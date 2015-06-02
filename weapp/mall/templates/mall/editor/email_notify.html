@@ -1,0 +1,88 @@
+{% extends "content_base_v2.html" %}
+{% block css%}
+<style>
+    .xui-theadHeight{
+        background-color: #c7d1e5;
+    }
+    .btn{
+        height:24px;
+        min-width:60px;
+        line-height: 12px;
+        border-radius: 4px;
+    }
+    .btn-success{
+        background: #288d3a;
+    }
+    .btn-danger{
+        background: #cf0404;
+    }
+</style>
+{% endblock%}
+{% block content-panel %}
+<div class="">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>配置管理</li>
+        <li class="active">运营邮件通知</li>
+    </ul>
+<div class="panel panel-default xb-panelBg">
+    <div class="xui-rightPanelTitle pl30">
+        运营邮件通知
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered table-condensed xb-stripedTable">
+            <thead class="xui-theadHeight">
+                <tr>
+                    <th class="tl pl40">邮件通知名称</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for notify_setting in notify_settings %}
+            <tr>
+                <td width="220"  class="tl pl40">
+                <a href="/mall/email_notify/edit/?status={{notify_setting.status}}">
+                {% if notify_setting.status == 0 %}
+                    下单时
+                {% endif %}
+                {% if notify_setting.status == 1 %}
+                    付款时
+                {% endif %}
+                {% if notify_setting.status == 2 %}
+                    发货时
+                {% endif %}
+                {% if notify_setting.status == 3 %}
+                    完成时
+                {% endif %}
+                {% if notify_setting.status == 4 %}
+                    取消时
+                {% endif %}
+                </a>
+                </td>
+                <td width="580">
+                    {% if notify_setting.is_active %}启用中{% else %}未启用{% endif %}
+                </td>
+                <td>
+                  {% if notify_setting.is_active %}
+                    <a class="btn btn-danger" href="/account/setting/notify/update/{{notify_setting.id}}/?action=stop">停用</a>
+                  {% else %}
+                    <a class="btn btn-success" href="/account/setting/notify/update/{{notify_setting.id}}/?action=restart">启用</a>
+                  {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+});
+</script>
+{% endblock %}

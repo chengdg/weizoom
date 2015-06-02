@@ -1,0 +1,33 @@
+<script id="image-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="imageView-uploadZone" class="imageView-uploadZone {{if picUrl}}xui-hide{{/if}}">
+		<input id="imageView-fileUploader" name="imageView-fileUploader" type="file" class="xui-hide" multi="true"/>
+	</div>
+	<div id="imageView-imgZone" name="imageView-imgZone" class="imgBox pt0 {{if !picUrl}}xui-hide{{/if}} imageView-imgZone"
+	     style="width:${width}px;position:relative;">
+		<button class="close xui-close" style="display:block;opacity:1;line-height:16px;"type="button">×</button>
+		<div class="imageView-imgContainer" style="clear: right;">
+			{{if picUrl}}
+				<img src="${picUrl}" width="${width}px" height="${height}px" style="width:${width}px; height:${height}px"/>
+			{{/if}}
+		</div>
+	</div>
+</script>
+
+<script id="multi-image-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="imageView-uploadZone" class="imageView-uploadZone {{if picUrl}}xui-hide{{/if}}">
+		<input id="imageView-fileUploader" name="imageView-fileUploader" type="file" class="xui-hide"/>
+	</div>
+	<div class="multi-image-zome">
+	</div>
+</script>
+
+<script id="one-image-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="imageView-imgZone imgBox pt0 mt5" name="imageView-imgZone" style="width:${width}px" data-img-url="${picUrl}">
+		<button class="close" type="button">×</button>
+		<div class="imageView-imgContainer">
+			{{if picUrl}}
+				<img src="${picUrl}" width="${width}px" height="${height}px" style="width:${width}px; height:${height}px"/>
+			{{/if}}
+		</div>
+	</div>
+</script>

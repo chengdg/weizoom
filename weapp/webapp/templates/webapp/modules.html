@@ -1,0 +1,56 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+{% endblock %}
+
+{% block content-panel %}
+  <div id="overlay"></div>
+  <div id="globalErrorPanel" class="alert alert-error hide"></div>
+  <div id="spin-wrapper"><div id="spin"></div><div id="spin-hint" class="ml10"></div></div>
+
+  <div id="topbar">
+    <div id="global-nav">
+      <div style="position: relative; margin: 0px 20px 0px 5px;">
+        <div id="weixin-logo">Web Builder</div>
+        <div id="top-action-bar">
+          你好，{{ user.username }} | <a href="/logout/">退出</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="projectList" class="">
+    <form action="/webapp/module/add/" method="post">
+      <table class="table table-bordered table-condensed mt10">
+        <thead>
+          <tr>
+            <th>模块</th>
+            <th>是否启用</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for module_workspace in module_workspaces %}
+          <tr>
+            <td><div data-workspace-id="{{module_workspace.id}}">{{module_workspace.name}}</div></td>
+            <td style="width: 140px;">
+              <label class="checkbox" style="min-height:0px;"><input type="checkbox" name="module_{{module_workspace.id}}" value="{{module_workspace.id}}" {% if module_workspace.is_selected %}checked="checked"{% endif %}/></label>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <button class="btn btn-success" type="submit">确定</button>
+    </form>
+  </div>
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+  });
+</script>  
+{% endblock %}

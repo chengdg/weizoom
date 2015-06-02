@@ -1,0 +1,19 @@
+<script id="competitor-list-items" type="text/x-jquery-tmpl">
+{{each(i, item) items}}
+	<li>
+		<a href="javascript:void(0)" data-role="button" name="radio" item_id="${item.id}">
+			<span class="ui-list-person-img">
+				<span class="poll-active" auto_height="1:1"></span>
+				<img src="${item.thumbnails_url}" auto_height="1:1"/>
+			</span>
+			<h3>
+				<span class="fr mt5 flag flag-${item.country_code}"></span>
+				<div class="ui-list-person-competitor-name">
+					<span class="ico-radio"></span>
+					<span class="ui-list-person-competitor-text">${item.name}</span>
+				</div>
+			</h3>
+		</a>
+	</li>
+{{/each}}
+</script>

@@ -1,0 +1,90 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<style type="text/css">
+#guest-form input[type='text'], #guest-form textarea {
+    width: 330px;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+
+<ul class="breadcrumb">
+    <li><a href="/operation/editor/versions/">版本升级列表</a><span class="divider">/</span></li>
+    <li class="active">{% if version %}更新{% else %}添加{% endif %}信息</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="version-form">
+    <fieldset>
+        <div class="control-group">
+            <label class="control-label" for="name">更新时间：</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="name" name="name" placeholder="更新时间" value="{% if version %}{{ version.update_time }}{% endif %}" data-validate="required" data-validate-version="{{ version.id }}" data-validate-min-length="2" data-validate-max-length="32" />
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="detail">更新内容：</label>
+            <div class="controls">
+                <textarea rows="5" data-validate="required" data-validate-min-length="2" data-validate-max-length="500" class="input-xlarge hide" id="detail" name="detail" placeholder="更新内容" >{% if version %}{{ version.update_content }}{% endif %}</textarea>
+            </div>
+        </div>
+
+
+    </fieldset>
+
+    <fieldset>
+        <legend></legend>
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" class="btn btn-success" id="submit-guest" value="&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;" />
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+    {% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+        $('#name').focus();
+
+
+        //创建RichTextEditor
+        var richTextEditor = new W.common.RichTextEditor({
+            el: 'textarea',
+            type: 'full',
+            width: 500,
+            height:300,
+            autoHeight:false,
+            imgSuffix: "uid="+W.uid,
+            wordCount: false
+        });
+        richTextEditor.render();
+
+        $('#version-form').submit(function(event) {
+            
+            if (!W.validate()) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+
+       
+    });
+</script>
+{% endblock %}

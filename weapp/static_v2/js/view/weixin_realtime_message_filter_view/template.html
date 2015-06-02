@@ -1,0 +1,48 @@
+<script id="weixin-realtime-message-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label class="">消息内容：</label>
+			<input type="text" class="form-control" id="content" name="content" value="">
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label></label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-enable-select-time="true"
+				data-ui-role="orderDatepicker"
+			    data-format="yy-mm-dd HH:MM"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH:MM"
+			    data-max="now"
+			    data-min-el="#start_date"/>
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item" style="margin-top: -15px;">
+			<label></label>
+			<a type="button" class="xa-search-realtime-message btn btn-primary mr40 xui-fontBold">查&nbsp; &nbsp;询</a>
+		</div>
+	</div>
+</div>
+</script>

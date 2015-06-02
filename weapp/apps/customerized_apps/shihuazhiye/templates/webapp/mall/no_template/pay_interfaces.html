@@ -1,0 +1,154 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<style>
+    img {
+        /*width: 95%;
+        max-width: 95%;
+        display: block;
+        border-radius: 4px 4px 4px 4px;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+        margin: 5px auto;*/
+    }
+
+    li {
+        /*
+        border-radius: 4px 4px 4px 4px;
+        box-shadow: 0 0 3px rgba(50, 50, 50, 0.2);
+        */
+    }
+
+    ul a:link, ul a:hover, ul a:visited {
+        display: block;
+        color: black;
+    }
+    .ui-page{
+        background-color: #f2f2f2!important;
+    }
+    .xui-payment-page .xui-container{
+    background: #f0f0f0;
+    padding:13px;
+    }
+    .xui-payment-page .xui-title{
+    line-height: 30px;
+    }
+    .xui-payment-page .xui-payment-box{
+    width: 100%;   
+    }
+    .xui-payment-page .xui-payment-box ul li{
+    list-style: none;
+    margin:10px 0;
+    }
+    .xui-payment-page .xui-content-box{
+    height: 60px;
+    background: #fff;
+    border-radius:5px;
+    border: 1px solid #cbcbcb;
+    }
+    .xui-payment-page .xui-content-box:hover{
+    background:url(/standard_static/img/right-icon.png) no-repeat 100% 100% rgba(255,255,255,1);
+    background-size: 7.5%;
+    border:1px solid #5bb75b;
+    box-shadow: none;
+    }
+    .xui-payment-page img{
+        width: 45px;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-payment-page" data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-category-page" data-title="{{ page_title }}" >
+    <div class="xui-container pr">
+        <div class="xui-title">选择支付方式</div>
+        <div class="xui-payment-box">
+            <ul>
+                {% for pay_interface in pay_interfaces %}
+                    <li>
+                        <a 
+                            href="#"
+                            class="x-payInterfaceLink" 
+                            data-interface-type="{{ pay_interface.type }}" 
+                            data-id="{{pay_interface.id}}" 
+                             {% if pay_interface.type == 0 %}
+                            data-href="./?woid={{request.webapp_owner_id}}&module=apps:shihuazhiye:mall&model=product_order&action=pay&order_id={{order_id}}&ignore_template=1&pay_interface_id={{pay_interface.id}}"
+                            {% endif %}
+                        >
+                            <div class="xui-content-box">   
+    
+
+                                <span style="display:inline-block;padding:7px 15px;" class="fl"><img src="{{pay_interface.pay_logo}}" alt=""> </span>
+                                <span style="display:inline-block;line-height:60px;" class="fl">{{pay_interface.name}}</span>
+
+                                   
+                                </div>
+                        </a>
+                    </li>
+                 {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+var orderId = "{{ order_id }}";
+
+$(document).ready(function() {
+    $('.x-payInterfaceLink').click(function(){
+        var $link = $(this);
+        var interfaceType = parseInt($link.attr('data-interface-type'));
+        var interfaceId = $link.attr('data-id');
+        var args = {order_id: orderId};
+        if (interfaceType === -1) {
+            var target = $link.attr('data-href');
+            target += ("&sct=" + $.cookie('sct'));
+            redirectTo(target);
+        } else {            
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    webapp_owner_id: W.webappOwnerId,
+                    project_id: 'apps:shihuazhiye:'+W.webappOwnerId,
+                    module: 'apps:shihuazhiye:mall',
+                    target_api: 'order/pay',
+                    interface_type: interfaceType,
+                    interface_id: interfaceId
+                }, args),
+                success: function(data) {
+                    order_id = data['order_id'];
+                    if (data['msg'] != null) {
+                        $('body').alert({
+                            isShow: true,
+                            speed: 2000,
+                            info: data['msg'] || '操作失败!'
+                        });
+                    } else {
+                        window.location.href = data['url'];     
+                    }
+                },
+                error: function(resp) {
+                    var errMsg = null;
+                    if (resp.data) {
+                        errMsg = resp.data['msg'];
+                    }
+                    if (!errMsg) {
+                        errMsg = '操作失败!';
+                    }
+                    $('body').alert({
+                        isShow: true,
+                        info: errMsg,
+                        speed:2000
+                    });
+                    isSubmit = false;
+                }
+            });
+        }
+    });
+})
+</script>
+{% endblock %}

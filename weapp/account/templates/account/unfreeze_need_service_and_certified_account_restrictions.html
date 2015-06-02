@@ -1,0 +1,56 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<style>
+h3 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+font.highlight {
+	color: #FF2D2D;
+	font-weight: bold;
+}
+
+.doc-content {
+	margin-bottom: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="doc-content">
+	<h3>解除使用限制指南</h3>
+	<p>当前功能需要您绑定的微信账号是<font class="highlight">服务号</font>并且<font class="highlight">通过微信认证</font></p>
+
+	<p>如何解除使用限制？</p>
+	<p>
+	由于该功能中使用的微信接口面向的是认证后的服务号，weShop只能基于微信提供的基础上进行，在您完成账号认证和变更为服务号后该功能即可使用。<br>
+	步骤：
+	</p>
+
+	<ul>
+		<li>1. 首先请进入微信公众账号平台：<a href="http://mp.weixin.qq.com">http://mp.weixin.qq.com</a></li>
+		<li>2. 查看您的账号信息，确认为服务号。（订阅号不支持此功能</li>
+		<li>3. 点击“申请微信认证”
+			<img src="/static/img/docs/unfreeze_restrictions_0.jpg"></img>
+		</li>
+
+		<li>4. 等您的申请通过以后您会看到类似下图的信息
+			<img src="/static/img/docs/unfreeze_restrictions_1.jpg"></img>
+		</li>
+
+		<li>5. 进入weShop->首页-> 账号信息，修改您的认证信息为服务号和已认证，之后您将会获得相应的功能的权限
+			<img src="/static/img/docs/unfreeze_restrictions_2.jpg"></img>
+		</li>
+	</ul>
+</div>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}

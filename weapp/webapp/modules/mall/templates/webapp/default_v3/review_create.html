@@ -1,0 +1,46 @@
+{% extends "webapp_content_base.html" %}
+{% load mall_filter %}
+
+{% block content-panel %}
+<label id='order_id' value={{order_id}}></label>
+<label id='product_id' value={{product_id}}></label>
+
+<form method="post" action="">
+    <label for='goods_score'><input name='goods_score'></label>
+    <label for="review_detail"><input name='review_detail'></label>
+    <label for="serve_score"><input name='serve_score'></label>
+    <label for="deliver_score"><input name='deliver_score'></label>
+    <label for="process_score"><input name='process_score'></label>
+    <input type='submit' value="submit">
+</form>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+        $('input[type="submit"]').on('click', function(e){
+            e.preventDefault();
+            order_id=parseInt($.trim($('#order_id').attr('value')));
+            product_id=parseInt($.trim($('#product_id').attr('value')));
+            W.getApi().call({
+                app:'webapp',
+                api:'project_api/call',
+                method:'post',
+                args:_.extend({
+                    woid:W.webappOwnerId,
+                    order_id:order_id,
+                    product_id:product_id,
+                    module:'mall',
+                    password:pass,
+                    target_api:'review/create'
+                }),
+                success:function(data){},
+                error: function(data){}
+            });
+
+        });
+);
+
+</script>
+
+{% endblock %}

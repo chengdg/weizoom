@@ -1,0 +1,11 @@
+{
+ "inner_name": "pixel", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "\u50cf\u7d20\u5370\u8c61", 
+ "template_project_id": 0, 
+ "type": "jqm", 
+ "id": 16, 
+ "css": "", 
+ "pagestore": "mongo"
+}

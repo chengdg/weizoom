@@ -1,0 +1,96 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/mall/editor/mall_settings/">商城配置首页</a><span class="divider">/</span></li>
+	<li class="active">商城配置</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">点击分享链接为购买后的分享者增加的额度：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="click_shared_url_increase_count_after_buy" name="click_shared_url_increase_count_after_buy" placeholder="输入点击分享链接为购买后的分享者增加的额度" value="{% if integral_setting %}{{ integral_setting.click_shared_url_increase_count_after_buy }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="name">点击分享链接为未购买的分享者增加的额度：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="click_shared_url_increase_count_before_buy" name="click_shared_url_increase_count_before_buy" placeholder="输入点击分享链接为未购买的分享者增加的额度" value="{% if integral_setting %}{{ integral_setting.click_shared_url_increase_count_before_buy }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="name">通过分享链接购买为购买者增加的额度：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="buy_via_shared_url_increase_count_for_buyer" name="buy_via_shared_url_increase_count_for_buyer" placeholder="输入通过分享链接购买为购买者增加的额度" value="{% if integral_setting %}{{ integral_setting.buy_via_shared_url_increase_count_for_buyer }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="name">通过分享链接购买为分享者增加的额度：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="buy_via_shared_url_increase_count_for_author" name="buy_via_shared_url_increase_count_for_author" placeholder="输入通过分享链接购买为分享者增加的额度" value="{% if integral_setting %}{{ integral_setting.buy_via_shared_url_increase_count_for_author }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="name">成为会员增加额度：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="be_member_increase_count" name="be_member_increase_count" placeholder="输入成为会员增加额度" value="{% if integral_setting %}{{ integral_setting.be_member_increase_count }}{% endif %}" data-validate="int" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="name">一元是多少积分：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="integral_each_yuan" name="integral_each_yuan" placeholder="输入点击分享链接为购买后的分享者增加的额度" value="{% if integral_setting %}{{ integral_setting.integral_each_yuan }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+{% endblock %}

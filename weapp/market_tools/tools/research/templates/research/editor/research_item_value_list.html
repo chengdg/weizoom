@@ -1,0 +1,49 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/market_tools/research/">调研列表</a><span class="divider">/</span></li>
+	<li class="active">{{ research_item.research.name }}的调研结果</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<div class="fr" style="margin: 0 30px 10px 0;">总共收集{{ research_item_values.count }}张调研问卷</div>
+		
+		<div class="control-group">
+			<table class="table table-bordered table-condensed">
+	            <thead>
+	                <tr style="background: #C0C0C0;">
+	                <th>调研项目</th>
+	               </tr>
+	            </thead> 
+	            <tbody>
+	            	<tr style="background: #E6E6E6;">
+	            		<td>{{research_item.title}}</td>
+					</tr>
+					{% for value in research_item_values %}
+					<tr>
+	            		<td style="padding-left: 30px;">{{value.value}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+	         </table>
+		</div>
+    </fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	
+</script>
+{% endblock %}

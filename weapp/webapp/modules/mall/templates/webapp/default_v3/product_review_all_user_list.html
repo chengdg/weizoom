@@ -1,0 +1,60 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div class="xui-reviewAllPage xui-page">
+	<div class="xui-title pr">
+		<i data-ui-role="goBack"></i>
+		<span class="em9">更多评价</span>
+	</div>
+	<div class="xui-content">
+		<ul class="xui-reviewlist">
+			{% for review in product_review_list %}
+				<li>
+			        <div class="clearfix pt10 pb10">
+			            <div class="fl">
+			                <img src="/static/img/user-1.jpg" data-allow-autoplay="true" class="xui-user">
+			                <span class="ml5 xa-memberName">
+			                	{% autoescape off %}
+			                		{{review.member_name }}
+			                	{% endautoescape %}
+			                </span>
+			            </div>
+			            <span class="fr">{{ review.created_at|date:"Y-m-j" }}</span>
+			        </div>
+			        <p class="pb5 em85 c6">{{ review.review_detail }}</p>
+					<div>
+						{% if review.custom_model_properties %}
+                            {% for property in review.custom_model_properties %}
+                            <span class="mr10">{{ property.propertyName }}：&nbsp;{{ property.name }}</span>
+                            {% endfor %}
+                        {% endif %}
+					</div>
+					<div class="xui-reviewImg clearfix mt10">
+						{% for picture in review.pictures %}
+			                {% ifequal picture|truncatechars:18 'http://weappimg...'%}
+							<img width="50" height="50" src="{{picture}}!60"  full-src="{{picture}}">
+			                {% else %}
+							<img width="50" height="50" src="{{picture}}">
+			                {% endifequal%}
+						{% endfor %}
+					</div>
+			    </li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+	$(document).ready(function(){
+		var spanMemberName = $(".xa-memberName");
+		for(var i = 0; i < spanMemberName.length; i++) {
+			var str = $(spanMemberName[i]).text().trim();
+			var str_name = str.substring(0,1)+"**"+str[str.length-1];
+			$(spanMemberName[i]).html(str_name)
+		}
+	})
+</script>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">商品列表</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a id="addProductBtn" class="btn btn-primary" href="/mall/editor/product/create/?type=object"> <i class="icon-plus icon-white"></i>
+			普通商品
+		</a>
+		<a id="addProductBtn" class="btn btn-primary" href="/mall/editor/product/create/?type=integral"> <i class="icon-plus icon-white"></i>
+			积分商品
+		</a>
+	</span>
+</div>
+{% if has_product %}
+<div 
+	data-ui-role="advanced-table" 
+	data-app="mall" 
+	data-api="products/get" 
+	data-template-id="#products-view"
+	data-enable-paginator="true" 
+	data-enable-sort="true" 
+	data-sort-api="product_display_index/update"
+	data-item-count-per-page="50" 
+></div>
+{% else %}
+	目前还没有数据
+{% endif %}
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="products-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th width="120">商品缩略图</th>
+				<th>
+					<p class="m0 f14 tx_searchable">商品名称</p>
+				</th>
+				<th width="60" class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">商品类型</p>
+						<ul class="dropdown-menu" >
+                            <li>
+                            	<a href="javascript:void(0);" data-attr='type' data-value="-1">全部</a>
+                            </li>
+							<li>
+								<a href="javascript:void(0);" data-attr='type' data-value="object">普通商品</a>
+							</li>
+							<li>
+								<a href="javascript:void(0);" data-attr='type' data-value="integral">积分商品</a>
+							</li>
+						</ul>
+					</div>
+				</th>
+				<th width="60" class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">分类</p>
+						<ul class="dropdown-menu" >
+                            <li>
+                            	<a href="javascript:void(0);" data-attr='category_id' data-value="0">全部</a>
+                            </li>
+                            {{each(i, category) categories}}
+							<li>
+								<a href="javascript:void(0);" data-attr='category_id' data-value="${category.id}">${category.name}</a>
+							</li>
+							{{/each}}
+						</ul>
+					</div>
+				</th>
+				<th class="tx_sortable" data-sort-attr='price' width="80">商品价格</th>
+				<th width="60" class="tx_sortable" data-sort-attr='created_at'>创建时间</th>
+				{{if data.data.is_weizoom_mall}}
+					<th class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">来源</p>
+						<ul class="dropdown-menu">
+	                        <li><a href="javascript:void(0);" data-attr='source' data-value="-1">全部</a></li>
+							<li><a href="javascript:void(0);" data-attr='source' data-value="0">本店</a></li>
+							<li><a href="javascript:void(0);" data-attr='source' data-value="1">商户</a></li>
+						
+						</ul>
+					</div>
+				</th>
+				<th class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">审核</p>
+						<ul class="dropdown-menu">
+	                        <li><a href="javascript:void(0);" data-attr='checked' data-value="-1">全部</a></li>
+							<li><a href="javascript:void(0);" data-attr='checked' data-value="1">已审核</a></li>
+							<li><a href="javascript:void(0);" data-attr='checked' data-value="0">未审核</a></li>
+						</ul>
+					</div>
+				</th>
+				{{/if}}
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{if items.length}}
+	            {{each(i, product) items}}
+				<tr data-id="${product.id}">
+					<td class="wui-advanced-table-sort-handler">
+						<div class="imgBox fl m5" style="width: auto; padding: 5px;">
+							<a href="/mall/editor/product/update/${product.id}/">
+                               {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                                 <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                               {{else}}
+                                 <img src="${product.thumbnails_url}" width="60" height="60"/>
+                               {{/if}}
+							</a>
+						</div>
+					</td>
+					<td class="nowrap" style="width: 60px;">
+						<div>
+							<a href="/mall/editor/product/update/${product.id}/">${product.name}</a>
+						</div>
+					</td>
+					<td class="nowrap" style="width: 60px;">
+						<div>${product.type_str}</div>
+					</td>
+					<td class="nowrap" style="width: 60px;">
+						{{each(i, category) product.categories}}
+						<div class="alert alert-info alert-category">${category.name}</div>
+						{{/each}}
+					</td>
+					<td class="nowrap">
+						<div>￥${product.display_price}</div>
+					</td>
+					<td style="width: 120px;">${product.created_at}</td>
+					{{if data.data.is_weizoom_mall}}
+					<td class="nowrap">
+						{{if product.is_from_other_mall == true}}
+							商户
+						{{/if}}
+						{{if product.is_from_other_mall == false}}
+							本店
+						{{/if}}
+						
+					</td>
+					<td class="nowrap">
+						{{if product.is_checked == true}}
+							<a id="checkProductBtn" class="btn btn-primary" href="/mall/editor/product/check_other_mall_product/${product.id}/0" value='0' >已审核</a>
+						{{/if}}
+						{{if product.is_checked == '-'}}
+							-
+						{{/if}}
+						{{if product.is_checked == false}}
+							<a id="checkProductBtn" class="btn btn-primary"  href="/mall/editor/product/check_other_mall_product/${product.id}/1" value='1' >未审核</a>
+						{{/if}}
+					</td>
+					{{/if}}
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='7'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>        
+	</table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+	/*
+	var maxProductCount = {{ max_product_count }};
+	
+	$(document).ready(function() {
+		$('#addProductBtn').click(function(event) {
+			var productCount = $('#product_list tr').length;
+			if (productCount >= maxProductCount) {
+				var info = '最多创建'+maxProductCount+'个商品，如需更多商品，请购买高级版本'
+				W.getErrorHintView().show(info);
+				event.stopPropagation();
+				event.preventDefault();
+			}
+		});
+	});
+	*/
+</script>
+{% endblock %}

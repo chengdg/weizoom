@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//ZH-CN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Preview</title>
+
+        <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
+
+      <link type="text/css" rel="stylesheet" media="all" href="/static/css/base.css">
+      <link type="text/css" rel="stylesheet" media="all" href="/static/css/system.css">
+        <style type="text/css">
+            html, body {
+                background-color: #FFFFFF;
+            }
+
+            body {
+                padding: 20px;
+            }
+
+            table {
+                margin: 5px auto;
+            }
+
+            h3 {
+                text-align: center;
+                font-weight: bold;
+                font-size: 2em;
+            }
+
+            h4 {
+                text-align: center;
+                font-size: 1.5em;
+                color: blue;
+            }
+
+            div {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        {% if is_under_deploy %}
+            准备预览数据...
+        {% else %}
+        <h3>Prepare Preview</h3>
+        <h4 id="redirectUrl"></h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>webapp_id</th>
+                    <th>workspace_id</th>
+                    <th>project_id</th>
+                    <th>是否关注？</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{webapp_id}}</td>
+                    <td>{{workspace_id}}</td>
+                    <td>{{project_id}}</td>
+                    <td id="subscribInfo">
+                        {% if is_subscribed %}
+                        <span style="color: blue">已关注</span>
+                        {% else %}
+                        <span style="color: red">未关注</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        <script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery.cookie.js"></script>
+        <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/static/js/system/system.js"></script>
+        <script type="text/javascript" src="/static/js/system/debug.js"></script>
+        <script type="text/javascript" src="/static/js/system/template-0.9.js"></script>
+        <script type="text/javascript" src="/static/js/system/api.js"></script>
+        <script type="text/javascript">
+            var redirectUrl = '/workbench/jqm/preview/?project_id={{project_id}}&woid={{request.user.id}}';
+            var webappId = '{{webapp_id}}';
+            var weixinUserName = '';
+            var isSubscribed = {% if is_subscribed %}true{% else %}false{% endif %};
+
+            var sendSubscribeEvent = function(callback) {
+                xlog('send subscribe event for ' + webappId + ' by ' + weixinUserName);
+                W.getApi().call({
+                    app: 'simulator',
+                    api: 'mp_user/subscribe',
+                    method: 'post',
+                    args: {
+                        webapp_id: webappId,
+                        from_user: weixinUserName
+                    },
+                    success: function(data) {
+                        if (callback) {
+                            callback();
+                        }
+                    },
+                    scope: this
+                });
+            };
+
+            var getSessionId = function(callback) {
+                W.getApi().call({
+                    app: 'account',
+                    api: 'sessionid/get',
+                    args: {
+                    },
+                    success: function(sessionid) {
+                        weixinUserName = 'pc-weixin-user-' + sessionid;
+                        $.cookie('wuid', 'pc-wuid-'+sessionid, {path:'/'});
+                        $.cookie('uuid', 'pc-wuid-'+sessionid, {path:'/'});
+                        $.cookie('wx-simulator', 'true', {path:'/'});
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                });
+            }
+
+            var getSocialAccountToken = function(callback) {
+                W.getApi().call({
+                    app: 'account',
+                    api: 'social_account_token/get',
+                    args: {
+                        openid: weixinUserName
+                    },
+                    success: function(token) {
+                        $.cookie('sct', token, {path:'/'});
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                });
+            }
+
+            var doRedirect = function() {
+                window.location.href = redirectUrl;
+            }
+
+            $(document).ready(function() {
+                var $redirectUrl = $('#redirectUrl');
+                if ($redirectUrl.length > 0) {
+                    $redirectUrl.html(redirectUrl);
+                }                
+
+                if (!isSubscribed) {
+                    var task = new W.DelayedTask(function() {
+                        getSessionId(function() {
+                            sendSubscribeEvent(function() {
+                                $('#subscribInfo').html('<span style="color: blue">已关注</span>');
+                                getSocialAccountToken(function() {
+                                    window.location.href = redirectUrl;
+                                });
+                            })
+                        });
+                    });
+                    task.delay(1000);
+                } else {
+                    var task = new W.DelayedTask(function() {
+                        getSessionId(function() {
+                            getSocialAccountToken(function() {
+                                window.location.href = redirectUrl;
+                            })
+                        });
+                    });
+                    task.delay(1000);
+                }
+            })
+        </script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Request Context</title>
+        <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css?v=1">
+    </head>
+    <body style="padding: 20px;">
+        <h1 style="text-align: center;">Request Context</h1>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for data in datas %}
+                <tr style="background-color: #E4F2F1;">
+                    <td colspan="2">new dict</td>
+                </tr>
+                {% for item in data %}
+                <tr style="font-weight: bold; font-size: 16px;">
+                    <td style="padding: 5px;">{{item.0}}</td>
+                    <td style="padding: 5px;">{{item.1|safe}}</td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

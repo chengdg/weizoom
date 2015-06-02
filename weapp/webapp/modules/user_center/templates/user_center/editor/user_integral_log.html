@@ -1,0 +1,74 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+	<li><a href="/user_center/">会员列表</a><span class="divider">/</span></li>
+	<li><a href="/user_center/member/{{ member_id }}/">会员详情</a><span class="divider">/</span></li>
+		<li class="active">会员积分日志列表</li>
+	</ul>
+</div>
+
+{% if member_logs %}
+<div>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>积分类型</th>
+				<th>积分量</th>
+				<!--<th>所关注的会员</th>-->
+				<th>时间</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for member_log in member_logs %}
+			<tr data-id="{{ member_log.id }}">
+				<td>
+					<div>
+						{{ member_log.event_type }}
+					</div>
+				</td>
+				<td>
+					<div>
+					{% if member_log.integral_count > 0 %}
+                            +
+                    {% endif %}
+					{{member_log.integral_count }}
+					</div>
+				</td>
+				<!--
+				<td>
+					<div>
+					{% if member_log.follower_member %}
+                        {{member_log.follower_member.username}}
+                    {% endif %}
+					</div>
+				</td>
+				-->
+				<td>
+					<div>
+					{{member_log.created_at|date:"Y/m/j"}}
+					</div>
+				</td>
+				
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div id="paginationContent"></div>
+</div>
+{% else %}
+	目前还没有数据
+{% endif %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/paginationView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

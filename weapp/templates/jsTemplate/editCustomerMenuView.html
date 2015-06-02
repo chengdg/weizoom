@@ -1,0 +1,81 @@
+
+<script id="edit-customer-menu-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="list-customer-menu-box" class="fl"></div>
+	<div id="customer-menu-editor-box" class="wx-thin-form fl ml20">
+		<div id="formWrapper">
+			<form class="form-horizontal hide" method="get" id="customer-menu-form">
+				<legend> 菜单项:</legend>
+				<fieldset>
+					<div id="nameDiv" class="control-group">
+						<label class="control-label" style="width:90px;" for="name">菜单名称：</label>
+						<div class="controls" style="margin-left:100px;">
+							<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入菜单名称" value="" data-validate-max-length="4"/>
+							<div class="errorHint"></div>
+							<span class="help-block mt15">一级菜单可输入4个字符！</span>
+						</div>
+					</div>
+
+					<div id="typeDiv" class="control-group">
+						<label class="control-label" for="type" style="width:90px;">类型：</label>
+						<div class="controls" style="margin-left:100px;">
+							<select id="type" class="type">
+								<option value="1" selected="">关键词</option>
+							</select>
+						</div>
+					</div>
+
+					<div id="urlDiv" class="control-group hide">
+						<label class="control-label" for="url" style="width:90px;">连接地址：</label>
+						<div class="controls" style="margin-left:100px;">
+							<input type="text" class="input-xlarge" id="url" name="url" placeholder="输入链接地址"/>
+							<div class="errorHint"></div>
+						</div>
+					</div>
+
+					<div id="qaRuleIdDive" class="control-group">
+						<label class="control-label" for="qa_rule_id" style="width:90px;">关键词选择：</label>
+						<div class="controls" style="margin-left:100px;">
+							<select id="qa_rule_id" class="qa_rule_id"></select>
+							<div class="errorHint"></div>
+							<div id="small-phone" class="small-phone-nobackground mt20" can-checked="true" style="margin-left:-5px;">
+								<div class="previewMessage"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="control-group pt10 tr mr5" id="update-news-btns-box">
+						<div class="controls">
+							<input id="add-menu-btn" type="button" class="btn btn-success" value="&nbsp;&nbsp;&nbsp;&nbsp;添&nbsp;&nbsp;加&nbsp;&nbsp;&nbsp;&nbsp;" />
+							<input id="update-menu-btn" type="button" class="btn btn-success hide" value="&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;改&nbsp;&nbsp;&nbsp;&nbsp;" />
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	<div class="cb"></div>
+
+	<div class="tc mt20 mb20">
+		<legend></legend>
+		<button id="submit-btn" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+	</div>
+</script>
+
+<script id="list-customer-menu-view-tmpl-src" type="text/x-jquery-tmpl">
+	<span class="help-block ">更改需要24小时后生效</span>
+	<ul class="categorysTree">
+		<li data-id="0">
+			<p>
+				<span class="ico_arrow fl"></span>
+				<span class="name fl">自定义菜单</span>
+				<span class="fr mr10">
+				<span class="checkbox fl"><input id="isAllActive" type="checkbox" {{if	isActive=="True"}}checked="true"{{/if}}></span>
+				<span class="fl btnLay"><a href="javascript:void(0);" class="tx_add btnAdd	customer_menu_add">+</a></span>
+				<span class="fl btnLay">
+					<!--<a href="javascrpt:void(0);" class="tx_delete btnDelete
+				customer_menu_delete">×</a>--></span>
+				</span>
+			</p>
+		</li>
+	</ul>
+</script>

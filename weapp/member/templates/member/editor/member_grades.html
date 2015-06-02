@@ -1,0 +1,163 @@
+{% extends "content_base_v2.html" %}
+
+{% block css %}
+<style type="text/css">
+	#edui_fixedlayer{
+		z-index: 100009!important;
+	}
+	.modal{
+		z-index: 100009!important;
+	}
+	.edui-editor{
+		width: 625px!important;
+	}
+</style>
+
+{% endblock %}
+{% block content-panel %}
+<div class="xui-members-page">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li>
+				<a href="/member/members/get/">会员管理</a>
+			</li>
+			<li class="active">会员等级</li>
+		</ul>
+	</div>
+
+	<div class="xui-content">
+		<div class="xui-content-top">
+			<p class="xui-p-title">等级设置</p>
+		</div>
+		<form class="xui-mall-addProductForm" method="post" id="editForm" >
+			<table class="table table-bordered table-condensed xb-stripedTable">
+				<thead>
+					<tr>
+						<th>会员等级</th>
+						<th>满足条件</th>
+						<th>优惠</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody class = 'tags_tbody'>
+					{% for grade in member_grades %}
+					<tr data-id="{{ grade.id }}" class="domain_data">
+						<td class="td-first">
+							<div>
+							<input data-validate="required-none::不能为空"  type="text" class="form-control  xa-grade-name xui-grade"  id="grade_id_{{grade.id}}" name="grade_id_{{grade.id}}" placeholder="" value="{{ grade.name }}" maxlength="100"/>
+							<div class="errorHint" >
+						</div>
+						</td>
+						<td class="td-second">
+
+							{% if grade.is_default_grade %}
+								所有关注过您的公众号的用户
+							{% else %}
+								<div class="xui-td-left"><div><span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_money_term_{{grade.id}}" name="grade_money_term_{{grade.id}}" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+								<div><span class="xui-td-span">购买次数：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+								<div><span class="xui-td-span">
+								活动积分：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_integral_term_{{grade.id}}" name="grade_integral_term_{{grade.id}}" placeholder="" value="{{ grade.integral }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div>
+							   </div>
+							    </div>
+							    <div class="xui-td-right">
+							    	<p >满足任一条件即可</p>
+							    </div>
+							{% endif %}
+
+
+						</td>
+						<td class="td-thrid">
+
+							<div class="controls">
+								购物折扣：
+								<select type="text" class="input-xlarge" id="shop_discount" name="shop_discount_{{grade.id}}" style="width:120px;">
+								{% for i in shop_discounts%}
+									<option value="{{ forloop.revcounter }}" {% ifequal grade.shop_discount forloop.revcounter %}selected="selected"{% endifequal %}>{{ forloop.revcounter }}</option>
+								{% endfor %}
+								</select>&nbsp;&nbsp;%
+
+							</div>
+						</td>
+						<td class="td-fouth">{% if grade.is_default_grade %}
+							{% else %}
+							<a  href="javascript:void(0);" class="delete_tr">
+							删除
+							</a>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+					<tr data-id="{{ grade.id }}" class="last_tr">
+						<td class="w150">
+							<a href="javascript:void(0)" class='add_grades'>+添加会员等级</a>
+						</td>
+						<td>
+
+						</td>
+						<td>
+
+						</td>
+						<td>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+				<div class="xui-btn-group tc mt50">
+					<input type="submit" class="btn btn-primary" id="submitBtn" value="保存" />
+				</div>
+		</form>
+
+
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+	$(document).ready(function(){
+
+		var data_id = $(".domain_data").last().attr('data-id');
+		if (!data_id) {
+			data_id = 0;
+			}
+		$('.add_grades').click(function(event) {
+			console.log($(".domain_data").last().attr('data-id'));
+			//var data_id = $(".domain_data").last().attr('data-id');
+			data_id = parseInt(data_id) + 1;
+			var new_data_id = parseInt(data_id) + 1;
+			$(".tags_tbody .last_tr").before('<tr data-id="'+new_data_id+'" class="domain_data"><td class="w150"><div><input data-validate="required-none::不能为空" type="text" class="form-control xui-grade xa-grade-name"  id="grade_id_'+new_data_id+'" name="grade_id_'+new_data_id+'" placeholder="" value="{{ grade.name }}" maxlength="100"/><div class="errorHint"></div></div></td><td> <div class="xui-td-left">  <div> <span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_money_term_'+new_data_id+'" name="grade_money_term_'+new_data_id+'" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div><div> <span class="xui-td-span">购买次数：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_paytimes_term_'+new_data_id+'" name="grade_paytimes_term_'+new_data_id+'" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div><div><span class="xui-td-span">活动积分：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_integral_term_'+new_data_id+'" name="grade_integral_term_'+new_data_id+'" placeholder="" value="{{ grade.integral }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div></div> <div class="xui-td-right"><p class="xui-p">满足任一条件即可</p></div> </td><td><div class="controls"></p>购物折扣：<select type="text" class="input-xlarge" id="shop_discount" name="shop_discount_'+new_data_id+'" style="width:120px;">{% for i in shop_discounts%}<option value="{{ forloop.revcounter }}" {% ifequal grade.shop_discount forloop.revcounter %}selected="selected"{% endifequal %}>{{ forloop.revcounter }}&nbsp;&nbsp;%</option>{% endfor %}</select>%</div> </td><td><a  href="javascript:void(0);" class="delete_tr">删除</a></td></tr>');
+
+		});
+
+		$('tbody').delegate('.delete_tr', 'click', function(event){
+       		var $el = $(event.currentTarget);
+       		$el.parent().parent().remove();
+		});
+
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+			var $tagName = $('input.xa-grade-name');
+			var flag = true;
+			$tagName.each(function(i, value) {
+				console.log(value)
+				var tag_name = value.value;
+				console.log(tag_name)
+				if (!$.trim(tag_name)) {
+					flag = false;
+					return false;
+				}
+			});
+			if (!flag) {
+				W.showHint('error', '请输入会员等级名称');
+				return false;
+			}
+			W.showHint('success', '保存成功');
+		});
+	});
+</script>
+{% endblock %}

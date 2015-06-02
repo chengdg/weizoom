@@ -1,0 +1,156 @@
+
+
+
+
+
+
+
+
+
+
+
+<!--    -->
+<script id="question-problem-tmpl-src" type="text/x-jquery-tmpl">
+	<legend>编辑题目: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="start_add_problem" href="#" style="font-size: 15px;">+添加题目</a></legend>
+	<div class="control-group">
+		<div class="ml15 mr15">
+			<table class="table table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th>题目</th>
+						<th style="width: 20%">答案</th>
+						<th style="width: 30%">答案反馈</th>
+						<th style="width: 20%">操作</th>
+					</tr>
+				</thead>
+				<tbody border="0"></tbody>
+			</table>
+			<div id="problem_error" class="errorHint"></div>
+		</div>
+	</div>
+</script>
+
+
+<script id="question-one-problem-tmpl-src" type="text/x-jquery-tmpl">
+	<tr id ="${id}" problem_id="${id}" style="cursor:move">
+		<td id='desc_stime${index}'><span class="text_nowrap" data-type='title'>{{html title}}</span></td>
+		<td id='desc_etime${index}'><span class="text_nowrap">${right_answer}</span></td>
+		<td id='desc_content${index}'><span class="text_nowrap">{{html right_feedback}}</span></td>
+		<td >
+			<a class="btn btn-mini update-problem-btn" href="#" title="编辑"><i class="icon-pencil"></i></a>
+			<a title="删除" class="btn btn-danger btn-mini delete-problem-btn" href="#"><i class="icon-remove icon-white"></i></a>
+		</td>
+	</tr>
+</script>
+
+
+<script id="edit-problem-dialog-src" type="text/x-jquery-tmpl">
+	<div id="editorView-editProblemDialog" class="form-horizontal mt20">
+		<div class="control-group txt_title">
+			<label class="control-label" for="title">输入题目：</label>
+			<div class="controls">
+				<textarea rows="4" id="title" name="title" data-validate="required" data-validate-max-length="600" class="hide" />
+			</div>
+		</div>
+		<div class="control-group txt_right_answer">
+			<label class="control-label" for="right_answer">正确答案：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="right_answer" name="right_answer" placeholder="" style="width: 200px;"
+				       data-validate="required" value="" />
+				<span style="color:#595959;">&nbsp;&nbsp;&nbsp;&nbsp;多个答案用空格分割</span>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group txt_right_feedback">
+			<label class="control-label" for="right_feedback">答对反馈：</label>
+			<div class="controls">
+				<textarea rows="4" id="right_feedback" name="right_feedback" data-validate="required"  data-validate-max-length="600" data-validate-min-length="0" class="hide" />
+			</div>
+		</div>
+		<div class="control-group txt_error_feedback">
+			<label class="control-label" for="error_feedback">答错反馈：</label>
+			<div class="controls">
+				<textarea rows="4" id="error_feedback" name="error_feedback" data-validate="required" data-validate-max-length="600" data-validate-min-length="0" class="hide" />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls p25">
+				<button type="submit" class="btn btn-success tx_submit">添加</button>
+				<button type="button" class="btn tx_cancel ml20">取消</button>
+			</div>
+		</div>
+	</div>
+</script>
+
+
+
+
+<script id="question-prize-tmpl-src" type="text/x-jquery-tmpl">
+	<legend>编辑奖品: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="start_add_prize" href="#" style="font-size: 15px;">+添加奖品</a></legend>
+	<div class="control-group">
+		<div class="ml15 mr15">
+			<table class="table table-bordered table-condensed">
+				<thead>
+				<tr>
+					<th style="width: 20%">答对数目</th>
+					<th>奖品</th>
+					<th style="width: 20%">操作</th>
+				</tr>
+				</thead>
+				<tbody border="0"></tbody>
+			</table>
+			<div id="prize_error" class="errorHint"></div>
+		</div>
+	</div>
+</script>
+
+
+<script id="question-one-prize-tmpl-src" type="text/x-jquery-tmpl">
+	<tr prize_id="${id}">
+		<td><span data-type="right_count">${right_count_min} - ${right_count_max}</span></td>
+		<td><span class="text_nowrap" style="width:300px;">{{html content}}</span></td>
+		<td>
+			<a class="btn btn-mini update-prize-btn" href="#" title="编辑"><i class="icon-pencil"></i></a>
+			<a title="删除" class="btn btn-danger btn-mini delete-prize-btn" href="#"><i class="icon-remove icon-white"></i></a>
+		</td>
+	</tr>
+</script>
+
+
+<script id="edit-prize-dialog-src" type="text/x-jquery-tmpl">
+	<div id="editorView-editPrizeDialog" class="form-horizontal mt20">
+		<div class="control-group txt_title">
+			<label class="control-label" for="title">答对数量：</label>
+			<div class="controls">
+				<select id="right_count_min" name="right_count_min" style="width:120px;">
+					<option value="0" selected="">0</option>
+				</select>
+				 -
+				<select id="right_count_max" name="right_count_max" style="width:120px;">
+					<option value="0" selected="">0</option>
+				</select>
+				<div class="errorHint error_right"></div>
+			</div>
+		</div>
+		<div class="control-group txt_count">
+			<label class="control-label" for="count">奖品数量：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="count" name="count" placeholder=""
+				       data-validate="prize-count" style="width: 240px;"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group txt_content">
+			<label class="control-label" for="content">奖品内容：</label>
+			<div class="controls">
+				<textarea rows="4" id="content" name="content" data-validate="required" data-validate-max-length="600" class="hide"  />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls p25">
+				<button type="submit" class="btn btn-success tx_prize_submit">添加</button>
+				<button type="button" class="btn tx_cancel ml20">取消</button>
+			</div>
+		</div>
+	</div>
+</script>

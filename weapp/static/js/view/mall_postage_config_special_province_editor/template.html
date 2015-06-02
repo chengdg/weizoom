@@ -1,0 +1,59 @@
+<style>
+	.postageAreaDialog{
+		position: absolute;
+		top: 
+	}
+</style>
+<script id="mall-postage-config-special-province-editor-tmpl-src" type="text/x-jquery-tmpl">
+<table class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th>配送至</th>
+			<th>首重价格(元)</th>
+			<th class="xa-imageColumn {{if !isImageMode}}hide{{/if}}">续重价格(元)</th>
+			<th class="w20">操作</th>
+		</tr>
+	</thead>			
+	<tbody>
+		{{each(i, value) values}}
+		<tr>
+			<td style="width: 100px;">
+				<input type="text" readonly="true" data-value="${value.province_values}" class="xa-areaSelect input-medium"  value="${value.province_names}" />
+				<input type="hidden" class="xa-areaSelectValue input-medium" name="special^${value.id}^province" value="${value.province_values}"/>
+			</td>
+			<td style="width: 100px;">
+				<input type="text" class="input-medium" name="special^${value.id}^first_weight_price" value="${value.first_weight_price}" />
+			</td>
+			<td class="xa-imageColumn {{if !isImageMode}}hide{{/if}}">
+				<input name="special^${value.id}^added_weight_price" class="xa-addWeightPrice" type="text" value="${value.added_weight_price}"/>
+			</td>
+			<td style="width: 30px;">
+				<a class="btn btn-danger btn-mini xa-removeValueBtn"><i class="icon-white icon-remove"></i></a>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+<div class="mt5">
+	<a class="btn xa-addValueBtn" href='javascript:void(0);'><i class="icon-plus"></i> 添加特殊地区配置</a>
+</div>
+</script>
+
+<script id="mall-postage-config-special-province-editor-province-select-tmpl-src" type="text/x-jquery-tmpl">
+<tr>
+	<td style="width: 80px;">
+		<input type="text" readonly="true" class="xa-areaSelect input-medium" data-validate="required-none"/>
+		<input type="hidden" class="xa-areaSelectValue input-medium" name="special^${cid}^province" data-validate="require-none"/>
+		<div class="errorHint"></div>
+	</td>
+	<td style="width: 80px;">
+		<input type="text" class="input-medium" name="special^${cid}^first_weight_price"/>
+	</td>
+	<td class="xa-imageColumn {{if !isImageMode}}hide{{/if}}">
+		<input name="special^${cid}^added_weight_price" class="xa-addWeightPrice" type="text"/>
+	</td>
+	<td style="width: 30px;">
+		<a class="btn btn-danger btn-mini xa-removeValueBtn"><i class="icon-white icon-remove"></i></a>
+	</td>
+</tr>
+</script>

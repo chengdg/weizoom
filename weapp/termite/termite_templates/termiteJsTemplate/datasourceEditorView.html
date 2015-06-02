@@ -1,0 +1,18 @@
+<script id="datasource-editor-fields-selector-tmpl-src" type="text/x-jquery-tmpl">
+	{{each(i, dataItem) dataItems}}
+	<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+		<div class="propertyGroup_property_label">${dataItem.name}：</div>
+		<div class="propertyGroup_property_input">
+			<select class="input-medium" name="${dataItem.name}">
+				<option value="null">无数据</option>
+				{{each(n, field) fields}}
+				<option value="${field}" {{if existedDatasource[dataItem.name] === field}}selected="selected"{{/if}}>
+					${field}
+				</option>
+				{{/each}}
+			</select>
+		</div>
+	</div>
+	{{/each}}
+	<button id="datasourceEditor_submitBtn" class="btn btn-success mt10 pl10">保存</button>
+</script>

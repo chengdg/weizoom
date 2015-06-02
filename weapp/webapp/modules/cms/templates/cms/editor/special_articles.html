@@ -1,0 +1,41 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">特殊页面列表</li>
+	</ul>
+</div>
+
+<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>
+					<p class="m0 f14 tx_searchable">
+						页面名称
+					</p>
+				</th>
+				<th width="60" class="tx_sortable" data-sort-attr='created_at'>创建时间</th>
+			</tr>
+		</thead>
+		<tbody id='article_list'>
+            {% for article in articles %}
+			<tr>
+				<td class="nowrap">
+					<div>
+						<a href="/cms/editor/special_article/update/{{article.id}}/">{{article.title}}</a>
+					</div>
+				</td>
+				<td style="width: 120px">{{article.created_at|date:"m月j日 H:i"}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>        
+	</table>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

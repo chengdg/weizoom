@@ -1,0 +1,100 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">课程列表</li>
+	</ul>
+
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/apps/shengjing/?module=study_plan&resource=course&action=create"><i class="icon-plus icon-white"></i> 添加课程</a>
+	</span>
+</div>
+
+<div
+	class="xa-courseListView"
+	data-ui-role="advanced-table" 
+	data-enable-paginator="true" 
+	data-app="apps/shengjing" 
+	data-api="study_plan/course_list/get" 
+	data-template-id="#shengjing_course_list_view" 
+	data-sort-api="study_plan/course_display_index/modify"
+	data-item-count-per-page="15"
+>
+
+{% endblock %}
+{% block jsTemplate %}
+{% verbatim %}
+<script id="shengjing_course_list_view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed" style="margin-bottom: 10px;">
+		<thead>
+			<tr>
+				<th>
+					课程名
+				</th>
+				<th>
+					创建时间
+				</th>
+				<th>
+					更新时间
+				</th>
+				<th>
+					操作
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each(i, config) items}}
+			<tr data-id="${config.id}">
+				<td>
+					<a href="/apps/shengjing/?module=study_plan&resource=course&action=modify&config_id=${config.id}" >${config.name}</a>
+				</td>
+				<td>
+					${config.created_at}
+				</td>
+				<td>
+					${config.update_time}
+				</td>
+				<td>
+					<a class="btn btn-danger xa_delete" href="javascript:void(0)">删除</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+{% endblock %}
+{% block js %}
+<script>
+	var deleteCommentView = W.getItemDeleteView();
+	$('.xa-courseListView').delegate('.xa_delete', 'click', function() {
+		var $el = $(this);
+		var $tr = $el.parents('tr:eq(0)');
+		var id = $tr.attr('data-id');
+        deleteCommentView.show({
+            $action: $el,
+            info: '确定删除吗?'
+        });
+        deleteCommentView.bind(deleteCommentView.SUBMIT_EVENT, function(options){
+           W.getApi().call({
+           		method: 'post',
+           		app: 'apps/shengjing',
+           		api: 'study_plan/course/delete',
+           		args: {
+           			id: id
+           		},
+           		success: function() {
+           			 deleteCommentView.hide();
+           			 $tr.remove();
+           		},
+           		error: function() {
+           			alert('删除失败!');
+           		}
+           })
+        });
+	})
+</script>
+{% endblock %}

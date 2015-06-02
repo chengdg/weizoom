@@ -1,0 +1,234 @@
+html,body {
+	background-color: #efeff4;
+}
+#filter{
+	position: fixed;
+	z-index:4;
+	background-color:#C0C0C0;
+	opacity:1;
+	padding-top: 5px;
+	width: 100%;
+}
+#filter_orderstatus{
+	float:left;margin-right: 2%;margin-left: 2%;width:21%
+}
+#order_list_content .mui-card{
+	margin:5px 10px 0 10px;
+	
+}
+#order_list_content .mui-card .mui-navigate-right:after{
+	top:11%;
+	color:#000000;
+}
+#order_list_content ul li{
+	font-size: 14px;
+	
+}
+#input_search .mui-search:before{
+	margin-top: -12px;
+}
+.mui-content .mui-popover{
+	position: fixed;
+	top:55px;
+	left:10px;
+	font-size: 14px;
+	width: 75px;
+	z-index: 999;
+}
+#select_values .mui-table-view{
+	padding-top: 0px;
+	width: 75px;
+	box-shadow: 5px 0 5px rgba(0, 0, 0, 0.1),
+	0 5px 5px rgba(0, 0, 0, 0.1); 
+}
+#select_values .mui-table-view .mui-table-view-cell{
+	padding-top: 8px;
+	padding-bottom:8px;
+	font-size: 14px;
+}
+#select_values .mui-table-view .mui-table-view-cell:after{
+	left:0px;
+}
+#query{
+	background-color: #fff;
+	margin-bottom: 5px;
+}
+
+.tab{
+	margin-top: 3px;
+}
+#afui .list > li > .order_id_link:after{
+	top:12% !important;
+}
+.det{
+	padding-left: 5px;
+	font-size: 14px;
+}
+#afui .list .order_info{
+	padding-right: 10px;
+
+}
+#afui .order_info .button{
+	margin: 0;
+}
+#search_order{
+	position: relative;
+	z-index: 2;
+	padding: 10px 12px;
+	display: none;
+	background-color: inherit;
+	width: 100% !important;
+}
+#afui #order_id_search{
+	float:right;
+	border: 1px solid #E3E6EB;
+	border-radius: 5px;
+	margin-top:0px;
+	padding:5px 3px 5px 5px;
+	width: 15% !important;
+	height: 40px;
+	text-align: center;
+}
+#afui #order_id_search:before{
+	top:6px;
+}
+#order_id_search .button .pressed{
+	background: none repeat scroll 0 0 #fff;
+}
+#afui #filter{
+	width: 20%;
+	text-align: center;
+	padding:0 !important;
+}
+#afui #search_order_id{
+	width: 60% ;
+	padding: 0 5px ;
+	-moz-user-select: text;
+}
+
+#clear_order_id{
+    width:5%;
+	position:absolute;
+	display: block;
+	top:20px;
+	height: 30px;
+	left: 72%;
+	z-index:3;
+	cursor: pointer;
+}
+#clear_order_id:before{
+	left:0;
+	color:#E3E6EB;
+}
+#order_content ul li,#order_content p{
+	color:#000000;
+}
+#main_info{
+	position: absolute;
+	z-index:9999;
+	width:60%;
+	background-color:#EFF6F7;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 6px;
+	text-align: center;
+	right:13px;
+	top:50px;
+	padding-top: 11px;
+	box-shadow: -5px 0 5px rgba(0, 0, 0, 0.1),
+	0 5px 5px rgba(0, 0, 0, 0.1); /*底边阴影*/
+}
+#main_info .express{
+	font-size: 14px;
+}
+#main_info #express_values{
+	float:left;
+	margin-top:0px;
+	margin-left: 11px;
+	margin-bottom: 10px;
+}
+#main_info #express_select{
+	height: 150px;
+	position:absolute;
+	top:65px;
+	left:12px;
+	width:46%;
+	border:1px solid #ccc;
+	border-top-color: transparent;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	display: none;
+}
+#express_select .mui-table-view:before{
+	background-color:transparent;
+}
+#express_select .mui-table-view:after{
+	background-color:transparent;
+}
+#express_select .mui-table-view .mui-table-view-cell{
+	padding-top: 5px;
+	padding-bottom:5px;
+	font-size: 14px;
+}
+#express_select .mui-table-view .mui-table-view-cell:after{
+	left:0px;
+}
+#main_info .express label{
+	color:#000;
+	float:left;
+	padding-left:6px;
+}
+#main_info .express input{
+	float:left;
+	margin-left: 11px;
+	width:90%;
+	margin-bottom: 10px;
+}
+#main_info .express .express_error{
+	margin-left: 5px;
+	text-align: left;
+	color:red;
+}
+#main_info .drop-box-arrow-down-right{
+	float:right;
+	top:-20px;
+	right: 10px;
+   	width:0;
+    height:0;
+    border-width:0 9px 9px;
+    border-style:solid;
+    border-color:transparent transparent #ccc;/*透明 透明  灰*/
+    position:relative;
+	
+}
+#main_info .drop-box-arrow-down-right span{
+	display:block;
+    width:0;
+    height:0;
+    border-width:0 8px 8px;
+    border-style:solid;
+    border-color:transparent transparent #EFF6F7;/*透明 透明  黄*/
+    position:absolute;
+    top:2px;
+    left: -8px;
+}
+#cancel_concent .mui-popover-arrow:after{
+	background:#EFF6F7;
+}
+#cancel_concent .mui-popover{
+	border:1px solid #EEEEEE;
+	padding-bottom: 5px;
+	width:60%;
+	background-color:#EFF6F7;
+}
+.display_none{
+	display:none;
+}
+.mui-backdrop{
+	position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.2);
+	
+}

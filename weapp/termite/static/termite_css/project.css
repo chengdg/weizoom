@@ -1,0 +1,29 @@
+html {
+	background-color: #eee;
+}
+
+body {
+	background: none;
+	
+}
+
+.itemList {
+	margin: 60px auto;
+	padding: 20px;
+	margin-bottom: 0px;
+	width: 1000px;
+	background-color: #fff;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.itemList_actionBar {
+	text-align: right;
+}
+
+[contenteditable="true"]:hover {
+	border: dashed 1px #888;
+}
+
+[contenteditable="true"]:focus {
+	background-color: yellow;
+}

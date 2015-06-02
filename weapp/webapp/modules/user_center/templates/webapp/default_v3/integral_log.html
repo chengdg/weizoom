@@ -1,0 +1,72 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div class="xui-integralLogPage">
+    {%if not member_integral_logs%}
+    <div class="influence-log-list error-info">您还没有积分日志</div>
+    {% else %}
+    <ul class="clearStyle xui-integralLogList">
+        {% for member_integral_log in member_integral_logs %}
+            <li class="xui-listItem">
+                <div class="xui-inner-dotBox pr">
+                    <span class="xui-inner-dot"></span>
+                    <span class="xui-timeLine"></span>
+                </div>
+                <div class="xui-inner-infoBox">
+                    <span class="xui-inner-time">{{ member_integral_log.created_at|date:"Y. m. j" }}</span>
+                    {% ifequal member_integral_log.event_type '好友奖励' %}
+                        <div class="xui-inner-content">
+                            <p class="zoom">
+                                <span class="fl em85 c65">好友奖励</span>
+                                <span class="fr xui-text-blue em8">+{{member_integral_log.integral_count}}</span>
+                            </p>
+
+                            {% if member_integral_log.logs %}
+                            <ul class="zoom clearStyle xui-userCenter-friendList">
+                                {% for log in member_integral_log.logs %}
+                                    {% if log.pic %}
+                                    <li>
+                                        <div class="xui-userImg">
+                                            <img src="{{ log.pic }}"/>
+                                        </div>
+                                        <div class="xui-userName em7 tc pt5">{{ log.name }}</div>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+               
+                            <!-- 推荐奖励静态页面 -->
+                        </div>
+                    {% else %}
+                        <div class="xui-inner-content">
+                            <p class="zoom xt-integral">
+                                <span class="fl xt-integralEvent em85 c65">
+                                    {{ member_integral_log.event_type }}
+                                </span>
+                                <span class="fr {% if member_integral_log.integral_count > 0 %} xui-text-blue {% else %}xui-text-red{% endif %} xt-integralCount em8">
+                                {% if member_integral_log.integral_count > 0 %}
+                                    +{{ member_integral_log.integral_count }}
+                                {% else %}
+                                    {{ member_integral_log.integral_count }}
+                                {% endif %}
+                                </span>
+                            </p>
+                        </div>
+                    {% endifequal %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.xui-integralLogPage').css('min-height', screen.height+'px');
+	})
+</script>
+{% endblock %}

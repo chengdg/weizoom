@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>message_main</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			.slide-view{
+				background: none repeat scroll 0 0 #000;
+				height: 100%;
+				left: 0;
+				overflow: hidden;
+				position: absolute;
+				top: 0;
+				width: 100%;
+				z-index: 999;
+				visibility: hidden;
+			}
+			.showbig{
+				max-height: 100%;
+				max-width: 98%;
+				transform: scale(1) translate(0px, 0px);
+				transition: all 200ms ease 0s;
+				vertical-align: middle;
+				visibility: visible;
+			}
+			html,body {
+				background:#efeff4;
+			}
+		</style>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-2.1.3.min.js"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" onclick="mui.back();"></a>
+			<h1 id="title" class="mui-title"></h1>
+		</header>
+		<!--放大图片-->
+		<div id="slideView" class="slide-view"></div>
+		<script>
+			mui.plusReady(function(){
+				var parentView = plus.webview.currentWebview();
+				var custName = plus.storage.getItem('CURR_CUST_NAME');
+				document.getElementById('title').innerHTML = custName?custName:'消息历史';//设置顶部title
+				var his_detail_view = plus.webview.create('message_his.html','message_his.html',{top: '46px',bottom: '0px'});
+				his_detail_view.hide();
+				parentView.append(his_detail_view);
+				parentView.show();
+			});
+			//显示大图的方法
+			function showBigImage(pic_url){
+				var h = plus.screen.resolutionHeight;
+				var w = plus.screen.resolutionWidth;
+				if(w>500){
+					w = w/2;
+					h = h/2
+				}
+			    	h = h - 20;
+				var obj = document.getElementById("slideView");
+				obj.innerHTML = "<div style='text-align:center;line-height:"+h+"px;transform:translateX(0px);'><div style='width:"+w+"px;height:"+h+"px;'><img class='showbig' src='"+pic_url+"'></div></div>";
+				obj.style.minHeight = h+"px";
+				obj.style.visibility = 'visible';
+				obj.addEventListener('tap',function(){
+					obj.style.visibility = 'hidden';
+					this.innerHTML = '';
+					plus.webview.getWebviewById('message_his.html').show();
+				});
+			}
+		</script>
+	</body>
+
+</html>

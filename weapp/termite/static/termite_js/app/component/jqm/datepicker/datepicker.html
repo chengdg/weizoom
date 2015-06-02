@@ -1,0 +1,18 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.datepicker' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="mt5 mb5 xui-br" 
+>
+    <div data-role="fieldcontain" data-controltype="dateinput">
+        <label for="dateinput{{component.cid}}">
+            {{component.model.title}}
+        </label>
+        <input name="{{component.model.name}}" id="dateinput{{component.cid}}" placeholder="{{component.model.placeholder}}" value="" type="{{component.model.type}}" {% ifequal component.model.is_mini "yes" %}data-mini="true"{% endifequal %} >
+    </div>
+</div>
+{% endifequal %}

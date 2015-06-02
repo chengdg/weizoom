@@ -1,0 +1,15 @@
+{% load workbench_filter %}
+{% if component.type == 'weapp.textnav_group' %}
+<ul class="wui-textnav"
+	{% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable" {% endifequal %} 
+    data-cid="{{component.cid}}">
+	{% for component in component.components %}
+	<li data-cid="{{component.cid}}">
+		<a href="{{component.model.target|extract_target_data:request|safe}}">
+			<span class="wa-inner-link">{{component.model.title}}</span> 
+			<i class="right-arrow"></i>
+		</a>
+	</li>
+	{% endfor %}
+</ul>
+{% endif %}

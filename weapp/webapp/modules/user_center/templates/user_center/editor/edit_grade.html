@@ -1,0 +1,294 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style type="text/css">
+	span.inline-text{
+		display: inline-block;
+		width: 100%;
+		text-overflow: ellipsis;
+		overflow:hidden;
+		white-space: nowrap;
+	}
+
+	span.hint {
+		font-size: 13px;
+		color: #666666;
+		margin-left: 20px
+	}
+
+	.input-group {
+		border-collapse: separate;
+	    display: table;
+	    width: 230px;
+	}
+
+	.input-group input {
+		border-bottom-right-radius: 0;
+    	border-top-right-radius: 0;
+	}
+
+	.input-group-addon, .input-group .form-control, .tag {
+	    display: table-cell;
+	}
+
+	.input-group-addon {
+	    background-color: #EEEEEE;
+	    border: 1px solid #CCCCCC;
+	    border-radius: 4px;
+	    color: #555555;
+	    font-size: 14px;
+	    font-weight: normal;
+	    line-height: 1;
+	    padding: 6px 12px;
+	    text-align: center;
+	}
+
+	.input-group-addon:last-child {
+	    border-left: 0 none;
+	    border-bottom-left-radius: 0;
+    	border-top-left-radius: 0;
+	}
+
+	.input-group-addon, .input-group-btn {
+	    vertical-align: middle;
+	    white-space: nowrap;
+	    width: 1%;
+	}
+
+	span.tag {
+	    background-color: #000000;
+	    color: #FFFFFF;
+	    border-radius: 3px;
+	    padding: 4px;
+	    max-width: 68px;
+		width: 68px;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.center-button input {
+		width: 50px;
+	}
+	</style>
+{% endblock %}
+
+{% block single-content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/webapp/user_center/grades/">会员等级</a><span class="divider">/</span></li>
+	<li class="active">{% if grade %}更新等级{% else %}添加等级  {% endif %}
+		
+	{% if show_alert %}
+	<span style="margin-left:5px;display:inline-block;color:#c09853">注：添加或删除成功后请前往会员扫码修改对应的等级奖励</span>
+	{% endif %}
+	</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if grade %}{{ grade.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">会员等级名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入会员等级名称(最长10个字符)" value="{% if grade %}{{ grade.name }}{% endif %}" data-validate="required" data-validate-max-length="16" maxlength="10"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		{% if grade.is_default_grade %}
+		{% else %}
+		<div class="control-group">
+			<label class="control-label" for="is_auto_upgrade">凭经验值自动升级：</label>
+			<div class="controls">
+				<input type="radio" value="0" style="margin-top:-2px" name="is_auto_upgrade" id="not_auto_upgrade" class="m10 p20" {% if grade.is_auto_upgrade %}{% else %}checked{% endif %}>&nbsp;
+				不自动升级
+
+				<input type="radio" {% if grade.is_auto_upgrade %}checked{% endif %} value="1" style="margin-top:-2px; margin-left:10px" name="is_auto_upgrade" id="is_auto_upgrade">
+				&nbsp;经验满&nbsp;
+				<input type="text" class="input-xlarge w50" id="upgrade_lower_bound" name="upgrade_lower_bound" placeholder="经验值" value="{% if grade %}{{ grade.upgrade_lower_bound }}{%endif %}" style="height:15px;"/>
+				&nbsp;自动升级
+				<div class="errorHint" style="margin-left:175px"></div>
+			</div>
+			<span class="hint">用户的积分增长被称为经验值，自动升级也就是当用户的经验值满足了升级条件后自动升级为对应的级别</span>
+		</div>
+		{% endif %}
+
+		<div class="control-group">
+			<label class="control-label" for="shop_discount">购物折扣：</label>
+			<div class="controls">
+				<select type="text" class="input-xlarge" id="shop_discount" name="shop_discount" style="width:120px;">
+				{% for i in shop_discounts%}
+					<option value="{{ forloop.revcounter }}" {% ifequal grade.shop_discount forloop.revcounter %}selected="selected"{% endifequal %}>{{ forloop.revcounter }}%</option>
+				{% endfor %}
+				</select>
+				<div class="errorHint"></div>
+			</div>
+			<span class="hint"  style="margin-left:180px">
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="shop_discount">积分使用：</label>
+			<div class="controls">
+
+		         <label class="radio inline" >
+		             <input type="radio" name="optionsRadios" id="unlimited_integral" value="100"{% if grade.usable_integral_percentage_in_order == 100 %}checked{% endif %} >无限制
+		         </label> &nbsp;
+
+		         <label class="radio inline" >
+		            <input type="radio" name="optionsRadios" id="order_per_integral" value="{{grade.usable_integral_percentage_in_order}}" {% if grade.usable_integral_percentage_in_order == 100 %}{% else %}checked{% endif %}> 订单金额的
+		         </label>
+		             <input type="number" name="usable_integral_percentage_in_order" value="{{ grade.usable_integral_percentage_in_order }}" data-validate="required-percentage-not-border,require-int" style="width:45px;"  id='usable_integral_percentage_in_order' {% if grade.usable_integral_percentage_in_order == 100 %}disabled="readonly"{% endif %}>%
+		     			<div class="errorHint"></div><br/>
+		</div>
+		</div>
+
+
+		<div class="control-group">
+			<label style="padding-top:0" class="control-label" for="member_ids">会&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;员：</label>
+			<div class="controls">
+				<div class="select-member-view"></div>
+				<input type="hidden" class="input-xlarge" id="member_ids" name="member_ids" value=""/>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				{% if request.sub_user %}
+				{% else %}
+				<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+				{% if grade %}
+				{% if grade.is_default_grade %}
+				<a title="返回" class="btn btn-default" href="/webapp/user_center/grades/" >&nbsp;&nbsp;返&nbsp;&nbsp;回&nbsp;&nbsp;</a>
+				{% else %}
+				<a title="删除" class="btn btn-delete" href="/webapp/user_center/grade/delete/{{ grade.id }}/" >&nbsp;&nbsp;删&nbsp;&nbsp;除&nbsp;&nbsp;</a>
+				{% endif %}
+				{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+		<script id="select-member-list-tmpl-src" type="text/x-jquery-tmpl">
+			<div>
+				<div class="left-member-list fl">
+				</div>
+				<div class="right-member-list fr" style="margin-right: 240px;">
+				</div>
+				<div class="center-button pt100">
+					<input id="right-move" class="btn btn-default inline-text m10" type="button" value=">">
+					<input id="left-move" class="btn btn-default inline-text m10" type="button" value="<">
+					<input id="all-right-move" class="btn btn-default inline-text m10" type="button" value="»">
+					<input id="all-left-move" class="btn btn-default inline-text m10" type="button" value="«">
+				</div>
+			</div>
+		</script>
+
+		<script id="member-list-tmpl-src" type="text/x-jquery-tmpl">
+			<div class="input-group">
+				<span class="tag">${memberListTitle}</span>&nbsp;&nbsp;
+
+				<input type="text" name="search_member" value="" placeholder="输入会员名称" style="width:90px; margin-right: -22px;" class="form-control"/>
+	            
+				<a href="javascript:void(0)" class="input-group-addon search_member_button"><i class="icon-search"></i></a>
+	           
+            </div>
+
+			<div class="member_list_div" style="width: 230px; height: 300px; border: 1px solid #ccc; overflow-y:scroll;">
+				<ul>
+
+				</ul>
+			</div>
+		</script>
+
+
+		<script id="one-member-info-tmpl-src" type="text/x-jquery-tmpl">
+			<li data-id="${id}">
+				<div class="m5" style="border: 1px solid #ccc; padding:5px;">
+					<div class="fl">
+				<span class="head-img">
+					<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
+				</span>
+					</div>
+					<div class="fl w120">
+						<span class="inline-text ml5">{{html username}}</span>
+						<span class="inline-text ml5 mt5">积分：${integral}</span>
+					</div>
+
+	{% endverbatim %}
+					{% if grade.is_default_grade %}
+					{% else %}
+					<div class="fr pt15">
+						<input name="member_check" type="checkbox" value="${id}" >
+					</div>
+					{% endif %}
+					
+	{% verbatim %}
+					<div class="clear"></div>
+				</div>
+			</li>
+		</script>
+	{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/static/js/app/member/SelectMemberView.js"></script>
+<script type="text/javascript" src="/static/js/app/member/MemberListView.js"></script>
+<script type="text/javascript" src="/static/js/app/member/model/GradeHasMembers.js"></script>
+<script type="text/javascript">
+	var isShowOtherMember = {% if grade and grade.is_default_grade %}false{% else %}true{%endif %};
+	var grade_id = {{ default_grade.id }};
+	var target_grade_id = {% if grade %}{{ grade.id }}{% else %}-1{% endif %};
+	$(document).ready(function() {
+
+		$('#order_per_integral').click(function(){
+        	$('#usable_integral_percentage_in_order').attr('disabled',false);
+	    });
+
+	    $('#unlimited_integral').click(function(){
+	        $('#usable_integral_percentage_in_order').attr('disabled','disabled');
+	        $('#usable_integral_percentage_in_order').attr('value',100);
+	    });
+
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		var selectMemberView = new W.SelectMemberView({
+			el: '.select-member-view',
+			isShowOtherMember: isShowOtherMember,
+			grade_id: grade_id,
+			target_grade_id: target_grade_id
+		});
+
+		//提交
+		$('#editForm').submit(function() {
+			var isAutoUpgrade = $('input[name=is_auto_upgrade]:radio:checked').val();
+			if (isAutoUpgrade == '1') {
+				$('#upgrade_lower_bound').attr('data-validate', 'prize-count');
+			} else {
+				$('#upgrade_lower_bound').removeAttr('data-validate');
+			}
+
+			if (!W.validate()) {
+				return false;
+			}
+			var save_ids = selectMemberView.getSaveMemberIds();
+			$('#member_ids').val(save_ids.join(','));
+			console.log('save_ids', save_ids);
+			return true;
+		});
+	});
+</script>
+{% endblock %}

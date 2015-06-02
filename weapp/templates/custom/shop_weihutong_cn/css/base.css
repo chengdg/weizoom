@@ -1,0 +1,52 @@
+/* reset */
+html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,blockquote,pre,hr,figure,table,caption,th,td,form,fieldset,legend,input,button,textarea,menu{margin:0;padding:0;}
+header,footer,section,article,aside,nav,hgroup,address,figure,figcaption,menu,details{display:block;}
+table{border-collapse:collapse;border-spacing:0;}
+caption,th{text-align:left;font-weight:normal;}
+html,body,fieldset,img,iframe,abbr{border:0;}
+i,cite,em,var,address,dfn{font-style:normal;}
+[hidefocus],summary{outline:0;}
+li{list-style:none;}
+h1,h2,h3,h4,h5,h6,small{font-size:100%;}
+sup,sub{font-size:83%;}
+pre,code,kbd,samp{font-family:inherit;}
+q:before,q:after{content:none;}
+textarea{overflow:auto;resize:none;}
+label,summary{cursor:default;}
+a,button{cursor:pointer;}
+h1,h2,h3,h4,h5,h6,em,strong,b{font-weight:bold;}
+del,ins,u,s,a,a:hover{text-decoration:none;}
+body,textarea,input,button,select,keygen,legend{font:12px/1.14 arial,\5b8b\4f53;color:#333;outline:0;}
+body{background:#fff;}
+a,a:hover{color:#333;}
+.text-c{ text-align:center;}
+
+
+
+/*代理页*/
+body,input,button,select,textarea {
+	font:12px/1.5 Microsoft YaHei,Helvitica,Verdana,Arial,san-serif;
+	color:#444;
+}
+.logo{width:990px; margin:0 auto;}
+.login{ width:100%; height:535px; overflow:hidden; background:url("../images/wht_bg.jpg") no-repeat center top;}
+.login-con{ width:1144px; height:450px; overflow:hidden;margin:0 auto; background:}
+.login-form{ width:470px; height:auto; margin:95px 0 0 0; float:right; background:#fff;-webkit-box-shadow: rgba(200,200,200,.7) 0 4px 10px -1px;box-shadow: rgba(0,0,0,.3) 0 4px 10px -1px;border-radius: 5px; position:relative;}
+.login-form .tabs{ width:470px; height:48px;background:url("../images/tab_cur.jpg") repeat-x; overflow:hidden;}
+.login-form .tabs li{ width:235px; height:46px; float:left; text-align:center; line-height:46px; font-size:16px; color:#898686; border-bottom:1px solid #B0C2CB; cursor:pointer;}
+.login-form .tabs .thistab{  border:1px solid #b0c2cb; border-bottom:0; height:45px; background:#fff; width:234px; margin-left:-1px; line-height:45px;}
+.tab_con{ padding:80px 0 50px 0; display:none;}
+.tab_con h2{ width:377px; height:56px; background:url("../images/wht_icon.png") no-repeat; position:absolute; top:60px; left:-18px; color:#fff; font-size:18px; line-height:45px; padding-left:50px;}
+
+.login-eror{ color:#F00; font-size:12px; position:absolute; bottom:15px; left:60px;}
+.login-form form{ display:block; overflow:hidden; clear:both;}
+.login-info{ width:350px; height:auto; overflow:hidden; padding:0 0 0 60px;}
+.login-name,.login-pwd{ height:40px; position:relative; display:block; overflow:hidden; width:348px; border:1px solid #cbcbcb; margin-bottom:18px; border-radius:4px;}
+.login-name i,.login-pwd i{background: url("../images/wht_icon.png") no-repeat scroll 0 -92px; height: 21px; width: 21px; display:block; position:absolute; left:7px; top:10px;}
+.login-pwd i{ background-position:-45px -92px;}
+.login-name span,.login-pwd span{position:absolute;float:left;padding:12px 0 10px 0;left:37px;color:#666;cursor:text;}
+.login-name .input_txt,.login-pwd .input_txt{width:193px;border:0;height:20px; padding:12px 0 8px 37px;}
+.login-btn{ width:348px; margin-left:60px; padding:5px 10px; height:auto; text-align:center; line-height:1.5;background-color: #93c97b; border:1px solid #84a57a; border-radius: 3px;box-shadow: 0 1px 1px #AAAAAA; font-size:20px; letter-spacing:8px; color:#fff;}
+.login-reg{ display:block; text-align:center;}
+.footer{ clear:both; display:block; color:#666; line-height:1.8; padding:15px 0;}
+.footer p{ text-align:center; font-size:13px;word-wrap:break-word;}

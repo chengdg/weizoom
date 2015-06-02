@@ -1,0 +1,110 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block single-content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/apps/">定制APP管理</a><span class="divider">/</span></li>
+	<li class="active">{% if customized_app_info %}修改APP{% else %}创建APP{% endif %}</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if customized_app_info %}{{ customized_app_info.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<legend>基本信息</legend>
+		<div class="control-group mt0">
+			<label class="control-label" for="user_id">用户：</label>
+			<div class="controls">
+				<select name="user_id" id="user_id" {% if customized_app_info and not is_super_user %}disabled{% endif %}>
+					{% for user in all_users %}
+						<option value="{{user.id}}" {% ifequal user.id customized_app_info.owner.id %}selected="selected"{% endifequal %}>{{user.username}}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+        <div class="control-group">
+            <label class="control-label" for="app_name">APP名称：</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="app_name" name="app_name" placeholder="最多100个字符"
+                       value="{% if customized_app_info %}{{ customized_app_info.app_name }}{% endif %}"
+                       data-validate="require-letter"
+                       maxlength="100" {% if customized_app_info %}readonly{% endif %}/>
+                <div class="errorHint"></div>
+            </div>
+        </div>
+		<div class="control-group">
+			<label class="control-label" for="remark_name">用户备注名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="remark_name" name="remark_name" placeholder="最多100个字符"
+				       value="{% if customized_app_info %}{{ customized_app_info.remark_name }}{% endif %}"
+                       data-validate="required-none"
+				       maxlength="100"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="principal">负责人：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="principal" name="principal" placeholder="最多100个字符"
+				       value="{% if customized_app_info %}{{ customized_app_info.principal }}{% endif %}"
+                       data-validate="required-none"
+				       maxlength="100"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="repository_path">产品库地址：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="repository_path" name="repository_path" placeholder="svn产品库地址"
+				       value="{% if customized_app_info %}{{ customized_app_info.repository_path }}{% endif %}"/>
+			</div>
+		</div>
+        <div class="control-group">
+            <label class="control-label" for="principal">产品库用户名：</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="repository_username" name="repository_username"
+                       value="{% if customized_app_info %}{{ customized_app_info.repository_username }}{% endif %}"
+                       data-validate="required-none"
+                       />
+                <div class="errorHint"></div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="principal">产品库用户密码：</label>
+            <div class="controls">
+                <input type="password" class="input-xlarge" id="repository_passwd" name="repository_passwd"
+                       value="{% if customized_app_info %}{{ customized_app_info.repository_passwd }}{% endif %}"
+                       data-validate="required-none"/>
+                <div class="errorHint"></div>
+            </div>
+        </div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group tc">
+			<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('input[type="text"]').eq(0).focus();
+
+		$('form').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			$('input[disabled="disabled"]').removeAttr('disabled');
+			return true;
+		})
+	});
+</script>
+{% endblock %}

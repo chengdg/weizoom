@@ -1,0 +1,30 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/webapp_static/simple_fashion/css/simple_fashion.css">
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-user-center-info-page"  data-title="{{ page_title }}">
+    <ul data-role="navbar" class="xui-user-center-navBar">
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=member_grade&action=get&workspace_id=user_center">等级指南</a></li>
+        <li class="active"><a href="#">积分指南</a></li>
+    </ul>
+    <div data-role="content">
+        <div class="xui-detail-content rawHtml">
+            {% if article.content %}
+                {{article.content|safe}}
+            {% else %}
+                没有积分指南
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/cms/editor/special_articles/">特殊页面</a><span class="divider">/</span></li>
+	<li class="active">更新“{{article.title}}”</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if article %}{{ article.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="content">显示的二维码：</label>
+			<div class="controls">
+				<input type="hidden" name="content" id="content" value="{{ article.content }}" data-validate="require-image" data-ui-role="image-selector" data-width="300" data-height="300"/>
+                <div data-ui-role="image-selector-view"></div>
+                <div class="errorHint"></div>
+			</div>
+		</div>
+    </fieldset>
+
+    <div class="alert">
+		<strong>【注】非手机访问页面</strong>，指的是当用户使用电脑等打开您的微站时显示的页面。<br/>由于设备原因不能对微站进行访问，所以上传一张您的二维码用来引导用户关注您的微信公众账号。
+	</div>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />				
+			</div>			
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+{% endblock %}

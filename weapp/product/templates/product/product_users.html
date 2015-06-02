@@ -1,0 +1,61 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+{% endblock %}
+
+{% block single-content-panel %}
+  <div id="productList" class="">
+    <div class="relative">
+      <ul class="breadcrumb">
+        <li><a href="/product/products/">产品列表</a><span class="divider">/</span></li>
+        <li class="active">用户列表</li>
+      </ul>
+      <span class="breadcrumRightButton">
+        <form action="/product/product/install/" method="post">
+          <input type="hidden" name="product_id" value="{{product_id}}" />
+          <select name="user_id" style="margin-bottom: 0px; width: 100px;">
+            {% for user in all_users %}
+            <option value="{{user.id}}">{{user.username}}</option>
+            {% endfor %}
+          </select>
+          <a id="xa-addUserBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-plus icon-white"></i>为用户安装</a>
+        </form>
+      </span>
+    </div>
+
+    <table class="table table-bordered table-condensed mt10">
+      <thead>
+        <tr>
+          <th>用户名</th>
+          <th>创建日</th>
+          <th>最近登录</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in product_users %}
+        <tr>
+          <td>
+            {{user.username}}
+          </td>
+          <td style="width: 100px;">{{user.date_joined|date:"Y-m-d"}}</td>
+          <td style="width: 100px;">{% if user.last_login %}{{user.last_login|date:"Y-m-d"}}{% else %}未登录{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#xa-addUserBtn').click(function() {
+      $('form').submit();
+    })
+  })
+</script>  
+{% endblock %}

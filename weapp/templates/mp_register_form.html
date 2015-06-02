@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form style="margin: 100px auto; background-color: white; padding: 30px 50px; width: 300px;">
+    <label>Url</label>
+    <input type="text" name="url" class="input-xlarge"/>
+    <br/>
+    <label>Token</label>
+    <input type="text" name="token" class="input-xlarge"/>
+    <br/>
+    <input type="button" value="接入" class="btn btn-primary" id="btn-submit" />
+</form>
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('input[name="url"]').focus();
+
+        $('#btn-submit').click(function() {
+            var url = $.trim($('input[name="url"]').val());
+            var token = $.trim($('input[name="token"]').val());
+            if (token.length == 0) {
+                alert('输入token');
+                return;
+            }
+
+            if (url.length == 0) {
+                alert('输入url');
+                return;
+            }
+
+            W.getApi().call({
+                app: 'weixin/dev',
+                api: 'signature/create',
+                args: {
+                    token: token
+                },
+                success: function(data) {
+                    var verify_url = url + '?nonce=' + data.nonce + '&timestamp=' + data.timestamp + '&signature=' + data.signature + '&echostr=weizoom';
+                    $.get(verify_url, function(data) {
+                        if (data == 'weizoom') {
+                            alert('接入成功');
+                        } else {
+                            alert('接入失败');
+                        }
+                    });
+                },
+                error: function(resp) {
+                    alert('创建signature失败');
+                }
+            });
+        })
+    });
+</script>
+{% endblock %}

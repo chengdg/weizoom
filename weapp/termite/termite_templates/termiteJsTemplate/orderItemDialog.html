@@ -1,0 +1,32 @@
+<script id="order-item-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="orderItemDialog" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>排序元素</h3>
+		</div>
+		<div class="modal-body clearfix orderItemDialog_body">
+			<div class="control-group">
+		    	<div class="controls">
+		    	</div>
+	    	</div>
+		</div>
+		<div class="modal-footer">		
+			<button class="btn btn-success orderItemDialog_submitBtn">确定</button>
+		</div>
+	</div>
+</script>
+
+<script id="order-item-dialog-items-tmpl-src" type="text/x-jquery-tmpl">
+	{{each(i, itemInfo) itemInfos}}
+	<div class="orderItemDialog_item" style="padding: 5px; border: solid 1px #AFAFAF; margin: 2px 10px; color: #888;" data-item-id="${itemInfo.id}">
+		<div class="form-inline">
+			<label class="checkbox" style="margin-bottom: 0px; width: 160px;">
+				<input type="checkbox" {{if itemInfo.is_checked }}checked="checked"{{/if}}> ${itemInfo.label}
+			</label>
+			<label>长度
+				<input class="input-mini" type="text" value="${itemInfo.width}" />
+			</label>
+		</div>
+	</div>
+	{{/each}}
+</script>

@@ -1,0 +1,217 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="xui-massSendingMessage">
+    {% if mode == 'mass_sending' %} 
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li>
+                <a href="/new_weixin/mass_sending_messages/">消息互动</a>
+            </li>
+            <li class="">群发消息</li>
+        </ul>
+
+        <ul class="xui-messageNav">
+            <li class="messageNavActive messageNavLi">
+                <a class="messageNavLiA" href="javascript:void(0);">新建群发消息</a>
+            </li>
+            <li class="messageNavLi">
+                <a class="messageNavLiA" href="/new_weixin/mass_sent_messages/">已发送</a>
+            </li>
+        </ul>
+            
+        <div class="xui-massageSendingHead">
+            群发对象
+            <input type="radio" value="member" name="group_type" checked="checked" class="ml35 pr" /><span class="ml5">商城会员</span>
+            <input type="radio" value="fans" name="group_type" class="ml35 pr"/><span class="ml5">微信粉丝</span>
+        </div>
+
+        <div class="xui-massageSendingGroup">
+            选择分组
+            <select type="text" id="group_list" name="group_list" style="width:120px;" class="ml35 pr">
+                <option value="-1" selected="selected">全部</option>
+                {% for group in groups %}
+                    <option value="{{group.id}}">{{group.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    {% else %}
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/materials/">高级管理</a></li>
+            <li class="">粉丝管理</li>
+        </ul>
+
+        <ul class="xui-messageNav">
+            <li class="messageNavActive messageNavLi">
+                <a class="messageNavLiA" href="javascript:void(0);">新建群发消息</a>
+            </li>
+            <li class="messageNavLi">
+                <a class="messageNavLiA" href="/new_weixin/mass_sent_messages/">已发送</a>
+            </li>
+        </ul>
+
+        <div class="xui-massageSendingHead">
+            消息发送给：
+            {% if mode == 'filter' %}
+                <span class="xui-sendTargetGroup ml5">分组({{category}})</span>
+                <span class="xui-sendTargetGroup ml5">关注状态({{status}})</span>
+                <span class="xui-sendTargetGroup ml5">性别({{sex}})</span>
+                <div class="hidden xa-sendMemberIds" data-send-member-ids={{member_ids_str}}></div>
+            {% else %}
+                {% for member in member_list %}
+                    <span class="xui-sendTargetNames xa-sendTargetNames ml5" data-member-id={{member.id}}>{{member.name|safe}}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="xui-massageSendingGroup xa-changeSendNumber" data-send-number={{number}}>
+            <span class="xa-changeSendText">准备向{{number}}人发送信息</span>
+            <a href="../../new_weixin/fanses">重新筛选</a>
+        </div>
+    {% endif %}
+    
+    <div class="w600" id="edit-message-panel"></div>
+    <div class="xui-massageSendingCount pr"><i></i>本月已群发{{sent_count}}条消息</div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+var MassSendingMessagePage = Backbone.View.extend({
+    getTemplate: function() {
+        $('#row-tmpl-src').template('row-tmpl');
+        return "row-tmpl";
+    },
+
+    events: {
+        'click input[type="radio"]': 'onClickType',
+    },
+
+    initialize: function(options) {
+        this.template = this.getTemplate();
+    },
+
+    onClickType: function(event) {
+        var $radio = $(event.currentTarget);
+        var group_type = $radio.val();
+
+        W.getApi().call({
+            method: 'get',
+            app: 'new_weixin',
+            resource: 'mass_sending_messages',
+
+            args: {
+                group_type: group_type,
+            },
+            success: function(data) {
+                //解析数组
+                $("#group_list").empty();
+                $("#group_list").append("<option value='-1'>全部</option>");
+                $.each(data.groups, function(i, item) {
+                    $("#group_list").append("<option value=" + item.id + ">" + item.name + "</option>");
+                });
+            },
+            error: function(resp) {
+                alert('获取分组列表失败!');
+            }
+        });
+    },
+});
+
+
+
+$(document).ready(function() {
+    //设置默认选中商城会员按钮，避免火狐浏览器自动记忆
+    $('input[type="radio"][name="group_type"][value="member"]').attr("checked",true);
+    
+    var view = new MassSendingMessagePage({
+        el: '.xui-massSendingMessage'
+    });
+
+    var editor = new W.view.weixin.MessageEditor({
+        el: '#edit-message-panel',
+        richTextEditorWidth: '600',
+        submitBtnText: '群&nbsp;&nbsp;发'
+    });
+
+    editor.bind("finish-edit", function(message){
+        var group_id = $('#group_list').val();
+        var group_type = $('input[type="radio"]:checked').val();
+        var content = message.answer;
+        var send_type = message.type;
+
+        //收集群发给筛选结果用户的数据
+        var memberIds = $('.xa-sendMemberIds').attr('data-send-member-ids');
+
+        //收集群发给选中用户的数据
+        var ids = [];
+        $('.xa-sendTargetNames').each(function() {
+            var id = $(this).attr('data-member-id');
+            ids.push(id);
+        });
+
+        if (send_type == 'news'){
+            content = message.materialId;
+        }
+
+        var numberStr = $('.xa-changeSendNumber').attr('data-send-number');
+        if (numberStr) {
+            var number = parseInt(numberStr);
+            if (number <= 0) {
+                W.showHint('error', "没有可以发送的用户");
+                return;
+            }
+        }
+
+        W.getApi().call({
+            method: 'post',
+            app: 'new_weixin',
+            resource: 'mass_sending_messages',
+
+            args: {
+                group_id: group_id,
+                group_type: group_type,
+                content: content,
+                send_type: send_type,
+
+                member_ids: memberIds,
+                ids: JSON.stringify(ids)
+            },
+            success: function(data) {
+                W.showHint('success', '群发成功')
+                setTimeout(function(){window.location.href = '/new_weixin/mass_sent_messages/';},500);
+            },
+            error: function(resp) {
+                W.showHint('error', resp.errMsg);
+            }
+        });
+    });
+
+    $('.xa-cancel').hide();
+
+    //显示删除图片
+    $('.xa-sendTargetNames').hover(
+        function(){
+            $(this).append('<i class="xa-sendTargetNamesDelete"></i>')
+            
+        },
+        function(){
+            $('.xa-sendTargetNames i').css("display", "none");
+        }
+    )
+
+    //删除一个用户
+    $(document).delegate('.xa-sendTargetNamesDelete','click',function() {
+        $(this).parent().remove();
+        var number = parseInt($('.xa-changeSendNumber').attr('data-send-number'));
+        number = number - 1;
+        $('.xa-changeSendNumber').attr('data-send-number', number);
+        $('.xa-changeSendText').text('准备向' + number + '人发送信息');
+    })
+});
+</script>
+{% endblock %}

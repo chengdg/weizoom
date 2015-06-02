@@ -1,0 +1,172 @@
+@charset "utf-8";
+.cursor{
+	cursor:pointer;
+}
+.chartTableListLoading{background:url("/static/img/loading.gif") no-repeat center center; min-height:160px; position:absolute; width:100%;top:0; left:0;}
+.ft-boder-table{
+	background:#f7f7f7;
+	padding:0 10px;
+	border:1px solid #f2f2f2;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.ft-boder-table .nowrap{
+	overflow:hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;/* ֧�� Opera */
+}
+.ft-boder-table .nav-pills > li > a{
+	padding-left:8px;
+	padding-right:8px;
+}
+.ft-boder-table table{
+	background:#fff;
+}
+.ft-boder-table .pagination li a{
+	background:#fff;
+}
+.wineTableListTotal{
+	overflow:hidden;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background:#fff;
+	border:1px solid #eee;
+	padding:5px 10px;
+	margin-bottom:10px;
+	text-align:left;
+}
+.wineTableListTotal label{
+	display:inline-block;
+	margin:0 0 0 0;
+	color:#436C30;
+	cursor:default;
+	width:19%;
+	line-height:22px;
+}
+.wineTableListTotal label.labelFirst{
+	width:60px;
+}
+.wineTableListTotal label span{
+	padding-left:5px;
+	font-weight:bold;
+}
+.wine_password>div>div{
+	display: inline;
+}
+.wine_password,
+.wine_password table{
+	background-color: #FEFCF0;
+}
+.wine_password td{
+	border: 0;
+}
+
+.recorded{
+	color: green;
+}
+.wineDropdown a.active{
+	background:#F5C581;
+}
+.ft-order .table thead th,
+.ft-order .table tbody td{
+	text-align: center;
+}
+#ft-order_statisticsView{
+	overflow:auto;
+	padding-bottom:12px;
+}
+#ft-order_statisticsView input[type="checkbox"],
+#ft-order_statisticsView input[type="radio"]{
+	margin-top:-4px;
+}
+
+#ft-order_statisticsView #dailyMessage{
+	margin-bottom: 0;
+	padding-bottom: 0;
+	min-height: 260px;
+}
+.ft-orderTopSpan{
+	font-family:Arial;
+	font-size:15px;
+	font-weight:normal;
+	font-style:normal;
+	text-decoration:none;
+	color:#999999;
+}
+.ft-orderTopCount{
+	font-family:Arial;
+	font-size:16px;
+	font-weight:bold;
+	font-style:normal;
+	text-decoration:none;
+	color:#333333;
+}
+.showPassword{
+	cursor:pointer;
+}
+
+.ft-order .caret{
+	vertical-align: middle;
+}
+.ft-order .dropdown-menu{
+	min-width: 80px;
+}
+
+
+
+
+
+.categorysTree li ul{
+	padding-left:20px;
+}
+.categorysTree p{
+	line-height: 22px;
+	overflow: hidden;
+}
+.categorysTree .ico_arrow{
+	background: url('/static/img/customer_menu_down.png') 0 center no-repeat;
+	width:15px;
+	height:20px;
+	display:inline-block;
+}
+.categorysTree p a.btnDelete{
+	font-family:Arial;
+	font-size:18px;
+	font-weight:bold;
+	font-style:normal;
+	text-decoration:none;
+	color:#FF0000;
+	cursor:pointer;
+}
+.categorysTree p .checkbox{
+	margin-left:10px;
+}
+.categorysTree p .btnLay{
+	width:15px;
+	height:20px;
+}
+.categorysTree p a.btnAdd{
+	font-family:Arial;
+	font-size:18px;
+	font-weight:bold;
+	font-style:normal;
+	text-decoration:none;
+	color:#333333;
+	cursor:pointer;
+}
+
+.categorysTree p span.name{
+	cursor:pointer;
+}
+.answer_tr{
+	background-color: #EFEFEF;
+}
+.answer_tr .answer_title{
+	margin-left: 30px;
+}
+ul.messageTimelineMove li{
+	list-style-type: none;
+}

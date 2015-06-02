@@ -1,0 +1,68 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/webapp_static/default/css/default.css">
+<style>
+   html,body,.ui-page,.ui-content{
+        background: #fff;
+    }
+    h2.xui-content-layer-title{
+        font-weight:normal;
+    }
+    .ui-content{
+        padding:10px 15px!important;
+    }
+    .xui-content-layer-content{
+        line-height: 1.5em;
+    }
+    .xui-memberHead{
+        width:40px;
+        height:40px;
+        top:50%;
+        left:50%;
+        margin-top:-20px;
+        margin-left:-20px;
+        border-radius:8px;
+        border:1px solid #dfdfdf;
+        box-shadow:0 0 0 2px #fff,0px 8px 5px -5px #888;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
+	<div data-role="content">
+            <br>
+            <div class="xui-two-dimensional-code pr"  style="text-align:center;">
+
+               		{% if member %} 
+               		<input type='hidden' id="member_id" value="{{member.id}}" />
+                    <div class="pr" style="width:100%;height:250px;">
+                        <img width="250" height="250" data-ui-role="twoDimensionalCode" src="{% if qrcode_url %}{{qrcode_url}}{% endif %}" effective-time="{% if expired_second %}{{expired_second}}{% endif %}" api="member_qrcode/get" app="market_tools/member_qrcode" data-allow-autoplay=false class="pa" style="left:50%;margin-left:-125px;">
+                        <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
+                    </div>
+        			
+                	{% else %}
+                	<input type='hidden' id="member_id" value="0" />
+                    <div class="pr" style="width:100%;height:250px;">
+                    	<img width="250" height="250" src="{{default_img}}" style="left:50%;margin-left:-125px;" class="pa">
+                        <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
+                    </div>
+                	{% endif %}
+                    
+    		</div>
+    		<br>
+            <div class="xui-content-layer">
+	            <h2 class="xui-content-layer-title">活动说明</h2>
+	            <div class="xui-content-layer-content rawHtml">
+	                {{ member_qrcode_settings.detail|safe }}
+	            </div>
+	        </div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/static/js/widget/jquery.mobile.twoDimensionalCode.js"></script>
+{% endblock %}

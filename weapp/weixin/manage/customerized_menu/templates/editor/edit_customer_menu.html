@@ -1,0 +1,39 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link href="/static/css/small_simulator.css" media="all" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content-panel %}
+	<ul class="breadcrumb">
+		<li class="active">自定义菜单</li>
+	</ul>
+	<div id="editMenuPanel"></div>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		var isActive = '{{ is_active }}';
+		var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+		var menus = [];//$.parseJSON('{{ menu_items|safe }}');
+		$(document).ready(function() {
+			var editMenuPanel = new W.view.weixin.EditMenuPanel({
+				el: '#editMenuPanel',
+				menus: menus
+			});
+
+			if (shouldShowAuthorizeCover) {
+				W.view.showAuthorizeCover({
+					hint: '您的公众账号还没有操作菜单的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+					doc: 'unfreeze_need_certified_restrictions-tmpl-src'
+				});
+			}
+		});
+	</script>
+{% endblock %}

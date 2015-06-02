@@ -1,0 +1,212 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li>
+		<a href="/market_tools/point_card/">积分充值列表</a><span class="divider">/</span>
+	</li>
+	<li class="active">{% if point_card_rule.id %}更新{% else %}添加{% endif %}积分充值卡规则</li>
+</ul>
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="parents_name">规则名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入规则名称" value="{% if point_card_rule %}{{ point_card_rule.name }}{% endif %}"  data-validate="name" data-validate-name="{{ point_card_rule.id }}"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="parents_name">卡号前辍：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="prefix" placeholder="输入卡号前辍" value="{% if point_card_rule %}{{ point_card_rule.prefix }}{% endif %}" {% if point_card_rule %}disabled{% endif %} data-validate="required" data-validate-max-length="7" data-validate-min-length="7" data-validate-enable-special=false data-validate-name="{{ point_card_rule.id }}"/>
+				<div class="errorHint"></div>
+				{% if is_add %}<div class="red xa-add">该前辍己存在， 请重新输入</div>{% endif %}
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="parents_name">包含积分数额：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge w50" id="name" name="point" value="{% if point_card_rule %}{{ point_card_rule.point }}{% endif %}" {% if point_card_rule %}disabled{% endif %} data-validate="int-range" data-validate-min="0" data-validate-max="99999999" data-validate-name="{{ point_card_rule.id }}"/>积分
+				<div class="errorHint"></div>
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset class="xa-activeButtonBox">
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+				{% if point_card_rule.id %}
+				<input type="button" class="btn btn-primary xa-slelectButton" data-type="1" value="自动生成" />
+		        <input type="button" class="btn btn-primary xa-slelectButton" data-type="2" value="手动生成" />
+		        {% endif %}
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+ <fieldset class="hide form-horizontal xa-configBox" data-type="1">
+    <legend>自动生成配置</legend>
+    <div class="control-group">
+      <label class="control-label">充值卡数量：</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge xa-pointCardCount" style="width: 350px" placeholder="" data-validate="int-range" data-validate-max='9999' data-validate-min='1' />
+        <div class="errorHint"></div>
+      </div>
+    </div>
+    <div class="control-group mt5 mr5 x-actionBtns">
+      <div class="controls ml20 tc">
+        <input type="button" class="btn btn-success xa-submit" data-type="1" value="生&nbsp;成" />
+        <input type="button" class="btn xa-returnBtn" value="返&nbsp;回" />
+      </div>
+    </div>
+  </fieldset>
+  
+   <fieldset class="hide form-horizontal xa-configBox" data-type="2">
+    <legend>手动生成配置</legend>
+    <div class="control-group">
+      <label class="control-label">卡号：</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge xa-pointCardId" style="width: 350px" placeholder="" data-validate="required" data-validate-max-length="11" data-validate-min-length="11" />
+        <div class="errorHint"></div>
+      </div>
+    </div>
+     <div class="control-group">
+      <label class="control-label">密码：</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge xa-password" style="width: 350px" placeholder="" data-validate="required" data-validate-max-length="4" data-validate-min-length="4"/>
+        <div class="errorHint"></div>
+      </div>
+    </div>
+    <div class="control-group mt5 mr5 x-actionBtns">
+      <div class="controls ml20 tc">
+        <input type="button" class="btn btn-success xa-submit" data-type="2" value="生&nbsp;成" />
+        <input type="button" class="btn xa-returnBtn" value="返&nbsp;回" />
+      </div>
+    </div>
+  </fieldset>
+  
+  <div class="hide xa-pointCardListView">
+    <legend>充值卡</legend>
+    <table class="table table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th>充值卡</th>
+          <th>包含积分</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for point_card in point_cards %}
+        <tr data-id="{{ point_card.id }}">
+          <td>
+            {{ point_card.point_card_id }}
+          </td>
+          <td>
+            {{ point_card.point }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="control-group mt5 mr5 x-actionBtns">
+      <div class="controls ml20 tc">
+        <a class="btn btn-primary" id="exportCouponsBtn" href="javascript:void(0);">
+          <i class="icon-download-alt icon-white"></i> 导出EXCEL
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+<script>
+	setTimeout(function() {
+		$('.xa-add').remove();
+	}, 3000);
+	$('form').submit(function() {
+		 if (!W.validate()) {
+	        return false;
+	      }
+	});
+	var pointCardRuleId = "{{point_card_rule.id}}"
+	 function showPointCardList(pointCards) {
+	    var buf = [];
+	    _.each(pointCards, function(pointCard) {
+	      buf.push(
+	        '<tr>' +
+	          '<td>' +
+	            pointCard.point_card_id +
+	          '</td>' +
+	         '<td>' +
+	            pointCard.point + 
+	          '</td>' +
+	        '</tr>'
+	      );
+	    });
+	    console.log(buf.join('\n'), 333)
+	    $('.xa-pointCardListView tbody').empty().html(buf.join('\n'));
+	    $('.xa-configBox').hide();
+	    // $('.xa-pointCardListView .x-actionBtns').hide();
+	    $('.xa-pointCardListView').show();
+	    $('#deleteBtn').remove();
+	  }
+
+	$('.xa-slelectButton').click(function() {
+		var $el = $(this);
+		var dataType = $el.attr('data-type');
+		$('.xa-configBox').hide();
+		$('.xa-configBox[data-type='+dataType+']').show();
+		$('.xa-activeButtonBox').addClass('hide');
+	});
+	$('.xa-returnBtn').click(function() {
+		$('.xa-configBox').hide();
+		$('.xa-activeButtonBox').show();
+	});
+	$('.xa-submit').click(function(event) {
+		if (!W.validate()) {
+	       return false;
+	    }
+		var $el = $(event.currentTarget);
+		var data_type = $el.attr('data-type') || 1;
+		var count = $('.xa-pointCardCount').val();
+		if (!(data_type==1)){
+			args = {
+				'type': data_type,
+				'count': 1,
+				'point_card_id': $('.xa-pointCardId').val(),
+				'password': $('.xa-password').val(),
+				'rule_id': pointCardRuleId
+			}
+		} else {
+			args = {
+				'type': data_type,
+				'count': count,
+				'rule_id': pointCardRuleId
+			}
+		}
+		W.getApi().call({
+			method: 'post',
+			app: 'market_tools/point_card',
+			api: 'point_card/create',
+			args: args,
+			success: function(data) {
+				showPointCardList(data.items);
+			},
+			error: function(requ) {
+				var errMsg = requ.errMsg || '发放失败！';
+				W.getErrorHintView().show(errMsg);
+			}
+		});
+	});
+	$('#exportCouponsBtn').click(function(event) {
+      var url = '/market_tools/point_card/point_card_rule/export/?rule_id=' + pointCardRuleId;
+      window.open(url);
+    });
+</script>
+{% endblock %}

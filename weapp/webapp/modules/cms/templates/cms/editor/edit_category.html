@@ -1,0 +1,57 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/cms/editor/categories/">文章分类列表</a><span class="divider">/</span></li>
+	<li class="active">{% if category %}更新{% else %}添加{% endif %}文章分类</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if category %}{{ category.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">分类名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="最多8个字符" value="{% if category %}{{ category.name }}{% endif %}" data-validate="required-none" maxlength="8"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+				{% if category %}
+				<a class='btn btn-danger' href="/cms/editor/category/delete/{{ category.id }}/" >删&nbsp;&nbsp;除</a>
+				{% endif %}
+			</div>
+		</div>
+	</fieldset>
+</form>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+{% endblock %}

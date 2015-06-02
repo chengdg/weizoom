@@ -1,0 +1,27 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.page_footer' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-cid="{{component.cid}}"
+    data-index="{{component.model.index}}"
+    class="pt5 mt5"
+    {% ifequal component.model.is_fixed 'yes' %}style="position: fixed; bottom: 0px; left: 0px;"{% endifequal %} 
+    data-component-container="true"
+>
+    <div 
+        data-role="footer" 
+        {% ifequal component.model.is_fixed 'yes' %}data-position="fixed"{% endifequal %} 
+        {% if component.model.id %}id="{{componnet.model.id}}"{% endif %} 
+        class="{{component.model.class}}" 
+        data-theme="{{component.model.theme}}" 
+    >
+        {% if not component.components %}
+            <span class="ui-title" data-cid={{''|next_hidden_cid}}></span>
+        {% else %}
+            {{ component|join_sub_components_html|safe }}
+        {% endif %}
+    </div>
+</div>
+{% endifequal %}

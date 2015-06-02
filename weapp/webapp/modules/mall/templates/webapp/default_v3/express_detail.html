@@ -1,0 +1,33 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% load express_filter %}
+
+{% block content-panel %}
+<div class="xui-expressInfoPage">
+	<section class="xui-top tc">
+		<div class="tl" style="display:inline-block;padding:13px 0 12px 0">
+			<p class="em105">{{ order.express_company_name|get_company_name_by_value }}</p>
+			<p class="em95 mt5">物流单号：{{ order.express_number }}</p>
+		</div>
+	</section>
+	<section class="mt10 xui-content">
+		<ul>
+            {% if order.get_express_details %}
+           		{% for detail in order.get_express_details %}
+				<li class="disT w">
+					<div class="disTc xui-mark tc vm" style="width:48px">
+						<i class="xui-mark-normal"></i>
+					</div>
+					<div class="disTc pl5 pr15">
+						<p class="c6 em95">{{ detail.context }}</p>
+						<p class="c9 em85">{{ detail.ftime }}</p>
+					</div>
+				</li>
+				{% endfor %}
+            {% else %}
+            	<p style="margin:25px auto auto 50px;" class="c6 em95">暂无跟踪记录</p>
+            {% endif %}
+		</ul>
+	</section>
+</div>
+{% endblock %}

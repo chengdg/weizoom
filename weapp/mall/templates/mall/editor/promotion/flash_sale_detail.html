@@ -1,0 +1,153 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-promotionsPage xui-commonPromotionStyle">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall_promotion/flash_sales/get/">限时抢购</a></li>
+		<li class="active">限时抢购详情</li>
+	</ul>
+</div>
+
+<div class="panel panel-default mt20 xb-panelBg">
+	<div class="panel-heading xui-createSaleHead">
+		商品详情
+	</div>
+	<div class="panel-body mb0">
+		<table class="table table-bordered mb0 table-condensed  xb-noTdBorder">
+			<thead class="xui-theadHeight" style="height:38px;">
+				<tr>
+					<th>商品信息</th>
+					<th width="120">商品价格（元）</th>
+					<th width="80">总销量</th>
+				</tr>
+			</thead>
+			<tbody>
+	            {% for product in promotion.products %}
+				<tr class="xui-trColor" data-id="{{product.promotion.id}}">
+					<td class="tl_important pl20 pt10 pb10">
+						<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
+							<a href="{{product.detail_link}}" target="_blank">
+								<img src="{{product.thumbnails_url}}" width="58" height="60"/>
+							</a>
+						</div>
+						<div class="ml10 fl">
+							<div class="mb25">
+								<a href="{{product.detail_link}}" target="_blank">{{product.name}}</a>
+							</div>
+							{% if product.is_use_custom_model %}
+							<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看{{product.models|length}}个规格详情</span>
+							{% else %}
+							<p style="color:#666">商品条码：{{product.bar_code}}</p>
+							{% endif %}
+						</div>
+					</td>
+					<td>
+						{{product.display_price_range}}
+					</td>
+					<td>
+						{{product.sales}}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<div class="panel panel-default mt20 xb-panelBg">
+	<div class="panel-heading  xui-createSaleHead">
+		促销规则
+	</div>
+	<div class="panel-body xui-borderCancel">
+		<div class="form-horizontal" style="width:800px;">
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label star_show fn">活动名称：</label>
+				<div class="col-sm-8 xui-i-content">
+					{{promotion.name}}
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label fn">广告语：</label>
+				<div class="col-sm-8 xui-i-content">
+					{{promotion.promotion_title}}
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label star_show fn">活动时间：</label>
+				<div class="col-sm-8 xui-i-content">
+					{{promotion.start_date|date:"Y-m-d H:i:s"}} 至 {{promotion.end_date|date:"Y-m-d H:i:s"}}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label fn">单人单次限购数量：</label>
+				<div class="col-sm-8 xui-i-content">
+					{% if promotion.detail.count_per_purchase == 9999999 %}
+						不限制
+					{% else %}
+						{{promotion.detail.count_per_purchase}}
+					{% endif %}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label fn">限购周期：</label>
+				<div class="col-sm-8 xui-i-content">
+					{% if promotion.detail.limit_period == 0 %}
+						不限制
+					{% else %}
+						{{promotion.detail.limit_period}}天
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label fn">限购价格：</label>
+				<div class="col-sm-8 xui-i-content">
+					{{promotion.detail.promotion_price}}
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 xui-i-label fn">会员等级：</label>
+				<div class="col-sm-8 xui-i-content">
+					{% if promotion.member_grade_id == 0 %}
+						全部会员
+					{% else %}
+						{{promotion.member_grade_name}}
+					{% endif %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+$('#mall-product-list-view-model-info-tmpl-src').template('mall-product-list-view-model-info-tmpl');
+
+$(document).ready(function() {
+	$(document).delegate('.xa-showAllModels', 'click', function(event) {
+		var $target = $(event.currentTarget);
+        var models = W.loadJSON('product_models');
+        var properties = _.pluck(models[0].property_values, 'propertyName');
+        var $node = $.tmpl('mall-product-list-view-model-info-tmpl', {properties: properties, models: models});
+        W.popup({
+            $el: $target,
+            position:'top',
+            isTitle: false,
+            msg: $node
+        });
+	});
+});
+</script>
+{% endblock %}

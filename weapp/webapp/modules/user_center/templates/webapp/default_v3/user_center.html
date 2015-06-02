@@ -1,0 +1,193 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+
+{% block content-panel %}
+<div class="xui-userCenterPage xui-page">
+    <!-- 全局导航 -->
+    <div class="wui-globalNav xa-globalNav" data-ui-role="global-nav" data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
+    </div>
+        <div class="xui-userCenter-header xa-userCenter-header pr">
+            <i data-ui-role="goBack"></i>
+            <a class="xui-helpInfo pa" href="./?woid={{request.webapp_owner_id}}&module=user_center&model=help&action=get" >
+                <i class="xui-icon-tool xui-icon-help"></i>
+            </a>
+            <div class="xui-userCenterInfoBox">
+                <div class="xui-i-box">
+                    <div class="xui-userCenterInfo">
+                        <div class="xui-userCenter-imgBox xa-userCenter-imgBox">
+            	            <img class="fl xui-userCenterImg" src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
+                        </div>
+                    </div>
+                    <div class="xui-userCenterInfo pl5">
+                        <h2 class="em8">{% if member.username %}{{ member.username }}{% else %}我{% endif %}</h2>
+                        <span class="xui-inner-levelBox em85">
+                            <i></i>
+                            <span class="xui-btn-guide em7">
+                            {{ member.grade.name }}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="xui-fastBtn disT pa">
+            {% if is_weizoom_mall %}
+                <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=-1">
+                    <p class="xui-inner-red">{% if member.history_order_count %}{{ member.history_order_count }}{% else %}0{% endif %}</p>
+                    <p class="em9">全部订单</p>
+                </a>
+                <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
+                    <p class="xui-inner-red">{% if member.not_payed_order_count %}{{ member.not_payed_order_count }}{% else %}0{% endif %}</p>
+                    <p class="em9">待支付</p>
+                </a>
+
+            {% else %}
+                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
+                    <i class="pr">
+                         {% if member.not_payed_order_count %}
+                            <p class="em85 xui-hintNum pa">{{ member.not_payed_order_count }}</p>
+                        {% endif %}
+                    </i>
+                    <p class="em7">待付款</p>
+                </a>
+                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=3">
+                    <i class="pr">
+                        {% if member.not_ship_order_count %}
+                            <p class="em85 xui-hintNum pa {% if member.history_order_count %}xui-inner-red{% else %}xui-inner-gray{% endif %}">{{ member.not_ship_order_count }}</p>
+                        {% endif %}
+                    </i>
+                    <p class="em7">待发货</p>
+                </a>
+                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=4">
+                    <i class="pr">
+                        {% if member.shiped_order_count %}
+                            <p class="em85 xui-hintNum pa {% if member.history_order_count %}xui-inner-red{% else %}xui-inner-gray{% endif %}">{{ member.shiped_order_count }}</p>
+                        {% endif %}
+                    </i>
+                    <p class="em7">待收货</p>
+                </a>
+                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="?woid={{request.webapp_owner_id}}&module=mall&model=order_review_list&action=get">
+                    <i class="pr">
+                        {% if member.review_count %}
+                        <p class="em85 xui-hintNum pa">{{member.review_count}}</p>
+                        {% else%}
+                        {% endif %}
+                    </i>
+                    <p class="em7">待评价</p>
+                </a>
+                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="###">
+                    <i class="pr">
+                        <!-- <p class="em85 xui-hintNum pa">13</p> -->
+                    </i>
+                    <p class="em7">退货/退款</p>
+                </a>
+            {% endif %}
+            </div>
+        </div>
+
+
+    <div class="xui-userCenter-itemList">
+        <div class="xui-section">
+             <div class="xui-section-item">
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=-1" class="em95">
+                    <span class="xui-icon-tool mr5 xui-icon-tool-allOrder"></span>
+                    全部订单
+                    <span class="xui-inner-info">查看所有</span>
+                </a>
+            </div>
+            <div class="xui-section-item">
+                <a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=integral_introduction&action=get&member_id={{member.id}}" class="em95">
+                    <span class="xui-icon-tool mr5 xui-icon-tool-intergral"></span>
+                    我的积分
+                    <span class="xui-inner-info xt-integral">{% if member.integral %}{{ member.integral }}积分{% else %}暂无积分{% endif %}</span>
+                </a>
+            </div>
+            {% for market_tool in market_tools %}
+            <div class="xui-section-item">
+                <a href="{{market_tool.link}}" data-role="button" data-icon="true" class="em95">
+                    <span class="xui-icon-tool mr5 xui-icon-tool-{{market_tool.en_name}}"></span>
+                    {{market_tool.name}}<span class="xui-inner-info">{{market_tool.name}}</span>
+                </a>
+            </div>
+            {% endfor %}
+            {% if not is_weizoom_mall %}
+            <div class="xui-section-item">
+                <a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=wishlist&action=get&member_id={{member.id}}" class="em95">
+                    <span class="xui-icon-tool mr5 xui-icon-tool-collection"></span>
+                    收藏商品
+                    <span class="xui-inner-info">{% if member.wishlist_product_count %}{{member.wishlist_product_count}}件收藏{% else %}暂无收藏{% endif %}</span>
+                </a>
+            </div>
+            <div class="xui-section-item">
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product_review_list&action=get&member_id={{member.id}}" class="em95">
+                    <span class="xui-icon-tool mr5 xui-icon-tool-evaluation"></span>
+                    商品评价
+                    <span class="xui-inner-info">评价过的商品</span>
+                </a>
+            </div>
+            {% endif %}
+
+        <!-- <div class="xui-section-item">
+            <a href="###" class="em95">
+                <span class="xui-icon-tool mr5 xui-icon-phone"></span>
+                手机绑定
+                <span class="xui-inner-info">未绑定</span>
+                <span class="xui-icon xui-icon-rightarrow"></span>
+            </a>
+        </div> -->
+        <div class="xui-section-item">
+            <a href="./?module=market_tool:activity&model=member_activites&action=get&workspace_id=market_tool:activity&webapp_owner_id={{request.webapp_owner_id}}&project_id=0">
+                <span class="xui-icon-tool mr5 xui-icon-tool-activity" class="em95"></span>
+                我参与的活动<span class="xui-inner-info">报名/抽奖/投票</span>
+            </a>
+        </div>
+       <div class="xui-section-item">
+            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=list" class="em95">
+                <span class="xui-icon-tool mr5 xui-icon-tool-address"></span>
+                地址管理
+                <span class="xui-inner-info">管理收货地址</span>
+            </a>
+        </div>
+        <!-- <div class="xui-section-item">
+            <a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=feed_back&action=get" class="em95">
+                <span class="xui-icon-tool mr5 xui-icon-opinion"></span>
+                意见反馈
+                <span class="xui-icon xui-icon-rightarrow"></span>
+            </a>
+        </div> -->
+       <!--    <div class="xui-section-item">
+            <a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=help&action=get" class="em95">
+                <span class="xui-icon-tool mr5 xui-icon-help"></span>
+                帮助中心
+                <span class="xui-icon xui-icon-rightarrow"></span>
+            </a>
+        </div> -->
+    </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+$(document).ready(function(){
+    // $('.xa-clickPointCard').click(function(event){
+    //     // event.stopPropagation();
+    //     event.preventDefault();
+    //     window.location.href ='./?module=market_tool:point_card&model=usage&action=get&workspace_id=market_tool:point_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0';
+    // });
+    //点击非头像区域，页面跳转
+    // $('.xa-userCenter-header').bind('click',function(event){
+    //     if(!$(event.target).is('.xui-userCenterImg')){
+    //         window.location.href = "./?woid={{request.webapp_owner_id}}&module=user_center&model=user_guide&action=get&workspace_id=user_center";
+    //     }
+    // });
+    // 九宫格宽高一致
+    // $('.xui-section-item').each(function() {
+    //     var width = $(this).width()-10;
+    //     $(this).height(width);
+    // });
+});
+</script>
+{% endblock %}

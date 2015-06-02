@@ -1,0 +1,169 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-productsPage">
+
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li>
+				<a href="/mall/onshelf_products/get/">商品管理</a>
+			</li>
+			<li class="active">商品回收站</li>
+		</ul>
+	</div>
+	<div class="xa-productFilterView xui-filterPanel"></div>
+	{% if has_product %}
+	<div class="panel panel-default mt20 xb-rightPanel">
+		<div class="panel-heading">
+			<label for="topSelectAll" class="xui-selectAll ml15">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">恢复</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
+		</div>
+		<div
+		data-ui-role="advanced-table"
+		data-app="mall"
+		data-api="products/get"
+		data-args='{"type":"recycled"}'
+		data-template-id="#products-view"
+		data-enable-paginator="true"
+		data-enable-sort="false"
+		data-selectable="true"
+		data-item-count-per-page="30"
+		data-disable-header-select="true"
+		data-outer-selecter='.xa-selectAll'
+		class="panel-body"
+	></div>
+		<div style="height:30px;"></div>
+		<div class="xui-batchbtn">
+			<label for="bottomSelectAll" class="xui-selectAll ml10">
+				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">恢复</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
+		</div>
+	</div>
+	{% else %}
+	<div class="panel panel-default mt20 xb-rightPanel">
+		<div class="panel-heading">
+		</div>
+		<div class="panel-body xb-noContent">
+			<div class="xui-emptyBox">
+				<div class="xui-i-emptyHint">
+					<img src="/static_v2/img/editor/empty.png">
+					<div  style="margin-top:26px;">
+						<span>商品回收站为空</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	{% endif %}
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="products-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered table-condensed xui-productList  xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+		<thead>
+			<tr>
+				<th width="308">商品信息</th>
+				<th width="100">条码</th>
+				<th width="100">分组</th>
+				<th width="105">商品价格（元）</th>
+				<th width="50">库存</th>
+				<th class="tx_sortable" data-sort-attr='sales' width="50">总销量</th>
+				<th width="120">创建时间</th>
+				<th width="110">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{if items.length}}
+	            {{each(i, product) items}}
+				<tr data-id="${product.id}">
+					<td class="wui-advanced-table-sort-handler tl_important">
+						<div class="disT w">
+							<div class="imgBox disTc pr xui-imgBox">
+								<a href="/mall/product/update/?id=${product.id}&source=recycled">
+                                   {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                                     <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                                   {{else}}
+                                     <img src="${product.thumbnails_url}" width="60" height="60"/>
+                                   {{/if}}
+								</a>
+								{{if (!product.is_use_custom_model && product.stocks === 0)}}
+								<div class="xui-i-sellout">已售罄</div>
+								{{/if}}
+							</div>
+							<div class="pl15 disTc xui-poductorIntroduction">
+								<div class="mb0 mt0" style="height:35px; "><p class="mb0" style="line-height:16px;">${product.name}</p></div>
+								{{if product.is_use_custom_model}}
+								<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看${product.models.length}个规格详情</span>
+								{{else}}
+									<span class="xui-fontGary">商品编码: ${product.user_code}</span>
+								{{/if}}
+							</div>
+						</div>
+					</td>
+					<td>${product.bar_code}</td>
+					<td>
+						<ul>
+							{{each(i, category) product.categories}}
+							{{if category.is_selected}}
+							<li>
+								<span style="font-size: 1.0em;">${category.name}</span>
+							</li>
+							{{/if}}
+							{{/each}}
+						<ul></td>
+					<td>
+						{{if product.is_use_custom_model}}
+						${product.display_price_range}
+						{{else}}
+						${product.display_price}
+						{{/if}}
+					</td>
+					<td>
+						{{if product.is_use_custom_model}}
+						-
+						{{else}}
+						<div class="xa-stockText">${product.stocks}</div>
+						{{/if}}
+					</td>
+					<td>${product.sales}</td>
+					<td>${product.created_at}</td>
+					<td>
+                        <div style="width:74px; margin:auto;">
+						<a href="/mall/product/update/?id=${product.id}&source=recycled" class="xa-modify fl" style="width: 25px;">
+						{{if product.is_self}}修改{{else}}审核{{/if}}</a>
+						<a href="javascript:void(0);" class="xa-offshelf fl" style="width:35px;">恢复</a>
+						</div>
+						</br>
+                        <div style="width:74px; margin:auto; text-align:left;">
+						<a href="javascript:void(0);" class="xa-delete">彻底删除</a>
+						</div>
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='7'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.mall.ProductListView({
+		el: '.xui-productsPage',
+		type: 'recycled'
+	});
+	view.render();
+});
+</script>
+{% endblock %}

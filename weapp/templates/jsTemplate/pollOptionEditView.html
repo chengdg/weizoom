@@ -1,0 +1,37 @@
+<script id="edit-site-dialog-src" type="text/x-jquery-tmpl">
+	<div id="editorView-editSiteDialog" class="form-horizontal mt20">
+		<div class="control-group">
+			<label class="control-label">姓名 *</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入姓名" value="" data-validate="required"  data-validate-min-length="1" data-validate-max-length="10" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label">头像 *</label>
+			<div class="controls">
+				<input type="hidden" name="pic_url" id="pic_url" value="" data-validate="require-image" />
+				<div id="site-imageView"></div>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+		 <div class="control-group">
+            <label class="control-label" for="name">国籍 *</label>
+            <div class="controls">
+            
+            <!-- 选择国籍 -->
+            <div id="selectView" data-validate="required-select-area"></div></br></br>
+            <div class="errorHint"></div>
+            </div>
+            
+        </div>
+		<div class="control-group">
+			<div class="controls p25">
+				<button type="submit" class="btn btn-success tx_submit">添加</button>
+				<button type="button" class="btn tx_cancel ml20">取消</button>
+			</div>
+		</div>
+	</div>
+</script>

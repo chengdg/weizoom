@@ -1,0 +1,239 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
+<style>
+/*重置*/
+	body,html{
+		background-color: #e1e1e6;
+	}
+	.xui-loading{
+		top: 19%;
+	}
+	.ui-page,.ui-content{
+	background: #e1e1e6!important;
+	}
+	.ui-btn-inner{
+		padding:0;
+	}
+	.ui-shadow{
+		box-shadow: none;
+	}
+	.xui-section{
+		padding:0;
+	}
+	.xui-section .xui-section-item{
+		padding:15px 10px;
+	}
+	.xui-btn-danger.ui-btn-up-x, .xui-btn-danger.ui-btn-down-x, .xui-btn-danger.ui-btn-hover-x, .xui-btn-danger.ui-btn-active{
+		padding:5px 0.4em;
+		width: 30%;
+		border:none;
+        box-shadow: 0 0 0 1px #ae0001;
+	}
+/*new*/
+	.xui-phoneNum .ui-input-text{
+		width: 50%;
+		float: left;
+	}
+	.xui-phoneNum .ui-btn{
+		margin:0;
+		display: inline-block;
+		width: 38%;
+		margin-left:2%;
+		padding:0.46em 0.3em;
+		background: #f0f0f0;
+		border:none;
+		box-shadow:0 0 0 1px #c8cacd;
+		-webkit-border-radius:5px;
+		border-radius:5px;
+	}
+	.xui-phoneCode div.ui-input-text{
+		width: 30%;
+	}
+	.xui-btn-danger .ui-btn-text{
+		font-size: 16px;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x">
+    <div data-role="content" data-theme="x">
+    	<!-- 控制 loading -->
+		<div class="xui-loading" style="display: none">
+			<div class="xui-loading-container container1">
+				<div class="circle1"></div>
+				<div class="circle2"></div>
+				<div class="circle3"></div>
+				<div class="circle4"></div>
+			</div>
+			<div class="xui-loading-container container2">
+				<div class="circle1"></div>
+				<div class="circle2"></div>
+				<div class="circle3"></div>
+				<div class="circle4"></div>
+			</div>
+			<div class="xui-loading-container container3">
+				<div class="circle1"></div>
+				<div class="circle2"></div>
+				<div class="circle3"></div>
+				<div class="circle4"></div>
+			</div>
+		</div>
+
+    	<form class="xui-form" method="post" action="" id="binding_form" data-ui-role="validate" form="at">
+			<div class="xui-section">
+				<div class="xui-section-item xui-phoneNum">
+
+					<input  type="text" cellphone_number required-msg="请输入正确的手机号" name="number" id="number" placeholder="输入您的手机号"/>
+					<input  type="button" data-role="button" class="xui-btnCode" id="btn_captcha" value="获取验证码"/>
+				</div>
+				<div class="xui-section-item xui-phoneCode">
+					<input  type="text" id="captcha" required required-msg="验证码" placeholder="验证码">
+				</div>
+				<div class="xui-section-item">
+					<a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger" id="btnSubmit">确认绑定</a>
+				</div>
+			</div>
+		</form>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	//处理加载时的样式
+
+	var member_id = "{{request.member.id}}";
+	var wait=60;
+	function validate_number(number){
+		if (8 > number.length || number.length > 20) {
+        	$('.ui-page').alert({
+		         	isShow: true,
+		         	info: "请输入正确的手机号",
+		         	isSlide: true,
+		         	speed: 2000
+		     });
+            return false;
+        }
+        if(number.match(/\D/)) {
+        	$('.ui-page').alert({
+		         	isShow: true,
+		         	info: "请输入正确的手机号",
+		         	isSlide: true,
+		         	speed: 2000
+		     });
+            return false;
+        }
+        return true;
+	}
+	function time(currentTarget) {
+		if (wait == 0) {
+			currentTarget.attr("disabled","false");
+			currentTarget.removeAttr('disabled');
+			currentTarget.siblings('.ui-btn-inner').find('.ui-btn-text').text("获取验证码");
+			wait = 60;
+		} else {
+			currentTarget.attr("disabled", "true");
+			currentTarget.siblings('.ui-btn-inner').find('.ui-btn-text').text("重新发送(" + wait + ")");
+			wait--;
+			setTimeout(function() {
+				time(currentTarget)
+			},
+			1000)
+		}
+	}
+    $('#btn_captcha').click(function(event) {
+    	var number = $("#number").val();
+		if (validate_number(number) == false) {
+			return false;
+		}
+    	$('.xui-loading').css('display', 'block');
+		W.getApi().call({
+			app: 'webapp',
+        	api: 'project_api/call',
+			args: {
+	            woid: W.webappOwnerId,
+	            project_id: W.projectId,
+	            module: 'apps:shengjing:user_center',
+	            target_api: 'sent_captcha/create',
+	            number: number,
+				member_id: member_id
+	        },
+	        method: 'post',
+	        success: function(data) {
+				time($(event.currentTarget));
+				$('.xui-loading').css('display', 'none');
+	        },
+	        error: function(data) {
+	        	$('.xui-loading').css('display', 'none');
+		        var code = parseInt(data['code']);
+		        var msg = '获取失败，请重试';
+		        if (code == 501){
+			       	msg = data['data']['msg']
+		        }
+
+		        $('.ui-page').alert({
+		         	isShow: true,
+		         	info: msg,
+		         	isSlide: true,
+		         	speed: 2000
+	         	});
+	    	}
+        })
+    	
+	});
+  
+
+   $('#btnSubmit').click(function() {
+        var number = $("#number").val();
+        var captcha = $("#captcha").val();
+        
+        if (validate_number(number) == false) {
+			return false;
+		}
+        
+        if(captcha.length == 0) {
+        	$('.ui-page').alert({
+		         	isShow: true,
+		         	info: "请输入验证码",
+		         	isSlide: true,
+		         	speed: 2000
+		     });
+            return false;
+        }
+   		$('.xui-loading').css('display', 'block');
+		W.getApi().call({
+			app: 'webapp',
+        	api: 'project_api/call',
+			args: {
+	            woid: W.webappOwnerId,
+	            project_id: W.projectId,
+	            module: 'apps:shengjing:user_center',
+	            target_api: 'binded_phone/create',
+	            number: number,
+				captcha: captcha,
+				member_id:member_id
+	        },
+	        method: 'post',
+	        success: function(data) {
+	        	window.location.href = './?module=apps:shengjing:user_center&resource=binding_info&action=get&workspace_id=apps:&project_id=0&is_need_to_add_integral_for_father=True&webapp_owner_id={{request.webapp_owner_id}}&sct='+$.cookie('sct');
+	        },
+	        error: function(data) {
+	        	$('.xui-loading').css('display', 'none');
+		        $('.ui-page').alert({
+		         	isShow: true,
+		         	info: data['data']['msg'],
+		         	isSlide: true,
+		         	speed: 2000
+		         });
+	        }
+        })
+    });
+})
+</script>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+	<link type="text/css" rel="stylesheet" href="/markettools_static/thanks_card/css/thanks_card.css">
+{% endblock %}
+
+{% block content-panel %}
+	<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-thanksCard-page xui-thanksCard-bg2" data-title="{{ page_title }}">
+		<div class="xui-container pr" style="min-height:100%;overflow:visible;position:absolute; width:100%;left:0;top:0;padding:0;">
+			<div class="xui-fieldset xui-mt45p" style="padding:10%;">				
+				<p style="text-align: center">制作感恩贺卡失败</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<style>
+.popover{
+	min-width: 252px;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-promotionsPage xui-commonPromotionStyle">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall_promotion/promotion_lists/get/">促销管理</a></li>
+		<li class="active">优惠券</li>
+	</ul>
+</div>
+
+<div class="xa-promotionFilterView xui-filterPanel"></div>
+
+<div class="panel panel-default mt20 xui-bigBoxbg">
+<div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
+	<div class="panel-heading xui-headStyle"  style="background:#E9EDF5;padding-bottom:11px!important; margin-left:-2px;">
+		<b style="line-height: 30px;">所有优惠</b>
+		<a href="/mall_promotion/coupon_rules/create/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建优惠券</a>
+	</div>
+	<div
+		data-ui-role="advanced-table"
+		data-app="mall_promotion"
+		data-api="promotions/get"
+		data-args='{"type": "coupon"}'
+		data-template-id="#coupons_list_view"
+		data-enable-paginator="true"
+		data-enable-sort="false"
+		data-selectable="false"
+		data-disable-header-select="true"
+		data-item-count-per-page="10"
+		class="panel-body xui-promotionHead pb0"
+	></div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+<script id="coupons_list_view" type="text/x-jquery-tmpl">
+{{if items.length}}
+<table class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder mb0 noborder">
+	<thead class="xui-theadHeight">
+		<tr>
+			<th width="50">序号</th>
+			<th>优惠券名称</th>
+			<th>类型</th>
+			<th>价值</th>
+			<th>领取限制</th>
+			<th>有效期</th>
+			<th>领取人/次</th>
+			<th>已使用</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{each(i, promotion) items}}
+		<tr class="h80" data-id="${ promotion.id }">
+			<td>${ i+1 }</td>
+			<td>${ promotion.detail.name }</td>
+			<td>
+				{{if promotion.detail.limit_product}}
+				单品券
+				{{else}}
+				全店通用券
+				{{/if}}
+			</td>
+			<td>${ promotion.detail.money }</td>
+			<td>
+				{{if promotion.detail.limit_counts>0}}1人${ promotion.detail.limit_counts }张{{/if}}
+				{{if promotion.detail.limit_counts<=0}}无限{{/if}}<br/>
+				<p class="xui-greyColor">库存${promotion.detail.remained_count}</p>
+			</td>
+			<td>${ promotion.start_date} 至 ${ promotion.end_date}
+			</td>
+			<td>${ promotion.detail.get_person_count }/${promotion.detail.get_count}
+			</td>
+			<td>${ promotion.detail.use_count }
+			</td>
+			<td>
+				<a href="../../coupons/get?id=${ promotion.detail.id }">码库</a>
+				{{if promotion.status != '已结束' }}
+				<span class="xa-notFinishInfo">&nbsp;-&nbsp;
+				<a class="xa-copyLinkBtn" href="javascript:void(0);" data-url="/termite/workbench/jqm/preview/?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=${ promotion.detail.owner_id }&project_id=0&rule_id=${promotion.detail.id}">链接</a>&nbsp;-&nbsp;
+				<a href="../update?id=${ promotion.id }">编辑</a>&nbsp;-&nbsp;
+				<a href="../select?id=${ promotion.id }">查看</a>
+				<br/>
+				<a href="javascript:void(0);" class="xa-finish">使失效</a></span>
+				{{/if}}
+				<!--a href="#">查看</a-->
+				<p class="xui-greyColor xa-finishInfo"{{if promotion.status != '已结束' }} style="display:none;"{{/if}}>已失效</p>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+{{else}}
+<div class="panel-body xb-noContent mb0">
+	<div class="xui-emptyBox mb0">
+		<div class="xui-i-emptyHint">
+			<img src="/static_v2/img/editor/empty.png">
+			<div>
+				<span style="width:145px!important;">您还没有优惠券，赶快添加！</span>
+			</div>
+		</div>
+	</div>
+</div>
+{{/if}}
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.mall.PromotionListView({
+		el: '.xui-promotionsPage',
+		promotionType: 'coupon',
+		templateFilterName: 'mall-coupon-filter-view-tmpl-src'
+	});
+	view.render();
+	xlog(view.filterView)
+
+	// 复制链接
+	$('body').delegate('.xa-copyLinkBtn', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var urlLink = $el.attr('data-url');
+
+		var promotionCopyLinkView = W.getPromotionCopyLinkView({
+			width: 414,
+			height: 62,
+			title: '复制链接',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-remarkDropBox'
+
+		});
+		promotionCopyLinkView.show({
+			$action: $el,
+			urlLink: urlLink
+		})
+
+	});
+});
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div id="statisticsView">
+	<div class="mt5">首页链接：http://weapp.weizoom.com/termite/workbench/jqm/preview/?workspace_id={{ home_page_workspace.id }}</div>
+	<div 
+		data-ui-role="chart" 
+		class="mt20 chart longChart" 
+		id="dailyBuy" 
+		data-title="每日购买量" 
+		data-url="/webapp/statistics/buy_trend/get/",
+		data-args='{"days":7}'
+	></div>
+
+	<div 
+		data-ui-role="chart" 
+		class="mt20 chart longChart" 
+		id="dailyPV" 
+		data-title="每日微站访问数(PV)" 
+		data-url="/webapp/statistics/visit_daily_trend/get/",
+		data-args='{"days":7, "type":"pv"}'
+	></div>
+
+	<div 
+		data-ui-role="chart" 
+		class="mt20 chart longChart" 
+		id="dailyUV" 
+		data-title="每日微站访问数(UV)" 
+		data-url="/webapp/statistics/visit_daily_trend/get/",
+		data-args='{"days":7, "type":"uv"}'
+	></div>
+</div>
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/chart.html' %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}

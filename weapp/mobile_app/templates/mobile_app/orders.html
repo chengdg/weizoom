@@ -1,0 +1,72 @@
+{% extends "mobile_base.html" %}
+{% block css %}
+<style type="text/css">
+.tab{
+	margin-top: 10px;
+}
+a:after{
+	top:13% !important;
+}
+</style>
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block content %}
+<div id="content">
+	<div class="panel" title='订单列表' id="order" js-scrolling="true" selected="true">
+		{% if not orders %}
+			目前还没有数据
+		{% else %}
+			{% for order in orders %}
+		<!-- 		<div style="border:1px solid grey;margin-top:2px;margin-bottom:3px;"> -->
+				<ul class="list inset" style="margin-top:10px;">
+		            <li>
+						<a href="order_detail/{{order.id}}/">
+							<b style="float:left;">订单号：</b>{{order.order_id}}
+							<div class="tab">金额：￥{{order.final_price}}</div>
+							<div class="tab">购买人：{{order.buyer_name}}</div>
+							<div class="tab">下单时间：{{order.created_at|date:"Y-m-d H:i:s"}}</div>
+							<div class="tab">支付方式：{{order.pay_interface_name}}</div>
+							<div class="tab">订单状态：
+								<span class="a"  a="{{order.statu}}" {% if order.statu == '待支付' or order.statu == '待发货' %}style="color:#FF0000;" {% elif  order.statu == '已发货' or order.statu == '已完成' %}style="color:green;" 
+								{% elif  order.statu == '已取消' %}style="color:#AFAFAF;" {% endif %}>
+								{{order.statu}}</span></div>
+							<div class="tab">付款时间：{{order.pay_time}}</div>
+						</a>
+					</li>
+				</ul>
+		<!-- 		</div> -->
+			{% endfor %}
+		{% endif %}
+</div>
+</div>
+{% endblock %}
+{% block footer %}
+<!-- <div id="navbar">
+	<a class="icon basket" href="#orders">订单 <span class="af-badge" >5</span></a>
+
+</div> -->
+{% endblock %}
+{% block navbar %}{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function(){
+	scroll_to_refresh("#order");
+})
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var status = $(".a");
+	status.forEach(function(a){
+		console.log(a.getAttribute('a'));
+	});
+	// if (status == '待支付' || status == '待发货') {
+	// 	$(".a").css("color",'#FF0000');
+	// } else if (status == '已发货' || status == '已完成') {
+	// 	$(".a").css("color",'green');
+	// } else if (status == '已取消') {
+	// 	$(".a").css("color",'#AFAFAF');
+	// }
+})
+</script>
+{% endblock %}

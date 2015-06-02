@@ -1,0 +1,31 @@
+<script id="newses-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="tx_newsesSelect" class="form-horizontal mt20">
+		<div class="control-group">
+			<span class="breadcrumRightButton mr30">
+				<a class="btn btn-primary" href="/weixin/message/material/single_news/add/"><i class="icon-plus icon-white"></i>单图文</a>
+				<a class="btn btn-primary" href="/weixin/message/material/multi_news/add/"><i class="icon-plus icon-white"></i>多图文</a>
+			</span>
+			<div style="margin-top: 10px; margin-bottom: 15px;">
+				<div id="categoryProducts" class="select_img_box">
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<div id="dialog-newses-tmpl-src" class="pl30 pr50">
+				没有图文素材信息！
+			</div>
+			<div class="controls zoom pt15 pr50">
+				<button type="submit" class="btn btn-success tx_submit fr">&nbsp;&nbsp;&nbsp;确&nbsp;&nbsp;定&nbsp;
+					&nbsp;&nbsp;</button>
+			</div>
+
+		</div>
+	</div>
+</script>
+
+<script id="one-news-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="oneNews" data-id="${id}" class="fl imgBox mr15 mb10 mt5" style="width:80px;	position:relative;">
+		<img width="80px" src="${pic_url}" style="width: 80px; height: 80px;" title="${title}"/>
+		<span class="selected_product"></span>
+	</div>
+</script>

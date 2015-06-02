@@ -1,0 +1,101 @@
+<script id="tour-orders-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th colspan='2' width="120">下单时间</th>
+				<th width="110">订单号</th>
+                <th>金额</th>
+				<th>
+					<div class="btn-group">
+						<p class="m0 dropdown-toggle cursor" data-toggle="dropdown" style="font-size: 14px;">
+							<span class="caret"></span>
+							订单状态
+						</p>
+						<ul class="dropdown-menu wineDropdown">
+                            <li><a href="javascript:void(0);" class="tx_sortByStatus" value="-1">全部</a></li>
+							<li><a href="javascript:void(0);" class="tx_sortByStatus" value="0">待支付</a></li>
+							<li><a href="javascript:void(0);" class="tx_sortByStatus" value="2">已支付</a></li>
+							<li><a href="javascript:void(0);" class="tx_sortByStatus" value="3">待发货</a></li>
+							<li><a href="javascript:void(0);" class="tx_sortByStatus" value="4">已发货</a></li>
+							<li><a href="javascript:void(0);" class="tx_sortByStatus" value="1">已取消</a></li>
+							<li><a href="javascript:void(0);" class="tx_sortByStatus" value="5">已完成</a></li>
+						</ul>
+					</div>
+				</th>
+				<th>出货数</th>
+				<th>收货人</th>
+			</tr>
+		</thead>
+		<tbody>
+            {{if items.length}}
+            {{each(i, order) items}}
+			<tr data-id="${order.id}">
+				<td class="w10 tx_showPassword cursor"> + </td>
+				<td class="nowrap">
+					<div>
+						${order.created_at}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+						<a title="查看" href="/tour/editor/order/${order.id}/?order_id=${order.order_id}">${order.order_id}</a>
+					</div>
+				</td>
+                <td class="nowrap">
+					<div>
+                        ￥${order.total_price}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+                        ${order.status}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+						${order.num}
+					</div>
+				</td>
+				<td>
+					<div style="width:60px;" class="nowrap">
+						${order.ship_name}
+					</div>
+				</td>
+			</tr>
+			<tr data-id="${order.id}_password" style="display: none;">
+				<td colspan="9" class="wine_password" algin="center">
+					<table width='100%'>
+                    {{if order.order_details}}
+                        {{each(i, order_detail) order_details}}
+                            <tr>
+								<td width="200">
+                                    <div class="fl nowrap ml40" style="width:200px; text-align:left;" title="${order_detail.buyer_name}">
+                                    ${order_detail.name}
+                                    </div>
+                                </td>
+								<td width="10%" class="nowrap">
+                                    ￥${order_detail.total_price}
+								</td>
+								<td width="10%" class="nowrap">
+                                    x ${order_detail.num}
+                                </td>
+                                <td>
+                                    <div class="fl">
+                                   收货人：${order.ship_name}
+                                    </div>
+                                </td>
+							</tr>
+                        {{/each}}
+                    {{else}}
+                    <tr><td>暂无数据</td></tr>
+                    {{/if}}
+					</table>
+				</td>
+			</tr>
+			{{/each}}
+            {{else}}
+                <tr><td colspan='9'>还没有订单数据</td></tr>
+            {{/if}}
+		</tbody>        
+	</table>
+</script>

@@ -1,0 +1,118 @@
+<script id="mall-menu-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="control-group">
+		<div>
+			<span style="line-height: 40px;font-size: 21px; ">首页菜单：</span>
+			<input id="add-menu-btn" type="button" class="btn btn-primary ml150" value="&nbsp;&nbsp;&nbsp;&nbsp;添&nbsp;&nbsp;加&nbsp;&nbsp;&nbsp;&nbsp;" />
+			<span class="help-block ml20">允许最多8个首页菜单</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="ml15 mr15">
+			<table class="table table-bordered table-condensed">
+				<thead>
+				<tr>
+					<th style="width: 30px;">标题名称</th>
+					<th style="text-align: center;">链接</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+</script>
+
+
+<script id="mall-one-menu-tmpl-src" type="text/x-jquery-tmpl">
+	<tr menu_id="${id}" style="cursor:move">
+		<td class="w30"><a href="/mall/editor/menu/update/${id}/" menu_id='${id}' id="one-menu">${title}</a></td>
+		<td class="w200" style="word-break:break-all">
+			<span class="select_text">${link_url}</span></td>
+		<td class="w30">
+			<a href='#' class="btn btn-danger btn-mini" id="delete-menu-btn" ><i class="icon-remove icon-white"></i></a>
+		</td>
+	</tr>
+</script>
+
+<script id="mall-menu-one-product-tmpl-src" type="text/x-jquery-tmpl">
+    <div id="oneMallMenu-div" name="oneMallMenu" data-id="${id}" class="fl imgBox pt0 mr15 mb10 mt5" style="width:80px;">
+        <button class="close" type="button" display-index="${display_index}">×</button>
+        <img width="80px" src="${pic_url}" style="width: 80px; height: 80px;" title="${name}"/>
+    </div>
+</script>
+
+
+<script id="edit-mall-menu-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="editorView-editMallMenu" class="form-horizontal mt20">
+		<div class="control-group txt_title_info">
+			<label class="control-label" for="title_info">推荐标题：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="title_info" name="title_info" placeholder=""
+				       data-validate="required,noDuplicateMallMenu"
+				       data-validate-min-length='2'
+				       data-validate-max-length='8'/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group" id="edit_linkUrlView">
+			<!-- 加入选择url链接 模块 -->
+		</div>
+		<div class="control-group">
+			<label class="control-label">推荐商品数量：</label>
+			<div class="controls">
+				<select id="product_count" name="product_count">
+					<option value="3">3</option>
+					<option value="6">6</option>
+					<option value="9">9</option>
+				</select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">选择推荐商品：</label>
+			<div class="controls">
+				<div class="pt5 pb5"><a class="tx_addProduct" href="#">+添加商品</a></div>
+				<div class="productList clearfix" style="width: 350px;">
+					<!-- 加入选择product 模块 -->
+				</div>
+				<div class="errorHint selectProductError"></div>
+			</div>
+		</div>
+
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input class="btn btn-success tx_submit" type="button" value="    提  交    ">
+			</div>
+		</div>
+	</div>
+</script>
+
+
+<script id="mall-products-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="tx_productsSelect" class="form-horizontal mt20">
+		<div class="control-group m25">
+			<select class="span2" id="categorySelect">
+				<option value="-1">全部</option>
+			</select>
+			<div style="margin-top: 10px; margin-bottom: 15px;">
+				<div id="categoryProducts" class="select_img_box">
+				</div>
+			</div>
+		</div>
+		<div class="control-group m15">
+			<div class="controls zoom">
+				<label class="fl mt5">你已经选择了<span class="selectProductCount"></span>个商品</label>
+				<button type="submit" class="btn btn-success tx_submit fr">&nbsp;&nbsp;&nbsp;确&nbsp;&nbsp;定&nbsp;
+					&nbsp;&nbsp;</button>
+			</div>
+
+		</div>
+	</div>
+</script>
+
+<script id="mall-one-product-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="oneProduct" data-id="${id}" class="fl imgBox mr15 mb10 mt5" style="width:80px;	position:relative;">
+		<img width="80px" src="${pic_url}" style="width: 80px; height: 80px;" title="${title}"/>
+		<span class="selected_product"></span>
+	</div>
+</script>

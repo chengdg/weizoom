@@ -1,0 +1,81 @@
+{% extends "content_base_v2.html" %}
+
+{% block title %}图文预览——微众传媒{% endblock %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/new_preview.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="xui-header">
+    <div class="xui-i pr">
+        <div class="xui-logo">
+            {% if first_navs %}
+                <img src="/static_v2/img/editor/weixinTopLogo.jpg" alt="">
+            {% else %}
+                <img src="/static_v2/img/editor/topLogo.jpg" alt="">
+            {% endif %}
+        </div>
+        <span class="xui-systemName"></span>
+        
+    </div>
+    <div class="xui-navBar">
+        <div class="xui-i pr">
+            <div class="xui-headerActionBar" style="bottom:40px">
+                <span class="mr10">
+                    <span class="">帮助中心</span>
+                    <span class=" ml5">|</span>
+                    <span class=" ml5">服务热线</span>
+                    <span class=" ml5">400-688-6929</span>
+            </div>
+            <div class="xui-headerActionBar">
+                <span class="mr10">
+                    <span class="">{{ request.user.username }}</span>
+                    <span class=" ml5">-</span>
+                    <span title="{{ request.user.username }}" class="xui-i-userName ml5">
+                    <a href="/logout/">退出</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+	<div class="xui-materialNewsPreview xa-materialNewsPreview clearfix"></div>
+</div>
+
+<div class="footer xui-footer">
+	<div class="xui-i" style="">
+		<span>Copyright&nbsp;&copy; 2012-2014 weizoom.com微众传媒 版权所有&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.weizoom.com">微众传媒</a> 旗下微众云商通</span>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    W.ISUNLOADALERT = true;
+    var newsesJsonStr = '{{ newses|safe }}';
+    var materialId = {% if material_id %}{{ material_id }}{% else %}-1{% endif %};
+    var headImg = {% if head_img %}'{{ head_img }}'{% else %}''{% endif %};
+    var typeMaterial = {{ material.type }};
+
+    $(document).ready(function() {
+        xlog("in news_preview ready()");
+
+        var editNewsPanel = new W.view.weixin.NewsPreviewer({
+            el: '.xa-materialNewsPreview',
+            mode: 'single-news',
+            initCount: 2,
+            materialId: materialId,
+            newses: $.parseJSON(newsesJsonStr),
+            headImg: headImg,
+            typeMaterial: typeMaterial
+        });
+
+    });
+});
+</script>
+
+{% endblock %}

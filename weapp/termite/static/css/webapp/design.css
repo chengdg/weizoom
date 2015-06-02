@@ -1,0 +1,18 @@
+@charset "utf-8";
+
+.x-design .x-ui-grid .ui-block-a, .x-design .x-ui-grid .ui-block-b, .x-design .x-ui-grid .ui-block-c, .x-design .x-ui-grid .ui-block-d, .x-design .x-ui-grid .ui-block-e {
+    box-shadow: 0 0 2px #000000 inset;
+    min-height: 60px;
+}
+
+.x-circumInsertablePlaceholder {
+	height: 1px;
+	background-color: transparent;
+}
+
+.xui-state-highlight {
+    height: 3px;
+    background: none;
+    display: block;
+    background-color: rgba(111, 167, 210, 0.8) !important;
+}

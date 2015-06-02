@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div id="overlay"></div>
+  <div id="globalErrorPanel" class="alert alert-error hide"></div>
+  <div id="spin-wrapper"><div id="spin"></div><div id="spin-hint" class="ml10"></div></div>
+  <div id="topbar">
+    <div id="global-nav">
+      <div style="position: relative; width: 1020px; margin: 0px auto;">
+        <div id="weixin-logo">Agile & Lean</div>
+        <div id="top-action-bar">
+	        你好，{{ user.username }} | <a href="/logout/">退出</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="workbench">
+    你好
+  </div>
+{% endblock %}
+
+{% block base_js %}
+  <script type="text/javascript">
+    W.uid = {{ user.id }};
+    W.API_VERSION = 1;
+
+    $(document).ready(function() {
+      
+    });
+  </script>
+{% block js %}{% endblock %}
+ {% endblock %}

@@ -1,0 +1,207 @@
+<script id="editer-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="editerViewTop">
+		{{if showAddLink}}
+		<span><a href="#" class="addLink ml5">添加链接</a></span>
+		{{/if}}
+		<span class="wordCountInfo fr f12 mr5">您还可以输入${maxCount}个字</span>
+		<div style="clear: right;"></div>
+	</div>
+</script>
+
+<script id="old-editer-view-tmpl-src" type="text/x-jquery-tmpl">
+	{{if showTop}}
+	<div class="editerViewTop">
+		<span><a href="#" class="addLink ml20">添加链接</a></span>
+		<span class="wordCounInfo fr mr20">您还可以输入300个字</span>
+	</div>
+	{{/if}}
+	<textarea rows="5" style="width: 95%; margin: 5px" name="content" id="messageText"></textarea>
+	<input type="submit" class="btn btn-success doReplyMessage fr mr20" id="replyMessage" value="提交" />
+	{{if showBottom}}
+	<div class="editerViewBottom">
+		<span><a href="#" class="addLink ml20">添加链接</a></span>
+		<span class="wordCounInfo ml20">您还可以输入300个字</span>
+	</div>
+	{{/if}}
+</script>
+
+
+<script id="add-link-dialog-src" type="text/x-jquery-tmpl">
+<div id="editorView-addLinkDialog" class="form-horizontal mt20">
+	<div class="control-group">
+		<label for="name" class="control-label">链接内容：</label>
+		<div class="controls">
+			<input type="text" value="" id="contentInput" name="content" maxLength="50" data-validate="required" data-validate-dynamic="true">
+			<div class="errorHint"></div>
+		</div>
+	</div>
+	<div class="control-group">
+		<label for="name" class="control-label">链接地址：</label>
+		<div class="controls">
+			<input type="text" value="" id="urlInput" name="url" maxLength="1024" data-validate="url" data-validate-dynamic="true">
+			<div class="errorHint"></div>
+		</div>
+	</div>
+	<div class="control-group">
+		<label for="name" class="control-label"></label>
+		<div class="controls">
+			<button type="submit" class="btn btn-success tx_submit">添加</button>
+			<button type="button" class="btn tx_cancel ml20">取消</button>
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="edit-news-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="small-phone-box" class="fl"></div>
+	<div id="news-editor-box" class="wx-thin-form fl ml10">
+		<div id="formWrapper">
+			<form class="form-horizontal" method="get" id="news-form">
+				{{if showPattern}}
+				<legend>当消息中出现:</legend>
+				<fieldset>
+					<div class="control-group ml10">
+						<input type="text" id="patterns" name="patterns" placeholder="输入匹配词" value="${patterns}" style="width: 335px" data-validate="required,noDuplicatePattern" data-validate-rule="${ruleId}" />
+						<div class="errorHint"></div>
+						<span class="help-block">词与词之间用英文竖线|分隔</span>
+					</div>
+				</fieldset>
+				{{/if}}
+				<legend>回复:</legend>
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label" for="title">标题：</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge" id="title" name="title" placeholder="输入图文消息的标题" value="" data-validate="required" data-validate-max-length="30"/>
+							<div class="errorHint" style="width: 300px;"></div>
+						</div>
+					</div>
+
+					<div id="summaryDiv" class="control-group hide">
+	                    <label class="control-label" for="summary">摘要：</label>
+	                    <div class="controls">
+	                        <textarea rows="2" class="input-xlarge" id="summary" name="summary" data-validate="required" data-validate-max-length="120"></textarea>
+	                        <div class="errorHint"></div>
+	                    </div>
+	                </div>
+
+					<div id="urlDiv" class="control-group hide">
+						<label class="control-label" for="url">地址：</label>
+						<div class="controls form-inline">
+							<input type="hidden" id="url" name="url" />
+							<input type="hidden" id="linkTarget" name="link_target" />
+							<input type="text" style="width: 230px;" id="urlDisplayValue" name="urlDisplayValue" placeholder="链接地址" disabled />
+							<a id="selectTermiteLinkTargetButton" href='javascript:selectLinkTarget();' class="btn btn-primary" data-input="url">选择</a>
+							<div class="errorHint"></div>
+						</div>
+					</div>
+
+					<div id="textareaDiv" class="control-group">
+						<label class="control-label" for="text">正文：</label>
+						<div class="controls">
+							<textarea rows="4" class="input-xlarge" id="text" name="text" data-validate="required" data-validate-max-length="20000"></textarea>
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" >图片：</label>
+						<div class="controls">
+							<input type="hidden" name="pic_url" id="picUrlInput" value="" data-validate="require-image"/>
+							<div id="imageView"></div>
+							<div class="errorHint"></div>
+						</div>
+					</div>
+
+					<div class="control-group pt10 tr mr5 hide" id="update-news-btns-box">
+						<div class="controls">
+							<input id="delete-news-btn" type="button" class="btn btn-danger" value="&nbsp;&nbsp;&nbsp;&nbsp;删&nbsp;&nbsp;除&nbsp;&nbsp;&nbsp;&nbsp;" />
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	<div class="cb"></div>
+
+	<div class="tc mt20 mb20">
+		<legend></legend>
+		<button id="submit-btn" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+	</div>
+</script>
+
+
+
+
+<script id="edit-content-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="embeded-phone-box" class="fl"></div>
+	<div id="news-editor-box" class="wx-thin-form fl ml10">
+		{{if isPatterns}}
+		<form class="form-horizontal" method="post" id="patterns-form">
+			<fieldset>
+				<legend>当消息中出现:</legend>
+				<div class="control-group ml20">
+					<input type="text" id="patterns" name="patterns" placeholder="输入匹配词" value="${patterns}" data-validate="required,noDuplicatePattern" data-validate-rule="${ruleId}"/>
+					<div class="errorHint"></div>
+					<span class="help-block">词与词之间用英文竖线'|'分隔</span>
+				</div>
+			</fieldset>
+		</form>
+
+		<legend>回复:</legend>
+		{{/if}}
+		<form class="form-horizontal" id="message-form">
+			<fieldset>
+				{{if isUnmatchRule}}
+				<div class="control-group mr5 mt5">
+					<div class="controls ml20">
+						<label class="checkbox inline">
+							{{if isActive == "True"}}
+								<input id="isActiveCheckbox" type="checkbox" name="is_active" value="1" checked="checked"> 启用
+							{{else}}
+								<input id="isActiveCheckbox" type="checkbox" name="is_active" value="1"> 启用
+							{{/if}}
+						</label>
+					</div>
+				</div>
+				{{/if}}
+				<div class="control-group mr5 mt5">
+
+					<div id="tabZone" class="tabbable fl ml20">
+						<ul class="nav nav-tabs w350">
+							<li class="active"><a href="#timedWeixinEditer-textMessageZone" data-toggle="tab" data-type="text">文字</a></li>
+							<li><a href="#timedWeixinEditer-newsMessageZone" data-toggle="tab" data-type="news">图文消息</a></li>
+						</ul>
+
+						<!-- 时间选择器 -->
+						<div class="tab-content">
+							<!-- 文字消息 -->
+							<div class="tab-pane active" id="timedWeixinEditer-textMessageZone" style="width: 350px">
+								<div class="control-group mr5 mt5">
+									<div class="controls ml20">
+										<textarea rows="7" id="answer" name="answer" data-validate="required" data-validate-max-length="600" data-validate-min-length="0" class="hide"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<!-- 图文消息 -->
+							<div class="tab-pane tc" id="timedWeixinEditer-newsMessageZone" style="width: 350px">
+								<div id="timedWeixinEditer-newsMessageZone-editLinkZone" class="">
+									<a id="singleNewsLink" href="/weixin/message/material/single_news/edit/" class="add-btn vm">单图文消息</a>
+									<a id="multiNewsLink" href="/weixin/message/material/multi_news/edit/" class="add-btn multi-access vm">多图文消息</a>
+								</div>
+								<div id="small-phone" class="small-phone-nobackground mc hide">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="control-group mr5 mt50">
+					<div class="controls ml150">
+						<input type="button" id="submit-btn" class="btn btn-success" value="&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;"/>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="cb"></div>
+</script>

@@ -1,0 +1,71 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
+    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
+        <span class="xui-inner-count {% if shopping_cart_product_nums == 0 %}hidden{% endif %}">{{shopping_cart_product_nums}}</span>
+    </a>
+
+    {% if has_category %}
+    <ul data-ui-role="top-dropdown-nav" class="hidden" style="overflow-y:auto;">
+        <li><a href='#'></a></li>
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" data-role="button">全部</a></li>
+        {% for product_category in product_categories %}
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list&category_id={{product_category.id}}" data-role="button">{{product_category.name}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+  
+    <div data-role="content" data-theme="x">
+        <div class="xui-hlist xui-hlist-cell-2 xui-products-original" id="xa-wrapper">
+            {% if products %}
+            <ul data-role="listview" data-theme="x" data-icon="false">
+                {% for product in products %}
+                <li class="xui-inner-li xt-oneProduct">
+                    <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
+                        <div class="xui-inner-img">
+                            <img src="{{ product.thumbnails_url }}">
+                        </div>
+                        <h3 class="xt-productName">{{ product.name|truncatechars:16 }}</h3>
+                        <p class="xt-productPrice">
+                        {% if product.type == 'integral' %}
+                            <!-- 积分商品 -->
+                            {{ product.display_price }}积分
+                        {% elif product.type == 'object' %}                    
+                            <!-- 普通商品 -->
+                            ￥{{ product.display_price }}
+                        {% endif %}
+                        </p>
+                    </a>
+                    {% ifequal product.stock_type 1 %}
+                        {% ifequal product.stocks 0 %}
+                        <div class="xui-sellout-tag fr"><div class="xui-sellout-middle"><div class="xui-sellout-inner">已售罄</div></div></div>
+                        {% endifequal %} 
+                    {% endifequal %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <h2>没有相关商品</h2>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    //商品图片成1:1显示
+    var $img = $('.xui-inner-img img');
+    var imgHeight = $img.css('width');
+    $img.css('height', imgHeight);
+
+    $( document.body ).highlight('ui-state-hover', '.xui-inner-li');
+    var wrapperHeight = window.document.body.clientHeight;
+    $('#xa-wrapper').css('height', wrapperHeight);
+    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+});
+</script>
+{% endblock %}

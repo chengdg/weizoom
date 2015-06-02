@@ -1,0 +1,224 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/termite_static/css/shengjing_custom.css">
+<style>
+/*重置*/
+	body,html{
+		background-color: #e1e1e6;
+	}
+	.ui-page,.ui-content{
+		background: #e1e1e6;
+	}
+	.xui-userCenter-header{
+		background: #2d3e4f;
+		color:#fff;
+	}
+	.xui-section{
+		padding:0;
+	}
+	.xui-section .xui-section-item{
+		padding:10px;
+	}
+	.xui-form-controls .xui-form-cell{
+		padding:0;
+		text-align: right;
+	}
+	.xui-form-controls label.xui-form-cell{
+		width: 100px;
+	}
+/*new*/
+	.xui-inner-roleBox{
+		text-align: center;
+	}
+	.xui-form-controls ul li{
+		margin-bottom:10px;
+		list-style: none;
+		border-bottom:1px solid #cbcbcb;
+		margin-right: 20px;
+		padding-bottom: 7px;
+		margin-bottom: 8px;
+	}
+	.xui-form-controls ul li:last-child{
+		margin-bottom: 0px;
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+	.xui-headphoto{
+		text-align: center;
+	}
+	.xui-headphoto img{
+		border-radius:50%;
+		width: 96px;
+		height: 96px;
+	}
+	.wui-alert{
+		z-index: 10001!important;
+	}
+/*new*/
+.ui-cover{
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.7);
+		z-index: 10000;
+		position: absolute;
+		top: 0;
+	}
+	.ui-applyBox{
+		background: #fff;
+		width: 90%;
+		margin: 0 auto;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px; 
+		border-radius: 5px;
+		position: fixed;
+		margin-left: 5%;
+		padding-bottom: 20px;
+	}
+	.ui-applyBox .xui-btnGroup div:nth-child(1),.ui-applyBox .xui-btnGroup div:nth-child(2){
+		background: none repeat scroll 0 0 #f0f0f0;
+	    border: 1px solid transparent;
+	    border-radius: 5px;
+	    display: inline-block;
+	    padding: 9px;
+	    width: 25%;
+	}
+	.ui-applyBox .xui-btnGroup div:nth-child(1){
+		border-color:#DBDCDE;
+		color: #656975;
+	}
+	.ui-applyBox .xui-btnGroup div:nth-child(2){
+		border-color:#ae0001;
+		background: #ae0001;
+		color:#fff;
+		margin-left:5%;
+	}
+	.xui-unlock div:first-child{
+		color: #9498A3;
+		text-decoration:underline;
+		text-align: right;
+		margin-right:10px;
+	}
+	.ui-applySuccessBox{
+		height: 100px;
+		padding: 15px;
+	}
+	.xui-section-item{
+		height: 45px;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-shengjing-userCenterPage"  data-title="{{ page_title }}">
+    <div data-role="content" data-theme="x">
+        <dl class="xui-userCenter-header"> 
+            <dt>
+                <div class="xui-headphoto">    
+    	            <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
+                </div>
+            </dt>
+            <dd>
+                <h2 class="mt5 tc" style="font-size:1.4em;">{{ member.username }}</h2>
+                <div class="xui-inner-roleBox mt5">
+                    <span class="xui-inner-roleLabel">
+                    {{ member_info.status_name }}
+                    </span>
+                </div>
+
+             </dd>
+        </dl>
+
+        <div class="xui-section">
+				<div class="xui-section-item">
+					<div class="xui-form-controls">
+						<label for="" class="xui-form-cell">姓名：</label>
+						<span>{{ member_info.name }}</span>
+					</div>
+				</div>
+				<div class="xui-section-item">
+					<div class="xui-form-controls">
+						<label for="" class="xui-form-cell">手机：</label>
+						<span>{{ member_info.phone_number }}</span>
+					</div>
+				</div>
+				<div class="xui-section-item">
+					<div class="xui-form-controls">
+						<label for="" class="xui-form-cell" style="vertical-align:inherit;">企业：</label>
+						<ul>
+							{% for company in member_info.companys %}
+							<li>{{ company.name }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+		</div>
+		<div class="xui-unlock">
+			<button class="ua-apply">解除绑定</button>
+		</div>
+		<div class="ui-cover hidden ua-cover">
+			
+			<div class="ui-applyBox ua-applySuccessBox ">
+				
+				<!-- <div class="fr mr5 mt5 xui-close xa-close"></div> -->
+				<div class="ui-applySuccessBox mt20 tc">
+						<p>解除绑定之后</p><p>您将无法查看当前的学员信息</p>
+				</div>
+			 	<div class="xui-btnGroup tc"><button class="cancel ua-applyConfirm">取消</button><button class="confirm ua-applyConfirm">确认</button></div>
+			</div>
+		</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+	var height = $('.ui-cover').height();
+	$('.ui-applyBox').css('top', 100 + 'px');
+	$('.ua-apply').click(function() {
+	   $('.ua-cover').removeClass('hidden');
+	});
+	
+	$('.ua-cover').click(function(event) {
+		if(event.target==this){
+			$('.ua-cover').addClass('hidden');
+		}
+	});
+	$('.xa-close').click(function(event) {
+		$('.ua-cover').addClass('hidden');
+	});
+	$('.cancel').click(function(event) {
+		$('.ua-cover').addClass('hidden');
+	});
+	$('.confirm').click(function() {
+		
+		var _this = this;
+		var args = {
+				'member_id': '{{request.member.id}}',
+				'webapp_owner_id': '{{request.webapp_owner_id}}'
+			};
+
+		W.getApi().call({
+    		app: 'webapp',
+        	api: 'project_api/call',
+        	method: 'post',
+			args: _.extend({
+	            woid: W.webappOwnerId,
+	            project_id: W.projectId,
+	            module: 'apps:shengjing:user_center',
+	            target_api: 'binding_member/remove'
+	        }, args),
+			success: function() {
+			 window.location.href="./?module=apps:shengjing:user_center&model=user_info&resource=user_info&action=get&workspace_id=apps:&webapp_owner_id={{request.webapp_owner_id}}&project_id=0";
+			},
+			error: function(req) {
+				 $('body').alert({
+                    isShow: true,
+                    info: "操作失败,请重试",
+                    speed:2000
+                });
+			}
+		})
+	});
+</script>
+{% endblock %}

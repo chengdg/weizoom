@@ -1,0 +1,56 @@
+<script id="dialog-view-product-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="monitorSetActiveDialog">
+        <p class="tx_content">
+        <p style="text-align:center">
+            你还没有商品信息
+            <br>
+            请创建商品之后再创建网站
+        </p>
+        <p></p>
+        </p>
+        <p class="btnLayout" style="text-align:center">
+            <button class="btn tx_cancel">我知道了</button>
+            <a class="btn btn-success ml10" href="/shop/editor/product/add/0/">创建商品</a>
+        </p>
+        <p></p>
+    </div>
+</script>
+
+<script id="dialog-view-category-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="monitorSetActiveDialog">
+        <p class="tx_content">
+        <p style="text-align:center">
+            你还没有分类信息
+            <br>
+            请创建分类之后再创建网站
+        </p>
+        <p></p>
+        </p>
+        <p class="btnLayout" style="text-align:center">
+            <button class="btn tx_cancel">我知道了</button>
+            <a class="btn btn-success ml10" href="/shop/editor/category/create/">创建分类</a>
+        </p>
+        <p></p>
+    </div>
+</script>
+
+<script id="dialog-view-edit-remark-customer-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="customer-title"><p class="editRemarkCustomer-remark">编辑备注</p></div>
+	<div class="editRemarkCustomer">
+		<div class="form-inline">
+			<input type="text" name="content" class="tx_textarea" style="width: 66%" value="${remark}"/>
+			<button class="btn btn-success tx_submit" type="submit">{{if remark}}修改备注{{else}}添加备注{{/if}}</button>
+			<div class="errorHint"></div>
+		</div>
+	</div>
+</script>
+
+<script id="dialog-view-edit-statistic-display-name-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="editDisplayName">
+        <div class="form-inline">
+            <input type="text" name="content" class="tx_textarea" value="${displayName}" placeholder="输入文本"/>
+            <button class="btn btn-success tx_submit" type="submit"> {{if displayName}}修改{{else}}添加{{/if}} </button>
+            <div class="errorHint"></div>
+        </div>
+    </div>
+</script>

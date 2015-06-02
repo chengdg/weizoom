@@ -1,0 +1,16 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'viper.simulator' %}
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-cid="{{component.cid}}"
+>
+    <div class="" style="box-shadow: 0 0 3px rgba(50, 50, 50, 0.75);">
+        <img src="/static/termite_img/viper/simulator.png" style="width: 200px;" />
+    </div>
+</div>
+{% else %}
+<div id="embeded-phone-box" data-ui-role="embeded-simulator" data-url='/m/mall/product/{{ project_id }}/0/'></div>
+{% endif %}
+{% endifequal %}

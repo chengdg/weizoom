@@ -1,0 +1,165 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-promotionsPage xui-commonPromotionStyle">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+		<li class="active">限时抢购</li>
+	</ul>
+</div>
+<div class="xa-promotionFilterView xui-filterPanel"></div>
+
+<div class="panel panel-default mt20 xui-bigBoxbg">
+<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
+	<div class="panel-heading xui-headStyle pl18"  style="background:#E9EDF5; margin-left: -2px;">
+		<input type="checkbox" id="topSelectAll" class="xa-selectAll" />
+		<label for="topSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">删&nbsp;&nbsp;&nbsp;&nbsp;除</a>
+		<a href="/mall_promotion/flash_sale/create/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建活动</a>
+	</div>
+
+	<div
+		data-ui-role="advanced-table"
+		data-app="mall_promotion"
+		data-api="promotions/get"
+		data-args='{"type": "flash_sale"}'
+		data-template-id="#promotions-view"
+		data-enable-paginator="true"
+		data-enable-sort="false"
+		data-selectable="true"
+		data-disable-header-select="true"
+		data-item-count-per-page="10"
+		data-outer-selecter='.xa-selectAll'
+		data-selecttable-tr='xa-selectTr'
+		class="panel-body xui-promotionHead pb0"
+	></div>
+
+	<div class="xui-leftBoxTow">
+	<div class="panel-heading pl22">
+		<input type="checkbox" id="bottomSelectAll"  class="xa-selectAll" style="margin-left:-1px;"/>
+	<label for="bottomSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">删&nbsp;&nbsp;&nbsp;&nbsp;除</a>
+	</div>
+</div>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="promotions-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-condensed mb0 xb-stripedTable xb-noTdBorder">
+		<thead class="xb-theadBg xui-theadHeight">
+			<tr>
+				<th >商品信息</th>
+				<th width="120">商品价格（元）</th>
+				<th width="100">促销价</th>
+				<th width="80">状态</th>
+				<th width="180">起止时间</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list' class="xui-flashSaleTbody">
+            {{if items.length}}
+	            {{each(i, promotion) items}}
+	            <tr class="xui-activeName xa-selectTr" data-id="${promotion.id}">
+	            	<td>
+	            		<div title="${promotion.name}" class="xui-i-promotionName mb5  xui-ellipsis">
+							{{if promotion.promotionTitle}}
+							<p class="f12 fn">广告语: ${promotion.promotionTitle}</p>
+							{{else}}
+							<p class="f12 fn">活动名称: ${promotion.name}</p>
+							{{/if}}
+						</div>
+					</td>
+	            	<td></td>
+	            	<td></td>
+	            	<td></td>
+	            	<td></td>
+	            	<td></td>
+	            </tr>
+
+				<tr class="xui-trborder" data-id="${promotion.id}">
+					<td class="tl_important pt10 pb10">
+						 {{if promotion.product}}
+						<div class="clearfix xui-i-cell2">
+							<div class="imgBox fl" style="width: auto;border:solid 1px #cfcfcf;">
+								<a href="${promotion.product.detail_link}" target="_blank">
+                                    {{if promotion.product.thumbnails_url.search('http://weappimg') != -1}}
+                                      <img src="${promotion.product.thumbnails_url + '!60'}" width="60" height="60"/>
+                                    {{else}}
+                                      <img src="${promotion.product.thumbnails_url}" width="60" height="60"/>
+                                    {{/if}}
+								</a>
+							</div>
+							<div class="ml10 fl h60">
+								<div class="xui-commodityName">
+									<a href="${promotion.product.detail_link}" target="_blank">${product.name}</a>
+								</div>
+								<p style="color:#666;" class="mb0">{{if promotion.product.is_use_custom_model}}</p>
+								<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;padding-bottom:2px;">查看${promotion.product.models.length}个规格详情</span>
+								{{else}}
+								商品条码：${promotion.product.bar_code}
+								{{/if}}
+							</div>
+						</div>
+					</td>
+					<td>
+						${promotion.product.display_price_range}
+					</td>
+					{{/if}}
+
+					<td>
+						${promotion.detail.promotion_price}
+					</td>
+					<td>
+						{{if (promotion.status === '已结束')}}
+						已结束
+						{{else}}
+						<span class="xa-notFinishInfo">${promotion.status}</span><span class="xa-finishInfo xui-hide">已结束</span>
+						{{/if}}
+					</td>
+					<td>
+						<span class="xui-i-date">${promotion.start_date}</span>-<span class="xui-i-date">${promotion.end_date}</span>
+					</td>
+					<td>
+						{{if (promotion.status === '已结束')}}
+						<!--
+						<a href="/mall_promotion/flash_sale/copy/?id=${promotion.id}" class="xa-copy fl" style="width: 40px;text-decoration:none;">复制</a>
+						-->
+						<a href="/mall_promotion/flash_sale_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a href="javascript:void(0);" class="xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
+						{{else}}
+						<a href="/mall_promotion/flash_sale_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a href="javascript:void(0);" class="xa-notFinishInfo xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
+						<a href="javascript:void(0);" class="xui-hide xa-finishInfo xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
+						{{/if}}
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='8'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</div>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.mall.PromotionListView({
+		el: '.xui-promotionsPage',
+		promotionType: 'flash_sale'
+	});
+	view.render();
+});
+</script>
+{% endblock %}

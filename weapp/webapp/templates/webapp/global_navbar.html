@@ -1,0 +1,22 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link href="/static/css/small_simulator.css" media="all" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content-panel %}
+  <div id="navbarEditor"></div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    var navbarEditor = new W.view.webapp.GlobalNavbarEditor({
+      el: '#navbarEditor'
+    });
+  });
+</script>  
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<style>
+h3{
+    color: #333;
+    margin-left: 10px;
+}
+a:link, a:hover, a:visited {
+  color: #333;
+  text-decoration: none;
+}
+.xui-selectedProductList-productImg img {
+  display: block;
+  height: 70px;
+  width: 70px;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-storeList"  data-title="{{ page_title }}">
+    <div data-role="content">
+        <h3>{{city}}</h3>
+        {% for store in stores %}
+            <div class="xui-section p10 xt-product" store-id="{{store.id}}">
+                <div class="xui-selectedProductList">
+                    <ul class="clearStyle">
+                        <li>
+                            <div class="xui-selectedProductList-productImg fl">
+                            <a href='./?woid={{request.webapp_owner_id}}&module=market_tool:store&model=store_detail&action=get&id={{store.id}}'><img src="{{store.thumbnails_url}}" data-allow-autoplay=false></a>
+                            </div>
+                            <div class="xui-selectedProductList-productInfo fl">
+                                <a href='./?woid={{request.webapp_owner_id}}&module=market_tool:store&model=store_detail&action=get&id={{store.id}}'><p>{{store.name}}</p>
+                                
+                                    <div class="pt5 pb5 em8" style="color: #7F7F7F; overflow: hidden;">
+                                    <span class="xt-price"><div class="displayPart" displayLength="110">简介:{{store.store_intro}}</div></span>
+                                    </div>
+                                
+                                </a>
+                            </div>
+                            
+                        </li>    
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript"> 
+// 超出字数显示“...”
+    $.fn.extend({  
+        displayPart:function () {  
+            var displayLength = 100;  
+            displayLength = this.attr("displayLength") || displayLength;  
+            var text = this.text();  
+            if (!text) return "";  
+  
+            var result = "";  
+            var count = 0;  
+            for (var i = 0; i < displayLength; i++) {  
+                var _char = text.charAt(i);  
+                if (count >= displayLength)  break;  
+                if (/[^x00-xff]/.test(_char))  count++;  //双字节字符，//[u4e00-u9fa5]中文  
+  
+                result += _char;  
+                count++;  
+            }  
+            if (result.length < text.length) {  
+                result += "...";  
+            }  
+            this.text(result);  
+        }  
+    });  
+  
+    $(function () {  
+        $(".displayPart").each(function(){
+            $(this).displayPart();  
+        })
+    }); 
+</script>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li class="active">会员扫码</li>
+</ul>
+<div id="lotteryLayer" is_edit_page="{% if member_qrcode_settings %}true{% endif %}">
+<form class="form-horizontal" method="post" id="roulette-form">
+	<fieldset>
+		<div class="control-group">
+				<label class="control-label">扫码后奖励会员：</label>
+				<div class="controls">
+					<div style="margin-top:5px;">
+					{% if member_qrcode_settings %}
+						<input type="radio" {% if member_qrcode_settings.award_member_type == 1 %}checked="checked" {% endif %}value="1" class='reward' name='reward'>统一奖励
+				        <input type="radio" {% if member_qrcode_settings.award_member_type == 0 %}checked="checked" {% endif %} value="0" name='reward' class='reward' >按会员等级奖励
+					{% else %}
+				        <input type="radio" checked="checked" value="1" name='reward' class='reward'>统一奖励
+				        <input type="radio" value="0" name='reward' class='reward' >按会员等级奖励
+				    {% endif %}
+	           		</div>
+	 			</div>
+		</div>
+
+
+		<div class="control-group">
+            <label class="control-label" for="probability">奖项设置：</label>
+			<div class="controls w500">
+				
+                <div class="tx_prizeItem_all prizeItem" >
+                   <div class="zoom" >
+	                	<div style="width:50%;position:absolute;">奖励类型</div>
+						<div style="width:26%;position:absolute;text-align:right;">奖品</div><br>
+						<div class='mt10'>
+                            <select name="prize_type|0" class="span2 mr10" {% if award_content %} value='{{ award_content.award_type }}'{% else %}value='1'{% endif %}>
+                                {% if coupon_rules %}<option value="1">优惠劵</option>{% endif %}
+                                <!--<option value="2">兑换码</option>-->
+                                <option value="3">积分</option>
+                               
+                            </select>
+                            <select class="span2 prize" name="prize_source|0" for_type="1" {% if award_content.award_type == 1 %}value='{{ award_content.award_content }}'{% else %}style="display:none;" disabled="disabled" {% endif %} >
+                                <option value="">请选择优惠劵...</option>
+                                {% for rule in coupon_rules %}
+                                <option value="{{rule.id}}">{{rule.name}}</option>
+                                {% endfor %}
+                            </select>
+                           
+                            <input type="text" class="span2 prize2" name="prize_source|0" for_type="3"{% if award_content.award_type == 3 %}value='{{ award_content.award_content }}'{% else %}style="display:none;" disabled="disabled" {% endif %} placeholder="请输入积分数值">
+                            <div class="errorHint"></div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="tx_prizeItem_member prizeItem hide" >
+                   <div class="zoom" >
+                   			<div style="width:50%;position:absolute;">会员等级</div>
+							<div style="width:23%;position:absolute;text-align:right">奖励类型</div>
+							<div style="width:42%;position:absolute;text-align:right;">奖品</div><br>
+							{% for member_grade in member_grades %}
+							<div class='mt10'>
+							<div style="position:absolute;">
+							{{member_grade.name}}
+							</div>
+                            <select name="prize_type|{{member_grade.id}}"  class="span2 ml100 mr20" {% if member_grade.award_type %} value="{{ member_grade.award_type }}"{% else %}value=''{% endif %}>
+                                {% if coupon_rules %}<option value="1">优惠劵</option>{% endif %}
+                                <!--<option value="2">兑换码</option>-->
+                                <option value="3">积分</option>
+                            </select>
+                            {% if member_grade.award_type %}
+                            <select class="span2" name="prize_source|{{member_grade.id}}" for_type="1" {% if  member_grade.award_type == 1 %}value='{{ member_grade.award_content }}'{% else %}style="display:none;" disabled="disabled" {% endif %} >
+                                <option value="">请选择优惠劵...</option>
+                                {% for rule in coupon_rules %}
+                                <option value="{{rule.id}}">{{rule.name}}</option>
+                                {% endfor %}
+                            </select>
+                           
+                            <input type="text" class="span2" name="prize_source|{{member_grade.id}}" for_type="3"{% if member_grade.award_type == 3 %}value='{{ member_grade.award_content }}'{% else %}style="display:none;" disabled="disabled" {% endif %} placeholder="请输入积分数值">
+                           {% else %}
+                           		<select class="span2" name="prize_source|{{member_grade.id}}" for_type="1" style="display:none;" disabled="disabled"  >
+                                <option value="">请选择优惠劵...</option>
+                                {% for rule in coupon_rules %}
+                                <option value="{{rule.id}}">{{rule.name}}</option>
+                                {% endfor %}
+	                            </select>
+	                           
+	                            <input type="text" class="span2" name="prize_source|{{member_grade.id}}" for_type="3" style="display:none;" disabled="disabled" placeholder="请输入积分数值">
+	                         {% endif %}
+	                            <div class="errorHint"></div>
+	                        	</div>
+                        {% endfor %}
+                        <!-- <table>
+	                    	<tr><th class="ml 20">会员等级</th><th>奖励类型</th><th>奖品</th></tr>
+	                    	<tr>
+	                    		<td class="span2">白金会员</td>
+		                    	<td class="span2">
+		                            <select name="prize_type|1" class="span2 mr10">
+		                                <option value="1">优惠劵</option>
+		                                
+		                                <option value="3">积分</option>
+		                            </select>
+		                         </td>
+		                         <td class="span2"> 
+		                            <select class="span2" name="prize_source|1" for_type="1" disabled="disabled" style="display:none;">
+		                                <option value="">请选择优惠劵...</option>
+		                                {% for rule in coupon_rules %}
+		                                <option value="{{rule.id}}">{{rule.name}}</option>
+		                                {% endfor %}
+		                            </select>
+		                           
+		                            <input type="text" class="span2" name="prize_source|1" for_type="3" disabled="disabled" style="display:none;" placeholder="请输入积分数值">
+
+		                           
+		                         </td>
+		                         <td class="errorHint"> </td>
+	                        </tr>
+
+                     </table> -->
+                    </div>
+                </div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="detail">详情：</label>
+			<div class="controls">
+				<textarea rows="5" class="input-xlarge hide" id="detail" name="detail" data-validate="required" placeholder="输入详情" data-validate-max-length="10240">{{ member_qrcode_settings.detail|safe }}</textarea>
+			</div>
+		</div>
+
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				
+				<button type="submit" class="btn btn-success" id="submit-product">&nbsp;&nbsp;&nbsp;&nbsp;保&nbsp;&nbsp;存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+				
+			</div>
+		</div>
+	</fieldset>
+</form>
+</div>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+	$(document).ready(function() {
+		if (shouldShowAuthorizeCover) {
+			W.view.showAuthorizeCover({
+				hint: '您还没有使用会员扫码的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+				doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
+			});
+		}
+	});
+	
+    new W.MemberQrcode({
+        el: '#lotteryLayer',
+        item_id: '{{member_qrcode_settings.id}}',
+        radio_id: '{{member_qrcode_settings.award_member_type}}',
+    });
+</script>
+
+{% endblock %}

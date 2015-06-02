@@ -1,0 +1,8 @@
+{
+ "name": "\u7528\u6237\u4e2d\u5fc3", 
+ "source_workspace_id": 0, 
+ "inner_name": "user_center", 
+ "template_project_id": 5, 
+ "data_backend": "module:user_center", 
+ "id": 3
+}

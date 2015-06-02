@@ -1,0 +1,180 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/termite_static/jquery/jquery.fancybox-1.3.1.css">
+<style>
+ .xui-sectionTop .xui-datepicker-icon{
+  display:inline-block;
+  width: 30px;
+  height: 30px;
+  background: url(/termite_static/termite_img/nav_icons/icon_Black/icon2_12.png) no-repeat;
+  background-size:cover;
+  opacity: 0.4;
+ }
+ .xui-sectionTop .xui-datepicker-inner{
+  display: inline-block;
+ }
+ .xui-sectionTop input[type="text"]{
+  background: #f9f9f9;
+  margin-bottom: 0;
+ }
+ .xui-sectionTop .xui-sessionsIcon-starBtn{
+  display:inline-block;
+  width: 18px;
+  height: 19px;
+  background-position:-58px 0;
+ }
+ .xui-sectionTop .xui-searchBox input[type="text"]{
+  width:140px;
+ }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="relative">
+ <div class="breadcrumb xui-sectionTop">
+  <i class="xui-datepicker-icon vm"></i>
+   <input
+    type="text"
+    class="input-xlarge"
+    id="start_date"
+    name="start_date"
+    style="width:80px;z-index:9999"
+       placeholder="开始日期"
+       value=""
+       readonly="readonly"
+       data-validate="required-none"
+       data-ui-role="datepicker"
+       data-format="yy-mm-dd"
+       
+   />
+   <span class="vm" style="display:inline-block">-</span>
+   <input
+    type="text"
+    class="input-xlarge"
+    id="end_date"
+    name="end_date"
+    style="width: 80px;z-index:9999"
+       placeholder="结束日期"
+       value=""
+       readonly="readonly"
+       data-validate="required-none"
+       data-ui-role="datepicker"
+       data-format="yy-mm-dd"
+       data-min-el="#start_date"
+       
+   />
+   <input type='button' class='data_search btn' value='提交'>
+  <div class="fr">
+   <div style="display:inline-block;" class="xui-searchBox">
+    <input type="text" placeholder="搜近两天内容 搜昵称" class="xui-search" id='search_content'>
+   </div>
+   <a class="cursorPointer btn"><i class="icon-search" style="opacity:0.5;margin-right:3px;"></i>搜索</a><!--搜索按钮-->
+   <a href="/weixin/message/message/collect_message/list/" class="btn">星标消息</a>
+  </div>
+ </div>
+ <ul class="breadcrumb">
+  <li class="active">消息列表<span style="margin-left:5px;display:inline-block;color:#c09853">注：消息仅在48小时内回复有效</span></li>
+ </ul>
+</div>
+
+<div id="sessions">
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/termite_static/jquery/jquery.fancybox-1.3.1.js"></script>
+<script type="text/javascript">
+ var is_debug = {% if is_debug_enabled %}true{% else %}false{% endif %};
+ var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+ 
+ $(document).ready(function() {
+  var view = new W.view.weixin.SessionListView({
+   el: '#sessions',
+   is_debug: is_debug,
+   is_fancyBox: true
+  });
+  view.render();
+  $('body').delegate('div.xui-voiceContent', 'click', function
+        (event) {
+          $(this).siblings('#media')[0].play();
+          $(this).find('span').addClass('xui-voicePlay');
+          $(this).siblings('#media').bind('ended', function() {
+                  $(this).siblings().find('span').removeClass('xui-voicePlay');
+              });
+        });
+  //灯箱效果
+  $('a.xui-sessionsImg').fancybox({
+    data_type: 'image'
+  });
+  $('.data_search').click(function() {
+      var startTime = $('input[name=start_date]').val();
+      var endTime =  $('input[name=end_date]').val();
+      
+      if (startTime == ''){
+        alert('请输入开始日期');      
+        return 
+      }
+      if (endTime == ''){
+        alert('请输入结束日期');      
+        return 
+      }
+      var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+      var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+      if (start > end){
+        alert('开始日期不能大于结束日期');      
+        return  
+      }
+
+      if (startTime || endTime){
+       
+          view = new W.view.weixin.SessionListView({
+           el: '#sessions',
+           is_debug: is_debug,
+           start_time: startTime,
+           end_time: endTime,
+           is_fancyBox: true
+          });
+          view.render();  
+      }
+  });
+
+  $('.cursorPointer').click(function(){
+    var search_content = $('#search_content').val();
+    if (search_content == ''){
+      return
+    }else{
+      view = new W.view.weixin.SessionListView({
+          el: '#sessions',
+          is_debug: is_debug,
+          search_content: search_content,
+          is_fancyBox: true
+      });
+      view.render(); 
+    }
+  })
+  $('#search_content').keyup(function(event) {
+      var keyCode = event.keyCode;
+      if (keyCode == 13) {
+        var search_content = $('#search_content').val();
+        if (search_content == ''){
+          return
+        }else{
+          view = new W.view.weixin.SessionListView({
+              el: '#sessions',
+              is_debug: is_debug,
+              search_content: search_content,
+              is_fancyBox: true
+          });
+          view.render(); 
+        }
+          }
+  });
+  if (shouldShowAuthorizeCover) {
+   W.view.showAuthorizeCover({
+    hint: '您还没有回复消息的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+    doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
+   });
+  }
+ });
+</script>
+{% endblock %} 

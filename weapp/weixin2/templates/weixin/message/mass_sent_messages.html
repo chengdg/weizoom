@@ -1,0 +1,178 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="xui-massSentPage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/new_weixin/mass_sending_messages/">消息互动</a>
+        </li>
+        <li class="">群发消息</li>
+    </ul>
+    <ul class="xui-messageNav">
+        <li class="messageNavLi">
+            <a class="messageNavLiA" href="/new_weixin/mass_sending_messages/">新建群发消息</a>
+        </li>
+        <li class="active messageNavLi">
+            <a class="messageNavLiA" href="javascript:void(0);">已发送</a>
+        </li>
+    </ul>
+    <div
+        data-ui-role="advanced-table"
+        data-app="new_weixin"
+        data-resource="mass_sent_messages"
+        data-template-id="#weixin-mass-sent-message-view"
+        data-enable-paginator="true"
+        data-enable-sort="false"
+        data-selectable="false"
+        data-item-count-per-page="20"
+        data-disable-header-select="true"
+        class="panel-body"
+    ></div>
+
+
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+
+<script id="weixin-mass-sent-message-view" type="text/x-jquery-tmpl">
+    <table class="table xb-theadBg xui-rightPanelBg xui-massSentTable">
+        <thead>
+            <tr>
+                <th>消息内容</th>
+                <th>消息概况</th>
+                <th>时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each(i, message) items}}
+            <tr>
+                <td class="xui-massSentTableFirstColumn">
+                    <ul class="wui-newses">
+                        {{if message.message_type == 0}}
+                            <span class="wui-i-header">文本</span>
+                            <span class="wui-i-text">{{html message.message_content}}</span>
+                        {{else}}
+                            {{each(i, news) message.newses}}
+                                <span class="wui-i-header">图文</span>
+                                <span class="wui-i-title">
+                                    {{if message.message_content != -1}}
+                                        <a href="/new_weixin/news_preview/?id=${message.message_content}" target="_blank">
+                                            ${news.title}
+                                        </a>
+                                    {{else}}
+                                        ${news.title}
+                                    {{/if}}
+                                </span>
+                            {{/each}}
+                        {{/if}}
+                    </ul>
+                </td>
+                <td class="xui-massSentTableOtherColumn">
+                    <span class="xa-update-tag c9" data-total="${message.total_count}" data-succ="${message.sent_count}" data-fail="${message.error_count}" data-status="${message.status}">
+                        {{if message.status == 'send success'}}发送成功
+                        {{else}}
+                            {{if message.status == 'delete'}}已删除
+                            {{else}}
+                                {{if message.status == ''}}
+                                    发送中
+                                {{else}}
+                                    发送失败
+                                {{/if}}
+                            {{/if}}
+                        {{/if}}
+                        <i class="glyphicon glyphicon-triangle-bottom"></i>
+                    </span>
+                </td>
+                <td class="xui-massSentTableOtherColumn c9">${message.created_at}</td>
+                <td class="xui-massSentTableOtherColumn">
+                    {{if message.message_type == 1}}
+                        {{if message.status != 'delete'}}
+                            <a class="xa-deleteMessage" data-type="${message.message_type}" data-msg-id="${message.msg_id}" href="javascript:void(0);">删除</a>
+                        {{/if}}
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(document).delegate('.xa-deleteMessage', 'click', function(event) {
+        var $el = $(event.currentTarget);
+        var message_type = $el.attr('data-type');
+        var msg_id = $el.attr('data-msg-id');
+
+        W.requireConfirm({
+            $el: $(event.currentTarget),
+            width:270,
+            height:100,
+            position:'top',
+            isTitle: false,
+            privateContainerClass:'xui-mass',
+            msg: '确定删除？该操作只能删除历史消息中的记录',
+            confirm: function(){
+                W.getApi().call({
+                    method: 'post',
+                    app: 'new_weixin',
+                    resource: 'mass_sent_messages',
+                    args: {
+                        message_type: message_type,
+                        msg_id: msg_id
+                    },
+                    success: function(rule) {
+                        window.location.href = '/new_weixin/mass_sent_messages/';
+                    },
+                    error: function(rule) {
+                        //W.getLoadingView().hide();
+                        alert('删除失败');
+                    }
+                });
+            }
+        });
+    });
+
+
+    $(document).delegate('.xa-update-tag', 'hover', function(event) {
+        //鼠标经过时显示消息概况悬浮框
+        var $el = $(event.currentTarget);
+        var massSentMessageView = W.getMassSentMessageView({
+            //width: 220,
+            isTitle: false,
+            isArrow:false,
+            privateContainerClass:'xui-massSentMessageDropBox',
+            position:'down-left'
+        });
+
+        var status = $el.attr('data-status');
+        var total = -1;
+        var succ = -1;
+        var fail = -1;
+        if (status != 'delete'){
+            total = $el.attr('data-total');
+            succ = $el.attr('data-succ');
+            fail = total - succ;
+        }
+
+        massSentMessageView.show({
+            $action: $el,
+            total: total,
+            succ: succ,
+            fail: fail
+        });
+    });
+
+    $(document).delegate('.xa-update-tag', 'mouseout', function(event) {
+        $('.xui-massSentMessageDropBox').hide();
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,29 @@
+<script id="timelinewall-timelines-tmpl-src" type="text/x-jquery-tmpl">
+<ul class="timelineList">
+	{{each(i, timeline) timelines}}
+	<li class="oneTimeline">
+        <div class="author_thumbnails">
+            <img src="${timeline.author_thumbnails}" />
+        </div>
+        <div class="timeline">
+            <div class="clearfix">
+                <div class="content fl {{if timeline.pic_url.length > 0}}contentWithPic{{/if}}">
+                    <span class="content_name">{{html timeline.author}}:</span> {{html timeline.content}}
+                </div>
+                {{if timeline.pic_url.length > 0}}
+                <div class="pic fr">
+                    <img src="${timeline.pic_url}" />
+                </div>
+                {{/if}}
+            </div>
+            <div class="info">
+                <span class="time">
+                    ${timeline.published_at}
+                </span>
+                <span class="source"></span>
+            </div>
+        </div>
+    </li>
+    {{/each}}
+</ul>
+</script>

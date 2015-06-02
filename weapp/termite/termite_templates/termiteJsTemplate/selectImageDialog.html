@@ -1,0 +1,28 @@
+<script id="select-image-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="selectImageDialog" class="modal hide fade">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>选择图片</h3>
+		</div>
+		<div class="modal-body clearfix selectImageDialog_body">
+			<div class="tc selectImageDialog_body_loading">
+				<img src="/static/termite_img/loading.gif" />
+			</div>
+		</div>
+		<div class="hide ml10 mt5 selectImageDialog_uploadBtn">
+			<input id="imageView-fileUploader" name="imageView-fileUploader" type="file" />
+			<span class="help-block alert">建议图片尺寸: <span class="selectImageDialog-width"></span>*<span class="selectImageDialog-height"></span></span>
+		</div>
+		<div class="modal-footer">		
+			<button class="btn btn-danger selectImageDialog_deleteBtn hide">删除</button>
+			<button class="btn btn-success selectImageDialog_submitBtn">确定</button>
+		</div>
+	</div>
+</script>
+
+<script id="select-image-dialog-one-image-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="selectImageDialog_imgBox fl ml10 mb10">
+		<img src="${url}" class="selectImageDialog_imgBox_img" />
+		<div class="selectImageDialog_imgBox_cover"><img src="/static/termite_img/selected.gif"/></div>
+	</div>
+</script>

@@ -1,0 +1,49 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">套餐列表</li>
+	</ul>
+
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="./deliver_plan/create/"><i class="icon-plus icon-white"></i> 生成新套餐</a>
+	</span>
+</div>
+
+<div>
+	<legend>生成规则</legend>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>套餐名称</th>
+                <th>套餐价格</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for delivery_plan in delivery_plans %}
+			<tr data-id="{{ delivery_plan.id }}">
+				<td>
+					<a href="./delivery_plan/update/{{delivery_plan.id}}/">{{ delivery_plan.name }}</a>
+				</td>
+				<td>
+					{{ delivery_plan.price }}
+				</td>
+				<td>
+					<a class="btn btn-danger wx_delete" href="/market_tools/delivery_plan/delete/{{ delivery_plan.id }}/">删除</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %}

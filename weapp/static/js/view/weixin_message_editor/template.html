@@ -1,0 +1,82 @@
+<script id="weixin-message-eidtor-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="embeded-phone-box" class="fl"></div>
+	<div id="news-editor-box" class="wx-thin-form fl ml10">
+		{{if enableEditPattern}}
+		<form class="form-horizontal" method="post" id="patterns-form">
+			<fieldset>
+				<legend>当消息中出现:</legend>
+				<div class="ml20">
+					<input type="text" id="weixinMessageEditor-patternsInput" name="patterns" placeholder="输入匹配词" value="${patterns}" data-validate="required,noDuplicatePattern" data-validate-rule="${ruleId}"/>
+					<div class="errorHint"></div>
+					<span class="help-block">词与词之间用英文竖线'|'分隔</span>
+				</div>
+			</fieldset>
+		</form>
+
+		<legend>回复:</legend>
+		{{/if}}
+		<form class="form-horizontal" id="message-form">
+			<fieldset>
+				{{if enableRuleActivationController}}
+				<div class="control-group mr5 mt5">
+					<div class="controls ml20">
+						<label class="radio">
+							<input id="weixinMessageEditor-ruleActivationRadio" type="radio" name="active_type" value="0" {{if activeType == 0}}checked="checked"{{/if}}> 禁用
+						</label>
+						<label class="radio">
+							<input id="weixinMessageEditor-allDayRadio" type="radio" name="active_type" value="1" {{if  activeType == 1}}checked="checked"{{/if}}> 全天启用
+						</label>
+						<label class="radio">
+							<input id="weixinMessageEditor-timedRadio" type="radio" name="active_type" value="2" {{if  activeType == 2}}checked="checked"{{/if}}> 定时启用，从
+							<select name="start_hour" style="width: 80px; height: 25px; padding: 2px;">
+							{{each(i, hour) hours}}
+								<option value="${hour}" {{if hour == startHour}}selected="selected"{{/if}}>${hour}点</option>
+							{{/each}}
+							</select>
+							到 
+							<select name="end_hour" style="width: 80px; height: 25px; padding: 2px;">
+							{{each(i, hour) hours}}
+								<option value="${hour}" {{if hour == endHour}}selected="selected"{{/if}}>${hour}点</option>
+							{{/each}}
+							</select>
+						</label>
+					</div>
+				</div>
+				{{/if}}
+				<div class="control-group mr5 mt5">
+
+					<div id="tabZone" class="tabbable fl ml20">
+						<ul class="nav nav-tabs w350">
+							<li class="active"><a href="#weixinMessageEditer-textMessageZone" data-toggle="tab" data-type="text">文字</a></li>
+							<li><a href="#weixinMessageEditer-newsMessageZone" data-toggle="tab" data-type="news">图文消息</a></li>
+						</ul>
+
+						<!-- 时间选择器 -->
+						<div class="tab-content">
+							<!-- 文字消息 -->
+							<div class="tab-pane active" id="weixinMessageEditer-textMessageZone" style="width: 350px">
+								<div class="control-group mr5 mt5">
+									<div class="controls ml20">
+										<textarea rows="7" id="answer" name="answer" data-validate="required" data-validate-max-length="600" data-validate-min-length="0" class="hide"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<!-- 图文消息 -->
+							<div class="tab-pane tc" id="weixinMessageEditer-newsMessageZone" style="width: 350px">
+								<div id="small-phone" class="small-phone-nobackground mc">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="control-group mr5 mt50">
+					<div class="controls ml150">
+						<input type="button" id="submit-btn" class="btn btn-success" value="&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;"/>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="cb"></div>
+</script>

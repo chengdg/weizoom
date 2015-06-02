@@ -1,0 +1,11 @@
+<script id="shop-category-tmpl-src" type="text/x-jquery-tmpl">
+	<tr category_id="${id}">
+		<td><a href="/shop/editor/products/${id}/">${name}</a></td>
+		<td style="width: 100px;">${created_at}</td>
+		<td style="width: 80px;">
+			<span class="btn-group">
+				<a class="btn btn-danger tx_delete" href="/shop/editor/category/delete/${id}/">删除</a>
+			</span>
+		</td>
+	</tr>
+</script>

@@ -1,0 +1,29 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.select_menu' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="mt5 mb5 xui-br" 
+>
+    <div data-role="fieldcontain" data-controltype="selectmenu">
+        <label for="{{component.model.id}}">{{component.model.title}}</label>
+        <select 
+            id="{{component.model.id}}" 
+            data-native-menu="false" 
+            data-theme="{{component.model.theme}}"
+            {% ifequal component.model.is_mini "yes" %}data-mini="true"{% endifequal %}
+        >
+            {{ component|join_sub_components_html|safe }}
+        </select>
+    </div>
+</div>
+{% endifequal %}    
+
+
+{% ifequal component.type 'jqm.select_menu_item' %}
+    <option value={{component.model.value}} data-cid="{{component.cid}}">{{component.model.text}}</option>
+{% endifequal %}

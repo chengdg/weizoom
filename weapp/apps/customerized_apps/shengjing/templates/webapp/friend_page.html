@@ -1,0 +1,114 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+	<style>
+	body,html{
+		background-color: #e1e1e6;
+	}
+	.ui-page,.ui-content{
+		background: #e1e1e6!important;
+	}
+	.xui-section{
+		padding:0;
+	}
+	.xui-section .xui-section-item{
+		padding:15px 15px 0 28px;
+	}
+	.xui-iconSet{
+		-webkit-background-size:20px!important;
+		background-size: 20px!important;
+		background-position: left bottom!important;
+		color:#656975;
+	}
+	.xui-stuIcon{
+		background: url(/customerized_apps_static/shengjing/img/icon2_02.png) no-repeat;
+	}
+	.xui-companyIcon{
+		background: url(/customerized_apps_static/shengjing/img/icon2_101.png) no-repeat;
+	}
+	.xui-headInfo{
+		background: #d64141;
+		border-top-left-radius: 6px;
+		border-top-right-radius: 6px;
+		padding:13px 20px!important;
+		border-bottom: none;
+	}
+	.xui-photo{
+		width: 45px;
+		height: 45px;
+		-webkit-border-radius:50%;
+		border-radius:50%;
+		display: inline-block;
+		vertical-align: middle;
+	}
+	.xui-stuName{
+		vertical-align: middle;
+		font-family: "黑体";
+		font-size: 19px;
+		color:#fff;
+		text-align: right;
+		width: 70%;
+		right:15px;
+		top:50%;
+		display: inline-block;
+	}
+	.xui-dotsBorder{
+		background: url(/customerized_apps_static/shengjing/img/dots.png) repeat-x;
+		height:20px;
+		width:98%;
+		top:65px;
+		left:50%;
+		margin-left:-49%;
+		-webkit-background-size: 13px;
+		background-size: 13px;
+	}
+	.xui-errorInfo{
+		font-family: "黑体";
+		text-align:center;
+		margin:30px 0 40px 0;
+		color:#e65151;
+		padding:0px 30px;
+	}
+	</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x">
+<div data-role="content" data-theme="x">
+	{% if friend_binding_member_infos %}
+    {% for binding_info in friend_binding_member_infos %}
+    	<div class="xui-section pr"stle="overflow:hidden;">
+    		<div class="xui-section-item xui-headInfo clearfix pr">
+    			<img src="{% if binding_info.member.user_icon %}{{ binding_info.member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" alt="" class="xui-photo">
+    			<div class="xui-stuName pa">{{binding_info.member.username}}</div>
+    		</div>
+    		<div class="pa xui-dotsBorder"></div>
+    		<div style="padding:0 20px 15px 20px;" class="xa-userInfo">
+    			<div class="xui-section-item xui-stuIcon xui-iconSet">{% if binding_info.status == 0  %}非盛景学员{% else %}盛景学员{% endif %}</div>
+    			{% for company in binding_info.companys %}
+    			<div class="xui-section-item xui-iconSet">{{company.name}}</div>
+    			{% endfor %}
+    		</div>   		
+    	</div> 
+    {% endfor %}
+    {% else %}
+    	<div class="xui-section">
+	    	<div class="xui-errorInfo pt30 pb30">您还没有小伙伴哦！赶快带上您的朋友，在盛景一起学习玩耍吧！</div>
+	    </div>
+    {% endif %}
+ </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		var nameHeight = $('.xui-stuName').css('height');
+		var height = parseInt(nameHeight)
+		$('.xui-stuName').css('margin-top',"-"+ height*0.5 +"px");
+		var $firstChild = $('.xa-userInfo').children(":nth-child(2)");
+		$firstChild.addClass('xui-companyIcon');
+	});
+</script>
+{% endblock %}

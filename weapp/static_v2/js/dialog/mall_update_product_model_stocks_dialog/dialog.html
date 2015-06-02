@@ -1,0 +1,65 @@
+<script id="mall-update-product-model-stocks-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-updateProductModelStocksDialog" id="mallUpdateProductModelStocksDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				修改库存
+			</h3>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer xb-modalFooterBg">
+			<button class="btn btn-primary xa-submit-dialog">确认修改</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="mall-update-product-model-stocks-dialog-table-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table table-bordered xb-stripedTable">
+		<thead>
+			<tr>
+				{{each(i, property) properties}}
+				<th width="80px;">${property}</th>
+				{{/each}}
+				<th>库存</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each(i, model) models}}
+			<tr data-property-value-id="${model.id}">
+				{{each(j, property_value) model.property_values}}
+				<td>${property_value.name}</td>
+				{{/each}}
+				<td style="text-align: left;">
+					<div class="radio">
+						<label>
+							<input
+								type="radio"
+								name="propertyValue-${id}"
+								value="unlimit"
+								{{if (model.stock_type == 0)}}checked="checked"{{/if}} /> 无限
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input
+								type="radio"
+								name="propertyValue-${id}"
+								value="limit"
+								{{if (model.stock_type == 1)}}checked="checked"{{/if}} />
+							有限
+							<input type="text" class="form-control ml5 xui-inlineblock xa-stocksInput {{if (model.stock_type == 0)}}xui-invisible{{/if}}" style="width: 80px;" value="${model.stocks}" data-validate="require-nonnegative" />
+							<span class="errorHint"></span>
+						</label>
+					</div>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>

@@ -1,0 +1,14 @@
+<script id="tag-filter-view" type="text/x-jquery-tmpl">
+    {{if items }}
+    <ul>
+        <li tag_id="-1">
+            <a href="javascript:void(0);" class="tx_filter {{if active_id == -1}}active{{/if}}" value='-1'>全部</a>
+        </li>
+        {{each(i, tag) items}}
+        <li tag_id="${tag.products.id}">
+            <a href="javascript:void(0);" class="tx_filter {{if active_id == tag.id}}active{{/if}}" value='${tag.id}'>${tag.name}</a>
+        </li>
+        {{/each}}
+    </ul>
+	{{/if}}
+</script>

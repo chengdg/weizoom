@@ -1,0 +1,372 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style type="text/css">
+  .settings_section {
+    background: none repeat scroll 0 0 #F2F2F2;
+    margin-bottom: 10px;
+  }
+
+  span {
+    display: inline-block;
+  }
+
+  .settings_section legend {
+    margin-bottom: 3px;
+    margin-left: 5px;
+  }
+
+  .settings_section span.short_name {
+    min-width: 20%;
+    max-width: 20%;
+    margin-right: 5%;   
+  }
+
+  input {
+    width: 200px;
+    margin-top: 5px;
+  }
+
+  .settings_section span.long_name {
+    min-width: 40%;
+    max-width: 40%;
+    margin-right: 3%;
+  }
+
+  .short .errorHint {
+    margin-left: 29%;
+  }
+
+  .long .errorHint {
+    margin-left: 47%;
+  }
+
+  .settings_section span.short_name, .settings_section span.long_name {
+    margin-left: 20px;
+    line-height: 20px;
+  }
+
+  .settings_section .op {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #D0D0D0 -moz-use-text-color -moz-use-text-color;
+    border-image: none;
+    border-style: solid none none;
+    border-width: 1px;
+    width: 100%;
+  }
+
+  .settings_section .op a {
+    margin: 5px 20px 5px;
+  }
+  .mail-notification table{
+    width: 98%;
+    margin:10px auto;
+  }
+  .xui-guideLink{
+    top:1.1em;
+    left:180px;
+    font-size: 0.9em;
+  }
+  .xui-guideImg{
+    width:1000px;
+    left:50%;
+    margin-left: -500px;
+    position: fixed;
+    z-index: 1042;
+    height:100%;
+    overflow-y:auto;
+  }
+  .xui-guidecover{
+    background: rgba(0,0,0,.4);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1041;
+  }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<!--
+<div class="settings_section" id="integral_strategy">
+  <legend>积分策略</legend>
+
+  <div class="integral_setting_item short">
+    <span class="short_name">一元等价的积分数量</span>
+    <input type="number" name="integral_each_yuan" value="{{ interal_strategy_settings.integral_each_yuan }}" data-validate="require-positive-int"></input>
+    <div class="errorHint"></div>
+    </span>
+  </div>
+
+  <div class="integral_setting_item short">
+    <span class="short_name">成为会员赠送积分</span>
+    <input type="number" name="be_member_increase_count" value="{{ interal_strategy_settings.be_member_increase_count }}" data-validate="int"></input>
+    <div class="errorHint"></div>
+    </span>
+  </div>
+
+  <div class="integral_setting_item long">
+    <span class="long_name">点击给已购买的分享者增加的积分</span>
+    <input type="number" name="click_shared_url_increase_count_after_buy" value="{{ interal_strategy_settings.click_shared_url_increase_count_after_buy }}" data-validate="int"></input>
+    <div class="errorHint"></div>
+    </span>
+  </div>
+
+  <div class="integral_setting_item long">
+    <span class="long_name">点击给未购买的分享者增加的积分</span>
+    <input type="number" name="click_shared_url_increase_count_before_buy" value="{{ interal_strategy_settings.click_shared_url_increase_count_before_buy }}" data-validate="int"></input>
+    <div class="errorHint"></div>
+    </span>
+  </div>
+
+  <div class="integral_setting_item long">
+    <span class="long_name">通过分享链接购买后给分享者增加的积分</span>
+    <input type="number" name="buy_via_shared_url_increase_count_for_author" value="{{ interal_strategy_settings.buy_via_shared_url_increase_count_for_author }}" data-validate="int"></input>
+    <div class="errorHint"></div>
+    </span>
+  </div>
+
+  <div class="integral_setting_item long">
+    <span class="long_name">每次购买给邀请者增加的积分</span>
+    <input type="number" name="buy_increase_count_for_father" value="{{ interal_strategy_settings.buy_increase_count_for_father }}" data-validate="int"></input>
+    <div class="errorHint"></div>
+    </span>
+  </div>
+ 
+
+  {% if interal_strategy_settings.usable_integral_percentage_in_order == 100 %}
+   <div class="integral_setting_item long" >
+     <span class="long_name">积分使用 </span>   
+         <label class="radio inline" >
+             <input type="radio" name="optionsRadios" id="unlimited_integral" value="100" checked>无限制
+         </label> &nbsp;
+
+         <label class="radio inline" >
+            <input type="radio" name="optionsRadios" id="order_per_integral" value="{{interal_strategy_settings.usable_integral_percentage_in_order}}"> 订单金额的
+         </label>
+             <input type="number" name="optionsRadios" value="{{ interal_strategy_settings.usable_integral_percentage_in_order }}" data-validate=" required-percentage-not-border,require-int" style="width:45px;" disabled="readonly" id='usable_integral_percentage_in_order'>%
+     <div class="errorHint"></div><br/>
+   </div>
+  {% else %}
+   <div class="integral_setting_item long" >
+     <span class="long_name">积分使用 </span>   
+         <label class="radio inline" >
+             <input type="radio" name="optionsRadios" id="unlimited_integral" value="100" >无限制
+         </label> &nbsp;
+
+         <label class="radio inline" >
+            <input type="radio" name="optionsRadios" id="order_per_integral" value="{{interal_strategy_settings.usable_integral_percentage_in_order}}" checked> 订单金额的
+         </label>
+             <input type="number" name="optionsRadios" value="{{ interal_strategy_settings.usable_integral_percentage_in_order }}" data-validate=" required-percentage-not-border,require-int" style="width:45px;"  id='usable_integral_percentage_in_order'>%
+     <div class="errorHint"></div><br/>
+   </div>
+  {% endif %}
+ 
+    <div class="integral_setting_item long">
+      <span class="long_name">积分与优惠券可以同时使用</span>
+      <select class="span2"  value="{{interal_strategy_settings.usable_integral_or_conpon}}" id="usable_integral_or_conpon">
+        <option value="0" {% ifequal  interal_strategy_settings.usable_integral_or_conpon 0 %}selected{% endifequal %}>两者都可用</option>
+        <option value="1" {% ifequal  interal_strategy_settings.usable_integral_or_conpon 1 %}selected{% endifequal %}>只积分可用</option>
+        <option value="2" {% ifequal  interal_strategy_settings.usable_integral_or_conpon 2 %}selected{% endifequal %}>优惠券可用</option>
+        <option value="3" {% ifequal  interal_strategy_settings.usable_integral_or_conpon 3 %}selected{% endifequal %}>仅可用一项</option>
+      </select>
+    </div>
+
+  <div class="integral_setting_item long">
+    <span class="long_name"><a href="/account/setting/integral_detail/">积分详情设置</a></span>
+    </span>
+  </div>
+
+  <div class="op">
+    {% if request.sub_user %}
+    {% else %}
+    <a href="javascript:void(0);" class="btn btn-success" id="integral_update">提交</a>
+    {% endif %}
+  </div>
+</div>
+-->
+<div class="settings_section mail-notification">
+  <legend>运营邮件通知</legend>
+  <form>
+    <table class="table table-bordered">
+      <tr>
+        <th>邮件通知名称</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+      {% for notify_setting in notify_settings %}
+      <tr>
+        <td><label><a href="/account/setting/edit_email_setting/{{notify_setting.status}}/">
+          {% if notify_setting.status == 0 %}
+            下单时
+          {% endif %}
+          {% if notify_setting.status == 1 %}
+            付款时
+          {% endif %}
+          {% if notify_setting.status == 2 %}
+            发货时
+          {% endif %}
+          {% if notify_setting.status == 3 %}
+            完成时
+          {% endif %}
+          {% if notify_setting.status == 4 %}
+            取消时
+          {% endif %}
+        </a></label></td>
+        <td>
+            {% if notify_setting.is_active %}启用中{% else %}未启用{% endif %}
+        </td>
+        <td>
+          {% if notify_setting.is_active %}
+            <a class="btn btn-warning" href="/account/setting/notify/update/{{notify_setting.id}}/?action=stop">停用</a>
+          {% else %}
+            <a class="btn btn-success" href="/account/setting/notify/update/{{notify_setting.id}}/?action=restart">启用</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  
+  </form>
+</div>
+<!--
+<div class="settings_section pr" id="operation">
+  <legend>引导关注图文地址</legend>
+  <a href='javascript:void(0);' class='pa xa-guideImg xui-guideLink'>如何设置图文地址？</a>
+  <input style="width:80%" type="text" name="non-member-follow-url" value="{{ operation_settings.non_member_followurl }}" data-validate="can-none-length-limit" data-validate-max-length="1024"></input>
+  <legend>微众商城引流图文地址</legend>
+  <input style="width:80%" type="text" name="weshop-follow-url" value="{{ operation_settings.weshop_followurl }}" data-validate="can-none-length-limit" data-validate-max-length="1024"></input>
+  <div class="op">
+    <a href="javascript:void(0);" class="btn btn-success" id="operation_settings_update">提交</a>
+  </div>
+  </div>
+</div>
+  <div>
+  -->
+    
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    //“如何设置引导关注图文"灯箱
+    $('body').append("<div class='xui-guidecover hidden'></div>");
+    $('.xui-guidecover').append("<div style='display:none;' class='xui-guideImg'><img src='/termite_static/img/guide.jpg'></div>");
+    $('.xa-guideImg').click(function(event) {
+      $('.xui-guidecover').removeClass('hidden');
+      $('.xui-guideImg').show(200);
+    });
+    $('.xui-guidecover').click(function(event) {
+      $('.xui-guideImg').hide(200);
+      $('.xui-guidecover').addClass('hidden');
+    });
+
+    $('#operation_settings_update').click(function() {
+      var check_url = function(sel){
+        var url = $(sel).val();
+        if (!url) {
+          return '';
+        }
+        if(url.indexOf('http://') === -1) {
+          url = 'http://' + url;
+          $(sel).val(url);
+        }
+        return url;
+      }
+      var non_member_followurl = check_url('input[name="non-member-follow-url"]');
+      var weshop_followurl = check_url('input[name="weshop-follow-url"]');
+      if(non_member_followurl.length == 0 && weshop_followurl.length == 0)
+        return;
+
+      W.getLoadingView().show();
+      W.getApi().call({
+        method: 'post',
+        app: 'account',
+        api: 'operation_settings/update',
+        args: {
+          non_member_followurl: non_member_followurl,
+          weshop_followurl: weshop_followurl
+        },
+        success: function(data) {
+          W.getLoadingView().hide();
+          W.getSuccessHintView().show('保存成功');
+        },
+        error: function(resp) {
+          alert(resp);
+          W.getLoadingView().hide();
+          //TODO 通知错误信息
+          W.getErrorHintView().show('保存失败，请稍后重试！');
+        },
+        scope: this
+      });
+    });
+
+
+      $('#integral_update').click(function() {
+      if (!W.validate()) {
+        return false;
+      }
+      
+      if($('#unlimited_integral').attr("checked")=="checked"){
+        var usableIntegralPercentageInOrder = 100;
+      }
+
+        if($('#order_per_integral').attr("checked")=="checked"){
+          var usableIntegralPercentageInOrder = $("#usable_integral_percentage_in_order").val();
+      }
+
+      var integral_each_yuan = $('input[name="integral_each_yuan"]').val();
+      var be_member_increase_count = $('input[name="be_member_increase_count"]').val();
+      var click_shared_url_increase_count_after_buy = $('input[name="click_shared_url_increase_count_after_buy"]').val();
+      var click_shared_url_increase_count_before_buy = $('input[name="click_shared_url_increase_count_before_buy"]').val();
+      var buy_via_shared_url_increase_count_for_author = $('input[name="buy_via_shared_url_increase_count_for_author"]').val();
+      var buy_increase_count_for_father = $('input[name="buy_increase_count_for_father"]').val();
+      var usable_integral_or_conpon = $('#usable_integral_or_conpon').val();
+
+      W.getLoadingView().show();
+      W.getApi().call({
+        method: 'post',
+        app: 'account',
+        api: 'settings/update',
+        args: {
+          integral_each_yuan: integral_each_yuan,
+          be_member_increase_count: be_member_increase_count,
+          click_shared_url_increase_count_after_buy: click_shared_url_increase_count_after_buy,
+          click_shared_url_increase_count_before_buy: click_shared_url_increase_count_before_buy,
+          buy_via_shared_url_increase_count_for_author: buy_via_shared_url_increase_count_for_author,
+          usable_integral_percentage_in_order: usableIntegralPercentageInOrder,
+          usable_integral_or_conpon: usable_integral_or_conpon,
+          buy_increase_count_for_father: buy_increase_count_for_father
+        },
+        success: function(data) {
+          W.getLoadingView().hide();
+           W.getSuccessHintView().show('保存成功');
+        },
+        error: function(resp) {
+          W.getLoadingView().hide();
+          //TODO 通知错误信息
+          W.getErrorHintView().show('保存失败，请稍后重试！');
+        },
+        scope: this
+      });
+    });
+
+    $('#order_per_integral').click(function(){
+        $('#usable_integral_percentage_in_order').attr('disabled',false);
+    });
+
+    $('#unlimited_integral').click(function(){
+        $('#usable_integral_percentage_in_order').attr('disabled','disabled');
+    });
+
+  });
+</script>  
+{% endblock %}

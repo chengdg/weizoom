@@ -1,0 +1,47 @@
+<script id="page-nav-tmpl-src" type="text/x-jquery-tmpl">
+	<div>
+    	<table class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>导航菜单</th>
+				</tr>
+			</thead>
+			<tbody style="color: blue;">
+			</tbody>
+		</table>
+		<form id="pageNavEditForm" method="post">
+			<fieldset>
+			<legend style="margin-bottom: 5px;">添加导航:</legend>
+			<div class="control-group" style="margin-top: 0px;">
+				<!--
+				<label for="name" class="control-label">显示名：</label>
+				-->
+				<div class="controls">
+					<input type="text" placeholder="显示名" name="displayName" class="input-medium">
+				</div>
+				<!--
+				<label for="name" class="control-label">内部值：</label>
+				-->
+				<div class="controls">
+					<input type="text" placeholder="值:(mall-category)" name="value" class="input-medium">
+				</div>
+				<input type="button" class="btn btn-success" value="确定" />
+			</div>
+		</form>
+    </div>
+</script>
+
+
+
+<script id="page-nav-navs-list-tmpl-src" type="text/x-jquery-tmpl">
+	{{each(i, nav) navs}}
+	<tr style="cursor: pointer;" data-id="${nav.id}">
+		<td>${nav.displayName}</td>
+		<td width="20px;">
+			<a class="btn btn-danger btn-mini wx-delete" href="javascript:void(0);">
+				<i class="icon-remove icon-white"></i>
+			</a>
+		</td>
+	</tr>
+	{{/each}}
+</script>

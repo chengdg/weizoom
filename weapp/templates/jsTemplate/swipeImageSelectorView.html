@@ -1,0 +1,39 @@
+<script id="swipe-images-selector-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="control-group mb0">
+        <div>
+            <input id="add-swipe-photo-btn" type="button" class="btn btn-primary" value="&nbsp;&nbsp;&nbsp;&nbsp;添&nbsp;&nbsp;加&nbsp;&nbsp;&nbsp;&nbsp;" />
+            <span class="help-inline">允许最多上传${count}个图片</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div id="swipePhotos" class="clearfix" style="width: 350px;"></div>
+    </div>
+</script>
+
+<script id="swipe-images-selector-one-image-tmpl-src" type="text/x-jquery-tmpl">
+    <div name="oneSwipePhoto" data-id="${id}" class="swipeImagesSelector-oneImage fl imgBox pt0 mr15 mb10 mt5" style="width: 80px;">
+        <button class="close" type="button">×</button>
+        <img width="80px" src="${url}" style="width: 80px; height: 80px;"/>
+    </div>
+</script>
+
+
+<script id="swipe-images-selector-dialog-src" type="text/x-jquery-tmpl">
+	<div id="" class="form-horizontal mt20">
+		<div class="control-group">
+			<label class="control-label">图片：</label>
+			<div class="controls">
+				<input type="hidden" name="pic_url" id="pic_url" value="" data-validate="require-image"data-validate-dynamic = "true"/>
+				<div id="swipeImagesSelector-dialog-imageView"></div>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn btn-success tx_submit">添加</button>
+				<button type="button" class="btn tx_cancel ml20">取消</button>
+			</div>
+		</div>
+	</div>
+</script>

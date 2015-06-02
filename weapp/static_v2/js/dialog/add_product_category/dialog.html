@@ -1,0 +1,66 @@
+<script id="mall-add-product-category-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="xui-addProductCategoryDialog modal fade" id="mallAddProductCategoryDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title" ></h3>
+		</div>
+		<div class="modal-body">
+			<div class="form-inline" style="">
+				<div class="form-group">
+					<div class="">
+						<input class="form-control xa-query wui-query" />
+						<span class="xa-search  cursor-pointer btn  btn-primary ml30 xui-color-white">搜索</span>
+						<span class="ml10">分组中已有的商品不会显示在列表中</span>
+					</div>
+				</div>
+
+				<div
+					data-ui-role="advanced-table"
+					data-app="mall"
+					data-api="category_products/get"
+					data-template-id="#mall-add-product-category-dialog-products-tmpl"
+					data-enable-paginator="true"
+					data-enable-sort="false"
+					data-selectable="true"
+					data-item-count-per-page="15"
+					data-auto-load="false"
+					class="mt10 mb20"
+				></div>
+			</div>
+			
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary xa-submit-dialog" id="change_password">确认添加</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="mall-add-product-category-dialog-products-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable xa-productTable">
+	<thead>
+		<tr>
+			<th>商品名称</th>
+			<th>商品价格（元）</th>
+			<th>状态</th>
+			<th>销量</th>
+			<th>编辑时间</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{each(i, product) items}}
+		<tr data-id="${product.id}">
+			<td>${product.name}</td>
+			<td>${product.display_price}</td>
+			<td>${product.status}</td>
+			<td>${product.sales}</td>
+			<td>${product.update_time}</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+</script>

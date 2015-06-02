@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title></title>
+        <link type="text/css" rel="stylesheet" href="/termite_static/jquery/jquery.mobile-1.3.1.min.css">
+        
+        <script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript">
+            var $window = $(window);
+            window.W = {};
+            $(document).bind("mobileinit", function () {
+                $.mobile.ajaxEnabled = false;
+            });
+        </script>
+        <script type="text/javascript" src="/termite_static/jquery/jquery.mobile-1.3.1.min.js"></script>
+
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    </head>
+    <body>
+    	<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-vote-page" data-title="{{ page_title }}">
+			<div data-role="content" data-theme="x">
+				
+				<h1 style="margin-top: 80px; text-align: center;">请稍等<span class="xt-totalFee"></span><br/>授权中...</h1>
+			
+			</div>
+		</div>
+	  <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>	 
+	 <script type="text/javascript" src="/termite_static/js/system/system.js"></script>
+	 <script type="text/javascript" src="/static/js/system/template-0.9.js"></script>
+		<script type="text/javascript" src="/termite_static/js/system/md5.js"></script>
+		<script type="text/javascript" src="/termite_static/js/system/crypto-js.js"></script>
+        <script type="text/javascript" src="/termite_static/js/system/weixinapi.js"></script>
+        <script type="text/javascript" src="/termite_static/js/system/api.js"></script>
+        <script src="/static/jquery/jquery.cookie.js"></script>
+		<script type="text/javascript">
+
+			//W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
+			var webappOwnerId = "{{woid}}";
+			var appId = "{{weixin_mp_user_access_token.app_id}}";
+			//var appId = 'wxc0889b3d7d577bde';
+			var secret = "{{weixin_mp_user_access_token.app_secret}}";
+			var redirect_uri = encodeURIComponent(window.location.href);
+			var fmt = '{{fmt}}';
+	        //获取参数中的code
+			var code = '';
+			//try {
+			var reg = new RegExp("(^|&)code=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r!=null) {
+				code = unescape(r[2]);
+			}
+			//} catch(err) {
+                //alert(err);
+			if (code == '') {
+			    var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base#wechat_redirect";
+			    var auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?"+queryString;
+				setTimeout(function(){document.location.href = auth_url},500);
+			} else {
+				var data = {woid:webappOwnerId, module:'user_center',target_api: 'sct/get',appid:appId,secret:secret,code:code, fmt:fmt ,request_uri:"{{request_uri}}"};
+		        var open_id = '';
+		        //alert(data)
+		        $.ajax({
+		            type: "post", 
+		            url: "/webapp/api/project_api/call/", 
+		            data: data,
+		            dataType: "json", 
+		            success: function (data) { 
+		                alert(data.code);
+		               if (data.code == 200){
+		                    sct = data.data.sct;
+		                    webapp_id = data.data.webapp_id;
+		                    member_token = data.data.member_token;
+		                    open_id = data.data.open_id;
+		                    $.cookie('sct', sct, {expires:365*24*60*60, path:'/'}); 
+		                    $.cookie('fmt', member_token, {expires:365*24*60*60, path:'/'}); 
+		                    $.cookie('openid', open_id, {expires:365*24*60*60, path:'/'}); 
+		                    $.cookie('webapp_id', webapp_id, {expires:365*24*60*60, path:'/'}); 
+
+		                    var current_redirect_uri = window.location.href + '&fmt=' + member_token;//encodeURIComponent();
+		                   	alert(current_redirect_uri)
+		                   	setTimeout(function(){document.location.href = current_redirect_uri},500);
+		                 }
+		                 else{
+		                 	alert('授权失败请联系客服')
+		                 	setTimeout(function(){document.location.href = encodeURIComponent(window.location.href)},500);
+		                }
+		            }, 
+		            error: function (XMLHttpRequest, textStatus, errorThrown) { 
+		                alert('授权失败请联系客服'+errorThrown); 
+		                setTimeout(function(){document.location.href = encodeURIComponent(window.location.href)},500);
+		            },
+		        });
+				
+			}
+
+		
+		</script>
+    </body>
+</html>

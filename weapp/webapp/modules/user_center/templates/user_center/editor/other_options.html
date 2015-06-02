@@ -1,0 +1,50 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style type="text/css">
+	.user_center_opther_options {
+		border: 1px solid #ccc;
+		padding:10px 25px;
+	}
+	.user_center_opther_options_name{
+		font-family: Arial;
+		font-size: 15px;
+		font-weight: bold;
+		font-style: normal;
+		text-decoration: none;
+		color: #333333;	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">其它选项</li>
+	</ul>
+</div>
+
+<div>
+	<div class="w400 user_center_opther_options">
+		<div class="fl mt5">
+			<span class="user_center_opther_options_name">会员等级</span>
+		</div>
+
+		<div class="fr">
+			<a class="btn btn-primary" href="/webapp/user_center/grade/editor/list/"><i
+					class="icon-plus icon-white"></i>等级管理</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

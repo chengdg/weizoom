@@ -1,0 +1,12 @@
+<script id="video-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="videoView-uploadZone" class="videoView-uploadZone {{if videoUrl}}hide{{/if}}">
+		<input id="videoView-fileUploader" name="videoView-fileUploader" type="file" class="hide"/>
+	</div>
+	<div id="videoView-imgZone" name="videoView-imgZone" class="imgBox pt0 {{if !videoUrl}}hide{{/if}} videoView-imgZone"
+	     style="width:90px">
+		<button class="close" type="button">×</button>
+		<div class="videoView-imgContainer">
+			{{if videoUrl}}<span style="vertical-align:middle; padding-top:13px;">&nbsp;&nbsp;&nbsp;已上传！</span>{{/if}}
+		</div>
+	</div>
+</script>

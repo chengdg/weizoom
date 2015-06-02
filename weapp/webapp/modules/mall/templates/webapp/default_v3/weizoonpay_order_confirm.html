@@ -1,0 +1,115 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
+<style>
+	
+	.ui-cover{
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.7);
+		z-index: 10000;
+		position: absolute;
+		top: 0;
+	}
+	.ui-applyBox{
+		top:10%;
+		-webkit-background-size: cover;
+		background-size: cover;
+		width: 90%;
+		margin: 0 auto;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px; 
+		border-radius: 5px;
+		position: fixed;
+		margin-left: 5%;
+		padding-bottom: 20px;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-wzcoinConfirm-page">
+    <div data-role="content" data-theme="x">
+    	<form class="xui-form" method="post" action="" id="editForm">
+				<div class="xui-section-item xui-submitBox">
+					<div class="xui-form-controls">
+						<span class="xui-textTips">微众卡余额：<span class="xui-numTips">{{weizoom_card.money}}</span>元</span>
+					</div>
+					<div class="xui-form-controls mt">
+						<span class="xui-textTips">此次交易扣除：<span class="xui-numTips">{{order.final_price}}</span>元</span>
+					</div>
+					
+
+					{% if is_can_pay %}
+					<div class="mt30 clearfix">
+						<a href="javascript:void(0);" data-role="button" class="xui-btn xui-btnSubmit fl ua-apply" id="payBtn">确认</a>
+						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&workspace_id=mall&order_id={{order.order_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">取消</a>
+					</div>
+					{% else %}
+					<p style="color:#ae0001" class="mt20">您的微众卡余额不足！</p>
+
+					<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=weizoomcard_change_intr&action=get&&workspace_id=mall" style="color:#41434c;font-size:0.9em;text-decoration:underline;">积分兑换说明</a>
+					<div class="mt30 clearfix">
+						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&workspace_id=mall&order_id={{order.order_id}}" data-role="button" class="xui-btn xui-btnSubmit fl" id="submitBtn">确认</a>
+						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&workspace_id=mall&order_id={{order.order_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">取消</a>
+					</div>
+					{% endif %}
+				</div>
+		</form>
+	</div>
+	<div class="ui-cover hidden ua-cover">
+		<div class="ui-applyBox ua-applyBox pr">
+			<div class="xui-popBg pa">
+				<p>支付成功</p>
+				<p class="xui-popText mt50 tl">您的微众卡余额<span class="xui-popNum"></span>元</p>	
+				<p class="mt5 tl"><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=weizoomcard_change_intr&action=get&workspace_id=mall" style="color:#41434c;font-size:0.9em;text-decoration:underline;">积分兑换说明</a></p>
+				<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=pay_result_success&action=get&workspace_id=mall&order_id={{order.order_id}}" data-role="button" class="xui-btn xui-btnSubmit" id="submitBtn">确认</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {	
+		var $submitBtn = $('#payBtn');
+        $submitBtn.click(function() {
+        	var card_id = "{{weizoom_card.id}}";
+        	var order_id = "{{order.order_id}}";
+        	W.getApi().call({
+        		app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                	woid: W.webappOwnerId,
+                    project_id: W.projectId,
+                    card_id: card_id,
+                    order_id: order_id,
+                    module:'mall',
+                    target_api: 'weizoom_card/pay',
+                }),
+		        success: function(data) {
+		        	var balance = data['balance'];
+		        	$('.xui-popNum').text(balance);
+		        	$('.ua-cover').removeClass('hidden');
+		        },
+		        error: function(data) {
+		        	var code = parseInt(data['code']);
+			        var msg = '支付失败';
+			        if (code == 500){
+				       	msg = data['data']['msg']
+			        }
+			        $('.ui-page').alert({
+			         	isShow: true,
+			         	info: msg,
+			         	isSlide: true,
+			         	speed: 2000
+			         });
+		        }
+        	})
+        })
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+{
+ "inner_name": "databackend", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "\u540e\u53f0\u6570\u636e", 
+ "template_project_id": 0, 
+ "type": "viper", 
+ "id": 13, 
+ "css": "", 
+ "pagestore": "mongo"
+}

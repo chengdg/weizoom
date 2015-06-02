@@ -1,0 +1,706 @@
+{% extends "webapp_content_base.html" %}
+{% load mall_filter %}
+
+{% block css %}
+<style>
+.disabled_btn {
+    background: none repeat scroll 0 0 #D0D0D0;
+    border: 1px solid #D0D0D0;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage">
+    
+    <div id="wrapper" data-role="content" class="xui-wrapper">
+        <form class="xui-form xa-form" method="post" action="">
+            
+            
+            <fieldset class="xui-section xui-addr-border xui-receiverSection">
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=list" class="xui-section-info xui-section-title xui-section-inner xui-section-item pr xui-section-item xt-shipInfo disT" data-icon="true" data-role="button" style="width:100%;">
+                    <div class="disTc xui-positionIcon">
+                        <img src="/static_v2/img/webapp/mall/position.png" alt="">
+                    </div>
+                    <div class="xui-section-title xui-receiverInfo pr disTc">
+                        <p class="mb10 em9 disT">
+                            <span class="disTc xui-nameTd">
+                                {% if order %}<span class="xt-shipName">收货人:{{ order.ship_name }}</span>{% endif %}
+                            </span>
+                            <span class="disTc">
+                                <span class="xt-shipTel">{% if order %}{{ order.ship_tel }}{% endif %}</span>
+                            </span>
+                        </p>
+                        <div class="xui-address pr20">{% if order %}<span class="xt-shipArea">收货地址:{{ order.get_str_area }}</span><span class="xt-shipAddress ml5">{{ order.ship_address }}</span>{% endif %}</div>
+                        <!-- <span class="xui-icon xui-icon-rightarrow"> </span> -->
+                    </div>
+                    <div class="xui-rightArrow disTc">
+                        <img src="/static_v2/img/webapp/mall/right_arrowBlack.png" alt="">
+                    </div>
+                </a>
+                
+                <!-- <div class="xui-section-item">
+                    <div class="xui-section-title">
+                        <h2>运费</h2>
+                        <div class="fr">
+                            <span class="xa-postageAllElement em9" style="color:#7f7f7f;">
+                            {% if order.postage > 0 %}
+                            ￥<span class="xa-postageElement">{{order.postage}}</span>
+                            {% else %}
+                            免运费
+                            {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div> -->
+                
+            </fieldset>
+
+            <fieldset class="hidden">
+                <input id="ship_id" name="ship_id" value="{% if order %}{{ order.ship_id }}{% endif %}" type="hidden" >
+                <input id="delivery_plan_id" name="delivery_plan_id" value="{{ delivery_plan_id }}" type="hidden" >
+                <input id="delivery_dates" name="delivery_dates" value="{{ delivery_dates }}" type="hidden">
+                <input id="ship_name" name="ship_name" type="hidden" value="{% if order %}{{ order.ship_name }}{% endif %}" >
+                <input id="ship_tel" name="ship_tel" type="hidden" value="{% if order %}{{ order.ship_tel }}{% endif %}" >
+                <input id="area" name="area" class="xa-areaInput" data-ui-role="areaPop" type="hidden" value="{% if order %}{{ order.area }}{% endif %}" data-area-str="{% if order %}{{order.get_str_area}}{% endif %}">
+                <input id="ship_address" name="ship_address" type="hidden" value="{% if order %}{{ order.ship_address }}{% endif %}" >
+            </fieldset>
+            <input type="hidden" name="integral" id="integral" value="0" />
+
+            <!-- 商品列表 start -->
+            <div class="xui-selectedProductList">
+                {% for product_group in order.product_groups %}<!-- 商品循环li -->
+                <fieldset 
+                    class="
+                        mt10 
+                        xui-section 
+                        xa-promotion-{{product_group.promotion_type}} 
+                        xt-productGroup
+                        xa-productGroup
+                        {% if product_group.integral_sale_rule %}
+                        xa-has-integral-sale-rule
+                        {% endif %}
+                    " 
+                    data-product-group-id="{{product_group.id}}" 
+                >
+                    <ul class="clearStyle">
+                    {% with product_group.products.0 as product %}
+
+                        {% for product in product_group.products %}
+                        <li class="xa-product disT xui-i-padding xt-product"
+                            data-product-id="{{product.id}}" 
+                            data-product-count="{{product.purchase_count}}" 
+                            data-product-model-name="{{product.model_name}}"
+                            {% if product_group.can_use_promotion %}
+                            data-promotion-id="{{product_group.promotion.id}}"
+                            {% else %}
+                            data-promotion-id="0"
+                            {% endif %}
+                        >
+                            <div class="disTc xui-productThumbNail">
+                                <img src="{{product.order_thumbnails_url}}"/>
+                            </div>
+                            <div class="disTc xui-productInfo vt">
+                                <dl class="disT w em95">
+                                    <!-- <i> {{product.promotion.name}},{{product.promotion.type}},{{product.promotion.money}}</i> -->
+                                    <dd class="disTc xui-ellipsis-2 xa-name xt-name">{{ product.name }}</dd>
+                                    <dd class="disTc vt tr">
+                                        {% if product_group.can_use_promotion and product_group.promotion_type == 'flash_sale' %}
+                                        <span class="ml15">￥<span class="xa-product-price xt-price">{{ product_group.promotion.detail.promotion_price }}</span></span>
+                                        {% else %}
+                                        <span class="ml15">￥<span class="xa-product-price xt-price">{{ product.price|floatformat:2  }}</span></span>
+                                        {% endif %}
+                                    </dd>
+                                </dl>
+                                <dl class="disT w em9 mt5 c9">
+                                    <dd class="disTc vt xui-ellipsis-2">
+                                        {% if product.custom_model_properties %}
+                                            规格:
+                                            <span class="xt-model">
+                                            {% for property in product.custom_model_properties %}
+                                            <span class="mr10">{{ property.property_value }}</span>
+                                            {% endfor %}
+                                            </span>
+                                        {% endif %}
+                                    </dd>
+                                    <dd class="disTc vt tr">
+                                        Ｘ<span class="xt-count xa-count">{{ product.purchase_count }}</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </li>           
+                        {% endfor %}
+                        {% if product_group.can_use_promotion and product_group.promotion_type == 'premium_sale' %}            
+                        <li class="xui-promotion-section xt-promotion" data-product-promotion-id="{{product.id}}">
+                            <dl class="xui-i-content em85">
+                                <dd class="disTc vt" style="width:35px;white-space: nowrap;padding-left: 3px;padding-top:6px;">
+                                    <label class="xui-promotion-type xt-promotionType">买赠</label>
+                                </dd>
+                                <dd class="disTc">
+                                    <table class="xui-promotion-buyGifts w">
+                                    {% for premium_product in product_group.promotion.detail.premium_products %}
+                                    <tr class="pr xt-premiumProduct"
+                                        data-product-id="{{ premium_product.id }}"
+                                        data-product-count="{{premium_product.premium_count}}"
+                                        data-model-id="{{ premium_product.standard_model.id }}">
+                                        <td class="disTc xui-ellipsis-1">
+                                            赠品&nbsp;&nbsp;<span class="xt-name">{{ premium_product.name }}</span>
+                                        </td>
+                                        <td class="disTc tr c9 em75" style="padding-right:3px;">
+                                            <span class="cRed xui-donationState xt-stockInfo hidden">已赠完</span>
+                                            <!-- <span class="cRed xui-donationState xt-stockInfo">赠品不足</span> -->
+                                            Ｘ<em class="xa-promotion-count xt-count" data-id="{{ premium_product.id }}">{{ premium_product.premium_count }}</em></td>
+                                    </tr>
+                                    {% endfor %}
+                                    </table>
+                                </dd>
+                            </dl>
+                        </li>
+                        {% endif %}
+
+                        {% if product_group.promotion_type == 'price_cut' %}       
+                        <li class="xui-promotion-section xt-promotion" data-product-promotion-id="{{product.id}}">
+                            <dl class="xui-i-content em85" style="line-height:26px;">
+                                <dd class="disTc" style="white-space: nowrap;padding-left: 3px;width:35px;">
+                                    <label class="xui-promotion-type xt-promotionType">满减</label>
+                                </dd>
+                                <dd class="disTc xa-price-cut-info">
+                                    {% if product_group.can_use_promotion %}
+                                        商品已购满<span class="xt-price">{{product_group.promotion.detail.price_threshold}}</span>元，已减<span class="xt-cutMoney">{{product_group.promotion.detail.cut_money}}</span>元
+                                    {% else %}
+                                        商品购满<span class="xt-price">{{product_group.promotion.detail.price_threshold}}</span>元，可减<span class="xt-cutMoney">{{product_group.promotion.detail.cut_money}}</span>元
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                        </li>
+                        {% endif %}
+
+                        {% if product_group.integral_sale_rule %}     
+                        <li class="xui-promotion-section em85 xt-promotion">
+                            <input 
+                                type='checkbox' 
+                                id='is_use_integral_{{product_group.uid}}' 
+                                class="xui-integral-checkbox xa-integral-checkbox hidden"  
+                            />
+                            <label 
+                                class="xa-integral block clearfix" 
+                                style="padding:6px 3px;">
+                                <span class="xa-product-integral-info xt-promotionType fl pr20"></span>
+                                <i class="xui-iconSprite xui-iconSprite-checkbox pa xt-useIntegralTrigger" style="right:3px;top:6px;"></i>
+                                <input 
+                                    type="hidden" 
+                                    id="use_integral_{{product_group.uid}}" 
+                                    value="0" 
+                                    class="xa-integral"
+                                />
+                            </label>
+                        </li>
+                        {% endif %}
+                        
+                        {% if product_group.promotion_type and product_group.promotion_type != 'flash_sale' %}
+                        <li class="tr em85 c9" style="padding:10px 3px" data-product-promotion-id="{{product.id}}">
+                            <span class="xa-promotion-info">共件商品，</span>小计<span class="xui-text-red">￥<em class="xui-text-red em9 xa-subtotal xt-subtotal"></em></span>  
+                        </li>
+                        {% endif %}
+                    {% endwith %}
+
+                    </ul>
+                </fieldset>
+            {% endfor %}
+            </div>
+
+            <!-- 商品列表 end -->
+            <!-- 支付方式 start -->
+            {% if order.pay_interfaces %}
+            <fieldset class="xui-section xui-section-title xui-payInerface-section">
+                <div class="xui-i-padding clearfix">
+                    <h2 class="fl" style="line-height:38px;">支付方式：</h2>
+                    <dl class="fr clearfix" style="margin-top:2px">
+                        {% for pay_interface in order.pay_interfaces %}
+                        {% if pay_interface.type == 9 %}
+                        <dd class="fl xa-cashOndelivery">
+                            <input type="radio" value="9" class="xui-payInterface hidden" name="xa-choseInterfaces" id="payInterface1" data-id="{{pay_interface.id}}">
+                            <label for="payInterface1" class="xui-payInterface-opt xt-payInterface-cod">
+                                货到付款
+                            </label>
+                        </dd>
+                        {% elif pay_interface.type == 2 %}
+                        <dd class="fl xa-wxpay">
+                            <input type="radio" value="2" class="xui-payInterface hidden" name="xa-choseInterfaces" id="payInterface2" checked data-id="{{pay_interface.id}}">
+                            <label for="payInterface2" class="xui-payInterface-opt xt-payInterface-weixin">
+                                微信支付
+                            </label>
+                        </dd>
+                        {% elif pay_interface.type == 0 %}
+                        <dd class="fl xa-wxpay">
+                            <input type="radio" value="0" class="xui-payInterface hidden" name="xa-choseInterfaces" id="payInterface3" checked data-id="{{pay_interface.id}}">
+                            <label for="payInterface3" class="xui-payInterface-opt xt-payInterface-alipay">
+                                支付宝
+                            </label>
+                        </dd>
+                        {% endif %}
+                        {% endfor %}
+                        <!-- <span class="xa-selectedOpt xui-selectedOpt pa em9 xui-gray-7f" style="line-height:33px;">请选择支付方式</span> -->
+                        <!-- <select name="" id="xa-choseInterfaces" class="xui-gray-7f em9 xui-inner">
+                            <option value="" selected>请选择支付方式</option>
+                        {% for pay_interface in order.pay_interfaces %}
+                            <option value="{{pay_interface.type}}" data-id="{{pay_interface.id}}">{{pay_interface.get_str_name}}</option>
+                        {% endfor %}
+                        </select>
+                        <span class="xui-icon xui-icon-rightarrow"></span> -->
+                    </dl>
+                </div>
+            </fieldset>
+            {% endif %}
+            <!-- 支付方式 end -->
+            <fieldset class="xui-section xui-conditionBox">
+            <!--给商家留言-->
+                <div class="xui-section-item xui-section-title xui-section-message xa-clearBtnContainer xui-i-padding">
+                    <!-- <div class="xui-clearBtn pa hidden" data-icon="true"></div> -->
+                    <div class="xui-inner-input-container" style="border-radius:0;">
+                        <input type="text" name="message" class="pl10 xt-customerMessage xa-clearText ui-input-text" placeholder="订单留言在45字以内" maxlength="45">
+                    </div>
+                </div>
+            </fieldset>
+            <!-- 发票 start -->
+            <!-- {% if mall_config.is_enable_bill %} -->
+            <!-- {% endif %} -->
+            <fieldset class="xui-section hidden">
+                <div class="xa-triggerGroup xt-triggerGroup xui-section-item">
+                    <input type="checkbox" id="is_use_bill" name="is_use_bill" class="xui-bill-checkbox hidden">
+                    <label class="xa-displayTrigger xui-section-title clearfix pr block xui-i-padding" data-target="#billInputZone">
+                        <h2 class="">开具发票{{ request.owner_id }}1</h2>
+                        <i class="xui-iconSprite xui-iconSprite-checkbox fr" style="margin-bottom:-2px;"></i>
+                    </label>
+                    
+                    <div id="billInputZone" class="hidden em95" data-mode="dropDown"  style="padding-bottom:1px;">
+                        <div class="xui-billContainer">
+                        <div class="disT w xa-choseBillType">
+                            <label class="disTc vm" style="width:55px;" for="r1">
+                                <input type="radio" value="1" name="bill_type" id="r1" class="xui-regular-radio xa-billInput" data-role="none"  checked='checked'>
+                                <label for="r1"></label><label class="xui-regular-radio-label">个人</label>
+                            </label>
+                            <div class="pr disTc vm xa-clearBtnContainer">
+                                <!-- <div class="xui-clearBtn pa hidden" data-icon="true"></div> -->
+                                <input type="text" class="xa-clearText ui-input-text" value="{{ order.ship_name }}" name="bill">
+                            </div>
+                        </div>
+                        <div class="disT w xa-choseBillType" style="margin-top:7px;">
+                            <label class="disTc vm" style="width:55px;" for="r2">
+                                <input type="radio" value="2" name="bill_type" class="xui-regular-radio xa-billInput" data-role="none" id="r2">
+                                <label for="r2"></label><label class="xui-regular-radio-label">公司</label>
+                            </label>
+                            <div class="pr disTc xa-clearBtnContainer vm">
+                                <!-- <div class="xui-clearBtn pa hidden" data-icon="true"></div> -->
+                                <input type="text" class="xa-clearText ui-input-text" disabled="disabled">
+                            </div>
+                        </div>
+                        </div>
+                        <!-- <div style="width: 80%; margin: 0px auto;">
+                            <div class="zoom pb5">
+                                <label><input type="radio" name="bill_type" value="1" checked='checked'>个人</label>
+                                <label><input type="radio" name="bill_type" value="2">公司</label>
+                            </div>
+                            <input id="bill" name="bill" type="text" required required-msg="发票信息不能为空" />
+                        </div> -->
+                </div>
+            </fieldset>
+            <!-- 发票 end -->
+            <fieldset class="xui-section xui-deductionSetion" style="padding:0 10px;margin-top:10px;">
+            <!-- 积分商品 -->
+            {% if use_ceiling > 0 %}
+            <!-- 整单积分 -->
+            <div class="xui-orderIntegralDeduction pr xa-order-integral" data-integralCount="{{use_ceiling}}">
+                <input 
+                    type='checkbox' 
+                    id='is_use_integral_{{product.id}}_{{product.model.name|format_model_to_valid_selector}}' 
+                    class="xui-integral-checkbox xa-integral-checkbox hidden" 
+                    name='is_use_integral_{{product.id}}_{{product.model.name|format_model_to_valid_selector}}' />
+                <label 
+                    class="xa-integral block clearfix" 
+                    style="padding:6px 3px;">
+                    <span class="xa-product-integral-info xt-promotionType fl pr20"></span>
+                    <i class="xui-iconSprite xui-iconSprite-checkbox pa xt-useIntegralTrigger" style="right:3px;top:11px;"></i>
+                    <input 
+                        type="hidden" 
+                        name="integral_order" 
+                        id="integral_order" 
+                        value="0" 
+                        class="xa-product-use-integral"
+                    />
+                </label>
+            </div>
+            {% endif %}
+            <!--优惠券-->
+            <div class="xa-triggerGroup xt-triggerGroup clearfix xui-section-item  xa-couponItem">
+                <div class="clearfix xui-section-title tl">
+                    <label class="clearfix pr xui-coupon block xui-i-padding xa-couponSwiperSlide"  data-target="#orderCouponDialog">
+                        <h2 class="mr5">优惠券</h2>
+                        <span class="xa-no-use-coupon-show">
+                            <span class="xui-inlineblock em8 xui-couponNum" style="">{%if coupons %}{{coupons|length}}张{%else%}无{%endif%}可用</span>
+                            <span class="mr20 pa xui-gray-7f em85" style="right:0;top:14px;">未使用</span>
+                            <span class="xui-icon xui-icon-rightarrow" style="border-color:#999"></span>
+                        </span>
+                        <span class="xa-use-coupon-show hidden em9">
+                            <span class="xa-coupon-money">已抵用</span>
+                            <a href="javascript:void(0);" class="xa-cancelCoupon mr20 pa c3" style="right:0;top:0;padding:14px 0;">取消使用</a>
+                            <span class="xui-icon xui-icon-rightarrow"> </span>
+                        </span>
+                        
+                    </label>
+                    <input type="checkbox" id="is_use_coupon" name="is_use_coupon" value="true" class="hidden">
+                    <input id="coupon_id" name="coupon_id" type="hidden" value="0" >
+                </div>
+            </div>
+            <!-- 微众卡 -->
+            {% if is_weizoom_card_permission %}
+            <div class="xui-weizoomCard xa-weizoomCard">
+                <div class="xui-guideUse xa-guideUse" >
+                    <div class="xui-i-title xui-section-title">
+                        <h2>使用微众卡</h2>
+                        <span class="fr c9 em85">您最多使用10张微众卡</span>
+                    </div>
+                    <div class="xui-firstcard xa-firstCard w disT">
+                        <div class="disTc" style="width:37.68%">
+                            <input class="ui-input-text" id="tmp_card_name" placeholder="输入卡号">
+                        </div>
+                        <div class="disTc" style="width:37.68%">
+                            <input class="ui-input-text" id="tmp_card_pass" placeholder="输入密码">
+                        </div>
+                        <div class="disTc tr vm" style="width:26%">
+                            <a class="xui-button xa-useWeizoomCardButton" href="javascript:void(0);">使用</a>
+                        </div>
+                    </div>
+                    <div class="xui-errorHint xa-errorHint" style="display:none;">
+                        卡号或密码错误
+                    </div>
+                </div>
+                <div class="xui-cardInfo xa-cardInfo" style="display:none;">
+                     <div class="xui-i-title xui-section-title">
+                        <h2>微众卡</h2>
+                        <span class="fr c9 em85">您最多使用10张微众卡</span>
+                    </div>
+                    <div class="xui-cardDetails xa-cardDetails">
+                        <input id="card_name" name="card_name" type="hidden" />
+                        <input id="card_pass" name="card_pass" type="hidden" />
+                    </div>
+                    <div class="xui-otherCard xa-otherCard"></div>
+                    <div class="xui-footer">
+                        <a href="javascript:void(0);" class="xa-addNewCard xui-addNewCard">+添加新卡</a>
+                        <span class="c3 em8 fr">您已使用<span class="xa-use-weizoomcard-count"></span>/10张</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            </fieldset>
+
+                
+                
+            <!--更改end-->
+            {% if not order.type == "integral" %}
+            <fieldset class="xui-section xui-prizeItemList em9">
+                <div class="xui-i-padding">
+                    <p class="zoom">
+                        <span class="fl xui-gray-8">商品金额</span>
+                        <span class="fr">￥<span class="xa-totalProductPrice xt-totalProductPrice"></span></span>
+                    </p>
+                    <p class="zoom">
+                        <span class="fl xui-gray-8">积分抵扣</span>
+                        <span class="fr">- ￥<span class="xa-integralMoney xt-integralMoney"></span>
+                    </p>
+                    <p class="zoom">
+                        <span class="fl xui-gray-8">促销优惠</span>
+                        <span class="fr">- ￥<span class="xa-promotionMoney xt-promotionMoney"></span>
+                    </p>
+                    <p class="zoom">
+                        <span class="fl xui-gray-8">优惠劵</span>
+                        <span class="fr">- ￥<span class="xa-couponMoney xt-couponMoney"></span></span>
+                    </p>
+                    <p class="zoom">
+                        <span class="fl xui-gray-8">微众抵扣</span>
+                        <span class="fr">- ￥<span class="xa-weizoomCardMoney xt-weizoomCardMoney"></span></span>
+                    </p>
+                    <p class="zoom">
+                        <span class="fl xui-gray-8">运费</span>
+                        <span class="fr">+ ￥<span class="xa-postageElement xt-postage">{{order.postage}}</span></span>
+                    </p>
+                </div>
+            </fieldset>
+            {% endif %}
+        </form>
+    </div>
+    <div class="xui-bottom-actionPanel xui-actionPanel pr disT w xa-bottom-actionPanel">
+                <div class="disTc vm tc xui-text em95" style="background:rgba(0,0,0,0.8);color:#fff;">                    
+                    <!-- {% if order.type == "integral" %}
+                        实付 <span class="xui-text-red" style="font-size:1.1rem;"><span class="xa-totalPrice xt-totalPrice"></span>积分</span>
+
+                    {% else %}
+                    {% endif %} -->
+                         实付金额：￥<span class="xa-totalPrice xt-totalPrice" style="font-size:1rem;"></span></span>
+                    
+                </div>
+                <a href="javascript:void(0);" data-role="button" class="disTc vm xui-btnOuter tc em95 xa-submit" id="submit-order" style="width:95px;color:#fff;background:#cf0404;">提交订单</a>
+            </div>
+    <!-- 微众卡弹窗 -->
+    <div class="xui-cardDialog xa-cardDialog xui-cover" style="display:none;">
+        <div class="xui-i-box">
+            <h2>使用微众卡</h2>
+            <label class="xui-cardid">
+                <span>卡号</span>
+                <input type="text"  class="xa-cardid">
+            </label>
+            <label class="xui-password">
+                <span>密码</span>
+                <input type="text" class="xa-password">
+            </label>
+            <span class="xui-errorHint xa-errorHint" style="display:none;">卡号或密码错误</span>
+            <div class="xui-button">
+                <div class="xui-cancleButton xa-cancleWeizoomDialogButton">取消</div>
+                <div class="xui-confirmButton xa-confirmButton">确认</div>
+            </div>
+        </div>
+    </div>
+    <!-- 不可购买弹窗 -->
+    <div class="xui-cover xui-cantBuyDialog xa-cantBuyDialog hidden">
+        <div class="xui-i-box">
+            <h2 class="xa-cantBuyElement">该订单内商品状态发生变化！</h2>
+            <h2 class="hidden">以下赠品库存不足或已赠完！</h2>
+            <div class="xui-cantBuyList" style="">
+                <ul class="clearStyle"><!-- 商品循环li -->
+                    <li class="xa-product-not-buy disT xui-i-padding w">
+                        <div class="disTc xui-productThumbNail pr">
+                            <img src=""/>
+                            <label class="pa tc xa-cantBuyReason">{{ msg }}</label>
+                        </div>
+                        <div class="disTc xui-productInfo vt">
+                            <dl class="disT w em95">
+                                <dd class="disTc xui-ellipsis-2 xa-cantBuyProductName"></dd>
+                                <dd class="disTc vt tr xa-cantBuyElement">
+                                    <span class="ml15">￥<span class="xa-product-price"></span></span>
+                                </dd>
+                            </dl>
+                            <dl class="disT w em9 mt5 c9">
+                                <dd class="disTc vt xui-ellipsis-2 xa-cantBuyProductModel">
+                                    <span class="mr10"></span>
+                                </dd>
+                                <dd class="disTc vt tr">
+                                    Ｘ<span class="xt-count xa-count"></span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </li>
+                </ul>   
+            </div>
+            <div class="xui-button clearfix tc">
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-goBackButton xa-goBackButton">返回修改</a>
+                <a class="xui-deleteButton xa-deleteButton xa-cantBuyElement">移除以上商品</a>
+                <a class="xui-deleteButton xa-deletePremiumButton hidden" style="display:none;">继续提交</a>
+            </div>
+        </div>
+    </div>
+    <!-- 优惠券弹出 -->
+    <div id="orderCouponDialog" class="wui-swiper xui-orderCoupon-Page" data-mode="dialog" data-ui-role="swipedialog">
+        <div class="wui-swiper-tabs-coupon clearfix">
+            <a class="wui-inner-active">可用</a>
+            <a>不可用</a>
+            <a>使用优惠码</a>
+        </div>
+        <div class="wui-swiper-container">    
+            <div class="wui-swiper-wrapper">
+                <div class="wui-swiper-slide" id="xa-wrapper">
+                    <!--数据开始-->
+                    {% if coupons %}
+                    <div class="orderList m10">
+                        <ul data-role="listview" class="xui-list-y">
+                            {% for coupon in coupons %}
+                            <li class="xa-coupon mt10" data-id="{{ coupon.coupon_id }}" data-money="{{coupon.money}}" data-productid="{{ coupon.limit_product_id }}">
+                                <div class="xui-coupon clearfix">
+                                    <div class="xui-couponBg-container{% if coupon.limit_product_id %} xui-singleCoupon{% endif %}">
+                                        <div class="p10">
+                                            <p class="em95 xui-couponTitle">{{ coupon.name }}</p>
+                                            <p class="xui-coupon-inner">
+                                                <span class="xui-priceTag">¥</span>
+                                                <span class="xui-couponPrice">{{ coupon.money|floatformat:"2" }}</span>
+                                            </p>
+                                        </div>
+                                        <div class="em75 tl xui-couponInfo">
+                                            <p>使用期限：{{coupon.start_date |date:"Y/m/j H:i:s"}} - {{coupon.expired_time |date:"Y/m/j H:i:s"}}</p>
+                                            <p>使用范围：{% if coupon.limit_product_id %}单品券{% else %}全店通用券{% endif %}</p>
+                                            <p>使用条件：{% if coupon.valid_restrictions > 0 %}
+                                                {% if coupon.limit_product_id %}商品{% else %}订单{% endif %}金额满{{ coupon.valid_restrictions }}元可用
+                                                {% else %}不限制{% endif %}</p>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
+                    <p class="tc" style="margin-top:25%;color:#888;"><img src="/static_v2/img/webapp/mall/couponEmpty.png" alt="" width="50%" data-allow-autoplay=false></p>
+                    <p class="tc mt5 c9 em105">暂无优惠券</p>
+                    <p class="tc mt5 xa-closeCouponDialog c9" style="text-decoration:underline;">返回</p>
+                    {% endif %}
+                    <!--数据结束-->
+                </div>
+                <div class="wui-swiper-slide">
+                    {% if limit_coupons %}
+                    <div class="orderList m10">
+                        <ul data-role="listview" class="xui-list-y">
+                            {% for coupon in limit_coupons %}
+                            <li class="mt10" data-id="{{ coupon.id }}" data-money="{{coupon.money}}">
+                                <div class="xui-coupon clearfix">
+                                    <div class="xui-couponBg-container{% if coupon.limit_product_id %} xui-singleCoupon{% endif %} xui-{{coupon.display_status}} ">
+                                        <div class="p10">
+                                            <p class="em95 xui-couponTitle">{{ coupon.name }}</p>
+                                            <p class="xui-coupon-inner">
+                                                <span class="xui-priceTag">¥</span>
+                                                <span class="xui-couponPrice">{{ coupon.money|floatformat:"2" }}</span>
+                                            </p>
+                                        </div>
+                                        <div class="em75 tl xui-couponInfo">
+                                            <p>使用期限：{{coupon.start_date |date:"Y/m/j H:i:s"}} - {{coupon.expired_time |date:"y/m/j H:i:s"}}</p>
+                                            <p>使用范围：{% if coupon.limit_product_id %}单品券{% else %}全店通用券{% endif %}</p>
+                                            <p>使用条件：{% if coupon.valid_restrictions > 0 %}
+                                                {% if coupon.limit_product_id %}商品{% else %}订单{% endif %}金额满{{ coupon.valid_restrictions }}元可用
+                                                {% else %}不限制{% endif %}</p>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
+                    <p class="tc" style="margin-top:25%;color:#888;"><img src="/static_v2/img/webapp/mall/couponEmpty.png" alt="" width="50%" data-allow-autoplay=false></p>
+                    <p class="tc mt5 c9 em105">暂无优惠券</p>
+                    <p class="tc mt5 xa-closeCouponDialog c9" style="text-decoration:underline;">返回</p>
+                    {% endif %}
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="pl10 pr10">
+                      <!--数据开始-->
+                        <div class="disT w">
+                            
+                            <div class="xui-couponCodeInput pr disTc xa-clearBtnContainer">
+                                <div class="xui-clearBtn pa hidden" data-icon="true"></div>
+                                <!-- <span style="border:1px solid #dbdbdb">  -->
+                                    <input name="coupon_coupon_id" placeholder="请输入优惠码" type="text" class="ui-input-text"/>
+                                <!-- </span> -->
+                            </div>
+                            <div class="xui-couponCodeSubmit disTc vm" style="width:117px;">
+                                <a href="javascript:void(0);" data-attr="couponButton" class="xui-couponCodeSubmit xa-useCouponCode disTc vm tc">确认使用</a>
+                            </div>
+                        </div>
+                        
+                        <div class="error-info tl em85" style="color:#db4350;">
+                        </div>
+                     <!--数据结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+if (/ipad|iphone|mac/i.test(navigator.userAgent)){
+    $('#wrapper').addClass('xui-wrapper');
+    // $('.xa-bottom-actionPanel').css('position','absolute');
+    // $('.xa-form').css('padding-bottom','0');
+    // var myScroll;
+    function loaded() {
+        myScroll = new iScroll('wrapper', { checkDOMChanges: true });
+    }
+    $('.xui-editOrderPage .xui-form').css('padding-bottom','0px');
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+    document.addEventListener('DOMContentLoaded', loaded, false);
+
+    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+}
+
+var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %}; 
+
+$(document).ready(function() {   
+    //绑定初始化数据
+    _.delay(function() {
+        var postageFactor = W.loadJSON('postageFactor');
+        console.log('postageFactor', postageFactor)
+        var integralInfo = W.loadJSON('integralInfo');
+        var productGroups = W.loadJSON('productGroups');
+        view = new W.page.EditOrderPage({
+            el: '.xui-editOrderPage',
+            postageFactor: postageFactor,
+            integralInfo: integralInfo,
+            productGroups: productGroups,
+            isOrderFromShoppingCart: isOrderFromShoppingCart
+        });
+    }, 100);
+});
+
+//无刷新页面重置数量信息
+if (document.getElementById('card_name')) {
+    document.getElementById('card_name').value = '';    
+}
+if (document.getElementById('card_pass')) {
+    document.getElementById('card_pass').value = '';    
+}
+if (document.getElementById('card_name')) {
+    document.getElementById('card_name').value = '';    
+}
+_.each($('input.xui-integral-checkbox[type="checkbox"]'), function($el){
+    $el.checked = false;
+});
+$(function(){
+    // 处理赠品库存不足
+    var product_ids='', model_ids='';
+    $('.xt-premiumProduct').each(function(i,n){
+        product_ids += '_'+$(n).data('product-id');
+        model_ids += '_'+$(n).data('model-id');
+    })
+    if(product_ids.length<=0 && model_ids.length<=0){
+        return
+    }
+    product_ids = product_ids.substr(1)
+    model_ids = model_ids.substr(1)
+    // ajax获取赠品实时库存
+    W.getApi().call({
+        app: 'webapp',
+        api: 'project_api/call',
+        method: 'post',
+        args: _.extend({
+            woid: W.webappOwnerId,
+            project_id: W.projectId,
+            module: 'mall',
+            target_api: 'products_stocks/get',
+            product_ids: product_ids,
+            model_ids: model_ids
+        }),
+        success: function(data) {
+            $('.xt-premiumProduct').each(function(i, n){
+                var id = $(n).data('product-id'), key = id + '-' + $(n).data('model-id'),total_count = 0;
+                if(data[key].stock_type == '0'){
+                    // 库存类型是无限
+                    return
+                }
+                if(data[key].stocks <= 0){
+                    // 已赠完
+                    $('.xt-stockInfo', n).removeClass('hidden');
+                    return
+                }
+                // 获取需要多少件商品
+                $('[data-product-id="'+ id +'"]').each(function(j,m){
+                    total_count += parseInt($(m).data('product-count'));
+                })
+                if(data[key].stocks < total_count){
+                    $('.xt-stockInfo', n).removeClass('hidden').text('库存不足');
+                }
+            });
+        },
+        error: function(data){}
+    });
+})
+</script>
+{% endblock %}

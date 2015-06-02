@@ -1,0 +1,8 @@
+{
+ "name": "\u5fae\u5546\u57ce", 
+ "source_workspace_id": 0, 
+ "inner_name": "mall", 
+ "template_project_id": 3, 
+ "data_backend": "module:mall", 
+ "id": 2
+}

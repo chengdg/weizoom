@@ -1,0 +1,292 @@
+[
+ {
+  "created_at": "2014-05-12 13:59:34", 
+  "component": {
+   "cid": 1, 
+   "pid": null, 
+   "property_view_title": "\u80cc\u666f", 
+   "force_display_in_property_view": "no", 
+   "components": [
+    {
+     "cid": 3, 
+     "pid": 1, 
+     "property_view_title": "List View", 
+     "force_display_in_property_view": "no", 
+     "components": [
+      {
+       "cid": 5, 
+       "pid": 3, 
+       "property_view_title": "Listview Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.listview_button", 
+       "model": {
+        "index": 1, 
+        "name": "", 
+        "bubble_text": "", 
+        "text": "\u6625\u88c5\u4e13\u573a", 
+        "image": "/standard_static/test_resource_img/simple_fashion/category_1.jpg", 
+        "detail": "", 
+        "id": "", 
+        "theme": "x", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "arrow-r", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data\":\"javascript:W.alertEditTemplateLinkTarget();\"}"
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 6, 
+       "pid": 3, 
+       "property_view_title": "Listview Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.listview_button", 
+       "model": {
+        "index": 2, 
+        "name": "", 
+        "bubble_text": "", 
+        "text": "\u6e05\u51c9\u590f\u98ce", 
+        "image": "/standard_static/test_resource_img/simple_fashion/category_2.jpg", 
+        "detail": "", 
+        "id": "", 
+        "theme": "x", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "arrow-r", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data\":\"javascript:W.alertEditTemplateLinkTarget();\"}"
+       }, 
+       "has_global_content": "no"
+      }
+     ], 
+     "selectable": "yes", 
+     "type": "jqm.listview", 
+     "model": {
+      "index": 2, 
+      "name": "", 
+      "items": [
+       5, 
+       6
+      ], 
+      "is_inset": "yes", 
+      "uploadHeight": "358", 
+      "id": "", 
+      "uploadWidth": "588", 
+      "divider_theme": "x", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "class": "xui-categoryList"
+     }, 
+     "has_global_content": "no"
+    }, 
+    {
+     "cid": 11, 
+     "pid": 1, 
+     "property_view_title": "\u5bfc\u822a\u6309\u94ae", 
+     "force_display_in_property_view": "no", 
+     "components": [
+      {
+       "cid": 12, 
+       "pid": 11, 
+       "property_view_title": "\u56fe\u6807Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.nav_icon_grid_button", 
+       "model": {
+        "index": 1, 
+        "name": "", 
+        "color": "#F46B41", 
+        "text": " \u7528\u6237\u4e2d\u5fc3", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "/termite_static/termite_img/nav_icons/icon_White/icon1_02.png", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data\":\"javascript:W.alertEditTemplateLinkTarget();\"}"
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 13, 
+       "pid": 11, 
+       "property_view_title": "\u56fe\u6807Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.nav_icon_grid_button", 
+       "model": {
+        "index": 2, 
+        "name": "", 
+        "color": "none", 
+        "text": "\u8d2d\u7269\u8f66", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "/termite_static/termite_img/nav_icons/icon_White/icon1_08.png", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data\":\"javascript:W.alertEditTemplateLinkTarget();\"}"
+       }, 
+       "has_global_content": "no"
+      }
+     ], 
+     "selectable": "yes", 
+     "type": "jqm.nav_icon_grid", 
+     "model": {
+      "index": 3, 
+      "name": "", 
+      "items": [
+       12, 
+       13
+      ], 
+      "height": "", 
+      "width": "", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "id": "xui-homePageNav", 
+      "fixed_position": "none", 
+      "class": "xui-homePageNav", 
+      "columns": "4"
+     }, 
+     "has_global_content": "no"
+    }, 
+    {
+     "cid": 14, 
+     "pid": 1, 
+     "property_view_title": "\u8f6e\u64ad\u56fe", 
+     "force_display_in_property_view": "no", 
+     "components": [
+      {
+       "cid": 15, 
+       "pid": 14, 
+       "property_view_title": "\u56fe\u7247", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.swipeimage", 
+       "model": {
+        "index": 1, 
+        "name": "", 
+        "text": "\u56fe\u7247", 
+        "image": "/standard_static/test_resource_img/simple_fashion/swipe_1.jpg", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "class": "", 
+        "target": ""
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 16, 
+       "pid": 14, 
+       "property_view_title": "\u56fe\u7247", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.swipeimage", 
+       "model": {
+        "index": 2, 
+        "name": "", 
+        "text": "\u56fe\u7247", 
+        "image": "/standard_static/test_resource_img/simple_fashion/swipe_2.jpg", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "class": "", 
+        "target": ""
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 17, 
+       "pid": 14, 
+       "property_view_title": "\u56fe\u7247", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.swipeimage", 
+       "model": {
+        "index": 3, 
+        "name": "", 
+        "text": "\u56fe\u7247", 
+        "image": "/standard_static/test_resource_img/simple_fashion/swipe_3.jpg", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "class": "", 
+        "target": ""
+       }, 
+       "has_global_content": "no"
+      }
+     ], 
+     "selectable": "yes", 
+     "type": "jqm.swipeimage_group", 
+     "model": {
+      "index": 1, 
+      "name": "", 
+      "items": [
+       15, 
+       16, 
+       17
+      ], 
+      "image_width": "588px", 
+      "uploadHeight": "358px", 
+      "id": "", 
+      "width": "100%", 
+      "uploadWidth": "588px", 
+      "image_height": "358px", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "class": ""
+     }, 
+     "has_global_content": "no"
+    }
+   ], 
+   "selectable": "yes", 
+   "type": "jqm.page", 
+   "model": {
+    "index": 1, 
+    "name": "", 
+    "title": "index", 
+    "datasource_page_id": "", 
+    "theme": "x", 
+    "uploadHeight": "568", 
+    "id": "", 
+    "event:onload": "", 
+    "uploadWidth": "320", 
+    "datasource": {
+     "api_name": "", 
+     "type": "api"
+    }, 
+    "background": "", 
+    "content_padding": "10px", 
+    "class": "xui-homePage"
+   }, 
+   "has_global_content": "no"
+  }, 
+  "updated_at": "2014-05-12 13:59:34", 
+  "display_index": "1", 
+  "project_id": "16", 
+  "page_id": "1", 
+  "pp_id": "16_1"
+ }
+]

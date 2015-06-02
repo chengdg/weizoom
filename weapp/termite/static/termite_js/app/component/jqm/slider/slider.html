@@ -1,0 +1,27 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.slider' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="mt5 mb5 xui-br" 
+>
+    <div data-role="fieldcontain" data-controltype="slider">
+        <label for="slider{{component.cid}}">
+            {{component.model.title}}
+        </label>
+        <input 
+            name="{% if component.model.name %}{{component.model.name}}{% else %}slider{{component.cid}}{% endif %}" 
+            value="{{component.model.value}}" 
+            min="{{component.model.min_value}}" 
+            max="{{component.model.max_value}}" 
+            {% ifequal component.model.is_show_highlight "yes" %}data-highlight="true"{% endifequal %} 
+            {% ifequal component.model.is_mini "yes" %}data-mini="true"{% endifequal %} 
+            data-theme="c"
+            type="range" 
+        />
+    </div>
+</div>
+{% endifequal %}

@@ -1,0 +1,83 @@
+@charset "utf-8";
+
+.x-design .x-ui-grid .ui-block-a, .x-design .x-ui-grid .ui-block-b, .x-design .x-ui-grid .ui-block-c, .x-design .x-ui-grid .ui-block-d, .x-design .x-ui-grid .ui-block-e {
+    box-shadow: 0 0 2px #000000 inset;
+    min-height: 60px;
+}
+
+#selectedWidgetHighlighter {
+    background: transparent;
+    border: solid 1px #91C4DF;
+    border-radius: 3px 3px 3px 3px;
+    position: absolute;
+    /*margin-left: -2px;*/
+    padding: 1px;
+    top: -1000px;
+    left: 0px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+#selectedWidgetCover {
+	background-color: rgba(73, 164, 230, 0.1);
+    border: 2px solid #009FF2;
+    border-radius: 3px 3px 3px 3px;
+	position: absolute;
+	/*padding: 1px;*/
+	top: -1000px;
+	left: 10px;
+    /*margin-left: -2px;*/
+    cursor: move;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+#selectedWidgetCover_actionPanel {
+	background-color: #EEEEEE;
+    border: 1px solid #999999;
+    border-radius: 5px 5px 5px 5px;
+    bottom: -14px;
+    height: 14px;
+    padding: 5px 0 5px 5px;
+    position: absolute;
+    right: 10px;
+    z-index: 101;
+    pointer-events: auto;
+}
+
+.actionIcon {
+	display: block;
+    float: left;
+    margin-right: 5px;
+    background: url("/termite_static/termite_img/icons_sprite.png") no-repeat scroll 0 0 transparent;
+}
+
+.actionIconPlus {
+	background-position: -70px -15px;
+    height: 15px;
+    width: 14px;
+}
+
+.x-circumInsertablePlaceholder {
+	height: 1px;
+	background-color: transparent;
+}
+
+.xui-state-highlight {
+    height: 3px;
+    background: none;
+    display: block;
+    background-color: rgba(111, 167, 210, 0.8) !important;
+}
+.weapp-block,.weapp-line{
+	padding:4px 0;
+}
+.weapp-block div{
+	border:1px dashed #bbb;
+} 
+
+/*===================页头====================*/
+/*.wui-pageheader .wui-shop-header{
+    -webkit-background-size: 360px 100px !important;
+    background-size: 360px 100px !important;
+}*/

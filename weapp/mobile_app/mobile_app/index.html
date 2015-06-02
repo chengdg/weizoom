@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/account.css">
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery-2.1.3.min.js"></script>
+		<script src="js/config.js"></script>
+		<script src="js/system.js"></script>
+		<script src="js/app_account.js"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav" style="display: none;">
+			<a class="mui-icon mui-icon-bars mui-pull-left"></a>
+			<a id="info" class="mui-icon mui-icon-info-filled mui-pull-right" style="color: #999;"></a>
+		</header>
+
+		<div class="mui-content">
+			<!--登录页面-->
+			<div id='login' class="mui-content-padded" style="display: none;">
+				<div align="center"><img src="img/logo.png"></div>
+				<form class="mui-input-group" onsubmit="return false;">
+					<div class="mui-input-row">
+						<label><a id="icon-icon-contact"><span class="mui-icon mui-icon-contact"></span></a></label>
+						<input class="mui-input-clear" id="username" name="username" placeholder="请输入账号" type="text">
+					</div>
+					<div class="mui-input-row">
+						<label><a><span class="mui-icon mui-icon-locked"></span></a></label>
+						<input class="mui-input-clear" id="password" name="password" placeholder="请输入密码" type="password">
+					</div>
+				</form>
+					<div id="login_error_message"></div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label for="recordPwd">记住密码</label>
+						<input id="recordPwd" type="checkbox" name="recordPwd" value="1">
+					</div>
+					<!--<div class="mui-input-row mui-checkbox mui-left">
+						<label for="autologin">自动登录</label>
+						<input id="autologin" type="checkbox" name="autologin" value="2">
+					</div>-->
+				<p style="margin: 10% 15px;">
+					<button id="login_btn" class="mui-btn mui-btn-primary mui-btn-block" style="padding: 5px 20px;">登录</button>
+				</p>
+			</div>
+			<div id="slider" class="mui-slider" style="display: none;">
+				<div class="mui-slider-group">
+					 <!--第一张-->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="img/pic1.jpg">
+						</a>
+					</div>
+					<!-- 第二张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="img/pic2.jpg">
+						</a>
+					</div>
+					<!-- 第三张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<button id="start" class="mui-btn mui-btn-primary">开始微众之旅</button>
+							<img src="img/pic3.jpg">
+						</a>
+					</div>
+				</div>
+				<div class="mui-slider-indicator">
+					<div class="mui-indicator mui-active"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+			mui.ready(function(){
+				mui.init();
+
+				mui.plusReady(function(){
+					//记录安装后第一次登陆
+					if(plus.storage.getItem('firstUse')==null){
+						//首先删除所有storage以免在已安装过之前版本的前提下数据乱入
+						plus.storage.clear();
+						//初始化
+						plus.storage.setItem('sound', 'true');
+						plus.storage.setItem('vibrator', 'true');
+						plus.storage.setItem('push', 'true');
+						plus.storage.setItem('firstUse', 'true');
+
+						$("#slider").show();
+
+
+						//轮播图
+						var height = plus.display.resolutionHeight;
+						$("#slider img").css("height",height);//变为屏幕高度
+
+						mui("#slider").slider();
+						$('#start').on('tap',function(){
+							$("#slider").hide();
+							$("#login").show();
+						});
+						//关闭splashscreen
+						plus.navigator.closeSplashscreen();
+					}else{
+						$("#login").show();
+					}
+
+					initLocalStore();
+
+					//在选中自动登录的情况下，退出登录后不自动登录
+					if (plus.storage.getItem('isLogout')=='false') {
+						plus.nativeUI.showWaiting();
+						mui.openWindow({
+							id: 'tab',
+							url: 'html/tab-webview-main.html',
+							waiting: {
+								autoShow: false
+							},
+						});
+						login_check_new();//自动登录也检查更新
+					}else{
+						//关闭splashscreen
+						plus.navigator.closeSplashscreen();
+					}
+
+					$('#login_btn').one('tap',function(){
+						loginFunction();
+					});
+				});
+			});
+			listenBackButton();
+			// 登录
+			function loginFunction(){
+				var username = $.trim($('#username').val());
+				var password = $.trim($('#password').val());
+				password = encodeURIComponent(password);//处理特殊字符，如#，&等
+				if (!(username&&password)) {
+					$('#login_error_message').html("请输入用户名或密码");
+				}
+				else{
+					document.getElementById('login_btn').innerText = '正在登录...';
+					//判断是否包含_manager,不包含则不作操作
+					if (username.indexOf("_manager") > 0) {
+						username = username.split("_manager",1);
+						plus.storage.setItem('isManager', 'true');
+					}
+
+					$.getJSON( HOST_URL +'mobile_app/api/login/get/?username='+username+'&password='+password+'&account_id='+ACCOUNTS[0]['id']+'&callback=?',
+					function(data,status){
+						if (data.code == 200) {
+							plus.nativeUI.showWaiting('正在加载页面...');
+							mui.openWindow({
+								id: 'tab',
+								url: 'html/tab-webview-main.html',
+								waiting: {
+									autoShow: false,
+								},
+							});
+							window.setTimeout(function(){
+								document.getElementById('login_btn').innerText = '登录';
+							},1000);
+							login_check_new();//检查更新
+							plus.storage.setItem('isLogout','false');//处理自动登录问题
+				    		plus.storage.setItem('USER_ID', data.data.user_id+'');
+							if(data.data.isSystemMenager){
+					    			plus.storage.setItem('isSystemMenager', data.data.isSystemMenager+'');
+					    			plus.storage.setItem('username', SYSTEMUSERNAME+'');
+					    			plus.storage.setItem('currentUser',ACCOUNTS[0].name+'');//当前查看的账号
+					    		}else{
+					    			if(plus.storage.getItem('isManager')=='true'){
+										plus.storage.setItem('username', data.data.username+'_manager');
+									}else{
+										plus.storage.setItem('username', data.data.username);
+									}
+					    		}
+					    	var isRecondPwd = $("#recordPwd").prop("checked");
+							if (isRecondPwd) {
+								plus.storage.setItem('password',password);
+					    	}else {
+								plus.storage.removeItem('password');
+							}
+						$('#login_error_message').empty();
+						$('#login_btn').one('tap',function(){
+								loginFunction();
+							});
+						}else {
+							$('#login_error_message').html(data.errorMsg);
+							document.getElementById('login_btn').innerText = '登录';
+							$('#login_btn').one('tap',function(){
+								loginFunction();
+							});
+							plus.nativeUI.closeWaiting();
+						}
+					});
+				}
+			}
+		</script>
+	</body>
+</html>

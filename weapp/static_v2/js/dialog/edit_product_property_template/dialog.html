@@ -1,0 +1,85 @@
+<script id="mall-edit-product-property-template-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-mallEditProductPropertyTemplateDialog" id="mallEditProductPropertyTemplateDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title"></h3>
+		</div>
+		<div class="modal-body xa-errorHintContainer">
+			<table class=" table table-bordered xb-stripedTable xa-propertyTable">
+			</table>
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-primary xa-submit-dialog">保&nbsp;存</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="mall-edit-product-property-template-dialog-table-tmpl-src" type="text/x-jquery-tmpl">
+	<thead>
+		<tr>
+			<th width="78px;">属性</th>
+			<th>描述</th>
+			<th width="63px">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{each(i, property) properties}}
+		<tr data-property-id="${property.id}">
+			<td contenteditable="true"
+                class="xui-contenteditable xa-contenteditable xa-name" 
+                data-validate="require-string"
+                data-maxlength="15"
+                errorhint-value=""
+                value='${property.name}'
+                data-old-content="${property.name}">${property.name}
+            </td>
+			<td contenteditable="true"
+                class="xui-contenteditable xa-contenteditable xa-value"
+                data-validate="require-string"
+                data-maxlength="255"
+                errorhint-value=""
+                value='${property.value}'
+                data-old-content="${property.value}">${property.value}
+            </td>
+			<td><a href="javascript:void(0);" class="btn btn-xs xa-delete">删除</a></td>
+		</tr>
+		{{/each}}
+		<tr class="xa-addActionRow">
+			<td><a href="javascript:void(0);" class="btn xa-add" style="color:#0041FF;">+添加</a></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</script>
+
+
+
+<script id="mall-edit-product-property-template-dialog-table-row-tmpl-src" type="text/x-jquery-tmpl">
+	<tr data-property-id="${id}">
+		<td contenteditable="true" 
+            class="xui-contenteditable xa-contenteditable xa-name" 
+            data-validate="require-string"
+            data-maxlength="15"
+            errorhint-value=""
+            style="max-width:100px;"
+            value=""
+            data-old-content="点击添加">点击添加
+        </td>
+		<td contenteditable="true" 
+            class="xui-contenteditable xa-contenteditable xa-value" 
+            data-validate="require-string"
+            data-maxlength="255"
+            errorhint-value=""
+            style="max-width:100px;"
+            value=""
+            data-old-content="点击添加" 
+            style="color:#656565;">点击添加
+        </td>
+		<td><a href="javascript:void(0);" class="btn btn-xs  xa-delete">删除</td>
+	</tr>
+</script>

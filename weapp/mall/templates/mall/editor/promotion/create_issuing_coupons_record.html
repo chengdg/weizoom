@@ -1,0 +1,179 @@
+{% extends "content_base_v2.html" %}
+{% load staticfiles %}
+{% block css %}
+<style>
+.popover{
+    min-width: 252px;
+}
+.xui-filterPanel .xui-col{
+    float: inherit;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-commonPromotionStyle xui-createIssuingCouponsPage">
+
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+            <li class="active">发优惠券</li>
+        </ul>
+    </div>
+
+    <div class="xa-productSelector">
+        <div class="xa-redEnevlopSelectConditionPanel xui-filterPanel">
+        </div>
+
+        <div class="panel panel-default mt20 xb-panelBg xa-errorHintContainer">
+            <div class="panel-heading xui-createSaleHead xa-vip-headline" style='display:none;'>
+                发放对象
+            </div>
+            <div class="panel-body xa-selectedProductList mb0 pb0" style="margin-bottom:15px!important;margin-left:23px;" data-validate="require-element-exist" data-selector="tbody tr">
+                请通过查询选择发放优惠券的会员
+            </div>
+            <div class="errorHint pb0" style="padding-left:38px;" data-error-hint="请先选择商品"></div>
+        </div>
+    </div>
+    <div class="panel panel-default mt20  xb-panelBg">
+        <div class="panel-heading xui-createSaleHead">
+            发放规则
+        </div>
+        <form class="panel-body xui-formPanel xa-form xui-borderCancel mt30">
+            <div class="xui-i-table">
+                <div class="xui-i-col pr">
+                    <div class="xui-i-item">
+                        <label>优惠券：</label>
+                        <span class="xa-couponName"></span>
+                        <a href="javascript:void(0);" class="xa-selectCoupon">添加</a>
+                        <span class="xa-couponInfo"></span>
+                    </div>
+                    <div class="xui-i-item pa" style="width:350px;">
+                        <label>张数：</label>
+                        <span>每人&nbsp;&nbsp;
+                        <select name="pre_person_count" id="selectCouponCount" style="width:50px;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        &nbsp;&nbsp;张</span>
+                        <span class="xa-totalMoney">总价值：0.00元</span>
+                        <div class="errorHint ml110 mt5" data-error-hint="请输入正整数"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tc" style="margin-top:60px;">
+                <p class="xui-fontGary">优惠券发送后，直接保存在用户的个人中心。</p>
+                <a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">发放</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var selectCouponMoney = '0';
+    var couponRuleId = 0;
+    var webapp_id = {{webapp_id}};
+    var productSelector = new W.view.mall.PromotionRedProductView({
+         el: '.xa-productSelector',
+         tableTemplate: 'selected-promotion-products-view-tmpl-src',
+         webapp_id: webapp_id,
+     });
+     // productSelector.on('finish-select-products', onSelectProduct);
+     productSelector.render();
+    var remained_count = 0;
+    $('.xa-selectCoupon').click(function(event){
+        W.dialog.showDialog('W.dialog.mall.SelectCouponDialog',{
+            success: function(data) {
+                // TODO
+                remained_count = data[0].remained_count
+                var couponType = '';
+                var limit = data[0].limit_counts;
+                var count = $('#selectCouponCount').val();
+                if(limit <= 0){
+                    limit = '不限';
+                    $('#selectCouponCount option').removeAttr('disabled');
+                }else{
+                    if(count>limit)
+                        $('#selectCouponCount').val(limit);
+                    $('#selectCouponCount option').each(function(i,n){
+                        if($(n).val()<=limit)
+                            $(n).removeAttr('disabled');
+                        else
+                            $(n).attr('disabled', 1);
+                    })
+                    limit += '张';
+                }
+                if(data[0].limit_product) {
+                    couponType = "(单品券)";
+                }else{
+                    couponType = "(全店通用券)";
+                }
+                selectCouponMoney = data[0].money;
+                couponRuleId = data[0].id;
+                $(".xa-couponName").text(data[0].name+couponType);
+                $(".xa-couponInfo").empty().append(' 当前库存:'+remained_count+' 每人限领：'+limit).append($('<a/>').attr('href','/mall_promotion/coupon/create/?rule_id='+data[0].id).html('增加库存'));
+                $(".xa-selectCoupon").text("修改");
+                var totalMoney = parseFloat(selectCouponMoney) * parseInt(count);
+                $(".xa-totalMoney").text("总价值："+ totalMoney.toFixed(2) +"元");
+            },
+            error: function(data) {}
+        });
+    })
+
+    $("#selectCouponCount").change(function(){
+        var count = parseInt($("#selectCouponCount").val());
+        var totalMoney = parseFloat(selectCouponMoney) * count;
+        $(".xa-totalMoney").text("总价值："+ totalMoney.toFixed(2) +"元");
+    })
+	$('.xa-submit').click(function(event) {
+        if(!$('.xa-vip-member-id').length){
+            W.showHint('error', '请选择会员!')
+            return ;
+        }
+        if (selectCouponMoney == '0') {
+            W.showHint('error', '请选择优惠券!')
+            return ;
+        }
+        var count = parseInt($("#selectCouponCount").val());
+        if(parseInt($('.xa-vip-count').attr('vip_count'))*count>remained_count){
+            W.showHint('error', '发放数量大于优惠券库存，请先增加库存!')
+            return ;
+        }
+		//获取integral sale rule
+        var member_ids = []
+        $('.xa-vip-member-id').each(function(){
+            member_ids.push(parseInt($(this).text()));
+        });
+
+		var args = $('.xa-form').serializeObject();
+        args.coupon_rule_id = couponRuleId;
+        args.member_id=member_ids;
+		W.getApi().call({
+			method: 'post',
+			app: 'mall_promotion',
+			api: 'issuing_coupons_record/create',
+			args: W.toFormData(args),
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '发放成功');
+				_.delay(function() {
+					window.location.href = '/mall_promotion/issuing_coupons_record/get/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '发放失败!')
+			}
+		})
+	});
+});
+</script>
+{% endblock %}

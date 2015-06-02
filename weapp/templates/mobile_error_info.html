@@ -1,0 +1,18 @@
+{% extends "jqm_content_base.html" %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{{ extra_class }} xui-error-page" data-title="未找到页面">
+    <div data-role="content">
+        <div class="xui-error-box"></div>
+        <a class="xui-error-goback-button" href='javascript:window.history.go(-1);' data-ajax="false" data-role="button" data-theme="x">返回首页</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+$(document).ready(function() {
+})
+</script>
+{% endblock %}

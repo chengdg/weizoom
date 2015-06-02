@@ -1,0 +1,179 @@
+{% extends "content_base_v2.html" %}
+
+
+{% block content-panel %}
+<div class="xui-procateCategoriesPage">
+<ul class="breadcrumb">
+	<li>您当前所在位置</li>
+	<li><a href="/mall/onshelf_products/get/">商品管理</a></li>
+	<li class="active">分组管理</li>
+</ul>
+
+<div class="fr">
+	<button class="btn mt20 mr10 btn-success xui-addProductBtn xa-addCategory xui-addNewGroup"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>新建分组</button>
+</div>
+<hr  class="mt70" style="border:1px solid #1183C9;">
+<!-- glyphicon glyphicon-plus-sign -->
+{% for category in product_categories %}
+<table class="table  mt20  table-bordered" data-category-id="{{category.id}}">
+	<thead>
+		<tr class="xui-tableTitleBar ">
+			<th colspan="6" class="xui-i-title">
+				<span class="xa-categoryTitle xui-fontBold xui-categoryTitlePosition">{{category.name}}</span>
+				<div class="xui-i-actionBar">
+					<a href="javascript:void(0);" class="btn btn-primary xa-editCategory xui-editCategory">管理</a>
+					<div class="xui-cutLine fl"></div>
+					<a href="javascript:void(0);" class="btn btn-danger xa-deleteCategory xui-deleteCategory">删除分组</a>
+				</div>
+			</th>
+		</tr>
+		<tr>
+			<th>商品名称</th>
+			<th>商品价格（元）</th>
+			<th>状态</th>
+			<th>销量</th>
+			<th>加入分组时间</th>
+			<th>操作</th>
+		</tr>{{product.user_code}}
+	</thead>
+	<tbody>
+		{% for product in category.products %}
+		<tr data-product-id="{{product.id}}">
+			<td>{{product.name}}</td>
+			<td>{{product.display_price}}</td>
+			<td>{{product.status}}</td>
+			<td>{{product.sales}}</td>
+			<td>{{product.join_category_time|date:"Y-m-j H:i"}}</td>
+			<td><a class=" xa-deleteProductFromCategory" href="javascript:void(0);">删除</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	function addCategory() {
+		W.getAip().call({
+			app: 'mall',
+			api: 'product_category/add',
+		})
+	}
+
+	$('.xa-addCategory').click(function() {
+		W.dialog.showDialog('W.dialog.mall.AddProductCategoryDialog', {
+			canEditTitle: true,
+			success: function(data) {
+				W.getApi().call({
+					method: 'post',
+					app: 'mall',
+					api: 'product_category/create',
+					args: data,
+					success: function(data) {
+						window.location.reload();
+					},
+					error: function(resp) {
+
+					}
+				})
+			}
+		})
+	});
+
+	$('.xa-editCategory').click(function(event) {
+		var $table = $(event.currentTarget).parents('table');
+		var categoryId = $table.data('categoryId');
+		var title = $table.find('.xa-categoryTitle').text();
+
+		W.dialog.showDialog('W.dialog.mall.AddProductCategoryDialog', {
+		  	canEditTitle: true,
+			title: title,
+			categoryId: categoryId,
+			success: function(data) {
+				W.getApi().call({
+					method: 'post',
+					app: 'mall',
+					api: 'product_category/update',
+					args: _.extend(data, {
+						id: categoryId
+					}),
+					success: function(data) {
+						window.location.reload();
+					},
+					error: function(resp) {
+
+					}
+				})
+			}
+		})
+	});
+
+	$('.xa-deleteCategory').click(function(event) {
+		var $table = $(event.currentTarget).parents('table');
+		var categoryId = $table.data('categoryId');
+
+		W.requireConfirm({
+        	$el: $(this),
+        	width:380,
+        	position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-orderConfirmPop',
+        	msg:'确定删除分组？',
+        	confirm:function(){
+        		W.getApi().call({
+					method: 'post',
+					app: 'mall',
+					api: 'product_category/delete',
+					args: {
+						id: categoryId
+					},
+					success: function(data) {
+						window.location.reload();
+					},
+					error: function(resp) {
+
+					}
+				});
+        	}
+        })
+
+	});
+
+	$(document).delegate('.xa-deleteProductFromCategory', 'click', function(event) {
+		var $link = $(event.currentTarget);
+		var productId = $link.parents('tr').data('productId');
+		var categoryId = $link.parents('table').data('categoryId');
+
+		W.requireConfirm({
+        	$el: $(this),
+        	width:380,
+        	position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-orderConfirmPop',
+        	msg:'确定删除？',
+        	confirm:function(){
+        		W.getApi().call({
+					method: 'post',
+					app: 'mall',
+					api: 'product_in_category/delete',
+					args: {
+						category_id: categoryId,
+						product_id: productId
+					},
+					success: function(data) {
+						window.location.reload();
+					},
+					error: function(resp) {
+						alert("创建分组失败");
+					}
+				});
+        	}
+        })
+	});
+});
+</script>
+{% endblock %}

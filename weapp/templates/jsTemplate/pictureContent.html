@@ -1,0 +1,62 @@
+
+<div class="mt20 shop-service">
+    <div class="content content-picture">
+        <div class="main-picture">
+            <div class="main-picture-box">
+                <img src="${main_picture_url}" width="360px" height="180px"/>
+            </div>
+            <div class="main-picture-title">
+                ${main_picture_title}
+            </div>
+        </div>
+        <div class="sub-pictures mt20">
+            <div class="sub-picture">
+                <div class="sub-picture-title">
+                    云南特产蜜汁鸡腿 云南特产蜜汁鸡腿
+                </div>
+                <div class="sub-picture-box">
+                    <img src="http://i1.dpfile.com/pc/b05b37e017976a3d095d9fe657f505cb/15816390_s.jpg" style="width:40px; height:40px;" />
+                </div>
+                <div class="cb"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="pictureContent" type="text/x-jquery-tmpl">
+	<div class="one-timeline sending new-timeline">
+		<div class="fl head-img user_img" weibo_id="${user.weibo_id}" weibo_name="${user.name}">
+			<a href="http://weibo.com/${user.weibo_id}" target="_blank"><img src="${user.profile_image_url}" width="50" height="50" /></a>
+		</div>
+		<div class="fl content-zone">
+			<p><a href="http://weibo.com/${user.weibo_id}" target="_blank" class="user_img" weibo_id="${user.weibo_id}" weibo_name="${user.name}"><span class="name">${user.name}</span></a>：<span class="tx_content">{{html content}}</span></p>
+			{{if image_url}}
+			<div class="img_div"><a class="miniImg artZoom" onerror="this.style.display='none'" href="${image_url}"><img class="smallImage" src="${image_url}" /></a></div>
+			{{/if}}
+			<div class="info-zone">
+				<div class="info">
+					<span class="time gray99">
+					<a href="${url}" target="_blank">${weibo_created_at}</a>
+					</span>
+				</div>
+				<div class="actionLayout">
+					转发(<em class="tx_repost${weibo_id}">0</em>)<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>评论(<em class="tx_comment${weibo_id}">0</em>)&nbsp;&nbsp;&nbsp;&nbsp;
+					{{if is_sent}}
+					<button class="btn tx_post">已发布</button>
+					{{else}}
+					<button class="btn tx_post">发布</button>
+					{{/if}}
+					{{if is_added}}
+					{{if isCategoryPage}}
+					<button class="btn tx_cancelCollect">取消收藏</button>
+					{{else}}
+					<button class="btn" Disabled="Disabled">已收藏</button>
+					{{/if}}
+					{{else}}
+					<button class="btn tx_collect">收藏</button>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+		<div class="cl"></div>
+	</div>
+</script>

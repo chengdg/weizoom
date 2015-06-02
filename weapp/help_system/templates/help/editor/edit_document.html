@@ -1,0 +1,56 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block single-content-panel %}
+<ul class="breadcrumb">
+	<li class="active">编辑帮助文档</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if document %}{{ document.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<input type="hidden" name="redirect_url" value="{{ from_url }}" />
+		<input type="hidden" name="page_id" value="{{ page_id }}" />
+
+		<div class="control-group">
+
+			<label class="control-label" for="content">内容：</label>
+			<div class="controls">
+				<textarea class="input-xlarge hide" id="content" name="content" data-ui-role="richtext-editor" data-type="full" data-height="300" data-width="500">{% if document %}{{ document.content|safe }}{% endif %}</textarea>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />				
+			</div>
+
+			
+		</div>
+
+	</fieldset>
+</form>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		//提交
+		/*
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+		*/
+	});
+</script>
+{% endblock %}

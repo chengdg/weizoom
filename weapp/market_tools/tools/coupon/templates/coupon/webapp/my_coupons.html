@@ -1,0 +1,201 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+
+<style type="text/css">
+.xui-list-y li:last-child{padding-bottom:20px;}
+.wui-swiper-tabs {
+    position: fixed!important;
+    top: 0;
+    z-index: 2;
+}
+.wui-swiper .wui-swiper-tabs a{
+  display: block;
+  float: left;
+  width:33.3%;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myCouponList-Page wui-swiper">
+
+<!--Tab静态-->
+<div class="wui-swiper-tabs-coupon clearfix">
+  <a class="wui-inner-active">未使用</a>
+  <a >已使用</a>
+  <a>已过期</a>
+</div>
+  <div class="wui-swiper-container">    
+    <div class="wui-swiper-wrapper">
+      <div class="wui-swiper-slide" id="xa-wrapper">
+        <div class="wui-content-slide">
+        <!--数据开始-->
+          <div class="orderList m10">
+            {% if unused_coupons %}
+		<!-- <div class="listcount">未使用优惠券<span class="xui-inner-info">{{unused_coupons|length}}张</span></div> -->
+            <ul data-role="listview" class="xui-list-y" data-theme="x" data-icon-shadow="false" data-icon="false">
+              {% for coupon in unused_coupons %}
+              <li class="xa-coupon mt10">
+                {% if coupon.limit_product_id %}
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{ coupon.limit_product_id }}&action=get">
+                {% else %}
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">
+                {% endif %}
+                  <div class="xui-coupon clearfix">
+                      <div class="xui-couponBg-container{% if coupon.limit_product_id %} xui-singleCoupon{% endif %}" data-id="{{ coupon.id }}" data-money="{{coupon.money}}">
+                        <div class="p10">
+                          <p class="em95 xui-couponTitle">{{ coupon.name }}</p>
+                          <p class="xui-coupon-inner">
+                            <span class="xui-priceTag">¥</span>
+                            <span class="xui-couponPrice">{{ coupon.money|floatformat:"2" }}</span>
+                          </p>
+                        </div>
+                        <div class="em75 tl xui-couponInfo">
+                          <p>使用期限：{{coupon.start_date |date:"Y/m/j H:i:s"}} - {{coupon.expired_time |date:"Y/m/j H:i:s"}}</p>
+                          <p>使用范围：{% if coupon.limit_product_id %}单品券{% else %}全店通用券{% endif %}</p>
+                          <p>使用条件：{% if coupon.valid_restrictions > 0 %}
+                              {% if coupon.limit_product_id %}商品{% else %}订单{% endif %}金额满{{ coupon.valid_restrictions }}元可用
+                              {% else %}不限制{% endif %}</p>
+                        </div>
+                      </div>
+                  </div> 
+                </a>  
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+              <p class="tc" style="margin-top:25%;color:#888;"><img src="/static_v2/img/webapp/mall/couponEmpty.png" alt="" width="50%" data-allow-autoplay=false></p>
+              <p class="tc mt5 c9 em105">暂无优惠券</p>
+            {% endif %}
+            <!-- <div><a href="./?module=market_tool:coupon&model=seller_list&action=get&workspace_id=market_tool:coupon&webapp_owner_id={{request.webapp_owner_id}}&project_id={{product.id}}"><button class="btn btn-submit btn-seller">优惠劵使用排行榜</button></a></div> -->
+        </div>
+         <!--数据结束-->
+        </div>
+      </div>
+      <div class="wui-swiper-slide">
+        <div class="wui-content-slide">
+          <!--数据开始-->
+          <div class="orderList m10">
+            {% if used_coupons %}
+            <!-- <div class="listcount">已使用优惠券<span class="xui-inner-info">{{used_coupons|length}}张</span></div> -->
+            <ul data-role="listview" class="xui-list-y" data-theme="x" data-icon-shadow="false" data-icon="false">
+              {% for coupon in used_coupons %}
+              <li class="xa-coupon mt10" data-id="{{ coupon.id }}" data-money="{{coupon.money}}">
+                {% if coupon.limit_product_id %}
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{ coupon.limit_product_id }}&action=get">
+                {% else %}
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">
+                {% endif %}
+                  <div class="xui-coupon clearfix">
+                      <div class="xui-couponBg-container xui-used{% if coupon.limit_product_id %} xui-singleCoupon{% endif %}">
+                        <div class="p10">
+                          <p class="em95 xui-couponTitle">{{ coupon.name }}</p>
+                          <p class="xui-coupon-inner">
+                            <span class="xui-priceTag">¥</span>
+                            <span class="xui-couponPrice">{{ coupon.money|floatformat:"2" }}</span>
+                          </p>
+                        </div>
+                        <div class="em75 tl xui-couponInfo">
+                          <p>使用期限：{{coupon.start_date |date:"Y/m/j H:i:s"}} - {{coupon.expired_time |date:"Y/m/j H:i:s"}}</p>
+                          <p>使用范围：{% if coupon.limit_product_id %}单品券{% else %}全店通用券{% endif %}</p>
+                          <p>使用条件：{% if coupon.valid_restrictions > 0 %}
+                              {% if coupon.limit_product_id %}商品{% else %}订单{% endif %}金额满{{ coupon.valid_restrictions }}元可用
+                              {% else %}不限制{% endif %}</p>
+                        </div>
+                      </div>
+                  </div>  
+                </a>  
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <p class="tc" style="margin-top:25%;color:#888;"><img src="/static_v2/img/webapp/mall/couponEmpty.png" alt="" width="50%" data-allow-autoplay=false></p>
+            <p class="tc mt5 c9 em105">暂无优惠券</p>
+            {% endif %}
+        </div>
+         <!--数据结束-->
+        </div>
+      </div>
+      <div class="wui-swiper-slide">
+        <div class="wui-content-slide">
+           <!--数据开始-->
+          <div class="orderList m10">
+            {% if expired_coupons %}
+		<!-- <div class="listcount">已过期优惠券<span class="xui-inner-info">{{expired_coupons|length}}张</span></div> -->
+            <ul data-role="listview" class="xui-list-y" data-theme="x" data-icon-shadow="false" data-icon="false">
+                {% for coupon in expired_coupons %}                
+                <li class="xa-coupon mt10" data-id="{{ coupon.id }}" data-money="{{coupon.money}}">
+                  {% if coupon.limit_product_id %}
+                  <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{ coupon.limit_product_id }}&action=get">
+                  {% else %}
+                  <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">
+                  {% endif %}
+                    <div class="xui-coupon clearfix">
+                      <div class="xui-couponBg-container xui-overdue{% if coupon.limit_product_id %} xui-singleCoupon{% endif %}">
+                        <div class="p10">
+                          <p class="em95 xui-couponTitle">{{ coupon.name }}</p>
+                          <p class="xui-coupon-inner">
+                            <span class="xui-priceTag">¥</span>
+                            <span class="xui-couponPrice">{{ coupon.money|floatformat:"2" }}</span>
+                          </p>
+                        </div>
+                        <div class="em75 tl xui-couponInfo">
+                          <p>使用期限：{{coupon.start_date |date:"Y/m/j H:i:s"}} - {{coupon.expired_time |date:"Y/m/j H:i:s"}}</p>
+                          <p>使用范围：{% if coupon.limit_product_id %}单品券{% else %}全店通用券{% endif %}</p>
+                          <p>使用条件：{% if coupon.valid_restrictions > 0 %}
+                              {% if coupon.limit_product_id %}商品{% else %}订单{% endif %}金额满{{ coupon.valid_restrictions }}元可用
+                              {% else %}不限制{% endif %}</p>
+                        </div>
+                      </div>
+                  </div> 
+                  </a>   
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <p class="tc" style="margin-top:25%;color:#888;"><img src="/static_v2/img/webapp/mall/couponEmpty.png" alt="" width="50%" data-allow-autoplay=false></p>
+            <p class="tc mt5 c9 em105">暂无优惠券</p>
+            {% endif %}
+        </div>
+         <!--数据结束-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- <script src="/markettools_static/coupon/js/idangerous.swiper.js"></script> -->
+<script type="text/javascript">
+$(document).ready(function($) {
+  var bodyHeight = window.document.body.clientHeight;
+  var containerHeight = bodyHeight - 47;
+  $(".wui-swiper-container").css('height', containerHeight );
+  $(".wui-swiper-slide").css('height', containerHeight );  
+  $("body").css('overflow-y', 'hidden');
+  var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
+    var tabsSwiper = new Swiper('.wui-swiper-container',{
+    speed:500,
+    onSlideChangeStart: function(){
+      $(".wui-swiper-tabs-coupon .wui-inner-active").removeClass('wui-inner-active')
+      $(".wui-swiper-tabs-coupon a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+      myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+    }
+  })
+  $(".wui-swiper-tabs-coupon a").click(function(e){
+    e.preventDefault();
+    $(".wui-swiper-tabs-coupon .wui-inner-active").removeClass('wui-inner-active')
+    $(this).addClass('wui-inner-active')
+    tabsSwiper.swipeTo( $(this).index() );
+    myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+  });
+  $('.xa-coupon').click(function(event) {
+    window.href='./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list';
+  });
+});
+
+</script>
+{% endblock %}

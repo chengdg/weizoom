@@ -1,0 +1,151 @@
+{% extends "content_base_v2.html" %}
+{% block content-panel %}
+<div class="xui-weixin-template_messagesPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/realtime_messages/">消息互动</a></li>
+            <li class="active">模板消息</li>
+        </ul>
+    </div>
+    <div class="xui-background">
+    <div class="xui-filterPanel" style="border:none;">
+        <span class="ml50 mr20">主营行业：{% if industry.major %}{{ industry.major }}{% else %}暂无{% endif %}</span>
+        <span class="mr80">副营行业：{% if industry.deputy %}{{ industry.deputy }}{% else %}暂无{% endif %}</span>
+        <a class="xa-showIndustryBoxButton btn btn-success ml60" style="display: inline;">修改行业</a>
+ 	</div>
+
+	<div
+		data-ui-role="advanced-table"
+		data-app="new_weixin"
+		data-resource="template_messages"
+		data-template-id="#weixin-template-message-view"
+		data-enable-paginator="false"
+		data-enable-sort="false"
+		data-selectable="false"
+		data-item-count-per-page="10"
+		data-disable-header-select="true"
+		class="panel-body"
+	></div>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+<script id="weixin-template-message-view" type="text/x-jquery-tmpl">
+<table class="table table-condensed mb0 xui-tableHead">
+		<thead>
+			<tr>
+				<th class="tl" width="385"><span style="padding-left:100px">标题</span></th>
+				<th width="140">行业</th>
+				<th width="180">状态</th>
+				<th width="290">操作</th>
+			</tr>
+		</thead>
+        <tbody id = "template_message_list">
+			{{if items.length}}
+	            {{each(i, tmpl) items}}
+				<tr data-id="${tmpl.template_detail_id}">
+					<td class="tl" style="padding-left:100px">
+						<div>
+							${tmpl.title}
+						</div>
+					</td>
+					<td>
+						<div class="centerAlign">
+						${tmpl.industry_name}
+						</div>
+					</td>
+					<td>
+						<div class="centerAlign current-status" data-id="${tmpl.template_detail_id}" >
+							{{if tmpl.status == '1'}}
+							    启用
+                            {{else}}
+                                未启用
+                            {{/if}}
+						</div>
+					</td>
+					<td class="tc">
+                        {{if tmpl.edit_status == '1'}}
+                            <a class="btn btn-success mt10 w50 mr10"  status="1" value = ${tmpl.template_detail_id} href="/new_weixin/template_messages_detail?template_detail_id=${tmpl.template_detail_id}">编　辑</a>
+                             {{if tmpl.status == '1'}}
+                               <a class="btn btn-danger mt10 w50 mr10 xa-update-status"  status="1" value = ${tmpl.template_detail_id} >停　用</a>
+                            {{else}}
+                                <a class="btn btn-success mt10 w50 mr10  xa-update-status" status="0"  value = ${tmpl.template_detail_id} >启　用</a>
+                            {{/if}}
+                        {{else}}
+                            <a class="btn btn-success mt10 w50 mr10 fl" status="0" style="margin-left:45px" value = ${tmpl.template_detail_id} href="/new_weixin/template_messages_detail?template_detail_id=${tmpl.template_detail_id}">配　置</a>
+                        {{/if}}
+					</td>
+				</tr>
+				{{/each}}
+			{{/if}}
+		</tbody>
+</table>
+
+</script>
+
+<script src="/static/jquery/jquery.cookie.js"></script>
+
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+        //更新启用状态
+        $('body').delegate('.xa-update-status', 'click', function(event){
+        var $el = $(event.currentTarget);
+        var status = $el.attr('status');
+        var id = $el.attr('value');
+        W.resource.new_weixin.TemplateMessages.post({
+            data: {
+        		status: status,
+        		id: id
+        	},
+        	success: function(data) {
+        			if (status == '1'){
+        				$el.attr('status', '0');
+        				$el.text("启　用");
+                        $(".current-status[data-id$=" + id +"]").text("未启用")
+                        $el.removeClass('btn-danger')
+                        $el.addClass('btn-success')
+        			}else {
+        				$el.attr('status', '1');
+        				$el.text("停　用");
+                        $el.removeClass('btn-success')
+                        $el.addClass('btn-danger')
+                        $(".current-status[data-id$=" + id +"]").text("启用")
+        			}
+        	},
+        	error: function(resp) {
+             	alert("更改状态失败");
+        	}
+        })
+    });
+
+
+    $('.xa-showIndustryBoxButton').click(function(event) {
+    W.dialog.showDialog('W.dialog.weixin.SelectIndustryDialog', {
+      success: function(data) {
+        W.getLoadingView().show();
+          W.resource.new_weixin.MessageIndustry.post({
+              data:data,
+          success: function() {
+            window.location.reload();
+          },
+          error: function(resp) {
+            W.getLoadingView().hide();
+            if (resp.code !== 200) {
+              alert('修改行业失败!');
+            }
+          }
+          })
+      }
+    })
+});
+
+});
+</script>
+{% endblock %}

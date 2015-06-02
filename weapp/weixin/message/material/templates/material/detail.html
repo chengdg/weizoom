@@ -1,0 +1,42 @@
+{% extends "new_jqm_content_base.html" %}
+
+{% block css %}
+<style type="text/css">
+.xui-news-detail-title{
+    font-size: 22px;
+}
+.xui-date{
+    color: #989898;
+}
+.xui-mp-name{
+    color: #79a0c9;
+    padding-left: 10px;
+}
+.newsDetail-image{
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" id="newsDetail" data-title="{{ page_title }}">
+    <div data-role="content" style="padding: 15px 15px;" data-theme="x">
+        <div class="xui-news-detail-title">{{ page_title }}</div>
+        <div class="pt10 pb10">
+            <span class="xui-date">{{ date }}</span>
+            <span class="xui-mp-name">{{ nick_name }}</span>
+        </div>
+        {% if is_show_cover_pic %}
+        <div class="newsDetail-image">
+        	<img src="{{ pic_url }}" />
+        </div>
+        {% endif %}
+        <div class="newsDetail-detail mt10 rawHtml">
+            {{ detail|safe }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

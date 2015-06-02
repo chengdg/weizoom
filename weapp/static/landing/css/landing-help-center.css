@@ -1,0 +1,78 @@
+a:hover {
+	text-decoration: none;
+}
+.help-center-content {
+	margin:116px auto 0; 
+	width: 960px;
+	overflow: hidden;
+	zoom: 1;
+	margin-bottom: 20px;
+}
+.one-nav{
+	border: medium none;
+    color: #353535;
+    font-family: "微软雅黑";
+    font-size: 14px;
+    font-weight: bold;
+/*    height: 33px;*/
+    text-shadow: none;
+    background: #EAEDF2;
+    width: 195px;
+    display: block;
+    padding: 10px 5px 10px 15px;
+}
+.nav-title {
+	font-size: 20px;
+	color: #353535;
+	padding-top: 18px;
+	padding-bottom: 17px;
+}
+.navShow {
+	border-bottom: 1px solid #D0D5D9;
+}
+ul:last-child {
+	border-bottom: none;
+}
+.navShow .x-left-nav{
+	margin: 0;
+    border: medium none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #EAEDF2;
+}
+.navShow .x-left-nav li a {
+	padding: 5px 15px 5px 0px;
+	min-height:26px;
+    display:block;
+    text-shadow:none;
+    border:none;border-radius:0px;
+    -moz-border-radius:0px;
+    -webkit-border-radius:0px;
+    text-overflow:ellipsis;
+    font-family:"微软雅黑";
+    font-size:14px;
+    color:#283740;
+    width: 170px;
+    border-bottom:1px solid #D0D5D9;
+    padding-left:30px;
+}
+.navShow .x-left-nav li>a:hover, .helpCenterView>li>a:hover span.one-nav  {
+	background:#E3E6EB;
+}
+.navShow .x-left-nav li.active a {
+	background: none repeat scroll 0 0 #E3E6EB;
+    color: #66B856;
+}
+.info-box{
+	float: left;
+	width: 710px;
+	background: #fff;
+	padding: 10px 15px;;
+}
+.info-box-title{
+	background: #F2F2F2;
+	color: #353535;
+	height: 30px;
+	font-size: 22px;
+	padding-top: 15px;
+}

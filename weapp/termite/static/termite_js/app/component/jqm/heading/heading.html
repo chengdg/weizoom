@@ -1,0 +1,24 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.heading' %}
+{% if in_production_mode %}
+	<h{{component.model.size}} class="{{component.model.class}}">
+		{% if component.datasources %}
+	    {{component.datasources.text}}
+	    {% else %}
+	    {{component.model.text}}
+	    {% endif %}
+	</h{{component.model.size}}>
+{% else %}
+	<h{{component.model.size}} 
+	    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %}
+	    data-ui-sortable="true"  
+	    data-cid="{{component.cid}}"
+	    data-index="{{component.model.index}}" 
+	    class="{{component.model.class}}"
+	>
+	    {{component.model.text}}
+	</h{{component.model.size}}>
+{% endif %}
+{% endifequal %}

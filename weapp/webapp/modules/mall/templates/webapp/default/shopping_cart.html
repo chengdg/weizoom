@@ -1,0 +1,254 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<style>
+    .xui-shoppingCartPage .xui-selectedProductList>label{
+        width: 40px;
+        vertical-align: middle;
+    }
+    .xui-shoppingCartPage .xui-regular-radio{
+        margin:0;
+        padding:10px;
+    }
+    .xui-checkCart{
+        background: url(/standard_static/img/radio-checked.png) no-repeat;
+        background-position: center center;
+        background-size: 67% auto;
+        background-color: #f36766;
+        border: 1px solid #f36766!important;
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-shoppingCartPage"  data-title="{{ page_title }}">
+    <div data-role="content">
+        {% if products %}
+            <div class="xui-bottom-actionPanel xui-actionPanel">
+                <div class="fl text pr">
+<!-- 
+                    <input type="checkbox" name="checkbox-cart-all" id="checkbox-cart-all">
+                    <label for="checkbox-cart-all">&nbsp;</label> -->
+                    <label for="checkbox-cart-all" style="" class="tc pa">
+                        <!-- <input type="checkbox" id="checkbox-cart-all"  name="checkbox-cart-all" class="xui-regular-radio" data-role="none"> -->
+                        <label id="checkbox-cart-all" class="xui-regular-radio mt5"></label>
+                    </label>
+                    <span class="pl30">
+                    共计: <span class="xui-text-red">￥<span class="xa-totalPrice xt-totalPrice"></span></span>
+                    </span>
+                </div>
+                <div class="fr">
+                    <a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger" id="submit-order">去结算</a>
+                </div>
+            </div>
+            
+            <div class="xa-context">
+            {% for product in products %}
+            <div class="xui-section xt-product disT" data-id="{{product.id}}" data-model-name="{{product.model_name}}">
+                <label for="checkbox-cart-{{forloop.counter}}" style="width:40px;vertical-align:middle;" name="checkbox-cart" class="disTc tc">
+                    <!-- <input type="checkbox" data-role="none" id="checkbox-cart-{{forloop.counter}}" name="checkbox-cart" class="xui-regular-radio"> -->
+                    <label id="checkbox-cart-{{forloop.counter}}" class="xui-regular-radio"></label>
+                </label>
+                <div class="disTc pr10 pt15 pb15 xui-divLine">
+                    <div class="xui-selectedProductList clearfix disT pr" style="width:100%;">
+
+                        <!-- <input type="checkbox" name="checkbox-cart" id="checkbox-cart-{{forloop.counter}}">
+                            <label for="checkbox-cart-{{forloop.counter}}">&nbsp;</label> -->
+
+                                
+                                <div class="xui-selectedProductList-productImg disTc" style="width:70px;">
+                                    <img src="{{product.order_thumbnails_url}}" />
+                                </div>
+                                <div class="xui-selectedProductList-productInfo disTc">
+                                    <div class="xt-name text_nowrap em9 xui-productName" style=" float: none;height: inherit;">{{ product.name }}</div>
+                                    
+                                    {% if product.custom_model_properties %}
+                                    <div class="em9 clearfix" style="color: #7F7F7F;">
+                                        {% for property in product.custom_model_properties %}
+                                        <span class="mr5">{{ property.name }}: {{ property.property_value }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="clearfix">
+                                        <input 
+                                            data-ui-role="counter" 
+                                            {% ifequal product.stock_type 1 %}data-max-count="{{product.stocks}}"{% endifequal %}
+                                            data-product-id="{{ product.id }}" 
+                                            data-product-model-name="{{ product.model_name }}" 
+                                            data-product-price="{{ product.price }}" 
+                                            data-product-weight="{{ product.weight }}"
+                                            type="hidden" 
+                                            name="total_count" 
+                                            id="total_count" 
+                                            value="{{product.count}}" 
+                                        >
+                                    </div>
+                                </div>
+                                <div class="disTc em9 tr pr">
+                                    <p class="xt-price">￥{{ product.price }}</p>
+                                    <p class="xui-text-disabled">￥{{ product.market_price }}</p>
+                                    <a class="xui-btn-delete xa-delete" data-role="button" href="javascript:void(0);"></a>
+                                </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="xui-errorInfo">购物车里还没有商品</div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript"> 
+function calculatePrice() {
+    //获得商品列表
+    var products = [];
+    $('[data-ui-role="counter"]').each(function() {
+        var $product = $(this);
+        //var isCheckbox = true;
+        var isCheckbox = $product.parents('.xt-product').find('[name="checkbox-cart"]:first').children().hasClass('xui-checkCart');
+        if (isCheckbox) {
+            products.push({
+                price: parseFloat($product.attr('data-product-price')),
+                weight: parseFloat($product.attr('data-product-weight')),
+                count: parseInt($product.val())
+            });
+        }
+    });
+
+    var totalPrice = 0.0;
+    var productCount = products.length;
+    for (var i = 0; i < productCount; ++i) {
+        var product = products[i];
+        totalPrice += (product.price * product.count);
+    }
+
+    //更新页面元素
+    $('.xa-totalPrice').text(totalPrice.toFixed(2));
+}
+
+$(document).ready(function() {
+    //调整商品数量后重新计算运费
+    $('[data-ui-role="counter"]').bind('count-changed', function() {
+        calculatePrice();
+    });
+
+    //删除
+    $('.xa-delete').click(function(event) {
+        var $parent = $(event.currentTarget).parents('.xui-section');
+        var productId = $parent.attr('data-id');
+        var productModelName = $parent.attr('data-model-name');
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'post',
+            scope: this,
+            args: {
+                woid: W.webappOwnerId,
+                module: 'mall',
+                target_api: 'shopping_cart/delete',
+                product_id: productId,
+                product_model_name: productModelName,
+                order_id: 0
+            },
+            success: function(data) {
+                if($('.xui-section').length > 1) {
+                    $parent.remove();
+                    calculatePrice();
+                }
+                else {
+                    window.location.href = window.location.href;
+                }
+            },
+            error: function(data) {
+                $('body').alert({
+                    isShow: true,
+                    info: '删除失败',
+                    speed:2000
+                });
+                isSubmit = false;
+             }
+        });
+    });
+    
+    //结算
+    $('#submit-order').click(function() {
+        var productIds = [];
+        var productCounts = [];
+        var productModelNames = [];
+        $('[data-ui-role="counter"]').each(function() {
+            var $counter = $(this);
+            //var isCheckbox = true;
+            var isCheckbox = $counter.parents('.xt-product').find('[name="checkbox-cart"]:first').children().hasClass('xui-checkCart');
+            if (isCheckbox) {
+                productIds.push($counter.attr('data-product-id'));
+                productModelNames.push($counter.attr('data-product-model-name'));
+                productCounts.push($counter.val());
+            }
+        });
+        
+        if(productIds.length === 0) {
+            $('body').alert({
+                isShow: true,
+                info:'请选择结算的商品',
+                speed: 2000
+            });
+            return false;
+        }
+
+        productIds = productIds.join('_');
+        productCounts = productCounts.join('_');
+        productModelNames = productModelNames.join('$')
+        var url = './?woid='+W.webappOwnerId+'&module=mall&model=shopping_cart_order&action=edit&product_ids='+productIds+'&product_counts='+productCounts+'&product_model_names='+productModelNames;
+        window.location.href = url;
+    });
+
+    
+    //全选
+    $("#checkbox-cart-all").parent().bind('touchstart',function(event) {
+        event.stopPropagation();
+         // $('input[name="checkbox-cart"]').attr("checked");
+        var isSelect = $(this).children().hasClass('xui-checkCart');
+        if (isSelect) {
+            $(this).children().removeClass('xui-checkCart');
+        }else{
+            $(this).children().addClass('xui-checkCart');
+        };
+        $('label[name="checkbox-cart"]').children().each(function() {
+            var $checkbox = $(this);
+            if (isSelect) {
+                $checkbox.removeClass('xui-checkCart');
+            } else {
+                $checkbox.addClass('xui-checkCart');
+            }
+        });
+        calculatePrice();
+    });
+
+    // 选择部分商品
+    var $subBox = $("label[name='checkbox-cart']");
+    $subBox.bind('touchstart',function(event){
+        event.stopPropagation();
+        var isSelect = $(this).children().hasClass('xui-checkCart');
+        if (!isSelect) {
+            $(this).children().addClass('xui-checkCart');
+        }else{
+            $(this).children().removeClass('xui-checkCart');
+        };
+
+        var checkedCount = $('.xa-context').find('.xui-checkCart').length;
+        if ($subBox.length == checkedCount) {
+            $("#checkbox-cart-all").addClass('xui-checkCart');
+        }else{
+            $("#checkbox-cart-all").removeClass('xui-checkCart');
+        }
+        calculatePrice();
+    });
+
+    calculatePrice();
+}); 
+</script>
+{% endblock %}

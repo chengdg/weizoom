@@ -1,0 +1,178 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-promotionsPage xui-commonPromotionStyle">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+		<li class="active">促销查询</li>
+	</ul>
+</div>
+<div class="xa-promotionFilterView xui-filterPanel pt30"></div>
+<div class="panel panel-default xui-tableBox " style="margin-top:14px;">
+
+	<div class="panel-heading mb10 xui-headStyle pl18" style="background:#E9EDF5;">
+		<input type="checkbox" id="topSelectAll"  class="xa-selectAll ml10"/>
+	<label for="topSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">删&nbsp;&nbsp;&nbsp;&nbsp;除</a>
+	</div>
+	<div
+		data-ui-role="advanced-table"
+		data-app="mall_promotion"
+		data-api="promotions/get"
+		data-template-id="#promotions-view"
+		data-enable-paginator="true"
+		data-enable-sort="false"
+		data-selectable="true"
+		data-disable-header-select="true"
+		data-item-count-per-page="10"
+		data-outer-selecter='.xa-selectAll'
+		data-selecttable-tr='xa-selectTr'
+		class="panel-body xui-promotionHead mt0"
+	></div>
+	<div class="xui-leftBoxTow">
+	<div class="panel-heading pl22">
+		<input type="checkbox" id="bottomSelectAll"  class="xa-selectAll" style="margin-left:2px;"/>
+	<label for="bottomSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">删&nbsp;&nbsp;&nbsp;&nbsp;除</a>
+	</div>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="promotions-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table  table-condensed xui-tableWidth xb-stripedTable xb-noTdBorder">
+		<thead class="xui-theadHeight">
+			<tr>
+				<th>商品信息</th>
+				<th width="100">促销类型</th>
+				<th  width="120">商品价格（元）</th>
+				<th width="80">状态</th>
+				<th class="tx_sortable" data-sort-attr='sales' width="60">总销量</th>
+				<th width="210">起止时间</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+
+		<tbody id='product_list' class="xui-bottomLine">
+            {{if items.length}}
+	            {{each(i, promotion) items}}
+	            	<tr class="xui-activeName xa-selectTr" data-id="${promotion.id}">
+	            		<td>
+	            			<div class="xui-i-promotionName mb5 xui-ellipsis">
+							{{if promotion.promotionTitle}}
+							<p class="f12 fn">广告语: ${promotion.promotionTitle}</p>
+							{{else}}
+							<p class="f12 fn">活动名称: ${promotion.name}</p>
+							{{/if}}
+							</div>
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+	            	</tr>
+				<tr class="xui-trborder" data-id="${promotion.id}">
+					<td class="tl_important" style="padding:0px;">
+
+						{{each(j, product) promotion.products}}
+						<div class="clearfix xa-product mt10 mb10" data-id="${product.id}" >
+							<div class="imgBox fl" style="width: auto; border:solid 1px #cfcfcf;">
+								<a href="${product.detail_link}" target="_blank">
+                                  {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                                    <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                                  {{else}}
+                                    <img src="${product.thumbnails_url}" width="60" height="60"/>
+                                  {{/if}}
+
+								</a>
+							</div>
+							<div class="ml10 fl h60">
+								<div class="xui-commodityName">
+									<a href="${product.detail_link}" target="_blank">${product.name}</a>
+								</div>
+								{{if product.is_use_custom_model}}
+								<span class="label label-info xa-showAllModels cursor-pointer" style=" background:#1183ca; font-weight:normal; font-size: 1.0em;padding-bottom:2px;" data-product-id="${product.id}">查看${product.models.length}个规格详情</span>
+								{{else}}
+								<p style="color:#666;">商品条码：${product.bar_code}</p>
+								{{/if}}
+							</div>
+						</div>
+						{{/each}}
+					</td>
+					<td>
+						${promotion.type.display_name}
+					</td>
+					<td>
+						{{each(j, product) promotion.products}}
+						<div class="xui-i-cell xui-i-cell-vcenter">
+						${product.display_price_range}
+						</div>
+						{{/each}}
+					</td>
+					<td>
+						{{if (promotion.status === '已结束')}}
+						已结束
+						{{else}}
+						<span class="xa-notFinishInfo">${promotion.status}</span><span class="xa-finishInfo xui-hide">已结束</span>
+						{{/if}}
+					</td>
+					<td>
+						{{each(j, product) promotion.products}}
+						<div class="xui-i-cell xui-i-cell-vcenter">
+						${product.sales}
+						</div>
+						{{/each}}
+					</td>
+					<td>
+						{{if (promotion.type.name == "integral_sale" && promotion.start_date == "1900-01-01 00:00" && promotion.end_date == "2999-01-01 00:00")}}
+							<span class="xui-i-date">永久有效</span>
+						{{else}}
+							<span class="xui-i-date">${promotion.start_date}</span>-<span class="xui-i-date">${promotion.end_date}</span>
+						{{/if}}
+					</td>
+					<td>
+
+						{{if (promotion.status === '已结束')}}
+						<a target="_blank" href="/mall_promotion/${promotion.type.name}_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a href="javascript:void(0);" class="xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
+						{{else}}
+						<a target="_blank" href="/mall_promotion/${promotion.type.name}_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a href="javascript:void(0);" class="xa-notFinishInfo xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
+						<a href="javascript:void(0);" class="xui-hide xa-finishInfo xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
+						{{/if}}
+					</td>
+				</tr>
+
+
+</div>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='8'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.mall.PromotionListView({
+		el: '.xui-promotionsPage'
+	});
+	view.render();
+
+});
+</script>
+{% endblock %}

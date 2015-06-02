@@ -1,0 +1,26 @@
+<script id="tag-menus-view" type="text/x-jquery-tmpl">
+    {{if tags }}
+    <table class="table table-bordered table-condensed">
+        {{each(i, tag) tags}}
+        <tr>
+            <td width="90">${tag.CH_name}</td>
+            <td>
+                {{if tag.sub_tags && tag.sub_tags.length }}
+                   {{each(i, sub_tag) sub_tags}}
+                        <label class="checkbox inline mr10">
+                            <input class="tx_checked" type="checkbox" name="tag_id" value="${sub_tag.id}" {{if sub_tag.is_checked}}checked="checked"{{/if}} />
+                            ${sub_tag.CH_name}
+                        </label>
+                   {{/each}}
+                {{else}}
+                <label class="checkbox inline">
+                    <input class="tx_checkedAll" type="checkbox" name="tag_id" value="${tag.id}"  {{if tag.is_checked}}checked="checked"{{/if}} >
+                    ${tag.CH_name}
+                </label>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+    {{/if}}
+</script>

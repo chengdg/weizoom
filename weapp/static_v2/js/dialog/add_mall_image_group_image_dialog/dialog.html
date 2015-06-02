@@ -1,0 +1,33 @@
+<script id="mall-add-mall-image-group-image-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-addImageGroupImageDialog" id="mallAddMallImageGroupImageDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title"></h3>
+		</div>
+		<div class="modal-body" >
+			<ul class="xa-images xui-i-images  clearfix">
+			</ul>
+
+			<div class="xa-imageUploader xui-uploader mt20 "></div>
+
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-primary xa-submit-dialog" id="change_password">保存</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="mall-add-mall-image-group-image-dialog-image-tmpl-src" type="text/x-jquery-tmpl">
+<li class="pr xui-i-image xa-image" data-image-id="${image.id}">
+	<img src="${image.src}" />
+	<button class="xui-close xa-delete" type="button" style="display: block;">
+		<span>&times;</span>
+	</button>
+	<div class="xui-i-footer"><span class="xa-width">${image.width}</span> x <span class="xa-height">${image.height}</span></div>
+</li>
+</script>

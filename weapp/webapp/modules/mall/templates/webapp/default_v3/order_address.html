@@ -1,0 +1,226 @@
+{% extends "webapp_content_base.html" %}
+{% load mall_filter %}
+
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-address-page xui-page">
+  <div class="xui-content">
+    <form class="xui-form">
+      <fieldset class="xui-section" style="box-shadow:0 0 0;-webkit-box-shadow:0 0 0;">
+        <input id="ship_id" name="ship_id" type="hidden" value="{% if ship_info %}{{ ship_info.id }}{%else%}0{% endif %}">
+        <div class="xui-form-controls xui-form-controls-first xui-addressTitle">
+          <label class="xui-form-cell">您的收货信息:</label>
+            {% if ship_info %}
+              <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=delete&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}"class="xui-delete">
+                删除
+                <a>
+              {% endif %}
+        </div>
+        <div class="xui-form-controls xui-topBorder xui-info">
+          <label class="xui-form-cell">收货人</label>
+          <div class="xui-form-cell pr xa-clearBtnContainer">
+            <div class="xui-clearBtn pa hidden"></div>
+            <div class="xui-inner-input-container">
+              <input id="ship_name" name="ship_name" style="color:#878787" data-validate="require-notempty::收货人不能为空" type="text" value="{% if ship_info %}{{ ship_info.ship_name }}{% endif %}" class="ui-input-text" placeholder="姓名"></div>
+          </div>
+        </div>
+        <div class="xui-cuttingLine"></div>
+        <div class="xui-form-controls xui-info">
+          <label class="xui-form-cell">手机号码</label>
+          <div class="xui-form-cell pr xa-clearBtnContainer">
+            <div class="xui-clearBtn pa hidden"></div>
+            <div class="xui-inner-input-container">
+              <input id="ship_tel" name="ship_tel" style="color:#878787"  type="tel" data-validate="require-mobile-phone::请输入正确的手机号" value="{% if ship_info %}{{ ship_info.ship_tel }}{% endif %}" class="ui-input-text" placeholder="11位手机号"></div>
+          </div>
+        </div>
+        <div class="xui-cuttingLine"></div>
+        <div class="xui-form-controls xui-info">
+          <label class="xui-form-cell align-top" style="vertical-align:middle;">选择地区</label>
+          <div class="xui-form-cell" style="padding-left:5px;">
+            <div class="xui-inner-input-container">
+              <div class="xa-areaPopContainer">
+                <input id="area" name="area" class="xa-areaInput" style="color:#878787"  data-validate="require-notempty::所在地区不能为空" data-force-validate="true" data-ui-role="areaPop" type="textarea" value="{% if ship_info %}{{ ship_info.area }}{% endif %}" data-area-str="{% if ship_info %}{{ship_info.get_str_area}}{% endif %}"></div>
+            </div>
+          </div>
+        </div>
+        <div class="xui-cuttingLine"></div>
+        <div class="xui-form-controls xui-bottomBorder" >
+          <label class="xui-form-cell xa-areaLabel">详细地址</label>
+          <div class="xui-form-cell pr xa-clearBtnContainer">
+            <!-- <div class="xa-areaValue pb5"></div>
+          -->
+          <div class="xui-clearBtn pa hidden"></div>
+          <div class="xui-inner-input-container">
+            <textarea id="ship_address" style="font-size:0.9em;color:#878787;" name="ship_address" data-validate="require-notempty::地址不能为空" type="text" class="ui-input-text" placeholder="街道门牌信息" cols="5" rows="2" >{% if ship_info %}{{ ship_info.ship_address }}{% endif %}</textarea></div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+<!--   {% if ship_info %}
+  <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=delete&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" class="xui-section disBl" style="padding:15px;border-radius: 0;margin: 15px 0;color:#e44445;">
+    删除收货地址
+    <a>
+      {% endif %} -->
+      <div class="xui-btnBox">
+        <a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger xa-submit">保存并使用</a>
+      </div>
+    </div>
+    <div data-ui-role="swipemask" class="mask">
+      <div class="xui-loading">
+        <div class="xui-loading-container container1">
+          <div class="circle1"></div>
+          <div class="circle2"></div>
+          <div class="circle3"></div>
+          <div class="circle4"></div>
+        </div>
+        <div class="xui-loading-container container2">
+          <div class="circle1"></div>
+          <div class="circle2"></div>
+          <div class="circle3"></div>
+          <div class="circle4"></div>
+        </div>
+        <div class="xui-loading-container container3">
+          <div class="circle1"></div>
+          <div class="circle2"></div>
+          <div class="circle3"></div>
+          <div class="circle4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+{% block js %}
+  <script type="text/javascript">
+    var redirectUrlQueryString = "{{redirect_url_query_string|safe}}";
+    // $(function() {
+    //     FastClick.attach(document.body);
+    // });
+    //绑定初始化数据
+    var page = new W.page.EditAddressPage({
+        el: '.xui-address-page',
+        redirectUrlQueryString: redirectUrlQueryString
+    });
+    var height = screen.height;
+    var width = screen.width;
+
+    //var $iscrollUl = this.$el.find(".xui-popAddress");
+    //$('.xui-page').css({
+    //    width: width,
+    //    height: height
+    //});
+    //var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+
+//var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %}; //是否是从购物车访问的该页面
+//var product_model_name = '{% if product_model_name %}{{product_model_name}}{% else %}{% endif %}';
+//var product_count = {% if product_count %}{{product_count}}{% else %}1{% endif %};
+//var product_id = {% if product_id %}{{product_id}}{% else %}0{% endif %};
+// var webappOwnerId = "{{request.webapp_owner_id}}";
+// // 跳转queryString
+// var redirectUrlQueryString = "{{redirect_url_query_string|safe}}";
+// console.log(redirectUrlQueryString)
+// /**
+//  * getProductsInfo: 获得订单中的商品信息
+//  */
+// function getProductsInfo() {
+//     return {
+//         product_ids: '{{ product_id }}',
+//         product_counts: '{{ product_count }}',
+//         product_model_names: '{{ product_model_name }}'
+//     }
+// };
+
+// /**
+//  * submitAddress: 提交收货地址信息
+//  */
+// function submitAddress(args) {
+//     W.getApi().call({
+//         app: 'webapp',
+//         api: 'project_api/call',
+//         method: 'post',
+//         args: _.extend({
+//             woid: W.webappOwnerId,
+//             module: 'mall',
+//             is_order_from_shopping_cart: isOrderFromShoppingCart,
+//             target_api: 'address/save'
+//         }, args),
+//         success: function(data) {
+//             xlog(333,data);
+//             var ship_name = data['ship_name'];
+//             if (data['msg'] != null) {
+//                 $('body').alert({
+//                     isShow: true,
+//                     speed: 2000,
+//                     info: data['msg']
+//                 })
+//             } else {
+//                 window.location.href = "./?"+redirectUrlQueryString;
+//             }
+//         },
+//         error: function(resp) {
+//             var errMsg = '保存失败';
+//             if (resp.errMsg) {
+//                 errMsg = resp.errMsg;
+//             } else if (resp.data && resp.data['msg']) {
+//                 errMsg = resp.data['msg']
+//             }
+
+//             $('body').alert({
+//                 isShow: true,
+//                 info: errMsg,
+//                 speed: 2000,
+//                 callBack: function() {
+//                     // window.location.reload();
+//                 }
+//             });
+//         }
+//     });
+// };
+
+// jQuery(document).ready(function($) {
+//     //清除“给卖家留言”文本框内容
+//     var $inputs = $('input[type="text"],input[type="tel"]');
+//     $inputs.each(function() {
+//         var $clearBtn = $(this).parent('div').siblings();
+//         var $couponInput = $(this).parent().parent();
+//         $clearBtn.hide();
+//         $(this).focus(function(){
+//             if($(this).val() !== ""){
+//                 $clearBtn.show();
+//             }else{
+//                 $clearBtn.hide();        
+//             }
+//         });
+//         $(this).blur(function(event){
+//            $clearBtn.fadeOut(300);     
+//         });
+//        $(this).on('input',function(){
+//             if($(this).val() === ""){
+//                 $clearBtn.hide();
+//             }else{
+//                 $clearBtn.show();
+//             }
+//         });
+//     });
+//     $('.xui-clearBtn').click(function(event) {
+//         var $input = $(this).parent('div').find('input');
+//         $input.val('');
+//         $(this).hide();
+//     });
+
+//     $('form').bind('validate-success', function() {
+//         //显示提交订单的提示
+//         $('body').alert({
+//             isShow: true,
+//             info:'正在保存收货地址',
+//             speed: 200000
+//         });
+//         console.log('ddddd')
+//         var args = _.extend($('form').serializeObject(), getProductsInfo());
+//         submitAddress(args); 
+//     });
+//});
+    </script>
+  {% endblock %}

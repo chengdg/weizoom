@@ -1,0 +1,16 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.html_tag' %}
+<{% if component.model.tag %}{{component.model.tag}}{% else %}div{% endif %} 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-component-container="true"
+    class="mt5 mb5 {{component.model.class}}" 
+    style="border: dotted 1px #888; padding: 10px;"
+>
+    {% include 'component/common/circum_insert_indicator.html' %}
+    {{ component|join_sub_components_html|safe }}
+</{% if component.model.tag %}{{component.model.tag}}{% else %}div{% endif %} >
+{% endifequal %}

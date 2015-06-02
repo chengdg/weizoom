@@ -1,0 +1,205 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% load mall_filter %}
+
+{% block content-panel %}
+
+<ul class="breadcrumb">
+	<li>
+		<a href="/market_tools/channel_qrcode/">渠道扫码</a><span class="divider">/</span>
+	</li>
+	<li class="active">渠道交易订单</li>
+</ul>
+
+
+	{% if setting_id %}
+		<div
+			data-ui-role="advanced-table"
+			data-app="mall"
+			data-api="channel_qrcode_payed_orders/get"
+			data-enable-paginator="true"
+			data-template-id="#mall-orders-view"
+			data-args='{"id":{{setting_id}} }'
+			data-init-sort="-created_at"
+			data-enable-sort= "false"
+		>
+		</div>
+	{% else %}
+		目前还没有数据
+	{% endif %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% verbatim %}
+<script id="mall-orders-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed table-hover">
+		<thead>
+			<tr>
+				<th colspan='2' width="110">
+					<p class="m0 f14 ">
+						订单号
+					</p>
+				</th>
+                <th>金额</th>
+				<th class="tx_filterable">
+					订单状态
+
+				</th>
+				<th class="tx_filterable">
+					支付方式
+				</th>
+				<th>商品数</th>
+				<th>购买人</th>
+				<th>收货人</th>
+				<th>顾客留言</th>
+				<th class="tx_sortable" data-sort-attr='created_at'>下单时间</th>
+			</tr>
+		</thead>
+		<tbody>
+            {{if items.length}}
+            {{each(i, order) items}}
+			<tr data-id="${order.id}">
+				<td class="w10 tx_expandTrigger" data-expand-source="${order.id}" style="cursor: pointer;"> + </td>
+				<td class="nowrap">
+					<div>
+						<a title="查看" href="/mall/order_detail/get/?order_id=${order.id}">${order.order_id}</a>
+					</div>
+				</td>
+                <td class="nowrap">
+					<div>
+                        ￥${order.total_price}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+                        {{html formatOrderStatus(order.status)}}
+					</div>
+				</td>
+				<td class="nowrap">
+					${order.pay_interface_name}
+				</td>
+				<td class="nowrap">
+					<div>
+						${order.product_count}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+						{{html order.buyer_name}}
+					</div>
+				</td>
+				<td>
+					<div style="width:60px;" class="nowrap">
+						${order.ship_name}
+					</div>
+				</td>
+				<td class="auto_wrap">
+					{{if order.customer_message}}
+						${order.customer_message}
+					{{/if}}
+				</td>
+				<td class="nowrap">
+					<div>
+						${order.created_at}
+					</div>
+				</td>
+			</tr>
+			<tr class="hide" data-expand-target="${order.id}">
+				<td colspan="10">
+					<div class="pt10 pb10 tc" style="background-color: #FAFAFA;">
+						<img src="/standard_static/img/loading.gif" />
+					</div>
+				</td>
+			</tr>
+			{{/each}}
+            {{else}}
+                <tr><td colspan='9'>还没有订单数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</script>
+
+<script id="order-products-table-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed" style="margin: 5px auto; background-color: #FAFAFA; width: 94%;">
+    {{if products}}
+    	<tr>
+    		<th>商品</th>
+    		<th>规格</th>
+    		<th>数量</th>
+    		<th>总价</th>
+    	</tr>
+        {{each(i, product) products}}
+        <tr>
+			<td width="200" style="padding: 10px;">
+                <img class="imgBox" src="${product.thumbnails_url}" width="100" style="max-width: 80px" /><span class="ml10">${product.name}</span>
+            </td>
+            <td width="20%">
+            {{if (product.custom_model_properties !== null)}}
+            	{{each(j, property) product.custom_model_properties}}
+            	${property.name}: ${property.property_value}<br/>
+            	{{/each}}
+            {{/if}}
+           	</td>
+            <td width="10%" class="nowrap">
+                x ${product.count}
+            </td>
+			<td width="10%" class="nowrap">
+                ￥${product.total_price}
+			</td>
+		</tr>
+        {{/each}}
+    {{else}}
+    	<tr><td>暂无数据</td></tr>
+    {{/if}}
+	</table>
+</script>
+{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+function formatOrderStatus(status) {
+	var color = '#000000';
+	if (status === '待支付' || status === '待发货') {
+		color = '#FF0000';
+	} else if (status === '已发货' || status === '已完成') {
+		color = 'green'
+	} else if (status === '已取消') {
+		color = '#AFAFAF'
+	}
+
+	return '<span style="color: ' + color + '">' + status + '</span>';
+}
+
+$(document).ready(function() {
+	$('#exportBtn').click(function(event) {
+      var url = '/mall/editor/orders/export/';
+      window.open(url);
+	});
+
+	$('#order-products-table-tmpl-src').template('order-products-table-tmpl-src');
+	if($('[data-ui-role="advanced-table"]').length>0)// 避免没有数据时报空
+		$('[data-ui-role="advanced-table"]').data('view').on('table-row-expanded', function(order_id, $tr) {
+			if ($tr.find('table').length !== 0) {
+				xlog('already loaded');
+				return;
+			}
+			W.getApi().call({
+				app: 'mall',
+				api: 'order_products/get',
+				args: {
+					order_id: order_id
+				},
+				success: function(data) {
+					var $node = $.tmpl('order-products-table-tmpl-src', data);
+					$tr.find('td').empty().append($node);
+				},
+				error: function(resp) {
+					$tr.find('td').empty().html('无商品数据')
+				}
+			})
+		})
+});
+</script>
+{% endblock %}

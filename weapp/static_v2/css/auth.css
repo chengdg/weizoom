@@ -1,0 +1,387 @@
+@charset "utf-8";
+/*
+* 账号帮助页面
+*/
+.xui-acountHelpPage .xui-stepBox{
+    border-right:1px solid #c9d1e4;
+    width:223px;
+}
+.xui-acountHelpPage .xui-hide{
+    display: none!important;
+}
+.xui-acountHelpPage .xui-stepInfo ul li{
+    display: table;
+}
+.xui-acountHelpPage .xui-stepInfo ul li label{
+    font-size: 14px;
+    color:#1183ca;
+}
+.xui-acountHelpPage .xui-stepInfo ul li div{
+    width:285px;
+}
+.xui-acountHelpPage .xui-rightPanelTitle{
+    background: #c9d1e4;
+}
+.xui-acountHelpPage .xui-i-step {
+    cursor: pointer;
+    display: block;
+    border: solid 1px #ccc;
+    background-color: #FFF;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 64px;
+    text-align: center;
+    text-decoration: none;
+}
+.xui-acountHelpPage .xui-i-step:after{
+    content: '';
+    width: 30px;
+    height: 64px;
+    background: url("/static_v2/img/editor/step-arrow.png");
+    display: block;
+    margin-left:23px;
+    margin-top: -1px;
+}
+.xui-acountHelpPage .xui-i-step:last-child{
+    margin-bottom:0px;
+}
+.xui-acountHelpPage .xui-i-step:last-child:after{
+    content: '';
+    background: none;
+}
+.xui-acountHelpPage .xui-i-activeStep {
+    background-color: #1183ca;
+    border-color:#1183ca;
+    color: #FFF;
+}
+.xui-acountHelpPage .xui-i-activeContent {
+    display: block !important;
+}
+
+
+
+
+
+
+
+
+
+
+/*
+* 角色管理页面&员工管理页面
+*/
+.xui-accountRolesPage {
+    
+}
+.xui-roleInfoList,
+.xui-departmentInfoList {
+    background-color: #EAEEF7;
+    min-height: 610px;
+    border: solid 1px #D7E0E7;
+    margin-right: 10px;
+}
+.xui-roleList,
+.xui-departmentList {
+    width: 245px;
+}
+.xui-roleList .xui-i-header,
+.xui-departmentList .xui-i-header {
+    text-align: center;
+    font-weight: bold;
+    border-bottom:1px solid #d7e0e7;
+    height: 50px;
+    line-height: 50px;
+}
+.xui-roleList .xui-i-addButton,
+.xui-departmentList .xui-i-addButton {
+    height: 28px;
+    line-height: 24px;
+    min-width: 58px !important;
+    position: absolute;
+    right: 30px;
+    top: 10px;
+}
+.xui-rolePermissions,
+.xui-departmentUsers {
+    background-color: #FFF;
+    min-height: 610px;
+    margin-left: 245px;
+    padding: 10px 13px;
+    border-left: 1px solid #d7e0e7;
+}
+.xui-roleList .xui-i-role,
+.xui-departmentList .xui-i-department {
+    height: 50px;
+    line-height: 50px;
+    color: #000;
+    text-decoration: none;
+    border-bottom: solid 1px #CFCFCF;
+    display: block;
+    position: relative;
+    padding: 0 15px;
+}
+.xui-roleList .xui-i-role .xui-name,
+.xui-departmentList .xui-i-department .xui-name{
+    color:#666;
+}
+.xui-roleList .xui-i-role .caret,
+.xui-departmentList .xui-i-department .caret{
+    margin-right:15px;
+    -webkit-transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);
+    transform:rotate(-90deg);
+}
+.xui-roleList .xui-i-config,
+.xui-departmentList .xui-i-config {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    top: 50%;
+    margin-top: -9px;
+    right: 10px;
+    color:#eaeef6;
+    -webkit-text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0;  
+    -moz-text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0;  
+    text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0; 
+}
+.xui-roleList .xui-i-input[placeholder],
+.xui-departmentList .xui-i-input[placeholder]{
+    width: 214px;
+}
+.xui-roleList .xui-i-input,
+.xui-departmentList .xui-i-input {
+    display: inline;
+    margin: 13px 0px;
+    width: 171px;
+    padding-left: 25px;
+}
+.xui-roleList .xui-i-activeRole,
+.xui-departmentList .xui-i-activeDepartment {
+    background-color: #FFF;
+}
+/*.xui-roleList .xui-i-activeRole .xui-i-input,
+.xui-departmentList .xui-i-activeDepartment .xui-i-input{
+    width:171px;   
+}*/
+.xui-roleList .xui-i-activeRole .xui-i-config,
+.xui-departmentList .xui-i-activeDepartment .xui-i-config{
+    color:#fff;
+}
+.xui-roleList .xui-i-activeRole:after,
+.xui-departmentList .xui-i-activeDepartment:after{
+    background-color: #fff;
+    content: "";
+    display: inline-block;
+    height: 49px;
+    position: absolute;
+    right: -1px;
+    width: 2px;
+}
+    /*角色管理内容样式*/
+.xui-rolePermissions .panel{
+    margin-bottom:0;
+}
+.xui-rolePermissions .panel-heading{
+    background-color: #c9d1e4;
+    font-weight: bold;
+}
+.xui-rolePermissions .panel-body{
+    min-height:70px;
+    margin-bottom:0;
+    color:#666;
+    padding: 30px 44px;
+}
+.xui-rolePermissions .panel-body::after, .xui-rolePermissions .panel-body::before{
+    display: inline;
+}
+
+
+
+
+
+
+
+/**
+ * 权限列表样式
+ */
+.xui-commonPermissionStype .xui-i-permission {
+}
+.xui-commonPermissionStype .xui-i-level1 {
+    font-weight: bold;
+    margin-bottom: 15px;
+    margin-left: 0;
+    margin-top: 25px;
+}
+.xui-commonPermissionStype .xui-i-level1:first-child{
+    margin-top:0;
+}
+.xui-commonPermissionStype .xui-i-level2 {
+    margin-left: 35px;
+    line-height: 25px;
+}
+.xui-commonPermissionStype .xui-i-level2 .xui-i-line2:after{
+    content: "";
+    display: inline-block;
+    height: 14px;
+    left: -25px;
+    position: absolute;
+    width: 15px;
+    border-bottom:1px solid #ccc;
+}
+.xui-commonPermissionStype .xui-i-level2 .xui-i-line2:before{
+    content: "";
+    display: inline-block;
+    height: 25px;
+    left: -25px;
+    position: absolute;
+    width: 1px;
+    top:-11px;
+    background: #ccc;
+}
+.xui-commonPermissionStype .xui-i-level3 {
+    margin-left: 40px;
+}
+.xui-commonPermissionStype .xui-i-level4 {
+    margin-left: 60px;
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * 选择权限对话框
+ */
+.xui-authSelectPermissionDialog .xui-i-permission {
+    display: block;
+}
+.xui-authSelectPermissionDialog .xui-i-level1 {
+    margin-left: 0px;
+}
+.xui-authSelectPermissionDialog .xui-i-level2 {
+    margin-left: 20px;
+}
+.xui-authSelectPermissionDialog .xui-i-level3 {
+    margin-left: 40px;
+}
+.xui-authSelectPermissionDialog .xui-i-level4 {
+    margin-left: 60px;
+}
+.xui-authSelectPermissionDialog .modal-body {
+    height: 500px;
+    overflow: auto;
+}
+
+
+
+
+
+
+
+
+
+/*
+* 员工管理页面
+*/
+    /*员工管理列表样式*/
+.xui-departmentUsers .xui-advancedTableContent{
+    min-height: 493px;
+    border:1px solid #ccc;
+}
+.xui-departmentUsers .xui-advancedTablePaginator{
+    background: #eaeef6;
+    border-width:0 1px 1px 1px;
+    border-color:#ccc;
+    border-style: solid;
+}
+.xui-departmentUsers .xui-advancedTableContent .table > tbody > tr > td {
+    padding:15px 8px;
+}
+.xui-departmentUsers .xui-advancedTableContent .xui-operation{
+   text-align:right;
+   padding-right:30px!important;
+}
+.xui-departmentUsers .xui-advancedTableContent .xui-operation a{
+    padding:0 8px;
+    border-right:1px solid #086cb2;
+}
+.xui-departmentUsers .xui-advancedTableContent .xui-operation a:last-child{
+    padding-right:0;
+    border: none;
+}
+/*
+新建员工页面
+ */
+.xui-acountDetailPage label{
+    font-weight: normal;
+    width: 150px;
+    padding: 0px;
+}
+.xui-acountDetailPage .star_show:before{
+    right: 12px;
+}
+.xui-acountDetailPage .star_show{
+    right: 0px;
+}
+.xui-acountDetailPage .xui-warnning{
+    padding: 0px;
+}
+.xui-acountDetailPage{
+    min-height: 880px;
+    background-color: #eaeef6;
+}
+.xui-acountDetailPage .xui-role{
+    padding-left: 90px;
+    height: 80px;
+    line-height: 80px;
+}
+.xui-acountDetailPage .xui-role label{
+   width: auto;
+   
+   padding-right:30px;
+}
+.xui-acountDetailPage .xui-authority{
+    min-height: 300px;
+    width: 95%;
+    margin: auto;
+    border-bottom: 1px solid #cccccc;
+    padding-left: 60px;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    color: #666666;
+}
+.xui-acountDetailPage .xui-submite{
+    height:125px;
+}
+.xui-acountDetailPage .xui-submite .btn{
+    height: 40px !important;
+    width: 80px !important;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.xui-acountDetailPage .breadcrumb{
+    background-color: #fff;
+}
+.xui-acountDetailPage .xui-btnwrap{
+    margin: auto;
+    width: 242px;
+    padding-top: 20px;
+
+}
+.xui-acountDetailPage .form-control{
+    margin-top: 5px;
+}
+.xui-acountDetailPage .xui-warnning{
+    margin-top: 7px;
+}
+.xui-acountDetailPage .errorHint{
+    margin-top: 10px;
+}

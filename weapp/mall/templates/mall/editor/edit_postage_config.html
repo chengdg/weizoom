@@ -1,0 +1,320 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-editPostageTemplatePage">
+
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li>配置管理</li>
+		<li>
+			<a href="/mall/postage_templates/get/">运费模板</a>
+		</li>
+		<li class="active">编辑运费模板</li>
+	</ul>
+
+	<div class="xui-editPostageTemplate xui-tableList-content">
+		<fieldset class="form-horizontal">
+			<input type="hidden" name="id" value="{% if postage_config %}{{ postage_config.id }}{% endif %}" />
+			<table class="xui-postageTemplateName">
+				<tbody>
+					<tr>
+						<td>模板名称：</td>
+						<td>
+							<input type="text" class="form-control" name="name" data-validate="require-string" value="{% if postage_config %}{{postage_config.name}}{% endif %}" />
+                            <div class="errorHint"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>运送方式：</td>
+						<td>除特殊地区外，其余地区的运费采用“默认运费”</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+
+		<fieldset class="form-inline mb20 xui-defaultPostage">
+
+			<legend>默认运费</legend>
+			<div class="form-group">
+                <label class="xui-verticalAling">
+				<input type="text" class="form-control" 
+                       name="firstWeight" id="firstWeight"  
+                       data-validate="require-float"
+                       value="{% if postage_config.first_weight %}{{postage_config.first_weight|floatformat:1}}{% else %}1.0{% endif %}"/>
+				<label class="control-label" for="firstWeight">kg内，</label>
+                <div class="errorHint pa ml10" data-error-hint="请输入数字"></div>
+                </label>
+
+                <label class="xui-verticalAling">
+				<input type="text" class="form-control" name="firstWeightPrice" id="firstWeightPrice" data-validate="require-price" value="{% if postage_config %}{{postage_config.first_weight_price|floatformat:2}}{% endif %}"/>
+				<label class="control-label" for="firstWeightPrice">元，</label>
+                <div class="errorHint pa" data-error-hint="请输入数字"></div>
+                </label>
+
+                <label class="xui-verticalAling">
+				<label class="control-label" for="addedWeight">每增加</label>
+				<input type="text" class="form-control" name="addedWeight" id="addedWeight"
+                       data-validate="require-custom-function"
+                       data-validate-function="validateWeight" 
+                       value="{% if postage_config %}{{postage_config.added_weight|floatformat:1}}{% else %}1.0{% endif %}"/>
+				<label class="control-label" for="addedWeight">kg，</label>
+                <div class="errorHint pa ml40" data-error-hint="请输入数字"></div>
+                </label>
+
+                <label class="xui-verticalAling">
+				<label class="control-label" for="addedWeightPrice">增加运费</label>
+				<input type="text" class="form-control" name="addedWeightPrice" id="addedWeightPrice" data-validate="require-price" value="{% if postage_config %}{{postage_config.added_weight_price|floatformat:2}}{% endif %}"/>
+				<label class="control-label" for="addedWeightPrice">元</label>
+                <div class="errorHint pa ml50" data-error-hint="请输入数字"></div>
+                </label>
+			</div>
+		</fieldset>
+
+		<fieldset class="form-inline xui-specialPostage">
+			<legend>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="enableSpecialCofnig" class="mr5 xa-enableSpecialConfig"
+						{% if postage_config.is_enable_special_config %}checked="checked"{% endif %}>
+                        特殊地区运费
+                    </label>
+				</div>
+			</legend>
+            <div id="xa-display-specialPostage" style="display: none;">
+			<div class="xui-i-box">
+				<table class="table xa-specialConfigTable xui-specialConfigTable">
+					<thead>
+						<tr>
+							<th data-field="destination" data-model-field="true" data-use-data-value="true">运送到</th>
+							<th width="114px" data-field="firstWeight" data-model-field="true" data-editable="true">首重（kg）</th>
+							<th width="114px" data-field="firstWeightPrice" data-model-field="true" data-editable="true">运费（元）</th>
+							<th width="114px" data-field="addedWeight" data-model-field="true" data-editable="true">续重（kg）</th>
+							<th width="114px" data-field="addedWeightPrice" data-model-field="true" data-editable="true">续费（元）</th>
+							<th width="114px" data-field="actions">操作</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+
+			<div class="xui-i-button"><button class="btn xa-addSpecialConfig">为特殊地区城市设置运费</button></div>
+            </div>
+		</fieldset>
+
+		<fieldset class="form-inline xui-freePostage">
+			<legend>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="enableFreeCofnig" class="mr5 xa-enableFreeConfig"
+						{% if postage_config.is_enable_free_config %}checked="checked"{% endif %}>
+                        包邮条件
+                    </label>
+				</div>
+			</legend>
+            <div id="xa-display-freePostage" style="display: none;">
+			<div class="xui-i-box">
+				<table class="table xa-freeConfigTable xui-freeConfigTable">
+					<thead>
+						<tr>
+							<th width="365px">运送到</th>
+							<th width="360 px">包邮条件</th>
+							<th width="" data-field="actions">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for free_postage in free_configs %}
+						<tr data-id="{{free_postage.id}}" >
+							<td class="xa-destination" data-value="{{free_postage.destination}}">
+								<span class="xa-destinationText">{{free_postage.destination_str}}</span>
+								<a href="javascript:void(0);" class="ml10 xa-editProvince">编辑</a>
+							</td>
+							<td class="xui-aligntop xa-errorHintContainer">
+                                {% if free_postage.condition == 'count' %}
+								<select data-validate="require-custom-function"
+                                        data-validate-function="checkFreeConfigConditionValue"
+                                        name="type" class="form-control mr5 xa-freeConfigConditionType">
+									<option value="count" selected="selected">件数</option>
+									<option value="money">金额</option>
+								</select>
+								满
+								<div class="xui-inlineblock pr xui-aligntop">
+									<input name="value" type="text" class="ml5 form-control mr5" value="{{free_postage.condition_value}}">
+									<span class="xa-countText xa-conditionTypeText">件 包邮</span>
+									<span class="xa-moneyText xa-conditionTypeText" style="display: none;">元 包邮</span>
+									<div class="errorHint" data-error-hint="dfhfh"></div>
+								</div>
+                                {% elif free_postage.condition == 'money' %}
+								<select data-validate="require-custom-function"
+                                        data-validate-function="checkFreeConfigConditionValue"
+                                        name="type" class="form-control mr5 xa-freeConfigConditionType">
+									<option value="count" >件数</option>
+									<option value="money" selected="selected">金额</option>
+								</select>
+								满
+								<div class="xui-inlineblock pr xui-aligntop">
+									<input name="value" type="text" class="ml5 form-control mr5" value="{{free_postage.condition_value}}">
+									<span class="xa-countText xa-conditionTypeText" style="display: none;">件 包邮</span>
+									<span class="xa-moneyText xa-conditionTypeText">元 包邮</span>
+									<div class="errorHint" data-error-hint="dfhfh"></div>
+								</div>
+                                {% endif %}
+
+							</td>
+							<td>
+								<a href="javascript:void(0);" class="btn btn-xs xa-deleteFreePostageConfig">删除</a>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="xui-i-button"><button class="btn xa-addFreeConfig">添加包邮条件</button></div>
+            </div>
+		</fieldset>
+
+		
+	</div>
+<div class="tc">
+	
+	 <button class="btn btn-primary xa-submit mt20">保&nbsp;存</button>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+<!--    重量校验    -->
+<script type="text/javascript">
+function validateWeight($el){
+    var validate_pattern = /^\d+(\.\d{1})?$/g;
+    var current_val = $el.val();
+    var isValidate = validate_pattern.test(current_val);
+    return {
+        isValidate: isValidate,
+        errorHint: '请输入数字'
+    }
+}
+
+function checkFreeConfigConditionValue($el) {
+    var $el = $el.parent();
+	var type = $el.find('[name="type"]').val();
+	var value = $.trim($el.find('input[type="text"]').val());
+	if ('count' === type) {
+		if (!/^[1-9][0-9]*$/g.test(value)) {
+			return {
+				isValidate: false,
+				errorHint: '请输入正整数'
+			}
+		}
+	} else if ('money' === type) {
+		if (!/^\d{1,9}(\.\d{1,2})?$/g.test(value)) {
+			return {
+				isValidate: false,
+				errorHint: '请输入正整数'
+			}
+		}
+	}
+
+	return {
+		isValidate: true
+	}
+}
+
+function checkDestination($el) {
+	var text = $el.text();
+	text = $.trim(text.replace('未添加地区', '').replace('编辑', ''));
+	if (text.length === 0) {
+		return {
+			isValidate: false,
+			errorHint: '请选择地区'
+		}	
+	}
+
+	return {
+		isValidate: true
+	}
+}
+
+</script>
+<!--    /重量校验    -->
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var isUpdate = {% if postage_config %}true{% else %}false{% endif %};
+	var view = new W.view.mall.ProductPostageConfigEditor({
+		el: '.xui-editPostageTemplatePage',
+		specialConfigs: W.loadJSON('special_configs'),
+		freeConfigs: W.loadJSON('free_configs')
+	});
+	view.render();
+
+	$('.xa-submit').click(function() {
+        if(W.validate()){
+            var data = W.toFormData(view.getData());
+            var api_url = 'postage_template/create';
+            if (isUpdate) {
+                api_url = 'postage_template/update';
+            }
+            W.getApi().call({
+                method: 'post',
+                app: 'mall',
+                api: api_url,
+                args: data,
+                scope: this,
+                success: function(data) {
+                    window.location.href = '/mall/postage_templates/get/';
+                },
+                error: function(resp) {
+                    alert('创建运费模板失败')
+                }
+            })
+        }else{
+            return false;}
+	});
+});
+</script>
+<!--    特殊地区隐藏    -->
+<script>
+$(document).ready(function(){
+        if($(".xa-enableSpecialConfig").is(":checked")){
+            $("#xa-display-specialPostage").show();
+        }
+        if($(".xa-enableFreeConfig").is(":checked")){
+            $("#xa-display-freePostage").show();
+        }
+
+});
+
+$(".xa-enableSpecialConfig").on('click', function(e){
+    $checkbox = $(e.currentTarget);
+    $fieldset = $checkbox.parents('fieldset');
+    $display = $fieldset.children("#xa-display-specialPostage")
+    if($checkbox.is(':checked')){
+        $display.show();
+    }else{
+        $display.hide();
+    }
+});
+
+$(".xa-enableFreeConfig").on("click", function(e){
+    $checkbox = $(e.currentTarget);
+    $fieldset = $checkbox.parents("fieldset");
+    $display = $fieldset.children("#xa-display-freePostage");
+    if($checkbox.is(":checked")){
+        $display.show();
+    }else{
+        $display.hide();
+    }
+});
+</script>
+<!--    /特殊地区隐藏    -->
+
+
+
+
+{% endblock %}

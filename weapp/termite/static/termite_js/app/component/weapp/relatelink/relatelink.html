@@ -1,0 +1,24 @@
+{% load workbench_filter %}
+{% if component.type == 'weapp.relatelink_group' %}
+<div {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    class="weapp-block">
+    {{ component|join_sub_components_html|safe }}
+</div>
+{% endif %}
+
+{% if component.type == 'weapp.relatelink' %}
+<ul class="wui-relatelink"    
+    data-cid="{{component.cid}}">
+    {% with component.model.count|add:"0" as count %}
+    {% for link in component.model.target|target_child_links %}
+    {% if in_design_mode or link.url %}
+	<li data-pid="{{component.cid}}" class="wa-inner-link{% if forloop.counter > count %} hidden{% endif %}">
+		<a href="{{link.url}}"><h3>{% if in_design_mode %}第{{forloop.counter}}条 {% endif %}<span>{% firstof link.name '关联链接' %}</span></h3><i class="right-arrow"></i></a> 
+	</li>
+	{% endif %}
+	{% endfor %}
+	{% endwith %}
+</ul>
+{% endif %}

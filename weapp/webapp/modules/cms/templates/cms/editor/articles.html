@@ -1,0 +1,94 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">文章列表</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/cms/editor/article/create/"><i class="icon-plus icon-white"></i>添加文章</a>
+	</span>
+</div>
+
+{% if articles %}
+<div 
+	data-ui-role="advanced-table" 
+	data-app="cms" 
+	data-api="articles/get" 
+	data-template-id="#articles-view" 
+	data-enable-paginator="true" 
+	data-enable-sort="true" 
+	data-sort-api="article_display_index/update"
+	data-item-count-per-page="50" 
+>
+</div>
+{% else %}
+	目前还没有数据
+{% endif %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% verbatim %}
+<script id="articles-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed" data-ui-role="sortable-table" data-sort-app="wine" data-sort-api="winepage/display_index/update">
+		<thead>
+			<tr>
+				<th>
+					<p class="m0 f14 tx_searchable">
+						文章
+					</p>
+				</th>
+				<th width="60" class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">
+							分类
+						</p>
+						<ul class="dropdown-menu" >
+                            <li>
+                            	<a href="javascript:void(0);" data-attr='category_id' data-value="0">全部</a>
+                            </li>
+                            {{each(i, category) categories}}
+							<li>
+								<a href="javascript:void(0);" data-attr='category_id' data-value="${category.id}">${category.name}</a>
+							</li>
+							{{/each}}
+						</ul>
+					</div>
+				</th>
+				<th width="60" class="tx_sortable" data-sort-attr='created_at'>创建时间</th>
+			</tr>
+		</thead>
+		<tbody id='article_list'>
+            {{if items.length}}
+	            {{each(i, article) items}}
+				<tr data-id="${article.id}">
+					<td class="nowrap wui-advanced-table-sort-handler">
+						<div>
+							<a href="/cms/editor/article/update/${article.id}/">${article.title}</a>
+						</div>
+					</td>
+					<td class="nowrap" style="width: 60px;">
+						{{each(i, category) article.categories}}
+						<div class="alert alert-info alert-category">
+							${category.name}
+						</div>
+						{{/each}}
+					</td>
+					<td style="width: 120px">${article.created_at}</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='4'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>        
+	</table>
+</script>
+{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

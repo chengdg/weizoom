@@ -1,0 +1,76 @@
+<script id="mall-order-pay-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade" >
+	<div class="modal-dialog xui-commonOrderPayDialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">支付</h3>
+		</div>
+		<div class="modal-body">
+			<div class="form-inline">
+				<table class="xa-productTable mt10">
+				</table>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="xa-order-ship-info">
+			</div>
+			<button class="btn btn-success wui-dialogbtn">确认支付</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="mall-order-pay-dialog-products-tmpl-src" type="text/x-jquery-tmpl">
+	<thead>
+		<tr class="wui-dialogTablebg">
+			<th style="width:26%">商品</th>
+			<th style="width:26%" class="xui-tdborder">单价/数量</th>
+			<th style="width:16%">促销信息</th>
+			<th style="width:16%">运费</th>
+			<th style="width:16%">现金支付金额</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{each(i, product) order.products}}
+	<tr data-id="${product.id}">
+		<td>
+			<div>${product.name}</div>
+			<div>
+			{{each(j, property) product.custom_model_properties}}
+				<span class="ml8">${property.name}:${property.property_value}</span>
+			{{/each}}
+			</div>
+		</td>
+	<td class="xui-tdborder">
+		<div>${product.price}</div>
+		<div>（${product.count}）</div>
+	</td>
+	{{if i==0 }}
+	<td rowspan="${productCount}"></td>
+	<td rowspan="${productCount}">
+		{{if isUpdatePrice}}
+			<div class="xui-input-postage">${order.postage}</div>
+			<input type="hidden" name="order-postage" value="${order.postage}"/>
+		{{else}}
+			<div class="xa-postage-info"></div>
+		{{/if}}
+	</td>
+	<td rowspan="${productCount}">
+		{{if isUpdatePrice}}
+				<input class="xui-input-final_price" type="text" name="order-final-price" value="${order.final_price}" data-validate="require-price::输入价格格式不正确"/>
+				<div class="errorHint" style="margin-top: 50px;"></div>
+		{{else}}
+			<div class="xa-postage-info">${order.final_price}</div>
+		{{/if}}
+	</td>
+    {{/if}}
+</tr>
+{{/each}}
+	</tbody>
+</script>
+<script id="mall-order-pay-dialog-ship-info-tmpl-src" type="text/x-jquery-tmpl">
+	<p class="xui-innerwrap" style="float:left">收货信息:${order.ship_name} </P>
+	<p class="xui-innerwrap">${order.ship_tel}</p>
+	<p class="xui-innerwrap">${order.area_str} ${order.ship_address}</p>
+</script>

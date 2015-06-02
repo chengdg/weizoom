@@ -1,0 +1,154 @@
+{% extends "content_base_v2.html" %}
+
+{% block css %}
+{% endblock %}
+{% block content-panel %}
+<div class="xui-memberTagPage">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li>
+			<a href="/member/members/get/">会员管理</a>
+		</li>
+		<li class="active">会员分组</li>
+	</ul>
+	<div class="xui-rightPanelBg">
+		<p class="xui-rightPanelTitle">
+		分组设置
+		</p>
+		<div class="xui-i-content mt20">
+			<font  color="red">*&nbsp;注： 非认证的公众号不能使用群发功能！</font>
+			<form method="post" id="editForm" >
+				<table class="table table-bordered xb-stripedTable xb-theadBg">
+					<thead>
+						<tr>
+							<th>分组名称</th>
+							<th>组内会员数</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody class='tags_tbody'>
+						{% for member_tag in member_tags %}
+						<tr data-id="{{ member_tag.id }}" class="domain_data">
+							<td>
+								<input type="text" class="form-control xa-tag-name"  id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" placeholder="" value="{{ member_tag.name }}" data-validate="require-notempty"/>
+								<div class="errorHint"></div>
+							</td>
+							<td>
+								{{ member_tag.count }}
+							</td>
+							<td>
+								<a href="javascript:void(0);" class="xa-deleteTr">
+								删除
+								</a>
+								{% if is_can_send and False %}
+								&nbsp;&nbsp;&nbsp;
+								<a href="javascript:void(0);" class="xa-send-text {% if member_tag.count > 0 %}{% else %}hide{% endif %}" value="{{member_tag.id}}" >
+								发文本
+								</a>
+								{% endif %}
+							</td>
+						</tr>
+						{% endfor %}
+						<tr data-id="{{ grade.id }}" class="last_tr">
+							<td width="315">
+								<a href="javascript:void(0)" class='xa-addTags'>+添加分组</a>
+							</td>
+							<td width="288">
+
+							</td>
+							<td width="373">
+
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="xui-btn-group tc">
+					<input type="submit" class="btn btn-primary" id="submitBtn" value="保&nbsp;&nbsp;&nbsp;&nbsp;存" />
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+	$(document).ready(function(){
+
+		var data_id = $(".domain_data").last().attr('data-id');
+		if (!data_id) {
+			data_id = 0;
+			}
+		$('.xa-addTags').click(function(event) {
+			data_id = parseInt(data_id) + 1;
+			var new_data_id = parseInt(data_id) + 1;
+			$(".tags_tbody .last_tr").before('<tr class="domain_data" data-id='+new_data_id+'><td width="315"><input type="text" class="form-control xa-tag-name" id="tag_id_'+new_data_id+'" name="tag_id_'+new_data_id+'"  data-validate = "require-notempty" placeholder="" value="" maxlength="100"/><div class="errorHint"></div></td><td width="288">0</td><td width="373"><a href="javascript:void(0);" class="xa-deleteTr">删除</a></td></tr>');
+		});
+
+		$('tbody').delegate('.xa-deleteTr', 'click', function(event){
+       		var $el = $(event.currentTarget);
+       		$el.parent().parent().remove();
+		});
+
+
+		var send_message = function(group_id, cont, send_type){
+			W.getApi().call({
+			 	method: 'post',
+	            app: 'webapp/user_center',
+	            api: 'massmessage/send',
+	            async: false,
+	            args: {
+	                group_id: group_id,
+	                content: cont,
+	                send_type: send_type
+	            },
+	            scope: this,
+	            success: function(data) {
+	                W.getSuccessHintView().show('发送成功');
+	                var times = $('#times').text();
+	                $('#times').text((parseInt(times) +1 ))
+	            },
+	            error: function(resp) {
+	                //TODO 进行错误通知
+	                W.getErrorHintView().show('发送失败');
+	               
+	                //failed_callback();
+	            }
+			})
+		}
+
+		$('.xa-send-text').click(function(event){
+			var group_id = $(event.currentTarget).attr('value');
+			W.dialog.showDialog('W.dialog.member.tag.TextareDialog', {
+				success: function(ids) {
+					send_message(group_id, ids, 0);
+				}
+			});
+		});
+
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+			W.showHint('success', '保存成功');
+			/*var $tagName = $('input.xa-tag-name');
+			var flag = true;
+			$tagName.each(function(i, value) {
+				console.log(value)
+				var tag_name = value.value;
+				console.log(tag_name)
+				if (!$.trim(tag_name)) {
+					flag = false;
+					return false;
+				}
+			});
+			if (!flag) {
+				W.showHint('error', '请输入分组名称');
+				return false;
+			} */
+
+		});
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+<style type="text/css">
+.xui-appList{
+    width: 926px;
+    overflow: hidden;
+    padding-left: 17px;
+    border-top: 1px dashed #ccc;
+}
+.xui-appList-app { 
+    width: 185px;
+    height: 222px;
+    border-right:1px dashed #ccc;
+    border-bottom:1px dashed #ccc;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    float: left;
+    /*font-family: "Segoe UI Semilight","Open Sans",Verdana,Arial,Helvetica,sans-serif;*/  
+    text-align: center;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    text-decoration: none;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+.xui-appList-app:nth-child(5n+1){
+    border-left: none;
+}
+.xui-appList-app:nth-child(5n){
+    border-right: none;
+}
+.xui-appList-app:hover{
+    background: #f1f1f1;
+}
+.xui-appList-app img{
+    width: 60px;
+    height: 60px;
+    padding-top: 43px;
+    padding-bottom: 24px;
+}
+a.xui-appList-app:link, a.xui-appList-app:visited {
+    color: black;
+    text-decoration: none;
+}
+a.xui-appList-app{
+    outline: none;
+}
+.xui-appList-app h2 {
+    font-size: 20px;
+    font-family: "微软雅黑","宋体";
+    line-height: 35px;
+    color: #4E5255;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 8px;
+    /*font-family: "Segoe UI Light","Open Sans",Verdana,Arial,Helvetica,sans-serif;*/
+    letter-spacing: 0.01em;
+
+    /*-webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;*/
+}
+.xui-appList-app p {
+    width: 116px;
+    font-size: 14px;
+    font-family: "微软雅黑","宋体";
+    color: #989DA1;
+    padding-left: 36px;
+}
+</style>
+{% endblock %}
+
+{% block single-content-panel %}
+  <div class="">
+    <div class="relative">
+      
+       {% if is_super_user %}
+      <span class="breadcrumRightButton">
+          <a class="btn btn-primary" href="/apps/app/add/"><i class="icon-plus icon-white"></i>添加APP</a>
+      </span>
+        {% endif %}
+    </div>
+    <div class="xui-appList " style="position:relative;top:14px;">
+        {% for app_info in customized_app_infos %}
+        {% if app_info.home_url != '/market_tools/member_qrcode/' and app_info.home_url != '/market_tools/coupon/' %}
+        <a class="xui-appList-app" href="{{app_info.home_url}}">
+            <img src="{{app_info.app_logo|default:'/static/img/app/default.png'}}"/>
+            <h2>{{app_info.app.display_name}}</h2>
+              <p>{{app_info.description}}</p>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+$(document).ready(function() {
+});
+</script>  
+{% endblock %}

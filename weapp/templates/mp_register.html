@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="topbar">
+    <div id="global-nav">
+        <div id="weixin-logo"><img src="/static/img/weixin-logo.png" alt=""></div>
+        <div id="top-action-bar">
+            {% if is_under_dev %}
+            <span class="mr10"><a target="_blank" href="/weixin/register/" id="x-mp-btn" class="btn btn-success">接入公众平台</a></span>
+            {% endif %}
+            你好，{{ user.username }} | <a href="/logout/">退出</a>
+        </div>
+    </div>
+</div>
+
+<div id="main-panel">
+    <div class="container">
+        <h3 class="mt70">您还没有将本系统接入您的微信公众账号，请按以下操作接入：</h3>
+        <h5 class="mt20">1. 登录<a target="_blank" href="http://mp.weixin.qq.com">微信公众平台</a></h5>
+        <h5 class="mt20">2. 按照：高级功能->开发模式->接口配置信息（如果打开编辑模式，请先关闭编辑模式，再打开开发模式）</h5>
+        <img src="/static/img/mp_register.jpg" />
+        <h5 class="mt20">3. 将下面的url和token填入上图所示的公众平台页面的对应位置中：</h5>
+        <div class="tc">
+            <h5>URL: <span class="red">{{ user.get_profile.mp_url }}</span></h5>
+            <h5>Token: <span class="red">{{ user.get_profile.mp_token }}</span></h5>
+        </div>
+        <h5 class="mt20">4. 微信公众平台提示接入网站成功后，点击下面的按钮：</h5>
+
+        <div class="tc mb20"><a href="/" class="btn btn-success">接入成功</a></div>
+    </div>
+</div>
+{% endblock %}

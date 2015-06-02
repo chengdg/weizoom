@@ -1,0 +1,321 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage">
+    <div data-role="content">
+        <input id="errMsg" type="hidden" value="lala" />
+        <form class="xui-form" method="post" action="">
+            <div class="xui-bottom-actionPanel xui-actionPanel">
+                <div class="fl text">
+                    共计: <span class="xui-text-red">￥<span class="xa-totalPrice xt-totalPrice"></span></span>
+                </div>
+                <div class="fr">
+                    <a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger xa-submit" id="submit-order">去下单</a>
+                </div>
+            </div>
+
+            <fieldset class="xui-section">
+                <div class="xui-selectedProductList">
+                    <ul class="clearStyle">
+                        {% for product in order.products %}
+                        <li class="xa-product"
+                            data-product-id="{{product.id}}" 
+                            data-product-price="{{product.price}}" 
+                            data-product-weight="{{product.weight}}" 
+                            data-product-count="{{product.purchase_count}}" 
+                            data-product-model-name="{{product.model_name}}" 
+                        >
+                            <div class="xui-selectedProductList-productImg">
+                                <img src="{{product.thumbnails_url}}" />
+                            </div>
+                            <div class="xui-selectedProductList-productInfo">
+                                <div class="xt-title" style="color:#333;">{{ product.name }}</div>
+                                {% if product.custom_model_properties %}
+                                <div class="clearfix" style="color: #7F7F7F;font-size:0.9em;">
+                                {% for property in product.custom_model_properties %}
+                                <span class="fl mr10">{{ property.name }}: {{ property.property_value }}</span>
+                                {% endfor %}
+                                </div>
+                                {% endif %}
+                                {% if order.postage %}
+                                    <div style="color:#7f7f7f;font-size:0.9em;">运费: ￥<span class="xa-postageElement">{{order.postage}}</span></div>
+                                {% endif %}
+                                <div class="clearfix" style="color:#7f7f7f;font-size:0.9em;">
+                                    {% if is_delivery_plan %}
+                                        <span class="fl">价格: <span class="xt-price">￥{{ product.price }}</span></span>
+                                    {% else %}
+                                        <span class="fl">￥{{ product.price }}Ｘ{{ product.purchase_count }}</span>
+                                    {% endif %}
+                                </div>                                
+                            </div>
+                        </li>                        
+                        {% endfor %}
+                    </ul>
+                </div>
+            </fieldset>
+
+            <fieldset class="xui-section">
+                <input id="delivery_plan_id" name="delivery_plan_id" value="{{ delivery_plan_id }}" type="hidden" >
+                <input id="delivery_dates" name="delivery_dates" value="{{ delivery_dates }}" type="hidden">
+                <input id="is_delivery_plan" name="is_delivery_plan" value="{{ is_delivery_plan }}" type="hidden">
+                <div class="xui-section-title">
+                    <h2 class="active">收货人信息</h2>
+                </div>
+                <div class="xui-form-controls">
+                    <label class="xui-form-cell">收货人：</label>
+                    <div class="xui-form-cell pr xa-clearBtnContainer">
+                        <div class="xui-clearBtn pa" data-icon="true"></div>
+                        <div class="xui-inner-input-container">
+                            <input id="ship_name" name="ship_name" data-validate="require-notempty::收货人不能为空" type="text" value="{% if order %}{{ order.ship_name }}{% endif %}" class="ui-input-text">
+                        </div>
+                    </div>
+                </div>
+                <div class="xui-form-controls">
+                    <label class="xui-form-cell align-top" style="vertical-align:top;padding:13px 0;">所在地区：</label>
+                    <div class="xui-form-cell">
+                        <div class="xui-inner-input-container">
+                            <input id="area" name="area" class="xa-areaInput ui-input-text" data-validate="require-notempty::所在地区不能为空" data-ui-role="areaPop" type="text" value="{% if order %}{{ order.area }}{% endif %}" data-area-str="{% if order %}{{order.get_str_area}}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+                <div class="xui-form-controls">
+                    <label class="xui-form-cell xa-areaLabel">详细地址：</label>
+                    <div class="xui-form-cell pr xa-clearBtnContainer">
+                        <!-- <div class="xa-areaValue pb5"></div> -->
+                        <div class="xui-clearBtn pa" data-icon="true"></div>
+                        <div class="xui-inner-input-container">
+                            <input id="ship_address" name="ship_address" data-validate="require-notempty::地址不能为空" type="text" value="{% if order %}{{ order.ship_address }}{% endif %}" class="ui-input-text">
+                        </div>
+                    </div>
+                </div>
+                <div class="xui-form-controls">
+                    <label class="xui-form-cell">手机号：</label>
+                    <div class="xui-form-cell pr xa-clearBtnContainer">
+                        <div class="xui-clearBtn pa" data-icon="true"></div>
+                        <div class="xui-inner-input-container">
+                            <input id="ship_tel" name="ship_tel" type="tel" data-validate="require-mobile-phone::请输入正确的手机号" value="{% if order %}{{ order.ship_tel }}{% endif %}" class="ui-input-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <!--更改start-->
+            <fieldset class="xui-section" style="padding:0;">
+                <!--积分-->
+                {% if integral_info.have_integral and not is_delivery_plan %}
+                <div class="xa-promotionStrategy xa-triggerGroup xt-triggerGroup xui-intergral-slide clearfix xui-section-info ml15 pr15" {% ifequal  integral_info.usable_integral_or_conpon 2 %} style="display:none;"{% endifequal %} data-role="button">
+                    <div class="clearfix xa-intergralSlide xui-section-title tl pr" data-down-div="integralInputZone">
+                        <label class="pt15 pb15 block" for="is_use_integral">
+                            <input type="checkbox" id="is_use_integral" name="is_use_integral" class="xa-displayTrigger" value="1" data-target="#integralInputZone">
+                            <h2 style="display: inline; font-size:1.1em;">使用积分</h2>
+                        </label>
+                        <div class="pa tr pt15 pb15" style="right:0;top:0;">
+                            <p>可用{{order.usable_integral}}</p>
+                           <!-- <p>订单可用{{order.usable_integral}}积分</p>
+                           <p>总积分：<span class="xui-text-red">{{ integral_info.count }}</span></p> -->
+                        </div>
+                    </div>
+                    <div class="hidden clearfix mb15" id="integralInputZone">
+                        <div class="fl mr5 xui-inner-input-container">
+                            <input id="integral" class="xa-integralInput ui-input-text" data-validate="require-notempty::积分不能为空,, require-max-int-value({{ order.usable_integral}})::积分不能大于{{ order.usable_integral}}" name="integral" type="number" value="">
+                        </div>
+                        <div class="xui-text-red fl" style="line-height:37px;">{{ integral_info.count_per_yuan }}积分=1元</div>
+                    </div>
+                </div>
+                {% endif %}
+                <!--优惠券-->
+                {% if not is_delivery_plan %}
+                <div class="xa-promotionStrategy xa-triggerGroup xt-triggerGroup xui-coupon-slide xui-section-info ml15 pr15 clearfix" {% ifequal  integral_info.usable_integral_or_conpon 1 %} style="display:none;"{% endifequal %} data-role="button">
+                    <div class="clearfix xa-couponSlide xui-section-title tl"
+                    data-down-div="couponSelectZone">
+                        <label class="pt15 pb15 block" for="is_use_coupon">
+                            <input type="checkbox" id="is_use_coupon" name="is_use_coupon" value="true" data-target="#couponSelectZone" class="xa-displayTrigger">
+                            <h2 style="display: inline; font-size:1.1em;">使用优惠券</h2>
+                        </label>
+                    </div>
+                    <div class="xa-couponInputZone"></div>
+                    <div id="couponSelectZone" class="mb15 hidden">
+                        <div class="xa-couponIdSelect" style="width:100%;">
+                            <select id="coupon_id" name="coupon_id" required required-msg="优惠劵不能为空" style="padding: 5px; width: 100%;">
+                                <option value="0">请选择优惠劵</option>
+                                <option value="-1">输入优惠券</option>
+                                {% for coupon in coupons %}
+                                <option valid_restrictions="{{ coupon.valid_restrictions }}" value="{{ coupon.id }}" data-money="{{coupon.money}}">{{coupon.coupon_rule.name}}，还剩{{coupon.valid_time}}过期</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="xa-couponIdInput hidden pr xa-clearBtnContainer">
+                            <div class="xui-clearBtn pa" data-icon="true"></div>
+                            <div class="xui-inner-input-container">
+                                <input name="coupon_coupon_id" placeholder="输入优惠券码" type="text" class="ui-input-text" data-validate="require-notempty::请输入有效的优惠券码"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <!--发票-->
+                {% if mall_config.is_enable_bill %}
+                <div class="xa-triggerGroup xt-triggerGroup xui-bill-slide xui-section-info ml15 pr15" data-role="button">
+                    <div class="clearfix xa-billSlide xui-section-title tl"
+                    data-down-div="billInputZone">
+                    <label for="is_use_bill" class="pt15 pb15">
+                        <h2 class="fl">是否开发票</h2>
+                    </label>
+                        <input type="checkbox" id="is_use_bill" name="is_use_bill" class="xa-displayTrigger" value="1" data-target="#billInputZone">
+                    </div>
+                    <div id="billInputZone" class="mt10 hidden">
+                        <div class="xui-section-slide-inner">
+                                <div class="zoom pb5 tl">
+                                    <input type="radio" value="1" name="bill_type" id="r1" class="xui-regular-radio" data-role="none"  checked='checked'>
+                                    <label for="r1"></label><label for="r1" class="xui-regular-radio-label">个人</label>
+                                    <input type="radio" value="2" name="bill_type" class="xui-regular-radio" data-role="none" id="r2">
+                                    <label for="r2" class="ml20"></label><label for="r2" class="xui-regular-radio-label">公司</label>
+
+                                    <!-- <label><input type="radio" name="bill_type" value="1" checked='checked'>个人</label>
+                                    <label><input type="radio" name="bill_type" value="2" >公司</label> -->
+                                </div>
+                                <div class="pr mb15 xa-clearBtnContainer">
+                                    <div class="xui-clearBtn pa" data-icon="true"></div>
+                                    <input id="bill" name="bill" class="xa-displayTrigger xa-clearText" type="text" required required-msg="发票信息不能为空" />
+                                </div>
+                            </div>
+
+                        <!-- <div style="width: 80%; margin: 0px auto;">
+                            <div class="zoom pb5">
+                                <label><input type="radio" name="bill_type" value="1" checked='checked'>个人</label>
+                                <label><input type="radio" name="bill_type" value="2">公司</label>
+                            </div>
+                            <input id="bill" name="bill" type="text" required required-msg="发票信息不能为空" />
+                        </div> -->
+                    </div>
+                </div>
+                {% endif %}
+                <!--给商家留言-->
+                <div class="xui-section-title xui-section-inner ml15 mr15 pr xui-section-message">
+                    <div class="xui-clearBtn pa" data-icon="true"></div>
+                    <div class="xui-inner-input-container">
+                        <input type="text" name="message" class="xa-displayTrigger xa-clearText ui-input-text" placeholder="给卖家留言...">
+                    </div>
+                </div>
+            </fieldset>
+            <!--更改end-->
+            <!-- {% if integral_info.have_integral and not is_delivery_plan %}
+            <fieldset class="xui-section p10 xt-triggerGroup" >
+                <div class="clearfix" {% ifequal  integral_info.usable_integral_or_conpon 2 %} style="display:none;"{% endifequal %}>
+                    <div class="fl">
+                        <label>
+                            <input type="checkbox" id="is_use_integral"  name="is_use_integral" class="xa-displayTrigger" value="1" data-target="#integralInputZone">
+                            使用积分
+                        </label>
+                    </div>
+                    <div class="fr tr">
+                       <p>订单可用{{order.usable_integral}}积分</p>
+                       <p>总积分：<span class="xui-text-red">{{ integral_info.count }}</span></p>
+                    </div>
+                </div>
+                <div class="hidden clearfix" id="integralInputZone">
+                    <div class="fl mr5" style="width:20%;">
+                        <input id="integral" class="xa-integralInput" name="integral" integer integer-msg="请输入整数" required required-msg="积分不能为空" max="{{order.usable_integral}}" max-msg="积分不能大于{{ order.usable_integral}}" type="number" value="">
+                    </div>
+                    <div class="xui-text-red fl" style="line-height:37px;">{{ integral_info.count_per_yuan }}积分=1元</div>
+                </div>
+            </fieldset>
+            {% endif %} -->
+
+            <!-- {% if not is_delivery_plan %}
+            <fieldset class="xui-section p10 xt-triggerGroup" {% ifequal  integral_info.usable_integral_or_conpon 1 %} style="display:none;"{% endifequal %}>
+				<div>
+                    <label>
+                        <input type="checkbox" id="is_use_coupon" name="is_use_coupon" value="true" data-target="#couponSelectZone" class="xa-displayTrigger">
+                        使用优惠劵
+                    </label>
+                </div>
+                <div class="xa-couponInputZone"></div>
+				<div id="couponSelectZone" class="mt10 hidden">
+                    <div class="fl pl5 xa-couponIdSelect" style="width:100%;">
+                        <select id="coupon_id" name="coupon_id" required required-msg="优惠劵不能为空">
+                            <option value="0">请选择优惠劵</option>
+                            <option value="-1">输入优惠券</option>
+                            {% for coupon in coupons %}
+                            <option valid_restrictions="{{ coupon.valid_restrictions }}" value="{{ coupon.id }}" data-money="{{coupon.money}}">{{coupon.coupon_rule.name}}，还剩{{coupon.valid_time}}过期</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="xa-couponIdInput hidden" style="width: 60%; text-align: center; margin: 0px auto;">
+                        <input name="coupon_coupon_id" placeholder="输入优惠券码" type="text"/>
+                    </div>
+				</div>
+            </fieldset>
+            {% endif %} -->
+
+            <!-- 发票 -->
+            <!-- {% if mall_config.is_enable_bill %}
+            <fieldset class="xui-section p10 xt-triggerGroup">
+				<div>
+                    <label>
+                        <input type="checkbox" id="is_use_bill" name="is_use_bill" class="xa-displayTrigger" value="1" data-target="#billInputZone">
+                是否开发票
+                    </label>
+                </div>
+				<div id="billInputZone" class="mt10 hidden">
+                    <div style="width: 80%; margin: 0px auto;">
+                        <div class="zoom pb5">
+                            <label><input type="radio" name="bill_type" value="1" checked='checked'>个人</label>
+                            <label><input type="radio" name="bill_type" value="2">公司</label>
+                    	</div>
+                        <input id="bill" name="bill" type="text" required required-msg="发票信息不能为空" />
+                    </div>
+				</div>
+            </fieldset>
+            {% endif %} -->
+
+            <!-- 商家留言 -->
+            <!-- <fieldset class="xui-section p10 xt-triggerGroup">
+                <div>
+                    <label>
+                        <input type="checkbox" id="is_use_message" name="is_use_message" class="xa-displayTrigger" value="1" data-target="#messageInputZone">给商家留言
+                    </label>
+                </div>
+                <div id="messageInputZone" class="mt10 hidden">
+                    <div style="width: 100%; margin: 0px auto;">
+                        <textarea name="message" style="width: 100%; height: 100px;"></textarea>
+                    </div>
+                </div>
+            </fieldset> -->
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+//运费计算因子
+var postageFactor = $.parseJSON('{{postage_factor|safe}}');
+//是否是从购物车访问的该页面
+var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %}; 
+//是否拥有积分
+var haveIntegral = {% if integral_info.have_integral %}true{% else %}false{% endif %};
+//积分与金额的兑换率
+var integralCountPerYuan = {% if integral_info %}{{integral_info.count_per_yuan}}{% else %}0{% endif %};
+//订单类型
+var orderType = "{{ order.type }}";
+//促销策略（优惠券、积分的使用策略）
+var promotionStrategy = "3";// "{{integral_info.usable_integral_or_conpon}}";
+
+
+$(document).ready(function() {   
+    //绑定初始化数据
+    view = new W.page.EditOrderPage({
+        el: '.xui-editOrderPage',
+        orderType: orderType,
+        isOrderFromShoppingCart: isOrderFromShoppingCart,
+        haveIntegral: haveIntegral,
+        integralCountPerYuan: integralCountPerYuan,
+        promotionStrategy: promotionStrategy
+    });
+}); 
+</script>
+{% endblock %}

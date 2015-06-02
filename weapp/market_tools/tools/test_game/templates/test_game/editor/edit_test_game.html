@@ -1,0 +1,225 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style>
+	.textBox {
+		border: 1px solid #eee;
+	}
+	.market-tool-question-title{
+		display: inline-block;
+	    text-align: right;
+	    width: 40px;
+	}
+	.answer-box{
+		border: 1px solid #d3d3d3;
+		padding: 3px 0;
+	}
+	.btn-answer{
+		float: right;
+	    margin-right: 5px;
+	    margin-top: -45px;
+	    width: 29px;
+	}
+	.control-title {
+		display: inline-block;
+	}
+	.control-detail{
+		display: inline-block;
+	}
+	.result-box{
+		border: 1px solid #aaa;
+		padding: 5px;
+	}
+	.btn-deleteResult{
+		
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li>
+		<a href="/market_tools/test_game/">测试列表</a><span class="divider">/</span>
+	</li>
+	<li class="active">{% if test_game.id %}更新{% else %}添加{% endif %}趣味测试</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="parents_name">趣味测试名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入趣味测试名称" value="{% if test_game %}{{ test_game.name }}{% endif %}"  data-validate="name" data-validate-max-length="30" data-validate-name="{{ test_game.id }}"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<!-- <div class="control-group">
+			<label class="control-label" for="parents_name">背景图片：</label>
+			<div class="controls">
+		        <input type="hidden" name="background_pic_url" value="{% if test_game %}{{ test_game.background_pic_url }}{% endif %}" data-ui-role="image-selector" data-width="160" data-height="160"/>
+		        <div data-ui-role="image-selector-view"></div>
+		        <span class="help-block alert"><span class="selectImageDialog-width">160px</span>*<span class="selectImageDialog-height">160px</span>
+		        </span>
+		        <div class="errorHint"></div>
+			</div>
+		</div> -->
+		<div class="control-group">
+			<label class="control-label" for="head_url">非会员可参与：</label>
+			<div class="controls">
+				<label class="checkbox">
+					<input type="checkbox" {% if test_game.is_non_member or test_game.id == None %}checked{% endif %}
+					       name="is_non_member">
+				</label>
+          	</div>
+		</div>
+		<div class="control-group">
+			<label  class="control-label" for="award">奖励：</label>
+			<div class="controls" id="prize_selector"  data-ui-role="prize-selector" data-init-prizeinfo='{% if test_game %}{{ test_game.award_prize_info|safe }}{% else %}{% endif %}'></div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="parents_name">题目：</label>
+			<div class="controls">
+				<div class="ua-optionsPanel">
+					<table class="table table-bordered table-condensed">
+						<thead>
+							<tr>
+								<th>编号</th>
+								<th>题目名称</th>
+								<th>题目答案</th>
+								<th>删除</th>
+							<tr>
+						</thead>
+						<tbody>
+							{% if test_game %}
+							{% for question in test_game.questions %}
+							<tr>
+								<td><span class="ua-questionIndex">{{question.display_index}}</span></td>
+								<td>
+									<input type="text" class="w150 ua-questionName" name="test_game_question_{{question.display_index}}" value="{{question.name}}" data-validate="required-none" placeholder="输入题目名称"/>
+									<div class="errorHint"></div>
+								</td>
+								<td>
+									<div class="ua-answer-box">
+										{% for answer in question.answers %}
+										<div class="answer-box mt5">
+											<div class="mb5">
+												<label class="market-tool-question-title mr5 ua-answerTitle">{{ answer.display_index }}:</label>
+												<input data-validate="required-none" data-validate="required-none" value="{{answer.name}}" name="test_game_answer_{{question.display_index}}_{{ answer.display_index }}" type="text" class="w100 ua-answerName" placeholder="输入题目名称"/>
+												<div class="errorHint"></div>
+											</div>
+											<div><label class="market-tool-question-title mr10">分值:</label><input value="{{answer.score}}" data-validate="required-percentage-2" type="text" name="test_game_answer_score_{{question.display_index}}_{{ answer.display_index }}" class="w100 ua-answerScore" placeholder="输入题目分值"/><div class="errorHint"></div></div>
+											<button class="btn btn-danger btn-answer ua-deleteAnswer" type="button"><i class="icon-remove icon-white"></i></button>
+										</div>
+										{% endfor %}
+									</div>
+									<div style="text-align: center; margin-top: 5px;"><button type="button" class="w200 btn btn-default ua-addAnswer">+增加答案</button></div>
+								</td>
+								<td>
+									<button class="btn btn-danger ua-deleteQuestion" type="button"><i class="icon-remove icon-white"></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+							{% endif %}
+						</tbody>
+					</table>
+					<div>
+						<div style="text-align: center; margin-top: 5px;"><button class="btn btn-default ua-addQuestion" type="button" style="width: 100%;">+增加题目</button></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="parents_name">测试结果：</label>
+			<div class="controls">
+				<div class="ua-testGameResult">
+					 <div>
+	     				<div class="ua-results">
+						{% if test_game.results %}
+						{% for result in test_game.results %}
+						 <div class="result-box mt10">
+					     	<div class="pa" style="right:10px;">
+					     		<button class="fr btn btn-danger ua-deleteResult btn-deleteResult" type="button"><i class="icon-remove icon-white"></i></button>
+					     	</div>
+					     	<div class="control-group">
+					     		<label class="control-title" style="display:table-cell;">结果标题：</label>
+					     		<div class="control-detail" style="display:table-cell;">
+					     			<input type="text" data-validate="name" data-validate-max-length="25" value="{{result.title}}" name="result_name_{{forloop.counter}}" placeholder="不超过25个字"/>
+					     			<div class="errorHint"></div>
+					     		</div>
+					     	</div>
+					     	<div class="control-group">
+					     		<label class="control-title" style="display:table-cell;">分值范围：</label>
+					     		<div class="control-detail" style="display:table-cell;">
+						     		<input type="text" class="w50 ua-score" value="{{result.min_score}}" data-validate="int-range" data-validate-max=10000 data-validate-min=0 name="min_score_{{forloop.counter}}"/>
+						     		-
+						     		<input type="text" class="w50 ua-score" value="{{result.max_score}}" data-validate="int-range" data-validate-max=10000 data-validate-min=0 name="max_score_{{forloop.counter}}"/><div class="errorHint"></div>
+					     		</div>
+					     	</div>
+					     	<div class="control-group">
+					     		<label class="control-title" style="vertical-align: top;">结果详情：</label>
+					     		<div class="control-detail">
+						     		<textarea class="input-xlarge hide" data-validate="required-none" id="detail{{forloop.counter}}" name="result_detail_{{forloop.counter}}" data-ui-role="richtext-editor" data-type="full" data-height="200" data-width="422">{{ result.content|format_emotion|safe }}</textarea>
+									<div class="errorHint"></div>
+								</div>
+					     	</div>
+					     </div>
+						{% endfor %}
+						{% endif %}
+						</div>
+			     		<div><button type="button" class="btn btn-default ua-addTestGameResult mt10" style="width: 100%;">+添加测试结果</button></div>
+			        </div>
+				</div>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+			<input type="submit" class="btn btn-success ua-submit" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var testOptionsListView = new W.view.market_tools.test_game.TestOptionsListView({
+		el: ".ua-optionsPanel",
+		isAddOne: '{{test_game.id}}' ? false : true
+	});
+	testOptionsListView.render();
+	var testGameResultView = new W.view.market_tools.test_game.testGameResultView({
+		el: ".ua-testGameResult",
+		isAddOne: '{{test_game.id}}' ? false : true
+	});
+	testGameResultView.render();
+	$('.ua-submit').click(function() {
+		$(this).attr('disabled', true);
+		if (!W.validate()) {
+			$(this).attr('disabled', false);
+			return false;
+		}
+		if (!testGameResultView.validateScore){
+			$(this).attr('disabled', false);
+			W.getErrorHintView().show('测试结果分值区间不正确，请重新设置！');
+			return false;
+		}
+		$('form').find('[name=award_prize_info]').remove();
+		var prizeInfo = $('#prize_selector').data('view').getPrizeInfo();
+		prizeInfo = JSON.stringify(prizeInfo);
+		var $prizeInfo = $('<input name="award_prize_info" type="text" style="display: none;" value=' + prizeInfo + '>');
+		$('form').append($prizeInfo);
+		$('form').submit();
+	});
+	
+</script>
+{% endblock %}

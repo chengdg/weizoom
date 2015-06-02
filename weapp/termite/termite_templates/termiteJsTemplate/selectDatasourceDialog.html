@@ -1,0 +1,141 @@
+<script id="select-datasource-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="selectDatasourceDialog" class="modal hide fade" style="width: 600px">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>选择数据源</h3>
+		</div>
+		<div class="modal-body clearfix selectDatasourceDialog_body">
+			<div class="form-inline selectDatasourceDialog_typeSwitcher">
+				<label class="radio"><input {{if (existedModelDatasource.type === "data") }}checked="checked"{{/if}} type="radio" value="data" name="type" />数据</label>&nbsp;&nbsp;
+				<label class="radio"><input {{if (existedModelDatasource.type === "api") }}checked="checked"{{/if}} type="radio" value="api" name="type" />API</label>
+			</div>
+			
+
+			
+
+
+			<div class='selectDatasourceDialog_apiZone form-inline {{if (existedModelDatasource.type === "data") }}hide{{/if}}'>
+				<label type="input">API：</label><input type="text" placeholder="输入API名" name="apiName" value="${existedModelDatasource.api_name}" />
+			</div>
+			<div class='mt20 selectDatasourceDialog_apiZone  {{if (existedModelDatasource.type === "data") }}hide{{/if}}'>
+				<legend style="color: #5B92C1; margin-bottom: 10px;">
+				请提供以下数据
+				</legend>
+				{{if component }}
+				{{each(i, componentField) component.datasource}}
+				<label>
+					<span style="display: inline-block; width: 120px; text-align: right; color: #5B92C1; font-weight: bold;">
+						${componentField.name.replace('.', '__')}
+					</span>
+				</label>
+				{{/each}}
+				{{/if}}
+			</div>
+
+
+			
+
+
+			<div class='selectDatasourceDialog_dataZone {{if (existedModelDatasource.type === "api") }}hide{{/if}}'>
+				<div class="form-inline">
+					<label>
+						Page：
+						<select name="page_id" class="input-medium">
+							<option value="0">选择页面...</option>
+							{{each(i, page) pages}}
+							<option value="${page.id}" {{if (existedModelDatasource.page_id === page.id) }}selected="selected"{{/if}}>${page.name}</option>
+							{{/each}}
+						</select>
+					</label>
+
+					<label class="ml20">
+						Record：
+						<select name="record_source" class="input-medium">
+							<option value="all" {{if (existedModelDatasource.record_source === "all") }}selected="selected"{{/if}}>全部</option>
+							<option value="from_last_page" {{if (existedModelDatasource.record_source === "from_last_page") }}selected="selected"{{/if}}>上一页面指定</option>
+						</select>
+					</label>
+				</div>
+
+				<div class="form-inline selectDatasourceDialog_filter">
+					{{if page}}
+					<label>
+						Filter：
+						<select name="filter_page_field" class="input-medium">
+							<option value="null">不过滤</option>
+							{{each(n, pageField) page.fields}}
+							<option value="${pageField}" 
+								{{if (existedModelDatasource && existedModelDatasource.filter && existedModelDatasource.filter.page_field === pageField)}}
+								selected="selected"
+								{{/if}}
+							>
+								${pageField}
+							</option>
+							{{/each}}
+						</select>
+					</label>
+
+					<label class="ml20">
+						Filter Value：
+						<select name="filter_value" class="input-medium">
+							<option value="null">无</option>
+							<option value="from_last_page" 
+								{{if (existedModelDatasource && existedModelDatasource.filter && existedModelDatasource.filter.value === "from_last_page") }}
+								selected="selected"
+								{{/if}}
+							>
+								上一页面指定
+							</option>
+						</select>
+					</label>
+					{{/if}}
+				</div>
+			</div>
+
+			<div class='clearfix mt20 selectDatasourceDialog_dataZone  {{if (existedModelDatasource.type === "api") }}hide{{/if}}'>
+				<legend style="color: #5B92C1; margin-bottom: 10px;">
+				确定Field映射
+				</legend>
+				<div class="fl selectDatasourceDialog_fields" style="width: 230px">
+					{{if (page && component) }}
+					<div style="margin-bottom: 5px; font-size: 1.2em; font-weight: bold;">Field映射：</div>
+					{{each(i, componentField) component.datasource}}
+					<label>
+						<span style="display: inline-block; width: 120px; text-align: right; color: #5B92C1; font-weight: bold;">
+							${componentField.name}：
+						</span>
+						<select class="input-small" name="${componentField.name}" style="margin-bottom: 0px;">
+							<option value="null">无数据</option>
+							{{each(n, pageField) page.fields}}
+							<option value="${pageField}" {{if existedFieldMap[componentField.name] === pageField}}selected="selected"{{/if}}>
+								${pageField}
+							</option>
+							{{/each}}
+						</select>
+					</label>
+					{{/each}}
+					{{/if}}
+				</div>
+				<div class="fl selectDatasourceDialog_record ml10" style="width: 300px; border-left: solid 1px #888; padding-left: 10px;">
+					{{if page}}
+					<div style="margin-bottom: 5px; font-size: 1.2em; font-weight: bold;">Record样例：</div>
+					{{each(field, value) page.record}}
+						<label>
+							<span style="color: #5B92C1; font-weight: bold;">${field}：</span>
+							<span style="color: #888;">${value}</span>
+						</label>
+					{{/each}}
+					{{/if}}
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-success selectDatasourceDialog_submitBtn">确定</button>
+		</div>
+	</div>
+</script>
+
+<script id="select-datasource-dialog-one-record-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="selectDatasourceDialog_record fl ml10 mb10">
+	</div>
+</script>

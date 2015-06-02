@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//ZH-CN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <title>{% block title %}{{ system_name }}{% endblock %}</title>
+
+		{% if not debug_merged_css %}
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/css/base.css">
+		{% else %}
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/all.css">
+		{% endif %}
+    </head>
+    
+    <body>
+        <div class="browserRestrictions">
+        <p>
+        请使用<a href="http://www.firefox.com.cn/">firefox</a>或<a href="http://www.google.cn/intl/zh-CN/chrome/browser/">chrome</a>浏览器登陆
+        </p>
+        </div>
+    </body>
+</html>

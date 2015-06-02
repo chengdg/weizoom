@@ -1,0 +1,205 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+		<li>
+			<a href="/market_tools/complain/">反馈列表</a>
+			<span class="divider">/</span>
+		</li>
+		<li class="active">配置反馈</li>
+		
+	</ul>
+	
+<div id="lotteryLayer" is_edit_page="{% if member_complain_setting %}true{% endif %}">
+
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+
+		<div class="control-group">
+				<label class="control-label" for="start_patterns">名称：</label>
+				<input type="hidden" name='id' value='{% if member_complain_setting %}{{ member_complain_setting.id }}{% else %}0{% endif %}'>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="name" name="name"
+					       placeholder="输入名称" value="{% if member_complain_setting %}{{ member_complain_setting.name }}{% endif %}"
+					       data-validate="required" 
+					       data-validate-max-length="10" />
+					<div class="errorHint"></div>
+				</div>
+		</div>	
+		<div class="control-group">
+			<label class="control-label">非会员可参与：</label>
+			<div class="controls">
+				<label class="checkbox inline">
+					<input type="checkbox" name="is_non_member" value="{% if member_complain_setting %}
+					{{ member_complain_setting.is_non_member }}{% else %}0{% endif %}"
+					       {% if member_complain_setting.is_non_member or member_complain_setting == None%}checked="checked"{% endif %}>
+				</label>
+ 			</div>
+		</div>
+		<!-- <div class="control-group">
+            <label class="control-label" for="probability">奖项设置：</label>
+			<div class="controls w500">
+				
+                <div class="tx_prizeItem_all prizeItem" >
+                   <div class="zoom" >
+	                	<div style="width:50%;position:absolute;">奖励类型</div>
+						<div style="width:26%;position:absolute;text-align:right;">奖品</div><br>
+						<div class='mt10'>
+                            <select  name="prize_type|0" class="span2 mr10 prize_type" {% if member_complain_setting %} value='{{ member_complain_setting.prize_type }}'{% else %}value='1'{% endif %}>
+                                <option value="1">优惠劵</option>
+                                <option value="3">积分</option>
+                                <option value="2">无奖励</option>
+                            </select>
+                            <select class="span2 prize_select" name="prize_source|0" for_type="1" {% if member_complain_setting.prize_type == 1 %}value='{{ member_complain_setting.prize_content }}'{% else %}style="display:none;" disabled="disabled" {% endif %} >
+                                <option value="">请选择优惠劵...</option>
+                                {% for rule in coupon_rules %}
+                                <option value="{{rule.id}}">{{rule.name}}</option>
+                                {% endfor %}
+                            </select>
+                            
+                            <input type="text" class="span2 prize2 prize_integral" name="prize_source|0" for_type="3" {% if member_complain_setting.prize_type == 3 %}value='{{ member_complain_setting.prize_content }}'{% else %}style="display:none;" disabled="disabled" {% endif %} placeholder="请输入积分数值">
+                            <div class="errorHint"></div>
+                        </div>
+                    </div>
+                </div>
+		</div> -->
+
+		<!-- <div class="control-group">
+			<label class="control-label">上传图片：</label>
+			<div class="controls">
+				<label class="checkbox inline">
+					<input type="checkbox" name="is_allowed_image" value="{% if member_complain_setting %}{{ member_complain_setting.is_allowed_image }}{% else %}0{% endif %}" {% if member_complain_setting.is_allowed_image == 1 %}checked="checked"{% endif %}>启用
+				</label>
+ 			</div>
+		</div> -->
+		
+		<div class="control-group">
+			<label class="control-label" for="detail">详情：</label>
+			<div class="controls">
+				<textarea class="input-xlarge hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="200" data-width="500">{{ member_complain_setting.detail|safe }}</textarea>
+			</div>
+		</div>
+
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				
+				<button type="submit" class="btn btn-success" id="submit-product">&nbsp;&nbsp;&nbsp;&nbsp;保&nbsp;&nbsp;存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+				
+			</div>
+		</div>
+	</fieldset>
+</form>
+</div>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+   	var is_edit = {% if member_complain_setting.prize_type == 1 %}true{% else %}false{% endif %};
+   	var select_value = {% if member_complain_setting.prize_type == 1 %}{{member_complain_setting.prize_content}}{% else %}''{% endif %};
+   	var prize_type =  {% if member_complain_setting %}{{member_complain_setting.prize_type}}{% else %}'1'{% endif %};
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+		/*if (prize_type == '1'){
+			$prize_select = $('.prize_select');
+			$prize_integral = $('.prize_integral');
+			$prize_select.attr('data-validate', 'require-select');
+			$prize_select.attr('disabled', false).show();
+			$(".prize_type option[value="+prize_type+"]").attr("selected", true); 
+
+			$prize_integral.attr('disabled', true).hide();
+			$prize_integral.removeAttr('data-validate');
+    		$prize_integral.removeAttr('data-validate-max-length');
+
+    		if (is_edit){ 
+
+    			$(".prize_select option[value="+select_value+"]").attr("selected", true); 
+    		}
+
+		} else if (prize_type == '3'){
+			
+			$prize_select = $('.prize_select');
+			$prize_integral = $('.prize_integral');
+			$prize_integral.attr('data-validate', 'require-int');
+			$(".prize_type option[value="+prize_type+"]").attr("selected", true); 
+			$prize_integral.attr('disabled', false).show();
+
+
+			$prize_select.attr('disabled', true).hide();
+			$prize_select.removeAttr('data-validate');
+		} else if (prize_type == '2'){
+			$prize_select = $('.prize_select');
+			$prize_integral = $('.prize_integral');
+			$(".prize_type option[value="+prize_type+"]").attr("selected", true); 
+
+			$prize_select.attr('disabled', true).hide();
+			$prize_select.removeAttr('data-validate');
+			$prize_integral.attr('disabled', true).hide();
+			$prize_integral.removeAttr('data-validate');
+    		$prize_integral.removeAttr('data-validate-max-length');
+		}
+
+		$('.prize_type').click(function(){
+			var prize_type = $('.prize_type').val();
+			if (prize_type == '1'){
+				$prize_select = $('.prize_select');
+				$prize_integral = $('.prize_integral');
+				$prize_select.attr('data-validate', 'require-select');
+				$prize_select.attr('disabled', false).show();
+
+				$prize_integral.attr('disabled', true).hide();
+				$prize_integral.removeAttr('data-validate');
+        		$prize_integral.removeAttr('data-validate-max-length');
+
+			} else if (prize_type =='3') {
+				$prize_select = $('.prize_select');
+				$prize_integral = $('.prize_integral');
+				$prize_integral.attr('data-validate', 'require-int');
+				$prize_integral.attr('disabled', false).show();
+
+				$prize_select.attr('disabled', true).hide();
+				$prize_select.removeAttr('data-validate');
+        		$prize_select.removeAttr('data-validate-max-length');
+			} else if (prize_type == '2'){
+				$prize_select = $('.prize_select').hide();
+				$prize_integral = $('.prize_integral').hide();
+
+				$prize_select.attr('disabled', true).hide();
+				$prize_select.removeAttr('data-validate');
+				$prize_integral.attr('disabled', true).hide();
+				$prize_integral.removeAttr('data-validate');
+	    		$prize_integral.removeAttr('data-validate-max-length');
+			}
+		})
+*/
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+
+{% endblock %}

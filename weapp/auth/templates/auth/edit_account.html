@@ -1,0 +1,241 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-acountDetailPage">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/auth/account_help/get/">账号权限管理</a></li>
+		<li><a href="/auth/departments/get/">员工管理</a></li>
+		<li class="active">{% if account_user %}员工信息{% else %}新建员工{% endif %}</li>
+	</ul>
+</div>
+
+<form class="form-horizontal  xui-auth-addaccount_UserForm xa-addaccount_UserForm" method="post" id="editForm" data-id="{% if account_user %}{{ account_user.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="xui-rightPanelTitle">
+            	{% if account_user %}员工信息{% else %}新建员工{% endif %}
+		</div>
+		<input id="user_permission_ids" name="user_permission_ids" type="hidden" value="{{account_user.user_permission_ids_str}}" />
+ 
+		<div class="form-group mt30">
+			<label class="control-label col-sm-2 " for="username">账户名称：</label>
+			<div class="col-sm-3">
+				{% if not account_user %}
+				<input type="text" class="form-control" id="username" name="username" placeholder="" value="" data-validate="require-string" data-max-length="20" data-min-length="4"/>
+				<div class="errorHint"></div>
+				{% else %}
+				{{account_user.username}}
+				{% endif %}
+			</div>
+			{% if not account_user %}
+			<div class="red col-sm-6 xui-warnning">
+				注：账户名一旦注册不能更改，4-20位字符，可使用字母或数字的组合，不建议使用纯数字。
+			</div>
+			{% endif %}
+		</div>
+
+		{% if not account_user %}
+		<div class="form-group">
+			<label class="control-label col-sm-2 " for="password">密码：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="password" name="password" placeholder="" value="" data-validate="require-string" data-max-length="20" data-min-length="6"/>
+				<div class="errorHint"></div>
+			</div>
+			<div class="red xui-warnning">
+				注：6-20位字符，可使用字母、数字或符号的组合，不建议使用单一类型。
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2 " for="confirm_password">确认密码：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="confirm_password" name="confirm_password" placeholder="" value="" data-validate="require-custom-function" data-validate-function="validatePassword" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		{% endif %}
+        <div class="form-group">
+			<label class="control-label col-sm-2 " for="name">员工姓名：</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="name" name="name" placeholder="" value="{% if account_user %}{{account_user.first_name}}{% endif %}" data-validate="require-notempty"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2 " for="department">部门：</label>
+			<div class="col-sm-3">
+				<select class="form-control" name="department" id="department" data-validate="require-select-positive-option">
+					<option value="-1">选择部门</option>
+					{% for department in departments %}
+					<option value="{{department.id}}" {% if department.is_selected %}selected{% endif %}>{{department.name}}</option>
+					{% endfor %}
+				</select>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		
+	</fieldset>
+
+	<fieldset class="mt10">
+		<div class="xui-rightPanelTitle">
+            	角色
+		</div>
+		<div class="xui-role">
+			<div class="col-sm-9">
+				{% for role in roles %}
+				<label class="checkbox-inline">
+					<input 
+						type="checkbox" 
+						value="{{ role.id }}"
+						class="xa-role"
+						{% ifequal role.is_selected 1 %}checked="checked"{% endifequal %}
+					/>
+					{{ role.name }}
+				</label>
+				{% endfor %}
+				<input type="hidden" id="role_ids" name="role_ids" value="" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset class="mt20 ">
+		<div class="xui-rightPanelTitle">
+			权限
+			{% if account_user %}
+			<a href="javascript:void(0);" class="fr mr10 btn btn-primary btn-xs xa-addPermission">补充权限</a>
+			{% endif %}
+		</div>
+		<div class="xa-permissionList xui-commonPermissionStype xui-authority">
+		{% if account_user %}
+		{% else %}
+		 此员工未设置权限
+		{% endif %}
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<div class="form-group xui-submite" >
+				<div class="xui-btnwrap">
+					<input type="submit" class="btn btn-success fl" id="submitBtn" value="保&nbsp;&nbsp;&nbsp;存" />
+					<input type="button" class="btn btn-default fr xa-cancel" value="取&nbsp;&nbsp;&nbsp;消" />
+				</div>
+		</div>
+	</fieldset>
+</form>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">	
+var userId = {% if account_user %}{{account_user.id}}{% else %}0{% endif %};
+function validatePassword($el) {
+	var $confirmPassword = $el;
+	var $password = $('#password');
+	var isValidate = $confirmPassword.val() === $password.val();
+	return {
+		isValidate: isValidate,
+		errorHint: '确认密码与密码不一致'
+	}
+}
+
+function getCheckedRoleIds() {
+	var roleIds = [];
+	$('.xa-role:checked').each(function() {
+		var $role = $(this);
+		roleIds.push($role.val());
+	});
+
+	if (roleIds.length > 0) {
+		return roleIds;
+	} else {
+		return null;
+	}
+}
+
+function getCheckedUserPermissionIds() {
+	var userPermissionIds = $.trim($('#user_permission_ids').val());
+	if (userPermissionIds) {
+		return userPermissionIds.split(',');
+	}
+
+	return null;
+}
+
+function loadAccountPermissions(userId) {
+	var args = {
+		id: userId,
+		type: 'view'
+	}
+
+	var specificRoleIds = getCheckedRoleIds();
+	if (specificRoleIds) {
+		args['specific_role_ids'] = specificRoleIds.join(',')
+	}
+
+	var specificUserPermissionIds = getCheckedUserPermissionIds();
+	if (specificUserPermissionIds) {
+		args['specific_user_permission_ids'] = specificUserPermissionIds.join(',')
+	}
+
+	W.getApi().call({
+		app: 'auth',
+		api: 'account_permissions/get',
+		args: args,
+		success: function(data) {
+			var html = data;
+			$('.xa-permissionList').empty().append(html);
+		},
+		error: function() {
+			W.showHint('error', '加载用户权限失败!')
+		}
+	})
+}
+
+
+$(document).ready(function() {
+	$('form').submit(function() {
+		if (!W.validate()) {
+			return false;
+		}
+		
+		var roleIds = [];
+		$('.xa-role:checked').each(function() {
+			roleIds.push($(this).val());
+		});
+		$('#role_ids').val(roleIds.join(','));
+	});
+
+	$('.xa-role').click(function(event) {
+		loadAccountPermissions(userId);
+	});
+
+	$('.xa-addPermission').click(function(event) {
+		W.dialog.showDialog('W.dialog.auth.SelectPermissionDialog', {
+            userId: userId,
+            checkedRoleIds: getCheckedRoleIds(),
+            checkedUserPermissionIds: getCheckedUserPermissionIds(),
+            title: '设置用户权限',
+            success: function(data) {
+                var ids = data;
+                $('#user_permission_ids').val(ids.join(','));
+                loadAccountPermissions(userId);
+            }
+        })
+	});
+
+	$('.xa-cancel').click(function(event) {
+		window.location.href = '/auth/departments/get/'
+	});
+
+	if (userId !== 0) {
+		loadAccountPermissions(userId);
+	}
+});
+</script>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/mall/editor/mall_settings/">商品规格设置</a><span class="divider">/</span></li>
+	<li class="active">{% if product_model_property %}更新{% else %}添加{% endif %}商品规格</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<!-- 通用配置 -->
+		<div id="generalConfig">
+			<div class="control-group">
+				<label class="control-label" for="name">规格名称：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="name" name="name" placeholder="最多8个字符" value="{{ product_model_property.name }}" maxlength="8" data-validate="required-none"/>
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="type">显示类型：</label>
+				<div class="controls">
+					<label class="radio inline" for="textType">
+						<input 
+							id="textType" 
+							type="radio" 
+							name="type" 
+							value="0"
+							{% if not product_model_property %}checked="checked"{% endif %}
+							{% if product_model_property.type == 0 %}checked="checked"{% endif %}
+						/> 文字
+					</label>
+					<label class="radio inline" for="imageType">
+						<input 
+							id="imageType" 
+							type="radio" 
+							name="type" 
+							value="1"
+							{% if product_model_property.type == 1 %}checked="checked"{% endif %}
+						/> 图片
+					</label>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">规格值：</label>
+				<div class="controls">
+					<div
+						data-validate="required-custom-function" 
+						data-validate-function="checkPropertyValue" 
+						data-ui-role="product-model-property-value-editor"
+						data-values='{{product_model_property.values_json_str}}' 
+						data-init-image-mode="
+						{% if not product_model_property %}
+							false
+						{% else %}
+							{% if product_model_property.type == 1 %}
+								true
+							{% else %}
+								false
+							{% endif %}
+						{% endif %}
+						"
+					>
+					</div>
+					<div class="errorHint"></div>
+				</div>
+				
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+				{% if product_model_property %}
+				<input type="button" class="btn btn-danger wx_delete" id="deleteBtn" value="删&nbsp;&nbsp;除" href="/mall/editor/product_model_property/delete/{{product_model_property.id}}/" />
+				{% endif %}
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	window.checkPropertyValue = function($el) {
+		var $trs = $el.find('tbody tr');
+		if ($trs.length === 0) {
+			return {
+				isValidate: false,
+				errorHint: '请添加规格值'
+			}
+		}
+
+		var $inputs = $el.find('input[type="text"]');
+		for (var i = 0; i < $inputs.length; ++i) {
+			var $input = $inputs.eq(i);
+			if ($.trim($input.val()).length === 0) {
+				return {
+					isValidate: false,
+					errorHint: '请填写合法的规格值'
+				}
+			}
+		}
+		
+		return {
+			isValidate: true,
+			errorHint: ''
+		}
+	}
+
+	
+	$(document).ready(function() {
+		$('#name').focus();
+
+		$('#imageType').click(function() {
+			$('[data-ui-role="product-model-property-value-editor"]').data('view').enterImageValueMode();
+		});
+		$('#textType').click(function() {
+			$('[data-ui-role="product-model-property-value-editor"]').data('view').enterTextValueMode();
+		});
+
+		$('form').submit(function(event) {
+			if (!W.validate()) {
+				return false;
+			}
+		});
+	});
+</script>
+{% endblock %}

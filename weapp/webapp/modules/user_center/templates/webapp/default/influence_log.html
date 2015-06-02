@@ -1,0 +1,91 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/webapp_static/simple_fashion/css/simple_fashion.css">
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} {%if not integral_from_friend_log and not integral_no_friend_logs %}{% else %}xui-influence-log{% endif %}"  data-title="{{ page_title }}">
+	<div data-role="content" style="background-color: rgba(255, 255, 255, 0);">
+        <a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=member_grade&action=get&workspace_id=user_center" class="fr xui-btn-guide">?</a>
+
+        <dl class="xui-user-center-title">
+            <dt>
+	            <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
+            </dt>
+            <dd>
+                <h2>{% if member.username %}{{ member.username }}{% else %}我{% endif %}</h2>
+                <a href="#" style="padding-bottom: 0px;">{% if member.integral %}{{ member.integral }}{% else %}0{% endif %}个积分</a>
+                <div class="xui-level-box">
+                    <div class="xui-levelBox-label">
+                        {{ member.grade.name }}
+                    </div>
+                </div>
+            </dd>
+        </dl>
+        {%if not integral_from_friend_log and not integral_no_friend_logs %}
+        <div class="influence-log-list error-info">您还没有积分日志</div>
+        {% else %}
+        <ul class="influence-log-list clearStyle">
+    
+           {% if integral_from_friend_log %}
+            <li>
+                <div class="influence-log-list-time">{{integral_from_friend_log.created_at|date:"Y/m/j"}}</div>
+                <span class="influence-log-list-dot"></span>
+                <div class="influence-log-list-content">
+                    <span class="influence-log-list-arrow"></span>
+                    <p class="zoom">
+                        <span class="fl">好友奖励</span>
+                        <span class="fr xui-text-red">+{{integral_from_friend_log.integral_count}}</span>
+                    </p>
+                    {% if integral_from_friend_log.member_pic %}
+                    <ul class="zoom clearStyle">
+                    {% for pic in integral_from_friend_log.member_pic %}
+                       <li><img src="{{pic}}"/></li>
+                    {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            {% if integral_no_friend_logs %}
+              {% for integral_no_friend_log in integral_no_friend_logs %}
+                <li>
+                    <div class="influence-log-list-time">{{ integral_no_friend_log.created_at|date:"Y/m/j" }}</div>
+                    <span class="influence-log-list-dot"></span>
+                    <div class="influence-log-list-content">
+                        <span class="influence-log-list-arrow"></span>
+                        <p class="zoom">
+                            <span class="fl">
+                            {{integral_no_friend_log.event_type}}
+                            </span>
+                            <span class="fr xui-text-red">
+                            {% if integral_no_friend_log.integral_count > 0 %}
+                            +
+                            {% else %}
+                            
+                            {% endif %}
+                            {{ integral_no_friend_log.integral_count }}
+                            </span>
+                        </p>
+                    </div>
+                </li>
+                {% endfor %}
+            {% endif %}
+            
+        </ul>
+        {% endif %}
+		<!-- <div class="xui-btn-layer-footer xui-form-box">
+            <a data-role="button" class="btn-back" href="/m/rice/user_center/{{ webapp_id }}/">&nbsp;&nbsp;返 回&nbsp;&nbsp;</a>
+        </div> -->
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/static/js/widget/jquery.mobile.area.js"></script>
+<script type="text/javascript">
+
+</script>
+{% endblock %}

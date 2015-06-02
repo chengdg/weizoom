@@ -1,0 +1,355 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-shoppingCartPage"  data-title="{{ page_title }}">
+    <!-- 全局导航 -->
+    <div class="wui-globalNav xa-globalNav" data-ui-role="global-nav" data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
+    </div>
+    <!-- 返回顶部 -->
+    <div class="wui-returnTop xa-returnTop hidden" data-ui-role="return-top">
+    </div>
+    <!-- 最近浏览 -->
+    <!-- <div class="xui-footprint">
+        <div class="xui-fp-header xa-showFooterprint tc mb5">
+            <em>最近浏览商品</em>
+            <span class="xa-arrow xui-icon-rightarrow" style="border-color:#c5c5c5"></span>
+        </div>
+        <div class="wui-swiper-container">    
+            <div class="wui-swiper-wrapper">
+                <div class="wui-swiper-slide">
+                    <div class="xui-inner" >
+                        <div class="tc xui-fp-img" style="width:75px;">
+                            <img src="/static_v2/img/webapp/mall/order_shopCar.png" alt="">
+                        </div>
+                        <p class="xui-text xui-ellipsis-2 tl">2015春装 灰色紧身小脚裤</p>
+                        <p class="c6 tl mt5">￥158.00</p>
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="xui-inner" >
+                        <div class="tc xui-fp-img" style="width:75px;">
+                            <img src="/static_v2/img/webapp/mall/order_home.png" alt="">
+                        </div>
+                        <p class="xui-text xui-ellipsis-2 tl">灰色牛仔裤</p>
+                        <p class="c6 tl mt5">￥128.00</p>
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="xui-inner" >
+                        <div class="tc xui-fp-img" style="width:75px;">
+                            <img src="/static_v2/img/webapp/mall/order_shopCar.png" alt="">
+                        </div>
+                        <p class="xui-text xui-ellipsis-2 tl">2015春装 灰色紧身小脚裤</p>
+                        <p class="c6 tl mt5">￥158.00</p>
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="xui-inner" >
+                        <div class="tc xui-fp-img" style="width:75px;">
+                            <img src="/static_v2/img/webapp/mall/order_home.png" alt="">
+                        </div>
+                        <p class="xui-text xui-ellipsis-2 tl">灰色牛仔裤</p>
+                        <p class="c6 tl mt5">￥128.00</p>
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="xui-inner" >
+                        <div class="tc xui-fp-img" style="width:75px;">
+                            <img src="/static_v2/img/webapp/mall/order_shopCar.png" alt="">
+                        </div>
+                        <p class="xui-text xui-ellipsis-2 tl">2015春装 灰色紧身小脚裤</p>
+                        <p class="c6 tl mt5">￥158.00</p>
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="xui-inner" >
+                        <div class="tc xui-fp-img" style="width:75px;">
+                            <img src="/static_v2/img/webapp/mall/order_home.png" alt="">
+                        </div>
+                        <p class="xui-text xui-ellipsis-2 tl">灰色牛仔裤</p>
+                        <p class="c6 tl mt5">￥128.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div data-role="content">
+        {% if product_groups or invalid_products%}
+            <div class="xui-bottom-actionPanel xui-actionPanel pr disT w">
+                <div class="disTc vm tc xui-text em95" style="background:rgba(0,0,0,0.8);color:#fff;">                    
+                    <dl class="disT w">
+                        <dd class="disTc vm tc xa-checkAll" style="width:75px">
+                            <!-- <input type="checkbox" id="checkbox-cart-all"  name="checkbox-cart-all" class="xui-regular-radio" data-role="none"> -->
+                            <label id="checkbox-cart-all" class="xui-regular-radio" style="margin-bottom: -2px;"></label>
+                            <span class="em85 xui-80grey">全选</span>
+                        </dd>
+                        <dd class="disTc vm xui-80grey tl xui-lh20">
+                            <p class="ml5" style="margin-top:3px;">
+                                <span class="em95">合计：</span>
+                                <span style="font-size:1rem">￥<span class="xa-totalPrice xt-totalPrice"></span></span>
+                            </p>
+                            <p class="ml5 em85">
+                                共<span class="xa-total-count xt-totalAccount"></span>件，不含运费
+                            </p>
+                        </dd>
+                    </dl>                    
+                </div>
+                <a href="javascript:void(0);" data-role="button" class="disTc vm xui-btnOuter tc em95 xa-submit" id="submit-order" style="width:95px;color:#fff;background:#cf0404;">去结算</a>
+            </div>
+
+            
+            <div class="xa-context">
+            
+            <div class="xui-productContainer xa-productContainer">
+            {% for product_group in product_groups %}
+            {% with product_group.promotion as promotion %}
+                <div class="xa-productGroup mb10 xa-promotion-{{product_group.promotion_type}} xt-productGroup" data-id="{{product_group.id}}" data-product-group-id="{{product_group.id}}" >
+                    {% if product_group.can_use_promotion and product_group.promotion_type == 'flash_sale' %}
+                    <div class="xui-buyLimit pl10 pr15 xt-promotion">
+                        <div class="pt5 pb5">
+                            <span class="xui-i-title em75 xt-promotionType">限时抢购</span>
+                            <span class="em8">商品已降价<span class="xt-savedMoney">{{product_group.promotion_result.saved_money}}</span>元</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if product_group.promotion_type == 'price_cut' %}
+                    <div class="xui-reduction pl10 pr15 xt-promotion">
+                        <div class="pt5 pb5">
+                            <span class="xui-i-title em75 xt-promotionType">满减</span>
+                            <span class="em8 xa-satisfyPriceCut {% if not product_group.can_use_promotion %}hidden{% endif %}">
+                                活动商品已购满<span class="xa-priceCut-price xt-price">{{promotion.detail.price_threshold}}</span>元，
+                                已减<span class="xa-priceCut-cutMoney xt-cutMoney">{{promotion.detail.cut_money}}</span>元
+                            </span>
+                            <span class="em8 xa-notSatisfyPriceCut {% if product_group.can_use_promotion %}hidden{% endif %}">
+                                购满<span class="xt-detail-price">{{promotion.detail.price_threshold}}</span>元，可减<span class="xt-detail-cutMoney">{{promotion.detail.cut_money}}</span>元
+                            </span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% for product in product_group.products %}
+                    <div 
+                        class="xui-section xa-product disT xt-product" 
+                        data-id="{{product.id}}"
+                        data-shopping-cart-id = "{{product.shopping_cart_id}}" 
+                        data-model-name="{{product.model_name}}"
+                        data-stocks="{{product.stocks}}" 
+                    >
+                        <label for="checkbox-cart-{{forloop.counter}}" style="width:39px;vertical-align:middle;" name="checkbox-cart" class="disTc tc xt-selectProduct">
+                            <label id="checkbox-cart-{{forloop.counter}}" class="xa-check xui-regular-radio"></label>
+                        </label>
+
+                        <div class="pr10 pt10 pb10 xui-divLine pr disTc">
+                            <div class="xui-selectedProductList clearfix disT" style="width:100%;">
+                                <div class="xui-selectedProductList-productImg disTc tc">
+                                    <div class="pr">
+                                        <img src="{{product.order_thumbnails_url}}" />
+                                        {% if product.stocks <= 5 and product.stock_type == 1 %}
+                                        <p class="xa-stockTip xui-stockTip pa">仅剩{{product.stocks}}件</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="xui-selectedProductList-productInfo disTc vt">
+                                    <div class="xui-productInfo em85">
+                                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}" style="color:#333;"><span class="xt-name xui-productName" style=" float: none;height: inherit;">{{ product.name | truncatechars:20 }}</span></a>
+                                        {% if product.custom_model_properties %}
+                                        <span class="clearfix xt-productCustomModel xa-productCustomModel xui-productCustomModel">
+                                            {% for property in product.custom_model_properties %}
+                                            <span class="">{{ property.property_value }}</span>
+                                            {% endfor %}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    {% if product_group.can_use_promotion and product_group.promotion_type == 'flash_sale' %}
+                                    <div class="xui-price xt-price em8">￥{{ product_group.promotion.detail.promotion_price }}</div>
+                                    {% else %}
+                                    <div class="xui-price xt-price em8">￥{{ product.price }}</div>
+                                    {% endif %}
+                                    <div class="clearfix xa-counterContainer ml10 xui-productNum pr">
+                                        <span class="em8">数量</span>
+                                        <input 
+                                            data-ui-role="counter" 
+                                            data-ui-role-id="{{product.id}}-{{product.model_name}}"
+                                            {% if product.stock_type == 1 %}
+                                                {% if product.promotion.detail.count_per_purchase and product.promotion.detail.count_per_purchase < product.stocks %}
+                                                    data-max-count="{{product.promotion.detail.count_per_purchase}}"
+                                                {% else %}            
+                                                    data-max-count="{{product.stocks}}"
+                                                {% endif %}
+                                            {% else %}
+                                                {% if product.promotion.detail.count_per_purchase > 0 %}
+                                                    data-max-count="{{product.promotion.detail.count_per_purchase}}"
+                                                {% else %}
+                                                    data-max-count="-99999"
+                                                {% endif %}
+                                            {% endif %} 
+                                            data-product-id="{{product.id}}" 
+                                            data-product-model-name="{{product.model_name}}"
+                                            type="hidden" 
+                                            name="total_count" 
+                                            id="total_count" 
+                                            value="{{product.count}}"
+                                        >
+                                        <span class="em7 cRed hidden xui-understock">
+                                            {% if product.stock_type == 1 %}
+                                                {% if product.promotion.detail.count_per_purchase and product.promotion.detail.count_per_purchase < product.stocks %}
+                                                    限购{{product.promotion.detail.count_per_purchase}}件
+                                                {% else %}            
+                                                    库存不足
+                                                {% endif %}
+                                            {% else %}
+                                                {% if product.promotion.detail.count_per_purchase > 0 %}
+                                                    限购{{product.promotion.detail.count_per_purchase}}件
+                                                {% else %}
+                                                    无限
+                                                {% endif %}
+                                            {% endif %} 
+                                        </span>
+                                        <span class="xui-deleteBtn xa-deleteBtn pa">
+                                            <img src="/static_v2/img/webapp/mall/trash.png" data-allow-autoplay=false>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    {% if product_group.promotion_type == 'premium_sale' %}
+                    <div class="xui-donation pl10 pr15 xt-promotion xa-premiumProducts {% if not product_group.can_use_promotion %}hidden{% endif %}">
+                        <div class="pt5 pb5 em75">
+                            <span class="xui-i-title xt-promotionType">赠品</span>
+                            {% for premium_product in promotion.detail.premium_products %}
+                            <span div class="disBl xt-premiumProduct xui-premiumProduct xa-premiumProduct-{{premium_product.id}}">
+                                <span class="xt-name">{{premium_product.name}}</span>
+                                <span class="fr c9">X<span class="xt-count">{{premium_product.premium_count}}</span></span>
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product_group.promotion_type == 'price_cut' %}
+                    <div class="xa-subtotal xui-subtotal pl10 pr15">
+                         <div class="pt5 pb5 em75">
+                            <span>小计</span>
+                            <span class="xui-totalPrice xa-subtotal-price xt-subtotal">￥{{product_group.promotion_result.subtotal}}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endwith %}
+            {% endfor %}
+            </div>
+
+            {% if invalid_products %}
+            <div class="xui-invalidProductInfo xa-invalidProductInfo" >
+                <div class="xa-invalidProductTitle xui-invalidProductTitle">
+                    <div class="xui-invalidText em8">失效商品</div>
+                </div>
+                <div class="xui-invalidProductContainer xa-invalidProductContainer">
+                {% for product in invalid_products %}
+                    <div 
+                        class="xui-section xa-invalidProduct xui-invalidProduct disT" 
+                        data-id="{{product.id}}" 
+                        data-model-name="{{product.model_name}}"
+                        data-shopping-cart-id = "{{product.shopping_cart_id}}" 
+                    >
+                    <label for="" class="disTc xui-i-box">
+                        <label class="xui-invalid-icon em8">失效</label>
+                    </label>
+                    <div class="disTc pt15 pb15 xui-divLine pr">
+                        <div class="xui-selectedProductList clearfix disT" style="width:100%;">  
+                            <div class="xui-selectedProductList-productImg disTc tc">
+                                <div class="pr">
+                                    <img src="{{product.order_thumbnails_url}}" />
+                                </div>
+                            </div>
+                            <div class="disTc pr" style="width:68%;">
+                                <div class="xui-productInfo em85 ml10">
+                                        <span class="xt-name xui-productName" style=" float: none;height: inherit;">{{ product.name | truncatechars:20 }}</span>
+                                        {% if product.custom_model_properties %}
+                                        <span class="clearfix xa-productCustomModel xui-productCustomModel">
+                                            {% for property in product.custom_model_properties %}
+                                            <span>{{ property.property_value }}</span>
+                                            {% endfor %}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                <div class="xui-price xt-price em8 ml10">￥{{ product.price }}</div>
+                                <span class="xui-deleteBtn xa-deleteBtn pa">
+                                    <img src="/static_v2/img/webapp/mall/trash.png" data-allow-autoplay=false>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+                <!-- <div class="xui-cleanValidProductBtn mt15 xa-invalidProductTitle">
+                    <span class="xa-cleanValidProduct xui-inner">清空失效商品</span>
+                </div> -->
+            {% endif %}
+            <div style="width:100%;height:90px;"></div>
+            </div>
+        {% else %}
+        <div class="xui-page xui-emptyBg tc">
+            <div class="xui-emptySign"></div>
+            <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-btn xui-goShopping-btn">继续逛逛</a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+var $product = $('.xa-productContainer').children();
+if($product.length == 0){
+    // $('.xa-invalidProductTitle').css('margin-top', '44px');
+};
+
+$(document).ready(function() {
+    //绑定初始化数据
+    var productGroups = W.loadJSON('productGroups');
+    var view = new W.page.ShoppingCartPage({
+        el: '.xui-shoppingCartPage',
+        productGroups: productGroups
+    });
+
+    // 继续逛逛透明
+    if($('.xui-footprint').length){
+        $('.xui-goShopping-btn').css('background','rgba(209,0,0,0.8)');
+    }
+
+    // 限购vs库存不足
+    $('.xa-product').each(function(){
+        var $el = $(this);
+        var $counter = $(this).find('[data-ui-role="counter"]');
+        var $cutDown = $(this).find('.wa-down');
+        var $check = $(this).find('.xa-check');
+        var stocks = parseInt($counter.attr('data-max-count'));
+        
+        $counter.bind('reach-max-count',function(){
+            $el.find('.xui-understock').show();
+        }); 
+        $cutDown.bind('click',function(){
+            var count = parseInt($el.find('.wui-counterText').text()) -1;
+            $el.find('.xui-understock').hide();
+            // 不可用选框，全选框
+            if(stocks != null && stocks != -99999){
+                if( stocks >= count){
+                    $check.removeClass('xui-disabled-radio');
+                    $('#checkbox-cart-all').removeClass('xui-checkCart');
+                }
+            }
+        });
+
+    });
+});
+</script>
+{% endblock %}

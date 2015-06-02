@@ -1,0 +1,18 @@
+<script id="richtext-input-component-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="control-group" style="">
+		<label for="name" class="control-label">${label}：</label>
+		<div class="controls">
+			{{if editorType == 'text'}}
+			<img src="/static/termite_img/text_richtext_editor.jpg" />
+			{{/if}}
+			
+			{{if editorType == 'richtext'}}
+			<img src="/static/termite_img/richtext_richtext_editor.jpg" />
+			{{/if}}
+
+			{{if editorType == 'full'}}
+			<img src="/static/termite_img/full_richtext_editor.jpg" />
+			{{/if}}
+		</div>
+	</div>
+</script>

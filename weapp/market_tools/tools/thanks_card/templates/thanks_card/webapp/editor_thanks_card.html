@@ -1,0 +1,166 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,target- densitydpi =device-dpi">
+	<link type="text/css" rel="stylesheet" href="/static/css/market_tools_css/common.css">
+	<link type="text/css" rel="stylesheet" href="/markettools_static/thanks_card/css/thanks_card.css">
+	<link type="text/css" rel="stylesheet" href="/static/jquery/jquery.fancybox-1.3.1.css">
+	<link type="text/css" rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
+	<style>
+	.wui-loading{
+		text-align: center;
+
+	}
+	.xui-loading{
+		z-index:100000!important;
+	}
+	</style>
+{% endblock %}
+{% block content-panel %}
+	<div class="xui-loading" style="display: none">
+		<div class="xui-loading-container container1">
+			<div class="circle1"></div>
+			<div class="circle2"></div>
+			<div class="circle3"></div>
+			<div class="circle4"></div>
+		</div>
+		<div class="xui-loading-container container2">
+			<div class="circle1"></div>
+			<div class="circle2"></div>
+			<div class="circle3"></div>
+			<div class="circle4"></div>
+		</div>
+		<div class="xui-loading-container container3">
+			<div class="circle1"></div>
+			<div class="circle2"></div>
+			<div class="circle3"></div>
+			<div class="circle4"></div>
+		</div>
+	</div>
+	<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-thanksCard-page" data-title="{{ page_title }}">
+	
+	<div style="background:url(/markettools_static/thanks_card/img/paper2.png)no-repeat;background-size:cover;min-height:100%;overflow:visible;position:absolute; width:100%;left:0;top:0;">
+
+
+		<div class="xui-container pr" style="">
+			<div class="xui-fieldset" style="margin-top:40%;">
+			<form class="xui-form" method="post" action="./?module=market_tool:thanks_card&model=thanks_card&action=edit&workspace_id=market_tool:thanks_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&thanks_card_id={{thanks_card_id}}" data-ui-role="validate" id="create_card_form">
+				<input type='hidden' id='thanks_card_id' name='thanks_card_id' value='{{thanks_card_id}}'/>
+				<input type='hidden' id='thanks_card_img' name='thanks_card_img' value=''/>
+				<input type='hidden' id='thanks_card_att_type' name='thanks_card_att_type' value='' />
+				<div style="position:relative;z-index:10000;">
+					<textarea name="card_content" onkeyup="checkLength(this);" id="card_content" cols="30" rows="7" placeholder="输入您想说的话"></textarea>
+					<p id="show" class="fr xui-limited">最多输入120个字</p>
+				</div>
+				<div style="position:relative;z-index:10000;">
+				<input
+					id="card_img"
+	            	name="card_img"
+	                data-ui-role="uploadImageVideo" 
+	                type="file">   
+				</div>
+				<div class="xui-btnGroup mt15 pr">
+					<a href="javascript:void(0);" data-role="button" class="xui-btn pa" style="background: transparent; z-index:10000; left:0;" id="btnSubmit"></a>
+					<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order_id}}&workspace_id=mall" data-role="button" class="xui-btn pa" style="background: transparent; z-index:10000; right:0;" id="btnCancel"></a>
+					<a href="javascript:void(0);" data-role="button" class="xui-btn xui-btnSubmit pa">确认</a>
+					<a href="javascript:void(0);" data-role="button" class="xui-btn xui-btnCancel pa">取消</a>
+				</div>
+			</form>
+			</div>
+	</div>
+
+	</div>
+	</div>
+{% endblock %}
+{% block js %}
+<script src="/markettools_static/thanks_card/js/jquery.mobile.uploadImageVideo.js" type="text/javascript"></script>
+<script type="text/javascript">
+	//处理加载时的样式
+	var bodyHeight = window.document.body.clientHeight;
+	var loadingTop = bodyHeight*0.5;
+	$('.xui-loading').css('top',loadingTop);
+
+	var remain = 0;
+	function checkLength(which) {
+		var maxChars = 120; //
+		var validate = getStringLength(which.value, maxChars, true);
+		remain = maxChars-validate.valueLength;
+		//document.getElementById("sid").innerHTML = remain;
+		return validate.isValid;
+	}
+
+	function getStringLength(value, number, isChineseBeTwoByte) {
+		var valueLength;
+		var maxLength = number;
+		value = value.replace(/^(\s|\u00A0)+/, '');
+		if(isChineseBeTwoByte) {
+			value = value.replace(/[^\x00-\xff]/g, "**");
+		}
+		
+		var reg = /(http:\/\/|https:\/\/)((\w|%|=|\?|\.|\/|&|-|#|:)+)/g;
+		var https = value.match(reg);
+		if(https !== null){
+			//处理博文中的url链接长度，每个url链接的长度计算为20个长度
+			value = value.replace(reg, '');
+			valueLength = value.length;
+			var httpsLength = 0, httpLength;
+			var i, k;
+			for(i = 0, k = https.length; i < k; i++) {
+				httpLength = https[i].length;
+				if(httpLength >= 20) {
+					if(httpLength >= 140) {
+						httpsLength += 10 + (httpLength - 140);
+					}
+					else {
+						httpsLength += 10;
+					}
+				}
+				else {
+					httpsLength += httpLength;
+				}
+			}
+			valueLength = valueLength + httpsLength;
+		}else{
+			valueLength = value.length;
+		}
+		
+		if(valueLength > number) {
+			length = -parseFloat(maxLength-valueLength,10);
+			length = Math.round(length);
+			return {isValid: false, length: length, valueLength: valueLength};
+		}else {
+			return {isValid: true, length: parseInt(maxLength-valueLength,10), valueLength: valueLength};
+		}
+	}
+
+	$(document).ready(function() {
+		$("#btnSubmit").click(function() {
+			var $cardContent = $('#card_content');
+			if ($cardContent.val().length > 120) {
+				var beyound = $cardContent.val().length - 120;
+				$('body').alert({
+		            isShow: true,
+		            info:'已超出 ' + beyound + ' 个字符',
+		            speed: 2000
+	        	});
+	        	return;
+			}
+
+			var content = $('#card_content').val().trim();
+			var att = $('#thanks_card_img').val().trim();
+			if (att=='' && content=='') {
+				$('body').alert({
+		            isShow: true,
+		            info:'请输入内容或者上传图片',
+		            speed: 2000
+	        	});
+	        	return;
+			}
+
+			$('.xui-loading').css('display', 'block');
+	        $("#create_card_form").submit();
+		});
+	});
+</script>
+{% endblock %}

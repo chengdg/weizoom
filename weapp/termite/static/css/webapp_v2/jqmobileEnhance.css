@@ -1,0 +1,19 @@
+/* 定制simple dialog样式 */
+.ui-simpledialog-container > .ui-header:first-child {
+    -webkit-border-top-left-radius: 0;
+    border-top-left-radius: 0;
+    -moz-border-radius-topleft: 0;
+
+    -webkit-border-top-right-radius: 0;
+    border-top-right-radius: 0;
+    -moz-border-radius-topright: 0;
+}
+
+.ui-simpledialog-container .ui-btn {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.ui-simpledialog-container .ui-simpledialog-subtitle {
+	padding-top: 5px;
+}

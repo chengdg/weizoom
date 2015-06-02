@@ -1,0 +1,180 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+{% endblock %}
+
+{% block single-content-panel %}
+  <div id="projectList" class="">
+    <div class="relative">
+      <ul class="breadcrumb">
+        <li class="active">项目列表</li>
+      </ul>
+      <span class="breadcrumRightButton">
+        <a id="syncWorkspaceBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-hdd icon-white"></i> 同步项目</a>
+        <a id="addProjectBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-plus icon-white"></i>添加项目</a>
+      </span>
+    </div>
+    <table class="table table-bordered table-condensed mt10">
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>内部名</th>
+          <th>创建日</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for workspace in workspaces %}
+        <tr data-workspace-id="{{workspace.id}}">
+          <td>
+            <div contenteditable="true" data-workspace-id="{{workspace.id}}">{{workspace.name}}</div>
+          </td>
+          <td style="width: 150px">{{workspace.inner_name}}</td>
+          <td style="width: 100px;">{{workspace.created_at|date:"Y-m-d"}}</td>
+          <td style="width: 100px;" class="clearfix">
+            <a class="btn btn-mini" title="编辑" href="/webapp/projects/?workspace_id={{workspace.id}}"><i class="icon-pencil"></i></a>
+            <a class="btn btn-danger btn-mini wx_delete" title="删除" href="/webapp/workspace/delete/{{workspace.id}}/" ><i class="icon-remove icon-white"></i></a>
+            <i class="icon-align-justify icon-white fr mr5" style="cursor: move"></i>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+  function sortHelper(e, ui) {
+      ui.children().each(function() {
+          $(this).width($(this).width());
+      });
+      return ui;
+  }
+
+  function sortWorkspaces($table) {
+    var ids = [];
+    $table.find('tr').each(function() {
+      var $tr = $(this);
+      var workspaceId = $tr.attr('data-workspace-id');
+      if (workspaceId) {
+        ids.push(workspaceId);
+      }
+    });
+    ids = ids.join(',')
+    W.getLoadingView().show();
+    W.getApi().call({
+      app: 'webapp',
+      api: 'workspace_display_index/update',
+      args: {
+        ids: ids
+      },
+      success: function(data) {
+        W.getLoadingView().hide();
+      },
+      error: function(resp) {
+        W.getLoadingView().hide();
+        alert('调整显示顺序失败！');
+      }
+    })
+  }
+
+  $(document).ready(function() {
+    $table = $('table').eq(0);
+    $table.find("tbody").sortable({
+        axis: 'y',
+        cursor: 'move',
+        helper: sortHelper,
+        handle: '.icon-align-justify',
+        stop: _.bind(function(options) {
+            sortWorkspaces($table);
+        }, this)
+    });
+
+    $('#addProjectBtn').click(function(event) {
+        W.dialog.showDialog('W.weapp.dialog.AddWorkspaceDialog', {
+          success: function(data) {
+            W.getLoadingView().show();
+            W.getApi().call({
+              app: 'webapp',
+              api: 'workspace/create',
+              method: 'post',
+              args: {
+                name: data.name,
+                inner_name: data.innerName
+              },
+              success: function() {
+                console.log('\n\n\n\n\n');
+                window.location.reload();
+              },
+              error: function(resp) {
+                W.getLoadingView().hide();
+                if (resp.code === 500) {
+                  alert(resp.data);
+                } else {
+                  alert('创建项目失败!')
+                }
+              }
+            })
+          }
+        })
+    });
+
+    $('#syncWorkspaceBtn').click(function(event) {
+        W.dialog.showDialog('W.weapp.dialog.SyncWorkspaceDialog', {
+          success: function(data) {
+            if (data.length === 0) {
+              return;
+            }
+
+            W.getLoadingView().show();
+            W.getApi().call({
+              app: 'webapp',
+              api: 'workspace/sync',
+              method: 'post',
+              args: {
+                modules_info: data
+              },
+              success: function() {
+                window.location.reload();
+              },
+              error: function() {
+                W.getLoadingView().hide();
+                alert('同步项目失败！');
+              }
+            })
+          }
+          
+        });
+    });
+
+    $('[contenteditable="true"]').blur(function(event) {
+      var $workspace = $(this);
+      var name = $workspace.text();
+      var workspaceId = $workspace.attr('data-workspace-id');
+      W.getLoadingView().show();
+      W.getApi().call({
+        app: 'webapp',
+        api: 'workspace_name/update',
+        method: 'post',
+        args: {
+          workspace_id: workspaceId,
+          name: name
+        },
+        success: function(data) {
+          W.getLoadingView().hide();
+        },
+        error: function(resp) {
+          W.getLoadingView().hide();
+          alert('更新项目名失败！')
+        }
+      })
+    });
+  });
+</script>  
+{% endblock %}

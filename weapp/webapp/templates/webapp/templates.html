@@ -1,0 +1,118 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+{% endblock %}
+
+{% block content-panel %}
+  <ul id="templates" class="mb30">
+    {% for project in projects %}
+    <li class="fl" data-project-id="{{project.id}}" data-template-name="{{project.inner_name}}"> 
+        <a class="templates_templateImg relative" href="javascript:void(0);">
+          <div class="templates_templateCover {% ifequal project.inner_name workspace.template_name %}active{% endifequal %}">
+            <img src="/static/img/selected.png"/>
+          </div>
+          <div class="p10" style="box-shadow: 0 0 1px rgba(50, 50, 50, 0.8);">
+            <img src="{{project.template_pic_url}}" onerror="this.src='/webapp_static/default/template.jpg'" />
+          </div>
+        </a>
+        <div class="mt5 tc">
+          <a class="btn" href="/termite/workbench/project/edit/{{project.id}}/"><i class="icon-pencil"></i>编辑</a>
+          <button class="btn x-preview" data-template-name="{{project.name}}" data-url="/webapp/preview/?project_id={{project.id}}"><i class="icon-eye-open"></i>预览</button>
+          {% ifequal project.type 'weapp' %}
+          <a class="btn" href="/termite/workbench/project/delete/{{project.id}}"><i class="icon-remove"></i>删除</a>
+          {% endifequal %}
+        </div>
+        <div class="tc mt10">
+          {{project.name}}
+        </div>
+    </li>
+    {% endfor %}
+    {% if enable_add_action %}
+    <li class="fl" data-project-id="{{project.id}}" data-template-name="{{project.inner_name}}"> 
+        <a class="templates_templateImg relative" href="javascript:void(0);">
+          <div class="p10" style="box-shadow: 0 0 1px rgba(50, 50, 50, 0.8);">
+            <img src="/webapp_static/default/template.jpg" />
+          </div>
+        </a>
+        <div class="mt5 tc">
+          <button class="btn xa-addProject"><i class="icon-plus"></i> 定制</button>
+        </div>
+        <div class="tc mt10">
+          x
+        </div>
+    </li>
+    {% endif %}
+  </ul>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  W.workspaceId = {{ workspace.id }};
+  $(document).ready(function() {
+    $('#templates li a.templates_templateImg').click(function(event) {
+      var $li = $(event.currentTarget).parent();
+      var projectId = $li.attr('data-project-id');
+      var templateName = $li.attr('data-template-name');
+
+      W.getLoadingView().show();
+      W.getApi().call({
+          app: 'webapp',
+          api: 'workspace_template/update',
+          method: 'post',
+          args: {
+              project_id: projectId,
+              target_project_inner_name: templateName
+          },
+          success: function(data) {
+              W.getLoadingView().hide();
+              $('#templates .templates_templateCover.active').removeClass('active');
+              $li.find('.templates_templateCover').addClass('active');
+              W.getSuccessHintView().show('切换模板成功');
+          },
+          error: function() {
+              W.getLoadingView().hide();
+              W.getErrorHintView().show('切换模板失败！');
+          }
+      });
+    });
+
+    $('.x-preview').click(function(event) {
+      var $button = $(event.currentTarget);
+      var url = $button.attr('data-url');
+      if (W.isUnderDevelop) {
+        //develop模式下，控制left为1000，方便测试观察
+        window.open(url, '_blank', 'top=50, left=1000, width=430, height=600,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=yes');  
+      } else {
+        window.open(url, '_blank', 'top=50, left=300, width=430, height=600,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=yes');  
+      }
+    })
+
+    $('.xa-addProject').click(function(event) {
+      W.getLoadingView().show();
+      W.getApi().call({
+          app: 'webapp',
+          api: 'template_project/create',
+          method: 'post',
+          args: {
+          },
+          success: function(data) {
+              W.getLoadingView().hide();
+              W.getSuccessHintView().show('创建模板成功');
+              _.delay(function() {
+                window.location.href = '/termite/workbench/project/edit/'+data.project_id+'/';
+              }, 500);
+          },
+          error: function() {
+              W.getLoadingView().hide();
+              W.getErrorHintView().show('创建模板失败！');
+          }
+      });
+    });
+
+  });
+</script>  
+{% endblock %}

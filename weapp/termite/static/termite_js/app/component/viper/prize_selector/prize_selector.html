@@ -1,0 +1,35 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.prize_selector' %}
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="p5"
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{name}}">{{component.model.label}}：</label>
+        <div class="controls">
+            {% if in_design_mode %}
+                <img src="/static/termite_img/viper/prize_selector.jpg" />
+            {% else %}
+                <div 
+                    data-component-name={{name}} 
+                    data-ui-role="prize-selector" 
+                    data-init-prizeinfo='' 
+                    data-should-extract-data="true"
+                    data-should-set-data="true"
+                ></div>
+            {% endif %}
+            <div class="errorHint">{% if in_design_mode %}name="{{name}}"{% endif %}</div>
+        </div>
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+{% endifequal %}

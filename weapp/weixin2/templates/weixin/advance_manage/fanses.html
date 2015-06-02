@@ -1,0 +1,413 @@
+{% extends "content_base_v2.html" %}
+{% load project_filter %}
+{% load account_filter %}
+{% block content-panel %}
+<div class="xui-weixin-materialsPage xa-weixin-materialsPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/materials/">高级管理</a></li>
+            <li class="active">粉丝管理</li>
+        </ul>
+    </div>
+    <div id='weixin-fans-filter-view'  class="xa-fansFilterView"></div>
+    {% if has_fans %}
+    <div class="panel panel-default mt20 xb-rightPanel pr">
+        <div class="panel-heading" style="height:40px">
+        </div>
+
+        <div 
+            data-ui-role="advanced-table" 
+            data-app="new_weixin" 
+            data-resource="fanses"
+            data-template-id="#members-view"
+            data-enable-paginator="true" 
+            data-enable-sort="false" 
+            data-selectable="true" 
+            data-disable-header-select="true"
+            data-item-count-per-page="50"
+            data-outer-selecter=".xa-outerSelectAll"
+            class="panel-body"
+        ></div>
+        
+        <div class="category-name-editor">
+            <a class="btn btn-success xa-showDialog xui-i-showDialog pa" href="javascript:void(0);"> + 新建分组</a>
+            <div class="xui-i-fans_List pa">
+                <div class="xui-i-groupDialog pr">
+                    <form class="xui-i-dialogPOST" action="">
+                        <!-- <label class="">分组名称</label> -->
+                        <input class="xa-valueAdd xui-valueAdd" type="text">
+                        <br>
+                        <a class="btn btn-primary xui-addfan-primary xa-addFanCategory" href="javascript:void(0);">确定</a>
+                        <a class="btn xa-addCancel xui-addfan-default btn-default" href="javascript:void(0);">取消</a>
+                        <div class="data-error-hint" style="color:#f00;"></div>
+                    </form>
+                </div>
+                <ul class='xui-i-addLi pa'>
+                    {% for item in categories %}
+                    <li class="xa-hoverEditor pl20" data-id="{{item.id}}" data-name="{{item.name}}"><span class="xui-i-categoryName">{{item.name}}</span>（{{item.count}}）
+                        <!-- <input type="text" value="{{item.name}}"> -->
+                        <div class="xui-i-hoverShow fr">
+                            {% if item.is_editable %}
+                            <a class="xa-editorGroup"><img src="/static_v2/img/weixin/fansPencil.png" alt=""> </a>
+                            <a class="xa-delGroup mr5 ml10"><img src="/static_v2/img/weixin/deleteEditor.png" alt=""></a>
+                            {% else %}
+                            <a class="xa-editorGroup"></a>
+                            <a class="xa-delGroup mr5 ml10"></a>
+                            {% endif %}
+                        </div>
+                        <input class="xa-editorInput form-control xui-i-input" style="display:none;position: relative;top: -27px;" type="text" value="{{item.name}}"/>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+
+        
+    </div>
+    <form class="hidden xa-postSendMessageAll" action="../../new_weixin/mass_sending_messages/" method="post">
+        <input name="params"/>
+    </form>
+    {% else %}
+    <div class="xui-emptyBox">
+        <img src="/static_v2/img/editor/empty.png">
+        <span class="ml20">您还没有相关数据！</span>
+    </div>
+{% endif%}
+</div>
+{% endblock %}
+
+{% block global_elements %}
+<ul class="dropdown-menu xui-fansCategoryActionMenu xa-fansCategoryActionMenu xui-hide">
+</ul>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="members-view" type="text/x-jquery-tmpl">
+    {{if items!='' }}
+        <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg fl" >
+            <thead>
+            <tr>
+                <th >粉丝</th>
+                <th >会员等级</th>
+                <th  class="tx_sortable" data-sort-attr='created_at' data-init-sort="-created_at" >关注时间</th>
+                <th>最后对话</th>
+                <th class="" >
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <div id="__item_count" class="hidden" data-member-count=${data.pageinfo.object_count}></div>
+            <div id="__json-members" class="hidden">${JSON.stringify(items)}</div>
+            {{each(i, fans) items}}
+            <tr data-id="${fans.id}">
+                <td style="position:relative; width:305px;">
+                    <div class="column_block xui-memberHeader">
+                        {{if fans.is_subscribed == 0}}
+                            <div class="xui-cancelCover tc pa">
+                            <span style="width:41px;width:41px;">已跑路</span>
+                            </div>
+                        {{/if}}
+                        <a class="xa-appendUser" href="/member/member_detail/edit/?id=${ fans.id }">
+                            <img width="60" he ght="60" data-id='${fans.id}' class="fl xa-showUserData" src="{{if fans.profile_img}}${ fans.profile_img }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
+                        </a>
+
+
+                    <div class="column_block">
+                        <div class="fans_name">
+
+                            {{if fans.name}}
+                            <a href="/member/member_detail/edit/?id=${ fans.id }" style="width:80px;">
+                            <span id='xui-i-displayName-${ fans.id }'>${ fans.name }({{html fans.nickname}})</span>
+                            </a>
+                            {{else}}
+                            <a href="/member/member_detail/edit/?id=${ fans.id }" style="width:80px;">
+                            <span id='xui-i-displayName-${ fans.id }'>{{html fans.nickname}}</span>
+                            </a>
+                            {{/if}}
+                        </div>
+                        <div style="float:left;padding:10px 0 0 5px;"><a href='javascript:void(0);'><img class="xa-editRemark" data-id="${ fans.id }" data-nickname="${ fans.nickname }" data-remark="${ fans.name }" src="/static_v2/img/weixin/fansPencil.png" alt=""></a></div>
+
+                    </div>
+                </td>
+                <td>
+                    <div class="centerAlign">${ fans.level }</div>
+                </td>
+                <td>
+                    <div class="centerAlign">${ fans.subscribed_at_date } <br>${ fans.subscribed_at_time }</div>
+                </td>
+
+                <td>
+                    <div class="centerAlign">${ fans.last_chat_at}<br>${ fans.last_chat_at_time }</div>
+                </td>
+                <td style="text-align:left">
+                    <a href="javascript:void(0)" class="xa-changeTocategory" data-id="${fans.id}">修改分组</a></br>
+                    <a href="/new_weixin/realtime_messages_detail/?session_id=${ fans.session_id }"  {{if fans.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看对话</a>
+                </td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        <div class="dropdown xui-operation update_dropdown" style="float:left;padding:16px 0; background: #eaeef6;width: 973px;">
+            <div class="pr" >
+                <span class="checkbox" style="display:inline-block;margin:0 15px 0 17px;">
+                    <label for="all">
+                            <input type="checkbox" class="xa-selectAll xa-outerSelectAll" style="" id="all">
+                            <span class="xui-alignsub">全选</span>
+                    </label>
+                </span>
+                <div class="pr xui-inlineblock" style="top:3px;">
+                    <div class="xui-addGrouping pa">
+                        <li class="cece">全部分组</li>
+                        <li>未分组</li>
+                        <li>活跃</li>
+                        <li>星标</li>
+                    </div>
+                    <div class="xui-sendMessage pa">
+                        <li>选中的人</li>
+                        <li>筛选出来的N人(已跑路)</li>
+                    </div>
+                    <a class="xa-addTocategory" href="javascript:void(0);">添加分组到</a>
+                    <a class="xa-sendMessageLink pl20" href="javascript:void(0);" class="pl10"> 群发消息</a>
+                    <ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+                        <li class="dropdown-submenu">
+                            <a class="tc" type="button"  href="javascript:void(0);">
+                                等级<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" style="min-height:29px;">
+                                {% for grade in grades %}
+                                <li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}">{{grade.name}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a class="tc"  type="button"  href="javascript:void(0);" >
+                                分组<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" {% if user_tags|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
+                                {% for tag in user_tags %}
+                                <li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    {{else}}
+        <div class="xui-emptyBox">
+            <img src="/static_v2/img/editor/empty.png">
+            <span class="ml20">您还没有相关数据！</span>
+        </div>
+    {{/if}}
+
+</script>
+
+<script src="/static/jquery/jquery.cookie.js"></script>
+
+{% endverbatim %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // 粉丝-备注
+        // TODO: 
+        $('body').delegate('.xa-editRemark', 'click', function(event){
+            var $el = $(event.currentTarget);
+            var fanId = $el.attr('data-id');
+            var nickname = $el.attr('data-nickname');
+            var remark = $el.attr('data-remark');
+            var fansRemarkView = W.getWeixin2FansRemarkView({
+                width: 358,
+                height: 67,
+                title: '备注',
+                position:'top',
+                isTitle: false,
+                privateContainerClass:'xui-remarkDropBox'
+            });
+            fansRemarkView.show({
+                $action: $el,
+                $display: $("#xui-i-displayName-"+fanId),
+                member_id: fanId,
+                member_remarks: remark,
+                nickname: nickname,
+            });
+        });
+
+        var filterBox = new W.view.weixin.FansFilterView({
+            el: "#weixin-fans-filter-view",
+            dataView: $('[data-ui-role="advanced-table"]').data('view'),
+            });
+    });
+
+    var fansView = new W.view.weixin.FansView({
+        el: $("body"),
+    });
+</script>
+
+
+<!--<script src="/static_v2/lib/react-with-addons.js"></script>
+<script src="/static_v2/lib/JSXTransformer.js"></script>
+<script type="text/jsx" src="/static_v2/js/view/weixin2_fan_category_list/app.jsx"></script>
+-->
+
+<script type="text/javascript">
+// 修改分类名的编辑器
+var FansTable = Backbone.View.extend({
+    events: {
+        'click .xa-changeTocategory': 'onChangeCategory',
+        'click .xa-addTocategory': 'onAddToCategory',
+    },
+
+    initialize: function(options) {
+        xlog("in FansTable.initialize()");
+        this.selectedFansIds = [];
+        this.$menu = $('.xa-fansCategoryActionMenu').eq(0);
+        this.isShowMenu = false;
+        this.actionCategoryId = null;
+
+        var _this = this;
+        $document = $(document);
+        $document.delegate('.xa-menuItem', 'click', _.bind(this.onClickMenuItemButton, this));
+        $document.click(function() {
+            _this.hideActionMenu();
+        });
+    },
+
+    /*"添加分组到"的响应函数*/
+    onAddToCategory: function(event) {
+        //xlog("in onAddToCategory()");
+        var $selectedEl = $('input.xa-select:checked');
+        this.selectedFansIds = [];
+        if ($selectedEl.length == 0) {
+            W.getErrorHintView().show('请选择粉丝');
+            return;
+        };
+
+        var _this = this;
+        $selectedEl.each(function(){
+            _this.selectedFansIds.push($(this).parents('tr').attr('data-id'));
+        }, this)
+
+        //console.log(111, $selectedEl.length, this.selectedFansIds.join(','))
+        W.getLoadingView().show();
+        W.getApi().call({
+            method: 'get',
+            app: 'new_weixin',
+            resource: 'fans_category',
+
+            success: function(data) {
+                _this.$menu.empty();
+                $.each(data.categories, function(i, item) {
+                    var html = '<li><a href="javascript:void(0);" class="xa-menuItem" data-id="'+item.id+'">'+item.name+'</a></li>'
+                    _this.$menu.append(html);
+                    _this.showActionMenu($(event.currentTarget));
+                });
+                W.getLoadingView().hide();
+            },
+            error: function(resp) {
+                alert('获取分组列表失败!');
+            }
+        });
+    },
+
+    /*"修改分组"的响应函数*/
+    onChangeCategory: function(event) {
+        //xlog("in onChangeCategory()");
+        var $el = $(event.currentTarget);
+        var fanId = $el.attr('data-id');
+        //xlog("fanId: " + fanId);
+
+        var categorySelector = W.getCategorySelector({
+            width: 108,
+            title: '修改等级',
+            position:'down-left',
+            isTitle: false,
+            isArrow: false,
+            privateContainerClass:'xui-updateGradeOrTagBox'
+        });
+        categorySelector.show({
+            $action: $el,
+            isUpdateGrade: true,
+            memberId: fanId,
+            isPostData: true
+        })
+        categorySelector.render();
+
+        /*
+        W.getApi().call({
+            app: 'new_weixin',
+            api: 'fans_category_relation',
+            method: 'post',
+            args: {
+                "fan_id": fanId,
+                "category_id": 2,
+            },
+            success: function(data) {
+                var msg = "修改成功";
+                W.getSuccessHintView().show(msg);   
+            },
+            error: function(response) {
+                var msg = response.errMsg || "修改失败";
+                W.getErrorHintView().show(msg);
+            }
+        });*/
+    },
+
+    showActionMenu: function($icon) {
+        var offset = $icon.offset();
+        this.$menu.css({
+            top: offset.top+17+'px',
+            left: offset.left-2+'px'
+        });
+        this.$menu.show();
+        this.isShowMenu = true;
+    },
+
+    hideActionMenu: function(){
+        if (this.isShowMenu) {
+            this.$menu.hide();
+            this.isShowMenu = false;
+            this.actionRoleId = null;
+        }
+    },
+
+    onClickMenuItemButton: function(event){
+        var categoryId = $(event.currentTarget).attr('data-id');
+        console.log('onClickMenuItemButton', categoryId);
+        var _this = this;
+        W.getLoadingView().show();
+        W.getApi().call({
+            method: 'post',
+            app: 'new_weixin',
+            resource: 'fans_category_relation',
+            args:{
+                fan_ids: _this.selectedFansIds.join(','),
+                category_id: categoryId
+            },
+            success: function(data) {
+                W.showHint('success', "添加分组成功");
+                setTimeout(function(){location.reload()},500);
+            },
+            error: function(resp) {
+                alert('失败!');
+                W.getLoadingView().hide();
+            }
+        });
+    }
+});
+
+$(document).ready(function() {
+    // 粉丝列表
+    var fansTable = new FansTable({
+        el: '.panel'
+    });
+});
+</script>
+
+{% endblock %}

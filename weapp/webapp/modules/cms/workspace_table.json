@@ -1,0 +1,8 @@
+{
+ "name": "\u6587\u7ae0\u7ba1\u7406", 
+ "source_workspace_id": 0, 
+ "inner_name": "cms", 
+ "template_project_id": 1, 
+ "data_backend": "module:cms", 
+ "id": 1
+}

@@ -1,0 +1,58 @@
+{% extends "webapp_content_base.html" %} {% load common_tag %} {% block css %}
+<!-- css -->
+<style type="text/css">
+	body{
+		margin: 0;
+		padding: 0;
+	}
+</style>
+{% endblock %} {% block content-panel %}
+<div class="xui-orderResult-page">
+	<div class="xui-submitOrder">
+		<div class="xui-successHint">
+			<img src="/static_v2/img/webapp/mall/success.png">
+			<span class="xui-fonts">
+				{% if order.pay_interface_type == 9 or order.pay_interface_type == 10 %}
+					您的订单已经提交，我们将尽快发货。
+				{%else%}
+					支付成功
+				{%endif%}
+			</span>
+		</div>
+		<div class="xui-cuttingLineThick"></div>
+		<div class="xui-orderInfo">
+			<p> <b>订单编号：&nbsp;</b>
+				<span>{{order.order_id}}</span>
+			</p>
+			<p> <b>应付金额：&nbsp;</b>
+				<span style="color:#D20001; font-size:1rem;"><span class="xt-price" style="color:#D20001;">{{order.final_price|floatformat:2}}</span>元</span>
+			</p>
+			<p style="padding-bottom:3%;">
+				<b>支付方式：&nbsp;</b>
+				<span class="xt-payInterface">{{order.get_pay_interface_name}}</span>
+			</p>
+		</div>
+	</div>
+	<div class="xui-otherPage">
+		<div class="xui-continue">您可继续</div>
+		<div class="xui-choice">
+			<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall" class="xui-i-leftBox xt-orderDetailLink">
+				<div class="xui-otherPageImg">
+					<img src="/static_v2/img/webapp/mall/order.gif">
+				</div>
+				<span>查看订单</span>
+			</a>
+
+			<a href="./?woid={{request.webapp_owner_id}}&{%if request.webapp_owner_id == 216 %}project_id=4109{%else%}module=mall&model=products&action=list{%endif%}" class="xui-i-rightBox xt-productListLink">
+				<div class="xui-otherPageImg">
+					<img src="/static_v2/img/webapp/mall/order_home.png">
+				</div>
+				<span>逛逛首页</span>
+			</a>
+		</div>
+</div>
+
+</div>
+{% endblock %} {% block js %}
+<!-- js -->
+{% endblock %} 成功 {%if is_pay_interface_cod == '0'%} 提交成功 {%else%} 支付成功 {%endif%}

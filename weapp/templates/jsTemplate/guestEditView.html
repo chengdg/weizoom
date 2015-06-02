@@ -1,0 +1,36 @@
+
+
+<script id="conference-menu-tmpl-src" type="text/x-jquery-tmpl">
+    
+    <div class="control-group">
+        <div class="ml15 mr15">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>嘉宾姓名</th>
+                    <th>嘉宾职位</th>
+                    <th>嘉宾简介</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+<script id="conference-one-menu-tmpl-src" type="text/x-jquery-tmpl">
+    <tr menu_id="${id}" style="cursor:move">
+        <td  style="width: 40px;">${name}</td>
+        <td  >${position}</td>
+        <td  >${profile}</td>
+        <td style="width: 70px;" >
+            <center>
+            <a title="编辑" class="btn btn-mini" href="/conference/editor/guest/update/${id}/" ><i class="icon-pencil"></i></a>
+	        <a title="删除" class="btn btn-danger btn-mini wx_delete" href="/conference/editor/guest/delete/${id}/" ><i class="icon-remove icon-white"></i></a>
+            </center>
+        </td>
+    </tr>
+</script>
+
+

@@ -1,0 +1,29 @@
+<script id="tag-filter-view" type="text/x-jquery-tmpl">
+    {{if tags }}
+    <ul>
+        <li tag_id="-1">
+            <a class="tx_filter {{if active_id == '-1'}}active{{/if}}" value='-1' href="javascript:void(0);">
+            {{if language === 'English'}}
+            all
+            {{else}}
+            全部
+            {{/if}}
+            </a>
+        </li>
+        {{each(i, tag) tags}}        
+        <li tag_id="${tag.id}">
+            <a href="javascript:void(0);" class="tx_filter {{if active_id == tag.id}}active{{/if}}" value='${tag.id}'>${tag[nameKey]}</a>
+            {{if tag.sub_tags }}
+            {{if tag.sub_tags.length }}
+                <ul>
+                    {{each(i, sub_tag) sub_tags}}
+                    <li tag_id="${sub_tag.id}"><a href="javascript:void(0);" class="tx_filter {{if active_id == sub_tag.id}}active{{/if}}" value='${sub_tag.id}'>${sub_tag[nameKey]}</a></li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+	{{/if}}
+</script>

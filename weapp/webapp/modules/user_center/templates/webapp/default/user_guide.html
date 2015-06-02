@@ -1,0 +1,51 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-userGuidePage"  data-title="{{ page_title }}">
+    <div data-role="content" class="p10">
+        <h2 class="clearfix">
+            <div class="xui-inner-title">等级指南</div>
+        </h2>
+        <table class="xui-table">
+            <thead>
+                <tr>
+                    <th align="left">等级名称</th>
+                    <th align="left">购物折扣</th>
+                    <th align="left">需要经验</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for member_grade in member_grades %}
+                <tr>
+                    <td>{{member_grade.name}}</td>
+                    {% if member_grade.shop_discount == 100 %}
+                    <td>无折扣</td>
+                    {% else %}
+                    <td>{{member_grade.shop_discount}}折</td>
+                    {% endif %}
+                    <td>{% if member_grade.upgrade_lower_bound %}{{member_grade.upgrade_lower_bound}}{% else %}-{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="clearfix mt30">
+            <div class="xui-inner-title">积分指南</div>
+        </h2>
+        <div class="rawHtml xui-inner-content">
+            {% if integral_guide.content %}
+                {{integral_guide.content|safe}}
+            {% else %}
+                没有积分指南
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+</script>
+{% endblock %}

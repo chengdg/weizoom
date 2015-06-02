@@ -1,0 +1,21 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.toggleswitch' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="mt5 mb5 xui-br" 
+>
+    <div data-role="fieldcontain" data-controltype="toggleswitch">
+        <label for="toggleswitch{{component.cid}}">
+            {{component.model.title}}
+        </label>
+        <select id="toggleswitch{{component.cid}}" data-role="slider" data-theme="e" name="{{component.model.name}}" {% ifequal component.model.is_mini "yes" %}data-mini="true"{% endifequal %} >
+            <option value="off">{{component.model.off_text}}</option>
+            <option value="on">{{component.model.on_text}}</option>
+        </select>
+    </div>
+</div>
+{% endifequal %}

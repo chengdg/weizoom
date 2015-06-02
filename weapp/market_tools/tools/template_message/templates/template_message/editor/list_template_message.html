@@ -1,0 +1,89 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">模板消息</li>
+	</ul>
+	<div class="ml5 mb10">
+	 	<span>我的行业：</span>
+	 	<span class="mr50">主营行业：<font class="major">{% if industry.major %}{{ industry.major }}{% else %}暂无{% endif %}</font></span>
+	 	<span class="mr20">副营行业：<font class="deputy">{% if industry.deputy %}{{ industry.deputy }}{% else %}暂无{% endif %}</font></span>
+	 	<span type="show" class="xa-showIndustryBoxButton btn" style="display: inline;">修改行业</span>
+ 	</div>
+	<span class="ml5 mb10" style="display:inline-block;color:#c09853">模板消息可以使用十条</span>
+</div>
+
+ 		
+<div data-ui-role="advanced-table" data-enable-paginator="true" data-app="market_tools/template_message" data-api="template/get" data-template-id="#template_message_list_view"  data-item-count-per-page="15">
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+	<script id="template_message_list_view" type="text/x-jquery-tmpl">
+		<table class="table table-bordered table-condensed xa-pointCardListTable" style="margin-bottom: 10px;">
+		<thead>
+			<tr>
+				<th>模板ID</th>
+				<th>标题</th>
+                <th>行业</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody id="">
+			{{each(i, template) items}}
+			<tr>
+				<td>
+					${template.template_id}
+				</td>
+				<td>
+					${template.title}
+				</td>
+				<td>
+					${template.industry_name}
+				</td>
+				<td>
+					${template.status}
+				</td>
+				<td>
+					<a class="btn" href="/market_tools/template_message/edit_detail?template_detail_id=${template.template_detail_id}">查看</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+	{% endverbatim %}
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.xa-showIndustryBoxButton').click(function(event) {
+        W.dialog.showDialog('W.weapp.dialog.SelectIndustryDialog', {
+          success: function(data) {
+            W.getLoadingView().show();
+            W.getApi().call({
+              app: 'market_tools/template_message',
+              api: 'template/create',
+              method: 'post',
+              args: data,
+              success: function() {
+                window.location.reload();
+              },
+              error: function(resp) {
+                W.getLoadingView().hide();
+                if (resp.code !== 200) {
+                  alert('修改行业失败!');
+                }
+              }
+            })
+          }
+        })
+    });
+  });
+</script>  
+{% endblock %}

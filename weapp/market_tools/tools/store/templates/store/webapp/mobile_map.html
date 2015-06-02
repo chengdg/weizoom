@@ -1,0 +1,56 @@
+
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<style type="text/css">
+	#allmap{
+		width: 100%;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div id="allmap"></div>
+{% include 'footer.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=23bd8e8710020bf323beeb13128685bd"></script>
+<script type="text/javascript">
+	var height = $(window).height();
+	var height2 = height-30
+	$("#allmap").css('height', height2)
+	// 百度地图API功能
+	var loc = "{{store.location}}";
+	var loc = loc.split(",")
+	var lat = loc[0]
+	var lng = loc[1]
+	console.log(lat, lng)
+
+	var map = new BMap.Map("allmap");
+	var cur_point = new BMap.Point(lat, lng);
+
+	map.centerAndZoom(cur_point, 18);
+	
+	var marker = new BMap.Marker(cur_point);  // 创建标注
+	map.addOverlay(marker);              // 将标注添加到地图中      
+
+	map.enableScrollWheelZoom();
+	map.enableDragging();
+
+
+	var opts = {
+	  width : 150,     // 信息窗口宽度
+	  height: 50,     // 信息窗口高度
+	  title : "{{store.name}}" , // 信息窗口标题
+	  enableMessage:false,
+	}
+	var infoWindow = new BMap.InfoWindow("地址：{{store.address}}", opts);  // 创建信息窗口对象 
+	marker.addEventListener("click", function(){          
+		map.openInfoWindow(infoWindow,cur_point); //开启信息窗口
+	});
+</script>
+{% endblock %}
+
+

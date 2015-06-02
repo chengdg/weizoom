@@ -1,0 +1,95 @@
+html,body {
+	background-color: #efeff4;
+}
+
+header.mui-bar {
+	display: none;
+}
+.mui-bar-nav~.mui-content {
+	padding: 0;
+}
+
+.mui-control-content {
+	background-color: white;
+	min-height: 480px;
+}
+.mui-control-content .mui-loading {
+	margin-top: 50px;
+}
+
+#topPopover {
+	position: fixed;
+	top: 16px;
+	right: 6px;
+}
+#topPopover .mui-popover-arrow {
+	left: auto;
+	right: 6px;
+}
+p {
+	text-indent: 22px;
+}
+span.mui-icon {
+	font-size: 14px;
+	color: #007aff;
+	margin-left: -15px;
+	padding-right: 10px;
+}
+.mui-popover {
+	min-height: 160px;
+}
+
+.sale_context{
+    width: 100%;
+}
+.show_date{
+    width: 20%;
+    text-align: center;
+    float: left;
+}
+.post_date{
+    width: 20%;
+    height: 40px;
+    margin-top: 4px;
+    background: url("../img/date-bg.gif") no-repeat scroll center 0 rgba(0, 0, 0, 0);
+    text-align: center;
+    float: left;
+}
+
+.date_month{
+    color: #fff;
+}
+.date_day{
+    font-size: 18px;
+    margin-top: -3px;
+}
+
+.show_order_info{
+    width: 80%;
+    font-size: 12px;
+    float: left;
+}
+.clearfix:after {
+    content:".";
+    display:block;
+    height:0;
+    visibility:hidden;
+    clear:both;
+}
+
+.clearfix { *zoom:1; }
+
+.sale_icon{
+    display: inline-block;
+    font-size: 1.5em;
+    width: 16%;
+}
+
+.sale_icon img{
+    width: 20px!important;
+}
+
+.sale_icon_and_count{
+    padding-top: 5px;
+    text-align: justify;
+}

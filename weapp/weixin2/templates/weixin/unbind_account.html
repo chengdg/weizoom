@@ -1,0 +1,37 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-weixin-unbindAccountPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li class="active">一键绑定</li>
+		</ul>
+	</div>
+
+	<div class="tc">
+		<button class="btn btn-success xa-bind">一键绑定</button>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">	
+$(document).ready(function() {
+	$('.xa-bind').click(function(event) {
+		W.resource.new_weixin.MpUser.put({
+			success: function(data) {
+				W.showHint('success', '绑定成功');
+				_.delay(function() {
+					window.location.href = data.redirect_url
+				}, 1000);
+			},
+			error: function(resp) {
+				W.showHint('error', '绑定失败');
+			}
+		});		
+	})
+});
+</script>
+{% endblock %}

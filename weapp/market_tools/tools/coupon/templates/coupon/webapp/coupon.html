@@ -1,0 +1,104 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<style>
+html,body{
+	background: #fff;
+}
+
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-getCouponPage m10">
+	<div class="xui-coupon">
+		<div class="xui-item tc xui-title-section">{{ rule.name }}</div>
+		<div class="xui-item tc xui-money-section">
+			<span style="font-size:25px;">￥</span><span class="xui-money" style="font-size:55px;">{{ rule.money }}</span>
+		</div>
+		<div class="xui-item tc xui-role-section">
+			<ul>
+				<li class="disT w">
+					<div class="disTc" style="white-space: nowrap;width:50px;">使用期限：</div>
+					<div class="disTc">
+						<p>{{promotion.start_date|date:"Y-m-j H:i:s"}} -</p>
+						<p>{{promotion.end_date|date:"Y-m-j H:i:s"}}</p>
+					</div>
+				</li>
+				{% if rule.valid_restrictions > 0 %}
+				<li>使用限制：订单满{{ rule.valid_restrictions }}元可用</li>
+				{% else %}
+				<li>使用限制：无限制</li>
+				{% endif %}
+				{% if rule.remark %}
+				<li>使用说明：<span style="color:#0177a0;">{{ rule.remark }}</span></li>
+				{% endif %}
+			</ul>
+		</div>
+		<div class="tc xui-type-section">
+			<!-- 0初始化领取优惠券 显示 -->
+			<a href="javascript:void(0);" class="xui-btn xui-get-btn xa-getCoupon mt{% if msg %} hidden{% endif %}">立即领取</a>
+			<div class="xa-couponType{% if not msg %} hidden{% endif %}">
+				<!-- 1优惠券领取成功 显示 -->
+				<p class="c6">{% if msg %}{{msg}}{% else %}<span style="color:#fff;">恭喜您成功领取优惠券！</span>{% endif %}</p>
+				<!-- 2优惠券超过限额 显示 -->
+				<!-- <p class="c6 hidden">该优惠券每人限领??张，你已经领取过了！</p>
+				 3优惠券过期 显示
+				<p class="c6 hidden">该优惠券使用期已过，不能领取！</p> -->
+
+				<ul class="disT w mt10">
+					<li class="disTc" style="width:41.836%;">
+						<!-- 2优惠券超过限额 显示 3优惠券过期 显示-->
+						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-btn xui-goShopping-btn">随便逛逛</a>
+						<!-- 1.优惠券领取成功 显示 -->
+						{% if rule.limit_product_id %}
+						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{ rule.limit_product_id }}&action=get" class="xui-btn xui-toUse-btn hidden">立即使用</a>
+						{% else %}
+						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-btn xui-toUse-btn hidden">立即使用</a>
+						{% endif %}
+					</li>
+					<li class="disTc" style="width:14px;"></li>
+					<li class="disTc">
+					 	<!-- 1 2 3状态均存在 -->
+						<a href="./?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-btn xui-myCoupon-btn">我的优惠券</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	$('.xa-getCoupon').click(function(){
+		W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'post',
+            args: {
+                project_id: W.projectId,
+                rule_id: {{ rule.id }},
+                target_api: 'coupon/consume'
+            },
+            success: function(data) {
+				$('.xa-getCoupon').hide();
+                if (data.msg){
+                	$('.xa-couponType p').html(data.msg);
+                }else{
+                	$('.xa-couponType .xui-toUse-btn').removeClass('hidden');
+                	$('.xa-couponType .xui-goShopping-btn').hide();
+                }
+				$('.xa-couponType').show();
+            },
+            error: function(data) {
+                $('body').alert({
+                    isShow: true,
+                    info: data['msg'],
+                    speed:2000
+                });
+            }
+        });
+	})
+</script>
+{% endblock %}

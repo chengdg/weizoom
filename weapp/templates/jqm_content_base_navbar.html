@@ -1,0 +1,16 @@
+<div id="footerNavBar" data-role="navbar" data-position="fixed" class="bingo xui-footer_tools_nav" data-tap-toggle="false">
+    <ul>
+        <li><a href="javascript:window.history.back();"><!--上一页--></a></li>
+        <li><a href="./?project_id={{request.project.id}}"><!--首页--></a></li>
+        <li>
+            <a href="#footer_tools-sub-nav-listbox" role="button" id="footer_tools-sub-nav-button" aria-haspopup="true" data-rel="popup" data-transition="flip"></a>
+            <select data-native-menu="false" id="footer_tools-sub-nav" name="footer_tools-sub-nav" tabindex="-1" data-shadow="false" style="display:none" data-defaults="true" data-hide-placeholder-menu-items="true" onchange="javascript:window.location.href = this.value">
+                <option data-placeholder="true">Choose options</option>
+                <option value="/m/weapp/ship_info/3180/?shipInfo_id=&fwxsid=">ship</option>
+                <option value="/m/weapp/user_center/3180/">Rush</option>
+                <option value="/m/weapp/user_center/3180/" >Express</option>
+                <option value="/m/weapp/user_center/3180/" href="">Overnight</option>
+            </select>
+        </li>
+    </ul>
+</div>

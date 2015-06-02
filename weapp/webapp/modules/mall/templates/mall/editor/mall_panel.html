@@ -1,0 +1,217 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">订单列表</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" id="export_csv" href="/mall/export/order/csv/">导出图表数据</a>
+		<a class="btn btn-primary" id="export_excel" href="/mall/export/order/excel/">导出所有数据</a>
+	</span>
+</div>
+
+<div class="wineStatisticesChartBox">
+	<div id="selectDateZone" style="padding:10px 0px 10px 0px; margin:0;background:none; height:33px;">
+		<ul class="nav nav-pills mb0 fl" style="display: block;">
+			<li class="active"><a data-days="7" class="wx_changeDate active" href="javascript:void(0);">最近7天</a></li>
+			<li class="dropdown">
+				<a data-toggle="dropdown" class="dropdown-toggle wx_setCustomTime active" href="javascript:void(0);" actiondisabled="" data-target='#'>
+					<span class="wx-textTime">自定义</span><b class="caret"></b>
+				</a>
+				<div id="dateSelector-dropBox" class="dropdown-menu pa wx_dropbox mt5" style="width: 385px;">
+					<div class="drop-box-arrow-down-left"></div>
+					<div class="drop-box-content tx_content">
+						<div class="zoom pt15 pl15 form-inline pb10 ">
+							<input type="text" readonly="readonly" class="span2 wx-datepicker" name="startTime" value="" id="dp1371804482436"> - <input type="text" readonly="readonly" class="span2 wx-datepicker" name="endTime" value="" id="dp1371804482437">
+							<button class="btn btn-success wx-dateSelector-customTime-submit">确定</button>
+							<div class="errorHint pt5" style="display: none;"></div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+		<div class="fr mt5">
+			<table name="date_statistics">
+				<tr class="h30">                    
+					<td class="wine_orderTopSpan">订单总量:</td>
+					<td class="wine_orderTopCount w60 orderCount" align="center" name="order_count">0</td>
+                    <td class="wine_orderTopSpan">出货总量:</td>
+					<td align="center" class="wine_orderTopCount shipCount w60"  name="ship_count">0</td>
+					<td class="wine_orderTopSpan">金额总量:</td>
+					<td class="wine_orderTopCount w60 webCount" align="center"  name="total_price">0</td>
+				</tr>
+			</table>
+		</div>
+		<div class="cr"></div>
+	</div>
+	<div id="wine_order_statisticsView" >
+		<div class="chart longChart" id="dailyMessage"></div>
+		<div>
+			<div class="fl">
+				<input type="checkbox" name="element" value="1" checked="checked" /> <span style="color:#0099FF">日订单量</span>&nbsp;&nbsp;
+				<input type="checkbox" name="element" value="2" checked="checked" /> <span style="color:#993300">日出货量</span>&nbsp;&nbsp;
+				<input type="checkbox" name="element" value="3" /> <span style="color:#FF6600">日总金额</span>&nbsp;&nbsp;
+				
+			</div>
+			<div class="fr">
+				<input type="radio" name="type" value="1" checked="checked"/> 柱状图
+				<input type="radio" name="type" value="2" /> 趋势线图
+			</div>
+			<div class="cr"></div>
+		</div>
+	</div>
+</div>
+
+<div class="wine_order mt20 pt15 wineStatisticesChartBox">
+   
+    <div class="wineTableListTotal" name="total_statistics">
+        <label>总计</label>
+        <label>订单量<span name="order_count">0</span></label>
+        <label>已完成<span name="order_successed">0</span></label>
+        <label>出货<span name="ship_count">0</span></label>
+        <label>金额<span name="total_price">0</span></label>
+    </div>
+</div>
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/chart.html' %}
+	{% include_raw 'jsTemplate/paginationView.html' %}
+    {% include_raw 'jsTemplate/tourOrdersView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var __days = 7;
+	var __type = 1;
+	var __element = [];
+	$(document).ready(function() {
+			console.log(W.SingleTitleChart,111111111)
+        //订单详情[TABLE]			TourOrderDetailView
+       
+        //点击搜索按扭操作　更新:订单详情[TABLE]
+        $('.tx_search').click(function(event) {
+            var value = $('.tx_searchValue').val();
+            orderDetailView.reload({
+                'order_id': value,
+                'status':'-1',
+                'source': '-1'
+            });
+        });
+        //搜索回车操作　更新:订单详情[TABLE]
+        $('.tx_searchValue').keyup(function(event) {
+            var keyCode = event.keyCode;
+            if(keyCode === 13) {
+                var value = $('.tx_searchValue').val();
+                orderDetailView.reload({
+                    'order_id': value,
+                    'status':'-1',
+                    'source': '-1'
+                });
+            }
+        });
+        
+        var updateTotal = function(options) {
+            options = options || {};
+            W.getApi().call({
+                app: 'mall',
+                api: 'orders/statistics',
+                args: {
+                    days: options.days || 7
+                },
+                success: function(data) {
+                    var key;
+                    for(key in data.date_statistics) {
+                        $('[name="date_statistics"] [name="'+key+'"]').text(data.date_statistics[key]);
+                    }
+                    for(key in data.total_statistics) {
+                        $('[name="total_statistics"] [name="'+key+'"]').text(data.total_statistics[key]);
+                    }
+                },
+                error: function() {
+                    
+                }
+            });
+        };
+        updateTotal();
+		var dateSelector = new W.common.SelectDateView({
+			el: '#selectDateZone'
+		});
+		dateSelector.bind('change-days', function(days) {
+			__days = days;
+			messageChart.loadJson({
+				days: days
+			});
+            updateTotal({
+                days: days
+            });
+		});
+		dateSelector.render();
+		console.log(W.SingleTitleChart,22222222)
+		var messageChart = new W.SingleTitleChart({
+			el: '#dailyMessage',
+			id: 'dialyMessage',
+			dataUrl: '/mall/api/order/daily_day_trend/get/',
+			args: {
+				days: 7,
+				element: '1,2',
+				type: 1
+			}
+		});
+		messageChart.render();
+
+
+		$('input[type="radio"]').click(function(event){
+			var $el = $(event.currentTarget);
+			var type = $el.val();
+            var check = $('input[type="checkbox"]:checked');  //得到所有被选中的checkbox
+            var check_values = []; 
+            check.each(function(i){        //循环拼装被选中项的值
+				check_values.push($(this).val());
+			});
+			__element = check_values;
+			__type = type;
+			messageChart.loadJson({
+				days: __days,
+				element: __element.join(','),
+				type: __type
+			})
+		});
+		$('input[type="checkbox"]').click(function(event){
+			var check = $('input[type="checkbox"]:checked');  //得到所有被选中的checkbox
+			var check_values = [];              //定义变量
+			check.each(function(i){        //循环拼装被选中项的值
+				check_values.push($(this).val());
+			});
+			__element = check_values;
+			messageChart.loadJson({
+				days: __days,
+				element: __element.join(','),
+				type: __type
+			})
+		});
+	});
+        $('#export_csv').click(function(event){
+            var $link = $(this);
+            var param ='';
+            var check = $('input[type="checkbox"]:checked');  //得到所有被选中的checkbox
+			var check_values = [];              //定义变量
+			check.each(function(i){        //循环拼装被选中项的值
+				check_values.push($(check[i]).val());
+			});
+            var date = $('#selectDateZone li.active a').text()
+            param+='?types='+check_values.toString()
+            param += "&date_time="+__days;
+            var href = $link.attr('href')+param;
+            $link.attr('href', href);
+        });
+        $('#export_csv').mouseup(function(evetn){
+            var $link = $(this);
+            $link.attr('href', '/mall/export/order/csv/');
+        });
+</script>
+{% endblock %}

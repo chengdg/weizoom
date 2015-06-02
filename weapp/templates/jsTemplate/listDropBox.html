@@ -1,0 +1,25 @@
+<script id="list-drop-box" type="text/x-jquery-tmpl">
+{{if error_msg}}
+<div class="pt10 pb10 pl10">
+${error_msg}
+</div>
+{{/if}}
+<ul class="messageTimelineMove">
+	<li class="tx_all"><a title="全部" value="-1" valueName="全部" href="javascript:void(0);">全部</a></li>
+	{{if statuss}}
+	{{each(i, status) statuss}}
+    <li><a title="${status.name}" value="${status.id}" valueName="${status.name}" href="javascript:void(0);
+    ">{{html status.name}}</a></li>
+	{{/each}}
+	{{/if}}
+	<li class="divider"></li>
+	<li><a class="tx_addGroup" valueName='addGroup' href="javascript:void(0);">+创建分组</a>
+		<div class="controls tx_groupBox hidden">
+			<input type="text" name="group_name" id="group_name" class="w80 mt10 ml5" data-validate="required,noDuplicateCustomerGroup" data-validate-group="-1" data-validate-max-length="6">
+			<button class="btn btn-success tx_addGroupButton" type="button">提交</button>
+
+			<div class="errorHint w150"></div>
+		</div>
+	</li>
+</ul>
+</script>

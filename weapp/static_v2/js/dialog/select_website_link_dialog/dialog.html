@@ -1,0 +1,99 @@
+<script id="weixin-select-link-page-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-selectWeixinMaterialDialog" id="weixinSelectMaterialDialog">
+	<div class="modal-dialog modal-lg" style="width: 800px;">
+	<div class="modal-content">
+		<div class="modal-header" style="margin-bottom: 10px;">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				选择图文
+			</h3>
+		</div>
+		
+		<div class="modal-body" style="min-height: 300px; max-height: 600px; overflow: auto;">
+			<div class="mb10 clearfix xa-add-box {{if menuType == 'shengjingCustom'}}xui-hide{{/if}}">
+				<a href="/new_weixin/single_news/" target="_blank" class="btn btn-success xa-add-item w150"><span class="mr5 pr">+</span>创建单图文</a>
+				<div class="fr">
+					<input class="form-control xa-query xui-search-text" value=""><span class="xa-search xui-searchBtn cursor-pointer btn w80">搜索</span>
+				</div>
+			</div>
+			
+			<div
+				data-ui-role="advanced-table"
+				data-app="new_weixin"
+				data-resource="webapp_item_links"
+				data-template-id="#weixin-select-link-page-dialog-table"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-item-count-per-page="6"
+				data-auto-load="false"
+				class="mb20"
+			></div>
+		</div>
+
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">完成选择</button> 
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="weixin-select-link-page-dialog-table" type="text/x-jquery-tmpl">
+	{{if items.length > 0}}
+	<table id="pageTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition">
+		<thead style="background:#c8d2e5;">
+			<tr>
+				<th>名称</th>
+			{{if data.type == 'lottery' || data.type == 'coupon'}}
+				<th>类型</th>
+			{{/if}}
+
+			{{if data.type != 'shengjing_app'}}
+				{{if data.type == 'lottery' || data.type == 'coupon' || data.type == 'activity'}}
+					<th width="230">有效期</th>
+				{{else}}
+					<th width="200">创建时间</th>
+				{{/if}}
+			{{/if}}
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+            {{each(i, item) items}}
+			<tr class="xb-stripedTable" data-id="${item.id}">
+				<td>
+					${item.name}
+				</td>
+			{{if data.type == 'lottery' || data.type == 'coupon'}}
+				<td>
+					${item.type}
+				</td>
+			{{/if}}
+			
+				{{if data.type == 'lottery' || data.type == 'coupon' || data.type == 'activity'}}
+					<td>
+						${item.valid}
+					</td>
+				{{else}}
+					{{if data.type != 'shengjing_app'}}
+					<td>
+						${item.created_at}
+					</td>
+					{{/if}}
+				{{/if}}
+			
+
+				<td>	
+					<label class="btn lh20 btn-primary {{if item.isChecked}}checked{{/if}}" style="border-radius:3px;">
+						<input type="checkbox" autocomplete="off" class="xa-selectPage"><span>{{if item.isChecked}}已选取{{else}}选取{{/if}}</span>
+					</label>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+    {{else}}
+        还没有数据
+    {{/if}}
+</script>

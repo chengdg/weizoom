@@ -1,0 +1,17 @@
+<script id="component-list-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="componentList" class="section">
+		<div class="sectionHeader">
+			Components
+		</div>
+		<ul class="sectionContainer componentList_components clearfix">
+			{{each(i, component) components}}
+			{{if component.indicator}}
+			<li class="xui-component" data-component-type="${component.type}">
+				<div class="componentList_component_img ${component.indicator.imgClass}"></div>
+				<div class="componentList_component_label">${component.indicator.name}</div>
+			</li>
+			{{/if}}
+			{{/each}}
+		</ul>
+	</div>
+</script>

@@ -1,0 +1,125 @@
+@charset "utf-8";
+body{
+	background: #f0f0f0;
+}
+ul li{
+	list-style: none;
+}
+.ml5{
+	margin-left:5px;
+}
+.clearfix:after{
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+.clearfix { 
+	display: inline-table;
+}
+/*重置开始*/
+.ui-body-c, .ui-body-c input, .ui-body-c select, .ui-body-c textarea, .ui-body-c button{
+    font-family: inherit;
+}
+.ui-body-c, .ui-overlay-c{
+    display:inline-block;
+}
+.ui-input-search, div.ui-input-text{
+    margin: 10px 0 0 114px;
+    width: 90px;
+}
+.ui-body-c .ui-link{
+    font-weight: normal;
+}
+.ui-body-c .ui-link:hover{
+    color: #fff;
+}
+.ui-body-c, .ui-overlay-c{
+    text-shadow:none;
+}
+.xui-section{
+    padding: 0;
+}
+
+.ui-btn-inner{
+    padding: 0.6em 20px !important;
+}
+/*重置结束*/
+.xui-deliveryplan-page{
+    color: #9b9b9b;
+}
+.xui-imgswipe{
+	width: 100%;
+	border-radius:10px;
+	overflow:hidden;
+	margin:0 auto;
+}
+.xui-imgswipe img{
+	width: 100%;
+}
+.xui-product-title{
+	color: #000;
+	font-size: 1.5em;
+}
+.xui-section-item{
+	border-bottom:1px solid #ccc;
+	padding:10px;
+	line-height: 27px;
+}
+.xui-section-item:last-child{
+	border:none;
+}
+.xui-calendarBox img{
+    padding:5px;
+}
+.xui-price{
+	color:#ae0001;
+	font-size:1.2em;
+}
+.xui-priceBefore{
+	text-decoration: line-through;
+}
+.xui-priceSave{
+    display: inline;
+	padding:0 4px;
+    font-size: 0.9em;
+	background: #f93;
+	color: #fff;
+}
+/* action panel 样式 */
+.xui-actionPanel{
+    position:fixed;
+    width:100%;
+    background:rgba(240,240,240,0.9);
+    border:none;
+    height:55px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    margin:0;
+    padding:10px;
+    z-index:9999;
+    border-top: solid 1px #AFAFAF;
+}
+
+.xui-bottom-actionPanel {
+    bottom:0px;
+    left:0px;
+}
+
+.xui-actionPanel .text {
+    height: 30px;
+    line-height: 30px;
+}
+.xui-deliveryplan-page .xui-btn{
+    text-align: center;
+    width: 50%;
+    margin:-2px auto;
+    display: block;
+    padding:8px 20px;
+    background: #ae0404;
+    color: #fff;
+    border-radius:6px;
+}

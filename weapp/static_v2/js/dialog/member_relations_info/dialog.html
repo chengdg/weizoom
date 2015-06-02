@@ -1,0 +1,93 @@
+<script id="member-relations-tmpl-src" type="text/x-jquery-tmpl">
+<div class="modal logs" >
+	<div class="modal-dialog">
+	<div class="modal-content" style="width:667px">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">好友列表
+			</h3>
+		</div>
+		<div class="modal-body" style="padding:0 20px;">
+			
+			<div class="form-inline" style="min-height:420px;">
+				<span style="margin-left: 333px;"><strong>好友：&nbsp;<font class="friend_count"></font> 
+					</strong>
+				</span>&nbsp;&nbsp;&nbsp;
+				<span> <strong>贡献：&nbsp;<font class="fans_count"></font></strong></span>
+				&nbsp;&nbsp;&nbsp;
+				<input type="checkbox" class="show_fans" name="show_fans" style="margin-right:5px;margin-top:2px;vertical-align: sub;"><strong>仅查看贡献会员</strong>
+				<table class="xa-logTable mt10 w">
+				<div
+					data-ui-role="advanced-table"
+					data-app="member"
+					data-api="follow_relations/get"
+					data-template-id="#member-relation-tmpl-src"
+					data-enable-paginator="true"
+					data-enable-sort="false"
+					data-selectable="false"
+					data-item-count-per-page="5"
+					data-auto-load="false"
+					class="mt10 mb20"
+				></div>
+				</table>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="xa-order-ship-info">
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="member-relation-tmpl-src" type="text/x-jquery-tmpl">
+		<table style="width:100%;border:1px solid #ddd" class="table xb-stripedTable xb-noBorder">
+				<thead style="background:#c8d2e5;">
+				<tr class="">
+					<th width="180">会员</th>
+					<th width="90">消费金额</th>
+					<th width="100">积分</th>
+					<th width="150">来源</th>
+					<th width="90">时间</th>
+				</tr>
+				</thead>
+				<tbody>
+					{{each(i, log) items}}
+					<tr data-id="${log.id}">
+						<td>
+							<div style="display:table ">
+								<a href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
+								<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
+								</a>
+								<div style="display: table-cell;vertical-align:top;padding-left:8px;">
+									<a href="/member/member_detail/edit/?id=${id}" >{{html username}}</a><br><br>
+									<div>${grade_name}</div>
+								</div>
+							</div>
+						</td>
+					    <td>${log.pay_money} </td>
+					    <td class="text_nowrap" style="max-width:150px;" title="${log.reason}">${log.integral} </td>
+					    <td style="color:{{if log.integral_count >0}}#008620{{else}}#ff6600{{/if}};font-weight:bold;">
+					    		<span><span style="{{if log.is_fans}}background-color:#008000;color:#fff;border-radius:3px;{{/if}}{{if log.is_father}}background-color:#FF0000;color:#fff;border-radius:3px;{{/if}}">
+								{{if log.source == 0}}
+									直接关注
+								{{/if}}
+								{{if log.source == 1}}
+									推广扫码
+								{{/if}}
+								{{if log.source == 2}}
+									会员分享
+								{{/if}}
+								{{if log.source == -1}}
+									直接关注
+								{{/if}}
+								</span>
+							</span>
+					    </td>
+					    <td style="font-weight:bold;">${log.created_at} </td>
+					</tr>
+					{{/each}}
+					</tbody>
+			</table>
+	
+</script>

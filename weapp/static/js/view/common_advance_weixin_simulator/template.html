@@ -1,0 +1,66 @@
+<script id="advance-weixin-simulator-one-shared-message-tmpl-src" type="text/x-jquery-tmpl">
+{{each(i, message) messages}}
+<div class="oneSharedMessage clearfix">
+    <div class="fl oneSharedMessage_headImgBox">
+        <img src="/standard_static/img/simulator/${message.userName}.jpg" width="100%" />
+    </div>
+    <div class="ml60">
+        <div><span class="oneSharedMessage_name">${message.displayUserName}</span> <span class="oneSharedMessage_action">分享了一个链接</span></div>
+        <div class="mt5">${message.content}</div>
+        <a href='#browserPage' data-href="${message.linkUrl}" class="mt5 oneSharedMessage_link" data-transition="slide">
+            <img class="oneSharedMessage_linkImg" src="{{if message.linkImg}}${message.linkImg}{{else}}/standard_static/img/simulator/link.jpg{{/if}}" />${message.linkTitle}
+        </a>
+    </div>
+</div>
+{{/each}}
+</script>
+
+
+<script id="weixin-simulator-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="phone">
+        <div id="back-weixin-btn"></div>
+        <div id="top-weixin-title">${title}</div>
+        <div id="weixin-unsubscribe-btn"></div>
+        <div id="screen">
+	        <div id="timeline-zone">
+	        	{{if !isLogined}}
+		        <div id="userSelect" class="mt30">
+		        	<select name="weixin_user_name">
+		        		<option value="-1">选择用户</option>
+		        		<option value="zhouxun">周迅</option>
+		        		<option value="yangmi">杨幂</option>
+		        	</select>
+		        	<select name="mp_user_name">
+		        		<option value="-1">选择公众号</option>
+		        		{{each(i,mpUser) mpUsers}}
+		        		<option value="${mpUser.webapp_id}">${mpUser.mp_user_name}</option>
+		        		{{/each}}
+		        	</select>
+
+		        	<br/>
+		        	<button class="btn btn-primary">确定</button>
+		        </div>
+	        	{{/if}}
+	        </div>
+	        <div id="browser-zone">
+	            <iframe src="/loading/" frameborder="0" width="100%" height="100%" id="mobile-browser" name="mobile-browser"></iframe>
+	        </div>
+        </div>
+        <form id='weixin-form'>
+        	<div id="weixin-menubar-btn"></div>
+            <div id="weixin-input"><input id="weixinInput-contentInput" type="text" placeholder="输入微信" name="content" /></div>
+        </form>
+
+        <div class="popover top in x-menuItemContainer">
+			<div class="arrow"></div>
+			<div class="x-menuItems">
+			</div>
+		</div>
+        <div id="menubar-zone" class="relative hide">
+	        <div class="" style="margin: 0; width: 100%;">
+				<div class="x-menus btn-group" style="width: 100%;">
+				</div>
+			</div>
+        </div>
+    </div>
+</script>

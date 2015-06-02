@@ -1,0 +1,178 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style>
+.xui-area-container label:first-child{
+	margin:0px 10px 0px 0px;
+}
+.xui-area-container input[type="checkbox"]{
+	width: 60% !important;
+	outline: transparent;
+}
+
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/mall/editor/mall_settings/">商城设置</a><span class="divider">/</span></li>
+	<li class="active">{% if postage_config %}更新{% else %}添加{% endif %}运费配置</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if postage_config %}{{ postage_config.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="最多5个字符" value="{% if postage_config %}{{ postage_config.name }}{% endif %}" data-validate="required-none" maxlength="5"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="first_weight">首重(公斤)：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="first_weight" name="first_weight" placeholder="输入首重" value="{% if postage_config %}{{ postage_config.first_weight }}{% endif %}" data-validate="require-float-not-zero" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="first_weight_price">首重价格(元)：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="first_weight_price" name="first_weight_price" placeholder="输入首重价格" value="{% if postage_config %}{{ postage_config.first_weight_price }}{% endif %}" data-validate="require-price" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="is_enable_added_weight">是否续重：</label>
+			<div class="controls">
+				<label class="checkbox inline">
+					<input id="is_enable_added_weight" type="checkbox" value="1" name="is_enable_added_weight" {% if postage_config.is_enable_added_weight %}checked="checked"{% endif %} />
+					续重
+				</label>
+			</div>
+		</div>
+
+		<div id="addedWeightConfigZone" {% if not postage_config.is_enable_added_weight %}class="hide"{% endif %}>
+			<div class="control-group">
+				<label class="control-label" for="added_weight">续重(公斤)：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="added_weight" name="added_weight" placeholder="输入续重" data-validate="require-float-not-zero" value="{% if postage_config %}{{ postage_config.added_weight }}{% endif %}"  />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="added_weight_price">续重价格(元)：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="added_weight_price" name="added_weight_price" placeholder="输入续重价格" value="{% if postage_config %}{{ postage_config.added_weight_price }}{% endif %}" />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls m0">
+				<div
+					data-validate="required-custom-function" 
+					data-validate-function="checkPropertyValue" 
+					data-ui-role="postage-config-special-province-editor"
+					data-values='{{postage_config.values_json_str}}' 
+					data-init-image-mode="
+					{% if postage_config.is_enable_added_weight %}
+						true
+					{% else %}
+						false
+					{% endif %}
+					"
+				>
+				</div>
+				<div class="errorHint"></div>
+			</div>
+			
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+				{% if postage_config %}
+				<input type="button" class="btn btn-danger wx_delete" id="deleteBtn" value="删&nbsp;&nbsp;除" href="/mall/editor/postage_config/delete/{{postage_config.id}}/" />
+				{% endif %}
+			</div>
+		</div>
+	</fieldset>
+</form>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	window.checkPropertyValue = function($el) {
+		var isWeight = $('#is_enable_added_weight').attr('checked');
+		if (isWeight){
+			var $inputs = $el.find('input[type="text"]');
+		} else {
+			var $inputs = $el.find('input[type="text"]:not(.xa-addWeightPrice)');
+		}
+		for (var i = 0; i < $inputs.length; ++i) {
+			var $input = $inputs.eq(i);
+			if ($.trim($input.val()).length === 0) {
+				return {
+					isValidate: false,
+					errorHint: '请填写合法的值'
+				}
+			}
+		}
+		
+		return {
+			isValidate: true,
+			errorHint: ''
+		}
+	}
+
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('form').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+
+		//切换“续重”输入区域
+		$('#is_enable_added_weight').click(function(event) {
+			var $input = $(event.currentTarget);
+			if ($input.is(':checked')) {
+				$('#addedWeightConfigZone').show();
+				$('#added_weight').attr('data-validate','require-float');
+				$('#added_weight_price').attr('data-validate','require-price');
+				$('[data-ui-role="postage-config-special-province-editor"]').data('view').enterImageValueMode();
+			} else {
+				$('#addedWeightConfigZone').hide();
+				$('#added_weight').removeAttr('data-validate');
+				$('#added_weight_price').removeAttr('data-validate');
+				$('[data-ui-role="postage-config-special-province-editor"]').data('view').enterTextValueMode();
+			}
+		});
+	});
+</script>
+{% endblock %}

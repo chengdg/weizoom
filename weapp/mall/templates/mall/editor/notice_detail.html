@@ -1,0 +1,18 @@
+ {% extends "content_base_v2.html" %}        
+   
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall/outline/get/">首页</a></li>
+		<li><a href="/mall/notice_list/get/">消息中心</a></li>
+		<li class="active">消息详情</li>
+	</ul>
+</div>
+<div class="xb-rightPanel xui-noticeDetail">
+	<div class="xui-detailTitle">{{ notice.title}}</div>
+	<div class="xui-detailTime c65">{{ notice.created_at}}</div>
+	<div class="xui-detailContent pt20" style="line-height: 2em;color: rgb(104, 102, 102);font-size: 14px;font-family:'微软雅黑';text-indent: 2em;">{{ notice.content|safe }}</div>
+</div>
+{% endblock %}
+

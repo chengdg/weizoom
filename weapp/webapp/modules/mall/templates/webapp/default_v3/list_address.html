@@ -1,0 +1,126 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% load mall_filter %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-addrManage-page xui-page" data-title="{{ page_title }}">
+	<div class="xui-section" style="box-shadow:0 0 0;-webkit-box-shadow:0 0 0;">
+		{% if not ship_infos %}
+		<div class="xui-emptyImg">
+			<img src="/static_v2/img/webapp/mall/map.png"></div>
+		<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=add&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" data-role="button" data-icon="true" class="xui-addAddress">+添加收货地址</a>
+		{% else %}
+		<div class="xui-addNewBtn">
+			<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=add&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" data-role="button" data-icon="true" class="xui-addNew disT pr xt-addShipAddress">
+			<span class="disTc">新建地址</span>
+			</a>
+		</div>
+		<form action="">
+			<ul>
+				{%for ship_info in ship_infos %}
+				<li data-role="button" data-icon="true" class="xui-inner-box tl pr xt-shipInfo {% if ship_info.is_selected %}xui-checked{% endif %}" >
+					<div class="disT" style="width:100%;">
+						<label class="xui-radioBox disTc tc xt-shipInfoSelector" for="is_addrItem_{{ship_info.id}}"
+						 data-id="{{ship_info.id}}">
+							<div class="disTc xui-choseAddress">
+								<input type="radio" id="is_addrItem_{{ship_info.id}}" name="is_addrItem" data-role="none" class="xui-regular-radio hidden xt-selectRadio" {% if ship_info.is_selected %}checked=checked{% endif %} data-id="{{ship_info.id}}">
+
+								<label for="is_addrItem_{{ship_info.id}}" class="xui-regular-radio-label"></label>
+							</div>
+
+							<div class="xui-infoLink disTc">
+								<div class="pr20">
+									<h2 class="mb10">
+										<span class="xui-receiver">收件人:</span>
+										<span class="xt-name xui-name">{{ship_info.ship_name}}</span>
+										<span class="xui-tel xt-tel">{{ship_info.ship_tel}}</span>
+									</h2>
+									<div style="color:#7f7f7f;font-size:0.9em;line-height:18px;" class="xt-areaAddress">{{ship_info.get_str_area}} {{ship_info.ship_address}}</div>
+								</div>
+							</div>
+
+						</label>
+
+						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=edit&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" class="xui-editIcon disTc"> <i></i>
+						</a>
+
+					</div>
+				</li>
+				{%endfor%}
+			</ul>
+		</form>
+		{% endif %}
+	</div>
+
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+
+// 跳转queryString
+var redirectUrlQueryString = "{{redirect_url_query_string}}".replace(/&amp;/g,'&');
+$(document).ready(function() {
+	// $('[name="is_addrItem"]').click(function(event){
+	$('.xui-radioBox').click(function(event){
+		// 点击添加信封边框
+		var $target = $(event.currentTarget);
+		$('input').parents('li').removeClass('xui-checked');
+		$target.parents('li').addClass('xui-checked');
+
+		var ship_info_id = $(this).attr('data-id');
+		console.log('aaa', ship_info_id);
+		event.stopPropagation();
+		event.preventDefault();
+        //显示提交订单的提示
+        $('body').alert({
+            isShow: true,
+            info:'正在修改收货地址',
+            speed: 200000
+        });
+
+
+
+	    W.getApi().call({
+	        app: 'webapp',
+	        api: 'project_api/call',
+	        method: 'post',
+	        args: {
+	            woid: W.webappOwnerId,
+	            module: 'mall',
+	            target_api: 'address/select',
+	            ship_id: ship_info_id
+	        },
+	        success: function(data) {
+	            var ship_id = data['ship_id'];
+	            if (data['msg'] != null&&redirectUrlQueryString.indexOf('user_center')>0) {
+	                $('body').alert({
+	                    isShow: true,
+	                    speed: 2000,
+	                    info: data['msg']
+	                })
+	            } else {
+	                window.location.href = "./?"+redirectUrlQueryString;
+	            }
+	        },
+	        error: function(resp) {
+	            var errMsg = '保存失败';
+	            if (resp.errMsg) {
+	                errMsg = resp.errMsg;
+	            } else if (resp.data && resp.data['msg']) {
+	                errMsg = resp.data['msg']
+	            }
+
+	            $('body').alert({
+	                isShow: true,
+	                info: errMsg,
+	                speed: 2000,
+	                callBack: function() {
+	                    // window.location.reload();
+	                }
+	            });
+	        }
+	    });
+	});
+});
+</script>
+{% endblock %}

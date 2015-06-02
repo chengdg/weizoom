@@ -1,0 +1,72 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li class="active">商品分类列表</li>
+		</ul>
+		<span class="breadcrumRightButton">
+			<a class="btn btn-primary" href="/mall/editor/productcategory/create/"><i class="icon-plus icon-white"></i>添加商品分类</a>
+		</span>
+	</div>
+
+	{% if productcategories %}
+	<div 
+		id="categoryListTable"
+		data-ui-role="advanced-table" 
+		data-app="mall" 
+		data-api="categories/get" 
+		data-template-id="#categories-view"
+		data-init-sort="-created_at" 
+		data-enable-paginator="false"
+	>
+	</div>
+	{% else %}
+	目前还没有数据
+	{% endif %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% verbatim %}
+<script id="categories-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed" data-ui-role="sortable-table" data-sort-app="weapp" data-sort-api="productcategory/display_index/update">
+		<thead>
+			<tr>
+				<th>
+					<p class="m0 f14 tx_searchable">
+						分类名称
+					</p>
+				</th>
+				<th class="tx_sortable" data-sort-attr='product_count'>商品数量</th>
+				<th width="60" class="tx_sortable" data-sort-attr='created_at'>创建时间</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{if items.length}}
+	            {{each(i, category) items}}
+				<tr data-id="${category.id}">
+					<td class="nowrap">
+						<div>
+						<a href="/mall/editor/productcategory/update/${category.id}/">${category.name}</a>
+							
+						</div>
+					</td>
+					<td style="width: 80px;">${category.count}</td>
+					<td style="width: 120px">${category.created_at}</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='3'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>        
+	</table>
+</script>
+{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

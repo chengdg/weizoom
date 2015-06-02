@@ -1,0 +1,75 @@
+{% extends "landing_content_base.html" %}
+{% block content-panel %}
+<div class="help-center-content">
+	<div class="fl">
+     <ul class="tx_showNav helpCenterView">
+     	<li class="navShow"><span class="one-nav nav-title">使用帮助</span></li>
+     	{% for help in helps %}
+     	<li class="navShow">
+     		<a href="javascript: void(0);"><span class="one-nav">{{ help.name }}</span></a>
+     		<ul class="hidden open x-left-nav">
+     			{% for article in help.articles %}
+     			<li>
+     				<a href="javascript:void(0)" class="tx_changeContent" id="{{article.id}}" title-value="{{article.title}}">{{article.title}}</a>
+     			</li>
+     			{% endfor %}
+     		</ul>
+     	</li>
+     	{% endfor %}
+     </ul>
+    </div>
+    <div>
+    	<div class="ua_showTitle info-box info-box-title">
+    	</div>
+	    <div class="tx_showContent info-box">
+	    </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+	$('.tx_showNav').find('li').click(function(event) {
+		var $el = $(event.currentTarget);
+		$el.parent('ul').find('li').find('ul').addClass('hidden');
+		$el.find('ul').removeClass('hidden');
+	});
+	$('.tx_showNav>li:last').css('border-bottom', 'none');
+	function getContent(id) {
+		W.getApi().call({
+	     app: 'cms',
+	     api: 'article/get',
+	     args: {'id': id},
+	     scope: this,
+	     success: function(data) {
+	     	 $('.tx_showContent').html(data.content);
+	     	 window.scrollTo(0, 0);
+	     },
+	     error: function(resp) {
+	     	 $('.tx_showContent').text('暂未获取到数据！');
+	     	 window.scrollTo(0, 0);
+	     }
+      });
+     
+    }
+    var default_article_id = $('.tx_changeContent:eq(0)').attr('id');
+    if (default_article_id){
+    	 var title = $('.tx_changeContent:eq(0)').attr('title-value');
+    	 $('.ua_showTitle').text(title);
+    	 getContent(default_article_id);
+    	 $('.tx_changeContent:eq(0)').parents('li:eq(0)').addClass('active');
+    	 $('.tx_changeContent:eq(0)').parents('ul:eq(0)').removeClass('hidden');
+    } else {
+    	$('.tx_showContent').text('暂未获取到数据！');
+	    window.scrollTo(0, 0);
+    }
+    $('.tx_changeContent').click(function(event) {
+    	var $el = $(event.currentTarget);
+    	$('li.navShow').find('li').removeClass('active');
+    	$el.parents('li:eq(0)').addClass('active');
+    	var id = $el.attr('id');
+    	var title = $el.attr('title-value');
+    	$('.ua_showTitle').text(title);
+    	getContent(id);
+    })
+</script>
+{% endblock %}

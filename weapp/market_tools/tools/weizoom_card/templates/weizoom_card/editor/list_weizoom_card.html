@@ -1,0 +1,59 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">钱包列表</li><span class="divider">/</span>
+		<li class=""><a href="/market_tools/weizoom_card/adjust_accounts/">核算</a></li>
+	</ul>
+
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/market_tools/weizoom_card/list_accounts/">账号管理</a>
+		<a class="btn btn-primary" href="/market_tools/weizoom_card/account/permissions/edit/">开通权限</a>
+		<a class="btn btn-primary" href="./weizoom_card/create/">创建钱包<i class="icon-plus icon-white"></i></a>
+	</span>
+</div>
+
+<div data-ui-role="advanced-table" data-enable-paginator="true" data-app="market_tools/weizoom_card" data-api="weizoom_card_rules/get" data-template-id="#weizoom_card_rule_record_list_view" data-init-sort="-created_at"  data-item-count-per-page="15">
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+	<script id="weizoom_card_rule_record_list_view" type="text/x-jquery-tmpl">
+		<table class="table table-bordered table-condensed xa-pointCardListTable" style="margin-bottom: 10px;">
+		<thead>
+			<tr>
+				<th>活动名称</th>
+				<th>单卡金额</th>
+                <th>数量</th>
+				<th>创建时间</th>
+				<th>备注</th>
+			</tr>
+		</thead>
+		<tbody id="">
+			{{each(i, card_rule) items}}
+			<tr>
+				<td>
+					<a href="./weizoom_card_rule_detail/?id=${card_rule.id}" >${card_rule.name}</a>
+				</td>
+				<td>
+					${card_rule.money}
+				</td>
+				<td>
+					${card_rule.count}
+				</td>
+				<td>
+					${card_rule.created_at}
+				</td>
+				<td>
+					${card_rule.remark}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+	{% endverbatim %}
+{% endblock %}

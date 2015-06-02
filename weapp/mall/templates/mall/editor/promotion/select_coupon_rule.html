@@ -1,0 +1,74 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-couponRulesPage xui-commonPromotionStyle">
+<ul class="breadcrumb">
+    <li>您当前所在位置</li>
+    <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+    <li><a href="/mall_promotion/coupon_rules/get/">优惠券</a></li>
+    <li class="active">优惠码信息</li>
+</ul>
+
+<div class="panel panel-default mt20 xui-bigBoxbg" style="height: 806px;">
+    <div class="xui-couponImg"></div>
+    <div class="xui-couponInfo">
+        <div class="xui-couponInfoTitle">
+            <span>优惠码信息</span>
+        </div>
+        <div class="xui-couponInfoBody">
+            <ul>
+                <li class="pl30">
+                    <span class="xui-textAlign">优惠码数量：</span>
+                    <span class="xui-couponCount">{{ coupon_rule.count }}</span>&nbsp;&nbsp;份
+                </li>
+                  <li class="pl30">
+                    <span class="xui-textAlign">领取链接：</span>
+                    <div class="xui-copyWrap"><input type="text" id="coupon_link_text" readonly="readonly" value="{{coupon_rule.get_url}}">
+                    <span id="xa-copy-btn" class="xa-copyCouponUrl xui-btnCopy" data-clipboard-target="coupon_link_text">复制</span>
+                    </div>
+                </li>
+                <li class="pl30">
+                    <span class="xui-textAlign" >推广二维码：</span>
+                </li>
+                <li class="pl80">
+                    <span class="xui-couponQrcode"><img class="xui-i-img" style="width: 190px;" src="{{ coupon_rule.qrcode_url }}"></img></span>
+                </li>
+            </ul>
+        </div>
+        <div class="xui-couponInfoButton">
+            <a href="/mall_promotion/coupon_qrcode/download/?id={{coupon_rule.id}}"><span class="btn btn-primary">下载</span></a>
+            <a href="/mall_promotion/coupon_rules/get/" style="margin-left:40px;"><span class="btn xui-backToList">返回列表</span></a>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        // 复制内容到剪贴板
+        var clip = new ZeroClipboard(document.getElementById("xa-copy-btn"), {
+          moviePath: "/static_v2/zero_clipboard.swf"
+        });
+
+        clip.on('complete', function(client, args) {
+            W.showHint('success', '复制成功');
+        });
+    })
+</script>
+{% endblock %}

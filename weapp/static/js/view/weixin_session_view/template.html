@@ -1,0 +1,94 @@
+<script id="weixin-message-one-session-tmpl-src" type="text/x-jquery-tmpl">
+	<li class="oneSession_li clearStyle">
+		<dl class="oneSession" data-member-id="${member_id}">
+			<dt>
+				<span class="memberInfo_headImg">
+					<a href="/weixin/message/message/session_history/show/?session_id=${session_id}#${message_id}">
+						<img width="54" height="54" src="${weixin_user_icon}">
+					</a>
+				</span>
+				{{if unread_count}}<span class="unreadMessageCount" title="${unread_count}">${unread_count}</span>{{/if}}
+			</dt>
+			<dd class="oneSession_session">
+				<div class="oneSession_title" style="overflow-y: show;">
+					<div class="navbar clearfix">
+						<a href="/member/member_detail/edit/?id=${ member_id }" class="fl">{{html sender_name}}</a>
+							<div class="fl dropdown x-editRemark">
+								<span class="remarkMessage">
+									（<span class="member_remarks_name">{{if member_remarks_name}}${member_remarks_name}{{else}}备注名{{/if}}</span>）
+								</span>
+								{{if for_collected == true}}
+								{{else}}
+								<a class="dropdown-toggle x-editRemarkLink" data-toggle="dropdown" data-target='#' style="display:inline-block;"><i class="icon-pencil"></i></a>
+								<div class="dropdown-menu" style="padding: 0px; cursor: auto; width: 371px;">
+									<h3 class="popover-title">编辑备注</h3>
+									<div class="popover-content tr">
+										<input type="text" class="input-xlarge mt15" />
+										<button class="btn btn-success">确定</button>
+									</div>
+								</div>
+								{{/if}}
+							</div>
+						<span class="oneSession_createdAt oneSession_info fr">${created_at}</span>
+						<a class="viewHistory hidden" href="/weixin/message/message/session_history/show/?session_id=${session_id}#${message_id}">查看对话</a>
+					</div>
+				</div>
+				<div class="oneSession_content">
+				{{if message_type == 'voice'}}
+					<div class="xui-voiceContainer">
+						<audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
+		    			<div class="xui-voiceContent cursorPointer">
+			    		<!--voice msg -->
+			    			<span class="xui-voiceIco xui-voiceIco-listen cursorPointer"></span>
+			    		</div>
+		    		</div> 
+				{{/if}}
+				{{if message_type == 'text'}}
+					{{html content}}
+				{{/if}}
+				{{if message_type == 'image'}}
+					<a href="${pic_url}" class="xui-sessionsImg">
+						<img src = "${pic_url}" />
+					</a>
+				{{/if}}
+				</div>
+				<div class="oneSession_info clearfix">
+					<div class="fr mr10">
+							{{if message_type == 'text'}}
+							{{/if}}
+							{{if message_type == 'image'}}
+                        	<a href="${pic_url}" target='_blank'  class="wx_down_file xui-session-btn xui-sessionsIcon-download" title="文件下载"></a>
+                        	{{/if}}
+                        	{{if message_type == 'voice'}}
+                        	<a href="${audio_url}" target='_blank'  class="wx_down_file xui-session-btn xui-sessionsIcon-download" title="文件下载"></a>
+                        	{{/if}}
+                        
+                        	{{if is_active == true}}
+						    <a href="javascript:void(0);" class="wx_replyLink xui-session-btn xui-sessionsIcon-reply" title="快捷回复"></a>
+						    {{/if}}
+						    {{if is_collected}}
+						     	<a href="javascript:void(0);" class="wx_collect_message xui-session-btn xui-sessionsIcon-starActive" status='0' value='${message_id}' title="取消收藏"></a>
+						   	{{else}}
+						   		<a href="javascript:void(0);" class="wx_collect_message xui-session-btn xui-sessionsIcon-star" status='1' value='${message_id}' title="收藏消息" ></a>
+						   	{{/if}}
+                       	<!--
+						<a href="#" class="wx_deletLink">删除</a>
+						-->
+					</div>
+				</div>
+
+				<div class="oneSession_replyForm hide">
+					<div class="drop-box-arrow-down-right"></div>
+					<input type="hidden" name="sessionId" value="${sesiion_id}"/>
+					<textarea rows="5" class="contentText" style="width: 95%; margin: 5px;" name="content"></textarea>
+					<input type="button" class="btn btn-success wx_submitReply fr mr5" value="提交" />
+				</div>
+
+			</dd>
+			<dd class="cb"></dd>
+
+			
+
+		</dl>
+	</li>
+</script>

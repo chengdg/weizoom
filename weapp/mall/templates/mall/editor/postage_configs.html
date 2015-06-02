@@ -1,0 +1,138 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-editor-postageConfigsPage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>配置管理</li>
+        <li class="active">运费模板</li>
+    </ul>
+    <div class="xui-i-box xui-rightPanelBg xui-tableList-content pr">
+        <hr class="mt40" style="border:1px solid #1183ca;">
+        <div>
+            <a class="btn btn-success xui-addNewGroup pa  xui-btnPosition" href="/mall/postage_template/create/">
+                <img src="/static_v2/img/editor/plusOpcity.png" alt="">添加运费模板</a>
+        </div>
+        {% if postage_configs %}
+        {% for postage_config in postage_configs %}
+        <section class="xui-i-postageConfig xa-postageTemplate pt0" data-postage-template-id="{{postage_config.id}}">
+            <h2 class="xui-i-title clearfix" style="height:38px;background:#f2f0f1;">
+                {% if postage_config.is_used %}
+                <input id="is_used" type="radio" name="is_used" value="{{postage_config.name}}" checked>
+                {% else %}
+                <input id="is_used" type="radio" name="is_used" value="{{postage_config.name}}">
+                {% endif %}
+                <span style="font-weight:bold;">{{postage_config.name}}</span>{% if postage_config.is_enable_free_config %}<span style="color:#FF6666;">(已指定条件包邮)</span>{% endif %}
+                {% if not postage_config.is_system_level_config %}
+                <div class="xui-i-actionBar fr">
+                    <div class="xui-i-actionItem xui-fontGary">最后编辑时间: {{postage_config.update_time|date:"Y-m-j H:i"}}</div>
+                    <div class="ml20 xui-i-actionItem">
+                        <a href="/mall/postage_template/edit/?id={{postage_config.id}}" class="btn btn-xs xa-edit xui-edit xui-inline">修改</a>
+                        <a href="javascript:void(0)" class="btn btn-xs xa-cancelBtn xui-delete xui-redBtn xui-inline">删除</a>
+                    </div>
+                </div>
+                {% endif %}
+            </h2>
+            <table class="table table-bordered xb-stripedTable">
+                <thead>
+                    <tr style="background:#c9d1e4;">
+                        <th width="190px;">运送方式</th>
+                        <th>运送到</th>
+                        <th width="101px;">首重（kg）</th>
+                        <th width="101px;">运费（元）</th>
+                        <th width="101px;">续重（kg）</th>
+                        <th width="101px;">续费（元）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for special_config in postage_config.special_configs %}
+                    <tr>
+                        <td width="190px;" height="30px;">快递</td>
+                        <td>{{special_config.destination_str}}</td>
+                        <td width="101px;">{{special_config.first_weight|floatformat:1}}</td>
+                        <td width="101px;">{{special_config.first_weight_price|floatformat:2}}</td>
+                        <td width="101px;">{{special_config.added_weight|floatformat:1}}</td>
+                        <td width="101px;">{{special_config.added_weight_price|floatformat:2}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td width="190px;" height="30px;">快递</td>
+                        <td>
+                            {% if postage_config.special_configs %}其他地区{% else %}全国{% endif %}
+                        </td>
+                        <td width="101px;">{{postage_config.first_weight|floatformat:1}}</td>
+                        <td width="101px;">{{postage_config.first_weight_price|floatformat:2}}</td>
+                        <td width="101px;">{{postage_config.added_weight|floatformat:1}}</td>
+                        <td width="101px;">{{postage_config.added_weight_price|floatformat:2}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        {% endfor %}
+        {% else %}
+        <div class="xui-emptyBox">
+            <div class="xui-i-emptyHint">
+                <img src="/static_v2/img/editor/empty.png">
+                <div><span style="">您还没有运费模板，赶快添加！</span> </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('body').delegate('.xa-cancelBtn', 'click', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        $el = $(event.target);
+        var $section = $el.parents('section');
+        var templateId = $section.data('postageTemplateId');
+        W.requireConfirm({
+            $el:$(this),
+            width:380,
+            position:'top',
+            isTitle: false,
+            privateContainerClass:'wui-confirmDelete',
+            msg:'是否确定删除',
+            confirm:function(){
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall',
+                    api: 'postage_template/delete',
+                    args: {id: templateId},
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function(resp) {
+                        alert('删除运费模板失败');
+                    }
+                })
+            }
+        })
+    });
+
+    $('[name="is_used"]').click(function(event) {
+        var $input = $(event.currentTarget);
+        var $postageTemplate = $input.parents('.xa-postageTemplate');
+        var postageTemplateId = $postageTemplate.data('postageTemplateId');
+        W.getApi().call({
+            method: 'post',
+            app: 'mall',
+            api: 'used_postage_template/create',
+            args: {
+                id: postageTemplateId
+            },
+            success: function() {
+                W.showHint('success', '切换运费模板成功');
+            },
+            error: function() {
+                W.showHint('error', '切换运费模板失败');
+            }
+        })
+    });
+});
+</script>
+{% endblock %}

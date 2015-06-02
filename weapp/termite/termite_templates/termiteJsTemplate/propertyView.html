@@ -1,0 +1,286 @@
+<script id="property-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="propertyView" class="section">
+		<div class="sectionHeader">
+			${title}
+			<div class="sectionActionBar">
+				<!--
+				<a data-target="#propertyEditor" data-action="editProperty" href="javascript:void(0);" class="btn btn-mini btn active" data-toggle="tooltip" title="编辑属性" data-placement="bottom"><i class="icon-list"></i></a>
+				-->
+				{{if (!onlyShowUserProperty)}}
+				<a data-target="#datasourceEditor" data-action="editDatasource" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="编辑数据源" data-placement="bottom"><i class="icon-hdd"></i></a>
+				{{/if}}
+			</div>
+		</div>
+		<div id="propertyEditor" class="propertyView_actionTarget">
+		{{each(i, property_group) property_groups}}
+			{{if (!onlyShowUserProperty || property_group.isUserProperty)}}
+			<div class="propertyGroup mt10" {{if property_group.groupName }}name="${property_group.groupName}"{{/if}}>
+				{{if i > 0}}
+				<div class="ml5 fb">${property_group.group}:</div>
+				{{/if}}
+
+				{{each(j, field) property_group.fields}}
+				{{if (!onlyShowUserProperty || field.isUserProperty)}}
+				<div class="propertyGroup_property">
+					{{if (field.type == 'text')}}
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}：</div>
+						<div class="propertyGroup_property_input">
+							<input type="text" class="input-small xui-propertyGroup-input" data-field="${field.name}" value="${model.get(field.name)}" placeholder="${field.placeholder}" {{if field.validate}}data-validate="${field.validate}"{{/if}} />
+							{{if field.help}}
+							<div style="color: #888;">
+								{{html field.help.replace(/\n/g, "<br/>")}}
+							</div>
+							{{/if}}
+							<div class="errorHint"></div>
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'textarea')}}
+					<div class="propertyGroup_property_textareaField">
+						{{if field.displayName}}
+						<div class="propertyGroup_property_label">${field.displayName}：</div>
+						{{/if}}
+						<div class="propertyGroup_property_input" style="width: 90%; margin: 5px auto;">
+							<textarea class="" style="height: 100px; width: 95%;" data-field="${field.name}">${model.get(field.name)}</textarea>
+							{{if field.help}}
+							<div style="color: #888;">
+								{{html field.help.replace(/\n/g, "<br/>")}}
+							</div>
+							{{/if}}
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'radio')}}
+					<div class="propertyGroup_property_radioField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}：</div>
+						<div class="propertyGroup_property_input">
+						{{each(fi, radio) field.source}}
+						<label style="display:inline;"><input style="margin-top:-3px;" type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == radio.value}}checked="checked"{{/if}} value="${radio.value}" />${radio.name}</label><br/>
+						{{/each}}
+						</div>
+					</div>
+					{{/if}}
+
+					{{if (field.type == 'boolean')}}
+					<div class="propertyGroup_property_booleanField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}：</div>
+						<div class="propertyGroup_property_input">
+						<label style="display:inline;"><input type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == "yes"}}checked="checked"{{/if}} value="yes" />是</label>
+						<label style="display:inline;"><input type="radio" data-field="${field.name}" name='${field.name}' class="ml10" {{if model.get(field.name) == "no"}}checked="checked"{{/if}} value="no" />否</label>
+						</div>
+					</div>
+					{{/if}}
+
+					{{if (field.type == 'checkbox')}}
+					<div class="propertyGroup_property_checkboxField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}：</div>
+						<div class="propertyGroup_property_textCheckboxField" style="display: inline;">
+						{{each(fi, checkbox) field.source}}
+						<label style="display:inline;"><input style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
+						{{/each}}
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'select')}}
+					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}：</div>
+						<div class="propertyGroup_property_input">
+							<select data-field="${field.name}" name="${field.name}" class="input-medium">
+							{{each(n, nav) W.component.getSelectSource(field.source, component)}}
+								<option value="${nav.value}" {{if model.get(field.name) == nav.value}}selected="selected"{{/if}}>
+									{{if nav.name }}
+										${nav.name}
+									{{else}}
+										${nav.value}
+									{{/if}}
+								</option>
+							{{/each}}
+							</select>
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'dialog_select')}}
+					<div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}：</div>
+						<div class="propertyGroup_property_input">
+							{{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
+							<input data-field="${field.name}" name="${field.name}" type="hidden" />
+							<button class="btn btn-small" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}">${field.triggerButton}</button>
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'text-checkbox')}}
+					<div class="propertyGroup_property_textCheckboxField propertyGroup_property_horizontalField">
+						{{each(fi, checkboxField) field.source}}
+						<div class="propertyGroup_property_label long-label mt5">${checkboxField.model.get('label')}：</div>
+						<div class="propertyGroup_property_input short-input">
+						<input type="checkbox" data-field="${field.name}" data-column-name="${checkboxField.model.get('name')}" {{if checkboxField.isSelectIntoList}}checked="checked"{{/if}} />&nbsp;选中
+						</div>
+						{{/each}}
+					</div>
+					{{/if}}
+
+					{{if (field.type == 'radio-group')}}
+					<div class="propertyGroup_property_radioGroupField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}：</div>
+						<div class="propertyGroup_property_input">
+							<div class="btn-group" data-toggle="buttons-radio" data-field="${field.name}">
+								{{each(fi, radio) field.source}}
+								<a class="btn btn-mini {{if model.get(field.name) == radio.value}}btn-primary active{{/if}}" href="javascript:void(0);" data-value="${radio.value}"><i class="${radio.img} {{if model.get(field.name) == radio.value}}icon-white{{/if}}"></i></a>
+								{{/each}}
+							</div>
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'html-editor')}}
+					<div class="propertyGroup_property_htmlEditorField propertyGroup_property_horizontalField hide">
+						<div class="propertyGroup_property_input" style="width: 100%;">
+							<pre id="htmlEditor${component.cid}" data-field="${field.name}" style="height: 200px; overflow-y: auto; width: 92%;">${model.get(field.name)}</pre>
+							<div class="tr mr10">
+								<button id="submitHtmlEditorContent" class="btn btn-success">保存</button>
+							</div>
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'dynamic-generated-control')}}
+					<div class="propertyGroup_property_dynamicControlField propertyGroup_property_horizontalField" data-field="${field.name}">
+						{{each(dynamicComponentIndex, dynamicComponent) dynamicComponents}}
+						<div class="propertyGroup_property_dynamicControlField_control" data-dynamic-cid="${dynamicComponent.cid}" data-parent-cid="${component.cid}">
+							<h3 class="propertyGroup_property_dynamicControlField_title clearfix">
+								<i class="icon-chevron-right"></i> 
+								<span>${dynamicComponent.getDisplayTitle()} </span>
+								<i class="icon-align-justify icon-white fr mr5"></i>
+								<i class="icon-remove fr mr5"></i>
+							</h3>
+							<div class="propertyGroup_property_dynamicControlField_content hide">
+								{{each(dynamicComponentFieldIndex, dynamicComponentField) W.component.getFieldsByType(dynamicComponent.type)}}
+								{{if (!onlyShowUserProperty || dynamicComponentField.isUserProperty)}}
+
+								{{if (dynamicComponentField.type == 'text')}}
+								<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}：</div>
+									<div class="propertyGroup_property_input">
+										<input type="text" class="input-small xui-propertyGroup-input ${dynamicComponentField.extraClass}" data-field="${dynamicComponentField.name}" value="${dynamicComponent.model.get(dynamicComponentField.name)}" placeholder="${dynamicComponentField.placeholder}"/>
+										{{if dynamicComponentField.help}}
+										<div style="color: #888;">
+											{{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
+										</div>
+										{{/if}}
+									</div>
+								</div>
+								{{/if}}
+
+								{{if (dynamicComponentField.type == 'boolean')}}
+								<div class="propertyGroup_property_booleanField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}：</div>
+									<div class="propertyGroup_property_input">
+									<input type="radio" data-field="${dynamicComponentField.name}" name='${dynamicComponent.cid}>${dynamicComponentField.name}' {{if dynamicComponent.model.get(dynamicComponentField.name) == "yes"}}checked="checked"{{/if}} value="yes" />是
+									<input type="radio" data-field="${dynamicComponentField.name}" name='${dynamicComponent.cid}>${dynamicComponentField.name}' class="ml10" {{if dynamicComponent.model.get(dynamicComponentField.name) == "no"}}checked="checked"{{/if}} value="no" />否
+									</div>
+								</div>
+								{{/if}}
+
+								{{if (dynamicComponentField.type == 'radio')}}
+								<div class="propertyGroup_property_booleanField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}：</div>
+									<div class="propertyGroup_property_input">
+									{{each(fi, radio) dynamicComponentField.source}}
+									<label type="radio">
+										<input 
+											style="margin-top:-3px;" 
+											type="radio" 
+											data-field="${dynamicComponentField.name}" 
+											name='${dynamicComponent.cid}>${dynamicComponentField.name}' 
+											{{if dynamicComponent.model.get(dynamicComponentField.name) == radio.value}}checked="checked"{{/if}} 
+											value="${radio.value}" /> ${radio.name}
+									</label>
+									{{/each}}
+								</div>
+								{{/if}}
+
+
+								{{if (dynamicComponentField.type == 'dialog_select')}}
+								<div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}：</div>
+									<div class="propertyGroup_property_input" style="height: auto;">
+										{{html W.data.getDynamicComponentDataForDialogSelectControl(dynamicComponent, dynamicComponentField)}}
+										<input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden" />
+										<button class="btn btn-small" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}" >${dynamicComponentField.triggerButton}</button>
+									</div>
+								</div>
+								{{/if}}
+
+								{{if (dynamicComponentField.type == 'select')}}
+								<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}：</div>
+									<div class="propertyGroup_property_input">
+										<select data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" class="input-medium">
+										{{each(n, nav) W.component.getSelectSource(dynamicComponentField.source, component)}}
+											<option value="${nav.value}" {{if dynamicComponent.model.get(dynamicComponentField.name) == nav.value}}selected="selected"{{/if}}>
+												{{if nav.name }}
+													${nav.name}
+												{{else}}
+													${nav.value}
+												{{/if}}
+											</option>
+										{{/each}}
+										</select>
+									</div>
+								</div>
+								{{/if}}
+								
+								{{/if}} <!-- end for isUserProperty -->
+								{{/each}}
+							</div>
+						</div>
+						{{/each}}
+
+						<div class="propertyGroup_property_dynamicControlField_buttons ml5 mt10">
+						{{each(dynamicComponentTypeIndex, dynamicComponentType) component.unifiedDynamicComponentTypes}}
+							{{if dynamicComponentType.noAdd == undefined}}
+							<button class="btn btn-success btn-small mr5" data-component='${dynamicComponentType.type}'>添加${W.component.getPropertyViewTitleByType(dynamicComponentType.type)}</button>
+							{{/if}}
+						{{/each}}
+						</div>
+					</div>
+					{{/if}}
+
+				</div>
+				{{/if}}
+				{{/each}}
+			</div>
+			{{/if}}
+		{{/each}}
+		</div>
+
+		{{if datasourceProject}}
+		<div id="datasourceEditor" class="hide propertyView_actionTarget p10">
+			<select name="__datasource_page_id" class="datasourceEditor_pageSelector">
+				<option value="null">选择Page...</option>
+			{{each(i, page) datasourceProject}}
+				<option value="${page.id}">${page.name}</option>
+			{{/each}}
+			</select>
+			<div id="datasrouceEditor_dateItems">
+			</div>
+		</div>
+		{{/if}}
+
+		</div>
+	</div>
+</script>

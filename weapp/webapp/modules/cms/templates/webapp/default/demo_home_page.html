@@ -1,0 +1,86 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-homePage">
+    <div data-role="content" data-theme="x">
+    	<!-- swipe image -->
+        <div 
+            data-ui-role="swipeimage" 
+            data-images-json='{{swipe_images_json}}' 
+            data-image-width='320' 
+            data-image-height='200'
+        >
+        </div>
+
+        <!-- list view -->
+        <ul data-role="listview" data-icon="false" class="xui-categoryList">
+        	<li>
+        		<a href='#'>
+	        		<img src="/standard_static/test_resource_img/tang1.jpg" />
+        			<h2 class="">莲藕排骨汤</h2>
+        		</a>
+        	</li>
+        	<li>
+        		<a href='#'>
+        			<img src="/standard_static/test_resource_img/tang2.jpg" />
+        			<h2 class="">冬阴功汤</h2>
+        		</a>
+        	</li>
+        	<li>
+        		<a href='#'>
+        			<img src="/standard_static/test_resource_img/tang3.jpg" />
+        			<h2 class="">竹笋汤</h2>
+        		</a>
+        	</li>
+        </ul>
+
+        <!-- nav icon grid -->
+        <div
+		    data-ui-behavior="xub-selectable" 
+		    data-ui-sortable="true" 
+		    data-cid="11" 
+		    data-index="2" 
+		    class="x-ui-grid mt10"
+		>
+	    <div 
+	        class="ui-list-horizontal ui-list-cell-4 xui-index-nav fixed-none xui-index-menu-fixed xui-homePageNav" 
+	        id="xui-homePageNav" 
+	    >
+	        <ul data-role="listview" data-theme="x" data-icon="false">
+	            <li data-cid="12" data-index="1">
+				    <a 
+				        href='./?module=user_center&amp;model=user_info&amp;action=get&amp;workspace_id=mall&amp;webapp_owner_id=3&amp;project_id=0&amp;workspace_id=7&amp;project_id=0' 
+				        style="
+				            background-repeat: no-repeat; 
+				            background-image: url('/termite_static/termite_img/nav_icons/icon_White/icon1_02.png');
+				            background-color: ##F46B41;
+				        "
+				    >
+	        			<h3> 用户中心</h3>
+	        		</a>
+				</li>
+	            <li data-cid="13" data-index="2">
+				    <a 
+				        href='./?module=cms&amp;model=demo_home_page&amp;action=get&amp;workspace_id=5&amp;project_id=0' 
+				        style="
+				            background-repeat: no-repeat; 
+				            background-image: url('/termite_static/termite_img/nav_icons/icon_White/icon1_08.png');
+				        "
+				    >
+	        			<h3>购物车</h3>
+	    			</a>
+				</li>
+	        </ul>
+    	</div>
+	</div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

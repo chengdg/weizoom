@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//ZH-CN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Viper效果预览</title>
+
+        <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/jquery/jquery-ui-1.10.3/css/redmond/jquery-ui-1.10.3.custom.min.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/jquery/uploadify-3.2.css">
+
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/css/base.css">
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/css/bootstrapEnhance.css">
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/css/system.css">
+	    {% block css %}{% endblock %}
+    </head>
+    <body>
+    	{% block content %} {% endblock %}
+
+        {% block jsTemplate %}{% endblock %}
+
+        <script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery-migrate-1.2.1.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery.tmpl.min.js"></script>
+        
+        <script type="text/javascript" src="/static/jquery/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js"></script>      
+        <script type="text/javascript" src="/static/jquery/jquery.uploadify-3.2.min.js"></script>
+        <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/backbone-1.0.0.min.js"></script>
+        <script type="text/javascript" src="/static/js/library/spin-1.3.js"></script>
+        <script type="text/javascript" src="/static/js/library/stacktrace-min-0.4.js"></script>
+
+        <script type="text/javascript" src="/static/js/system/system.js"></script>
+        <script type="text/javascript" src="/static/js/system/validate.js"></script>
+        <script type="text/javascript" src="/static/js/system/template-0.9.js"></script>
+        <script type="text/javascript" src="/static/js/system/api.js"></script>
+        <script type="text/javascript" src="/static/js/system/swfobject.js"></script>
+        <script type="text/javascript" src="/static/js/system/global_hook.js"></script>
+        <script type="text/javascript" src="/static/js/system/emotion.js"></script>
+        
+        <script type="text/javascript" src="/static/js/common/DropBox.js"></script>
+        <script type="text/javascript" src="/static/js/common/ItemDeleteView.js"></script>
+        <script type="text/javascript" src="/static/js/common/PaginationView.js"></script>
+        <script type="text/javascript" src="/static/js/common/dialog.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/LoadingView.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/ErrorHintView.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/DelayedTask.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/ImageView.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/RichTextEditor.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/Message.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/EmbededPhoneView.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/SwipeImagesSelectorView.js"></script>
+
+        {% block base_js %}{% endblock %}
+	</body>
+</html>

@@ -1,0 +1,18 @@
+<script id="single-title-chart-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="${id}Chart" class="x_singleTitleChart">
+		{{if title}}
+		<h2 class="chartTitle">
+			${title}
+		</h2>
+		{{/if}}
+		
+		<div class="singleTitleChart_flash">
+			<div id="${id}ChartFlash"><!--图表--></div>
+		</div>
+		{{if showSidebar}}
+		<div class="singleTitleChart_tableList tx_showTableList" id="${id}ChartTableList" name="${id}ChartTableListCollection" collection="ChartTableListCollection" isHasPaginationView="true">
+			<!--table List-->
+		</div>
+		{{/if}}
+	</div>
+</script>

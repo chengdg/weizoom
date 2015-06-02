@@ -1,0 +1,13 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.divider' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    style="padding-top:4px; padding-bottom:4px;" 
+    data-cid="{{component.cid}}"
+>
+    <hr style="height:{{component.model.size}}px; background-color:{{component.model.color}}; border:0;" />
+</div>
+{% endifequal %}

@@ -1,0 +1,252 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+	<link type="text/css" rel="stylesheet" href="/static/css/market_tools_css/common.css">
+	<link type="text/css" rel="stylesheet" href="/markettools_static/vote/css/vote.css">
+	<link type="text/css" rel="stylesheet" href="/static/jquery/jquery.fancybox-1.3.1.css">
+	<style>
+		#enlarge_images{position:absolute;display:none;z-index:2;}
+	</style>
+{% endblock %}
+
+{% block mobileinit %}
+	<script type="text/javascript">
+		$(document).bind("mobileinit", function () {
+			$.mobile.ajaxEnabled = false;
+		});
+	</script>
+{% endblock %}
+
+{% block content-panel %}
+	<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-vote-page" data-title="{{ page_title }}">
+		<a href="javascript:void(0);" target="_self" class="xui-btn-shopping-cart tx_btnTop" data-role="button">
+			回到顶部
+		</a>
+		<div id="enlarge_images"></div>
+		<div data-role="content" class="rice-vote-list" data-theme="x" id="voteView">
+			<form class="xui-form-box vote_list">
+				<div class="vote_apply">
+					<h3 class="mt15 mb15">{{ vote.name }}</h3>
+					<hr/>
+					<div class="xui-product-detail-content xui-detail-content rawHtml">
+						{{ vote.detail|safe }}
+					</div>
+				</div>
+				<div class="ui-search-box-div">
+					<div class="ui-search-box" >
+						<div class="tx_searchBoxLayer" style="display:none;">
+							<div class="fr">
+								<a href="javascript:void(0);" class="search-btn">
+									<img src="/markettools_static/vote/img/btn.png" class="w40">
+								</a>
+							</div>
+							<input class="input-prepend tx_search" id="search" name="search" type="text"
+							       placeholder="Search" value="{{ search }}">
+						</div>
+					</div>
+				</div>
+				<div class="ui-list-person" id="items" data-ui-role="waterFalls">
+					<ul class="tx_content">
+					</ul>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript" src="/static/jquery/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="/static/js/common/TemplateLoadingView.js"></script>
+	<script type="text/javascript" src="/static/js/widget/jquery.mobile.waterFalls.js"></script>
+	<script type="text/javascript" src="/static/jquery/jquery.fancybox-1.3.1.js"></script>
+	<script id="competitor-list-items" type="text/x-jquery-tmpl">
+		{% verbatim %}
+		{{each(i, item) items}}
+
+		<li data-id="${ item.id }">
+			<div class="list-vote-item">
+				<div class="ui-vote-item">
+					<div class="item-img">
+						<a class="vote_img" title="" href="${ item.pic_url }"><img alt="" src="${ item.pic_url }" auto_height="80:80" /></a>
+					</div>
+					<span class="ui-name">${ item.name }</span>
+					<span class="ui-poll"><i class="tx_pollCount">${ item.vote_count }</i> 票</span>
+                    <button type="button" class="poll-button" {{if is_webapp_user_vote}}disabled="disabled"{{/if}}>
+                    	{{if item.has_voted }}
+                    	已投票
+                    	{{else}}
+                    	投票
+                    	{{/if}}
+                    </button>
+				</div>
+			</div>
+		</li>
+		{{/each}}
+		{% endverbatim %}
+	</script>
+
+	<script type="text/javascript">
+
+
+		W.WEBAPP_ID = '{{webapp_id}}';
+		W.VOTE_ID = '{% if vote %}{{vote.id}}{% else %}0{% endif %}';
+		W.scrollTop = 0;
+		W.VoteView = function(options) {
+			this.$el = $('#'+options.id);
+			this.events();
+		};
+
+		W.VoteView.prototype = {
+			events: function() {
+				var _this = this;
+			}
+		}
+
+		W.Alert = function(message){
+			$('.ui-page').alert({
+				isShow: true,
+				info: message,
+				isSlide: true,
+				speed: 3000,
+				callBack: function() {
+
+				}
+			});
+		}
+		var cur_request_member =  "{{cur_request_member}}";
+		if (cur_request_member == "none" || cur_request_member == 'None'){
+			$('body').alert({show:true, info:'请关注后进行投票！', speed:6000});
+		}
+
+		$(document).ready(function() {
+			var $top_el = $('.xui-btn-shopping-cart');
+			$top_el.hide();
+
+			new W.VoteView({
+				id: 'voteView'
+			});
+			var createTemplate = function(search){
+				new W.TemplateLoadingView({
+					el: '#items',
+					alertText: '暂无此项目',
+
+					getTemplate: function() {
+						$('#competitor-list-items').template('competitor-list-items-tmpl');
+						return 'competitor-list-items-tmpl';
+					},
+
+					url: '/webapp/api/project_api/call',
+
+					args: {
+						count: 15,
+						item_index: 0,
+						search: search,
+						project_id: W.projectId,
+						id: W.VOTE_ID,
+						target_api: 'vote_options/get',
+						'_timestamp': (+new Date())
+					},
+					
+					begin_load: function() {
+						W.scrollTop = document.body.scrollTop || document.documentElement.scrollTop || 0;
+						$('.tx_content li').remove();
+					},
+
+					complete: function() {
+						var length = $('.tx_content li').length;
+						if(length > 15) {
+							$('.tx_searchBoxLayer').show()
+                            $('.tx_btnTop').show();
+						}
+						else {
+							//$('.tx_searchBoxLayer').hide()
+                            $('.tx_btnTop').hide();
+						}
+						$('img[auto_height], span[auto_height]').imageAutoHeight();
+						
+						$('[data-ui-role=waterFalls]').waterFalls();
+						window.scrollTo(0, W.scrollTop);
+						
+						$(".vote_img").fancybox({
+							'transitionIn'		: 'none',
+							'transitionOut'		: 'none',
+							'titlePosition' 	: 'over',
+							'overlayOpacity'    : '0.8',
+							'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) {
+								return '<span id="fancybox-title-over">' + (title.length ? ' &nbsp; ' + title : '') + '</span>';
+							}
+						});
+					}
+				});
+			}
+
+			createTemplate('');
+
+			var requestUserIsMember = {% if cur_request_member %}true{% else %}false{% endif %};
+			var hasOperationSettings = {% if operation_settings %}true{% else %}false{% endif %};
+
+			$('body').delegate('.poll-button', 'click', function(event){
+				var $el = $(event.currentTarget);
+				var dataID =  $el.parents('li:eq(0)').attr('data-id');
+				var is_can_poll = $el.parents('.vote-poll-div').hasClass('not-action-button')
+				if (is_can_poll){
+					$('body').alert({show:true, info:'您已经投过票咯!', speed:2000});
+				} else {
+                    $('body').alert({show:true, info:'投票中,请稍后...!', speed:2000});
+                    $('.poll-button').attr('disabled', true);
+					W.getApi().call({
+		                app: 'webapp',
+		                api: 'project_api/call',
+		                method: 'get',
+		                args: _.extend({
+			                target_api: 'ballot/create',
+			                option_id: dataID,
+			                project_id: W.projectId
+		                }),
+		                success: function(data) {
+		                	if (W.WEBAPP_ID == "3211") {
+		                		$('body').alert({show:true, info:'投票成功！恭喜您获得5折购米券！', speed:5000});
+		                	} else {
+		                		$('body').alert({show:true, info:'投票成功!', speed:3000});	
+		                	}
+							
+                            $('.poll-button').attr('disabled', true);
+                            $el.html('已投票');
+                            var $pollCount = $el.parents('.ui-vote-item').find('.tx_pollCount');
+                            $pollCount.text(parseInt($pollCount.text(), 10)+1);
+		                },
+		                error: function(resp) {
+		                	$('body').alert({show:true, info:'投票失败，请稍后再试!', speed:2000});
+                            $('.poll-button').attr('disabled', false);
+		                },
+		                scope: this
+		            });
+				}
+			});
+
+			$('.search-btn').click(function(event){
+				var $tx_search = $('.tx_search').val();
+				createTemplate($tx_search);
+				// $top_el.hide();
+			});
+            
+            $('form').submit(function() {
+                var $tx_search = $('.tx_search').val();
+				createTemplate($tx_search);
+                return false;
+            })
+
+			$('body').delegate('a.tx_btnMore', 'click', function(event) {
+				$top_el.show();
+			});
+
+			$('body').delegate('a.tx_btnTop', 'click', function(event) {
+				window.scrollTo(0, $('.ui-search-box').offset().top);
+			});
+			
+			var ei = document.getElementById("enlarge_images");
+		});
+		
+	</script>
+{% endblock %}

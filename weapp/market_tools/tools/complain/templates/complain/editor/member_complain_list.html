@@ -1,0 +1,63 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">反馈列表</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/market_tools/complain/settings/">配置反馈<i class="icon-plus icon-white"></i></a>
+	</span>
+</div>
+{% if complains %}
+<div>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>反馈时间</th>
+				<th>反馈内容</th>
+				<th>反馈会员</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for complain in complains %}
+			<tr data-id="{{ complain.id }}">
+				<td>
+					<div>
+						{{ complain.created_at|date:'Y-m-d H:i' }}
+					</div>
+				</td>
+				<td>
+					<div style="word-break:break-all; overflow:auto;">
+						{{ complain.content }}
+					</div>
+				</td>
+				<td>
+					<div>
+						{% if complain.member_id %}
+						<a href="/member/member_detail/edit/?{{ complain.member_id }}">
+							{{ complain.member_username|safe }} 
+						</a>
+						{% else%}
+							{{ complain.member_username|safe }} 
+						{% endif %}
+						
+					</div>
+				</td>
+				
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div data-ui-role="paginator" data-pageinfo='{{pageinfo|safe}}'></div>
+</div>
+{% else %}
+<p style="margin-left:10px;">您还没任何反馈信息</p>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

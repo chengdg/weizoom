@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="no-cache" http-equiv="Pragma">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>{% block title %}{{ system_name }}{% endblock %}</title>
+
+    <link rel="stylesheet" href="/static/appframework/build/css/af.ui.min.css">
+    <link rel="stylesheet" href="/static/appframework/build/css/icons.min.css">
+    <link rel="stylesheet" href="/static/appframework/build/css/af.scroller.css">
+    <link rel="stylesheet" href="/static/appframework/build/css/afui.custom.css">
+    <style>
+    .logout {
+      display: inline-block;
+      float: right;
+      margin-right: 10px;
+      margin-top: 8px;
+    }
+    .logout > a {
+      color: #cfe7f3;
+      text-decoration: none;
+    }
+    .logout img{
+        vertical-align: middle;
+    }
+    </style>
+    {% block css %}
+    {% endblock %}
+    // <script>
+
+
+    //         function loadedPanel(what) {
+    //             //We are going to set the badge as the number of li elements inside the target
+    //             $.ui.updateBadge("#aflink", $("#af").find("li").length);
+    //         }
+
+
+    //         function unloadedPanel(what) {
+    //             console.log("unloaded " + what.id);
+    //         }
+
+    //         if (!((window.DocumentTouch && document instanceof DocumentTouch) || 'ontouchstart' in window)) {
+    //             var script = document.createElement("script");
+    //             script.src = "plugins/af.desktopBrowsers.js";
+    //             var tag = $("head").append(script);
+    //             //$.os.desktop=true;
+    //         }
+
+    //       //  $.feat.nativeTouchScroll=true;
+
+
+    // </script>
+    <script src="/static/appframework/build/appframework.min.js"></script>
+    <script src="/static/appframework/build/ui/appframework.ui.min.js"></script>
+    <script src="/static/appframework/build/af.scroller.js"></script>
+    <script>
+
+            /* This function runs once the page is loaded, but intel.xdk is not yet active */
+            //$.ui.animateHeaders=false;
+            var re_href = window.location.href;
+             var search=document.location.search.toLowerCase().replace("?","");
+             //if(!search)
+            $.ui.useOSThemes=true;
+            if(search.length>0) //Android fix has too many buggy issues on iOS - can't preview with $.os.android
+            {
+
+               $.ui.useOSThemes=true;
+                if(search=="win8")
+                    $.os.ie=true;
+                $.ui.ready(function(){
+                    $("#afui").get(0).className=search;
+                });
+            }
+
+            var webRoot = "./";
+            // $.os.android=true;
+            //$.ui.autoLaunch = false;
+            $.ui.openLinksNewTab = false;
+            $.ui.splitview=false;
+
+
+            $(document).ready(function(){
+                  // $.ui.launch();
+
+            });
+
+            /* This code is used to run as soon as intel.xdk activates */
+            var onDeviceReady = function () {
+                intel.xdk.device.setRotateOrientation("portrait");
+                intel.xdk.device.setAutoRotate(false);
+                webRoot = intel.xdk.webRoot + "";
+                //hide splash screen
+                intel.xdk.device.hideSplashScreen();
+                $.ui.blockPageScroll(); //block the page from scrolling at the header/footer
+            };
+            document.addEventListener("intel.xdk.device.ready", onDeviceReady, false);
+
+            function showHide(obj, objToHide) {
+                var el = $("#" + objToHide)[0];
+
+                if (obj.className == "expanded") {
+                    obj.className = "collapsed";
+                } else {
+                    obj.className = "expanded";
+                }
+                $(el).toggle();
+
+            }
+
+
+            if($.os.android||$.os.ie||search=="android"){
+                $.ui.ready(function(){
+                    $("#main .list").append("<li><a id='toggleAndroidTheme'>Toggle Theme Color</a></li>");
+                    var $el=$("#afui");
+                    $("#toggleAndroidTheme").bind("click",function(e){
+                        if($el.hasClass("light"))
+                            $el.removeClass("light");
+                        else
+                            $el.addClass("light");
+                    });
+                });
+            }
+
+    </script>
+</head>
+<body>
+    <div id="afui">
+        <div id="header">
+        <div class="logout"> <a href="/mobile_app/logout/" data-ignore="True"><img src="/static/img/top_nav_logout_bg.png">&nbsp;退出</a></div>
+        </div>
+        {% block content %}{% endblock %}
+        <div id="navbar">
+                <a href="/mobile_app/main/" id='navbar_home' class='icon graph {% if pressed_link == "main"%} pressed {% endif %} footer_link'>概要</a>
+                <a href="/mobile_app/messages/" id='navbar_home' class='icon message {% if pressed_link == "messages"%} pressed {% endif %} footer_link'>消息</a>
+                <a href="/mobile_app/order/" id="" class='icon basket {% if pressed_link == "order"%} pressed {% endif %} footer_link'>订单</a>
+        </div>
+    </div>
+    <script>
+        function scroll_to_refresh(css_selector){
+            var myScroller = $(css_selector).scroller({
+                verticalScroll:true,
+                horizontalScroll:false,
+                autoEnable:true
+            });
+            myScroller.addPullToRefresh();
+            //Here we listen for the user to pull the page down and then let go to start the pull to refresh callbacks.
+            var hideClose;
+            $.bind(myScroller, "refresh-release", function () {
+                var that = this;
+                    clearTimeout(hideClose);
+                    //For the demo, we set a timeout of 5 seconds to show how to hide it asynchronously
+                    hideClose = setTimeout(function () {
+                            location.reload(true);
+                            that.hideRefresh();
+                    }, 1000);
+                    return false; //tells it to not auto-cancel the refresh
+            });
+        }
+
+        $(".footer_link").click(function(){
+            console.log($(this))
+            window.location = $(this).attr("href")
+        });
+        $.os.android = false;
+        $.os.androidICS = false;
+        $.os.ios7 = false;
+        $.os.ios = true;
+    </script>
+    {% block jsTemplate %}{% endblock %}
+    {% block js %}{% endblock %}
+
+</body>
+
+</html>

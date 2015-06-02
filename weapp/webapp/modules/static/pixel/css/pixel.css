@@ -1,0 +1,90 @@
+@charset "utf-8";
+
+/* 普通全局样式 */
+html, body {
+    background-color: #f0f0f0;
+}
+.ui-page{
+    min-height:100% !important;
+    padding-top:0px !important;
+    background-color: #f0f0f0;
+}
+.ui-content{
+    margin:0px;
+    padding:0px;
+    background-color: #f0f0f0;
+}
+.xui-text-red{
+    color:#AD0101;
+}
+.xui-text-green{
+    color:#6A942D;
+}
+.xui-text-orange{
+    color:#E36C03;
+}
+.xui-text-disabled{
+    text-decoration:line-through;
+    color:#7F7F7F;
+    font-size:0.7em;
+    margin-left:5px;
+}
+.xui-text-alignTop {
+    vertical-align:top;
+    padding-top:5px;
+}
+.xui-smallLink {
+    font-size: 0.6em;
+}
+.xui-errorInfo{
+    padding:15px;
+}
+
+
+
+
+
+/*
+ * home page页面样式
+ */
+ .xui-homePage-bg{
+    color: #fff;
+    height: 100%;
+    width: 100%;
+    position:fixed!important;
+    top: 0;
+    left: 0;
+    background:url('/webapp_static/pixel/imgs/bg.jpg') no-repeat 0 0 scroll;
+    -moz-ba60ckground-size:cover;
+    -webkit-background-size:cover;
+    background-size:cover;
+    text-align: center;
+    }
+.xui-homePage a{
+    color: #fff;
+}
+.xui-homePage-nav{
+    width: 93.75%;
+    background: rgba(0,0,0,0.4);
+    position:absolute;
+    bottom: 2.97619%;
+    left: 50%;
+    margin-left: -46.875%;
+}
+.xui-swipe-container{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding:5% 0;
+}
+.ui-grid-b:nth-child(2){
+    margin-top:8.3333%;
+}
+
+.ui-block-b{
+    border-left: solid 1px #fff!important;
+    border-right: solid 1px #fff!important;
+}
+.xui-homePage-bg img{
+    width: 30%;
+}

@@ -1,0 +1,104 @@
+<script id="sessions-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="unreadCountHint" class="alert tc hide"></div>
+	<ul id="sessionList">
+    <!--加载sessions-->
+    </ul>
+	<div id="no_messages" class="hidden"><span class="error"></span>您目前还没有微信消息</div>
+	<div class="wx_paginationContent" class="hidden"></div>
+</script>
+
+
+
+
+<script id="one-session-tmpl-src" type="text/x-jquery-tmpl">
+	<li class="oneSession_li">
+		<dl class="oneSession">
+			<dt>
+				<span class="memberInfo_headImg">
+					<a href="#">
+						<img width="54" height="54" src="${weixin_user_icon}">
+					</a>
+				</span>
+				{{if unread_count}}<span class="unreadMessageCount" title="${unread_count}">${unread_count}</span>{{/if}}
+			</dt>
+			<dd class="oneSession_session">
+				<div class="oneSession_title">
+					<span>
+						<a href="#">${sender_name}</a>&nbsp;
+					</span>
+					<span class="fr">
+						<span class="edit_remark tx_editRemark hide">
+							<a class="btn-remark tx_addRemarkOneCustomer mr300" href="#" title="编辑" data-remark="${member_remarks_name}"
+							   data-id="${member_id}">
+								<i class="icon-pencil"></i>
+							</a>
+						</span>
+						<a class="viewHistory" href="/weixin/message/message/session_history/show/?session_id=${id}">查看对话</a>
+					</span>
+				</div>
+				<div class="oneSession_content">{{html content}}</div>
+				<div class="oneSession_info">
+					<span class="oneSession_createdAt">${created_at}</span>
+					<div class="fr mr10">
+                        {{if is_subscribed}}
+						    <a href="#" class="wx_replyLink">回复</a>
+                       	{{/if}}
+
+						{{if IS_DEBUG=='true' || IS_DEBUG=='True'}}
+						<a href="#" class="wx_deletLink">删除</a>
+						{{/if}}
+					</div>
+				</div>
+
+				<div class="oneSession_replyForm hide">
+					<div class="drop-box-arrow-down-right"></div>
+					<input type="hidden" name="sessionId" value="${id}"/>
+					<textarea rows="5" class="contentText" style="width: 95%; margin: 5px;" name="content"></textarea>
+					<input type="button" class="btn btn-success wx_submitReply fr mr5" value="提交" />
+				</div>
+
+			</dd>
+			<dd class="cb"></dd>
+
+			<dd class="tx_remarkLayout remarkLayout {{if !member_remarks_name}}hide{{/if}}">
+				<span class="remarkMessage">
+					<span class="textNowrap">备注：</span>
+					<span class="member_remarks_name">${member_remarks_name}</span>
+				</span>
+			</dd>
+
+		</dl>
+	</li>
+</script>
+
+
+
+
+
+<script id="session-history-tmpl-src" type="text/x-jquery-tmpl">
+	{{if is_reply}}
+	<div class="messageLog_oneMessage">
+		<span class="messageLog_userImg fr ml30"><img width="64" height="64px" src="${sender_icon}"></span>
+	    <div class="messageLog_myMessageContent fr">
+	    	<p class="messageLog_messageContentTop"><em>${sender_name}</em>：{{html content}}</p>
+	        <p class="messageLog_messageContentDown">
+	        	${weixin_created_at}
+	        </p>
+	        <div class="messageLog_replyMessage"></div>		
+	    </div>
+	    <div class="clear"></div>
+	</div>
+	{{else}}
+	<div class="messageLog_oneMessage">
+		<span class="messageLog_userImg fl mr30"><img width="64" height="64px" src="${sender_icon}"></span>
+	    <div class="messageLog_messageContent fl">
+	    	<p class="messageLog_messageContentTop"><em>${sender_name}</em>：{{html content}}</p>
+	        <p class="messageLog_messageContentDown">
+	        	${weixin_created_at}
+	        </p>
+	        <div class="messageLog_message"></div>		
+	    </div>
+	    <div class="clear"></div>
+	</div>
+	{{/if}}
+</script>

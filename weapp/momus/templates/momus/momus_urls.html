@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Momus URL</title>
+        <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css?v=1">
+        <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/base.css">
+
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+        <meta content="telephone=no" name="format-detection">
+    </head>
+    <body>
+        <ul>
+            {% for url_info in url_infos %}
+                <h2>{{url_info.0}}</h2>
+                {% for url in url_info.1 %}
+                <li>
+                    <a href="/{{url}}">/{{url}}</a>
+                </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </body>
+</html>

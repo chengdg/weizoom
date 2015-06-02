@@ -1,0 +1,22 @@
+<!-- 搜索框模板 -->
+<script id="my-customer-search-panel-view" type='text/x-jquery-tmpl'>
+<div class="fl">
+<ul class="myCustomerSearchBox">
+	<li>
+		<select class="span2" name="continent" id="searchOption_province" value="1">
+			{{each(i, province) provinces}}
+			<option value="${province.value}">${province.name}</option>
+			{{/each}}
+		</select>
+		<!-- 选择国家 -->
+		<select  class="span2" name="country" id="searchOption_city" >
+			<option value="-1">国家</option>
+			{{each(i, city) citys}}
+			<option value="${city.value}">${city.name}</option>
+			{{/each}}
+		</select>
+		<input type="hidden" name="countryName" id="countryName"/> 
+	</li>
+</ul>
+</div>
+</script>

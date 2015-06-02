@@ -1,0 +1,80 @@
+{% extends "content_base_v2.html" %}
+{% load staticfiles %}
+{% block content-panel %}
+<div class="xui-promotion-RedEnevlopPage">
+
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+            <li><a href="/mall_promotion/integral_sales/get/">积分应用</a></li>
+            <li class="active">新建积分应用</li>
+        </ul>
+    </div>
+
+    <div class="xa-productSelector">
+        <div class="xa-redEnevlopSelectConditionPanel">
+        </div>
+
+        <div class="panel panel-default mt20 xb-panelBg xa-errorHintContainer js-user-container">
+            <div class="panel-body xa-selectedProductList mb0 pb0" style="margin-bottom:15px!important;margin-left:23px;" data-validate="require-element-exist" data-selector="tbody tr">
+                请通过查询选择参与活动的商品
+            </div>
+            <div class="errorHint pb0" style="padding-left:38px;" data-error-hint="请先选择商品"></div>
+        </div>
+    </div>
+    <div>
+        <form class="xa-form">
+        发放规则：
+        优惠券：
+        张数： 每人 张
+            <input class="xa-submit" type="submit" value="发送">
+        </form>
+
+
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+
+     var productSelector = new W.view.mall.PromotionRedProductView({
+         el: '.xa-productSelector',
+         // dataInsertLocation: '.xa-selectedProductList',
+     });
+     productSelector.render();
+
+	$('.xa-submit').click(function(event) {
+		//获取integral sale rule
+		var rules = [];
+
+		var args = $('.xa-form').serializeObject();
+		args.vips_id = productSelector.getData();
+		args.rules = rules;
+		W.getApi().call({
+			method: 'post',
+			app: 'mall_promotion',
+			api: 'red_enevlop_record/create',
+			args: W.toFormData(args),
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '创建积分应用成功');
+				_.delay(function() {
+					window.location.href = '/mall_promotion/red_enevlop_record/get/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '创建积分应用失败!')
+			}
+		})
+	});
+});
+</script>
+{% endblock %}

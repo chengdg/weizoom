@@ -1,0 +1,12 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.link' %}
+<div 
+    data-cid="{{component.cid}}" 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+>
+    <a class="ui-link" href="{{component.model.target|format_target:project_id}}">{{component.model.text}}</a>
+</div>
+{% endifequal %}

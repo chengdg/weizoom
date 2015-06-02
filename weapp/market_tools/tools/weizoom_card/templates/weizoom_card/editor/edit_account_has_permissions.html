@@ -1,0 +1,101 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% load mall_filter %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li>
+		<a href="/market_tools/weizoom_card/">微众卡</a><span class="divider">/</span>
+	</li>
+	<li class="active">设置账号的微众卡权限</li>
+</ul>
+<form>
+	<fieldset>		
+		<div class="ua-selectView" data-ui-role="select-box-for-member-view" data-one-template="#thanks-card-product-template-src" data-title="所有账号;有权限的账号" data-app="market_tools/weizoom_card/account" data-api="user_all/get" data-args='{"count":"10000"}'>
+	  	</div>
+  	</fieldset>
+  	<fieldset class="mt20">
+		<legend></legend>
+	  	<div class="control-group">
+			<div class="controls" style="text-align: center;">
+			<button class="btn btn-success ua-submit">保存</button>
+			</div>
+		</div>
+	</fieldset>
+</form>
+{% endblock %}
+
+{% block jsTemplate %}
+{% verbatim %}
+<script id="thanks-card-product-template-src" type="text/x-jquery-tmpl">
+	<li data-id="${id}">
+		<div class="m5" style="border: 1px solid #ccc; padding:5px;">
+			<div class="fl w120" style="padding-top:2px">
+				<div class="inline-text ml5">${name}</div>
+			</div>
+			<div class="fr pb5 ua-checkbox">
+				<input name="member_check" type="checkbox" value="${id}" >
+			</div>
+			<div class="clear"></div>
+		</div>
+	</li>
+</script>
+{% endverbatim %}
+{% endblock %}
+{% block js %}
+<script>
+$(document).ready(function() {
+	var view = $('.ua-selectView').data('view');
+	view.bind('moveRightView', function() {
+		W.getApi().call({
+			app: 'market_tools/weizoom_card/account',
+			api: 'has_weizoom_card_permissions_user/get',
+			args: {},
+			success: function(data) {
+				var data = data.items;
+				var selectView = $('.ua-selectView').data('view');
+				var left = $('.left-data-list');
+				var $check = left.find("input[name='member_check']");
+				$check.each(function() {
+					var id = $(this).attr('value');
+					for (var i=0; i<data.length; i++) {
+						if (id==data[i].id) {
+							$(this).attr('checked', 'true');
+						}
+					}
+				});
+				selectView.onRightMoveButton();
+			},
+			error: function() {
+			}
+		});
+	});
+	
+	
+	$('.ua-submit').click(function() {
+		var $right = $('.right-data-list');
+		var $check = $right.find("input[name='member_check']");
+		var ids = [];
+		var $id = $check.each(function() {
+			ids.push($(this).attr('value'));
+		});
+		var idStr = ids.join(',');
+		W.getApi().call({
+			app: 'market_tools/weizoom_card/account',
+			api: 'weizoom_card_account_permission/update',
+			args: {
+				'owner_ids': idStr.trim(),
+			},
+			success: function() {
+				W.getSuccessHintView().show('设置成功！');
+			},
+			error: function() {
+				W.getErrorHintView().show('设置失败！');
+			}
+		});
+		return false;
+	});
+});
+</script>
+{% endblock %}

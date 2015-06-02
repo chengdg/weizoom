@@ -1,0 +1,38 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'viper.textinput' %}
+<!-- =====> viper:textinput component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="p5"
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{name}}">{{component.model.label}}：</label>
+        <div class="controls xa-errorHintContainer">
+            {% if component.model.prefix or component.model.suffix %}
+            <div class="input-prepend input-append xa-addOnZone">
+                {% if component.model.prefix %}
+                <span class="add-on">{{component.model.prefix}}</span>
+                {% endif %}
+                <input type="text" class="input-xlarge" id="{{name}}" name="{{name}}" placeholder="{{component.model.placeholder}}" value="{{page.record|get_record_value:name|safe}}" {{ component.model.validate|safe }} />
+                {% if component.model.suffix %}
+                <span class="add-on">{{component.model.suffix}}</span>
+                {% endif %}
+            </div>
+            {% else %}
+                <input type="text" class="input-xlarge" id="{{name}}" name="{{name}}" placeholder="{{component.model.placeholder}}" value="{{page.record|get_record_value:name|safe}}" {{ component.model.validate|safe }} />
+            {% endif %}
+            <div class="errorHint">{% if in_design_mode %}name="{{name}}"{% endif %}</div>
+        </div>
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:textinput component -->
+{% endifequal %}

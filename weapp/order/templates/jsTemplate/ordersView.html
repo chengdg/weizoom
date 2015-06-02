@@ -1,0 +1,176 @@
+<script id="list-drop-box" type="text/x-jquery-tmpl">
+	{{if error_msg}}
+	<div class="pt10 pb10 pl10">
+		${error_msg}
+	</div>
+	{{/if}}
+	<ul class="messageTimelineMove">
+		{{if statuss}}
+		{{each(i, status) statuss}}
+		<li><a href="javascript:void(0);" data-value='${status.value}' valueName="${status.name}"> ${status.name}</a></li>
+		{{/each}}
+		{{/if}}
+		<!--
+		<li class="divider"></li>
+		<li><a class="tx_addGroup" valueName='addGroup' href="javascript:void(0);">+创建名称</a>
+			<div class="controls tx_groupBox hidden">
+				<input type="text" name="group_name" id="group_name" class="w80 mt10 ml5" data-validate="required,noDuplicateCustomerGroup" data-validate-group="-1" data-validate-max-length="6">
+				<button class="btn btn-success tx_addGroupButton" type="button">提交</button>
+
+				<div class="errorHint w150"></div>
+			</div>
+		</li>
+		-->
+	</ul>
+</script>
+
+<script id="orders-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed">
+		<thead>
+		<tr>
+			<th class="tx_sortable" data-sort-attr='created_at'>下单时间</th>
+			<th class="tx_sortable" data-sort-attr='payment_time'>付款时间</th>
+			<th>
+				<p class="tx_searchable m0">
+					<span class="">订单号</span>
+				</p>
+			</th>
+			<th class="tx_sortable" data-sort-attr='total_price'>金额</th>
+			<th class="tx_filterable">
+				<div class="dropdown">
+					<p class="m0 dropdown-toggle" style="font-size: 14px;">订单状态</p>
+					<ul class="dropdown-menu">
+                        <li><a href="javascript:void(0);" data-attr='status' data-value="-1">全部</a></li>
+						<li><a href="javascript:void(0);" data-attr='status' data-value="3">待发货</a></li>
+						<li><a href="javascript:void(0);" data-attr='status' data-value="4">已发货</a></li>
+					</ul>
+				</div>
+			</th>
+			<th>购买人</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{if items.length}}
+		{{each(i, order) items}}
+		<tr data-id="${order.id}">
+			<td class="nowrap">
+				<div>
+					${order.created_at}
+				</div>
+			</td>
+			<td class="nowrap">
+				<div>
+					${order.payment_time}
+				</div>
+			</td>
+			<td class="nowrap">
+				<div>
+					<a title="查看" href="/ft/waybill/editor/detail/?order_id=${order.order_id}">
+						${order.order_id}</a>
+				</div>
+			</td>
+			<!--
+			<td class="nowrap">
+				<div>
+					${order.product_name} x ${order.num}
+				</div>
+			</td>
+			-->
+			<td class="nowrap">
+				<div>
+					￥${order.total_price}
+				</div>
+			</td>
+			<td class="nowrap">
+				<div>
+					{{if order.status == '2' | order.status == '3'}}
+					<a class="btn btn-primary tx_showPassword" href="javascript:void(0);" style="line-height:15px;">
+						发货
+					</a>
+					{{else}}
+						{{if order.status_str}}
+							${order.status_str}
+						{{else}}
+						已发货
+						{{/if}}
+					{{/if}}
+				</div>
+			</td>
+			<td>
+				<div style="width:60px;" class="nowrap">
+					{{html order.buyer_name}}
+				</div>
+			</td>
+		</tr>
+		<tr data-id="${order.id}_password" style="display: none;" class="hide-tr">
+			<td colspan="9" class="wine_password" algin="center">
+				<table width='100%'>
+					{{if order.products}}
+					{{each(i, product) products}}
+					<tr>
+						<td colspan="2">
+							<div class="fl alert-info alert m0 p5">
+								商品名称：${product.name} &nbsp;x &nbsp;${product.count}
+							</div>
+						</td>
+					</tr>
+					{{/each}}
+					<tr>
+						<td width="55%">
+							<div class="fl">
+								收&nbsp;货&nbsp;人&nbsp;：${order.ship_name}
+							</div>
+						</td>
+						<td align=right>
+							快递公司：<span class="btn-group">
+									<button data-toggle="dropdown" class="btn dropdown-toggle tx_selectGroup"
+									        data-name="0" data-id="${order.id}"
+									        style="width:165px;">请选择
+										<span class="caret mt0"></span></button>
+								</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="fl">
+								收货电话：${order.ship_tel}
+							</div>
+						</td>
+						<td align=right>
+							快递单号：<input type="text" class="input-xlarge tx_waybill w150"
+							            placeholder="输入运单号" data-id="${order.id}"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="fl">
+								<p class="fl">收货地址：</p>
+								<p style="text-align:left;width:350px">${order.ship_address}</p>
+							</div>
+						</td>
+
+						<td align=right>
+							发&nbsp;货&nbsp;人&nbsp;：<input type="text" class="input-xlarge tx_leader_name w150"
+							            placeholder="输入发货人" data-id="${order.id}"/>
+						</td>
+					</tr>
+					<tr><td></td>
+						<td style="text-align:right">
+							<input type="button" class="btn tx_sendOutBtu mr30"
+							       value="&nbsp;确认发货&nbsp;" data-id="${order.id}"/>
+							<input type="hidden" class="tx_orderId" value="${order.id}"/>
+						</td>
+					</tr>
+					{{else}}
+					<tr><td>暂无数据</td></tr>
+					{{/if}}
+				</table>
+			</td>
+		</tr>
+		{{/each}}
+		{{else}}
+		<tr><td colspan='10'>还没有订单数据</td></tr>
+		{{/if}}
+		</tbody>
+	</table>
+</script>

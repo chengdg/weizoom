@@ -1,0 +1,209 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">积分充值卡列表</li>
+	</ul>
+
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="./point_card_rule/create/"><i class="icon-plus icon-white"></i> 创建积分充值卡规则</a>
+	</span>
+</div>
+
+<div>
+	<legend>生成规则</legend>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>积分充值卡规则</th>
+                <th>包含积分</th>
+				<th>创建时间</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for point_card_rule in point_card_rules %}
+			<tr data-id="{{ point_card_rule.id }}">
+				<td>
+					<a href="./point_card_rule/update/{{point_card_rule.id}}/">{{ point_card_rule.name }}</a>
+				</td>
+				<td>
+					{{ point_card_rule.point }}
+				</td>
+				<td>
+					{{ point_card_rule.created_at|date:"y-m-d" }}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<div style="margin-top: 40px;" class="pointCardListView">
+	<div style="font-weight: bolder; margin-left: 5px;">已生成积分充值卡:</div>
+	<div data-ui-role="advanced-table" data-enable-paginator="true" data-app="market_tools/point_card" data-api="records/get" data-template-id="#point_card_record_list_view" data-init-sort="-created_at"  data-item-count-per-page="15">
+	</div>
+</div>
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+	<script id="point_card_record_list_view" type="text/x-jquery-tmpl">
+		<table class="table table-bordered table-condensed xa-pointCardListTable" style="margin-bottom: 10px;">
+		<thead>
+			<tr>
+				<th>
+					{{if data.has_active_point_card }}
+					<input type="checkbox" class="tx_selectAll"/>
+					{{/if}}
+				</th>
+				<th class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">积分充值卡</p>
+						<ul class="dropdown-menu">
+	                        <li><a href="javascript:void(0);" data-attr='status' data-value="-1">全部</a></li>
+							{{each(i, role) data.roles}}
+ 								<li><a href="javascript:void(0);" data-attr='point_card_rule' data-value='${role.id}'> ${role.name}</a></li>
+							{{/each}}
+						</ul>
+					</div>
+				</th>
+				<th>卡号</th>
+				<th>密码</th>
+                <th>包含积分</th>
+				<th class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">使用状态</p>
+						<ul class="dropdown-menu">
+	                        <li><a href="javascript:void(0);" data-attr='status' data-value="-1">全部</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="0">未使用</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="1">已使用</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="2">已作废</a></li>
+						</ul>
+					</div>
+				</th>
+				<th class="tx_sortable" data-sort-attr='created_at'>生成时间</th>
+			</tr>
+		</thead>
+		<tbody id="">
+			{{each(i, point_card) items}}
+			<tr {{if point_card.status == 2 }}style="color: #AFAFAF;"{{/if}} {{if point_card.status == 1 }}style="color: #0000FF;"{{/if}}>
+				<td style="width: 13px;">
+					{{if point_card.status == 0 }}
+	                <input type="checkbox" data-id="${point_card.id}" />
+                    {{/if}}
+				</td>
+				<td>
+					${point_card.point_card_rule_name}
+				</td>
+				<td>
+					${point_card.point_card_id}
+				</td>
+				<td>
+					${point_card.password}
+				</td>
+				<td>
+					${point_card.point}
+				</td>
+				<td>
+					{{if point_card.status == 0 }}
+						未使用
+					{{/if}}
+					{{if point_card.status == 1 }}
+						已使用
+					{{/if}}
+					{{if point_card.status == 2 }}
+						已作废
+					{{/if}}
+				</td>
+				<td>
+					${ point_card.created_at }
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<div class="clearfix mb30">
+		{{if data.has_active_point_card}}
+		<span class="fl mr10">
+			<button class="xa-disablePointCard btn btn-danger">作废</button>
+		</span>
+		{{/if}}
+		<span class="fl">
+			<button class="btn btn-danger xa-deletePointCard">删除作废积分充值卡</button>
+		</span>
+	</div>
+	</script>
+	{% endverbatim %}
+{% endblock %}
+{% block js %}
+<script>
+	$('.pointCardListView').delegate('.xa-disablePointCard', 'click', function(event) {
+    	//获取选中的充值卡的id集合
+    	var point_card_ids = [];
+    	$('.xa-pointCardListTable input[type="checkbox"]').each(function() {
+    		var $checkbox = $(this);
+    		if ($checkbox.is(':checked')) {
+    			var pointCardId = $checkbox.attr('data-id');
+    			if (pointCardId){
+    				point_card_ids.push(pointCardId);
+    			}
+    		}
+    	});
+
+    	if (point_card_ids.length == 0) {
+    		alert('请选择需要作废的积分充值卡');
+    		return;
+    	}
+
+    	//作废选中的充值卡
+    	W.getLoadingView().show();
+    	W.getApi().call({
+    		app: 'market_tools/point_card',
+    		api: 'point_cards/discard',
+    		method: 'post',
+    		args: {
+    			'point_card_ids': point_card_ids.join(',')
+    		},
+    		success: function(data) {
+    			 $('div[data-ui-role="advanced-table"]').data('view').reload();
+    		},
+    		error: function(resp) {
+    			W.getLoadingView().hide();
+    			W.getErrorHintView().show('失败');
+    		},
+    		scope: this
+    	});
+    });
+		
+    $('.pointCardListView').delegate('.xa-deletePointCard', 'click', function(event) {
+    	 //删除作废物充值卡
+    	var $el = $(event.currentTarget);
+    	var deleteView = W.getItemDeleteView ();
+		deleteView.bind(deleteView.SUBMIT_EVENT, function(){
+			W.getApi().call({
+	    		app: 'market_tools/point_card',
+	    		api: 'disabled_point_cards/deleted',
+	    		method: 'post',
+	    		args: {
+	    		},
+	    		success: function(data) {
+	    			deleteView.hide();
+	    			$('div[data-ui-role="advanced-table"]').data('view').reload();
+	    		},
+	    		error: function(resp) {
+	    			W.getLoadingView().hide();
+	    			W.getErrorHintView().show('失败');
+	    		},
+	    		scope: this
+	    	});
+		}, this);
+    	var is_delete = deleteView.show({
+			$action: $el,
+			info: '确定删除'
+		})
+    });
+</script>
+{% endblock %}

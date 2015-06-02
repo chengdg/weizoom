@@ -1,0 +1,140 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style>
+    #ui-datepicker-div{
+        z-index: 9999 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+    <li>
+        <a href="/market_tools/store/">门店管理</a><span class="divider">/</span>
+    </li>
+    <li class="active">门店信息</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm">
+    <fieldset>
+        <div class="control-group">
+            <label class="control-label" for="store_name">门店名称：</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="name" name="name" value="{% if store %}{{ store.name }}{% endif %}" data-validate-name="{{ store.id }}" data-validate="required-none" maxlength="30">
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="thumbnails_url">缩略图：</label>
+            <div class="controls x-thumbnailUrl">
+                <input type="hidden" name="thumbnails_url" id="thumbnails_url" value="{% if store %}{{ store.thumbnails_url }}{% endif %}" data-ui-role="image-selector" data-width="70" data-height="70" data-validate="require-image"/>
+                <div data-ui-role="image-selector-view"></div>
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="store_intro">门店简介：</label>
+            <div class="controls">
+                <textarea class="input-xlarge" id="store_intro" name="store_intro" style="height: 100px;" placeholder="最多50个字符" maxlength="50" data-validate="required-none" data-validate-name="{{ store.id }}">{% if store %}{{ store.store_intro}}{% endif %}</textarea>
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="swipe_images">轮播图片：</label>
+            <div class="controls x-picUrl">
+                <input type="hidden" name="swipe_images" id="swipe_images" value="{% if store %}{{ store.swipe_images_json }}{% endif %}" data-ui-role="swipe-image-selector" data-validate="require-image" data-image-width="320" data-image-height="200" data-max-count="3"/>
+                <div data-ui-role="swipe-image-selector-view"></div>
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">所在地区：</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="city" name="city" value="{% if store %}{{ store.city }}{% endif %}" data-validate-name="{{ store.id }}" data-validate="required-none" maxlength="30">
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">公司地址：</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="address" name="address" value="{% if store %}{{ store.address }}{% endif %}" data-validate-name="{{ store.id }}" data-validate="required-none" maxlength="50">
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">公司坐标：</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="location" name="location" value="{% if store %}{{ store.location }}{% endif %}" data-validate-name="{{ store.id }}" data-validate="required-location">
+                <a href="http://api.map.baidu.com/lbsapi/getpoint/" target="view_window" class="btn">点击设置</a>
+                <div class="errorHint"></div>
+            </div>
+
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="bus_line">乘车路线：</label>
+            <div class="controls">
+                <textarea class="input-xlarge" id="bus_line" name="bus_line" style="height: 100px;" placeholder="最多200个字符" maxlength="200" data-validate="required-none" data-validate-name="{{ store.id }}">{% if store %}{{ store.bus_line}}{% endif %}</textarea>
+                <div class="errorHint"></div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="name">联系电话：</label>
+            <div class="controls" style="float:left;margin-left: 20px">
+                <input type="text" class="span1" id="tel" name="zone" value="{% if store %}{{ store.zone }}{% endif %}" data-validate-name="{{ store.id }}" data-validate="required-tel-zone" placeholder="区号"> -&nbsp;
+                <div class="errorHint" ></div>
+            </div>
+            <div class="controls">
+                <input type="text" class="span2" id="tel" name="num" value="{% if store %}{{ store.num }}{% endif %}" data-validate-name="{{ store.id }}" data-validate="required-tel-num" placeholder="电话（如:12345678）">
+                <div class="errorHint"></div>
+            </div>
+            <div class="cl"></div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="detail">店铺详情：</label>
+            <div class="controls">
+                <textarea class="input-xlarge hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="300" data-width="400" data-validate-name="{{ store.id }}" >{% if store %}{{ store.detail|format_emotion|safe }}{% endif %}</textarea>
+                <div class="errorHint"></div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend></legend>
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+                <a title="取消" class="btn btn-delete btn-inverse" href="/market_tools/store/" >取&nbsp;&nbsp;消</a>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#editForm').submit(function() {
+            if (!W.validate()) {
+                return false;
+            }
+            return true;
+        });
+    })
+</script>
+{% endblock %}

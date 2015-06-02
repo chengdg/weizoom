@@ -1,0 +1,87 @@
+@charset "utf-8";
+* {
+    font-family: Helvetica, Arial, sans-serif /*{global-font-family}*/;   
+}
+
+[data-ui-behavior="xub-selectable"] {
+	/*border: solid 1px #91C4DF;*/
+    /*border: solid 1px transparent;*/
+}
+
+.xui-selectedWidget {
+	/*
+	border: solid 2px #009FF2 !important;
+	*/
+}
+
+#selectedWidgetHighlighter {
+    background: transparent;
+    border: solid 1px #91C4DF;
+    border-radius: 3px 3px 3px 3px;
+    position: absolute;
+    /*margin-left: -2px;*/
+    padding: 1px;
+    top: -1000px;
+    left: 0px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+#selectedWidgetCover {
+	background-color: rgba(73, 164, 230, 0.1);
+    border: 2px solid #009FF2;
+    border-radius: 3px 3px 3px 3px;
+	position: absolute;
+	/*padding: 1px;*/
+	top: -1000px;
+	left: 10px;
+    /*margin-left: -2px;*/
+    cursor: move;
+    pointer-events: none;
+    z-index: 99;
+}
+
+#selectedWidgetCover_actionPanel {
+	background-color: #EEEEEE;
+    border: 1px solid #999999;
+    border-radius: 5px 5px 5px 5px;
+    bottom: -14px;
+    height: 14px;
+    padding: 5px 0 5px 5px;
+    position: absolute;
+    right: 10px;
+    z-index: 101;
+    pointer-events: auto;
+}
+
+.actionIcon {
+	display: block;
+    float: left;
+    margin-right: 5px;
+    background: url("/static/termite_img/icons_sprite.png") no-repeat scroll 0 0 transparent;
+}
+
+.actionIconPlus {
+	background-position: -70px -15px;
+    height: 15px;
+    width: 14px;
+}
+
+.xui-state-highlight {
+    height: 3px;
+    background: none;
+    display: block;
+    background-color: rgba(111, 167, 210, 0.8) !important;
+}
+
+.xui-br {
+    border-color: rgba(130, 130, 130, 0.3);
+    border-style: solid;
+    border-width: 0 0 1px;
+    margin: 0;
+    overflow: visible;
+}
+
+.xui-br:last-child {
+    border-bottom: none;
+}

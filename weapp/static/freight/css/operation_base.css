@@ -1,0 +1,65 @@
+@charset "utf-8";
+html, body {
+	background-color: #dadada;
+}
+.border-box{
+	border: 1px solid #ababac;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	box-shadow: 0 0 15px rgba(50, 50, 50, 0.75);
+}
+/*顶部样式*/
+.po-top-box{
+	background: url("/static/img/top-back.jpg");
+	width: 90%;
+	min-width: 980px;
+}
+.top-log{
+	height: 100px;
+	width: 250px;
+	margin-left: 10px;
+	vertical-align:bottom;
+}
+.top-title{
+	font-size: 25px;
+	color: #818181;
+	line-height: 60px;
+	margin-left: 30px;
+}
+.content-outer-box{
+	width: 86%;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: 980px;
+}
+.content-left-box{
+	float: left;
+	width: 26%;
+	background-color: #FFFFFF;
+	min-height: 500px;
+	height: 100%;
+}
+.content-box{
+	float: right;
+	width: 71%;
+	min-height: 500px;
+	background-color: #FFFFFF;
+	padding: 10px;
+}
+
+.chart #dialyMessageChart{
+	width: 710px;
+}
+
+table.list-view>tbody>tr:hover{
+	background-color: #bceaff;
+}
+
+
+.table-bordered table th, .table-bordered table td {
+	border-left: 0;
+}

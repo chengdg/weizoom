@@ -1,0 +1,30 @@
+{% extends "webapp_content_base.html" %}
+{% load mall_filter %}
+
+{% block content-panel %}
+<div class="xui-productReviewSuccessedPage">
+    <div class="xui-placeholder"></div>
+    <div class="xui-reviewImg">
+        <img src="/static_v2/img/webapp/mall/review.png" alt="">
+    </div>
+    <div class="xui-button">
+        {% if orders_is_reviewed == "TRUE"%}
+        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-returnHome fl">返回首页</a>
+        {% else %}
+        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-returnHome xui-smallReturnHome fl">返回首页</a>
+        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_review_list&action=get" class="xui-continue cRed fr">继续评论</a>
+        {% endif %} 
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+       
+});
+
+</script>
+
+{% endblock %}

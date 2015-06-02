@@ -1,0 +1,214 @@
+{% extends "viper_base.html" %}
+{% load account_filter %}
+
+{% block content %}
+  <div id="globalErrorPanel" class="alert alert-error hide"></div>
+  <div id="spin-wrapper"><div id="spin"></div><div id="spin-hint" class="ml10"></div></div>
+  
+  <!-- 顶部标题栏 -->
+  <div id="topbar">
+    <div id="global-nav">
+      <div style="position: relative; width: 1020px; margin: 0px auto;">
+        <div id="weixin-logo">
+          <a href="/"><img src="/static/img/weixin-logo.png" alt=""></a>
+        </div>
+        <div id="top-action-bar">
+          {% if not is_operator  %}
+	        <span class="mr10"><a href="#" id="x-simulator-btn" class="btn btn-success">微信测试</a></span>
+          {% endif %}
+	        你好，{{ user.username }} | <a href="/logout/">退出</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if enable_embed_simalator %}
+  <div id="embed-simulator-box">
+  	<iframe src="/weixin/simulator/?mode=embed&url={{ embed_url }}" frameborder="0" width="430px" height="680px" id="embed-simulator" name="embed-simulator"></iframe>
+      <button class="btn btn-primary" id="x-embed-simulator-btn">&lt;</button>
+  </div>
+  {% endif %}
+
+  <div id="main-panel">
+    
+
+    <div class="container">
+      <div class="row mt70">
+        <!-- 头部水平方向一级导航 -->
+        <div class="navbar">
+          <div class="navbar-inner">
+            <ul class="nav">
+              <li {% ifequal first_nav_name 'home' %}class="active"{% endifequal %}>
+                <a href='/'>首页</a>
+              </li>
+              <li {% ifequal first_nav_name 'weixin' %}class="active"{% endifequal %}>
+                <a href="/weixin/message/message/">互动<span class="unreadMessageCount_menu" id="message_notify" style="display:none"></span></a>
+              </li>
+              <li {% ifequal first_nav_name 'webapp' %}class="active"{% endifequal %}>
+                <a href="/webapp/">微站</a>
+              </li>
+              {% if user|is_system_manager %}
+              <li {% ifequal first_nav_name 'account' %}class="active"{% endifequal %}>
+                <a href="/account/accounts/">账户</a>
+              </li>
+              {% endif %}
+              <li {% ifequal first_nav_name 'template' %}class="active"{% endifequal %}>
+                <a href="/webapp/template/">模板</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- 左侧垂直方向二级导航 -->
+      <div class="row">
+        {% if second_navs %}
+        <div class="span3" id="x-leftNavZone">
+          <ul class="nav nav-list x-left-nav" style="margin-top: 0px;">
+            <!--
+            <li class="{% ifequal nav_name 'usercenter' %}active{% endifequal %}"><a href="#usercenter"><i class="icon-chevron-right"></i> 用户中心</a></li>
+            -->
+            {% for second_nav in second_navs %}
+              {% if second_nav.section %}
+              <li><span>{{ second_nav.section }}</span></li>
+              {% endif %}
+              {% for nav in second_nav.navs %}
+              <li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}"><a href="{{nav.url}}" title="{{nav.title}}"><i class="icon-chevron-right"></i> {{nav.title}}</a></li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="span9 pr">
+          <!-- 内容 start -->
+          {% block content-panel %}{% endblock %}
+          <!-- 内容 end -->
+        </div>
+        {% else %}
+          <!-- 内容 start -->
+          {% block single-content-panel %}{% endblock %}
+          <!-- 内容 end -->
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!--
+	<div class="footer">
+		<div class="footerInfo">
+			<span>客服电话:400-688-6929</span>
+			<span>
+				<a href="http://wpa.qq.com/msgrd?v=3&uin=800051878&Site=qq&Menu=yes" target="blank">
+					<i class="icon_qq"></i>
+					在线咨询
+				</a>
+			</span>
+		</div>
+    <div id ="help">
+    <!-- <a  target="blank" href="#" id="feedback">反馈意见</a>&nbsp;|&nbsp;<a href="/operation/helper" target="blank" id="help">使用帮助</a>&nbsp;|&nbsp;<a href="/operation/version" target="blank" id="version">版本升级</a><br> -->
+		<!--Copyright &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.weizoom.com" target="blank">微众传媒</a>
+  </div>
+	</div>
+  -->
+  
+  <div class="footer">
+    <span>
+      <a target="_blank" href="http://www.weizoom.com">关于微众</a>&nbsp;|&nbsp;
+      <a href="http://bizapp.qq.com/webc.htm?new=0&sid=800051878&eid=&o=http://www.weizoom.com/&q=7&ref=http://www.weizoom.com/" target="_blank">在线客服</a>&nbsp;|&nbsp;      
+      <a target="_blank" href="mailto:service@weizoom.com">联系邮箱</a>      
+    </span>
+    <span>Copyright&nbsp;&copy; 2012-2014 微众传媒 All Rights Reserved.</span>
+  </div>
+{% endblock %}
+
+{% block base_js %}
+    <!-- start of ueditor -->
+    <script type="text/javascript">
+     window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
+    </script>  
+    <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
+    <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
+    <!-- end of ueditor -->
+
+    <script type="text/javascript">
+        W.uid = {{ user.id }};
+        W.API_VERSION = 1;
+
+        {% if mp_user %}
+        	W.mpUserAccessToken = "{{ mp_user.access_token }}";
+        	W.mpUserFakeId = "";
+        	W.mpUserCookie = "{{ mp_user.cookie }}";
+        {% else %}
+        	W.mpUserAccessToken = '';
+        	W.mpUserFakeId = '';
+        	W.mpUserCookie = '';
+        {% endif %}
+
+        {% if preview_info %}
+          W.previewName = "{{ preview_info.name }}";
+          W.previewImage = "{{ preview_info.image_path }}";
+        {% else %}
+          W.previewName = "信息预览";
+          W.previewImage = "/static/img/user-1.jpg";
+        {% endif %}
+        
+        //added by chuter
+        function unReadMessageCountCheck() {
+          W.getApi().call({
+            app: 'weixin/message/message',
+            api: 'realtime_unread_count/get',
+            args: {
+            },
+            success: function(data) {
+              var unread_count = data.unread_count;
+
+              if (unread_count > 0) {
+                // $('#message_notify').html('new');
+                $('#message_notify').css('display', 'inline');
+              }
+            },
+            error: function(resp) {
+              //TODO 进行错误通知
+            }
+          });
+        }
+
+        $(document).ready(function() {
+          //dailog
+          /*$('#feedback').click(function(event) {
+            window.open('/operation/api/feedback/add/', '_blank', 'top=200, left=350, width=630, height=300,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no');
+            event.stopPropagation();
+            event.preventDefault();
+          });*/
+ 
+          //message notify interval
+          unReadMessageCountCheck();
+          var unread_message_notify_interval = setInterval(
+            unReadMessageCountCheck, 5000); //5s进行一次未读消息数的检查
+
+	        $('#x-simulator-btn').click(function(event) {
+		        window.open('/simulator/', '_blank', 'top=50, left=300, width=430, height=700,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no');
+		        event.stopPropagation();
+		        event.preventDefault();
+	        });
+
+          
+
+	        $('#x-embed-simulator-btn').click(function(event) {
+		        var text = $('#x-embed-simulator-btn').text();
+		        if (text == '<') {
+		        $('#embed-simulator-box').animate({
+			        left: '-420px'
+		        }, 500, function() {
+			        $('#x-embed-simulator-btn').text('>')
+		        });
+		        } else {
+			        $('#embed-simulator-box').animate({
+                        left: '-5'
+                    }, 500, function() {
+	                    $('#x-embed-simulator-btn').text('<')
+	                });
+		        }
+	        });
+        });
+    </script>
+    {% block js %}{% endblock %}
+ {% endblock %}

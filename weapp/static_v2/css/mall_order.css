@@ -1,0 +1,959 @@
+@charset "utf-8";
+/*
+*筛选面板
+*/
+
+.xui-refundOrderPage .xui-i-item label,.xui-orderDetialPage .xui-i-item label,.xui-allOrders .xui-i-item  label ,.xui-auditOrderPage .xui-i-item  label
+{
+    width: 73px !important;
+
+}
+.xui-refundOrderPage .xui-col:first-child,.xui-allOrders .xui-col:first-child,.xui-orderDetialPage .xui-col:first-child ,.xui-auditOrderPage .xui-col:first-child {
+  margin-right: 100px;
+  margin-left: 40px;
+}
+.xui-refundOrderPage .xui-col:nth-child(2) label,.xui-allOrders .xui-col:nth-child(2) label,.xui-orderDetialPage .xui-col:nth-child(2) label ,.xui-auditOrderPage .xui-col:nth-child(2) label {
+   width: 60px !important;
+}
+.xui-filterPanel {
+    border: 1px solid #d7e0e7;
+    background: #eaeef6;
+    padding: 30px 0 30px 0;
+}
+
+.xui-filterPanel .xui-form {
+    max-height: 145px;
+}
+
+.xui-filterPanel .xui-col {
+    /*width:33.3333%;*/
+    float: left;
+}
+
+.xui-filterPanel .xui-col .xui-i-item {
+    margin-bottom: 12px;
+}
+.xui-filterPanel .xui-col .xui-i-item:last-child {
+    margin-bottom: 20px;
+}
+
+.xui-filterPanel .xui-col label {
+    width: 100px;
+    text-align: right;
+    font-weight: normal;
+    margin-bottom: 0;
+}
+
+.xui-filterPanel .xui-dateFilter {
+    line-height: 24px;
+}
+
+.xui-filterPanel .form-control {
+    display: inline-block;
+}
+
+.xui-filterPanel .xui-col .xui-i-item input, .xui-col .xui-i-item select {
+    width: 150px;
+    line-height: 24px;
+    border:1px solid #b1dbf1;
+    background: #f2f2f2;
+    padding: 0 5px;
+    color: #656565;
+}
+
+.xui-filterPanel .xui-col .xui-i-item  .xui-span{
+    margin-left:3px;
+    margin-right:3px;
+}
+.xui-filterPanel .xui-col .xui-i-item .form-control[readonly] {
+    cursor: pointer;
+}
+
+.xui-filterPanel .xui-col .xui-i-item select {
+    height: 24px;
+}
+
+.xui-filterPanel .xui-btn-group {
+    text-align: center;
+}
+/*
+.xui-filterPanel .xui-btn-group .btn,.xui-expiredTime-page .xui-btn-group .btn{
+    width: 88px;
+    height: 34px;
+    line-height: 34px;
+}*/
+
+.xui-filterPanel .xui-datePicker {
+    width: 132px !important;
+    background: url(/static_v2/img/editor/calendar.jpg) no-repeat !important;
+    background-position: right !important;
+    background-color: #f2f2f2 !important;
+}
+
+/*
+*订单表格样式
+*/
+.xui-order-firstTr {
+    background-color: #F2F0F0;
+    height: 38px;
+}
+
+.xui-order-firstTr td {
+    line-height: 38px !important;
+    padding: 0 !important;
+}
+
+.xui-table-orderDetail {
+    border-width: 0px 1px 1px 1px;
+    border-color: #ddd;
+    border-style: solid;
+}
+
+.xui-table-orderDetail tr td {
+    text-align: center;
+    vertical-align: middle !important;
+    padding: 0;
+}
+
+.xui-table-orderDetail tr:nth-child(2) td {
+    padding: 10px 0 !important;
+}
+
+.xui-table-orderDetail tr td p {
+    margin: 0;
+}
+
+.xui-table-orderDetail tr td ul li:first-child {
+    margin-top: 0;
+}
+.xui-table-orderDetail .xui-operation{
+    border-right: 1px solid #ccc;
+}
+.xui-table-orderDetail tr td ul li {
+    margin-top: 10px;
+}
+
+.xui-table-orderDetail td.xui-operation a {
+    display: block;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.xui-table-orderDetail td.xui-operation a:first-child {
+    margin-top: 0px;
+}
+.xui-table-orderDetail .xui-productName{
+	color:#0477e0;
+}
+/*批量发货样式*/
+.xui-batch_delivery_dialog .xui-dialogtitle {
+    line-height: 38px;
+    color: #fff;
+    margin-top: 0px;
+}
+
+.xui-batch_delivery_dialog .xui-expresslabel {
+    width: 102px;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 20px;
+
+}
+.xui-batch_delivery_dialog .xui-color-gray{
+	color: #666666;
+}
+.xui-batch_delivery_dialog .xui-express-t {
+    margin-left: 14px;
+}
+
+.xui-batch_delivery_dialog .xui-table-file {
+    width: 636px;
+    margin: auto;
+    background-color: #cdd1d4;
+}
+.xui-batch_delivery_dialog .xui-table-error{
+    width: 646px;
+    margin: auto;
+    margin-left: 30px;
+}
+
+.xui-batch_delivery_dialog .xui-batch_deliveryInfo{
+    width: 646px;
+    margin: auto;
+    margin-left: 30px;
+    line-height: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+.xui-batch_delivery_dialog .xui-table-error td,.xui-batch_delivery_dialog .xui-table-error th{
+    border:1px solid #ccc;
+}
+
+.xui-batch_delivery_dialog .xui-table-error {
+    border-top:1px solid #ccc;
+}
+.xui-batch_delivery_dialog .xui-table-error tbody > tr:nth-child(odd){
+    background: #fff;
+}
+.xui-batch_delivery_dialog .xui-table-error tbody > tr:nth-child(even){
+    background: #f0f9fe;
+}
+.xui-batch_delivery_dialog .xui-table-file tr {
+    height: 33px;
+}
+
+.xui-batch_delivery_dialog .xui-table-file tr td {
+    border: 1px solid #cdd1d4;
+    background-color: #fff;
+    text-align: center;
+}
+.xui-batch_delivery_dialog .xui-table-file tr th {
+    border: 1px solid #cdd1d4;
+    background-color: #eeeeee;
+    text-align: center;
+}
+
+.xui-batch_delivery_dialog .xui-table-file tr:first-child {
+    background-color: #eeeeee;
+}
+
+.xui-batch_delivery_dialog .xui-table-file tr td:first-child {
+    background-color: #eeeeee;
+    width: 72px;
+}
+
+.xui-batch_delivery_dialog .xui-table-file tr td {
+    width: 180px;
+}
+
+.xui-batch_delivery_dialog {
+    width: 706px;
+    height: 609px;
+
+}
+
+.xui-batch_delivery_dialog .xui-wrap {
+    width: 642px;
+    margin: auto;
+
+    padding: 0px;
+}
+
+.xui-batch_delivery_dialog .xui-explain {
+    line-height: 50px;
+}
+.xui-batch_delivery_dialog .xui-warning{
+	position: relative;
+	left:105px;
+	top:-39px;
+}
+.xui-batch_delivery_dialog .xui-controlbox
+{
+	margin-left: 50px;
+}
+.xui-batch_delivery_dialog .xui-text-file{
+	float: left;
+	line-height: 30px;
+}
+.xui-batch_delivery_dialog .xui-batch-delivery{
+    background-position: center top;
+    background-repeat: no-repeat;
+    border-radius: 2px;
+    font: 12px Arial,Helvetica,sans-serif;
+    text-align: center;
+    width: 84px !important;
+    margin-top: -17px;
+    margin-right: 50px;
+    margin-bottom: 17px;
+    border:none;
+
+}
+
+/*买家留言*/
+
+/*.xui-allOrders .xa-costomerMessage ~ .popover{
+ 	border: 1px solid #e48a0c;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(228, 138, 12, 0.7);
+}
+.xui-allOrders .xui-costomerMessage ~ .popover .popover-content{
+	padding:20px;
+	font-size: 12px;
+	line-height: 24px;
+}*/
+.xui-allOrders .xui-colorGray{
+    color:#999;
+}
+.xui-allOrders .xui-weizoomCard{
+    /*display: inline-block;*/
+}
+.xui-allOrders .xui-weizoomCard i{
+    display: inline-block;
+    width: 24px;
+    height: 17px;
+    background: url(/static_v2/img/editor/weizoomCard.jpg);
+    -webkit-background-size: 100%;
+    background-size: 100%;
+}
+.xui-allOrders .xui-weizoomCard span{
+    background: #fff;
+    display: inline-block;
+    min-width: 126px;
+    height: 32px;
+    border: 1px solid #56B2EC;
+    text-align: center;
+    line-height: 32px;
+    top:6px;
+    left: 20px;
+    z-index: 10;
+
+}
+.xui-costomerMessageDropBox {
+    border: 1px solid #e48a0c;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(228, 138, 12, 0.7);
+    padding: 20px;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+.xui-costomerMessage {
+    display: inline-block;
+    width: 20px;
+    height: 21px;
+    background: url(/static_v2/img/editor/note.jpg) no-repeat;
+    cursor: pointer;
+}
+
+/*卖家备注*/
+.xui-remark {
+    background-color: #fffdf0;
+    border: 1px solid #f0d58f !important;
+    width: 100%;
+    margin-bottom: -1px;
+    height: 37px;
+    line-height: 37px;
+    padding: 0;
+    text-align: left !important;
+}
+
+.xui-remark img {
+    margin: -1px 13px 2px
+
+}
+/*订单过期时间*/
+.xui-expiredTime-page section span{
+	line-height: 24px;
+}
+.xui-expiredTime-page .xui-mall-addProductForm section{
+	height:85px;
+	padding:0px 35px;
+	margin-top:0;
+}
+.xui-expiredTime-page .xui-btn-group{
+    margin-top: 26px;
+    margin-right: 210px;
+}
+.xui-expiredTime-page .form-control{
+	background: #f2f2f2;
+	margin:0 20px;
+}
+/*确认支付弹窗样式*/
+.xui-commonOrderPayDialog  {
+    width: 812px;
+}
+
+.xui-commonOrderPayDialog .modal-body {
+    max-height: 398px;
+    padding-left: 0px;
+    overflow-y: scroll;
+    padding-bottom: 15px;
+}
+
+.xui-commonOrderPayDialog table {
+    width: 740px;
+    margin: auto;
+    border: 1px solid #ccc;
+
+}
+
+.xui-commonOrderPayDialog table tr td {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    height: 105px;
+    padding: 30px;
+}
+
+.xui-commonOrderPayDialog table tr:first-child {
+    border-bottom: 1px solid #ccc;
+}
+
+.xui-commonOrderPayDialog table tr td, th {
+    text-align: center;
+}
+
+.xui-commonOrderPayDialog .xui-tdborder {
+    border-right: 1px solid #ccc !important;
+}
+
+.xui-commonOrderPayDialog .wui-dialogbtn {
+    margin-top: 20px;
+    margin-right: 50px;
+    float: right;
+}
+
+.xui-commonOrderPayDialog .modal-footer {
+    height: 73px;
+    background-color: #eaeef7;
+}
+
+.xui-commonOrderPayDialog .modal-footer .xui-info-p {
+    width: 270px;
+    text-align: left;
+    line-height: 15px;
+    margin-top: 27px;
+}
+
+.xui-commonOrderPayDialog .modal-footer .xui-innerwrap {
+    float: left;
+    margin-left: 27px;
+}
+
+.xui-commonOrderPayDialog .xui-input-postage,.xui-commonOrderPayDialog .xui-input-final_price {
+    width: 78px;
+    height: 40px;
+    text-align: center;
+    position: fixed;
+    top: 150px;
+}
+
+.xui-commonOrderPayDialog .xui-input-postage {
+    left: 550px;
+}
+
+.xui-commonOrderPayDialog .xui-input-final_price {
+    top: 138px;
+    border: 1px solid #ccc;
+    left: 672px;
+}
+
+.xui-commonOrderPayDialog .xui-productprice {
+    margin: auto;
+    text-align: center;
+}
+
+.xui-commonOrderPayDialog .xui-productinfo {
+    width: 120px;
+    margin: auto;
+    text-align: left;
+    line-height: 30px;
+}
+/*确认弹窗样式*/
+.xui-orderConfirmPop dd{
+	width: 100%;
+	display:table;
+}
+.xui-orderConfirmPop dd div{
+	display:table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+.xui-orderConfirmPop dd .xui-i-msg{
+	white-space: nowrap;
+	/*line-height: 40px;*/
+}
+/*财务审核确认弹窗样式*/
+/*.xui-orderAuditConfirmPop dd div:first-child{
+	margin: 15px auto;
+    text-align: center;
+}
+.xui-orderAuditConfirmPop dd div:nth-child(2),.xui-orderAuditConfirmPop dd div:last-child{
+	display:inline-block;
+}
+.xui-orderAuditConfirmPop dd div:nth-child(3){
+	margin-left:115px;
+}
+.xui-orderAuditConfirmPop dd div:nth-child(2){
+	margin-left:35px;
+}
+.xui-orderAuditConfirmPop .wui-confirmView dd div{
+
+}*/
+/*卖家备注弹框*/
+/*.xui-remarkDropBox .drop-box-arrow-right{
+	top: 43px;
+}*/
+/*发货、修改物流弹窗*/
+/*.xui-shipDropBox .drop-box-arrow-right{
+	top: 60px;
+}*/
+.xui-shipDropBox {
+    padding: 20px 0;
+    font-size: 12px;
+}
+
+.xui-shipDropBox .form-group .control-label {
+    padding: 0;
+    font-weight: normal;
+}
+
+.xui-shipDropBox .form-group .radio-inline {
+    padding-top: 0;
+}
+
+.xui-shipDropBox .xui-error {
+    color: #d10000;
+    margin: -5px 25px -10px 40px;
+    text-align: right;
+}
+
+.xui-ml40 {
+    margin-left: 40px;
+}
+
+/*订单详情页样式*/
+.xui-orderDetialPage .form-horizontal .control-group {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.xui-orderDetialPage .form-horizontal legend {
+    margin-bottom: 10px;
+}
+
+.xui-orderDetialPage .xui-orderinfo {
+    width: 100%;
+    height: 145px;
+    background-color: #eaeef6;
+}
+
+.xui-orderDetialPage .xui-orderinfo .xui-info-p {
+    margin-left: 56px;
+    color: #000;
+}
+
+.xui-orderDetialPage .xui-orderinfo .xui-info-value {
+    margin-left: 10px;
+    color: #666666;
+}
+
+.xui-orderDetialPage .xui-orderwrap {
+    width: 996px;
+}
+
+.xui-orderDetialPage .xui-orderstate {
+    width: 100%;
+    height: 160px;
+    background-color: #fff;
+    text-align: center;
+    padding-top: 5px;
+     padding-bottom: 10px;
+}
+
+.xui-orderDetialPage .xui-ordernom {
+    height: 100px;
+    background-color: #eaeef6;
+}
+
+.xui-orderDetialPage .xui-containertop {
+    background-color: #c8d2e5;
+    width: 100%;
+    height: 35px;
+}
+
+.xui-orderDetialPage .xuicontainer {
+    width: 100%;
+    margin-top: 22px;
+    border: 1px solid #d7e0e7;
+}
+
+.xui-orderDetialPage .xui-customerinfo {
+    background-color: #eaeef6;
+    width: 100%;
+    min-height: 66px;
+    padding-bottom: 10px;
+}
+
+.xui-orderDetialPage .xui-customerinfo .container {
+    background-color: transparent;
+    width: 100%;
+    min-height: 100px;
+    margin-top: 30px;
+}
+
+.xui-orderDetialPage .xui-customerinfo .container .xui-innerwrap {
+    margin-left: 29px;
+}
+
+.xui-orderDetialPage .xui-customerinfo .container [class^="col-"] {
+    padding-left: 56px;
+}
+
+.xui-orderDetialPage .xui-customerinfo .container [class^="col-"]:last-child {
+    border-left: 1px solid #d7d7d7;
+    height: 130px;
+}
+
+.xui-orderDetialPage .xui-customerinfo .container .xui-innerwrap p {
+    margin-bottom: 0px;
+}
+
+.xui-orderDetialPage .xui-title {
+    color: #333333;
+    line-height: 10px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    margin-top: 3px;
+}
+
+.xui-orderDetialPage .xui-wuliuinfo {
+    background-color: #eaeef6;
+    width: 100%;
+    min-height: 87px;
+    padding-left: 56px;
+    padding-top: 18px;
+    padding-bottom: 14px;
+}
+.xui-orderDetialPage .xui-wuliuinfo .xui-Logtable{
+    width: 500px;
+}
+.xui-orderDetialPage .xui-wuliuinfo .xui-Logtable th,.xui-orderDetialPage .xui-wuliuinfo .xui-Logtable td{
+   text-align: left;
+}
+.xui-orderDetialPage .xui-wuliuinfo .xui-Logtable th{
+   font-weight: bold;
+}
+
+.xui-orderDetialPage .xui-orderinfo {
+    background-color: #eaeef6;
+    width: 100%;
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 50px;
+}
+
+.xui-orderDetialPage .xui-orderinfo .container {
+    min-height: 160px;
+    border: 1px solid #c3c9ce;
+}
+
+.xui-orderDetialPage .xui-ordernom .control-group {
+    float: left;
+    margin-left: 190px;
+    line-height: 100px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.xui-orderDetialPage .xui-ordernomcon {
+    background-color: #eaeef6;
+
+}
+
+.xui-orderDetialPage .xui-btngroup .btn:first-child {
+    color: #fff;
+    border-color: #207cbe;
+    background-color: #207cbe;
+    margin-left: 30px;
+}
+
+.xui-orderDetialPage .xui-btngroup .btn {
+    width: 90px;
+    height: 35px;
+    background-color: #fff;
+    font-weight: bold;
+    margin-left: 30px;
+    color: #000;
+    border-color: #ccc;
+    margin-bottom: 20px;
+}
+
+.xui-orderDetialPage .xui-orderDetialPage .control-group {
+    margin-top: 0px;
+
+}
+
+.xui-orderDetialPage .xui-orderDetialPage .control-group p {
+
+}
+
+.xui-orderDetialPage .xui-infotitle {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 35px;
+    margin-left: 30px;
+}
+
+.xui-orderDetialPage .xui-btngroup {
+    clear: both;
+    width: 600px;
+    text-align: center;
+    margin: auto;
+}
+
+.xui-orderDetialPage .xui-btn:first-child {
+
+    color: #fff;
+}
+
+.xui-orderDetialPage .container {
+    padding: 0px;
+    width: 98%;
+    margin: auto;
+}
+
+.xui-orderDetialPage .xui-conheader .row:first-child {
+    background-color: #e1ebfd;
+    line-height: 35px;
+    height: 40px;
+}
+
+.xui-orderDetialPage .xui-conheader .row {
+    height: 80px;
+    vertical-align: middle;
+    font-size: 12px;
+    text-align: center;
+}
+
+.xui-orderDetialPage .xui-conheader .row p {
+    padding-top: 30px;
+}
+
+.xui-orderDetialPage .container .xui-wrap {
+    height: 45px;
+    width: 410px;
+    margin: auto;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.xui-orderDetialPage .xui-stateimg {
+    width: 652px;
+    min-height: 26px;
+    margin: auto;
+    margin-top: 60px;
+}
+
+.xui-orderDetialPage .xui-stateimg .xui-state {
+    width: 164px;
+    height: 160px;
+    padding-top: 7px;
+
+    display: inline-block;
+    text-align: center;
+    line-height: 44px;
+    position: relative;
+    margin-left: -8px
+}
+
+.xui-orderDetialPage .xui-stateimg {
+    font-weight: bold;
+}
+
+.xui-orderDetialPage .xui-stateimg:first-child p {
+    color: #000;
+    font-weight: normal;
+}
+
+.xui-orderDetialPage .xui-stateimg:last-child p {
+    line-height: 20px;
+}
+
+.xui-orderDetialPage .xui-btnfh {
+    color: #fff !important;
+}
+
+.xui-orderDetialPage .xui-summary {
+    height: 120px;
+    width: 35%;
+    margin-left: 66%;
+    margin-top: 33px;
+}
+
+.xui-orderDetialPage .xui-summary p {
+    width: 172px;
+    float: left;
+}
+
+.xui-orderDetialPage .xui-summary .xui-field {
+    clear: both;
+    margin-left: 55px;
+    text-align: right;
+
+}
+
+.xui-orderDetialPage .xui-summary .xui-line {
+    height: 1px;
+    width: 180px;
+    float: left;
+    clear: both;
+    margin-left: 60px;
+    background-color: #ccc;
+    margin-bottom: 5px;
+}
+
+.xui-orderDetialPage .xui-summary .xui-line-long {
+    height: 1px;
+    width: 300px;
+    float: left;
+    clear: both;
+    background-color: #ccc;
+    margin-bottom: 5px;
+}
+
+.xui-orderDetialPage .xui-summary .xui-value {
+    margin-left: 24px;
+    width: 80px;
+    color: #CF0404;
+}
+
+.xui-orderDetialPage .row p {
+    color: #5E574C;
+}
+
+.xui-orderDetialPage .xui-allnum {
+    color: red;
+    margin: 0, 23px, 0, 3px;
+}
+.xui-orderDetialPage .xui-money {
+    color: #CF0404;
+    margin: 0, 23px, 0, 3px;
+}
+
+.xui-orderDetialPage .xui-bk {
+    background-color: #eaeef6;
+}
+
+.xui-orderDetialPage .xui-notify {
+    width: 14px;
+    height: 14px;
+    float: right;
+    position: relative;
+    top: -25px;
+    left: -43px;
+}
+
+
+
+.xui-orderDetialPage .xui-backgroundpay {
+    position:relative; top:-66px; left:80px; height:30px;
+
+}
+
+.xui-orderDetialPage .xui-log-status {
+    font-weight: bold !important;
+    position:relative; top:-36px;
+}
+.xui-orderDetialPage .xui-log-time{
+   position:relative; top:-42px;
+}
+
+.xui-orderDetialPage .xui-logstatus-p {
+    height: 100px;
+    overflow: hidden;
+}
+
+.xui-orderDetialPage .xui-producttab {
+    width: 98%;
+    margin: auto;
+    border: 1px solid #c3c9ce;
+    background-color: #fff;
+    text-align: center;
+
+}
+.xui-orderDetialPage .xui-producttab thead{
+    background-color: red;
+}
+.xui-orderDetialPage .xui-producttab tr:first-child {
+    height: 40px;
+    line-height: 35px;
+}
+
+.xui-orderDetialPage .xui-producttab tr {
+    height: 40px !important;
+}
+
+
+.xui-orderDetialPage .xui-producttab tr td {
+	vertical-align: middle;
+
+   padding-top: 15px;
+    height: 42px;
+    padding-bottom:4px;
+}
+.xui-orderDetialPage .xui-producttab tr th {
+	font-weight: bold;
+    background-color: #c8d2e5;
+}
+
+.xui-orderDetialPage .xui-producttab tr td:first-child {
+    text-align: left;
+}
+.xui-orderDetialPage .xui-producttab tr:last-child td:first-child {
+   padding-bottom: 15px;
+}
+
+.xui-orderDetialPage .xui-producttab .xui-img {
+    width: 42px;
+    height: 42px;
+    float: left;
+    overflow: hidden;
+    border:1px solid #ccc;
+
+}
+
+.xui-orderDetialPage .xui-producttab .xui-colorsize {
+
+    margin-top: -5px;
+    line-height: 10px;
+    text-align: left;
+}
+
+.xui-orderDetialPage .xui-producttab .xui-a-productname {
+    margin-left:0px;
+    line-height:12px;
+    margin-top: 5px;
+    text-align: left;
+}
+
+
+.xui-orderDetialPage .xui-producttab td .xui-td-first {
+    width: 24%;
+}
+.xui-orderDetialPage .xui-producttab .xui-td-third {
+    border-right: #ccc solid 1px;
+}
+.xui-orderDetialPage .xui-producttab .xui-td-fourth {
+    width: 16%;
+    border-right: #ccc solid 1px;
+}
+.xui-orderDetialPage .xui-producttab .xui-td-fifth {
+    width: 16%;
+    border-right: #ccc solid 1px;
+}
+.xui-orderDetialPage .xui-producttab .xui-td-sixth {
+    width: 8%;
+}
+.xui-orderDetialPage .xui-producttab .xui-td-img{
+	 width:80px;
+	 padding-left:24px;
+}
+.ui-timepicker-div{
+    widht:100%;
+    height:30px;
+}
+.ui-timepicker-div dl dt,dd{
+    width:50px;
+    height:15px;
+    float:left;
+    line-height:2;
+    text-align: center;
+}
+.ui_tpicker_time{
+    display:none;
+}
+.ui-timepicker-div dl dt:first-child{
+   display:none;
+
+}

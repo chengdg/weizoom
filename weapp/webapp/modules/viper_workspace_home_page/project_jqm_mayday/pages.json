@@ -1,0 +1,841 @@
+[
+ {
+  "created_at": "2014-05-14 22:31:48", 
+  "component": {
+   "cid": 1, 
+   "pid": null, 
+   "property_view_title": "\u80cc\u666f", 
+   "force_display_in_property_view": "no", 
+   "components": [
+    {
+     "cid": 11, 
+     "pid": 1, 
+     "property_view_title": "\u5bfc\u822a\u6309\u94ae", 
+     "force_display_in_property_view": "no", 
+     "components": [
+      {
+       "cid": 12, 
+       "pid": 11, 
+       "property_view_title": "\u56fe\u6807Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.nav_icon_grid_button", 
+       "model": {
+        "index": 2, 
+        "name": "", 
+        "color": "#F46B41", 
+        "text": " \u7528\u6237\u4e2d\u5fc3", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "/termite_static/termite_img/nav_icons/icon_White/icon1_02.png", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u3010\u9759\u6001\u94fe\u63a5\u3011\u4e2a\u4eba\u4e2d\u5fc3\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u3010\u9759\u6001\u94fe\u63a5\u3011\u4e2a\u4eba\u4e2d\u5fc3\",\"data\":\"static_nav:user_center\"}"
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 13, 
+       "pid": 11, 
+       "property_view_title": "\u56fe\u6807Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.nav_icon_grid_button", 
+       "model": {
+        "index": 4, 
+        "name": "", 
+        "color": "none", 
+        "text": "\u8d2d\u7269\u8f66", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "/termite_static/termite_img/nav_icons/icon_White/icon1_08.png", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u3010\u9759\u6001\u94fe\u63a5\u3011\u8d2d\u7269\u8f66\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u3010\u9759\u6001\u94fe\u63a5\u3011\u8d2d\u7269\u8f66\",\"data\":\"static_nav:shopping_cart\"}"
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 37, 
+       "pid": 11, 
+       "property_view_title": "\u56fe\u6807Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.nav_icon_grid_button", 
+       "model": {
+        "index": 1, 
+        "name": "", 
+        "color": "none", 
+        "text": "\u9996\u9875", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "/termite_static/termite_img/nav_icons/icon_White/icon1_01.png", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u3010\u9759\u6001\u94fe\u63a5\u3011\u9996\u9875\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u3010\u9759\u6001\u94fe\u63a5\u3011\u9996\u9875\",\"data\":\"static_nav:homepage\"}"
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 38, 
+       "pid": 11, 
+       "property_view_title": "\u56fe\u6807Button", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.nav_icon_grid_button", 
+       "model": {
+        "index": 3, 
+        "name": "", 
+        "color": "none", 
+        "text": "\u8ba2\u5355\u5217\u8868", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "icon": "/termite_static/termite_img/nav_icons/icon_White/icon1_21.png", 
+        "class": "", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u3010\u9759\u6001\u94fe\u63a5\u3011\u8ba2\u5355\u5217\u8868\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u3010\u9759\u6001\u94fe\u63a5\u3011\u8ba2\u5355\u5217\u8868\",\"data\":\"static_nav:order_list\"}"
+       }, 
+       "has_global_content": "no"
+      }
+     ], 
+     "selectable": "yes", 
+     "type": "jqm.nav_icon_grid", 
+     "model": {
+      "index": 2, 
+      "name": "", 
+      "items": [
+       12, 
+       13, 
+       37, 
+       38
+      ], 
+      "height": "", 
+      "width": "", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "id": "xui-homePageNav", 
+      "fixed_position": "none", 
+      "class": "xui-homePageNav", 
+      "columns": "4"
+     }, 
+     "has_global_content": "no"
+    }, 
+    {
+     "cid": 14, 
+     "pid": 1, 
+     "property_view_title": "\u8f6e\u64ad\u56fe", 
+     "force_display_in_property_view": "no", 
+     "components": [
+      {
+       "cid": 15, 
+       "pid": 14, 
+       "property_view_title": "\u56fe\u7247", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.swipeimage", 
+       "model": {
+        "index": 1, 
+        "name": "", 
+        "text": "\u56fe\u7247", 
+        "image": "/standard_static/test_resource_img/mayday/banner_2.jpg", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "class": "", 
+        "target": ""
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 16, 
+       "pid": 14, 
+       "property_view_title": "\u56fe\u7247", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.swipeimage", 
+       "model": {
+        "index": 2, 
+        "name": "", 
+        "text": "\u56fe\u7247", 
+        "image": "/standard_static/test_resource_img/mayday/banner_3.jpg", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "class": "", 
+        "target": ""
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 17, 
+       "pid": 14, 
+       "property_view_title": "\u56fe\u7247", 
+       "force_display_in_property_view": "no", 
+       "selectable": "no", 
+       "type": "jqm.swipeimage", 
+       "model": {
+        "index": 3, 
+        "name": "", 
+        "text": "\u56fe\u7247", 
+        "image": "/standard_static/test_resource_img/mayday/banner_4.jpg", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "class": "", 
+        "target": ""
+       }, 
+       "has_global_content": "no"
+      }
+     ], 
+     "selectable": "yes", 
+     "type": "jqm.swipeimage_group", 
+     "model": {
+      "index": 1, 
+      "name": "", 
+      "items": [
+       15, 
+       16, 
+       17
+      ], 
+      "image_width": "588px", 
+      "uploadHeight": "179px", 
+      "id": "", 
+      "width": "100%", 
+      "uploadWidth": "640px", 
+      "image_height": "358px", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "class": ""
+     }, 
+     "has_global_content": "no"
+    }, 
+    {
+     "cid": 18, 
+     "pid": 1, 
+     "property_view_title": "Data Column Group List", 
+     "force_display_in_property_view": "no", 
+     "components": [
+      {
+       "cid": 32, 
+       "pid": 18, 
+       "property_view_title": "\u6570\u636e\u96c6", 
+       "force_display_in_property_view": "no", 
+       "components": [
+        {
+         "cid": 33, 
+         "pid": 32, 
+         "property_view_title": "\u6570\u636e\u5217", 
+         "force_display_in_property_view": "no", 
+         "components": [
+          {
+           "cid": 34, 
+           "pid": 33, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 1, 
+            "name": "", 
+            "original_price": "999.0", 
+            "text": "\u7403\u978b1", 
+            "image": "/standard_static/test_resource_img/mayday/sale_2.jpg", 
+            "id": "", 
+            "price": "1.00", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": "{\"workspace\":\"1\",\"workspace_name\":\"\u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u6587\u7ae0\u5206\u7c7b\",\"data_item_name\":\"\u5168\u90e8\",\"data_path\":\"\u6587\u7ae0\u7ba1\u7406-\u6587\u7ae0\u5206\u7c7b-\u5168\u90e8\",\"data\":\"./?module=cms&model=category&rid=0&workspace_id=cms&webapp_owner_id=2&project_id=0\"}"
+           }, 
+           "has_global_content": "no"
+          }, 
+          {
+           "cid": 35, 
+           "pid": 33, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 2, 
+            "name": "", 
+            "original_price": "2000.0", 
+            "text": "\u7403\u978b2", 
+            "image": "/standard_static/test_resource_img/mayday/p1.jpg", 
+            "id": "", 
+            "price": "1.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }
+         ], 
+         "selectable": "yes", 
+         "type": "jqm.datacolumn", 
+         "model": {
+          "index": 10, 
+          "name": "", 
+          "items": [
+           34, 
+           35
+          ], 
+          "id": "", 
+          "datasource": {
+           "api_name": "", 
+           "type": "api"
+          }, 
+          "text": "\u6570\u636e\u52171", 
+          "class": ""
+         }, 
+         "has_global_content": "no"
+        }
+       ], 
+       "selectable": "yes", 
+       "type": "jqm.datacolumn_group", 
+       "model": {
+        "index": 1, 
+        "name": "", 
+        "text": "\u9650\u65f6\u62a2\u8d2d", 
+        "is_only_show_product_name": "no", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "items": [
+         33
+        ], 
+        "class": "", 
+        "columns": "1", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"1                                                    1                         \u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data_path\":\"1                                                    1                         \u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data\":\"javascript:W.alertEditTemplateLinkTarget();\"}"
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 39, 
+       "pid": 18, 
+       "property_view_title": "\u6570\u636e\u96c6", 
+       "force_display_in_property_view": "no", 
+       "components": [
+        {
+         "cid": 40, 
+         "pid": 39, 
+         "property_view_title": "\u6570\u636e\u5217", 
+         "force_display_in_property_view": "no", 
+         "components": [
+          {
+           "cid": 41, 
+           "pid": 40, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 1, 
+            "name": "", 
+            "original_price": "2.0", 
+            "text": "", 
+            "image": "/standard_static/test_resource_img/mayday/hot_6.jpg", 
+            "id": "", 
+            "price": "1.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }, 
+          {
+           "cid": 42, 
+           "pid": 40, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 2, 
+            "name": "", 
+            "original_price": "2.0", 
+            "text": "\u70ed\u95e8\u7403\u978b1", 
+            "image": "/standard_static/test_resource_img/mayday/hot_1.jpg", 
+            "id": "", 
+            "price": "1.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }
+         ], 
+         "selectable": "yes", 
+         "type": "jqm.datacolumn", 
+         "model": {
+          "index": 1, 
+          "name": "", 
+          "items": [
+           41, 
+           42
+          ], 
+          "id": "", 
+          "datasource": {
+           "api_name": "", 
+           "type": "api"
+          }, 
+          "text": "\u6570\u636e\u52171", 
+          "class": ""
+         }, 
+         "has_global_content": "no"
+        }, 
+        {
+         "cid": 43, 
+         "pid": 39, 
+         "property_view_title": "\u6570\u636e\u5217", 
+         "force_display_in_property_view": "no", 
+         "components": [
+          {
+           "cid": 44, 
+           "pid": 43, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 1, 
+            "name": "", 
+            "original_price": "2.0", 
+            "text": "\u70ed\u95e8\u7403\u978b2", 
+            "image": "/standard_static/test_resource_img/mayday/hot_2.jpg", 
+            "id": "", 
+            "price": "1.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }, 
+          {
+           "cid": 45, 
+           "pid": 43, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 2, 
+            "name": "", 
+            "original_price": "2.0", 
+            "text": "", 
+            "image": "/standard_static/test_resource_img/mayday/hot_7.jpg", 
+            "id": "", 
+            "price": "1.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }
+         ], 
+         "selectable": "yes", 
+         "type": "jqm.datacolumn", 
+         "model": {
+          "index": 2, 
+          "name": "", 
+          "items": [
+           44, 
+           45
+          ], 
+          "id": "", 
+          "datasource": {
+           "api_name": "", 
+           "type": "api"
+          }, 
+          "text": "\u6570\u636e\u52172", 
+          "class": ""
+         }, 
+         "has_global_content": "no"
+        }, 
+        {
+         "cid": 46, 
+         "pid": 39, 
+         "property_view_title": "\u6570\u636e\u5217", 
+         "force_display_in_property_view": "no", 
+         "components": [
+          {
+           "cid": 47, 
+           "pid": 46, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 1, 
+            "name": "", 
+            "original_price": "2.0", 
+            "text": "\u70ed\u95e8\u7403\u978b3", 
+            "image": "/standard_static/test_resource_img/mayday/hot_3.jpg", 
+            "id": "", 
+            "price": "1.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }, 
+          {
+           "cid": 48, 
+           "pid": 46, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 2, 
+            "name": "", 
+            "original_price": "2.0", 
+            "text": "\u70ed\u95e8\u7403\u978b4", 
+            "image": "/standard_static/test_resource_img/mayday/hot_4.jpg", 
+            "id": "", 
+            "price": "1.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }, 
+          {
+           "cid": 49, 
+           "pid": 46, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 3, 
+            "name": "", 
+            "original_price": "", 
+            "text": "\u70ed\u95e8\u7403\u978b5", 
+            "image": "/standard_static/test_resource_img/mayday/hot_5.jpg", 
+            "id": "", 
+            "price": "", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }
+         ], 
+         "selectable": "yes", 
+         "type": "jqm.datacolumn", 
+         "model": {
+          "index": 3, 
+          "name": "", 
+          "items": [
+           47, 
+           48, 
+           49
+          ], 
+          "id": "", 
+          "datasource": {
+           "api_name": "", 
+           "type": "api"
+          }, 
+          "text": "\u6570\u636e\u52173", 
+          "class": ""
+         }, 
+         "has_global_content": "no"
+        }
+       ], 
+       "selectable": "yes", 
+       "type": "jqm.datacolumn_group", 
+       "model": {
+        "index": 2, 
+        "name": "", 
+        "text": "\u70ed\u95e8\u63a8\u8350", 
+        "is_only_show_product_name": "yes", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "items": [
+         40, 
+         43, 
+         46
+        ], 
+        "class": "", 
+        "columns": "3", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"1                                                    1                         \u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data_path\":\"1                                                    1                         \u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data\":\"javascript:W.alertEditTemplateLinkTarget();\"}"
+       }, 
+       "has_global_content": "no"
+      }, 
+      {
+       "cid": 50, 
+       "pid": 18, 
+       "property_view_title": "\u6570\u636e\u96c6", 
+       "force_display_in_property_view": "no", 
+       "components": [
+        {
+         "cid": 51, 
+         "pid": 50, 
+         "property_view_title": "\u6570\u636e\u5217", 
+         "force_display_in_property_view": "no", 
+         "components": [
+          {
+           "cid": 52, 
+           "pid": 51, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 1, 
+            "name": "", 
+            "original_price": "600.0", 
+            "text": "\u7279\u4ef7\u7403\u978b1", 
+            "image": "/standard_static/test_resource_img/mayday/sale_1.jpg", 
+            "id": "", 
+            "price": "400.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }
+         ], 
+         "selectable": "yes", 
+         "type": "jqm.datacolumn", 
+         "model": {
+          "index": 1, 
+          "name": "", 
+          "items": [
+           52
+          ], 
+          "id": "", 
+          "datasource": {
+           "api_name": "", 
+           "type": "api"
+          }, 
+          "text": "", 
+          "class": ""
+         }, 
+         "has_global_content": "no"
+        }, 
+        {
+         "cid": 60, 
+         "pid": 50, 
+         "property_view_title": "\u6570\u636e\u5217", 
+         "force_display_in_property_view": "no", 
+         "components": [
+          {
+           "cid": 61, 
+           "pid": 60, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 1, 
+            "name": "", 
+            "original_price": "600.0", 
+            "text": "\u7279\u4ef7\u7403\u978b2", 
+            "image": "/standard_static/test_resource_img/mayday/sale_2.jpg", 
+            "id": "", 
+            "price": "300.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }
+         ], 
+         "selectable": "yes", 
+         "type": "jqm.datacolumn", 
+         "model": {
+          "index": 2, 
+          "name": "", 
+          "items": [
+           61
+          ], 
+          "id": "", 
+          "datasource": {
+           "api_name": "", 
+           "type": "api"
+          }, 
+          "text": "", 
+          "class": ""
+         }, 
+         "has_global_content": "no"
+        }, 
+        {
+         "cid": 63, 
+         "pid": 50, 
+         "property_view_title": "\u6570\u636e\u5217", 
+         "force_display_in_property_view": "no", 
+         "components": [
+          {
+           "cid": 64, 
+           "pid": 63, 
+           "property_view_title": "\u6570\u636e", 
+           "force_display_in_property_view": "no", 
+           "selectable": "no", 
+           "type": "jqm.datacolumn_data", 
+           "model": {
+            "index": 1, 
+            "name": "", 
+            "original_price": "150.0", 
+            "text": "\u7279\u4ef7T\u6064", 
+            "image": "/standard_static/test_resource_img/mayday/sale_3.jpg", 
+            "id": "", 
+            "price": "55.0", 
+            "datasource": {
+             "api_name": "", 
+             "type": "api"
+            }, 
+            "class": "", 
+            "target": ""
+           }, 
+           "has_global_content": "no"
+          }
+         ], 
+         "selectable": "yes", 
+         "type": "jqm.datacolumn", 
+         "model": {
+          "index": 3, 
+          "name": "", 
+          "items": [
+           64
+          ], 
+          "id": "", 
+          "datasource": {
+           "api_name": "", 
+           "type": "api"
+          }, 
+          "text": "", 
+          "class": ""
+         }, 
+         "has_global_content": "no"
+        }
+       ], 
+       "selectable": "yes", 
+       "type": "jqm.datacolumn_group", 
+       "model": {
+        "index": 3, 
+        "name": "", 
+        "text": "\u4eca\u65e5\u7279\u4ef7", 
+        "is_only_show_product_name": "no", 
+        "id": "", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "items": [
+         51, 
+         60, 
+         63
+        ], 
+        "class": "", 
+        "columns": "3", 
+        "target": "{\"workspace\":\"1\",\"workspace_name\":\"1                                                    1                                                    1                         \u6587\u7ae0\u7ba1\u7406\",\"data_category\":\"\u9875\u9762\",\"data_item_name\":\"\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data_path\":\"1                                                    1                                                    1                         \u6587\u7ae0\u7ba1\u7406-\u9875\u9762-\u7f16\u8f91\u94fe\u63a5\u63d0\u793a\",\"data\":\"javascript:W.alertEditTemplateLinkTarget();\"}"
+       }, 
+       "has_global_content": "no"
+      }
+     ], 
+     "selectable": "yes", 
+     "type": "jqm.datacolumn_group_list", 
+     "model": {
+      "index": 4, 
+      "name": "", 
+      "items": [
+       32, 
+       39, 
+       50
+      ], 
+      "class": "", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "id": ""
+     }, 
+     "has_global_content": "no"
+    }
+   ], 
+   "selectable": "yes", 
+   "type": "jqm.page", 
+   "model": {
+    "index": 1, 
+    "name": "", 
+    "title": "index", 
+    "datasource_page_id": "", 
+    "theme": "x", 
+    "uploadHeight": "568", 
+    "id": "", 
+    "event:onload": "", 
+    "uploadWidth": "320", 
+    "datasource": {
+     "api_name": "", 
+     "type": "api"
+    }, 
+    "background": "", 
+    "content_padding": "0px", 
+    "class": "xui-homePage"
+   }, 
+   "has_global_content": "no"
+  }, 
+  "updated_at": "2014-05-14 22:31:48", 
+  "display_index": "1", 
+  "project_id": "15", 
+  "page_id": "1", 
+  "pp_id": "15_1"
+ }
+]

@@ -1,0 +1,255 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style type="text/css">
+#product-form input[type='text'], #product-form textarea {
+	width: 330px;
+}
+.star_show:before{
+    content: '';
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li>
+		<a href="/market_tools/red_envelope/">微信红包</a>
+		<span class="divider">/</span>
+	</li>
+	<li class="active">{% if red_envelope.id %}更新{% else %}添加{% endif %}红包</li>
+</ul>
+<div id="red_envelopeLayer" is_edit_page="{% if red_envelope.name %}true{% endif %}">
+<form class="form-horizontal" method="post" id="roulette-form">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">微信红包名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入活动名称" value="{{ red_envelope.name }}" data-validate="required" data-validate-max-length="14" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="total_award_value">红包总额：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="total_award_value" name="total_award_value" placeholder="输入红包总额" value="{{ red_envelope.total_award_value }}"
+				       data-validate="can-none-length-limit" data-validate-max-length="8" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="desc">红包描述：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="desc" name="desc" placeholder="输入红包描述" value="{{ red_envelope.desc }}"
+				       data-validate="can-none-length-limit" data-validate-max-length="36" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+        
+        <!--
+		<div class="control-group">
+			<label class="control-label" for="probability">预计参与人数：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge w50" id="expected_participation_count" name="expected_participation_count" placeholder=""
+				       value="{% if red_envelope.expected_participation_count %}{{ red_envelope.expected_participation_count }}{% else %}0{% endif %}"
+				       data-validate="require-int"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+        -->
+
+		<div class="control-group">
+			<label class="control-label" for="head_url">非会员可参与：</label>
+			<div class="controls">
+				<label class="checkbox">
+					<input type="checkbox" {% if red_envelope.is_non_member or red_envelope.id == None %}checked{% endif %}
+					       name="is_non_member">
+				</label>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="logo_url">logo图片：</label>
+			<div class="controls x-thumbnailUrl">
+				<input type="hidden" name="logo_url" id="logo_url" value="{% if red_envelope.logo_url %}
+				{{ red_envelope.logo_url }}{% endif %}" data-ui-role="image-selector" data-width="82"
+				       data-height="47"/>
+				<div data-ui-role="image-selector-view"></div>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+            <label class="control-label" for="probability">奖项设置：</label>
+			<div class="controls w500">
+			<!--
+				<div class=" prizeItem">
+                    <p>
+                        <span class="label">奖项名称：</span>
+                        <span>谢谢参与</span>
+                    </p>
+                    <p>
+                        <span class="label">中奖率：</span>
+                        <input name="no_prize_odd" type="text" class="span1 tx_odds" value="{{red_envelope.no_prize_odd}}" data-validate="require-int">%
+                        <span class="errorHint"></span>
+                    </p>
+                </div>
+			-->
+                {% if red_envelope.prizes %}
+                {% for prize in red_envelope.prizes %}
+				<div class="tx_prizeItem prizeItem">
+                    <button class="close tx_removeItem" type="button">×</button>
+                    <p>
+                        <span class="label">奖项名称：</span>
+                        <span class="tx_prize_name">一等奖</span>
+                        <input name="prize_name|1" type="text" class="span2 tx_prize_name_input" style="display: none" value="{{prize.name}}" >
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">中奖率：</span>
+                        <input name="prize_odds|1" type="text" class="span1 tx_odds" value="{{prize.odds}}" data-validate="require-int">%
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">奖品数：</span>
+                        <input name="prize_count|1" type="text" class="span1" value="{{prize.count}}" data-validate="required-custom-function" data-validate-function="validatePrizeCount">
+                        <span class="errorHint"></span>
+                    </p>
+                    <div class="zoom">
+                        <span class="label">奖品类型：</span>
+                        <select name="prize_type|1" class="span2" value="{{prize.prize_type}}">
+                            {% if coupon_rules %}<option value="1">优惠劵</option>{% endif %}
+                            <!--<option value="2">兑换码</option>-->
+                            <option value="3">积分</option>
+                            <option value="0">实物奖品</option>
+                        </select>
+                        
+                        <select class="span2 xua-coupon" name="prize_source|1" for_type="1" disabled="disabled" style="display:none;" {% if prize.prize_type == 1 %}value="{{prize.prize_source}}"{% endif %}>
+                            <option value="">请选择优惠劵...</option>
+                            {% for rule in coupon_rules %}
+                            <option value="{{rule.id}}" data-count="{{rule.remained_count}}">{{rule.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <span class="xua-remainedCount hide"></span>
+                        <!--<select class="span2" name="prize_source|1" for_type="2" disabled="disabled" style="display:none;" {% if prize.prize_type == 2 %}value="{{prize.prize_source}}"{% endif %}>
+                            <option value="">请选择兑换码...</option>
+                        </select>-->
+                        <input type="text" class="span2" name="prize_source|1" for_type="3" disabled="disabled" style="display:none;" {% if prize.prize_type == 3 %}value="{{prize.prize_source}}"{% endif %} placeholder="请输入积分数值">
+                        <input type="text" class="span2" name="prize_source|1" for_type="0" disabled="disabled" style="display:none;" {% if prize.prize_type == 0 %}value="{{prize.prize_source}}"{% endif %} placeholder="请输入奖品内容">
+                        <p class="errorHint ml80 pl5"></p>
+                        <p><a target="_blank" class="hide">增加码库</a></p>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="tx_prizeItem prizeItem">
+                    <button class="close tx_removeItem" type="button">×</button>
+                    <p>
+                        <span class="label">奖项名称：</span>
+                        <span class="tx_prize_name">一等奖</span>
+                        <input name="prize_name|1" type="text" value="一等奖" class="span2 tx_prize_name_input" style="display: none">
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">中奖率：</span>
+                        <input name="prize_odds|1" type="text" class="span1 tx_odds" data-validate="require-int">%
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">奖品数：</span>
+                        <input name="prize_count|1" type="text" class="span1" data-validate="required-custom-function" data-validate-function="validatePrizeCount">
+                        <span class="errorHint"></span>
+                    </p>
+                    <div class="zoom">
+                            <span class="label">奖品类型：</span>
+                            <select name="prize_type|1" class="span2 mr10 √">
+                                {% if coupon_rules %}<option value="1">优惠劵</option>{% endif %}
+                                <!--<option value="2">兑换码</option>-->
+                                <option value="3">积分</option>
+                                <option value="0">实物奖品</option>
+                            </select>
+                            
+                            <select class="span2 xua-coupon" name="prize_source|1" for_type="1" disabled="disabled" style="display:none;">
+                                <option value="">请选择优惠劵...</option>
+                                {% for rule in coupon_rules %}
+                                <option value="{{rule.id}}" data-count="{{rule.remained_count}}">{{rule.name}}</option>
+                                {% endfor %}
+                            </select>
+                            <span name="prize_source|1" class="xua-remainedCount hide"></span>
+                            <!--<select class="span2" name="prize_source|1" for_type="2" disabled="disabled" style="display:none;">
+                                <option value="">请选择兑换码...</option>
+                            </select>-->
+                            <input type="text" class="span2" name="prize_source|1" for_type="3" disabled="disabled" style="display:none;" placeholder="请输入积分数值">
+                            <input type="text" class="span2" name="prize_source|1" for_type="0" disabled="disabled" style="display:none;" placeholder="请输入奖品内容">
+                            <p class="errorHint ml80 pl5"></p>
+                            <p name="prize_source|1"><a target="_blank" class="hide">增加码库</a></p>
+                    </div >
+                </div>
+                {% endif %}
+                <button class="btn btn-block tx_addPrizeItem" for_item=".tx_prizeItem" type="button">添加奖项</button>
+			</div>
+		</div>
+
+
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				{% if red_envelope.can_update %}
+                <p style="color:#C09853;">活动一旦创建将不可修改，请先认真核对确认</p>
+				<button type="submit" class="btn btn-success" id="submit-product">&nbsp;&nbsp;&nbsp;&nbsp;保&nbsp;&nbsp;存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                <a href="/market_tools/red_envelope/" class="btn">&nbsp;&nbsp;&nbsp;&nbsp;返&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                {% else %}
+                <div class="market-tools-overlay" style="height:104%;"></div>
+				{% endif %}
+
+			</div>
+		</div>
+	</fieldset>
+</form>
+</div>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $('body').delegate('.xua-coupon', 'change', function(){
+        var count = $(':selected', this).data('count');
+        if(count || count == 0){
+            $(this).next('.xua-remainedCount').html('当前库存:'+count).show();
+            $(this).nextAll('p:last').show().find('a').attr('href','/mall_promotion/coupon/create/?rule_id='+$(this).val()).show();
+        }
+    })
+    function validatePrizeCount(el){
+        // $(el).val()
+        var result = {}
+        result.isValidate = true;
+        result.errorHint = false;
+        if(!/^\d+$/g.test($(el).val())){
+            result.isValidate = false;
+            result.errorHint = '格式不正确，请输入整数';
+        }else{
+            var index = $(el).attr('name').split('|')[1];
+            if($('[name="prize_type|'+index+'"]').val()==1 && $('[name="prize_source|'+index+'"]').find(':selected').data('count')<parseInt($(el).val())) {
+                result.isValidate = false;
+                result.errorHint = '奖品数量应不大于当前库存';
+            }
+        }
+        return result;
+    }
+    new W.RedEnvelope({
+        el: '#red_envelopeLayer',
+        item_id: '{{red_envelope.id}}'
+    });
+</script>
+{% endblock %}

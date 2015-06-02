@@ -1,0 +1,8 @@
+{% load workbench_filter %}
+{% ifequal component.type 'weapp.search' %}
+<div {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" class="weapp-search">
+	<input type="search" placeholder="商品搜索：请输入商品关键字"/>
+</div>
+{% endifequal %}

@@ -1,0 +1,43 @@
+@charset "utf-8";
+/*我的红包页面*/
+.xui-myR-pege{
+	background: #fff;
+}
+.xui-myR-pege .xui-list-y li a{
+	margin:15px auto;
+	-moz-border-radius: 5px!important;
+	-webkit-border-radius: 5px!important;
+	border-radius: 5px!important;
+	background-color: #d9434e;
+	box-shadow: 0 0 0 1px #650a0c;
+	background-image:url('/markettools_static/red_envelope/img/bg.png');
+	background-repeat:no-repeat;
+	background-position: right center;
+	color:#fff;	width: 93%;
+	display:block;
+}
+.ui-li.ui-btn-hover-x:visited, .ui-li.ui-btn-hover-x:hover, .ui-li.ui-btn-hover-x a.ui-link-inherit{
+	color:#fff;
+}
+.xui-myR-pege .xui-list-y li:first-child a{
+	margin-top:15px;
+}
+.xui-myR-pege .xui-list-y li:last-child a{
+	margin-bottom:15px;
+}
+.xui-myR-name{
+	font-size: 1.4em;
+}
+.xui-myR-info{
+	padding:15px;
+	box-sizing:border-box;
+	width: 80%
+
+}
+.xui-myR-detail span{
+	background:#cf3641;
+	padding:3px 20px 3px 2px;
+	min-width:110px;
+	display:inline-block;
+	margin-top:2px;
+}

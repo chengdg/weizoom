@@ -1,0 +1,45 @@
+<!-- this is copied from weixin-edit-menu-panel for temp solution -->
+<script id="weixin-global-navbar-editor-tmpl-src" type="text/x-jquery-tmpl">
+<div class="clearfix">
+	<div class="mb10">
+		<label class="checkbox inline" style="padding-left: 0px;">是否启用全局导航: </label>
+		<label class="radio inline"><input class="xa-notEnableGlobalNavbar" type="radio" name="enable_global_navbar" value="0"/>否</label>
+		<label class="radio inline ml10"><input class="xa-enableGlobalNavbar" type="radio" name="enable_global_navbar" value="1" />是</label>
+	</div>
+	<div id="small-phone-box" class="fl"></div>
+	<div id="edit-menu-box" class="wx-thin-form fl ml10">
+		<form class="form-horizontal hide" id="editMenuForm">
+			<fieldset>
+				<div class="control-group mr5 mt5">
+					<label class="control-label" for="product_category">菜单：</label>
+					<div class="controls">
+						<input type="text" style="width: 240px;" name="menuText" data-validate="required-none"/> 
+						<a id="editMenuPanel-deleteLink" class="btn btn-danger">
+							删除
+						</a>
+						<span class="help-block">最长<span class="x-editMenuView-maxInputWordCount"></span>个汉字</span>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="x-answer">
+				<legend>
+				点击时访问：
+				</legend>
+				<div class="control-group mr5 mt5">
+					<input class="xa-webappPageName" type="text" disabled="" placeholder="链接地址" name="urlDisplayValue" style="width: 230px;">
+					<a class="btn xa-selectWebappPage" href="javascript:void(0);">选择微站页面</a>
+					<div class="errorHint">
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="cb"></div>
+
+	<div class="tc mt60 mb20">
+		<legend></legend>
+		<button id="submit-btn" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+	</div>
+</div>
+</script>

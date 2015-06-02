@@ -1,0 +1,11 @@
+{
+ "inner_name": "custom_template_base", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "\u5b9a\u5236\u6a21\u677f", 
+ "template_project_id": 0, 
+ "type": "weapp", 
+ "id": 31, 
+ "css": "", 
+ "pagestore": "mongo"
+}

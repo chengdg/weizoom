@@ -1,0 +1,63 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-shipInfoPage"  data-title="{{ page_title }}">
+	<div data-role="content">
+		<form class="xui-form p15" method="post" action="./?woid={{request.webapp_owner_id}}&module=user_center&model=ship_info&action=save&ship_info_id={% if shipInfo %}{{ shipInfo.id }}{% else %}0{% endif %}" data-ui-role="validate" submit-button="#saveShipInfoBtn">
+			<fieldset class="pb20">
+				<div class="xui-form-controls">
+					<label class="xui-form-cell">收货人:</label>
+					<div class="xui-form-cell">
+						<input id="ship_name" name="ship_name" required required-msg="收货人不能为空" type="text" value="{% if shipInfo %}{{ shipInfo.ship_name }}{% endif %}" >
+					</div>
+				</div>
+				<div class="xui-form-controls">
+					<label class="xui-form-cell xui-text-alignTop">所在地区:</label>
+					<div class="xui-form-cell">
+						<input id="area" name="area" required required-msg="所在地区不能为空" data-ui-role="area" type="text" value="{% if shipInfo %}{{ shipInfo.area }}{% endif %}" >
+					</div>
+				</div>
+				<div class="xui-form-controls">
+					<label class="xui-form-cell xa-areaLabel">详细地址:</label>
+					<div class="xui-form-cell">
+                        <div class="xa-areaValue pb5"></div>
+						<input id="ship_address" name="ship_address" required required-msg="地址不能为空" type="text" value="{% if shipInfo %}{{ shipInfo.ship_address }}{% endif %}" >
+					</div>
+				</div>
+                <div class="xui-form-controls">
+					<label class="xui-form-cell">手机号:</label>
+					<div class="xui-form-cell">                        
+						<input id="ship_tel" name="ship_tel" required required-msg="电话不能为空" type="number" value="{% if shipInfo %}{{ shipInfo.ship_tel }}{% endif %}" >
+					</div>
+				</div>
+			</fieldset>
+            <div class="tc mt20">
+                <a id="saveShipInfoBtn" href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger" style="padding:5px 45px;">确 定</a>
+            </div>
+		</form>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('input[name="area"]').bind('change', function(event) {
+        var $el = $(event.currentTarget);
+        var areaValue = $el.attr('area-value');
+        $('.xa-areaValue').html(areaValue);
+        if(areaValue) {
+            $('.xa-areaLabel').addClass('xui-text-alignTop');
+        }
+        else {
+            $('.xa-areaLabel').removeClass('xui-text-alignTop');
+        }
+    });
+
+    $('#saveShipInfoBtn').bind('submit', function() {
+        $('form').submit();
+    });
+})
+</script>
+{% endblock %}

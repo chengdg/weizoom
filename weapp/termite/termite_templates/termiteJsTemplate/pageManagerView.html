@@ -1,0 +1,93 @@
+<script id="page-manager-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="pageManager" class="section">
+		<div class="sectionHeader">
+			Pages
+			<div class="sectionActionBar">
+				{{if isSystemManager}}
+				<a data-action="addPage" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="创建页面" data-placement="bottom"><i class="icon-plus"></i></a>
+				<a data-action="duplicatePage" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="复制页面" data-placement="bottom"><i class="icon-folder-open"></i></a>
+				<a data-action="makeTemplate" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="创建模板" data-placement="bottom"><i class="icon-share"></i></a>
+				<a data-action="importProject" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="导入工程" data-placement="bottom"><i class="icon-circle-arrow-up"></i></a>
+				<a data-action="exportProject" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="导出工程" data-placement="bottom"><i class="icon-circle-arrow-down"></i></a>
+				<a data-action="removePage" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="删除" data-placement="bottom"><i class="icon-remove"></i></a>
+				{{else}}
+				<a data-action="selectTemplate" href="javascript:void(0);" class="btn btn-mini" data-toggle="tooltip" title="切换模板" data-placement="bottom"><i class="icon-picture"></i></a>
+				{{/if}}
+			</div>
+		</div>
+		<ul class="sectionContainer pageManager_pageList item-list">
+		</ul>
+
+
+		<div id="addPageDialog" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>创建页面</h3>
+			</div>
+			<div class="modal-body clearfix">
+				<div class="fl p5 imgBox" style="width: 300px;">
+					<img src="" name="screenshot" style="width:300px;" />
+				</div>
+				<div class="fl ml20">
+					<label>名称：<input name="pageName" type="text" class="input-small" /></label>
+					<label>模板：
+						<select name="pageTemplate" style="width: 100px;">
+							
+						</select>
+					</label>
+					
+				</div>
+				
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success" id="submitPageBtn">创建</button>
+			</div>
+		</div>
+
+
+		<div id="makeTemplateDialog" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>创建封面</h3>
+			</div>
+			<div class="modal-body" style="max-height: 800px;">
+				<div class="clearfix">
+					<div class="fl p5 imgBox" style="width: 320px; height: 480px;">
+						<img src="" name="screenshot" style="width:320px; height: 480px;" />
+					</div>
+					<div class="fl ml20">
+						<input name="name" type="text" class="input-medium" placeholder="模板名" style="width: 140px;" />
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success" id="submitTemplateBtn">创建</button>
+			</div>
+		</div>
+
+		<div id="selectTemplateDialog" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>选择模板</h3>
+			</div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+				<button class="btn btn-success" id="updateTemplateBtn">确定</button>
+			</div>
+		</div>
+
+		<div id="importProjectDialog" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>导入工程</h3>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-error"><strong>导入工程会清空工程中已存在的内容，请谨慎操作！</strong></div>
+				<input id="importProjectDialog-fileUploader" type="file" />
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success" id="updateTemplateBtn">确定</button>
+			</div>
+		</div>
+	</div>
+</script>

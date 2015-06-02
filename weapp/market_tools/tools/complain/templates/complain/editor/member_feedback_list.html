@@ -1,0 +1,65 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">投诉列表</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/market_tools/vote/add/">配置投诉<i class="icon-plus icon-white"></i></a>
+		<a class="btn btn-primary" href="/market_tools/vote/add/">配置投诉<i class="icon-plus icon-white"></i></a>
+	</span>
+</div>
+
+{% if complains %}
+<div>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>投诉时间</th>
+				<th>投诉内容</th>
+				<th>附件</th>
+				<th>反馈会员</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for complain in complains %}
+			<tr data-id="{{ vote.id }}">
+				<td>
+					<div>
+						{{ complain.created_at }}
+					</div>
+				</td>
+				<td>
+					<div>
+						{{ complain.content }}
+					</div>
+				</td>
+				<td>
+					<div>
+					{% if complain.pic_url %}
+						<a href="{{complain.pic_url}}"></a>
+					{% endif %}
+					</div>
+				</td>
+				<td>
+					<div>
+						{{ complain.member.member.username_for_html }} 
+					</div>
+				</td>
+				
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% else %}
+<p style="margin-left:10px;">您还没任何反馈</p>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

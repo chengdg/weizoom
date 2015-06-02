@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//ZH-CN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>微信营销系统——微众传媒</title>
+
+        <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/jquery/jquery-ui-1.10.3/css/redmond/jquery-ui-1.10.3.custom.min.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/jquery/uploadify-3.2.css">
+
+        <!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if not debug_merged_css %}
+		<!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/css/base.css">
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/css/bootstrapEnhance.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/css/system.css">
+
+        <link type="text/css" rel="stylesheet" media="all" href="/static/termite_css/system.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/termite_css/bootstrapEnhance.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/termite_css/workbench.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/termite_css/pick-a-color-1.1.8.min.css">
+	    <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+		<link type="text/css" rel="stylesheet" media="all" href="/static/termite_css/all.css">
+		{% endif %}
+		<!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+
+        {% if project %}
+        <link type="text/css" rel="stylesheet" media="all" href="/static/termite_css/{{project.type}}_workbench.css">
+        {% endif %}
+	    {% block css %}{% endblock %}
+    </head>
+    <body data-ui-role="integralMechanism" data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}">
+    	{% block content %} {% endblock %}
+
+        {% block jsTemplate %}{% endblock %}
+
+        <!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if True %}
+		<!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+        <script type="text/javascript" src="/static/jquery/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery-migrate-1.2.1.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery.tmpl.min.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js"></script>      
+        <script type="text/javascript" src="/static/jquery/jquery.uploadify-3.2.min.js"></script>
+        <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/backbone-1.0.0.min.js"></script>
+        <script type="text/javascript" src="/static/js/library/spin-1.3.js"></script>
+        <script type="text/javascript" src="/static/aceeditor/src-min-noconflict/ace.js"></script>
+
+        <script type="text/javascript" src="/static/js/system/system.js"></script>
+        <script type="text/javascript" src="/static/js/system/debug.js"></script>
+        <script type="text/javascript" src="/static/js/system/template-0.9.js"></script>
+        <script type="text/javascript" src="/static/js/system/api.js"></script>
+        <script type="text/javascript" src="/static/js/system/dialog.js"></script>
+        <script type="text/javascript" src="/static/js/system/loading.js"></script>
+        <script type="text/javascript" src="/static/js/system/validate.js"></script>
+        <script type="text/javascript" src="/static/js/app/common/ErrorHintView.js"></script>
+
+        <script type="text/javascript" src="/static/termite_js/system/termite_system.js"></script>
+        <script type="text/javascript" src="/static/termite_js/library/tinycolor-0.9.15.min.js"></script>
+        <script type="text/javascript" src="/static/termite_js/library/pick-a-color-1.1.8.min.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/common/GlobalBroadcaster.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/component/common/Component.js"></script>
+        
+        <!-- 
+        <script type="text/javascript" src="/static/termite_js/library/html2canvas-0.4.1.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/design/CoverManager.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/design/DesignPage.js"></script>
+        -->
+        {% ifequal project.type "viper" %}
+            {% include 'workbench/viper_components.html' %}
+        {% endifequal %}
+        {% ifequal project.type "jqm" %}
+            {% include 'workbench/jqm_components.html' %}
+        {% endifequal %}
+        {% ifequal project.type "weapp" %}
+            {% include 'workbench/weapp_components.html' %}
+        {% endifequal %}
+        
+        <script type="text/javascript" src="/static/termite_js/app/workbench/ComponentListView.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/PhoneView.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/SelectImageDialog.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/SelectDatasourceDialog.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/OrderItemDialog.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/EditCodeDialog.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/PageNavView.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/FormPageView.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/PropertyView.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/PageManagerView.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/PageSynchronizer.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/CssEditorView.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/workbench/RichTextEditor.js"></script>
+        
+        <!-- dialogs start -->
+        {{ termite_dialogs|safe }}
+        <!-- dialogs end -->
+
+        <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+			<script type="text/javascript" src="/termite_static/js/termite_base_all.min.js"></script>
+		{% endif %}
+		<!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+        
+        {% block base_js %}{% endblock %}
+	</body>
+</html>

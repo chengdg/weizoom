@@ -1,0 +1,109 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-wzcoinPay-page">
+	<div class="xui-container p30">
+    	<form class="xui-form" method="post" action="" id="editForm">
+			<div class="xui-pageTitle tc xui-ffht">微众卡</div>
+			<div class="xui-pageTip tc f16 xui-ffht">请您输入微众卡信息</div>
+		
+			<div class="xui-submitBox">
+				<div class="xui-form-controls">
+					<label for="" class="xui-form-cell xui-ffht xui-count">卡号：</label>
+					<input  type="tel" name="name" id="name">
+				</div>
+				<div class="xui-form-controls">
+					<label for="" class="xui-form-cell xui-ffht xui-pwd">密码：</label>
+					<input type="tel" name="password" id="password">
+				</div>
+				<a href="javascript:void(0);" data-role="button" class="xui-btn xui-btnSubmit" id="submitBtn">确定</a>
+			</div>					
+		</form>
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		//密码文本框失焦时仍type为密码
+		var $pwd = $('#password');
+		$pwd.focus(function(event) {
+			$(this).attr('type','tel');
+		});
+		$pwd.blur(function(event) {
+			$(this).attr('type','password');
+		});
+		
+        var $submitBtn = $('#submitBtn');
+        $submitBtn.click(function() {
+        	var order_id = '{{order_id}}'
+        	var name = $('#name').val();
+			if (name.trim().length == 0) {
+	        	$('.ui-page').alert({
+			         	isShow: true,
+			         	info: "请输卡号",
+			         	isSlide: true,
+			         	speed: 2000
+			     });
+	            return false;
+	        }
+
+	        var password = $('#password').val();
+			if (password.trim().length == 0) {
+	        	$('.ui-page').alert({
+			         	isShow: true,
+			         	info: "请输密码",
+			         	isSlide: true,
+			         	speed: 2000
+			     });
+	            return false;
+	        }
+
+        	W.getApi().call({
+        		app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                	woid: W.webappOwnerId,
+                    project_id: W.projectId,
+                    name: name,
+                    module: 'mall',
+                    password: password,
+                    target_api: 'weizoom_card/check',
+                }),
+		        success: function(data) {
+		        	if(data.code == 200) {
+		        		window.location.href = './?module=mall&model=weizoompay_confirm&action=get&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&workspace_id=mall&card_id='+data.id+'&order_id='+order_id;
+		        	} else {
+		        		$('.ui-page').alert({
+				            isShow: true,
+				            info: '帐号或密码错误！',
+				            speed: 2000
+				        });
+		        	} 	
+		        },
+		        error: function(data) {
+		        	var code = parseInt(data['code']);
+			        var msg = '';
+				    msg = data['data']['msg'];
+			        msg = msg || data.errMsg || '帐号或密码错误！';
+
+			        $('.ui-page').alert({
+			         	isShow: true,
+			         	info: msg,
+			         	isSlide: true,
+			         	speed: 2000
+			         });
+		        }
+        	})
+        })
+	});
+</script>
+{% endblock %}

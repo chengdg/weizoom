@@ -1,0 +1,41 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.swipeimage_group' %}
+{% if in_design_mode %}
+<div 
+    data-cid="{{component.cid}}" 
+    data-ui-sortable="true" 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %}
+    {% if component.components.0.model.image %}
+    style="width: {{component.model.width}}; text-align: center;"
+    {% else %}
+    style="width: {{component.model.width}}; height: 100px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8; text-align: center;" 
+    {% endif %}
+>
+{% endif %}
+	{% if component.components.0.model.image %}
+    <div 
+        data-ui-role="swipeimage" 
+        data-images-json='{{component|to_swipe_images_json|safe}}' 
+        data-image-width='{{component.model.uploadWidth|px2int}}' 
+        data-image-height='{{component.model.uploadHeight|px2int}}' 
+        {% if in_design_mode %}data-design='true'{% endif %}
+    >
+    </div>
+    {% else %}
+        {% if in_design_mode %}
+        <img style="position: absolute; top: 50%; left: 50%; margin-left: -16px; margin-top: -18px" alt="image" src="/static/termite_img/image.png">
+        {% else %}
+        <div class="xui-noContentSwipeImage"></div>
+        {% endif %}
+    {% endif %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+{% endifequal %}
+
+
+{% ifequal component.type 'jqm.swipeimage' %}
+
+{% endifequal %}

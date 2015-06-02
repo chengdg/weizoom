@@ -1,0 +1,129 @@
+@charset "utf-8";
+html, body, ul, li, p {
+    margin: 0px;
+    padding: 0px;
+    word-break: break-all;
+    word-wrap: break-word;
+    font-family: "微软雅黑";
+    list-style: none;
+}
+body,.ui-page{
+    background:url('/markettools_static/test_game/img/bg.jpg') no-repeat; 
+    -moz-background-size:cover;
+    -webkit-background-size:cover;
+    background-size:cover;
+/*background: -moz-linear-gradient(top, #ace, #f96,#ace); 
+background: -webkit-gradient(linear,top,from(#ace),to(#f96));
+background: -webkit-linear-gradient(top,  #ace, #f96,#ace);
+background: -o-linear-gradient(top, #ace, #f96,#ace);*/
+}
+img {
+    max-width: 100%;
+}
+.p20{
+    padding:20px 10px!important;
+}
+.p-uni{
+    padding:20px 10px 5px!important;
+}
+.pb20{
+    padding-bottom: 20px;
+}
+.f18{
+    font-size: 1.2em;
+}
+.fl{
+    float:left;
+}
+.fr{
+    float:right;
+}
+a:link, a:hover, a:visited {
+    text-decoration: none;
+}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
+.mt10{
+    margin-top: 10px;
+}
+.xui-test-homepage,.xui-test-resultpage{
+	color: #fff;
+	width: 100%;
+	top: 0;
+	left: 0;
+    overflow-y:auto; 
+    }
+.xui-test-homepage a{
+	color: #fff;
+}
+.xui-test-homepage .container,.xui-test-resultpage .container{
+    padding:10px;
+}
+.xui-test-homepage .container ul li ,.xui-thisResult-box,.xui-otherResult-box,.xui-award-box{
+    padding:10px;
+    background: rgba(255,255,255,0.4);
+    border-radius:5px;
+    margin-bottom: 10px;
+}
+.ui-btn-inner{
+    background-color: rgba(255,255,255,0.4)!important;
+    border-color: none;
+    border:none;
+    border-radius: 5px;
+}
+.xui-test-homepage .xui-regular-radio{
+    display: none;
+}
+.xui-test-homepage .xui-regular-radio:checked + label:after{
+    content:"\2714";
+    font-size: 16px;
+    height: 12px;
+    left: 0px;
+    position: absolute;
+    top: -5px;
+    width: 12px;
+}
+.xui-test-homepage .xui-regular-radio:checked + label{
+    border:2px solid #fff;
+    color: #fff;
+}
+.xui-test-homepage .xui-regular-radio + label{
+    border:2px solid #fff;
+    display:inline-block;
+    padding:6px;
+    position: relative;
+    border-radius: 50%;
+
+    margin:0 6px -2px 20px;
+}
+.xui-userInfo-box{
+   margin:30px 0 20px;
+}
+
+.xui-test-resultpage .xui-userInfo-content{
+    text-align: center;
+}
+.xui-test-resultpage .xui-headphoto img{
+    border-radius:50%;
+   width: 30%;
+   box-shadow: 0px -1px 5px rgba(0,0,0,.4);
+}
+.xui-test-resultpage .xui-otherResult-content ul li{
+    margin-bottom: 20px;
+}
+.xui-test-resultpage .xui-otherType{
+    cursor:pointer;
+}
+.xui-arrow{
+    display:inline-block; 
+    width: 12px;
+    height: 7px;   
+    overflow: hidden;
+    margin-top:6px;
+}
+.xui-arrow-down{   
+    background: url('/markettools_static/test_game/img/css.png') no-repeat;
+   
+}
+.xui-arrow-up{
+    background: url('/markettools_static/test_game/img/css.png') no-repeat -12px 0;
+}

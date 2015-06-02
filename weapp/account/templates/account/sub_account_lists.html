@@ -1,0 +1,127 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<style type="text/css">
+	#edui_fixedlayer{
+		z-index: 100009!important;
+	}
+	.modal{
+		z-index: 100009!important;	
+	}
+	.edui-editor{
+		width: 625px!important;
+	}
+</style>
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/small_simulator.css">
+
+{% endblock %}
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li><a href="/account/">帐号信息</a><span class="divider">/</span></li>
+		<li class="active">员工账号管理</li>
+	</ul>
+	{% if is_can_create %}
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/account/sub_user/create/"><i class="icon-plus
+		icon-white"></i>创建员工信息</a>
+	</span>
+	{% endif %}
+</div>
+
+<div>
+  <ul class="breadcrumb">
+  <li class="active">注：<span style="margin-left:5px;display:inline-block;color:#c09853">  1、员工账号仅拥有运营操作权限，不可进行修改积分规则、修改会员积分、解除绑定等关键操作。</span></li>
+  <li class="active">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="margin-left:5px;display:inline-block;color:#c09853">2、目前最多支持3个员工账号。</span></li><br>
+  <li class="active">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="margin-left:5px;display:inline-block;color:#c09853">3、员工账号登陆地址：<a href='http://weapp.weizoom.com' target='_blank'>weapp.weizoom.com</a>。</span></li>
+ </ul>
+	{% if user_has_sub_users %}
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>帐号</th>
+				<th>备注</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user_has_sub_user in user_has_sub_users %}
+			<tr data-id="{{ grade.id }}">
+				<td class="w150">
+					{{ user_has_sub_user.sub_user.username }}
+				</td>
+				<td>
+					{{ user_has_sub_user.remark }}
+				</td>
+				<td>
+					<a class="btn btn-danger btn-mini" title="删除" href="/account/sub_user/delete/?user_id={{user_has_sub_user.sub_user.id}}" ><i class="icon-remove icon-white"></i></a>
+				</td>
+			</tr>
+			{% endfor %}
+
+		</tbody>
+	</table>
+	{% else %}
+		暂无信息
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+	$(document).ready(function(){
+		if (shouldShowAuthorizeCover) {
+			W.view.showAuthorizeCover({
+				hint: '您还没有该功能的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+				doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
+			});
+		}
+
+		var send_message = function(group_id, cont, send_type){
+			W.getApi().call({
+			 	method: 'post',
+	            app: 'webapp/user_center',
+	            api: 'massmessage/send',
+	            async: false,
+	            args: {
+	                group_id: group_id,
+	                content: cont,
+	                send_type: send_type
+	            },
+	            scope: this,
+	            success: function(data) {
+	                W.getSuccessHintView().show('发送成功');
+	                var times = $('#times').text();
+	                $('#times').text((parseInt(times) +1 ))
+	            },
+	            error: function(resp) {
+	                //TODO 进行错误通知
+	                W.getErrorHintView().show('发送失败');
+	               
+	                //failed_callback();
+	            }
+			})
+		}
+
+		$('.send-text').click(function(event){
+			var group_id = $(event.currentTarget).attr('value');
+			W.dialog.showDialog('W.dialog.member.tag.TextareDialog', {
+				success: function(ids) {
+					send_message(group_id, ids, 0);
+				}
+			});
+		});
+		$('.send-material').click(function(event){
+			var group_id = $(event.currentTarget).attr('value');
+			W.dialog.showDialog('W.dialog.weixin.SelectMaterialDialog', {
+				success: function(ids) {
+					send_message(group_id, ids[0], 1);
+				}
+			});
+		});
+	});
+</script>
+{% endblock %}

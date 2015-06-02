@@ -1,0 +1,27 @@
+<script id="common-select-swipe-image-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade" id="commonSelectSwipeImageDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">上传图片</h3>
+		</div>
+		<div class="modal-body wx-thin-form">
+			<div class="form-horizontal">
+			<div class="form-group">
+				<label class="control-label col-sm-2">图片：</label>
+				<div class="col-sm-9">
+					<input type="hidden" name="pic_url" id="pic_url" value="" data-validate="require-image"/>
+					<div id="commonSelectSwipeImagesDialog-imageView"></div>
+					<div class="errorHint"></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-success" id="change_password">完成</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>

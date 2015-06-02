@@ -1,0 +1,27 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.textarea' %}
+<!-- =====> viper:textarea component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="p5"
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{name}}">{{component.model.label}}：</label>
+        <div class="controls">
+            <textarea class="input-xlarge" id="{{name}}" name="{{name}}" style="height: {{component.model.height}}px;" placeholder="{{component.model.placeholder}}" {{ component.model.validate|safe }}>{{page.record|get_record_value:name}}</textarea>
+            <div class="errorHint">{% if in_design_mode %}name="{{name}}"{% endif %}</div>
+        </div>
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+<!-- <===== viper:textarea component -->
+</div>
+{% endif %}
+{% endifequal %}

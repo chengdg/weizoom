@@ -1,0 +1,478 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style type="text/css">
+	.table th {
+		text-align: center;
+	}
+
+	.column_block img {
+	    border: 0 none;
+	    height: 60px;
+	    width: 60px;
+	}
+
+	.column_block {
+		vertical-align: middle;
+	}
+	.xui-cancelCover{
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,.4);
+		position:absolute;
+		left:0;
+		top:0;
+		text-align:center;
+		color:#fff;
+	}
+	.xui-filter{
+		padding-bottom: 20px;
+	}
+	ul{
+		list-style: none;
+	}
+	.xui-filterTab{
+		position: relative;
+		height: 37px;
+	}
+	.xui-filterTab-section{
+		float: left;
+		width: 94px;
+		height: 36px;
+		border: solid 1px #ccc;
+		text-align: center;
+		line-height: 36px;
+		border-radius: 10px 10px 0 0;
+		cursor: pointer;
+		position: absolute;
+	}
+	.xui-filterTab-section:first-child{
+		left: 0;
+	}
+	.xui-filterTab-section:last-child{
+		left: 96px;
+	}
+	.xui-filterTab .active{
+		border-bottom: solid 2px #fff;
+	}
+	.xui-filterCondition{
+		border:solid 1px #ccc;
+		padding-bottom: 8px;
+	}
+	.xui-filterCondition-section{
+		min-height: 34px;
+		line-height: 34px;
+		border-bottom: dashed 1px #ccc;
+		padding-left: 18px;
+		overflow: hidden;
+	}
+	.xui-filterCondition-section .selected{
+		font-weight: 700;
+		color: rgb(247, 2, 2);
+	}
+	.xui-filterCondition-section span{
+		display: block;
+		float: left;
+		font-weight: 700;
+	}
+	.xui-filterCondition-section ul{
+		float: left;
+		width: 600px;
+	}
+	.xui-filterCondition-section li{
+		line-height: 34px;
+		padding: 0 10px;
+		text-align: center;
+		float: left;
+		color: #0088cc;
+		cursor: pointer;
+	}
+	.selectBtn{
+		padding-top: 7px;
+		padding-left: 19px;
+	}
+	.xui-filterResult{
+		height: 30px;
+		line-height: 30px;
+		padding-bottom: 6px;
+	}
+	.xui-filterResult-exportBtn{
+		width: 84px;
+		height: 28px;
+		display: block;
+		border-radius: 5px;
+		border: solid 1px #8C8C8C;
+		text-align: center;
+		line-height: 28px;
+		color: #595959;
+	}
+	.xui-filterResult span:first-child{
+		font-weight: 700;
+	}
+	.xui-filterResult span:nth-child(2){
+		display: block;
+		padding-left: 10px;
+	}
+	.xui-filterResult span:last-child{
+		border-right: solid 1px #ccc;
+		width: 110px;
+		text-align: center;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xa-memberFilterView">
+	<ul class="breadcrumb">
+		<li class="active">用户中心</li>
+	</ul>
+	<div class="xui-filter">
+		<ul class="xui-filterTab">
+			<li class="xui-filterTab-section active">基础筛选</li>
+			<li class="xui-filterTab-section">消费指数筛选</li>
+		</ul>
+		<div class="xui-filterCondition">
+			<ul class="xui-filterCondition1">
+				<li class="xui-filterCondition-section tag">
+					<span>会员分组&nbsp:</span>
+					<ul>
+						<li name='tag' class='selected fll default_class' value='-1'>不限</li>
+						{% for tag in user_tags %}
+						<li name='tag' value='{{tag.id}}'>{{tag.name}}</li>
+						{% endfor %}
+					</ul>
+				</li>
+				<li class="xui-filterCondition-section grade">
+					<span>会员等级&nbsp:</span>
+					<ul>
+						<li name='grade' class='selected default_class' value='-1'>不限</li>
+						{% for grade in grades %}
+						<li name='grade' value='{{grade.id}}'>{{grade.name}}</li>
+						{% endfor %}
+					</ul>
+				</li>
+				<li class="xui-filterCondition-section source">
+					<span>会员来源&nbsp:</span>
+					<ul>
+						<li name='source' class='selected default_class' value='-2'>不限</li>
+						<li name='source' value='0'>直接关注</li>
+						<li name='source' value='1'>推广扫码</li>
+						<li name='source' value='2'>会员分享</li>
+					</ul>
+				</li>
+				<li class="selectBtn">
+					<input type="button" class="select_button"  value="筛选"></li>
+			</ul>
+			<ul class="xui-filterCondition2" style="display:none;">
+				<li class="xui-filterCondition-section pay-times">
+					<span>购买次数&nbsp:</span>
+					<ul>
+						<li name='pay_times' value='1'>1+</li>
+						<li name='pay_times' value='2'>2+</li>
+						<li name='pay_times' value='3'>3+</li>
+						<li name='pay_times' value='4'>4+</li>
+						<li name='pay_times' value='5'>5+</li>
+						<li name='pay_times' value='10'>10+</li>
+					</ul>
+
+				</li>
+				<li class="xui-filterCondition-section pay-days">
+					<span>最近消费&nbsp:</span>
+					<ul>
+						<li name='pay_days' value='2'>三天内</li>
+						<li name='pay_days' value='6'>一周内</li>
+						<li name='pay_days' value='13'>二周内</li>
+						<li name='pay_days' value='29'>一月内</li>
+						<li name='pay_days' value='89'>三月内</li>
+						<li name='pay_days' value='179'>半年内</li>
+					</ul>
+				</li>
+				<li class="xui-filterCondition-section subscribe">
+					<span>关注时间&nbsp:</span>
+					<ul>
+						<li name='subscribe' value='2'>三天内</li>
+						<li name='subscribe' value='6'>一周内</li>
+						<li name='subscribe' value='13'>二周内</li>
+						<li name='subscribe' value='29'>一月内</li>
+						<li name='subscribe' value='89'>三月内</li>
+						<li name='subscribe' value='179'>半年内</li>				
+					</ul>
+				</li>
+				<li class="selectBtn">
+			
+					<input type="button" class="select_button"  value="筛选"></li>
+			</ul>
+
+		</div>
+	</div>
+	<div class="xui-filterResult">
+			<span class="fr">共<b>{{counts}}</b>个会员</span>
+	</div>
+	<!-- 	<span class="breadcrumRightButton">
+	<a id="exportBtn" class="btn btn-primary" href="javascript:void(0);"> <i class="icon-plus icon-white"></i>
+		导出全部
+	</a>
+</span>
+-->
+</div>
+
+<div
+	data-ui-role="advanced-table"
+	data-app="webapp/user_center"
+	data-api="members/get"
+	data-template-id="#user_list_view"
+	data-init-sort="-created_at"
+	data-item-count-per-page="15"
+	data-enable-paginator="true"
+></div>
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+<script id="user_list_view" type="text/x-jquery-tmpl">
+			<table class="table table-bordered table-condensed" id="dddd" >
+				<thead>
+				<tr>
+					<th>
+						<p class="tx_searchable m0">
+							<span class="mr30">用户 </span>
+						</p>
+					</th>
+					<th>等级
+						<!--
+						<div class="btn-group">
+							<p class="m0 dropdown-toggle cursor" data-toggle="dropdown" style="font-size: 14px;">
+								<span class="caret"></span>
+								用户等级
+							</p>
+							<ul class="dropdown-menu wineDropdown" >
+								<li><a href="javascript:void(0);" data-attr='status' class="tx_sortByStatus" value="-1">全部</a></li>
+								{{each(i, grade) data.grades}}
+								<li><a href="javascript:void(0);" data-attr='grade_id' class="tx_sortByStatus" value="${grade.id}">${grade.name}</a></li>
+								{{/each}}
+							</ul>
+						</div>
+						-->
+					</th>
+					<th class="tx_sortable" data-sort-attr='integral' >积分</th>
+					<th class="tx_sortable" data-sort-attr='friend_count' >好友数</th>
+					{{if data.is_shengjing }}
+						<th>姓名</th>
+					{{else}}
+						<th>备注名</th>
+					{{/if}}
+					<th class="tx_sortable" data-sort-attr='created_at' data-init-sort="-created_at" >加入时间</th>
+					<!-- <th class="tx_sortable" data-sort-attr='last_visit_time' >最后访问</th> -->
+					{{if data.is_shengjing }}
+						<th class="tx_sortable" >身份</th>
+					{{else}}
+						<th class="tx_sortable" data-sort-attr='pay_money' >消费金额</th>
+					{{/if}}
+					<th class="tx_sortable" data-sort-attr='pay_times' >购买次数</th>
+
+					<th class="">
+						全部来源
+					</th>
+					<th class="" >分组</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{if items.length}}
+				{{each(i, member) items}}
+				<tr data-id="${member.id}">
+					<td style="width:80px;position:relative;text-align:center;">
+					{{if member.is_subscribed == 0}}
+						<div class="xui-cancelCover">
+							<div style="position:relative;width:100%;height:100%;">
+								<div style="width:100%;position:absolute;top:50%;margin-top:-6px">已取消</div>
+							</div>
+						</div>
+					{{/if}}
+						<div class="column_block">
+							<a href="/webapp/user_center/member/${ member.id }/">
+								<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
+							</a>
+						</div>
+
+						<div class="column_block">
+							<div>
+							<a href="/webapp/user_center/member/${ member.id }/" style="display:block;width:80px;">{{html member.username}}</a>
+							</div>
+
+							<div>
+							{{if member.session_id > 0}}
+							<a href="/weixin/message/message/session_history/show/?session_id=${ member.session_id }" class="btn btn-success frbtn">会话</a>
+							</div>
+							{{else}}
+							{{/if}}
+						</div>
+					</td>
+					<td>
+						<div class="centerAlign">${ member.grade_name }</div>
+					</td>
+					<td>
+						<div class="centerAlign">${ member.integral }</div>
+					</td>
+					<td>
+						<div class="centerAlign"><a class="relation-text" href="javascript:void(0);" style="font-family:Arial;
+						font-size:13px;font-weight:bold;
+						font-style:normal;color:#0000FF;" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }</a>
+						</div>
+					</span>
+					</td>
+					<td width="40" style="word-break:break-all">
+						{{if data.is_shengjing}}
+							<div class="centerAlign">${ member.sj_name }</div>
+						{{else}}
+							<div class="centerAlign">${ member.remarks_name }</div>
+						{{/if}}
+					</td>
+
+					<td>
+						<div class="centerAlign">${ member.created_at }</div>
+					</td>
+				<!--	
+					<td>
+						<div class="centerAlign">${ member.last_visit_time }</div>
+					</td>
+				-->
+					<td>
+						{{if data.is_shengjing}}
+							<div class="centerAlign">${ member.sj_status }</div>
+						{{else}}
+							<div class="centerAlign">￥${ member.pay_money }</div>
+						{{/if}}
+					</td>
+					<td>
+						<div class="centerAlign">${ member.pay_times }</div>
+					</td>
+					<td>
+						<div class="centerAlign">{{if member.source == 0}}
+													直接关注
+												{{/if}}
+												{{if member.source == 1}}
+													推广扫码
+												{{/if}}
+												{{if member.source == 2}}
+													会员分享
+												{{/if}}
+												{{if member.source == -1}}
+													直接关注
+												{{/if}}
+						</div>
+					</td>
+					<td>
+						<div class="centerAlign">
+						{{each(i,tag) tags}}
+   				          ${tag.name}<br>{{/each}}</div>
+					</td>
+				</tr>
+				{{/each}}
+				{{else}}
+				<tr><td colspan='10'>还没有数据</td></tr>
+				{{/if}}
+				</tbody>
+			</table>
+			<div>筛选结果(共${data.total_count}人)</div>
+			<div id="paginationContent"></div>
+		</script>
+{% endverbatim %}
+	
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+
+	var dic = new Array();
+	
+	$(document).ready(function() {
+			var dataView = $('[data-ui-role="advanced-table"]').data('view');
+			$('.select_button').click(function(event) {
+				var args =  [];
+				console.log(dic)			
+				for (var i in dic){
+					args.push('"'+i+'":'+dic[i])	
+				}
+				console.log(args);
+				args.push('"page":1');
+            	args =  '{'+ args.join(',') +'}';
+            	console.log(args)
+				dataView.options.args = args; 
+				$('#select_history').attr('value', args);
+				dataView.setPage(1); 
+		        dataView.reload();
+		        
+			})
+			
+			$(".xui-filterTab-section").click(function(event){
+				dic = new Array();
+				$('.xui-filterCondition-section').find('li').removeClass('selected');
+				$('.default_class').addClass('selected');
+				dataView.options.args = '{}';
+				dataView.reload();
+			});
+			$(".xui-filterCondition-section li").click(function(event){
+				$('#select_history').attr('value', '');
+				var $el = $(event.currentTarget);
+				$el.siblings().removeClass('selected');
+				$el.addClass('selected');
+				dic[$el.attr('name')] = $el.attr('value');
+				//dic['"'+$el.attr('name')+'"'] = $el.attr('value');
+				//dic.push()
+				console.log(dic)
+			})
+			if (shouldShowAuthorizeCover) {
+				W.view.showAuthorizeCover({
+					hint: '您还没有该功能的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+					doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
+				});
+			}
+			$('.container').delegate('.relation-text', 'click', function(event) {
+					var _this = this;
+					var $el = $(event.currentTarget);
+					console.log($el);
+
+					var friend_count = $el.attr('friend_count');
+					var fans_count = $el.attr('fans_count');
+					var memberId = $el.attr('value');
+					if ($el.html() == '0') {
+						return false;
+					}
+
+					/*
+					var commentDialog = W.getInfluenceListDialog({memberId:memberId});
+					commentDialog.show({
+						$action: $el,
+						title: '用户关系',
+						memberId:memberId
+					});
+					*/
+					W.dialog.showDialog('W.weapp.dialog.UserCenterRelationsDialog', {
+						memberId: memberId,
+						friendCount: friend_count,
+						fansCount: fans_count
+		          	});
+			});
+
+			/*$('#exportBtn').click(function(event) {
+		      var url = '/user_center/member/export/';
+		      window.open(url);
+			});*/
+
+			// 筛选选项卡点击
+		$('.xui-filterTab-section').click(function(){
+				$(this).addClass('active').siblings().removeClass('active').parent().siblings(".xui-filterCondition").children("ul").eq($(this).index()).show().siblings().hide();
+			});
+/*	
+			// 筛选选项卡里的a标签点击标红加粗
+			$('.xui-filterCondition-section a').click(function(){
+				$(this).addClass('selected').siblings().removeClass('selected');
+			});
+*/
+			})
+		</script>
+{% endblock %}

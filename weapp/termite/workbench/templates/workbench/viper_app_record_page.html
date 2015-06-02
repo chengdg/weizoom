@@ -1,0 +1,17 @@
+<% extends "content_base.html" %>
+
+<% block content-panel %>
+{{ page_html_content|safe }}
+<% endblock %>
+
+<% block js %>
+<script type="text/javascript">
+	W.projectId = "<<project_id>>";
+
+	$(document).ready(function() {
+		$('input[type="text"]').eq(0).focus();
+	});
+
+	//对html中.xa-viperForm的处理逻辑在global_hook.js中
+</script>
+<% endblock %>

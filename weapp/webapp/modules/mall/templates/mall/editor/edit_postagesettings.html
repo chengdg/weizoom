@@ -1,0 +1,135 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/mall/editor/mall_settings/">商城配置</a><span class="divider">/</span></li>
+	<li class="active">{% if postagesettings %}更新{% else %}添加{% endif %}运费配置</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if postagesettings %}{{ postagesettings.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入名称" value="{% if postagesettings %}{{ postagesettings.name }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+
+
+
+
+
+
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="first_weight">首重：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="first_weight" name="first_weight" placeholder="输入首重" value="{% if postagesettings %}{{ postagesettings.first_weight }}{% endif %}" data-validate="price" />
+				<div class="errorHint"></div>
+
+
+
+
+
+
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="first_weight_price">首重价格：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="first_weight_price" name="first_weight_price" placeholder="输入首重价格" value="{% if postagesettings %}{{ postagesettings.first_weight_price }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+
+
+
+
+
+
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="is_added_weight">是否续重：</label>
+			<div class="controls">
+
+
+
+
+
+
+				<label class="checkbox inline">
+					<input id="is_added_weight" type="checkbox" value="1" name="is_added_weight" {% if postagesettings.is_added_weight %}checked="checked"{% endif %} />
+					续重
+				</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="added_weight">续重：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="added_weight" name="added_weight" placeholder="输入续重" value="{% if postagesettings %}{{ postagesettings.added_weight }}{% endif %}"  />
+				<div class="errorHint"></div>
+
+
+
+
+
+
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="added_weight_price">续重价格：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="added_weight_price" name="added_weight_price" placeholder="输入续重价格" value="{% if postagesettings %}{{ postagesettings.added_weight_price }}{% endif %}"  />
+				<div class="errorHint"></div>
+
+
+
+
+
+
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+{% endblock %}

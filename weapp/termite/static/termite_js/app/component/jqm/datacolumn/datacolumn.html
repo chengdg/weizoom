@@ -1,0 +1,96 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.datacolumn_group_list' %}
+{% if in_design_mode %}
+    <div 
+        {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+        data-ui-sortable="true" 
+        data-cid="{{component.cid}}" 
+        data-index="{{component.model.index}}" 
+        class="mb20"
+        style="border: solid 1px #BFBFBF; padding-bottom: 10px;"
+    >
+        {{ component|join_sub_components_html|safe }} 
+    </div>
+{% else %}
+    {{ component|join_sub_components_html|safe }} 
+{% endif %}
+{% endifequal %}
+
+{% ifequal component.type 'jqm.datacolumn_group' %}
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="mb20"
+>
+{% endif %}
+    <div class="xui-inner-category 
+                {% if component.model.columns == '1' %}xui-inner-category-column1{% else %}xui-inner-category-columnn{% endif %} 
+                xui-inner-category-column{{component.model.columns}} 
+                {% if component.model.is_only_show_product_name == 'yes' %}xui-inner-category-noProductInfo{% else %}xui-inner-category-withProductInfo{% endif %}"
+    >
+        <div class="xui-inner-categoryTitle">
+            <span class="xui-inner-categoryTitle-text">{{component.model.text}}</span>
+            <a href="{{component.model.target|extract_target_data:request|safe}}" class="fr">更多></a>
+        </div>
+        <div class="xui-inner-columnContainer">
+            {{ component|join_sub_components_html|safe }}
+        </div>
+    </div>
+{% if in_design_mode %}
+</div>
+{% endif %}
+{% endifequal %}
+
+
+{% ifequal component.type 'jqm.datacolumn' %}
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="xui-inner-column"
+>
+{% else %}
+<div 
+    class="xui-inner-column"
+>
+{% endif %}
+    {{ component|join_sub_components_html|safe }}
+</div>
+{% endifequal %}
+
+
+{% ifequal component.type 'jqm.datacolumn_data' %}
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class=""
+>
+{% endif %}
+    <div class="xui-inner-columnItem xui-inner-product">
+        <a href="{{component.model.target|extract_target_data:request|safe}}">
+            <img src="{{component.model.image}}" />
+            <div class="xui-inner-productInfo">
+                {% if component.parent_component.parent_component.model.columns == '1' %}
+                <div class="xui-inner-productName">{{component.model.text}}</div>
+                <div class="xui-inner-productPriceInfo">
+                    秒杀价: <span class="xui-inner-price">￥{{component.model.price}}</span>
+                    <span class="xui-inner-originalPrice fr">原价: ￥{{component.model.original_price}}</span>
+                </div>
+                {% else %}
+                <div class="xui-inner-productPriceInfo"><span class="xui-inner-price">￥{{component.model.price}}</span><span class="xui-inner-originalPrice fr">￥{{component.model.original_price}}</span></div>
+                <div class="xui-inner-productName">{{component.model.text}}</div>
+                {% endif %}
+            </div>
+        </a>
+    </div>
+{% if in_design_mode %}
+</div>
+{% endif %}
+{% endifequal %}

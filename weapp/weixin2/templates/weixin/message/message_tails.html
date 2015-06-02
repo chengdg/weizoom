@@ -1,0 +1,121 @@
+{% extends "content_base_v2.html" %}
+{% block content-panel %}
+<div class="xui-weixin-messagePage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/new_weixin/keyword_rules/">消息互动</a></li>
+			<li class="">小尾巴</li>
+		</ul>
+	</div>
+	<div></div>
+	<ul class="xui-messageNav">
+		<li><a href="/new_weixin/keyword_rules/">关键词自动回复</a></li>
+		<li><a href="/new_weixin/follow_rules/">关注后自动回复</a></li>
+		<li><a href="/new_weixin/unmatch_rules">消息托管</a></li>
+		<li class="active" ><a href="/new_weixin/message_tails">小尾巴</a></li>
+	</ul>
+
+	{% if tail %}
+		<div class="xui-contentWrap" id="xa-smallTail" >
+			<div class="xui-messageTrust ml10 mt10 mr10 h80">
+				<div class="xui-i-left fl pt30">
+					开启后，自动回复给粉丝的文本消息末尾都会自动加上“小尾巴”里的内容
+				</div> 
+				<div class="fl pt15 h30 w90">
+					{% ifequal tail.is_active False %} 
+						<span class="btn btn-primary xa-switch xui-save xui-i-btnColor" style="background-color:#207cbe;" data-switch=0> 开&nbsp;&nbsp启 </span>
+					{% else %}
+						{% ifequal tail.is_active True %}
+							<span class="btn btn-primary xa-switch   xui-i-btnColor" data-switch=1 style="background-color:#d9534f;">停&nbsp;&nbsp用</span>
+						{% else %}
+						{% endifequal %}
+					{% endifequal %}
+				</div>
+			</div>
+			<div class="xui-contentText pr">
+				<span class="pa">内容</span>
+			</div>
+			<textarea class="xa-tails xui-textarea ml10">{{tail.tail}}</textarea>
+			<div class="ml10 mt5 w975 tl_important">
+				<span class="btn btn-primary xui-save xa-submit" method="post" data-tailid="{{tail.id}}">保存</span>
+			</div>
+		</div>
+	{% else %}
+		<div  class="xui-contentWrap " id="xa-smallTail" >
+			<div class="xui-messageTrust ml10 mt10 mr10 h80">
+				<div class="xui-i-left fl pt30">
+					开启后，自动回复给粉丝的文本消息末尾都会自动加上“小尾巴”里的内容
+				</div> 
+				<div class="fl pt15 h30 w90">
+					<span class="btn btn-primary xa-switch xui-save  style="background-color:#d9534f;" xui-i-btnColor" data-switch=1>停&nbsp;&nbsp用</span>
+				</div>
+			</div>
+			<div class="xui-contentText pr">
+				<span class="pa">内容</span>
+			</div>
+			<textarea class="xa-tails xui-textarea ml10"></textarea>
+			<div class="ml10 mt5 w975 tl_important">
+				<span class="btn btn-primary xui-save xa-submit" method="put" data-tailid="">保存</span>
+			</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		//创建富文本编辑器
+        var editor = new W.view.common.RichTextEditor({
+            el: 'textarea',
+            type: 'onlyLink',
+            maxCount: 600,
+            width: 600,
+            height:250,
+        });
+		editor.bind('contentchange', function() {}, this);
+		editor.render();
+
+		_switch = $('.xa-switch').attr('data-switch');
+		$("#xa-smallTail").delegate('.xa-submit','click',function() {
+			var args = new Object();
+			args.tail = editor.getContent();
+			if (args.tail.length > 600) {
+				W.showHint('error', '内容不能超过600字');
+				return;
+			}
+			console.log(args.tail);
+			args.is_active = _switch;
+			args.id = $(this).attr('data-tailid');
+			
+			W.getApi().call({
+				app: 'new_weixin',
+				resource: 'message_tails',
+				method: $(this).attr('method'),
+				args: args,
+				success: function(data) {
+					W.showHint('success', '保存成功');
+					setTimeout(function(){location.reload()},500);
+				},
+				error: function(resp) {
+					W.showHint('error', '保存失败');
+				},
+			});
+		});
+		$("#xa-smallTail").delegate('.xa-switch','click',function() {
+			console.log(_switch);
+			if(_switch == 0){
+				_switch = 1;
+				$(this).html('停&nbsp;&nbsp用');
+				$(this).css('background-color','#d9534f');
+			}
+			else{
+				_switch = 0;
+				  $(this).css('background-color','#207cbe');
+				$(this).html('开&nbsp;&nbsp启 ');
+			}
+		});
+	});
+</script>
+{% endblock %}

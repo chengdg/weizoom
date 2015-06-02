@@ -1,0 +1,52 @@
+body {
+    background-color: #e4f4fc;
+}
+.mui-bar-nav ~ .mui-content {
+  padding-top: 0;
+}
+.mui-content,.mui-input-group,input[type="password"]{
+  background-color: transparent;
+  border: medium none;
+}
+.mui-input-row label ~ input{
+  width: 85%;
+}
+
+.mui-input-group label {
+    width: 15%;
+    padding: 8px 15px;
+}
+.mui-input-group:before,.mui-input-group:after{
+	background: none;
+}
+
+#login {
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border: medium none;
+	margin-top: 25%;
+}
+
+#login form {
+	margin-top: 10%;
+}
+
+.mui-content a {
+  color: #8f8f94;
+}
+
+#login_error_message {
+	min-height: 20px;
+	color: red;
+	margin-top: 10px;
+}
+
+#login img {
+  width: 35%;
+}
+
+#slider button {
+    left: 25%;
+    position: absolute;
+    top: 80%;
+    width: 50%;
+}

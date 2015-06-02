@@ -1,0 +1,92 @@
+<script id="weixin-edit-news-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="small-phone-box" class="fl"></div>
+	<div id="news-editor-box" class="wx-thin-form fl ml10">
+		<div id="formWrapper">
+			<form class="form-horizontal" method="get" id="news-form">
+				{{if showPattern}}
+				<legend>当消息中出现:</legend>
+				<fieldset>
+					<div class="control-group ml10">
+						<input type="text" id="patterns" name="patterns" placeholder="输入匹配词" value="${patterns}" style="width: 335px" data-validate="required,noDuplicatePattern" data-validate-rule="${ruleId}" />
+						<div class="errorHint"></div>
+						<span class="help-block">词与词之间用英文竖线|分隔</span>
+					</div>
+				</fieldset>
+				{{/if}}
+				<legend>回复:</legend>
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label" for="title">标题：</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge" id="title" name="title" placeholder="输入图文消息的标题" value="" data-validate="required,cannot-contains" data-validate-max-length="30" data-validate-not-contain-characters="&quot;,'" />
+							<div class="errorHint" style="width: 300px;"></div>
+						</div>
+					</div>
+					
+					<div id="actionDiv" class="control-group">
+	                    <label class="control-label" for="acction">行为：</label>
+	                    <div class="controls">
+	                    	<label class="radio w60 inline"><input type="radio" checked value="0" name="change_action">显示图文</label>
+	                    	<label class="radio w60 inline"><input type="radio" value="1" name="change_action">进入微站</label>
+	                    </div>
+	                </div>
+
+					<div id="summaryDiv" class="control-group hide">
+	                    <label class="control-label" for="summary">摘要：</label>
+	                    <div class="controls">
+	                        <textarea rows="2" class="input-xlarge" id="summary" name="summary" data-validate="cannot-contains,required"
+	                        data-validate-not-contain-characters="&quot;,'" data-validate-max-length="120"></textarea>
+	                        <div class="errorHint"></div>
+	                    </div>
+	                </div>
+	                
+					<div id="urlDiv" class="control-group hide">
+						<label class="control-label" for="url">地址：</label>
+						<div class="controls form-inline">
+							<input type="hidden" id="url" name="url" />
+							<input type="hidden" id="linkTarget" name="link_target" />
+							<input type="text" style="width: 230px;" id="urlDisplayValue" name="urlDisplayValue" placeholder="链接地址" disabled />
+							<a id="newsEditor-selectWebAppLinkTargetButton" href='javascript:void(0);' class="btn btn-primary" data-input="url">选择</a>
+							<div class="errorHint"></div>
+						</div>
+					</div>
+
+					<div id="textareaDiv" class="control-group hide">
+						<label class="control-label" for="text">正文：</label>
+						<div class="controls">
+							<textarea rows="4" class="input-xlarge" id="text" name="text" data-validate="required" data-validate-max-length="2000000"></textarea>
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" >封面：</label>
+						<div class="controls">
+							<input type="hidden" name="pic_url" id="picUrlInput" value="" data-validate="require-image"/>
+							<div id="imageView"></div>
+							<div class="errorHint"></div>
+						</div>
+						<div class="controls mt10">
+							<div id="showCoverPicOption">
+								<label class="checkbox">
+									<input type="checkbox" id="showCoverPicCheckbox" name="is_show_cover_pic" value="true" /> 封面图片显示在正文中
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="control-group pt10 tr mr5 hide" id="update-news-btns-box">
+						<div class="controls">
+							<input id="delete-news-btn" type="button" class="btn btn-danger" value="&nbsp;&nbsp;&nbsp;&nbsp;删&nbsp;&nbsp;除&nbsp;&nbsp;&nbsp;&nbsp;" />
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	<div class="cb"></div>
+
+	<div class="tc mt20 mb20">
+		<legend></legend>
+		<button id="submit-btn" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+	</div>
+</script>

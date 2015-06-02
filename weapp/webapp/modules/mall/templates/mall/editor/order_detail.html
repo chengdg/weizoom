@@ -1,0 +1,490 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% load mall_filter %}
+{% load express_filter %}
+
+{% block css %}
+<style type="text/css">
+	.form-horizontal .control-group {
+		margin-bottom: 10px;
+		margin-top: 10px;
+	}
+
+	.form-horizontal legend {
+		margin-bottom: 10px;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+	<ul class="breadcrumb" xmlns="http://www.w3.org/1999/html">
+		<li><a href="/mall/editor/orders/">订单列表</a><span class="divider">/</span></li>
+		<li class="active">订单详情</li>
+		<span class="breadcrumRightButton">
+			{% for action in order|get_order_actions %}
+			<a class="btn {{action.button_class}}{% ifequal action.action 'cancel' %}  
+			ua-cancel
+			{% endifequal %}{% ifequal action.action 'ship' %} ua-ship{% endifequal %}" {% if action.action == 'ship' %} href="javascript:void(0);"
+			{% else %} 
+
+			onclick="{% if action.action == 'cancel' %}  
+			{% else %} window.location='/mall/editor/order_status/update/?order_id={{order.id}}&action={{action.action}}' {% endif %}"
+			{% endif %}>{{action.name}}</a>
+			{% endfor %}
+		</span>
+	</ul>
+
+	<form class="form-horizontal" method="post" id="order-form" action="/mall/editor/order/update/">
+		<fieldset>
+			<legend>基本信息</legend>
+			<div class="control-group">
+				<label class="control-label">订单号：</label>
+				<div class="controls">
+					<p class="pt5 m0">{{ order.order_id }}</p>
+					<input type="hidden" name="order_id" value="{{order.id}}" />
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">下单时间：</label>
+				<div class="controls">
+					<p class="pt5 m0"> {{ order.created_at|date:"Y-m-j H:i" }}</p>
+				</div>
+			</div>
+
+			{% if order.express_company_name %}
+			<div class="control-group">
+				<label class="control-label">物流信息：</label>
+				<div class="controls">
+					<p class="pt5 m0">
+						【{{ order.express_company_name|get_company_name_by_value }}】
+						<a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ order.express_number }}</a>&nbsp;&nbsp;&nbsp;{{ order.leader_name }}
+
+						<a class="btn ua-ship" href="javascript:void(0);" data-is-update="true">修改</a>
+					</p>
+				</div>
+			</div>
+			{% endif %}
+			<div class="control-group">
+				<label class="control-label">订单类型：</label>
+				<div class="controls">
+					<p class="pt5 m0">
+						{% ifequal order.type 'delivery' %}
+							套餐订单
+						{% endifequal %}
+						{% ifequal order.type 'test' %}
+							测试订单
+						{% endifequal %}
+						{% ifequal order.type 'object' %}
+							普通订单
+						{% endifequal %}
+						{% ifequal order.type 'thanks_card' %}
+							贺卡订单
+						{% endifequal %}
+						{% ifequal order.type 'integral' %}
+							积分商品
+						{% endifequal %}
+					</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">订单状态：</label>
+				<div class="controls">
+					<p class="pt5 m0">
+						{% if order.type == 'delivery' %}
+							{% for order_has_delivery_time in order_has_delivery_times %} 
+								时间：{{ order_has_delivery_time.delivery_date|date:"Y-m-j" }}
+								&nbsp;&nbsp;&nbsp;
+								{% ifequal order_has_delivery_time.status 0 %}
+									待发货
+								{% endifequal %}
+								{% ifequal order_has_delivery_time.status 1 %}
+									已发货
+								{% endifequal %}
+								&nbsp;&nbsp;&nbsp;
+								{% ifequal order_has_delivery_time.status 1 %}
+								【{{ order_has_delivery_time.express_company_name|get_company_name_by_value }}】
+								<a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order_has_delivery_time.express_company_name}}&nu={{ order_has_delivery_time.express_number }}">{{ order_has_delivery_time.express_number }}</a>&nbsp;&nbsp;&nbsp;{{ order_has_delivery_time.leader_name }}
+								{% endifequal %}
+								<br>
+							{% endfor %}
+						{% else %}
+							{{ order|get_order_status_text }}							
+					{% endif %}
+					</p>
+				</div>
+			</div>
+
+			{% if order.status == 1 %}
+				<div class="control-group">
+				<label class="control-label">取消原因：</label>
+				<div class="controls">
+					<p class="pt5 m0">
+						{{order.reason}}
+					</p>
+				</div>
+			</div>
+			{% endif %}
+			<div class="control-group">
+				<label class="control-label">数量：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.number }}</p>
+				</div>
+			</div>
+			{% if order.integral and order.webapp_id == user.get_profile.webapp_id%}
+			<div class="control-group">
+				<label class="control-label">使用积分：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.integral }}</p>
+				</div>
+			</div>
+			{% endif %}
+			{% if coupon %}
+				<div class="control-group">
+				<label class="control-label">优惠券：</label>
+				<div class="controls"><p class="pt5 m0">{{ coupon.coupon_id }}&nbsp;&nbsp;（{{ coupon.coupon_rule.name }}&nbsp;|&nbsp;￥{{ coupon.money }}）</p>
+				</div>
+			</div>
+			{% endif %}
+			{% if order.used_weizoom_card_id %}
+			<div class="control-group">
+				<label class="control-label">微众卡：</label>
+					<div class="controls"><p class="pt5 m0">
+					{% if is_weizoom_mall %}
+					<a href="/market_tools/weizoom_card/weizoom_card/{{ order.used_weizoom_card_id }}/expense_record/">{{ order.used_weizoom_card_number }}</a>
+					{% endif %}
+					{% if not is_weizoom_mall %}
+						{{ order.used_weizoom_card_number }}
+					{% endif %}
+					</p>
+				</div>
+			</div>
+			{% endif %}
+			<div class="control-group">
+				<label class="control-label">订单金额：</label>
+				<div class="controls">
+					<p class="pt5 m0">{{ order.get_total_price }}
+				{% ifequal order.type 'integral' %}
+				积分
+				{% endifequal %}</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">支付金额：</label>
+				<div class="controls">
+				{% if order.webapp_id == user.get_profile.webapp_id %}
+					{% if is_order_not_payed %}
+						<input type="text" class="input-xlarge" id="final_price" name="final_price" style="width: 350px" placeholder="输入邮费" value="{% if order %}{{ order.final_price }}{% endif %}"  data-validate='price'/>
+						<div class="errorHint"></div>
+					{% else %}
+						<p class="pt5 m0" style="display: inline-block;">{{ order.final_price }}</p>
+					{% endif %}
+				{% else %}
+					<p class="pt5 m0" style="display:inline-block;">{{ order.get_total_price }}</p>
+				{% endif %}
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">发票：</label>
+				<div class="controls">
+					{% if is_order_not_payed %}
+					<select id="bill_type" name="bill_type" style="width: 100px;">
+						<option value="0" {% ifequal order.bill_type 0 %}selected="selected"{% endifequal %}>无</option>
+						<option value="1" {% ifequal order.bill_type 1 %}selected="selected"{% endifequal %}>个人</option>
+						<option value="2" {% ifequal order.bill_type 2 %}selected="selected"{% endifequal %}>公司</option>
+					</select>
+					<input type="text" class="input-xlarge" id="bill" name="bill" style="width: 250px" placeholder="输入发票信息" value="{{ order.bill }}" {% if order.bill_type == 0 %}disabled="disabled"{% endif %}/>
+					{% else %}
+					<p class="pt5 m0">
+						{% ifequal order.bill_type 0 %}
+							无
+						{% else %}
+							{% ifequal order.bill_type 1 %}
+								个人,
+							{% endifequal %}
+							{% ifequal order.bill_type 2 %}
+								公司,
+							{% endifequal %}
+							{{ order.bill }}
+						{% endifequal %}
+					</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">邮费：</label>
+				<div class="controls">
+					{% if is_order_not_payed %}
+					<input type="text" class="input-xlarge" id="postage" name="postage" style="width: 350px" placeholder="输入邮费" value="{% if order %}{{ order.postage }}{% endif %}"  data-validate='price'/>
+					<div class="errorHint"></div>
+					{% else %}
+					<p class="pt5 m0">{{ order.postage }}</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人：</label>
+				<div class="controls">
+					{% if is_order_not_payed %}
+					<input type="text" class="input-xlarge" id="ship_name" name="ship_name" style="width: 350px" placeholder="输入收货人" value="{% if order.ship_name %}{{ order.ship_name }}{% endif %}" data-validate="required-none" />
+					<div class="errorHint"></div>
+					{% else %}
+					<p class="pt5 m0">{{ order.ship_name }}</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人电话：</label>
+				<div class="controls">
+					{% if is_order_not_payed %}
+					<input type="text" class="input-xlarge" id="ship_tel" name="ship_tel" style="width: 350px" placeholder="输入收货人电话" value="{% if order.ship_tel %}{{ order.ship_tel }}{% endif %}" data-validate="required-none" />
+					<div class="errorHint"></div>
+					{% else %}
+					<p class="pt5 m0">{{ order.ship_tel }}</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人地址：</label>
+				<div class="controls">
+					{% if is_order_not_payed %}
+					{{order.area|default:""}}  <input type="text" class="input-medium" id="ship_address" name="ship_address" style="width: 212px" placeholder="输入收货人地址" value="{% if order.ship_address %}{{ order.ship_address }}{% endif %}" data-validate="required-none" />
+					<div class="errorHint"></div>
+					{% else %}
+					<p class="pt5 m0">{% if order.area %}{{ order.area }}{% endif %} {{order.ship_address}}</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">顾客留言：</label>
+				<div class="controls">
+					<p class="pt5 m0 xt-customerMessage">{{order.customer_message}}</p>
+				</div>
+			</div>
+		</fieldset>
+			
+		<fieldset>	
+			<legend>商品详情</legend>
+			<div class="control-group">
+				<div class="m5 ml20">
+					<table class="table table-bordered table-condensed" style="margin: 5px auto; background-color: #FAFAFA; width: 100%;">
+					{% if order.products %}
+						<tr>
+							<th>商品</th>
+							<th>规格</th>
+							<th>数量</th>
+							<th>总价</th>
+						</tr>
+						{% for product in order.products %}
+						<tr>
+							<td style="padding: 10px;">
+								<img class="imgBox" src="{{product.thumbnails_url}}" width="100" style="max-width: 80px" /><span class="ml10">{{product.name}}</span><span class="ml10" style="color: red">{% if product.is_deleted %}已删除{% endif %}</span>
+							</td>
+							<td width="20%">
+				            {% if product.custom_model_properties %}
+				            	{% for property in product.custom_model_properties %} 
+				            	{{property.name}}: {{property.property_value}}<br/>
+				            	{% endfor %}
+				            {% endif %}
+				           	</td>
+							<td style="width:50px">{{ product.count }} </td>
+							<td style="width:50px">{{ product.total_price }} </td>
+						</tr>
+						{% endfor %}
+					{% else %}
+						<tr><td width='100%' align="center">暂无数据</td></tr>
+					{% endif %}
+					</table>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>日志信息</legend>
+			<div class="control-grop">
+				<ul class="nav nav-tabs" id="myTab"> 
+			      <li class="active"><a href="#home">订单备注</a></li> 
+			      <li><a href="#profile">订单状态日志</a></li> 
+			      <li><a href="#messages">订单后台操作日志</a></li> 
+			    </ul> 
+			       
+			    <div class="tab-content"> 
+			      <div class="tab-pane active" id="home">
+					<textarea class="input-xlarge" id="remark" name="remark" style="height: 100px; width: 96%">{{order.remark}}</textarea>
+			      </div> 
+			      <div class="tab-pane" id="profile">
+			      		<div class="m5 ml20">
+							<table width='100%' class="table table-bordered table-condensed table-striped">
+							{% if order_status_logs %}
+								<thead>
+									<tr>
+									 	<th>状态</th>
+									 	<th>操作人</th>
+									 	<th>时间</th>
+									 </tr>
+							 	<thead>
+							 	<tbody>
+									{% for order_status_log in order_status_logs %}
+									<tr>
+										<td width="25%">
+											{{ order_status_log|get_order_status_transition }}
+										</td>
+										<td width="25%">{{ order_status_log.operator }} </td>
+										<td width="20%">
+										{{ order_status_log.created_at|date:"Y-m-j H:i" }}
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							{% else %}
+								<tbody>
+									<tr>
+										<td width='100%' align="center">暂无数据</td>
+									</tr>
+								</tbody>
+							{% endif %}
+							</table>
+						</div>
+			      </div> 
+			      <div class="tab-pane" id="messages">
+			      		<div class="m5 ml20">
+							<table width='100%' class="table table-bordered table-condensed table-striped">
+							{% if order_operation_logs %}
+								<thead>
+									<tr>
+									 	<th>操作</th>
+									 	<th>操作人</th>
+									 	<th>时间</th>
+									 </tr>
+							 	<thead>
+							 	<tbody>
+									{% for order_operation_log in order_operation_logs %}
+									<tr>
+										<td width="25%">{{ order_operation_log.action }}</td>
+										<td width="25%">{{ order_operation_log.operator }} </td>
+										<td width="20%">
+										{{ order_operation_log.created_at|date:"Y-m-j H:i" }}
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							{% else %}
+								<tbody>
+									<tr>
+										<td width='100%' align="center">暂无数据</td>
+									</tr>
+								</tbody>
+							{% endif %}
+							</table>
+						</div>
+			      </div> 
+			    </div> 
+
+			</div>
+			{% if order.webapp_id == user.get_profile.webapp_id %}
+			<div class="control-group mt5 mr5">
+				<div class="controls ml20 tc">
+					<input id="submitBtn" class="btn btn-success" type="submit" value="提  交">
+				</div>
+			</div>
+			{% endif %}
+		</fieldset>
+	</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+	$(document).ready(function () { 
+		/*$(".btn-danger").click(function(event) {
+			var $cancelButton = $(event.currentTarget);
+			alert($cancelButton.href);
+			if(confirm("确定取消吗?")){
+				location.href="确认后跳转的页面";
+			} else {
+				return;
+		    }
+		});*/
+        $('#myTab a:last').tab('show');//初始化显示哪个tab 
+      
+        $('#myTab a').click(function (e) { 
+        	e.preventDefault();//阻止a链接的跳转行为 
+        	$(this).tab('show');//显示当前选中的链接及关联的content 
+        });
+        
+        $('.ua-ship').click(function(event){
+        	var $el = $(event.currentTarget);
+        	var express_company_value = {% if order.express_company_name %}'{{ order.express_company_name }}'{% else %}-1{% endif %};
+        	var express_number = '{{ order.express_number }}';
+        	var leader_name = '{% if order.leader_name %}{{ order.leader_name }}{% endif %}';
+        	// 点击发货，不是点击修改
+        	console.log($el.attr('data-is-update'), $el.attr('data-is-update') !== true)
+        	if($el.attr('data-is-update') !== 'true'){
+        		express_company_value = -1;
+        		express_number = '';
+        		leader_name = '';
+        	}
+        	var mallOrderShipView = W.getMallOrderShipView({
+				width: 220,
+				title: '发货'
+			});
+			mallOrderShipView.show({
+				$action: $el,
+				order_id: '{{order.id}}',
+				express_company_value: express_company_value,
+				express_number: express_number,
+				leader_name: leader_name
+			})
+        	
+        })
+
+        $('.ua-cancel').click(function(event){
+        	var $el = $(event.currentTarget);
+        	var express_company_value = {% if order.express_company_name %}'{{ order.express_company_name }}'{% else %}-1{% endif %};
+        	var express_number = '{{ order.express_number }}';
+        	var leader_name = '{% if order.leader_name %}{{ order.leader_name }}{% endif %}';
+        	// 点击发货，不是点击修改
+        	//console.log($el.attr('data-is-update'), $el.attr('data-is-update') !== true)
+        	
+        	var mallOrderShipView = W.getMallOrderCancelView({
+				width: 220,
+				height: 300,
+				title: '取消原因'
+			});
+			mallOrderShipView.show({
+				$action: $el,
+				order_id: '{{order.id}}',
+				express_company_value: express_company_value,
+				express_number: express_number,
+				leader_name: leader_name
+			})
+        })
+
+        $('#bill_type').change(function() {
+        	var $select = $(this);
+        	var type = parseInt($select.val());
+        	var $input = $select.parent().find('input[type="text"]');
+        	if (type === 0) {
+        		$input.val('').attr('disabled', 'disabled');
+        	} else {
+        		$input.removeAttr('disabled');
+        	}
+        })
+
+        $('#order-form').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		}); 
+      });
+  //提交 
+</script>
+{% endblock %}

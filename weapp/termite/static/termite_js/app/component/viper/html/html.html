@@ -1,0 +1,23 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.html' %}
+<!-- =====> viper:html component -->
+{% if in_production_mode %}
+	{{component|render_html:request|safe}}
+{% else %}
+	<div 
+	    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+	    data-ui-sortable="true" 
+	    data-cid="{{component.cid}}"
+	    class="mt5 mb5"
+	>
+		{% if component.model.html|contains_django_template %}
+			{{component.model.html|linebreaksbr}}
+		{% else %}
+		    {{component.model.html|safe}}
+		{% endif %}
+	</div>
+{% endif %}
+<!-- <===== viper:html component -->
+{% endifequal %}

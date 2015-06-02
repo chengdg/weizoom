@@ -1,0 +1,121 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">账号管理</li>
+	</ul>
+	<span class="breadcrumRightButton">
+			<a id="addWeizoomCardUserBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-plus icon-white"></i>添加</a>
+	</span>
+</div>
+
+<div
+	data-ui-role="advanced-table"
+	data-app="market_tools/weizoom_card"
+	data-api="accounts/get"
+	data-template-id="#weizoom_card_accounts_view"
+	data-init-sort="-created_at"
+	data-item-count-per-page="15"
+	data-enable-paginator="true"
+>
+</div>
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+		<script id="weizoom_card_accounts_view" type="text/x-jquery-tmpl">
+			<table class="table table-bordered table-condensed" id="dddd" >
+				<thead>
+				<tr>
+					<th>账号</th>
+					<th>名称</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{if items.length}}
+				{{each(i, item) items}}
+				<tr data-id="${item.id}">
+					<td>
+						<div>${ item.username }</div>
+					</td>
+					<td>
+						<div>${ item.nickname }</div>
+					</td>
+				</tr>
+				{{/each}}
+				{{else}}
+				<tr><td colspan='10'>还没有数据</td></tr>
+				{{/if}}
+				</tbody>
+			</table>
+			<div id="paginationContent"></div>
+		</script>
+	{% endverbatim %}
+	
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#addWeizoomCardUserBtn').click(function(event) {
+        W.dialog.showDialog('W.weapp.dialog.AddWeizoomCardUserDialog', {
+          success: function(data) {
+            W.getLoadingView().show();
+            W.getApi().call({
+              app: 'market_tools/weizoom_card',
+              api: 'user/create',
+              method: 'post',
+              args: data,
+              success: function() {
+                window.location.reload();
+              },
+              error: function(resp) {
+                W.getLoadingView().hide();
+                if (resp.code === 500) {
+                  alert(resp.data);
+                } else if(resp.code === 201) {
+                  alert('该账号系统里没有请重新添加!');
+                } else {
+                  alert('添加用户失败!')
+                }
+              }
+            })
+          }
+        })
+    });
+
+    $('.x-manageModules').click(function(event) {
+      var $link = $(event.currentTarget);
+      var userId = $link.attr('data-user-id');
+      var installedModuleIds = $.parseJSON($link.attr('data-module-ids'));
+      W.dialog.showDialog('W.weapp.dialog.ManageModuleDialog', {
+        installedModuleIds: installedModuleIds,
+        success: function(data) {
+          W.getLoadingView().show();
+          W.getApi().call({
+            app: 'webapp',
+            api: 'user_module/add',
+            method: 'post',
+            args: {
+              user_id: userId,
+              modules: data
+            },
+            success: function(data) {
+              window.location.reload();
+            },
+            error: function(resp) {
+              W.getLoadingView().hide();
+              alert('添加微站模块失败！');
+            }
+          });
+          xwarn(data);
+        }
+      });
+    });
+  });
+</script>  
+{% endblock %}

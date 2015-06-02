@@ -1,0 +1,26 @@
+<script id="multi-image-view" type="text/x-jquery-tmpl">
+	<div id="multi-imageView-uploadZone" class="multi-imageView-uploadZone {{if isMulti}}{{else}}{{if picUrlCount}}hide{{/if}}{{/if}}">
+		<input id="multi-imageView-fileUploader" name="multi-imageView-fileUploader" type="file" class="hide"/>
+	</div>
+    <div class="clearfix ui-sortable tx_itemContainer">
+    {{if picUrlCount}}
+    {{each(i, imgUrl) imgUrls}}
+	<div id="multi-imageView-imgZone" name="multi-imageView-imgZone" class="imgBox fl mb10 mr10 pt0 multi-imageView-imgZone"
+	     style="width:${width}px">
+		<button class="close" type="button">×</button>
+		<div class="multi-imageView-imgContainer">
+			<img src="${imgUrl}" width="${width}px" height="${height}px" style="width:${width}px; height:${height}px"/>
+		</div>
+	</div>
+    {{/each}}
+    {{else}}
+    <div id="multi-imageView-imgZone" name="multi-imageView-imgZone" class="imgBox fl mb10 mr10 pt0 {{if !picUrlCount}}hide{{/if}} multi-imageView-imgZone"
+	     style="width:${width}px">
+		<button class="close" type="button">×</button>
+		<div class="multi-imageView-imgContainer">
+			<img src="" width="${width}px" height="${height}px" style="width:${width}px; height:${height}px"/>
+		</div>
+	</div>
+    {{/if}}
+    </div>
+</script>

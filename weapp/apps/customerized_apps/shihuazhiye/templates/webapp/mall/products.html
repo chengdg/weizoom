@@ -1,0 +1,78 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<style>
+.xui-products .ui-listview .ui-li > .ui-btn-text{
+    height: auto;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}">
+    {% if is_weizoom_mall %}
+    {% else %}
+    <a href="./?woid={{request.webapp_owner_id}}&module=apps:shihuazhiye:mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn" data-role="button">
+        {{shopping_cart_product_nums}}
+    </a>
+    {% endif %}
+<!--微众商城用户无分类-->
+<!--     {% if has_category %}
+    <ul data-ui-role="top-dropdown-nav">
+    	<li></li>
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=apps:shihuazhiye:mall&model=products&action=list" data-role="button">全部</a></li>
+        {% for product_category in product_categories %}
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=apps:shihuazhiye:mall&model=products&action=list&category_id={{product_category.id}}" data-role="button">{{product_category.name}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %} -->
+  
+    <div data-role="content" data-theme="x">
+		<div class="xui-hlist xui-hlist-cell-1 xui-products">
+			{% if products %}
+			<ul data-role="listview" data-theme="x" data-icon="false">
+				{% for product in products %}
+				<li>
+					<a href='./?woid={{request.webapp_owner_id}}&module=apps:shihuazhiye:mall&model=product&action=get&workspace_id=apps:shihuazhiye:mall&rid={{product.id}}'>
+                        <div class="img"><img src="{{ product.thumbnails_url }}"></div>
+						<h3>{{ product.name }}</h3>
+                        <p class="mb10" style="font-size:17px;">
+                        {% if product.type == 'integral' %}
+                            <!-- 积分课程 -->
+                            {{ product.display_price }}积分
+                        {% elif product.type == 'object' %}                    
+                            <!-- 普通课程 -->
+                            ￥{{ product.display_price }}
+                        {% endif %}
+                        </p>
+					</a>
+					{% ifequal product.stock_type 1 %}
+						{% ifequal product.stocks 0 %}
+						<div class="xui-sellout-tag fr"><div class="xui-sellout-middle"><div class="xui-sellout-inner">已售罄</div></div></div>
+						{% endifequal %} 
+					{% endifequal %}
+				</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<h2>没有相关课程</h2>
+			{% endif %}
+    	</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+    var imgWidth = window.document.body.clientWidth
+    var imgHeight = imgWidth - 36
+    $('.xui-hlist .img img').css({
+        'height': imgHeight,
+        'width': imgWidth
+    });
+    $('[auto_height]').imageAutoHeight();
+});
+</script>
+{% endblock %}

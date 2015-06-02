@@ -1,0 +1,13 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'jqm.page' %}
+{% if in_production_mode %}
+<div data-role="page" data-theme="{{component.model.theme}}" class="{{component.model.class}} {% if not component.model.background %}xui-default-background{% endif %}" {% if component.model.background %}style="background-image: url({{component.model.background}})"{% endif %}>
+{% endif %}
+    {% for sub_component in component.components %}
+    {{ sub_component.html|safe }}
+    {% endfor %}        
+{% if in_production_mode %}
+</div>
+{% endif %}
+{% endifequal %}

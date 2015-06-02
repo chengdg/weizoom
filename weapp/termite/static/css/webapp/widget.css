@@ -1,0 +1,127 @@
+@charset "utf-8";
+
+/**
+ * top dropdown menu widget的样式
+ */
+.wui-topDropdownMenu {
+    background-color: #FFFFFF;
+    position: relative;
+    z-index: 1000;
+    position: fixed;
+    width: 100%;
+    /*top: -246px;*/
+    top: 0px;
+    left: 0px;
+    -webkit-transition: 0.5s top;
+    -moz-transition: 0.5s top;
+    transition: 0.5s top;
+}
+
+.wui-topDropdownMenu ul {
+    background-color: #FFFFFF;
+    position: relative;
+    z-index: 2002;
+}
+
+.wui-topDropdownMenu li {
+    padding: 10px 20px;
+    line-height: 20px;
+    border-bottom: solid 1px #CFCFCF;
+}
+
+.wui-topDropdownMenu li a:link, .wui-topDropdownMenu li a:visited {
+    color: #333;
+}
+
+.wui-topDropdownMenu.wui-dropdownMenuExpand {
+    -webkit-transition: 1s top cubic-bezier(.58,.01,.76,1.71);
+    -moz-transition: 1s top cubic-bezier(.58,.01,.76,1.71);
+    transition: 1s top cubic-bezier(.58,.01,.76,1.71);
+}
+
+.wui-dropdownTrigger {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    background-color: rgba(224, 222, 228, 0.9);
+    display: block;
+    /*
+    position: fixed;
+    top: -35px;
+    left: 50%;
+    margin-left: -30px;
+    */
+    position: absolute;
+    left: 50%;
+    bottom: -30px;
+    margin-left: -30px;
+    z-index: 1001;
+}
+
+.wui-dropdownIndicator {
+    position: relative; 
+    top: 32px; 
+    left: 20px; 
+    width: 20px; 
+    height: 20px; 
+    font-size: 1.2em; 
+    color: #333333;
+    font-weight: bold; 
+    text-align: center; 
+    line-height: 20px;
+    -webkit-transition: all 0.2s linear 0s;
+    -moz-transition: all 0.2s linear 0s;
+    transition: all 0.2s linear 0s;
+}
+
+.wui-dropdownIndicator-up {
+    -webkit-transform: rotate(-90deg); 
+    -moz-transform: rotate(-90deg); 
+    transform: rotate(-90deg); 
+}
+
+.wui-dropdownIndicator-down {
+    -webkit-transform: rotate(90deg); 
+    -moz-transform: rotate(90deg); 
+    transform: rotate(90deg); 
+}
+
+
+/**
+ * counter widget的样式
+ */
+.wui-counter {
+    background:#fff;
+    border:1px solid #C2C2C2;
+    height:1.7em;
+    display:table;
+}
+.wui-counter a {
+    color:#727272;
+    height:1.7em;
+    line-height:1.7em;
+    width:1.7em;
+    text-align:center;
+    display:table-cell;
+}
+.wui-counter a:active{
+    color:#aaa;
+}
+.wui-counter span.wui-counterText{
+    display:table-cell;
+    height:1.7em;
+    line-height:1.7em;
+    padding:0 1em;
+    color:#555555;
+    border-left:1px solid #D3DBE1;
+    border-right:1px solid #D3DBE1;
+}
+.line-bottom{
+    border-bottom:1px solid #F1F1F1;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+.xui-btn-layer-footer{
+    padding:15px 0 50px 0;
+}
+

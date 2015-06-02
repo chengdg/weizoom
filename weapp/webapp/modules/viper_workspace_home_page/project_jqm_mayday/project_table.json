@@ -1,0 +1,11 @@
+{
+ "inner_name": "mayday", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "\u4e94\u6708\u5929", 
+ "template_project_id": 0, 
+ "type": "jqm", 
+ "id": 15, 
+ "css": "", 
+ "pagestore": "mongo"
+}

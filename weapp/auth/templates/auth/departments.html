@@ -1,0 +1,123 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-accountDepartmentsPage">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/auth/account_help/get/">账号权限管理</a></li>
+		<li class="active">员工管理</li>
+	</ul>
+</div>
+
+<div class="xui-departmentInfoList clearfix">
+	<section class="xui-departmentList fl">
+		<header class="clearfix xui-i-header pr">
+			<span class="mr20">部门</span>
+			<a href="javascript:void(0);" class="btn btn-default xui-i-addButton btn-xs xa-addDepartment">+ 新建</a>
+		</header>
+		<ul class="xa-departmentList">
+			{% for department in departments %}
+			<li data-id="{{department.id}}">
+				<a href="javascript:void(0)" class="xa-department xui-i-department">
+					<span class="caret"></span>
+					<span class="xui-name xa-name">{{department.name}}</span>
+					<input type="text" class="form-control xui-i-input xa-departmentNameInput" style="display: none"/>
+					<span class="glyphicon glyphicon-cog xui-i-config xa-config"></span>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</section>
+
+	<section class="xui-departmentUsers xa-departmentUsers">
+		<header class="mb10"><a href="javascript:void(0);" class="btn btn-default xa-createAccount">+ 新建员工</a></header>
+		<div 
+			data-ui-role="advanced-table" 
+			data-app="auth" 
+			data-api="department_users/get"
+			data-template-id="#user-list"
+			data-enable-paginator="true" 
+			data-enable-sort="false" 
+			data-item-count-per-page="10" 
+			data-auto-load="false"
+		></div>
+	</section>
+</div>
+
+</div>
+{% endblock %}
+
+{% block global_elements %}
+<ul class="dropdown-menu xa-departmentActionMenu xui-hide">
+	<li><a href="javascript:void(0);" class="xa-renameDepartment">重命名</a></li>
+	<li><a href="javascript:void(0);" class="xa-deleteDepartment">删除</a></li>
+</ul>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="user-list" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+		<thead>
+			<tr>
+				<th>账户名称</th>
+				<th width="170">角色</th>
+				<th width="100">状态</th>
+				<th width="185">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+            {{if items.length}}
+	            {{each(i, user) items}}
+				<tr data-id="${user.id}" class="xa-user">
+					<td>
+						${user.name}
+					</td>
+					<td>
+						<ul>
+							{{each(i, role) user.roles}}
+							<li>
+								<span style="font-size: 1.0em;">${role.name}</span>
+							</li>
+							{{/each}}
+						<ul></td>
+					<td>
+						{{if user.is_active}}
+						启用
+						{{else}}
+						停用
+						{{/if}}
+					</td>
+					<td class="xui-operation">
+						{{if user.is_active}}
+						<a href="javascript:void(0);" class="xa-inactive">停用</a>
+						{{else}}
+						<a href="javascript:void(0);" class="xa-active">启用</a>
+						<a href="javascript:void(0);" class="xa-delete">删除</a>
+						{{/if}}						
+						<a href="/auth/account/update/?id=${user.id}">员工信息</a>
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='5'>还没有员工，请添加</td></tr>
+            {{/if}}
+		</tbody>        
+	</table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">	
+var focusDepartmentId = "{{focus_department_id}}";
+$(document).ready(function() {
+	var view = new W.view.auth.DepartmentList({
+		el: '.xui-departmentInfoList',
+		focusDepartmentId: focusDepartmentId
+	});
+	view.render();
+});
+</script>
+{% endblock %}

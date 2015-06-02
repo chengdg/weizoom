@@ -1,0 +1,108 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<style>
+.popover{
+	min-width: 252px;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-promotionsPage xui-commonPromotionStyle">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+		<li class="active">优惠券</li>
+	</ul>
+</div>
+
+<div class="xa-couponFilterView xui-filterPanel"></div>
+
+<div class="panel panel-default mt20 xui-bigBoxbg">
+<div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
+	<div class="panel-heading xui-headStyle"  style="background:#E9EDF5; height: 61px">
+		<input type="checkbox" id="topSelectAll"  class="xa-selectAll ml10"/>
+		<label for="topSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">批量删除</a>
+		<a href="/mall/coupons/export/?rule_id={{ rule_id }}" class="btn btn-default ml10">导出所有</a>
+
+
+		<a href="/mall_promotion/coupon/create/?rule_id={{ rule_id }}" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;添加库存</a>
+	</div>
+	<div
+		data-ui-role="advanced-table"
+		data-app="mall_promotion"
+		data-api="coupons/get"
+		data-args='{"id": {{ rule_id }}}'
+		data-template-id="#coupons_list_view"
+		data-enable-paginator="true"
+		data-enable-sort="false"
+		data-selectable="true"
+		data-selecttable-tr="xa-selectCoupon"
+		data-outer-selecter='.xa-selectAll'
+		data-disable-header-select="true"
+		data-item-count-per-page="15"
+		class="panel-body xui-promotionHead pb0"
+	></div>
+	<div class="xui-leftBox" style="bottom:0;left:5px;">
+		<div class="panel-heading pl22">
+		<input type="checkbox" id="bottomSelectAll"  class="xa-selectAll" style="margin-left:2px;"/>
+		<label for="bottomSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">批量删除</a>
+		<a href="/mall/coupons/export/?rule_id={{ rule_id }}" class="btn btn-default ml10">导出所有</a>
+	</div>
+	</div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+<script id="coupons_list_view" type="text/x-jquery-tmpl">
+<table class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder mb0">
+	<thead class="xui-theadHeight">
+		<tr>
+			<th>优惠码</th>
+			<th>金额</th>
+			<th>创建时间</th>
+			<th>领取时间</th>
+			<th>领取人</th>
+			<th>使用时间</th>
+			<th>使用人</th>
+			<th>订单号</th>
+			<th>状态</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{if items.length}}
+		{{each(i, coupon) items}}
+		<tr data-id="${ coupon.id }" style="height:48px;" {{if coupon.status == '未领取' || coupon.status == '已过期' || coupon.status == '作废'}}class="xa-selectCoupon"{{/if}}>
+			<td>${ coupon.coupon_id }</td>
+			<td>${ coupon.money }</td>
+			<td>${ coupon.created_at }</td>
+			<td>{{if coupon.member.username_for_html }}${ coupon.provided_time }{{/if}}</td>
+			<td><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.member.id }">{{html coupon.member.username_for_html }}</a></td>
+			<td>${ coupon.use_time }</td>
+			<td><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.consumer.id }">{{html coupon.consumer.username_for_html }}</a></td>
+			<td><a target="_blank" href="/mall/order_detail/get/?order_id=${ coupon.order_id }">${ coupon.order_fullid }</a></td>
+			<td style="color:{{if coupon.status == '未使用' || coupon.status == '未领取'}}#086cb2;{{/if}}{{if coupon.status == '已使用' || coupon.status == '已过期' || coupon.status == '作废'}}#999;{{/if}}">${ coupon.status }</td>
+		</tr>
+		{{/each}}
+	{{/if}}
+	</tbody>
+</table>
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.mall.CouponListView({
+		el: '.xui-promotionsPage',
+	});
+	view.render();
+});
+</script>
+{% endblock %}

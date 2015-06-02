@@ -1,0 +1,36 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.nav_grid' %}
+<div
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="x-ui-grid mt10 {%ifequal component.model.is_image_shadow 'no' %}noImageShadow{% endifequal %}"
+>
+    <div 
+        class="{{component.model.columns|get_grid_type}}" 
+        id="{{component.model.id}}" 
+    >
+    {% for sub_component in component.components %}
+        <div class="{{forloop.counter0|get_grid_block_type:component.model.columns}}">
+        {{ sub_component.html|safe }}
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endifequal %}  
+
+
+{% ifequal component.type 'jqm.nav_grid_button' %}
+<div
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+>
+    <a class="navGridButton_link" href='{{component.model.target|extract_target_data:request|safe}}'>
+        <img src="{{component.model.image}}" />
+        <div class="mt5 navGridButton_link_text">{{ component.model.text }}</div>
+    </a>
+</div>
+{% endifequal %}  

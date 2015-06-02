@@ -1,0 +1,53 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/cms/editor/special_articles/">特殊页面</a><span class="divider">/</span></li>
+	<li class="active">更新“{{article.title}}”</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if article %}{{ article.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="content">内容：</label>
+			<div class="controls">
+				<textarea class="input-xlarge hide" id="content" name="content" data-ui-role="richtext-editor" data-type="full" data-height="300" data-width="500">{% if article %}{{ article.content|safe }}{% endif %}</textarea>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />				
+			</div>			
+		</div>
+	</fieldset>
+</form>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+{% endblock %}

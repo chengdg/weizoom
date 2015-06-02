@@ -1,0 +1,395 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-promotion-createFlashSalePage">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+		<li><a href="/mall_promotion/premium_sales/get/">买赠</a></li>
+		<li class="active">新建买赠</li>
+	</ul>
+</div>
+
+<div class="xa-productSelector">
+	<div class="xa-productSelectConditionPanel">
+	</div>
+
+	<div class="panel panel-default mt20 xb-panelBg">
+		<div class="panel-body xa-selectedProductList mb0 pb0" style="margin-left:24px;">
+			请通过查询选择参与活动的商品
+		</div>
+		<div class="mb15"></div>
+	</div>
+</div>
+<div style="color:#FF0000; margin-top:-14px; margin-bottom:4px; ">*注：当前多规格商品不可设置为赠品，请选择或创建单一规格商品作为活动赠品。<a href="/mall/product/create/?no_custom_model=1" target="_blank">创建无规格商品</a></div>
+<div class="panel panel-default xa-products">
+	<div class="panel-body mb0 xb-panelBg pr">
+		<div class="mb10 pa" style="top:10px;right:16px;">
+			<a href="javascript:void(0);" class="btn btn-success xa-setPrimaryProduct xui-btnBg">设定主商品</a>
+			<a href="javascript:void(0);" class="btn btn-success xa-setPremiumProduct xui-btnBg ml20">设定赠品</a>
+		</div>
+
+		<section class="xa-errorHintContainer">
+			<header class="xui-headerTitleBg pl25 mt20">主商品</header>
+			<table class="table table-bordered table-condensed xa-primaryProductTable xb-stripedTable xb-noTdBorder mb0" data-validate="require-element-exist" data-selector="tbody tr">
+				<thead class="xui-theadHeight">
+					<tr>
+						<th>商品信息</th>
+						<th width="120">商品价格（元）</th>
+						<th width="80">总销量</th>
+						<th width="80"></th>
+						<th width="80">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div class="errorHint pl15 pb15" data-error-hint="请选择主商品"></div>
+		</section>
+
+		<section class="xa-errorHintContainer mt10">
+			<header class="xui-headerTitleBg pl25">赠品</header>
+			<table style="background:#fff;" class="table table-bordered table-condensed xa-premiumProductTable xb-noTdBorder mb0" data-validate="require-element-exist" data-selector="tbody tr">
+				<thead class="xui-theadHeight">
+					<tr>
+						<th>商品信息</th>
+						<th width="120">商品价格（元）</th>
+						<th width="80">总销量</th>
+						<th width="80">赠送数量</th>
+						<th width="80">赠品单位</th>
+						<th width="80">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div class="errorHint pl15 pb15" data-error-hint="请选择赠品"></div>
+		</section>
+	</div>
+</div>
+
+
+<div class="panel panel-default mt20 xb-panelBg">
+	<div class="panel-heading  xui-createSaleHead">
+		促销规则
+	</div>
+	<form class="panel-body xui-formPanel xa-form xui-borderCancel" >
+		<div class="xui-i-table" >
+			<div class="xui-i-col" >
+				<div class="xui-i-item">
+					<label class="star_show">活动名称：</label>
+					<input type="text" class="form-control" id="name" name="name" value="{% if promotion %}{{promotion.name}}{% endif %}" data-validate="require-string" maxlength="20" minlength="0"   />
+					<div class="errorHint ml110 mt5" data-error-hint="活动名称必须在1-20个字内"></div>
+				</div>
+				<div class="xui-i-item">
+					<label>会员等级：</label>
+					<select name="member_grade" class="">
+						<option value="0">全部会员</option>
+						{% for member_grade in member_grades %}
+							<option value="{{member_grade.id}}">{{member_grade.name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+
+			<div class="xui-i-col">
+				<div class="xui-i-item">
+					<label class="">广告语：</label>
+					<input type="text" class="form-control" id="promotion_title" name="promotion_title" value="{% if promotion %}{{promotion.promotion_title}}{% endif %}" />
+				</div>
+
+				<div class="xui-i-item">
+					<label class="" for="count">购买基数：</label>
+					<input type="text" class="form-control" placeholder="1" id="count" name="count" value="{% if promotion %}{{promotion.detail.count}}{% endif %}" data-validate="norequire,,require-positive-int" style="width: 150px"/>
+					<label class="" style="width: 70px; margin-top: 0px;">
+						<input type="checkbox" name="is_enable_cycle_mode" style="vertical-align: sub;" value="true" {% if not promotion.detail.is_enable_cycle_mode %}checked=""{% else %} checked="checked" {% endif %}/>&nbsp;循环买赠
+					</label>
+					<div class="errorHint ml110 mt5" data-error-hint="购买基数必须为正整数"></div>
+				</div>
+			</div>
+
+			<div class="xui-i-col pr" style="display:block; right:60px">
+				<div class="xui-i-item">
+					<label class="star_show">活动时间
+					：</label>
+					<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+					<input
+					    style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker"
+						id="start_date"
+						name="start_date"
+						style=""
+					    value=""
+					    readonly="readonly"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+						data-enable-select-time="true"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min="now"
+					    data-max-el="#end_date"
+					    width="132"
+					    />
+					    <div class="errorHint  mt5" data-error-hint="必须选择一个开始时间" style="display:block;"></div>
+					</div>
+					至
+					<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+					<input
+					    style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker"
+						id="end_date"
+						name="end_date"
+					    value=""
+					    readonly="readonly"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+						data-enable-select-time="true"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min="now"
+					    data-min-el="#start_date"/>
+					    <div class="errorHint  mt5" data-error-hint="必须选择一个过期时间" style="display:block;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="tc mt20">
+			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall_promotion/premium_sales/get/">取消创建</a>
+		</div>
+	</form>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="selected-promotion-products-view-tmpl-src" type="text/x-jquery-tmpl">
+	<table id="productListTable" style="background:#fff;" class="table table-bordered table-condensed xb-noTdBorder mb0">
+		<thead class="xui-theadHeight">
+			<tr>
+				<th>商品信息</th>
+				<th width="120">商品价格（元）</th>
+				<th width="80">总销量</th>
+				<th width="80">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{each(i, product) products}}
+			<tr style="border-bottom:1px solid #ccc!important;"
+				data-id="${product.id}"
+				{{if (product.is_use_custom_model)}}
+				data-model-id="${product.current_used_model.id}"
+				{{else}}
+				data-model-id="${product.standard_model.id}"
+				{{/if}}
+			>
+				<td style="text-align: left;" class="pt10 pl0">
+					<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
+						<a href="${product.detail_link}" target="_blank">
+                            {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                              <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                            {{else}}
+                              <img src="${product.thumbnails_url}" width="60" height="60"/>
+                            {{/if}}
+						</a>
+					</div>
+					<div class="ml10 fl">
+						<div class="mb25">
+							<a href="${product.detail_link}" target="_blank">${product.name}</a>
+						</div>
+						{{if product.is_use_custom_model}}
+						<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看${product.models.length}个规格详情</span>
+						{{else}}
+						<p  style="color:#666;">商品条码：${product.bar_code}</p>
+						{{/if}}
+					</div>
+				</td>
+				<td>
+					${product.display_price_range}
+				</td>
+				<td>
+					${product.sales}
+				</td>
+				<td>
+					<a href="javascript:void(0);" class="xa-delete fl" style="width: 50px;">删除</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+var fromCopy = {% if promotion %}true{% else %}false{% endif %};
+$(document).ready(function() {
+	var productSelector = new W.view.mall.PromotionSelectProductView({
+		el: '.xa-productSelector',
+		tableTemplate: 'selected-promotion-products-view-tmpl-src',
+		enableTableItemSelectable: true,
+		enableMultiSelection: true
+	});
+	productSelector.render();
+
+	$('.xa-submit').click(function(event) {
+		if(!W.validate()) {
+			return false;
+		}
+		var args = $('.xa-form').serializeObject();
+
+		var primaryProducts = [];
+		$('.xa-primaryProductTable tbody tr').each(function() {
+			var $tr = $(this);
+			primaryProducts.push({
+				id: $tr.data('id'),
+				model_id: $tr.data('modelId')
+			})
+		});
+
+		if (!primaryProducts.length) {
+			W.showHint('error', '请选中一个主商品');
+			return false;
+		}
+
+
+		var premiumProducts = [];
+		$('.xa-premiumProductTable tbody tr').each(function() {
+			var $tr = $(this);
+			premiumProducts.push({
+				id: $tr.data('id'),
+				model_id: $tr.data('modelId'),
+				count: $tr.find('input[name="count"]').val(),
+				unit: $tr.find('input[name="unit"]').val()
+			})
+		});
+
+		if (!premiumProducts.length) {
+			W.showHint('error', '请至少选择一个赠品！');
+			return false;
+		}
+
+		args.products = primaryProducts;
+		args.premium_products = premiumProducts;
+		W.getApi().call({
+			method: 'post',
+			app: 'mall_promotion',
+			api: 'premium_sale/create',
+			args: W.toFormData(args),
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '创建买赠成功');
+				_.delay(function() {
+					window.location.href = '/mall_promotion/premium_sales/get/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '创建买赠失败!')
+			}
+		})
+	});
+
+	$('.xa-setPrimaryProduct').click(function(event) {
+		var $trs = productSelector.getAllSelectedItems();
+		if ($trs.length === 0) {
+			W.showHint('error', '请选择参与活动的主商品');
+			return;
+		}
+		if ($trs.length > 1) {
+			W.showHint('error', '只能选中一个主商品');
+			return;
+		}
+
+		if ($('.xa-primaryProductTable tbody tr').length > 0) {
+			W.showHint('error', '只能选中一个主商品');
+			return;
+		}
+
+		var $tr = $trs[0];
+		var $tds = $tr.find('td');
+		$('<td></td>').insertBefore($tds.eq(4));
+
+
+		$tr.find('td').eq(0).remove();
+		$tr.find('.xa-showAllModels').remove();
+
+		var $div = $tr.find('div').eq(0);
+		$div.css("marginLeft", "30px");
+
+		$('.xa-primaryProductTable tbody').append($tr);
+		$('.xa-primaryProductTable').siblings('.errorHint').hide();
+	});
+
+	$('.xa-setPremiumProduct').click(function(event) {
+		var $trs = productSelector.getAllSelectedItems();
+		if ($trs.length === 0) {
+			W.showHint('error', '请选择参与活动的赠品');
+			return;
+		}
+
+		var $tbody = $('.xa-premiumProductTable tbody').eq(0);
+		$tbody.hide().empty();
+		for (var i = 0; i < $trs.length; ++i) {
+			var $tr = $trs[i];
+			if($('.xa-showAllModels', $tr).length>0){
+				W.showHint('error', '当前多规格商品不可设置为赠品');
+				continue
+			}
+			var $tds = $tr.find('td');
+			$('<td class="pr"><input name="count" class="form-control" value="1" data-validate="require-positive-int"/><span class="errorHint pa" style="left:5px" data-error-hint="请输入整数"></span></td><td class="pr"><input name="unit" class="form-control" data-validate="require-string" maxlength="5"/><span class="errorHint pa" style="left:5px" data-error-hint="不能为空"></span></td>').insertBefore($tds.eq(4));
+			$tds.eq(0).remove();
+			$tr.find('.xa-showAllModels').remove();
+
+			var $div = $tr.find('div').eq(0);
+			$div.css("marginLeft", "30px");
+
+			$tbody.append($tr);
+		}
+		$tbody.show();
+
+		$('.xa-premiumProductTable').siblings('.errorHint').hide();
+	});
+
+	$('.xa-products').delegate('.xa-delete', 'click', function(event) {
+		var $tr = $(event.currentTarget).parents('tr').eq(0);
+		$tr.remove();
+	});
+
+	if (fromCopy) {
+		$('#selected-promotion-products-view-tmpl-src').template('table-template');
+
+		var $node = $.tmpl('table-template', {products: W.loadJSON('products')});
+
+		$tr = $node.find('tbody tr');
+		var $div = $tr.find('div').eq(0);
+		$div.css("marginLeft", "30px");
+		var $tds = $tr.find('td');
+		$('<td></td>').insertBefore($tds.eq(3));
+
+		$('.xa-primaryProductTable tbody').append($node.find('tbody tr'));
+
+		//添加premium products
+		var premiumProducts = W.loadJSON('premium_products');
+		var $node = $.tmpl('table-template', {products: premiumProducts});
+		$node.find('tbody tr').each(function() {
+			var $tr = $(this);
+			var productId = parseInt($tr.data('id'));
+			var product = _.find(premiumProducts, function(product) { return product.id === productId; });
+
+			var $div = $tr.find('div').eq(0);
+			$div.css("marginLeft", "30px");
+
+			var $tds = $tr.find('td');
+			$('<td><input type="text" name="count" class="form-control" value="'+product.premium_count+'"/></td>').insertBefore($tds.eq(3));
+		});
+		$('.xa-premiumProductTable tbody').append($node.find('tbody tr'));
+
+	}
+});
+</script>
+{% endblock %}

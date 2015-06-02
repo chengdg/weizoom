@@ -1,0 +1,125 @@
+/*
+ Copyright (c) 2011-2012 Weizoom Inc
+ */
+
+W.mall.EditSiteDialog = W.Dialog.extend({
+    SUBMIT_SUCCESS_EVENT: 'submit',
+
+	events: _.extend({
+		'click .tx_cancel': 'close',
+		'click .tx_submit': 'onSubmit'
+	}, W.Dialog.prototype.events),
+
+	getTemplate: function() {
+		$('#edit-site-dialog-src').template('edit-site-dialog-tmpl');
+		return 'edit-site-dialog-tmpl';
+	},
+
+	initializeDialog: function() {
+		this.render();
+		this.$editEl = $('#editorView-editSiteDialog');
+
+		this.state = null;
+		//初始化ImageView
+		this.imageView = new W.ImageView({
+			el: $('#site-imageView'),
+			autoShowHelp: true,
+			width: 70,
+			height: 70
+		});
+		this.imageView.bind('upload-image-success', function(path) {
+			this.$editEl.find('#pic_url').val(path);
+		}, this);
+		this.imageView.bind('delete-image', function(path) {
+			this.$editEl.find('#pic_url').val('');
+		}, this);
+
+		this.editLinkUrlView = new W.mall.EditLinkUrlView({
+			el: $('#edit_linkUrlView')
+		});
+		this.editLinkUrlView.render();
+	},
+
+	renderDialog: function() {
+		var html = $.tmpl(this.getTemplate(), {state :this.state});
+		this.$contentEl.html(html);
+	},
+
+	showDialog: function(options) {
+		this.title = options.title;
+
+		this.editLinkUrlView.setShopDomain(options);
+
+		this.$('#linkUrl, #pic_url, #title_info').val('');
+		this.imageView.computeWidthAndHeight(options.imageWidthAndHeight)
+		this.imageView.cleanImage();
+
+		this.imageView.render();
+
+		if(options.state == 'SwipePhoto'){
+			$('.txt_title_info').addClass('hidden');
+			$('.txt_helpSiteMenu').addClass('hidden');
+			$('.txt_helpSwipePhoto').removeClass('hidden');
+			$('#linkUrl').attr('data-validate','customer-url');
+			$('#title_info').removeAttr('data-validate');
+			$('#title_info').attr('data-validate-menu','-1');
+		}else{
+			$('.txt_title_info').removeClass('hidden')
+			$('.txt_helpSiteMenu').removeClass('hidden');
+			$('.txt_helpSwipePhoto').addClass('hidden');
+			$('#linkUrl').attr('data-validate','url');
+			$('#title_info').attr('data-validate','required,noDuplicateMenu');
+			$('#title_info').attr('data-validate-menu','-1');
+			if(options.menu){
+				$('#title_info').attr('data-validate-menu',options.menu.id);
+				$("#title_info").val(options.menu.title);
+				$('#linkUrl').val(options.menu.link_url);
+				$('#pic_url').val(options.menu.pic_url);
+				this.imageView.showImage(options.menu.pic_url);
+			}
+		}
+		this.editLinkUrlView.reload();
+	},
+
+	onSubmit: function() {
+		if (!W.validate($('#editorView-editSiteDialog'), true)) {
+			return;
+		}
+
+		var url = $.trim(this.$editEl.find('#pic_url').val());
+		var link_url = $.trim(this.$editEl.find('#linkUrl').val());
+		var title_info = $.trim(this.$editEl.find('#title_info').val());
+		this.$editEl.find('#linkUrl').val('');
+		this.imageView.cleanImage();
+
+		this.trigger(this.SUBMIT_SUCCESS_EVENT, {url: url, link_url: link_url,title_info: title_info});
+	},
+
+	afterClose: function() {
+		this.unbind();
+		this.imageView.cleanImage();
+		this.$('#linkUrl, #pic_url, #title_info').val('');
+	}
+});
+
+/**
+ * 获得getEditSiteDialog的单例实例
+ * @param {Number} width - 宽度
+ * @param {Number} height - 高度
+ */
+W.mall.getEditSiteDialog = function(options) {
+    var dialog = W.registry['EditSiteDialog'];
+    if (!options) {
+        options = {};
+    }
+    options.width = options.width || 500;
+    options.height = options.height || 360;
+
+    if (!dialog) {
+        //创建dialog
+        xlog('create W.EditSiteDialog');
+        dialog = new W.mall.EditSiteDialog(options);
+        W.registry['EditSiteDialog'] = dialog;
+    }
+    return dialog;
+};

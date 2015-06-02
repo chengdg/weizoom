@@ -1,0 +1,183 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style>
+	#ui-datepicker-div{
+		z-index: 9999 !important;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li>
+		<a href="/market_tools/activity/">活动列表</a><span class="divider">/</span>
+	</li>
+	<li class="active">{% if activity.id %}更新{% else %}添加{% endif %}活动</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="parents_name">活动名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入活动名称" value="{% if activity %}{{ activity.name }}{% endif %}"  data-validate="required-none" data-validate-name="{{ activity.id }}" {% if not activity.can_update %}disabled="disabled"{% endif %}/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">活动日期：</label>
+
+			<div class="controls">
+				<input 
+					type="text" 
+					class="input-xlarge" 
+					id="start_date" 
+					name="start_date" 
+					style="width:160px;z-index:9999"
+				    placeholder="开始日期" 
+				    value="{% if activity %}{{ activity.start_date }}{% endif %}"
+				    readonly="readonly" 
+				    data-validate="required-none" 
+				    data-ui-role="datepicker"
+				    data-format="yy-mm-dd" 
+				    data-min="now" 
+				    {% if not activity.can_update %}disabled="true"{% endif %}
+				/>
+			-
+				<input 
+					type="text" 
+					class="input-xlarge" 
+					id="end_date" 
+					name="end_date" 
+					style="width: 160px;z-index:9999"
+				    placeholder="结束日期" 
+				    value="{% if activity %}{{ activity.end_date }}{% endif %}"
+				    readonly="readonly" 
+				    data-validate="required-none" 
+				    data-ui-role="datepicker"
+				    data-format="yy-mm-dd" 
+				    data-min="now" 
+				    data-min-el="#start_date" 
+				    {% if not activity.can_update %}disabled="true"{% endif %}
+				/>
+
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label  class="control-label" >详情：</label>
+			<div class="controls">
+				<textarea class="input-xlarge hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="200" data-width="500">
+					{% if activity %}{{ activity.detail|format_emotion|safe }}{% endif %}
+				</textarea>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="head_url">启用线下签到功能：</label>
+			<div class="controls xa-prize-selector">
+				<label class="checkbox">
+					<input type="checkbox" {% if activity.is_enable_offline_sign %}checked{% endif %} name="is_enable_offline_sign">
+					启用
+				</label>
+          	</div>
+		</div>
+		
+		<div class="control-group">
+			<label  class="control-label" for="award">奖励：</label>
+			<div class="xa-sign-zone" data-ui-role="prize-selector-control" data-coupon-rules='{{coupon_rule_items|safe}}' data-prize-type="{{activity.prize_type}}" data-prize-source="{{activity.prize_source}}"></div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="head_url">非会员可参与：</label>
+			<div class="controls">
+				<label class="checkbox">
+					<input type="checkbox" {% if activity.is_non_member or activity.id == None %}checked{% endif %}
+					       name="is_non_member">
+				</label>
+          	</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="head_url">用户输入项：</label>
+			<div class="controls" id="itemListZone">
+          	</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+			{% if activity.can_update %}
+			<p style="color:#C09853;">活动一旦创建将不可修改，请先认真核对确认</p>
+			<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+			{% else %}
+			<div class="market-tools-overlay" style="height:103.85%;"></div>
+			{% endif %}				
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var canEdit = {% if activity.can_update %}true{% else %}false{% endif %};
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+		
+		var data =  {% if activity_items %}"{{ activity_items }}"{% else %} null {% endif %};
+        if (data) {
+            data = $.parseJSON('{{ activity_items|safe }}');
+        }
+        var view = new W.view.markettool.ActivityItemListView({
+            el: '#itemListZone',
+            canEdit: true,
+            items : data
+        });
+        view.render();
+		
+		var checked = $('input:checkbox[name=is_enable_offline_sign]').attr('checked');
+		// var signZone = $('.xa-sign-zone');
+		// if (checked) {
+			// $('div[data-ui-role="prize-selector-control"]').data('view').show();
+		// } else {
+			// $('div[data-ui-role="prize-selector-control"]').data('view').hide();
+		// }
+		
+		// $('input:checkbox[name=is_enable_offline_sign]').click(function(event) {
+			// var checked = $(event.currentTarget).attr('checked');
+			// if (checked) {
+				// $('.xa-prize-selector').append(signZone);
+				// $('div[data-ui-role="prize-selector-control"]').data('view').show();
+			// } else {
+				// $('div[data-ui-role="prize-selector-control"]').data('view').hide();
+			// }
+		// })
+		
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+            if(document.getElementsByClassName('tx_delete_option').length == 0){
+                alert('请至少添加一个用户输入项！');
+                return false;
+            }
+			return true;
+		});
+	});
+</script>
+{% endblock %}

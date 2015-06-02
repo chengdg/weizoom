@@ -1,0 +1,43 @@
+{% extends "content_base_v2.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+  <div class="xui-editMaterialPage xa-editMaterialPage pr" is_weizoom_mall="{{is_weizoom_mall}}" is_certified_service="{{is_certified_service}}"></div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/static_v2/js/system/string.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  	W.menuPhone = null;
+  	W.customMenu = {}
+  	
+    var navbarEditor = new W.view.weixin.MenuEditor({
+      el: '.xa-editMaterialPage',
+      status: "{{status}}"
+    });
+    
+    // 滚动浮动在底部
+    var stickyMenu = function(){
+    	var winScrollTop = $(window).scrollTop();
+	        　var scrollHeight = $(document).height();
+	        　var windowHeight = $(window).height();
+	    var gap = scrollHeight - winScrollTop - windowHeight;
+	    console.log(1)
+	    console.log(gap)
+	    if( gap < 144 ){
+	    	$('.xa-custom-menu-save').css({ 'position': 'absolute'}).removeClass('fxd');
+	    } else {
+	    	$('.xa-custom-menu-save').css({ 'position': 'fixed' }).addClass('fxd');
+	    }
+	};
+    stickyMenu();
+    $(window).bind('scroll resize',(function() {
+        stickyMenu();
+    }));
+});
+</script>  
+{% endblock %}

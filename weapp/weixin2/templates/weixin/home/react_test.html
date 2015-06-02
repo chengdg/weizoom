@@ -1,0 +1,55 @@
+{% extends "content_base_v2.html" %}
+{% load project_filter %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="xui-weixin-materialsPage xa-weixin-materialsPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/outline/">首页</a></li>
+            <li class="active">微信概况</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <ul class="funs_date_ul">
+            <li><em><a href="#">8</a></em>
+                <br>未读消息</li>
+            <li><em>48</em>
+                <br>昨日新增粉丝</li>
+            <li><em>4</em>
+                <br>昨日跑路粉丝</li>
+            <li><em><a href="#">967</a></em>
+                <br>总粉丝</li>
+        </ul>
+    </div>
+
+    <section id="fan-category-list-app"></section>
+</div>
+{% endblock %}
+
+
+{% block global_elements %}
+
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script src="/static_v2/lib/react-with-addons.js"></script>
+<script src="/static_v2/lib/JSXTransformer.js"></script>
+<script src="/static_v2/lib/director.js"></script>
+<script type="text/jsx" src="/static_v2/js/view/weixin2_fan_category_list/app.jsx"></script>
+
+<script id="weixin-realtime-message-view" type="text/x-jquery-tmpl">
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    xlog("in ready()");
+});
+</script>
+
+{% endblock %}

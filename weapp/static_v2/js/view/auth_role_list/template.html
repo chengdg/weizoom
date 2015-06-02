@@ -1,0 +1,16 @@
+<script id="auth-role-list-view-permission-tmpl-src" type="text/x-jquery-tmpl">
+<div class="panel panel-default">
+	<div class="panel-heading pb10 pl20">
+		权限设置<a href="javascript:void(0);" class="fr btn-link btn-xs xa-addPermission">{{if htmlContent}}修改{{else}}+ 添加{{/if}}权限</a>
+	</div>
+	<div class="panel-body pr">
+		{{if htmlContent}}
+			{{html htmlContent}}
+		{{else}}
+		<p style="margin-bottom:0">
+			暂未给此角色添加权限
+		</p>
+		{{/if}}
+	</div>
+</div>
+</script>

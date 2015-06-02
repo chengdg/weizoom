@@ -1,0 +1,1061 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% load mall_filter %}
+
+{% block css %}
+<link rel="stylesheet" href="/markettools_static/coupon/css/idangerous.swiper.css">
+<style>
+.disabled_btn {
+    background: none repeat scroll 0 0 #D0D0D0;
+    border: 1px solid #D0D0D0;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage">
+    <div data-role="content">
+        <input id="errMsg" type="hidden" value="lala" />
+        <form class="xui-form" method="post" action="" data-ui-role="validate" submit-button="#submit-order">
+            <div class="xui-bottom-actionPanel xui-actionPanel">
+                <div class="fl text">                    
+                    <!-- 积分商品 -->
+                    {% if order.type == "integral" %}
+                        共计: <span class="xui-text-red"><span class="xa-totalPrice xt-totalPrice"></span>积分</span>
+
+                    <!-- 普通商品 -->
+                    {% else %}
+                        共计: <span class="xui-text-red">￥<span class="xa-totalPrice xt-totalPrice"></span></span>
+                    {% endif %}
+                </div>
+                <div class="fr">
+                    <a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger" id="submit-order">去支付</a>
+                </div>
+            </div>
+            <fieldset class="xui-section" style="padding:0;">
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=list" class="xui-section-info xui-section-title xui-section-inner ml15 pr15" data-icon="true" data-role="button" style="border-bottom:none;">
+                    <div style="text-align: left;width:95%;">
+                        <h2 class="mb5">收货人：{% if order %}{{ order.ship_name }}{% endif %}<span class="ml15">{% if order %}{{ order.ship_tel }}{% endif %}</span></h2>
+                        <div style="color:#7f7f7f;font-size:0.9em;">{% if order %}{{ order.get_str_area }}{{ order.ship_address }}{% endif %}</div>
+                       </div>
+                </a>
+                
+                <div class="xui-section-title xui-section-inner ml15 pr15" style="border-top:1px solid rgba(0, 0, 0, 0.1);">
+                    <h2>运费</h2>
+                    <span class="fr xa-postageAllElement em9" style="color:#7f7f7f;">
+                    {% if order.postage >= 0 %}
+                    ￥<span class="xa-postageElement">{{order.postage}}</span>
+                    {% else %}
+                    免运费
+                    {% endif %}
+                    </span>
+                </div>
+                
+            </fieldset>
+
+            <fieldset class="hidden">
+                <input id="ship_id" name="ship_id" value="{% if order %}{{ order.ship_id }}{% endif %}" type="hidden" >
+                <input id="delivery_plan_id" name="delivery_plan_id" value="{{ delivery_plan_id }}" type="hidden" >
+                <input id="delivery_dates" name="delivery_dates" value="{{ delivery_dates }}" type="hidden">
+                <input id="is_delivery_plan" name="is_delivery_plan" value="{{ is_delivery_plan }}" type="hidden">
+                <input id="ship_name" name="ship_name" type="hidden" value="{% if order %}{{ order.ship_name }}{% endif %}" >
+                <input id="ship_tel" name="ship_tel" type="hidden" value="{% if order %}{{ order.ship_tel }}{% endif %}" >
+                <input id="area" name="area" class="xa-areaInput" data-ui-role="areaPop" type="hidden" value="{% if order %}{{ order.area }}{% endif %}" data-area-str="{% if order %}{{order.get_str_area}}{% endif %}">
+                <input id="ship_address" name="ship_address" type="hidden" value="{% if order %}{{ order.ship_address }}{% endif %}" >
+            </fieldset>
+
+            <fieldset class="xui-section">
+                <div class="xui-selectedProductList">
+                    <ul class="clearStyle">
+                        {% for product in order.products %}
+                        <li class="xa-product"
+                            data-product-id="{{product.id}}" 
+                            data-product-price="{{product.price}}" 
+                            data-product-weight="{{product.weight}}" 
+                            data-product-count="{{product.purchase_count}}" 
+                            data-product-model-name="{{product.model_name}}" 
+                        >
+                            <div class="xui-selectedProductList-productImg fl">
+                                <img src="{{product.order_thumbnails_url}}" />
+                            </div>
+                            <div class="xui-selectedProductList-productInfo">
+                                <div class="xt-title em9" style="color:#333;">{{ product.name }}</div>
+                                {% if product.custom_model_properties %}
+                                <div class="clearfix em9" style="color: #7F7F7F;">
+                                {% for property in product.custom_model_properties %}
+                                <span class="fl mr10">{{ property.name }}: {{ property.property_value }}</span>
+                                {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="clearfix em9" style="color: #7F7F7F;">
+                                <div class="clearfix em9" style="color:#7f7f7f;">
+                                    {% if is_delivery_plan %}
+                                        <span class="fl">价格: <span class="xt-price">￥{{ product.price }}</span></span>
+                                    {% else %}
+                                        <!-- 积分商品 -->
+                                        {% if order.type == "integral" %}
+                                            <span class="fl">{{ product.price }}积分Ｘ{{ product.purchase_count }}</span>
+
+                                        <!-- 普通商品 -->
+                                        {% else %}
+                                            <span class="fl">￥{{ product.price }}Ｘ{{ product.purchase_count }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+
+                                
+                                
+                            </div>
+                        </li>                        
+                        {% endfor %}
+                    </ul>
+                    <!--
+                    <input type="hidden" name="product_ids" id="product_ids" value="">
+                    <input type="hidden" name="product_counts" id="product_counts" value="">
+                    <input type="hidden" name="order_id" id="order_id" value="{{order.order_id}}">
+                    -->
+
+                </div>
+            </fieldset>
+
+            <!--更改start-->
+            <fieldset class="xui-section" style="padding:0;">
+            <!-- 积分商品 -->
+            {% if order.type == "integral" %}
+            <!-- 普通商品 -->
+            {% else %}
+                <!--积分-->
+                {% if integral_info.have_integral and not is_delivery_plan %}
+                <div class="xt-triggerGroup xui-intergral-slide clearfix xui-section-info ml15" {% ifequal  integral_info.usable_integral_or_conpon 2 %} style="display:none;"{% endifequal %} data-role="button">
+                    <div class="clearfix xa-intergralSlide xui-section-title tl pr">
+                        <label for="is_use_integral">
+                            <div style="width:85%" class="pt15 pb15">
+                                <h2 class="mr5">使用积分</h2><span class="em9" style="color:#7f7f7f;">可用<span class="ta-use-integral">{{order.usable_integral}}</span>，抵￥<span class="ta-use-integral-money">{{ order.usable_integral|usable_money:integral_info.count_per_yuan }}</span>
+                                </span>
+                            </div>
+                            <div class='xui-btn-switch pa'>
+                                <input type='checkbox' id='is_use_integral' name='is_use_integral' data-role="none" class="xa-displayTrigger">
+                                <label for='is_use_integral'><span></span></label>
+
+                            </div> 
+                        </label>
+                        <input id="integral" class="xa-integralInput" name="integral" type="hidden" value="0">
+                    </div>
+                </div>
+                {% endif %}
+                <!--优惠券-->
+                {% if not is_delivery_plan %}
+                <div class="xt-triggerGroup xui-coupon-slide xui-section-info ml15 pr15 clearfix" {% ifequal  integral_info.usable_integral_or_conpon 1 %} style="display:none;"{% endifequal %} data-icon="true" data-role="button">
+                    <div class="clearfix xui-section-title tl xa-coupon-slideUp">
+                        <label for="is_use_coupon"  style="display:block;"class="pt15 pb15 clearfix pr">
+                            <h2 class="mr5">优惠券</h2>
+                            <span class="tx-no-use-coupon-show">
+                                <span style="color:#e44445;font-size:0.9em;">{%if coupons%}{{coupons|length}}{%else%}0{%endif%}</span>
+                                <span class="mr20 pa em9" style="right:0;color:#7f7f7f;bottom:17px;">未使用</span>
+                            </span>
+                            <span class="tx-use-coupon-show hidden em9">
+                                <span class="tx-coupon-money" style="color:#7f7f7f;">已抵用￥</span>
+                                <a href="javascript:void();" class="tx-cancel-coupon mr20 pa" style="right:0;color:#7f7f7f;text-decoration:underline;bottom:17px;">取消使用</a>
+                            </span>
+                            <input type="checkbox" id="is_use_coupon" name="is_use_coupon" value="true" class="hidden" data-role="none">
+                        </label>
+                        <input id="coupon_id" name="coupon_id" type="hidden" value="0" >
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+
+                <!--发票-->
+                {% if mall_config.is_enable_bill %}
+                <div class="xt-triggerGroup xui-bill-slide xui-section-info ml15 pr15" data-role="button" data-icon="true">
+                    <div class="clearfix xa-billSlide xui-section-title tl">
+                    <label for="is_use_bill" class="pt15 pb15 clearfix" style="display:block;">
+                        <h2 class="fl">是否开发票</h2>
+                        <span class="mr20 fr tx-bill-span em9" style="color:#7f7f7f;line-height: 20px;">未开</span>
+                    </label>
+                        <input type="checkbox" id="is_use_bill" name="is_use_bill" class="xa-displayTrigger hidden" data-role="none" data-down-div="billInputZone">
+                    </div>
+                    <div id="billInputZone" class="mt10 hidden">
+                        <div class="xui-section-slide-inner">
+                                <div class="zoom pb5 tl">
+                                    <input type="radio" value="1" name="bill_type" id="r1" class="xui-regular-radio" data-role="none"  checked='checked'>
+                                    <label for="r1"></label><label for="r1" class="xui-regular-radio-label">个人</label>
+                                    <input type="radio" value="2" name="bill_type" class="xui-regular-radio" data-role="none" id="r2">
+                                    <label for="r2" class="ml20"></label><label for="r2" class="xui-regular-radio-label">公司</label>
+
+                                    <!-- <label><input type="radio" name="bill_type" value="1" checked='checked'>个人</label>
+                                    <label><input type="radio" name="bill_type" value="2" >公司</label> -->
+                                </div>
+                                <div class="pr mb15">
+                                    <div class="xui-clearBtn pa" data-icon="true"></div>
+                                    <input id="bill" name="bill" class="xa-displayTrigger xa-clearText" type="text" required required-msg="发票信息不能为空" />
+                                </div>
+                            </div>
+
+                        <!-- <div style="width: 80%; margin: 0px auto;">
+                            <div class="zoom pb5">
+                                <label><input type="radio" name="bill_type" value="1" checked='checked'>个人</label>
+                                <label><input type="radio" name="bill_type" value="2">公司</label>
+                            </div>
+                            <input id="bill" name="bill" type="text" required required-msg="发票信息不能为空" />
+                        </div> -->
+                    </div>
+                </div>
+                {% endif %}
+                <!--给商家留言-->
+                <div class="xui-section-title xui-section-inner ml15 mr15 pr xui-section-message">
+                    <div class="xui-clearBtn pa" data-icon="true"></div>
+                    <input type="text" name="message" class="xa-displayTrigger xa-clearText" placeholder="给卖家留言...">
+                </div>
+            </fieldset>
+            <!--更改end-->
+        </form>
+    </div>
+    <!-- 优惠券弹出 -->
+    <div class="xui-orderCoupon-Page xa-orderCoupon-Page">
+        <div class="wui-tabs clearfix">
+            <a href="#" class="wui-active">
+                <span class="xui-tabInner mt5">使用优惠券</span>
+            </a>
+            <a href="#">
+                <span class="xui-tabInner mt5">使用优惠码</span>
+            </a>
+        </div>
+        <div class="wui-swiper-container">    
+            <div class="wui-swiper-wrapper">
+                <div class="wui-swiper-slide">
+                    <div class="wui-content-slide">
+                    <!--数据开始-->
+                    {% if coupons %}
+                        <div class="orderList">
+                            <ul data-role="listview" class="xui-list-y" data-theme="x" data-icon-shadow="false" data-icon="false">
+                                {% for coupon in coupons %}
+                                <li class="xa-submitLi" data-value="{{ coupon.id }}" data-money="{{coupon.money}}">
+                                    <div class="xui-coupon clearfix">
+                                        <div class="xui-couponBg-container">
+                                            <div class="xui-couponBginner">
+                                                <div class="clearfix mt5" style="color:#fff;">
+                                                    <div class="xui-ffImpact fl mr5" style="min-width:70px;">
+                                                        <span class="xui-priceTag">¥</span><span class="xui-couponPrice" style="font-size:">{{ coupon.money|floatformat:"-2" }}</span>
+                                                    </div>
+                                                    <div class="xui-couponName-container fl mt5" style="">
+                                                        <span class="xui-couponName">{{ coupon.coupon_rule.name }}</span>
+                                                        <div style="margin-top:3px;"><span class="xui-couponCode">{{ coupon.coupon_id }}</span></div>
+                                                    </div>
+                                                </div>
+                                                    <div class="xui-couponInfo mt10 pt5 pb5">
+                                                        {% if coupon.valid_restrictions == -1 %}
+                                                        {% else %}
+                                                            <span class="">满{{coupon.valid_restrictions}}元可以使用</span>
+                                                        {% endif %}
+                                                        <span class="">还剩{{coupon.valid_time}}过期</span>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                    <p class="tc" style="margin-top:25%;color:#888;">您还没有优惠劵，赶快去参加活动吧</p>
+                    <p class="tc mt15 xa-closeCouponList"><a href="javascript:void(0);" style="color:#576b95;text-decoration:underline">返回</a></p>
+                    {% endif %}
+                     <!--数据结束-->
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="wui-content-slide mr10 ml10">
+                      <!--数据开始-->
+                    <div style="display:table" class="mt10">
+                        <div class="xui-couponCodeInput pr">
+                            <!-- <div class="xui-clearBtn pa" data-icon="true" style="right:20px;"></div> -->
+                            <input name="coupon_coupon_id" placeholder="输入优惠券码" type="text" />
+                        </div>
+                        <div class="xui-couponCodeSubmit">
+                            <a href="javascript:void(0);" data-attr="couponButton" class="xa-submitLink">确认</a>
+                        </div>
+                    </div>
+                    
+                    <div class="error-info ml20" style="color:#db4350;">
+                    </div>
+                     <!--数据结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="/markettools_static/coupon/js/idangerous.swiper.js"></script>
+<script type="text/javascript"> 
+var fwxsid = '{{ fwxsid }}';
+//var isIntegralChecked = '{{order.integral}}'!=0 && 'None' !==  '{{order.integral}}' ? true : false;
+//var isCouponChecked = '{{is_using_coupon}}' === 'True' ? true : false;
+//var isBillChecked = '{{order.bill_type}}' && 'None' !==  '{{order.bill_type}}' ? true : false; 
+var postageFactor = $.parseJSON('{{postage_factor|safe}}');
+var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %}; //是否是从购物车访问的该页面
+var haveIntegral = {% if integral_info.have_integral %}true{% else %}false{% endif %};
+var integralCountPerYuan = {% if integral_info %}{{integral_info.count_per_yuan}}{% else %}0{% endif %};
+var enableSubmitOrder = true;
+var webappOwnerId = "{{request.webapp_owner_id}}";
+var order_type = "{{ order.type }}";
+// 可用积分
+var usableIntegral = {{order.usable_integral}};
+// 总积分
+var totalIntegral = {{integral_info.count}};
+// 优惠券使用情况
+var onlyIntegralOrConpon = {{integral_info.usable_integral_or_conpon}} ;
+
+//点击“优惠券”，弹出优惠券列表
+var bodyHeight = window.document.body.clientHeight;
+var containerHeight = bodyHeight - 42;
+var pageHeight = 0;
+
+function getPostageForWeight(weight) {
+    var currentPostageFactor = postageFactor;
+    //选择的省份
+    var areaProvinceID = 0;
+    var $area = $('#area');
+    // console.log('aaa', $area.val(), $area.val().length)
+    if ($area.val().length > 0) {
+        var province_id = $area.val().split('_')[0]; 
+        areaProvinceID = 'province_' + province_id;
+        if(postageFactor['special_factor'][areaProvinceID]){
+            currentPostageFactor = postageFactor['special_factor'][areaProvinceID];
+            // console.log(currentPostageFactor)
+        }
+    }
+
+    if (weight <= currentPostageFactor.firstWeight) {
+        return currentPostageFactor.firstWeightPrice;
+    }
+
+    if (!currentPostageFactor.isEnableAddedWeight) {
+        return currentPostageFactor.firstWeightPrice;
+    }
+
+    weight = weight - currentPostageFactor.firstWeight;
+    var price = currentPostageFactor.firstWeightPrice;
+    var addedWeight = parseFloat(currentPostageFactor.addedWeight);
+
+    //added by chuter
+    if (addedWeight == 0) {
+        return price;
+    }
+    
+    var addedCount = 1;
+    while (true) {
+        weight = parseFloat(weight).toFixed(2) - parseFloat(addedWeight).toFixed(2);
+        console.log('1111 weight', weight, 'addedWeight', addedWeight)
+        if (weight <= 0) {
+            break;
+        } else {
+            addedCount += 1;
+        }
+    }
+    var addedPrice = addedCount * currentPostageFactor.addedWeightPrice;
+    return price + addedPrice;
+}
+
+function calculateTotalPrice(options) {
+    if (!options.products) {
+        return 0.0;
+    }
+
+    var totalProductPrice = 0.0;
+    var totalProductWeight = 0.0;
+
+    var productCount = options.products.length;
+    for (var i = 0; i < productCount; ++i) {
+        var product = options.products[i];
+        totalProductPrice += product.price * product.count;
+        totalProductWeight += product.weight * product.count;
+    }
+
+    var postage = getPostageForWeight(totalProductWeight);
+    var couponMoney = options.couponMoney || 0.0;
+    var integralMoney = options.integralMoney || 0.0;
+
+    // 优先使用优惠券,再计算积分
+    var integralUseMoney = 0.0;
+    var integralUseCount = 0;
+    var integralUse = {
+        'useIntegral': 0,
+        'useMoney': 0.0
+    }
+    if (options.isResetInteger) {
+        integralUse = updateUsableInteger(totalProductPrice + postage - couponMoney)
+        if (getIntegralCheckboxEl().checked) {
+            integralMoney = integralUse.useMoney
+        }        
+    }
+
+    // 如果是测试够买，总价钱为0.01 by liupeiyu
+    if(order_type === 'test'){
+        totalProductPrice = {{ order.final_price }};
+        var totalPrice = totalProductPrice - couponMoney - integralMoney;
+    }else{
+        var totalPrice = totalProductPrice + postage - couponMoney - integralMoney;
+    }
+
+    console.log('商品价钱', totalProductPrice, '   积分', integralMoney, '   优惠劵',couponMoney,'        ','总价', totalPrice, '   运费',postage);
+    return {
+    	'totalProductPrice': totalProductPrice.toFixed(2),
+        'totalPrice': totalPrice.toFixed(2),
+        'postage': postage.toFixed(2),
+        'integralUseMoney': integralUse.useMoney,
+        'integralUseCount': integralUse.useIntegral
+    };
+}
+
+function calculatePrice(isResetInteger) {
+    //获得商品列表
+    var products = [];
+    $('.xa-product').each(function() {
+        var $product = $(this);
+        products.push({
+            price: parseFloat($product.attr('data-product-price')),
+            weight: parseFloat($product.attr('data-product-weight')),
+            count: parseInt($product.attr('data-product-count'))
+        });
+    });
+    
+    //获得优惠券
+    //TODO: 兼容输入优惠券码的情况
+    var couponMoney = 0;
+    var couponId = $('[name="coupon_id"]').val();
+    if (couponId) {
+        couponMoney = parseFloat($('[name="coupon_id"]').attr('data-money')) || 0;
+    }
+    console.log('优惠券', couponMoney, $('[name="coupon_id"]'), isResetInteger, $('#is_use_integral').checked);
+
+    //获得积分
+    var integralMoney = 0;
+    var integralCount = 0;
+    if (haveIntegral) {
+        var integral = $('.xa-integralInput').eq(0).val();
+        if (!integral) {
+            integral = 0;
+            integralCount = 0
+        }
+        var integralMoney = integral / integralCountPerYuan;
+        integralCount = integral
+    }
+    console.log('积分', integralMoney, $('.xa-integralInput').eq(0), integral, integralCountPerYuan);
+
+    //计算价格
+    var priceInfo = calculateTotalPrice({
+        products: products,
+        couponMoney: couponMoney,
+        integralMoney: integralMoney,
+        isResetInteger: isResetInteger
+    });
+
+    var totalProductPricePostage = priceInfo.postage + priceInfo.totalProductPrice;
+    changeCouponStatus(totalProductPricePostage);
+
+    // 更新运费
+    if (priceInfo.postage <= 0) {
+        $('.xa-postageAllElement').html('免运费');
+    }else{
+        $('.xa-postageAllElement').html('￥<span class="xa-postageElement">'+priceInfo.postage+'</span>');
+    }
+
+    // 按钮el
+    var submitButtonEl = $('#submit-order .ui-btn-text');
+    if (priceInfo.totalPrice < 0.0) {
+        priceInfo.isValidPrice = false;
+        $('.xa-totalPrice').text("0.00");
+        submitButtonEl.html("确认订单");
+    } else if(priceInfo.totalPrice == 0){
+        priceInfo.isValidPrice = true;
+        $('.xa-totalPrice').text("0.00");
+        submitButtonEl.html("确认订单");
+    } else {
+        //更新页面元素        
+        $('.xa-totalPrice').text(priceInfo.totalPrice);
+        priceInfo.isValidPrice = true;
+        submitButtonEl.html("去支付");
+    }
+    if (isResetInteger) {
+        // 重置积分值
+        resetIntegerValue(priceInfo)
+    }
+    if('{{order.type}}'=='integral'){
+        submitButtonEl.html("确认订单");
+    }
+    console.log('++++++++++++++++++++++++++++++++++++++',priceInfo,'priceInfo')
+    return priceInfo;
+}
+
+// 计算改变使用积分
+function updateUsableInteger(totalPrice){    
+    var useIntegral = parseInt(totalPrice * integralCountPerYuan * {{integral_info.usable_integral_percentage_in_order}} / 100);
+    var useMoney = (useIntegral / integralCountPerYuan).toFixed(2);
+
+    if (useIntegral > totalIntegral) {
+        useIntegral = totalIntegral;
+        useMoney = (useIntegral / integralCountPerYuan).toFixed(2);
+    }
+    return {
+        'useIntegral': useIntegral,
+        'useMoney': useMoney
+    }
+}
+// 重置积分值
+function resetIntegerValue(priceInfo){ 
+    if (priceInfo.integralUseCount < 0) {    
+        priceInfo.integralUseCount = 0; 
+        priceInfo.integralUseMoney = 0;
+    }    
+    if (getIntegralCheckboxEl().checked) {
+        $('#integral').val(parseInt(priceInfo.integralUseCount));
+    }   
+    usableIntegral = priceInfo.integralUseCount;
+    $('.ta-use-integral').html(priceInfo.integralUseCount);
+    $('.ta-use-integral-money').html(priceInfo.integralUseMoney);
+}
+/* 
+*   获取是否有积分控件
+*/
+var __INTEGRALCHECKBOX = null;
+function getIntegralCheckboxEl(){
+    if(__INTEGRALCHECKBOX !== null){
+        return __INTEGRALCHECKBOX
+    }
+    if($('#is_use_integral').length > 0){
+        __INTEGRALCHECKBOX = $('#is_use_integral')[0];
+        return __INTEGRALCHECKBOX
+    }else{
+        return {}
+    }
+}
+
+
+/**
+ * getProductsInfo: 获得订单中的商品信息
+ */
+function getProductsInfo() {
+    var productIds = [];
+    var productCounts = [];
+    var productModelNames = [];
+    $('.xa-product').each(function() {
+        var $product = $(this);
+        productIds.push($product.attr('data-product-id'));
+        productCounts.push($product.attr('data-product-count'));
+        productModelNames.push($product.attr('data-product-model-name'));
+    });
+
+    return {
+        product_ids: productIds.join('_'),
+        product_counts: productCounts.join('_'),
+        product_model_names: productModelNames.join('$')
+    }
+};
+
+//调整优惠券可用状态
+function changeCouponStatus(price) {
+	var coupons = $('#coupon_id').find('option');
+	coupons.each(function(coupon) {
+		var $el = $(this);
+		var valid_restrictions = $el.attr('valid_restrictions');
+		if (valid_restrictions!=-1 && valid_restrictions>price) {
+			$el.attr('disabled', true);
+		} else {
+			$el.attr('disabled', false);
+		}
+	});
+}
+
+// 取消使用优惠劵
+var cancelUsedCoupon = function(){
+    $('.tx-no-use-coupon-show').show();
+    $('.tx-use-coupon-show').hide();
+    $('#is_use_coupon')[0].checked = false;
+    $('#coupon_id').val(0).attr('data-money', 0);
+};
+
+// 关闭优惠券列表
+var closeUsedCouponDiv = function(event){
+    $('.xa-orderCoupon-Page').css({
+        'top': pageHeight
+    });
+    var data_value = $(event.currentTarget).attr('data-value');
+    var data_money = $(event.currentTarget).attr('data-money');
+    if (data_value && data_money) {
+        $('#coupon_id').val(data_value).attr('data-money', data_money);
+        $('#is_use_coupon')[0].checked = true;
+        // 修改使用优惠券后的样式
+        $('.tx-coupon-money').html('已抵用￥'+data_money);
+        $('.tx-no-use-coupon-show').hide();
+        $('.tx-use-coupon-show').show();
+    }else{
+        cancelUsedCoupon()
+    }
+    calculatePrice(true);
+};
+/**
+ * 发送验证手工输入的优惠券
+ */
+function verificationCouponId(event){  
+    var couponCouponId = $('[name=coupon_coupon_id]').val().trim();
+    var totalPrice = calculatePrice(true).totalPrice;   
+    if (couponCouponId.length == 0) {     
+        $(event.currentTarget).attr('data-value','');
+        $(event.currentTarget).attr('data-money','');
+        closeUsedCouponDiv(event);
+        return false;
+    }else if(couponCouponId.length < 10){        
+        $('.error-info').html('优惠券码格式不正确');
+        return false;
+    }else{  
+        $('body').alert({
+            isShow: true,
+            info:'正在验证...',
+            speed: 200000
+        });
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'post',
+            args: {
+                woid: W.webappOwnerId,
+                module: 'mall',
+                target_api: 'can_use_coupon/is',
+                coupon_coupon_id: couponCouponId,
+                total_price: totalPrice
+            },
+            success: function(data) {
+                // console.log('success', data, $('#is_use_coupon')[0].checked);
+                $('.error-info').val('');
+                var couponId = data['id'];
+                var couponMoney = data['money'];
+                if (parseInt(couponId) !== 0) {
+                    $(event.currentTarget).attr('data-value',couponId);
+                    $(event.currentTarget).attr('data-money',couponMoney);
+                    closeUsedCouponDiv(event);
+                    if(onlyIntegralOrConpon === 3){
+                        if($('#coupon_id').val() === "0"){
+                            $('.xui-intergral-slide').show();
+                        }else{
+                            $('.xui-intergral-slide').hide();
+                        }
+                    }
+                }else{
+                    $('.error-info').html(data['msg']);
+                }
+                $('body').alert({
+                    isShow: true,
+                    info:'正在验证...',
+                    speed: 1
+                });
+            },
+            error: function(resp) {
+                // console.log('error',resp);
+                var errMsg = '';
+                if (resp.errMsg) {
+                    errMsg = resp.errMsg;
+                } else if (resp.data && resp.data['msg']) {
+                    errMsg = resp.data['msg']
+                }
+                $('.error-info').html(errMsg);
+                $('body').alert({
+                    isShow: true,
+                    info:'正在验证...',
+                    speed: 1
+                });
+            }
+        });
+    }
+};
+
+/**
+ * submitOrder: 提交订单
+ */
+function submitOrder(args) {
+    W.getApi().call({
+        app: 'webapp',
+        api: 'project_api/call',
+        method: 'post',
+        args: _.extend({
+            woid: W.webappOwnerId,
+            module: 'mall',
+            is_order_from_shopping_cart: isOrderFromShoppingCart,
+            target_api: 'order/save',
+            order_type: order_type
+        }, args),
+        success: function(data) {
+            xlog(data);
+            var orderId = data['id'];
+            var order_id = data['order_id'];
+            var final_price = parseInt(data['final_price']);
+            if (data['msg'] != null) {
+                $('body').alert({
+                    isShow: true,
+                    speed: 2000,
+                    info: data['msg']
+                })  
+            } else {
+                if (final_price === 0) {
+                   window.location.href = "./?woid="+ webappOwnerId+"&module=mall&model=order&action=pay&order_id="+order_id+"&workspace_id=mall&isShowSuccess=1";
+                }
+                else { 
+                    var template = _.template("./?woid=<%= webappOwnerId %>&module=mall&model=pay_interfaces&action=list&order_id=<%= orderId %>&ignore_template=1");
+                    var url = template({
+                        webappOwnerId: webappOwnerId,
+                        orderId: orderId
+                    });
+                    window.location.href = url;
+                }
+                //window.location.href = './?woid='+W.webappOwnerId+'&module=mall&model=order&action=pay&order_id='+orderId+'&fwxsid='+fwxsid;
+            }
+        },
+        error: function(resp) {
+            var errMsg = '下单失败';
+            if (resp.errMsg) {
+                errMsg = resp.errMsg;
+            } else if (resp.data && resp.data['msg']) {
+                errMsg = resp.data['msg']
+            }
+            $('#errMsg').val(errMsg);
+
+            $('body').alert({
+                isShow: true,
+                info: errMsg,
+                speed: 2000,
+                callBack: function() {
+                	enableSubmitOrderButton();
+                    // window.location.reload();
+                }
+            });
+
+            if (resp && resp.data) {
+                var redirectUrl = resp.data['redirect_url'];
+                if (redirectUrl) {
+                    _.delay(function() {
+                        redirectTo(redirectUrl);
+                    }, 2300);
+                }
+            }
+            isSubmit = false;
+        }
+    });
+}
+
+function doSubmitOrder() {
+    //提交表单
+    var args = _.extend($('form').serializeObject(), getProductsInfo());
+
+    if($("#area").val().length == 0){
+        $("body").alert({
+               isShow:true,
+                info:"所在地区不能为空!",
+                speed:2300
+            });
+        enableSubmitOrderButton()
+        return false;
+    }else if( (($("#is_use_coupon").prev().attr("data-icon"))==='checkbox-on') && ((args['coupon_id']==='0') || ((args['coupon_id']==='-1') && (args['coupon_coupon_id']===''))) ){
+            $("body").alert({
+               isShow:true,
+                info:"请输入优惠券!",
+                speed:2300
+            });
+            enableSubmitOrderButton()
+            return false;
+    }else{
+        //显示提交订单的提示
+        $('body').alert({
+            isShow: true,
+            info:'正在提交订单',
+            speed: 200000
+        });
+        args = integralOrderArgs(args);
+        submitOrder(args); 
+    }
+}
+function integralOrderArgs(args){
+    var args_ed = args
+    if ('integral' == '{{order.type}}') {
+        args_ed = _.extend({
+            is_use_integral: 'on',
+            integral: parseInt($('.xa-totalPrice').text())
+        }, args)
+    }
+    return args_ed;
+}
+//added by chuter
+function enableSubmitOrderButton() {
+    enableSubmitOrder = true;
+}
+
+function disableSubmitOrderButton() {
+    enableSubmitOrder = false;
+}
+$(".xui-orderCoupon-Page").css({
+        display:'none'
+    });
+$(document).ready(function() {
+    //点击“优惠券”，弹出优惠券列表
+    var bodyHeight = window.document.body.clientHeight;
+    var containerHeight = bodyHeight - 42;
+    var couponPageTop= containerHeight + 65
+    pageHeight = $('.ui-page').height() + 50;
+    $(".wui-swiper-container").css('height', containerHeight);
+    $(".xui-orderCoupon-Page").css({
+        top: pageHeight,
+        display:'block'
+    });
+    $(".wui-swiper-slide").css('height', containerHeight );
+    var tabsSwiper = new Swiper('.wui-swiper-container',{
+        speed:500,
+        onSlideChangeStart:(function(){
+            $(".wui-tabs .wui-active").removeClass('wui-active');
+            $(".wui-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-active');
+        })
+    });
+    $(".wui-tabs a").bind('click',function(e){
+        e.preventDefault();
+        $(".wui-tabs .wui-active").removeClass('wui-active');
+        $(this).addClass('wui-active');
+        tabsSwiper.swipeTo( $(this).index() );
+    });
+    $('.xa-coupon-slideUp').bind('click',function(event) {
+        $('.xui-orderCoupon-Page').css({
+            top: 0
+        });
+    });
+    //绑定初始化数据
+    $('select').selectmenu('refresh');
+
+    $('[data-ui-role="areaPop"]').bind('changed-province', function(){
+        calculatePrice(true);
+    })
+
+    $(document).bind('validate-error', function(event, errMsg) {
+        //接受validate错误消息，记录之，用于支持测试
+        $('#errMsg').val(errMsg);
+    });
+    
+    //当地点控件发生变化时，下时要显示它所选的地址
+    $('.xa-areaInput').bind('change', function(event) {
+        var $el = $(event.currentTarget);
+        var areaValue = $el.attr('area-value');
+        $('.xa-areaValue').html(areaValue);
+        if(areaValue) {
+            $('.xa-areaLabel').addClass('align-top-text');
+        }
+        else {
+            $('.xa-areaLabel').removeClass('align-top-text');
+        }
+        calculatePrice(true);
+    });
+    //点击发票，隐藏内容展开
+    var eventBillSlideClick = function(el_this){
+        var $el = $('#'+$(el_this).attr('data-down-div'));
+        if($el.is(':visible')){
+            $el.slideUp(200).addClass('hidden');
+            $('.tx-bill-span').html('未开');
+        }else{
+            $el.slideDown(200).removeClass('hidden');
+            $('.tx-bill-span').html('');
+        }
+        $(el_this).parent().siblings('.ui-btn-inner .ui-icon').toggleClass('xui-arrow-slideDown');
+    };
+
+    //点击优惠券或点击确认，关闭优惠券列表
+    $('.xa-submitLink').bind('click',verificationCouponId);
+    $('.xa-submitLi,.xa-closeCouponList').bind('click',closeUsedCouponDiv);
+
+    //点击优惠券‘取消使用’
+    $('.tx-cancel-coupon').click(function(event){ 
+        event.stopPropagation();
+        event.preventDefault();
+        cancelUsedCoupon();
+        calculatePrice(true);
+    });
+
+    //清除“给卖家留言”文本框内容
+    var $inputs = $('input[type="text"],input[type="tel"]');
+    $inputs.each(function() {
+        var $clearBtn = $(this).parent('div').siblings();
+        var $couponInput = $(this).parent().parent();
+        $clearBtn.hide();
+        $(this).focus(function(){
+            if($(this).val() !== ""){
+                $clearBtn.show();
+            }else{
+                $clearBtn.hide();        
+            }
+        });
+        $(this).blur(function(event){
+           $clearBtn.fadeOut(300);     
+        });
+       $(this).on('input',function(){
+            if($(this).val() === ""){
+                $clearBtn.hide();
+                $('.error-info').html('');
+            }else{
+                $clearBtn.show();
+            }
+        });
+    });
+    $('.xui-clearBtn').click(function(event) {
+        var $input = $(this).parent('div').find('input');
+        $input.val('');
+        $(this).hide();
+        $('.error-info').html('');
+    });
+
+    /*
+    //使用优惠劵后"应付金额"计算
+    $('[name="coupon_id"]').bind('change', function(event) {
+    	var $el = $(event.currentTarget);
+    	var value = $el.val();
+    	var $p = $('#couponSelectZone');
+    	if (value==='-1') {
+            $('.xa-couponIdSelect').hide();
+            $('.xa-couponIdInput').show();
+    	}
+        calculatePrice();
+    });
+    */
+    //只让积分或用或优惠券可用
+    if(onlyIntegralOrConpon===3){
+        var $integral = $("#is_use_integral");
+        var $coupon = $("#is_use_coupon");
+        var $integralContainer = $integral.parents(".xt-triggerGroup").eq(0);
+        var $couponContainer = $coupon.parents(".xt-triggerGroup").eq(0);
+
+        $("#is_use_integral").click(function (){
+            console.log('仅有一种可用时,使用积分');
+            if($couponContainer.is(":visible")){
+                $couponContainer.hide();
+            }else{
+                $couponContainer.show();
+            }         
+        });
+        $(".tx-cancel-coupon, .xa-submitLi").click(function (){
+            console.log('仅有一种可用时,使用优惠券',$('#coupon_id').val(), $integralContainer);
+            if($('#coupon_id').val() === "0"){
+                $integralContainer.show();
+            }else{
+                $integralContainer.hide();
+            }
+        });
+    }
+    
+    $('form').delegate('.xa-displayTrigger', 'change', function() {
+        var $trigger = $(this);
+        var checked = this.checked;
+        var css = checked ? 'block' : 'none';
+        var targetId = $trigger.attr('data-target');
+        var $content = $(this).parents('fieldset').find(targetId);
+        var slideArrow = $(this).parents('.ui-btn-text').siblings('.ui-btn-inner .ui-icon')
+        if(checked){
+            $content.slideDown(300);
+            slideArrow.addClass('xui-arrow-slideDown');
+        }else{
+            $content.slideUp(300);
+            slideArrow.removeClass('xui-arrow-slideDown');
+        }
+        var elId = $trigger.attr('id');
+        // 是否选择的是优惠券
+        var isUseIntegral = (elId === "is_use_integral");
+        if (isUseIntegral && checked){
+            $('#integral').val(parseInt(usableIntegral));
+        }else{
+            $('#integral').val(0);
+        }
+
+        if (elId === "is_use_bill"){
+            eventBillSlideClick(this)
+            return;
+        }
+        calculatePrice(!isUseIntegral);
+
+        // var $textInput = $content.find('input[type="text"]');
+        // if ($textInput.length > 0) {
+        //     $textInput.eq(0).focus();
+        // } else {
+        //     $textInput = $content.find('input[type="number"]');
+        //     $textInput.eq(0).focus();
+        // }
+    });
+    /*
+    $('#is_use_coupon').change(function() {
+        if ($('#coupon_id').val() == -1) {
+            var $options = $('#coupon_id').find('option')
+            $options.attr('selected', false);
+            $($options.eq(0)).attr('selected', true);
+        }
+    });
+    */
+    calculatePrice(true);
+
+    $('form').bind('validate-success', function() {
+        if (!enableSubmitOrder) {
+            return false;
+        }
+
+        disableSubmitOrderButton(); //禁用提交按钮，防止再次提交
+        var priceInfo = calculatePrice(false);
+        console.log(priceInfo, 55555555);
+        if (priceInfo.isValidPrice) {
+            //最终价格有效，直接提交
+            doSubmitOrder();
+        } else {
+            //最终价格无效，请用户确认
+            var shouldSubmit = false;
+            $('body').simpledialog2({
+                mode: 'button',
+                buttonPrompt: '优惠券和积分已超过商品'+(0-priceInfo.totalPrice)+'元<br/>您可以返回修改，或直接提交<br/>确实要提交吗？',
+                buttons : {
+                  '提交吧': {
+                    click: function () { 
+                        shouldSubmit = true;
+                    },
+                    icon: ''
+                  },
+                  '去修改': {
+                    click: function () { 
+                      
+                    },
+                    theme: "c",
+                    icon: ''
+                  }
+                },
+                callbackClose: function() {
+                    if (shouldSubmit) {
+                        //用户确认提交
+                        doSubmitOrder()
+                    } else {
+                        //用户确认不提交，重新显示提交按钮
+                        enableSubmitOrderButton();
+                    }
+                }
+            });
+        }
+    });
+}); 
+
+//无刷新页面重置积分和优惠券信息
+if (document.getElementById('is_use_integral')) {
+    document.getElementById('is_use_integral').checked = false;    
+}
+if (document.getElementById('integral')) {
+    document.getElementById('integral').value = 0;    
+}
+if (document.getElementById('is_use_coupon')) {
+    document.getElementById('is_use_coupon').checked = false;
+}
+if (document.getElementById('coupon_id')) {
+    document.getElementById('coupon_id').value = 0
+}
+if (document.getElementById('is_use_bill')) {
+    document.getElementById('is_use_bill').checked = false;
+}
+</script>
+{% endblock %}

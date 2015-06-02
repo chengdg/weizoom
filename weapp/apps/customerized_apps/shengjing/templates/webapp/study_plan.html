@@ -1,0 +1,359 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/markettools_static/coupon/css/idangerous.swiper.css">
+<link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
+<style>
+	body,html{
+		background-color: #e1e1e6;
+	}
+	.ui-page,.ui-content{
+		background: #e1e1e6!important;
+	}
+	.ui-select .ui-btn{
+		background: transparent;
+		border:none;
+		padding-left:0;
+		margin:0;
+	}
+	.ui-select .ui-btn-inner{
+		border: none;
+		color:#fff!important;
+		text-shadow:none;
+		padding-left: 0;
+		height:25px;
+	}
+	.ui-select .ui-shadow{ 
+		box-shadow: none;
+	}
+	.ui-select .ui-btn select{
+		width: 90%;
+	}
+	.ui-select .ui-btn .ui-icon-arrow-d{
+		background: url("/webapp_static/backend_default/imgs/down.png") no-repeat;
+    	border-radius: 0;
+    	border-style:none;
+    	-webkit-background-size: cover;
+    	background-size: cover;
+    	height: 25px;
+    	left: auto;
+    	right: 5px;
+    	width: 30px;
+    	top:9px;
+	}
+	.ui-select .ui-icon-shadow{
+		box-shadow: none;
+	}
+	.xui-topNav{
+		top:0px;
+	}
+	.xui-userCenter-header{
+		background: #2d3e4f;
+		color:#fff;
+		width: 100%;
+		padding-top: 20px;
+		padding-bottom: 10px;
+	}
+	.ui-select{
+    	margin-bottom:0px!important;
+	}
+	.wui-tabs{
+		background: #273644;	
+		width: 100%;
+	}
+	.wui-tabs a{
+		width: 32%;	
+		display: inline-block;
+		color: #fff!important;
+		padding: 10px 0px;
+		text-align: center;
+		text-shadow:none;
+		font-weight:normal!important;
+	}
+	.wui-tabs a.active{
+		border-bottom: 3px solid #f19b2c;
+	}
+	.ui-title {
+		color: #46617b;
+		font-size: 20px;
+		padding: 5px 0;
+		border-bottom: 1px solid #EDEDED;
+	}
+	.ui-info {
+		color:#666;
+		border-bottom: 1px solid #e1e1e6;
+	}
+	.wui-swiper-container {
+		height: auto;
+		border:none;
+	}
+	.wui-swiper-slide {
+	  overflow: auto;
+	  width: 100%;
+	  background: none;
+	  color:#000;
+	}
+	.xui-section{
+		padding:0;
+		box-shadow: none;
+	}
+	.xui-section div.ui-info,.xui-section div.ui-title{
+		padding:10px 20px;
+	}
+	.xui-pageTitle{
+		font-size: 2.5em;
+		margin-top:10px;
+	}
+	.xui-arrow{
+		border-top: 1px solid #949494;
+		border-right: 1px solid #949494;
+		display: inline-block;
+		height: 10px;
+		width: 10px; 
+		float: right;
+	}
+	.xui-arrow-down{
+		margin-top: 3px;
+		-webkit-transform: rotate(135deg);
+		transform: rotate(135deg);
+	}
+	.xui-arrow-up{
+		margin-top: 8px;
+		-webkit-transform: rotate(-45deg);
+		transform: rotate(-45deg);
+	}
+	.xui-info{
+		padding:10px;
+		padding-left:25px;
+		border-bottom:1px solid #e1e1e6;
+		color:#646975;
+		background: #f1f1f1;
+	}
+	.ui-notLeaderBox{
+		background: #fff;
+		border-radius: 5px;
+		margin-top: 20px;
+		text-align: center;
+		padding: 20px 30px;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x">
+	<div class="xui-loading" style="display: none">
+		<div class="xui-loading-container container1">
+			<div class="circle1"></div>
+			<div class="circle2"></div>
+			<div class="circle3"></div>
+			<div class="circle4"></div>
+		</div>
+		<div class="xui-loading-container container2">
+			<div class="circle1"></div>
+			<div class="circle2"></div>
+			<div class="circle3"></div>
+			<div class="circle4"></div>
+		</div>
+		<div class="xui-loading-container container3">
+			<div class="circle1"></div>
+			<div class="circle2"></div>
+			<div class="circle3"></div>
+			<div class="circle4"></div>
+		</div>
+		</div>
+	
+	
+		<div class="xui-topNav">
+			<div class="xui-userCenter-header">
+				<div class="xui-pageTitle ml20">学习计划</div>
+				<select class="ua-company ml20" name="companys" id="companySelect">
+					{% for company in companys %}
+						<option value="{{company.name}}">{{company.name}}</option>
+					{% endfor %}
+				</select>
+				
+			</div>
+			<div class="wui-tabs">
+					<a href="javascript:void(0)" status="0" class="active">未开课</a>
+					<a href="javascript:void(0)" status="1">已上课</a>
+					<a href="javascript:void(0)" status="2">全部</a>
+			</div>
+		</div>
+		 <div class="wui-swiper-container">    
+		    <div class="wui-swiper-wrapper">
+		      <div class="wui-swiper-slide">
+		        <div class="wui-content-slide">
+					<ul data-role="listview" class="xui-list-y ui-listView ua-listView ua-listView0" data-theme="x" data-icon-shadow="false" data-icon="false">
+					</ul>
+				</div>
+			</div>
+			<div class="wui-swiper-slide">
+		        <div class="wui-content-slide">
+					<ul data-role="listview" class="xui-list-y ui-listView ua-listView ua-listView1" data-theme="x" data-icon-shadow="false" data-icon="false">
+					</ul>
+				</div>
+			</div>
+			<div class="wui-swiper-slide">
+		        <div class="wui-content-slide">
+					<ul data-role="listview" class="xui-list-y ui-listView ua-listView ua-listView2" data-theme="x" data-icon-shadow="false" data-icon="false">
+					</ul>
+				</div>
+			</div>
+		  </div>
+		</div>
+	</div>
+{% endblock %}
+{% block js %}
+<script src="/markettools_static/coupon/js/idangerous.swiper.js"></script>
+<!-- <script src="/termite_static/js/widget/jquery.smint.js"></script> -->
+<script>
+	//处理留白问题
+	var bodyHeight = window.document.body.clientHeight;
+	var pageHeight = bodyHeight - 222;	
+	$('.wui-swiper-slide').css('height',pageHeight);
+	// $('.wui-tabs').smint();
+	
+	//处理加载时的样式
+	var loadingTop = bodyHeight - (bodyHeight - 222)*0.5;
+	$('.xui-loading').css('top',loadingTop);
+	
+	var company_name = $.cookie('SHENGJING_STUDY_PLAN_COMPANY_NAME');
+	var $options = $('.ua-company').find('option');
+	$options.each(function() {
+		if ($(this).val()==company_name){
+			$(this).attr('selected', 'selected');
+		}
+	});
+	
+	showData();
+	function showData() {
+		var company_name = $('[name=companys]').val();
+		// for (var i=0; i<3; i++){
+		var args = {'status': 2, 'company_name': company_name, 'member_id': '{{member.id}}'}
+		getData(args);
+		// }
+	}
+	
+	$('.ua-company').change(function() {
+		var company_name = $('[name=companys]').val();
+		$.cookie('SHENGJING_STUDY_PLAN_COMPANY_NAME', company_name, {expires:365*24*60*60, path:'/'});
+		showData();
+	});
+	
+	//通过状态获取数据（已开课，未开课，全部）
+    function getData(args) {
+    	$('.xui-loading').css('display', 'block');
+		W.getApi().call({
+    		app: 'webapp',
+        	api: 'project_api/call',
+			args: _.extend({
+	            woid: W.webappOwnerId,
+	            project_id: W.projectId,
+	            module: 'apps:shengjing:study_plan',
+	            target_api: 'study_plan/get'
+	        }, args),
+			success: function(data) {
+				var data = data.items || [];
+				//var data = [{'id': 1, 'course_name': '创新思维', 'curricula_time': '1992-05-13', 'plan_count': args.status}, {'id': 2, 'course_name': 'aad', 'curricula_time': '1992-05-13', 'plan_count': '3'}, {'id': 3, 'course_name': 'ccc', 'curricula_time': '1992-05-13', 'plan_count': '2'}];
+				$('.ua-listView').find('li').remove();
+				$('.xui-loading').css('display', 'none');
+				/*if (data.length==0){
+					$('.ua-listView').append($('<li class="ml10 mr10 mt10" style="font-size: 20px;">您现在尚未制定学习计划，请点击“在线预约”，制定计划，开始学习吧。</li>'));
+				}*/
+				for (var i=0; i<data.length; i++) {
+					var $contain = $('.ua-listView'+data[i].status);
+					var $li = getTemplate(data[i]);
+					if (data[i].status==1){
+						$contain.prepend($li);
+					} else {
+						$contain.append($li);
+					}
+					var $containAll = $('.ua-listView2');
+					var $li = getTemplate(data[i]);
+					$containAll.append($li);
+					
+				}
+				for (var i=0; i<3; i++){
+					if (($('.ua-listView'+i).find('li').length)<=0){
+						if (i==0){
+							$('.ua-listView'+i).append($('<li class="ml10 mr10 mt10" style="font-size: 20px;">你还没有制定学习计划哟~马上约课，赶紧来充电吧！</li>'));
+						} else{
+							$('.ua-listView'+i).append($('<li class="ml10 mr10 mt10" style="font-size: 20px;">您现在尚未制定学习计划，请点击“在线预约”，制定计划，开始学习吧。</li>'));
+						}
+					}
+				}
+			},
+			error: function(resp) {
+				var code = resp.code;
+				if (code=='501'){
+					$('.ua-listView').find('li').remove();
+					$('.xui-loading').css('display', 'none');
+					var errMsg = resp.errMsg || '不是决策人！';
+					$('.ua-listView').append($('<li class="ui-notLeaderBox xa-notLeaderBox xui-section">'+errMsg+'</li>'));
+				} else {
+					$('.xui-loading').css('display', 'none');
+					var errMsg = resp.errMsg || '获取数据失败！';
+					alert(errMsg);
+				}
+			}
+		})
+    }
+    var bodyWidth = window.document.body.clientWidth;
+    $('.wui-swiper-container').css('width', bodyWidth);
+     var tabsSwiper = new Swiper('.wui-swiper-container',{
+	    speed:500,
+	    onSlideChangeStart: function(){
+	      $(".wui-tabs .active").removeClass('active')
+	      $(".wui-tabs a").eq(tabsSwiper.activeIndex).addClass('active')  
+	    }
+	  })
+	  $(".wui-tabs a").on('touchstart mousedown',function(e){
+	    e.preventDefault()
+	    $(".wui-tabs .active").removeClass('active')
+	    $(this).addClass('active')
+	    var status = $(this).attr('status');
+	    tabsSwiper.swipeTo( $(this).index() )
+	  })
+	function getTemplate(data) {
+		var $li = $('<li li-id='+data.id+' class="xui-section"></li>');
+		$li.append($('<div class="ui-title">'+data.course_name+'</div>'));
+		var start_date = data.curricula_time.split('-');
+		start_date = start_date[0] + '.' + start_date[1] + '.' + start_date[2];
+		var end_date = data.stop_time.split('-');
+		end_date = end_date[1] + '.' + end_date[2];
+		$li.append($('<div class="ui-info"><label>开课时间：</label>'+start_date+' - '+end_date+'</div>'));
+		if (data.plan_count>0 && data.status!='0'){
+			$li.append($('<div class="ui-info" onclick="showInfo(this);" type="show"><label>上课人数：</label>'+data.plan_count+'<span class="xui-arrow xui-arrow-down ua-arrow" ></span></div>'));
+			if (data.students.length){
+				var student_str = data.students.join(' , ');
+				$li.append($('<div class="hidden xui-info xa-info"><label>上课人：</label>'+student_str+'</div>'));
+			} else {
+				$li.append($('<div class="hidden xui-info xa-info">系统尚未录入信息</div>'));
+			}
+		} else {
+			$li.append($('<div class="ui-info"><label>上课人数：</label>'+data.plan_count+'</div>'));
+		}
+		return $li;
+	}
+	
+	function showInfo(el) {
+		var $el = $(el);
+		var type = $el.attr('type');
+		if (type=='show'){
+			$el.find('.ua-arrow').removeClass('xui-arrow-down');
+	        $el.find('.ua-arrow').addClass('xui-arrow-up');
+			
+			$el.attr('type', 'hide');
+			$el.parents('li:eq(0)').find('.xa-info').slideDown('200');
+		}else{
+			$el.find('.ua-arrow').removeClass('xui-arrow-up');
+	        $el.find('.ua-arrow').addClass('xui-arrow-down');
+			$el.attr('type', 'show')
+			$el.parents('li:eq(0)').find('.xa-info').slideUp('200');
+		}
+	}
+</script>
+{% endblock %}
+

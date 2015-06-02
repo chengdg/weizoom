@@ -1,0 +1,10 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'weapp.title' %}
+<div class="wui-title" {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" style="background-color: {{component.model.backcolor}};text-align:{{component.model.align}}">
+    <h2 class="wa-inner-title">{{component.model.title}}</h2>
+    <span class="wa-inner-subtitle">{{component.model.subtitle}}</span>
+</div>
+{% endifequal %}

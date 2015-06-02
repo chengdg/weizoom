@@ -1,0 +1,116 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li>
+		<a href="/market_tools/delivery_plan/">套餐列表</a><span class="divider">/</span>
+	</li>
+	<li class="active">{% if delivery_plan.id %}更新{% else %}添加{% endif %}套餐</li>
+</ul>
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="parents_name">套餐名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" name="name" placeholder="输入套餐名称" value="{% if delivery_plan %}{{ delivery_plan.name }}{% endif %}" {% if delivery_plan %} disabled {% endif %} data-validate="required" data-validate-max-length="100" data-validate-name="{{ point_card_rule.id }}"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="parents_name">包含商品：</label>
+			<div class="controls">
+				<select class="w150 ua-productListView" name="product_id" {% if delivery_plan %} disabled {% endif %} >
+				</select>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="parents_name">配送频率：</label>
+			<div class="controls">
+				<input type="text" {% if delivery_plan %} disabled {% endif %} class="input-xlarge w50" name="frequency" value="{% if delivery_plan %}{{ delivery_plan.frequency }}{% endif %}"  data-validate="require-positive-int" />
+				<div class="errorHint" style="display: inline-block"></div>
+				<select class="w50" name="type" {% if delivery_plan %} disabled {% endif %} >
+					<option value='1' {% if delivery_plan %}{% if delivery_plan.type == 1 %}selected=selected{% endif %}{% endif %}>周</option>
+					<option value='2' {% if delivery_plan %}{% if delivery_plan.type == 2 %}selected=selected{% endif %}{% endif %}>月</option>
+					<option value='0' {% if delivery_plan %}{% if delivery_plan.type == 0 %}selected=selected{% endif %}{% endif %}>日</option>
+				</select>
+				/次
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="parents_name">配送次数：</label>
+			<div class="controls">
+				<input type="text" {% if delivery_plan %} disabled {% endif %} class="input-xlarge" name="times" value="{% if delivery_plan %}{{ delivery_plan.times }}{% endif %}"  data-validate="require-positive-int" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="parents_name">商品价格：</label>
+			<div class="controls">
+				<input type="text" {% if delivery_plan %} disabled {% endif %} class="input-xlarge" name="price" value="{% if delivery_plan %}{{ delivery_plan.price }}{% endif %}"  data-validate="price" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="parents_name">商品原价：</label>
+			<div class="controls">
+				<input type="text" {% if delivery_plan %} disabled {% endif %} class="input-xlarge" name="original_price" value="{% if delivery_plan %}{{ delivery_plan.original_price }}{% endif %}"  data-validate="price" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		
+	</fieldset>
+	{% if not delivery_plan %} 
+	<fieldset class="xa-activeButtonBox">
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+			</div>
+		</div>
+	</fieldset>
+	{% endif %} 
+</form>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	var deliveryPlanProductId = '{{delivery_plan.original_product_id}}';
+	W.getApi().call({
+		app: 'mall',
+		api: 'products/get',
+		args: {
+			'page': 1,
+			'count_per_page': 100000
+		},
+		success: function(data) {
+			var products = data.items || [];
+			
+			var $content = $('.ua-productListView');
+			var selected = '';
+			for (var i=0; i<products.length; i++){
+				if (deliveryPlanProductId==products[i].id){
+					selected = 'selected="selected"';
+				}
+				var $op = $('<option value="' + products[i].id + '" ' + selected + '>' + products[i].name + '</option>');
+				selected = '';
+				$content.append($op);
+			}
+		},
+		error: function() {}
+		
+	})
+	$('form').submit(function() {
+		 if (!W.validate()) {
+	        return false;
+	      }
+	});
+</script>
+{% endblock %}

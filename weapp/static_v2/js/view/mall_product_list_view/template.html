@@ -1,0 +1,26 @@
+<script id="mall-product-list-view-model-info-tmpl-src" type="text/x-jquery-tmpl">
+<table class="table xb-noTdBorder xb-bottomBorder" style="margin-bottom: 0px;">
+	<thead>
+		<tr>
+			{{each(i, property) properties}}
+			<th>${property}</th>
+			{{/each}}
+			<th>价格（元）</th>
+			<th>库存</th>
+			<th>商品编码</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{each(i, model) models}}
+		<tr>
+			{{each(j, property_value) model.property_values}}
+			<td>${property_value.name}</th>
+			{{/each}}
+			<td>${model.price}</th>
+			<td>{{if (model.stock_type == 0)}}无限{{else}}${model.stocks}{{/if}}</th>
+			<td>${model.user_code}</th>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+</script>

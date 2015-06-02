@@ -1,0 +1,31 @@
+<!-- start PaginationView模板 -->
+<script id="pagination-view-tmpl-src" type='text/x-jquery-tmpl'>
+<div class="pagination pagination-right">
+	<ul>
+		{{if isHasDetailedPage}}
+		<li class="{{if has_head}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="1">首页</a></li>
+		{{/if}}
+		<li class="{{if has_prev}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="${prev}">上一页</a></li>
+		{{if isHasDetailedPage}}
+		{{each display_pages}}
+		{{if $value == cur_page}}
+		<li class="active disabled"><a href="javascript:void(0)">${$value}</a></li>
+		{{else}}
+		<li><a href="javascript:void(0)" page="${$value}">${$value}</a></li>
+		{{/if}}
+		{{/each}}
+		{{/if}}
+		<li class="{{if has_next}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="${next}">下一页</a></li>
+		{{if isHasDetailedPage}}
+		<li class="{{if has_tail}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="${max_page}">尾页</a></li>
+		{{/if}}
+	</ul>
+	{{if isHasJumpPage}}
+	<div class="jump_page input-append">
+		<input {{if (max_page && max_page < 2)}}disabled="disabled"{{/if}} type="text" size="2" id="appendedInputButton" class="span2" placeholder="跳转到页...">
+		<button {{if (max_page && max_page < 2)}}disabled="disabled"{{/if}} type="button" class="btn">Go!</button>
+	</div>
+	{{/if}}
+</div>
+</script>
+<!-- finish PaginationView模板 -->

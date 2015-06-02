@@ -1,0 +1,371 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-modelPropertyPage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/mall/onshelf_products/get/">商品管理</a>
+        </li>
+        <li class="active">属性规格管理</li>
+    </ul>
+
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="/mall/property_templates/get/">属性管理</a>
+        </li>
+        <li class="active">
+            <a href="javascript:void(0);">规格管理</a>
+        </li>
+    </ul>
+    <div class="xa-specification xui-specification">
+        <table class="table {% if not model_properties %} xui-hide {% endif %}" data-category-id="{{category.id}}" >
+            <thead>
+                <tr>
+                    <th width="153px" style="padding-left:34px;">规格名</th>
+                    <th width="209px;">显示样式</th>
+                    <th width="508px;">规格值</th>
+                    <th width="92px">操作</th>
+                </tr>
+            </thead>
+            <tbody class="xa-isvalidate">
+                {% for property in model_properties %}
+                <tr data-property-id="{{property.id}}">
+                    <td style="width:153px;">
+                        <input class='xa-nameInput form-control xui-hide'
+                               data-validate="require-string"
+                               maxlength="15"
+                               type="text" value="{{property.name}}" style="width:90px;"/>
+                        <span class="xa-name xui-name" title="{{property.name}}">{{property.shot_name}}</span>
+                        <span class="xa-editName xui-editName cursor-pointer"><img src="/static_v2/img/editor/pencial.png"></span>
+                        <div class="errorHint pa" data-error-hint="内容不能为空" style="left:47px;"></div>
+                    </td>
+                    <td style="width:209px;">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="text" name="type_{{property.id}}" {% if property.type == 0 %}checked="checked"{% endif %} />
+                                <span class="mr10">文本</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="image" name="type_{{property.id}}" {% if property.type == 1 %}checked="checked"{% endif %} />
+                                <span class="mr10">图片</span>
+                            </label>
+                        </div>
+                    </td>
+                    <td style="width:508px;">
+                        <ul class="xui-propertyValueList">
+                            {% for property_value in property.property_values %}
+                            <li data-value-id="{{property_value.id}}">
+                                <div>
+                                    {% if property_value.is_image_property_value %}
+                                    <img src="{{property_value.pic_url}}" />
+                                    {% else %}
+                                    <span title="{{property_value.name}}">{{property_value.shot_name}}</span>
+                                    {% endif %}
+                                </div>
+                                <button class="xui-close xa-delete" type="button">
+                                    <span>&times;</span>
+                                </button>
+
+                            </li>
+                            {% endfor %}
+                            <li class="xa-addPropertyValue cursor-pointer">
+                                <div><img src="/static_v2/img/editor/addProduct.png"></div>
+                            </li>
+                        </ul>
+                    </td>
+                    <td style="width:92px;">
+                        <a class="xui-deleteModelProperty xa-deleteModelProperty" href="javascript:void(0);">
+                            删除</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="xui-addModelProperty pt20 pr30">
+            <button class="btn fr btn-success xa-addModelProperty">+添加</button>
+        </div>
+        <div class="xui-emptyBox {% if model_properties %} xui-hide{% endif %}">
+            <div class="xui-i-emptyHint">
+                <img src="/static_v2/img/editor/empty.png">
+                <div>
+                    <span style="">您还没有规格列表，赶快添加！</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script id="row-tmpl-src" type="text/x-jquery-tmpl">
+    {% verbatim %}
+    <tr data-property-id="${id}">
+        <td >
+            <input class='xa-nameInput form-control mt20' data-validate="require-notempty" type="text" style="width:90px;" maxlength="15"/>
+            <div class="errorHint pa"></div>
+            <span class="xa-name xui-name xui-hide"></span>
+            <span class="xa-editName xui-editName cursor-pointer xui-hide">
+                <img src="/static_v2/img/editor/pencial.png"></span>
+        </td>
+        <td>
+            <div class="radio">
+                <label>
+                    <input type="radio" value="text" name="type_${id}" checked="checked" /><span class="mr10">文本</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" value="image" name="type_${id}" /><span class="mr10">图片</span>
+                </label>
+            </div>
+        </td>
+        <td>
+            <ul class="xui-propertyValueList">
+                <li class="xa-addPropertyValue cursor-pointer"><div><img src="/static_v2/img/editor/addProduct.png"></div></li>
+            </ul>
+        </td>
+        <td>
+            <a class="xui-deleteModelProperty xa-deleteModelProperty" href="javascript:void(0);">删除</a>
+        </td>
+    </tr>
+    {% endverbatim %}
+</script>
+
+<script type="text/javascript">
+
+var ModelPropertyPage = Backbone.View.extend({
+    getTemplate: function() {
+        $('#row-tmpl-src').template('row-tmpl');
+        return "row-tmpl";
+    },
+
+    events: {
+        'click .xa-addModelProperty': 'onClickAddModelPropertyLink',
+        'blur .xa-nameInput': 'onCompleteInputName',
+        'click .xa-editName': 'onClickEditNameLink',
+        'click input[type="radio"]': 'onClickType',
+        'click .xa-deleteModelProperty': 'onClickDeleteModelPropertyLink',
+        'click .xa-addPropertyValue': 'onClickAddModelPropertyValueLink',
+        'mouseenter .xui-propertyValueList li': 'onEnterPropertyValue',
+        'mouseleave .xui-propertyValueList li': 'onLeavePropertyValue',
+        'click .xa-delete': 'onClickDeleteModelPropertyValueLink'
+    },
+
+    initialize: function(options) {
+        this.template = this.getTemplate();
+    },
+
+    onClickAddModelPropertyLink: function(event) {
+        var $tbody = $(event.currentTarget).parents('.xa-specification').find(".xa-isvalidate");
+        console.log("onClickAddModelPropertyLink");
+        console.log($tbody);
+        if(W.validate($tbody)){
+            W.getApi().call({
+                method: 'post',
+                app: 'mall',
+                api: 'product_model_property/create',
+                args: {},
+                scope: this,
+                success: function(data) {
+                    xlog(data);
+                    var context = {
+                        id: data
+                    }
+                    // if(this.$('tbody').length == 0){
+                    //     window.location.reload();
+                    // }
+                    var $node = $.tmpl(this.template, context);
+                    this.$('table').show();
+                    this.$('tbody').append($node);
+                    this.$('.xui-emptyBox').hide();
+                    $node.find('input[type="text"]').focus();
+                },
+                error: function(resp) {
+                    alert('创建规格失败');
+                }
+            });
+        }else{
+            return false;
+        }
+    },
+
+    onClickDeleteModelPropertyLink: function(event) {
+        var $tr = $(event.currentTarget).parents('tr');
+        event.stopPropagation();
+        event.preventDefault();
+        var $tr = $(event.currentTarget).parents('tr');
+        var propertyId = $tr.data('propertyId');
+        var $link = $(event.currentTarget);
+
+        W.requireConfirm({
+            $el: $link,
+            width:380,
+            height:55,
+            position:'top',
+            isTitle: false,
+            privateContainerClass:'xui-orderConfirmPop',
+            msg:'确定删除?',
+            confirm:function(){
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall',
+                    api: 'product_model_property/delete',
+                    args: {
+                        id: propertyId
+                    },
+                    scope: this,
+                    success: function(data) {
+                        // window.location.reload();
+                        $tr.remove();
+                        
+                    },
+                    error: function(resp) {
+                        alert('删除规格失败!');
+                    }
+                })
+            }
+        })
+    },
+
+    onClickEditNameLink: function(event) {
+        var $tr = $(event.currentTarget).parents('tr');
+        var $input = $tr.find('input[type="text"]');
+        var $name = $tr.find('.xa-name');
+        var $editIcon = $tr.find('.xa-editName');
+        $name.hide();
+        $editIcon.hide();
+        $input.show().focus();
+    },
+
+    onClickType: function(event) {
+        var $input = $(event.currentTarget);
+        var type = $input.val();
+        var $tr = $input.parents('tr');
+        var propertyId = $tr.data('propertyId');
+        if(W.validate($tr)){
+            W.getApi().call({
+                method: 'post',
+                app: 'mall',
+                api: 'product_model_property/update',
+                args: {
+                    id: propertyId,
+                    field: 'type',
+                    type: type
+                },
+                scope: this,
+                success: function(data) {
+                    window.location.reload();
+                },
+                error: function(resp) {
+                    alert('更新规格类型失败!')
+                }
+            });
+        }else{
+            return false;
+        }
+    },
+
+    onClickAddModelPropertyValueLink: function(event) {
+        var $tr = $(event.currentTarget).parents('tr');
+        var propertyId = $(event.currentTarget).parents('tr').data('propertyId');
+        if(W.validate($tr)){
+            W.dialog.showDialog('W.dialog.mall.AddProductModelPropertyValueDialog', {
+                propertyId: propertyId,
+                success: function(data) {
+                    data['pic_url'] = data['picUrl'];
+                    W.getApi().call({
+                        method: 'post',
+                        app: 'mall',
+                        api: 'product_model_property_value/create',
+                        args: _.extend(data, {
+                            id: propertyId,
+                        }),
+                        scope: this,
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function(resp) {
+                            alert('添加规格值失败!');
+                        }
+                    })
+                }
+            });
+        }else{
+            return false;
+        }
+    },
+
+    onEnterPropertyValue: function(event) {
+        var $li = $(event.currentTarget);
+        $li.find('.xa-delete').show();
+    },
+
+    onLeavePropertyValue: function(event) {
+        var $li = $(event.currentTarget);
+        $li.find('.xa-delete').hide();
+    },
+
+    onClickDeleteModelPropertyValueLink: function(event) {
+        var $link = $(event.currentTarget);
+        var $li = $link.parents('li');
+        var propertyValueId = $li.data('valueId');
+        W.getApi().call({
+            method: 'post',
+            app: 'mall',
+            api: 'product_model_property_value/delete',
+            args: {
+                id: propertyValueId,
+            },
+            scope: this,
+            success: function(data) {
+                $li.remove();
+            },
+            error: function(resp) {
+                alert('删除规格值失败!');
+            }
+        })
+    },
+
+    onCompleteInputName: function(event) {
+        var $input = $(event.currentTarget);
+        var name = $.trim($input.val());
+        if (!name) {
+            return;
+        }
+
+        var $tr = $input.parents('tr');
+        var propertyId = $tr.data('propertyId');
+        W.getApi().call({
+            method: 'post',
+            app: 'mall',
+            api: 'product_model_property/update',
+            args: {
+                id: propertyId,
+                field: 'name',
+                name: name
+            },
+            scope: this,
+            success: function(data) {
+                var $name = $tr.find('.xa-name');
+                var $editIcon = $tr.find('.xa-editName');
+                $input.hide();
+                $name.text(name).show();
+                $editIcon.show();
+            },
+            error: function(resp) {
+                alert('更新规格名失败!')
+            }
+        })
+    }
+});
+
+$(document).ready(function() {
+    var view = new ModelPropertyPage({
+        el: '.xui-modelPropertyPage'
+    });
+});
+</script>
+{% endblock %}

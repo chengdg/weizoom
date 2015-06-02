@@ -1,0 +1,141 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.table_column' %}
+{% if in_production_mode %}
+<th 
+    class="{% if component.model.action == 'sortable' %}tx_sortable{% endif %} {% if component.model.action == 'filterable' %}tx_filterable{% endif %}"
+    {% if component.model.action == 'sortable' %}data-sort-attr="{{component.model.field_target}}"{% endif %}
+    {% if component.model.width %}width="{{component.model.width}}px"{% endif %}
+>
+    {% if component.model.action == 'filterable' %}
+    <div class="dropdown">
+        {% with component.model.field_target as field_target %}
+        <p class="m0 dropdown-toggle" style="font-size: 14px;">{{component.model.text}}</p>
+        <ul class="dropdown-menu">
+            <li><a href="javascript:void(0);" data-attr='{{field_target}}' data-value="-1">全部</a></li>
+            <li><a href="javascript:void(0);" data-attr='{{field_target}}' data-value='0'> Item0</a></li>
+            <li><a href="javascript:void(0);" data-attr='{{field_target}}' data-value='1'> Item1</a></li>
+            <li><a href="javascript:void(0);" data-attr='{{field_target}}' data-value='2'> Item2</a></li>
+        </ul>
+        {% endwith %}
+    </div>
+    {% elif component.model.action == 'searchable' %}
+    <p class="m0 f14 tx_searchable" data-attr='{{component.model.field_target}}'>
+        {{component.model.text}}
+    </p>
+    {% else %}
+    {{component.model.text}}
+    {% endif %}
+</th>
+{% else %}
+<th 
+    data-cid="{{component.cid}}"
+    class="{% if component.model.is_sortable == 'yes' %}tx_sortable{% endif %} {% if component.model.is_filterable == 'yes' %}tx_filterable{% endif %}"
+    {% if component.model.is_sortable == 'yes' %}data-sort-attr="{{component.model.field_target}}"{% endif %}  
+    {% if component.model.width %}width="{{component.model.width}}px"{% endif %}
+>
+    {{component.model.text}}({{component.model.field_target}})
+</th>
+{% endif %}
+{% endifequal %}  
+
+
+{% ifequal component.type 'viper.table' %}
+<!-- =====> viper:table component -->
+{% if in_design_mode %}
+<div
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true"
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+>
+{% endif %}
+    {% with component.model.target|get_target_resource:request as target_resource %}
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li class="active">
+                {% if component.model.title %}
+                    {{component.model.title}}
+                {% else %}
+                    {{component.model.target_entity_name}}列表
+                {% endif %}
+            </li>
+        </ul>
+        <span 
+            class="breadcrumRightButton {% if component.model.is_enable_add_button == 'no' %}hide{% endif %}"
+        >
+            <a 
+                {% if request.in_generate_mode %}
+                    {% if target_resource.is_dialog %}
+                    class="btn btn-primary xa-viperDialog"
+                    data-dialog="{{target_resource.dialog}}" 
+                    href="/apps/{{project.inner_name}}/?module={{page.component.model.module}}&resource={{target_resource.resource}}&action=create&project_id=apps:{{project.inner_name}}:0&page_id={{page.page_id}}"
+                    {% else %}
+                    class="btn btn-primary"
+                    href="/apps/{{project.inner_name}}/?module={{page.component.model.module}}&resource={{target_resource.resource}}&action=create&project_id=apps:{{project.inner_name}}:0&page_id={{page.page_id}}"
+                    {% endif %}
+                {% else %}
+                class="btn btn-primary"
+                href="/workbench/viper/record/create/{{component.model.target|format_target:project_id}}&submit_redirect_to={{page.page_id}}"
+                {% endif %}
+            >
+                <i class="icon icon-plus icon-white"></i>添加{{component.model.target_entity_name}}
+            </a>
+        </span>
+    </div>
+
+    <div 
+        data-ui-role="advanced-table" 
+        data-app="workbench/viper" 
+        data-api="records/get"
+        {% if request.in_generate_mode %}
+        {% with page.component.model as page_model %}
+        data-args='{"app":"{{project.inner_name}}", "module":"{{page_model.module}}", "resource":"{{target_resource.resource}}", "project_id":"apps:{{project.inner_name}}:0", "target_fields":"{{component.model.target_fields}}", "submit_redirect_to":"{{page_model.title}}", "store_engine":"{{page_model.storeEngine}}", "model_class":"{{target_resource.className}}"}'
+        {% endwith %}
+        {% else %}
+        data-args='{"page_id":"{{component.model.target}}", "project_id":"{{project_id}}", "target_fields":"{{component.model.target_fields}}", "submit_redirect_to":"{{page.page_id}}"}' 
+        {% endif %}
+        data-template-id="#table-{{component.cid}}-view"
+        data-init-sort="{% if component.model.is_list_item_order_by_asc == 'yes' %}display_index{% else %}-display_index{% endif %}"  
+        {% if component.model.is_enable_paginate == 'yes' %}
+        data-enable-paginator='true'
+        data-item-count-per-page='{{component.model.count_per_page}}'
+        {% else %} 
+        data-enable-paginator='false'
+        {% endif %}
+        {% if component.model.is_list_item_sortable == 'yes' %}
+        data-enable-sort="true" 
+        data-sort-api="record_display_index/update" 
+        {% endif %}
+    >
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+
+<script id="table-{{component.cid}}-view" type="text/x-jquery-tmpl">
+    <table class="table table-bordered table-condensed table-hover">
+        <thead>
+            <tr>
+            {{ component|join_sub_components_html|safe }}
+            </tr>
+        </thead>
+        <tbody>
+            {% verbatim %}
+            <!-- begin verbatim -->
+            {{each(i, row) items}}
+            <tr data-id=${row.meta_data.id}>
+            {{each(j, data) row.data}}
+            <td {{if (j === row.data.length-1) }}width="30px"{{/if}}>{{html data}}</td>
+            {{/each}}
+            </tr>
+            {{/each}}
+            <!-- end verbatim -->
+            {% endverbatim %}
+        </tbody>
+    </table>
+</script>
+<!-- <===== viper:table component -->
+{% endifequal %}  

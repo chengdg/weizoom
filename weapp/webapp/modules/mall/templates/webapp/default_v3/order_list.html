@@ -1,0 +1,545 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<style>
+.ui-page,.ui-content{
+    background: none repeat scroll 0 0 #fff;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-orderListPage xui-page wui-swiper">
+    <div class="wui-swiper-tabs">
+        <a href="javascript:void(0)" status="-1" class="wui-inner-active"><span class="wui-inner-tabTitle">全部订单</span><i></i></a>
+        <a href="javascript:void(0)" status="0"><span class="wui-inner-tabTitle">待支付</span><i></i></a>
+        <a href="javascript:void(0)" status="3"><span class="wui-inner-tabTitle">待发货</span><i></i></a>
+        <a href="javascript:void(0)" status="4"><span class="wui-inner-tabTitle">待收货</span></a>
+    </div>
+    <div class="wui-swiper-container" style="margin-top:43px;background:#f0f0f0;">
+        <div class="wui-swiper-wrapper">
+            <div class="wui-swiper-slide" id="xa-wrapper">
+                <div class="xui-list mb40 xt-orderList">
+                    <ul>
+                        {% for order in orders %}
+                        <li>
+                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
+                                <div class="clearfix xui-btLine xui-orderState  em95">
+                                    <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                    <div class="xt-status fl">
+                                        {% ifequal order.status 0 %}
+                                            <span class="xui-text-red">待支付</span>
+                                        {% endifequal %}
+                                        {% ifequal order.status 1 %}
+                                            <span class="c3">已取消</span>
+                                        {% endifequal %}
+                                        {% ifequal order.status 3 %}
+                                            <span class="xui-text-red">待发货</span>
+                                        {% endifequal %}
+                                        {% ifequal order.status 4 %}
+                                            <span class="xui-text-red">待收货</span>
+                                        {% endifequal %}
+                                        {% ifequal order.status 5 %}
+                                            <span class="c3">已完成</span>
+                                        {% endifequal %}
+                                        {% ifequal order.status 6 %}
+                                            <span class="c3">退款中</span>
+                                        {% endifequal %}
+                                        {% ifequal order.status 7 %}
+                                            <span class="c3">已取消</span>
+                                        {% endifequal %}
+                                    </div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                                </div>
+                                {% if order.get_products|length >= 2 %}
+                                <div class="xui-userCenterOrderInfo">
+                                   <div class="xui-userCenterOrderProductImgList fl">
+                                        {% for has_product in order.get_products %}
+                                         <div class="xui-productImg">
+                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}" />
+                                            {% else %}
+                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                            {% endifequal%}
+                                         </div>
+                                         {% endfor %}
+                                    </div>
+                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                </div>
+                                {% else %}
+                                    {% for has_product in order.get_products %}
+                                    <div class="clearfix pt10 pb10 xui-selectedProductList">
+                                        <div class="xui-selectedProductList-productImg">
+                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}" />
+                                            {% else %}
+                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                            {% endifequal%}
+
+                                        </div>
+                                        <div class="xui-selectedProductList-productInfo">
+                                            <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
+                                            {% if has_product.get_specific_model %}
+                                            <div class="em8 clearfix c9 pt10">
+                                            {% for property in has_product.get_specific_model %}
+                                            <span class="fl mr10">{{ property.property_value }}</span>
+                                            {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            <div class="em9 clearfix c9 em65 xui-productNum">
+                                                {% if is_delivery_plan %}
+                                                    <span >￥{{order.final_price}}</span>
+                                                {% else %}
+                                                    <!-- 积分商品 -->
+                                                    {% if order.type == "integral" %}
+                                                        <span>{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+
+                                                    <!-- 普通商品 -->
+                                                    {% else %}
+                                                        <span class="mr5">Ｘ{{ has_product.number }}</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <div class="pr15 xui-bottomBtn xui-tPLine tl">
+                                    <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
+                                    <span class="xui-button">
+                                        {% ifequal order.status 0 %}
+                                            <a href="javascript:void(0);" class="xui-forPay-btn xui-cancel update_order_cancel tc" data-id="{{order.id}}">取消订单</a>
+                                            <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=pay_interfaces&action=list&order_id={{order.id}}&ignore_template=1" class="xui-forPay-btn xui-topay tc">支付</a>
+                                        {% endifequal %}
+
+                                        {% ifequal order.status 4 %}
+                                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
+                                            {% if order.session_data.has_comfire_button %}
+                                            <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc" data-id="{{order.id}}">确认收货</a>
+                                            {% endif %}
+                                        {% endifequal %}
+
+                                        {% if order.status == 5 and not is_weizoom_mall %}
+                                           {%if order.review_is_finished%}
+                                           <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product_review_list&action=get&member_id={{request.member.id}}" class="xui-reviewBtn xui-comment tc" data-id="{{order.id}}">查看评价</a>
+                                           {%else%}
+                                           <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_review_list&action=get" class="xui-reviewBtn xui-review tc" data-id="{{order.id}}">发表评价</a>
+                                           {%endif%}
+                                        {% endif %}
+                                </span>
+
+                                </div>
+                            </a>
+                        </li>
+
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="xa-emptyOrder hidden">
+                    <div class="xui-errorInfo xa-errorInfo"></div>
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
+                </div>
+
+            </div>
+            <div class="wui-swiper-slide">
+                <div class="xui-list mb40 xt-orderList">
+                    <ul>
+                        {% for order in orders %}
+                        {% ifequal order.status 0 %}
+                        <li>
+                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
+                                <div class="clearfix xui-btLine  xui-orderState  em95">
+                                    <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                    <div class="xt-status fl">
+                                        <span class="xui-text-red">待支付</span>
+                                    </div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                                </div>
+                                 {% if order.get_products|length >= 2 %}
+                                <div class="xui-userCenterOrderInfo">
+                                   <div class="xui-userCenterOrderProductImgList fl">
+                                        {% for has_product in order.get_products %}
+                                         <div class="xui-productImg">
+                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% else %}
+                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                            {% endifequal%}
+
+                                         </div>
+                                         {% endfor %}
+                                    </div>
+                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                </div>
+                                {% else %}
+                                    {% for has_product in order.get_products %}
+                                    <div class="clearfix pt10 pb10 xui-btLine xui-selectedProductList">
+                                        <div class="xui-selectedProductList-productImg">
+                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% else %}
+                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                            {% endifequal%}
+                                        </div>
+                                        <div class="xui-selectedProductList-productInfo">
+                                            <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
+                                            {% if has_product.get_specific_model %}
+                                            <div class="em8 clearfix c9 pt10">
+                                            {% for property in has_product.get_specific_model %}
+                                            <span class="fl mr10">{{ property.property_value }}</span>
+                                            {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            <div class="em9 clearfix c9 em65 xui-productNum">
+                                                {% if is_delivery_plan %}
+                                                    <span class="fl">￥{{order.final_price}}</span>
+                                                {% else %}
+                                                    <!-- 积分商品 -->
+                                                    {% if order.type == "integral" %}
+                                                        <span class="fl">{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+
+                                                    <!-- 普通商品 -->
+                                                    {% else %}
+                                                        <span class="fl">Ｘ{{ has_product.number }}</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <div class="pr15 xui-bottomBtn tl">
+                                     <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
+                                     <span class="xui-button">
+                                        <a href="javascript:void(0);" class="xui-forPay-btn xui-cancel update_order_cancel tc" data-id="{{order.id}}">取消订单</a>
+                                        <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=pay_interfaces&action=list&order_id={{order.id}}&ignore_template=1" class="xui-forPay-btn xui-topay tc">支付</a>
+                                     </span>
+                                </div>
+                            </a>
+                        </li>
+                        {% endifequal %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="xa-emptyOrder hidden">
+                    <div class="xui-errorInfo xa-errorInfo"></div>
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
+                </div>
+            </div>
+            <div class="wui-swiper-slide">
+                <div class="xui-list mb40 xt-orderList">
+                <ul>
+                    {% for order in orders %}
+                    {% ifequal order.status 3 %}
+                    <li>
+                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
+                            <div class="clearfix xui-btLine xui-orderState  em95">
+                                <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                <div class="xt-status fl">
+                                    <span class="xui-text-red">待发货</span>
+                                </div>
+                                <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                            </div>
+                             {% if order.get_products|length >= 2 %}
+                                <div class="xui-userCenterOrderInfo">
+                                   <div class="xui-userCenterOrderProductImgList fl">
+                                        {% for has_product in order.get_products %}
+                                         <div class="xui-productImg">
+                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% else %}
+                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                            {% endifequal%}
+                                         </div>
+                                         {% endfor %}
+                                    </div>
+                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                </div>
+                            {% else %}
+                                {% for has_product in order.get_products %}
+                                <div class="clearfix pt10 pb10 xui-btLine xui-selectedProductList">
+                                    <div class="xui-selectedProductList-productImg">
+                                        {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                         <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                        {% else %}
+                                         <img src="{{has_product.product.thumbnails_url}}" />
+                                        {% endifequal%}
+                                    </div>
+                                    <div class="xui-selectedProductList-productInfo">
+                                        <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
+                                        {% if has_product.get_specific_model %}
+                                        <div class="em8 clearfix c9 pt10">
+                                        {% for property in has_product.get_specific_model %}
+                                        <span class="fl mr10">{{ property.property_value }}</span>
+                                        {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                        <div class="em9 clearfix c9 em65 xui-productNum">
+                                            {% if is_delivery_plan %}
+                                                <span class="fl">￥{{order.final_price}}</span>
+                                            {% else %}
+                                                <!-- 积分商品 -->
+                                                {% if order.type == "integral" %}
+                                                    <span class="fl">{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+
+                                                <!-- 普通商品 -->
+                                                {% else %}
+                                                    <span class="fl">Ｘ{{ has_product.number }}</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="pr15 xui-bottomBtn tl">
+                                <span class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></span>
+                            </div>
+                        </a>
+                    </li>
+                    {% endifequal %}
+                    {% endfor %}
+                </ul>
+                </div>
+               <div class="xa-emptyOrder hidden">
+                    <div class="xui-errorInfo xa-errorInfo"></div>
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
+                </div>
+            </div>
+            <div class="wui-swiper-slide">
+                <div class="xui-list mb40 xt-orderList">
+                    <ul>
+                    {% for order in orders %}
+                        {% ifequal order.status 4 %}
+                        <li>
+                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
+                                <div class="clearfix xui-btLine xui-orderState  em95">
+                                    <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                    <div class="xt-status fl">
+                                        <span class="xui-text-red">已发货</span>
+                                    </div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                                </div>
+                                 {% if order.get_products|length >= 2 %}
+                                <div class="xui-userCenterOrderInfo">
+                                   <div class="xui-userCenterOrderProductImgList fl">
+                                        {% for has_product in order.get_products %}
+                                         <div class="xui-productImg">
+                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% else %}
+                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                            {% endifequal%}
+
+                                         </div>
+                                         {% endfor %}
+                                    </div>
+                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                </div>
+                                {% else %}
+                                    {% for has_product in order.get_products %}
+                                    <div class="clearfix pt10 pb10 xui-btLine xui-selectedProductList">
+                                        <div class="xui-selectedProductList-productImg">
+                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% else %}
+                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             {% endifequal %}
+
+                                        </div>
+                                        <div class="xui-selectedProductList-productInfo">
+                                            <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
+                                            {% if has_product.get_specific_model %}
+                                            <div class="em8 clearfix c9 pt10">
+                                            {% for property in has_product.get_specific_model %}
+                                            <span class="fl mr10">{{ property.property_value }}</span>
+                                            {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            <div class="em9 clearfix c9 em65 xui-productNum">
+                                                {% if is_delivery_plan %}
+                                                    <span class="fl">￥{{order.final_price}}</span>
+                                                {% else %}
+                                                    <!-- 积分商品 -->
+                                                    {% if order.type == "integral" %}
+                                                        <span class="fl">{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+
+                                                    <!-- 普通商品 -->
+                                                    {% else %}
+                                                        <span class="fl">Ｘ{{ has_product.number }}</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                                 <div class="pr15 xui-bottomBtn tl">
+                                    <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
+                                    <span class="xui-button">
+                                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
+                                        {% if order.session_data.has_comfire_button %}
+                                        <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc"  data-id="{{order.id}}">确认收货</a>
+                                        {% endif %}
+
+                                    </span>
+                                </div>
+                            </a>
+                        </li>
+                        {% endifequal %}
+                        {% endfor %}
+                    </ul>
+                </div>
+               <div class="xa-emptyOrder hidden">
+                    <div class="xui-errorInfo xa-errorInfo"></div>
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function($) {
+    var bodyWidth = window.document.body.clientWidth;
+    var bodyHeight = window.document.body.clientHeight;
+    var containerHeight = bodyHeight - 40;
+    $(".wui-swiper-container").css('height',containerHeight);
+    $(".wui-swiper-slide").css('height', containerHeight );
+    $("body").css('overflow-y', 'hidden');
+
+    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+    var tabsSwiper = new Swiper('.wui-swiper-container',{
+        speed:500,
+        onSlideChangeStart: function() {
+            $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+            $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+
+            var $el = $('.wui-swiper-slide-active');
+            var $info = $el.find('.xa-emptyOrder');
+            if($info.css('display') == 'block'){
+                $el.css('background','#fff');
+                // $el.parents('.wui-swiper-container').css('background','#fff');
+                // $el.parents('.wui-swiper-wrapper').css('background','#fff');
+            };
+        }
+    });
+
+    // var myscroll;
+    // function loaded(){
+    //     myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+    // }
+    // window.addEventListener("load",loaded,false);
+
+    var type = "{{status_type}}";
+    if (type === "0"){
+        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+        $(".wui-swiper-tabs a[status='1']").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+        tabsSwiper.swipeTo(1);
+    }
+
+    if (type === "3"){
+        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+        $(".wui-swiper-tabs a[status='3']").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+        tabsSwiper.swipeTo(2);
+    }
+
+    if (type === "4"){
+        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+        $(".wui-swiper-tabs a[status='4']").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+        tabsSwiper.swipeTo(3);
+    }
+
+    $(".wui-swiper-tabs a").on('touchstart mousedown',function(e){
+        e.preventDefault();
+        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+        $(this).addClass('wui-inner-active');
+        tabsSwiper.swipeTo($(this).index());
+    });
+    /* 点击确认收货 */
+
+    $('.xa-receipt').click(function(event) {
+        var receipt = confirm("是否确认收货？")
+        if (receipt==true){
+            $('body').alert({
+                isShow: true,
+                info:'正在确认收货...',
+                speed: 2000
+            });
+            var action = 'finish-客户';
+            var args = {order_id: $(this).attr('data-id'), 'action': action};
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    webapp_owner_id: W.webappOwnerId,
+                    module: 'mall',
+                    target_api: 'order_status/update'
+                }, args),
+                success: function(data) {
+                    window.location.reload();
+                },
+                error: function(resp) {
+                    $('body').alert({
+                        isShow: true,
+                        speed:2000
+                    });
+                }
+            });
+        }
+    });
+    /**
+     * 是否为空的数据
+     */
+    $(".wui-swiper-slide").each(function(){
+        var $el = $(this);
+        var length = $el.find('li').length;
+        if (length === 0) {
+            $el.find('.xa-emptyOrder').show();
+        }
+    })
+    $('.update_order_cancel').click(function() {
+        var cancel = confirm("确定取消订单？")
+        if (cancel==true){
+            $('body').alert({
+                isShow: true,
+                info:'正在取消订单...',
+                speed: 200000
+            });
+            var action = 'cancel-客户';
+            var args = {order_id: $(this).attr('data-id'), 'action': action};
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    webapp_owner_id: W.webappOwnerId,
+                    module: 'mall',
+                    target_api: 'order_status/update'
+                }, args),
+                success: function(data) {
+                    window.location.reload();
+                },
+                error: function(resp) {
+                    $('body').alert({
+                        isShow: true,
+                        info: resp.data['msg'],
+                        speed:2000
+                    });
+                }
+            });
+        }
+    });
+
+    var $el = $('.wui-swiper-slide-active');
+    var $info = $el.find('.xa-emptyOrder');
+    if($info.css('display') == 'block'){
+       $el.css('background','#fff');
+    }
+});
+</script>
+{% endblock %}

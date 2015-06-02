@@ -1,0 +1,265 @@
+{% extends "base_v2.html" %}
+{% load project_filter %}
+{% load account_filter %}
+
+{% block content %}
+<div id="spin-wrapper">
+	<div id="spin"></div>
+	<div id="spin-hint" class="ml10"></div>
+</div>
+<div id="main-mask"></div>
+
+
+<div class="xui-header">
+	<div class="xui-i pr">
+		<div class="xui-logo">
+			<div class="xui-i-logoHref xa-i-logoHref"></div>
+			{% if first_navs %}
+				<img src="/static_v2/img/editor/weixinTopLogo.jpg" alt="">
+			{% else %}
+				<img src="/static_v2/img/editor/topLogo.jpg" alt="">
+			{% endif %}
+		</div>
+		<span class="xui-systemName"></span>
+		
+	</div>
+	<div class="xui-navBar xa-navBar">
+		<div class="xui-i pr">
+			<ul class="xui-navBar-box clearStyle">
+				{% if first_navs %}
+					{% for nav in first_navs %}
+					<li>
+						<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href='{{nav.url}}' title='{{nav.name}}'>{{nav.name}}</a>
+					</li>
+					{% endfor %}
+				{% else %}
+					<li>
+						<a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/mall/outline/get/' title='首页'>首页</a>
+					</li>
+					{% if 'manage_product'|satisfy_permission:request %}
+					<li>
+						<a {% ifequal first_nav_name 'product' %}class="active"{% endifequal %} href='/mall/onshelf_products/get/' title='商品管理'>商品管理</a>
+					</li>
+					{% endif %}
+					<li>
+						<a {% ifequal first_nav_name 'order' %}class="active"{% endifequal %} href='/mall/orders/get/' title='订单管理'>订单管理</a>
+					</li>
+					{% if 'manage_promotion'|satisfy_permission:request %}
+					<li>
+						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall_promotion/promotion_list/get/' title='促销管理'>促销管理</a>
+					</li>
+					{% endif %}
+					<li>
+						<a {% ifequal first_nav_name 'member' %}class="active"{% endifequal %} href='/member/members/get/' title='会员管理'>会员管理</a>
+					</li>
+					<li>
+						<a href='http://tj.weizzz.com/' target='_blank' title='数据统计'>数据统计</a>
+					</li>
+					{% if 'manage_mall_config'|satisfy_permission:request %}
+					<li>
+						<a {% ifequal first_nav_name 'config' %}class="active"{% endifequal %} href='/mall/pay_interfaces/get/' title='配置管理'>配置管理</a>
+					</li>
+					{% endif %}
+					
+				{% endif %}
+			</ul>
+			<div class="xui-headerActionBar" style="bottom:40px">
+				<span class="mr10">
+					<span class="">帮助中心</span>
+					<span class=" ml5">|</span>
+					<span class=" ml5">服务热线</span>
+					<span class=" ml5">400-688-6929</span>
+			</div>
+			<div class="xui-headerActionBar">
+				<span class="mr10">
+					<span class="">{{ request.user.username }}</span>
+					<span class=" ml5">-</span>
+					<span title="{{ request.user.username }}" class="xui-i-userName ml5">
+					<a href="/logout/">退出</a>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="" class="xui-mainPanel">
+	<div class="xui-container pr">
+		<!-- 左侧垂直方向二级导航 -->
+		<!-- <div class="row"> -->
+			{% if second_navs %}
+			<div id="" class="xui-sideBar xa-sideBar pa {% if second_navs %}xui-sideBarBg{% endif %}">
+				<ul class="nav">
+				{% for second_nav in second_navs %}
+					<!-- {% if second_nav.section %}
+					<li><span>1111{{ second_nav.section }}</span></li>
+					{% endif %} -->
+					{% for nav in second_nav.navs %}
+					{% if nav|satisfy_permission:request %}
+						{% if not forloop.last %} 
+						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+						<i class="xui-icon-arrow"></i>
+						</a>
+					   </li>
+						{% else %}
+					    <li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+						{% if nav.name != 'orderBatchDelivery' %}
+						<i class="xui-icon-arrow"></i>
+						{% endif %}
+						</a>
+					   </li>
+						{% endif %}
+					
+					{% endif %}
+					{% endfor %}
+				{% endfor %}
+				</ul>
+			</div>
+			<!-- 内容 start -->
+			<div class="span9 pr xui-content" style="">
+				{% block content-panel %}{% endblock %}
+			</div>
+			<!-- 内容 end -->
+			{% else %}
+				<!-- 内容 start -->
+				{% block single-content-panel %}{% endblock %}
+				<!-- 内容 end -->
+			{% endif %}
+		<!-- </div> -->
+	</div>
+</div>
+
+<div class="footer xui-footer">
+	<div class="xui-i" style="">
+		<!-- <span>
+			<a target="_blank" href="http://www.weizoom.com">关于微众</a>&nbsp;|&nbsp;
+			<a href="http://bizapp.qq.com/webc.htm?new=0&sid=800051878&eid=&o=http://www.weizoom.com/&q=7&ref=http://www.weizoom.com/" target="_blank">在线客服</a>&nbsp;|&nbsp;
+			<a target="_blank" href="mailto:service@weizoom.com">联系邮箱</a>
+		</span> -->
+		<span>Copyright&nbsp;&copy; 2012-2015 weizoom.com 微众传媒 版权所有&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.weizoom.com">微众传媒</a> 旗下微众云商通</span>
+	</div>
+</div>
+
+{% block global_elements %}{% endblock %}
+{% endblock %}
+
+{% block base_js %}
+<!-- start of ueditor -->
+<script type="text/javascript">
+	window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
+</script>
+<script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
+<!-- end of ueditor -->
+
+<div id="jsons" style="display: none;">
+	{% for json in jsons %}
+	<div id="__json-{{json.name}}">
+		{{json.content|format_json|ltgt_translate|safe}}
+	</div>
+	{% endfor %}
+</div>
+
+<script type="text/javascript">
+	W.uid = {{ user.id }};
+	W.mid = {{ request.manager.id }};
+	W.username = "{{ user.username }}";
+	W.host = "{{request.META.HTTP_HOST}}";
+	W.API_VERSION = 1;
+	W.isUnderDevelop = {% if under_develop %}true{% else %}false{% endif %};
+
+	{% if preview_info %}
+      W.previewName = "{{ preview_info.name }}";
+      W.previewImage = "{{ preview_info.image_path }}";
+    {% else %}
+      W.previewName = "信息预览";
+      W.previewImage = "/static/img/user-1.jpg";
+    {% endif %}
+    
+</script>
+ <script type="text/javascript">
+
+	$(document).ready(function($) {
+// 	var scrollLeft = $(this).scrollLeft();
+// 	if(scrollLeft != 0){
+// 		$('.xa-sideBar').css('position', 'absolute');
+// 	}else{
+// 		$('.xa-sideBar').css('position', 'fixed');
+// 	}
+// 	if($('.xa-sideBar').length !== 0){
+// 		$(document).scroll(function(event) {
+// 			var scrollLeft = $(this).scrollLeft();
+// 			if(scrollLeft != 0){
+// 				$('.xa-sideBar').css('position', 'absolute');
+// 			}else{
+// 				$('.xa-sideBar').css('position', 'fixed');
+// 			}
+// 		});
+// 	}
+		// 导航右边线选中无
+		$('.xui-navBar a.active').parent('li').prev().children('a').addClass('xui-rightBorder');
+
+	});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function($) {
+	// 批量发货
+	$('a[name="orderBatchDelivery"]').click(function(event){
+		W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
+		    success: function(data) {
+    			// W.getLoadingView().show();
+
+				W.getApi().call({
+					app: 'mall',
+					api: 'bulk_shipments/update',
+					method: 'post',
+					args: {
+						file_url: data
+					},
+					success: function(data) {
+						console.log('bulk_shipments/update', data.error_count);
+						if (data.error_count == 0) {
+							W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
+							W.getLoadingView().hide();
+						} else {
+							W.dialog.showDialog('W.dialog.common.OrderResultBatchDeliverDialog', {
+									data: data,
+									success: function(data) {},
+									error: function(data) {}
+								});
+						}
+
+					},
+					error: function(resp) {
+						W.getLoadingView().hide();
+						W.getErrorHintView().show('处理失败，请稍后重试！');
+					}
+				})
+		    }
+		});
+		
+
+
+
+	});
+
+	$('.xa-i-logoHref').click(function(event){
+		location.href = "http://fans.weizoom.com";
+	});
+
+	//让这三个临时标签在新页面打开 duhao 20150512
+	$(".xa-navBar a[title='账号信息']").attr('target', '_blank');
+	$(".xa-navBar a[title='百宝箱']").attr('target', '_blank');
+	$(".xa-navBar a[title='模板']").attr('target', '_blank');
+
+	//添加token参数
+	$(".xa-navBar a[title='数据统计']").attr('href', 'http://tj.weizzz.com/?token=' + "{{request.user_token}}");
+});
+</script>
+{% block js %}{% endblock %}
+{% endblock %}

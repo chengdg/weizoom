@@ -1,0 +1,329 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/mall/editor/mall_settings/">支付方式设置</a><span class="divider">/</span></li>
+	<li class="active">{% if postage_config %}更新{% else %}添加{% endif %}支付方式</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<!-- 通用配置 -->
+		<div id="generalConfig">
+			<div class="control-group">
+				<label class="control-label" for="type">支付类型：</label>
+				<div class="controls">
+					<select name="type" id="type" {% if pay_interface %}disabled="disabled"{% endif %}>
+						{% for avaliable_pay_interface in pay_interfaces %}
+						<option 
+							data-target="{{avaliable_pay_interface.name}}" 
+							id="{{avaliable_pay_interface.name}}"
+							value="{{avaliable_pay_interface.type}}" 
+							{% if avaliable_pay_interface.type == pay_interface.type %}selected="selected"{% endif %} 
+						>{{avaliable_pay_interface.name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="description">备注：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="description" name="description" placeholder="最多18个字符" value="{{ pay_interface.description }}" maxlength="18"/>
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="is_active">是否启用：</label>
+				<div class="controls">
+					<label class="radio inline">
+						<input 
+							type="radio" 
+							name="is_active" 
+							value="true" 
+							{% if not pay_interface %}checked="checked"{% endif %}
+							{% if pay_interface.is_active %}checked="checked"{% endif %}
+						/>启用
+					</label>
+					<label class="radio inline">
+						<input 
+							type="radio" 
+							name="is_active" 
+							value="false" 
+							{% if pay_interface %}
+							{% if not pay_interface.is_active %}checked="checked"{% endif %}
+							{% endif %}
+						/>停用
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<!-- 支付宝配置 -->
+		<div id="alipayConfig" class="x-configZone hide" data-name="支付宝">
+			{% with pay_interface.related_config as alipay_config %}
+			<div class="control-group">
+				<label class="control-label" for="partner">接口类型：</label>
+				<div class="controls">
+					<label class="pt5">即时到帐交易接口</label>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="partner">合作身份者ID：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="partner" name="partner" placeholder="以2088开头由16位纯数字组成的字符串" value="{% if alipay_config %}{{ alipay_config.partner }}{% endif %}" />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="key">交易安全检验码：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="key" name="key" placeholder="由数字和字母组成的32位字符串" value="{% if alipay_config %}{{ alipay_config.key }}{% endif %}" />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="ali_public_key">支付宝公钥：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="ali_public_key" name="ali_public_key" placeholder="" value="{% if alipay_config %}{{ alipay_config.ali_public_key }}{% endif %}" />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="private_key">商户私钥：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="private_key" name="private_key" placeholder="" value="{% if alipay_config %}{{ alipay_config.private_key }}{% endif %}" />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="seller_email">邮箱：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="seller_email" name="seller_email" placeholder="" value="{% if alipay_config %}{{ alipay_config.seller_email }}{% endif %}"/>
+					<div class="errorHint"></div>
+				</div>
+			</div>
+			{% endwith %}
+		</div>
+
+		<!-- 财付通配置 -->
+		<div id="tenpayConfig" class="x-configZone hide" data-name="财付通">
+			{% with pay_interface.related_config as tenpay_config %}
+			<div class="control-group">
+				<label class="control-label" for="tenpay_partner">合作商户号：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="tenpay_partner" name="tenpay_partner" placeholder="财付通分配给您的10位数字" value="{% if tenpay_config %}{{ tenpay_config.partner }}{% endif %}" />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="tenpay_key">交易密钥：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="tenpay_key" name="tenpay_key" placeholder="" value="{% if tenpay_config %}{{ tenpay_config.key }}{% endif %}" />
+					<div class="errorHint"></div>
+				</div>
+			</div>
+			{% endwith %}
+		</div>
+
+		<!-- 微信支付配置 -->
+		<div id="weixinPayConfig" class="x-configZone hide" data-name="微信支付">
+			{% with pay_interface.related_config as weixin_pay_config %}
+
+			<div class="control-group">
+     		<label class="control-label" for="app_id">接口版本：</label>
+     		<div class="controls">
+		     	<select class="span2"  value="{{weixin_pay_config.pay_version}}" id="pay_version" name = "pay_version">
+			        <option class = "pay_version_option" value="0" {% ifequal  weixin_pay_config.pay_version 0 %}selected{% endifequal %}>V2</option>
+			        <option class = "pay_version_option" value="1" {% ifequal  weixin_pay_config.pay_version 1 %}selected{% endifequal %}>V3</option>
+		      	</select>
+		    </div>
+		    </div>
+			<div class="control-group">
+				<label class="control-label" for="app_id">微信公众号AppId：</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="app_id" name="app_id" value="{% if weixin_pay_config %}{{ weixin_pay_config.app_id }}{% endif %}" data-validate="required-none"/>
+					<div class="errorHint"></div>
+				</div>
+			</div>
+
+			<div class='{% if weixin_pay_config %}{% if weixin_pay_config.pay_version == 0 %}{% else %}hide{% endif %}{% endif %}' id = "v2">
+				<div class="control-group">
+					<label class="control-label" for="partner_id">合作商户Id：</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" id="partner_id" name="partner_id" value="{% if weixin_pay_config.pay_version == 0 %}{{ weixin_pay_config.partner_id }}{% endif %}" data-validate="required-none"/>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="partner_key">合作商户密钥：</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" id="partner_key" name="partner_key" value="{% if weixin_pay_config.pay_version == 0 %}{{ weixin_pay_config.partner_key }}{% endif %}" data-validate="required" data-validate-max-length="32" data-validate-min-length="1"/>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="paysign_key">支付专用签名串：</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" id="paysign_key" name="paysign_key" value="{% if weixin_pay_config.pay_version == 0 %}{{ weixin_pay_config.paysign_key }}{% endif %}" data-validate="required-none"/>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+		</div>
+		<div class="{% if weixin_pay_config.pay_version == 1 %}{% else %}hide{% endif %}" id = "v3">
+				<div class="control-group">
+					<label class="control-label" for="app_secret">微信公众号AppSecret：</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" id="app_secret" name="app_secret" value="{% if weixin_pay_config.pay_version == 1 %}{{ weixin_pay_config.app_secret }}{% endif %}" data-validate="required-none"/>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="mch_id">商户号MCHID：</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" id="mch_id" name="mch_id" value="{% if weixin_pay_config.pay_version == 1 %}{{ weixin_pay_config.partner_id }}{% endif %}" data-validate="required-none"/>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="api_key">APIKEY密钥：</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" id="api_key" name="api_key" value="{% if weixin_pay_config.pay_version == 1 %}{{ weixin_pay_config.partner_key }}{% endif %}" data-validate="required" data-validate-max-length="32" data-validate-min-length="1"/><span><a href='http://pay.weixin.qq.com' target='_blank'>微信商户平台获取</a><span>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+
+			
+		</div>
+			{% endwith %}
+		</div>
+
+		<!-- 微信支付配置 -->
+		<div id="codConfig" class="x-configZone hide" data-name="货到付款">
+			<div class="control-group">
+				<label class="control-label" for="partner">货到付款：</label>
+				<div class="controls">
+					请与快递公司协商收款事宜
+				</div>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+				{% if pay_interface %}
+				{% if not pay_interface.is_active %}
+				<input type="button" class="btn btn-danger wx_delete" id="deleteBtn" value="删&nbsp;&nbsp;除" href="/mall/editor/pay_interface/delete/{{pay_interface.id}}/" />
+				{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var currentTarget = "";
+
+	function getActivePay() {
+		var type = $('select[name="type"]').val();
+		var $option = $('option[value="'+type+'"]');
+		var target = $option.attr('data-target');
+		return target;
+	}
+
+	function showActivePay() {
+		var activePay = getActivePay();
+
+		$('.x-configZone').hide();
+		$('.errorHint').text('');
+		var selector = '[data-name="'+activePay+'"]';
+		$(selector).show();
+	}
+
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+		
+		function getActivePayId(activePay) {
+			var ActivePayId = '';
+			if (activePay==="微信支付"){
+				ActivePayId = 'weixinPayConfig';
+			}
+			return ActivePayId;
+		};
+
+		$('select[name="pay_version"]').change(function(event) {
+			var target = $(event.currentTarget);
+			var value = target.attr('value');
+			if (value == '0') {
+				$("#v2").show();
+				$("#v3").hide();
+			} else {
+				$("#v3").show();
+				$("#v2").hide();
+			}
+		});
+		var pay_version = $('#pay_version').val();
+		if (pay_version == '0') {
+				$("#v2").show();
+				$("#v3").hide();
+			} else {
+				$("#v3").show();
+				$("#v2").hide();
+			}
+		//提交
+
+		$('#editForm').submit(function() {
+			var activePay = getActivePay();
+			var validateResult = W.validate($('#generalConfig'));
+			xlog('active pay: ' + activePay);
+			if (activePay) {
+				xlog('validate ha');
+				validateResult &= W.validate($('#'+activePay));
+			}
+			if (activePay==="微信支付"){
+				validateResult = W.validate($('#'+getActivePayId(activePay)))
+			}
+			
+			if (!validateResult) {
+				return false;
+			}
+
+			return true;
+		});
+
+		$('select[name="type"]').change(function(event) {
+			showActivePay();
+		});
+
+		showActivePay();
+	});
+</script>
+{% endblock %}

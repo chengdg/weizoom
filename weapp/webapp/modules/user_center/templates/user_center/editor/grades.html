@@ -1,0 +1,65 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">会员等级</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/webapp/user_center/grade/create/"><i class="icon-plus
+		icon-white"></i>添加等级</a>
+	</span>
+</div>
+
+<div>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>等级名称</th>
+				<th>组会员数</th>
+				<th>需要经验</th>
+				<th>购物折扣</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for grade in member_grades %}
+			<tr data-id="{{ grade.id }}">
+				<td class="w150">
+					<a href="/webapp/user_center/grade/update/{{ grade.id }}/">{{ grade.name }}</a>
+				</td>
+				<td>
+					{{ grade.member_count }}
+				</td>
+				<td>
+					{% if grade.is_auto_upgrade %}
+						{{ grade.upgrade_lower_bound }}
+					{% else %}
+						-
+					{% endif %}
+				</td>
+				<td>
+					{{ grade.shop_discount }}%
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+ var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+	$(document).ready(function() {
+			if (shouldShowAuthorizeCover) {
+				W.view.showAuthorizeCover({
+					hint: '您还没有该功能的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+					doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
+				});
+			}
+	});
+</script>
+{% endblock %}

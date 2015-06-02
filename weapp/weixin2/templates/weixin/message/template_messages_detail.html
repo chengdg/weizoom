@@ -1,0 +1,119 @@
+{% extends "content_base_v2.html" %}
+{% block content-panel %}
+<div class="xui-weixin-template_messagesPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/new_weixin/realtime_messages/">消息互动</a></li>
+            <li class="active">模板消息</li>
+        </ul>
+    </div>
+
+    <form class="form-horizontal xui-formPanel" method="post" id="editForm">
+        <div class="ml5 mb10 mt10">
+            <span class="xui-bold f12 fb ml10 ">模板详情：</span><span class="f12 ml10">{{ message_detail.template_message.title }}</span>
+        </div>
+        <div class="mt10 ml5 mb10">
+            <span class="xui-bold f12 fb ml10">内容详情：</span>
+            <fieldset style="margin-top: -16px;margin-left:70px;">
+                <input type="hidden" name="id" value="{{message_detail.id}}" />
+                <div class="form-group">
+                    <label class="fl control-label tr star_show">模板ID：</label>
+                    <div class="fl controls xa-parentAddbox pr">
+                        <input type="text" class="input-xlarge form-control w180" name="tid" {% if message_detail %}value="{{message_detail.template_id}}"{% endif %} data-validate="require-notempty" placeholder="输入模板ID" /><img class="ml20 xa-showIntroduction" src="/static_v2/img/weixin/wenhao.png">
+                        <div class="errorHint"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="fl control-label tr star_show">first（开头语）：</label>
+                    <div class="fl fl controls">
+                        <input type="text" class="input-xlarge form-control w180" name="first" {% if message_detail %}value="{{message_detail.first_text}}"{% endif %} data-validate="require-notempty" placeholder="输入first内容" />
+                        <div class="errorHint"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="fl control-label tr star_show">remark（结尾语）：</label>
+                    <div class="fl controls">
+                        <input type="text" class="input-xlarge form-control w180" {% if message_detail %}value="{{message_detail.remark_text}}"{% endif %} name="remark" data-validate="require-notempty" placeholder="输入remark内容" />
+                        <div class="errorHint"></div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <legend></legend>
+        <div class="ml5 mb10">
+            <span class="xui-bold f12 fb ml10">内容示例：</span>
+            <fieldset class="ml110" style="margin-top: -20px;">
+                <div class="xui-contentItem">
+                    <label class="control-label tr w70">first：</label>
+                    <span class="mt5">我们已收到您的货款，开始为您打包商品，请耐心等待: )</span>
+                </div>
+                <div class="xui-contentItem">
+                    <label class="control-label tr w70">支付金额：</label>
+                    <span class="mt5">30.00元</span>
+                </div>
+                <div class="xui-contentItem">
+                    <label class="control-label tr w70">商品信息：</label>
+                    <span class="mt5">我是商品名字</span>
+                </div>
+                <div class="xui-contentItem">
+                    <label class="control-label tr w70">remark：</label>
+                    <span class="mt5">如有问题咨询微众客服，微众将第一时间为您服务！</span>
+                </div>
+            </fieldset>
+            <div class="control-group tc mt20">
+                <input type="submit" class="btn btn-success mr50" id="submitBtn" value="&nbsp;&nbsp;保&nbsp;&nbsp;存&nbsp;&nbsp;" />
+                <input type="button" class="btn btn-cancel xui-btn-cancel" id="cancelBtn" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+	$('form').submit(function() {
+		if (!W.validate()) {
+	    	return false;
+	    }
+	    saveTemplateDetail();
+	    return false;
+	});
+
+	    function saveTemplateDetail() {
+        W.getLoadingView().show();
+	  	var id = $('[name="id"]').val();
+	  	var template_id = $('[name="tid"]').val().trim();
+	  	var first_text = $('[name="first"]').val().trim();
+	  	var remark_text = $('[name="remark"]').val().trim();
+	  	W.resource.new_weixin.TemplateMessagesDetail.post({
+	    	data: {
+	      		id: id,
+	      		template_id: template_id,
+	      		first_text: first_text,
+	      		remark_text: remark_text
+	    	},
+	    	success: function(data) {
+	        	window.location.href = '/new_weixin/template_messages/';
+	    	},
+	    	error: function(resp) {
+	      		W.getLoadingView().hide();
+	        	W.getErrorHintView().show('保存模板详细信息失败！');
+	    	}
+	  	});
+	}
+
+    $('#cancelBtn').click(function(){
+		window.location.href = '/new_weixin/template_messages/';
+	});
+    $(function(){
+        $('.xa-showIntroduction').on('mouseover',function(){
+        $('.xa-parentAddbox').append('<div class="xui-templateIntroduction"><p class="pt20">模板消息仅用于公众号向用户发送业务通知。如信支付成功商品购买成功通知等，模板消息只对认证的服务号开放。</p><p>配置方法：</p><ul><li>1、登录微信公众平台</li><li>2、在“添加功能插件”处添加模板消息，并填写申请信息</li><li>3、打开模板消息</li><li>4、在模板库中添加对应编号的模板</li><li>5、在我的模板中复制模板ID</li><li>6、在微众后台模板消息配置中粘贴所复制的ID</li><li>7、填写开头语和结束语，其他商品信息系统会自动获取无需自己填写</li></ul><div>')
+    });
+    $('.xa-showIntroduction').on('mouseout',function(){
+         $(".xui-templateIntroduction").hide()
+    });
+});
+    
+</script>
+{% endblock %}

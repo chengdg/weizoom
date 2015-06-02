@@ -1,0 +1,78 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block content-panel %}
+<div class="xui-helpPage">
+	<ul style="margin-top:7px;border-color:#dbdbdb;border-width:1px 0px 1px 0px;border-style:solid" class="">
+		<li>
+			<label for="" class="xa-clickSlide">微众卡怎么使用？</label>
+			<span class="xui-icon xui-icon-rightarrow"> </span>
+			<div class="xa-helpInfo hidden  xui-helpInfo">
+				<p>购买商品时在下单页输入卡号密码，可直接抵用现金。每笔订单最多可使用10张微众卡。</p>
+			</div>
+		</li>
+		<li>
+			<label for="" class="xa-clickSlide">积分怎么用？</label>
+			<span class="xui-icon xui-icon-rightarrow"> </span>
+			<div class="xa-helpInfo hidden xui-helpInfo">
+				<p>商城部分商品可用积分按不同比例抵扣商品金额，在下单页直接勾选就可以了。</p>
+			</div>
+		</li>
+		<li>
+			<label for="" class="xa-clickSlide">我已经支付了，为什么订单显示未付款?</label>
+			<span class="xui-icon xui-icon-rightarrow"> </span>
+			<div class="xa-helpInfo hidden xui-helpInfo">
+				<p>请您先查看您的交易记录，确认款项是否成功划出：</p>
+				<p>1.若款项未成功划出，请您在"个人中心—待支付订单"中找到该订单重新支付即可</p>
+				<p>2.若款项已成功划出，请您通过公众号联系客服处理</p>
+			</div>
+		</li>
+		<li>
+			<label for="" class="xa-clickSlide">为什么我的订单总是无法提交成功？</label>
+			<span class="xui-icon xui-icon-rightarrow"> </span>
+			<div class="xa-helpInfo hidden xui-helpInfo">
+				<p>可能存在以下几种情况：</p>
+				<p>1.订单信息填写不完整</p>
+				<p>2.订单商品库存不足或者库存无货</p>
+				<p>3.网络延时以上各种情况都会在页面中弹出提示信息，可以通过修改订单信息（提示信息）或者稍后再试，即可成功提交订单。</p>
+			</div>
+		</li>
+		<li>
+			<label for="" class="xa-clickSlide">在加入购物车后，是不是该商品已经被我预定了？
+			</label>
+			<span class="xui-icon xui-icon-rightarrow"> </span>
+			<div class="xa-helpInfo hidden xui-helpInfo">
+				<p>并不是，如果您想订购该商品，请把该商品加入购物车后进行结算。</p>
+			</div>
+		</li>
+		<li>
+			<label for="" class="xa-clickSlide">如何修改订单
+			</label>
+			<span class="xui-icon xui-icon-rightarrow"> </span>
+			<div class="xa-helpInfo hidden xui-helpInfo">
+				<p>暂不提供修改订单功能，请您在提交订单前仔细核对订单信息，确认无误后在提交。</p>
+			</div>
+		</li>
+		<li>
+			<label for="" class="xa-clickSlide">如何取消订单</label>
+			<span class="xui-icon xui-icon-rightarrow"> </span>
+			<div class="xa-helpInfo hidden xui-helpInfo">
+				<p>1.当您的订单处于“待付款”状态时，您可以取消订单。</p>
+				<p>2.您可以通过公众平台直接与客服联系</p>
+			</div>
+		</li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	$(document).ready(function() {
+		$('.xa-clickSlide').click(function(event) {
+			$(event.target).siblings('.xa-helpInfo').toggleClass('hidden');
+			$(event.target).siblings('.xui-icon-rightarrow').toggleClass('xui-up');
+
+		});
+	});
+</script>
+{% endblock %}

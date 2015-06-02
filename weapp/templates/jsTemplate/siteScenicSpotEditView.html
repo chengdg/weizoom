@@ -1,0 +1,101 @@
+<script id="swipe-photo-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="swipePhotoView-imgs" class="clearfix" style="width: 350px;">
+		{{each(i,image) images}}
+		<div class="fl imgBox pt0 mr15 mb10 mt5" style="width: 80px;">
+			<button class="close" type="button" data-id="${image.id}">×</button>
+			<img width="80px" src="${image.url}" style="width: 80px; height: 80px;"/>
+		</div>
+		{{/each}}
+	</div>
+	<div id="imageView-uploadZone" class="">
+		<input id="imageView-fileUploader" type="file" class="hide"/>
+	</div>
+</script>
+
+<script id="swipe-photo-view-one-image-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="fl imgBox pt0 mr15 mb10 mt5" style="width: 80px;">
+		<span class="label label-important" data-new-hint="true">新</span>
+		<button class="close" type="button" data-id="-1">×</button>
+		<img width="80px" src="${image.url}" data-new="true"  data-fakeid="${image.fakeId}" style="width: 80px; height: 80px;"/>
+	</div>
+</script>
+
+<script id="shop-menu-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="control-group">
+        <div>
+            <span style="line-height: 40px;font-size: 21px; ">首页菜单：</span>
+            <input id="add-menu-btn" type="button" class="btn btn-primary ml150" value="&nbsp;&nbsp;&nbsp;&nbsp;添&nbsp;&nbsp;加&nbsp;&nbsp;&nbsp;&nbsp;" />
+            <span class="help-block ml20">允许最多8个首页菜单</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="ml15 mr15">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th style="width: 30px;">标题名称</th>
+                    <th style="text-align: center;">链接</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+<script id="shop-one-menu-tmpl-src" type="text/x-jquery-tmpl">
+    <tr menu_id="${id}" style="cursor:move">
+        <td class="w30"><a href="#" menu_id='${id}' id="one-menu">${title}</a></td>
+        <td class="w200" style="word-break:break-all">${link_url}</td>
+        <td class="w30">
+            <a href='#' class="btn btn-danger btn-mini" id="delete-menu-btn" ><i class="icon-remove icon-white"></i></a>
+        </td>
+    </tr>
+</script>
+
+
+<script id="shop-swipe-photo-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="control-group">
+        <div>
+            <input id="add-swipe-photo-btn" type="button" class="btn btn-primary" value="&nbsp;&nbsp;&nbsp;&nbsp;添&nbsp;&nbsp;加&nbsp;&nbsp;&nbsp;&nbsp;" />
+            <span class="help-block ml20">允许最多上传3个图片</span>
+        </div>
+    </div>
+    <div class="control-group pl15">
+        <div id="swipePhotos" class="clearfix" style="width: 350px;"></div>
+    </div>
+</script>
+
+<script id="shop-one-swipe-photo-tmpl-src" type="text/x-jquery-tmpl">
+    <div id="oneSwipePhoto-div" name="oneSwipePhoto" data-id="${id}" class="fl imgBox pt0 mr15 mb10 mt5" style="width: 80px;">
+        <button class="close" type="button">×</button>
+        <img width="80px" src="${url}" style="width: 80px; height: 80px;"/>
+    </div>
+</script>
+
+
+<script id="edit-site-dialog-src" type="text/x-jquery-tmpl">
+	<div id="editorView-editSiteDialog" class="form-horizontal mt20">
+		<div class="control-group">
+			<label class="control-label">图片：</label>
+			<div class="controls">
+				<input type="hidden" name="pic_url" id="pic_url" value="" data-validate="require-image"data-validate-dynamic = "true"/>
+				<div id="site-imageView"></div>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls p25">
+				<button type="submit" class="btn btn-success tx_submit">添加</button>
+				<button type="button" class="btn tx_cancel ml20">取消</button>
+			</div>
+		</div>
+	</div>
+</script>
+
+
+<script id="edit-link-url-view-tmpl-src" type="text/x-jquery-tmpl">
+
+</script>

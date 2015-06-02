@@ -1,0 +1,100 @@
+{% extends "content_base_v2.html" %}
+{% load project_filter %}
+
+{% block css %}
+<style type="text/css">
+.xui-mp-user-index th,
+.xui-mp-user-index td {
+	border: 1px solid #dddddd;
+}
+</style>
+{% endblock %}
+{% block single-content-panel %}
+<div class="xui-weixin-unbindAccountPage" style = "margin-top: 42px;">
+	<div class="relative">
+		<div class="xa-fansFilterView xui-filterPanel  pr">
+			
+
+			<div class="xui-form disT" style="">
+				<div class="xui-col disTc w470 pr" style="margin-left: 71px;argin-right: 71px;" >
+					<p><font><B>绑定微信公众号，把店铺和微信打通</font></B></p>
+					<p class="mt20"> 绑定后即可在这里管理您的公众号，微众提供比微信后台更强大的功能！</p>
+					<div class="mt30">
+
+						<a style="background-color:#14d214" class="btn btn-success cert-setting-btn js-wxauth-btn" href="https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid={{component_info.app_id}}&pre_auth_code={{pre_auth_code}}&redirect_uri=http://weapp.weizoom.com/weixin/component/receiveauthcode/" target="_blank"><img src="/static_v2/img/editor/weixinlogo.png">&nbsp;&nbsp;&nbsp;<B>我有微信公众号，立即设置</B></a>
+					</div>
+				</div>
+				<div class="line pa" style="border-left:1px #ccc solid;height:100px;left:655px;"></div>
+				<div class="" style="position: absolute;margin-left: 703px;">
+					温馨提示：
+					<ul class="mt20">
+						<li><span style="display:inline-block;width:10px;height:10px;border-radius:100%;background-color:#ccc"></span>&nbsp;&nbsp;一个公众号只能和一个店铺绑定</li>
+						<li class="mt20"><span style="display:inline-block;width:10px;height:10px;border-radius:100%;background-color:#ccc"></span>&nbsp;&nbsp;账号绑定后不支持解绑</li>
+					</ul>
+				</div>
+			</div>
+			<div class=" mt50" style="border-top:#ccc solid 1px;margin-left: 71px;margin-right: 71px;"></div>
+			
+			<div class="xui-form xui-mp-user-index disT mt50" style="margin-left: 71px;margin-right: 71px;">
+				<table border="1" class=" tc"  width="100%" style="table-layout:fixed;border:#dddddd solid 1px;">
+				<tr class="h50" style="background-color:#c8d2e5;">
+					<th  ></th>
+					<th>未认证订阅号</th>
+					<th>认证订阅号</th>
+					<th>未认证服务号</th>
+					<th>认证服务号</th>
+				</tr>
+				<tr class="h50">
+					<td style="background-color:#c8d2e5;">消息自动回复</td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+				</tr>
+				<tr class="h50">
+					<td style="background-color:#c8d2e5;">微信自定义菜单</td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+				</tr>
+				<tr class="h50">
+					<td style="background-color:#c8d2e5;"
+					>微信群发</td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+				</tr>
+				<tr class="h50">
+					<td style="background-color:#c8d2e5;">高级客户管理</td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+				</tr>
+				<tr class="h50">
+					<td style="background-color:#c8d2e5;">微信支付</td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"></td>
+					<td style="background-color:#ffffff;"><img src="/static_v2/img/editor/mp-dui.png"></td>
+				</tr>
+				</table>
+			</div>
+			
+			<div class="xui-btn-group tc mt30" >
+				<!-- <a style="background-color:#ffffff;border:#ddd solid 1px" class="btn " id="submitBtn"><strong style="color:#999999;">进一步了解他们的区别</strong></a> -->
+			</div>
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">	
+
+</script>
+{% endblock %}

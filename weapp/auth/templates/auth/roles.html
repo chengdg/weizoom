@@ -1,0 +1,59 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-accountRolesPage">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/auth/account_help/get/">账号权限管理</a></li>
+		<li class="active">权限管理</li>
+	</ul>
+</div>
+
+<div class="xui-roleInfoList clearfix xui-commonPermissionStype">
+	<section class="xui-roleList fl">
+		<header class="clearfix xui-i-header pr">
+			<span class="mr20">角色</span>
+			<a href="javascript:void(0);" class="btn btn-default xui-i-addButton btn-xs xa-addRole">+ 新建</a>
+		</header>
+		<ul class="xa-roleList">
+			{% for role in roles %}
+			<li data-id="{{role.id}}">
+				<a href="javascript:void(0)" class="xa-role xui-i-role {% if forloop.first %}xui-i-activeRole{% endif %}">
+					<span class="caret"></span>
+					<span class="xui-name xa-name">{{role.name}}</span>
+					<input type="text" class="form-control xui-i-input xa-roleNameInput" style="display: none"/>
+					<span class="glyphicon glyphicon-cog xui-i-config xa-config"></span>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</section>
+
+	<section class="xui-rolePermissions xa-rolePermissions">
+		
+	</section>
+</div>
+
+</div>
+{% endblock %}
+
+{% block global_elements %}
+<ul class="dropdown-menu xa-roleActionMenu xui-hide">
+	<li><a href="javascript:void(0);" class="xa-renameRole">重命名</a></li>
+	<li><a href="javascript:void(0);" class="xa-deleteRole">删除</a></li>
+</ul>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">	
+$(document).ready(function() {
+	var view = new W.view.auth.RoleList({
+		el: '.xui-roleInfoList'
+	});
+	view.render();
+});
+</script>
+{% endblock %}

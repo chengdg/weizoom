@@ -1,0 +1,101 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-userGuidePage"  data-title="{{ page_title }}">
+    <div data-role="content" class="">
+    <section class="xui-memberInfo">
+        <h2 class="clearfix tc">
+            当前等级：{{request.member.grade.name}}
+        </h2>
+        <ul class="disT w">
+            <li class="disTc">
+                <div>
+                    <p>￥{{request.member.pay_money |floatformat:2}}</p>
+                    <p>交易金额</p>
+                </div>
+            </li>
+            <li class="disTc">
+                <div>
+                    <p>{{request.member.pay_times}}</p>
+                    <p>消费次数</p>
+                </div>
+            </li>
+            <li class="disTc">
+                <div>
+                    <p>{{request.member.experience}}</p>
+                    <p>经验值</p>
+                </div>
+            </li>
+        </ul>
+    </section>
+        <table class="xui-table mt15">
+            <thead>
+                <tr>
+                    <th align="left">会员等级</th>
+                    <th align="left">升级条件</th>
+                    <th align="left">享受优惠</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for member_grade in member_grades %}
+                <tr>
+                    <td>{{member_grade.name}}</td>
+                    {% if member_grade.shop_discount == 100 %}
+                    <td style="text-align:left;">关注公众账号</td>
+                    {% else %}
+                    <td style="text-align:left;">
+                        <p>1.累计交易金额达到{{member_grade.pay_money | floatformat:-2}}元</p>
+                        <p>2.累计消费次数达到{{member_grade.pay_times}}次</p>
+                        <p>3.经验值达到{{member_grade.integral}}</p>
+                        <p style="margin-top:8px;">满足任一条件即可</p>
+                    </td>
+                    {% endif %}
+                    <td>
+                    {% if member_grade.shop_discount == 100 %}
+                        无
+                    {% else %}
+                        <span data-value="{{member_grade.shop_discount}}" class="xa-discount"></span>折
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p class="xui-text-red p10 em85 w disT" style="box-sizing:border-box;">
+        <label for="" class="disTc" style="width:30px;">注：</label>
+            <span class="disTc">
+                经验值为累计积分总数，消费积分后不会对经验值产生影响。
+            </span>
+        </p>
+        <!-- <h2 class="clearfix mt30">
+            <div class="xui-inner-title">积分指南</div>
+        </h2>
+        <div class="rawHtml xui-inner-content">
+            {% if integral_guide.content %}
+                {{integral_guide.content|safe}}
+            {% else %}
+                没有积分指南
+            {% endif %}
+        </div> -->
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+$(document).ready(function($) {
+    if($(".xa-discount")){
+        $(".xa-discount").each(function() {
+            var val = $(this).attr('data-value');
+            var newVal = val / 10; 
+            $(this).text(newVal.toFixed(1));
+        });
+        
+
+    }   
+});
+     
+</script>
+{% endblock %}

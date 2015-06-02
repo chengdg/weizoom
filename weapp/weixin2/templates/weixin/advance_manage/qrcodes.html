@@ -1,0 +1,146 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css%}
+<style>
+.xui-weixin-qrcodePage [class^="icon-"]{
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	line-height: 14px;
+	vertical-align: text-top;
+}
+	.xui-weixin-qrcodePage .icon-arrow-up{
+		/*background: #000;*/
+		background: url('/static_v2/img/weixin/storingUp.png') no-repeat ;
+	}
+	.xui-weixin-qrcodePage .icon-arrow-down{
+		/*background: #f00;*/
+		background: url('/static_v2/img/weixin/storing.png') no-repeat;
+		
+	}
+</style>
+{% endblock%}
+{% block content-panel %}
+<div class="xui-weixin-qrcodePage xa-weixin-materialsPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/new_weixin/materials/">高级管理</a></li>
+			<li class="active">带参数二维码</li>
+		</ul>
+	</div>
+	<div class="xui-rightPanel pr">
+
+	<div 
+		data-ui-role="advanced-table" 
+		data-app="new_weixin" 
+		data-resource="qrcodes" 
+		data-template-id="#setting_list_view" 
+		data-init-sort="-count" 
+		data-item-count-per-page="20" 
+		data-enable-paginator="true"
+		class="panel-body mt40"
+		>
+	</div>
+
+	<span class="breadcrumRightButton">
+		<a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode" href="/new_weixin/qrcode/"><span class="xui-add-btn-icon">+</span>新建二维码<i class="icon-plus icon-white"></i></a>
+	</span>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+	{% verbatim %}
+		<script id="setting_list_view" type="text/x-jquery-tmpl">
+			{{if items}}
+			<table class="table table-bordered table-condensed xb-stripedTable xb-theadBg">
+				<thead>
+					<tr>
+						<th style="width:25%;">
+							<p class="tx_searchable m0">
+								<span class="">二维码名称</span>
+							</p>
+						</th>
+						
+						<th style="width:10%;" class="tx_sortable xa-sorting" data-sort-attr='count' data-sort-direction="up"><a href="javascript:;">关注数量</a> <img class="xa-storingimg" src="" alt=""> </th>
+						<th style="width:10%;" class="tx_sortable" data-sort-attr='total_final_price'><a href="javascript:void(0);">成交金额</a></th>
+						<th style="width:25%;">扫码奖励</th>
+						<th style="width:20%;">备注</th>
+						<th style="width:10%;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{if items.length}}
+						{{each(i, qrcode) items}}
+							<tr class="h40" data-id="${qrcode.qrcode_id}">
+								<td style="word-break:break-all; overflow:auto;">
+									<a href="/new_weixin/qrcode/?setting_id=${qrcode.id}">${qrcode.name}</a>
+								</td>
+								<td >
+									{{if qrcode.count > 0}}
+										<a class="relation-text" href="/new_weixin/qrcode_member/?setting_id=${qrcode.id}">${qrcode.count}</a>
+									{{else}}
+										${qrcode.count}
+									{{/if}}
+								</td>
+								<td style="word-break:break-all; overflow:auto;">
+									{{if qrcode.total_final_price > 0}}
+									   <a class="relation-text" href="/new_weixin/qrcode_order/?setting_id=${qrcode.id}">￥${qrcode.total_final_price}</a>
+									{{else}}
+										￥${qrcode.total_final_price}
+									{{/if}}
+								</td>
+								<td style="word-break:break-all; overflow:auto;">
+									${ qrcode.cur_prize }
+								</td>
+								<td style="word-break:break-all; overflow:auto;">
+									${ qrcode.remark }
+								</td>
+								<td>
+									<a target="_blank" href="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${qrcode.ticket}">查看二维码</a>
+								</td>
+							</tr>
+						{{/each}}
+					{{else}}
+						<tr><td colspan='6'>还没有数据</td></tr>
+					{{/if}}
+				</tbody>
+			</table>
+			{{else}}
+				当前还没有二维码，请添加二维码
+			{{/if}}
+		</script>
+	{% endverbatim %}
+
+	<script type="text/javascript">
+		var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+		$(document).ready(function() {
+			if (shouldShowAuthorizeCover) {
+				W.view.showAuthorizeCover({
+					hint: '您还没有使用渠道扫码的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+					doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
+				});
+			}
+			// var qrcodeView = new W.view.weixin.QrcodeView({
+			// 	el: $("body"),
+			// });
+		});
+		$('body').delegate('.relation-text','click',function(event) {
+			var _this = this;
+			var $el = $(event.currentTarget);
+			var $tr = $el.parents('tr');
+
+			if ($el.html() == '0') {
+				return false;
+			}
+
+			W.dialog.showDialog('W.weapp.markettools.channel_qrcode.dialog.ChannelMembersDialog', {
+				settingId: $tr.attr('data-id')
+			});
+		});
+
+	</script>
+{% endblock %}

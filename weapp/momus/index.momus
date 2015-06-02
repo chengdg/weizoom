@@ -1,0 +1,20 @@
+导航页
+
+Context:
+	"""
+	{
+	}
+	"""
+
+Scenario:
+	导航页面
+
+	Get /momus/
+	Return
+		"""
+		{
+			"type": "html",
+			"template": "$url_list"
+		}
+		"""
+

@@ -1,0 +1,639 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<style type="text/css">
+	.member-info-panel {
+		background-color: #EEEEEE;
+   		border: 1px solid #D3D3D3;
+   		margin: 3px auto;
+	}
+
+	.member-base-info {
+		margin: 5px 3px;
+	}
+
+	.info-box {
+		border: 2px solid #000000;
+		max-height: 400px;
+		margin-bottom: 5px;
+		overflow-y: auto;
+	}
+
+	.member-head-img {
+		display: block;
+	}
+
+	.member-head-img img {
+		width: 60px;
+	}
+
+	.info-table {
+		display: table;
+		margin-left: 70px;
+		color: #666666;
+	}
+
+	.info-table-column {
+		display: table-cell;
+		width: 240px;
+	}
+
+	.info-item {
+		display: block;
+		margin-bottom: 11px;
+	}
+
+	.info-item:last-child {
+		margin-bottom: 0px;	
+	}
+
+	.info-item input, .info-item select {
+    	width: 120px;
+    	margin-bottom: 0;
+	}
+
+	.info-box {
+		padding: 5px 5px;
+	}
+
+	input[type="radio"] {
+		width: 50px;
+		margin-top: -3px;
+		margin-left: -10px;
+	}
+
+	.label {
+		cursor: pointer;
+	}
+
+	.section-show {
+		display: block;
+	}
+
+	.section-hide {
+		display: none;
+	}
+
+	.info-box th {
+		background-color: #6C6C6C;
+	}
+
+	.order_not_payed_status, .order_not_send_status {
+		color: red;
+	}
+
+	.order_payed_status, .order_has_sent_status {
+		color: green;
+	}
+
+	.order_finished_status, .order_canceled_status {
+		color: gray;
+	}
+
+	.member-head-img img {
+	    border: 0 none;
+	    height: 60px;
+	}
+
+	.column_block {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.column_block img {
+		width: 60px;
+	}
+
+	.relation-block {
+		margin-top: 10px;
+	}
+
+	.relation-block:first-child {
+		margin-top: 0;
+	}
+    .member-info-panel .xui-tagbox{
+	    display:block;
+	    position:absolute;
+	    top:10px;
+	    left:400px;
+	}
+	.member-info-panel .xui-tagbox .xui-tagcon{
+	    width:230px;
+	    height:100px;
+	    display:inline-block;
+	    background:#fff;
+	    border:1px #ddd solid;
+	    overflow-y:auto; 
+	}
+	.xui-tagbox .xui-tagcon input{
+	    width: auto;
+	    margin: 0 5px;
+	}
+</style>
+{% endblock %}
+
+{% block single-content-panel %}
+	<ul class="breadcrumb" xmlns="http://www.w3.org/1999/html">
+		<li><a href="/user_center/">会员列表</a><span class="divider">/</span></li>
+		<li class="active">会员详情</li>
+	</ul>
+
+	<div class="member-info-panel">
+		{% if not show_member.is_subscribed %}
+		<div style="position: absolute; width: 96%; height: 100%; background: url(&quot;/static/img/inactive_member.png&quot;) no-repeat scroll center 100px rgba(0, 0, 0, 0.5); z-index: 2;"></div>
+		{% endif %}
+
+		<div class="member-base-info">
+			<div style="float:left">
+				<span class="member-head-img">
+					<img src="{% if show_member.user_icon %}{{ show_member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
+				</span>
+			</div>
+
+			<div class="info-table">
+				<div class="info-table-column">
+					<!-- <span class="info-item">id:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ show_member.token }}</span> -->
+					<span class="info-item">昵称:&nbsp;&nbsp;{{ show_member.username_for_html|safe }}</span>
+					<span class="info-item">备注:
+						<input id="member-remarks-name" class="member-remarks-name" type="text" placeholder="不超过8个字符" value="{% if show_member.remarks_name %}{{ show_member.remarks_name }}{% endif %}" data-validate="can-none-length-limit" data-validate-max-length="8"></input>
+						<div class="errorHint"></div>
+					</span>
+					<span class="info-item">购买测试:
+						<input type="checkbox" name="is_for_buy_test" style="width:20px!important;margin-top:0px;" id="is_for_buy_test"  {% if show_member.is_for_buy_test %}checked value='1'{% else %}value='0'{% endif %}>
+    				</span>
+				</div>
+
+				<div class="info-table-column">
+					<span class="info-item">好&nbsp;&nbsp;&nbsp;&nbsp;友: 
+						&nbsp;&nbsp;<a friend_count='{{ show_member.friend_count }}' fans_count='{{ fans_count }}' value='{{ show_member.id }}' class="relation-text" href="javascript:void(0);" style="font-family:Arial;
+						font-size:13px;font-weight:bold;
+						font-style:normal;color:#0000FF;">{{ show_member.friend_count }}</a>
+					</span>
+					<span class="info-item">经验值:&nbsp;&nbsp;{{ show_member.experience }}</span>
+					<span class="info-item">级别: 
+						<select type="text" class="w120 m0" id="grade_id" name="grade_id" {% if request.sub_user %}disabled="disabled"{% endif %}>
+							{% for grade in grades%}
+								<option value="{{ grade.id }}"  {% ifequal grade.id show_member.grade.id %}selected="selected"{% endifequal %}>{{ grade.name }}</option>
+							{% endfor %}
+						</select>
+					</span>
+				</div>
+
+				<div class="info-table-column">
+					<span class="info-item">加入时间:&nbsp;&nbsp;{{ show_member.created_at|unify_datetime }}</span>
+					<span class="info-item">最后访问:&nbsp;&nbsp;{{ show_member.last_visit_time|unify_datetime }}</span>
+					<span class="info-item ">积分: 
+						<input id="integral" name="integral" type="number" value="{{ show_member.integral }}" {% if request.sub_user %}disabled="disabled"{% endif %}style="width:120px;" data-validate="int"></input>
+						<a href="/webapp/user_center/member/{{show_member.id}}/integral_log/">积分日志</a>
+						<div class="errorHint"></div>
+					</span>
+				</div>
+				
+			</div>
+		</div>
+
+		<div class="info-block">
+			<div class="tag-line">
+				<span class="label">资料</span>
+			</div>
+
+			<div class="info-box pr">
+				<div class="info-table-column">
+					<span class="info-item">姓名:&nbsp;&nbsp;
+						<input type="text" id="name" name="name" placeholder="不超过8个字符" value="{% if show_member_info %}{{ show_member_info.name }}{% endif %}" data-validate="can-none-length-limit" data-validate-max-length="8"/>
+						<div class="errorHint"></div>
+					</span>
+					<span class="info-item">性别:&nbsp;&nbsp;
+						<input name="sex_type" type="radio" value="1" {% ifequal show_member_info.sex 1 %}checked {% endifequal %}/>男 &nbsp;&nbsp;&nbsp;/
+						<input name="sex_type" type="radio" value="2" {% ifequal show_member_info.sex 2 %}checked {% endifequal %}/>女
+					</span>
+					<span class="info-item">电话: &nbsp;&nbsp;
+						<input type="text" id="phone_number" name="phone_number" placeholder="输入手机号" value="{% if show_member_info %}{{ show_member_info.phone_number }}{% endif %}" data-validate="can-none-mobile-phone" />
+						<div class="errorHint"></div>
+					</span>
+					<span class="info-item">Q Q:&nbsp;&nbsp;&nbsp;
+						<input type="text" id="qq_number" name="qq_number" placeholder="输入QQ号码" value="{% if show_member_info %}{{ show_member_info.qq_number }}{% endif %}" data-validate="qq-number"/>
+						<div class="errorHint"></div>
+					</span>
+				</div>
+				
+				<div style="width: 300px" class="info-table-column">
+					<span class="info-item">微博:&nbsp;&nbsp;
+						<input style="width: 206px" type="text" id="weibo_nickname" name="weibo_nickname" placeholder="输入微博昵称" value="{% if show_member_info %}{{ show_member_info.weibo_nickname }}{% endif %}" data-validate-max-length="100"/>
+						<div class="errorHint"></div>
+					</span>
+					<span class="info-item">
+						<span style="vertical-align: top;">备注: &nbsp;</span>
+						<textarea id="member_remarks" name="member_remarks" placeholder="备注信息" rows=4 >{% if show_member_info.member_remarks %}{{ show_member_info.member_remarks }}{% endif %}</textarea>
+						<div class="errorHint"></div>
+					</span>
+				</div>
+
+				<div class="info-table-column">
+					<span style="margin-left: 150px" class="info-item pa xui-tagbox"><span style="vertical-align:top;">分组:&nbsp;&nbsp;</span>
+	                    <span style="height: 125px" class="xui-tagcon">
+	                    	{% for tag in member_tags %}
+		                        <input type="checkbox" {% if tag.is_member_tag %}checked{% endif %} name="tag_ids" value="{{ tag.id }}">{{ tag.name }}</br>
+		                     
+	                        {% endfor %}
+				        </span>
+	                    <a href="/webapp/user_center/tag/create/">添加新分组</a>
+	                </span>
+                </div>
+			</div>
+			
+		</div>
+		{%if is_shengjing%}
+			<div class="info-block">
+				<div class="tag-line">
+					<span class="label">注册资料</span>
+				</div>
+				<div class="info-box pr">
+					<div class="info-table">
+						<div class="info-table-column">
+							<div class="info-table-column">
+								<span class="info-item">姓名:&nbsp;&nbsp;{{ shengjing_register_info.name }}</span>
+								<span class="info-item">公司:
+									{% for company in shengjing_register_info.companys %}
+										{% if forloop.counter == 1 %}
+										<span>{{ company }}</span>
+										{% else %}
+										<span style="display: block; margin-left: 37px;">{{ company }}</span>
+										{% endif %}
+									{% endfor %}
+								</span>
+								<span class="info-item ">职务: &nbsp;&nbsp;{{ shengjing_register_info.position }}</span>
+							</div>
+						</div>
+
+						<div class="info-table-column">
+							<div class="info-table-column">
+								<span class="info-item">手机号:&nbsp;&nbsp;{{ shengjing_register_info.phone_number }}</span>
+								<span class="info-item ">身份: &nbsp;&nbsp;{{ shengjing_register_info.status }}</span>
+								<span class="info-item">是否为决策人:&nbsp;&nbsp;{{ shengjing_register_info.is_leader }}</span>
+							</div>
+						</div>
+
+						<div class="info-table-column">
+							<div class="info-table-column">
+								<span class="info-item">CRM姓名:&nbsp;&nbsp;{{ shengjing_register_info.crm_name }}</span>
+								<span class="info-item"  style="width: 270px">CRM公司: 
+									{% for company in shengjing_register_info.crm_companys %}
+										{% if forloop.counter == 1 %}
+										<span>{{ company }}</span>
+										{% else %}
+										<span style="display: block; margin-left: 70px;">{{ company }}</span>
+										{% endif %}
+									{% endfor %}
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+		<div class="info-block">
+			<div class="tag-line">
+				<span class="label">订单</span>
+				<!--
+				<span class="label label-inverse">会员卡</span>
+				<span class="label label-inverse">优惠券</span>
+				<span class="label label-inverse">兑换码</span>
+				-->
+			</div>
+			<div class="info-box">
+				<div class="sections order-section section-show">
+					<table class="table table-bordered table-condensed">
+
+					<thead>
+						<tr>
+							<th width="25%">订单编号</th>
+							<th width="12.5%">金额</th>
+							<th width="25%">下单时间</th>
+							<th width="12.5%">状态</th>
+						</tr>
+					</thead>
+
+					<tbody>
+					{% if orders %}
+					{% for order in orders %}
+						<tr data-id="{{ order.id }}">
+							<td>
+								<a title="查看" href="/mall/editor/order/get/?order_id={{order.id}}" target="_blank">{{ order.order_id }}</a>
+							</td>
+
+							<td>
+								<span class="order_price">{{ order.final_price }}</span>
+							</td>
+
+							<td>
+								<span class="order_time">{{ order.created_at|unify_datetime }}</span>
+							</td>
+
+							<td>
+								{% if order.status == 0 %}
+								<span class="order_not_payed_status">[待支付]</span>
+								{% endif %}
+									
+								{% if order.status == 2 %}
+								<span class="order_payed_status">[已付款]</span>
+								{% endif %}
+
+								{% if order.status == 3 %}
+								<span class="order_not_send_status">[待发货]</span>
+								{% endif %}
+
+								{% if order.status == 4 %}
+								<span class="order_has_sent_status">[已发货]</span>
+								{% endif %}
+										
+								{% if order.status == 5 %}
+								<span class="order_finished_status">[已完成]</span>
+								{% endif %}
+										
+								{% if order.status == 1 %}
+								<span class="order_canceled_status">[已取消]</span>
+								{% endif %}
+								</span>
+							</td>
+						</tr>
+						{% endfor %}
+						<tbody>
+					{% else %}
+					<tr>
+						<td width='100%' colspan="4" style="text-align:center"><span>暂无信息</span></td>
+					</tr>
+					{% endif %}
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="info-block">
+			<div class="tag-line">
+				<span class="label">优惠券</span>
+			</div>
+			<div class="info-box">
+				<div class="sections order-section section-show">
+					<table class="table table-bordered table-condensed">
+
+					<thead>
+						<tr>
+							<th width="12.5%">优惠券号</th>
+							<th width="25%">名称</th>
+							<th width="12.5%">金额</th>
+							<th width="25%">过期时间</th>
+							<th width="12.5%">状态</th>
+							<th width="12.5%">使用人</th>
+						</tr>
+					</thead>
+
+					<tbody>
+					{% if coupons %}
+					{% for coupon in coupons %}
+						<tr data-id="{{ coupon.id }}">
+							<td>
+								<span class="coupon_id">{{ coupon.coupon_id }}</span>
+							</td>
+
+							<td>
+								<span class="order_price">{{ coupon.coupon_rule.name }}</span>
+							</td>
+
+							<td>
+								<span class="order_time">{{ coupon.money }}</span>
+							</td>
+
+							<td>
+								<span class="expired_time">{{ coupon.expired_time|date:"Y年m月j日" }}</span>
+							</td>
+							<td>
+								{% if coupon.status == 0 %}
+									<span class="status">未使用</span>
+								{% endif %}
+								{% if coupon.status == 1 %}
+									<span class="status">已使用</span>
+								{% endif %}
+								{% if coupon.status == 2 %}
+									<span class="status">已过期</span>
+								{% endif %}
+							</td>
+							<td>
+									<span class="name">{{coupon.consumer_name|safe}}</span>
+							
+							</td>
+						</tr>
+						{% endfor %}
+						<tbody>
+					{% else %}
+					<tr>
+						<td width='100%' colspan="6" style="text-align:center"><span>暂无信息</span></td>
+					</tr>
+					{% endif %}
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="info-block">
+			<div class="tag-line">
+				<span class="label">分享</span>
+			</div>
+			<div class="info-box">
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th width="70%">分享链接</th>
+							<th width="15%">点击</th>
+							<th width="15%">注册转化</th>
+							<th width="15%">购物转化</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if shared_url_infos %}
+						{% for info in shared_url_infos %}
+						<tr data-id="{{ info.id }}">
+							<td style="width:70%;">
+								<span class="shared_url">
+								 {% if info.title != '' and info.title != None %}
+								 {{ info.title }}
+								 {% else %}
+								 {{ info.shared_url }}
+								 {% endif %}
+								</span>
+							</td>
+
+							<td>{{ info.pv }}</td>
+							<td>{% if info.followers == 0 %}
+								-
+								{% else %}
+								{{ info.pv|cr_calculate:info.followers }}%
+								{% endif %}</td>
+
+							<td>{% if info.leadto_buy_count == 0 %}
+								-
+								{% else %}
+								{{ info.pv|cr_calculate:info.leadto_buy_count }}%
+								{% endif %}
+							</td>
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td width='100%' colspan="4" style="text-align:center"><span>暂无分享</span></td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="info-block">
+			<div class="tag-line">
+				<span class="label">访问轨迹</span>
+			</div>
+			<div class="info-box">
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th width="15%">时间</th>
+							<th width="70%">链接</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if member_browse_records %}
+						{% for member_browse_record in member_browse_records %}
+						<tr data-id="{{ info.id }}">
+							
+
+							<td>{{ member_browse_record.created_at|date:'Y-m-d H:i' }}</td>
+
+							<td style="width:70%;">
+								<span class="shared_url">
+								 {{ member_browse_record.title }}
+								</span>
+							</td>
+
+							
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td width='100%' colspan="3" style="text-align:center"><span>暂无访问</span></td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="info-op">
+			<a href="javascript:void(0);" class="btn btn-success" id="save-submit">保存</a>
+			<a href="/user_center/" class="btn btn-default">返回</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		var memberId = '{{ show_member.id }}';
+		$('.relation-text').click(function(event){
+			var _this = this;
+			var $el = $(event.currentTarget);
+			var _this = this;
+			var $el = $(event.currentTarget);
+		
+			var friend_count = $el.attr('friend_count');
+			var fans_count = $el.attr('fans_count');
+			var memberId = $el.attr('value');
+			if ($el.html() == '0') {
+				return false;
+			}
+
+			/*
+			var commentDialog = W.getInfluenceListDialog({memberId:memberId});
+			commentDialog.show({
+				$action: $el,
+				title: '用户关系',
+				memberId:memberId
+			});
+			*/
+			W.dialog.showDialog('W.weapp.dialog.UserCenterRelationsDialog', {
+						memberId: memberId,
+						friendCount: friend_count,
+						fansCount: fans_count
+		          	});
+		});
+		$('#is_for_buy_test').click(function(event){
+			var $el = $(event.currentTarget);
+			var value = $el.attr('value');
+			if (value == '1'){
+				$el.attr('value','0');
+				$el.attr('checked', false);
+			} else {
+				$el.attr('value','1');
+				$el.attr('checked', true);
+			}
+		})
+		//提交
+		$('#save-submit').click(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			var memberId = {{ show_member.id }};
+			var integral = $('#integral').val();
+			var gradeId = $('#grade_id').val();
+			var remarksName = $('#member-remarks-name').val();
+			var name = $('#name').val();
+			var sex = $('input[name=sex_type]:radio:checked').val();
+			var is_for_buy_test = $('#is_for_buy_test').val();
+			var phoneNumber = $('#phone_number').val();
+			var qqNumber = $('#qq_number').val();
+			var weiboNickname = $('#weibo_nickname').val();
+			var memberRemarks = $('#member_remarks').val();
+			if (!sex) {
+				sex = 0;
+			}
+			var tag_ids = ''
+			 $("input[name='tag_ids']:checked").each(function () {
+              	    tag_ids = this.value +',' + tag_ids;
+              })
+
+			W.getLoadingView().show();
+			W.getApi().call({
+				method: 'post',
+				app: 'webapp/user_center',
+				api: 'member/update',
+				args: {
+					member_id: memberId,
+					integral: integral,
+					grade_id: gradeId,
+					remarks_name: remarksName,
+					name: name,
+					sex: sex,
+					phone_number: phoneNumber,
+					tag_ids: tag_ids,
+					is_for_buy_test:is_for_buy_test,
+					qq_number: qqNumber,
+					weibo_nickname: weiboNickname,
+					member_remarks: memberRemarks
+				},
+				success: function(data) {
+                	window.location = '/user_center/';
+                },
+                error: function(resp) {
+	                W.getLoadingView().hide();
+	                //TODO 通知错误信息
+	                W.getErrorHintView().show('保存失败，请稍后重试！');
+                },
+                scope: this
+			});
+		});
+	</script>
+{% endblock %}

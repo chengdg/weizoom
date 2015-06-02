@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html >
+    <head>
+        <meta charset="UTF-8" />
+        <title></title>
+        <link type="text/css" rel="stylesheet" media="all" href="/standard_static/bootstrap/css/bootstrap.css?v=1">
+        <link type="text/css" rel="stylesheet" href="/termite_static/jquery/jquery.mobile-1.3.1.min.css">
+        <!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
+        {% if is_use_dev_resource %}
+        <!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/webapp/base.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/app.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/webapp/webapp_default.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/jqmobileEnhance.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/standard_static/css/advance_simulator.css">
+        <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
+        {% else %}
+        <link type="text/css" rel="stylesheet" media="all" href="/standard_static/css/jqm_content_base_all.css">
+        {% endif %}
+        <!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+        
+        <script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript">
+            var $window = $(window);
+            $(document).bind("mobileinit", function () {
+                //$.mobile.ajaxEnabled = false;
+            });
+        </script>
+
+        <!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
+        {% if is_use_dev_resource %}
+        <!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+        <script type="text/javascript" src="/static/jquery/jquery.mobile-1.3.1.min.js"></script>        
+        <script type="text/javascript" src="/static/jquery/jquery.cookie.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery.tmpl.min.js"></script>
+
+        <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/backbone-1.0.0.min.js"></script>
+        <script type="text/javascript" src="/static/js/system/system.js"></script>
+        <script type="text/javascript" src="/static/js/system/template-0.9.js"></script>
+        <script type="text/javascript" src="/static/js/system/api.js"></script>
+        <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
+        {% else %}
+        <script type="text/javascript" src="/standard_static/js/jqm_content_base_all.min.js"></script>
+        {% endif %}
+        <!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    </head>
+    <body>
+        <div data-role="page" id="loginPage">
+            <form>
+                {% if not simulator_users %}
+                <div class="xui-inner-hint">请执行python manage.py init_simulator_user以初始化模拟器微信用户</div>
+                {% endif %}
+                <select name="user" id="users">
+                    {% for simulator_user in simulator_users %}
+                    <option value="{{simulator_user.name}}">{{simulator_user.display_name}}</option>
+                    {% endfor %}
+                </select>
+                <!--
+                <select name='webapp_id'>
+                    {% for mp_user in mp_users %}
+                    <option value='{{ mp_user.webapp_id }}'>{{ mp_user.mp_user_name }}</option>
+                    {% endfor %}
+                </select>
+                -->
+                <a data-theme="e" href='#accountPage' data-role="button" data-transition="slide" class="x-loginBtn">
+                    登录
+                </a>
+            </form>
+        </div>
+
+
+
+
+
+        <div data-role="page" id="accountPage">
+            <div data-role="header">
+                <h1>微信</h1>
+                <a href="/simulator/2/" data-ajax="false" data-icon="home" data-iconpos="notext" data-transition="slide"></a>
+            </div>
+            <div data-role="content" class="ui-content">
+                <ul data-theme="c" data-role="listview">
+                    {% for mp_user in mp_users %}
+                    <li data-icon="false" data-webapp-id="{{mp_user.webapp_id}}" data-mp-user-name="{{mp_user.mp_user_name}}">
+                        <a href="#messagePage" data-transition="slide">
+                            <img src="/standard_static/img/weizoom.jpg">
+                            <h2 class="x-mpUser">{{mp_user.mp_user_name}} ({{mp_user.webapp_id}})</h2>
+                            <p class="x-mpUserInfo">
+                                欢迎访问{{mp_user.mp_user_name}}的公众号
+                            </p>
+                            <p class="ui-li-aside">今天</p>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div data-role="footer" style="position: fixed; bottom: 0px; width: 100%; z-index:100;">
+                <div data-iconpos="top" data-role="navbar" data-cid="30" data-ui-sortable="true" data-ui-behavior="xub-selectable" class="ui-navbar ui-mini" role="navigation">
+                    <ul class="ui-grid-c">
+                        <li class="ui-block-a">
+                            <a data-icon="home" href="" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">微信</a>
+                        </li>
+                        <li class="ui-block-b">
+                            <a data-icon="bars" href="" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">通讯录</a>
+                        </li>
+                        <li class="ui-block-c">
+                            <a data-icon="search" href="#discoverPage" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">发现</a>
+                        </li>
+                        <li class="ui-block-d">
+                            <a data-icon="star" href="" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">我</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <div data-role="page" id="messagePage">
+            <div data-role="header" data-position="fixed">
+                <a href="#accountPage" data-transition="slide" data-direction="reverse" data-icon="arrow-l">微信</a>
+                <h1>微信公众号</h1>
+                <div class="ui-btn-right" data-type="horizontal">
+                    <a data-role="button" data-inline='true' href="/simulator/2/" data-ajax="false" data-icon="home" data-iconpos="notext" data-transition="slide"></a>
+                    <a class="xa-homepageLink" data-role="button" href="javascript:void(0);" data-ajax="false" data-inline='true' data-icon="bars" data-iconpos="notext" data-transition="slide"></a>
+                </div>
+            </div>
+            <div data-role="content" class="ui-content" style="padding: 0px 5px; margin-bottom: 54px;">
+                <div id="screen">
+                    <div id="timeline-zone">
+                    </div>
+                </div>
+            </div>
+            <div style="position: fixed; bottom: 0px; width: 100%; border-top: solid 1px #888888; background-color: #EFEFEF; height: 54px;" id="phone">
+                <div id="messagePage-menuBar">
+                    <div class="popover top in x-menuItemContainer">
+                        <div class="arrow"></div>
+                        <div class="x-menuItems">
+                        </div>
+                    </div>
+                    <div id="menubar-zone" class="relative hide">
+                        <div class="" style="margin: 0; width: 100%;">
+                            <div class="x-menus btn-group" style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--
+                <div class="popover top in x-menuItemContainer" style="left: 286.967px; display: block;">    <div class="arrow"></div>    <div class="x-menuItems ui-sortable"><h3 data-menu-id="5" class="popover-title oneMenuItem">菜单项5</h3><h3 data-menu-id="4" class="popover-title oneMenuItem">菜单项4</h3></div>   </div>
+                <div class="relative hide" id="menubar-zone" style="display: block;">          <div style="margin: 0; width: 100%;" class="">     <div style="width: 100%;" class="x-menus btn-group ui-sortable"><a data-menu-id="0" style="width: 10%;" class="btn oneMenu"><span style="position: relative; left: -100px;">*</span><i class="icon-edit"></i></a><a data-menu-id="1" style="width: 29.5%;" class="btn oneMenu">菜单1</a><a data-menu-id="2" style="width: 29.5%;" class="btn oneMenu">菜单2</a><a data-menu-id="3" style="width: 29.5%;" class="btn oneMenu active">菜单3</a></div>    </div>         </div>
+                -->           
+                <form id="messagePage-editPanel" class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <a id="messagePage-editPanel-menubarTrigger" href="#" data-role="button" data-inline="true" data-icon="bars" data-iconpos="notext" data-theme="c" data-mini="true"></a>
+                    </div>
+                    <div class="ui-block-b">
+                        <input type="text" data-inline="true" name="messageInput"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+
+        <div data-role="page" id="discoverPage">
+            <div data-role="header">
+                <h1>发现</h1>
+                <a href="/simulator/2/" data-ajax="false" data-icon="home" data-iconpos="notext" data-transition="slide"></a>
+            </div>
+            <div data-role="content" class="ui-content">
+                <ul data-inset="true" data-theme="c" data-role="listview">
+                    <li>
+                        <a href="#friendPage" data-transition="slide">
+                            <img src="/standard_static/img/weixin_friend.jpg" class="ui-li-icon ui-corner-none" style="max-width: 40px; max-height: 40px;">
+                            <h2 style="margin-left: 30px;">朋友圈</h2>
+                            <p class="ui-li-aside" style="color: red;">*</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div data-role="footer" style="position: fixed; bottom: 0px; width: 100%;">
+                <div data-iconpos="top" data-role="navbar" data-cid="30" data-ui-sortable="true" data-ui-behavior="xub-selectable" class="ui-navbar ui-mini" role="navigation">
+                    <ul class="ui-grid-c">
+                        <li class="ui-block-a">
+                            <a data-icon="home" href="#accountPage" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">微信</a>
+                        </li>
+                        <li class="ui-block-b">
+                            <a data-icon="bars" href="" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">通讯录</a>
+                        </li>
+                        <li class="ui-block-c">
+                            <a data-icon="search" href="" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">发现</a>
+                        </li>
+                        <li class="ui-block-d">
+                            <a data-icon="star" href="" data-corners="false" data-shadow="false" data-iconshadow="false" data-wrapperels="span" data-iconpos="top" data-theme="a" data-inline="true">我</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div data-role="page" id="friendPage">
+            <div data-role="header">
+                <a href="#discoverPage" data-transition="slide" data-direction="reverse" data-icon="arrow-l">发现</a>
+                <h1>朋友圈</h1>
+                <a href="/simulator/2/" data-ajax="false" data-icon="home" data-iconpos="notext"></a>
+            </div>
+            <div data-role="content" class="ui-content" style="padding: 0px;">
+                <div class="pr">
+                    <img id="friendPageLogo" src="/standard_static/img/simulator/friend_logo_zhouxun.jpg" width='100%' />
+                    <div class="headImgBox">
+                        <img id="myHeadImg" src="/standard_static/img/simulator/zhouxun.jpg" width='100%' />
+                    </div>
+                </div>
+                
+                <div id="friendSharedMessageList" class="mt50">
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+        <div data-role="page" id="browserPage">
+            <div data-role="header">
+                <a id="browserPage-backBtn" href="" data-transition="slide" data-direction="reverse" data-icon="arrow-l">返回</a>
+                <h1>浏览器</h1>
+                <a id="browserPage-shareBtn" href="" data-icon="forward" data-iconpos="notext" data-transition="slide"></a>
+            </div>
+            <div data-role="content" class="ui-content" style="padding: 0px;">
+                <iframe src="/loading/" frameborder="0" width="100%" height="100%" id="mobile-browser" name="mobile-browser"></iframe>
+            </div>
+        </div>
+
+
+
+
+        <div data-role="page" id="sharePage">
+            <div data-role="header">
+                <a href="#browserPage" data-transition="slide" data-direction="reverse" data-icon="arrow-l">取消</a>
+                <h1>分享到朋友圈</h1>
+            </div>
+            <div data-role="content" class="ui-content" >
+                <form>
+                    <label>此时心情</label>
+                    <input type="text" name="message" value=""/>
+
+                    <label>链接标题</label>
+                    <input type="text" name="link_title" />
+
+                    <a id="sendBtn" data-theme="b" data-role="button" href="#browserPage" data-transition="slide" data-direction="reverse">发送</a>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- views start -->
+        {{ weapp_views|safe }}
+        <!-- views end -->
+
+        <script type="text/javascript">
+        var loginPage = new W.view.common.advanceWeixinSimulator.LoginPage({
+            el: '#loginPage'
+        });
+
+        var accountListPage = new W.view.common.advanceWeixinSimulator.AccountListPage({
+            el: '#accountPage'
+        });
+
+        var discoverPage = new W.view.common.advanceWeixinSimulator.DiscoverPage({
+            el: '#discoverPage'
+        });
+
+        var friendPage = new W.view.common.advanceWeixinSimulator.FriendPage({
+            el: '#friendPage'
+        });
+
+        var browserPage = new W.view.common.advanceWeixinSimulator.BrowserPage({
+            el: '#browserPage'
+        });
+
+        var sharePage = new W.view.common.advanceWeixinSimulator.SharePage({
+            el: '#sharePage'
+        });
+
+        var messagePage = new W.view.common.advanceWeixinSimulator.MessagePage({
+            el: '#messagePage'
+        });
+
+        $.cookie('wx-simulate-weixin', 'true', {path:'/'});
+        </script>
+    </body>
+</html>

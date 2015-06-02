@@ -1,0 +1,27 @@
+<!-- this is copied from weixin-edit-menu-panel for temp solution -->
+<script id="weixin-menu-item-tmpl-src" type="text/x-jquery-tmpl">
+	<button type="button" class="xa-close close xui-close xui-i-menu-close mt5 mr5">×</button>
+	<div class="xui-menu-left-item pa">
+		<div class="xui-one-menu active">
+			<li>一级菜单</li>
+			<input name="oneMenuText" class="form-control ml0" readonly="readonly" value="标题">
+			<a href="javascript:void(0);" class="xa-edit-one-menu">编辑</a>
+		</div>
+		<div class="xui-two-menu">
+			<li>二级菜单</li>
+			<div class="xui-one-menu-item"></div>
+			<a href="javascript:void(0);" class="xa-add-one-menu-item">+添加二级菜单</a>
+		</div>
+	</div>
+	<div class="xui-menu-right-item">
+		<div id="edit-message-panel" class="xui-menu-right-item-inner"></div>
+	</div>
+</script>
+
+<script id="weixin-one-menu-item-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="pt10 mb5" style="cursor: move;">
+		<input name="oneMenuItemText" class="form-control ml0" readonly="readonly">
+		<a href="javascript:void(0);" class="xa-edit-one-menu-item xui-edit-one-menu-item">编辑</a>
+		<a href="javascript:void(0);" class="xa-del-one-menu-item xui-del-one-menu-item">删除</a>
+	</div>
+</script>

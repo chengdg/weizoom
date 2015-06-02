@@ -1,0 +1,435 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+    <div class="xui-refundOrderPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li>
+				<a href="/mall/orders/get/">订单管理</a>
+			</li>
+			<li class="active">退款订单</li>
+		</ul>
+	</div>
+	<!-- 筛选 -->
+	<div class="xa-orderFilterView xui-filterPanel"></div>
+	{% if has_order %}
+		<div
+			data-ui-role="advanced-table"
+			data-app="mall"
+			data-api="refund_orders/get"
+			data-enable-paginator="true"
+			data-template-id="#mall-orders-view"
+			data-init-sort="-created_at"
+			data-user-webapp-id={{user.get_profile.webapp_id}}
+		>
+		</div>
+	{% else %}
+	<ul class="nav nav-tabs mt14 mb20">
+		<li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">所有订单</a></li>
+  		<li class="xa-count" data-total-status-value="0"><a href="javascript:void(0);">待支付</a></li>
+  		<li class="xa-count" data-total-status-value="3"><a href="javascript:void(0);">待发货</a></li>
+  		<li class="xa-count" data-total-status-value="4"><a href="javascript:void(0);">已发货</a></li>
+  		<li class="xa-count" data-total-status-value="5"><a href="javascript:void(0);">已完成</a></li>
+  		<li class="xa-count" data-total-status-value="1"><a href="javascript:void(0);">已取消</a></li>
+  		<li class="xa-count" data-total-status-value="6"><a href="javascript:void(0);">退款中</a></li>
+  		<li class="fr"><p class="fb mb0 " style="line-height:30px; width:274px;text-align:right ;">筛选结果：共0条订单</p></li>
+	</ul>
+	<div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+	{% endif %}
+    </div>
+{% endblock %}
+
+
+
+{% block js %}
+{% verbatim %}
+<script id="mall-orders-view" type="text/x-jquery-tmpl">
+	<ul class="nav nav-tabs mt14 ">
+		<li class="xa-count {{if data.current_status_value==-1}}active{{/if}}" data-total-status-value="-1"><a href="javascript:void(0);">全部</a></li>
+		<li class="xa-count {{if data.current_status_value==6}}active{{/if}}" data-total-status-value="6"><a href="javascript:void(0);">退款中</a></li>
+		<li class="xa-count {{if data.current_status_value==7}}active{{/if}}" data-total-status-value="7"><a href="javascript:void(0);">退款完成</a></li>
+		<li class="fr"><p class="fb mb0 " style="line-height:30px; width:686px;text-align:right ;">筛选结果：共${data.order_return_count}条订单</p></li>
+	</ul>
+	{{if data.pageinfo.object_count != 0}}
+	<table class="table table-condensed mb15 xui-tableHead">
+		<thead>
+			<tr>
+				{{if data.is_show_source }}
+				<th width="75">来源</th>
+				{{/if}}
+				<th width="310">
+					商品
+				</th>
+				<th width="80">单价/数量</th>
+				<th width="140">优惠金额</th>
+				<th width="100">买家</th>
+				<th width="110">实付金额</th>
+				<th width="90">订单状态</th>
+				<th width="90">操作</th>
+				<!--<th>商品数</th>
+				<th>收货人</th>
+				<th class="tx_sortable" data-sort-attr='created_at'>下单时间</th>
+				<th class="tx_sortable" data-sort-attr='payment_time'>付款时间</th>
+				-->
+			</tr>
+		</thead>
+	</table>
+	{{/if}}
+
+	{{if data.pageinfo.object_count == 0}}
+		<div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+	{{/if}}
+	<ul>
+    {{each(i, order) items}}
+		<li>
+			<table width="100%" class="table mb15 xui-table-orderDetail">
+				<tr class="xui-order-firstTr">
+					<td colspan="8">
+					<div class="fl">
+						<span class="ml20 fl">
+						订单编号：
+						<a title="查看" class="xt-orderLink" href="/mall/refund_order_detail/get/?order_id=${order.id}" target="_blank">${order.order_id}</a>
+						</span>
+						<span class="ml10 fl w60">
+						&nbsp;
+							${order.pay_interface_name}
+						</span>
+						<span class="ml80">
+							下单时间：${order.created_at}
+						</span>
+						<span class="ml80">
+						&nbsp;
+							{{if order.payment_time}}
+								付款时间：${order.payment_time}
+							{{/if}}
+						</span>
+					</div>
+					<div class="fr">
+						<a title="查看" href="/mall/refund_order_detail/get/?order_id=${order.id}" target="_blank" class="mr10">查看详情</a>
+						-
+						<a href='javascript:void(0);' class="ml10 mr15 xa-order-remark" data-order-id="${order.id}" data-order-value="${order.remark}">备注</a>
+					</div>
+					</td>
+				</tr>
+				<tr>
+					{{if data.is_show_source}}
+					<td class="nowrap" width="75">
+						{{if order.come == 'weizoom_mall'}}
+							商户
+						{{else}}
+							本店
+						{{/if}}
+					</td>
+					{{/if}}
+					<td class="" width="390">
+					<ul class="">
+					{{each(i, product) order.products}}
+						<li class="disT" style="width:100%;" data-id="${product.id}">
+							<div style="display:table-cell;vertical-align:middle;text-align: center;width:75px">
+                            {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                              <img class="xui-product-thumbnails" src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                            {{else}}
+                              <img class="xui-product-thumbnails" src="${product.thumbnails_url}" width="60" height="60"/>
+                            {{/if}}
+
+							</div>
+							<div style="width:235px;display:table-cell">
+								<p class="tl"><span class="xa-productName " name="xa-productName">
+									{{if product.promotion }}
+											{{if product.promotion.type == "flash_sale"}}【限时抢购】{{/if}}
+											{{if product.promotion.type == "premium_sale:premium_product"}}【赠品】 {{/if}}
+										{{/if}}
+									${product.name}
+								</span></p>
+								<p class="tl pt10">
+								{{each(p, property) product.custom_model_properties}}
+								<span class="mr15">
+									${property.name}:${property.property_value}
+								</span>
+								{{/each}}
+								</p>
+							</div>
+							<div style="width:80px;display:table-cell">
+								<p class="tc">${product.price}</p>
+								<p class="tc">(${product.count}${product.physical_unit}&nbsp;件)</p>
+							</div>
+						</li>
+					{{/each}}
+					</ul>
+					</td>
+					<td width="140">
+						{{if order.save_money != 0 }}
+							${ order.save_money.toFixed(2)}
+						{{/if}}
+					</td>
+					<td width="100">
+						{{if order.member_id > 0}}
+							<a href="/webapp/user_center/member/${order.member_id}/">{{html order.buyer_name}}</a>
+						{{else}}
+							{{html order.buyer_name}}
+						{{/if}}
+						{{if order.customer_message}}
+							<p class="pt5 tc"><a class="xa-costomerMessage xui-costomerMessage" data-content="${order.customer_message}"></a></p>
+						{{/if}}
+						<!--${order.customer_message}-->
+					</td>
+					<td width="110">
+						{{if order.type == 'integral'}}
+							${order.integral}积分
+						{{else}}
+							{{if order.webapp_id == userWebappId}}
+		                        ${order.total_price}
+		                    {{else}}
+		                    	${order.order_total_price}
+		                    {{/if}}
+		                    {{if order.postage > 0 }}
+		                    </br>
+		                    	<span class="xui-colorGray">(含运费：${order.postage})</span>
+		                    {{/if}}
+		                {{/if}}
+
+					</td>
+					<td class="nowrap" width="90">
+						<div>
+	                        {{html formatOrderStatus(order.status)}}
+
+						</div>
+					</td>
+					<!--<td class="auto_wrap">
+						<div style="width:150px;" class="nowrap">
+							{{if order.customer_message}}
+									${order.customer_message}
+							{{/if}}
+						</div>
+					</td>-->
+					<td class="nowrap xui-operation" width="90">
+
+					</td>
+				</tr>
+
+					{{if order.remark}}
+					<tr>
+						<td colspan="8" class="xui-remark">
+							<img src="/static_v2/img/editor/attention.jpg">卖家备注：${order.remark}
+						</td>
+				    </tr>
+					{{/if}}
+
+			</table>
+		</li>
+	{{/each}}
+	</ul>
+</script>
+
+<script id="order-products-table-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed" id='xx' style="margin: 5px auto; background-color: #FAFAFA; width: 94%;">
+    {{if products}}
+    	<tr>
+    		<th>商品</th>
+    		<th>规格</th>
+    		<th>数量</th>
+    		<th>总价</th>
+    	</tr>
+        {{each(i, product) products}}
+        <tr>
+			<td width="200" style="padding: 10px;">
+                {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                  <img class="imgBox" src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                {{else}}
+                  <img class="imgBox" src="${product.thumbnails_url}" width="60" height="60"/>
+                {{/if}}
+
+                <span class="ml10">${product.name}</span>
+                <span class="ml10" style="color: red">
+                	{{if product.is_deleted}} 已删除 {{/if}}
+                </span>
+            </td>
+            <td width="20%">
+            {{if (product.custom_model_properties !== null)}}
+            	{{each(j, property) product.custom_model_properties}}
+            	${property.name}: ${property.property_value}<br/>
+            	{{/each}}
+            {{/if}}
+           	</td>
+            <td width="10%" class="nowrap">
+                x ${product.count}
+            </td>
+			<td width="10%" class="nowrap">
+                ￥${product.total_price}
+			</td>
+		</tr>
+        {{/each}}
+    {{else}}
+    	<tr><td>暂无数据</td></tr>
+    {{/if}}
+	</table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+function formatOrderStatus(status) {
+	var color = '#333333';
+	if (status === '退款中') {
+		return '<img src="/static_v2/img/editor/refund.jpg" class="mr5"><span style="color:red">' + status + '</span>';
+	} else {
+		return '<span style="color: ' + color + '">' + status + '</span>';
+	}
+	return
+}
+var DATA_INTERVAL = '';
+$(document).ready(function() {
+	var filterBox = new W.view.mall.order.orderFilter({
+		el: ".xa-orderFilterView",
+		dataView: $('[data-ui-role="advanced-table"]').data('view'),
+		userWebappId: {{user.get_profile.webapp_id}},
+		status:'refund'
+	});
+
+	filterBox.$el.bind('end_click', function(){
+		// $('#start_date').val('');
+		// $('#end_date').val('');
+		DATA_INTERVAL = '';
+	});
+
+	// 订单状态栏，点击事件
+	$('body').delegate('.xa-count', 'click', function(event){
+        var $el = $(event.currentTarget);
+        status = $el.attr('data-total-status-value');
+        filterBox.trigger('clickStatusBox', status);
+	});
+
+	// 导出
+	$('#exportBtn').click(function(event) {
+		var url = '/mall/editor/orders/export/';
+		if (filterBox.filter_value) {
+			url = url + '?filter_value='+filterBox.filter_value+'&date_interval='+DATA_INTERVAL;
+		}
+		console.log(url, filterBox.filter_value)
+		W.getLoadingView().show();
+		$('#spin-hint').html('玩命导出中...');
+		var $frame=$('<iframe>').hide().attr('src',url);
+		$('body').append($frame);
+		setTimeout(function(){W.getLoadingView().hide()}, 5000);
+	});
+
+	// 时间确定按钮
+	$('#dateTimeBtn').click(function(event){
+		var startDate = $('#start_date').val();
+		var endDate = $('#end_date').val();
+		if (!W.validate()) {
+			return false;
+		}
+		var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+		var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+		if (start > end){
+			W.getErrorHintView().show('开始日期不能大于结束日期！');
+			return false;
+		}
+
+		DATA_INTERVAL = startDate+'|'+endDate;
+
+    	var dataView = $('[data-ui-role="advanced-table"]').data('view');
+    	dataView.options.args = _.extend('{"date_interval":"'+DATA_INTERVAL+'", "filter_value":"'+filterBox.filter_value+'"}', dataView.options.args);
+    	dataView.reload();
+	});
+
+	// 获取商品
+	$('#order-products-table-tmpl-src').template('order-products-table-tmpl-src');
+	if($('[data-ui-role="advanced-table"]').length>0)// 避免没有数据时报空
+		$('[data-ui-role="advanced-table"]').data('view').on('table-row-expanded', function(order_id, $tr) {
+			if ($tr.find('table').length !== 0) {
+				xlog('already loaded');
+				return;
+			}
+			W.getApi().call({
+				app: 'mall',
+				api: 'order_products/get',
+				args: {
+					order_id: order_id
+				},
+				success: function(data) {
+					var $node = $.tmpl('order-products-table-tmpl-src', data);
+					$tr.find('td').empty().append($node);
+				},
+				error: function(resp) {
+					$tr.find('td').empty().html('无商品数据')
+				}
+			})
+		});
+	// 备注
+	$('body').delegate('.xa-order-remark', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var orderId = $el.attr('data-order-id');
+		var message = $el.attr('data-order-value');
+
+		var mallOrderRemarkView = W.getMallOrderRemarkView({
+			width: 574,
+			height: 62,
+			title: '备注',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-remarkDropBox'
+
+		});
+		mallOrderRemarkView.show({
+			$action: $el,
+			orderId: orderId,
+			message: message
+		})
+
+	});
+	//买家留言
+	$('body').delegate('.xa-costomerMessage', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var messageContent = $el.attr('data-content');
+		// console.log(content);
+		var mallOrderCostomerMessageView = W.getMallOrderCostomerMessageView({
+			width: 220,
+			isTitle: false,
+			isArrow:false,
+			privateContainerClass:'xui-costomerMessageDropBox',
+			position:'down-left'
+		});
+		mallOrderCostomerMessageView.show({
+			$action: $el,
+			messageContent: messageContent
+		});
+	})
+
+	// 批量发货
+	$('#deliveryBtn').click(function(event){
+		W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
+		    success: function(data) {
+		    	console.log('aaaaa', data);
+        		W.getLoadingView().show();
+
+				W.getApi().call({
+					app: 'mall',
+					api: 'bulk_shipments',
+					method: 'post',
+					args: {
+						file_url: data
+					},
+					success: function(data) {
+						console.log('bulk_shipments/update', data);
+						W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
+						W.getLoadingView().hide();
+					},
+					error: function(resp) {
+						W.getLoadingView().hide();
+						W.getErrorHintView().show('处理失败，请稍后重试！');
+					}
+				})
+		    }
+		});
+
+	});
+});
+</script>
+{% endblock %}

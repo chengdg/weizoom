@@ -1,0 +1,496 @@
+{% extends "base.html" %}
+{% load account_filter %}
+
+{% block content %}
+  <div id="globalErrorPanel" class="alert alert-error hide"></div>
+  <div id="featurePanel"></div>
+  <div id="spin-wrapper"><div id="spin"></div><div id="spin-hint" class="ml10"></div></div>
+  <div id="main-mask"></div>
+
+  <div id="pageHelpDocumentContainer" class="popover left" style="display: none; width: 400px; max-width: 400px; position: fixed;">
+    <div class="arrow" style="top: 50px;"></div>
+    <h3 class="popover-title">帮助文档</h3>
+    <div class="popover-content rawHtml" style="max-height: 400px; overflow-y: auto;">
+      <div class='tc mt20'>
+        加载中...
+      </div>
+    </div>
+  </div>
+
+  <div id="header">
+    <div class="head">
+        <h1 id="headerTitle"><a href="/">{{ system_name }}</a></h1>
+        <ul class="headerMenu clearStyle">            
+            <!--<li>
+                <a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/' title='首页'>首页</a>
+            </li>-->
+           <!--  <li>
+                <a {% ifequal first_nav_name 'weixin' %}class="active"{% endifequal %} href="/weixin/message/message/" title='互动'>互动<span class="unreadMenu" id="unread_message_notify" style="display:none;">5</span></a>
+            </li> -->
+            <!--
+            <li>
+                <a {% ifequal first_nav_name 'webapp' %}class="active"{% endifequal %} href="/webapp/" title='微站'>微站<span class="unreadMenu" id="	" style="display:none;">5</span></a>
+            </li>
+            <li>
+                <a {% ifequal first_nav_name 'mall' %}class="active"{% endifequal %} href="/mall/outline/get/" title='微商城'>微商城</a>
+            </li>
+            -->
+            <li>
+                <a href="/new_weixin/landing_page/" title='新微信'>新微信</a>
+            </li>
+            <li>
+                <a {% ifequal first_nav_name 'apps' %}class="active"{% endifequal %} {% ifequal first_nav_name 'market_tools' %}class="active"{% endifequal %} href="/apps/" title='百宝箱'>百宝箱</a>
+            </li>
+            {% if user|is_system_manager %}
+            <li>
+                <a {% ifequal first_nav_name 'account' %}class="active"{% endifequal %} href="/account/accounts/" title='账户'>账户</a>
+            </li>
+            <li>
+                <a {% ifequal first_nav_name 'product' %}class="active"{% endifequal %}   href="/product/products/" title='产品'>产品</a>
+            </li>
+            {% else %}
+            <li>
+                <a {% ifequal first_nav_name 'template' %}class="active"{% endifequal %} href="/webapp/template/" title='模板'>模板</a>
+            </li>
+            <li>
+                <a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href="/account/" title='账号信息'>账号信息</a>
+            </li>
+            {% endif %}
+        </ul>
+        <div id="headerAction">
+            {% if not is_operator  %}
+	        <span class="mr10">
+            <a href="#" id="x-simulator-btn" class="btn btn-success">微信测试</a>
+<!--             <a href="#" id="notice_btn" title='通知'><img src="/static/img/top_nav_notice.png"><span class="unreadMenu" id="unread_notice_notify" style="display:none;">5</span></a> -->
+          </span>
+            {% endif %}
+            {% if request.sub_user %}
+              <span title="{{ request.sub_user.username }}" class="trialUserStatus system-username-box">
+            你好，{{ request.sub_user.username }} </span>
+            {% else %}
+            	<span title="{{ user.username }}" class="trialUserStatus system-username-box">
+            你好，{{ user.username }} </span>
+            {% endif %}
+           
+            <!-- <a href="/mail/"><img title="消息" class="mailAlert" src="/static/resources/img/top_nav_info_bg.jpg"><span style="display:none;" class="mail_alert tx_mailAlert  mr10"><span class="tx_count">5</span></span></a> -->
+            <span href="javascript:void(0)" style="cursor: pointer;" class="ua-set set">
+            	<img title="设置" src="/static/img/top_nav_set.png">
+            	<span class="unreadMenu unreadMenuNav ua-unread_notice_notify" id="unread_notice_notify" style="display:none;">5</span>
+            </span>
+            <div>
+           		 <div class="setBox hidden ua-setBox" type="off" >
+	            	<ul>
+	            		{% if not is_operator  %}
+	            		<li>
+	            			<a href="#" id="notice_btn" title='通知'>
+	            				<img src="/static/img/top_nav_notice.png">
+	            				<span class="unreadMenu ua-unread_notice_notify unreadnotice" id="unread_notice_notify" style="display:none;">5</span>
+	            				&nbsp;&nbsp;&nbsp;&nbsp;消息
+	            			</a>
+	            		</li>
+	            		{% endif %}
+	            		<li>
+	            			<a href="/logout/">
+	            				<img src="/static/img/top_nav_logout_bg.png">
+	            				&nbsp;&nbsp;&nbsp;&nbsp;退出
+	            			</a>
+	            		</li>
+	            	</ul>
+	            </div>
+	        </div>
+        </div>
+    </div>
+</div>
+
+  {% if enable_embed_simalator %}
+  <div id="embed-simulator-box">
+  	<iframe src="/weixin/simulator/?mode=embed&url={{ embed_url }}" frameborder="0" width="430px" height="680px" id="embed-simulator" name="embed-simulator"></iframe>
+      <button class="btn btn-primary" id="x-embed-simulator-btn">&lt;</button>
+  </div>
+  {% endif %}
+
+  <div id="main-panel">
+    <div id="helpSystemLink" class="hide">
+      {% if need_show_page_help_action %}
+        {% if user.is_manager %}
+        <div class="btn-group">
+          {% if has_page_help_document %}
+          <a href="/help/document/update/?page_id={{ request.page_id }}" class="btn btn-info"><i class="icon-white icon-pencil"></i> 编辑帮助</a>
+          <a data-page-id="{{ request.page_id }}" id="helpSystemLink_viewPageHelpLink" href="javascript:void(0);" class="btn btn-info"><i class="icon-white icon-question-sign"></i></a>
+          {% else %}
+          <a href="/help/document/create/?page_id={{ request.page_id }}" class="btn btn-warning"><i class="icon-white icon-plus"></i> 创建帮助</a>
+          {% endif %}
+        </div>
+        {% else %}
+        <a data-page-id="{{ request.page_id }}" id="helpSystemLink_viewPageHelpLink" href="javascript:void(0);" class="btn"><i class="icon-question-sign"></i></a>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div id="featureLink" class="hide">
+      {% if need_show_feature %}
+      <div class="btn-group">
+        <a class="btn {% if feature_count > 0 %}btn-info{% else %}btn-warning{% endif %} dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="icon-white icon-list-alt"></i> Features({{feature_count}})
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          {% for feature in features %}
+          <li><a href='javascript:void(0);' data-id="{{feature.id}}">{{feature.name}}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="container {% if second_navs %}main-right-container{% endif %}">
+      <!-- 左侧垂直方向二级导航 -->
+      <div class="row">
+        {% if second_navs %}
+        <div class="span3" id="x-leftNavZone">
+          <ul class="nav nav-list x-left-nav">
+            <!--
+            <li class="{% ifequal nav_name 'usercenter' %}active{% endifequal %}"><a href="#usercenter"><i class="icon-chevron-right"></i> 用户中心</a></li>
+            -->
+            {% for second_nav in second_navs %}
+              {% if second_nav.section %}
+              <li><span>{{ second_nav.section }}</span></li>
+              {% endif %}
+              {% for nav in second_nav.navs %}
+              <li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}"><a href="{{nav.url}}" title="{{nav.title}}"><i class="icon-chevron-right"></i> {{nav.title|safe}}</a></li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="span9 pr">
+          <!-- 内容 start -->
+          {% block content-panel %}{% endblock %}
+          <!-- 内容 end -->
+        </div>
+        {% else %}
+          <!-- 内容 start -->
+          {% block single-content-panel %}{% endblock %}
+          <!-- 内容 end -->
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!--
+
+	<div class="footer">
+		<div class="footerInfo">
+			<span>客服电话:400-688-6929</span>
+			<span>
+				<a href="http://wpa.qq.com/msgrd?v=3&uin=800051878&Site=qq&Menu=yes" target="blank">
+					<i class="icon_qq"></i>
+					在线咨询
+				</a>
+			</span>
+		</div>
+    <div id ="help">
+    <a  target="blank" href="#" id="feedback">反馈意见</a>&nbsp;|&nbsp;<a href="/operation/helper" target="blank" id="help">使用帮助</a>&nbsp;|&nbsp;<a href="/operation/version" target="blank" id="version">版本升级</a><br> -->
+		<!--Copyright &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.weizoom.com" target="blank">微众传媒</a>
+  -->
+
+  </div>
+	</div>
+
+  {% if user_product.footer == 0 %}
+  <div class="footer">
+    <span>
+      <a target="_blank" href="http://www.weizoom.com">关于微众</a>&nbsp;|&nbsp;
+      <a href="http://bizapp.qq.com/webc.htm?new=0&sid=800051878&eid=&o=http://www.weizoom.com/&q=7&ref=http://www.weizoom.com/" target="_blank">在线客服</a>&nbsp;|&nbsp;      
+      <a target="_blank" href="mailto:service@weizoom.com">联系邮箱</a>
+      {% if under_develop %}
+      &nbsp;|&nbsp;<a target="_blank" href="/example/db/">Django DB</a>
+      &nbsp;|&nbsp;<a target="_blank" href="http://weixin.weappsimulator.com/simulator/2/">微信模拟器</a>
+      {% endif %}
+    </span>
+    <span>Copyright&nbsp;&copy; 2012-2015 微众传媒 All Rights Reserved.</span>
+  </div>
+  {% endif %}
+  {% if user_product.footer == 1 %}
+  <div class="footer" style="background-color: #E7E7E7; border-top: solid 1px #CFCFCF;">
+    <span>
+      <a href='http://www.weizoom.com/' alt="微众传媒">
+        <img src="/standard_static/img/agent/weizoom_logo.png" />
+      </a>
+      <a href="http://shop.weihutong.cn/" alt="微互通">
+        <img src="/standard_static/img/agent/weihutong_logo.png" class="ml10">
+      </a>
+    </span>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block base_js %}
+    <!-- start of ueditor -->
+    
+    <script type="text/javascript">
+     window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
+    </script>  
+    <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
+    <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
+    <!-- end of ueditor -->
+
+    <div id="jsons" style="display: none;">
+        {% for json in jsons %}
+        <div id="__json-{{json.name}}">
+            {{json.content|safe}}
+        </div>
+        {% endfor %}
+    </div>
+
+    <script type="text/javascript">
+        $('.wui-rightNav').show();
+        W.uid = {{ user.id }};
+        W.username = "{{ user.username }}";
+        W.host = "{{request.META.HTTP_HOST}}";
+        W.API_VERSION = 1;
+        W.isUnderDevelop = {% if under_develop %}true{% else %}false{% endif %};
+
+        {% if mp_user %}
+        	W.mpUserAccessToken = "{{ mp_user.access_token }}";
+        	W.mpUserFakeId = "";
+        	W.mpUserCookie = "{{ mp_user.cookie }}";
+        {% else %}
+        	W.mpUserAccessToken = '';
+        	W.mpUserFakeId = '';
+        	W.mpUserCookie = '';
+        {% endif %}
+
+        {% if preview_info %}
+          W.previewName = "{{ preview_info.name }}";
+          W.previewImage = "{{ preview_info.image_path }}";
+        {% else %}
+          W.previewName = "信息预览";
+          W.previewImage = "/static/img/user-1.jpg";
+        {% endif %}
+        
+        //added by chuter
+        function unReadCountCheck() {
+          /*
+          W.getApi().call({
+            app: 'webapp',
+            api: 'unread_count_notify/get',
+            args: {
+            },
+            success: function(data) {
+              var unreadRealtimeCount = data.unread_realtime_count;
+              var unreadOrderCount = data.unread_order_count;
+              var unreadNoticeCount = data.unread_notice_count;
+
+              if (unreadRealtimeCount > 0) {
+                // $('#message_notify').html('new');
+                $('#unread_message_notify').css('display', 'inline');
+              } else {
+                $('#unread_message_notify').css('display', 'none');
+              }
+
+              if (unreadOrderCount > 0) {
+                // $('#message_notify').html('new');
+                $('#unread_order_notify').css('display', 'inline');
+              } else {
+                $('#unread_order_notify').css('display', 'none');
+              }
+
+              if (unreadNoticeCount > 0) {
+                // $('#message_notify').html('new');
+                $('.ua-unread_notice_notify').css('display', 'inline');
+                $('.ua-unread_notice_notify').text(unreadNoticeCount);
+              } else {
+                $('.ua-unread_notice_notify').css('display', 'none');
+              }
+            },
+            error: function(resp) {
+              //TODO 进行错误通知
+            }
+          });
+*/
+        }
+
+        function positionHelpSystemLink() {
+          var $panel = $('#main-panel');
+          var left = $panel.offset().left;
+          var width = $panel.outerWidth();
+          var $link = $('#helpSystemLink');
+          /*var linkWidth = $link.outerWidth();*/
+          $link.css('left', left+width+'px').show();
+          $('#featureLink').css('left', left+width+'px').show();
+
+        }
+
+        function positionFeaturePanel() {
+          var $window = $(window);
+          var height = $window.outerHeight();
+          $('#featurePanel').height(height-55+'px');
+        }
+
+        $(document).ready(function() {
+          /*
+          var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+          var isFirefox = typeof InstallTrigger !== 'undefined';
+          var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+          var isChrome = !!window.chrome && !isOpera;
+
+          if ((!isFirefox) && (!isChrome) && (!isSafari)) {
+            $('.browserRestrictions').css('display', 'block');
+          }
+          */
+
+          //dailog
+          /*$('#feedback').click(function(event) {
+            window.open('/operation/api/feedback/add/', '_blank', 'top=200, left=350, width=630, height=300,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no');
+            event.stopPropagation();
+            event.preventDefault();
+          });*/
+
+          //message notify interval
+
+          {% if not under_develop %}
+          unReadCountCheck();
+          var unread_message_notify_interval = setInterval(
+            unReadCountCheck, 5000); //5s进行一次未读消息数的检查
+          {% endif %}
+
+
+          $('#notice_btn').click(function(event){
+            W.dialog.showDialog('W.weapp.dialog.ManageNoticeDialog', {});
+          });
+
+
+
+          $('#previewWebappBtn').click(function() {
+            http://dev.weapp.com/workbench/jqm/preview/?project_id=11
+            var url = '/webapp/preview/';
+            window.open(url, '_blank', 'top=50, left=300, width=430, height=600,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=yes');
+          });
+ 
+	        $('#x-simulator-btn').click(function(event) {
+		        window.open('/simulator/', '_blank', 'top=50, left=300, width=430, height=700,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no');
+		        event.stopPropagation();
+		        event.preventDefault();
+	        });
+
+          
+
+	        $('#x-embed-simulator-btn').click(function(event) {
+		        var text = $('#x-embed-simulator-btn').text();
+		        if (text == '<') {
+		        $('#embed-simulator-box').animate({
+			        left: '-420px'
+		        }, 500, function() {
+			        $('#x-embed-simulator-btn').text('>')
+		        });
+		        } else {
+			        $('#embed-simulator-box').animate({
+                        left: '-5'
+                    }, 500, function() {
+	                    $('#x-embed-simulator-btn').text('<')
+	                });
+		        }
+	        });
+
+          //设置页面帮助信息
+          $('#helpSystemLink_setPageHelpLink').click(function() {
+            var pageId = $(this).attr('data-page-id');
+            W.dialog.showDialog('W.dialog.manager.SetPageHelpDialog', {
+              pageId: pageId,
+              success: function(data) {
+                W.getLoadingView().show();
+                W.getApi().call({
+                  app: 'help',
+                  api: 'page_help/update',
+                  method: 'post',
+                  args: {
+                    page_id: pageId,
+                    document_id: data
+                  },
+                  success: function() {
+                    W.getLoadingView().hide();
+                    W.getErrorHintView().show('设置页面帮助文档成功!');
+                  },
+                  error: function() {
+                    W.getLoadingView().hide();
+                    alert('设置页面帮助文档失败!');
+                  }
+                }) 
+              }
+            })
+          });
+
+          //设置feature信息
+          $('#featureLink a').click(function(event) {
+            var id = $(this).attr('data-id');
+            if (id) {
+              W.getApi().call({
+                app: 'help',
+                api: 'feature_content/get',
+                args: {
+                  id: id
+                },
+                success: function(data) {
+                  var $featurePanel = $('#featurePanel');
+                  $featurePanel.empty()
+                  .html(data)
+                  .append('<button class="btn btn-danger"><i class="icon-white icon-remove"></i></button>')
+                  .animate({left: '0px'}, "fast");
+                },
+                error: function(resp) {
+                  alert('没有这个Feature');
+                }
+              })
+            }
+          });
+          $('#featurePanel').delegate('button', 'click', function(event) {
+            $('#featurePanel').animate({left: '-550px'}, "fast");
+          })
+
+          $(window).resize(function(){
+            positionHelpSystemLink();
+            positionFeaturePanel();
+          }).resize();
+
+          //浏览页面帮助信息
+          $('#helpSystemLink_viewPageHelpLink').click(function(event) {
+            var $pageHelpDocumentContainer = $('#pageHelpDocumentContainer');
+            if (!$pageHelpDocumentContainer.attr('data-initialized')) {
+              //设置位置
+              $pageHelpDocumentContainer.attr('data-initialized', 'true');
+              var $link = $(event.currentTarget);
+              var offset = $link.offset();
+              var left = offset.left - $pageHelpDocumentContainer.outerWidth();
+              var top = (100 - 50) + ($link.outerHeight() / 2.0);
+              $pageHelpDocumentContainer.css({
+                left: left+'px',
+                top: top+'px'
+              });
+
+              //获取数据
+              var pageId = $(this).attr('data-page-id');
+              W.getApi().call({
+                app: 'help',
+                api: 'document/get',
+                args: {
+                  page_id: pageId
+                },
+                success: function(data) {
+                  $pageHelpDocumentContainer.find('.popover-content').html(data.content);
+                },
+                error: function(resp) {
+                  $pageHelpDocumentContainer.find('.popover-content').html('<div class="tc mt20">本页面无帮助文档</div>');
+                }
+              })
+            }
+            
+            if ($pageHelpDocumentContainer.is(':visible')) {
+              $pageHelpDocumentContainer.fadeOut('fast');
+            } else {
+              $pageHelpDocumentContainer.fadeIn('fast');
+            }
+          });
+        });
+    </script>
+    {% block js %}{% endblock %}
+ {% endblock %}

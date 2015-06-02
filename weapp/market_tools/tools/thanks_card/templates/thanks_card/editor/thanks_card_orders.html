@@ -1,0 +1,238 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% load mall_filter %}
+{% block css %}
+<style>
+	.btn-orange {
+		background: #F9AB3A;
+		color: #fff;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li class="active">感恩贺卡</li>
+		</ul>
+		<span class="breadcrumRightButton">
+			<a id="thanksCardSettingBtn" class="btn btn-primary" href="./thanks_card/edit/"><i class="icon-plus icon-white"></i>感恩贺卡设置</a>
+		</span>
+	</div>
+
+	{% if has_order %}
+		<div>
+			<input type="text" class="w100 ua-secretText" placeholder="查找感恩密码"/>
+			<button class="btn ua-searchSecret" style="margin-top: -13px; margin-left: 5px;">查找</button>
+		</div>
+		
+		<div  class="ua-orderListView"
+			data-ui-role="advanced-table" 
+			data-app="mall" 
+			data-api="thanks_card_orders/get" 
+			data-enable-paginator="true" 
+			data-template-id="#thanks-card-orders-view"
+			data-init-sort="-created_at" 
+		>
+		</div>
+	{% else %}
+		目前还没有数据
+	{% endif %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% verbatim %}
+<script id="thanks-card-orders-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed table-hover">
+		<thead>
+			<tr>
+				<th colspan='2' width="110">
+					<p class="m0 f14 tx_searchable">
+						订单号
+					</p>
+				</th>
+                <th class="tx_sortable" data-sort-attr='payment_time'>付款时间</th>
+                <th>感恩密码</th>
+				<th>贺卡生成个数</th>
+				<th>收听次数</th>
+				<th class="tx_filterable">
+					<div class="dropdown">
+						<p class="m0 dropdown-toggle" style="font-size: 14px;">订单状态</p>
+						<ul class="dropdown-menu">
+	                        <li><a href="javascript:void(0);" data-attr='status' data-value="-1">全部</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="0">待支付</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="3">待发货</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="4">已发货</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="1">已取消</a></li>
+							<li><a href="javascript:void(0);" data-attr='status' data-value="5">已完成</a></li>
+						</ul>
+					</div>
+				</th>				
+			</tr>
+		</thead>
+		<tbody>
+            {{if items.length}}
+            {{each(i, order) items}}
+			<tr data-id="${order.id}">
+				<td class="w10 tx_expandTrigger" data-expand-source="${order.id}" style="cursor: pointer;"> + </td>
+				<td class="nowrap">
+					<div>
+						<a title="查看" href="/mall/editor/order/get/?order_id=${order.id}">${order.order_id}</a>
+					</div>
+				</td>
+                <td class="nowrap">
+					<div>
+                        ${order.payment_time}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+                        ${order.thanks_secret_count}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+                        ${order.card_count}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+                        ${order.listen_count}
+					</div>
+				</td>
+				<td class="nowrap">
+					<div>
+                        {{html formatOrderStatus(order.status)}}
+					</div>
+				</td>				
+			</tr>
+			<tr class="hide ua-orderId" data-expand-target="${order.id}">
+				<td colspan="10">
+					<div class="pt10 pb10 tc" style="background-color: #FAFAFA;">
+						<img src="/standard_static/img/loading.gif" />
+					</div>
+				</td>
+			</tr>
+			{{/each}}
+            {{else}}
+                <tr><td colspan='9'>还没有订单数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</script>
+
+<script id="thanks-card-order-products-table-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed" style="margin: 5px auto; background-color: #FAFAFA; width: 94%;">
+    {{if products}}
+    	<tr>
+    		<th>感恩密码</th>
+    		<th>贺卡生成个数</th>
+    		<th>收听次数</th>
+    	</tr>
+        {{each(i, product) products}}
+        <tr>
+            <td width="20%">
+            	${product.thanks_secret}
+           	</td>
+            <td width="20%" class="nowrap">
+                ${product.card_count}
+            </td>
+			<td width="20%" class="nowrap">
+                <span class="ua-listenCount">${product.listen_count}</span>
+                {{if product.listen_count > 0 }}
+                <button class="btn btn-orange ml10 ua-resetPassword">重置密码</button>
+                {{/if}}
+			</td>
+		</tr>
+        {{/each}}
+    {{else}}
+    	<tr><td>暂无数据</td></tr>
+    {{/if}}
+	</table>
+</script>
+{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+function formatOrderStatus(status) {
+	var color = '#000000';
+	if (status === '待支付' || status === '待发货') {
+		color = '#FF0000';
+	} else if (status === '已发货' || status === '已完成') {
+		color = 'green'
+	} else if (status === '已取消') {
+		color = '#AFAFAF'
+	}
+
+	return '<span style="color: ' + color + '">' + status + '</span>';
+}
+
+$(document).ready(function() {
+	$('.ua-searchSecret').click(function() {
+		var view = $('[data-ui-role="advanced-table"]').data('view');
+		var secret = $('.ua-secretText').val();
+		view.options.args = '{"secret": "'+secret+'"}';
+		view.reload();
+		view.options.args = '';
+	});
+	$('#thanks-card-order-products-table-tmpl-src').template('thanks-card-order-products-table-tmpl-src');
+	if($('[data-ui-role="advanced-table"]').length>0)// 避免没有数据时报空
+		$('[data-ui-role="advanced-table"]').data('view').on('table-row-expanded', function(order_id, $tr) {
+			if ($tr.find('table').length !== 0) {
+				xlog('already loaded');
+				return;
+			}
+			W.getApi().call({
+				app: 'mall',
+				api: 'thanks_card_order_products/get',
+				args: {
+					order_id: order_id
+				},
+				success: function(data) {
+					var $node = $.tmpl('thanks-card-order-products-table-tmpl-src', data);
+					$tr.find('td').empty().append($node);
+				},
+				error: function(resp) {
+					$tr.find('td').empty().html('无商品数据')
+				}
+			})
+		})
+	$('.ua-orderListView').delegate('.ua-resetPassword', 'click',function(event) {
+		var $el = $(event.currentTarget);
+		var id = $el.parents('tr.ua-orderId').attr('data-expand-target');
+		var secret = $el.parents('tr:eq(0)').find('td:eq(0)').text();
+		secret = $.trim(secret);
+		W.getApi().call({
+			app: 'mall',
+			api: 'thanks_card_secret/update',
+			args: {
+				'order_id': id,
+				'secret': secret
+			},
+			success: function(data) {
+				var secret = data.secret || '';
+				$el.addClass('hidden');
+				var $td = $el.parents('td:eq(0)');
+				var listenCount = $td.find('.ua-listenCount').text();
+				var count = $el.parents('tr:eq(0)').find('td:eq(1)').html();
+				//重新生成贺卡后，贺卡的生成个数和收听次数置0
+				$td.find('.ua-listenCount').text(0);
+				$el.parents('tr:eq(0)').find('td:eq(1)').html('0');
+				$el.parents('tr:eq(0)').find('td:eq(0)').html(secret);
+				//重置定单的生成个数，收听次数
+				var $tr = $td.parents('table:eq(0)').parents('tr:eq(0)').prev()
+				var $orderCount = $tr.find('td:eq(4)').find('div');
+				$orderCount.html($orderCount.html()-count);
+				var $listenCount = $tr.find('td:eq(5)').find('div');
+				$listenCount.html($listenCount.html()-listenCount);
+			},
+			error: function() {
+				W.getErrorHintView().show('重置失败！');
+			}
+		});
+	})
+});
+</script>
+{% endblock %}

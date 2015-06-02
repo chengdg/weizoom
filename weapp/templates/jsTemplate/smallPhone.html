@@ -1,0 +1,159 @@
+<script id="small-phone-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="small-phone">
+        <div id="screen">
+	        {{if enableWeixin}}
+	        <div id="timeline-zone">
+	        </div>
+	        {{/if}}
+	        {{if enableBrowser}}
+	        <div id="browser-zone" {{if !enableWeixin}}style="left:0%"{{/if}}>
+                <iframe src="/shop/${shopName}/" frameborder="0" width="100%" height="100%" id="mobile-browser" name="mobile-browser"></iframe>
+            </div>
+	        {{/if}}
+        </div>
+    </div>
+</script>
+
+
+
+
+
+<script id="phone-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="phone">
+        <div id="back-weixin-btn"></div>
+        <div id="top-weixin-title"></div>
+        <div id="screen">
+	        <div id="timeline-zone">
+	        	{{if !isLogined}}
+		        <div id="userSelect" class="mt30">
+		        	<select name="weixin_user_name">
+		        		<option value="-1">选择用户</option>
+		        		<option value="zhouxun">周迅</option>
+		        		<option value="yangmi">杨幂</option>
+		        	</select>
+		        	<div>${mpUsers}</div>
+		        	<br/>
+		        	<button class="btn btn-primary">确定</button>
+		        </div>
+	        	{{/if}}
+	        	<form id='weixinForm'>
+		            <div id="weixin-input"><input id="content-input" type="text" placeholder="输入微信" name="content" /></div>
+		        </form>
+	        </div>
+	        <div id="browser-zone">
+	            <iframe src="/shop/${shopName}/" frameborder="0" width="100%" height="100%" id="mobile-browser" name="mobile-browser"></iframe>
+	        </div>
+        </div>
+    </div>
+</script>
+
+
+
+
+
+<script id="single-news-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="mt10 shop-service" data-id="${news.id}">
+		<div class="content content-picture single-content-picture">
+ 			<div data-link="${news.url}" class="wx-news-container main-picture wx-message-link" data-id="${news.id}">
+		        <div class="main-picture-title">
+		            ${news.title}{{if news.id < 0}}<span class="label label-important">新</span>{{/if}}
+		            <p class="date">${news.date}</p>
+		        </div>
+		        <div class="main-picture-box">
+		            <img class="main-picture-img" src="${news.pic_url}">
+		        </div>
+				<div class="wx-action-bar hide" data-pin='false'></div>
+		    </div>
+		    <div class="description mt5 pb10">${news.description}</div>
+		    <div class="more-link pt5">
+		        阅读全文
+		    </div>
+			<!-- start 添加新图文 -->
+			{{if enableAddNews}}
+			<div class="sub-pictures mt10">
+		        <div id="create-news-btn" class="sub-picture wx-message-link" data-link="">
+		            <div class="sub-picture-title">
+		                <span class="blue">点击添加新图文消息</span>
+		            </div>
+		            <div class="sub-picture-box">
+		                <img src="/static/img/add_30.png" style="width:30px; height:30px;" />
+		            </div>
+		            <div class="cb"></div>
+		        </div>
+	        </div>
+			{{/if}}
+			<!-- finish 添加新图文 -->
+		</div>
+	</div>
+</script>
+
+
+
+
+
+<script id="multi-newses-tmpl-src" type="text/x-jquery-tmpl">
+<!--
+<button id="submit-btn" class="btn btn-danger mt5">提交新增图文</button>
+-->
+<div class="mt10 shop-service">
+    <div class="content content-picture">
+        <div class="wx-news-container main-picture wx-message-link" data-link="${mainNews.url}" data-id="${mainNews.id}">
+            <div class="main-picture-box">
+                <img src="${mainNews.pic_url}" width="360px" height="180px"/>
+            </div>
+            <div class="main-picture-title">
+	            ${mainNews.title}{{if mainNews.id < 0}}<span class="label label-important">新</span>{{/if}}
+            </div>
+	        <div class="wx-action-bar hide" data-pin='false'></div>
+        </div>
+
+        <div class="sub-pictures mt10">
+	        {{each(i,news) subNewses}}
+            <div class="wx-news-container sub-picture wx-message-link" data-link="${news.url}" data-id="${news.id}">
+                <div class="sub-picture-title">
+	                ${news.title}{{if news.id < 0}}<span class="label label-important">新</span>{{/if}}
+                </div>
+                <div class="sub-picture-box">
+                    <img src="${news.pic_url}" style="width:30px; height:30px;" />
+                </div>
+	            <div class="wx-action-bar hide" data-pin='false'></div>
+                <div class="cb"></div>
+            </div>
+	        {{/each}}
+
+	        <!-- start 添加新图文 -->
+	        {{if enableAddNews}}
+	        <div id="create-news-btn" class="sub-picture wx-message-link" data-link="">
+	            <div class="sub-picture-title">
+	                <span class="blue">点击添加新图文消息</span>
+	            </div>
+	            <div class="sub-picture-box">
+	                <img src="/static/img/add_30.png" style="width:30px; height:30px;" />
+	            </div>
+	            <div class="cb"></div>
+	        </div>
+	        {{/if}}
+	        <!-- finish 添加新图文 -->
+        </div>
+
+    </div>
+</div>
+</script>
+
+
+
+
+
+<script id="text-message-tmpl-src" type="text/x-jquery-tmpl">
+<div class="mt20 ${extraClass}">
+    <div class="profile ${extraClass}-profile"></div>
+    <div class="content">
+    	<pre>
+	    {{each(i,text) texts}}
+	    {{html text}}<br/>
+	    {{/each}}
+	    </pre>
+    </div>
+    <div class="cb"></div>
+</div>
+</script>

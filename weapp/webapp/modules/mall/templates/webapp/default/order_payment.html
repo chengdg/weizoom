@@ -1,0 +1,401 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% load express_filter %}
+{% block css %}
+<style>
+    .ui-cover{
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 10000;
+        position: absolute;
+        top: 0;
+    }
+    .ui-applyBox{
+        top:10%;
+        -webkit-background-size: cover;
+        background-size: cover;
+        width: 90%;
+        margin: 0 auto;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px; 
+        border-radius: 5px;
+        position: fixed;
+        margin-left: 5%;
+        padding-bottom: 20px;
+    }
+    .xui-popBg{
+        background: url('/markettools_static/weizoom_card/img/popbg1.png') no-repeat;
+        background-size: cover;
+        height: 273px;
+        left: 50%;
+        margin-left: -143px;
+        text-align: center;
+        top: 50%;
+        width: 286px;
+    }
+    .xui-popBg p:first-child{
+        color: #f77f31;
+        font-size: 1.3em;
+        margin-top: 43px;
+    }
+    .xui-popBg .xui-doneInfo{
+        color: #fbfa86;
+        font-size: 2.3em;
+        margin-top: 50px;
+    }
+    /*@media (min-width:320px){
+       .xui-popBg{
+            height:273px;
+            width:286px;
+            margin-left:-143px;
+       }
+       .xui-popBg p:first-child{
+            font-size: 2.3em;
+            margin-top: 120px;
+       }
+    }*/
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-payOrderPage" data-title="{{ page_title }}">
+	<div data-role="content">
+        <div class="xui-bottom-actionPanel xui-actionPanel">
+            <div class="fl text">
+                {% if order.status %}<span class="xui-text-red xt-finalPrice">{{order_status_info}}</span>{% else %}应付:<span class="xui-text-red">￥<span class="xt-finalPrice">{{order.final_price}}</span></span>{% endif %} 
+            </div>
+            <div class="fr xui-btn-box">
+                {% if order.status %}
+                    {% if request.user.is_weizoom_mall %}
+                        <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}">返回商城首页</a>
+                    {% else %}
+                       <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">返回商城首页</a>
+                    {% endif %}
+                {% else %}
+                <a href="javascript:void(0);" type="button" id="update_order_cancel" class="xui-btn xui-btn-disable">取消订单</a>
+                <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=pay_interfaces&action=list&order_id={{order.id}}&ignore_template=1" type="button" id="pay_order" class="xui-btn xui-btn-danger">去支付</a>
+                {% endif %}
+            </div>
+        </div>
+
+		<form class="xui-form-box xui-order-payment mb80" method="post" action="/m/wine/edit_order/3180/0/">
+			<fieldset class="xui-section">
+                <div class="xui-form-controls">
+					<label class="xui-form-cell xui-infoTitle">订单状态</label>
+					<div class="xui-form-cell xt-status">						
+                            {% ifequal order.status 0 %}
+								<span class="xui-text-red">{{order_status_info}}</span>
+							{% endifequal %}
+							{% ifnotequal order.status 0 %}
+                                {{order_status_info}}
+                            {% endifnotequal %}
+					</div>
+				</div>
+                {% if order.status == 1 %}
+                <div class="xui-form-controls">
+                    <label class="xui-form-cell xui-infoTitle">取消原因</label>
+                    <div class="xui-form-cell xt-status">                       
+                            {{order.reason}}
+                    </div>
+                </div>
+                {% endif %}
+				<div class="xui-form-controls">
+					<label class="xui-form-cell xui-infoTitle">订单编号</label>
+					<div class="xui-form-cell xt-orderId">
+						{{ order.order_id }}
+					</div>
+				</div>
+				<div class="xui-form-controls">
+					<label class="xui-form-cell xui-infoTitle">下单时间</label>
+					<div class="xui-form-cell">
+						{{ order.created_at|date:"Y年m月j日 H:i" }}
+					</div>
+				</div>
+                {% if order.bill %}
+				<div class="xui-form-controls">
+					<label class="xui-form-cell align-top-text xui-infoTitle">发票信息</label>
+					<div class="xui-form-cell xt-bill">
+                    {% ifequal order.bill_type 0 %}
+                    无
+                    {% endifequal %}
+                    {% ifequal order.bill_type 1 %}
+                    个人 - {{ order.bill }}
+                    {% endifequal %}
+                    {% ifequal order.bill_type 2 %}
+                    公司 - {{ order.bill }}	
+                    {% endifequal %}
+					</div>
+				</div>
+                {% endif %}
+                {% if order.customer_message %}
+                <div class="xui-form-controls">
+                    <label class="xui-form-cell xui-text-alignTop xui-infoTitle">购买留言</label>
+                    <div class="xui-form-cell xt-customerMessage">
+                        {{ order.customer_message }}
+                    </div>
+                </div>
+                {% endif %}
+			</fieldset>
+            <fieldset class="xui-section">
+                <div href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=edit" class="xui-section-info xui-section-title xui-section-inner">
+                    <h2 class="mb5">收货人：{% if order %}{{ order.ship_name }}{% endif %}<span class="ml15">{% if order %}{{ order.ship_tel }}{% endif %}</span></h2>
+                    <div style="color:#7f7f7f;">{% if order %}{{ order.area }}{{ order.ship_address }}{% endif %}</div>
+                </div>
+            </fieldset>
+            {% if order.express_company_name and not is_delivery_plan %}
+                <fieldset class="xui-section pr">
+                    <a class="xui-inner-expressLink" href="http://m.kuaidi100.com/index_all.html?type={{ order.express_company_name}}&postid={{ order.express_number }}" data-role="button" data-icon="true">
+                        <div class="xui-form-controls">
+                            <label class="xui-form-cell xui-infoTitle xui-text-alignTop">物流公司</label>
+                            <div class="xui-form-cell">
+                                {{ order.display_express_company_name|get_company_name_by_value }}
+                            </div>
+                        </div>
+                        <div class="xui-form-controls">
+                            <label class="xui-form-cell xui-infoTitle xui-text-alignTop">运单编号</label>
+                            <div class="xui-form-cell" style="color:#3d84d1;">
+                                {{ order.express_number }}
+                            </div>
+                        </div>
+                    </a>
+                </fieldset>
+            {% endif %}
+            <fieldset class="zoom xui-section">
+                <div class="xui-selectedProductList">
+                    <ul class="clearStyle">
+                        {% for product in order.products %}
+                        <li>
+                            <div class="xui-selectedProductList-productImg fl">
+                                <img src="{{product.order_thumbnails_url}}" />
+                            </div>
+                            <div class="xui-selectedProductList-productInfo">
+                                <div class="xt-title em9">{{ product.name }}</div>
+                                {% if product.custom_model_properties %}
+                                <div class="em9 clearfix" style="color: #7F7F7F;">
+                                {% for property in product.custom_model_properties %}
+                                <span class="fl mr10">{{ property.name }}: {{ property.property_value }}</span>
+                                {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="em9 clearfix" style="color: #7F7F7F;">
+                                    {% if is_delivery_plan %}
+                                        <span class="fl">￥{{order.final_price}}</span>
+                                    {% else %}
+                                        <!-- 积分商品 -->
+                                        {% if order.type == "integral" %}
+                                            <span class="fl">{{ product.price }}积分Ｘ{{ product.ordered_count }}</span>
+
+                                        <!-- 普通商品 -->
+                                        {% else %}
+                                            <span class="fl">￥{{ product.price }}Ｘ{{ product.ordered_count }}</span>
+                                        {% endif %}
+                                    {% endif %}                                    
+                                </div>
+
+
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </fieldset>
+            {% if order.is_show_field %}
+			<fieldset class="xui-section xui-postageAndMktool" style="padding:10px 15px">
+                {% if order.postage %}
+                <p class="zoom">
+                    <span class="fl xui-infoTitle">运费</span>
+                    <span class="fr xt-postageMoney">￥{{order.postage}}</span>
+                </p>
+                {% endif %}
+                {% if order.coupon_id %}
+                <p class="zoom">
+                    <span class="fl xui-infoTitle">使用优惠劵</span>
+                    <span class="fr">- ￥<span class="xt-couponMoney tx_couponPrice" >{{order.coupon_money}}</span></span>
+                </p>
+                {% endif %}
+                {% if order.integral %}
+                <p class="zoom">
+                    <span class="fl xui-infoTitle">使用<span class="xt-integralCount">{{order.integral}}</span>积分</span>
+                    <!-- 普通商品 -->
+                    {% if order.type == "integral" %}
+
+                    <!-- 普通商品 -->
+                    {% else %}
+                    <span class="fr">- ￥<span class="xt-integralMoney">{{ order.integral_money }}</span>
+                    {% endif %}                    
+                </p>
+                {% endif %}
+            </fieldset>
+            {% endif %}
+            {% if is_support_thanks_card %}
+            <fieldset class="xui-section pr" style="padding-right:0px;">
+                <div class="xui-infoTitle pb10 mb5" style="border-bottom:1px solid rgba(0,0,0,.1)">感恩密码</div>
+                <div class="xui-thankCard">
+                    {% for thanks_card in thanks_cards %}
+                    <ul style="list-style:none;">
+                        <li>
+                            <p>密码：
+                                {% if thanks_card.is_used %}
+                                    <a class="xui-thankCard-pwd" href="./?module=market_tool:thanks_card&model=thanks_card&action=get&workspace_id=market_tool:thanks_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&secret={{ thanks_card.thanks_secret }}&thanks_card_id={{thanks_card.id}}">{{ thanks_card.thanks_secret }}</a>
+                                    <span class="ml10 xui-text-green">已使用</span>
+                                {% else %}
+                                    <a class="xui-thankCard-pwd" href="./?module=market_tool:thanks_card&model=thanks_card&action=edit&workspace_id=market_tool:thanks_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&secret={{ thanks_card.thanks_secret }}&thanks_card_id={{thanks_card.id}}&order_id={{ order.order_id }}">{{ thanks_card.thanks_secret }}</a>
+                                    <span class="ml10 xui-text-red">未使用</span>
+                                {% endif %}
+                            </p>
+                        </li>
+                    </ul>
+                    {% endfor %}
+                    <div class="xui-thankCard-notice">点击密码制作感恩贺卡</div>
+                </div>
+            </fieldset>
+            {% endif %}
+
+            {% if is_delivery_plan %}
+            <div class="xui-expressPage clearfix mt20 pr">
+                <ul>
+                    {% for has_delivery_time in has_delivery_times %}
+                        {% if has_delivery_time.status %}
+                            <li class="clearfix pr">
+                            <p class="xui-outer-box">
+                                <span class="xui-inner-dot"></span>                              
+                                <span class="ml5">{{ has_delivery_time.delivery_date|date:"Y年m月j日" }}</span>
+                            </p>
+                            <div class="xui-expressPo clearfix">
+                                <fieldset class="xui-section xui-expressBox m10 pr">
+                                    <a class="xui-inner-expressLink" href="http://m.kuaidi100.com/index_all.html?type={{ order.express_company_name}}&postid={{ order.express_number }}">                       
+                                            <div>
+                                                <p>物流公司：{{ has_delivery_time.express_company_name|get_company_name_by_value }}</p>
+                                                <p>运单编号：{{ has_delivery_time.express_number }}</p>
+                                            </div>
+                                        <span class="xui-icon" style="">&nbsp;</span>
+                                    </a>
+                                </fieldset>
+                            </div>
+                            </li>
+                        {% else %}
+                            <li class="clearfix">
+                            <p class="mb20">
+                                <span class="xui-inner-dot"></span>
+                                <span class="ml5">{{ has_delivery_time.delivery_date|date:"Y年m月j日" }}</span>
+                                <span style="color:#ae0404">未发货</span>
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+		</form>
+	</div>
+</div>
+    {% if is_show_success %}
+    <div class="ui-cover ua-cover">
+        <div class="ui-applyBox ua-applyBox pr">
+            <div class="xui-popBg pa">
+            <!-- 订单状态为'优惠抵扣'或'货到付款'时，显示'下单成功' -->
+            {% if order.pay_interface_type == 9 or order.pay_interface_type == 10 or order.type == 'integral'%}
+                <p>下单成功</p>
+                <p class="xui-doneInfo">下单成功</p>
+            {% else %}
+                <p>支付成功</p>
+                <p class="xui-doneInfo">支付成功</p>
+            {% endif %}
+                <p class="mt10" style="color: #fff;font-size: 1.2em;">请等待收货</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">	
+var orderId = "{{ order.id }}";
+$(document).ready(function() {
+	var error_msg = {% if error_msg %}"{{ error_msg }}"{% else %}null{% endif %};
+	if (error_msg!=null) {
+		$('body').alert({
+			isShow: true,
+			speed: 3000,
+			info: error_msg
+		});
+	}
+
+	$('#pay_order1').click(function(){
+		var wxsid_cookie_value = $.cookie('wxsid');
+        if (wxsid_cookie_value != null){
+            $.cookie('wxsid', wxsid_cookie_value, {expires:365*24*60*60, path:'/'});   
+        }
+        var uuid_cookie_value = $.cookie('uuid');
+        if (uuid_cookie_value != null){
+            $.cookie('uuid', uuid_cookie_value, {expires:365*24*60*60, path:'/'});   
+        }
+
+		var args = {order_id: orderId};
+		W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'post',
+            args: _.extend({
+                webapp_owner_id: W.webappOwnerId,
+                module: 'mall',
+                target_api: 'order/pay'
+            }, args),
+            success: function(data) {
+                order_id = data['order_id'];
+                if (data['msg'] != null) {
+                    $('body').alert({
+                        isShow: true,
+                        speed: 2000,
+                        info: data['msg']
+                    })  
+                } else {
+                	window.location.href = data['url'];     
+                }
+
+                
+            },
+            error: function(resp) {
+                $('body').alert({
+                    isShow: true,
+                    info: resp.data['msg'],
+                    speed:2000
+                });
+                isSubmit = false;
+            }
+        });
+	});
+    $('.ua-cover').bind('touchstart mousedown',function(){
+        $(this).fadeOut(100);
+    })
+    $('#update_order_cancel').click(function() {        
+        $('body').alert({
+            isShow: true,
+            info:'正在提交订单...',
+            speed: 200000
+        });
+        var action = 'cancel-客户';
+        var args = {order_id: orderId, 'action': action};
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'post',
+            args: _.extend({
+                webapp_owner_id: W.webappOwnerId,
+                module: 'mall',
+                target_api: 'order_status/update'
+            }, args),
+            success: function(data) {
+                window.location.reload();
+            },
+            error: function(resp) {
+                $('body').alert({
+                    isShow: true,
+                    info: resp.data['msg'],
+                    speed:2000
+                });
+            }
+        });
+    });
+});	
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+{
+ "inner_name": "default", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "\u6781\u7b80\u4e3b\u4e49", 
+ "template_project_id": 0, 
+ "type": "jqm", 
+ "id": 10, 
+ "css": "", 
+ "pagestore": "mongo"
+}

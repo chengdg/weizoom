@@ -1,0 +1,62 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'jqm.panel' %}
+<a 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-role="button" 
+    data-controltype="panelbutton" 
+    href="#panel{{component.cid}}" 
+    {% ifequal component.model.is_inline "yes" %}data-inline="true"{% endifequal %} 
+    data-theme="{{component.model.button_theme}}" 
+    {% if component.model.text %}data-iconpos="{{component.model.icon_position}}"{% else %}data-iconpos="notext"{% endif %} 
+    data-icon="{{component.model.icon}}" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    id="{{component.model.id}}" 
+    class="{{component.model.class}}" 
+>
+    {{component.model.text}}
+</a>
+{% endifequal %}
+
+
+
+{% ifequal component.type 'jqm.panel:global_content' %}
+<div 
+    data-role="panel" 
+    id="panel{{component.cid}}" 
+    data-position="{{component.model.position}}" 
+    data-display="{{component.model.display_mode}}"
+    data-theme="{{component.model.panel_theme}}"
+>
+    <ul 
+        data-role="listview" 
+        data-divider-theme="{{component.model.divider_theme}}" 
+        data-inset="false"
+    >
+        {{ component|join_sub_components_html|safe }} 
+    </ul>
+</div>
+{% endifequal %}    
+
+
+{% ifequal component.type 'jqm.panel_button' %}
+    <li data-theme="{{component.model.theme}}" data-cid="{{component.cid}}" class="ui-li-has-count">
+        <a href="{{component.model.target}}" data-transition="slide">
+            {{ component.model.text }}
+            {% if component.model.bubble_text %}
+            <span class="ui-li-count">
+                {{ component.model.bubble_text }}
+            </span>
+            {% endif %}
+        </a>
+    </li>
+{% endifequal %}
+
+
+{% ifequal component.type 'jqm.panel_divider' %}
+<li data-role="list-divider" role="heading" data-cid="{{component.cid}}">
+    {{component.model.text}}
+</li>
+{% endifequal %}

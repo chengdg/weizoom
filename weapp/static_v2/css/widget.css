@@ -1,0 +1,251 @@
+@charset "utf-8";
+/*===================全局提示条=======================*/
+.wui-globalErrorPanel {
+    position: fixed;
+    top: 0px;
+    left: 50%;
+    margin-left: -225px;
+    width: 450px;
+    height: 36px;
+    z-index: 1100;
+    opacity: 0.9;
+    padding: 10px 20px;
+    color: #FFF;
+    font-size: 12px;
+    border-radius: 4px;
+    font-family: "宋体";
+    opacity: 0;
+    border:0;
+}
+.wui-globalErrorPanel.alert-success {
+    background-color: #82d588;
+}
+.wui-globalErrorPanel.alert-danger {
+    background-color: #FD7171;
+}
+
+/**
+ * 选择轮播图的控件
+ */
+.wui-imageSelector{}
+.wui-imageSelector .wui-i-imgBox {
+    width: 100px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 0 3px rgba(50, 50, 50, 0.75);
+    padding: 10px;
+}
+.wui-imageSelector .wui-i-img {
+    width: 80px;
+    height: 80px;
+}
+
+/*
+ * 整体删除提示
+*/
+.wui-confirmDelete{
+    width: 530px;
+    height: 54px;
+    background: #fff;
+}
+.wui-confirmView{
+    padding:5px;
+}
+.wui-confirmDelete div i,.wui-confirmView div i{
+    display: block;
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-left: 20px;
+    background: url(/static_v2/img/editor/query.png) no-repeat;
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    background-size: 100%;
+}
+.wui-confirmView div i{
+    margin-right: 6px;
+    margin-left: 0px;
+}
+.wui-confirmDelete dd,.wui-confirmView dd{
+    display: table;
+    width: 100%;
+}
+.wui-confirmDelete dd div,.wui-confirmView dd div{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.wui-confirmDelete dd div span,.wui-confirmView dd div span{
+    line-height: 24px;
+}
+.wui-confirmDelete .xui-confirm, .wui-confirmView .xui-confirm{
+    background: #1F7BBD;
+    color: #fff;
+    margin-left: 20px;
+}
+.wui-confirmView .xui-confirm{
+    float: left;
+    margin-right: 5px;
+    background: #1F7BBD;
+    color: #fff;
+    margin-right: 14px;
+}
+.wui-confirmView .xui-cancel{
+    margin-right: 24px;
+}
+.wui-confirmView .xui-i-msg{
+    padding-left: 19px;
+}
+
+
+
+
+
+
+
+
+
+/**
+ * echart widget样式
+ */
+.wui-echart {
+    background-color: #FFF;
+}
+.wui-echart .wui-i-header {
+    background-color: #F6F9FF;
+    height: 50px;
+    line-height: 50px;
+}
+.wui-echart .wui-i-content {
+    width: 100%; 
+    height: 300px;
+}
+.wui-echart .wui-i-date {
+    display: inline;
+    background: url("/static_v2/img/editor/calendar.jpg") no-repeat scroll right center #f2f2f2 !important;
+    width: 132px !important;
+    cursor: pointer;
+}
+.wui-echart .wui-i-shortcut {
+    display: inline-block;
+}
+.wui-echart .wui-i-shortcutLink {
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    text-decoration: none;
+    padding: 0px 10px;
+}
+.wui-echart .wui-i-shortcutLink:link, .wui-echart .wui-i-shortcutLink:visited {
+    color: #1D84C7;
+}
+.wui-echart .wui-i-shortcutLink:hover {
+    /*background-color: #FFF;*/
+}
+.wui-echart .wui-i-activeLink {
+    background-color: #FFF;
+    border: solid 1px #1D84C7;
+}
+
+
+
+/**
+ * 图文消息widget样式
+ */
+.wui-newses {
+    width: 300px;
+}
+.wui-newses .wui-i-news {
+    padding: 10px;
+    text-align: left;
+    border: solid 1px #EFEFEF;
+    border-top: none;
+}
+.wui-newses .wui-i-news:after {
+    content:".";display:block;height:0;clear:both;visibility:hidden;
+}
+.wui-newses .wui-i-news:first-child {
+    border-top: solid 1px #EFEFEF;
+}
+.wui-newses .wui-i-header {
+    background-color: #1C911C;
+    color: #FFFFFF;
+    display: inline-block;
+    padding: 1px 3px;
+    float: left;
+}
+.wui-newses .wui-i-title {
+    color: #1183CC;
+    margin-left: 15px;
+    float: left;
+    line-height: 20px;
+    width: 230px;
+    overflow: hidden; /* 超出的部分隐藏起来 */
+    white-space: nowrap;/* 不显示的地方用省略号...代替 */
+    text-overflow: ellipsis;/* 支持 IE */
+    -o-text-overflow: ellipsis;/* 支持 Opera */
+}
+.wui-newses .wui-i-content {
+    width: 100%; 
+    height: 300px;
+    margin-left: 15px;
+}
+.wui-messageEditorPopup {
+    position: absolute;
+    width: 400px; 
+    background-color: #FFF;
+    border: solid 1px #ddd;
+    z-index: 99;
+}
+.wui-messageEditor .tab-content{
+    background-color: #fff;
+}
+.wui-messageEditorPopup .tab-content{
+    background-color: #fff;
+}
+/*.xui-weixin-followRulesPage .wui-messageEditor .nav-tabs>li:last-child > a,*/
+/*.xui-massSendingMessage .wui-messageEditor .nav-tabs>li:last-child > a */
+.wui-messageEditor .nav-tabs>li:last-child > a {
+    border-right:1px solid #D7D7D7;
+    background: #ededed;
+}
+/*.xui-weixin-followRulesPage .wui-messageEditor .nav-tabs>li:first-child > a,*/
+/*.xui-massSendingMessage .wui-messageEditor .nav-tabs>li:first-child > a */
+.wui-messageEditor .nav-tabs>li:first-child > a {
+    border-left:1px solid #d7d7d7 !important;
+    background: #D7D7D7;
+}
+/*.xui-weixin-followRulesPage .wui-messageEditor .nav-tabs>li.active>a,*/
+/*.xui-massSendingMessage .wui-messageEditor .nav-tabs>li.active>a */
+.wui-messageEditor .nav-tabs>li.active>a {
+    background: #fff !important;
+    color: #000;
+    border-top: 0px;
+    background: url();
+    background-repeat: no-repeat;
+    background-color: #fff;
+    border-left: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

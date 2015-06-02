@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>微互通--微商城</title>
+<meta name="keywords" content="微互通--微商城"/>
+<meta name="description" content="微互通--微商城"/>
+<meta name="viewport" content="width=device-width"/>
+<link rel="stylesheet" href="/custom_static/shop_weihutong_cn/css/base.css"/>
+<link rel="shortcut icon" href="/custom_static/shop_weihutong_cn/images/favicon.ico"/>
+<script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+ $(document).ready(function(){
+   $("#focus .input_txt").each(function(){
+     var thisVal=$(this).val();
+     //判断文本框的值是否为空，有值的情况就隐藏提示语，没有值就显示
+     if(thisVal!=""){
+       $(this).siblings("span").hide();
+      }else{
+       $(this).siblings("span").show();
+      }
+     //聚焦型输入框验证 
+     $(this).focus(function(){
+       $(this).siblings("span").hide();
+      }).blur(function(){
+        var val=$(this).val();
+        if(val!=""){
+         $(this).siblings("span").hide();
+        }else{
+         $(this).siblings("span").show();
+        } 
+      });
+    })
+	
+	jQuery.jqtab = function(tabtit,tab_conbox,shijian) {
+		$(tab_conbox).find("li").hide();
+		$(tabtit).find("li:first").addClass("thistab").show(); 
+		$(tab_conbox).find("li:first").show();
+	
+		$(tabtit).find("li").bind(shijian,function(){
+		  $(this).addClass("thistab").siblings("li").removeClass("thistab"); 
+			var activeindex = $(tabtit).find("li").index(this);
+			$(tab_conbox).children().eq(activeindex).show().siblings().hide();
+			return false;
+		});
+	
+	};
+	/*调用方法如下：*/
+	$.jqtab("#tabs","#tab_conbox","click");
+	
+  })
+</script>
+</head>
+<body>
+<div class="logo"><img src="/custom_static/shop_weihutong_cn/images/logo.png"></div><!--logo-->
+<div class="login">
+	<div class="login-con">
+    	<div class="login-form"> 
+        	<ul class="tabs" id="tabs">
+                <li>商城管理</li>
+                <li>账号管理</li>
+            </ul>
+            <div class="tab_conbox" id="tab_conbox">
+            	<div class="tab_con" style="display:block;">
+                	<h2>微商城管理平台</h2>
+                    <form  id="focus" action="/login/" method="post">
+                        <div class="login-info">
+                        <label class="login-name"><i></i><span>请输入用户名</span><input type="text" class="input_txt" name="username" /></label>
+                    	<label class="login-pwd"><i></i><span>请输入密码</span><input type="password" class="input_txt" name="password" /></label>
+                        </div>
+                        <button tabindex="1" value="登录" name="loginsubmit" type="submit" class="login-btn">登录</button>
+                        {% if error %}
+                            <div class="login-eror">用户名或密码错误</div>
+                          {% else %}
+                          {% endif %}
+            		</form>
+                </div><!--商城管理-->
+                <div class="tab_con">
+                	<h2>账号管理平台</h2>
+                    <div id="focus" >
+                        <div class="login-info">
+                        <label class="login-name"><i></i><span>请输入用户名</span><input type="text" class="input_txt" id="username" /></label>
+                    	<label class="login-pwd"><i></i><span>请输入密码</span><input type="password" class="input_txt" id="password" /></label>
+                        </div>
+                        <button tabindex="1" value="登录" name="loginsubmit" class="login-btn" id="login-fenxiao">登录</button>
+                        <div class="login-eror" style="display:none">用户名或密码错误</div>
+            		</div>
+                </div><!--账号管理-->
+            </div>
+             
+        </div><!--login-form-->
+    </div>
+</div><!--login-->
+<div class="footer">
+	<p>© 2014　微互通版权所有　京ICP备14002208号-1.　地址：北京中关村苏州街紫金长河6#309　电话：010-61943198</p>
+</div><!--footer-->
+<script type="text/javascript">
+$().ready(function(){
+	$('#login-fenxiao').click(function() {
+		var un = $('#username').val();
+		var pw = $('#password').val();
+		var url = 'http://shopgl.weihutong.cn/account/api/authorized_user/create?';
+		url += ('un=' + un);
+		url += ('&pw=' + pw);
+		
+		$.ajax({
+			dataType: 'jsonp',
+			data: {un:un, pw:pw},
+			jsonp: 'callback',
+			type: 'get',
+			url: url,
+			success: function(data) {
+				console.log(data)
+				if (data.code == 200) {
+					window.location = 'http://shopgl.weihutong.cn/?token='+data.token;
+				}
+				else {
+					$('.login-eror').show();
+				}
+			},
+		});
+	});
+
+	$('#password').keydown(function(e){
+			 if(e.keyCode==13){
+				 $("#login-fenxiao").click(); //处理事件
+				 return false;
+			 }
+		 });	 
+});
+
+</script>
+</body>
+</html>

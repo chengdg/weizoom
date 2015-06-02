@@ -1,0 +1,21 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'weapp.button' %}
+<a 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-role="button" 
+    href="{{component.model.target|format_target:project_id}}" 
+    {% ifequal component.model.is_inline "yes" %}data-inline="true"{% endifequal %} 
+    {% if component.model.theme %}data-theme="{{component.model.theme}}"{% endif %} 
+    data-iconpos="{{component.model.icon_position}}" 
+    data-icon="{{component.model.icon}}" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    id="{{component.model.id}}" 
+    class="{{component.model.class}}" 
+>
+    {{component.model.text}}
+</a>
+{% endifequal %}

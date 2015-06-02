@@ -1,0 +1,393 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<style>
+.xui-addCartBtn{
+    background: #ff9400!important;
+}
+html,body{
+    background: #fff;
+}
+.xui-section{
+    margin:0;
+    -webkit-border-radius:0;
+    border-radius:0;
+    border-bottom:1px solid #dfdfdd;
+    border-left: none;
+    border-right: none;
+    border-top:none;
+    box-shadow: none;
+}
+.xui-section-item{
+    border-bottom: none;
+}
+.xui-productDetailPage .xui-btn:visited{color:#fff!important;}
+.xui-productDetailPage .xui-btn{
+    display: inline-block;
+    height: 42px;
+    line-height: 42px;
+    color: #fff;
+}
+.xui-tab-wrap{
+    position:relative;
+}
+.xui-tab-fixed .xui-tab-wrap{
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #fff;
+    z-index: 998;
+    padding: 5px 0;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+.xui-cf6{
+    background: #f6f6f9;
+}
+.xui-btn-commen{
+    background:#ae0001;
+}
+.xui-btn-disable{
+    background: #ccc;
+}
+.xui-w93{
+    width: 93%;
+}
+.xui-w46{
+    width: 46%;
+}
+.hidden{
+    display: none;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-productDetailPage xui-page">
+    {% if is_weizoom_mall %}
+    {% else %} 
+    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn">
+        <span class="xui-inner-count {% if shopping_cart_product_nums == 0 %}hidden{% endif %}">{{shopping_cart_product_nums}}</span>
+    </a>
+    {% endif %}
+    <div data-role="content" data-theme="x">
+        <div 
+            data-ui-role="swipeimage" 
+            data-jsondata='{{product.swipe_images_json|safe}}' 
+            data-width='320' 
+            data-height='200'
+        >
+        </div>
+        
+        {% with product.models.0 as standard_model %}
+        <div class="xui-section">
+            <div class="xui-section-title xui-section-item zoom">
+            {% if product.is_sellout %}
+           <!--  <div class="xui-sellout-tag fr xui-detail-sellout-style"><div class="xui-sellout-middle"><div class="xui-sellout-inner">已售罄</div></div></div> -->
+            {% endif %}
+                <h2 class="xt-productName">{{ product.name }}</h2>
+                <p class="xui-section-boldItemText xui-text-red">
+                    <!-- 积分商品 -->
+                    {% if product.type == 'integral' %}
+                        <span class="xt-originalPrice xui-vipPrice-num xa-fixed-price">{{ product.price }}</span>积分
+
+                    <!-- 普通商品 -->
+                    {% elif product.type == 'object' %}  
+                        {% if cur_request_member %}
+                            <span class="xt-price xui-vipPrice-num xa-fixed-price">￥{{ product.price }}</span>
+                        {% else %}
+                            <span class="xt-originalPrice xui-vipPrice-num xa-fixed-price">￥{{ product.original_price }}</span> 
+                        {% endif %}
+                        {% if product.market_price > 0 %}
+                            <span class="xui-text-disabled">市场价：￥<span class="xt-marketPrice">{{ product.market_price }}</span></span>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- 积分商品：拥有积分  -->
+                    {% if product.type == 'integral' %}
+                        <span class="xui-gray-7f em9">拥有积分：{{ use_integral }}</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="xui-product-title zoom btn-div xa-tab pt5" style="position:sticky;top:0;">
+                <div class="tc xui-tab-wrap">                    
+                    <!-- 已售罄 -->
+                    {% if product.is_sellout %}
+                        <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">已售罄</a>
+
+                    <!-- 积分商品 -->
+                    {% elif product.type == 'integral' %}
+                        {% if is_non_member == 'True' or use_integral < product.price %}
+                            <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">积分不足</a>
+                        {% else %}
+                            <a href="javascript:void(0);" class="xui-btn-commen xui-btn xui-w93 xa-apply">积分购买</a>
+                        {% endif %}                    
+
+                    <!-- 普通商品 -->
+                    {% else %}
+                        <!-- 微众商城 -->
+                        {% if is_weizoom_mall %}
+                            <!--其他商户商品，并且有引导关注地址 -->
+                            {% if non_member_followurl %}
+                                <a href="javascript:void(0);" class=" xui-btn xui-btn-commen xui-w46 xa-apply">购买</a>
+                                <a href="{{non_member_followurl}}" class="xui-btn xui-btn-commen xui-addCartBtn xui-w46">关注店铺</a>
+                            <!-- 微众商城 本店商品-->
+                            {% else%}
+                                <a href="javascript:void(0);" class="xui-btn-commen xui-btn xui-w93 xa-apply">购买</a>
+                            {% endif %}
+                        <!-- 其他商户商 -->
+                        {% else %}
+                            <a href="javascript:void(0);" class=" xui-btn xui-btn-noPadding xui-btn-commen xui-w46 xa-apply">购买</a>
+                            <a href="javascript:void(0);" class="xui-btn xui-btn-noPadding xui-btn-commen xui-addCartBtn xui-w46 xa-addShoppingCartBtn">加入购物车</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if product.detail %}
+        <div class="xui-section">
+            <div class="xui-section-title xui-section-item zoom">
+                <span style="font-size:17px;">商品详情</span>
+                <div class="xui-productDetail-content rawHtml">
+                    {{ product.detail|safe }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="xui-productInfo xui-applyBox hidden">
+            <i class="xui-popInfo-close pa"></i>
+            <div class="xui-section">
+                <div class="xui-section-inner xui-section-info ml15">
+                    <p class="xui-counterLabel">数量：&nbsp;</p>
+                    <div class="clearfix">
+                        <div class="fl">
+                            <input 
+                                data-ui-role="counter" 
+                                {% ifequal product.stock_type 1 %}data-max-count="{{product.stocks}}"{% endifequal %} 
+                                type="hidden" 
+                                name="total_count" 
+                                id="total_count" 
+                                value="1"
+                            >
+                        </div>
+                        <div class="fl" style="margin:4px 0 0 10px">
+                            {% ifequal product.stock_type 1 %}
+                            <span class="mr20 xt-stocks xui-text-counter xui-section-normalItemText xui-counterLabel">库存：{{product.stocks}}{{product.physical_unit}}</span>
+                            {% endifequal %}
+                        </div>
+                    </div>
+                </div>
+                <div class="xui-section">
+                    <div class="xui-section-inner ml15 clearfix pr15">
+                        <p class="xui-text-red fl">
+                        <!-- 积分商品 -->
+                        {% if product.type == 'integral' %}
+                            <span class="xt-price xui-vipPrice-num xa-variable-price">{{ product.price }}</span>积分
+
+                        <!-- 普通商品 -->
+                        {% elif product.type == 'object' %}  
+                            {% if cur_request_member %}
+                                ￥<span class="xt-price xui-vipPrice-num xa-variable-price">{{ product.price }}</span>
+                            {% else %}
+                                ￥<span class="xt-originalPrice xui-vipPrice-num xa-variable-price">{{ product.original_price }}</span>
+                            {% endif %}
+                        {% endif %}
+                        </p>
+                        <p class="xui-section-normalItemText fr" style="line-height:1.7em;">
+                            {% if standard_model.weight %}重量：<span class="xt-weight">{{ standard_model.weight }}</span><span class="xt-single-weight" style='display: none'>{{ standard_model.weight }}</span>公斤{% endif %}&nbsp;&nbsp;<span class="xt-postageConfigName ml20">{{product.postage_config.name}}</span>{% if standard_model.postage %}:￥<span class="xt-postage">{{ standard_model.postage }}</span>{% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="xui-section zoom tc xui-cf6">
+                    <div class="xui-section-inner xui-section-btn">
+                        <!-- 积分商品 -->
+                        {% if product.type == 'integral' %}
+                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen xt-integral-buy-Btn" data-url="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1">积分购买</a>
+
+                        <!-- 普通商品 -->
+                        {% else %}  
+                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen xui-btn-noPadding">购买</a>
+                        {% endif %}
+                    </div>
+
+                    {% if cur_request_member.is_for_buy_test == True%}
+                    <div>
+                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xui-btn-commen">测试购买</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="xui-cover xa-cover hidden"></div>
+
+        {% endwith %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var postageFactor = $.parseJSON('{{postage_factor|safe}}');
+
+    function getPostageForWeight(weight) {
+        if (weight <= postageFactor.firstWeight) {
+            return postageFactor.firstWeightPrice;
+        }
+
+        if (!postageFactor.isEnableAddedWeight) {
+            return postageFactor.firstWeightPrice;
+        }
+
+        weight = weight - postageFactor.firstWeight;
+        var price = postageFactor.firstWeightPrice;
+        var addedWeight = parseFloat(postageFactor.addedWeight);
+
+        //added by chuter
+        if (addedWeight == 0) {
+            return price;
+        }
+        
+        var addedCount = 1;
+        while (true) {
+            weight = weight - addedWeight;
+            if (weight <= 0) {
+                break;
+            } else {
+                addedCount += 1;
+            }
+        }
+        var addedPrice = addedCount * postageFactor.addedWeightPrice;
+        return price + addedPrice;
+    }
+
+    //弹出商品信息
+    $('.xa-apply').bind('click',function(event) {
+        $('.xa-cover').removeClass('hidden');
+        $('.xui-applyBox').slideDown(500);
+    });
+    
+    $('.xa-cover').bind('click',function(event) {
+        if(event.target==this){
+            $('.xa-cover').addClass('hidden');
+            $('.xui-applyBox').slideUp(500);
+        }
+    })
+    $('.xui-popInfo-close').bind('click',function(event) {
+        $('.xa-cover').addClass('hidden');
+        $('.xui-applyBox').slideUp(500);
+    });
+    //轮播图
+    W.BUY_COUNT = 1;
+    var productId = '{{product.id}}';
+
+    $(document).ready(function() {
+        //购买按钮组粘性导航
+        var $wxTab= $('.xa-tab');
+        var wxTab = $wxTab[0];
+        var wxTabOffsetTop = wxTab.offsetTop;
+        var isTabFixed = $wxTab.hasClass('.xui-tab-fixed');
+        $(document).on('touchmove scroll', function () {
+            if (window.scrollY > wxTabOffsetTop) {
+                if (!isTabFixed) {
+                    $wxTab.addClass('xui-tab-fixed');
+                    isTabFixed = true;
+                }
+            } else {
+                if (isTabFixed) {
+                    $wxTab.removeClass('xui-tab-fixed');
+                    isTabFixed = false;
+                }
+            }
+        });        
+
+        //修改"立即购买"链接中的product_count参数
+        var updateBuyLink = function(productCount) {
+            var $buy = $('.xa-buyBtn');
+            $('.xa-buyBtn').each(function(){
+                $buy = $(this);
+                var hrefAttr = $buy.attr('href');
+                hrefAttr = hrefAttr.replace(/product_count=\d+/, 'product_count='+productCount);
+                $buy.attr('href', hrefAttr).attr('data-url', hrefAttr);
+            }); 
+        };
+
+        //更新重量和邮费  和 价钱
+        var updateWeightPostage = function(productCount) {
+            //更新重量
+            var singleWeight = $('.xt-single-weight').text();
+            var weight = (productCount*singleWeight).toFixed(1);
+            $('.xt-weight').text(weight);
+
+            //更新邮费
+            if ($('.xt-postage')) {
+                var postage = getPostageForWeight(weight);
+                $('.xt-postage').text(postage.toFixed(1));
+            }
+
+            //更新价钱
+            var price = $('.xa-fixed-price').text();
+            price = parseFloat(price).toFixed(1);
+            var total_price = (price*productCount).toFixed(1);
+            $('.xa-variable-price').text(total_price);
+            console.log(price, productCount, (price*productCount).toFixed(1))
+            if('integral' == '{{product.type}}'){                
+                if (total_price > {{use_integral}}) {
+                    $('.xt-integral-buy-Btn').addClass("xui-btn-disable");
+                    $('.xt-integral-buy-Btn').attr('href', 'javascript:void(0);');
+                }else{
+                    $('.xt-integral-buy-Btn').removeClass("xui-btn-disable");
+                    $('.xt-integral-buy-Btn').attr('href', $('.xt-integral-buy-Btn').attr('data-url'));
+                }
+            }
+        };
+
+        $('input[data-ui-role="counter"]').bind('count-changed', function(event, value) {
+            updateBuyLink(value);
+            updateWeightPostage(value);
+            W.BUY_COUNT = value;
+        });
+
+        //加入购物车
+        $('.xa-addShoppingCartBtn').bind('click',function() {
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    module: 'mall',
+                    target_api: 'shopping_cart/add',
+                    count: W.BUY_COUNT,
+                    product_id: productId,
+                    product_model_name: 'standard'
+                },
+                success: function(data) {
+                    $('body').alert({
+                        isShow: true,
+                        info:'加入购物车成功',
+                        isSlide: true,
+                        speed:2000
+                    });
+                    if(data.shopping_cart_product_nums) {
+                        var $btnCart = $('.xui-shoppingCartBtn .xui-inner-count');
+                        $btnCart.css('display', 'inline-block!important').text(data.shopping_cart_product_nums);
+                    }
+                },
+                error: function(resp) {
+                    var errMsg = '加入购物车失败'
+                    if (resp.errMsg) {
+                        errMsg = resp.errMsg;
+                    }
+                    $('body').alert({
+                        isShow: true,
+                        info: errMsg,
+                        speed: 3000
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

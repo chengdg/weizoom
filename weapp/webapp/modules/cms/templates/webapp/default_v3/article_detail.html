@@ -1,0 +1,33 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+    <style>
+        html,body,.ui-page,.ui-content{
+            background: #fff;
+        }
+    </style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-articleDetailPage"  data-title="{{ page_title }}">
+    <div data-role="content" data-theme="x">
+    	{% if article.is_deleted %}
+    	<h2>该文章已被删除</h2>
+    	{% else %}
+        <div class="xui-sub-title">
+            <h2>{{article.title}}</h2>
+<!--             <p class="ml20 mb20">{{article.created_at|date:"Y年m月j日 H:i"}}</p> -->
+        </div>
+
+        <div class="xui-sub-content rawHtml">
+            {{article.content|safe}}
+        </div>
+        {% endif %}
+    </div>  
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}

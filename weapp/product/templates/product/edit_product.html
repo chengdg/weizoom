@@ -1,0 +1,112 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block single-content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/product/products/">产品列表</a><span class="divider">/</span></li>
+	<li class="active">添加产品</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<legend>基本信息</legend>
+		<input type="hidden" id="product_id" name="product_id" value="{% if product %}{{ product.id }}{%else%}-1{% endif %}"/>
+		<div class="control-group mt0">
+			<label class="control-label" for="name">产品名：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="最多18个字符" value="{% if product %}{{ product.name }}{% endif %}" data-validate="required-none" maxlength="18"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="price">价格：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="price" placeholder="产品价格" name="price" value="{% if product %}{{ product.price }}{% endif %}" data-validate="require-price"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="max_mall_product_count">商城商品数：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="max_mall_product_count" placeholder="商城中最多可添加的商品个数" name="max_mall_product_count" value="{% if product %}{{ product.max_mall_product_count }}{% endif %}" data-validate="require-int"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="footer">Footer：</label>
+			<div class="controls">
+				<select name="footer" id="footer">
+					{% for footer in footers %}
+					<option value="{{footer.value}}">{{footer.name}}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend>基础模块</legend>
+		<div class="control-group mt0">
+			<label class="checkbox inline mr20"><input type="checkbox" checked="checked" name="base_function" disabled="disabled" value="1"/>基本功能</label>
+			<label class="checkbox inline mr20"><input type="checkbox" checked="checked" name="interaction" disabled="disabled" value="1"/>互动</label>
+		</div>
+    </fieldset>
+
+    <fieldset>
+		<legend>微站模块</legend>
+		<div class="control-group mt0">
+			{% for module in webapp_modules %}
+			<label class="checkbox inline mr20"><input type="checkbox" checked="checked" name="webapp_{{module.value}}" disabled="disabled" value="{{module.value}}"/>{{module.name}}</label>
+			{% endfor %}
+		</div>
+    </fieldset>
+
+    <fieldset>
+		<legend>营销工具模块</legend>
+		<div class="control-group mt0">
+			{% for module in market_tool_modules %}
+			<label class="checkbox inline mr20"><input type="checkbox" name="market_tool_{{module.value}}" value="{{module.value}}" {% if module.checked %}checked{% endif %}/>{{module.name}}</label>
+			{% endfor %}
+		</div>
+    </fieldset>
+
+    <fieldset>
+		<legend>其他信息</legend>
+		<div class="control-group mt0">
+			<label class="control-label" for="remark">备注：</label>
+			<div class="controls">
+				<textarea name="remark" id="remark" class="input-xlarge" style="height: 100px;">{% if product %}{{ product.remark }}{% endif %}</textarea>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group tc">
+			<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('input[type="text"]').eq(0).focus();
+
+		$('form').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			$('input[disabled="disabled"]').removeAttr('disabled');
+			return true;
+		})
+	});
+</script>
+{% endblock %}

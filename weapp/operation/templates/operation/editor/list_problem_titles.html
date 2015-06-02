@@ -1,0 +1,56 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div id="categoryList">
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">常见问题列表</li>
+	</ul>
+
+	<span class="breadcrumRightButton">
+		<!--
+		<input type="text" class="m0 input-medium" id="categoryNameInput" data-validate="required"/>
+		-->
+		<a class="btn btn-primary" id="addCategoryBtn" href="/operation/editor/problem_title/add/"><i class="icon-plus icon-white"></i>添加常见问题</a>
+	</span>
+</div>
+
+{% if problem_titles %}
+	<div>
+		<table class="table table-condensed">
+			<tbody>
+             <div id="siteMenuList"></div>
+			</tbody>
+		</table>
+	</div>
+
+{% else %}
+	<img src="/static/img/img_kong_fl.jpg" class="ml40">
+{% endif %}
+
+</div>
+{% endblock %}
+
+{% block jsTemplate %}
+
+	{% include_raw 'jsTemplate/commonProblemTitleEditView.html' %}
+{% endblock %}
+
+{% block js %}
+
+<script type="text/javascript">
+    //var siteDomain = "{{ ''|get_site_domain }}";
+	$(document).ready(function() {
+        var menuView = new W.CommonProblemTitleListView({
+            el: '#siteMenuList'     //siteDomain: siteDomain
+        });
+        menuView.bind('finish-submit-message',function(){
+           //phone.refreshBrowser();
+        });
+        menuView.render();
+
+	});
+</script>
+{% endblock %}

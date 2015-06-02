@@ -1,0 +1,141 @@
+{% extends "new_jqm_content_base.html" %}
+{% load weshop_filter %}
+{% block css %}
+<style>
+/*商城列表样式修改*/
+.ui-btn-inner .img{
+    width: 115px;
+    height: 115px;
+    float: left;
+}
+.ui-btn-inner .img img{
+    width: 100%;
+}
+.xui-hlist .ui-btn-inner .ui-btn-text h3.ui-li-heading{
+    color:#404040;
+    font-size: 1.125em;
+    line-height: 24px;
+    font-weight: normal;
+}
+.xui-hlist .ui-btn div.ui-btn-inner{
+    height: 115px;
+    font-family: "黑体";
+    padding: 0;
+}
+.xui-hlist .ui-btn-text{
+    position: relative;
+}
+.xui-hlist .ui-btn .ui-btn-inner .ui-btn-text .text div.productname{
+    display: block;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    width: 100%;
+    display: block;
+    color: #666;
+    font-size: 0.9em;
+}
+.xui-hlist .ui-btn-inner .ui-btn-text p.ui-li-desc{
+    font-size: 0.875em;
+    font-family: "Arial","黑体";
+    color: #CE0203;
+    display: block;
+    line-height: 23px;
+    font-weight: 500;
+    position: absolute;
+    bottom: 10px;
+    left: 128px;
+}
+.xui-products .ui-listview .ui-li > .ui-btn-text{
+    height: auto;
+}
+.text{
+    position: absolute;
+    top:0px;
+    left: 128px;
+    width: 60%;
+}
+.buy{
+   background: #F40;
+   height: 23px;
+   line-height: 23px;
+   text-align: center;
+   color: #fff;
+   padding: 0px 3px;
+   position: absolute;
+   bottom: 10px;
+   right: 3%;
+}
+.buy span{
+    display: block;
+    float: left;
+    font-size: 0.8em;
+    padding-right: 2px;
+}
+.buy img{
+    width: 14px;
+    height: 14px;
+    display: block;
+    float: left;
+    padding-top: 4px;
+}
+.xui-hlist .ui-btn-inner .ui-btn-text h3.ui-li-heading{
+    color:#404040;
+    font-weight: normal;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" data-title="{{ page_title }}">
+    {% if is_weizoom_mall %}
+    {% else %}
+    <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn" data-role="button">{{shopping_cart_product_nums}}</a>
+    {% endif %}
+<div data-role="content" data-theme="x" style="padding: 0px;">
+    <div class="xui-hlist xui-hlist-cell-1 xui-products">
+        {% if products %}
+        <ul data-role="listview" data-theme="x" data-icon="false">
+            {% for product in products %}
+            <li>
+                <a href='./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall&model=product&action=get&rid={{product.id}}'>
+                    <div class="img">
+                        <img src="{{ product.thumbnails_url }}"></div>
+                    <div class="text">
+                        <h3>{{category.name}}</h3>
+                        <div class="productname">{{ product.name }}</div>
+                    </div>
+                        <p style="font-size:17px;">￥{{ product.display_price }}
+                        </p>
+                        <div class="buy">
+                            <span>立即购买</span>
+                            <img src="/standard_static/img/arrow.png">
+                    </div>
+                </a>
+                {% ifequal product.stock_type 1 %}
+                        {% ifequal product.stocks 0 %}
+                <div class="xui-sellout-tag fr">
+                    <div class="xui-sellout-middle">
+                        <div class="xui-sellout-inner">已售罄</div>
+                    </div>
+                </div>
+                {% endifequal %} 
+                    {% endifequal %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <h2>没有相关商品</h2>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var imgWidth = window.document.body.clientWidth;
+    var imgHeight = imgWidth - 36;
+    $('[auto_height]').imageAutoHeight();
+});
+</script>
+{% endblock %}

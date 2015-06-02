@@ -1,0 +1,97 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+	<ul class="breadcrumb">
+		<li><a href="/question/tools/">营销工具</a><span class="divider">/</span></li>
+		<li class="active">微信问答</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" id="addActivityBtn" href="/question/editor/create/"><i class="icon-plus icon-white"></i>添加问答</a>
+	</span>
+	{% if questions %}
+	<div id="TableListView">
+		<table class="table table-bordered table-condensed">
+			<thead>
+			<tr>
+				<th width="30%">启用关键词</th>
+				<th>参与人次</th>
+				<th width="30%">创建时间</th>
+				<th width="20%">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for question in questions %}
+				<tr tr_id="{{question.id}}">
+					<td style="width: 200px;">
+						<!--<a href="/question/editor/update/{{ question.id }}/">{{ question.start_patterns }}</a>-->
+						{{ question.start_patterns }}
+					</td>
+					<td>
+						{{ question.statistics }}
+					</td>
+					<td>
+						{{ question.created_at|date:"Y年m月j日 H:i" }}
+					</td>
+					<td style="width: 80px;">
+					<span class="btn-group">
+						{% if question.is_active %}
+							<a class="btn btn-info wx_update_status" data-status='{{ question.is_active }}' href="/question/editor/update_status/{{ question.id }}/">停用</a>
+						{% else %}
+							<a class="btn btn-warning wx_update_status" data-status='{{ question.is_active }}'
+							   href="/question/editor/update_status/{{ question.id }}/">启用</a>
+						{% endif %}
+						<a class="btn btn-danger wx_delete" href="/question/editor/delete/{{ question.id }}/">删除</a>
+					</span>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<div id="paginationContent"></div>
+	</div>
+	{% else %}
+		目前还没有数据
+	{% endif %}
+
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/paginationView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var pageinfo = $.parseJSON('{{ pageinfo|safe }}');
+
+	$(document).ready(function() {
+		//分页
+		var paginationView = new W.PaginationView({
+			el: '#paginationContent',
+			isHasDetailedPage: true,
+			isHasJumpPage: true
+		});
+		paginationView.bind('goto', function(page) {
+			window.location.href = paginationView.getTargetUrl(page);
+		});
+		paginationView.setPageInfo(pageinfo);
+		paginationView.render();
+
+		$('.wx_update_status').click(function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+			var $el = $(event.currentTarget);
+			var deleteCommentView = W.getItemDeleteView();
+			var status = $el.attr('data-status');
+			var str = status=='True' ? '停用': '启用';
+			deleteCommentView.bind(deleteCommentView.SUBMIT_EVENT, function(options){
+				window.location.href = $el.attr('href');
+			});
+			deleteCommentView.show({
+				$action: $el,
+				info: '确定要'+str+'吗?'
+			});
+		});
+	});
+</script>
+{% endblock %}

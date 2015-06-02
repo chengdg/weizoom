@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title></title>
+        <link type="text/css" rel="stylesheet" href="/termite_static/jquery/jquery.mobile-1.3.1.min.css">
+        
+        <script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript">
+            var $window = $(window);
+            window.W = {};
+            $(document).bind("mobileinit", function () {
+                $.mobile.ajaxEnabled = false;
+            });
+        </script>
+        <script type="text/javascript" src="/termite_static/jquery/jquery.mobile-1.3.1.min.js"></script>
+
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    </head>
+    <body>
+    	<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-vote-page" data-title="{{ page_title }}">
+			<div data-role="content" data-theme="x">
+				{% if under_develop %}
+				<ul>
+					<li>app_id: {{app_id}}</li>
+					<li>partner_id: {{partner_id}}</li>
+					<li>partner_key: {{partner_key}}</li>
+					<li>paysign_key: {{paysign_key}}</li>
+				</ul>
+				{% endif %}
+				<h1 style="margin-top: 80px; text-align: center;">微信支付 ￥<span class="xt-totalFee">{{total_fee_display}}</span><br/>支付中...</h1>
+			{% if under_develop %}
+				<div style="margin-top: 20px; text-align: center;">
+					<a href="javascript:void(0);" id="syncPayBtn" data-role="button" data-theme="b" class="btn-success">同步支付</a>
+					<a href="javascript:void(0);" id="asyncPayBtn" data-role="button" data-theme="e">异步支付</a>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		<script type="text/javascript" src="/pay_static/weixin/static/js/md5.js"></script>
+		<script type="text/javascript" src="/pay_static/weixin/static/js/crypto-js.js"></script>
+        <script type="text/javascript" src="/pay_static/weixin/static/js/weixinapi.js"></script>
+        <script type="text/javascript" src="/pay_static/weixin/static/js/wxstring.js"></script>
+        <script type="text/javascript" src="/pay_static/weixin/static/js/wxpay_v3.js"></script>
+		<script type="text/javascript">
+			W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
+
+			var appId = "{{app_id}}";
+			var partnerId = "{{partner_id}}";
+			var appSecret = "{{app_secret}}"
+			var partnerKey = "{{partner_key}}";
+			var userIp = "{{user_ip}}";
+			var productName = "{{product_names}}";
+			var totalFee = "{{total_fee}}";
+
+			var orderId = "{{order_id}}";
+			var webappOwnerId = "{{webapp_owner_id}}";
+			var payInterfaceType = "{{pay_interface_type}}";
+			var payInterfaceRelatedConfigId = "{{pay_interface_related_config_id}}";
+			var domain = "{{domain}}";
+			var notifyUrl = "http://"+domain+"/wxpay/mall/pay_notify_result/get/"+webappOwnerId+'/'+payInterfaceRelatedConfigId+"/";
+			// 定制化支付回调module
+			var callbackModule = "{%if callback_module%}{{callback_module}}{%else%}mall{%endif%}";
+
+			//获取参数中的code
+			var code = '';
+			//try {
+			var reg = new RegExp("(^|&)code=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r!=null) {
+				code = unescape(r[2]);
+			}
+
+	    	W.WeixinJsApi.ready(function(Api) {
+		    	Api.hideToolbar();
+	    		Api.hideOptionMenu();
+	    	});
+			
+		    var pay = function() {
+				if (code == '') {
+					var redirect_uri = encodeURIComponent(window.location.href);
+			        var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base#wechat_redirect";
+			        var auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?"+queryString;
+					setTimeout(function(){document.location.href = auth_url},500);
+				} else {
+					var wxpay = new W.WXPayV3(
+						appId,
+						appSecret,
+						partnerId, 
+						partnerKey,
+						productName,
+						orderId,
+						totalFee,
+						userIp,
+						notifyUrl,
+						code
+					);
+					
+                    wxpay.pay(function(isPaySucceed, errMsg) {
+                    	var i_url = '/termite/workbench/jqm/preview/?module='+callbackModule+'&model=pay_result&action=get&pay_interface_type=';
+						if (isPaySucceed) {
+							var items = [
+								i_url,
+								payInterfaceType,
+								'&order_id=',
+								orderId,
+								'&woid=',
+								webappOwnerId,
+								'&related_config_id=',
+								payInterfaceRelatedConfigId
+							]
+							var success_url = items.join('');
+							setTimeout(function(){document.location.href = success_url},500);
+						} else {
+							$.ajax({ 
+					            url: "/account/api/logapi/log_api_error/",
+					            data: {
+					            	api: 'getBrandWCPayRequest',
+									error: errMsg
+					            },
+					            type: "post",
+					            success: function (data) {}, 
+					            error: function (resp) {} 
+					        });
+							window.location.href = '/termite/workbench/jqm/preview/?module='+callbackModule+'&model=order&action=pay&order_id='+orderId+'&woid='+webappOwnerId;
+						}
+					});
+				}
+		    };
+
+			$(document).ready(function() {
+				if (W.isUnderDevelopMode) {
+					$('#syncPayBtn').click(function() {
+						pay();
+					});
+
+					$('#asyncPayBtn').click(function() {
+						var url = 'http://dev.weapp.com:8003/mockapi/weixin_pay/async_pay/'
+						$.ajax({
+							dataType: 'jsonp',
+							url: url,
+							data: {
+								notify_url: notifyUrl,
+								order_id: orderId
+							},
+							success: function(data) {
+								if (data.code === 500) {
+									alert('支付失败!');
+									return;
+								}
+								var items = [
+									'/termite/workbench/jqm/preview/?module=mall&model=pay_result&action=get&pay_interface_type=',
+									payInterfaceType,
+									'&order_id=',
+									orderId,
+									'&webappOwnerId=',
+									webappOwnerId,
+									'&related_config_id=',
+									payInterfaceRelatedConfigId
+								]
+								window.location.href = items.join('')
+							},
+							error: function() {
+								alert('支付失败！');
+							}
+						})
+					});
+				} else {
+					pay();
+				}
+			});
+		</script>
+    </body>
+</html>

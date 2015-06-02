@@ -1,0 +1,32 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.checkbox_button_group' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="mt5 mb5 xui-br" 
+>
+    <div data-role="fieldcontain" data-controltype="checkboxes">
+        <fieldset 
+            data-role="controlgroup" 
+            data-type="{{component.model.orientation}}" 
+            {% ifequal component.model.is_mini "yes" %}data-mini="true"{% endifequal %}
+        >
+            <legend>
+                {{component.model.title}}:
+            </legend>
+            {{ component|join_sub_components_html|safe }}
+        </fieldset>
+    </div>
+</div>
+{% endifequal %}    
+
+{% ifequal component.type 'jqm.checkbox_button' %}
+    <input id="{{component.model.value}}" name="{{component.model.name}}" value="{{component.model.value}}" data-theme="{{component.model.theme}}" data-cid="{{component.cid}}" type="checkbox" />
+    <label for="{{component.model.value}}">
+        {{component.model.text}}
+    </label>
+{% endifequal %}

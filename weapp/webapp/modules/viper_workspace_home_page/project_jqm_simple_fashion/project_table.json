@@ -1,0 +1,11 @@
+{
+ "inner_name": "simple_fashion", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "\u7b80\u7ea6\u98ce\u5c1a", 
+ "template_project_id": 0, 
+ "type": "jqm", 
+ "id": 16, 
+ "css": "", 
+ "pagestore": "mongo"
+}

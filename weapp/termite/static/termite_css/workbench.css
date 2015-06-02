@@ -1,0 +1,882 @@
+body {
+	/*background-color: #D8DCDF;*/
+	overflow: hidden;
+}
+
+#workbench {
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    margin-top: 50px;
+}
+
+#leftPanel, #rightPanel {
+	width: 313px;
+	border: solid 1px #CCC;
+	background-color: white;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+
+#phonePanel {
+	overflow-y: auto;
+	position: relative;
+}
+
+#phonePanel_actionBar {
+	position: absolute; 
+	right: 10px; 
+	top: 6px;
+}
+
+#phone {
+	width: 414px;
+	margin: 30px auto;
+	margin-bottom: 0px;
+	position: relative;
+}
+
+#cssEditor {
+	position: absolute;
+	top: 10px;
+	left: -200px;
+	z-index: 200;
+	width: 200px;
+	background-color: white;
+	height: 95%;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+#cssEditor_codeEditor {
+	overflow: auto;
+}
+
+#cssEditorIndicator {
+	width: 64px;
+	height: 64px;
+	position: absolute;
+	top: 0px;
+	right: -35px;
+	cursor: pointer;
+}
+
+#apisPyEditorIndicator {
+	width: 64px;
+	height: 64px;
+	position: absolute;
+	top: 70px;
+	right: -35px;
+	cursor: pointer;
+}
+
+#phone iframe {
+	border: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+	background-color: #fff;
+}
+
+#phoneSkin {
+    background-clip: padding-box;
+    background-color: #232323;
+    border: 1px solid #000000;
+    border-radius: 11px 11px 11px 11px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.28), 0 1px 1px rgba(255, 255, 255, 0.45) inset, 0 0 2px rgba(255, 255, 255, 0.2) inset;
+    height: 100%;
+    padding: 15px;
+    position: relative;
+    width: 380px;
+}
+
+#phoneSkinCover {
+	width: 380px;
+	background-color: rgba(0, 0, 0, 0.1);
+	height: 100%;
+	z-index: 99;
+	position: absolute;
+	top: 0px;
+	left: 15px;
+}
+
+.panelTitle {
+	background-color: #3a87ad;
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+	line-height: 20px;
+	color: white;
+	font-weight: bold;
+	margin: 0px 1px;
+	padding: 3px 10px;
+}
+
+#dirtyWorkbenchIndicator {
+	margin-right: 5px;
+	padding-right: 14px; 
+	font-weight: bold;
+	position: absolute; 
+	top: 7px; 
+	left: 120px;
+}
+
+
+/************************************************************************
+ * item-list 部分样式
+ ************************************************************************/
+.item-list li ul {
+}
+.item-list li, .list li {
+  padding-left: 10px;
+  border: 1px solid transparent;
+  border-width: 1px 0px 1px 0px;
+  padding: 0px 15px 0px 15px;
+  line-height: 27px;
+
+  color: #999999;
+  font-family: 'ProximaNova-Regular', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+}
+.item-list li:hover, .list li:hover {
+  cursor: pointer;
+  border-top: 1px solid #e4e4e4;
+  border-bottom: 1px solid #e4e4e4;
+  background-color: #f4f4f4;
+  color: #666666;
+}
+.item-list li:hover .b4-icon.grabber {
+  background-position: 0px 0px;
+}
+.item-list li.selected .b4-icon.grabber {
+  background-position: 0px -8px;
+}
+.item-list li .b4-icon.page {
+  margin-bottom: -2px;
+  margin-right: 10px;
+}
+.item-list li.selected .b4-icon.page {
+  background-position: 0px -22px;
+}
+.item-list li a, .list li a {
+  text-decoration: none;
+  color: #525252;
+}
+
+.item-list li.selected, .item-list li.active, .list li.active {
+  color: #fff;
+  font-family: 'ProximaNova-Regular', Helvetica, Arial, sans-serif;
+  border-width: 1px 0px 1px 0px;
+  border-top: 1px solid #439dc3;
+  border-bottom: 1px solid #439dc3;
+  background-image: linear-gradient(90deg, #58b6dd 0%, #5dc1eb 100%);
+  background-image: -moz-linear-gradient(90deg, #58b6dd 0%, #5dc1eb 100%);
+  background-image: -webkit-linear-gradient(90deg, #58b6dd 0%, #5dc1eb 100%);
+  background-image: -ms-linear-gradient(90deg, #58b6dd 0%, #5dc1eb 100%);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.15), inset 0px 1px 0px rgba(255, 255, 255, 0.15);
+}
+.item-list li.selected > a, .list li.active > a {
+  font-weight: bold;
+  color: #fff;
+}
+.item-list li .r {
+  display: none;
+}
+.item-list li .fr {
+	display: none;
+}
+.item-list li:hover .r {
+  display: block;
+}
+.item-list li:hover .fr {
+  display: block;
+}
+.item-list li.selected .r {
+  display: block;
+}
+.item-list li.selected .fr {
+	display: block;
+}
+.item-list li .button {
+  margin-top: -2px;
+  display: block;
+  color: #6e6e6e;
+  font-size: 11px;
+  text-shadow: 0px 1px 0px #fff;
+  margin-right: 5px;
+  line-height: 23px;
+  font-weight: bold;
+}
+.item-list li .button.hover.green {
+  color: #fff;
+  text-shadow: 0px -1px 0px #6e6e6e;
+}
+.item-list li .button.hover.red {
+  color: #fff;
+  text-shadow: 0px -1px 0px #6e6e6e;
+}
+.item-list li .button.hover {
+  color: #fff;
+}
+.item-list li .button.active {
+  color: #fff;
+}
+.item-list li .button.selected {
+  color: #fff;
+}
+.item-list li .button .l {
+  background: url('/termite_static/images/v2/pages_options_left_cap.png') 0px 0px no-repeat transparent;
+  width: 3px;
+  height: 23px;
+}
+.item-list li .button .l-c { 
+  background: url('/termite_static/images/v2/pages_options_middle.png') 0px 0px repeat-x transparent; 
+  padding: 0px 8px;
+  height: 23px;
+}
+.item-list li .button .r { 
+  background: url('/termite_static/images/v2/pages_options_right_cap.png') 0px 0px no-repeat transparent;
+  width: 3px;
+  height: 23px;
+}
+.item-list li .button.red.hover .l { background-position: 0px -92px; }
+.item-list li .button.red.hover .l-c { background-position: 0px -92px; }
+.item-list li .button.red.hover .r { background-position: 0px -92px; }
+
+.item-list li .button.green.hover .l { background-position: 0px -23px; }
+.item-list li .button.green.hover .l-c { background-position: 0px -23px; }
+.item-list li .button.green.hover .r { background-position: 0px -23px; }
+.item-list li.selected .button.green.hover .l { background-position: 0px -69px; }
+.item-list li.selected .button.green.hover .l-c { background-position: 0px -69px; }
+.item-list li.selected .button.green.hover .r { background-position: 0px -69px; }
+
+.item-list li.selected .button .l { background-position: 0px -46px; }
+.item-list li.selected .button .l-c { background-position: 0px -46px; }
+.item-list li.selected .button .r { background-position: 0px -46px; }
+
+/************************************************************************
+ * 左右两侧一个section样式
+ ************************************************************************/
+.section {
+
+}
+
+.sectionHeader {
+	position: relative;
+	padding: 10px;
+	border-top: 1px solid #dbdbdb;
+	border-bottom: 1px solid #dbdbdb;
+	background-color: #f5f5f5;
+	background-image: linear-gradient(bottom, #f5f5f5, #f9f9f9);
+	background-image: -moz-linear-gradient(bottom, #f5f5f5, #f9f9f9);
+	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #f9f9f9);
+
+	font-size: 12px;
+	color: #111;
+	font-weight: bold;
+}
+
+.sectionContainer {
+	background-color: #FBFBF9;
+	overflow: auto;
+}
+
+.sectionActionBar {
+	float: right;
+	margin-right: 10px;
+	height: 20px;
+}
+
+/************************************************************************
+ * component list view 部分样式
+ ************************************************************************/
+#componentList li {
+	float: left;
+	padding-top: 21px;
+	/*padding-left: 4px;*/
+	width: 94px;
+	height: 76px;
+	text-align: center;
+	text-shadow: 0px 1px 0px #eee;
+	cursor: pointer;
+	z-index: 100;
+	margin-top:12px;
+}
+#componentList li:hover {
+	background-color: #F1FF83;
+}
+
+#componentList .componentList_component_img {
+	width: 82px;
+	height: 70px;
+	margin: 0px auto;
+}
+
+.componentList_component_header {
+	background: url(/termite_static/termite_img/builder_component_header.png) no-repeat transparent;
+}
+.componentList_component_footer {
+	background: url(/termite_static/termite_img/builder_component_footer.png) no-repeat transparent;
+}
+.componentList_component_tab_bar {
+	background: url(/termite_static/termite_img/builder_component_tab_bar.png) no-repeat transparent;
+}
+.componentList_component_nav_bar {
+	background: url(/termite_static/termite_img/builder_component_nav_bar.png) no-repeat transparent;
+}
+.componentList_component_button {
+	background: url(/termite_static/termite_img/builder_component_button.png) no-repeat transparent;
+}
+.componentList_component_link {
+	background: url(/termite_static/termite_img/builder_component_link.png) no-repeat transparent;
+}
+.componentList_component_image {
+	background: url(/termite_static/termite_img/builder_component_image.png) no-repeat transparent;
+}
+.componentList_component_heading {
+	background: url(/termite_static/termite_img/builder_component_heading.png) no-repeat transparent;
+}
+.componentList_component_hr {
+	background: url(/termite_static/termite_img/builder_component_hr.png) no-repeat transparent;
+}
+.componentList_component_textblock {
+	background: url(/termite_static/termite_img/builder_component_textblock.png) no-repeat transparent;
+}
+.componentList_component_html {
+	background: url(/termite_static/termite_img/builder_component_html.png) no-repeat transparent;
+}
+.componentList_component_form {
+	background: url(/termite_static/termite_img/builder_component_form.png) no-repeat transparent;
+}
+.componentList_component_text_input {
+	background: url(/termite_static/termite_img/builder_component_text_input.png) no-repeat transparent;
+}
+.componentList_component_search {
+	background: url(/termite_static/termite_img/builder_component_search.png) no-repeat transparent;
+}
+.componentList_component_datepicker {
+	background: url(/termite_static/termite_img/builder_component_datepicker.png) no-repeat transparent;
+}
+.componentList_component_text_area {
+	background: url(/termite_static/termite_img/builder_component_text_area.png) no-repeat transparent;
+}
+.componentList_component_toggle_switch {
+	background: url(/termite_static/termite_img/builder_component_toggle.png) no-repeat transparent;
+}
+.componentList_component_slider {
+	background: url(/termite_static/termite_img/builder_component_slider.png) no-repeat transparent;
+}
+.componentList_component_radio {
+	background: url(/termite_static/termite_img/builder_component_radio.png) no-repeat transparent;
+}
+.componentList_component_checkbox {
+	background: url(/termite_static/termite_img/builder_component_checkbox.png) no-repeat transparent;
+}
+.componentList_component_submit {
+	background: url(/termite_static/termite_img/builder_component_submit.png) no-repeat transparent;
+}
+.componentList_component_select_menu {
+	background: url(/termite_static/termite_img/builder_component_select_menu.png) no-repeat transparent;
+}
+.componentList_component_panel {
+	background: url(/termite_static/termite_img/builder_component_panel.png) no-repeat transparent;
+}
+.componentList_component_video {
+	background: url(/termite_static/termite_img/builder_component_youtube.png) no-repeat transparent;
+}
+.componentList_component_map {
+	background: url(/termite_static/termite_img/builder_component_map.png) no-repeat transparent;
+}
+.componentList_component_listview {
+	background: url(/termite_static/termite_img/builder_component_listview.png) no-repeat transparent;
+}
+.componentList_component_collapsible {
+	background: url(/termite_static/termite_img/builder_component_collapsible.png) no-repeat transparent;
+}
+.componentList_component_grid {
+	background: url(/termite_static/termite_img/builder_component_grid.png) no-repeat transparent;
+}
+.componentList_component_swipe_image {
+	background: url(/termite_static/termite_img/builder_component_swipe_image.png) no-repeat transparent;
+}
+/*=====================================组件图片替换======================================*/
+.componentList_component_black {
+	background: url(/termite_static/termite_img/component_black.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_image_adv {
+	background: url(/termite_static/termite_img/component_image_adv.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_showcase {
+	background: url(/termite_static/termite_img/component_showcase.png) no-repeat transparent 10px 4px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_image_nav {
+	background: url(/termite_static/termite_img/component_image_nav.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_product {
+	background: url(/termite_static/termite_img/component_product.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_product_list {
+	background: url(/termite_static/termite_img/component_product_list.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_subline {
+	background: url(/termite_static/termite_img/component_subline.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_relate_link {
+	background: url(/termite_static/termite_img/component_relate_link.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_richtext {
+	background: url(/termite_static/termite_img/component_richtext.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_text_nav {
+	background: url(/termite_static/termite_img/component_text_nav.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_title {
+	background: url(/termite_static/termite_img/component_title.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_page_header {
+	background: url(/termite_static/termite_img/component_page_header.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.componentList_component_header_nav {
+	background: url(/termite_static/termite_img/component_page_header.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+/*===========================================================================*/
+
+.componentList_component_label {
+	width: 94px;
+	/*text-align: center;*/
+	/*padding-left: 11px;*/
+	color: #333;
+}
+
+.btn-component {
+	width: 150px;
+	height: 30px;
+	line-height: 30px;
+	cursor: move;
+	padding: 5px 0px;
+	margin: 0px auto;
+	margin-top: 10px;
+	z-index: 1038;
+}
+
+/************************************************************************
+ * page nav view 部分样式
+ ************************************************************************/
+#pageNavContainer {
+	padding: 5px;
+}
+
+/************************************************************************
+ * page tabs 部分样式
+ ************************************************************************/
+#pageTabs {
+	height: 98%;
+}
+
+#pageTabs .formPageWrapper {
+	padding: 5px;
+}
+#pageTabs_tabList .ui-icon-close {
+	position: absolute;
+	right: 2px;
+}
+
+/************************************************************************
+ * page manager部分样式
+ ************************************************************************/
+.pageManager_pageList {
+	height: 204px;
+	overflow: auto;
+}
+
+/************************************************************************
+ * form page部分样式
+ ************************************************************************/
+.formPage {
+	height: 98%;
+	position: relative;
+	overflow: auto;
+}
+
+#pagePanel .control-group {
+	margin-bottom: 8px;
+}
+
+.xui-droppable-active {
+	box-shadow: 0px 0px 10px rgba(255, 255, 0, 0.9);
+}
+
+.formPage_newElement {
+	height: 50px;
+	border: dashed 3px blue;
+	margin: 10px 0px;
+	visibility: hidden;
+}
+
+.componentContainer {
+	position: relative;
+	padding: 5px;
+}
+
+.componentOverlay {
+	height: 100%;
+	width: 100%;
+	z-index: 100;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: rgba(0, 0, 0, 0);
+	text-align: center;
+	line-height: 50px;
+}
+
+.componentMetaInfoContainer {
+	position: absolute;
+	width: 48px;
+	height: 48px;
+	top: 5px;
+	z-index: 1037;
+	left: 10px;
+	background: url(/termite_static/termite_img/page.png) top left no-repeat;
+	background-color: #8F8F8F;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);	
+	cursor: pointer;
+}
+
+.componentListInfoContainer {
+	position: absolute;
+	width: 48px;
+	height: 48px;
+	top: 5px;
+	z-index: 1037;
+	right: 10px;
+	background: url(/termite_static/termite_img/list_page.png) top left no-repeat;
+	background-color: #8F8F8F;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);	
+	cursor: pointer;
+}
+
+.weixinSimulator {
+	position: absolute;
+	top: 80px;
+	left: 3px;
+	width: 100px;
+	z-index: 1037;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);	
+}
+
+/*
+.componentMetaInfoContainer:hover {
+	background-color: #BFBFBF;
+}
+*/
+
+.formPage .pageMetaInfo {
+}
+
+.formPage .pageListInfo {
+}
+
+.formPage_cover {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 1038;
+}
+
+#formPage_closeCoverBtn {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+#formPage_closeCoverBtn > i {
+	margin-top: 0px;
+}
+
+.formPage_cover_contentContainer {
+	margin: 50px 10px;
+}
+
+.formPage_cover_contentContainer table {
+	background-color: #fff;
+}
+
+.componentOverlay-hover {
+	background-color: rgba(0, 0, 0, 0.15);
+}
+
+.componentOverlay-active {
+	background-color: rgba(255, 255, 0, 0.15);
+	box-shadow: 0px 0px 5px rgba(0, 0, 255, 0.9);
+}
+
+.componentOverlay a {
+	visibility: hidden;
+}
+
+.componentOverlay-active a {
+	visibility: visible;
+}
+
+.formPage .ui-state-highlight {
+	height: 70px;
+	background: none;
+	background-color: rgba(111, 167, 210, 0.5) !important;
+}
+
+/************************************************************************
+ * property view部分样式
+ ************************************************************************/
+#propertyView {
+	font-size: 12px;
+}
+
+.propertyGroup {
+	padding-bottom: 15px;
+	border-bottom: solid 1px #E5E5E5;
+}
+
+.propertyGroup:last-child {
+	border-bottom: none;
+}
+
+.propertyGroup_title {
+	font-size: 14px;
+	padding: 3px 5px;
+	font-weight: bold;
+	margin-right: 5px;
+	margin-left: 1px;
+	background-color: #888;
+	color: white;
+	text-shadow: 0 1px 0 #BFBFBF;
+}
+
+.propertyGroup_property_horizontalField .propertyGroup_property_label {
+	display: inline-block;
+	width: 85px;
+	/*background-color: #EFEFEF;*/
+	height: 24px;
+	line-height: 24px;
+	text-align: right;
+	margin-right: 2px;
+	font-weight: bold;
+	vertical-align: top;
+}
+
+.propertyGroup_property_horizontalField .long-label {
+	width: 160px;
+}
+
+.propertyGroup_property_horizontalField .propertyGroup_property_input {
+	display: inline-block;
+	width: 150px;
+}
+
+.propertyGroup_property_horizontalField .short-input {
+	width: 50px;
+}
+
+.propertyGroup_property_horizontalField .propertyGroup_property_input input[type="text"] {
+	height: 20px;
+	padding: 1px 2px;
+	width: 190px;
+	margin: 0px;
+	margin-left: -5px;
+}
+
+.propertyGroup_property_textareaField .propertyGroup_property_input textarea {
+	height: 100px;
+}
+
+.propertyGroup_property {
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+.propertyGroup_property_dynamicControlField h3 {
+	position: relative;
+	margin: 0px 5px;
+	padding: 3px;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 17px;
+	border-radius: 2px 2px 0 0;
+    border: solid 1px #CCC;
+}
+
+.propertyGroup_property_dynamicControlField .icon-remove {
+	cursor: pointer;
+}
+
+.propertyGroup_property_dynamicControlField_title span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap; 
+	max-width: 200px; 
+	display: inline-block;
+}
+
+.propertyGroup_property_dynamicControlField_title {
+	cursor: move;
+}
+
+.propertyGroup_property_dynamicControlField_content {
+	background-color: #EEE;
+	border: solid 1px #CCC;
+	border-top: none;
+	margin: 0px 5px;
+	padding: 5px;
+	font-size: 12px;
+}
+
+.propertyGroup_property_dynamicControlField_content .propertyGroup_property_label {
+	width: 70px;
+}
+.propertyGroup_property_dynamicControlField_content .propertyGroup_property_horizontalField {
+	margin-top: 10px;
+}
+
+/*****************************************************
+ * selectImageDialog部分样式
+ *****************************************************/
+#selectImageDialog {
+	width: 600px;
+}
+
+.selectImageDialog_body {
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+.selectImageDialog_imgBox {
+	cursor: pointer;
+	width: 120px;
+	height: 120px;
+	position: relative;
+	border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 5px rgba(50, 50, 50, 0.50);
+    padding: 3px;
+}
+
+.selectImageDialog_imgBox_img {
+	width: 120px;
+	height: 120px;
+}
+
+.selectImageDialog_imgBox_cover {
+	width: 120px; 
+	height: 120px; 
+	background-color: rgba(0, 0, 0, 0.5); 
+	position:absolute; 
+	top: 0px; 
+	left: 0px; 
+	z-index: 103;
+	display: none;
+	padding: 3px;
+}
+
+.selectImageDialog_imgBox_cover img {
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	margin-left: -16px;
+	margin-top: -16px;
+}
+
+/*****************************************************
+ * selectNavIconDialog部分样式
+ *****************************************************/
+.selectNavIconDialog_title{
+    position:relative;
+    height:30px;
+}
+.selectNavIconDialog_title .close{
+    position:relative;
+    z-index:2;
+}
+.selectNavIconDialog_title .nav{
+    position:absolute;
+    bottom:-1px;
+    left:0px;
+    width:100%;
+}
+.selectNavIconDialog_title .nav li:first-child{
+    margin-left:15px;
+}
+.selectNavIconDialog_title .nav li a{
+    outline:none;
+}
+.selectNavIconDialog_body {
+	max-height: 300px;
+    min-height: 300px;
+	overflow-y: auto;
+}
+
+.selectNavIconDialog_iconBox {
+	cursor: pointer;
+	width: 60px;
+	height: 60px;
+	position: relative;
+	border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 3px rgba(50, 50, 50, 0.2);
+    padding: 3px;
+    background-color: #BD96CB;
+    text-align: center;
+    line-height: 60px;
+}
+
+.selectNavIconDialog_iconBox_img {
+	width: 40px;
+	height: 40px;
+}
+
+.selectNavIconDialog_iconBox_cover {
+	width: 60px; 
+	height: 60px; 
+	background-color: rgba(0, 0, 0, 0.5); 
+	position:absolute; 
+	top: 0px; 
+	left: 0px; 
+	z-index: 103;
+	display: none;
+	padding: 3px;
+}
+
+.selectNavIconDialog_iconBox_cover img {
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	margin-left: -16px;
+	margin-top: -16px;
+}

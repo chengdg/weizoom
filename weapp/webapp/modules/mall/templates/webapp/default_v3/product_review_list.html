@@ -1,0 +1,66 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div class="xui-productReviewListPage pb20">
+    <div class="xui-title pr">
+        <i data-ui-role="goBack"></i>
+        <span class="em9">我的评价</span>
+    </div>
+    {% if product_review_list%}
+    {% for review in product_review_list%}
+    <div class="xui-productReview p10 mb10">
+        <div class="xui-product disT mb15 w">
+            <div class="xui-productImg disTc">
+                {% ifequal review.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                    <img src="{{review.product.thumbnails_url}}!60" full-src="{{review.product.thumbnails_url}}" >
+                {% else %}
+                    <img src="{{review.product.thumbnails_url}}" >
+                {% endifequal%}
+
+            </div>
+            <div class="productInfo disTc vt pl10">
+                <div class="xui-productname em85 c65">{{review.product.name}}</div>
+                <div class="xui-productSpecificationAndPrice mt10">
+                    <span class="xui-specification em75 c9">
+                        {% if review.custom_model_properties %}
+                            {% for property in review.custom_model_properties %}
+                                {{ property.name }}&nbsp;&nbsp;
+                            {% endfor %}
+                        {% endif %}
+                    </span>
+                    <span class="em7 c9 fr">{{review.created_at|date:"Y-m-j"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="xui-productReviewText c65 em8">
+            {{review.review_detail}}
+        </div>
+        <!-- 如果有商品评价晒图-->
+        {% if review.pictures %}
+        <div class="xui-uploadImg">
+            {% for picture in review.pictures%}
+            {% ifequal picture.att_url|truncatechars:18 'http://weappimg...'%}
+                <img src="{{picture.att_url}}!60" full-src="{{picture.att_url}}">
+            {% else %}
+                <img src="{{picture.att_url}}">
+            {% endifequal%}
+
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+
+    <div class="xa-emptyReview xui-emptyReview">
+         <div class="xui-placeholder"></div>
+         <div class="xui-emptyImg"></div>
+    </div>
+    {% endif %}
+       
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

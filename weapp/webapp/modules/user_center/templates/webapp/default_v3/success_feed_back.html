@@ -1,0 +1,36 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block content-panel %}
+<div class="xui-feedBackSuccess-page">
+	<div class="xui-success">
+		<p class="tc">
+			<img src="/static_v2/img/webapp/mall/success.png" style="width:1.67rem;height:1.67rem;vertical-align:middle;">
+			提交成功
+		</p>
+		<p class="em95 c6 xui-tip">
+			感谢您提出宝贵意见，我们将尽快处理！
+		</p>
+	</div>
+	<div class="xui-otherPage">
+		<div class="xui-continue">您可继续</div>
+		<div class="xui-choice">
+			<a href="./?project_id=4109&woid=216" class="xui-i-leftBox">
+				<div class="xui-otherPageImg">
+					<img src="/static_v2/img/webapp/usercenter/usercenter.gif">
+				</div>
+				<span>个人中心</span>
+			</a>
+
+			<a href="./?woid={{request.webapp_owner_id}}&{%if request.webapp_owner_id == 216 %}project_id=4109{%else%}module=mall&model=products&action=list{%endif%}" class="xui-i-rightBox">
+				<div class="xui-otherPageImg">
+					<img src="/static_v2/img/webapp/mall/order_home.png">
+				</div>
+				<span>逛逛首页</span>
+			</a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

@@ -1,0 +1,196 @@
+<script id="small-phone-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="small-phone">
+		<div id="back-weixin-btn"></div>
+		<div id="title-zone">${title}</div>
+        <div id="screen">
+	        {{if enableWeixin}}
+	        <div id="timeline-zone">
+	        </div>
+	        {{/if}}
+	        {{if enableBrowser}}
+	        <div id="browser-zone" {{if !enableWeixin}}style="left:0%"{{/if}}>
+                <iframe src="${initBrowserUrl}" frameborder="0" width="100%" height="100%" id="mobile-browser" name="mobile-browser"></iframe>
+            </div>
+	        {{/if}}
+        </div>
+    </div>
+</script>
+
+
+
+
+
+<script id="phone-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="phone">
+        <div id="back-weixin-btn"></div>
+        <div id="top-weixin-title">${title}</div>
+        <div id="weixin-unsubscribe-btn"></div>
+        <div id="screen">
+	        <div id="timeline-zone">
+	        	{{if !isLogined}}
+		        <div id="userSelect" class="mt30">
+		        	<select name="weixin_user_name">
+		        		<option value="-1">选择用户</option>
+		        		<option value="zhouxun">周迅</option>
+		        		<option value="yangmi">杨幂</option>
+		        	</select>
+		        	<select name="mp_user_name">
+		        		<option value="-1">选择公众号</option>
+		        		{{each(i,mpUser) mpUsers}}
+		        		<option value="${mpUser.webapp_id}">${mpUser.mp_user_name}</option>
+		        		{{/each}}
+		        	</select>
+
+		        	<br/>
+		        	<button class="btn btn-primary">确定</button>
+		        </div>
+	        	{{/if}}
+	        </div>
+	        <div id="browser-zone">
+	            <iframe src="/loading/" frameborder="0" width="100%" height="100%" id="mobile-browser" name="mobile-browser"></iframe>
+	        </div>
+        </div>
+        <form id='weixin-form'>
+            <div id="weixin-input"><input id="weixinInput-contentInput" type="text" placeholder="输入微信" name="content" /></div>
+        </form>
+    </div>
+</script>
+
+
+
+
+
+<script id="single-news-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="mt10 shop-service" data-id="${news.id}">
+		<div class="content content-picture single-content-picture">
+			<div data-link="${news.url}" class="wx-news-container main-picture wx-message-link" data-id="${news.id}">
+		        <div class="main-picture-title">
+		            <span name="title">${news.title}</span>
+		            <p class="date">${news.date}</p>
+		        </div>
+		        <div class="main-picture-box">
+		            <img class="main-picture-img" name="picture" src="${news.pic_url}">
+		        </div>
+				<div class="wx-action-bar hide" data-pin='false'></div>
+		    </div>
+		    <div class="description mt5 pb10"><span name="summary">${news.summary}</span></div>
+		    <div class="more-link pt5">
+		        阅读全文
+		    </div>
+			<!-- start 添加新图文 -->
+			{{if enableAddNews}}
+			<div class="sub-pictures mt10">
+		        <div id="create-news-btn" class="sub-picture wx-message-link" data-link="">
+		            <div class="sub-picture-title">
+		                <span class="blue">点击添加新图文消息</span>
+		            </div>
+		            <div class="sub-picture-box">
+		                <img src="/static/img/add_30.png" style="width:30px; height:30px;" />
+		            </div>
+		            <div class="cb"></div>
+		        </div>
+	        </div>
+			{{/if}}
+			<!-- finish 添加新图文 -->
+			{{if enableEdit}}
+			<div class="tc mt10 sub-picture pt10 edit-div">
+				{{if enableUpdateMaterial}}
+				<input id="embededPhone-editBtn" type="button" class="btn btn-primary" value="编辑" />
+				{{/if}}
+				{{if enableDeleteMaterial}}
+				<input id="embededPhone-deleteBtn" type="button" class="ml20 btn btn-danger" value="删除" />
+				{{/if}}
+			</div>
+			{{/if}}
+		</div>
+	</div>
+</script>
+
+
+
+
+
+<script id="multi-newses-tmpl-src" type="text/x-jquery-tmpl">
+<div class="mt10 shop-service">
+    <div class="content content-picture">
+        <div class="wx-news-container main-picture wx-message-link" data-link="${mainNews.url}" data-id="${mainNews.id}">
+            <div class="main-picture-box">
+            	{{if mainNews.pic_url}}
+                <img src="${mainNews.pic_url}" name="picture" width="360px" height="200px"/>
+                {{else}}
+                <img src="/static/img/empty_image.png" name="picture" width="360px" height="200px"/>
+                {{/if}}
+            </div>
+            <div class="main-picture-title">
+	            <span name="title">${mainNews.title}</span>
+            </div>
+	        <div class="wx-action-bar hide" data-pin='false'></div>
+        </div>
+
+        <div class="sub-pictures mt10">
+	        {{each(i,news) subNewses}}
+            <div class="wx-news-container sub-picture wx-message-link" data-link="${news.url}" data-id="${news.id}">
+                <div class="sub-picture-title">
+	                <span name="title">${news.title}</span>
+                </div>
+                <div class="sub-picture-box">
+                	{{if news.pic_url}}
+                    <img src="${news.pic_url}" name="picture" style="width:30px; height:30px;" />
+                    {{else}}
+                    <img src="/static/img/empty_image.png" name="picture" style="width:30px; height:30px;" />
+                    {{/if}}
+                </div>
+	            <div class="wx-action-bar hide" data-pin='false'></div>
+                <div class="cb"></div>
+            </div>
+	        {{/each}}
+
+	        <!-- start 添加新图文 -->
+	        {{if enableAddNews}}
+	        <div id="create-news-btn" class="sub-picture wx-message-link" data-link="">
+	            <div class="sub-picture-title">
+	                <span class="blue">点击添加新图文消息</span>
+	            </div>
+	            <div class="sub-picture-box">
+	                <img src="/static/img/add_30.png" style="width:30px; height:30px;" />
+	            </div>
+	            <div class="cb"></div>
+	        </div>
+	        {{/if}}
+	        <!-- finish 添加新图文 -->
+
+	        <!-- start 编辑区域 -->
+	        {{if enableEdit}}
+			<div class="tc mt10 sub-picture pt10 edit-div">
+				{{if enableUpdateMaterial}}
+				<input id="embededPhone-editBtn" type="button" class="btn btn-primary" value="编辑" />
+				{{/if}}
+				{{if enableDeleteMaterial}}
+				<input id="embededPhone-deleteBtn" type="button" class="ml20 btn btn-danger" value="删除" />
+				{{/if}}
+			</div>
+			<!-- finish 编辑区域 -->
+			{{/if}}
+        </div>
+
+    </div>
+</div>
+</script>
+
+
+
+
+
+<script id="text-message-tmpl-src" type="text/x-jquery-tmpl">
+<div class="mt20 ${extraClass}" data-id="${id}">
+    <div class="profile ${extraClass}-profile">
+    	<img src="${imagePath}" width="45"/>
+    </div>
+    <div class="content">
+	    {{each(i,text) texts}}
+	    {{html text}}<br/>
+	    {{/each}}
+    </div>
+    <div class="cb"></div>
+</div>
+</script>

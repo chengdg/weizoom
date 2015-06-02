@@ -1,0 +1,55 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block content-panel %}
+<div class="xui-feedBackPage p10">
+    <form method="post">
+        <label for="">
+            请详细写下你的意见和感受吧：<span class="xui-text-red">（必填）</span>
+        </label>
+        <div class="em95 c6 mt10 mb10 xui-suggestion" style="">
+            <textarea name="content" id="" rows="5" col="30" class="xa-inputSuggestion"></textarea>
+            <p class="tr"><span class="xa-letter">0</span>/300</p>
+        </div>
+        <label for="" class="mt10">
+            请留下你的联系方式：<span class="c6">（选填）</span>
+        </label>
+        <input type="text" style="" name="tel" class="ui-input-text"  placeholder="QQ/邮箱/电话">
+        <a href="javascript:void(0);" class="xui-btn xui-btn-danger w xa-submit">提交</a>
+    </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('.xa-inputSuggestion').on('input', function(event) {
+        var curLength=$(".xa-inputSuggestion").val().length; 
+        if(curLength>300){ 
+            var num=$(".xa-inputSuggestion").val().substr(0,300); 
+            $(".xa-inputSuggestion").val(num);
+        } 
+        else{ 
+            $(".xa-letter").text($(".xa-inputSuggestion").val().length); 
+        } 
+    });
+    $('.xa-submit').click(function(){
+        var val = $('.xa-inputSuggestion').val();
+        if(val.length == 0){
+            $('body').alert({
+                isShow: true,
+                speed: 1500,
+                info: '意见不能为空'
+            });
+            return false;
+        }else{
+            $('body').alert({
+                isShow: true,
+                info:'正在提交',
+                speed: 200000
+            });
+            $('form').submit();
+        }
+    })
+});
+</script>
+{% endblock %}

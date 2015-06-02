@@ -1,0 +1,122 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<style type="text/css">
+	#edui_fixedlayer{
+		z-index: 100009!important;
+	}
+	.modal{
+		z-index: 100009!important;	
+	}
+	.edui-editor{
+		width: 625px!important;
+	}
+</style>
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/small_simulator.css">
+
+{% endblock %}
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">会员分组</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/webapp/user_center/tag/create/"><i class="icon-plus
+		icon-white"></i>添加分组</a>
+	</span>
+</div>
+
+<div>
+	{% if member_tags %}
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>分组名</th>
+				<th>会员数</th>
+				<th>分组群发</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for member_tag in member_tags %}
+			<tr data-id="{{ grade.id }}">
+				<td class="w150">
+					<a href="/webapp/user_center/tag/update/{{ member_tag.id }}/">{{ member_tag.name }}</a>
+				</td>
+				<td>
+					{{ member_tag.count }}
+				</td>
+				<td>
+					<button class="btn btn-primary send-text"  value='{{ member_tag.id }}' {% if member_tag.count == 0 %} disabled {% endif %}>发文本</button>
+
+					<button class="btn btn-primary send-material" value='{{ member_tag.id }}' {% if member_tag.count == 0 %} disabled {% endif %}>发图文</button>
+				</td>
+			</tr>
+			{% endfor %}
+
+		</tbody>
+	</table>
+	<div class='mt10'>本月已群发<font id='times'>{{success_count}}</font>次</div>
+	{% else %}
+		暂无分组
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var shouldShowAuthorizeCover = {% if should_show_authorize_cover %}true{% else %}false{% endif %};
+	$(document).ready(function(){
+		if (shouldShowAuthorizeCover) {
+			W.view.showAuthorizeCover({
+				hint: '您还没有该功能的权限，请<a href="javascript:void(0);" class="x-docTrigger">查看文档</a>',
+				doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
+			});
+		}
+
+		var send_message = function(group_id, cont, send_type){
+			W.getApi().call({
+			 	method: 'post',
+	            app: 'webapp/user_center',
+	            api: 'massmessage/send',
+	            async: false,
+	            args: {
+	                group_id: group_id,
+	                content: cont,
+	                send_type: send_type
+	            },
+	            scope: this,
+	            success: function(data) {
+	                W.getSuccessHintView().show('发送成功');
+	                var times = $('#times').text();
+	                $('#times').text((parseInt(times) +1 ))
+	            },
+	            error: function(resp) {
+	                //TODO 进行错误通知
+	                W.getErrorHintView().show('发送失败');
+	               
+	                //failed_callback();
+	            }
+			})
+		}
+
+		$('.send-text').click(function(event){
+			var group_id = $(event.currentTarget).attr('value');
+			W.dialog.showDialog('W.dialog.member.tag.TextareDialog', {
+				success: function(ids) {
+					send_message(group_id, ids, 0);
+				}
+			});
+		});
+		$('.send-material').click(function(event){
+			var group_id = $(event.currentTarget).attr('value');
+			W.dialog.showDialog('W.dialog.weixin.SelectMaterialDialog', {
+				success: function(ids) {
+					send_message(group_id, ids[0], 1);
+				}
+			});
+		});
+	});
+</script>
+{% endblock %}

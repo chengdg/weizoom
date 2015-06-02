@@ -1,0 +1,29 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.fieldset' %}
+{% if in_production_mode %}
+	<fieldset 
+    	data-cid="{{component.cid}}" 
+    	data-index="{{component.model.index}}" 
+    	class="{{component.model.class}} {% if component.model.is_horizontal == 'yes' %}form-horizontal{% endif %}"
+	>
+		<legend>{{component.model.legend}}</legend>
+	    {{ component|join_sub_components_html|safe }}
+	</fieldset>
+{% else %}
+	<fieldset 
+	    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    	data-ui-sortable="true" 
+    	data-cid="{{component.cid}}" 
+    	data-index="{{component.model.index}}" 
+    	data-component-container="true"
+    	class="mt5 mb5 {{component.model.class}} {% if component.model.is_horizontal == 'yes' %}form-horizontal{% endif %}" 
+    	style="border: dotted 1px #888; padding: 10px;"
+	>
+		<legend>{{component.model.legend}}</legend>
+	    {% include 'component/common/circum_insert_indicator.html' %}
+	    {{ component|join_sub_components_html|safe }}
+	</fieldset>
+{% endif %}
+{% endifequal %}

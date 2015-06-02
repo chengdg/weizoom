@@ -1,0 +1,82 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active"><a href="/market_tools/weizoom_card/">钱包列表</a></li>
+		<li class="active"><a href="/market_tools/weizoom_card/adjust_accounts/">/核算</li><span class="divider"></a></span>
+		<li class="">/{{username}}</li><span class="divider"></span>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a id="exportBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-plus icon-white"></i>导出excel</a>
+	</span>
+</div>
+
+<div class="mt10">
+	<div class="control-group">
+		<label class="control-label w200" for="parents_name">商家账号：{{username}}</label>
+		{% if start_date or end_date %}
+			<label class="control-label w250" for="parents_name">时间：{{start_date}} / {{end_date}}</label>
+		{% endif %}
+		<!-- <label class="control-label w200" for="parents_name">合计金额：{{total}}</label> -->
+	</div>
+</div>
+
+<div>
+	<div class="xa-listView" data-ui-role="advanced-table" data-app="market_tools/weizoom_card" data-api="adjust_accounts_info/get" data-args='{"username": "{{username}}", "start_date": "{{start_date}}","end_date": "{{end_date}}"}' data-template-id="#adjust_accounts_list_view" data-enable-paginator="true"></div>
+</div>
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+		<script id="adjust_accounts_list_view" type="text/x-jquery-tmpl">
+			<table class="table table-bordered table-condensed">
+	            <thead>
+	                <th>时间</th>
+	                <th>卡号</th>
+	                <th>操作</th>
+					<th class="w100">结算金额（元）</th>
+	            </thead> 
+	            <tbody>
+	            	{{each(i, item) items}}
+					<tr tr_id='${item.id}'>
+						<td>${item.created_at}</td>
+						<td>
+						<a href="/market_tools/weizoom_card/weizoom_card/${item.data_card_id}/expense_record/">${item.card_id}</a>
+						</td>
+						<td>【${item.event_type}】
+						{{if item.order_id != '-1'}}
+						${item.order_id}
+						{{/if}}
+						</td>
+						<td>${item.money}</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+	</script>
+	{% endverbatim %}
+	
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+function get_str_date(){
+	var start_date = "{{start_date}}" || "2001-01-01";
+	var end_date = "{{end_date}}" || "2099-01-01";
+	return 'start_date=' + start_date + '&end_date=' + end_date
+}
+$(document).ready(function() {
+	$('#exportBtn').click(function(event) {
+		var url = '/market_tools/weizoom_card/detail_adjust_accounts/export/?username={{username}}';
+		var args = get_str_date();
+		if (args.length > 0){
+			url = url + '&' + args;
+		}
+		window.open(url);
+	});
+});
+</script>
+{% endblock %}

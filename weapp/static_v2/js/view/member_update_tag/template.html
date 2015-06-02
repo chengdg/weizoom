@@ -1,0 +1,38 @@
+<script id="member-update-tag-dialog-tmpl-src" type="text/x-jquery-tmpl">
+
+		<div class="xa-i-content clearfix p5">
+	
+		</div>
+		<div class="tc" style="padding:7px 0 10px 0;background:#eaeef7;">
+			<div class="xa-order-ship-info">
+			</div>
+			<button class="btn btn-primary xa-submit ml15 xa-close">确 认</button>
+			<button class="btn xa-close btn-default">取 消</button>
+		</div>
+
+</script>
+
+<script id="tags-tmpl-src" type="text/x-jquery-tmpl">
+		<ul>
+			{{each(i,tag) tags}}
+			<li class="fl ml15 mt5 checkbox">
+			<label>
+				<input type="checkbox" name="tag_id" value="${tag.id}" data-value="${tag.name}"> ${tag.name}
+			</label>
+			</li>
+			{{/each}}
+		</ul>
+		
+</script>
+
+<script id="grade-tmpl-src" type="text/x-jquery-tmpl">
+		<ul>
+			{{each(i,tag) tags}}
+			<li class="fl ml15 mt5 mb5 radio">
+			<label>
+				<input type="radio" name="tag_id" value="${tag.id}"> ${tag.name}
+			</label>
+			</li>
+			{{/each}}
+		</ul>
+</script>

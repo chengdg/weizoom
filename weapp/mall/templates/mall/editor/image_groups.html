@@ -1,0 +1,129 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-editor-imageGroupPage">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li>图片管理</li>
+	</ul>
+	<div class="xui-rightPanelBg xui-tableList-content">
+		<div class="pt20 pl20 mr15 ovh">
+			<a class="btn btn-success xui-addProductBtn xa-add fr " href="javascript:void(0);">
+				<span style="padding-right:5px;">
+					<img src="/static_v2/img/editor/plusOpcity.png"></span>
+				新建分组
+			</a>
+		</div>
+
+		<div class="xui-i-imageGroups clearfix xa-imageGroups">
+			{% if image_groups %}
+{% for image_group in image_groups %}
+			<section class="xui-i-imageGroup fl xa-imageGroup" data-image-group-id="{{image_group.id}}" data-name="{{image_group.name}}">
+				<h2 class="xui-i-title clearfix">
+					{{image_group.name}}
+					<div class="xui-i-actionBar fr">
+						<button class="close xa-delete" type="button">
+							<span>&times;</span>
+						</button>
+					</div>
+				</h2>
+				<ul class="xui-i-images clearfix cursor-pointer xa-images" style="background:#fff;">
+					{% for image in image_group.images %}
+					<li class="xui-i-image">
+						<img src="{{image.url}}" />
+					</li>
+				
+					{% endfor %}
+				</ul>
+			</section>
+			{% endfor %}
+{% else %}
+			<div class="panel-body xb-noContent mb0">
+				
+				<div class="xui-emptyBox mb0">
+					<div class="xui-i-emptyHint">
+						<img src="/static_v2/img/editor/empty.png">
+							<div>
+								<span>您还没有图片分组，赶快添加！</span>
+							</div>
+					</div>
+				</div>
+			
+            </div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.xa-add').click(function(event) {
+		W.dialog.showDialog('W.dialog.mall.AddMallImageGroupImageDialog', {
+			canEditTitle: true,
+			success: function(data) {
+				W.getApi().call({
+					method: 'post',
+					app: 'mall',
+					api: 'image_group/create',
+					args: W.toFormData(data),
+					success: function(data) {
+						window.location.reload();
+					},
+					error: function(resp) {
+						alert('创建图片分组失败');
+					}
+				})
+			}
+		});
+	});
+
+	$(document).delegate('.xa-imageGroup .xa-images', 'click', function(event) {
+		var $imageGroup = $(event.currentTarget).parents('.xa-imageGroup');
+		var title = $imageGroup.data('name');
+		var id = $imageGroup.data('imageGroupId');
+		W.dialog.showDialog('W.dialog.mall.AddMallImageGroupImageDialog', {
+			canEditTitle: true,
+			title: title,
+			groupId: id,
+			success: function(data) {
+				W.getApi().call({
+					method: 'post',
+					app: 'mall',
+					api: 'image_group/update',
+					args: _.extend(W.toFormData(data), {
+						id: id
+					}),
+					success: function(data) {
+						window.location.reload();
+					},
+					error: function(resp) {
+						alert('创建图片分组失败');
+					}
+				})
+			}
+		});
+	});
+
+	$('.xa-imageGroups').delegate('.xa-delete', 'click', function(event) {
+		var $imageGroup = $(event.currentTarget).parents('.xa-imageGroup');
+		var id = $imageGroup.data('imageGroupId');
+		W.getApi().call({
+			method: 'post',
+			app: 'mall',
+			api: 'image_group/delete',
+			args: {
+				id: id
+			},
+			success: function(data) {
+				window.location.reload();
+			},
+			error: function(resp) {
+				alert('删除图片分组失败');
+			}
+		})
+	});
+});
+</script>
+{% endblock %}

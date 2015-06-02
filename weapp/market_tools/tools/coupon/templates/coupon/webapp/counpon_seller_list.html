@@ -1,0 +1,68 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+
+<link rel="stylesheet" href="/markettools_static/coupon/css/rank.css">
+<link type="text/css" rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-rank-bg">
+	<div class="xui-container">
+		<h4>优惠劵使用排行榜</h4>
+		
+		<div class="xui-tableBox clearfix">
+		<div class="xui-info">
+			<span class="fl ml10">{{start_date}}~{{end_date}}</span>
+			<span class="fr mr10">我的位置：{% if member_seller %}{{member_seller}}{% else %}无{% endif %}</span>
+		</div>
+		<div class="clearfix">
+			<table class="table table-shadow">
+				<tr>
+					<th>名次</th>
+					<th>用户</th>
+					<th>使用张数</th>
+				</tr>
+				{% for member in members %}
+				<tr>
+					<td>
+						<i class=" {% if member.member_seller == 1 %}xui-rank xui-no1{% endif %}{% if member.member_seller == 2 %}xui-rank xui-no2{% endif %}{% if member.member_seller == 3 %}xui-rank xui-no3{% endif %}"></i>
+						<span>{{member.member_seller}}</span>
+					</td>
+					<td>
+						{{member.username_for_html|safe}}
+					</td>
+					<td>
+						{{member.used_coupon_count}}
+					</td>
+				</tr>
+				{% endfor %}
+			</table>
+			</div>
+			<div class="fl ml10">
+			{% if pageinfo.has_prev %}
+			<a href="./?module=market_tool:coupon&model=seller_list&action=get&workspace_id=market_tool:coupon&webapp_owner_id={{request.webapp_owner_id}}&project_id={{product.id}}&page={{pageinfo.prev}}">上一页</a>
+			{% else %}
+			<span style="color:#ccc">上一页</span>
+			{% endif %}
+			</div>
+			<div class="fr mr10">
+			{% if pageinfo.has_next %}
+			<a href="./?module=market_tool:coupon&model=seller_list&action=get&workspace_id=market_tool:coupon&webapp_owner_id={{request.webapp_owner_id}}&project_id={{product.id}}&page={{pageinfo.next}}">下一页</a>
+			{% else %}
+			<span style="color:#ccc">下一页</span>
+			{% endif %}
+			</div>
+		</div>
+		
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

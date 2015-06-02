@@ -1,0 +1,58 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.datepicker' %}
+<!-- =====> viper:datepicker component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="mt5 mb5 xui-br" 
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{name}}">{{component.model.label}}：</label>
+        <div 
+            class="controls" 
+            data-ui-role="date-picker-group"
+            {% if component.model.enable_validate == 'yes' %}
+            data-validate="required-date-picker" 
+            {% endif %}
+        >
+            {% for sub_component in component.components %}
+                {{ sub_component.html|safe }}
+                {% if not forloop.last %}—{% endif %}
+            {% endfor %}
+            <div class="errorHint">{% if in_design_mode %}name="{{name}}"{% endif %}</div>
+        </div>
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:datepicker component -->
+{% endifequal %}
+
+
+
+
+
+
+{% ifequal component.type 'viper.dateinput' %}
+{% with component|get_component_name as name %}
+<input 
+    type="text" 
+    class="input-small" 
+    id="{{name}}" 
+    name="{{name}}" 
+    placeholder="{{component.model.placeholder}}" 
+    value="{{page.record|get_record_value:name|safe}}" 
+    data-ui-role="date-picker" 
+    {% if component.parent_component.model.enable_today_as_min_date == 'yes' %}
+    data-today-as-min-date="true"
+    {% endif %}
+/>
+{% endwith %}
+{% endifequal %}

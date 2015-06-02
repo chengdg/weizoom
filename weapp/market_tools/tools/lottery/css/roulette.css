@@ -1,0 +1,124 @@
+@charset "utf-8";
+
+/*背景*/
+body.ui-overlay-x .ui-page.xui-rouletter-page{
+    background: #fffdf2 url('/markettools_static/lottery/img/roulette/bg.jpg') no-repeat 0 0 scroll;
+    background-size: 100% auto;
+    -moz-background-size: 100% auto;
+    -webkit-background-size: 100% auto;
+}
+.android body.ui-overlay-x .ui-page.xui-rouletter-page{
+    background: #fffdf2 url('/markettools_static/lottery/img/roulette/bg.jpg') no-repeat 0 0 scroll;
+    background-size: 100% auto;
+    -moz-background-size: 100% auto;
+    -webkit-background-size: 100% auto;
+}
+
+/*大转盘*/
+.xui-rouletter-widget{
+    margin:0 auto;
+    padding-top:10px;
+    overflow:hidden;
+}
+
+
+/*内容介绍区域*/
+.xui-content-layer{
+
+}
+.xui-content-layer .xui-content-layer-title{
+    width:115px;
+    height:30px;
+    line-height:44px;
+    font-weight:normal;
+    font-size:0.9em;
+    color:#d22d2c;
+    overflow:hidden;
+    margin:0 15px;
+}
+.xui-content-layer .xui-content-layer-content{
+    line-height:22px;
+    font-size: 0.8em;
+    color:#565656;
+    padding:5px 0;
+    margin:0 15px;
+}
+.xui-content-info{
+    background:#f1eedd;  
+    color:#5790c8;
+    font-size: 0.9em;
+    padding:10px;
+    margin:0 15px;
+}
+
+
+/*积分层*/
+.xui-integral-content{
+    position:relative;
+    display:inline-block;
+}
+.xui-integral-delete{
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:30px;
+    text-align:right;
+}
+
+/*状态*/
+.xui-lottery-status{
+    position:absolute;
+    right:0;
+    top:0;
+    width:100px;
+    height:100px;
+    z-index:99999;
+}
+.xui-lottery-status-0{
+    background:url(/markettools_static/lottery/img/active_suspend.png) 0 0 no-repeat;
+}
+.xui-lottery-status-2{
+    background:url(/markettools_static/lottery/img/active_over.png) 0 0 no-repeat;
+}
+.xui-lottery-status-,
+.xui-lottery-status-1{
+    display:none;
+}
+.xui-lottery-status-3{
+    background:url(/markettools_static/lottery/img/active_not_start.png) 0 0 no-repeat;
+}
+
+.xui-header-btnLayer{
+    position:relative;
+    z-index: 999;
+}
+.xui-btn-again{
+    position:fixed;
+    top:10px;
+    left:0px;
+    z-index: 99999;
+    background:rgba(0,0,0,0.2);
+    border-radius:0 15px 15px 0;
+    -moz-border-radius:0 15px 15px 0;
+    -webkit-border-radius:0 15px 15px 0;
+    height:30px;
+    padding:0 20px 0 10px;
+    line-height: 28px;
+    color:#F9C596;
+    cursor:pointer;
+    border:none;
+    box-shadow:none;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    text-shadow:none;
+}
+.xui-btn-again .ui-btn-inner{
+    padding:0;
+    border:none;
+    text-shadow:none;
+    overflow:visible;
+}
+.xui-btn-again .ui-btn-text{
+    font-size:0.8em;
+    text-shadow:none;
+}

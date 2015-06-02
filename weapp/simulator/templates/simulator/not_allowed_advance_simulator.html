@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html >
+    <head>
+        <meta charset="UTF-8" />
+        <title></title>
+        <link type="text/css" rel="stylesheet" media="all" href="/standard_static/bootstrap/css/bootstrap.css?v=1">
+        <link type="text/css" rel="stylesheet" media="all" href="/standard_static/css/advance_simulator.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/jquery/jquery.mobile-1.3.1.min.css">
+        
+        <script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript">
+            var $window = $(window);
+            $(document).bind("mobileinit", function () {
+                //$.mobile.ajaxEnabled = false;
+            });
+        </script>
+
+
+        <script type="text/javascript" src="/static/jquery/jquery.mobile-1.3.1.min.js"></script>
+
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    </head>
+    <body>
+        <div data-role="page" id="loginPage">
+        </div>
+        <script type="text/javascript">
+            $('#loginPage').on('pageshow', function() {
+                    $.mobile.loading( 'show', {
+                        text: '登录状态下，不允许访问。请退出登录',
+                        textVisible: true,
+                        textonly: true,
+                        theme: 'e',
+                        html: ''
+                    });
+                });
+        </script>
+    </body>
+</html>

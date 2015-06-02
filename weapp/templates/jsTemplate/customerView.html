@@ -1,0 +1,53 @@
+<script id="timelines-action-view" type="text/x-jquery-tmpl">
+	<div class="timelineListAction bs-docs-example form-inline mt10">
+		<div class="fl tx_actionsLayout tx_actionButton">
+			<label class="checkbox">
+				<input type="checkbox" class="tx_selectAll"> 全选
+			</label>
+
+			<span class="btn-group"><button data-toggle="dropdown" class="btn dropdown-toggle
+			tx_moveTimeline">转移到...<span class="caret"></span></button></span>
+
+		</div>
+		<div class="fr tx_actionButton">
+			查看
+			<span class="btn-group"><button data-toggle="dropdown" class="btn dropdown-toggle w100 tx_selectTimeline">全部&nbsp;<span class="caret"></span></button></span>
+			<a href="/customer/groups/">分组管理</a>
+		</div>
+	</div>
+</script>
+
+
+<!-- start one customer模板 -->
+<script id="one-customer-tmpl-src" type="text/x-jquery-tmpl">
+<dl class="oneCustomer">
+	<dt>
+		<span class="fl customer_img" customer_id="${id}">
+			<img src="${icon}">
+			<input class="customer_checkeBox tx_actionButton" type="checkbox" >
+		</span>
+	</dt>
+	<dd>
+		<div class="oneCustomer_title">
+			<span>${username}</span>
+			<div class="oneCustomer_action">
+				<span>
+					<a class="btn btn-mini tx_addRemarkOneCustomer mr250" href="#" title="编辑" data-remark="${remark}" data-id="${id}">
+						<i class="icon-pencil"></i>
+					</a>
+				</span>
+				<span class="btn-group">
+					<button data-toggle="dropdown" class="btn dropdown-toggle tx_selectGroup w110">${group_name}
+						<span class="caret"></span></button>
+				</span>
+				<button class="btn btn-info tx_session" type="button" customer_id="${id}">
+					与他对话
+				</button>
+			</div>
+		</div>
+		<p>备注：<span class='tx_remarkLayout'>${ remark }</span></p>
+		<p>关注时间：${ created_at }</p>
+	</dd>
+</dl>
+</script>
+<!-- finish one timelin模板 -->

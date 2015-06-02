@@ -1,0 +1,319 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% load express_filter %}
+{% load mall_filter %}
+
+{% block content-panel %}
+<div class="xui-payOrderPage xui-page">
+    <!-- 订单详情 -->
+	<fieldset class="xui-section">
+        <div class="clearfix xui-inner">
+			<div class="xt-status fl" style="white-space: nowrap;">						
+                    {% ifequal order.status 0 %}
+						<span class="xui-text-red em1">{{order_status_info}}</span>
+					{% endifequal %}
+					{% ifnotequal order.status 0 %}
+                        {{order_status_info}}
+                    {% endifnotequal %}
+			</div>
+            <div class="fr c9 em9">
+                订单号：{{ order.order_id }}
+            </div>
+		</div>
+        <div class="clearfix xui-inner pr pr20">
+            <!-- 暂无物流信息 -->  
+            {% if order.get_express_detail_last %}
+            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}">
+                <p class="em95 c6">{{ order.get_express_detail_last.context }}</p>
+                <p class="em85 c9">{{ order.get_express_detail_last.ftime }}</p>
+                <span class="xui-icon xui-icon-rightarrow" style="right:12px"></span>
+            </a>
+            {% else %}
+                暂无物流信息
+            {% endif %}
+        </div>
+    </fieldset>
+    <!-- 收货地址 -->
+    <fieldset class="xui-section xui-section-title ">
+        <div class="xui-inner">
+            <h2 class="mb10">
+                收货人：<span class="xt-shipName em1">{% if order %}{{ order.ship_name }}{% endif %}</span><span class="ml15 xt-shipTel">{% if order %}{{ order.ship_tel }}{% endif %}</span>
+            </h2>
+            <div class="c9 em9">
+                {% if order %}
+                    <span class="xt-shipArea">{{ order.area }}</span>
+                    <span class="xt-shipAddress ml5">{{ order.ship_address }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% if order.customer_message %}
+        <div class="xui-inner">
+            <h2>买家留言</h2>
+            <p class="c9 em9 mt10">{{ order.customer_message }}</p>
+        </div>
+        {% endif %}
+    </fieldset>
+    <!-- 收货地址 -->
+
+    <!-- 订单商品列表 -->
+    <fieldset class="zoom xui-section">
+        <div class="xui-selectedProductList">
+            <ul class="clearStyle" style="padding-left:12px;">
+                {% for product in order.products %}
+                <li class="xa-product disT w"
+                    data-product-id="{{product.id}}" 
+                    data-product-count="{{product.purchase_count}}" 
+                    data-product-model-name="{{product.model_name}}"
+                >
+                    <div class="disTc xui-productThumbNail pr">
+                        {% if product.promotion %}
+                        {% if product.promotion.type != 'premium_sale' %}
+                            <span class="xui-giftTag">
+                            {% if product.promotion.type == 'price_cut' %}满减{% endif %}
+                            {% if product.promotion.type == 'flash_sale' %}限时抢购{% endif %}
+                            {% if product.promotion.type == 'integral_sale' %}积分抵扣{% endif %}
+                            {% if product.promotion.type == 'premium_sale:premium_product' %}赠品{% endif %}
+                            </span>
+                        {% endif %}
+                        {% endif %}
+                        {% if not product.id %}<span class="xui-giftTag">赠品</span>{% endif %}
+                        <img src="{{product.thumbnails_url}}"/>
+                    </div>
+                    <div class="disTc xui-productInfo vt">
+                        <dl class="disT w em95">
+                            <dd class="disTc xui-ellipsis-2"><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}" style="color:#333;">{{ product.name }}</a></dd>
+                            <dd class="disTc vt tr">
+                                {% if product.promotion_result.promotioned_product_price %}
+                                <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.promotion_result.promotioned_product_price }}</span></span>
+                                {% else %}
+                                <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.price }}</span></span>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                        <dl class="disT w em9 mt5 c9">
+                            <dd class="disTc vt xui-ellipsis-2">
+                                {% if product.custom_model_properties %}
+                                    规格:
+                                    {% for property in product.custom_model_properties %}
+                                    <span class="mr10">{{ property.property_value }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </dd>
+                            {% if product.price %}
+                            <dd class="disTc vt tr">
+                               Ｘ<span class="xt-count xa-count">{{ product.count }}</span>
+                            </dd>
+                            {% endif %}
+                        </dl>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </fieldset>
+    <!-- 订单商品列表 -->
+    <!--支付方式及发票-->
+    <fieldset class="xui-section xui-section-title">
+        <div class="xui-inner clearfix">
+            <h2 class="fl c6">支付方式</h2>
+            <p class="fr">{{ pay_interface }}</p>
+        </div>
+        {% if order.bill%}
+        <div class="xui-inner">
+            <h2>发票信息</h2>
+            <p class="c9 em9 mt10">发票抬头：
+                {% ifequal order.bill_type 1 %}
+                个人 {{ order.bill }}
+                {% endifequal %}
+                {% ifequal order.bill_type 2 %}
+                公司 {{ order.bill }}   
+                {% endifequal %}
+            </p>
+        </div>
+        {% endif %}
+    </fieldset>    
+    <!-- 订单价格清单(积分、优惠券、运费...) -->
+
+	<fieldset class="xui-section xui-otherCosts">
+    <div class="xui-priceItem">
+        <p class="zoom">
+            <span class="fl">商品金额</span>
+            <span class="fr">￥<span class="xa-totalProductPrice">{{ order.product_price | floatformat:"2" }}</span></span>
+        </p>
+        {% if order.integral %}
+        <p class="zoom">
+            <span class="fl">积分抵扣</span>
+            <span class="fr">-￥<span class="xa-integralMoney">{{ order.integral_money | floatformat:"2"}}</span>
+        </p>
+        {% endif %}
+        {% if order.has_promotion_saved_money %}
+        <p class="zoom">
+            <span class="fl">促销优惠</span>
+            <span class="fr">-￥<span class="">{{ order.promotion_saved_money | floatformat:"2"}}</span>
+        </p>
+        {% endif %}
+        {% if order.coupon_id %}
+        <p class="zoom">
+            <span class="fl">优惠劵</span>
+            <span class="fr">-￥<span class="xa-couponMoney">{{ order.coupon_money | floatformat:"2" }}</span></span>
+        </p>
+        {% endif %}
+        {% if order.weizoom_card_money %}
+        <p class="zoom">
+            <span class="fl">微众抵扣</span>
+            <span class="fr">-￥<span class="xa-weizoomCardMoney">{{ order.weizoom_card_money | floatformat:"2" }}</span></span>
+        </p>
+        {% endif %}
+        <p class="zoom">
+            <span class="fl">运费</span>
+            <span class="fr">+￥<span class="xa-postageElement">{{ order.postage | floatformat:"2" }}</span></span>
+        </p>
+    </div>
+    <div style="padding:10px 12px;" class="clearfix">
+        <p class="tr em95">实付金额：<span class="xui-text-red em1">￥{{ order.final_price | floatformat:"2" }}</span></p>
+        <p class="em75 c9 tr">
+            下单时间：{{ order.created_at|date:"Y-m-j H:i:s" }}
+        </p>
+    </div>
+    </fieldset>
+
+    {% if order.status == 0 or order.status == 4  %}
+    <div style="height:50px;"></div>
+    <div class="clearfix xui-stupidBar">
+        <div class="fr xui-btnOuter">
+            {% if order.status == 0 %}
+            <!-- 待支付 -->
+            <a href="javascript:void(0);" type="button" id="cancelOrderButton" class="xui-btn xui-btn-disable">取消订单</a>
+            <a href="javascript:void(0);" type="button" id="pay_order" class="xui-btn xui-btn-danger xa-pay">支付</a>
+            {% endif %}
+            
+            {% if order.status == 4 %}
+            <!-- 已发货 -->
+            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" type="button" class="xui-btn xui-btn-disable">查看物流</a>
+            {% if order.session_data.has_comfire_button %}
+            <a href="javascript:void(0);" type="button" class="xui-btn xui-btn-danger xa-receipt">确认收货</a>
+            {% endif %}
+            {% endif %}
+                <!-- {% if request.user.is_weizoom_mall %}
+                    <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}">返回商城首页</a>
+                {% else %}
+                   <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">返回商城首页</a>
+                {% endif %} -->
+        </div>
+    </div>
+    {% endif %}
+    <!-- 订单价格清单 -->
+
+    <!-- 感恩卡
+    {% if is_support_thanks_card %}
+    <fieldset class="xui-section pr">
+        <p class="zoom">
+            <span class="fl">感恩密码</span>
+        </p>
+        <hr style="position:absolute;width:100%;margin-left:-15px;border:none;border-top:1px solid #ccc;">
+        <div class="mt10 xui-thankCard">
+            {% for thanks_card in thanks_cards %}
+            <ul style="list-style:none;">
+                <li>
+                    <p>密码：
+                        {% if thanks_card.is_used %}
+                            <a class="xui-thankCard-pwd" href="./?module=market_tool:thanks_card&model=thanks_card&action=get&workspace_id=market_tool:thanks_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&secret={{ thanks_card.thanks_secret }}&thanks_card_id={{thanks_card.id}}">{{ thanks_card.thanks_secret }}</a>
+                            <span class="ml10 xui-text-green">已使用</span>
+                        {% else %}
+                            <a class="xui-thankCard-pwd" href="./?module=market_tool:thanks_card&model=thanks_card&action=edit&workspace_id=market_tool:thanks_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&secret={{ thanks_card.thanks_secret }}&thanks_card_id={{thanks_card.id}}&order_id={{ order.order_id }}">{{ thanks_card.thanks_secret }}</a>
+                            <span class="ml10 xui-text-red">未使用</span>
+                        {% endif %}
+                    </p>
+                </li>
+            </ul>
+            {% endfor %}
+            <div class="xui-thankCard-notice">点击密码制作感恩贺卡</div>
+        </div>
+    </fieldset>
+    {% endif %} -->
+    <!-- 感恩卡 -->
+
+    <!-- 配送套餐
+    {% if is_delivery_plan %}
+    <div class="xui-expressPage clearfix mt20 pr">
+        <ul>
+            {% for has_delivery_time in has_delivery_times %}
+                {% if has_delivery_time.status %}
+                    <li class="clearfix pr">
+                    <p class="xui-outer-box">
+                        <span class="xui-inner-dot"></span>                              
+                        <span class="ml5">{{ has_delivery_time.delivery_date|date:"Y年m月j日" }}</span>
+                    </p>
+                    <div class="xui-expressPo clearfix">
+                        <fieldset class="xui-section xui-expressBox m10 pr">
+                            <a class="xui-inner-expressLink" href="http://m.kuaidi100.com/index_all.html?type={{ order.express_company_name}}&postid={{ order.express_number }}">                       
+                                    <div>
+                                        <p>物流公司：{{ has_delivery_time.express_company_name|get_company_name_by_value }}</p>
+                                        <p>运单编号：{{ has_delivery_time.express_number }}</p>
+                                    </div>
+                                <span class="xui-icon" style="">&nbsp;</span>
+                            </a>
+                        </fieldset>
+                    </div>
+                    </li>
+                {% else %}
+                    <li class="clearfix">
+                    <p class="mb20">
+                        <span class="xui-inner-dot"></span>
+                        <span class="ml5">{{ has_delivery_time.delivery_date|date:"Y年m月j日" }}</span>
+                        <span style="color:#ae0404">未发货</span>
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %} -->
+
+    <!-- {% if is_show_success %}
+    <div class="xui-cover xa-cover">
+        <div class="xui-inner-container pr">
+            <div class="xui-popBg pa">
+            <!-- 订单状态为'优惠抵扣'或'货到付款'时，显示'下单成功' -->
+            {% if order.pay_interface_type == 9 or order.pay_interface_type == 10 or order.type == 'integral'%}
+                <p>下单成功</p>
+                <p class="xui-doneInfo xt-coverInfo">下单成功</p>
+            {% else %}
+                <p>支付成功</p>
+                <p class="xui-doneInfo xt-coverInfo">支付成功</p>
+            {% endif %}
+                <p class="mt10" style="color: #fff;font-size: 1.2em;">请等待收货</p>
+            </div>
+        </div>
+    </div>
+    {% endif %} -->
+
+    {% if under_develop %}
+        <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}">测试快递物流</a>        
+        <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}&is_finish=success">测试快递已收货</a>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">	
+var orderId = "{{ order.id }}";
+var payInterfaceType = "{{ order.pay_interface_type }}";
+$(document).ready(function() {
+	var errorMsg = {% if error_msg %}"{{ error_msg }}"{% else %}null{% endif %};
+	if (errorMsg != null) {
+		$('body').alert({
+			isShow: true,
+			speed: 3000,
+			info: errorMsg
+		});
+	}
+
+    var orderDetailView = new W.page.OrderDetailPage({
+        el: '.xui-payOrderPage',
+        orderId: orderId,
+        payInterfaceType: payInterfaceType
+    });
+});	
+</script>
+{% endblock %}

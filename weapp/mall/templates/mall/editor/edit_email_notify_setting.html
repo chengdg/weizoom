@@ -1,0 +1,81 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+<style>
+    .xui-emailNotifySetting-page table td:first-child{
+        vertical-align: top;
+    }
+    .xui-emailNotifySetting-page table td:last-child{
+        padding-left:5px;
+    }
+    .xui-emailNotifySetting-page table td{
+        padding:5px 0;
+    }
+    .xui-emailNotifySetting-page textarea{
+        width: 450px;
+        height: 142px;
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>配置管理</li>
+        <li class="active">运营邮件通知</li>
+        <li>更新配置</li>
+    </ul>
+<div class="panel panel-default xb-panelBg xui-emailNotifySetting-page">
+    <div class="xui-rightPanelTitle pl30">
+        更新配置
+    </div>
+    <div class="panel-body">
+    <form class="form-horizontal" method="post" id="editForm" >
+    <table width="560" class="mt10">
+        <tr>
+            <td class="tr" width="100">通知情况：</td>
+            <td>
+                {% if notify_setting.status == 0 %}
+                    下单时
+                  {% endif %}
+                  {% if notify_setting.status == 1 %}
+                    付款时
+                  {% endif %}
+                  {% if notify_setting.status == 2 %}
+                    发货时
+                  {% endif %}
+                  {% if notify_setting.status == 3 %}
+                    完成时
+                  {% endif %}
+                  {% if notify_setting.status == 4 %}
+                    取消时
+                  {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td class="star_show tr vt" width="100">收件人email：</td>
+            <td>
+                <textarea class="input-xlarge" id="emails" name="emails" placeholder="多个地址用“|”分割" data-validate="required-none" >{{notify_setting.emails}}</textarea>
+                <div class="errorHint"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="star_show tr vt" width="100">过滤的会员ID：</td>
+            <td>
+                <textarea class="input-xlarge" id="member_ids" name="member_ids" placeholder="多个ID用“|”分割" data-validate="required-none" >{{notify_setting.black_member_ids}}</textarea>
+                <div class="errorHint"></div>
+            </td>
+        </tr>
+    </table>
+
+    <fieldset>
+        <legend></legend>
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" class="btn btn-primary" id="submitBtn" value="提&nbsp;&nbsp;交" style="margin-left:100px"/>
+            </div>
+        </div>
+    </fieldset>
+    </form>
+    </div>
+</div>
+{% endblock %}

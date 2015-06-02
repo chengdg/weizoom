@@ -1,0 +1,121 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
+<style>
+	.ui-cover{
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.7);
+		z-index: 10000;
+		position: absolute;
+		top: 0;
+	}
+	.ui-applyBox{
+		background: #fff;
+		-webkit-background-size: cover;
+		background-size: cover;
+		width: 90%;
+		margin: 0 auto;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px; 
+		border-radius: 5px;
+		position: fixed;
+		margin-left: 5%;
+		padding: 20px 0;
+	}
+	.ui-applyBox .xui-btn .ui-btn-text{
+		font-size: 1em;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-wzcoinConfirm-page">
+    <div data-role="content" data-theme="x">
+    	<form class="xui-form" method="post" action="" id="editForm">
+				<div class="xui-section-item xui-submitBox">
+					<div class="xui-form-controls">
+						<span class="xui-textTips">您的微众卡余额：<span class="xui-numTips">{{weizoom_card.money}}</span>元</span>
+					</div>
+					<div class="xui-form-controls mt">
+						<span class="xui-textTips">您可以兑换：<span class="xui-numTips">{{change_integral}}</span>积分</span>
+					</div>
+					
+
+					{% if is_can_pay %}
+						<div class="mt30 clearfix tc">
+							<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable" id="back">返回</a>
+						</div>
+						<!-- {% if request.user.is_weizoom_mall %}
+						<div class="mt30 clearfix">
+							<a href="#" data-role="button" class="xui-btn xui-btnSubmit fl ua-apply" id="payBtn">兑换积分</a>
+							<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">返回</a>
+						</div>
+						{% else %} -->
+						<!-- {% endif %} -->
+					{% else %}
+					<p style="color:#ae0001" class="mt20">您的微众卡余额不足！</p>
+					<div class="mt30 clearfix">
+						<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btnSubmit fl" id="submitBtn">确认</a>
+						<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">取消</a>
+					</div>
+					{% endif %}
+					
+				</div>
+		</form>
+	</div>
+	<div class="ui-cover hidden ua-cover">
+		<div class="ui-applyBox ua-applyBox pr tc">
+			<div class="p20">
+				<span class="xui-textTips">恭喜您成功兑换<span class="xui-numTips">{{change_integral}}</span>积分！</span>
+				<div class="tc mt30">
+				<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-danger" id="submitBtn">确认</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var bodyHeight = window.document.body.clientHeight;
+		var height = bodyHeight * 0.3
+	
+		var $submitBtn = $('#payBtn');
+        $submitBtn.click(function() {
+        	var card_id = "{{weizoom_card.id}}";
+        	W.getApi().call({
+        		app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    project_id: W.projectId,
+                    card_id: card_id,
+                    module:'mall',
+                    target_api: 'weizoom_card_to_integral/change',
+                }),
+		        success: function(data) {
+		        	$('.ua-cover').removeClass('hidden');
+					$('.ui-applyBox').css('top',height);
+		        },
+		        error: function(data) {
+		        	var code = parseInt(data['code']);
+			        var msg = '支付失败';
+			        if (code == 500){
+				       	msg = data['data']['msg']
+			        }
+			        $('.ui-page').alert({
+			         	isShow: true,
+			         	info: msg,
+			         	isSlide: true,
+			         	speed: 2000
+			         });
+		        }
+        	})
+        })
+	});
+</script>
+{% endblock %}

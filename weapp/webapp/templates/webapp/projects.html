@@ -1,0 +1,342 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+{% endblock %}
+
+{% block single-content-panel %}
+  <div id="projectList" class="">
+    <div class="relative">
+      <ul class="breadcrumb">
+        <li><a href="/webapp/">项目列表</a><span class="divider">/</span></li>
+        <li class="active">{{workspace.name}} 子项目列表</li>
+      </ul>
+      <span class="breadcrumRightButton">
+        <a id="exportWorkspaceBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-download-alt icon-white"></i> 导出</a>
+        <!--
+        <a id="editDataBtn" class="btn btn-primary" href="/webapp/workspace_data/edit/?workspace_id={{ workspace_id }}"><i class="icon-edit icon-white"></i> 编辑数据</a>
+        -->
+        <a id="bindDataBackendBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-list icon-white"></i> 数据源</a>
+        <a id="addProjectBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-plus icon-white"></i>添加子项目</a>
+      </span>
+    </div>
+    <table class="table table-bordered table-condensed mt10">
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>内部名</th>
+          <th>默认模板</th>
+          <th>类型</th>
+          <th>创建日</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+        <tr>
+          <td>
+            <div contenteditable="true" data-project-id="{{project.id}}">
+            {{project.name}}
+            </div>
+          </td>
+          <td style="width: 150px;">
+            {{project.inner_name}}
+          </td>
+          <td style="width: 50px">
+            {% ifequal workspace.template_project_id project.id %}
+            是
+            {% endifequal %}
+          </td>
+          <td style="width: 100px;">
+            {{project.type}}
+            {% ifnotequal project.type 'viper' %}
+            <a class="btn btn-mini btn-success x-newWindow" title="预览" href="/workbench/jqm/preview/?project_id={{project.id}}"><i class="icon-eye-open icon-white"></i></a>
+            {% else %}
+            <!--
+            <a class="btn btn-mini btn-success" title="数据" href="/workbench/viper/records/?project_id={{project.id}}"><i class="icon-eye-open icon-white"></i></a>
+          -->
+            {% endifnotequal %}
+          </td>
+          <td style="width: 100px;">{{project.created_at|date:"Y-m-d"}}</td>
+          <td style="width: 170px;">
+            {% ifnotequal project.type 'raw' %}
+            <a class="btn btn-mini" title="编辑" href="/webapp/project/edit/{{project.id}}/"><i class="icon-pencil"></i></a>
+            {% endifnotequal %}
+            
+            {% ifnotequal project.type 'viper' %}
+            <a class="btn btn-mini" title="设置默认模板" href="/webapp/workspace_template/set/?workspace_id={{workspace.id}}&project_id={{project.id}}"><i class="icon-picture"></i></a>
+            {% endifnotequal %}
+
+            {% ifequal 'home_page' workspace.inner_name %}
+            {% ifnotequal project.type 'viper' %}
+            <a class="btn btn-mini btn-warning x-syncToUserBtn" title="同步到用户" href="javascript:void(0);" data-workspace-id="{{workspace.id}}" data-project-id="{{project.id}}"><i class="icon-user icon-white"></i></a>
+
+            <a class="btn btn-mini btn-warning x-updateBtn" title="更新模板" href="javascript:void(0);" data-workspace-id="{{workspace.id}}" data-project-id="{{project.id}}"><i class="icon-refresh icon-white"></i></a>
+            {% endifnotequal %}
+            {% endifequal %}
+
+            {% if project.type == 'viper' %}
+            <a class="btn btn-mini xa-createApp" title="生成App" href="javascript:void(0);" data-project-id="{{project.id}}"><i class="icon-folder-open"></i></a>
+            {% endif %}
+            
+            <a class="btn btn-danger btn-mini wx_delete" title="删除" href="/webapp/project/delete/{{project.id}}/" ><i class="icon-remove icon-white"></i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div id="selectDataBackendDialog" class="modal hide fade" style="width: 600px">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>选择数据后台</h3>
+    </div>
+    <div class="modal-body clearfix">
+      <label>
+        请选择数据来源：
+        <select name="dataBackend">
+        </select>
+      </label>
+      
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-submit">确定</button>
+    </div>
+  </div>
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+  W.workspaceId = {{ workspace_id }};
+  W.workspaceDataBackend = "{{ workspace.data_backend }}";
+  $(document).ready(function() {
+    $('a.x-newWindow').click(function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      var $link = $(event.currentTarget);
+      var url = $link.attr('href');
+      window.open(url, '_blank', 'top=50, left=300, width=400, height=600,location=no,resizable=yes,status=no,toolbar=yes,scrollbars=yes');
+    });
+
+    $('#exportWorkspaceBtn').click(function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      W.getLoadingView().show();
+      W.getApi().call({
+        app: 'webapp',
+        api: 'workspace/export',
+        args: {
+          workspace_id: W.workspaceId
+        },
+        success: function(data) {
+          W.getLoadingView().hide();
+          alert('workspace数据已成功导出到相应目录，请提交svn!')
+        },
+        error: function(resp) {
+          W.getLoadingView().hide();
+          if (resp.code === 500) {
+            alert(resp.data);
+          } else {
+            alert('导出数据失败!')
+          }          
+        }
+      })
+    });
+
+    $('#addProjectBtn').click(function(event) {
+      W.dialog.showDialog('W.weapp.dialog.AddProjectDialog', {
+        workspaceId: W.workspaceId,
+        success: function(data) {
+          W.getLoadingView().show();
+          W.getApi().call({
+            app: 'webapp',
+            api: 'project/create',
+            method: 'post',
+            args: {
+              workspace_id: W.workspaceId,
+              name: data.name,
+              inner_name: data.innerName,
+              type: data.type
+            },
+            success: function(data) {
+              window.location.reload();
+            },
+            error: function(resp) {
+              W.getLoadingView().hide();
+              if (resp.code === 500) {
+                  alert(resp.data);
+              } else { 
+                alert('创建项目失败！')
+              }
+            }
+          })
+        }
+      })
+    });
+
+    $('#bindDataBackendBtn').click(function(event) {
+      var $dialog = $('#selectDataBackendDialog');
+      $dialog.modal('toggle');
+
+      W.getApi().call({
+          app: 'webapp',
+          api: 'data_backends/get',
+          args: {
+              workspace_id: W.workspaceId
+          },
+          scope: this,
+          success: function(data) {
+              var buf = [];
+              var count = data.length;
+              for (var i = 0; i < count; ++i) {
+                var option = data[i];
+                if (W.workspaceDataBackend === option.value) {
+                  buf.push('<option selected="selected" value="'+option.value+'">'+option.name+'</option>');
+                } else {
+                  buf.push('<option value="'+option.value+'">'+option.name+'</option>');
+                }
+              }
+
+              $dialog.find('select').eq(0).empty().html(buf.join(''));
+          },
+          error: function() {
+              alert('获取数据失败!')
+          }
+      });
+    });
+
+    $('#selectDataBackendDialog .btn-submit').click(function() {
+      var $dialog = $('#selectDataBackendDialog');
+      $dialog.modal('toggle');
+
+      var dataBackend = $dialog.find('select').val();
+      W.workspaceDataBackend = dataBackend;
+      W.getApi().call({
+          app: 'webapp',
+          api: 'workspace_data_backend/update',
+          args: {
+              workspace_id: W.workspaceId,
+              data_backend: dataBackend
+          },
+          method: 'post',
+          scope: this,
+          success: function(data) {
+          },
+          error: function() {
+              alert('获取数据失败!')
+          }
+      });
+    });
+
+    $('.x-syncToUserBtn').click(function(event) {
+      var $link = $(event.currentTarget);
+      var workspaceId = $link.attr('data-workspace-id');
+      var projectId = $link.attr('data-project-id');
+      W.getLoadingView().show();
+      W.getApi().call({
+        app: 'webapp',
+        api: 'template_project/sync_to_user',
+        method: 'post',
+        args: {
+          workspace_id: workspaceId,
+          project_id: projectId,
+        },
+        success: function(data) {
+          W.getLoadingView().hide();
+          W.getSuccessHintView().show('模板已同步到所有用户');          
+        },
+        error: function(resp) {
+          var errMsg = '同步模板到用户失败';
+          if (resp.errMsg) {
+            errMsg = resp.errMsg;
+          }
+
+          W.getLoadingView().hide();
+          W.getErrorHintView().show(errMsg);
+        }
+      })
+    })
+
+    $('.x-updateBtn').click(function(event) {
+      var $link = $(event.currentTarget);
+      var workspaceId = $link.attr('data-workspace-id');
+      var projectId = $link.attr('data-project-id');
+      W.getLoadingView().show();
+      W.getApi().call({
+        app: 'webapp',
+        api: 'template_project/update',
+        method: 'post',
+        args: {
+          workspace_id: workspaceId,
+          project_id: projectId,
+        },
+        success: function(data) {
+          W.getLoadingView().hide();
+          W.getSuccessHintView().show('模板已更新');          
+        },
+        error: function(resp) {
+          var errMsg = '更新模板失败';
+          if (resp.errMsg) {
+            errMsg = resp.errMsg;
+          }
+
+          W.getLoadingView().hide();
+          W.getErrorHintView().show(errMsg);
+        }
+      })
+    });
+
+    $('.xa-createApp').click(function(event) {
+      var $link = $(event.currentTarget);
+      var projectId = $link.attr('data-project-id');
+      W.getApi().call({
+        app: 'webapp',
+        api: 'customized_app/create',
+        args: {
+          project_id: projectId
+        },
+        success: function(data) {
+          W.getSuccessHintView().show('创建App成功');
+        },
+        error: function(resp) {
+          if (resp.errMsg) {
+            W.getErrorHintView().show(resp.errMsg);
+          }
+          else {
+            W.getErrorHintView().show('创建App失败');
+          }
+          
+        }
+      })
+    });
+
+    $('[contenteditable="true"]').blur(function(event) {
+      var $project = $(this);
+      var name = $project.text();
+      var projectId = $project.attr('data-project-id');
+      W.getLoadingView().show();
+      W.getApi().call({
+        app: 'webapp',
+        api: 'project_name/update',
+        method: 'post',
+        args: {
+          project_id: projectId,
+          name: name
+        },
+        success: function(data) {
+          W.getLoadingView().hide();
+        },
+        error: function(resp) {
+          W.getLoadingView().hide();
+          alert('更新项目名失败！')
+        }
+      })
+    });
+  });
+</script>  
+{% endblock %}

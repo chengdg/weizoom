@@ -1,0 +1,7 @@
+<ul class="nav nav-tabs">
+	{% for nav in content_navs %}
+		<li {% ifequal nav.index active_content_nav %}class="active"{% endifequal %}>
+			<a href="{{ nav.url }}">{{ nav.name }}</a>
+		</li>
+	{% endfor %}
+</ul>

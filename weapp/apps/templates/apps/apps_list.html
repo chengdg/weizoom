@@ -1,0 +1,186 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+{% endblock %}
+
+{% block single-content-panel %}
+  <div id="projectList" class="">
+    <div class="relative">
+      <ul class="breadcrumb">
+        <li class="active">定制APP管理</li>
+      </ul>
+       {% if is_super_user %}
+      <span class="breadcrumRightButton">
+	      <a class="btn btn-primary" href="/apps/app/add/"><i class="icon-plus icon-white"></i>添加APP</a>
+      </span>
+        {% endif %}
+    </div>
+    <table class="table table-bordered table-condensed mt10">
+      <thead>
+        <tr>
+          <th>用户</th>
+          <th>APP</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for customized_app_info in customized_app_infos %}
+        <tr data-id="{{customized_app_info.id}}" app-data-id="{{ customized_app_info.customized_app.id }}"
+            data-status="{{ customized_app_info.customized_app.status }}">
+          <td>
+	          {{customized_app_info.owner.username}}
+          </td>
+          <td style="width: 300px">
+              <a{% ifnotequal customized_app_info.remark_name 'markettool'%} href="/apps/{{ customized_app_info.customized_app.name }}/home/"{% endifnotequal %}>{{customized_app_info.app_name}}</a>
+          </td>
+          <td style="width: 200px;padding:0;">
+	          {% if customized_app_info.customized_app.status == 0 %}
+		          <div class="progress m0" style="height: 25px;">
+			          <div class="bar bar-danger" style="width: 100%;">未启动</div>
+		          </div>
+	          {% elif customized_app_info.customized_app.status == 1 %}
+                  <div class="progress progress-striped active m0" style="height:25px">
+                      <div class="bar txt-status-updating-bar bar-{{ customized_app_info.id }}" data-id="{{ customized_app_info.customized_app.id }}" style="width: 10%;">
+                          正在停止...
+                      </div>
+                  </div>
+	          {% elif customized_app_info.customized_app.status == 2 %}
+		          <div class="progress progress-striped active m0" style="height:25px">
+			          <div class="bar txt-status-updating-bar bar-{{ customized_app_info.id }}" data-id="{{ customized_app_info.customized_app.id }}" style="width: 10%;">
+                          正在启动...
+                      </div>
+		          </div>
+	          {% elif customized_app_info.customized_app.status == 3 %}
+                  <div class="progress m0" style="height: 25px;">
+                      <div class="bar bar-success" style="width: 100%;">正在运行</div>
+                  </div>
+              {% elif customized_app_info.customized_app.status == 4 %}
+                  <div class="progress progress-striped active m0" style="height:25px">
+                      <div class="bar txt-status-updating-bar bar-{{ customized_app_info.id }}" data-id="{{ customized_app_info.customized_app.id }}" style="width: 10%;">
+                          正在更新...
+                      </div>
+                  </div>
+              {% elif customized_app_info.customized_app.status == 5 %}
+                  正在运行，但是有故障
+              {% elif customized_app_info.customized_app.status == 6 %}
+                  已经卸载
+	          {% endif %}
+	          </td>
+          <td style="width: 200px;" class="clearfix">
+	          {% if customized_app_info.customized_app.status == 0 %}
+		          <a class="btn btn-success btn-mini start-btn" data-api="started_app/create"
+                     href="javascript:void(0);">启用</a>                  
+                    {% ifnotequal customized_app_info.app_name 'shengjing' %}
+                  <a class="btn btn-danger btn-mini update-btn" data-api="uninstalled_app/create"
+                     href="javascript:void(0);">卸载</a>
+                     {% endifnotequal %}
+
+	          {% elif customized_app_info.customized_app.status == 3 %}
+		          <a class="btn btn-danger btn-mini stop-btn" data-api='stopped_app/create'
+                     href="javascript:void(0);">停止</a>
+                  <a class="btn btn-warning btn-mini update-btn" data-api="updated_app/create"
+                     href="javascript:void(0);">更新</a>
+
+              {% elif customized_app_info.customized_app.status == 7 or customized_app_info.customized_app.status == 6%}
+                  <a class="btn btn-success btn-mini install-btn" data-api='installed_app/create'
+                     href="javascript:void(0);">安装</a>
+                  <a class="btn btn-danger btn-mini delete-btn" data-api='app/delete'
+                     href="javascript:void(0);">删除</a>
+
+              {% endif %}
+			  {% ifnotequal customized_app_info.remark_name 'markettool'%} 
+              <a class="btn btn-primary btn-mini fr"
+                 href="/apps/app/update/{{ customized_app_info.id }}/">编辑</a>
+              {% endifnotequal %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	var selectStatus = function(id, $el){
+		W.getApi().call({
+			app: 'apps',
+			api: 'app_status/get',
+			method: 'post',
+			args: {
+				id: id
+			},
+			success: function(data) {
+                var nowStatus = $el.parents('tr').attr('data-status');
+                console.log('nowStatus='+nowStatus+'     data_status='+data['status']);
+				if(nowStatus != data['status']){
+					$el.width("100%");
+					window.location.reload();
+				}else{
+					if ($el.width() + 20 > 200 ){
+						$el.width("1%");
+					}else{
+						$el.width($el.width() + 20);
+					}
+					setTimeout(function(){selectStatus(id, $el)},5000);
+				}
+			},
+			error: function(resp) {
+				W.getLoadingView().hide();
+				if (resp.code === 500) {
+					alert(resp.data);
+				} else {
+					alert('失败!')
+				}
+			}
+		})
+	};
+
+	var $els = $('.txt-status-updating-bar');
+	if ($els.length > 0){
+		$els.each(function(i){
+			var id = $(this).attr('data-id');
+			selectStatus(id, $(this));
+		});
+	}
+
+
+	var updateStatus = function(id, api){
+		W.getLoadingView().show();
+		W.getApi().call({
+			app: 'apps',
+			api: api,
+			method: 'post',
+			args: {
+				id: id
+			},
+			success: function() {
+				window.location.reload();
+			},
+			error: function(resp) {
+				W.getLoadingView().hide();
+				if (resp.code === 500) {
+					alert(resp.data);
+				} else {
+					alert('失败!')
+				}
+			}
+		})
+	};
+
+	$('.stop-btn,.start-btn,.update-btn,.install-btn,.delete-btn').click(function(event) {
+		var $el = $(event.currentTarget);
+		var id = $el.parents('tr').attr('app-data-id');
+		var api = $el.attr('data-api');
+		updateStatus(id, api);
+	});
+});
+</script>  
+{% endblock %}

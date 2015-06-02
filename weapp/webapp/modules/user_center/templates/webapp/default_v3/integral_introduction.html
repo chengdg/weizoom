@@ -1,0 +1,64 @@
+
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div class="xui-myIntegralPage">
+   <div class="xui-myIntegral  xui-bg">
+    <div class="xui-currentIntegral">
+        <span class="em1 c3">当前积分:</span>
+        <span class="cRed em1">{{ member.integral }}</span>
+        <a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=integral_log&action=get&member_id={{member.id}}" class="cBlue em8 fr">积分明细</a>
+    </div>
+    <div>
+        <span class="c9 em8">积分有效期:</span>
+        <span class="c65 em8">长期有效</span>
+    </div>
+</div>
+<div class="xui-pathway xui-bg mt15">
+    <h2 class="em95 c3">获得积分途径:</h2>
+    {% if integral_strategy_setting.be_member_increase_count %}
+    <p class="pt10">
+        <p class="em85 c3">关注</p>
+        <p class="c65 em8 pt5">首次关注可获得{{ integral_strategy_setting.be_member_increase_count }}积分。</p>
+    </p>
+    {% endif %}
+    {% if integral_strategy_setting.click_shared_url_increase_count %}
+    <p class="pt10">
+        <p class="em85 c3">分享链接给好友点击</p>
+        <p class="c65 em8 pt5">每位好友首次点击你分享的链接，你可获得{{ integral_strategy_setting.click_shared_url_increase_count }}积分。</p>
+    </p>
+    {% endif %}
+    {% if integral_strategy_setting.buy_award_count_for_buyer %}
+    <p class="pt10">
+        <p class="em85 c3">购买商品积分</p>
+        <p class="c65 em8 pt5">微信店铺购物，你每成功交易的一笔订单可获得({{ integral_strategy_setting.buy_award_count_for_buyer }}+{{ integral_strategy_setting.order_money_percentage_for_each_buy }}%*订单支付金额)积分。</p>
+    </p>
+    {% endif %}
+    {% if integral_strategy_setting.buy_via_shared_url_increase_count_for_author %}
+    <p class="pt10">
+        <p class="em85 c3">分享链接购买</p>
+        <p class="c65 em8 pt5">好友通过你分享的链接购买成功后你可获得{{ integral_strategy_setting.buy_via_shared_url_increase_count_for_author }}积分。</p>
+    </p>
+    {% endif %}
+    {% if integral_strategy_setting.buy_via_offline_increase_count_for_author %}
+    <p class="pt10">
+        <p class="em85 c3">推荐奖励</p>
+        <p class="c65 em8 pt5">你推荐的会员每次购买成功后你可获得{{ integral_strategy_setting.buy_via_offline_increase_count_for_author }}积分。</p>
+    </p>
+    {% endif %}
+</div>
+<div class="xui-rule xui-bg mt15">
+    <h2 class="em95 c3">积分使用规则:</h2>
+    <span class="c65 em8">积分可按不同比例抵扣部分商品金额。</span>
+</div> 
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.xui-integralLogPage').css('min-height', screen.height+'px');
+	})
+</script>
+{% endblock %}

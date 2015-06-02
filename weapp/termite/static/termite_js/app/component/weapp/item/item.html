@@ -1,0 +1,45 @@
+{% load workbench_filter %}
+
+{% if component.type == 'weapp.item_group' %}
+<div 
+    class="wui-product" 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    data-ui-behavior="xub-selectable" 
+>
+    <ul class="wui-block-type{{component.model.type}}">
+        {% for sub_component in component.components %}
+        {{ sub_component.html|safe }}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+
+{% if component.type == 'weapp.item' %}
+<li
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+>
+    {% with component|find_index_in_parent as index %}
+    {% with component|get_component_product as product %}
+    <a class="wui-inner-box{{index}}" href="{{component.model.target|format_target:project_id}}">
+        <div class="wui-inner-pic">
+            {% if product.thumbnails_url %}
+            <img src="{{product.thumbnails_url}}" />
+            {% else %}
+            <p>{{product.name}}</p>
+            {% endif %}
+        </div>
+        <div class="wui-inner-titleAndprice">
+            <p class="wa-inner-title">{{product.name}}</p>
+            <p class="wa-inner-price">¥{{product.display_price}}</p>
+        </div>
+        <div class="wa-inner-shopCar wui-inner-shopCar wui-shopCar-style{{component.parent_component.model.style}}"></div>
+    </a>
+    {% endwith %}
+    {% endwith %}
+</li>
+{% endif %}

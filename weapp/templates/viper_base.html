@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//ZH-CN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{% block title %}微信营销系统——微众传媒{% endblock %}</title>
+
+        <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/bootstrap/css/bootstrap.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/jquery/jquery-ui-1.10.3/css/redmond/jquery-ui-1.10.3.custom.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/jquery/uploadify-3.2.css">
+
+        <!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if not debug_merged_css %}
+		<!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/base.css">
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/bootstrapEnhance.css">
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/system.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/message.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/masssend.css">
+	    <link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/chart.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/customer.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/shop.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/mall.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/wine.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/rice.css">
+	    <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+		<link type="text/css" rel="stylesheet" media="all" href="/static/viper_static/css/all.css">
+		{% endif %}
+		<!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+	    {% block css %}{% endblock %}
+    </head>
+    <body>
+    	{% block content %} {% endblock %}
+
+        {% block jsTemplate %}{% endblock %}
+
+        <script type="text/javascript" src="/static/viper_static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="/static/viper_static/jquery/jquery-migrate-1.2.1.js"></script>
+        <script type="text/javascript" src="/static/viper_static/jquery/jquery.tmpl.min.js"></script>
+        <!--
+        <script type="text/javascript" src="/static/viper_static/jquery/jquery-ui-1.10.3.custom.min.js"></script>      
+    -->
+        <script type="text/javascript" src="/static/viper_static/jquery/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js"></script>      
+        <script type="text/javascript" src="/static/viper_static/jquery/jquery.uploadify-3.2.min.js"></script>
+        <script type="text/javascript" src="/static/viper_static/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/viper_static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/static/viper_static/backbone/backbone-1.0.0.min.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/library/spin-1.3.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/library/stacktrace-min-0.4.js"></script>
+
+        <!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if is_use_dev_js %}
+		<!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+        <script type="text/javascript" src="/static/viper_static/js/system/system.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/validate.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/template-0.9.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/api.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/swfobject.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/chart.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/global_hook.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/emotion.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/system/ItemCheck.js"></script>
+        
+        <script type="text/javascript" src="/static/viper_static/js/common/DropBox.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/common/ItemDeleteView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/common/PaginationView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/common/EditerView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/common/OldEditerView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/common/dialog.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/common/AddLinkDialog.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/common/ListDropBox.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/common/LoadingView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/ErrorHintView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/DelayedTask.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/ImageView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/MultiImageView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/common/VideoView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/MessagesLocalStorage.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/Message.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/EditNewsPanel.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/NewsEditorView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/EmbededPhoneView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/RichTextEditor.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/SelectDateView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/common/SwipeImagesSelectorView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/common/SwipeImagesLinkSelectorView.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/common/CommonFilterCollection.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/common/CommonFilterView.js"></script>
+        
+        <script type="text/javascript" src="/static/viper_static/js/app/SmallPhoneView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/PhoneView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/qa/NewsEditorView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/qa/EditNewsPanel.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/qa/EditMessagePanel.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/qa/ShopRuleDialog.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/message/MessagesView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/message/Sessions.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/message/SessionView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/message/SessionsView.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/qa/SelectShopView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/qa/EditShopRulePanel.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/qa/EditContentPanel.js"></script>
+
+		<script type="text/javascript" src="/static/viper_static/js/app/statistics/EditDisplayNameDialog.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/statistics/PageVisitTable.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/statistics/ChartDetails.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/statistics/OrderDetailListView.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/model/ProductCategory.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/model/ProductCategories.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/model/SiteMenus.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/model/SwipePhotos.js"></script>
+		<script type="text/javascript" src='/static/viper_static/js/app/shop/EditLinkUrlView.js'></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/ShopCategoryListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/EditSiteDialog.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/ShopMenuListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/shop/SwipePhotoListView.js"></script>
+
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/model/ProductCategory.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/model/ProductCategories.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/model/SiteMenus.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/model/SwipePhotos.js"></script>
+		<script type="text/javascript" src='/static/viper_static/js/app/mall/SelectProductDialog.js'></script>
+		<script type="text/javascript" src='/static/viper_static/js/app/mall/EditLinkUrlView.js'></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/ShopCategoryListView.js"></script>
+		<script type="text/javascript" src='/static/viper_static/js/app/mall/EditSiteMenuView.js'></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/EditSiteDialog.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/ShopMenuListView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/mall/SwipePhotoListView.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/masssend/TimedWeixinEditer.js"></script>        
+        <script type="text/javascript" src="/static/viper_static/js/app/masssend/SelectTimeView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/masssend/SelectNewsTypeView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/masssend/model/MassMessage.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/masssend/model/MassMessages.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/masssend/MassMessagesView.js"></script>
+
+		<script type="text/javascript" src="/static/viper_static/js/app/customer/model/CustomerInfomations.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer/MessageTimelineMoves.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer/MoveTimelineDropBox.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer/TitleActionView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer/EditRemarkCustomerDialog.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer/CustomerInfomationView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer/CustomerInfomationsView.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/conference/model/AgendaMenus.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/conference/ConferenceAgendaListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/conference/model/GuideMenus.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/conference/ConferenceGuideListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/conference/model/GuestMenus.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/conference/ConferenceGuestListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/conference/model/AgendaDetailMenus.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/conference/ConferenceAgendaDetailListView.js"></script>
+
+		<script type="text/javascript" src="/static/viper_static/js/app/question/model/Prizes.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/question/model/Problems.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/question/EditProblemDialog.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/question/EditPrizeDialog.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/question/ProblemListView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/question/PrizeListView.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/operation/CommonProblemTitleListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/operation/model/ProblemTitles.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/operation/CommonProblemListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/operation/model/ProblemList.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/operation/EditCommonProblem.js"></script>
+
+         <script type="text/javascript" src="/static/viper_static/js/app/operation/FeedbackView.js"></script>
+         <script type="text/javascript" src="/static/viper_static/js/app/operation/Feedback.js"></script>
+
+        
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/SiteMenus.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/SwipePhotos.js"></script>      
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/EditSiteDialog.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/SwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/ScenicSpotSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/ScenicSpotSwipePhotos.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/TourEditLinkUrlView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/TourScenicSpotAudioList.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/ScenicSpotAudioMenu.js"></script>
+
+		<script type="text/javascript" src="/static/viper_static/js/app/tour/model/ProudctSwipePhotos.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/tour/ProductSwipePhotoListView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/tour/model/HotelSwipePhotos.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/tour/HotelSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/AmusementSwipePhotos.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/AmusementSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/ShoppingSwipePhotos.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/ShoppingSwipePhotoListView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/tour/model/RestaurantSwipePhotos.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/tour/RestaurantSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/TravelAgencySwipePhotos.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/TravelAgencySwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/RuralTourismSwipePhotos.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/RuralTourismSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/model/FeatureProductSwipePhotos.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/FeatureProductSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/tour/TagListView.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/show/ShowCompetitorListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/show/model/CompetListMenu.js"></script>
+         <script type="text/javascript" src="/static/viper_static/js/app/show/ShowMentorListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/show/model/MentorListMenu.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/show/SelectView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/system/area.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/show/ShowPollOptionListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/show/model/PollOptionListMenu.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/show/ShowPollOptionAddDialog.js"></script>
+
+		<script type="text/javascript" src="/static/viper_static/js/app/material/model/Newses.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/material/NewsesView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/material/SelectNewsDialog.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/tools/TagFilterView.js"></script>
+
+
+		<script type="text/javascript" src="/static/viper_static/js/app/customer_menu/model/CustomerMenus.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer_menu/EditCustomerMenuItemView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer_menu/EditListCustomerMenuView.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/customer_menu/EditCustomerMenuPanel.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/school/MagazineSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/school/model/MagazineSwipePhoto.js"></script>
+         <script type="text/javascript" src="/static/viper_static/js/app/school/ConferenceSiteSwipePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/school/model/ConferenceSiteSwipePhoto.js"></script>
+
+        <script type="text/javascript" src="/static/viper_static/js/app/school/AnswerListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/rice/RiceProductSwioePhotoListView.js"></script>
+        <script type="text/javascript" src="/static/viper_static/js/app/rice/model/RiceProductSwipePhoto.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/rice/model/Influences.js"></script>
+		<script type="text/javascript" src="/static/viper_static/js/app/rice/InfluenceListDialog.js"></script>
+        
+        <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+			<script type="text/javascript" src="/static/viper_static/js/all.js"></script>
+		{% endif %}
+		<!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+
+        {% block base_js %}{% endblock %}
+	</body>
+</html>

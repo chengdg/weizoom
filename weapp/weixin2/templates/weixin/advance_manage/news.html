@@ -1,0 +1,45 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-weixin-editMaterialPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/new_weixin/materials/">高级管理</a></li>
+			<li><a href="/new_weixin/materials/">图文管理</a></li>
+			<li class="active">创建单图文</li>
+		</ul>
+	</div>
+
+	<div class="xui-editMaterialPage-simulator fl">
+		<div class="xui-i-background pt20 pb40">
+			<ul class="xui-i-news">
+				<li class="xui-i-message xui-i-firstMessage xa-message clearfix">
+					<span class="xui-i-messageTitle">balabala</span>
+					<img class="xui-i-messageImg" src="..." />
+				</li>
+				<li class="xui-i-message xa-message clearfix">
+					<span class="xui-i-messageTitle">balabala</span>
+					<img class="xui-i-messageImg" src="..." />
+				</li>
+			<ul>
+		</div>
+	</div>
+
+	<div class="xui-editMaterialPage-simulator fl">
+
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">	
+$(document).ready(function() {
+	$('.xa-message').click(function(event) {
+		$(event.currentTarget).addClass('xui-i-activeMessage');
+	})
+});
+</script>
+{% endblock %}

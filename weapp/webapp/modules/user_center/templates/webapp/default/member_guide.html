@@ -1,0 +1,42 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/webapp_static/simple_fashion/css/simple_fashion.css">
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-user-center-info-page"  data-title="{{ page_title }}">
+    <ul data-role="navbar" class="xui-user-center-navBar">
+        <li class="active"><a href="javascript:void(0);">等级指南</a></li>
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=integral_grade&action=get&workspace_id=user_center">积分指南</a></li>
+    </ul>
+    <div data-role="content">
+        <table class="xui-table">
+            <tbody>
+            <tr>
+                <th align="left">等级名称</th>
+                <th align="left">购物折扣</th>
+                <th align="left">需要经验</th>
+            </tr>
+            {% for member_grade in member_grades %}
+            <tr>
+                <td>{{member_grade.name}}</td>
+                {% if member_grade.shop_discount == 100 %}
+                <td>无折扣</td>
+                {% else %}
+                <td>{{member_grade.shop_discount}}折</td>
+                {% endif %}
+                <td>{% if member_grade.upgrade_lower_bound %}{{member_grade.upgrade_lower_bound}}{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+</script>
+{% endblock %}

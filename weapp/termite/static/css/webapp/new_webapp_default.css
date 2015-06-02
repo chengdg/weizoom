@@ -1,0 +1,145 @@
+@charset "utf-8";
+.responsiveImg {
+    max-width: 100%;
+    min-width: 100%;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+img {
+    max-width: 100%;
+}
+
+a:link, a:hover, a:visited {
+    text-decoration: none;
+}
+
+.nomargin {
+    margin: -15px;
+    margin-bottom: 15px;
+}
+
+/* 定制x color swatch样式 */
+.ui-bar-x > a > .ui-btn-inner {
+    padding: 0.1em 10px 0.5em;
+}
+
+.ui-header.ui-bar-x {
+    background-color: #F2F2F2;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    color: #99783D;
+}
+
+.ui-footer.ui-bar-x {
+    border:none;
+    background-color: hsla(0, 0%, 100%, 0.6);
+}
+.ui-footer.ui-bar-x a{
+    color: #99783D;
+    text-shadow: none;
+    font-weight:normal;
+}
+
+.ui-li.ui-btn-up-x, .ui-li.ui-btn-hover-x {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+.ui-li.ui-btn-up-x:last-child, .ui-li.ui-btn-hover-x:last-child{
+    border-bottom: none;
+}
+.ui-li.ui-btn-up-x:first-child, .ui-li.ui-btn-hover-x:first-child{
+	border-top: none;
+}
+
+.ui-bar-x {
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    color: #e2cace;
+    font-weight: 700;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.ui-li.ui-btn-up-x:visited,
+.ui-li.ui-btn-up-x:hover,
+.ui-li.ui-btn-up-x a {
+    color:#333 /*{a-bhover-color}*/;
+    font-weight:normal;
+}
+
+.ui-li.ui-btn-hover-x:visited,
+.ui-li.ui-btn-hover-x:hover,
+.ui-li.ui-btn-hover-x a.ui-link-inherit {
+     color:#333 /*{a-bhover-color}*/;
+    font-weight:normal;
+}
+
+.ui-li.ui-btn-down-x:visited,
+.ui-li.ui-btn-down-x:hover,
+.ui-li.ui-btn-down-x a.ui-link-inherit {
+    color:#333 /*{a-bhover-color}*/;
+    font-weight:normal;
+}
+
+.ui-focus, li.ui-btn:focus{
+    box-shadow: 0px 0px 5px rgba(242, 168, 205, 0.7);
+    /*box-shadow: none !important;*/
+}
+
+.ui-li.ui-btn-active {
+    background: transparent;
+    color: #FFF;
+    text-shadow: 0 1px 0 #BFBFBF;
+}
+
+.ui-dialog .ui-body-x, .ui-dialog .ui-overlay-x {
+    /*
+    background: linear-gradient(#444444, #222222) repeat scroll 0 0 #222222;
+    */
+    background-image: -webkit-gradient(linear, left top, left bottom, from( #444 /*{x-body-background-start}*/), to( #222 /*{x-body-background-end}*/)); /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient( #444 /*{x-body-background-start}*/, #222 /*{x-body-background-end}*/); /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient( #444 /*{x-body-background-start}*/, #222 /*{x-body-background-end}*/); /* FF3.6 */
+    background-image:     -ms-linear-gradient( #444 /*{x-body-background-start}*/, #222 /*{x-body-background-end}*/); /* IE10 */
+    background-image:      -o-linear-gradient( #444 /*{x-body-background-start}*/, #222 /*{x-body-background-end}*/); /* Opera 11.10+ */
+    background-image:         linear-gradient( #444 /*{x-body-background-start}*/, #222 /*{x-body-background-end}*/);
+    border: 1px solid #444444;
+    color: #FFFFFF;
+    font-weight: 400;
+    text-shadow: 0 1px 0 #111111;
+}
+
+/*头部下拉框*/
+.ui-selectmenu.ui-body-x, .ui-selectmenu.ui-body-x:focus {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding:0;
+    box-shadow:none;
+}
+.ui-listview, .ui-li{
+    border:none;
+}
+.ui-selectmenu .ui-btn-hover-x, .ui-selectmenu .ui-focus{
+    box-shadow:none;
+}
+.ui-selectmenu .ui-header.ui-bar-x{
+    display:block;
+}
+.ui-selectmenu .ui-btn-active{
+    background:none;
+}
+
+/* 背景样式*/
+body.ui-overlay-x .ui-page{
+    /*background: url(/static/img/webapp/bg.png) no-repeat center center fixed;*/
+    -webkit-background-size: cover; /*for webKit*/
+    -moz-background-size: cover; /*Mozilla*/
+    -o-background-size: cover; /*opera*/
+    background-size: cover; /*generic*/
+}
+.android body.ui-overlay-x .ui-page{
+    /*background: url(/static/img/webapp/bg.png) no-repeat center center scroll;*/
+    -webkit-background-size: 100% 100%; /*for webKit*/
+    -moz-background-size: 100% 100%; /*Mozilla*/
+    -o-background-size: 100% 100%; /*opera*/
+    background-size: 100% 100%; /*generic*/
+}

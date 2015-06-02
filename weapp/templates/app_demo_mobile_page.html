@@ -1,0 +1,56 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/webapp_static/simple_fashion/css/simple_fashion.css">
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
+    <div data-role="header" data-theme="x">
+		<h1>App Demo Mobile Page {{ hide_non_member_cover }}</h1>
+	</div>
+	<div data-role="content">
+        <a class="xa-callApi" data-role="button" href='javascript:void(0);'>Click</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function(event) {
+        $('a.xa-callApi').click(function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            var $link = $(event.currentTarget);
+            
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: {
+                    woid: W.webappOwnerId,
+                    project_id: W.projectId,
+                    app: 'app1',
+                    target_api: 'something/do'
+                },
+                success: function(data) {
+                    $('body').alert({
+                        isShow: true,
+                        speed: 3000,
+                        info: data
+                    });
+                },
+                error: function(data) {
+                    $('body').alert({
+                        isShow: true,
+                        info: data['msg'],
+                        speed:2000
+                    });
+                }
+            });
+        })
+    });
+</script>
+{% endblock %}

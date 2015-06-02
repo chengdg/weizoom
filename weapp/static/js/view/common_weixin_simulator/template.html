@@ -1,0 +1,48 @@
+<script id="weixin-simulator-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="phone">
+        <div id="back-weixin-btn"></div>
+        <div id="top-weixin-title">${title}</div>
+        <div id="weixin-unsubscribe-btn"></div>
+        <div id="screen">
+	        <div id="timeline-zone">
+	        	{{if !isLogined}}
+		        <div id="userSelect" class="mt30">
+		        	<select name="weixin_user_name">
+		        		<option value="-1">选择用户</option>
+		        		<option value="zhouxun">周迅</option>
+		        		<option value="yangmi">杨幂</option>
+		        	</select>
+		        	<select name="mp_user_name">
+		        		<option value="-1">选择公众号</option>
+		        		{{each(i,mpUser) mpUsers}}
+		        		<option value="${mpUser.webapp_id}">${mpUser.mp_user_name}</option>
+		        		{{/each}}
+		        	</select>
+
+		        	<br/>
+		        	<button class="btn btn-primary">确定</button>
+		        </div>
+	        	{{/if}}
+	        </div>
+	        <div id="browser-zone">
+	            <iframe src="/loading/" frameborder="0" width="100%" height="100%" id="mobile-browser" name="mobile-browser"></iframe>
+	        </div>
+        </div>
+        <form id='weixin-form'>
+        	<div id="weixin-menubar-btn"></div>
+            <div id="weixin-input"><input id="weixinInput-contentInput" type="text" placeholder="输入微信" name="content" /></div>
+        </form>
+
+        <div class="popover top in x-menuItemContainer">
+			<div class="arrow"></div>
+			<div class="x-menuItems">
+			</div>
+		</div>
+        <div id="menubar-zone" class="relative hide">
+	        <div class="" style="margin: 0; width: 100%;">
+				<div class="x-menus btn-group" style="width: 100%;">
+				</div>
+			</div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,279 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+	<link type="text/css" rel="stylesheet" href="/markettools_static/research/css/research.css">
+	<style>
+		.form-box-div .xui-formTitle{
+			border:none;
+		}
+	</style>
+{% endblock %}
+
+{% block content-panel %}
+	<div data-role="page" data-theme="x" class="xui-research-page {% if not user.is_from_weixin %}notweixin{% endif %} detailPage" data-title="用户调研">
+    {% if research %}
+		<div data-role="content" data-theme="x" class="activity-box p10 ">
+			<div class="vote_apply">
+				<!-- 活动信息区域 -->
+				<div class="vote_apply">
+					<h3 class="mt15 ml10">{{ research.name }}</h3>
+					{% if member %}
+					{% if research.prize_type != -1 %}
+					<div class="xui-product-detail-content pl10">
+						参与奖励：
+						{% if research.prize_type == 1 %}
+                   		 	优惠劵
+	                    {% endif %}
+	                    {% if research.prize_type == 2 %}
+	                    	兑换码
+	                    {% endif %}
+	                    {% if research.prize_type == 3 %}
+	                   		 积分
+	                    {% endif %}
+	                    {% if research.prize_type == 0 %}
+	                    	实物奖品
+	                    {% endif %}	
+	                    {{research.prize_source}}			
+					</div>	
+					{% endif %}
+					{% endif %}
+					<div class="xui-product-detail-content xui-detail-content rawHtml">
+						{{ research.detail|safe }}
+					</div>
+				</div>
+				<!-- <span class="tx_alert_info">请完善填写以下信息，我们会第一时间联系您：</span> -->
+
+				<!-- 用户输入区域 -->
+				<div class="form-box-div mt10">
+					<div class="xui-formTitle p10">
+						<div class="member-box fr">
+							<span>参与人数：<span class="red tx_member_count">{{member_count}}</span>人</span>
+
+                            {% for friend_member in friend_members %}
+                            <img src="{% if friend_member.user_icon %}{{friend_member.user_icon}}{% else %}/static/img/user-1.jpg{% endif %}">
+							{% endfor %}
+						</div>
+						<div class="clear"></div>
+					</div>
+
+                    <div class="activity-submit-success" style="{% if not is_participated %}display:none;{% endif %}">已参与</div>
+
+					<form class="xui-activity-form xui-form-box p10" method="post" action="" style="{% if is_participated %}display:none;{% else %}{% endif %}">
+						<fieldset>
+                            {% if items %}
+                            {% for item in items %}
+							<div data-role="fieldcontain">
+                                {% if item.type == 'text' %}
+								<label for="{{ item.input_name }}">{{item.title}}{% if item.is_mandatory %}<span style="color: #ae0001">*</span>{% endif %}</label>
+								<input 
+									id="{{ item.input_name }}"
+									name="{{ item.input_name }}" 
+								    placeholder="{{ item.initial_data }}"
+								    type="text" 
+								    value="{{ item.value }}" 
+								    {% if item.is_mandatory %}
+								    required
+								    required-msg="{{ item.title }}不能为空"
+								    {% endif %}
+								/>
+                                {% endif %}
+
+                                {% if item.type == 'select' %}
+                                <label for="{{ item.input_name }}">{{item.title}}{% if item.is_mandatory %}<span style="color: #ae0001">*</span>{% endif %}</label>
+                                <select 
+                                	id="{{ item.input_name }}"
+                                	name="{{item.input_name}}" 
+                                    placeholder="{{ item.title }}"
+                                    {% if item.is_mandatory %}
+								    required
+								    required-msg="{{ item.title }}不能为空"
+								    {% endif %}
+                                >
+                                    {% for option in item.options %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                    {% endfor %}
+								</select>
+                                {% endif %}
+                                
+                                {% if item.type == 'checkbox' %}
+                                <label for="{{ item.input_name }}">{{item.title}}{% if item.is_mandatory %}<span style="color: #ae0001">*</span>{% endif %}</label>
+                                <div class=" xui-checkbox">
+	                                <select 
+	                                	id="{{item.input_name}}"
+	                                	name="{{item.input_name}}" 
+	                                    placeholder="{{ item.title }}"
+	                                    multiple="multiple" 
+	                                    data-native-menu="false" 
+	                                    {% if item.is_mandatory %}
+									    required
+									    required-msg="{{ item.title }}不能为空"
+									    {% endif %}
+									    data-theme="x"
+	                                >
+	                                	<option>选择{{item.title}}</option>
+	                                    {% for option in item.options %}
+	                                    <option value="{{ option }}">{{ option }}</option>
+	                                    {% endfor %}
+									</select>
+								</div>
+                                {% endif %}
+                                
+                                {% if item.type == 'image' %}
+                                <label>{{item.title}}{% if item.is_mandatory %}<span style="color: #ae0001">*</span>{% endif %}</label>
+                                <div class="mt5">
+	                                <input 
+	                                	id="{{ item.input_name }}"
+	                                	name="{{item.input_name}}" 
+	                                	data-ui-role="uploadImage" 
+	                                    type="file"
+	                                    {% if item.is_mandatory %}
+									    required
+									    required-msg="{{ item.title }}不能为空"
+									    {% endif %}
+	                                />
+	                                {% if is_alert_img_msg %}
+	                                <div>仅支持ios6以上的用户上传图片</div>
+	                                {% endif %}
+	                            </div>
+	                            {% endif %}
+							</div>
+                            {% endfor %}
+                            {% endif %}
+						</fieldset>
+						<fieldset class="mt40">
+							<div class="ui-form-btn-lay">
+								<button type="button" id="btnSubmit" class="btn btn-submit">参与</button>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+
+		</div>
+    {% endif %}
+	</div>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/widget/jquery.mobile.uploadImage.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+	var researchId = '{{research.id}}';
+	W.Validate = function(options) {
+		this.$el = options.$el;
+		this.validate = function(keyName, valideteFn, msg) {
+			var isValid = true;
+			var msg = msg;
+			this.$el.find('input['+keyName+']:enabled').each(function() {
+				isValid = valideteFn($(this));
+				if(!isValid) {
+					isValid = false;
+					msg = $(this).attr(keyName+'-msg') || msg;
+					return false;
+				}
+			});
+			return {
+				isValid: isValid,
+				msg: msg
+			};
+		};
+
+		var prototype = W.Validate.prototype;
+		var key;
+		var result;
+		for(key in prototype) {
+			if('function' === typeof prototype[key]) {
+				result = this[key]();
+				if(false === result.isValid) {
+					return result;
+				}
+			}
+		}
+		return result;
+	}
+	W.Validate.prototype.required = function() {
+		return this.validate('required',function($el) {
+			if(!$el.val()) {
+				return false;
+			}else {
+				return true;
+			}
+		}, '请填写此字段');
+	};
+
+    $(document).ready(function() {
+        $('body').delegate('a.tx_btnTop', 'click', function(event) {
+            window.scrollTo(0, $('.form-box-div').offset().top);
+        });
+    
+        var $submit = $('#btnSubmit');
+        $submit.click(function() {
+	        var memberId = '{{ member.id }}';
+	        
+	        var validate = new W.Validate({
+		        $el: $('.xui-form-box')
+	        });
+	        if(!validate.isValid) {
+		        $('body').alert({
+			        isShow: true,
+			        info: validate.msg,
+			        speed: 2000
+		        });
+		        return false;
+	        }
+			var $postBtn = $('#btnSubmit');
+	        var $input = $('form input[name]');
+	        var $select = $('form select[name]');
+	        var $img = $('form img[name="file_img"]');
+	        var data = {};
+	        $input.each(function() {
+                var value = $(this).val();
+		        data[$(this).attr('name')] = value;
+	        });
+	        $select.each(function() {
+	        	var $el = $(this);
+	        	if ($el.attr('multiple') === 'multiple') {
+	        		var value = $.trim($el.parents('.ui-select').find('a .ui-btn-text').text());
+	        		data[$(this).attr('name')] = value;
+	        	} else {
+			        data[$(this).attr('name')] = $(this).val();
+			    }
+	        });
+	        $img.each(function() {
+		        data[$(this).attr('file_name')] = $(this).attr('src');
+	        });
+	        //将按钮置为无效,防止多次点击
+	        $postBtn.attr('disabled', true);
+	        W.getApi().call({
+	        	app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    project_id: W.projectId,
+                    research_id: researchId,
+                    target_api: 'research/join'
+                }, data),
+		        method: 'post',
+		        success: function(data) {
+                    $('form').remove();
+                    $('.activity-submit-success').show();
+                    var memberCount = parseInt($('.tx_member_count').text(), 10);
+                    $('.tx_member_count').text(memberCount + 1);
+			        $('.tx_btnTop').hide();
+			        $postBtn.removeAttr('disabled');
+		        },
+		        error: function() {
+			        $('.ui-page').alert({
+			         	isShow: true,
+			         	info: '参与失败',
+			         	isSlide: true,
+			         	speed: 2000
+			         });
+			         $postBtn.removeAttr('disabled');
+		        }
+	        })
+        });
+    })
+	</script>
+{% endblock %}

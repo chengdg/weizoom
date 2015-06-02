@@ -1,0 +1,44 @@
+<script id="weather-view" type="text/x-jquery-tmpl">
+<dl class="weatherView">
+	{{if current_weather_info}}
+	<dt>
+		<span class="black_weather weather_max weather_${current_weather_info.daytime} weather_${current_weather_info.status}"></span>
+		<h3>${current_temp}&#8451;</h3>
+		<h4>
+        {{if language === 'Chinese'}}
+        现在
+        {{/if}}
+        {{if language === 'English'}}
+        Now
+        {{/if}}
+        <br/><b>${create_time} 
+        {{if language === 'Chinese'}}
+        发布
+        {{/if}}
+        {{if language === 'English'}}
+        publish
+        {{/if}}
+        </b></h4>
+	</dt>
+	{{/if}}
+	{{if weather_infos }}
+	{{each(i, weather_info) weather_infos}}
+	<dd class="{{if weather_info.is_today}}today{{/if}}">
+		<ul>
+			<li class="rowA">
+				<h3>${weather_info.week}</h3>
+				<h4>${weather_info.date}</h4>
+			</li>
+			<li class="rowB">
+				<span class="black_weather weather_min weather_${weather_info.daytime} weather_${weather_info.status}"></span>
+			</li>
+			<li class="rowC">
+				<span class="name">${weather_info.weather}</span>
+			</li>
+			<li class="rowD"><span class="temp_lowest"><i></i>${weather_info.temp_lowest}&#176;</span><span class="temp_highest"><i></i>${weather_info.temp_highest}&#176;</span></li>
+		</ul>
+	</dd>
+	{{/each}}
+	{{/if}}
+</dl>
+</script>

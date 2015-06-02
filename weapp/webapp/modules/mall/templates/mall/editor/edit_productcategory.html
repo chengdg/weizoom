@@ -1,0 +1,135 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/mall/editor/productcategories/">商品分类</a><span class="divider">/</span></li>
+	<li class="active">{% if productcategory %}更新{% else %}添加{% endif %}商品分类</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" data-id="{% if productcategory %}{{ productcategory.id }}{% else %}0{% endif %}">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">分类名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="最多8个字符" value="{% if productcategory %}{{ productcategory.name }}{% endif %}" data-validate="required-none" maxlength="8"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+<!-- 删除上传图片按钮 -->
+<!-- 		<div class="control-group">
+			<label class="control-label" for="pic_url">分类图片：</label>
+			<div class="controls">
+				<input type="hidden" name="pic_url" id="pic_url" value="{% if productcategory %}{{ productcategory.pic_url }}{% endif %}" data-ui-role="image-selector" data-width="300" data-height="200"/>
+                <div data-ui-role="image-selector-view"></div>
+                <div class="errorHint"></div>
+			</div>
+		</div> -->
+
+		<div 
+			data-ui-role="advanced-table" 
+			data-app="mall" 
+			data-api="category_selectable_products/get" 
+			data-args='{"category_id": {% if productcategory %}{{productcategory.id}}{% else %}0{% endif %} }' 
+			data-template-id="#category-products-view"
+		>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+				{% if productcategory %}
+				<a class='btn btn-danger' href="/mall/editor/productcategory/delete/{{ productcategory.id }}/" >删&nbsp;&nbsp;除</a>
+				{% endif %}
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% verbatim %}
+	<script id="category-products-view" type="text/x-jquery-tmpl">
+		<table class="table table-bordered table-condensed" class="table table-bordered table-condensed" data-ui-role="sortable-table" data-sort-app="wine" data-sort-api="winepage/display_index/update">
+			<thead>
+				<tr>
+					<th width="13">
+						<input type="checkbox" class="tx_selectAll" {{if data.isAllProductSelected}}checked="checked"{{/if}}>
+					</th>
+					<th width="120">缩略图</th>
+					<th>
+						<p class="m0 f14">
+							商品
+						</p>
+					</th>
+					<th class="tx_sortable" data-sort-attr='price' width="40">价格</th>
+				</tr>
+			</thead>
+			<tbody id='product_list'>
+	            {{if items.length}}
+	            {{each(i, product) items}}
+				<tr data-id="${product.id}">
+					<td style="width: 13px;">
+	                    {{if product.is_selected}}
+	                        <input class="tx_checked" type="checkbox" name="product_id"  checked="checked" value="${product.id}"/>
+	                    {{else}}
+	                    	<input class="tx_checked" type="checkbox" name="product_id"  value="${product.id}"/>
+	                    {{/if}}
+					</td>
+					<td>
+						<div class="imgBox fl m5" style="width: auto; padding: 5px;">
+							<img src="${product.thumbnails_url}" width="80"/>
+						</div>
+					</td>
+					<td class="nowrap">
+						<div>
+							${product.name}
+						</div>
+					</td>
+					<td class="nowrap">
+						<div>
+							￥${product.price}
+						</div>
+					</td>
+				</tr>
+			
+				{{/each}}
+	            {{else}}
+	                <tr><td colspan='5'>还没有数据</td></tr>
+	            {{/if}}
+			</tbody>        
+		</table>
+	</script>
+	{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+{% endblock %}

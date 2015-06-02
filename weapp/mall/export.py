@@ -1,0 +1,300 @@
+# -*- coding: utf-8 -*-
+
+PRODUCT_FIRST_NAV = 'product'
+PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV = 'selling'
+PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV = 'toSell'
+PRODUCT_ADD_PRODUCT_NAV = 'addnew'
+PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV = 'recycleBin'
+PRODUCT_MANAGE_IMAGE_NAV = 'pictureManagement'
+PRODUCT_MANAGE_CATEGORY_NAV = 'groupManagement'
+PRODUCT_MANAGE_MODEL_NAV = 'attrModelManagement'
+PRODUCT_REVIEW_NAV = 'reviewManagement'
+
+NAV = {
+    'section': u'微信商城',
+    'navs': [
+        # 商品管理
+        {
+            'name': PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV,
+            'title': u'在售商品管理',
+            'url': '/mall/onshelf_products/get/',
+            'need_permissions': ['manage_onshelf_product', ]
+        },
+
+        {
+            'name': PRODUCT_ADD_PRODUCT_NAV,
+            'title': u'添加新商品',
+            'url': '/mall/product/create/',
+            'need_permissions': ['add_product', ]
+        },
+        {
+            'name': PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV,
+            'title': u'待售商品管理',
+            'url': '/mall/offshelf_products/get/',
+            'need_permissions': ['manage_offshelf_product', ]
+        },
+        {
+            'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
+            'title': u'商品回收站',
+            'url': '/mall/recycled_products/get/',
+            'need_permissions': ['manage_deleted_product', ]
+        },
+        {
+            'name': PRODUCT_MANAGE_IMAGE_NAV,
+            'title': u'图片管理',
+            'url': '/mall/image_groups/get/',
+            'need_permissions': ['manage_image', ]
+        },
+        {
+            'name': PRODUCT_MANAGE_CATEGORY_NAV,
+            'title': u'分组管理',
+            'url': '/mall/product_categories/get/',
+            'need_permissions': ['manage_product_category', ]
+        },
+        {
+            'name': PRODUCT_MANAGE_MODEL_NAV,
+            'title': u'属性规格管理',
+            'url': '/mall/model_properties/get/',
+            'need_permissions': ['manage_product_property_and_model_property', ]
+        },
+        {
+            'name': PRODUCT_REVIEW_NAV,
+            'title': u'评价管理',
+            'url': '/mall/product_review/get/',
+            'need_permissions': [],
+        },
+    ]
+}
+
+########################################################################
+# get_second_navs: 获得二级导航
+########################################################################
+
+
+def get_second_navs(request):
+    if request.user.username == 'manager':
+        pass
+    else:
+        # webapp_module_views.get_modules_page_second_navs(request)
+        second_navs = [NAV]
+
+    return second_navs
+get_product_second_navs = get_second_navs
+
+
+ORDER_FIRST_NAV = 'order'
+ORDER_ALL = 'allOrder'
+ORDER_REFUND = 'refundOrder'
+ORDER_AUDIT = 'financialCheck'
+ORDER_EXPIRED_TIME = 'orderExpiration'
+ORDER_BATCH_DELIVERY = 'orderBatchDelivery'
+
+
+ORDER_NAV = {
+    'section': u'',
+    'navs': [
+        # 商品管理
+        {
+            'name': ORDER_ALL,
+            'title': u'所有订单',
+            'url': '/mall/orders/get/',
+        },
+        {
+            'name': ORDER_REFUND,
+            'title': u'退款订单',
+            'url': '/mall/refund_orders/get/',
+        },
+        {
+            'name': ORDER_EXPIRED_TIME,
+            'title': u'订单设置',
+            'url': '/mall/expired_time/edit/',
+        },
+        {
+            'name': ORDER_AUDIT,
+            'title': u'财务审核',
+            'url': '/mall/audit_orders/get/',
+        },
+        {
+            'name': ORDER_BATCH_DELIVERY,
+            'title': u'批量发货',
+            'url': 'javascript:void(0);',
+        }
+    ]
+}
+
+
+def get_orders_second_navs(request):
+    if request.user.username == 'manager':
+        pass
+    else:
+        # webapp_module_views.get_modules_page_second_navs(request)
+        second_navs = [ORDER_NAV]
+
+    return second_navs
+
+
+MALL_PROMOTION_FIRST_NAV = 'promotion'
+MALL_PROMOTION_PROMOTIONS_NAV = 'promotionQuery'
+MALL_PROMOTION_FLASH_SALE_NAV = 'flashSale'
+MALL_PROMOTION_PREMIUM_SALE_NAV = 'buyGifts'
+MALL_PROMOTION_PRICE_CUT_NAV = 'fullReduction'
+MALL_PROMOTION_COUPON_NAV = 'Coupon'
+MALL_PROMOTION_INTEGRAL_SALE_NAV = 'integralYingyon'
+MALL_PROMOTION_ISSUING_COUPONS_NAV = 'issuingCoupon'
+
+
+PROMOTION_NAV = {
+    'navs': [
+        # 商品管理
+        {
+            'name': MALL_PROMOTION_PROMOTIONS_NAV,
+            'title': u'促销查询',
+            'url': '/mall_promotion/promotion_list/get/',
+            'need_permissions': ['search_promotion', ]
+        },
+        {
+            'name': MALL_PROMOTION_FLASH_SALE_NAV,
+            'title': u'限时抢购',
+            'url': '/mall_promotion/flash_sales/get/',
+            'need_permissions': ['manage_flash_sale', ]
+        },
+        {
+            'name': MALL_PROMOTION_PREMIUM_SALE_NAV,
+            'title': u'买赠',
+            'url': '/mall_promotion/premium_sales/get/',
+            'need_permissions': ['manage_premium_sale', ]
+        },
+        # {
+        #     'name': MALL_PROMOTION_PRICE_CUT_NAV,
+        #     'title': u'满减',
+        #     'url': '/mall_promotion/price_cuts/get/',
+        #     'need_permissions': ['manage_price_cut', ]
+        # },
+        {
+            'name': MALL_PROMOTION_INTEGRAL_SALE_NAV,
+            'title': u'积分应用',
+            'url': '/mall_promotion/integral_sales/get/',
+            'need_permissions': ['manage_integral_sale', ]
+        },
+        {
+            'name': MALL_PROMOTION_COUPON_NAV,
+            'title': u'优惠券',
+            'url': '/mall_promotion/coupon_rules/get/',
+            'need_permissions': ['manage_coupon', ]
+        },
+        {
+            'name': MALL_PROMOTION_ISSUING_COUPONS_NAV,
+            'title': u'发优惠券',
+            'url': '/mall_promotion/issuing_coupons_record/get/',
+            'need_permissions': ['manage_coupon', ]
+        }
+    ]
+}
+
+########################################################################
+# get_promotion_second_navs: 获得促销管理的二级导航
+########################################################################
+
+
+def get_promotion_second_navs(request):
+    if request.user.username == 'manager':
+        pass
+    else:
+        # webapp_module_views.get_modules_page_second_navs(request)
+        second_navs = [PROMOTION_NAV]
+
+    return second_navs
+
+
+MALL_CONFIG_FIRST_NAV = 'config'
+MALL_CONFIG_PAYINTERFACE_NAV = 'payInterfaces'
+MALL_CONFIG_POSTAGE_NAV = 'postageManagement'
+MALL_CONFIG_EXPRESS_COMOANY_NAV = 'expressManagement'
+MALL_CONFIG_MAIL_NOTIFY_NAV = 'emailNotify'
+
+
+CONFIG_NAV = {
+    'navs': [
+        # 商品管理
+        {
+            'name': MALL_CONFIG_POSTAGE_NAV,
+            'title': u'运费模板',
+            'url': '/mall/postage_templates/get/',
+            'need_permissions': ['manage_postage_template', ]
+        },
+        {
+            'name': MALL_CONFIG_EXPRESS_COMOANY_NAV,
+            'title': u'物流名称管理',
+            'url': '/mall/express_delivery/get/',
+            'need_permissions': ['manage_express', ]
+        },
+        {
+            'name': MALL_CONFIG_PAYINTERFACE_NAV,
+            'title': u'支付方式',
+            'url': '/mall/pay_interfaces/get/',
+            'need_permissions': ['manage_pay_interface', ]
+        },
+        {
+            'name': MALL_CONFIG_MAIL_NOTIFY_NAV,
+            'title': u'运营邮件通知',
+            'url': '/mall/email_notify/get/',
+            'need_permissions': ['manage_pay_interface', ]
+        },
+    ]
+}
+
+########################################################################
+# get_config_second_navs: 获得配置管理的二级导航
+########################################################################
+
+
+def get_config_second_navs(request):
+    if request.user.username == 'manager':
+        pass
+    else:
+        # webapp_module_views.get_modules_page_second_navs(request)
+        second_navs = [CONFIG_NAV]
+
+    return second_navs
+
+
+MALL_HOME_FIRST_NAV = 'home'
+MALL_HOME_OUTLINE_NAV = 'census'
+MALL_HOME_INTEGRAL_NAV = 'integralRule'
+MALL_HOME_NOTICES_NAV = 'notices'
+
+HOME_NAV = {
+    'section': u'商城首页',
+    'navs': [  # 商品管理
+        {
+            'name': MALL_HOME_OUTLINE_NAV,
+            'title': u'统计概况',
+            'url': '/mall/outline/get/',
+            'need_permissions': ['manage_mall_home_outline', ]
+        },
+        {
+            'name': MALL_HOME_INTEGRAL_NAV,
+            'title': u'积分规则',
+            'url': '/mall/integral_strategy/get/',
+            'need_permissions': ['manage_mall_home_integral_strategy', ]
+        },
+        {
+            'name': MALL_HOME_NOTICES_NAV,
+            'title': u'消息中心',
+            'url': '/mall/notice_list/get',
+            'need_permissions': [],
+        }
+    ]
+}
+
+
+def get_home_second_navs(request):
+    """
+    获取"商铺首页"部分的二级导航
+    """
+    if request.user.username == 'manager':
+        pass
+    else:
+        second_navs = [HOME_NAV]
+
+    return second_navs

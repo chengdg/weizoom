@@ -1,0 +1,127 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">运费配置列表</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/mall/editor/postagesettings/create/"><i class="icon-plus icon-white"></i>添加运费配置</a>
+		<a class="btn btn-primary" href="/mall/coupons/"><i class="icon-plus icon-white"></i>优惠券配置</a>
+		<a class="btn btn-primary" href="/mall/integral/"><i class="icon-plus icon-white"></i>积分配置</a>
+	</span>
+</div>
+ <form class="" method="post" id="editForm">
+ <fieldset>
+{% if postagesettingses %}
+<div>
+	<table class="table table-bordered table-condensed" data-ui-role="sortable-table" data-sort-app="weapp" data-sort-api="postagesettings/display_index/update">
+		
+		<tbody>
+			<tr data-id="{{ postagesettings.id }}">
+				<td>
+					<label class="checkbox inline mr10">
+                    <input type="radio" name="postagesetting_id" class="store" value="-1" checked="checked"/>
+                     </label>
+				</td>
+				<td>
+					<div>
+						免运费
+					</div>
+				</td>
+			</tr>
+			{% for postagesettings in postagesettingses %}
+			<tr data-id="{{ postagesettings.id }}">
+				<td>
+					<label class="checkbox inline mr10">
+					
+                    <input class="tx_checked" type="radio" name="postagesetting_id" value="{{ postagesettings.id }}"  {% ifequal postagesettings.is_used 1 %} checked="checked" {% endifequal %}/>
+                    
+                     </label>
+				</td>
+				<td>
+					<div>
+					<a href="/mall/editor/postagesettings/update/{{postagesettings.id}}/">{{ postagesettings.name }}</a>，
+						首重{{ postagesettings.first_weight }}kg 【{{ postagesettings.first_weight_price }}元】，
+						{% if  postagesettings.is_added_weight %}
+						续重{{ postagesettings.added_weight_price }}kg 【{{ postagesettings.added_weight_price }}元】
+						{% else %}
+						 无续重
+						{% endif %}
+					</div>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endif %}
+
+<div class="control-group">
+			<legend class="control-label" for="introduction">优惠券：</legend>
+
+			<div class="controls">
+
+				<input type="radio" name="use_coupon_type" class="store" value="0" {% if coupon_setting.use_coupon_type == 0 %}checked="checked" {% endif %}/>无限
+				
+				<input type="radio" name="use_coupon_type" class="store" value="1" {% if coupon_setting.use_coupon_type == 1 %}checked="checked" {% endif %}/>满&nbsp;<input type="text" class="input-xlarge hide" id="coupon_price_boundary" name="coupon_price_boundary" placeholder="输入金额" value="{% if coupon_setting.coupon_price_boundary %}{{ coupon_setting.coupon_price_boundary }}{% endif %}" />元可以使用
+				
+			</div>
+</div>
+
+<div class="control-group">
+			<legend class="control-label" for="introduction">超额处理：</legend>
+			<div class="controls">
+
+				<input type="radio" name="over_coupon_type" class="store" value="0" {% if coupon_setting.over_coupon_type == 0 %}checked="checked" {% endif %}/>
+超额部分折换成积分返回给用户			
+				<input type="radio" name="over_coupon_type" class="store" value="1" {% if coupon_setting.over_coupon_type == 1 %}checked="checked" {% endif %}/>超额部分作废
+			</div>
+</div>
+
+
+<div class="control-group">
+			<legend class="control-label" for="name">一元是多少积分:</legend>
+			<div class="controls">
+				
+				<input type="text" class="input-xlarge" id="integral_each_yuan" name="integral_each_yuan" placeholder="输入积分价值" value="{% if integral_setting %}{{ integral_setting.integral_each_yuan }}{% endif %}" data-validate="required-none" />/元
+				<div class="errorHint"></div>
+			</div>
+</div>
+<!-- <div class="control-group">
+			<legend class="control-label" for="introduction">积分使用限制：</legend>
+			<div class="controls">
+
+				<input type="radio" name="integration_boundary_type" class="store" value="0" {% if integral_setting.integration_boundary_type == 0 %}checked="checked" {% endif %}/>无限			
+				<input type="radio" name="integration_boundary_type" class="store" value="1" {% if integral_setting.integration_boundary_type == 1 %}checked="checked" {% endif %}/>总价的&nbsp;<input type="text" class="input-xlarge hide" id="integration_boundary" name="integration_boundary" placeholder="输入" value="{% if integral_setting %}{{ integral_setting.integration_boundary }}{% endif %}" />%
+			</div>
+</div> -->
+<!-- <div class="control-group">
+			
+			<div class="controls">
+				<label class="control-label" for="name">客服电话：</label>
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="输入客服电话" value="{% if product %}{{ product.name }}{% endif %}" data-validate="required-none" />元
+				<div class="errorHint"></div>
+			</div>
+</div> -->
+ <div class="control-group mt5 mr5">
+          <div class="controls ml20 tc">
+            <input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+          </div>
+        </div>
+
+</form>
+
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/paginationView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

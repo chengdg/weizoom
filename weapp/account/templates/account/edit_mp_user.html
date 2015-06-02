@@ -1,0 +1,96 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<form class="form-horizontal" method="post" id="mp-user-form">
+	<fieldset>
+		<legend>绑定微信公众号</legend>
+		{% if mp_user %}
+		<div class="alert alert-success">
+			您已经绑定了公众号
+		</div>
+		{% else %}
+		<div id="bindingResult" class="alert hide">
+		</div>
+		{% endif %}
+		<div class="control-group">
+			<label class="control-label" for="name">公众账号：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="username" name="username" placeholder="输入公众账号" {% if mp_user %}value="{{ mp_user.username }}" disabled{% else %}value=""{% endif %}/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="password">登录密码：</label>
+			<div class="controls">
+				<input type="password" class="input-xlarge" id="password" name="password" placeholder="输入登录密码" value=""/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" value="&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;" />
+			</div>
+		</div>
+	</fieldset>
+</form>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#username').focus();
+
+		$('#mp-user-form').submit(function() {
+			var username = $.trim($('#username').val());
+			var password = $.trim($('#password').val());
+			W.getLoadingView().show();
+			W.getApi().call({
+				app: 'weixin',
+				api: 'm/account/login',
+				method: 'post',
+				args: {
+					username: username,
+					password: password
+				},
+				success: function(data) {
+					data.password = password;
+					W.getApi().call({
+						app: 'account',
+						api: 'weixin_mp_user_login_info/create',
+						method: 'post',
+						args: data,
+						success: function(data) {
+							W.getLoadingView().hide();
+{#							$('#bindingResult').html('公众号验证成功，现在可使用人工客服功能!').show();#}
+							window.location.href = '/account/mp/';
+						},
+						error: function(resp) {
+							W.getLoadingView().hide();
+						},
+						scope: this
+					})
+				},
+				error: function(resp) {
+					W.getLoadingView().hide();
+					alert(resp.errMsg);
+				},
+				scope: this
+			})
+			return false;
+		});
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-userCenterPage"  data-title="{{ page_title }}">
+    <div data-role="content" data-theme="x">
+        <dl class="xui-userCenter-header pr">
+            <dt>
+                <div class="xui-userCenter-imgBox">
+    	            <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
+                </div>
+            </dt>
+            <dd>
+                <p>{% if member.username %}{{ member.username }}{% else %}我{% endif %}</p>
+                <div class="xui-inner-levelBox">
+                    <div class="xui-inner-levelLabel">
+                        <a class="xui-btn-guide" href="./?woid={{request.webapp_owner_id}}&module=user_center&model=user_guide&action=get&workspace_id=user_center" >
+                        {{ member.grade.name }}
+                        </a>
+                    </div>
+                    <!--
+                    <div class="xui-level-progress-box">
+                        <span class="xui-level-progress-bar" style="width:30%;">
+                            <span class="xui-level-progress-bar-text">30%</span>
+                        </span>
+                    </div>
+                -->
+                </div>
+
+             </dd>
+            {% if is_weizoom_mall %}
+            <!-- <a
+                class="fr xui-btn-wzcoin"
+                href="./?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" 
+            ><img src="/standard_static/img/mockapi/wzcoin.png" alt=""></a> -->
+            {% endif %}
+        </dl>
+        <div class="xui-fastBtn disT">
+        {% if is_weizoom_mall %}
+            <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
+                <p>{% if member.history_order_count %}{{ member.history_order_count }}{% else %}0{% endif %}</p>
+                <p class="em9">全部订单</p>
+            </a>
+            <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=1">
+                <p>{% if member.not_payed_order_count %}{{ member.not_payed_order_count }}{% else %}0{% endif %}</p>
+                <p class="em9">待支付</p>
+            </a>
+            
+            {% else %}
+            <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
+                <p>{% if member.history_order_count %}{{ member.history_order_count }}{% else %}0{% endif %}</p>
+                <p class="em9">全部订单</p>
+            </a>
+            <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=1">
+                <p>{% if member.not_payed_order_count %}{{ member.not_payed_order_count }}{% else %}0{% endif %}</p>
+                <p class="em9">待支付</p>
+            </a>
+            <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show&workspace_id=mall">
+                <p>{{member.shopping_cart_product_count}}</p>
+                <p class="em9">购物车</p>
+            </a>
+            {% endif %}
+        </div>
+        <div class="xui-userCenter-itemList">
+            <div class="xui-section">
+                <div class="xui-section-item">
+                    <a href="./?woid={{request.webapp_owner_id}}&module=user_center&model=integral_log&action=get&member_id={{member.id}}" data-role="button" data-icon="true">
+                    <span class="xui-toolIco mr5 intergral"></span>积分<span class="xui-inner-info xt-integral ml5 mr5">{% if member.integral %}{{ member.integral }}{% else %}0{% endif %}</span>
+                        {% if is_can_use_weizoomcard and not is_weizoom_mall%}
+                        <span class="xa-link">
+                        </span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <div class="xui-section">
+                <div class="xui-section-item">
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=list" data-role="button" data-icon="true"><span class="xui-toolIco mr5 address"></span>收货地址</a>
+                </div>
+            </div>
+            
+            <div class="xui-section mb10 xui-sectionGroup">
+                {% for market_tool in market_tools %}
+                <div class="xui-section-item">
+                    <a href="{{market_tool.link}}" data-role="button" data-icon="true"><span class="xui-toolIco mr5 {{market_tool.en_name}}"></span>{{market_tool.name}}<span class="xui-inner-info ml5">{{market_tool.info}}</span></a>
+                </div>
+                {% endfor %}
+                <div class="xui-section-item {{market_tool.en_name}}">
+                    <a href="./?module=market_tool:activity&model=member_activites&action=get&workspace_id=market_tool:activity&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" data-role="button" data-icon="true"><span class="xui-toolIco mr5 activity"></span>我参与的活动<span class="em8 ml5" style="color:#888">报名/抽奖/投票/</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+    $('.xa-link').append('<a href="./?module=market_tool:point_card&model=usage&action=get&workspace_id=market_tool:point_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-pointCardLink">充值</a>');
+</script>
+{% endblock %}

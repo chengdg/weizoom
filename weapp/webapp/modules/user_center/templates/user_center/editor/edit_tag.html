@@ -1,0 +1,76 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/webapp/user_center/tags/">会员分组</a><span class="divider">/</span></li>
+	<li class="active">{% if tag %}更新{% else %}添加{% endif %}分组</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">分组名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="最多18个字符" value="{% if tag %}{{ tag.name }}{% endif %}" data-validate="required-none" maxlength="18"/>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+    </fieldset>
+
+    <fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">该组会员：</label>
+			<div class="controls">
+				{% for member_has_tag in member_has_tags %}
+					<a href="/webapp/user_center/member/{{ member_has_tag.member.id }}/">{{ member_has_tag.member.username_for_html|safe }}</a></br>
+				{% endfor %}
+			</div>
+		</div>
+    </fieldset>
+    {% if not is_shengjing %}
+		<fieldset>
+			<legend></legend>
+			<div class="control-group">
+				<div class="controls">
+					<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+					
+					{% if tag %}
+						<a title="删除" class="btn btn-delete btn-danger" href="/webapp/user_center/tag/delete/{{ tag.id }}/" >删&nbsp;&nbsp;除</a>
+					{% endif %}
+				</div>
+
+			</div>
+
+		</fieldset>
+	{% endif %}
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/imageView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate($(this))) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+{% endblock %}

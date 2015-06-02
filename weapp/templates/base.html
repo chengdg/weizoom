@@ -1,0 +1,115 @@
+{% load project_filter %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//ZH-CN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		{% block customerized_meta %}{% endblock %}
+
+		<title>{% block title %}{{ system_name }}{% endblock %}</title>
+
+		<link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css?v=1">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/jquery/jquery-ui-1.10.3/css/redmond/jquery-ui-1.10.3.custom.css?v=1">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/jquery/uploadify-3.2.css?v=1">
+
+		<!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if not debug_merged_css %}
+		<!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/base.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/sidebar_menu.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/emojilc6cc2.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/bootstrapEnhance.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/system.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/message.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/masssend.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/chart.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/customer.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/viper_component.css">
+		<!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/all.css">
+		{% endif %}
+
+		<!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% block css %}{% endblock %}
+
+	</head>
+	<body>
+		<div class="wui-rightNav xui-hide">
+			<a title="数据挖掘" href="http://data.weizoom.com/?token={{token}}"></a>
+			<a title="粉丝沟通" href="http://weibo.weizoom.com/?token={{token}}"></a>
+			<a title="微信沟通" href="/new_weixin/outline/"></a>
+			<a title="微商城" href="/mall/outline/get/"></a>
+		</div>
+
+		{% block content %} {% endblock %}
+
+		{% block jsTemplate %}{% endblock %}
+
+		<!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if is_use_dev_resource %}
+		<!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+			<script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+			<script type="text/javascript" src="/static/jquery/jquery-migrate-1.2.1.js"></script>
+			<script type="text/javascript" src="/static/jquery/jquery.tmpl.min.js"></script>
+			<script type="text/javascript" src="/static/jquery/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js"></script>
+			<script type="text/javascript" src="/static/jquery/jquery.uploadify-3.2.min.js"></script>
+			<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+			<script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
+			<script type="text/javascript" src="/static/backbone/backbone-1.0.0.min.js"></script>
+			<script type="text/javascript" src="/static/js/library/spin-1.3.js"></script>
+			<script type="text/javascript" src="/static/js/library/stacktrace-min-0.4.js"></script>
+		
+			<script type="text/javascript" src="/static/js/system/system.js"></script>
+			<script type="text/javascript" src="/static/js/system/debug.js"></script>
+			<script type="text/javascript" src="/static/js/system/template-0.9.js"></script>
+			<script type="text/javascript" src="/static/js/system/api.js"></script>
+			<script type="text/javascript" src="/static/js/system/dialog.js"></script>
+			<script type="text/javascript" src="/static/js/system/swfobject.js"></script>
+			<script type="text/javascript" src="/static/js/system/chart.js"></script>
+			<script type="text/javascript" src="/static/js/system/loading.js"></script>
+			<script type="text/javascript" src="/static/js/system/emotion.js"></script>
+			<script type="text/javascript" src="/static/js/system/validate.js"></script>
+			<script type="text/javascript" src="/static/js/system/global_hook.js"></script>
+			
+			<script type="text/javascript" src="/static/js/common/LoadingView.js"></script>
+			<script type="text/javascript" src="/static/js/common/ErrorHintView.js"></script>
+
+			<script type="text/javascript" src="/static/js/common/SelectDateView.js"></script>
+			<script type="text/javascript" src="/static/js/common/DropBox.js"></script>
+			<script type="text/javascript" src="/static/js/common/ItemDeleteView.js"></script>
+			<script type="text/javascript" src="/static/js/common/ListDropBox.js"></script>
+			<script type="text/javascript" src="/static/js/common/RichTextEditor.js"></script>
+			<script type="text/javascript" src="/static/js/common/LoginView.js"></script>
+			<script type="text/javascript" src="/static/js/app/statistics/PageVisitTable.js"></script>
+			<script type="text/javascript" src="/static/js/app/statistics/ChartDetails.js"></script>
+			<script type="text/javascript" src="/static/js/app/statistics/OrderDetailListView.js"></script>
+			<script type="text/javascript" src="/static/js/app/member/model/Relations.js"></script>
+			<script type="text/javascript" src="/static/js/app/market_tools/Lottery.js"></script>
+			<script type="text/javascript" src="/static/js/app/market_tools/MemberQrcode.js"></script>
+			<script type="text/javascript" src="/static/js/app/market_tools/RedEnvelope.js"></script>
+		   <script type="text/javascript" src="/static/js/common/TitleSet.js"></script>
+			<!-- views start -->
+			{{ weapp_models|safe }}
+			<!-- views end -->
+
+			<!-- views start -->
+			{{ weapp_views|safe }}
+			<!-- views end -->
+
+			<!-- dialogs start -->
+			{{ weapp_dialogs|safe }}
+			<!-- dialogs end -->
+		<!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+			{{ ''|load_templates|safe }}
+			<script type="text/javascript" src="/static/js/all.js"></script>
+		{% endif %}
+		 
+		<!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+
+		{{ 'select_link_target'|load_termite_dialog|safe }}
+		{% block base_js %}{% endblock %}
+	</body>
+</html>

@@ -1,0 +1,214 @@
+<script id="markettool-activity-item-list-tmpl-src" type="text/x-jquery-tmpl">
+<table class="table table-bordered table-condensed mb5">
+	<thead>
+		<tr>
+			<th width="40">必填?</th>
+			<th width="120">标题</th>
+			<th width="100">输入类型</th>
+			<th>初始数据</th>
+			<th width="40">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+{{if canEdit}}
+<input id="tx_add_text" class="tx_add_text btn" type="button" value="+输入框">
+<input id="tx_add_radio" class="tx_add_radio btn" type="button" value="+单选框">
+<input id="tx_add_checkbox" class="tx_add_checkbox btn" type="button" value="+复选框">
+<input id="tx_add_image" class="tx_add_image btn" type="button" value="+上传图片">
+{{/if}}
+</script>
+
+
+
+
+
+<script id="markettool-activity-item-text-tmpl-src" type="text/x-jquery-tmpl">
+<tr>
+	<td class="tr">
+		<label class="input">
+			<input type="checkbox" name="item_text_mandatory_${id}" value="1" {{if is_mandatory}}checked="checked"{{/if}} />
+		</label>
+	</td>
+    <td>
+    	<div class="tx_inputlay mb5">
+    		<input 
+    			type="text" 
+    			class="input-xlarge w120"  
+    			data-validate="required"  
+    			data-validate-max-length="20"  
+    			name="item_text_title_${id}" 
+    			maxlength="20" 
+    			placeholder="小于20个字符" 
+    			value="${title}" />
+    		<div class="errorHint"></div>
+    	</div>
+    </td>
+    <td style="width: 80px;">
+		文本输入框
+	</td>
+	<td>
+    	<div class="tx_inputlay mb5">
+    		<input 
+    			type="text" 
+    			class="input-xlarge w150" 
+    			data-validate-max-length="500" 
+    			name="item_text_data_${id}" 
+    			placeholder="文本框的输入提示" 
+    			value="${initial_data}" />
+    		<div class="errorHint"></div>
+    	</div>
+    </td>
+    <td>
+    	{{if can_edit}}
+    	<button class="tx_delete_option btn btn-danger btn-mini ml5">
+    		<i class="icon-remove icon-white"></i>
+    	</button>
+    	{{/if}}
+    </td>
+</tr>
+</script>
+
+
+
+
+
+<script id="markettool-activity-item-radio-tmpl-src" type="text/x-jquery-tmpl">
+<tr>
+	<td class="tr">
+		<label class="input">
+			<input type="checkbox" name="item_select_mandatory_${id}" value="1" {{if is_mandatory}}checked="checked"{{/if}} />
+		</label>
+	</td>
+    <td>
+    	<div class="tx_inputlay mb5">
+    		<input 
+    			type="text" 
+    			class="input-xlarge w120"  
+    			data-validate="required"  
+    			data-validate-max-length="20"  
+    			name="item_select_title_${id}" 
+    			maxlength="20" 
+    			placeholder="小于20个字符" 
+    			value="${title}" />
+    		<div class="errorHint"></div>
+    	</div>
+    </td>
+    <td style="width: 80px;">
+		单选框
+	</td>
+	<td>
+    	<div class="tx_inputlay mb5">
+    		<input 
+    			type="text" 
+    			class="input-xlarge w150" 
+    			data-validate-max-length="500" 
+    			maxlength="500" 
+    			data-validate="required"  
+    			name="item_select_data_${id}" 
+    			placeholder="选项用字符'|'分隔" 
+    			value="${initial_data}" />
+    		<div class="errorHint"></div>
+    	</div>
+    </td>
+    <td>
+	    {{if can_edit}}
+    	<button class="tx_delete_option btn btn-danger btn-mini ml5">
+    		<i class="icon-remove icon-white"></i>
+    	</button>
+    	{{/if}}
+    </td>
+</tr>
+</script>
+
+
+
+
+<script id="markettool-activity-item-checkbox-tmpl-src" type="text/x-jquery-tmpl">
+<tr>
+    <td class="tr">
+        <label class="input">
+            <input type="checkbox" name="item_checkbox_mandatory_${id}" value="1" {{if is_mandatory}}checked="checked"{{/if}} />
+        </label>
+    </td>
+    <td>
+        <div class="tx_inputlay mb5">
+            <input 
+                type="text" 
+                class="input-xlarge w120"  
+                data-validate="required"  
+                data-validate-max-length="20"  
+                name="item_checkbox_title_${id}" 
+                maxlength="20" 
+                placeholder="小于20个字符" 
+                value="${title}" />
+            <div class="errorHint"></div>
+        </div>
+    </td>
+    <td style="width: 80px;">
+        复选框
+    </td>
+    <td>
+        <div class="tx_inputlay mb5">
+            <input 
+                type="text" 
+                class="input-xlarge w150"  
+                data-validate-max-length="500" 
+                data-validate="required"  
+                name="item_checkbox_data_${id}" 
+                placeholder="选项用字符'|'分隔" 
+                value="${initial_data}" />
+            <div class="errorHint"></div>
+        </div>
+    </td>
+    <td>
+        {{if can_edit}}
+        <button class="tx_delete_option btn btn-danger btn-mini ml5">
+            <i class="icon-remove icon-white"></i>
+        </button>
+        {{/if}}
+    </td>
+</tr>
+</script>
+
+
+
+
+
+<script id="markettool-activity-item-image-tmpl-src" type="text/x-jquery-tmpl">
+<tr>
+	<td class="tr">
+		<label class="input">
+			<input type="checkbox" name="item_image_mandatory_${id}" value="1" {{if is_mandatory}}checked="checked"{{/if}} />
+		</label>
+	</td>
+    <td>
+    	<div class="tx_inputlay mb5">
+    		<input 
+    			type="text" 
+    			class="input-xlarge w120"  
+    			data-validate="required"  
+    			data-validate-max-length="20"  
+    			name="item_image_title_${id}" 
+    			maxlength="20" 
+    			placeholder="小于20个字符" 
+    			value="${title}" />
+    		<div class="errorHint"></div>
+    	</div>
+    </td>
+    <td style="width: 80px;">
+		图片上传控件
+	</td>
+	<td>
+		无
+    </td>
+    <td>
+    	{{if can_edit}}
+    	<button class="tx_delete_option btn btn-danger btn-mini ml5">
+    		<i class="icon-remove icon-white"></i>
+    	</button>
+    	{{/if}}
+    </td>
+</tr>
+</script>

@@ -1,0 +1,75 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">意见反馈列表</li>
+	</ul>
+</div>
+
+{% if feedbacks %}
+<div>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>反馈用户</th>
+				<th>模板</th>
+				<th>内容</th>
+				<th>时间</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for feedback in feedbacks %}
+			<tr pid="{{ version.id }}">
+				
+				<td style="width: 80px;">
+					{{ feedback.user.username }}
+				</td>
+				<td style="width: 80px;">
+					{{ feedback.webapp_temp }}
+				</td>
+				<td style="width: 100px;">
+					{{ feedback.content }}
+				</td>
+				
+				<td style="width: 100px;">
+					{{ feedback.created_at }}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div id="paginationContent"></div>
+</div>
+{% else %}
+	<img src="/static/img/img_kong_sp.jpg" class="ml40 mt20" />
+{% endif %}
+{% endblock %}
+
+{% block jsTemplate %}
+	{% include_raw 'jsTemplate/paginationView.html' %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var pageinfo = $.parseJSON('{{ pageinfo|safe }}');
+
+	$(document).ready(function() {
+		//分页
+		var paginationView = new W.PaginationView({
+			el: '#paginationContent',
+			isHasDetailedPage: true,
+			isHasJumpPage: true,
+		});
+		paginationView.bind('goto', function(page) {
+			window.location.href = paginationView.getTargetUrl(page);
+		});
+		paginationView.setPageInfo(pageinfo);
+		paginationView.render();
+
+		
+	});
+</script>
+{% endblock %}

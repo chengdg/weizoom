@@ -1,0 +1,39 @@
+
+
+<script id="conference-menu-tmpl-src" type="text/x-jquery-tmpl">
+    
+    <div class="control-group">
+        <div class="ml15 mr15">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>图片</th>
+                    <th>名称</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+<script id="conference-one-menu-tmpl-src" type="text/x-jquery-tmpl">
+    <tr menu_id="${id}" style="cursor:move">
+        
+        <td style="width: 80px;">
+                    <div class="imgBox fl m5" style="width: auto; padding: 5px;">
+                        <img src="${thumbnails_url}" width="80"/>
+                    </div>
+                </td>
+        <td  >${name}</td>
+        <td style="width: 70px;" >
+            <center>
+            <a title="编辑" class="btn btn-mini" href="/tour/editor/scenic_spot/audio/update/${id}/" ><i class="icon-pencil"></i></a>
+	        <a title="删除" class="btn btn-danger btn-mini wx_delete" href="/tour/editor/scenic_spot/audio/delete/${id}/" ><i class="icon-remove icon-white"></i></a>
+            </center>
+        </td>
+    </tr>
+</script>
+
+

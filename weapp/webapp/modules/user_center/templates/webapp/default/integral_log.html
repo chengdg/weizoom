@@ -1,0 +1,86 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-integralLogPage"  data-title="{{ page_title }}">
+	<div data-role="content">
+        <dl class="xui-userCenter-header">
+            <dt>
+	            <div class="xui-userCenter-imgBox">
+    	            <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
+                </div>
+            </dt>
+            <dd>
+                <p>{% if member.username %}{{ member.username }}{% else %}我{% endif %}</p>
+                <div class="xui-inner-levelBox">
+                    <div class="xui-inner-levelLabel">
+                    	<a class="xui-btn-guide" href="./?woid={{request.webapp_owner_id}}&module=user_center&model=user_guide&action=get&workspace_id=user_center" >
+                        	{{ member.grade.name }}
+                        </a>
+                    </div>
+                </div>
+            </dd>
+        </dl>
+        {%if not member_integral_logs%}
+        <div class="influence-log-list error-info">您还没有积分日志</div>
+        {% else %}
+        <ul class="clearStyle xui-integralLogList">
+	        {% for member_integral_log in member_integral_logs %}
+		        <li class="xui-listItem">
+			        <div class="xui-inner-dotBox pr">
+			        	<span class="xui-inner-dot"></span>
+			        	<span class="xui-timeLine"></span>
+			        </div>
+			        <div class="xui-inner-infoBox">
+				        	<div class="xui-inner-time">{{ member_integral_log.created_at|date:"Y. m. j" }}</div>
+				        {% ifequal member_integral_log.event_type '好友奖励' %}
+					        <div class="xui-inner-content">
+						        <p class="zoom">
+							        <span class="fl">好友奖励</span>
+							        <span class="fr xui-text-red">+{{member_integral_log.integral_count}}</span>
+						        </p>
+						        {% if member_integral_log.logs %}
+							        <ul class="zoom clearStyle xui-userCenter-friendList">
+								        {% for log in member_integral_log.logs %}
+									        {% if log.pic %}
+										        <li><img src="{{ log.pic }}"/></li>
+									        {% endif %}
+								        {% endfor %}
+							        </ul>
+						        {% endif %}
+					        </div>
+
+				        {% else %}
+					        <div class="xui-inner-content">
+						        <p class="zoom">
+		                            <span class="fl">
+		                                {{ member_integral_log.event_type }}
+		                            </span>
+		                            <span class="fr xui-text-red">
+		                            {% if member_integral_log.integral_count > 0 %}
+			                            +
+		                            {% else %}
+
+		                            {% endif %}
+			                            {{ member_integral_log.integral_count }}
+		                            </span>
+						        </p>
+					        </div>
+				        {% endifequal %}
+					</div>
+		        </li>
+	        {% endfor %}
+        </ul>
+        {% endif %}
+		<!-- <div class="xui-btn-layer-footer xui-form-box">
+            <a data-role="button" class="btn-back" href="/m/rice/user_center/{{ webapp_id }}/">&nbsp;&nbsp;返 回&nbsp;&nbsp;</a>
+        </div> -->
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}

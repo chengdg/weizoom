@@ -1,0 +1,48 @@
+<script id="logistics-info-view" type="text/x-jquery-tmpl">
+<form class="form-horizontal">
+	<div class="form-group xui-express">
+			<label class="col-sm-4 control-label">发货方式：</label>
+			<div class="col-sm-8">
+			<label class="radio-inline">
+				<input class="xa-is-need-logistics" name="is_need_logistics" type="radio" value="1" checked/>
+				需要物流
+			</label>
+			<label class="radio-inline xa-spetialState">
+				<input class="xa-is-need-logistics" name="is_need_logistics" type="radio" value="0"/>
+				不需要物流
+			</label>
+		</div>
+	</div>
+	<div class="xa-ship-detail-from">
+		<div class="form-group">
+			<label class="col-sm-4 control-label star_show">物流公司：</label>
+			<div class="col-sm-7">
+				<select class="ua-logistics form-control">
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label star_show">快递单号：</label>
+			<div class="col-sm-7">
+				<input name="logistics_order_id" class="form-control" type="text"/>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+			<label class="col-sm-4 control-label"> 发货人：</label>
+			<div class="col-sm-7">
+				<input name="leader_name" class="form-control" type="text" placeholder="备注请用竖线隔开"/>
+			</div>			
+	</div>
+	<div class="xa-ship-detail-from xa-error xui-error hidden"></div>
+	<div class="tc mt20">
+		<button class="btn xa-submit btn-primary">确定</button>
+		<button class="btn xa-close ml35">取消</button>
+	</div>
+</form>
+</script>
+
+<script id="single-logistics-info-view" type="text/x-jquery-tmpl">
+	<option value="${value}">${name}
+	</option>
+</script>

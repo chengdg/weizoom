@@ -1,0 +1,147 @@
+{% extends "viper/base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content %}
+	<div id="overlay"></div>
+  <div id="globalErrorPanel" class="alert alert-error hide"></div>
+    <div id="spin-wrapper"><div id="spin"></div><div id="spin-hint" class="ml10"></div></div>
+    <div id="topbar">
+        <div id="global-nav">
+          <div style="position: relative; width: 1020px; margin: 0px auto;">
+  	        <div id="weixin-logo">
+              <a href="/"><img src="/static/img/weixin-logo.png" alt=""></a>
+            </div>
+  	        <div id="top-action-bar">
+              {% if not is_operator  %}
+  		        <span class="mr10"><a href="#" id="x-simulator-btn" class="btn btn-success">微信测试</a></span>
+              {% endif %}
+  		        &nbsp;&nbsp;你好，{{ user.username }} | <a href="/webapp/projects/?workspace_id={{project.workspace.id}}">项目列表</a> | <a href="/logout/">退出</a>
+  	        </div>
+          </div>
+        </div>
+    </div>
+
+    <div id="main-panel">
+        <div class="container">
+            <div class="row">
+              {% if not request.in_design_mode %}
+              <div class="span3" id="x-leftNavZone">
+                <ul class="nav nav-list x-left-nav">
+                
+                {% if user|is_system_manager %}
+                  <li><span>{{ webapp_editor_nav.section }}</span></li>
+                  {% for nav in webapp_editor_nav.navs %}
+                    <li class="{% ifequal nav_name nav.name %}active{% endifequal %}"><a href="{{nav.url}}" title="{{nav.title}}"><i class="icon-chevron-right"></i> {{nav.title}}</a></li>
+                  {% endfor %}
+                {% else %}
+                  {% for webapp_editor_nav in user|get_workspace_navs %}
+                    <li><span>{{ webapp_editor_nav.section }}</span></li>
+                    {% for nav in webapp_editor_nav.navs %}
+                      <li class="{% ifequal nav_name nav.name %}active{% endifequal %}"><a href="{{nav.url}}" title="{{nav.title}}"><i class="icon-chevron-right"></i> {{nav.title}}</a></li>
+                    {% endfor %}
+                  {% endfor %}
+                {% endif %}
+
+                </ul>
+              </div>
+              {% endif %}
+              <div class="span9 mt80 pr t-pageContainer">
+	              {% block content-panel %}{% endblock %}
+	          </div>
+	        </div>
+	    </div>
+    </div>
+	<div class="footer">
+		<div class="footerInfo">
+			<span>客服电话:400-688-6929</span>
+			<span>
+				<a href="http://wpa.qq.com/msgrd?v=3&uin=800051878&Site=qq&Menu=yes" target="blank">
+					<i class="icon_qq"></i>
+					在线咨询
+				</a>
+			</span>
+		</div>
+    <div id ="help">
+    <!-- <a  target="blank" href="#" id="feedback">反馈意见</a>&nbsp;|&nbsp;<a href="/operation/helper" target="blank" id="help">使用帮助</a>&nbsp;|&nbsp;<a href="/operation/version" target="blank" id="version">版本升级</a><br> -->
+		Copyright &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.weizoom.com" target="blank">微众传媒</a>
+  </div>
+	</div>
+{% endblock %}
+
+{% block jsTemplate %}
+  {% include_raw 'jsTemplate/imageView.html' %}
+  {% include_raw 'jsTemplate/phone.html' %}
+  {% include_raw 'jsTemplate/swipeImageSelectorView.html' %}
+  {% include_raw 'jsTemplate/paginationView.html' %}
+{% endblock %}
+
+{% block base_js %}
+    <!-- start of ueditor -->
+    <script type="text/javascript">
+     window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
+    </script>  
+    <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
+    <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
+    <!-- end of ueditor -->
+
+    <script type="text/javascript">
+        W.uid = {{ user.id }};
+        W.API_VERSION = 1;
+        W.isInDesignMode = {% if request.in_design_mode %}true{% else %}false{% endif %};
+
+        {% if mp_user %}
+        	W.mpUserAccessToken = "{{ mp_user.access_token }}";
+        	W.mpUserFakeId = "";
+        	W.mpUserCookie = "{{ mp_user.cookie }}";
+        {% else %}
+        	W.mpUserAccessToken = '';
+        	W.mpUserFakeId = '';
+        	W.mpUserCookie = '';
+        {% endif %}
+
+        {% if preview_info %}
+          W.previewName = "{{ preview_info.name }}";
+          W.previewImage = "{{ preview_info.image_path }}";
+        {% else %}
+          W.previewName = "信息预览";
+          W.previewImage = "/static/img/user-1.jpg";
+        {% endif %}
+        
+        $(document).ready(function() {
+          //dailog
+          /*$('#feedback').click(function(event) {
+            window.open('/operation/api/feedback/add/', '_blank', 'top=200, left=350, width=630, height=300,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no');
+            event.stopPropagation();
+            event.preventDefault();
+          });*/
+ 
+	        $('#x-simulator-btn').click(function(event) {
+		        window.open('/simulator/', '_blank', 'top=50, left=300, width=430, height=700,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no');
+		        event.stopPropagation();
+		        event.preventDefault();
+	        });
+
+          
+
+	        $('#x-embed-simulator-btn').click(function(event) {
+		        var text = $('#x-embed-simulator-btn').text();
+		        if (text == '<') {
+		        $('#embed-simulator-box').animate({
+			        left: '-420px'
+		        }, 500, function() {
+			        $('#x-embed-simulator-btn').text('>')
+		        });
+		        } else {
+			        $('#embed-simulator-box').animate({
+                        left: '-5'
+                    }, 500, function() {
+	                    $('#x-embed-simulator-btn').text('<')
+	                });
+		        }
+	        });
+        });
+    </script>
+    {% block js %}{% endblock %}
+ {% endblock %}

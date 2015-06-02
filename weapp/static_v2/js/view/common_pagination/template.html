@@ -1,0 +1,42 @@
+<!-- start PaginationView模板 -->
+<script id="pagination-view-box-tmpl-src" type='text/x-jquery-tmpl'>
+<div class="xb-pagination-component tr fr disT xui-paginationPosition">
+	<div class="xui-infoCount disTc vm" style="padding-top:4px;">
+		<span class="mr20">共${object_count}条记录</span>
+		<span class="mr15">共${max_page}页</span>
+	</div>
+	<ul class="pagination disTc vm pr0">
+		<!--{{if isHasDetailedPage}}
+		<li class="{{if has_head}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="1">首页</a></li>
+		{{/if}} -->
+		<li class="xb-up {{if has_prev}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="${prev}"><i class="xb-arrow mr5"></i>上一页</a></li>
+		{{if isHasDetailedPage}}
+		{{each display_pages}}
+		{{if $value == cur_page}}
+		<li class="active disabled"><a href="javascript:void(0)">${$value}</a></li>
+		{{else}}
+		<li><a href="javascript:void(0)" page="${$value}">${$value}</a></li>
+		{{/if}}
+		{{/each}}
+		{{/if}}
+		<li class="xui-jumpPage mr10">
+			<a href="javascript:void(0)">
+				<input {{if (max_page && max_page < 2)}}disabled="disabled"{{/if}} type="text" id="appendedInputButton" class="xa-gotoPage"/>
+				 	&nbsp;/&nbsp;${max_page}<span style="font-size:14px;">页</span>
+			</a>
+		</li>
+		<li class="xb-down {{if has_next}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="${next}">下一页<i class="xb-arrow ml5"></i></a></li>
+		<!--{{if isHasDetailedPage}}
+		<li class="{{if has_tail}}{{else}}disabled{{/if}}"><a href="javascript:void(0)" page="${max_page}" style="color:#949494">尾页</a></li>
+		{{/if}}
+		-->
+	</ul>
+	<!--{{if isHasJumpPage}}
+	<div class="xui-jumpPage disTc vm">
+		&nbsp;&nbsp;转向第&nbsp;<input {{if (max_page && max_page < 2)}}disabled="disabled"{{/if}} type="text" size="2" id="appendedInputButton" class="span2 xa-gotoPage">&nbsp;页
+		<button {{if (max_page && max_page < 2)}}disabled="disabled"{{/if}} type="button" class="btn">确定</button>
+	</div>
+	{{/if}}-->
+</div>
+</script>
+<!-- finish PaginationView模板 -->

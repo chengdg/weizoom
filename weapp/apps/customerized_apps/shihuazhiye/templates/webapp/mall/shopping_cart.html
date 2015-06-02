@@ -1,0 +1,168 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-shoppingCartPage"  data-title="{{ page_title }}">
+    <div data-role="content">
+        {% if products %}
+            <div class="xui-bottom-actionPanel xui-actionPanel">
+                <div class="fl text">
+                    共计: <span class="xui-text-red">￥<span class="xa-totalPrice xt-totalPrice"></span></span>
+                </div>
+                <div class="fr">
+                    <a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger" id="submit-order">去结算</a>
+                </div>
+            </div>
+
+            {% for product in products %}
+            <div class="xui-section p10 xt-product" data-id="{{product.id}}">
+                <div class="xui-selectedProductList">
+                    <ul class="clearStyle">
+                        <li>
+                            <div class="xui-selectedProductList-productImg fl">
+                                <img src="{{product.thumbnails_url}}" />
+                            </div>
+                            <div class="xui-selectedProductList-productInfo">
+                                <div class="xt-name">{{ product.name }}</div>
+                                
+                                {% if product.custom_model_properties %}
+                                <div class="em8 clearfix" style="color: #7F7F7F;">
+                                {% for property in product.custom_model_properties %}
+                                <span class="fl mr10">{{ property.name }}: {{ property.property_value }}</span>
+                                {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <div class="pt5 pb5 em8" style="color: #7F7F7F;">
+                                    <span class="xt-price">价格:￥{{ product.price }}</span>
+                                    {% ifequal product.stock_type 1 %}
+                                    <span class="ml10 xt-stock">库存:{{product.stocks}}{{product.physical_unit}}</span>
+                                    {% endifequal %}
+                                </div>
+                                <div class="clearfix">
+                                    <input 
+                                        data-ui-role="counter" 
+                                        {% ifequal product.stock_type 1 %}data-max-count="{{product.stocks}}"{% endifequal %}
+                                        data-product-id="{{ product.id }}" 
+                                        data-product-model-name="{{ product.model_name }}" 
+                                        data-product-price="{{ product.price }}" 
+                                        data-product-weight="{{ product.weight }}"
+                                        type="hidden" 
+                                        name="total_count" 
+                                        id="total_count" 
+                                        value="{{product.count}}" 
+                                    >
+                                </div>
+                            </div>
+                            <a class="xui-btn-delete xa-delete" data-role="button" href="javascript:void(0);"></a>
+                        </li>                        
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="xui-errorInfo">购物车里还没有课程</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript"> 
+function calculatePrice() {
+    //获得课程列表
+    var products = [];
+    $('[data-ui-role="counter"]').each(function() {
+        var $product = $(this);
+        products.push({
+            price: parseFloat($product.attr('data-product-price')),
+            weight: parseFloat($product.attr('data-product-weight')),
+            count: parseInt($product.val())
+        });
+    });
+
+    var totalPrice = 0.0;
+    var productCount = products.length;
+    for (var i = 0; i < productCount; ++i) {
+        var product = products[i];
+        totalPrice += (product.price * product.count);
+    }
+
+    //更新页面元素
+    $('.xa-totalPrice').text(totalPrice.toFixed(2));
+}
+
+$(document).ready(function() {
+    //调整课程人数后重新计算运费
+    $('[data-ui-role="counter"]').bind('count-changed', function() {
+        calculatePrice();
+    });
+    
+    //删除
+    $('.xa-delete').click(function(event) {
+        var $parent = $(event.currentTarget).parents('.xui-section');
+        var productId = $parent.attr('data-id');
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'post',
+            scope: this,
+            args: {
+                woid: W.webappOwnerId,
+                module: 'mall',
+                target_api: 'shopping_cart/delete',
+                product_id: productId,
+                order_id: 0
+            },
+            success: function(data) {
+                if($('.xui-section').length > 1) {
+                    $parent.remove();
+                    calculatePrice();
+                }
+                else {
+                    window.location.href = window.location.href;
+                }
+            },
+            error: function(data) {
+                $('body').alert({
+                    isShow: true,
+                    info: '删除失败',
+                    speed:2000
+                });
+                isSubmit = false;
+             }
+        });
+    });
+    
+    //结算
+    $('#submit-order').click(function() {
+        var productIds = [];
+        var productCounts = [];
+        var productModelNames = [];
+        $('[data-ui-role="counter"]').each(function() {
+            var $counter = $(this);
+            productIds.push($counter.attr('data-product-id'));
+            productModelNames.push($counter.attr('data-product-model-name'));
+            productCounts.push($counter.val());
+        });
+        
+        if(productIds.length === 0) {
+            $('body').alert({
+                isShow: true,
+                info:'请选择结算的课程',
+                speed: 2000
+            });
+            return false;
+        }
+
+        productIds = productIds.join('_');
+        productCounts = productCounts.join('_');
+        productModelNames = productModelNames.join('$')
+        var url = './?woid='+W.webappOwnerId+'&module=apps:shihuazhiye:mall&model=shopping_cart_order&action=edit&product_ids='+productIds+'&product_counts='+productCounts+'&product_model_names='+productModelNames;
+        window.location.href = url;
+    });
+
+    calculatePrice();
+}); 
+</script>
+{% endblock %}

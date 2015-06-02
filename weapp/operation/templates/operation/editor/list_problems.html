@@ -1,0 +1,111 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/small_simulator.css">
+{% endblock %}
+
+{% block content-panel %}
+<div id="categoryList">
+<div class="relative">
+  <ul class="breadcrumb">
+    <li class="active">常见问题列表</li>
+  </ul>
+
+  <span class="breadcrumRightButton">
+    <!--
+    <input type="text" class="m0 input-medium" id="categoryNameInput" data-validate="required"/>
+    -->
+    
+  </span>
+</div>
+
+  <fieldset>
+  <div>
+    <table class="table table-condensed">
+      <tbody>
+             <div class="control-group">
+            
+            <div class="controls">
+              问题标题:
+                <input type="text" class="input-xlarge" id="name" name="name" placeholder="请输入问题标题" value="{% if title %}{{ title.problem_title }}{% endif %}" data-validate="required" data-validate-guest="{{ title.id }}" data-validate-min-length="2" data-validate-max-length="32" />
+                <div class="errorHint"></div>
+            </div>       
+             <div class="controls" align="right">
+                <input type="button" class="btn btn-success" id="submit-title" value="&nbsp;&nbsp;&nbsp;&nbsp;提交标题&nbsp;&nbsp;" />
+            </div>
+          </div>
+           <div class="control-group">
+           
+        </div>
+      <div id="siteMenuList"></div>
+      </tbody>
+    </table>
+  </div>
+</fieldset>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+  {% include_raw 'jsTemplate/commonProblemEditView.html' %}
+  
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  var titleId = {% if title %}{{ title.id }}{% else %}0{% endif %};
+  $(document).ready(function() {
+        var date = +new Date();
+
+        var titleName = $('#name').val();
+        var menuView = new W.CommonProblemListView({
+            el: '#siteMenuList',
+            titleId: titleId,
+            titleName:titleName
+        });
+        menuView.bind('finish-submit-message',function(){
+            //phone.refreshBrowser();
+        });
+        menuView.render();
+
+        $('#submit-title').click(function(event){
+            if (titleName == ""){
+              alert("请输入问题标题");
+              return;
+            }
+            var titleName = $('#name').val();
+            W.getApi().call({
+                app: 'operation',
+                api: 'problem_title/add',
+                method: 'post',
+                args: {
+                    titleName: titleName,
+                    id:titleId
+                },
+                success: function(data) {
+                   window.location.href = '/operation/editor/problem_title/get/'+data['id'];
+                },
+                error: function(resp) {
+                   alert('提交失败');
+                },
+                scope: this
+            });
+        });
+
+        $('#add-menu-btn').click(function() {
+            if (titleId == 0) {
+                alert("请提交标题");
+                return;
+            }
+        });
+  });
+</script>
+{% endblock %}

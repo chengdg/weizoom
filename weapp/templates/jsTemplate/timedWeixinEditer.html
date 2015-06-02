@@ -1,0 +1,88 @@
+<script id="timed-weixin-editer-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="timedWeixinEditer-timeSelecter" class="fl mb30">
+  		<div id="datepicker" style="width: 220px"></div>
+  		<div class="mt5">
+	  		<select name="hour" class="input-small">
+	  		</select>
+	  		时
+	  		<select name="minutes" class="input-small ml10">
+	  		</select>
+	  		分
+  		</div>
+  	</div>
+
+	<div id="tabZone" class="tabbable fl ml20 hide">
+	  <ul class="nav nav-tabs">
+	    <li class="active"><a href="#timedWeixinEditer-textMessageZone" data-toggle="tab" data-type="text">文字</a></li>
+	    <li><a href="#timedWeixinEditer-newsMessageZone" data-toggle="tab" data-type="news">图文消息</a></li>
+	  </ul>
+
+	  <!-- 时间选择器 -->
+	  <div class="tab-content">	  	
+	  	<!-- 文字消息 -->
+	    <div class="tab-pane active" id="timedWeixinEditer-textMessageZone" style="width: 430px">
+	      <textarea name="content" id="textMessage" style="width: 400px" rows="10"></textarea>
+	    </div>
+
+	    <!-- 图文消息 -->
+	    <div class="tab-pane tc" id="timedWeixinEditer-newsMessageZone" style="width: 450px">
+	    	<div id="timedWeixinEditer-newsMessageZone-editLinkZone" class="hide">
+		    	<a id="singleNewsLink" href="/material/single_news/edit/" class="add-btn vm">单图文消息</a>
+		    	<a id="multiNewsLink" href="/material/multi_news/edit/" class="add-btn multi-access vm">多图文消息</a>	
+	    	</div> 
+	    	<div id="small-phone" class="small-phone-nobackground mc hide">	
+	    	</div>  
+	    </div>
+	  </div>
+
+	  <div class="mt5 clearfix pt10 mt2	0" style="border-top: solid 1px #BFBFBF;">
+	      	<div class="fl">
+		      	<label id="timedSendControl" class="radio inline">
+				  <input id="timedSend" type="radio" name="send_type" value="0" checked>定时发布
+				</label>
+				<label id="ontimeSendControl" class="radio inline">
+				  <input id="ontimeSend" type="radio" name="send_type" value="1">立刻发布
+				</label>
+			</div>
+			<div class="fr">
+				<input id="deleteBtn" type="button" class="btn btn-danger" value="删 除" />
+		      	<input id="submitBtn" type="button" class="btn btn-success" value="发 布" />
+		    </div>
+	    </div>
+	</div>
+</script>
+
+<script id="timed-weixin-mass-messages-tmpl-src" type="text/x-jquery-tmpl">
+	<ul class="centent_ul"></ul>
+</script>
+
+<script id="timed-weixin-one-mass-message-tmpl-src" type="text/x-jquery-tmpl">
+	<li class="li1" data-id="${id}">
+		<dl class="oneMassMessageTimeline">
+			<dt>
+                <div class="dateBox w100 h100 text-center m10 p10">
+                    <h1>
+                        <span class="f20 mt10 mb10">${scheduled_month}月${scheduled_day}日</span>
+                        ${scheduled_time}
+                    </h1>
+                </div>
+			</dt>
+			<dd>
+				<div class="dateBox m10">
+					<div class="oneTimeline_context p10">  {{html content}} </div>
+					<div class="oneTimeline_actionLayout p10">
+                        <span class="oneTimeline_actionLayout_left">
+						    <span class="${status_color}">${status_text}</span>
+						</span>
+				        <span class="ml50">创建日期：${created_at}</span>
+						<span class="oneTimeline_actionLayout_right tx_actionButton">
+							{{if status == '0'|| status == '3'}}
+							<a href='#' class="time_mass_message_delete" >删除</a>
+							{{/if}}
+						</span>
+					</div>
+				</div>
+			</dd>
+		</dl>
+	</li>
+</script>

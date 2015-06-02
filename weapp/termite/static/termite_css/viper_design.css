@@ -1,0 +1,60 @@
+html.design {
+	width: 100%;
+}
+
+.design #main-panel {
+    width: 660px;
+}
+
+.design .container {
+	width: 660px;
+}
+
+.design .row {
+	margin-left: 0px;
+}
+
+.design .span3 {
+	width: 165px;
+} 
+
+.design .span9 {
+	width: 620px;
+}
+
+.design #weixin-logo {
+	left: 10px;
+}
+
+.design #main-panel #x-leftNavZone .nav {
+	width: 90%;
+	margin-left: 5px;
+}
+
+.design .form-horizontal .control-label {
+	width: 80px;
+}
+
+.design .form-horizontal .controls {
+	margin-left: 80px;
+}
+
+
+.design .form-horizontal .control-group {
+	/*margin-bottom: 10px;*/
+}
+
+/*
+.design #editForm textarea.input-xlarge, .design #editForm input.input-xlarge {
+    width: 316px;
+}
+
+.design #editForm select.input-xlarge {
+    width: 330px;
+}
+*/
+
+.design .xui-componentGroup .xui-inner-emptyComponents {
+	padding: 10px;
+	border: dashed 1px #333;
+}

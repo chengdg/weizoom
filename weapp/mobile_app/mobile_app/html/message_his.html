@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/message.css">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-2.1.3.min.js"></script>
+		<script src="../js/baiduTemplate.js"></script>
+		<script src="../js/config.js"></script>
+		<script src="../js/system.js"></script>
+		<script src="../js/messgae_his.js"></script>
+		<script src="../js/emotion.js"></script>
+	</head>
+
+	<body>
+
+		<div class="mui-content">
+			<div id="pullrefresh" class="mui-scroll-wrapper">
+				<div id="message_history">
+
+				</div>
+			</div>
+
+		</div>
+		<!--回复消息-->
+		<div class="mui-table-view mui-input-row reply_box">
+			<div id='ori_reply'>
+				<span id="mul_msg" class="mui-icon mui-icon-plus"></span>
+				<textarea rows="1" placeholder="回复消息.." class="msg_content"></textarea>
+				<span id="emoji_button"><img src="../img/weixin/emoji.png" alt="" /></span>
+				<button class="mui-btn mui-btn-positive msg_send">发送</button>
+			</div>
+			<!--多功能选取-->
+			<div class="multy_selects" id='mul_sel'>
+				<div class="button">
+					<i class="mui-icon mui-icon-camera fontSize80"></i>
+				</div>
+				<div class="button">
+					<i class="mui-icon mui-icon-image fontSize70"></i>
+				</div>
+				<div class="button" style="border-right: 0;">
+					<i class="mui-icon mui-icon-mic-filled fontSize60"></i>
+				</div>
+			</div>
+			<!--表情输入块-->
+			<div id="show_emoji" class="mui-slider">
+				<div class="mui-slider-group">
+				    <div class="mui-slider-item">
+				    	<div class="page" id="page1">
+				    		<div class="list_emoji">
+					    	<span class="one_emoji"><img class="emoji_icon" title="微笑" src="../img/weixin/1.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="撇嘴" src="../img/weixin/2.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="色" src="../img/weixin/3.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="发呆" src="../img/weixin/4.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="得意" src="../img/weixin/5.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="流泪" src="../img/weixin/6.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="害羞" src="../img/weixin/7.png" alt="" /></span>
+							</div>
+							<div class="list_emoji">
+							<span class="one_emoji"><img class="emoji_icon" title="闭嘴" src="../img/weixin/8.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="睡" src="../img/weixin/9.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="大哭" src="../img/weixin/10.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="尴尬" src="../img/weixin/11.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="发怒" src="../img/weixin/12.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="调皮" src="../img/weixin/13.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="呲牙" src="../img/weixin/14.png" alt="" /></span>
+							</div>
+							<div class="list_emoji">
+							<span class="one_emoji"><img class="emoji_icon" title="惊讶" src="../img/weixin/15.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="难过" src="../img/weixin/16.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="酷" src="../img/weixin/17.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="冷汗" src="../img/weixin/18.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="抓狂" src="../img/weixin/19.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="吐" src="../img/weixin/20.png" alt="" /></span>
+							<span class="one_emoji"><img class="emoji_icon" title="删除" src="../img/weixin/backspace.png" alt="" /></span>
+							</div>
+						</div>
+				    </div>
+				    <div class="mui-slider-item">
+				    	<div id="page" class="page2">
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="偷笑" src="../img/weixin/21.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="可爱" src="../img/weixin/22.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="白眼" src="../img/weixin/23.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="傲慢" src="../img/weixin/24.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="饥饿" src="../img/weixin/25.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="困" src="../img/weixin/26.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="惊恐" src="../img/weixin/27.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="流汗" src="../img/weixin/28.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="憨笑" src="../img/weixin/29.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="大兵" src="../img/weixin/30.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="奋斗" src="../img/weixin/31.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="咒骂" src="../img/weixin/32.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="疑问" src="../img/weixin/33.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="嘘" src="../img/weixin/34.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="晕" src="../img/weixin/35.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="折磨" src="../img/weixin/36.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="衰" src="../img/weixin/37.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="骷髅" src="../img/weixin/38.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="敲打" src="../img/weixin/39.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="再见" src="../img/weixin/40.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="删除" src="../img/weixin/backspace.png" alt="" /></span>
+				    		</div>
+				    	</div>
+				    </div>
+				    <div class="mui-slider-item">
+				    	<div id="page" class="page3">
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="擦汗" src="../img/weixin/41.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="抠鼻" src="../img/weixin/42.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="鼓掌" src="../img/weixin/43.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="糗大了" src="../img/weixin/44.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="坏笑" src="../img/weixin/45.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="左哼哼" src="../img/weixin/46.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="右哼哼" src="../img/weixin/47.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="哈欠" src="../img/weixin/48.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="鄙视" src="../img/weixin/49.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="委屈" src="../img/weixin/50.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="快哭了" src="../img/weixin/51.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="阴险" src="../img/weixin/52.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="亲亲" src="../img/weixin/53.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="吓" src="../img/weixin/54.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="可怜" src="../img/weixin/55.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="菜刀"  src="../img/weixin/56.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="西瓜" src="../img/weixin/57.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="啤酒" src="../img/weixin/58.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="篮球" src="../img/weixin/59.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="乒乓" src="../img/weixin/60.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="删除" src="../img/weixin/backspace.png" alt="" /></span>
+				    		</div>
+				    	</div>
+				    </div>
+				    <div class="mui-slider-item">
+				    	<div id="page" class="page4">
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="咖啡" src="../img/weixin/61.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="饭" src="../img/weixin/62.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="猪头" src="../img/weixin/63.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="玫瑰" src="../img/weixin/64.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="凋谢" src="../img/weixin/65.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="示爱" src="../img/weixin/66.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="爱心" src="../img/weixin/67.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="心碎" src="../img/weixin/68.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="蛋糕" src="../img/weixin/69.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="闪电" src="../img/weixin/70.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="炸弹" src="../img/weixin/71.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="刀" src="../img/weixin/72.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="足球" src="../img/weixin/73.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="瓢虫" src="../img/weixin/74.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="便便" src="../img/weixin/75.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="月亮" src="../img/weixin/76.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="太阳" src="../img/weixin/77.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="礼物" src="../img/weixin/78.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="拥抱" src="../img/weixin/79.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="强" src="../img/weixin/80.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="删除" src="../img/weixin/backspace.png" alt="" /></span>
+				    		</div>
+				    	</div>
+				    </div>
+				    <div class="mui-slider-item">
+				    	<div id="page" class="page5">
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="弱" src="../img/weixin/81.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="握手" src="../img/weixin/82.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="胜利" src="../img/weixin/83.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="抱拳" src="../img/weixin/84.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="勾引" src="../img/weixin/85.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="拳头" src="../img/weixin/86.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="差劲" src="../img/weixin/87.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="爱你" src="../img/weixin/88.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="NO" src="../img/weixin/89.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="OK" src="../img/weixin/90.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="爱情" src="../img/weixin/91.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="飞吻" src="../img/weixin/92.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="跳跳" src="../img/weixin/93.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="发抖" src="../img/weixin/94.png" alt="" /></span>
+				    		</div>
+				    		<div class="list_emoji">
+				    		<span class="one_emoji"><img class="emoji_icon" title="怄火" src="../img/weixin/95.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="转圈" src="../img/weixin/96.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="磕头" src="../img/weixin/97.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="回头" src="../img/weixin/98.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="跳绳" src="../img/weixin/99.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="挥手" src="../img/weixin/100.png" alt="" /></span>
+				    		<span class="one_emoji"><img class="emoji_icon" title="删除" src="../img/weixin/backspace.png" alt="" /></span>
+				    		</div>
+				    	</div>
+				    </div>
+				</div>
+				<div class="mui-slider-indicator" style="bottom: -5px;">
+					<div class="mui-indicator mui-active"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+				</div>
+			</div>
+		</div>
+		<!--语音显示-->
+		<div id="recordAni">
+			<div class="recording"></div>
+			<div class="counting">00:00:00</div>
+		</div>
+
+	</body>
+	<!--消息历史模版-->
+	<script type="text/template" id="message_history_template">
+			<% for(var i=0;i<data.length;i++){ var message = data[i];%>
+				<%message.content = message.content.replace(new RegExp("/static/ueditor-1.2.6.1/dialogs/emotion/images", "g"),"../img");%>
+				<div class="surr_b">
+				<% if(message.is_reply == 1){%>
+					<span class="fr">
+						<img src="<%=message.sender_icon%>" class="img_size" onerror="javascript:this.src='../img/user-1.jpg'">
+					</span>
+					<div class="message_info_box fr">
+						<p class="message_sender_right fr">
+							<span class="time"><%=message.weixin_created_at%></span>
+						</p>
+						<div class="clear"></div>
+						<div class="message_content message_content_right fr <% if(message.message_type == 'image'){ %>pic_padding<% } %>">
+							<div class="bubble_arrow_fr"></div>
+
+							<% if(message.message_type == 'text'){ %>
+								<div>
+									<p class="message_content_text"><%-message.content.replace(new RegExp("\n","g"),"<br>")%></p>
+								</div>
+							<%}else if(message.message_type == 'voice'){ %>
+								<div class="voiceBody" onclick="controlVoice(event,this);">
+                                    <p class="voice_duration"></p>
+									<audio id="media" style="display:none;" controls="" preload="auto" src="<%=message.audio_url%>"></audio>
+									<div class="voiceContent_right">
+										<span class="icoVoice"></span>
+									</div>
+								</div>
+							<%}else if(message.message_type == 'image'){ %>
+								<div>
+                                    <div class="pic_mask mui-icon mui-icon-spinner-cycle mui-spin"></div>
+                                    <div class="pic_mask_text"></div>
+                                    <!--<div class="pic_mask"></div>-->
+									<img class="pic" style="float:right;" src="<%=message.pic_url%>" <!--onload="checkOrentation(this);"-->/>
+								</div>
+							<% } %>
+
+						</div>
+						<div class="clear"></div>
+					</div>
+				<% }else{ %>
+					<span class="fl">
+						<img src="<%=message.sender_icon%>" class="img_size" onerror="javascript:this.src='../img/user-1.jpg'">
+					</span>
+					<div class="message_info_box fl">
+						<p class="message_sender_left fl">
+							<span class="time"><%=message.weixin_created_at%></span>
+						</p>
+						<div class="clear"></div>
+						<div class="message_content message_content_left fl <% if(message.message_type == 'image'){ %>pic_padding<% } %>">
+							<div class="bubble_arrow_fl"></div>
+
+							<% if(message.message_type == 'text'){ %>
+								<div>
+									<p class="message_content_text"><%-message.content.replace(new RegExp("\n","g"),"<br>")%></p>
+								</div>
+							<%}else if(message.message_type == 'voice'){ %>
+								<div class="voiceBody" onclick="controlVoice(event,this);">
+									<p class="voice_duration"></p>
+									<audio id="media" style="display:none;" controls="" preload="auto" src=<%=message.audio_url%>></audio>
+									<div class="voiceContent_left">
+										<span class="icoVoice"></span>
+									</div>
+								</div>
+							<%}else if(message.message_type == 'image'){ %>
+								<div>
+                                    <div class="pic_mask mui-icon mui-icon-spinner mui-spin"></div>
+                                    <div class="min-badge pic_mask_text"></div>
+									<img class="pic" src="<%=message.pic_url%>" <!--onload="checkOrentation(this);"-->/>
+								</div>
+							<% } %>
+
+						</div>
+						<div class="clear"></div>
+					</div>
+					<% } %>
+					<div class="clear">
+						<input type="hidden" s_id="<%=session_id%>"/>
+					</div>
+				</div>
+			<% } %>
+	</script>
+
+</html>

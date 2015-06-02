@@ -1,0 +1,71 @@
+{% load workbench_filter %}
+
+{# 橱窗固定三张图片 #}
+{% ifequal component.type 'weapp.image_display' %}
+<div class="wui-imagedisplay"
+    data-cid="{{component.cid}}" 
+    data-ui-sortable="true"
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable" {% endifequal %}>
+	<h3 class="wui-inner-title wa-display-title">{{component.model.title}}</h3>
+	{% if component.model.displayMode == 'one'%}
+	<ul class="wui-grid-f">
+		<li data-cid="{{component.components.0.cid}}" class="wui-block-a">
+			<a href="{{component.components.0.model.target|format_target:project_id}}" class="wui-singleImageWithTitle">
+				<img src="{{component.components.0.model.image}}" class="wa-inner-imgbox{%ifequal component.model.displayMode "default" %} big{% endifequal%}" />
+				<p class="wui-inner-bottomTitle wa-inner-title {% if not component.components.0.model.title %}hidden{% endif %}">{{component.components.0.model.title}}</p>
+			</a>
+		</li>
+	</ul>
+	{% endif %}
+	{% if component.model.displayMode == 'two' %}
+	<ul class="wui-grid-a">
+		{% if component.components.0 %}
+		<li data-cid="{{component.components.0.cid}}" class="wui-block-a">
+			<a href="{{component.components.0.model.target|format_target:project_id}}" class="wui-singleImageWithTitle">
+				<img src="{{component.components.0.model.image}}" class="wa-inner-imgbox{%ifequal component.model.displayMode "default" %} big{% endifequal%}" />
+				<p class="wui-inner-bottomTitle wa-inner-title {% if not component.components.0.model.title %}hidden{% endif %}">{{component.components.0.model.title}}</p>
+			</a>
+		</li>
+		{% endif %}
+		{% if component.components.1 %}
+		<li data-cid="{{component.components.1.cid}}" class="wui-block-b">
+			<a href="{{component.components.1.model.target|format_target:project_id}}" class="wui-singleImageWithTitle">
+				<img src="{{component.components.1.model.image}}" class="wa-inner-imgbox" />
+				<p class="wui-inner-bottomTitle wa-inner-title {% if not component.components.1.model.title %}hidden{% endif %}">{{component.components.1.model.title}}</p>
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+	{% endif %}
+	{% if component.model.displayMode == 'three' or component.model.displayMode == 'default' %}
+	<ul class="wui-grid-{% ifequal component.model.displayMode 'three' %}b{% else %}e{%  endifequal %}">
+		{% if component.components.0 %}
+		<li data-cid="{{component.components.0.cid}}" class="wui-block-a">
+			<a href="{{component.components.0.model.target|format_target:project_id}}" class="wui-singleImageWithTitle">
+				<img src="{{component.components.0.model.image}}" class="wa-inner-imgbox{%ifequal component.model.displayMode "default" %} big{% endifequal%}" />
+				<p class="wui-inner-bottomTitle wa-inner-title {% if not component.components.0.model.title %}hidden{% endif %}">{{component.components.0.model.title}}</p>
+			</a>
+		</li>
+		{% endif %}
+		{% if component.components.1 %}
+		<li data-cid="{{component.components.1.cid}}" class="wui-block-b">
+			<a href="{{component.components.1.model.target|format_target:project_id}}" class="wui-singleImageWithTitle">
+				<img src="{{component.components.1.model.image}}" class="wa-inner-imgbox" />
+				<p class="wui-inner-bottomTitle wa-inner-title {% if not component.components.1.model.title %}hidden{% endif %}">{{component.components.1.model.title}}</p>
+			</a>
+		</li>
+		{% endif %}
+		{% if component.components.2 %}
+		<li data-cid="{{component.components.2.cid}}" class="wui-block-c">
+			<a href="{{component.components.2.model.target|format_target:project_id}}" class="wui-singleImageWithTitle">
+				<img src="{{component.components.2.model.image}}" class="wa-inner-imgbox" />
+				<p class="wui-inner-bottomTitle wa-inner-title {% if not component.components.2.model.title %}hidden{% endif %}">{{component.components.2.model.title}}</p>
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+	{% endif %}
+	<p class="wui-inner-contentTitle wa-inner-contentTitle{% if not component.model.contentTitle %} hidden{% endif %}">{{component.model.contentTitle}}</p>
+	<p class="wui-inner-content wa-inner-content{% if not component.model.content %} hidden{% endif %}">{{component.model.content}}</p>
+</div>
+{%  endifequal %}

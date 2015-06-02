@@ -1,0 +1,219 @@
+[
+ {
+  "created_at": "2014-03-10 14:43:57", 
+  "component": {
+   "is_new_created": true, 
+   "cid": 1, 
+   "pid": null, 
+   "property_view_title": "Page", 
+   "components": [
+    {
+     "cid": 2, 
+     "pid": 1, 
+     "property_view_title": "Text Input", 
+     "selectable": "yes", 
+     "type": "viper.textinput", 
+     "model": {
+      "index": 1, 
+      "name": "name", 
+      "label": "\u5206\u7c7b", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "id": "", 
+      "validate": "data-validate=\"required\"\ndata-validate-max-length=\"50\"", 
+      "placeholder": "", 
+      "class": ""
+     }, 
+     "has_global_content": "no"
+    }
+   ], 
+   "selectable": "yes", 
+   "type": "viper.page", 
+   "model": {
+    "index": 1, 
+    "is_enable_paginate": "no", 
+    "name": "", 
+    "title": "category", 
+    "entityName": "\u5206\u7c7b", 
+    "is_horizontal": "yes", 
+    "is_free_page": "no", 
+    "event:onload": "", 
+    "is_list_item_sortable": "yes", 
+    "datasource": {
+     "api_name": "", 
+     "type": "api"
+    }, 
+    "has_list_page": "yes", 
+    "id": "", 
+    "is_list_item_order_by_asc": "yes", 
+    "count_per_page": "20", 
+    "class": "", 
+    "columns": "[{\"type\":\"viper.textinput\",\"id\":2,\"name\":\"name\",\"label\":\"\u5206\u7c7b\",\"index\":1,\"is_checked\":true,\"width\":\"\"},{\"id\":-1,\"label\":\"WebApp\u7f51\u5740\",\"index\":2,\"is_checked\":true,\"name\":\"webapp_url\",\"width\":\"\"}]", 
+    "navName": "\u5206\u7c7b\u7ba1\u7406"
+   }, 
+   "has_global_content": "no"
+  }, 
+  "updated_at": "2014-03-10 14:43:57", 
+  "display_index": "1", 
+  "project_id": "13", 
+  "page_id": "1", 
+  "pp_id": "13_1"
+ }, 
+ {
+  "created_at": "2014-03-10 14:43:57", 
+  "component": {
+   "is_new_created": true, 
+   "cid": 3, 
+   "pid": null, 
+   "property_view_title": "Page", 
+   "components": [
+    {
+     "cid": 4, 
+     "pid": 3, 
+     "property_view_title": "Text Input", 
+     "selectable": "yes", 
+     "type": "viper.textinput", 
+     "model": {
+      "index": 1, 
+      "name": "title", 
+      "label": "\u6807\u9898", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "id": "", 
+      "validate": "data-validate=\"required\"\ndata-validate-max-length=\"50\"", 
+      "placeholder": "", 
+      "class": ""
+     }, 
+     "has_global_content": "no"
+    }, 
+    {
+     "cid": 5, 
+     "pid": 3, 
+     "property_view_title": "Radio Button Group", 
+     "components": [
+      {
+       "cid": 6, 
+       "pid": 5, 
+       "property_view_title": "Radio Button", 
+       "selectable": "no", 
+       "type": "viper.radio_button", 
+       "model": {
+        "index": 6, 
+        "name": "", 
+        "text": "\u5206\u7c7b1", 
+        "value": "1", 
+        "id": "", 
+        "theme": "c", 
+        "datasource": {
+         "api_name": "", 
+         "type": "api"
+        }, 
+        "is_checked": "no", 
+        "class": ""
+       }, 
+       "has_global_content": "no"
+      }
+     ], 
+     "selectable": "yes", 
+     "type": "viper.radio_button_group", 
+     "model": {
+      "datasource_page": "page-1", 
+      "index": 2, 
+      "name": "category", 
+      "items": [
+       6
+      ], 
+      "label": "\u5206\u7c7b", 
+      "datasource_field": "name", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "event:onclick": "", 
+      "id": "", 
+      "class": "", 
+      "orientation": "horizontal"
+     }, 
+     "has_global_content": "no"
+    }, 
+    {
+     "cid": 7, 
+     "pid": 3, 
+     "property_view_title": "\u5bcc\u6587\u672c\u7f16\u8f91\u5668", 
+     "selectable": "yes", 
+     "type": "viper.richtext_editor", 
+     "model": {
+      "index": 4, 
+      "name": "content", 
+      "label": "\u5185\u5bb9", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "id": "", 
+      "validate": "data-validate=\"required\"\ndata-validate-max-length=\"10240\"", 
+      "height": "200", 
+      "type": "full", 
+      "class": ""
+     }, 
+     "has_global_content": "no"
+    }, 
+    {
+     "cid": 9, 
+     "pid": 3, 
+     "property_view_title": "Text Input", 
+     "selectable": "yes", 
+     "type": "viper.textinput", 
+     "model": {
+      "index": 3, 
+      "name": "publish_time", 
+      "label": "\u53d1\u5e03\u65e5\u671f", 
+      "datasource": {
+       "api_name": "", 
+       "type": "api"
+      }, 
+      "id": "", 
+      "validate": "data-validate=\"required\"\ndata-validate-max-length=\"50\"", 
+      "placeholder": "", 
+      "class": ""
+     }, 
+     "has_global_content": "no"
+    }
+   ], 
+   "selectable": "yes", 
+   "type": "viper.page", 
+   "model": {
+    "index": 3, 
+    "is_enable_paginate": "no", 
+    "name": "", 
+    "title": "article", 
+    "entityName": "\u6587\u7ae0", 
+    "is_horizontal": "yes", 
+    "is_free_page": "no", 
+    "event:onload": "", 
+    "is_list_item_sortable": "yes", 
+    "datasource": {
+     "api_name": "", 
+     "type": "api"
+    }, 
+    "has_list_page": "yes", 
+    "id": "", 
+    "is_list_item_order_by_asc": "yes", 
+    "count_per_page": "20", 
+    "class": "", 
+    "columns": "[{\"type\":\"viper.textinput\",\"id\":4,\"name\":\"title\",\"label\":\"\u6807\u9898\",\"index\":1,\"is_checked\":true,\"width\":\"\"},{\"type\":\"viper.radio_button_group\",\"id\":5,\"name\":\"category\",\"label\":\"\u5206\u7c7b\",\"index\":2,\"is_checked\":true,\"width\":\"80\"},{\"type\":\"viper.richtext_editor\",\"id\":7,\"name\":\"content\",\"label\":\"\u5185\u5bb9\",\"index\":3,\"is_checked\":false,\"width\":\"\"},{\"id\":-1,\"label\":\"WebApp\u7f51\u5740\",\"index\":4,\"is_checked\":true,\"name\":\"webapp_url\",\"width\":\"\"}]", 
+    "navName": "\u6587\u7ae0\u7ba1\u7406"
+   }, 
+   "has_global_content": "no"
+  }, 
+  "updated_at": "2014-03-10 14:43:57", 
+  "display_index": "3", 
+  "project_id": "13", 
+  "page_id": "3", 
+  "pp_id": "13_3"
+ }
+]

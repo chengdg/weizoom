@@ -1,0 +1,205 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">商城设置</li>
+	</ul>
+</div>
+
+<form class="" method="post" id="editForm" action="/mall/editor/mall_settings/update/">
+	<fieldset>
+ 		<legend class="clearfix">
+ 			邮费配置：
+ 			<a id="x-addPostageConfigBtn" class="fr btn btn-primary" href="/mall/editor/postage_config/create/"><i class="icon-plus icon-white"></i> 添加配置</a>
+ 		</legend>
+ 		{% if postage_configs %}
+		<table id="postageListTable" class="table table-bordered table-condensed">			
+			<tbody>
+				{% for postage_config in postage_configs %}
+				<tr data-id="{{ postage_config.id }}">
+					<td style="width: 13px;">						
+	                    <input type="radio" name="postage_config_id" value="{{ postage_config.id }}"  {% if postage_config.is_used %}checked="checked"{% endif %}/>
+					</td>
+					<td style="width: 150px;">
+						{% if postage_config.is_system_level_config %}
+							{{ postage_config.name }}
+						{% else %}
+							<a href="/mall/editor/postage_config/update/{{postage_config.id}}/">{{ postage_config.name }}</a>
+						{% endif %}
+					</td>
+					<td>
+						<div>
+							{% if not postage_config.is_system_level_config %}
+								首重{{ postage_config.first_weight }}公斤 【{{ postage_config.first_weight_price }}元】，
+								{% if  postage_config.is_enable_added_weight %}
+									续重{{ postage_config.added_weight }}公斤 【{{ postage_config.added_weight_price }}元】
+								{% else %}
+								 	无续重
+								{% endif %}
+							{% endif %}
+						</div>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% endif %}
+	</fieldset>
+
+	<fieldset class="mt40">
+ 		<legend class="clearfix">
+ 			未付款订单过期时间：
+ 		</legend>
+		         <label class="radio inline" >
+		             <input type="radio" name="optionsRadios" id="unlimited" value='-1' {% if mall_config.order_expired_day == -1 %}checked{% endif %} >无限制
+		         </label> &nbsp;
+
+		         <label class="radio inline" >
+		            <input type="radio" name="optionsRadios" id="limited" value="0" {% if mall_config.order_expired_day == -1 %}{% else %}checked{% endif %}>
+		         </label>
+		             <input type="text" name="order_expired_day" 
+		             value="{% if mall_config.order_expired_day == -1 %}{% else %}{{ mall_config.order_expired_day }}{% endif %}" 
+		             data-validate="{% if mall_config.order_expired_day == -1 %}{% else %}require-positive-int{% endif %}" 
+		             style="width:45px;margin-bottom:0px;"  
+		             id="order_expired_day" {% if mall_config.order_expired_day == -1 %}disabled="readonly"{% endif %}>天
+		     <div class="errorHint" style="margin-left: 109px;"></div><br/>
+		
+	</fieldset>
+
+	<fieldset class="mt40">
+ 		<legend class="clearfix">
+ 			支付方式：
+
+			{% if has_other_pay_interface %}
+				<a id="x-addPayInterfaceBtn" class="fr btn btn-primary" href="/mall/editor/pay_interface/create/"><i class="icon-plus icon-white"></i> 添加支付方式</a>
+			{% endif %}
+
+ 	<!-- 		<a id="x-addPayInterfaceBtn" class="fr btn btn-primary" href="/mall/editor/pay_interface/create/"><i class="icon-plus icon-white"></i> 添加支付方式</a> -->
+ 		</legend>
+ 		{% if pay_interfaces %}
+		<table id="payInterfaceListTable" class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>支付类型</th>
+					<th>备注</th>
+					<th width="60">状态</th>
+					<th width="60">操作</th>
+				</th>
+			</thead>
+			<tbody>
+				{% for pay_interface in pay_interfaces %}
+				<tr {% if not pay_interface.is_active %}style="color: #AFAFAF;"{% endif %}>
+					<td style="width: 150px;">
+						<a href="/mall/editor/pay_interface/update/{{pay_interface.id}}/"><img src="{{ pay_interface.pay_logo }}" width="100" /></a>
+					</td>
+					<td>
+						<a href="/mall/editor/pay_interface/update/{{pay_interface.id}}/">{{ pay_interface.description }}</a>
+					</td>
+					<td>
+						{% if pay_interface.is_active %}
+						开启
+						{% else %}
+						停用
+						{% endif %}
+					</td>
+					<td>
+						{% if pay_interface.is_active %}
+						<a class="btn btn-danger" href="/mall/editor/pay_interface/inactive/{{pay_interface.id}}/">停用</a>
+						{% else %}
+						<a  class="btn btn-success" href="/mall/editor/pay_interface/active/{{pay_interface.id}}/">启用</a>
+						{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% else %}
+		当前没有支付方式，请添加支付方式
+		{% endif %}
+	</fieldset>
+
+	<fieldset class="mt40">
+ 		<legend class="clearfix">
+ 			商品规格：
+ 			<a id="x-addProductModelPropertyBtn" class="fr btn btn-primary" href="/mall/editor/product_model_property/create/"><i class="icon-plus icon-white"></i> 添加规格</a>
+ 		</legend>
+ 		{% if product_model_properties %}
+		<table id="productModelListTable" class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>规格名</th>
+					<th>规格值</th>
+				</tr>
+			</thead>			
+			<tbody>
+				{% for property in product_model_properties %}
+				<tr data-id="{{ property.id }}">
+					<td style="width: 150px;">
+						<a href="/mall/editor/product_model_property/update/?id={{property.id}}">{{ property.name }}</a>
+					</td>
+					<td>
+						{% for value in property.values %}
+							{{value.name}}{% if not forloop.last %},{% endif %}
+						{% endfor %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% endif %}
+	</fieldset>
+
+	<fieldset class="mt40">
+ 		<legend class="clearfix">
+ 			购物流程：
+ 		</legend>
+ 		<label class="checkbox"><input type="checkbox" name="is_enable_bill" value="1" {% if mall_config.is_enable_bill %}checked="checked"{% endif %}/> 支持开发票</label>
+	</fieldset>
+
+ 	<div class="control-group mt5 mr5">
+ 		<div class="controls ml20 tc">
+ 			<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+ 		</div>
+    </div>
+</form>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#limited').click(function(){
+	   	$('#order_expired_day').attr('disabled',false);
+        $('#order_expired_day').attr('data-validate','require-positive-int');
+    });
+
+    $('#unlimited').click(function(){
+        $('#order_expired_day').attr('disabled','disabled');
+        $('#order_expired_day').attr('value','');
+        $('#order_expired_day').attr('data-validate','');
+    });
+	//提交
+	$('#editForm').submit(function() {
+		var isAutoUpgrade = $('input[name=is_auto_upgrade]:radio:checked').val();
+		if (isAutoUpgrade == '1') {
+			$('#upgrade_lower_bound').attr('data-validate', 'require-int');
+		} else {
+			$('#upgrade_lower_bound').removeAttr('data-validate');
+		}
+		
+
+		if (!W.validate()) {
+			return false;
+		}
+		/*var save_ids = selectMemberView.getSaveMemberIds();
+		$('#member_ids').val(save_ids.join(','));
+		console.log('save_ids', save_ids);*/
+		return true;
+	});
+	});
+
+</script>
+{% endblock %}

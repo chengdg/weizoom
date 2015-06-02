@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<script src="../js/mui.min.js"></script>
+		<!--<script src="../js/app.js"></script>-->
+		<script src="../js/config.js"></script>
+		<script src="../js/system.js"></script>
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+		</style>
+	</head>
+
+	<body>
+		<audio style="display: none;" src="../img/beep.aac" id="beep"></audio>
+		<header class="mui-bar mui-bar-nav">
+			<h1 id="title" class="mui-title">首页</h1>
+			<a id="menu" href="#topPopover" class="mui-icon mui-action-menu mui-icon-bars mui-pull-right" style="visibility: visible;"></a>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a id="defaultTab" class="mui-tab-item mui-active" href="overview.html">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">概览</span>
+			</a>
+			<a class="mui-tab-item" href="message.html">
+				<span class="mui-icon mui-icon-chat"><span class="mui-badge" style="visibility: hidden;" id="msg_count"></span></span>
+				<span class="mui-tab-label">消息</span>
+			</a>
+			<a class="mui-tab-item" href="order.html">
+				<span class="mui-icon mui-icon-list"></span>
+				<span class="mui-tab-label">订单</span>
+			</a>
+			<a class="mui-tab-item" href="setting.html">
+				<span class="mui-icon mui-icon-gear"><span id="updateDot" class="mui-badge mui-badge-danger" style="visibility: hidden;">1</span></span>
+				<span class="mui-tab-label">设置</span>
+			</a>
+		</nav>
+		<script type="text/javascript" charset="utf-8">
+
+			var subpages = ['overview.html','message.html','order.html','setting.html'];
+			var subpage_style = {
+				top: '46px',
+				bottom: '50px'
+			};
+			var firstTap = true;
+			//创建子页面，首个选项卡页面显示，其它均隐藏；
+			mui.plusReady(function(){
+				W.init();
+				//开启新消息定时刷新
+				start_auto_update_messages();
+				//设置上的更新小点
+				if(plus.storage.getItem("is_update")=='true'){
+					var updateDot = document.getElementById("updateDot");
+					updateDot.style.visibility = 'visible';
+				};
+				var self = plus.webview.currentWebview();
+//				plus.nativeUI.showWaiting();
+				for(var i=3;i>=0;i--){
+					var sub = plus.webview.create(subpages[i],subpages[i],subpage_style);
+					self.append(sub);
+				}
+				//当前激活选项
+				var activeTab = subpages[0];
+				var title = document.getElementById("title");
+				//选项卡点击事件
+				mui('.mui-bar-tab').on('tap', 'a', function(e) {
+					var targetTab = this.getAttribute('href');
+					if (targetTab == activeTab) {
+						return;
+					}
+					//更换标题
+					var title_text = this.querySelector('.mui-tab-label').innerHTML;
+					if (title_text == "概览") {
+						document.getElementById("menu").style.visibility = "visible";
+					} else {
+						document.getElementById("menu").style.visibility = "hidden";
+					}
+					title.innerHTML = title_text;
+
+					if(firstTap){
+						toogleView(targetTab);
+					}else{
+						//显示目标选项卡
+						plus.webview.show(targetTab);
+						//隐藏当前;
+						plus.webview.hide(activeTab);
+					}
+					//更改当前活跃的选项卡
+					activeTab = targetTab;
+
+				});
+				document.getElementById("menu").addEventListener('tap', function() {
+					plus.webview.getWebviewById("overview.html").evalJS('mui("#topPopover").popover("toggle")');
+				});
+			})
+
+			function toogleView(targetTab){
+				var s;
+				for(s in subpages){
+					if(subpages[s] == targetTab){
+						plus.webview.getWebviewById(subpages[s]).show();
+					}else{
+						plus.webview.getWebviewById(subpages[s]).hide();
+					}
+				}
+				firstTap = false;
+			}
+
+			listenBackButton();
+			function updateMsgCount(count){
+				var bdge = document.querySelector("#msg_count");
+				bdge.innerText = count;
+				bdge.style.visibility = 'visible';
+				//设置图标的气泡数字
+				plus.runtime.setBadgeNumber(count+'');
+			}
+
+			//定时刷新消息函数
+			var messages_auto_update_interval,push_flag;
+			var new_message_count = 0; //记录上次消息未读消息个数，用于判断是否提醒
+			function start_auto_update_messages(){
+
+				messages_auto_update_interval = setInterval(function(){
+					W.getJsonP(HOST_URL + 'mobile_app/api/messages/get_unread_count/',function(response){
+							var count = response.data.unread_count;
+							var beep = plus.storage.getItem("sound");
+							var vibrate = plus.storage.getItem("vibrator");
+							var push = plus.storage.getItem("push");
+
+							if(count != 0){
+								//刷新消息列表,需要改后台，暂不实现
+//								plus.webview.getWebviewById('message.html').evalJS("mainTabFresh()");
+								if(new_message_count < count){
+									//新消息震动提示
+									if (vibrate=='true') {
+										plus.device.vibrate(100);
+									}
+									//弹出通知
+									if(push == "true") {
+										plus.push.createMessage("你有"+count+"条新消息","",{
+											title:'微众',
+											cover:true
+										});
+									}else{
+										//新消息声音提示
+										if (beep=='true') {
+											document.getElementById('beep').play();
+										}
+									}
+								}
+								updateMsgCount(count);
+							}else{
+								var bdge = document.querySelector("#msg_count");
+								bdge.style.visibility = 'hidden';
+								//清除通知
+								plus.push.clear();
+							}
+							new_message_count = count;
+						},function(){
+							stop_auto_update_messages();
+							start_auto_update_messages();
+						}
+					);
+				},message_auto_update_time);
+			}
+
+			//停止自动刷新消息函数
+			function stop_auto_update_messages(){
+				clearInterval(messages_auto_update_interval);
+				messages_auto_update_interval = null;
+			}
+
+			/**
+			 * NJS的push写法，但是目前没有实现点击转到应用
+			 * @param {Object} count
+			 */
+			function pushNJSNotification(count){
+				var NotifyID = 1;
+				var Context = plus.android.importClass("android.content.Context");
+				var main = plus.android.runtimeMainActivity();
+				var Noti = plus.android.importClass("android.app.Notification");
+				var NotificationManager = plus.android.importClass("android.app.NotificationManager");
+				var nm = main.getSystemService(Context.NOTIFICATION_SERVICE)
+				var Notification = plus.android.importClass("android.app.Notification");
+				var mNotification = new Notification.Builder(main);
+				mNotification.setOngoing(true); //無效
+				mNotification.setContentTitle("微众");
+				mNotification.setContentText("你有"+count+"条新消息");
+				mNotification.setSmallIcon(17301620);
+				mNotification.setTicker("PadInfo");
+
+
+				mNotification.setNumber(count);
+				var mNb = mNotification.build();
+				nm.notify(NotifyID , mNb);
+			}
+
+		</script>
+	</body>
+</html>

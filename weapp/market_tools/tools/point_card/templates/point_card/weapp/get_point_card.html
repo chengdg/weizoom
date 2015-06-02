@@ -1,0 +1,32 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/webapp_static/default/css/default.css">
+<link type="text/css" rel="stylesheet" href="/markettools_static/point_card/css/point_card.css">
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} detailPage" data-title="{{ page_title }}">
+	<div class="p20">
+		<form class="xui-activity-form xui-form-box" method="post" action="">
+			<fieldset>
+				<div>
+					<input name="point_card_id" type="text" placeholder="请输入充值卡号"/>
+				</div>
+				<div>
+					<input name="password" type="password" placeholder="请输入充值密码"/>
+				</div>
+			</fieldset>
+			<fieldset>
+				{% if errorMsg %}
+				<div style="color:red;" class="red">{{errorMsg}}</div>
+				{% endif %}
+				<div class="ui-form-btn-lay xui-confirm-btn w150">
+					<button type="submit" id="btnSubmit" class="btn btn-submit">确认充值</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>
+{% endblock %}

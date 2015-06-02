@@ -1,0 +1,356 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+	<ul class="breadcrumb" xmlns="http://www.w3.org/1999/html">
+		<li><a href="/mall/editor/orders/">订单列表</a><span class="divider">/</span></li>
+		<li class="active">订单详情</li>
+	</ul>
+
+	<form class="form-horizontal" method="post" id="order-form" action>
+		<fieldset>
+
+			<div class="control-group">
+				<label class="control-label">订单号：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.order_id }}</p>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">下单时间：</label>
+				<div class="controls">
+					<p class="pt5 m0"> {{ order.created_at|date:"Y-m-j H:i" }}</p>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">订单状态：</label>
+				<div class="controls">
+					{% if order %}
+						<select id="order_status" name="order_status" style="width: 150px;">
+							<option value="0" {% ifequal order.status 0 %}selected=""{% endifequal %}>待支付</option>
+							<option value="1" {% ifequal order.status 1 %}selected=""{% endifequal %}>已取消</option>
+							<option value="2" {% ifequal order.status 2 %}selected=""{% endifequal %}>已支付</option>
+							<option value="3" {% ifequal order.status 3 %}selected=""{% endifequal %}>待发货</option>
+							<option value="4" {% ifequal order.status 4 %}selected=""{% endifequal %}>已发货</option>
+							<option value="5" {% ifequal order.status 5 %}selected=""{% endifequal %}>已完成</option>
+						</select>
+					{% else %}
+						<p class="pt5 m0">
+							{% ifequal order.status 0 %}
+								待支付
+							{% endifequal %}
+							{% ifequal order.status 1 %}
+								已取消
+							{% endifequal %}
+							{% ifequal order.status 2 %}
+								已支付
+							{% endifequal %}
+							{% ifequal order.status 3 %}
+								待发货
+							{% endifequal %}
+							{% ifequal order.status 4 %}
+								已发货
+							{% endifequal %}
+							{% ifequal order.status 5 %}
+								已完成
+							{% endifequal %}
+						</p>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">数量：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.number }}</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">微众卡：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.weizoom_card_id }}</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">总金额：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.total_price }}</p>
+				</div>
+			</div>
+			{% if order.integral %}
+			<div class="control-group">
+				<label class="control-label">使用积分：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.integral }}</p>
+				</div>
+			</div>
+			{% endif %}
+			{% if coupon %}
+				<div class="control-group">
+				<label class="control-label">优惠券：</label>
+				<div class="controls"><p class="pt5 m0">{{ coupon.coupon_id }}</p>
+				</div>
+			</div>
+			{% endif %}
+
+			{% if order.status <= 2 %}
+			
+			<div class="control-group">
+				<label class="control-label">发票：</label>
+				<div class="controls">
+					{% if order %}
+						<select id="bill_type" name="bill_type" style="width: 100px;">
+							<option value="0" {% ifequal order.bill_type '0' %}selected=""{% endifequal %}>个人</option>
+							<option value="1" {% ifequal order.bill_type '1' %}selected=""{% endifequal %}>公司</option>
+							
+						</select>
+					{% else %}
+						<p class="pt5 m0">
+							{% ifequal order.bill_type '0' %}
+								个人
+							{% endifequal %}
+							{% ifequal order.bill_type '1' %}
+								公司
+							{% endifequal %}
+						</p>
+					{% endif %}
+					<input type="text" class="input-xlarge" id="bill" name="bill" style="width: 250px" placeholder="输入发票信息" value="{% if order %}{{ order.bill }}{% endif %}"  />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">邮费：</label>
+				<div class="controls">
+				<input type="text" class="input-xlarge" id="postage" name="postage" style="width: 350px" placeholder="输入邮费" value="{% if order.postage %}{{ order.postage }}{% endif %}"  data-validate='price'/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人：</label>
+				<div class="controls">
+				<input type="text" class="input-xlarge" id="ship_name" name="ship_name" style="width: 350px" placeholder="输入收货人" value="{% if order.ship_name %}{{ order.ship_name }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人电话：</label>
+				<div class="controls">
+				<input type="text" class="input-xlarge" id="ship_tel" name="ship_tel" style="width: 350px" placeholder="输入收货人电话" value="{% if order.ship_tel %}{{ order.ship_tel }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人地址：</label>
+				<div class="controls">
+				<input type="text" class="input-xlarge" id="ship_address" name="ship_address" style="width: 350px" placeholder="输入收货人地址" value="{% if order.ship_address %}{{ order.ship_address }}{% endif %}" data-validate="required-none" />
+				<div class="errorHint"></div>
+				</div>
+			</div>
+			{% else %}
+			<div class="control-group">
+				<label class="control-label">发票：</label>
+				<div class="controls">
+					<p class="pt5 m0">
+						{% ifequal order.bill_type '0' %}
+							个人,
+						{% endifequal %}
+						{% ifequal order.bill_type '1'%}
+							公司,
+						{% endifequal %}
+						{{ order.bill }}
+					</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">邮费：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.postage }}</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.ship_name }}</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人电话：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.ship_tel }}</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">收货人地址：</label>
+				<div class="controls"><p class="pt5 m0">{{ order.ship_address }}</p>
+				</div>
+			</div>
+			{% endif %}
+
+			<hr />
+			<h1 class="tc f20">订单出货情况</h1>
+			<div class="control-group wine_password">
+				<div class="m5 ml20">
+					<table width='100%'>
+					{% if order_has_products %}
+						{% for order_has_product in order_has_products %}
+						<tr>
+						    <td>
+								 <label class="checkbox inline mr10">
+								{% ifequal order_has_product.is_shiped 1 %}
+									<input class="tx_checked" type="checkbox" name="product_id"  checked="checked" value="{{order_has_product.id}}"/>
+								{% else %}
+									
+			                    	<input class="tx_checked" type="checkbox" name="product_id"  value="{{order_has_product.id}}"/>
+								{% endifequal %}
+			                    
+			                     </label>
+							</td>
+							<td width="25%">商品： {{ order_has_product.product.name }}</td>
+							<td width="25%">数量：{{ order_has_product.number }} </td>
+							<td width="25%">总价：{{ order_has_product.total_price }} </td>
+							<td width="20%">
+								{{ order_has_product.created_at|date:"Y-m-j H:i" }}
+							</td>
+						</tr>
+						{% endfor %}
+					{% else %}
+						<tr><td width='100%' align="center">暂无数据</td></tr>
+					{% endif %}
+					</table>
+				</div>
+			</div>
+			<hr />
+
+			
+			<div class="control-grop">
+				<ul class="nav nav-tabs" id="myTab"> 
+			      <li class="active"><a href="#home">订单备注</a></li> 
+			      <li><a href="#profile">订单状态日志</a></li> 
+			      <li><a href="#messages">订单后台操作日志</a></li> 
+			    </ul> 
+			       
+			    <div class="tab-content"> 
+			      <div class="tab-pane active" id="home">
+					<div class="controls">
+					<textarea class="input-xlarge" id="remark" name="remark" style="height: 100px;"></textarea>
+
+					</div>
+			      </div> 
+			      <div class="tab-pane" id="profile">
+			      		<div class="m5 ml20">
+							<table width='100%' border='1'>
+							{% if order_status_logs %}
+							 	<th>时间</th>
+							 	<th>状态</th>
+							 	<th>备注</th>
+							 	<th>操作人</th>
+								{% for order_status_log in order_status_logs %}
+								<tr>
+									<td width="20%">
+									{{ order_status_log.created_at|date:"Y-m-j H:i" }}
+									</td>
+									<td width="25%">
+											{% ifequal order_status_log.pre_status 0 %}
+												待支付
+											{% endifequal %}
+											{% ifequal order_status_log.pre_status 1 %}
+												已取消
+											{% endifequal %}
+											{% ifequal order_status_log.pre_status 2 %}
+												已支付
+											{% endifequal %}
+											{% ifequal order_status_log.pre_status 3 %}
+												待发货
+											{% endifequal %}
+											{% ifequal order_status_log.pre_status 4 %}
+												已发货
+											{% endifequal %}
+											{% ifequal order_status_log.pre_status 5 %}
+												已完成
+											{% endifequal %}
+											->
+											{% ifequal order_status_log.cur_status 0 %}
+												待支付
+											{% endifequal %}
+											{% ifequal order_status_log.cur_status 1 %}
+												已取消
+											{% endifequal %}
+											{% ifequal order_status_log.cur_status 2 %}
+												已支付
+											{% endifequal %}
+											{% ifequal order_status_log.cur_status 3 %}
+												待发货
+											{% endifequal %}
+											{% ifequal order_status_log.cur_status 4 %}
+												已发货
+											{% endifequal %}
+											{% ifequal order_status_log.cur_status 5 %}
+												已完成
+											{% endifequal %}
+									</td>
+									<td width="25%">{{ order_status_log.remark }} </td>
+									<td width="25%">{{ order_status_log.operator }} </td>
+									
+								{% endfor %}
+							{% else %}
+								<tr><td width='100%' align="center">暂无数据</td></tr>
+							{% endif %}
+							</table>
+						</div>
+			      </div> 
+			      <div class="tab-pane" id="messages">
+			      		<div class="m5 ml20">
+							<table width='100%' border='1'>
+							{% if order_operation_logs %}
+							 	<th>时间</th>
+							 	<th>操作</th>
+							 	<th>备注</th>
+							 	<th>操作人</th>
+								{% for order_operation_log in order_operation_logs %}
+								<tr>
+									<td width="20%">
+									{{ order_operation_log.created_at|date:"Y-m-j H:i" }}
+									</td>
+									<td width="25%">{{ order_operation_log.action }}</td>
+									<td width="25%">{{ order_operation_log.remark }} </td>
+									<td width="25%">{{ order_operation_log.operator }} </td>
+									
+								{% endfor %}
+							{% else %}
+								<tr><td width='100%' align="center">暂无数据</td></tr>
+							{% endif %}
+							</table>
+						</div>
+			      </div> 
+			    </div> 
+
+			</div>
+			<div class="control-group mt5 mr5">
+				<div class="controls ml20 tc">
+					<input id="submitBtn" class="btn btn-success" type="submit" value="提  交">
+				</div>
+			</div>
+		</fieldset>
+	</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		$(function () { 
+        $('#myTab a:last').tab('show');//初始化显示哪个tab 
+      
+        $('#myTab a').click(function (e) { 
+          e.preventDefault();//阻止a链接的跳转行为 
+          $(this).tab('show');//显示当前选中的链接及关联的content 
+        }) 
+      });
+      //提交
+		$('#order-form').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		}); 
+	</script>
+{% endblock %}

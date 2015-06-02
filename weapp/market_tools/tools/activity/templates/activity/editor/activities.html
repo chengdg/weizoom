@@ -1,0 +1,81 @@
+﻿{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">活动列表</li>
+	</ul>
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="./activity/create/">添加活动<i class="icon-plus icon-white"></i></a>
+	</span>
+</div>
+
+{% if activities %}
+<div>
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>活动名称</th>
+				<th>开始时间</th>
+				<th>结束时间</th>
+				<th>报名人数</th>
+				<th>状态</th>
+				<th>操作</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+			{% for activity in activities %}
+			<tr>
+				<!--
+				<td>
+						http://{{ ''|get_site_domain }}/market_tools/activity/m/activity/{{ webapp_id }}/{{ activity.id }}/
+				</td>
+				-->
+				<td width="150" style="word-break:break-all; overflow:auto;">
+					<a href="./activity/update/{{ activity.id }}/">{{ activity.name }}</a>
+				</td>
+				<td>
+					{{ activity.start_date }}
+				</td>
+				<td>
+					{{ activity.end_date }}
+				</td>
+				<td>
+					<div>
+					<a href="./activity_member/list/?activity_id={{ activity.id }}">{{ activity.member_count }}</a>
+						
+					</div>
+				</td>
+				<td>
+					{{ activity.status_text }}
+				</td>
+				<td>
+					{% if activity.can_delete %}
+						<a class="btn btn-danger wx_delete" href="./activity/delete/{{ activity.id }}/">删除</a>
+					{% endif %}
+					{% if activity.can_stop %}
+						<a class="btn btn-warning" href="./activity_status/update/{{ activity.id }}/?action=stop">暂停</a>
+					{% endif %}
+					{% if activity.can_restart %}
+						<a class="btn btn-success" href="./activity_status/update/{{ activity.id }}/?action=restart">重启</a>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div data-ui-role="paginator" data-pageinfo='{{pageinfo|safe}}'></div>
+</div>
+{% else %}
+	当前还没有活动，请添加活动
+{% endif %}
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

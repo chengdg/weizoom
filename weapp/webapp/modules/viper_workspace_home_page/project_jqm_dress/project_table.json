@@ -1,0 +1,11 @@
+{
+ "inner_name": "dress", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "\u7b80\u5355\u7231", 
+ "template_project_id": 0, 
+ "type": "jqm", 
+ "id": 11, 
+ "css": "", 
+ "pagestore": "mongo"
+}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block css %}
+<style type="text/css">
+#guest-form input[type='text'], #guest-form textarea {
+    width: 330px;
+}
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+<form class="form-horizontal" method="post" id="guest-form">
+    <fieldset>
+     <div class="control-group">
+            <label class="control-label" for="detail">反馈内容：</label>
+            <div class="controls">
+                <textarea rows="5" class="input-xlarge" id="detail" name="detail" placeholder="输入反馈内容" ></textarea>
+            </div>
+        </div>
+
+
+    </fieldset>
+
+    <fieldset>
+        <legend></legend>
+        <div class="control-group">
+            <div class="controls">
+                <input type="button" class="btn btn-success" id="feedid" value="&nbsp;&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;" />
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}
+
+{% block base_js %}{% block js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#feedid').click(function(event){
+            var detail = $('#detail').val();
+            if (detail == ''){
+               alert('亲，请输入反馈意见')
+             }
+            W.getApi().call({
+                app: 'operation',
+                api: 'feedback/add',
+                method: 'post',
+                args: {
+                    detail: detail
+                },
+                success: function(data) {
+                    
+                    window.close();
+                },
+                error: function(resp) {
+                   alert('提交失败');
+                },
+                scope: this
+            });
+        });
+
+        
+        
+    });
+</script>
+{% endblock %}
+{% endblock %}

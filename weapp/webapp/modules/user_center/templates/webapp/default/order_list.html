@@ -1,0 +1,66 @@
+{% extends "jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/webapp_static/simple_fashion/css/simple_fashion.css">
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
+    <div data-role="header" data-theme="x">
+		<h1>订单信息</h1>
+	</div>
+	<div data-role="content">
+        <div class="orderList">
+            {% if orders %}
+            <ul>
+                {% for order in orders %}
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
+                <li>
+                    <p>
+                        <span class="fl">订单号：{{ order.order_id }}</span>
+                        <span class="fr">
+                        {% ifequal order.status 0 %}
+                                <span class="xui-text-red">[待支付]</span>
+                            {% endifequal %}
+                            {% ifequal order.status 1 %}
+                                [已取消]
+                            {% endifequal %}
+                            {% ifequal order.status 2 %}
+                                <span class="xui-text-green">[已支付]</span>
+                            {% endifequal %}
+                            {% ifequal order.status 3 %}
+                                <span class="xui-text-orange">[待发货]</span>
+                            {% endifequal %}
+                            {% ifequal order.status 4 %}
+                                <span class="xui-text-green">[已发货]</span>
+                            {% endifequal %}
+                            {% ifequal order.status 5 %}
+                                <span class="xui-text-green">[已完成]</span>
+                            {% endifequal %}
+                        </span>
+                        </span>
+                    </p>
+                    <p>
+                        <span class="fl">共 {{ order.product_count }} 件</span>
+                        <span class="fr textTime">{{ order.created_at|date:"Y-m-j H:i" }}</span>
+                    </p>
+                </li>
+                </a>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="error-info">
+            您还没有订单信息
+            </div>
+            {% endif %}
+        </div>
+        <!-- <div class="xui-btn-layer-footer xui-form-box">
+            <a data-role="button" class="btn-back" href="/m/rice/user_center/{{ webapp_id }}/">&nbsp;&nbsp;返 回&nbsp;&nbsp;</a>
+        </div> -->
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

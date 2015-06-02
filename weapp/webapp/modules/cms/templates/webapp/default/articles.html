@@ -1,0 +1,51 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+    <style>
+        body,html,.ui-page,.ui-content{
+            background: #fff;
+        }
+
+    </style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-articleListPage" data-title="{{ page_title }}">
+    {% if has_category %}
+    <ul data-ui-role="top-dropdown-nav">
+        <li></li>
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=cms&model=category&action=get&rid=0" data-role="button">全部</a></li>
+        {% for articles_category in articles_categories %}
+        <li><a href="./?woid={{request.webapp_owner_id}}&module=cms&model=category&action=get&rid={{articles_category.id}}" data-role="button">{{articles_category.name}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div data-role="content" data-theme="x" style="padding: 15px;">
+        {% if articles %}
+		<div class="xui-list mt10">
+			<ul data-role="listview" data-theme="x" data-icon="false">
+                {% for article in articles %}
+				<li>
+					<a href='./?woid={{request.webapp_owner_id}}&module=cms&model=article&action=get&article_id={{article.id}}'>
+                        <!-- <div class="img"><img src="/webapp_static/dress/imgs/pc_01.jpg"></div> -->
+						<h3>{{article.title}}</h3>
+                        <p>{{article.summary}}</p>
+                        <p class="mt10">{{article.created_at|date:"Y年m月j日 H:i"}}</p>
+                    </a>
+				</li>
+                {% endfor %}
+			</ul>
+    	</div>
+        {% else %}
+        <h2>该分类中无数据</h2>
+        {% endif %}
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}

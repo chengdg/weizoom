@@ -1,0 +1,114 @@
+{% load project_filter %}
+{% load account_filter %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		{% block customerized_meta %}{% endblock %}
+
+		<!--
+		<title>{% block title %}{{ system_name }}{% endblock %}</title>
+		-->
+		<title>微众云商通——微商城管理</title>
+
+		<!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if not debug_merged_css %}
+		<!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/lib/bootstrap-3.3.2/css/bootstrap.min.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/lib/jquery/jquery-ui-1.10.3/css/redmond/jquery-ui-1.10.3.custom.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/lib/uploadify-3.2.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/bootstrap_enhance.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/base.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/common.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
+
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/widget.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/sidebar_menu.css">
+
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/mall_product.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/mall_order.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/fanses_remark.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/mall_promotion.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/mall_home.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/member.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/weixin_advance_manage.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/weixin_message.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/mass_message.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/new_weixin_message.css">
+		<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/auth.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/weixin_template_message.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/weixin_fun_date.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/direct_follow.css">
+		<!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+		<link type="text/css" rel="stylesheet" media="all" href="/static/css/all.css">
+		{% endif %}
+		<!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+
+		{% block css %}{% endblock %}
+
+	</head>
+	<body>
+		{% block content %} {% endblock %}
+
+		<!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% if is_use_dev_resource %}
+		<!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+			<script type="text/javascript" src="/static_v2/lib/jquery/jquery-1.11.2.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/jquery/jquery-migrate-1.2.1.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/jquery.tmpl.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/jquery/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/jquery/jquery-ui-timepicker-addon.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/jquery.uploadify-3.2.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/jquery.dotdotdot.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/jquery.dotdotdot.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/handlebars-v3.0.1.js"></script>
+
+			<script type="text/javascript" src="/static_v2/lib/bootstrap-3.3.2/js/bootstrap.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/underscore-1.7.0.min.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/backbone-1.1.2.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/spin-1.3.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/stacktrace-min-0.4.js"></script>
+			<script type="text/javascript" src="/static_v2/lib/echarts-2.0.4/js/echarts-plain.js"></script>
+
+			<script type="text/javascript" src="/static_v2/js/system/system.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/debug.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/resource.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/api.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/dialog.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/swfobject.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/validate.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/loading.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/global_hook.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/zero_clipboard.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/emotion.js"></script>
+			<script type="text/javascript" src="/static_v2/js/system/template-0.9.js"></script>
+			<!-- views start -->
+			{{ weapp_models|safe }}
+			<!-- views end -->
+
+			<!-- views start -->
+			{{ weapp_views|safe }}
+			<!-- views end -->
+
+			<!-- dialogs start -->
+			{{ weapp_dialogs|safe }}
+			<!-- dialogs end -->
+		<!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
+		{% else %}
+			{{ ''|load_templates_v2|safe }}
+			<script type="text/javascript" src="/static/js/all.js"></script>
+		{% endif %}
+		<!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+
+		<script type="text/javascript" src="/resource_js/"></script>
+		{% block base_js %}{% endblock %}
+		<div class="wui-rightNav">
+			<a title="数据挖掘" href="http://data.weizoom.com/?token={{token}}"></a>
+			<a title="粉丝沟通" href="http://weibo.weizoom.com/?token={{token}}"></a>
+			<a title="微信沟通" href="/new_weixin/outline/"></a>
+			<a title="微商城" href="/mall/outline/get/"></a>
+		</div>
+	</body>
+</html>

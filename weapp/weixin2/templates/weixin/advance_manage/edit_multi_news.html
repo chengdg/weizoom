@@ -1,0 +1,62 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-weixin-editMaterialPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/new_weixin/materials/">高级管理</a></li>
+			<li><a href="/new_weixin/materials/">图文管理</a></li>
+			<li class="active">{% if material_id %}更新{% else %}新建{% endif %}多图文</li>
+		</ul>
+	</div>
+
+	<div class="xui-editMaterialPage xa-editMaterialPage pr"></div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">	
+$(document).ready(function() {
+
+    W.ISUNLOADALERT = true;
+    var newsesJsonStr = '{{ newses|safe }}';
+    //var returnUrl = '{{ return_url }}';
+    var returnQueryString = '{{ return_query_string|safe }}';
+    var materialId = {% if material_id %}{{ material_id }}{% else %}-1{% endif %};
+
+    $(document).ready(function() {
+        $('#title').focus();
+
+        var editNewsPanel = new W.view.weixin.EditNewsPanel({
+            el: '.xa-editMaterialPage',
+            mode: 'multi-news',
+            initCount: 2,
+            materialId: materialId,
+            newses: $.parseJSON(newsesJsonStr)
+        });
+
+        editNewsPanel.bind('finish-create-material', function(data) {
+            window.location.href = '/new_weixin/materials/'
+        });
+
+        // 滚动浮动在底部
+        var stickyMenu = function(){
+            var winScrollTop = $(window).scrollTop();
+        　　var scrollHeight = $(document).height();
+        　　var windowHeight = $(window).height();
+            var gap = scrollHeight - winScrollTop - windowHeight;
+            if( gap < 144 ){
+                $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+            }else{
+                $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+            }  
+        };
+        stickyMenu();
+        $(window).bind('scroll resize',(function() {
+            stickyMenu();
+        }));
+    });
+});
+</script>
+{% endblock %}

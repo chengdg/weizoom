@@ -1,0 +1,66 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.checkbox_group' %}
+<!-- =====> viper:checkbox_group component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="p5" 
+>
+{% endif %}
+    <div class="control-group">
+        <label class="control-label" for="{{component|get_component_name}}">{{component.model.label}}：</label>
+        <div  class="controls">
+            <div id="{{component.model.id}}" class="wx-checkboxGroup">
+            {% if in_design_mode %}
+                {{ component|join_sub_components_html|safe }}
+            {% else %}
+                {% ifequal component.model.datasource_field '#' %}
+                    {{ component|join_sub_components_html|safe }}
+                {% else %}
+                    {% for item in component|get_related_checkbox_items:request %}
+                    {% with item|get_component_name as name %}
+                    <label class="checkbox inline">
+                        <input id="{{name}}" type="checkbox" value="{{item.model.text}}" name="{{name}}" {% if page.record|is_box_checked:item %}checked="checked"{% endif %}/><span>{{item.model.text}}</span>
+                    </label>
+                    {% endwith %}
+                    {% endfor %}
+                {% endifequal %}
+            {% endif %}
+            </div>
+            <div class="errorHint">
+            </div>
+        </div>
+    </div>
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:checkbox_group component -->
+{% endifequal %}    
+
+
+
+{% ifequal component.type 'viper.checkbox_button' %}
+    {% with component|get_component_name as name %}
+        <label class="checkbox inline" data-cid="{{component.cid}}">
+            <input 
+                id="{{name}}" 
+                type="checkbox" 
+                value="{{component.model.value}}" 
+                name="{{name}}" 
+                {% if request.in_generate_mode %}
+                <% if "{{component.model.value}}" == record.{{name}} %>checked="checked"<% endif %>
+                {% else %}
+                {% if page.record|is_box_checked:component %}checked="checked"{% endif %}
+                {% endif %}
+            /><span>{{component.model.text}}</span>
+            {% if in_design_mode %}
+            <div class="errorHint">name={{component.model.name}}</div>
+            {% endif %}
+        </label>
+    {% endwith %}
+{% endifequal %}

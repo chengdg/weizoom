@@ -1,0 +1,267 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style>
+.controls input[type="radio"] {
+	margin-top: -2px;
+	margin-left: -1px;
+	margin-right: 5px;
+}
+
+button[class="hidden"] {
+	display: none;
+}
+
+.table {
+	max-width: 77%;
+	margin-left: 5px;
+}
+
+th {
+	background-color: #6C6C6C;;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/market_tools/vote/">投票列表</a><span class="divider">/</span></li>
+	<li class="active">{% if vote %}更新{% else %}添加{% endif %}投票</li>
+</ul>
+
+<div class="form-horizontal" id="editForm">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">投票名称：</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name" placeholder="长度小于18个字符" value="{% if vote %}{{ vote.name }}{% endif %}"  data-validate="{% if vote %}required{% else %}required,noDuplicateVoteName{% endif %}" data-validate-max-length="18" />
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label  class="control-label" for="detail">详情：</label>
+			<div class="controls">
+				<textarea class="input-xlarge hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="300" data-width="350">{% if vote %}{{ vote.detail|format_emotion|safe }}{% endif %}</textarea>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label">非会员可参与：</label>
+			<div class="controls">
+				<label class="checkbox inline">
+					<input type="checkbox" id="is_non_member" name="is_non_member"
+					       {% if vote.is_non_member or vote == None %}checked="checked"{% endif %}>
+				</label>
+ 			</div>
+		</div>
+		
+		<div class="control-group">
+			<label  class="control-label" for="show_style">展示样式：</label>
+			<div class="controls">
+				<input type="radio" value="0" style="margin-top:-2px" name="show_style" id="matrix" class="m10 p20" {% if vote %}{% ifequal vote.show_style 0 %}checked{% endifequal %}{% else %}checked{% endif %} {% if vote %}disabled{% endif %}>&nbsp;
+				<img src="/markettools_static/vote/img/show_style_matrix.png"></img>
+
+				<input type="radio" {% if vote %}{% ifequal vote.show_style 1 %}checked{% endifequal %}{% endif %} value="1" style="margin-top:-2px; margin-left:10px" name="show_style" id="line" {% if vote %}disabled{% endif %}>&nbsp;
+				<img src="/markettools_static/vote/img/show_style_line.png"></img>
+				<div class="errorHint" style="margin-left:175px"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label  class="control-label" for="award">奖励：</label>
+			<div class="controls" id="prize_selector"  data-ui-role="prize-selector" data-init-prizeinfo='{% if vote %}{{ vote.award_prize_info|safe }}{% else %}{% endif %}'></div>
+		</div>
+
+		<div class="control-group">
+			<label  class="control-label" for="options_list">票项列表：</label>
+			<div id="vote-options-panel">
+			</div>
+		</div>
+		
+		<!--
+		<div class="control-group">
+			<label class="control-label">选项：</label>
+			<div class="controls">
+				<label class="checkbox inline">
+					<input type="checkbox" name="enable_other_options" value="{% if vote %}{{ vote.enable_other_options }}{% else %}0{% endif %}" {% if vote.enable_other_options == 1 %}checked="checked"{% endif %} disabled="disables">启用会员输入其他选项
+				</label><br>
+ 			
+				<label class="checkbox inline">	
+					<input type="checkbox" name="is_sort_by_votes" value="{% if vote %}{{ vote.is_sort_by_votes }}{% else %}0{% endif %}" {% if vote.is_sort_by_votes %}{% else %}checked="checked"{% endif %} disabled="disables">自动按最高票数排序
+				</label>
+				<div style="margin-top:5px;">
+			        <input type="radio" checked="checked" value="1" name='reward_points_for_vote' disabled="disabled">不奖励积分
+			        <input type="radio" value="0" name='reward_points_for_vote' disabled="disabled">奖励积分
+           		</div>
+ 			</div>
+		</div>
+		-->
+
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			{% if vote %}
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="updateBtn" value="&nbsp;&nbsp;更&nbsp;&nbsp;新&nbsp;&nbsp;" />
+			</div>
+			{% else %}
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;保&nbsp;&nbsp;存&nbsp;&nbsp;" />
+			</div>
+			{% endif %}
+		</div>
+	</fieldset>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		voteId = {% if vote %}{{ vote.id }}{% else %}null{% endif %};
+
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+		
+		var voteOptions =  {% if vote_options %}"{{ vote_options }}"{% else %} null {% endif %};
+        if (voteOptions) {
+            voteOptions = $.parseJSON('{{ vote_options|safe }}');
+        }
+
+        var showStyle = {% if vote %}{% if vote.show_style == 1 %}"line"{% else %}"matrix"{% endif %}{% else %}"matrix"{% endif %};
+        var voteOptionsView = new W.view.market_tools.vote.VoteOptionsListView({
+            el: $('#vote-options-panel'),
+            voteOptions : voteOptions,
+            showStyle: showStyle,
+        });
+        voteOptionsView.render();
+
+        function wrapVoteOption($optionEl) {
+			var voteOptionName = $optionEl.find('[id="vote_option_name"]').val();
+        	var picUrl = $optionEl.find('img').eq(0).attr('src');
+        	var optionId = $optionEl.attr('data-id');
+
+        	return {
+        		id: optionId,
+        		name: voteOptionName,
+        		pic_url: picUrl,
+        	}
+		}
+
+        function callVoteWriteApi(api, options, failed_call_back) {
+        	if (!W.validate($('#editForm'))) {
+        		if (failed_call_back) {
+        			failed_call_back();
+        		}
+				return false;
+			}
+
+			var optionsArr = [];
+			$('#vote_options_list tr').each(function(index, optionEl) {
+				optionsArr.push(wrapVoteOption($(optionEl)));
+			})
+
+			options.name = $('#name').val();
+			options.detail = $('[name=detail]').val();
+			options.show_style = $('input[name=show_style]:radio:checked').val();
+			
+			if ($('#is_non_member:checked').length > 0){
+				options.is_non_member = 1;
+			}
+			else {
+				options.is_non_member = 0;
+			}
+			
+			options.vote_options = JSON.stringify(optionsArr);
+
+			W.getLoadingView().show();
+			W.getApi().call({
+                app: 'market_tools/vote',
+                api: api,
+                method: 'post',
+                args: options,
+                success: function(data) {
+                	W.getLoadingView().hide();
+
+                	window.location.href = '/market_tools/vote/';
+                },
+                error: function(resp) {
+	                W.getLoadingView().hide();
+	                //TODO 通知错误信息
+	                W.getErrorHintView().show('保存失败, 请稍后重试！');
+	                if (failed_call_back) {
+	                	failed_call_back();
+	            	}
+                },
+                scope: this
+            });
+        }
+
+	 	function getPrizeSelectorSelectResult() {
+	 		return $('#prize_selector').data('view').getPrizeInfo();
+	 	}
+
+	    function modifyImageInputValidate() {
+	    	var showStyle = $('input[name=show_style]:radio:checked').val();
+			if (showStyle == '1') {
+				//line
+				$('input[name=vote_option_url]').attr('data-validate', '');
+			} else {
+				//matrix
+				$('input[name=vote_option_url]').attr('data-validate', 'require-image');
+			}
+	    }
+
+		//保存
+		$('#submitBtn').click(function() {
+			$('#submitBtn').attr('disabled', true);
+
+			modifyImageInputValidate();
+
+			var prizeInfo = getPrizeSelectorSelectResult();
+
+			callVoteWriteApi('/vote/create', {
+				prize_info: JSON.stringify(prizeInfo)
+			}, function() {
+				$('#submitBtn').attr('disabled', false);
+			});
+		});
+
+		//更新
+		$('#updateBtn').click(function() {
+			$('#updateBtn').attr('disabled', true);
+
+			modifyImageInputValidate();
+
+			var prizeInfo = getPrizeSelectorSelectResult();
+
+			callVoteWriteApi('/vote/update', {
+				id: voteId,
+				prize_info: JSON.stringify(prizeInfo)
+			}, function() {
+				$('#updateBtn').attr('disabled', false);
+			});
+		});
+
+		$('input[name=show_style]').click(function() {
+			var showStyle = $('input[name=show_style]:radio:checked').val();
+			if (showStyle == '1') {
+				//line
+				voteOptionsView.hide_image();
+				$('.vote_option_picurl').addClass('hidden');
+			} else {
+				//matrix
+				voteOptionsView.show_image();
+				$('.vote_option_picurl').removeClass('hidden');
+
+				voteOptionsView.render_image();
+			}
+		});
+	});
+</script>
+{% endblock %}
