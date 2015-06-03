@@ -497,7 +497,8 @@ def _export_orders_json(request):
 			source = 'weizoom_mall'
 		elif source_value == 0:
 			source = 'mine_mall'
-		order_list = order_list.filter(order_source=source_value)
+		if source_value != None:
+			order_list = order_list.filter(order_source=source_value)
 
 	# if request.user.is_weizoom_mall:
 	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_orders_weizoom_mall_for_other_mall(webapp_id)
