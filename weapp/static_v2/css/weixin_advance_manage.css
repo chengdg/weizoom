@@ -436,13 +436,13 @@
 	background-color: #fff;
 }
 .xui-editMaterialPage .xui-news-editor-box .xui-eidt-urlBox{
-	width: 367px;
+	/*width: 367px;
 	height: 195px;
 	background-color: #fff;
 	border: solid 1px #e6e6e6;
 	margin-right: 3px;
 	margin: 0 auto;
-	vertical-align: center;
+	vertical-align: center;*/
 }
 .xui-editMaterialPage .btn {
 	-webkit-border-radius: 3px;
@@ -468,7 +468,31 @@
 .xui-editMaterialPage .uploadify-button-text {
 	color: #066baf;
 }
-
+.xui-editMaterialPage .xui-help-box{
+	width:160px; 
+	float:right; 
+	position: relative; 
+	top: -20px; 
+	left: 15px;
+}
+.xui-editMaterialPage .xui-help-box .xui-helpIcon{
+	color: #fff;
+	background-color: #ccc;
+	width: 20px;
+	border-radius: 10px;
+	text-align: center;
+	line-height: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+.xui-editMaterialPage .xui-help-box .xui-help-info{
+	border:1px solid #aaa;
+	margin-top:-5px; 
+	background-color:#fff;
+	float: left;
+	padding: 15px 2px;
+	margin-left: 10px;
+}
 
 
 

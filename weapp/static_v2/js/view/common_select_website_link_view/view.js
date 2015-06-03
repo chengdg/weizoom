@@ -10,7 +10,7 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 	el: '',
 
 	events: {
-		'click .xa-news-editor-select-link-menu': 'onClickLinkMenu',
+		// 'click .xa-news-editor-select-link-menu': 'onClickLinkMenu',
 		'click .xa-close-link': 'onClickCloseLink'
 	},
 
@@ -109,7 +109,7 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
     },
 
     onClickCloseLink: function(event){
-    	this.setEditHtml(null);
+    	this.setEditHtml(null, true);
     },
 
     /**

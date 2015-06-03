@@ -23,7 +23,11 @@ W.view.weixin.NewsEditor = Backbone.View.extend({
 		// 'change input[name="change_action"]': 'changeAction',
 		'click .xa-edit-textShowBtn': 'onClickShowTextBox',
 		'click .xa-edit-urlShowBtn': 'onClickShowUrlBox',
-		'blur input[name="urlDisplayValue"]': 'onBlurUrlDisplayValue',
+		'blur input[name="urlDisplayValue"]': 'onBlurUrlDisplayValue',		
+		'click .xa-news-editor-select-link-menu': 'onClickLinkMenu',
+
+        'mouseover .xa-tips': 'onMouseoverTips',
+        'mouseout .xa-tips': 'onMouseoutTips',
 	},
 
 	onClickShowTextBox: function(event){	
@@ -142,7 +146,6 @@ W.view.weixin.NewsEditor = Backbone.View.extend({
 		this.webSiteLinkView = W.getSelectWebSiteLinkView({
 			el: '.xa-weixin-edit-urlBox'
 		});
-
 		/*
 		this.webSiteLinkView.bind('selected-url', function(data){
             var linkTarget = $.parseJSON(data);
@@ -154,6 +157,14 @@ W.view.weixin.NewsEditor = Backbone.View.extend({
 		this.countNews = options.countNews || this.preserveNewsIndex;
 
 		// this.changeContentBox();
+	},
+
+	onClickLinkMenu: function(event){		
+		//选择内部链接
+		this.webSiteLinkView = W.getSelectWebSiteLinkView({
+			el: '.xa-weixin-edit-urlBox'
+		});
+		this.webSiteLinkView.onClickLinkMenu(event);
 	},
 
 	/**
@@ -272,7 +283,7 @@ W.view.weixin.NewsEditor = Backbone.View.extend({
 			}
 
 			this.setEditPagePosition(news);
-			this.changeContentBox();
+			// this.changeContentBox();
 		}
 	},
 
@@ -404,5 +415,18 @@ W.view.weixin.NewsEditor = Backbone.View.extend({
                 $displayValueInput.val(linkTarget.data_path);
             }
         });
-	}
+	},
+
+    onMouseoverTips: function(event){
+        console.log('onMouseoverTips', this.wrapEl)
+        if ($('.xa-tips-wrap').length > 0) {
+            $('.xa-tips-wrap').css("display","block");
+        };
+    },
+
+    onMouseoutTips: function(event){
+        if ($('.xa-tips-wrap').length > 0) {
+            $('.xa-tips-wrap').css("display","none");
+        }
+    }
 });

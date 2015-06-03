@@ -1,7 +1,7 @@
 <script id="weixin-edit-news-view-tmpl-src" type="text/x-jquery-tmpl">
 	<div style="min-height:850px;padding:20px 25px;">
 		<div class="xui-simulator-box xa-simulator-box fl mb80"></div>
-		<div class="xui-news-editor-box xa-news-editor-box wx-thin-form fl ml20 mb80">
+		<div class="xui-news-editor-box xa-news-editor-box wx-thin-form fl ml20 mb80 pl25">
 			<div class="xui-news-editor-form xa-news-editor-form">
 				<form class="form-horizontal" method="get" id="news-form">
 					<div class="form-group">
@@ -49,36 +49,50 @@
 	                    </div>
 	                </div>
 
-					<div class="control-group mt5">
-						<span class="star_show"></span>
-						<label class="" for="text">内容</label>
-						<div class="controls xui-richHtml fr">
-							<span class="">
-								<span class="xui-edit-textShowBtu xa-edit-textShowBtn xui-editTab">文本</span><span class="xui-edit-urlShowBtu xa-edit-urlShowBtn xui-editTab ">跳转链接</span>
-							</span>
-							<div class="xa-weixin-edit-textAreaBox xui-hide">
-								<textarea rows="4" class="input-xlarge" id="text" name="text"
-									data-validate="require-notempty" 
-									data-force-validate="true"
-									maxlength="2000000" ></textarea>
-								<div class="errorHint" data-error-hint="正文不能为空"></div>
-							</div>
-							<div id="urlDiv" class="xa-weixin-edit-urlBox xui-eidt-urlBox xui-hide" style="padding:75px 45px 0 45px; margin-bottom: 15px;">
-								<label class="pa">链接地址</label>						
-								<div class="pl50">
-									<input type="hidden" id="url" name="url" value=""/>
-									<input type="hidden" id="linkTarget" name="link_target" value=""/>
-									<input type="text" id="urlDisplayValue" name="urlDisplayValue" placeholder="可手动输入连接地址" class="xui-link"/>
-									<div class="pr xui-selected-title-box xa-selected-title-box xui-hide">
-										<span class="xa-selected-title xui-selected-title"></span>
-										<button class="close xui-close xa-close-link" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
-									</div>
-									<a href='javascript:void(0);' class="xui-block xui-news-editor-select-link-dialog xa-news-editor-select-link-menu mt10" data-input="url">从微站选择</a>							
-									<div class="errorHint pr" style="bottom:-70px; left:-95px;" data-error-hint="正文不能为空"></div>
-								</div>
-							</div>
-						</div>
-					</div>
+                    <div class="control-group mt5">
+                        <span class="star_show"></span>
+                        <label class="" for="text">正文</label>
+                        <div class="controls xui-richHtml fr">
+                            <div class="xa-weixin-edit-textAreaBox">
+                                <textarea rows="4" class="input-xlarge" id="text" name="text"
+                                    data-validate="require-notempty" 
+                                    data-force-validate="true"
+                                    maxlength="2000000" ></textarea>
+                                <div class="errorHint" data-error-hint="正文不能为空"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group mt5 mb100" style="position: relative; left: -15px;top: 12px;">
+                        <label class="fl" for="summary">链接地址</label>
+                        <div class="controls">
+                            <div id="urlDiv" class="xa-weixin-edit-urlBox xui-eidt-urlBox">                      
+                                <div class="pl50">
+                                    <input type="hidden" id="url" name="url" value=""/>
+                                    <input type="hidden" id="linkTarget" name="link_target" value=""/>
+                                    <input type="text" id="urlDisplayValue" name="urlDisplayValue" placeholder="可手动输入连接地址" class="xui-link"/>
+                                    <div class="pr xui-selected-title-box xa-selected-title-box xui-hide">
+                                        <span class="xa-selected-title xui-selected-title"></span>
+                                        <button class="close xui-close xa-close-link" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
+                                    </div>
+
+                                
+                                    <a href='javascript:void(0);' class="xui-block xui-news-editor-select-link-dialog xa-news-editor-select-link-menu mt10" data-input="url">从微站选择</a>  
+
+                                    <div class="xui-help-box">
+		                                <div class="fl xa-tips xui-helpIcon" >?</div>
+		                                <div class="xa-tips-wrap xui-help-info xui-hide">
+		                                	设置链接地址后，除除群发图文外，其他模块使用的图文均不显示正文内容
+							            </div>
+						            </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
 				</form>
 			</div>
 		</div>

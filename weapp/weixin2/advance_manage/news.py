@@ -90,14 +90,15 @@ class SingleNews(resource.Resource):
 				new.display_index = index+1
 				new.title = news['title'].strip()
 				new.summary = news['summary'].strip()
+				new.text = news['text']
+
 				if news['url']:
-					new.text = ''
 					new.url = news['url']
 					new.link_target = link_target
 				else:
-					new.text = news['text']
 					new.url = ''
 					new.link_target = ''
+
 				new.pic_url = news['pic_url']
 				
 				new.is_show_cover_pic = True if (news.get('is_show_cover_pic', True) in ('true', 'yes', 'True', 'Yes', True)) else False
@@ -202,14 +203,15 @@ class MultiNews(resource.Resource):
 				new.display_index = index+1
 				new.title = news['title'].strip()
 				new.summary = news['summary'].strip()
+				new.text = news['text']
+
 				if news['url']:
-					new.text = ''
 					new.url = news['url']
 					new.link_target = link_target
 				else:
-					new.text = news['text']
 					new.url = ''
 					new.link_target = ''
+
 				new.pic_url = news['pic_url']
 				
 				new.is_show_cover_pic = True if (news.get('is_show_cover_pic', True) in ('true', 'yes', 'True', 'Yes', True)) else False

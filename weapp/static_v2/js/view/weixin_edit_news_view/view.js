@@ -54,11 +54,11 @@ W.view.weixin.EditNewsPanel = Backbone.View.extend({
         if (enableSummary) {
             this.$('.xa-weixin-edit-summaryBox').show();
             this.$el.find('#summary').attr('data-validate', 'require-notempty');
-            this.$('.xa-weixin-edit-urlBox').show();
+            // this.$('.xa-weixin-edit-urlBox').show();
             //this.$el.find('#url').attr('data-validate','customer-url');
         } else {
             this.$el.find('#summary').attr('data-validate', '');
-            this.$('.xa-weixin-edit-urlBox').show();
+            // this.$('.xa-weixin-edit-urlBox').show();
             //this.$el.find('#url').attr('data-validate','customer-url');
         }
 
