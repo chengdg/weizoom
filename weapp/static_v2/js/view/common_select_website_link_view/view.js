@@ -133,7 +133,7 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
                     newTitle.push(t)
                 else if(t.type == 'shengjing_app' && _this.tools['shengjing'])
                     newTitle.push(t)
-                else if(t.type == 'product')
+                else if(t.type == 'product'  || t.type == 'category')
                     newTitle.push(t)
             })
             
