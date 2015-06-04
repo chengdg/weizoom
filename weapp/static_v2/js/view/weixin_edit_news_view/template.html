@@ -59,15 +59,16 @@
                                     data-force-validate="true"
                                     maxlength="2000000" ></textarea>
                                 <div class="errorHint" data-error-hint="正文不能为空"></div>
+                                <br/>
                             </div>
                         </div>
                     </div>
 
-                    <div class="control-group mt5 mb100" style="position: relative; left: -15px;top: 12px;">
-                        <label class="fl" for="summary">链接地址</label>
-                        <div class="controls">
+                    <div class="control-group mt5 mb100" style="position: relative; left: -15px;">
+                        <label class="fl" for="summary" style="">链接地址</label>
+                        <div class="controls fr" style="width:360px">
                             <div id="urlDiv" class="xa-weixin-edit-urlBox xui-eidt-urlBox">                      
-                                <div class="pl50">
+                                <div class="h150">
                                     <input type="hidden" id="url" name="url" value=""/>
                                     <input type="hidden" id="linkTarget" name="link_target" value=""/>
                                     <input type="text" id="urlDisplayValue" name="urlDisplayValue" placeholder="可手动输入连接地址" class="xui-link"/>
