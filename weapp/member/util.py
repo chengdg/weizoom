@@ -99,11 +99,10 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 						if len(new.text.strip()) != 0:
 							if new.text.find('img') and new.text.find('http') == -1:
 								content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
-							#added by chuter
 							else:
-								content = new.summary
+								content = new.text
 						else:
-							content = new.summary						
+							content = new.text						
 
 						article.add_article(result_info['media_id'], new.title, content, new.url, None, new.summary)
 				result = weixin_api.upload_media_news(article)
