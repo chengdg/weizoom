@@ -97,7 +97,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 							new.url = '%s/workbench/jqm/preview%s' % (user_profile.host, new.url[1:])
 						
 						if len(new.text.strip()) != 0:
-							if new.text.find('img') and new.text.find('http') == -1:
+							if new.text.find('static') :
 								content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
 							else:
 								content = new.text
@@ -118,7 +118,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				return False
 		else:
 			return False
-
+ 
 	return True
 
 ########################################################################
