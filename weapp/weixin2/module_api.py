@@ -12,7 +12,7 @@ def get_news_url(news):
 		domain = 'http://%s/workbench/jqm/preview/?' % settings.DOMAIN
 		return news.url.replace('./?', domain)
 	else:
-		return 'http://{}/weixin/message/material/news_detail/mshow/{}/?opid=weizoom'.format(settings.DOMAIN, news.id)
+		return 'http://{}/weixin/message/material/news_detail/mshow/{}/'.format(settings.DOMAIN, news.id)
 
 
 def get_newses_object(newses, is_complement_url=False):
