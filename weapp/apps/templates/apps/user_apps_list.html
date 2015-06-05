@@ -97,7 +97,7 @@ a.xui-appList-app{
     </div>
     <div class="xui-appList " style="position:relative;top:14px;">
         {% for app_info in customized_app_infos %}
-        {% if app_info.home_url != '/market_tools/member_qrcode/' and app_info.home_url != '/market_tools/coupon/' %}
+        {% if app_info.home_url != '/market_tools/member_qrcode/' and app_info.home_url != '/market_tools/coupon/' and app_info.home_url != '/market_tools/weizoom_card/' %}
         <a class="xui-appList-app" href="{{app_info.home_url}}">
             <img src="{{app_info.app_logo|default:'/static/img/app/default.png'}}"/>
             <h2>{{app_info.app.display_name}}</h2>
