@@ -3,7 +3,6 @@
 __author__ = 'bert'
 
 import os
-import HTMLParser
 from django.conf import settings
 
 from core.wxapi.weixin_api import *
@@ -80,7 +79,6 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 	if len(openid_list) > 0 and material_id != None and material_id != '' and user:
 		news = News.get_news_by_material_id(material_id)
 		mpuser_access_token = _get_mpuser_access_token(user)
-		html_parser = HTMLParser.HTMLParser()
 		if mpuser_access_token:
 			weixin_api = get_weixin_api(mpuser_access_token)
 			try:
@@ -104,9 +102,8 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 							else:
 								content = new.text
 						else:
-							content = new.text
-						
-						content = html_parser.unescape(content)
+							content = new.text						
+
 						article.add_article(result_info['media_id'], new.title, content, new.url, None, new.summary)
 				result = weixin_api.upload_media_news(article)
 				message = NewsMessage(openid_list, result['media_id'])
