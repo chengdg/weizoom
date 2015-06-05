@@ -108,12 +108,22 @@
 		
 		//提交二维码表单
 		$(".xa-footerBtn").delegate('.xa-submit','click',function() {
+
+
 			var name = $.trim($('[name="name"]').val());
 			if(name==''){
 				W.showHint('error', '二维码名称不能为空');
 				return false;
 			}
-			
+			var jifen = $.trim($('[name="prize_score"]').val());
+			if(jifen==''){
+				W.showHint('error', '积分值不能为空');
+				return false;
+			}
+			if(!W.validate()){
+				W.showHint('error', '积分值格式错误！');
+				return false;
+			}
 			var textContent = $.trim($('[name="text_content"]').val());
 			var materialId = 0;
 			var chose = $(".xa-choseCoupon").html();
