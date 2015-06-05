@@ -9,9 +9,11 @@ ensureNS('W.view.weixin')
 W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
 	
     events: {
-        'click .xa-news-editor-select-link-menu': 'onClickLinkMenu'
+        'click .xa-news-editor-select-link-menu': 'onClickLinkMenu',
+        'click .xa-close-link': 'onClickCloseLink'
+
     },
-    
+
 	getTemplate: function() {
         $('#weixin-menu-link-tmpl-src').template('weixin-menu-dropdown-link-tmpl');
         return 'weixin-menu-dropdown-link-tmpl';
