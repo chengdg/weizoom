@@ -157,7 +157,8 @@
 			}
 
 			var replyType = 0;
-			if(materialId > 0) {
+			var activeLink = $('#edit-message-panel li[class="active"]').text();
+			if(activeLink === '图文消息' && materialId > 0) {
 				replyType = 2;
 				textContent = '';
 			} else {
