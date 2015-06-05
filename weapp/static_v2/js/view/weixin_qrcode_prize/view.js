@@ -117,6 +117,8 @@ W.view.markettool.prize.PrizeSelector = Backbone.View.extend({
                 score: _this.getInitializingScoreValue()
             });
 
+            this.$('#prizeTypesSelector').parent().find($('.errorHint')).remove();
+
             this.$('#prizeTypesSelector').after(html);
         } else if (value == '无奖励') {
             this.isNonPrizeType = true;

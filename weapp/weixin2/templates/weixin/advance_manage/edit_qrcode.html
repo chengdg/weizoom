@@ -102,6 +102,9 @@
 {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
+		$("#prize_selector").delegate('.xa-selectPrizeType','change',function() {
+			$('.has-error').find($('.errorHint')).hide();
+		});
 		$(".xa-footerBtn").delegate('.xa-cancel','click',function() {
 			window.location.href="/new_weixin/qrcodes/";
 		});
@@ -115,11 +118,15 @@
 				W.showHint('error', '二维码名称不能为空');
 				return false;
 			}
+			var selectVal = $.trim($('[name="prize_type"]').val());
 			var jifen = $.trim($('[name="prize_score"]').val());
-			if(jifen==''){
+			if(selectVal == "积分"){
+				if(jifen==''){
 				W.showHint('error', '积分值不能为空');
 				return false;
+				}
 			}
+
 			if(!W.validate()){
 				W.showHint('error', '积分值格式错误！');
 				return false;
@@ -250,7 +257,6 @@
                 selectCouponMoney = data[0].money;
                 couponRuleId = data[0].id;
                 remainedCount = data[0].remained_count;
-                xlog(data);
                 $(".xa-couponName").text(data[0].name+couponType);
                 $(".xa-couponName").addClass('w160');
                 $(".xa-choseCoupon").text("修改");
