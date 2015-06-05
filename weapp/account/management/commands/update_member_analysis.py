@@ -2,7 +2,7 @@
 
 import os
 import subprocess
-from datetime import datetime
+
 
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
@@ -12,7 +12,7 @@ from modules.member.models import *
 from account.models import *
 from account.util import *
 from core.wxapi import get_weixin_api
-
+import datetime
 
 class Command(BaseCommand):
 	help = "update member analysis"
@@ -22,17 +22,9 @@ class Command(BaseCommand):
 		print options
 		print args
 
-		# if len(args) != 2:
-		# 	print ' need webapp_id date_time(2015-05-05)!'
-		# 	return 
-		# if UserProfile.objects.filter(webapp_id=args[0]).count() == 0:
-		# 	print 'invalid webapp_id' 
-		# 	return 
-
-		# user_profile = UserProfile.objects.get(webapp_id=args[0])
-		
-		# date_time = args[1]
-		date_time = args[0]
+		date_time = datetime.datetime.now() + datetime.timedelta(days=-1)
+		date_time = date_time.strftime("%Y-%m-%d")
+		print date_time
 		user_profiles = UserProfile.objects.filter(is_mp_registered=True)
 		for user_profile in user_profiles:
 			print user_profile.webapp_id
@@ -48,9 +40,7 @@ class Command(BaseCommand):
 				if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
 					weixin_api = get_weixin_api(mpuser_access_token)
 					summary_result = weixin_api.api_get_user_summary(date_time, date_time)
-					print summary_result
 
-					print '----------------'
 
 					cumulate_result = weixin_api.api_get_user_cumulate(date_time, date_time)
 					print cumulate_result
