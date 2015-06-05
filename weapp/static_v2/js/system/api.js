@@ -66,17 +66,24 @@ W.Api = function() {
 			app = null;
 		}
 		var api_key = false;
-		if(options.app && options.api){
-			api_key = options.app + '_' + options.api;
-			if(this.cant_call[api_key]){
-				xerror('Api ERROR, repeat call!!!!!!!')
-				return;
-			}else{
-				this.cant_call[api_key] = true;
+		
+
+		var method = options.method || 'get';
+
+		if (method != 'get') {
+			if(options.app && options.api){
+				api_key = options.app + '_' + options.api;
+
+				if(this.cant_call[api_key]){
+					xlog('Api ERROR'+api_key)
+					xerror('Api ERROR, repeat call!!!!!!!')
+					return;
+				}else{
+					this.cant_call[api_key] = true;
+				}
 			}
 		}
 
-		var method = options.method || 'get';
 		var name = options.api || options.resource;
 		if (options.hasOwnProperty('resource')) {
 			name = options.resource;
