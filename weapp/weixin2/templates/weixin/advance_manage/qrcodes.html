@@ -47,6 +47,9 @@
 
 	<span class="breadcrumRightButton">
 		<a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode" href="/new_weixin/qrcode/"><span class="xui-add-btn-icon">+</span>新建二维码<i class="icon-plus icon-white"></i></a>
+		<div class="fr">
+			<input class="xui-searchInput  w250 xa-search-title h30" type="text"><a class="xui-searchBtn btn btn-default xa-searchBtn xa-search h30 ml0 mr5" style="min-width:50px!important;background: #f2f2f2;border-left-width: 0px; border-radius:0px;">搜索</a>
+		</div>
 	</span>
 	</div>
 </div>
@@ -60,7 +63,7 @@
 				<thead>
 					<tr>
 						<th style="width:25%;">
-							<p class="tx_searchable m0">
+							<p class=" m0">
 								<span class="">二维码名称</span>
 							</p>
 						</th>
@@ -124,9 +127,9 @@
 					doc: 'unfreeze_need_service_and_certified_account_restrictions-tmpl-src'
 				});
 			}
-			// var qrcodeView = new W.view.weixin.QrcodeView({
-			// 	el: $("body"),
-			// });
+			var qrcodeView = new W.view.weixin.QrcodeView({
+				el: $("body"),
+			});
 		});
 		$('body').delegate('.relation-text','click',function(event) {
 			var _this = this;

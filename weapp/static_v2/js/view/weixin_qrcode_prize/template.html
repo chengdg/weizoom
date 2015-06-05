@@ -17,7 +17,7 @@
 <script id="market-tool-prize-list-tmpl-src" type='text/x-jquery-tmpl'>
 
    <div id="prize_list" name="prize_list" class="xui-i-col clearfix" style="display:table-row;">
-       {{if name}}
+       {{if name && type === '优惠券'}}
            <span class="xa-couponName text_nowrap tl w160" style="display:inline-block;vertical-align: -webkit-baseline-middle;" data-id=${id} data-name=${name}>${name}(${couponType})</span>
            <a href="javascript:void(0);" class="xa-choseCoupon fr pr xui-firefoxhuk" style="padding-top: 3px;width:24px;">修改</a>
            <div class="xui-remaining tl" style="margin-right:-142px;color:#979292;">优惠券剩余库存${remainedCount}张</div>

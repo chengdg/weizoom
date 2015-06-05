@@ -128,7 +128,7 @@ textarea{resize:none}
 .w{width:100%}
 .h20{height:20px;}
 .h25{height:25px;}
-.h30{height:30px;}
+.h30{height:30px!important;}
 .h38{height:38px;}
 .h40{height:40px!important;}
 .h50{height:50px;}

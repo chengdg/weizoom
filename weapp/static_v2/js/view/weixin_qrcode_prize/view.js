@@ -147,6 +147,7 @@ W.view.markettool.prize.PrizeSelector = Backbone.View.extend({
                 html = $.tmpl(_this.prizeListTemplate, {
                     id: this.initPrizeInfo.id,
                     name: this.initPrizeInfo.name,
+                    type: this.initPrizeInfo.type,
                     couponType: this.initPrizeInfo.coupon_type,
                     remainedCount: this.initPrizeInfo.remained_count
                 });
@@ -175,7 +176,7 @@ W.view.markettool.prize.PrizeSelector = Backbone.View.extend({
                 success: function(data) {
                     var prizeList = data.items;
                     
-                    var html = $.tmpl(_this.prizeListTemplate, {
+                    var html = $.tmpl(_this.prizeListTemplate, { 
                         defaultSelectValue: defaultSelectValue,
                         prizeList: prizeList,
                         selected_prize_name: _this.getInitializingPrizeName()
