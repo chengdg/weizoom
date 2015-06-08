@@ -151,6 +151,11 @@ $(document).ready(function() {
 		offset_X:-31,
 	});
 
+	messageEditorPopup.bind('cancel-edit', function() {
+		messageEditorPopup.setContent('');
+		$('.xa-editing').removeClass('xa-editing');
+	});
+
 	messageEditorPopup.bind('finish-edit', function(message) {
 		messageEditorPopup.setContent('');
 
@@ -171,7 +176,7 @@ $(document).ready(function() {
 					var answer = message.answer.replace("<","&lt");
 				}
 				$('.xa-editing').append('<span class="xui-type">文本</span>'+answer);
-				$('.xa-answer-content a').attr('target', '_blank');
+				$('.xa-addTargetBlank a').attr('target', '_blank');
 			} else {
 				$('.xa-editing').append('<span class="xui-type">图文</span><a href="/new_weixin/news_preview/?id='+message.materialId+'" target="_blank">'+message.material.newses[0].title+'</a>');
 			}
@@ -186,16 +191,16 @@ $(document).ready(function() {
 		if($answer.find('div').length === 0) {
 			$answer.html("");
 		}
-		$('.xui-answersWrap a').attr('target', '_blank');
+		// $('.xui-answersWrap a').attr('target', '_blank');
 		if(message.type=="text") {
 			if (message.answer.indexOf("<a") >= 0) {
 				var answer = message.answer;
 			}else{
 				var answer=message.answer.replace("<","&lt");
 			}
-			$('.xa-data-answer').append('<div class="xui-answersWrap"><div class="fr"><a class="xa-edit-answer mr10" href="javascript:void(0);">编辑</a><a class="xa-close-answer" href="javascript:void(0);">删除</a></div><div class="xui-answerContent fl xa-answer-content" data-answer-type='
-			+message.type+' data-answer-content=\''+answer+'\'> <span class="xui-type">文本</span>'+answer+'</div></div>');
-			$('.xui-answersWrap a').attr('target', '_blank')
+			$('.xa-data-answer').append('<div class="xui-answersWrap"><div class="xui-answerContent fl xa-answer-content xa-addTargetBlank" data-answer-type='
+			+message.type+' data-answer-content=\''+answer+'\'> <span class="xui-type">文本</span>'+answer+'</div><div class="fr"><a class="xa-edit-answer mr10" href="javascript:void(0);">编辑</a><a class="xa-close-answer" href="javascript:void(0);">删除</a></div></div>');
+			$('.xa-addTargetBlank a').attr('target', '_blank');
 		} else {
 			$('.xa-data-answer').append('<div class="xui-answersWrap"><div class="xui-answerContent fl xa-answer-content" data-answer-type="news" data-answer-content="'+message.materialId+'"><span class="xui-type">图文</span><a href="/new_weixin/news_preview/?id='+message.materialId+'" target="_blank">'+message.material.newses[0].title+'</a></div><div class="fr"><a class="xa-edit-answer mr10" href="javascript:void(0);">编辑</a><a class="xa-close-answer" href="javascript:void(0);">删除</a></div></div>');
 		}
@@ -320,7 +325,7 @@ $(document).ready(function() {
 
 	//给超链接增加target属性
 	setTimeout(function(){
-		$('.xa-answer-content a').attr('target', '_blank')
+		$('.xa-addTargetBlank a').attr('target', '_blank');
 	},1000);
 
 });
