@@ -103,8 +103,8 @@
 	<h3 class="tc">活动规则</h3>
 
 	<div class="xui-ruleContent">
-		{% if shake_detail %}
-			{{shake_detail.shake.detail|safe}}
+		{% if shake %}
+			{{shake.detail|safe}}
 		{% endif %}
 	</div>
 </div>
@@ -158,7 +158,6 @@
 	    	}
 	    	data = {};
 	    	var member_id = "{{ cur_request_member.id }}";
-	    	alert(member_id)
 	    	if (member_id){
 			 W.getApi().call({
 	        	app: 'webapp',

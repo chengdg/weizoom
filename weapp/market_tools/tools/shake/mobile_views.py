@@ -50,6 +50,7 @@ def get_shake(request):
             'shake_detail': shake_detail,
             'hide_non_member_cover': True,
             'next_shake_detail': next_shake_detail,
+            'shake':shake,
             'is_hide_weixin_option_menu':True
         })
     else:
@@ -58,7 +59,8 @@ def get_shake(request):
                 'is_participated': False,
                 'shake_detail': None,
                 'hide_non_member_cover': True,
-                'is_hide_weixin_option_menu':True 
+                'is_hide_weixin_option_menu':True ,
+                'shake':shake
             })
 
     # except:
