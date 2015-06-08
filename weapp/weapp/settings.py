@@ -446,6 +446,7 @@ INSTALLED_TASKS = [
     'weixin.message.qa',
     'weixin.statistics',
     'weixin.message.message_handler',
+    'market_tools.tools.shake',
 
     # for services
     'services.example_service',
@@ -459,8 +460,7 @@ INSTALLED_TASKS = [
 
     'services.daily_page_visit_statistic_service',
     'services.update_mp_token_service',
-
-    'services.cancel_not_pay_order_service',
+    'services.cancel_not_pay_order_service.tasks.cancel_not_pay_order_timeout',
     'services.update_component_mp_token_service',
     'services.analysis_message_service',
     'services.count_keyword_service',

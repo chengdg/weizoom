@@ -11,8 +11,6 @@ from django.db.models import signals
 
 from account.social_account.models import SocialAccount, SOCIAL_PLATFORM_WEIXIN
 
-from utils.string_util import byte_to_hex, hex_to_byte
-
 from core.emojicons_util import encode_emojicons_for_html
 
 #########################################################################
@@ -41,12 +39,13 @@ class WeixinUser(models.Model):
 	def weixin_user_nick_name(self):
 		if hasattr(self, '_nick_name'):
 			return self._nick_name
-
+		from utils.string_util import hex_to_byte
 		self._nick_name = hex_to_byte(self.nick_name)
 		return self._nick_name
 
 	@weixin_user_nick_name.setter
 	def weixin_user_nick_name(self, nick_name):
+		from utils.string_util import byte_to_hex
 		self.nick_name = byte_to_hex(nick_name)
 
 	@property

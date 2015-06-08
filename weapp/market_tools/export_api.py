@@ -33,7 +33,7 @@ def get_market_tool_webapp_usage_links(webapp_owner_id, member=None):
 			#无权限，跳过
 			continue
 
-		if tool_module.module_name in  ['lottery', 'activity', 'vote', 'point_card']:
+		if tool_module.module_name in  ['shake', 'lottery', 'activity', 'vote', 'point_card']:
 			continue
 
 		if tool_module_export and hasattr(tool_module_export, 'get_webapp_usage_link'):

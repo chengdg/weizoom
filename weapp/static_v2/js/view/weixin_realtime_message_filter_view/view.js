@@ -123,29 +123,29 @@ W.view.weixin.RealtimeMessageFilterView = Backbone.View.extend({
                 dayNamesMin: ['日','一','二','三','四','五','六'],
                 beforeShow: function(e) {
                     if(min === 'now') {
-                        $(this).datepicker('option', 'minDate', new Date());
+                        $(this).datetimepicker('option', 'minDate', new Date());
                     }else if(min){
-                        $(this).datepicker('option', 'minDate', min);
+                        $(this).datetimepicker('option', 'minDate', min);
                     }
 
                     if($min_el){
                         var startTime = $min_el.val();
                         if(startTime) {
-                            $(this).datepicker('option', 'minDate', startTime);
-                            $(this).datepicker('option', 'minDateTime', new Date(startTime));
+                            $(this).datetimepicker('option', 'minDate', startTime);
+                            $(this).datetimepicker('option', 'minDateTime', new Date(startTime));
                         }
                     }
 
                     if(max === 'now') {
-                        $(this).datepicker('option', 'maxDate', new Date());
+                        $(this).datetimepicker('option', 'maxDate', new Date());
                     }else if(max){
-                        $(this).datepicker('option', 'maxDate', max);
+                        $(this).datetimepicker('option', 'maxDate', max);
                     }
 
                     if($max_el){
                         var endTime = $max_el.val();
                         if(endTime) {
-                            $(this).datepicker('option', 'maxDate', endTime);
+                            $(this).datetimepicker('option', 'maxDate', endTime);
                         }
                     }
                 },

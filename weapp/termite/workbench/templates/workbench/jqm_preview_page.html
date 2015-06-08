@@ -143,6 +143,9 @@
                       'hideOptionMenu',
                     ],
                     success: function (res) {
+                      if(res.hideOptionMenu && isHideWeixinOptionMenu){
+                        wx.hideOptionMenu();
+                      }
                       if(!W.wxShareData)
                         return
                       res = res.checkResult;
@@ -154,8 +157,6 @@
                         wx.onMenuShareQQ(W.wxShareData)
                       if(res.previewImage)
                         W.ImagePreview(wx)
-                      if(res.hideOptionMenu && isHideWeixinOptionMenu)
-                        wx.hideOptionMenu()
                       if(res.showOptionMenu && !isHideWeixinOptionMenu)
                         wx.showOptionMenu()
                     }

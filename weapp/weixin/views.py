@@ -130,8 +130,16 @@ def receiveauthcode(request):
 			# 	ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).update(last_update_time=datetime.datetime.now(), auth_code=auth_code)
 			# else:
 			# 	ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id, auth_code=auth_code)
-
-			component_authed_appid = ComponentAuthedAppid.objects.get(user_id=request.user.id)
+			request_host = request.get_host()
+			if request_host == 'member.weapp.weizzz.com':
+				component_info = ComponentInfo.objects.filter(app_id='wx984abb2d00cc47b8')[0]
+			elif request_host == 'weixin.weapp.weizzz.com':
+				component_info = ComponentInfo.objects.filter(app_id='wxba6fccbdcccbea49')[0]
+			elif request_host == 'docker.test.gaoliqi.com':
+				component_info = ComponentInfo.objects.filter(app_id='wx9b89fe19768a02d2')[0]
+			else:
+				component_info = ComponentInfo.objects.filter(app_id='wx8209f1f63f0b1d26')[0]
+			component_authed_appid = ComponentAuthedAppid.objects.get(component_info=component_info, user_id=request.user.id)
 			component_info = component_authed_appid.component_info
 
 			"""
@@ -306,39 +314,41 @@ def component_handle(request, appid):
 		from weixin.message.message_pipeline import MessagePipeline
 		message_pipeline = MessagePipeline()
 
-	if ComponentAuthedAppid.objects.filter(authorizer_appid=appid, is_active=True).count() > 0:
-		print '------------in1'
-		user_id = ComponentAuthedAppid.objects.filter(authorizer_appid=appid, is_active=True)[0].user_id
-		user = User.objects.get(id=user_id)
-		request.user_profile = user.get_profile()
-		request.webapp_owner_id = user_id
-		print '------------in2'
+	# if ComponentAuthedAppid.objects.filter(authorizer_appid=appid, is_active=True).count() > 0:
+	# 	print '------------in1'
+	# 	user_id = ComponentAuthedAppid.objects.filter(authorizer_appid=appid, is_active=True)[0].user_id
+	# 	user = User.objects.get(id=user_id)
+	# 	request.user_profile = user.get_profile()
+	# 	request.webapp_owner_id = user_id
+	# 	print '------------in2'
 
 
-	if 'echostr' in request.GET:
-		if is_valid_request(request, request.user_profile.webapp_id):
-			return HttpResponse(request.GET['echostr'])
-		else:
-			return HttpResponse('')
+	# if 'echostr' in request.GET:
+	# 	if is_valid_request(request, request.user_profile.webapp_id):
+	# 		return HttpResponse(request.GET['echostr'])
+	# 	else:
+	# 		return HttpResponse('')
+	# else:
+	# 	if appid == "wx570bc396a51b8ff8":
+	# 		webapp_id = None
+	# 		user_profile = None
+	# 	else:
+	# 		webapp_id = request.user_profile.webapp_id
+	# 		user_profile = request.user_profile
+
+ 	try:
+		content = message_pipeline.handle_component(request, appid)
+	except:
+		notify_message = u"进行消息处理失败，cause:\n{}".format(unicode_full_stack())
+		watchdog_fatal(notify_message)
+		content =None
+	
+	if content is None or len(content) == 0:
+		return HttpResponse('')
 	else:
-		if appid == "wx570bc396a51b8ff8":
-			webapp_id = None
-		else:
-			webapp_id = request.user_profile.webapp_id
+		return HttpResponse(content, mimetype="application/xml")
 
-	 	try:
-			content = message_pipeline.handle(request, webapp_id, False)
-		except:
-			notify_message = u"进行消息处理失败，cause:\n{}".format(unicode_full_stack())
-			watchdog_fatal(notify_message)
-			content =None
-		
-		if content is None or len(content) == 0:
-			return HttpResponse('')
-		else:
-			return HttpResponse(content, mimetype="application/xml")
-
-	return HttpResponse('')
+	#return HttpResponse('')
 
 
 	

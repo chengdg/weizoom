@@ -1,0 +1,59 @@
+<script id="markettool-shake-prize-tmpl-src" type="text/x-jquery-tmpl">
+ <div class="tx_prizeItem prizeItem" data-id="${id}">
+                    <p>
+                       
+                       <input type="text" 
+                                class="" 
+                                data-ui-role="shakeDatepicker" 
+                                name="start_at|${id}" 
+                                id="start_at|${id}" 
+                                placeholder="开始时间" 
+                                data-validate="required" 
+                                value=""
+                                data-enable-select-time="true"
+                                data-max=""
+                                >至
+                        <input type="text"
+                             class="" 
+                             name="end_at|${id}" 
+                             id="end_at|${id}" 
+                             data-ui-role="shakeDatepicker" 
+                             placeholder="结束时间" 
+                             data-validate="required" 
+                             value="">
+                        <br>
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">奖金总额：</span>
+                        <input name="total_money|${id}" type="text" class="span1 tx_odds" data-validate="require-int">元
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">固定金额：</span>
+                        <input name="fixed_price|${id}" type="text" class="span1" data-validate="require-int">元
+                        <input name="fixed_price_number|${id}" type="text" class="span1" data-validate="require-int">个
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">随机金额：</span>
+                        <input name="random_price_start|${id}" type="text" class="span1" data-validate="require-int">元~
+                        <input name="random_price_end|${id}" type="text" class="span1" data-validate="require-int">元
+                        <span class="errorHint"></span>
+                    </p>
+                    <p>
+                        <span class="label">次数：</span>
+                        <input name="play_count|${id}" type="text" class="span1 tx_odds" data-validate="require-int">
+                        <span class="errorHint"></span>
+                    </p>
+    </div>
+</script>
+
+ <script id="markettool-shake-sub-tmpl-src" type="text/x-jquery-tmpl">
+  <button class="btn btn-block tx_addPrizeItem" for_item=".tx_prizeItem" type="button">添加奖项信息</button>
+ </script>
+
+
+
+
+

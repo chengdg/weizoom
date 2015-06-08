@@ -15,6 +15,7 @@ from django.conf import settings
 
 from watchdog.utils import watchdog_fatal, watchdog_info
 from weixin.user.models import *
+from weixin.user.util import *
 from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
 
 from weixin.message import generator
@@ -140,7 +141,7 @@ class MessagePipeline(object):
 			if hasattr(handler_instance, 'post_processing'):
 				self.post_processing_handlers.append(handler_instance)
 
-	def handle(self, request, webapp_id, old_process=True):
+	def handle(self, request, webapp_id, old_process=True, appid=None, user_profile=None):
 		try:
 			if webapp_id:
 				user_profile = UserProfile.objects.get(webapp_id=webapp_id)
@@ -176,10 +177,15 @@ class MessagePipeline(object):
 				xml_message = self._get_raw_message(request)
 			else:
 				xml_message = self._get_raw_message(request).decode('utf-8')
-				component_info = ComponentInfo.objects.filter(is_active=True)[0]
+				if user_profile:
+					authorizer_appid = ComponentAuthedAppid.objects.get(authorizer_appid=appid, user_id=user_profile.user_id)
+					component_info = authorizer_appid.component_info
+				else:
+
+					component_info = ComponentInfo.objects.filter(is_active=True)[0]
+
 				wxiz_msg_crypt = WXBizMsgCrypt(component_info.token, component_info.ase_key, component_info.app_id)#"2950d602ffb613f47d7ec17d0a802b", "BPQSp7DFZSs1lz3EBEoIGe6RVCJCFTnGim2mzJw5W4I", "wx984abb2d00cc47b8")
 				_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
-
 		if xml_message is None or len(xml_message) == 0:
 			return None
 
@@ -225,7 +231,121 @@ class MessagePipeline(object):
 					weixin_http_client = WeixinHttpClient()
 					weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
 					result = weixin_api.api_query_auth(component_info.app_id, auth_code)
-					print '=======result----1:', result
+					if result.has_key('authorization_info'):
+						authorization_info = result['authorization_info']
+						func_info_ids = []
+						func_info = authorization_info['func_info']
+						if isinstance(func_info, list):
+							for funcscope_category in func_info:
+								funcscope_category_id = funcscope_category.get('funcscope_category', None)
+								if funcscope_category_id:
+									func_info_ids.append(str(funcscope_category_id.get('id')))
+						authorizer_appid = authorization_info['authorizer_appid']
+						authorizer_access_token=authorization_info['authorizer_access_token']
+						authorizer_refresh_token=authorization_info['authorizer_refresh_token']
+						url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % authorizer_access_token
+						post_json = '{ "touser":"%s", "msgtype":"text", "text": {"content":"%s_from_api" } }' % (message.fromUserName, auth_code)
+						result = weixin_http_client.post(url, post_json)
+						print result
+						content = "%s_from_api" % auth_code
+					else:
+						print '---------------------Error----------------------'
+
+				else:
+					content = 'TESTCOMPONENT_MSG_TYPE_TEXT_callback'
+			else:
+				content	= 'SUCCESS'
+
+			response_content = generator.get_text_request(message.fromUserName, message.toUserName, content)
+
+		if response_content and wxiz_msg_crypt:
+			_,response_content = wxiz_msg_crypt.EncryptMsg(response_content.encode('utf-8'), nonce, timestamp)
+		return response_content
+
+	def handle_component(self, request, appid):
+		wxiz_msg_crypt = None
+		is_from_simulator = False
+		msg_signature = request.GET.get('msg_signature', None)
+		timestamp = request.GET.get('timestamp', None)
+		nonce = request.GET.get('nonce', None)
+		encrypt_type = request.GET.get('encrypt_type', None)
+		signature = request.GET.get('signature', None)
+		component_info = None
+
+		if component_info == None:
+			component_info = get_component_info_from(request)
+
+		if appid == "wx570bc396a51b8ff8":
+			webapp_id = None
+			user_profile = None
+		else:
+
+			if ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True).count() > 0:
+				authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
+				user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
+				request.user_profile = user_profile
+				request.webapp_owner_id = authed_appid.user_id
+				webapp_id = user_profile.webapp_id
+			else:
+				# webapp_id = None
+				# user_profile = None
+				return None
+
+		
+		
+		if 'weizoom_test_data' in request.GET:
+			xml_message = self._get_raw_message(request)
+		else:
+			xml_message = self._get_raw_message(request).decode('utf-8')
+			wxiz_msg_crypt = WXBizMsgCrypt(component_info.token, component_info.ase_key, component_info.app_id)#"2950d602ffb613f47d7ec17d0a802b", "BPQSp7DFZSs1lz3EBEoIGe6RVCJCFTnGim2mzJw5W4I", "wx984abb2d00cc47b8")
+			_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
+		
+		if xml_message is None or len(xml_message) == 0:
+			return None
+		
+		message = parse_weixin_message_from_xml(xml_message)
+		
+		if webapp_id != None:
+			handling_context = MessageHandlingContext(message, xml_message, user_profile, request)
+
+			#预处理
+			self._pre_processing(handling_context, is_from_simulator)
+			if not handling_context.should_process:
+				return None
+
+			prcoess_handler = None
+			response_content = None
+			for handler in self.handlers:
+				process_handler = handler
+				try:
+					response_content = handler.handle(handling_context, is_from_simulator)
+
+					if EMPTY_RESPONSE_CONTENT == response_content:
+						response_content = None
+						break
+
+					if response_content:
+						break
+				except:
+					self._handle_exception(handler, user_profile, xml_message)
+
+					if self.haltonfailure:
+						break
+
+			#后处理
+			self._post_processing(handling_context, process_handler, response_content, is_from_simulator)
+		else:
+			content	= 'SUCCESS'
+			if message.toUserName ==  "gh_3c884a361561":
+				if message.event:
+					content = "%sfrom_callback" % (message.event)
+				elif message.content.find('QUERY_AUTH_CODE') > -1:
+					auth_code = message.content.split(":")[1]
+					from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
+					weixin_http_client = WeixinHttpClient()
+					weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
+					result = weixin_api.api_query_auth(component_info.app_id, auth_code)
+
 					if result.has_key('authorization_info'):
 						authorization_info = result['authorization_info']
 						func_info_ids = []

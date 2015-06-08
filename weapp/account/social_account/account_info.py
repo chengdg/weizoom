@@ -237,13 +237,13 @@ def _update_local_weixin_account_info(social_account, social_account_info):
 
 def get_weixin_account_info(user_profile, social_account, can_use_local=True):
 	weixin_account_info = None
-	if can_use_local:
-		try:
-			weixin_account_info = _get_local_weixin_account_info(social_account)
-		except:
-			notify_message = u"从本地获取微信账号基本信息失败，openid:{}, cause:\n{}".format(
-				social_account.openid, unicode_full_stack())
-			watchdog_error(notify_message)
+	# if can_use_local:
+	# 	try:
+	# 		weixin_account_info = _get_local_weixin_account_info(social_account)
+	# 	except:
+	# 		notify_message = u"从本地获取微信账号基本信息失败，openid:{}, cause:\n{}".format(
+	# 			social_account.openid, unicode_full_stack())
+	# 		watchdog_error(notify_message)
 
 	if weixin_account_info and weixin_account_info.nickname and weixin_account_info.head_img:
 		return weixin_account_info

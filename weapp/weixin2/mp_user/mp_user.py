@@ -43,13 +43,17 @@ class MpUser(resource.Resource):
 				mpuser = None
 				mpuser_preview_info = None
 		
+		from weixin.user.util import get_component_info_from
+		component_info = get_component_info_from(request)
+		
 		pre_auth_code = None
-		if weixin_models.ComponentInfo.objects.all().count() > 0:
+		request_host = request.META['HTTP_HOST']
+		if component_info:
 			from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
-			component_info = weixin_models.ComponentInfo.objects.all()[0]
 			weixin_http_client = WeixinHttpClient()
 			weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
 			result = weixin_api.api_create_preauthcode(component_info.app_id)
+			print result
 			if hasattr(result, 'pre_auth_code'):
 				pre_auth_code = result['pre_auth_code']
 			else:
@@ -87,21 +91,21 @@ class MpUser(resource.Resource):
 				'default_icon': weixin_models.DEFAULT_ICON,
 				'is_mp_registered':user_profile.is_mp_registered,
 				'pre_auth_code': pre_auth_code,
-				'auth_appid_info':auth_appid_info
+				'auth_appid_info':auth_appid_info,
+				'request_host':request_host
 			})
 			return render_to_response('weixin/mp_user/mp_user.html', c)
 		else:
 			c = RequestContext(request, {
 				'first_nav_name': FIRST_NAV,
-				#'second_navs': export.get_mpuser_second_navs(request),
-				# 'second_nav_name': export.MPUSER_BINDING_NAV,
 				'pre_auth_code': pre_auth_code,
 				'request_user': request_user,
 				'user_profile': user_profile,
 				'default_icon': weixin_models.DEFAULT_ICON,
 				'component_info': component_info,
 				'is_mp_registered':user_profile.is_mp_registered,
-				'auth_appid_info':auth_appid_info
+				'auth_appid_info':auth_appid_info,
+				'request_host':request_host
 			})
 			return render_to_response('weixin/mp_user/mp_user_index.html', c)
 

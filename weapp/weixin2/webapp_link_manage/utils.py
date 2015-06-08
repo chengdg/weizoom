@@ -11,6 +11,7 @@ from market_tools.tools.red_envelope.models import RedEnvelope
 from market_tools.tools.activity.models import Activity
 from market_tools.tools.research.models import Research
 from market_tools.tools.test_game.models import TestGame
+from market_tools.tools.shake.models import Shake
 from webapp.modules.cms.models import Article
 
 from market_tools.tools.member_qrcode.export import get_member_qrcode_webapp_link
@@ -98,6 +99,11 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'test_game',
 				'add_btn_title': '新建趣味测试',
 				'add_link': '/market_tools/test_game/test_game/create/'
+			}, {
+				'name': '摇一摇',
+				'type': 'shake',
+				'add_btn_title': '新建摇一摇',
+				'add_link': '/market_tools/shake/edit/0/'
 			}]
 		},
 		'memberQrcode': {
@@ -209,7 +215,12 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			'query_name': 'name',
 			'link_template': './?module=market_tool:shengjing_app&model=shengjing_app&action=get&game_id={}&workspace_id=market_tool:shengjing_app&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {}
-		}		
+		},
+		'shake': {
+			'class': Shake, 
+			'query_name': 'name',
+			'link_template': './?module=market_tool:shake&model=shake&action=get&shake_id={}&workspace_id=market_tool:shake&webapp_owner_id=%d&project_id=0' % webapp_owner_id
+		},		
 	}
 
 	item = type2object[type]

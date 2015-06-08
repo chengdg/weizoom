@@ -68,7 +68,7 @@
             <td>${ coupon.coupon_id }</td>
             <td>${ coupon.money }</td>
             <td>${ coupon.start_time }&nbsp;至&nbsp;${ coupon.end_time }</td>
-            <td class="text_nowrap" style="max-width:100px;"><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.member.id }">${ coupon.member.username_for_html }</a></td>
+            <td class="text_nowrap" style="max-width:100px;"><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.member.id }">{{html coupon.member.username_for_html}}</a></td>
             <td>${ coupon.use_time }</td>
             <td><a target="_blank" href="/mall/order_detail/get/?order_id=${ coupon.order_id }">${ coupon.order_fullid }</a></td>
             <td>${ coupon.status }</td>
