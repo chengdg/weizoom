@@ -117,9 +117,20 @@ class WeixinApiError(Exception):
 			detail = self.error_response.detail
 		else:
 			detail = ''
+
+		if hasattr(self.error_response, 'errcode'):
+			errcode = self.error_response.errcode
+		else:
+			errcode = ''
+
+		if hasattr(self.error_response, 'errmsg'):
+			errmsg = self.error_response.errmsg
+		else:
+			errmsg = ''	
+
 		return u"errcode:{}\nerrmsg:{}\ndetail:{}".format(
-			self.error_response.errcode,
-			self.error_response.errmsg,
+			errcode,
+			errmsg,
 			detail
 			)
 
