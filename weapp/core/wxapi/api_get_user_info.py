@@ -34,7 +34,7 @@ class WeixinUserApi(object):
 
 		if mpuser_access_token is None:
 			raise ValueError(u'WeixinUserInfo get_get_request_url_and_api_info：mpuser_access_token is None')
-		return self._complete_weixin_api_get_request_url(mpuser_access_token, varargs), u'获取用户信息'
+		return self._complete_weixin_api_get_request_url(mpuser_access_token, varargs), u'获取用户信息 openid %s' % varargs[0]
 		#return USER_INFO_URL.format(mpuser_access_token.access_token, varargs[0], 'zh_CN'), u'获取用户信息'
 
 	def parse_response(self, api_response):
