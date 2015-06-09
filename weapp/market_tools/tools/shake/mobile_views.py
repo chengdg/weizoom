@@ -7,8 +7,15 @@ from datetime import datetime
 
 from models import *
 from modules.member import util as member_util
+from modules.member.models import Member
 
-
+def __get_current_user_info(request, member):
+    """
+    获取当前用户的头像和名称信息
+    """
+    member_util.member_basic_info_updater(request.user_profile, member)
+    return Member.objects.get(id = member.id)
+    
 ########################################################################
 # get_shake: 获取红包页面
 ########################################################################
@@ -17,6 +24,8 @@ def get_shake(request):
     member = request.member
     shake_id = request.GET.get('shake_id', None)
     #try:
+    member = __get_current_user_info(request, member)
+    #member = Member.objects.get(id = member.id)
     shake = Shake.objects.get(id=shake_id)
     if member:
     #是否已经参加领红包
@@ -32,8 +41,6 @@ def get_shake(request):
                 is_participated = True
         else:
             shake_detail = None
-
-        
 
         if shake_detail is None:
             next_shake_details = ShakeDetail.objects.filter(shake=shake, start_at__gte=now).order_by('start_at')
@@ -51,7 +58,8 @@ def get_shake(request):
             'hide_non_member_cover': True,
             'next_shake_detail': next_shake_detail,
             'shake':shake,
-            'is_hide_weixin_option_menu':True
+            'is_hide_weixin_option_menu':True,
+            'cur_request_member': member
         })
     else:
         c = RequestContext(request, {
@@ -60,7 +68,8 @@ def get_shake(request):
                 'shake_detail': None,
                 'hide_non_member_cover': True,
                 'is_hide_weixin_option_menu':True ,
-                'shake':shake
+                'shake':shake,
+                'cur_request_member': member
             })
 
     # except:

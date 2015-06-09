@@ -1075,11 +1075,12 @@ def _create_webapp_user(member):
 
 def get_member_by(request, social_account):
 	member = member_util.get_member_by_binded_social_account(social_account)
-
 	if member is None:
 		#创建会员信息
 		try:
 			member = member_util.create_member_by_social_account(request.user_profile, social_account)
+			member_util.member_basic_info_updater(request.user_profile, member)
+			member = Member.objects.get(id=member.id)
 			#之后创建对应的webappuser
 			_create_webapp_user(member)
 			member.is_new_created_member = True
@@ -1262,7 +1263,7 @@ def _process_error_openid(openid, user_profile):  #response_rule, from_weixin_us
 				member = member_util.create_member_by_social_account(user_profile, social_account)
 				try:
 					member_util.member_basic_info_updater(user_profile, member)
-					print '----member_util.member_basic_info_updater--'
+					member = Member.objects.get(id=member.id)
 				except:
 					notify_message = u"_process_error_openid update_member_basic_info cause:\n{}".format(unicode_full_stack())
 					watchdog_error(notify_message)

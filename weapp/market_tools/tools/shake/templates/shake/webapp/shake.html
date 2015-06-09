@@ -50,11 +50,9 @@
 		<img src="/markettools_static/shake/img/music_on.png" alt="" data-allow-autoplay=false>
 	</div>
 	<div class="autoX pa xui-info">
+		{{cur_request_member.is_subscribed}}
 		 {% if cur_request_member and cur_request_member.is_subscribed %}
-		 {% else %}
-		 	请您关注后参与活动！
-		 {% endif %}
-		{% if next_shake_detail %}
+		 {% if next_shake_detail %}
 		<h2 class="tc">
 			您来晚了，活动已结束!
 		</h2>
@@ -84,6 +82,12 @@
 			{% endif %}
 			
 		{% endif %}
+		 {% else %}
+		 <h2 class="tc">
+		 	请您关注后参与活动！
+		 </h2>
+		 {% endif %}
+		
 		<a class="xui-ruleBtn tc xa-ruleBtn" href="javascript:void(0);">
 			活动规则
 		</a>
@@ -158,6 +162,9 @@
 	    	}
 	    	data = {};
 	    	var member_id = "{{ cur_request_member.id }}";
+	    	var is_subscribed = "{{cur_request_member.is_subscribed}}";
+	    	alert(is_subscribed,'11')
+	    	alert(is_subscribed=='false')
 	    	if (member_id){
 			 W.getApi().call({
 	        	app: 'webapp',
@@ -270,7 +277,6 @@
     })
 	
 		
-
 });
 </script>
 

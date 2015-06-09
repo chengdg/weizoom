@@ -6,8 +6,8 @@ from django.conf import settings
 
 from weixin.user.models import WeixinMpUser
 from modules.member import member_settings
-from modules.member.models import NonmemberFirstVisitRecord
-from modules.member.util import get_request_member
+from modules.member.models import NonmemberFirstVisitRecord, Member
+from modules.member.util import get_request_member, member_basic_info_updater
 #from webapp.models import Workspace
 from help_system.models import Document
 #from weixin.user.models import get_system_user_binded_mpuser
@@ -107,6 +107,9 @@ def get_cur_request_member(request):
 	cur_request_member = get_request_member(request)
 	#add is_subscribed at 21.0
 	if cur_request_member and cur_request_member.is_subscribed:
+		if 'shake' in request.path_info:
+			member_basic_info_updater(request.user_profile, cur_request_member)
+			cur_request_member = Member.objects.get(id=cur_request_member.id)
 		return {'cur_request_member': cur_request_member}
 	else:
 		return {'cur_request_member': None}
