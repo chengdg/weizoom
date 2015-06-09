@@ -100,7 +100,9 @@
 	<h2 class="pa autoX tc notice"></h2>
 	<p class="pa autoX tc mark"></p>
 	<a href="javascript:void(0);" class="xui-redBtn pa autoX xa-more hidden">再摇一把</a>
+	{% if cur_request_member and cur_request_member.is_subscribed %}
 	<a href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" class="xui-whiteBtn pa autoX">用户中心</a>
+	{% endif %}
 </div>
 <div class="xui-rule xa-rule" style="">
 	<div class="pa" style="right:15px;top:15px;overflow:hidden;"><i class="xui-close xa-Rclose"></i></div>
@@ -163,8 +165,6 @@
 	    	data = {};
 	    	var member_id = "{{ cur_request_member.id }}";
 	    	var is_subscribed = "{{cur_request_member.is_subscribed}}";
-	    	alert(is_subscribed,'11')
-	    	alert(is_subscribed=='false')
 	    	if (member_id){
 			 W.getApi().call({
 	        	app: 'webapp',
@@ -265,7 +265,6 @@
 	                }
 		        },
 		        error: function() {
-		        	alert('in-error')
 			        $('.ui-page').alert({
 			         	isShow: true,
 			         	info: '领取红包失败',
