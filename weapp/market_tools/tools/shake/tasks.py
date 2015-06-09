@@ -29,9 +29,12 @@ sysstr = platform.system()
 if sysstr !="Windows":
 	SSLCERT_PATH = "/weapp/web/weapp/pay/weixin/api/apiclient_cert.pem"  
 	SSLKEY_PATH = "/weapp/web/weapp/pay/weixin/api/apiclient_key.pem"  
+	SSLCERT_PATH_WEILAI = "/weapp/web/weapp/pay/weixin/api/apiclient_cert_weilai.pem"  
+	SSLKEY_PATH_WEILAI = "/weapp/web/weapp/pay/weixin/api/apiclient_key_weilai.pem"  
 else:
 	SSLCERT_PATH = "D://weapp_project//web//weapp//pay//weixin//api//apiclient_cert.pem"
 	SSLKEY_PATH = "D://weapp_project//web//weapp//pay//weixin//api//apiclient_key.pem"
+
 @task
 def send_red_pack_task(detail_id, owner_id, member_id, record_id, ip):
 	time.sleep(2)
@@ -57,7 +60,15 @@ def send_red_pack_task(detail_id, owner_id, member_id, record_id, ip):
 		shake_detail.shake.name,
 		shake_detail.shake.remark,
 		weixin_pay_config.partner_key)
-	result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
+	
+	if owner_id == '481':
+		sslkey_path = SSLKEY_PATH
+		sslcert_path = SSLCERT_PATH
+	else:
+		sslkey_path = SSLKEY_PATH_WEILAI
+		sslcert_path = SSLCERT_PATH_WEILAI
+
+	result = red.post_data(sslkey_path, sslcert_path)
 	xml = red.arrayToXml()
 	#print result
 	result = BeautifulSoup(result)
