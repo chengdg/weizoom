@@ -123,7 +123,7 @@ def export_channel_detail(request):
                     created_at,
                     order_id,
                     o['rule_name'],
-                    o['card_id'],
+                    o['weizoom_card_id'],
                     o['status'],
                     o['rule_money'],
                     o['use_money'],
