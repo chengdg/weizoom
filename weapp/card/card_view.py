@@ -67,7 +67,7 @@ def export_weizoom_cards(request):
     export_weizoom_cards:  导出微众卡
     """
     id = request.GET.get('card_id', 0)
-    weizoom_cards = WeizoomCard.objects.filter(owner=request.user, weizoom_card_rule_id=id)
+    weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=id)
     weizoom_card_rule = WeizoomCardRule.objects.get(id =id)
     card_name = weizoom_card_rule.name
     try:

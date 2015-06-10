@@ -138,7 +138,7 @@ def get_weizoom_cards(request):
     count_per_page = int(request.GET.get('count_per_page', '1'))
     cur_page = int(request.GET.get('page', '1'))
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
-    weizoom_cards = WeizoomCard.objects.filter(owner=request.user, weizoom_card_rule_id=weizoom_card_rule_id)
+    weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
     #获得已经过期的微众卡id
     today = datetime.today()
     card_ids_need_expire = []
