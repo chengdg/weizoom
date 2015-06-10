@@ -426,7 +426,7 @@ INSTALLED_APPS = [
     'erp',
     #'momus',
     'pay',
-
+    'card',
     'mall',
     'mall.promotion',
     'auth',
