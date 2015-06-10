@@ -1,0 +1,102 @@
+{% extends "card_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li>
+                <a href="/card/cards/get/">微众卡管理</a>
+            </li>
+            <li class="active">制卡管理</li>
+        </ul>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="xa-cardFilterView xui-filterPanel"></div>
+
+    <div class="panel-heading" style="position: absolute;left: 720px;;margin-top:24px;z-index:10;" id="u62">
+        <a href="/card/card_create/get/" class="btn btn-success xui-addProductBtn xa-addProduct fr" style="position: absolute;">
+            <span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>
+            创建新卡
+        </a>
+
+        <a href="/card/permissions/get/" class="btn btn-success xui-addProductBtn xa-addProduct fr" style="position: absolute; left: 140px;">
+            商户权限管理
+        </a>
+    </div>
+
+<div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+    <div class="panel-heading" style="height:40px">
+    </div>
+    <div 
+        data-ui-role="advanced-table" 
+        data-enable-paginator="true" 
+        data-app="card" 
+        data-api="cards/get" 
+        data-template-id="#card_rule_record_list_view" 
+        data-init-sort="-created_at" 
+        data-item-count-per-page="15"
+        data-auto-load="true"
+        class="panel-body">
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+    {% verbatim %}
+        <script id="card_rule_record_list_view" type="text/x-jquery-tmpl">
+            <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" style="margin-bottom: 10px;clear:both;">
+                <thead>
+                    <tr>
+                        <th>卡名称</th>
+                        <th>面值</th>
+                        <th>数量</th>
+                        <th>卡类型</th>
+                        <th>卡号区间</th>
+                        <th>有效期</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{each(i, card_rule) items}}
+                    <tr>
+                        <td style="width:auto">
+                            <a href="/card/card_detail/get/?id=${card_rule.id}" >${card_rule.name}</a>
+                        </td>
+                        <td>${card_rule.money}</td>
+                        <td>${card_rule.count}</td>
+                        <td>${card_rule.card_type}</td>
+                        <td>${card_rule.card_range}</td>
+                        <td>${card_rule.valid_time_from}至${card_rule.valid_time_to}</td>
+                        <td>${card_rule.remark}</td>
+                        <td>
+                            <a href="javascript:void(0);" class="exportCard" onclick="export_card_list(${ card_rule.id });">导出全部</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </script>
+    {% endverbatim %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var filterBox = new W.view.card.cards.cardFilter({
+                el: ".xa-cardFilterView",
+                dataView: $('[data-ui-role="advanced-table"]').data('view'),
+                userWebappId: {{user.get_profile.webapp_id}},
+                status:''
+            });
+        });
+
+        function export_card_list(card_id) {
+            var url = '/card/weizoom_cards/export/?card_id='+card_id;
+            window.open(url);
+        }
+    </script>
+{% endblock %}

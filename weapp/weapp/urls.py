@@ -93,6 +93,8 @@ urlpatterns = patterns('',
     #微信支付模拟api
     url(r'^sns/oauth2/access_token', pay_simulator_views.access_token),
     url(r'^pay/unifiedorder', pay_simulator_views.pay_unifiedorder),
+
+	url(r'^card/', restful_url('card')),
 )
 
 

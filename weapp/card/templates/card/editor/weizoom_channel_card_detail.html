@@ -1,0 +1,207 @@
+{% extends "card_base.html" %}
+{% block css %}
+<style>
+    .channel_display_none{
+        display: none;
+        height:35px;
+        line-height:35px;
+    }
+    #more .rotate_div{
+        display: inline-block;
+        transform:rotate(180deg);
+        -ms-transform:rotate(180deg); /* Internet Explorer */
+        -moz-transform:rotate(180deg); /* Firefox */
+        -webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+        -o-transform:rotate(180deg); /* Opera */
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-mall-outlinePage">
+<div class="relative">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/card/cards/get/">微众卡管理</a>
+        </li>
+        <li>
+            <a href="/card/cards_census/get/">数据统计</a>
+        </li>
+        <li><a href="/card/cards_channel_census/get/">按渠道统计</a></li>
+        <li class="active">{{channel.username}}</li>
+    </ul>
+</div>
+<div class="panel xui-i-allContent " style="padding-left:2%;padding-top:0px;border:1px;">
+<ul class="clearfix" style="background-color:#EBEEF7">
+    {% if channel %}
+        <li class="xui-i-outlineCount fl" style="width:75%">
+            <div style="float:left;width:25%">
+                <div class="xui-i-description">渠道名称：{{channel.username}}</div>
+            </div>
+            <div style="float:left;width:25%">
+                <div class="xui-i-description">消费金额：{{channel.use_money}}</div>
+            </div>
+            <div style="float:left;width:25%">
+                <div class="xui-i-description">订单数：{{channel.order_count}}</div>
+            </div>
+            <div style="float:left;width:25%">
+                <div class="xui-i-description">使用张数：{{channel.use_count}}</div>
+            </div>
+        </li>
+    {% endif %}
+</ul>
+</div>
+<div class="xa-detailFilterView xui-filterPanel xui-cardnumFilter"></div>
+</div>
+
+<!--列表-->
+    <div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+        <div class="panel-heading" style="font-size:16px">消费明细</div>
+        {% if has_order %}
+        <div 
+            data-ui-role="advanced-table" 
+            data-app="card" 
+            data-resource="card_channel_details/get"
+            data-template-id="#card-detail-list"
+            data-enable-paginator="true" 
+            data-enable-sort="false" 
+            data-item-count-per-page="10" 
+            data-auto-load="true"
+            class="panel-body"
+            data-args='{"owner_id":"{{channel.id}}","start_date": "{{channel.start_date}}","end_date": "{{channel.end_date}}"}'
+        ></div>
+    {% else %}
+        <div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+    {% endif %}
+    </div>
+
+{% verbatim %}
+<script id="card-detail-list" type="text/x-jquery-tmpl">
+    <div class="panel panel-default mt20 xb-rightPanel pr">
+        <div class="pa" style="top:-50px;right:15px;">
+            <a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
+        </div>
+        <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+            <thead>
+                <tr>
+                    <th width="145">消费时间</th>
+                    <th>订单号</th>
+                    <th>卡名称</th>
+                    <th>卡号</th>
+                    <th>状态</th>
+                    <th>面值</th>
+                    <th>消费金额</th>
+                    <!--<th>余额</th>-->
+                    <th>使用人</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{each(i,card_order) items}}
+                <tr>
+                    <td style="vertical-align: top; padding-top: 33px;"><div>${card_order[1][0].created_at}</div></td>
+                    <td style="vertical-align: top; padding-top: 33px;"><div><a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${card_order[1][0].id}" target="_blank">${card_order[1][0].order_id}</a><div></td>
+                    <td>
+                        {{each(i,card) card_order[1]}}
+                            {{if i<2}}
+                                <div style="height:35px;line-height:35px">${card.rule_name}</div>
+                            {{else}}
+                                <div class="channel_display_none">${card.rule_name}</div>
+                            {{/if}}
+                        {{/each}}
+                    </td>
+                    <td>
+                        {{each(i,card) card_order[1]}}
+                            {{if i<2}}
+                                <div style="height:35px;line-height:35px">${card.card_id}</div>
+                            {{else}}
+                                <div class="channel_display_none">${card.card_id}</div>
+                            {{/if}}
+                        {{/each}}
+                    </td>
+                    <td>
+                        {{each(i,card) card_order[1]}}
+                            {{if i<2}}
+                                <div style="height:35px;line-height:35px">${card.status}</div>
+                            {{else}}
+                                <div class="channel_display_none">${card.status}</div>
+                            {{/if}}
+                        {{/each}}
+                    </td>
+                    <td>
+                        {{each(i,card) card_order[1]}}
+                            {{if i<2}}
+                                <div style="height:35px;line-height:35px">${card.rule_money}</div>
+                            {{else}}
+                                <div class="channel_display_none">${card.rule_money}</div>
+                            {{/if}}
+                        {{/each}}
+                    </td>
+                    <td>
+                        {{each(i,card) card_order[1]}}
+                            {{if i<2}}
+                                <div style="height:35px;line-height:35px">${card.use_money}</div>
+                            {{else}}
+                                <div class="channel_display_none">${card.use_money}</div>
+                            {{/if}}
+                        {{/each}}
+                    </td>
+                    <td style="vertical-align: top; padding-top: 33px;">{{html card_order[1][0].buyer_name}}</td>
+                    <td style="vertical-align: top; padding-top: 33px;" class="the-icons">
+                            {{if card_order[1].length>2}}
+                                <div><a href="javascript:void(0);" id="more" style="text-decoration: none;">更多<span class="glyphicon glyphicon-menu-down"></span></a><div>
+                            {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
+
+{% endverbatim %}
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var start_date = '{{channel.start_date}}';
+    start_date = start_date.split(' ');
+    var end_date = '{{channel.end_date}}';
+    end_date = end_date.split(' ');
+    var view = new W.view.card.channelDetailFilter({
+        el: ".xa-detailFilterView",
+        dataView: $('[data-ui-role="advanced-table"]').data('view'),
+        start_date: start_date[0],
+        end_date: end_date[0]
+    });
+    view.$el.bind('end_click', function(){
+        DATA_INTERVAL = '';
+    });
+    // 导出
+    $('.panel-body').delegate('.xa-export', 'click', function(event){   
+        var url = '/card/channel_detail/export/?owner_id={{owner_id}}&start_date={{channel.start_date}}&end_date={{channel.end_date}}';
+        if (view.filter_value) {
+            url = url + '&filter_value='+view.filter_value;
+        }
+        W.getSuccessHintView().show("'导出中...'");
+        var $frame=$('<iframe>').hide().attr('src',url);
+        $('body').append($frame);
+        setTimeout(function(){W.getErrorHintView().hide()}, 5000);
+    });
+    $('.panel-body').delegate('#more', 'click', function(event){
+        var $this = $(event.currentTarget);
+        var $parnet = $this.parents("tr");
+        if ($parnet.find("div[class='channel_display_none']").css("display") =="none"){
+            $parnet.find("div[class='channel_display_none']").css("display","block");
+            $this.children().removeClass('glyphicon-menu-down').addClass('glyphicon-menu-up');
+        }
+        else{
+            $parnet.find("div[class='channel_display_none']").css("display","none");
+            $this.children().removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
+        }
+    });
+});
+</script>
+
+{% endblock %}

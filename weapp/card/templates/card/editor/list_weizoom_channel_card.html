@@ -1,0 +1,95 @@
+{% extends "card_base.html" %}
+
+{% block content-panel %}
+<div class="relative">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/card/cards/get/">微众卡管理</a>
+        </li>
+        <li>
+            <a href="/card/cards_census/get/">数据统计</a>
+        </li>
+        <li class="active">按渠道统计</li>
+    </ul>
+</div>
+<!--筛选-->
+<div class="xa-channelFilterView xui-filterPanel xui-cardnumFilter"></div>
+<!--列表-->
+{% if has_cards %}
+<div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+	<div class="panel-heading" style="height:40px">
+	</div>
+	<div 
+	    data-ui-role="advanced-table"
+        data-app="card" 
+        data-resource="cards_channel_census/get"
+        data-template-id="#cards-list"
+        data-enable-paginator="true" 
+        data-enable-sort="false"
+        data-item-count-per-page="20" 
+        data-auto-load="true"
+        class="panel-body"
+	></div>
+</div>
+{% else %}
+	<div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+{% endif %}
+
+{% verbatim %}
+<script id="cards-list" type="text/x-jquery-tmpl">
+	<div class="pa" style="top:10px;right:15px;">
+		<a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
+	</div>
+	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+		<thead>
+			<tr>
+				<th width="120">渠道名称</th>
+				<th class="tx_sortable" data-sort-attr='use_money'>消费金额</th>
+				<th class="tx_sortable" data-sort-attr='order_count'>订单数</th>
+				<th class="tx_sortable" data-sort-attr='use_count'>使用张数</th>
+			</tr>
+		</thead>
+		<tbody>
+		{{each(i,channels) items}}
+		    <tr>
+		    	<td><a title="查看明细" href="/card/card_channel_details/get/?owner_id=${channels[0]}&start_date=${channels[1].start_date}&end_date=${channels[1].end_date}">${channels[1].first_name}</a></td>
+		    	<td>${channels[1].use_money}</td>
+		    	<td>${channels[1].order_count}</td>
+		    	<td>${channels[1].use_count}</td>
+		    </tr>
+		{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.card.channelFilter({
+		el: ".xa-channelFilterView",
+		dataView: $('[data-ui-role="advanced-table"]').data('view'),
+		status:''
+	});
+	view.$el.bind('end_click', function(){
+		DATA_INTERVAL = '';
+	});
+	// 导出
+	$('.panel-body').delegate('.xa-export', 'click', function(event){	
+		var url = '/card/channel/export/';
+		if (view.filter_value) {
+			url = url + '?filter_value='+view.filter_value;
+		}
+		W.getSuccessHintView().show("'导出中...'");
+		var $frame=$('<iframe>').hide().attr('src',url);
+		$('body').append($frame);
+		setTimeout(function(){W.getErrorHintView().hide()}, 5000);
+	});
+
+
+});
+</script>
+
+{% endblock %}

@@ -18,14 +18,22 @@ from account.models import *
 #########################################################################
 # WeizoomCardRule ：微众卡规则
 #########################################################################
+#微众卡类型
+WEIZOOM_CARD_EXTERNAL_USER = 0 #外部卡
+WEIZOOM_CARD_INTERNAL_USER = 1 #内部卡
+WEIZOOM_CARD_GIFT_USER = 2 #赠品卡
+
 class WeizoomCardRule(models.Model):
 	owner = models.ForeignKey(User)
 	name = models.CharField(max_length=20, db_index=True) #名称
 	money = models.DecimalField(max_digits=65, decimal_places=2) #微众卡金额
 	count = models.IntegerField(default=0) #发放总数量
 	remark = models.CharField(max_length=20, db_index=True) #备注
-	expired_time = models.DateTimeField() #过期时间
+	expired_time = models.DateTimeField(auto_now_add=True) #过期时间
+	valid_time_from = models.DateTimeField() #有效范围开始时间
+	valid_time_to = models.DateTimeField() #有效范围结束时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
+	card_type = models.IntegerField(default=WEIZOOM_CARD_EXTERNAL_USER) #微众卡类型
 
 	@staticmethod
 	def get_all_weizoom_card_rules_list(user):
@@ -55,7 +63,7 @@ class WeizoomCard(models.Model):
 	weizoom_card_rule = models.ForeignKey(WeizoomCardRule) 
 	status = models.IntegerField(default=WEIZOOM_CARD_STATUS_INACTIVE) #微众卡状态
 	weizoom_card_id = models.CharField(max_length=50) #微众卡号
-	money = models.DecimalField(max_digits=65, decimal_places=2) #金额
+	money = models.DecimalField(max_digits=65, decimal_places=2) #剩余金额
 	password = models.CharField(max_length=50) #微众卡密码
 	expired_time = models.DateTimeField() #过期时间
 	is_expired = models.BooleanField(default=False) #是否过期

@@ -1,0 +1,26 @@
+<script id="card-list-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="xui-form disT">
+        <div class="xui-col disTc">
+            <div class="xui-i-item">
+                <label class="">卡号：</label>
+                <input type="text" class="form-control" id="card_number" name="cardNumber" value="" />
+            </div>
+        </div>
+
+        <div class="xui-col disTc">
+            <div class="xui-i-item">
+                <label>状态：</label>
+                <select id="cardStatus" name="cardStatus" class="w120 m0">
+                    <option value="-1">全部</option>
+                    <option value="0">未使用</option>
+                    <option value="1">使用中</option>
+                    <option value="2">已用完</option>
+                    <option value="3">未激活</option>
+                </select>
+            </div>
+        </div>
+    <div class="xui-btn-group">
+        <a type="button" class="btn btn-primary mr40 seacrh-card-btn xui-fontBold" id="seacrh-card-btn">查&nbsp; &nbsp;询</a>
+        <a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重置</a>
+    </div>
+</script>

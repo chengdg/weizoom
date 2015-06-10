@@ -1,0 +1,57 @@
+<script id="select-data-for-member-list-view-tmpl-src" type='text/x-jquery-tmpl'>
+	<div class="input-group">
+		<input type="text" name="search_member" placeholder="${title}" style="width:201px;height:30px;padding-left:7px;" />
+		<a href="javascript:void(0)" class="input-group-addon xa-searchMemberButton" style="padding:2px 7px;">
+			<i class="glyphicon glyphicon-search" aria-hidden="true"></i>
+		</a>
+    </div>
+
+	<div class="data_list_div" style="width: 230px; height: 300px; border: 1px solid #ccc; overflow-y:auto;margin-top:10px;">
+		<ul>
+		</ul>
+	</div>
+	
+</script>
+
+<script id="one-select-data-for-member-view-tmpl-src" type='text/x-jquery-tmpl'>
+<li data-id="${id}">
+		<div class="m5" style="border: 1px solid #ccc; padding:5px;">
+			{{if user_icon }}
+			<div class="fl">
+				<span class="head-img">
+					<img src="${user_icon}" onerror="this.src='/static/img/user-1.jpg'"/>
+				</span>
+			</div>
+			{{/if}}
+			<div class="fl w120">
+				<div class="inline-text ml5">{{html name}}</div>
+				{{if grade}}
+				<div class="inline-text ml5 mt5">${grade}</div>
+				{{/if}}
+				{{if member_count}}
+					<div class="inline-text ml5 mt5">成员数：{{if member_count==='-'}}0{{else}}${member_count}{{/if}}</div>
+				{{/if}}
+			</div>
+			<div class="fr pt15">
+				<input name="member_check" type="checkbox" value="${id}" >
+			</div>
+			<div class="clear"></div>
+		</div>
+	</li>
+</script>
+
+<script id="select-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div style="width:610px; overflow: hidden;">
+		<div class="left-data-list fl">
+		</div>
+		<div class="right-data-list fr">
+		</div>
+		<div style="width: 70px;display:inline-block; margin-left: 30px; margin-top:70px;">
+			<button class="btn btn-default m10 xa-rightMove" type="button"><i class="glyphicon glyphicon-triangle-right"></i></button>
+			<button class="xa-leftMove btn btn-default inline-text m10" type="button"><i class="glyphicon glyphicon-triangle-left"></i></button>
+			<button class="xa-allRightMove btn btn-default inline-text m10" type="button"><i class="glyphicon glyphicon-forward"></i></button>
+			<button class="xa-allLeftMove btn btn-default inline-text m10" type="button"><i class="glyphicon glyphicon-backward"></i></button>
+		</div>
+	</div>
+	<div class="clear"></div>
+</script>

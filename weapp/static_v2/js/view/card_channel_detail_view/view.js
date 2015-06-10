@@ -1,16 +1,17 @@
-ensureNS('W.view.mall.order');
-W.view.mall.order.orderFilter = Backbone.View.extend({
+ensureNS('W.view.card');
+W.view.card.channelDetailFilter = Backbone.View.extend({
     events: {
-        'click .xa-create': 'createFilter',
-        'click .xa-filter': 'filter',
         'click .seacrh-order-btn': 'seacrhBtn',
         'click .recently-week-day': 'setDateText',
-        'click .export-btn': 'exportBtn'
+        'click .xa-reset': 'onClickResetButton'
     },
 
     // 点击‘最近7天’或‘最近30天’
     setDateText: function(event){
-        var day = $(event.currentTarget).attr('data-day') -1 ;//parseInt(.toSting()) - 1;
+        var $this = $(event.currentTarget);
+        $this.parent().children().css("color","black");
+        $this.css("color","#1262b7");
+        var day = $this.attr('data-day') -1 ;//parseInt(.toSting()) - 1;
         var today = new Date(); // 获取今天时间
 
         today.setTime(today.getTime()-day*24*3600*1000);
@@ -19,6 +20,7 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
 
         $('#start_date').val(begin);
         $('#end_date').val(end);
+        $('.seacrh-order-btn').trigger('click');
     },
 
     // 点击‘筛选’按钮事件
@@ -54,79 +56,73 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
     getFilterValue: function(){
         var dataValue = [];
         var orderId = $('#order_id').val().trim();
-        var shipName = $('#ship_name').val().trim();
-        var shipTel = $('#ship_tel').val().trim();
-        var orderStatus = $('#orderStatus').val();
-        var orderType = $('#orderType').val();
-        var payType = $('#payType').val();
-        var orderSource = $('#orderSource').val();
-        var productName = $('#product_name').val().trim();
-
+        var cardId = $('#weizoom_card_id').val().trim();
+        var cardName = $('#weizoom_card_name').val().trim();
         var startDate = $('#start_date').val().trim();
         var endDate = $('#end_date').val().trim();
-        var expressNumber = $('#express_number').val().trim();
 
-
-        if ($('#isonlyweizoomcardpay').is(':checked')) {
-            var isUseWeizoomCard = 1;
-        }else {
-            var isUseWeizoomCard = 0;
+        var moneyRex = /^\d*(\.\d{0,2})?$/;
+        var lowMoney = $('#low_money').val().trim();
+        var highMoney = $('#high_money').val().trim();
+        if(!moneyRex.test(lowMoney) || !moneyRex.test(highMoney)){
+            W.showHint('error', '请输入正确的价格');
+            return false;
         }
+        if (lowMoney.length === 0 && highMoney.length > 0) {
+            W.showHint('error', '请输入起始价格！');
+            return false;
+        }
+        if (highMoney.length === 0 && lowMoney.length > 0) {
+            W.showHint('error', '请输入最高价格！');
+            return false;
+        }
+        if (parseFloat(highMoney) < parseFloat(lowMoney)) {
+            W.showHint('error', '最高价格不能低于起始价格');
+            return false;
+        }
+
+        var cardStatus = $('#cardStatus').val();
+        var memberName = $('#member_name').val().trim();
+
         var args = [];
-
-        // filter_value=type:object|status:0|pay_interface_type:0|source:0
-        // if (orderType != -1) {
-        //     dataValue.push('type:'+orderType);
-        // }
-        if (orderStatus != -1) {
-            dataValue.push('status:'+orderStatus);
+        //card_id
+        if (cardId.length > 0) {
+            dataValue.push('card_id:'+cardId);
         }
-        if (payType != -1) {
-            dataValue.push('pay_interface_type:'+payType);
+        // card_name
+        if (cardName.length > 0) {
+            dataValue.push('name:'+cardName);
         }
-        if (orderSource != -1) {
-            dataValue.push('source:'+orderSource);
+        //order_id
+        if (orderId.length > 0) {
+            dataValue.push('order_id:'+orderId);
         }
-        if (expressNumber != '') {
-            dataValue.push('express_number:'+expressNumber);
+        //status
+        if (cardStatus != -1) {
+            dataValue.push('status:'+cardStatus);
+        }
+        //use_name
+        if (memberName != '') {
+            dataValue.push('member:'+memberName);
+        }
+        // money
+        if (lowMoney.length > 0 && highMoney.length > 0) {
+            dataValue.push('money:'+lowMoney+'-'+highMoney)
+        }
+        //created_at
+        if (startDate != "" && endDate != "") {
+            dataValue.push('created_at:'+startDate+'--'+endDate)
         }
 
         var filter_value = dataValue.join('|');
-        console.log("orderStatus", orderStatus, filter_value);
 
         if (filter_value != ''){
-            args.push('"filter_value":"'+filter_value+'"')
+            args.push('"filter_value":"'+filter_value+'"');
         }
 
-        // query
-        if (orderId.length > 0) {
-            args.push('"query":"'+orderId+'"')
-        }
+        this.filter_value = filter_value;
 
-        //date_interval
-        if (startDate != "" && endDate != "") {
-            args.push('"date_interval":"'+startDate+'|'+endDate+'"')
-        }
-
-        // ship_name
-        if (shipName.length > 0) {
-            args.push('"ship_name":"'+shipName+'"')
-        }
-        // ship_tel
-        if (shipTel.length > 0) {
-            args.push('"ship_tel":"'+shipTel+'"')
-        }
-        //is_only_show_pay_by_weizoom_card
-        if (isUseWeizoomCard) {
-            args.push('"isUseWeizoomCard":"'+isUseWeizoomCard+'"')
-        }
-
-        if (productName) {
-            args.push('"productName":"'+productName+'"');
-        }
-
-        console.log("orderStatus", orderStatus, filter_value, args);
-        return args
+        return args;
     },
 
     // 组织筛选的查询参数格式
@@ -134,47 +130,51 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         if (args.length == 0) {
             return ""
         }else{
-            args.push('"page":1');
+            args.push('"page":1')
             return '{'+ args.join(',') +'}';
         }
     },
 
-    // 组织导出的查询参数格式
-    getArgsExportValueByDict: function(args){
-        if (args.length == 0) {
-            return ""
-        }else{
-            for (var i = args.length - 1; i >= 0; i--) {
-                args[i] = args[i].replace(/"/g, '').replace(':', '=')
-            };
-            return args.join('&');
-        }
-    },
-
     getTemplate: function() {
-        $('#mall-order-filter-view-tmpl-src').template('mall-order-filter-view-tmpl');
-        return 'mall-order-filter-view-tmpl';
+        $('#card-channel-detail-filter-view-tmpl-src').template('card-channel-detail-filter-view-tmpl');
+        return 'card-channel-detail-filter-view-tmpl';
     },
 
     render: function() {
-    	var _this = this;
+        var _this = this;
         var status = this.options.status || '';
+        var start_date = this.options.start_date || '';
+        var end_date = this.options.end_date || '';
         W.getApi().call({
             method: 'post',
-            app: 'mall',
-            api: 'order_filter_params/get',
+            app: 'card',
+            api: 'card_channel_filter_params/get',
             args:{status:status},
             success: function(data) {
                 var html = $.tmpl(this.getTemplate(), {
-                	filters: _this.filterData,
-	            	types: data.type || [],
-		        	statuses: data.status || [],
-		        	payTypes: data.pay_interface_type || [],
-		        	orderSources: data.source || []
-		        });
-       	 		this.$el.append(html);
+                    filters: _this.filterData,
+                    cardStatus: data.cardStatus || [],
+                    cardTypes: data.cardTypes || []
+                });
+                this.$el.append(html);
                 _this.addDatepicker();
-       	 		$('.xa-showFilterBox').append($('.xa-timelineControl'));
+                $('.xa-showFilterBox').append($('.xa-timelineControl'));
+                //时间
+                $('#start_date').val(start_date);
+                $('#end_date').val(end_date);
+                var today = $.datepicker.formatDate('yy-mm-dd', new Date());//获取今天的日期
+                if (end_date == today){
+                    end_date = end_date.replace(/-/g,"/");
+                    var a = new Date(end_date);
+                    start_date = start_date.replace(/-/g,"/");
+                    var b = new Date(start_date);
+                    var dif = a.getTime() - b.getTime();
+                    var day = Math.floor(dif / (1000 * 60 * 60 * 24));//计算天数
+                    day+=1;
+                    if (day==30 || day==60 || day==7){
+                        $('.recently-week-day[data-day='+day+']').css("color","#1262b7");
+                    }
+                }
             },
             error: function(response) {
                 alert('加载失败！请刷新页面重试！');
@@ -196,11 +196,9 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
             var options = {
                 buttonText: '选择日期',
                 currentText: '当前时间',
-                hourText: "小时",
-                minuteText: "分钟",
                 numberOfMonths: 1,
                 dateFormat: 'yy-mm-dd',
-                //dateFormat: format,
+                timeFormat: '',
                 closeText: '关闭',
                 prevText: '&#x3c;上月',
                 nextText: '下月&#x3e;',
@@ -248,59 +246,29 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
     },
 
     initialize: function(options) {
-    	this.options = options || {};
-    	this.$el = $(options.el);
+        this.options = options || {};
+        this.$el = $(options.el);
         this.render();
-    	this.filter_value = '';
-        this.bind('clickStatusBox', this.clickStatusBox);
+        this.filter_value = '';
     },
 
-    // 导出按钮事件
-    exportBtn: function(event){
-        console.log('导出');
-        var status = this.options.status || '';
-        var url = '/mall/orders/export/';
-        var args = this.getFilterValue();
-        args = this.getArgsExportValueByDict(args);
-        if (args.length > 0) {
-            url = url + '?'+args+'&status='+status;
-        } else {
-            url = url + '?status='+status;
-        }
-
-        console.log(url, args);
-       // W.getLoadingView().show();
-        $('#spin-hint').html('玩命导出中...');
-        var $frame=$('<iframe>').hide().attr('src',url);
-        $('body').append($frame);
-        setTimeout(function(){W.getLoadingView().hide()}, 5000);
-    },
-
-    // 设置状态选中事件
-    setStatusActive: function(){
-        var status = $('#orderStatus').val();
-        $('.xa-count').removeClass('active');
-        $('[data-total-status-value="'+status+'"]').addClass('active');
-    },
-
-    clickStatusBox: function(status_value){
-        this.resetFrom();
-        $('#orderStatus').val(status_value);
-        // 调用搜索事件
-        this.seacrhBtn();
-    },
-
-    resetFrom: function(){
+    onClickResetButton: function(){
+        var $that = $('.recently-week-day[data-day=7]');
+        $that.parent().children().css("color","black");
+        $that.css("color","#1262b7");
+        var day = $that.attr('data-day') -1 ;//parseInt(.toSting()) - 1;
+        var today = new Date(); // 获取今天时间
+        today.setTime(today.getTime()-day*24*3600*1000);
+        var begin = $.datepicker.formatDate('yy-mm-dd', today);
+        var end = $.datepicker.formatDate('yy-mm-dd', new Date());
+        $('#start_date').val(begin);
+        $('#end_date').val(end);
         $('#order_id').val('');
-        $('#ship_name').val('');
-        $('#ship_tel').val('');
-        $('#start_date').val('');
-        $('#end_date').val('');
-        $('#orderStatus').val(-1);
-        $('#payType').val(-1);
-        $('#orderType').val(-1);
-        $('#orderSource').val(-1);
-        $('#express_number').val('');
-        $('#product_name').val('');
+        $('#weizoom_card_id').val('');
+        $('#weizoom_card_name').val('');
+        $('#low_money').val('');
+        $('#high_money').val('');
+        $('#cardStatus').val(-1);
+        $('#member_name').val('');
     }
 });

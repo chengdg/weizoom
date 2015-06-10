@@ -1,0 +1,433 @@
+{% extends "card_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+    <style>
+      .week-day-active {
+          color:#009DD9;
+      }
+
+      .question_icon {
+
+      }
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li>
+                <a href="/card/cards/get/">微众卡管理</a>
+            </li>
+            <li>
+                <a href="/card/overview/get/">数据统计</a>
+            </li>
+            <li>
+                <a href="/card/overview/get/">整体概览</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <div>
+        <div class="xa-overviewFilterView xui-filterPanel" style="padding: 0;height: 80px">
+            <div class="xui-form disT" style="width:100%">
+                <div class="xui-col disTc" id="overview_filter_div" style="width: 100%;">
+                    <!--过滤面板-->
+                </div>
+            </div>
+        </div>
+        <!--下面就是可以做模板的区域-->
+        <div id="card-overview-board-view-div">
+            <!--统计面板-->
+        </div>
+        <div id="wCard_rank_t10" style="margin-top: 10px;height:400px;border: solid 2px #eee;padding: 5px;">
+            <!--微众卡使用量排行榜Top10-->
+            <div id="wCard_bar_container" style="height:400px;width: 70%;float: left"></div>
+            <div id="wCard_rank_t10_table_div" style="float: right;width: 25%;height:380px"></div>
+        </div>
+
+        <div id="consum_rank_t10" style="height:400px;clear: both;border: solid 2px #eee;padding: 5px; ">
+            <!--卡消费额排行榜top10-->
+            <div id="consum_bar_container" style="height: 400px;width: 70%;float:left"></div>
+            <div id="consum_rank_t10_table_div" style="float: right;width: 25%;height: 380px;"></div>
+        </div>
+        <div id="pie_chart">
+            <div id="cards_pie_chart"
+                 style="clear: both;float: left;width:49.5%;border: solid 2px #eee;margin: 5px 0 5px 0">
+                <!--卡类型使用占比-->
+                <div id="cards_pie_container" style="height: 400px"></div>
+            </div>
+            <div id="channels_pie_chart" style="float: right;width:49.5%;border: solid 2px #eee;margin: 5px 0 5px 0">
+                <!--渠道消费占比-->
+
+                <div id="channels_pie_container" style="height: 400px"></div>
+            </div>
+        </div>
+        <div style="clear: both;border: solid 2px #eee;padding: 5px;margin: 5px 0 5px 0;color:#008ACD;font: large bold;">
+            详细数据
+        </div>
+        <div id="detail_data_table"
+             data-ui-role="advanced-table-ex"
+             data-app="card"
+             data-api="overview/get"
+             data-template-id="#card-overview-details-tmpl-src"
+             data-enable-paginator="true"
+             data-enable-sort="false"
+             data-item-count-per-page="10"
+             data-auto-load="false"
+             style="clear: both;">
+
+        </div>
+
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+    $(document).ready(function(){
+        //过滤面板
+        var overview_filter = new W.view.card.overview.OverviewFilterView({
+            el:'#overview_filter_div',
+            dataView: $('[data-ui-role="advanced-table-ex"]').data('view')
+        });
+        //过滤面板默认7天显示
+
+        $('.recently-week-day-div > span').click(function(){
+                $(this).siblings().removeClass('week-day-active');
+                $(this).addClass('week-day-active');
+                $('#search-order-btn').trigger('click');
+        });
+        //模拟点击7天
+        $('.recently-week-day[data-day="7"]').get(0).click();
+
+        //绑定30天，60天点击
+
+
+
+
+
+
+    });
+
+    //统计一览面板，微众卡Top10，卡消费Top10,卡类型饼图，渠道图
+    // advanced table ex 获得数据后，处理将 整理好的data传到render_overview_tables
+    // 该函数负责渲染页面上所有的表格
+    function render_overview_tables(data) {
+        //统计面板
+        document.getElementById('card-overview-board-view-div').innerHTML = '';
+        $("#card-overview-board-view-tmpl-src").tmpl(data.overview_info_dict).appendTo("#card-overview-board-view-div");
+
+        $('td > li > span').css("visibility","hidden");
+        $('td:not(.td_ex)').hover(
+                function(){$(this).css('background','#009DD9');$(this).css('color','#FFFFFF');$(this).children().children().css("visibility","visible");},
+                function(){$(this).css('background','#EEEEEE');$(this).css('color','#333333');$(this).children().children().css("visibility","hidden");}
+        );
+
+
+        //微众卡Top10表格
+        document.getElementById('wCard_rank_t10_table_div').innerHTML = '';
+        $("#card-overview-card-top10-tmpl-src").tmpl({'wcards_use_top10': data.wcards_use_top10}).appendTo("#wCard_rank_t10_table_div");
+        //卡消费Top10表格
+        document.getElementById('consum_rank_t10_table_div').innerHTML = '';
+        $("#card-overview-consum-top10-tmpl-src").tmpl({'wcards_consum_top10': data.wcards_consum_top10}).appendTo("#consum_rank_t10_table_div");
+
+        //微众卡top10 柱状图 ：横坐标
+        var wcards_top10_x = [];
+        for(var i in data.wcards_use_top10){
+            wcards_top10_x.push(data.wcards_use_top10[i].name)
+        }
+        //微众卡top10 柱状图：纵坐标
+        var wcards_top10_data = [];
+        for(var i in data.wcards_use_top10){
+            wcards_top10_data.push(data.wcards_use_top10[i].use_num)
+        }
+
+        //卡消费top10 柱状图： 横坐标
+        var cards_consum_top10_x=[];
+        for(var i in data.wcards_consum_top10){
+            cards_consum_top10_x.push(data.wcards_consum_top10[i].weizoom_card_id)
+        }
+        //卡消费 top10 纵坐标
+        var cards_consum_top10_data=[];
+        for(var i in data.wcards_consum_top10){
+            cards_consum_top10_data.push(data.wcards_consum_top10[i].consum_money)
+        }
+
+        //卡类型
+        var cards_pie_legend=[];
+        for(var i in data.card_type_static){
+            cards_pie_legend.push(data.card_type_static[i].name);
+        }
+        var cards_pie_data= data.card_type_static;
+
+        //渠道统计
+        var  channels_pie_legend=[];
+        for(var i in data.user_consum){
+            channels_pie_legend.push(data.user_consum[i].name)
+        }
+        var channels_pie_data=data.user_consum;
+
+
+        //Echart 图表
+        //微众卡消费top10
+        var wCard_t10_bar = echarts.init(document.getElementById('wCard_bar_container'), 'macarons');
+        var wCard_t10_bar_option = {
+            title: {
+                text: '微众卡使用量排行榜Top10'
+            },
+            tooltip: {
+                show: true
+            },
+            legend: {
+                data: ['使用张数']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            xAxis: [
+                {
+                    axisLabel:{
+                        interval:0//显示不间隔
+                    },
+                    name: '卡名称',
+                    type: 'category',
+                    data:fmat_xAxis(wcards_top10_x)
+
+
+                }
+            ],
+            yAxis: [
+                {
+                    name: '使用张数',
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    "name": "使用张数",
+                    "type": "bar",
+                    "data": wcards_top10_data
+                }
+            ],
+
+        };
+
+        wCard_t10_bar.setOption(wCard_t10_bar_option);
+
+
+        //卡消费额度top10
+        var consum_bar = echarts.init(document.getElementById('consum_bar_container'), 'macarons');
+        var consum_bar_option = {
+            title: {
+                text: '卡消费额排行Top10'
+            },
+            tooltip: {
+                show: true
+            },
+            legend: {
+                data: ['消费金额']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            xAxis: [
+                {
+                    axisLabel:{
+                        interval:0,//显示不间隔
+                    },
+                    name: '卡号',
+                    type: 'category',
+                    data: fmat_xAxis(cards_consum_top10_x)
+
+                }
+            ],
+            yAxis: [
+                {
+                    name: '消费金额',
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    "name": "消费金额",
+                    "type": "bar",
+                    "data": cards_consum_top10_data
+                }
+            ]
+
+        };
+
+        consum_bar.setOption(consum_bar_option);
+
+        function fmat_xAxis(data){
+                        var list=[];
+                        for(var x in data ){
+                            if(data[x]!=''){
+                                if(data[x].length>8){
+                                    var less = data[x].substring(0,2)+"..."+ data[x].substring(data[x].length-3, data[x].length-1);
+                                    list.push(less);
+                                }
+                                else{
+                                    list.push(data[x]);
+                                }
+                            }
+                        }
+                        return list;
+                    }
+
+        //卡类型使用量占比
+        var cards_pie = echarts.init(document.getElementById('cards_pie_container'));
+        var cards_pie_option = {
+            title: {
+                text: '卡类型使用量占比'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                y: 80,
+                data: cards_pie_legend
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'center',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            series: [
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: false
+                            },
+                            labelLine: {
+                                show: false
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                position: 'center',
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    data: cards_pie_data
+                }
+            ]
+        };
+        cards_pie.setOption(cards_pie_option);
+
+        //渠道消费占比
+        var channels_pie = echarts.init(document.getElementById('channels_pie_container'), 'macarons');
+        var channels_pie_option = {
+            title: {
+                text: '消费渠道占比'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                y: 80,
+                data: channels_pie_legend
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'center',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            series: [
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: false
+                            },
+                            labelLine: {
+                                show: false
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                position: 'center',
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    data:channels_pie_data
+                }
+            ]
+        };
+        channels_pie.setOption(channels_pie_option);
+
+    }
+    </script>
+{% endblock %}

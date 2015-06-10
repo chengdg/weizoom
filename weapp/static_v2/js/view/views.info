@@ -12,6 +12,7 @@ common_global_hint_view
 common_editable_widget
 common_echarts_view
 common_select_website_link_view
+common_member_select_box_view
 mall_product_custom_model_editor
 mall_product_model_property_editor
 mall_product_editor
@@ -59,6 +60,17 @@ weixin2_category_selector
 weixin2_fan_category_list
 mall_product_review_filter_view
 mall_product_review_list_view
+card_num_census_view
+card_num_detail_view
+card_channel_census_view
+card_channel_detail_view
+card_filter_view
+card_detail_list_view
+card_overview_filter
+card_overview_board
+card_overview_tables
+card_overview_details
+card_overview_advanced_table_ex
 mall_coupon_list_view
 mall_coupon_list_view
 weixin2_fans_analysis

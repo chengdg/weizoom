@@ -611,6 +611,15 @@ select{
 	background-repeat: no-repeat;
 	background-position: right;
 }
+
+.xui-mainPanel .xui-sideBar ul li.active_third a{
+    color:#1262b7;
+}
+
+.xui-sideBar-third{
+	font-size: 13px;
+}
+
 .xui-mainPanel .xui-sideBar ul li.active a .xui-icon-arrow{
 	display: none;
 }

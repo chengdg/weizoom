@@ -1,0 +1,399 @@
+{% extends "card_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+
+<div class="xui-editProductPage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/card/cards/get/">微众卡管理</a>
+        </li>
+        <li>
+            <a href="/card/cards/get/">制卡管理</a>
+        </li>
+        <li>{% if weizoom_card_rule %}{{weizoom_card_rule.name}}{%else%}新建{% endif %}</li>
+    </ul>
+
+    <!-- 筛选 -->
+    <div class="xa-cardListFilterView xui-filterPanel"></div>
+
+    <div class="panel-heading" style="position: absolute;clear: both;margin-top: 22px;z-index: 10;left: -4px;">
+        <a class="btn btn-success xa-batch-active fr mt5 ml10" href="javascript:void(0)">批量激活</a> 
+        <a class="btn btn-success xa-batch-inactive fr mt5" href="javascript:void(0)">批量停用</a>
+    </div>
+
+    <div class=" " style="position: absolute;clear: both;margin-top: 27px;right:0px;z-index: 10;">
+        <a id="appendBtn" rule-id="{{weizoom_card_rule.id}}" class="btn btn-primary" href="javascript:void(0)" style="margin:0px">追加</a>
+        <a id="exportBtn" class="btn btn-primary" href="javascript:void(0)"><i class="icon-plus icon-white"></i>导出表格</a>
+    </div>
+
+    <form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="post" id="editForm" style="">
+
+        {% if weizoom_card_rule %}
+        <fieldset>
+            <div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+                <div class="panel-heading" style="height:60px">
+                </div>
+
+                <div class="xa-listView" 
+                    data-ui-role="advanced-table"  
+                    data-args='{"weizoom_card_rule_id":"{{weizoom_card_rule.id}}"}' 
+                    data-enable-paginator="true" 
+                    data-app="card" 
+                    data-api="weizoom_cards/get" 
+                    data-template-id="#weizoom_card_record_list_view" 
+                    data-init-sort="-created_at"  
+                    data-item-count-per-page="15">
+                </div>
+            </div>
+        </fieldset>
+        {% endif %}
+
+    </form>
+</div>
+
+
+{% endblock %}
+{% block js %}
+
+    {% verbatim %}
+    <script id="weizoom_card_record_list_view" type="text/x-jquery-tmpl">
+        <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" style="margin-bottom: 10px;">
+        <thead>
+            <tr>
+                <th>
+                    <input class="xa-select-all fl " style="cursor: default;margin-top:2px;" type="checkbox" value="1" name="select-all">
+                    <span class="tx_searchable">
+                        卡号
+                    </span>
+                </th>
+                <th>密码</th>
+                <th>
+                    状态
+                </th>
+                <th>面值/余额</th>
+                <th>已使用金额</th>
+                <th>激活时间</th>
+                <th>有效期</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="">
+            {{each(i, card) items}}
+            <tr tr-id='${card.id}'>
+                <td style="width:85px;">
+                    {{if (card.is_expired && card.status!=2) || card.status==2}}
+                        <input class="fl " style="cursor: default;margin-top:2px;" type="checkbox" value="1" name="select-one" disabled>
+                    {{else}}
+                        <input class="fl " style="cursor: default;margin-top:2px;" type="checkbox" value="1" name="select-one" >
+                    {{/if}}
+                    <a href="/card/card_num_details/get/?card_id=${card.weizoom_card_id}&IS_CARD_RULE=TRUE">${card.weizoom_card_id}</a>
+                </td>
+                <td>
+                    ${card.password}
+                </td>
+                <td class="card_status" td-status="${card.status}">
+                    {{if card.is_expired}}
+                    <dl>已过期</dl>
+                    {{else}}
+                        {{if card.status==0}}
+                        <dl style="color: #FF0000;">未使用</dl>
+                        {{/if}}
+                        {{if card.status==1}}
+                        <dl style="color: #00FF00;">使用中</dl>
+                        {{/if}}
+                        {{if card.status==2 }}
+                        <dl>己用完</dl>
+                        {{/if}}
+                        {{if card.status==3}}
+                        <dl>未激活</dl>
+                        {{/if}}
+                    {{/if}}
+                </td>
+                <td>
+                    ${card.total_money}/${card.money}
+                </td>
+                <td>
+                    ${card.used_money}
+                </td>
+                <td>
+                    ${card.activated_at}
+                </td>
+                <td>
+                    ${card.valid_time_from}</br>
+                    ${card.valid_time_to}
+                </td>
+                <td>
+                    ${card.remark}
+                </td>
+                <td>
+                    {{if !card.is_expired}}
+                        {{if card.status==3}}
+                        <a class="btn btn-success xa-active" href="javascript:void(0)">激活</a>   
+                        {{else}}
+                        {{if card.status!=2}}
+                        <a class="btn btn-danger xa-inactive" href="javascript:void(0)">停用</a>
+                        {{/if}} 
+                        {{/if}}
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+    {% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var filterBox = new W.view.card.cards.cardListFilter({
+        el: ".xa-cardListFilterView",
+        dataView: $('[data-ui-role="advanced-table"]').data('view'),
+        userWebappId: {{user.get_profile.webapp_id}},
+        status:''
+    });
+
+     $('#exportBtn').click(function(event) {
+        var url = '/card/weizoom_cards/export/?card_id='+{{weizoom_card_rule.id}};
+        if (filterBox.filter_value) {
+            url = url + '&filter_value='+filterBox.filter_value;
+        }
+
+        window.open(url);
+    });
+});
+</script>
+
+<script>
+    function buildTimeOptions(max, selected) {
+        var i, optionHtml = '', value;
+        for(i = 0; i < max; i++) {
+            value = i < 10 ? '0'+i : i;
+            if (selected==value){
+                optionHtml += '<option value="'+value+'" selected>'+value+'</option>';
+            }else{
+                optionHtml += '<option value="'+value+'">'+value+'</option>';
+            }
+        }
+        return optionHtml;
+    }
+    var selected = $('.xa_hours').attr('data-value') || '00';
+    $('.xa_hours').append(buildTimeOptions(24, selected));
+    selected = $('.xa_minute').attr('data-value') || '00';
+    $('.xa_minute').append(buildTimeOptions(60, selected));
+
+    $('.xa-listView').delegate('.xa-active', 'click', function(event) {
+        var id = $(this).parents('tr').attr('tr-id');
+        var $el = $(event.currentTarget);
+        var deleteView = W.getItemDeleteView();
+
+        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
+            W.getApi().call({
+                app: 'card',
+                api: 'status/update',
+                method: 'post',
+                args: {
+                    card_id: id,
+                    status: '0'
+    
+                },
+                success: function(data) {
+                    deleteView.hide();
+                    $('div[data-ui-role="advanced-table"]').data('view').reload();
+                },
+                error: function(resp) {
+                    W.getLoadingView().hide();
+                    W.getErrorHintView().show('失败');
+                },
+                scope: this
+            });
+        }, this);
+        var is_delete = deleteView.show({
+            $action: $el,
+            info: '确定激活'
+        })
+    });
+    
+    $('.xa-batch-active').click(function(event) {
+        var $el = $(event.currentTarget);
+        var deleteView = W.getItemDeleteView();
+
+        var card_ids =[],flag=false;
+        var checkboxes = $('input[name="select-one"]:checked').parents('tr').each(function(){
+            card_status= $(this).children('.card_status').attr('td-status');
+
+            if(card_status == 3 ){
+                card_ids.push($(this).attr('tr-id'));
+            }else{
+                W.getErrorHintView().show('操作失败，您所选的卡号含有使用中或未使用的状态！');
+                flag = true;
+            }
+        });
+
+        if(flag){
+            deleteView.hide();
+            return false;
+        }
+
+        if(card_ids.length == 0){
+            W.getErrorHintView().show('请先选择要激活的微众卡！');
+            return;
+        }
+
+        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
+            W.getApi().call({
+                app: 'card',
+                api: 'batch_status/update',
+                method: 'post',
+                args: {
+                    card_id: card_ids.toString(),
+                    status: '0'
+    
+                },
+                success: function(data) {
+                    deleteView.hide();
+                    $('div[data-ui-role="advanced-table"]').data('view').reload();
+                },
+                error: function(resp) {
+                    W.getLoadingView().hide();
+                    if(resp.code == 500){
+                        W.getErrorHintView().show(resp.errMsg);
+                    }else{
+                        W.getErrorHintView().show('批量激活失败');
+                    }
+                    deleteView.hide();
+                },
+                scope: this
+            });
+        }, this);
+        var is_delete = deleteView.show({
+            $action: $el,
+            info: '确定批量激活'
+        })
+    });
+
+    $('.xa-batch-inactive').click(function(event) {
+        var $el = $(event.currentTarget);
+        var deleteView = W.getItemDeleteView();
+        var card_ids =[],flag=false;
+
+        var checkboxes = $('input[name="select-one"]:checked').parents('tr').each(function(){
+            card_status= $(this).children('.card_status').attr('td-status');
+            if(card_status != 3 ){
+                card_ids.push($(this).attr('tr-id'));
+            }else{
+                W.getErrorHintView().show('操作失败，您所选的卡号已包含未激活的状态！');
+                flag = true;
+            }
+        });
+
+        if(flag){
+            deleteView.hide();
+            return false;
+        }
+
+        if(card_ids.length == 0){
+            W.getErrorHintView().show('请先选择要停用的微众卡！');
+            return;
+        }
+
+        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
+            W.getApi().call({
+                app: 'card',
+                api: 'onbatch_status/update',
+                method: 'post',
+                args: {
+                    card_id: card_ids.toString(),
+                    status: '3'
+    
+                },
+                success: function(data) {
+                    deleteView.hide();
+                    $('div[data-ui-role="advanced-table"]').data('view').reload();
+                },
+                error: function(resp) {
+                    W.getLoadingView().hide();
+                    if(resp.code == 500){
+                        W.getErrorHintView().show(resp.errMsg);
+                    }else{
+                        W.getErrorHintView().show('批量停用失败');
+                    }
+                    deleteView.hide();
+                },
+                scope: this
+            });
+        }, this);
+        var is_delete = deleteView.show({
+            $action: $el,
+            info: '确定批量停用'
+        })
+    });
+
+    $('.xa-listView').delegate('.xa-inactive', 'click', function(event) {
+        var id = $(this).parents('tr').attr('tr-id');
+        var $el = $(event.currentTarget);
+        var deleteView = W.getItemDeleteView();
+        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
+            W.getApi().call({
+                app: 'card',
+                api: 'status/update',
+                method: 'post',
+                args: {
+                    card_id: id,
+                    status: '3'
+                },
+                success: function(data) {
+                    deleteView.hide();
+                    $('div[data-ui-role="advanced-table"]').data('view').reload();
+                },
+                error: function(resp) {
+                    W.getLoadingView().hide();
+                    W.getErrorHintView().show('失败');
+                },
+                scope: this
+            });
+        }, this);
+        var is_delete = deleteView.show({
+            $action: $el,
+            info: '确定停用'
+        })
+    });
+    
+    
+    $('.xa-listView').delegate('.xa-select-all', 'click', function(event) {
+        var checkboxes = $('input[name="select-one"]');
+        for(var i=0; i < checkboxes.length; i++) {
+            if(checkboxes[i].disabled) {
+                continue;
+            }
+            checkboxes[i].checked = !checkboxes[i].checked;
+        }
+    });
+    
+    $('#appendBtn').click(function(event) {
+        W.dialog.showDialog('W.weapp.dialog.AppendWeizoomCardDialog', {
+            success: function(data) {
+                W.getLoadingView().show();
+                W.getApi().call({
+                    app: 'card',
+                    api: 'weizoom_cards/append',
+                    method: 'post',
+                    args: data,
+                    success: function(data) {
+                        W.getLoadingView().hide();
+                        $('[name="number"]').val(data.count)
+                        $('div[data-ui-role="advanced-table"]').data('view').reload();
+                    },
+                    error: function(resp) {
+                        W.getLoadingView().hide();
+                        W.getErrorHintView().show('追加微众卡失败！');
+                    }
+                })
+            }
+        })
+    });
+</script>
+{% endblock %}

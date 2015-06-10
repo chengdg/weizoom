@@ -1,0 +1,42 @@
+<script id="card-overview-card-top10-tmpl-src" type="text/x-jquery-tmpl">
+                <table id="wCard_rank_t10_table" class="table" frame="border" style="border: #eee 2px;">
+                       <thead>
+                            <tr class="active">
+                                <th>排名</th>
+                                <th>卡名称</th>
+                                <th>数量</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{each(i, card)  wcards_use_top10}}
+                                <tr>
+                                    <td>${i+1}</td>
+                                    <td>${card.name}</td>
+                                    <td>${card.use_num}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                </table>
+</script>
+
+<script id="card-overview-consum-top10-tmpl-src" type="text/x-jquery-tmpl">
+                <table id="consum_rank_t10_table" class="table" frame="border" style="border: #eee 2px;">
+                    <thead>
+                        <tr class="active">
+                            <th>排名</th>
+                            <th>卡号</th>
+                            <th>消费金额</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{each(i, card)  wcards_consum_top10}}
+                            <tr>
+                                <td>${i+1}</td>
+                                <td>${card.weizoom_card_id}</td>
+                                <td>${card.consum_money}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+</script>
+

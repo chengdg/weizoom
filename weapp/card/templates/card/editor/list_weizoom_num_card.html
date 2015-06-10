@@ -1,0 +1,104 @@
+{% extends "card_base.html" %}
+
+{% block content-panel %}
+<div class="relative">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/card/cards/get/">微众卡管理</a>
+        </li>
+        <li>
+            <a href="/card/cards_census/get/">数据统计</a>
+        </li>
+        <li class="active">按卡号统计</li>
+    </ul>
+</div>
+<!--筛选-->
+<div class="xa-numFilterView xui-filterPanel xui-cardnumFilter"></div>
+<!--列表-->
+{% if has_cards %}
+<div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+	<div class="panel-heading" style="height:40px">
+	</div>
+	<div 
+	    data-ui-role="advanced-table" 
+        data-app="card" 
+        data-resource="cards_num_census/get"
+        data-template-id="#cards-list"
+        data-enable-paginator="true" 
+        data-enable-sort="false" 
+        data-item-count-per-page="20" 
+        data-auto-load="true"
+        class="panel-body"
+	></div>
+</div>
+{% else %}
+	<div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+{% endif %}
+
+{% verbatim %}
+<script id="cards-list" type="text/x-jquery-tmpl">
+	<div class="pa" style="top:10px;right:15px;">
+		<a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
+	</div>
+	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+		<thead>
+			<tr>
+				<th width="120">卡号</th>
+				<th>卡名称</th>
+				<th>面值</th>
+				<th>状态</th>
+				<th>余额</th>
+				<th>卡类型</th>
+				<th>消费金额</th>
+				<th>订单数</th>
+				<th>使用人</th>
+			</tr>
+		</thead>
+		<tbody id='card_list'>
+		{{each(i,card) items}}
+		    <tr>
+		        <td><a title="查看明细" href="/card/card_num_details/get/?card_id=${card[1].weizoom_card_id}">${card[1].weizoom_card_id}</a></td>
+		        <td>${card[1].name}</td>
+		        <td>${card[1].rule_money}</td>
+		        <td>${card[1].status}</td>
+		        <td>${card[1].money}</td>
+		        <td>${card[1].card_type}</td>
+		        <td>${card[1].use_money}</td>
+		        <td>${card[1].order_count}</td>
+		        <td>{{html card[1].buyer_name}}</td>
+		    </tr>
+		{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.card.numFilter({
+		el: ".xa-numFilterView",
+		dataView: $('[data-ui-role="advanced-table"]').data('view'),
+		status:''
+	});
+	view.$el.bind('end_click', function(){
+		DATA_INTERVAL = '';
+	});
+	// 导出
+	$('.panel-body').delegate('.xa-export', 'click', function(event){	
+		var url = '/card/cards/export/';
+		if (view.filter_value) {
+			url = url + '?filter_value='+view.filter_value;
+		}
+		W.getSuccessHintView().show("'导出中...'");
+		var $frame=$('<iframe>').hide().attr('src',url);
+		$('body').append($frame);
+		setTimeout(function(){W.getErrorHintView().hide()}, 5000);
+	});
+
+});
+</script>
+
+{% endblock %}

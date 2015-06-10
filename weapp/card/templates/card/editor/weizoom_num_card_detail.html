@@ -1,0 +1,136 @@
+{% extends "card_base.html" %}
+
+{% block content-panel %}
+<div class="xui-mall-outlinePage">
+<div class="relative">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/card/cards/get/">微众卡管理</a>
+        </li>
+
+        {% if IS_CARD_RULE %}
+            <li>
+                <a href="/card/cards/get/">制卡管理</a>
+            </li>
+            <li><a href="/card/card_detail/get/?id={{weizoom_card_rule_id}}">{{card_rule_name }}</a></li>
+        {% else %}
+            <li>
+                <a href="/card/cards_census/get/">数据统计</a>
+            </li>
+            <li><a href="/card/cards_num_census/get/">按卡号统计</a></li>
+        {% endif %}
+        <li class="active">{{card.weizoom_card_id}}</li>
+    </ul>
+</div>
+<div class="panel xui-i-allContent " style="padding-left:2%;padding-top:0px;">
+    <ul class="clearfix">
+        {% if card %}
+            <li class="xui-i-outlineCount fl" style="width:75%;text-align: left">
+                <div style="float:left;width:25%;margin-left:10px">
+                    <div class="xui-i-description">卡号：{{card.weizoom_card_id}}</div>
+                    <div class="xui-i-description">面值：{{card.rule_money}}</div>
+                </div>
+                <div style="float:left;width:25%">
+                    <div class="xui-i-description">密码：{{card.password}}</div>
+                    <div class="xui-i-description">状态：{{card.status_str}}</div>
+                </div>
+                
+                <div style="float:left;">
+                    <div class="xui-i-description">卡名称：{{card.rule_name}}</div>
+                    <div class="xui-i-description">类型：{{card.type}}</div>
+                </div>
+            </li>
+            <li class="xui-i-outlineCount fl">
+                <div class="xui-i-description" style="font-size:35px;color:#0099CB">￥{{card.money}}</div>
+                <div class="xui-i-description">卡内余额</div>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+<div class="xa-numFilterView xui-filterPanel xui-cardnumFilter"></div>
+</div>
+
+<!--列表-->
+    <div class="panel  panel-default mt20 pr" style="background-color:#EAEEF6">
+        <div class="panel-heading" style="font-size:16px">消费明细</div>
+        {% if card_orders %}
+        <div 
+            data-ui-role="advanced-table" 
+            data-app="card" 
+            data-resource="card_num_details/get"
+            data-template-id="#card-detail-list"
+            data-enable-paginator="true" 
+            data-enable-sort="false" 
+            data-item-count-per-page="10" 
+            data-auto-load="true"
+            class="panel-body"
+            data-args='{"card_id":"{{card.weizoom_card_id}}"}'
+        ></div>
+    {% else %}
+        <div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+    {% endif %}
+    </div>
+
+{% verbatim %}
+<script id="card-detail-list" type="text/x-jquery-tmpl">
+    <div class="panel panel-default mt20 xb-rightPanel pr">
+        <div class="pa" style="top:-50px;right:15px;">
+            <a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
+        </div>
+        <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+            <thead>
+                <tr>
+                    <th width="200">消费时间</th>
+                    <th>订单号</th>
+                    <th>渠道</th>
+                    <th>消费金额</th>
+                    <th>余额</th>
+                    <th>使用人</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{each(i,card_order) items}}
+                <tr>
+                    <td>${card_order.created_at}</td>
+                    <td><a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${card_order.orderid}" target="_blank">${card_order.order_id}</a></td>
+                    <td>${card_order.owner}</td>
+                    <td>${card_order.money}</td>
+                    <td>${card_order.remainder}</td>
+                    <td>{{html card_order.use_name}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
+
+{% endverbatim %}
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var view = new W.view.card.numDetailFilter({
+        el: ".xa-numFilterView",
+        dataView: $('[data-ui-role="advanced-table"]').data('view'),
+        status:''
+    });
+    view.$el.bind('end_click', function(){
+        DATA_INTERVAL = '';
+    });
+    // 导出
+    $('.panel-body').delegate('.xa-export', 'click', function(event){   
+        var url = '/card/card_detail/export/?card_id={{card.weizoom_card_id}}';
+        if (view.filter_value) {
+            url = url + '&filter_value='+view.filter_value;
+        }
+        W.getSuccessHintView().show("'导出中...'");
+        var $frame=$('<iframe>').hide().attr('src',url);
+        $('body').append($frame);
+        setTimeout(function(){W.getErrorHintView().hide()}, 5000);
+    });
+});
+</script>
+
+{% endblock %}

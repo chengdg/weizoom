@@ -1,0 +1,45 @@
+<script id="card-overview-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="xui-col disTc" style="margin-top: 20px">
+        <div class="xui-i-item" >
+            <label>筛选日期：</label>
+            <input type="text"
+                   data-max="now"
+                   data-format="yy-mm-dd HH:MM"
+                   data-ui-role="overviewDatepicker"
+                   data-enable-select-time="true"
+                   data-validate="require-notempty"
+                   readonly="readonly"
+                   value=""
+                   style=""
+                   name="start_date"
+                   id="start_date"
+                   class="form-control xui-datePicker">
+            <span class="ml5 mr5">至</span>
+
+            <input type="text"
+                   data-min-el="#start_date"
+                   data-max="now"
+                   data-format="yy-mm-dd HH:MM"
+                   data-enable-select-time="true"
+                   data-ui-role="overviewDatepicker"
+                   data-validate="require-notempty"
+                   readonly="readonly"
+                   value=""
+                   name="end_date"
+                   id="end_date"
+                   class="form-control xui-datePicker">
+            <button id="search-order-btn" class="btn btn-primary mr40 seacrh-order-btn xui-fontBold"
+                    type="button">查&nbsp;&nbsp;询
+            </button>
+
+        </div>
+    </div>
+    <div class="xui-col disTc">
+        <div class="xui-i-item recently-week-day-div" style="margin-top: 32px">
+            快速查询：
+            <span data-day="7" class="xui-dateFilter recently-week-day">最近7天</span>&nbsp;
+            <span data-day="30" class="xui-dateFilter  recently-week-day">最近30天</span>&nbsp;
+            <span data-day="60" class="xui-dateFilter recently-week-day">最近60天</span>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,267 @@
+{% extends "card_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block content-panel %}
+
+<style type="text/css">
+    .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; } 
+    .ui-timepicker-div dl { text-align: left; } 
+    .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; } 
+    .ui-timepicker-div dl dd { margin: 0px 10px 0px 45px; } 
+    .ui-timepicker-div td { font-size: 90%; } 
+    .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+</style>
+
+<div class="xui-editProductPage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/card/cards/get/">微众卡管理</a>
+        </li>
+        <li>
+            <a href="/card/cards/get/">制卡管理</a>
+        </li>
+        <li>新建</li>
+    </ul>
+
+    <form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="post" id="editForm">
+        <section>
+        <header style="margin-left:38px;">
+                <span class="xui-fontBold">基本信息</span>
+                <span class="xui-fontGary">
+                    ( <i class="star_show pl5"></i>
+                    表示必填)
+                </span>
+        </header>
+
+        <fieldset>
+            <div class="form-group">
+                <label class="control-label fl" for="parents_name">名&nbsp;&nbsp;&nbsp;称：</label>
+                <div class="fl">
+                    <input type="text" class="form-control w490 mr20 ml5" name="name" placeholder="1-20个字，中英文、数字特殊符号均可" data-validate="require-notempty"/>
+                    <div class="errorHint" ></div>
+                </div>
+
+            </div>
+            
+            <div class="form-group ">
+                <label class="control-label fl" for="parents_name">面&nbsp;&nbsp;&nbsp;值：</label>
+                <div class="col-sm-2 fl pl5">
+                    <input type="text" class="form-control w106"  name="money" placeholder=" " data-validate="require-price"/>
+                    <div class="errorHint"></div>
+                </div>
+                <span style="position: absolute;left: 320px;">元</span>
+            </div>
+            
+            <div class="form-group ">
+                <label class="control-label fl" for="parents_name">数&nbsp;&nbsp;&nbsp;量：</label>
+                <div class="col-sm-2 fl pl5">
+                    <input type="text" class="form-control w106" name="number" placeholder=" " data-validate="require-int"/>
+                    <div class="errorHint"></div>
+                </div>
+                <span style="position: absolute;left: 320px;">张</span>
+            </div>
+
+            <div class="form-group ">
+                <label class="control-label fl" for="parents_name">卡类型：</label>
+                <div class="col-sm-2 fl pl5">
+                    <select type="text" class="input-xlarge" name="type" data-validate="require-select">
+                        <option value="0">外部卡</option>
+                        <option value="1">内部卡</option>
+                        <option value="2">赠品卡</option>
+                    </select>
+                    <div class="errorHint"></div>
+                </div>
+            </div>
+            
+            <div class="form-group ">
+                <label class="control-label fl" for="parents_name">有效期：</label>
+                <div class="col-sm-2 fl pl5">
+                    <input 
+                        type="text" 
+                        data-min="now"
+                        class="input-xlarge form-control" 
+                        id="valid_time_from" 
+                        name="valid_time_from" 
+                        style="width:160px;z-index:9999"
+                        placeholder="" 
+                        value="{% if weizoom_card_rule %}{{weizoom_card_rule.valid_time_from|date:"Y-m-d"}}{% endif %}"
+                        readonly="readonly" 
+                        data-validate="require-notempty" 
+                        data-enable-select-time="true"
+                        data-ui-role="date_time_picker"
+                        data-format="yy-mm-dd" />
+
+                    <div class="errorHint"></div>
+                </div>
+
+                <div class="col-sm-2 fl pl5">
+                    <span style="width:10px;z-index:9999;position:absolute;top:0px;left:10px;">至</span>
+                    <input 
+                        type="text" 
+                        class="input-xlarge form-control" 
+                        id="valid_time_to" 
+                        name="valid_time_to" 
+                        style="width:160px;z-index:9999;position:absolute;top:0px;left:40px;"
+                        placeholder="" 
+                        value="{% if weizoom_card_rule %}{{weizoom_card_rule.valid_time_to|date:"Y-m-d"}}{% endif %}"
+                        readonly="readonly" 
+                        data-validate="require-notempty" 
+                        data-enable-select-time="true"
+                        data-ui-role="date_time_picker"
+                        data-format="yy-mm-dd" 
+                        data-min-el="#valid_time_from" />
+
+                    <div class="errorHint" style="position:absolute;top:24px;left:40px;"></div>
+                </div>
+            </div>
+            
+            <div class="form-group nostar">
+                <label class="control-label fl" for="parents_name">备注：</label>
+                <div class="col-sm-2 fl pl5">
+                    <input type="text" class="input-xlarge" name="remark" placeholder=""/>
+                    <div class="errorHint"></div>
+                </div>
+            </div>
+        </fieldset>
+        
+        <fieldset {% if weizoom_card_rule %}class="hidden"{% endif %}>
+            <div class="control-group" style="position: relative;left: 180px;">
+                <div class="controls">
+                    <input type="submit" class="btn btn-primary" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+                    <a href="/card/cards/get/"><input type="button" class="btn btn-default" value="取消"/></a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('input[data-ui-role="date_time_picker"]').each(function() {
+            var $datetimepicker = $(this);
+            var format = $datetimepicker.attr('data-format');
+            var min = $datetimepicker.attr('data-min');
+            var max = $datetimepicker.attr('data-max');
+            var $min_el = $($datetimepicker.attr('data-min-el'));
+            var $max_el = $($datetimepicker.attr('data-max-el'));
+            var options = {
+                buttonText: '选择日期',
+                numberOfMonths: 1,
+                dateFormat: format,
+                //timeFormat: 'HH:mm',
+                closeText: '关闭',
+                prevText: '&#x3c;上月',
+                nextText: '下月&#x3e;',
+                monthNames: ['一月','二月','三月','四月','五月','六月',
+                    '七月','八月','九月','十月','十一月','十二月'],
+                monthNamesShort: ['一','二','三','四','五','六',
+                    '七','八','九','十','十一','十二'],
+                dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+                dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
+                dayNamesMin: ['日','一','二','三','四','五','六'],
+                beforeShow: function(e) {
+                    if(min === 'now') {
+                        $(this).datetimepicker('option', 'minDate', new Date());
+                    }else if(min){
+                        $(this).datetimepicker('option', 'minDate', min);
+                    }
+
+                    if($min_el){
+                        var startTime = $min_el.val();
+                        if(startTime) {
+                            $(this).datetimepicker('option', 'minDate', startTime);
+                        }
+                    }
+
+                    if(max === 'now') {
+                        $(this).datetimepicker('option', 'maxDate', new Date());
+                    }else if(max){
+                        $(this).datetimepicker('option', 'maxDate', max);
+                    }
+
+                    if($max_el){
+                        var endTime = $max_el.val();
+                        if(endTime) {
+                            $(this).datetimepicker('option', 'maxDate', endTime);
+                        }
+                    }
+                },
+                onClose: function() {
+                }
+            };
+
+            $datetimepicker.datetimepicker(options);
+        });
+    });
+
+    $('form').submit(function() {
+
+        var startDate = $('#valid_time_from').val();
+        var endDate = $('#valid_time_to').val();
+        if (startDate.length > 0 && endDate.length == 0) {
+            W.getErrorHintView().show('请输入结束日期！');
+            return false;
+        }
+        if (endDate.length > 0 && startDate.length == 0) {
+            W.getErrorHintView().show('请输入开始日期！');
+            return false;
+        }
+        var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+        var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+        if ((startDate.length > 0 || endDate.length > 0) && start > end){
+            W.getErrorHintView().show('开始日期不能大于结束日期！');
+            return false;
+        }
+
+        $('#submitBtn').attr('disabled', true);
+        if (!W.validate()) {
+            $('#submitBtn').prop('disabled', false);
+            return false;
+        }
+        createCards();
+        return false;
+    });
+    
+
+    function createCards() {
+        W.getLoadingView().show();
+        var name = $('[name="name"]').val();
+        var money = $('[name="money"]').val();
+        var remark = $('[name="remark"]').val();
+        var number = $('[name="number"]').val();
+        var valid_time_from = $('[name="valid_time_from"]').val();
+        var valid_time_to = $('[name="valid_time_to"]').val();
+        var expired_hour = $('[name="expired_hour"]').val();
+        var expired_minute = $('[name="expired_minute"]').val();
+        var card_type = $('[name="type"]').val();
+
+        W.getApi().call({
+            app: 'card',
+            api: 'weizoom_cards/create',
+            args: {
+              name: name,
+              money: money,
+              remark: remark,
+              number: number,
+              valid_time_from: valid_time_from,
+              valid_time_to: valid_time_to,
+              card_type: card_type
+            },
+            method: 'post',
+            success: function(data) {
+                W.getLoadingView().hide();
+                window.location.href = "/card/cards/get/"
+            },
+            error: function(resp) {
+                W.getLoadingView().hide();
+                W.getErrorHintView().show(resp.code == 500 ? resp.errMsg : '创建微众卡失败！');
+                $('#submitBtn').prop('disabled', false);
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -313,7 +313,7 @@ def weapp_dialogs_old(request):
 #===============================================================================
 def weapp_dialogs(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path):
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('/card/' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -330,7 +330,8 @@ def weapp_dialogs(request):
 #===============================================================================
 def weapp_views(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path):
+	print request.path
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('/card/' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -347,7 +348,7 @@ def weapp_views(request):
 #===============================================================================
 def weapp_models(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path):
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('/card/' in request.path):
 		version = '2'
 	else:
 		version = '1'

@@ -1,0 +1,30 @@
+<script id="card-overview-details-tmpl-src" type="text/x-jquery-tmpl">
+    <table id='detail_data_table' class='table' frame="border" style="border: #eee 2px">
+        <thead>
+            <tr class="active">
+                <th>卡名称</th>
+                <th>面值</th>
+                <th>总张数</th>
+                <th>使用张数</th>
+                <th>消费金额</th>
+                <th>总余额</th>
+                <th>订单数</th>
+                <th>使用率</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each(i, card)  items}}
+                <tr>
+                    <td>${card.name}</td>
+                    <td>${card.money}</td>
+                    <td>${card.count}</td>
+                    <td>${card.use_num}</td>
+                    <td>${card.consum_total}</td>
+                    <td>${card.balance_total}</td>
+                    <td>${card.orders_num}</td>
+                    <td>${card.use_rate}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
