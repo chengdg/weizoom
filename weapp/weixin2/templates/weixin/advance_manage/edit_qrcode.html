@@ -29,7 +29,7 @@
 					<div class="xui-i-left fl"> 扫码奖励： </div>
 					<div class=" fl mt18 ml20">
 						<div class="controls" id="prize_selector" data-ui-role="prize-selector" data-init-prizeinfo='{% if qrcode %}{{ qrcode.award_prize_info|safe }}{% else %}{% endif %}'></div>
-					<input id="prize_info" name="prize_info" class="hide" value=""><span class="xui-i-remark">只有通过本次扫码新关注的会员获得奖励</span>
+					<input id="prize_info" name="prize_info" class="hide" value="">
 					</div>
 				</div>
 				<div class="xui-row">
@@ -111,8 +111,6 @@
 		
 		//提交二维码表单
 		$(".xa-footerBtn").delegate('.xa-submit','click',function() {
-
-
 			var name = $.trim($('[name="name"]').val());
 			if(name==''){
 				W.showHint('error', '二维码名称不能为空');
