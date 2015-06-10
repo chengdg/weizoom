@@ -49,7 +49,6 @@ W.view.card.channelDetailFilter = Backbone.View.extend({
         console.log('dataView.options.args', dataView.options.args)
         dataView.reload();
         this.$el.trigger('end_click');
-        this.setStatusActive();
     },
 
     // 获取条件数据
