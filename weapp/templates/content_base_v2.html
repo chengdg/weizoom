@@ -47,6 +47,7 @@
 					<li>
 						<a {% ifequal first_nav_name 'order' %}class="active"{% endifequal %} href='/mall/orders/get/' title='订单管理'>订单管理</a>
 					</li>
+					{% endif %}
 					{% if 'manage_promotion'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall_promotion/promotion_list/get/' title='促销管理'>促销管理</a>
