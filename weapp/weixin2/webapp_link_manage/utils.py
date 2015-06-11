@@ -106,16 +106,8 @@ def get_webapp_link_menu_objectes(request):
 				'add_link': '/market_tools/shake/edit/0/'
 			}]
 		},
-		'memberQrcode': {
-			'id': 6,
-			'name': '推广扫码',
-			'link': get_member_qrcode_webapp_link(request)
-		},
-		'complain': {
-			'id': 7,
-			'name': '用户反馈',
-			'link': get_complain_webapp_link(request)
-		},
+		
+		
 		'myOrder': {
 			'id': 8,
 			'name': '我的订单',
@@ -131,6 +123,24 @@ def get_webapp_link_menu_objectes(request):
 			}]
 		}
 	}
+	#update by bert at 20150611
+	# 'memberQrcode': {
+	# 		'id': 6,
+	# 		'name': '推广扫码',
+	# 		'link': get_member_qrcode_webapp_link(request)
+	# 	},
+	member_qrcode_link = get_member_qrcode_webapp_link(request)
+	if member_qrcode_link:
+		menus['memberQrcode'] = {'id': 6, 'name': '推广扫码','link': member_qrcode_link}
+	# 'complain': {
+	# 		'id': 7,
+	# 		'name': '用户反馈',
+	# 		'link': get_complain_webapp_link(request)
+	# 	},
+	complain_link = get_complain_webapp_link(request)
+	if complain_link:
+		menus['complain'] ={'id': 7, 'name': '用户反馈', 'link': complain_link}
+
 	return menus
 
 
