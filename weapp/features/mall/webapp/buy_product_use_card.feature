@@ -62,7 +62,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall2 @mall.pay_weizoom_card  
+@mall2 @mall.pay_weizoom_card  @jz
 Scenario:1 微众卡金额大于订单金额时进行支付
 	bill用微众卡购买jobs的商品时,微众卡金额大于订单金额 
 	1.自动扣除微众卡金额

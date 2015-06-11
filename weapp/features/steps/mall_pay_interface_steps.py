@@ -115,10 +115,13 @@ def step_impl(context, user):
 
 	actual = target_pay_interface
 	actual.is_active = u'启用' if actual.is_active else u'停用'
+
 	configs = {}
 	if hasattr(actual, 'configs'):
 		for actual_config in actual.configs:
-			configs[actual_config['name']] = actual_config['value']
+			the_key = actual_config['name']
+			the_value = actual_config['value']
+			configs[the_key] = the_value
 
 	if actual.type == PAY_INTERFACE_WEIXIN_PAY:
 		actual.type = u'微信支付'
@@ -128,11 +131,13 @@ def step_impl(context, user):
 		actual.weixin_sign = configs[u"支付专用签名串"]
 	elif actual.type == PAY_INTERFACE_ALIPAY:
 		actual.type = u'支付宝'
-		actual.partner = actual.related_config.partner
-		actual.key = actual.related_config.key
-		actual.ali_public_key = actual.related_config.ali_public_key
-		actual.private_key = actual.related_config.private_key
-		actual.seller_email = actual.related_config.seller_email
+		actual.description = u'我的支付宝'
+		actual.partner = configs[u'合作者身份ID']
+		actual.key = configs[u'交易安全检验码']
+		actual.ali_public_key = configs[u'支付宝公钥']
+		actual.private_key = configs[u'商户私钥']
+		actual.seller_email = configs[u'邮箱']
+
 	elif actual.type == PAY_INTERFACE_COD:
 		actual.type = u'货到付款'
 	elif actual.type == PAY_INTERFACE_WEIZOOM_COIN:
@@ -162,24 +167,27 @@ def step_impl(context, user, pay_interface_type):
 
 @then(u"{user}能获得支付方式列表")
 def step_impl(context, user):
-	response = context.client.get('/mall/editor/mall_settings/')
+	response = context.client.get('/mall/pay_interfaces/get/')
 
 	expected = json.loads(context.text)
 	actual = list(response.context['pay_interfaces'])
+	result = []
 	for pay_interface in actual:
-		pay_interface.is_active = u'启用' if pay_interface.is_active else u'停用'
-		if pay_interface.type == PAY_INTERFACE_WEIXIN_PAY:
-			pay_interface.type = u'微信支付'
-		elif pay_interface.type == PAY_INTERFACE_ALIPAY:
-			pay_interface.type = u'支付宝'
-		elif pay_interface.type == PAY_INTERFACE_COD:
-			pay_interface.type = u'货到付款'
-		elif pay_interface_type == u'微众卡支付':
-			pay_interface_type = PAY_INTERFACE_WEIZOOM_COIN
-		else:
-			pass
+		if pay_interface.is_active:
+			_actual = {}
+			if pay_interface.type == PAY_INTERFACE_WEIXIN_PAY:
+				_actual['type'] = u'微信支付'
+			elif pay_interface.type == PAY_INTERFACE_COD:
+				_actual['type'] = u'货到付款'
+			elif pay_interface.type == PAY_INTERFACE_ALIPAY:
+				_actual['type'] = u'支付宝'
+			elif pay_interface.type == PAY_INTERFACE_WEIZOOM_COIN:
+				_actual['type'] = u'微众卡支付'
+			else:
+				pass
+			result.append(_actual)
 
-	bdd_util.assert_list(expected, actual)
+	bdd_util.assert_list(expected, result)
 
 
 @then(u'{user}"{add_ability}"添加其他支付方式')

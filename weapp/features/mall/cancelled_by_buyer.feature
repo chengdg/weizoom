@@ -47,17 +47,17 @@ Background:
 			}],
 			"coupon_code": "12345678",
 			"status": "待支付"
-		},{	
+		},{
 			"order_no":"003",
 			"member": "bill",
 			"products": [{
 				"name": "商品1",
-				"count": 1 
+				"count": 1
 			}],
 			"integral": 100,
 			"status": "待支付"
 
-		},{	
+		},{
 			"order_no":"004",
 			"member": "bill",
 			"products": [{
@@ -70,18 +70,18 @@ Background:
 		}]
 		"""
 
-@mall.order_cancel_status @mall.order_cancel_status.member @pyliu @ignore
+@mall2 @mall.order_cancel_status @mall.order_cancel_status.member @pyliu
 Scenario:bill取消订单
 	bill取消订单'001'
 	1. bill手机端订单状态改变为'已取消'
 	2. jobs后端订单状态改变为'已取消'
 	3. '商品1'库存改为为:1
-	
+
 	When bill访问jobs的webapp
 	When bill取消订单'001'
 	Then bill手机端获取订单'001'状态
 		"""
-		{	
+		{
 			"order_no": "001",
 			"status": "已取消"
 		}
@@ -101,7 +101,7 @@ Scenario:bill取消订单
 		}
 		"""
 
-@mall.order_cancel_status @mall.order_cancel_status.coupon_member @pyliu @ignore
+@mall2 @mall.order_cancel_status @mall.order_cancel_status.coupon_member @pyliu
 Scenario:bill取消使用了优惠券的订单
 	bill取消订单'002'
 	1. bill手机端订单状态改变为'已取消'
@@ -113,7 +113,7 @@ Scenario:bill取消使用了优惠券的订单
 	When bill取消订单'002'
 	Then bill手机端获取订单'002'状态
 		"""
-		{	
+		{
 			"order_no": "002",
 			"status": "已取消"
 		}
@@ -140,7 +140,7 @@ Scenario:bill取消使用了优惠券的订单
 		}
 		"""
 
-@mall.order_cancel_status @mall.order_cancel_status.integral_member @pyliu @ignore
+@mall2 @mall.order_cancel_status @mall.order_cancel_status.integral_member @pyliu
 Scenario:bill取消使用了积分的订单
 	bill取消订单'003'
 	1. bill手机端订单状态改变为'已取消'
@@ -152,7 +152,7 @@ Scenario:bill取消使用了积分的订单
 	When bill取消订单'003'
 	Then bill手机端获取订单'003'状态
 		"""
-		{	
+		{
 			"order_no": "003",
 			"status": "已取消"
 		}
@@ -178,7 +178,7 @@ Scenario:bill取消使用了积分的订单
 		}
 		"""
 
-@mall.order_cancel_status @mall.order_cancel_status.integral_and_coupon_member @pyliu @ignore
+@mall2 @mall.order_cancel_status @mall.order_cancel_status.integral_and_coupon_member @pyliu
 Scenario:bill取消使用积分和优惠券的订单
 	bill取消订单'004'
 	1. bill手机端订单状态改变为'已取消'
@@ -191,7 +191,7 @@ Scenario:bill取消使用积分和优惠券的订单
 	When bill取消订单'004'
 	Then bill手机端获取订单'004'状态
 		"""
-		{	
+		{
 			"order_no": "004",
 			"status": "已取消"
 		}

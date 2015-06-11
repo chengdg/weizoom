@@ -12,7 +12,7 @@ from features.testenv.model_factory import *
 from django.test.client import Client
 from mall.models import *
 from tools.express import util as express_util
-from mall.promotion.models import CouponRule, Coupon
+from mall.promotion.models import *
 from core import dateutil
 
 @given(u"{user}已有的会员")
@@ -47,12 +47,14 @@ def step_impl(context, user):
 def _save_coupon(user, coupon_data):
 	coupon_price = coupon_data.get('coupon_price')
 	rule = CouponRule.objects.create(
-		owner=user, 
+		owner=user,
 		name=coupon_price,
 		valid_days=120,
 		money=coupon_price,
 		count=1,
-		remained_count=1
+		remained_count=1,
+		start_date=datetime.now(),
+		end_date=datetime.now(),
 	)
 	Coupon.objects.create(
 		owner=user,
@@ -102,7 +104,7 @@ def step_impl(context, webapp_user_name, order_id):
 	bdd_util.assert_dict(expected, actual_order)
 
 @then(u"{user}后端订单状态改变为")
-def step_impl(context, user):	
+def step_impl(context, user):
 	if hasattr(context, 'client'):
 		context.client.logout()
 
@@ -113,7 +115,7 @@ def step_impl(context, user):
 	expected = json.loads(context.text)
 
 	order_id = _get_order_by_order_id(expected['order_no']).id
-	response = context.client.get('/mall/editor/order/get/?order_id=%d' % order_id)
+	response = context.client.get('/mall/order_detail/get/?order_id=%d' % order_id)
 
 	order = response.context['order']
 	actual_order = dict()
@@ -130,7 +132,7 @@ def step_impl(context, user):
 	expected = json.loads(context.text)
 
 	product_id = _get_product_by_name(expected['name']).id
-	response = context.client.get('/mall/editor/product/update/%d/' % product_id)
+	response = context.client.get('/mall/product/update/?id=%s' % product_id)
 
 	product = response.context['product']
 	actual_product = dict()
