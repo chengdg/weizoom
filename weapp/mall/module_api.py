@@ -1875,8 +1875,8 @@ def get_order_products(order):
 def get_weizoom_mall_partner_products_and_ids(webapp_id):
 	return _get_weizoom_mall_partner_products_and_ids_by(webapp_id)
 
-# def get_verified_weizoom_mall_partner_products_and_ids(webapp_id):
-# 	return _get_weizoom_mall_partner_products_and_ids_by(webapp_id, True)
+def get_verified_weizoom_mall_partner_products_and_ids(webapp_id):
+	return _get_weizoom_mall_partner_products_and_ids_by(webapp_id, True)
 
 def get_not_verified_weizoom_mall_partner_products_and_ids(webapp_id):
 	return _get_weizoom_mall_partner_products_and_ids_by(webapp_id, False)

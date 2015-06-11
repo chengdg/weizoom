@@ -47,8 +47,10 @@ def get_link_targets(request):
 		return response.get_response()
 
 	app_module = manager.get_app_module(app)
+	# print app_module
+	from apps.customerized_apps import shengjing, weshop
 	try:
-		return app_module.export.get_link_targets(request)
+		return eval(app.name).export.get_link_targets(request)
 	except:
 		raise
 		alert_msg = u"调用APP:{}的get_link_targets失败，cause:\n{}".format(

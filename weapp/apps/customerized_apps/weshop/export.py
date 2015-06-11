@@ -7,13 +7,13 @@ from core.jsonresponse import create_response
 
 from apps.module_api import get_app_link_url
 
-from mall.models import *
-from mall import module_api
 
 ########################################################################
 # get_link_targets: 获取可链接的目标
 ########################################################################
 def get_link_targets(request):
+	from mall.models import ProductCategory, Product
+	from mall import module_api
 	response = create_response(200)
 
 	workspace_template_info = 'workspace_id=mall&webapp_owner_id=%d' % request.workspace.owner_id
@@ -23,12 +23,12 @@ def get_link_targets(request):
 	if has_data_category_filter:
 		categories = []
 	else:
-		categories = [{'text': u'全部', 'value': get_app_link_url(request, 'weshop', 'mall', 'products', 'list', 'category_id=0')}]
+		categories = [{'text': u'全部', 'value': get_app_link_url(request, 'weshop', 'mall2', 'products', 'list', 'category_id=0')}]
 
 	for category in ProductCategory.objects.filter(owner=request.user):
 		categories.append({
 			'text': category.name, 
-			'value': get_app_link_url(request, 'weshop', 'mall', 'products', 'list', 'category_id=%d' % category.id),
+			'value': get_app_link_url(request, 'weshop', 'mall2', 'products', 'list', 'category_id=%d' % category.id),
 			'meta': {
 				'id': category.id,
 				'name': category.name,
@@ -52,7 +52,7 @@ def get_link_targets(request):
 		for product in temp_products:
 			products.append({
 				'text': product.name, 
-				'value': get_app_link_url(request, 'weshop', 'mall', 'product', 'get', 'rid=%d' % product.id),
+				'value': get_app_link_url(request, 'weshop', 'mall2', 'product', 'get', 'rid=%d' % product.id),
 				'meta': {
 					'pic_url': product.thumbnails_url,
 					'name': product.name,

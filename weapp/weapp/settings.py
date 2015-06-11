@@ -359,7 +359,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'captcha',
-
+    
     'apps.customerized_apps.shengjing',
     'apps.customerized_apps.weshop',
 
