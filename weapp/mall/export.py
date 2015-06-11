@@ -52,7 +52,7 @@ def get_first_navs(user):
     manage_order=ORDER_NAV
     manage_promotion=PROMOTION_NAV
     manage_member=CONFIG_NAV
-    static=[]
+    static={'navs':[]}
     manage_auth=MEMBER_NAV
     manage_mall_config=CONFIG_NAV
 
