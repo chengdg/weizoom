@@ -38,11 +38,6 @@
                         {% endif %}
                         </p>
                     </a>
-                    {% ifequal product.stock_type 1 %}
-                        {% ifequal product.stocks 0 %}
-                        <div class="xui-sellout-tag fr"><div class="xui-sellout-middle"><div class="xui-sellout-inner">已售罄</div></div></div>
-                        {% endifequal %}
-                    {% endifequal %}
                 </li>
                 {% endfor %}
             </ul>

@@ -29,12 +29,12 @@ SECOND_NAV_NAME = 'weizoom_card'
 ########################################################################
 @login_required
 def list_weizoom_card(request):
-	c = RequestContext(request, {
-		'first_nav_name': MARKET_TOOLS_NAV,
-		'second_navs': export.get_second_navs(request),
-		'second_nav_name': SECOND_NAV_NAME,
-	})
-	return render_to_response('weizoom_card/editor/list_weizoom_card.html', c)
+	# c = RequestContext(request, {
+	# 	'first_nav_name': MARKET_TOOLS_NAV,
+	# 	'second_navs': export.get_second_navs(request),
+	# 	'second_nav_name': SECOND_NAV_NAME,
+	# })
+	return HttpResponseRedirect('/apps/')
 
 
 ########################################################################
