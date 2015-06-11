@@ -116,7 +116,7 @@ class MyEcharts(object):
 
 		option[self.TOOLTIP_OPTION_NAME] = {
 			"trigger": 'axis',
-			"formatter": "{b}%s : {c}%s" % (x_unit_label, y_unit_label)
+			# "formatter": "{b}%s : {c}%s" % (x_unit_label, y_unit_label)
 		}
 
 		option['xAxis'] = {
