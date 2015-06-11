@@ -58,7 +58,7 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 			},
 			error: function(resp) {
 				W.getLoadingView().hide();
-				alert('加载菜单数据失败!');
+				W.showHint('error', '加载菜单数据失败!');
 			}
 		});
     },

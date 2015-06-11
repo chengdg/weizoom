@@ -217,13 +217,15 @@ div[class^="xui-star"]{
 .xui-cover{
 	background-color: rgba(0,0,0,0.8);
 	z-index: 21;
+	animation: fadeIn 0.3s ease-in-out;
+	-webkit-animation: fadeIn 0.3s ease-in-out;
 }
 .xui-pop{
 	width:80%;
 	top:27.7778%;
 	z-index: 22;
-	animation: bounceInDown 0.5s ease-in-out;
-	-webkit-animation: bounceInDown 0.5s ease-in-out;
+	animation: bounceInDown 2s ease-in-out;
+	-webkit-animation: bounceInDown 2s ease-in-out;
 }
 .xui-pop h2{
 	font-weight: bold;
@@ -254,7 +256,7 @@ div[class^="xui-star"]{
 .xui-redBtn{
 	background-color: #d81c26;
 	color:#fff;
-	top:54%;
+	top:60%;
 }
 .xui-whiteBtn{
 	background-color: #fff;
@@ -450,8 +452,8 @@ div[class^="xui-star"]{
 
   0% {
     opacity: 0;
-    -webkit-transform: translate3d(0, -3000px, 0);
-    transform: translate3d(0, -3000px, 0);
+    -webkit-transform: translate3d(0, -1000px, 0);
+    transform: translate3d(0, -1000px, 0);
   }
 
   60% {

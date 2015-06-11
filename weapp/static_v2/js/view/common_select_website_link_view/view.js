@@ -118,7 +118,11 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
     onClickItemMenu: function(event){
     	var menuType = $(event.currentTarget).attr('data-type');
     	var item =  this.menus[menuType];
-    	var title = item.title;
+
+    	
+        var title = item.title;
+
+        
     	var selectedLinkTarget = this.$el.find('#linkTarget').data('link_target');
     	var _this = this;
     	if (title) {
@@ -136,7 +140,6 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
                 else if(t.type == 'product'  || t.type == 'category')
                     newTitle.push(t)
             })
-            
 			W.dialog.showDialog('W.dialog.weixin.SelectWebSiteLinkDialog', {
 				title: newTitle,
 				menuType: menuType,
@@ -150,9 +153,8 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 			});
     	} else {
     		var data = this.getLinkTargetJson(item.id, item.name, item.name, item.name, item.name, item.link)
-    		
 	        if ($.parseJSON(data).data === null) {
-	            alert('没有设置该链接');
+                W.showHint('error', '没有设置该链接');
 	            return false;
 	        }
     		this.setEditHtml(data, true);

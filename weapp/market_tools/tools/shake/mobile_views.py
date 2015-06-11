@@ -23,9 +23,7 @@ def get_shake(request):
     webapp_user = request.webapp_user
     member = request.member
     shake_id = request.GET.get('shake_id', None)
-    #try:
     member = __get_current_user_info(request, member)
-    #member = Member.objects.get(id = member.id)
     shake = Shake.objects.get(id=shake_id)
     if member:
     #是否已经参加领红包
@@ -72,11 +70,7 @@ def get_shake(request):
                 'cur_request_member': member
             })
 
-    # except:
-    #     c = RequestContext(request, {
-    #         'is_deleted_data': True,
-    #         'is_hide_weixin_option_menu':True
-    #     })
+    
     return render_to_response('shake/webapp/shake.html', c)
 
 

@@ -42,7 +42,7 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
                 var data = options.data || null;
             },
             error: function() {
-                alert('2')
+                //alert('2')
 
             }
         });
@@ -80,9 +80,9 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
 			});
     	} else {
     		var data = this.getLinkTargetJson(item.id, item.name, item.name, item.name, item.name, item.link)
-    		
-	        if (data.data === null) {
-	            alert('没有设置该链接');
+	        if ($.parseJSON(data).data === null) {
+	           // alert('没有设置该链接');
+                W.showHint('error', '没有设置该链接');
 	            return false;
 	        }
     		this.setEditHtml(data, true);

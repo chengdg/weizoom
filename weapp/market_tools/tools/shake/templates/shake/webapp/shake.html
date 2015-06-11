@@ -99,9 +99,6 @@
 	<h2 class="pa autoX tc notice"></h2>
 	<p class="pa autoX tc mark"></p>
 	<a href="javascript:void(0);" class="xui-redBtn pa autoX xa-more hidden">再摇一把</a>
-	{% if cur_request_member and cur_request_member.is_subscribed %}
-	<a href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" class="xui-whiteBtn pa autoX">用户中心</a>
-	{% endif %}
 </div>
 <div class="xui-rule xa-rule" style="">
 	<div class="pa" style="right:15px;top:15px;overflow:hidden;"><i class="xui-close xa-Rclose"></i></div>
@@ -177,7 +174,7 @@
 		        method: 'get',
 		        success: function(data) {
 	                
-	                $('.xa-cover').removeClass('hidden');
+	                
 			    	$('.xa-hand').removeClass('shake');
 			    	myShakeEvent.stop();
 			    	if (data.result.error_msg) {
@@ -185,11 +182,11 @@
 	                	$('.mark').html(data.result.error_msg)
 	                	
 	                } else {
-	                	$('.notice').html("恭喜您")
-	                	$('.mark').html('恭喜您获得<h2>'+data.result.send_price+'元</h2>现金红包')
+	                	$('.notice').html("恭喜您");
+	                	$('.mark').html('恭喜您获得<span style="font-size:1.45rem;font-weight:bold;">'+data.result.send_price+'元</span>现金红包');
 	                }
 	                $('.xa-pop').removeClass('hidden');
-
+	                $('.xa-cover').removeClass('hidden');
 	                if (data.result.play_count > 0) {
 	                	$('.xa-more').removeClass('hidden');
 	                }
@@ -198,7 +195,7 @@
 		        	$('.xa-cover').removeClass('hidden');
 			    	$('.xa-hand').removeClass('shake');
 			    	myShakeEvent.stop();
-		    		$('.notice').html("很遗憾")
+		    		$('.notice').html("很遗憾");
                 	$('.mark').html("{{shake_detail.shake.not_winning_desc}}")
 	                $('.xa-pop').removeClass('hidden');
                 	$('.xa-more').removeClass('hidden');

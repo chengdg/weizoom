@@ -63,14 +63,26 @@ def record_prize(request):
 			member_play_count = ShakeRecord.objects.filter(member=member, shake_detail_id=detail_id).count()
 			now_join_count = ShakeRecord.objects.filter(shake_detail_id=detail_id).count()
 			max_price_member = False
+
+			
+
 			if now_join_count >= 30:
 				max_price_member = (0 == now_join_count%30)
 			with transaction.atomic():
 				shake_detail = ShakeDetail.objects.select_for_update().get(id=detail_id)
+
+				next_shake_details = ShakeDetail.objects.filter(shake=shake_detail.shake, start_at__gte=shake_detail.end_at).order_by('start_at')
+				if next_shake_details.count() > 0:
+					next_shake_detail = next_shake_details[0]
+				else:
+					next_shake_detail = None
 				if shake_detail.shake.is_deleted == False and shake_detail.start_at <= now and shake_detail.end_at >= now:
 					if shake_detail.residue_price > 10:
 						if  member_play_count >= shake_detail.play_count:
-							error_msg = u'您已经参加过本次摇一摇活动'
+							if next_shake_detail:
+								error_msg = u'本轮活动已经结束，我们下轮见，祝您好运'
+							else:
+								error_msg = u'活动已经结束，感谢您今天的参与！'
 						else:
 							if shake_detail.residue_price <= shake_detail.fixed_price or shake_detail.residue_price <= shake_detail.random_price_end:
 								send_price = random.uniform(1, float(shake_detail.residue_price))
@@ -103,9 +115,12 @@ def record_prize(request):
 							else:
 								error_msg = shake_detail.shake.not_winning_desc
 					else:
-						error_msg = u'本次活动红包已经发送完毕'
+						if next_shake_detail:
+							error_msg = u'本轮活动已经结束，我们下轮见，祝您好运'
+						else:
+							error_msg = u'活动已经结束，感谢您今天的参与！'
 				else:
-					error_msg = u'活动已经结束'
+					error_msg = u'活动已经结束，感谢您今天的参与！'
 			# except:
 			# 	error_msg = u'活动不存在'
 	else:
