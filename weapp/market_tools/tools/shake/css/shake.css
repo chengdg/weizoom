@@ -236,7 +236,8 @@ div[class^="xui-star"]{
 .xui-pop p{
 	font-size: 0.9rem;
 	color:#454545;
-	top: 32%;
+	top: 35%;
+	padding:0 25px;
 }
 .xui-pop .xui-close{
 	height: 13.1783%;
@@ -256,7 +257,7 @@ div[class^="xui-star"]{
 .xui-redBtn{
 	background-color: #d81c26;
 	color:#fff;
-	top:60%;
+	top:65%;
 }
 .xui-whiteBtn{
 	background-color: #fff;
