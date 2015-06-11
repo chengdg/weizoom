@@ -26,11 +26,11 @@ PERMISSIONS = [{
 	"name": u"商品管理",
 	"code_name": u"manage_product",
 	"permissions": [{
-		"name": u"添加新商品",
-		"code_name": u"manage_product_add"
-	}, {
 		"name": u"在售商品管理",
 		"code_name": u"manage_product_onshelf"
+	}, {
+		"name": u"添加新商品",
+		"code_name": u"manage_product_add"
 	}, {
 		"name": u"待售商品管理",
 		"code_name": u"manage_product_offshelf"
@@ -44,7 +44,7 @@ PERMISSIONS = [{
 		"name": u"分组管理",
 		"code_name": u"manage_product_category"
 	}, {
-		"name": u"属性规格管理",
+		"name": u"属性管理",
 		"code_name": u"manage_product_property_and_model_property"
 	}, {
 		"name": u"评价管理",
@@ -85,30 +85,14 @@ PERMISSIONS = [{
 	# 	"name": u"满减",
 	# 	"code_name": u"manage_price_cut"
 	# }, {
-		"name": u"优惠券",
-		"code_name": u"manage_coupon"
-	}, {
 		"name": u"积分应用",
 		"code_name": u"manage_integral_sale"
 	}, {
+		"name": u"优惠券",
+		"code_name": u"manage_coupon"
+	}, {
 		"name": u"发优惠券",
 		"code_name": u"manage_send_coupon"
-	}]
-}, {
-	"name": u"配置管理",
-	"code_name": u"manage_mall_config",
-	"permissions": [{
-		"name": u"运费模板",
-		"code_name": u"manage_postage_template"
-	}, {
-		"name": u"物流名称管理",
-		"code_name": u"manage_express"
-	}, {
-		"name": u"支付方式",
-		"code_name": u"manage_pay_interface"
-	}, {
-		"name": u"运营邮件通知",
-		"code_name": u"manage_config_mail"
 	}]
 }, {
 	"name": u"会员管理",
@@ -141,7 +125,23 @@ PERMISSIONS = [{
 	}, {
 		"name": u"员工管理",
 		"code_name": u"manage_auth_account"
-	}]	
+	}]
+}, {
+	"name": u"配置管理",
+	"code_name": u"manage_mall_config",
+	"permissions": [{
+		"name": u"运费模板",
+		"code_name": u"manage_postage_template"
+	}, {
+		"name": u"物流名称管理",
+		"code_name": u"manage_express"
+	}, {
+		"name": u"支付方式",
+		"code_name": u"manage_pay_interface"
+	}, {
+		"name": u"运营邮件通知",
+		"code_name": u"manage_config_mail"
+	}]
 }]
 
 class Command(BaseCommand):

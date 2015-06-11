@@ -265,7 +265,7 @@
 					<td class="nowrap w80 wbAll">
 						<div>
 							{{if order.member_id > 0}}
-								<a href="/webapp/user_center/member/${order.member_id}/">{{html order.buyer_name}}</a>
+								<a href="/member/member_detail/edit/?id=${order.member_id}">{{html order.buyer_name}}</a>
 							{{else}}
 								{{html order.buyer_name}}
 							{{/if}}

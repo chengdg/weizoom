@@ -177,7 +177,7 @@
 					</td>
 					<td width="100">
 						{{if order.member_id > 0}}
-							<a href="/webapp/user_center/member/${order.member_id}/">{{html order.buyer_name}}</a>
+							<a href="/member/member_detail/edit/?id=${order.member_id}">{{html order.buyer_name}}</a>
 						{{else}}
 							{{html order.buyer_name}}
 						{{/if}}

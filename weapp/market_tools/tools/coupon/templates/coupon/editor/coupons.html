@@ -224,7 +224,7 @@
 					{{if coupon.is_manual_generated }}
 					手工
 					{{else}}
-					<a href="/webapp/user_center/member/${coupon.member.id}">{{html coupon.member.username_for_html}}</a>
+					<a href="/member/member_detail/edit/?id=${coupon.member.id}">{{html coupon.member.username_for_html}}</a>
 					{{/if}}
 				</td>
 			</tr>

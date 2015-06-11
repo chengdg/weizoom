@@ -27,7 +27,7 @@
 			<label class="control-label" for="name">该组会员：</label>
 			<div class="controls">
 				{% for member_has_tag in member_has_tags %}
-					<a href="/webapp/user_center/member/{{ member_has_tag.member.id }}/">{{ member_has_tag.member.username_for_html|safe }}</a></br>
+					<a href="/member/member_detail/edit/?id={{ member_has_tag.member.id }}">{{ member_has_tag.member.username_for_html|safe }}</a></br>
 				{% endfor %}
 			</div>
 		</div>

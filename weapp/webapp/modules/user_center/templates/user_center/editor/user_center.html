@@ -292,14 +292,14 @@
 						</div>
 					{{/if}}
 						<div class="column_block">
-							<a href="/webapp/user_center/member/${ member.id }/">
+							<a href="/member/member_detail/edit/?id=${ member.id }">
 								<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
 							</a>
 						</div>
 
 						<div class="column_block">
 							<div>
-							<a href="/webapp/user_center/member/${ member.id }/" style="display:block;width:80px;">{{html member.username}}</a>
+							<a href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;">{{html member.username}}</a>
 							</div>
 
 							<div>

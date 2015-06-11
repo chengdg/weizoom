@@ -1,3 +1,0 @@
-# 每分钟执行
-* * * * * sh /weapp/web/weapp/services/service_minutely.sh &> /weapp/web/log/services/minutely.log
-
