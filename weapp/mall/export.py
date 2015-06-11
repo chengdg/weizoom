@@ -112,8 +112,8 @@ NAV = {
         },
         {
             'name': PRODUCT_MANAGE_MODEL_NAV,
-            'title': u'属性规格管理',
-            'url': '/mall/model_properties/get/',
+            'title': u'属性管理',
+            'url': '/mall/property_templates/get/',
             'need_permissions': ['manage_product_property_and_model_property', ]
         },
         {
