@@ -232,7 +232,7 @@ def update_order(request):
 	action = request.GET['action']
 	order = Order.objects.get(id=order_id)
 
-	mall_api.update_order_status(request.manager, action, order, request)
+	mall_api.update_order_status(request.user, action, order, request)
 	return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
