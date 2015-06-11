@@ -299,7 +299,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         <!-- <a href="javascript:void(0);" class="xa-addShoppingCartBtn xui-btn xui-addCartBtn xa-carButton xui-w93">加入购物车</a> -->
 
                         {% if cur_request_member.is_for_buy_test == True%}                     
-                        <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>                    
+                        <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>                    
                         {% endif %}
                     </div>
                     {% endif %}

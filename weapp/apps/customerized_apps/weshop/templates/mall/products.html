@@ -88,7 +88,7 @@
 <div data-role="page" data-theme="x" data-title="{{ page_title }}">
     {% if is_weizoom_mall %}
     {% else %}
-    <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn" data-role="button">{{shopping_cart_product_nums}}</a>
+    <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=shopping_cart&action=show" class="xui-shoppingCartBtn" data-role="button">{{shopping_cart_product_nums}}</a>
     {% endif %}
 <div data-role="content" data-theme="x" style="padding: 0px;">
     <div class="xui-hlist xui-hlist-cell-1 xui-products">
@@ -96,7 +96,7 @@
         <ul data-role="listview" data-theme="x" data-icon="false">
             {% for product in products %}
             <li>
-                <a href='./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall&model=product&action=get&rid={{product.id}}'>
+                <a href='./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=product&action=get&rid={{product.id}}'>
                     <div class="img">
                         <img src="{{ product.thumbnails_url }}"></div>
                     <div class="text">

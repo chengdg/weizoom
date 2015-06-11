@@ -24,9 +24,9 @@ def pay(pay_interface, order, webapp_owner_id):
 
 		return tenpay_url
 	elif PAY_INTERFACE_COD == pay_interface.type:
-		return './?woid={}&module=apps:weshop:mall&model=pay_result&action=get&pay_interface_type={}&order_id={}'.format(webapp_owner_id, PAY_INTERFACE_COD, order.order_id)
+		return './?woid={}&module=apps:weshop:mall2&model=pay_result&action=get&pay_interface_type={}&order_id={}'.format(webapp_owner_id, PAY_INTERFACE_COD, order.order_id)
 	elif PAY_INTERFACE_WEIXIN_PAY == pay_interface.type:
-		return '/webapp/wxpay/?woid={}&order_id={}&pay_id={}&callback_module=apps:weshop:mall&showwxpaytitle=1'.format(webapp_owner_id, order.order_id, pay_interface.id)
+		return '/webapp/wxpay/?woid={}&order_id={}&pay_id={}&callback_module=apps:weshop:mall2&showwxpaytitle=1'.format(webapp_owner_id, order.order_id, pay_interface.id)
 	elif PAY_INTERFACE_WEIZOOM_COIN == pay_interface.type:
 		return './?woid={}&module=mall&model=weizoompay_order&action=pay&pay_interface_type={}&pay_interface_id={}&order_id={}'.format(webapp_owner_id, PAY_INTERFACE_WEIZOOM_COIN, pay_interface.id, order.order_id)
 	else:
