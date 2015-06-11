@@ -286,9 +286,6 @@
               <td class="xui-td-fifth" rowspan="{{ forloop.revcounter }}">
                 {% if order.weizoom_card_money %}
                   <p> 微众卡抵扣:{{ order.weizoom_card_money|floatformat:"2" }}</p>
-                  {% for card in order.weizoom_cards %}
-                  <p>{{card | safe}}</p>
-                  {% endfor %}
                 {% endif %}
               </td>
               <td class="xui-td-sixth" rowspan="{{ forloop.revcounter }}">{{ order.postage|floatformat:"2" }}</td>

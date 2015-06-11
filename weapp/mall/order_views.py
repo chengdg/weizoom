@@ -369,14 +369,6 @@ def _get_detail_response(request, belong='all'):
 		order_status_logs = mall_api.get_order_status_logs(order)
 		log_count = len(order_status_logs)
 
-		# 微众卡信息
-		if order.weizoom_card_money:
-			from market_tools.tools.weizoom_card import models as weizoom_card_model
-			cardOrders = weizoom_card_model.WeizoomCardHasOrder.objects.filter(order_id=order.order_id)
-			cardIds = [card.card_id for card in cardOrders]
-			cards = weizoom_card_model.WeizoomCard.objects.filter(id__in=cardIds)
-			order.weizoom_cards = ['钱包ID:%s<br>卡号:%s' % (card.weizoom_card_rule_id, card.weizoom_card_id) for card in cards]
-
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_orders_second_navs(request),
