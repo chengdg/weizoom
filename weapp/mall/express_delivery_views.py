@@ -35,7 +35,7 @@ FIRST_NAV = export.MALL_CONFIG_FIRST_NAV
 @view(app='mall', resource='express_delivery', action='get')
 @login_required
 def get_express_delivery(request):
-	has_express_delivery = (ExpressDelivery.objects.filter(owner_id=request.user.id).count() > 0)
+	has_express_delivery = (ExpressDelivery.objects.filter(owner_id=request.manager.id).count() > 0)
 	c = RequestContext(request, {
 		'first_nav_name': FIRST_NAV,
 		'second_navs': export.get_config_second_navs(request),

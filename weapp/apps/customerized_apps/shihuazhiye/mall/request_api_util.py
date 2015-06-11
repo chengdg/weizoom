@@ -32,7 +32,7 @@ from account.models import UserProfile
 from modules.member.models import *
 from modules.member.util import *
 import httplib
-from webapp.modules.mall.models import *
+from mall.models import *
 from webapp.modules.mall import util as mall_util
 from webapp.modules.mall import signals as mall_signals
 from webapp.modules.mall import request_api_util

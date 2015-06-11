@@ -142,6 +142,9 @@ def check_shopping_cart_products(request):
 def get_products_stocks(request):
 	return request_api_util.products_stocks(request)
 
+def get_product_stocks(request):
+	return request_api_util.product_stocks(request)
+
 def update_wishlist_product(request):
 	"""
 	更新商品收藏
@@ -154,11 +157,11 @@ def check_product_in_wishlist(request):
 	"""
 	return request_api_util.check_product_in_wishlist(request)
 
-def get_product_detail(request):
-	"""
-	获取商品的介绍信息
-	"""
-	return request_api_util.get_product_detail(request)
+# def get_product_detail(request):
+# 	"""
+# 	获取商品的介绍信息
+# 	"""
+# 	return request_api_util.get_product_detail(request)
 
 
 def create_product_review(request):
@@ -171,3 +174,10 @@ def update_product_review_picture(request):
     PreCondition: product_review_id, picture_list
     '''
     return request_api_util.update_product_review_picture(request)
+
+
+def get_member_product_info(request):
+	'''
+	获取购物车的数量和检查商品是否已被收藏
+	'''
+	return request_api_util.get_member_product_info(request)

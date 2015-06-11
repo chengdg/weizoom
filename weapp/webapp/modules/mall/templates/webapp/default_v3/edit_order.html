@@ -12,11 +12,11 @@
 
 {% block content-panel %}
 <div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage">
-    
+
     <div id="wrapper" data-role="content" class="xui-wrapper">
         <form class="xui-form xa-form" method="post" action="">
-            
-            
+
+
             <fieldset class="xui-section xui-addr-border xui-receiverSection">
                 <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=list" class="xui-section-info xui-section-title xui-section-inner xui-section-item pr xui-section-item xt-shipInfo disT" data-icon="true" data-role="button" style="width:100%;">
                     <div class="disTc xui-positionIcon">
@@ -38,7 +38,7 @@
                         <img src="/static_v2/img/webapp/mall/right_arrowBlack.png" alt="">
                     </div>
                 </a>
-                
+
                 <!-- <div class="xui-section-item">
                     <div class="xui-section-title">
                         <h2>运费</h2>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </div> -->
-                
+
             </fieldset>
 
             <fieldset class="hidden">
@@ -70,26 +70,26 @@
             <!-- 商品列表 start -->
             <div class="xui-selectedProductList">
                 {% for product_group in order.product_groups %}<!-- 商品循环li -->
-                <fieldset 
+                <fieldset
                     class="
-                        mt10 
-                        xui-section 
-                        xa-promotion-{{product_group.promotion_type}} 
+                        mt10
+                        xui-section
+                        xa-promotion-{{product_group.promotion_type}}
                         xt-productGroup
                         xa-productGroup
                         {% if product_group.integral_sale_rule %}
                         xa-has-integral-sale-rule
                         {% endif %}
-                    " 
-                    data-product-group-id="{{product_group.id}}" 
+                    "
+                    data-product-group-id="{{product_group.id}}"
                 >
                     <ul class="clearStyle">
                     {% with product_group.products.0 as product %}
 
                         {% for product in product_group.products %}
                         <li class="xa-product disT xui-i-padding xt-product"
-                            data-product-id="{{product.id}}" 
-                            data-product-count="{{product.purchase_count}}" 
+                            data-product-id="{{product.id}}"
+                            data-product-count="{{product.purchase_count}}"
                             data-product-model-name="{{product.model_name}}"
                             {% if product_group.can_use_promotion %}
                             data-promotion-id="{{product_group.promotion.id}}"
@@ -128,9 +128,9 @@
                                     </dd>
                                 </dl>
                             </div>
-                        </li>           
+                        </li>
                         {% endfor %}
-                        {% if product_group.can_use_promotion and product_group.promotion_type == 'premium_sale' %}            
+                        {% if product_group.can_use_promotion and product_group.promotion_type == 'premium_sale' %}
                         <li class="xui-promotion-section xt-promotion" data-product-promotion-id="{{product.id}}">
                             <dl class="xui-i-content em85">
                                 <dd class="disTc vt" style="width:35px;white-space: nowrap;padding-left: 3px;padding-top:6px;">
@@ -158,7 +158,7 @@
                         </li>
                         {% endif %}
 
-                        {% if product_group.promotion_type == 'price_cut' %}       
+                        {% if product_group.promotion_type == 'price_cut' %}
                         <li class="xui-promotion-section xt-promotion" data-product-promotion-id="{{product.id}}">
                             <dl class="xui-i-content em85" style="line-height:26px;">
                                 <dd class="disTc" style="white-space: nowrap;padding-left: 3px;width:35px;">
@@ -175,31 +175,31 @@
                         </li>
                         {% endif %}
 
-                        {% if product_group.integral_sale_rule %}     
+                        {% if product_group.integral_sale_rule %}
                         <li class="xui-promotion-section em85 xt-promotion">
-                            <input 
-                                type='checkbox' 
-                                id='is_use_integral_{{product_group.uid}}' 
-                                class="xui-integral-checkbox xa-integral-checkbox hidden"  
+                            <input
+                                type='checkbox'
+                                id='is_use_integral_{{product_group.uid}}'
+                                class="xui-integral-checkbox xa-integral-checkbox hidden"
                             />
-                            <label 
-                                class="xa-integral block clearfix" 
+                            <label
+                                class="xa-integral block clearfix"
                                 style="padding:6px 3px;">
                                 <span class="xa-product-integral-info xt-promotionType fl pr20"></span>
                                 <i class="xui-iconSprite xui-iconSprite-checkbox pa xt-useIntegralTrigger" style="right:3px;top:6px;"></i>
-                                <input 
-                                    type="hidden" 
-                                    id="use_integral_{{product_group.uid}}" 
-                                    value="0" 
+                                <input
+                                    type="hidden"
+                                    id="use_integral_{{product_group.uid}}"
+                                    value="0"
                                     class="xa-integral"
                                 />
                             </label>
                         </li>
                         {% endif %}
-                        
+
                         {% if product_group.promotion_type and product_group.promotion_type != 'flash_sale' %}
                         <li class="tr em85 c9" style="padding:10px 3px" data-product-promotion-id="{{product.id}}">
-                            <span class="xa-promotion-info">共件商品，</span>小计<span class="xui-text-red">￥<em class="xui-text-red em9 xa-subtotal xt-subtotal"></em></span>  
+                            <span class="xa-promotion-info">共件商品，</span>小计<span class="xui-text-red">￥<em class="xui-text-red em9 xa-subtotal xt-subtotal"></em></span>
                         </li>
                         {% endif %}
                     {% endwith %}
@@ -272,7 +272,7 @@
                         <h2 class="">开具发票{{ request.owner_id }}1</h2>
                         <i class="xui-iconSprite xui-iconSprite-checkbox fr" style="margin-bottom:-2px;"></i>
                     </label>
-                    
+
                     <div id="billInputZone" class="hidden em95" data-mode="dropDown"  style="padding-bottom:1px;">
                         <div class="xui-billContainer">
                         <div class="disT w xa-choseBillType">
@@ -311,21 +311,21 @@
             {% if use_ceiling > 0 %}
             <!-- 整单积分 -->
             <div class="xui-orderIntegralDeduction pr xa-order-integral" data-integralCount="{{use_ceiling}}">
-                <input 
-                    type='checkbox' 
-                    id='is_use_integral_{{product.id}}_{{product.model.name|format_model_to_valid_selector}}' 
-                    class="xui-integral-checkbox xa-integral-checkbox hidden" 
+                <input
+                    type='checkbox'
+                    id='is_use_integral_{{product.id}}_{{product.model.name|format_model_to_valid_selector}}'
+                    class="xui-integral-checkbox xa-integral-checkbox hidden"
                     name='is_use_integral_{{product.id}}_{{product.model.name|format_model_to_valid_selector}}' />
-                <label 
-                    class="xa-integral block clearfix" 
+                <label
+                    class="xa-integral block clearfix"
                     style="padding:6px 3px;">
                     <span class="xa-product-integral-info xt-promotionType fl pr20"></span>
                     <i class="xui-iconSprite xui-iconSprite-checkbox pa xt-useIntegralTrigger" style="right:3px;top:11px;"></i>
-                    <input 
-                        type="hidden" 
-                        name="integral_order" 
-                        id="integral_order" 
-                        value="0" 
+                    <input
+                        type="hidden"
+                        name="integral_order"
+                        id="integral_order"
+                        value="0"
                         class="xa-product-use-integral"
                     />
                 </label>
@@ -346,14 +346,14 @@
                             <a href="javascript:void(0);" class="xa-cancelCoupon mr20 pa c3" style="right:0;top:0;padding:14px 0;">取消使用</a>
                             <span class="xui-icon xui-icon-rightarrow"> </span>
                         </span>
-                        
+
                     </label>
                     <input type="checkbox" id="is_use_coupon" name="is_use_coupon" value="true" class="hidden">
                     <input id="coupon_id" name="coupon_id" type="hidden" value="0" >
                 </div>
             </div>
             <!-- 微众卡 -->
-            {% if is_weizoom_card_permission %}
+            {% if request.webapp_owner_info.is_weizoom_card_permission %}
             <div class="xui-weizoomCard xa-weizoomCard">
                 <div class="xui-guideUse xa-guideUse" >
                     <div class="xui-i-title xui-section-title">
@@ -394,8 +394,8 @@
             {% endif %}
             </fieldset>
 
-                
-                
+
+
             <!--更改end-->
             {% if not order.type == "integral" %}
             <fieldset class="xui-section xui-prizeItemList em9">
@@ -430,14 +430,14 @@
         </form>
     </div>
     <div class="xui-bottom-actionPanel xui-actionPanel pr disT w xa-bottom-actionPanel">
-                <div class="disTc vm tc xui-text em95" style="background:rgba(0,0,0,0.8);color:#fff;">                    
+                <div class="disTc vm tc xui-text em95" style="background:rgba(0,0,0,0.8);color:#fff;">
                     <!-- {% if order.type == "integral" %}
                         实付 <span class="xui-text-red" style="font-size:1.1rem;"><span class="xa-totalPrice xt-totalPrice"></span>积分</span>
 
                     {% else %}
                     {% endif %} -->
                          实付金额：￥<span class="xa-totalPrice xt-totalPrice" style="font-size:1rem;"></span></span>
-                    
+
                 </div>
                 <a href="javascript:void(0);" data-role="button" class="disTc vm xui-btnOuter tc em95 xa-submit" id="submit-order" style="width:95px;color:#fff;background:#cf0404;">提交订单</a>
             </div>
@@ -489,7 +489,7 @@
                             </dl>
                         </div>
                     </li>
-                </ul>   
+                </ul>
             </div>
             <div class="xui-button clearfix tc">
                 <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-goBackButton xa-goBackButton">返回修改</a>
@@ -505,7 +505,7 @@
             <a>不可用</a>
             <a>使用优惠码</a>
         </div>
-        <div class="wui-swiper-container">    
+        <div class="wui-swiper-container">
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide" id="xa-wrapper">
                     <!--数据开始-->
@@ -531,7 +531,7 @@
                                                 {% else %}不限制{% endif %}</p>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             </li>
                             {% endfor %}
                         </ul>
@@ -566,7 +566,7 @@
                                                 {% else %}不限制{% endif %}</p>
                                         </div>
                                     </div>
-                                </div>   
+                                </div>
                             </li>
                             {% endfor %}
                         </ul>
@@ -581,7 +581,7 @@
                     <div class="pl10 pr10">
                       <!--数据开始-->
                         <div class="disT w">
-                            
+
                             <div class="xui-couponCodeInput pr disTc xa-clearBtnContainer">
                                 <div class="xui-clearBtn pa hidden" data-icon="true"></div>
                                 <!-- <span style="border:1px solid #dbdbdb">  -->
@@ -592,7 +592,7 @@
                                 <a href="javascript:void(0);" data-attr="couponButton" class="xui-couponCodeSubmit xa-useCouponCode disTc vm tc">确认使用</a>
                             </div>
                         </div>
-                        
+
                         <div class="error-info tl em85" style="color:#db4350;">
                         </div>
                      <!--数据结束-->
@@ -621,9 +621,9 @@ if (/ipad|iphone|mac/i.test(navigator.userAgent)){
     var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
 }
 
-var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %}; 
+var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %};
 
-$(document).ready(function() {   
+$(document).ready(function() {
     //绑定初始化数据
     _.delay(function() {
         var postageFactor = W.loadJSON('postageFactor');
@@ -642,13 +642,13 @@ $(document).ready(function() {
 
 //无刷新页面重置数量信息
 if (document.getElementById('card_name')) {
-    document.getElementById('card_name').value = '';    
+    document.getElementById('card_name').value = '';
 }
 if (document.getElementById('card_pass')) {
-    document.getElementById('card_pass').value = '';    
+    document.getElementById('card_pass').value = '';
 }
 if (document.getElementById('card_name')) {
-    document.getElementById('card_name').value = '';    
+    document.getElementById('card_name').value = '';
 }
 _.each($('input.xui-integral-checkbox[type="checkbox"]'), function($el){
     $el.checked = false;

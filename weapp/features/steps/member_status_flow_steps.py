@@ -8,7 +8,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import * 
 from utils.string_util import byte_to_hex
 import urlparse

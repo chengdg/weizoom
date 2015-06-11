@@ -45,7 +45,7 @@ def create_flash_sale(request):
 	if not limit_period:
 		limit_period = 0
 	flash_sale = FlashSale.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		limit_period = limit_period,
 		promotion_price = request.POST.get('promotion_price', 0.0),
 		count_per_purchase = count_per_purchase
@@ -55,7 +55,7 @@ def create_flash_sale(request):
 	# 当前实现了Promotion.update信号捕获更新缓存，因此数据插入时状态为活动未开始
 	status = PROMOTION_STATUS_NOT_START
 	promotion = Promotion.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		type = PROMOTION_TYPE_FLASH_SALE,
 		name = request.POST.get('name', ''),
 		promotion_title = request.POST.get('promotion_title', ''),

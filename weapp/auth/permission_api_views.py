@@ -80,6 +80,10 @@ def __build_permission_tree():
 	id2permission = {}
 	root = {"permissions":[], "level":0, "id":0}
 	for db_permission in Permission.objects.all():
+		if db_permission.code_name.find('manage_auth') >= 0:
+			# 屏蔽权限管理菜单权限分配
+			continue
+
 		permission = {
 			"id": db_permission.id,
 			"name": db_permission.name,
@@ -303,8 +307,8 @@ def get_account_permissions(request):
 		else:
 			specific_user_permission_ids = [int(specific_user_permission_ids_str),]
 		if specific_user_permission_ids:
-			user_permission_ids.update(set(specific_user_permission_ids))
-	if type == 'view':
+			user_permission_ids = set(specific_user_permission_ids)
+	if type == 'view' and not 0 in user_permission_ids:
 		__fill_parent_permissions(user_permission_ids)
 
 	options = {

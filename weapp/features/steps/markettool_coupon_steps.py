@@ -9,7 +9,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 from account.social_account.models import SocialAccount
 from modules.member.models import WebAppUser, Member, MemberHasSocialAccount
 from mall.promotion.models import *

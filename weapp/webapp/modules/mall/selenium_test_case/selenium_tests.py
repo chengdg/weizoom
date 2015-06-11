@@ -809,7 +809,7 @@ class TestMall(helper.FunctionFilterMixin, helper.TestHelperMixin, unittest.Test
 		self.driver.switch_to_window(main_window)
 
 
-from webapp.modules.mall.models import *
+from mall.models import *
 def init():
 	print 'init db environment for mall'
 

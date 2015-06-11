@@ -15,8 +15,8 @@ from workbench.models import *
 
 from datetime import datetime
 import pagestore as pagestore_manager
-from webapp.modules.mall import module_api as mall_api
-from webapp.modules.mall.models import Product
+from mall import module_api as mall_api
+from mall.models import Product
 from webapp import design_api_views
 from weixin.manage.customerized_menu.api_views import FakeRequest
 
@@ -564,19 +564,21 @@ def get_specific_products_by_ids(component):
 	
 
 @register.filter(name='get_component_product')
-def get_component_product(component):
+def get_component_product(component, owner_id):
 	target = component['model']['target']
 	if not target:
 		product_id = None
+		product = Product()
+		product.name = u'第%d个商品' % component['index']
 	else:
 		data = json.loads(target)
 		product_id = data['meta']['id']
 		component['product_id'] = product_id
 
-	product = mall_api.get_product_by_id(product_id)
-	Product.fill_display_price([product])
-	if not getattr(product, 'id', None):
-		product.name = u'第%d个商品' % component['index']
+	# product = mall_api.get_product_by_id(product_id)
+	# 
+		from mall import module_api
+		product = module_api.get_product_detail(owner_id, product_id)
 	return product
 
 

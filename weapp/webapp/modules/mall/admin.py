@@ -4,7 +4,7 @@ __author__ = 'lizhengxue'
 
 from django.contrib import admin
 
-from webapp.modules.mall.models import WeizoomMall, WeizoomMallHasOtherMallProduct
+from mall.models import WeizoomMall, WeizoomMallHasOtherMallProduct
 
 class WeizoomMallAdmin(admin.ModelAdmin):
 	list_display = (

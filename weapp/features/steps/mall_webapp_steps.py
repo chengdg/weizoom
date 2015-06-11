@@ -10,7 +10,7 @@ from features.testenv.model_factory import *
 from tools.regional.models import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 from mall.promotion.models import *
 from modules.member.models import *
 import mall_product_steps as product_step_util

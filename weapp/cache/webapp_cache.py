@@ -10,22 +10,39 @@ import shutil
 from django.conf import settings
 
 from account.models import UserProfile
-from webapp.modules.mall.models import WeizoomMall
+from mall.models import WeizoomMall
 from utils import cache_util
 import cache
 from mall import module_api as mall_api
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
+from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
 
 local_cache = {}
 
+def get_product_display_price(product, webapp_owner_id):
+	"""
+	根据促销类型返回商品价格
+	"""
+	if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+		return round(product.display_price * 1.1, 2)
+	elif (hasattr(product, 'promotion') and
+	      		(product.promotion is not None) and
+	     		product.promotion['type'] == PROMOTION_TYPE_FLASH_SALE):
+		return product.promotion['detail']['promotion_price']
+	else:
+		return product.display_price
+
+
 def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall):
+
 	def inner_func():
 		webapp_id = webapp_owner_user_profile.webapp_id
 		webapp_owner_id = webapp_owner_user_profile.user_id
 
 		_, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, 0)
-		mall_models.Product.fill_display_price(products)
+
+
 
 		categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
 
@@ -35,15 +52,22 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
 		for relation in category_has_products:
 			product2categories.setdefault(relation.product_id, set()).add(relation.category_id)
 
+
 		try:
 			categories = [{"id":category.id, "name":category.name} for category in categories]
 			product_dicts = []
+
+			# Fill detail
+			new_products = []
 			for product in products:
+				new_product = get_webapp_product_detail(webapp_owner_id, product.id)
+				new_products.append(new_product)
+
+			mall_models.Product.fill_display_price(new_products)
+
+			for product in new_products:
 				product_dict = product.to_dict()
-				if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
-					product_dict['display_price'] = round(product.display_price * 1.1, 2)
-				else:
-					product_dict['display_price'] = product.display_price
+				product_dict['display_price'] = get_product_display_price(product, webapp_owner_id)
 				product_dict['categories'] = product2categories.get(product.id, set())
 				product_dicts.append(product_dict)
 			return {
@@ -63,6 +87,7 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
 
 def get_webapp_products(webapp_owner_user_profile, is_access_weizoom_mall, category_id):
 	key = 'webapp_products_categories_{wo:%s}' % webapp_owner_user_profile.user_id
+	webapp_owner_id = webapp_owner_user_profile.user_id
 	if key in local_cache:
 		data = local_cache[key]
 	else:
@@ -78,7 +103,6 @@ def get_webapp_products(webapp_owner_user_profile, is_access_weizoom_mall, categ
 			category_dict = id2category[category_id]
 			category = mall_models.ProductCategory()
 			category.id = category_dict['id']
-
 			category.name = category_dict['name']
 		else:
 			category = mall_models.ProductCategory()

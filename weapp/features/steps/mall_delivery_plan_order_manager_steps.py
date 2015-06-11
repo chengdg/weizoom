@@ -10,7 +10,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 
 @then(u"{user}通过后台管理系统可以看到配送套餐订单列表")
 def step_impl(context, user):

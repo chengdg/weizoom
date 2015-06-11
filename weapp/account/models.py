@@ -86,7 +86,7 @@ class UserProfile(models.Model):
 	account_type = models.IntegerField(default=SELF_OPERATION)#帐号类型
 	is_oauth = models.BooleanField(default=False) #是否授权
 	#v2
-	sub_account_count = models.IntegerField(default=0) #可创建的子账号的个数
+	sub_account_count = models.IntegerField(default=50) #可创建的子账号的个数
 	class Meta(object):
 		db_table = 'account_user_profile'
 		verbose_name = '用户配置'
@@ -125,13 +125,13 @@ class OperationSettings(models.Model):
 		verbose_name_plural = '阴影配置'
 
 	@staticmethod
-	def get_settings_for_user(user):
-		if user is None:
+	def get_settings_for_user(userid):
+		if userid is None:
 			return None
 
-		settings_list = list(OperationSettings.objects.filter(owner=user)) 
+		settings_list = list(OperationSettings.objects.filter(owner_id=userid)) 
 		if len(settings_list) == 0:
-			return OperationSettings.objects.create(owner=user)
+			return OperationSettings.objects.create(owner_id=userid)
 		else:
 			return settings_list[0]
 
@@ -376,7 +376,7 @@ def create_profile(instance, created, **kwargs):
 				owner = instance,
 			)
 
-		from webapp.modules.mall.models import PostageConfig, MallConfig
+		from mall.models import PostageConfig, MallConfig
 		from market_tools.models import MarketToolAuthority
 		if PostageConfig.objects.filter(owner=instance).count() == 0:
 			#创建默认的“免运费”配置

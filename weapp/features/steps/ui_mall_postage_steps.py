@@ -7,7 +7,7 @@ from behave import *
 from test import bdd_util
 from features.testenv.model_factory import *
 
-from webapp.modules.mall.models import *
+from mall.models import *
 from webapp.modules.mall.pageobject.postage_list_page import PostageListPage
 
 

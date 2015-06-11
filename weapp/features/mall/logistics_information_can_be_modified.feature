@@ -7,7 +7,7 @@ Background:
 	Given jobs登录系统
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
-	And jobs已有的订单	
+	And jobs已有的订单
 		"""
 		[{
 			"order_no": "0000001",
@@ -21,11 +21,11 @@ Background:
 			"number": "100065940000",
 			"status": "已完成",
 			"member": "tom"
-		}]	
+		}]
 		"""
 	And jobs登录系统
 
-@mall.update_express_info @pyliu
+@mall2 @mall.update_express_info @pyliu
 Scenario:jobs修改'0000001'的物流信息
 	When jobs通过后台管理系统对'0000001'的物流信息进行修改
 		"""
@@ -45,7 +45,7 @@ Scenario:jobs修改'0000001'的物流信息
 			"status":"已发货"
 		}
 		"""
-		
+
 	When jobs通过后台管理系统对'0000002'的物流信息进行修改
 		"""
 		{

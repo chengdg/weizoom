@@ -24,7 +24,7 @@
     data-index="{{component.model.index}}" 
 >
     {% with component|find_index_in_parent as index %}
-    {% with component|get_component_product as product %}
+    {% with component|get_component_product:request.webapp_owner_id as product %}
     <a class="wui-inner-box{{index}}" href="{{component.model.target|format_target:project_id}}">
         <div class="wui-inner-pic">
             {% if product.thumbnails_url %}
@@ -35,7 +35,12 @@
         </div>
         <div class="wui-inner-titleAndprice">
             <p class="wa-inner-title">{{product.name}}</p>
-            <p class="wa-inner-price">¥{{product.display_price}}</p>
+            <p class="wa-inner-price">¥
+            {% if product.promotion and product.promotion.type == 1 %}
+                {{product.promotion.detail.promotion_price }}
+            {% else %}
+                {{product.price_info.min_price}}
+            {% endif %}</p>
         </div>
         <div class="wa-inner-shopCar wui-inner-shopCar wui-shopCar-style{{component.parent_component.model.style}}"></div>
     </a>

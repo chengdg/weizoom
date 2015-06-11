@@ -120,7 +120,7 @@ def __get_request_members_list(request):
 
 
 def __build_return_member_json(member):
-	from webapp.modules.mall.models import Order
+	from mall.models import Order
 	return {
 		'id': member.id,
 		'username': member.username_for_html,

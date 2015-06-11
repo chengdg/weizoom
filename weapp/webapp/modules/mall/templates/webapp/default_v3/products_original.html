@@ -4,7 +4,7 @@
 {% block content-panel %}
 <div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
-        <span class="xui-inner-count {% if shopping_cart_product_nums == 0 %}hidden{% endif %}">{{shopping_cart_product_nums}}</span>
+        <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
     </a>
 
     {% if has_category %}
@@ -16,7 +16,7 @@
         {% endfor %}
     </ul>
     {% endif %}
-  
+
     <div data-role="content" data-theme="x">
         <div class="xui-hlist xui-hlist-cell-2 xui-products-original" id="xa-wrapper">
             {% if products %}
@@ -32,7 +32,7 @@
                         {% if product.type == 'integral' %}
                             <!-- 积分商品 -->
                             {{ product.display_price }}积分
-                        {% elif product.type == 'object' %}                    
+                        {% elif product.type == 'object' %}
                             <!-- 普通商品 -->
                             ￥{{ product.display_price }}
                         {% endif %}
@@ -41,7 +41,7 @@
                     {% ifequal product.stock_type 1 %}
                         {% ifequal product.stocks 0 %}
                         <div class="xui-sellout-tag fr"><div class="xui-sellout-middle"><div class="xui-sellout-inner">已售罄</div></div></div>
-                        {% endifequal %} 
+                        {% endifequal %}
                     {% endifequal %}
                 </li>
                 {% endfor %}
@@ -58,6 +58,24 @@
 <script type="text/javascript">
 $(document).ready(function() {
     //商品图片成1:1显示
+    W.getApi().call({
+        app: 'webapp',
+        api: 'project_api/call',
+        method: 'get',
+        args: {
+            woid: W.webappOwnerId,
+            module: 'mall',
+            target_api: 'member_product_info/get'
+        },
+        success: function(data) {
+            if(data.count != 0) {
+                $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+            }
+        },
+        error: function(data) {
+
+        }
+    });
     var $img = $('.xui-inner-img img');
     var imgHeight = $img.css('width');
     $img.css('height', imgHeight);

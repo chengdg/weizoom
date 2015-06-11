@@ -152,7 +152,7 @@ def step_impl(context, user, order_id):
 	express_value = express_util.get_value_by_name(order['logistics'])
 	data_order_id = _get_order_by_order_id(order['order_no']).id
 
-	url = '/mall/editor/order_express/add/?order_id={}&express_company_name={}&express_number={}&is_update_express=true&leader_name={}'.format(
+	url = '/mall/api/order_delivery/update/?order_id={}&express_company_name={}&express_number={}&leader_name=&is_update_express=true&leader_name={}'.format(
 			data_order_id,
 			express_value,
 			order['number'],

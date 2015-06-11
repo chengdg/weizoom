@@ -39,7 +39,7 @@ from features.testenv.model_factory import *
 from account import models as account_models
 from webapp import models as webapp_models
 from product import models as weapp_product_models
-#from webapp.modules.mall import models as mall_models
+#from mall import models as mall_models
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
 from webapp.modules.cms import models as cms_models

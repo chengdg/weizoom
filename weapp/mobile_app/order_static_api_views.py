@@ -10,7 +10,7 @@ from core.jsonresponse import JsonResponse, create_response
 from core.exceptionutil import unicode_full_stack
 from wglass_dateutil import get_month_range, get_date_range
 from core import paginator
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import *
 from datetime import datetime, timedelta
 

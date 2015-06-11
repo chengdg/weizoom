@@ -10,7 +10,7 @@ from features.testenv.model_factory import *
 from django.test.client import Client
 from django.contrib.auth.models import User
 
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import * 
 from weixin.user import models as weixn_models
 from account import models as account_models

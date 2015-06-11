@@ -40,6 +40,11 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
         this.privateContainerClass = options.privateContainerClass;
         this.$el.addClass(this.privateContainerClass);
         this.viewName = options.viewName;
+        xlog(options.show_icon)
+        this.show_icon = options.show_icon;
+        if(this.show_icon == undefined)
+            this.show_icon = true;
+        xlog(this.show_icon)
     },
     
     render: function() {        
@@ -50,6 +55,9 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
         this.$('.xa-submit').focus();
         var html = this.template(options);
         this.$content.html(html);
+        if(!this.show_icon){
+            this.$content.find('i').hide();
+        }
     },
     
     submit: function() {

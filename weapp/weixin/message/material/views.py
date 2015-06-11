@@ -41,7 +41,7 @@ def show_news_detail(request, newsid):
 	try:
 		news = News.objects.get(id=newsid)
 		# 为了支持是否显示点击关注的区域
-		settings = OperationSettings.get_settings_for_user(news.user)
+		settings = OperationSettings.get_settings_for_user(news.user_id)
 		request.operation_settings = settings
 		request.user_profile = news.user.get_profile()
 		request.member = get_member(request)

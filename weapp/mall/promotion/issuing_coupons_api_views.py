@@ -141,12 +141,12 @@ def get_issuing_coupons_detail(request):
     """
     #处理排序
     sort_attr = request.GET.get('sort_attr', '-id')
-    coupons = Coupon.objects.filter(owner=request.user, coupon_record_id=request.GET.get('id')).order_by(sort_attr)
+    coupons = Coupon.objects.filter(owner=request.manager, coupon_record_id=request.GET.get('id')).order_by(sort_attr)
     if coupons:
         coupon_rule = CouponRule.objects.get(id=coupons[0].coupon_rule_id)
 
     #获取coupon所属的rule的name
-    id2rule = dict([(rule.id, rule) for rule in CouponRule.objects.filter(owner=request.user)])
+    id2rule = dict([(rule.id, rule) for rule in CouponRule.objects.filter(owner=request.manager)])
 
     #进行分页
     count_per_page = int(request.GET.get('count_per_page', 15))
@@ -253,7 +253,7 @@ def create_red_enevlop(request):
 
     # 创建优惠券记录
     coupon_record = promotion_models.CouponRecord.objects.create(
-        owner=request.user,
+        owner=request.manager,
         coupon_rule_id=coupon_rule_id,
         pre_person_count=pre_person_count,
         person_count=person_count,
@@ -267,7 +267,7 @@ def create_red_enevlop(request):
             c_index = 0
             c_real_count = 0
             while c_index < pre_person_count:
-                coupon, msg = consume_coupon(request.user.id, coupon_rule_id, member_id, coupon_record_id=coupon_record.id)
+                coupon, msg = consume_coupon(request.manager.id, coupon_rule_id, member_id, coupon_record_id=coupon_record.id)
                 if coupon:
                     c_real_count += 1
                 c_index += 1
@@ -296,7 +296,7 @@ def get_all_coupon_rules(request):
     response = create_response(200)
     response.data.items = []
 
-    rules = CouponRule.objects.filter(owner=request.user, is_active=True, end_date__gte=datetime.now()).order_by('-id')
+    rules = CouponRule.objects.filter(owner=request.manager, is_active=True, end_date__gte=datetime.now()).order_by('-id')
 
     # 进行分页
     count_per_page = int(request.GET.get('count_per_page', 15))

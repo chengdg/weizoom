@@ -9,7 +9,7 @@ from models import *
 import member_settings
 from member_info_util import get_request_member
 
-from webapp.modules.mall.models import Order
+from mall.models import Order
 
 ########################################################################
 # get_uuid : 获取请求信息中包含的uuid信息

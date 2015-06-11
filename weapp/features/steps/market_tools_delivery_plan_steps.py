@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from market_tools.tools.test_game.models import *
 from market_tools.tools.delivery_plan.models import *
 from webapp.models import Workspace
-from webapp.modules.mall.models import Product
+from mall.models import Product
 
 
 def __add_delivery_plan(context, delivery_plan, user):

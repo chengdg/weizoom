@@ -33,7 +33,7 @@ from tools.express import util as tools_express_util
 @login_required
 def get_init_express_deliverys(request):
 	data = tools_express_util.get_express_company_json()
-	express_deliverys = ExpressDelivery.objects.filter(owner_id=request.user.id)
+	express_deliverys = ExpressDelivery.objects.filter(owner_id=request.manager.id)
 
 	# 过滤已有的快递公司
 	result_express_deliverys = []
@@ -69,7 +69,7 @@ def update_express_delivery_display_index(request):
 	dst_id = int(dst_id)
 	if dst_id == 0:
 		#dst_id = 0, 将src_product的display_index设置得比第一个product的display_index大即可
-		first_delivery = ExpressDelivery.objects.filter(owner=request.user).order_by('-display_index')[0]
+		first_delivery = ExpressDelivery.objects.filter(owner=request.manager).order_by('-display_index')[0]
 		if first_delivery.id != src_id:
 			ExpressDelivery.objects.filter(id=src_id).update(display_index=first_delivery.display_index+1)
 	else:
@@ -95,7 +95,7 @@ def get_express_deliverys(request):
 	if not sort_attr:
 		sort_attr = '-display_index'
 
-	express_deliverys = list(ExpressDelivery.objects.filter(owner_id=request.user.id).order_by('-display_index'))
+	express_deliverys = list(ExpressDelivery.objects.filter(owner_id=request.manager.id).order_by('-display_index'))
 
 	pageinfo, express_deliverys = paginator.paginate(express_deliverys, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 	result_express_deliverys = []
@@ -124,14 +124,14 @@ def get_express_deliverys(request):
 @api(app='mall', resource='express_delivery', action='create')
 @login_required
 def create_express_delivery(request):
-	express_deliverys = ExpressDelivery.objects.filter(owner_id=request.user.id).order_by('-display_index')
+	express_deliverys = ExpressDelivery.objects.filter(owner_id=request.manager.id).order_by('-display_index')
 	if express_deliverys.count() > 0:
 		display_index = express_deliverys[0].display_index + 1
 	else:
 		display_index = 1
 
 	express_delivery = ExpressDelivery.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		name = request.POST.get('name'),
 		express_number = request.POST.get('express_number'),
 		express_value = request.POST.get('express_value'),
@@ -181,7 +181,7 @@ def delete_express_delivery(request):
 @api(app='mall', resource='shipping_express_companies', action='get')
 @login_required
 def get_shipping_express_companies(request):
-	express_deliverys = list(ExpressDelivery.objects.filter(owner_id=request.user.id).order_by('-display_index'))
+	express_deliverys = list(ExpressDelivery.objects.filter(owner_id=request.manager.id).order_by('-display_index'))
 	if len(express_deliverys) > 0:
 		# 获取 物流名称管理  中的物流信息
 		result_express_deliverys = []

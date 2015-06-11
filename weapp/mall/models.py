@@ -89,6 +89,17 @@ class MallCounter(models.Model):
 			unread_order_count=0)
 
 
+def increase_unread_order(webapp_owner_id, count):
+	"""
+	未读订单数加1
+	"""
+	records = MallCounter.objects.filter(owner_id=webapp_owner_id)
+	if records.count()>0:
+		records.update(unread_order_count=F('unread_order_count')+count)
+	else:
+		MallCounter.objects.create(owner_id=webapp_owner_id, unread_order_count=count).save()
+
+
 # MODULE START: productcategory
 
 
@@ -1942,13 +1953,13 @@ class PayInterface(models.Model):
 			order_id = request.GET.get('order_id')
 		else:
 			pass
-		
+
 		#兼容改价
 		try:
 			order_id = order_id.split('-')[0]
 		except:
 			pass
-		
+
 		return {
 			'is_success': is_trade_success,
 			'order_id': order_id,
@@ -1986,7 +1997,7 @@ class PayInterface(models.Model):
 			order_id = order_id.split('-')[0]
 		except:
 			pass
-		
+
 		return {
 			'order_id': order_id,
 			'is_success': is_trade_success,

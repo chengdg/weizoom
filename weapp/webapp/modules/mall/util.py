@@ -32,7 +32,7 @@ from account.models import UserProfile
 from modules.member.models import *
 # from modules.member.util import *
 import httplib
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import WebAppUser
 from account.models import *
 from mall.models import *

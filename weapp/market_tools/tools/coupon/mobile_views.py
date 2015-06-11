@@ -22,8 +22,8 @@ from core import paginator
 
 from mall.promotion.models import *
 from modules.member.models import *
-from webapp.modules.mall.models import *
-from webapp.modules.mall.models import Order as mall_order_model
+from mall.models import *
+from mall.models import Order as mall_order_model
 
 import util as coupon_util
 

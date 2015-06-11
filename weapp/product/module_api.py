@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-	#from webapp.modules.mall.models import MallConfig
-	#from webapp.modules.mall.models import MallConfig
+	#from mall.models import MallConfig
+	#from mall.models import MallConfig
 
 #import time
 #from datetime import timedelta, datetime, date
@@ -27,7 +27,7 @@ from cache import product_cache
 
 from models import *
 from webapp.models import Workspace
-from webapp.modules.mall.models import MallConfig
+from mall.models import MallConfig
 
 
 def __add_user_modules(user, modules):

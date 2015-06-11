@@ -27,7 +27,7 @@ from core import dateutil, core_setting
 from tools.express import util as express_util
 
 from models import *
-from webapp.modules.mall.models import Order
+from mall.models import Order
 from watchdog.utils import watchdog_alert
 
 

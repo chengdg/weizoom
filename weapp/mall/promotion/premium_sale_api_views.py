@@ -36,7 +36,7 @@ COUNT_PER_PAGE = 20
 @login_required
 def create_premium_sale(request):
 	premium_sale = PremiumSale.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		count = request.POST.get('count', 1) or 1,
 		is_enable_cycle_mode = (request.POST.get('is_enable_cycle_mode', 'false') == 'true')
 	)
@@ -46,7 +46,7 @@ def create_premium_sale(request):
 	# 当前实现了Promotion.update信号捕获更新缓存，因此数据插入时状态为活动未开始
 	status = PROMOTION_STATUS_NOT_START
 	promotion = Promotion.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		type = PROMOTION_TYPE_PREMIUM_SALE,
 		name = request.POST.get('name', ''),
 		status = status,
@@ -70,7 +70,7 @@ def create_premium_sale(request):
 	premium_products = json.loads(request.POST.get('premium_products', '[]'))
 	for product in premium_products:
 		PremiumSaleProduct.objects.create(
-			owner = request.user,
+			owner = request.manager,
 			premium_sale = premium_sale,
 			product_id = product['id'],
 			count = product['count'],

@@ -15,7 +15,7 @@ from account.url_util import get_webappid_from_request
 
 import member_settings
 from models import *
-from webapp.modules.mall.models import Order
+from mall.models import Order
 
 from watchdog.utils import watchdog_error, watchdog_fatal, watchdog_info
 import module_api

@@ -38,7 +38,7 @@ class WeappDebugWrapper(orm_util.CursorDebugWrapper):
 				buf.append(formated_stack_entry)
 			stack = '<br/>'.join(buf).replace("\\", '/').replace('"', "``").replace("'", '`')
 			self.db.queries[-1]['stack'] = stack
-			
+
 
 def hackCursorDebugWrapper(params):
 	if not params['enable_record_sql_stacktrace']:
@@ -75,13 +75,13 @@ def hackQuerySetFilter():
 				if self.model == mall_models.Product:
 					owner = kwargs.pop('owner')
 					if 'shelve_type' in kwargs:
-						print 'jz-----1', kwargs, args ,owner
+						# print 'jz-----1', kwargs, args ,owner
 						shelve_type = kwargs.pop('shelve_type')
 						return old_filter(self, *args, **kwargs).filter(Q(owner=owner, shelve_type=shelve_type) |\
 								Q(weshop_sync__gt=0, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON, weshop_status=shelve_type))
 					# kwargs['shelve_type'] = mall_models.PRODUCT_SHELVE_TYPE_ON
 					# kwargs['weshop_status'] = mall_models.PRODUCT_SHELVE_TYPE_ON
-					print 'jz-----1.5', kwargs, args ,owner
+					# print 'jz-----1.5', kwargs, args ,owner
 					return old_filter(self, **kwargs).filter(Q(owner=owner) | Q(weshop_sync__gt=0))
 				if self.model == mall_models.ProductModelProperty:
 					owner = kwargs.pop('owner')
@@ -89,12 +89,12 @@ def hackQuerySetFilter():
 				if self.model == mall_models.Product:
 					owner_id = kwargs.pop('owner_id')
 					if 'shelve_type' in kwargs:
-						print 'jz-----2', kwargs, args ,owner_id
+						# print 'jz-----2', kwargs, args ,owner_id
 						shelve_type = kwargs.pop('shelve_type')
 						return old_filter(self, *args, **kwargs).filter(Q(owner_id=owner_id, shelve_type=shelve_type) |\
 								Q(weshop_sync__gt=0, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON, weshop_status=shelve_type))
 
-					print 'jz-----2.5', kwargs, args ,owner_id
+					# print 'jz-----2.5', kwargs, args ,owner_id
 					# kwargs['shelve_type'] = mall_models.PRODUCT_SHELVE_TYPE_ON
 					# kwargs['weshop_status'] = mall_models.PRODUCT_SHELVE_TYPE_ON
 					return old_filter(self, **kwargs).filter(Q(owner_id=owner_id) | Q(weshop_sync__gt=0))
@@ -160,7 +160,7 @@ def hackRenderToResponse():
 			response = django_render_to_response(*args, **kwargs)
 			response._debug_context = args[1]
 			return response
-		
+
 		shortcuts.render_to_response = new_render_to_response
 
 
@@ -188,7 +188,7 @@ def hackUser():
 		if not permission_set:
 			return False
 
-		if isinstance(perms, unicode):
+		if isinstance(perms, unicode) or isinstance(perms, str):
 			return perms in permission_set
 		else:
 			for perm in perms:

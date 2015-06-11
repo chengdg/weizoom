@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
 from django.db.models import signals, F, Sum
+from django.utils.functional import cached_property
 
 from account.models import UserProfile
 from account.social_account.models import SocialAccount
@@ -142,7 +143,7 @@ class WebAppUser(models.Model):
 	#############################################################################
 	# integral_info: 获取积分信息
 	#############################################################################
-	@property
+	@cached_property
 	def integral_info(self):
 		try:
 			self.member = Member.objects.get(id=self.member_id)
@@ -417,7 +418,7 @@ class Member(models.Model):
 	pay_times =  models.IntegerField(default=0)
 	last_pay_time = models.DateTimeField(auto_now=True)#会员信息更新时间 2014-11-11
 	unit_price = models.FloatField(default=0.0) #ke dan jia
-	#add by bert 
+	#add by bert
 	city = models.CharField(default='', max_length=50)
 	province = models.CharField(default='', max_length=50)
 	country = models.CharField(default='', max_length=50)
@@ -678,14 +679,14 @@ class MemberFollowRelation(models.Model):
 			return []
 
 		try:
-			
+
 			if is_fans != '0' and is_fans != None:
 				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('id')
 			else:
 				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id).order_by('id')
-			
+
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
-			
+
 			if is_from_qrcode:
 				return Member.objects.filter(id__in=follow_member_ids,source=SOURCE_MEMBER_QRCODE)
 			else:
@@ -1040,7 +1041,7 @@ class UserSentMassMsgLog(models.Model):
 	status = models.CharField(default='', max_length=256)
 	message_type = models.IntegerField(default=MESSAGE_TYPE_TEXT)
 	#message_content = models.CharField(default='', max_length=256)
-	message_content = models.CharField(default='', max_length=1024) 
+	message_content = models.CharField(default='', max_length=1024)
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
@@ -1103,7 +1104,7 @@ class MemberAnalysis(models.Model):
 	cancel_user = models.IntegerField(default=0) #cancel_user
 	new_user = models.IntegerField(default=0) #新增的用户数量
 	net_growth = models.IntegerField(default=0)#new_user -cancel_user
-	
+
 	class Meta(object):
 		db_table = 'member_analysis'
 		verbose_name = '用户统计'

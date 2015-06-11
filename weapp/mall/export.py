@@ -10,6 +10,65 @@ PRODUCT_MANAGE_CATEGORY_NAV = 'groupManagement'
 PRODUCT_MANAGE_MODEL_NAV = 'attrModelManagement'
 PRODUCT_REVIEW_NAV = 'reviewManagement'
 
+FIRST_NAVS = [{
+    'name': u'首页',
+    'url': '/mall/outline/get/',
+    'permission': 'manage_index'
+}, {
+    'name': u'商品管理',
+    'url': '/mall/onshelf_products/get/',
+    'permission': 'manage_product'
+}, {
+    'name': u'订单管理',
+    'url': '/mall/orders/get/',
+    'permission': 'manage_order'
+}, {
+    'name': u'促销管理',
+    'url': '/mall_promotion/promotion_list/get/',
+    'permission': 'manage_promotion'
+}, {
+    'name': u'会员管理',
+    'url': '/member/members/get/',
+    'permission': 'manage_member'
+}, {
+    'name': u'数据统计',
+    'url': 'http://tj.weizzz.com/',
+    'permission': 'static'
+}, {
+    'name': u'权限管理',
+    'url': '/auth/account_help/get/',
+    'permission': 'manage_auth'
+}, {
+    'name': u'配置管理',
+    'url': '/mall/pay_interfaces/get/',
+    'permission': 'manage_mall_config'
+}]
+
+def get_first_navs(user):
+    from auth.export import NAV as AUTH_NAV
+    from member.export import MEMBER_NAV
+    manage_index=HOME_NAV
+    manage_product=NAV
+    manage_order=ORDER_NAV
+    manage_promotion=PROMOTION_NAV
+    manage_member=CONFIG_NAV
+    static=[]
+    manage_auth=MEMBER_NAV
+    manage_mall_config=CONFIG_NAV
+
+    first_navs_result = []
+    for nav in FIRST_NAVS:
+        if user.has_perm(nav['permission']):
+            for s_nav in eval(nav['permission'])['navs']:
+                if user.has_perm(s_nav['need_permissions']):
+                    if not nav.get('children', None):
+                        nav['children'] = []
+                        nav['url'] = s_nav['url']
+                    nav['children'].append(s_nav)
+            first_navs_result.append(nav)
+                    
+    return first_navs_result
+
 NAV = {
     'section': u'微信商城',
     'navs': [
@@ -18,32 +77,32 @@ NAV = {
             'name': PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV,
             'title': u'在售商品管理',
             'url': '/mall/onshelf_products/get/',
-            'need_permissions': ['manage_onshelf_product', ]
+            'need_permissions': ['manage_product_onshelf', ]
         },
 
         {
             'name': PRODUCT_ADD_PRODUCT_NAV,
             'title': u'添加新商品',
             'url': '/mall/product/create/',
-            'need_permissions': ['add_product', ]
+            'need_permissions': ['manage_product_add', ]
         },
         {
             'name': PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV,
             'title': u'待售商品管理',
             'url': '/mall/offshelf_products/get/',
-            'need_permissions': ['manage_offshelf_product', ]
+            'need_permissions': ['manage_product_offshelf', ]
         },
         {
             'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
             'title': u'商品回收站',
             'url': '/mall/recycled_products/get/',
-            'need_permissions': ['manage_deleted_product', ]
+            'need_permissions': ['manage_product_deleted', ]
         },
         {
             'name': PRODUCT_MANAGE_IMAGE_NAV,
             'title': u'图片管理',
             'url': '/mall/image_groups/get/',
-            'need_permissions': ['manage_image', ]
+            'need_permissions': ['manage_product_image', ]
         },
         {
             'name': PRODUCT_MANAGE_CATEGORY_NAV,
@@ -61,7 +120,7 @@ NAV = {
             'name': PRODUCT_REVIEW_NAV,
             'title': u'评价管理',
             'url': '/mall/product_review/get/',
-            'need_permissions': [],
+            'need_permissions': ['manage_product_review', ],
         },
     ]
 }
@@ -98,26 +157,31 @@ ORDER_NAV = {
             'name': ORDER_ALL,
             'title': u'所有订单',
             'url': '/mall/orders/get/',
+            'need_permissions': ['manage_order_all', ]
         },
         {
             'name': ORDER_REFUND,
             'title': u'退款订单',
             'url': '/mall/refund_orders/get/',
+            'need_permissions': ['manage_order_refund', ]
         },
         {
             'name': ORDER_EXPIRED_TIME,
             'title': u'订单设置',
             'url': '/mall/expired_time/edit/',
+            'need_permissions': ['manage_order_expired_time', ]
         },
         {
             'name': ORDER_AUDIT,
             'title': u'财务审核',
             'url': '/mall/audit_orders/get/',
+            'need_permissions': ['manage_order_audit', ]
         },
         {
             'name': ORDER_BATCH_DELIVERY,
             'title': u'批量发货',
             'url': 'javascript:void(0);',
+            'need_permissions': ['manage_order_batch_delivery', ]
         }
     ]
 }
@@ -186,7 +250,7 @@ PROMOTION_NAV = {
             'name': MALL_PROMOTION_ISSUING_COUPONS_NAV,
             'title': u'发优惠券',
             'url': '/mall_promotion/issuing_coupons_record/get/',
-            'need_permissions': ['manage_coupon', ]
+            'need_permissions': ['manage_send_coupon', ]
         }
     ]
 }
@@ -238,7 +302,7 @@ CONFIG_NAV = {
             'name': MALL_CONFIG_MAIL_NOTIFY_NAV,
             'title': u'运营邮件通知',
             'url': '/mall/email_notify/get/',
-            'need_permissions': ['manage_pay_interface', ]
+            'need_permissions': ['manage_config_mail', ]
         },
     ]
 }
@@ -270,19 +334,19 @@ HOME_NAV = {
             'name': MALL_HOME_OUTLINE_NAV,
             'title': u'统计概况',
             'url': '/mall/outline/get/',
-            'need_permissions': ['manage_mall_home_outline', ]
+            'need_permissions': ['manage_index_outline', ]
         },
         {
             'name': MALL_HOME_INTEGRAL_NAV,
             'title': u'积分规则',
             'url': '/mall/integral_strategy/get/',
-            'need_permissions': ['manage_mall_home_integral_strategy', ]
+            'need_permissions': ['manage_index_integral', ]
         },
         {
             'name': MALL_HOME_NOTICES_NAV,
             'title': u'消息中心',
             'url': '/mall/notice_list/get',
-            'need_permissions': [],
+            'need_permissions': ['manage_index_notice'],
         }
     ]
 }

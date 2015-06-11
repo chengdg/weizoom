@@ -22,10 +22,10 @@ from django.shortcuts import render_to_response, render
 from django.contrib.auth.models import User, Group
 from django.contrib import auth
 
-from webapp.modules.mall.models import Order
+from mall.models import Order
 from core.jsonresponse import create_response
 from account.models import UserAlipayOrderConfig, UserTenpayOrderConfig
-from webapp.modules.mall.models import PayInterface, PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY
+from mall.models import PayInterface, PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY
 
 
 #===============================================================================

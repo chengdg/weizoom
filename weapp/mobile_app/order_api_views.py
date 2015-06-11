@@ -7,9 +7,9 @@ from core import paginator
 from core.jsonresponse import JsonResponse, create_response
 
 from account.models import *
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import Member,MemberHasSocialAccount
-from webapp.modules.mall import module_api as mall_api
+from mall import module_api as mall_api
 from tools.regional import views as regional_util
 from tools.express.util import *
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions

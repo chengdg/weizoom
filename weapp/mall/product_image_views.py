@@ -47,7 +47,7 @@ def get_image_groups(request):
 	@note 每个图片分组最多显示8张图片
 	"""
 	#获取image group
-	image_groups = list(ImageGroup.objects.filter(owner=request.user))
+	image_groups = list(ImageGroup.objects.filter(owner=request.manager))
 	group_ids = []
 	id2group = {}
 	for image_group in image_groups:

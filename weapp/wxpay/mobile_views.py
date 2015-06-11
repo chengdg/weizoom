@@ -7,7 +7,7 @@ from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 
-from webapp.modules.mall.models import Order, OrderHasProduct, PayInterface, Product
+from mall.models import Order, OrderHasProduct, PayInterface, Product
 from account.models import UserWeixinPayOrderConfig
 from weixin.user.models import WeixinMpUserAccessToken
 

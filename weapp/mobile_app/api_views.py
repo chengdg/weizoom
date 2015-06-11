@@ -11,10 +11,10 @@ from core.jsonresponse import JsonResponse, create_response
 from django.http import HttpResponseRedirect, HttpResponse
 
 from account.models import *
-from webapp.modules.mall.models import *
+from mall.models import *
 from webapp.statistics_views import get_buy_trend as webapp_get_buy_trend, get_visit_daily_trend as webapp_get_visit_daily_trend
 from weixin.statistics.api_views import get_message_daily_trend as webapp_get_message_daily_trend
-from webapp.modules.mall import models
+from mall import models
 from settings import APP_VERSION, APP_DOWNLOAD_URL
 
 

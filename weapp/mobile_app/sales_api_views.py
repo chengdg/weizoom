@@ -8,7 +8,7 @@ from core.jsonresponse import JsonResponse, create_response
 from core import paginator
 
 from account.models import *
-from webapp.modules.mall.models import *
+from mall.models import *
 from wglass_dateutil import get_date_range
 
 COUNT_PER_PAGE = 10

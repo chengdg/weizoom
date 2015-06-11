@@ -24,7 +24,7 @@ from core import chartutil, dateutil, apiview_util
 from models import *
 
 from statistics_util import *
-from webapp.modules.mall.models import *
+from mall.models import *
 
 def _count_visit_yestoday_daily_pv_uv(webapp_id):
 	yestoday = dateutil.get_previous_date('today', 1)

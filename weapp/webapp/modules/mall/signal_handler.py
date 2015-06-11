@@ -8,7 +8,7 @@ from django.db.models import signals as django_model_signals
 
 from webapp.modules.mall import signals as mall_signals
 #import webapp.modules.mall.signals as mall_signals
-from .models import *
+from mall.models import *
 from webapp.models import Workspace
 from account.models import UserProfile
 from watchdog.utils import watchdog_alert, watchdog_fatal, watchdog_warning, watchdog_error, watchdog_info

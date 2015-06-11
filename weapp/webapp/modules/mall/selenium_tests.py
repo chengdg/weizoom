@@ -32,7 +32,7 @@ from webapp.modules.mall.pageobject.webapp_page.home_page import WAHomePage
 from webapp.modules.mall.selenium_test_case import editor_mall_config_tests, editor_product_and_category_tests, editor_template_tests, webapp_mall_tests
 
 
-from webapp.modules.mall.models import *
+from mall.models import *
 def init():
 	print 'init db environment for mall'
 

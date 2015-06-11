@@ -34,7 +34,7 @@ from models import *
 from modules.member.models import IntegralStrategySttings,Member
 from modules.member import integral
 
-from webapp.modules.mall import module_api as mall_api 
+from mall import module_api as mall_api 
 
 import util as mall_util
 

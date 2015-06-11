@@ -26,7 +26,7 @@ def get_trace_back():
 
 def set_cache(key, value, timeout=0):
 	cache.set(key, value, timeout)
-	
+
 def get_cache(key):
 	return cache.get(key)
 
@@ -148,7 +148,7 @@ def delete_pattern_wrapper(pattern):
 		})
 
 
-if settings.MODE == 'develop':	
+if settings.MODE == 'develop':
 	SET_CACHE = set_cache_wrapper
 	GET_CACHE = get_cache_wrapper
 	DELETE_CACHE = delete_cache_wrapper
@@ -196,12 +196,12 @@ def get_many_from_cache(key_infos):
 		key = key_info['key']
 		keys.append(key)
 		key2onmiss[key] = key_info['on_miss']
-	
+
 	objs = GET_MANY(keys)
 	for key in keys:
 		if objs.get(key, None):
 			continue
-		
+
 		on_miss = key2onmiss[key]
 		if on_miss:
 			fresh_obj = on_miss()

@@ -8,7 +8,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 from tools.regional.models import Province
 
 @given(u"{user}已有的运费配置名称")

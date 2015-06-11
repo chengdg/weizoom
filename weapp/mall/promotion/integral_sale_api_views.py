@@ -47,7 +47,7 @@ def create_integral_sale(request):
 		integral_price = request.POST.get('integral_price', 0.0)
 
 	integral_sale = IntegralSale.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		type = integral_sale_type,
 		discount = 0,
 		discount_money = 0.0,
@@ -59,7 +59,7 @@ def create_integral_sale(request):
 	rules = json.loads(request.POST.get('rules'))
 	for rule in rules:
 		IntegralSaleRule.objects.create(
-			owner = request.user,
+			owner = request.manager,
 			integral_sale = integral_sale,
 			member_grade_id = rule['member_grade_id'],
 			discount = rule['discount'],
@@ -73,7 +73,7 @@ def create_integral_sale(request):
 	# 当前实现了Promotion.update信号捕获更新缓存，因此数据插入时状态为活动未开始
 	status = PROMOTION_STATUS_NOT_START
 	promotion = Promotion.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		type = PROMOTION_TYPE_INTEGRAL_SALE,
 		name = request.POST.get('name', ''),
 		status = status,

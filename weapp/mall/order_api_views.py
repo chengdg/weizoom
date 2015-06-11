@@ -39,8 +39,8 @@ DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
 def get_order_status_text(status):
 	return STATUS2TEXT[status]
 
-def _get_order_items(user, query_dict, filter_value, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None ,is_refund=False):
-	orders, pageinfo, order_total_count, order_return_count = mall_api.get_order_list(user, query_dict, filter_value, sort_attr, query_string, count_per_page, cur_page, date_interval, is_refund=is_refund)
+def _get_order_items(user, query_dict, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None ,is_refund=False):
+	orders, pageinfo, order_total_count, order_return_count = mall_api.get_order_list(user, query_dict, sort_attr, query_string, count_per_page, cur_page, date_interval, is_refund=is_refund)
 	#构造返回的order数据
 	items = []
 
@@ -110,73 +110,35 @@ def get_audit_orders(request):
 	return _get_orders_response(request, True)
 
 def _get_orders_response(request, is_refund=False):
-	is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.user.id)
-	if request.user.is_weizoom_mall:
+	is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.manager.id)
+	if request.manager.is_weizoom_mall:
 		is_weizoom_mall_partner = False
 
-	# 搜索
-	query = request.GET.get('query', '').strip()
-	ship_name = request.GET.get('ship_name', '').strip()
-	ship_tel = request.GET.get('ship_tel', '').strip()
-	express_number = request.GET.get('express_number', '').strip()
-	isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
-	product_name = request.GET.get('productName', '').strip()
+	# 获取查询条件字典和时间筛选条件
+	query_dict, date_interval = mall_api.get_select_params(request)
 
-	# 处理筛选条件
-	filter_value = request.GET.get('filter_value', '-1')
 	# 处理排序
-	#sort_attr = request.GET.get('sort_attr', 'created_at')
 	sort_attr = request.GET.get('sort_attr', '-id')
 	if sort_attr == 'created_at':
 		sort_attr = 'id'
 	if sort_attr == '-created_at':
 		sort_attr = '-id'
+
+	# 分页
 	count_per_page = int(request.GET.get('count_per_page', 15))
 	cur_page = int(request.GET.get('page', '1'))
+
 	# 用户
-	user = request.user
+	user = request.manager
 	query_string = request.META['QUERY_STRING']
 
-	# 填充query
-	query_dict = dict()
-	if len(query):
-		query_dict['order_id'] = query.strip().split('-')[0]
-	if len(ship_name):
-		query_dict['ship_name'] = ship_name
-	if len(ship_tel):
-		query_dict['ship_tel'] = ship_tel
-	if len(express_number):
-		query_dict['express_number'] = express_number
-	if isUseWeizoomCard:
-		query_dict['isUseWeizoomCard'] = isUseWeizoomCard
-	if product_name:
-		query_dict['product_name'] = product_name
 
-	# 时间区间
-	try:
-		date_interval = request.GET.get('date_interval', '')
-		if date_interval:
-			date_interval = date_interval.split('|')
-			if " " in date_interval[0]:
-				date_interval[0] = date_interval[0] +':00'
-			else:
-				date_interval[0] = date_interval[0] +' 00:00:00'
-
-			if " " in date_interval[1]:
-				date_interval[1] = date_interval[1] +':00'
-			else:
-				date_interval[1] = date_interval[1] +' 23:59:59'
-		else:
-			date_interval = None
-	except:
-		date_interval = None
-
-	items, pageinfo, order_total_count, order_return_count = _get_order_items(user, query_dict, filter_value, sort_attr, query_string, count_per_page, cur_page, date_interval=date_interval,is_refund=is_refund)
+	items, pageinfo, order_total_count, order_return_count = _get_order_items(user, query_dict, sort_attr, query_string, count_per_page, cur_page, date_interval=date_interval,is_refund=is_refund)
 
 	# 获取该用户下的所有支付方式
 	existed_pay_interfaces = mall_api.get_pay_interfaces_by_user(user)
 
-	if is_weizoom_mall_partner or request.user.is_weizoom_mall:
+	if is_weizoom_mall_partner or request.manager.is_weizoom_mall:
 		is_show_source = True
 	else:
 		is_show_source = False
@@ -187,11 +149,6 @@ def _get_orders_response(request, is_refund=False):
 	if sort_attr == '-id':
 		sort_attr = '-created_at'
 
-	# 是否是筛选
-	is_filter = False
-	if len(query_dict) > 0 or filter_value is not '-1' or (date_interval and len(date_interval) > 0):
-		is_filter = True
-
 	response.data = {
 		'items': items,
 		'pageinfo': paginator.to_dict(pageinfo),
@@ -200,8 +157,7 @@ def _get_orders_response(request, is_refund=False):
 		'existed_pay_interfaces' : existed_pay_interfaces,
 		'order_total_count': order_total_count,
 		'order_return_count': order_return_count,
-		'current_status_value': _get_status_value(filter_value),
-		'is_filter': is_filter
+		'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
 	}
 	return response.get_response()
 
@@ -473,7 +429,7 @@ def get_channel_qrcode_payed_orders(request):
 # get_thanks_card_orders : 获得感恩贺卡类型的订单列表
 #===============================================================================
 def get_thanks_card_orders(request):
-	webapp_id = request.user.get_profile().webapp_id
+	webapp_id = request.manager.get_profile().webapp_id
 
 	orders = None
 	secret = request.GET.get('secret')
@@ -556,7 +512,7 @@ def save_order_filter(request):
 	filter_value = request.GET.get('filter_value', '')
 	filter_name = request.GET.get('filter_name', '')
 
-	filter = UserHasOrderFilter.create(request.user, filter_name, filter_value)
+	filter = UserHasOrderFilter.create(request.manager, filter_name, filter_value)
 
 	response = create_response(200)
 	response.data = {
@@ -588,7 +544,7 @@ def delete_order_filter(request):
 def get_order_filters(request):
 	response = create_response(200)
 	response.data = {
-		'filters': mall_api.get_order_fitlers_by_user(request.user)
+		'filters': mall_api.get_order_fitlers_by_user(request.manager)
 	}
 	return response.get_response()
 
@@ -629,22 +585,22 @@ def get_order_filter_params(request):
 
 	# 来源
 	source = [{'name': u'本店', 'value': 0},
-			{'name': u'商户', 'value': 1}]
+			{'name': u'商城', 'value': 1}]
 
-	is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.user.id)
-	if not is_weizoom_mall_partner and not request.user.is_weizoom_mall:
+	is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.manager.id)
+	if not is_weizoom_mall_partner and not request.manager.is_weizoom_mall:
 		source = []
 
 	# 支付方式
-	pay_interface_type = mall_api.get_pay_interfaces_by_user(request.user)
+	pay_interface_type = mall_api.get_pay_interfaces_by_user(request.manager)
 	#pay_interface_type.append({'pay_name':u'优惠抵扣','data_value':PAY_INTERFACE_PREFERENCE})
 
 	# 有该营销工具才会显示此选项
-	user_market_tool_modules = request.user.market_tool_modules
-	if 'delivery_plan' in user_market_tool_modules:
-		type.append({'name': u'套餐订单', 'value': PRODUCT_DELIVERY_PLAN_TYPE})
-	if 'thanks_card' in user_market_tool_modules:
-		type.append({'name': u'贺卡订单', 'value': THANKS_CARD_ORDER})
+	# user_market_tool_modules = request.manager.market_tool_modules
+	# if 'delivery_plan' in user_market_tool_modules:
+	# 	type.append({'name': u'套餐订单', 'value': PRODUCT_DELIVERY_PLAN_TYPE})
+	# if 'thanks_card' in user_market_tool_modules:
+	# 	type.append({'name': u'贺卡订单', 'value': THANKS_CARD_ORDER})
 
 	response.data = {
 		'type': type,
@@ -667,7 +623,7 @@ def update_order_delivery(request):
 	leader_name = request.GET.get('leader_name')
 	is_update_express = request.GET.get('is_update_express')
 	is_update_express = True if is_update_express == 'true' else False
-	is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.user.username, leader_name=leader_name, is_update_express=is_update_express)
+	is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username, leader_name=leader_name, is_update_express=is_update_express)
 
 	if is_success:
 		response = create_response(200)
@@ -688,7 +644,7 @@ def update_bulk_shipments(request):
 	json_data, error_rows = _read_file(file_url[1:])
 
 	# 批量处理订单
-	success_data, error_items = mall_api.batch_handle_order(json_data, request.user)
+	success_data, error_items = mall_api.batch_handle_order(json_data, request.manager)
 	# print '------------------'
 	# print json_data
 	# print u'成功处理订单'
@@ -789,7 +745,7 @@ def update_order_info(request):
 	if order_status:
 		if order.status != int(order_status):
 			operate_log = u' 修改状态'
-			mall_api.record_status_log(order.order_id, order.status, order_status, request.user.username)
+			mall_api.record_status_log(order.order_id, order.status, order_status, request.manager.username)
 			order.status = order_status
 
 			try:
@@ -847,7 +803,7 @@ def update_order_info(request):
 
 
 	if len(operate_log.strip()) > 0:
-		mall_api.record_operation_log(order.order_id, request.user.username, operate_log)
+		mall_api.record_operation_log(order.order_id, request.manager.username, operate_log)
 
 	order.save()
 

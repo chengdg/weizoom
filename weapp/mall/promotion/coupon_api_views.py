@@ -109,7 +109,7 @@ def create_coupon_rule(request):
 		end_date = '2000-01-01 00:00'
 
 	couponRule = CouponRule.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		name = request.POST.get('name', ''),
 		money = request.POST.get('money', '0.0'),
 		# valid_days = request.POST.get('valid_days', '0'),
@@ -125,7 +125,7 @@ def create_coupon_rule(request):
 	)
 
 	promotion = Promotion.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		name = request.POST.get('name', ''),
 		type = PROMOTION_TYPE_COUPON,
 		member_grade_id = request.POST.get('member_grade', 0),
@@ -205,10 +205,10 @@ def get_records(request):
 	is_fetch_all_coupon = (not coupon_code) and (use_status == 'all') and (not member_name)
 	#处理排序
 	sort_attr = request.GET.get('sort_attr', '-id')
-	coupons = Coupon.objects.filter(owner=request.user, coupon_rule_id=request.GET.get('id')).order_by(sort_attr)
+	coupons = Coupon.objects.filter(owner=request.manager, coupon_rule_id=request.GET.get('id')).order_by(sort_attr)
 
 	#获取coupon所属的rule的name
-	id2rule = dict([(rule.id, rule) for rule in CouponRule.objects.filter(owner=request.user)])
+	id2rule = dict([(rule.id, rule) for rule in CouponRule.objects.filter(owner=request.manager)])
 
 	if is_fetch_all_coupon:
 		#进行分页

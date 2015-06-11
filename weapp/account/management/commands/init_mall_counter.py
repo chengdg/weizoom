@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from webapp.modules.mall.models import MallCounter
+from mall.models import MallCounter
 
 class Command(BaseCommand):
 	help = "init mall counter for all user"

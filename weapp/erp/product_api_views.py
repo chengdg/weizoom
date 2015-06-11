@@ -22,8 +22,8 @@ from core.jsonresponse import JsonResponse, create_response
 from core import dateutil
 from core import paginator
 
-from webapp.modules.mall.models import *
-from webapp.modules.mall import module_api as mall_module_api
+from mall.models import *
+from mall import module_api as mall_module_api
 import module_api
 from util import *
 

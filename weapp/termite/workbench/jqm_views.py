@@ -31,7 +31,7 @@ import apps
 import jqm_api_views as api_views
 import pagestore as pagestore_manager
 from account.models import UserProfile
-from webapp.modules.mall.models import PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY
+from mall.models import PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY
 
 
 #===============================================================================

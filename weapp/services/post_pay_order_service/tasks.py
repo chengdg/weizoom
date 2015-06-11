@@ -4,8 +4,8 @@ import random
 from watchdog.utils import watchdog_alert, watchdog_warning
 from core.exceptionutil import unicode_full_stack
 
-from webapp.modules.mall import models as mall_models
-from webapp.modules.mall import module_api as mall_api
+from mall import models as mall_models
+from mall import module_api as mall_api
 from webapp.modules.mall import util as mall_util
 from core import dateutil
 from market_tools.tools.template_message import module_api as template_message_api

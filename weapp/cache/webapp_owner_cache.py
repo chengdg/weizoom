@@ -20,6 +20,8 @@ from account import models as account_models
 
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_error
+from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
+
 
 local_cache = {}
 
@@ -44,7 +46,7 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
 			watchdog_error(error_msg, user_id=webapp_owner_id, noraise=True)
 			mpuser_preview_info = weixin_user_models.MpuserPreviewInfo()
 			weixin_mp_user_access_token = weixin_user_models.WeixinMpUserAccessToken()
-			mpuser = weixin_user_models.WeixinMpUser()	
+			mpuser = weixin_user_models.WeixinMpUser()
 
 		#webapp
 		try:
@@ -62,7 +64,7 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
 			error_msg = u"获得user('{}')对应的IntegralStrategySttings构建cache失败, cause:\n{}"\
 					.format(webapp_owner_id, unicode_full_stack())
 			watchdog_error(error_msg, user_id=webapp_owner_id, noraise=True)
-			integral_strategy_settings = member_models.IntegralStrategySttings()	
+			integral_strategy_settings = member_models.IntegralStrategySttings()
 
 		#member grade
 		try:
@@ -82,6 +84,16 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
 			watchdog_error(error_msg, user_id=webapp_owner_id, noraise=True)
 			pay_interfaces = []
 
+		# 微众卡权限
+		has_permission = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(webapp_owner_id)
+
+		try:
+			operation_settings = account_models.OperationSettings.get_settings_for_user(webapp_owner_id)
+		except:
+			error_msg = u"获得user('{}')对应的OperationSettings构建cache失败, cause:\n{}"\
+					.format(webapp_owner_id, unicode_full_stack())
+			watchdog_error(error_msg, user_id=webapp_owner_id, noraise=True)
+			operation_settings = {}
 		return {
 			'value': {
 				'weixin_mp_user_access_token': weixin_mp_user_access_token.to_dict(),
@@ -91,7 +103,9 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
 				'mpuser': mpuser.to_dict(),
 				'integral_strategy_settings': integral_strategy_settings.to_dict(),
 				'member_grades': member_grades,
-				'pay_interfaces': pay_interfaces
+				'pay_interfaces': pay_interfaces,
+				'has_permission': has_permission,
+				'operation_settings': operation_settings.to_dict(),
 			}
 		}
 	return inner_func
@@ -114,6 +128,8 @@ def get_webapp_owner_info(webapp_owner_id):
 	obj.member_grades = member_models.MemberGrade.from_list(data['member_grades'])
 	obj.member2grade = dict([(grade.id, grade) for grade in obj.member_grades])
 	obj.pay_interfaces = mall_models.PayInterface.from_list(data['pay_interfaces'])
+	obj.is_weizoom_card_permission = data['has_permission']
+	obj.operation_settings = account_models.OperationSettings.from_dict(data['operation_settings'])
 	return obj
 
 
@@ -143,10 +159,17 @@ signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=weix
 post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=member_models.IntegralStrategySttings, dispatch_uid = "integral_strategy_settings.update")
 signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=member_models.IntegralStrategySttings, dispatch_uid = "integral_strategy_settings.save")
 post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=member_models.MemberGrade, dispatch_uid = "member_grade.update")
-signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=member_models.MemberGrade, dispatch_uid = "member_grade.save")	
-post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=webapp_models.WebApp, dispatch_uid = "webapp.update")	
-post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=account_models.UserProfile, dispatch_uid = "user_profile.update")	
+signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=member_models.MemberGrade, dispatch_uid = "member_grade.save")
+post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=webapp_models.WebApp, dispatch_uid = "webapp.update")
+post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=account_models.UserProfile, dispatch_uid = "user_profile.update")
 post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=weixin_user_models.WeixinMpUser, dispatch_uid = "weixin_mp_user.update")
 #pay interface
 post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=mall_models.PayInterface, dispatch_uid = "PayInterface.update")
 signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=mall_models.PayInterface, dispatch_uid = "PayInterface.save")
+signals.post_save.connect(
+                          update_webapp_owner_info_cache_with_login,
+                          sender=AccountHasWeizoomCardPermissions,
+                          dispatch_uid="accounthwzcp.save")
+post_update_signal.connect(update_webapp_owner_info_cache_with_login,
+                           sender=AccountHasWeizoomCardPermissions,
+                           dispatch_uid="accountwzcp.update")

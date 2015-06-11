@@ -25,7 +25,7 @@ from core.dateutil import get_today
 
 from account.models import *
 from models import *
-from webapp.modules.mall.models import *
+from mall.models import *
 from market_tools import export
 
 COUNT_PER_PAGE = 20

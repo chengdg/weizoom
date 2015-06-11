@@ -8,7 +8,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 
 
 @then(u"{user}能获取商铺首页的代发货订单列表")
@@ -35,7 +35,6 @@ def step_impl(context, user):
 
 	url = '/mall/outline/get/'
 	response = context.client.get(url)
-	print 'jz-----', response.context
 	outline_counts = response.context['outline_counts']
 	actual = {
 		"order_count_for_yesterday": outline_counts[0]['count'],

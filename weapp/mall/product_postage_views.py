@@ -30,7 +30,7 @@ def get_postage_templates(request):
     """
     运费模板列表页面
     """
-    postage_configs = [config for config in PostageConfig.objects.filter(owner=request.user) if not config.is_deleted]
+    postage_configs = [config for config in PostageConfig.objects.filter(owner=request.manager) if not config.is_deleted]
     config_ids = []
     id2config = {}
     for config in postage_configs:

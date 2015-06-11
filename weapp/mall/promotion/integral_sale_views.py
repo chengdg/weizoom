@@ -75,7 +75,7 @@ def create_integral_sale(request):
 def copy_integral_sale(request):
 	promotion_id = request.GET['id']
 	promotion = Promotion.objects.get(id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_concrete_promotion': True
 	})
 
@@ -96,8 +96,8 @@ def copy_integral_sale(request):
 @login_required
 def get_integral_sale_detail(request):
 	promotion_id = request.GET['id']
-	promotion = Promotion.objects.get(owner=request.user, type=PROMOTION_TYPE_INTEGRAL_SALE, id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	promotion = Promotion.objects.get(owner=request.manager, type=PROMOTION_TYPE_INTEGRAL_SALE, id=promotion_id)
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_product': True,
 		'with_concrete_promotion': True
 	})
@@ -109,7 +109,7 @@ def get_integral_sale_detail(request):
 		try:
 			promotion.member_grade_name = MemberGrade.objects.get(id=promotion.member_grade_id).name
 		except:
-			promotion.member_grade_name = MemberGrade.get_default_grade(request.user_profile.webapp_id).name
+			promotion.member_grade_name = MemberGrade.get_default_grade(request.manager_profile.webapp_id).name
 
 
 	jsons = [{

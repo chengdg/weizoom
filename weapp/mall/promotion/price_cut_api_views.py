@@ -36,7 +36,7 @@ COUNT_PER_PAGE = 20
 @login_required
 def create_price_cut(request):
 	price_cut = PriceCut.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		price_threshold = request.POST.get('price_threshold', 0),
 		cut_money = request.POST.get('cut_money', 0),
 		is_enable_cycle_mode = (request.POST.get('is_enable_cycle_mode', 'false') == 'true')
@@ -47,7 +47,7 @@ def create_price_cut(request):
 	# 当前实现了Promotion.update信号捕获更新缓存，因此数据插入时状态为活动未开始
 	status = PROMOTION_STATUS_NOT_START
 	promotion = Promotion.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		type = PROMOTION_TYPE_PRICE_CUT,
 		name = request.POST.get('name', ''),
 		status = status,

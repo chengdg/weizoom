@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from behave import *
 from test import bdd_util
 
-from webapp.modules.mall.models import *
+from mall.models import *
 from webapp.modules.mall.pageobject.product_list_page import ProductListPage
 from webapp.modules.mall.pageobject.order_list_page import OrderListPage
 

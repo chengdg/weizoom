@@ -21,8 +21,8 @@ from core.exceptionutil import full_stack, unicode_full_stack
 from core import paginator
 
 from models import *
-from webapp.modules.mall.models import *
-from webapp.modules.mall.models import Order as mall_order_model
+from mall.models import *
+from mall.models import Order as mall_order_model
 
 import util as coupon_util
 

@@ -14,7 +14,7 @@ from weixin.message.qa.models import Rule
 from weixin.message.material.models import News, Material
 
 from modules.member.models import WebAppUser, MemberFollowRelation
-from webapp.modules.mall.models import Product
+from mall.models import Product
 from account.social_account.models import SocialAccount
 
 

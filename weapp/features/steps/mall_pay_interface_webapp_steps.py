@@ -9,7 +9,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 
 
 @then(u'{webapp_user_name}在webapp中能使用以下支付方式')

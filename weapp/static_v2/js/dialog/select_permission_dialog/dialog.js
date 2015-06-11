@@ -22,7 +22,8 @@ W.dialog.auth.SelectPermissionDialog = W.dialog.Dialog.extend({
     },
 
     events: _.extend({
-        'click input[type="checkbox"]': 'onClickPermission'
+        'click input[type="checkbox"]': 'onClickPermission',
+        'click .xa-close':'onClickDialogHide'
     }, W.dialog.Dialog.prototype.events),
 
     onInitialize: function(options) {
@@ -70,7 +71,9 @@ W.dialog.auth.SelectPermissionDialog = W.dialog.Dialog.extend({
             }
         })
     },
-
+    onClickDialogHide:function(event){
+        this.$dialog.modal('hide');
+    },
     onClickPermission: function(event) {
         var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');

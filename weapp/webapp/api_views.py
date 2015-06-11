@@ -31,7 +31,7 @@ from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 
 from weixin.message.message.module_api import get_realtime_unread_count
-from webapp.modules.mall.module_api import get_unread_order_count
+from mall.module_api import get_unread_order_count
 from notice.module_api import get_unread_notice_count
 
 from watchdog.utils import watchdog_debug

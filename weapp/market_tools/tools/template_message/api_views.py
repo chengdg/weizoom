@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Count
 from account.models import *
-from webapp.modules.mall.models import * 
+from mall.models import * 
 from core.jsonresponse import JsonResponse, create_response
 from datetime import datetime, timedelta
 

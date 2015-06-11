@@ -274,14 +274,14 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         id="total_count"
                         value="1"
                     >
-                    </div>
-                    <span class="em7 cRed hidden xui-understock xa-understock" style="margin-top:-34px;">
-                        {% if product.promotion.type == 1 and product.promotion.detail.count_per_purchase < product.stocks %}
-                            限购{{product.promotion.detail.count_per_purchase}}件
-                        {% else %}
-                            库存不足
-                        {% endif %}
-                    </span>
+                </div>
+                <span class="em7 cRed hidden xui-understock xa-understock" style="margin-top:-34px;">
+                    {% if product.promotion.type == 1 and product.promotion.detail.count_per_purchase < product.stocks %}
+                        限购{{product.promotion.detail.count_per_purchase}}件
+                    {% else %}
+                        库存不足
+                    {% endif %}
+                </span>
             {% endif %}
             {% if product.properties %}
             <div class="xui-section-item xui-section-title xui-property-panel">
@@ -355,8 +355,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xui-btn">
 
                 <i class="xui-inner-icon pr">
-                    <span class="xui-inner-count pa {% if shopping_cart_product_nums == 0 %}hidden{%else%}{% endif %}">{{shopping_cart_product_nums}}
-                     </span>
+                    <span class="xui-inner-count pa hidden xa-shoppingCartCount"></span>
                 </i>
         </a>
         {% endif %}
@@ -535,21 +534,24 @@ var postageConfigName = "{{product.postage_config.name}}";
 var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
 
 $(document).ready(function() {
-    //检查此商品是否被收藏
+    //检查此商品是否被收藏和显示购物车的数量
     W.getApi().call({
         app: 'webapp',
         api: 'project_api/call',
-        method: 'post',
+        method: 'get',
         args: {
             woid: W.webappOwnerId,
             module: 'mall',
-            target_api: 'product_in_wishlist/check',
+            target_api: 'member_product_info/get',
             product_id: productId,
         },
         success: function(data) {
-            if(data == 'true'){
+            if(data.is_collect == 'true'){
                 $('.xa-collectProduct').addClass('faved').text('已收藏');
                 $('.xa-collectProduct').attr('data-is-collect', 'true');
+            }
+            if(data.count != 0) {
+                $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
         },
         error: function(data) {
@@ -574,6 +576,7 @@ $(document).ready(function() {
         countPerPurchase: countPerPurchase,
         promotion: promotion
     });
+
     if(models.length > 1){
         var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,bounce:false});
     }
@@ -581,7 +584,6 @@ $(document).ready(function() {
         $('.xa-content').css('height',window.document.body.clientHeight - 42).refresh({
             statechange: function (e, $elem, state, dir) {
                 var refreshInfo = this._options.refreshInfo[dir];
-                console.log(state);
                 switch (state) {
                     case 'loading':
                         refreshInfo['$label'].html('详情加载中...');
@@ -612,7 +614,7 @@ $(document).ready(function() {
                     me.afterDataLoading(dir);
                     me.disable(dir,true);
                 }
-                
+
             }
         });
         // $('.ui-refresh-icon').hide();

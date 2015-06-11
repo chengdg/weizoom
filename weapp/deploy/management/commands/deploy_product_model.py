@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from webapp.modules.mall.models import ProductModel, Product
+from mall.models import ProductModel, Product
 
 class Command(BaseCommand):
 	help = "create standard product model for existed product if necessary"

@@ -15,7 +15,7 @@
             <em>最近浏览商品</em>
             <span class="xa-arrow xui-icon-rightarrow" style="border-color:#c5c5c5"></span>
         </div>
-        <div class="wui-swiper-container">    
+        <div class="wui-swiper-container">
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide">
                     <div class="xui-inner" >
@@ -77,7 +77,7 @@
     <div data-role="content">
         {% if product_groups or invalid_products%}
             <div class="xui-bottom-actionPanel xui-actionPanel pr disT w">
-                <div class="disTc vm tc xui-text em95" style="background:rgba(0,0,0,0.8);color:#fff;">                    
+                <div class="disTc vm tc xui-text em95" style="background:rgba(0,0,0,0.8);color:#fff;">
                     <dl class="disT w">
                         <dd class="disTc vm tc xa-checkAll" style="width:75px">
                             <!-- <input type="checkbox" id="checkbox-cart-all"  name="checkbox-cart-all" class="xui-regular-radio" data-role="none"> -->
@@ -93,14 +93,14 @@
                                 共<span class="xa-total-count xt-totalAccount"></span>件，不含运费
                             </p>
                         </dd>
-                    </dl>                    
+                    </dl>
                 </div>
                 <a href="javascript:void(0);" data-role="button" class="disTc vm xui-btnOuter tc em95 xa-submit" id="submit-order" style="width:95px;color:#fff;background:#cf0404;">去结算</a>
             </div>
 
-            
+
             <div class="xa-context">
-            
+
             <div class="xui-productContainer xa-productContainer">
             {% for product_group in product_groups %}
             {% with product_group.promotion as promotion %}
@@ -130,12 +130,12 @@
                     {% endif %}
 
                     {% for product in product_group.products %}
-                    <div 
-                        class="xui-section xa-product disT xt-product" 
+                    <div
+                        class="xui-section xa-product disT xt-product"
                         data-id="{{product.id}}"
-                        data-shopping-cart-id = "{{product.shopping_cart_id}}" 
+                        data-shopping-cart-id = "{{product.shopping_cart_id}}"
                         data-model-name="{{product.model_name}}"
-                        data-stocks="{{product.stocks}}" 
+                        data-stocks="{{product.stocks}}"
                     >
                         <label for="checkbox-cart-{{forloop.counter}}" style="width:39px;vertical-align:middle;" name="checkbox-cart" class="disTc tc xt-selectProduct">
                             <label id="checkbox-cart-{{forloop.counter}}" class="xa-check xui-regular-radio"></label>
@@ -169,13 +169,15 @@
                                     {% endif %}
                                     <div class="clearfix xa-counterContainer ml10 xui-productNum pr">
                                         <span class="em8">数量</span>
-                                        <input 
-                                            data-ui-role="counter" 
+                                        <input
+                                            data-ui-role="counter"
                                             data-ui-role-id="{{product.id}}-{{product.model_name}}"
+                                            data-product-model-id="{{product.model.id}}"
+                                            data-product-count-per-purchase="{{product.promotion.detail.count_per_purchase}}"
                                             {% if product.stock_type == 1 %}
                                                 {% if product.promotion.detail.count_per_purchase and product.promotion.detail.count_per_purchase < product.stocks %}
                                                     data-max-count="{{product.promotion.detail.count_per_purchase}}"
-                                                {% else %}            
+                                                {% else %}
                                                     data-max-count="{{product.stocks}}"
                                                 {% endif %}
                                             {% else %}
@@ -184,19 +186,19 @@
                                                 {% else %}
                                                     data-max-count="-99999"
                                                 {% endif %}
-                                            {% endif %} 
-                                            data-product-id="{{product.id}}" 
+                                            {% endif %}
+                                            data-product-id="{{product.id}}"
                                             data-product-model-name="{{product.model_name}}"
-                                            type="hidden" 
-                                            name="total_count" 
-                                            id="total_count" 
+                                            type="hidden"
+                                            name="total_count"
+                                            id="total_count"
                                             value="{{product.count}}"
                                         >
                                         <span class="em7 cRed hidden xui-understock">
                                             {% if product.stock_type == 1 %}
                                                 {% if product.promotion.detail.count_per_purchase and product.promotion.detail.count_per_purchase < product.stocks %}
                                                     限购{{product.promotion.detail.count_per_purchase}}件
-                                                {% else %}            
+                                                {% else %}
                                                     库存不足
                                                 {% endif %}
                                             {% else %}
@@ -205,7 +207,7 @@
                                                 {% else %}
                                                     无限
                                                 {% endif %}
-                                            {% endif %} 
+                                            {% endif %}
                                         </span>
                                         <span class="xui-deleteBtn xa-deleteBtn pa">
                                             <img src="/static_v2/img/webapp/mall/trash.png" data-allow-autoplay=false>
@@ -230,7 +232,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    
+
                     {% if product_group.promotion_type == 'price_cut' %}
                     <div class="xa-subtotal xui-subtotal pl10 pr15">
                          <div class="pt5 pb5 em75">
@@ -251,17 +253,17 @@
                 </div>
                 <div class="xui-invalidProductContainer xa-invalidProductContainer">
                 {% for product in invalid_products %}
-                    <div 
-                        class="xui-section xa-invalidProduct xui-invalidProduct disT" 
-                        data-id="{{product.id}}" 
+                    <div
+                        class="xui-section xa-invalidProduct xui-invalidProduct disT"
+                        data-id="{{product.id}}"
                         data-model-name="{{product.model_name}}"
-                        data-shopping-cart-id = "{{product.shopping_cart_id}}" 
+                        data-shopping-cart-id = "{{product.shopping_cart_id}}"
                     >
                     <label for="" class="disTc xui-i-box">
                         <label class="xui-invalid-icon em8">失效</label>
                     </label>
                     <div class="disTc pt15 pb15 xui-divLine pr">
-                        <div class="xui-selectedProductList clearfix disT" style="width:100%;">  
+                        <div class="xui-selectedProductList clearfix disT" style="width:100%;">
                             <div class="xui-selectedProductList-productImg disTc tc">
                                 <div class="pr">
                                     <img src="{{product.order_thumbnails_url}}" />
@@ -321,6 +323,53 @@ $(document).ready(function() {
         productGroups: productGroups
     });
 
+    //获取商品对应的规格id
+    var model_ids = []
+    $('[data-ui-role="counter"]').each(function(){
+        var model_id = $(this).attr('data-product-model-id');
+        model_ids.push(model_id);
+    });
+
+    // window.setInterval(getProductStocks, 5000);
+
+    //动态修改库存
+    function getProductStocks(){
+        W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'get',
+                args: {
+                    woid: W.webappOwnerId,
+                    module: 'mall',
+                    target_api: 'product_stocks/get',
+                    model_ids: model_ids,
+                },
+                success: function(data){
+                    $('[data-ui-role="counter"]').each(function(){
+                        var model_id = $(this).data('product-model-id');
+                        var count_per_purchase = $(this).data('product-count-per-purchase');
+                        if (data[model_id].stock_type) {
+                            if (count_per_purchase > 0 && count_per_purchase < data[model_id].stocks){
+                                $(this).data('view').reset().setMaxCount(count_per_purchase);
+                            }else{
+                                $(this).data('view').reset().setMaxCount(data[model_id].stocks);
+                            }
+                        }else {
+                            if (count_per_purchase > 0){
+                                $(this).data('view').reset().setMaxCount(count_per_purchase);
+                            }else{
+                                $(this).data('view').reset().setMaxCount(-99999);
+                            }
+                        }
+                    });
+                    view.initCounter();
+                },
+                error: function(){
+                    console.log("error");
+                }
+            })
+    }
+
     // 继续逛逛透明
     if($('.xui-footprint').length){
         $('.xui-goShopping-btn').css('background','rgba(209,0,0,0.8)');
@@ -333,10 +382,10 @@ $(document).ready(function() {
         var $cutDown = $(this).find('.wa-down');
         var $check = $(this).find('.xa-check');
         var stocks = parseInt($counter.attr('data-max-count'));
-        
+
         $counter.bind('reach-max-count',function(){
             $el.find('.xui-understock').show();
-        }); 
+        });
         $cutDown.bind('click',function(){
             var count = parseInt($el.find('.wui-counterText').text()) -1;
             $el.find('.xui-understock').hide();

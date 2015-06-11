@@ -28,7 +28,7 @@ def get_onshelf_products(request):
     """
     在售商品列表页面
     """
-    has_product = (Product.objects.filter(owner=request.user, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False).count() > 0)
+    has_product = (Product.objects.filter(owner=request.manager, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False).count() > 0)
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV,
         'second_navs': export.get_second_navs(request),
@@ -45,7 +45,7 @@ def get_offshelf_products(request):
     """
     代售商品列表页面
     """
-    has_product = (Product.objects.filter(owner=request.user, shelve_type=PRODUCT_SHELVE_TYPE_OFF, is_deleted=False).count() > 0)
+    has_product = (Product.objects.filter(owner=request.manager, shelve_type=PRODUCT_SHELVE_TYPE_OFF, is_deleted=False).count() > 0)
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV,
         'second_navs': export.get_second_navs(request),
@@ -62,7 +62,7 @@ def get_recycled_products(request):
     """
     回收站商品列表页面
     """
-    has_product = (Product.objects.filter(owner=request.user, shelve_type=PRODUCT_SHELVE_TYPE_RECYCLED, is_deleted=False).count() > 0)
+    has_product = (Product.objects.filter(owner=request.manager, shelve_type=PRODUCT_SHELVE_TYPE_RECYCLED, is_deleted=False).count() > 0)
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV,
         'second_navs': export.get_second_navs(request),
@@ -152,7 +152,7 @@ def create_product(request):
     @note 处理GET请求时，返回页面
     @note 处理post请求时，创建相应数据，成功后跳转到待售商品页面
     """
-    user = request.user
+    user = request.manager
     # 获取默认运费
     postage = None#module_api.get_default_postage_by_owner_id(user.id)
     # 获取在线支付
@@ -160,9 +160,6 @@ def create_product(request):
     # 获取货到付款
     pay_interface_cod = []#module_api.get_pay_interface_cod_by_owner_id(user.id)
 
-    #is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.user.id)
-    if request.user.is_weizoom_mall:
-        is_weizoom_mall_partner = False
     if request.POST:
         standard_model, custom_models = __extract_product_model(request)
 
@@ -175,7 +172,7 @@ def create_product(request):
             postage_id = 0
             unified_postage_money = 0.0
         product = mall_models.Product.objects.create(
-            owner = request.user,
+            owner = request.manager,
             name = request.POST.get('name', '').strip(),
             promotion_title = request.POST.get('promotion_title', '').strip(),
             user_code = request.POST.get('user_code', '').strip(),
@@ -191,12 +188,12 @@ def create_product(request):
             unified_postage_money = unified_postage_money,
             weshop_sync = request.POST.get('weshop_sync', 0)
         )
-        first_product = Product.objects.filter(owner=request.user).order_by('-display_index')[0]
+        first_product = Product.objects.filter(owner=request.manager).order_by('-display_index')[0]
         product.display_index = first_product.display_index+1
 
         #处理standard商品规格
         ProductModel.objects.create(
-            owner = request.user,
+            owner = request.manager,
             product = product,
             name = 'standard',
             is_standard = True,
@@ -210,7 +207,7 @@ def create_product(request):
         #处理custom商品规格
         for custom_model in custom_models:
             product_model = ProductModel.objects.create(
-                owner = request.user,
+                owner = request.manager,
                 product = product,
                 name = custom_model['name'],
                 is_standard = False,
@@ -257,24 +254,15 @@ def create_product(request):
         properties = json.loads(request.POST.get('properties', '[]'))
         for property in properties:
             ProductProperty.objects.create(
-                owner = request.user,
+                owner = request.manager,
                 product = product,
                 name = property['name'],
                 value = property['value']
             )
 
-        # if is_weizoom_mall_partner:
-        #     weizoom_mall = int(request.POST.get('weizoom_mall', 0))
-        #     if weizoom_mall == 1:
-        #         for weizoom_mall in WeizoomMall.objects.filter(is_active=True):
-        #             WeizoomMallHasOtherMallProduct.objects.create(
-        #                 weizoom_mall=weizoom_mall,
-        #                 webapp_id=request.user_profile.webapp_id,
-        #                 product_id=product.id
-        #                 )
         return HttpResponseRedirect('/mall/offshelf_products/get/')
     else:
-        categories = ProductCategory.objects.filter(owner=request.user)
+        categories = ProductCategory.objects.filter(owner=request.manager)
 
         #确定支付接口配置
         pay_interface_config = {
@@ -282,7 +270,7 @@ def create_product(request):
             "is_enable_cod_pay_interface": False
         }
         online_pay_interface_type_set = set(ONLINE_PAY_INTERFACE)
-        pay_interfaces = list(PayInterface.objects.filter(owner=request.user))
+        pay_interfaces = list(PayInterface.objects.filter(owner=request.manager))
         for pay_interface in pay_interfaces:
             if not pay_interface.is_active:
                 continue
@@ -306,7 +294,7 @@ def create_product(request):
         }
 
         #确定属性模板
-        property_templates = ProductPropertyTemplate.objects.filter(owner=request.user)
+        property_templates = ProductPropertyTemplate.objects.filter(owner=request.manager)
 
         type = request.GET.get('type', 'object')
         c = RequestContext(request, {
@@ -341,7 +329,7 @@ def update_product(request):
     属性在POST数据中id为属性在db中的id。
     @note 对于分类信息，创建新的<product, category>关系，从db中删除POST中不存在的<product, category>关系，并更新category中的product计数
     """
-    user = request.user
+    user = request.manager
     # 获取默认运费
     postage = None#module_api.get_default_postage_by_owner_id(user.id)
     # 获取在线支付
@@ -349,8 +337,8 @@ def update_product(request):
     # 获取货到付款
     pay_interface_cod = []#module_api.get_pay_interface_cod_by_owner_id(user.id)
 
-    #is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.user.id)
-    if request.user.is_weizoom_mall:
+    #is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.manager.id)
+    if request.manager.is_weizoom_mall:
         is_weizoom_mall_partner = False
     if request.POST:
         #
@@ -372,7 +360,7 @@ def update_product(request):
         product_id = request.GET['id']
 
         if request.POST.get('weshop_sync', None):
-            Product.objects.record_cache_args(ids=[product_id]).filter(owner=request.user, id=product_id).update(
+            Product.objects.record_cache_args(ids=[product_id]).filter(owner=request.manager, id=product_id).update(
                 name = request.POST.get('name', '').strip(),
                 promotion_title = request.POST.get('promotion_title', '').strip(),
                 user_code = request.POST.get('user_code', '').strip(),
@@ -387,7 +375,7 @@ def update_product(request):
                 weshop_sync = request.POST.get('weshop_sync', None)
             )
         else:
-            Product.objects.record_cache_args(ids=[product_id]).filter(owner=request.user, id=product_id).update(
+            Product.objects.record_cache_args(ids=[product_id]).filter(owner=request.manager, id=product_id).update(
                 name = request.POST.get('name', '').strip(),
                 promotion_title = request.POST.get('promotion_title', '').strip(),
                 user_code = request.POST.get('user_code', '').strip(),
@@ -405,13 +393,13 @@ def update_product(request):
         #
         standard_model, custom_models = __extract_product_model(request)
         #清除旧的custom product model
-        existed_models = [product_model for product_model in ProductModel.objects.filter(owner=request.user, product_id=product_id) if product_model.name != 'standard']
+        existed_models = [product_model for product_model in ProductModel.objects.filter(owner=request.manager, product_id=product_id) if product_model.name != 'standard']
         existed_model_names = set([model.name for model in existed_models])
 
         #处理standard商品规格
         if ProductModel.objects.filter(product_id=product_id, name='standard').count() == 0:
             ProductModel.objects.create(
-                owner = request.user,
+                owner = request.manager,
                 product_id = product_id,
                 name = 'standard',
                 is_standard = True,
@@ -451,7 +439,7 @@ def update_product(request):
             else:
                 #model不存在，创建之
                 product_model = ProductModel.objects.create(
-                    owner = request.user,
+                    owner = request.manager,
                     product_id = product_id,
                     name = custom_model['name'],
                     is_standard = False,
@@ -494,7 +482,7 @@ def update_product(request):
         for property in properties:
             if property['id'] < 0:
                 ProductProperty.objects.create(
-                    owner = request.user,
+                    owner = request.manager,
                     product_id = product_id,
                     name = property['name'],
                     value = property['value']
@@ -510,7 +498,7 @@ def update_product(request):
         #
         #减少原category的product_count
         #
-        user_category_ids = [category.id for category in ProductCategory.objects.filter(owner=request.user)]
+        user_category_ids = [category.id for category in ProductCategory.objects.filter(owner=request.manager)]
         old_category_ids = set([relation.category_id for relation in CategoryHasProduct.objects.filter(category_id__in=user_category_ids, product_id=product_id)])
         product_category_ids = request.POST.get('product_category', -1).split(',')
 
@@ -539,7 +527,7 @@ def update_product(request):
         #获取商品信息
         product_id = request.GET['id']
         product = Product.objects.get(id=product_id)
-        Product.fill_details(request.user, [product], {
+        Product.fill_details(request.manager, [product], {
             'with_product_model': True,
             'with_image': True,
             'with_property': True,
@@ -556,7 +544,7 @@ def update_product(request):
             "is_enable_cod_pay_interface": False
         }
         online_pay_interface_type_set = set(ONLINE_PAY_INTERFACE)
-        pay_interfaces = list(PayInterface.objects.filter(owner=request.user))
+        pay_interfaces = list(PayInterface.objects.filter(owner=request.manager))
         for pay_interface in pay_interfaces:
             if not pay_interface.is_active:
                 continue
@@ -585,7 +573,7 @@ def update_product(request):
         '''
 
         #确定属性模板
-        property_templates = ProductPropertyTemplate.objects.filter(owner=request.user)
+        property_templates = ProductPropertyTemplate.objects.filter(owner=request.manager)
 
         product_type = request.GET.get('type', 'object')
         c = RequestContext(request, {

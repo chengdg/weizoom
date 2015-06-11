@@ -262,21 +262,27 @@ def create_authorized_user(request):
 	response = None
 	user, request = module_api.get_current_user_and_request(user, request)
 
-	if user and user.is_active:
+	if user:
 		try:
 			user_profile = user.get_profile()
 		except:
 			pass
-
-		is_remember_password = request.POST.get('remember_password', 'false')
-		if not is_remember_password in ['yes', 'y', 'true', 'True', 'Yes', 'Y']:
-			request.session._session['_session_expiry'] = 0
-		auth.login(request, user)
-		if hasattr(request, 'sub_user') and request.sub_user:
-			request.session['sub_user_id'] = request.sub_user.id
+		if user.is_active:
+			is_remember_password = request.POST.get('remember_password', 'false')
+			if not is_remember_password in ['yes', 'y', 'true', 'True', 'Yes', 'Y']:
+				request.session._session['_session_expiry'] = 0
+			auth.login(request, user)
+			if hasattr(request, 'sub_user') and request.sub_user:
+				request.session['sub_user_id'] = request.sub_user.id
+			else:
+				request.session['sub_user_id'] = None
+			response = create_response(200)
 		else:
-			request.session['sub_user_id'] = None
-		response = create_response(200)
+			response = create_response(500)
+			if user_profile and not user_profile.is_active:
+				response.errMsg = u'该账号已删除'
+			else:
+				response.errMsg = u'该账号已停用'
 	else:
 		try:
 			user = User.objects.get(username=username)

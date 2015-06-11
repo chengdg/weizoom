@@ -31,7 +31,7 @@ from tools.regional import views as regional_util
 from tools.express import util as express_util
 
 
-#from webapp.modules.mall.models import Order,Product
+#from mall.models import Order,Product
 from modules.member import module_api as member_model_api
 
 from models import *

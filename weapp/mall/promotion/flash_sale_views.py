@@ -72,7 +72,7 @@ def create_flash_sale(request):
 def copy_flash_sale(request):
 	promotion_id = request.GET['id']
 	promotion = Promotion.objects.get(id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_concrete_promotion': True
 	})
 
@@ -93,8 +93,8 @@ def copy_flash_sale(request):
 @login_required
 def get_flash_sale_detail(request):
 	promotion_id = request.GET['id']
-	promotion = Promotion.objects.get(owner=request.user, type=PROMOTION_TYPE_FLASH_SALE, id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	promotion = Promotion.objects.get(owner=request.manager, type=PROMOTION_TYPE_FLASH_SALE, id=promotion_id)
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_product': True,
 		'with_concrete_promotion': True
 	})

@@ -4,10 +4,10 @@ from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 from order.account.order_decorators import project_freight_required
 
-from webapp.modules.mall.models import *
+from mall.models import *
 from tools.regional.views import get_str_value_by_string_ids
 from mall.promotion.models import Coupon
-from webapp.modules.mall import module_api as mall_api
+from mall import module_api as mall_api
 
 FREIGHT_NAV_NAME = 'freight-waybill'
 

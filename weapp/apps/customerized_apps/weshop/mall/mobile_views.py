@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response, redirect
 from django.core.cache import cache
 
 from webapp.modules.mall import request_util
-from webapp.modules.mall.models import *
+from mall.models import *
 from apps.register import mobile_view_func
 from weshop.models import WeshipMemberRelation
 

@@ -44,12 +44,12 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if (this.models.length === 1 && this.models[0]['name'] === 'standard') {
             this.isStandardModelProduct = true;
         }
-        if (this.isStandardModelProduct) {
-            this.targetModel = this.models[0];
-            this.initForStandardModelProduct();
-        } else {
-            this.initForCustomModelProduct();
-        }
+
+        this.getProductStock();//更新库存信息
+
+        var _this = this;
+        this.stockInterval = setInterval(this.getProductStock, 5000, _this);
+
         //设置规格选择区域的最大高度
         // var boxHeight = window.document.body.clientHeight * 0.75;
         // var buttonTop = $('.xui-productInfo-box').height();
@@ -107,6 +107,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         //     });
         // }
     },
+
+
 
     /**
      * initForStandardModelProduct: 初始化标准规格商品界面
@@ -295,6 +297,44 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         // end用于处理显示积分抵扣信息 提出单独的方法
     },
     /**
+    更新models中的商品库存的信息
+    */
+    getProductStock: function(_this) {
+        if (_this) {
+        }else {
+            _this = this;
+        }
+
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'get',
+            args: {
+                woid: W.webappOwnerId,
+                module: 'mall',
+                target_api: 'product_stocks/get',
+                product_id: this.productId,
+            },
+            success: function(data){
+                if (_this.isStandardModelProduct) {
+                    _this.models[0].stock_type = data.stock_type;
+                    _this.models[0].stocks = data.stocks;
+                    _this.targetModel = _this.models[0];
+                    _this.initForStandardModelProduct();
+                } else {
+                    for(var i = 0; i < _this.models.length; i++){
+                        _this.models[i].stock_type = data[_this.models[i].id].stock_type;
+                        _this.models[i].stocks = data[_this.models[i].id].stocks;
+                    }
+                    _this.initForCustomModelProduct();
+                }
+            },
+            error: function(){
+                console.log("error");
+            }
+        })
+    },
+    /**
      * initStickyActionBar: 初始化粘性action bar
      */
     initStickyActionBar: function() {
@@ -365,7 +405,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $panel.addClass('hidden');
             $arrow.removeClass('xui-up');
         }
-        
+
     },
     /**
      * onClickModelSelectionTrigger: 点击选择规格触发器（“购买”，“加入购物车”）按钮的响应函数
@@ -403,7 +443,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     onChangeProductCount: function(event, value) {
         var $purchaseCount =$(event.target).parents('.xui-page').find('.xa-purchaseCount');
         $purchaseCount.text(value);
-        
+
         this.updateCountInByLink(value);
         this.updateWeightPostage(value);
         this.productCount = value;

@@ -17,7 +17,7 @@ from core.exceptionutil import unicode_full_stack
 from models import *
 from modules.member import util as member_util
 from modules.member import module_api as member_module_api
-from webapp.modules.mall.models import ThanksCardOrder
+from mall.models import ThanksCardOrder
 from account.views import save_base64_img_file_local_for_webapp
 from watchdog.utils import watchdog_alert, watchdog_fatal
 

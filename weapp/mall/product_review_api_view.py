@@ -75,7 +75,7 @@ def get_product_review_list(request):
     is_fetch_all_reviews = (not name) and (not user_code) and (not start_date) and (not end_date) and (review_status == 'all') and (product_score == 'all')
 
     # 当前用户
-    owner = request.user
+    owner = request.manager
     all_reviews = mall_models.ProductReview.objects.filter(owner_id=owner.id).order_by("-created_at")
 
     if is_fetch_all_reviews:

@@ -267,7 +267,7 @@ Scenario: 4 购买多个商品，带有限时抢购商品
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @jz
 Scenario: 5 购买单个限时抢购商品，超出库存限制
 	第一次购买2个，成功；第二次购买2个，超出商品库存，确保缓存更新
 

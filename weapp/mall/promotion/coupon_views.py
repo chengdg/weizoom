@@ -106,7 +106,7 @@ def update_coupon_rule(request):
 	promotion_id = request.GET['id']
 	# if request.method == 'GET':
 	promotion = Promotion.objects.get(id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_product': True,
 		'with_concrete_promotion': True
 	})
@@ -230,7 +230,7 @@ def select_coupon_rule(request):
     """
     promotion_id = request.GET['id']
     promotion = Promotion.objects.get(id=promotion_id)
-    Promotion.fill_details(request.user, [promotion], {
+    Promotion.fill_details(request.manager, [promotion], {
         'with_product': True,
         'with_concrete_promotion': True
     })

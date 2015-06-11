@@ -10,7 +10,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 from tools.express import util as express_util
 from mall.promotion.models import CouponRule, Coupon
 from core import dateutil

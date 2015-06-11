@@ -88,6 +88,21 @@ def __get_to_be_shipped_order_infos(request):
 def get_outline(request):
 	webapp_id = request.user_profile.webapp_id
 	if not settings.IS_UNDER_BDD:
+		if request.manager.id != request.user.id:
+			# 子账号
+			if len(request.user.permission_set) == 0:
+				# 没有权限页面
+				return render_to_response('mall/editor/outline_no_permission.html', RequestContext(request, {
+					'first_nav_name': FIRST_NAV,
+					'second_navs': export.get_home_second_navs(request),
+					'second_nav_name': export.MALL_HOME_INTEGRAL_NAV,}
+				))
+			else:
+				first_url = export.get_first_navs(request.user)[0]['url']
+				# print 'jz----', first_url, first_url.find('/mall/outline/get') < 0
+				if first_url.find('/mall/outline/get') < 0:
+					# 第一个有权限的一面，不是首页
+					return HttpResponseRedirect(first_url)
 		integral_strategy = member_models.IntegralStrategySttings.objects.get(webapp_id=webapp_id)
 		if integral_strategy.use_ceiling == -1:
 			# 需要进入积分引导页
@@ -144,7 +159,7 @@ def get_outline(request):
 def get_integral_strategy(request):
 	webapp_id = request.user_profile.webapp_id
 	integral_strategy = member_models.IntegralStrategySttings.objects.get(webapp_id=webapp_id)
-	has_a_integral_strategy = True if promotion_models.Promotion.objects.filter(owner=request.user, status=promotion_models. PROMOTION_STATUS_STARTED, type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)  else False
+	has_a_integral_strategy = True if promotion_models.Promotion.objects.filter(owner=request.manager, status=promotion_models. PROMOTION_STATUS_STARTED, type=promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)  else False
 	show_guide = False
 	if integral_strategy.use_ceiling == -1:
 		# 需要进入积分引导页

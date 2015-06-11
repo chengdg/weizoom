@@ -15,7 +15,7 @@ from core.exceptionutil import full_stack, unicode_full_stack
 from core.alipay.alipay_submit import *
 from modules.member.models import *
 from modules.member.util import *
-from webapp.modules.mall.models import *
+from mall.models import *
 from mall import models as mall_models
 from mall import module_api as mall_api
 from webapp.modules.mall import util as mall_util
@@ -31,6 +31,40 @@ import request_util
 from market_tools.tools.coupon import util as coupon_util
 
 from webapp.handlers import event_handler_util
+
+
+def product_stocks(request):
+	"""
+	获取单个商品各个规格的实时库存
+	"""
+	product_id = request.GET.get('product_id', None)
+	model_ids = request.GET.get('model_ids', None)
+
+	result_data = dict()
+
+	if product_id:
+		models = ProductModel.objects.filter(product_id=product_id)
+	if model_ids:
+		model_ids = model_ids.split(",")
+		models = ProductModel.objects.filter(id__in=model_ids)
+
+	response = create_response(200)
+	if models.count() == 1:
+		model_data = dict()
+		model_data["stocks"] = models[0].stocks
+		model_data["stock_type"] = models[0].stock_type
+		response.data = model_data
+	elif models.count() > 1:
+		for model in models:
+			model_data = dict()
+			model_data["stocks"] = model.stocks
+			model_data["stock_type"] = model.stock_type
+			result_data[model.id] = model_data
+		response.data = result_data
+	else:
+		return create_response(500).get_response()
+
+	return response.get_response()
 
 
 def products_stocks(request):
@@ -174,6 +208,7 @@ def save_order(request):
 	signal_responses = mall_signals.check_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
 	http_response = common_util.check_failed_signal_response(signal_responses)
 	if http_response:
+		print http_response
 		return http_response
 
 	order = None
@@ -194,7 +229,6 @@ def save_order(request):
 			'pay_interface': pay_interface,
 		}
 		order = mall_api.save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request)
-
 		#删除购物车中的商品
 		if request.POST.get('is_order_from_shopping_cart', 'false') == 'true':
 			for product in products:
@@ -596,20 +630,26 @@ def check_product_in_wishlist(request):
 	"""
 	return mall_api.check_product_in_wishlist(request)
 
-def get_product_detail(request):
-	"""
-	获取商品的介绍信息
-	"""
-	product_id = request.GET['product_id']
-	webapp_user = request.webapp_user
-	try:
-		product = mall_api.get_product_detail(request.webapp_owner_id, webapp_user, product_id)
-	except:
-		return create_response(500).get_response()
+def get_member_product_info(request):
+	'''
+	获取购物车的数量和检查商品是否已被收藏
+	'''
+	return mall_api.get_member_product_info(request)
 
-	response = create_response(200)
-	response.data = product.detail
-	return response.get_response()
+# def get_product_detail(request):
+# 	"""
+# 	获取商品的介绍信息
+# 	"""
+# 	product_id = request.GET['product_id']
+# 	webapp_user = request.webapp_user
+# 	try:
+# 		product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user)
+# 	except:
+# 		return create_response(500).get_response()
+
+# 	response = create_response(200)
+# 	response.data = product.detail
+# 	return response.get_response()
 
 
 def get_review_status(webapp_user_id, member_id):

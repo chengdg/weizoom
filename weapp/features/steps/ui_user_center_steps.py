@@ -9,7 +9,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 
 from webapp.modules.mall.pageobject.webapp_page.home_page import WAHomePage
 from webapp.modules.user_center.pageobject.webapp_page.user_center_page import WAUserCenterPage

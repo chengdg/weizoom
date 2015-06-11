@@ -29,7 +29,7 @@ from core.exceptionutil import unicode_full_stack
 from core import apiview_util
 import pagestore as pagestore_manager
 from webapp.modules.cms.models import Article, CategoryHasArticle
-from webapp.modules.mall.models import Product, CategoryHasProduct
+from mall.models import Product, CategoryHasProduct
 from workbench.models import Workspace
 
 #===============================================================================

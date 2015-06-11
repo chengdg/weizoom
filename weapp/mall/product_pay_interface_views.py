@@ -47,29 +47,29 @@ def get_pay_interfaces(request):
 	"""
 	支付接口列表页面
 	"""
-	# if PayInterface.objects.filter(owner=request.user).count() == 0:
+	# if PayInterface.objects.filter(owner=request.manager).count() == 0:
 	# 	#初始化所有的支付接口
 	# 	for pay_interface_type in VALID_PAY_INTERFACES:
 	# 		PayInterface.objects.create(
-	# 			owner = request.user,
+	# 			owner = request.manager,
 	# 			type = pay_interface_type,
 	# 			description = '',
 	# 			is_active = False
 	# 		)
 	# else:
-	pay_interface_types = [pay_interface.type for pay_interface in PayInterface.objects.filter(owner=request.user)]
+	pay_interface_types = [pay_interface.type for pay_interface in PayInterface.objects.filter(owner=request.manager)]
 
 	for pay_type_id in VALID_PAY_INTERFACES:
 		if pay_type_id not in pay_interface_types:
 			PayInterface.objects.create(
-				owner = request.user,
+				owner = request.manager,
 				type = pay_type_id,
 				description = '',
 				is_active = False
 			)
 	
-	pay_interfaces = list(PayInterface.objects.filter(owner=request.user))
-	if request.user.can_use_weizoom_card():
+	pay_interfaces = list(PayInterface.objects.filter(owner=request.manager))
+	if request.manager.can_use_weizoom_card():
 		pay_interfaces = filter(lambda pay_interface: pay_interface.type != PAY_INTERFACE_WEIZOOM_COIN, pay_interfaces)
 	for pay_interface in pay_interfaces:
 		pay_interface.name = PAYTYPE2NAME[pay_interface.type]
@@ -80,7 +80,7 @@ def get_pay_interfaces(request):
 
 		#获取接口对应的配置项
 		if pay_interface.type == PAY_INTERFACE_WEIXIN_PAY and pay_interface.related_config_id != 0:
-			related_config = UserWeixinPayOrderConfig.objects.get(owner=request.user, id=pay_interface.related_config_id)
+			related_config = UserWeixinPayOrderConfig.objects.get(owner=request.manager, id=pay_interface.related_config_id)
 			configs = []
 			if related_config.pay_version == 0:
 				configs = [{
@@ -109,7 +109,7 @@ def get_pay_interfaces(request):
 			pay_interface.configs = configs
 
 		if pay_interface.type == PAY_INTERFACE_ALIPAY and pay_interface.related_config_id != 0:
-			related_config = UserAlipayOrderConfig.objects.get(owner=request.user, id=pay_interface.related_config_id)
+			related_config = UserAlipayOrderConfig.objects.get(owner=request.manager, id=pay_interface.related_config_id)
 			configs = [{
 					"name":u"合作者身份ID", "value":related_config.partner
 				}, {
@@ -138,7 +138,7 @@ def __add_weixin_pay_config(request):
 	"""
 	if int(request.POST.get('pay_version', 0)) == 0:
 		config = UserWeixinPayOrderConfig.objects.create(
-			owner = request.user,
+			owner = request.manager,
 			app_id = request.POST.get('app_id', ''),
 			pay_version = request.POST.get('pay_version', 0),
 			app_secret = request.POST.get('app_secret', ''),
@@ -148,7 +148,7 @@ def __add_weixin_pay_config(request):
 		)
 	else:
 		config = UserWeixinPayOrderConfig.objects.create(
-			owner = request.user,
+			owner = request.manager,
 			app_id = request.POST.get('app_id', ''),
 			pay_version = request.POST.get('pay_version', 0),
 			app_secret = request.POST.get('app_secret', ''),
@@ -161,7 +161,7 @@ def __add_weixin_pay_config(request):
 
 # def __add_ali_pay_config(request):
 # 	UserAlipayOrderConfig.objects.create(
-# 		owner = request.user,
+# 		owner = request.manager,
 # 		partner = request.POST.get('partner', ''),
 # 		key = request.POST.get('key', ''),
 # 		private_key = request.POST.get('private_key', ''),
@@ -175,7 +175,7 @@ def __add_weixin_pay_config(request):
 ########################################################################
 def __add_alipay_config(request):
 	config = UserAlipayOrderConfig.objects.create(
-		owner=request.user,
+		owner=request.manager,
 		partner = request.POST.get('partner', ''),
 		key = request.POST.get('key', ''),
 		private_key = request.POST.get('private_key', ''),
@@ -191,7 +191,7 @@ def __update_weixin_pay_config(request, pay_interface):
 	更新微信支付配置
 	"""
 	if int(request.POST.get('pay_version', 0)) == 0:
-		UserWeixinPayOrderConfig.objects.filter(owner=request.user, id=pay_interface.related_config_id).update(
+		UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
 			app_id = request.POST.get('app_id', ''),
 			app_secret = request.POST.get('app_secret', ''),
 			pay_version = request.POST.get('pay_version', 0),
@@ -200,7 +200,7 @@ def __update_weixin_pay_config(request, pay_interface):
 			paysign_key = request.POST.get('paysign_key', '')
 		)
 	else:
-		UserWeixinPayOrderConfig.objects.filter(owner=request.user, id=pay_interface.related_config_id).update(
+		UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
 			app_id = request.POST.get('app_id', ''),
 			pay_version = request.POST.get('pay_version', 0),
 			app_secret = request.POST.get('app_secret', ''),
@@ -210,7 +210,7 @@ def __update_weixin_pay_config(request, pay_interface):
 		)
 
 def __update_alipay_config(request, pay_interface):
-	config = UserAlipayOrderConfig.objects.filter(owner=request.user, id=pay_interface.related_config_id).update(
+	config = UserAlipayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
 		partner = request.POST.get('partner', ''),
 		key = request.POST.get('key', ''),
 		private_key = request.POST.get('private_key', ''),
@@ -279,11 +279,11 @@ def update_pay_interface(request):
 		return HttpResponseRedirect('/mall/pay_interfaces/get/')
 	else:
 		#获取指定的pay interface
-		pay_interface = PayInterface.objects.get(owner=request.user, id=pay_interface_id)
+		pay_interface = PayInterface.objects.get(owner=request.manager, id=pay_interface_id)
 		if pay_interface.type == PAY_INTERFACE_WEIXIN_PAY:
-			related_config = UserWeixinPayOrderConfig.objects.get(owner=request.user, id=pay_interface.related_config_id)
+			related_config = UserWeixinPayOrderConfig.objects.get(owner=request.manager, id=pay_interface.related_config_id)
 		elif pay_interface.type == PAY_INTERFACE_ALIPAY:
-			related_config = UserAlipayOrderConfig.objects.get(owner=request.user, id=pay_interface.related_config_id)
+			related_config = UserAlipayOrderConfig.objects.get(owner=request.manager, id=pay_interface.related_config_id)
 		else:
 			related_config = None
 		pay_interface.related_config = related_config

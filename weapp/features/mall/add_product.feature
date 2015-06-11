@@ -12,7 +12,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	When jobs已添加支付方式
 		"""
@@ -24,9 +24,9 @@ Background:
 			"type": "微信支付",
 			"description": "我的微信支付",
 			"is_active": "启用",
-			"weixin_appid": "12345", 
-			"weixin_partner_id": "22345", 
-			"weixin_partner_key": "32345", 
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
 			"weixin_sign": "42345"
 		}]
 		"""
@@ -40,7 +40,7 @@ Background:
 		}]
 		"""
 
-@mall @mall.product @after_rebuild
+@mall2 @mall.product @after_rebuild
 Scenario: 添加商品
 	Jobs添加商品后，能获取他添加的商品
 
@@ -56,7 +56,7 @@ Scenario: 添加商品
 		}]
 		"""
 	#When jobs选择'顺丰'运费配置
-	When jobs已添加商品
+	When jobs添加商品
 		#东坡肘子(有分类，上架，无限库存，多轮播图), 叫花鸡(无分类，下架，有限库存，单轮播图)
 		"""
 		[{
@@ -64,6 +64,7 @@ Scenario: 添加商品
 			"promotion_title": "促销的东坡肘子",
 			"category": "分类1,分类2,分类3",
 			"detail": "东坡肘子的详情",
+			"status": "待售",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}, {
@@ -84,6 +85,7 @@ Scenario: 添加商品
 			"name": "叫花鸡",
 			"category": "",
 			"detail": "叫花鸡的详情",
+			"status": "待售",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
@@ -97,13 +99,12 @@ Scenario: 添加商品
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	Then jobs能获取商品'东坡肘子'
 		"""
 		{
 			"name": "东坡肘子",
-			"promotion_title": "促销的东坡肘子",
 			"category": "分类1,分类2,分类3",
 			"detail": "东坡肘子的详情",
 			"swipe_images": [{
@@ -130,14 +131,13 @@ Scenario: 添加商品
 		{
 			"name": "叫花鸡",
 			"category": "",
-			"physical_unit": "盘",
 			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "叫花鸡的简介",
+			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+			"introduction": "",
 			"detail": "叫花鸡的详情",
 			"shelve_type": "下架",
 			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
 			"is_use_custom_model": "否",
 			"model": {
@@ -152,12 +152,14 @@ Scenario: 添加商品
 			}
 		}
 		"""
-	And bill能获取商品列表
+	Given bill登录系统
+	Then bill能获取商品列表
 		"""
 		[]
 		"""
 
-@mall @mall.product
+
+@mall2 @mall.product
 Scenario: 添加'免运费'配置的商品
 	Jobs添加商品后，能获取他添加的商品
 
@@ -167,9 +169,7 @@ Scenario: 添加'免运费'配置的商品
 		[{
 			"name": "红烧肉",
 			"category": "",
-			"physical_unit": "盘",
 			"price": 12.0,
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"introduction": "红烧肉的简介",
 			"detail": "红烧肉的详情",
@@ -197,10 +197,8 @@ Scenario: 添加'免运费'配置的商品
 		{
 			"name": "红烧肉",
 			"category": "",
-			"physical_unit": "盘",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "红烧肉的简介",
 			"detail": "红烧肉的详情",
 			"shelve_type": "上架",
 			"stock_type": "有限",
@@ -227,10 +225,10 @@ Scenario: 添加'免运费'配置的商品
 		}
 		"""
 
-@mall @mall.product
+@mall2 @mall.product
 Scenario: 添加商品按倒序排列
 	Jobs添加多个商品后，"商品列表"会按照添加的顺序倒序排列
-	
+
 	When jobs添加商品
 		"""
 		[{
@@ -239,7 +237,7 @@ Scenario: 添加商品按倒序排列
 			"name": "商品2"
 		}, {
 			"name": "商品3"
-		}]	
+		}]
 		"""
 	Then jobs能获取商品列表
 		"""
@@ -251,7 +249,8 @@ Scenario: 添加商品按倒序排列
 			"name": "商品1"
 		}]
 		"""
-	And bill能获取商品列表
+	Given bill登录系统
+	Then bill能获取商品列表
 		"""
 		[]
 		"""

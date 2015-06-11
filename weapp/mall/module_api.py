@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import timedelta, datetime, date
-import urllib, urllib2
+from datetime import datetime
 import os
 import json
 import copy
-import shutil
 import random
 import math
 
-#from itertools import chain
+# from itertools import chain
 
-from django.http import HttpResponseRedirect, HttpResponse
-from django.template import Context, RequestContext
 #from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 #from django.shortcuts import render_to_response
@@ -30,6 +26,7 @@ from tools.express import util as express_util
 from account.models import UserProfile
 # from modules.member.models import Member, IntegralStrategySttings
 # from modules.member import integral
+
 from models import *
 import signals
 from core import paginator
@@ -289,6 +286,8 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	options可用参数：
 
 	 1. search_info: 搜索
+
+	最后修改：闫钊
 	"""
 	#获得category和product集合
 	category = None
@@ -297,16 +296,23 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 		if not is_access_weizoom_mall:
 			# 非微众商城
 			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
-			products = Product.objects.filter(owner_id=webapp_owner_id, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted = False).filter(~Q(id__in=product_ids_in_weizoom_mall)).exclude(type = PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
-			category = ProductCategory()
-			category.name = u'全部'
+			products = Product.objects.filter(
+			                                  owner_id=webapp_owner_id,
+			                                  shelve_type=PRODUCT_SHELVE_TYPE_ON,
+			                                  is_deleted=False
+			).filter(~Q(id__in=product_ids_in_weizoom_mall)
+					).exclude(type=PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
 		else:
 			# other_mall_products, other_mall_product_ids = get_verified_weizoom_mall_partner_products_and_ids(webapp_id)
-			products = Product.objects.filter(owner_id=webapp_owner_id, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted = False).exclude(type = PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
+			products = Product.objects.filter(
+			                                  owner_id=webapp_owner_id,
+			                                  shelve_type=PRODUCT_SHELVE_TYPE_ON,
+			                                  is_deleted = False
+			).exclude(type = PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
 			# if other_mall_products:
 			# 	products = list(products) + list(other_mall_products)
-			category = ProductCategory()
-			category.name = u'全部'
+		category = ProductCategory()
+		category.name = u'全部'
 	else:
 		try:
 			if not is_access_weizoom_mall:
@@ -341,7 +347,6 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	# 		conditions = {}
 	# 		conditions['name__contains'] = query
 	# 		products = products.filter(**conditions)
-
 	return category, products
 
 
@@ -403,7 +408,10 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			product.swipe_images_json = json.dumps(product.swipe_images)
 
 			#获取商品的评论
-			product_review  = ProductReview.objects.filter(Q(product_id=product.id) & Q(status__in=['1', '2'])).order_by('-top_time', '-id')[:2]
+			product_review  = ProductReview.objects.filter(
+			                            Q(product_id=product.id) &
+			                            Q(status__in=['1', '2'])
+			                  ).order_by('-top_time', '-id')[:2]
 			product.product_review = product_review
 
 			if product_review:
@@ -515,7 +523,7 @@ def get_mall_config_for_cache(webapp_owner_id):
 	return inner_func
 
 
-def __fill_realtime_stocks(products):
+def fill_realtime_stocks(products):
 	models = []
 	for product in products:
 		if product.is_use_custom_model:
@@ -555,20 +563,18 @@ def get_product_details_with_model(webapp_owner_id, webapp_user, product_infos):
 	for product_info in product_infos:
 		product = webapp_cache.get_webapp_product_detail(webapp_owner_id, product_info['id'])
 		product = copy.copy(product)
-
 		#会员折扣
 		# product.price, _ = webapp_user.get_discounted_money(product.price)
-		# print 'jz-----', product.price
 		product.flash_data = {
 			"product_model_id": '%s_%s' % (product_info['id'], product_info['model_name'])
 		}
 		products.append(product)
 
-	__fill_realtime_stocks(products)
+	#__fill_realtime_stocks(products)
 	for product in products:
 		product_info = id2info[product.flash_data['product_model_id']]
 		product.fill_specific_model(product_info['model_name'], product.models)
-		if webapp_owner_id != product.owner.id and product.weshop_sync == 2:
+		if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
 			product.price = round(product.price * 1.1, 2)
 
 	#if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.stocks <= 0:
@@ -698,7 +704,7 @@ def get_product_details_with_model(webapp_owner_id, webapp_user, product_infos):
 
 # 	return product
 
-def get_product_detail(webapp_owner_id, webapp_user, product_id, member_grade_id=None):
+def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_grade_id=None):
 	"""
 	获取商品的详细信息
 	"""
@@ -728,7 +734,8 @@ def get_product_detail(webapp_owner_id, webapp_user, product_id, member_grade_id
 
 		for product_model in product.models:
 			#获取折扣后的价格
-			product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
+			if webapp_user:
+				product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
 			if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
 				product_model['price'] = round(product_model['price'] * 1.1, 2)
 
@@ -815,7 +822,7 @@ def get_product_detail(webapp_owner_id, webapp_user, product_id, member_grade_id
 		# 	if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.stocks <= 0:
 		# 		product.is_sellout = True
 
-		__fill_realtime_stocks([product])
+		#__fill_realtime_stocks([product])
 
 	except:
 		if settings.DEBUG:
@@ -1705,7 +1712,11 @@ def update_order_time(order_id):
 # get_unread_order_count: 获得未读订单数量
 ########################################################################
 def get_unread_order_count(webapp_owner_id):
-	return MallCounter.objects.get(owner_id=webapp_owner_id).unread_order_count
+	counter = MallCounter.objects.filter(owner_id=webapp_owner_id)
+	if len(counter) == 1:
+		return counter[0].unread_order_count
+	else:
+		return 0
 
 
 ########################################################################
@@ -2054,26 +2065,67 @@ def get_order_status_text(status):
 	return STATUS2TEXT[status]
 
 
-########################################################################
-# get_order_list: 获取订单列表
-########################################################################
-DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
+def get_select_params(request):
+	"""
+	构造查询条件
+	"""
+	query = request.GET.get('query', '').strip()
+	ship_name = request.GET.get('ship_name', '').strip()
+	ship_tel = request.GET.get('ship_tel', '').strip()
+	product_name = request.GET.get('product_name', '').strip()
+	pay_type = request.GET.get('pay_type', '').strip()
+	express_number = request.GET.get('express_number', '').strip()
+	order_source = request.GET.get('order_source', '').strip()
+	order_status = request.GET.get('order_status', '').strip()
+	isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
 
-DATA_UPDATE_TYPE = "update_time"
-DATA_CREATED_TYPE = "created_time"
-def get_order_list(user, query_dict, filter_value, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None,
-	date_type=None, is_refund=False):
-	webapp_id = user.get_profile().webapp_id
-	orders = belong_to(webapp_id)
+	# 填充query
+	query_dict = dict()
+	if len(query):
+		query_dict['order_id'] = query.strip().split('-')[0]
+	if len(ship_name):
+		query_dict['ship_name'] = ship_name
+	if len(ship_tel):
+		query_dict['ship_tel'] = ship_tel
+	if len(express_number):
+		query_dict['express_number'] = express_number
+	if len(product_name):
+		query_dict['product_name'] = product_name
+	if len(pay_type):
+		query_dict['pay_interface_type'] = int(pay_type)
+	if len(order_source):
+		query_dict['order_source'] = int(order_source)
+	if len(order_status):
+		query_dict['status'] = int(order_status)
+	if isUseWeizoomCard:
+		query_dict['isUseWeizoomCard'] = isUseWeizoomCard
 
-	if is_refund:
-		orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
-	# else:
-	# 	orders = orders.filter(~Q(status=ORDER_STATUS_REFUNDED))
 
-	# 统计订单总数
-	order_total_count = _get_orders_total_count(orders)
-	###################################################
+	# 时间区间
+	try:
+		date_interval = request.GET.get('date_interval', '')
+		if date_interval:
+			date_interval = date_interval.split('|')
+			if " " in date_interval[0]:
+				date_interval[0] = date_interval[0] +':00'
+			else:
+				date_interval[0] = date_interval[0] +' 00:00:00'
+
+			if " " in date_interval[1]:
+				date_interval[1] = date_interval[1] +':00'
+			else:
+				date_interval[1] = date_interval[1] +' 23:59:59'
+		else:
+			date_interval = None
+	except:
+		date_interval = None
+
+	return query_dict, date_interval
+
+def get_orders_by_params(query_dict, date_interval, orders):
+	"""
+	按照查询条件筛选符合条件的订单
+	"""
 	#商品名称
 	product_name = ""
 	if query_dict.has_key("product_name"):
@@ -2086,63 +2138,13 @@ def get_order_list(user, query_dict, filter_value, sort_attr, query_string, coun
 			query_dict.pop("isUseWeizoomCard")
 			orders = orders.exclude(weizoom_card_money=0)
 		orders = orders.filter(**query_dict)
-	###################################################
-	# 处理筛选条件
-	source = None
-	if filter_value and (filter_value != '-1'):
-		params, source_value = UserHasOrderFilter.get_filter_params_by_value(filter_value)
-		if params.has_key('status') and int(params['status']) == ORDER_STATUS_CANCEL:
-			del params['status']
-			orders = orders.filter(**params).filter(status__in=[ORDER_STATUS_CANCEL])
-		else:
-			orders = orders.filter(**params)
-		if not source_value is None:
-			orders = orders.filter(order_source=source_value)
-	# 	if source_value == 1:
-	# 		source = 'weizoom_mall'
-	# 	elif source_value == 0:
-	# 		source = 'mine_mall'
 
-	# ###################################################
-	# if user.is_weizoom_mall:
-	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_orders_weizoom_mall_for_other_mall(webapp_id)
-	# else:
-	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
-	# order_id_list = []
-	# if source:
-	# 	for order in orders:
-	# 		if weizoom_mall_order_ids:
-	# 			if order.order_id in weizoom_mall_order_ids:
-	# 				if user.is_weizoom_mall:
-	# 					order.come = 'weizoom_mall'
-	# 				else:
-	# 					order.come = 'weizoom_mall'
-	# 			else:
-	# 				order.come = 'mine_mall'
-	# 		else:
-	# 			order.come = 'mine_mall'
-	# 		if source and order.come != source:
-	# 			continue
-
-	# 		order_id_list.append(order.id)
-
-	# if source:
-	# 	orders = orders.filter(id__in=order_id_list)
-
-	###################################################
 	#处理 时间区间筛选
 	if date_interval:
 		start_time = date_interval[0]
 		end_time = date_interval[1]
-		if date_type == "update_at":
-			orders = orders.filter(update_at__gte=start_time, update_at__lt=end_time)
-		else:
-			orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
+		orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
 
-	###################################################
-	#处理排序
-	if sort_attr != 'created_at':
-		orders = orders.order_by(sort_attr)
 	#处理商品名称筛选条件
 	if product_name:
 		filter_orders = []
@@ -2155,6 +2157,34 @@ def get_order_list(user, query_dict, filter_value, sort_attr, query_string, coun
 					break
 
 		orders = filter_orders
+
+	return orders
+
+########################################################################
+# get_order_list: 获取订单列表
+########################################################################
+DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
+
+DATA_UPDATE_TYPE = "update_time"
+DATA_CREATED_TYPE = "created_time"
+def get_order_list(user, query_dict, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None,
+	date_type=None, is_refund=False):
+	webapp_id = user.get_profile().webapp_id
+	orders = belong_to(webapp_id)
+
+	if is_refund:
+		orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+	# else:
+	# 	orders = orders.filter(~Q(status=ORDER_STATUS_REFUNDED))
+
+	# 统计订单总数
+	order_total_count = _get_orders_total_count(orders)
+	#处理排序
+	if sort_attr != 'created_at':
+		orders = orders.order_by(sort_attr)
+
+	orders = get_orders_by_params(query_dict, date_interval, orders)
+
 	#返回订单的数目
 	order_return_count = len(orders)
 	###################################################
@@ -2185,7 +2215,7 @@ def get_order_list(user, query_dict, filter_value, sort_attr, query_string, coun
 
 	#构造返回的order数据
 	items = []
-	for order in  orders:
+	for order in orders:
 		#获取order对应的member的显示名
 		member = webappuser2member.get(order.webapp_user_id, None)
 		if member:
@@ -2204,16 +2234,6 @@ def get_order_list(user, query_dict, filter_value, sort_attr, query_string, coun
 		else:
 			payment_time = datetime.strftime(order.payment_time, '%Y-%m-%d %H:%M:%S')
 
-		# if weizoom_mall_order_ids:
-		# 	if order.order_id in weizoom_mall_order_ids:
-		# 		if user.is_weizoom_mall:
-		# 			order.come = 'weizoom_mall'
-		# 		else:
-		# 			order.come = 'weizoom_mall'
-		# 	else:
-		# 		order.come = 'mine_mall'
-		# else:
-		# 	order.come = 'mine_mall'
 		if order.order_source:
 			order.come = 'weizoom_mall'
 		else:
@@ -2227,8 +2247,6 @@ def get_order_list(user, query_dict, filter_value, sort_attr, query_string, coun
 		else:
 			order.pay_interface_type_text = PAYTYPE2NAME.get(order.pay_interface_type, u'')
 
-		if source and order.come != source:
-			continue
 
 		# liupeiyu 该订单中的会员是否可点击
 		# 来自本店的订单,会员不可点击
@@ -2404,11 +2422,6 @@ def __get_products_pay_interfaces(webapp_user, products):
 		# return pay_interfaces.filter(type__in = ONLINE_PAY_INTERFACE)
 		return [pay_interface for pay_interface in pay_interfaces if pay_interface.type in ONLINE_PAY_INTERFACE]
 
-def get_weizoom_card_permission(owner_id):
-	'''
-	获取该用户有没有微众卡权限
-	'''
-	return AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(owner_id)
 
 ########################################################################
 # get_pay_interface_onlines_by_owner_id: 获取在线支付方式
@@ -2543,7 +2556,7 @@ def get_products_in_wishlist(webapp_user, owner_id, member_id):
 	product_list = []
 	for item in wishlist:
 		#---TODO:似乎有更好的函数可以调用get_product_detail()---
-		product = get_product_detail(owner_id, webapp_user, item.product_id)
+		product = get_product_detail(owner_id, item.product_id, webapp_user)
 		#product = webapp_cache.get_webapp_product_detail(owner_id, item.product_id)
 		product_list.append(product)
 	return product_list
@@ -2584,7 +2597,7 @@ def check_product_in_wishlist(request):
 	try:
 		webapp_owner_id = request.webapp_owner_id
 		member_id = request.member.id
-		product_id = request.POST['product_id']
+		product_id = request.GET['product_id']
 		collect = MemberProductWishlist.objects.filter(
 			owner_id=webapp_owner_id,
 			member_id=member_id,
@@ -2600,6 +2613,32 @@ def check_product_in_wishlist(request):
 
 	return response.get_response()
 
+def get_member_product_info(request):
+	'''
+	获取购物车的数量和检查商品是否已被收藏
+	'''
+	response = create_response(200)
+	try:
+		shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
+		webapp_owner_id = request.webapp_owner_id
+		member_id = request.member.id
+		product_id = request.GET.get('product_id',"")
+		if product_id:
+			collect = MemberProductWishlist.objects.filter(
+				owner_id=webapp_owner_id,
+				member_id=member_id,
+				product_id=product_id,
+				is_collect=True
+			)
+			if collect.count() > 0:
+				response.data.is_collect = 'true'
+			else:
+				response.data.is_collect = 'false'
+		response.data.count = shopping_cart_count
+	except:
+		return create_response(500).get_response()
+
+	return response.get_response()
 
 def wishlist_product_count(webapp_owner_id, member_id):
 	"""

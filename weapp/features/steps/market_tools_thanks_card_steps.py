@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from market_tools.tools.test_game.models import *
 from market_tools.tools.delivery_plan.models import *
 from webapp.models import Workspace
-from webapp.modules.mall.models import *
+from mall.models import *
 
 @Then(u"{user}获取到商品列表")
 def step_impl(context, user):

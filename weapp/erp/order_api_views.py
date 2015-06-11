@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 
 from core import paginator
-from webapp.modules.mall import module_api as mall_api
+from mall import module_api as mall_api
 from tools.express import util as express_util
 
 from watchdog.utils import *

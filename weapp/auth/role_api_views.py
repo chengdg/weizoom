@@ -40,16 +40,24 @@ def create_role(request):
 
 	@param name 角色名
 	"""
-	group = Group.objects.create(
-		owner = request.manager,
-		name = request.POST['name']
-	)
+	name_count = Group.objects.filter(owner = request.manager, name = request.POST['name']).count()
+	if name_count:
+		response = create_response(500)
+		response.data = {"msg": u'角色名称重复'}
+	elif Group.objects.filter(owner = request.manager).count() >= 30:
+		response = create_response(500)
+		response.data = {"msg": u'角色数目已超过限额'}
+	else:
+		group = Group.objects.create(
+			owner = request.manager,
+			name = request.POST['name']
+		)
 
-	response = create_response(200)
-	response.data = {
-		'id': group.id,
-		'name': group.name
-	}
+		response = create_response(200)
+		response.data = {
+			'id': group.id,
+			'name': group.name
+		}
 	return response.get_response()
 
 
@@ -83,7 +91,12 @@ def update_role(request):
 	@param id 角色id
 	@param name 角色名
 	"""
-	Group.objects.filter(owner=request.manager, id=request.POST['id']).update(name=request.POST['name'])
+	count = Group.objects.filter(owner = request.manager, name = request.POST['name']).exclude(id=request.POST['id']).count()
+	if count:
+		response = create_response(500)
+		response.data = {"msg": u'角色名称重复'}
+	else:
+		Group.objects.filter(owner=request.manager, id=request.POST['id']).update(name=request.POST['name'])
 
-	response = create_response(200)
+		response = create_response(200)
 	return response.get_response()

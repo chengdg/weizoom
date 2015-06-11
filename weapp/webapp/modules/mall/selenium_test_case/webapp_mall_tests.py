@@ -19,7 +19,7 @@ from selenium.webdriver.chrome.options import Options
 from account.models import *
 from modules.member.models import ShipInfo
 from test import helper
-from webapp.modules.mall.models import *
+from mall.models import *
 
 from account.pageobject.login_page import LoginPage
 from webapp.pageobject.template_list_page import TemplateListPage

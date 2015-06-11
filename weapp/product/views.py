@@ -27,7 +27,7 @@ import module_api as weapp_product_api
 from webapp.models import Workspace
 from market_tools import ToolModule
 from core.jsonresponse import create_response, JsonResponse
-from webapp.modules.mall.models import MallConfig
+from mall.models import MallConfig
 
 
 FIRST_NAV_NAME = 'product'

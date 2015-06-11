@@ -74,7 +74,7 @@ def create_premium_sale(request):
 def copy_premium_sale(request):
 	promotion_id = request.GET['id']
 	promotion = Promotion.objects.get(id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_concrete_promotion': True,
 		'with_product': True
 	})
@@ -113,8 +113,8 @@ def copy_premium_sale(request):
 @login_required
 def get_premium_sale_detail(request):
 	promotion_id = request.GET['id']
-	promotion = Promotion.objects.get(owner=request.user, type=PROMOTION_TYPE_PREMIUM_SALE, id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	promotion = Promotion.objects.get(owner=request.manager, type=PROMOTION_TYPE_PREMIUM_SALE, id=promotion_id)
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_product': True,
 		'with_concrete_promotion': True
 	})

@@ -254,9 +254,13 @@ class UserProfileMiddleware(object):
 		#处理user profile
 		webapp_owner_id = -1
 		request.user_profile = None
-		if request.user.is_authenticated() and not request.user.is_superuser:
-			request.user_profile = request.user.get_profile()
-			webapp_owner_id = request.user_profile.user_id
+		if request.user.is_authenticated() and not request.user.is_superuser and not request.is_access_webapp and not request.is_access_webapp_api:
+			if hasattr(request, 'manager'):
+				request.user_profile = request.manager.get_profile()
+			# else:
+			# 	# request.user_profile = request.user.get_profile()
+			# 	request.user_profile = request.webapp_owner_info.user_profile
+				webapp_owner_id = request.user_profile.user_id
 		else:
 			webapp_owner_id = request.REQUEST.get('woid', -1)
 			if webapp_owner_id == -1:
@@ -557,7 +561,15 @@ class UserManagerMiddleware(object):
 	确定user的manager
 	"""
 	def process_request(self, request):
-		request.manager = request.user
+		user = request.user
+		manager = user
+		if is_pay_request(request) or request.is_access_webapp or request.is_access_webapp_api:
+			return None
+		if isinstance(request.user, User):
+			departmentUser = auth_models.DepartmentHasUser.objects.filter(user=request.user)
+			if len(departmentUser) == 1:
+				manager = User.objects.get(id=departmentUser[0].owner_id)
+			request.manager = manager
 		return None
 
 
@@ -679,7 +691,7 @@ class WeizoomCardUseAuthKeyMiddleware(object):
 		return response
 
 
-from webapp.modules.mall.models import WeizoomMall
+from mall.models import WeizoomMall
 class WeizoomMallMiddleware(object):
 	"""
 	微众商城中间件
@@ -692,6 +704,8 @@ class WeizoomMallMiddleware(object):
 		
 		if request.user_profile:
 			request.user.is_weizoom_mall = request.user_profile.webapp_type == WEBAPP_TYPE_WEIZOOM_MALL#WeizoomMall.is_weizoom_mall(request.user_profile.webapp_id)
+			if hasattr(request, 'manager'):
+				request.manager.is_weizoom_mall = request.user.is_weizoom_mall
 			request.is_access_weizoom_mall = request.user.is_weizoom_mall
 		else:
 			request.user.is_weizoom_mall = False
@@ -720,7 +734,7 @@ class GetRequestInfoMiddleware(object):
 
 		#检查用户来源
 		is_from_simulator = request_source_detector.is_from_simulator(request)
-		if request.user.is_authenticated():
+		if is_request_for_webapp or is_request_for_webapp_api or request.user.is_authenticated():
 			return None
 			
 		if request.is_access_webapp and not is_from_simulator:
@@ -770,6 +784,8 @@ class PermissionMiddleware(object):
 	填充request.user的权限数据，用于支持request.user.has_perm操作
 	"""
 	def process_request(self, request):
+		if is_request_for_webapp(request) or is_request_for_webapp_api(request):
+			return None
 		if not request.user.is_authenticated():
 			return None
 			
@@ -782,4 +798,5 @@ class PermissionMiddleware(object):
 		auth_api.fill_parent_permissions(permission_ids)
 
 		permission_set = set([permission.code_name for permission in auth_models.Permission.objects.filter(id__in=permission_ids)])
+
 		request.user.permission_set = permission_set

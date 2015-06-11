@@ -40,7 +40,7 @@ def get_product_categories(request):
 	商品分类列表页面
 	"""
 	#获取category集合
-	product_categories = list(ProductCategory.objects.filter(owner=request.user))
+	product_categories = list(ProductCategory.objects.filter(owner=request.manager))
 
 	#获取与category关联的product集合
 	category_ids = [category.id for category in product_categories]

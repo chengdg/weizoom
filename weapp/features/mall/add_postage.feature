@@ -1,7 +1,7 @@
 Feature: 添加邮费配置
 	Jobs能通过管理系统为商城添加的"邮费配置"
 
-@mall @mall.postage
+@mall2 @mall.postage @zypost1
 Scenario: 添加邮费配置
 	Jobs添加"邮费配置"
 	1. jobs能获得邮费配置列表
@@ -53,11 +53,13 @@ Scenario: 添加邮费配置
 				"condition": "money",
 				"value": 2.0
 			}]
-		}]	
+		}]
 		"""
 	Then jobs能获取添加的邮费配置
 		"""
 		[{
+			"name" : "免运费"
+		},{
 			"name" : "圆通"
 		}, {
 			"name" : "顺丰"

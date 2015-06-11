@@ -16,7 +16,7 @@ from django.shortcuts import render_to_response
 from core.exceptionutil import unicode_full_stack
 
 from market_tools.prize.models import *
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.util import get_member
 from models import *
 

@@ -74,7 +74,7 @@ def create_price_cut(request):
 def copy_price_cut(request):
 	promotion_id = request.GET['id']
 	promotion = Promotion.objects.get(id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_concrete_promotion': True
 	})
 
@@ -95,8 +95,8 @@ def copy_price_cut(request):
 @login_required
 def get_price_cut_detail(request):
 	promotion_id = request.GET['id']
-	promotion = Promotion.objects.get(owner=request.user, type=PROMOTION_TYPE_PRICE_CUT, id=promotion_id)
-	Promotion.fill_details(request.user, [promotion], {
+	promotion = Promotion.objects.get(owner=request.manager, type=PROMOTION_TYPE_PRICE_CUT, id=promotion_id)
+	Promotion.fill_details(request.manager, [promotion], {
 		'with_product': True,
 		'with_concrete_promotion': True
 	})

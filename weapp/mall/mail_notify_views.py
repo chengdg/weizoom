@@ -27,15 +27,15 @@ FIRST_NAV = export.MALL_CONFIG_FIRST_NAV
 @login_required
 def get_email_notify(request):
     interal_strategy_settings = IntegralStrategySttings.objects.get(webapp_id=request.user_profile.webapp_id)
-    operation_settings_objs = OperationSettings.objects.filter(owner=request.user)
+    operation_settings_objs = OperationSettings.objects.filter(owner=request.manager)
     if operation_settings_objs.count() == 0:
-        operation_settings = OperationSettings.objects.create(owner=request.user)
+        operation_settings = OperationSettings.objects.create(owner=request.manager)
     else:
         operation_settings = operation_settings_objs[0]
 
-    if UserOrderNotifySettings.objects.filter(user=request.user).count() == 0:
+    if UserOrderNotifySettings.objects.filter(user=request.manager).count() == 0:
         for index in range(5):
-            UserOrderNotifySettings.objects.create(user=request.user, status=index)
+            UserOrderNotifySettings.objects.create(user=request.manager, status=index)
 
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV,
@@ -44,7 +44,7 @@ def get_email_notify(request):
 
         'interal_strategy_settings': interal_strategy_settings,
         'operation_settings': operation_settings,
-        'notify_settings': UserOrderNotifySettings.objects.filter(user=request.user)
+        'notify_settings': UserOrderNotifySettings.objects.filter(user=request.manager)
     })
 
     return render_to_response('mall/editor/email_notify.html', c)
@@ -59,14 +59,14 @@ def edit_email_notify(request):
     if request.method == 'POST':
         emails = request.POST.get('emails', '')
         member_ids = request.POST.get('member_ids', '')
-        if UserOrderNotifySettings.objects.filter(user=request.user, status=status).count() > 0:
-            UserOrderNotifySettings.objects.filter(user=request.user, status=status).update(emails=emails, black_member_ids=member_ids)
+        if UserOrderNotifySettings.objects.filter(user=request.manager, status=status).count() > 0:
+            UserOrderNotifySettings.objects.filter(user=request.manager, status=status).update(emails=emails, black_member_ids=member_ids)
         else:
-            UserOrderNotifySettings.objects.create(status=status, black_member_ids=member_ids, emails=emails, user=request.user)
+            UserOrderNotifySettings.objects.create(status=status, black_member_ids=member_ids, emails=emails, user=request.manager)
 
         return HttpResponseRedirect('/mall/email_notify/get/')
     else:
-        notify_settings = UserOrderNotifySettings.objects.filter(user=request.user, status=status)
+        notify_settings = UserOrderNotifySettings.objects.filter(user=request.manager, status=status)
         if notify_settings.count() > 0:
             notify_setting = notify_settings[0]
         else:

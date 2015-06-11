@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from webapp.modules.mall.models import *
+from mall.models import *
 from django.contrib.auth.models import Group, User
 
 def pay(pay_interface, order, webapp_owner_id):

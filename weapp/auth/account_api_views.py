@@ -22,6 +22,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Q, F
 from django.db.models.aggregates import Sum, Count
+from django.db.utils import IntegrityError
 
 from account import models as account_models
 from models import *
@@ -44,16 +45,21 @@ def create_department(request):
 
 	@param name 部门名
 	"""
-	department = Department.objects.create(
-		owner = request.manager,
-		name = request.POST['name']
-	)
+	count = Department.objects.filter(owner = request.manager, name = request.POST['name']).count()
+	if count:
+		response = create_response(500)
+		response.data = {"msg": u'部门名称重复'}
+	else:
+		department = Department.objects.create(
+			owner = request.manager,
+			name = request.POST['name']
+		)
 
-	response = create_response(200)
-	response.data = {
-		'id': department.id,
-		'name': department.name
-	}
+		response = create_response(200)
+		response.data = {
+			'id': department.id,
+			'name': department.name
+		}
 	return response.get_response()
 
 
@@ -84,9 +90,14 @@ def update_department(request):
 	@param id 部门id
 	@param name 部门名
 	"""
-	Department.objects.filter(owner=request.manager, id=request.POST['id']).update(name=request.POST['name'])
 
-	response = create_response(200)
+	count = Department.objects.filter(owner = request.manager, name = request.POST['name']).exclude(id=request.POST['id']).count()
+	if count:
+		response = create_response(500)
+		response.data = {"msg": u'部门名称重复'}
+	else:
+		Department.objects.filter(owner=request.manager, id=request.POST['id']).update(name=request.POST['name'])
+		response = create_response(200)
 	return response.get_response()
 
 
@@ -102,9 +113,15 @@ def get_department_users(request):
 	"""
 	department_id = int(request.GET.get('id', 0))
 	if department_id == 0:
-		user_ids = [relation.user_id for relation in DepartmentHasUser.objects.filter(owner=request.manager)]
+		relations = DepartmentHasUser.objects.filter(owner=request.manager)
 	else:
-		user_ids = [relation.user_id for relation in DepartmentHasUser.objects.filter(owner=request.manager, department_id=department_id)]
+		relations = DepartmentHasUser.objects.filter(owner=request.manager, department_id=department_id)
+	user_ids = []
+	userid2departmentid = dict()
+	for relation in relations:
+		user_ids.append(relation.user_id)
+		userid2departmentid[relation.user_id] = relation.department_id
+
 	users = list(User.objects.filter(id__in=user_ids))
 	users.sort(lambda x,y: cmp(y.id, x.id))
 
@@ -123,26 +140,31 @@ def get_department_users(request):
 	id2user = dict()
 	user_ids = []
 	for user in users:
-		user.roles = []
+		user.role_name = ''
 		id2user[user.id] = user
 		user_ids.append(user.id)
 	id2role = dict([(role.id, role) for role in Group.objects.filter(owner=request.manager)])
 	for relation in UserHasGroup.objects.filter(user_id__in=user_ids):
 		user = id2user[relation.user_id]
 		role = id2role[relation.group_id]
-		user.roles.append({
-			"id": role.id,
-			"name": role.name
-		})
+		if len(user.role_name) > 0 and user.role_length == 1:
+			user.role_name += '及其他'
+			user.role_length = 2
+		elif not hasattr(user, 'role_length'):
+			user.role_name = role.name
+			user.role_length = 1
 
+	id2departmentname = dict([(department.id, department.name) for department in Department.objects.filter(owner=request.manager)])
 	#构造返回数据
 	items = []
 	for user in users:
 		items.append({
 			"id": user.id,
 			"name": user.first_name,
+			"login_name": user.username,
 			"is_active": user.is_active,
-			"roles": user.roles
+			"role_name": user.role_name,
+			"department_name": id2departmentname.get(userid2departmentid[user.id], '')
 		})
 
 	response = create_response(200)
@@ -181,8 +203,110 @@ def inactive_account(request):
 	elif status == 'inactive':
 		User.objects.filter(id=user_id).update(is_active=False)
 	elif status == 'delete':
-		User.objects.filter(id=user_id).update(is_active=False)
+		for user in User.objects.filter(id=user_id):
+			# .update(is_active=False, username=F('username')+u'abc')
+			user.is_active = False
+			user.last_name = str(time.time()).split('.')[0]
+			user.username += user.last_name
+			user.save()
 		account_models.UserProfile.objects.filter(user_id=user_id).update(is_active=False)
+		# 更新主账号的子账号数量
+		request.user_profile.sub_account_count += 1
+		request.user_profile.save()
+
+	response = create_response(200)
+	return response.get_response()
+
+
+@api(app='auth', resource='account', action='create')
+@login_required
+def create_account(request):
+	#创建user
+	username = request.POST['username']
+	first_name = request.POST['name']
+	password = request.POST['password']
+
+	msg = None
+	try:
+		user = User.objects.create_user(username, 'none@weizoom.com', password, first_name=first_name)
+	except IntegrityError:
+		msg = u'账户名称已存在'
+	if request.user_profile.sub_account_count < 1:
+		msg = u'子账号数目已超过限额'
+	if msg:
+		response = create_response(500)
+		response.data = {"msg": msg}
+		return response.get_response()
+
+	# 更新主账号的子账号数量
+	request.user_profile.sub_account_count -= 1
+	request.user_profile.save()
+
+	profile = user.get_profile()
+	profile.manager_id = request.manager.id
+	profile.is_mp_registered = True
+	profile.save()
+
+	#处理<department, user>关系
+	department_id = request.POST['department']
+	DepartmentHasUser.objects.create(
+		owner = request.manager,
+		department_id = department_id,
+		user = user
+	)
+
+	#处理<user, group>关系
+	role_ids = request.POST.get('role_ids', '').split(',')
+	for role_id in role_ids:
+		role_id = role_id.strip()
+		if not role_id:
+			continue
+		UserHasGroup.objects.create(
+			user = user,
+			group_id = role_id
+		)
+
+	response = create_response(200)
+	return response.get_response()
+
+
+@api(app='auth', resource='account', action='update')
+@login_required
+def update_account(request):
+	user_id = request.POST['id']
+	#更新user
+	User.objects.filter(id=user_id).update(first_name=request.POST['name'])
+
+	#更新<department, user>关系 
+	department_id = request.POST['department']
+	relation = DepartmentHasUser.objects.get(owner=request.manager, user_id=user_id)
+	if relation.department_id != department_id:
+		DepartmentHasUser.objects.filter(owner=request.manager, user_id=user_id).update(department=department_id)
+
+	#更新<user, group>关系
+	UserHasGroup.objects.filter(user_id=user_id).delete()
+	role_ids = request.POST.get('role_ids', '').split(',')
+	for role_id in role_ids:
+		role_id = role_id.strip()
+		if not role_id:
+			continue
+		UserHasGroup.objects.create(
+			user_id = user_id,
+			group_id = role_id
+		)
+
+	#更新<user, permission>关系
+	UserHasPermission.objects.filter(owner=request.manager, user_id=user_id).delete()
+	user_permission_ids_str = request.POST.get('user_permission_ids', "unmodified").strip()
+	if user_permission_ids_str and (not user_permission_ids_str == 'unmodified'):
+		user_permission_ids = user_permission_ids_str.split(',')
+		for permission_id in user_permission_ids:
+			UserHasPermission.objects.create(
+				owner = request.manager,
+				user_id = user_id,
+				permission_id = permission_id
+			)
+
 
 	response = create_response(200)
 	return response.get_response()

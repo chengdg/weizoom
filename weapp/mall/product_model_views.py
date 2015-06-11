@@ -44,7 +44,7 @@ def get_model_properties(request):
 	"""
 	商品规格列表页面
 	"""
-	model_properties = ProductModelProperty.objects.filter(owner=request.user, is_deleted=False)
+	model_properties = ProductModelProperty.objects.filter(owner=request.manager, is_deleted=False)
 	id2property = {}
 	for model_property in model_properties:
 		model_property.property_values = []

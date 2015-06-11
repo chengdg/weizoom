@@ -65,20 +65,20 @@ html,body{
 {% block content-panel %}
 <div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-productDetailPage xui-page">
     {% if is_weizoom_mall %}
-    {% else %} 
+    {% else %}
     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn">
         <span class="xui-inner-count {% if shopping_cart_product_nums == 0 %}hidden{% endif %}">{{shopping_cart_product_nums}}</span>
     </a>
     {% endif %}
     <div data-role="content" data-theme="x">
-        <div 
-            data-ui-role="swipeimage" 
-            data-jsondata='{{product.swipe_images_json|safe}}' 
-            data-width='320' 
+        <div
+            data-ui-role="swipeimage"
+            data-jsondata='{{product.swipe_images_json|safe}}'
+            data-width='320'
             data-height='200'
         >
         </div>
-        
+
         {% with product.models.0 as standard_model %}
         <div class="xui-section">
             <div class="xui-section-title xui-section-item zoom">
@@ -92,11 +92,11 @@ html,body{
                         <span class="xt-originalPrice xui-vipPrice-num xa-fixed-price">{{ product.price }}</span>积分
 
                     <!-- 普通商品 -->
-                    {% elif product.type == 'object' %}  
+                    {% elif product.type == 'object' %}
                         {% if cur_request_member %}
                             <span class="xt-price xui-vipPrice-num xa-fixed-price">￥{{ product.price }}</span>
                         {% else %}
-                            <span class="xt-originalPrice xui-vipPrice-num xa-fixed-price">￥{{ product.original_price }}</span> 
+                            <span class="xt-originalPrice xui-vipPrice-num xa-fixed-price">￥{{ product.original_price }}</span>
                         {% endif %}
                         {% if product.market_price > 0 %}
                             <span class="xui-text-disabled">市场价：￥<span class="xt-marketPrice">{{ product.market_price }}</span></span>
@@ -111,7 +111,7 @@ html,body{
             </div>
 
             <div class="xui-product-title zoom btn-div xa-tab pt5" style="position:sticky;top:0;">
-                <div class="tc xui-tab-wrap">                    
+                <div class="tc xui-tab-wrap">
                     <!-- 已售罄 -->
                     {% if product.is_sellout %}
                         <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">已售罄</a>
@@ -122,7 +122,7 @@ html,body{
                             <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">积分不足</a>
                         {% else %}
                             <a href="javascript:void(0);" class="xui-btn-commen xui-btn xui-w93 xa-apply">积分购买</a>
-                        {% endif %}                    
+                        {% endif %}
 
                     <!-- 普通商品 -->
                     {% else %}
@@ -164,12 +164,12 @@ html,body{
                     <p class="xui-counterLabel">数量：&nbsp;</p>
                     <div class="clearfix">
                         <div class="fl">
-                            <input 
-                                data-ui-role="counter" 
-                                {% ifequal product.stock_type 1 %}data-max-count="{{product.stocks}}"{% endifequal %} 
-                                type="hidden" 
-                                name="total_count" 
-                                id="total_count" 
+                            <input
+                                data-ui-role="counter"
+                                {% ifequal product.stock_type 1 %}data-max-count="{{product.stocks}}"{% endifequal %}
+                                type="hidden"
+                                name="total_count"
+                                id="total_count"
                                 value="1"
                             >
                         </div>
@@ -188,7 +188,7 @@ html,body{
                             <span class="xt-price xui-vipPrice-num xa-variable-price">{{ product.price }}</span>积分
 
                         <!-- 普通商品 -->
-                        {% elif product.type == 'object' %}  
+                        {% elif product.type == 'object' %}
                             {% if cur_request_member %}
                                 ￥<span class="xt-price xui-vipPrice-num xa-variable-price">{{ product.price }}</span>
                             {% else %}
@@ -208,7 +208,7 @@ html,body{
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen xt-integral-buy-Btn" data-url="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1">积分购买</a>
 
                         <!-- 普通商品 -->
-                        {% else %}  
+                        {% else %}
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen xui-btn-noPadding">购买</a>
                         {% endif %}
                     </div>
@@ -248,7 +248,7 @@ html,body{
         if (addedWeight == 0) {
             return price;
         }
-        
+
         var addedCount = 1;
         while (true) {
             weight = weight - addedWeight;
@@ -267,7 +267,7 @@ html,body{
         $('.xa-cover').removeClass('hidden');
         $('.xui-applyBox').slideDown(500);
     });
-    
+
     $('.xa-cover').bind('click',function(event) {
         if(event.target==this){
             $('.xa-cover').addClass('hidden');
@@ -300,7 +300,7 @@ html,body{
                     isTabFixed = false;
                 }
             }
-        });        
+        });
 
         //修改"立即购买"链接中的product_count参数
         var updateBuyLink = function(productCount) {
@@ -310,7 +310,7 @@ html,body{
                 var hrefAttr = $buy.attr('href');
                 hrefAttr = hrefAttr.replace(/product_count=\d+/, 'product_count='+productCount);
                 $buy.attr('href', hrefAttr).attr('data-url', hrefAttr);
-            }); 
+            });
         };
 
         //更新重量和邮费  和 价钱
@@ -332,7 +332,7 @@ html,body{
             var total_price = (price*productCount).toFixed(1);
             $('.xa-variable-price').text(total_price);
             console.log(price, productCount, (price*productCount).toFixed(1))
-            if('integral' == '{{product.type}}'){                
+            if('integral' == '{{product.type}}'){
                 if (total_price > {{use_integral}}) {
                     $('.xt-integral-buy-Btn').addClass("xui-btn-disable");
                     $('.xt-integral-buy-Btn').attr('href', 'javascript:void(0);');

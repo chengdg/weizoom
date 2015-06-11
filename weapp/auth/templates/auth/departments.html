@@ -6,7 +6,7 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/auth/account_help/get/">账号权限管理</a></li>
+		<li><a href="/auth/account_help/get/">权限管理</a></li>
 		<li class="active">员工管理</li>
 	</ul>
 </div>
@@ -64,33 +64,22 @@
 		<thead>
 			<tr>
 				<th>账户名称</th>
-				<th width="170">角色</th>
-				<th width="100">状态</th>
-				<th width="185">操作</th>
+				<th width="100">姓名</th>
+				<th width="100">部门</th>
+				<th width="70">角色</th>
+				<th width="50">状态</th>
+				<th width="155">操作</th>
 			</tr>
 		</thead>
 		<tbody>
             {{if items.length}}
 	            {{each(i, user) items}}
 				<tr data-id="${user.id}" class="xa-user">
-					<td>
-						${user.name}
-					</td>
-					<td>
-						<ul>
-							{{each(i, role) user.roles}}
-							<li>
-								<span style="font-size: 1.0em;">${role.name}</span>
-							</li>
-							{{/each}}
-						<ul></td>
-					<td>
-						{{if user.is_active}}
-						启用
-						{{else}}
-						停用
-						{{/if}}
-					</td>
+					<td>${user.login_name}</td>
+					<td>${user.name}</td>
+					<td>${user.department_name}</td>
+					<td>${user.role_name}</td>
+					<td>{{if user.is_active}}启用{{else}}停用{{/if}}</td>
 					<td class="xui-operation">
 						{{if user.is_active}}
 						<a href="javascript:void(0);" class="xa-inactive">停用</a>
@@ -103,7 +92,7 @@
 				</tr>
 				{{/each}}
             {{else}}
-                <tr><td colspan='5'>还没有员工，请添加</td></tr>
+                <tr><td colspan=6>还没有员工，请添加</td></tr>
             {{/if}}
 		</tbody>        
 	</table>

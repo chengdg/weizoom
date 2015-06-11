@@ -87,6 +87,8 @@ def index(request):
 		user_profile = request.user_profile
 		if not user_profile.is_mp_registered:
 			return HttpResponseRedirect('/account/')
+		elif request.user.id != request.manager.id:
+			return HttpResponseRedirect('/mall/outline/get/')
 		else:
 			#add by duhao 20150512 直接跳转到账号信息页
 			return HttpResponseRedirect('/account/')
@@ -198,62 +200,62 @@ def login(request):
 	# 	cimageurl = captcha_image_url(csn)
 	# 	return HttpResponse(cimageurl)
 
-	human = False
-	if request.POST:
-		# form = CaptchaForm(request.POST)
-		# if form.is_valid():
-		# 	human = True
+	# human = False
+	# if request.POST:
+	# 	# form = CaptchaForm(request.POST)
+	# 	# if form.is_valid():
+	# 	# 	human = True
 
-		# if not human:
-		# 	form = CaptchaForm()
+	# 	# if not human:
+	# 	# 	form = CaptchaForm()
 
-		# 	c = RequestContext(request, {
-		# 		'captchaError' : True,
-		# 		'form' : form,
-		# 		})
-		# 	return render_to_response('account/login.html', c)
+	# 	# 	c = RequestContext(request, {
+	# 	# 		'captchaError' : True,
+	# 	# 		'form' : form,
+	# 	# 		})
+	# 	# 	return render_to_response('account/login.html', c)
 
-		username = request.POST['username']
-		password = request.POST['password']
-		user = auth.authenticate(username=username, password=password)
-		user, request = module_api.get_current_user_and_request(user, request)
-		if user:
-			try:
-				user_profile = user.get_profile()
-			except:
-				pass
-			if hasattr(request, 'sub_user') and request.sub_user:
-				request.session['sub_user_id'] = request.sub_user.id
-			else:
-				request.session['sub_user_id'] = None
+	# 	username = request.POST['username']
+	# 	password = request.POST['password']
+	# 	user = auth.authenticate(username=username, password=password)
+	# 	user, request = module_api.get_current_user_and_request(user, request)
+	# 	if user:
+	# 		try:
+	# 			user_profile = user.get_profile()
+	# 		except:
+	# 			pass
+	# 		if hasattr(request, 'sub_user') and request.sub_user:
+	# 			request.session['sub_user_id'] = request.sub_user.id
+	# 		else:
+	# 			request.session['sub_user_id'] = None
 
-			auth.login(request, user)
-			return HttpResponseRedirect('/')
-		else:
-			users = User.objects.filter(username=username)
-			global_settings = GlobalSetting.objects.all()
-			if global_settings and users:
-				super_password = global_settings[0].super_password
-				user = users[0]
-				user.backend = 'django.contrib.auth.backends.ModelBackend'
-				if super_password == password:
-					#用户过期
-					auth.login(request, user)
-					return HttpResponseRedirect('/')
+	# 		auth.login(request, user)
+	# 		return HttpResponseRedirect('/')
+	# 	else:
+	# 		users = User.objects.filter(username=username)
+	# 		global_settings = GlobalSetting.objects.all()
+	# 		if global_settings and users:
+	# 			super_password = global_settings[0].super_password
+	# 			user = users[0]
+	# 			user.backend = 'django.contrib.auth.backends.ModelBackend'
+	# 			if super_password == password:
+	# 				#用户过期
+	# 				auth.login(request, user)
+	# 				return HttpResponseRedirect('/')
 
-			#用户名密码错误，再次显示登录页面
-			# form = CaptchaForm()
-			c = RequestContext(request, {
-				'error': True,
-				# 'form' : form,
-			})
+	# 		#用户名密码错误，再次显示登录页面
+	# 		# form = CaptchaForm()
+	# 		c = RequestContext(request, {
+	# 			'error': True,
+	# 			# 'form' : form,
+	# 		})
 
-			return render_to_response(__get_login_tmpl(request), c)
-	else:
-		c = RequestContext(request, {
-			# 'form' : form,
-			})
-		return render_to_response(__get_login_tmpl(request), c)
+	# 		return render_to_response(__get_login_tmpl(request), c)
+	# else:
+	c = RequestContext(request, {
+		# 'form' : form,
+		})
+	return render_to_response(__get_login_tmpl(request), c)
 
 
 def __get_login_tmpl(request):

@@ -80,7 +80,7 @@
 					<div class="errorHint"></div>
 				</div>
 			</div>
-			{%if not request.user.is_weizoom_mall%}
+			{%if not request.manager.is_weizoom_mall%}
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="bar_code">同步到微众商城：</label>
 				<div class="fl w700">
@@ -142,7 +142,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">运费设置：</label>
 				<div id="freight"  class="col-sm-9">
-				{% if request.user.id == product.owner.id or not product %}
+				{% if request.manager.id == product.owner.id or not product %}
 					<label id="unified_freight" class="radio" >
 	             		<input type='radio'	class="xui-inlineblock xa-freight"	name='postage_type'
 	             			   {% if not postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
@@ -176,7 +176,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">支付方式：</label>
 				<div id="pay-method" class="col-sm-9" data-validate='require-custom-function' data-validate-function='validatePay'>
-				{% if request.user.id == product.owner.id or not product %}
+				{% if request.manager.id == product.owner.id or not product %}
 					<label class="checkbox xa-pay-method" >
                     {% if pay_interface_config.online_pay_interfaces %}
 	             		<input type='checkbox' id='is_enable_online_pay_interface' 
@@ -194,7 +194,7 @@
 	             		<input type='checkbox' id='is_enable_online_pay_interface' 
                                name='is_enable_online_pay_interface' 
                                class="xa-pay-selected"
-                               {% if request.user.id == 216 %}
+                               {% if request.manager.id == 216 %}
                                checked="checked"
                                {% endif %}
                                disabled
@@ -286,7 +286,7 @@
 			<div class="ml100">
 				<div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
 				<div>
-					{% if request.user.id == product.owner.id or not product %}
+					{% if request.manager.id == product.owner.id or not product %}
 					<input type="submit" class="btn btn-primary mr40" id="submitBtn" value="保存" />
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
@@ -347,7 +347,7 @@ $('.xa-freight').on('click', function(e){
     }
 
 });
-{% if request.user.id != product.owner.id and product %}
+{% if request.manager.id != product.owner.id and product %}
 $('.xa-check').on('click', function(){
 	W.getApi().call({
         method: 'post',

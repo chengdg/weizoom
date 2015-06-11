@@ -8,7 +8,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 
 def __fill_post_data(pay_interface):
 	data = {}
@@ -96,7 +96,7 @@ def step_impl(context, user, pay_interface_description):
 def step_impl(context, user):
 	url = '/mall/pay_interfaces/get/'
 	response = context.client.get(url)
-	
+
 	expected = json.loads(context.text)
 	if expected['type'] == u'微信支付':
 		pay_interface_type = PAY_INTERFACE_WEIXIN_PAY
@@ -104,6 +104,8 @@ def step_impl(context, user):
 		pay_interface_type = PAY_INTERFACE_COD
 	elif expected['type'] == u'微众卡支付':
 		pay_interface_type = PAY_INTERFACE_WEIZOOM_COIN
+	elif expected['type'] == u'支付宝':
+		pay_interface_type = PAY_INTERFACE_ALIPAY
 
 	db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, type=pay_interface_type)
 	for pay_interface in response.context['pay_interfaces']:
@@ -197,7 +199,7 @@ def step_impl(context, user, add_ability):
 def step_impl(context, user):
 	#client = context.client
 	pay_interfaces = json.loads(context.text)
-	#data = {}	
+	#data = {}
 	context.client.get('/mall/pay_interfaces/get/')
 	for pay_interface in pay_interfaces:
 		__add_pay_interface(context, pay_interface)
@@ -205,7 +207,7 @@ def step_impl(context, user):
 
 @then(u"{user}添加支付方式时{is_can}使用'{pay_interface_type}'")
 def step_impl(context, user, is_can, pay_interface_type):
-	response = context.client.get('/mall/editor/pay_interface/create/')
+	response = context.client.get('/mall/pay_interface/create/')
 	pay_interfaces = response.context['pay_interfaces']
 
 	has_other_pay_interface = False

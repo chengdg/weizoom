@@ -74,38 +74,9 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         }
         var args = [];
 
-        // filter_value=type:object|status:0|pay_interface_type:0|source:0
-        // if (orderType != -1) {
-        //     dataValue.push('type:'+orderType);
-        // }
-        if (orderStatus != -1) {
-            dataValue.push('status:'+orderStatus);
-        }
-        if (payType != -1) {
-            dataValue.push('pay_interface_type:'+payType);
-        }
-        if (orderSource != -1) {
-            dataValue.push('source:'+orderSource);
-        }
-        if (expressNumber != '') {
-            dataValue.push('express_number:'+expressNumber);
-        }
-
-        var filter_value = dataValue.join('|');
-        console.log("orderStatus", orderStatus, filter_value);
-
-        if (filter_value != ''){
-            args.push('"filter_value":"'+filter_value+'"')
-        }
-
         // query
         if (orderId.length > 0) {
             args.push('"query":"'+orderId+'"')
-        }
-
-        //date_interval
-        if (startDate != "" && endDate != "") {
-            args.push('"date_interval":"'+startDate+'|'+endDate+'"')
         }
 
         // ship_name
@@ -116,16 +87,35 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         if (shipTel.length > 0) {
             args.push('"ship_tel":"'+shipTel+'"')
         }
+        //product_name
+        if (productName.length > 0) {
+            args.push('"product_name":"'+productName+'"');
+        }
+        // pay_type
+        if (payType != '-1') {
+            args.push('"pay_type":"'+payType+'"')
+        }
+        // express_number
+        if (expressNumber.length > 0) {
+            args.push('"express_number":"'+expressNumber+'"')
+        }
+        // order_source
+        if (orderSource != '-1') {
+            args.push('"order_source":"'+orderSource+'"')
+        }
+        // order_status
+        if (orderStatus != '-1') {
+            args.push('"order_status":"'+orderStatus+'"')
+        }
+        //date_interval
+        if (startDate != "" && endDate != "") {
+            args.push('"date_interval":"'+startDate+'|'+endDate+'"')
+        }
+
         //is_only_show_pay_by_weizoom_card
         if (isUseWeizoomCard) {
             args.push('"isUseWeizoomCard":"'+isUseWeizoomCard+'"')
         }
-
-        if (productName) {
-            args.push('"productName":"'+productName+'"');
-        }
-
-        console.log("orderStatus", orderStatus, filter_value, args);
         return args
     },
 

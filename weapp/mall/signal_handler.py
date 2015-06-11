@@ -9,6 +9,7 @@ from django.dispatch.dispatcher import receiver
 from django.db.models import signals as django_model_signals
 
 from mall import signals as mall_signals
+from mall import postage_calculator as mall_postage_calculator
 from models import *
 from webapp.models import Workspace
 from account.models import UserProfile
@@ -16,7 +17,6 @@ from watchdog.utils import watchdog_alert, watchdog_fatal, watchdog_warning, wat
 from core.exceptionutil import unicode_full_stack
 from market_tools.tools.delivery_plan.models import  DeliveryPlan
 from core.common_util import ignore_exception
-from mall import postage_calculator as mall_postage_calculator
 from tools.express.express_poll import ExpressPoll
 
 #############################################################################################
@@ -843,6 +843,8 @@ def check_stocks_for_pre_order(pre_order, args, request, **kwargs):
 	检查商品库存是否满足下单条件
 	@todo 改为基于redis的并发安全的实现
 	"""
+	from mall import module_api as mall_api
+
 	fail_msg = {
 		'success': False,
 		'data': {
@@ -852,7 +854,13 @@ def check_stocks_for_pre_order(pre_order, args, request, **kwargs):
 		}
 	}
 	products = pre_order.products
+	mall_api.fill_realtime_stocks(products)
 	for product in products:
+		for model in product.models:
+			if product.model_name == model['name']:
+				product.stock_type = model['stock_type']
+				product.stocks = model['stocks']
+				
 		if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.purchase_count > product.stocks:
 			if product.stocks == 0:
 				fail_msg['data']['detail'].append({

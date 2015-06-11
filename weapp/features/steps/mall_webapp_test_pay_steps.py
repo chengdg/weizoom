@@ -10,7 +10,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import Member
 from tools.regional.models import *
 from mall.promotion.models import Coupon

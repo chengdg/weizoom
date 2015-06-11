@@ -10,7 +10,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 
 @When(u"{webapp_user_name}点击支付")
 def step_impl(context, webapp_user_name):
@@ -207,7 +207,7 @@ def step_impl(context, user):
 def step_impl(context, user):
 	config = json.loads(context.text)
 	no_payment_order_expire_day = config['no_payment_order_expire_day'][:-1]
-	from webapp.modules.mall.models import MallConfig
+	from mall.models import MallConfig
 	MallConfig.objects.filter(owner=context.client.user).update(order_expired_day=no_payment_order_expire_day)
 
 

@@ -83,8 +83,10 @@ def cur_webapp_owner_operation_settings(request):
 
 	if not hasattr(request, 'user_profile') or request.user_profile is None:
 		return {'operation_settings' : None}
+	elif hasattr(request, 'webapp_owner_info') and hasattr(request.webapp_owner_info, 'operation_settings'):
+		return {'operation_settings' : request.webapp_owner_info.operation_settings}
 	else:
-		settings = OperationSettings.get_settings_for_user(request.user_profile.user)
+		settings = OperationSettings.get_settings_for_user(request.user_profile.user_id)
 		return {'operation_settings' : settings}
 
 #added by chuter
@@ -125,8 +127,10 @@ def get_cur_request_webapp_user(request):
 #===============================================================================
 def mp_user(request):
 	try:
-		user = request.user
-		mp_user = WeixinMpUser.objects.get(owner=user)
+		mp_user = request.webapp_owner_info.mpuser
+		if not mp_user:
+			user = request.user
+			mp_user = WeixinMpUser.objects.get(owner=user)
 	except:
 		mp_user = {}
 	return {'mp_user': mp_user}
@@ -493,8 +497,8 @@ def get_user_product(request):
 	else:
 		#TODO: 换成user.product
 		return {
-			'user_product': weapp_product_api.get_product_for_user(request.user),
-			'name': u'',
+		# 	'user_product': weapp_product_api.get_product_for_user(request.user),
+		# 	'name': u'',
 		}
 
 
@@ -538,7 +542,7 @@ def user_token(request):
 def request_host(request):
 	return {'request_host' : request.get_host()}
 
-from webapp.modules.mall.models import WeizoomMall
+from mall.models import WeizoomMall
 def is_weizoom_mall(request):
 	if hasattr(request, 'user_profile') and request.user_profile:
 		return {'is_weizoom_mall' : request.is_access_weizoom_mall}

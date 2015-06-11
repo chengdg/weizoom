@@ -9,7 +9,7 @@ import json
 from django.shortcuts import render_to_response
 from webapp.modules.mall import request_util
 # from apps.customerized_apps.shihuazhiye.mall import request_util
-from webapp.modules.mall.models import *
+from mall.models import *
 from apps.register import mobile_view_func
 
 template_path_items = os.path.dirname(__file__).split(os.sep)

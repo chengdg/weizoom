@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 import module_api
 from core.jsonresponse import JsonResponse, create_response
 from tools.express import util as express_util
-from webapp.modules.mall import models as mall_models
+from mall import models as mall_models
 
 def get_user_by_username(username):
 	try:

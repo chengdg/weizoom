@@ -19,7 +19,7 @@ from django.db.models import Q
 from market_tools import export
 from excel_response import ExcelResponse
 
-from webapp.modules.mall import models as mall_model
+from mall import models as mall_model
 from modules.member import models as member_model
 from core.jsonresponse import JsonResponse, create_response, decode_json_str
 from core import paginator

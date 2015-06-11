@@ -11,7 +11,7 @@ from django.db.models import Q
 from core import emotion
 
 from datetime import datetime
-from webapp.modules.mall.models import *
+from mall.models import *
 
 register = template.Library()
 

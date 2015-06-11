@@ -18,9 +18,9 @@ from django.db.models import Q
 from core.jsonresponse import JsonResponse, create_response
 from core import dateutil
 from webapp import module_views as webapp_module_views
-from webapp.modules.mall.models import WeizoomMall
+from mall.models import WeizoomMall
 
-from models import *
+from mall.models import ProductCategory, Product, Order
 import module_api
 
 NAV = {

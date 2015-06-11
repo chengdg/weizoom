@@ -33,29 +33,40 @@
 					</li>
 					{% endfor %}
 				{% else %}
+					{% if 'manage_index'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/mall/outline/get/' title='首页'>首页</a>
 					</li>
+					{% endif %}
 					{% if 'manage_product'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'product' %}class="active"{% endifequal %} href='/mall/onshelf_products/get/' title='商品管理'>商品管理</a>
 					</li>
 					{% endif %}
+					{% if 'manage_order'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'order' %}class="active"{% endifequal %} href='/mall/orders/get/' title='订单管理'>订单管理</a>
 					</li>
-					
 					{% if 'manage_promotion'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall_promotion/promotion_list/get/' title='促销管理'>促销管理</a>
 					</li>
 					{% endif %}
+					{% if 'manage_member'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'member' %}class="active"{% endifequal %} href='/member/members/get/' title='会员管理'>会员管理</a>
 					</li>
+					{% endif %}
+					{% if 'static'|satisfy_permission:request %}
 					<li>
 						<a href='http://tj.weizzz.com/' target='_blank' title='数据统计'>数据统计</a>
 					</li>
+					{% endif %}
+					{% if 'manage_auth'|satisfy_permission:request %}
+					<li>
+						<a {% ifequal first_nav_name 'auth' %}class="active"{% endifequal %} href='/auth/account_help/get/' title='配置管理'>权限管理</a>
+					</li>
+					{% endif %}
 					{% if 'manage_mall_config'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'config' %}class="active"{% endifequal %} href='/mall/pay_interfaces/get/' title='配置管理'>配置管理</a>
@@ -206,6 +217,11 @@
  <script type="text/javascript">
 
 	$(document).ready(function($) {
+		if($('.xui-navBar-box .active').length==0 && $('.xui-navBar-box a').length){
+			location.href = $('.xui-navBar-box a:first').attr('href');
+		}else if($('.xa-sideBar .active').length==0 && $('.xa-sideBar a').length){
+			location.href = $('.xa-sideBar a:first').attr('href');
+		}
 // 	var scrollLeft = $(this).scrollLeft();
 // 	if(scrollLeft != 0){
 // 		$('.xa-sideBar').css('position', 'absolute');
@@ -224,7 +240,6 @@
 // 	}
 		// 导航右边线选中无
 		$('.xui-navBar a.active').parent('li').prev().children('a').addClass('xui-rightBorder');
-
 	});
 </script>
 

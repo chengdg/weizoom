@@ -17,7 +17,7 @@ from core.wxapi import get_weixin_api
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from watchdog.utils import watchdog_warning, watchdog_error
 
-from webapp.modules.mall import models as mall_model
+from mall import models as mall_model
 
 def __build_member_basic_json(member):
 	return {

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
-from mall import models as mall_models
+
 from mall.models import Product
 
 
@@ -142,6 +142,7 @@ class Promotion(models.Model):
 
 	@staticmethod
 	def fill_product_detail(webapp_owner, promotions):
+		from mall import models as mall_models
 		promotions = [promotion for promotion in promotions if not hasattr(promotion, 'products')]
 
 		#获取product列表

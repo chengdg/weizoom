@@ -21,7 +21,7 @@ from watchdog.utils import watchdog_warning, watchdog_error, watchdog_info
 
 from account.social_account.models import SocialAccount, SOCIAL_PLATFORM_WEIXIN, SOCIAL_PLATFORM_QQ, SOCIAL_PLATFORM_SINAWEIBO
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
-from webapp.modules.mall.models import Order
+from mall.models import Order
 
 import member_settings
 

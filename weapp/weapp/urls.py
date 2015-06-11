@@ -2,7 +2,7 @@
 
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-#from django.conf import settings
+from django.conf import settings
 
 from weapp import views as weizoom
 from account import views as account_view
@@ -53,14 +53,14 @@ urlpatterns = patterns('',
 	url(r'^product/', include('product.urls')),
 	url(r'^termite/', include('termite.urls')),
 	#url(r'^shop/', include('webapp.modules.shop.urls')),
-	
+
 	url(r'^mall/', restful_url('mall')),
 	url(r'^mall_promotion/', restful_url('mall_promotion')),
 	url(r'^auth/', restful_url('auth')),
 	url(r'^cms/', include('webapp.modules.cms.urls')),
 	url(r'^user_center/', include('webapp.modules.user_center.urls')),
 	url(r'^help/', include('help_system.urls')),
-	
+
 	(r'^alipay/([^/]+)/([^/]+)/([^/]+)/(\d+)/(\d+)/$', termite_jqm_views.show_alipay_callback_page),
 	(r'^tenpay/([^/]+)/([^/]+)/([^/]+)/(\d+)/(\d+)/$', termite_jqm_views.show_tenpay_callback_page),
 	(r'^wxpay/([^/]+)/([^/]+)/([^/]+)/(\d+)/(\d+)/$', termite_jqm_views.show_wxpay_callback_page),
@@ -89,14 +89,13 @@ urlpatterns = patterns('',
 
     url(r'^member/', restful_url('member')),
     url(r'^messages/', restful_url('message')),
-    
+
     #微信支付模拟api
     url(r'^sns/oauth2/access_token', pay_simulator_views.access_token),
     url(r'^pay/unifiedorder', pay_simulator_views.pay_unifiedorder),
 
 	url(r'^card/', restful_url('card')),
 )
-
 
 urlpatterns += staticfiles_urlpatterns()
 

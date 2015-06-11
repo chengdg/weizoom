@@ -14,7 +14,7 @@ from core.exceptionutil import unicode_full_stack
 
 from watchdog.utils import *
 
-from webapp.modules.mall.models import Order, OrderHasProduct, PayInterface, Product
+from mall.models import Order, OrderHasProduct, PayInterface, Product
 from account.models import UserWeixinPayOrderConfig, UserProfile
 
 template_path_items = os.path.dirname(__file__).split(os.sep)

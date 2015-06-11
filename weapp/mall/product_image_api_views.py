@@ -53,13 +53,13 @@ def create_image_group(request):
 	images = json.loads(request.POST.get('images', '[]'))
 
 	image_group = ImageGroup.objects.create(
-		owner = request.user,
+		owner = request.manager,
 		name = name
 	)
 
 	for image in images:
 		Image.objects.create(
-			owner = request.user,
+			owner = request.manager,
 			group = image_group,
 			url = image['path'],
 			width = image['width'],
@@ -115,7 +115,7 @@ def update_image_group(request):
 	for image in images:
 		if int(image['id']) < 0:
 			Image.objects.create(
-				owner = request.user,
+				owner = request.manager,
 				group = image_group,
 				url = image['path'],
 				width = image['width'],
@@ -211,7 +211,7 @@ def get_image_groups(request):
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	"""
 	image_groups = []
-	for image_group in ImageGroup.objects.filter(owner=request.user):
+	for image_group in ImageGroup.objects.filter(owner=request.manager):
 		image_groups.append({
 			"id": image_group.id,
 			"name": image_group.name

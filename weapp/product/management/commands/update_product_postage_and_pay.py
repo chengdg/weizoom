@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from webapp.modules.mall.models import *
+from mall.models import *
 import webapp.modules.mall.module_api as mall_api
 
 class Command(BaseCommand):

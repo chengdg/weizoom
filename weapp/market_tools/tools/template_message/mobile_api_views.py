@@ -15,6 +15,6 @@ from watchdog.utils import watchdog_warning, watchdog_error, watchdog_info
 
 from models import *
 from modules.member.integral import increase_member_integral
-from webapp.modules.mall.models import *
+from mall.models import *
 from account.views import save_base64_img_file_local_for_webapp
 

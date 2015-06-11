@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from webapp.modules.mall.models import Product, ProductSwipeImage
+from mall.models import Product, ProductSwipeImage
 
 from webapp.models import GlobalNavbar, Workspace
 

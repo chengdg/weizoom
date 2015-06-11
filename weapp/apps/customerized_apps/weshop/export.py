@@ -7,8 +7,8 @@ from core.jsonresponse import create_response
 
 from apps.module_api import get_app_link_url
 
-from webapp.modules.mall.models import *
-from webapp.modules.mall import module_api
+from mall.models import *
+from mall import module_api
 
 ########################################################################
 # get_link_targets: 获取可链接的目标

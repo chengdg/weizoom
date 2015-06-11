@@ -117,6 +117,7 @@ def list_products(request):
 			'query': query
 		}
 	}
+
 	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 	#5/0
@@ -139,7 +140,7 @@ def list_products(request):
 		'products': products,
 		'category': category,
 		'is_deleted_data': category.is_deleted if hasattr(category, 'is_deleted') else False,
-		'shopping_cart_product_nums': mall_api.get_shopping_cart_product_nums(request.webapp_user),
+		#'shopping_cart_product_nums': mall_api.get_shopping_cart_product_nums(request.webapp_user),
 		'product_categories': product_categories,
 		'has_category': has_category,
 		'hide_non_member_cover': True
@@ -173,8 +174,9 @@ def _get_has_deleted_product_response(request, webapp_user, product):
 def get_product(request):
 	product_id = request.GET['rid']
 	webapp_user = request.webapp_user
-	member_grade_id = request.member.grade.id if request.member else None
-	product = mall_api.get_product_detail(request.webapp_owner_id, webapp_user, product_id,  member_grade_id)
+
+	member_grade_id = request.member.grade_id if request.member else None
+	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
 	#product.fill_model()
 
 	if product.is_deleted:
@@ -183,8 +185,6 @@ def get_product(request):
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-	#获得购物车数量
-	shopping_cart_product_nums = mall_api.get_shopping_cart_product_nums(request.webapp_user)
 
 	if product.promotion:
 		product.promotion['is_active'] = product.promotion_model.is_active
@@ -225,7 +225,6 @@ def get_product(request):
 		'product': product,
 		'jsons': jsons,
 		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
-		'shopping_cart_product_nums': shopping_cart_product_nums,
 		'is_enable_get_coupons': settings.IS_IN_TESTING,
 		'model_property_size': len(product.product_model_properties),
 		# 'postage_factor': json.dumps(product.postage_factor),
@@ -235,7 +234,7 @@ def get_product(request):
 		'usable_integral': usable_integral,
 		'use_integral': use_integral,
 		'is_non_member': is_non_member,
-		'per_yuan': webapp_user.integral_info['count_per_yuan']
+		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan
 	})
 
 	if hasattr(request, 'is_return_context'):
@@ -783,9 +782,6 @@ def edit_order(request):
 	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
 	# delivery_dates = request.REQUEST.get('delivery_dates', '')
 
-	# 微众卡权限
-	is_weizoom_card_permission = mall_api.get_weizoom_card_permission(webapp_owner_id)
-
 
 	jsons = [{
 		"name": "postageFactor",
@@ -810,7 +806,6 @@ def edit_order(request):
 		# 'delivery_plan_id': delivery_plan_id,	#配送套餐id
 		# 'delivery_dates': delivery_dates,	#配送套餐计划,
 		'hide_non_member_cover': True,
-		'is_weizoom_card_permission': is_weizoom_card_permission,
 		'use_ceiling': use_ceiling,
 		'jsons': jsons
 	})
@@ -889,6 +884,20 @@ def __format_product_group_price_factor(product_groups):
 	return factors
 
 
+def get_member_discount(request):
+	"""
+	返回产品与会员等级相关的折扣-> float:0.0~1.0
+	"""
+	if hasattr(request, 'member') and request.member:
+		member_grade_id = request.member.grade_id
+		member_grades = request.webapp_owner_info.member_grades
+		member_grade = filter(lambda x: x.id==member_grade_id, member_grades)[0]
+
+		return member_grade.shop_discount / 100.00
+	else:
+		return 1.0
+
+
 ########################################################################
 # edit_shopping_cart_order: 编辑从购物车产生的订单
 ########################################################################
@@ -931,12 +940,8 @@ def edit_shopping_cart_order(request):
 	order.usable_integral = mall_api.get_order_usable_integral(order, integral_info)
 
 	#获取商城配置
-	mall_config = MallConfig.objects.get(owner_id=webapp_owner_id)
+	mall_config = request.webapp_owner_info.mall_data['mall_config'] # MallConfig.objects.get(owner_id=webapp_owner_id)
 	use_ceiling = request.webapp_owner_info.integral_strategy_settings.use_ceiling
-
-	# 微众卡权限
-	is_weizoom_card_permission = mall_api.get_weizoom_card_permission(webapp_owner_id)
-
 
 	jsons = [{
 		"name": "postageFactor",
@@ -960,7 +965,6 @@ def edit_shopping_cart_order(request):
 		'postage_factor': json.dumps(postage_factor),
 		'integral_info': integral_info,
 		'is_order_from_shopping_cart': True,
-		'is_weizoom_card_permission': is_weizoom_card_permission,
 		'use_ceiling': use_ceiling,
 		'jsons': jsons
 	})

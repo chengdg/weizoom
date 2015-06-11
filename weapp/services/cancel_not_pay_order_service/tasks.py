@@ -47,8 +47,17 @@ def cancel_not_pay_order_timeout(request, args):
     orders = mall_models.Order.objects.filter(status=mall_models.ORDER_STATUS_NOT)
     need_cancel_orders = []
     for order in orders:
-        if webapp_id2expired_time[order.webapp_id] and order.created_at < webapp_id2expired_time[order.webapp_id]:
+        if webapp_id2expired_time.get(order.webapp_id, None) == None:
+            try:
+                user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+            except:
+                watchdog_info(u"订单所属用户已不存在！", type="mall")
+                continue
+            update_order_status(user, 'cancel', order)
+            watchdog_info(u"订单所属用户已失效！并将其订单自动取消。", type="mall")
+        elif webapp_id2expired_time[order.webapp_id] and order.created_at < webapp_id2expired_time[order.webapp_id]:
             need_cancel_orders.append(order)
+
         if len(need_cancel_orders) > 50:
             break
 

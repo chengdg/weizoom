@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.db.models import Q
 import sys
-from webapp.modules.mall.models import Order, STATUS2TEXT
+from mall.models import Order, STATUS2TEXT
 
 from modules.member.models import *
 from watchdog.utils import watchdog_error

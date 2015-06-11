@@ -121,19 +121,19 @@ def get_products(request):
 
 	#处理商品分类
 	if type == 'offshelf':
-		products = Product.objects.filter(owner=request.user, shelve_type=PRODUCT_SHELVE_TYPE_OFF, is_deleted=False)
+		products = Product.objects.filter(owner=request.manager, shelve_type=PRODUCT_SHELVE_TYPE_OFF, is_deleted=False)
 	elif type == 'onshelf':
-		products = Product.objects.filter(owner=request.user, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False)
+		products = Product.objects.filter(owner=request.manager, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False)
 	elif type == 'recycled':
-		products = Product.objects.filter(owner=request.user, shelve_type=PRODUCT_SHELVE_TYPE_RECYCLED, is_deleted=False)
+		products = Product.objects.filter(owner=request.manager, shelve_type=PRODUCT_SHELVE_TYPE_RECYCLED, is_deleted=False)
 	else:
-		products = Product.objects.filter(owner=request.user, is_deleted=False)
+		products = Product.objects.filter(owner=request.manager, is_deleted=False)
 
 	#未回收的商品
 	products = products.order_by(sort_attr)
 	
 	products = list(products)
-	Product.fill_details(request.user, products, {
+	Product.fill_details(request.manager, products, {
 		"with_product_model": True,
 		"with_model_property_info": True,
 		"with_selected_category": True,
@@ -152,7 +152,7 @@ def get_products(request):
 	items = []
 	for product in products:
 		product_dict = product.format_to_dict()
-		product_dict['is_self'] = (request.user.id == product.owner.id)
+		product_dict['is_self'] = (request.manager.id == product.owner_id)
 		items.append(product_dict)
 
 	data = dict()
@@ -193,7 +193,7 @@ def get_products_filter_params(request):
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	"""
 	categories = []
-	for category in ProductCategory.objects.filter(owner=request.user):
+	for category in ProductCategory.objects.filter(owner=request.manager):
 		categories.append({
 			"id": category.id,
 			"name": category.name
@@ -283,7 +283,7 @@ def update_product_shelve_type(request):
 	if shelve_type == 'delete':
 		product.update(shelve_type=-1, is_deleted=True)
 	else:
-		if request.user.id == product[0].owner_id:
+		if request.manager.id == product[0].owner_id:
 			if shelve_type != PRODUCT_SHELVE_TYPE_ON:
 				product.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False)
 			else:

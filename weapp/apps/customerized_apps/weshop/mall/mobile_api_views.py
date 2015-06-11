@@ -3,7 +3,7 @@
 import json
 
 from core.jsonresponse import JsonResponse, create_response
-from webapp.modules.mall.models import Order, OrderHasProduct, WeizoomMallHasOtherMallProductOrder
+from mall.models import Order, OrderHasProduct, WeizoomMallHasOtherMallProductOrder
 from webapp.modules.mall import request_util, request_api_util
 from apps.register import mobile_api
 

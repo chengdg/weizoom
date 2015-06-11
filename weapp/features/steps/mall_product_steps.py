@@ -8,7 +8,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-from webapp.modules.mall.models import *
+from mall.models import *
 
 @When(u"{ignore}:wglass")
 def step_impl(context, ignore):
@@ -128,13 +128,18 @@ def __supplement_product(context, product):
 		"postage_deploy": -1,
 		"pay_interface_online": True,
 		"pay_interface_cod": True,
-		"is_enable_cod_pay_interface": True
+		"is_enable_cod_pay_interface": True,
+		"is_enable_online_pay_interface": True
 	}
 	# 支付方式
 	pay_interface_online, pay_interface_cod = __pay_interface(product.get('pay_interfaces', None))
 	product_prototype['pay_interface_online'] = pay_interface_online
 	if pay_interface_cod is False:
 		product_prototype.pop('pay_interface_cod')
+		product_prototype.pop('is_enable_cod_pay_interface')
+	if pay_interface_online is False:
+		product_prototype.pop('pay_interface_online')
+		product_prototype.pop('is_enable_online_pay_interface')
 
 	# 运费
 	postage = product.get('postage', None)
@@ -153,6 +158,11 @@ def __supplement_product(context, product):
 	# 积分商品
 	if product.get('type', PRODUCT_DEFAULT_TYPE) == PRODUCT_INTEGRAL_TYPE:
 		product['price'] = product.get('integral', 0)
+
+	#商品图
+	pic_url = product.get('pic_url', None)
+	if pic_url:
+		product_prototype['pic_url'] = pic_url
 
 	product_prototype.update(product)
 
@@ -248,7 +258,7 @@ def __add_product(context, product):
 		latest_product = Product.objects.all().order_by('-id')[0]
 		Product.objects.filter(id=latest_product.id).update(shelve_type=1)
 
-1
+
 @given(u"{user}已添加商品")
 def step_impl(context, user):
 	user = UserFactory(username=user)
@@ -333,7 +343,6 @@ def step_impl(context, user):
 ############################################################################################
 def __get_product_from_web_page(context, product_name):
 	existed_product = Product.objects.get(owner_id=context.webapp_owner_id, name=product_name)
-
 	response = context.client.get('/mall/product/update/?id=%d' % existed_product.id)
 	product = response.context['product']
 
@@ -341,8 +350,8 @@ def __get_product_from_web_page(context, product_name):
 	categories = response.context['categories']
 	category_name = ''
 	for category in categories:
-		if hasattr(category, 'selected') and category.selected:
-			category_name += ',' + category.name
+		if category.has_key('is_selected') and category['is_selected']:
+			category_name += ',' + category['name']
 	if len(category_name) > 0:
 		category_name = category_name[1:]
 
@@ -499,6 +508,25 @@ def step_impl(context, user, type_name):
 def step_impl(context, user, product_list):
 	context.caller_step_text = product_list
 	context.execute_steps(u"then %s能获取商品列表" % user)
+
+def __get_products(context):
+	response = context.client.get('/mall/api/products/get/?version=1&type=onshelf&count_per_page=15&page=1')
+	data = json.loads(response.content)['data']
+
+	products = []
+	for product in data["items"]:
+		products.append({
+			"name": product['name']
+		})
+	return products
+
+
+
+@then(u"{user}能获取商品列表")
+def step_impl(context, user):
+	actual = __get_products(context)
+	expected = json.loads(context.text)
+	bdd_util.assert_list(expected, actual)
 
 
 @when(u"{user}'{direction}'调整'{product_name}'")

@@ -14,7 +14,7 @@ from core.exceptionutil import unicode_full_stack
 
 from watchdog.utils import *
 
-from webapp.modules.mall.models import Order
+from mall.models import Order
 from account.models import UserProfile, UserAlipayOrderConfig
 
 from pay.ali.api.ali_pay_api import AliHttpClient, AliPayApi

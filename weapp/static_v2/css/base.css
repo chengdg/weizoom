@@ -970,10 +970,10 @@ button.xui-close{
 	display: block;
 	width:40px;
 	height:40px;
-	border-radius:5px;
-	background-color: #239ccc;
-	background-image: url('../img/sprite_icon.png');
-	margin-bottom:1px;
+	border-radius:3px;
+	background-color: #2c73bf;
+	background-image: url('/static_v2/img/sprite_icon.png');
+	margin-bottom:2px;
 }
 .wui-rightNav a:nth-child(2){
 	background-position: -40px 0;

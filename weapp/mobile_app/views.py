@@ -11,8 +11,8 @@ from django.contrib import auth
 
 from core import paginator
 from account.models import *
-from webapp.modules.mall.models import *
-from webapp.modules.mall import module_api as mall_api
+from mall.models import *
+from mall import module_api as mall_api
 
 import types
 from datetime import datetime, timedelta

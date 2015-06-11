@@ -122,7 +122,7 @@ def __get_request_members_list(request):
 
 	pay_times = request.GET.get('pay_times', None)
 	pay_days = request.GET.get('pay_days', None)
-	from webapp.modules.mall.models import Order
+	from mall.models import Order
 	if pay_days:
 		webapp_user_ids = Order.get_webapp_user_ids_pay_days_in(request.user_profile.webapp_id, pay_days)
 		member_ids = [webapp_user.member_id  for webapp_user in WebAppUser.objects.filter(id__in=list(set(webapp_user_ids)))]
@@ -157,7 +157,7 @@ def __get_request_members_list(request):
 
 
 def __build_return_member_json(member):
-	from webapp.modules.mall.models import Order
+	from mall.models import Order
 	return {
 		'id': member.id,
 		'username': member.username_for_html,

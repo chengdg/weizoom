@@ -211,7 +211,6 @@ TEMPLATE_LOADERS = [
     'django.template.loaders.app_directories.Loader',
     #     'django.template.loaders.eggs.Loader',
 ]
-
 MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
     'core.middleware.ExceptionMiddleware',
@@ -237,6 +236,7 @@ MIDDLEWARE_CLASSES = [
     'core.profiling_middleware.ProfileMiddleware',
 
     'modules.member.middleware.AddUuidSessionMiddleware',
+    'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
     'modules.member.middleware.CleanUpCookieMiddleware',
     'modules.member.middleware.MemberCacheMiddleware',
@@ -424,7 +424,7 @@ INSTALLED_APPS = [
     # 'django_behave',
     'mobile_app',
     'erp',
-    #'momus',
+    # 'momus',
     'pay',
     'card',
     'mall',
@@ -434,7 +434,9 @@ INSTALLED_APPS = [
     'weixin.message.message_handler',
     'notice',
     'svsmon',
-    #'django_extensions',
+
+    # Third-party apps
+    # 'django_extensions',
 ]
 
 
@@ -648,7 +650,6 @@ MIDDLEWARE_CLASSES.extend([
     'core.debug_middleware.DumpContextMiddleware',
     'core.middleware.PageIdMiddleware',
     'core.middleware.ManagerDetectMiddleware',
-    'core.middleware.UserManagerMiddleware',
     'core.middleware.PermissionMiddleware',
     # 'modules.member.middleware.MemberBrowseRecordMiddleware', #TODO: change to service
     'core.middleware.WeizoomMallMiddleware',

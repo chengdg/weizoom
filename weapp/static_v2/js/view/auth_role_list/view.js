@@ -74,7 +74,10 @@ W.view.auth.RoleList = Backbone.View.extend({
                 this.loadRolePermissions(roleId, true);
             },
             error: function(resp) {
-                W.showHint('error', '创建角色失败!');
+                if(resp.data.msg)
+                    W.showHint('error', resp.data.msg);
+                else
+                    W.showHint('error', '创建角色失败!');
             }
         })
     },
@@ -101,7 +104,10 @@ W.view.auth.RoleList = Backbone.View.extend({
                 $role.find('.xa-config').show();                
             },
             error: function(resp) {
-                W.showHint('error', '创建角色失败!');
+                if(resp.data.msg)
+                    W.showHint('error', resp.data.msg);
+                else
+                    W.showHint('error', '更新角色失败!');
             }
         })
     },
@@ -151,6 +157,8 @@ W.view.auth.RoleList = Backbone.View.extend({
     },
 
     onClickAddRoleButton: function(event) {
+        if(this.$('input:visible').length > 0)
+            return
         var $roleList = this.$('.xa-roleList');
         $roleList.prepend('<li data-id="-1"><a href="javascript:void(0);" class="xui-i-role"><input type="text" class="form-control xui-i-input xa-roleNameInput"  placeholder="新角色"/></a></li>');
         $roleList.find('input[type="text"]').focus();
@@ -222,22 +230,24 @@ W.view.auth.RoleList = Backbone.View.extend({
     },
 
     onClickDeleteRoleButton: function(event) {
-        var roleId = this.actionRoleId;
-        var $role = this.$('[data-id="'+roleId+'"]');
-        this.hideActionMenu();
+        if(confirm('确认要删除角色吗？')){
+            var roleId = this.actionRoleId;
+            var $role = this.$('[data-id="'+roleId+'"]');
+            this.hideActionMenu();
 
-        if (roleId) {
-            W.getApi().call({
-                method: 'post',
-                app: 'auth',
-                api: 'role/delete',
-                args: {
-                    id: roleId
-                },
-                success: function() {
-                    $role.remove();
-                }
-            })
+            if (roleId) {
+                W.getApi().call({
+                    method: 'post',
+                    app: 'auth',
+                    api: 'role/delete',
+                    args: {
+                        id: roleId
+                    },
+                    success: function() {
+                        $role.remove();
+                    }
+                })
+            }
         }
     },
 

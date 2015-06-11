@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response
 from core.jsonresponse import JsonResponse, create_response, decode_json_str
 from models import *
 from modules.member import util as member_util
-from webapp.modules.mall.models import ThanksCardOrder
+from mall.models import ThanksCardOrder
 from account.views import save_base64_img_file_local_for_webapp
 
 ########################################################

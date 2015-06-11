@@ -18,7 +18,7 @@ from django.conf import settings
 from models import *
 from core.jsonresponse import create_response, JsonResponse
 import pagestore as pagestore_manager
-from webapp.modules.mall.models import *
+from mall.models import *
 
 
 ######################################################################

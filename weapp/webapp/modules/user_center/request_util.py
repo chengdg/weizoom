@@ -24,7 +24,7 @@ from django.shortcuts import render_to_response
 #from core.dateutil import get_today
 #from core.exceptionutil import full_stack, unicode_full_stack
 
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import *
 from modules.member import util as member_util
 from modules.member import module_api as member_api

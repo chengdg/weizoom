@@ -1,9 +1,5 @@
 ensureNS('W.view.auth');
 W.view.auth.DepartmentList = Backbone.View.extend({
-    getUsersTemplate:function() {
-        $('#auth-department-list-view-users-tmpl-src').template('auth-department-list-view-users-tmpl');
-        return 'auth-department-list-view-users-tmpl';
-    },
 
     events:  {
         'click .xa-addDepartment': 'onClickAddDepartmentButton',
@@ -40,8 +36,6 @@ W.view.auth.DepartmentList = Backbone.View.extend({
         $document.click(function() {
             _this.hideActionMenu();
         });
-
-        this.usersTemplate = this.getUsersTemplate();
 
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
         this.focusDepartmentId = options.focusDepartmentId || 0;
@@ -82,7 +76,10 @@ W.view.auth.DepartmentList = Backbone.View.extend({
                 this.loadDepartmentUsers(departmentId);
             },
             error: function(resp) {
-                W.showHint('error', '创建部门失败!');
+                if(resp.data.msg)
+                    W.showHint('error', resp.data.msg);
+                else
+                    W.showHint('error', '创建部门失败!');
             }
         })
     },
@@ -109,7 +106,10 @@ W.view.auth.DepartmentList = Backbone.View.extend({
                 $department.find('.xa-config').show();                
             },
             error: function(resp) {
-                W.showHint('error', '创建部门失败!');
+                if(resp.data.msg)
+                    W.showHint('error', resp.data.msg);
+                else
+                    W.showHint('error', '更新部门失败!');
             }
         })
     },
@@ -140,6 +140,9 @@ W.view.auth.DepartmentList = Backbone.View.extend({
     },
 
     onClickAddDepartmentButton: function(event) {
+        if($('.xa-departmentList input:visible').length > 0){
+            return
+        }
         var $departmentList = this.$('.xa-departmentList');
         $departmentList.prepend('<li data-id="-1"><a href="javascript:void(0);" class="xui-i-department"><input type="text" class="form-control xui-i-input xa-departmentNameInput" placeholder="新部门"/></a></li>');
         $departmentList.find('input[type="text"]').focus();
@@ -221,7 +224,7 @@ W.view.auth.DepartmentList = Backbone.View.extend({
 
     onClickCreateAccountButton: function(event) {
         if (this.$('.xa-department').length == 0) {
-            W.showHint('info', '请先添加部门');
+            W.showHint('error', '请先创建部门再新建员工');
             return;
         }
         window.location.href = '/auth/account/create/';
@@ -252,7 +255,8 @@ W.view.auth.DepartmentList = Backbone.View.extend({
         var _this = this;
         W.requireConfirm({
             $el: $link,
-            width:340,
+            show_icon: false,
+            width:360,
             position:'top',
             isTitle: false,
             msg: '确认停用该员工？',
@@ -273,7 +277,8 @@ W.view.auth.DepartmentList = Backbone.View.extend({
         var _this = this;
         W.requireConfirm({
             $el: $link,
-            width:340,
+            show_icon: false,
+            width:360,
             position:'top',
             isTitle: false,
             msg: '确认删除该员工？',

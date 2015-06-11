@@ -13,7 +13,7 @@ from django.contrib import auth
 from core.paginator import paginate
 
 from account.models import *
-from webapp.modules.mall.models import *
+from mall.models import *
 from account.social_account.models import SocialAccount
 
 import types

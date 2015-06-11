@@ -17,7 +17,7 @@ from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember
 from modules.member import models as member_model
-from webapp.modules.mall import models as mall_model
+from mall import models as mall_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from mall.models import *
 from mall import module_api as mall_api

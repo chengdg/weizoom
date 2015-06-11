@@ -25,7 +25,7 @@ from core import paginator
 
 from modules.member.module_api import get_member_by_id_list
 from modules.member.module_api import *
-from webapp.modules.mall.models import *
+from mall.models import *
 
 from models import *
 from modules.member.models import *

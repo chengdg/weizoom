@@ -6,9 +6,9 @@ from order.account.order_decorators import project_freight_required
 from core import paginator
 from tools.regional.views import get_str_value_by_string_ids
 
-from webapp.modules.mall.models import *
+from mall.models import *
 from modules.member.models import *
-from webapp.modules.mall.module_api import ship_order
+from mall.module_api import ship_order
 from tools.express.util import get_value_by_name
 
 ########################################################################

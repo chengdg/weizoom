@@ -7,7 +7,7 @@ from django.test.client import Client
 from django.http import SimpleCookie
 from django.contrib.auth.models import User
 from django.db.models import Model
-from webapp.modules.mall.models import *
+from mall.models import *
 from webapp.models import *
 from account.models import UserProfile
 from weapp import settings
