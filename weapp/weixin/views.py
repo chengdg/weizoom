@@ -191,7 +191,7 @@ def receiveauthcode(request):
 							access_token = authorizer_access_token,
 							update_time=datetime.datetime.now()
 						)
-					UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True)
+					#UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True)
 					"""
 						处理公众号绑定过其它系统帐号情况
 					"""
@@ -200,7 +200,6 @@ def receiveauthcode(request):
 						authed_appid.is_active = False
 						authed_appid.save()
 						update_user_ids.append(authed_appid.user_id)
-					print '=============1',update_user_ids
 					UserProfile.objects.filter(user_id__in=update_user_ids).update(is_mp_registered=False)
 
 
@@ -212,7 +211,6 @@ def receiveauthcode(request):
 			"""
 			try:
 				result = weixin_api.api_get_authorizer_info(component_info.app_id,authorizer_appid)
-				print '=============mp------------1',result
 				if result.has_key('authorizer_info'):
 					nick_name = result['authorizer_info'].get('nick_name', '')
 					head_img = result['authorizer_info'].get('head_img', '')
@@ -273,6 +271,12 @@ def receiveauthcode(request):
 					if int(verify_type_info) > -1:
 						is_certified = True
 					WeixinMpUser.objects.filter(owner_id=user_id).update(is_service=is_service, is_certified=is_certified, is_active=True)
+					
+					if is_certified:
+						UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True, is_oauth=True)
+					else:
+						UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True, is_oauth=False)
+				
 					try:
 						if mp_user:
 							if MpuserPreviewInfo.objects.filter(mpuser=mp_user).count() > 0:

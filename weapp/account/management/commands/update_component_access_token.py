@@ -147,6 +147,11 @@ class Command(BaseCommand):
 							MpuserPreviewInfo.objects.filter(mpuser=mp_user).update(image_path=head_img, name=nick_name)
 						else:
 							MpuserPreviewInfo.objects.create(mpuser=mp_user,image_path=head_img, name=nick_name)
-
-					UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=True)
+					user_profile = UserProfile.objects.get(user_id=user_id)
+					if is_service:
+						if (user_profile.is_mp_registered is False) or (user_profile.is_oauth is False):
+							UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=True, is_oauth=True)
+					else:
+						if user_profile.is_oauth:
+							UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=True, is_oauth=False)
 			
