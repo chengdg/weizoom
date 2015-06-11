@@ -44,9 +44,6 @@
               <li {% ifequal first_nav_name 'weixin' %}class="active"{% endifequal %}>
                 <a href="/weixin/message/message/">互动<span class="unreadMessageCount_menu" id="message_notify" style="display:none"></span></a>
               </li>
-              <li {% ifequal first_nav_name 'webapp' %}class="active"{% endifequal %}>
-                <a href="/webapp/">微站</a>
-              </li>
               {% if user|is_system_manager %}
               <li {% ifequal first_nav_name 'account' %}class="active"{% endifequal %}>
                 <a href="/account/accounts/">账户</a>
