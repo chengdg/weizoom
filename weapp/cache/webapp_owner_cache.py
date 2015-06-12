@@ -166,6 +166,9 @@ post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=wei
 #pay interface
 post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=mall_models.PayInterface, dispatch_uid = "PayInterface.update")
 signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=mall_models.PayInterface, dispatch_uid = "PayInterface.save")
+
+post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=account_models.OperationSettings, dispatch_uid = "OperationSettings.update")
+signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=account_models.OperationSettings, dispatch_uid = "OperationSettings.save")
 signals.post_save.connect(
                           update_webapp_owner_info_cache_with_login,
                           sender=AccountHasWeizoomCardPermissions,

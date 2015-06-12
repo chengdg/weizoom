@@ -207,8 +207,8 @@ def get_product(request):
 		product.is_can_buy_by_product(request)
 		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
 		otherSettings = OperationSettings.objects.get(owner = otherProfile.user)
-		if otherSettings.non_member_followurl.startswith('http://mp.weixin.qq.com'):
-			non_member_followurl = otherSettings.non_member_followurl
+		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
+			non_member_followurl = otherSettings.weshop_followurl
 
 			# liupeiyu 记录点击关注信息
 			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product.id, product.owner.id)
