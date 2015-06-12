@@ -1,8 +1,6 @@
 {% extends "content_base_v2.html" %}
 
 {% block content-panel %}
-<div class="xui-promotionsPage xui-commonPromotionStyle">
-
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
@@ -11,9 +9,49 @@
 		<li class="active">交易订单</li>
 	</ul>
 </div>
-
+<div class="xui-filterPanel" >
+        <div class="xui-form disT ml20">
+            <div class="xui-i-item">
+			<label>下单时间：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-enable-select-time="true"
+				data-ui-role="datepicker"
+			    data-format="yy-mm-dd"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="datepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd"
+			    data-max="now"
+			    data-min-el="#start_date"/>
+			
+			<a class="btn btn-primary xa-search xui-fontBold" href="javascript:void(0);">查询</a>
+			<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
+		</div>
+</div>
+</div>
 <div class="panel panel-default mt20 xui-bigBoxbg">
+
 <div class="panel panel-default ml10 mr10 mb50" style="border:none;">
+	<div class="panel-heading">
+	<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示扫码后成交订单
+</div>
 	<div
 		data-ui-role="advanced-table"
 		data-app="new_weixin"
@@ -62,7 +100,10 @@
 	{{/if}}
 
 	{{if data.pageinfo.object_count == 0}}
-		<div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+		<div class="xui-emptyBox">
+		<img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！
+		</span>
+		</div>
 	{{/if}}
 
 	<ul>
@@ -202,11 +243,9 @@ function formatOrderStatus(status) {
 	return
 }
 $(document).ready(function() {
-	var view = new W.view.mall.PromotionListView({
-		el: '.xui-promotionsPage',
-		promotionType: 'flash_sale'
-	});
-	view.render();
+	$('#start_date').attr('value','');
+	$('#end_date').attr('value','');
+
 });
 </script>
 {% endblock %}

@@ -70,6 +70,7 @@ textarea{resize:none}
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
 .clear{height:0;clear:both;overflow:hidden;}
 .vm{vertical-align:middle;}
+.vs{vertical-align:sub;}
 .vt{vertical-align:top;}
 .vtb{vertical-align:text-bottom;}
 .pr{position:relative;}

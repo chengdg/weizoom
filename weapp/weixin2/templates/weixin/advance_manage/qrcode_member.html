@@ -11,15 +11,55 @@
 			<li class="active">关注粉丝</li>
 		</ul>
 	</div>
-	<div class="panel panel-default xb-rightPanel pr">
+	<div class="xui-filterPanel " >
+        <div class="xui-form disT ml20">
+            <div class="xui-i-item">
+			<label>关注时间：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-enable-select-time="true"
+				data-ui-role="datepicker"
+			    data-format="yy-mm-dd"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="datepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd"
+			    data-max="now"
+			    data-min-el="#start_date"/>
+			
+			<a class="btn btn-primary xa-search xui-fontBold" href="javascript:void(0);">查询</a>
+			<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
+		</div>
+
+    </div>
+    </div>
+	<div class="panel panel-default xb-rightPanel pr mt20">
 		<div class="panel-heading">
 			<!-- <a class="xui-tipBox fr">
 			如何对数据排序<b class="xui-tip">?</b></a> -->
+			<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示通过二维码新关注会员
 		</div>
+
 		<div 
 			data-ui-role="advanced-table" 
 			data-app="new_weixin"
-			data-args='{"setting_id": {{ setting_id }} }'
+			data-args='{"setting_id": {{ setting_id }}, "is_show":"1" }'
 			data-resource="qrcode_member"
 			data-template-id="#members-view"
 			data-enable-paginator="true" 
@@ -36,6 +76,7 @@
 {% block js %}
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
+
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg xui-qrcode-table" >
 		<thead>
 		<tr>
@@ -88,173 +129,38 @@
 
 <script type="text/javascript">	
 $(document).ready(function() {
-	$('#all').attr('checked', false);
+	$('#start_date').attr('value','');
+	$('#end_date').attr('value','');
 
-	$('.update_dropdown').delegate('#all', 'click', function(event){
-		var $checkbox = $(event.currentTarget);
-        var isChecked = $checkbox.is(':checked');
-        $('tbody .xa-select,.xa-selectAll').prop('checked', isChecked);
-
-	});
-
-	$('.panel-body').delegate('.xa-selectAll', 'click', function(event){
-		var $checkbox = $(event.currentTarget);
-        var isChecked = $checkbox.is(':checked');
-        $('tbody .xa-select,#all').prop('checked', isChecked);
-	});
-
-	var view = new W.view.member.memberFilterView ({
-		el: '.xui-filterPanel',
-		dataView: $('[data-ui-role="advanced-table"]').data('view'),
-		userWebappId: {{user.get_profile.webapp_id}},
-		status:''
-	});
-	view.$el.bind('end_click', function(){
-		DATA_INTERVAL = '';
-	});
-	// 修改等级
-	$('body').delegate('.xa-update-grade', 'click', function(event){		
-		var $el = $(event.currentTarget);
-		var member_id = $el.attr('data-id');
-		
-		var memberTagsUpdateView = W.getMemberTagsUpdateView({
-			width: 260,
-			title: '修改等级',
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-updateGradeOrTagBox'
-		});
-		memberTagsUpdateView.show({
-			$action: $el,
-			isUpdateGrade: true,
-			memberId: member_id,
-			isPostData: true
-		})
-        memberTagsUpdateView.render();
-	});
-	// 修改分组
-	$('body').delegate('.xa-update-tag', 'click', function(event){
-		var $el = $(event.currentTarget);
-		var member_id = $el.attr('data-id');
-		
-		var memberTagsUpdateView = W.getMemberTagsUpdateView({
-			width: 260,
-			title: '修改分组',
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-updateGradeOrTagBox'
-		});
-		memberTagsUpdateView.show({
-			$action: $el,
-			isUpdateGrade: false,
-			memberId: member_id,
-			isPostData: true
-		})
-        memberTagsUpdateView.render();
-	});
-
-	// 修改等级
-	$('.update_dropdown').delegate('.update-grade', 'click', function(event){
-		var post_ids = [];
-		var grade_id = $(this).attr('data-id');
-	 	$('input.xa-select:checked').each(function(){ 
-    		console.log($(this).parent().parent().attr('data-id'))
-    		post_ids.push($(this).parent().parent().attr('data-id'))
-  			}); 
-	 	if (grade_id && post_ids.length > 0) {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'grade/batch_update',
-	            args:{ids:post_ids.join('-'), grade_id:grade_id},
-	            success: function(data) {
-	                 window.location.reload();
-	            },
-	            error: function(response) {
-	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
-	            },
-	            scope: this
-	        });
-	 	}
-	});
-	// 修改分组
-	$('.update_dropdown').delegate('.update-tag', 'click', function(event){
-		var post_ids = [];
-		var tag_id = $(this).attr('data-id');
-	 	$('input.xa-select:checked').each(function(){ 
-    		console.log($(this).parent().parent().attr('data-id'))
-    		post_ids.push($(this).parent().parent().attr('data-id'))
-  			}); 
-	 	if (tag_id && post_ids.length > 0) {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'tag/batch_update',
-	            args:{ids:post_ids.join('-'), tag_id:tag_id},
-	            success: function(data) {
-	                 window.location.reload();
-	            },
-	            error: function(response) {
-	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
-	            },
-	            scope: this
-	        });
-	 	}
-	});
-
-	// 修改积分
-	$('.panel-body').delegate('.xa-update-integral', 'click', function(event){
-
-		var $el = $(event.currentTarget);
-		var member_id = $el.attr('data-id');
-		
-		var memberIntegralUpdateView = W.getMemberIntegralUpdateView({
-			width: 310,
-			title: '调积分',
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-updateGradeOrTagBox'
-		});
-		memberIntegralUpdateView.show({
-			$action: $el,
-			memberId: member_id,
-		})
-        memberIntegralUpdateView.render();
-		
-	});
-
-	// 导出
-	$('.panel-body').delegate('.xa-export', 'click', function(event){	
-		var url = '/member/members/export/';
-		if (view.filter_value) {
-			url = url + '?filter_value='+view.filter_value;
+	function dateViewReload(){
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var is_checked = $('.is_show').is(':checked');
+		var dataView = $('[data-ui-role="advanced-table"]').data('view');
+		var is_show = 0;
+		if (is_checked == true){
+			is_show = 1;
 		}
-		console.log(url, view.filter_value)
-		W.getErrorHintView().show("'玩命导出中...'");
-		var $frame=$('<iframe>').hide().attr('src',url);
-		$('body').append($frame);
-		setTimeout(function(){W.getErrorHintView().hide()}, 5000);
-	});
+		var args= '{"start_date":"'+start_date+'","end_date":"'+end_date+'", "is_show":"'+is_show+'"}';
+		dataView.options.args =  args;//this.getFilterValueByDict(args);
+	    dataView.setPage(1);
+		dataView.reload();
+	}
 
-	$('.panel').delegate('.relation-text', 'click', function(event) {
-					var _this = this;
-					var $el = $(event.currentTarget);
-					console.log($el);
+	$('.xa-search').click(function(){
+		dateViewReload();
+	})
+	$('.xa-reset').click(function(){
+		$('#start_date').attr('value','');
+		$('#end_date').attr('value','');
+	})
 
-					var friend_count = $el.attr('friend_count');
-					var fans_count = $el.attr('fans_count');
-					var memberId = $el.attr('value');
-					if ($el.html() == '0') {
-						return false;
-					}
-
-					W.dialog.showDialog('W.dialog.member.RelationsDialog', {
-						memberId: memberId,
-						friendCount: friend_count,
-						fansCount: fans_count,
-						isReload:true,
-		          	});
-			});
+	$('.is_show').click(function(){
+		dateViewReload();
+	})
+	
+    //var args = this.getFilterValue();
+    
 });
 </script>
 {% endblock %}

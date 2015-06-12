@@ -231,7 +231,6 @@ class Qrcode(resource.Resource):
 		jsons = [{
 			"name": "qrcode_answer", "content": answer_content
 		}]
-
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_advance_manage_second_navs(request),
@@ -372,13 +371,29 @@ class QrcodeMember(resource.Resource):
 	@login_required
 	@mp_required
 	def api_get(request):
-		#try:
 		setting_id = int(request.GET['setting_id'])
+		start_date = request.GET.get('start_date', '')
+		end_date = request.GET.get('end_date', '')
+		is_show = request.GET.get('is_show', '0')
 
-		member_ids = [relation.member_id for relation in \
-			ChannelQrcodeHasMember.objects.filter(channel_qrcode=setting_id)]
+		if is_show == '1':
+			member_ids = [relation.member_id for relation in \
+				ChannelQrcodeHasMember.objects.filter(channel_qrcode=setting_id, is_new=True)]
+		else:
+			member_ids = [relation.member_id for relation in \
+				ChannelQrcodeHasMember.objects.filter(channel_qrcode=setting_id)]
 		
-		channel_members = Member.objects.filter(id__in=member_ids)
+		filter_data_args = {}
+		filter_data_args['id__in'] = member_ids
+
+		if start_date:
+			filter_data_args['created_at__gte'] = start_date
+
+		if end_date:
+			filter_data_args['created_at__lte'] = end_date
+
+
+		channel_members = Member.objects.filter(**filter_data_args)
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, channel_members = paginator.paginate(channel_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])

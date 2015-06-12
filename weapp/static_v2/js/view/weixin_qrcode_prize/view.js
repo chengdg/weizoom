@@ -39,7 +39,7 @@ W.view.markettool.prize.PrizeSelector = Backbone.View.extend({
             app: 'prize',
             api: 'prize_types/get',
             method: 'get',
-            args: {},
+            args: {'is_entity':0},
             success: function(data) {
                 _this.prizeTypes = data.items;
 
@@ -199,10 +199,12 @@ W.view.markettool.prize.PrizeSelector = Backbone.View.extend({
         } else if (this.isScorePrizeType) {
             var score = parseInt(this.$('#prize_score_input').val());
             return {'id':score, 'name':'_score-prize_', 'type':'积分'};
-        } else if (this.isRealPrizeType) {
+        } 
+        else if (this.isRealPrizeType) {
             var prize_name = this.$('#prize_real_prize_input').val();
             return {'id':0, 'name':prize_name, 'type':'实物奖励'};
-        } else {
+        } 
+        else {
             var $slectPrizeType = this.$("#prizeTypesSelector option:selected");
             var prizeType = $slectPrizeType.val();
 

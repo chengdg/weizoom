@@ -6,17 +6,21 @@ __author__ = 'chuter'
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+import copy
 from core.jsonresponse import create_response
 from core import apiview_util
 from core.exceptionutil import unicode_full_stack
 
-from module_api import PRIZE_TYPES, PrizeInfo, get_request_prize_type
+from module_api import PRIZE_TYPES, PrizeInfo, get_request_prize_type, REAL_PRIZE_TYPE_NAME
 
 @login_required
 def get_prize_types(request):
 	response = create_response(200)
-
+	is_entity = request.GET.get('is_entity', '1')
+	
 	prize_type_names_json_array = [prize_type.name for prize_type in PRIZE_TYPES]
+	if is_entity == '0':
+		prize_type_names_json_array.remove(REAL_PRIZE_TYPE_NAME)
 	response.data.items = prize_type_names_json_array
 
 	return response.get_response()
@@ -24,7 +28,6 @@ def get_prize_types(request):
 @login_required
 def get_prize_list(request):
 	prize_type_name = request.GET.get('name', None)
-
 	response = create_response(200)
 
 	try:

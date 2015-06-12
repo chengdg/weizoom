@@ -23,7 +23,7 @@ def create_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_membe
 
 			if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
 				ChannelQrcodeHasMember.objects.filter(member=member).delete()
-				ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member)
+				ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member, is_new=is_new_member)
 			else:
 				return 
 
