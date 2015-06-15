@@ -66,11 +66,10 @@ def update_weizoom_card_account_permission(request):
         create_account_list = []
         for id in ids:
             if int(id) not in permission_owner_ids:
-                create_account_list.append(AccountHasWeizoomCardPermissions(
+                AccountHasWeizoomCardPermissions.objects.create(
                     owner_id=id,
                     is_can_use_weizoom_card=True
-                ))
-        AccountHasWeizoomCardPermissions.objects.bulk_create(create_account_list)
+                )
         for permission in set(accounts_relation2permission):
             if not permission.is_can_use_weizoom_card:
                 permission.is_can_use_weizoom_card=True
