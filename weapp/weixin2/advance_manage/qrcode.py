@@ -519,7 +519,8 @@ class QrcodeOrder(resource.Resource):
 			elif old_member_order_ids:
 				filter_data_args['id__in'] = old_member_order_ids
 				orders = Order.objects.filter(**filter_data_args)
-			orders = []
+			else:
+				orders = []
 			#orders = Order.objects.filter(webapp_user_id__in=new_webapp_user_ids, status=ORDER_STATUS_SUCCESSED, id__in=old_member_order_ids).order_by('-created_at')
 		else:
 			webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
