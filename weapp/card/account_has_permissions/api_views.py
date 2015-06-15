@@ -31,7 +31,7 @@ def get_user_all(request):
 #===============================================================================
 @api(app='card', resource='has_weizoom_card_permissions_user', action='get')
 def get_has_weizoom_card_permissions_user(request):
-    permissions = AccountHasWeizoomCardPermissions.objects.all()
+    permissions = AccountHasWeizoomCardPermissions.objects.filter(is_can_use_weizoom_card=True)
     user2id = dict([(u.id, u) for u in User.objects.all()])
 
     items = []
@@ -56,7 +56,9 @@ def get_has_weizoom_card_permissions_user(request):
 def update_weizoom_card_account_permission(request):
     owner_ids = request.GET['owner_ids']
     if not owner_ids or (owner_ids is ''):
-        AccountHasWeizoomCardPermissions.objects.all().update(is_can_use_weizoom_card=False)
+        for permission in AccountHasWeizoomCardPermissions.objects.filter(is_can_use_weizoom_card=True):
+            permission.is_can_use_weizoom_card=False
+            permission.save()
     else:
         ids = owner_ids.split(',')
         accounts_relation2permission = AccountHasWeizoomCardPermissions.objects.filter(owner_id__in=ids)
@@ -69,7 +71,12 @@ def update_weizoom_card_account_permission(request):
                     is_can_use_weizoom_card=True
                 ))
         AccountHasWeizoomCardPermissions.objects.bulk_create(create_account_list)
-        accounts_relation2permission.update(is_can_use_weizoom_card=True)
-        AccountHasWeizoomCardPermissions.objects.exclude(owner_id__in=ids).update(is_can_use_weizoom_card=False)
+        for permission in set(accounts_relation2permission):
+            if not permission.is_can_use_weizoom_card:
+                permission.is_can_use_weizoom_card=True
+                permission.save()
+        for permission in AccountHasWeizoomCardPermissions.objects.exclude(owner_id__in=ids).filter(is_can_use_weizoom_card=True):
+            permission.is_can_use_weizoom_card=False
+            permission.save()
     response = create_response(200)
     return response.get_response()
