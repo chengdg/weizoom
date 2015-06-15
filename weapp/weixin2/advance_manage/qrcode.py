@@ -476,6 +476,7 @@ class QrcodeOrder(resource.Resource):
 
 		if end_date:
 			filter_data_args['created_at__lte'] = end_date
+		filter_data_args['status'] = ORDER_STATUS_SUCCESSED
 
 		relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
 		setting_id2count = {}
@@ -508,11 +509,16 @@ class QrcodeOrder(resource.Resource):
 				created_at = old_member_id2_create_at[webapp_user.member_id]
 				for order in Order.objects.filter(webapp_user_id=webapp_user.id, created_at__gte=created_at):
 					old_member_order_ids.append(order.id)
-			if new_webapp_user_ids:
+
+			if new_webapp_user_ids and old_member_order_ids:
+				orders = Order.objects.filter(Q(webapp_user_id__in=new_webapp_user_ids) | Q(id__in=old_member_order_ids).filter(**filter_data_args).order_by('-created_at')
+			elif new_webapp_user_ids:
 				filter_data_args['webapp_user_id__in'] = new_webapp_user_ids
-			if old_member_order_ids:
+				orders = Order.objects.filter(**filter_data_args)
+			elif old_member_order_ids:
 				filter_data_args['id__in'] = old_member_order_ids
-			filter_data_args['status'] = ORDER_STATUS_SUCCESSED
+				orders = Order.objects.filter(**filter_data_args)
+
 			#orders = Order.objects.filter(webapp_user_id__in=new_webapp_user_ids, status=ORDER_STATUS_SUCCESSED, id__in=old_member_order_ids).order_by('-created_at')
 		else:
 			webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
