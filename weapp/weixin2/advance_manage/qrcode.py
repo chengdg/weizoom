@@ -400,7 +400,7 @@ class QrcodeMember(resource.Resource):
 			filter_data_args['created_at__lte'] = end_date
 
 
-		channel_members = Member.objects.filter(**filter_data_args).order_by('-is_subscribed')
+		channel_members = Member.objects.filter(**filter_data_args).order_by('-created_at')
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, channel_members = paginator.paginate(channel_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
