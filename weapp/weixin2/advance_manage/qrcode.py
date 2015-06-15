@@ -58,7 +58,7 @@ class Qrcodes(resource.Resource):
 		sort_attr = request.GET.get('sort_attr', None)
 		created_at = '-created_at'
 		if 'created_at' in  sort_attr:
-			created_at = sorter
+			created_at = sort_attr
 
 		if query:
 			settings = ChannelQrcodeSettings.objects.filter(owner=request.user, name__contains=query).order_by(created_at)
