@@ -400,7 +400,7 @@ class QrcodeMember(resource.Resource):
 			filter_data_args['created_at__lte'] = end_date
 
 
-		channel_members = Member.objects.filter(**filter_data_args)
+		channel_members = Member.objects.filter(**filter_data_args).order_by('-is_subscribed')
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, channel_members = paginator.paginate(channel_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -520,7 +520,7 @@ class QrcodeOrder(resource.Resource):
 			filter_data_args['webapp_user_id__in'] = webapp_user_ids
 			filter_data_args['status'] = ORDER_STATUS_SUCCESSED
 			#orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by('-created_at')
-		orders = Order.objects.filter(**filter_data_args)
+		orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
