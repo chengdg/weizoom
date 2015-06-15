@@ -515,10 +515,10 @@ class QrcodeOrder(resource.Resource):
 				orders = Order.objects.filter(Q(webapp_user_id__in=new_webapp_user_ids) | Q(id__in=old_member_order_ids)).filter(**filter_data_args).order_by('-created_at')
 			elif new_webapp_user_ids:
 				filter_data_args['webapp_user_id__in'] = new_webapp_user_ids
-				orders = Order.objects.filter(**filter_data_args)
+				orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 			elif old_member_order_ids:
 				filter_data_args['id__in'] = old_member_order_ids
-				orders = Order.objects.filter(**filter_data_args)
+				orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 			else:
 				orders = []
 		else:
