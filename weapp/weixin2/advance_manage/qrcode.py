@@ -521,16 +521,15 @@ class QrcodeOrder(resource.Resource):
 				orders = Order.objects.filter(**filter_data_args)
 			else:
 				orders = []
-			#orders = Order.objects.filter(webapp_user_id__in=new_webapp_user_ids, status=ORDER_STATUS_SUCCESSED, id__in=old_member_order_ids).order_by('-created_at')
 		else:
 			webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
 			webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 			webapp_user_ids = set(webapp_user_id2member_id.keys())
 			if webapp_user_ids:
 				filter_data_args['webapp_user_id__in'] = webapp_user_ids
-			filter_data_args['status'] = ORDER_STATUS_SUCCESSED
-			#orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by('-created_at')
-			orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+				orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+			else:
+				orders = []
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
