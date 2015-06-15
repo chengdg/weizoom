@@ -56,18 +56,20 @@ def get_has_weizoom_card_permissions_user(request):
 def update_weizoom_card_account_permission(request):
     owner_ids = request.GET['owner_ids']
     if not owner_ids or (owner_ids is ''):
-        AccountHasWeizoomCardPermissions.objects.all().delete()
+        AccountHasWeizoomCardPermissions.objects.all().update(is_can_use_weizoom_card=False)
     else:
         ids = owner_ids.split(',')
-        AccountHasWeizoomCardPermissions.objects.exclude(owner_id__in=ids).delete()
-        permission_owner_ids = [int(a.owner_id) for a in AccountHasWeizoomCardPermissions.objects.filter(owner_id__in=ids)]
-
+        accounts_relation2permission = AccountHasWeizoomCardPermissions.objects.filter(owner_id__in=ids)
+        permission_owner_ids = [int(a.owner_id) for a in accounts_relation2permission]
+        create_account_list = []
         for id in ids:
             if int(id) not in permission_owner_ids:
-                AccountHasWeizoomCardPermissions.objects.create(
+                create_account_list.append(AccountHasWeizoomCardPermissions(
                     owner_id=id,
                     is_can_use_weizoom_card=True
-                )
-
+                ))
+        AccountHasWeizoomCardPermissions.objects.bulk_create(create_account_list)
+        accounts_relation2permission.update(is_can_use_weizoom_card=True)
+        AccountHasWeizoomCardPermissions.objects.exclude(owner_id__in=ids).update(is_can_use_weizoom_card=False)
     response = create_response(200)
     return response.get_response()
