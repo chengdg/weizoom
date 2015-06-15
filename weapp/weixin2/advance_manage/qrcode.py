@@ -458,7 +458,18 @@ class QrcodeOrder(resource.Resource):
 	@mp_required
 	def api_get(request):
 		channel_qrcode_id = request.GET.get('setting_id', None)
+		start_date = request.GET.get('start_date', '')
+		end_date = request.GET.get('end_date', '')
 		is_show = request.GET.get('is_show', '0')
+
+		filter_data_args = {}
+
+		if start_date:
+			filter_data_args['created_at__gte'] = start_date
+
+		if end_date:
+			filter_data_args['created_at__lte'] = end_date
+
 		relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
 		setting_id2count = {}
 		member_id2setting_id = {}
@@ -490,14 +501,19 @@ class QrcodeOrder(resource.Resource):
 				created_at = old_member_id2_create_at[webapp_user.member_id]
 				for order in Order.objects.filter(webapp_user_id=webapp_user.id, created_at__gte=created_at):
 					old_member_order_ids.append(order.id)
-			
-			orders = Order.objects.filter(webapp_user_id__in=new_webapp_user_ids, status=ORDER_STATUS_SUCCESSED, id__in=old_member_order_ids).order_by('-created_at')
+			filter_data_args['webapp_user_id__in'] = new_webapp_user_ids
+			filter_data_args['id__in'] = old_member_order_ids
+			filter_data_args['status'] = ORDER_STATUS_SUCCESSED
+			#orders = Order.objects.filter(webapp_user_id__in=new_webapp_user_ids, status=ORDER_STATUS_SUCCESSED, id__in=old_member_order_ids).order_by('-created_at')
 		else:
 			webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
 			webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 			webapp_user_ids = set(webapp_user_id2member_id.keys())
 
-			orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by('-created_at')
+			filter_data_args['webapp_user_id__in'] = webapp_user_ids
+			filter_data_args['status'] = ORDER_STATUS_SUCCESSED
+			#orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by('-created_at')
+		orders = Order.objects.filter(**filter_data_args)
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
