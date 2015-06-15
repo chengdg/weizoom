@@ -72,7 +72,7 @@ card_overview_tables
 card_overview_details
 card_overview_advanced_table_ex
 mall_coupon_list_view
-mall_coupon_list_view
+mall_coupon_filter_view
 weixin2_fans_analysis
 weixin2_bought_fans_analysis
 weixin2_fans_keyword

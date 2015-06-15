@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from core.restful_url_route import *
 
+from mall.models import Order
 from mall import export
 from models import *
 from modules.member import models as member_models
@@ -152,7 +153,7 @@ def export_coupons(request):
 
     #获取被使用的优惠券使用者信息
     coupon_ids = [c.id for c in coupon_list if c.status==COUPON_STATUS_USED]
-    orders = mall_models.Order.get_orders_by_coupon_ids(coupon_ids)
+    orders = Order.get_orders_by_coupon_ids(coupon_ids)
     user_ids = []
     if orders:
         coupon_id2webapp_user_id = dict([(o.coupon_id, \
