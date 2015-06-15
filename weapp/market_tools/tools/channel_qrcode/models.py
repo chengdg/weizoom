@@ -40,7 +40,7 @@ class ChannelQrcodeSettings(models.Model):
 class ChannelQrcodeHasMember(models.Model):
 	channel_qrcode = models.ForeignKey(ChannelQrcodeSettings)
 	member = models.ForeignKey(Member)
-	is_new = models.BooleanField(default=False)
+	is_new = models.BooleanField(default=True)
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 	
 	class Meta(object):

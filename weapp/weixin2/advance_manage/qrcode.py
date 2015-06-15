@@ -458,10 +458,14 @@ class QrcodeOrder(resource.Resource):
 	@mp_required
 	def api_get(request):
 		channel_qrcode_id = request.GET.get('setting_id', None)
+		is_show = request.GET.get('is_show', '0')
 		relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
 		setting_id2count = {}
 		member_id2setting_id = {}
 		member_ids = []
+
+		old_member_id2_create_at = {}
+		new_member_id2_create_at = {}
 		for r in relations:
 			member_ids.append(r.member_id)
 			member_id2setting_id[r.member_id] = r.channel_qrcode_id
@@ -469,12 +473,31 @@ class QrcodeOrder(resource.Resource):
 				setting_id2count[r.channel_qrcode_id] += 1
 			else:
 				setting_id2count[r.channel_qrcode_id] = 1
+			if r.is_new:
+				new_member_id2_create_at[r.member_id] = r.created_at
+			else:
+				old_member_id2_create_at[r.member_id] = r.created_at
 
-		webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
-		webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
-		webapp_user_ids = set(webapp_user_id2member_id.keys())
+		if is_show == '1':
+			#获取新会员的webapp_user
+			new_webapp_users = WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
+			new_webapp_user_ids = [u.id for u in new_webapp_users]
+			
+			#获取old会员的webapp_user
+			old_webapp_users = WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
+			old_member_order_ids = []
+			for webapp_user in old_webapp_users:
+				created_at = old_member_id2_create_at[webapp_user.member_id]
+				for order in Order.objects.filter(webapp_user_id=webapp_user.id, created_at__gte=created_at):
+					old_member_order_ids.append(order.id)
+			
+			orders = Order.objects.filter(webapp_user_id__in=new_webapp_user_ids, status=ORDER_STATUS_SUCCESSED, id__in=old_member_order_ids).order_by('-created_at')
+		else:
+			webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
+			webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
+			webapp_user_ids = set(webapp_user_id2member_id.keys())
 
-		orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by('-created_at')
+			orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by('-created_at')
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
