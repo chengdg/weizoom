@@ -80,7 +80,7 @@
 	<tbody>
 	{{if items.length}}
 		{{each(i, coupon) items}}
-		<tr data-id="${ coupon.id }" style="height:48px;" {{if coupon.status == '未领取' || coupon.status == '已过期' || coupon.status == '作废'}}class="xa-selectCoupon"{{/if}}>
+		<tr data-id="${ coupon.id }" style="height:48px;" {{if coupon.status == '未领取' || coupon.status == '已过期' || coupon.status == '作废' || coupon.status == '已失效'}}class="xa-selectCoupon"{{/if}}>
 			<td>${ coupon.coupon_id }</td>
 			<td>${ coupon.money }</td>
 			<td>${ coupon.created_at }</td>
@@ -89,7 +89,7 @@
 			<td>${ coupon.use_time }</td>
 			<td><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.consumer.id }">{{html coupon.consumer.username_for_html }}</a></td>
 			<td><a target="_blank" href="/mall/order_detail/get/?order_id=${ coupon.order_id }">${ coupon.order_fullid }</a></td>
-			<td style="color:{{if coupon.status == '未使用' || coupon.status == '未领取'}}#086cb2;{{/if}}{{if coupon.status == '已使用' || coupon.status == '已过期' || coupon.status == '作废'}}#999;{{/if}}">${ coupon.status }</td>
+			<td style="color:{{if coupon.status == '未使用' || coupon.status == '未领取'}}#086cb2;{{/if}}{{if coupon.status == '已使用' || coupon.status == '已过期' || coupon.status == '作废' || coupon.status == '已失效'}}#999;{{/if}}">${ coupon.status }</td>
 		</tr>
 		{{/each}}
 	{{/if}}

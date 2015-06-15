@@ -492,6 +492,7 @@ COUPON_STATUS_USED = 1 #已被使用
 COUPON_STATUS_EXPIRED = 2 #已过期
 COUPON_STATUS_DISCARD = 3 #作废 手机端用户不显示
 COUPON_STATUS_UNGOT = 4 #未领取
+COUPON_STATUS_Expired = 5 #已失效
 COUPONSTATUS = {
 	COUPON_STATUS_UNUSED: {
 		"name": u'未使用'
@@ -507,6 +508,9 @@ COUPONSTATUS = {
 	},
 	COUPON_STATUS_UNGOT: {
 		"name": u'未领取'
+	},
+	COUPON_STATUS_Expired: {
+		"name": u'已失效'
 	}
 }
 class Coupon(models.Model):

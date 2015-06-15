@@ -347,6 +347,7 @@ def finish_promotions(request):
         ruleIds = [promotion.detail_id for promotion in Promotion.objects.filter(owner=request.manager, id__in=ids)]
         print ruleIds
         CouponRule.objects.filter(owner=request.manager, id__in=ruleIds).update(is_active=False)
+        Coupon.objects.filter(owner=request.manager, coupon_rule_id__in=ruleIds, status=COUPON_STATUS_UNGOT).update(status=COUPON_STATUS_Expired)
 
     if start == 'true':
         pass
