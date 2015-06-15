@@ -55,7 +55,7 @@ class Qrcodes(resource.Resource):
 	def api_get(request):
 		#处理搜索
 		query = request.GET.get('query', '').strip()
-		sort_attr = request.GET.get('sort_attr', None)
+		sort_attr = request.GET.get('sort_attr', '-created_at')
 		created_at = '-created_at'
 		if 'created_at' in  sort_attr:
 			created_at = sort_attr
