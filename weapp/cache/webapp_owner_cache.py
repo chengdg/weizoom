@@ -144,6 +144,8 @@ from weapp.hack_django import post_update_signal
 def update_webapp_owner_info_cache_with_login(instance, **kwargs):
 	if isinstance(instance, account_models.UserProfile):
 		webapp_owner_id = instance.user_id
+	elif isinstance(instance, AccountHasWeizoomCardPermissions):
+		webapp_owner_id = instance.owner_id
 	else:
 		if cache.request.user_profile:
 			webapp_owner_id = cache.request.user_profile.user_id
