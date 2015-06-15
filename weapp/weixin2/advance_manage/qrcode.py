@@ -55,10 +55,15 @@ class Qrcodes(resource.Resource):
 	def api_get(request):
 		#处理搜索
 		query = request.GET.get('query', '').strip()
+		sort_attr = request.GET.get('sort_attr', None)
+		created_at = '-created_at'
+		if 'created_at' in  sort_attr:
+			created_at = sorter
+
 		if query:
-			settings = ChannelQrcodeSettings.objects.filter(owner=request.user, name__contains=query).order_by('-created_at')
+			settings = ChannelQrcodeSettings.objects.filter(owner=request.user, name__contains=query).order_by(created_at)
 		else:
-			settings = ChannelQrcodeSettings.objects.filter(owner=request.user).order_by('-created_at')
+			settings = ChannelQrcodeSettings.objects.filter(owner=request.user).order_by(created_at)
 		
 		setting_ids = [s.id for s in settings]
 		relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
@@ -148,17 +153,17 @@ class Qrcodes(resource.Resource):
 			items.append(current_setting)
 
 		#进行分页
-		sort_attr = request.GET.get('sort_attr', 'count')
 		
-		if '-' in sort_attr:
-			sorter = sort_attr[1:]
-			is_reverse = True
-		else:
-			sorter = sort_attr
-			is_reverse = False
+		if 'created_at' not in  sort_attr:
+			if '-' in sort_attr:
+				sorter = sort_attr[1:]
+				is_reverse = True
+			else:
+				sorter = sort_attr
+				is_reverse = False
 
-		# items = sorted(items, reverse=is_reverse, key=lambda b : getattr(b, sorter))
-		items = sorted(items, reverse=is_reverse, key=lambda x:getattr(x, sorter))
+			# items = sorted(items, reverse=is_reverse, key=lambda b : getattr(b, sorter))
+			items = sorted(items, reverse=is_reverse, key=lambda x:getattr(x, sorter))
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
