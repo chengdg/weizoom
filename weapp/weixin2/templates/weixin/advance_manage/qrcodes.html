@@ -71,6 +71,7 @@
 						<th style="width:10%;" class="tx_sortable xa-sorting" data-sort-attr='count' data-sort-direction="up"><a href="javascript:;">关注数量</a> <img class="xa-storingimg" src="" alt=""> </th>
 						<th style="width:10%;" class="tx_sortable" data-sort-attr='total_final_price'><a href="javascript:void(0);">成交金额</a></th>
 						<th style="width:25%;">扫码奖励</th>
+						<th style="width:20%;">创建时间</th>
 						<th style="width:20%;">备注</th>
 						<th style="width:10%;">操作</th>
 					</tr>
@@ -98,6 +99,9 @@
 								</td>
 								<td style="word-break:break-all; overflow:auto;">
 									${ qrcode.cur_prize }
+								</td>
+								<td style="word-break:break-all; overflow:auto;">
+									${ qrcode.created_at }
 								</td>
 								<td style="word-break:break-all; overflow:auto;">
 									${ qrcode.remark }

@@ -56,9 +56,9 @@ class Qrcodes(resource.Resource):
 		#处理搜索
 		query = request.GET.get('query', '').strip()
 		if query:
-			settings = ChannelQrcodeSettings.objects.filter(owner=request.user, name__contains=query)
+			settings = ChannelQrcodeSettings.objects.filter(owner=request.user, name__contains=query).order_by('-created_at')
 		else:
-			settings = ChannelQrcodeSettings.objects.filter(owner=request.user)
+			settings = ChannelQrcodeSettings.objects.filter(owner=request.user).order_by('-created_at')
 		
 		setting_ids = [s.id for s in settings]
 		relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
@@ -142,7 +142,9 @@ class Qrcodes(resource.Resource):
 			current_setting.total_final_price = round(setting.total_final_price,2)
 			current_setting.cur_prize = setting.cur_prize
 			current_setting.ticket = setting.ticket
-			current_setting.remark = setting.remark 
+			current_setting.remark = setting.remark
+			current_setting.created_at = setting.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
 			items.append(current_setting)
 
 		#进行分页
