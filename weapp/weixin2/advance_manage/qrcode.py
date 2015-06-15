@@ -174,7 +174,7 @@ class Qrcodes(resource.Resource):
 
 		response = create_response(200)
 		response.data = {
-			'items': new_items,
+			'items': new_items, 
 			'pageinfo': paginator.to_dict(pageinfo),
 			'sortAttr': sort_attr,
 			'data': {}
@@ -510,7 +510,7 @@ class QrcodeOrder(resource.Resource):
 					old_member_order_ids.append(order.id)
 			filter_data_args['webapp_user_id__in'] = new_webapp_user_ids
 			filter_data_args['id__in'] = old_member_order_ids
-			filter_data_args['status'] = ORDER_STATUS_SUCCESSED
+			filter_data_args['status__gte'] = ORDER_STATUS_SUCCESSED
 			#orders = Order.objects.filter(webapp_user_id__in=new_webapp_user_ids, status=ORDER_STATUS_SUCCESSED, id__in=old_member_order_ids).order_by('-created_at')
 		else:
 			webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
@@ -518,7 +518,7 @@ class QrcodeOrder(resource.Resource):
 			webapp_user_ids = set(webapp_user_id2member_id.keys())
 
 			filter_data_args['webapp_user_id__in'] = webapp_user_ids
-			filter_data_args['status'] = ORDER_STATUS_SUCCESSED
+			filter_data_args['status__gte'] = ORDER_STATUS_SUCCESSED
 			#orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by('-created_at')
 		orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 		#进行分页
