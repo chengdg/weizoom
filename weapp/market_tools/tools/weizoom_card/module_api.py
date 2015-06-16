@@ -55,8 +55,8 @@ def return_weizoom_card_money(order):
 	if WeizoomCardHasOrder.objects.filter(order_id=order.order_id).count() > 0:
 		for weizoom_card_has_order in WeizoomCardHasOrder.objects.filter(order_id=order.order_id):
 			return_money = weizoom_card_has_order.money
-			if weizoom_card_has_order.money < 0:
-				return_money = -weizoom_card_has_order.money
+			# if weizoom_card_has_order.money < 0:
+			# 	return_money = -weizoom_card_has_order.money
 
 			weizoom_cards = WeizoomCard.objects.filter(id=weizoom_card_has_order.card_id)
 
