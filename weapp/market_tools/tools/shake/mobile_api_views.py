@@ -64,8 +64,6 @@ def record_prize(request):
 			now_join_count = ShakeRecord.objects.filter(shake_detail_id=detail_id).count()
 			max_price_member = False
 
-			
-
 			if now_join_count >= 30:
 				max_price_member = (0 == now_join_count%30)
 			with transaction.atomic():
@@ -104,7 +102,7 @@ def record_prize(request):
 									shake_detail.save(update_fields=['residue_price'])
 
 								record = ShakeRecord.objects.create(owner_id=request.webapp_owner_id, shake_detail=shake_detail, member=member, money=send_price)
-								play_count = shake_detail.play_count - now_join_count - 1
+								play_count = shake_detail.play_count - member_play_count - 1
 				
 								try:
 									ip = request.META['REMOTE_ADDR']

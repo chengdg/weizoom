@@ -116,7 +116,7 @@
 <script src="/markettools_static/shake/js/shake.js"></script>
 <script src="/markettools_static/shake/js/jpreloader.js"></script>
 <script>
- $(document).ready(function() {
+$(document).ready(function(){
  	/*loading*/
  	$('body').jpreLoader({
         showSplash: true,
@@ -125,8 +125,7 @@
         showPercentage: true,
         closeBtnText: '',
         autoClose: true
-    });
-    
+    });  
  	/*声音的开启&关闭*/
  	var musicOn = "on",
  		$sound = $('#shaking')[0];
@@ -142,16 +141,18 @@
 		}
 	});
 	/*摇动的响应函数*/
-	var shake_detail_id = '{{shake_detail.id}}';
-	shake_detail = "{{shake_detail}}";
-	if (shake_detail != 'None') { 
-		var myShakeEvent = new Shake({
-	        	threshold: 15
-		    });
-	    myShakeEvent.start();
-	    
-	}
-	window.addEventListener('shake', shakeEventDidOccur, false);
+		var shake_detail_id = '{{shake_detail.id}}';
+		shake_detail = "{{shake_detail}}";
+		if (shake_detail != 'None') { 
+			var myShakeEvent = new Shake({
+				threshold: 15
+			    });
+		    myShakeEvent.start();
+		    
+		}
+		window.onload = function(){
+		window.addEventListener('shake', shakeEventDidOccur, false);
+		}
 	  function shakeEventDidOccur(){
 	    	if(musicOn == "on"){
 	    		$sound.play();
@@ -185,6 +186,7 @@
 	                }
 	                $('.xa-pop').removeClass('hidden');
 	                $('.xa-cover').removeClass('hidden');
+			alert(data.result.play_count)
 	                if (data.result.play_count > 0) {
 	                	$('.xa-more').removeClass('hidden');
 	                }
@@ -205,6 +207,7 @@
 	            $('.xa-pop').removeClass('hidden');
 	    	}
 	    }
+	
    	/*点击活动规则按钮*/
  	$('.xa-ruleBtn').click(function(event) {
 		$('.xa-rule').css('display', 'block').addClass('fadeIn');
@@ -268,8 +271,6 @@
 		        }
 	        });
     })
-	
-		
 });
 </script>
 
