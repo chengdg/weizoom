@@ -213,27 +213,31 @@ def edit_member(request):
 	member_id = request.GET.get('id', None)
 	ship_infos = None
 	orders = []
-	try:
-		if member_id:
-			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
-			orders = __get_member_orders(member)
-			pay_money = 0
-			pay_times = 0
-			for order in orders:
-				order.final_price = order.final_price + order.weizoom_card_money
-				if order.status > 2:
-					pay_money += order.final_price
-					pay_times += 1
-			
-			member.pay_times = pay_times
-			member.pay_money = pay_money
+	#try:
+	if member_id:
+		member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+		orders = __get_member_orders(member)
+		pay_money = 0
+		pay_times = 0
+		for order in orders:
+			order.final_price = order.final_price + order.weizoom_card_money
+			if order.status > 2:
+				pay_money += order.final_price
+				pay_times += 1
+		
+		member.pay_times = pay_times
+		member.pay_money = pay_money
+		try:
 			member.unit_price = pay_money/pay_times
-			member.friend_count = __count_member_follow_relations(member)
-			member.save()
-		else:
-			raise Http404(u"不存在该会员")
-	except:
+		except:
+			member.unit_price = 0
+		
+		member.friend_count = __count_member_follow_relations(member)
+		member.save()
+	else:
 		raise Http404(u"不存在该会员")
+	#except:
+	#	raise Http404(u"不存在该会员")
 
 	#完善会员的基本信息
 	if member.user_icon:
