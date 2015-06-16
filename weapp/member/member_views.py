@@ -215,6 +215,7 @@ def edit_member(request):
 	orders = []
 	try:
 		if member_id:
+			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
 			orders = __get_member_orders(member)
 			pay_money = 0
 			pay_times = 0
@@ -223,7 +224,7 @@ def edit_member(request):
 				if order.status > 2:
 					pay_money += order.final_price
 					pay_times += 1
-			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+			
 			member.pay_times = pay_times
 			member.pay_money = pay_money
 			member.unit_price = pay_money/pay_times
