@@ -245,7 +245,7 @@ def save_order(request):
 	except Exception, e:
 		response = create_response(500)
 		stack = unicode_full_stack()
-		watchdog_error(stack)
+		watchdog_error(stack, 'mall')
 		data['msg'] = u'创建订单失败，请稍后重试'
 		data['exception'] = stack
 		return response.get_response()
@@ -254,7 +254,7 @@ def save_order(request):
 		data = {
 			'order_id' : order.order_id,
 			'id' : order.id,
-			'final_price' : float(order.final_price)
+			'final_price' : round(order.final_price, 2)
 		}
 
 	response = create_response(200)

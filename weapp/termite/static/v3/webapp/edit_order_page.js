@@ -1242,10 +1242,9 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 						info: data['msg']
 					})  
 				} else {
-					if (final_price <= 0.00) {
+					if(final_price <= 0 || !args['xa-choseInterfaces']){
 					   window.location.href = "./?woid="+ W.webappOwnerId+"&module=mall&model=pay_result_success&action=get&order_id="+order_id+"&workspace_id=mall&isShowSuccess=true";
-					}
-					else { 
+					}else{
 						_this.payOrder(orderId);
 					}
 				}
@@ -1410,7 +1409,8 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 						speed: 2000,
 						info: data['msg'] || '操作失败!'
 					});
-					_this.enableSubmitOrderButton();
+					// _this.enableSubmitOrderButton();
+					window.location.reload();
 				} else {
 					window.location.href = data['url'];     
 				}
@@ -1428,7 +1428,8 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 					info: errMsg,
 					speed:2000
 				});
-				_this.enableSubmitOrderButton();
+				// _this.enableSubmitOrderButton();
+				window.location.reload();
 			}
 		});
 		// }
@@ -1538,7 +1539,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 			return;
 		}
 		if (!this.enableSubmitOrder) {
-			return false;
+			return;
 		}
 		this.disableSubmitOrderButton();
 		var $form = $('form');
