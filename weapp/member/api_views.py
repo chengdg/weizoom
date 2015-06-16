@@ -141,7 +141,7 @@ def __build_return_member_json(member):
 		'is_subscribed':member.is_subscribed,
 		'pay_money': '%.2f' % member.pay_money,
 		'pay_times': member.pay_times,
-		'unit_price': '%.2f' % member.pay_money
+		'unit_price': '%.2f' % member.unit_price
 	}
 
 def __count_member_follow_relations(member):
