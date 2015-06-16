@@ -212,9 +212,21 @@ def edit_member(request):
 	webapp_id = request.user_profile.webapp_id
 	member_id = request.GET.get('id', None)
 	ship_infos = None
+	orders = []
 	try:
 		if member_id:
+			orders = __get_member_orders(member)
+			pay_money = 0
+			pay_times = 0
+			for order in orders:
+				order.final_price = order.final_price + order.weizoom_card_money
+				if order.status > 2:
+					pay_money += order.final_price
+					pay_times += 1
 			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+			member.pay_times = pay_times
+			member.pay_money = pay_money
+			member.unit_price = pay_money/pay_times
 			member.friend_count = __count_member_follow_relations(member)
 			member.save()
 		else:
@@ -321,13 +333,14 @@ def edit_member(request):
 
 	shared_url_lead_number = fans_count.count() - qrcode_friends
 
+
 	c = RequestContext(request, {
 		'is_shengjing': is_shengjing,
 		'shengjing_register_info': shengjing_register_info,
 		'first_nav_name': export.MEMBER_FIRST_NAV,
 		'show_member': member,
 		'grades': MemberGrade.get_all_grades_list(member.webapp_id),
-		'orders': __get_member_orders(member),
+		'orders': orders,
 		'ship_infos': ship_infos,
 		'shared_url_infos': shared_url_infos,
 		'show_member_info': __get_member_info(member),
