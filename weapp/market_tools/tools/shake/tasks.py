@@ -17,7 +17,8 @@ from modules.member.models import *
 from mall.models import *
 from account.models import UserWeixinPayOrderConfig, UserProfile
 
-from celery import task
+#from celery import task
+from weapp.celery import celery_logger, celery_task as task
 
 from pay.weixin.api.api_send_red_pack import RedPackMessage
 from BeautifulSoup import BeautifulSoup 
@@ -37,8 +38,10 @@ else:
 
 @task
 def send_red_pack_task(detail_id, owner_id, member_id, record_id, ip):
+	info= celery_logger().info
+	info("message: send_red_pack_task, owner_id:{}".format(owner_id))
 	time.sleep(2)
-	print '>>>>>>>>>>>>>>>>>>>>> in send_red_pack_task----', record_id
+
 	shake_detail = ShakeDetail.objects.get(id=detail_id)
 	record = ShakeRecord.objects.get(id=record_id)
 	price = int(record.money * 100)
@@ -48,12 +51,12 @@ def send_red_pack_task(detail_id, owner_id, member_id, record_id, ip):
 	pay_interface = PayInterface.objects.get(type=PAY_INTERFACE_WEIXIN_PAY, owner_id=owner_id)
 	weixin_pay_config = UserWeixinPayOrderConfig.objects.get(id=pay_interface.related_config_id)
 
-	try:
-		authed_appid = ComponentAuthedAppid.objects.filter(user_id=owner_id, authorizer_appid=weixin_pay_config.app_id, is_active=False)[0]
-		info = ComponentAuthedAppidInfo.objects.filter(auth_appid=authed_appid, authorizer_appid=weixin_pay_config.app_id, is_active=False)[0]
-		nick_name = info.nick_name
-	except:
-		nick_name = u'微众传媒'
+	#try:
+	authed_appid = ComponentAuthedAppid.objects.filter(user_id=owner_id, authorizer_appid=weixin_pay_config.app_id, is_active=True)[0]
+	appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=authed_appid)[0]
+	nick_name = appid_info.nick_name
+	#except:
+	#	nick_name = u'微众传媒'
 
 	red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
 		nick_name,openid,price,price,price,1, shake_detail.shake.wishing, ip,
@@ -83,5 +86,6 @@ def send_red_pack_task(detail_id, owner_id, member_id, record_id, ip):
 	record.xml_msg = xml
 	record.save()
 	print return_msg
+	info("return_msg: {},  owner_id:{}".format(return_msg, owner_id))
 	print 'ok'
 	

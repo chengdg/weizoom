@@ -119,7 +119,7 @@ class RedPackMessage(object):
 	            'Content-type'   : 'text/xml; charset=\"UTF-8\"',
 	            'Content-length' : len(xml),
 	          }
-		conn = httplib.HTTPSConnection(HOST, key_file=SSLKEY_PATH, cert_file = SSLCERT_PATH)
+		conn = httplib.HTTPSConnection(HOST, key_file=key_file, cert_file = cert_file)
 		conn.request("POST", API_URL, body=xml.encode('utf8'), headers=headers)
 		response = conn.getresponse()
 		return response.read()
