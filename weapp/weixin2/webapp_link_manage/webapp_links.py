@@ -98,7 +98,7 @@ class WebappItemLinks(resource.Resource):
 
 				if link_type == 'coupon':
 					# 优惠券
-					data['type'] = '部分商品' if item.limit_product else '全店通用'
+					data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
 					data['valid'] = u'{} 至 {}'.format(item.start_date.strftime("%Y-%m-%d %H:%M"), item.end_date.strftime("%Y-%m-%d %H:%M"))
 
 				if link_type == 'activity':

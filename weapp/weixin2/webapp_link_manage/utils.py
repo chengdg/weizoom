@@ -2,9 +2,10 @@
 __author__ = 'liupeiyu'
 
 import json
+from datetime import timedelta, datetime
 
 from mall.models import Product, ProductCategory, PRODUCT_SHELVE_TYPE_ON
-from mall.promotion.models import CouponRule
+from mall.promotion.models import CouponRule, Promotion, PROMOTION_TYPE_COUPON
 from market_tools.tools.vote.models import Vote
 from market_tools.tools.lottery.models import Lottery
 from market_tools.tools.red_envelope.models import RedEnvelope
@@ -142,12 +143,15 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	"""
 	user = request.manager
 	webapp_owner_id = user.id
+	today = datetime.today()
 	type2object = {
 		'webappPage': {
 			'class': Article, 
 			'query_name': 'title',
 			'link_template': './?module=cms&model=article&article_id={}&workspace_id=cms&webapp_owner_id=%d' % webapp_owner_id,
-			'filter': {}
+			'filter': {
+				"end_at__gt": today
+			}
 		},
 		'product': {
 			'class': Product, #is_deleted=False, 
@@ -169,7 +173,8 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			'query_name': 'name',
 			'link_template': './?module=market_tool:lottery&model=lottery&action=get&lottery_id={}&workspace_id=market_tool:lottery&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
-				"is_deleted": False
+				"is_deleted": False,
+				"end_at__gt": today
 			}
 		},
 		'red': {
@@ -181,10 +186,14 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			}
 		},
 		'coupon': {
-			'class': CouponRule, 
+			'class': Promotion, 
 			'query_name': 'name',
 			'link_template': './?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%d&project_id=0&rule_id={}' % webapp_owner_id,
-			'filter': {}
+			'filter': {
+				"type": PROMOTION_TYPE_COUPON,
+				"status__lt": 3,
+				"end_date__gt": today.strftime('%Y-%m-%d %H:%M:%S')
+			}
 		},
 		'vote': {
 			'class': Vote, 
@@ -204,7 +213,9 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			'class': Activity, 
 			'query_name': 'name',
 			'link_template': './?module=market_tool:activity&model=activity&action=get&activity_id={}&workspace_id=market_tool:activity&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
-			'filter': {}
+			'filter': {
+				"end_date__gt": today
+			}
 		},
 		'test_game': {
 			'class': TestGame, 
@@ -221,7 +232,10 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		'shake': {
 			'class': Shake, 
 			'query_name': 'name',
-			'link_template': './?module=market_tool:shake&model=shake&action=get&shake_id={}&workspace_id=market_tool:shake&webapp_owner_id=%d&project_id=0' % webapp_owner_id
+			'link_template': './?module=market_tool:shake&model=shake&action=get&shake_id={}&workspace_id=market_tool:shake&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
+			'filter': {
+				"is_deleted": False
+			}
 		},		
 	}
 
@@ -237,6 +251,14 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		if query and len(query) > 0:
 			kwargs[item['query_name']+'__contains'] = query
 		objects = item['class'].objects.filter(**kwargs).order_by(order_by)
+
+
+		if type == 'coupon':
+			# 组织detail
+			Promotion.fill_details(request.manager, objects, {
+	            'with_product': True,
+	            'with_concrete_promotion': True
+        	})
 	return objects, item
 
 
