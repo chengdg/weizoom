@@ -146,14 +146,14 @@
                     </p>
                     <div class="zoom">
                         <span class="label">奖品类型：</span>
-                        <select name="prize_type|1" class="span2" data-origin="{{prize.prize_type}}">
+                        <select name="prize_type|1" class="span2" data-origin="{{prize.prize_type}}" value="{{prize.prize_type}}">
                             <option value="1">优惠劵</option>
                             <!--<option value="2">兑换码</option>-->
                             <option value="3">积分</option>
                             <option value="0">实物奖品</option>
                         </select>
 
-                        <select class="span2 xua-coupon" name="prize_source|1" for_type="1" disabled="disabled" style="display:none;" data-origin="{{prize.prize_source}}">
+                        <select class="span2 xua-coupon" name="prize_source|1" for_type="1" disabled="disabled" style="display:none;" value="{{prize.prize_source}}" data-origin="{{prize.prize_source}}">
                             <option value="">请选择优惠劵...</option>
                             {% for rule in coupon_rules %}
                             <option value="{{rule.id}}" data-count="{{rule.remained_count}}">{{rule.name}}</option>
