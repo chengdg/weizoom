@@ -68,6 +68,7 @@ def __create_coupons(couponRule, count, promotion=None):
 			)
 			i += 1
 		except:
+			print 1
 			continue
 
 @api(app='mall_promotion', resource='coupon_rules', action='create')
