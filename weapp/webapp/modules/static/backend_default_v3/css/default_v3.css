@@ -862,43 +862,6 @@ input.ui-input-text, textarea.ui-input-text {
     box-sizing:border-box;
 }
 
-
-/* 已选商品列表样式 */
-/*.xui-selectedProductList li {
-    overflow: hidden;
-    position: relative;
-    padding: 15px;
-}
-.xui-selectedProductList li:last-child { 
-    margin-bottom: 0px;
-}*/
-.xui-selectedProductList{
-    display: table;
-    width:100%;
-}
-.xui-selectedProductList-productImg{
-    display: table-cell;
-    vertical-align: top;
-    width: 75px;
-}
-.xui-selectedProductList-productImg img {
-    width: 75px;
-    height: 75px;
-    display: block;
-}
-.xui-orderListPage .xui-selectedProductList-productImg{
-    width: 64px;
-}
-.xui-selectedProductList-productInfo {
-    display: table-cell;
-    text-align: left;
-    /*width: 70%;
-    float: left;
-    margin-left: 10px;*/
-}
-.xui-selectedProductList-productInfo > div {
-    margin-left:10px;
-}
 /* table样式 */
 .xui-table {
     background-color: #FFFFFF;
@@ -1726,13 +1689,17 @@ input.ui-input-text, textarea.ui-input-text {
 }*/
 .xui-editOrderPage .xui-productThumbNail,
 .xui-payOrderPage .xui-productThumbNail{
-    width: 60px;
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
 }
 .xui-editOrderPage .xui-productThumbNail img,
 .xui-payOrderPage .xui-productThumbNail img{
-    width: 50px;
-    height: 50px;
-    display: block;
+    max-width: 100%!important; 
+    height: auto!important;
+    max-height: 50px;
+    display:block;
+    margin:0 auto;
 }
 .xui-editOrderPage .xui-product-prizeQuantity {
     white-space: nowrap;
@@ -2701,13 +2668,35 @@ input.ui-input-text, textarea.ui-input-text {
 /*
  * mall: 购物车页面样式
  */
-/*.xui-shoppingCartPage .xui-section:last-child{margin-bottom:50px;border-bottom:1px solid #dfdfdf;}*/
 .xui-shoppingCartPage .xui-invalidProductContainer .xui-section:last-child{border-bottom:1px solid #fff;}
 .xui-shoppingCartPage .xui-productContainer .xui-section:last-child{border-bottom:1px solid #fff;}
 .xui-shoppingCartPage .xui-section:last-child .xui-divLine{border:none;}
 .xui-shoppingCartPage .xui-btn-del{
     background-color:#fff;
     color:#d10000;
+}
+.xui-shoppingCartPage .xui-selectedProductList{
+    display: table;
+    width:100%;
+}
+.xui-shoppingCartPage .xui-selectedProductList-productImg{
+    display: table-cell;
+    vertical-align: middle;
+    width: 75px;
+}
+.xui-shoppingCartPage .xui-selectedProductList-productImg img {
+    max-width: 100%!important; 
+    height: auto!important;
+    max-height: 75px;
+    display:block;
+    margin:0 auto;
+}
+.xui-shoppingCartPage .xui-selectedProductList-productInfo {
+    display: table-cell;
+    text-align: left;
+}
+.xui-shoppingCartPage .xui-selectedProductList-productInfo > div {
+    margin-left:10px;
 }
 .xui-shoppingCartPage .xui-btn-del-disabled {
     border-color:#a19fa0;
@@ -2729,14 +2718,6 @@ input.ui-input-text, textarea.ui-input-text {
     width: 100%;
     left: 0;
 }
-/*.xui-shoppingCartPage .xui-btn-delete,
-.xui-shoppingCartPage .xui-btn-delete,
-.xui-shoppingCartPage .xui-btn-delete{
-    border:none;
-    background:url("/webapp_static/default/imgs/btn_delete.png") center no-repeat;
-    width:25px;
-    height:26px;
-}*/
 .xui-shoppingCartPage .xui-lh20{
     line-height: 20px;
 }
@@ -2778,22 +2759,12 @@ input.ui-input-text, textarea.ui-input-text {
     float: left;
     height: 22px;
 }
-/*.xui-shoppingCartPage .wui-counter span{
-    height:22px;
-    line-height: 22px;
-    width: 24px;
-    font-size: 0.75rem;
-}*/
 .xui-shoppingCartPage .wui-counter span{
     height:22px;
     line-height: 22px;
     width: 24px;
     font-size: 0.75rem;
-}/*
-.xui-shoppingCartPage .wui-counter span{
-    padding: 0;
-    text-align: center;
-}*/
+}
 .xui-shoppingCartPage span.xui-understock{
     padding-left: 5px;
     line-height: 28px;
@@ -2858,20 +2829,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-shoppingCartPage .xui-opacity{
     opacity: 80%;
 }
-/*.xui-shoppingCartPage .xui-top-actionPanel{
-    width: 100%;
-    min-height: 46px;
-    border-bottom:1px solid #f0f0f0;
-    background: #fff;
-    box-sizing:border-box;
-    z-index: 9999;
-    top:0;  
-}*/
-/*.xui-shoppingCartPage .xui-top-actionPanel .xui-inner{
-    line-height: 46px;
-    padding-right:15px;
-    font-size:0.9em;
-}*/
 .xui-shoppingCartPage .xui-invalidLine{
     position: absolute;
     width: 90%;
@@ -3224,22 +3181,24 @@ input.ui-input-text, textarea.ui-input-text {
     margin-right: 10px;
 }
 .xui-orderListPage .xui-userCenterOrderProductImgList{
-    margin-left: 12px;
     height: 59px;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin: 12px 0 12px 12px;
     width: 266px;
     overflow: hidden;
 }
 .xui-orderListPage .xui-userCenterOrderProductImgList .xui-productImg{
-    width: 59px;
-    height: 59px;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
     float: left;
     margin-right: 8px;
 }
 .xui-orderListPage .xui-userCenterOrderProductImgList .xui-productImg img{
-    width: 59px;
-    height: 59px;
+    max-width: 100%!important; 
+    height: auto!important;
+    max-height: 60px;
+    margin:0 auto;
+    vertical-align: middle;
 }
 .xui-orderListPage .xui-userCenterOrderProductImgList .xui-productImg:nth-child(4){
     margin-right: 4px;
@@ -3276,9 +3235,17 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-orderListPage .xui-selectedProductList{
     margin-left: 12px;
 }
+
+.xui-orderListPage .xui-selectedProductList-productImg{
+    width: 60px;
+    vertical-align: middle;
+}
 .xui-orderListPage .xui-selectedProductList-productImg img{
-    width: 59px;
-    height: 59px;
+    max-width: 100%!important; 
+    height: auto!important;
+    max-height: 60px;
+    display:block;
+    margin:0 auto;
 }
 .xui-orderListPage .xui-selectedProductList-productInfo .xui-productName{
     height: 32px;
@@ -4295,9 +4262,19 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     border-bottom: 1px solid #E5E5E5;
 }
 .xui-orderReviewListPage .xui-productInfo .xui-productImg,
-.xui-orderReviewListPage .xui-productInfo .xui-productImg img{
+.xui-productReviewCreatePage .xui-productReview .xui-productImg{
     width: 60px;
     height: 60px;
+    text-align: center;
+    vertical-align: middle;
+}
+.xui-orderReviewListPage .xui-productInfo .xui-productImg img,
+.xui-productReviewCreatePage .xui-productReview .xui-productImg img{
+    max-width: 100%!important; 
+    height: auto!important;
+    max-height: 60px;
+    display:block;
+    margin:0 auto;
 }
 .xui-orderReviewListPage .xui-money{
     line-height: 44px;
@@ -4384,13 +4361,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     background: #fff;
     border-top: 1px solid #E5E5E5;
     border-bottom: 1px solid #E5E5E5;
-}
-.xui-productReviewCreatePage .xui-productReview .xui-productImg{
-    width: 60px;
-    height: 60px;
-}
-.xui-productReviewCreatePage .xui-productReview .xui-productImg img{
-    width: 100%;
 }
 .xui-productReviewCreatePage .xui-productReview .xui-productname{
     height: 36px;
@@ -4820,6 +4790,9 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     background: #fff;
     min-height: 81px;
     border-bottom: 1px solid #DADADA;
+}
+.xui-addrManage-page .xui-section .xui-inner-box:last-child{
+    margin-bottom:75px;
 }
 .xui-addrManage-page .xui-section .xui-icon-rightarrow,.xui-addrManage-page .xui-addNew .xui-icon-rightarrow{
     right:15px;

@@ -366,7 +366,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
 	else:
 		order.coupon_money = coupon.money
 		order.final_price -= coupon.money
-		
+
 	coupon = promotion_models.Coupon.objects.filter(id = coupon.id)
 	coupon_rule = promotion_models.CouponRule.objects.filter(id = coupon[0].coupon_rule_id)
 	if not coupon[0].member_id:
@@ -859,7 +859,7 @@ def check_stocks_for_pre_order(pre_order, args, request, **kwargs):
 			if product.model_name == model['name']:
 				product.stock_type = model['stock_type']
 				product.stocks = model['stocks']
-				
+
 		if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.purchase_count > product.stocks:
 			if product.stocks == 0:
 				fail_msg['data']['detail'].append({

@@ -100,7 +100,7 @@
                             <div class="disTc xui-productThumbNail">
                                 <img src="{{product.order_thumbnails_url}}"/>
                             </div>
-                            <div class="disTc xui-productInfo vt">
+                            <div class="disTc xui-productInfo vt pl10">
                                 <dl class="disT w em95">
                                     <!-- <i> {{product.promotion.name}},{{product.promotion.type}},{{product.promotion.money}}</i> -->
                                     <dd class="disTc xui-ellipsis-2 xa-name xt-name">{{ product.name }}</dd>
@@ -215,7 +215,7 @@
             <fieldset class="xui-section xui-section-title xui-payInerface-section">
                 <div class="xui-i-padding clearfix">
                     <h2 class="fl" style="line-height:38px;">支付方式：</h2>
-                    <dl class="fr clearfix" style="margin-top:2px">
+                    <dl class="fr clearfix xa-payOption" style="margin-top:2px">
                         {% for pay_interface in order.pay_interfaces %}
                         {% if pay_interface.type == 9 %}
                         <dd class="fl xa-cashOndelivery">
@@ -226,14 +226,14 @@
                         </dd>
                         {% elif pay_interface.type == 2 %}
                         <dd class="fl xa-wxpay">
-                            <input type="radio" value="2" class="xui-payInterface hidden" name="xa-choseInterfaces" id="payInterface2" checked data-id="{{pay_interface.id}}">
+                            <input type="radio" value="2" class="xui-payInterface hidden" name="xa-choseInterfaces" id="payInterface2" data-id="{{pay_interface.id}}">
                             <label for="payInterface2" class="xui-payInterface-opt xt-payInterface-weixin">
                                 微信支付
                             </label>
                         </dd>
                         {% elif pay_interface.type == 0 %}
-                        <dd class="fl xa-wxpay">
-                            <input type="radio" value="0" class="xui-payInterface hidden" name="xa-choseInterfaces" id="payInterface3" checked data-id="{{pay_interface.id}}">
+                        <dd class="fl xa-alpay">
+                            <input type="radio" value="0" class="xui-payInterface hidden" name="xa-choseInterfaces" id="payInterface3" data-id="{{pay_interface.id}}">
                             <label for="payInterface3" class="xui-payInterface-opt xt-payInterface-alipay">
                                 支付宝
                             </label>

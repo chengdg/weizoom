@@ -35,7 +35,7 @@ def cancel_order_for_promotion(promotion_ids):
 				request.user = user
 				request.POST = {
 					"order_id": order_id,
-					"action": "cancel"			
+					"action": "cancel"
 				}
 				request.GET = {
 					"reason": "promotion %s is finished" % promotion_id
@@ -59,6 +59,7 @@ def finish_promotion(request0, args):
 	print 'start service @%s' % datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 	print 'args: %s' % args
 	promotion_id = str(args['id']).strip()
+	promotion_type = args.get('type', None)
 	if promotion_id != 0 and not promotion_id:
 		print 'No promotion_id. Return directly'
 		return
@@ -82,19 +83,33 @@ def finish_promotion(request0, args):
 	if should_process_all_promotions:
 		#处理全部促销
 		now = datetime.today()
-		promotion_ids = [promotion.id for promotion in promotion_models.Promotion.objects.filter(status=promotion_models.PROMOTION_STATUS_STARTED, end_date__lte=now)]
+		id2promotion = dict([(promotion.id, promotion) for promotion in promotion_models.Promotion.objects.filter(status=promotion_models.PROMOTION_STATUS_STARTED, end_date__lte=now)])
+		promotion_ids = id2promotion.keys()
+		promotions = id2promotion.values()
 		promotion_models.Promotion.objects.filter(id__in=promotion_ids).update(status=promotion_models.PROMOTION_STATUS_FINISHED)
-		watchdog_info('将promotion(%s)状态改为PROMOTION_STATUS_FINISHED' % promotion_ids)
+		watchdog_info(u'将promotion(%s)状态改为PROMOTION_STATUS_FINISHED' % promotion_ids)
+		#修改过期优惠券规则的库存
+		coupon_rule_ids = []
+		for promotion in promotions:
+			if promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
+				coupon_rule_ids.append(promotion.detail_id)
+		promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids).update(remained_count=0)
 	else:
-		promotion_models.Promotion.objects.filter(id__in=promotion_ids).update(status=promotion_models.PROMOTION_STATUS_FINISHED)
-		watchdog_info('将promotion(%s)状态改为PROMOTION_STATUS_FINISHED' % promotion_ids)
-	
+		if promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
+			promotion_models.Promotion.objects.filter(id__in=promotion_ids).update(status=promotion_models.PROMOTION_STATUS_DISABLE)
+			promotion_detail_ids = [promotion.detail_id for promotion in promotion_models.Promotion.objects.filter(id__in=promotion_ids)]
+			promotion_models.CouponRule.objects.filter(id__in=promotion_detail_ids).update(remained_count=0)
+			watchdog_info(u'将promotion(%s)状态改为PROMOTION_STATUS_DISABLE' % promotion_ids)
+		else:
+			promotion_models.Promotion.objects.filter(id__in=promotion_ids).update(status=promotion_models.PROMOTION_STATUS_FINISHED)
+			watchdog_info(u'将promotion(%s)状态改为PROMOTION_STATUS_FINISHED' % promotion_ids)
+
 	product_ids = [r.product_id for r in promotion_models.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
 	products = list(mall_models.Product.objects.filter(id__in=product_ids))
 	for product in products:
 		key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (product.owner_id, product.id)
 		print 'delete redis key %s' % key
 		cache_util.delete_cache(key)
-		
+
 	cancel_order_for_promotion(promotion_ids)
 	return "OK"

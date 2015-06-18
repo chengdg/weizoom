@@ -13,7 +13,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	And jobs已添加商品
 		"""
@@ -39,7 +39,7 @@ Background:
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	And jobs已创建微众卡
 		"""
@@ -52,7 +52,7 @@ Background:
 			}]
 		}
 		"""
-	
+
 	And jobs已添加支付方式
 		"""
 		[{
@@ -63,28 +63,40 @@ Background:
 		"""
 	And bill关注jobs的公众号
 	And jobs登录系统
-	And jobs已添加了优惠券规则
+	And jobs已添加了优惠券
 		"""
 		[{
 			"name": "优惠券规则1",
-			"money": 1,
-			"expire_days": 1,
-			"using_limit": "无限制"
+			"money": "1",
+			"count": 0,
+			"expire_days": "1",
+			"using_limit": "无限制",
+			"start_date": "前天",
+			"end_date": "后天"
 		}, {
 			"name": "优惠券规则2",
-			"money": 10,
-			"expire_days": 1,
-			"using_limit": "无限制"
+			"money": "10",
+			"count": 2,
+			"expire_days": "1",
+			"using_limit": "无限制",
+			"start_date": "前天",
+			"end_date": "后天"
 		}, {
 			"name": "优惠券规则3",
-			"money": 1,
-			"expire_days": 2,
-			"using_limit": "满10元可以使用"
+			"money": 10,
+			"count": 3,
+			"expire_days": "2",
+			"using_limit": "满10元可以使用",
+			"start_date": "前天",
+			"end_date": "后天"
 		}, {
 			"name": "过期优惠券规则",
-			"money": 1,
-			"expire_days": 1,
-			"using_limit": "无限制"
+			"money": "1",
+			"count": 4,
+			"expire_days": "1",
+			"using_limit": "无限制",
+			"start_date": "前天",
+			"end_date": "昨天"
 		}]
 		"""
 	When jobs为会员发放优惠券
@@ -96,22 +108,37 @@ Background:
 			"coupon_ids": ["coupon_1"]
 		}
 		'''
-	Then jobs能获得优惠券列表
+	Then jobs获得优惠券规则列表
 		'''
 		[{
+			"coupon_rule": "过期优惠券规则",
+			"money": "1.00",
+			"create_date": "前天",
+			"expire_date": "昨天",
+			"status": "已结束"
+		},{
+			"coupon_rule": "优惠券规则3",
+			"money": "10.00",
+			"create_date": "前天",
+			"expire_date": "后天",
+			"status": "进行中"
+		},{
+			"coupon_rule": "优惠券规则2",
+			"money": "10.00",
+			"create_date": "前天",
+			"expire_date": "后天",
+			"status": "进行中"
+		},{
 			"coupon_rule": "优惠券规则1",
-			"coupon_id": "coupon_1",
-			"money": 1,
-			"create_date": "今天",
-			"expire_date": "明天",
-			"status": "未使用",
-			"consumer": "",
-			"target": "bill"
+			"money": "1.00",
+			"create_date": "前天",
+			"expire_date": "后天",
+			"status": "进行中"
 		}]
 		'''
 
 
-@mall @mall.order
+@mall @mall2 @mall.order @zy_mo1
 Scenario: 购买商品后，可以获得订单列表
 	bill购买了商品1(只下单, 未支付)和商品2(已支付)
 
@@ -142,7 +169,7 @@ Scenario: 购买商品后，可以获得订单列表
 		"""
 		[{
 			"status": "待发货",
-			"price": 10,
+			"price": "10.00",
 			"customer_message": "bill的订单备注2",
 			"buyer": "bill",
 			"products":[{
@@ -163,7 +190,7 @@ Scenario: 购买商品后，可以获得订单列表
 		}]
 		"""
 
-@mall @mall.order @mall_a
+@mall @mall2 @mall.order @mall_a @zy_mo2
 Scenario: 购买商品后，管理员通过后台管理系统可以查看订单详情
 	bill购买商品后
 	1. 能看到订单详情
@@ -246,7 +273,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 		}
 		"""
 
-@mall @mall.order
+@mall @mall2 @mall.order @zy_mo3
 #验证待发货状态的订单可以取消
 Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取消'取消订单
 	bill购买商品后
@@ -255,33 +282,33 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 	3. 取消订单之后使用的优惠券回退
 	4. 取消订单之后使用的积分回退
 	5. 取消订单之后使用的微众卡回退
-	
+
 	Given jobs登录系统
+	And jobs设定会员积分策略
+		"""
+		{
+			"一元等价的积分数量": 100,
+			"订单积分抵扣上限": 100
+		}
+		"""
 	When jobs给id为'0000001'的微众卡激活
 	When bill访问jobs的webapp
 	When bill获得jobs的100会员积分
 	Then bill在jobs的webapp中拥有100会员积分
 	When bill购买jobs的商品
 		"""
-		{	
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
+		{
+
+			"coupon": "coupon_1",
+			"integral": 50,
 			"products": [{
 				"name": "商品1",
 				"count": 1
 			}],
-			"coupon_type": "选择",
-			"coupon": "coupon_1",
-			"integral":"1"
-		}
-		"""
-	And bill使用支付方式'微众卡支付'进行支付
-		"""
-		{
-			"id":"0000001",
-			"password":"1234567"
+			"weizoom_card":[{
+				"card_name":"0000001",
+				"card_pass":"1234567"
+			}]
 		}
 		"""
 	Given jobs登录系统
@@ -298,19 +325,19 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 			}
 		}
 		"""
-	Then jobs能获得优惠券列表
-		"""
-		[{
-			"coupon_rule": "优惠券规则1",
-			"coupon_id": "coupon_1",
-			"money": 1,
-			"create_date": "今天",
-			"expire_date": "明天",
-			"status": "已使用",
-			"consumer": "bill",
-			"target": "bill"
-		}]
-		"""
+
+	Then jobs能获得优惠券'优惠券规则1'的码库
+		'''
+		{
+			"coupon_1": {
+				"money": 1.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			}
+		}
+		'''
+
 	Then jobs能获取微众卡'0000001'
 		"""
 		{
@@ -319,7 +346,7 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有99会员积分
+	Then bill在jobs的webapp中拥有50会员积分
 	Given jobs登录系统
 	When jobs取消最新订单
 		"""
@@ -349,18 +376,16 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 			}
 		}
 		"""
-	Then jobs能获得优惠券列表
+	Then jobs能获得优惠券'优惠券规则1'的码库
 		'''
-		[{
-			"coupon_rule": "优惠券规则1",
-			"coupon_id": "coupon_1",
-			"money": 1,
-			"create_date": "今天",
-			"expire_date": "明天",
-			"status": "未使用",
-			"consumer": "",
-			"target": "bill"
-		}]
+		{
+			"coupon_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
 		'''
 	Then jobs能获取微众卡'0000001'
 		"""
@@ -368,10 +393,6 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 			"status":"已使用",
 			"price":8.7,
 			"log":[{
-				"merchant":"jobs",
-				"order_id":"激活",
-				"price": 0
-			},{
 				"merchant":"jobs",
 				"order_id":"使用",
 				"price": 8.7

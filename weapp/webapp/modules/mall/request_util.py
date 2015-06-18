@@ -832,7 +832,15 @@ def __fill_coupons_for_edit_order(webapp_user, products):
 	for coupon in coupons:
 		valid = coupon.valid_restrictions
 		limit_id = coupon.limit_product_id
-		if coupon.status != promotion_models.COUPON_STATUS_UNUSED:
+
+		if coupon.start_time > today:
+			#兼容历史数据
+			if coupon.status == promotion_models.COUPON_STATUS_USED:
+				coupon.display_status = 'used'
+			else:
+				coupon.display_status = 'disable'
+			limit_coupons.append(coupon)
+		elif coupon.status != promotion_models.COUPON_STATUS_UNUSED:
 			# 状态不是未使用
 			if coupon.status == promotion_models.COUPON_STATUS_USED:
 				# 状态是已使用
@@ -852,6 +860,7 @@ def __fill_coupons_for_edit_order(webapp_user, products):
 			limit_coupons.append(coupon)
 		else:
 			result_coupons.append(coupon)
+
 	return result_coupons, limit_coupons
 
 def __format_product_group_price_factor(product_groups):
@@ -906,6 +915,7 @@ def edit_shopping_cart_order(request):
 	webapp_owner_id = request.webapp_owner_id
 	products = _get_products(request)
 	buf = []
+
 	for product in products:
 		buf.append({
 			"name": product.name,

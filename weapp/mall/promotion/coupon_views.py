@@ -26,32 +26,38 @@ FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
 @view(app='mall_promotion', resource='coupon_rules', action='get')
 @login_required
 def list_coupon_rules(request):
-	"""
-	优惠券规则列表
-	"""
-	c = RequestContext(request, {
-		'first_nav_name': FIRST_NAV_NAME,
-		'second_navs': export.get_promotion_second_navs(request),
-		'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
-	})
-	return render_to_response('mall/editor/promotion/coupon_rules.html', c)
+    """
+    优惠券规则列表
+    """
+    c = RequestContext(request, {
+    	'first_nav_name': FIRST_NAV_NAME,
+    	'second_navs': export.get_promotion_second_navs(request),
+    	'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+    })
+    return render_to_response('mall/editor/promotion/coupon_rules.html', c)
 
 
 @view(app='mall_promotion', resource='coupons', action='get')
 @login_required
 def list_coupons(request):
-	"""
-	优惠券列表
-	"""
-	rule_id = request.GET.get('id', '0')
+    """
+    优惠券列表
+    """
+    rule_id = request.GET.get('id', '0')
+    can_add_coupon = 1
+    if rule_id:
+        coupon_rule = CouponRule.objects.get(id=rule_id)
+        if not coupon_rule.is_active or coupon_rule.end_date < datetime.now():
+            can_add_coupon = 0
 
-	c = RequestContext(request, {
-		'first_nav_name': FIRST_NAV_NAME,
-		'second_navs': export.get_promotion_second_navs(request),
-		'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
-		'rule_id': rule_id,
-	})
-	return render_to_response('mall/editor/promotion/coupons.html', c)
+    c = RequestContext(request, {
+    	'first_nav_name': FIRST_NAV_NAME,
+    	'second_navs': export.get_promotion_second_navs(request),
+    	'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+    	'rule_id': rule_id,
+        'can_add_coupon': can_add_coupon
+    })
+    return render_to_response('mall/editor/promotion/coupons.html', c)
 
 
 @view(app='mall_promotion', resource='coupon', action='create')

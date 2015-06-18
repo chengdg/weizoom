@@ -894,9 +894,13 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		this.prices();
 		this.resetForm();
 
-		//如果没有微信支付，默认选中货到付款
-		if($('.xa-wxpay').length == 0 ){
-			$('.xa-cashOndelivery input').attr('checked', 'checked');
+		//如果有微信支付，则默认选中；否则，默认选中第一个dd中的input
+		if($('.xa-payOption').length != 0){
+			if($('.xa-wxpay').length != 0){
+				$('.xa-wxpay input').attr('checked', 'checked');
+			}else{
+				$('.xa-payOption dd:last-child').children('input').attr('checked', 'checked');
+			}
 		}
 	},
 
@@ -1235,18 +1239,14 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 				var orderId = data['id'];
 				var order_id = data['order_id'];
 				var final_price = parseFloat(data['final_price']);
-				if (data['msg'] != null) {
-					$('body').alert({
-						isShow: true,
-						speed: 2000,
-						info: data['msg']
-					})  
-				} else {
-					if(final_price <= 0 || !args['xa-choseInterfaces']){
-					   window.location.href = "./?woid="+ W.webappOwnerId+"&module=mall&model=pay_result_success&action=get&order_id="+order_id+"&workspace_id=mall&isShowSuccess=true";
-					}else{
-						_this.payOrder(orderId);
-					}
+				xlog(data)
+				if(final_price <= 0 || !args['xa-choseInterfaces']){
+					window.location.href = "./?woid="+ W.webappOwnerId+"&module=mall&model=pay_result_success&action=get&order_id="+order_id+"&workspace_id=mall&isShowSuccess=true";
+				}else if(data['pay_url']){
+					window.location.href = data['pay_url'];
+				}else{
+					// _this.payOrder(orderId);
+					xerror('save order not return pay_url data:'+data)
 				}
 			},
 			error: function(resp) {
@@ -1368,72 +1368,72 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		location.href = url;
 	},
 
-	payOrder: function(orderId){
-		var $link = $(this);
-		var $payInterface =  $('[name="xa-choseInterfaces"]:checked');
-		var interfaceType = $payInterface.val();
-		if(!interfaceType && parseFloat($('.xa-totalPrice').text())>0){
-			$('body').alert({
-				isShow: true,
-				speed: 2000,
-				info: '请使用优惠抵扣完成支付...'
-			});
-			return;
-		}
-		var interfaceId = $payInterface.attr('data-id');
-		var args = {order_id: orderId};
-		var _this = this;
-		if (interfaceType != 9) {//支付方式为货到付款，则不提示“正在支付”
-			$('body').alert({
-				isShow: true,
-				speed: 2000,
-				info: '正在去支付…'
-			});
-		}
-		W.getApi().call({
-			app: 'webapp',
-			api: 'project_api/call',
-			method: 'post',
-			args: _.extend({
-				webapp_owner_id: W.webappOwnerId,
-				module: 'mall',
-				target_api: 'order/pay',
-				interface_type: interfaceType,
-				interface_id: interfaceId
-			}, args),
-			success: function(data) {
-				order_id = data['order_id'];
-				if (data['msg'] != null) {
-					$('body').alert({
-						isShow: true,
-						speed: 2000,
-						info: data['msg'] || '操作失败!'
-					});
-					// _this.enableSubmitOrderButton();
-					window.location.reload();
-				} else {
-					window.location.href = data['url'];     
-				}
-			},
-			error: function(resp) {
-				var errMsg = null;
-				if (resp.data) {
-					errMsg = resp.data['msg'];
-				}
-				if (!errMsg) {
-					errMsg = '操作失败!';
-				}
-				$('body').alert({
-					isShow: true,
-					info: errMsg,
-					speed:2000
-				});
-				// _this.enableSubmitOrderButton();
-				window.location.reload();
-			}
-		});
-		// }
-	},
+	// payOrder: function(orderId){
+	// 	var $link = $(this);
+	// 	var $payInterface =  $('[name="xa-choseInterfaces"]:checked');
+	// 	var interfaceType = $payInterface.val();
+	// 	if(!interfaceType && parseFloat($('.xa-totalPrice').text())>0){
+	// 		$('body').alert({
+	// 			isShow: true,
+	// 			speed: 2000,
+	// 			info: '请使用优惠抵扣完成支付...'
+	// 		});
+	// 		return;
+	// 	}
+	// 	var interfaceId = $payInterface.attr('data-id');
+	// 	var args = {order_id: orderId};
+	// 	var _this = this;
+	// 	if (interfaceType != 9) {//支付方式为货到付款，则不提示“正在支付”
+	// 		$('body').alert({
+	// 			isShow: true,
+	// 			speed: 2000,
+	// 			info: '正在去支付…'
+	// 		});
+	// 	}
+	// 	W.getApi().call({
+	// 		app: 'webapp',
+	// 		api: 'project_api/call',
+	// 		method: 'post',
+	// 		args: _.extend({
+	// 			webapp_owner_id: W.webappOwnerId,
+	// 			module: 'mall',
+	// 			target_api: 'order/pay',
+	// 			interface_type: interfaceType,
+	// 			interface_id: interfaceId
+	// 		}, args),
+	// 		success: function(data) {
+	// 			order_id = data['order_id'];
+	// 			if (data['msg'] != null) {
+	// 				$('body').alert({
+	// 					isShow: true,
+	// 					speed: 2000,
+	// 					info: data['msg'] || '操作失败!'
+	// 				});
+	// 				// _this.enableSubmitOrderButton();
+	// 				window.location.reload();
+	// 			} else {
+	// 				window.location.href = data['url'];     
+	// 			}
+	// 		},
+	// 		error: function(resp) {
+	// 			var errMsg = null;
+	// 			if (resp.data) {
+	// 				errMsg = resp.data['msg'];
+	// 			}
+	// 			if (!errMsg) {
+	// 				errMsg = '操作失败!';
+	// 			}
+	// 			$('body').alert({
+	// 				isShow: true,
+	// 				info: errMsg,
+	// 				speed:2000
+	// 			});
+	// 			// _this.enableSubmitOrderButton();
+	// 			window.location.reload();
+	// 		}
+	// 	});
+	// 	// }
+	// },
 
 	doSubmitOrder: function() {
 		//提交表单
@@ -1456,7 +1456,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		$('body').alert({
 			isShow: true,
 			info:'正在提交订单',
-			speed: 200000
+			speed: 3000
 		});
 		this.submitOrder(args);
 	},

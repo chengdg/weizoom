@@ -45,7 +45,7 @@ WEIXIN_PAY_NOTIFY_POST_DATA = """
 
 def __do_weixin_pay(context, pay_url):
 	pay_url = '{}&code={}'.format(pay_url, time.time())
-	
+
 	pay_url_response = context.client.get(pay_url, follow=True)
 	html_page = pay_url_response.content
 
@@ -78,6 +78,10 @@ def __do_weixin_pay(context, pay_url):
 
 @when(u"{webapp_user_name}使用支付方式'{pay_interface_name}'进行支付")
 def step_impl(context, webapp_user_name, pay_interface_name):
+	# print("*"*80, 'pay_way')
+	# print(context.created_order_id)
+	# print("*"*120)
+
 	order = Order.objects.get(order_id=context.created_order_id)
 
 	data = {
@@ -86,16 +90,24 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		"target_api": "order/pay",
 		"order_id": order.id
 	}
-	url = '/workbench/jqm/preview/?woid=%s&module=mall&model=pay_interfaces&action=list&order_id=0&ignore_template=1' % context.webapp_owner_id
-	response = context.client.get(bdd_util.nginx(url), follow=True)
-	pay_interfaces = response.context['pay_interfaces']
+	# url = '/workbench/jqm/preview/?woid=%s&module=mall&model=pay_interfaces&action=list&order_id=0&ignore_template=1' % context.webapp_owner_id
+	# response = context.client.get(bdd_util.nginx(url), follow=True)
+	# pay_interfaces = response.context['pay_interfaces']
+	from mall.models import PayInterface, PAYTYPE2NAME
+	pay_interfaces = PayInterface.objects.all()
+
 	for pay_interface in pay_interfaces:
-		if pay_interface.name != pay_interface_name:
+		if PAYTYPE2NAME[pay_interface.type] != pay_interface_name:
 			continue
 
-		data['interface_type'] = pay_interface.type
-		data['interface_id'] = pay_interface.id
+		data.setdefault('interface_type', pay_interface.type)
+		data.setdefault('interface_id', pay_interface.id)
 		break
+
+	# print("*"*80, "pay_way")
+	# from pprint import pprint
+	# pprint(data)
+	# print("*"*120)
 	url = '/webapp/api/project_api/call/'
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)

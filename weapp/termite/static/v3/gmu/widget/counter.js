@@ -1,6 +1,6 @@
 /*
  * Jquery Mobile数量调节器插件
- * 
+ *
  *
  * 使用示例;
  * <input data-ui-role="orderCount" type="hidden" name="total_count" id="total_count" value="{{order.number}}" total_price_element=".tx_price" item_price="{{ product.price }}" total_postage_price="{{ product.postage }}" item_postage_price="{{ product.postage }}">
@@ -37,10 +37,10 @@
             this.$textValue.text(this.count);
 
             this.isEnable = true;
-            this.bindEvents(); 
-        }, 
- 
-        /** 
+            this.bindEvents();
+        },
+
+        /**
          * bindEvents: 绑定向上（向下）按钮的click事件的响应函数
          */
         bindEvents: function() {
@@ -59,7 +59,7 @@
         changeCount: function(delta) {
             var $up = this.$el.siblings('.wa-up');
             var $down = this.$el.siblings('.wa-down');
-     
+
             if (!this.isEnable) {
                 //被禁用，直接返回
                 this.$el.trigger('click-disabledCounter', this.count);
@@ -73,7 +73,7 @@
             }
             if (this.maxCount > 0) {
                 if(this.count >= this.maxCount && delta > 0) {
-                    //不能超过最大数量  
+                    //不能超过最大数量
                     this.$el.trigger('reach-max-count', this.maxCount);
                     return;
                 }
@@ -102,7 +102,7 @@
 
             this.$el.trigger('count-changed', this.count);
 
-            var borderColor = '#ccc';            
+            var borderColor = '#ccc';
 
             if(this.count == this.maxCount){
                 borderColor = "#e5e5e5";
@@ -137,9 +137,13 @@
                 var count = 1;
                 if (this.count >= this.maxCount && this.maxCount > 0) {
                     count = this.maxCount;
+                    xlog('change to ' + count);
+                    this.changeCountTo(count);
                 }
-                xlog('change to ' + count);
-                this.changeCountTo(count);
+                if (this.count == 1) {
+                    xlog('change to ' + count);
+                    this.changeCountTo(count);
+                }
             }
             return this;
         },
@@ -180,5 +184,5 @@
     $(function() {
         $('[data-ui-role="counter"]').counter();
     })
-    
+
 })(Zepto);

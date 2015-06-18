@@ -131,7 +131,7 @@ def step_impl(context, user):
 	order = Order.objects.all().order_by('-id')[0]
 	context.latest_order_id = order.id
 	client = context.client
-	response = context.client.get('/mall/editor/order/get/?order_id=%d' %(context.latest_order_id))
+	response = context.client.get('/mall/order_detail/get/?order_id=%d' %(context.latest_order_id))
 
 	order = response.context['order']
 	order.order_type = ORDER_TYPE2TEXT[order.type]
@@ -157,14 +157,15 @@ def step_impl(context, user):
 
 @When(u"{user}支付最新订单")
 def step_impl(context, user):
-	url = '/mall/editor/order_status/update/?order_id={}&action=pay'.format(context.latest_order_id)
+	url = '/mall/order/update/?order_id={}&action=pay'.format(context.latest_order_id)
 	context.client.get(url, HTTP_REFERER='/')
 
 
 @When(u"{user}对最新订单进行发货")
 def step_impl(context, user):
 	#点击发货:mall/editor/order_express/add/?order_id=87&express_company_name=shentong&express_number=123456789
-	response = context.client.get('/mall/editor/order_express/add/?order_id=%d&express_company_name=shentong&express_number=123456789&leader_name=%s&is_update_express=false' %(context.latest_order_id, user))
+	# url = '/mall/api/order_delivery/update/'
+	response = context.client.get('/mall/api/order_delivery/update/?order_id=%d&express_company_name=shentong&express_number=123456789&leader_name=%s&is_update_express=false' %(context.latest_order_id, user))
 
 
 # @Then(u"{user}通过后台管理系统可以看到订单状态为")
@@ -186,7 +187,7 @@ def step_impl(context, user):
 
 @When(u"{user}完成最新订单")
 def step_impl(context, user):
-	url = '/mall/editor/order_status/update/?order_id=%d&action=finish' %(context.latest_order_id)
+	url = '/mall/order/update/?order_id=%d&action=finish' %(context.latest_order_id)
 	response = context.client.get(url, HTTP_REFERER='/')
 
 

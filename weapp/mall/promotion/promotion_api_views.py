@@ -120,9 +120,10 @@ def get_promotions(request):
     start_date = request.GET.get('startDate', '')
     end_date = request.GET.get('endDate', '')
     type_str = request.GET.get('type', 'all')
+    coupon_id = request.GET.get('couponId','')
     promotion_type = PROMOTIONSTR2TYPE[type_str]
 
-    is_fetch_all_promotions = (not name) and (not bar_code) and (not start_date) and (not end_date) and (promotion_status == -1) and (promotion_type == 'all')
+    is_fetch_all_promotions = (not name) and (not bar_code) and (not start_date) and (not end_date) and (not coupon_id) and (promotion_status == -1) and (promotion_type == 'all')
     if is_fetch_all_promotions:
         #获取promotion列表
         if promotion_type == PROMOTION_TYPE_ALL:
@@ -151,6 +152,14 @@ def get_promotions(request):
         # if promotion_type != PROMOTION_TYPE_COUPON:
         promotions = __filter_promotions(request, promotions)
 
+        #
+        if coupon_id:
+            coupon_rule_id2promotion = dict([(promotion.detail_id, promotion) for promotion in promotions])
+            coupon = Coupon.objects.filter(coupon_id=coupon_id)
+            if coupon.count() > 0:
+                promotions = [coupon_rule_id2promotion[coupon[0].coupon_rule_id]]
+            else:
+                promotions = []
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -163,7 +172,6 @@ def get_promotions(request):
 
     #获取返回数据
     promotions.sort(lambda x,y: cmp(y.id, x.id))
-
     items = []
     for promotion in promotions:
         if promotion.detail.has_key('money'):
@@ -180,7 +188,6 @@ def get_promotions(request):
             "detail": promotion.detail,
             "products": []
         }
-
         if hasattr(promotion, 'products'):
             for product in promotion.products:
                 data["products"].append({
@@ -345,8 +352,7 @@ def finish_promotions(request):
     Promotion.objects.filter(owner=request.manager, id__in=ids).update(status=status)
     if promotion_type == PROMOTION_TYPE_COUPON:
         ruleIds = [promotion.detail_id for promotion in Promotion.objects.filter(owner=request.manager, id__in=ids)]
-        print ruleIds
-        CouponRule.objects.filter(owner=request.manager, id__in=ruleIds).update(is_active=False)
+        CouponRule.objects.filter(owner=request.manager, id__in=ruleIds).update(is_active=False, remained_count=0)
         Coupon.objects.filter(owner=request.manager, coupon_rule_id__in=ruleIds, status=COUPON_STATUS_UNGOT).update(status=COUPON_STATUS_Expired)
 
     if start == 'true':
@@ -355,7 +361,8 @@ def finish_promotions(request):
         #发送finish_promotion event
         from webapp.handlers import event_handler_util
         event_data = {
-           "id": ','.join(ids)
+           "id": ','.join(ids),
+           "type": promotion_type
         }
         event_handler_util.handle(event_data, 'finish_promotion')
 

@@ -387,9 +387,9 @@ class MemberGrade(models.Model):
 #===============================================================================
 # Member : 会员
 #===============================================================================
-SOURCE_SELF_SUB = 0
-SOURCE_MEMBER_QRCODE = 1
-SOURCE_BY_URL = 2
+SOURCE_SELF_SUB = 0  # 直接关注
+SOURCE_MEMBER_QRCODE = 1  # 推广扫码
+SOURCE_BY_URL = 2  # 会员分享
 class Member(models.Model):
 	token = models.CharField(max_length=255, db_index=True, unique=True)
 	webapp_id = models.CharField(max_length=16, db_index=True)
@@ -482,7 +482,7 @@ class Member(models.Model):
 	def username(self, username):
 		self.username_hexstr = byte_to_hex(username)
 
-	@property
+	@cached_property
 	def username_for_html(self):
 		if hasattr(self, '_username_for_html'):
 			return self._username_for_html
@@ -499,6 +499,17 @@ class Member(models.Model):
 			self._username_for_html = self.username_hexstr
 
 		return self._username_for_html
+
+	@cached_property
+	def username_truncated(self):
+		try:
+			username = unicode(self.username, 'utf8')
+			if len(username) <= 5:
+				return username
+			else:
+				return u'%s...' % username[:5]
+		except TypeError:
+			return self.username_for_html[:5]
 
 	@property
 	def friends(self):

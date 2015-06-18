@@ -94,7 +94,8 @@ def products_stocks(request):
 
 def pay_order(request):
 	"""
-	订单支付api
+	订单支付api, 获取【支付跳转路径】
+	避免使用，直接通过save_order方法返回【支付跳转路径】
 	"""
 	order_to_pay = None
 	#profile = request.user_profile
@@ -208,10 +209,11 @@ def save_order(request):
 	signal_responses = mall_signals.check_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
 	http_response = common_util.check_failed_signal_response(signal_responses)
 	if http_response:
-		print http_response
+		# print http_response
 		return http_response
 
 	order = None
+	pay_url = None
 	try:
 		#保存订单信息
 		order_info = {
@@ -229,6 +231,11 @@ def save_order(request):
 			'pay_interface': pay_interface,
 		}
 		order = mall_api.save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request)
+		if order.final_price > 0 and pay_interface != '-1':
+			# 处理 支付跳转路径
+			pay_interface = PayInterface.objects.get(owner_id=request.webapp_owner_id, type=pay_interface)
+			pay_url = pay_interface.pay(order, webapp_owner_id)
+
 		#删除购物车中的商品
 		if request.POST.get('is_order_from_shopping_cart', 'false') == 'true':
 			for product in products:
@@ -256,6 +263,8 @@ def save_order(request):
 			'id' : order.id,
 			'final_price' : round(order.final_price, 2)
 		}
+		if pay_url:
+			data['pay_url'] = pay_url
 
 	response = create_response(200)
 	response.data = data

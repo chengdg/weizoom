@@ -39,7 +39,7 @@ Scenario: 安装完整测试数据
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	When jobs已添加商品
 		"""
@@ -180,10 +180,10 @@ Scenario: 安装完整测试数据
 				"models": {
 					"S": {
 						"price": 6.0
-					}, 
+					},
 					"L": {
 						"price": 8.0
-					}, 
+					},
 					"M": {
 						"price": 7.0
 					}
@@ -246,7 +246,7 @@ Scenario: 安装完整测试数据
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	#促销活动
 	When jobs创建限时抢购活动
@@ -374,7 +374,7 @@ Scenario: 安装完整测试数据
 				"first_weight_price":30.00,
 				"added_weight_price":20.00
 			}]
-		}]	
+		}]
 		"""
 	#支付方式
 	Given jobs已添加支付方式
@@ -443,7 +443,7 @@ Scenario: 安装完整测试数据
 		"""
 	#bill收货地址
 	And bill设置jobs的webapp的默认收货地址
-	
+
 	# bill发消息
 	And bill在微信中向jobs的公众号发送消息'你好，这是bill发给jobs的消息01'
 	And bill在微信中向jobs的公众号发送消息'你好，这是bill发给jobs的消息02'
@@ -469,7 +469,7 @@ Scenario: 安装完整测试数据
 		}, {
 			"patterns": "keyword3",
 			"answer": "answer3"
-		}]	
+		}]
 		"""
 	When jobs创建分组
 		"""
@@ -506,7 +506,7 @@ Scenario: 安装完整测试数据
 		}, {
 			"patterns": "keyword3",
 			"answer": "answer3"
-		}]	
+		}]
 		"""
 	When bill关注jobs的公众号
 	And bill在微信中向jobs的公众号发送消息'你好，这是bill发给jobs的消息01'

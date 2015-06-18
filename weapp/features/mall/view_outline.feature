@@ -11,7 +11,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	When jobs已添加商品
 		"""
@@ -48,7 +48,7 @@ Background:
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	When jobs已添加支付方式
 		"""
@@ -95,7 +95,7 @@ Background:
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	When nokia已添加支付方式
 		"""
@@ -272,7 +272,7 @@ Scenario: 获得商铺首页的订单数量信息
 		"""
 
 
-@mall2 @mall.outline 
+@mall2 @mall.outline @zy_ui_1
 Scenario: 获得商铺首页的会员数量信息
 	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
 

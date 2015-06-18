@@ -59,6 +59,7 @@ def __create_coupons(couponRule, count, promotion=None):
 				owner = couponRule.owner,
 				coupon_id = coupon_id,
 				provided_time = promotion.start_date,
+				start_time = promotion.start_date,
 				expired_time = promotion.end_date,
 				money = couponRule.money,
 				coupon_rule_id = couponRule.id,
@@ -205,7 +206,9 @@ def get_records(request):
 	is_fetch_all_coupon = (not coupon_code) and (use_status == 'all') and (not member_name)
 	#处理排序
 	sort_attr = request.GET.get('sort_attr', '-id')
-	coupons = Coupon.objects.filter(owner=request.manager, coupon_rule_id=request.GET.get('id')).order_by(sort_attr)
+	coupon_rule_id = request.GET.get('id')
+	if coupon_rule_id:
+		coupons = Coupon.objects.filter(owner=request.manager, coupon_rule_id=coupon_rule_id).order_by(sort_attr)
 
 	#获取coupon所属的rule的name
 	id2rule = dict([(rule.id, rule) for rule in CouponRule.objects.filter(owner=request.manager)])

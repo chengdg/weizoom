@@ -27,7 +27,7 @@ def __add_weizoom_rule(context, weizoom_card):
     weizoom_card = __supplement_weizoom_card(weizoom_card)
     __process_activity_data(weizoom_card)
     context.client.post("/market_tools/weizoom_card/weizoom_card/create/", weizoom_card)
-    
+
 
 @when(u"{user}创建钱包")
 def step_impl(context, user):
@@ -76,19 +76,35 @@ def step_impl(context, user):
 
 @given(u"{user}已创建微众卡")
 def step_impl(context, user):
+    """
+    e.g.:
+    {
+        "cards":[{
+            "id":"0000001",
+            "password":"1234567",
+            "status":"未激活",
+            "price":5.00
+        },{
+            "id":"0000002",
+            "password":"1231231",
+            "status":"已过期",
+            "price":5.00
+        }]
+    }
+    """
     client = context.client
     user = client.user
     WeizoomCardRule.objects.filter(owner=user).delete()
     rule = WeizoomCardRule.objects.create(
         owner=user,
-        name='a', 
-        money=100, 
-        count=10, 
-        remark="", 
+        name='a',
+        money=100,
+        count=10,
+        remark="",
         expired_time="3000-12-12 00:00:00")
 
     weizoom_cards = json.loads(context.text)
-    for card in weizoom_cards:
+    for card in weizoom_cards.get('cards'):
         status, is_expired = _get_status(card['status'])
         WeizoomCard.objects.create(
             owner_id=user.id,
@@ -128,7 +144,7 @@ def _get_weizoom_card_log(expense_records):
         }
         data.append(item)
     return data
-        
+
 
 @then(u"{user}能获取微众卡'{weizoom_card_id}'")
 def step_impl(context, user, weizoom_card_id):
@@ -153,7 +169,13 @@ def step_impl(context, user, weizoom_card_id):
     if expected_json.get('log'):
         actual_data['log'] = expected_json.get('log')
         expected['log'] = _get_weizoom_card_log(expense_records)
-        
+
+    # print("*"*80, "能获取微众卡")
+    # from pprint import pprint
+    # pprint(expected)
+    # pprint(actual_data)
+    # print("*"*120)
+
     bdd_util.assert_dict(expected, actual_data)
 
 

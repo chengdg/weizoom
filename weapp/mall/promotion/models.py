@@ -52,11 +52,13 @@ PROMOTION_STATUS_NOT_START = 1
 PROMOTION_STATUS_STARTED = 2
 PROMOTION_STATUS_FINISHED = 3
 PROMOTION_STATUS_DELETED = 4
+PROMOTION_STATUS_DISABLE = 5
 PROMOTIONSTATUS2NAME = {
 	PROMOTION_STATUS_NOT_START: u'未开始',
 	PROMOTION_STATUS_STARTED: u'进行中',
 	PROMOTION_STATUS_FINISHED: u'已结束',
-	PROMOTION_STATUS_DELETED: u'已删除'
+	PROMOTION_STATUS_DELETED: u'已删除',
+	PROMOTION_STATUS_DISABLE: u'已失效'
 }
 class Promotion(models.Model):
 	owner = models.ForeignKey(User)
@@ -524,6 +526,7 @@ class Coupon(models.Model):
 	status = models.IntegerField(default=COUPON_STATUS_UNUSED) #优惠券状态
 	coupon_id = models.CharField(max_length=50) #优惠券号
 	provided_time = models.DateTimeField() #领取时间
+	start_time = models.DateTimeField() #优惠券有效期开始时间
 	expired_time = models.DateTimeField() #过期时间
 	money = models.DecimalField(max_digits=65, decimal_places=2) #金额
 	is_manual_generated = models.BooleanField(default=False) #是否手工生成

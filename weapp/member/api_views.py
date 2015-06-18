@@ -31,6 +31,7 @@ from core.restful_url_route import *
 
 COUNT_PER_PAGE = 20
 
+
 def __get_request_members_list(request):
 	#获取当前页数
 	cur_page = int(request.GET.get('page', '1'))
@@ -124,6 +125,7 @@ def __build_return_member_json(member):
 	return {
 		'id': member.id,
 		'username': member.username_for_html,
+		'username_truncated': member.username_truncated,
 		'user_icon': member.user_icon,
 		'grade_name': member.grade.name,
 		'integral': member.integral,
@@ -201,13 +203,9 @@ def update_integral(request):
 	return response.get_response()
 
 
-########################################################################
-# get_members: 获取member列表
-########################################################################
 @api(app='member', resource='members', action='get')
 @login_required
 def get_members(request):
-	sort_attr = request.GET.get('sort_attr', '-created_at')
 	pageinfo, request_members, total_count = __get_request_members_list(request)
 
 	# 构造返回数据
@@ -280,7 +278,7 @@ def get_member_follow_relations(request):
 		only_fans = '1'
 	else:
 		only_fans = '0'
-		
+
 	if data_value:
 		if data_value == 'shared':
 			follow_members = MemberFollowRelation.get_follow_members_for_shred_url(member_id)
@@ -299,7 +297,7 @@ def get_member_follow_relations(request):
 	return_follow_members_json_array = []
 	for follow_member in follow_members:
 		return_follow_members_json_array.append(__build_follow_member_basic_json(follow_member, member_id))
-	
+
 	response = create_response(200)
 	response.data = {
 		'items': return_follow_members_json_array,
@@ -530,7 +528,7 @@ def get_member_logs(request):
 	count_per_page = int(request.GET.get('count_per_page', 10))
 	cur_page = int(request.GET.get('page', '1'))
 	pageinfo, member_logs = paginator.paginate(member_logs, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-	data = [] 
+	data = []
 	for log in member_logs:
 		data.append(
 			{'event_type': log.event_type,

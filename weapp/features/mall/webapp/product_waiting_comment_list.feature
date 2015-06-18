@@ -319,6 +319,63 @@ Scenario: 1 bill 进入待评价列表，该列表中显示的是订单状态为
     }]
     """
 
+
+@mall @mall.webapp.comment 
+Scenario: 2 同一商品，下过两个订单，不同订单对同一商品的评价不会相互影响
+                例如：订单1，购买商品1，订单2，购买商品1，那么对订单1内的商品1评价完后，再次进入，还可以看到订单2的商品1，对其进行评价
+    
+    Given bill关注jobs的公众号
+    When bill访问jobs的webapp
+    And bill完成购买后成功获取订单列表
+    """
+        [{
+            "order_id": "1",
+            "status": "已完成",
+            "final_price": 10.00,
+            "products": [{
+                "name": "商品1",
+                "price": 10.00,
+                "count": 1
+            }]
+        },{
+            "order_id": "2",
+            "status": "已完成",
+            "final_price": 30.00,
+            "products": [{
+                "name": "商品1",
+                "price": 10.00,
+                "count": 1
+            },{
+                "name": "商品2",
+                "price": 20.00,
+                "count": 1
+            }]
+        }]
+    """
+    When bill完成订单'2'中'商品1'的评价包括'文字与晒图'
+    Then bill成功获取'待评价'列表
+    """
+        [{
+            "order_id": "1",
+            "status": "已完成",
+            "final_price": 10.00,
+            "products": [{
+                "name": "商品1",
+                "price": 10.00,
+                "count": 1
+            }]
+        },{
+            "order_id": "2",
+            "status": "已完成",
+            "final_price": 30.00,
+            "products": [{
+                "name": "商品2",
+                "price": 20.00,
+                "count": 1
+            }]
+        }]
+    """
+
 @mall2 @mall.webapp.comment.ee
 Scenario: 3 同一商品，不同规格进行评价，不会互相影响
     

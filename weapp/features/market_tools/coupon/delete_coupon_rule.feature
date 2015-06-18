@@ -1,99 +1,302 @@
-# __author__ : "崔帅帅"
-Feature: 删除优惠券规则
-	Jobs能通过管理系统删除"优惠券规则"
+# __author__ : "冯雪静"
+Feature: 删除优惠券
+	Jobs能通过管理系统删除已过期、已失效、未领取的"优惠券"
 
 Background:
 	Given jobs登录系统
-	And jobs已添加了优惠券规则
+	And jobs已添加商品
 		"""
-		[{
-			"name": "优惠券1",
-			"money": 1,
-			"expire_days": 1,
-			"using_limit": "无限制"
-		}, {
-			"name": "优惠券2",
-			"money": 2,
-			"expire_days": 2,
-			"using_limit": "满10元可以使用"
+		[ {
+			"name": "商品1",
+			"price": 200.00
+		},{
+			"name": "商品2",
+			"price": 200.00
 		}]
 		"""
-	Given bill登录系统
-	And bill已添加了优惠券规则
+	And jobs已添加了优惠券
 		"""
 		[{
-			"name": "优惠券1",
-			"money": 1,
-			"expire_days": 1,
-			"using_limit": "无限制"
+			"name": "全体券1",
+			"money": 1.00,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"coupon_id_prefix": "coupon1_id_"
 		}, {
-			"name": "优惠券2",
-			"money": 2,
-			"expire_days": 2,
-			"using_limit": "满10元可以使用"
+			"name": "单品券2",
+			"money": 10.00,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_",
+			"coupon_product": "商品1"
+		}, {
+			"name": "全体券3",
+			"money": 100.00,
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon3_id_"
+		}, {
+			"name": "单品券4",
+			"money": 1.00,
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon4_id_",
+			"coupon_product": "商品2"
 		}]
 		"""
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill领取jobs的优惠券
+		"""
+		[{
+			"name": "全体券1",
+			"coupon_ids": ["coupon1_id_2", "coupon1_id_1"]
+		}, {
+			"name": "单品券2",
+			"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
+		}, {
+			"name": "全体券3",
+			"coupon_ids": ["coupon3_id_2", "coupon3_id_1"]
+		}]
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'全体券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.00,
+				"status": "已过期",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.00,
+				"status": "已过期",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_3": {
+				"money": 1.00,
+				"status": "已过期",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon1_id_4": {
+				"money": 1.00,
+				"status": "已过期",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+	Then jobs能获得优惠券'单品券2'的码库
+		"""
+		{
+			"coupon2_id_1": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon2_id_2": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon2_id_3": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_4": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+	Then jobs能获得优惠券'全体券3'的码库
+		"""
+		{
+			"coupon3_id_1": {
+				"money": 100.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon3_id_2": {
+				"money": 100.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon3_id_3": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon3_id_4": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+	Then jobs能获得优惠券'单品券4'的码库
+		"""
+		{
+			"coupon4_id_1": {
+				"money": 1.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon4_id_2": {
+				"money": 1.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon4_id_3": {
+				"money": 1.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon4_id_4": {
+				"money": 1.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
 
-
-@market_tool.coupon @market_tool
-Scenario: 无优惠券时，可以删除优惠券规则
-	jobs添加"优惠券规则"后
-	1. 如果没有优惠券与之关联，则jobs能删除该优惠券
-	2. jobs的删除操作不影响其他用户的优惠券规则
+@mall2 @zy_cp1
+Scenario: 1 删除已过期的优惠券
+	jobs添加"优惠券"后，优惠券已过期
+	1. 如果优惠券没有被使用，可以删除已过期的优惠券
+	2. jobs的删除操作不影响会员的其他优惠券
 
 
 	Given jobs登录系统
-	Then jobs能获得优惠券规则'优惠券1'
-		'''
-		{
-			"name": "优惠券1"
-		}
-		'''
-	When jobs删除优惠券规则'优惠券1'
-	Then jobs能获得优惠券规则列表
-		'''
-		[{
-			"name": "优惠券2",
-			"money": 2,
-			"expire_days": 2,
-			"using_limit": "满10元可以使用"
-		}]
-		'''
-	Given bill登录系统
-	Then bill能获得优惠券规则列表
-		'''
-		[{
-			"name": "优惠券2",
-			"money": 2,
-			"expire_days": 2,
-			"using_limit": "满10元可以使用"
-		}, {
-			"name": "优惠券1",
-			"money": 1,
-			"expire_days": 1,
-			"using_limit": "无限制"
-		}]
-		'''
+	When jobs删除优惠券'全体券1'的码库
+	Then jobs能获得优惠券'全体券1'的码库
+		"""
+		[]
+		"""
+	When bill访问jobs的webapp
+	Then bill能获得webapp优惠券列表
+		"""
+		[
+			{
+				"coupon_id": "coupon2_id_1",
+				"money": 10.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon2_id_2",
+				"money": 10.00,
+				"status": "未使用"
+			},{
+				"coupon_id": "coupon3_id_1",
+				"money": 100.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon3_id_2",
+				"money": 100.00,
+				"status": "未使用"
+			}
+		]
+		"""
 
 
-@market_tool.coupon @market_tool
-Scenario: 已有优惠券时，不可删除优惠券规则
-	jobs添加"优惠券规则"后
-	1. 如果有优惠券与之关联，则jobs不能删除该优惠券
-	2. jobs的删除操作不影响其他用户的优惠券规则
-
+@mall2 @zy_cp2
+Scenario: 2 删除已失效的优惠券
+	jobs添加"优惠券规则"后，使优惠券失效后
+	1. 如果优惠券没有被领取和使用，可以删除已失效的优惠券
+	2. jobs的失效和删除操作不影响被领取的优惠券
 
 	Given jobs登录系统
-	When jobs手工为优惠券规则生成优惠券
-		'''
+	When jobs失效优惠券'单品券2'
+	Then jobs能获得优惠券'单品券2'的码库
+		"""
 		{
-			"coupon_rule": "优惠券1",
-			"count": 2
+			"coupon2_id_1": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon2_id_2": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon2_id_3": {
+				"money": 10.00,
+				"status": "已失效",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_4": {
+				"money": 10.00,
+				"status": "已失效",
+				"consumer": "",
+				"target": ""
+			}
 		}
-		'''
-	Then jobs能获得优惠券规则'优惠券1'
-		'''
+		"""
+	When jobs删除优惠券'单品券2'的码库
+	Then jobs能获得优惠券'单品券2'的码库
+		"""
 		{
-			"name": "优惠券1"
+			"coupon2_id_1": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon2_id_2": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
 		}
-		'''
+		"""
+
+
+
+@mall2 @zy_cp3
+Scenario: 3 删除未领取的优惠券
+jobs添加"优惠券规则"后
+	1. 如果优惠券没有被领取和使用，可以删除未领取的优惠券
+	2. jobs的删除操作不影响被领取的优惠券
+
+	Given jobs登录系统
+	When jobs删除优惠券'全体券3'的码库
+	Then jobs能获得优惠券'全体券3'的码库
+		"""
+		{
+			"coupon3_id_1": {
+				"money": 100.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon3_id_2": {
+				"money": 100.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""

@@ -166,7 +166,7 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 		today = datetime.today()
 		if coupon.expired_time < today:
 			return '该优惠券已过期', None
-		if coupon.provided_time > today:
+		if coupon.start_time > today:
 			return'该优惠券活动尚未开始', None
 		if coupon.status != promotion_models.COUPON_STATUS_UNUSED and coupon.status != promotion_models.COUPON_STATUS_UNGOT:
 			return '该优惠券已使用', None

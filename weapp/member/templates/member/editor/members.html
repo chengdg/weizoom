@@ -27,15 +27,15 @@
 			<!-- <a class="xui-tipBox fr">
 			如何对数据排序<b class="xui-tip">?</b></a> -->
 		</div>
-		<div 
-			data-ui-role="advanced-table" 
-			data-app="member" 
+		<div
+			data-ui-role="advanced-table"
+			data-app="member"
 			data-api="members/get"
 			data-template-id="#members-view"
-			data-enable-paginator="true" 
-			data-enable-sort="false" 
-			data-selectable="true" 
-			data-item-count-per-page="50" 
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="true"
+			data-item-count-per-page="50"
 			class="panel-body"
 		></div>
 		<div class="dropdown xui-operation update_dropdown">
@@ -46,7 +46,7 @@
 							全选
 					</label>
 				</span>
-				<div class="pr xui-inlineblock">	
+				<div class="pr xui-inlineblock">
 					<button type="button" class="pr btn btn-default dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 						添加到<span class="caret"></span>
 				   	</button>
@@ -104,23 +104,23 @@
 			<th  class="tx_sortable" style="width:10%" data-sort-attr='pay_times' >购买次数</th>
 			<th  class="tx_sortable" style="width:10%" data-sort-attr='integral' >拥有积分</th>
 			<th >分组</th>
-			<th  class="tx_sortable " style="width:10%" data-sort-attr='created_at' data-init-sort="-created_at" >加入时间</th>
+			<th  class="tx_sortable " style="width:12%" data-sort-attr='created_at' data-init-sort="-created_at" >加入时间&来源</th>
 			<th class="" style="width:10%">
 				操作
 			</th>
-			
+
 		</tr>
 		</thead>
 		<tbody>
-		
+
 		{{each(i, member) items}}
 		<tr data-id="${member.id}">
 			<td style="position:relative;">
-			
-				<div class="column_block xui-memberHeader">
+
+				<div class="column_block xui-memberHeader pr">
 					{{if member.is_subscribed == 0}}
-						<div class="xui-cancelCover tc" style="width:50%;background-color:rgba(0, 0, 0, 0.2); position:absolute;top:50%;margin-top:-6px; color:#fff;">
-						<span style="width:41px;width:41px;">已取消</span>
+						<div class="xui-cancelCover tc">
+						已取消
 						</div>
 					{{/if}}
 					<a href="/member/member_detail/edit/?id=${ member.id }">
@@ -129,7 +129,7 @@
 				</div>
 				<div class="column_block">
 					<div>
-					<a href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;">{{html member.username}}</a>
+					<a href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" title="{{html member.username}}">{{html member.username_truncated}}</a>
 				</div>
 			</td>
 			<td>
@@ -161,8 +161,11 @@
 			</td>
 			<td>
 				<div class="centerAlign">${ member.created_at }</div>
+				{{if member.source == 0}}<div class="">直接关注</div>{{/if}}
+				{{if member.source == -1}}<div class="">直接关注</div>{{/if}}
+				{{if member.source == 1}}<div class="xui-fromCode">推广扫码</div>{{/if}}
+				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
-			
 			<td>
 				<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">调等级</a></br>
 				<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a></br>
@@ -176,7 +179,7 @@
 </script>
 {% endverbatim %}
 
-<script type="text/javascript">	
+<script type="text/javascript">
 $(document).ready(function() {
 	$('#all').attr('checked', false);
 
@@ -203,10 +206,10 @@ $(document).ready(function() {
 		DATA_INTERVAL = '';
 	});
 	// 修改等级
-	$('body').delegate('.xa-update-grade', 'click', function(event){		
+	$('body').delegate('.xa-update-grade', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var member_id = $el.attr('data-id');
-		
+
 		var memberTagsUpdateView = W.getMemberTagsUpdateView({
 			width: 260,
 			title: '修改等级',
@@ -226,7 +229,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-update-tag', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var member_id = $el.attr('data-id');
-		
+
 		var memberTagsUpdateView = W.getMemberTagsUpdateView({
 			width: 260,
 			title: '修改分组',
@@ -247,10 +250,10 @@ $(document).ready(function() {
 	$('.update_dropdown').delegate('.update-grade', 'click', function(event){
 		var post_ids = [];
 		var grade_id = $(this).attr('data-id');
-	 	$('input.xa-select:checked').each(function(){ 
+	 	$('input.xa-select:checked').each(function(){
     		console.log($(this).parent().parent().attr('data-id'))
     		post_ids.push($(this).parent().parent().attr('data-id'))
-  			}); 
+  			});
 	 	if (grade_id && post_ids.length > 0) {
 	 		W.getApi().call({
 	            method: 'post',
@@ -271,10 +274,10 @@ $(document).ready(function() {
 	$('.update_dropdown').delegate('.update-tag', 'click', function(event){
 		var post_ids = [];
 		var tag_id = $(this).attr('data-id');
-	 	$('input.xa-select:checked').each(function(){ 
+	 	$('input.xa-select:checked').each(function(){
     		console.log($(this).parent().parent().attr('data-id'))
     		post_ids.push($(this).parent().parent().attr('data-id'))
-  			}); 
+  			});
 	 	if (tag_id && post_ids.length > 0) {
 	 		W.getApi().call({
 	            method: 'post',
@@ -297,7 +300,7 @@ $(document).ready(function() {
 
 		var $el = $(event.currentTarget);
 		var member_id = $el.attr('data-id');
-		
+
 		var memberIntegralUpdateView = W.getMemberIntegralUpdateView({
 			width: 310,
 			title: '调积分',
@@ -310,11 +313,11 @@ $(document).ready(function() {
 			memberId: member_id,
 		})
         memberIntegralUpdateView.render();
-		
+
 	});
 
 	// 导出
-	$('.panel-body').delegate('.xa-export', 'click', function(event){	
+	$('.panel-body').delegate('.xa-export', 'click', function(event){
 		var url = '/member/members/export/';
 		if (view.filter_value) {
 			url = url + '?filter_value='+view.filter_value;

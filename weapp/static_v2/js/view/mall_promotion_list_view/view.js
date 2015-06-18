@@ -48,6 +48,7 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 	},
 
 	finishPromotions: function($trs, promotionIds, start) {
+		var _this = this;
 		W.getApi().call({
 			method: 'post',
 			app: 'mall_promotion',
@@ -58,6 +59,7 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 				W.showHint('success', '结束成功!');
 				$trs.find('.xa-notFinishInfo').hide();
 				$trs.find('.xa-finishInfo').show();
+				$trs.find('.xa-remained-count').text("库存0");
 				$trs.css('background-color', 'yellow');
 				_.delay(function() {
 					$trs.css('background-color', '#FFF');
@@ -66,6 +68,7 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 					var promotion = this.table.getDataItem(promotionId);
 					promotion.set('status', '已结束');
 				}, this);
+				_this.table.reload();
 			},
 			error: function(resp) {
 				W.showHint('error', '结束失败!');
@@ -74,6 +77,7 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 	},
 
 	deletePromotions: function($trs, promotionIds) {
+		var _this = this;
 		W.getApi().call({
 			method: 'post',
 			app: 'mall_promotion',
@@ -88,6 +92,7 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 					var id = promotionIds[i];
 					$('tr[data-id="'+id+'"]').remove();
 				}
+				_this.table.reload();
 			},
 			error: function(resp) {
 				W.showHint('error', '删除失败!');

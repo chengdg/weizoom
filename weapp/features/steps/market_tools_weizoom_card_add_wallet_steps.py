@@ -23,7 +23,7 @@ text2status = {
 def __create_weizoom_card_wallet(context, wallets):
     WeizoomCardRule.objects.all().delete()
     WeizoomCard.objects.all().delete()
-    
+
     context.rule2wallet = {}
     for wallet in wallets:
         name = wallet['name']
@@ -56,7 +56,7 @@ def __create_weizoom_card_wallet(context, wallets):
 def step_impl(context, user):
     WeizoomCardRule.objects.all().delete()
     WeizoomCard.objects.all().delete()
-    
+
     wallets = json.loads(context.text)
     __create_weizoom_card_wallet(context, wallets)
 
@@ -87,33 +87,29 @@ def step_impl(context, user, wallet_name, number):
         'card_num': number
     }
     context.client.post('/market_tools/weizoom_card/api/weizoom_cards/append/', params)
-    
-    
+
+
 @when(u"{user}给id为'{card_id}'的微众卡激活")
 def step_impl(context, user, card_id):
-    card = WeizoomCard.objects.get(owner=context.client.user, weizoom_card_id=card_id)
-    params = {
-        'card_id': card.id,
-        'status': 0
-    }
-    context.client.post('/market_tools/weizoom_card/api/status/update/', params)
-    
-    
+    WeizoomCard.objects.filter(
+                               owner=context.client.user,
+                               weizoom_card_id=card_id
+    ).update(status=0)
+
+
 @when(u"{user}给id为'{card_id}'的微众卡停用")
 def step_impl(context, user, card_id):
-    card = WeizoomCard.objects.get(owner=context.client.user, weizoom_card_id=card_id)
-    params = {
-        'card_id': card.id,
-        'status': 3
-    }
-    context.client.post('/market_tools/weizoom_card/api/status/update/', params)
+    WeizoomCard.objects.filter(
+                               owner=context.client.user,
+                               weizoom_card_id=card_id
+    ).update(status=1)
 
 
 @then(u"{user}能获取微众卡钱包'{wallet_name}'")
 def step_impl(context, user, wallet_name):
     expected = json.loads(context.text)
     rule_id = context.rule2wallet[wallet_name]
-    
+
     params = {
         'count_per_page': 10000,
         'weizoom_card_rule_id': rule_id
@@ -121,7 +117,7 @@ def step_impl(context, user, wallet_name):
     wallet_data = WeizoomCardRule.objects.get(id=rule_id)
     response = context.client.get('/market_tools/weizoom_card/api/weizoom_cards/get/', params)
     card_data = json.loads(response.content)['data']
-    
+
     actual = {}
     actual['name'] = wallet_data.name
     actual['price'] = wallet_data.money
@@ -146,10 +142,10 @@ def step_impl(context, user, wallet_name):
             card_item['actions'] = u'["停用"]'
         cards.append(card_item)
     actual['cards'] = cards
-    
+
     bdd_util.assert_list(sorted(expected), sorted(actual))
-    
-    
+
+
 @then(u"{user}能获取微众卡钱包列表")
 def step_impl(context, user):
     expected = json.loads(context.text)
@@ -158,7 +154,7 @@ def step_impl(context, user):
     }
     response = context.client.get('/market_tools/weizoom_card/api/weizoom_card_rules/get/', params)
     wallet_data = json.loads(response.content)['data']
-    
+
     actual = []
     for wallet in wallet_data['items']:
         actual_item = {}

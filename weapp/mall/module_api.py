@@ -1916,6 +1916,8 @@ def update_order_status(user, action, order, request=None):
 
 	已知引用：
 	mobile_app/order_api_views.py
+	mall/order_views.py
+	services/cancel_not_pay_order_service/tasks.py
 	"""
 	order_id = order.id
 	operation_name = user.username

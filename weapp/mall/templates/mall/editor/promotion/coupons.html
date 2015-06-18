@@ -29,8 +29,9 @@
 		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">批量删除</a>
 		<a href="/mall/coupons/export/?rule_id={{ rule_id }}" class="btn btn-default ml10">导出所有</a>
 
-
+		{% if can_add_coupon %}
 		<a href="/mall_promotion/coupon/create/?rule_id={{ rule_id }}" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;添加库存</a>
+		{% endif %}
 	</div>
 	<div
 		data-ui-role="advanced-table"

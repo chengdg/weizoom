@@ -42,6 +42,7 @@ W.view.mall.PromotionFilterView = Backbone.View.extend({
         $('#end_date').val('');
         $('#promotion_status').val('-1');
         $('#promotion_type').val('all');
+        $('#coupon_id').val('');
         $('#coupon_promotion_type').val('-1');
     },
 
@@ -75,6 +76,9 @@ W.view.mall.PromotionFilterView = Backbone.View.extend({
         //商品编码
         var barCode = $.trim(this.$('#bar_code').val());
 
+        //优惠码
+        var couponId = $.trim(this.$('#coupon_id').val());
+
         //优惠券类型
         var couponPromotionType = this.$('#coupon_promotion_type').val() || 'all';
 
@@ -85,6 +89,7 @@ W.view.mall.PromotionFilterView = Backbone.View.extend({
             barCode: barCode,
             startDate: startDate,
             endDate: endDate,
+            couponId: couponId,
             couponPromotionType: couponPromotionType
         };
     }

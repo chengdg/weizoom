@@ -144,14 +144,36 @@
 /*
 *会员列表页面
 */
-
+.xui-memberListPage .xui-fromShare,
+.xui-memberListPage .xui-fromCode{
+	border-width: 1px;
+	border-style: solid;
+	display: inline-block;
+	width: 67px;
+	padding: 2px 0;
+}
+.xui-memberListPage .xui-fromShare{
+	border-color: #ED9611;
+	color:#ED9611;
+}
+.xui-memberListPage .xui-fromCode{
+	border-color: #22866E;
+	color:#22866E;
+}
 .xui-memberListPage .xui-productList td{
 	padding: 0px !important;
 }
 .xui-memberListPage  .xui-memberHeader{
 	margin-bottom: 5px;
 }
-
+.xui-memberListPage .xui-cancelCover{
+	width:50%;
+	background-color:rgba(0, 0, 0, 0.8);
+	position:absolute;
+	top:0;
+	color:#fff;
+	line-height:41px;
+}
 .xui-memberListPage .xui-productList td:nth-child(2){
  text-align: left;
   width: 50px;
@@ -178,9 +200,6 @@
 }
 .xui-memberListPage .xui-productList td:nth-child(9){
   width: 90px;
-}
-.xui-memberListPage .xui-productList td:nth-child(10){
- padding-left: 30px !important;
 }
 .xui-memberListPage .xui-productList td:nth-child(2)  a{
    color: #000;

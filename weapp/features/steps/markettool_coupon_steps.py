@@ -32,7 +32,10 @@ def __add_coupon_rule(context, coupon_rule, webapp_owner_name):
 		data['is_valid_restrictions'] = '1'
 		using_limit = coupon_rule["using_limit"]
 		end = using_limit.find(u'元')
-		data['valid_restrictions'] = using_limit[1:end]
+		if end == -1:
+			data['valid_restrictions'] = -1
+		else:
+			data['valid_restrictions'] = int(using_limit[1:end])
 	if "coupon_product" in coupon_rule:
 		data['limit_product'] = 1
 		webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
@@ -59,7 +62,7 @@ def __get_member_by_openid(webapp_id, openid):
 	social_account = SocialAccount.objects.get(openid=openid)
 	relation = MemberHasSocialAccount.objects.get(account_id=social_account.id, webapp_id=webapp_id)
 	member = Member.objects.get(id=relation.member_id)
-	
+
 	return member
 
 
@@ -161,16 +164,18 @@ def step_impl(context, user_name, coupon_rule_name):
 
 @then(u'{user_name}能获得优惠券规则列表')
 def step_impl(context, user_name):
-	url = '/market_tools/coupon/'
-	response = context.client.get(url)
-	coupon_rules = response.context['coupon_rules']
+	response = context.client.get('/mall_promotion/api/promotions/get/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1')
+	coupon_rules = json.loads(response.content)['data']['items']
 
+	actual = []
 	for coupon_rule in coupon_rules:
-		coupon_rule.expire_days = coupon_rule.valid_days
-		coupon_rule.using_limit = u'无限制' if coupon_rule.valid_restrictions == -1 else (u'满%d元可以使用' % coupon_rule.valid_restrictions)
+		rule = {}
+		rule["name"] = coupon_rule["name"]
+		rule["type"] = "单品券" if coupon_rule["detail"]["limit_product"] else "全店通用券"
+		rule["money"] = coupon_rule["detail"]["money"]
+		actual.append(rule)
 
 	expected = json.loads(context.text)
-	actual = coupon_rules
 	bdd_util.assert_list(expected, actual)
 
 
@@ -195,6 +200,15 @@ def step_impl(context, user_name, coupon_rule_name):
 	url = '/market_tools/coupon/coupon_rule/delete/?rule_id=%d' % coupon_rule.id
 
 	response = context.client.get(url)
+
+
+@When(u"{user_name}删除优惠券'{coupon_rule_name}'的码库")
+def step_coupon_delete(context, user_name, coupon_rule_name):
+	from django.db.models import Q
+	coupon_rule = CouponRule.objects.get(name=coupon_rule_name)
+	Coupon.objects.filter(Q(coupon_rule_id=coupon_rule.id) and
+	                      ~Q(status=0)
+	                      ).delete()
 
 
 @when(u"{user_name}手工为优惠券规则生成优惠券")
@@ -232,44 +246,60 @@ def step_impl(context, user_name):
 				Coupon.objects.filter(coupon_id=coupon.coupon_id).update(coupon_id=expected_coupon_ids[index])
 
 
-@then(u"{user_name}能获得优惠券列表")
+@then(u"{user_name}获得优惠券规则列表")
 def step_impl(context, user_name):
-	url = '/market_tools/coupon/api/records/get/'
-	response = context.client.get(url)
+	"""
+
+	e.g.:
+		[{
+			"coupon_rule": "过期优惠券规则",
+			"money": "1.00",
+			"create_date": "前天",
+			"expire_date": "昨天",
+			"status": "已结束"
+		},{
+			"coupon_rule": "优惠券规则3",
+			"money": "10.00",
+			"create_date": "前天",
+			"expire_date": "后天",
+			"status": "进行中"
+		}]
+
+	"""
+	url = '/mall_promotion/api/promotions/get/'
+	the_kwargs = {
+		"type": "coupon",
+	}
+	response = context.client.get(url, the_kwargs)
 	coupons = json.loads(response.content)['data']['items']
 
 	for coupon in coupons:
-		coupon['coupon_rule'] = coupon['rule_name']
-		coupon['create_date'] = coupon['provided_time']
-		coupon['expire_date'] = coupon['expired_time']
-		if coupon['status'] == COUPON_STATUS_UNUSED:
-			coupon['status'] = u'未使用'
-		elif coupon['status'] == COUPON_STATUS_USED:
-			coupon['status'] = u'已使用'
-		elif coupon['status'] == COUPON_STATUS_EXPIRED:
-			coupon['status'] = u'已过期'
-		else:
-			coupon['status'] = u'unknown'
+		coupon['coupon_rule'] = coupon['detail']['name']
+		coupon['create_date'] = coupon['start_date']
+		coupon['expire_date'] = coupon['end_date']
 
-		if coupon['is_manual_generated']:
-			coupon['target'] = u'手工'
-		else:
-			coupon['target'] = coupon['member']['username_for_html']
+		# if coupon['is_manual_generated']:
+		# 	coupon['target'] = u'手工'
+		# else:
+		# 	coupon['target'] = coupon['member']['username_for_html']
 
-		coupon['consumer'] = coupon['consumer']['username_for_html']
-		coupon['money'] = float(coupon['money'])
+		# coupon['consumer'] = coupon['consumer']['username_for_html']
+		coupon['money'] = coupon['detail']["money"]
 
 	#处理expected中的参数
-	today = datetime.now()
+	today = datetime.today()
+	today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+
 	tomorrow = today + timedelta(1)
 	day_after_tomorrow = tomorrow + timedelta(1)
 	yesterday = today - timedelta(1)
 	day_before_yesterday = yesterday - timedelta(1)
-	today = today.strftime('%m月%d日').decode('utf-8')
-	tomorrow = tomorrow.strftime('%m月%d日').decode('utf-8')
-	day_after_tomorrow = day_after_tomorrow.strftime('%m月%d日').decode('utf-8')
-	yesterday = yesterday.strftime('%m月%d日').decode('utf-8')
-	day_before_yesterday = day_before_yesterday.strftime('%m月%d日').decode('utf-8')
+	t_format = "%Y-%m-%d %H:%M"
+	today = today.strftime(t_format).decode('utf-8')
+	tomorrow = tomorrow.strftime(t_format).decode('utf-8')
+	day_after_tomorrow = day_after_tomorrow.strftime(t_format).decode('utf-8')
+	yesterday = yesterday.strftime(t_format).decode('utf-8')
+	day_before_yesterday = day_before_yesterday.strftime(t_format).decode('utf-8')
 	name2date = {
 		u'今天': today,
 		u'明天': tomorrow,
@@ -293,9 +323,9 @@ def step_impl(context, user_name, coupon_rule_name):
 	db_coupon_rule = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=coupon_rule_name)
 	url = '/mall_promotion/api/coupons/get/?id=%d' % db_coupon_rule.id
 	response = context.client.get(url)
-	
+
 	bdd_util.assert_api_call_success(response)
-	
+
 	actual = {}
 	coupons = json.loads(response.content)['data']['items']
 	for coupon in coupons:
@@ -311,15 +341,15 @@ def step_impl(context, user_name, coupon_rule_name):
 @when(u"{user_name}为会员发放优惠券")
 def step_impl(context, user_name):
 	__send_coupons(context, user_name, u'会员')
-	
-	
+
+
 @when(u"{user}更新优惠券排行榜时间")
 def step_impl(context, user):
 	coupon_saller_data = json.loads(context.text)
 	url = '/market_tools/coupon/api/coupon_saller_data/update/'
 	response = context.client.post(url, coupon_saller_data[0])
 
- 
+
 @then(u"{user}能获得优惠券排行榜时间")
 def step_impl(context, user):
 	url = '/market_tools/coupon/'
@@ -339,7 +369,7 @@ def step_impl(context, user):
 @when(u"{webapp_user_name}领取{webapp_owner_name}的优惠券")
 def step_impl(context, webapp_user_name, webapp_owner_name):
 	infos = json.loads(context.text)
-	
+
 	for info in infos:
 		coupon_rule = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=info['name'])
 		for coupon_id in info['coupon_ids']:
@@ -350,4 +380,14 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			#bdd_util.assert_api_call_success(response)
 			#coupon = response.context['coupons'][0]
 			#Coupon.objects.filter(id=coupon.id).update(coupon_id=coupon_id)
-	
+
+
+@when(u"{webapp_owner}失效优惠券'{coupon_rule_name}'")
+def step_disable_coupon_rule(context, webapp_owner, coupon_rule_name):
+	promotion = Promotion.objects.get(name=coupon_rule_name)
+	args = {
+		'ids[]': [promotion.id,],
+		'type': 'coupon'
+	}
+	url = '/mall_promotion/api/promotions/finish/'
+	context.client.post(url, args)

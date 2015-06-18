@@ -68,8 +68,8 @@
                                 </div>
                                 {% else %}
                                     {% for has_product in order.get_products %}
-                                    <div class="clearfix pt10 pb10 xui-selectedProductList">
-                                        <div class="xui-selectedProductList-productImg">
+                                    <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
+                                        <div class="xui-selectedProductList-productImg disTc">
                                             {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
                                              <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}" />
                                             {% else %}
@@ -77,7 +77,7 @@
                                             {% endifequal%}
 
                                         </div>
-                                        <div class="xui-selectedProductList-productInfo">
+                                        <div class="xui-selectedProductList-productInfo disTc vt pl5">
                                             <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
                                             {% if has_product.get_specific_model %}
                                             <div class="em8 clearfix c9 pt10">
@@ -173,15 +173,15 @@
                                 </div>
                                 {% else %}
                                     {% for has_product in order.get_products %}
-                                    <div class="clearfix pt10 pb10 xui-btLine xui-selectedProductList">
-                                        <div class="xui-selectedProductList-productImg">
+                                    <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
+                                        <div class="xui-selectedProductList-productImg disTc">
                                             {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
                                              <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
                                             {% else %}
                                              <img src="{{has_product.product.thumbnails_url}}" />
                                             {% endifequal%}
                                         </div>
-                                        <div class="xui-selectedProductList-productInfo">
+                                        <div class="xui-selectedProductList-productInfo disTc vt pl5">
                                             <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
                                             {% if has_product.get_specific_model %}
                                             <div class="em8 clearfix c9 pt10">
@@ -208,7 +208,7 @@
                                     </div>
                                     {% endfor %}
                                 {% endif %}
-                                <div class="pr15 xui-bottomBtn tl">
+                                <div class="pr15 xui-bottomBtn tl xui-tPLine">
                                      <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
                                      <span class="xui-button">
                                         <a href="javascript:void(0);" class="xui-forPay-btn xui-cancel update_order_cancel tc" data-id="{{order.id}}">取消订单</a>
@@ -257,15 +257,15 @@
                                 </div>
                             {% else %}
                                 {% for has_product in order.get_products %}
-                                <div class="clearfix pt10 pb10 xui-btLine xui-selectedProductList">
-                                    <div class="xui-selectedProductList-productImg">
+                                <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
+                                    <div class="xui-selectedProductList-productImg disTc">
                                         {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
                                          <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
                                         {% else %}
                                          <img src="{{has_product.product.thumbnails_url}}" />
                                         {% endifequal%}
                                     </div>
-                                    <div class="xui-selectedProductList-productInfo">
+                                    <div class="xui-selectedProductList-productInfo disTc vt pl5">
                                         <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
                                         {% if has_product.get_specific_model %}
                                         <div class="em8 clearfix c9 pt10">
@@ -292,7 +292,7 @@
                                 </div>
                                 {% endfor %}
                             {% endif %}
-                            <div class="pr15 xui-bottomBtn tl">
+                            <div class="pr15 xui-bottomBtn tl xui-tPLine">
                                 <span class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></span>
                             </div>
                         </a>
@@ -338,8 +338,8 @@
                                 </div>
                                 {% else %}
                                     {% for has_product in order.get_products %}
-                                    <div class="clearfix pt10 pb10 xui-btLine xui-selectedProductList">
-                                        <div class="xui-selectedProductList-productImg">
+                                    <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
+                                        <div class="xui-selectedProductList-productImg disTc">
                                             {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
                                              <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
                                             {% else %}
@@ -347,7 +347,7 @@
                                              {% endifequal %}
 
                                         </div>
-                                        <div class="xui-selectedProductList-productInfo">
+                                        <div class="xui-selectedProductList-productInfo disTc vt pl5">
                                             <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
                                             {% if has_product.get_specific_model %}
                                             <div class="em8 clearfix c9 pt10">
@@ -374,7 +374,7 @@
                                     </div>
                                     {% endfor %}
                                 {% endif %}
-                                 <div class="pr15 xui-bottomBtn tl">
+                                 <div class="pr15 xui-bottomBtn tl xui-tPLine">
                                     <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
                                     <span class="xui-button">
                                         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>

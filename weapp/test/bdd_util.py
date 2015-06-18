@@ -359,3 +359,13 @@ def get_product_review(order_code, product_name):
 def get_product_by(product_name):
     product = mall_models.Product.objects.get(name=product_name)
     return product
+
+
+def get_coupon(coupon_rule_name, member):
+	"""
+	根据优惠券规则名称返回对应de优惠券
+	"""
+	from mall.promotion.models import CouponRule, Coupon
+	coupon_rule = CouponRule.objects.get(name=coupon_rule_name)
+	return Coupon.objects.get(member_id=member.id, coupon_rule_id=coupon_rule.id)
+

@@ -128,6 +128,30 @@ def step_impl(context, webapp_user_name):
 
 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
 def step_impl(context, webapp_user_name, webapp_owner_name):
+	"""
+	最近修改: yanzhao
+	e.g.:
+		{
+			"ship_area": "",
+			"ship_name": "bill",
+			"ship_address": "",
+			"ship_tel": "",
+			"customer_message": "",
+			"integral": "10",
+			"integral_money": "10",
+			"weizoom_card": [{"card_name":"", "card_pass": ""}],
+			"coupon": "coupon_1",
+			"date": ""
+			"products": [
+				{
+					"count": "",
+					"name": "",
+					"promotion": {"name": ""},
+					integral: ""
+				},...
+			]
+		}
+	"""
 	url = '/webapp/api/project_api/call/'
 	if hasattr(context, 'caller_step_purchase_info'):
 		args = context.caller_step_purchase_info
@@ -267,7 +291,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		"ship_tel": args.get('ship_tel', "11111111111"),
 		"is_use_coupon": "false",
 		"coupon_id": 0,
-		"coupon_coupon_id": "",
+		# "coupon_coupon_id": "",
 		"message": args.get('customer_message', ''),
 		"group2integralinfo": json.JSONEncoder().encode(group2integralinfo),
 		"card_name": '',
@@ -296,10 +320,11 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	# 	data['integral_%s' % product_model_id] = integral
 
 	#填充优惠券信息
-	coupon_id = args.get('coupon', None)
-	if coupon_id:
+	# 根据优惠券规则名称填充优惠券ID
+	coupon = args.get('coupon', None)
+	if coupon:
 		data['is_use_coupon'] = 'true'
-		data['coupon_id'] = coupon_id
+		data['coupon_id'] = coupon
 
 	#填充积分信息
 	# integral = args.get('integral', None)
@@ -313,10 +338,23 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	# 	data['integral'] = get_use_integral(webapp_user_name, context.webapp_id, data)
 
 	# 访问下订单的API
+	# print("*"*80, "consumer buy producer goods")
+	# from pprint import pprint
+	# pprint(data)
+	# print("*"*120)
+
 	response = context.client.post(url, data)
 	context.response = response
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
+
 	response_json = json.loads(context.response.content)
+
+	# print("*"*80, "bill购买jobs的商品")
+	# from pprint import pprint
+	# pprint(response_json['data'])
+	# print("*"*120)
+
+
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
 		context.created_order_id = response_json['data']['order_id']
@@ -331,6 +369,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.product_counts = product_counts
 	context.product_model_names = product_model_names
 	context.webapp_owner_name = webapp_owner_name
+
 
 @when(u"微信用户批量消费{webapp_owner_name}的商品")
 def step_impl(context, webapp_owner_name):

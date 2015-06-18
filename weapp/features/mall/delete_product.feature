@@ -12,7 +12,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	And jobs已添加商品
 		"""
@@ -28,10 +28,10 @@ Background:
 		}, {
 			"name": "商品4",
 			"category": "分类2"
-		}]	
+		}]
 		"""
 
-@mall @mall.product
+@mall2 @mall.product
 Scenario: 删除商品
 	Jobs添加一组商品后，能删除单个商品。
 	删除后：
@@ -42,35 +42,102 @@ Scenario: 删除商品
 		"""
 		[{"name":"商品4"}, {"name":"商品3"}, {"name":"商品2"}, {"name":"商品1"}]
 		"""
-	And jobs能获取商品分类信息
+	And jobs能获取商品分类列表
 		"""
-		[{"name":"分类1", "product_count":3}, {"name":"分类2", "product_count":3}, {"name":"分类3", "product_count":0}]
+		[
+		{
+			"name":"分类1",
+			"products":
+			[
+				{"name": "商品3"},
+				{"name": "商品2"},
+				{"name": "商品1"}
+			]
+		}, {
+			"name":"分类2",
+			"products": [
+				{"name": "商品4"},
+				{"name": "商品2"},
+				{"name": "商品1"}
+			]
+		}, {
+			"name":"分类3",
+			"products":[]
+		}]
 		"""
-	When jobs删除已存在的商品'商品3'
+	When jobs永久删除商品'商品3'
 	Then jobs能获取商品列表
 		"""
 		[{"name":"商品4"}, {"name":"商品2"}, {"name":"商品1"}]
 		"""
-	And jobs能获取商品分类信息
+	And jobs能获取商品分类列表
 		"""
-		[{"name":"分类1", "product_count":2}, {"name":"分类2", "product_count":3}, {"name":"分类3", "product_count":0}]
+		[
+			{
+				"name":"分类1",
+				"products":[
+					{"name": "商品2"},
+					{"name": "商品1"}
+				]
+			},
+			{
+				"name":"分类2",
+				"products": [
+					{"name": "商品4"},
+					{"name": "商品2"},
+					{"name": "商品1"}
+				]
+			},
+			{
+				"name":"分类3",
+				"products": []
+			}
+		]
 		"""
-	When jobs删除已存在的商品'商品2'
+	When jobs永久删除商品'商品2'
 	Then jobs能获取商品列表
 		"""
 		[{"name":"商品4"}, {"name":"商品1"}]
 		"""
-	And jobs能获取商品分类信息
+	And jobs能获取商品分类列表
 		"""
-		[{"name":"分类1", "product_count":1}, {"name":"分类2", "product_count":2}, {"name":"分类3", "product_count":0}]
+		[
+		{
+			"name":"分类1",
+			"products":[
+					{"name": "商品1"}
+				]
+		},
+		{
+			"name":"分类2",
+			"products": [
+					{"name": "商品4"},
+					{"name": "商品1"}
+				]
+		},
+		{
+			"name":"分类3",
+			"products": []
+		}]
 		"""
-	When jobs删除已存在的商品'商品1'
-	When jobs删除已存在的商品'商品4'
+	When jobs永久删除商品'商品1'
+	When jobs永久删除商品'商品4'
 	Then jobs能获取商品列表
 		"""
 		[]
 		"""
-	And jobs能获取商品分类信息
+	And jobs能获取商品分类列表
 		"""
-		[{"name":"分类1", "product_count":0}, {"name":"分类2", "product_count":0}, {"name":"分类3", "product_count":0}]
+		[{
+			"name":"分类1",
+			"products": []
+		},
+		{
+			"name":"分类2",
+			"products": []
+		},
+		{
+			"name":"分类3",
+			"products": []
+		}]
 		"""

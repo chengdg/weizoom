@@ -482,3 +482,75 @@ Scenario: 3 bill在下单购买jobs的商品后，jobs发货方式为"不需要�
 			}]
 		}]
 		"""
+
+@mall @mall.webapp @mall.pay_order 
+Scenario: 4 bill 在不同时段下订单，订单列表按下订单的时间倒序排列
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		'''
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		'''
+	Then bill成功创建订单
+		"""
+		{
+			"order_time": "2015-05-04 16:11:12",
+			"order_id": "20150504161112",
+			"status": "待支付",
+			"final_price": 10.00,
+			"products": [{
+				"name": "商品1",
+				"price": 10.00,
+				"count": 1
+			}]
+		}
+		"""
+	When bill购买jobs的商品
+		'''
+		{
+			"products": [{
+				"name": "商品2",
+				"count": 1
+			}]
+		}
+		'''
+	Then bill成功创建订单
+		"""
+		{
+			"order_time": "2015-05-03 16:11:12",
+			"order_id": "20150503161112",
+			"status": "待支付",
+			"final_price": 20.00,
+			"products": [{
+				"name": "商品2",
+				"price": 20.00,
+				"count": 1
+			}]
+		}
+		"""
+	Then bill可以看到订单列表
+		"""
+		[{
+			"order_time": "2015-05-04 16:11:12",
+			"status": "待支付",
+			"price": 10.00,
+			"products_count": 1,
+			"products":[{
+				"img_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+				"product_name": "商品1"
+			}]
+		},{
+			"order_time": "2015-05-03 16:11:12",
+			"status": "待支付",
+			"price": 20.00,
+			"products_count": 1,
+			"products":[{
+				"img_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+				"product_name": "商品2"
+			}]
+		}]
+		"""
