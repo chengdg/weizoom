@@ -50,7 +50,7 @@ def find_answer_for(user_profile, query):
 
 	#处理部分匹配
 	for (pattern, rule) in pattern2rule_sub_match.items():
-		if query in pattern:
+		if pattern in query:
 			rule.patterns = pattern  #记录此次命中的关键词
 			return rule
 

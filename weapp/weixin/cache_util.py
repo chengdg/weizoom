@@ -65,12 +65,15 @@ def get_auto_qa_message_material_for_cache(user_profile, query):
 	def inner_func():
 		response_rule = qa_util.find_answer_for(user_profile, query.lower())
 		webapp_id = user_profile.webapp_id
-		if not response_rule:
+	
+	 	if not response_rule:
 			#user_profile = UserProfile.objects.get(webapp_id=webapp_id)
 			webapp_owner_id = user_profile.user_id
 			msg = u"获得user('{}')对应的material_news构建cache失败，query:{}"\
 					.format(webapp_owner_id, query)
 			watchdog_info(msg, user_id=webapp_owner_id)
+			#add by bert None 需要保存吗？
+			return response_rule
 
 		return {
 				'keys': [
@@ -80,12 +83,13 @@ def get_auto_qa_message_material_for_cache(user_profile, query):
 			}
 	return inner_func
 
+
 def get_auto_qa_message_material(user_profile, query):
 	if not query or query == '':
 		return None
 	key = 'auto_qa_message_webapp_id_%s_query_%s' % (user_profile.webapp_id, query.lower())
-	reply_rule = cache_util.get_from_cache(key, get_auto_qa_message_material_for_cache(user_profile, query))
 
+	reply_rule = cache_util.get_from_cache(key, get_auto_qa_message_material_for_cache(user_profile, query))
 	return _parse_rule(user_profile, reply_rule)
 
 def _parse_rule(user_profile, reply_rule):
