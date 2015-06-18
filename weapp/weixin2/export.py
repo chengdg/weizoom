@@ -46,11 +46,6 @@ FIRST_NAVS = [{
     'inner_name': 'mp_user',
     'permission': ''
 }, {
-    'name': u'账号信息',
-    'url': '/account/',
-    'inner_name': '',
-    'permission': ''
-}, {
     'name': u'百宝箱',
     'url': '/apps/',
     'inner_name': '',
