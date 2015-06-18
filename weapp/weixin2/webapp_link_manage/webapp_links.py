@@ -100,6 +100,7 @@ class WebappItemLinks(resource.Resource):
 					# 优惠券
 					data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
 					data['valid'] = u'{} 至 {}'.format(item.start_date.strftime("%Y-%m-%d %H:%M"), item.end_date.strftime("%Y-%m-%d %H:%M"))
+					data['link'] = menu_item['link_template'].format(item.detail['id'])
 
 				if link_type == 'activity':
 					# 活动
