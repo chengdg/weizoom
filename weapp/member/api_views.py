@@ -124,7 +124,7 @@ def __build_return_member_json(member):
 	from mall.models import Order
 	return {
 		'id': member.id,
-		'username': member.username_for_html,
+		'username': member.username_for_title,
 		'username_truncated': member.username_truncated,
 		'user_icon': member.user_icon,
 		'grade_name': member.grade.name,

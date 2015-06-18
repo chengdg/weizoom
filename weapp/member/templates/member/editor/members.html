@@ -115,7 +115,7 @@
 
 		{{each(i, member) items}}
 		<tr data-id="${member.id}">
-			<td style="position:relative;">
+			<td style="position:relative;" title='{{html member.username}}'>
 
 				<div class="column_block xui-memberHeader pr">
 					{{if member.is_subscribed == 0}}
@@ -129,7 +129,7 @@
 				</div>
 				<div class="column_block">
 					<div>
-					<a href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" title="{{html member.username}}">{{html member.username_truncated}}</a>
+					<a href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
 				</div>
 			</td>
 			<td>

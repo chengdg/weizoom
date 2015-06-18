@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-__author__ = 'chuter'
+# __author__ = 'chuter'
+import re
 
 from datetime import datetime
 
 
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
-from django.db.models import signals, F, Sum
+from django.db.models import signals, Sum
 from django.utils.functional import cached_property
 
 from account.models import UserProfile
@@ -494,17 +494,27 @@ class Member(models.Model):
 
 		try:
 			#解决用户名本身就是字节码串导致不能正常转换得问题，例如ae
-			self._username_for_html.decode('utf-8')
-		except:
+			self._username_for_html.decode('utf8')
+		except TypeError:
 			self._username_for_html = self.username_hexstr
 
 		return self._username_for_html
 
 	@cached_property
+	def username_for_title(self):
+		try:
+			username = unicode(self.username_for_html, 'utf8')
+			username = re.sub('<[^<]+?>', '', username)
+			return username
+		except TypeError:
+			return self.username_for_html
+
+	@cached_property
 	def username_truncated(self):
 		try:
-			username = unicode(self.username, 'utf8')
-			if len(username) <= 5:
+			username = unicode(self.username_for_html, 'utf8')
+			_username = re.sub('<[^<]+?>', '', username)
+			if len(_username) <= 5:
 				return username
 			else:
 				return u'%s...' % username[:5]
