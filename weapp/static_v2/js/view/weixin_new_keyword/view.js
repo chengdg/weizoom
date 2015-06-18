@@ -92,7 +92,7 @@ W.view.weixin.NewKeywordView = Backbone.View.extend({
 	},
 
 	onClickMistinessRadio: function() {
-		this.md = "部分匹配";
+		this.md = "模糊匹配";
 		this.type = 1;
 	},
 
