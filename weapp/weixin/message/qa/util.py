@@ -19,8 +19,10 @@ def find_answer_for(user_profile, query):
 	rules = list(Rule.objects.filter(owner=user_profile.user).order_by('-created_at'))
 
 	#允许部分匹配的列表
+	pattern2rule_sub_match_key = []
 	pattern2rule_sub_match = {}
 	#完全匹配的规则列表
+	pattern2rule_not_sub_match_key = []
 	pattern2rule_not_sub_match = {}
 	for rule in rules:
 		try:
@@ -33,26 +35,39 @@ def find_answer_for(user_profile, query):
 
 				if is_sub_match == 1:
 					pattern2rule_sub_match[pattern.strip().lower()] = rule
+					pattern2rule_sub_match_key.append(pattern.strip().lower())
 				else:
 					pattern2rule_not_sub_match[pattern.strip().lower()] = rule
+					pattern2rule_not_sub_match_key.append(pattern.strip().lower())
 		except:
 			patterns = rule.patterns.split('|')
 			for pattern in patterns:
 				if pattern == '':
 					continue
+				pattern2rule_not_sub_match_key.append(pattern.strip().lower())
 				pattern2rule_not_sub_match[pattern.strip().lower()] = rule
 
 	#先处理完全匹配
-	for (pattern, rule) in pattern2rule_not_sub_match.items():
+	for pattern in pattern2rule_not_sub_match_key:
 		if pattern == query:
+			rule = pattern2rule_not_sub_match[pattern]
 			rule.patterns = pattern  #记录此次命中的关键词
-			return rule
+	 		return rule
+	# for (pattern, rule) in pattern2rule_not_sub_match.items():
+	# 	if pattern == query:
+	# 		rule.patterns = pattern  #记录此次命中的关键词
+	# 		return rule
 
 	#处理部分匹配
-	for (pattern, rule) in pattern2rule_sub_match.items():
+	for pattern in pattern2rule_sub_match_key:
 		if pattern in query:
+			rule = pattern2rule_sub_match[pattern]
 			rule.patterns = pattern  #记录此次命中的关键词
 			return rule
+	# for (pattern, rule) in pattern2rule_sub_match.items():
+	# 	if pattern in query:
+	# 		rule.patterns = pattern  #记录此次命中的关键词
+	# 		return rule
 
 	return None
 
