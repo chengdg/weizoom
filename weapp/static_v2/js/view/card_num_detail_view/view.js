@@ -163,7 +163,7 @@ W.view.card.numDetailFilter = Backbone.View.extend({
                 numberOfMonths: 1,
                 dateFormat: 'yy-mm-dd',
                 timeFormat: '',
-                closeText: '关闭',
+                closeText: '确定',
                 prevText: '&#x3c;上月',
                 nextText: '下月&#x3e;',
                 monthNames: ['一月','二月','三月','四月','五月','六月',

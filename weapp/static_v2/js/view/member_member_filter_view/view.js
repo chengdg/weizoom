@@ -292,7 +292,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
                 minuteText: "分钟",
                 //dateFormat: format,
                 dateFormat: 'yy-mm-dd',
-                closeText: '关闭',
+                closeText: '确定',
                 prevText: '&#x3c;上月',
                 nextText: '下月&#x3e;',
                 monthNames: ['一月','二月','三月','四月','五月','六月',
