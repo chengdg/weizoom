@@ -93,12 +93,12 @@ def finish_promotion(request0, args):
 		for promotion in promotions:
 			if promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
 				coupon_rule_ids.append(promotion.detail_id)
-		promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids).update(remained_count=0)
+		promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids).update(remained_count=0, is_active=False)
 	else:
 		if promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
 			promotion_models.Promotion.objects.filter(id__in=promotion_ids).update(status=promotion_models.PROMOTION_STATUS_DISABLE)
 			promotion_detail_ids = [promotion.detail_id for promotion in promotion_models.Promotion.objects.filter(id__in=promotion_ids)]
-			promotion_models.CouponRule.objects.filter(id__in=promotion_detail_ids).update(remained_count=0)
+			promotion_models.CouponRule.objects.filter(id__in=promotion_detail_ids).update(remained_count=0, is_active=False)
 			watchdog_info(u'将promotion(%s)状态改为PROMOTION_STATUS_DISABLE' % promotion_ids)
 		else:
 			promotion_models.Promotion.objects.filter(id__in=promotion_ids).update(status=promotion_models.PROMOTION_STATUS_FINISHED)

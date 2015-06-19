@@ -28,7 +28,7 @@ def step_impl(context, webapp_user_name, user):
 def _save_coupon(user, coupon_data):
 	coupon_price = coupon_data.get('coupon_amount')
 	rule = CouponRule.objects.create(
-		owner=user, 
+		owner=user,
 		name=coupon_data.get('coupon_name'),
 		valid_days=120,
 		money=coupon_price,
@@ -39,6 +39,7 @@ def _save_coupon(user, coupon_data):
 		owner=user,
 		coupon_rule=rule,
 		provided_time=datetime.now(),
+		start_time=datetime.now(),
 		expired_time=datetime.now() + timedelta(10),
 		coupon_id=coupon_data.get('coupon_id'),
 		money=coupon_price

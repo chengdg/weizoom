@@ -60,6 +60,7 @@ def _save_coupon(user, coupon_data):
 		owner=user,
 		coupon_rule=rule,
 		provided_time=datetime.now(),
+		start_time=datetime.now(),
 		expired_time=datetime.now() + timedelta(10),
 		coupon_id=coupon_data.get('coupon_code'),
 		money=coupon_price

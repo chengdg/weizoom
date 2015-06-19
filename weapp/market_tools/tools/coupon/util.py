@@ -131,6 +131,7 @@ def create_coupons(owner, rule_id, count, member_id=0, coupon_record_id=0):
 					member_id = member_id,
 					coupon_id = coupon_id,
 					provided_time = today,
+					start_time = promotion.start_date,
 					expired_time = promotion.end_date,
 					money = coupon_rule.money,
 					coupon_rule_id = coupon_rule.id,

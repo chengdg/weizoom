@@ -89,8 +89,8 @@
 			</td>
 			<td>
 				<a href="../../coupons/get?id=${ promotion.detail.id }">码库</a>
-				{{if promotion.status == '已失效' }}
-					&nbsp;&nbsp;<a href="javascript:void(0);" class="xa-delete">删除</a>
+				{{if promotion.status == '已结束' }}
+					&nbsp;-&nbsp;<a href="javascript:void(0);" class="xa-delete">删除</a>
 				{{/if}}
 				{{if promotion.status != '已结束' && promotion.status != '已失效'}}
 				<span class="xa-notFinishInfo">&nbsp;-&nbsp;

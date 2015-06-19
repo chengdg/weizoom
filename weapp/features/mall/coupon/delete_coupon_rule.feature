@@ -300,3 +300,62 @@ jobs添加"优惠券规则"后
 			}
 		}
 		"""
+
+
+Scenario: 4 删除已过期的优惠券规则
+jobs添加"优惠券"后，优惠券已过期
+	1. jobs可以删除已过期的优惠券规则
+	2. jobs的删除操作不影响其他优惠券规则
+	3. jobs的删除操作不影响会员的其他优惠券
+
+	Given jobs登录系统
+	When jobs删除优惠券'全体券1'
+	Then jobs能获得优惠券
+		"""
+		[{
+			"name": "单品券2",
+			"money": 10.00,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_",
+			"coupon_product": "商品1"
+		}, {
+			"name": "全体券3",
+			"money": 100.00,
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon3_id_"
+		}, {
+			"name": "单品券4",
+			"money": 1.00,
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon4_id_",
+			"coupon_product": "商品2"
+		}]
+		"""
+	When bill访问jobs的webapp
+	Then bill能获得webapp优惠券列表
+		"""
+		[
+			{
+				"coupon_id": "coupon2_id_1",
+				"money": 10.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon2_id_2",
+				"money": 10.00,
+				"status": "未使用"
+			},{
+				"coupon_id": "coupon3_id_1",
+				"money": 100.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon3_id_2",
+				"money": 100.00,
+				"status": "未使用"
+			}
+		]
+		"""
