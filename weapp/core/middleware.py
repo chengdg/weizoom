@@ -187,8 +187,8 @@ class UserAgentMiddleware(object):
 		if request.META['REMOTE_ADDR'] == '127.0.0.1':
 			return None
 		
-		if not settings.MODE == 'deploy':
-			return None
+		# if not settings.MODE == 'deploy':
+		# 	return None
 
 		if is_request_for_weixin(request):
 			return None
