@@ -14,10 +14,11 @@ from account.models import UserProfile
 from account.social_account.models import SocialAccount
 from weixin.user.models import WeixinUser
 
-from watchdog.utils import watchdog_fatal
+from watchdog.utils import watchdog_fatal, watchdog_error
 from market_tools.tools.coupon import models as coupon_model
 
 from core.emojicons_util import encode_emojicons_for_html
+from core.exceptionutil import unicode_full_stack
 
 from utils.string_util import hex_to_byte, byte_to_hex
 
@@ -495,7 +496,9 @@ class Member(models.Model):
 		try:
 			#解决用户名本身就是字节码串导致不能正常转换得问题，例如ae
 			self._username_for_html.decode('utf8')
-		except TypeError:
+		except:
+			error_msg = u"用户名:{}; utf8解码失败, cause:\n{}".format(self._username_for_html, unicode_full_stack())
+			watchdog_error(error_msg, 'mall')
 			self._username_for_html = self.username_hexstr
 
 		return self._username_for_html
@@ -506,7 +509,9 @@ class Member(models.Model):
 			username = unicode(self.username_for_html, 'utf8')
 			username = re.sub('<[^<]+?>', '', username)
 			return username
-		except TypeError:
+		except:
+			error_msg = u"用户名:{}; utf8编码失败, cause:\n{}".format(self.username_for_html, unicode_full_stack())
+			watchdog_error(error_msg, 'mall')
 			return self.username_for_html
 
 	@cached_property
@@ -518,7 +523,9 @@ class Member(models.Model):
 				return username
 			else:
 				return u'%s...' % username[:5]
-		except TypeError:
+		except:
+			error_msg = u"用户名:{}; utf8编码失败, cause:\n{}".format(self.username_for_html, unicode_full_stack())
+			watchdog_error(error_msg, 'mall')
 			return self.username_for_html[:5]
 
 	@property
