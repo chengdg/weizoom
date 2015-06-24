@@ -23,6 +23,10 @@
                 var url = _this.$el.attr('data-url');
                 url = url.replace(/(^\s*)|(\s*$)/g,'');
                 return url;
+            },
+            getDataId: function(_this) {
+                var id = _this.$el.attr('data-id');
+                return id;
             }
         },
 		_create : function() {
@@ -37,7 +41,11 @@
             var url = this.url;
             var height;
             if(this.url) {
-                this.$button = $('<a href="'+url+'">关注我们可查看账户积分、红包、优惠券等！<i class="xui-icon xui-icon-rightarrow"></i></a>');
+                if (this.setting.getDataId(this) == '124') {
+                    this.$button = $('<a href="'+url+'">点击此处关注未来广场官方微信哦<i class="xui-icon xui-icon-rightarrow"></i></a>');
+                } else {
+                    this.$button = $('<a href="'+url+'">关注我们可查看账户积分、红包、优惠券等！<i class="xui-icon xui-icon-rightarrow"></i></a>');
+                }
                 this.$el.html(this.$button);
                 height = this.setting.isShowCover(this) ? '100%' : '60px';
             }
