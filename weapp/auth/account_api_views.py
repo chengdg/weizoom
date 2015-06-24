@@ -30,6 +30,7 @@ from core import paginator
 import export
 from core.restful_url_route import *
 from core.jsonresponse import create_response
+from watchdog.utils import watchdog_error
 
 
 COUNT_PER_PAGE = 20
@@ -277,7 +278,7 @@ def update_account(request):
 	#更新user
 	User.objects.filter(id=user_id).update(first_name=request.POST['name'])
 
-	#更新<department, user>关系 
+	#更新<department, user>关系
 	department_id = request.POST['department']
 	relation = DepartmentHasUser.objects.get(owner=request.manager, user_id=user_id)
 	if relation.department_id != department_id:
@@ -310,3 +311,26 @@ def update_account(request):
 
 	response = create_response(200)
 	return response.get_response()
+
+@api(app='auth', resource='account_password', action='update')
+@login_required
+def update_account_password(request):
+	id = request.POST.get("id", None)
+	password = request.POST.get("password", None)
+	if id and password:
+		try:
+			sub_account = User.objects.get(id=id)
+			sub_profile = sub_account.get_profile()
+			if sub_profile.manager_id == request.manager.id:
+				sub_account.set_password(password)
+				sub_account.save()
+			else:
+				watchdog_error(u"所需修改密码的子帐号(id:%s)不属于当前管理帐号(manager_id:%s)" % (id, str(sub_profile.manager_id)), "mall")
+				return create_response(500).get_response()
+		except:
+			watchdog_error(u"需要修改的子帐号(id:%s)不存在" % id, "mall")
+			return create_response(500).get_response()
+		return create_response(200).get_response()
+	else:
+		watchdog_error(u"所需修改的子帐号ID或者password不存在", "mall")
+		return create_response(500).get_response()

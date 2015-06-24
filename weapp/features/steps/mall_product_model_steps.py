@@ -87,7 +87,7 @@ def __add_product_model_property(context, model_property):
 			value['pic_url'] = ''
 		value['id'] = property_id
 		response = context.client.post('/mall/api/product_model_property_value/create/', value)
-		bdd_util.assert_api_call_success(response)		
+		bdd_util.assert_api_call_success(response)
 
 
 @given(u"{user}已添加商品规格")
@@ -110,7 +110,7 @@ def step_impl(context, user):
 ###########################################################################################
 def __get_model_property_from_web_page(context, property_name):
 	model_property = ProductModelProperty.objects.get(owner_id=context.webapp_owner_id, name=property_name, is_deleted=False)
-	
+
 	response = context.client.get('/mall/editor/product_model_property/update/?id=%d' % model_property.id)
 	actual = {}
 	model_property = response.context['product_model_property']
@@ -121,7 +121,7 @@ def __get_model_property_from_web_page(context, property_name):
 	for property_value in property_values:
 		actual['values'].append({
 			"name": property_value.name,
-			"image": property_value.pic_url 
+			"image": property_value.pic_url
 		})
 
 	return actual
@@ -133,7 +133,7 @@ def step_impl(context, user, product_model_property_name):
 	actual = __get_model_property_from_web_page(context, product_model_property_name)
 
 	bdd_util.assert_dict(expected, actual)
-		
+
 
 @then(u"{user}能获取商品规格列表")
 def step_impl(context, user):
@@ -153,7 +153,7 @@ def step_impl(context, user):
 		for property_value in property_values:
 			data['values'].append({
 				"name": property_value.name,
-				"image": property_value.pic_url 
+				"image": property_value.pic_url
 			})
 		actual.append(data)
 

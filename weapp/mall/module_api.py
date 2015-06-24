@@ -708,6 +708,7 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 	"""
 	获取商品的详细信息
 	"""
+
 	from cache import webapp_cache
 	try:
 		product = webapp_cache.get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id)

@@ -17,7 +17,7 @@ def step_impl(context, user):
 	client = context.client
 	context.article_categories = json.loads(context.text)
 	for article_category in context.article_categories:
-		data = article_category  
+		data = article_category
 		response = client.post('/cms/editor/category/create/', data)
 		time.sleep(1)
 
@@ -27,7 +27,7 @@ def step_impl(context, user):
 	client = context.client
 	context.article_categories = json.loads(context.text)
 	for article_category in context.article_categories:
-		data = article_category  
+		data = article_category
 		response = client.post('/cms/editor/category/create/', data)
 
 
@@ -60,7 +60,7 @@ def step_impl(context, user):
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	response = client.get('/cms/api/categories/get/?version=1&sort_attr=-created_at&count_per_page=15&page=1')					
+	response = client.get('/cms/api/categories/get/?version=1&sort_attr=-created_at&count_per_page=15&page=1')
 	data = json.loads(response.content)['data']
 	expected = json.loads(context.text)
 	actual = data['items']

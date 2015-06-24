@@ -44,7 +44,7 @@ def step_impl(context, user):
 @then(u"{user}能获取关键词自动回复规则'{rule_patterns}'")
 def step_impl(context, user, rule_patterns):
 	existed_rule = Rule.objects.get(patterns=rule_patterns)
-	
+
 	expected = json.loads(context.text)
 
 	response = context.client.get('/new_weixin/api/keyword_rules/?_method=get&id=%d' % existed_rule.id)
@@ -54,7 +54,7 @@ def step_impl(context, user, rule_patterns):
 		if len(rule['answer']) > 0:
 			rule['answer'] = rule['answer'][0]['content']
 	except:
-		pass	
+		pass
 
 	try:
 		if len(rule['patterns']) > 0:
@@ -69,7 +69,7 @@ def step_impl(context, user, rule_patterns):
 		"type": "news" if rule['type'] == NEWS_TYPE else 'text'
 	}
 	bdd_util.assert_dict(expected, actual)
-	
+
 
 @then(u"{user}无法获取关键词自动回复规则'{rule_patterns}'")
 def step_impl(context, user, rule_patterns):
@@ -78,7 +78,7 @@ def step_impl(context, user, rule_patterns):
 	context.client = bdd_util.login(user)
 
 	context.tc.assertEquals(0, Rule.objects.filter(owner=context.client.user, patterns=rule_patterns).count())
-	
+
 
 @then(u"{user}能获取关键词自动回复规则列表")
 def step_impl(context, user):
@@ -89,7 +89,7 @@ def step_impl(context, user):
 
 	response = client.get('/new_weixin/keyword_rules/')
 	rules = response.context['rules']
-	
+
 	actual = []
 	for rule in rules:
 		answers = rule['answer']
@@ -141,7 +141,7 @@ def step_impl(context, user):
 
 	response = client.get('/new_weixin/follow_rules/')
 	print response.context['rule']
-	
+
 	rule = response.context['rule']
 	if rule == None:
 		actual = {
@@ -156,7 +156,7 @@ def step_impl(context, user):
 				rule.answer = answers[0]['content']
 		except:
 			pass
-		
+
 		actual = {
 			"answer": rule['answer']['content'],
 			"material_id": rule['material_id'],
@@ -232,7 +232,7 @@ def step_impl(context, user):
 				rule['answer'] = answers[0]['content']
 		except:
 			pass
-		
+
 
 		actual.append({
 			"answer": rule['answer'],
@@ -245,7 +245,7 @@ def step_impl(context, user):
 
 	expected = json.loads(context.text)
 	__process_unmatch_rule(expected)
-	
+
 	bdd_util.assert_dict(expected, actual[0])
 
 

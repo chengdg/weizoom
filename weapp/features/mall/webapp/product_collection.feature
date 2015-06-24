@@ -82,7 +82,7 @@ Scenario: 收藏单个无规格商品
 		[]
 		"""
 
-@mall2 @weapp.mall.collect.product
+@mall2 @weapp.mall.collect.product @zy_cp02
 Scenario: 收藏多个商品，包括无规格和有规格的商品
 	jobs添加商品后
 	1. bill能在webapp中将jobs添加的商品收藏

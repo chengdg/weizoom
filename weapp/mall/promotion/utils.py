@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # __author__: zwidny 整理
+import random
 from datetime import datetime
 from django.db.models import F
 
@@ -66,3 +67,8 @@ def award_coupon_for_member(coupon_rule_info, member):
     """
     rule = promotion_models.CouponRule.objects.get(id=coupon_rule_info.id)
     consume_coupon(rule.owner, rule.id, member.id)
+
+
+def coupon_id_maker(a, b):
+    random_args_value = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+    return '%03d%04d%s' % (a, b, ''.join(random.sample(random_args_value, 6)))

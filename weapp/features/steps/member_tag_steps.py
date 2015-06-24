@@ -9,7 +9,7 @@ from features.testenv.model_factory import *
 
 from django.test.client import Client
 from mall.models import *
-from modules.member.models import * 
+from modules.member.models import *
 
 @given(u"{user}登录系统")
 def step_impl(context, user):

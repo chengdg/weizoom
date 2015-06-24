@@ -12,14 +12,14 @@ def __supplement_activity(activity):
     activity_prototype = {
         "name": u"活动报名",
         "start_date": u"2014-06-16",
-        "end_date": u"2014-06-19",    
+        "end_date": u"2014-06-19",
         "detail": u"<p>343434<br/></p>",
         "is_non_member": u"非会员可参与",
         "is_enable_offline_sign": u"启用线下签到",
         "prize_source": u"500",
         "prize_type": u"3",
         "item_text_data_100000": u"",
-        "item_text_data_99999": u"",    
+        "item_text_data_99999": u"",
         "item_text_mandatory_100000": u"必填",
         "item_text_mandatory_99999": u"必填",
         "item_text_title_100000": u"手机号",
@@ -37,7 +37,7 @@ def __add_activity(context, activity):
     activity = __supplement_activity(activity)
     __process_activity_data(activity)
     context.client.post("/market_tools/activity/activity/create/", activity)
-    
+
 
 #######################################################################
 # __process_activity_data: 转换一个报名的数据
@@ -47,18 +47,18 @@ def __process_activity_data(activity):
         activity['is_non_member'] = 1
     else:
          activity['is_non_member'] = 0
-         
+
     if activity['is_enable_offline_sign'] == u'启用线下签到':
         activity['is_enable_offline_sign'] = 1
     else:
          activity['is_enable_offline_sign'] = 0
-    
+
     if activity['item_text_mandatory_100000'] == u'必填':
         activity['item_text_mandatory_100000'] = 1
     else:
          activity['item_text_mandatory_100000'] = 0
-         
-    
+
+
 
 @when(u"{user}添加活动报名")
 def step_impl(context, user):
@@ -84,7 +84,7 @@ def step_impl(context, user):
     expected = json.loads(context.text)
 
     bdd_util.assert_list(expected, actual_data)
-    
+
 
 @given(u"{user}已添加'活动报名'")
 def step_impl(context, user):

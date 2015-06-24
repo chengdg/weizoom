@@ -40,7 +40,7 @@ def __add_shengjing_course(context, course):
     __process_shengjing_course(course)
     url = '/apps/shengjing/?module=study_plan&resource=course&action=create'
     context.client.post(url, course)
-    
+
 
 
 @when(u"{user}添加盛景课程")
@@ -67,7 +67,7 @@ def step_impl(context, user):
 
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual_data)
-    
+
 @then(u"{user}能获取课程{course_name}的详情")
 def step_impl(context, user, course_name):
     id = ShengjingCourseConfig.objects.get(name=course_name).id
@@ -98,5 +98,5 @@ def step_impl(context, user):
 @when(u"{user}删除盛景课程'{course_name}'")
 def step_impl(context, user, course_name):
     course = ShengjingCourse.objects.get(name=course_name)
-    url = '/apps/shengjing/study_plan/api/course/delete/' 
+    url = '/apps/shengjing/study_plan/api/course/delete/'
     context.client.get(url, {'id': course.id})

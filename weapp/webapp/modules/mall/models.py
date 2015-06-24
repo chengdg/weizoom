@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
-# """@package webapp.modules.mall.models
 
+raise DeprecationWarning(
+    "'webapp.modules.mall.models' is deprecated in favor of 'mall.models'. "
+    "Please use 'mall.models' instead!")
+
+# """@package webapp.modules.mall.models
 # """
 # from datetime import datetime
 
@@ -1211,13 +1215,13 @@
 # 			error_msg = ''
 # 			reply_response = ''
 # 			order_payment_info = None
-		
+
 # 		#兼容改价
 # 		try:
 # 			order_id = order_id.split('-')[0]
 # 		except:
 # 			pass
-		
+
 # 		return {
 # 			'order_id': order_id,
 # 			'is_success': is_trade_success,

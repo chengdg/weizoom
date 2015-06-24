@@ -16,18 +16,18 @@ urlpatterns = patterns('',
 	(r'^$', workspace_views.show_webapp),
 	(r'^template/$', workspace_views.edit_template),
 	(r'^preview/$', workspace_views.preview_webapp),
-	
+
 	#workspace
 	(r'^workspaces/$', workspace_views.show_workspaces),
 	(r'^workspace/delete/(\d+)/$', workspace_views.delete_workspace),
 	#(r'^workspace_data/edit/$', workspace_views.edit_workspace_data),
 	(r'^workspace_template/set/$', workspace_views.set_workspace_template),
-	
+
 	#project
 	(r'^projects/$', project_views.show_projects),
 	(r'^project/edit/(\d+)/$', project_views.show_workbench),
 	(r'^project/delete/(\d+)/$', project_views.delete_project),
-	
+
 	#modules
 	#(r'^modules/$', views.list_modules),
 	#(r'^module/add/$', views.add_module),
@@ -46,7 +46,7 @@ urlpatterns = patterns('',
 	(r'^api/', apiurl('webapp')),
 
 	# modules
-	url(r'^mall/', include('webapp.modules.mall.urls')),
+	url(r'^mall/', include('mall.urls')),
 	url(r'^user_center/', include('webapp.modules.user_center.urls')),
 	url(r'^cms/', include('webapp.modules.cms.urls')),
 

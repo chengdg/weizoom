@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import random
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, F
 
@@ -13,6 +12,7 @@ from core import search_util
 from modules.member.module_api import get_member_by_id_list
 from modules.member.models import WebAppUser
 from mall.models import Order
+from mall.promotion.utils import coupon_id_maker
 
 from models import *
 
@@ -47,28 +47,32 @@ def __create_coupons(couponRule, count, promotion=None):
 	"""
 	创建未使用的优惠券
 	"""
-	random_args_value = ['1','2','3','4','5','6','7','8','9','0']
 	i = 0
 	if not promotion:
 		promotion = Promotion.objects.filter(type=PROMOTION_TYPE_COUPON, detail_id=couponRule.id)[0]
 
+	a = couponRule.owner.id
+	b = couponRule.id
+
+	# 创建未使用的优惠券
 	while i < count:
-		try:
-			coupon_id = '%03d%04d%s' % (couponRule.owner.id, couponRule.id, ''.join(random.sample(random_args_value, 6)))
-			new_coupon = Coupon.objects.create(
-				owner = couponRule.owner,
-				coupon_id = coupon_id,
-				provided_time = promotion.start_date,
-				start_time = promotion.start_date,
-				expired_time = promotion.end_date,
-				money = couponRule.money,
-				coupon_rule_id = couponRule.id,
-				is_manual_generated = False,
-				status = COUPON_STATUS_UNGOT
-			)
-			i += 1
-		except:
-			continue
+	 	# 生成优惠券ID
+		coupon_id = coupon_id_maker(a, b)
+		while Coupon.objects.filter(coupon_id=coupon_id):
+			coupon_id = coupon_id_maker(a, b)
+		new_coupon = Coupon.objects.create(
+			owner = couponRule.owner,
+			coupon_id = coupon_id,
+			provided_time = promotion.start_date,
+			start_time = promotion.start_date,
+			expired_time = promotion.end_date,
+			money = couponRule.money,
+			coupon_rule_id = couponRule.id,
+			is_manual_generated = False,
+			status = COUPON_STATUS_UNGOT
+		)
+		i += 1
+
 
 @api(app='mall_promotion', resource='coupon_rules', action='create')
 @login_required

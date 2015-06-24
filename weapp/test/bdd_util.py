@@ -307,7 +307,6 @@ def get_date(str):
 
 	return today + timedelta(delta)
 
-
 def get_date_str(str):
 	date = get_date(str)
 	return date.strftime('%Y-%m-%d')

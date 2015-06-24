@@ -1,5 +1,9 @@
 # # -*- coding: utf-8 -*-
 
+raise DeprecationWarning(
+    "'webapp.modules.mall.urls' is deprecated in favor of 'mall.urls'. "
+    "Please use 'mall.urls' instead!")
+
 from django.conf.urls import *
 
 # import views
@@ -24,7 +28,7 @@ urlpatterns = patterns('',
 
 # 	(r'^api/productcategory/display_index/update/$', api_views.update_productcategory_display_index),
 # 	(r'^api/categories/get/$', api_views.get_categories),
-# 	(r'^editor/category_product/delete/(\d+)/$', views.category_has_product_delete),	
+# 	(r'^editor/category_product/delete/(\d+)/$', views.category_has_product_delete),
 # 	# MODULE END: productcategory
 
 
@@ -37,9 +41,9 @@ urlpatterns = patterns('',
 # 	(r'^api/product_display_index/update/$', api_views.update_product_display_index),
 # 	(r'^api/products/get/$', api_views.get_products),
 # 	(r'^api/category_selectable_products/get/$', api_views.get_category_selectable_products),
-	
 
-	
+
+
 # 	# MODULE END: product
 # 	# Termite GENERATED END: url
 
@@ -91,7 +95,7 @@ urlpatterns = patterns('',
 # 	(r'^api/thanks_card_secret/update/$', api_views.reset_thanks_secret),
 
 # 	(r'^integral/$', views.integral_settings),
-	
+
 # 	#面板
 # 	(r'^editor/panel/$',  views.list_panel),
 # 	(r'^api/orders/$', api_views.get_orders),

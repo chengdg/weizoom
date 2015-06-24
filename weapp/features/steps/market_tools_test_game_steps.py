@@ -87,7 +87,7 @@ def __process_test_game_data(test_game):
 			test_game[key] = answer["score"]
 			key = 'test_game_answer_%s_%s' % (question["index"], answer["index"])
 			test_game[key] = answer["name"]
-	
+
 	#处理"评价列表"
 	results = test_game["results"]
 	for result in results:
@@ -100,7 +100,7 @@ def __process_test_game_data(test_game):
 		test_game[key] = min
 		key = 'result_detail_%s' % result["index"]
 		test_game[key] = result["detail"]
-	
+
 
 #######################################################################
 # __translate_data_prize_info: 翻译奖数据信息
@@ -147,7 +147,7 @@ def step_impl(context, user):
 		__add_test_game(context, test_game)
 		time.sleep(1)
 
-  	
+
 @then(u"{user}能获取趣味测试列表")
 def step_impl(context, user):
 	context.client = bdd_util.login(user)
@@ -168,15 +168,15 @@ def step_impl(context, user):
 @then(u"{user}能获取趣味测试'{test_game_name}'")
 def step_impl(context, user, test_game_name):
 	existed_test_game = TestGame.objects.get(name=test_game_name)
-	
+
 	expected = json.loads(context.text)
 	response = context.client.get('/market_tools/test_game/test_game/update/%d/' % existed_test_game.id)
 	test_game = response.context['test_game']
-	
+
 	actual = {
 		"name": test_game.name,
 	}
-	
+
 	bdd_util.assert_dict(expected, actual)
 
 @when(u"{user}更新趣味测试'{test_game_name}'")
@@ -225,7 +225,7 @@ def step_impl(context, user):
 			webapp_id = webapp_id,
 			member_id = member.id
 		)
-		
+
 
 MEMBER_TOKEN="1122334455"
 @given(u"微信用户")
@@ -259,7 +259,7 @@ def step_impl(context):
 
 @when(u"{member}参加趣味测试'{test_game_name}'")
 def step_impl(context, member, test_game_name):
-	
+
 	client = context.client
 	test_game = TestGame.objects.get(name=test_game_name)
 	url = '/workbench/jqm/preview/?module=market_tool:test_game&model=test_game&action=get&game_id=%s&woid=%s&fmt=%s' % (test_game.id, context.webapp_owner_id, context.member.token)
@@ -270,7 +270,7 @@ def step_impl(context, member, test_game_name):
 	# 	"game_id": test_game.id
 	# }
 	context.client.get(url)
-	
+
 @when(u"{member}再次参加营销工具趣味测试'{test_game_name}'")
 def step_impl(context, member, test_game_name):
 	client = context.client

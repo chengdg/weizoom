@@ -14,17 +14,19 @@ Background:
 			"price": 200.00
 		}]
 		"""
-	And jobs已添加了优惠券
+	And jobs已添加了优惠券规则
 		"""
 		[{
 			"name": "全体券1",
 			"money": 1.00,
+			"limit_counts": 10,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"coupon_id_prefix": "coupon1_id_"
 		}, {
 			"name": "单品券2",
 			"money": 10.00,
+			"limit_counts": 10,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_",
@@ -32,6 +34,7 @@ Background:
 		}, {
 			"name": "全体券3",
 			"money": 100.00,
+			"limit_counts": 10,
 			"start_date": "今天",
 			"end_date": "2天后",
 			"using_limit": "满50元可以使用",
@@ -39,6 +42,7 @@ Background:
 		}, {
 			"name": "单品券4",
 			"money": 1.00,
+			"limit_counts": 10,
 			"start_date": "今天",
 			"end_date": "2天后",
 			"using_limit": "满50元可以使用",
@@ -76,18 +80,6 @@ Background:
 				"status": "已过期",
 				"consumer": "",
 				"target": "bill"
-			},
-			"coupon1_id_3": {
-				"money": 1.00,
-				"status": "已过期",
-				"consumer": "",
-				"target": ""
-			},
-			"coupon1_id_4": {
-				"money": 1.00,
-				"status": "已过期",
-				"consumer": "",
-				"target": ""
 			}
 		}
 		"""
@@ -275,7 +267,7 @@ Scenario: 2 删除已失效的优惠券
 
 
 
-@mall2 @zy_cp3
+@mall2 @zy_cp3 @eugeneX
 Scenario: 3 删除未领取的优惠券
 jobs添加"优惠券规则"后
 	1. 如果优惠券没有被领取和使用，可以删除未领取的优惠券
@@ -301,7 +293,7 @@ jobs添加"优惠券规则"后
 		}
 		"""
 
-
+@mall2 @eugene
 Scenario: 4 删除已过期的优惠券规则
 jobs添加"优惠券"后，优惠券已过期
 	1. jobs可以删除已过期的优惠券规则
@@ -310,30 +302,35 @@ jobs添加"优惠券"后，优惠券已过期
 
 	Given jobs登录系统
 	When jobs删除优惠券'全体券1'
-	Then jobs能获得优惠券
+	Then jobs能获得优惠券规则列表
 		"""
 		[{
-			"name": "单品券2",
-			"money": 10.00,
+			"name": "单品券4",
+			"type": "单品券",
+			"money": 1.00,
+			"remained_count": 4,
+			"limit_counts": 10,
+			"use_count": 0,
 			"start_date": "今天",
-			"end_date": "1天后",
-			"coupon_id_prefix": "coupon2_id_",
-			"coupon_product": "商品1"
+			"end_date": "2天后"
 		}, {
 			"name": "全体券3",
+			"type": "全店通用券",
 			"money": 100.00,
+			"remained_count": 2,
+			"limit_counts": 10,
+			"use_count": 0,
 			"start_date": "今天",
-			"end_date": "2天后",
-			"using_limit": "满50元可以使用",
-			"coupon_id_prefix": "coupon3_id_"
+			"end_date": "2天后"
 		}, {
-			"name": "单品券4",
-			"money": 1.00,
+			"name": "单品券2",
+			"type": "单品券",
+			"money": 10.00,
+			"remained_count": 2,
+			"limit_counts": 10,
+			"use_count": 0,
 			"start_date": "今天",
-			"end_date": "2天后",
-			"using_limit": "满50元可以使用",
-			"coupon_id_prefix": "coupon4_id_",
-			"coupon_product": "商品2"
+			"end_date": "1天后"
 		}]
 		"""
 	When bill访问jobs的webapp

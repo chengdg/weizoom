@@ -41,7 +41,7 @@ from tools.regional.models import City, Province, District
 from tools.regional.views import get_str_value_by_string_ids
 from core.send_order_email_code import *
 from watchdog.utils import *
-import signal_handler
+import mall.signal_handler
 from webapp import util as webapp_util
 
 from cache import webapp_cache

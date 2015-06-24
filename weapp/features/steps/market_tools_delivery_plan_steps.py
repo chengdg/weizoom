@@ -52,7 +52,7 @@ def step_impl(context, user, test_delivery_plan):
 		delivery_plan.type = u'周'
 	else:
 		delivery_plan.type = u'天'
-	
+
 	actual = {
 		"name": delivery_plan.name,
 		"product": product_name,

@@ -82,7 +82,7 @@ def step_impl(context, user, product_model_property_name):
 
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, actual)
-		
+
 
 @then(u"{user}能获取商品规格列表:ui")
 def step_impl(context, user):

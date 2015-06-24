@@ -25,7 +25,7 @@ def step_impl(context, user):
 
 	response_json示例：
 	~~~~~~~~~~~~{.c}
-	{"errMsg": "", "code": 200, "data": {"category_id": 8}, "success": true, "innerErrMsg": ""}	
+	{"errMsg": "", "code": 200, "data": {"category_id": 8}, "success": true, "innerErrMsg": ""}
 	~~~~~~~~~~~~
 	"""
 	# 清除现有的粉丝分类
@@ -48,7 +48,7 @@ def step_impl(context, user):
 
 	response_json示例：
 	~~~~~~~~~~~~{.c}
-	{"errMsg": "", "code": 200, "data": {"category_id": 8}, "success": true, "innerErrMsg": ""}	
+	{"errMsg": "", "code": 200, "data": {"category_id": 8}, "success": true, "innerErrMsg": ""}
 	~~~~~~~~~~~~
 	"""
 	client = context.client
@@ -59,7 +59,7 @@ def step_impl(context, user):
 	response_data = response_json['data']
 	if response_data.has_key('category_id'):
 		context.category_id = response_data['category_id']
-	
+
 
 @then(u"{user}看到分组列表中有'{category_name}'")
 def step_impl(context, user, category_name):
@@ -86,7 +86,7 @@ def step_impl(context, user):
 	client = context.client
 	# 期待的列表
 	expected_list = json.loads(context.text)
-	
+
 	response = client.get('/new_weixin/fanses/')
 	# 获取页面返回的分组列表
 	categories = response.context['categories']

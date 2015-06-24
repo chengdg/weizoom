@@ -429,6 +429,7 @@ def get_integral_introduction(request):
 	})
 	return render_to_response('%s/integral_introduction.html' % request.template_dir, c)
 
+
 def get_wishlist(request):
 	"""
 	获取会员收藏夹

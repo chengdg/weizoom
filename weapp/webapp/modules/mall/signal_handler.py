@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+raise DeprecationWarning(
+    "'webapp.modules.mall.signal_handler' is deprecated in favor of 'mall.signal_handler'. "
+    "Please use 'mall.signal_handler' instead!")
 # from datetime import datetime
 # import random
 
@@ -39,7 +43,7 @@
 
 # 		#获得这些model关联的product
 # 		product_ids = set(list(ProductModel.objects.filter(id__in=invalid_models).values_list('product_id', flat=True)))
-		
+
 # 		#删除这一批model
 # 		ProductModel.objects.filter(id__in=invalid_models).update(is_deleted=True)
 
@@ -78,7 +82,7 @@
 
 # 		#获得这些model关联的product
 # 		product_ids = set(list(ProductModel.objects.filter(id__in=invalid_models).values_list('product_id', flat=True)))
-		
+
 # 		#删除这一批model
 # 		ProductModel.objects.filter(id__in=invalid_models).update(is_deleted=True)
 
@@ -149,7 +153,7 @@
 # 			watchdog_alert(alert_message, type='WEB')
 
 #############################################################################################
-# create_delivery_product_handler: 创建一个与DeliveryPlan关联的product一模一样的product, 
+# create_delivery_product_handler: 创建一个与DeliveryPlan关联的product一模一样的product,
 # 并将deliveryPlan关联新创建的product
 # 该设计有个问题,没有考虑到规格以及规格的变动
 #############################################################################################
@@ -170,7 +174,7 @@
 # 			detail = product.detail,
 # 			remark = product.remark,
 # 			stock_type = 0,	#库存无限
-		
+
 # 			shelve_type = product.shelve_type,
 # 			shelve_start_time = product.shelve_start_time,
 # 			shelve_end_time = product.shelve_end_time,
@@ -242,7 +246,7 @@
 	# except:
 	# 	alert_message = u"cancel_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
 	# 	watchdog_fatal(alert_message, type='WEB')
-	
+
 	# 2、删除订单统计表中的数据
 	# PurchaseDailyStatistics.objects.filter(order_id=order.order_id).delete()
 

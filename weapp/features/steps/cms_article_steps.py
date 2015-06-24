@@ -59,7 +59,7 @@ def step_impl(context, user, article_title):
 	response = context.client.get('/cms/editor/article/update/%d/' % existed_article.id)
 	article = response.context['article']
 
-	#处理category	
+	#处理category
 	categories = response.context['categories']
 	category_name = ''
 	for category in categories:
@@ -75,12 +75,12 @@ def step_impl(context, user, article_title):
 	}
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, actual)
-	
+
 
 # @then(u"{user}找不到文章'{article_name}'")
 # def step_impl(context, user, article_name):
 # 	context.tc.assertEquals(0, article.objects.filter(name=article_name).count())
-	
+
 
 @then(u"{user}能获取文章列表")
 def step_impl(context, user):

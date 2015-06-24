@@ -63,7 +63,7 @@ Background:
 		}]
 		"""
 	#优惠券6是新加的
-	Given jobs已添加了优惠券
+	Given jobs已添加了优惠券规则
 		"""
 		[{
 			"name": "优惠券1",

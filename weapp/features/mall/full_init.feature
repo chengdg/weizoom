@@ -407,7 +407,7 @@ Scenario: 安装完整测试数据
 		}
 		"""
 	#优惠券
-	Given jobs已添加了优惠券
+	Given jobs已添加了优惠券规则
 		"""
 		[{
 			"name": "优惠券1",

@@ -78,7 +78,7 @@
 * 角色管理页面&员工管理页面
 */
 .xui-accountRolesPage {
-    
+
 }
 .xui-roleInfoList,
 .xui-departmentInfoList {
@@ -148,9 +148,9 @@
     margin-top: -9px;
     right: 10px;
     color:#eaeef6;
-    -webkit-text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0;  
-    -moz-text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0;  
-    text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0; 
+    -webkit-text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0;
+    -moz-text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0;
+    text-shadow:#666 1px 0 0,#666 0 1px 0,#666 -1px 0 0,#666 0 -1px 0;
 }
 .xui-roleList .xui-i-input[placeholder],
 .xui-departmentList .xui-i-input[placeholder]{
@@ -169,7 +169,7 @@
 }
 /*.xui-roleList .xui-i-activeRole .xui-i-input,
 .xui-departmentList .xui-i-activeDepartment .xui-i-input{
-    width:171px;   
+    width:171px;
 }*/
 .xui-roleList .xui-i-activeRole .xui-i-config,
 .xui-departmentList .xui-i-activeDepartment .xui-i-config{
@@ -363,7 +363,7 @@
 }
 .xui-acountDetailPage .xui-role label{
    width: auto;
-   
+
    padding-right:30px;
 }
 .xui-acountDetailPage .xui-authority{
@@ -403,4 +403,19 @@
 }
 .xui-acountDetailPage .errorHint{
     margin-top: 10px;
+}
+
+.xui-updateSubAccountPasswordDialog label{
+    font-weight: normal;
+    width: 80px;
+    padding: 0px;
+}
+.xui-updateSubAccountPasswordDialog .password-input{
+    float: left;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.xui-updateSubAccountPasswordDialog input {
+    width: 110px;
 }

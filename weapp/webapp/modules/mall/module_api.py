@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+raise DeprecationWarning(
+    "'webapp.modules.mall.module_api' is deprecated in favor of 'mall.module_api'. "
+    "Please use 'mall.module_api' instead!")
+
 # """
 # """
 
@@ -109,7 +114,7 @@
 # 			conditions = {}
 # 			conditions['name__contains'] = query
 # 			products = products.filter(**conditions)
-			
+
 # 	return category, products
 
 
@@ -128,7 +133,7 @@
 # 			continue
 # 		product.original_price = product.price
 # 		product.price, _ = webapp_user.get_discounted_money(product.price, product_type=product.type)
-			
+
 # 	return category, products
 
 
@@ -156,7 +161,7 @@
 # 			#获取product及其model
 # 			product = Product.objects.get(id=product_id)
 # 			product.fill_model()
-			
+
 # 			#获取轮播图
 # 			product.swipe_images = []
 # 			for swipe_image in ProductSwipeImage.objects.filter(product_id=product_id):
@@ -167,7 +172,7 @@
 
 # 			#获取库存
 # 			is_sellout = True
-# 			for product_model in product.models:	
+# 			for product_model in product.models:
 # 				# 判断是否有库存，只有有一个商品库存时，is_sellout=False
 # 				# 当库存为无限时 or 有限并且库存大于0 时， 并且 is_sellout 还没有被设置为False时
 # 				if product_model['stock_type'] == PRODUCT_STOCK_TYPE_UNLIMIT:
@@ -299,7 +304,7 @@
 # 			property_value_ids = []
 
 # 			for model_property_info in product.model_name.split('_'):
-# 				property_id, property_value_id = model_property_info.split(':')	
+# 				property_id, property_value_id = model_property_info.split(':')
 # 				property_id = int(property_id)
 # 				property_value_id = int(property_value_id)
 # 				property_value_ids.append(property_value_id)
@@ -343,12 +348,12 @@
 # 			postage_config = filter(lambda c: c.id == product.postage_id, postage_configs)
 # 		if product.type == PRODUCT_INTEGRAL_TYPE or len(postage_config) == 0:
 # 			postage_config = filter(lambda c: c.is_system_level_config, postage_configs)
-		
+
 # 		if len(postage_config) > 0:
 # 			postage_config = postage_config[0]
 # 		else:
 # 			print 'jz----ERROR: 没有运费配置。'
-			
+
 
 # 		#记录运费计算因子
 # 		product.postage_factor = postage_config.factor
@@ -359,7 +364,7 @@
 # 		for product_model in product.models:
 # 			#获取折扣后的价格
 # 			product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
-		
+
 # 		# 商品规格
 # 		p_type = product.type
 
@@ -388,10 +393,10 @@
 
 # 				if len(market_prices) == 0:
 # 					market_prices.append(0.0)
-					
+
 # 				if len(prices) == 0:
 # 					prices.append(0.0)
-					
+
 # 				prices.sort()
 # 				market_prices.sort()
 # 				# 如果最大价格和最小价格相同，价格处显示一个价格。
@@ -403,8 +408,8 @@
 # 				if market_prices[0] == market_prices[-1]:
 # 					market_price_range = _get_price_by_type(p_type, market_prices[0])
 # 				else:
-# 					market_price_range = '%s-%s' % (_get_price_by_type(p_type, market_prices[0]), _get_price_by_type(p_type, market_prices[-1]))					
-				
+# 					market_price_range = '%s-%s' % (_get_price_by_type(p_type, market_prices[0]), _get_price_by_type(p_type, market_prices[-1]))
+
 # 				# 最低价
 # 				min_price = prices[0]
 # 				# 最高价
@@ -423,7 +428,7 @@
 # 				'display_price': _get_price_by_type(p_type, standard_model['price']),
 # 				'display_original_price': _get_price_by_type(p_type, standard_model['original_price']),
 # 				'display_market_price': _get_price_by_type(p_type, standard_model['market_price']),
-# 				'min_price': standard_model['price'],				
+# 				'min_price': standard_model['price'],
 # 				'max_price': standard_model['price']
 # 			}
 
@@ -441,7 +446,7 @@
 # 			product.stock_type = db_product_model.stock_type
 # 			product.stocks = db_product_model.stocks
 # 			if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.stocks <= 0:
-# 				product.is_sellout = True				
+# 				product.is_sellout = True
 
 # 	except:
 # 		if settings.DEBUG:
@@ -455,7 +460,7 @@
 # 			product.is_deleted = True
 
 # 	return product
-	
+
 # def _get_price_by_type(p_type, price):
 # 	if p_type == PRODUCT_INTEGRAL_TYPE:
 # 		return int(price)
@@ -494,7 +499,7 @@
 # 	else:
 # 		postage_config = filter(lambda c: c.is_used, postage_configs)[0]
 # 	#获取重量，计算运费
-# 	total_weight = (product.weight * product.purchase_count)	
+# 	total_weight = (product.weight * product.purchase_count)
 # 	_, order.postage = mall_util.get_postage_for_weight(total_weight, postage_config)
 
 # 	order.used = {
@@ -509,11 +514,11 @@
 # #############################################################################
 # # update_order_type_test: 修改订单的为测试订单，并且修改价钱
 # #############################################################################
-# def update_order_type_test(type, order):	
+# def update_order_type_test(type, order):
 # 	if type == PRODUCT_TEST_TYPE:
 # 		order.type = PRODUCT_TEST_TYPE
 # 		order.final_price = 0.01
-		
+
 # 	return order
 
 
@@ -542,7 +547,7 @@
 # 	"""
 # 	order = Order()
 # 	order.order_id = __create_random_order_id()
-	
+
 # 	order.buyer_name = order_info['buyer_name']
 # 	order.buyer_tel = order_info['buyer_tel']
 # 	order.ship_name = order_info['ship_name']
@@ -570,7 +575,7 @@
 
 # 	#计算会员等级折扣价
 # 	order.member_grade_discounted_money, _ = webapp_user.get_discounted_money(order.product_price, product_type=order.type)
-	
+
 # 	#计算运费
 # 	province_id = _get_province_id_by_area(order.area)
 # 	order.postage = mall_util.get_postage_for_products(webapp_owner_id,
@@ -579,9 +584,9 @@
 # 	if order.postage < 0:
 # 		order.postage = 0
 # 	postage = order.postage
-	
+
 # 	#
-# 	#处理订单中的优惠券 
+# 	#处理订单中的优惠券
 # 	# TODO: 将优惠券的判断放入request_api_util.py中
 # 	#
 # 	order.coupon_money = 0.0
@@ -602,13 +607,13 @@
 # 			else:
 # 				member_id = 0
 # 			coupon = webapp_user.use_coupon_by_coupon_id(member_id, coupon_coupon_id, product_postage_total_price, request.webapp_owner_id)
-		
+
 # 		order.coupon_money = coupon.money
 # 		order.coupon_id = coupon.id
 
 # 	#计算订单总价
 #  	order.integral_money = webapp_user.use_integral(order.integral)
-#  	#add by bert at weizoom accounts 
+#  	#add by bert at weizoom accounts
 #  	# if integral:
 #  	if False:
 #  		integral_strategy_settings = webapp_user.webapp_owner_info.integral_strategy_settings
@@ -622,7 +627,7 @@
 #  	else:
 # 		order.final_price = float('%.2f' % (order.member_grade_discounted_money \
 # 			+ order.postage - order.coupon_money - order.weizoom_card_money - order.promotion_money))
-	
+
 # 	if order.final_price < 0:
 # 		#调整总价
 # 		order.final_price = 0
@@ -644,10 +649,10 @@
 # 	for product in products:
 # 		product_discounted_money, _ = webapp_user.get_discounted_money(product.price, product_type=order.type)
 # 		OrderHasProduct.objects.create(
-# 			order = order, 
+# 			order = order,
 # 			product_id = product.id,
 # 			product_model_name = product.model['name'],
-# 			number = product.purchase_count, 
+# 			number = product.purchase_count,
 # 			total_price = product.total_price,
 # 			price = product_discounted_money,
 # 			promotion_id = product.promotion['id'] if hasattr(product, 'promotion') else 0,
@@ -765,9 +770,9 @@
 # 	except:
 # 		watchdog_fatal(u"本地获取订单信息失败：order_id:{}, cause:\n{}".format(order_id, unicode_full_stack()))
 # 		return None, False
-		
+
 # 	pay_result = False
-	
+
 # 	if is_success and order.status == ORDER_STATUS_NOT: #支付成功
 # 		#order.status = ORDER_STATUS_PAYED_SUCCESSED
 # 		order.status = ORDER_STATUS_PAYED_NOT_SHIP
@@ -789,7 +794,7 @@
 
 # 		#更新webapp_user的has_purchased字段
 # 		webapp_user.set_purchased()
-	
+
 # 		try:
 # 			mall_util.email_order(order=order)
 # 		except:
@@ -820,7 +825,7 @@
 # #
 # # 如果订单id、快递公司名称或运单号任一为None，直接返回False
 # ########################################################################
-# def ship_order(order_id, express_company_name, 
+# def ship_order(order_id, express_company_name,
 # 	express_number, operator_name=u'我', leader_name=u'', is_update_express=False):
 # 	if (order_id is None) or (express_company_name is None) or (express_number is None):
 # 		return False
@@ -844,7 +849,7 @@
 
 # 		# 即修改物流信息，也修改状态, 需要加上状态条件
 # 		if not is_update_express:
-# 			order_params['status'] = target_status			
+# 			order_params['status'] = target_status
 # 			if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
 # 				order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED).order_by('delivery_date')
 # 				if order_has_delivery_times.count() > 0:
@@ -869,7 +874,7 @@
 # 				order.express_company_name = express_company_name
 # 				order.express_number = express_number
 # 				order.leader_name = leader_name
-				
+
 # 				template_message_api.send_order_template_message(order.webapp_id, order.id, template_message_model.PAY_DELIVER_NOTIFY)
 # 		except:
 # 			alert_message = u"ship_order 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
@@ -879,7 +884,7 @@
 # 		error_msg = u"更改订单({})状态信息失败，cause:\n{}".format(order_id, unicode_full_stack())
 # 		watchdog_error(error_msg)
 
-# 		return False	
+# 		return False
 
 # 	# 记录log信息
 # 	if is_update_express:
@@ -907,7 +912,7 @@
 # def add_product_to_shopping_cart(webapp_user, product_id, product_model_name, count):
 # 	try:
 # 		shopping_cart_item = ShoppingCart.objects.get(
-# 			webapp_user_id = webapp_user.id, 
+# 			webapp_user_id = webapp_user.id,
 # 			product_id = product_id,
 # 			product_model_name = product_model_name
 # 		)
@@ -1009,7 +1014,7 @@
 # 		order.ship_tel = ship_info.ship_tel
 # 		order.ship_id = ship_info.id
 
-# 	#在购物车页面，可能更改了商品数量，这里更新购物车中商品的数量	
+# 	#在购物车页面，可能更改了商品数量，这里更新购物车中商品的数量
 # 	for product in products:
 # 		ShoppingCart.objects.filter(webapp_user_id=webapp_user.id, product_id=product.id).update(count=product.purchase_count)
 
@@ -1021,7 +1026,7 @@
 # 		# 有运费商品
 # 		if product.postage_id > 0:
 # 			total_weight += float(product.purchase_count) * float(product.weight)
-		
+
 # 	'''
 # 	# 运费临时使用，测试
 # 	'''
@@ -1047,7 +1052,7 @@
 # ########################################################################
 # def record_operation_log(order_id, operator_name, action):
 # 	try:
-# 		OrderOperationLog.objects.create(order_id=order_id, action=action, operator=operator_name)	
+# 		OrderOperationLog.objects.create(order_id=order_id, action=action, operator=operator_name)
 # 	except:
 # 		error_msg = u"增加订单({})发货操作记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 # 		watchdog_error(error_msg)
@@ -1067,11 +1072,11 @@
 # def record_status_log(order_id, operator_name, from_status, to_status):
 # 	try:
 # 		OrderStatusLog.objects.create(
-# 			order_id = order_id, 
-# 			from_status = from_status, 
-# 			to_status = to_status, 
+# 			order_id = order_id,
+# 			from_status = from_status,
+# 			to_status = to_status,
 # 			operator = operator_name
-# 		)	
+# 		)
 # 	except:
 # 		error_msg = u"增加订单({})状态更改记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 # 		watchdog_error(error_msg)
@@ -1082,7 +1087,7 @@
 # ########################################################################
 # def update_order_time(order_id):
 # 	try:
-# 		Order.objects.filter(order_id=order_id).update(update_at=datetime.now())	
+# 		Order.objects.filter(order_id=order_id).update(update_at=datetime.now())
 # 	except:
 # 		error_msg = u"更新订单({})修改时间记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 # 		watchdog_error(error_msg)
@@ -1202,7 +1207,7 @@
 # ########################################################################
 # # update_order_status: 修改订单状态
 # ########################################################################
-# def update_order_status(user, action, order, request=None):	
+# def update_order_status(user, action, order, request=None):
 # 	order_id = order.id
 # 	operation_name = user.username
 # 	if action == 'pay':
@@ -1273,7 +1278,7 @@
 # 		if models.count() > 0 and models[0].stock_type == PRODUCT_STOCK_TYPE_LIMIT:
 # 			product_model = models[0]
 # 			product_model.stocks = product_model.stocks + order_has_product.number
-# 			product_model.save()			
+# 			product_model.save()
 
 
 # ########################################################################
@@ -1331,15 +1336,15 @@
 # DATA_CREATED_TYPE = "created_time"
 # def get_order_list(user, query_dict, filter_value, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None,
 # 	date_type=None):
-# 	webapp_id = user.get_profile().webapp_id	
+# 	webapp_id = user.get_profile().webapp_id
 # 	orders = Order.objects.belong_to(webapp_id)
 # 	# 统计订单总数
 # 	order_total_count = _get_orders_total_count(orders)
-# 	###################################################	
+# 	###################################################
 # 	#处理搜索
 # 	if len(query_dict):
 # 		orders = orders.filter(**query_dict)
-# 	###################################################	
+# 	###################################################
 # 	# 处理筛选条件
 # 	source = None
 # 	if filter_value and (filter_value != '-1'):
@@ -1365,7 +1370,7 @@
 # 					else:
 # 						order.come = 'weizoom_mall'
 # 				else:
-# 					order.come = 'mine_mall'	
+# 					order.come = 'mine_mall'
 # 			else:
 # 				order.come = 'mine_mall'
 # 			if source and order.come != source:
@@ -1378,7 +1383,7 @@
 
 # 	###################################################
 # 	#处理 时间区间筛选
-# 	if date_interval:		
+# 	if date_interval:
 # 		start_time = date_interval[0]
 # 		end_time = date_interval[1]
 # 		if date_type == "update_at":
@@ -1388,7 +1393,7 @@
 # 	###################################################
 # 	#处理排序
 # 	if sort_attr != 'created_at':
-# 		orders = orders.order_by(sort_attr)	
+# 		orders = orders.order_by(sort_attr)
 # 	###################################################
 # 	if count_per_page > 0:
 # 		#进行分页
@@ -1396,7 +1401,7 @@
 # 	else:
 # 		#全部订单
 # 		pageinfo = {"object_count": orders.count()}
-	
+
 # 	#获取order对应的会员
 # 	webapp_user_ids = set([order.webapp_user_id for order in orders])
 # 	webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
@@ -1440,7 +1445,7 @@
 # 				else:
 # 					order.come = 'weizoom_mall'
 # 			else:
-# 				order.come = 'mine_mall'	
+# 				order.come = 'mine_mall'
 # 		else:
 # 			order.come = 'mine_mall'
 
@@ -1490,10 +1495,10 @@
 # 	try:
 # 		order = Order.objects.get(order_id=order_id)
 # 	except:
-# 		return None	
+# 		return None
 
 # 	order_has_products = OrderHasProduct.objects.filter(order=order)
-	
+
 # 	number = 0
 # 	for order_has_product in order_has_products:
 # 		number += order_has_product.number
@@ -1551,7 +1556,7 @@
 # 				ship_order(order.id, express_company_value, express_number, user.username, u'')
 # 				success_data.append(item)
 # 		except:
-# 			error_data.append(item)			
+# 			error_data.append(item)
 # 			alert_message = u"batch_handle_order批量发货 格式不正确, item:{}, cause:\n{}".format(item, unicode_full_stack())
 # 			watchdog_warning(alert_message)
 
@@ -1582,19 +1587,19 @@
 # from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 # def __get_products_pay_interfaces(webapp_owner_id, products):
 # 	# 没有微众卡权限的，不能使用微众卡支付
-# 	is_can_use_weizoom_card = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(webapp_owner_id)	
+# 	is_can_use_weizoom_card = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(webapp_owner_id)
 # 	if is_can_use_weizoom_card is False:
 # 		pay_interfaces = PayInterface.objects.filter(owner_id=webapp_owner_id, is_active=True).filter(~Q(type=PAY_INTERFACE_WEIZOOM_COIN))
 # 	else:
 # 		pay_interfaces = PayInterface.objects.filter(owner_id=webapp_owner_id, is_active=True)
-		
+
 # 	types = [p.type for p in pay_interfaces]
 
 # 	# 如果不包含货到付款，直接返回所有的在线支付
 # 	if PAY_INTERFACE_COD not in types:
 # 		return pay_interfaces
 
-# 	# 商品中是 货到付款方式 
+# 	# 商品中是 货到付款方式
 # 	pay_interface_cod_count = 0
 # 	for product in products:
 # 		if product.is_use_cod_pay_interface:
@@ -1629,13 +1634,13 @@
 # ########################################################################
 # # update_products_postage: 修改运费
 # ########################################################################
-# def update_products_postage(owner_id, postage_id):	
+# def update_products_postage(owner_id, postage_id):
 # 	# 该id是否为 免运费
 # 	try:
 # 		is_system_level_config = PostageConfig.objects.get(id=postage_id).is_system_level_config
 # 	except:
 # 		is_system_level_config = True
-	
+
 # 	# id 大于0 并且 不是免运费
 # 	if postage_id > 0 and is_system_level_config == False:
 # 		# 更换邮费
@@ -1702,7 +1707,7 @@
 # 			factor['free_factor'] = free_factor
 
 # 			postage_config.factor = factor
-# 			values.append(postage_config.to_dict('factor'))		
+# 			values.append(postage_config.to_dict('factor'))
 
 # 		return {
 # 			'value': values

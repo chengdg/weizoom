@@ -47,11 +47,14 @@ def step_impl(context, webapp_user_name):
     products = response.context['products']
     actual = []
 
+
+
     for product in products:
         product_info = {}
         product_info['name'] = product.name
         product_info['price'] = product.price_info['min_price'] if product.price_info['min_price'] else product.price
         actual.append(product_info)
+
     bdd_util.assert_list(expected, actual)
 
 @when(u"{webapp_user_name}取消收藏已收藏的商品")

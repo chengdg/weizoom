@@ -1,0 +1,39 @@
+<script id="newmall-update-sub-account-password-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade xui-updateSubAccountPasswordDialog" id="updateSubAccountPasswordDialog">
+    <div class="modal-dialog modal-lg" style="width: 436px;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button data-dismiss="modal" class="close" type="button"><span class="xui-closeColor">&times;</span></button>
+            <h3 class="modal-title">
+                修改密码
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <form class="form-horizontal">
+              <div class="form-group xa-errorHintContainer">
+                <label for="password" class="control-label fl">新密码</label>
+                <div class="password-input">
+                  <input type="password" class="form-control" id="password" placeholder="" value="" data-validate="require-notempty,,require-string" data-maxlength="20" data-minlength="6">
+                </div>
+                <div class="fl" style="width: 204px;">注：6-20位字符，可使用字母、数字或符号的组合，不建议使用单一类型。</div>
+                <div class="errorHint fl ml95"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm_password" class="control-label fl">确认新密码</label>
+                <div class="password-input">
+                  <input type="password" class="form-control" id="confirm_password" placeholder="" value="" data-validate="require-notempty,,require-custom-function::与第一次输入密码不一致" data-validate-function="validatePassword">
+                  <div class="errorHint"></div>
+                </div>
+              </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-success xui-btnStyle" style="background:#207cbe; color:#ffffff;">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+        </div>
+    </div>
+    </div>
+    </div>
+</script>

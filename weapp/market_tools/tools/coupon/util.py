@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-
-__author__ = 'jiangzhe'
-
-from datetime import timedelta, datetime
+#
+# __author__ = 'jiangzhe'
 import random
-
+from datetime import timedelta, datetime
+from django.db import IntegrityError
 from django.db.models import F
 
 from mall.promotion import models as promotion_models
+from mall.promotion.models import Coupon
+from mall.promotion.utils import coupon_id_maker
+
 
 def get_coupon_rules(owner):
 	"""
@@ -119,32 +121,34 @@ def create_coupons(owner, rule_id, count, member_id=0, coupon_record_id=0):
 	promotion = promotion_models.Promotion.objects.filter(type=promotion_models.PROMOTION_TYPE_COUPON, detail_id=coupon_rule.id)[0]
 
 	#创建coupon
+	a = owner.id
+	b = coupon_rule.id
+
 	coupons = []
 	i = 1
 	if count > 0:
-		random_args_value = ['1','2','3','4','5','6','7','8','9','0']
 		while True:
-			coupon_id = '%03d%04d%s' % (owner.id, coupon_rule.id, ''.join(random.sample(random_args_value, 6)))
-			try:
-				new_coupon = promotion_models.Coupon.objects.create(
-					owner = owner,
-					member_id = member_id,
-					coupon_id = coupon_id,
-					provided_time = today,
-					start_time = promotion.start_date,
-					expired_time = promotion.end_date,
-					money = coupon_rule.money,
-					coupon_rule_id = coupon_rule.id,
-					is_manual_generated = False,
-					status = promotion_models.COUPON_STATUS_UNUSED,
-					coupon_record_id=coupon_record_id
-				)
-				coupons.append(new_coupon)
-				if i >= count:
-					break
-				i += 1
-			except:
-				continue
+		 	# 生成优惠券ID
+			coupon_id = coupon_id_maker(a, b)
+			while Coupon.objects.filter(coupon_id=coupon_id):
+				coupon_id = coupon_id_maker(a, b)
+			new_coupon = promotion_models.Coupon.objects.create(
+				owner = owner,
+				member_id = member_id,
+				coupon_id = coupon_id,
+				provided_time = today,
+				start_time = promotion.start_date or coupon_rule.start_date,
+				expired_time = promotion.end_date,
+				money = coupon_rule.money,
+				coupon_rule_id = coupon_rule.id,
+				is_manual_generated = False,
+				status = promotion_models.COUPON_STATUS_UNUSED,
+				coupon_record_id=coupon_record_id
+			)
+			coupons.append(new_coupon)
+			if i >= count:
+				break
+			i += 1
 
 	promotion_models.CouponRule.objects.filter(id=rule_id).update(
 			count=(coupon_rule.count+count),

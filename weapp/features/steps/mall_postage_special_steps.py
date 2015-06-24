@@ -52,7 +52,7 @@ def _get_province_ids(province_names):
 # 		context.client.logout()
 # 	context.client = bdd_util.login(user)
 # 	client = context.client
-	
+
 # 	response = context.client.get('/mall/editor/mall_settings/')
 
 # 	actual =response.context['postage_configs']

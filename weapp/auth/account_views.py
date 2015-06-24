@@ -30,7 +30,7 @@ FIRST_NAV = export.ACCOUNT_AUTH_FIRST_NAV
 
 
 ########################################################################
-# get_account_help: 获得在售商品列表
+# get_account_help: 权限管理
 ########################################################################
 @view(app='auth', resource='account_help', action='get')
 @login_required

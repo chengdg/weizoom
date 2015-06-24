@@ -11,7 +11,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 
 from mall.models import *
-from modules.member.models import * 
+from modules.member.models import *
 from weixin.user import models as weixn_models
 from account import models as account_models
 from utils.string_util import byte_to_hex
@@ -35,7 +35,7 @@ def __get_member_by_openid(openid):
 		return member
 	except:
 		return None
-	
+
 def __get_fmt_by_sct(sct):
 	social_account = SocialAccount.objects.get(token=sct)
 	member = MemberHasSocialAccount.objects.get(account=social_account).member
@@ -67,7 +67,7 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name, shared_url_nam
 		response = context.client.get(bdd_util.nginx(redirect_url))
 	else:
 		context.last_url = shared_url
-	
+
 
 @Then(u'{user}能获取到{webapp_user_name}的好友')
 def step_impl(context, user, webapp_user_name):

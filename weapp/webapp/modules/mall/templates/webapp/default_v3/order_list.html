@@ -402,6 +402,18 @@
 
 {% block js %}
 <script>
+/*按扭LOADING*/
+Zepto.fn.buttonLoading = function(options) {
+    var el = this;
+    switch(options.status) {
+    case 'show'://loading...
+        el.data('sign', 1);
+        break;
+    case 'hide'://loading end...
+        el.data('sign', 0);
+        break;
+    }
+}
 $(document).ready(function($) {
     var bodyWidth = window.document.body.clientWidth;
     var bodyHeight = window.document.body.clientHeight;
@@ -462,8 +474,15 @@ $(document).ready(function($) {
     /* 点击确认收货 */
 
     $('.xa-receipt').click(function(event) {
-        var receipt = confirm("是否确认收货？")
+        var $target = $(event.target);
+        var sign = $target.data('sign');
+        if(sign == 1){
+            return;
+        }
+        var receipt = confirm("是否确认收货？");
         if (receipt==true){
+
+            $target.buttonLoading({status:'show'});            
             $('body').alert({
                 isShow: true,
                 info:'正在确认收货...',
@@ -486,8 +505,10 @@ $(document).ready(function($) {
                 error: function(resp) {
                     $('body').alert({
                         isShow: true,
-                        speed:2000
+                        speed:2000,
+                        info:'确认收货失败，请重试',
                     });
+                    $target.buttonLoading({status:'hide'});
                 }
             });
         }
@@ -502,9 +523,15 @@ $(document).ready(function($) {
             $el.find('.xa-emptyOrder').show();
         }
     })
-    $('.update_order_cancel').click(function() {
-        var cancel = confirm("确定取消订单？")
+    $('.update_order_cancel').click(function(event) {
+        var $target = $(event.target);
+        var sign = $target.data('sign');
+        if(sign == 1){
+            return;
+        }
+        var cancel = confirm("确定取消订单？");
         if (cancel==true){
+            $target.buttonLoading({status:'show'});
             $('body').alert({
                 isShow: true,
                 info:'正在取消订单...',
@@ -527,9 +554,10 @@ $(document).ready(function($) {
                 error: function(resp) {
                     $('body').alert({
                         isShow: true,
-                        info: resp.data['msg'],
+                        info:'取消订单失败，请重试',
                         speed:2000
                     });
+                    $target.buttonLoading({status:'hide'});
                 }
             });
         }

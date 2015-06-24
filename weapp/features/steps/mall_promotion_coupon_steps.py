@@ -3,56 +3,69 @@ import json
 import time
 from datetime import datetime, timedelta
 
-from behave import *
 
+from behave import given, then, when
 from test import bdd_util
-from features.testenv.model_factory import *
+# from features.testenv.model_factory import *
 
-from django.test.client import Client
-from mall.models import *
+from mall.models import Product
 from account.social_account.models import SocialAccount
-from modules.member.models import WebAppUser, Member, MemberHasSocialAccount
-from mall.promotion.models import *
+from modules.member.models import Member, MemberHasSocialAccount
+from mall.promotion.models import Promotion, Coupon, CouponRule
 
 
-def __add_coupon_rule(context, coupon_rule, webapp_owner_name):
-	data = {
-		"name": coupon_rule['name'],
-		"money": coupon_rule['money'],
-		"limit_counts": coupon_rule.get('limit_counts', 9999),
-		"count": coupon_rule.get("count", 5),
-		"member_grade": 0,
-		"start_date": '%s 00:00' % bdd_util.get_date_str(coupon_rule['start_date']),
-		"end_date": '%s 00:00' % bdd_util.get_date_str(coupon_rule['end_date'])
-	}
+def __add_coupon_rule(context, webapp_owner_name):
+	coupon_rules = json.loads(context.text)
+	if type(coupon_rules) == dict:
+		coupon_rules = [coupon_rules]
 
-	if not "using_limit" in coupon_rule:
-		data['is_valid_restrictions'] = '0'
-	else:
-		data['is_valid_restrictions'] = '1'
-		using_limit = coupon_rule["using_limit"]
-		end = using_limit.find(u'元')
-		if end == -1:
-			data['valid_restrictions'] = -1
+	webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
+	for coupon_rule in coupon_rules:
+		# __add_coupon_rule(context, coupon_rule, user_name)
+		cr_name = coupon_rule['name']
+		cr_money = coupon_rule['money']
+		cr_count = coupon_rule.get('count', 4)
+		cr_limit_counts = coupon_rule.get('limit_counts', 9999)
+		cr_start_date = coupon_rule['start_date']
+		start_date = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+		cr_end_date = coupon_rule['end_date']
+		end_date = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+		post_data = {
+			'name': cr_name,
+			'money': cr_money,
+			'count': cr_count,
+			'limit_counts': cr_limit_counts,
+			'start_date': start_date,
+			'end_date': end_date
+		}
+		if not "using_limit" in coupon_rule:
+			post_data['is_valid_restrictions'] = '0'
 		else:
-			data['valid_restrictions'] = int(using_limit[1:end])
-	if "coupon_product" in coupon_rule:
-		data['limit_product'] = 1
-		webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
-		data['product_ids'] = Product.objects.get(owner_id=webapp_owner_id, name=coupon_rule['coupon_product']).id
+			post_data['is_valid_restrictions'] = '1'
+			using_limit = coupon_rule['using_limit']
+			end = using_limit.find(u"元")
+			if end == -1:
+				post_data['valid_restrictions'] = -1
+			else:
+				post_data['valid_restrictions'] = int(using_limit[1:end])
+		if "coupon_product" in coupon_rule:
+			post_data['limit_product'] = 1
+			post_data['product_ids'] = Product.objects.get(
+											owner_id=webapp_owner_id,
+											name=coupon_rule['coupon_product']).id
+		url = '/mall_promotion/api/coupon_rules/create/'
+		response = context.client.post(url, post_data)
+		context.tc.assertEquals(200, response.status_code)
+		if "coupon_id_prefix" in coupon_rule:
+			latest_coupon_rule = CouponRule.objects.all().order_by('-id')[0]
+			index = 1
+			coupon_id_prefix = coupon_rule['coupon_id_prefix']
+			for coupon in Coupon.objects.filter(coupon_rule=latest_coupon_rule):
+				coupon_id = "%s%d" % (coupon_id_prefix, index)
+				Coupon.objects.filter(id=coupon.id).update(coupon_id=coupon_id)
+				index +=1
+		time.sleep(0.002)
 
-	url = '/mall_promotion/api/coupon_rules/create/'
-	response = context.client.post(url, data)
-	context.tc.assertEquals(200, response.status_code)
-
-	if 'coupon_id_prefix' in coupon_rule:
-		latest_coupon_rule = CouponRule.objects.all().order_by('-id')[0]
-		index = 1
-		coupon_id_prefix = coupon_rule['coupon_id_prefix']
-		for coupon in Coupon.objects.filter(coupon_rule=latest_coupon_rule):
-			coupon_id = '%s%d' % (coupon_id_prefix, index)
-			Coupon.objects.filter(id=coupon.id).update(coupon_id=coupon_id)
-			index += 1
 
 
 ###################################################################################
@@ -103,15 +116,15 @@ def __send_coupons(context, webapp_owner_name, type):
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)
 
-	#将coupon_id改为指定的coupon_id
 	new_created_coupons = Coupon.objects.filter(owner_id=webapp_owner_id).order_by('-id')[:count]
 	expected_coupon_ids = coupon_info['coupon_ids']
 	expected_coupon_ids.reverse()
 	for index, coupon in enumerate(new_created_coupons):
+		# 将coupon_id改为指定的coupon_id，特殊情况允许更新操作
 		Coupon.objects.filter(coupon_id=coupon.coupon_id).update(coupon_id=expected_coupon_ids[index])
 
-	#修改发放时间和过期时间
 	if 'expire_date' in coupon_info:
+		# 修改发放时间和过期时间，特殊情况允许更新操作
 		today = datetime.today()
 		if coupon_info['expire_date'] == u'昨天':
 			expire_date = today - timedelta(1)
@@ -126,23 +139,12 @@ def __send_coupons(context, webapp_owner_name, type):
 
 @when(u'{user_name}添加优惠券规则')
 def step_impl(context, user_name):
-	coupon_rules = json.loads(context.text)
-	if type(coupon_rules) == dict:
-		coupon_rules = [coupon_rules]
-
-	for coupon_rule in coupon_rules:
-		__add_coupon_rule(context, coupon_rule, user_name)
-		time.sleep(1)
+	__add_coupon_rule(context, user_name)
 
 
-@given(u'{user_name}已添加了优惠券')
+@given(u'{user_name}已添加了优惠券规则')
 def step_impl(context, user_name):
-	coupon_rules = json.loads(context.text)
-	if type(coupon_rules) == dict:
-		coupon_rules = [coupon_rules]
-
-	for coupon_rule in coupon_rules:
-		__add_coupon_rule(context, coupon_rule, user_name)
+	__add_coupon_rule(context, user_name)
 
 
 @then(u"{user_name}能获得优惠券规则'{coupon_rule_name}'")
@@ -173,9 +175,17 @@ def step_impl(context, user_name):
 		rule["name"] = coupon_rule["name"]
 		rule["type"] = "单品券" if coupon_rule["detail"]["limit_product"] else "全店通用券"
 		rule["money"] = coupon_rule["detail"]["money"]
+		rule["remained_count"] = coupon_rule["detail"]["remained_count"]
+		rule["limit_counts"] = coupon_rule["detail"]["limit_counts"]
+		rule["use_count"] = coupon_rule["detail"]["use_count"]
+		rule["start_date"] = coupon_rule["start_date"]
+		rule["end_date"] = coupon_rule["end_date"]
 		actual.append(rule)
 
 	expected = json.loads(context.text)
+	for item in expected:
+		item["start_date"] = "{} 00:00".format(bdd_util.get_date_str(item["start_date"]))
+		item["end_date"] = "{} 00:00".format(bdd_util.get_date_str(item["end_date"]))
 	bdd_util.assert_list(expected, actual)
 
 
@@ -193,22 +203,23 @@ def step_impl(context, user_name, coupon_rule_name):
 	response = context.client.post(url, data)
 
 
-@when(u"{user_name}删除优惠券规则'{coupon_rule_name}'")
+@when(u"{user_name}删除优惠券'{coupon_rule_name}'")
 def step_impl(context, user_name, coupon_rule_name):
 	user_id = bdd_util.get_user_id_for(user_name)
 	coupon_rule = CouponRule.objects.get(owner_id=user_id, name=coupon_rule_name, is_active=True)
-	url = '/market_tools/coupon/coupon_rule/delete/?rule_id=%d' % coupon_rule.id
+	promotion = Promotion.objects.get(detail_id=coupon_rule.id)
+	url = '/mall_promotion/api/promotions/delete/'
 
-	response = context.client.get(url)
+	response = context.client.post(url, {'ids[]': [promotion.id], 'type': 'coupon'})
 
 
-@When(u"{user_name}删除优惠券'{coupon_rule_name}'的码库")
+@when(u"{user_name}删除优惠券'{coupon_rule_name}'的码库")
 def step_coupon_delete(context, user_name, coupon_rule_name):
 	from django.db.models import Q
 	coupon_rule = CouponRule.objects.get(name=coupon_rule_name)
-	Coupon.objects.filter(Q(coupon_rule_id=coupon_rule.id) and
-	                      ~Q(status=0)
-	                      ).delete()
+	# Coupon.objects.filter(Q(coupon_rule_id=coupon_rule.id) and
+	#                       ~Q(status=0)
+	#                       ).delete()
 
 
 @when(u"{user_name}手工为优惠券规则生成优惠券")
@@ -343,27 +354,27 @@ def step_impl(context, user_name):
 	__send_coupons(context, user_name, u'会员')
 
 
-@when(u"{user}更新优惠券排行榜时间")
-def step_impl(context, user):
-	coupon_saller_data = json.loads(context.text)
-	url = '/market_tools/coupon/api/coupon_saller_data/update/'
-	response = context.client.post(url, coupon_saller_data[0])
+# @when(u"{user}更新优惠券排行榜时间")
+# def step_impl(context, user):
+# 	coupon_saller_data = json.loads(context.text)
+# 	url = '/market_tools/coupon/api/coupon_saller_data/update/'
+# 	response = context.client.post(url, coupon_saller_data[0])
 
 
-@then(u"{user}能获得优惠券排行榜时间")
-def step_impl(context, user):
-	url = '/market_tools/coupon/'
-	response = context.client.get(url)
-	actual = response.context['coupon_saller_data']
-	actual_data = []
-	actual_data.append({
-		"start_date": actual.start_date.strftime('%Y-%m-%d'),
-		"end_date": actual.end_date.strftime('%Y-%m-%d')
-	})
+# @then(u"{user}能获得优惠券排行榜时间")
+# def step_impl(context, user):
+# 	url = '/market_tools/coupon/'
+# 	response = context.client.get(url)
+# 	actual = response.context['coupon_saller_data']
+# 	actual_data = []
+# 	actual_data.append({
+# 		"start_date": actual.start_date.strftime('%Y-%m-%d'),
+# 		"end_date": actual.end_date.strftime('%Y-%m-%d')
+# 	})
 
-	expected = json.loads(context.text)
+# 	expected = json.loads(context.text)
 
-	bdd_util.assert_list(expected, actual_data)
+# 	bdd_util.assert_list(expected, actual_data)
 
 
 @when(u"{webapp_user_name}领取{webapp_owner_name}的优惠券")
