@@ -28,8 +28,9 @@ def log_api_error(request):
 		print 'api: ', api
 		print 'error: ', error
 
-	#TODO: 加入watchdog操作
-	watchdog_error(u'api:{},\nerror:\n{}'.format(api, error))
+	if len(error.strip()) > 0:
+		#TODO: 加入watchdog操作
+		watchdog_error(u'api:{},\nerror:\n{}'.format(api, error))
 
 	return create_response(200).get_response()
 
