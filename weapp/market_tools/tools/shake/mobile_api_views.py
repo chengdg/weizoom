@@ -78,9 +78,9 @@ def record_prize(request):
 					if shake_detail.residue_price > 10:
 						if  member_play_count >= shake_detail.play_count:
 							if next_shake_detail:
-								error_msg = u'本轮活动已经结束，我们下轮见，祝您好运'
+								error_msg = u'本轮红包已抢完!'
 							else:
-								error_msg = u'活动已经结束，感谢您今天的参与！'
+								error_msg = u'红包已抢光，感谢您今天的参与！'
 						else:
 							if shake_detail.residue_price <= shake_detail.fixed_price or shake_detail.residue_price <= shake_detail.random_price_end:
 								send_price = random.uniform(1, float(shake_detail.residue_price))
@@ -114,11 +114,11 @@ def record_prize(request):
 								error_msg = shake_detail.shake.not_winning_desc
 					else:
 						if next_shake_detail:
-							error_msg = u'本轮活动已经结束，我们下轮见，祝您好运'
+							error_msg = u'本轮红包已抢完!'
 						else:
-							error_msg = u'活动已经结束，感谢您今天的参与！'
+							error_msg = u'红包已抢光，感谢您今天的参与！'
 				else:
-					error_msg = u'活动已经结束，感谢您今天的参与！'
+					error_msg = u'红包已抢光，感谢您今天的参与！'
 			# except:
 			# 	error_msg = u'活动不存在'
 	else:

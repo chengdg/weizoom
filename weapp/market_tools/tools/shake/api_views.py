@@ -134,7 +134,7 @@ def get_records(request):
 		one_record.money = str(record.money)
 		one_record.name = record.shake_detail.shake.name
 		one_record.is_sended = record.is_sended
-		one_record.created_at = record.created_at.strftime('%Y-%m-%d')
+		one_record.created_at = record.created_at.strftime('%Y-%m-%d %H:%M:%S')
 		one_record.id = record.id
 		response.data.items.append(one_record)
 	
