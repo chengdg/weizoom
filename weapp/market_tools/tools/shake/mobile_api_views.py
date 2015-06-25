@@ -60,7 +60,7 @@ def record_prize(request):
 		if detail_id != 0:
 			now = datetime.now()
 			#try:
-			member_play_count = ShakeRecord.objects.filter(member=member, shake_detail_id=detail_id).count()
+			
 			now_join_count = ShakeRecord.objects.filter(shake_detail_id=detail_id).count()
 			max_price_member = False
 
@@ -68,7 +68,7 @@ def record_prize(request):
 				max_price_member = (0 == now_join_count%30)
 			with transaction.atomic():
 				shake_detail = ShakeDetail.objects.select_for_update().get(id=detail_id)
-
+				member_play_count = ShakeRecord.objects.filter(member=member, shake_detail_id=detail_id).count()
 				next_shake_details = ShakeDetail.objects.filter(shake=shake_detail.shake, start_at__gte=shake_detail.end_at).order_by('start_at')
 				if next_shake_details.count() > 0:
 					next_shake_detail = next_shake_details[0]
