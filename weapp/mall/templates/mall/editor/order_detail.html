@@ -285,7 +285,16 @@
               </td>
               <td class="xui-td-fifth" rowspan="{{ forloop.revcounter }}">
                 {% if order.weizoom_card_money %}
-                  <p> 微众卡抵扣:{{ order.weizoom_card_money|floatformat:"2" }}</p>
+                  <span class="xa-wzcardHint xui-wzcard pr">{{ order.weizoom_card_money|floatformat:"2" }}
+                    <div class="xa-wzcardInfo pa xui-wzcardInfo" style="display:none;">
+                      <h4 for="">卡号：</h4>
+                      <ul>
+                        {% for card in order.weizoom_cards %}
+                          <li>{{card | safe}}</li>
+                        {% endfor %}
+                        </ul>  
+                    </div>
+                  </span>
                 {% endif %}
               </td>
               <td class="xui-td-sixth" rowspan="{{ forloop.revcounter }}">{{ order.postage|floatformat:"2" }}</td>
@@ -556,6 +565,13 @@
 
             return true;
         });
+        //微众卡号提示
+        $('body').delegate('.xa-wzcardHint','mouseenter',function(event){
+            $(event.target).children('.xa-wzcardInfo').css('display','block');
+        });
+        $('body').delegate('.xa-wzcardHint','mouseleave',function(event){
+              $(event.target).children('.xa-wzcardInfo').css('display','none');
+          });
     });
     //提交
 </script>

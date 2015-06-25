@@ -202,11 +202,11 @@ def get_order_detail(request):
 	order = Order.objects.get(id=request.GET['order_id'])
 	
 	#如果定单是微众卡支付显示微众卡号
-	try:
-		order.used_weizoom_card_id, order.used_weizoom_card_number = order.get_used_weizoom_card_id()
-	except:
-		order.used_weizoom_card_id = None
-		order.used_weizoom_card_number = None
+	# try:
+	# 	order.used_weizoom_card_id, order.used_weizoom_card_number = order.get_used_weizoom_card_id()
+	# except:
+	# 	order.used_weizoom_card_id = None
+	# 	order.used_weizoom_card_number = None
 
 	if request.method == 'GET':
 		order_has_products = OrderHasProduct.objects.filter(order=order)

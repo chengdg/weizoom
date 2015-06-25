@@ -252,7 +252,7 @@ def __add_product(context, product):
 	__process_product_data(product)
 	product = __supplement_product(context, product)
 	response = context.client.post('/mall/product/create/', product)
-	if product.get('status', None) == u'待售':
+	if product.get('status', None) == u'待售' or product["shelve_type"] == PRODUCT_SHELVE_TYPE_OFF:
 		pass
 	else:
 		latest_product = Product.objects.all().order_by('-id')[0]

@@ -102,10 +102,9 @@ Background:
 	When jobs为会员发放优惠券
 		'''
 		{
-			"coupon_rule": "优惠券规则1",
+			"name": "优惠券规则1",
 			"count": 1,
-			"members": ["bill"],
-			"coupon_ids": ["coupon_1"]
+			"members": ["bill"]
 		}
 		'''
 	Then jobs获得优惠券规则列表
@@ -136,7 +135,7 @@ Background:
 			"status": "进行中"
 		}]
 		"""
-@mall @mall2 @mall.order @zy_mo1
+@mall @mall2 @mall.order @zy_mo1 @eugene
 Scenario: 购买商品后，可以获得订单列表
 	bill购买了商品1(只下单, 未支付)和商品2(已支付)
 

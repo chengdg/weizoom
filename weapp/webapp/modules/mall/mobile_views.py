@@ -115,8 +115,10 @@ def edit_shopping_cart_order(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	request.redirect_url_query_string = _get_redirect_url_query_string(request)
 	if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
+		print("*"*20, 'edit_shopping_cart_order', ' : 1')
 		return request_util.edit_shopping_cart_order(request)
 	else:
+		print("*"*20, 'edit_shopping_cart_order', ' : 2')
 		request.action = 'add'
 		return request_util.edit_address(request)
 

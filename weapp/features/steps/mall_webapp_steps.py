@@ -113,17 +113,30 @@ def step_impl(context, webapp_user_name):
 
 @then(u"{webapp_user_name}获得待编辑订单")
 def step_impl(context, webapp_user_name):
+	"""
+		e.g.:
+		[{'name': "asdfasdfa",
+		  'count': "111"
+		},{...}]
+	"""
 	context_text = json.loads(context.text)
 	if context_text == []:
-		actual_products = []
+		actual = []
 		expected_products = []
 	else:
+		actual = []
 		expected_products = context_text['products']
-		actual_products = context.response.context['order'].products
-		for product in actual_products:
-			product.count = product.purchase_count
+		product_groups = context.response.context['product_groups']
+		for i in product_groups:
+			for product in i['products']:
+				_a = {}
+				_a['name'] = product.name
+				_a['count'] = product.count
+				actual.append(_a)
 
-	bdd_util.assert_list(expected_products, actual_products)
+	bdd_util.assert_list(expected_products, actual)
+
+
 
 
 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
@@ -171,6 +184,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		integral_each_yuan = settings[0].integral_each_yuan
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	group2integralinfo = dict()
+
 	if webapp_owner_name == u'订单中':
 		is_order_from_shopping_cart = "true"
 		webapp_owner_id = context.webapp_owner_id
@@ -178,12 +192,15 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		product_counts = []
 		promotion_ids = []
 		product_model_names = []
+
+
 		products = context.response.context['order'].products
 		for product in products:
 			product_counts.append(str(product.purchase_count))
 			product_ids.append(str(product.id))
-			if product.has_key('promotion'):
-				promotion = Promotion.objects.get(name=product['promotion']['name'])
+
+			if hasattr(product, 'promotion'):
+				promotion = Promotion.objects.get(name=product.promotion.name)
 				promotion_ids.append(str(promotion.id))
 			else:
 				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj)))
@@ -501,7 +518,8 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 		context.webapp_user.update_ship_info(ship_name='11', ship_address='12', ship_tel='12345678970', area='1')
 	else:
 		# 获取购物车参数
-		product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context)
+		arugment = json.loads(context.text)
+		product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context.webapp_user.id, arugment)
 
 	if len(product_ids) == 1:
 		url = '/workbench/jqm/preview/?woid=%s&module=mall&model=order&action=edit&product_id=%s&product_count=%s&product_model_name=%s' % (context.webapp_owner_id, product_ids[0], product_counts[0], product_model_names[0])
@@ -600,6 +618,54 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 
 @then(u"{webapp_user_name}能获得购物车")
 def step_impl(context, webapp_user_name):
+	"""
+	e.g.:1
+		{
+			"product_groups": [{
+				"promotion": {
+					"type": "premium_sale",
+					"result": {
+						"premium_products": [{
+							"name": "商品4",
+							"premium_count": 3
+						}]
+					}
+				},
+				"can_use_promotion": true,
+				"products": [{
+					"name": "商品5",
+					"model": "M",
+					"price": 7.0,
+					"count": 1
+				}, {
+					"name": "商品5",
+					"model": "S",
+					"price": 8.0,
+					"count": 2
+				}]
+			}],
+			"invalid_products": []
+		}
+	e.g.:2
+		{
+			"product_groups": [{
+				"promotion": null,
+				"can_use_promotion": false,
+				"products": [{
+					"name": "商品1",
+					"count": 1
+				}]
+			}, {
+				"promotion": null,
+				"can_use_promotion": false,
+				"products": [{
+					"name": "商品2",
+					"count": 2
+				}]
+			}],
+			"invalid_products": []
+		}
+	"""
 	url = '/workbench/jqm/preview/?woid=%d&module=mall&model=shopping_cart&action=show' % context.webapp_owner_id
 	response = context.client.get(bdd_util.nginx(url), follow=True)
 	product_groups = response.context['product_groups']
@@ -612,19 +678,22 @@ def step_impl(context, webapp_user_name):
 				for property in product.custom_model_properties:
 					model.append('%s' % (property['property_value']))
 			product.model = ' '.join(model)
+			product.count = product.count
+
 	fill_products_model(invalid_products)
 	for product_group in product_groups:
-		from copy import copy
+		from copy import deepcopy
 		promotion = None
 		promotion = product_group['promotion']
 		products = product_group['products']
+
 		if not promotion:
 			product_group['promotion'] = None
 		elif not product_group['can_use_promotion']:
 			product_group['promotion'] = None
 		else:
 			#由于相同promotion产生的不同product group携带着同一个promotion对象，所以这里要通过copy来进行写时复制
-			new_promotion = copy(promotion)
+			new_promotion = deepcopy(promotion)
 			product_group['promotion'] = new_promotion
 			new_promotion['type'] = product_group['promotion_type']
 			new_promotion['result'] = product_group['promotion_result']
@@ -639,6 +708,7 @@ def step_impl(context, webapp_user_name):
 		'product_groups': product_groups,
 		'invalid_products': invalid_products
 	}
+
 
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, actual)
@@ -710,20 +780,57 @@ def step_impl(context, webapp_user_name):
 
 @when(u"{webapp_user_name}从购物车发起购买操作")
 def step_impl(context, webapp_user_name):
-	# 获取购物车参数
-	product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context)
+	"""
+	action = "click" or "pay"
 
-	# 加默认地址
-	#context.webapp_user.update_ship_info(ship_name='11', ship_address='12', ship_tel='12345678970', area='1')
+	e.g.:
+		{
+			"action": "click"
+			"context": [
+				{'name': 'basketball', 'model': "standard"},
+				{...}
+			]
+		}
+	"""
+	__i = json.loads(context.text)
+	if __i.get("action") == u"pay":
+		argument = __i.get('context')
+		# 获取购物车参数
+		product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context.webapp_user.id, argument)
+		url = '/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart_order&action=edit&product_ids=%s&product_counts=%s&product_model_names=%s' % (context.webapp_owner_id, product_ids, product_counts, product_model_names)
+		product_infos = {
+			'product_ids': product_ids,
+			'product_counts': product_counts,
+			'product_model_names': product_model_names
+		}
+	elif __i.get("action") == u"click":
+		# 加默认地址
+		#context.webapp_user.update_ship_info(ship_name='11', ship_address='12', ship_tel='12345678970', area='1')
+		url = '/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart&action=show' % (context.webapp_owner_id)
+		product_infos = {}
 
-	url = '/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart_order&action=edit&product_ids=%s&product_counts=%s&product_model_names=%s' % (context.webapp_owner_id, product_ids, product_counts, product_model_names)
 	response = context.client.get(bdd_util.nginx(url), follow=True)
+	assert response.status_code == 200
+	context.product_infos = product_infos
 	context.response = response
+	context.redirect_url_query_string_pay = url
 
-def _get_shopping_cart_parameters(context):
-	shopping_cart_items = ShoppingCart.objects.filter(webapp_user_id=context.webapp_user.id)
-	if context.text is not None:
-		product_infos = json.loads(context.text)
+
+def _get_shopping_cart_parameters(webapp_user_id, context):
+	"""
+	webapp_user_id-> int
+	context -> list
+		e.g.:
+			[
+				{'name': "",
+				 'model': },
+				{...},
+			]
+	"""
+
+	shopping_cart_items = ShoppingCart.objects.filter(webapp_user_id=webapp_user_id)
+	if context is not None:
+		product_infos = context
 		product_ids = []
 		product_counts = []
 		product_model_names = []
@@ -732,7 +839,7 @@ def _get_shopping_cart_parameters(context):
 			product_model_name = product_info.get('model', 'standard')
 			try:
 				product = Product.objects.get(name= product_info['name'])
-				cart = shopping_cart_items.get(product = product, product_model_name=product_model_name)
+				cart = shopping_cart_items.get(product=product, product_model_name=product_model_name)
 				product_ids.append(str(cart.product.id))
 				product_counts.append(str(cart.count))
 				product_model_names.append(cart.product_model_name)
@@ -766,6 +873,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 
 
 def __get_address_id(areas):
+	if not areas:
+		areas = u'北京市 北京市 海淀区'
 	areas = areas.split(' ')
 	province = Province.objects.get(name=areas[0])
 	city = City.objects.get(name=areas[1])
@@ -786,7 +895,115 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#ship_info = ShipInfo.objects.get(webapp_user_id=context.webapp_user.id)
 	url = '/workbench/jqm/preview/?woid=%s&module=user_center&model=ship_info&action=save' % (context.webapp_owner_id)
 	response = context.client.post(bdd_util.nginx(url), data)
-	print response
+
+
+@when(u"{webapp_user_name}填写收货信息")
+def step_add_address_info(context, webapp_user_name):
+	"""
+		e.g.:
+		{
+			"ship_name": "你大爷",         # 收货人
+			"ship_tel":  "18612456555",   # 手机号码
+			"area": "北京市 北京市 海淀区",  # 地区
+			"ship_address": "泰兴大厦"     # 详细地址
+		}
+	"""
+	address_info = json.loads(context.text)
+	try:
+		ship_info = context.response.context['ship_info']
+		if not ship_info:
+			ship_info = {}
+	except KeyError as e:
+		ship_info = {}
+	try:
+		redirect_url = context.response.context['redirect_url_query_string']
+	except KeyError as e:
+		redirect_url = context.redirect_url_query_string_pay
+	url = '/webapp/api/project_api/call/'
+	data = {
+		'woid': context.webapp_owner_id,
+		'module': 'mall',
+		'target_api': 'address/save',
+		'ship_address': address_info.get('ship_address', u'泰兴大厦'),
+		'area': __get_address_id(address_info.get('area')),
+		'ship_tel': address_info.get("ship_tel", '18612456555'),
+		'ship_name': address_info.get("ship_name", u"你大爷"),
+		'ship_id': ship_info.get('id', 0),
+	}
+	response = context.client.post(url, data)
+	bdd_util.assert_api_call_success(response)
+	response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
+	context.response = response
+
+
+def get_prodcut_ids_info(order):
+	product_ids = []
+	product_counts = []
+	product_model_names = []
+	promotion_ids = []
+
+
+	for product_group in order.product_groups:
+		for product in product_group['products']:
+			product_ids.append(str(product.id))
+			product_counts.append(str(product.purchase_count))
+			product_model_names.append(str(product.model_name))
+			if product_group['can_use_promotion']:
+				promotion_ids.append(str(product_group['promotion'].id))
+			else:
+				promotion_ids.append('0')
+	return {'product_ids': '_'.join(product_ids),
+			'product_counts': '_'.join(product_counts),
+			'product_model_names': '$'.join(product_model_names),
+			'promotion_ids': '_'.join(promotion_ids)
+			}
+
+
+
+
+@when(u"{webapp_user_name}在购物车订单编辑中点击提交订单")
+def step_click_check_out(context, webapp_user_name):
+	"""
+	{
+		"pay_type":  "货到付款",
+	}
+	"""
+	from mall.models import PAYNAME2TYPE
+	argument = json.loads(context.text)
+	pay_type = argument.get(argument['pay_type'])
+
+	order = context.response.context['order']
+	argument_request = get_prodcut_ids_info(order)
+
+	url = '/webapp/api/project_api/call/'
+	data = {
+		'module': 'mall',
+		'target_api': 'order/save',
+		'is_order_from_shopping_cart': 'true',
+		'woid': context.webapp_owner_id,
+		'ship_id': order.ship_id,
+		'ship_name': order.ship_name,
+		'ship_tel': order.ship_tel,
+		'area': order.area,
+		'ship_address': order.ship_address,
+		'xa-choseInterfaces': PAYNAME2TYPE.get(pay_type, -1),
+		'bill': order.ship_name,
+		'group2integralinfo': {},
+	}
+	data.update(argument_request)
+	response = context.client.post(url, data)
+	content = json.loads(response.content)
+	msg = content["data"].get("msg", "")
+	match_str = u"有商品已下架<br/>2秒后返回购物车<br/>请重新下单"
+	if match_str == msg:
+		context.server_error_msg = msg
+	else:
+		context.created_order_id = content['data']['order_id']
+		context.response = response
+	# print("*"*80)
+	# from pprint import pprint
+	# pprint(response_data)
+	# raise Exception("hello")
 
 
 # def get_use_integral(webapp_user_name, webapp_id, data):

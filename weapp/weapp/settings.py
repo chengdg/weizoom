@@ -42,6 +42,8 @@ TASKQUEUE_ENABLED = True
 #   dummy: print event, but not dispatch
 EVENT_DISPATCHER = 'redis'
 
+DATETIME_FORMAT = 'Y m d, H:i:s.u'
+
 
 DATABASES = {
     'default': {
@@ -52,7 +54,7 @@ DATABASES = {
         'USER': 'weapp',                      # Not used with sqlite3.
         'PASSWORD': 'weizoom',                  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'njweb.weapp.weizzz.com',
+        'HOST': 'db.weizoom.com',
         # Set to empty string for default. Not used with sqlite3.
         'PORT': '',
         'CONN_MAX_AGE': 100

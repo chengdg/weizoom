@@ -311,3 +311,36 @@ body.ui-overlay-x .ui-page{
     -moz-border-radius: 0px;
     border-radius: 0px;
 }
+/*引导关注样式*/
+.xui-attentionAlert{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+}
+.xui-attentionAlert a{
+    box-sizing:boredr-box;
+    -webkit-box-sizing:boredr-box;
+    padding:0 10px;
+    line-height: 40px;
+    text-align: left;
+    display: block;
+    background: rgba(255,243,145,0.9);
+    color: #F95901;
+    font-size: 0.85rem;
+}
+.xui-attentionAlert .xui-icon-rightarrow{
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    width: 6px;
+    height: 6px;
+    background: none;
+    border-top: 1px solid #f95901;
+    border-right: 1px solid #f95901;
+    transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}

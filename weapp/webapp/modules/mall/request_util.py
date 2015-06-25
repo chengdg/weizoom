@@ -651,6 +651,7 @@ def _get_products(request):
 	product_infos = []
 	product2count = {}
 	product2promotion = {}
+
 	for i in range(len(product_ids)):
 		product_id = int(product_ids[i])
 		product_model_name = product_model_names[i]

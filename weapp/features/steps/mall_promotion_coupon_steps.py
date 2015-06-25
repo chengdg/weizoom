@@ -82,59 +82,31 @@ def __get_member_by_openid(webapp_id, openid):
 ###################################################################################
 # __send_coupons: webapp_owner发放优惠券
 ###################################################################################
-def __send_coupons(context, webapp_owner_name, type):
-	from market_tools.tools.coupon.api_views import SEND_COUPON_OF_MEMBER, SEND_COUPON_OF_TAG, SEND_COUPON_OF_GRADE
-	if type == u'会员':
-		type = SEND_COUPON_OF_MEMBER
-	else:
-		type = -1
-
+def __send_coupons(context, webapp_owner_name):
 	webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
 	coupon_info = json.loads(context.text)
-	coupon_rule_name = coupon_info['coupon_rule']
+	coupon_rule_name = coupon_info['name']
+	count = coupon_info['count']
+	member_names = coupon_info['members']
+
 	coupon_rule = CouponRule.objects.get(owner_id=webapp_owner_id, name=coupon_rule_name, is_active=True)
 
-	count = coupon_info['count']
-
-	member_names = coupon_info['members']
 	member_ids = []
 	for member_name in member_names:
 	 	openid = u'%s_%s' % (member_name, webapp_owner_name)
 	 	member = __get_member_by_openid(context.webapp_id, openid)
 	 	member_ids.append(str(member.id))
 
-	member_ids = '_'.join(member_ids)
 
-	url = '/market_tools/coupon/api/coupons/send/'
+	url = '/mall_promotion/api/issuing_coupons_record/create/'
 	data = {
-		"type": type,
-		"count": count,
-		"rule_id": coupon_rule.id,
-		"ids": member_ids
+		"member_id": json.dumps(member_ids),
+		"coupon_rule_id": coupon_rule.id,
+		"pre_person_count": count
 	}
 
 	response = context.client.post(url, data)
-	bdd_util.assert_api_call_success(response)
-
-	new_created_coupons = Coupon.objects.filter(owner_id=webapp_owner_id).order_by('-id')[:count]
-	expected_coupon_ids = coupon_info['coupon_ids']
-	expected_coupon_ids.reverse()
-	for index, coupon in enumerate(new_created_coupons):
-		# 将coupon_id改为指定的coupon_id，特殊情况允许更新操作
-		Coupon.objects.filter(coupon_id=coupon.coupon_id).update(coupon_id=expected_coupon_ids[index])
-
-	if 'expire_date' in coupon_info:
-		# 修改发放时间和过期时间，特殊情况允许更新操作
-		today = datetime.today()
-		if coupon_info['expire_date'] == u'昨天':
-			expire_date = today - timedelta(1)
-		elif coupon_info['expire_date'] == u'前天':
-			expire_date = today - timedelta(2)
-		else:
-			pass
-
-		new_created_coupon_ids = [coupon.id for coupon in new_created_coupons]
-		Coupon.objects.filter(id__in=new_created_coupon_ids).update(expired_time=expire_date)
+	context.response = response
 
 
 @when(u'{user_name}添加优惠券规则')
@@ -193,10 +165,11 @@ def step_impl(context, user_name):
 def step_impl(context, user_name, coupon_rule_name):
 	user_id = bdd_util.get_user_id_for(user_name)
 	coupon_rule = CouponRule.objects.get(owner_id=user_id, name=coupon_rule_name, is_active=True)
-	url = '/market_tools/coupon/coupon_rule/update/?rule_id=%d' % coupon_rule.id
+	url = '/mall_promotion/api/coupon_rules/create/'
 
 	name = json.loads(context.text)['name']
 	data = {
+		"rule_id": coupon_rule.id,
 		"name": name
 	}
 
@@ -351,7 +324,19 @@ def step_impl(context, user_name, coupon_rule_name):
 
 @when(u"{user_name}为会员发放优惠券")
 def step_impl(context, user_name):
-	__send_coupons(context, user_name, u'会员')
+	__send_coupons(context, user_name)
+
+@then(u"{user_name}能获得发放优惠券失败的信息")
+def step_impl(context, user_name):
+	expected = json.loads(context.text)
+	error_data = json.loads(context.response.content)
+	print "-------------"
+	print context.text
+	actual = dict(
+		error_message=error_data['errMsg']
+	)
+	context.tc.assertTrue(200 != error_data['code'])
+	bdd_util.assert_dict(expected, actual)
 
 
 # @when(u"{user}更新优惠券排行榜时间")

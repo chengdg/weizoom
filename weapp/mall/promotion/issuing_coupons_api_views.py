@@ -249,7 +249,14 @@ def create_red_enevlop(request):
     coupon_rule_id = int(request.POST.get('coupon_rule_id'))  # 优惠券规则
     pre_person_count = int(request.POST.get('pre_person_count'))  # 每人几张
     person_count = len(member_ids)  # 发放的人数
-    coupon_count = pre_person_count * person_count  # 发放的张数
+    send_count = pre_person_count * person_count  # 发放的张数
+
+    # 对应优惠券的库存
+    coupon_count = promotion_models.CouponRule.objects.get(id=coupon_rule_id).remained_count
+    if coupon_count < send_count:
+        response = create_response(500)
+        response.errMsg = u"发放数量大于优惠券库存,请先增加库存"
+        return response.get_response()
 
     # 创建优惠券记录
     coupon_record = promotion_models.CouponRecord.objects.create(
@@ -257,7 +264,7 @@ def create_red_enevlop(request):
         coupon_rule_id=coupon_rule_id,
         pre_person_count=pre_person_count,
         person_count=person_count,
-        coupon_count=coupon_count)
+        coupon_count=send_count)
     coupon_record.save()
     if member_ids:  # 会员列表
         # 对每个会员创建优惠券

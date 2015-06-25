@@ -833,7 +833,37 @@
     top: -25px;
     left: -43px;
 }
-
+.xui-orderDetialPage .xui-wzcard::after{
+    content:"i";
+    display:inline-block;
+    width:15px;
+    height:15px;
+    line-height:15px;
+    border:1px solid #666;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    border-radius:50%;
+    color:#666;
+    cursor: pointer;
+    font-style: normal;
+    -webkit-transform:scale(0.95);
+    -moz-transform:scale(0.95);
+    transform:scale(0.95);
+}
+.xui-orderDetialPage .xui-wzcardInfo{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 25px 5px 20px;
+    left: 87%;
+    top: 5px;
+    z-index: 1;
+    min-width: 100px;
+}
+.xui-orderDetialPage .xui-wzcardInfo h4{
+    font-weight: normal;
+    margin: 5px 0;
+    text-align: left;
+}
 
 
 .xui-orderDetialPage .xui-backgroundpay {

@@ -170,7 +170,11 @@ $(document).ready(function() {
 				}, 500)
 			},
 			error: function(resp) {
-				W.showHint('error', '发放失败!')
+                if (resp.errMsg) {
+                    W.showHint('error', resp.errMsg);
+                }else {
+				    W.showHint('error', '发放失败!');
+                }
 			}
 		})
 	});

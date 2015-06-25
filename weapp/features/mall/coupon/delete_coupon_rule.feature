@@ -267,7 +267,7 @@ Scenario: 2 删除已失效的优惠券
 
 
 
-@mall2 @zy_cp3 @eugeneX
+@mall2 @zy_cp3 @eugene
 Scenario: 3 删除未领取的优惠券
 jobs添加"优惠券规则"后
 	1. 如果优惠券没有被领取和使用，可以删除未领取的优惠券

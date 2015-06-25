@@ -1335,16 +1335,16 @@ class Order(models.Model):
 	##########################################################################
 	# get_weizoom_card_id: 获取定单使用的微众卡的id
 	##########################################################################
-	def get_used_weizoom_card_id(self):
-		if self.pay_interface_type == PAY_INTERFACE_WEIZOOM_COIN:
-			from market_tools.tools.weizoom_card import models as weizoom_card_model
-			weizoom_card_id = weizoom_card_model.WeizoomCardHasOrder.objects.get(
-				order_id=self.order_id).card_id
-			weizoom_card_number = weizoom_card_model.WeizoomCard.objects.get(
-				id=weizoom_card_id).weizoom_card_id
-			return weizoom_card_id, weizoom_card_number
-		else:
-			return None, None
+	# def get_used_weizoom_card_id(self):
+	# 	if self.pay_interface_type == PAY_INTERFACE_WEIZOOM_COIN:
+	# 		from market_tools.tools.weizoom_card import models as weizoom_card_model
+	# 		weizoom_card_id = weizoom_card_model.WeizoomCardHasOrder.objects.get(
+	# 			order_id=self.order_id).card_id
+	# 		weizoom_card_number = weizoom_card_model.WeizoomCard.objects.get(
+	# 			id=weizoom_card_id).weizoom_card_id
+	# 		return weizoom_card_id, weizoom_card_number
+	# 	else:
+	# 		return None, None
 
 	@staticmethod
 	def fill_payment_time(orders):
@@ -1868,6 +1868,15 @@ PAYTYPE2NAME = {
 	PAY_INTERFACE_COD: u'货到付款',
 	PAY_INTERFACE_WEIZOOM_COIN: u"微众卡支付"
 }
+PAYNAME2TYPE = {
+	u'优惠抵扣':PAY_INTERFACE_PREFERENCE,
+	u'支付宝': PAY_INTERFACE_ALIPAY,
+	u'财付通': PAY_INTERFACE_TENPAY,
+	u'微信支付': PAY_INTERFACE_WEIXIN_PAY,
+	u'货到付款': PAY_INTERFACE_COD,
+	u"微众卡支付": PAY_INTERFACE_WEIZOOM_COIN
+}
+
 VALID_PAY_INTERFACES = [
 	PAY_INTERFACE_WEIXIN_PAY,
 	PAY_INTERFACE_COD,
