@@ -102,8 +102,8 @@ def step_impl(context, user):
         count=10,
         remark="",
         expired_time="3000-12-12 00:00:00",
-        valid_time_from = "2000-1-1 00:00:00"
-        valid_time_to = "3000-12-12 00:00:00"
+        valid_time_from="2000-1-1 00:00:00",
+        valid_time_to="3000-12-12 00:00:00",
         )
 
     weizoom_cards = json.loads(context.text)
