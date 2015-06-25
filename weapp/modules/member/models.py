@@ -659,7 +659,7 @@ class MemberInfo(models.Model):
 	member_remarks = models.TextField(max_length=1024, blank=True)
 
 	class Meta(object):
-		#managed = False
+		managed = False
 		db_table = 'member_info'
 		verbose_name = '会员详细资料'
 		verbose_name_plural = '会员详细资料'
