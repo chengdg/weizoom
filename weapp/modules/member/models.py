@@ -497,8 +497,6 @@ class Member(models.Model):
 			#解决用户名本身就是字节码串导致不能正常转换得问题，例如ae
 			self._username_for_html.decode('utf8')
 		except:
-			error_msg = u"用户名:{}; utf8解码失败, cause:\n{}".format(self._username_for_html, unicode_full_stack())
-			watchdog_error(error_msg, 'mall')
 			self._username_for_html = self.username_hexstr
 
 		return self._username_for_html
@@ -510,8 +508,6 @@ class Member(models.Model):
 			username = re.sub('<[^<]+?>', '', username)
 			return username
 		except:
-			error_msg = u"用户名:{}; utf8编码失败, cause:\n{}".format(self.username_for_html, unicode_full_stack())
-			watchdog_error(error_msg, 'mall')
 			return self.username_for_html
 
 	@cached_property
@@ -524,8 +520,6 @@ class Member(models.Model):
 			else:
 				return u'%s...' % username[:5]
 		except:
-			error_msg = u"用户名:{}; utf8编码失败, cause:\n{}".format(self.username_for_html, unicode_full_stack())
-			watchdog_error(error_msg, 'mall')
 			return self.username_for_html[:5]
 
 	@property
@@ -665,7 +659,7 @@ class MemberInfo(models.Model):
 	member_remarks = models.TextField(max_length=1024, blank=True)
 
 	class Meta(object):
-		managed = False
+		#managed = False
 		db_table = 'member_info'
 		verbose_name = '会员详细资料'
 		verbose_name_plural = '会员详细资料'
