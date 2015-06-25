@@ -23,10 +23,11 @@ def get_cards_num_census(request):
     cur_page = int(request.GET.get('page', '1'))
     filter_value = request.GET.get('filter_value', None)
     query_string=request.META['QUERY_STRING']
-    cards,pageinfo= get_num_cards(filter_value,cur_page,count_per_page,query_string)
+    cards,card_ids,pageinfo= get_num_cards(filter_value,cur_page,count_per_page,query_string)
     cards = sorted(cards.items(), lambda x, y: cmp(float(x[1]['use_money']), float(y[1]['use_money'])),reverse=True)
     response = create_response(200)
     response.data.items = cards
+    response.data.card_ids=card_ids
     response.data.sortAttr = request.GET.get('sort_attr', 'money')
     response.data.pageinfo = paginator.to_dict(pageinfo)
     
@@ -40,11 +41,13 @@ def get_card_num_details(request):
     微众卡明细页面
     """
     card_id = request.GET.get('card_id','')
+    start_date = request.GET.get('start_date','')
+    end_date = request.GET.get('end_date','')
     #处理过滤
     filter_value = request.GET.get('filter_value', None)
     count_per_page = int(request.GET.get('count_per_page', '1'))
     cur_page = int(request.GET.get('page', '1'))
-    card_orders = get_num_details(card_id,filter_value)
+    card_orders = get_num_details(card_id,filter_value,start_date,end_date)
     pageinfo, card_orders = paginator.paginate(card_orders, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
     cards = []
@@ -103,11 +106,14 @@ def get_card_num_filter_params(request):
 
 #获得按卡号统计的集合
 def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string=""):
-    card_relation2orders = WeizoomCardHasOrder.objects.exclude(order_id=-1)
+    card_relation2orders = WeizoomCardHasOrder.objects.exclude(order_id__in=['-1','-2'])
     weizoom_cards = WeizoomCard.objects.all()
     
     #处理过滤
     filter_data_args = {}
+
+    start_date = ""
+    end_date = ""
 
     if filter_value:
         filter_data_dict = {}
@@ -159,9 +165,34 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
                 val1,val2 = value.split('--')
                 low_date = val1 +' 00:00:00'
                 high_date = val2 +' 23:59:59'
-                # filter_data_args['created_at__gte'] = low_date
-                # filter_data_args['created_at__lte'] = high_date
                 weizoom_cards = weizoom_cards.filter(created_at__gte=low_date,created_at__lte=high_date)
+
+        if filter_data_dict.has_key('activated_at'):
+            value = filter_data_dict['activated_at']
+            if value.find('--') > -1:
+                val1,val2 = value.split('--')
+                low_date = val1 +' 00:00:00'
+                high_date = val2 +' 23:59:59'
+                weizoom_cards = weizoom_cards.filter(activated_at__gte=low_date,activated_at__lte=high_date,status__in=[0,1,2,4])
+
+        if filter_data_dict.has_key('used_at'):
+            value = filter_data_dict['used_at']
+            if value.find('--') > -1:
+                val1,val2 = value.split('--')
+                start_date = val1 +' 00:00:00'
+                end_date = val2 +' 23:59:59'
+                card_ids = []
+                card_relation2orders = card_relation2orders.filter(created_at__gte=start_date,created_at__lte=end_date)
+                card_has_order_dict = {}
+                for one_relation in card_relation2orders:
+                    card_ids.append(one_relation.card_id)
+                weizoom_cards = weizoom_cards.filter(id__in=card_ids)
+
+        if filter_data_dict.has_key('order_id'):
+            value = filter_data_dict['order_id']
+            card_relation2orders = card_relation2orders.filter(order_id__contains=value)
+            card_ids = [r.card_id for r in card_relation2orders]
+            weizoom_cards = weizoom_cards.filter(id__in=card_ids)
 
         if filter_data_dict.has_key('member'):
             member_ids = []
@@ -221,11 +252,15 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
                     card_ids.append(key)
             # filter_data_args['id__in'] = card_ids
             weizoom_cards = weizoom_cards.filter(id__in=card_ids)
-    else:
-        total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), "6", 0)
-        low_date = str(low_date) + ' 00:00:00'
-        high_date = str(high_date) + ' 23:59:59'
-        weizoom_cards = weizoom_cards.filter(created_at__gte=low_date,created_at__lte=high_date)
+    # else:
+        # total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), "6", 0)
+        # low_date = str(low_date) + ' 00:00:00'
+        # high_date = str(high_date) + ' 23:59:59'
+        # weizoom_cards = weizoom_cards.filter(created_at__gte=low_date,created_at__lte=high_date)
+    # total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), "6", 0)
+    if start_date:
+        start_date = str(start_date)
+        end_date = str(end_date)
     #获得已经过期的微众卡id
     today = datetime.today()
     card_ids_need_expire = []
@@ -252,7 +287,10 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
             'name': rule.name,
             'card_type': rule.card_type
         }
+    card_ids =card_id2card_rule.keys()
+
     card_id2card_rule = sorted(card_id2card_rule.items(), lambda x, y: cmp(float(x[1]['use_money']), float(y[1]['use_money'])),reverse=True)
+
     if cur_page:
         pageinfo, card_id2card_rule = paginator.paginate(card_id2card_rule, cur_page, count_per_page, query_string)
 
@@ -285,7 +323,10 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
                 buyer_name = member.username_for_html
             else:
                 buyer_name = u'未知'
-            order_count = len(card2orders[card[0]])
+            order_ids = set()
+            for o in card2orders[card[0]]:
+                order_ids.add(o.order_id)
+            order_count = len(order_ids)
         card_type = u''
         if card[1]['card_type'] == WEIZOOM_CARD_EXTERNAL_USER:
             card_type = u'外部卡'
@@ -315,17 +356,24 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
             'use_money': '%.2f' % card[1]['use_money'],
             'card_type': card_type,
             'order_count': order_count,
-            'buyer_name': buyer_name
+            'buyer_name': buyer_name,
+            'start_date': start_date,
+            'end_date': end_date
         }
     if cur_page:
-        return cur_cards,pageinfo
+        return cur_cards,card_ids,pageinfo
     else:
         return cur_cards
 
 #获取按卡号明细列表
-def get_num_details(card_id,filter_value):
+def get_num_details(card_id,filter_value,start_date,end_date):
     card = WeizoomCard.objects.get(weizoom_card_id=card_id)
-    card_relation2orders = WeizoomCardHasOrder.objects.filter(card_id=card.id).exclude(order_id=-1).order_by('-created_at')
+    card_relation2orders = WeizoomCardHasOrder.objects.filter(card_id=card.id,).exclude(order_id__in=['-1','-2']).order_by('-created_at')
+    if start_date:
+        # total_days, start_date, cur_date, end_date = dateutil.get_date_range(dateutil.get_today(), "6", 0)
+        # start_date = str(start_date) + ' 00:00:00'
+        # end_date = str(end_date) + ' 23:59:59'
+        card_relation2orders = card_relation2orders.filter(created_at__gte=start_date,created_at__lte=end_date).order_by('-created_at')
     #处理过滤
     filter_data_args = {}
 
@@ -367,18 +415,18 @@ def get_num_details(card_id,filter_value):
                 filter_data_args['money__gte'] = float(val1)
                 filter_data_args['money__lte'] = float(val2)
 
-            if key == 'created_at':
+            if key == 'used_at':
                 if value.find('--') > -1:
                     val1,val2 = value.split('--')
                     filter_data_args['created_at__gte'] = val1 +' 00:00:00'
                     filter_data_args['created_at__lte'] = val2 +' 23:59:59'
 
         card_relation2orders = card_relation2orders.filter(**filter_data_args)
-    else:
-        total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), "6", 0)
-        low_date = str(low_date) + ' 00:00:00'
-        high_date = str(high_date) + ' 23:59:59'
-        card_relation2orders = card_relation2orders.filter(created_at__gte=low_date, created_at__lte=high_date)
+    # else:
+    #     total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), "6", 0)
+    #     low_date = str(low_date) + ' 00:00:00'
+    #     high_date = str(high_date) + ' 23:59:59'
+    #     card_relation2orders = card_relation2orders.filter(created_at__gte=low_date, created_at__lte=high_date)
     card_rule = WeizoomCardRule.objects.get(id=card.weizoom_card_rule_id)
     money = card_rule.money #面值
     for order in reversed(card_relation2orders):

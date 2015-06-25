@@ -96,10 +96,10 @@
 					'owner_ids': idStr.trim(),
 				},
 				success: function() {
-					W.getSuccessHintView().show('设置成功！');
+					W.showHint('success','设置成功！');
 				},
 				error: function() {
-					W.getErrorHintView().show('设置失败！');
+					W.showHint('error','设置失败！');
 				}
 			});
 			return false;

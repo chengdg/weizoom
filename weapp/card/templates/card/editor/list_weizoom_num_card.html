@@ -8,7 +8,7 @@
             <a href="/card/cards/get/">微众卡管理</a>
         </li>
         <li>
-            <a href="/card/cards_census/get/">数据统计</a>
+            <a href="/card/overview/get/">数据统计</a>
         </li>
         <li class="active">按卡号统计</li>
     </ul>
@@ -39,7 +39,7 @@
 {% verbatim %}
 <script id="cards-list" type="text/x-jquery-tmpl">
 	<div class="pa" style="top:10px;right:15px;">
-		<a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
+		<a href="javascript:void(0);" class="btn btn-default xa-export ml20" card_data="${getCard(data.card_ids)}">导出结果</a>
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
 		<thead>
@@ -58,7 +58,7 @@
 		<tbody id='card_list'>
 		{{each(i,card) items}}
 		    <tr>
-		        <td><a title="查看明细" href="/card/card_num_details/get/?card_id=${card[1].weizoom_card_id}">${card[1].weizoom_card_id}</a></td>
+		        <td><a title="查看明细" href="/card/card_num_details/get/?card_id=${card[1].weizoom_card_id}&start_date=${card[1].start_date}&end_date=${card[1].end_date}">${card[1].weizoom_card_id}</a></td>
 		        <td>${card[1].name}</td>
 		        <td>${card[1].rule_money}</td>
 		        <td>${card[1].status}</td>
@@ -77,6 +77,7 @@
 
 {% block js %}
 <script type="text/javascript">
+var cards ={};
 $(document).ready(function() {
 	var view = new W.view.card.numFilter({
 		el: ".xa-numFilterView",
@@ -88,17 +89,42 @@ $(document).ready(function() {
 	});
 	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){	
-		var url = '/card/cards/export/';
-		if (view.filter_value) {
-			url = url + '?filter_value='+view.filter_value;
-		}
-		W.getSuccessHintView().show("'导出中...'");
-		var $frame=$('<iframe>').hide().attr('src',url);
-		$('body').append($frame);
-		setTimeout(function(){W.getErrorHintView().hide()}, 5000);
+{#		var url = '/card/cards/export/';#}
+{#		if (view.filter_value) {#}
+{#			url = url + '?filter_value='+view.filter_value;#}
+{#		}#}
+{#		W.getSuccessHintView().show("'导出中...'");#}
+{#		var $frame=$('<iframe>').hide().attr('src',url);#}
+{#		$('body').append($frame);#}
+{#		setTimeout(function(){W.getErrorHintView().hide()}, 5000);#}
+        W.getApi().call({
+            method: 'post',
+            app: 'card',
+            api: 'cards/export',
+            args:{cards:JSON.stringify(cards)},
+            success: function(data) {
+                $(this).siblings().find('a').remove();
+                var a = $('<a></a>');
+                a.prop({
+                    'href': data.url,
+                    'download': data.filename,
+                    'target': 'view_window'
+                });
+                $(this).after(a);
+                a.get(0).click();
+
+            },
+            error: function(response) {
+                alert('加载失败！请刷新页面重试！');
+            },
+            scope: this
+        });
 	});
 
 });
+function getCard(card){
+    cards = card;
+}
 </script>
 
 {% endblock %}

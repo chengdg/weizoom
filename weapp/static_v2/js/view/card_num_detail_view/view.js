@@ -51,7 +51,6 @@ W.view.card.numDetailFilter = Backbone.View.extend({
         console.log('dataView.options.args', dataView.options.args)
         dataView.reload();
         this.$el.trigger('end_click');
-        this.setStatusActive();
     },
 
     // 获取条件数据
@@ -101,7 +100,7 @@ W.view.card.numDetailFilter = Backbone.View.extend({
             dataValue.push('money:'+lowMoney+'-'+highMoney)
         }
         if (startDate != "" && endDate != "") {
-            dataValue.push('created_at:'+startDate+'--'+endDate)
+            dataValue.push('used_at:'+startDate+'--'+endDate)
         }
 
         var filter_value = dataValue.join('|');
@@ -131,20 +130,29 @@ W.view.card.numDetailFilter = Backbone.View.extend({
     },
 
     render: function() {
-        var html = $.tmpl(this.getTemplate(), {
-        });
+        var html = $.tmpl(this.getTemplate(), {});
+        var start_date = this.options.start_date || '';
+        var end_date = this.options.end_date || '';
         this.$el.append(html);
         W.createWidgets(this.$el);
         this.addDatepicker();
 
-        var day = 6 ;//parseInt(.toSting()) - 1;
-        var today = new Date(); // 获取今天时间
-
-        today.setTime(today.getTime()-day*24*3600*1000);
-        var begin = $.datepicker.formatDate('yy-mm-dd', today);;
-        var end = $.datepicker.formatDate('yy-mm-dd', new Date());
-        $('#start_date').val(begin)
-        $('#end_date').val(end);
+        //时间
+        $('#start_date').val(start_date);
+        $('#end_date').val(end_date);
+        var today = $.datepicker.formatDate('yy-mm-dd', new Date());//获取今天的日期
+        if (end_date == today){
+            end_date = end_date.replace(/-/g,"/");
+            var a = new Date(end_date);
+            start_date = start_date.replace(/-/g,"/");
+            var b = new Date(start_date);
+            var dif = a.getTime() - b.getTime();
+            var day = Math.floor(dif / (1000 * 60 * 60 * 24));//计算天数
+            day+=1;
+            if (day==30 || day==60 || day==7){
+                $('.recently-week-day[data-day='+day+']').css("color","#1262b7");
+            }
+        }
     },
 
     // 初始化日历控件

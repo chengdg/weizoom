@@ -8,7 +8,7 @@
             <a href="/card/cards/get/">微众卡管理</a>
         </li>
         <li>
-            <a href="/card/cards_census/get/">数据统计</a>
+            <a href="/card/overview/get/">数据统计</a>
         </li>
         <li class="active">按渠道统计</li>
     </ul>
@@ -39,13 +39,14 @@
 {% verbatim %}
 <script id="cards-list" type="text/x-jquery-tmpl">
 	<div class="pa" style="top:10px;right:15px;">
-		<a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
+		<a href="javascript:void(0);" class="btn btn-default xa-export ml20" channel_data="${getChannel(data.owner2channel)}">导出结果</a>
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
 		<thead>
 			<tr>
 				<th width="120">渠道名称</th>
 				<th class="tx_sortable" data-sort-attr='use_money'>消费金额</th>
+				<th>退款金额</th>
 				<th class="tx_sortable" data-sort-attr='order_count'>订单数</th>
 				<th class="tx_sortable" data-sort-attr='use_count'>使用张数</th>
 			</tr>
@@ -55,6 +56,7 @@
 		    <tr>
 		    	<td><a title="查看明细" href="/card/card_channel_details/get/?owner_id=${channels[0]}&start_date=${channels[1].start_date}&end_date=${channels[1].end_date}">${channels[1].first_name}</a></td>
 		    	<td>${channels[1].use_money}</td>
+		    	<td>${channels[1].refund}</td>
 		    	<td>${channels[1].order_count}</td>
 		    	<td>${channels[1].use_count}</td>
 		    </tr>
@@ -67,6 +69,7 @@
 
 {% block js %}
 <script type="text/javascript">
+var channels = {};
 $(document).ready(function() {
 	var view = new W.view.card.channelFilter({
 		el: ".xa-channelFilterView",
@@ -77,19 +80,34 @@ $(document).ready(function() {
 		DATA_INTERVAL = '';
 	});
 	// 导出
-	$('.panel-body').delegate('.xa-export', 'click', function(event){	
-		var url = '/card/channel/export/';
-		if (view.filter_value) {
-			url = url + '?filter_value='+view.filter_value;
-		}
-		W.getSuccessHintView().show("'导出中...'");
-		var $frame=$('<iframe>').hide().attr('src',url);
-		$('body').append($frame);
-		setTimeout(function(){W.getErrorHintView().hide()}, 5000);
+	$('.panel-body').delegate('.xa-export', 'click', function(event){
+        W.getApi().call({
+            method: 'post',
+            app: 'card',
+            api: 'channel/export',
+            args:{channels:JSON.stringify(channels)},
+            success: function(data) {
+                $(this).siblings().find('a').remove();
+                var a = $('<a></a>');
+                a.prop({
+                    'href': data.url,
+                    'download': data.filename,
+                    'target': 'view_window'
+                });
+                $(this).after(a);
+                a.get(0).click();
+
+            },
+            error: function(response) {
+                alert('加载失败！请刷新页面重试！');
+            },
+            scope: this
+        });
 	});
-
-
 });
+function getChannel(owner2channel){
+    channels = owner2channel;
+}
 </script>
 
 {% endblock %}

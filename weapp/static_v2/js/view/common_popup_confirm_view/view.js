@@ -94,7 +94,7 @@ W.requireConfirm = function(options) {
         height:options.height,
         $action: options.$el,
         msg: options.msg || '确定删除吗？',
-        warning_msg: options.warning_msg || '',
+        warning_msg: options.warning_msg || ''
     });
     W.isRequireConfirmViewDisplayed = true;
 };
@@ -104,4 +104,4 @@ W.finishConfirm = function() {
     if (view) {
         view.hide();
     }
-}
+};

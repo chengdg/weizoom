@@ -113,7 +113,10 @@ def export_weizoom_cards(request):
 
         c.total_and_balance_money = '%s/%s' % (total_money,c.money)
 
-        c.remark = weizoom_card_rule.remark
+        if c.remark:
+            remark = c.remark
+        else:
+            remark = ""
 
         valid_time_from = datetime.strftime(weizoom_card_rule.valid_time_from, '%Y-%m-%d %H:%M')
         valid_time_to = datetime.strftime(weizoom_card_rule.valid_time_to, '%Y-%m-%d %H:%M')
@@ -126,7 +129,7 @@ def export_weizoom_cards(request):
             c.used_money, 
             activated_at, 
             c.time,
-            c.remark
+            remark
         ]
         weizoom_cards_table.append(info)
     

@@ -16,7 +16,7 @@ W.view.card.cards.cardListFilter = Backbone.View.extend({
         var begin = $.datepicker.formatDate('yy-mm-dd', today);;
         var end = $.datepicker.formatDate('yy-mm-dd', new Date());
 
-        $('#start_date').val(begin)
+        $('#start_date').val(begin);
         $('#end_date').val(end);
     },
 
@@ -37,9 +37,39 @@ W.view.card.cards.cardListFilter = Backbone.View.extend({
         var dataValue = [];
         var card_number = $('#card_number').val();
         var cardStatus = $('#cardStatus').val().trim();
+        var card_num_min = $('#card_num_min').val().trim();
+        var card_num_max = $('#card_num_max').val().trim();
         var args = [];
 
+        if (card_num_min != ''){
+            //卡号长度为7检查
+            if (card_num_min.length != 7){
+                W.getErrorHintView().show('卡号长度错误！');
+                return false;
+            }
+            args.push('"card_num_min":"'+card_num_min+'"');
+        }
+        if (card_num_max != ''){
+            //卡号长度为7检查
+            if (card_num_max.length !=7){
+                W.getErrorHintView().show('卡号长度错误！');
+                return false;
+            }
 
+            args.push('"card_num_max":"'+card_num_max+'"');
+        }
+        if (card_num_min != '' && card_num_max != ''){
+            //卡号大小检查
+            if (card_num_min > card_num_max){
+                W.getErrorHintView().show('卡号区间应指定从小到大！');
+                return false;
+            }
+            //卡号长度为7检查
+            if (card_num_min.length != 7||card_num_max.length !=7){
+                W.getErrorHintView().show('卡号长度错误！');
+                return false;
+            }
+        }
         if (card_number.length > 0) {
             dataValue.push('card_number:'+card_number);
         }
@@ -52,7 +82,8 @@ W.view.card.cards.cardListFilter = Backbone.View.extend({
         if (filter_value != ''){
             args.push('"filter_value":"'+filter_value+'"')
         }
-        this.filter_value = filter_value
+
+        this.filter_value = filter_value;
         return args
     },
 
@@ -61,7 +92,7 @@ W.view.card.cards.cardListFilter = Backbone.View.extend({
         if (args.length == 0) {
             return ""
         }else{
-            args.push('"page":1')
+            args.push('"page":1');
             return '{'+ args.join(',') +'}';
         }
     },
@@ -107,5 +138,8 @@ W.view.card.cards.cardListFilter = Backbone.View.extend({
     resetFrom: function(){
         $('#card_number').val('');
         $('#cardStatus').val(-1);
+        $('#card_num_min').val('');
+        $('#card_num_max').val('');
+
     }
 });

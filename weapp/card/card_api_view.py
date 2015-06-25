@@ -42,13 +42,66 @@ def get_cards(request):
     if date_interval:
         date_interval = get_datetime_from_date_interval(date_interval)
         weizoom_card_rules = weizoom_card_rules.filter(valid_time_from__gte=date_interval[0],valid_time_to__lte=date_interval[1])
-        
+
+
     filter_value = request.GET.get('filter_value', '')
     card_type = _get_type_value(filter_value)
     if card_type != -1:
         weizoom_card_rules = weizoom_card_rules.filter(card_type= card_type)
-    
-    pageinfo, weizoom_card_rules = paginator.paginate(weizoom_card_rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])  
+
+    #卡号区间查询
+    card_num_min = request.GET.get('card_num_min','')
+    card_num_max = request.GET.get('card_num_max','')
+
+    if card_num_min or card_num_max:
+
+        card_rule_ids = [int(r.id) for r in weizoom_card_rules]
+        all_cards = WeizoomCard.objects.filter(weizoom_card_rule_id__in=card_rule_ids)
+        rule_id2cards = {}
+
+        for c in all_cards:
+            card_rule_id = c.weizoom_card_rule_id
+            if card_rule_id not in rule_id2cards:
+                rule_id2cards[card_rule_id] = [c]
+            else:
+                rule_id2cards[card_rule_id].append(c)
+
+        weizoom_card_id2rule_ids={}
+
+        for rule_id in rule_id2cards:
+            for card in rule_id2cards[rule_id]:
+                weizoom_card_id2rule_ids[card.weizoom_card_id] = rule_id
+
+        card_num_set = set(int(i) for i in weizoom_card_id2rule_ids.keys())
+
+        if card_num_min and card_num_max:
+            max_num = int(card_num_max)
+            min_num = int(card_num_min)
+            search_set = set(range(min_num,max_num+1))
+        elif card_num_max:
+            search_set = set([int(card_num_max)])
+        elif card_num_min:
+            search_set = set([int(card_num_min)])
+        else:
+            search_set = set([])
+        result_set = search_set & card_num_set
+        result_list = list(result_set)
+
+        if len(result_list)>0:
+            filter_cards_id_list=[]
+            for card_num in result_list:
+                filter_cards_id_list.append(u'%07d'%card_num)
+
+            filter_rule_ids = []
+            for card in filter_cards_id_list:
+                r_id = weizoom_card_id2rule_ids[card]
+                filter_rule_ids.append(r_id)
+            filter_rule_ids = list(set(filter_rule_ids))
+            weizoom_card_rules = weizoom_card_rules.filter(id__in= filter_rule_ids)
+        if len(result_list)==0:
+            weizoom_card_rules =[]
+
+    pageinfo, weizoom_card_rules = paginator.paginate(weizoom_card_rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
     card_rule_ids = [int(r.id) for r in weizoom_card_rules]
     all_cards = WeizoomCard.objects.filter(weizoom_card_rule_id__in=card_rule_ids)
@@ -77,9 +130,9 @@ def get_cards(request):
         cur_weizoom_card_rule.remark = rule.remark
         cur_weizoom_card_rule.money = '%.2f' % rule.money
         cur_weizoom_card_rule.card_type = rule.card_type
-        cur_weizoom_card_rule.valid_time_from = datetime.strftime(rule.valid_time_from, '%Y-%m-%d %H:%M')
-        cur_weizoom_card_rule.valid_time_to = datetime.strftime(rule.valid_time_to, '%Y-%m-%d %H:%M')
-        cur_weizoom_card_rule.created_at = datetime.strftime(rule.created_at, '%Y-%m-%d %H:%M')
+        cur_weizoom_card_rule.valid_time_from = rule.valid_time_from.strftime('%Y-%m-%d %H:%M')
+        cur_weizoom_card_rule.valid_time_to = rule.valid_time_to.strftime('%Y-%m-%d %H:%M')
+        cur_weizoom_card_rule.created_at = rule.created_at.strftime('%Y-%m-%d %H:%M')
 
         #卡号区间
         try:
@@ -161,7 +214,37 @@ def get_weizoom_cards(request):
     except:
         pass
 
-    pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])    
+    #卡号区间查询
+    card_num_min = request.GET.get('card_num_min','')
+    card_num_max = request.GET.get('card_num_max','')
+
+    if card_num_min or card_num_max:
+        weizoom_card_id_set = set([int(c.weizoom_card_id) for c in weizoom_cards])
+
+        if card_num_min and card_num_max:
+            min_num = int(card_num_min)
+            max_num = int(card_num_max)
+            search_set = set(range(min_num,max_num+1))
+        elif card_num_max:
+            search_set = set([int(card_num_max)])
+        elif card_num_min:
+            search_set = set([int(card_num_min)])
+        else:
+            search_set = set([])
+        result_set = search_set & weizoom_card_id_set
+        result_list = list(result_set)
+
+        if len(result_list)>0:
+            filter_cards_id_list=[]
+            for card_num in result_list:
+                filter_cards_id_list.append(u'%07d'%card_num)
+            weizoom_cards = weizoom_cards.filter(weizoom_card_id__in=filter_cards_id_list)
+        if len(result_list)==0:
+            weizoom_cards =[]
+
+
+
+    pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
     weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card_rule_id)
     cur_weizoom_cards = []
@@ -180,7 +263,8 @@ def get_weizoom_cards(request):
 
         cur_weizoom_card.total_money ='%.2f' % weizoom_card_rule.money #总额
         cur_weizoom_card.used_money = '%.2f' % (float(cur_weizoom_card.total_money) - float(cur_weizoom_card.money)) #已使用金额
-        cur_weizoom_card.remark = weizoom_card_rule.remark
+        cur_weizoom_card.remark = c.remark
+        cur_weizoom_card.activated_to = c.activated_to
         cur_weizoom_card.valid_time_from = datetime.strftime(weizoom_card_rule.valid_time_from, '%Y-%m-%d %H:%M')
         cur_weizoom_card.valid_time_to = datetime.strftime(weizoom_card_rule.valid_time_to, '%Y-%m-%d %H:%M')
         cur_weizoom_card.is_expired = c.is_expired
@@ -275,30 +359,53 @@ def __create_weizoom_card_password(passwords):
     return password
 
 
+@api(app='card', resource='card_info', action='get')
+@login_required
+def get_card_info(request):
+    id = request.POST['card_id']
+    weizoom_card = WeizoomCard.objects.get(id=id)
+    dic_card = {
+        'card_remark': weizoom_card.remark,
+        'activated_to': weizoom_card.activated_to
+    }
+
+    response = create_response(200)
+    response.data.weizoom_card_info = dic_card
+    return response.get_response()
+
+
 @api(app='card', resource='status', action='update')
 @login_required
 def update_status(request):
     """
     激活或停用微众卡
     """
-    id = request.POST['card_id']
-    status = int(request.POST['status'])
-    event_type = WEIZOOM_CARD_LOG_TYPE_DISABLE
-    weizoom_card = WeizoomCard.objects.get(id=id)
-    if weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
-        weizoom_card.activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-        event_type = WEIZOOM_CARD_LOG_TYPE_ACTIVATION
+    try:
+        id = request.POST.get('card_id','')
+        card_remark = request.POST.get('card_remark','')
+        activated_to = request.POST.get('activated_to','')
+        status = int(request.POST['status'])
+        event_type = WEIZOOM_CARD_LOG_TYPE_DISABLE
+        weizoom_card = WeizoomCard.objects.get(id=id)
+        if weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
+            weizoom_card.activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+            event_type = WEIZOOM_CARD_LOG_TYPE_ACTIVATION
 
-    if (status==0 and weizoom_card.weizoom_card_rule.money!=weizoom_card.money):
-        weizoom_card.status = WEIZOOM_CARD_STATUS_USED
-    else:
-        weizoom_card.status = status=status
-    weizoom_card.target_user_id = 0
-    weizoom_card.save()
+        if (status==0 and weizoom_card.weizoom_card_rule.money!=weizoom_card.money):
+            weizoom_card.status = WEIZOOM_CARD_STATUS_USED
+        else:
+            weizoom_card.status = status=status
+        weizoom_card.target_user_id = 0
+        if card_remark and activated_to:
+            weizoom_card.remark = card_remark
+            weizoom_card.activated_to = activated_to
+        weizoom_card.save()
 
-    # 创建激活日志
-    module_api.create_weizoom_card_log(request.user.id, -1, event_type, id, weizoom_card.money)
-    response = create_response(200)
+        # 创建激活日志
+        module_api.create_weizoom_card_log(request.user.id, -1, event_type, id, weizoom_card.money)
+        response = create_response(200)
+    except:
+        response = create_response(500)
     return response.get_response()
 
 
@@ -309,11 +416,14 @@ def update_batch_status(request):
     批量激活微众卡
     """
     card_ids = request.POST.get('card_id', '')
+    card_remark = request.POST['card_remark']
+    activated_to = request.POST['activated_to']
     if card_ids:
         card_ids = card_ids.split(',')
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
-        cards.update(status=0, activated_at=activated_at)
+
+        cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to)
 
         # 创建激活日志
         for card in cards:

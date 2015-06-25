@@ -13,10 +13,10 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         var today = new Date(); // 获取今天时间
 
         today.setTime(today.getTime()-day*24*3600*1000);
-        var begin = $.datepicker.formatDate('yy-mm-dd', today);;
+        var begin = $.datepicker.formatDate('yy-mm-dd', today);
         var end = $.datepicker.formatDate('yy-mm-dd', new Date());
 
-        $('#start_date').val(begin)
+        $('#start_date').val(begin);
         $('#end_date').val(end);
     },
 
@@ -56,9 +56,9 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         var cardType = $('#cardType').val();
         var startDate = $('#start_date').val().trim();
         var endDate = $('#end_date').val().trim();
-
+        var card_num_min = $('#card_num_min').val().trim();
+        var card_num_max = $('#card_num_max').val().trim();
         var args = [];
-
         if (cardType != -1) {
             dataValue.push('cardType:'+cardType);
         }
@@ -72,8 +72,38 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
             args.push('"filter_value":"'+filter_value+'"')
         }
 
-        if (cardName.length > 0) {
+        if (cardName.length > 0){
             args.push('"cardName":"'+cardName+'"');
+        }
+
+        if (card_num_min != ''){
+            //卡号长度为7检查
+            if (card_num_min.length != 7){
+                W.getErrorHintView().show('卡号长度错误！');
+                return false;
+            }
+            args.push('"card_num_min":"'+card_num_min+'"');
+        }
+        if (card_num_max != ''){
+            //卡号长度为7检查
+            if (card_num_max.length !=7){
+                W.getErrorHintView().show('卡号长度错误！');
+                return false;
+            }
+
+            args.push('"card_num_max":"'+card_num_max+'"');
+        }
+        if (card_num_min != '' && card_num_max != ''){
+            //卡号大小检查
+            if (card_num_min > card_num_max){
+                W.getErrorHintView().show('卡号区间应指定从小到大！');
+                return false;
+            }
+            //卡号长度为7检查
+            if (card_num_min.length != 7||card_num_max.length !=7){
+                W.getErrorHintView().show('卡号长度错误！');
+                return false;
+            }
         }
 
         //date_interval
@@ -89,7 +119,7 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         if (args.length == 0) {
             return ""
         }else{
-            args.push('"page":1')
+            args.push('"page":1');
             return '{'+ args.join(',') +'}';
         }
     },
@@ -101,7 +131,7 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         }else{
             for (var i = args.length - 1; i >= 0; i--) {
                 args[i] = args[i].replace(/"/g, '').replace(':', '=')
-            };
+            }
             return args.join('&');
         }
     },
@@ -226,5 +256,7 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         $('#start_date').val('');
         $('#end_date').val('');
         $('#cardType').val(-1);
+        $('#card_num_min').val('');
+        $('#card_num_max').val('');
     }
 });

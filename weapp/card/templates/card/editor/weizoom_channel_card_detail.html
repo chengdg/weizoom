@@ -14,6 +14,9 @@
         -webkit-transform:rotate(180deg); /* Safari 和 Chrome */
         -o-transform:rotate(180deg); /* Opera */
     }
+    P{
+        margin-bottom: 0px;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -25,7 +28,7 @@
             <a href="/card/cards/get/">微众卡管理</a>
         </li>
         <li>
-            <a href="/card/cards_census/get/">数据统计</a>
+            <a href="/card/overview/get/">数据统计</a>
         </li>
         <li><a href="/card/cards_channel_census/get/">按渠道统计</a></li>
         <li class="active">{{channel.username}}</li>
@@ -35,16 +38,19 @@
 <ul class="clearfix" style="background-color:#EBEEF7">
     {% if channel %}
         <li class="xui-i-outlineCount fl" style="width:75%">
-            <div style="float:left;width:25%">
+            <div style="float:left;width:20%">
                 <div class="xui-i-description">渠道名称：{{channel.username}}</div>
             </div>
-            <div style="float:left;width:25%">
+            <div style="float:left;width:20%">
                 <div class="xui-i-description">消费金额：{{channel.use_money}}</div>
             </div>
-            <div style="float:left;width:25%">
+            <div style="float:left;width:20%">
+                <div class="xui-i-description">退款金额：{{channel.refund}}</div>
+            </div>
+            <div style="float:left;width:20%">
                 <div class="xui-i-description">订单数：{{channel.order_count}}</div>
             </div>
-            <div style="float:left;width:25%">
+            <div style="float:left;width:20%">
                 <div class="xui-i-description">使用张数：{{channel.use_count}}</div>
             </div>
         </li>
@@ -55,7 +61,7 @@
 </div>
 
 <!--列表-->
-    <div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+    <div class="panel panel-default mt20 pr" style="background-color:#EAEEF6;">
         <div class="panel-heading" style="font-size:16px">消费明细</div>
         {% if has_order %}
         <div 
@@ -78,81 +84,117 @@
 {% verbatim %}
 <script id="card-detail-list" type="text/x-jquery-tmpl">
     <div class="panel panel-default mt20 xb-rightPanel pr">
+        <ul class="nav nav-tabs" style="background-color:white">
+                <li class="xa-count {{if data.event_type=="0"}}active{{/if}}" data-total-event-type="0"><a href="javascript:void(0);">消费支出</a></li>
+                <li class="xa-count {{if data.event_type=="1"}}active{{/if}}" data-total-event-type="1"><a href="javascript:void(0);">订单退款</a></li>
+
+        </ul>
         <div class="pa" style="top:-50px;right:15px;">
             <a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
         </div>
         <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
             <thead>
                 <tr>
-                    <th width="145">消费时间</th>
+                    {{if data.event_type=="0"}}
+                        <th width="131px">消费时间</th>
+                    {{else}}
+                        <th width="131px">时间</th>
+                    {{/if}}
                     <th>订单号</th>
                     <th>卡名称</th>
                     <th>卡号</th>
-                    <th>状态</th>
+                    <th width="52">状态</th>
                     <th>面值</th>
-                    <th>消费金额</th>
-                    <!--<th>余额</th>-->
+                    {{if data.event_type=="0"}}
+                        <th style="min-width:64px">消费金额</th>
+                    {{else}}
+                        <th style="min-width:64px">退款金额</th>
+                    {{/if}}
                     <th>使用人</th>
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    <th style="min-width:64px">商品分组</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-            {{each(i,card_order) items}}
-                <tr>
-                    <td style="vertical-align: top; padding-top: 33px;"><div>${card_order[1][0].created_at}</div></td>
-                    <td style="vertical-align: top; padding-top: 33px;"><div><a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${card_order[1][0].id}" target="_blank">${card_order[1][0].order_id}</a><div></td>
-                    <td>
-                        {{each(i,card) card_order[1]}}
-                            {{if i<2}}
-                                <div style="height:35px;line-height:35px">${card.rule_name}</div>
-                            {{else}}
-                                <div class="channel_display_none">${card.rule_name}</div>
-                            {{/if}}
+            {{each(i,card_orders) items}}
+                {{each(j,card_order) card_orders}}
+                    <tr>
+                        <td style="vertical-align: top; padding-top: 31px;"><div>${card_order[0].created_at}</div></td>
+                        <td style="vertical-align: top; padding-top: 31px;"><div><a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${card_order[0].id}" target="_blank">${card_order[0].order_id}</a><div></td>
+                        <td>
+                            {{each(m,card) card_order}}
+                                {{if m<2}}
+                                    <p title="${card.rule_name}" style="height:35px;line-height:35px;max-width:100px;white-space: nowrap;overflow:hidden;text-overflow:ellipsis">${card.rule_name}</p>
+                                {{else}}
+                                    <p title="${card.rule_name}" class="channel_display_none" style="max-width:100px;white-space: nowrap;overflow:hidden;text-overflow:ellipsis">${card.rule_name}</p>
+                                {{/if}}
+                            {{/each}}
+                        </td>
+                        <td>
+                            {{each(m,card) card_order}}
+                                {{if m<2}}
+                                    <p style="height:35px;line-height:35px">${card.weizoom_card_id}</p>
+                                {{else}}
+                                    <p class="channel_display_none">${card.weizoom_card_id}</p>
+                                {{/if}}
+                            {{/each}}
+                        </td>
+                        <td>
+                            {{each(m,card) card_order}}
+                                {{if m<2}}
+                                    <p style="height:35px;line-height:35px">${card.status}</p>
+                                {{else}}
+                                    <p class="channel_display_none">${card.status}</p>
+                                {{/if}}
+                            {{/each}}
+                        </td>
+                        <td>
+                            {{each(m,card) card_order}}
+                                {{if m<2}}
+                                    <p  style="height:35px;line-height:35px">${card.rule_money}</p>
+                                {{else}}
+                                    <p class="channel_display_none">${card.rule_money}</p>
+                                {{/if}}
+                            {{/each}}
+                        </td>
+                        <td>
+                            {{each(m,card) card_order}}
+                                {{if m<2}}
+                                    <p style="height:35px;line-height:35px">
+                                        {{if data.event_type=="0"}}
+                                            ${card.use_money}
+                                        {{else}}
+                                            ${card.refund}
+                                        {{/if}}
+                                    </p>
+                                {{else}}
+                                    <p class="channel_display_none">
+                                        {{if data.event_type=="0"}}
+                                            ${card.use_money}
+                                        {{else}}
+                                            ${card.refund}
+                                        {{/if}}
+                                    </p>
+                                {{/if}}
+                            {{/each}}
+
+                        </td>
+                        <td style="vertical-align: top; padding-top: 31px;">
+                            <p id="buyer_name" style="cursor:default;max-width:100px;white-space: nowrap;overflow:hidden;text-overflow:ellipsis">{{html card_order[0].buyer_name}}</p>
+                            <div class="btn btn-default" style="border-radius:6px;z-index:999;position:fixed;display:none;left:0;top:0">{{html card_order[0].buyer_name}}</div>
+                        </td>
+                        <td style="vertical-align: top; padding-top: 31px;">
+                        {{each(m,card) card_order[0].product}}
+                            <div title="${card}" style="max-width:100px;white-space: nowrap;overflow:hidden;text-overflow:ellipsis">${card}</div>
                         {{/each}}
-                    </td>
-                    <td>
-                        {{each(i,card) card_order[1]}}
-                            {{if i<2}}
-                                <div style="height:35px;line-height:35px">${card.weizoom_card_id}</div>
-                            {{else}}
-                                <div class="channel_display_none">${card.weizoom_card_id}</div>
-                            {{/if}}
-                        {{/each}}
-                    </td>
-                    <td>
-                        {{each(i,card) card_order[1]}}
-                            {{if i<2}}
-                                <div style="height:35px;line-height:35px">${card.status}</div>
-                            {{else}}
-                                <div class="channel_display_none">${card.status}</div>
-                            {{/if}}
-                        {{/each}}
-                    </td>
-                    <td>
-                        {{each(i,card) card_order[1]}}
-                            {{if i<2}}
-                                <div style="height:35px;line-height:35px">${card.rule_money}</div>
-                            {{else}}
-                                <div class="channel_display_none">${card.rule_money}</div>
-                            {{/if}}
-                        {{/each}}
-                    </td>
-                    <td>
-                        {{each(i,card) card_order[1]}}
-                            {{if i<2}}
-                                <div style="height:35px;line-height:35px">${card.use_money}</div>
-                            {{else}}
-                                <div class="channel_display_none">${card.use_money}</div>
-                            {{/if}}
-                        {{/each}}
-                    </td>
-                    <td style="vertical-align: top; padding-top: 33px;">{{html card_order[1][0].buyer_name}}</td>
-                    <td style="vertical-align: top; padding-top: 33px;" class="the-icons">
-                            {{if card_order[1].length>2}}
-                                <div><a href="javascript:void(0);" id="more" style="text-decoration: none;">更多<span class="glyphicon glyphicon-menu-down"></span></a><div>
-                            {{/if}}
-                    </td>
-                </tr>
+                        </td>
+                        <td style="vertical-align: top; padding-top: 31px;" class="the-icons">
+                                {{if card_order.length>2}}
+                                    <div style="width:36px"><a href="javascript:void(0);" id="more" style="text-decoration: none;">更多<span class="glyphicon glyphicon-menu-down"></span></a><div>
+                                {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
                 {{/each}}
             </tbody>
         </table>
@@ -173,34 +215,77 @@ $(document).ready(function() {
         el: ".xa-detailFilterView",
         dataView: $('[data-ui-role="advanced-table"]').data('view'),
         start_date: start_date[0],
-        end_date: end_date[0]
+        end_date: end_date[0],
+        event_type: "使用"
     });
     view.$el.bind('end_click', function(){
         DATA_INTERVAL = '';
     });
+    // 订单状态栏，点击事件
+	$('.panel-body').delegate('.xa-count', 'click', function(event){
+        var $el = $(event.currentTarget);
+        var event_type = $el.attr('data-total-event-type');
+        console.log(event_type);
+        view.trigger('clickEventType',event_type);
+
+	});
     // 导出
     $('.panel-body').delegate('.xa-export', 'click', function(event){   
-        var url = '/card/channel_detail/export/?owner_id={{owner_id}}&start_date={{channel.start_date}}&end_date={{channel.end_date}}';
-        if (view.filter_value) {
-            url = url + '&filter_value='+view.filter_value;
-        }
-        W.getSuccessHintView().show("'导出中...'");
-        var $frame=$('<iframe>').hide().attr('src',url);
-        $('body').append($frame);
-        setTimeout(function(){W.getErrorHintView().hide()}, 5000);
+{#        var url = '/card/channel_detail/export/?owner_id={{owner_id}}&start_date={{channel.start_date}}&end_date={{channel.end_date}}';#}
+{#        if (view.filter_value) {#}
+{#            url = url + '&filter_value='+view.filter_value;#}
+{#        }#}
+{#        W.getSuccessHintView().show("'导出中...'");#}
+{#        var $frame=$('<iframe>').hide().attr('src',url);#}
+{#        $('body').append($frame);#}
+{#        setTimeout(function(){W.getErrorHintView().hide()}, 5000);#}
+        W.getApi().call({
+            method: 'post',
+            app: 'card',
+            api: 'channel_detail/export',
+            args:{owner_id:{{owner_id}},start_date:'{{channel.start_date}}',end_date:'{{channel.end_date}}',filter_value:view.filter_value},
+            success: function(data) {
+                $(this).siblings().find('a').remove();
+                var a = $('<a></a>');
+                a.prop({
+                    'href': data.url,
+                    'download': data.filename,
+                    'target': 'view_window'
+                });
+                $(this).after(a);
+                a.get(0).click();
+
+            },
+            error: function(response) {
+                alert('加载失败！请刷新页面重试！');
+            },
+            scope: this
+        });
     });
     $('.panel-body').delegate('#more', 'click', function(event){
         var $this = $(event.currentTarget);
         var $parnet = $this.parents("tr");
-        if ($parnet.find("div[class='channel_display_none']").css("display") =="none"){
-            $parnet.find("div[class='channel_display_none']").css("display","block");
+        if ($parnet.find("p[class='channel_display_none']").css("display") =="none"){
+            $parnet.find("p[class='channel_display_none']").css("display","block");
             $this.children().removeClass('glyphicon-menu-down').addClass('glyphicon-menu-up');
         }
         else{
-            $parnet.find("div[class='channel_display_none']").css("display","none");
+            $parnet.find("p[class='channel_display_none']").css("display","none");
             $this.children().removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
         }
     });
+    $('.panel-body').delegate('#buyer_name', 'mousemove', function(event){
+        var $this = $(event.currentTarget);
+        $this.next().css('left', event.clientX+10+'px');
+        $this.next().css('top',event.clientY+15+'px');
+        $this.next().css('display','block');
+        
+    });
+    $('.panel-body').delegate('#buyer_name', 'mouseleave', function(event){
+        var $this = $(event.currentTarget);
+        $this.next().css('display','none')
+    });
+
 });
 </script>
 

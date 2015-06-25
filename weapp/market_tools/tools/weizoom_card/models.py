@@ -30,8 +30,8 @@ class WeizoomCardRule(models.Model):
 	count = models.IntegerField(default=0) #发放总数量
 	remark = models.CharField(max_length=20, db_index=True) #备注
 	expired_time = models.DateTimeField(auto_now_add=True) #过期时间
-	valid_time_from = models.DateTimeField(auto_now_add=True) #有效范围开始时间
-	valid_time_to = models.DateTimeField(auto_now_add=True) #有效范围结束时间
+	valid_time_from = models.DateTimeField() #有效范围开始时间
+	valid_time_to = models.DateTimeField() #有效范围结束时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 	card_type = models.IntegerField(default=WEIZOOM_CARD_EXTERNAL_USER) #微众卡类型
 
@@ -69,6 +69,8 @@ class WeizoomCard(models.Model):
 	is_expired = models.BooleanField(default=False) #是否过期
 	activated_at = models.DateTimeField(null=True) #激活时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
+	remark = models.CharField(max_length=20, db_index=True) #备注
+	activated_to = models.CharField(max_length=20) #领用人
 
 	class Meta(object):
 		db_table = 'market_tool_weizoom_card'

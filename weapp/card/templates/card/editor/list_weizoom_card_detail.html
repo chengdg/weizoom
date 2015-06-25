@@ -20,7 +20,7 @@
     <div class="xa-cardListFilterView xui-filterPanel"></div>
 
     <div class="panel-heading" style="position: absolute;clear: both;margin-top: 22px;z-index: 10;left: -4px;">
-        <a class="btn btn-success xa-batch-active fr mt5 ml10" href="javascript:void(0)">批量激活</a> 
+        <a class="btn btn-success xa-batch-active fr mt5 ml10" href="javascript:void(0)">批量激活</a>
         <a class="btn btn-success xa-batch-inactive fr mt5" href="javascript:void(0)">批量停用</a>
     </div>
 
@@ -78,6 +78,7 @@
                 <th>激活时间</th>
                 <th>有效期</th>
                 <th>备注</th>
+                <th>领用人</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -130,6 +131,9 @@
                     ${card.remark}
                 </td>
                 <td>
+                    ${card.activated_to}
+                </td>
+                <td>
                     {{if !card.is_expired}}
                         {{if card.status==3}}
                         <a class="btn btn-success xa-active" href="javascript:void(0)">激活</a>   
@@ -168,6 +172,58 @@ $(document).ready(function() {
 </script>
 
 <script>
+    var deleteView2 = W.view.common.ConfirmView.extend({
+        events:{
+            'click .xa-confirm': 'submit',
+            'click .xa-cancel2': 'close'
+        },
+        getTemplate: function() {
+            var template ='<dl class="itemDeleteView2 wui-confirmView" style="margin: 0px 16px 5px 6px;">'
+                    +'<div class="activated_to" style="margin-left: 4px;">'
+                    +'<label for="activated_to">领用人</label>'
+                    +'<input type="text" id="activated_to" style="width: 100px;margin-left: 8px;">'
+                    +'</div>'
+                    +'<div class="card_remark" style="margin-top: 10px;margin-left: 4px;">'
+                    +'<label for="card_remark" style="vertical-align: top;">备&nbsp;&nbsp;注</label>'
+                    +'<textarea type="text" id="card_remark" style="height: 52px;width:164px;margin-left: 14px;"></textarea>'
+                    +'</div>'
+                    +'<button type="button" class="xa-confirm btn btn-success" style="background-color:#207CBE;margin: 8px 47px;width:60px;">确定</button> '
+                    +'<button type="button" class="xa-cancel2 btn" style="background-color:#207CBE; color:#FFF;margin: 0px -44px;width:60px;">取消</button>'
+                    +'</dl>';
+            return _.template(template);
+        }
+    });
+    W.requireConfirm2 = function(options) {
+    //防止和父级view冲突
+        var parent_view = W.registry['common-popup-confirm-view'];
+        if(parent_view){
+            parent_view.hide();
+            W.isRequireConfirmViewDisplayed = false;
+        }
+    //获得view
+        var view = W.registry['common-popup-confirm-view2'];
+        if (!view) {
+            xlog('create PopupConfirmView2');
+            view = new deleteView2(options);
+            W.registry['common-popup-confirm-view2'] = view;
+        }
+        if (options.confirm) {
+            view.bind(view.SUBMIT_EVENT, options.confirm);
+        }
+
+        view.show({
+            $action: options.$el
+        });
+    };
+
+    W.finishConfirm2 = function() {
+        var view = W.registry['common-popup-confirm-view2'];
+        if (view) {
+            view.hide();
+        }
+    };
+</script>
+<script>
     function buildTimeOptions(max, selected) {
         var i, optionHtml = '', value;
         for(i = 0; i < max; i++) {
@@ -188,178 +244,212 @@ $(document).ready(function() {
     $('.xa-listView').delegate('.xa-active', 'click', function(event) {
         var id = $(this).parents('tr').attr('tr-id');
         var $el = $(event.currentTarget);
-        var deleteView = W.getItemDeleteView();
-
-        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
-            W.getApi().call({
-                app: 'card',
-                api: 'status/update',
-                method: 'post',
-                args: {
-                    card_id: id,
-                    status: '0'
-    
-                },
-                success: function(data) {
-                    deleteView.hide();
-                    $('div[data-ui-role="advanced-table"]').data('view').reload();
-                },
-                error: function(resp) {
-                    W.getLoadingView().hide();
-                    W.getErrorHintView().show('失败');
-                },
-                scope: this
-            });
-        }, this);
-        var is_delete = deleteView.show({
-            $action: $el,
-            info: '确定激活'
-        })
+        W.getApi().call({
+            app: 'card',
+            api: 'card_info/get',
+            method: 'post',
+            args: {
+                card_id: id
+            },
+            success: function(data) {
+                var weizoom_card_info = data.weizoom_card_info;
+                $("#card_remark").val(weizoom_card_info.card_remark);
+                $("#activated_to").val(weizoom_card_info.activated_to);
+            },
+            error: function(resp) {
+                W.showHint('error','失败');
+            }
+        });
+        W.requireConfirm2({
+            $el: $el,
+            isTitle: false,
+            confirm: function(){
+                var card_remark = $("#card_remark").val().trim();
+                var activated_to =$("#activated_to").val().trim();
+                if (activated_to.length<= 0){
+                    W.showHint('error','请输入领用人');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                if (card_remark.length<= 0){
+                    W.showHint('error','请输入备注');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                if (activated_to.length>20 || card_remark.length> 20) {
+                    W.showHint('error','该内容最多输入20个字符');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                W.getApi().call({
+                    app: 'card',
+                    api: 'status/update',
+                    method: 'post',
+                    args: {
+                        card_id: id,
+                        status: '0',
+                        card_remark: card_remark,
+                        activated_to: activated_to
+                    },
+                    success: function(data) {
+                        W.finishConfirm2();
+                        $('div[data-ui-role="advanced-table"]').data('view').reload();
+                    },
+                    error: function(resp) {
+                        W.showHint('error','失败');
+                    },
+                    scope: this
+                });
+            }
+        });
     });
     
     $('.xa-batch-active').click(function(event) {
         var $el = $(event.currentTarget);
-        var deleteView = W.getItemDeleteView();
-
-        var card_ids =[],flag=false;
-        var checkboxes = $('input[name="select-one"]:checked').parents('tr').each(function(){
+        var card_ids =[],flag = false;
+        $('input[name="select-one"]:checked').parents('tr').each(function(){
             card_status= $(this).children('.card_status').attr('td-status');
-
+            console.log(card_status);
             if(card_status == 3 ){
                 card_ids.push($(this).attr('tr-id'));
             }else{
-                W.getErrorHintView().show('操作失败，您所选的卡号含有使用中或未使用的状态！');
+                W.showHint('error','操作失败，您所选的卡号含有使用中或未使用的状态！');
                 flag = true;
             }
         });
-
-        if(flag){
-            deleteView.hide();
-            return false;
-        }
-
+        if(flag) return;
         if(card_ids.length == 0){
-            W.getErrorHintView().show('请先选择要激活的微众卡！');
+            W.showHint('error','请先选择要激活的微众卡！');
             return;
         }
+        $("#card_remark").val("");
+        $("#activated_to").val("");
 
-        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
-            W.getApi().call({
-                app: 'card',
-                api: 'batch_status/update',
-                method: 'post',
-                args: {
-                    card_id: card_ids.toString(),
-                    status: '0'
-    
-                },
-                success: function(data) {
-                    deleteView.hide();
-                    $('div[data-ui-role="advanced-table"]').data('view').reload();
-                },
-                error: function(resp) {
-                    W.getLoadingView().hide();
-                    if(resp.code == 500){
-                        W.getErrorHintView().show(resp.errMsg);
-                    }else{
-                        W.getErrorHintView().show('批量激活失败');
-                    }
-                    deleteView.hide();
-                },
-                scope: this
-            });
-        }, this);
-        var is_delete = deleteView.show({
-            $action: $el,
-            info: '确定批量激活'
-        })
+        W.requireConfirm2({
+            $el: $el,
+            isTitle: false,
+            confirm: function(){
+                var card_remark = $("#card_remark").val().trim();
+                var activated_to =$("#activated_to").val().trim();
+                if (activated_to.length<= 0){
+                    W.showHint('error','请输入领用人');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                if (card_remark.length<= 0){
+                    W.showHint('error','请输入备注');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                if (activated_to.length>20 || card_remark.length> 20) {
+                    W.showHint('error','该内容最多输入20个字符');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                W.getApi().call({
+                    app: 'card',
+                    api: 'batch_status/update',
+                    method: 'post',
+                    args: {
+                        card_id: card_ids.toString(),
+                        status: '0',
+                        card_remark: card_remark,
+                        activated_to: activated_to
+                    },
+                    success: function(data) {
+                        W.finishConfirm2();
+                        $('div[data-ui-role="advanced-table"]').data('view').reload();
+                    },
+                    error: function(resp) {
+                        if(resp.code == 500){
+                            W.showHint('error',resp.errMsg);
+                        }else{
+                            W.showHint('error','批量激活失败');
+                        }
+                    },
+                    scope: this
+                });
+            }
+        });
     });
 
     $('.xa-batch-inactive').click(function(event) {
         var $el = $(event.currentTarget);
-        var deleteView = W.getItemDeleteView();
-        var card_ids =[],flag=false;
+        var card_ids =[],flag = false;
 
-        var checkboxes = $('input[name="select-one"]:checked').parents('tr').each(function(){
+        $('input[name="select-one"]:checked').parents('tr').each(function(){
             card_status= $(this).children('.card_status').attr('td-status');
             if(card_status != 3 ){
                 card_ids.push($(this).attr('tr-id'));
             }else{
-                W.getErrorHintView().show('操作失败，您所选的卡号已包含未激活的状态！');
+                W.showHint('error','操作失败，您所选的卡号已包含未激活的状态！');
                 flag = true;
             }
         });
-
-        if(flag){
-            deleteView.hide();
-            return false;
-        }
-
+        if(flag) return;
         if(card_ids.length == 0){
-            W.getErrorHintView().show('请先选择要停用的微众卡！');
+            W.showHint('error','请先选择要停用的微众卡！');
             return;
         }
 
-        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
-            W.getApi().call({
-                app: 'card',
-                api: 'onbatch_status/update',
-                method: 'post',
-                args: {
-                    card_id: card_ids.toString(),
-                    status: '3'
-    
-                },
-                success: function(data) {
-                    deleteView.hide();
-                    $('div[data-ui-role="advanced-table"]').data('view').reload();
-                },
-                error: function(resp) {
-                    W.getLoadingView().hide();
-                    if(resp.code == 500){
-                        W.getErrorHintView().show(resp.errMsg);
-                    }else{
-                        W.getErrorHintView().show('批量停用失败');
-                    }
-                    deleteView.hide();
-                },
-                scope: this
-            });
-        }, this);
-        var is_delete = deleteView.show({
-            $action: $el,
-            info: '确定批量停用'
-        })
+        W.requireConfirm({
+            $el: $el,
+            msg : '确定停用么?',
+            isTitle: false,
+            confirm: function(){
+                W.getApi().call({
+                    app: 'card',
+                    api: 'onbatch_status/update',
+                    method: 'post',
+                    args: {
+                        card_id: card_ids.toString(),
+                        status: '3'
+                    },
+                    success: function(data) {
+                        W.finishConfirm();
+                        $('div[data-ui-role="advanced-table"]').data('view').reload();
+                    },
+                    error: function(resp) {
+                        if(resp.code == 500){
+                            W.showHint('error',resp.errMsg);
+                        }else{
+                            W.showHint('error','批量停用失败');
+                        }
+                    },
+                    scope: this
+                }); 
+            }
+        });
     });
 
     $('.xa-listView').delegate('.xa-inactive', 'click', function(event) {
         var id = $(this).parents('tr').attr('tr-id');
         var $el = $(event.currentTarget);
-        var deleteView = W.getItemDeleteView();
-        deleteView.bind(deleteView.SUBMIT_EVENT, function(){
-            W.getApi().call({
-                app: 'card',
-                api: 'status/update',
-                method: 'post',
-                args: {
-                    card_id: id,
-                    status: '3'
-                },
-                success: function(data) {
-                    deleteView.hide();
-                    $('div[data-ui-role="advanced-table"]').data('view').reload();
-                },
-                error: function(resp) {
-                    W.getLoadingView().hide();
-                    W.getErrorHintView().show('失败');
-                },
-                scope: this
-            });
-        }, this);
-        var is_delete = deleteView.show({
-            $action: $el,
-            info: '确定停用'
-        })
+
+        W.requireConfirm({
+            $el: $el,
+            msg : '确定停用么?',
+            isTitle: false,
+            confirm: function(){
+                W.getApi().call({
+                    app: 'card',
+                    api: 'status/update',
+                    method: 'post',
+                    args: {
+                        card_id: id,
+                        status: '3'
+                    },
+                    success: function(data) {
+                        W.finishConfirm();
+                        $('div[data-ui-role="advanced-table"]').data('view').reload();
+                    },
+                    error: function(resp) {
+                        W.showHint('error','失败');
+                    },
+                    scope: this
+                }); 
+            }
+        });
     });
     
     
@@ -383,17 +473,16 @@ $(document).ready(function() {
                     method: 'post',
                     args: data,
                     success: function(data) {
-                        W.getLoadingView().hide();
-                        $('[name="number"]').val(data.count)
+                        $('[name="number"]').val(data.count);
                         $('div[data-ui-role="advanced-table"]').data('view').reload();
                     },
                     error: function(resp) {
-                        W.getLoadingView().hide();
-                        W.getErrorHintView().show('追加微众卡失败！');
+                        W.showHint('error','追加微众卡失败！');
                     }
                 })
             }
         })
     });
+    
 </script>
 {% endblock %}

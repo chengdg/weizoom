@@ -131,6 +131,7 @@ W.view.card.channelFilter = Backbone.View.extend({
         var end = $.datepicker.formatDate('yy-mm-dd', new Date());
         $('#start_date').val(begin);
         $('#end_date').val(end);
+
     },
 
     // 初始化日历控件

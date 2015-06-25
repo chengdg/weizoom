@@ -94,6 +94,8 @@ W.view.common.DropBox = Backbone.View.extend({
         var arrowHeight = this.$arrow ? this.$arrow.height() : 0;
         var topOfArrowForCurr = parseInt(this.$arrow.css('top'));
         var rightOfArrowForCurr = parseInt(this.$arrow.css('right'));
+        topOfArrowForCurr = isNaN(topOfArrowForCurr) ? -23 : topOfArrowForCurr;
+        rightOfArrowForCurr = isNaN(rightOfArrowForCurr) ? 20 : rightOfArrowForCurr;
         var arrowTop = this.$arrow ? topOfArrowForCurr : 0;
         var arrowRight = this.$arrow ? rightOfArrowForCurr : 0;
         var arrowWidth = this.$arrow ? this.$arrow.width()/2 : 0;
@@ -198,7 +200,7 @@ W.view.common.DropBox = Backbone.View.extend({
     },
     
     close: function(event) {
-        //console.log('close',this.$el)
+        // console.log('close',this.$el)
         this.$html.trigger('click.dropdown');
     },
     

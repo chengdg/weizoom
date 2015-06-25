@@ -2,8 +2,9 @@ ensureNS('W.view.card');
 W.view.card.numFilter = Backbone.View.extend({
     events: {
         'click .seacrh-order-btn': 'seacrhBtn',
-        'click .recently-week-day': 'setDateText',
-        'click .xa-reset': 'onClickResetButton'
+        'click .xui-dateFilter': 'setDateText',
+        'click .xa-reset': 'onClickResetButton',
+        'click .xa-reset-create-dateFilter,.xa-reset-activate-dateFilter,.xa-reset-use-dateFilter': 'onClickResetDateFilter'
     },
 
     // 点击‘最近7天’或‘最近30天’
@@ -13,31 +14,55 @@ W.view.card.numFilter = Backbone.View.extend({
         $this.css("color","#1262b7");
         var day = $this.attr('data-day') -1 ;//parseInt(.toSting()) - 1;
         var today = new Date(); // 获取今天时间
-
         today.setTime(today.getTime()-day*24*3600*1000);
         var begin = $.datepicker.formatDate('yy-mm-dd', today);
         var end = $.datepicker.formatDate('yy-mm-dd', new Date());
-
-        $('#start_date').val(begin);
-        $('#end_date').val(end);
-        $('.seacrh-order-btn').trigger('click');
+        if ($this.hasClass('create_recently-week-day')){
+            $('#create_start_date').val(begin);
+            $('#create_end_date').val(end);
+        }
+        if ($this.hasClass('activate_recently-week-day')){
+            $('#activate_start_date').val(begin);
+            $('#activate_end_date').val(end);
+        }
+        if ($this.hasClass('use_recently-week-day')){
+            $('#use_start_date').val(begin);
+            $('#use_end_date').val(end);
+        }
+        // $('.seacrh-order-btn').trigger('click');
     },
 
-    // 点击‘筛选’按钮事件
+    // 点击‘查询’按钮事件
     seacrhBtn: function(){
-        var startDate = $('#start_date').val();
-        var endDate = $('#end_date').val();
-        if (startDate.length > 0 && endDate.length == 0) {
+        var createStartDate = $('#create_start_date').val();
+        var createEndDate = $('#create_end_date').val();
+        var activateStartDate = $('#activate_start_date').val();
+        var activateEndDate = $('#activate_end_date').val();
+        var useStartDate = $('#use_start_date').val();
+        var useEndDate = $('#use_end_date').val();
+        if ((createStartDate.length > 0 && createEndDate.length == 0)||(activateStartDate.length > 0 && activateEndDate.length == 0)||(useStartDate.length > 0 && useEndDate.length == 0)) {
             W.getErrorHintView().show('请输入结束日期！');
             return false;
         }
-        if (endDate.length > 0 && startDate.length == 0) {
+        if ((createEndDate.length > 0 && createStartDate.length == 0)||(activateEndDate.length > 0 && activateStartDate.length == 0)||(useEndDate.length > 0 && useStartDate.length == 0)) {
             W.getErrorHintView().show('请输入开始日期！');
             return false;
         }
-        var start = new Date(startDate.replace("-", "/").replace("-", "/"));
-        var end = new Date(endDate.replace("-", "/").replace("-", "/"));
-        if ((startDate.length > 0 || endDate.length > 0) && start > end){
+        var create_start = new Date(createStartDate.replace("-", "/").replace("-", "/"));
+        var create_end = new Date(createEndDate.replace("-", "/").replace("-", "/"));
+        var activate_start = new Date(activateStartDate.replace("-", "/").replace("-", "/"));
+        var activate_end = new Date(activateEndDate.replace("-", "/").replace("-", "/"));
+        var use_start = new Date(useStartDate.replace("-", "/").replace("-", "/"));
+        var use_end = new Date(useEndDate.replace("-", "/").replace("-", "/"));
+        if ((createStartDate.length > 0 || createEndDate.length > 0) && create_start > create_end){
+            W.getErrorHintView().show('开始日期不能大于结束日期！');
+            return false;
+        }
+        if ((activateStartDate.length > 0 || activateEndDate.length > 0) && activate_start > activate_end){
+            W.getErrorHintView().show('开始日期不能大于结束日期！');
+            return false;
+        }
+        if ((useStartDate.length > 0 || useEndDate.length > 0) && use_start > use_end){
             W.getErrorHintView().show('开始日期不能大于结束日期！');
             return false;
         }
@@ -56,8 +81,13 @@ W.view.card.numFilter = Backbone.View.extend({
         var cardId = $('#weizoom_card_id').val().trim();
         var cardName = $('#weizoom_card_name').val().trim();
         var cardType = $('#weizoom_card_type').val();
-        var startDate = $('#start_date').val().trim();
-        var endDate = $('#end_date').val().trim();
+
+        var createStartDate = $('#create_start_date').val().trim();
+        var createEndDate = $('#create_end_date').val().trim();
+        var activateStartDate = $('#activate_start_date').val().trim();
+        var activateEndDate = $('#activate_end_date').val().trim();
+        var useStartDate = $('#use_start_date').val().trim();
+        var useEndDate = $('#use_end_date').val().trim();
 
         var moneyRex = /^\d*(\.\d{0,2})?$/;
         var lowMoney = $('#low_money').val().trim();
@@ -82,6 +112,8 @@ W.view.card.numFilter = Backbone.View.extend({
         var cardStatus = $('#cardStatus').val();
         var memberName = $('#member_name').val().trim();
 
+        var orderId = $('#order_id').val().trim();
+
         var args = [];
 
         // query
@@ -97,6 +129,9 @@ W.view.card.numFilter = Backbone.View.extend({
         if (memberName != '') {
             dataValue.push('member:'+memberName);
         }
+        if (orderId != '') {
+            dataValue.push('order_id:'+orderId);
+        }
         // ship_name
         if (cardName.length > 0) {
             dataValue.push('name:'+cardName)
@@ -105,8 +140,15 @@ W.view.card.numFilter = Backbone.View.extend({
         if (lowMoney.length > 0 && highMoney.length > 0) {
             dataValue.push('money:'+lowMoney+'-'+highMoney)
         }
-        if (startDate != "" && endDate != "") {
-            dataValue.push('created_at:'+startDate+'--'+endDate)
+        //日期
+        if (createStartDate != "" && createEndDate != "") {
+            dataValue.push('created_at:'+createStartDate+'--'+createEndDate)
+        }
+        if (activateStartDate != "" && activateEndDate != "") {
+            dataValue.push('activated_at:'+activateStartDate+'--'+activateEndDate)
+        }
+        if (useStartDate != "" && useEndDate != "") {
+            dataValue.push('used_at:'+useStartDate+'--'+useEndDate)
         }
 
         var filter_value = dataValue.join('|');
@@ -153,14 +195,8 @@ W.view.card.numFilter = Backbone.View.extend({
                 _this.addDatepicker();
                 $('.xa-showFilterBox').append($('.xa-timelineControl'));
 
-                var day = 6 ;//parseInt(.toSting()) - 1;
-                var today = new Date(); // 获取今天时间
-
-                today.setTime(today.getTime()-day*24*3600*1000);
-                var begin = $.datepicker.formatDate('yy-mm-dd', today);
-                var end = $.datepicker.formatDate('yy-mm-dd', new Date());
-                $('#start_date').val(begin);
-                $('#end_date').val(end);
+                $('.xui-datePicker').val('');
+                // $('#end_date').val('');
             },
             error: function(response) {
                 alert('加载失败！请刷新页面重试！');
@@ -237,17 +273,18 @@ W.view.card.numFilter = Backbone.View.extend({
         this.render();
         this.filter_value = '';
     },
+    //重置
     onClickResetButton: function(){
-        var $that = $('.recently-week-day[data-day=7]');
-        $that.parent().children().css("color","black");
-        $that.css("color","#1262b7");
-        var day = $that.attr('data-day') -1 ;//parseInt(.toSting()) - 1;
-        var today = new Date(); // 获取今天时间
-        today.setTime(today.getTime()-day*24*3600*1000);
-        var begin = $.datepicker.formatDate('yy-mm-dd', today);
-        var end = $.datepicker.formatDate('yy-mm-dd', new Date());
-        $('#start_date').val(begin);
-        $('#end_date').val(end);
+        var $that_1 = $('.xa-reset-create-dateFilter');
+        var $that_2 = $('.xa-reset-activate-dateFilter');
+        var $that_3 = $('.xa-reset-use-dateFilter');
+        $that_1.parent().children().css("color","black");
+        $that_2.parent().children().css("color","black");
+        $that_3.parent().children().css("color","black");
+        $that_1.css("color","#1262b7");
+        $that_2.css("color","#1262b7");
+        $that_3.css("color","#1262b7");
+        $('.xui-datePicker').val('');
         $('#weizoom_card_id').val('');
         $('#weizoom_card_name').val('');
         $('#weizoom_card_type').val(-1);
@@ -255,5 +292,25 @@ W.view.card.numFilter = Backbone.View.extend({
         $('#high_money').val('');
         $('#cardStatus').val(-1);
         $('#member_name').val('');
+        $('#order_id').val('');
+    },
+    //不限
+    onClickResetDateFilter: function(event){
+        var $this = $(event.currentTarget);
+        $this.parent().children().css("color","black");
+        $this.css("color","#1262b7");
+        if ($this.hasClass('xa-reset-create-dateFilter')){
+            $('#create_start_date').val('');
+            $('#create_end_date').val('');
+        }
+        if ($this.hasClass('xa-reset-activate-dateFilter')){
+            $('#activate_start_date').val('');
+            $('#activate_end_date').val('');
+        }
+        if ($this.hasClass('xa-reset-use-dateFilter')){
+            $('#use_start_date').val('');
+            $('#use_end_date').val('');
+        }
+        // $('.seacrh-order-btn').trigger('click');
     }
 });

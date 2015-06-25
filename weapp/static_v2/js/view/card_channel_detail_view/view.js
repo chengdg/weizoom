@@ -1,9 +1,11 @@
 ensureNS('W.view.card');
 W.view.card.channelDetailFilter = Backbone.View.extend({
+//    moneyRex: /^\d*(\.\d{0,2})?$/,
     events: {
         'click .seacrh-order-btn': 'seacrhBtn',
         'click .recently-week-day': 'setDateText',
         'click .xa-reset': 'onClickResetButton'
+
     },
 
     // 点击‘最近7天’或‘最近30天’
@@ -46,7 +48,6 @@ W.view.card.channelDetailFilter = Backbone.View.extend({
         var args = this.getFilterValue();
         dataView.options.args = this.getFilterValueByDict(args);
         dataView.setPage(1);
-        console.log('dataView.options.args', dataView.options.args)
         dataView.reload();
         this.$el.trigger('end_click');
     },
@@ -59,10 +60,10 @@ W.view.card.channelDetailFilter = Backbone.View.extend({
         var cardName = $('#weizoom_card_name').val().trim();
         var startDate = $('#start_date').val().trim();
         var endDate = $('#end_date').val().trim();
-
         var moneyRex = /^\d*(\.\d{0,2})?$/;
         var lowMoney = $('#low_money').val().trim();
         var highMoney = $('#high_money').val().trim();
+        var event_type = $('#event_type').val().trim();
         if(!moneyRex.test(lowMoney) || !moneyRex.test(highMoney)){
             W.showHint('error', '请输入正确的价格');
             return false;
@@ -106,12 +107,21 @@ W.view.card.channelDetailFilter = Backbone.View.extend({
         }
         // money
         if (lowMoney.length > 0 && highMoney.length > 0) {
-            dataValue.push('money:'+lowMoney+'-'+highMoney)
+            if (event_type == "1"){
+                var temp = lowMoney;
+                lowMoney = '-'+highMoney;
+                highMoney = '-'+temp;
+            }
+            dataValue.push('money:'+lowMoney+'--'+highMoney);
         }
         //created_at
         if (startDate != "" && endDate != "") {
-            dataValue.push('created_at:'+startDate+'--'+endDate)
+            dataValue.push('created_at:'+startDate+'--'+endDate);
         }
+        if (event_type == '') {
+            event_type = "0";
+        }
+        dataValue.push('event_type:'+event_type);
 
         var filter_value = dataValue.join('|');
 
@@ -129,7 +139,7 @@ W.view.card.channelDetailFilter = Backbone.View.extend({
         if (args.length == 0) {
             return ""
         }else{
-            args.push('"page":1')
+            args.push('"page":1');
             return '{'+ args.join(',') +'}';
         }
     },
@@ -249,6 +259,21 @@ W.view.card.channelDetailFilter = Backbone.View.extend({
         this.$el = $(options.el);
         this.render();
         this.filter_value = '';
+        this.bind('clickEventType', this.clickEventType);
+    },
+    clickEventType: function(event_type){
+        if (event_type=="0"){
+            $('#low_money').prev().html("消费金额：");
+//            this.moneyRex = /^\d*(\.\d{0,2})?$/;
+        }
+        else{
+            $('#low_money').prev().html("退款金额：");
+//            this.moneyRex = /^(-[1-9]\d*|0)*(\.\d{0,2})?$/;
+        }
+        $('#low_money').val('');
+        $('#high_money').val('');
+        $('#event_type').val(event_type);
+        $('.seacrh-order-btn').trigger('click');
     },
 
     onClickResetButton: function(){

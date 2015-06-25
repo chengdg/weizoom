@@ -203,17 +203,17 @@ $(document).ready(function() {
         var startDate = $('#valid_time_from').val();
         var endDate = $('#valid_time_to').val();
         if (startDate.length > 0 && endDate.length == 0) {
-            W.getErrorHintView().show('请输入结束日期！');
+            W.showHint('error','请输入结束日期！');
             return false;
         }
         if (endDate.length > 0 && startDate.length == 0) {
-            W.getErrorHintView().show('请输入开始日期！');
+            W.showHint('error','请输入开始日期！');
             return false;
         }
         var start = new Date(startDate.replace("-", "/").replace("-", "/"));
         var end = new Date(endDate.replace("-", "/").replace("-", "/"));
         if ((startDate.length > 0 || endDate.length > 0) && start > end){
-            W.getErrorHintView().show('开始日期不能大于结束日期！');
+            W.showHint('error','开始日期不能大于结束日期！');
             return false;
         }
 
@@ -258,7 +258,7 @@ $(document).ready(function() {
             },
             error: function(resp) {
                 W.getLoadingView().hide();
-                W.getErrorHintView().show(resp.code == 500 ? resp.errMsg : '创建微众卡失败！');
+                W.showHint('error',resp.code == 500 ? resp.errMsg : '创建微众卡失败！');
                 $('#submitBtn').prop('disabled', false);
             }
         });
