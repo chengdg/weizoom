@@ -78,7 +78,7 @@ def record_prize(request):
 					if shake_detail.residue_price > 10:
 						if  member_play_count >= shake_detail.play_count:
 							if next_shake_detail:
-								error_msg = u'本轮红包已抢完!'
+								error_msg = u'本轮红包已抢光!'
 							else:
 								error_msg = u'红包已抢光，感谢您今天的参与！'
 						else:
@@ -114,7 +114,7 @@ def record_prize(request):
 								error_msg = shake_detail.shake.not_winning_desc
 					else:
 						if next_shake_detail:
-							error_msg = u'本轮红包已抢完!'
+							error_msg = u'本轮红包已抢光!'
 						else:
 							error_msg = u'红包已抢光，感谢您今天的参与！'
 				else:
