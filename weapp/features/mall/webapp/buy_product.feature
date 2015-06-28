@@ -12,7 +12,16 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
+		"""
+	And jobs已有微众卡支付权限
+	And jobs已添加支付方式
+		"""
+		[{
+			"type": "微众卡支付"
+		}, {
+			"type": "货到付款"
+		}]
 		"""
 	And jobs已添加商品规格
 		"""
@@ -36,23 +45,8 @@ Background:
 			}]
 		}]
 		"""
-	When jobs已添加支付方式
-		"""
-		[{
-			"type": "货到付款",
-			"description": "我的货到付款",
-			"is_active": "启用"
-		}]
-		"""
-	When jobs开通使用微众卡权限
-	When jobs添加支付方式
-		"""
-		[{
-			"type": "微众卡支付",
-			"description": "我的微众卡支付",
-			"is_active": "启用"
-		}]
-		"""
+
+
 	And jobs已添加商品
 		"""
 		[{
@@ -99,16 +93,16 @@ Background:
 			"pay_interfaces":[{
 				"type": "在线支付"
 			}]
-		}]	
+		}]
 		"""
 	And bill关注jobs的公众号
 
-@mall @mall.webapp
+@mall @mall2 @mall.webapp @zy_bp01
 Scenario: 购买单个商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs添加的商品
 	1. bill的订单中的信息正确
-	
+
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -141,12 +135,12 @@ Scenario: 购买单个商品
 		"""
 
 
-@mall @mall.webapp
+@mall @mall.webapp @mall2 @zy_bp02
 Scenario: 购买商品时，使用订单备注
 	bill在购买jobs添加的商品时
 	1. 添加了"订单备注"，则jobs能在管理系统中看到该"订单备注"
 	2. 不添加'订单备注', 则jobs能在管理系统中看到"订单备注"为空字符串
-	
+
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -192,7 +186,7 @@ Scenario: 购买商品时，使用订单备注
 		}
 		"""
 
-@mall @mall.webapp
+@mall @mall.webapp @mall2 @zy_bp03
 Scenario: 购买有规格的商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs添加的商品
@@ -233,7 +227,7 @@ Scenario: 购买有规格的商品
 		"""
 
 
-@mall @mall.webapp
+@mall @mall.webapp @mall2 @zy_bp04
 Scenario: 购买已经下架的商品
 	bill可能会在以下情景下购买已下架的商品A：
 	1. bill打开商品A的详情页面
@@ -255,7 +249,7 @@ Scenario: 购买已经下架的商品
 		"""
 	Then bill获得错误提示'商品已下架<br/>2秒后返回商城首页'
 
-@mall @mall.webapp
+@mall @mall.webapp @mall2 @zy_bp05
 Scenario: 购买的商品数量等于库存数量
 	jobs添加有限商品后
 	1. bill能在webapp中购买jobs添加的商品
@@ -297,11 +291,11 @@ Scenario: 购买的商品数量等于库存数量
 						"stocks": 0
 					}
 				}
-			} 
+			}
 		}
 		"""
 
-@mall @mall.webapp
+@mall @mall.webapp @mall2 @zy_bp06
 Scenario:购买库存不足的商品
 	bill可能会在以下情景下购买库存不足的商品A：
 	1. bill打开商品A的详情页面
@@ -320,7 +314,7 @@ Scenario:购买库存不足的商品
 			}]
 		}
 		"""
-	Then bill获得错误提示'库存不足'
+	Then bill获得错误提示'有商品库存不足<br/>2秒后返回购物车<br/>请重新下单'
 	Given jobs登录系统
 	Then jobs能获取商品'商品5'
 		"""
@@ -334,11 +328,11 @@ Scenario:购买库存不足的商品
 						"stocks": 2
 					}
 				}
-			} 
+			}
 		}
 		"""
 
-@mall @mall.webapp
+@mall @mall.webapp @mall2 @zy_bp07
 Scenario:货到付款的商品有两种支付方式
 	bill购买jobs配有'货到付款'的商品时
 	1.bill可以使用'在线支付'进行支付
@@ -356,8 +350,8 @@ Scenario:货到付款的商品有两种支付方式
 		"""
 	Then bill'能'使用支付方式'微众卡支付'进行支付
 	Then bill'能'使用支付方式'货到付款'进行支付
-	
-@mall @mall.webapp
+
+@mall @mall.webapp @mall2 @zy_bp08
 Scenario:没有货到付款的商品只有一种支付方式
 	bill购买jobs没有配'货到付款'的商品时
 	1.bill可以使用'在线支付'进行支付

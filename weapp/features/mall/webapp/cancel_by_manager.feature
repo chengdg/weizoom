@@ -18,18 +18,18 @@ Background:
 					}
 				}
 			}
-		
-		}]	
+
+		}]
 		"""
 	And bill关注jobs的公众号
 
-@mall.manager_cancel_status @bert
+@mall2 @mall.manager_cancel_status @bert
 Scenario: 取消订单后,手机端订单状态为'已取消'
 		1.jobs取消订单,bill可以获取订单状态为'已取消'
 		2.bill可获取'取消原因'
 
 	Given jobs登录系统
-	
+
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -47,7 +47,7 @@ Scenario: 取消订单后,手机端订单状态为'已取消'
 		"""
 	Then bill成功创建订单
 		"""
-		{	
+		{
 			"status": "待支付",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
@@ -97,7 +97,7 @@ Scenario: 取消订单后,手机端订单状态为'已取消'
 	When bill访问jobs的webapp
 	Then bill成功创建订单
 		"""
-		{	
+		{
 			"status": "已取消",
 			"reason":"不想要了",
 			"ship_name": "bill",
@@ -112,4 +112,3 @@ Scenario: 取消订单后,手机端订单状态为'已取消'
 		}
 		"""
 
-		

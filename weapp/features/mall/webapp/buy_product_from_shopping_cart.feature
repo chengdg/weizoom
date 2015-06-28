@@ -797,7 +797,7 @@ Scenario: 从购物车同时购买"有运费和无运费"的商品，并且商�
 		{
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
+			"area": "北京市 北京市 海淀区",
 			"ship_address": "泰兴大厦"
 		}
 		"""
@@ -820,6 +820,7 @@ Scenario: 从购物车同时购买"有运费和无运费"的商品，并且商�
 @mall @mall2 @zy_wsc08 @mall.webapp @mall.webapp.shopping_cart
 Scenario: 从购物车购买多个"有特殊运费"的商品
 	bill将jobs多个'有特殊运费'的商品加入购物车后
+	1. bill 在特殊地区
 	1. bill能从购物车中下单,购买商品
 	2. bill的订单中的信息正确
 

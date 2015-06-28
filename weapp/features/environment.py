@@ -125,7 +125,6 @@ def __clear_all_account_data():
 
 	#会员
 	#member_models.MemberGrade.objects.all().delete()
-	member_models.ShipInfo.objects.all().delete()
 	SocialAccount.objects.all().delete()
 	member_models.WebAppUser.objects.all().delete()
 	member_models.Member.objects.all().delete()
@@ -144,6 +143,7 @@ def __clear_all_app_data():
 	清空应用数据
 	"""
 	#webapp
+	member_models.ShipInfo.objects.all().delete()
 	webapp_models.PageVisitLog.objects.all().delete()
 	webapp_models.PageVisitDailyStatistics.objects.all().delete()
 

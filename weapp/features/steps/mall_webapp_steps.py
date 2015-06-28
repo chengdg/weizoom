@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
-import time
+import logging
+logger = logging.getLogger(__name__)
+
 from datetime import datetime, timedelta
 
 from behave import *
@@ -533,7 +535,11 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 	# print pay_type
 
 	if pay_type == u'能':
-		context.tc.assertTrue(pay_interface in pay_interface_names)
+		if pay_interface == u"微众卡支付":
+			from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
+			context.tc.assertTrue(AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(context.webapp_owner_id))
+		else:
+			context.tc.assertTrue(pay_interface in pay_interface_names)
 	else:
 		context.tc.assertTrue(pay_interface not in pay_interface_names)
 
@@ -567,7 +573,7 @@ def step_impl(context, webapp_user_name):
 @then(u"{webapp_owner_name}能获取订单")
 def step_impl(context, webapp_owner_name):
 	db_order = Order.objects.all().order_by('-id')[0]
-	response = context.client.get('/mall/editor/order/get/?order_id=%d' % db_order.id, follow=True)
+	response = context.client.get('/mall/order_detail/get/?order_id=%d' % db_order.id, follow=True)
 
 	order = response.context['order']
 
@@ -797,23 +803,24 @@ def step_impl(context, webapp_user_name):
 		argument = __i.get('context')
 		# 获取购物车参数
 		product_ids, product_counts, product_model_names = _get_shopping_cart_parameters(context.webapp_user.id, argument)
-		url = '/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart_order&action=edit&product_ids=%s&product_counts=%s&product_model_names=%s' % (context.webapp_owner_id, product_ids, product_counts, product_model_names)
+		url = '/termite/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart_order&action=edit&product_ids=%s&product_counts=%s&product_model_names=%s' % (context.webapp_owner_id, product_ids, product_counts, product_model_names)
 		product_infos = {
 			'product_ids': product_ids,
 			'product_counts': product_counts,
 			'product_model_names': product_model_names
 		}
+
 	elif __i.get("action") == u"click":
 		# 加默认地址
 		#context.webapp_user.update_ship_info(ship_name='11', ship_address='12', ship_tel='12345678970', area='1')
-		url = '/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart&action=show' % (context.webapp_owner_id)
+		url = '/termite/workbench/jqm/preview/?woid=%s&module=mall&model=shopping_cart&action=show' % (context.webapp_owner_id)
 		product_infos = {}
 
 	response = context.client.get(bdd_util.nginx(url), follow=True)
 	assert response.status_code == 200
 	context.product_infos = product_infos
 	context.response = response
-	context.redirect_url_query_string_pay = url
+	context.pay_url = url
 
 
 def _get_shopping_cart_parameters(webapp_user_id, context):
@@ -897,6 +904,37 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response = context.client.post(bdd_util.nginx(url), data)
 
 
+def _create_address(context, address_info):
+	"""
+	"""
+
+	ship_info = {
+		'ship_address': address_info.get('ship_address', u'泰兴大厦'),
+		'area': __get_address_id(address_info.get('area')),
+		'ship_tel': address_info.get("ship_tel", '18612456555'),
+		'ship_name': address_info.get("ship_name", u"你大爷"),
+	}
+	url = '/webapp/api/project_api/call/'
+	data = {
+		'woid': context.webapp_owner_id,
+		'module': 'mall',
+		'target_api': 'address/save',
+		'ship_id': 0
+	}
+	data.update(ship_info)
+	response = context.client.post(url, data)
+	return response
+
+
+def _update_address(context, address_info):
+	"""
+	"""
+	edit_shoping_cart_url = context.pay_url
+	url = '/termite/workbench/jqm/preview/?woid=%s&module=mall&model=address&action=add&%s' % (context.webapp_owner_id, edit_shoping_cart_url)
+	context.client.get(url)
+	return _create_address(context, address_info)
+
+
 @when(u"{webapp_user_name}填写收货信息")
 def step_add_address_info(context, webapp_user_name):
 	"""
@@ -908,29 +946,42 @@ def step_add_address_info(context, webapp_user_name):
 			"ship_address": "泰兴大厦"     # 详细地址
 		}
 	"""
-	address_info = json.loads(context.text)
-	try:
-		ship_info = context.response.context['ship_info']
-		if not ship_info:
-			ship_info = {}
-	except KeyError as e:
-		ship_info = {}
-	try:
+	# 判断是否需要填写收货信息
+	page_title = context.response.context['page_title']
+	if page_title == u'编辑收货地址':
+		address_info = json.loads(context.text)
 		redirect_url = context.response.context['redirect_url_query_string']
-	except KeyError as e:
-		redirect_url = context.redirect_url_query_string_pay
-	url = '/webapp/api/project_api/call/'
-	data = {
-		'woid': context.webapp_owner_id,
-		'module': 'mall',
-		'target_api': 'address/save',
-		'ship_address': address_info.get('ship_address', u'泰兴大厦'),
-		'area': __get_address_id(address_info.get('area')),
-		'ship_tel': address_info.get("ship_tel", '18612456555'),
-		'ship_name': address_info.get("ship_name", u"你大爷"),
-		'ship_id': ship_info.get('id', 0),
-	}
-	response = context.client.post(url, data)
+		response = _create_address(context, address_info)
+		bdd_util.assert_api_call_success(response)
+		response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
+		assert response.status_code == 200
+		context.response = response
+	elif page_title == u"购物车订单编辑":
+		pass
+
+
+@when(u"{webapp_user_name}更新收货信息")
+def step_create_or_update_address_info(context, webapp_user_name):
+	"""
+	如果没有地址就创建， 有则更新
+	e.g.:
+		{
+			"ship_name": "你大爷",         # 收货人
+			"ship_tel":  "18612456555",   # 手机号码
+			"area": "北京市 北京市 海淀区",  # 地区
+			"ship_address": "泰兴大厦"     # 详细地址
+		}
+	"""
+	page_title = context.response.context['page_title']
+	address_info = json.loads(context.text)
+	redirect_url = context.pay_url
+
+	if page_title == u'编辑收货地址':
+		# create_address
+		response = _create_address(context, address_info)
+	elif page_title == u"购物车订单编辑":
+		response = _update_address(context, address_info)
+
 	bdd_util.assert_api_call_success(response)
 	response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
 	context.response = response
@@ -957,8 +1008,6 @@ def get_prodcut_ids_info(order):
 			'product_model_names': '$'.join(product_model_names),
 			'promotion_ids': '_'.join(promotion_ids)
 			}
-
-
 
 
 @when(u"{webapp_user_name}在购物车订单编辑中点击提交订单")

@@ -885,7 +885,7 @@ Scenario:11 用微众卡购买商品时，输入两张同样的卡号密码
 			"price":100.00
 		}
 		"""
-@mall @mall.pay_weizoom_card
+@mall2 @mall @mall.pay_weizoom_card
 Scenario:12 用已用完的微众卡购买商品时
 	bill用已用完的微众卡购买jobs的商品时
 	1.创建订单成功，订单状态为“等待支付”
