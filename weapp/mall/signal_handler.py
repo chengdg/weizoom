@@ -117,6 +117,7 @@ def post_pay_order_handler(order, request, **kwargs):
 				增加异步消息：修改会员消费次数和金额,平均客单价
 			"""
 			from modules.member.tasks import update_member_pay_info
+			order.payment_time = payment_time
 			update_member_pay_info(order)
 		except:
 			alert_message = u"post_pay_order_handler 修改会员消费次数和金额,平均客单价, cause:\n{}".format(unicode_full_stack())

@@ -414,10 +414,10 @@ class Member(models.Model):
 	factor = models.FloatField(default=0.00) #社会因子
 	source = models.IntegerField(default=-1) #会员来源
 	is_for_buy_test = models.BooleanField(default=False)
-	update_time = models.DateTimeField(auto_now=True)#会员信息更新时间 2014-11-11
+	update_time = models.DateTimeField(default=datetime.now())#会员信息更新时间 2014-11-11
 	pay_money = models.FloatField(default=0.0)
 	pay_times =  models.IntegerField(default=0)
-	last_pay_time = models.DateTimeField(auto_now=True)#会员信息更新时间 2014-11-11
+	last_pay_time = models.DateTimeField(blank=True, null=True, default=None)#会员信息更新时间 2014-11-11
 	unit_price = models.FloatField(default=0.0) #ke dan jia
 	#add by bert
 	city = models.CharField(default='', max_length=50)

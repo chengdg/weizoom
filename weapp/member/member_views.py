@@ -411,9 +411,12 @@ def export_members(request):
 
 	if filter_value:
 		filter_data_dict = {}
-
 		for filter_data_item in filter_value.split('|'):
-			key, value = filter_data_item.split(":")
+			try:
+				key, value = filter_data_item.split(":")
+			except:
+				key = filter_data_item[:filter_data_item.find(':')]
+				value = filter_data_item[filter_data_item.find(':')+1:]
 			filter_data_dict[key] = value
 			if key == 'name':
 				query_hex = byte_to_hex(value)

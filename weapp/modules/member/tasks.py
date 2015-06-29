@@ -45,9 +45,9 @@ def update_member_pay_info(order):
 	if member:
 		try:
 			unit_price = (member.pay_money + order.final_price)/(member.pay_times + 1)
-			Member.objects.filter(id=member.id).update(pay_money=F('pay_money')+order.final_price, pay_times=F('pay_times')+1, unit_price=unit_price)
+			Member.objects.filter(id=member.id).update(pay_money=F('pay_money')+order.final_price, pay_times=F('pay_times')+1, unit_price=unit_price, last_pay_time=order.payment_time)
 		except:
-			notify_message = u"_process_error_openid member_id:{}, cause:\n{}".format(member.id, unicode_full_stack())
+			notify_message = u"update_member_pay_info member_id:{}, cause:\n{}".format(member.id, unicode_full_stack())
 			watchdog_error(notify_message)
 
 
