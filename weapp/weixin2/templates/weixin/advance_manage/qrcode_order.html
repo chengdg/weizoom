@@ -4,14 +4,14 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/mall_promotion/promotion_list/get/">高级管理</a></li>
+		<li><a href="/new_weixin/materials/">高级管理</a></li>
 		<li><a href="/new_weixin/qrcodes/">带参数二维码</a></li>
 		<li class="active">交易订单</li>
 	</ul>
 </div>
 <div class="xui-filterPanel" >
-        <div class="xui-form disT ml20">
-            <div class="xui-i-item">
+    <div class="xui-form disT ml20">
+        <div class="xui-i-item">
 			<label>下单时间：</label>
 			<input
 				type="text"
@@ -44,32 +44,30 @@
 			<a class="btn btn-primary xa-search xui-fontBold" href="javascript:void(0);">查询</a>
 			<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
 		</div>
-</div>
+	</div>
 </div>
 <div class="panel panel-default mt20 xui-bigBoxbg">
-
-<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
-	<div class="panel-heading">
-	<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示扫码后成交订单
-</div>
-	<div
-		data-ui-role="advanced-table"
-		data-app="new_weixin"
-		data-resource="qrcode_order"
-		data-args='{"setting_id": "{{setting_id}}", "is_show":"1"}'
-		data-template-id="#promotions-view"
-		data-enable-paginator="true"
-		data-enable-sort="false"
-		data-selectable="true"
-		data-disable-header-select="true"
-		data-item-count-per-page="10"
-		data-outer-selecter='.xa-selectAll'
-		data-selecttable-tr='xa-selectTr'
-		class="panel-body xui-promotionHead pb0"
-	></div>
-
-</div>
-
+	<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
+		<div class="panel-heading xui-qrcode-order-head">
+			<input type="checkbox" class="is_show vs" checked value="0">&nbsp;&nbsp;仅显示扫码后成交订单
+			<div class="xui-i-money">现金支付：<span class="xa-getFinalPrice">0.00</span>&nbsp;&nbsp;微众卡支付：<span class="xa-getWeizoomCardMoney">0.00</span></span></div>
+		</div>
+		<div
+			data-ui-role="qrcode-order-advanced-table"
+			data-app="new_weixin"
+			data-resource="qrcode_order"
+			data-args='{"setting_id": "{{setting_id}}", "is_show":"1"}'
+			data-template-id="#promotions-view"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="true"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
+			class="panel-body xui-promotionHead pb0"
+		></div>
+	</div>
 </div>
 {% endblock %}
 
@@ -100,13 +98,13 @@
 	{{/if}}
 
 	{{if data.pageinfo.object_count == 0}}
-		<div class="xui-emptyBox">
+		<div class="xui-emptyBox xa-emptyBox">
 		<img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！
 		</span>
 		</div>
 	{{/if}}
 
-	<ul>
+	<ul class="xa-countLi">
         {{each(i, order) items}}
 		<li data-order-id="${order.id}">
 			<table width="100%" class="table mb15 xui-table-orderDetail">
@@ -226,8 +224,8 @@
 		</li>
 		{{/each}}
 	</ul>
-		</tbody>
-	</table>
+	<div class="hidden"><span class="xa-getHiddenFinalPrice">${data.final_price}</span></div>
+	<div class="hidden"><span class="xa-getHiddenWeizoomCardMoney">${data.weizoom_card_money}</span></div>
 </div>
 </script>
 {% endverbatim %}
@@ -246,12 +244,11 @@ $(document).ready(function() {
 	$('#start_date').attr('value','');
 	$('#end_date').attr('value','');
 
-
 	function dateViewReload(){
 		var start_date = $('#start_date').val();
 		var end_date = $('#end_date').val();
 		var is_checked = $('.is_show').is(':checked');
-		var dataView = $('[data-ui-role="advanced-table"]').data('view');
+		var dataView = $('[data-ui-role="qrcode-order-advanced-table"]').data('view');
 		var is_show = 0;
 		if (is_checked == true){
 			is_show = 1;
@@ -264,15 +261,59 @@ $(document).ready(function() {
 
 	$('.xa-search').click(function(){
 		dateViewReload();
-	})
+	});
 	$('.xa-reset').click(function(){
 		$('#start_date').attr('value','');
 		$('#end_date').attr('value','');
-	})
+	});
 
 	$('.is_show').click(function(){
 		dateViewReload();
-	})
+	});
+
+	// 微众卡价钱提示
+    $('body').delegate('.xa-weizoomCardImg','mouseenter',function(){
+    	$('.xa-weizoomCardImg').each(function(){
+			$(this).mouseenter(function() {
+				$(this).siblings('.xa-weizoomCardHint').css('display','inline-block');
+			});
+		});
+    });
+    $('body').delegate('.xa-weizoomCardImg','mouseleave',function(){
+    	$('.xa-weizoomCardImg').each(function(){
+			$(this).mouseleave(function() {
+				$(this).siblings('.xa-weizoomCardHint').css('display','none');
+			});
+		});
+    });
+
+
+    // if($('.xa-emptyBox').length <= 0) {
+		// while(true) {
+		// 	var liCount = 0;
+		// 	setTimeout(
+		// 		function(){
+		// 			liCount = $('.xa-countLi li').length;
+		// 			xlog('11111liCount:' + liCount);
+		// 		},
+		// 	500);
+		// 	xlog('liCount:' + liCount);
+		// 	if(liCount > 0) {
+		// 		break;
+		// 	}
+		// }
+	// }
+
+	// setTimeout(
+	// 	function(){
+	// 		var finalPrice = $('.xa-getHiddenFinalPrice').text();
+	// 		var weizoomCardMoney = $('.xa-getHiddenWeizoomCardMoney').text();
+	// 		xlog('===================================================');
+	// 		xlog('finalPrice:' + finalPrice);
+	// 		xlog('weizoomCardMoney:' + weizoomCardMoney);
+	// 		xlog('===================================================');
+	// 	},
+	// 4000);
 
 });
 </script>

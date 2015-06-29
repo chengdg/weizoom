@@ -1149,3 +1149,12 @@
 	float: left;
 	padding: 0 0 0 10px;
 }
+
+.xui-qrcode-order-head {
+	display: block;
+}
+
+.xui-qrcode-order-head .xui-i-money {
+	font-weight: 700;
+	float: right;
+}

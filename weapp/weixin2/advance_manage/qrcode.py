@@ -530,6 +530,16 @@ class QrcodeOrder(resource.Resource):
 				orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
 			else:
 				orders = []
+
+
+		#add by duhao 2015-06-29 统计微众卡支付总金额和现金支付总金额
+		final_price = 0
+		weizoom_card_money = 0
+		for order in orders:
+			final_price += order.final_price
+			weizoom_card_money += order.weizoom_card_money
+
+
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', 15))
 		cur_page = int(request.GET.get('page', '1'))
@@ -587,41 +597,11 @@ class QrcodeOrder(resource.Resource):
 				'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money)
 			 })
 
-		# for order in orders:
-		# 	items.append({
-		# 		'id': order.id,
-		# 		'order_id': order.order_id,
-		# 		'status': order.get_status_text(),
-		# 		'total_price': float('%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
-		# 		'order_total_price': float('%.2f' % order.get_total_price()),
-		# 		'ship_name': order.ship_name,
-		# 		'buyer_name': order.buyer_name,
-		# 		'pay_interface_name': order.pay_interface_type_text,
-		# 		'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
-		# 		'product_count': order.product_count,
-		# 		'customer_message': order.customer_message,
-		# 		'payment_time': order.payment_time,
-		# 		'come': order.come,
-		# 		'member_id': order.member_id,
-		# 		'type': order.type,
-		# 		'webapp_id': order.webapp_id,
-		# 		'integral': order.integral,
-		# 		'products': mall_api.get_order_products(order),
-		# 		'pay_interface_type':order.pay_interface_type,
-		# 		'order_status':order.status,
-		# 		'express_company_name': order.express_company_name,
-		# 		'express_number': order.express_number,
-		# 		'leader_name': order.leader_name,
-		# 		'remark': order.remark,
-		# 		'postage': '%.2f' % order.postage,
-		# 		'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(order.final_price) - float(order.weizoom_card_money),
-		# 		'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-		# 		'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money)
-		# 	})
-
 		response = create_response(200)
 		response.data = {
 			'items': items,
+			'final_price': '%.2f' % final_price,
+			'weizoom_card_money': '%.2f' % weizoom_card_money,
 			'sortAttr': request.GET.get('sort_attr', '-created_at'),
 			'pageinfo': paginator.to_dict(pageinfo),
 			'data': {}
