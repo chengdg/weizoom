@@ -367,14 +367,8 @@ def __count_member_follow_relations(member):
 def __get_member_orders(member):
 	if member is None:
 		return None
-
-	webapp_user = WebAppUser.from_member(member)
-	if webapp_user is None:
-		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
-		watchdog_error(notify_message)
-		return None
-
-	return Order.objects.filter(webapp_user_id=webapp_user.id).order_by("-created_at")
+	webapp_user_ids = member.get_webapp_user_ids()
+	return Order.objects.filter(webapp_user_id__in=webapp_user_ids).order_by("-created_at")
 
 def __get_member_shared_urls(member):
 	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
