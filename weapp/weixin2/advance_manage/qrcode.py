@@ -87,9 +87,9 @@ class Qrcodes(resource.Resource):
 		for order in orders:
 			member_id = webapp_user_id2member_id[order.webapp_user_id]
 			if member_id in member_id2total_final_price:
-				member_id2total_final_price[member_id] += order.final_price
+				member_id2total_final_price[member_id] += order.final_price + order.weizoom_card_money
 			else:
-				member_id2total_final_price[member_id] = order.final_price
+				member_id2total_final_price[member_id] = order.final_price + order.weizoom_card_money
 		
 		setting_id2total_final_price = {}
 		for member_id in member_id2total_final_price.keys():
