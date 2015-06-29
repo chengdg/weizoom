@@ -477,7 +477,7 @@ class QrcodeOrder(resource.Resource):
 
 		if end_date:
 			filter_data_args['created_at__lte'] = end_date
-		filter_data_args['status'] = ORDER_STATUS_SUCCESSED
+		filter_data_args['status__in'] = (ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
 
 		relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
 		setting_id2count = {}

@@ -1158,3 +1158,25 @@
 	font-weight: 700;
 	float: right;
 }
+
+.xui-qrcode-list .xui-weizoomCard i{
+    display: inline-block;
+    width: 24px;
+    height: 17px;
+    background: url(/static_v2/img/editor/weizoomCard.jpg);
+    -webkit-background-size: 100%;
+    background-size: 100%;
+}
+.xui-qrcode-list .xui-weizoomCard span{
+    background: #fff;
+    display: inline-block;
+    min-width: 126px;
+    height: 32px;
+    border: 1px solid #56B2EC;
+    text-align: center;
+    line-height: 32px;
+    top:6px;
+    left: 20px;
+    z-index: 10;
+
+}
