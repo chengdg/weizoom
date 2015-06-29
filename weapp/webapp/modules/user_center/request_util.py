@@ -45,8 +45,9 @@ def __get_current_user_info(request, member):
 	"""
 	获取当前用户的头像和名称信息
 	"""
-	member_util.member_basic_info_updater(request.user_profile, member)
-	return Member.objects.get(id = member.id)
+	if 'user-1.jpg' in member.user_icon:
+		member_util.member_basic_info_updater(request.user_profile, member)
+		return Member.objects.get(id = member.id)
 
 
 def get_user_info(request):
@@ -111,7 +112,7 @@ def get_user_info(request):
 	#经验值 (bert add at 14 )
 	#grade_lists = MemberGrade.get_all_grades_list(member.webapp_id)
 	# 是否允许用微众卡？
-	is_can_use_weizoomcard = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.webapp_owner_id)
+	#is_can_use_weizoomcard = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.webapp_owner_id)
 
 	# 是否享受会员折扣
 	is_enjoy_member_discount = get_is_enjoy_member_discount(request.webapp_user)
@@ -123,7 +124,7 @@ def get_user_info(request):
 		#'shipInfo': shipInfo,
 		'request': request,
 	 	'market_tools': market_tools,
-		'is_can_use_weizoomcard':is_can_use_weizoomcard,
+		#'is_can_use_weizoomcard':is_can_use_weizoomcard,
 		'is_enjoy_member_discount': is_enjoy_member_discount
 	})
 	return render_to_response('%s/user_center.html' % request.template_dir, c)

@@ -21,6 +21,7 @@ from core.wxapi.weixin_api import *
 from core.wxapi import get_weixin_api
 from core.wxapi.weixin_api import WeixinApi
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
+from datetime import datetime, timedelta
 
 #############################################################################
 #get_coupon_rules: 获取优惠券rule
@@ -83,6 +84,10 @@ def __get_qrcode(user_id):
 ###########################################################
 def get_member_qrcode(user_id, member_id):
 	try:
+		now_date = datetime.strftime(datetime.now(), '%Y-%m-%d')
+		viper_spreads = MemberQrcode.objects.filter(member_id=member_id, created_at__gte=now_date, is_active=1)
+		if viper_spreads.count() > 0:
+	 		return viper_spreads[0].ticket, viper_spreads[0].expired_second
 		ticket, expired_second = __get_qrcode(user_id)
 		if ticket:
 			MemberQrcode.objects.create(owner_id=user_id, member_id=member_id, ticket=ticket, created_time=int(time.time()), expired_second=expired_second)

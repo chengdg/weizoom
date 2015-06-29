@@ -405,17 +405,19 @@ def export_members(request):
 
 	if filter_value:
 		filter_data_dict = {}
+
 		for filter_data_item in filter_value.split('|'):
 			try:
 				key, value = filter_data_item.split(":")
 			except:
 				key = filter_data_item[:filter_data_item.find(':')]
 				value = filter_data_item[filter_data_item.find(':')+1:]
+
 			filter_data_dict[key] = value
 			if key == 'name':
 				query_hex = byte_to_hex(value)
-				filter_data_args["username_hexstr__contains"] = value
-
+				filter_data_args["username_hexstr__contains"] = query_hex
+			print  filter_data_args
 			if key == 'grade_id':
 				filter_data_args["grade_id"] = value
 
@@ -431,8 +433,7 @@ def export_members(request):
 					pass
 				else:
 					filter_data_args["source"] = value
-
-			if key in ['pay_times', 'pay_money', 'friend_count']:
+			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price', 'integral']:
 				if value.find('-') > -1:
 					val1,val2 = value.split('-')
 					if float(val1) > float(val2):
@@ -448,11 +449,11 @@ def export_members(request):
 				if value.find('-') > -1:
 					val1,val2 = value.split('--')
 					if key == 'first_pay':
-						filter_data_args['last_pay_time__gte'] = float(val1)
-						filter_data_args['last_pay_time__lte'] = float(val2)
+						filter_data_args['last_pay_time__gte'] = val1
+						filter_data_args['last_pay_time__lte'] =  val2
 					else:
-						filter_data_args['created_at__gte'] = float(val1)
-						filter_data_args['created_at__lte'] = float(val2)
+						filter_data_args['created_at__gte'] = val1
+						filter_data_args['created_at__lte'] = val2
 
 	members = Member.objects.filter(**filter_data_args)
 
@@ -609,9 +610,18 @@ def export_members(request):
 						factor
 					]
 			else:
-				info_list = [
-						'', '', '', '', '', '', '',
-						'', '',
+				info_list = ['', 
+						'', 
+						'', 
+						'', 
+						'', 
+						'', 
+						'',
+						'', 
+						'',
+						'',
+						'',
+						'',
 						'',
 						friend_name,
 						'',
