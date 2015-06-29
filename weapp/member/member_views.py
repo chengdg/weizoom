@@ -367,7 +367,7 @@ def __count_member_follow_relations(member):
 def __get_member_orders(member):
 	if member is None:
 		return None
-	webapp_user_ids = member.get_webapp_user_ids()
+	webapp_user_ids = member.get_webapp_user_ids
 	return Order.objects.filter(webapp_user_id__in=webapp_user_ids).order_by("-created_at")
 
 def __get_member_shared_urls(member):
