@@ -116,7 +116,7 @@ def get_user_info(request):
 	#is_can_use_weizoomcard = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.webapp_owner_id)
 
 	# 是否享受会员折扣
-	is_enjoy_member_discount = get_is_enjoy_member_discount(request.webapp_user)
+	#is_enjoy_member_discount = get_is_enjoy_member_discount(request.webapp_user)
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
@@ -126,7 +126,7 @@ def get_user_info(request):
 		'request': request,
 	 	'market_tools': market_tools,
 		#'is_can_use_weizoomcard':is_can_use_weizoomcard,
-		'is_enjoy_member_discount': is_enjoy_member_discount
+		#'is_enjoy_member_discount': is_enjoy_member_discount
 	})
 	return render_to_response('%s/user_center.html' % request.template_dir, c)
 
