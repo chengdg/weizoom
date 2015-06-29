@@ -66,7 +66,7 @@ def __get_qrcode(user_id):
 				
 			#qcrod_info = weixin_api.get_qrcode(ticket)
 			if ticket:
-				return ticket, 1800
+				return ticket, 604800
 			else:
 				return None, None
 		except:
@@ -83,31 +83,41 @@ def __get_qrcode(user_id):
 ###########################################################
 def get_member_qrcode(user_id, member_id):
 	try:
-		from django.db import connection, transaction
-		cursor = connection.cursor()
-		cursor.execute('update market_tool_member_qrcode set expired_second = expired_second - (%d - created_time) where is_active = 1;' % (int(time.time())))
-		cursor.execute('update market_tool_member_qrcode set is_active = 0 where expired_second <= 0;')
-		transaction.commit_unless_managed()
-	except:
-		notify_msg = u"微信会员二维码get_member_qrcode execute sql errror cause:\n{}".format(unicode_full_stack())
-		watchdog_fatal(notify_msg)
-		pass
-			
-	try:
-		viper_spreads = MemberQrcode.objects.filter(member_id=member_id, expired_second__gt=850, is_active=1)
-		if viper_spreads.count() > 0:
-			return viper_spreads[0].ticket, viper_spreads[0].expired_second
+		ticket, expired_second = __get_qrcode(user_id)
+		if ticket:
+			MemberQrcode.objects.create(owner_id=user_id, member_id=member_id, ticket=ticket, created_time=int(time.time()), expired_second=expired_second)
+			return ticket, expired_second
 		else:
 			ticket, expired_second = __get_qrcode(user_id)
-			if ticket:
-				MemberQrcode.objects.create(owner_id=user_id, member_id=member_id, ticket=ticket, created_time=int(time.time()), expired_second=expired_second)
-				return ticket, expired_second
-			else:
-				return None, None
+			MemberQrcode.objects.create(owner_id=user_id, member_id=member_id, ticket=ticket, created_time=int(time.time()), expired_second=expired_second)
+			return ticket, expired_second
 	except:
-		notify_msg = u"微信会员二维码get_member_qrcode execute sql errror cause:\n{}".format(unicode_full_stack())
-		watchdog_fatal(notify_msg)
 		return None, None
+	# try:
+	# 	from django.db import connection, transaction
+	# 	cursor = connection.cursor()
+	# 	cursor.execute('update market_tool_member_qrcode set expired_second = expired_second - (%d - created_time) where is_active = 1;' % (int(time.time())))
+	# 	cursor.execute('update market_tool_member_qrcode set is_active = 0 where expired_second <= 0;')
+	# 	transaction.commit_unless_managed()
+	# except:
+	# 	notify_msg = u"微信会员二维码get_member_qrcode execute sql errror cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_fatal(notify_msg)
+			
+	# try:
+	# 	viper_spreads = MemberQrcode.objects.filter(member_id=member_id, expired_second__gt=850, is_active=1)
+	# 	if viper_spreads.count() > 0:
+	# 		return viper_spreads[0].ticket, viper_spreads[0].expired_second
+	# 	else:
+	# 		ticket, expired_second = __get_qrcode(user_id)
+	# 		if ticket:
+	# 			MemberQrcode.objects.create(owner_id=user_id, member_id=member_id, ticket=ticket, created_time=int(time.time()), expired_second=expired_second)
+	# 			return ticket, expired_second
+	# 		else:
+	# 			return None, None
+	# except:
+	# 	notify_msg = u"微信会员二维码get_member_qrcode execute sql errror cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_fatal(notify_msg)
+	# 	return None, None
 
 
 ###########################################################

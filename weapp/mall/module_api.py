@@ -1980,7 +1980,20 @@ def update_order_status(user, action, order, request=None):
 		if 'cancel' in action and request:
 			Order.objects.filter(id=order_id).update(status=target_status, reason=request.GET.get('reason', ''))
 		elif 'pay' in action:
-			Order.objects.filter(id=order_id).update(status=target_status, payment_time=datetime.now())
+			payment_time = datetime.now()
+			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
+
+			try:
+			"""
+				增加异步消息：修改会员消费次数和金额,平均客单价
+			"""
+				from modules.member.tasks import update_member_pay_info
+				order.payment_time = payment_time
+				update_member_pay_info(order)
+			except:
+				alert_message = u"update_order 修改会员消费次数和金额,平均客单价, cause:\n{}".format(unicode_full_stack())
+				watchdog_error(alert_message)
+
 		else:
 			Order.objects.filter(id=order_id).update(status=target_status)
 		operate_log = u' 修改状态'
