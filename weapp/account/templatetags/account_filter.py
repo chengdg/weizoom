@@ -75,7 +75,11 @@ def format_emotion(content):
 
 @register.filter(name='unify_datetime')
 def unify_datetime(datetime):
-	return datetime.strftime('%Y/%m/%d %H:%M')
+	try:
+		return datetime.strftime('%Y/%m/%d %H:%M')
+	except:
+		return ''
+	
 
 @register.filter(name='scale')
 def scale(option_count, poll_count):
