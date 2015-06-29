@@ -1984,9 +1984,9 @@ def update_order_status(user, action, order, request=None):
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
 
 			try:
-			"""
-				增加异步消息：修改会员消费次数和金额,平均客单价
-			"""
+				"""
+					增加异步消息：修改会员消费次数和金额,平均客单价
+				"""
 				from modules.member.tasks import update_member_pay_info
 				order.payment_time = payment_time
 				update_member_pay_info(order)
