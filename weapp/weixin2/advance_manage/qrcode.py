@@ -18,7 +18,6 @@ from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember
 from modules.member import models as member_model
-from mall import models as mall_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from mall.models import *
 from mall import module_api as mall_api
@@ -82,7 +81,7 @@ class Qrcodes(resource.Resource):
 		webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
 		webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 		webapp_user_ids = set(webapp_user_id2member_id.keys())
-		orders = mall_model.Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=mall_model.ORDER_STATUS_SUCCESSED)
+		orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
 		member_id2total_final_price = {}
 		for order in orders:
 			member_id = webapp_user_id2member_id[order.webapp_user_id]
