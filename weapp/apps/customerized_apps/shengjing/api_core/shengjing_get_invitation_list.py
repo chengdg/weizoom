@@ -11,7 +11,7 @@ from django.conf import settings
 from api_config import *
 from api_params import *
 
-from watchdog.utils import watchdog_info, watchdog_error, watchdog_fatal
+from watchdog.utils import watchdog_info, watchdog_error, watchdog_fatal, watchdog_notice
 from core.exceptionutil import unicode_full_stack
 
 class ShengjingGetInvitationList(object):
@@ -103,7 +103,7 @@ class ShengjingGetInvitationList(object):
 				return self._reload_invitation_json(json_list)
 			else:
 				message = u'_resolve_invitation_list_json解析 Code不为0, phone:{}\n, data:\n{}'.format(self.phone, data)
-				watchdog_fatal(message, self.shengjing_params.WATCHDOG_TYPE_SHENGJING)
+				watchdog_notice(message, self.shengjing_params.WATCHDOG_TYPE_SHENGJING)
 				return None
 		except:
 			message = u'_resolve_invitation_list_json解析异常 except, phone:{}\n, data:\n{}, cause:\n{}'.format(self.phone, data, unicode_full_stack())
