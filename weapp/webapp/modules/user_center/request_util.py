@@ -48,6 +48,7 @@ def __get_current_user_info(request, member):
 	if 'user-1.jpg' in member.user_icon:
 		member_util.member_basic_info_updater(request.user_profile, member)
 		return Member.objects.get(id = member.id)
+	return member
 
 
 def get_user_info(request):
