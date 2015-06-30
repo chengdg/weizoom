@@ -47,8 +47,7 @@ def get_card_second_navs(request):
     获取"微众卡管理"部分的下级导航
     """
     if request.user.username == 'manager':
-        pass
+        second_navs = [CARD_NAV]
     else:
         second_navs = [CARD_NAV]
-
     return second_navs
