@@ -25,6 +25,13 @@ from pay.ali.api import api_settings
 
 from BeautifulSoup import BeautifulSoup
 
+from utils.user_agents.parsers import parse as parse_user_agents
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth
+
+from django.http import HttpResponse
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+
 def _extract_result_from_response(response_data):
 	assert (response_data)
 
@@ -70,6 +77,8 @@ def _build_auth_and_execute_raw_request_param(token, partner, key, input_charset
  
 	return params
 
+template_path_items = os.path.dirname(__file__).split(os.sep)
+TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 def index(request):
 	woid = request.GET.get('woid', None)
 	order_id = request.GET.get('order_id', None)
@@ -77,8 +86,24 @@ def index(request):
 	
 	if not woid or not order_id or not related_config_id:
 		return HttpResponse('woid or order_id or related_config_id is none')
+
+	user_agent_str = request.META.get('HTTP_USER_AGENT', '')
 	
-	data = {}
+	if user_agent_str and user_agent_str.find('MicroMessenger') > -1:
+		order = Order.objects.get(order_id=order_id)
+		c = RequestContext(request, {'woid':woid, 'order':order})
+		if user_agent_str.find('iPhone') > 0  or  user_agent_str.find('iPad') > 0  or  user_agent_str.find('iPod') > 0:
+			return render_to_response('%s/aliPay_ios.html' % TEMPLATE_DIR, c)
+		else:
+			return render_to_response('%s/aliPay_android.html' % TEMPLATE_DIR, c)
+	
+	
+	# 记录支付开始时间
+	pay_start_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+	msg = u'ali pay, stage:[start], order_id:{}, time:{}'.format(order_id, pay_start_time)
+	watchdog_info(msg)
+	
+	data= {}
 	try:
 		user_profile = UserProfile.objects.get(user_id=woid)
 		call_back_url = "http://{}/alipay/mall/pay_result/get/{}/{}/".format(user_profile.host, woid, related_config_id)

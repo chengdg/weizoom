@@ -1,0 +1,78 @@
+@charset "utf-8";
+html{
+	background-color: #333;
+	height:100%;
+	background: #f2f2f2;
+}
+
+a{
+	text-decoration: none;
+}
+body{
+	margin: 0 auto;
+	min-width: 320px;
+	max-width: 640px;
+	height:100%;
+	color:#666;
+	font-family: Arial,Tahoma,Roboto,"Droid Sans","Helvetica Neue","Droid Sans Fallback","Heiti SC","Hiragino Sans GB",'Microsoft Yahei',Simsun,sans-serif
+}
+p{
+	font-size: 0.8rem;
+}
+.pr{
+	position: relative;	
+}
+.pa{
+	position: absolute;
+}
+.tc{
+	text-align: center;	
+}
+.iosPage .icon{
+	margin-top:80px;
+}
+.iosPage h2{
+	font-weight: normal;
+	font-size: 1.2rem;
+	margin:25px 0 0 12px;
+}
+.iosPage .btn{
+	margin-top: 82px;
+}
+.arrow{
+	width:54px;
+	height: 65px;
+	position: absolute;
+	top: 20px;
+	right: 30px;
+}
+.androidPage .icon{
+	margin-top:93px;
+}
+
+.androidPage .btn{
+	margin-top: 60px;
+}
+.androidPage p{
+	margin-top: 44px;
+}
+
+.btn{
+	display: inline-block;
+	width:201px;
+	height:40px;
+	line-height: 40px;
+	border-radius: 4px;
+	font-size: 0.8rem;
+	color:#666;
+	background-color: #fff;
+}
+.page{
+	max-width: 640px;
+	position: relative;
+	border: 0 none;
+    left: 0;
+    min-height: 100% !important;
+    top: 0;
+    width: 100%;
+}
