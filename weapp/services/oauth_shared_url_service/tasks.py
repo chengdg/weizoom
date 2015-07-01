@@ -24,20 +24,31 @@ def process_shared_url(request, args):
 	try:
 		if fmt and member and fmt != member.token:
 			#建立关系，更新会员来源
+			integral_friend_count = False
 			follow_member = Member.objects.get(token=fmt)
 			if is_new_created_member:
 				MemberFollowRelation.objects.create(member_id=follow_member.id, follower_member_id=member.id, is_fans=is_new_created_member)
 				MemberFollowRelation.objects.create(member_id=member.id, follower_member_id=follow_member.id, is_fans=False)
 				member.source = SOURCE_BY_URL
 				member.save()
+				integral_friend_count = True
 			elif MemberFollowRelation.objects.filter(member_id=member.id,follower_member_id=follow_member.id).count() == 0:
 				MemberFollowRelation.objects.create(member_id=follow_member.id, follower_member_id=member.id, is_fans=is_new_created_member)
 				MemberFollowRelation.objects.create(member_id=member.id, follower_member_id=follow_member.id, is_fans=False)
+				integral_friend_count = True
+
+			try:
+				if integral_friend_count:
+					Member.objects.filter(id__in = [member.id, follow_member.id]).update(friend_count=F('friend_count')+1)
+			except:
+				notify_message = u"process_shared_url integral_friend_count error:('member_id':{}, follower_member_id: {}), cause:\n{}".format(member.id, follow_member.id, unicode_full_stack())
+				watchdog_fatal(notify_message)
+			
 			#点击分享链接给会员增加积分
 			try:
 				integral_new.increase_for_click_shared_url(follow_member, member, request.get_full_path())
 			except:
-				notify_message = u"increase_for_click_shared_url:('member_id':{}), cause:\n{}".format(member.id, unicode_full_stack())
+				notify_message = u"process_shared_url increase_for_click_shared_url:('member_id':{}), cause:\n{}".format(member.id, unicode_full_stack())
 				watchdog_fatal(notify_message)
 
 	except:
