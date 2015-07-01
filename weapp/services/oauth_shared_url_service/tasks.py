@@ -2,7 +2,7 @@
 """@package services.oauth_shared_url_service.tasks
 
 """
-
+from django.db.models import F
 from watchdog.utils import watchdog_fatal
 from core.exceptionutil import unicode_full_stack
 from modules.member import member_settings
@@ -11,6 +11,7 @@ from modules.member import integral_new
 from modules.member.models import Member, MemberFollowRelation, SOURCE_BY_URL
 
 from celery import task
+
 
 def process_shared_url(request, args):
 	is_new_created_member = False
