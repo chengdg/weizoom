@@ -76,3 +76,8 @@ p{
     top: 0;
     width: 100%;
 }
+@media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+	.iosPage .btn{
+		margin-top: 50px;
+	}
+}
