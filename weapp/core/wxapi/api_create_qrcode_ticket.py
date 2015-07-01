@@ -33,7 +33,7 @@ expire_seconds: 二维码的有效时间，以秒为单位。最大不超过1800
 class QrcodeTicket(ObjectAttrWrapedInDict):
 	TEMPORARY = 'QR_SCENE'
 	PERMANENT = 'QR_LIMIT_SCENE'
-	MAX_EXPIRE_SECONDS = 1800
+	MAX_EXPIRE_SECONDS = 604800
 
 	def __init__(self, src_dict):
 		super(QrcodeTicket, self).__init__(src_dict)	
