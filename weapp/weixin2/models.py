@@ -185,7 +185,7 @@ class Rule(models.Model):
 			
 		try:
 			self.answer = json.loads(self.answer)
-			if type(self.answer) == int or type(self.answer) == long:
+			if type(self.answer) == int or type(self.answer) == long or type(self.answer) == float:
 				self.answer = str(self.answer)
 				1/0 #防止关键词是数字时引起bug，使进入except代码块
 		except:
