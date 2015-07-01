@@ -88,8 +88,8 @@ Background:
 			}
 		}
 		"""
-	
 
+@mall2 @add_coupon @eugene
 Scenario: 1 给有效优惠券规则增加库存
 	jobs添加"优惠券规则"后，优惠券有效
 	1. 可以给优惠券码库添加库存
@@ -99,7 +99,8 @@ Scenario: 1 给有效优惠券规则增加库存
 	When jobs为优惠券'单品券2'添加库存
 		"""
 		{
-			"count": 2
+			"count": 2,
+			"coupon_id_prefix": "coupon2_id_"
 		}
 		"""
 	Then jobs能获得优惠券'单品券2'的码库
@@ -144,16 +145,17 @@ Scenario: 1 给有效优惠券规则增加库存
 		}
 		"""
 
-
+@mall2 @add_coupon @eugene
 Scenario: 2 给已过期优惠券规则增加库存
 	jobs添加"优惠券规则"后，优惠券已过期
 	1. 给已过期的优惠券码库添加库存，码库不变
-	
+
 	Given jobs登录系统
 	When jobs为优惠券'全体券1'添加库存
 		"""
 		{
-			"count": 2
+			"count": 2,
+			"coupon_id_prefix": "coupon1_id_"
 		}
 		"""
 	Then jobs能获得优惠券'全体券1'的码库
@@ -186,7 +188,7 @@ Scenario: 2 给已过期优惠券规则增加库存
 		}
 		"""
 
-
+@mall2 @add_coupon @eugeneZ
 Scenario: 3 给已失效优惠券规则增加库存
 	jobs添加"优惠券规则"后，优惠券已失效
 	1. 给已失效的优惠券码库添加库存，码库不变
@@ -196,7 +198,8 @@ Scenario: 3 给已失效优惠券规则增加库存
 	When jobs为优惠券'单品券2'添加库存
 		"""
 		{
-			"count": 2
+			"count": 2,
+			"coupon_id_prefix": "coupon2_id_"
 		}
 		"""
 	Then jobs能获得优惠券'单品券2'的码库

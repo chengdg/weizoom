@@ -34,7 +34,9 @@ def create_coupon(request):
 	rule_id = request.POST.get('rule_id', '0')
 	rules = CouponRule.objects.filter(id=rule_id)
 	if len(rules) != 1:
-		return create_response(200, '优惠券不存在')
+		return create_response(500, '优惠券不存在')
+	if rules[0].is_active == 0 or rules[0].end_date < datetime.now():
+		return create_response(500, '优惠券已失效或者已过期')
 	count = int(request.POST.get('count', '0'))
 	__create_coupons(rules[0], count)
 	rules.update(

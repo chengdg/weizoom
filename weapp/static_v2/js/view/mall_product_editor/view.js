@@ -51,7 +51,7 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 	},
 
 	onClickSelectImageButton: function(event) {
-        var $target = $(event.currentTarget).parents('#imgSelect');    // 图片验证input的父节点
+		var $target = $(event.currentTarget).parents('#imgSelect'); // 图片验证input的父节点
 		var _this = this;
 		W.dialog.showDialog('W.dialog.mall.SelectMallImagesDialog', {
 			success: function(data) {
@@ -63,24 +63,25 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 					var $image = $images.eq(i);
 					buf.push($image.clone());
 				}
-				var id = (0-$images.length);
+				var id = (0 - $images.length);
 				_.each(images, function(image) {
 					id -= 1;
 					image['id'] = id
-					var $node = $.tmpl(_this.imageTemplate, {image: image});
+					var $node = $.tmpl(_this.imageTemplate, {
+						image: image
+					});
 					buf.push($node);
 				});
 				buf.push('<li class="xui-i-image  xa-selectImage" ><img src="/static_v2/img/editor/addProduct.png"/></li>');
 				$imageContainer.empty().append(buf);
 
-                // 验证是否提供图片
-                // $target.children('#swipe_images').val(buf);
-                // W.validate();
+				// 验证是否提供图片
+				// $target.children('#swipe_images').val(buf);
+				// W.validate();
 
 			}
 		});
 	},
-
 	onEnterImage: function(event) {
 		$(event.currentTarget).find('.xa-deleteImage').show();
 	},
@@ -179,6 +180,7 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 			})
 		});
 
+
 		//收集category
 		var buf = [];
 		this.$('.xa-product_category').each(function() {
@@ -190,7 +192,8 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		this.$('#product_category').val(buf.join(','));
 
 		//搜集swipe image
-		this.$('[name="swipe_images"]').val(JSON.stringify(swipeImages));
+		this.$('#swipe_images').val(JSON.stringify(swipeImages));
+
 
 		//收集property
 		buf = [];
@@ -203,8 +206,8 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 		});
 		this.$('input[name="properties"]').val(JSON.stringify(buf));
 
-        if(!W.validate()){
-            return false;
-        }
+		if (!W.validate()) {
+			return false;
+		}
 	}
 });

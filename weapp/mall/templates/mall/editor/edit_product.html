@@ -28,10 +28,10 @@
 			<div class="form-group ">
 				<label class="control-label fl star_show" for="goodsname">商品名称：</label>
 				<div class="fl">
-					<input type="text" class="form-control w490 mr20 ml5" id="name" name="name" 
-                           placeholder="" 
-                           value="{% if product %}{{ product.name }}{% endif %}" 
-                           data-validate="require-notempty" 
+					<input type="text" class="form-control w490 mr20 ml5" id="name" name="name"
+                           placeholder=""
+                           value="{% if product %}{{ product.name }}{% endif %}"
+                           data-validate="require-notempty"
                            maxlength="20"/>
 					<div class="errorHint" data-error-hint="请输入商品名称， 不超过20个汉字"></div>
 				</div>
@@ -114,13 +114,17 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show" for="swipe_images">商品图片：</label>
 				<div id="imgSelect" class="col-sm-9">
-                    <input id="swipe_images" name="swipe_images" type='hidden'
-                    data-force-validate="true"
-                    data-validate="require-string::请至少添加一张图片"
-                    data-min-length="3"/>
+          <input id="swipe_images" name="swipe_images" type='hidden'
+                 data-force-validate="true"
+                 data-validate="require-string::请至少添加一张图片"
+                 data-minlength="3"
+          />
 					<ul class="xui-i-images clearfix">
 						{% for image in product.swipe_images %}
-						<li class="pr xui-i-image xa-image" data-image-id="{{image.id}}" data-width="{{image.width}}" data-height="{{image.height}}">
+						<li class="pr xui-i-image xa-image"
+                data-image-id="{{image.id}}"
+                data-width="{{image.width}}"
+                data-height="{{image.height}}">
 							<img class="imgexist" src="{{image.url}}" />
 							<button class="xui-close xa-deleteImage" type="button">
 								<span>&times;</span>
@@ -128,10 +132,10 @@
 						</li>
 						{% endfor %}
 						<li class="xui-i-image xa-selectImage">
-                        <img src="/static_v2/img/editor/addProduct.png"/>
+              <img src="/static_v2/img/editor/addProduct.png"/>
 						</li>
 					</ul>
-                    <div class="errorHint mt5"></div>
+          <div class="errorHint mt5"></div>
 				</div>
 				<div style="padding-top:0px;padding-left:215px;clear:both; line-height:40px;">建议图片尺寸为640*640像素</div>
 			</div>
@@ -150,7 +154,7 @@
 	             		/>
                         <span class="xui-bold">统一运费：￥</span>
                         <input type='text' name="unified_postage_money"
-                               value='{% if product %}{{product.unified_postage_money}}{% endif %}' 
+                               value='{% if product %}{{product.unified_postage_money}}{% endif %}'
                                style="width: 80px;" class="form-control xui-inlineblock xa-unifiedPostageInput"
                                placeholder="0.0"
                         />
@@ -179,26 +183,26 @@
 				{% if request.manager.id == product.owner.id or not product %}
 					<label class="checkbox xa-pay-method" >
                     {% if pay_interface_config.online_pay_interfaces %}
-	             		<input type='checkbox' id='is_enable_online_pay_interface' 
-                               name='is_enable_online_pay_interface' 
+	             		<input type='checkbox' id='is_enable_online_pay_interface'
+                               name='is_enable_online_pay_interface'
                                checked="checked"
                                class="xa-pay-selected"
                                disabled
-	             			   value="1" 
+	             			   value="1"
                          />
                          <p class="xui-bold">在线支付</p>
                         {% for pay_interface in pay_interface_config.online_pay_interfaces %}
                         <p class="tx-pay-interface-item-p">{{ pay_interface.name }}</p>
                         {% endfor %}
                     {% else %}
-	             		<input type='checkbox' id='is_enable_online_pay_interface' 
-                               name='is_enable_online_pay_interface' 
+	             		<input type='checkbox' id='is_enable_online_pay_interface'
+                               name='is_enable_online_pay_interface'
                                class="xa-pay-selected"
                                {% if request.manager.id == 216 %}
                                checked="checked"
                                {% endif %}
                                disabled
-	             			   value="1" 
+	             			   value="1"
                          />
                         <p class="xui-bold">在线支付</p>
                         <p class="tx-pay-interface-item-p">当前没有启用在线支付接口，请前往<a href="/mall/pay_interfaces/get/" target="_blank">启用在线支付接口</a></p>
@@ -227,7 +231,7 @@
 	         		<label class="checkbox xa-pay-method">在线支付</label>
 	         	{%endif%}
 				</div>
-               
+
 			</div>
 		</fieldset>
 	</section>
@@ -309,38 +313,38 @@
 <!--    运费验证实现    -->
 <script type="text/javascript">
 $('.xa-freight').on('click', function(e){
-    var $el = $(e.target); 
-    var $_parent = $el.parents("#freight"); 
+    var $el = $(e.target);
+    var $_parent = $el.parents("#freight");
     var $unified = $_parent.find("#unified_freight");
-    var $unified_input = $_parent.find('input[name="unified_postage_money"]'); 
+    var $unified_input = $_parent.find('input[name="unified_postage_money"]');
     var $unified_error = $_parent.find("#unified_postage_error");
 
     var $custom = $_parent.find("#custom_freight");
-    var $custom_input = $_parent.find('select[name="postage_config_id"]'); 
+    var $custom_input = $_parent.find('select[name="postage_config_id"]');
     var $custom_error = $_parent.find("#custom_postage_error");
-    var value = $el.attr('value'); 
+    var value = $el.attr('value');
 
-    // Initial 
+    // Initial
     $custom_input.removeAttr('data-validate');
     $custom_error.hide();
     $unified_input.removeAttr('data-validate');
     $unified_error.hide();
-    if(value === 'unified_postage_type'){  // 统一运费验证 
-        // 去掉运费模板验证 
-        $custom_input.removeAttr('data-validate'); 
+    if(value === 'unified_postage_type'){  // 统一运费验证
+        // 去掉运费模板验证
+        $custom_input.removeAttr('data-validate');
         $custom_error.hide();
 
-        // 添加统一运费验证 
-        $unified_input.attr('data-validate', 'require-price'); 
+        // 添加统一运费验证
+        $unified_input.attr('data-validate', 'require-price');
         // $unified.append('<label id="unified_postage_error" class="errorHint" data-error-hint="请输入价格， 精确到小数点后两位"></label>');
         $unified_error.show();
-    }else if(value === 'custom_postage_type'){  // 运费模板验证 
-        // 去掉统一运费验证 
+    }else if(value === 'custom_postage_type'){  // 运费模板验证
+        // 去掉统一运费验证
         $unified.removeClass('has-error');
-        $unified_input.removeAttr('data-validate'); 
+        $unified_input.removeAttr('data-validate');
         $unified_error.hide();
 
-        // 添加运费模板验证 
+        // 添加运费模板验证
         $custom_input.attr('data-validate', 'require-nonnegative');
         // $custom.append('<label id="custom_postage_error" class="errorHint" data-error-hint="请选择运费模板"></label>');
         $custom_error.show();

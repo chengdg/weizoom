@@ -14,21 +14,19 @@ W.view.common.DropBox = Backbone.View.extend({
     
     isTitle: true,
     
-    position: 'down-right',
+    position: 'top',
     
     initialize: function(options) {
         var _this = this;
         options = options || {};
-        this.isTitle = options.isTitle == false ? false : true;
-        this.isArrow = options.isArrow == false ? false : true;
-        this.position = options.position || 'down-right';
-
+        this.isTitle = (options.isTitle == false || options.isTitle == undefined)? false : true;
+        this.isArrow = (options.isArrow || options.isArrow == undefined)? true : false;
+        this.position = options.position || 'top';
         this.$el = $(this.el);
         this.$html = $('html');
         
         this.isInFileInput = false;
         this.$el.bind('click', function(event) {
-            //console.log(event.target.type)
             if('file' === event.target.type || 'checkbox' === event.target.type || 'radio' === event.target.type || 'checkbox' === event.target.className) {
                 _this.isInFileInput = true;
                 return;
@@ -75,7 +73,6 @@ W.view.common.DropBox = Backbone.View.extend({
         if(this.isTitle) {
             this.$el.append(this.$title);
         }
-        
         this.$el.append(this.$content);
     },
     setSize:function(width,height){
@@ -88,59 +85,105 @@ W.view.common.DropBox = Backbone.View.extend({
     setPosition: function(position) {
         var $action = this.$action;
         var elOffset = $action.offset();
-        var elWidth = $action.width();
+        var elWidth = parseInt($action.css('width'));
         var elHeight = $action.height();
         var currWidth = this.$el.width() || 0;
-        var arrowHeight = this.$arrow ? this.$arrow.height() : 0;
-        var topOfArrowForCurr = parseInt(this.$arrow.css('top'));
-        var rightOfArrowForCurr = parseInt(this.$arrow.css('right'));
-        topOfArrowForCurr = isNaN(topOfArrowForCurr) ? -23 : topOfArrowForCurr;
-        rightOfArrowForCurr = isNaN(rightOfArrowForCurr) ? 20 : rightOfArrowForCurr;
-        var arrowTop = this.$arrow ? topOfArrowForCurr : 0;
-        var arrowRight = this.$arrow ? rightOfArrowForCurr : 0;
-        var arrowWidth = this.$arrow ? this.$arrow.width()/2 : 0;
-        
+        var currHeight = parseInt(this.$el.css('height')) || 0;
         var isBtn = $action.hasClass('btn') || $action.hasClass('dropdown-toggle');
         // var widthCount = $action.hasClass('btn') ? 28 : 16;
         //elWidth = isBtn ? elWidth + widthCount : elWidth;
-        elHeight = isBtn ? elHeight + 8 : elHeight;
-        //console.log('elHeight',elHeight);
+        elHeight =isBtn ? elHeight + 8 : elHeight - 5;
         var position = position || this.position;
-        //console.log("elOffset.left",elOffset.left,"currWidth",currWidth,"arrowRight",arrowRight,"arrowWidth",arrowWidth)
-        switch(position) {
-            
-        case 'right':
-            this.$el.css({
-                left: (elOffset.left - elWidth/3) - currWidth - arrowWidth,
-                top: elOffset.top + elHeight/2 - arrowTop - arrowHeight/2
-            });
-            break;
-        case 'right-middle':
-            this.$el.css({
-                left: (elOffset.left - elWidth/3) - currWidth - arrowWidth + 10,
-                top: elOffset.top + elHeight/2 - arrowTop - arrowHeight/2
-            });
-            break;
-        case 'down-right':
-            this.$el.css({
-                left: (elOffset.left + elWidth/3*2) - currWidth,
-                top: elOffset.top + elHeight/3*2 + arrowHeight
-            });
-            break;
-        case 'down-left':
-            this.$el.css({
-                left: elOffset.left,
-                top: elOffset.top + elHeight + arrowHeight
-            });
-            break;
-        case 'top':
-            this.$el.css({
-                left: elOffset.left - currWidth + elWidth/2 + arrowRight + arrowWidth,
-                top: elOffset.top + arrowHeight + elHeight - 10
-            });
-            break;
+        //console.log("elOffset.left",elOffset.left,"currWidth",currWidth,"arrowRight",arrowRight,"arrowWidth",arrowWidth,"position",position)
+        if(this.isArrow){
+            var arrowTop = parseInt(this.$arrow.css('top'));
+            var arrowRight = parseInt(this.$arrow.css('right'));
+            var arrowWidth = this.$arrow.width()/2;
+            var arrowHeight = this.$arrow.height();
+            switch(position) {
+
+            case 'top':
+                this.$el.css({
+                    left: elOffset.left - currWidth + elWidth/2 + arrowRight + arrowWidth,
+                    top: elOffset.top + arrowHeight + elHeight
+                });
+                break;
+
+            case 'left':
+                this.$el.css({
+                    left: elOffset.left + elWidth + arrowWidth,
+                    top: elOffset.top - arrowHeight/2 - arrowTop + elHeight/2
+                });
+                break;
+            case 'right':
+                this.$el.css({
+                    left: elOffset.left - currWidth - arrowWidth,
+                    top: elOffset.top - arrowTop - arrowHeight/2 + elHeight/2 
+                });
+                break;
+            case 'right-middle':
+                this.$el.css({
+                    left: (elOffset.left - elWidth/3) - currWidth - arrowWidth + 10,
+                    top: elOffset.top + elHeight/2 - arrowTop - arrowHeight/2
+                });
+                break;
+            case 'down-right':
+                this.$el.css({
+                    left: (elOffset.left + elWidth/3*2) - currWidth,
+                    top: elOffset.top + elHeight/3*2 + arrowHeight
+                });
+                break;
+            case 'down-left':
+                this.$el.css({
+                    left: elOffset.left,
+                    top: elOffset.top + elHeight + arrowHeight
+                });
+                break;
+            }
+            this.$arrow.addClass('drop-box-arrow-'+position);
+        }else{
+            switch(position) {
+
+            case 'top':
+                this.$el.css({
+                    left: elOffset.left - currWidth + elWidth,
+                    top: elOffset.top + elHeight + 10
+                });
+                break;
+
+            case 'left':
+                this.$el.css({
+                    left: elOffset.left + elWidth,
+                    top: elOffset.top
+                });
+                break;
+            case 'right':
+                this.$el.css({
+                    left: elOffset.left - currWidth,
+                    top: elOffset.top
+                });
+                break;
+            case 'right-middle':
+                this.$el.css({
+                    left: elOffset.left - currWidth,
+                    top: elOffset.top
+                });
+                break;
+            case 'down-right':
+                this.$el.css({
+                    left: (elOffset.left + elWidth/2) - currWidth,
+                    top: elOffset.top + elHeight
+                });
+                break;
+            case 'down-left':
+                this.$el.css({
+                    left: elOffset.left + elWidth/2,
+                    top: elOffset.top + elHeight
+                });
+                break;
+            }
         }
-        this.$arrow.addClass('drop-box-arrow-'+position);
+        
     },
     
     show: function(options) {
@@ -164,7 +207,6 @@ W.view.common.DropBox = Backbone.View.extend({
         this.$action = options.locationElement || options.$action;        
         this.showPrivate(options);
         this.setSize(options.width, options.height);
-        
         this.setPosition(options.position);
         this.$el.show();
     },

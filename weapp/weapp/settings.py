@@ -526,7 +526,8 @@ if 'develop' == MODE:
     WATCH_DOG_LEVEL = 0
     RECORD_SIMULATOR_MESSAGE = True
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 3 * 60
-    USE_MOCK_PAY_API = True
+#    USE_MOCK_PAY_API = True
+    USE_MOCK_PAY_API = False
     CDN_HOST = ''
     EVENT_DISPATCHER = 'local'
 

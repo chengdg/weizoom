@@ -2,13 +2,12 @@
 {% load common_tag %}
 {% load express_filter %}
 {% load mall_filter %}
-
 {% block content-panel %}
 <div class="xui-payOrderPage xui-page">
     <!-- 订单详情 -->
 	<fieldset class="xui-section">
         <div class="clearfix xui-inner">
-			<div class="xt-status fl" style="white-space: nowrap;">						
+			<div class="xt-status fl" style="white-space: nowrap;">
                     {% ifequal order.status 0 %}
 						<span class="xui-text-red em1">{{order_status_info}}</span>
 					{% endifequal %}
@@ -21,7 +20,7 @@
             </div>
 		</div>
         <div class="clearfix xui-inner pr pr20">
-            <!-- 暂无物流信息 -->  
+            <!-- 暂无物流信息 -->
             {% if order.get_express_detail_last %}
             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}">
                 <p class="em95 c6">{{ order.get_express_detail_last.context }}</p>
@@ -61,8 +60,8 @@
             <ul class="clearStyle" style="padding-left:12px;">
                 {% for product in order.products %}
                 <li class="xa-product disT w"
-                    data-product-id="{{product.id}}" 
-                    data-product-count="{{product.purchase_count}}" 
+                    data-product-id="{{product.id}}"
+                    data-product-count="{{product.purchase_count}}"
                     data-product-model-name="{{product.model_name}}"
                 >
                     <div class="disTc xui-productThumbNail pr">
@@ -126,12 +125,12 @@
                 个人 {{ order.bill }}
                 {% endifequal %}
                 {% ifequal order.bill_type 2 %}
-                公司 {{ order.bill }}   
+                公司 {{ order.bill }}
                 {% endifequal %}
             </p>
         </div>
         {% endif %}
-    </fieldset>    
+    </fieldset>
     <!-- 订单价格清单(积分、优惠券、运费...) -->
 
 	<fieldset class="xui-section xui-otherCosts">
@@ -164,6 +163,16 @@
             <span class="fr">-￥<span class="xa-weizoomCardMoney">{{ order.weizoom_card_money | floatformat:"2" }}</span></span>
         </p>
         {% endif %}
+        {% if order.edit_money %}
+        <p class="zoom">
+            <span class="fl">商家优惠</span>
+            {% if order.edit_money > 0 %}
+            <span class="fr">-￥<span class="xa-weizoomCardMoney">{{ order.edit_money | floatformat:"2" }}</span></span>
+            {% else %}
+            <span class="fr">+￥<span class="xa-weizoomCardMoney">{{ order.edit_money|abs|floatformat:"2"}}</span></span>
+            {% endif %}
+        </p>
+        {% endif %}
         <p class="zoom">
             <span class="fl">运费</span>
             <span class="fr">+￥<span class="xa-postageElement">{{ order.postage | floatformat:"2" }}</span></span>
@@ -186,7 +195,7 @@
             <a href="javascript:void(0);" type="button" id="cancelOrderButton" class="xui-btn xui-btn-disable">取消订单</a>
             <a href="javascript:void(0);" type="button" id="pay_order" class="xui-btn xui-btn-danger xa-pay">支付</a>
             {% endif %}
-            
+
             {% if order.status == 4 %}
             <!-- 已发货 -->
             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" type="button" class="xui-btn xui-btn-disable">查看物流</a>
@@ -241,12 +250,12 @@
                 {% if has_delivery_time.status %}
                     <li class="clearfix pr">
                     <p class="xui-outer-box">
-                        <span class="xui-inner-dot"></span>                              
+                        <span class="xui-inner-dot"></span>
                         <span class="ml5">{{ has_delivery_time.delivery_date|date:"Y年m月j日" }}</span>
                     </p>
                     <div class="xui-expressPo clearfix">
                         <fieldset class="xui-section xui-expressBox m10 pr">
-                            <a class="xui-inner-expressLink" href="http://m.kuaidi100.com/index_all.html?type={{ order.express_company_name}}&postid={{ order.express_number }}">                       
+                            <a class="xui-inner-expressLink" href="http://m.kuaidi100.com/index_all.html?type={{ order.express_company_name}}&postid={{ order.express_number }}">
                                     <div>
                                         <p>物流公司：{{ has_delivery_time.express_company_name|get_company_name_by_value }}</p>
                                         <p>运单编号：{{ has_delivery_time.express_number }}</p>
@@ -288,7 +297,7 @@
     {% endif %} -->
 
     {% if under_develop %}
-        <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}">测试快递物流</a>        
+        <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}">测试快递物流</a>
         <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}&is_finish=success">测试快递已收货</a>
     {% endif %}
 </div>
@@ -296,7 +305,7 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">	
+<script type="text/javascript">
 var orderId = "{{ order.id }}";
 var payInterfaceType = "{{ order.pay_interface_type }}";
 $(document).ready(function() {
@@ -314,6 +323,6 @@ $(document).ready(function() {
         orderId: orderId,
         payInterfaceType: payInterfaceType
     });
-});	
+});
 </script>
 {% endblock %}

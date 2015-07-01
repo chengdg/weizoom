@@ -450,7 +450,7 @@ def __check_integral(request, product_groups, data_detail, pre_order):
 	检查积分应用、整单积分抵扣使用
 	"""
 	integralinfo = request.POST.get('group2integralinfo', None)
-	count_per_yuan = request.webapp_user.integral_info['count_per_yuan']
+	count_per_yuan = request.webapp_owner_info.integral_strategy_settings.integral_each_yuan
 	total_integral = 0
 	if not integralinfo or integralinfo == '{}':
 		if request.POST.get('orderIntegralInfo', None):

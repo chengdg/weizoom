@@ -9,7 +9,7 @@
 		</ul>
 	</div>
 	<div class="panel xui-rightPanelBg" style='min-height:826px;'>
-		
+
 	<ul class="xui-messageNav">
 		<li class="xa-count active" data-total-status-value="0"><a href="/new_weixin/keyword_rules">关键词自动回复</a></li>
 		<li class="xa-count" data-total-status-value="1"><a href="/new_weixin/follow_rules">关注后自动回复</a></li>
@@ -33,7 +33,7 @@
 					<tr>
 						<th colspan="2" class="xui-white tl h38 pl30"><span class="fb pr10 fl lh26 ">规则名称</span>
 							<div>
-								<input class="xa-rule_name" type="text" style="width:174px;"  maxlength=20   data-validate="require-string" data-max-length="20" data-min-length="0"  /> 
+								<input class="xa-rule_name" type="text" style="width:174px;"  maxlength=20   data-validate="require-string" data-maxlength="20" data-minlength="0"  />
 								<div class="errorHint " data-error-hint="请输规则名称"></div>
 							</div>
 						</th>
@@ -61,24 +61,24 @@
 					</tr>
 					<tr>
 						<td class="h70" colspan="2">
-							<div class="tc"> 
+							<div class="tc">
 								<span class="btn btn-primary noborder xui-save xa-submit" style="background:#207cbe;" method="put"  data-id="new">保&nbsp;&nbsp;存</span>
-								<span class="btn pr btn-default xui-delete ml20 h30 xa-answerDelete">删&nbsp;&nbsp;除</span> 
+								<span class="btn pr btn-default xui-delete ml20 h30 xa-answerDelete">删&nbsp;&nbsp;除</span>
 							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div 
-		data-ui-role="advanced-table" 
-		data-app="new_weixin" 
+		<div
+		data-ui-role="advanced-table"
+		data-app="new_weixin"
 		data-resource="keyword_rules"
 		data-template-id="#rules-view"
-		data-enable-paginator="true" 
-		data-enable-sort="false" 
-		data-selectable="false" 
-		data-item-count-per-page="10" 
+		data-enable-paginator="true"
+		data-enable-sort="false"
+		data-selectable="false"
+		data-item-count-per-page="10"
 		class="cb"
 		>
 		</div>
@@ -99,7 +99,7 @@
 						<tr>
 							<th colspan="2" class="xui-white tl h38 pl30"><span class="fb pr10  fl lh26">规则名称</span>
 								<div>
-									<input class="xa-rule_name" type="text" style="width:174px;"  maxlength=20  value="${rule.rule_name}" data-validate="require-string" data-max-length="20" data-min-length="0"  /> 
+									<input class="xa-rule_name" type="text" style="width:174px;"  maxlength=20  value="${rule.rule_name}" data-validate="require-string" data-maxlength="20" data-minlength="0"  />
 									<div class="errorHint " data-error-hint="规则名称必须在1-20个字内"></div>
 								</div>
 							</th>
@@ -117,7 +117,7 @@
 										<div class="xui-i-key fl">
 											<sapn class="data-keyword">${item.keyword}</sapn>
 										</div>
-										<div class="xui-i-type fl pr xa-mode" >		
+										<div class="xui-i-type fl pr xa-mode" >
 											{{if item.type == "1"}}
 												<span class="xa-data-type" data-type=${item.type}>模糊匹配</span>
 											{{else}}
@@ -127,7 +127,7 @@
 										</div>
 									</div>
 								{{/each}}
-								<span class="xa-hint xui-hint ">还没有任何关键词！</span>	
+								<span class="xa-hint xui-hint ">还没有任何关键词！</span>
 
 							</td>
 							<td class="xui-verticalTop">
@@ -161,7 +161,7 @@
 						<tr>
 							<td class="h70" colspan="2">
 								<div class="tc xa-addDialog" style="width:914px;">
-								 	<span class="btn btn-primary noborder xui-save xa-submit" style="background:#207cbe;" method="post" data-id="${rule.id}">保&nbsp;&nbsp;存</span><span class="btn pr btn-default xui-delete ml20 h30 xa-answerDelete" data-id="${rule.id}">删&nbsp;&nbsp;除</span> 
+								 	<span class="btn btn-primary noborder xui-save xa-submit" style="background:#207cbe;" method="post" data-id="${rule.id}">保&nbsp;&nbsp;存</span><span class="btn pr btn-default xui-delete ml20 h30 xa-answerDelete" data-id="${rule.id}">删&nbsp;&nbsp;除</span>
 								</div>
 							</td>
 						</tr>
@@ -174,7 +174,7 @@
 						<tr>
 							<th class="xui-white tl h38 pl20">
 								<span class="fb pl6">${rule.rule_name}</span>
-								<span class="xa-rule_name" type="text" style="width:174px;" value="${rule.name}"></span> 
+								<span class="xa-rule_name" type="text" style="width:174px;" value="${rule.name}"></span>
 								<a class="xa-edit pr pl20" data-id="${rule.id}" href="javascript:void(0);">编辑</a>
 							</th>
 						</tr>
@@ -234,7 +234,7 @@
 	{{/if}}
 
 </script>
-	
+
 {% endverbatim %}
 
 <script type="text/javascript">
@@ -246,7 +246,7 @@ $(document).ready(function() {
 
 	keywordview.hide();
 	keywordview.render();
-	var messageEditorPopup = new W.view.weixin.MessageEditorPopup({		
+	var messageEditorPopup = new W.view.weixin.MessageEditorPopup({
 		richTextEditorWidth: 465,
 		width: 487,
 		offset_Y:12,
@@ -382,7 +382,7 @@ $(document).ready(function() {
 		if($(this).parent().parent().parent().find('.xa-answer-content').length==1){
 			$(this).parent().parent().parent().parent().find('.xa-answerHint').show();
 		}
-		
+
 		$(this).parent().parent().remove();
 
 	});
@@ -473,7 +473,7 @@ $(document).ready(function() {
 		var id = $(this).attr('data-id');
 		var post_id = $('#'+id).attr("data-id");
 		var rule_name = $('#'+id).find('.xa-rule_name').val();
-		$('#'+id+' .xa-showTable').find('.xa-data-patterns').each(function(){ 
+		$('#'+id+' .xa-showTable').find('.xa-data-patterns').each(function(){
 			$(this).find(".data-keyword").each(function(){
 				var pattern = new Object();
 				pattern.keyword = $(this).text().trim();
@@ -487,20 +487,20 @@ $(document).ready(function() {
 			return;
 		}
 
-		$('#'+id+' .xa-showTable').find('.xa-data-answer').each(function() { 
+		$('#'+id+' .xa-showTable').find('.xa-data-answer').each(function() {
 			$(this).find(".xa-answer-content").each(function(){
 				var temp = new Object();
 				temp.content = $(this).attr('data-answer-content').trim();
 				temp.type = $(this).attr('data-answer-type').trim();;
 				answer.push(temp);
 			});
-		}); 
+		});
 
 		if(answer.length==0) {
 			W.showHint('error', '请至少添加一条回复');
 			return;
 		}
-		
+
 		var args = new Object();
 		args.id = post_id;
 		args.rule_name = rule_name;

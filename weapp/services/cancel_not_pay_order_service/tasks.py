@@ -54,7 +54,8 @@ def cancel_not_pay_order_timeout(request, args):
                 watchdog_info(u"订单所属用户已不存在！", type="mall")
                 continue
             update_order_status(user, 'cancel', order)
-            watchdog_info(u"订单所属用户已失效！并将其订单自动取消。", type="mall")
+            watchdog_info(u"订单所属用户已失效！并将其订单自动取消。(order_id=%s, webapp_id=%s)" \
+                % (order.order_id, order.webapp_id), type="mall")
         elif webapp_id2expired_time[order.webapp_id] and order.created_at < webapp_id2expired_time[order.webapp_id]:
             need_cancel_orders.append(order)
 

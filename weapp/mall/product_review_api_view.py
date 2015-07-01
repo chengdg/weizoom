@@ -115,14 +115,20 @@ def get_product_review_list(request):
 
     items = []
     from cache import webapp_cache
+
+    reviewids = [r.order_has_product_id for r in product_reviews]
+    orderhasproducts = mall_models.OrderHasProduct.objects.filter(id__in=reviewids)
+    review2orderhasproductsmap = dict([(i.id, i) for i in orderhasproducts])
+
+
     for review in product_reviews:
         if not hasattr(review, 'product_user_code'):
-            review_product = mall_models.OrderHasProduct.objects.get(id=review.order_has_product_id)
+            review_product = review2orderhasproductsmap[review.order_has_product_id]
             review.product_name = review_product.product_name
             review.product_model_name = review_product.product_model_name
             product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
             product.fill_specific_model(review.product_model_name, product.models)
-            review.product_user_code = product.model['user_code']
+            review.product_user_code = product.model['user_code'] if 'user_code' in product.model else ''
         items.append({
                 'id': review.id,
                 'product_user_code': review.product_user_code,

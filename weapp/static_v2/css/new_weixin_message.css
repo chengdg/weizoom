@@ -353,7 +353,33 @@
     margin: 10px;
     border-radius: 3px;
 }
-
+.xui-weixin-materialsPage .xui-i-dialogPOST a{
+    min-width: 65px;
+}
+.xui-updateGradeBox{
+    min-width: 0px;
+    border-top:1px solid #ddd;
+    border-left:1px solid #ddd;
+    border-right:1px solid #ddd;
+    border-bottom:none;
+    border-radius: 0px;
+}
+.xui-updateGradeBox li{
+    margin: 0;
+}
+.xui-updateGradeBox .xa-selectCategory{
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    border-bottom:1px solid #ddd; 
+    padding-left: 12px;
+    color: #333;
+    text-decoration: none;
+}
+.xui-updateGradeBox .xa-selectCategory:hover {
+    color: #333;
+    text-decoration: none;
+}
 /**
 * 实时消息详情页面
 */

@@ -27,7 +27,6 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
     },
 
     initializePrivate: function(options) {
-        this.position = options.position;
         this.privateContainerClass = options.privateContainerClass;
         this.$content.parent().addClass(this.privateContainerClass);
     },

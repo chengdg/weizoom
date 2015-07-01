@@ -84,7 +84,7 @@ $(function(){
         }, 500)
       },
       error: function(resp) {
-        W.showHint('error', '批量添加优惠码失败')
+        W.showHint('error', resp.data.msg)
       }
     })
   });

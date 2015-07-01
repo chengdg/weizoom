@@ -2673,9 +2673,17 @@ def get_product_review(request):
 	product_id = request.GET.get('product_id', None)
 	product_review_list = ProductReview.objects.filter(Q(product_id=product_id) & Q(status__in=['1', '2'])).order_by('-top_time', '-id')
 	propertyid2name = dict([(property.id, property.name) for property in ProductModelProperty.objects.filter(owner_id=request.webapp_owner_id)])
-	product_review_ids = [review.id for review in product_review_list]
-	product_review_pictures = ProductReviewPicture.objects.filter(product_review_id__in=product_review_ids)
+	modelid2value = dict([(model.id, model.name) for model in ProductModelPropertyValue.objects.filter(property_id__in=propertyid2name.keys())])
 
+	product_review_ids = []
+	member_ids = []
+	order_has_product_ids = []
+	for review in product_review_list:
+		product_review_ids.append(review.id)
+		member_ids.append(review.member_id)
+		order_has_product_ids.append(review.order_has_product_id)
+
+	product_review_pictures = ProductReviewPicture.objects.filter(product_review_id__in=product_review_ids)
 	review_id2pictures = {}
 	for picture in product_review_pictures:
 		if review_id2pictures.has_key(picture.product_review_id):
@@ -2683,24 +2691,26 @@ def get_product_review(request):
 		else:
 			review_id2pictures[picture.product_review_id] = [picture.att_url]
 
-	member_ids = [review.member_id for review in product_review_list]
 	members = get_member_by_id_list(member_ids)
 	member_id2member = dict([(m.id, m) for m in members])
+
+	id2order_has_product = dict([(o.id, o) for o in OrderHasProduct.objects.filter(id__in=order_has_product_ids)])
 
 	from cache import webapp_cache
 	for review in product_review_list:
 		#去OrderHasProduct取对应商品的规格数据product_model_name
-		review_product = OrderHasProduct.objects.get(id=review.order_has_product_id)
+		review_product = id2order_has_product[review.order_has_product_id]
 		review.product_name = review_product.product_name
 		review.product_model_name = review_product.product_model_name
-		product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, product_id)
-		product.fill_specific_model(review.product_model_name, product.models)
-		if product.model.has_key('property_values'):
-			for property in product.model['property_values']:
-				property['propertyName'] = propertyid2name[int(property['propertyId'])]
-			review.custom_model_properties = product.model['property_values']
-		else:
+		if review.product_model_name == 'standard':
 			review.custom_model_properties = []
+		else:
+			model_data = review.product_model_name.split(":")
+			review.custom_model_properties = [dict(
+					propertyName = propertyid2name[int(model_data[0])],
+					name = modelid2value[int(model_data[1])]
+				)]
+
 		if review_id2pictures.has_key(review.id):
 			review.pictures = review_id2pictures[review.id]
 		else:

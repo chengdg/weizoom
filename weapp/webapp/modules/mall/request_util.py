@@ -260,22 +260,38 @@ def get_order_list(request):
         key = "%s_%s" % (i.order_id, i.product_id)
         order_product_has_review[key] = True
 
-    # 为每个订单的每个商品， 添加评价信息
-    def _order_review_finished(order, order_product_has_review):
-        '''
+    orderIds = []
+    orderId2order = dict()
+    for order in orders:
+        orderIds.append(order.id)
+        orderId2order[order.id] = order
+    product_list = OrderHasProduct.objects.filter(order_id__in=orderIds)
+    totalProductIds = [orderHasProduct.product_id for orderHasProduct in product_list]
 
-        如果这个订单的每个商品都有评论, 说明订单已经完成， return True
-        否则说明订单未完成， return False
+    productId2products = dict([(product.id, product) for product in Product.objects.filter(id__in=totalProductIds)])
+    orderId2productIds = dict()
 
-        '''
-        is_finished = True
-        for product in order.get_products:
-            key = "%s_%s" % (order.id, product.product_id)
-            is_finished = is_finished & order_product_has_review.get(key, False)
-        return is_finished
+    for orderHasProduct in product_list:
+        if not orderId2productIds.get(orderHasProduct.order_id):
+            orderId2productIds[orderHasProduct.order_id] = []
+        orderId2productIds.get(orderHasProduct.order_id).append(orderHasProduct.product_id)
+        if not hasattr(orderId2order[orderHasProduct.order_id], 'products'):
+            orderId2order[orderHasProduct.order_id].products = []
+        product = productId2products[orderHasProduct.product_id]
+
+        product.price = orderHasProduct.price
+        product.number = orderHasProduct.number
+
+        product.properties = orderHasProduct.get_specific_model
+
+        orderId2order[orderHasProduct.order_id].products.append(product)
 
     for order in orders:
-        order.review_is_finished = _order_review_finished(order, order_product_has_review)
+        is_finished = True
+        for productId in orderId2productIds.get(order.id, []):
+            key = "%s_%s" % (order.id, productId)
+            is_finished = is_finished & order_product_has_review.get(key, False)
+        order.review_is_finished = is_finished
 
     status = {
         -1: u'全部订单列表',

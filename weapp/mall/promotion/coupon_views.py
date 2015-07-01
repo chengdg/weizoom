@@ -63,29 +63,31 @@ def list_coupons(request):
 @view(app='mall_promotion', resource='coupon', action='create')
 @login_required
 def create_coupon(request):
-	"""
-	添加库码
-	"""
-	rule_id = request.GET.get('rule_id', '0')
-	rules = CouponRule.objects.filter(id=rule_id)
-	if request.method == 'GET':
-		ungot_count = Coupon.objects.filter(coupon_rule__id=rule_id, status=COUPON_STATUS_UNGOT).count()
-		# if rules
-		c = RequestContext(request, {
-			'first_nav_name': FIRST_NAV_NAME,
-			'second_navs': export.get_promotion_second_navs(request),
-			'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
-			'rule': rules[0]
-		})
-		return render_to_response('mall/editor/promotion/create_coupon.html', c)
-	else:
-		count = int(request.POST.get('count', '0'))
-		__create_coupons(rules[0], count)
-		CouponRule.objects.filter(id=rule_id).update(
-				count=(rules[0].count+count)
-			)
-		return HttpResponseRedirect('/mall_promotion/coupons/get/?id=%s' % rule_id)
-		# pass
+    """
+    添加库码
+    """
+    rule_id = request.GET.get('rule_id', '0')
+    rules = CouponRule.objects.filter(id=rule_id)
+
+    if request.method == 'GET':
+        ungot_count = Coupon.objects.filter(coupon_rule__id=rule_id, status=COUPON_STATUS_UNGOT).count()
+        # if rules
+        c = RequestContext(request, {
+        	'first_nav_name': FIRST_NAV_NAME,
+        	'second_navs': export.get_promotion_second_navs(request),
+        	'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+        	'rule': rules[0]
+        })
+        return render_to_response('mall/editor/promotion/create_coupon.html', c)
+    else:
+        if rules.is_active == 1 or rules.end_date > datetime.now():
+            count = int(request.POST.get('count', '0'))
+            __create_coupons(rules[0], count)
+            CouponRule.objects.filter(id=rule_id).update(
+            		count=(rules[0].count+count)
+            	)
+        return HttpResponseRedirect('/mall_promotion/coupons/get/?id=%s' % rule_id)
+    # pass
 
 @view(app='mall_promotion', resource='coupon_rules', action='create')
 @login_required

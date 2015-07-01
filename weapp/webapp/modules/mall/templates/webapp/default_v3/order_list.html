@@ -51,53 +51,49 @@
                                     </div>
                                     <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                                 </div>
-                                {% if order.get_products|length >= 2 %}
+                                {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
                                    <div class="xui-userCenterOrderProductImgList fl">
-                                        {% for has_product in order.get_products %}
+                                        {% for product in order.products %}
                                          <div class="xui-productImg">
-                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}" />
+                                            {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}" />
                                             {% else %}
-                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             <img src="{{product.thumbnails_url}}" />
                                             {% endifequal%}
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
                                 </div>
                                 {% else %}
-                                    {% for has_product in order.get_products %}
+                                    {% for product in order.products %}
                                     <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
                                         <div class="xui-selectedProductList-productImg disTc">
-                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}" />
+                                            {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}" />
                                             {% else %}
-                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             <img src="{{product.thumbnails_url}}" />
                                             {% endifequal%}
 
                                         </div>
                                         <div class="xui-selectedProductList-productInfo disTc vt pl5">
-                                            <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
-                                            {% if has_product.get_specific_model %}
+                                            <div class="xt-title xui-productName em85 tl c65">{{ product.name }}</div>
+                                            {% if product.properties %}
                                             <div class="em8 clearfix c9 pt10">
-                                            {% for property in has_product.get_specific_model %}
+                                            {% for property in product.properties %}
                                             <span class="fl mr10">{{ property.property_value }}</span>
                                             {% endfor %}
                                             </div>
                                             {% endif %}
                                             <div class="em9 clearfix c9 em65 xui-productNum">
-                                                {% if is_delivery_plan %}
-                                                    <span >￥{{order.final_price}}</span>
-                                                {% else %}
-                                                    <!-- 积分商品 -->
-                                                    {% if order.type == "integral" %}
-                                                        <span>{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+                                                <!-- 积分商品 -->
+                                                {% if order.type == "integral" %}
+                                                    <span>{{ product.price }}积分Ｘ{{ product.number }}</span>
 
-                                                    <!-- 普通商品 -->
-                                                    {% else %}
-                                                        <span class="mr5">Ｘ{{ has_product.number }}</span>
-                                                    {% endif %}
+                                                <!-- 普通商品 -->
+                                                {% else %}
+                                                    <span class="mr5">Ｘ{{ product.number }}</span>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -155,37 +151,37 @@
                                     </div>
                                     <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                                 </div>
-                                 {% if order.get_products|length >= 2 %}
+                                 {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
                                    <div class="xui-userCenterOrderProductImgList fl">
-                                        {% for has_product in order.get_products %}
+                                        {% for product in order.products %}
                                          <div class="xui-productImg">
-                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}"/>
                                             {% else %}
-                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             <img src="{{product.thumbnails_url}}" />
                                             {% endifequal%}
 
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
                                 </div>
                                 {% else %}
-                                    {% for has_product in order.get_products %}
+                                    {% for product in order.products %}
                                     <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
                                         <div class="xui-selectedProductList-productImg disTc">
-                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}"/>
                                             {% else %}
-                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             <img src="{{product.thumbnails_url}}" />
                                             {% endifequal%}
                                         </div>
                                         <div class="xui-selectedProductList-productInfo disTc vt pl5">
-                                            <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
-                                            {% if has_product.get_specific_model %}
+                                            <div class="xt-title xui-productName em85 tl c65">{{ product.name }}</div>
+                                            {% if product.properties %}
                                             <div class="em8 clearfix c9 pt10">
-                                            {% for property in has_product.get_specific_model %}
+                                            {% for property in product.properties %}
                                             <span class="fl mr10">{{ property.property_value }}</span>
                                             {% endfor %}
                                             </div>
@@ -196,11 +192,11 @@
                                                 {% else %}
                                                     <!-- 积分商品 -->
                                                     {% if order.type == "integral" %}
-                                                        <span class="fl">{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+                                                        <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
 
                                                     <!-- 普通商品 -->
                                                     {% else %}
-                                                        <span class="fl">Ｘ{{ has_product.number }}</span>
+                                                        <span class="fl">Ｘ{{ product.number }}</span>
                                                     {% endif %}
                                                 {% endif %}
                                             </div>
@@ -240,36 +236,36 @@
                                 </div>
                                 <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                             </div>
-                             {% if order.get_products|length >= 2 %}
+                             {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
                                    <div class="xui-userCenterOrderProductImgList fl">
-                                        {% for has_product in order.get_products %}
+                                        {% for product in order.products %}
                                          <div class="xui-productImg">
-                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}"/>
                                             {% else %}
-                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             <img src="{{product.thumbnails_url}}" />
                                             {% endifequal%}
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
                                 </div>
                             {% else %}
-                                {% for has_product in order.get_products %}
+                                {% for product in order.products %}
                                 <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
                                     <div class="xui-selectedProductList-productImg disTc">
-                                        {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                         <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                        {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                         <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}"/>
                                         {% else %}
-                                         <img src="{{has_product.product.thumbnails_url}}" />
+                                         <img src="{{product.thumbnails_url}}" />
                                         {% endifequal%}
                                     </div>
                                     <div class="xui-selectedProductList-productInfo disTc vt pl5">
-                                        <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
-                                        {% if has_product.get_specific_model %}
+                                        <div class="xt-title xui-productName em85 tl c65">{{ product.name }}</div>
+                                        {% if product.properties %}
                                         <div class="em8 clearfix c9 pt10">
-                                        {% for property in has_product.get_specific_model %}
+                                        {% for property in product.properties %}
                                         <span class="fl mr10">{{ property.property_value }}</span>
                                         {% endfor %}
                                         </div>
@@ -280,11 +276,11 @@
                                             {% else %}
                                                 <!-- 积分商品 -->
                                                 {% if order.type == "integral" %}
-                                                    <span class="fl">{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+                                                    <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
 
                                                 <!-- 普通商品 -->
                                                 {% else %}
-                                                    <span class="fl">Ｘ{{ has_product.number }}</span>
+                                                    <span class="fl">Ｘ{{ product.number }}</span>
                                                 {% endif %}
                                             {% endif %}
                                         </div>
@@ -320,38 +316,38 @@
                                     </div>
                                     <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                                 </div>
-                                 {% if order.get_products|length >= 2 %}
+                                 {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
                                    <div class="xui-userCenterOrderProductImgList fl">
-                                        {% for has_product in order.get_products %}
+                                        {% for product in order.products %}
                                          <div class="xui-productImg">
-                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}"/>
                                             {% else %}
-                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             <img src="{{product.thumbnails_url}}" />
                                             {% endifequal%}
 
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.get_products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
                                 </div>
                                 {% else %}
-                                    {% for has_product in order.get_products %}
+                                    {% for has_product in order.products %}
                                     <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
                                         <div class="xui-selectedProductList-productImg disTc">
-                                            {% ifequal has_product.product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                                             <img src="{{has_product.product.thumbnails_url}}!60"  full-src="{{has_product.product.thumbnails_url}}"/>
+                                            {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                                             <img src="{{product.thumbnails_url}}!60"  full-src="{{product.thumbnails_url}}"/>
                                             {% else %}
-                                             <img src="{{has_product.product.thumbnails_url}}" />
+                                             <img src="{{product.thumbnails_url}}" />
                                              {% endifequal %}
 
                                         </div>
                                         <div class="xui-selectedProductList-productInfo disTc vt pl5">
-                                            <div class="xt-title xui-productName em85 tl c65">{{ has_product.product.name }}</div>
-                                            {% if has_product.get_specific_model %}
+                                            <div class="xt-title xui-productName em85 tl c65">{{ product.name }}</div>
+                                            {% if product.properties %}
                                             <div class="em8 clearfix c9 pt10">
-                                            {% for property in has_product.get_specific_model %}
+                                            {% for property in product.properties %}
                                             <span class="fl mr10">{{ property.property_value }}</span>
                                             {% endfor %}
                                             </div>
@@ -362,11 +358,11 @@
                                                 {% else %}
                                                     <!-- 积分商品 -->
                                                     {% if order.type == "integral" %}
-                                                        <span class="fl">{{ has_product.price }}积分Ｘ{{ has_product.number }}</span>
+                                                        <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
 
                                                     <!-- 普通商品 -->
                                                     {% else %}
-                                                        <span class="fl">Ｘ{{ has_product.number }}</span>
+                                                        <span class="fl">Ｘ{{ product.number }}</span>
                                                     {% endif %}
                                                 {% endif %}
                                             </div>

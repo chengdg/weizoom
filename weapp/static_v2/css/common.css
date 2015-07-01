@@ -625,11 +625,11 @@ div.wx_dropbox input[readonly] {
 	cursor: text;
 }
 
-div.drop-box-arrow-down-left {
+/*div.drop-box-arrow-down-left {
     background: url("/static/img/sanjiao.png") no-repeat scroll left top transparent;
     height: 8px;
     margin: -12px 10px 0;
-}
+}*/
 
 /*.footer {
     background-color: #333944;

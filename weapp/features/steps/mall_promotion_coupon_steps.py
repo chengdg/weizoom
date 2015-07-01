@@ -387,3 +387,26 @@ def step_disable_coupon_rule(context, webapp_owner, coupon_rule_name):
 	}
 	url = '/mall_promotion/api/promotions/finish/'
 	context.client.post(url, args)
+
+@when(u"{webapp_owner_name}为优惠券'{coupon_rule_name}'添加库存")
+def step_impl(context, webapp_owner_name, coupon_rule_name):
+	infos = json.loads(context.text)
+	coupon_rule = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=coupon_rule_name)
+	url = "/mall_promotion/api/coupon/create/?rule_id=%s" % coupon_rule.id
+	args = {
+		'rule_id': coupon_rule.id,
+		'count': infos['count']
+	}
+	response = context.client.post(url, args)
+	response_data = json.loads(response.content)
+	if response_data['code'] == 200:
+		if "coupon_id_prefix" in infos:
+			coupon_id_prefix = infos['coupon_id_prefix']
+			coupon_count = len(Coupon.objects.filter(coupon_rule=coupon_rule))
+			index = infos['count'] - 1
+			for coupon in Coupon.objects.filter(coupon_rule=coupon_rule).order_by("-id")[:infos['count']]:
+				coupon_id = "%s%d" % (coupon_id_prefix, coupon_count - index)
+				Coupon.objects.filter(id=coupon.id).update(coupon_id=coupon_id)
+				index = index - 1
+	time.sleep(0.002)
+

@@ -119,8 +119,8 @@ W.ValidaterClass = function() {
                 if(element.attr('contenteditable') == 'true'){
                     trimedValue = element.attr('value');
                 }
-                var minLength = element.data('minlength') || 1;
-                var maxLength = element.data('maxlength') || 9999999;
+                var minLength = element.data('minlength') || element.data('min-length')|| 1;
+                var maxLength = element.data('maxlength') || element.data('max-length') || 9999999;
                 var actualLength = trimedValue.length;
                 if (actualLength < minLength || actualLength > maxLength) {
                     if (maxLength == 9999999) {
@@ -278,7 +278,7 @@ W.validate = function(el, checkDynamicElement) {
                     	hasError = true;
                     	errorHint = validateErrorHint ? validateErrorHint : validater.errorHint;
                         W.validate.toggleErrorHint($targetEl, false, errorHint);
-						return true; 
+						return true;
                     } else {
                         W.validate.toggleErrorHint($targetEl, true);
                     }

@@ -277,7 +277,11 @@ def get_audit_order_detail(request):
 	return _get_detail_response(request, 'audit')
 
 def _get_detail_response(request, belong='all'):
-	order = Order.objects.get(id=request.GET['order_id'])
+	#没有订单号参数直接返回订单列表页
+	if not request.GET.get('order_id', None):
+		return HttpResponseRedirect('/mall/orders/get/')
+	else:
+		order = Order.objects.get(id=request.GET['order_id'])
 	# #如果定单是微众卡支付显示微众卡号
 	# try:
 	# 	order.used_weizoom_card_id, order.used_weizoom_card_number = order.get_used_weizoom_card_id()

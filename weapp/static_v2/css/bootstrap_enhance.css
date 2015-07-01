@@ -463,24 +463,49 @@ button.close{
 .drop-box-arrow{
 	background: url(/static_v2/img/editor/arrow-right.png) no-repeat;
 	position: absolute;
+	width: 14px;
+	height: 14px;
 }
 .drop-box-arrow-right{
-	width: 22px;
-	height: 27px;
-	right: -20px;
+	right: -12px;
+	top:23px;
+}
+.drop-box-arrow-left{
+	left: -12px;
+	top:23px;
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
 }
 .drop-box-arrow-right-middle{
-	width: 10px;
-	height: 13px;
-	right: -8px;
+	right: -12px;
 	top:15px;
 }
-.drop-box-arrow-top{
-    height: 27px;
-    right: 20px;
-    top: -23px;
+.drop-box-arrow-down-right,
+.drop-box-arrow-top,
+.drop-box-arrow-down-left{
+	-webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
     transform: rotate(-90deg);
-    width: 22px;
+}
+.drop-box-arrow-down-right{
+	right: 12px;
+	top: -12px;
+}
+.drop-box-arrow-down-left{
+	top:-12px;
+	left:22px;
+}
+.drop-box-arrow-top{
+    right: 20px;
+    top: -12px;
+}
+.drop-box-arrow-bottom{
+	bottom:-12px;
+	right:20px;
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	transform: rotate(90deg);
 }
 /*
 面板
@@ -581,34 +606,4 @@ button.close{
 .label-info {
   background-color: #1183ca;
   font-weight: normal;
-}
-.xui-i-dialogPOST a{
-	min-width: 65px;
-}
-.xui-updateGradeOrTagBox
-{
-	min-width: 0px;
-	border-top:1px solid #ddd;
-	border-left:1px solid #ddd;
-	border-right:1px solid #ddd;
-	border-bottom:none;
-	border-radius: 0px;
-}
-.xui-updateGradeOrTagBox li
-{
-	margin: 0;
-}
-.xa-selectCategory
-{
-	display: block;
-	height: 30px;
-	line-height: 30px;
-	border-bottom:1px solid #ddd; 
-	padding-left: 12px;
-	color: #333;
-	text-decoration: none;
-}
-.xa-selectCategory:hover {
-	color: #333;
-	text-decoration: none;
 }

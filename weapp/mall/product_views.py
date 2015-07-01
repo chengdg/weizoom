@@ -154,11 +154,11 @@ def create_product(request):
     """
     user = request.manager
     # 获取默认运费
-    postage = None#module_api.get_default_postage_by_owner_id(user.id)
+    postage = None  # module_api.get_default_postage_by_owner_id(user.id)
     # 获取在线支付
-    pay_interface_onlines = []#module_api.get_pay_interface_onlines_by_owner_id(user.id)
+    pay_interface_onlines = []  # module_api.get_pay_interface_onlines_by_owner_id(user.id)
     # 获取货到付款
-    pay_interface_cod = []#module_api.get_pay_interface_cod_by_owner_id(user.id)
+    pay_interface_cod = []  # module_api.get_pay_interface_cod_by_owner_id(user.id)
 
     if request.POST:
         standard_model, custom_models = __extract_product_model(request)
@@ -226,7 +226,7 @@ def create_product(request):
                 )
 
         #处理轮播图
-        swipe_images = json.loads(request.POST.get('swipe_images', '[]'))
+        swipe_images = json.loads(request.POST.get('swipe_images', []))
         for swipe_image in swipe_images:
             ProductSwipeImage.objects.create(
                 product = product,
@@ -236,7 +236,10 @@ def create_product(request):
             )
 
         #商品后处理
-        thumbnails_url = swipe_images[0]["url"]
+        if swipe_images:
+            thumbnails_url = swipe_images[0]["url"]
+        else:
+            thumbnails_url = ''
         product.thumbnails_url = thumbnails_url
         product.save()
 

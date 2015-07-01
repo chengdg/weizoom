@@ -7,9 +7,9 @@
 					<div class="form-group">
 						<span class="star_show"></span>
 						<label class="" for="title">标题</label>
-						<input type="text" class="input-xlarge xui-title" 
+						<input type="text" class="input-xlarge xui-title"
 							id="title" name="title" placeholder="" value=""
-							data-validate="require-string" 
+							data-validate="require-string"
                             maxlength="30"
                             data-validate-not-contain-characters="&quot;,'" />
 						<div class="errorHint"  data-error-hint="标题必须在30个字内"></div>
@@ -17,32 +17,32 @@
 
 					<div class="form-group">
 						<span class="star_show"></span>
-						<label class="" >封面&nbsp;<span class="xui-color-mark 
+						<label class="" >封面&nbsp;<span class="xui-color-mark
 						ml5">（图片建议尺寸：<span class="xa-img-prompt">900X500</span>像素）</span></label>
 						<div class="controls">
-							<input type="hidden" name="pic_url" id="picUrlInput" value="" 
+							<input type="hidden" name="pic_url" id="picUrlInput" value=""
 			                    data-force-validate="true"
 			                    data-validate="require-string::必须插入一张图片"
-			                    data-min-length="3"/>
+			                    data-minlength="3"/>
 							<div class="xui-weixin-edit-imageView xa-weixin-edit-imageView" id="imageView"></div>
 							<div id="showCoverPicOption" class="xui-weixin-cover mt5">
 								<label class="checkbox">
-									<input type="checkbox" id="showCoverPicCheckbox" name="is_show_cover_pic" value="true" /> 
+									<input type="checkbox" id="showCoverPicCheckbox" name="is_show_cover_pic" value="true" />
 									<span class="c65 ml20">封面图片显示在正文中</span>
 								</label>
 							</div>
 							<div class="errorHint"></div>
 						</div>
-							
-						
+
+
 					</div>
 
 					<div class="xa-weixin-edit-summaryBox control-group xui-hide mt5">
 						<span class="star_show pr" style="top:-104px;"></span>
 	                    <label class="" for="summary">摘要</label>
 	                    <div class="controls">
-	                        <textarea rows="2" class="input-xlarge xui-summary" id="summary" name="summary" 
-	                        data-validate="require-notempty" 
+	                        <textarea rows="2" class="input-xlarge xui-summary" id="summary" name="summary"
+	                        data-validate="require-notempty"
                             maxlength="120"
 	                        data-validate-not-contain-characters="&quot;,'"></textarea>
 	                        <div class="errorHint" data-error-hint="摘要必须在120个字内"></div>
@@ -55,7 +55,7 @@
                         <div class="controls xui-richHtml fr">
                             <div class="xa-weixin-edit-textAreaBox">
                                 <textarea rows="4" class="input-xlarge" id="text" name="text"
-                                    data-validate="require-notempty" 
+                                    data-validate="require-notempty"
                                     data-force-validate="true"
                                     maxlength="2000000" ></textarea>
                                 <div class="errorHint" data-error-hint="正文不能为空"></div>
@@ -67,7 +67,7 @@
                     <div class="control-group mt5 mb100" style="position: relative; left: -15px;">
                         <label class="fl" for="summary" style="">链接地址</label>
                         <div class="controls fr" style="width:360px">
-                            <div id="urlDiv" class="xa-weixin-edit-urlBox xui-eidt-urlBox">                      
+                            <div id="urlDiv" class="xa-weixin-edit-urlBox xui-eidt-urlBox">
                                 <div class="h150">
                                     <input type="hidden" id="url" name="url" value=""/>
                                     <input type="hidden" id="linkTarget" name="link_target" value=""/>
@@ -77,8 +77,8 @@
                                         <button class="close xui-close xa-close-link" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
                                     </div>
 
-                                
-                                    <a href='javascript:void(0);' class="xui-block xui-news-editor-select-link-dialog xa-news-editor-select-link-menu mt10" data-input="url">从微站选择</a>  
+
+                                    <a href='javascript:void(0);' class="xui-block xui-news-editor-select-link-dialog xa-news-editor-select-link-menu mt10" data-input="url">从微站选择</a>
 
                                     <div class="xui-help-box">
 		                                <div class="fl xa-tips xui-helpIcon" >?</div>

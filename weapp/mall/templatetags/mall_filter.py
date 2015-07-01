@@ -57,17 +57,17 @@ def format_float(value):
 ORDER_PAY_ACTION = {
 	'name': u'支付',
 	'action': 'pay',
-	'button_class': 'btn-success'	
+	'button_class': 'btn-success'
 }
 ORDER_SHIP_ACTION = {
 	'name': u'发货',
 	'action': 'ship',
-	'button_class': 'btn-danger'	
+	'button_class': 'btn-danger'
 }
 ORDER_FINISH_ACTION = {
 	'name': u'标记完成',
 	'action': 'finish',
-	'button_class': 'btn-success'	
+	'button_class': 'btn-success'
 }
 ORDER_CANCEL_ACTION = {
 	'name': u'取消订单',
@@ -140,7 +140,7 @@ def get_order_status_transition(order):
 ############################
 @register.filter(name='usable_money')
 def usable_money(usable_integral, count_per_yuan):
-	try:		
+	try:
 		return round(float(usable_integral) / float(count_per_yuan), 2)
 	except:
 		return 0
@@ -160,3 +160,12 @@ def formate_width(value):
 @register.filter(name='format_model_to_valid_selector')
 def format_model_to_valid_selector(value):
 	return value.replace(':', '-')
+
+
+@register.filter(name="abs")
+def absolute(value):
+    """Return the absolute value."""
+    try:
+        return abs(value)
+    except (ValueError, TypeError):
+        return ""
