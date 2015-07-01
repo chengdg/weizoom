@@ -46,6 +46,8 @@ class Materials(resource.Resource):
 
 		return render_to_response('weixin/advance_manage/materials.html', c)
 	
+	@login_required
+	@mp_required
 	def api_get(request):
 		"""
 		获取素材集合的json表示
