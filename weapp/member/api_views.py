@@ -480,6 +480,7 @@ def update_member(request):
 	name = request.POST.get('name', None)
 	sex = request.POST.get('sex', None)
 	phone_number = request.POST.get('phone_number', None)
+	is_for_buy_test = request.POST.get('is_for_buy_test', 0)
 	member = Member.objects.get(id=member_id)
 	tag_ids = request.POST.get('tag_ids', None)
 
@@ -497,6 +498,7 @@ def update_member(request):
 
 		if sex != None:
 			member_info_update['sex'] = sex
+		member_info_update['is_for_buy_test'] = is_for_buy_test
 		if member_info_update:
 			if MemberInfo.objects.filter(member=member).count() > 0:
 				MemberInfo.objects.filter(member=member).update(**member_info_update)

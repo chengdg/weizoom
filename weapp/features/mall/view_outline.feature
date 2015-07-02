@@ -111,7 +111,7 @@ Background:
 	When bill访问nokia的webapp
 
 
-@mall2 @mall.outline1
+@mall2 @mall.outline1 @vippp1
 Scenario: 获得购买趋势
 	jobs的用户购买商品后，jobs能获得正确的购买趋势
 

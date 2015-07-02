@@ -28,11 +28,11 @@ def step_impl(context, webapp_owner_name, webapp_user_name, action):
 	member_json['member_id'] = member.id
 	member_json['is_for_buy_test'] = 1
 	member_json['grade_id'] = member.grade_id
-	member_json['integral'] = member.integral
+	#member_json['integral'] = member.integral
 	member_json['sex'] = 0
 
 	if action == u'分配':
-		url = u'/webapp/user_center/api/member/update/'
+		url = u'/member/member/update/'
 		response = context.client.post(bdd_util.nginx(url), member_json)
 
 
