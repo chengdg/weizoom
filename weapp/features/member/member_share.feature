@@ -12,7 +12,7 @@ Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-@crm @member @member.member_share
+@crm @member @member.member_share 
 Scenario: 建立好友关系传播情景,A-->(E,F,G)
 
 	When 清空浏览器
@@ -202,7 +202,7 @@ Scenario: 建立好友关系传播情景,A-->C-->(E,F,G)
 		}]
 		"""
 
-@crm @member @member.member_share
+@crm @member @member.member_share 
 Scenario: 建立好友关系传播情景,A-->C-->B-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -281,7 +281,7 @@ Scenario: 建立好友关系传播情景,A-->C-->D-->(E,F,G)
 	When jordan分享ma分享jobs的微站链接到朋友圈
 	
 	When 清空浏览器
-	When tom点击ordan分享链接
+	When tom点击jordan分享链接
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When 清空浏览器

@@ -87,6 +87,7 @@ $(document).ready(function() {
 	});
 
 	$(".xa-getCode").click(function(event){
+		$('.xa-getCode').attr('disabled', 'true').css('background-color', '#63b7ff');
 		var phone_number = $('.xa-phoneNum').val();
 		if (validate_phone(phone_number)){
 			W.getApi().call({
@@ -113,9 +114,11 @@ $(document).ready(function() {
 			         	speed: 2000
 			     	});
 		        	}
-
+		        	$('.xa-getCode').removeAttr('disabled').css('background-color', '#067de2');
 		        }
 		    });
+		} else {
+			$('.xa-getCode').removeAttr('disabled').css('background-color', '#067de2');
 		}
 	});
 

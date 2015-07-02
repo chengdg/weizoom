@@ -200,6 +200,7 @@ def __clear_all_app_data():
 	#member_models.MemberGrade.objects.all().update(usable_integral_percentage_in_order=100)
 	#member_models.WebAppUser.objects.all().delete()
 	#member_models.MemberGrade.objects.all().delete()
+	member_models.Member.objects.all().delete()
 	member_models.MemberFollowRelation.objects.all().delete()
 	#自动回复消息
 	weixin_qa_models.Rule.objects.all().delete()
