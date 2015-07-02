@@ -24,7 +24,7 @@ import os
 #from core.dateutil import get_today
 #from core.exceptionutil import full_stack, unicode_full_stack
 
-from modules.member.member_decorators import member_required
+from modules.member.member_decorators import member_required#binding_required
 from webapp.modules.user_center import request_util
 
 
@@ -33,6 +33,7 @@ TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 
 
 @member_required
+#@binding_required
 def get_user_info(request):
 	"""
 	个人信息
@@ -122,3 +123,21 @@ def get_wishlist(request):
 	"""
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.get_wishlist(request)
+
+@member_required
+def get_binding_page(request):
+	"""
+	绑定页面
+	"""
+	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+	return request_util.get_binding_page(request)
+
+#@binding_required
+@member_required
+def get_binded_user_info(request):
+	"""
+	绑定信息
+	"""
+	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+	return request_util.get_binded_user_info(request)
+

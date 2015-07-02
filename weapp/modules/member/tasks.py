@@ -112,7 +112,8 @@ def create_member_info(member_id, name, sex):
 	MemberInfo.objects.create(
 			member = Member.objects.get(id=member_id),
 			name = name,
-			sex = sex
+			sex = sex,
+			is_binded=False
 			)
 
 
@@ -180,7 +181,7 @@ def update_member_from_weixin_api(member_id, webapp_id):
 					sex=sex,
 					)
 
-	create_member_info(member_id,'', sex)
+	create_member_info(member_id, '', sex)
 
 
 

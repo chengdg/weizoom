@@ -21,6 +21,7 @@
                     </div>
                     <div class="xui-userCenterInfo pl5">
                         <h2 class="em8">{% if member.username %}{{ member.username }}{% else %}我{% endif %}</h2>
+                        <a href="./?module=user_center&model=binding_page&action=get&workspace_id=user_center&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bindphone">绑定手机</a>
                         <span class="xui-inner-levelBox em85">
                             <i></i>
                             <span class="xui-btn-guide em7">

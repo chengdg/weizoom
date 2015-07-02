@@ -3788,9 +3788,19 @@ position: absolute;
     margin: 0px;
     color:#fff;
     max-width: 116px;
+    display: inline-block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+.xui-userCenter-header .xui-bindphone{
+    border:1px solid #fff;
+    border-radius:2px;
+    -webkit-transform:scale(0.65);
+    transform:scale(0.65);
+    padding:1px 2px;
+    color:#fff;
+    display: inline-block;
 }
 .xui-userCenter-header .xui-inner-integralBox {
     color: #B32225;
@@ -3799,7 +3809,7 @@ position: absolute;
     text-align: center;
 }
 .xui-userCenter-header .xui-inner-levelBox {
-    display: inline-block;
+    display: block;
     margin-top: 9px;
     color: #fff;
     height: 18px;
@@ -4935,7 +4945,7 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 }
 
 /*
-*物流信息页6面
+*物流信息页面
 */
 .xui-expressInfoPage .xui-top{
     height: 70px;
@@ -4975,6 +4985,115 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-expressInfoPage .xui-content ul li:last-child i{
     background-image:url(/static_v2/img/webapp/usercenter/active.png);
     border-color: #0580ce!important;
+}
+/*
+*Wap：绑定页面
+*/
+.xui-wapBinding-page {
+    padding:12px 10px;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+}
+.xui-wapBinding-page label{
+    padding: 0 0 0 45px;
+    height:40px;
+    width: 100%;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    background-color: #fff;
+    display: inline-block;
+    position: relative;
+}
+.xui-wapBinding-page label.xui-phoneCode-section{
+    display: block;
+    width: 100%;
+}
+.xui-wapBinding-page label.xui-phoneCode-section i{
+    background-position: -25px 0;
+}
+.xui-wapBinding-page i{
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    background-image: url(/static_v2/img/webapp/usercenter/wapBindIcon.jpg);
+    background-size: 50px 25px;
+    position: absolute;
+    left: 10px;
+    top: 8px;
+}
+.xui-wapBinding-page input{
+    height:40px; 
+    border:none;
+    display: inline-block;
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 0;
+    font-size: 0.95rem;
+    
+}
+.xui-wapBinding-page ::-webkit-input-placeholder{
+    font-size: 0.95rem;
+    color:#bebdbd;
+}
+.xui-wapBinding-page button,
+.xui-wapInfo-page button{
+    background-color: #63b7ff;
+    border:none;
+    color:#fff;
+    padding: 0;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    height:40px;
+    font-size: 0.95rem;
+    vertical-align: middle;
+    font-family: "Helvetica Neue","Heiti SC","Hiragino Sans GB",'Microsoft Yahei';
+}
+.xui-wapBinding-page .xui-btnCode{
+    width: 97px;
+    position: absolute;
+    right:0;
+    top: 0;
+}
+.xui-wapBinding-page .xui-btnsubmit{
+    width:100%;
+}
+.xui-wapBinding-page .xui-phoneNum-section{
+    padding-right:107px;
+}
+.xui-wapBinding-page .xa-phoneNum[disabled=true]{
+    background-color: #fff;
+}
+/*
+*Wap：绑定信息页面
+*/
+
+.xui-wapInfo-page .xui-section{
+    background-color: #fff;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    position: relative;
+    height:44px;
+    line-height: 44px;
+    border-bottom:1px solid #dbdbdb;
+    padding-left: 115px;
+    text-align: right;
+    font-size: 0.95rem;
+    color:#333;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.xui-wapInfo-page .xui-section label{
+    width:115px;
+    position: absolute;
+    left: 15px;
+    text-align: left;
+    color:#666;
+}
+.xui-wapInfo-page p{
+    margin:0;
+    color:#d00405;
+    font-size: 0.8rem;
 }
 /**
 *媒体查询

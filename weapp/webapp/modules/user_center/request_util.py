@@ -77,16 +77,8 @@ def get_user_info(request):
 	member = request.member
 	#member = Member.objects.get(id=request.member.id)
 	week = None
-	shipInfo = None
 	# TODO: 优化获取头像信息
 	member = __get_current_user_info(request, member)
-
-	# 收货信息
-	# TODO: 只取第1条，是否可以缓存和优化？
-	# shipInfos = ShipInfo.objects.filter(webapp_user_id=request.webapp_user.id)
-	# if shipInfos.count() > 0:
-	# 	shipInfo = shipInfos[0]
-	# 	shipInfo.area = get_str_value_by_string_ids(shipInfo.area)
 
 	# 历史订单、待支付
 	(history_order_count, not_paid_count, not_ship_order_count, shiped_order_count, review_count) = order_cache.get_order_stats(request.webapp_user.id)
@@ -125,8 +117,6 @@ def get_user_info(request):
 		#'shipInfo': shipInfo,
 		'request': request,
 	 	'market_tools': market_tools,
-		#'is_can_use_weizoomcard':is_can_use_weizoomcard,
-		#'is_enjoy_member_discount': is_enjoy_member_discount
 	})
 	return render_to_response('%s/user_center.html' % request.template_dir, c)
 
@@ -446,3 +436,39 @@ def get_wishlist(request):
 		'products': products
 	})
 	return render_to_response('%s/wishlist.html' % request.template_dir, c)
+
+def get_binding_page(request):
+	"""
+	获取绑定页面
+	"""
+	member_info = MemberInfo.get_member_info(member_id=request.member.id)
+	if member_info.is_binded:
+		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
+
+	c = RequestContext(request, {
+		'is_hide_weixin_option_menu': True,
+		'page_title':  u'绑定会员',
+		'member': request.member,
+		'hide_non_member_cover': True,
+		'member_info':member_info
+	})
+	if member_info.is_binded:
+		return render_to_response('%s/binding_info.html' % request.template_dir, c)
+	else:	
+		return render_to_response('%s/binding_page.html' % request.template_dir, c)
+
+def get_binded_user_info(request):
+	"""
+	获取绑定信息
+	"""
+	member_info = MemberInfo.objects.get(member=request.member)
+	member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
+
+	c = RequestContext(request, {
+		'is_hide_weixin_option_menu': True,
+		'page_title': u'绑定信息',
+		'member': request.member,
+		'member_info': member_info
+	})
+	return render_to_response('%s/binding_info.html' % request.template_dir, c)
+

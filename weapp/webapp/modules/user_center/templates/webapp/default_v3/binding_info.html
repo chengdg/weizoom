@@ -1,0 +1,20 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css%}
+{% endblock%}
+{% block content-panel %}
+<div class="xui-page xui-wapInfo-page">
+	<div class="xui-section mb5">
+		<label for="">
+			绑定手机
+		</label>
+		{{member_info.phone}}
+		<!-- <a href="javascript:void(0);" style="color:#dd2727;">立即绑定</a> -->
+	</div>
+	<p class="ml10 mr10">注：手机号绑定后不能更改，若原手机号已丢失或停用请通过公众号联系客服。</p>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

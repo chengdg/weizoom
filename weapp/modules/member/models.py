@@ -398,7 +398,6 @@ class Member(models.Model):
 	user_icon = models.CharField(max_length=1024, blank=True, verbose_name='会员头像')
 	integral = models.IntegerField(default=0, verbose_name='积分')
 	created_at = models.DateTimeField(auto_now_add=True)
-
 	grade = models.ForeignKey(MemberGrade)
 	experience = models.IntegerField(default=0, verbose_name='经验值')
 	remarks_name = models.CharField(max_length=32, blank=True, verbose_name='备注名')
@@ -406,10 +405,8 @@ class Member(models.Model):
 	last_visit_time = models.DateTimeField(auto_now_add=True)
 	last_message_id = models.IntegerField(default=-1, verbose_name="最近一条消息id")
 	session_id = models.IntegerField(default=-1, verbose_name="会话id")
-
 	is_for_test = models.BooleanField(default=False)
 	is_subscribed = models.BooleanField(default=True)
-
 	friend_count = models.IntegerField(default=0) #好友数量
 	factor = models.FloatField(default=0.00) #社会因子
 	source = models.IntegerField(default=-1) #会员来源
@@ -419,12 +416,10 @@ class Member(models.Model):
 	pay_times =  models.IntegerField(default=0)
 	last_pay_time = models.DateTimeField(blank=True, null=True, default=None)#会员信息更新时间 2014-11-11
 	unit_price = models.FloatField(default=0.0) #ke dan jia
-	#add by bert
 	city = models.CharField(default='', max_length=50)
 	province = models.CharField(default='', max_length=50)
 	country = models.CharField(default='', max_length=50)
 	sex = models.IntegerField(default=0, verbose_name='性别')
-	#social_account_id = models.IntegerField(db_index=True, unique=True)
 
 	class Meta(object):
 		db_table = 'member_member'
@@ -621,6 +616,19 @@ class Member(models.Model):
 		cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member_id))
 		transaction.commit_unless_managed()
 
+	@property
+	def is_binded(self):
+		if MemberInfo.objects.filter(member_id=self.id).count() > 0:
+			member_info = MemberInfo.objects.filter(member_id=self.id)[0]
+			return member_info.is_binded
+		else:
+			MemberInfo.objects.create(
+				member=self,
+				name='',
+				weibo_nickname=''
+				)
+			return False
+
 
 #===============================================================================
 # modify_member_grade : 进行会员的等级修改操作
@@ -648,7 +656,8 @@ SEX_TYPES = (
 	)
 
 class MemberInfo(models.Model):
-	member = models.ForeignKey(Member)
+	#member = models.ForeignKey(Member)
+	member = models.OneToOneField(Member, primary_key=True)
 	name = models.CharField(max_length=8, verbose_name='会员姓名')
 	sex = models.IntegerField(choices=SEX_TYPES, verbose_name='性别')
 	age = models.IntegerField(default=-1, verbose_name='年龄')
@@ -657,9 +666,15 @@ class MemberInfo(models.Model):
 	qq_number = models.CharField(max_length=13, blank=True)
 	weibo_nickname = models.CharField(max_length=16, verbose_name='微博昵称')
 	member_remarks = models.TextField(max_length=1024, blank=True)
+	#new add by bert 
+	is_binded = models.BooleanField(default=False)
+	session_id = models.CharField(max_length=1024, blank=True)
+	captcha = models.CharField(max_length=11, blank=True) #验证码
+	#is_passed = models.BooleanField(default=False)
+
 
 	class Meta(object):
-		managed = False
+		#managed = False
 		db_table = 'member_info'
 		verbose_name = '会员详细资料'
 		verbose_name_plural = '会员详细资料'
@@ -668,8 +683,19 @@ class MemberInfo(models.Model):
 	def get_member_info(member_id):
 		if member_id is None or member_id <= 0:
 			return None
+		if MemberInfo.objects.filter(member_id=member_id).count() > 0:
+			return MemberInfo.objects.filter(member_id=member_id)[0] 
+		else:
+			return MemberInfo.objects.create(
+					member_id=member_id,
+					name='',
+					weibo_nickname='',
+					sex=0
+					)
+	@staticmethod
+	def is_can_binding(phone_number, member_id, webapp_id):
+		return not MemberInfo.objects.filter(member__webapp_id=webapp_id, is_binded=True, phone_number=phone_number).count() > 0 
 
-		return MemberInfo.objects.filter(member_id=member_id)[0] if MemberInfo.objects.filter(member_id=member_id).count() > 0 else None
 
 
 class MemberHasSocialAccount(models.Model):

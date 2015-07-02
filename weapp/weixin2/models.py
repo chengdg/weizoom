@@ -603,37 +603,42 @@ class CustomerMenuStatus(models.Model):
 		verbose_name_plural = '自定义菜单状态'
 
 
-SEX_TYPE_MEN = 1
-SEX_TYPE_WOMEN = 2
-SEX_TYPE_UNKOWN = 0
-SEX_TYPES = (
-	(SEX_TYPE_MEN, '男'),
-	(SEX_TYPE_WOMEN, '女'),
-	(SEX_TYPE_UNKOWN, '未知')
-	)
+# SEX_TYPE_MEN = 1
+# SEX_TYPE_WOMEN = 2
+# SEX_TYPE_UNKOWN = 0
+# SEX_TYPES = (
+# 	(SEX_TYPE_MEN, '男'),
+# 	(SEX_TYPE_WOMEN, '女'),
+# 	(SEX_TYPE_UNKOWN, '未知')
+# 	)
 
-class MemberInfo(models.Model):
-	member = models.ForeignKey(Member, related_name='owner_member')
-	name = models.CharField(max_length=300, default='', verbose_name='会员姓名')
-	sex = models.IntegerField(choices=SEX_TYPES, verbose_name='性别')
-	age = models.IntegerField(default=-1, verbose_name='年龄')
-	address = models.CharField(max_length=32, blank=True, null=True, verbose_name='地址')
-	phone_number = models.CharField(max_length=11, blank=True)
-	qq_number = models.CharField(max_length=13, blank=True)
-	weibo_nickname = models.CharField(max_length=16, verbose_name='微博昵称')
-	member_remarks = models.TextField(max_length=1024, blank=True) 
+# class MemberInfo(models.Model):
+# 	member = models.ForeignKey(Member, related_name='owner_member')
+# 	name = models.CharField(max_length=300, default='', verbose_name='会员姓名')
+# 	sex = models.IntegerField(choices=SEX_TYPES, verbose_name='性别')
+# 	age = models.IntegerField(default=-1, verbose_name='年龄')
+# 	address = models.CharField(max_length=32, blank=True, null=True, verbose_name='地址')
+# 	phone_number = models.CharField(max_length=11, blank=True)
+# 	qq_number = models.CharField(max_length=13, blank=True)
+# 	weibo_nickname = models.CharField(max_length=16, verbose_name='微博昵称')
+# 	member_remarks = models.TextField(max_length=1024, blank=True) 
+# 	#new add by bert 
+# 	is_binded = models.BooleanField(default=False)
+# 	session_id = models.CharField(max_length=1024, blank=True)
+# 	captcha = models.CharField(max_length=11, blank=True) #验证码
+# 	is_passed = models.BooleanField(default=False)
 
-	class Meta(object):
-		db_table = 'member_info'
-		verbose_name = '会员详细资料'
-		verbose_name_plural = '会员详细资料'
+# 	class Meta(object):
+# 		db_table = 'member_info'
+# 		verbose_name = '会员详细资料'
+# 		verbose_name_plural = '会员详细资料'
 
-	@staticmethod
-	def get_member_info(member_id):
-		if member_id is None or member_id <= 0:
-			return None
+# 	@staticmethod
+# 	def get_member_info(member_id):
+# 		if member_id is None or member_id <= 0:
+# 			return None
 
-		return MemberInfo.objects.filter(member_id=member_id)[0] if MemberInfo.objects.filter(member_id=member_id).count() > 0 else None
+# 		return MemberInfo.objects.filter(member_id=member_id)[0] if MemberInfo.objects.filter(member_id=member_id).count() > 0 else None
 
 
 class MessageAnalysis(models.Model):

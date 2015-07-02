@@ -408,7 +408,7 @@ class QrcodeMember(resource.Resource):
 		return_channel_members_json_array = []
 		
 		for channel_member in channel_members:
-			member_info = MemberInfo.get_member_info(channel_member.id)
+			member_info = member_model.MemberInfo.get_member_info(channel_member.id)
 			if member_info:
 				channel_member.name = member_info.name
 			else:
