@@ -79,7 +79,9 @@ def get_user_info(request):
 	week = None
 	# TODO: 优化获取头像信息
 	member = __get_current_user_info(request, member)
-
+	
+	member_info = MemberInfo.objects.get(member=request.member)
+	member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
 	# 历史订单、待支付
 	(history_order_count, not_paid_count, not_ship_order_count, shiped_order_count, review_count) = order_cache.get_order_stats(request.webapp_user.id)
 	member.history_order_count = history_order_count   # "全部订单"数量
@@ -114,7 +116,7 @@ def get_user_info(request):
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'个人中心',
 		'member': member,
-		#'shipInfo': shipInfo,
+		'member_info':member_info,		
 		'request': request,
 	 	'market_tools': market_tools,
 	})
@@ -462,7 +464,7 @@ def get_binded_user_info(request):
 	获取绑定信息
 	"""
 	member_info = MemberInfo.objects.get(member=request.member)
-	member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
+	
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,

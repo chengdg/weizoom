@@ -3809,7 +3809,7 @@ position: absolute;
     text-align: center;
 }
 .xui-userCenter-header .xui-inner-levelBox {
-    display: block;
+    display: inline-block;
     margin-top: 9px;
     color: #fff;
     height: 18px;
