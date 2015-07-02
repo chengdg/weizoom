@@ -87,11 +87,16 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 		notify_message = u"update_member_integral member_id:{}, cause:\n{}".format(member.id, unicode_full_stack())
 		watchdog_error(notify_message)
 
-@task
-def increase_intgral_for_be_member_first(member_id, webapp_id, event_type):
-	if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() > 0:
-		integral_stting = IntegralStrategySttings.objects.filter(webapp_id=webapp_id)[0]
-		update_member_integral(member_id, 0, integral_stting.be_member_increase_count, event_type, 0)
+@task(bind=True)
+def increase_intgral_for_be_member_first(self, member_id, webapp_id, event_type):
+	try:
+		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() > 0:
+			integral_stting = IntegralStrategySttings.objects.filter(webapp_id=webapp_id)[0]
+			update_member_integral(member_id, 0, integral_stting.be_member_increase_count, event_type, 0)
+	except:
+		notify_message = u"increase_intgral_for_be_member_first member_id:{}, cause:\n{}".format(member_id, unicode_full_stack())
+		watchdog_error(notify_message)
+		raise self.retry()
 
 	"""
 	防止数据库锁

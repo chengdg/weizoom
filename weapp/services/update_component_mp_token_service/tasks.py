@@ -17,7 +17,7 @@ import datetime
 from celery import task
 weixin_http_client = WeixinHttpClient()
 
-@task
+#@task
 def update_component_mp_info(request0, args):
 	"""
 		更新第三方帐号信息
