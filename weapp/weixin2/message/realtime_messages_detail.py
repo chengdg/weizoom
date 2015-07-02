@@ -60,7 +60,7 @@ class RealtimeMessagesDetail(resource.Resource):
                 if not member.is_subscribed:
                     could_replied = 0
         except:
-            pass
+            session = None
         
 
         c = RequestContext(request, {
@@ -68,7 +68,8 @@ class RealtimeMessagesDetail(resource.Resource):
             'second_navs': export.get_message_second_navs(request),
             'second_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
             'session_id': session_id,
-            'could_replied': could_replied
+            'could_replied': could_replied,
+            'session':session
         })
         
         return render_to_response('weixin/message/realtime_messages_detail.html', c)

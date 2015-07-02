@@ -212,6 +212,7 @@ function updateUserInfo(options) {
 $(document).ready(function() {
 	//start: 判断是否需要回复
 	var replied = '{{could_replied}}';
+	var openid = "{{session.weixin_user}}";
 	if (replied === '1') {
 		var editor = new W.view.weixin.MessageEditor({
 	        el: '#edit-message-panel',
@@ -221,7 +222,7 @@ $(document).ready(function() {
 	        submitBtnText: '发&nbsp;&nbsp;送'
 	    });
 	    editor.bind("finish-edit", function(message){
-	        var openid = $('#realtime_message_list').attr('data-openid');
+	        //var openid = $('#realtime_message_list').attr('data-openid');
 		    var sessionId = $('#realtime_message_list').attr('data-id');
 		    if (message.type === 'text' && message.answer.length > 600) {
 	    		W.showHint('error', '内容不能超过600字');
