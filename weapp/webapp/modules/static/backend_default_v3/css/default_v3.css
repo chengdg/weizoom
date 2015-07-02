@@ -5031,6 +5031,10 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     font-size: 0.95rem;
     
 }
+.xui-wapBinding-page input::-webkit-inner-spin-button,
+.xui-wapBinding-page input::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+}
 .xui-wapBinding-page ::-webkit-input-placeholder{
     font-size: 0.95rem;
     color:#bebdbd;

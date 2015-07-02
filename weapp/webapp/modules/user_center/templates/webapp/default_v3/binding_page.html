@@ -137,6 +137,12 @@ $(document).ready(function() {
 		            code:code
 		        }),
 		        success: function(data) {
+		        	$('.xui-page').alert({
+			         	isShow: true,
+			         	info: '绑定成功',
+			         	isSlide: true,
+			         	speed: 3000
+			        })
 		        	window.location.href = "./?webapp_owner_id={{request.webapp_owner_id}}&module=user_center&model=binded_user_info&action=get&workspace_id=user_center";
 		        },
 		        error: function(data){

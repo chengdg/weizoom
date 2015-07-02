@@ -444,12 +444,14 @@ def get_binding_page(request):
 	获取绑定页面
 	"""
 	member_info = MemberInfo.get_member_info(member_id=request.member.id)
+	page_title =  u'绑定会员'
 	if member_info.is_binded:
-		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
+		page_title =  u'绑定信息',
+	# 	member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
-		'page_title':  u'绑定会员',
+		'page_title': page_title,
 		'member': request.member,
 		'hide_non_member_cover': True,
 		'member_info':member_info
