@@ -18,9 +18,9 @@ echo "========================================================" >> $LOG
 
 # add more services here
 
-echo ">> calling 'services.update_component_mp_token_service.tasks.update_component_mp_info'" >> $LOG
-echo "--------------------------------------------------------" >> $LOG
-python services/send_task.py "services.update_component_mp_token_service.tasks.update_component_mp_info" {} "{\"id\": 0}" >> $LOG 2>&1
+# echo ">> calling 'services.update_component_mp_token_service.tasks.update_component_mp_info'" >> $LOG
+# echo "--------------------------------------------------------" >> $LOG
+# python services/send_task.py "services.update_component_mp_token_service.tasks.update_component_mp_info" {} "{\"id\": 0}" >> $LOG 2>&1
 
 echo ">> calling 'services.analysis_message_service.tasks.analysis_message'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
