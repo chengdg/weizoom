@@ -32,7 +32,7 @@ def step_impl(context, webapp_owner_name, webapp_user_name, action):
 	member_json['sex'] = 0
 
 	if action == u'分配':
-		url = u'/member/member/update/'
+		url = u'/member/api/member/update/'
 		response = context.client.post(bdd_util.nginx(url), member_json)
 
 

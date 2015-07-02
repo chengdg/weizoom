@@ -498,7 +498,8 @@ def update_member(request):
 
 		if sex != None:
 			member_info_update['sex'] = sex
-		member_info_update['is_for_buy_test'] = is_for_buy_test
+		member.is_for_buy_test = is_for_buy_test
+		member.save()
 		if member_info_update:
 			if MemberInfo.objects.filter(member=member).count() > 0:
 				MemberInfo.objects.filter(member=member).update(**member_info_update)
