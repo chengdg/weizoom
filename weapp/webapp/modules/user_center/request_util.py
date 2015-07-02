@@ -45,7 +45,7 @@ def __get_current_user_info(request, member):
 	"""
 	获取当前用户的头像和名称信息
 	"""
-	if 'user-1.jpg' in member.user_icon:
+	if (member.user_icon is None) or ('user-1.jpg' in member.user_icon):
 		member_util.member_basic_info_updater(request.user_profile, member)
 		return Member.objects.get(id = member.id)
 	return member
