@@ -982,6 +982,9 @@ class OAUTHMiddleware(object):
 		if 'code' in request.GET:
 			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'code')
 
+		if 'appid' in request.GET:
+			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'appid')
+
 		if member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY in request.GET:
 			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)	
 
@@ -1123,7 +1126,7 @@ def get_oauthinfo_by(request):
 	appid = request.GET.get('appid', None)
 	mpuser = request.webapp_owner_info.mpuser
 	weixin_mp_user_access_token = WeixinMpUserAccessToken.objects.get(mpuser=mpuser)
-	response = process_to_oauth(request, weixin_mp_user_access_token, code)
+	response = process_to_oauth(request, weixin_mp_user_access_token, code, appid)
 	if response:
 		return None, response
 
@@ -1165,8 +1168,8 @@ def get_oauthinfo_by(request):
 				return None, response
 
 
-def process_to_oauth(request, weixin_mp_user_access_token, code=None):
-	if not code:# 没有code需要跳转至微信授权页面
+def process_to_oauth(request, weixin_mp_user_access_token, code=None, appid=None):
+	if not code or not appid:# 没有code需要跳转至微信授权页面
 		redirect_url = request.get_full_path()
 		if 'code' in request.GET:
 			redirect_url = url_helper.remove_querystr_filed_from_request_url(request, 'code')
