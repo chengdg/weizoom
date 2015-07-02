@@ -447,7 +447,7 @@ def get_binding_page(request):
 	page_title =  u'绑定会员'
 	if member_info.is_binded:
 		page_title =  u'绑定信息'
-	# 	member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
+		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
@@ -466,7 +466,8 @@ def get_binded_user_info(request):
 	获取绑定信息
 	"""
 	member_info = MemberInfo.objects.get(member=request.member)
-	
+	if member_info.is_binded:
+		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,

@@ -134,7 +134,9 @@ class Rule(models.Model):
 
 			#兼容旧的start_hour和end_hour，转换成时分格式
 			start_hour, end_hour = _format_hour(self.start_hour, self.end_hour)
-
+			if end_hour == '24:00':
+				end_hour = '23:59'
+				
 			start_time = time.strptime(start_hour, "%H:%M")
 			end_time = time.strptime(end_hour, "%H:%M")
 
