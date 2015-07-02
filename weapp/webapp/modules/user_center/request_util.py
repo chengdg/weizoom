@@ -446,7 +446,7 @@ def get_binding_page(request):
 	member_info = MemberInfo.get_member_info(member_id=request.member.id)
 	page_title =  u'绑定会员'
 	if member_info.is_binded:
-		page_title =  u'绑定信息',
+		page_title =  u'绑定信息'
 	# 	member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
 
 	c = RequestContext(request, {

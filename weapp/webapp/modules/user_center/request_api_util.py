@@ -57,11 +57,11 @@ def send_captcha(request):
 				# 	)
 			else:
 				response = create_response(501)
-				data['msg'] = u'获取失败，请重试'
+				data['msg'] = u'验证码获取失败，请重试'
 				response.data = data
 		else:
 			response = create_response(502)
-			data['msg'] = u'该手机已经注册过'
+			data['msg'] = u'该手机已经绑定'
 			response.data = data
 	else:
 		response = create_response(504)
@@ -91,7 +91,7 @@ def binding_phone(request):
 				 MemberInfo.objects.filter(member_id=member_id, session_id=sessionid, phone_number=phone_number, captcha=code).update(is_binded=True)
 			else:
 				response = create_response(501)
-				data['msg'] = u'绑定失败，请重试'
+				data['msg'] = u'手机验证码错误，请重新输入'
 				response.data = data
 		else:
 			response = create_response(502)
