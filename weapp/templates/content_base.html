@@ -52,9 +52,9 @@
             <li>
                 <a {% ifequal first_nav_name 'template' %}class="active"{% endifequal %} href="/webapp/template/" title='模板'>模板</a>
             </li>
-            <li>
+           <!--  <li>
                 <a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href="/account/" title='账号信息'>账号信息</a>
-            </li>
+            </li> -->
             {% endif %}
         </ul>
         <div id="headerAction">
@@ -270,7 +270,7 @@
         
         //added by chuter
         function unReadCountCheck() {
-          /*
+          alert(2)
           W.getApi().call({
             app: 'webapp',
             api: 'unread_count_notify/get',
@@ -307,7 +307,6 @@
               //TODO 进行错误通知
             }
           });
-*/
         }
 
         function positionHelpSystemLink() {
@@ -348,11 +347,12 @@
 
           //message notify interval
 
-          {% if not under_develop %}
+         // {% if not under_develop %}
+         alert(1)
           unReadCountCheck();
           var unread_message_notify_interval = setInterval(
             unReadCountCheck, 5000); //5s进行一次未读消息数的检查
-          {% endif %}
+          //{% endif %}
 
 
           $('#notice_btn').click(function(event){

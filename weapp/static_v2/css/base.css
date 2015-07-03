@@ -977,14 +977,36 @@ button.xui-close{
 	background-image: url('/static_v2/img/sprite_icon.png');
 	margin-bottom:2px;
 }
+.wui-rightNav .xui-noticyNum{
+	display: none;
+	background-color: #da0909;
+	color: #fff;
+	height: 18px;
+	min-width: 18px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	position: absolute;
+	text-align: center;
+	line-height: 18px;
+	top: -6px;
+	box-sizing: border-box;
+	left: -6px;
+	padding: 0 3px;
+}
 .wui-rightNav a:nth-child(2){
 	background-position: -40px 0;
 }
 .wui-rightNav a:nth-child(3){
 	background-position: -80px 0;
 }
-.wui-rightNav a:last-child{
+.wui-rightNav a:nth-child(4){
 	background-position: -120px 0;
+}
+.wui-rightNav a:last-child{
+	position: relative;	
+	background-color: #bebebe;
+	background-position: -160px 0;
 }
 
 /**

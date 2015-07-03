@@ -216,13 +216,44 @@
     
 </script>
  <script type="text/javascript">
+ 	  function unReadCountCheck() {
+          W.getApi().call({
+            app: 'new_weixin',
+            resource: 'outline',
+            showLoading: false,
+            args: {
 
+            },
+            success: function(data) {
+               var unreadRealtimeCount = data.unread_realtime_count;
+                // $('#message_notify').html('new');
+               	if (parseInt(unreadRealtimeCount) > 0){
+               		$('.xa-num-unread-message-count').css('display', 'block');
+               		if (parseInt(unreadRealtimeCount) > 99){
+               			unreadRealtimeCount = '99+'
+               		}
+               		$('.xa-num-unread-message-count').text(unreadRealtimeCount);
+               	} else {
+               		$('.xa-num-unread-message-count').css('display', 'none');
+               	}
+              
+             
+            },
+            error: function(resp) {
+              //TODO 进行错误通知
+            }
+          });
+        }
 	$(document).ready(function($) {
 		if($('.xui-navBar-box .active').length==0 && $('.xui-navBar-box a').length){
 			location.href = $('.xui-navBar-box a:first').attr('href');
 		}else if($('.xa-sideBar .active').length==0 && $('.xa-sideBar a').length){
 			location.href = $('.xa-sideBar a:first').attr('href');
 		}
+
+		unReadCountCheck();
+	    var unread_message_notify_interval = setInterval(
+	    unReadCountCheck, 10000); //10s进行一次未读消息数的检查
 // 	var scrollLeft = $(this).scrollLeft();
 // 	if(scrollLeft != 0){
 // 		$('.xa-sideBar').css('position', 'absolute');

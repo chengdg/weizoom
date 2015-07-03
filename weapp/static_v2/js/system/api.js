@@ -103,8 +103,8 @@ W.Api = function() {
 		}
 
 		var showLoading = true;
-		if (options.hasOwnProperty('showLoaindg')) {
-			showLoaindg = options.showLoaindg;
+		if (options.hasOwnProperty('showLoading')) {
+			showLoading = options.showLoading;
 		}
 		var onSuccess = options.success;
 		var onError = options.error;

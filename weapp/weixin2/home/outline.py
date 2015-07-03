@@ -49,6 +49,20 @@ class Outline(resource.Resource):
 		})
 		return render_to_response('weixin/home/outline.html', c)
 
+	@login_required
+	def api_get(request):
+		unread_message_count = _get_unread_message_count(request.user)
+		try:
+			response = create_response(200)
+			response.data = {
+				'unread_realtime_count': unread_message_count,
+				}
+			#watchdog_debug("response.data={}".format(response.data))
+		except:
+			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
+		return response.get_response()
+
 def _get_yesterday_count(owner_id):
 	yesterday_added_count, yesterday_net_count = 0, 0
 	yesterday_str = dateutil.get_yesterday_str('today')
