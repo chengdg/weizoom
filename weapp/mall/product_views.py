@@ -16,7 +16,7 @@ import models as mall_models
 from models import *
 import export
 from core.restful_url_route import *
-
+from watchdog.utils import watchdog_warning
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.PRODUCT_FIRST_NAV
@@ -341,8 +341,8 @@ def update_product(request):
     pay_interface_cod = []#module_api.get_pay_interface_cod_by_owner_id(user.id)
 
     #is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.manager.id)
-    if request.manager.is_weizoom_mall:
-        is_weizoom_mall_partner = False
+    # if request.manager.is_weizoom_mall:
+    #     is_weizoom_mall_partner = False
     if request.POST:
         #
         #获取轮播图集合
@@ -528,7 +528,11 @@ def update_product(request):
             return HttpResponseRedirect('/mall/recycled_products/get/')
     else:
         #获取商品信息
-        product_id = request.GET['id']
+        product_id = request.GET.get('id', None)
+        if not product_id:
+            watchdog_warning('修改商品没有商品ID, %s' % request.GET, 'MALL', request.manager.id)
+            return HttpResponseRedirect('/mall/onshelf_products/get/')
+
         product = Product.objects.get(id=product_id)
         Product.fill_details(request.manager, [product], {
             'with_product_model': True,
