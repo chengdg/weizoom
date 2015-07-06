@@ -61,11 +61,6 @@
 		<!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
 		{% if is_use_dev_resource %}
 		<!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
-			<!-- handlebar component start -->
-			<script type="text/x-handlebar-template" id="componentTemplates">
-			{{ handlebar_component_template|safe }}
-			</script>
-			<!-- handlebar component end -->
 			
 			<script type="text/javascript" src="/static_v2/lib/jquery/jquery-1.11.2.min.js"></script>
 			<script type="text/javascript" src="/static_v2/lib/jquery/jquery-migrate-1.2.1.js"></script>
@@ -124,6 +119,12 @@
 		{% endif %}
 		<!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
 
+		<!-- handlebar component start -->
+		<script type="text/x-handlebar-template" id="componentTemplates">
+		{{ handlebar_component_template|safe }}
+		</script>
+		<!-- handlebar component end -->
+		
 		<script type="text/javascript" src="/resource_js/"></script>
 		{% block base_js %}{% endblock %}
 		<div class="wui-rightNav">
