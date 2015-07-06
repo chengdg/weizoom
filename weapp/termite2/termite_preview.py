@@ -30,7 +30,7 @@ class TermitePreview(resource.Resource):
         """
         object_id = request.GET.get('id', None)
         is_view_editing_data = request.GET.get('view_editing_data', False)
-        preview_url = u'/termite2/webapp_page/?project_id={}&woid={}&opid=weizoom'.format(object_id, request.user.id)
+        preview_url = u'/termite2/webapp_page/?project_id={}&woid={}'.format(object_id, request.user.id)
         if is_view_editing_data:
             preview_url += '&page_id=preview'
 
