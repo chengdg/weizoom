@@ -18,11 +18,11 @@
 		</ul>
 	</div>
 
-    <div class="xb-rightPanel pl10 pr10 mb30 xui-pagesPage-activePage pb10">
+    <div class="xb-rightPanel pl10 pr10 mb15 xui-pagesPage-activePage pb10">
         <div class="xui-i-head">
             微页面
         </div>
-        <div class="xui-i-content pr xa-project" data-id="{{active_page.id}}">
+        <div class="xui-i-content pr xa-project mt10" data-id="{{active_page.id}}">
             <div class="xui-i-title"><a href="/termite2/page_editor/?project_id={{active_page.id}}">店铺主页 - {{active_page.site_title}}</a></div>
             <div class="xui-i-date mt10">创建时间：{{active_page.created_at|date:"Y-m-j H:i"}}</div>
 
@@ -82,9 +82,9 @@
                 <th width="250">操作</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody style="background:#fff;">
             {{each(i, project) items}}
-            <tr class="xa-project" data-id="${project.id}">
+            <tr class="xa-project" data-id="${project.id}" style="border-bottom:1px solid #E5E5E5;">
                 <td class="p10" style="text-align:left;">
                     <a class="xa-site-title" href="/termite2/page_editor/?project_id=${project.id}">${project.siteTitle}</a>
 
