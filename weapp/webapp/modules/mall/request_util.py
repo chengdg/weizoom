@@ -234,7 +234,10 @@ def get_product(request):
 		'usable_integral': usable_integral,
 		'use_integral': use_integral,
 		'is_non_member': is_non_member,
-		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan
+		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
+		#add by bert 增加分享时显示信息	
+		'share_page_desc':product.name,
+		'share_img_url':product.thumbnails_url
 	})
 
 	if hasattr(request, 'is_return_context'):

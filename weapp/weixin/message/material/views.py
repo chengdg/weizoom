@@ -61,7 +61,9 @@ def show_news_detail(request, newsid):
 		'is_show_cover_pic': news.is_show_cover_pic,
 		'date': news.created_at.strftime('%Y-%m-%d'),
 		'nick_name': nick_name if nick_name else '',
-		'hide_non_member_cover':True
+		'hide_non_member_cover':True,
+		'share_page_desc':news.summary,
+		'share_img_url':pic_url
 	})
 	return render_to_response('material/detail.html', c)
 

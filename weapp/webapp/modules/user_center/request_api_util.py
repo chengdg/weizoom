@@ -104,3 +104,30 @@ def binding_phone(request):
 		return response.get_response()
 	
 	return response.get_response()
+
+import hashlib
+from utils.url_helper import remove_querystr_filed_from_request_url
+def record_shared_url(request):
+	member = request.member
+
+	if member:
+		title = request.POST.get('title', '')
+		shared_url =  request.POST.get('link','')
+		if shared_url:
+			shared_url = remove_querystr_filed_from_request_url(shared_url, 'from')
+			shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
+			shared_url_digest = hashlib.md5(shared_url).hexdigest()
+
+			print '=======================shareurl=', shared_url
+			if MemberSharedUrlInfo.objects.filter(member=member, shared_url_digest=shared_url_digest).count() == 0:
+				MemberSharedUrlInfo.objects.create(
+					member = member,
+					shared_url = shared_url,
+					pv = 0,
+					shared_url_digest = shared_url_digest,
+					title=title
+					)
+	else:
+		print 'no-------------------member'
+	response = create_response(200)
+	return response.get_response()

@@ -16,7 +16,9 @@ from core.dateutil import is_timespan_beyond_the_interval_util
 from utils.url_helper import remove_querystr_filed_from_request_url
 
 def get_request_url(request):
-	return remove_querystr_filed_from_request_url(request, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD)
+	shared_url = remove_querystr_filed_from_request_url(request, 'from')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
+	return shared_url
 
 def get_request_url_digest(request, request_url=None):
 	if request_url is None:

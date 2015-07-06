@@ -84,8 +84,8 @@
         <div id="homePageUrlZone" style="display: none;">/workbench/jqm/preview/?{{homepage_workspace_info|safe}}</div>
         {% if is_deleted_data %}
             <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
-				<h2 style="margin-top: 100px;">您访问的数据已被删除</h2>
-				<a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
+                <h2 style="margin-top: 100px;">您访问的数据已被删除</h2>
+                <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
             <div data-ui-role="attentionAlert" class="xui-attentionAlert"
@@ -107,7 +107,7 @@
         <div id="jsons" style="display: none;">
             {% for json in jsons %}
             <div id="__json-{{json.name}}">
-				{{json.content|format_json|safe}}
+                {{json.content|format_json|safe}}
             </div>
             {% endfor %}
         </div>
@@ -122,10 +122,9 @@
             W.visitHistory = "{{ visit_histroy_url }}";
             W.urlTitle = "{{ visit_histroy_url_title }}";
             if (W.urlTitle == ''){
-				W.urlTitle = '{{ show_system_name }}';
+                W.urlTitle = '{{ show_system_name }}';
             }
             W.pageTitle = "{{page_title}}";
-
             W.errorMessage = null;
 
             {% if messages %}
@@ -134,11 +133,12 @@
             {% endfor %}
             {% endif %}
 
-            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
             W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageImg = "{{ request.share_img_url }}";
+                  
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
-				W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
+                    W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
 
             $(document).ready(function() {
                 $('a').highlight();
@@ -166,12 +166,42 @@
                     "title" : W.sharePageTitle,
                     // 点击分享按钮
                     trigger: function (res) {
-                       // alert('用户点击分享按钮'+res);
+                       alert('用户点击分享按钮'+res);
                     },
                     // 分享成功
                     success : function(res) {
-                       // alert('success'+res);
+                       //alert('success'+res); 增加分享链接api
+                       alert('success1')
+                       W.getApi().call({
+                            app: 'webapp',
+                            api: 'project_api/call',
+                            method: 'post',
+                            args: _.extend({
+                                woid: W.webappOwnerId,
+                                project_id: W.projectId,
+                                module: 'user_center',
+                                target_api: 'shared_url/record',
+                                link: window.location.href,
+                                title:W.sharePageTitle
+                            }),
+                            success: function(data) {
+                                alert("创建分享链接成功")
+                            },
+                            error: function(data){
+                                alert("创建分享链接失败")
+                            }
+                        });
+                       alert('success2')
                     }
+                    //error : function(res) {
+                    //           alert('error'+res);
+                    //},
+                    //cancel: function (res) {
+                    //     alert('已取消');
+                    //      },
+                    //fail: function (res) {
+                    //    alert(JSON.stringify(res));
+                    //}     
                 };
                 wx.ready(function () {
                   // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
@@ -226,7 +256,7 @@
         {% if under_develop %}
         <script type="text/javascript">
             $(function() {
-				$('body').append('<a style="top:90px; height:40px; width:40px; color:#BBB; border-radius:20px; left:10px; position:fixed; z-index:99; background-color: rgba(46, 94, 134, 0.1); line-height:40px; text-align:center;" href="/simulator/2/">H</a>')
+                $('body').append('<a style="top:90px; height:40px; width:40px; color:#BBB; border-radius:20px; left:10px; position:fixed; z-index:99; background-color: rgba(46, 94, 134, 0.1); line-height:40px; text-align:center;" href="/simulator/2/">H</a>')
             });
         </script>
         {% endif %}

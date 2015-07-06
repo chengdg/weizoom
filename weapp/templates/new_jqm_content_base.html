@@ -186,9 +186,9 @@
             {% endfor %}
             {% endif %}
 
-            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
             W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageImg = "{{ request.share_img_url }}";
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
                 W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
 
@@ -220,7 +220,27 @@
                     },
                     // 分享成功
                     success : function(res) {
-                       // alert('success'+res);
+                       alert('success1')
+                       W.getApi().call({
+                            app: 'webapp',
+                            api: 'project_api/call',
+                            method: 'post',
+                            args: _.extend({
+                                woid: W.webappOwnerId,
+                                project_id: W.projectId,
+                                module: 'user_center',
+                                target_api: 'shared_url/record',
+                                link: window.location.href,
+                                title:W.sharePageTitle
+                            }),
+                            success: function(data) {
+                                alert("创建分享链接成功")
+                            },
+                            error: function(data){
+                                alert("创建分享链接失败")
+                            }
+                        });
+                       alert('success2')
                     }
                 };
                 wx.ready(function () {

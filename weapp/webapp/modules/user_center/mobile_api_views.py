@@ -145,4 +145,7 @@ def send_captcha(request):
 	return request_api_util.send_captcha(request)
 
 def binding_phone(request):
-	return request_api_util.binding_phone(request)	
+	return request_api_util.binding_phone(request)
+
+def record_shared_url(request):
+	return request_api_util.record_shared_url(request)	
