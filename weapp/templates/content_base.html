@@ -51,7 +51,7 @@
             <li>
                 <a {% ifequal first_nav_name 'template' %}class="active"{% endifequal %} href="/termite2/pages/" title='店铺装修'>店铺装修</a>
             </li>
-            {% else %}
+            {% endif %}
             {% if not request.user_profile.is_use_wepage %}
             <li>
                 <a {% ifequal first_nav_name 'template' %}class="active"{% endifequal %} href="/webapp/template/" title='模板'>模板</a>
