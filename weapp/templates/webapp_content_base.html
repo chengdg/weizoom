@@ -166,12 +166,12 @@
                     "title" : W.sharePageTitle,
                     // 点击分享按钮
                     trigger: function (res) {
-                       alert('用户点击分享按钮'+res);
+                       //alert('用户点击分享按钮'+res);
                     },
                     // 分享成功
                     success : function(res) {
                        //alert('success'+res); 增加分享链接api
-                       alert('success1')
+                     //  alert('success1')
                        W.getApi().call({
                             app: 'webapp',
                             api: 'project_api/call',
@@ -185,13 +185,13 @@
                                 title:W.sharePageTitle
                             }),
                             success: function(data) {
-                                alert("创建分享链接成功")
+                                alert("分享链接成功")
                             },
                             error: function(data){
-                                alert("创建分享链接失败")
+                                alert("分享链接失败")
                             }
                         });
-                       alert('success2')
+                      // alert('success2')
                     }
                     //error : function(res) {
                     //           alert('error'+res);
