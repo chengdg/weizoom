@@ -83,7 +83,8 @@ W.workbench.PageSynchronizer = Backbone.View.extend({
             var json = JSON.stringify(this.currentPage.toJSON());
             W.Broadcaster.trigger('page_synchronizer:synchronizing');
             var _this = this;
-            if (json != this.pageJson) {
+            //if (json != this.pageJson) {
+            if (true) {
                 xlog('call project/update api');
                 this.pageJson = json;
                 W.getApi().call({

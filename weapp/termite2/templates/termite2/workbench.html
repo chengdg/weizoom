@@ -290,24 +290,28 @@
       };
 
       $('.xa-preview').click(function(event){
-        // 预览事件
+        var page = pageManagerView.getCurrentActivePage();
 
         // 验证
-        W.Synchronizer.manualSync(function() {          
-          var page = pageManagerView.getCurrentActivePage();
-          var pageJson = JSON.stringify(page.toJSON());
-          W.resource.termite2.TermitePreview.put({
-            data: {
-              project_id: W.projectId,
-              page_json: pageJson
-            },
-            success: function(data) {
-              window.open("/termite2/termite_preview/?view_editing_data=true&id="+W.projectId);
-            },
-            error: function(resp) {
-
+        if (!W.isSystemManager) {
+            if(!page.validate()) {
+                return;
             }
-          });
+        }
+
+        // 预览
+        var pageJson = JSON.stringify(page.toJSON());
+        W.resource.termite2.TermitePreview.put({
+          data: {
+            project_id: W.projectId,
+            page_json: pageJson
+          },
+          success: function(data) {
+            window.open("/termite2/termite_preview/?view_editing_data=true&id="+W.projectId);
+          },
+          error: function(resp) {
+
+          }
         });
       });
 
