@@ -63,7 +63,7 @@ def show_news_detail(request, newsid):
 		'nick_name': nick_name if nick_name else '',
 		'hide_non_member_cover':True,
 		'share_page_desc':news.summary,
-		'share_img_url':pic_url
+		'share_img_url':news.pic_url
 	})
 	return render_to_response('material/detail.html', c)
 
