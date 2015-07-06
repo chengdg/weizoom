@@ -62,7 +62,15 @@ W.LoadingView = Backbone.View.extend({
     },
 
     show: function(callback, timeout, cssOptions) {
+        var msg = null;
+        if (typeof(callback) === 'string') {
+            msg = callback;
+            callback = null;
+        }
         if (!this.visible) {
+            if (msg) {
+                this.$el.find('#spin-hint').html(msg);
+            }
             this.$el.show();
             this.visible = true;
             this.spinner.spin($('#spin')[0]);

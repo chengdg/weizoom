@@ -221,6 +221,9 @@ MIDDLEWARE_CLASSES = [
     # Uncomment this middleware for monitor sql querys:
     'core.debug_middleware.SqlMonitorMiddleware',
 
+    # termite middleware
+    'core.termite_middleware.WebappPageCacheMiddleware',
+
     # REST resorce manage
     'core.resource_middleware.ResourceJsMiddleware',
     'core.resource_middleware.RestfulUrlMiddleware',
@@ -327,13 +330,15 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'core.context_processors.user_token',
     'core.context_processors.request_host',
     'core.context_processors.is_weizoom_mall',
-    'core.context_processors.cdn_host'
+    'core.context_processors.cdn_host',
+    'core.context_processors.handlebar_component_templates'
 
 ]
 
 CUSTOMERIZED_TEMPLATES_DIR = '%s/../templates/custom' % PROJECT_HOME
 CUSTOMIZED_APP_TEMPLATES_DIR = '%s/../apps/customerized_apps' % PROJECT_HOME
 PAY_TEMPLATES_DIR = '%s/../pay' % PROJECT_HOME
+TERMITE2_TEMPLATES_DIR = '%s/../termite2/templates' % PROJECT_HOME
 
 
 TEMPLATE_DIRS = [
@@ -348,7 +353,8 @@ TEMPLATE_DIRS = [
     '../templates',
     CUSTOMERIZED_TEMPLATES_DIR,
     CUSTOMIZED_APP_TEMPLATES_DIR,
-    PAY_TEMPLATES_DIR
+    PAY_TEMPLATES_DIR,
+    TERMITE2_TEMPLATES_DIR
 ]
 
 
@@ -377,6 +383,7 @@ INSTALLED_APPS = [
     'weixin',
     'weixin.user',
     'weixin2',
+    'termite2',
 
     'weixin.message.material',
     'weixin.message.message',
@@ -439,6 +446,8 @@ INSTALLED_APPS = [
 
     # Third-party apps
     # 'django_extensions',
+
+    #'new_mall', # for exercises
 ]
 
 
@@ -515,6 +524,7 @@ MIXUP_FACTOR = 3179
 WATCH_DOG_DEVICE = 'mysql'
 
 WATCHDOG_WEIXIN_MESSAGE = False
+ENABLE_WEPAGE_CACHE = True
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
@@ -530,6 +540,7 @@ if 'develop' == MODE:
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
     EVENT_DISPATCHER = 'local'
+    ENABLE_WEPAGE_CACHE = True
 
     import logging
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
@@ -608,7 +619,7 @@ WEAPP_WEB_MODEL_DIRS_V2 = [
 # import termite content
 #####################################################################
 from termite import embed_settings as termite_settings
-
+ 
 TEMPLATE_LOADERS.extend(termite_settings.TEMPLATE_LOADERS)
 MIDDLEWARE_CLASSES.extend(termite_settings.MIDDLEWARE_CLASSES)
 TEMPLATE_CONTEXT_PROCESSORS.extend(termite_settings.TEMPLATE_CONTEXT_PROCESSORS)

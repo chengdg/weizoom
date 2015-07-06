@@ -10,6 +10,22 @@
 {% endifequal %}
 
 
+{% ifequal component.type 'wepage.runtime_component_container' %}
+    {% for sub_component in component.components %}
+    <div class="pr xa-componentContainer" data-contained-cid="{{sub_component.cid}}" data-cid="{{sub_component.cid}}" data-widget-sortable="true" data-ui-behavior="xub-selectable" style="margin:0px; padding:0px;">
+        {{ sub_component.html|safe }}
+        <div class="xui-designPage-actionPanel xa-actionPanel">
+            <span class="xui-i-action xa-add xa-action">添加模块</span>
+            <span class="xui-i-action xui-i-editAction xa-edit xa-action">编辑</span>
+            <span class="xui-i-action xa-delete xa-action">删除</span>
+        </div>
+        <div class="xui-designPage-selectIndicator xa-selectIndicator">
+        </div>
+    </div>
+    {% endfor %}
+{% endifequal %}
+
+
 
 
 

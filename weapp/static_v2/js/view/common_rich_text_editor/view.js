@@ -174,6 +174,9 @@ W.view.common.RichTextEditor = Backbone.View.extend({
             this.$el.parent().append('<div class="errorHint"></div>');
         }
 
+        // 删除已有的弹框
+        $('.edui-dialog.edui-for-link').remove();
+
         //editor进入ready状态之后，需要将缓冲的content调用setContent
         this.editor.ready(_.bind(function() {
             this.isEditorReady = true;

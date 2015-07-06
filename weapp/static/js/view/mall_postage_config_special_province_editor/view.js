@@ -147,7 +147,7 @@ W.view.mall.PostageConfigSpecialProvinceEditor = Backbone.View.extend({
 	}
 });
 
-W.PostageAreaSelectView = W.DropBox.extend({
+W.PostageAreaSelectView = W.view.common.DropBox.extend({
 	SUBMIT_EVENT: 'submit',
 	
 	CLOSE_EVENT: 'close',

@@ -24,6 +24,10 @@ W.view.mall.PromotionCopyLinkView = W.view.common.DropBox.extend({
         this.position = options.position;
         this.privateContainerClass = options.privateContainerClass;
         this.$content.parent().addClass(this.privateContainerClass);
+        this.enableEdit = true;
+        if (options.hasOwnProperty('enableEdit')) {
+            this.enableEdit = options.enableEdit;
+        }
     },
     
     validate: function() {
@@ -31,11 +35,13 @@ W.view.mall.PromotionCopyLinkView = W.view.common.DropBox.extend({
     },
     
     render: function() {
-    	this.$content.html($.tmpl(this.getTemplate()));
+        var context = {enableEdit: this.enableEdit};
+    	this.$content.html($.tmpl(this.getTemplate(), context));
 	},
 
     onShow: function(options) {
-        this.$content.html($.tmpl(this.getTemplate()));
+        var context = {enableEdit: this.enableEdit};
+        this.$content.html($.tmpl(this.getTemplate(), context));
         this.position = options.position;
         this.urlLink = options.urlLink;
         
@@ -48,7 +54,8 @@ W.view.mall.PromotionCopyLinkView = W.view.common.DropBox.extend({
     
     showPrivate: function(options) {
         this.urlLink = options.urlLink;
-        this.$content.html($.tmpl(this.getTemplate()));
+        var context = {enableEdit: this.enableEdit};
+        this.$content.html($.tmpl(this.getTemplate(), context));
 
         var host = window.location.host;
         $('input[name="link"]').attr('value', 'http://'+host+this.urlLink);

@@ -417,7 +417,7 @@ W.view.common.advanceWeixinSimulator.MessagePage = Backbone.View.extend({
                 api: 'weixin/send',
                 method: 'post',
                 args: {
-                    weixin_user_name: W.view.common.advanceWeixinSimulator.user,
+                    weixin_user_name: W.view.common.advanceWeixinSimulator.user + '_' + W.view.common.advanceWeixinSimulator.mpUserName,
                     content: data.content,
                     webapp_id: W.view.common.advanceWeixinSimulator.webappId,
                     weixin_user_fakeid: data.fakeId

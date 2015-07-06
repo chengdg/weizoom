@@ -152,6 +152,13 @@ def add_user_module(request):
 		template_project = None #template_project是inner_name为'default'的project
 		new_data_backend = None
 		for module_project in module_projects:
+			if module_project.type == 'wepage':
+				if module_project.inner_name != 'wepage_empty':
+					continue
+				else:
+					module_project.is_active = True
+					module_project.is_enable = True
+
 			new_project = Project.objects.create(
 				owner = user, 
 				workspace_id = new_workspace.id,
@@ -159,7 +166,10 @@ def add_user_module(request):
 				inner_name = module_project.inner_name,
 				type = module_project.type,
 				source_project_id = module_project.id,
-				datasource_project_id = 0
+				datasource_project_id = 0,
+				is_active = module_project.is_active,
+				is_enable = module_project.is_enable,
+				site_title = module_project.site_title
 			)
 
 			if module_project.type == 'viper':

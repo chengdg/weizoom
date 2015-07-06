@@ -1,0 +1,35 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'wepage.page' %}
+<div 
+	class="wa-page {{component.model.class}} {% if not component.model.background %}xui-default-background{% endif %}" 
+	{% if component.model.background %}style="background-image: url({{component.model.background}})"{% endif %}
+>
+{% if in_production_mode %}
+    {% for sub_component in component.components %}
+    {{ sub_component.html|safe }}
+    {% endfor %}
+{% else %}
+	{% for sub_component in component.components %}
+    <div 
+        class="pr xa-componentContainer" 
+        data-contained-cid="{{sub_component.cid}}" 
+        data-cid="{{sub_component.cid}}" 
+        data-widget-sortable="true" 
+        data-type="{{sub_component.type}}" 
+        data-ui-behavior="xub-selectable" 
+        style="margin:0px; padding:0px;"
+    >
+    	{{ sub_component.html|safe }}
+    	<div class="xui-designPage-actionPanel xui-hide xa-actionPanel">
+            <span class="xui-i-action xa-add xa-action">添加模块</span>
+            <span class="xui-i-action xui-i-editAction xa-edit xa-action">编辑</span>
+            <span class="xui-i-action xa-delete xa-action">删除</span>
+        </div>
+        <div class="xui-designPage-selectIndicator xui-hide xa-selectIndicator">
+        </div>
+	</div>
+    {% endfor %}
+{% endif %}
+</div>
+{% endifequal %}

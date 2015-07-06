@@ -63,6 +63,20 @@ def hackQuerySetUpdate():
 	QuerySet.update = new_update
 
 
+post_delete_signal = Signal(providing_args=["model", "instance"])
+def hackQuerySetDelete():
+	old_delete = QuerySet.delete
+	def new_delete(self, **kwargs):
+		old_delete(self, **kwargs)
+		cache_args = getattr(Model, 'cache_args', None)
+		setattr(Model, 'cache_args', None)
+		instance = self
+		if cache_args:
+			instance = cache_args.get('instance', self)
+		post_delete_signal.send(sender=self.model, model=self.model, instance=instance, cache_args=cache_args)
+	QuerySet.delete = new_delete
+
+
 def hackQuerySetFilter():
 	old_filter = QuerySet.filter
 	def new_filter(self,  *args, **kwargs):
@@ -202,6 +216,7 @@ def hackUser():
 def hack(params):
 	hackCursorDebugWrapper(params)
 	hackQuerySetUpdate()
+	hackQuerySetDelete()
 	hackQuerySetFilter()
 	hackModel()
 	hackRenderToResponse()

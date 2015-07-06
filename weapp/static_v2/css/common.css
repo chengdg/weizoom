@@ -1022,3 +1022,14 @@ div.wx_dropbox input[readonly] {
     margin-left: 7px;
     display: inline-block;
 }
+
+/**
+ * 笔图标
+ */
+.xui-pencil-icon {
+    background: url(/static_v2/img/weixin/fansPencil.png) no-repeat;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    vertical-align: middle;
+}

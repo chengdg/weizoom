@@ -71,6 +71,7 @@ from apps import apps_manager
 
 from django.core.cache import cache
 from weapp import celeryconfig
+from termite2 import models as termite2_models
 
 
 def add_touch_support_in_selenium():
@@ -243,6 +244,9 @@ def __clear_all_app_data():
 	vote_models.VoteOption.objects.all().delete()
 	vote_models.VoteOptionHasWebappUser.objects.all().delete()
 
+	# 店铺装修
+	termite2_models.TemplateCustomModule.objects.all().delete()
+
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
 
@@ -258,17 +262,21 @@ def __binding_wexin_mp_account(user=None):
 	account_models.UserProfile.objects.all().update(is_mp_registered=True)
 
 	if user:
-		mpuser = weixin_user_models.WeixinMpUser.objects.create(
-			owner = user,
-			username = '',
-			password= '',
-			is_certified = True,
-			is_service = True,
-			is_active = True
-		)
-
-		weixin_user_models.WeixinMpUserAccessToken.objects.create(mpuser=mpuser, is_active=True,app_id=user.id, app_secret='app_secret',  access_token='access_token')
-		weixin_user_models.MpuserPreviewInfo.objects.create(mpuser=mpuser, name=mpuser.username)
+		count = weixin_user_models.WeixinMpUser.objects.filter(owner=user).count()
+		if count == 0:
+			mpuser = weixin_user_models.WeixinMpUser.objects.create(
+				owner = user,
+				username = '',
+				password= '',
+				is_certified = True,
+				is_service = True,
+				is_active = True
+			)
+	
+			weixin_user_models.WeixinMpUserAccessToken.objects.create(mpuser=mpuser, is_active=True,app_id=user.id, app_secret='app_secret',  access_token='access_token')
+			weixin_user_models.MpuserPreviewInfo.objects.create(mpuser=mpuser, name=mpuser.username)
+		else:
+			weixin_user_models.WeixinMpUser.objects.filter(owner=user).update(is_certified=True, is_service=True, is_active=True)
 
 
 def __sync_workspace():
@@ -444,6 +452,7 @@ def before_all(context):
 	# __create_system_user('tom6')
 	__create_simulator_user()
 	user_guo = __create_system_user('guo')
+	__create_system_user('manager')
 	#call_command('loaddata', 'regional')
 	__create_shengjing_app()
 	__update_template_to_v3()

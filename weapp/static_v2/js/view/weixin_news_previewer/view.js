@@ -14,17 +14,21 @@ W.view.weixin.NewsPreviewer = Backbone.View.extend({
     },
 
     getTemplate: function() {
-        $('#weixin-news-preview-tmpl-src').template('weixin-news-preview-tmpl');
-        return 'weixin-news-preview-tmpl';
+        $(this.templateId).template('weixin-preview-tmpl');
+        return 'weixin-preview-tmpl';
     },
 
     initialize: function(options) {
         xlog("in NewsPreviewer.initialize()");
         this.$el = $(this.el);
-        this.mode = options.mode || 'multi-news';
+        this.templateId = options.templateId || '#weixin-news-preview-tmpl-src';
         this.scheduledDate = options.scheduledDate;
         this.materialId = options.materialId || '-1';
         this.headImg = options.headImg || '/static/img/user-1.jpg';
+        this.qrcodeUrl = options.qrcodeUrl;
+
+        // 链接
+        this.url = options.url || null;
 
         this.initCount = options.initCount || 1; //model为multi-news时有效
         this.patterns = options.patterns || '';
@@ -38,9 +42,18 @@ W.view.weixin.NewsPreviewer = Backbone.View.extend({
             showPattern: this.showPattern,
             materialId: this.materialId,
             headImg: this.headImg,
-            typeMaterial: this.typeMaterial
+            typeMaterial: this.typeMaterial,
+            qrcodeUrl: this.qrcodeUrl
         }));
 
+        if (parseInt(this.materialId) > 0) {
+            this.initNews(options);
+        }else{
+            this.initTermite(options);
+        }
+    },
+
+    initNews: function(options){
         /**
          * 初始化模拟器
          */
@@ -88,6 +101,22 @@ W.view.weixin.NewsPreviewer = Backbone.View.extend({
             }
         }
         this.messageId = options.messageId
+    },
+
+    initTermite: function(options){    
+        this.initBrowserUrl = options.initBrowserUrl;
+        /**
+         * 初始化模拟器
+         */
+        this.phone = new W.view.weixin.EmbededPhoneView({
+            el: this.$('.xa-simulator-box').get(),
+            enableAction: false,
+            enableAddNews: false,
+            mode: "webapp",
+            initBrowserUrl: this.initBrowserUrl,
+        });
+        this.phone.render();        
+        console.log(this.initBrowserUrl, 11111)
     },
 
     render: function() {

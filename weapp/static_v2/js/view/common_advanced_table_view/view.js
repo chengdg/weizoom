@@ -203,6 +203,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
             args: args,
             scope: this,
             success: function(data) {
+                _this.rawData = data;
                 if (data.items.length == 0) {
                     if (options && options.emptyDataHint) {
                         W.showHint('error', options.emptyDataHint);
@@ -215,6 +216,8 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                     categories: data.categories,
                     'userWebappId': _this.userWebappId
                 });
+                xwarn('====== advance table =====');
+                xwarn($node.html());
                 if (this.enableSelect) {
                     if (this.disableHeaderSelect) {
                         $node.find('thead tr').prepend('<th width="30"></th>');
@@ -240,6 +243,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                 }
 
                 //table不存在
+                xwarn(this.$content);
                 this.$content.html($node);
 				
                 var multilineClass = this.$content.find('#multiline').attr('name');
@@ -363,6 +367,10 @@ W.view.common.AdvancedTable = Backbone.View.extend({
     gotoPage: function(page) {
         this.curPage = page;
         this.load(true);
+    },
+
+    getRawData: function() {
+        return this.rawData;
     },
 
     /**
@@ -618,7 +626,8 @@ W.view.common.AdvancedTable = Backbone.View.extend({
     },
 
     reset: function() {
-        this.$('table').empty();
+        //this.$('table').empty();
+        this.$content.empty();
         this.frozenArgs = {};
     }
 

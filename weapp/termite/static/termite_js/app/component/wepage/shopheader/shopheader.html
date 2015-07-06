@@ -1,0 +1,13 @@
+{% load workbench_filter %}
+
+{% if component.type == 'wepage.shopheader' %}
+<div 
+    class="wui-shopheader" 
+    data-component-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    style="">
+    <div class="wa-shop-backgroud wui-shop-header" style="background: {% if component.model.backgroud %}url({{component.model.backgroud}}){% else %}#256FB5{% endif %} no-repeat;background-size:100%; ">
+    </div>
+    <div class="wui-shop-title"><i></i>{{component.model.title}}</div>
+</div>
+{% endif %}

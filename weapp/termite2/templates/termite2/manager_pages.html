@@ -1,0 +1,143 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-wepage-pagesPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/termite2/pages/">店铺装修</a></li>
+			<li class="active">微页面</li>
+		</ul>
+	</div>
+	<div class="xb-rightPanel pl10 pr10 pb30">
+		<div class="xui-head">
+			<a href="javascript:void(0);" class="xa-addManagerProject btn btn-success mt10 w150 lh20"><span class="xui-add-btn-icon">+</span>新建页面</a>
+		</div>
+
+		{% if has_page %}
+            <ul class="xui-pagesPage-pages clearfix">
+            {% for page in pages %}
+                <li class="xui-i-page fl" data-id="{{page.id}}" data-type="{{page.inner_name}}">
+                    <a href="/termite2/page_editor/?project_id={{page.id}}">
+                        <img src="{% if page.cover_name %}/static_v2/img/termite2/cover/{{page.cover_name}}{% endif %}" class="xui-i-img"/>
+                    </a>
+                    <div class="xui-i-title">
+                        <div>
+                            {{page.site_title}}
+                            {% if page.inner_name != 'wepage_empty' %}
+                            <select class="form-control xui-inline xa-changeType" style="width: 100px;">
+                                <option value="wepage_basic_template" {% if page.inner_name == 'wepage_basic_template' %}selected{% endif %}>基础模板</option>
+                                <option value="wepage_nav_template" {% if page.inner_name == 'wepage_nav_template' %}selected{% endif %}>场景导航</option>
+                                <option value="wepage_shop_template" {% if page.inner_name == 'wepage_shop_template' %}selected{% endif %}>店铺模板</option>
+                            </select>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <a href="/termite2/termite_preview/?id={{page.id}}" target="_blank" class="btn btn-default mt5">预览</a>
+                            <a href="javascript:void(0);" class="xa-setCover btn btn-default mt5">设置封面</a>
+                            <a href="javascript:void(0);" class="xa-deleteManagerProject btn btn-danger mt5">删除</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+		{% else %}
+		<div class="xui-emptyBox m10">
+			<div class="xui-i-emptyHint">
+				<img src="/static_v2/img/editor/empty.png">
+				<div>
+					<span>还没有相关数据</span>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+ 	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.xa-addManagerProject').click(function(event) {
+        W.resource.termite2.Project.put({
+            data: {
+            },
+            success: function(data) {
+                W.showHint('success', '创建页面成功');
+                _.delay(function() {
+                    window.location.href = '/termite2/page_editor/?project_id=' + data.project_id + '&page_id=' + data.page_id;
+                }, 500);
+            },
+            error: function() {
+                W.showHint('error', '创建模板失败！');
+            }
+        });
+    });
+
+    $('body').delegate('.xa-deleteManagerProject', 'click', function(event) {
+        if (!confirm("确定删除该模板吗？")) {
+            return;
+        }
+
+        var $li = $(event.target).parents('li');
+        var projectId = $li.data('id');
+        W.resource.termite2.Project.id(projectId).remove({
+            success: function(data) {
+                W.showHint('success', '删除微页面成功');
+                $li.remove();
+            },
+            error: function() {
+                W.showHint('error', '删除微页面失败！');
+            }
+        });
+    });
+
+    $('body').delegate('.xa-setCover', 'click', function(event) {
+        var $li = $(event.currentTarget).parents('li');
+        var projectId = $li.data('id');
+        var $img = $li.find('img');
+        var coverName = $img.attr('src');
+        W.dialog.showDialog('W.dialog.termite.SetTemplateCoverDialog', {
+            coverName: coverName,
+            success: function(data) {
+                $img.attr('src', data.url);
+
+                W.resource.termite2.Project.id(projectId).post({
+                    data: {
+                        field: 'cover_name',
+                        value: data.coverName
+                    },
+                    success: function(data) {
+                        W.showHint('success', '更新封面成功');
+                    },
+                    error: function(resp) {
+                        W.showHint('error', '更新封面失败!');
+                    }
+                });
+            }
+        });
+    });
+    
+    $('body').delegate('.xa-changeType', 'change', function(event) {
+        var $select = $(event.currentTarget);
+        var $li = $select.parents('li');
+        var projectId = $li.data('id');
+
+        W.resource.termite2.Project.id(projectId).post({
+            data: {
+                field: 'inner_name',
+                value: $select.val()
+            },
+            success: function(data) {
+                W.showHint('success', '更新模板类型成功');
+            },
+            error: function(resp) {
+                W.showHint('error', '更新模板类型失败!');
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

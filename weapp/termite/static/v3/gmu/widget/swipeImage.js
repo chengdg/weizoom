@@ -23,7 +23,7 @@ gmu.define('SwipeImage', {
         var height = $el.width();
         console.log(height);
         $el.height(height+'px').css('visibility', 'hidden');
-        
+
 		//生成html
 		var swipeImages = this._options.jsondata;
 		var htmls = []
@@ -33,10 +33,29 @@ gmu.define('SwipeImage', {
 			htmls.push('<div class="wui-swiper-wrapper">');
 			for (var i = 0; i < swipeImages.length; ++i) {
 				var image = swipeImages[i];
-				htmls.push('<div class="wui-swiper-slide"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></div>')
+				htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></a></div>')
 			}
 			htmls.push('</div>');
-			htmls.push('<div class="wui-swiper-pagination-fraction"><span class="xa-numerator wui-numerator"></span>/<span class="xa-denominator"></span></div>');
+
+			if (this._options.showtitle) {
+				htmls.push('<span class="wui-i-bottomTitle wa-title">'+swipeImages[0].title+'</span>');
+			}
+
+			var positionMode = this._options.positionmode;
+			if (positionMode === 'dot') {
+				htmls.push('<div class="wui-i-dotPositions">');
+				for (var i = 0; i < swipeImages.length; ++i) {
+					var image = swipeImages[i];
+					if (i == 0) {
+						htmls.push('<span class="wui-i-dotPosition wui-i-activeDotPosition" data-index="0" data-title="'+image.title+'"></span>')
+					} else {
+						htmls.push('<span class="wui-i-dotPosition" data-index="'+i+'" data-title="'+image.title+'"></span>')
+					}
+				}	            
+	            htmls.push('</div">');
+	        } else {
+	        	htmls.push('<div class="wui-swiper-pagination-fraction"><span class="xa-numerator wui-numerator"></span>/<span class="xa-denominator"></span></div>');
+	        }			
 		}
 		
 		
@@ -47,6 +66,7 @@ gmu.define('SwipeImage', {
 
 	refresh: function() {
 		var $el = this.$el;
+		xwarn($el.get(0));
 		var swipeImages = this._options.jsondata;
         var view = new Swiper('#swipeImage', {
 	        mode:'horizontal',
@@ -64,10 +84,22 @@ gmu.define('SwipeImage', {
 	    var activeIndex = view.activeLoopIndex + 1;
 	    var imageLength = swipeImages.length;
 	    $numerator.text(activeIndex);
-	    $denominator.text(imageLength);	    
+	    $denominator.text(imageLength);
+
+	    var positionMode = this._options.positionmode;
+	    var isShowTitle = this._options.showtitle;
 	    view.addCallback('SlideChangeStart',function(Swiper){
-	    	var activeIndex = view.activeLoopIndex + 1;
-	    	$numerator.text(activeIndex);
+	    	if (positionMode === 'dot') {
+	    		$el.find('.wui-i-activeDotPosition').removeClass('wui-i-activeDotPosition');
+	    		var $position = $el.find('[data-index="'+view.activeLoopIndex+'"]');
+	    		$position.addClass("wui-i-activeDotPosition");
+	    		if (isShowTitle) {
+	    			$el.find('.wa-title').text($position.attr('data-title'));
+	    		}
+	    	} else {
+	    		var activeIndex = view.activeLoopIndex + 1;
+	    		$numerator.text(activeIndex);
+	    	}
 	    });
 	    $el.data('view', view);
 	}

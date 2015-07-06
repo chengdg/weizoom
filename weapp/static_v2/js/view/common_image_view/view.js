@@ -39,6 +39,7 @@ W.view.common.ImageView = Backbone.View.extend({
 		this.tagId = (+new Date());
         this.autoShowHelp = options.autoShowHelp || false;//是否显示建议信息
         this.isNeedSizeInfo = options.isNeedSizeInfo || false; //是否需要server端返回size信息
+        this.help = options.help || null;
 
         this.computeWidthAndHeight();
 
@@ -73,12 +74,17 @@ W.view.common.ImageView = Backbone.View.extend({
 
         this.$el.parent('div').find('.help-block').remove();
         if(this.autoShowHelp){
-            var items = ["<span class='help-block mt15' >上传图片建议尺寸 ", this.width, "*", this.height];
-            if (this.sizeLimit) {
-                items.push(", 大小不超过" + this.sizeLimit + "KB");
+            if (this.help) {
+                var helpHtml = "<span class='help-block mt15' >"+this.help+"</span>";
+                this.$el.parent('div').append($(helpHtml));
+            } else {
+                var items = ["<span class='help-block mt15' >上传图片建议尺寸 ", this.width, "*", this.height];
+                if (this.sizeLimit) {
+                    items.push(", 大小不超过" + this.sizeLimit + "KB");
+                }
+                items.push('</span>');
+                this.$el.parent('div').append(items.join(''));
             }
-            items.push('</span>');
-            this.$el.parent('div').append(items.join(''));
         }
 
         var mark,old = 0;

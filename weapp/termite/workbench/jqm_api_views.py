@@ -31,7 +31,7 @@ from webapp.models import Workspace
 # __get_display_info: 构造request的display_info
 ########################################################################
 def __get_display_info(request):
-	pagestore = pagestore_manager.get_pagestore(request)
+	pagestore = pagestore_manager.get_pagestore('mongo')
 
 	#获取project
 	project_id = int(request.REQUEST.get('project_id', 0))
@@ -135,7 +135,10 @@ def __preprocess_page(request):
 	#识别header, content components, footer
 	page_component['headers'] = []
 	page_component['footers'] = []
-	page_component['content'] = {'type': 'content', 'uid':'', 'components':[], 'model': {'index': 1}}
+	if 'wepage' in page_component['type']:
+		page_component['content'] = {'type': 'wepage.inner_content', 'uid':'', 'components':[], 'model': {'index': 1}}
+	else:
+		page_component['content'] = {'type': 'content', 'uid':'', 'components':[], 'model': {'index': 1}}
 	for component in page_component['components']:
 		if component['type'] == 'jqm.page_header':
 			component['model']['index'] = 0

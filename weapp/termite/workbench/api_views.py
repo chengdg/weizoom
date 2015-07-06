@@ -27,7 +27,6 @@ from termite.core.jsonresponse import create_response
 import pagerender
 import pagestore as pagestore_manager
 
-
 @login_required
 def create_mobile_page(request):
 	page = json.loads(request.POST['page'])
@@ -91,10 +90,10 @@ def update_page_display_index(request):
 	return response.get_response()
 
 
-#######################################################################
-# get_pages_json: 获得page的json内容
-#######################################################################
 def get_pages_json(request):
+	"""
+	获得page的json内容
+	"""
 	pagestore = pagestore_manager.get_pagestore(request)
 
 	project_id = request.GET['project_id']

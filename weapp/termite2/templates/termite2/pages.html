@@ -1,0 +1,278 @@
+{% extends "content_base_v2.html" %}
+
+{% block css %}
+<style type="text/css">
+.xui-termitePagesPage-copyLinkView .xa-linkInput {
+    width: 350px !important;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-wepage-pagesPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/termite2/pages/">店铺装修</a></li>
+			<li class="active">微页面</li>
+		</ul>
+	</div>
+
+    <div class="xb-rightPanel pl10 pr10 mb30 xui-pagesPage-activePage pb10">
+        <div class="xui-i-head">
+            微页面
+        </div>
+        <div class="xui-i-content pr xa-project" data-id="{{active_page.id}}">
+            <div class="xui-i-title"><a href="/termite2/page_editor/?project_id={{active_page.id}}">店铺主页 - {{active_page.site_title}}</a></div>
+            <div class="xui-i-date mt10">创建时间：{{active_page.created_at|date:"Y-m-j H:i"}}</div>
+
+            <div class="xui-i-actions">
+                <a href="/termite2/page_editor/?project_id={{active_page.id}}">编辑</a>
+                <a class="ml10" href="/termite2/termite_preview/?id={{active_page.id}}" target="_blank">预览</a>
+                <a href="javascript:void(0);" class="xa-copyLink ml10">链接</a>
+                <a href="javascript:void(0);" class="xa-qrcode ml10">二维码</a>
+            </div>
+        </div>
+    </div>
+
+	<div class="xb-rightPanel pl10 pr10 pb30">
+		<div class="xui-head">
+			<a href="javascript:void(0);" class="xa-addProject btn btn-success mt10 w150 lh20"><span class="xui-add-btn-icon">+</span>新建微页面</a>
+            {% if not request.user_profile.is_use_wepage %}
+            <a href="javascript:void(0);" class="xa-enableWepage btn btn-danger mt10 w150 lh20">启用微页面</a>
+            {% endif %}
+		</div>
+
+		{% if has_page %}
+    		<div 
+    			data-ui-role="advanced-table" 
+    			data-app="termite2" 
+    			data-resource="pages"
+    			data-template-id="#pages-view"
+    			data-enable-paginator="false" 
+    			data-enable-sort="false" 
+    			data-selectable="false" 
+    			data-item-count-per-page="100" 
+    			data-init-sort="-created_at"
+    			class="mt10"
+    		></div>
+		{% else %}
+		<div class="xui-emptyBox m10">
+			<div class="xui-i-emptyHint">
+				<img src="/static_v2/img/editor/empty.png">
+				<div>
+					<span>还没有相关数据</span>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+ 	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="pages-view" type="text/x-jquery-tmpl">
+    <table class="table table-condensed mb0 xui-tableHead">
+        <thead>
+            <tr>
+                <th>标题</th>
+                <th width="400" class="tx_sortable" data-sort-attr='created_at'>创建时间</th>
+                <th width="250">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each(i, project) items}}
+            <tr class="xa-project" data-id="${project.id}">
+                <td class="p10" style="text-align:left;">
+                    <a class="xa-site-title" href="/termite2/page_editor/?project_id=${project.id}">${project.siteTitle}</a>
+
+                    <a class="xa-update-name ml10 xui-pencil-icon" href="javascript:void(0);"></a>
+                </td>
+                <td>${project.createdAt}</td>
+                <td style="text-align:left;">
+                    <a href="/termite2/page_editor/?project_id=${project.id}">编辑</a>
+                    <a class="ml10" href="/termite2/termite_preview/?id=${project.id}" target="_blank">预览</a>
+                    {{if !project.isActive}}
+                    <a class="xa-delete ml10" href="javascript:void(0);">删除</a>
+                    {{/if}}
+                    <a class="xa-copyLink ml10" href="javascript:void(0);">链接</a>
+                    {{if project.isActive}}
+                    <a class="ml10" href="javascript:void(0);" style="color:#999; text-decoration:none;">店铺主页</a>
+                    {{else}}
+                    <a class="xa-setActivePage ml10" href="javascript:void(0);">设置主页</a>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+var host = "{{request_host}}";
+$(document).ready(function() {
+    var pageLinkTemplate = null;
+
+    $('.xa-addProject').click(function(event) {
+        W.dialog.showDialog('W.dialog.termite.CreateProjectDialog', {
+            success: function(data) {
+                W.resource.termite2.Project.put({
+                    data: {
+                        source_template_id: data.id
+                    },
+                    success: function(data) {
+                        W.getLoadingView().show();
+                        _.delay(function() {
+                            window.location.href = '/termite2/page_editor/?is_new_project=1&project_id=' + data.project_id + '&page_id=' + data.page_id;
+                        }, 500);
+                    },
+                    error: function() {
+                        W.showHint('error', '创建模板失败！');
+                    }
+                });
+            }
+        });
+    });
+
+    $('.xa-enableWepage').click(function(event) {
+        W.resource.termite2.ActivateWepageMechanism.put({
+            data: {
+            },
+            success: function(data) {
+                W.showHint('success', '启用微页面成功!');
+                window.location.reload();
+            },
+            error: function() {
+                W.showHint('error', '创建模板失败！');
+            }
+        });
+    });
+
+    $('body').delegate('.xa-delete', 'click', function(event) {
+        var $link = $(event.target);
+        var $tr = $link.parents('tr');
+        var projectId = $tr.data('id');
+        W.requireConfirm({
+            $el: $link,
+            width: 400,
+            position:'top',
+            isTitle: false,
+            msg: '确认删除微页面？',
+            confirm: function() {
+                W.resource.termite2.Project.id(projectId).remove({
+                    success: function(data) {
+                        W.showHint('success', '删除微页面成功');
+                        $tr.remove();
+                    },
+                    error: function() {
+                        W.showHint('error', '删除微页面失败！');
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).delegate('.xa-copyLink', 'click', function(event) {
+        var $target = $(event.target);
+        var projectId = $target.parents('.xa-project').eq(0).data('id');
+        var urlLink = '/termite2/webapp_page/?project_id='+projectId;
+        var promotionCopyLinkView = W.getPromotionCopyLinkView({
+            width: 534,
+            height: 62,
+            title: '复制链接',
+            position:'top',
+            isTitle: false,
+            enableEdit: false,
+            privateContainerClass:'xui-termitePagesPage-copyLinkView'
+
+        });
+        promotionCopyLinkView.show({
+            $action: $target,
+            urlLink: urlLink
+        })
+    });
+
+    $(document).delegate('.xa-setActivePage', 'click', function(event) {
+        var $target = $(event.target);
+        var projectId = $target.parents('.xa-project').eq(0).data('id');
+        W.resource.termite2.ActiveProject.put({
+            data: {
+                id: projectId
+            },
+            success: function(data) {
+                W.getLoadingView().show();
+                W.showHint('success', '设置主页成功');
+                _.delay(function() {
+                    window.location.reload();                    
+                }, 1000);
+            },
+            error: function(resp) {
+                W.showHint('error', '设置主页失败，请稍后重试！');
+            }
+        });
+    });
+
+    $('.xa-qrcode').click(function(event) {
+        var $target = $(event.target);
+        var projectId = $target.parents('.xa-project').data('id');
+        var url = '/termite2/qrcode_image/?data=http://'+host+'/termite2/webapp_page/?project_id='+projectId;
+        var downloadUrl = '/termite2/qrcode_image/?download=1&data=http://'+host+'/termite2/webapp_page/?project_id='+projectId;
+        var html = '<div class="xui-page-qrcode"><p>微信扫一扫</p><img src="'+url+'"></div>';
+
+        W.popup({
+            $el: $target,
+            position:'top',
+            isTitle: false,
+            msg: $(html)
+        });
+    })
+
+
+    // 改名
+    var updateNameView = W.getTermiteUpdateNameView({
+        width: 330,
+        position:'top',
+        isTitle: false,
+        privateContainerClass:'xui-termiteUpdateNameDropBox'
+    });
+    updateNameView.bind("submit-finish", function(args){
+        console.log('aaaaaaa', args);
+        W.resource.termite2.Project.post({
+            data: {      
+                id: args.id,          
+                field: 'site_title',
+                value: args.name
+            },
+            success: function(data){
+                W.getLoadingView().show();
+                W.showHint('success', '修改成功');
+                _.delay(function() {
+                    window.location.reload();                    
+                }, 1000);
+            },
+            error: function(resp) {
+                W.showHint('error', '修改失败，请稍后重试！');
+            }
+        })
+
+    })
+    $('body').delegate('.xa-update-name', 'click', function(event) {
+        var $el = $(event.currentTarget);
+        var $tr = $el.parents('tr');
+        var id = $tr.attr('data-id');
+        var name = $tr.find('.xa-site-title').text();
+        updateNameView.show({
+            $action: $el,
+            modelId: id,
+            modelName: name
+        })
+
+    });
+
+});
+</script>
+
+{% endblock %}

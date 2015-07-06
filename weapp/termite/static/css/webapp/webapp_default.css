@@ -22,6 +22,10 @@ a:link, a:hover, a:visited {
     margin-bottom: 15px;
 }
 
+.xui-hide {
+    display: none;
+}
+
 /* 定制x color swatch样式 */
 .ui-bar-x > a > .ui-btn-inner {
     padding: 0.1em 10px 0.5em;

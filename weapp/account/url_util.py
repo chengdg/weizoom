@@ -78,7 +78,7 @@ def is_request_for_api(request):
 
 def is_request_for_webapp(request):
 	url = __get_request_url(request)
-	return ('/weixin/message/material/news_detail/mshow/' in url) or ('/jqm/preview/' in url) or ('/project_api/call' in url) or is_pay_request(request) or ('weshop/api/mall' in url) or is_pay_callback_request(request)
+	return ('/weixin/message/material/news_detail/mshow/' in url) or ('/termite2/webapp_page/' in url) or ('/jqm/preview/' in url) or ('/project_api/call' in url) or is_pay_request(request) or ('weshop/api/mall' in url) or is_pay_callback_request(request)
 
 def is_request_for_webapp_api(request):
 	url = __get_request_url(request)
@@ -88,6 +88,14 @@ def is_request_for_pcmall(request):
 	url = __get_request_url(request)
 	return url.find('/pcmall/') >= 0
 
+def is_request_for_temporary_qrcode_image(request):
+	'''
+	是否是生成临时二维码的接口
+	by liupeiyu 15.6.26
+	'''
+	url = __get_request_url(request)
+	return ('/termite2/qrcode_image/' in url)
+
 
 #是否是后台编辑请求
 def is_request_for_editor(request):
@@ -95,11 +103,13 @@ def is_request_for_editor(request):
 
 	# if request_domain is None:
 	# 	request_domain = request.META.get('SERVER_NAME', '')
+	if is_request_for_temporary_qrcode_image(request):
+		return True
 
-	return (not is_request_for_api(request)) and\
-			   (not is_request_for_webapp(request)) and\
-			   (not is_request_for_pcmall(request)) and\
-			   (not is_pay_request(request))
+	return  (not is_request_for_api(request)) and\
+				(not is_request_for_webapp(request)) and\
+				(not is_request_for_pcmall(request)) and\
+				(not is_pay_request(request))
 
 def is_request_for_weixin(request):
 	url = __get_request_url(request)

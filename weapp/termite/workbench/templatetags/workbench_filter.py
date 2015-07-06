@@ -29,6 +29,13 @@ RENDER_CONTEXT = {}
 def is_system_manager(user):
 	return user.username == 'manager'
 
+
+@register.filter(name='parse_json_str')
+def parse_json_str(json_str):
+	if json_str:
+		return json.loads(json_str)
+	else:
+		return None
 	
 @register.filter(name='get_design_page')
 def get_design_page(request, project):
@@ -38,6 +45,8 @@ def get_design_page(request, project):
 		return '/workbench/jqm_design_page/get/?project_id=%d&design_mode=1' % project.id
 	elif 'weapp' == project.type:
 		return '/workbench/jqm_design_page/get/?project_id=%d&design_mode=1' % project.id
+	elif 'wepage' == project.type:
+		return '/termite2/webapp_design_page/?project_id=%d&design_mode=1' % project.id
 
 
 @register.filter(name='get_workbench_actions')
@@ -189,9 +198,11 @@ def px2int(px_str):
 def to_swipe_images_json(component, request=None):
 	items = []
 	for sub_component in component['components']:
-		url = sub_component['model']['image']
-		link_url = extract_target_data(sub_component['model']['target'], request)
-		items.append({'url': url, 'link_url': link_url})
+		model = sub_component['model']
+		url = model['image']
+		link_url = extract_target_data(model['target'], request)
+		title = model['title']
+		items.append({'url':url, 'link_url':link_url, 'title':title})
 
 	return json.dumps(items)
 
@@ -532,6 +543,29 @@ def target_child_links(target, count=5, default_name=''):
 		})
 	return links
 
+@register.filter(name='category_child_links')
+def category_child_links(category, count=5, default_name=''):
+	links = []
+	index = 0
+	if '{' in category:
+		target_json = json.loads(category)
+		category_id = target_json[0]['id']
+		request = FakeRequest(None, None)
+		request.response_ajax = False
+		request.GET = {
+			"id": category_id,
+			"count": count
+		}
+		links = design_api_views.get_products_by_category_id(request)
+
+	while len(category) == 0 and len(links) < count:
+		index = index + 1
+		links.append({
+			"name": default_name,
+		})
+
+	return links
+
 @register.filter(name='default')
 def default(value, default):
 	return value if value else default
@@ -576,9 +610,10 @@ def get_component_product(component, owner_id):
 		component['product_id'] = product_id
 
 	# product = mall_api.get_product_by_id(product_id)
-	# 
-		from mall import module_api
-		product = module_api.get_product_detail(owner_id, product_id)
+	
+		product = mall_api.get_product_detail(owner_id, product_id)
+		Product.fill_display_price([product])
+
 	return product
 
 

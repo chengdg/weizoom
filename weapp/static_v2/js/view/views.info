@@ -39,6 +39,7 @@ mall_issuing_coupons_filter_view
 weixin_message_editor
 weixin_message_editor_popup
 weixin_embeded_phone
+termite_embeded_phone
 weixin_news_editor
 weixin_news
 weixin_edit_news_view
@@ -76,7 +77,11 @@ mall_coupon_filter_view
 weixin2_fans_analysis
 weixin2_bought_fans_analysis
 weixin2_fans_keyword
+weixin2_qrcode_order_advanced_table_view
 weixin_qrcode_list_view
 weixin_addqrcode_filter_view
 weixin_qrcode_prize
-weixin2_qrcode_order_advanced_table_view
+workbench_page_manager_view
+workbench_phone_view
+workbench_property_view
+termite_module_update_name

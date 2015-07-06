@@ -34,10 +34,10 @@ from account.models import UserProfile
 from mall.models import PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY
 
 
-#===============================================================================
-# show_design_page : 显示设计页面
-#===============================================================================
 def show_design_page(request):
+	"""
+	显示设计页面
+	"""
 	project_id = request.GET['project_id']
 	page_id = request.GET.get('page_id', None)
 	project = Project.objects.get(id=project_id)
@@ -61,8 +61,11 @@ def show_design_page(request):
 			'project_css': project_css,
 			'page_html_content': html
 		})
+
 		if project.inner_name == 'dress':
 			return render_to_response('workbench/jqm_design_page.html', c)
+		elif 'wepage_' in project.inner_name:
+			return render_to_response('workbench/wepage_design_page.html', c)
 		else:
 			return render_to_response('workbench/new_jqm_design_page.html', c)
 

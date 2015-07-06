@@ -14,6 +14,7 @@ from django.conf import settings
 from pymongo import Connection
 import pymongo
 from bson.objectid import ObjectId
+from mall.models import ProductCategory
 
 
 class PageStore(object):
@@ -71,9 +72,36 @@ class PageStore(object):
 
 
 	#######################################################################
+	# save_preview_page: 保存page
+	#######################################################################
+	def save_preview_page(self, project_id, page_id, page_component):
+		now = self.get_now()
+		page = self.db.preview_page.find_one({'project_id':project_id, 'page_id':page_id}, limit=1)
+		if page:
+			pp_id = '%s_%s' % (project_id, page_id)
+			self.db.preview_page.update({'pp_id': pp_id}, {'$set': {'component': page_component}})
+		else:
+			#创建page
+			page = {
+				'project_id': project_id,
+				'page_id': page_id,
+				'display_index': page_id,
+				'pp_id': '%s_%s' % (project_id, page_id),
+				'created_at': now,
+				'updated_at': now,
+				'component': page_component
+			}
+			self.db.preview_page.insert(page, safe=True)
+
+		return now
+
+	#######################################################################
 	# save_page: 保存page
 	#######################################################################
 	def save_page(self, project_id, page_id, page_component):
+		if page_id == "preview":
+			return self.save_preview_page(project_id, page_id, page_component)
+
 		now = self.get_now()
 		is_new_created_page = page_component.get('is_new_created', False)
 		if not is_new_created_page:
@@ -127,6 +155,8 @@ class PageStore(object):
 		page_components = []
 		for page in pages:
 			page_components.append(page['component'])
+
+		page_components = self.__filter_replace(page_components)
 		return page_components
 
 
@@ -145,7 +175,10 @@ class PageStore(object):
 			return self.get_first_page(project_id)
 		else:
 			pp_id = '%s_%s' % (project_id, page_id)
-			result = self.db.page.find_one({'pp_id': pp_id})
+			if page_id == 'preview':
+				result = self.db.preview_page.find_one({'pp_id': pp_id})
+			else:
+				result = self.db.page.find_one({'pp_id': pp_id})
 			return result
 
 
@@ -320,5 +353,45 @@ class PageStore(object):
 		record['id'] = str(record['_id'])
 		return record
 
+
+	#######################################################################
+	# __filter_replace: 过滤替换component
+	#######################################################################
+	def __filter_replace(self, pages):
+		for i in range(0, len(pages)):
+			delete_ids = []
+			components = pages[i]["components"]
+			for j in range(0, len(components)):
+				component = components[j]
+				if component["type"] == 'wepage.item_list':
+					component = self.__update_category(component)
+					if component:
+						pages[i]["components"][j] = self.__update_category(component)
+					else:
+						delete_ids.append(j)
+
+			for id in delete_ids:
+				del pages[i]["components"][id]			
+
+		return pages
+
+
+	#######################################################################
+	# __update_category: 更新分组信息
+	#######################################################################
+	def __update_category(self, component):
+		category = component["model"].get("category")
+		if category:
+			category = json.loads(category)
+			if len(category) > 0:
+				cateoryId = category[0]["id"]
+				categories = ProductCategory.objects.filter(id=cateoryId)
+				if categories.count() == 0:
+					component = None
+				else:
+					category[0]["title"] = categories[0].name
+					component["model"]["category"] = json.dumps(category)
+
+		return component
 
 pagestore = PageStore()

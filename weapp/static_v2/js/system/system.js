@@ -11,6 +11,18 @@ W = {
 	mall: {},
 	member: {},
 	weixin2: {},
+	//for termite
+	data: {mobile:{}, viper:{}},
+	design: {},
+	util: {
+		$M:null, //$M是iframe中的jQuery
+		mobilePageDragComponentHandler: $.noop,
+		changeComponentInDesignPageHandlers: [], //design page中切换component的响应函数集合
+		getInsertIndicatorLayoutInMobilePage: $.noop
+	},
+	view: {
+		cssEditorView: null,
+	}
 }
 
 /**
@@ -215,6 +227,25 @@ W.DelayedTask = function(fn, scope, args) {
         }
     };
 };
+
+
+/**
+ * 扩展underscore _.clone
+ */
+_.deepClone = function(obj) {
+	if (!_.isObject(obj)) return obj;
+	if (_.isFunction(obj)) return obj;
+	var isArr = (_.isArray(obj) || _.isArguments(obj));
+	var func = function (memo, value, key) {
+		if (isArr) {
+			memo.push(_.deepClone(value));
+		} else {
+			memo[key] = _.deepClone(value);
+		}
+		return memo;
+	};
+	return _.reduce(obj, func, isArr ? [] : {});
+}
 
 
 // 系统错误码

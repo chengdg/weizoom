@@ -108,7 +108,7 @@ def get_web_views(version):
 	views = []
 	for dir in dirs:
 		views_dir_path = os.path.join(dir['module_parent'], dir['module'], 'js/view')
-		print("views_dir_path: {}".format(views_dir_path))
+		#print("views_dir_path: {}".format(views_dir_path))
 
 		if not os.path.exists(views_dir_path):
 			continue
@@ -150,6 +150,7 @@ def get_web_views(version):
 			else:
 				js_url_path = '/%s/js/view/%s/view.js' % (dir['url_path'], view_name)
 				
+			#print('js_file_path:{}'.format(js_file_path))
 			views.append({
 				'template_file_path': template_file_path,
 				'template_source': template_source,

@@ -266,7 +266,7 @@ class ProjectMiddleware(object):
 		#保留逻辑，兼容升级到只是用webapp_owner_id的机制之前的url
 		project_id = None
 		request.project = None
-		if ('/jqm/preview/' in request.path) and ('workspace_id' in request.GET) and (not 'project_id' in request.GET) and (not 'webapp_owner_id' in request.GET) and (not 'woid' in request.GET):
+		if (('/termite2/webapp_page/' in request.path) or ('/jqm/preview/' in request.path)) and ('workspace_id' in request.GET) and (not 'project_id' in request.GET) and (not 'webapp_owner_id' in request.GET) and (not 'woid' in request.GET):
 			import urllib
 			workspace = Workspace.objects.get(id=request.GET['workspace_id'])
 			#project_id = workspace.template_project_id

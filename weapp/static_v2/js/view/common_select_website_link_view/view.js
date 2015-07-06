@@ -22,17 +22,20 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 	initialize: function(options) {		
 		this.$el = $(this.el);
         var _this = this;
+        this.menuEvent = null;
+        this.isShowMenu = false;
+        this.actionRoleId = null;
+        this.linkCustomeType = "custom";
+
         W.getApi().call({
             app: 'webapp',
             api: 'tools/get',
+            async: false,
             // scope: this,
             success: function(tools) {
                 $('body').append($.tmpl(_this.getTemplate(), tools));
 
                 _this.$menu = $('.xa-linkActionMenu').eq(0);
-                _this.isShowMenu = false;
-                _this.actionRoleId = null;
-                _this.linkCustomeType = "custom";
 
                 _this.tools = tools;
                 _this.initMenuData();
@@ -78,6 +81,8 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 	onClickLinkMenu: function(event, parentEl){	
         event.stopPropagation();
         event.preventDefault();
+        
+        this.menuEvent = event;
         var $icon = $(event.currentTarget);
         this.showActionMenu($icon, parentEl);
 	},
@@ -140,6 +145,12 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
                 else if(t.type == 'product'  || t.type == 'category')
                     newTitle.push(t)
             })
+
+            // 微页面
+            if (menuType == 'webappPage') {
+                newTitle = title;
+            }
+            
 			W.dialog.showDialog('W.dialog.weixin.SelectWebSiteLinkDialog', {
 				title: newTitle,
 				menuType: menuType,
@@ -148,7 +159,8 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 				getLinkTargetJsonFun: _this.getLinkTargetJson,
 				success: function(data) {
     				_this.setEditHtml(data, true);
-    				_this.trigger('finish-select-url', data)
+    				_this.trigger('finish-select-url', data);                    
+                    W.Broadcaster.trigger('link-url:selected', _this.menuEvent, data);
 				}
 			});
     	} else {
@@ -158,7 +170,8 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 	            return false;
 	        }
     		this.setEditHtml(data, true);
-    		this.trigger('finish-select-url', data)
+    		this.trigger('finish-select-url', data);
+            W.Broadcaster.trigger('link-url:selected', this.menuEvent, data);
     	}
     },
 

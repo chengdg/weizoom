@@ -18,6 +18,7 @@ from account.models import OperationSettings
 from product import module_api as weapp_product_api
 
 from account.url_util import is_request_for_webapp
+from utils import component_template_util
 
 #from weixin import cache_util as weixin_cache_util
 #from cache import webapp_cache
@@ -41,6 +42,14 @@ def first_navs(request):
 
 def cdn_host(request):
 	return {'cdn_host': settings.CDN_HOST}
+
+
+def handlebar_component_templates(request):
+	components_dir = '%s/../termite/static/termite_js/app/component/wepage' % settings.PROJECT_HOME
+	handlebar_template = component_template_util.generate_handlebar_template(components_dir)
+	return {'handlebar_component_template': handlebar_template}
+
+
 
 #added by chuter
 def page_title(request):
@@ -317,7 +326,7 @@ def weapp_dialogs_old(request):
 #===============================================================================
 def weapp_dialogs(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('/card/' in request.path):
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -334,8 +343,7 @@ def weapp_dialogs(request):
 #===============================================================================
 def weapp_views(request):
 	items = []
-	print request.path
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('/card/' in request.path):
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -352,7 +360,7 @@ def weapp_views(request):
 #===============================================================================
 def weapp_models(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('/card/' in request.path):
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -455,7 +463,7 @@ def detect_member_operate_capability(request):
 # detect_footer_visibility ：获取是否显示footer
 #===============================================================================
 def detect_footer_visibility(request):
-	if not 'jqm/preview' in request.path:
+	if not (('jqm/preview' in request.path) or ('termite2/webapp_page' in request.path)):
 		return {'should_hide_footer': True}
 
 	if hasattr(request, 'member') and not request.member:

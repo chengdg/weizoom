@@ -69,9 +69,9 @@ W.resource.Resource.prototype.post = function(options) {
 	return this.__callApi('post', options);
 }
 
-// W.resource.Resource.prototype.delete = function(options) {
-// 	options = options || {};
-// 	return this.__callApi('delete', options);
-// }
+W.resource.Resource.prototype.remove = function(options) {
+	options = options || {};
+	return this.__callApi('delete', options);
+}
 
 })()

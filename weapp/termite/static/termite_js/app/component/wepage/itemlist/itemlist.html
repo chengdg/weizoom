@@ -1,0 +1,48 @@
+{% load workbench_filter %}
+
+{% if component.type == 'wepage.item_list' %}
+<div class="wui-productlist {% if component.model.itemname %}wui-productTitle{% endif %}" 
+    data-component-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+>
+    <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}}">
+        {% with component.runtime_data.products as products %}
+            {% for product in products %}
+            <li>
+                <a class="wui-inner-box{% cycle '1' '2' '3' %}" href="{{product.url}}">
+                    <div class="wui-inner-pic">
+                        {% if product.thumbnails_url %}
+                        <img src="{{product.thumbnails_url}}" />
+                        {% else %}
+                        <p class="xui-productTitle">{% firstof product.name '商品列表' %}</p>
+                        {% endif %}
+                    </div>
+                    <div class="wui-inner-titleAndprice">
+                        <p class="wa-inner-title xui-inner-title"
+                            {% if component.model.itemname %}
+                            {% else %}
+                                {% if component.model.type == '3' %}
+                                {% else %}
+                                    style="display:none;"
+                                {% endif %}
+                            {% endif %}
+                        >{% firstof product.name '此处显示商品名称' %}</p>
+                        <p class="wa-inner-price xui-inner-price 
+                        {% if component.model.type == '3' %}
+                        {% else %}
+                            {% if component.model.card_type == '1' %}
+                            {% else %}
+                                {% if component.model.itemname %}
+                                xui-border
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}">¥{% firstof product.display_price '234.0' %}</p>
+                    </div>
+                    <div class="wa-inner-shopCar wui-inner-shopCar wui-shopCar-style{{component.model.style}}"></div>
+                </a>
+            </li>
+            {% endfor %}
+        {% endwith %}
+    </ul>
+</div>
+{% endif %}

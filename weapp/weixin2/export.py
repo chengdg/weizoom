@@ -50,11 +50,6 @@ FIRST_NAVS = [{
     'url': '/apps/',
     'inner_name': '',
     'permission': ''
-}, {
-    'name': u'模板',
-    'url': '/webapp/template/',
-    'inner_name': '',
-    'permission': ''
 }]
 
 

@@ -1,0 +1,73 @@
+<script id="termite-select-website-data-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-termiteSelectWebsiteDataDialog" id="termiteSelectWebsiteDataDialog">
+	<div class="modal-dialog modal-lg" style="width: 800px;">
+	<div class="modal-content">
+		<div class="modal-header" style="margin-bottom: 10px;">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				选择图文
+			</h3>
+		</div>
+		
+		<div class="modal-body" style="min-height: 300px; max-height: 600px; overflow: auto;">
+			<div class="mb10 clearfix">
+				<a href="/new_weixin/single_news/" target="_blank" class="btn btn-success xa-addItem w150"><span class="mr5 pr">+</span>新建<span class="xa-itemName"></span></a>
+				<div class="fr">
+					<input class="form-control xa-query xui-search-text" value=""><span class="xa-search xui-searchBtn cursor-pointer btn btn-primary">搜索</span>
+				</div>
+			</div>
+
+			<div
+				data-ui-role="advanced-table"
+				data-app="termite2"
+				data-resource="webapp_datas"
+				data-template-id="#termite-select-website-data-dialog-table"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-item-count-per-page="20"
+				data-auto-load="false"
+				class="mb20"
+			></div>
+		</div>
+
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">完成选择</button> 
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="termite-select-website-data-dialog-table" type="text/x-jquery-tmpl">
+	{{if items.length > 0}}
+	<table id="pageTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition">
+		<thead style="background:#c8d2e5;">
+			<tr>
+				<th>标题</th>
+				<th width="200">创建时间</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+            {{each(i, item) items}}
+			<tr class="xb-stripedTable" data-id="${item.id}" data-link="${item.link}" data-title="${item.name}">
+				<td>
+					${item.name}
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+				<td>	
+					<label class="btn lh20 btn-primary {{if item.isChecked}}checked{{/if}}" style="border-radius:3px;">
+						<input type="checkbox" autocomplete="off" class="xa-checkbox" {{if item.isChecked}}checked="checked"{{/if}}><span>{{if item.isChecked}}已选取{{else}}选取{{/if}}</span>
+					</label>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+    {{else}}
+        还没有数据
+    {{/if}}
+</script>

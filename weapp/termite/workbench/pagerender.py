@@ -18,6 +18,7 @@ from django.template import Template
 from termite.core import stripper
 from webapp import views as webapp_views 
 from models import *
+from mall.models import ProductCategory
 
 
 type2template = {}
@@ -162,14 +163,20 @@ def __render_component(request, page, component, project):
 
 	#获取所有sub component的html片段
 	sub_components = component.get('components', [])
+	component['sub_component_count'] = len(sub_components)
 	sub_components.sort(lambda x,y: cmp(x['model']['index'], y['model']['index']))
 	for sub_component in sub_components:
-		sub_component['parent_component'] = component
-		sub_component['html'] = __render_component(request, page, sub_component, project)
-		#将sub_component的信息放入component中
-		sub_component_type = sub_component['type'].replace('.', '')
-		if not sub_component_type in component:
-			component[sub_component_type] = sub_component
+		if sub_component['type'] == 'wepage.item_list':
+			# 过滤 商品列表 更新分类信息
+			sub_component = __update_category(sub_component)
+
+		if sub_component:
+			sub_component['parent_component'] = component
+			sub_component['html'] = __render_component(request, page, sub_component, project)
+			#将sub_component的信息放入component中
+			sub_component_type = sub_component['type'].replace('.', '')
+			if not sub_component_type in component:
+				component[sub_component_type] = sub_component
 
 	#处理javascript, javascript片段在model中，以event:onclick的形式存储
 	for field, value in component['model'].items():
@@ -207,6 +214,25 @@ def __render_component(request, page, component, project):
 	print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
 	'''
 	return content
+
+
+#######################################################################
+# __update_category: 更新分组信息
+#######################################################################
+def __update_category(component):
+	category = component["model"].get("category")
+	if category:
+		category = json.loads(category)
+		if len(category) > 0:
+			cateoryId = category[0]["id"]
+			categories = ProductCategory.objects.filter(id=cateoryId)
+			if categories.count() == 0:
+				component = None
+			else:
+				category[0]["title"] = categories[0].name
+				component["model"]["category"] = json.dumps(category)
+
+	return component
 
 
 #设置别名，方便别的文件调用

@@ -73,6 +73,10 @@ class CleanUpCookieMiddleware(object):
 			#如果是对webapp的请求，不进行任何处理
 			return None
 
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
+			return None
+
 		#不处理非webapp和非pcmall的请求
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
@@ -293,7 +297,14 @@ class RedirectBySctMiddleware(object):
 		#added by slzhu
 		if is_pay_request(request):
 			return None
+
+		if request.is_access_temporary_qrcode_image:
+			return None
 			
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
+			return None
+
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
 
@@ -361,6 +372,10 @@ class RedirectByFmtMiddleware(object):
 			return None
 
 		if is_js_config(request):
+			return None
+
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
 			return None
 
 		#不处理非webapp和非pcmall的请求
@@ -442,6 +457,10 @@ class RequestSocialAccountMiddleware(object):
 		if is_js_config(request):
 			return None
 		
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
+			return None
+
 		#对于非webapp请求和非pc商城的请求不进行任何处理
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			request.social_account = None
@@ -536,6 +555,10 @@ class MemberMiddleware(object):
 		if is_js_config(request):
 			return None
 		
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
+			return None
+
 		#不处理非webapp和非pcmall的请求
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
@@ -698,6 +721,10 @@ class WebAppUserMiddleware(object):
 		if is_js_config(request):
 			return None
 		
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
+			return None
+
 		if not request.is_access_webapp and not is_paynotify_request(request):
 			return None
 
@@ -814,6 +841,10 @@ class AddUuidSessionMiddleware(object):
 		if request.is_access_pay or request.is_access_paynotify_callback:
 			return None
 
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
+			return None
+
 		#对于非webapp请求和非pc商城地方请求不进行处理
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
@@ -880,6 +911,10 @@ class OAUTHMiddleware(object):
 
 		#不处理非微信请求
 		if not request.user.is_from_weixin:
+			return None
+
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
 			return None
 
 		#对于非webapp请求和非pc商城地方请求不进行处理

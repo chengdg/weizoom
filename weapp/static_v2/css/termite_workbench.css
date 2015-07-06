@@ -1,0 +1,1187 @@
+body {
+	/*
+	overflow-x: hidden;
+	background: url("/termite_static/img/builder_bg_texture_tile.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+	*/
+	font-family: "宋体";
+}
+.star_show:before {
+	top: -3px;
+}
+.colpick {
+	z-index: 9001;
+}
+
+
+.xui-workbench {
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    /*margin-top: 50px;*/
+}
+
+.xui-workbench-rightPanel {
+	margin-top: 0px;
+	margin-left: 10px;
+	max-width: 537px;
+	padding: 20px;
+	/*padding-top: 0;*/
+	/*公告有影响*/
+	border: solid 1px #CCC;
+	background-color: white;
+	overflow: hidden;
+	z-index: 1000;
+	/*min-height: 200px;*/
+	/*公告有影响*/
+	background-color: #F9F9F9;
+}
+
+
+/**
+ * page manager样式
+ */
+.xui-pageManager .xui-i-pages {
+	height: 204px;
+    overflow: auto;
+}
+
+
+/************************************************************************
+ * 左右两侧一个section样式
+ ************************************************************************/
+.xui-section {
+}
+.xui-section .xui-i-header {
+	position: relative;
+	padding: 10px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	text-align: center;
+}
+.xui-section .xui-i-content {
+	background-color: #FBFBF9;
+	overflow: auto;
+}
+.xui-section .xui-i-actionBar {
+	float: right;
+	height: 20px;
+}
+.xui-section .xui-i-actionLink {
+	padding: 4px;
+	font-size: 16px;
+}
+.xui-section a.xui-i-actionLink:link, .xui-section a.xui-i-actionLink:visited {
+	color: #333;
+}
+.xui-section a.xui-i-actionLink:hover {
+	color: #0000FF;
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * 底部action bar的样式
+ */
+.xui-bottomActionBar {
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	padding: 10px;
+	background: rgba(0,0,0,0.2);;
+	text-align: center;
+	z-index: 1001;
+}
+
+
+
+
+
+
+
+
+/************************************************************************
+ * component list view 部分样式
+ ************************************************************************/
+.xui-componentList .xui-component {
+	float: left;
+	width: 94px;
+	height: 76px;
+	text-align: center;
+	text-shadow: 0px 1px 0px #eee;
+	cursor: pointer;
+	z-index: 100;
+	margin-bottom:5px;
+}
+/*.xui-component:hover {
+	background-color: #FFFD91;
+}*/
+.xui-component .xui-i-img {
+	width: 39px;
+	height: 45px;
+	margin: 14px auto 0px;
+}
+.xui-component .xui-i-label {
+	width: 94px;
+	/*text-align: center;*/
+	/*padding-left: 11px;*/
+	color: #333;
+}
+.componentList_component_header {
+	background: url(/termite_static/img/component/builder_component_header.png) no-repeat transparent;
+}
+.componentList_component_footer {
+	background: url(/termite_static/img/component/builder_component_footer.png) no-repeat transparent;
+}
+.componentList_component_tab_bar {
+	background: url(/termite_static/img/component/builder_component_tab_bar.png) no-repeat transparent;
+}
+.componentList_component_nav_bar {
+	background: url(/termite_static/img/component/builder_component_nav_bar.png) no-repeat transparent;
+}
+.componentList_component_button {
+	background: url(/termite_static/img/component/builder_component_button.png) no-repeat transparent;
+}
+.componentList_component_link {
+	background: url(/termite_static/img/component/builder_component_link.png) no-repeat transparent;
+}
+.componentList_component_image {
+	background: url(/termite_static/img/component/builder_component_image.png) no-repeat transparent;
+}
+.componentList_component_heading {
+	background: url(/termite_static/img/component/builder_component_heading.png) no-repeat transparent;
+}
+.componentList_component_hr {
+	background: url(/termite_static/img/component/builder_component_hr.png) no-repeat transparent;
+}
+.componentList_component_textblock {
+	background: url(/termite_static/img/component/builder_component_textblock.png) no-repeat transparent;
+}
+.componentList_component_html {
+	background: url(/termite_static/img/component/builder_component_html.png) no-repeat transparent;
+}
+.componentList_component_form {
+	background: url(/termite_static/img/component/builder_component_form.png) no-repeat transparent;
+}
+.componentList_component_text_input {
+	background: url(/termite_static/img/component/builder_component_text_input.png) no-repeat transparent;
+}
+.componentList_component_search {
+	background: url(/termite_static/img/component/builder_component_search.png) no-repeat transparent;
+}
+.componentList_component_datepicker {
+	background: url(/termite_static/img/component/builder_component_datepicker.png) no-repeat transparent;
+}
+.componentList_component_text_area {
+	background: url(/termite_static/img/component/builder_component_text_area.png) no-repeat transparent;
+}
+.componentList_component_toggle_switch {
+	background: url(/termite_static/img/component/builder_component_toggle.png) no-repeat transparent;
+}
+.componentList_component_slider {
+	background: url(/termite_static/img/component/builder_component_slider.png) no-repeat transparent;
+}
+.componentList_component_radio {
+	background: url(/termite_static/img/component/builder_component_radio.png) no-repeat transparent;
+}
+.componentList_component_checkbox {
+	background: url(/termite_static/img/component/builder_component_checkbox.png) no-repeat transparent;
+}
+.componentList_component_submit {
+	background: url(/termite_static/img/component/builder_component_submit.png) no-repeat transparent;
+}
+.componentList_component_select_menu {
+	background: url(/termite_static/img/component/builder_component_select_menu.png) no-repeat transparent;
+}
+.componentList_component_panel {
+	background: url(/termite_static/img/component/builder_component_panel.png) no-repeat transparent;
+}
+.componentList_component_video {
+	background: url(/termite_static/img/component/builder_component_youtube.png) no-repeat transparent;
+}
+.componentList_component_map {
+	background: url(/termite_static/img/component/builder_component_map.png) no-repeat transparent;
+}
+.componentList_component_listview {
+	background: url(/termite_static/img/component/builder_component_listview.png) no-repeat transparent;
+}
+.componentList_component_collapsible {
+	background: url(/termite_static/img/component/builder_component_collapsible.png) no-repeat transparent;
+}
+.componentList_component_grid {
+	background: url(/termite_static/img/component/builder_component_grid.png) no-repeat transparent;
+}
+.componentList_component_swipe_image {
+	background: url(/termite_static/img/component/builder_component_swipe_image.png) no-repeat transparent;
+}
+/*=====================================组件图片替换======================================*/
+.xui-component{
+	width: 72px;
+	height: 60px;
+	border:1px solid #E6E6E6;
+	box-sizing:border-box;
+	background: #fff;
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+.componentList_component_richtext,.componentList_component_product,.componentList_component_product_list,
+.componentList_component_image_adv,.componentList_component_text_nav,.componentList_component_image_nav,
+.xui-component .componentList_component_title,.xui-component .componentList_component_notice,
+.componentList_component_black,.componentList_component_showcase,.xui-addDynamicComponentTrigger,
+.xui-selectBtn .xui-selectedIcon,
+.xui-propertyView-pageHeader .propertyGroup_property:nth-child(3) .propertyGroup_property_dialogSelectField button{
+	background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
+	-webkit-background-size: 345px 91px;
+	background-size: 345px 91px;
+}
+.propertyGroup_property_colorPickerField .xui-i-triggerButton {
+	background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
+	-webkit-background-size: 345px 91px;
+	background-size: 345px 91px;
+	width: 18px;
+	min-width: 18px;
+	height: 18px;
+	background-position: -261px -20px;
+	padding: 0;
+}
+.xui-component .componentList_component_black {
+	width: 51px;
+	background-position:-142px -46px;
+}
+.xui-component .componentList_component_image_adv {
+	width: 51px;
+	background-position:-143px 0;
+}
+.xui-component .componentList_component_showcase {
+	height: 46px;
+	background-position:-194px -45px;
+}
+.xui-component .componentList_component_image_nav {
+	width: 51px;
+	height: 46px;
+	background-position:-92px -45px;
+}
+.xui-component .componentList_component_product {
+	background-position:-46px 0;
+}
+.xui-component .componentList_component_product_list {
+	width: 51px;
+	background-position:-91px 0;
+}
+.xui-component .componentList_component_subline {
+	background: url(/termite_static/img/component/component_subline.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.xui-component .componentList_component_relate_link {
+	background: url(/termite_static/img/component/component_relate_link.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.xui-component .componentList_component_richtext {
+	background-position:3px 0;
+}
+.xui-component .componentList_component_text_nav {
+	height: 46px;
+	width: 51px;
+	background-position:-40px -45px;
+}
+.xui-component .componentList_component_title {
+	background-position: 0 -44px;
+}
+.xui-component .componentList_component_notice {
+	background-position: -196px 0;
+}
+.xui-component .componentList_component_page_header {
+	background: url(/termite_static/img/component/component_page_header.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.xui-component .componentList_component_header_nav {
+	background: url(/termite_static/img/component/component_page_header.png) no-repeat transparent 10px 0px;
+	-webkit-background-size: 50px 50px;
+	background-size: 50px 50px;
+}
+.propertyGroup_property_dialogSelectField .xui-i-triggerButton {
+	text-align: left;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+
+
+
+
+
+
+/*
+ * phone区域样式
+ */
+.xui-workbench-phonePanel {
+    position: relative;
+    width: 357px;
+    min-height: 500px;
+}
+.xui-workbench-phonePanel .xui-i-actionBar {
+	float: none;
+	position: absolute;
+    right: 10px;
+    top: 4px;    
+}
+.xui-phone {
+	width: 414px;
+	margin: 0px 0px 20px 0px;
+	position: relative;
+	background-image: url('/static_v2/img/termite2/weixin_bg_top.png'),url('/static_v2/img/termite2/weixin_bg_bottom.png'),url('/static_v2/img/termite2/weixin_bg_md.png');
+	background-repeat: no-repeat,no-repeat,repeat-y;
+	background-position: top center,bottom center,center;
+	width: 357px;
+	min-height: 680px;
+	/* text-align: center; */
+	position: relative;
+	padding-top: 154px ;
+	padding-bottom: 80px;
+	padding-bottom: 100px;
+}
+.xui-phone iframe {
+	border: 0;
+	width: 100%;
+	height: 100%;
+	/*border-radius: 5px;*/
+	background-color: #F5F5F5;
+}
+.xui-phone .xui-i-skin {
+    padding-left: 18px;
+    padding-right: 19px;
+    position: relative;
+    /*height: 425px;*/
+    min-height: 425px;
+    /*
+    width: 380px;
+    */
+}
+.xui-phone .xui-i-skinCover {
+	width: 380px;
+	background-color: rgba(0, 0, 0, 0.1);
+	height: 100%;
+	z-index: 99;
+	position: absolute;
+	top: 0px;
+	left: 15px;
+}
+.xui-phone .xui-i-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #FFF;
+	position: absolute;
+	top: -28px;
+	left: 0px;
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+}
+
+.xui-phone .xui-i-title span {
+	width: 190px;
+	display: block;
+	margin: auto;
+	overflow: hidden;
+	height: 20px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+
+
+
+
+
+
+
+
+/**
+ * add page dialog样式
+ */
+.xui-workbenchAddPageDialog .form-group {
+	width: 300px;
+}
+.xui-workbenchAddPageDialog .col-sm-3, .xui-workbenchAddPageDialog .col-sm-9 {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+/************************************************************************
+ * property view部分样式
+ ************************************************************************/
+#propertyView {
+	font-size: 12px;
+}
+.propertyGroup:last-child {
+	border-bottom: none;
+}
+.propertyGroup_title {
+	font-size: 14px;
+	padding: 3px 5px;
+	font-weight: bold;
+	margin-right: 5px;
+	margin-left: 1px;
+	background-color: #888;
+	color: white;
+	text-shadow: 0 1px 0 #BFBFBF;
+}
+.propertyGroup_property_horizontalField .propertyGroup_property_label {
+	display: inline-block;
+	min-width: 44px;
+	width: 60px;
+	/*background-color: #EFEFEF;*/
+	height: 24px;
+	line-height: 24px;
+	text-align: right;
+	margin-right: 12px;
+	vertical-align: top;
+}
+.propertyGroup_property_horizontalField .long-label {
+	width: 160px;
+}
+.propertyGroup_property_horizontalField .propertyGroup_property_input {
+	display: inline-block;
+	/*width: 176px;*/
+	/*line-height: 24px;*/
+	/*图片导航样式影响*/
+	/* color: #999; */
+}
+.propertyGroup_property_textField .propertyGroup_property_input{
+	/*border: 1px solid #ddd;*/
+	/*有问题单独加,公告有影响*/
+}
+.propertyGroup_property_horizontalField .short-input {
+	width: 50px;
+}
+.propertyGroup_property_horizontalField .propertyGroup_property_input input[type="text"] {
+	height: 22px;
+	/*标题要求22*/
+	padding: 1px 2px;
+	width: 180px;
+	margin: 0px;
+	/*margin-left: -5px;*/
+}
+.propertyGroup_property_textareaField .propertyGroup_property_input textarea {
+	height: 100px;
+}
+.propertyGroup_property_dynamicControlField h3 {
+	position: relative;
+	margin: 0px 5px;
+	padding: 3px;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 17px;
+	border-radius: 2px 2px 0 0;
+    border: solid 1px #CCC;
+}
+.propertyGroup_property_dynamicControlField .icon-remove {
+	cursor: pointer;
+}
+.propertyGroup_property_dynamicControlField_title span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap; 
+	max-width: 200px; 
+	display: inline-block;
+}
+.propertyGroup_property_dynamicControlField_title {
+	cursor: move;
+}
+.propertyGroup_property_dynamicControlField_content {
+	/*width: 378px;
+	padding:20px;
+	background-color: #fff;
+	border: solid 1px #E6E6E6;*/
+	font-size: 12px;
+}
+.propertyGroup_property_dynamicControlField_content .star_show:before{
+	position: relative;
+	top:-3px;
+}
+.propertyGroup_property_dynamicControlField_content .propertyGroup_property_label {
+	width: 70px;
+}
+.propertyGroup_property_horizontalField {
+	min-height: 36px;
+}
+.xui-propertyView-productGroup .propertyGroup_property_dynamicControlField_content {
+	width: 60px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+.xui-propertyView-productGroup .xui-addDynamicComponentTrigger {
+	margin-left: 10px;
+}
+.xui-propertyView-productGroup .propertyGroup_property_imageButtonField img {
+	width: 60px;
+	height: 60px;
+}
+
+
+/*移除按钮*/
+button.xui-removeImageButton{
+	position: absolute;
+	top:-11px;
+	right: 0px;
+	font-size: 14px;
+}
+.xui-removeImageButton span{
+	color: #fff;
+	display: block;
+	width: 14px;
+	height: 14px;
+	background: rgba(0,0,0,0.45);
+	border-radius: 50%;
+}
+
+
+/*图片添加按钮*/
+.xui-product{
+	/*width: 336px;*/
+	/*文本导航有影响宽度需要调整*/
+	padding-top:10px;
+	/*overflow: hidden;*/
+	/*float: right;*/
+}
+.propertyGroup_property_dynamicControlField_buttons{
+	/*display: inline-block;*/
+	float: left;
+	position: relative;
+	top:-10px;
+}
+.xui-addDynamicComponentTrigger{
+	width: 60px;
+	height: 60px;
+	background-position: -282px 0;
+}
+
+
+
+/*导航名称右侧样式*/
+.propertyGroup_property_dynamicControlField_control{
+	margin-bottom: 10px;
+	position: relative;
+}
+.xui-addDynamicComponent{
+	padding-left: 20px;
+	width: 377px;
+	height: 40px;
+	border: 1px dashed #CCCCCC;
+	line-height: 40px;
+	color: #1183CA;
+	cursor: pointer;
+	background: #fff;
+}
+.xui-addDynamicComponent span{
+	color: #1161B6;
+	font-size: 16px;
+}
+.xui-link{
+	color: #1183C9;
+}
+.xui-propertyView-textNavGroup{
+	width: 380px;
+}
+/*.xui-text{
+	width: 378px;
+	padding:20px;
+	background-color: #fff;
+	border: solid 1px #E6E6E6;
+}*/
+
+
+/*商品右侧编辑样式*/
+.propertyGroup_property_dynamicControlField .propertyGroup_property_dynamicControlField_control{
+	/*display: inline-block;*/
+	float: left;
+}
+.propertyGroup_property_productStyleContainerField .propertyGroup_property_label{
+	width: 60px;
+}
+.propertyGroup_property_productStyleContainerField .xui-styleType{
+	padding-bottom: 16px;
+}
+.propertyGroup_property_productStyleContainerField .xui-imgType label{
+	margin-right: 14px;
+}
+
+.propertyGroup_property_productStyleContainerField .xui-nameBlock{
+	padding-top: 16px;
+}
+.propertyGroup_property_productStyleContainerField .xui-nameBlock input{
+	position: relative;
+	top: 3px;
+}
+.xui-propertyView-productGroup .xui-product{
+	overflow: hidden;
+}
+.xui-propertyView-productGroup .xui-product{
+	padding-top: 0;
+}
+.xui-propertyView-productGroup .propertyGroup_property:first-child .propertyGroup_property_label{
+	margin-top: -20px;
+}
+/*选择按钮样式*/
+.xui-selectBtn{
+	padding: 4px 10px;
+	min-width: 58px;
+	text-align: center;
+	border: 1px solid #D9D9D9;
+	background: #fff;
+	color: #656565;
+	box-sizing:border-box;
+	margin: 2px 11px 2px 0;
+	position: relative;
+}
+.xui-selectBtn input{
+	opacity: 0;
+	position: absolute;
+}
+/*选中*/
+.xui-selected{
+	border:1px solid #2F8A29;
+}
+.xui-selected .xui-selectedIcon{
+	display: block;
+	width: 16px;
+	height: 18px;
+	background-position: -262px 0;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+/*公告样式*/
+.xui-noticeEditor .propertyGroup_property_horizontalField .propertyGroup_property_input input[type="text"]{
+	width: 320px;
+	color: #999;
+	font-size: 12px;
+}
+.xui-noticeEditor .propertyGroup_property{
+	margin-bottom: 0!important;
+}
+.xui-noticeEditor .propertyGroup_property_label {
+	width: 24px;
+	min-width: 24px;
+}
+
+
+/*辅助空白*/
+.propertyGroup_property_sliderField .slider .slider-track {
+	background-image: linear-gradient(to bottom, #eeeeee 0%, #eeeeee 100%);
+}
+.propertyGroup_property_sliderField .slider .slider-selection {
+	background-image: -webkit-linear-gradient(top, #dddee1 0%, #dddee1 100%);
+}
+.propertyGroup_property_sliderField .slider .slider-handle{
+	background-image: linear-gradient(to bottom, #ffffff 0%, #ffffff 100%);
+	box-shadow: inset 0 1px 0 #bfc0c1, 0 2px 3px #bfc0c1;
+	margin-top: -3px;
+	width: 16px;
+	height: 16px;
+}
+.propertyGroup_property_sliderField .slider .tooltip-main {
+	opacity: 1;
+}
+.propertyGroup_property_sliderField .slider .tooltip-inner{
+	background-color: #1262b7;
+}
+.propertyGroup_property_sliderField .slider .tooltip-arrow{
+	border-top-color: #1262b7;
+}
+
+
+/*文本导航右侧编辑*/
+.xui-propertyView-textNavGroup .propertyGroup_property_dynamicControlField_control,
+.xui-propertyView-imgDisplayGroup .propertyGroup_property_dynamicControlField_control,
+.xui-propertyView-imageNavGroup .propertyGroup_property_dynamicControlField_control,
+.xui-propertyView-imgAdjGroup .propertyGroup_property_dynamicControlField_control,
+.xui-propertyView-personalityThemeGroup .propertyGroup_property_dynamicControlField_control,
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control{
+	background: #fff;
+	border:1px solid #E6E6E6;
+	padding: 20px;
+	/*文本导航要求上下一致*/
+	box-sizing:border-box;
+}
+.xui-propertyView-textNavGroup .propertyGroup_property_dynamicControlField_control{
+	width: 376px;
+	padding-bottom: 15px;
+}
+.xui-propertyView-textNavGroup .propertyGroup_property_dynamicControlField_control .xui-text{
+	min-height: 85px;
+}
+.xui-propertyView-textNavGroup .xui-eidt-urlBox{
+	width: 176px;
+}
+.xui-propertyView-textNavGroup .errorHint{
+	padding-left: 88px;
+}
+.propertyGroup_property_dynamicControlField_control>button.xui-removeImageButton{
+	right: -5px;
+}
+.xui-propertyView-textNavGroup .xui-eidt-urlBox .xui-news-editor-select-link-dialog{
+	margin-left: 0px;
+	margin-top: 9px;
+}
+.xui-workbench-rightPanel a.xui-link:hover{
+	cursor: pointer;
+	text-decoration: none;
+}
+.xui-propertyView-textNavGroup .xui-eidt-urlBox .xui-selected-title-box{
+	margin: 0;
+	margin-right: 12px;
+}
+
+/*标题右侧编辑*/
+.xui-propertyView-title .xui-formPanel{
+	background: none;
+	border: none;
+}
+.xui-propertyView-title .propertyGroup_property:nth-child(4){
+	margin-bottom: 7px;
+}
+.xui-propertyView-title .xui-formPanel .xui-datePicker{
+	width: 132px!important;
+	height: 24px;
+	background-color: #fff!important;
+	border: 1px solid #E6E6E6;
+	margin-left: 76px;
+}
+.xui-propertyView-title .star_show:before{
+	top:-2px;
+}
+.xui-propertyView-title .propertyGroup_property_horizontalField .propertyGroup_property_label{
+	width: 58px;
+}
+.xui-propertyView-title .propertyGroup_property_horizontalField .propertyGroup_property_input input[type="text"]{
+	border: 1px solid #e6e6e6;
+}
+.xui-propertyView-title .propertyGroup_property_textField .propertyGroup_property_input{
+	padding: 0;
+}
+.xui-propertyView-title .xa-dynamicComponentColorField{
+	float: left;
+	margin-right: 10px;
+}
+.xui-propertyView-title .propertyGroup_property:last-child{
+	height: 30px;
+}
+
+.xui-categoryName {
+	background-color: #1e8f19;
+	color: #fff;
+	padding: 1px 4px;
+	border-radius: 2px;
+}
+
+/*商品列表*/
+.xui-propertyView-productList .xui-categoryName{
+	line-height: 16px;
+	max-width: 133px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	padding-right:3px; 
+	position: relative;
+	top:4px;
+}
+.xui-propertyView-productList button.btn{
+	background: none;
+	color: #1183C9;
+	padding: 0;
+	min-width: 40px;
+	margin-top: 3px;
+
+}
+.xui-propertyView-productList .propertyGroup_property_productStyleContainerField .propertyGroup_property_label{
+	width: 60px;
+}
+
+/*橱窗,图片导航添加图片按钮*/
+.xui-propertyView-imgDisplayGroup .xui-imgDisplayBtn,
+.xui-propertyView-imageNavGroup .xui-imgDisplayBtn,
+.xui-propertyView-imgAdjGroup .xui-imgDisplayBtn{
+	background: url(/static_v2/img/termite2/addImgBtn.png) no-repeat;
+	width: 100px!important;
+	height: 100px!important;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-nodata .uploadify-button{
+	background: url(/static_v2/img/termite2/addImgBtn.png) no-repeat;
+	width: 100px!important;
+	height: 100px!important;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify-button{
+	background: none;
+	color: #1183C9;
+	height: auto !important;
+	line-height: normal !important;
+	text-align: left;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .help-block,
+.xui-propertyView-pageHeader .xui-imageUploader-nodata .help-block{
+	margin-top: 2px !important;
+	margin-bottom: 0px !important;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .swfupload,
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .xui-imageUploader-uploader{
+	height: 15px;
+}
+/*选择链接折行显示*/
+.xui-propertyView-imgDisplayGroup .xui-selectLink,.xui-propertyView-imageNavGroup .xui-selectLink,
+.xui-propertyView-imgAdjGroup .xui-selectLink{
+	display: block;
+}
+.xui-propertyView-imgDisplayGroup .xui-selected-title-box,.xui-propertyView-imageNavGroup .xui-selected-title-box,
+.xui-propertyView-imgAdjGroup .xui-selected-title-box{
+	margin-left: -5px;
+}
+.xui-propertyView-imgDisplayGroup .xui-selected-title-box+a,.xui-propertyView-imageNavGroup .xui-selected-title-box+a,
+.xui-propertyView-imgAdjGroup .xui-selected-title-box+a{
+	display: inline-block;
+}
+/*橱窗,图片导航，文本导航绿色链接限制*/
+.xui-propertyView-imgDisplayGroup .xui-selected-title,.xui-propertyView-imageNavGroup .xui-selected-title,
+.xui-propertyView-textNavGroup .xui-selected-title,.xui-propertyView-imgAdjGroup .xui-selected-title{
+	display: inline-block;
+	max-width: 140px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	padding: 0 3px 0 4px;
+	position: relative;
+}
+.xui-propertyView-imgDisplayGroup .propertyGroup_property_dialogSelectField,
+.xui-propertyView-imgDisplayGroup .propertyGroup_property_linkSelectField,
+.xui-propertyView-imageNavGroup .propertyGroup_property_dialogSelectField,
+.xui-propertyView-imageNavGroup .propertyGroup_property_textField,
+.xui-propertyView-imgAdjGroup .propertyGroup_property_dialogSelectField,
+.xui-propertyView-imgAdjGroup .propertyGroup_property_textField{
+	float: left;
+}
+.xui-propertyView-textNavGroup .xui-selected-title{
+	max-width: 128px;
+}
+.xui-propertyView-imgDisplayGroup .xui-link,.xui-propertyView-imageNavGroup .xui-link,
+.xui-propertyView-imgAdjGroup .xui-link{
+	display: block;
+	margin-left: 0px;
+	margin-top: 10px;
+}
+
+
+/*橱窗*/
+.xui-propertyView-imgDisplay{
+	width: 420px;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property:last-child{
+	margin-top: -3px;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property:last-child .propertyGroup_property_label{
+	padding-left: 2px;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property_label{
+	min-width: 62px;
+	display: inline-block;
+	margin-right: 10px;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property_textareaField div{
+	float: left;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property_input input{
+	width: 176px!important;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property_textareaField .propertyGroup_property_input{
+	width: 176px!important;
+	height: 100px;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property_textareaField .propertyGroup_property_input textarea{
+	width: 176px!important;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property_radioField .propertyGroup_property_input{
+	margin-left: 0px;
+}
+.xui-propertyView-imgDisplayGroup{
+	width: 378px;
+}
+.xui-propertyView-imgDisplayGroup .propertyGroup_property_dynamicControlField_control{
+	width: 416px;
+}
+.xui-propertyView-imgDisplayGroup .errorHint{
+	margin-left: 88px;
+}
+.xui-propertyView-imgDisplayGroup .xui-removeImageButton{
+	display: none;
+}
+.xui-propertyView-imgDisplay .propertyGroup_property:nth-child(2){
+	margin-bottom: 7px;
+}
+
+/*图片导航*/
+.xui-propertyView-imageNavGroup .propertyGroup_property_linkSelectField{
+	clear: both;
+}
+.xui-propertyView-imageNavGroup .propertyGroup_property_textField{
+	margin-left: -11px;
+}
+.xui-propertyView-imageNavGroup .propertyGroup_property_linkSelectField{
+	position: absolute;
+	top:70px;
+	left: 109px;
+}
+.xui-propertyView-imageNavGroup .errorHint,.xui-propertyView-imgAdjGroup .errorHint{
+	margin-left: 88px;
+}
+.xui-propertyView-imageNavGroup .propertyGroup_property_dynamicControlField_control{
+	height: 162px;
+}
+.xui-propertyView-imageNavGroup .xui-removeImageButton {
+	display: none;
+}
+.xui-propertyView-imageNavGroup .propertyGroup_property{
+	width: 400px;
+}
+
+.xui-dynamicComponentControlImgBox {
+	width: 100px;
+	height: 100px;
+}
+.xui-dynamicComponentControlImgBox img {
+	width: 100%;
+	height: 100%;
+}
+.xui-propertyView-imgDisplayGroup .xui-dialogSelectedBtn,
+.xui-propertyView-imgAdjGroup .xui-dialogSelectedBtn,
+.xui-propertyView-imageNavGroup .xui-dialogSelectedBtn {
+	width: 100px;
+	height: 30px;
+	color: #fff;
+	position: absolute;
+	bottom: 0px;
+	text-align: center;
+	line-height: 30px;
+	background: rgba(0,0,0,0.5);
+}
+.xui-propertyView-imgDisplayGroup .propertyGroup_property_input,
+.xui-propertyView-imgAdjGroup .propertyGroup_property_input,
+.xui-propertyView-imageNavGroup .propertyGroup_property_input {
+	position: relative;
+}
+
+/*图片广告*/
+/*.xui-propertyView-imgAdjGroup .xui-selectLink{
+	display: block;
+}*/
+.xui-propertyView-imgAdjGroup .propertyGroup_property_dynamicControlField{
+	width: 415px;
+}
+.xui-propertyView-imgAdjGroup .propertyGroup_property_linkSelectField .errorHint{
+	margin-left: 183px;
+}
+.xui-propertyView-imgAdjGroup .propertyGroup_property_dynamicControlField_buttons .xui-addDynamicComponent{
+	width: 410px;
+}
+.xui-propertyView-imgAdjGroup .xui-selected-title{
+	max-width: 138px;
+}
+.xui-propertyView-imgAdjGroup .xui-removeImageButton {
+	display: none;
+}
+
+/*页头1*/
+.xui-propertyView-pageHeader,.xui-propertyView-shopHeader{
+	width: 423px;
+}
+.xui-propertyView-pageHeader .propertyGroup_property,.xui-propertyView-shopHeader .propertyGroup_property{
+	margin-bottom: 10px;
+}
+.xui-propertyView-pageHeader .propertyGroup_property:last-child,.xui-propertyView-shopHeader .propertyGroup_property:last-child{
+	margin-bottom: 0;
+}
+.xui-propertyView-pageHeader .propertyGroup_property_input,.xui-propertyView-shopHeader .propertyGroup_property_input{
+	line-height: 24px;
+}
+.xui-propertyView-pageHeader .propertyGroup_property:last-child .propertyGroup_property_input input,
+.xui-propertyView-shopHeader .propertyGroup_property:last-child .propertyGroup_property_input input{
+	line-height: 22px;
+}
+.xui-propertyView-pageHeader .propertyGroup_property:first-child button,
+.xui-propertyView-shopHeader .propertyGroup_property:first-child button,
+.xui-propertyView-personalityTheme .propertyGroup_property:first-child button,
+.xui-propertyView-specialTemplate .propertyGroup_property:first-child button{
+	color: #1183C9;
+	background: none;
+	margin-top: 3px;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-img{
+	width: 80px;
+	height: 80px;
+}
+.xui-propertyView-pageHeader .uploadify-button{
+	color: #F9F9F9;
+	box-shadow:none;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-uploader,.xui-propertyView-pageHeader .swfupload{
+	width: 100px;
+	height: 100px;
+}
+.xui-propertyView-pageHeader .propertyGroup_property:nth-child(3) .propertyGroup_property_dialogSelectField button{
+	width: 18px;
+	min-width: 18px;
+	height: 18px;
+	background-position: -261px -20px;
+	padding: 0;
+}
+.xui-propertyView-pageHeader .xui-dynamicComponentControlImgBox{
+	width: 320px;
+	height: 100px;
+}
+
+
+/*
+个性模板1
+*/
+.xui-propertyView-personalityTheme,.xui-propertyView-personalityThemeGroup{
+	width: 380px;
+}
+.xui-propertyView-personalityTheme .xui-dynamicComponentControlImgBox{
+	width: 120px!important;
+	height: 160px!important;
+}
+.xui-propertyView-personalityTheme .xui-removeImageButton,.xui-propertyView-specialTemplate .xui-removeImageButton{
+	display: none;
+}
+.xui-propertyView-personalityThemeGroup .propertyGroup_property_dynamicControlField_control{
+	width: 378px;
+}
+.xui-propertyView-personalityThemeGroup .xui-selectLink,.xui-propertyView-specialTemplateGroup .xui-selectLink{
+	display: block;
+}
+.xui-propertyView-personalityThemeGroup .xui-selected-title-box{
+	margin-left: -5px;
+}
+.xui-propertyView-personalityThemeGroup .xui-link{
+	margin-left: 0px;
+	margin-top: 8px;
+}
+.xui-propertyView-personalityThemeGroup .errorHint{
+	margin-left: 88px;
+}
+
+/*
+个性模板2
+*/
+.xui-propertyView-specialTemplateGroup .xui-imgDisplayBtn{
+	display: inline-block;
+	width: 64px;
+	height: 64px;
+	background: #000;
+	border: 1px dashed #ccc;
+	box-sizing:border-box;
+}
+.xui-propertyView-specialTemplateGroup .xui-dialogSelectedBtn{
+	color: #1183C9;
+}
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .propertyGroup_property_input .xui-dynamicComponentControlImgBox{
+	width: 64px;
+	height: 64px;
+	box-sizing:border-box;
+	border: 1px dashed #ccc;
+	background: #222F3B;
+	float: left;
+}
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .propertyGroup_property_input .xui-dialogSelectedBtn{
+	display: inline-block;
+	padding-top: 47px;
+	margin-left: 8px;
+}
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control{
+	width: 378px;
+}
+.xui-propertyView-specialTemplateGroup .propertyGroup_property{
+	width: 378px;
+}
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_input .xui-selectLink {
+	margin-bottom: 10px!important;
+}
+.xui-propertyView-specialTemplateGroup .errorHint{
+	margin-left: 87px!important;
+}
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .xui-dynamicComponentControlImgBox .xui-removeImageButton{
+	display: none;
+}
+.xui-propertyView-specialTemplateGroup .xui-link,.xui-propertyView-specialTemplateGroup .xui-selected-title-box{
+	margin-left: 0px;
+}
+.xui-propertyView-personalityThemeGroup .xui-selected-title,.xui-propertyView-specialTemplateGroup .xui-selected-title{
+	margin-bottom: 5px;
+}
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_dialogSelectField .propertyGroup_property_input+div{
+	margin-left: 87px;
+	margin-top: 3px;
+}
+/**
+ * dialog对话框 商品列表
+ */
+.xui-termiteSelectWebsiteDataDialog input[type="checkbox"] {
+	position: absolute;
+	clip: rect(0,0,0,0);
+	pointer-events: none;
+}
+.xui-termiteSelectWebsiteDataDialog .btn-primary.checked{
+	background: #CBCBCB;
+	border:1px solid #CBCBCB;
+	color: #999999;
+}
+.xui-termiteSelectWebsiteDataDialog .xui-btnStyle{
+	width: 110px;
+	height: 35px;
+	background: #207cbe;
+}
+
+
+/**
+ * dialog对话框  小图标
+ */
+.xui-selectTermiteImagesDialog .xui-icon-box .xui-i-image{
+	width: 68px;
+	height: 68px;
+	margin: 10px 0px 0px 10px;
+}
+.xui-selectTermiteImagesDialog .xui-icon-box .xui-i-image img{
+	background-color: #e3e3e3;
+}
+.xui-selectTermiteImagesDialog .xui-icon-box .xui-i-footer{
+	height: 22px;
+	line-height: 22px;
+}
+
+
+/*弹出模板选择对话框*/
+.xui-termiteCreateProjectDialog .modal-dialog li:last-child{
+	margin-right: 0px!important;
+}
+
+

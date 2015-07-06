@@ -1,0 +1,10 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'wepage.block' %}
+<div 
+    data-component-cid="{{component.cid}}" 
+    class="wepage-block"
+>
+    <div style="height:{{component.model.height}}px;" class="wa-inner-block"></div>
+</div>
+{% endifequal %}

@@ -14,6 +14,7 @@ from market_tools.tools.research.models import Research
 from market_tools.tools.test_game.models import TestGame
 from market_tools.tools.shake.models import Shake
 from webapp.modules.cms.models import Article
+from webapp.models import Project
 
 from market_tools.tools.member_qrcode.export import get_member_qrcode_webapp_link
 from market_tools.tools.complain.export import get_complain_webapp_link
@@ -33,7 +34,7 @@ def get_webapp_link_menu_objectes(request):
 				'name': '微页面',
 				'type': 'webappPage',
 				'add_btn_title': '新建微页面',
-				'add_link': '#'
+				'add_link': '/termite2/pages/'
 			}]
 		},
 		'product':{
@@ -146,11 +147,11 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	today = datetime.today()
 	type2object = {
 		'webappPage': {
-			'class': Article, 
-			'query_name': 'title',
-			'link_template': './?module=cms&model=article&article_id={}&workspace_id=cms&webapp_owner_id=%d' % webapp_owner_id,
+			'class': Project, 
+			'query_name': 'site_title',
+			'link_template': './?workspace_id=home_page&project_id={}&webapp_owner_id=%d' % webapp_owner_id,
 			'filter': {
-				"end_at__gt": today
+				'is_enable': True
 			}
 		},
 		'product': {
@@ -252,6 +253,8 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			kwargs[item['query_name']+'__contains'] = query
 		objects = item['class'].objects.filter(**kwargs).order_by(order_by)
 
+		if type == 'webappPage':
+			objects = objects.order_by('-is_active', '-id')
 
 		if type == 'coupon':
 			# 组织detail

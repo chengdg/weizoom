@@ -42,10 +42,9 @@ W.design.DesignPage = Backbone.View.extend({
         xlog('[design page]: ' + this.clientWidth + ', ' + this.clientHeight);
 
         //开启拖动排序
-        var enableSortTask = new W.DelayedTask(function() {
+        _.delay(_.bind(function() {
             this.enableSortComponent();
-        }, this);
-        enableSortTask.delay(500);
+        }, this), 500);
 
         if (W.design.isInFrame) {
             W.Broadcaster.trigger('designpage:finish_init');
@@ -257,6 +256,9 @@ W.design.DesignPage = Backbone.View.extend({
         if ($node.hasClass('xui-selectedWidget')) {
             return;
         }
+
+        var offset = $node.offset();
+        xlog(offset);
 
         //高亮边框
         this.$('.xui-selectedWidget').removeClass('xui-selectedWidget');

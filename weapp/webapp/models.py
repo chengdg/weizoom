@@ -93,10 +93,10 @@ class Workspace(models.Model):
 		verbose_name_plural = 'APP'
 
 
-########################################################################
-# Project: 一个项目，可包含多个Page
-########################################################################
 class Project(models.Model):
+	"""
+	Project: 一个项目，可包含多个Page	
+	"""
 	owner = models.ForeignKey(User)
 	workspace = models.ForeignKey(Workspace)
 	name = models.CharField(max_length=50) #项目名
@@ -107,6 +107,10 @@ class Project(models.Model):
 	source_project_id = models.IntegerField(default=0) #源project的id
 	datasource_project_id = models.IntegerField(default=0) #提供数据源的project
 	template_project_id = models.IntegerField(default=0) #模板project的id
+	is_enable = models.BooleanField(default=False) #是否开启模板项目
+	cover_name = models.CharField(default='', max_length=50) #封面图片名
+	site_title = models.CharField(default='', max_length=50) #模板项目名
+	is_active = models.BooleanField(default=False) #是否启用该微页面
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 
 	@staticmethod

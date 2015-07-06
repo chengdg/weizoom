@@ -600,6 +600,9 @@ select{
 .xui-mainPanel .xui-sideBar-issuingCoupon{
 	background-position: 0 -600px;
 }
+.xui-mainPanel .xui-sideBar-wepage{
+	background-position:-49px -383px;
+}
 .xui-mainPanel .xui-sideBar > ul{
 	margin-top:10px;
 }

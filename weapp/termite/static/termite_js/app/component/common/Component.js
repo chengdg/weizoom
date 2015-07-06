@@ -3,6 +3,7 @@
  * 组件的基类
  *
  */
+ensureNS('W.component');
 W.component.Component = function(obj) {
 	var obj = obj || {};
 	this.initialize(obj);
@@ -12,6 +13,7 @@ W.component.Component = function(obj) {
 
 W.component.cid = 1; //componenet id
 
+// 相当于让Component继承自Backbone.Events，并增加了若干函数
 _.extend(W.component.Component.prototype, Backbone.Events, {
 	dragSortHandler: {
 		handleComponentEnter: $.noop,
@@ -42,6 +44,7 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 	 *  2. shouldIgnoreSubComponent: 是否忽略创建子component
 	 */
 	initialize: function(obj) {
+
 		//处理cid
 		if (obj.cid) {
 			this.cid = obj.cid;
@@ -63,25 +66,30 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 				name: 'id',
 				type: 'text',
 				displayName: 'Id',
+				isUserProperty: false,
 				default: '',
 			}, {
 				name: 'class',
 				type: 'text',
 				displayName: 'Class',
+				isUserProperty: false,
 				default: '',
 			}, {
 				name: 'name',
 				type: 'text',
 				displayName: 'Name',
 				validate: 'required-none',
+				isUserProperty: false,
 				default: '',
 			}, {
 				name: 'index',
 				type: 'hidden',
 				displayName: '',
+				isUserProperty: false,
 				default: '-1',
 			}, {
 				name: 'datasource',
+				isUserProperty: false,
 				type: 'hidden',
 				displayName: '',
 				default: {
@@ -405,10 +413,11 @@ W.component.Component.parseJSON = function(obj, options) {
 W.component.Component.create = function(type, model) {
 	xlog('[component factory]: create component ' + type);
 	var ComponentClass = W.component.TYPE2COMPONENT[type];
+	xlog('ComponentClass: ' + ComponentClass);
 	var component = new ComponentClass({
 		model: model
 	});
-
+	xlog('component created: ' + component);
 	return component;
 }
 

@@ -91,6 +91,10 @@ class WebappItemLinks(resource.Resource):
 				data['name'] = item.name
 				data['link'] = menu_item['link_template'].format(item.id)
 				data['isChecked'] = True if is_selected_type and item.id == selected_id else False
+				if link_type == 'webappPage':
+					# 微页面
+					data['name'] = item.site_title
+					
 				if link_type == 'lottery':
 					# 抽奖
 					data['type'] = WebappItemLinks.LOTTER_TYPE[item.type]

@@ -10127,7 +10127,9 @@ UE.plugins['list'] = function () {
         'num1' : 'num-2-',
         'num2' : 'num-3-',
         'dash'  : 'dash',
-        'dot':'dot'
+        'dot': 'dot',
+        'circle': 'circle',
+        'square': 'square'
     };
 
     me.setOpt( {
@@ -10181,6 +10183,8 @@ UE.plugins['list'] = function () {
             if(p == 'dash' || p == 'dot'){
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
                 customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
+            }else if(p == 'circle' || p == 'square'){
+                customCss.push('ul.custom_'+p+'{padding-left:30px;}ul.custom_'+p+' li{}');
             }else{
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')

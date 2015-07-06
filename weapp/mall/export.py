@@ -132,7 +132,7 @@ NAV = {
 
 def get_second_navs(request):
     if request.user.username == 'manager':
-        pass
+        second_navs = [NAV]
     else:
         # webapp_module_views.get_modules_page_second_navs(request)
         second_navs = [NAV]
@@ -326,6 +326,7 @@ MALL_HOME_FIRST_NAV = 'home'
 MALL_HOME_OUTLINE_NAV = 'census'
 MALL_HOME_INTEGRAL_NAV = 'integralRule'
 MALL_HOME_NOTICES_NAV = 'notices'
+MALL_HOME_WEPAGE_NAV = 'wepage'
 
 HOME_NAV = {
     'section': u'商城首页',
@@ -347,6 +348,12 @@ HOME_NAV = {
             'title': u'消息中心',
             'url': '/mall/notice_list/get',
             'need_permissions': ['manage_index_notice'],
+        },
+        {
+            'name': MALL_HOME_WEPAGE_NAV,
+            'title': u'店铺装修',
+            'url': '/termite2/pages/',
+            'need_permissions': ['manage_wepage'],
         }
     ]
 }
@@ -357,7 +364,7 @@ def get_home_second_navs(request):
     获取"商铺首页"部分的二级导航
     """
     if request.user.username == 'manager':
-        pass
+        second_navs = [HOME_NAV]
     else:
         second_navs = [HOME_NAV]
 

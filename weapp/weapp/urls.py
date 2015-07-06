@@ -39,7 +39,12 @@ urlpatterns = patterns('',
 
 	url(r'^weixin/dev/', include('weixin.urls')),
 	url(r'^weixin/', include('weixin.urls')),
+	
 	url(r'^new_weixin/', restful_url2('new_weixin')),
+	url(r'^termite2/', restful_url2('termite2')),
+
+	#url(r'^new_mall/', restful_url2('new_mall')), # for exercises
+
 	url(r'^account/', include('account.urls')),
 	url(r'^simulator/', include('simulator.urls')),
 	url(r'^watchdog/', include('watchdog.urls')),

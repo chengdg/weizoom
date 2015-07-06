@@ -1,0 +1,194 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-weixin-materialsPage">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/termite2/pages/">店铺装修</a></li>
+			<li class="active">自定义页面模块</li>
+		</ul>
+	</div>
+	<div class="xb-rightPanel pl10 pr10 pb30">
+		<div class="xui-head pl10">
+			<a href="/termite2/custom_module/" class="btn btn-success fl mt10 w150 lh20"><span class="xui-add-btn-icon">+</span>新建模块</a>
+			<div class="fr">
+				<input type="text" class="xa-search-title"><a class="xui-searchBtn btn btn-default xa-searchBtn c65 fr m0 mt10 pt0 mr10">搜索</a>
+			</div>
+		</div>
+		<div class="">
+			{% if has_custom_module %}
+				<div 
+					data-ui-role="advanced-table" 
+					data-app="termite2" 
+					data-resource="custom_modules"
+					data-template-id="#custom-modules-view"
+					data-enable-paginator="true" 
+					data-enable-sort="false" 
+					data-selectable="false" 
+					data-item-count-per-page="20" 
+					data-disable-header-select="false"
+					class="panel-body"
+					data-user-webapp-id={{user.get_profile.webapp_id}}
+					data-init-sort="-updated_at"
+				></div>
+			{% else %}
+			<div class="xui-emptyBox m10">
+				<div class="xui-i-emptyHint">
+					<img src="/static_v2/img/editor/empty.png">
+					<div>
+						<span>还没有相关数据</span>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+		
+	</div>
+	
+	
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="custom-modules-view" type="text/x-jquery-tmpl">
+	{{if data.pageinfo.object_count != 0}}
+	<table class="table table-condensed mb0 xui-tableHead">
+		<thead>
+			<tr>
+				<th class="tl">
+					<div class="ml20">名称</div>
+				</th>
+				<th width="180">操作</th>
+			</tr>
+		</thead>
+        {{each(i, custom_module) items}}
+		<tr data-id="${custom_module.id}" data-name="${custom_module.name}">
+			<td class="p20 tl h50">
+				${custom_module.name}
+				<a class="xa-update-name ml10 xui-pencil-icon" href="javascript:void(0);"></a>
+			</td>
+			<td>
+				<a href="/termite2/page_editor/?id=${custom_module.id}">编辑</a>
+				<a class="xa-detete pl10" href="javascript:void(0);">删除</a>
+			</td>
+		</tr>
+		{{/each}}
+	</table>
+	{{/if}}
+
+	{{if data.pageinfo.object_count == 0}}
+	<div class="xui-emptyBox m10"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+	{{/if}}
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+var validateUpdateName = function($el){
+	var id = $el.attr('data-id');
+	var name = $el.val();
+	if (name.length === 0) {
+		return {
+			isValidate: false,
+			errorHint: '不能为空'
+		}
+	}
+
+	var result = { isValidate: false, errorHint: '' };
+    W.getLoadingView().show();
+    W.getApi().call({
+        method: 'get',
+        app: 'termite2',
+        resource: 'custom_module_name',
+        async: false,
+        args: {
+            id: id,
+            name: name
+        },
+        success: function(data) {
+            W.getLoadingView().hide();
+        	result.isValidate = true;
+        	result.errorHint = '';
+        },
+        error: function(response) {
+            W.getLoadingView().hide();
+        	result.isValidate = false;
+        	result.errorHint = response.data.msg;
+        }
+    });
+    return result;
+};
+
+$(document).ready(function() {
+    var table = $('[data-ui-role="advanced-table"]').data('view');
+    var reloadTable = function() {
+        var data = {
+            'query': $('.xa-search-title').val()
+        }
+        if (table) {        	
+	        table.reload(data, {
+	            emptyDataHint: '没有符合条件的模块'
+	        });
+        };
+    }
+
+    $('body').delegate('.xa-detete', 'click', function(event) {
+        var $tr = $(event.currentTarget).parents('tr');
+        var id = $tr.attr('data-id');
+        W.requireConfirm({
+            $el: $(event.currentTarget),
+            width: 420,
+            height: 55,
+            position: 'right-middle',
+            isTitle: false,
+            msg: '确定删除？',
+            confirm: function() {
+                W.getLoadingView().show();
+                W.getApi().call({
+                    method: 'delete',
+                    app: 'termite2',
+                    resource: 'custom_module',
+                    args: {
+                        id: id
+                    },
+                    success: function(data) {
+                        W.getLoadingView().hide();
+                        reloadTable();
+                    },
+                    error: function(response) {
+                        alert('删除自定义模块失败');
+                        W.getLoadingView().hide();
+                    }
+                });
+            }
+        });
+
+    });
+
+    $('body').delegate('.xa-update-name', 'click', function(event) {
+    	var $el = $(event.currentTarget);
+        var $tr = $el.parents('tr');
+        var id = $tr.attr('data-id');
+        var name = $tr.attr('data-name');
+		var updateNameView = W.getTermiteUpdateNameView({
+			width: 330,
+			title: '备注',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-termiteUpdateNameDropBox'
+		});
+		updateNameView.show({
+			$action: $el,
+			modelId: id,
+			modelName: name
+		})
+    });
+
+    $('.xa-searchBtn').click(function(event) {
+        reloadTable();
+    });
+});
+
+</script>
+{% endblock %}

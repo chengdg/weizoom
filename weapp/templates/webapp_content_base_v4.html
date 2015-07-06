@@ -1,0 +1,275 @@
+{% load webapp_filter %}
+{% load project_filter %}
+<!DOCTYPE html>
+<html class="{% if user.is_from_android %} android{% endif %}{% if not user.is_from_weixin %} notweixin{% endif %}">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{{ page_title }}</title>
+        {% if request.enable_sql_monitor %}
+        <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
+        {% endif %}
+        
+        <!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
+        {% if is_use_dev_resource %}
+        <!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/base.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/webapp_default.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">        
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">        
+        <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
+        {% else %}
+        <link type="text/css" rel="stylesheet" media="all" href="{{cdn_host}}/standard_static/css/webapp_content_base_all.css">
+        {% endif %}
+        <!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+
+        <!-- *finish webapp_template_css* [do not modify and delete this line, it will be needed by dist process] -->
+        {% block css %}{% endblock %}
+
+        <!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
+        {% if is_use_dev_resource %}
+        <!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+        <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/gmu-2.1.1.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/lib/idangerous.swiper.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/lib/fastclick.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
+        <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/webapp/backbone_lite.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/crypto-js.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/md5.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/webapp/webapp.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/weixinapi.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
+
+        <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
+        <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
+        {% else %}
+        <script type="text/javascript" src="{{cdn_host}}/standard_static/js/webapp_content_base_all.min.js"></script>
+        {% endif %}
+        <!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+        <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+        <meta name="x5-orientation" content="portrait">
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+        <meta content="telephone=no" name="format-detection">
+    </head>
+    <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}">
+        <!-- xt-errMsg for test -->
+        <input id="xt-errMsg" type="hidden" value="" />
+        
+        <div id="homePageUrlZone" style="display: none;">/workbench/jqm/preview/?{{homepage_workspace_info|safe}}</div>
+        {% if is_deleted_data %}
+            <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
+                <h2 style="margin-top: 100px;">您访问的数据已被删除</h2>
+                <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
+            </div>
+        {% else %}
+            <!--
+            <div data-ui-role="attentionAlert" 
+                {% if not cur_request_member %}
+                    data-is-show-button="true" 
+                {% endif %}
+                {% if not hide_non_member_cover %}
+                    data-is-show-cover="true"
+                {% endif %}
+                data-url="{% if operation_settings %}{{ operation_settings.non_member_followurl }}{% endif %}">
+            </div>
+            -->
+
+            {% block content-panel %}{% endblock %}
+        {% endif %}
+
+        <div id="jsons" style="display: none;">
+            {% for json in jsons %}
+            <div id="__json-{{json.name}}">
+                {{json.content|format_json|safe}}
+            </div>
+            {% endfor %}
+        </div>
+        <!-- 公告超出滚动 -->
+        <script type="text/javascript">
+            // 定时器
+            var mytimer = function(i, $content){
+                window.setInterval(function(){
+                    if(nowleftList[i] == -contentWidthList[i]){
+                        nowleftList[i] = width;
+                    }else{
+                        nowleftList[i] = nowleftList[i] -1;
+                    }
+                    $content.css('left',nowleftList[i]);
+                },15)  
+            };
+
+            var nowleftList = [];            // 向左移动的距离
+            var contentWidthList = [];       // 内容长度
+            var width = $(this).width();     // 屏幕的宽度
+            var rollWidth = width * 0.9;     // 滚动临界值
+            var $notice = $('.wui-notice');
+
+            if($notice.length > 0){
+                for (var i = 0; i < $notice.length; i++) {
+                    var $content = $($notice[i]).find('.wa-content');
+                    var contentWidth = $content.width();
+                    contentWidthList[i] = contentWidth;
+                    nowleftList[i] = 0;
+                    if(contentWidth == rollWidth || contentWidth > rollWidth){
+                        mytimer(i, $content);
+                    }
+                };
+            }
+
+        </script>
+        <!-- 获取屏幕宽度给高赋值 -->
+        <script type="text/javascript">
+        var $product = $('.wui-product');
+        var $productList = $('.wui-productlist');
+        var $imageDisplay = $('.wui-imagedisplay');
+        var $imageNav = $('.wui-imagenav');
+
+        if($product.length > 1){
+
+            getWidth('.wui-product');
+
+        }else if($productList.length > 1){
+
+            getWidth('.wui-productlist');
+
+        }else if($imageDisplay.length > 1){
+
+            getWidth('.wui-imagedisplay');
+
+        }else if($imageNav.length > 1){
+
+            getWidth('.wui-imagenav');
+
+        }
+        function getWidth(component){
+            var $component = $(component);
+            var $inner_pic = $component.find('li .wui-inner-pic');
+            $inner_pic.each(function() {
+                var width = $(this).width() +5 ;
+                $(this).height(width);
+            });
+        } 
+        </script>
+        
+
+        <!--<script src="http://192.168.2.76:8080/target/target-script-min.js"></script> -->
+        <script type="text/javascript">
+            var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+
+            W.projectId = "{{request.project.id}}";
+            W.webappOwnerId = "{{request.webapp_owner_id}}";
+            W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
+            W.curRequestMemberToken = "{{ cur_request_member.token }}";
+            W.visitHistory = "{{ visit_histroy_url }}";
+            W.urlTitle = "{{ visit_histroy_url_title }}";
+            if (W.urlTitle == ''){
+                W.urlTitle = '{{ show_system_name }}';
+            }
+            W.pageTitle = "{{page_title}}";
+
+            W.errorMessage = null;
+
+            {% if messages %}
+            {% for message in messages %}
+            W.errorMessage = "{{message}}";
+            {% endfor %}
+            {% endif %}
+
+            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageImg = "{{ request.share_img_url }}";
+            if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
+                W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
+
+            $(document).ready(function() {
+                $('a').highlight();
+                FastClick.attach(document.body);
+                var hm = document.createElement("script");
+                hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
+                var s = document.getElementsByTagName("script")[0]; 
+                s.parentNode.insertBefore(hm, s);
+                /*
+                 * 微信分享按钮事件
+                 * 注意：
+                 * 1. 所有的JS接口只能在公众号绑定的域名下调用，公众号开发者需要先登录微信公众平台进入“公众号设置”的“功能设置”里填写“JS接口安全域名”。
+                 * 2. 如果发现在 Android 不能分享自定义内容，请到官网下载最新的包覆盖安装，Android 自定义分享接口需升级至 6.0.2.58 版本及以上。
+                 * 3. 完整 JS-SDK 文档地址：http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html
+                 *
+                 * 功能说明
+                 * 1、分享给微信好友
+                 * 2、分享到微信朋友圈
+                 * 3、分享到腾讯微博
+                 */
+                W.wxShareData = {
+                    "imgUrl" : W.sharePageImg,
+                    "link" : window.location.href,
+                    "desc" : W.sharePageDesc,
+                    "title" : W.sharePageTitle,
+                    // 点击分享按钮
+                    trigger: function (res) {
+                       // alert('用户点击分享按钮'+res);
+                    },
+                    // 分享成功
+                    success : function(res) {
+                       // alert('success'+res);
+                    }
+                };
+                wx.ready(function () {
+                  // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
+                  wx.checkJsApi({
+                    jsApiList: [
+                      'onMenuShareAppMessage',
+                      'onMenuShareTimeline',
+                      'onMenuShareQQ',
+                      'previewImage',
+                      'hideOptionMenu',
+                      'showOptionMenu',
+                    ],
+                    success: function (res) {
+                      if(!W.wxShareData)
+                        return
+                      res = res.checkResult;
+                      if(res.onMenuShareAppMessage)
+                        wx.onMenuShareAppMessage(W.wxShareData)
+                      if(res.onMenuShareTimeline)
+                        wx.onMenuShareTimeline(W.wxShareData)
+                      if(res.onMenuShareQQ)
+                        wx.onMenuShareQQ(W.wxShareData)
+                      if(res.previewImage)
+                        W.ImagePreview(wx)
+                      if(res.hideOptionMenu && isHideWeixinOptionMenu)
+                        wx.hideOptionMenu()
+                      if(res.showOptionMenu && !isHideWeixinOptionMenu)
+                        wx.showOptionMenu()
+                    }
+                  });
+                });
+
+                if (W.visitHistory) {
+                   W.showVisitHistory(W.urlTitle, W.visitHistory);
+                }
+
+                if (W.errorMessage) {
+                    $("body").alert({
+                        isShow: true,
+                        info: W.errorMessage,
+                        speed: 3000                
+                    });
+                }
+            });
+        </script>
+
+        {% if under_develop %}
+        <script type="text/javascript">
+            $(function() {
+                $('body').append('<a style="top:90px; height:40px; width:40px; color:#BBB; border-radius:20px; left:10px; position:fixed; z-index:99; background-color: rgba(46, 94, 134, 0.1); line-height:40px; text-align:center;" href="/simulator/2/">H</a>')
+            });
+        </script>
+        {% endif %}
+
+        {% block js %}{% endblock %}
+    </body>
+</html>

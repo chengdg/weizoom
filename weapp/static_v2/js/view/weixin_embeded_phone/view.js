@@ -126,6 +126,7 @@ W.view.weixin.EmbededPhoneMenuBar = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        xlog("in initialize");
         this.$el = $(this.el);
         this.onBeforeChangeMenu = options.onBeforeChangeMenu;
 
@@ -628,7 +629,6 @@ W.view.weixin.EmbededPhoneView = Backbone.View.extend({
 	
 	initialize: function(options) {
 		this.$el = $(this.el);
-
         this.messages = new W.model.weixin.Messages();//options.messages || [];
         this.messages.bind('change', _.bind(this.onChangeMessage, this));
         this.id2message = {};
@@ -1209,5 +1209,594 @@ W.view.weixin.EmbededPhoneView = Backbone.View.extend({
         this.selectNews(parseInt(selectedNewsId));
         this.selectedNewsId = selectedNewsId;
         return true
+    }
+});
+
+
+/**
+ * 用于嵌入到页面中的微信模拟器
+ * @class
+ */
+W.view.weixin.TemplateEmbededPhoneView = Backbone.View.extend({
+    el: '',
+
+    events: {
+        'mouseenter .xa-i-news-message': 'onShowActionBar',
+        'mouseleave .xa-i-news-message': 'onHideActionBar',
+        'click li.xa-i-news-message': 'onSelectNews',
+        'click .xa-add-news-btn': 'onCreateNews',
+        'click .xa-i-delete-news-btn': 'onDeleteNews',
+        'click .xa-simulator-back-btn': 'onClickBackBtn',
+        'click .xa-simulator-screen a': 'onClickLink'
+    },
+
+    compileTemplate: function() {
+        $('#weixin-edit-simulator-tmpl-src').template('weixin-edit-simulator-tmpl');
+    },
+    
+    initialize: function(options) {
+    	alert('aaabbbbb')
+        console.log(6666);
+        this.$el = $(this.el);
+
+        console.log(this.$el, 1111)
+        this.messages = new W.model.weixin.Messages();//options.messages || [];
+        this.messages.bind('change', _.bind(this.onChangeMessage, this));
+        this.id2message = {};
+        this.id2element = {};
+
+        this.mode = options.mode || "weixin";
+        this.menubarMode = options.menubarMode || 'edit'
+        this.onBeforeChangeNews = options.onBeforeChangeNews;
+        this.onBeforeCreateNews = options.onBeforeCreateNews;
+        this.shopName = options.shopName || "";
+        this.initBrowserUrl = options.initBrowserUrl || '/m/shop/'+this.shopName+'/?embed=1';
+
+        this.deleteIds = [];
+
+        if (this.mode == "weixin") {
+            this.reset(this.messages);
+            this.enableWeixin = true;
+            this.enableBrowser = true;
+            this.initBrowserUrl = '/loading/';
+        } else if (this.mode == 'webapp') {
+            xlog('enter webapp mode');
+            this.enableWeixin = false;
+            this.enableBrowser = true;
+            if (options.initBrowserUrl) {
+                this.initBrowserUrl = options.initBrowserUrl;
+            }
+        } else {
+            this.enableWeixin = true;
+            this.enableBrowser = true;
+        }
+
+        this.enableAction = options.enableAction || false;
+        this.container = null;
+        this.enableAddNews = options.enableAddNews || false;
+        //菜单栏
+        this.enableMenu = options.enableMenu || false;
+        this.enableAddMenu = options.enableAddMenu || false;
+        this.onBeforeChangeMenu = options.onBeforeChangeMenu || null;
+        this.menubar = null;
+
+        this.isBrowserVisible = false;
+        this.autoRefreshEnabled = true;
+
+        this.messageIndex = 0; //用于计算message序号，对于多图文消息，我们会将多条message视为一条message
+
+        this.compileTemplate();
+    },
+
+    /**
+     * 禁止自动refresh
+     */
+    disableRefresh: function() {
+        this.autoRefreshEnabled = false;
+    },
+
+    /**
+     * 开启自动refresh
+     */
+    enableRefresh: function() {
+        this.autoRefreshEnabled = true;   
+    },
+
+    /**
+     * 获取一个新的message index
+     */
+    getNewMessageIndex: function() {
+        this.messageIndex += 1;
+        return this.messageIndex;
+    },
+
+    getMessageIndex: function() {
+        return this.messageIndex;
+    },
+
+    openBrowser: function(link) {
+        if (link) {
+            $('#mobile-browser').attr('src', link);
+        }
+        $('.xa-timeline-zone').hide();
+        $('.xa-browser-zone').animate({
+            left: '0'
+        }, 400);
+        this.isBrowserVisible = true;
+    },
+
+    refreshBrowser: function(link) {
+        xlog('refresh browser');
+
+        var browser = $('#mobile-browser');
+        if (!link) {
+            link = browser.attr('src');
+        }
+        browser.attr('src', '/loading/');
+
+        var task = new W.DelayedTask(function() {
+            browser.attr('src', link);
+        });
+        task.delay(300);
+    },
+
+    closeBrowser: function() {
+        $('.xa-browser-zone').animate({
+            left: '100%'
+        }, 400);
+        $('#mobile-browser').attr('src', '/loading/');
+        $('.xa-timeline-zone').show();
+        this.isBrowserVisible = false;
+    },
+
+    isViewWebapp: function() {
+        return this.isBrowserVisible;
+    },
+
+    /**
+     * 判断是否有新创建的news
+     */
+    hasNewCreatedNews: function() {
+        var count = this.messages.length;
+        for (var i = 0; i < count; ++i) {
+            var message = this.messages[i];
+            if (message.type == 'news' && message.id < 0) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * 获得新增news
+     * @return {*}
+     */
+    getNewCreatedNewses: function() {
+        return _.filter(this.messages.toJSON(), function(message) {
+//          return message.type == 'news' && message.id < 0;
+            return message.type == 'news';
+        }, this);
+    },
+
+    /**
+     * 获得删除的id集合
+     * @return {*}
+     */
+    getDeletedNewsIds: function() {
+        return this.deleteIds.join(',')
+    },
+
+    /**
+     * 渲染html结果
+     */
+    render: function() {
+        //创建html
+        this.$el.html($.tmpl('weixin-edit-simulator-tmpl', {
+            enableWeixin: this.enableWeixin,
+            enableBrowser: this.enableBrowser,
+            enableMenu: this.enableMenu,
+            enableAddMenu: this.enableAddMenu,
+            shopName: this.shopName,
+            title: W.previewName,
+            initBrowserUrl: this.initBrowserUrl,
+            enableAction: this.enableAction
+        }));
+        this.container = this.$el.find('.xa-timeline-zone');
+        //处理menubar
+        var $menubar = this.$('#menubar-zone');
+        if ($menubar.length > 0) {
+            this.menubar = new W.view.weixin.EmbededPhoneMenuBar({
+                el: $menubar,
+                onBeforeChangeMenu: this.onBeforeChangeMenu,
+                mode: this.menubarMode
+            });
+            this.menubar.bind('all', function(event, model) {
+                xlog('[embededPhone]: receive menubar event ' + event);
+                this.trigger(event, model);
+            }, this)
+        }
+
+        this.refresh();
+    },
+
+    /**
+     * 重新绘制消息区域
+     */
+    refresh: function() {
+        if (!this.container) {
+            //DOM还没有准备好，返回
+            return;
+        }
+
+        this.container.html('');
+        if (this.messages.length == 0) {
+            return;
+        }
+
+        //merge messages, change message model to message  JSON
+        var mergedMessages = [];
+        var curMessageIndex = -1;
+        var count = this.messages.length;
+        var tempMessages = [];
+        for (var i = 0; i < count; ++i) {
+            var message = this.messages.at(i);
+            var messageIndex = message.get('metadata').messageIndex;
+            if (messageIndex != curMessageIndex) {
+                curMessageIndex = messageIndex;
+                if (tempMessages.length != 0) {
+                    mergedMessages.push(tempMessages);
+                    tempMessages = [];
+                }
+            }
+
+            tempMessages.push(message.toJSON());
+        }
+        if (tempMessages.length != 0) {
+            mergedMessages.push(tempMessages); //处理最后一条消息
+        }
+
+        //render messages
+        var count = mergedMessages.length;
+        for (var i = 0; i < count; ++i) {
+            var messages = mergedMessages[i];
+            if (messages.length == 1) {
+                var message = messages[0];
+                //text or single_news
+                if (message.type == 'text') {
+                    this.container.append($.tmpl('weixin-material-text-message-tmpl', {
+                        extraClass: message.metadata.direction == 'send' ? 'shop-service' : 'customer',
+                        texts: message.text.split('\n'),
+                        imagePath: message.pic_url,
+                        id: message.id
+                    }));
+                } else {
+                    this.container.append($.tmpl('weixin-material-single-news-tmpl', {
+                        news: message,
+                        enableAddNews: this.enableAddNews
+                    }));
+                }
+            } else {
+                //multi_news
+                var mainNews = messages[0];
+                var subNewses = messages.slice(1);
+                this.enableAddNews = (this.enableAddNews && subNewses.length < 9 ? true : false);
+                this.container.append($.tmpl('weixin-material-multi-newses-tmpl', {
+                    mainNews: mainNews,
+                    subNewses: subNewses,
+                    enableAddNews: this.enableAddNews
+                }));
+            }
+        }
+        
+        //cache message's DOM element
+        this.messages.each(function(message) {
+            message.element = null;
+            var selector = 'li[data-id="'+message.id+'"]';
+            message.element = this.$(selector);
+        });
+    },
+
+    /**
+     * 添加一条新建的news message
+     * @param news
+     */
+    addNews: function(news) {
+        var message = news;
+        var metadata = message.get('metadata');
+        metadata.messageIndex = this.getNewMessageIndex();
+        this.messages.push(message);
+        this.refresh();
+
+        if (message.get('metadata') && message.get('metadata').autoSelect) {
+            this.selectNews(message.id);
+        }
+    },
+
+    /**
+     * 向最后一条message中附加一条额外的message
+     */
+    appendNews: function(news) {
+        var message = news;
+        var metadata = message.get('metadata');
+        metadata.messageIndex = this.getMessageIndex();
+
+        this.messages.push(message);
+        this.refresh();
+
+        this.selectNews(message.id);
+    },
+
+    /**
+     * 添加一组新建的news message
+     */
+    addNewses: function(messages) {
+        this.messages.add(messages);
+        this.refresh();
+
+        var count = this.messages.length;
+        for (var i = 0; i < count; ++i) {
+            var message = this.messages.at(i);
+            var metadata = message.get('metadata');
+            if (0 == i) {
+                metadata.messageIndex = this.getNewMessageIndex();
+            } else {
+                metadata.messageIndex = this.getMessageIndex();
+            }
+            if (message.get('metadata') && message.get('metadata').autoSelect) {
+                this.selectNews(message.id);
+            }
+        }
+    },
+
+    deleteNews: function(news) {
+        this.messages.remove(news);
+        if(news.id > 0){
+            this.deleteIds.push(news.id);
+        }
+        this.refresh();
+    },
+
+    checkNews: function() {
+        xlog('check newses...');
+        if (this.messages.length == 0) {
+            this.trigger('start-create-news');
+        }
+    },
+
+    /**
+     * 添加一条“发送”方向的文本消息
+     */
+    addTextMessage: function(message) {
+        var metadata = message.get('metadata');
+        metadata.direction = 'send';
+        metadata.messageIndex = this.getNewMessageIndex();
+        message.set('pic_url', W.previewImage);
+        this.messages.push(message);
+        this.refresh();
+    },
+
+    /**
+     * 收到一条文本消息
+     * @param text
+     */
+    receiveTextMessage: function(message, options) {
+        var metadata = message.get('metadata');
+        metadata.direction = 'receive';
+        metadata.messageIndex = this.getNewMessageIndex();
+        message.set('pic_url', '/static/img/weixin-customer.jpg');
+        this.messages.push(message);
+        if (options && options.silent) {
+            // silent, do nothing
+        } else {
+            this.refresh();
+        }
+    },
+
+    /**
+     * 选择一条news
+     */
+    selectNews: function(id) {
+        var message = this.messages.get(id);
+        if (this.enableAction) {
+            var newsEl = message.element;
+            $('li.xa-i-news-message').removeClass('xui-active-hover');
+            $('li.xa-i-news-message').attr('data-pin', 'false');
+            $('.xa-i-message-editor-bar').hide();
+            
+            // var actionBar = newsEl.find('div.wx-action-bar');
+            newsEl.attr('data-pin', 'true');
+            newsEl.addClass('xui-active-hover');
+            newsEl.find('.xa-i-message-editor-bar').show();
+            if(this.messages.length > 2){
+                newsEl.find('.xa-i-delete-news-btn').show();
+            }
+
+            // 选取图文的第index条
+            var index = $('li[data-id='+id+']').prevAll('li').length + 1;
+            this.trigger('select-news', message, this.messages.length, index);
+        }
+    },
+
+    /**
+     * 根据index选择一条
+     */
+    selectNewsByIndex: function(index) {
+        var message = this.messages.at(index);
+        if (message) {
+            this.selectNews(message.id);
+        }
+    },
+
+    /**
+     * deleteMenu: 删除菜单或菜单项
+     */
+    deleteMenu: function(model) {
+        this.menubar.deleteMenu(model);
+    },
+
+    /**
+     * getMenuData: 获得menu的数据
+     */
+    getMenuData: function() {
+        return this.menubar.getMenuData();
+    },
+
+    /**
+     * addMenus: 添加菜单数据
+     */
+    addMenus: function(menus) {
+        if (this.menubar) {
+            this.menubar.addMenus(menus);
+        } else {
+            xlog('[embeded phone]: no menubar but called addMenus function');
+        }
+    },
+
+    /**
+     * 点击微信消息中链接的响应函数
+     */
+    onClickLink: function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        var url = $(event.target).attr('href');
+        this.openBrowser(url);
+    },
+
+    /**
+     * 点击左上角"微信"按钮的响应函数
+     */
+    onClickBackBtn: function(event) {
+        this.closeBrowser();
+    },
+
+    onShowActionBar: function(event) {
+        if (this.enableAction) {
+            var $news = $(event.currentTarget);
+            var actionData = $news.attr('data-pin');
+            if ('false' == actionData) {
+                $news.addClass('xui-active-hover');
+            }
+            $news.find('.xa-i-message-editor-bar').show();
+            // 显示‘删除’按钮
+            if(this.messages.length > 2){
+                $news.find('.xa-i-delete-news-btn').show();
+            }
+        }
+    },
+
+    onHideActionBar: function(event) {
+        if (this.enableAction) {
+            var $news = $(event.currentTarget);
+            var actionData = $news.attr('data-pin');
+            if ('false' == actionData) {
+                $news.removeClass('xui-active-hover');
+                $news.find('.xa-i-message-editor-bar').hide();
+                $news.find('.xa-i-delete-news-btn').hide();
+            }            
+        }
+    },
+
+    onSelectNews: function(event) {
+        if (this.onBeforeChangeNews) {
+            if (!this.onBeforeChangeNews()) {
+                return;
+            }
+        }
+        var $newsEl = $(event.target).parents('li.xa-i-news-message');
+        if (this.enableAction) {
+            // 编辑
+            var id = $newsEl.attr('data-id');
+            this.selectNews(parseInt(id));
+        }else{
+            // 跳转连接
+            var url =  $newsEl.attr('data-link');
+            this.openBrowser(url);
+        }
+    },
+
+    onChangeMessage: function(message) {
+        _.each(message.changed, function(value, key) {
+            // value = value == null ? '' : value
+            // if (!value.hasOwnProperty('replace')){
+            //     value = '';
+            // }
+            
+            if (message.get('type') == 'text') {
+                var selector = 'div.content';
+                message.element.find(selector).html(value.replace(/\n/g, "<br />"));
+            } else {
+                if (key === 'pic_url') {
+                    var selector = 'img[name="picture"]';
+                    if (value.length == 0) {
+                        value = '/static/img/empty_image.png';
+                        message.element.find(selector).hide();
+                    }else{
+                        message.element.find(selector).show();
+                    }
+                    message.element.find(selector).attr('src', value);
+                } else {
+                    var selector = 'span[name="'+key+'"]';
+                    message.element.find(selector).html(value.replace(/\n/g, "<br />"));
+                }
+            }
+        });
+    },
+
+    /**
+     * 添加图文消息的区域的点击事件的响应函数
+     * @param event
+     */
+    onCreateNews: function(event) {
+        if (this.onBeforeCreateNews) {
+            //进行表单验证
+            if (!this.onBeforeCreateNews()) {
+                return;
+            }
+        }
+
+        //确认是否可创建新的图文消息: 检查第二条图文是否已创建
+        var message = this.messages.at(1);
+        if (!message.get('title') 
+            || !message.get('pic_url') 
+            || !(message.get('link_target') || message.get('text'))
+            ) {
+            W.getErrorHintView().show('请添加第二条图文信息');
+            this.selectNewsByIndex(1); //选中第二条图文信息
+            return;
+        }
+
+
+        this.trigger('start-create-news');
+    },
+
+    onDeleteNews: function(event){
+        event.stopPropagation();
+        event.preventDefault();
+        var $newsEl = $(event.target).parents('li.xa-i-news-message');
+        var id = $newsEl.attr('data-id');
+        var news = this.messages.get(id);
+        this.deleteNews(news);
+        var nextId = news.get('display_index')-2;
+        this.selectNewsByIndex(0);
+
+        this.enableAddNews = (this.enableAddNews && this.messages.length <= 9 ? true : false);
+        $('.xa-add-news-btn').show();
+    },
+
+    /**
+     * 重置message集合
+     */
+    reset: function(messages) {
+        if (messages) {
+            this.messages = messages;
+        } else {
+            //this.messages = new W.model.weixin.Messages();;
+            this.messages.reset();
+        }
+        _.each(this.messages.models, function(message) {
+            this.id2message[message.id] = message;
+        }, this);
+        this.refresh();
     }
 });

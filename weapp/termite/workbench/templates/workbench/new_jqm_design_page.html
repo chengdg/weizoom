@@ -67,6 +67,8 @@
             W.isSystemManager = true;//{% if user|is_system_manager %}true{% else %}false{% endif %};
             function startDetectParentTask() {
                 var detectParentTask = new W.DelayedTask(function() {
+                    xlog(parent.W);
+                    xlog(parent.W.isReady);
                     if (parent.W && parent.W.isReady) {
                         //parent已经准备好，进行初始化
                         xlog('[design page]: parent is ready, initialize design page');

@@ -29,7 +29,7 @@ from core.exceptionutil import unicode_full_stack
 from core import apiview_util
 import pagestore as pagestore_manager
 from webapp.modules.cms.models import Article, CategoryHasArticle
-from mall.models import Product, CategoryHasProduct
+from mall.models import Product, CategoryHasProduct, PRODUCT_SHELVE_TYPE_ON
 from workbench.models import Workspace
 
 #===============================================================================
@@ -70,7 +70,7 @@ def get_products_by_category_id(request):
 	count = int(request.GET.get('count', 5))
 
 	product_ids = [r.product_id for r in CategoryHasProduct.objects.filter(category_id=category_id)]
-	products = Product.objects.filter(id__in=product_ids, is_deleted=False).order_by('-display_index')[:count]
+	products = Product.objects.filter(id__in=product_ids, is_deleted=False, shelve_type=PRODUCT_SHELVE_TYPE_ON).order_by('-display_index')[:count]
 	Product.fill_display_price(products)
 	data = []
 	workspace_id = 0

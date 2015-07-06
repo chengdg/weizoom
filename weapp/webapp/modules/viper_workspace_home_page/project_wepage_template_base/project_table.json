@@ -1,0 +1,14 @@
+{
+ "inner_name": "wepage_empty", 
+ "datasource_project_id": 0, 
+ "source_project_id": 0, 
+ "name": "empty", 
+ "template_project_id": 0, 
+ "type": "wepage", 
+ "id": 15, 
+ "css": "", 
+ "is_active": 1,
+ "is_enable": 1,
+ "site_title": "空白页面",
+ "pagestore": "mongo"
+}

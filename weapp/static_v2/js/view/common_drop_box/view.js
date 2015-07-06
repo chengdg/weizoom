@@ -31,7 +31,12 @@ W.view.common.DropBox = Backbone.View.extend({
                 _this.isInFileInput = true;
                 return;
             }
-            return false;
+            var href = $(event.target).attr('href');
+            if (href) {
+                return true;
+            } else {
+                return false;
+            }
         });
         this.$el.delegate('.xa-close', 'click', function(event) {
             _this.close(event);

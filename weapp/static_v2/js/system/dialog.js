@@ -38,6 +38,10 @@ W.dialog.Dialog = Backbone.View.extend({
 
     },
 
+    onChangeNav: function(nav) {
+
+    },
+
     getDialogTitle: function() {
         return $.trim(this.$('.modal-title').text());
     },
@@ -96,16 +100,25 @@ W.dialog.Dialog = Backbone.View.extend({
 
         this.$el.on('shown.bs.modal', _.bind(this.afterShow, this));
 
-        this.$el.delegate('.xa-titleNav', 'click', _.bind(function(event) {
-            var $nav = $(event.target);
-            this.$('.xui-dialog-activeTitleNav').removeClass('xui-dialog-activeTitleNav');
-            $nav.addClass('xui-dialog-activeTitleNav');
-
-            var nav = $nav.data('nav');
-            this.trigger('change-nav', nav);
-        }, this));
+        this.$el.delegate('.xa-titleNav', 'click', _.bind(this.onClickTitleNav, this));
 
         this.onInitialize(options);
+    },
+
+    onClickTitleNav: function(event) {
+        var $nav = $(event.target);
+        this.$('.xui-dialog-activeTitleNav').removeClass('xui-dialog-activeTitleNav');
+        $nav.addClass('xui-dialog-activeTitleNav');
+
+        var nav = $nav.data('nav');
+        this.onChangeNav(nav);
+        this.trigger('change-nav', nav);
+    },
+
+    clickNav: function(nav) {
+        var $nav = this.$dialog.find('[data-nav="'+nav+'"]');
+        var event = {target:$nav.get(0)};
+        this.onClickTitleNav(event);
     },
 
     render: function() {
@@ -215,6 +228,7 @@ W.dialog.showDialog = function(dialogName, options) {
     var obj = window;
     var items = dialogName.split('.');
     var itemCount = items.length;
+    // 定位对象?
     for (var i = 0; i < itemCount; ++i) {
         var item = items[i];
         if (obj.hasOwnProperty(item)) {
@@ -226,6 +240,9 @@ W.dialog.showDialog = function(dialogName, options) {
     }
 
     if (obj !== null) {
+        //xlog(options);
+        xlog("obj=");
+        xlog(obj);
         var dialog = new obj(options);
         W.dialog.NAME2DIALOG[dialogName] = dialog;
         dialog.show(options);

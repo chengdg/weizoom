@@ -1,0 +1,25 @@
+{% load workbench_filter %}
+
+{% if component.type == 'wepage.specialTemplate_group' %}
+<div 
+    class="wui-specialTemplate" 
+    data-ui-sortable="true" 
+    data-component-cid="{{component.cid}}" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    data-ui-behavior="xub-selectable"
+    style="">
+    <div class="wa-shop-backgroud wui-shop-Bg" style="background: {% if component.model.backgroud %}url({{component.model.backgroud}}){% else %}#256FB5{% endif %} no-repeat;background-size:cover; ">
+    	<ul>
+	    	{% for component in component.components %}
+			<li data-component-cid="{{component.cid}}" class="">
+				<a href="{{component.model.target|extract_target_data:request|safe}}">
+					<img src="{{component.model.image}}" alt="" style="width: 33px; height: 33px;">
+                    <span class="xa-inner-title xui-inner-title">{{component.model.title}}</span>
+				</a>
+			</li>
+			{% endfor %}
+    	</ul>
+    </div>
+</div>
+{% endif %}

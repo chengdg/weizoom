@@ -182,16 +182,16 @@ def export_project(request):
 		f.close()
 
 	#export apis.py
-	apis_dir = os.path.join(settings.TERMITE_HOME, '../../webapp')
-	src_file = os.path.join(apis_dir, 'apis_%s.py' % project_id)
-	dst_file = os.path.join(download_dir, 'apis_%s.py' % project_id)
-	shutil.copyfile(src_file, dst_file)
+	# apis_dir = os.path.join(settings.TERMITE_HOME, '../../webapp')
+	# src_file = os.path.join(apis_dir, 'apis_%s.py' % project_id)
+	# dst_file = os.path.join(download_dir, 'apis_%s.py' % project_id)
+	# shutil.copyfile(src_file, dst_file)
 
 	#export project.css
-	css_dir = os.path.join(settings.TERMITE_HOME, '../../static/project_css')
-	src_file = os.path.join(css_dir, 'project_%s.css' % project_id)
-	dst_file = os.path.join(download_dir, 'project_%s.css' % project_id)
-	shutil.copyfile(src_file, dst_file)	
+	# css_dir = os.path.join(settings.TERMITE_HOME, '../../static/project_css')
+	# src_file = os.path.join(css_dir, 'project_%s.css' % project_id)
+	# dst_file = os.path.join(download_dir, 'project_%s.css' % project_id)
+	# shutil.copyfile(src_file, dst_file)	
 
 	#打包
 	files = os.listdir(download_dir)
@@ -278,11 +278,13 @@ def import_project(request):
 	return HttpResponse('import success')
 	
 
-#===============================================================================
-# show_workbench : 显示工作台
-#===============================================================================
 @login_required
 def show_workbench(request, project_id):
+	"""
+	显示工作台
+
+	URL举例: http://dev.weapp.com/termite/workbench/project/edit/8/
+	"""
 	project = Project.objects.get(id=project_id)
 
 	pages = []

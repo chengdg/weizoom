@@ -87,6 +87,8 @@ class UserProfile(models.Model):
 	is_oauth = models.BooleanField(default=False) #是否授权
 	#v2
 	sub_account_count = models.IntegerField(default=50) #可创建的子账号的个数
+	#wepage
+	is_use_wepage = models.BooleanField(default=False) #是否启用wepage
 	class Meta(object):
 		db_table = 'account_user_profile'
 		verbose_name = '用户配置'
@@ -344,6 +346,10 @@ def __create_special_article(owner, name, title):
 
 	article.display_index = article.id
 	article.save()
+
+class FakeRequest(object):
+	def __init__(self):
+		pass
 
 def create_profile(instance, created, **kwargs):
 	if created:

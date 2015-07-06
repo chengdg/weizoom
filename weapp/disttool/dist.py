@@ -168,7 +168,7 @@ def merge_javascripts(js_name):
 	for src_file_name in js_files:
 		if (js_name == 'jqm_content_base') or ('termite' in js_name):
 			src_file_name = src_file_name.replace('static/', 'termite/static/')
-		if (js_name == 'new_jqm_content_base') or (js_name == 'webapp_content_base'):
+		if (js_name == 'new_jqm_content_base') or (js_name == 'webapp_content_base') or (js_name == 'webapp_content_base_v4'):
 			src_file_name = src_file_name.replace('termite_static/', 'termite/static/')
 
 		print '\t[merge]: process js file: ', src_file_name
@@ -217,7 +217,7 @@ def change_js_reference(js_name):
 			elif (js_name == 'base_v2'):
 				line_content = ['\t\t{{ ""|load_templates_v2|safe }}\n\t\t{% if debug_merged_js %}', '\t\t<script type="text/javascript" src="/static/js/%s?version=%s"></script>' % (src_js_file_name, timestamp), '{% else %}', '\t\t<script type="text/javascript" src="{{cdn_host}}/standard_static/js/%s"></script>' % dst_js_file_name, '{% endif %}']
 				lines.append('\n\t\t'.join(line_content))
-			elif js_name == 'webapp_content_base':
+			elif js_name == 'webapp_content_base' or js_name == 'webapp_content_base_v4':
 				lines.append('\t\t<script type="text/javascript" src="{{cdn_host}}/standard_static/js/%s"></script>' % dst_js_file_name)
 			else:
 				lines.append('\t\t<script type="text/javascript" src="/standard_static/js/%s"></script>' % dst_js_file_name)
@@ -400,7 +400,7 @@ def merge_css(css_name):
 	for src_file_name in css_files:
 		if (css_name == 'jqm_content_base') or ('termite' in css_name):
 			src_file_name = src_file_name.replace('static/', 'termite/static/')
-		if (css_name == 'new_jqm_content_base') or (css_name == 'webapp_content_base'):
+		if (css_name == 'new_jqm_content_base') or (css_name == 'webapp_content_base') or (css_name == 'webapp_content_base_v4'):
 			src_file_name = src_file_name.replace('termite_static/', 'termite/static/')
 		print '\t[merge]: process css file: ', src_file_name
 		print >> dst_css, "/****************************************************/"
@@ -464,7 +464,7 @@ def change_css_reference(dst_css_file_name, css_name):
 	shouldRecord = True
 	for line in src_file:
 		if '*start css*' in line:
-			if css_name == 'webapp_content_base':
+			if css_name == 'webapp_content_base' or css_name == 'webapp_content_base_v4':
 				lines.append('\t\t<link type="text/css" rel="stylesheet" media="all" href="{{cdn_host}}/standard_static/css/%s">' % dst_css_file_name)
 			elif css_name == 'jqm_content_base' or css_name == 'new_jqm_content_base':
 				lines.append('\t\t<link type="text/css" rel="stylesheet" media="all" href="/standard_static/css/%s">' % dst_css_file_name)
@@ -480,7 +480,7 @@ def change_css_reference(dst_css_file_name, css_name):
 		if not shouldRecord:
 			continue
 
-		if css_name == 'webapp_content_base' and '{{request.template_name}}.css' in line:
+		if (css_name == 'webapp_content_base' or css_name == 'webapp_content_base_v4') and '{{request.template_name}}.css' in line:
 			line = line.replace('{{request.template_name}}.css', '{{request.template_name}}.css?version=%s' % timestamp)
 		lines.append(line.rstrip())
 	src_file.close()
@@ -571,7 +571,7 @@ def up_js_css_to_upyun():
 # 总控函数
 ################################################################################
 def dist():
-	htmls = ['base', 'base_v2', 'jqm_content_base', 'new_jqm_content_base', 'webapp_content_base']
+	htmls = ['base', 'base_v2', 'jqm_content_base', 'new_jqm_content_base', 'webapp_content_base', 'webapp_content_base_v4']
 	
 	for html in htmls:
 		merge_javascripts(html)

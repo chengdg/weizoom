@@ -1,0 +1,64 @@
+<script id="termite-create-project-dialog-tmpl-src" type="text/x-handlebar-tmpl">
+	<div class="modal fade xui-termiteCreateProjectDialog" id="termiteCreateProjectDialog">
+	<div class="modal-dialog modal-lg" style="width: 963px;">
+	<div class="modal-content">
+		<div class="modal-header" style="margin-bottom: 10px;">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				选择页面模板
+			</h3>
+		</div>
+		
+		<div class="modal-body" style="min-height:300px; max-height:600px; overflow:auto;">
+			<div class="mb10 clearfix xui-i-navs">
+				<a href="javascript:void(0);" class="xui-i-activeNav xa-nav" data-type="all">所有模板</a>
+				<span class="ml5 mr5">|</span>
+				<a href="javascript:void(0);" class="xa-nav" data-type="basic_template">基础模板</a>
+				<span class="ml5 mr5">|</span>
+				<a href="javascript:void(0);" class="xa-nav" data-type="nav_template">场景导航</a>
+				<span class="ml5 mr5">|</span>
+				<a href="javascript:void(0);" class="xa-nav" data-type="shop_template">店铺模板</a>
+			</div>
+
+			<div
+				data-ui-role="advanced-table"
+				data-app="termite2"
+				data-resource="project_templates"
+				data-template-id="#termite-create-project-dialog-table"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-item-count-per-page="10"
+				data-auto-load="false"
+				class="mb20 xa-table"
+			></div>
+		</div>
+
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">确定使用</button> 
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="termite-create-project-dialog-table" type="text/x-jquery-tmpl">
+	<ul class="xui-i-templates clearfix mb20">
+		{{each(i, projectTemplate) items}}
+			<li class="xui-i-template pr fl mt15 mr15 xa-template 
+				{{if i == 0 }}xui-i-selectedTemplate{{/if}}" data-id="${projectTemplate.id}">
+				{{if projectTemplate.id === -1}}
+				<div class="pr xui-i-cover xui-i-emptyTemplateCover">
+					<div class="xui-i-coverTitle pa">
+						空白模板
+					</div>
+				</div>
+				{{else}}
+				<img class="xui-i-cover" src="${projectTemplate.cover_url}" />
+				{{/if}}
+
+				<div class="xui-i-selectedIndicator pa {{if i != 0}}xui-hide{{/if}}">&radic;</div>
+			</li>
+		{{/each}}
+	</ul>
+</script>

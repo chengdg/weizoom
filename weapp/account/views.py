@@ -866,7 +866,7 @@ def show_error_page(request, **param_dict):
 		else:
 			watchdog_alert(alert_message, type='WEB')
 
-	is_mobile = '/jqm/preview/' in request.META['PATH_INFO']
+	is_mobile = ('/jqm/preview/' in request.META['PATH_INFO']) or ('/termite2/webapp_page/' in request.META['PATH_INFO'])
 	if 'HTTP_REFERER' in request.META:
 		c = RequestContext(request, {
 			'back_url': request.META['HTTP_REFERER']

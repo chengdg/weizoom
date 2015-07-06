@@ -87,6 +87,7 @@ W.ValidaterClass = function() {
 			extract: 'element',
 			check: function(element) {
 				var trimedValue = $.trim(element.val());
+                xwarn('trimed value:' + trimedValue);
 
 				if (trimedValue.length == 0) {
 					this.errorHint = '内容不能为空';
@@ -227,7 +228,7 @@ W.validate = function(el, checkDynamicElement) {
             }
 
             var value = $el.val();
-            var validateTypeStr = $el.data('validate');
+            var validateTypeStr = $el.attr('data-validate');
             if (!validateTypeStr) {
                 return;
             }
@@ -265,6 +266,7 @@ W.validate = function(el, checkDynamicElement) {
                 //执行验证
                 var validater = W.Validater.getRule(validateRule);
                 if (!validater) {
+                    alert('no validater');
                     continue;
                 }
                 if (validater.type === 'function') {

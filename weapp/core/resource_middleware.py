@@ -61,4 +61,3 @@ class ResourceJsMiddleware(object):
 				buf.append(class_info['js'])
 		
 			return HttpResponse('\n'.join(buf), 'text/javascript')
-

@@ -449,6 +449,12 @@ def sync_workspace(request):
 				#project不存在，创建之
 				print 'create project: %s-%s' % (workspace.inner_name, data['inner_name'])
 				project = Project.objects.create(**data)
+				'''
+				if project.type == 'wepage' and project.inner_name == 'empty':
+					print 'update is_active=True'
+					project.is_active = True
+					project.save()
+				'''
 				allow_update_pages = True
 
 			if project.inner_name == 'default':

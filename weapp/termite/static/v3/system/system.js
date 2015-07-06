@@ -16,6 +16,7 @@ W.registerUIRole = function(selector, initializer) {
 	W.uirole[selector] = initializer;	
 }
 W.initUIRole = function() {
+	/*
 	if (W.design && W.design.isInFrame) {
 		//当viper页面在frame中时，启动ui-role的初始化动作
 		var task = new W.DelayedTask(function() {
@@ -34,6 +35,7 @@ W.initUIRole = function() {
 		}, this);
 		task.delay(100);
 	}
+	*/
 }
 $(document).ready(function(event) {
 	W.initUIRole();

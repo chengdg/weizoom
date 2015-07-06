@@ -1,0 +1,62 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'wepage.image_group' %}
+<div 
+    class="wui-imageGroup pr" 
+    data-component-cid="{{component.cid}}" 
+    style="overflow: hidden; position: relative;"
+    >
+
+    {% if component.components.0 %}
+        {% if component.model.displayMode == 'swipe' %}
+            {% if in_production_mode %}
+                <div 
+                    data-ui-role="swipeimage" 
+                    data-jsondata='{{component|to_swipe_images_json}}' 
+                    data-showtitle='true'
+                    data-positionmode='dot'
+                >
+                </div>
+            {% else %}
+                {{ component.components.0.html|safe }}
+                <div class="wui-i-positions">
+                    {% for sub_component in component.components %}
+                    <span class="wui-i-positionDot {% if forloop.first %}wui-i-activePositionDot{% endif %}"></span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% else %}
+            {{ component|join_sub_components_html|safe }}
+        {% endif %}
+    {% else %}
+        <div class="xa-placeholder wui-i-placeholder">
+            <div class="wui-i-placeholderText" style="margin-top: 50px;">
+            编辑图片广告<br/>推荐图片宽度：640px
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endifequal %}
+
+
+
+{% ifequal component.type 'wepage.imagegroup_image' %}
+<a 
+    data-component-cid="{{component.cid}}" 
+    href="{{component.model.target|format_target:project_id}}" 
+    class="wui-singleImageWithTitle"
+>
+    {% if component.model.image %}
+        <img src="{{component.model.image}}" class="wa-inner-imgbox" />
+    {% else %}
+        <div class="xa-placeholder wui-i-placeholder">
+            <div class="wui-i-placeholderText" style="margin-top: 50px;">
+            编辑图片广告<br/>推荐图片宽度：640px
+            </div>
+        </div>
+        <img src="" class="wa-inner-imgbox xui-hide"/>
+    {% endif %}
+    <span class="wa-inner-title wui-i-bottomTitle" style="{% if not component.model.title %}display:none;{% endif %}">{{component.model.title}}</span>
+</a>
+{% endifequal %}

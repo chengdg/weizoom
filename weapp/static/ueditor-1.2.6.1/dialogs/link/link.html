@@ -126,6 +126,7 @@
                 } else {
                     var weappHref = "http://" + parent.W.host + $('#href').attr('data-href');
                     if (weappHref) {
+                        weappHref = weappHref.replace('./','');
                         href = weappHref + '&__name=' + href;
                     }
                 }
@@ -187,37 +188,39 @@
         return false;
     }
 
-    //选择内部链接
-    var onClickEvent = null;
-    if (parent.W.view.common.SelectWebSiteLinkView === undefined) {
-        // 版本1.0
-        onClickEvent = function(event){
-            parent.W.ueditor.handleSelectLinkTarget(function(data) {
-                var link = JSON.parse(data);
+
+    function onClickSelectLinkTargetButton(event) {        
+        console.log('click ueditor link button')
+        //选择内部链接
+        var onClickEvent = null;
+        if (parent.W.view.common.SelectWebSiteLinkView === undefined) {
+            // 版本1.0
+            onClickEvent = function(event){
+                parent.W.ueditor.handleSelectLinkTarget(function(data) {
+                    var link = JSON.parse(data);
+                    if (link.data.indexOf('http:') === -1) {
+                        link.data = '/workbench/jqm/preview/' + link.data;
+                    }
+                    $('#href').val(link.data_path).attr('data-href', link.data);
+                });
+            };
+        }else{
+            // 版本2.0
+            var webSiteLinkView = parent.W.getSelectWebSiteLinkView({
+                el: '.edui-dialog.edui-for-link'
+            });
+            webSiteLinkView.bind('finish-select-url', function(data){
+                var link = $.parseJSON(data);
                 if (link.data.indexOf('http:') === -1) {
                     link.data = '/workbench/jqm/preview/' + link.data;
                 }
                 $('#href').val(link.data_path).attr('data-href', link.data);
             });
-        };
-    }else{
-        // 版本2.0
-        var webSiteLinkView = parent.W.getSelectWebSiteLinkView({
-            el: '.edui-dialog.edui-for-link'
-        });
-        webSiteLinkView.bind('finish-select-url', function(data){
-            var link = $.parseJSON(data);
-            if (link.data.indexOf('http:') === -1) {
-                link.data = '/workbench/jqm/preview/' + link.data;
-            }
-            $('#href').val(link.data_path).attr('data-href', link.data);
-        });
-        onClickEvent = function(event){
-            webSiteLinkView.onClickLinkMenu(event, '.edui-dialog-body');
-        };
-    }
+            onClickEvent = function(event){
+                webSiteLinkView.onClickLinkMenu(event, '.edui-dialog-body');
+            };
+        }
 
-    function onClickSelectLinkTargetButton(event) {
         if (parent !== window) {
             onClickEvent(event);
         }

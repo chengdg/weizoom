@@ -118,11 +118,14 @@ W.Api = function() {
         if (disableCache) {
             args['timestamp'] = new Date().getTime();
         }
+        var async_val = options.async == false ? false : true;
 
 		var _this = this;
 		var options = {
 			type: method,
 			cache: false,
+			async: async_val,
+			dateType: 'json',
 			success: function(resp) {
 				if (showLoading && W.getLoadingView) {
 					W.getLoadingView().hide();
@@ -178,7 +181,7 @@ W.Api = function() {
 	            }
 			}
 		}
-
+		// console.log(666, options)
 		if (showLoading && W.getLoadingView) {
 			W.getLoadingView().show();
 		}
