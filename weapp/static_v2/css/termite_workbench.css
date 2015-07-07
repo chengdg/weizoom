@@ -911,7 +911,7 @@ button.xui-removeImageButton{
 	float: left;
 }
 .xui-propertyView-textNavGroup .xui-selected-title{
-	max-width: 128px;
+	max-width: 124px;
 }
 .xui-propertyView-imgDisplayGroup .xui-link,.xui-propertyView-imageNavGroup .xui-link,
 .xui-propertyView-imgAdjGroup .xui-link{
