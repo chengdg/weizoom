@@ -9,7 +9,7 @@
     data-index="{{component.model.index}}" 
     data-ui-behavior="xub-selectable"
     style="">
-    <div class="wa-shop-backgroud wui-shop-Bg" style="background: {% if component.model.backgroud %}url({{component.model.backgroud}}){% else %}#256FB5{% endif %} no-repeat;background-size:cover;cursor:pointer">
+    <div class="wa-shop-backgroud wui-shop-Bg" style="background: {% if component.model.backgroud %}url({{component.model.backgroud}}){% else %}#256FB5{% endif %} no-repeat;background-size:cover;cursor:pointer;background-position:center;">
     	<ul>
 	    	{% for component in component.components %}
 			<li data-component-cid="{{component.cid}}" class="xa-inner-title xui-inner-title">
