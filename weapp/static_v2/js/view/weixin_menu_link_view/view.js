@@ -131,6 +131,8 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
     		// 未选择链接
 			$linkTargetInput.data('menuLinkTarget', '').val('');
 	    	$urlDisplayValueInput.val('').removeAttr('disabled');
+            $urlDisplayValueInput.val('').removeAttr('readonly');
+            
             $urlInput.val('');
 
 	    	$selectedTitle.text('');
