@@ -119,6 +119,9 @@ def record_shared_url(request):
 		if shared_url:
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'from')
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
+			shared_url = remove_querystr_filed_from_request_url(shared_url, 'code')
+			shared_url = remove_querystr_filed_from_request_url(shared_url, 'state')
+			shared_url = remove_querystr_filed_from_request_url(shared_url, 'appid')
 			shared_url_digest = hashlib.md5(shared_url).hexdigest()
 
 			print '=======================shareurl=', shared_url
