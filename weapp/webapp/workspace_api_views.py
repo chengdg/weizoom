@@ -399,7 +399,6 @@ def sync_workspace(request):
 			else:
 				#workspace不存在，创建之
 				print 'create workspace: ', data['inner_name']
-				print 'jz-----', request.user
 				workspace = Workspace.objects.create(**data)
 				#TODO: 是否为所有用户创建workspace?
 
