@@ -116,6 +116,9 @@ def record_shared_url(request):
 		if shared_url.startswith('http'):
 			shared_url = shared_url[shared_url.find(settings.DOMAIN)+len(settings.DOMAIN):]
 
+		if shared_url.startswith('/workbench/jqm/preview/'):
+			shared_url = "/termite%s" % shared_url
+
 		if shared_url:
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'from')
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
@@ -124,7 +127,6 @@ def record_shared_url(request):
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'appid')
 			shared_url_digest = hashlib.md5(shared_url).hexdigest()
 
-			print '=======================shareurl=', shared_url
 			if MemberSharedUrlInfo.objects.filter(member=member, shared_url_digest=shared_url_digest).count() == 0:
 				MemberSharedUrlInfo.objects.create(
 					member = member,
