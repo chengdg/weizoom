@@ -41,7 +41,6 @@ class MemberSummary(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-	            'app_name': 'stats',
 			'second_navs': export.get_member_second_navs(request),
 			'second_nav_name': export.MEMBER_SUMMARY_NAV,
 			'start_date': today,
@@ -385,6 +384,9 @@ def _get_member_share_url_rank(webapp_id, low_date, high_date):
 	for item in sorted_member_id2followers:
 		username = '-'
 		member_id = item[0]
+		followers = item[1]
+		if followers == 0:
+			continue
 		try:
 			member = Member.objects.get(id=member_id)
 			username = member.username_for_html
@@ -395,7 +397,7 @@ def _get_member_share_url_rank(webapp_id, low_date, high_date):
 			'rank': i, 
 			'member_id': member_id,
 			'username': username,
-			'followers': item[1]
+			'followers': followers
 		})
 		
 		i += 1
