@@ -74,7 +74,6 @@ def _create_qrcode(url, object_id):
     )
     qr.add_data(url)
     img = qr.make_image()
-cd we
     file_name = '{}.png'.format(object_id)
     dir_path = os.path.join(settings.UPLOAD_DIR, '../termite_preview')
     if not os.path.exists(dir_path):
