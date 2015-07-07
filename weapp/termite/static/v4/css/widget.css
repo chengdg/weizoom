@@ -663,7 +663,7 @@ ul.wui-relatelink li h3{
 .wui-product .wui-inner-titleAndprice .xui-inner-title,
 .wui-productlist .wui-inner-titleAndprice .xui-inner-title{
     font-size: 13px;
-    padding: 10px 0px 0px;
+    padding: 6px 0px 0px;
     height: 32px;
     color: #333;
     overflow: hidden;
@@ -845,6 +845,9 @@ ul.wui-relatelink li h3{
 /*====type1====*/
 .wui-product .wui-block-type1 .wui-inner-titleAndprice,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice{
     font-size: 13px;
+}
+.wui-product .wui-block-type1 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice p:first-child{
+    margin-bottom: 6px;
 }
 .wui-product .wui-block-type1,.wui-productlist .wui-block-type1{
     padding-left: 10px;
@@ -1131,7 +1134,7 @@ ul.wui-relatelink li h3{
     padding: 0 0.5%;
     background: #fff;
     box-sizing:border-box;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 .wui-imagedisplay .wui-inner-pic{
     height: 106px;

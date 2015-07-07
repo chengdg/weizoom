@@ -2,11 +2,11 @@
 
 {% if component.type == 'wepage.pageheader' %}
 <div 
-    class="wui-pageheader" 
+    class="wui-pageheader pb10" 
     data-component-cid="{{component.cid}}" 
     data-index="{{component.model.index}}" 
     style="">
-    <div class="wa-shop-backgroud wui-shop-header" style="background: {% if component.model.backgroud %}url({{component.model.backgroud}}){% else %}{{component.model.background_color}}{% endif %} no-repeat;background-size:100%; ">
+    <div class="wa-shop-backgroud wui-shop-header" style="background: {% if component.model.backgroud %}url({{component.model.backgroud}}){% else %}{{component.model.background_color}}{% endif %} no-repeat;background-size:100%;border-bottom:1px solid #e5e5e5;">
         <div class="wui-shop-logo">
             <span>logo</span>
             <img class="wa-shop-logo" src="{{component.model.logo}}">

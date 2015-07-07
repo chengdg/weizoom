@@ -2,9 +2,10 @@
 {% if component.type == 'wepage.textnav_group' %}
 <ul class="wui-textnav"
     data-component-cid="{{component.cid}}"
+    style="background:#fff;"
 >
 	{% for component in component.components %}
-	<li data-component-cid="{{component.cid}}">
+	<li data-component-cid="{{component.cid}}" style="border-bottom:1px solid #e5e5e5;">
 		<a href="{{component.model.target|extract_target_data:request|safe}}">
 			<span class="wa-inner-link">{{component.model.title}}</span> 
 			<i class="right-arrow"></i>

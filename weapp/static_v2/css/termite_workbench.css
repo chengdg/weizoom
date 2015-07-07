@@ -520,7 +520,6 @@ body {
 }
 .propertyGroup_property_dynamicControlField_content .star_show:before{
 	position: relative;
-	top:-3px;
 }
 .propertyGroup_property_dynamicControlField_content .propertyGroup_property_label {
 	width: 70px;
