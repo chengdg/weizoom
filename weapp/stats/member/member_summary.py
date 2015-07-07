@@ -69,7 +69,7 @@ class MemberSummary(resource.Resource):
 		bought_member_count = stats_util.get_bought_member_count(webapp_id, low_date, high_date)
 		#会员复购率
 		repeat_buying_member_count = stats_util.get_repeat_buying_member_count(webapp_id, low_date, high_date)
-		repeat_buying_member_rate = '0.0%'
+		repeat_buying_member_rate = '0.00%'
 		if bought_member_count > 0:
 			repeat_buying_member_rate = str(round(((repeat_buying_member_count + 0.0) / bought_member_count) * 100, 2)) + '%'
 		#发起扫码会员和扫码新增会员
@@ -81,7 +81,7 @@ class MemberSummary(resource.Resource):
 		#分享链接新增会员
 		member_from_share_url_count = stats_util.get_member_from_share_url_count(webapp_id, low_date, high_date)
 		#会员推荐率
-		member_recommend_rate = '0.0%'
+		member_recommend_rate = '0.00%'
 		_total_member_count = stats_util.get_total_member_count(webapp_id, high_date)
 		if _total_member_count > 0:
 			member_recommend_rate = str(round(((share_url_member_count + ori_qrcode_member_count + 0.0) / _total_member_count) * 100, 2)) + '%'
