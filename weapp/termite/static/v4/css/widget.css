@@ -334,8 +334,8 @@ ul{
     top: -25px;
 }
 .wui-swipeImage .wui-i-dotPosition {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     display: inline-block;
     margin-right: 10px;
     border-radius: 50%;
@@ -357,6 +357,7 @@ ul{
     position: absolute;
     width: 100%;
     display: block;
+    z-index: 10;
 }
 
 

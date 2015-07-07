@@ -59,6 +59,6 @@
         </div>
         <img src="" class="wa-inner-imgbox xui-hide"/>
     {% endif %}
-    <span class="wa-inner-title wui-i-bottomTitle" style="{% if not component.model.title %}display:none;{% endif %}">{{component.model.title}}</span>
+    <span class="wa-inner-title wui-i-bottomTitle" style="{% if not component.model.title %}display:none;{% endif %} z-index:10;">{{component.model.title}}</span>
 </a>
 {% endifequal %}
