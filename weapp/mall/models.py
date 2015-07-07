@@ -514,12 +514,12 @@ class Product(models.Model):
 		type2promotions = {}
 		id2promotion = {}
 		product_promotion_relations = list(
-			promotion_models.ProductPromotion.objects.filter(
+			promotion_models.Promotion.objects.filter(
 				product_id__in=product_ids))
 		promotion_ids = [relation.promotion_id
 						 for relation in product_promotion_relations]
 		promotions = list(
-			promotion_models.ProductPromotion.objects.filter(
+			promotion_models.Promotion.objects.filter(
 				product_id__in=product_ids))
 		for promotion in promotions:
 			type2promotions.setdefault(promotion.type, []).append(promotion)

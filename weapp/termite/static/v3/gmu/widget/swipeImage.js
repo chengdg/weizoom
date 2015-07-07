@@ -33,8 +33,10 @@ gmu.define('SwipeImage', {
 			htmls.push('<div class="wui-swiper-wrapper">');
 			for (var i = 0; i < swipeImages.length; ++i) {
 				var image = swipeImages[i];
-				if (!image.link_url) {
-					image.link_url = 'javascript:void(0);';
+				if (image.link_url) {
+					htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></a></div>')
+				} else {
+					htmls.push('<div class="wui-swiper-slide"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></div>')
 				}
 				htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></a></div>')
 			}

@@ -19,6 +19,7 @@ from termite.core import stripper
 from webapp import views as webapp_views 
 from models import *
 from mall import models as mall_models
+from cache import webapp_cache
 
 
 type2template = {}
@@ -156,7 +157,7 @@ def process_item_group_data(request, component):
 		component['_has_data'] = True
 		return
 
-	product_ids = []
+	product_ids = set()
 	for sub_component in component['components']:
 		sub_component['runtime_data'] = {}
 		target = sub_component['model']['target']
@@ -164,7 +165,7 @@ def process_item_group_data(request, component):
 			try:
 				data = json.loads(target)
 				product_id = int(data['meta']['id'])
-				product_ids.append(product_id)
+				product_ids.add(product_id)
 				sub_component['__is_valid'] = True
 				sub_component['runtime_data']['product_id'] = product_id
 			except:
@@ -173,13 +174,16 @@ def process_item_group_data(request, component):
 		else:
 			sub_component['__is_valid'] = False
 
-	products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
-	if len(products) == 0:
+	#products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
+	if len(product_ids) == 0:
 		component['_has_data'] = False
 	else:
 		component['_has_data'] = True
-		webapp_owner_id = products[0].owner_id
-		mall_models.Product.fill_details(webapp_owner_id, products, {'with_product_model':True})
+		products = []
+		category, cached_products = webapp_cache.get_webapp_products(request.user_profile, False, 0)
+		for product in cached_products:
+			if product.id in product_ids:
+				products.append(product) 
 		id2product = dict([(product.id, product) for product in products])
 		
 		for sub_component in component['components']:
@@ -248,15 +252,16 @@ def process_item_list_data(request, component):
 		component['_has_data'] = False
 		return
 
-	product_ids = [r.product_id for r in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)]
-	product_ids.sort()
-	products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
+	category, products = webapp_cache.get_webapp_products(request.user_profile, False, int(category_id))
+	# product_ids = set([r.product_id for r in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)])
+	# product_ids.sort()
+	# products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
 	products = products[:count]
 	if len(products) == 0:
 		component['_has_data'] = False
 	else:
-		webapp_owner_id = products[0].owner_id
-		mall_models.Product.fill_details(webapp_owner_id, products, {'with_product_model':True})
+		#webapp_owner_id = products[0].owner_id
+		#mall_models.Product.fill_details(webapp_owner_id, products, {'with_product_model':True})
 		product_datas = []
 		for product in products:
 			product_datas.append({
