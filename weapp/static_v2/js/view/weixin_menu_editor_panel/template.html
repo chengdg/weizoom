@@ -1,5 +1,5 @@
 <script id="weixin-menu-eidtor-panel-tmpl-src" type="text/x-jquery-tmpl">
-	<div class="wui-messageEditor pa">
+	<div class="wui-messageEditor pa xa-menu-content" data-id="${index}">
 		<div>
 			<div>
 				<ul class="nav nav-tabs">
@@ -13,7 +13,7 @@
 				<div class="tab-content">
 					<!-- 文字消息 -->
 					<div class="tab-pane active" id="weixinMessageEditer-textMessageZone-${index}">
-						<textarea id="weixinMessageText" rows="7" name="text_content" data-validate="require-string" data-validate-max-length="600" data-validate-min-length="1" class="xui-hide"></textarea>
+						<textarea id="weixinMessageText" data-id="${index}" rows="7" name="text_content" data-validate="require-string" data-validate-max-length="600" data-validate-min-length="1" class="xui-hide"></textarea>
 					</div>
 
 					<!-- 图文消息 -->

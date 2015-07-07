@@ -34,7 +34,7 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 		this.answer = options.answer || '';
 		//跳转链接
 		this.url = options.url || '';
-		
+		this.currentMenuId = options.currentMenuId || '';
 		this.render();
 		
 		//选择内部链接
@@ -68,6 +68,11 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 			this.$('.xa-url').tab('show');
 		}
     },
+
+    getCurrentMenuId: function(){
+    	return this.currentMenuId
+    },
+
     
     /**
 	 * 处理外部链接
@@ -113,6 +118,7 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 	 * onClickTextMessageTab: 点击“文字”tab的响应函数 
 	 */
 	onClickTextMessageTab: function(){
+
 		this.materialId = 0;
 	},
 	

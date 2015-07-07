@@ -249,18 +249,22 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	},
 	
 	addPhoneNewses: function(materialId, material) {
+	//	alert(W.currentMenuId+':addPhoneNewses')
         var menuEditor = new W.view.weixin.MenuEditorPanel({
 	        el: this.$('#edit-message-panel'),
 	        materialId: materialId,
-	        material: material
+	        material: material,
+	        currentMenuId: W.currentMenuId
 	    });
 	    this.bindMenuEditorHandler(menuEditor);
 	},
 	
 	addPhoneUrl: function(url) {
+		//alert(W.currentMenuId+':addPhoneUrl')
         var menuEditor = new W.view.weixin.MenuEditorPanel({
 	        el: this.$('#edit-message-panel'),
-	        url: url
+	        url: url,
+	        currentMenuId: W.currentMenuId
 	    });
 	    this.bindMenuEditorHandler(menuEditor);
 	},
@@ -272,9 +276,11 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 		} else {
 			$messageEl = this.$('#edit-message-panel');
 		}
+		//alert(W.currentMenuId+':addPhoneText')
         var menuEditor = new W.view.weixin.MenuEditorPanel({
 	        el: $messageEl,
-	        answer: answer
+	        answer: answer,
+	        currentMenuId: W.currentMenuId
 	    });
 	    this.bindMenuEditorHandler(menuEditor);
 	},
@@ -382,7 +388,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	changeEditMessagePanel: function($menuDiv, menuType) {
     	var menuId = parseInt($menuDiv.parents('.xui-menu-left-item').find('.xui-one-menu input').attr('data-menu-id'));
     	W.currentMenuId = menuId;
-    	
+    	//alert('iiiiiiiii',W.currentMenuId,'--')
     	var menu;
     	// 一级菜单
     	if (menuType === 1) {
@@ -404,6 +410,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	},
 	
 	getMenuModel: function() {
+		//alert(W.currentMenuId)
 		var items = W.currentMenuId.toString().split('-');
 		var model;
 		if (items.length >= 2) {
@@ -427,6 +434,14 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 					$iframeBody.css('height', '184px');
 				}
 			}
+			//var menuId = parseInt(menuEditor.$el.parents('.xui-menu-left-item').find('.xui-one-menu input').attr('data-menu-id'));
+			//alert(menuId)
+			//console.log("menuEditor:",menuEditor.$el.find('.xa-menu-content').attr('data-id'))
+				//find('.xa-menu-content').attr('dat.fa-id'))
+			//console.log("menuEditor:")
+			//W.currentMenuId = menuEditor.$el.find('.xa-menu-content').attr('data-id')
+			W.currentMenuId = menuEditor.getCurrentMenuId();
+			//alert(W.currentMenuId+':bindMenuEditorHandler')
 			var model = _this.getMenuModel();
 			model.set('answer', {content: content, type: type});
 		});
