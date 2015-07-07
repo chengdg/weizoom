@@ -12,9 +12,11 @@ from django.contrib.auth.models import User
 
 from mall.models import *
 from modules.member.models import *
+from modules.member import module_api
 from weixin.user import models as weixn_models
 from account import models as account_models
 from utils.string_util import byte_to_hex
+from utils import url_helper
 
 
 
@@ -45,14 +47,22 @@ from core import dev_util
 @When(u'{webapp_user_name}点击{shared_webapp_user_name}分享链接')
 def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	time.sleep(1)
+	webapp_owner_id = context.webapp_owner_id
+	user = User.objects.get(id=webapp_owner_id)
+	openid = "%s_%s" % (shared_webapp_user_name, user.username)
+	member = module_api.get_member_by_openid(openid, context.webapp_id)
+
+	if member:
+		new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
+		context.shared_url = "%s&fmt=%s" % (new_url, member.token)
 	response = context.client.get(context.shared_url)
 	if response.status_code == 302:
-		print '[info] redirect by change fmt in shared_url'
+		print('[info] redirect by change fmt in shared_url')
 		redirect_url = bdd_util.nginx(response['Location'])
 		context.last_url = redirect_url
 		response = context.client.get(bdd_util.nginx(redirect_url))
 	else:
-		print '[info] not redirect'
+		print('[info] not redirect')
 		context.last_url = context.shared_url
 
 
@@ -61,7 +71,7 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name, shared_url_nam
 	shared_url = getattr(context, shared_url_name)
 	response = context.client.get(shared_url)
 	if response.status_code == 302:
-		print '[info] redirect by change fmt in shared_url'
+		print('[info] redirect by change fmt in shared_url')
 		redirect_url = bdd_util.nginx(response['Location'])
 		context.last_url = redirect_url
 		response = context.client.get(bdd_util.nginx(redirect_url))
@@ -146,3 +156,24 @@ def step_impl(context, webapp_owner_name):
 	user_profile = account_models.UserProfile.objects.get(user_id=webapp_owner_id)
 	IntegralStrategySttingsDetail.objects.filter(webapp_id=user_profile.webapp_id).update(is_used=True)
 
+
+@When(u'{user}通过{shared_user}分享链接关注{webapp_owner_name}的公众号')
+def step_impl(context, user, shared_user, webapp_owner_name):
+	context.execute_steps(u"When 清空浏览器")
+	context.execute_steps(u"When %s访问%s的webapp" % (shared_user, webapp_owner_name))
+	context.execute_steps(u"When %s把%s的微站链接分享到朋友圈" % (shared_user, webapp_owner_name))
+	
+	context.execute_steps(u"When 清空浏览器")
+	context.execute_steps(u"When %s点击%s分享链接" % (user, shared_user))
+	context.execute_steps(u"When %s关注%s的公众号" % (user, webapp_owner_name))
+
+
+@When(u'{user}通过{shared_user}分享链接关注{webapp_owner_name}的公众号于{followed_date}')
+def step_impl(context, user, shared_user, webapp_owner_name, followed_date):
+	context.execute_steps(u"When 清空浏览器")
+	context.execute_steps(u"When %s访问%s的webapp" % (shared_user, webapp_owner_name))
+	context.execute_steps(u"When %s把%s的微站链接分享到朋友圈" % (shared_user, webapp_owner_name))
+
+	context.execute_steps(u"When 清空浏览器")
+	context.execute_steps(u"When %s点击%s分享链接" % (user, shared_user))
+	context.execute_steps(u"When %s关注%s的公众号于%s" % (user, webapp_owner_name, followed_date))

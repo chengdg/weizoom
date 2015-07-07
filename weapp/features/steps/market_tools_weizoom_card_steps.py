@@ -174,7 +174,7 @@ def step_impl(context, user, weizoom_card_id):
         expected['log'] = _get_weizoom_card_log(expense_records)
 
     # print("*"*80, "能获取微众卡")
-    # from pprint import pprint
+    # from pprint(import pprint)
     # pprint(expected)
     # pprint(actual_data)
     # print("*"*120)

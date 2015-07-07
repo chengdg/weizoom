@@ -153,8 +153,8 @@ def step_impl(context, user, filter_name):
 def step_impl(context, user):
 	filter_dict = json.loads(context.text)
 	filter_value = _get_filter_value_by_name_str(context.client, filter_dict)
-	# print '+++++++++++++++++++++++'
-	# print filter_value
+	# print('+++++++++++++++++++++++')
+	# print(filter_value)
 	context.client.filter_value = filter_value
 
 @then(u"{user}获取对应的订单")
@@ -167,8 +167,8 @@ def step_impl(context, user):
 
 	actual_orders = _get_actual_orders(items, context)
 	expected_order = json.loads(context.text)
-	# print actual_orders
-	# print '-------------------'
+	# print(actual_orders)
+	# print('-------------------')
 	bdd_util.assert_list(expected_order, actual_orders)
 
 # 组织数据
@@ -217,7 +217,7 @@ def step_impl(context, user):
 	if filter_value:
 		url = '/mall/editor/orders/export/?{}'.format(filter_value)
 		response = context.client.get(bdd_util.nginx(url))
-		# print response
+		# print(response)
 		# items = json.loads(response.content)['data']['items']
 		# actual_orders = _get_actual_orders(items)
 		# expected_order = json.loads(context.text)

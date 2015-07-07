@@ -106,14 +106,14 @@ def step_impl(context, user):
 
 	actual = []
 	for menu in menus:
-		print 'haha'
+		print('haha')
 		if len(menu['items']) > 0:
 			nav = {
 				"name": menu['name'],
 				"items": []
 			}
 			items = menu['items']
-			items.sort(lambda x,y: cmp(x['index'], y['index']))			
+			items.sort(lambda x,y: cmp(x['index'], y['index']))
 			for menuitem in items:
 				nav['items'].append({
 					"name": menuitem['name'],

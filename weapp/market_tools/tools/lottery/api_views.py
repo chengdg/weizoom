@@ -84,11 +84,14 @@ def edit_lottery(request):
 	return response.get_response()
 
 
-########################################################################
-# get_records: 获取中奖记录
-########################################################################
 @login_required
 def get_records(request):
+	"""
+	获取中奖记录
+
+	举例：http://weapp.weizoom.com/market_tools/lottery/api/records/get/?version=1&sort_attr=-created_at&count_per_page=15&page=1&enable_paginate=1&timestamp=1434434567924
+
+	"""
 	user = request.user.get_profile()
 	lotteries = Lottery.objects.filter(owner=request.user, is_deleted=False)
 	lottery_ids = [l.id for l in lotteries]

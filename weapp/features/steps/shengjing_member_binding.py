@@ -11,7 +11,7 @@ from features.testenv.model_factory import *
 from django.test.client import Client
 from django.contrib.auth.models import User
 
-from apps.customerized_apps.shengjing.models import * 
+from apps.customerized_apps.shengjing.models import *
 
 from utils.string_util import byte_to_hex
 
@@ -37,7 +37,7 @@ def step_impl(context, user, member_A, member_B):
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	user_profile = __get_user(user).get_profile()	
+	user_profile = __get_user(user).get_profile()
 
 	try:
 		member_nickname_str_a = member_A.encode('utf-8')
@@ -76,7 +76,7 @@ def step_impl(context, user, member_A, member_B):
 
 	member_b = Member.objects.filter(username_hexstr=username_hexstr_b, webapp_id=user_profile.webapp_id)[0]
 	account_b  = MemberHasSocialAccount.objects.filter(member=member_b)[0].account
-	
+
 	content = json.loads(context.text)
 
 	data_a = content['member_a']
@@ -93,13 +93,13 @@ def step_impl(context, user, member_A, member_B):
 		'captcha': data_b['captcha'],
 		'member_id': member_b.id
 	}
-	
+
 	response = context.client.post('/apps/shengjing/user_center/api/record_binding_phone/', post_data_a)
 	context.tc.assertEquals(1, ShengjingBindingMember.objects.filter(member_id=member_a.id, phone_number=post_data_a['number'], captcha=post_data_a['captcha'], webapp_id=user_profile.webapp_id).count())
 	if ShengjingBindingMember.objects.filter(member_id=member_a.id, phone_number=post_data_a['number'], captcha=post_data_a['captcha'], webapp_id=user_profile.webapp_id).count() > 0:
-		binding_memnber = ShengjingBindingMember.objects.filter(member_id=member_a.id, phone_number=post_data_a['number'], captcha=post_data_a['captcha'], webapp_id=user_profile.webapp_id)[0]	
+		binding_memnber = ShengjingBindingMember.objects.filter(member_id=member_a.id, phone_number=post_data_a['number'], captcha=post_data_a['captcha'], webapp_id=user_profile.webapp_id)[0]
 		ShengjingBindingMemberInfo.objects.create(binding=binding_memnber,name=member_a.username_hexstr,status=1)
-	
+
 	context.client.post('/apps/shengjing/user_center/api/record_binding_phone/', post_data_b)
 	context.tc.assertEquals(1, ShengjingBindingMember.objects.filter(member_id=member_b.id, phone_number=post_data_b['number'], captcha=post_data_b['captcha'], webapp_id=user_profile.webapp_id).count())
 
@@ -166,9 +166,9 @@ def step_impl(context, user,member_B):
 
 	url = '/workbench/jqm/preview/?module=customerized_apps:shengjing:user_center&model=bingding_info&action=get&workspace_id=mall&webapp_owner_id=%s&sct=%s' % (user.id, account_b.token)
 	response =  context.client.post(bdd_util.nginx(url), post_data)
-	# print '-----------------------'
-	# print response
-	# print '------------------------aa'
+	# print('-----------------------')
+	# print(response)
+	# print('------------------------aa')
 
 	# context.tc.assertEquals(1, ShengjingBindingMemberInfo.objects.filter(binding=binding_member).count())
 	# context.tc.assertEquals(10, member_a.interal)

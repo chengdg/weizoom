@@ -1,0 +1,54 @@
+<script id="stats-order-summary-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<span style="margin-left: 40px;">筛选日期</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-enable-select-time="true"
+				data-ui-role="orderDatepicker"
+			    data-format="yy-mm-dd"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd"
+			    data-max="now"
+			    data-min-el="#start_date"/>
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item" style="margin-top: -15px; margin-left: 10px; margin-right: 30px">
+			<a type="button" class="xa-search-order-summary btn btn-primary xui-fontBold">查&nbsp;&nbsp;询</a>
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			快速查看：
+			<ul class="xui-inline">
+				<li class="xui-i-shortcut"><a data-value="0" href="javascript:void(0);" class="xui-i-shortcutLink xa-shortcut xui-i-activeLink">今天</a></li>
+				<li class="xui-i-shortcut"><a data-value="1" href="javascript:void(0);" class="xui-i-shortcutLink xa-shortcut">昨天</a></li>
+				<li class="xui-i-shortcut"><a data-value="6" href="javascript:void(0);" class="xui-i-shortcutLink xa-shortcut">最近7天</a></li>
+				<li class="xui-i-shortcut"><a data-value="29" href="javascript:void(0);" class="xui-i-shortcutLink xa-shortcut">最近30天</a></li>
+				<li class="xui-i-shortcut"><a data-value="89" href="javascript:void(0);" class="xui-i-shortcutLink xa-shortcut">最近90天</a></li>
+				<li class="xui-i-shortcut"><a data-value="-1" href="javascript:void(0);" class="xui-i-shortcutLink xa-shortcut">全部</a></li>
+			</ul>
+	 	</div>
+	</div>
+</div>
+</script>

@@ -387,6 +387,7 @@ INSTALLED_APPS = [
     'weixin.user',
     'weixin2',
     'termite2',
+    'stats',
 
     'weixin.message.material',
     'weixin.message.message',

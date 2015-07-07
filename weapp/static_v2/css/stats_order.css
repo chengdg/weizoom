@@ -1,0 +1,86 @@
+@charset "utf-8";
+/*
+*筛选面板
+*/
+
+
+.xui-stats-orders .xui-checkbox{
+	position: absolute;
+	margin-top: 40px;
+	margin-left: 40px;
+}
+
+.xui-stats-orders .xui-order-num{
+	position: absolute;
+	margin-left: 310px;
+}
+
+.xui-stats-orders .xui-pay-ways{
+	position: absolute;
+	margin-left: 600px;
+}
+
+.xui-stats-orders .xui-double-ways{
+	position: absolute;
+	margin-left: 40px;
+}
+
+.xui-stats-orders .xui-buyer-source{
+	position: absolute;
+	margin-left: 350px;
+}
+
+.xui-stats-orders .xui-favorable-deduction{
+	position: absolute;
+	margin-left: 640px;
+}
+
+.xui-stats-orders .xui-order-status{
+	font-weight: normal;
+}
+
+
+/**
+ * echart widget样式
+ */
+
+.xui-stats-orders .wui-i-header {
+    background-color: #F6F9FF;
+    height: 50px;
+    line-height: 50px;
+}
+.xui-stats-orders .wui-i-content {
+    width: 100%; 
+    height: 300px;
+}
+.xui-stats-orders .wui-i-shortcut {
+    display: inline-block;
+}
+.xui-stats-orders .wui-i-shortcutLink {
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    text-decoration: none;
+    padding: 0px 10px;
+}
+.xui-stats-orders .wui-i-shortcutLink:link, .wui-i-shortcutLink:visited {
+    color: #1D84C7;
+}
+.xui-stats-orders .wui-i-shortcutLink:hover {
+    /*background-color: #FFF;*/
+}
+.xui-stats-orders .wui-i-activeLink {
+    background-color: #FFF;
+    border: solid 1px #1D84C7;
+}
+
+.xui-stats-orders .xui-feedback-time{
+	position: absolute;
+	margin-top: -7px;
+}
+
+.xui-stats-orders .xui-quick-look{
+	position: absolute;
+	margin-top: -13px;
+	margin-left: 430px;
+}

@@ -1,0 +1,36 @@
+<script id="show-activity-analysis-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal">
+        <div class="modal-dialog xui-activityDialog" style="width:900px; margin-top:250px;">
+            <div class="modal-content">
+                <div class="modal-body pb50" style="overflow: auto;">
+                    <b style="line-height:60px;">活动结果分析</b>
+                    <div id="activity-analysis-table"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script id="activity-analysis-table-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="xui-wrap">
+        
+        {{each(i, item) stats}}
+         <div style="" class="fl xui-i-wrap">
+            <div class="xui-i-name" >${item.name}</div>
+            <div class="xui-i-value">${item.value}</div>
+        </div>
+        {{/each}}
+        {{if type=='qrcode'}}
+        <div style="" class="fl xui-i-wrap">
+            <div class="xui-i-name" ></div>
+            <div class="xui-i-value"></div>
+        </div>
+        <div style="" class="fl xui-i-wrap">
+            <div class="xui-i-name" ></div>
+            <div class="xui-i-value"></div>
+        </div>
+        {{/if}}
+        <div class="cb"></div>
+    </div>
+</script>

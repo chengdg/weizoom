@@ -556,7 +556,6 @@ def get_order_filters(request):
 def get_order_filter_params(request):
 	response = create_response(200)
 	# 类型
-
 	type = [{'name': u'普通订单', 'value': PRODUCT_DEFAULT_TYPE},
 			{'name': u'测试订单', 'value': PRODUCT_TEST_TYPE},
 			{'name': u'积分商品', 'value': PRODUCT_INTEGRAL_TYPE}]

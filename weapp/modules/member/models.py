@@ -496,6 +496,28 @@ class Member(models.Model):
 
 		return self._username_for_html
 
+	'''
+	@cached_property
+	def username_for_html(self):
+		if hasattr(self, '_username_for_html'):
+			return self._username_for_html
+
+		if (self.username_hexstr is not None) and (len(self.username_hexstr) > 0):
+			self._username_for_html = encode_emojicons_for_html(self.username_hexstr, is_hex_str=True)
+		else:
+			self._username_for_html = encode_emojicons_for_html(self.username)
+
+		try:
+			#解决用户名本身就是字节码串导致不能正常转换得问题，例如ae
+			self._username_for_html.decode('utf8')
+		except:
+			error_msg = u"用户名:{}; utf8解码失败, cause:\n{}".format(self._username_for_html, unicode_full_stack())
+			watchdog_error(error_msg, 'mall')
+			self._username_for_html = self.username_hexstr
+
+		return self._username_for_html
+	'''
+
 	@cached_property
 	def username_for_title(self):
 		try:
@@ -1167,7 +1189,6 @@ class MemberAnalysis(models.Model):
 			return None
 
 
-
 class MemberAnalysisDetail(models.Model):
 	member_analysis = models.ForeignKey(MemberAnalysis)
 	user_source = models.CharField(default='0', max_length=50)
@@ -1178,59 +1199,18 @@ class MemberAnalysisDetail(models.Model):
 		db_table = 'member_analysis_detail'
 		verbose_name = '用户统计详情'
 		verbose_name_plural = '用户统计详情'
-	#datetime = models.CharField(default='') #2014-12-07
-
-# AWARD_INTEGRAL = 3 #积分
-# AWARD_COUPON = 1 #优惠劵
-# AWARD_MEMBER_TYPE_ALL = 1 #统一奖励
-# AWARD_MEMBER_TYPE_LEVEL = 0 #按会员等级奖励
-# #===============================================================================
-# # MemberQrcode: 会员二维码设置
-# #===============================================================================
-# class MemberQrcodeSettings(models.Model):
-# 	owner = models.ForeignKey(User, related_name='auth_user')
-# 	detail = models.TextField(verbose_name=u'详情', null=True, blank=True, default='')
-# 	award_member_type = models.IntegerField(max_length=1, verbose_name=u'扫码后奖励会员', default=AWARD_MEMBER_TYPE_ALL) #扫码后奖励类型
-# 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
-
-# 	class Meta(object):
-# 		db_table = 'market_tool_member_qrcode_settings'
-# 		verbose_name = '会员二维码配置'
-# 		verbose_name_plural = '会员二维码配置'
 
 
-# class MemberQrcodeAwardContent(models.Model):
-# 	member_qrcode_settings = models.ForeignKey(MemberQrcodeSettings)
-# 	member_level =  models.IntegerField(max_length=1, verbose_name=u"会员等级", default=-1)
-# 	award_type = models.IntegerField(max_length=1, verbose_name=u"奖励类型", default=AWARD_INTEGRAL)
-# 	award_content = models.CharField(max_length=256, verbose_name=u'奖励内容') #目前奖励内容为：1，奖励积分分值 2，优惠券id
-# 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+class MemberMarketUrl(models.Model):
+	member = models.ForeignKey(Member)
+	market_tool_name = models.CharField(default='', max_length=50)
+	url = models.TextField()
+	page_title = models.CharField(default='', max_length=50)
+	follower_member_token = models.CharField(default='', max_length=1024)
+	created_at = models.DateTimeField(auto_now_add=True)
 
-# 	class Meta(object):
-# 		db_table = 'market_tool_member_qrcode_award_content'
-# 		verbose_name = '会员二维码奖励内容'
-# 		verbose_name_plural = '会员二维码奖励内容'
+	class Meta(object):
+		db_table = 'member_market_url'
+		verbose_name = '营销工具引流'
+		verbose_name_plural = '营销工具引流'
 
-
-# class MemberQrcode(models.Model):
-# 	owner = models.ForeignKey(User ,related_name='member_qrcode_user')
-# 	ticket = models.TextField() #获取的ticket值
-# 	member = models.ForeignKey(Member ,related_name='member') #会员id
-# 	expired_second = models.IntegerField(default=1800) #临时二维码失效时间
-# 	created_time = models.IntegerField()
-# 	is_active = models.IntegerField(default=1)
-# 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
-
-# 	class Meta(object):
-# 		db_table = 'market_tool_member_qrcode'
-# 		verbose_name = '会员二维码'
-# 		verbose_name_plural = '会员二维码'
-
-# class MemberQrcodeLog(models.Model):
-# 	member_qrcode = models.ForeignKey(MemberQrcode)
-# 	member_id = models.CharField(max_length=100)
-
-# 	class Meta(object):
-# 		db_table = 'market_tool_member_qrcode_log'
-# 		verbose_name = '会员二维码使用记录'
-# 		verbose_name_plural = '会员二维码使用记录'

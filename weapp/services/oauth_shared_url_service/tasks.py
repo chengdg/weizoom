@@ -9,6 +9,7 @@ from modules.member import member_settings
 
 from modules.member import integral_new
 from modules.member.models import Member, MemberFollowRelation, SOURCE_BY_URL
+from utils import url_helper
 
 from celery import task
 
@@ -51,6 +52,16 @@ def process_shared_url(request, args):
 			except:
 				notify_message = u"process_shared_url increase_for_click_shared_url:('member_id':{}), cause:\n{}".format(member.id, unicode_full_stack())
 				watchdog_fatal(notify_message)
+
+		if is_new_created_member:
+			name = url_helper.get_market_tool_name_from(request.get_full_path())
+			if name:
+				MemberMarketUrl.objects.create(
+					member = member,
+					market_tool_name = name,
+					url = request.get_full_path(),
+					follow_member_token = fmt,
+					)
 
 	except:
 		notify_message = u"('fmt':{}), 处理分享信息 cause:\n{}".format(

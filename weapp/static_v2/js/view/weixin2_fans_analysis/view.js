@@ -39,12 +39,11 @@ W.view.common.fansECharts = Backbone.View.extend({
         this.load();
     },
 
-    reload: function(options) {
-        this.load();
+    reload: function(args) {
+        this.load(args);
     },
 
-    load: function(options) {
-        var args = {};
+    load: function(args) {
         var _this = this;
         W.getApi().call({
             app: this.options.app,
@@ -54,9 +53,7 @@ W.view.common.fansECharts = Backbone.View.extend({
             scope: this,
             success: function(data) {
                 var option = data;
-                xlog(_this.$chart.get(0));
                 var myChart = echarts.init(_this.$chart.get(0));
-                xlog(_this.$chart.get(0));
                 // 为echarts对象加载数据 
                 option.legend = null;  //强制去除图例信息
                 myChart.setOption(option);

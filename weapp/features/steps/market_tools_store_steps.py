@@ -72,7 +72,7 @@ def step_impl(context, user, store_name):
     client = context.client
     store_new = json.loads(context.text)[0]
     store = Store.objects.get(name=store_name)
-    print store_new,store_name
+    print(store_new,store_name)
     if 'swipe_images' in store_new:
         store_new['swipe_images'] = json.dumps(store_new['swipe_images'])
 

@@ -96,3 +96,18 @@ def remove_querystr_filed_from_request_path(orig_full_path, remove_filed):
 			return "{}?{}".format(path, '&'.join(remain_query_parts))
 		else:
 			return path
+
+from urlparse import urlparse
+def get_market_tool_name_from(path):
+	query_str = urlparse(path).query
+	name = None
+	if 'module=market_tool:' in query_str:
+		query_list = query_str.split('&')
+		for query in query_list:
+			if 'module=market_tool:' in query:
+				split_list = query.split(':')
+				name = split_list[1]
+				break
+		return name
+	else:
+		return None

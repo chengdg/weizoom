@@ -13,8 +13,8 @@ from modules.member.models import *
 
 @given(u"{user}设定会员积分策略")
 def step_impl(context, user):
-	print type(context.text)
-	print "*" * 80
+	print(type(context.text))
+	print("*" * 80)
 	info = json.loads(context.text)
 
 	data = {

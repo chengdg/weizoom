@@ -100,15 +100,15 @@ W.dialog.Dialog = Backbone.View.extend({
  * showDialog: 显示dialogName指定的dialog
  */
 W.dialog.showDialog = function(dialogName, options) {
-	var dialog = W.dialog.NAME2DIALOG[dialogName];
-	if (dialog) {
-		dialog.show(options);
-		return;
-	}
+    var dialog = W.dialog.NAME2DIALOG[dialogName];
+    if (dialog) {
+        dialog.show(options);
+        return;
+    }
 
-	//没有dialog，创建之
-	xlog('create new dialog: ' + dialogName);
-	var obj = window;
+    //没有dialog，创建之
+    xlog('create new dialog: ' + dialogName);
+    var obj = window;
     var items = dialogName.split('.');
     var itemCount = items.length;
     for (var i = 0; i < itemCount; ++i) {
@@ -123,9 +123,9 @@ W.dialog.showDialog = function(dialogName, options) {
 
     xlog(obj);
     if (obj !== null) {
-    	var dialog = new obj(options);
-    	W.dialog.NAME2DIALOG[dialogName] = dialog;
-    	dialog.show(options);
+        var dialog = new obj(options);
+        W.dialog.NAME2DIALOG[dialogName] = dialog;
+        dialog.show(options);
     }
 }
 

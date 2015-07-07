@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
 import json
-import time
+#import time
 from datetime import datetime, timedelta
+import re
 
 from django.test.client import Client
 from django.http import SimpleCookie
 from django.contrib.auth.models import User
-from django.db.models import Model
+#from django.db.models import Model
+#from webapp.modules.mall.models import *
 from mall.models import *
 from webapp.models import *
 from account.models import UserProfile
 from weapp import settings
 from modules.member import models as member_models
 from mall import models as mall_models
+from market_tools.tools.channel_qrcode import models as channel_qrcode_models
+from market_tools.tools.lottery import models as lottery_models
+
+from utils.dateutil import get_current_date
 
 tc = None
 
@@ -46,10 +52,10 @@ class WeappClient(Client):
 
 
 
-###########################################################################
-# login: 登录系统
-###########################################################################
 def login(user, password=None, **kwargs):
+	"""
+	登录系统
+	"""
 	if not password:
 		password = 'test'
 
@@ -77,26 +83,35 @@ def login(user, password=None, **kwargs):
 	return client
 
 
-###########################################################################
-# get_webapp_id_for: 获取user对应的webapp id
-###########################################################################
 def get_webapp_id_for(username):
+	"""
+	获取user对应的webapp id
+	"""
 	user = User.objects.get(username=username)
 	profile = UserProfile.objects.get(user=user)
 	return profile.webapp_id
 
 
-###########################################################################
-# get_user_id_for: 获取username对应的user的id
-###########################################################################
+def get_webapp_id_via_owner_id(owner_id):
+	"""
+	获取user对应的webapp id
+	"""
+	user = User.objects.get(id=owner_id)
+	profile = UserProfile.objects.get(user=user)
+	return profile.webapp_id
+
+
 def get_user_id_for(username):
+	"""
+	获取username对应的user的id
+	"""
 	return User.objects.get(username=username).id
 
 
-###########################################################################
-# get_member_for: 获取username对应的会员
-###########################################################################
 def get_member_for(username, webapp_id):
+	"""
+	获取username对应的会员
+	"""
 	from utils.string_util import byte_to_hex
 	if isinstance(username, unicode):
 		member_nickname_str = username.encode('utf-8')
@@ -113,18 +128,18 @@ def get_order_by_order_no(order_no):
 	return mall_models.Order.objects.get(order_id=order_no)
 
 
-###########################################################################
-# use_webapp_template: 为webapp_owner_name模板webapp的模板
-###########################################################################
 def use_webapp_template(webapp_owner_name, template_name):
+	"""
+	为webapp_owner_name模板webapp的模板
+	"""
 	webapp_owner_id = get_user_id_for(webapp_owner_name)
 	Workspace.objects.filter(owner_id=webapp_owner_id, inner_name='home_page').update(template_name=template_name)
 
 
-###########################################################################
-# get_project_id_for_webapp_owner: 获取username对应的webapp的简约风尚的模板project的id
-###########################################################################
 def get_project_id_for_webapp_owner(username, workspace_name):
+	"""
+	获取username对应的webapp的简约风尚的模板project的id
+	"""
 	user = User.objects.get(username=username)
 	workspace = Workspace.objects.get(owner=user, inner_name=workspace_name)
 	project = Project.objects.get(workspace=workspace, inner_name='simple_fashion')
@@ -183,10 +198,10 @@ def get_ship_area_id_for(ship_area_str):
 	return ship_area
 
 
-###########################################################################
-# nginx: 模拟nginx的转换
-###########################################################################
 def nginx(url):
+	"""
+	模拟nginx的转换
+	"""
 	if url.startswith('/workbench/'):
 		return '/termite%s' % url
 	else:
@@ -219,10 +234,10 @@ def convert_to_same_type(a, b):
 	return a, b
 
 
-###########################################################################
-# assert_dict: 验证expected中的数据都出现在了actual中
-###########################################################################
 def assert_dict(expected, actual):
+	"""
+	验证expected中的数据都出现在了actual中
+	"""
 	global tc
 	is_dict_actual = isinstance(actual, dict)
 	for key in expected:
@@ -245,10 +260,10 @@ def assert_dict(expected, actual):
 				raise
 
 
-###########################################################################
-# assert_list: 验证expected中的数据都出现在了actual中
-###########################################################################
 def assert_list(expected, actual, options=None):
+	"""
+	验证expected中的数据都出现在了actual中
+	"""
 	global tc
 	try:
 		tc.assertEquals(len(expected), len(actual), 'list length DO NOT EQUAL: %d != %d' % (len(expected), len(actual)))
@@ -267,10 +282,10 @@ def assert_list(expected, actual, options=None):
 			tc.assertEquals(expected_obj, actual_obj)
 
 
-###########################################################################
-# assert_api_call_success: 验证api调用成功
-###########################################################################
 def assert_api_call_success(response):
+	"""
+	验证api调用成功
+	"""
 	if '<!DOCTYPE html>' in response.content:
 		assert False, "NOT a valid json string, call api FAILED!!!!"
 	else:
@@ -278,14 +293,17 @@ def assert_api_call_success(response):
 		assert 200 == content['code'], "code != 200, call api FAILED!!!!"
 
 
-###########################################################################
-# print_json: 将对象以json格式输出
-###########################################################################
 def print_json(obj):
+	"""
+	将对象以json格式输出
+	"""
 	print json.dumps(obj, indent=True)
 
 
 def get_date(str):
+	"""
+	将字符串转成datetime对象
+	"""
 	#处理expected中的参数
 	today = datetime.now()
 	if str == u'今天':
@@ -303,9 +321,10 @@ def get_date(str):
 	elif u'天前' in str:
 		delta = 0-int(str[:-2])
 	else:
-		return str
+		return datetime.strptime(str, "%Y-%m-%d")
 
 	return today + timedelta(delta)
+
 
 def get_date_str(str):
 	date = get_date(str)
@@ -368,3 +387,35 @@ def get_coupon(coupon_rule_name, member):
 	coupon_rule = CouponRule.objects.get(name=coupon_rule_name)
 	return Coupon.objects.get(member_id=member.id, coupon_rule_id=coupon_rule.id)
 
+
+def get_channel_qrcode_setting(channel_qrcode_name):
+	"""
+	根据名字获取ChannelQrcodeSetting对象
+	"""
+	settings = channel_qrcode_models.ChannelQrcodeSettings.objects.filter(name=channel_qrcode_name)
+	if len(settings) > 0:
+		return settings[0]
+	return None
+
+def get_lottery_setting(name):
+	"""
+	根据名字获取Lottery对象
+	"""
+	settings = lottery_models.Lottery.objects.filter(name=name)
+	if len(settings) > 0:
+		return settings[0]
+	return None
+
+
+
+def escape_date_string(str):
+	"""
+	日期字符串转义
+
+	eg: $(今天) ==> '2015-06-24'
+	"""
+	# TODO: to be optimized
+	print("str: {}".format(str))
+	str = re.sub(ur"\$\(今天\)", get_current_date(), str)
+	#str = re.sub(r'\$\(今天\+1\)', get_current_date(), str)
+	return str

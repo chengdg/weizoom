@@ -220,7 +220,7 @@ def step_impl(context, user, is_can, pay_interface_type):
 
 	has_other_pay_interface = False
 	for pay_interface in pay_interfaces:
-		print pay_interface
+		print(pay_interface)
 		if pay_interface_type == PAYTYPE2NAME[pay_interface['type']]:
 			has_other_pay_interface = True
 	if is_can == u'可':

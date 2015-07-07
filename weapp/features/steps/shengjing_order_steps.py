@@ -13,22 +13,22 @@ from webapp.modules.cms.models import *
 
 @Given(u"{webapp_user}所属公司")
 def step_impl(context, webapp_user):
-	print ''
+	print('')
 
 @Given(u"{webapp_user}拥有人次卡")
 def step_impl(context, webapp_user):
-	print ''
+	print('')
 
 @Given(u"{webapp_user}拥有时间卡")
 def step_impl(context, webapp_user):
-	print ''
+	print('')
 
 @When(u"{bill}访问{status}的账单明细")
 def step_impl(context, webapp_user, status):
-	print ''
+	print('')
 
 @Then(u"{bill}可以看到账单明细")
 def step_impl(context, webapp_user):
-	print ''
+	print('')
 
 

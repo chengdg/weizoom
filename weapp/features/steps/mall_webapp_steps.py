@@ -251,7 +251,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		areas = ship_area.split(' ')
 	else:
 		areas = '北京市 北京市 海淀区'.split(' ')
-		#print u'没有邮寄地区'
+		#print(u'没有邮寄地区')
 	if len(areas) > 0:
 		pros = Province.objects.filter(
 			name = areas[0]
@@ -358,7 +358,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 
 	# 访问下订单的API
 	# print("*"*80, "consumer buy producer goods")
-	# from pprint import pprint
+	# from pprint(import pprint)
 	# pprint(data)
 	# print("*"*120)
 
@@ -369,7 +369,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response_json = json.loads(context.response.content)
 
 	# print("*"*80, "bill购买jobs的商品")
-	# from pprint import pprint
+	# from pprint(import pprint)
 	# pprint(response_json['data'])
 	# print("*"*120)
 
@@ -461,11 +461,11 @@ def step_impl(context, webapp_owner_name):
 	#进行统计
 	from services.daily_page_visit_statistic_service.tasks import daily_page_visit_statistic_service
 	for date in dates:
-		print '>>>>>>>>>>>>>>>>>>>'
-		print date
-		print daily_page_visit_statistic_service
+		print('>>>>>>>>>>>>>>>>>>>')
+		print(date)
+		print(daily_page_visit_statistic_service)
 		result = daily_page_visit_statistic_service.delay(None, date)
-		print result
+		print(result)
 
 
 # 获取规格ids, 根据名称
@@ -484,7 +484,7 @@ def _get_product_model_name_from_ids(webapp_owner_id, ids):
 def step_impl(context, webapp_user_name):
 	order_id = context.created_order_id
 	if order_id == -1:
-		print 'Server Error: ', json.dumps(json.loads(context.response.content), indent=True)
+		print('Server Error: ', json.dumps(json.loads(context.response.content), indent=True))
 		assert False, "order_id must NOT be -1"
 		return
 
@@ -501,11 +501,11 @@ def step_impl(context, webapp_user_name):
 		actual_order.coupon_id = coupon.coupon_rule.name
 
 	for product in actual_order.products:
-		# print '---product---', product
+		# print('---product---', product)
 		if 'custom_model_properties' in product and product['custom_model_properties']:
 			product['model'] = ' '.join([property['property_value'] for property in product['custom_model_properties']])
 
-	# print '---actual_order---', actual_order
+	# print('---actual_order---', actual_order)
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, actual_order)
 
@@ -531,8 +531,8 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 	response = context.client.get(bdd_util.nginx(url), follow=True)
 
 	pay_interface_names = [p.get_str_name() for p in response.context['order'].pay_interfaces]
-	# print pay_interface_names
-	# print pay_type
+	# print(pay_interface_names)
+	# print(pay_type)
 
 	if pay_type == u'能':
 		if pay_interface == u"微众卡支付":
@@ -547,8 +547,8 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 @then(u"{webapp_user_name}获得创建订单失败的信息'{error_msg}'")
 def step_impl(context, webapp_user_name, error_msg):
 	error_data = json.loads(context.response.content)
-	# print error_data
-	# print error_msg
+	# print(error_data)
+	# print(error_msg)
 	context.tc.assertTrue(200 != error_data['code'])
 	response_msg = error_data['data']['msg']
 	if response_msg == '':

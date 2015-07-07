@@ -28,11 +28,12 @@ def __build_member_basic_json(member):
 		'grade_name': member.grade.name
 	}
 
-########################################################################
-# get_channel_qrcode_settings: 获取渠道扫码配置列表
-########################################################################
+
 @login_required
 def get_channel_qrcode_settings(request):
+	"""
+	获取渠道扫码配置列表
+	"""
 	#处理搜索
 	query = request.GET.get('query', '').strip()
 	if query:

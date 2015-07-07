@@ -52,7 +52,7 @@ from auth import models as auth_models
 
 from account.social_account.models import SocialAccount
 from modules.member import models as member_models
-from watchdog import models as watchdog_models
+#from watchdog import models as watchdog_models
 from market_tools.tools.delivery_plan import models as delivery_models
 from market_tools.tools.activity import models as activity_models
 from market_tools.tools.red_envelope import models as red_envelope_models
@@ -60,6 +60,9 @@ from market_tools.tools.point_card import models as point_card_models
 from market_tools.tools.vote import models as vote_models
 from market_tools.tools.test_game import models as test_game_models
 from market_tools.tools.store import models as store_models
+from market_tools.tools.lottery import models as lottery_models
+from market_tools.tools.channel_qrcode import models as channel_qrcode_models
+from market_tools.tools.member_qrcode import models as member_qrcode_models
 from weixin2 import models as weixin2_models
 
 from selenium import webdriver
@@ -181,6 +184,9 @@ def __clear_all_app_data():
 	mall_models.ProductSwipeImage.objects.all().delete()
 	mall_models.Product.objects.all().delete()
 	mall_models.Order.objects.all().delete()
+	mall_models.OrderHasProduct.objects.all().delete()
+	mall_models.OrderHasPromotion.objects.all().delete()
+	mall_models.OrderOperationLog.objects.all().delete()
 	mall_models.WeizoomMall.objects.all().delete()
 	mall_models.ShoppingCart.objects.all().delete()
 	mall_models.MallCounter.objects.all().delete()
@@ -203,6 +209,9 @@ def __clear_all_app_data():
 	#member_models.MemberGrade.objects.all().delete()
 	member_models.Member.objects.all().delete()
 	member_models.MemberFollowRelation.objects.all().delete()
+	member_models.MemberSharedUrlInfo.objects.all().delete()
+	member_models.Member.objects.all().delete()
+
 	#自动回复消息
 	weixin_qa_models.Rule.objects.all().delete()
 	weixin_material_models.News.objects.all().delete()
@@ -228,7 +237,6 @@ def __clear_all_app_data():
 	store_models.Store.objects.all().delete()
 	store_models.StoreSwipeImage.objects.all().delete()
 
-
 	#activity
 	activity_models.Activity.objects.all().delete()
 
@@ -243,6 +251,19 @@ def __clear_all_app_data():
 	vote_models.Vote.objects.all().delete()
 	vote_models.VoteOption.objects.all().delete()
 	vote_models.VoteOptionHasWebappUser.objects.all().delete()
+
+	# 微信抽奖
+	lottery_models.Lottery.objects.all().delete()
+	lottery_models.LotteryHasPrize.objects.all().delete()
+	lottery_models.LotteryRecord.objects.all().delete()
+
+	# 渠道扫码
+	channel_qrcode_models.ChannelQrcodeSettings.objects.all().delete()
+	channel_qrcode_models.ChannelQrcodeHasMember.objects.all().delete()
+
+	# 会员扫码
+	member_qrcode_models.MemberQrcode.objects.all().delete()
+	member_qrcode_models.MemberQrcodeLog.objects.all().delete()
 
 	# 店铺装修
 	termite2_models.TemplateCustomModule.objects.all().delete()

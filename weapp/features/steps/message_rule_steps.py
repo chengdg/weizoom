@@ -60,7 +60,7 @@ def step_impl(context, user, rule_patterns):
 		if len(rule['patterns']) > 0:
 			rule['patterns'] = rule['patterns'][0]['keyword']
 	except Exception, e:
-		print e
+		print(e)
 
 	actual = {
 		"patterns": rule['patterns'],
@@ -140,7 +140,7 @@ def step_impl(context, user):
 	client = context.client
 
 	response = client.get('/new_weixin/follow_rules/')
-	print response.context['rule']
+	print(response.context['rule'])
 
 	rule = response.context['rule']
 	if rule == None:
@@ -175,7 +175,7 @@ def step_impl(context, user):
 		"material_id": "0",
 		"answer": rule['answer']
 	}
-	print context.client.post('/new_weixin/api/follow_rules/?_method=put', data)
+	print(context.client.post('/new_weixin/api/follow_rules/?_method=put', data))
 
 
 @when(u"{user}更新关注自动回复规则为")
@@ -310,7 +310,7 @@ def step_impl(context, user, active_type):
 		start_hour = __parse_hour(start)
 		end_hour = __parse_hour(end)
 
-	print 'start_hour: %d, end_hour: %d' % (start_hour, end_hour)
+	print('start_hour: %d, end_hour: %d' % (start_hour, end_hour))
 	data = {
 		"material_id": 0,
 		"answer": rule.answer,

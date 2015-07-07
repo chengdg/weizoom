@@ -600,7 +600,13 @@ select{
 .xui-mainPanel .xui-sideBar-issuingCoupon{
 	background-position: 0 -600px;
 }
-.xui-mainPanel .xui-sideBar-wepage{
+.xui-mainPanel .xui-sideBar-order_summary{
+	background-position: 50px -380px;
+}
+.xui-mainPanel .xui-sideBar-order_list {
+	background-position: 50px -402px;
+}
+.xui-mainPanel .xui-sideBar-wepage {
 	background-position:-49px -383px;
 }
 .xui-mainPanel .xui-sideBar > ul{

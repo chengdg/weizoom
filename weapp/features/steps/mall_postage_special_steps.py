@@ -41,7 +41,7 @@ def _get_province_ids(province_names):
 	ids = []
 	province_names = province_names.split(',')
 	for province_name in province_names:
-		print province_name
+		print(province_name)
 		province = Province.objects.get(name=province_name)
 		ids.append(str(province.id))
 	return ','.join(ids)

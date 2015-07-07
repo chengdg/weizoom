@@ -111,13 +111,13 @@ def index(request):
 
 		return render_to_response('account/index.html', c)
 
-#===============================================================================
-# show_account_info : 账号信息
-#===============================================================================
 #from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
 
 @login_required
 def show_account_info(request):
+	"""
+	显示账号信息
+	"""
 	user_profile = request.user_profile
 	request_user = request.user
 

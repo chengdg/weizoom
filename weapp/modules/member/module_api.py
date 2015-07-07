@@ -119,4 +119,11 @@ def get_member_info_by(member_id):
 	 		member_info = MemberInfo.objects.create(member=member, name = '')
 	except:
 		return None
+
+def get_member_by_openid(openid, webapp_id):
+	try:
+		social_account = SocialAccount.objects.get(webapp_id=webapp_id, openid=openid)
+		return MemberHasSocialAccount.objects.filter(account=social_account)[0].member
+	except:
+		return None
 	

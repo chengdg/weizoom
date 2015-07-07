@@ -13,17 +13,18 @@ from mall.models import *
 @When(u"{ignore}:wglass")
 def step_impl(context, ignore):
 	import sys
-	print >> sys.stderr, u'ignore weapp operation: %s' % ignore
+	#print >> sys.stderr, u'ignore weapp operation: %s' % ignore
+	sys.stderr.write(u'ignore weapp operation: %s' % ignore)
 
 @Given(u"{ignore}:wglass")
 def step_impl(context, ignore):
 	import sys
-	print >> sys.stderr, u'ignore weapp operation: %s' % ignore
+	sys.stderr.write('ignore weapp operation: %s' % ignore)
 
 @Then(u"{ignore}:wglass")
 def step_impl(context, ignore):
 	import sys
-	print >> sys.stderr, u'ignore weapp operation: %s' % ignore
+	sys.stderr.write(u'ignore weapp operation: %s' % ignore)
 
 @When(u"执行weapp操作")
 def step_impl(context):

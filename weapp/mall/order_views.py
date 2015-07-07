@@ -473,6 +473,7 @@ def _export_orders_json(request):
 		product_name = query_dict["product_name"]
 
 	order_list = mall_api.get_orders_by_params(query_dict, date_interval, order_list)
+	print len(order_list)
 	if product_name:
 		# 订单总量
 		order_count = len(order_list)

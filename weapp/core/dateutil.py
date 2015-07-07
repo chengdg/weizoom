@@ -2,6 +2,7 @@
 
 import time
 from datetime import datetime, timedelta
+import re
 
 days_name2days_count = {
 	'current_day': 0,
@@ -424,3 +425,20 @@ def get_datetime_from_timestamp(parse_timestamp):
 #===============================================================================
 def get_timestamp_from_datetime(parse_datetime):
 	return int(time.mktime(parse_datetime.timetuple()))
+
+
+PATTERN_DATE = re.compile("(\d{4})-(\d{1,2})-(\d{1,2})")
+def get_date_string(datetime_string):
+	"""
+	用正则表达式匹配date
+
+	举例：输入可以为 
+	 * 1981-05-08
+	 * 1981-5-8
+	 * 1981-5-08
+	"""
+	result = PATTERN_DATE.search(datetime_string)
+	date_string = None
+	if len(result.groups()) == 3:
+		date_string = "%s-%02d-%02d" % (result.group(1), int(result.group(2)), int(result.group(3)))
+	return date_string

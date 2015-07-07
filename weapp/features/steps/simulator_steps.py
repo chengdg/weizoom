@@ -28,7 +28,7 @@ def __fill_member_info(context, username, openid):
 	#获得social_account
 	social_account = SocialAccount.objects.get(openid=openid)
 	relation = MemberHasSocialAccount.objects.get(account_id=social_account.id, webapp_id=context.webapp_id)
-	
+
 	#获得member
 	member = Member.objects.get(id=relation.member_id)
 	#由于mode=='develop'或者social account的is_for_test=True，导致member中的username都是'预览'
@@ -147,7 +147,7 @@ def step_impl(context, user, mp_user_name, date):
 def step_impl(context, webapp_user_name, webapp_owner_name):
 	client = context.client
 	openid = '%s_%s' % (webapp_user_name, webapp_owner_name)
-	
+
 	#获取sct cookie
 	sct = SocialAccount.objects.get(openid=openid).token
 
@@ -168,7 +168,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	if not has_sct:
 		assert False, '获取sct cookie失败'
 	if response.status_code == 302:
-		print "[info]: redirect by replace sct by fmt in url"
+		print("[info]: redirect by replace sct by fmt in url")
 		dev_util.print_cookies(context.client, 'cookie2')
 		redirect_url = response['Location']
 		response = client.get(bdd_util.nginx(response['Location']))
@@ -207,8 +207,8 @@ def step_impl(context, user, answer):
 
 @then(u"{user}收到自动回复")
 def step_impl(context, user):
-	print context.qa_result
-	print context.text
+	print(context.qa_result)
+	print(context.text)
 
 
 @when("清空浏览器")

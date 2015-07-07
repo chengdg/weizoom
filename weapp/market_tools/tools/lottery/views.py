@@ -25,11 +25,12 @@ from market_tools import export
 MARKET_TOOLS_NAV = 'market_tools'
 SECOND_NAV_NAME = 'lottery'
 
-########################################################################
-# list_lottery: 显示抽奖列表
-########################################################################
+
 @login_required
 def list_lottery(request):
+	"""
+	显示抽奖列表
+	"""
 	user = request.user.get_profile()
 	lotteries = Lottery.objects.filter(owner=request.user, is_deleted=False)
 	today = datetime.today()

@@ -47,8 +47,8 @@ W.view.weixin.FansFilterView = Backbone.View.extend({
 
     // 点击‘筛选’按钮事件
     doSeacrh: function(action) {
+
         var dataView = this.options.dataView;
-        console.log(dataView)
         var args = this.getFilterValue();
         dataView.options.args = this.getFilterValueByDict(args);
         dataView.setPage(1);

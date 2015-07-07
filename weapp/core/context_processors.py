@@ -26,6 +26,7 @@ from utils import component_template_util
 #import cache
 
 from weixin2 import export as weixin_export
+from stats import export as stats_export
 
 def first_navs(request):
 	"""
@@ -37,7 +38,8 @@ def first_navs(request):
 			result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
 		else:
 			result['first_navs'] = weixin_export.FIRST_NAVS
-
+	elif '/stats/' in request.path_info:
+		result['first_navs'] = stats_export.FIRST_NAVS
 	return result
 
 def cdn_host(request):
@@ -326,7 +328,7 @@ def weapp_dialogs_old(request):
 #===============================================================================
 def weapp_dialogs(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path):
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -343,7 +345,8 @@ def weapp_dialogs(request):
 #===============================================================================
 def weapp_views(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path):
+	print request.path
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -360,7 +363,7 @@ def weapp_views(request):
 #===============================================================================
 def weapp_models(request):
 	items = []
-	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path):
+	if ('/mall/' in request.path) or ('/mall_promotion/' in request.path) or ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path):
 		version = '2'
 	else:
 		version = '1'

@@ -1,0 +1,127 @@
+<script id="stats-order-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xa-fansFilterView xui-filterPanel">
+<div class="xui-feedback-time">
+        <div class="fl xui-col">
+            <label>筛选日期：
+            </label>
+            <input
+                type="text"
+                class="form-control xui-datePicker"
+                id="start_date"
+                name="start_date"
+                style="cursor:pointer"
+                value=""
+                readonly="readonly"
+                data-validate="require-notempty"
+                data-enable-select-time="true"
+                data-ui-role="date-picker-order"
+                data-format="yy-mm-dd"
+                data-max="now"/>
+            <span class="ml5 mr5">至</span>
+            <input
+                type="text"
+                class="form-control xui-datePicker"
+                id="end_date"
+                style="cursor:pointer"
+                name="end_date"
+                value=""
+                readonly="readonly"
+                data-validate="require-notempty"
+                data-ui-role="date-picker-order"
+                data-enable-select-time="true"
+                data-format="yy-mm-dd"
+                data-max="now"
+                data-min-el="#start_date"/>
+        </div>
+</div>
+<div class="xui-quick-look">
+        <div class="fl ml40">
+            快速查看：
+            <ul class="xui-inline">
+                <li class="wui-i-shortcut"><a data-day="0" href="javascript:void(0);" class="wui-i-shortcutLink xa-quick-look wui-i-activeLink">今天</a></li>
+                <li class="wui-i-shortcut"><a data-day="1" href="javascript:void(0);" class="wui-i-shortcutLink xa-quick-look ml10">昨天</a></li>
+                <li class="wui-i-shortcut"><a data-day="6" href="javascript:void(0);" class="wui-i-shortcutLink xa-quick-look ml10">最近7天</a></li>
+                <li class="wui-i-shortcut"><a data-day="29" href="javascript:void(0);" class="wui-i-shortcutLink xa-quick-look ml10">最近30天</a></li>
+                <li class="wui-i-shortcut"><a data-day="89" href="javascript:void(0);" class="wui-i-shortcutLink xa-quick-look ml10">最近90天</a></li>
+                <li class="wui-i-shortcut"><a data-day="-1" href="javascript:void(0);" class="wui-i-shortcutLink xa-quick-look ml10">全部</a></li>
+            </ul>
+        </div>
+</div><br><br>
+    <div class="xui-form disT">
+        <div class="xui-col disTc w470">
+            <div class="xui-i-item fl">
+                <label class="">商品名称：</label>
+                <input type="text" class="form-control" id="product_name" value="" />
+            </div>
+            <div class="xui-i-item xui-order-num">
+                <label>支付方式：</label>
+                <select id="payType" name="payType">
+                    <option value="-1">全部</option>
+                    <option value="1" name="tag">支付宝</option>
+                    <option value="2" name="tag">微信支付</option>
+                    <option value="3" name="tag">货到付款</option>
+                </select>
+            </div>
+            <div class="xui-i-item xui-pay-ways">
+                <label class="w60">买家来源：</label>
+                <select id="buyer_source" name="buyer_source">
+                    <option value="-1">全部</option>
+                    <option value="0">直接关注购买</option>
+                    <option value="1">推荐扫码关注购买</option>
+                    <option value="2">分享链接关注购买</option>
+                    <option value="3">其他</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="xui-form disT">
+        <div class="xui-col disTc w470">
+            <div class="xui-col disTc">
+                <div class="xui-i-item xui-double-ways">
+                <label class="w60">订单编号：</label>
+                <input type="text" class="form-control" id="order_id" value="" />
+                </div>
+            </div>
+        </div>
+        <div class="xui-col disTc w470">
+            <div class="xui-col disTc">
+                <div class="xui-i-item xui-buyer-source">
+                <label class="w60">复购筛选：</label>
+                <select id="repeat_buy" name="repeat_buy">
+                    <option value="-1">全部</option>
+                    <option value="1">购买一次</option>
+                    <option value="2">购买多次</option>
+                </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="order_status" class="xui-checkbox">
+        <label class="xui-order-status">订单状态：</label>
+        <span><input id="iswait_send" class="xa-status-checkbox" checked type="checkbox"></input></span>
+        <label class="xui-order-status">待发货</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><input id="isalready_send" class="xa-status-checkbox" checked type="checkbox"></input></span>
+        <label class="xui-order-status">已发货</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><input id="isalready_complete" class="xa-status-checkbox" checked type="checkbox"></input></span>
+        <label class="xui-order-status">已完成</label>
+    </div><br><br>
+    <div id="favorable_deduction" class="xui-checkbox">
+        <label class="xui-order-status">优惠抵扣：</label>
+        <span><input id="iswzcard_pay" class="xa-discount-checkbox" type="checkbox"></input></span>
+        <label class="xui-order-status">微众卡支付</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><input id="isintegral_deduction" class="xa-discount-checkbox" type="checkbox"></input></span>
+        <label class="xui-order-status">积分抵扣</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><input id="isfavorable_coupon" class="xa-discount-checkbox" type="checkbox"></input></span>
+        <label class="xui-order-status">优惠券</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><input id="iswzcard_integral" class="xa-discount-checkbox" type="checkbox"></input></span>
+        <label class="xui-order-status">微众卡+积分</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><input id="iswzcard_discountcoupon" class="xa-discount-checkbox" type="checkbox"></input></span>
+        <label class="xui-order-status">微众卡+优惠券</label>
+    </div><br><br><br><br><br>
+    <div class="tc">
+        <a class="btn btn-primary mr40 xa-search-stats-order xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+        <a class="btn btn-default mr40 xa-reset-section-time xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;&nbsp;置</a>
+        <a class="btn btn-default mr40 xa-export-order-list xui-fontBold" href="javascript:void(0);">批量导出</a>
+    </div>
+</div>
+</script>

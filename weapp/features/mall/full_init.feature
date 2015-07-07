@@ -39,7 +39,7 @@ Scenario: 安装完整测试数据
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]
+		}]	
 		"""
 	When jobs已添加商品
 		"""
@@ -180,10 +180,10 @@ Scenario: 安装完整测试数据
 				"models": {
 					"S": {
 						"price": 6.0
-					},
+					}, 
 					"L": {
 						"price": 8.0
-					},
+					}, 
 					"M": {
 						"price": 7.0
 					}
@@ -246,7 +246,7 @@ Scenario: 安装完整测试数据
 					}
 				}
 			}
-		}]
+		}]	
 		"""
 	#促销活动
 	When jobs创建限时抢购活动
@@ -374,7 +374,7 @@ Scenario: 安装完整测试数据
 				"first_weight_price":30.00,
 				"added_weight_price":20.00
 			}]
-		}]
+		}]	
 		"""
 	#支付方式
 	Given jobs已添加支付方式
@@ -443,7 +443,7 @@ Scenario: 安装完整测试数据
 		"""
 	#bill收货地址
 	And bill设置jobs的webapp的默认收货地址
-
+	
 	# bill发消息
 	And bill在微信中向jobs的公众号发送消息'你好，这是bill发给jobs的消息01'
 	And bill在微信中向jobs的公众号发送消息'你好，这是bill发给jobs的消息02'
@@ -469,7 +469,7 @@ Scenario: 安装完整测试数据
 		}, {
 			"patterns": "keyword3",
 			"answer": "answer3"
-		}]
+		}]	
 		"""
 	When jobs创建分组
 		"""
@@ -492,24 +492,142 @@ Scenario: 安装完整测试数据
 		}]
 		"""
 
+	# 添加渠道扫码的初始化信息
+	Given jobs登录系统
+	And jobs已添加'渠道扫码'营销活动
+		"""
+		[{
+			"setting_id": 0,
+			"name": "渠道扫码测试1",
+			"prize_info": "{\"id\":-1, \"name\": \"non-prize\", \"type\": \"xxx\"}",
+			"reply_type": 0,
+			"reply_material_id": 0,
+			"re_old_member": 0,
+			"grade_id": 16,
+			"remark": "备注1"
+		}, {
+			"setting_id": 0,
+			"name": "渠道扫码测试2",
+			"prize_info": "{\"id\":-1, \"name\": \"non-prize\", \"type\": \"xxx\"}",
+			"reply_type": 0,
+			"reply_material_id": 0,
+			"re_old_member": 0,
+			"grade_id": 16,
+			"remark": "备注2"
+		}, {
+			"setting_id": 0,
+			"name": "渠道扫码测试3",
+			"prize_info": "{\"id\":-1, \"name\": \"non-prize\", \"type\": \"xxx\"}",
+			"reply_type": 0,
+			"reply_material_id": 0,
+			"re_old_member": 0,
+			"grade_id": 16,
+			"remark": "备注3"
+		}, {
+			"setting_id": 0,
+			"name": "渠道扫码测试4",
+			"prize_info": "{\"id\":-1, \"name\": \"non-prize\", \"type\": \"xxx\"}",
+			"reply_type": 0,
+			"reply_material_id": 0,
+			"re_old_member": 0,
+			"grade_id": 16,
+			"remark": "备注4"
+		}]
+		"""
+	#And bill关注jobs的公众号
+	When bill通过扫描'渠道扫码测试1'二维码关注
+	And tom通过扫描'渠道扫码测试1'二维码关注
+	And nokia通过扫描'渠道扫码测试1'二维码关注
+	Given jobs登录系统
+	Then jobs能看到的渠道扫码列表
+		"""
+		[{
+			"name": "渠道扫码测试1",
+			"remark": "备注1"
+		}, {
+			"name": "渠道扫码测试2",
+			"remark": "备注2"
+		}, {
+			"name": "渠道扫码测试3",
+			"remark": "备注3"
+		}, {
+			"name": "渠道扫码测试4",
+			"remark": "备注4"
+		}]
+		"""
+
+	# 构造抽奖数据
+	Given jobs已添加'微信抽奖'活动配置
+		"""
+		[{
+			"id": 0,
+			"name": "抽奖测试1",
+			"award_hour": 0,
+			"award_type": 0,
+			"daily_play_count": 1,
+			"detail": "<p>测试2<br/></p>",
+			"start_at": "2015-06-16",
+			"end_at": "2015-06-30",
+			"expend_integral": 0,
+			"no_prize_odd": 0,
+			"not_win_desc": "谢谢参与",
+			"prize_count|1": 1,
+			"prize_name|1": "一等奖",
+			"prize_odds|1": 100,
+			"prize_source|1": 0,
+			"prize_type|1": 1,
+			"type": 0
+		}, {
+			"id": 0,
+			"name": "抽奖测试2",
+			"award_hour": 0,
+			"award_type": 0,
+			"daily_play_count": 1,
+			"detail": "<p>测试2<br/></p>",
+			"start_at": "2015-06-16",
+			"end_at": "2015-06-30",
+			"expend_integral": 0,
+			"no_prize_odd": 0,
+			"not_win_desc": "谢谢参与",
+			"prize_count|1": 1,
+			"prize_name|1": "一等奖",
+			"prize_odds|1": 100,
+			"prize_source|1": 0,
+			"prize_type|1": 1,
+			"type": 0
+		}]
+		"""
+	#And bill关注jobs的公众号
+	When bill参加抽奖活动'抽奖测试1'
+	And tom参加抽奖活动'抽奖测试1'
+	And nokia参加抽奖活动'抽奖测试1'
+	And guo参加抽奖活动'抽奖测试1'
+
+
 @ignore @wip.init
 Scenario: 安装完整测试数据
 	Given jobs登录系统
-	And jobs已添加关键词自动回复规则
+	When jobs添加抽奖活动配置
 		"""
 		[{
-			"patterns": "词1_1|词1_2",
-			"answer": "answer1"
-		}, {
-			"patterns": "keyword2_1",
-			"answer": "answer2"
-		}, {
-			"patterns": "keyword3",
-			"answer": "answer3"
+			"id": 0,
+			"name": "抽奖测试",
+			"award_hour": 0,
+			"award_type": 0,
+			"daily_play_count": 1,
+			"detail": "<p>测试<br/></p>",
+			"start_at": "2015-06-16",
+			"end_at": "2015-06-30",
+			"expend_integral": 0,
+			"no_prize_odd": 0,
+			"not_win_desc": "谢谢参与",
+			"prize_count|1": 1,
+			"prize_name|1": "一等奖",
+			"prize_odds|1": 100,
+			"prize_source|1": 0,
+			"prize_type|1": 1,
+			"type": 0
 		}]
 		"""
-	When bill关注jobs的公众号
-	And bill在微信中向jobs的公众号发送消息'你好，这是bill发给jobs的消息01'
-	And bill在微信中向jobs的公众号发送消息'词1_1'
-	When tom关注jobs的公众号
-	And tom在微信中向jobs的公众号发送消息'这是tom发给jobs的消息'
+	And bill关注jobs的公众号
+	And bill参加抽奖活动'抽奖测试'

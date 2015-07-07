@@ -26,7 +26,7 @@ def _get_post_data_postage(postage):
 	postage['firstWeightPrice'] = postage['first_weight_price']
 	postage['addedWeight'] = postage.get('added_weight', '0')
 	postage['addedWeightPrice'] = postage.get('added_weight_price', '0')
-	
+
 	if 'special_area' in postage:
 		postage['isEnableSpecialConfig'] = 'true'
 		special_configs = []
@@ -107,7 +107,7 @@ def step_impl(context, user):
 		context.client.logout()
 	context.client = bdd_util.login(user)
 	client = context.client
-	
+
 	response = context.client.get('/mall/postage_templates/get/')
 
 	actual =response.context['postage_configs']
@@ -161,9 +161,9 @@ def step_impl(context, user):
 
 @when(u"{user}选择'{postage_name}'运费配置")
 def step_impl(context, user, postage_name):
-	print '*' * 60
-	print context.client.user.id, postage_name
-	print '*' * 60
+	print('*' * 60)
+	print(context.client.user.id, postage_name)
+	print('*' * 60)
 	config = PostageConfig.objects.get(name=postage_name, owner_id=context.client.user.id)
 	data = {'id': config.id }
 	response = context.client.post('/mall/api/used_postage_template/create/', data)

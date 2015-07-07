@@ -43,8 +43,8 @@ def step_impl(context, user):
             expired_time = '2014-11-26 10:10'
         )
         context.id2card[card.weizoom_card_id] = card
-        
-        
+
+
 @when(u"{user}激活微众卡")
 def step_impl(context, user):
     weizoom_cards = json.loads(context.text)
@@ -52,8 +52,8 @@ def step_impl(context, user):
     for weizoom_card in weizoom_cards:
         card_ids.append(str(context.id2card.get(weizoom_card['card_number']).id))
     context.card_ids = ",".join(card_ids)
-    
-    
+
+
 @when(u"{user}能获取微众卡激活目标")
 def step_impl(context, user):
     targets = json.loads(context.text)
@@ -93,5 +93,5 @@ def step_impl(context, user):
         actual_item['price'] =card.money
         # actual_item['distribution_targets'] = card_has_account.account_name
         actual.append(actual_item)
-    print sorted(expected), sorted(actual)
+    print(sorted(expected), sorted(actual))
     bdd_util.assert_list(sorted(expected), sorted(actual))

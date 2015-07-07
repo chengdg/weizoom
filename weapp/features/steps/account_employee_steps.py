@@ -24,7 +24,7 @@ def step_impl(context, user):
 	sub_user = UserHasSubUser.objects.filter(user=user)[0]
 	context.tc.assertEquals(sub_user.is_active, False)
 	context.tc.assertEquals(sub_user.sub_user.username, '001@%s' % user.username)
-	
+
 	employee = context.employees[0]
 	employee['id'] = sub_user.sub_user.id
 	response = client.post('/account/sub_user/create/', employee)
@@ -39,19 +39,19 @@ def step_impl(context, user):
 
 	response = context.client.get('/account/sub_users/')
 	response_datas = response.context['user_has_sub_users']
-	print '--------------'
-	print context.employees
-	print '======'
-	print response_datas
+	print('--------------')
+	print(context.employees)
+	print('======')
+	print(response_datas)
 	for employee in context.employees:
-		print ']]]]]]]]]]]]]]]]]'
-		print employee['employees_account']
-		print employee['remark']
-		print response_datas.filter(sub_user__username=employee['employees_account'], remark=employee['remark']).count()
+		print(']]]]]]]]]]]]]]]]]')
+		print(employee['employees_account'])
+		print(employee['remark'])
+		print(response_datas.filter(sub_user__username=employee['employees_account'], remark=employee['remark']).count())
 		context.tc.assertEquals(response_datas.filter(sub_user__username=employee['employees_account'], remark=employee['remark']).count() , 1)
 
 
-	
+
 @when(u"{user}添加第二个员工账号")
 def step_impl(context, user):
 	context.client = bdd_util.login(user)
@@ -64,7 +64,7 @@ def step_impl(context, user):
 	sub_users = UserHasSubUser.objects.filter(sub_user__username='002@%s' % user.username)
 	context.tc.assertEquals(sub_users.count(), 1)
 	context.tc.assertEquals(sub_users[0].is_active, False)
-	
+
 	employee = context.employees[0]
 	employee['id'] = sub_users[0].sub_user.id
 	response = client.post('/account/sub_user/create/', employee)
@@ -82,7 +82,7 @@ def step_impl(context, user):
 	sub_users = UserHasSubUser.objects.filter(sub_user__username='003@%s' % user.username)
 	context.tc.assertEquals(sub_users.count(), 1)
 	context.tc.assertEquals(sub_users[0].is_active, False)
-	
+
 	employee = context.employees[0]
 	employee['id'] = sub_users[0].sub_user.id
 	response = client.post('/account/sub_user/create/', employee)
@@ -97,15 +97,15 @@ def step_impl(context, user):
 
 	response = context.client.get('/account/sub_users/')
 	response_datas = response.context['user_has_sub_users']
-	print '--------------'
-	print context.employees
-	print '======'
-	print response_datas
+	print('--------------')
+	print(context.employees)
+	print('======')
+	print(response_datas)
 	for employee in context.employees:
-		print ']]]]]]]]]]]]]]]]]'
-		print employee['employees_account']
-		print employee['remark']
-		print response_datas.filter(sub_user__username=employee['employees_account'], remark=employee['remark']).count()
+		print(']]]]]]]]]]]]]]]]]')
+		print(employee['employees_account'])
+		print(employee['remark'])
+		print(response_datas.filter(sub_user__username=employee['employees_account'], remark=employee['remark']).count())
 		context.tc.assertEquals(response_datas.filter(sub_user__username=employee['employees_account'], remark=employee['remark']).count() , 1)
 
 
@@ -118,8 +118,8 @@ def step_impl(context, user):
 
 	context.tc.assertEquals(UserHasSubUser.objects.filter(user=user).count(), 3)
 	sub_users = UserHasSubUser.objects.filter(sub_user__username=context.employees[0]['employees_account'])
-	
+
 	id = sub_users[0].sub_user.id
-	
+
 	response = client.get('/account/sub_user/delete/?user_id=%d' % id)
 

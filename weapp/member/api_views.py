@@ -33,6 +33,9 @@ COUNT_PER_PAGE = 20
 
 
 def __get_request_members_list(request):
+	"""
+	获取会员列表
+	"""
 	#获取当前页数
 	cur_page = int(request.GET.get('page', '1'))
 	#获取每页个数
@@ -206,6 +209,12 @@ def update_integral(request):
 @api(app='member', resource='members', action='get')
 @login_required
 def get_members(request):
+	"""
+	获取会员列表
+
+	URL: http://weapp.weizoom.com/member/api/members/get/?design_mode=0&version=1&filter_value=pay_times:0-1|first_pay:2015-04-08%2000:00--2015-04-30%2000:00&page=1&count_per_page=50&enable_paginate=1&timestamp=1435216368297&_=1435215905446
+
+	"""
 	pageinfo, request_members, total_count = __get_request_members_list(request)
 
 	# 构造返回数据
