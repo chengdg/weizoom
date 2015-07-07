@@ -103,8 +103,10 @@ class PageStore(object):
 			return self.save_preview_page(project_id, page_id, page_component)
 
 		now = self.get_now()
-		is_new_created_page = page_component.get('is_new_created', False)
-		if not is_new_created_page:
+		page = self.db.page.find_one({'project_id':project_id, 'page_id':page_id}, limit=1)
+		#is_new_created_page = page_component.get('is_new_created', False)
+		#if not is_new_created_page:
+		if page:
 			pp_id = '%s_%s' % (project_id, page_id)
 			self.db.page.update({'pp_id': pp_id}, {'$set': {'component': page_component}})
 		else:

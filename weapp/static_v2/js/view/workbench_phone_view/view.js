@@ -167,6 +167,9 @@ W.workbench.PhoneView = Backbone.View.extend({
     },
 
     onUpdateSiteTitle: function(title) {
+        if (title.length === 0) {
+            return;
+        }
         this.$title.text(title);
     },
 

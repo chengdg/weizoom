@@ -26,6 +26,10 @@ class Command(BaseCommand):
 			if Project.objects.filter(owner=user, type='wepage').count() > 0:
 				print '[%s] already have wepage project, skip.' % user.username
 				continue
+			profile = user.get_profile()
+			if profile.manager_id > 2:
+				print '[%s] is sub account, skip.'
+				continue
 
 			print '[%s] create new wepage project.' % user.username
 			request = FakeRequest()
