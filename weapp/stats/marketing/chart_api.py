@@ -3,7 +3,7 @@
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
 from market_tools.tools.lottery.models import LotteryRecord, Lottery
 from modules.member.models import Member
-
+import re
 
 activity_network_option =  {
 	"title": {
@@ -72,6 +72,15 @@ def get_activity_network_chart(activity_id):
 	return option
 
 
+def __remove_emoji(name):
+	"""
+	去掉表情符
+
+	举例: ```<span class="emoji emoji 1f44c"></span>```
+	"""
+	return re.sub(r'<span.*>.*?</span>', '', name)
+
+
 def get_channel_member_network_chart(setting_id):
 	option = activity_network_option
 	setting = ChannelQrcodeSettings.objects.get(id=setting_id)
@@ -82,7 +91,7 @@ def get_channel_member_network_chart(setting_id):
 	children = []
 	for member in members:
 		#channel_members.append(__build_member_basic_json(member))
-		children.append({"name": member.username_for_html})
+		children.append({"name": __remove_emoji(member.username_for_html)})
 
 	series = option['series']
 	series[0]['data'] = [{
@@ -102,7 +111,7 @@ def get_lottery_member_network_chart(lottery_id):
 	children = []
 	for member in members:
 		#channel_members.append(__build_member_basic_json(member))
-		children.append({"name": member.username_for_html})
+		children.append({"name": __remove_emoji(member.username_for_html)})
 
 	series = option['series']
 	series[0]['data'] = [{

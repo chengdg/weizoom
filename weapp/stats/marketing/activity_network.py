@@ -38,29 +38,6 @@ class ActivityNetwork(resource.Resource):
 	app = 'stats'
 	resource = 'activity_network'
 
-	# deprecated
-	'''
-	@login_required
-	def get(request):
-		"""
-		显示营销活动参与人员的网络图
-		"""
-		# 营销活动ID
-		activity_id = request.GET.get('id', '0')
-		# 获取营销活动的类型
-		activity_type = request.GET.get('type', 'qrcode')
-
-		c = RequestContext(request, {
-			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_market_second_navs(request),
-			'second_nav_name': export.MARKETING_ACTIVITY_NAV,
-			'activity_id': activity_id,
-			'activity_type': activity_type,
-		})
-		return render_to_response('marketing/activity_network.html', c)
-	'''		
-
-
 	@login_required
 	def api_get(request):
 		"""
