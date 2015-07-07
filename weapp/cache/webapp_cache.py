@@ -141,8 +141,8 @@ post_update_signal.connect(update_webapp_product_cache, sender=mall_models.Produ
 signals.post_save.connect(update_webapp_product_cache, sender=mall_models.Product, dispatch_uid = "product.save")
 signals.post_save.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "product_category.save")
 signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")
-post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "termite_product_category.delete")
-post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "termite_category_has_product.delete")
+post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "mall_product_category.delete")
+post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "mall_category_has_product.delete")
 
 
 def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None):
