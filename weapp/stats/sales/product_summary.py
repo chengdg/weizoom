@@ -34,6 +34,7 @@ class ProductSummary(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
+	            'app_name': 'stats',
 			'second_navs': export.get_sales_second_navs(request),
 			'second_nav_name': export.PRODUCT_SUMMARY_NAV,
 			'start_date': today,

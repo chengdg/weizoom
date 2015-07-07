@@ -45,6 +45,7 @@ class ManageSummary(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
+            'app_name': 'stats',
             'second_navs': export.get_management_second_navs(request),
             'second_nav_name': export.MANAGEMENT_SUMMARY_NAV,
             'start_date': today,

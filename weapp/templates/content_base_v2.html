@@ -15,7 +15,11 @@
 		<div class="xui-logo">
 			<div class="xui-i-logoHref xa-i-logoHref"></div>
 			{% if first_navs %}
+				{% ifequal app_name 'stats' %}
+				<img src="/static_v2/img/editor/statsTopLogo.jpg" alt="">
+				{% else %}
 				<img src="/static_v2/img/editor/weixinTopLogo.jpg" alt="">
+				{% endifequal %}
 			{% else %}
 				<img src="/static_v2/img/editor/topLogo.jpg" alt="">
 			{% endif %}
