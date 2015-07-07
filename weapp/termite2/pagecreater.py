@@ -45,12 +45,13 @@ def __get_display_info(request):
 		page_id = request.GET.get('page_id', 1)
 		page = pagestore.get_page(project_id, page_id)
 
-	try:
-		#使用project中的site_title作为真正的site_title
-		#因为在page列表页面直接更新page site_title时是不会更新mongo中page数据中的site_title的
-		page['component']['model']['site_title'] = project.site_title
-	except:
-		pass
+	if page_id != 'preview':
+		try:
+			#使用project中的site_title作为真正的site_title
+			#因为在page列表页面直接更新page site_title时是不会更新mongo中page数据中的site_title的
+			page['component']['model']['site_title'] = project.site_title
+		except:
+			pass
 
 	display_info = {
 		'project': project,

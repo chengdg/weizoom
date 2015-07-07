@@ -169,7 +169,6 @@
                 W.urlTitle = '{{ show_system_name }}';
             }
             W.pageTitle = "{{page_title}}";
-
             W.errorMessage = null;
 
             {% if messages %}
@@ -258,6 +257,19 @@
                         info: W.errorMessage,
                         speed: 3000                
                     });
+                }
+
+                var isInFrame = (parent !== window);
+                if (isInFrame) {
+                    if (parent.setWebappPageTitle) {
+                        parent.setWebappPageTitle(W.pageTitle);
+                    }
+
+                    //在预览模式下，修改a，禁止点击
+                    $('a').each(function() {
+                        var $link = $(this);
+                        $link.attr('href', 'javascript:void(0);');
+                    })
                 }
             });
         </script>

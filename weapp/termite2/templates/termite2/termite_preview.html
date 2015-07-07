@@ -54,6 +54,11 @@
 
 {% block js %}
 <script type="text/javascript">
+window.setWebappPageTitle = function(title) {
+    $('.xa-simulatorTitle').text(title);
+}
+W.previewName = "";
+
 $(document).ready(function() {
     W.ISUNLOADALERT = true;
     var headImg = {% if head_img %}'{{ head_img }}'{% else %}''{% endif %};
@@ -71,8 +76,8 @@ $(document).ready(function() {
 
         $('#mobile-browser').load(function() {
             var height = window.frames[0].document.body.clientHeight;
-            xwarn(height);
             $('.xa-simulator').height(height+50+'px');
+            $('.xa-simulator-back-btn').removeClass('xa-simulator-back-btn').css("cursor", "default"); //禁止模拟器的“返回”按钮
         }); 
 
         // 二维码随屏幕移动, 浮动在顶部

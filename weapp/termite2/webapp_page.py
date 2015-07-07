@@ -34,8 +34,17 @@ class WebappPage(resource.Resource):
 			return response.get_response()
 		html = pagecreater.create_page(request, return_html_snippet=True)
 
+		#获取page title
+		page_title = u'店铺首页'
+		beg_tag = 'data-page-title="'
+		end_tag = '"'
+		beg = html.find(beg_tag)+len(beg_tag)
+		if beg != -1:
+			end = html.find(end_tag, beg)
+			page_title = html[beg:end]
+
 		c = RequestContext(request, {
-			'page_title': u'微站首页',
+			'page_title': page_title,
 			'page_html_content': html,
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})

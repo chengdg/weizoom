@@ -52,10 +52,12 @@ W.workbench.PhoneView = Backbone.View.extend({
     startMonitor: function() {
         var _this = this;
         var monitor = function() {
-            var frameHeight = window.frames['phoneFrame'].document.body.clientHeight;
-            var phoneHeight = _this.$skin.height();
-            if (phoneHeight <= frameHeight+45) {
-                _this.$skin.height(frameHeight+50+'px');    
+            if (window.frames['phoneFrame'].document.body) {
+                var frameHeight = window.frames['phoneFrame'].document.body.clientHeight;
+                var phoneHeight = _this.$skin.height();
+                if (phoneHeight <= frameHeight+45) {
+                    _this.$skin.height(frameHeight+50+'px');    
+                }
             }       
         }
         setInterval(monitor, 200);
