@@ -56,7 +56,7 @@ Background:
         }]
     }]
     """
-@mall2 @mall.webapp.comment.aa
+@mall2 @mall.webapp.comment.aa @jz
 Scenario: 1 评价包括文字与晒图
     # bill没有进行购买评价，访问商品评价时，无评价信息
     When bill访问jobs的webapp
