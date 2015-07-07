@@ -493,7 +493,7 @@
 	font-weight: bold;
 }
 .xui-wepage-sellpagesPage  .xui-gradeTab {
-	min-height: 394px;
+	/*min-height: 394px;*/
 }
 .xui-wepage-sellpagesPage .xui-filter{
 	height: 66px;
