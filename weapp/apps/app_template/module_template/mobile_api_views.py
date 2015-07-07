@@ -30,7 +30,7 @@ from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_alert, watchdog_fatal
 __STRIPPER_TAG__
 from apps.register import api, mobile_api
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from apps import viper_util
 from {{app_name}}.models import *
 from {{app_name}}.mysql_models import *

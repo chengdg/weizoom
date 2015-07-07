@@ -23,7 +23,7 @@ from models import *
 from account.models import UserProfile
 from termite.core.jsonresponse import create_response
 import pagerender
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from webapp.models import Workspace
 
 

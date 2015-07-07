@@ -265,7 +265,7 @@ def receiveauthcode(request):
 							func_info=','.join(func_info_ids)
 							)
 					is_service = False
-					if int(service_type_info) > 0:
+					if int(service_type_info) > 1:
 						is_service = True
 					is_certified = False
 					if int(verify_type_info) > -1:

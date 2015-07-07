@@ -132,7 +132,7 @@ class Command(BaseCommand):
 					
 					is_service = False
 
-					if int(service_type_info) > 0:
+					if int(service_type_info) > 1:
 						is_service = True
 					is_certified = False
 					if int(verify_type_info) > -1:

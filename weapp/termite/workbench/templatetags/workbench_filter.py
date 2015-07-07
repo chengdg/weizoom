@@ -14,7 +14,7 @@ from django.db.models import Q
 from workbench.models import *
 
 from datetime import datetime
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from mall import module_api as mall_api
 from mall.models import Product
 from webapp import design_api_views

@@ -22,7 +22,7 @@ from django.db import connections
 from watchdog.utils import watchdog_alert
 from termite.core import dateutil
 from termite.core.jsonresponse import create_response
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 
 from workbench.models import Project, Workspace
 

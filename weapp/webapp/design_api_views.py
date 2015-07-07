@@ -27,7 +27,7 @@ from product.models import UserHasProduct
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 from core import apiview_util
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from webapp.modules.cms.models import Article, CategoryHasArticle
 from mall.models import Product, CategoryHasProduct, PRODUCT_SHELVE_TYPE_ON
 from workbench.models import Workspace

@@ -17,7 +17,7 @@ from django.conf import settings
 from django.template import Template
 
 from termite2 import pagerender
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from webapp import models as webapp_models
 from core.jsonresponse import create_response
 

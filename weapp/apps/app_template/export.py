@@ -2,7 +2,7 @@
 
 from apps.module_api import get_app_link_url
 from apps import viper_util
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from core.jsonresponse import create_response, JsonResponse
 __STRIPPER_TAG__
 __STRIPPER_TAG__

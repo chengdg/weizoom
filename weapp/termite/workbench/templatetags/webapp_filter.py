@@ -12,7 +12,7 @@ from django.db.models import Q
 from workbench.models import *
 
 from datetime import datetime
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from webapp.models import Project, GlobalNavbar
 
 register = template.Library()

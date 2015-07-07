@@ -25,7 +25,7 @@ from django.contrib import auth
 from models import *
 from termite.core.jsonresponse import create_response, JsonResponse
 import pagerender
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 
 
 #===============================================================================

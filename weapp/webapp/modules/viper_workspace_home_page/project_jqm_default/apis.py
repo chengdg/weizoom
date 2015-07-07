@@ -17,7 +17,7 @@ from django.conf import settings
 
 from models import *
 from core.jsonresponse import create_response, JsonResponse
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 
 
 product_page_id = '0'

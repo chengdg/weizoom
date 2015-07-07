@@ -24,7 +24,7 @@ from django.contrib import auth
 
 from models import *
 from core.jsonresponse import create_response, JsonResponse
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 import modules as raw_webapp_modules
 from account.social_account.models import SocialAccount
 import project_views

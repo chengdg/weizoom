@@ -26,7 +26,7 @@ from django.template.loader import get_template
 
 from models import *
 from core.jsonresponse import create_response, JsonResponse
-import pagestore as pagestore_manager
+from termite import pagestore as pagestore_manager
 from termite.core import stripper
 from termite.workbench import viper_api_views
 

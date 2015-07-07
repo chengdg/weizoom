@@ -10,8 +10,9 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 
-import termite2.models as termite_models
-import pagestore as pagestore_manager
+import termite2.mode
+cd weixinls as termite_models
+from termite import pagestore as pagestore_manager
 
 from weixin.user.module_api import get_mp_qrcode_img
 from django.conf import settings
@@ -74,7 +75,7 @@ def _create_qrcode(url, object_id):
     )
     qr.add_data(url)
     img = qr.make_image()
-
+cd we
     file_name = '{}.png'.format(object_id)
     dir_path = os.path.join(settings.UPLOAD_DIR, '../termite_preview')
     if not os.path.exists(dir_path):
