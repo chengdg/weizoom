@@ -279,6 +279,12 @@ class IntegralCaculator(object):
 	def update_shared_url_pv(self, url, followed_member, member):
 		
 		try:
+			url = remove_querystr_filed_from_request_url(url, 'from')
+			url = remove_querystr_filed_from_request_url(url, 'isappinstalled')
+			url = remove_querystr_filed_from_request_url(url, 'code')
+			url = remove_querystr_filed_from_request_url(url, 'state')
+			url = remove_querystr_filed_from_request_url(url, 'appid')
+			#url_digest = hashlib.md5(url).hexdigest()
 			shared_url_digest = hashlib.md5(url).hexdigest()
 			shared_infos = MemberSharedUrlInfo.objects.filter(member=followed_member, shared_url=url)
 			

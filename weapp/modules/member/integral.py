@@ -411,7 +411,14 @@ def update_shared_url_pv(request):
 			return
 
 		shared_url = get_request_url(request)
-		shared_url_digest = get_request_url_digest(request, shared_url)
+		#shared_url_digest = get_request_url_digest(request, shared_url)
+		shared_url = remove_querystr_filed_from_request_url(shared_url, 'from')
+		shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
+		shared_url = remove_querystr_filed_from_request_url(shared_url, 'code')
+		shared_url = remove_querystr_filed_from_request_url(shared_url, 'state')
+		shared_url = remove_querystr_filed_from_request_url(shared_url, 'appid')
+		shared_url_digest = hashlib.md5(shared_url).hexdigest()
+
 		
 		shared_infos = MemberSharedUrlInfo.objects.filter(member=followed_member, shared_url_digest=shared_url_digest)
 		if shared_infos.count() > 0:
