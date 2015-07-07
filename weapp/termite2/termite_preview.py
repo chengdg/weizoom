@@ -38,7 +38,7 @@ class TermitePreview(resource.Resource):
             'object_id': object_id,
             # 'head_img': get_mp_qrcode_img(request.user.id),
             'qrcode_url': get_preview_url(request.get_host(), preview_url, object_id),
-            'head_img': get_preview_url_qrcode(request.get_host(), preview_url, object_id),                        
+            'head_img': get_preview_url(request.get_host(), preview_url, object_id),                        
             'preview_url': preview_url
         })
         return render_to_response('termite2/termite_preview.html', c)

@@ -62,6 +62,8 @@ W.previewName = "";
 $(document).ready(function() {
     W.ISUNLOADALERT = true;
     var headImg = {% if head_img %}'{{ head_img }}'{% else %}''{% endif %};
+    var qrcodeUrl = {% if head_img %}'{{ head_img }}'{% else %}''{% endif %};
+    qrcodeUrl = qrcodeUrl.replace('&amp;', '%26').replace('&amp;', '%26');
     var initBrowserUrl = {% if preview_url %}'{{ preview_url }}'{% else %}''{% endif %};
 
     $(document).ready(function() {
@@ -71,7 +73,8 @@ $(document).ready(function() {
             el: '.xa-termitePreview',
             headImg: headImg,
             templateId: '#termite-preview-tmpl-src',
-            initBrowserUrl: initBrowserUrl
+            initBrowserUrl: initBrowserUrl,
+            qrcodeUrl: qrcodeUrl
         });
 
         $('#mobile-browser').load(function() {
