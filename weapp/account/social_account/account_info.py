@@ -151,7 +151,7 @@ def check_openid_by_api(user_profile, openid):
 	if mpuser_access_token is None:
 		return False
 
-	if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
+	if mp_user.is_certified and mpuser_access_token.is_active:
 		weixin_api = get_weixin_api(mpuser_access_token)
 		userinfo = weixin_api.get_user_info(openid)
 
@@ -171,7 +171,7 @@ def _get_weixin_account_info_via_api(user_profile, social_account):
 	if mpuser_access_token is None:
 		return None
 
-	if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
+	if mp_user.is_certified and mpuser_access_token.is_active:
 		weixin_api = get_weixin_api(mpuser_access_token)
 		userinfo = weixin_api.get_user_info(social_account.openid)
 
