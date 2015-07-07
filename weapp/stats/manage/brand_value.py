@@ -41,16 +41,14 @@ def compute_brand_value(webapp_id, end_date):
 	start_date = util_dateutil.get_date_after_days(end_date, -365) # 一年前
 	print("start_date:{}, end_date:{}".format(start_date, end_date))
 	orders = Order.objects.filter(webapp_id=webapp_id, created_at__range=(start_date, end_date))
-	#orders = Order.objects.filter(webapp_id=webapp_id)
 	order_count = orders.count()
 	print("order count: {}".format(orders.count()))
 	if order_count<1:
 		return 0.0
 	order_data = [(order.webapp_user_id, order.final_price, order.created_at, order.id) for order in orders]
-	#print("order_data: {}".format(order_data))
 	df = pd.DataFrame(order_data, columns=['wuid', 'fp', 'at', 'id'])
-	# 计算购买用户的平均消费金额
-	user_avg_consumption = df[['wuid', 'fp']].groupby('wuid').sum().sort('fp', ascending=False).head(5).mean()['fp']  # type: numpy.float64
+	# 计算购买用户前100人的平均消费金额
+	user_avg_consumption = df[['wuid', 'fp']].groupby('wuid').sum().sort('fp', ascending=False).head(100).mean()['fp']  # type: numpy.float64
 	print("user average consumption: {}".format(user_avg_consumption))
 	# 计算多次购买的用户数数
 	buyer_counts = df[df['fp']>1]['wuid'].value_counts()
