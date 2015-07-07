@@ -30,11 +30,13 @@
             {{ component|join_sub_components_html|safe }}
         {% endif %}
     {% else %}
+        {% if in_design_mode %}
         <div class="xa-placeholder wui-i-placeholder">
             <div class="wui-i-placeholderText" style="margin-top: 50px;">
             编辑图片广告<br/>推荐图片宽度：640px
             </div>
         </div>
+        {% endif %}
     {% endif %}
 </div>
 {% endifequal %}
