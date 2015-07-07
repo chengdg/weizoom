@@ -24,7 +24,7 @@ class WebappPageCacheMiddleware(object):
 			project_id = None
 			if 'model' in request.GET:
 				pass
-			elif 'project_id' in request.path:
+			elif 'project_id' in request.GET:
 				project_id = int(request.GET.get('project_id', -1))
 				if project_id == 0:
 					if 'workspace_id' in request.GET:
