@@ -39,7 +39,6 @@ gmu.define('SwipeImage', {
 				} else {
 					htmls.push('<div class="wui-swiper-slide"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></div>')
 				}
-				htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></a></div>')
 			}
 			htmls.push('</div>');
 
