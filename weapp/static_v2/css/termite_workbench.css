@@ -5,9 +5,11 @@ body {
 	*/
 	/*font-family: "宋体";*/
 }
+/*
 .star_show:before {
 	top: -3px;
 }
+*/
 .colpick {
 	z-index: 9001;
 }
@@ -770,9 +772,11 @@ button.xui-removeImageButton{
 	border: 1px solid #E6E6E6;
 	margin-left: 76px;
 }
+/*
 .xui-propertyView-title .star_show:before{
 	top:-2px;
 }
+*/
 .xui-propertyView-title .propertyGroup_property_horizontalField .propertyGroup_property_label{
 	width: 58px;
 }

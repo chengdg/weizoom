@@ -164,7 +164,7 @@
 
 					{{if (field.type == 'dialog_select')}}
 					<div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
-						<div class="propertyGroup_property_label star_show">${field.displayName}</div>
+						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input" style="position:relative;">
 							{{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
 							<input data-field="${field.name}" name="${field.name}" type="hidden" />
