@@ -10,8 +10,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 
-import termite2.mode
-cd weixinls as termite_models
+import termite2.models as termite_models
 from termite import pagestore as pagestore_manager
 
 from weixin.user.module_api import get_mp_qrcode_img
