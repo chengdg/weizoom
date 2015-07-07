@@ -439,6 +439,8 @@ W.workbench.PropertyView = Backbone.View.extend({
         var _this = this;
         this.inValidateMode = true;
         W.validate(_this.$el);
+        var scrollTop = _this.$el.offset().top - 50;
+        window.scrollTo(0,scrollTop);
     },
 
     /*********************************************************
