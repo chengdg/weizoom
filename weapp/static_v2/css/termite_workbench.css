@@ -1123,8 +1123,9 @@ button.xui-removeImageButton{
 	display: inline-block;
 	width: 64px;
 	height: 64px;
-	background: #000;
-	border: 1px dashed #ccc;
+	background: url('/static_v2/img/termite2/addImgBtn.png') no-repeat;
+	-webkit-background-size: 64px 64px;
+	background-size: 64px 64px;
 	box-sizing:border-box;
 }
 .xui-propertyView-specialTemplateGroup .xui-dialogSelectedBtn{
