@@ -547,7 +547,7 @@
 	text-align: center;
 	border-right: 1px dashed #e5e5e5;
 	color:#000;
-	font-size: 14px;
+	font-size: 18px;
 	line-height: 30px;
 }
 .xui-wepage-sellpagesPage .xui-summary tr:first-child {
@@ -679,7 +679,7 @@
 .xui-wepage-analysisPage .xui-summary .xui-i-wrap .xui-i-money {
 	color: #e55050;
 	cursor: auto;
-	font-size: 16px;
+	font-size: 18px;
 }
 .xui-wepage-analysisPage .xui-summary .xui-i-wrap {
 	height: 70%;
