@@ -1234,7 +1234,7 @@ class ProcessOpenidMiddleware(object):
 			else:
 				try:
 					if request.user_profile.is_oauth is False:
-						member, social_account = _process_error_openid(openid, request.user_profile)
+						member, social_account = _process_error_openid(openid, request.user_profile, request)
 				except:
 					notify_message = u"ProcessOpenidMiddleware error, cause:\n{}".format(unicode_full_stack())
 					watchdog_error(notify_message)
@@ -1266,7 +1266,7 @@ class ProcessOpenidMiddleware(object):
 		return None
 		
 from weixin.user.models import WeixinUser, get_token_for
-def _process_error_openid(openid, user_profile):  #response_rule, from_weixin_user, is_from_simulator):
+def _process_error_openid(openid, user_profile, request=None):  #response_rule, from_weixin_user, is_from_simulator):
 	member = None
 	social_account = None
 
@@ -1311,4 +1311,15 @@ def _process_error_openid(openid, user_profile):  #response_rule, from_weixin_us
 				except:
 					notify_message = u"_process_error_openid cause:\n{}".format(unicode_full_stack())
 					watchdog_error(notify_message)
+				#print 1/0
+				name = url_helper.get_market_tool_name_from(request.get_full_path())
+				#if name:
+				if not name:
+					name = ''
+				if request:
+					MemberMarketUrl.objects.create(
+						member = member,
+						market_tool_name = name,
+						url = request.get_full_path(),
+						)
 	return member, social_account
