@@ -5,11 +5,13 @@ Termite相关的中间件
 WebappPageCacheMiddleware: webapp page的缓存中间件
 """
 
+from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.conf import settings
 
 from utils import cache_util
 from webapp import models as webapp_models
+from account import models as account_models
 
 class WebappPageCacheMiddleware(object):
 	def process_request(self, request):
@@ -58,3 +60,37 @@ class WebappPageCacheMiddleware(object):
 				except:
 					pass
 			return response
+
+
+
+class WebappPageHomePageMiddleware(object):
+	"""
+	重定向 HomePage 链接地址
+
+	author = 'liupeiyu'
+	"""
+	def process_request(self, request):
+		if not 'home_page' in request.get_full_path():
+			return None
+
+		webapp_owner_id = request.GET.get('webapp_owner_id', 0)
+		if webapp_owner_id == 0:
+			return None
+
+		user_profiles = account_models.UserProfile.objects.filter(user_id=webapp_owner_id)
+		if user_profiles.count() == 0:
+			return None
+
+		user_profile = user_profiles[0]
+		if not user_profile.is_use_wepage:
+			return None
+
+		orig_path = request.path
+		if orig_path != '/termite/workbench/jqm/preview/':
+			return None
+
+		new_path = '/termite2/webapp_page/'
+		new_url = request.get_full_path().replace(orig_path, new_path)
+		response = HttpResponseRedirect(new_url)
+		return response
+

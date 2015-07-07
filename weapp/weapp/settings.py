@@ -221,6 +221,9 @@ MIDDLEWARE_CLASSES = [
     # Uncomment this middleware for monitor sql querys:
     'core.debug_middleware.SqlMonitorMiddleware',
 
+    # webapp home_page middleware
+    'core.termite_middleware.WebappPageHomePageMiddleware',
+
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
 
