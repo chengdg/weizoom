@@ -1101,7 +1101,9 @@ ul.wui-relatelink li h3{
 .wui-imageGroup a:first-child{
     margin-top: 0px;
 }
-
+.wui-imageGroup .wui-singleImageWithTitle img{
+    display: block;
+}
 
 /*===========================图片导航=============================================*/
 .wui-imagenav{
