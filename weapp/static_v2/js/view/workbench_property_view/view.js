@@ -87,6 +87,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         W.Broadcaster.on('component:refresh_field_editor', _.bind(this.onUpdateFieldEditor, this));
         W.Broadcaster.on('mobilepage:delete-widget', _.bind(this.onDeleteMobilePageWidget, this));
         W.Broadcaster.on('designpage:drag_widget', _.bind(this.onDragWidgetInDesignPage, this));
+        W.Broadcaster.on('component:cancel_linkMenu', _.bind(this.onCancelLinkMenu, this));
 
         W.Broadcaster.on('link-url:selected', _.bind(this.onSelectedLinkUrl, this));
         this.pageRegex = /\.page$/;
@@ -98,6 +99,13 @@ W.workbench.PropertyView = Backbone.View.extend({
         /*
         this.$el.append($.tmpl(this.template, {}));
         */
+    },
+
+    /**
+     * onCancelLinkMenu: 关闭linkMenu Div层
+     */
+    onCancelLinkMenu: function(){
+        $('.xa-linkActionMenu').hide();
     },
 
     /**
@@ -389,6 +397,8 @@ W.workbench.PropertyView = Backbone.View.extend({
                 this.onShowValidateError();
             }
         }
+
+        this.onCancelLinkMenu();
     },
 
     /*********************************************************
