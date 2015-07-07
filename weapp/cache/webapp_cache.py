@@ -46,8 +46,6 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
 
 		_, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, 0)
 
-
-
 		categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
 
 		product_ids = [product.id for product in products]
@@ -143,7 +141,8 @@ signals.post_save.connect(update_webapp_product_cache, sender=mall_models.Produc
 signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")
 post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "mall_product_category.delete")
 post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "mall_category_has_product.delete")
-
+signals.post_save.connect(update_webapp_product_cache, sender=promotion_models.Promotion, dispatch_uid = "update_webapp_product_cache_by_promotion.save")
+post_update_signal.connect(update_webapp_product_cache, sender=promotion_models.Promotion, dispatch_uid = "update_webapp_product_cache_by_promotion.update")
 
 def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None):
 	"""
