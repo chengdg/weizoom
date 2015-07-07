@@ -371,7 +371,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 		} else if (menuType === 'url') {
 			var content = menuContent;
 			if (content.indexOf('"data":') <= 0) {
-				content = '{"data": "' + menuContent + '"}';
+				content = '{"data": "' + menuContent + '", "workspace": "custom", "data_category":"外部链接"}';
 			}
 			_this.addPhoneUrl(content);
 		} else {

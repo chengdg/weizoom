@@ -20,7 +20,8 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
     },
 	
 	initialize: function(options) {
-		this.$el = $(this.el);    
+		this.$el = $(this.el);  
+        this.linkCustomeType = "custom";  
         var _this = this;
         W.getApi().call({
             app: 'webapp',
@@ -32,7 +33,7 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
                 _this.$menu = _this.$el.find('.xa-linkItemActionMenu').eq(0);
                 _this.isShowMenu = false;
                 _this.actionRoleId = null;
-                _this.linkCustomeType = "custom";
+                
 
                 _this.initMenuData();
                 _this.$el.delegate('.xa-linkItemMenu', 'click', _.bind(_this.onClickItemMenu, _this));
