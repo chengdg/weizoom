@@ -77,7 +77,7 @@
     <table class="table table-condensed mb0 xui-tableHead">
         <thead>
             <tr>
-                <th>标题</th>
+                <th style="text-align:left;padding-left:10px!important;">标题</th>
                 <th width="400" class="tx_sortable" data-sort-attr='created_at'>创建时间</th>
                 <th width="250">操作</th>
             </tr>
@@ -91,7 +91,7 @@
                     <a class="xa-update-name ml10 xui-pencil-icon" href="javascript:void(0);"></a>
                 </td>
                 <td>${project.createdAt}</td>
-                <td style="text-align:left;">
+                <td style="text-align:left;padding-left:50px;">
                     <a href="/termite2/page_editor/?project_id=${project.id}">编辑</a>
                     <a class="ml10" href="/termite2/termite_preview/?id=${project.id}" target="_blank">预览</a>
                     {{if !project.isActive}}
