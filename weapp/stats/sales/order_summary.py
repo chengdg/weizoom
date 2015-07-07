@@ -310,7 +310,9 @@ def _get_stats_data(user, start_time, end_time):
 	# debug
 	# print "qualified orders:\n %s" % order_id_str
 	# print "repeated orders:\n %s" % repeated_order_id_str 
-			
+	
+	discount_stats['discount_order_num'] = discount_stats['wezoom_num'] + discount_stats['coupon_num'] + discount_stats['integral_num'] + discount_stats['wezoom_coupon_num'] + discount_stats['wezoom_integral_num']
+	
 	result = {
 		'start_time': start_time,
 		'end_time': end_time,
@@ -374,8 +376,7 @@ def _do_discount_stats(discount_stats, order):
 	if (not weizoom_used) and (not coupon_used) and (not integral_used):
 		return
 	
-	discount_stats['discount_order_num'] += 1
-	
+	# discount_stats['discount_order_num'] += 1
 	# if weizoom_used and coupon_used and integral_used:
 	#	discount_stats['wezoom_integral_coupon_num'] += 1
 	#	discount_stats['wezoom_integral_coupon_amount'] += float(order.weizoom_card_money) + float(order.coupon_money) + float(order.integral_money)

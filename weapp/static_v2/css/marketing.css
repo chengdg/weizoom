@@ -347,6 +347,9 @@
 	font-size: 12px;
 	font-weight: bold;
 }
+.xui-sideBar-product_summary {
+	background-position: 50px -450px;
+}
 .xui-wepage-membersPage .xui-summary tr:last-child {
 	border-top:1px solid #f2f2f2;
 }
