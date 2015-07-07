@@ -1138,6 +1138,9 @@ button.xui-removeImageButton{
 	background: #222F3B;
 	float: left;
 }
+.xui-propertyView-specialTemplateGroup .xa-dialogTrigger {
+	cursor: pointer;
+}
 .xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .propertyGroup_property_input .xui-dialogSelectedBtn{
 	display: inline-block;
 	padding-top: 47px;
