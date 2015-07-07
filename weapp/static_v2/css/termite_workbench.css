@@ -834,8 +834,9 @@ button.xui-removeImageButton{
 }
 .xui-propertyView-pageHeader .xui-imageUploader-nodata .uploadify-button{
 	background: url(/static_v2/img/termite2/addImgBtn.png) no-repeat;
-	width: 100px!important;
-	height: 100px!important;
+	background-size: 80px 80px;
+	width: 80px!important;
+	height: 80px!important;
 }
 .xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify-button{
 	background: none;
@@ -843,6 +844,27 @@ button.xui-removeImageButton{
 	height: auto !important;
 	line-height: normal !important;
 	text-align: left;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify-queue-item .fileName,
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify-queue-item .data,
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify-queue-item .cancel,
+.xui-propertyView-pageHeader .xui-imageUploader-nodata .uploadify-queue-item .fileName,
+.xui-propertyView-pageHeader .xui-imageUploader-nodata .uploadify-queue-item .data,
+.xui-propertyView-pageHeader .xui-imageUploader-nodata .uploadify-queue-item .cancel {
+	display: none;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify {
+	margin: 0px;
+	height: 1px !important;
+	padding: 0px;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify-progress,
+.xui-propertyView-pageHeader .xui-imageUploader-nodata .uploadify-progress{
+	margin-top: 1px !important;
+}
+.xui-propertyView-pageHeader .xui-imageUploader-hasdata .uploadify-queue-item,
+.xui-propertyView-pageHeader .xui-imageUploader-nodata .uploadify-queue-item{
+	padding: 0px;
 }
 .xui-propertyView-pageHeader .xui-imageUploader-hasdata .help-block,
 .xui-propertyView-pageHeader .xui-imageUploader-nodata .help-block{
@@ -1048,8 +1070,8 @@ button.xui-removeImageButton{
 	box-shadow:none;
 }
 .xui-propertyView-pageHeader .xui-imageUploader-uploader,.xui-propertyView-pageHeader .swfupload{
-	width: 100px;
-	height: 100px;
+	width: 80px;
+	height: 80px;
 }
 .xui-propertyView-pageHeader .propertyGroup_property:nth-child(3) .propertyGroup_property_dialogSelectField button{
 	width: 18px;

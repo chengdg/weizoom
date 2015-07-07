@@ -14,6 +14,10 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 	initialize: function(obj) {
 		//编译handlebar模板
 		this.template = null;
+		this.compileTemplates();
+	},
+
+	compileTemplates: function() {
 		var $templates = $('#componentTemplates');
 		this.$templates = $templates;
 		if ($templates.length > 0) {
@@ -54,6 +58,9 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 			component: component
 		}
 		xwarn(this.template);
+		if (!this.template) {
+			this.compileTemplates();
+		}
 		var html = '<div>'+$.trim(this.template(context))+'</div>';
 		var $node = $(html);
 		$node.find('a').attr('href', 'javascript:void(0);');
