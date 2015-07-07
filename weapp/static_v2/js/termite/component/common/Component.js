@@ -233,6 +233,7 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 						xlog('[component] >>>>>>>>>>>>>>>>>>>> handle property change');
 						xlog('[' + component.type + ']: change property "' + name + '" to: ' + value + '(' + typeof value + ')');
 						handler.call(component, $node, model, value, $propertyViewNode);
+						$node.find('a').attr('href', 'javascript:void(0);')
 						xlog('[component] <<<<<<<<<<<<<<<<<<<< handle property change');
 					}
 				});

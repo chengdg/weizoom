@@ -6,7 +6,7 @@ W.design.isInFrame = (parent !== window);
 W.design.DesignPage = Backbone.View.extend({
 	events: {
 		'click [data-ui-behavior="xub-selectable"]': 'onClickSelectableWidget',
-		'click a': 'onClickLink'
+		//'click a': 'onClickLink'
 	},
 
 	initialize: function(options) {
