@@ -814,7 +814,7 @@ ul.wui-relatelink li h3{
 }
 .wui-product .wui-block-type0 li,.wui-productlist .wui-block-type0 li{
     padding: 10px;
-    /*padding-top: 0;*/
+    padding-top: 0;
 }
 .wui-product  a[class^="wui-inner-box"] .wui-inner-pic,
 .wui-productlist  a[class^="wui-inner-box"] .wui-inner-pic{
@@ -1062,8 +1062,8 @@ ul.wui-relatelink li h3{
     margin-top: -20px;
 }
 .wui-imageGroup .wui-i-positionDot {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     display: inline-block;
     margin-right: 10px;
     border-radius: 50%;
