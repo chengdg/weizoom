@@ -102,8 +102,7 @@ class ManageSummary(resource.Resource):
         repeat_buying_member_count = stats_util.get_repeat_buying_member_count(webapp_id, low_date, high_date)
         repeat_buying_member_rate = '0.00%'
         if bought_member_count > 0:
-            repeat_buying_member_rate = "%.2f%%" % (
-                repeat_buying_member_count * 100.0 / bought_member_count)
+            repeat_buying_member_rate = "%.2f%%" % (repeat_buying_member_count * 100.0 / bought_member_count)
 
         #会员推荐率
         member_recommend_rate = '0.00%'

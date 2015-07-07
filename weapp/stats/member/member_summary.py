@@ -72,6 +72,8 @@ class MemberSummary(resource.Resource):
 		repeat_buying_member_rate = '0.00%'
 		if bought_member_count > 0:
 			repeat_buying_member_rate = str(round(((repeat_buying_member_count + 0.0) / bought_member_count) * 100, 2)) + '%'
+			if str(repeat_buying_member_rate) == '0.0%':
+				repeat_buying_member_rate = '0.00%'
 		#发起扫码会员和扫码新增会员
 		ori_qrcode_member_count, member_from_qrcode_count = stats_util.get_ori_qrcode_member_count(webapp_id, low_date, high_date)
 		#发起链接会员
@@ -85,6 +87,8 @@ class MemberSummary(resource.Resource):
 		_total_member_count = stats_util.get_total_member_count(webapp_id, high_date)
 		if _total_member_count > 0:
 			member_recommend_rate = str(round(((share_url_member_count + ori_qrcode_member_count + 0.0) / _total_member_count) * 100, 2)) + '%'
+			if str(member_recommend_rate) == '0.0%':
+				member_recommend_rate = '0.00%'
 		
 		item = {
 			'total_member_count': total_member_count,
