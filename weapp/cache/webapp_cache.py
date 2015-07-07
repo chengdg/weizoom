@@ -332,7 +332,7 @@ def get_webapp_mall_config(webapp_owner_id):
 # update_webapp_product_model_properties_cache: 更新product model缓存
 ###############################################################################
 def update_webapp_mall_config_cache(**kwargs):
-	if cache.request.user_profile:
+	if hasattr(cache, 'request') and cache.request.user_profile:
 		webapp_owner_id = cache.request.user_profile.user_id
 		key = 'webapp_mall_config_{wo:%s}' % webapp_owner_id
 		cache_util.delete_cache(key)
