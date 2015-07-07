@@ -1067,6 +1067,7 @@ ul.wui-relatelink li h3{
     position: relative;
     text-align: center;
     margin-top: -20px;
+    height: 20px;
 }
 .wui-imageGroup .wui-i-positionDot {
     width: 6px;
