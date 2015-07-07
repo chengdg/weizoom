@@ -12,7 +12,7 @@ from core import resource
 from core.jsonresponse import create_response
 from webapp import models as webapp_models
 
-import pagestore as pagestore_manager
+import termite.pagestore as pagestore_manager
 
 
 class PagesJson(resource.Resource):
