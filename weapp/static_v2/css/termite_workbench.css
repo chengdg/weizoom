@@ -636,11 +636,14 @@ button.xui-removeImageButton{
 	position: relative;
 	top: 3px;
 }
+.xui-propertyView-productGroup{
+	width: 418px;
+}
 .xui-propertyView-productGroup .xui-product{
 	overflow: hidden;
 }
 .xui-propertyView-productGroup .xui-product{
-	padding-top: 0;
+	padding-top: 8px;
 }
 .xui-propertyView-productGroup .propertyGroup_property:first-child .propertyGroup_property_label{
 	margin-top: -20px;
