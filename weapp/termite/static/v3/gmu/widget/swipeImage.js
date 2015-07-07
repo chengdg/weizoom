@@ -38,7 +38,7 @@ gmu.define('SwipeImage', {
 			htmls.push('</div>');
 
 			if (this._options.showtitle) {
-				htmls.push('<span class="wui-i-bottomTitle wa-title">'+swipeImages[0].title+'</span>');
+				htmls.push('<span class="wui-i-bottomTitle wa-title" style="display:none;">'+swipeImages[0].title+'</span>');
 			}
 
 			var positionMode = this._options.positionmode;
@@ -62,11 +62,15 @@ gmu.define('SwipeImage', {
 		$el.addClass('wui-swiper-container wui-swipeImage').attr('id', 'swipeImage').html($(htmls.join('\n'))).css('visibility', 'visible');
 		var $swipeSlide = $el.find('.wui-swiper-slide');
 		$swipeSlide.css('line-height', height + "px");
+
+		var $title = $el.find('.wa-title');
+	    if ($.trim($title.text()).length !== 0) {
+	    	$title.show();	
+	    }
 	},
 
 	refresh: function() {
 		var $el = this.$el;
-		xwarn($el.get(0));
 		var swipeImages = this._options.jsondata;
         var view = new Swiper('#swipeImage', {
 	        mode:'horizontal',
@@ -94,7 +98,13 @@ gmu.define('SwipeImage', {
 	    		var $position = $el.find('[data-index="'+view.activeLoopIndex+'"]');
 	    		$position.addClass("wui-i-activeDotPosition");
 	    		if (isShowTitle) {
-	    			$el.find('.wa-title').text($position.attr('data-title'));
+	    			var title = $.trim($position.attr('data-title'));
+	    			var $title = $el.find('.wa-title');
+	    			if (title.length === 0) {
+	    				$title.hide().text('');
+	    			} else {
+		    			$title.text(title).show();
+		    		}
 	    		}
 	    	} else {
 	    		var activeIndex = view.activeLoopIndex + 1;

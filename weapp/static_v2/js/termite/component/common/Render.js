@@ -53,6 +53,7 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 			in_product_mode: false,
 			component: component
 		}
+		xwarn(this.template);
 		var html = '<div>'+$.trim(this.template(context))+'</div>';
 		var $node = $(html);
 		$node.find('a').attr('href', 'javascript:void(0);');
