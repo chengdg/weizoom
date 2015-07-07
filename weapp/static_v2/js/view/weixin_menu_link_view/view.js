@@ -28,6 +28,7 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
             api: 'tools/get',
             // scope: this,
             success: function(data) {
+                data['isUseWepage'] = W.isUseWepage;
                 _this.$el.append($.tmpl(_this.getTemplate(), data));
 
                 _this.$menu = _this.$el.find('.xa-linkItemActionMenu').eq(0);

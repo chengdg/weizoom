@@ -205,6 +205,7 @@
 	W.host = "{{request.META.HTTP_HOST}}";
 	W.API_VERSION = 1;
 	W.isUnderDevelop = {% if under_develop %}true{% else %}false{% endif %};
+	W.isUseWepage = {% if user.get_profile.is_use_wepage %}true{% else %}false{% endif %};
 
 	{% if preview_info %}
       W.previewName = "{{ preview_info.name }}";

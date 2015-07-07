@@ -33,6 +33,7 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
             async: false,
             // scope: this,
             success: function(tools) {
+                tools['isUseWepage'] = W.isUseWepage;
                 $('body').append($.tmpl(_this.getTemplate(), tools));
 
                 _this.$menu = $('.xa-linkActionMenu').eq(0);
