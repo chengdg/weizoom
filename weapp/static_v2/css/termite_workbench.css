@@ -3,7 +3,7 @@ body {
 	overflow-x: hidden;
 	background: url("/termite_static/img/builder_bg_texture_tile.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
 	*/
-	font-family: "宋体";
+	/*font-family: "宋体";*/
 }
 .star_show:before {
 	top: -3px;
