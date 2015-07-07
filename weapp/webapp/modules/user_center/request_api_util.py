@@ -88,7 +88,7 @@ def binding_phone(request):
 	if member_info.is_binded is False:
 		if MemberInfo.is_can_binding(phone_number, member_id, request.user_profile.webapp_id):
 			if MemberInfo.objects.filter(member_id=member_id, session_id=sessionid, phone_number=phone_number, captcha=code, is_binded=False).count() > 0:
-				 MemberInfo.objects.filter(member_id=member_id, session_id=sessionid, phone_number=phone_number, captcha=code).update(is_binded=True)
+				 MemberInfo.objects.filter(member_id=member_id, session_id=sessionid, phone_number=phone_number, captcha=code).update(is_binded=True, binding_time=datetime.now())
 			else:
 				response = create_response(501)
 				data['msg'] = u'手机验证码错误，请重新输入'

@@ -670,6 +670,7 @@ class MemberInfo(models.Model):
 	is_binded = models.BooleanField(default=False)
 	session_id = models.CharField(max_length=1024, blank=True)
 	captcha = models.CharField(max_length=11, blank=True) #验证码
+	binding_time = models.DateTimeField(default=datetime.now()) #绑定时间
 	#is_passed = models.BooleanField(default=False)
 
 
