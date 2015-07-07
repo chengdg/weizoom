@@ -31,9 +31,10 @@ gmu.define('SwipeImage', {
 			htmls.push('<div class="wui-swiper-wrapper">暂无图片</div>');
 		} else {
 			htmls.push('<div class="wui-swiper-wrapper">');
+			var positionMode = this._options.positionmode;
 			for (var i = 0; i < swipeImages.length; ++i) {
 				var image = swipeImages[i];
-				if (image.link_url) {
+				if (image.link_url && positionMode === 'dot') {
 					htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></a></div>')
 				} else {
 					htmls.push('<div class="wui-swiper-slide"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></div>')
@@ -46,7 +47,6 @@ gmu.define('SwipeImage', {
 				htmls.push('<span class="wui-i-bottomTitle wa-title" style="display:none;">'+swipeImages[0].title+'</span>');
 			}
 
-			var positionMode = this._options.positionmode;
 			if (positionMode === 'dot') {
 				htmls.push('<div class="wui-i-dotPositions">');
 				for (var i = 0; i < swipeImages.length; ++i) {
