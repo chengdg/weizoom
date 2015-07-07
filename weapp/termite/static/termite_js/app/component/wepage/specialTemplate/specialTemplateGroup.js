@@ -24,7 +24,7 @@ W.component.wepage.specialTemplateGroup = W.component.Component.extend({
                 isUserProperty: true,
                 triggerButton: {nodata:'选择图片', hasdata:'修改'},
                 dialog: 'W.dialog.termite.SelectImagesDialog',
-                help: '建议尺寸：640*1080像素\n尺寸不匹配，图片将会被拉伸或压缩',
+                help: '建议尺寸：640*1008像素\n尺寸不匹配，图片将会被拉伸或压缩',
                 default: ''
             }]
         },{

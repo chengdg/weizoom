@@ -25,7 +25,7 @@ W.component.wepage.personalityThemeGroup = W.component.Component.extend({
                 isUserProperty: true,
                 triggerButton: {nodata:'选择图片', hasdata:'修改'},
                 dialog: 'W.dialog.termite.SelectImagesDialog',
-                help: '建议尺寸：640*1080像素',
+                help: '建议尺寸：640*1008像素',
                 default: ''
             }]
         },{
