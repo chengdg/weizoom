@@ -266,6 +266,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	        url: url,
 	        currentMenuId: W.currentMenuId
 	    });
+	    //alert('addPhoneUrl')
 	    this.bindMenuEditorHandler(menuEditor);
 	},
 	
@@ -357,7 +358,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
     	var _this = this;
     	
     	$('#edui_fixedlayer').remove();
-    	
+    	//alert('1'+menuType)
     	if (menuType === 'news') {
 	    	W.getLoadingView().show();
 			W.resource.new_weixin.MenuMaterial.get({
@@ -388,7 +389,6 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	changeEditMessagePanel: function($menuDiv, menuType) {
     	var menuId = parseInt($menuDiv.parents('.xui-menu-left-item').find('.xui-one-menu input').attr('data-menu-id'));
     	W.currentMenuId = menuId;
-    	//alert('iiiiiiiii',W.currentMenuId,'--')
     	var menu;
     	// 一级菜单
     	if (menuType === 1) {
@@ -403,6 +403,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
     		var itemId = parseInt($menuDiv.find('input').attr('data-menu-id'));
 			W.currentMenuId = W.currentMenuId + '-' + itemId;
 	    	menu = W.menuPhone.menubar.getMenuItem(menuId, itemId).toJSON();
+	    	//console.log(menu)
     	}
     	if (menu) {
     		this.displayEditMessagePanel(menu);
@@ -424,6 +425,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	
 	bindMenuEditorHandler: function(menuEditor) {
 		var _this = this;
+		var currentId = menuEditor.getCurrentMenuId()
 		menuEditor.bind("custom-menu-change", function(content, type) {
 			if (type === 'text') {
 				var $iframeBody = this.$('iframe').contents().find('body');
@@ -440,10 +442,14 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 				//find('.xa-menu-content').attr('dat.fa-id'))
 			//console.log("menuEditor:")
 			//W.currentMenuId = menuEditor.$el.find('.xa-menu-content').attr('data-id')
-			W.currentMenuId = menuEditor.getCurrentMenuId();
+			 
 			//alert(W.currentMenuId+':bindMenuEditorHandler')
-			var model = _this.getMenuModel();
-			model.set('answer', {content: content, type: type});
+			if (currentId==menuEditor.getCurrentMenuId()) {
+				var model = _this.getMenuModel();
+				model.set('answer', {content: content, type: type});
+				console.log('---set:',W.currentMenuId,model.get('answer'))
+			}
+			
 		});
 	},
 });
