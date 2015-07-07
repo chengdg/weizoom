@@ -1128,7 +1128,21 @@ def get_member_by(request, social_account):
 				notify_message = u"get_member_by中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
 						member.id, unicode_full_stack())
 				watchdog_error(notify_message)
-
+			try:
+				name = url_helper.get_market_tool_name_from(request.get_full_path())
+				#if name:
+				if not name:
+					name = ''
+				if request:
+					MemberMarketUrl.objects.create(
+						member = member,
+						market_tool_name = name,
+						url = request.get_full_path(),
+						)
+			except:
+				notify_message = u"get_member_by中MemberMarketUrl失败，会员id:{}, cause:\n{}".format(member.id, unicode_full_stack())
+				watchdog_error(notify_message)
+		
 			return member,None			
 		except:
 			notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
