@@ -883,9 +883,10 @@ button.xui-removeImageButton{
 .xui-propertyView-imgAdjGroup .xui-selectLink{
 	display: block;
 }
-.xui-propertyView-imgDisplayGroup .xui-selected-title-box,.xui-propertyView-imageNavGroup .xui-selected-title-box,
-.xui-propertyView-imgAdjGroup .xui-selected-title-box{
-	margin-left: -5px;
+.xui-propertyView-imgDisplayGroup .xui-selected-title-box,
+.xui-propertyView-imageNavGroup .xui-selected-title-box,
+.xui-propertyView-imgAdjGroup .xui-selected-title-box {
+	margin-left: 0px;
 }
 .xui-propertyView-imgDisplayGroup .xui-selected-title-box+a,.xui-propertyView-imageNavGroup .xui-selected-title-box+a,
 .xui-propertyView-imgAdjGroup .xui-selected-title-box+a{
@@ -1112,7 +1113,7 @@ button.xui-removeImageButton{
 	display: block;
 }
 .xui-propertyView-personalityThemeGroup .xui-selected-title-box{
-	margin-left: -5px;
+	margin-left: 0px;
 }
 .xui-propertyView-personalityThemeGroup .xui-link{
 	margin-left: 0px;
