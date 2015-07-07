@@ -18,6 +18,10 @@ from mall import models as mall_models
 from mall.promotion import models as promotion_models
 from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
 
+from django.dispatch.dispatcher import receiver
+from django.db.models import signals
+from weapp.hack_django import post_update_signal, post_delete_signal
+
 local_cache = {}
 
 def get_product_display_price(product, webapp_owner_id):
@@ -127,9 +131,6 @@ def get_webapp_product_categories(webapp_owner_user_profile, is_access_weizoom_m
 	return mall_models.ProductCategory.from_list(data['categories'])
 
 
-from django.dispatch.dispatcher import receiver
-from django.db.models import signals
-from weapp.hack_django import post_update_signal
 def update_webapp_product_cache(**kwargs):
 	if hasattr(cache, 'request') and cache.request.user_profile:
 		webapp_owner_id = cache.request.user_profile.user_id
@@ -140,7 +141,8 @@ post_update_signal.connect(update_webapp_product_cache, sender=mall_models.Produ
 signals.post_save.connect(update_webapp_product_cache, sender=mall_models.Product, dispatch_uid = "product.save")
 signals.post_save.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "product_category.save")
 signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")
-
+post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "termite_product_category.delete")
+post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "termite_category_has_product.delete")
 
 
 def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None):
