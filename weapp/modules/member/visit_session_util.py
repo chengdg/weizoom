@@ -23,6 +23,8 @@ def get_request_url(request):
 	shared_url = remove_querystr_filed_from_request_url(shared_url, 'code')
 	shared_url = remove_querystr_filed_from_request_url(shared_url, 'state')
 	shared_url = remove_querystr_filed_from_request_url(shared_url, 'appid')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
 	return shared_url
 
 def get_request_url_digest(request, request_url=None):

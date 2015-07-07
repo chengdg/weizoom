@@ -125,6 +125,8 @@ def record_shared_url(request):
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'code')
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'state')
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'appid')
+			shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
+			shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
 			shared_url_digest = hashlib.md5(shared_url).hexdigest()
 
 			if MemberSharedUrlInfo.objects.filter(member=member, shared_url_digest=shared_url_digest).count() == 0:

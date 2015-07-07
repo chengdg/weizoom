@@ -151,6 +151,8 @@ class IntegralCaculator(object):
 		url = remove_querystr_filed_from_request_url(url, 'code')
 		url = remove_querystr_filed_from_request_url(url, 'state')
 		url = remove_querystr_filed_from_request_url(url, 'appid')
+		url = remove_querystr_filed_from_request_url(url, 'workspace_id')
+		url = remove_querystr_filed_from_request_url(url, 'workspace_id')
 		#url_digest = hashlib.md5(url).hexdigest()
 		shared_url_digest = hashlib.md5(url).hexdigest()
 		if self.has_visit_querier(url, member.id):
@@ -291,6 +293,8 @@ class IntegralCaculator(object):
 			url = remove_querystr_filed_from_request_url(url, 'code')
 			url = remove_querystr_filed_from_request_url(url, 'state')
 			url = remove_querystr_filed_from_request_url(url, 'appid')
+			url = remove_querystr_filed_from_request_url(url, 'workspace_id')
+			url = remove_querystr_filed_from_request_url(url, 'workspace_id')
 			#url_digest = hashlib.md5(url).hexdigest()
 			shared_url_digest = hashlib.md5(url).hexdigest()
 			shared_infos = MemberSharedUrlInfo.objects.filter(member=followed_member, shared_url=url)
