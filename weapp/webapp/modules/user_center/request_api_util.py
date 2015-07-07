@@ -113,6 +113,9 @@ def record_shared_url(request):
 	if member:
 		title = request.POST.get('title', '')
 		shared_url =  request.POST.get('link','')
+		if shared_url.startswith('http'):
+			shared_url = shared_url[shared_url.find(settings.DOMAIN+len(settings.DOMAIN):]
+
 		if shared_url:
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'from')
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
