@@ -60,7 +60,8 @@
 					{% endif %}
 					{% if 'static'|satisfy_permission:request %}
 					<li>
-						<a href='http://tj.weizzz.com/' target='_blank' title='数据统计'>数据统计</a>
+						<!--<a href='http://tj.weizzz.com/' target='_blank' title='数据统计'>数据统计</a>-->
+						<a href='/stats/manage_summary/' title='数据统计'>数据统计</a>
 					</li>
 					{% endif %}
 					{% if 'manage_auth'|satisfy_permission:request %}
@@ -329,7 +330,7 @@ $(document).ready(function($) {
 	$(".xa-navBar a[title='模板']").attr('target', '_blank');
 
 	//添加token参数
-	$(".xa-navBar a[title='数据统计']").attr('href', 'http://tj.weizzz.com/?token=' + "{{request.user_token}}");
+	//$(".xa-navBar a[title='数据统计']").attr('href', 'http://tj.weizzz.com/?token=' + "{{request.user_token}}");
 });
 </script>
 {% block js %}{% endblock %}

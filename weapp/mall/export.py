@@ -32,7 +32,8 @@ FIRST_NAVS = [{
     'permission': 'manage_member'
 }, {
     'name': u'数据统计',
-    'url': 'http://tj.weizzz.com/',
+    #'url': 'http://tj.weizzz.com/',
+    'url': '/stats/manage_summary/',
     'permission': 'static'
 }, {
     'name': u'权限管理',
