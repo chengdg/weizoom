@@ -146,6 +146,13 @@ class IntegralCaculator(object):
 		return MemberClickedUrl.objects.filter(url=url, mid=member_id, url_digest=shared_url_digest).count() > 0
 	#有人点击a用户分享的链接对a增加相应的积分
 	def increase_for_click_shared_url(self,  followed_member, member, url):
+		url = remove_querystr_filed_from_request_url(url, 'from')
+		url = remove_querystr_filed_from_request_url(url, 'isappinstalled')
+		url = remove_querystr_filed_from_request_url(url, 'code')
+		url = remove_querystr_filed_from_request_url(url, 'state')
+		url = remove_querystr_filed_from_request_url(url, 'appid')
+		#url_digest = hashlib.md5(url).hexdigest()
+		shared_url_digest = hashlib.md5(url).hexdigest()
 		if self.has_visit_querier(url, member.id):
 			#如果不是第一次点击，那么不进行积分计算
 			return
@@ -174,7 +181,7 @@ class IntegralCaculator(object):
 			print '--------------------create MemberClickedUrl start'
 			MemberClickedUrl.objects.create(
 				url = url,
-				url_digest = hashlib.md5(url).hexdigest(),
+				url_digest = shared_url_digest,
 				mid = member.id,
 				followed_mid = followed_member.id
 				)

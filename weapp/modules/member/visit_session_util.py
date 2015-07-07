@@ -18,6 +18,11 @@ from utils.url_helper import remove_querystr_filed_from_request_url
 def get_request_url(request):
 	shared_url = remove_querystr_filed_from_request_url(request, 'from')
 	shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'from')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'code')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'state')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'appid')
 	return shared_url
 
 def get_request_url_digest(request, request_url=None):
@@ -44,8 +49,11 @@ def record_shared_page_visit(request):
 		#如果获取不到分享者信息不进行任何处理
 		return
 
-	request_url = get_request_url(request)
-	request_path_digest = get_request_url_digest(request, request_url)
+	url = get_request_url(request)
+	#request_path_digest = get_request_url_digest(request, request_url)
+
+	#url_digest = hashlib.md5(url).hexdigest()
+	request_path_digest = hashlib.md5(url).hexdigest()
 	member = get_request_member(request)
 	if member:
 		if followed_member_token == member.token:
@@ -60,7 +68,7 @@ def record_shared_page_visit(request):
 				)
 		else:
 			MemberClickedUrl.objects.create(
-				url = request_url,
+				url = url,
 				url_digest = request_path_digest,
 				mid = member.id,
 				followed_mid = followed_member.id
@@ -76,7 +84,7 @@ def record_shared_page_visit(request):
 					)
 			else:
 				AnonymousClickedUrl.objects.create(
-					url = request_url,
+					url = url,
 					url_digest = request_path_digest,
 					uuid = uuid,
 					followed_mid = followed_member.id,
