@@ -88,15 +88,18 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 	},
 
     showActionMenu: function($icon, parentEl) {
+        // console.log('parentEl', parentEl, $(parentEl+':visible'))
         var offset = $icon.offset();
         var parentOffset = null;
         var top = offset.top+18;
         var left = offset.left+2;
+        // console.log(top, left)
         if (parentEl) {
-        	parentOffset = $(parentEl).offset();
+        	parentOffset = $(parentEl+':visible').offset();
         	left += parentOffset.left-74;
         	top += parentOffset.top+30;
         };
+        // console.log(top, left)
         this.$menu.css({
             top: top+'px',
             left: left+'px'
@@ -123,10 +126,8 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
     onClickItemMenu: function(event){
     	var menuType = $(event.currentTarget).attr('data-type');
     	var item =  this.menus[menuType];
-
     	
         var title = item.title;
-
         
     	var selectedLinkTarget = this.$el.find('#linkTarget').data('link_target');
     	var _this = this;
