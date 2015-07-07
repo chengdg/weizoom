@@ -16,7 +16,7 @@ gmu.define('SwipeImage', {
 	
 	_create: function() {
 		var $el = this.$el;
-		
+
 		//确定轮播图区域的高度
 		//var ratio = (this._options.width+0.0) / ($el.width() * 1.0);
         //var height = this._options.height / ratio;
@@ -33,6 +33,9 @@ gmu.define('SwipeImage', {
 			htmls.push('<div class="wui-swiper-wrapper">');
 			for (var i = 0; i < swipeImages.length; ++i) {
 				var image = swipeImages[i];
+				if (!image.link_url) {
+					image.link_url = 'javascript:void(0);';
+				}
 				htmls.push('<div class="wui-swiper-slide"><a href="'+image.link_url+'"><img src="'+image.url+'" style="width:100%;vertical-align: middle;" /></a></div>')
 			}
 			htmls.push('</div>');
