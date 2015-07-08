@@ -612,7 +612,7 @@ ul.wui-relatelink li h3{
   background-size: 100% 1px;
   background-position: left bottom;
   height: 44px;
-  margin: 0 10px;
+  padding: 0 10px;
   box-sizing:border-box;
 }
 .wui-textnav li a,.wui-relatelink li a{
@@ -1132,6 +1132,12 @@ ul.wui-relatelink li h3{
 .wui-imagenav .wui-inner-pic{
     height: 75px;
     overflow: hidden;
+    border: 1px solid #e5e5e5;
+    border-right: none;
+    box-sizing:border-box;
+}
+.wui-imagenav li:last-child .wui-inner-pic{
+    border-right: 1px solid #e5e5e5;
 }
 /*================================橱窗=========================*/
 .wui-imagedisplay{
@@ -1147,11 +1153,25 @@ ul.wui-relatelink li h3{
     height: 106px;
     overflow: hidden;
 }
+.wui-imagedisplay li .wui-inner-pic{
+    border: 1px solid #e5e5e5;
+    box-sizing:border-box;
+}
+.wui-imagedisplay li:last-child{
+    border-bottom: 1px solid #e5e5e5;
+}
 .wui-imagedisplay .wui-grid-e li:first-child{
     margin-right: 0.1%;
 }
 .wui-imagedisplay .wui-grid-e li:first-child .wui-inner-pic{
     height: 211px;
+    border-right: none;
+}
+.wui-imagedisplay .wui-grid-b li{
+    border-bottom: 1px solid #e5e5e5;
+}
+.wui-imagedisplay .wui-grid-b li .wui-inner-pic{
+    border-right: none;
 }
 .wui-imagedisplay .wui-black{
     height: 318px;
