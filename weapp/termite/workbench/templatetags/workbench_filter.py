@@ -201,9 +201,8 @@ def to_swipe_images_json(component, request=None):
 		model = sub_component['model']
 		url = model['image']
 		link_url = extract_target_data(model['target'], request)
-		title = model['title']
+		title = model.get('title', '')
 		items.append({'url':url, 'link_url':link_url, 'title':title})
-
 	return json.dumps(items)
 
 RICHTEXT2COUNT = {}
