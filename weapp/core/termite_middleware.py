@@ -21,6 +21,10 @@ class WebappPageCacheMiddleware(object):
 			if not '/termite2/webapp_page/' in request.path:
 				return
 
+			if request.GET.get('page_id', '') == 'preview':
+				#预览不使用缓存
+				return
+
 			project_id = None
 			if 'model' in request.GET:
 				pass
