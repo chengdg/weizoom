@@ -642,6 +642,7 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 					Q(created_at__gte=delta) &
 					~Q(order__status=ORDER_STATUS_CANCEL)
 				)
+				# 限购周期内已购买过商品
 				if purchase_records.count() > 0:  #
 					data_detail.append({
 						'id': product.id,

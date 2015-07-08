@@ -142,6 +142,8 @@ def step_impl(context, user):
 	order.actions = dict([(action['name'], 1) for action in actions])
 	if order.status == ORDER_STATUS_PAYED_SHIPED or order.status == ORDER_STATUS_SUCCESSED:
 		order.actions[u'修改物流'] = 1
+	if order.status == ORDER_STATUS_NOT:
+		order.actions[u'修改价格'] = 1
 	for product in order.products:
 		product['total_price'] = float(product['total_price'])
 	order.status = STATUS2TEXT[order.status]
