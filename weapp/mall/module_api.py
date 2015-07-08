@@ -2806,8 +2806,9 @@ def get_product_review(request):
 	"""
 	product_id = request.GET.get('product_id', None)
 	product_review_list = ProductReview.objects.filter(Q(product_id=product_id) & Q(status__in=['1', '2'])).order_by('-top_time', '-id')
-	propertyid2name = dict([(property.id, property.name) for property in ProductModelProperty.objects.filter(owner_id=request.webapp_owner_id)])
-	modelid2value = dict([(model.id, model.name) for model in ProductModelPropertyValue.objects.filter(property_id__in=propertyid2name.keys())])
+
+	from cache import webapp_cache
+	cache_product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, product_id)
 
 	product_review_ids = []
 	member_ids = []
@@ -2830,7 +2831,6 @@ def get_product_review(request):
 
 	id2order_has_product = dict([(o.id, o) for o in OrderHasProduct.objects.filter(id__in=order_has_product_ids)])
 
-	from cache import webapp_cache
 	for review in product_review_list:
 		#去OrderHasProduct取对应商品的规格数据product_model_name
 		review_product = id2order_has_product[review.order_has_product_id]
@@ -2839,11 +2839,7 @@ def get_product_review(request):
 		if review.product_model_name == 'standard':
 			review.custom_model_properties = []
 		else:
-			model_data = review.product_model_name.split(":")
-			review.custom_model_properties = [dict(
-					propertyName = propertyid2name[int(model_data[0])],
-					name = modelid2value[int(model_data[1])]
-				)]
+			review.custom_model_properties = review_product.product.fill_specific_model(review_product.product_model_name, cache_product.models)
 
 		if review_id2pictures.has_key(review.id):
 			review.pictures = review_id2pictures[review.id]

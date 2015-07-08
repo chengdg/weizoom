@@ -26,7 +26,7 @@
 					<div>
 						{% if review.custom_model_properties %}
                             {% for property in review.custom_model_properties %}
-                            <span class="mr10">{{ property.propertyName }}：&nbsp;{{ property.name }}</span>
+                            <span class="mr10">&nbsp;{{ property.property_value }}</span>
                             {% endfor %}
                         {% endif %}
 					</div>
