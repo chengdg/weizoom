@@ -20,7 +20,6 @@ def step_impl(context, user):
 		if data.get('is_enable_added_weight') == None and data.get('added_weight'):
 			data['is_enable_added_weight'] = 1
 		response = client.post('/mall/editor/postage_config/create/', data)
-		time.sleep(1)
 
 
 def _get_post_data_postage(postage):

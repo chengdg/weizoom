@@ -38,7 +38,6 @@ def step_impl(context, user):
 	context.rules = json.loads(context.text)
 	for rule in context.rules:
 		__add_rule(context, rule)
-		time.sleep(1)
 
 
 @then(u"{user}能获取关键词自动回复规则'{rule_patterns}'")

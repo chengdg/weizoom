@@ -156,7 +156,7 @@ Scenario: 1 购买单个限时抢购商品，限时抢购进行中
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs02
 Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车中是限时抢购商品，但，去提交订单时已经不是限时抢购商品）
 
 	When bill访问jobs的webapp
@@ -180,7 +180,7 @@ Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs03
 Scenario:3 购买单个限时抢购商品，限时抢购活动没开始，按原价下单
 
 	Given jobs登录系统
@@ -214,7 +214,7 @@ Scenario:3 购买单个限时抢购商品，限时抢购活动没开始，按原
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs04
 Scenario: 4 购买多个商品，带有限时抢购商品
 
 	When bill访问jobs的webapp
@@ -267,7 +267,7 @@ Scenario: 4 购买多个商品，带有限时抢购商品
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs05
 Scenario: 5 购买单个限时抢购商品，超出库存限制
 	第一次购买2个，成功；第二次购买2个，超出商品库存，确保缓存更新
 
@@ -308,7 +308,7 @@ Scenario: 5 购买单个限时抢购商品，超出库存限制
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs06
 Scenario: 6  购买单个限时抢购商品，未超过库存限制，但超过单次购买限制
 
 	Given jobs登录系统
@@ -352,7 +352,7 @@ Scenario: 6  购买单个限时抢购商品，未超过库存限制，但超过�
 	Then bill获得创建订单失败的信息'限购2件'
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs07
 Scenario: 7 在限购周期内连续购买限时抢购商品
 
 	When bill访问jobs的webapp
@@ -392,7 +392,7 @@ Scenario: 7 在限购周期内连续购买限时抢购商品
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs08
 Scenario: 8 购买多规格限时抢购商品
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -444,7 +444,7 @@ Scenario: 8 购买多规格限时抢购商品
 		"""
 	Then bill获得创建订单失败的信息'限购2件'
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs09
 Scenario: 9 购买多规格限时抢购商品同时适用于积分规则
 
 	Given jobs登录系统
@@ -511,7 +511,7 @@ Scenario: 9 购买多规格限时抢购商品同时适用于积分规则
 		"""
 	Then bill在jobs的webapp中拥有30会员积分
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs10
 Scenario: 10 购买单个限时抢购商品，购买时活动进行中，提交订单时，该活动被商家手工结束
 
 	Given jobs登录系统
@@ -550,5 +550,97 @@ Scenario: 10 购买单个限时抢购商品，购买时活动进行中，提交�
 				"msg": "该活动已经过期",
 				"short_msg": "已经过期"
 			}]
+		}
+		"""
+
+
+# 后续补充.雪静
+@zy_fs11 @mall2 @mall.promotion @mall.webapp.promotion
+Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还可以再次下单
+	有限购周期和限购数量设置
+
+	Given jobs登录系统
+	When jobs创建限时抢购活动
+		"""
+		{
+			"name": "商品4限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品4"],
+			"count_per_purchase": 2,
+			"promotion_price": 11.5,
+			"limit_period": 1
+		}
+		"""
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品4",
+				"count": 1,
+				"promotion": {
+					"name": "商品4限时抢购"
+				}
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 11.5
+		}
+		"""
+	Given jobs登录系统
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"status": "待支付",
+			"final_price": 11.5,
+			"actions": ["取消", "支付","修改价格"]
+		}
+		"""
+	When jobs取消最新订单
+		"""
+		 {
+		 	"reason": "不想要了"
+		 }
+		"""
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"status": "已取消",
+			"final_price": 11.5,
+			"actions": []
+		}
+		"""
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品4",
+				"count": 2,
+				"promotion": {
+					"name": "商品4限时抢购"
+				}
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 23.00
+		}
+		"""
+	Given jobs登录系统
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"status": "待支付",
+			"final_price": 23.00,
+			"actions": ["取消", "支付","修改价格"]
 		}
 		"""

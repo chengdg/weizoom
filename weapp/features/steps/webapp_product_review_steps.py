@@ -47,7 +47,6 @@ def step_finished_a_product_review(context, webapp_user, order_code, product_nam
     if has_picture:
         data['picture_list'] = json.dumps(has_picture)
     context.client.post(url, data)
-    time.sleep(1)
 
 
 @when(u"{webapp_owner}已获取对商品的评价信息")
@@ -165,7 +164,7 @@ def step_get_presonal_review_list(context, webapp_user):
 def step_get_user_thanks_page(context, webapp_user):
     from webapp.modules.mall.request_api_util import get_review_status
     expected = json.loads(context.text)
-    orders_is_finish = get_review_status(context.webapp_user.id, context.member.id)
+    orders_is_finish = get_review_status(context)
     actual = []
     if not orders_is_finish:
         actual.append({

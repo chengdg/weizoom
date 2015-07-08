@@ -39,7 +39,6 @@ def step_impl(context, user):
 		response_data = response_json['data']
 		if response_data.has_key('category_id'):
 			context.category_id = response_data['category_id']
-		time.sleep(1)
 
 @when(u"{user}添加一个分组")
 def step_impl(context, user):

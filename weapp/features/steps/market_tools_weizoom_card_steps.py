@@ -35,7 +35,6 @@ def step_impl(context, user):
     context.weizoom_rules = json.loads(context.text)
     for weizoom_rule in context.weizoom_rules:
         __add_weizoom_rule(context, weizoom_rule)
-        time.sleep(1)
 
 
 @then(u"{user}能获取钱包'{weizoom_card_rule_name}'")

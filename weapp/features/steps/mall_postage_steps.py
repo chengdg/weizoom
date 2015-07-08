@@ -88,7 +88,6 @@ def step_impl(context, user):
 		data = _get_post_data_postage(postage)
 		response = client.post('/mall/api/postage_template/create/', data)
 		bdd_util.assert_api_call_success(response)
-		time.sleep(0.2)
 
 
 @when(u"{user}已添加了邮费配置")

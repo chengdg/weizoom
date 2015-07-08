@@ -9,8 +9,8 @@ def full_stack():
     if not exc is None:  # i.e. if an exception is present
         del stack[-1]       # remove call of full_stack, the printed exception
         # will contain the caught exception caller instead
-    trc = 'Traceback (most recent call last):\n'
-    stackstr = trc + ''.join(traceback.format_list(stack))
+    trc = 'Traceback (most recent call last, REVERSED CALL ORDER):\n'
+    stackstr = trc + ''.join(reversed(traceback.format_list(stack)))
     if not exc is None:
         stackstr += '  ' + traceback.format_exc().lstrip(trc)
 

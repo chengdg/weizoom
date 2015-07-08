@@ -165,6 +165,7 @@ WAIT_BUYER_CONFIRM_GOODS = 'WAIT_BUYER_CONFIRM_GOODS'
 # 				delivery_date = delivery_date.strip()
 # 				)
 
+
 def save_order(request):
 	"""
 	保存订单
@@ -203,9 +204,6 @@ def save_order(request):
 	fake_order = common_util.Object("order")
 	fake_order.products = products
 	fake_order.product_groups = mall_api.group_product_by_promotion(request, products)
-	# print '$' * 60
-	# for product_group in fake_order.product_groups:
-	# 	print product_group['promotion_result']
 	signal_responses = mall_signals.check_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
 	http_response = common_util.check_failed_signal_response(signal_responses)
 	if http_response:
@@ -233,7 +231,10 @@ def save_order(request):
 		order = mall_api.save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request)
 		if order.final_price > 0 and pay_interface != '-1':
 			# 处理 支付跳转路径
-			pay_interface = PayInterface.objects.get(owner_id=request.webapp_owner_id, type=pay_interface)
+			# pay_interface = PayInterface.objects.get(owner_id=request.webapp_owner_id, type=pay_interface)
+			pay_interface = filter(
+				lambda x: x.type == int(pay_interface),
+				request.webapp_owner_info.pay_interfaces)[0]
 			pay_url = pay_interface.pay(order, webapp_owner_id)
 
 		#删除购物车中的商品
@@ -661,14 +662,14 @@ def get_member_product_info(request):
 # 	return response.get_response()
 
 
-def get_review_status(webapp_user_id, member_id):
+def get_review_status(request):
 	'''
 	得到个人中心待评价列表的状态，
 	如果所有订单已完成晒图， 返回True
 	否则返回 False
 	'''
 	# 得到个人中心的所用订单
-	orders = request_util._get_order_review_list(webapp_user_id, member_id)
+	orders = request_util._get_order_review_list(request)
 	# 如果订单都已经完成晒图
 	result = True
 	for order in orders:
@@ -725,17 +726,11 @@ def create_product_review(request):
 		deliver_score = data_dict.get('deliver_score', None)
 		process_score = data_dict.get('process_score', None)
 
-		# 创建订单评论
+		#创建订单评论
 		order_review, created = mall_models.OrderReview.objects.get_or_create(
 			order_id=order_id,
 			owner_id=owner_id,
-			member_id=member_id)
-		# order_review.save()
-		mall_models.OrderReview.objects.filter(
-			order_id=order_id,
-			owner_id=owner_id,
-			member_id=member_id
-		).update(
+			member_id=member_id,
 			serve_score=serve_score,
 			deliver_score=deliver_score,
 			process_score=process_score)
@@ -748,36 +743,29 @@ def create_product_review(request):
 			owner_id=owner_id,
 			product_id=product_id,
 			order_has_product_id=order_has_product_id,
-		)
-		# product_review.save()
-		mall_models.ProductReview.objects.filter(
-			order_has_product_id=order_has_product_id
-		).update(
 			product_score=product_score,
-			review_detail=review_detail)
+			review_detail=review_detail
+		)
 
 		# 创建商品评价图片
 		picture_list = data_dict.get('picture_list', None)
 		if picture_list:
 			picture_list = json.loads(picture_list)
+			picture_model_list = []
+
 			for picture in picture_list:
-				product_review_picture = mall_models.ProductReviewPicture.objects.create(
+				att_url=save_base64_img_file_local_for_webapp(request, picture)
+				picture_model_list.append(mall_models.ProductReviewPicture(
 					product_review=product_review,
 					order_has_product_id=order_has_product_id,
-					#先让地址为空
-					# att_url = ''
-					att_url = save_base64_img_file_local_for_webapp(request, picture)
-				)
-				#异步上传评论图片并将地址保存在数据库中
-				# mall_api.save_image_and_update_att_url.delay(request, picture, product_review_picture)
-
-
-				#mall_api.save_product_review_picture.delay(request, picture, product_review_picture)
+					att_url=att_url
+				))
 				watchdog_info(u"create_product_review after save img  %s" %\
-					(product_review_picture.att_url), type="mall", user_id=owner_id)
-				# product_review_picture.save()
+					(att_url), type="mall", user_id=owner_id)
+			mall_models.ProductReviewPicture.objects.bulk_create(picture_model_list)
+
 		response = create_response(200)
-		response.data = get_review_status(request.webapp_user.id, request.member.id)
+		response.data = get_review_status(request)
 		watchdog_info(u"create_product_review end, order_has_product_id is %s" %\
 			(order_has_product_id), type="mall", user_id=owner_id)
 		return response.get_response()
@@ -809,12 +797,17 @@ def update_product_review_picture(request):
 	# 为此商品评论创建贴图
 	if picture_list:
 		picture_list = json.loads(picture_list)
+		picture_model_list = []
+
 		for picture in picture_list:
-			product_review_picture = mall_models.ProductReviewPicture.objects.create(
+			picture_model_list.append(mall_models.ProductReviewPicture(
 				product_review_id=product_review_id,
 				order_has_product_id=order_has_product_id,
-				att_url=save_base64_img_file_local_for_webapp(request, picture))
-			product_review_picture.save()
+				att_url=save_base64_img_file_local_for_webapp(request, picture)
+			))
+
+		mall_models.ProductReviewPicture.objects.bulk_create(picture_model_list)
+
 		response = create_response(200)
-		response.data = get_review_status(request.webapp_user.id, request.member.id)
+		response.data = get_review_status(request)
 		return response.get_response()

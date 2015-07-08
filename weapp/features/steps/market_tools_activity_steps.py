@@ -66,7 +66,6 @@ def step_impl(context, user):
     context.activities = json.loads(context.text)
     for activity in context.activities:
         __add_activity(context, activity)
-        time.sleep(1)
 
 
 @then(u"{user}能获取活动列表")
@@ -95,7 +94,6 @@ def step_impl(context, user):
     context.activities = json.loads(context.text)
     for activity in context.activities:
         __add_activity(context, activity)
-        time.sleep(1)
 
 
 @when(u"{user}删除活动报名'{activity_name}'")

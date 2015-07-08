@@ -50,7 +50,6 @@ def step_impl(context, user):
 	context.articles = json.loads(context.text)
 	for article in context.articles:
 		__add_article(context, article)
-		time.sleep(1)
 
 
 @then(u"{user}能获取文章'{article_title}'")

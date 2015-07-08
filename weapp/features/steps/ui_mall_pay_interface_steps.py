@@ -21,7 +21,6 @@ def step_impl(context, user):
 	for pay_interface in pay_interfaces:
 		edit_pay_interface_page.add_pay_interface(pay_interface)
 		edit_pay_interface_page.submit()
-		time.sleep(1)
 
 
 @when(u"{user}更新支付方式'{pay_interface_description}':ui")

@@ -33,7 +33,6 @@ def _update_wishlist_product(context, status):
 
 @when(u"{webapp_user_name}收藏{webapp_owner_name}的商品到我的收藏")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-    time.sleep(1)
     response = _update_wishlist_product(context, "false")
     bdd_util.assert_api_call_success(response)
 

@@ -144,6 +144,48 @@ post_delete_signal.connect(update_webapp_product_cache, sender=mall_models.Categ
 signals.post_save.connect(update_webapp_product_cache, sender=promotion_models.Promotion, dispatch_uid = "update_webapp_product_cache_by_promotion.save")
 post_update_signal.connect(update_webapp_product_cache, sender=promotion_models.Promotion, dispatch_uid = "update_webapp_product_cache_by_promotion.update")
 
+
+def get_webapp_products_detail(webapp_owner_id, product_ids, member_grade_id=None):
+	"""
+	功能同get_webapp_product_detail
+
+	批量获取商品详情的缓存
+	"""
+	key_infos = []
+	for pid in product_ids:
+		key_infos.append({
+			'key': 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, pid),
+			'on_miss': mall_api.get_product_detail_for_cache(webapp_owner_id, pid)
+		})
+	data = cache_util.get_many_from_cache(key_infos)
+	products = []
+
+	for key in data:
+		product = mall_models.Product.from_dict(data[key])
+
+		if hasattr(product, 'integral_sale') and product.integral_sale \
+			and product.integral_sale['detail'].get('rules', None):
+			for i in product.integral_sale['detail']['rules']:
+				if i['member_grade_id'] == member_grade_id:
+					product.integral_sale['detail']['discount'] = str(i['discount'])+"%"
+					break
+
+		promotion_data = data[key]['promotion']
+		if promotion_data and len(promotion_data) > 0:
+			product.promotion_model = promotion_models.Promotion.from_dict(promotion_data)
+		else:
+			product.promotion_model = dict()
+
+		integral_sale_data = data[key]['integral_sale']
+		if integral_sale_data and len(integral_sale_data) > 0:
+			product.integral_sale_model = promotion_models.Promotion.from_dict(integral_sale_data)
+		else:
+			product.integral_sale_model = None
+
+		products.append(product)
+
+	return products
+
 def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None):
 	"""
 	管理product detail缓存

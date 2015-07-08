@@ -16,7 +16,6 @@ from test.pageobject.page_frame import PageFrame
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from test.helper import WAIT_SHORT_TIME
 from webapp.models import Project
 
 
@@ -62,14 +61,12 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	driver.find_element_by_xpath(xpath).click()
 	#点击"登录"
 	driver.find_element_by_css_selector('#loginPage .x-loginBtn').click()
-	time.sleep(WAIT_SHORT_TIME)
 
 	lis = driver.find_elements_by_css_selector('#accountPage .ui-content li')
 	for li in lis:
 		h2 = li.find_element_by_css_selector('h2')
 		if webapp_owner_name in h2.text:
 			li.find_element_by_css_selector('a').click()
-	time.sleep(WAIT_SHORT_TIME)
 
 	#设置member的username_hexstr
 	#TODO: 模拟微信接口，去掉强制设置的逻辑

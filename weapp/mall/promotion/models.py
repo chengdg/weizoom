@@ -60,6 +60,8 @@ PROMOTIONSTATUS2NAME = {
 	PROMOTION_STATUS_DELETED: u'已删除',
 	PROMOTION_STATUS_DISABLE: u'已失效'
 }
+
+
 class Promotion(models.Model):
 	owner = models.ForeignKey(User)
 	name = models.CharField(max_length=256) #活动名
@@ -221,7 +223,7 @@ class FlashSale(models.Model):
 	owner = models.ForeignKey(User)
 	limit_period = models.IntegerField(default=0) #限购周期
 	promotion_price = models.FloatField(default=0.0) #限购价格
-	count_per_purchase = models.IntegerField(default=1) #单人单次限购数量
+	count_per_purchase = models.IntegerField(default=1) #单人限购数量每次
 
 	class Meta(object):
 		db_table = 'mallpromotion_flash_sale'

@@ -135,7 +135,6 @@ def step_impl(context, user):
 	context.test_games = json.loads(context.text)
 	for test_game in context.test_games:
 		__add_test_game(context, test_game)
-		time.sleep(1)
 
 
 @given(u"{user}已添加趣味测试")
@@ -145,7 +144,6 @@ def step_impl(context, user):
 	context.test_games = json.loads(context.text)
 	for test_game in context.test_games:
 		__add_test_game(context, test_game)
-		time.sleep(1)
 
 
 @then(u"{user}能获取趣味测试列表")

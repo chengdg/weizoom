@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+from datetime import datetime, timedelta
 import random
 import math
 
@@ -7,6 +7,7 @@ from django.conf import settings
 from django.dispatch import Signal
 from django.dispatch.dispatcher import receiver
 from django.db.models import signals as django_model_signals
+from django.db.models import Q
 
 from mall import signals as mall_signals
 from mall import postage_calculator as mall_postage_calculator
@@ -15,7 +16,7 @@ from webapp.models import Workspace
 from account.models import UserProfile
 from watchdog.utils import watchdog_alert, watchdog_fatal, watchdog_warning, watchdog_error, watchdog_info
 from core.exceptionutil import unicode_full_stack
-from market_tools.tools.delivery_plan.models import  DeliveryPlan
+from market_tools.tools.delivery_plan.models import DeliveryPlan
 from core.common_util import ignore_exception
 from tools.express.express_poll import ExpressPoll
 
@@ -631,22 +632,38 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 			promotion_id = promotion['id']
 
 			#检查是否超过了限购周期的限制
-			if int(detail['limit_period']) == -1:
+			if int(detail['limit_period']) in (-1, 0):
 				pass
 			else:
-				purchase_records = list(OrderHasPromotion.objects.filter(webapp_user_id=request.webapp_user.id, promotion_id=promotion_id))
-				purchase_records.sort(lambda x,y: cmp(y.id, x.id))
-				if len(purchase_records) > 0:
-					now = datetime.today()
-					delta = now - purchase_records[0].created_at
-					if delta.days < detail['limit_period']:
-						data_detail.append({
-							'id': product.id,
-							'model_name': product.model_name,
-							'msg': '在限购周期内不能多次购买',
-							'short_msg': '限制购买'
-						})
-						continue
+				delta = datetime.today() - timedelta(days=detail['limit_period'])
+				purchase_records = OrderHasPromotion.objects.filter(
+					Q(webapp_user_id=request.webapp_user.id) &
+					Q(promotion_id=promotion_id) &
+					Q(created_at__gte=delta) &
+					~Q(order__status=ORDER_STATUS_CANCEL)
+				)
+				if purchase_records.count() > 0:  #
+					data_detail.append({
+						'id': product.id,
+						'model_name': product.model_name,
+						'msg': '在限购周期内不能多次购买',
+						'short_msg': '限制购买'
+					})
+					continue
+				# count = 0
+				# for record in purchase_records:
+				# 	if record.created_at > delta and recode.order.status != ORDER_STATUS_CANCEL:
+				# 		for order_has_product in recode.order.get_products:
+				# 			if order_has_product.product_id == product.id
+				# 				count += order_has_product.number
+				# if count > detail['count_per_purchase']:
+					# data_detail.append({
+					# 	'id': product.id,
+					# 	'model_name': product.model_name,
+					# 	'msg': '在限购周期内不能多次购买',
+					# 	'short_msg': '限制购买'
+					# })
+					# continue
 
 			if promotion_id in id2flashsale:
 				flash_sale = id2flashsale[promotion_id]
@@ -860,6 +877,13 @@ def check_stocks_for_pre_order(pre_order, args, request, **kwargs):
 			if product.model_name == model['name']:
 				product.stock_type = model['stock_type']
 				product.stocks = model['stocks']
+				if model.get('is_deleted', True):
+					fail_msg['data']['detail'].append({
+						'id': product.id,
+						'model_name': product.model_name,
+						'msg': '有商品规格已删除，请重新下单',
+						'short_msg': '已删除'
+					})
 
 		if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.purchase_count > product.stocks:
 			if product.stocks == 0:

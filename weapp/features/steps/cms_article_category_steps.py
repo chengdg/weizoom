@@ -19,7 +19,6 @@ def step_impl(context, user):
 	for article_category in context.article_categories:
 		data = article_category
 		response = client.post('/cms/editor/category/create/', data)
-		time.sleep(1)
 
 
 @when(u"{user}已添加了文章分类")

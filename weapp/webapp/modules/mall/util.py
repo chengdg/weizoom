@@ -1,47 +1,45 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import timedelta, datetime, date
-import urllib, urllib2
-import os
-import json
-import shutil
+# from datetime import timedelta, datetime, date
+# import urllib, urllib2
+# import os
+# import json
+# import shutil
 
-from django.http import HttpResponseRedirect, HttpResponse,Http404
-from django.template import Context, RequestContext
-from django.contrib.auth.decorators import login_required, permission_required
-from django.conf import settings
-from django.shortcuts import render_to_response
-from django.contrib.auth.models import User, Group, Permission
-from django.contrib import auth
-from django.db.models import Q
+# from django.http import HttpResponseRedirect, HttpResponse,Http404
+# from django.template import Context, RequestContext
+# from django.contrib.auth.decorators import login_required, permission_required
+# from django.conf import settings
+# from django.shortcuts import render_to_response
+# from django.contrib.auth.models import User, Group, Permission
+# from django.contrib import auth
+# from django.db.models import Q
 
-from core.jsonresponse import JsonResponse, create_response
-from core import dateutil
-from core import paginator
-from core import chartutil
+# from core.jsonresponse import JsonResponse, create_response
+# from core import dateutil
+# from core import paginator
+# from core import chartutil
 
 from core.alipay.alipay_submit import *
-from core.jsonresponse import JsonResponse, create_response
-from core import dateutil
-from core import paginator
-from core.exceptionutil import full_stack
-from core.alipay.alipay_notify import AlipayNotify
-from core.alipay.alipay_submit import AlipaySubmit
+# from core import dateutil
+# from core import paginator
+# from core.exceptionutil import full_stack
+# from core.alipay.alipay_notify import AlipayNotify
+# from core.alipay.alipay_submit import AlipaySubmit
 from account.models import UserProfile
 from modules.member.models import *
 # from modules.member.util import *
-import httplib
+# import httplib
 from mall.models import *
 from modules.member.models import WebAppUser
 from account.models import *
 from mall.models import *
 
-
-from tools.regional.models import City, Province, District
 from tools.regional.views import get_str_value_by_string_ids
 from core.send_order_email_code import *
-from watchdog.utils import watchdog_debug
+# from watchdog.utils import watchdog_debug
+
 
 def get_postage_for_weight(weight, postage_config, special_factor=None):
 	"""

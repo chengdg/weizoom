@@ -58,7 +58,6 @@ def step_impl(context, user):
     context.red_envelopes = json.loads(context.text)
     for red_envelope in context.red_envelopes:
         __add_red_envelope(context, red_envelope)
-        time.sleep(1)
 
 
 @then(u"{user}能获取红包列表")
@@ -87,7 +86,6 @@ def step_impl(context, user):
     context.red_envelopes = json.loads(context.text)
     for red_envelope in context.red_envelopes:
         __add_red_envelope(context, red_envelope)
-        time.sleep(1)
 
 
 @when(u"{user}删除微信红包'{red_envelope_name}'")

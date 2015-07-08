@@ -111,13 +111,16 @@ def get_unifiedorder(request):
 		response.data = data
 		return response.get_response()
 	except:
-		notify_message = u"weixin pay, stage:[get unifiedorder], order_id:{}, result:\n{}, exception:\n{}".format(out_trade_no, data, unicode_full_stack())
-		watchdog_error(notify_message)
-		
+		if data and ( not data.has_key('prepay_id') or not data.has_key('nonce_str') ):
+			notify_message = u"weixin pay, stage:[get unifiedorder], order_id:{}, result:\n{}, exception:\n{}".format(out_trade_no, data, unicode_full_stack())
+			watchdog_info(notify_message)
+		else:
+			notify_message = u"weixin pay, stage:[get unifiedorder], order_id:{}, result:\n{}, exception:\n{}".format(out_trade_no, data, unicode_full_stack())
+			watchdog_error(notify_message)
 		response = create_response(201)
 		response.innerErrMsg = unicode_full_stack() 
 		return response.get_response()
-	
+
 	
 ########################################################################
 # get_openid: 授权获取openid api

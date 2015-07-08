@@ -5,7 +5,7 @@ from datetime import datetime
 # import urllib2
 # import os
 import json
-# import copy
+import copy
 
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
@@ -251,50 +251,7 @@ def get_product(request):
 ########################################################################
 def get_order_list(request):
     type = int(request.GET.get('type', -1))
-    # 得到此用户的所有订单
-    orders = mall_api.get_orders(request.webapp_user, type)
-
-    # 此用户商品评价记录
-    order_product_has_review = {}
-    user_product_review = mall_models.ProductReview.objects.filter(
-        member_id=request.member.id
-    )
-    for i in user_product_review:
-        key = "%s_%s" % (i.order_id, i.product_id)
-        order_product_has_review[key] = True
-
-    orderIds = []
-    orderId2order = dict()
-    for order in orders:
-        orderIds.append(order.id)
-        orderId2order[order.id] = order
-    product_list = OrderHasProduct.objects.filter(order_id__in=orderIds)
-    totalProductIds = [orderHasProduct.product_id for orderHasProduct in product_list]
-
-    productId2products = dict([(product.id, product) for product in Product.objects.filter(id__in=totalProductIds)])
-    orderId2productIds = dict()
-
-    for orderHasProduct in product_list:
-        if not orderId2productIds.get(orderHasProduct.order_id):
-            orderId2productIds[orderHasProduct.order_id] = []
-        orderId2productIds.get(orderHasProduct.order_id).append(orderHasProduct.product_id)
-        if not hasattr(orderId2order[orderHasProduct.order_id], 'products'):
-            orderId2order[orderHasProduct.order_id].products = []
-        product = productId2products[orderHasProduct.product_id]
-
-        product.price = orderHasProduct.price
-        product.number = orderHasProduct.number
-
-        product.properties = orderHasProduct.get_specific_model
-
-        orderId2order[orderHasProduct.order_id].products.append(product)
-
-    for order in orders:
-        is_finished = True
-        for productId in orderId2productIds.get(order.id, []):
-            key = "%s_%s" % (order.id, productId)
-            is_finished = is_finished & order_product_has_review.get(key, False)
-        order.review_is_finished = is_finished
+    orders = mall_api.get_orders(request)
 
     status = {
         -1: u'全部订单列表',
@@ -1293,7 +1250,7 @@ def edit_order_review(request):
     return render_to_response('%s/review_create.html' % request.template_dir, c)
 
 
-def _get_order_review_list(webapp_user_id, member_id):
+def _get_order_review_list(request):
     '''
         得到会员已完成订单中所有未评价的商品列表的订单，
         或者已评价未晒图的订单
@@ -1303,42 +1260,53 @@ def _get_order_review_list(webapp_user_id, member_id):
 
     '''
 
-    def _product_has_review(order_has_product):
-        '''
-        商品是否有评价
-        '''
-        try:
-            product_review = mall_models.ProductReview.objects.get(
-                member_id=member_id,
-                order_id=order_has_product.order_id,
-                product_id=order_has_product.product_id,
-                order_has_product_id=order_has_product.id
-            )
-        except ObjectDoesNotExist:
-            product_review = False
-        return product_review
+    webapp_user_id = request.webapp_user.id  # 游客身份
+    member_id = request.member.id            # 会员身份
 
+
+    allProductReviewPicture = mall_models.ProductReviewPicture.objects.all()
     def _product_review_has_picture(product_review):
         '''
         评价是否有晒图
         '''
-        return mall_models.ProductReviewPicture.objects.filter(
-            product_review_id=product_review.id)
+
+        Ids = [ProductReviewPicture.product_review_id for ProductReviewPicture in allProductReviewPicture]
+        if product_review.id in Ids:
+            return True
+        else:
+            return False
 
     # start
     # 得到会员的所有已完成的订单
     orders = Order.objects.filter(webapp_user_id=webapp_user_id, status=5)
+    orderIds = [order.id for order in orders]
+    orderHasProducts = OrderHasProduct.objects.filter(order_id__in=orderIds)
+    totalProductIds = [orderHasProduct.product_id for orderHasProduct in orderHasProducts]
+    cache_products = webapp_cache.get_webapp_products_detail(request.webapp_owner_id, totalProductIds)
+    cache_productId2cache_products = dict([(product.id, product) for product in cache_products])
+    orderId2orderHasProducts = dict()
+    for orderHasProduct in orderHasProducts:
+        if not orderId2orderHasProducts.get(orderHasProduct.order_id):
+            orderId2orderHasProducts[orderHasProduct.order_id] = []
+        orderId2orderHasProducts.get(orderHasProduct.order_id).append(orderHasProduct)
+
+    orderHasProductIds = [orderHasProduct.id for orderHasProduct in orderHasProducts]
+    ProductReviews = mall_models.ProductReview.objects.filter(order_has_product_id__in=orderHasProductIds)
+    orderHasProductId2ProductReviews = dict()
+    for ProductReview in ProductReviews:
+        orderHasProductId2ProductReviews[ProductReview.order_has_product_id] = ProductReview
 
     # 对于每个订单
     for order in orders:
         products = []             # 订单的所有未评价商品, 或者有评价未晒图
         order_is_reviewed = True  # 订单是否评价完成
         # 对于订单的每件商品
-        for product in order.get_products:
+        for orderHasProduct in orderId2orderHasProducts[order.id]:
             # 如果商品有评价
-            product_review =  _product_has_review(product)
+            product_review = orderHasProductId2ProductReviews.get(orderHasProduct.id,False)
+            orderHasProduct.product = copy.copy(cache_productId2cache_products[orderHasProduct.product_id]) #此处需要复制
             if product_review:
-                product.product.has_review = True
+                orderHasProduct.product.has_review = True
                 product_review_picture =  _product_review_has_picture(product_review)
                 # 如果评价有晒图
                 if product_review_picture:
@@ -1346,25 +1314,28 @@ def _get_order_review_list(webapp_user_id, member_id):
                 # 评价无晒图
                 else:
                     order_is_reviewed = order_is_reviewed & False
-                    product.product.order_has_product_id = product.id
-                    product.product.has_picture = False
-                    product.product.fill_specific_model(product.product_model_name)
-                    product.product.product_model_name = product.product.custom_model_properties
-                    products.append(product.product)
+                    orderHasProduct.product.order_has_product_id = orderHasProduct.id
+                    orderHasProduct.product.has_picture = False
+                    orderHasProduct.product.fill_specific_model(
+                        orderHasProduct.product_model_name, cache_productId2cache_products[orderHasProduct.product.id].models)
+                    orderHasProduct.product.product_model_name = orderHasProduct.product.custom_model_properties
+                    products.append(orderHasProduct.product)
             # 商品无评价
             else:
                 order_is_reviewed = order_is_reviewed & False
-                product.product.order_has_product_id = product.id
-                product.product.has_review = False
-                # product.product.product_model_name = _get_product_model_name(product.product_model_name)
-                product.product.fill_specific_model(product.product_model_name)
-                product.product.product_model_name = product.product.custom_model_properties
+                orderHasProduct.product.order_has_product_id = orderHasProduct.id
+                orderHasProduct.product.has_review = False
+                orderHasProduct.product.fill_specific_model(
+                    orderHasProduct.product_model_name, cache_productId2cache_products[orderHasProduct.product.id].models)
+                orderHasProduct.product.product_model_name = orderHasProduct.product.custom_model_properties
 
-                products.append(product.product)
+                products.append(orderHasProduct.product)
+
+            orderHasProduct.product.order_product_model_name = orderHasProduct.product_model_name
+
         order.products = products
         order.order_is_reviewed = order_is_reviewed
     return orders
-
 
 ########################################################################
 # get_order_review_list: 会员订单中未评价订单列表
@@ -1385,54 +1356,9 @@ def get_order_review_list(request):
             }
 
     '''
-    webapp_user_id = request.webapp_user.id  # 游客身份
-    member_id = request.member.id            # 会员身份
 
-    orders = _get_order_review_list(webapp_user_id, member_id)
-#
-#     # 得到用户商品评价列表
-#     order_product_has_review = {}  # 用于过滤未评价商品
-#     product_review_list = mall_models.ProductReview.objects.filter(
-#         member_id=request.member.id)
-#     for i in product_review_list:
-#         key = "%s_%s_%s" % (i.order_id, i.product_id, i.order_has_product_id)
-#         order_product_has_review[key] = i.id
-#
-#     # 对于所有未评价的订单商品以及未贴图商品， 添加评价选项
-#     # 商品是否贴图
-#     product_picture = mall_models.ProductReviewPicture.objects.filter(
-#         product_review_id__in=[i.id for i in product_review_list]
-#     )
-#     product_has_picture_ids = set([i.product_review_id for i in product_picture])
-#
-#     # 对于每个订单
-#     for order in orders:
-#         products = []
-#         order_reviewed = True
-#         # 对于订单的每个商品
-#         for order_product in order.get_products:
-#             key = "%s_%s_%s" % (order.id, order_product.product_id, order_product.id)
-#             has_review = order_product_has_review.get(key, False)
-#             # 如果有评价
-#             if has_review:
-#                 # 有贴图
-#                 _product_review_id = has_review
-#                 if _product_review_id in product_has_picture_ids:
-#                     order_reviewed = order_reviewed & True
-#                 # 没贴图
-#                 else:
-#                     order_reviewed = order_reviewed & False
-#                     order_product.product.has_review = has_review
-#                     order_product.product.has_picture = False
-#                     products.append(order_product.product)
-#             # 如果没有评价
-#             else:
-#                 order_reviewed = order_reviewed & False
-#                 order_product.product.has_review = has_review
-#                 products.append(order_product.product)
-#         order.products = products
-#         order.order_reviewed = order_reviewed
-#
+    orders = _get_order_review_list(request)
+
     c = RequestContext(request,
                        {"orders": orders,
                         'is_hide_weixin_option_menu': True,
@@ -1448,7 +1374,7 @@ def get_order_review_list(request):
 def get_product_review_successful_page(request):
     c = RequestContext(request,
                        {'is_hide_weixin_option_menu': True,
-                        'page_title': u'',
+                        'page_title': u'评论信息',
                         })
     return render_to_response(
         '%s/product_review_successful.html' % request.template_dir, c)
@@ -1464,7 +1390,7 @@ def get_product_review_list(request):
         member_id = int(member_id)
         product_review_list = mall_models.ProductReview.objects.filter(
             member_id=member_id
-        ).order_by('-created_at')
+        ).order_by('-id')
 
         # 对于每个商品评价得到对应的商品评价晒图
         product_review_ids = [i.id for i in product_review_list]
@@ -1518,18 +1444,23 @@ def create_product_review(request):
 
     # 判断订单是否评价过
     order_id = request.GET.get('order_id', None)
-    try:
-        has_order_review = mall_models.OrderReview.objects.filter(
+    product_model_name = request.GET.get('product_model_name', None)
+    order_has_product_id = int(request.GET.get('order_has_product_id', None))
+    product_id = request.GET.get('product_id', None)
+
+    order_review_count = mall_models.OrderReview.objects.filter(
             owner_id=request.member.id,
             order_id=order_id,
-        )
-    except ObjectDoesNotExist:
-        has_order_review = False
+        ).count()
+    has_order_review = order_review_count > 0
+
     # 得到商品信息, 如果商品已不存在（下架..）, 返回404
-    order_has_product_id = int(request.GET.get('order_has_product_id', None))
+
     try:
-        order_has_product = mall_models.OrderHasProduct.objects.get(id=order_has_product_id)
-        order_has_product.product.fill_specific_model(order_has_product.product_model_name)
+        # order_has_product = mall_models.OrderHasProduct.objects.get(id=order_has_product_id)
+        product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id,product_id)
+        product = product
+        product.fill_specific_model(product_model_name, product.models)
     except ObjectDoesNotExist:
         return Http404
 
@@ -1538,10 +1469,11 @@ def create_product_review(request):
     c = RequestContext(request,
                        {
                            'is_hide_weixin_option_menu': True,
-                           'page_title': u'',
+                           'page_title': u'发表评价',
                            'order_id': order_id,
                            'has_order_review': has_order_review,
-                           'order_has_product': order_has_product,
+                           'order_has_product_id': order_has_product_id,
+                           'product':product,
                            'created': False,
                            'send_time': send_time
                        })
@@ -1557,20 +1489,27 @@ def update_product_review_picture(request):
 
     '''
     # 得到商品信息
-    order_has_product_id = request.GET.get('order_has_product_id')
-    order_has_product = mall_models.OrderHasProduct.objects.get(id=order_has_product_id)
-    order_has_product.product.fill_specific_model(order_has_product.product_model_name)
+
+    order_id = request.GET.get('order_id', None)
+    product_model_name = request.GET.get('product_model_name', None)
+    order_has_product_id = int(request.GET.get('order_has_product_id', None))
+    product_id = request.GET.get('product_id', None)
+    # order_has_product = mall_models.OrderHasProduct.objects.get(id=order_has_product_id)
+
+    product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id,product_id)
+
+    product.fill_specific_model(product_model_name, product.models)
     # 得到product_review
     send_time = time.time()
     try:
-        product_review = mall_models.ProductReview.objects.get(
-            order_has_product_id=order_has_product_id,
-        )
+        product_review = mall_models.ProductReview.objects.get(order_has_product_id=order_has_product_id)
         c = RequestContext(request,
                             {
                                 'is_hide_weixin_option_menu': True,
-                                'page_title': u'',
-                                'order_has_product': order_has_product,
+                                'page_title': u'追加晒图',
+                                'order_has_product_id': order_has_product_id,
+                                'order_id': order_id,
+                                'product': product,
                                 'product_review': product_review,
                                 'send_time': send_time,
                                 'created': True
@@ -1592,7 +1531,7 @@ def redirect_product_review(request):
     c = RequestContext(request,
                        {
                            'is_hide_weixin_option_menu': True,
-                           'page_title': u'',
+                           'page_title': u'感谢您评价',
                            'orders_is_reviewed': orders_is_reviewed.upper(),
                        })
     return render_to_response(

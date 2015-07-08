@@ -38,8 +38,8 @@ from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_alert, watch
 from webapp.modules.mall import util as mall_util
 from mall import signals as mall_signals
 from mall.promotion import models as promotion_models
+from mall import models as mall_models
 from modules.member.module_api import get_member_by_id_list
-
 random.seed(time.time())
 
 NO_PROMOTION_ID = -1
@@ -297,17 +297,17 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 			# 非微众商城
 			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
 			products = Product.objects.filter(
-			                                  owner_id=webapp_owner_id,
-			                                  shelve_type=PRODUCT_SHELVE_TYPE_ON,
-			                                  is_deleted=False
+											  owner_id=webapp_owner_id,
+											  shelve_type=PRODUCT_SHELVE_TYPE_ON,
+											  is_deleted=False
 			).filter(~Q(id__in=product_ids_in_weizoom_mall)
 					).exclude(type=PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
 		else:
 			# other_mall_products, other_mall_product_ids = get_verified_weizoom_mall_partner_products_and_ids(webapp_id)
 			products = Product.objects.filter(
-			                                  owner_id=webapp_owner_id,
-			                                  shelve_type=PRODUCT_SHELVE_TYPE_ON,
-			                                  is_deleted = False
+											  owner_id=webapp_owner_id,
+											  shelve_type=PRODUCT_SHELVE_TYPE_ON,
+											  is_deleted = False
 			).exclude(type = PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
 			# if other_mall_products:
 			# 	products = list(products) + list(other_mall_products)
@@ -409,9 +409,9 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 
 			#获取商品的评论
 			product_review  = ProductReview.objects.filter(
-			                            Q(product_id=product.id) &
-			                            Q(status__in=['1', '2'])
-			                  ).order_by('-top_time', '-id')[:2]
+										Q(product_id=product.id) &
+										Q(status__in=['1', '2'])
+							  ).order_by('-top_time', '-id')[:2]
 			product.product_review = product_review
 
 			if product_review:
@@ -544,11 +544,13 @@ def fill_realtime_stocks(products):
 				realtime_model = id2productmodels['%s_%s' % (product.id, model['id'])]
 				model['stock_type'] = realtime_model['stock_type']
 				model['stocks'] = realtime_model['stocks']
+				model['is_deleted'] = realtime_model['is_deleted']
 		else:
 			model = product.models[0]
 			realtime_model = id2productmodels['%s_%s' % (product.id, model['id'])]
 			model['stock_type'] = realtime_model['stock_type']
 			model['stocks'] = realtime_model['stocks']
+			model['is_deleted'] = realtime_model['is_deleted']
 
 
 def get_product_details_with_model(webapp_owner_id, webapp_user, product_infos):
@@ -703,6 +705,100 @@ def get_product_details_with_model(webapp_owner_id, webapp_user, product_infos):
 # 			product.is_deleted = True
 
 # 	return product
+
+def get_products_detail(webapp_owner_id, product_ids, webapp_user=None, member_grade_id=None):
+	from cache import webapp_cache
+	try:
+		products = webapp_cache.get_webapp_products_detail(webapp_owner_id, product_ids, member_grade_id)
+
+		for product in products:
+			if product.is_deleted:
+				continue
+
+			for product_model in product.models:
+				#获取折扣后的价格
+				if webapp_user:
+					product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
+				if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+					product_model['price'] = round(product_model['price'] * 1.1, 2)
+
+				# 商品规格
+				p_type = product.type
+
+				#获取product的price info
+				if product.is_use_custom_model:
+					custom_models = product.models[1:]
+					if len(custom_models) == 1:
+						#只有一个custom model，显示custom model的价格信息
+						product_model = custom_models[0]
+						product.price_info = {
+							'display_price': str("%.2f" % product_model['price']),
+							'display_original_price': str("%.2f" % product_model['original_price']),
+							'display_market_price': str("%.2f" % product_model['market_price']),
+							'min_price': product_model['price'],
+							'max_price': product_model['price']
+						}
+					else:
+						#有多个custom model，显示custom model集合组合后的价格信息
+						prices = []
+						market_prices = []
+						for product_model in custom_models:
+							if product_model['price'] > 0:
+								prices.append(product_model['price'])
+							if product_model['market_price'] > 0:
+								market_prices.append(product_model['market_price'])
+
+						if len(market_prices) == 0:
+							market_prices.append(0.0)
+
+						if len(prices) == 0:
+							prices.append(0.0)
+
+						prices.sort()
+						market_prices.sort()
+						# 如果最大价格和最小价格相同，价格处显示一个价格。
+						if prices[0] == prices[-1]:
+							price_range =  str("%.2f" % prices[0])
+						else:
+							price_range = '%s-%s' % (str("%.2f" % prices[0]), str("%.2f" % prices[-1]))
+
+						if market_prices[0] == market_prices[-1]:
+							market_price_range = str("%.2f" % market_prices[0])
+						else:
+							market_price_range = '%s-%s' % (str("%.2f" % market_prices[0]), str("%.2f" % market_prices[-1]))
+
+						# 最低价
+						min_price = prices[0]
+						# 最高价
+						max_price = prices[-1]
+
+						product.price_info = {
+							'display_price': price_range,
+							'display_original_price': price_range,
+							'display_market_price': market_price_range,
+							'min_price': min_price,
+							'max_price': max_price
+						}
+				else:
+					standard_model = product.models[0]
+					product.price_info = {
+						'display_price': str("%.2f" % standard_model['price']),
+						'display_original_price': str("%.2f" % standard_model['original_price']),
+						'display_market_price': str("%.2f" % standard_model['market_price']),
+						'min_price': standard_model['price'],
+						'max_price': standard_model['price']
+					}
+
+
+
+
+
+
+
+	except:
+		pass
+
+	return products
 
 def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_grade_id=None):
 	"""
@@ -1099,19 +1195,19 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 	return order
 
 
-def get_orders(webapp_user, type=-1):
+def get_orders(request):
 	"""
 	用户中心 获取webapp user的订单列表
 	"""
-	# if type == -1:
-	# 	orders = Order.objects.filter(webapp_user_id=webapp_user.id).order_by('-id')
-	# else:
-	# 	orders = Order.objects.filter(webapp_user_id=webapp_user.id, status=type).order_by('-id')
-	orders = Order.objects.filter(webapp_user_id=webapp_user.id).order_by('-id')
 
-	order_ids = [order.id for order in orders]
+	orders = Order.objects.filter(webapp_user_id=request.webapp_user.id).order_by('-id')
+
+	orderIds = [order.id for order in orders]
 	order2count = {}
-	for order_product_relation in OrderHasProduct.objects.filter(order_id__in=order_ids):
+	orderId2order = dict()
+
+	orderHasProducts = OrderHasProduct.objects.filter(order_id__in=orderIds)
+	for order_product_relation in orderHasProducts:
 		order_id = order_product_relation.order_id
 		old_count = 0
 		if order_id in order2count:
@@ -1119,12 +1215,48 @@ def get_orders(webapp_user, type=-1):
 		order2count[order_id] = old_count + order_product_relation.number
 
 	for order in orders:
+		orderId2order[order.id] = order
 		order.product_count = order2count.get(order.id, 0)
 		if order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - order.update_at).days >= 3:
 			#订单发货后3天显示确认收货按钮
 			if not hasattr(order, 'session_data'):
 				order.session_data = dict()
 			order.session_data['has_comfire_button'] = '1'
+
+	order_product_has_review = {}
+	user_product_review = mall_models.ProductReview.objects.filter(
+		member_id=request.member.id
+	)
+	for i in user_product_review:
+		key = "%s_%s" % (i.order_id, i.product_id)
+		order_product_has_review[key] = True
+
+	totalProductIds = [orderHasProduct.product_id for orderHasProduct in orderHasProducts]
+	productId2products = dict([(product.id, product) for product in Product.objects.filter(id__in=totalProductIds)])
+	orderId2productIds = dict()
+
+	from cache import webapp_cache
+	cache_products = webapp_cache.get_webapp_products_detail(request.webapp_owner_id, totalProductIds)
+	cache_productId2cache_products = dict([(product.id, product) for product in cache_products])
+
+	for orderHasProduct in orderHasProducts:
+		if not orderId2productIds.get(orderHasProduct.order_id):
+			orderId2productIds[orderHasProduct.order_id] = []
+		orderId2productIds.get(orderHasProduct.order_id).append(orderHasProduct.product_id)
+		if not hasattr(orderId2order[orderHasProduct.order_id], 'products'):
+			orderId2order[orderHasProduct.order_id].products = []
+		product = productId2products[orderHasProduct.product_id]
+		product.price = orderHasProduct.price
+		product.number = orderHasProduct.number
+		product.properties = product.fill_specific_model(orderHasProduct.product_model_name, cache_productId2cache_products[product.id].models)
+		orderId2order[orderHasProduct.order_id].products.append(product)
+
+	for order in orders:
+		is_finished = True
+		for productId in orderId2productIds.get(order.id, []):
+			key = "%s_%s" % (order.id, productId)
+			is_finished = is_finished & order_product_has_review.get(key, False)
+		order.review_is_finished = is_finished
 
 	return orders
 
@@ -1911,6 +2043,7 @@ def has_other_mall_product(webapp_id):
 def get_product_ids_in_weizoom_mall(webapp_id):
 	return [weizoom_mall_other_mall_product.product_id for weizoom_mall_other_mall_product in WeizoomMallHasOtherMallProduct.objects.filter(webapp_id=webapp_id)]
 
+
 def update_order_status(user, action, order, request=None):
 	"""
 	修改订单状态
@@ -1970,6 +2103,7 @@ def update_order_status(user, action, order, request=None):
 				from modules.member.integral import increase_member_integral
 				member = WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
 				increase_member_integral(member, order.integral, u'取消订单回收积分')
+
 		except :
 			notify_message = u"取消订单业务处理异常，cause:\n{}".format(unicode_full_stack())
 			watchdog_alert(notify_message, "mall")
@@ -2566,15 +2700,15 @@ def get_products_in_wishlist(webapp_user, owner_id, member_id):
 	"""
 	获取收藏夹中的商品
 	"""
-	from cache import webapp_cache
-	product_ids = []
-	wishlist = MemberProductWishlist.objects.filter(owner_id=owner_id, member_id=member_id, is_collect=True).order_by('-add_time')
-	product_list = []
-	for item in wishlist:
-		#---TODO:似乎有更好的函数可以调用get_product_detail()---
-		product = get_product_detail(owner_id, item.product_id, webapp_user)
-		#product = webapp_cache.get_webapp_product_detail(owner_id, item.product_id)
-		product_list.append(product)
+	wishlist = MemberProductWishlist.objects.filter(owner_id=owner_id, member_id=member_id, is_collect=True).order_by('-id')
+	product_ids = [item.product_id for item in wishlist]
+	product_list = get_products_detail(owner_id, product_ids, webapp_user)
+
+	# for item in wishlist:
+	# 	#---TODO:似乎有更好的函数可以调用get_product_detail()---
+	# 	product = get_product_detail(owner_id, item.product_id, webapp_user)
+	# 	#product = webapp_cache.get_webapp_product_detail(owner_id, item.product_id)
+	# 	product_list.append(product)
 	return product_list
 
 def update_wishlist_product(request):

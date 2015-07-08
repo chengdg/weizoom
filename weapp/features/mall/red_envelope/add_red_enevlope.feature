@@ -1,38 +1,95 @@
-# __author__ : "崔帅帅"
-@func:market_tools.tools.red_envelope.views.list_red_envelope
+# __author__ : "冯雪静"
+
 Feature: 添加红包
 	Jobs能通过管理系统添加"添加红包"
 
-@weapp.market_tools.red_envelope
-Scenario: 添加微信红包
-	Jobs添加"微信红包"后，能获取他的红包，"红包"列表会按照添加的倒序排列
+Background:
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "商品1",
+			"price": 200.00
+		}, {
+			"name": "商品2",
+			"price": 200.00
+		}]
+		"""
+	And jobs已添加了优惠券规则
+		"""
+		[{
+			"name": "全体券1",
+			"money": 1.00,
+			"limit_counts": "无限",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"coupon_id_prefix": "coupon1_id_"
+		}, {
+			"name": "单品券2",
+			"money": 10.00,
+			"limit_counts": 10,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_",
+			"coupon_product": "商品1"
+		}, {
+			"name": "全体券3",
+			"money": 100.00,
+			"limit_counts": "无限",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon3_id_"
+		}, {
+			"name": "单品券4",
+			"money": 1.00,
+			"limit_counts": "无限",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon4_id_",
+			"coupon_product": "商品2"
+		}]
+		"""
+
+Scenario: 添加分享红包
+	jobs添加"分享红包"后，"红包"列表会按照添加的倒序排列
+	1.bill能获取红包列表
 
 	Given jobs登录系统
-	When jobs添加微信红包
+	#jobs添加有领取限制的红包和没有领取限制的红包(1.有限制，活动时间段有效 2.无限制，活动永久有效)
+	When jobs添加分享红包
 		""" 
 		[{
-			"name": "微信红包",
-			"total_award_value": "522",
-			"desc": "红包",	
-			"expected_participation_count": "85",
-			"is_non_member": "非会员可参与",
-			"prize_odds|1": "100",
-			"prize_count|1": "3",
-			"prize_type|1": "3",
-			"prize_source|1": "3",
-			"prize_name|1": "一等奖",	
+			"name": "红包1",
+			"prize_info": ["全体券3"],
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "订单满200元可以领取",
+			"desc": "下订单领红包",	
+			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
+		}, {
+			"name": "红包2",
+			"prize_info": ["单品券4"],
+			"is_permanant_active": true,
+			"using_limit": "无限制",
+			"desc": "下订单领红包",	
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
 		}]
 		"""
 	Then jobs能获取红包列表
 		"""
 		[{
-			"name": "微信红包"
+			"name": "红包2",
+			"status": "关闭",
+			"actions": ["开启","删除","查看"]
+		}, {
+			"name": "红包1",
+			"status": "关闭",
+			"actions": ["开启","删除","查看"]
 		}]
 		"""
 	And bill能获取红包列表
 		"""
 		[]
 		"""
-		
-		

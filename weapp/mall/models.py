@@ -224,11 +224,11 @@ class Product(models.Model):
 	def total_stocks(self):
 		if not hasattr(self, '_total_stocks'):
 			self._total_stocks = 0
-			is_dict = (type(self.models[0]) == dict)
 			if self.is_use_custom_model:
 				models = self.models[1:]
 			else:
 				models = self.models
+			is_dict = (type(models[0]) == dict)
 
 			for model in models:
 				stock_type = model['stock_type'] if is_dict else model.stock_type
@@ -246,7 +246,8 @@ class Product(models.Model):
 			self._is_use_custom_model = (
 				ProductModel.objects.filter(
 					product=self,
-					is_deleted=False).count() > 1)  # 是否使用定制规格
+					is_standard=False,
+					is_deleted=False).count() > 0)  # 是否使用定制规格
 		return self._is_use_custom_model
 
 	@staticmethod

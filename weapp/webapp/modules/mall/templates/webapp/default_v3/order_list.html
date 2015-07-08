@@ -333,7 +333,7 @@
                                     <span class="c9 em75 fr">共{{order.products|length}}件</span>
                                 </div>
                                 {% else %}
-                                    {% for has_product in order.products %}
+                                    {% for product in order.products %}
                                     <div class="clearfix pt10 pb10 xui-selectedProductList disT w">
                                         <div class="xui-selectedProductList-productImg disTc">
                                             {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}

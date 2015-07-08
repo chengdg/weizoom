@@ -23,7 +23,6 @@ def step_impl(context, user):
 		edit_category_page = category_list_page.click_add_category_button()
 		edit_category_page.add_category(category_name)
 		edit_category_page.submit()
-		time.sleep(1)
 
 
 @when(u"{user}更新商品分类'{category_name}'为:ui")

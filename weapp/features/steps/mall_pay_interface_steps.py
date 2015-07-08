@@ -68,7 +68,6 @@ def step_impl(context, user):
 		__add_pay_interface(context, pay_interface)
 		if is_only_one_pay_interface:
 			break
-		time.sleep(1)
 
 
 @given(u"{user}已添加了支付方式")

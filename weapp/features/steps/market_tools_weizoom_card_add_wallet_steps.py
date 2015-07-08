@@ -49,7 +49,6 @@ def __create_weizoom_card_wallet(context, wallets):
         data = json.loads(response.content)['data']
         WeizoomCard.objects.filter(owner=context.client.user, weizoom_card_rule=data['id']).update(password=password)
         context.rule2wallet[name] = data['id']
-        time.sleep(1)
 
 
 @given(u"{user}已添加微众卡钱包")

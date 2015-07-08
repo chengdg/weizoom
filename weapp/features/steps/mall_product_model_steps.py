@@ -102,7 +102,6 @@ def step_impl(context, user):
 	product_model_properties = json.loads(context.text)
 	for property in product_model_properties:
 		__add_product_model_property(context, property)
-		time.sleep(1)
 
 
 ###########################################################################################

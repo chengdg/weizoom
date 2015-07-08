@@ -69,7 +69,6 @@ def step_impl(context, user):
 		edit_product_model_page = product_model_list_page.click_add_product_model_button()
 		edit_product_model_page.edit_product_model(property)
 		edit_product_model_page.submit()
-		time.sleep(1)
 
 
 @then(u"{user}能获取商品规格'{product_model_property_name}':ui")

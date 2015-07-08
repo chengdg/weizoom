@@ -85,9 +85,10 @@ def __extract_product_model(request):
         standard_model = {
             "price": 0.0,
             "weight": 0.0,
-            "stock_type": PRODUCT_STOCK_TYPE_UNLIMIT,
+            "stock_type": PRODUCT_STOCK_TYPE_LIMIT,
             "stocks": -1,
-            "user_code": ''
+            "user_code": '',
+            "is_deleted": True
         }
     else:
         price = request.POST.get('price', '0.0').strip()
@@ -113,7 +114,7 @@ def __extract_product_model(request):
             "weight": weight,
             "stock_type": stock_type,
             "stocks": stocks,
-            "user_code": user_code
+            "user_code": user_code,
         }
 
     if is_use_custom_model:
@@ -412,13 +413,18 @@ def update_product(request):
                 stocks = standard_model['stocks'],
                 user_code = standard_model['user_code']
             )
+        elif standard_model.get('is_deleted', None):
+            ProductModel.objects.filter(product_id=product_id, name='standard').update(
+                is_deleted = True
+            )
         else:
             ProductModel.objects.filter(product_id=product_id, name='standard').update(
                 price = standard_model['price'],
                 weight = standard_model['weight'],
                 stock_type = standard_model['stock_type'],
                 stocks = standard_model['stocks'],
-                user_code = standard_model['user_code']
+                user_code = standard_model['user_code'],
+                is_deleted = False
             )
 
         #处理custom商品规格

@@ -34,9 +34,9 @@
 
                             <div class="xui-button mt10">
                                 {% if not product.has_review %}
-                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product_review&action=create&order_has_product_id={{product.order_has_product_id}}&order_id={{order.id}}&product_id={{product.id}}" class="xui-reviewBtn xui-comment tc fr" data-id="{{order.id}}">发表评价</a>
+                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product_review&action=create&order_has_product_id={{product.order_has_product_id}}&order_id={{order.id}}&product_id={{product.id}}&product_model_name={{product.order_product_model_name}}&order_has_product_id={{product.order_has_product_id}}" class="xui-reviewBtn xui-comment tc fr" data-id="{{order.id}}">发表评价</a>
                                 {% elif product.has_review and not product.has_picture %}
-                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product_review_picture&action=update&order_has_product_id={{product.order_has_product_id}}" class="xui-reviewBtn xui-review tc fr" data-id="{{order.id}}">追加晒图</a>
+                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product_review_picture&action=update&order_has_product_id={{product.order_has_product_id}}&order_id={{order.id}}&product_id={{product.id}}&product_model_name={{product.order_product_model_name}}" class="xui-reviewBtn xui-review tc fr" data-id="{{order.id}}">追加晒图</a>
                                 {% else %}
                                 <a href="?woid=${owner_id}&module=mall&model=product_review&action=create&order_id=${order_id}&product_id=${product_id}&fmt=${fmt" class="xui-reviewBtn xui-review tc fr" data-id="{{order.id}}">查看评论</a>
                                 {% endif %}

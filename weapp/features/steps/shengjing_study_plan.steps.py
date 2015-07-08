@@ -49,7 +49,6 @@ def step_impl(context, user):
     context.courses = json.loads(context.text)
     for course in context.courses:
         __add_shengjing_course(context, course)
-        time.sleep(1)
 
 
 @then(u"{user}能获取盛景课程列表")
@@ -92,7 +91,6 @@ def step_impl(context, user):
     context.courses = json.loads(context.text)
     for course in context.courses:
         __add_shengjing_course(context, course)
-        time.sleep(1)
 
 
 @when(u"{user}删除盛景课程'{course_name}'")

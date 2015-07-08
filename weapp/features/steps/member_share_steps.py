@@ -46,7 +46,6 @@ def __get_fmt_by_sct(sct):
 from core import dev_util
 @When(u'{webapp_user_name}点击{shared_webapp_user_name}分享链接')
 def step_impl(context, webapp_user_name, shared_webapp_user_name):
-	time.sleep(1)
 	webapp_owner_id = context.webapp_owner_id
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (shared_webapp_user_name, user.username)

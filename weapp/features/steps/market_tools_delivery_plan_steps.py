@@ -27,7 +27,6 @@ def step_impl(context, user):
 	context.delivery_plans = json.loads(context.text)
 	for delivery_plan in context.delivery_plans:
 		__add_delivery_plan(context, delivery_plan, user)
-		time.sleep(1)
 
 @given(u"{user}添加配送套餐")
 def step_impl(context, user):
@@ -35,7 +34,6 @@ def step_impl(context, user):
 	context.delivery_plans = json.loads(context.text)
 	for delivery_plan in context.delivery_plans:
 		__add_delivery_plan(context, delivery_plan, user)
-		time.sleep(1)
 
 @then(u"{user}能获得配送套餐'{test_delivery_plan}'")
 def step_impl(context, user, test_delivery_plan):

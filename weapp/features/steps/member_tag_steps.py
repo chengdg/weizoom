@@ -23,7 +23,6 @@ def step_impl(context, user):
 	for member_tag in context.member_tags:
 		data = member_tag
 		response = client.post('/webapp/user_center/tag/create/', data)
-		time.sleep(1)
 
 @then(u"{user}能获取会员分组列表")
 def step_impl(context, user):

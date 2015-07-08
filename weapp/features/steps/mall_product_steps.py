@@ -307,7 +307,6 @@ def step_impl(context, user):
 	for product in context.products:
 		product['type'] = PRODUCT_DEFAULT_TYPE
 		__add_product(context, product)
-		time.sleep(1)
 
 
 @when(u"{user}更新商品'{product_name}'")
@@ -336,7 +335,6 @@ def step_impl(context, user):
 	for product in context.products:
 		product['type'] = PRODUCT_INTEGRAL_TYPE
 		__add_product(context, product)
-		time.sleep(1)
 
 
 ############################################################################################
@@ -391,7 +389,7 @@ def __get_product_from_web_page(context, product_name):
 		product_models = product.models
 		models = {}
 		for product_model in product_models:
-			if product_model['name'] == 'standard':
+			if not product_model or product_model['name'] == 'standard':
 				continue
 			else:
 				display_name = __get_custom_model_name_from_id(context.webapp_owner_id, product_model['name'])

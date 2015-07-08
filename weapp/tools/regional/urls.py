@@ -9,3 +9,5 @@ urlpatterns = patterns('',
 	(r'^cities/(\d+)/$', apiviews.get_cities),
 	(r'^districts/(\d+)/$', apiviews.get_districts),
 )
+
+

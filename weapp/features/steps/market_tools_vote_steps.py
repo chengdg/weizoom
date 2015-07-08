@@ -99,7 +99,6 @@ def step_impl(context, user):
 	context.votes = json.loads(context.text)
 	for vote in context.votes:
 		__add_vote(context, vote)
-		time.sleep(1)
 
 
 @given(u"{user}已添加'微信投票'")
@@ -111,7 +110,6 @@ def step_impl(context, user):
 	context.votes = json.loads(context.text)
 	for vote in context.votes:
 		__add_vote(context, vote)
-		time.sleep(1)
 
 
 @then(u"{user}能获取投票列表")
@@ -167,7 +165,6 @@ def step_impl(context, user):
 	context.votes = json.loads(context.text)
 	for vote in context.votes:
 		__add_vote(context, vote)
-		time.sleep(1)
 
 
 @when(u"{user}更新微信投票'{vote_name}'")

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import time
 from django.core.cache import get_cache
-from core.jsonresponse import JsonResponse, create_response, decode_json_str
-from core.exceptionutil import unicode_full_stack, full_stack
+
+from core.jsonresponse import create_response
+from core.exceptionutil import full_stack
 
 from models import *
 
@@ -60,6 +60,7 @@ def _get_districts_for_city(city_id):
 		districts[district.id] =district.name
 	return districts
 
+
 def get_str_value_by_string_ids(str_ids):
 	if str_ids != '' and str_ids:
 		cache = get_cache('mem')
@@ -81,6 +82,30 @@ def get_str_value_by_string_ids(str_ids):
 		return u'{}'.format(ship_address.strip())
 	else:
 		return None
+
+
+def get_str_value_by_string_ids_(str_ids):
+	if str_ids:
+		cache = get_cache('area')
+
+		provinces = cache.get('province')
+		if not province:
+			cache.set('province', Province.objects.all())
+		cities = cache.get('cite')
+		if not cite:
+			cache.set('cite', City.objects.all())
+		districts = cache.get('district')
+		if not district:
+			cache.set('district', objects.all())
+
+		str_ids_list = str_ids.split("_")
+		return u''.join((filter(lambda x: x==str_ids_list[0], provinces) +
+				filter(lambda x: x==str_ids_list[1], cities) +
+				filter(lambda x: x==str_ids_list[2], district)))
+	else:
+		raise Exception("order ship area should not be null")
+
+
 try:
 	ID2PROVINCE = dict([(p.id, p.name) for p in Province.objects.all()])
 	ID2CITY = dict([(c.id, c.name) for c in City.objects.all()])

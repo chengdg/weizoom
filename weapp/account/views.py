@@ -90,98 +90,97 @@ def index(request):
 		elif request.user.id != request.manager.id:
 			return HttpResponseRedirect('/mall/outline/get/')
 		else:
-			#add by duhao 20150512 直接跳转到账号信息页
-			return HttpResponseRedirect('/account/')
+			#add by jiangzhe 20150706 直接跳转到微信互动页面
+			return HttpResponseRedirect('/new_weixin/outline/')
 
-			#一般用户转入首页
-			todos = []
-			#待处理消息
-			profile = request.user.get_profile()
-			if profile.new_message_count > 0:
-				todos.append({'text': u'收到%d条新消息' % profile.new_message_count, 'url': '/message/'})
+		# 	#一般用户转入首页
+		# 	todos = []
+		# 	#待处理消息
+		# 	profile = request.user.get_profile()
+		# 	if profile.new_message_count > 0:
+		# 		todos.append({'text': u'收到%d条新消息' % profile.new_message_count, 'url': '/message/'})
 
-			c = RequestContext(request, {
-				'first_nav_name': FIRST_NAV_NAME,
-				'second_navs': HOME_SECOND_NAVS,
-				'second_nav_name': 'dashboard',
-				'has_todo': len(todos) != 0,
-				'todo_count': len(todos),
-				'todos': todos
-			})
+		# 	c = RequestContext(request, {
+		# 		'first_nav_name': FIRST_NAV_NAME,
+		# 		'second_navs': HOME_SECOND_NAVS,
+		# 		'second_nav_name': 'dashboard',
+		# 		'has_todo': len(todos) != 0,
+		# 		'todo_count': len(todos),
+		# 		'todos': todos
+		# 	})
 
-		return render_to_response('account/index.html', c)
+		# return render_to_response('account/index.html', c)
 
 #from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
 
 @login_required
 def show_account_info(request):
-	"""
-	显示账号信息
-	"""
-	user_profile = request.user_profile
-	request_user = request.user
+	#add by jiangzhe 20150706 直接跳转到微信互动页面
+	return HttpResponseRedirect('/new_weixin/outline/')
+	# user_profile = request.user_profile
+	# request_user = request.user
 
-	if user_profile.is_mp_registered:
-		try:
-			mpuser = get_system_user_binded_mpuser(request_user)
-			mpuser_preview_info = MpuserPreviewInfo.objects.get(mpuser=mpuser)
-		except:
-			user_profile.is_mp_registered = False
+	# if user_profile.is_mp_registered:
+	# 	try:
+	# 		mpuser = get_system_user_binded_mpuser(request_user)
+	# 		mpuser_preview_info = MpuserPreviewInfo.objects.get(mpuser=mpuser)
+	# 	except:
+	# 		user_profile.is_mp_registered = False
 
-	pre_auth_code = None
-	if ComponentInfo.objects.all().count() > 0:
-		from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
-		component_info = ComponentInfo.objects.all()[0]
-		weixin_http_client = WeixinHttpClient()
-		weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
-		result = weixin_api.api_create_preauthcode(component_info.app_id)
-		if hasattr(result, 'pre_auth_code'):
-			pre_auth_code = result['pre_auth_code']
-		else:
-			result = weixin_api.api_create_preauthcode(component_info.app_id)
-			if result and result.has_key('pre_auth_code'):
-				pre_auth_code = result['pre_auth_code']
-			else:
-				watchdog_error(result)
-		print '------------------', result
+	# pre_auth_code = None
+	# if ComponentInfo.objects.all().count() > 0:
+	# 	from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
+	# 	component_info = ComponentInfo.objects.all()[0]
+	# 	weixin_http_client = WeixinHttpClient()
+	# 	weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
+	# 	result = weixin_api.api_create_preauthcode(component_info.app_id)
+	# 	if hasattr(result, 'pre_auth_code'):
+	# 		pre_auth_code = result['pre_auth_code']
+	# 	else:
+	# 		result = weixin_api.api_create_preauthcode(component_info.app_id)
+	# 		if result and result.has_key('pre_auth_code'):
+	# 			pre_auth_code = result['pre_auth_code']
+	# 		else:
+	# 			watchdog_error(result)
+	# 	print '------------------', result
 
-		if ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).count() == 0:
-			ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id)
+	# 	if ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).count() == 0:
+	# 		ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id)
 
-	else:
-		component_info = None
+	# else:
+	# 	component_info = None
 
-	if user_profile.is_mp_registered:
-		mpuser_access_token = get_mpuser_access_token_for(mpuser)
+	# if user_profile.is_mp_registered:
+	# 	mpuser_access_token = get_mpuser_access_token_for(mpuser)
 
-		c = RequestContext(request, {
-			'first_nav_name': FIRST_NAV_NAME,
-			'second_navs': HOME_SECOND_NAVS,
-			'second_nav_name': 'account_info',
-			'component_info':component_info,
-			'request_user': request_user,
-			'user_profile': user_profile,
-			'mpuser': mpuser,
-			'mpuser_access_token': mpuser_access_token,
-			'preview_user': mpuser_preview_info,
-			'default_icon': DEFAULT_ICON,
-			'is_mp_registered':user_profile.is_mp_registered,
-			'pre_auth_code': pre_auth_code
-		})
-	else:
-		c = RequestContext(request, {
-			'first_nav_name': FIRST_NAV_NAME,
-			'second_navs': HOME_SECOND_NAVS,
-			'second_nav_name': 'account_info',
-			'pre_auth_code': pre_auth_code,
-			'request_user': request_user,
-			'user_profile': user_profile,
-			'default_icon': DEFAULT_ICON,
-			'component_info': component_info,
-			'is_mp_registered':user_profile.is_mp_registered
-		})
+	# 	c = RequestContext(request, {
+	# 		'first_nav_name': FIRST_NAV_NAME,
+	# 		'second_navs': HOME_SECOND_NAVS,
+	# 		'second_nav_name': 'account_info',
+	# 		'component_info':component_info,
+	# 		'request_user': request_user,
+	# 		'user_profile': user_profile,
+	# 		'mpuser': mpuser,
+	# 		'mpuser_access_token': mpuser_access_token,
+	# 		'preview_user': mpuser_preview_info,
+	# 		'default_icon': DEFAULT_ICON,
+	# 		'is_mp_registered':user_profile.is_mp_registered,
+	# 		'pre_auth_code': pre_auth_code
+	# 	})
+	# else:
+	# 	c = RequestContext(request, {
+	# 		'first_nav_name': FIRST_NAV_NAME,
+	# 		'second_navs': HOME_SECOND_NAVS,
+	# 		'second_nav_name': 'account_info',
+	# 		'pre_auth_code': pre_auth_code,
+	# 		'request_user': request_user,
+	# 		'user_profile': user_profile,
+	# 		'default_icon': DEFAULT_ICON,
+	# 		'component_info': component_info,
+	# 		'is_mp_registered':user_profile.is_mp_registered
+	# 	})
 
-	return render_to_response('account/account_info.html', c)
+	# return render_to_response('account/account_info.html', c)
 
 # from django import forms
 # from captcha.fields import CaptchaField

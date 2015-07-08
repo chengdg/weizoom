@@ -59,6 +59,8 @@ W.view.mall.ProductCustomModelEditor = Backbone.View.extend({
 		this.customModels = [];
 		for (var i = 0; i < this.models.length; ++i) {
 			var model = this.models[i];
+			if(model == null)
+				continue
 			if (model.name === 'standard') {
 				this.standardModel = model;
 			} else {

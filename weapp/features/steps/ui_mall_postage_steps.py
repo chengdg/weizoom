@@ -21,7 +21,6 @@ def step_impl(context, user):
 		edit_postage_page = postage_list_page.click_add_postage_config_button()
 		edit_postage_page.add_postage_config(postage_config)
 		edit_postage_page.submit()
-		time.sleep(1)
 
 
 @then(u"{user}能获取添加的邮费配置:ui")

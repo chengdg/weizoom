@@ -132,7 +132,8 @@ def update_webapp_order_cache(instance, **kwargs):
 	if isinstance(instance, Order):
 		webapp_user_id = instance.webapp_user_id
 	else:
-		instances = list(instance)
+		from itertools import chain
+		instances = chain(instance)
 		for order in instances:
 			webapp_user_id = order.webapp_user_id
 			if webapp_user_id:

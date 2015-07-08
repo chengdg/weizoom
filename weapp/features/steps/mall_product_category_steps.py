@@ -31,7 +31,6 @@ def step_impl(context, user):
 	for product_category in product_categories:
 		data = product_category
 		response = client.post('/mall/api/product_category/create/', data)
-		time.sleep(1)
 
 
 @when(u"{user}更新商品分类'{category_name}'为")

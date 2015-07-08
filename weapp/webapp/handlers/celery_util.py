@@ -1,4 +1,5 @@
-#coding: utf8
+# -*- coding: utf-8 -*-
+
 
 def send_task_test(name, args=None, kwargs=None, countdown=None,
             eta=None, task_id=None, publisher=None, connection=None,

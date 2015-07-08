@@ -373,7 +373,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	# pprint(response_json['data'])
 	# print("*"*120)
 
-
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
 		context.created_order_id = response_json['data']['order_id']
