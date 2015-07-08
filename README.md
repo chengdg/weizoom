@@ -1,3 +1,51 @@
+# FAQ
+
+**问：如何rebuild本地环境？**
+
+答：如下步骤操作（即执行rebuild.bat）
+```
+cd init_db 
+mysql -u weapp --password=weizoom weapp < rebuild_database.sql
+cd ..
+python manage.py clean_mongo
+python manage.py syncdb --noinput
+cd init_db
+mysql -u weapp --password=weizoom weapp < loc.sql
+cd ..
+python manage.py markettool2app
+python manage.py init_permissions
+```
+
+**问：如何更新线上数据库结构？**
+
+答：执行如下操作：
+
+1. 导出老版本数据库SQL
+```
+mysqldump -d -u xxx -p weapp > old.sql
+```
+
+
+2. 导出最新数据库SQL
+```
+rebuild.bat
+mysqldump -d -u xxx -p weapp > new.sql
+```
+
+3. 比对新老数据库，生成更新SQL：
+```
+python manage.py sqldiff --old old.sql --new new.sql
+```
+
+4. 更新线上数据库：
+```
+mysql -u xxx -p weapp < migrate.sql
+```
+
+
+# 积分测试用例
+
+```
 水晶虾仁
 	红色 S：10.00
 	红色 M：9.10
@@ -35,3 +83,5 @@
 1. 购买水晶虾仁（红色 M）+水晶虾仁（2个黄色 M），2个武昌鱼
 	1. 先抵扣水晶虾仁，水晶虾仁15积分抵扣2.82元，武昌鱼35积分抵扣7元
 	2. 先抵扣武昌鱼，武昌鱼50积分抵扣10元
+```
+
