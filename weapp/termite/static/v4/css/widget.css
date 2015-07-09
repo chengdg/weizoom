@@ -36,7 +36,7 @@
 .wui-grid-b > .wui-block-c {
     /* width: 33.25%; IE7 */
     /* margin-right: -.5px; BB5 */
-    width: 33.333%;
+    width: 33.3%;
 }
 .wui-grid-c > .wui-block-a,
 .wui-grid-c > .wui-block-b,
@@ -1114,10 +1114,10 @@ ul.wui-relatelink li h3{
 }
 .wui-imagenav li{
     text-align: center;
-    height: 75px;
+    min-height: 75px;
 }
 .wui-imagenav li a{
-    min-height: 83px;
+    min-height: 75px;
 }
 .wui-imagenav li a img{
     width: 100%;
@@ -1161,6 +1161,12 @@ ul.wui-relatelink li h3{
 }
 .wui-imagedisplay .wui-grid-e li:first-child .wui-inner-pic{
     height: 211px;
+}
+.wui-imagedisplay .wui-grid-b li{
+    margin-right: 0.05%;
+}
+.wui-imagedisplay .wui-grid-b li:last-child{
+    margin-right: 0;
 }
 .wui-imagedisplay .wui-black{
     height: 318px;
