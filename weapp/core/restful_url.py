@@ -18,6 +18,8 @@ from django.template import RequestContext
 from django.conf import settings
 from core.restful_url_route import APP2URL
 from core import resource as resource_util
+from watchdog.utils import watchdog_fatal
+from core.exceptionutil import unicode_full_stack
 
 class DataObj(object):
 	def __init__(self):
@@ -92,26 +94,31 @@ class RestfulURLPattern2(object):
 		raise Resolver404({'tried': tried, 'path' : path})
 
 	def resolve(self, path):
-		items = path.split('/')
-		method = items[-1].lower()
-		if items[0] == 'api':
-			resource = '/'.join(items[1:-1])
-			method = 'api_%s' % method
-		else:
-			resource = '/'.join(items[:-1])
-		
-		app_resource = '%s-%s' % (self.app_name, resource)
-		class_info = resource_util.APPRESOURCE2CLASS.get(app_resource, None)
-		if class_info:
-			if not class_info['instance']:
-				class_info['instance'] = class_info['cls']
-			resource_instance = class_info['instance']
-			func = getattr(resource_instance, method, None)
-			if func:
-				return ResolverMatch(func, (), {}, path)
+		try:
+			items = path.split('/')
+			method = items[-1].lower()
+			if items[0] == 'api':
+				resource = '/'.join(items[1:-1])
+				method = 'api_%s' % method
+			else:
+				resource = '/'.join(items[:-1])
+			
+			app_resource = '%s-%s' % (self.app_name, resource)
+			class_info = resource_util.APPRESOURCE2CLASS.get(app_resource, None)
+			if class_info:
+				if not class_info['instance']:
+					class_info['instance'] = class_info['cls']
+				resource_instance = class_info['instance']
+				func = getattr(resource_instance, method, None)
+				if func:
+					return ResolverMatch(func, (), {}, path)
+				else:
+					self.__raise_404(path)
 			else:
 				self.__raise_404(path)
-		else:
+		except:
+			notify_message = u"RESTful url2 route failed, cause:\n{}".format(unicode_full_stack())
+			watchdog_fatal(notify_message, type='URL_ROUTE', noraise=True)
 			self.__raise_404(path)
 
 
