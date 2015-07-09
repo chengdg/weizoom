@@ -28,7 +28,6 @@ class PageEditor(resource.Resource):
 		"""
 		project_id = request.GET.get('project_id', None)
 		if not project_id:
-            watchdog_warning('修改商品没有商品ID, %s' % request.GET)
             return HttpResponseRedirect('/termite2/pages/')
 
 		is_new_project = 'is_new_project' in request.GET
