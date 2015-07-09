@@ -126,21 +126,20 @@
         var $productList = $('.wui-productlist');
         var $imageDisplay = $('.wui-imagedisplay');
         var $imageNav = $('.wui-imagenav');
-
-        if($product.length > 1){
+        
+        if($product.length > 0){
 
             getWidth('.wui-product');
 
-        }else if($productList.length > 1){
+        }else if($productList.length > 0){
 
             getWidth('.wui-productlist');
 
-        }else if($imageDisplay.length > 1){
+        }else if($imageDisplay.length > 0){
 
             getWidth('.wui-imagedisplay');
 
-        }else if($imageNav.length > 1){
-
+        }else if($imageNav.length > 0){
             getWidth('.wui-imagenav');
 
         }
@@ -148,8 +147,9 @@
             var $component = $(component);
             var $inner_pic = $component.find('li .wui-inner-pic');
             $inner_pic.each(function() {
-                var width = $(this).width() +5 ;
+                var width = $(this).width();
                 $(this).height(width);
+                $(this).parents('li').height(width);
             });
         } 
         </script>

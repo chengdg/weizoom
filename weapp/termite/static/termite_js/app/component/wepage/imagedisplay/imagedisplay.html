@@ -20,7 +20,7 @@
 	</ul>
 
 	<p class="wui-inner-contentTitle wa-inner-contentTitle{% if not component.model.contentTitle %} hidden{% endif %}">{{component.model.contentTitle}}</p>
-	<p class="wui-inner-content wa-inner-content{% if not component.model.content %} hidden{% endif %}">{{component.model.content}}</p>
+	<p class="wui-inner-content wa-inner-content{% if not component.model.content %} hidden {% else %} pb10{% endif %}">{{component.model.content}}</p>
 </div>
 {%  endifequal %}
 

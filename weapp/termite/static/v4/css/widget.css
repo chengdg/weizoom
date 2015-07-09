@@ -1114,6 +1114,7 @@ ul.wui-relatelink li h3{
 }
 .wui-imagenav li{
     text-align: center;
+    height: 75px;
 }
 .wui-imagenav li a{
     min-height: 83px;
@@ -1144,7 +1145,6 @@ ul.wui-relatelink li h3{
     width: 100%;
     /*height: 213px;*/
     overflow: hidden;
-    padding: 0 0.5%;
     background: #fff;
     box-sizing:border-box;
     margin-bottom: 10px;
@@ -1153,25 +1153,14 @@ ul.wui-relatelink li h3{
     height: 106px;
     overflow: hidden;
 }
-.wui-imagedisplay li .wui-inner-pic{
-    border: 1px solid #e5e5e5;
+.wui-imagedisplay .wui-inner-pic{
     box-sizing:border-box;
-}
-.wui-imagedisplay li:last-child{
-    border-bottom: 1px solid #e5e5e5;
 }
 .wui-imagedisplay .wui-grid-e li:first-child{
     margin-right: 0.1%;
 }
 .wui-imagedisplay .wui-grid-e li:first-child .wui-inner-pic{
     height: 211px;
-    border-right: none;
-}
-.wui-imagedisplay .wui-grid-b li{
-    border-bottom: 1px solid #e5e5e5;
-}
-.wui-imagedisplay .wui-grid-b li .wui-inner-pic{
-    border-right: none;
 }
 .wui-imagedisplay .wui-black{
     height: 318px;
@@ -1219,7 +1208,7 @@ ul.wui-relatelink li h3{
     padding-left: 8px;
     font-size: 12px;
     color: #656565;
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
     box-sizing:border-box;
     margin:0;
     margin-top: 6px;

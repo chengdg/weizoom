@@ -84,6 +84,7 @@ W.component.wepage.ImageDisplay = W.component.Component.extend({
             else
                 $node.find('.wa-inner-content').hide();
             W.Broadcaster.trigger('component:resize', this);
+            this.refresh($node, {resize:true});
         }
     },
 
