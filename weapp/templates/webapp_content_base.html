@@ -139,7 +139,14 @@
             W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
                     W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-
+            var link = window.location.href;
+            if (link.indexOf('fmt') === -1){
+                if (link.indexOf('&') === -1){
+                    link = link +"?fmt="+W.curRequestMemberToken;
+                } else {
+                    link = link +"&fmt="+W.curRequestMemberToken;
+                }
+            }
             $(document).ready(function() {
                 $('a').highlight();
                 FastClick.attach(document.body);
@@ -161,7 +168,7 @@
                  */
                 W.wxShareData = {
                     "imgUrl" : W.sharePageImg,
-                    "link" : window.location.href,
+                    "link" : link,
                     "desc" : W.sharePageDesc,
                     "title" : W.sharePageTitle,
                     // 点击分享按钮

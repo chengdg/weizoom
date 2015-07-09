@@ -300,6 +300,9 @@ def call_project_api(request):
 		is_call_webapp_api = False
 		is_call_market_tool_api = False
 		is_call_app_api = True
+		
+	if target_api and target_api == 'shared_url/record':
+		is_call_app_api = True
 
 	if is_call_webapp_api:
 		module_name = request.REQUEST.get('module', None)
