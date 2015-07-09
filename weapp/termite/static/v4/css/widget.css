@@ -608,12 +608,10 @@ ul.wui-relatelink li h3{
     vertical-align:baseline;
 }
 .wui-textnav li,.wui-relatelink li{
-  background:url(/termite_static/img/bottom_line.png) left top no-repeat;
-  background-size: 100% 1px;
-  background-position: left bottom;
   height: 44px;
   padding: 0 10px;
   box-sizing:border-box;
+  border-bottom: 1px solid #e5e5e5;
 }
 .wui-textnav li a,.wui-relatelink li a{
     display: block;
