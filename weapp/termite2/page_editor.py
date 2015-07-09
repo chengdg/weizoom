@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core.jsonresponse import create_response
 from webapp import models as webapp_models
+from watchdog.utils import watchdog_warning
 
 from termite2 import export
 
@@ -25,7 +26,11 @@ class PageEditor(resource.Resource):
 		"""
 		微站编辑器首页
 		"""
-		project_id = request.GET['project_id']
+		project_id = request.GET.get('project_id', None)
+		if not project_id:
+            watchdog_warning('修改商品没有商品ID, %s' % request.GET)
+            return HttpResponseRedirect('/termite2/pages/')
+
 		is_new_project = 'is_new_project' in request.GET
 		project = webapp_models.Project.objects.get(id=project_id)
 

@@ -148,6 +148,8 @@
       loadPages(pageManagerView);
 
       $('.xa-save').click(function() {
+        event.stopPropagation();
+        event.preventDefault();
         // 保存model
         W.Synchronizer.manualSync(function() {
           W.resource.termite2.Project.id(W.projectId).post({
