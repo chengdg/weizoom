@@ -302,7 +302,7 @@ def call_project_api(request):
 		is_call_app_api = True
 		
 	if target_api and target_api == 'shared_url/record':
-		is_call_app_api = True
+		is_call_webapp_api = True
 
 	if is_call_webapp_api:
 		module_name = request.REQUEST.get('module', None)
