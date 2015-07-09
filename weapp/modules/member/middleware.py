@@ -933,7 +933,7 @@ class OAUTHMiddleware(object):
 			request_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 			#cookie_webapp_id = request.COOKIES.get('webapp_id', None)
 			#1 如果cookie中没有 cookie_open_id or cookie_opeqqqn_id 则进行授权
-			if (cookie_openid_webapp_id is None) or (not request_fmt):
+			if (cookie_openid_webapp_id is None):
 				is_oauth = True
 			else:
 				split_list = cookie_openid_webapp_id.split('____')
