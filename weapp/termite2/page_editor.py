@@ -28,7 +28,7 @@ class PageEditor(resource.Resource):
 		"""
 		project_id = request.GET.get('project_id', None)
 		if not project_id:
-            return HttpResponseRedirect('/termite2/pages/')
+			return HttpResponseRedirect('/termite2/pages/')
 
 		is_new_project = 'is_new_project' in request.GET
 		project = webapp_models.Project.objects.get(id=project_id)
