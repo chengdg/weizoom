@@ -146,7 +146,13 @@
     margin: 0px 2px;
     border: dashed 1px #CFCFCF;
 }
-
+/*店铺装修编辑页样式调整*/
 .wui-personalityTheme .wui-shop-Bg, .wui-specialTemplate .wui-shop-Bg{
     position: relative;
+}
+.wui-imagedisplay .wui-grid-e li:first-child{
+    margin-right: 0;
+}
+.wui-imagedisplay .wui-grid-b li{
+    margin-right: 0;
 }
