@@ -1146,7 +1146,7 @@ ul.wui-relatelink li h3{
     background: #fff;
     box-sizing:border-box;
     margin-bottom: 10px;
-    margin-top: 1px;
+    padding-top: 1px;
 }
 .wui-imagedisplay .wui-inner-pic{
     height: 106px;
