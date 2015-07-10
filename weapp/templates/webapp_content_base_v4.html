@@ -122,50 +122,54 @@
         </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
-        var $product = $('.wui-product');
-        var $productList = $('.wui-productlist');
-        var $imageDisplay = $('.wui-imagedisplay');
-        var $imageNav = $('.wui-imagenav');
-        var screenWidth = $(this).width()-2;   //获取屏幕宽度，减去2px外边距
-        var defalutWidth = $(this).width()-1;   
-        var averageWidth = screenWidth/3;             
-        var width = defalutWidth/3;             
+        $(document).ready(function() {
+            var $product = $('.wui-product');
+            var $productList = $('.wui-productlist');
+            var $imageDisplay = $('.wui-imagedisplay');
+            var $imageNav = $('.wui-imagenav');
+            var screenWidth = $(this).width()-2;   //获取屏幕宽度，减去2px外边距
+            var defalutWidth = $(this).width()-1;   
+            var averageWidth = screenWidth/3;             
+            var width = defalutWidth/3;             
 
-        if($product.length > 0){
+            if($product.length > 0){
 
-            getWidth('.wui-product');
+                getWidth('.wui-product');
 
-        }else if($productList.length > 0){
+            }else if($productList.length > 0){
 
-            getWidth('.wui-productlist');
+                getWidth('.wui-productlist');
 
-        }else if($imageDisplay.length > 0){
-            $imageDisplay.find('.wui-grid-b li').width(averageWidth);
-            $imageDisplay.find('.wui-grid-e li').width(width);
-            $imageDisplay.each(function() {
-                var $imgGroup = $(this).find('.wui-grid-e');
-                console.log($imgGroup,55555)
-                $imgGroup.find('li').eq(0).width(width*2);
-                $imgGroup.find('li').height(width)
-                $imgGroup.find('li').eq(0).height(width*2);
-                $imgGroup.find('li').eq(2).height(width-1);
-            });
-            getWidth('.wui-imagedisplay');
+            }else if($imageDisplay.length > 0){
+                $imageDisplay.find('.wui-grid-b li').width(averageWidth);
+                $imageDisplay.find('.wui-grid-e li').width(width);
+                $imageDisplay.each(function() {
+                    var $imgGroup = $(this).find('.wui-grid-e');
+                    console.log($imgGroup,55555)
+                    $imgGroup.find('li').eq(0).width(width*2);
+                    $imgGroup.find('li').height(width)
+                    $imgGroup.find('li').eq(0).height(width*2);
+                    $imgGroup.find('li').eq(2).height(width-1);
+                });
+                getWidth('.wui-imagedisplay');
 
-        }else if($imageNav.length > 0){
-            getWidth('.wui-imagenav');
-            var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
-            $imageNav.find('li').height(imgNavWidth);
+            }else if($imageNav.length > 0){
+                getWidth('.wui-imagenav');
+                var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
+                $imageNav.find('li').height(imgNavWidth);
 
-        }
-        function getWidth(component){
-            var $component = $(component);
-            var $inner_pic = $component.find('li .wui-inner-pic');
-            $inner_pic.each(function() {
-                var width = $(this).width() ;
-                $(this).height(width);
-            });
-        } 
+            }
+            function getWidth(component){
+                var $component = $(component);
+                var $inner_pic = $component.find('li .wui-inner-pic');
+                $inner_pic.each(function() {
+                    var width = $(this).width() ;
+                    $(this).height(width);
+                    // 不能在此对图片父级进行高度赋值，会影响到商品
+                });
+            } 
+        });
+        
         </script>
         
 
