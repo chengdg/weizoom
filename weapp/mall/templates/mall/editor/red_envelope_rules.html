@@ -1,0 +1,186 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<style>
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-redEnvelope-page xui-commonPromotionStyle">
+
+<div class="relative">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li><a href="/mall/red_envelope_rule/get/">促销管理</a></li>
+        <li class="active">分享红包</li>
+    </ul>
+</div>
+
+<div class="xa-redEnvelopeFilterView xui-filterPanel"></div>
+
+<div class="panel panel-default mt20 xui-bigBoxbg">
+<div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
+    <div class="panel-heading xui-headStyle clearfix">
+        <a href="/mall/red_envelope_rule/create/" class="btn btn-success ml10 fr xui-btnSetting"><span class="xui-add-btn-icon">+</span>新建分享红包</a>
+    </div>
+    <div
+        data-ui-role="advanced-table"
+        data-app="mall"
+        data-api="red_envelope_rules/get"
+        data-template-id="#red_envelope_rule_list_view"
+        data-enable-paginator="true"
+        data-enable-sort="false"
+        data-disable-header-select="true"
+        data-item-count-per-page="10"
+        class="xui-redEnvelopeList pb0"
+        id="redEnvelopeList"
+    ></div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+<script id="red_envelope_rule_list_view" type="text/x-jquery-tmpl">
+{{if items.length}}
+<table class="table table-condensed xb-stripedTable mb0">
+    <thead class="xui-theadHeight">
+        <tr>
+            <th>活动名称</th>
+            <th width="154">奖励时间</th>
+            <th width="132">奖励</th>
+            <th>活动状态</th>
+            <th>领取人数</th>
+            <th>优惠券剩余</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{each(i, rule) items}}
+        <tr class="h80" data-id="${ rule.id }">
+            <td class="tl pl20" ><a href="../select?id=${ rule.id }">${ rule.rule_name }</a></td>
+            <td width="154">
+                {{if rule.limit_time}}
+                永久
+                {{else}}
+                    <span style="display:inline-block;width:70px">${ rule.start_time }</span>-<span style="display:inline-block;width:70px">${ rule.end_time }</span>
+                {{/if}}
+            </td>
+            <td width="132">${ rule.coupon_rule_name }</td>
+            <td>
+                {{if rule.is_timeout && !rule.limit_time }}
+                    <span style="color:#cf0404;">已过期</span>
+                {{else}}
+                    {{if rule.status }}开启{{else}}关闭{{/if}}
+                {{/if}}
+            </td>
+            <td>${ rule.get_count }
+            </td>
+            <td>${ rule.remained_count }
+            </td>
+            <td class="tl xui-operation">
+                {{if rule.status }}
+                    <a href="javascript:void(0);" class="xa-update" data-status="over">关闭</a>
+                {{else}}
+                    {{if !rule.is_timeout || rule.limit_time}}
+                        <a href="javascript:void(0);" class="xa-update" data-status="start">开启</a>
+                    {{/if}}
+                    <a href="javascript:void(0);" class="xa-delete">删除</a>
+                {{/if}}
+                <a href="../select?id=${ rule.id }">查看</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+<div class="panel-body xb-noContent mb0">
+    <div class="xui-emptyBox mb0">
+        <div class="xui-i-emptyHint">
+            <img src="/static_v2/img/editor/empty.png">
+            <div>
+                <span>没有分享红包记录！</span>
+            </div>
+        </div>
+    </div>
+</div>
+{{/if}}
+</script>
+{% endverbatim %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var coupon_rule = {{ coupon_rule_info|safe }};
+    var view = new W.view.mall.RedEnvelopeFilterView({
+        el: '.xa-redEnvelopeFilterView',
+        templateFilterName: 'mall-red-envelope-filter-view-tmpl-src',
+        coupon_rule: coupon_rule
+    });
+    view.render();
+
+    $("#redEnvelopeList").delegate(".xa-update", "click",
+        function(event){
+            var $td = $(event.currentTarget);
+            var status = $td.data('status');
+            var id = $td.parents('tr').data('id');
+            W.getApi().call({
+                app: 'mall',
+                api: 'red_envelope_rule/update',
+                method: 'post',
+                args: {
+                    id: id,
+                    status: status
+                },
+                success: function() {
+                    view.table.reload();
+                    W.showHint('success', '操作成功！');
+                },
+                error: function(data) {
+                    if(data.errMsg){
+                        W.showHint('error', data.errMsg);
+                    }else{
+                        W.showHint('error', '操作失败！');
+                    }
+                }
+            });
+        }
+    )
+
+    $("#redEnvelopeList").delegate(".xa-delete", "click",
+        function(event){
+            var $td = $(event.currentTarget);
+            var id = $td.parents('tr').data('id');
+            var _this = this;
+            W.requireConfirm({
+                $el: $td,
+                width: 398,
+                position:'top',
+                isTitle: false,
+                msg: '确认删除红包吗？',
+                confirm: function() {
+                    deleteRedEnvelope(id);
+                }
+            })
+        });
+
+    function deleteRedEnvelope(id){
+        W.getApi().call({
+            app: 'mall',
+            api: 'red_envelope_rule/update',
+            method: 'post',
+            args: {
+                id: id,
+                status: 'delete'
+            },
+            success: function() {
+                view.table.reload();
+                W.showHint('success', '删除成功！');
+            },
+            error: function() {
+                W.showHint('error', '删除失败！')
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

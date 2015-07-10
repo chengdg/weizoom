@@ -33,6 +33,8 @@ import express_delivery_views
 import express_delivery_api_views
 
 import promotion.urls
+import red_envelope_views
+import red_envelope_api_views
 
 urlpatterns = [
 ]

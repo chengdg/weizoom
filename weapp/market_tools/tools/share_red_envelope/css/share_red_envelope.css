@@ -1,0 +1,335 @@
+@charset "utf-8";
+/*摇一摇*/
+html{
+	font-family:Arial,Tahoma,Roboto,"Droid Sans","Helvetica Neue","Droid Sans Fallback","Heiti SC","Hiragino Sans GB",'Microsoft Yahei',Simsun,sans-serif;
+}
+body{
+	background: #e93131;
+}
+.xui-attentionAlert{
+	display: none;
+}
+.xui-content{
+	background-image: url(/markettools_static/share_red_envelope/img/bg.jpg),url(/markettools_static/share_red_envelope/img/line.jpg) ;
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-position:top center,bottom center;
+	background-color: #ffd800;
+	padding-bottom: .75rem;
+}
+.xui-envelope{
+	width:12.5rem;
+	margin:0 auto;
+	padding-top:6.7rem;
+	position: relative;
+}
+.xui-top{
+	width: 100%;
+	height:3rem;
+	background-image: url(/markettools_static/share_red_envelope/img/env_top.png);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	padding:.75rem 0 0 0;
+}
+.xui-bg{
+	width: 100%;
+	background-image: url(/markettools_static/share_red_envelope/img/env_bg.jpg);
+	background-size: 100% auto;
+	background-repeat: repeat-y;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.xui-middle{
+	width: 100%;
+	height:2.05rem;
+	background-image: url(/markettools_static/share_red_envelope/img/env_middle.jpg);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+}
+.xui-bottom{
+	width: 100%;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	padding:.375rem .85rem .7rem;
+	background-color: #e93131;
+	border-radius: 0 0 4px 4px;
+	margin-bottom:.5rem;
+}
+/*获得优惠券信息*/
+.xui-prizeInfo p{
+	color:#666;
+	margin: 0;
+	text-align: center;
+}
+.xui-prizeInfo .xui-memberName{
+	font-size: 0.75rem;
+	padding:0 1.5rem; 
+	text-align: left;
+}
+.xui-prizeInfo .xui-cName{
+	font-size: .7rem;
+}
+.xui-prizeInfo .xui-cType{
+	color:#e93131;
+	font-size:0.6rem;
+}
+.xui-prizeInfo .xui-couponFinish{
+	font-size: .9rem;
+	padding-top:.85rem;
+}
+/*优惠券*/
+.xui-coupon{
+	width:8.7rem;
+	height: 4.35rem;
+	margin:0 auto;
+	background-image: url(/markettools_static/share_red_envelope/img/coupon_bg.jpg);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	padding: 0 .8rem 0 2.6rem;
+	line-height: 4.35rem;
+	text-align: center;
+	color:#e61835;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.xui-coupon span:first-child{
+	font-size: 2.1rem;
+	font-weight: bold;
+};
+.xui-coupon span:last-child{
+	font-size: .85rem;
+}
+/*红包底部内容*/
+.xui-memberTip,
+.xui-notMemberTip{
+	font-size: .6rem;
+	margin: 0 0 .5rem 0;
+}
+.xui-memberTip{
+	color:#6d000f;
+}
+.xui-notMemberTip{
+	color:#fff;
+}
+.xui-memberTip span,
+.xui-notMemberTip span{
+	color:#ffef9a;
+}
+.xui-qrCode{
+	width:5.25rem;
+	height:5.25rem;
+}
+.xui-use-btn:link,
+.xui-use-btn:active,
+.xui-use-btn:visited{
+	color:#333;
+}
+.xui-myCoupon-btn:link,
+.xui-myCoupon-btn:active,
+.xui-myCoupon-btn:visited{
+	color:#e72842;
+}
+.xui-use-btn,
+.xui-myCoupon-btn{
+	display: inline-block;
+	height:1.6rem;
+	line-height: 1.6rem;
+	border-radius:.15rem;
+	font-size:.65rem;
+}
+.xui-myCoupon-btn{
+	width:5.5rem;
+	background: #ffef9a;
+	color:#e72842;
+	margin-left: .65rem;
+}
+.xui-use-btn{
+	width:4.65rem;
+	background: #fff;
+	color:#333;
+}
+.xui-shareEnv-btn{
+	color:#fff;
+	width:12.5rem;
+	line-height: 2rem;
+	height:2rem;
+	text-align: center;
+	display: block;
+	margin:0 auto 0.5rem auto;
+	font-size: .8rem;
+	-webkit-border-radius: .15rem;
+	border-radius: .15rem;
+	background-color: #cf0404;
+	box-shadow: 0 .1rem #8d0100;
+}
+.xui-shopping-btn{
+	display: inline-block;
+	line-height:1.875rem;
+	height:1.875rem;
+	width: 100%;
+	font-size: .8rem;
+	background: #fff;
+	color:#f1354f;
+	-webkit-border-radius: .15rem;
+	border-radius: .15rem;
+	box-shadow: 0 .1rem #c00006;
+	margin-top:.625rem;
+}
+.xui-other{
+	background: #e93131;
+	padding:0 .5rem;
+}
+.xui-friends{
+	padding-bottom:1rem;
+}
+.xui-friends ul{
+	padding: 0 .25rem;
+}
+.xui-guideTitle{
+	font-size: .7rem;
+	color:#650202;
+	text-align: center;
+	font-weight: bold;
+	margin:0;
+	position: relative;
+}
+.xui-guideTitle i{
+	display: inline-block;
+	width:.525rem;
+	height:.525rem;
+	-webkit-background-size: cover;
+	background-size: cover;
+	background-image: url(/markettools_static/share_red_envelope/img/star.jpg);
+	position: absolute;
+	top: .5rem;
+	margin-top: -.25rem;
+	z-index: 1;
+}
+.xui-guideTitle i:first-child{
+	left:0;
+}
+.xui-guideTitle i:last-child{
+	right:0;
+}
+.xui-guideTitle::before,.xui-guideTitle::after{
+	position: absolute;
+	content: "";
+	border-top: solid 1px #8d0215;
+	top: .5rem;
+}
+.xui-rule .xui-guideTitle::before,.xui-rule .xui-guideTitle::after{
+	width: 4.6rem;
+}
+.xui-friends .xui-guideTitle::before,.xui-friends .xui-guideTitle::after{
+	width: 3.1rem;
+}
+.xui-guideTitle::before{
+	left:.75rem;
+}
+.xui-guideTitle::after{
+	right:.75rem;
+}
+.xui-rule p{
+	font-size: .65rem;
+	color:#fff;
+	padding-left:.35rem;
+	position: relative;
+	margin:.8rem 0;
+}
+.xui-rule p::before{
+	content:"";
+	display: inline-block;
+	width:.15rem;
+	height: .625rem;
+	background: #fbe150;
+	position: absolute;
+	top:.15rem;
+	left: 0;
+}
+.xui-rule p:last-child{
+	margin-bottom:.75rem;
+}
+.xui-gotCoupon{
+	width:100%;
+	height: 2.25rem;
+	line-height: 2.25rem;
+	background: url(/markettools_static/share_red_envelope/img/got_bg.jpg);
+	background-size: cover;
+	font-size: .7rem;
+	color:#666;
+	font-weight: bold;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	padding:0 1rem 0 .5rem;
+	margin-bottom: .75rem;
+}
+.xui-gotCoupon span{
+	font-size: .8rem;
+	color:#f1354f;
+	float: right;
+}
+.xui-friends .xui-avatar{
+	width:1.55rem;
+	height:1.55rem;
+	border-radius: 50%;
+	border:1px solid #a91127;
+	position: absolute;
+	top: .5rem;
+}
+.xui-friends .xui-info{
+	padding: .5rem 0 .35rem 2.3rem;
+}
+.xui-friends .xui-info .xui-memberName{
+	position: relative;
+	padding-right:2rem;
+}
+.xui-friends .xui-info p{
+	color:#fff;
+	margin:0;
+}
+.xui-friends .xui-couponNum{
+	position: absolute;
+	right:0;
+	top: 0;
+	color:#fff09c;
+	float: right;
+}
+.xui-friends .xui-info p:first-child{
+	font-size: .7rem;
+	margin:.35rem 0 .7rem 0;
+}
+.xui-friends .xui-info p:last-child{
+	font-size: .65rem;
+}
+.xui-friends ul li{
+	border-bottom:1px solid #a91127;
+	position: relative; 
+}
+.xui-cover{
+	background: rgba(0, 0, 0, 0.85);
+}
+.xui-cover .xui-guideArrow{
+	width:7rem;
+	height: 3.45rem;
+	right:2.05rem;
+	top: 0;
+	background-image: url(/markettools_static/share_red_envelope/img/guide_arrow.png);
+	background-size: 7rem 3.45rem;
+}
+.xui-cover .xui-close-btn{
+	width:6.1rem;
+	height: 2rem;
+	background-image: url(/markettools_static/share_red_envelope/img/known.png);
+	background-color: #c04949;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 3.9rem .9rem;
+	border-radius: .2rem;
+	top:7.85rem;
+	left:50%;
+	margin-left:-3.05rem;
+}

@@ -34,7 +34,7 @@ def __add_coupon_rule(context, webapp_owner_name):
 			'name': cr_name,
 			'money': cr_money,
 			'count': cr_count,
-			'limit_counts': cr_limit_counts,
+			'limit_counts': -1 if cr_limit_counts == '无限' else cr_limit_counts,
 			'start_date': start_date,
 			'end_date': end_date
 		}

@@ -359,7 +359,6 @@ W.view.mall.ProductCustomModelEditor = Backbone.View.extend({
 });
 
 W.registerUIRole('[data-ui-role="mall-product-custom-model-editor"]', function() {
-	console.log("FFFFFFFf");
     var $container = $(this);
     var models = $.parseJSON($container.attr('data-models'));
     var title = $container.data('title');

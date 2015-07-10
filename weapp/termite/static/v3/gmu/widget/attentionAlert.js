@@ -28,7 +28,6 @@ Copyright (c) 2011-2012 Weizoom Inc
 		_create : function() {
 			// this.$el = this.element;
             this.url = this.setting.getUrl(this);
-            console.log(this.url);
             if(this.setting.isShowButton(this)) {
                 this.render();
             }

@@ -970,7 +970,7 @@
 	 padding-left:24px;
 }
 .ui-timepicker-div{
-    widht:100%;
+    width:100%;
     height:30px;
 }
 .ui-timepicker-div dl dt,dd{
@@ -986,4 +986,19 @@
 .ui-timepicker-div dl dt:first-child{
    display:none;
 
+}
+
+/*分享红包样式*/
+.xui-redEnvelope-page .xui-btnSetting{
+    margin-bottom:0!important;
+}
+.xui-redEnvelope-page .xb-stripedTable tbody > tr:nth-child(even){
+    background: #f0f9fe!important;
+}
+.xui-redEnvelope-page .xui-operation{
+    padding-left:20px;
+    width:130px;
+}
+.xui-redEnvelope-page .xui-operation a{
+    margin:0 5px 0 0;
 }

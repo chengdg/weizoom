@@ -81,6 +81,7 @@ weixin2_qrcode_order_advanced_table_view
 weixin_qrcode_list_view
 weixin_addqrcode_filter_view
 weixin_qrcode_prize
+mall_red_envelop_filter_view
 workbench_page_manager_view
 workbench_phone_view
 workbench_property_view

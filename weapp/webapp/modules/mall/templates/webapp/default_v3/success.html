@@ -31,8 +31,12 @@
 				<b>支付方式：&nbsp;</b>
 				<span class="xt-payInterface">{{order.get_pay_interface_name}}</span>
 			</p>
+			{% if is_show_red_envelope %}
+			<a class="xui-getRedEnvelope-btn" href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{red_envelope_rule_id}}">马上去领红包</a>
+			{% endif %}
 		</div>
 	</div>
+
 	<div class="xui-otherPage">
 		<div class="xui-continue">您可继续</div>
 		<div class="xui-choice">

@@ -67,7 +67,7 @@ def get_first_navs(user):
                         nav['url'] = s_nav['url']
                     nav['children'].append(s_nav)
             first_navs_result.append(nav)
-                    
+
     return first_navs_result
 
 NAV = {
@@ -148,7 +148,7 @@ ORDER_REFUND = 'refundOrder'
 ORDER_AUDIT = 'financialCheck'
 ORDER_EXPIRED_TIME = 'orderExpiration'
 ORDER_BATCH_DELIVERY = 'orderBatchDelivery'
-
+ORDER_RED_ENVELOPE = 'orderRedEnvelope'
 
 ORDER_NAV = {
     'section': u'',
@@ -252,6 +252,12 @@ PROMOTION_NAV = {
             'title': u'发优惠券',
             'url': '/mall_promotion/issuing_coupons_record/get/',
             'need_permissions': ['manage_send_coupon', ]
+        },
+        {
+            'name': ORDER_RED_ENVELOPE,
+            'title': u'分享红包',
+            'url': '/mall/red_envelope_rule/get/',
+            'need_permissions': ['manage_order_red_envelope', ]
         }
     ]
 }

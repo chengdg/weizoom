@@ -80,8 +80,9 @@ def get_user_info(request):
 	# TODO: 优化获取头像信息
 	member = __get_current_user_info(request, member)
 	
-	member_info = MemberInfo.objects.get(member=request.member)
-	member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
+	member_info = MemberInfo.get_member_info(request.member.id)
+	if member_info and member_info.phone_number and len(member_info.phone_number) > 10:
+		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
 	# 历史订单、待支付
 	(history_order_count, not_paid_count, not_ship_order_count, shiped_order_count, review_count) = order_cache.get_order_stats(request.webapp_user.id)
 	member.history_order_count = history_order_count   # "全部订单"数量

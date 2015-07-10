@@ -1,0 +1,157 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link type="text/css" rel="stylesheet" href="/markettools_static/share_red_envelope/css/share_red_envelope.css">
+{% endblock %}
+{% block content-panel %}
+<div class="xui-wrap">
+  <section class="xui-content">
+    <div class="xui-envelope">
+        {% if coupon_rule %}
+            <div class="xui-top">
+                <div class="xui-prizeInfo">
+                 <!-- 会员领取时显示 -->
+                  {% if has_red_envelope %}
+                      <!-- 已经领过时显示 -->
+                      <p class="xui-cName">亲，您已经领过优惠券了哦！</p>
+                  {% else %}
+                        {% if member %}
+                            <p class="xui-memberName xui-ellipsis-1 xa-memberName">{{member.member_name|safe}}</p>
+                        {% endif%}
+                      <p class="xui-cName">恭喜您获得{{coupon_rule.money|floatformat }}元优惠券</p>
+                  {% endif %}
+                  <!-- 优惠券类型 -->
+                  <p class="xui-cType">
+                    {% if coupon_rule.limit_product %}
+                        {{coupon_rule.limit_product_name}}优惠券
+                    {%else%}
+                        全店通用优惠券
+                    {%endif%}
+                  </p>
+                </div>
+            </div>
+            <div class="xui-bg xa-bg">
+                <div class="xui-coupon">
+                    <span>{{coupon_rule.money|floatformat }}</span><span>元</span>
+                </div>
+            </div>
+            <div class="xui-middle"></div>
+            <div class="xui-bottom tc">
+                {% if member %}
+                    <!-- 会员领取后显示 -->
+                    <p class="xui-memberTip">已放入你的账户里，请在{{shop_name}}商城<br><span>“个人中心”</span> 查看</p>
+                    <div class="xui-btnGroup">
+                    <!-- 单品券应跳到对应商品详情 -->
+                        {% if coupon_rule.limit_product %}<a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{coupon_rule.limit_product_id}}" class="xui-use-btn">立即使用
+                        </a>{%else%}<a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-use-btn">立即使用
+                        </a>{% endif %}<a href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" class="xui-myCoupon-btn">我的优惠券</a>
+                    </div>
+                {% else %}
+                    <!-- 非会员领取后显示 -->
+                    <p class="xui-notMemberTip">请长按二维码关注{{shop_name}}商城<br>在 <span>“个人中心”</span> 即可使用优惠券</p>
+                    <img src="{{qcode_img_url}}" alt="" class="xui-qrCode">
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="xui-top">
+              <div class="xui-prizeInfo">
+                  <!-- 优惠券领完时显示 -->
+                <p class="xui-couponFinish">很遗憾，红包已经领<br>完了!</p>
+              </div>
+            </div>
+            <div class="xui-bg" style="padding: .8rem 0 0 0;"></div>
+            <div class="xui-middle"></div>
+            <div class="xui-bottom tc">
+                <!-- 红包领完了显示 -->
+                <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-shopping-btn tc">进入商城</a>
+            </div>
+        {% endif %}
+    </div>
+    {% if coupon_rule %}
+        <a href="javascript:void(0);" class="xui-shareEnv-btn xa-share">我要分享红包</a>
+    {% endif %}
+  </section>
+  <section class="xui-other">
+    <div class="xui-rule">
+      <h3 class="xui-guideTitle">
+        <i class="xui-star"></i>
+        <i class="xui-star"></i>
+        活动规则
+      </h3>
+      {% if red_envelope_rule.limit_order_money %}
+          <!-- ↓限制订单满额时显示↓ -->
+          <p>在商城支付的订单满{{red_envelope_rule.limit_order_money|floatformat}}元，就会赠送给你一个红包。支付的订单越多，获得的红包就越多哦！</p>
+      {% else %}
+          <!-- ↓不限制订单金额时显示↓ -->
+          <p>在商城只要支付订单，就会赠送给你一个红包。支付的订单越多，获得的红包就越哦！</p>
+      {% endif %}
+      <p style="margin-bottom:.75rem;">好友分享的红包，只能领取一个。</p>
+      {% if coupon_rule %}
+      <div class="xui-gotCoupon">
+        我领到的优惠券
+        <span>{{ coupon_rule.money|floatformat }}元</span>
+      </div>
+      {% endif %}
+    </div>
+    <div class="xui-friends">
+      <h3 class="xui-guideTitle">
+        <i class="xui-star"></i>
+        <i class="xui-star"></i>
+        看看朋友们的手气
+      </h3>
+      <ul>
+        <!-- for 循环来处理-->
+        {% for friend in friends %}
+        <li>
+          <img src="{% if friend.member_header_img%}{{friend.member_header_img}}{% else %}/markettools_static/share_red_envelope/img/avatar.jpg{%endif%}" alt="" class="xui-avatar">
+          <div class="xui-info">
+            <p class="xui-memberName xui-ellipsis-1">
+              {{friend.member_name|safe}}
+              <span class="xui-couponNum">{{coupon_rule.money|floatformat}}元</span>
+            </p>
+            <p>
+              {{friend.created_at|date:"Y-m-d H:i"}}
+            </p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </section>
+</div>
+
+
+<div class="xui-cover xa-cover hidden">
+  <div class="xui-guideArrow pa"></div>
+  <div class="xui-close-btn pa xa-close"></div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+(function (doc, win) {
+    var docEl = doc.documentElement,
+    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+    recalc = function () {
+      var clientWidth = docEl.clientWidth;
+      if (!clientWidth) return;
+      docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+    };
+
+    if (!doc.addEventListener) return;
+    win.addEventListener(resizeEvt, recalc, false);
+    doc.addEventListener('DOMContentLoaded', recalc, false);
+})(document, window);
+$(document).ready(function() {
+  if($('.xa-memberName').length > 0 && $('.xa-memberName').height() > 0){
+    $('.xa-bg').css('padding', '.8rem 0 0 0');
+  } 
+  $('.xa-share').click(function(event) {
+    $('.xa-cover').removeClass('hidden');
+  });
+  $('.xa-close').click(function(event) {
+    $('.xa-cover').addClass('hidden');
+  });
+});
+</script>
+{% endblock %}

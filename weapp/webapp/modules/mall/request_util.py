@@ -470,6 +470,16 @@ def get_pay_result(request):
 	else:
 		is_show_success = False
 
+	#是否提示用户领红包
+	is_show_red_envelope = False
+	red_envelope_rule_id = 0
+	red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
+	if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
+		if order.product_price + order.postage > red_envelope_rule[0].limit_order_money:
+			is_show_red_envelope = True
+			red_envelope_rule_id = red_envelope_rule[0].id
+
+
 	#获取订单包含商品
 	order_has_products = []
 	try:
@@ -502,7 +512,9 @@ def get_pay_result(request):
 		'thanks_cards': thanks_cards,
 		'is_delivery_plan': is_delivery_plan,
 		'hide_non_member_cover': True,
-		'is_show_success': is_show_success
+		'is_show_success': is_show_success,
+		'is_show_red_envelope': is_show_red_envelope,
+		'red_envelope_rule_id': red_envelope_rule_id
 	})
 	if hasattr(request, 'is_return_context'):
 		return c
@@ -523,10 +535,22 @@ def get_pay_result_success(request):
 	except:
 		raise Http404(u'订单%s不存在' % order_id)
 
+	#是否提示用户领红包
+	is_show_red_envelope = False
+	red_envelope_rule_id = 0
+	coupon_rule = None
+	red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
+	if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
+		if order.product_price + order.postage > red_envelope_rule[0].limit_order_money:
+			is_show_red_envelope = True
+			red_envelope_rule_id = red_envelope_rule[0].id
+
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'支付结果',
-		'order': order
+		'order': order,
+		'is_show_red_envelope': is_show_red_envelope,
+		'red_envelope_rule_id': red_envelope_rule_id
 	})
 	if hasattr(request, 'is_return_context'):
 		return c

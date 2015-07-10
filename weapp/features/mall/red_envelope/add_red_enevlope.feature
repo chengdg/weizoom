@@ -51,7 +51,7 @@ Background:
 			"coupon_product": "商品2"
 		}]
 		"""
-
+@eugeneX
 Scenario: 添加分享红包
 	jobs添加"分享红包"后，"红包"列表会按照添加的倒序排列
 	1.bill能获取红包列表
@@ -59,25 +59,25 @@ Scenario: 添加分享红包
 	Given jobs登录系统
 	#jobs添加有领取限制的红包和没有领取限制的红包(1.有限制，活动时间段有效 2.无限制，活动永久有效)
 	When jobs添加分享红包
-		""" 
+		"""
 		[{
 			"name": "红包1",
 			"prize_info": ["全体券3"],
 			"start_date": "今天",
 			"end_date": "2天后",
-			"using_limit": "订单满200元可以领取",
-			"desc": "下订单领红包",	
+			"limit_money": 200,
+			"desc": "下订单领红包",
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
 		}, {
 			"name": "红包2",
 			"prize_info": ["单品券4"],
 			"is_permanant_active": true,
-			"using_limit": "无限制",
-			"desc": "下订单领红包",	
+			"limit_money": "无限制",
+			"desc": "下订单领红包",
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
 		}]
 		"""
-	Then jobs能获取红包列表
+	Then jobs能获取分享红包列表
 		"""
 		[{
 			"name": "红包2",

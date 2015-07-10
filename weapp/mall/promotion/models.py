@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 
 from mall.models import Product
 
+DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
 
 #########################################################################
 # ProductHasPromotion: <商品，促销>的关联
@@ -450,7 +451,7 @@ class CouponRule(models.Model):
 	remained_count = models.IntegerField(default=0) #剩余数量
 	limit_counts = models.IntegerField(default=0) #每人限领
 	limit_product = models.BooleanField(default=False) #限制指定商品
-	limit_product_id = models.IntegerField(default=0) #过期天数
+	limit_product_id = models.IntegerField(default=0) #限制指定商品ID
 	remark = models.TextField(default='') #备注
 	get_person_count = models.IntegerField(default=0) #领取人数
 	get_count = models.IntegerField(default=0) #领取次数
@@ -557,3 +558,61 @@ class CouponRecord(models.Model):
 		db_table = 'mall_issuing_coupon_record'
 		verbose_name = '发优惠券记录'
 		verbose_name_plural = '发优惠券记录'
+
+
+class RedEnvelopeRule(models.Model):
+	"""
+	红包规则
+	"""
+	owner = models.ForeignKey(User)
+	name = models.CharField(max_length=128)
+	coupon_rule_id = models.IntegerField(default=0)
+	limit_time = models.BooleanField(default=False)
+	start_time = models.DateTimeField(default=DEFAULT_DATETIME)
+	end_time = models.DateTimeField(default=DEFAULT_DATETIME)
+	limit_order_money = models.DecimalField(max_digits=65, decimal_places=2, default=0.0)
+	use_info = models.TextField()
+	share_title = models.CharField(max_length=256)
+	share_pic = models.CharField(max_length=256)
+	is_delete = models.BooleanField(default=False)
+	status = models.BooleanField(default=False) #状态默认开启
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_red_envelope_rule'
+		verbose_name = '红包规则记录'
+		verbose_name_plural = '红包规则记录'
+
+class RedEnvelopeToOrder(models.Model):
+	"""
+	红包关联订单记录表
+	"""
+	owner = models.ForeignKey(User)
+	member_id = models.IntegerField(default=0)
+	order_id = models.IntegerField(default=0)
+	red_envelope_rule_id = models.IntegerField(default=0)
+	count = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_red_envelope_to_order'
+		verbose_name = '红包关联订单记录'
+		verbose_name_plural = '红包关联订单记录'
+
+class GetRedEnvelopeRecord(models.Model):
+	"""
+	红包领用记录
+	"""
+	owner = models.ForeignKey(User)
+	coupon_id = models.CharField(max_length=50)
+	red_envelope_rule_id = models.IntegerField(default=0)
+	red_envelope_relation_id = models.IntegerField(default=0)
+	member_id = models.IntegerField(default=0)
+	member_name = models.CharField(max_length=128)
+	member_header_img = models.CharField(max_length=256)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_red_envelope_record'
+		verbose_name = '红包领用记录'
+		verbose_name_plural = '红包领用记录'
