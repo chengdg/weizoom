@@ -136,11 +136,13 @@
 
                 getWidth('.wui-product');
 
-            }else if($productList.length > 0){
+            }
+            if($productList.length > 0){
 
                 getWidth('.wui-productlist');
 
-            }else if($imageDisplay.length > 0){
+            }
+            if($imageDisplay.length > 0){
                 $imageDisplay.find('.wui-grid-b li').width(averageWidth);
                 $imageDisplay.find('.wui-grid-e li').width(width);
                 $imageDisplay.each(function() {
@@ -153,7 +155,8 @@
                 });
                 getWidth('.wui-imagedisplay');
 
-            }else if($imageNav.length > 0){
+            }
+            if($imageNav.length > 0){
                 getWidth('.wui-imagenav');
                 var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
                 $imageNav.find('li').height(imgNavWidth);
