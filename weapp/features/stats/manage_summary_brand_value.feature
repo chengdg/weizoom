@@ -99,7 +99,7 @@ Background:
 		# tom4 => kate
 		And kate关注jobs的公众号
 
-@stats
+@stats @stats.brand_value
 Scenario: 测试只有1个消费用户、1个商品的品牌价值
 	When 微信用户批量消费jobs的商品
 		# consumer前有'-'表示清空浏览器
@@ -116,17 +116,43 @@ Scenario: 测试只有1个消费用户、1个商品的品牌价值
 		"""
 		[{
 			"value": 40
-		}, {
+			},{
 			"value": 40
-		}, {
+			},{
 			"value": 40
-		}, {
+			},{
 			"value": 40
-		}, {
+			},{
 			"value": 40
-		}, {
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
+			"value": 40
+			},{
 			"value": 30
-		}, {
+			},{
 			"value": 30
 		}]
 		"""
@@ -170,3 +196,10 @@ Scenario: 测试2个消费用户、2个商品的品牌价值
 			"value": 250
 		}]
 		"""
+
+Scenario: 测试当日订单情况变化导致微品牌数据变化的场景
+"""
+避免出现，当日数据被缓存而不变的情况
+"""
+
+Scenario: 测试当日微品牌数据及和昨日相比的增量

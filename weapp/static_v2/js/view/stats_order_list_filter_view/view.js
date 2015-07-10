@@ -238,9 +238,11 @@ W.view.stats.StatsOrderListFilterView = Backbone.View.extend({
         start_el.val(target_date_str);
         if (days == 1) {
             end_el.val(target_date_str);
-            return;
+        } else {
+        	end_el.val(this.getDateStr(now));
         }
-        end_el.val(this.getDateStr(now));
+        
+        this.doSearch();
     },
     
     getDateStr: function(date) {
@@ -259,7 +261,7 @@ W.view.stats.StatsOrderListFilterView = Backbone.View.extend({
     
     getPastDateStr: function(now, days) {
         if(days < 0) {
-            return "2013-01-01";
+            return "2014-01-01";
         }
         
         var now_time = now.getTime();

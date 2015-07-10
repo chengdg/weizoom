@@ -322,6 +322,7 @@
 
         $('#start_date').val('{{start_date}}');
         $('#end_date').val('{{end_date}}');
+        view.updateTimeTags();
 
         $(document).delegate('.xa-date-search','click',function(event) {
             var args = {};

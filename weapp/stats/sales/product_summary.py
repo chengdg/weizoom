@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from datetime import datetime
+from core import dateutil
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -29,16 +29,17 @@ class ProductSummary(resource.Resource):
 		显示商品概况页面
 		"""
 
-		#默认显示今天的日期
-		today = datetime.strftime(datetime.now(), '%Y-%m-%d')
+		#默认显示最近7天的日期
+		end_date = dateutil.get_today()
+		start_date = dateutil.get_previous_date(end_date, 6) #获取7天前日期
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 	            'app_name': 'stats',
 			'second_navs': export.get_sales_second_navs(request),
 			'second_nav_name': export.PRODUCT_SUMMARY_NAV,
-			'start_date': today,
-			'end_date': today,
+			'start_date': start_date,
+			'end_date': end_date,
 		})
 		
 		return render_to_response('sales/product_summary.html', c)

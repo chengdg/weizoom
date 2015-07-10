@@ -612,6 +612,7 @@
 }
 .xui-wepage-analysisPage .xui-i-tr {
 	border:1px solid #d7e0e7;
+	height: 100px;
 }
 
 
@@ -636,7 +637,6 @@
 	margin-bottom: 15px;
 }
 .xui-wepage-analysisPage .xui-summary {
-	height: 206px;
 	width: 100%;
 	margin-top: 15px;
 }
@@ -645,7 +645,7 @@
 	font-weight: bold;
 }
 .xui-wepage-analysisPage .xui-summary .xui-i-left {
-	background-color: #639fdf;
+	background-color: #eaeef6;
 	height:100px;
 	width: 100px;
 }
@@ -655,15 +655,6 @@
 .xui-wepage-analysisPage .xui-summary tr td:last-child .xui-i-wrap {
 	border-right:none;
 
-}
-.xui-wepage-analysisPage .xui-summary .xui-i-wrap {
-	height: 70%;
-	width: 100%;
-	text-align: center;
-	border-right: 1px dashed #f2f2f2;
-	color:#000;
-	font-size: 14px;
-	line-height: 30px;
 }
 
 .xui-wepage-analysisPage .xui-summary tr:last-child {
@@ -680,10 +671,16 @@
 	color: #e55050;
 	cursor: auto;
 	font-size: 18px;
+	margin-left: -12px;
 }
+.xui-wepage-analysisPage .xui-summary .xui-i-differ {
+	background-color: #eaeef6;
+	width: 266px;
+}
+.xui-wepage-analysisPage .f18{font-size:18px;}
+.xui-wepage-analysisPage .f26{font-size:26px;}
 .xui-wepage-analysisPage .xui-summary .xui-i-wrap {
 	height: 70%;
-	width: 100%;
 	text-align: center;
 	border-right: 1px dashed #e5e5e5;
 	color:#000;
@@ -692,19 +689,43 @@
 	padding-top: 8px;
 	line-height: 25px;
 } 
+.xui-wepage-analysisPage .xui--wrapFirst-money {
+	text-align:right;
+	margin-top: -22px;
+}
+.xui-wepage-analysisPage .xui-summary .xui-i-wrapFirst {
+	height: 70%;
+	width: 176px;
+	text-align: center;
+	border-right: 1px dashed #ccced1;
+	color:#000;
+	font-size: 12px;
+	font-weight: bold;
+	padding-top: 10px;
+	position: relative;
+	top:10px;
+	line-height: 25px;
+	color: #e60b11;
+} 
 .xui-wepage-analysisPage .xui-summary .xui-i-left .xui-i-title {
-	color: #fff;
 	width: 100px;
 	margin: auto;
 	font-size: 16px;
+	color: #e55050;
 	font-weight: bold;
-	background: #639fdf;
+	background: #eaeef6;
 	text-align: center;
 	padding-left: 0px;
 	padding-top: 5px;
 }
 .xui-wepage-analysisPage .xui-summary .xui-i-wrap .xui-i-name {
 	color: #666666;
+	margin-right: 10px;
+	cursor: auto;
+}
+
+.xui-wepage-analysisPage .xui-summary .xui-i-wrap .xui-i-value {
+	color: #e55050;
 	margin-right: 10px;
 	cursor: auto;
 }

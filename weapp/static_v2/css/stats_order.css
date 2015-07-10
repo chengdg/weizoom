@@ -84,3 +84,11 @@
 	margin-top: -13px;
 	margin-left: 430px;
 }
+
+/*
+ *
+ */
+.xui-bv-period-selected {
+	color: #000;
+	font-weight:bold;
+}

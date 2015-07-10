@@ -2,12 +2,10 @@
 
 import json
 from datetime import datetime
-#from django.http import HttpResponseRedirect
+from core import dateutil
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
-#from django.db.models import F
-# from core.exceptionutil import unicode_full_stack
 import time
 
 from stats import export
@@ -15,10 +13,7 @@ from core import resource
 from mall.models import Order, belong_to
 from mall import models
 from modules.member.models import Member, WebAppUser, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
-# from pip._vendor.requests.models import Response
-#from core import paginator
 from core.jsonresponse import create_response
-#from weixin.mp_decorators import mp_required
 
 import pandas as pd
 
@@ -37,9 +32,11 @@ class OrderSummary(resource.Resource):
 		"""
 		显示订单概况
 		"""
-		date_now = datetime.strftime(datetime.now(), '%Y-%m-%d')
-		start_time = date_now + ' 00:00:00'
-		end_time = date_now + ' 23:59:59'
+		#默认显示最近7天的日期
+		end_date = dateutil.get_today()
+		start_date = dateutil.get_previous_date(end_date, 6) #获取7天前日期
+		start_time = start_date + ' 00:00:00'
+		end_time = end_date + ' 23:59:59'
 		stats_data = _get_stats_data(request.user, start_time, end_time)
 		jsons = [{
 			"name": "stats_data",
@@ -48,7 +45,7 @@ class OrderSummary(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-	            'app_name': 'stats',
+			'app_name': 'stats',
 			'second_navs': export.get_sales_second_navs(request),
 			'second_nav_name': export.SALES_ORDER_SUMMARY_NAV,
 			'jsons': jsons

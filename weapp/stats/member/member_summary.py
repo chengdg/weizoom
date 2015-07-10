@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import json
-import time
-from datetime import datetime
+#import json
+from core import dateutil
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
@@ -17,7 +16,6 @@ import stats.util as stats_util
 from modules.member.models import Member, MemberSharedUrlInfo
 from market_tools.tools.member_qrcode.models import MemberQrcode, MemberQrcodeLog
 from core.charts_apis import create_line_chart_response
-
 
 FIRST_NAV = export.MEMBER_NAV
 DEFAULT_COUNT_PER_PAGE = 20
@@ -36,15 +34,17 @@ class MemberSummary(resource.Resource):
 		"""
 		显示营销活动分析的页面
 		"""
-		#默认显示今天的日期
-		today = datetime.strftime(datetime.now(), '%Y-%m-%d')
-		
+		#默认显示最近7天的日期
+		end_date = dateutil.get_today()
+		start_date = dateutil.get_previous_date(end_date, 6) #获取7天前日期
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_member_second_navs(request),
 			'second_nav_name': export.MEMBER_SUMMARY_NAV,
-			'start_date': today,
-			'end_date': today,
+			'start_date': start_date,
+			'end_date': end_date,
+
 		})
 		return render_to_response('member/member_summary.html', c)
 

@@ -3,6 +3,7 @@
 __author__ = 'robert'
 
 from datetime import datetime, timedelta
+from core import dateutil
 import calendar
 
 from core import dateutil
@@ -88,16 +89,17 @@ def get_date_range_for_data(request, start_date = None, end_date = None):
 
 def get_date_range(request):
 	"""
-	获取时间范围，如果没有start_date和end_date参数，则默认为今天
+	获取时间范围，如果没有start_date和end_date参数，则默认显示最近7天的日期
 	"""
 	start_date = request.GET.get('start_date', None)
 	end_date = request.GET.get('end_date', None)
 
-	if not start_date:
-		start_date = datetime.strftime(datetime.now(), '%Y-%m-%d')
-
 	if not end_date:
-		end_date = datetime.strftime(datetime.now(), '%Y-%m-%d')
+		#默认显示最近7天的日期
+		end_date = dateutil.get_today()
+
+	if not start_date:
+		start_date = dateutil.get_previous_date(end_date, 6) #获取7天前日期
 
 	return get_date_range_for_data(request, start_date, end_date)
 

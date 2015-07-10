@@ -18,44 +18,28 @@
         <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">店铺经营概况</span></div>
         <div class="xui-ChartBody" >
         <table class="xui-summary mt0">
-            <tr class="xui-i-tr">
-                <td class="xui-i-left"><p class="xui-i-title">综&nbsp;&nbsp;合</p></td>
-                <td>
-                    <div class="xui-i-wrap">
-                        <span class="xui-i-money" id="repeat_buying_member_rate">0.00%</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">会员复购率</span>
-                        <img class="xui-i-img" id="repeat_buying_member_rate_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-                <td>
-                    <div class="xui-i-wrap">
-                        <span class="xui-i-money" id="member_recommend_rate">0.00%</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">会员推荐率</span>
-                        <img class="xui-i-img" id="member_recommend_rate_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-                <td>
-                    <div class="xui-i-wrap hidden">
-                        <span class="xui-i-money" id="repeat_buying_product_rate">0.00%</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">商品复购率</span>
-                        <img class="xui-i-img" id="repeat_buying_product_rate_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-                <td>
-                    <div class="xui-i-wrap hidden">
-                        <span class="xui-i-money" id="product_recommend_rate">0</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">商品推荐指数</span>
-                        <img class="xui-i-img" id="product_recommend_rate_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-            </tr>
             <tr style="height:10px;"></tr>
             <tr class="xui-i-tr">
-                <td class="xui-i-left"><p class="xui-i-title">销&nbsp;&nbsp;量</p></td>
+                {% if is_valid_for_bv %}
+                    <td class="xui-i-differ">
+                        <div class="xui-i-wrapFirst h80 w100" >
+                            <p class=" fl ml10 w140"><img class="fl" src="/static_v2/img/editor/icon_money.png"/><span class="xui-i-value f18 fl ml5">当前微品牌价值</span></p>
+                            <div class="cb"></div>
+                            <p class="fl ml10 w150 pl10 f26" style="text-align:right;">￥{{ brand_value }}</p>
+                        </div>
+                        <p class=" fr ml10 mr30 xui--wrapFirst-money">
+                            {% if value_sign == 1 %}
+                                <img class="fl" src="/static_v2/img/editor/raise.png"/>
+                            {% endif %}
+                            {% if value_sign == -1 %}
+                                <img class="fl" src="/static_v2/img/editor/down.png"/>
+                            {% endif %}
+                            {% if value_sign == 0 %}
+                            {% endif %}
+                            <span class="xui-i-value f16 fl ml5">{{ increase_percent }}</span>
+                        </p>
+                    </td>
+                {% endif %}
                 <td>
                     <div class="xui-i-wrap">
                         <span class="xui-i-money" id="transaction_money">0.00</span><br/>
@@ -89,44 +73,8 @@
                     </div>
                 </td>
             </tr>
-            <tr style="height:10px;"></tr>
-            <tr class="xui-i-tr">
-                <td class="xui-i-left"><p class="xui-i-title">会&nbsp;&nbsp;员</p></td>
-                 <td>
-                    <div class="xui-i-wrap">
-                        <span class="xui-i-money" id="ori_qrcode_member_count">0</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">发起扫码会员</span>
-                        <img class="xui-i-img" id="ori_qrcode_member_count_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-                <td>
-                    <div class="xui-i-wrap">
-                        <span class="xui-i-money" id="member_from_qrcode_count">0</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">扫码新增会员</span>
-                        <img class="xui-i-img" id="member_from_qrcode_count_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-                <td>
-                    <div class="xui-i-wrap">
-                        <span class="xui-i-money" id="share_url_member_count">0</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">发起分享链接会员</span>
-                        <img class="xui-i-img" id="share_url_member_count_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-                <td>
-                    <div class="xui-i-wrap">
-                        <span class="xui-i-money" id="member_from_share_url_count">0</span><br/>
-                        <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
-                        <span class="xui-i-name">分享链接新增会员</span>
-                        <img class="xui-i-img" id="member_from_share_url_count_help" src="/static_v2/img/editor/help.png"/>
-                    </div>
-                </td>
-            </tr>
         </table>
-            </div>
+    </div>
        
     </div>
     
@@ -146,28 +94,24 @@
     ></div>
     </div>
     
+    <!--<div class="xui-chart"></div>-->
 
-    <div class="xui-chart">
+    {% if is_valid_for_bv %}
+    <div id="brand-value-container">
     </div>
-
+    {% endif %}
 
     <div class="xui-charWrap">
-            <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">微品牌价值</span></div>
-            <div class="xui-ChartBody" id="statsBrandValue" style="width: 100%; height: 500px; border:1px solid #f2f2f2; padding:10px">品牌价值图</div>
-    </div> 
-    <div class="xui-charWrap">
-            <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">流量</span></div>
-            <div class="xui-ChartBody" id="visitTrend" data-ui-role="manage-flow-echart" data-app="stats" data-api="flow_value">
-            </div>
-           
-    </div>
-      <div class="xui-charWrap">
-          
-             <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">销量</span></div>
-            <div class="xui-ChartBody" id="visitTrend" data-ui-role="manage-sale-echart" data-app="stats" data-api="sale_value">
-            </div>
+        <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">销售额趋势图</span></div>
+        <div class="xui-ChartBody" id="visitTrend" data-ui-role="manage-saleroom-echart" data-app="stats" data-api="saleroom_value">
         </div>
     </div>
+    <div class="xui-charWrap">
+        <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">成交订单趋势图</span></div>
+        <div class="xui-ChartBody" id="visitTrend" data-ui-role="manage-ordernum-echart" data-app="stats" data-api="ordernum_value">
+        </div>
+    </div>
+</div>
 
 </div>
 {% endblock %}
@@ -182,6 +126,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        var BRAND_VALUE_FREQ = "week";
+        
         var view = new W.view.stats.DateFilterView({
             el : '#stats-date-filter-view'
         });
@@ -189,7 +135,9 @@
 
         $('#start_date').val('{{start_date}}');
         $('#end_date').val('{{end_date}}');
+        view.updateTimeTags();
 
+        // 点击"查询"触发处理的监听函数
         $(document).delegate('.xa-date-search','click',function(event) {
             var args = {};
             args.start_date = $('#start_date').val();
@@ -197,23 +145,41 @@
             //更新基础数据的数据
             $('[data-ui-role="manage-summary-base-data-advanced-table"]').data('view').reload(args);
 
-            $('[data-ui-role="manage-flow-echart"]').data('view').reload(args);
-            $('[data-ui-role="manage-sale-echart"]').data('view').reload(args);
+            $('[data-ui-role="manage-ordernum-echart"]').data('view').reload(args);
+            $('[data-ui-role="manage-saleroom-echart"]').data('view').reload(args);
 
             view.updateTimeTags();
         });
 
+        // 第一次页面刷新时显示微品牌价值
+        {% if is_valid_for_bv %}
+        var brandValueView = new W.view.stats.BrandValueChart({
+            el: '#brand-value-container',
+            endDate: $('#end_date').val()
+        });
+        brandValueView.render();
+        brandValueView.reload({
+            //startDate: $('#start_date').val(),
+            endDate: $('#end_date').val(),
+            freqType: BRAND_VALUE_FREQ
+        });
+        {% endif %}
+
+        /*
         W.getApi().call({
             app: 'stats',
             resource: 'brand_value',
             args: {
-                "id": 1,
+                "start_date": $('#start_date').val(),
+                "end_date": $('#end_date').val(),
+                "freq_type": BRAND_VALUE_FREQ
             },
             success: function(data) {
                 var echartBrandValue = echarts.init($('#statsBrandValue').get(0));
                 echartBrandValue.setOption(data, true);
             }
         });
+*/
 
         $('#repeat_buying_member_rate_help').popover({
             content : "<div class='xui-i-alert'>时间段内，再次购买人数/总购买人数x100%</div>",

@@ -57,6 +57,7 @@ W.view.common.ManageOrdernumECharts = Backbone.View.extend({
             scope: this,
             success: function(data) {
                 var option = data; 
+                option.legend = null;
                 var myChart = echarts.init(_this.$chart.get(0));
 				// 为echarts对象加载数据 
                 myChart.setOption(option);

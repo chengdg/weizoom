@@ -17,40 +17,123 @@
         <table class="xui-summary" >
             <tr>
                 <td rowspan="2" class="xui-i-left"><p class="xui-i-title">订单概况</p></td>
-                <td><div class="xui-i-wrap"><span class="xui-i-money" id="order_num"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">成交订单</span><img class="xui-i-img" id="order_num_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td><div class="xui-i-wrap"><span class="xui-i-money" id="paid_amount"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">成交金额</span><img class="xui-i-img" id="paid_amount_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td><div class="xui-i-wrap"><span class="xui-i-money" id="unit_price"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">客单价</span><img class="xui-i-img" id="unit_price_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td><div class="xui-i-wrap"><span class="xui-i-money" id="product_num"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">成交商品</span><img class="xui-i-img" id="product_num_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td><div class="xui-i-wrap"><span class="xui-i-money" id="discount_amount"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">优惠抵扣</span><img class="xui-i-img" id="discount_amount_help" src="/static_v2/img/editor/help.png"/></div></td>
+                <td>
+                	<div class="xui-i-wrap"><span class="xui-i-money" id="order_num"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">成交订单</span>
+                		<img class="xui-i-img" id="order_num_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="paid_amount"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">成交金额</span>
+                		<img class="xui-i-img" id="paid_amount_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="unit_price"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">客单价</span>
+                		<img class="xui-i-img" id="unit_price_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="product_num"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">成交商品</span>
+                		<img class="xui-i-img" id="product_num_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="discount_amount"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">优惠抵扣</span>
+                		<img class="xui-i-img" id="discount_amount_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
             </tr>
 
             <tr>
-                <td ><div class="xui-i-wrap"><span class="xui-i-money" id="postage_amount"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">总运费</span><img class="xui-i-img" id="postage_amount_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td ><div class="xui-i-wrap"><span class="xui-i-money" id="online_paid_amount"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">在线支付金额</span><img class="xui-i-img" id="online_paid_amount_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td ><div class="xui-i-wrap"><span class="xui-i-money" id="cod_amount"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">货到付款金额</span><img class="xui-i-img" id="cod_amount_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td ><div class="xui-i-wrap"><span class="xui-i-money" id="online_order_num"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">在线支付订单</span><img class="xui-i-img" id="online_order_num_help" src="/static_v2/img/editor/help.png"/></div></td>
-                <td ><div class="xui-i-wrap"><span class="xui-i-money" id="cod_order_num"></span><br/><img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/><span class="xui-i-name">货到付款订单</span><img class="xui-i-img" id="cod_order_num_help" src="/static_v2/img/editor/help.png"/></div></td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="postage_amount"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">总运费</span>
+                		<img class="xui-i-img" id="postage_amount_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="online_paid_amount"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">在线支付金额</span>
+                		<img class="xui-i-img" id="online_paid_amount_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="cod_amount"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">货到付款金额</span>
+                		<img class="xui-i-img" id="cod_amount_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="online_order_num"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">在线支付订单</span>
+                		<img class="xui-i-img" id="online_order_num_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
+                <td>
+                	<div class="xui-i-wrap">
+                		<span class="xui-i-money" id="cod_order_num"></span><br/>
+                		<img class="xui-i-img xui-i-hide"  src="/static_v2/img/editor/help.png"/>
+                		<span class="xui-i-name">货到付款订单</span>
+                		<img class="xui-i-img" id="cod_order_num_help" src="/static_v2/img/editor/help.png"/>
+                	</div>
+                </td>
             </tr>
         </table>
         <div class="xui-charWrap">
-        	<div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">订单趋势</span></div>
+        	<div class="xui-i-title">
+        		<div class="xui-i-block"></div>
+        		<span class="ml5">订单趋势</span>
+        	</div>
             <div class="xui-i-chart pl20 pt10" id="order_trend_stats" style="height:300px;"></div>
         </div>  
         <div class="xui-charWrap">
-        	<div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">复购率</span></div>
+        	<div class="xui-i-title">
+        		<div class="xui-i-block"></div>
+        		<span class="ml5">复购率</span>
+        	</div>
             <div class="xui-i-chart pl20 pt10" id="repeated_ratio_stats" style="height:300px;"></div>
         </div> 
         <div class="xui-charWrap">
-        	<div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">买家来源</span></div>
+        	<div class="xui-i-title">
+        		<div class="xui-i-block"></div>
+        		<span class="ml5">买家来源</span>
+        	</div>
             <div class="xui-i-chart pl20 pt10" id="buyer_source_stats" style="height:300px;"></div>
         </div> 
         <div class="xui-charWrap">
-        	<div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">支付金额</span></div>
+        	<div class="xui-i-title">
+        		<div class="xui-i-block"></div>
+        		<span class="ml5">支付金额</span>
+        	</div>
             <div class="xui-i-chart pl20 pt10" id="payments_stats" style="height:300px;"></div>
         </div> 
         <div class="cb"></div>
         <div class="xui-charWrap">
-        	<div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">优惠抵扣</span></div>
+        	<div class="xui-i-title">
+        		<div class="xui-i-block"></div>
+        		<span class="ml5">优惠抵扣</span>
+        	</div>
             <div class="xui-i-chart pl20 pt10" id="discount_stats" style="height:380px;width:1000px"></div>
         </div> 
     </div>
@@ -71,6 +154,7 @@
 		var end_array = stats_data.end_time.split(" ");
 		$("#start_date").val(start_array[0]);
 		$("#end_date").val(end_array[0]);
+		view.updateTimeTags();
 		updateStatsData();
 	});
 	
@@ -379,12 +463,12 @@
 				borderWidth : 1,
 				// padding: 10,    // [5, 10, 15, 20]
 				textStyle : {
-					color : 'black'
-				// decoration: 'none',
-				// fontFamily: 'Verdana, sans-serif',
-				// fontSize: 15,
-				// fontStyle: 'italic',
-				// fontWeight: 'bold'
+					color : 'black',
+					//decoration: 'none',
+					//fontFamily: 'Verdana, sans-serif',
+					//fontSize: 15,
+					//fontStyle: 'italic',
+					//fontWeight: 'bold'
 				},
 				hideDelay : 200,
 				enterable : true,
@@ -394,7 +478,7 @@
 			xAxis : [ {
 				axisLabel : {
 					textStyle : {
-						fontSize : 1
+						fontSize : 16
 					}
 				},
 				type : 'category',

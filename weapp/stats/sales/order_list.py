@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import json
-#from datetime import datetime
-#from django.http import HttpResponseRedirect
+from core import dateutil
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
-#from django.db.models import F
 
 from stats import export
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
-#from weixin.mp_decorators import mp_required
 from mall.models import *
 from excel_response import ExcelResponse
 from tools.regional.views import get_str_value_by_string_ids, get_str_value_by_string_ids_new
@@ -36,7 +33,7 @@ class OrderExport(resource.Resource):
 	"""
 	app = 'stats'
 	resource = 'order_export'
-    
+	
 	@login_required
 	def get(request):
 		"""
@@ -462,7 +459,7 @@ class OrderList(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-	            'app_name': 'stats',
+			'app_name': 'stats',
 			'second_navs': export.get_sales_second_navs(request),
 			'second_nav_name': export.SALES_ORDER_LIST_NAV,
 			'jsons': jsons
@@ -497,9 +494,11 @@ def _extract_url_params(request):
 		params['start_time'] = start_time
 		params['end_time'] = end_time
 	else:
-		date_now = datetime.strftime(datetime.now(), '%Y-%m-%d')
-		params['start_time'] = date_now + ' 00:00:00'
-		params['end_time'] = date_now + ' 23:59:59'
+		#默认显示最近7天的日期
+		end_date = dateutil.get_today()
+		start_date = dateutil.get_previous_date(end_date, 6) #获取7天前日期
+		params['start_time'] = start_date + ' 00:00:00'
+		params['end_time'] = end_date + ' 23:59:59'
 	
 	status_str = request.GET.get('order_status', '')
 	if status_str:
@@ -529,7 +528,7 @@ def _get_stats_data(user, params, is_export):
 	q_obj = _create_q(params)
 	# print q_obj
 	
-    # 提前获取所需内容
+	# 提前获取所需内容
 	qualified_orders = total_orders.prefetch_related('orderhasproduct_set__product').filter(q_obj)
 	
 	if params['sort_attr'] != 'created_at':
@@ -626,7 +625,7 @@ def _get_products(order):
 		tmp['name'] = r.product.name
 		tmp['thumbnails_url'] = r.product.thumbnails_url
 		result.append(tmp)
-        
+		
 	return result
 
 def __report_performance(clock_t, wall_t, title):

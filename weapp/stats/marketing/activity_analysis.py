@@ -38,7 +38,7 @@ class ActivityAnalysis(resource.Resource):
 		activity_type = request.GET.get('type', 'lottery')
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-	            'app_name': 'stats',
+			'app_name': 'stats',
 			'second_navs': export.get_market_second_navs(request),
 			'second_nav_name': export.MARKETING_ACTIVITY_NAV,
 			'activity_type': activity_type

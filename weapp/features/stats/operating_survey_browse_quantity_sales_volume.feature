@@ -27,13 +27,13 @@ Feature: 经营报告-经营概况——流量
 		1、【PV】：在查询区间的不同日期点的“店铺流量”的分布曲线
 
 			例如：筛选日期：2015-5-1到2015-5-22
-					2015-5-10的【PV】=∑商品.浏览次数[(2015-5-10 00:00 <= 商品.浏览时间 < 2015-5-11 00:00)]
+					2015-5-10的【PV】=∑商品.浏览次数[(2015-5-10 00:00 <= 商品.访问时间 < 2015-5-11 00:00)]
 					其他日期点的【PV】依次类推
 
 		2、【UV】：在查询区间的不同日期点的”店铺的访问量“的分布曲线
 
 			例如：筛选日期：2015-5-1到2015-5-22
-					2015-5-10的【UV】=∑商品.访问次数[(2015-5-10 00:00 <= 商品.访问时间 < 2015-5-11 00:00)]
+					2015-5-10的【UV】=∑商品.访问人数[(2015-5-10 00:00 <= 商品.访问时间 < 2015-5-11 00:00)]
 					其他日期点的【UV】依次类推
 
 	三、经营概况——销量
@@ -61,12 +61,6 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"promotion_title": "促销商品1",
-			"category": "分类1",
-			"detail": "商品1详情",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
 			"model": {
 				"models": {
 					"standard": {
@@ -80,12 +74,6 @@ Background:
 			"synchronized_mall":"是"
 		},{
 			"name": "商品2",
-			"promotion_title": "促销商品2",
-			"category": "分类1",
-			"detail": "商品2详情",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
 			"model": {
 				"models": {
 					"standard": {
@@ -162,23 +150,24 @@ Background:
 		}]
 		"""
 
-	Given bill关注jobs的公众账号
-	Given tom关注jobs的公众账号
-	Given mary关注jobs的公众账号
+	Given bill关注jobs的公众账号于'2015-05-01'
+	Given tom关注jobs的公众账号于'2015-05-02'
+	Given mary关注jobs的公众账号于'2015-05-02'
+	Given bill3关注jobs的公众账号于'2015-05-03'
 
 Scenario: 1  经营概况：流量（PV和UV）
 
-	#用户名前加’*‘标示非会员	
+	#用户名前加’-‘标示非会员	
 	When 微信用户批量浏览访问jobs的商品
-		|    member   |     browse_time    |    access_time    |  browse_object  |
-		|    bill     |  2015-5-5 10:30:59 | 2015-5-5 10:31:10 |      商品1      |
-		|    bill     |  2015-5-5 15:30:59 | 2015-5-5 15:31:10 |      商品1      |
-		|    bill     |  2015-5-5 16:30:59 | 2015-5-5 16:31:10 |      商品2      |
-		|    *bill1   |  2015-5-5 11:30:20 |                   |      商品2      |
-		|    *bill2   |  2015-5-6 00:00:00 | 2015-5-6 00:01:00 |      商品2      |
-		|    *bill3   |  2015-5-6 10:02:00 |                   |      商品1      |
-		|    tom      |  2015-5-5 10:30:59 | 2015-5-5 10:31:10 |      商品1      |
-		|    Mary     |  2015-5-5 15:30:59 |                   |      商品2      |
+		|    member   |     access_time    |   browse_object  |
+		|    bill     |  2015-5-5 10:30:59 |       商品1      |
+		|    bill     |  2015-5-5 15:30:59 |       商品1      |
+		|    bill     |  2015-5-5 16:30:59 |       商品2      |
+		|    -bill1   |  2015-5-5 11:30:20 |       商品2      |
+		|    tom      |  2015-5-5 10:30:59 |       商品1      |
+		|    Mary     |  2015-5-5 15:30:59 |       商品2      |
+		|    -bill2   |  2015-5-6 00:00:00 |       商品2      |
+		|    bill3    |  2015-5-6 10:02:00 |       商品1      |
 
 	When jobs设置筛选日期
 		"""
@@ -191,12 +180,12 @@ Scenario: 1  经营概况：流量（PV和UV）
 	Then jobs获得PV和UV
 		|     date    |    PV   |  UV  |
 		|   2015-5-5  |    6    |  4   |
-		|   2015-5-6  |    2    |  1   |
+		|   2015-5-6  |    2    |  2   |
 
 Scenario: 2  经营概况：销量
 	
 	When 微信用户批量消费jobs的商品
-		| order_datetime  	| consumer |businessman|      product     | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action         |  order_status   |
+		|       date    	| consumer |businessman|      product     | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action         |  order_status   |
 		| 2015-4-4  10:20  	| mary     | jobs      | 商品1,1          | 支付    |   微信支付     | 10      | 100      | 10       | 0      | 100         | 0            | 0      |   100  | 0    |   jobs发货，完成    |    已完成       |
 		| 2015-5-2  8:00  	| bill     | jobs      | 商品1,1          |         |   支付宝       | 10      | 100      |  0       | 0      |  0          | 0            | 0      |    0   | 0    |   系统化自动取消    |    已取消       |
 		| 2015-5-3  10:00  	| tom      | jobs      | 商品2,1          | 支付    |   微信支付     | 15      | 100      |  0       | 0      | 115         | 0            | 0      |    115 | 0    |   jobs发货，完成    |    已完成       |

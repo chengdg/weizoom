@@ -64,6 +64,7 @@ from market_tools.tools.lottery import models as lottery_models
 from market_tools.tools.channel_qrcode import models as channel_qrcode_models
 from market_tools.tools.member_qrcode import models as member_qrcode_models
 from weixin2 import models as weixin2_models
+from stats import models as stats_models
 
 from selenium import webdriver
 from test.pageobject.page_frame import PageFrame
@@ -270,6 +271,9 @@ def __clear_all_app_data():
 
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
+
+	#统计方面的
+	stats_models.BrandValueHistory.objects.all().delete()
 
 	# 缓存
 	cache.clear()

@@ -1,30 +1,53 @@
 # -*- coding: utf-8 -*-
 
 import json
-from datetime import datetime
-#from datetime import datetime
-#from django.http import HttpResponseRedirect
+from core import dateutil
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
-#from django.db.models import F
 
 from stats import export
 from core import resource
-from core import paginator
+#from core import paginator
 from core.jsonresponse import create_response
-#from weixin.mp_decorators import mp_required
-#from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings, ChannelQrcodeHasMember
-#from market_tools.tools.lottery.models import Lottery, LotteryRecord
-#import utils.dateutil as dateutil
-#from market_tools.tools.lottery.models import STATUS2TEXT as LOTTERY_STATUS2TEXT
 import stats.util as stats_util
 from modules.member.models import Member
 from mall.models import Order, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
+from .brand_value_utils import get_latest_brand_value
 
 
 FIRST_NAV = export.MANAGEMENT_NAV
 DEFAULT_COUNT_PER_PAGE = 20
+
+
+VALID_FOR_BRAND_VALUE = set([
+    "hongjinding",
+    "manyuanyuan",
+    "hongfan",
+    "shoucao ",
+    "changjiufangzhi",
+    "jingyilixiang",
+    "tianmashengwu",
+    "benduobao",
+    "tianreyifang",
+    "heshibaineng",
+    "wugutang",
+    "wubao",
+    "yingguan",
+    "fxkj",
+    "homebi",
+    "boniya",
+    "hanjin",
+    "aliguo",
+    "larhea",
+    "ainicoffee",
+    "gangshanxigu",
+
+    "jobs",
+    ])
+
+def is_valid_for_brandvalue(username):
+    return username in VALID_FOR_BRAND_VALUE
 
 
 class ManageSummary(resource.Resource):
@@ -40,16 +63,27 @@ class ManageSummary(resource.Resource):
         """
         显示经营概况的页面
         """
-        #默认显示今天的日期
-        today = datetime.strftime(datetime.now(), '%Y-%m-%d')
+        #默认显示最近7天的日期
+        end_date = dateutil.get_today()
+        start_date = dateutil.get_previous_date(end_date, 6) #获取7天前日期
+
+        webapp_id = request.user_profile.webapp_id
+        (today_value, yesterday_value, increase_sign, increase_percent) = get_latest_brand_value(webapp_id)
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'app_name': 'stats',
             'second_navs': export.get_management_second_navs(request),
             'second_nav_name': export.MANAGEMENT_SUMMARY_NAV,
-            'start_date': today,
-            'end_date': today,
+            'start_date': start_date,
+            'end_date': end_date,
+
+            'is_valid_for_bv': is_valid_for_brandvalue(request.user.username),
+
+            # 当日微品牌价值数据
+            'brand_value': format(today_value, ','),
+            'value_sign': increase_sign,
+            'increase_percent': increase_percent, # 相比昨天增长(下降)百分比
         })
         return render_to_response('manage/manage_summary.html', c)
 
@@ -90,34 +124,34 @@ class ManageSummary(resource.Resource):
             vis_price = 0 
 
         #发起扫码会员和扫码新增会员
-        ori_qrcode_member_count, member_from_qrcode_count = stats_util.get_ori_qrcode_member_count(webapp_id, low_date, high_date)
+        # ori_qrcode_member_count, member_from_qrcode_count = stats_util.get_ori_qrcode_member_count(webapp_id, low_date, high_date)
 
         #发起分享链接会员
-        share_url_member_count = stats_util.get_share_url_member_count(webapp_id, low_date, high_date)
+        # share_url_member_count = stats_util.get_share_url_member_count(webapp_id, low_date, high_date)
 
         #分享链接新增会员
-        member_from_share_url_count = stats_util.get_member_from_share_url_count(webapp_id, low_date, high_date)
+        # member_from_share_url_count = stats_util.get_member_from_share_url_count(webapp_id, low_date, high_date)
 
         #会员复购率
-        bought_member_count = stats_util.get_bought_member_count(webapp_id, low_date, high_date)
-        repeat_buying_member_count = stats_util.get_repeat_buying_member_count(webapp_id, low_date, high_date)
-        repeat_buying_member_rate = '0.00%'
-        if bought_member_count > 0:
-            repeat_buying_member_rate = "%.2f%%" % (repeat_buying_member_count * 100.0 / bought_member_count)
+        # bought_member_count = stats_util.get_bought_member_count(webapp_id, low_date, high_date)
+        # repeat_buying_member_count = stats_util.get_repeat_buying_member_count(webapp_id, low_date, high_date)
+        # repeat_buying_member_rate = '0.00%'
+        # if bought_member_count > 0:
+        #     repeat_buying_member_rate = "%.2f%%" % (repeat_buying_member_count * 100.0 / bought_member_count)
 
         #会员推荐率
-        member_recommend_rate = '0.00%'
-        total_member_count = stats_util.get_total_member_count(webapp_id,high_date)
-        if total_member_count > 0:
-            member_recommend_rate = "%.2f%%" % ((share_url_member_count + ori_qrcode_member_count)*100.0 / total_member_count)
+        # member_recommend_rate = '0.00%'
+        # total_member_count = stats_util.get_total_member_count(webapp_id,high_date)
+        # if total_member_count > 0:
+        #     member_recommend_rate = "%.2f%%" % ((share_url_member_count + ori_qrcode_member_count)*100.0 / total_member_count)
         result = {
-            'repeat_buying_member_rate': repeat_buying_member_rate,
-            'member_recommend_rate': member_recommend_rate,
+            # 'repeat_buying_member_rate': repeat_buying_member_rate,
+            # 'member_recommend_rate': member_recommend_rate,
             'transaction_orders': transaction_orders,
-            'ori_qrcode_member_count': ori_qrcode_member_count,
-            'member_from_qrcode_count': member_from_qrcode_count,
-            'share_url_member_count': share_url_member_count,
-            'member_from_share_url_count': member_from_share_url_count,
+            # 'ori_qrcode_member_count': ori_qrcode_member_count,
+            # 'member_from_qrcode_count': member_from_qrcode_count,
+            # 'share_url_member_count': share_url_member_count,
+            # 'member_from_share_url_count': member_from_share_url_count,
             'transaction_money': "%.2f" % transaction_money,
             'vis_price': "%.2f" % vis_price,
             'buyer_count': buyer_count

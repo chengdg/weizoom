@@ -2,7 +2,7 @@ ensureNS('W.view.stats');
 W.view.stats.OrderSummaryFilterView = Backbone.View.extend({
 	events : {
 		'click .xa-shortcut': 'onClickShortcut',
-		'click .xa-search-order-summary': 'doSeacrh',
+		'click .xa-search-order-summary': 'doSearch',
 		'click .xa-reset': 'doReset'
 	},
 
@@ -33,9 +33,11 @@ W.view.stats.OrderSummaryFilterView = Backbone.View.extend({
         start_el.val(target_date_str);
         if (days == 1) {
         	end_el.val(target_date_str);
-        	return;
+        } else {
+        	end_el.val(this.getDateStr(now));
         }
-        end_el.val(this.getDateStr(now));
+        
+        this.doSearch();
     },
     
     getDateStr: function(date) {
@@ -54,7 +56,7 @@ W.view.stats.OrderSummaryFilterView = Backbone.View.extend({
     
     getPastDateStr: function(now, days) {
     	if(days < 0) {
-    		return "2013-01-01";
+    		return "2014-01-01";
     	}
     	
     	var now_time = now.getTime();
@@ -97,7 +99,7 @@ W.view.stats.OrderSummaryFilterView = Backbone.View.extend({
 	},
 
 	// 点击‘筛选’按钮事件
-	doSeacrh : function(action) {
+	doSearch : function(action) {
 		var startDate = $('#start_date').val().trim();
 		var endDate = $('#end_date').val().trim();
 		

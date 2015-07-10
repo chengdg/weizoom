@@ -3,10 +3,10 @@ Copyright (c) 2011-2012 Weizoom Inc
 */
 ensureNS('W.view.common');
 
-W.view.common.ManageOrdernumECharts = Backbone.View.extend({
+W.view.common.ManageSaleroomECharts = Backbone.View.extend({
     getTemplate:function() {
-        $('#stats-manage-ordernum-echart-tmpl-src').template('stats-manage-ordernum-echart-tmpl');
-        return 'stats-manage-ordernum-echart-tmpl';
+        $('#stats-manage-saleroom-echart-tmpl-src').template('stats-manage-saleroom-echart-tmpl');
+        return 'stats-manage-saleroom-echart-tmpl';
     },
 
 	events:  {
@@ -57,6 +57,7 @@ W.view.common.ManageOrdernumECharts = Backbone.View.extend({
             scope: this,
             success: function(data) {
                 var option = data; 
+                option.legend = null;
                 var myChart = echarts.init(_this.$chart.get(0));
 				// 为echarts对象加载数据 
                 myChart.setOption(option);
@@ -110,7 +111,7 @@ W.view.common.ManageOrdernumECharts = Backbone.View.extend({
     }
 });
 
-W.registerUIRole('div[data-ui-role="manage-ordernum-echart"]', function() {
+W.registerUIRole('div[data-ui-role="manage-saleroom-echart"]', function() {
         var $div = $(this);
         $div.removeData('view');
         var api = $div.attr('data-api');
@@ -122,7 +123,7 @@ W.registerUIRole('div[data-ui-role="manage-ordernum-echart"]', function() {
             args = $.parseJSON(args);
         }
 
-        var echart = new W.view.common.ManageOrdernumECharts({
+        var echart = new W.view.common.ManageSaleroomECharts({
             el: $div.get(0),
             app: app,
             api: api,
