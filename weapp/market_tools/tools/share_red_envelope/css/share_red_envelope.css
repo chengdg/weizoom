@@ -284,6 +284,7 @@ body{
 	border:1px solid #a91127;
 	position: absolute;
 	top: .5rem;
+	overflow: hidden;
 }
 .xui-friends .xui-info{
 	padding: .5rem 0 .35rem 2.3rem;
@@ -304,6 +305,7 @@ body{
 	float: right;
 }
 .xui-friends .xui-info p:first-child{
+	min-height:.95rem;
 	font-size: .7rem;
 	margin:.35rem 0 .7rem 0;
 }

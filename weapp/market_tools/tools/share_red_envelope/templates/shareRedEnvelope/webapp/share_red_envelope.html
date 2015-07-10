@@ -103,7 +103,7 @@
         <!-- for 循环来处理-->
         {% for friend in friends %}
         <li>
-          <img src="{% if friend.member_header_img%}{{friend.member_header_img}}{% else %}/markettools_static/share_red_envelope/img/avatar.jpg{%endif%}" alt="" class="xui-avatar">
+          <div class="xui-avatar"><img src="{% if friend.member_header_img%}{{friend.member_header_img}}{% else %}/markettools_static/share_red_envelope/img/avatar.jpg{%endif%}" alt=""></div>
           <div class="xui-info">
             <p class="xui-memberName xui-ellipsis-1">
               {{friend.member_name|safe}}
