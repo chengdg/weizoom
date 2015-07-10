@@ -13,7 +13,7 @@ import export
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
-FIRST_NAV_NAME = export.ORDER_FIRST_NAV
+FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
 
 @view(app="mall", resource="red_envelope_rule", action="get")
 @login_required
@@ -49,7 +49,7 @@ def create_red_envelope_rule(request):
     coupon_rules = promotion_models.CouponRule.objects.filter(owner=request.manager, is_active=True, end_date__gt=datetime.now(), limit_counts=-1)
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV_NAME,
-        'second_navs': export.get_orders_second_navs(request),
+        'second_navs': export.get_promotion_second_navs(request),
         'second_nav_name': export.ORDER_RED_ENVELOPE,
         'coupon_rules': coupon_rules
     })
@@ -67,7 +67,7 @@ def select_red_envelope_rule(request):
         coupon_rule = promotion_models.CouponRule.objects.get(id=red_envelope_rule.coupon_rule_id)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_promotion_second_navs(request),
             'second_nav_name': export.ORDER_RED_ENVELOPE,
             'coupon_rule': coupon_rule,
             'red_envelope_rule': red_envelope_rule,
