@@ -1100,10 +1100,10 @@ ul.wui-relatelink li h3{
 .wui-imageGroup a:first-child{
     margin-top: 0px;
 }
-.wui-imageGroup .wui-singleImageWithTitle img{
+/*.wui-imageGroup .wui-singleImageWithTitle img{
     display: block;
-}
-
+}*/
+/*火狐浏览器有影响*/
 /*===========================图片导航=============================================*/
 .wui-imagenav{
     background: #fff;
