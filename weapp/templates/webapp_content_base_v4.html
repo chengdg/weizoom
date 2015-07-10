@@ -142,9 +142,13 @@
         }else if($imageDisplay.length > 0){
             $imageDisplay.find('.wui-grid-b li').width(averageWidth);
             $imageDisplay.find('.wui-grid-e li').width(width);
-            $imageDisplay.find('.wui-grid-e li').eq(0).width(width*2);
+            $imageDisplay.each(function() {
+                var $imgGroup = $(this).find('.wui-grid-e');
+                console.log($imgGroup,55555)
+                $imgGroup.find('li').eq(0).width(width*2);
+                $imgGroup.find('li').eq(2).height(width-1);
+            });
             getWidth('.wui-imagedisplay');
-            $imageDisplay.find('.wui-grid-e li').eq(2).height(width-1);
 
         }else if($imageNav.length > 0){
             getWidth('.wui-imagenav');
