@@ -694,8 +694,9 @@
 	line-height: 25px;
 } 
 .xui-wepage-analysisPage .xui--wrapFirst-money {
-	text-align:right;
+	text-align:center;
 	margin-top: -22px;
+	width: 100px;
 }
 .xui-wepage-analysisPage .xui-summary .xui-i-wrapFirst {
 	height: 70%;
@@ -710,6 +711,7 @@
 	top:10px;
 	line-height: 25px;
 	color: #e60b11;
+	cursor: default;
 } 
 .xui-wepage-analysisPage .xui-summary .xui-i-left .xui-i-title {
 	width: 100px;
@@ -732,6 +734,10 @@
 	color: #e55050;
 	margin-right: 10px;
 	cursor: auto;
+}
+
+.xui-wepage-analysisPage .xui-summary .xui-i-value {
+	cursor: default;
 }
 
 .xui-wepage-analysisPage .xui-summary .xui-i-wrap .xui-i-img {
