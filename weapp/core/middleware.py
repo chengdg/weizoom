@@ -509,7 +509,8 @@ class BrowserSourceDetectMiddleware(object):
 			if request.user.is_from_simulator:
 				#不处理来自模拟器中的点击
 				return None
-
+			if 'webapp_page' in request.get_full_path():
+				return None
 			webapp_owner_id = int(request.GET.get('webapp_owner_id', '0'))
 			if webapp_owner_id == 0:
 				webapp_owner_id = int(request.GET.get('woid', '0'))

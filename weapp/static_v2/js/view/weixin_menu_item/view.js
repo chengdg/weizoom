@@ -424,7 +424,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	},
 	
 	bindMenuEditorHandler: function(menuEditor) {
-		var _this = this;
+		//var _this = this;
 		var currentId = menuEditor.getCurrentMenuId()
 		menuEditor.bind("custom-menu-change", function(content, type) {
 			if (type === 'text') {
@@ -445,9 +445,9 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 			 
 			//alert(W.currentMenuId+':bindMenuEditorHandler')
 			if (currentId==menuEditor.getCurrentMenuId()) {
-				var model = _this.getMenuModel();
+				var model = this.getMenuModel(currentId);
 				model.set('answer', {content: content, type: type});
-				console.log('---set:',W.currentMenuId,model.get('answer'))
+				//console.log('---set:',currentId,model.get('answer'))
 			}
 			
 		});

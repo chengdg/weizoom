@@ -164,4 +164,17 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 		}
 		this.trigger('custom-menu-change', value, 'url');
 	},
+
+	getMenuModel: function(currentMenuId) {
+		//alert(W.currentMenuId)
+		var items = currentMenuId.toString().split('-');
+		var model;
+		if (items.length >= 2) {
+			model = W.menuPhone.menubar.getMenuItem(parseInt(items[0]), parseInt(items[1]));
+		} else {
+			model = W.menuPhone.menubar.getMenu(parseInt(items[0]));
+		}
+		
+		return model;
+	},
 });

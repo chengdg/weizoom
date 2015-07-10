@@ -151,6 +151,7 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 				tipType = 2;
 				return false;
 			}
+
 			if (n.items.length == 0 && n.answer.content.length == 0) {
 				tipType = 4;
 				return false;
@@ -178,9 +179,7 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 				*/
 			});
 		});
-		
 		this.$('input').attr('readonly', 'readonly');
-		
 		var $input = $('input[data-menu-id="' + tipId + '"]');
 		var $inputParentDiv = $input.parent('div');
 		var $menuItemDiv = $inputParentDiv.parents('.xui-i-menu-item');
@@ -188,7 +187,6 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 		$menuItemDiv.find('.xui-menu-left-item div.active').removeClass('active');
 		$inputParentDiv.addClass('active');
 		$input.focus();
-		
 		var menuItem = new W.view.weixin.MenuItem({el: '', messageEl: $editMessagePanel});
 		if (tipType === 0) {
 			W.showHint('error', '一级菜单不能为空');
@@ -226,6 +224,10 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 				success: function(result) {
 					W.getLoadingView().hide();
 			    	W.showHint('success', '更新菜单成功');
+			    	setTimeout(function(){
+			    		window.location.reload();	
+			    	},2000)
+			    	
 				},
 				error: function(resp) {
 					W.getLoadingView().hide();
