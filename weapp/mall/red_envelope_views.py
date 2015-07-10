@@ -34,7 +34,7 @@ def get_red_envelope_rule(request):
 
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV_NAME,
-        'second_navs': export.get_orders_second_navs(request),
+        'second_navs': export.get_promotion_second_navs(request),
         'second_nav_name': export.ORDER_RED_ENVELOPE,
         "coupon_rule_info": json.dumps(coupon_rule_info)
     })

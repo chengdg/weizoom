@@ -148,7 +148,6 @@ ORDER_REFUND = 'refundOrder'
 ORDER_AUDIT = 'financialCheck'
 ORDER_EXPIRED_TIME = 'orderExpiration'
 ORDER_BATCH_DELIVERY = 'orderBatchDelivery'
-ORDER_RED_ENVELOPE = 'orderRedEnvelope'
 
 ORDER_NAV = {
     'section': u'',
@@ -206,6 +205,7 @@ MALL_PROMOTION_PRICE_CUT_NAV = 'fullReduction'
 MALL_PROMOTION_COUPON_NAV = 'Coupon'
 MALL_PROMOTION_INTEGRAL_SALE_NAV = 'integralYingyon'
 MALL_PROMOTION_ISSUING_COUPONS_NAV = 'issuingCoupon'
+ORDER_RED_ENVELOPE = 'orderRedEnvelope'
 
 
 PROMOTION_NAV = {
@@ -257,7 +257,7 @@ PROMOTION_NAV = {
             'name': ORDER_RED_ENVELOPE,
             'title': u'分享红包',
             'url': '/mall/red_envelope_rule/get/',
-            'need_permissions': ['manage_order_red_envelope', ]
+            'need_permissions': ['manage_red_envelope', ]
         }
     ]
 }
