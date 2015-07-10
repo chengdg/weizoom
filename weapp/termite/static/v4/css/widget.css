@@ -532,14 +532,14 @@ ul{
 .wui-inner-pic{
     position: relative;
 }
-/*.wui-inner-pic img{
+.wui-product.wui-inner-pic img,.wui-productlist.wui-inner-pic img,{
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
     margin: auto;
-}*/
+}
 
 /*==============================全局背景颜色、文字阴影================*/
 /*html{

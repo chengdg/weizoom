@@ -157,9 +157,11 @@ $(document).ready(function() {
     $('.xa-startUseBtn').click(function(event) {
         $('.xa-enableHint').show();
     });
-    $('.xa-cancelBtn').click(function(event) {
+    $(document).delegate('.xa-cancelBtn', 'click', function(event) {
+
         $('.xa-enableHint').hide();
     });
+    
     $('.xa-enableWepage').click(function(event) {
 
         W.resource.termite2.ActivateWepageMechanism.put({
