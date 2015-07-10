@@ -94,6 +94,9 @@ class RestfulURLPattern2(object):
 		raise Resolver404({'tried': tried, 'path' : path})
 
 	def resolve(self, path):
+		method = None
+		app_resource = None
+		func = None
 		try:
 			items = path.split('/')
 			method = items[-1].lower()
@@ -117,7 +120,14 @@ class RestfulURLPattern2(object):
 			else:
 				self.__raise_404(path)
 		except:
-			notify_message = u"RESTful url2 route failed, cause:\n{}".format(unicode_full_stack())
+			context = {
+				'path': path,
+				'method': method,
+				'app_resource': app_resource,
+				'func': func,
+				'APPRESOURCE2CLASS': resource_util.APPRESOURCE2CLASS
+			}
+			notify_message = u"RESTful url2 route failed, context:{}\ncause:\n{}".format(str(context), unicode_full_stack())
 			watchdog_fatal(notify_message, type='URL_ROUTE', noraise=True)
 			self.__raise_404(path)
 
