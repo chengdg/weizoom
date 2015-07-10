@@ -677,8 +677,12 @@
 	background-color: #eaeef6;
 	width: 266px;
 }
-.xui-wepage-analysisPage .f18{font-size:18px;}
-.xui-wepage-analysisPage .f26{font-size:26px;}
+
+.xui-wepage-analysisPage .xui-bv-period-selected:hover{
+    color: #333 !important;
+}
+.xui-wepage-analysisPage .f18{font-size:18px; font-family:微软雅黑; cursor: inherit;}
+.xui-wepage-analysisPage .f24{font-size:24px;}
 .xui-wepage-analysisPage .xui-summary .xui-i-wrap {
 	height: 70%;
 	text-align: center;

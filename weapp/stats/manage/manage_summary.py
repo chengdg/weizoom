@@ -84,6 +84,7 @@ class ManageSummary(resource.Resource):
             'brand_value': format(today_value, ','),
             'value_sign': increase_sign,
             'increase_percent': increase_percent, # 相比昨天增长(下降)百分比
+            'bv_diff': abs(today_value-yesterday_value), # 品牌价值差值
         })
         return render_to_response('manage/manage_summary.html', c)
 
