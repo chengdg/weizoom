@@ -179,6 +179,11 @@ body{
 	box-shadow: 0 .1rem #c00006;
 	margin-top:.625rem;
 }
+.xui-shopping-btn:link,
+.xui-shopping-btn:active,
+.xui-shopping-btn:visited{
+	color:#f1354f;
+}
 .xui-other{
 	background: #e93131;
 	padding:0 .5rem;
