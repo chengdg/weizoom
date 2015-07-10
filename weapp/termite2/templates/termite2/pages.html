@@ -39,7 +39,23 @@
 		<div class="xui-head">
 			<a href="javascript:void(0);" class="xa-addProject btn btn-success mt10 w150 lh20"><span class="xui-add-btn-icon">+</span>新建微页面</a>
             {% if not request.user_profile.is_use_wepage %}
-            <a href="javascript:void(0);" class="xa-enableWepage btn btn-danger mt10 w150 lh20 xui-hide">启用微页面</a>
+            <a href="javascript:void(0);" class="xa-startUseBtn btn btn-danger mt10 w150 lh20 pr">
+                启用微页面
+                <div class="dropdown-menu xa-enableHint"style="color:#333;border:1px solid #D9D9D9;" >
+                    <div class="p20 pb10 f12">
+                        <div class="pb15 f14 xui-bold">确认启用新模板后：</div>
+                        <p>1.以前旧店铺模板入口将被删除，换用新店铺模板入口；</p>
+                        <p> 2.以前旧店铺模板页面配置好的链接会自动变成新店铺模板链接，不需重新配置；</p>
+                        <p> 3.以前被分享出去的店铺模板链接被点击后还会跳到对应的旧店铺模板页面；</p>
+                        <p class="cRed">*建议：新的店铺主页做好,商品都配置好之后，在点击启用新模板。</p>
+                    </div>
+                    
+                    <div class="tc" style="height:54px;background:#F5F5F5;">
+                        <div class="btn btn-primary xa-enableWepage">确定</div> 
+                        <div class="btn btn-default xa-cancelBtn">取消</div> 
+                    </div>
+                </div>
+            </a>
             {% endif %}
 		</div>
 
@@ -91,13 +107,13 @@
                     <a class="xa-update-name ml10 xui-pencil-icon" href="javascript:void(0);"></a>
                 </td>
                 <td>${project.createdAt}</td>
-                <td style="text-align:left;padding-left:50px;">
+                <td style="text-align:left;padding-left:30px;">
                     <a href="/termite2/page_editor/?project_id=${project.id}">编辑</a>
                     <a class="ml10" href="/termite2/termite_preview/?id=${project.id}" target="_blank">预览</a>
                     {{if !project.isActive}}
                     <a class="xa-delete ml10" href="javascript:void(0);">删除</a>
                     {{/if}}
-                    <a class="xa-copyLink ml10 xui-hide" href="javascript:void(0);">链接</a>
+                    <a class="xa-copyLink ml10 {{if !W.isUseWepage }} xui-hide{{/if}}" href="javascript:void(0);">链接</a>
                     {{if project.isActive}}
                     <a class="ml10" href="javascript:void(0);" style="color:#999; text-decoration:none;">店铺主页</a>
                     {{else}}
@@ -113,6 +129,7 @@
 
 <script type="text/javascript">
 var host = "{{request_host}}";
+W.isUseWepage = {% if request.user_profile.is_use_wepage %}true{% else %}false{% endif %};
 $(document).ready(function() {
     var pageLinkTemplate = null;
 
@@ -137,7 +154,14 @@ $(document).ready(function() {
         });
     });
 
+    $('.xa-startUseBtn').click(function(event) {
+        $('.xa-enableHint').show();
+    });
+    $('.xa-cancelBtn').click(function(event) {
+        $('.xa-enableHint').hide();
+    });
     $('.xa-enableWepage').click(function(event) {
+
         W.resource.termite2.ActivateWepageMechanism.put({
             data: {
             },
