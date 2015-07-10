@@ -108,6 +108,11 @@ class RestfulURLPattern2(object):
 			
 			app_resource = '%s-%s' % (self.app_name, resource)
 			class_info = resource_util.APPRESOURCE2CLASS.get(app_resource, None)
+			# print '-*-' * 20
+			# print 'path: ', path
+			# print 'method: ', method
+			# print 'app_resource: ', app_resource
+			# print '-$-' * 20
 			if class_info:
 				if not class_info['instance']:
 					class_info['instance'] = class_info['cls']

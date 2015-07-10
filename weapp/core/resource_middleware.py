@@ -20,6 +20,7 @@ from django.conf import settings
 from core import dateutil
 from core import resource
 from account.models import UserProfile
+from watchdog.utils import watchdog_info
 # from watchdog.models import watchdog, WATCHDOG_ERROR, WATCHDOG_OPERATION
 
 
@@ -31,6 +32,13 @@ class RestfulUrlMiddleware(object):
 		path_info = request.path_info
 		pos = path_info.find('/', 2)
 		app = str(path_info[:pos+1])
+		if 'new_weixin' in path_info:
+			data = {
+				'path_info': path_info,
+				'app': app,
+				'resource': resource.RESTFUL_APP_SET
+			}
+			watchdog_info(str(data), type='RESTFUL_MIDDLEWARE')
 		if not app in resource.RESTFUL_APP_SET:
 			return None
 
