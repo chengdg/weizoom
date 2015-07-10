@@ -148,15 +148,16 @@
 
         }else if($imageNav.length > 0){
             getWidth('.wui-imagenav');
+            var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
+            $imageNav.find('li').height(imgNavWidth);
 
         }
         function getWidth(component){
             var $component = $(component);
             var $inner_pic = $component.find('li .wui-inner-pic');
             $inner_pic.each(function() {
-                var width = $(this).width();
+                var width = $(this).width() ;
                 $(this).height(width);
-                $(this).parents('li').height(width);
             });
         } 
         </script>
