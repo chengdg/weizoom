@@ -192,7 +192,7 @@ def get_share_red_envelope(request):
                         'member': member if member.is_subscribed else "",
                         'shop_name': shop_name,
                         'qcode_img_url': qcode_img_url,
-                        'share_page_title': red_envelope_rule.name,
+                        'page_title': red_envelope_rule.share_title,
                         'share_page_desc': red_envelope_rule.share_title,
                         'share_img_url': red_envelope_rule.share_pic
                     })
@@ -200,7 +200,7 @@ def get_share_red_envelope(request):
                 c = RequestContext(request, {
                         'red_envelope_rule': red_envelope_rule,
                         'shop_name': shop_name,
-                        'share_page_title': red_envelope_rule.name,
+                        'page_title': red_envelope_rule.share_title,
                         'share_page_desc': red_envelope_rule.share_title,
                         'share_img_url': red_envelope_rule.share_pic
                     })

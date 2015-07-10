@@ -921,7 +921,7 @@ class OAUTHMiddleware(object):
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
 		# if is_request_for_api(request):
-		# 	return None
+		#  	return None
 		if request.webapp_owner_info and \
 			request.webapp_owner_info.mpuser and \
 			request.webapp_owner_info.mpuser.is_certified and \
@@ -931,9 +931,11 @@ class OAUTHMiddleware(object):
 			#cookie_openid_webapp_id  ==  'openid____webappid'
 			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)	
 			request_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
+			if is_request_for_api(request):
+				request_fmt = True
 			#cookie_webapp_id = request.COOKIES.get('webapp_id', None)
 			#1 如果cookie中没有 cookie_open_id or cookie_opeqqqn_id 则进行授权
-			if (cookie_openid_webapp_id is None):
+			if (cookie_openid_webapp_id is None) or (not request_fmt):
 				is_oauth = True
 			else:
 				split_list = cookie_openid_webapp_id.split('____')

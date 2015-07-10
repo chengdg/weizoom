@@ -97,7 +97,7 @@ class Menu(resource.Resource):
 			need_add_ids = ids - existed_ids
 			need_delete_ids = existed_ids - ids
 			need_update_ids = ids.intersection(existed_ids)
-		
+			response = create_response(200).get_response()
 			for menu in menus:
 				menu_id = menu['id']
 				#处理CustomerMenuItem
@@ -151,13 +151,14 @@ class Menu(resource.Resource):
 			CustomerMenuItem.objects.filter(id__in=need_delete_ids).delete()
 			#调用微信api
 			menu_json_obj = menu_util.get_menus_json_for_weixin(request.user)
-			post = {
-				'menu_json': json.dumps(menu_json_obj, ensure_ascii=False)
-			}
-			fake_request = menu_util.get_fake_request(request.user, post)
-			response = menu_tool.update_customerized_menu(fake_request)
-			
-# 			response = create_response(200).get_response()
+			if menu_json_obj.has_key('button') and len(menu_json_obj['button']) > 0:
+
+				post = {
+					'menu_json': json.dumps(menu_json_obj, ensure_ascii=False)
+					}
+				fake_request = menu_util.get_fake_request(request.user, post)
+				response = menu_tool.update_customerized_menu(fake_request)
+# 			
 		except:
 			response = create_response(500).get_response()
 			error_msg = unicode_full_stack()
