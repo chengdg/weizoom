@@ -22,6 +22,7 @@ import module_api
 
 from modules.member.tasks import update_member_integral, increase_intgral_for_be_member_first
 
+import hashlib
 """
 积分计算
 
