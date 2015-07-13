@@ -19,7 +19,7 @@ gmu.define('integralMechanism', {
         //     return isHasArgs;
         // },
         dataValue: function(_this) {
-            return _this.$el.data('value');
+            return _this.$el.attr('data-value');
         },
         dataKey: function(_this) {
             return _this.$el.data('key');
