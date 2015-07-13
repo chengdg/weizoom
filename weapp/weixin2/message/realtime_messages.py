@@ -279,7 +279,7 @@ def get_collect_message_dict(session_message_ids):
 def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_string=None, is_debug=False):
     mpuser = get_system_user_binded_mpuser(user)
     if mpuser is None:
-        return []
+        return None, None
 
     if is_debug:
         sessions = Session.objects.select_related().filter(mpuser=mpuser)
