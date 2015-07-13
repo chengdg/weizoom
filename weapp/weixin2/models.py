@@ -167,7 +167,7 @@ class Rule(models.Model):
 	def format_to_dict(self):
 		try:
 			self.patterns = json.loads(self.patterns)
-			if type(self.patterns) == int or type(self.patterns) == long:
+			if type(self.patterns) == int or type(self.patterns) == long or type(self.patterns) == float:
 				self.patterns = str(self.patterns)
 				1/0 #防止关键词是数字时引起bug，使进入except代码块
 		except:
