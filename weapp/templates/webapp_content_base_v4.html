@@ -30,6 +30,7 @@
         <!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
         <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/gmu-2.1.1.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/integralMechanism.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/idangerous.swiper.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/fastclick.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
@@ -54,7 +55,7 @@
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
         <meta content="telephone=no" name="format-detection">
     </head>
-    <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2;">
+    <body data-ui-role="integralMechanism" data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2;">
         <!-- xt-errMsg for test -->
         <input id="xt-errMsg" type="hidden" value="" />
         
