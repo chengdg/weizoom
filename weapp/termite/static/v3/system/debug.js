@@ -131,6 +131,9 @@ window.onerror = function() { // install new error handler
 	if (typeError) {
 		xlog(typeof typeError.stack);
 	}
+	if (msg.indexOf('WeixinJSBridge is not defined') >= 0){
+		return;
+	}
     Logger.logJsError( msg, url, line );
     Logger.logToServer(msg, url, line, typeError);
 

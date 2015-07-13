@@ -28,9 +28,14 @@ def log_api_error(request):
 		print 'api: ', api
 		print 'error: ', error
 
+	try:
+		user_id = request.user.id
+	except:
+		user_id = 0
+
 	if len(error.strip()) > 0:
 		#TODO: 加入watchdog操作
-		watchdog_error(u'api:{},\nerror:\n{}'.format(api, error))
+		watchdog_error(u'api:{},\nerror:\n{}'.format(api, error), 'API', str(user_id))
 
 	return create_response(200).get_response()
 
@@ -45,16 +50,11 @@ def log_js_error(request):
 		user_id = 0
 
 	try:
-		user_id = request.user.id
-	except:
-		user_id = 0
-
-	try:
 		member_info = u'\nrequest.member.id = {}\n\n'.format(request.member.id)
 	except:
 		member_info = u''
 
 	watchdog_alert(u"***** Client Javascript Exception (%s) *****\n%s[UserAgent]: %s\n%s" % (message, member_info, user_agent, content),
-		user_id=str(user_id))
+		'JS', str(user_id))
 
 	return create_response(200).get_response()
