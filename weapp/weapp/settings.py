@@ -713,9 +713,8 @@ DJANGO_HACK_PARAMS = {
     'enable_record_sql_stacktrace': True
 }
 
+RESOURCE_LOADED = False
+RESOURCES = ['stats', 'termite2', 'weixin2']
 
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)
-
-RESOURCE_LOADED = False
-RESOURCES = ['stats', 'termite2', 'weixin2']
