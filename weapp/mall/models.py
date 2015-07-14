@@ -440,10 +440,15 @@ class Product(models.Model):
 				product.stocks = u'无限' if target_model[
 					'stock_type'] == PRODUCT_STOCK_TYPE_UNLIMIT else target_model['stocks']
 			else:
+				# 所有规格都已经被删除
 				product._is_use_custom_model = False
 				product.current_used_model = {}
 				product.display_price = product.price
-				product.display_price = product.user_code
+				product.display_price_range = product.price
+				product.user_code = product.user_code
+				product.stock_type = PRODUCT_STOCK_TYPE_LIMIT
+				product.stocks = 0
+
 
 	@staticmethod
 	def fill_image_detail(webapp_owner, products, product_ids):
