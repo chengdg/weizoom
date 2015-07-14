@@ -2,7 +2,9 @@
 
 import os
 import json
-from models import ExpressDetail
+from models import ExpressDetail, ExpressHasOrderPushStatus, EXPRESS_TYPE
+from watchdog.utils import watchdog_fatal
+from core.exceptionutil import full_stack
 
 ########################################################################
 # get_express_company_json: 获得快递公司信息, 读取json文件
@@ -59,8 +61,21 @@ def get_value_by_name(name):
 	return name
 
 
-def get_express_details_by_order(order_id):
+def get_express_details_by_order(order):
 	"""
-	根据 order_id 获取 快递明细信息
+	根据 order 获取 快递明细信息
 	"""
-	return list(ExpressDetail.objects.filter(order_id=order_id).order_by('-display_index'))
+	details = ExpressDetail.objects.filter(order_id=order.id).order_by('-display_index')
+	if details.count() > 0:
+		return list(details)
+
+	try:
+		express = ExpressHasOrderPushStatus.objects.get(
+			express_company_name = order.express_company_name,
+			express_number = order.express_number
+		)
+		return list(ExpressDetail.objects.filter(express_id=express.id).order_by('-display_index'))
+	except:
+		innerErrMsg = full_stack()
+		watchdog_fatal(u'获取快递详情失败，order_id={}, case:{}'.format(order.id, innerErrMsg), EXPRESS_TYPE)
+		return list([])

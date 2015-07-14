@@ -10,6 +10,7 @@ import urllib2
 import json
 from django.conf import settings
 from models import *
+from mall import models as mall_models
 
 
 class ExpressCallbackHandle(object):
@@ -52,14 +53,22 @@ class ExpressCallbackHandle(object):
 
 	测试接口:
 		http://dev.weapp.com/tools/api/express/test_analog_push_data/?order_id=2
+
+		http://dev.weapp.com/tools/api/express/kuaidi/callback/?callbackid=2&version=2.0
 	'''
 
-	def __init__(self, request, order):
+	def __init__(self, request, order, express):
 		self.callback_post_request = request
 		self.order = order
+		self.express = express
 
 		self.express_config = ExpressConfig
 		self.express_params = ExpressRequestParams
+
+		if self.order:
+			self.order_id = self.order.id
+		else:
+			self.order_id = -1
 
 
 	def success_json(self):
@@ -83,14 +92,19 @@ class ExpressCallbackHandle(object):
 
 	def save_express_details(self, json):
 		# 删除之前的
-		ExpressDetail.objects.filter(order_id = self.order.id).delete()
+		if self.order_id > 0:
+			ExpressDetail.objects.filter(order_id = self.order_id).delete()
+		else:
+			ExpressDetail.objects.filter(express_id = self.express.id).delete()
 
 		try:			
 			express_details = json.get(self.express_params.LAST_RESULT, {}).get('data', {})
 			display_index = 1
+			express_id = self.express.id if self.express else -1
 			for detail in express_details:
 				ExpressDetail.objects.create(
-					order_id = self.order.id,
+					order_id = self.order_id,
+					express_id = express_id,
 					context = detail['context'],
 					time = detail['time'],
 					ftime = detail['ftime'],
@@ -104,6 +118,9 @@ class ExpressCallbackHandle(object):
 					json
 				), self.express_config.watchdog_type
 			)
+			self.express.receive_count = self.express.receive_count + 1
+			self.express.save()
+
 			return True
 		except:
 			watchdog_error(u'保存快递100的 推送数据失败，url:{}, json:{}, 原因:{}'.format(
@@ -114,14 +131,15 @@ class ExpressCallbackHandle(object):
 			)
 			return False
 
-	def update_order_status(self, json):
+	def update_order_status(self, json, orders):
 		status = json.get(self.express_params.LAST_RESULT, {}).get(self.express_params.STATE)
 		try:
 			# 状态为 3已签收，并且order的状态为 已发货
 			# 将状态改为 已完成
-			if int(status) == self.express_config.STATE_SIGNED and self.order.status == 4:
-				self.order.status = 5
-				self.order.save()
+			for order in orders:
+				if int(status) == self.express_config.STATE_SIGNED and order.status == 4:
+					order.status = 5
+					order.save()
 
 			return True
 		except:
@@ -132,6 +150,14 @@ class ExpressCallbackHandle(object):
 			)
 			return False
 
+	def get_orders(self):
+		orders = mall_models.Order.objects.filter(
+			express_company_name=self.express.express_company_name, 
+			express_number=self.express.express_number,
+			status__in=[3, 4]
+		)
+		return orders
+
 
 	'''
 	1、解析json数据
@@ -140,15 +166,22 @@ class ExpressCallbackHandle(object):
 	4、返回数据
 	'''
 	def handle(self):
-		if self.order.status not in [3, 4]:
-			return self.error_json('该订单的状态不是已发货或待发货！')
+		# if self.order.status not in [3, 4]:
+		# 	return self.error_json('该订单的状态不是已发货或待发货！')
 
+		# 解析参数
 		json = self.analytical_json()
 		is_success = self.save_express_details(json)
 		if is_success is False:
 			return self.error_json('保存快递信息失败！')
 
-		is_update_success = self.update_order_status(json)
+		# 获取 改 快递公司 与 快递单号 对应的order
+		orders = self.get_orders()
+		if orders.count() == 0:
+			return self.error_json('该订单的状态不是已发货或待发货！')
+
+		# 修改订单的状态
+		is_update_success = self.update_order_status(json, orders)
 		if is_update_success:
 			return self.success_json()
 		else:

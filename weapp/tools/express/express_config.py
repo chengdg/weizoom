@@ -30,7 +30,7 @@ class ExpressConfig(object):
 	app_key = "zKcFdoLd2775"
 
 	# 回调地址
-	callback_url = "http://{}/tools/api/express/kuaidi/callback/?callbackid={}"
+	callback_url = "http://{}/tools/api/express/kuaidi/callback/?callbackid={}&version=2.0"
 
 	"""
 	跟踪的订单状态

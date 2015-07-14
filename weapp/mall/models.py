@@ -1498,7 +1498,7 @@ class Order(models.Model):
 		if hasattr(self, '_express_details'):
 			return self._express_details
 
-		self._express_details = express_util.get_express_details_by_order(self.id)
+		self._express_details = express_util.get_express_details_by_order(self)
 		return self._express_details
 
 	@property

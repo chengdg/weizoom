@@ -14,6 +14,7 @@ import mall.module_api as mall_api
 from handle_express_callback import ExpressCallbackHandle
 from django.conf import settings
 import urllib, urllib2
+import models as express_models
 
 EXPRESS_TYPE = 'EXPRESS_API'
 
@@ -50,7 +51,12 @@ def test_kuaidi_poll(request):
 def test_analog_push_data(request):	
 	order_id = request.GET.get('order_id', 2)
 	is_finish = request.GET.get('is_finish', 'error')
-	api_url = "http://{}/tools/api/express/kuaidi/callback/?callbackid={}".format(settings.DOMAIN, order_id)
+	version = request.GET.get('v', '1')
+	if version == 2:
+		express = express_models.ExpressHasOrderPushStatus.get_by_order(order)
+		order_id = express.id
+
+	api_url = "http://{}/tools/api/express/kuaidi/callback/?callbackid={}&version={}".format(settings.DOMAIN, order_id, version)
 	# 快递信息
 	param_json = {
 		"status":"polling",
@@ -138,11 +144,18 @@ def kuaidi_callback(request):
 	快递100 推送回调接口
 	"""
 	response = create_response(200)
-	order_id = request.GET.get('callbackid', -1)
+	callback_id = request.GET.get('callbackid', -1)
+	version = request.GET.get('version', '1')
+	order = None
+	if version == '2.0':
+		express = express_models.ExpressHasOrderPushStatus.get(callback_id)
+	else:
+		order = mall_api.get_order_by_id(callback_id)
+		express = express_models.ExpressHasOrderPushStatus.get_by_order(order)
 
-	order = mall_api.get_order_by_id(order_id)
-	data = ExpressCallbackHandle(request, order).handle()
+	data = ExpressCallbackHandle(request, order, express).handle()
 
 	response.data = data
-	response.data['order_id'] = order_id
+	response.data['callback_id'] = callback_id
+	response.data['version'] = version
 	return response.get_response()

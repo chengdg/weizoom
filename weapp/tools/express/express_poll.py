@@ -62,12 +62,16 @@ class ExpressPoll(object):
 		self.order = order
 		self.order_id = order.id
 		self.area = order.get_str_area
+		self.express = None
 
 		self.express_config = ExpressConfig()
 		self.express_params = ExpressRequestParams
 
 	def _get_api(self):
-		return self.express_config.callback_url.format(settings.DOMAIN, self.order_id)
+		if self.express:
+			return self.express_config.callback_url.format(settings.DOMAIN, self.express.id)
+
+		return self.express_config.callback_url.format(settings.DOMAIN, '-99')
 		# return self.express_config.callback_url.format('docker.test.gaoliqi.com', self.order_id)
 
 	def _poll_response(self):
@@ -104,11 +108,11 @@ class ExpressPoll(object):
 			verified_result = response.read()
 
 			watchdog_info(u"发送快递100 订阅请求 url: {},/n param_data: {}, /n response: {}".format(
-				self.express_config.api_url, 
+				self.express_config.get_api_url(), 
 				param_str,
 				verified_result), type=self.express_config.watchdog_type)
 		except:
-			watchdog_error(u'发送快递100 订阅请求 失败，url:{},data:{},原因:{}'.format(self.express_config.api_url,
+			watchdog_error(u'发送快递100 订阅请求 失败，url:{},data:{},原因:{}'.format(self.express_config.get_api_url(),
 				param_str,
 				unicode_full_stack()), type=self.express_config.watchdog_type)
 
@@ -138,45 +142,77 @@ class ExpressPoll(object):
 	def _is_poll_by_order(self):
 		try:
 			pushs = ExpressHasOrderPushStatus.objects.filter(
-					order_id = self.order_id,
+					# order_id = self.order_id,
 					express_company_name = self.order.express_company_name,
 					express_number = self.order.express_number
 					)
 			if pushs.count() > 0:
-				return pushs[0].status
-			else:
-				return False
+				if pushs[0].status and pushs[0].send_count > 0:
+					return True
+
+			return False
 		except:
-			watchdog_error(u'已经发送过快递100获取订单信息，order_id:{}'.format(self.order_id), self.express_config.watchdog_type)
+			watchdog_error(u'快递100tool_express_has_order_push_status表异常，获取订单信息，express_company_name:{}，express_number:{}'.format(self.order.express_company_name, self.order.express_number), self.express_config.watchdog_type)
 			return False
 
-	def _save_poll_order_id(self, status):
-		ExpressDetail.objects.filter(order_id=self.order_id).delete()
-		ExpressHasOrderPushStatus.objects.filter(order_id=self.order_id).delete()
+	def _save_poll_order_id(self):
+		# ExpressDetail.objects.filter(order_id=self.order_id).delete()
+		ExpressHasOrderPushStatus.objects.filter(
+			express_company_name = self.order.express_company_name,
+			express_number = self.order.express_number
+		).delete()
 		
-		ExpressHasOrderPushStatus.objects.create(
-			order_id = self.order_id,
-			status = status,
+		express = ExpressHasOrderPushStatus.objects.create(
+			order_id = -1,
+			status = False,
 			express_company_name = self.order.express_company_name,
 			express_number = self.order.express_number
 		)
+		return express
+
 
 	def get_express_poll(self):
-		if self.order.status not in [3, 4]:
-			return False
+		# if self.order.status not in [3, 4]:
+		# 	return Falses
 
 		# 是否已经订阅过该订单，并且成功
 		status = self._is_poll_by_order()
 		if status:
 			return True
 
+		# 保存快递信息	
+		self.express = self._save_poll_order_id()
+
 		# 发送订阅请求
 		data = self._send_poll_requset()
 		result = True if data.get('result') == "true" or data.get('result') is True else False
 
 		if result:
-			self._save_poll_order_id(result)
+			# 修改快递信息状态
+			self.express.status = result
+			self.express.send_count = self.express.send_count + 1
+			self.express.save()
 			return True
 		else:
 			return False
+
+
+	# def get_express_poll(self):
+	# 	if self.order.status not in [3, 4]:
+	# 		return False
+
+	# 	# 是否已经订阅过该订单，并且成功
+	# 	status = self._is_poll_by_order()
+	# 	if status:
+	# 		return True
+
+	# 	# 发送订阅请求
+	# 	data = self._send_poll_requset()
+	# 	result = True if data.get('result') == "true" or data.get('result') is True else False
+
+	# 	if result:
+	# 		self._save_poll_order_id(result)
+	# 		return True
+	# 	else:
+	# 		return False
 
