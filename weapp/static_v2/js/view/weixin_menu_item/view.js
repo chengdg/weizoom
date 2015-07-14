@@ -444,8 +444,8 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 			//W.currentMenuId = menuEditor.$el.find('.xa-menu-content').attr('data-id')
 			 
 			//alert(W.currentMenuId+':bindMenuEditorHandler')
-			if (currentId==menuEditor.getCurrentMenuId()) {
-				var model = this.getMenuModel(currentId);
+			if (W.currentMenuId==menuEditor.getCurrentMenuId()) {
+				var model = menuEditor.getMenuModel(currentId);
 				model.set('answer', {content: content, type: type});
 				//console.log('---set:',currentId,model.get('answer'))
 			}
