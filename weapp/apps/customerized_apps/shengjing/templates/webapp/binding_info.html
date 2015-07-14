@@ -39,7 +39,7 @@
 {% block content-panel %}
 <div data-role="page" data-theme="x">
     <div data-role="content" data-theme="x">
-    	<form class="xui-form" method="post" action="./?module=apps:shengjing:user_center&resource=binding_info&action=get&workspace_id=apps:&project_id=0&is_need_to_add_integral_for_father=True&webapp_owner_id={{webapp_owner_id}}" id="editForm">
+    	<form class="xui-form" method="post" action="./?module=apps:shengjing:user_center&resource=binding_info&action=get&workspace_id=apps:&project_id=0&is_need_to_add_integral_for_father=True&webapp_owner_id={{webapp_owner_id}}&fmt={{ cur_request_member.token }}" id="editForm">
 			<div class="xui-section">
 				<div class="xui-section-item">
 					<div style="color:#e65151;" class="pt10 pb10">请您填写基本资料</div>
