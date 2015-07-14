@@ -35,6 +35,7 @@ from qrcode_util import *
 from shengjing.study_plan import mobile_views as study_plan_views
 
 from apps.register import mobile_view_func
+from watchdog.utils import watchdog_info
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
@@ -66,6 +67,7 @@ def _get_template_name_and_response_data(request):
 
 def _handle_post(request):
 	if request.method == "POST":
+		watchdog_info(u'绑定盛景信息，保存手动输入公司名称，request：{}'.format(request.__dict__), 'SHENGJING')
 		binding_member_id = request.POST.get('binding_member_id', -1)
 		name  = request.POST.get('name', None)
 		position  = request.POST.get('position', '')
