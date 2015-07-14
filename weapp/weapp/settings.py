@@ -716,3 +716,6 @@ DJANGO_HACK_PARAMS = {
 
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)
+
+RESOURCE_LOADED = False
+RESOURCES = ['stats', 'termite2', 'weixin2']

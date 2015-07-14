@@ -78,3 +78,12 @@ class ResourceJsMiddleware(object):
 				buf.append(class_info['js'])
 		
 			return HttpResponse('\n'.join(buf), 'text/javascript')
+
+
+if settings.RESOURCE_LOADED:
+	print '[!!!!!!!!!!!!!!!!!!!!!!] already loaded'
+else:
+	for resource_module in settings.RESOURCES:
+		print '[resource middleware] load ', resource
+		exec('import %s' % resource_module)
+		settings.RESOURCE_LOADED = True
