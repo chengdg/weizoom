@@ -61,10 +61,10 @@ class MemberSummary(resource.Resource):
 		total_member_count = stats_util.get_total_member_count(webapp_id)
 		#新增会员
 		new_member_count = stats_util.get_new_member_count(webapp_id, low_date, high_date)
+		#新增手机绑定
+		binding_phone_member_count = stats_util.get_binding_phone_member_count(webapp_id, low_date, high_date)
 		#关注会员
 		subscribed_member_count = stats_util.get_subscribed_member_count(webapp_id)
-		#手机绑定会员
-		mobile_bind_member_count = 0  #待实现
 		#下单会员
 		bought_member_count = stats_util.get_bought_member_count(webapp_id, low_date, high_date)
 		#会员复购率
@@ -94,7 +94,7 @@ class MemberSummary(resource.Resource):
 			'total_member_count': total_member_count,
 			'subscribed_member_count': subscribed_member_count,
 			'new_member_count': new_member_count,
-			'mobile_bind_member_count': mobile_bind_member_count,
+			'binding_phone_member_count': binding_phone_member_count,
 			'bought_member_count': bought_member_count,
 			'repeat_buying_member_rate': repeat_buying_member_rate,
 			'ori_qrcode_member_count': ori_qrcode_member_count,
@@ -131,6 +131,9 @@ class MemberIncreasement(resource.Resource):
 		#下单会员数
 		date2bought_member_count = stats_util.get_date2bought_member_count(webapp_id, low_date, high_date)
 
+		#绑定手机会员数
+		date2binding_phone_member_count = stats_util.get_date2binding_phone_member_count(webapp_id, low_date, high_date)
+
 		formatted_date_list = stats_util.get_formatted_date_list(date_range, date_formatter)
 
 		#准备X轴日期数据
@@ -139,6 +142,7 @@ class MemberIncreasement(resource.Resource):
 		#准备Y轴数据
 		new_member_count_list = []
 		bought_member_count_list = []
+		binding_phone_member_count_list = []
 
 		for date in formatted_date_list:
 			new_member_count = 0  #新增会员数
@@ -153,6 +157,12 @@ class MemberIncreasement(resource.Resource):
 
 			bought_member_count_list.append(bought_member_count)
 
+			binding_phone_member_count = 0  #绑定手机会员数
+			if date2binding_phone_member_count.has_key(date):
+				binding_phone_member_count = date2binding_phone_member_count[date]
+
+			binding_phone_member_count_list.append(binding_phone_member_count)
+
 		y_values = [
 			{
 				"name": "新增会员数",
@@ -160,6 +170,9 @@ class MemberIncreasement(resource.Resource):
 			},{
 				"name": "下单会员数",
 				"values" : bought_member_count_list,
+			},{
+				"name": "绑定手机会员数",
+				"values" : binding_phone_member_count_list,
 			}
 		]
 		return create_line_chart_response('', '', x_values, y_values)
@@ -236,6 +249,8 @@ class MemberDetailData(resource.Resource):
 
 		#新增会员
 		date2new_member_count = stats_util.get_date2new_member_count(webapp_id, low_date, high_date)
+		#手机绑定会员
+		date2binding_phone_member_count = stats_util.get_date2binding_phone_member_count(webapp_id, low_date, high_date)
 		#发起分享链接
 		date2share_url_member_count = stats_util.get_date2share_url_member_count(webapp_id, low_date, high_date)
 		#发起链接新增
@@ -252,6 +267,10 @@ class MemberDetailData(resource.Resource):
 			new_member_count = 0
 			if date2new_member_count.has_key(date):
 				new_member_count = date2new_member_count[date]
+
+			binding_phone_member_count = 0
+			if date2binding_phone_member_count.has_key(date):
+				binding_phone_member_count = date2binding_phone_member_count[date]
 
 			share_url_member_count = 0
 			if date2share_url_member_count.has_key(date):
@@ -276,6 +295,7 @@ class MemberDetailData(resource.Resource):
 			items.append({
 				'date': date,
 				'new_member_count': new_member_count,
+				'binding_phone_member_count': binding_phone_member_count,
 				'share_url_member_count': share_url_member_count,
 				'member_from_share_url_count': member_from_share_url_count,
 				'ori_qrcode_member_count': ori_qrcode_member_count,

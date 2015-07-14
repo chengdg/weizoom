@@ -5,12 +5,13 @@ __author__ = 'robert'
 from datetime import datetime, timedelta
 from core import dateutil
 import calendar
+from django.db.models.query_utils import Q
 
 from core import dateutil
 from core import paginator
-from modules.member.models import Member, MemberSharedUrlInfo, WebAppUser, SOURCE_BY_URL, SOURCE_MEMBER_QRCODE
+from modules.member.models import Member, MemberSharedUrlInfo, MemberInfo, WebAppUser, SOURCE_BY_URL, SOURCE_MEMBER_QRCODE
 from market_tools.tools.member_qrcode.models import MemberQrcode, MemberQrcodeLog
-from mall.models import Order, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
+from mall.models import Order, WeizoomMallHasOtherMallProductOrder, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
 from mall.models import OrderHasProduct, Product, PRODUCT_SHELVE_TYPE_ON
 
 
@@ -610,6 +611,39 @@ def get_self_follow_member_count(webapp_id, low_date, high_date):
 		
 	return self_follow_member_count
 
+def get_date2binding_phone_member_count(webapp_id, low_date, high_date, date_formatter = None):
+	"""
+	获取各个日期新增的绑定手机会员数
+	"""
+	if not date_formatter:
+		date_formatter = TYPE2FORMATTER['day']
+
+	member_infos = MemberInfo.objects.filter(
+						member__webapp_id=webapp_id,
+						member__is_for_test=False, 
+						binding_time__range=(low_date, high_date)
+					)
+
+	date2binding_phone_member_count = {}
+	for member_info in member_infos:
+		date = date_formatter(member_info.binding_time)
+		if not date2binding_phone_member_count.has_key(date):
+			date2binding_phone_member_count[date] = 0
+		date2binding_phone_member_count[date] += 1
+
+	return date2binding_phone_member_count
+
+def get_binding_phone_member_count(webapp_id, low_date, high_date):
+	"""
+	获取新增的绑定手机会员数
+	"""
+	date2binding_phone_member_count = get_date2binding_phone_member_count(webapp_id, low_date, high_date)
+	binding_phone_member_count = 0
+	for date in date2binding_phone_member_count:
+		binding_phone_member_count += date2binding_phone_member_count[date]
+
+	return binding_phone_member_count
+
 
 ####################################################################
 #商品统计相关函数
@@ -618,12 +652,12 @@ def get_buyer_count(webapp_id, low_date, high_date):
 	"""
 	获取购买总人数，包括会员、已取消关注的会员和非会员
 	"""
+	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
 	#使用授权机制后，webapp_user_id对应唯一一个member_id了，不会再有多个webapp_user_idduiying
 	buyer_count = Order.objects.filter(
-				webapp_id = webapp_id, 
-				order_source=ORDER_SOURCE_OWN, 
-				status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED), 
-				created_at__range=(low_date, high_date)
+				Q(webapp_id = webapp_id) | Q(order_id__in=weizoom_mall_order_ids), 
+				Q(status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
+				Q(created_at__range=(low_date, high_date))
 			).exclude(type='test').values('webapp_user_id').distinct().count()
 	return buyer_count
 
@@ -631,11 +665,11 @@ def get_order_count(webapp_id, low_date, high_date):
 	"""
 	获取下单单量
 	"""
+	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
 	order_count = Order.objects.filter(
-				webapp_id = webapp_id, 
-				order_source=ORDER_SOURCE_OWN, 
-				status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED), 
-				created_at__range=(low_date, high_date)
+				Q(webapp_id = webapp_id) | Q(order_id__in=weizoom_mall_order_ids), 
+				Q(status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
+				Q(created_at__range=(low_date, high_date))
 			).count()
 	return order_count
 
@@ -643,11 +677,11 @@ def get_deal_product_count(webapp_id, low_date, high_date):
 	"""
 	获取总成交件数
 	"""
+	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
 	products = OrderHasProduct.objects.filter(
-			order__webapp_id=webapp_id, 
-			order__order_source=ORDER_SOURCE_OWN, 
-			order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED), 
-			order__created_at__range=(low_date, high_date)
+			Q(order__webapp_id=webapp_id) | Q(order__order_id__in=weizoom_mall_order_ids), 
+			Q(order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
+			Q(order__created_at__range=(low_date, high_date))
 		).exclude(order__type='test')
 	deal_product_count = 0
 	for product in products:
@@ -658,11 +692,11 @@ def get_top10_product(webapp_id, low_date, high_date):
 	"""
 	获取下单单量排行前10的商品
 	"""
+	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
 	products = OrderHasProduct.objects.filter(
-			order__webapp_id=webapp_id, 
-			order__order_source=ORDER_SOURCE_OWN, 
-			order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED), 
-			order__created_at__range=(low_date, high_date)
+			Q(order__webapp_id=webapp_id) | Q(order__order_id__in=weizoom_mall_order_ids), 
+			Q(order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
+			Q(order__created_at__range=(low_date, high_date))
 		).exclude(order__type='test')
 	product_id2num = {}
 	for product in products:

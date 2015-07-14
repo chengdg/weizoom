@@ -36,7 +36,8 @@
 			data-enable-sort="false"
 			data-selectable="true"
 			data-item-count-per-page="50"
-			class="panel-body"
+			class="panel-body" 
+			data-args='{"status":"{{status}}"}'
 		></div>
 		<div class="dropdown xui-operation update_dropdown">
 			<div class="pr">
@@ -346,8 +347,17 @@ $(document).ready(function() {
 						friendCount: friend_count,
 						fansCount: fans_count,
 						isReload:true,
-		          	});
+					});
 			});
+
+	var status = '{{status}}';
+	if(status === '1') {
+		_.delay(function(){
+			$('.xa-more-filter').trigger('click');
+			$("#status").val("1");
+		}, 500);
+		
+	}
 });
 </script>
 {% endblock %}

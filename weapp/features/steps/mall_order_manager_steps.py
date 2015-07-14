@@ -162,6 +162,15 @@ def step_impl(context, user):
 	url = '/mall/order/update/?order_id={}&action=pay'.format(context.latest_order_id)
 	context.client.get(url, HTTP_REFERER='/')
 
+@When(u"{user}完成最新订单退款")
+def step_impl(context, user):
+	url = '/mall/order/update/?order_id={}&action=return_success'.format(context.latest_order_id)
+	context.client.get(url, HTTP_REFERER='/')
+
+@When(u"{user}对最新订单进行退款")
+def step_impl(context, user):
+	url = '/mall/order/update/?order_id={}&action=return_pay'.format(context.latest_order_id)
+	context.client.get(url, HTTP_REFERER='/')
 
 @When(u"{user}对最新订单进行发货")
 def step_impl(context, user):

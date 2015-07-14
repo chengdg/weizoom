@@ -258,18 +258,26 @@ Scenario: 获取当日的经营概况
 	Then 获得店铺经营概况数据
 		"""
 		{
-			"buyer_count": 0,
-			"transaction_money": 0,
-			"vis_price": "0.00",
 			"transaction_orders": 0,
-			"member_recommend_rate": "40.0%",
-			"member_from_share_url_count": 2,
-			"ori_qrcode_member_count": 0,
-			"share_url_member_count": 2,
-			"repeat_buying_member_rate": "0.0%",
-			"member_from_qrcode_count": 0
+			"transaction_money": "0.00",
+			"vis_price": "0.00",
+			"buyer_count": 0
 		}
 		"""
+#		"""
+#		{
+#			"buyer_count": 0,
+#			"transaction_money": 0,
+#			"vis_price": "0.00",
+#			"transaction_orders": 0,
+#			"member_recommend_rate": "40.0%",
+#			"member_from_share_url_count": 2,
+#			"ori_qrcode_member_count": 0,
+#			"share_url_member_count": 2,
+#			"repeat_buying_member_rate": "0.0%",
+#			"member_from_qrcode_count": 0
+#		}
+#		"""
 
 
 @ignore 
@@ -340,7 +348,7 @@ Scenario: 1  经营概况：筛选日期，默认筛选日期当天；快速查�
 	#打印：？？
 
 
-@stats @wip.operation1
+@stats @wip.operation2
 Scenario: 2  经营概况：综合
 	#consumer字段“*jack”这样带“*”代表非会员
 	When 微信用户批量消费jobs的商品
@@ -381,23 +389,22 @@ Scenario: 2  经营概况：综合
 	Then 获得店铺经营概况数据
 		"""
 		{
-			"member_recommend_rate": "40.0%",
-			"repeat_buying_member_rate": "50.0%",
-
 			"buyer_count": 4,
-			"transaction_money": 700,
+			"transaction_money": "700.00",
 			"vis_price": "116.67",
-			"transaction_orders": 6,
-			"member_from_share_url_count": 2,
-			"ori_qrcode_member_count": 0,
-			"share_url_member_count": 2,
-			"member_from_qrcode_count": 0
+			"transaction_orders": 6
 		}
 		"""
-	#Then job获得综合数据
-	#	|     item    	 |    quantity   |
-	#	|  会员复购率 |      75%      |
-	#	|  会员推荐率 |      40%      |
+#		"""
+#		{	
+#			"member_recommend_rate": "40.0%",
+#			"repeat_buying_member_rate": "50.0%",
+#			"member_from_share_url_count": 2,
+#			"ori_qrcode_member_count": 0,
+#			"share_url_member_count": 2,
+#			"member_from_qrcode_count": 0
+#		}
+#		"""
 
 Scenario: commented
 """
@@ -484,7 +491,7 @@ Scenario: 3  经营概况：销量
 	#	|   客单价    |     128.57    |
 
 
-@wip.operation4
+@stats @wip.operation4
 Scenario: 4  经营概况：会员
 	#发起分享链接会员：2（mary、tom）；分享链接新增会员：tom1
 
@@ -499,14 +506,23 @@ Scenario: 4  经营概况：会员
 
 	And 查询'店铺经营概况'
 	Then 获得店铺经营概况数据
+		# 会员相关的数据被屏蔽了
 		"""
 		{
-			"ori_qrcode_member_count": 0,
-			"member_from_qrcode_count": 0,
-			"share_url_member_count": 2,
-			"member_from_share_url_count": 1
+			"transaction_orders": 0,
+			"transaction_money": "0.00",
+			"vis_price": "0.00",
+			"buyer_count": 0		
 		}
 		"""
+#		"""
+#		{
+#			"ori_qrcode_member_count": 0,
+#			"member_from_qrcode_count": 0,
+#			"share_url_member_count": 2,
+#			"member_from_share_url_count": 1
+#		}
+#		"""
 	#Then jobs获得会员数据
 	#	|     item        |    quantity   |
 	#	| 发起扫码会员    |       0       |

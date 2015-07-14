@@ -39,7 +39,7 @@ Feature: 会员分析-会员概况-会员详细数据
 					2015-5-10的【新增会员】=∑会员.个数[(2015-5-10 00:00 <= 会员.加入时间 < 2015-5-11 00:00) and (2015-5-1 00:00 <= 会员.加入时间 < 2015-5-23 00:00)]
 					其他日期点的【新增会员】依次类推
 
-		3、【手机绑定】：
+		3、【手机绑定】：对应的【日期】当天新增‘手机绑定’的会员数
 
 		4、【发起分享链接】：对应的【日期】当天发起‘有效分享链接’的会员数
 
@@ -59,8 +59,7 @@ Feature: 会员分析-会员概况-会员详细数据
 
 Background:
 	Given jobs登录系统
-
-	Given 开启手动清除cookie模式
+	And 开启手动清除cookie模式
 
 	When jobs添加商品
 		"""
@@ -70,14 +69,7 @@ Background:
 			"name": "商品2"
 		}, {
 			"name": "商品3"
-		}]	
-		"""
-
-	And jobs设置未付款订单过期时间
-		"""
-		{
-			"一元等价的积分数量": 10
-		}
+		}]
 		"""
 
 	And jobs已添加支付方式
@@ -89,57 +81,16 @@ Background:
 			"type": "微信支付",
 			"is_active": "启用"
 		},{
-			"type": "支付宝支付",
+			"type": "支付宝",
 			"is_active": "启用"
-		}]
-		"""
-
-	And jobs已添加微众支付
-		"""
-		[{
-			"is_weizoom_pay":"是"
-		}]
-		"""
-
-	And jobs设置积分策略
-		"""
-		[{ 
-			"integral_each_yuan": 10
-		}]
-		"""
-
-	And jobs已添加积分应用活动
-		"""
-		[{
-			"name": "商品1积分应用",
-			"start_date": "2014-8-1",
-			"end_date": "10天后",
-			"products": ["商品1"],
-			"is_permanant_active": false,
-			"rules": [{
-				"member_grade_name": "全部会员",
-				"discount": 70,
-				"discount_money": 70.0
-			}]
-		}]
-		"""
-
-	And toms已添加优惠券
-		"""
-		[{
-			"name": "商品2优惠券",
-			"money": 10,
-			"start_date": "2014-8-1",
-			"end_date": "10天后",
-			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
 
 	##微信用户批量关注jobs成为会员
 
-	When bill关注jobs的公众号于'两天前'
+	When bill关注jobs的公众号于'2天前'
 
-	When mary关注jobs的公众号于'一天前'
+	When mary关注jobs的公众号于'1天前'
 	When mary访问jobs的webapp
 	When mary把jobs的微站链接分享到朋友圈
 
@@ -151,8 +102,8 @@ Background:
 	When bill1取消关注jobs的公众号
 
 	When 清空浏览器
-	When bill1通过tom分享链接关注jobs的公众号
-	When bill1访问jobs的webapp
+	When bill2通过tom分享链接关注jobs的公众号
+	When bill2访问jobs的webapp
 
 	When 清空浏览器
 	When tom1通过tom分享链接关注jobs的公众号
@@ -161,90 +112,33 @@ Background:
 	When 清空浏览器
 	When jack点击mary分享链接
 	When jack把jobs的微站链接分享到朋友圈
-	"""
-	When 微信用户批量关注jobs成为会员
-		|  memberID   |  name  | launch_spreading_code | launch_share_link |   direct_attention   | spreading_code_attention |          share_link_attention      |   attention_time  |    entry_time     |       current_status         | member_source |
-		| memberID000 |  mary  |         是            |        是         | 直接搜索jobs公众账号 |                          |                                    |   2015-4-3 10:50  |   2015-4-3 10:50  |             关注             |    直接关注   |
-		| memberID001 |  bill  |         是            |                   | 直接搜索jobs公众账号 |                          |                                    |   2015-5-1 10:50  |   2015-5-1 10:50  |             关注             |    直接关注   |
-		| memberID002 |  tom   |                       |        是         | 直接搜索jobs公众账号 |                          |                                    |   2015-5-2 10:50  |   2015-5-2 10:50  |2015-6-2 11:20取消关注；已取消|    直接关注   |
-		| memberID003 | bill1  |                       |                   |                      |           bill           |                                    |   2015-5-3 11:20  |   2015-5-3 11:20  |2015-5-4 11:20取消关注； 关注 |    推广扫码   |
-		| memberID003 | bill1  |                       |                   |                      |                          |         tom                        |   2015-5-4 13:00  |   2015-5-3 11:20  |             关注             |    推广扫码   |
-		| memberID004 |  tom1  |                       |                   |                      |                          |         tom                        |   2015-5-5 14:00  |   2015-5-5 14:00  |             关注             |    会员分享   |
-		| memberID005 |  tom1  |         是            |                   |                      |           bill           |                                    |   2015-5-6 15:00  |   2015-5-6 15:00  |2015-5-7 8:00 取消关注，已取消|    推广扫码   |
-		| memberID000 |  mary  |         是            |        是         | 直接搜索jobs公众账号 |                          |                                    |   2015-5-7 10:50  |   2015-4-3 10:50  |2015-5-7 8:00取消关注；关注   |    推广扫码   |
-		| memberID006 |  jack  |         是            |        是         |                      |                          |         mary                       |   2015-5-9 9:30   |   2015-5-9 9:30   |             关注             |    会员分享   |
-		|             |  jack1 |                       |                   |                      |    扫码jack未关注jobs    |                                    |                   |                   |                              |               |
-		|             |  jack2 |                       |                   |                      |                          | 2015-5-9 9:30点击jack链接未关注jobs|                   |                   |                              |               |
-		| memberID007 |  jack3 |                       |                   |                      |           jack           |                                    |   2015-6-3 10:00  |   2015-6-3 10:00  |2015-6-3 13:00取消关注；已取消|    推广扫码   |
-		| memberID008 |  nokia |                       |                   | 直接搜索jobs公众账号 |                          |                                    |   2015-6-1 00:00  |   2015-6-1 00:00  |             关注             |    直接关注   |
-	"""
+
 	When 微信用户批量消费jobs的商品
-		|       date     	| consumer |businessman|      product     | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action       |  order_status   |
-		| 一天前  10:20   	| mary     | jobs      | 商品1,1          | 支付    |   微信支付     | 10      | 100      | 10       | 0      | 100         | 0            | 0      |   100  | 0    |   jobs发货，完成  |    已完成       |
-		| 两天前  8:00     	| bill     | jobs      | 商品1,1          |         |   支付宝       | 10      | 100      |  0       | 0      |  0          | 0            | 0      |    0   | 0    |   系统化自动取消  |    已取消       |
-		| 今天    10:00   	| tom      | jobs      | 商品2,1          | 支付    |   微信支付     | 15      | 100      |  0       | 0      | 115         | 0            | 0      |    115 | 0    |   jobs发货，完成  |    已完成       |
-		| 两天前  9:00    	| bill     | jobs      | 商品1,1          | 支付    |   货到付款     | 10      | 100      |  0       | 30     | 80          | 0            | 0      |    0   | 80   |                   |    待发货       |
-		| 今天    9:00    	| tom      | jobs      | 商品1,1          | 支付    |   货到付款     | 10      | 100      |  20      | 0      | 90          | 0            | 0      |    0   | 90   |   jobs发货        |    已发货       |
-		| 今天    10:00   	| tom1     | jobs      | 商品1,1          | 支付    |   支付宝       | 10      | 100      |  0       | 0      | 110         | 0            | 110    |    0   | 0    |   jobs发货，完成  |    已完成       |
-		| 今天    10:00   	| tom1     | jobs      | 商品2,1          | 支付    |   微信支付     | 15      | 100      |  0       | 0      | 115         | 0            | 0      |   115  | 0    |   jobs发货        |    已发货       |
-		| 一天前  13:20   	| mary     | jobs      | 商品2,2          | 支付    |   支付宝       | 15      | 100      |  0       | 20     | 195         | 0            | 195    |    0   | 0    |   jobs发货        |    已发货       |
+		|  date  | consumer | type |businessman|      product     | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |  action |  order_status   |
+		| 1天前  | mary     | 购买 | jobs      | 商品1,1          | 支付    |   微信支付     | 10      | 100      | 10       | 0      | 100         | 0            | 0      |   100  | 0    |         |    已完成       |
+		| 2天前  | bill     | 购买 | jobs      | 商品1,1          |         |   支付宝       | 10      | 100      |  0       | 0      |  0          | 0            | 0      |    0   | 0    |         |    未支付       |
+		| 今天   | tom      | 购买 | jobs      | 商品2,1          | 支付    |   微信支付     | 15      | 100      |  0       | 0      | 115         | 0            | 0      |    115 | 0    |jobs,取消|    已取消       |
+		| 2天前  | bill     | 购买 | jobs      | 商品1,1          | 支付    |   货到付款     | 10      | 100      |  0       | 30     | 80          | 0            | 0      |    0   | 80   |         |    待发货       |
+		| 今天   | tom      | 购买 | jobs      | 商品1,1          | 支付    |   货到付款     | 10      | 100      |  20      | 0      | 90          | 0            | 0      |    0   | 90   |         |    已发货       |
+		| 今天   | tom1     | 购买 | jobs      | 商品1,1          | 支付    |   支付宝       | 10      | 100      |  0       | 0      | 110         | 0            | 110    |    0   | 0    |         |    已完成       |
+		| 今天   | tom1     | 购买 | jobs      | 商品2,1          | 支付    |   微信支付     | 15      | 100      |  0       | 0      | 115         | 0            | 0      |   115  | 0    |         |    已发货       |
+		| 今天   | -lilei   | 购买 | jobs      | 商品2,1          | 支付    |   微信支付     | 15      | 100      |  0       | 0      | 115         | 0            | 0      |   115  | 0    |         |    已发货       |
+		| 1天前  | mary     | 购买 | jobs      | 商品2,2          | 支付    |   支付宝       | 15      | 100      |  0       | 20     | 195         | 0            | 195    |    0   | 0    |         |    已发货       |
+		| 1天前  | -lisi    | 购买 | jobs      | 商品2,2          | 支付    |   支付宝       | 15      | 100      |  0       | 20     | 195         | 0            | 195    |    0   | 0    |         |    已发货       |
 
+@stats @stats.member
 Scenario: 1  会员概况：会员详细数据
-
+	Given jobs登录系统
 	When jobs设置筛选日期
 		"""
-		[{
-			"begin_date":"今天",
+		{
+			"start_date":"2天前",
 			"end_date":"今天"
-		}]
+		}
 		"""
 
 	Then job获得会员详细数据
 		|    date    |  new_member  | mobile_phone_member | launch_share_link_member | share_link_new_member | launch_spreading_code_member | spreading_code_new_member | order_member |
-		|    今天    |      3       |          0          |            2             |           1           |               0              |              0            |       2      |
-		|   一天前   |      1       |          0          |            0             |           0           |               0              |              0            |       1      |
-		|   两天前   |      1       |          0          |            0             |           0           |               0              |              0            |       1      |
-
-
-Scenario: 2  会员概况：会员详细数据分页
-
-	When jobs设置筛选日期
-		"""
-		[{
-			"begin_date":"两天前",
-			"end_date":"今天"
-		}]
-		"""
-
-	When jobs已设置分页条件
-		"""
-		{
-			"page_count":1
-		}
-		"""
-
-	Then jobs获得会员详细数据显示共3页
-
-	When jobs浏览第一页
-
-	Then jobs获得会员详细数据
-		|    date    |  new_member  | mobile_phone_member | launch_share_link_member | share_link_new_member | launch_spreading_code_member | spreading_code_new_member | order_member |
-		|    今天    |      3       |          0          |            2             |           1           |               0              |              0            |       2      |
-
-	When jobs浏览'下一页'
-
-	Then jobs获得会员详细数据
-		|    date    |  new_member  | mobile_phone_member | launch_share_link_member | share_link_new_member | launch_spreading_code_member | spreading_code_new_member | order_member |
-		|   一天前   |      1       |          0          |            0             |           0           |               0              |              0            |       1      |
-
-	When jobs浏览'第3页'
-
-	Then jobs获得会员详细数据
-		|    date    |  new_member  | mobile_phone_member | launch_share_link_member | share_link_new_member | launch_spreading_code_member | spreading_code_new_member | order_member |
-		|   两天前   |      1       |          0          |            0             |           0           |               0              |              0            |       1      |
-
-	When jobs浏览'上一页'
-	
-	Then jobs获得会员详细数据	
-		|    date    |  new_member  | mobile_phone_member | launch_share_link_member | share_link_new_member | launch_spreading_code_member | spreading_code_new_member | order_member |
-		|   一天前   |      1       |          0          |            0             |           0           |               0              |              0            |       1      |
+		|    今天    |      4       |          0          |            2             |           2           |               0              |              0            |       3      |
+		|   1天前    |      1       |          0          |            0             |           0           |               0              |              0            |       2      |
+		|   2天前    |      1       |          0          |            0             |           0           |               0              |              0            |       1      |

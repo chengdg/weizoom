@@ -12,7 +12,7 @@ W.view.stats.MemberSummaryBaseDataAdvancedTable = W.view.common.AdvancedTable.ex
         var total_member_count = 0;
         var subscribed_member_count = 0;
         var new_member_count = 0;
-        var mobile_bind_member_count = 0;
+        var binding_phone_member_count = 0;
         var bought_member_count = 0;
         var repeat_buying_member_rate = 0;
         var ori_qrcode_member_count = 0;
@@ -26,7 +26,7 @@ W.view.stats.MemberSummaryBaseDataAdvancedTable = W.view.common.AdvancedTable.ex
             total_member_count = item.get('total_member_count');
             subscribed_member_count = item.get('subscribed_member_count');
             new_member_count = item.get('new_member_count');
-            mobile_bind_member_count = item.get('mobile_bind_member_count');
+            binding_phone_member_count = item.get('binding_phone_member_count');
             bought_member_count = item.get('bought_member_count');
             repeat_buying_member_rate = item.get('repeat_buying_member_rate');
             ori_qrcode_member_count = item.get('ori_qrcode_member_count');
@@ -51,7 +51,7 @@ W.view.stats.MemberSummaryBaseDataAdvancedTable = W.view.common.AdvancedTable.ex
             $('#subscribed_member_count').text(subscribed_member_count);
         }
         $('#new_member_count').text(new_member_count);
-        $('#mobile_bind_member_count').text(mobile_bind_member_count);
+        $('#binding_phone_member_count').text(binding_phone_member_count);
         $('#bought_member_count').text(bought_member_count);
         $('#repeat_buying_member_rate').text(repeat_buying_member_rate);
         $('#ori_qrcode_member_count').text(ori_qrcode_member_count);

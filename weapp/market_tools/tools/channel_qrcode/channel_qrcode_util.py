@@ -15,6 +15,7 @@ def check_channel_qrcode_ticket(ticket, user_profile):
 def create_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_member):
 	try:
 		channel_qrcodes = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id)
+		print("channel_qrcodes: {}, ticket: {}, owner_id: {}".format(channel_qrcodes, ticket, user_profile.user_id))
 		if channel_qrcodes.count() > 0:
 			channel_qrcode = channel_qrcodes[0]
 

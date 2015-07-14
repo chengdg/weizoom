@@ -44,9 +44,16 @@ def __get_request_members_list(request):
 	sort_attr = request.GET.get('sort_attr', '-created_at')
 	#会员过滤
 	filter_value = request.GET.get('filter_value', None)
+
 	filter_data_args = {}
 	filter_data_args['webapp_id'] = request.user_profile.webapp_id
 	filter_data_args['is_for_test'] = False
+
+	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
+	#add by duhao 2015-07-13
+	status = request.GET.get('status', '-1')
+	if not filter_value and status == '1':
+		filter_data_args['is_subscribed'] = True
 
 	if filter_value:
 		filter_data_dict = {}
@@ -71,7 +78,11 @@ def __get_request_members_list(request):
 				filter_data_args["id__in"] = member_ids
 
 			if key == 'status':
-				filter_data_args["is_subscribed"] = True if value == '1' else False
+				#无论如何这地方都要带有status参数，不然从“数据罗盘-会员分析-关注会员链接”过来的查询结果会有问题
+				if value == '1':
+					filter_data_args["is_subscribed"] = True
+				elif value == '0':
+					filter_data_args["is_subscribed"] = False
 
 			if key == 'source':
 				if value in ['-1', 0]:

@@ -33,3 +33,24 @@ def step_impl(context, user):
 	expected['deal_product_count'] = expected_dict[u'总成交件数']
 
 	bdd_util.assert_dict(expected, actual)
+
+
+@then(u"{user}获得下单单量排行top10")
+def step_impl(context, user):
+	start_date = bdd_util.get_date_str(context.date_dict['start_date'])
+	end_date = bdd_util.get_date_str(context.date_dict['end_date'])
+
+	url = '/stats/api/deal_order_rank/?start_date=%s&end_date=%s' % (start_date, end_date)
+	response = context.client.get(url)
+	results = json.loads(response.content)
+	actual_list = results['data']['items']
+
+	actual = {}
+	for item in actual_list:
+		actual[item['product_name']] = item['num']
+
+	expected = {}
+	for row in context.table:
+		expected[row['name']] = int(row['count'])
+
+	bdd_util.assert_dict(expected, actual)

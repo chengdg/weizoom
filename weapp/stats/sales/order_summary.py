@@ -153,7 +153,7 @@ def _get_test_data(start_time, end_time):
 def _get_stats_data(user, start_time, end_time):
 	# return _get_test_data(start_time, end_time)
 	webapp_id = user.get_profile().webapp_id
-	total_orders = Order.objects.filter(webapp_id=webapp_id)
+	total_orders = belong_to(webapp_id)
 	qualified_orders = total_orders.prefetch_related('orderhasproduct_set').filter(
 		#created_at__gte=start_time, created_at__lt=end_time,
 		created_at__range=(start_time, end_time),

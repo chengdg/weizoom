@@ -44,7 +44,7 @@ def step_impl(context):
 
 @then(u'获得店铺经营概况数据')
 def step_impl(context):
-	print("json: {}".format(context.data))
-	real = context.data['result']
+	print("context.data: {}".format(context.data))
+	real = context.data['items']
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, real)

@@ -5,6 +5,7 @@ from core import dateutil
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
+from django.db.models.query_utils import Q
 
 from stats import export
 from core import resource
@@ -12,7 +13,7 @@ from core import resource
 from core.jsonresponse import create_response
 import stats.util as stats_util
 from modules.member.models import Member
-from mall.models import Order, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
+from mall.models import Order, WeizoomMallHasOtherMallProductOrder, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
 from .brand_value_utils import get_latest_brand_value
 
 
@@ -166,36 +167,36 @@ class ManageSummary(resource.Resource):
 
         return response.get_response()
 
-
 #获取成交订单
 def get_transaction_orders(webapp_id,low_date,high_date):
+    weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+    tmp_q = Q(webapp_id=webapp_id) | Q(order_id__in=weizoom_mall_order_ids)
     transaction_orders = Order.objects.filter(
-        webapp_id=webapp_id,
-        order_source=ORDER_SOURCE_OWN,
-        created_at__range=(low_date,high_date),
-        status__in=(ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
+        tmp_q,
+        Q(created_at__range=(low_date,high_date)),
+        Q(status__in=(ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
         )
     return transaction_orders
 
 #获取来源为“本店”的总订单量
-def get_total_buyer(webapp_id,low_date,high_date):
-    orders = Order.objects.filter(
-                webapp_id=webapp_id, 
-                order_source=ORDER_SOURCE_OWN, 
-                created_at__range=(low_date, high_date), 
-                status__in=(ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
-            )
-    order_dict = {}
-    webapp_user_ids = set([order.webapp_user_id for order in orders])
-    webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
-    member_count = 0
-    for order in orders:
-        tmp_member = webappuser2member.get(order.webapp_user_id, None)
-        if tmp_member:
-            if not order_dict.has_key(tmp_member.id):
-                member_count += 1
-                order_dict[tmp_member.id] = ""
-        else:
-            member_count += 1
-
-    return member_count
+# def get_total_buyer(webapp_id,low_date,high_date):
+#     orders = Order.objects.filter(
+#                 webapp_id=webapp_id, 
+#                 order_source=ORDER_SOURCE_OWN, 
+#                 created_at__range=(low_date, high_date), 
+#                 status__in=(ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
+#             )
+#     order_dict = {}
+#     webapp_user_ids = set([order.webapp_user_id for order in orders])
+#     webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+#     member_count = 0
+#     for order in orders:
+#         tmp_member = webappuser2member.get(order.webapp_user_id, None)
+#         if tmp_member:
+#             if not order_dict.has_key(tmp_member.id):
+#                 member_count += 1
+#                 order_dict[tmp_member.id] = ""
+#         else:
+#             member_count += 1
+# 
+#     return member_count

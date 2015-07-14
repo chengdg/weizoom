@@ -185,9 +185,10 @@ W.view.member.memberFilterView = Backbone.View.extend({
             dataValue.push('grade_id:'+grade);
         }
         var status = $('#status').val();
-        if (status != -1) {
+        // if (status != -1) {
+            //#无论如何这地方都要带有status参数，不然从“数据罗盘-会员分析-关注会员链接”过来的查询结果会有问题
             dataValue.push('status:'+status);
-        }
+        // }
         var source = $('#source').val();
         if (source != '-1') {
             dataValue.push('source:'+source);

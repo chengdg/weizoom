@@ -19,6 +19,7 @@ from mall.models import Order
 
 from watchdog.utils import watchdog_error, watchdog_fatal, watchdog_info
 import module_api
+import hashlib
 
 from modules.member.tasks import update_member_integral, increase_intgral_for_be_member_first
 

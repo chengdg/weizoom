@@ -278,9 +278,11 @@ W.view.stats.StatsOrderListFilterView = Backbone.View.extend({
 
     //重置按钮事件
     doReset:function(){
-        var now_date_str = this.getDateStr(new Date());
-        $('#start_date').val(now_date_str);
-        $('#end_date').val(now_date_str);
+        var end_date = this.getDateStr(new Date());
+        var now_time = new Date().getTime();
+        var start_date = this.getDateStr(new Date(now_time - (6 * 24 * 60 * 60 * 1000)));
+        $('#start_date').val(start_date);
+        $('#end_date').val(end_date);
         this.updateTimeTags();
         
         $('#product_name').val('');

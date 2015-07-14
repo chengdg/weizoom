@@ -515,7 +515,7 @@ def _extract_url_params(request):
 		
 def _get_stats_data(user, params, is_export):
 	webapp_id = user.get_profile().webapp_id
-	total_orders =  Order.objects.filter(webapp_id=webapp_id)
+	total_orders =  belong_to(webapp_id)
 	# time_qualified_orders = total_orders.filter(created_at__gte=params['start_time'], created_at__lt=params['end_time'])
 	status_qualified_orders = total_orders.filter(status__in=[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED])
 	pre_status_qualified_orders = status_qualified_orders.filter(created_at__lt=params['start_time'])

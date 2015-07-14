@@ -34,6 +34,9 @@ def get_members(request):
 	"""
 	mpuser = get_system_user_binded_mpuser(request.user)
 	webapp_id  = request.user_profile.webapp_id
+	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
+	#add by duhao 2015-07-13
+	status = request.GET.get('status' , '-1')
 
 	c = RequestContext(request, {
 		'first_nav_name': export.MEMBER_FIRST_NAV,
@@ -42,7 +45,8 @@ def get_members(request):
 		'should_show_authorize_cover' : get_should_show_authorize_cover(request),
 		'user_tags': MemberTag.get_member_tags(webapp_id),
 		'grades': MemberGrade.get_all_grades_list(webapp_id),
-		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0).count()
+		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0).count(), 
+		'status': status
 	})
 
 	return render_to_response('member/editor/members.html', c)

@@ -158,7 +158,7 @@ Scenario: 测试只有1个消费用户、1个商品的品牌价值
 		"""
 
 
-@stats @wip.brand_value
+@stats @wip.brand_value2
 Scenario: 测试2个消费用户、2个商品的品牌价值
 	品牌价值会参考用户1年(365天)内购买金额和数量。
 
@@ -181,19 +181,45 @@ Scenario: 测试2个消费用户、2个商品的品牌价值
 		# 按日期顺序的品牌价值
 		"""
 		[{
-			"value": 140
+		    "value": 140
 		}, {
-			"value": 140
+		    "value": 140
 		}, {
-			"value": 140
+		    "value": 140
 		}, {
-			"value": 140
+		    "value": 140
 		}, {
-			"value": 50
+		    "value": 140
 		}, {
-			"value": 140
+		    "value": 140
 		}, {
-			"value": 250
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 140
+		}, {
+		    "value": 50
+		}, {
+		    "value": 140
+		}, {
+		    "value": 250
 		}]
 		"""
 

@@ -42,10 +42,10 @@
             </td>
             <td>
                 <div class="xui-i-wrap">
-                    <span class="xui-i-money" id="mobile_bind_member_count">0</span><br/>
+                    <span class="xui-i-money" id="binding_phone_member_count">0</span><br/>
                     <img class="xui-i-img xui-i-hide" src="/static_v2/img/editor/help.png"/>
                     <span class="xui-i-name">手机绑定会员</span>
-                    <img class="xui-i-img" id="mobile_bind_member_count_help" src="/static_v2/img/editor/help.png"/>
+                    <img class="xui-i-img" id="binding_phone_member_count_help" src="/static_v2/img/editor/help.png"/>
                 </div>
             </td>
             <td>
@@ -297,7 +297,7 @@
                 <tr>
                     <td>${item.date}</td>
                     <td>${item.new_member_count}</td>
-                    <td>0</td>
+                    <td>${item.binding_phone_member_count}</td>
                     <td>${item.share_url_member_count}</td>
                     <td>${item.member_from_share_url_count}</td>
                     <td>${item.ori_qrcode_member_count}</td>
@@ -365,7 +365,7 @@
             placement : "bottom"
         });
 
-        $('#mobile_bind_member_count_help').popover({
+        $('#binding_phone_member_count_help').popover({
             content : "<div class='xui-i-alert'>新增手机绑定会员数</div>",
             trigger : "hover",
             html : true,

@@ -15,6 +15,8 @@ from modules.member.models import MemberMarketUrl
 from market_tools.tools.channel_qrcode.models import  ChannelQrcodeHasMember
 from market_tools.tools.lottery.models import LotteryRecord
 
+from features.testenv.model_factory import UserFactory
+from market_tools.tools.channel_qrcode.channel_qrcode_util import create_channel_qrcode_has_memeber
 #from modules.member.models import Member
 
 #from market_tools.prize import module_api
@@ -33,6 +35,7 @@ def step_impl(context, user):
 	for setting in settings:
 		context.response = client.post('/market_tools/channel_qrcode/edit_setting/', setting)
 		time.sleep(1)
+
 
 @then(u'{user}能看到的渠道扫码列表')
 def step_impl(context, user):
@@ -68,17 +71,34 @@ def step_impl(context, webapp_user_name, channel_qrcode_name):
 	channel_setting = bdd_util.get_channel_qrcode_setting(channel_qrcode_name)
 	assert channel_setting is not None 
 	owner_id = channel_setting.owner_id
+	#is_new = False
 	if webapp_user_name[0] == '-':
 		# 表示此用户还不是会员，让其关注
 		owner = User.objects.get(id=owner_id)
 		webapp_user_name = webapp_user_name[1:]
 		context.execute_steps(u"When %s关注%s的公众号" % (webapp_user_name, owner.username))
+		#is_new = True
 
 	webapp_id = bdd_util.get_webapp_id_via_owner_id(owner_id)
 	member = bdd_util.get_member_for(webapp_user_name, webapp_id)
-	ChannelQrcodeHasMember.objects.create( \
-		channel_qrcode=channel_setting, \
-		member=member)
+	#user = UserFactory(username=webapp_user_name)
+	#user = User.objects.get(id=owner_id)
+	context.user_profile = UserProfile.objects.get(user_id=owner_id)
+	ticket = channel_setting.ticket
+
+	create_channel_qrcode_has_memeber(
+		context.user_profile,
+		member,
+		ticket,
+		True
+		)
+
+	#if channel_setting.re_old_member!=0:
+	#	ChannelQrcodeHasMember.objects.create( \
+	#		channel_qrcode=channel_setting, \
+	#		member=member \
+	#		)
+
 	#prize_info = PrizeInfo.from_json(channel_setting.award_prize_info)
 	#module_api.award(prize_info, member, u'渠道扫码奖励')
 

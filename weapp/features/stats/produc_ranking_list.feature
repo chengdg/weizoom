@@ -64,16 +64,10 @@ Background:
 		     "type": "微信支付",
 		     "is_active": "启用"
 	      },{
-		     "type": "支付宝支付",
+		     "type": "支付宝",
 		     "is_active": "启用"
 	      }]
 	     """
-	And jobs已添加微众支付
-	   """
-	     [{
-		    "is_weizoom_pay":"是"
-	     }]
-	   """
     When jobs添加商品
         """
         [{
@@ -90,23 +84,7 @@ Background:
     And jim关注jobs的公众号
     And kate关注jobs的公众号
     And mary关注jobs的公众号
-    #账号前面'-'代表取消关注的会员，账号前面'*'代表非会员
-    When 微信用户批量浏览并分享jobs的商品
-         |date        |product  |share_time   |accessed_time   |share_person |accessed_person |
-         |昨天 10:00  |商品1    | 昨天 11:10  |  今天 12:10    |kate         |tom             |
-         |今天 09:00  |商品1    | 今天 09:01  |                |bill         |                |
-         |今天 09:00  |商品1    | 今天 09:20  |  明天00:01     |mary         |*tom1           |
-         |今天 09:00  |商品1    | 今天 09:10  |  今天 10:00    |bill         |tom             |
-         |今天 09:00  |商品1    | 今天 09:10  |  今天 10:10    |bill         |tom             |
-         |今天 09:00  |商品1    | 今天 09:10  |  今天 10:20    |bill         |bill            |
-         |今天 09:00  |商品1    | 今天 09:10  |  今天 10:10    |bill         |*tom1           |
-         |今天 09:00  |商品1    | 今天 11:10  |  今天 10:10    |bill         |tom             |
-         |今天 10:00  |商品1    | 今天 11:10  |  今天 12:10    |tom          |*tom2           |
-         |今天 23:00  |商品1    | 今天 23:50  |  今天 23:59    |jim          |*tom3           |
-         |今天 10:10  |商品2    | 今天 11:10  |  今天 12:10    |tom          |*tom1           |
-         |今天 13:00  |商品2    | 今天 13:20  |  今天 13:40    |bill         |*tom1           |
-         |今天 13:10  |商品2    | 今天 13:20  |  今天 13:40    |jim          |*tom2           |
-         |今天 14:00  |商品3    | 今天 14:10  |  今天 15:10    |tom          |*tom1           |
+    #账号前面'-'代表取消关注的会员
         
     When 微信用户批量消费jobs的商品
          | date              | consumer | type |businessman| product          | payment | payment_method | freight | price    | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash | action    |  order_status   |
@@ -136,29 +114,7 @@ Scenario: 1 商品排行（下单单量、被分享次数）
      #下单单量排行top10
      Then jobs获得下单单量排行top10
          |ranking  |name   |count  |  
-         |1        |商品1  |7      | 
+         |1        |商品1  |4      | 
          |2        |商品2  |3      |
-         |3        |商品3  |1      |
-         |4        |       |0      |
-         |5        |       |0      |
-         |6        |       |0      | 
-         |7        |       |0      |
-         |8        |       |0      |
-         |9        |       |0      |
-         |10       |       |0      |
-
-
-     #商品被分享次数排行top10
-     And jobs获得商品被分享次数排行
-         |ranking  |name   |proportion |count |
-         |1        |商品1  |50.00%     | 4    |
-         |2        |商品2  |37.50%     | 3    |
-         |3        |商品3  |12.50%     | 1    |
-         |4        |       |0          | 0    |
-         |5        |       |0          | 0    |
-         |6        |       |0          | 0    |
-         |7        |       |0          | 0    |
-         |8        |       |0          | 0    |
-         |9        |       |0          | 0    |
-         |10       |       |0          | 0    | 
+         |3        |商品3  |2      |
 

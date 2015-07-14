@@ -19,7 +19,6 @@ from market_tools.tools.lottery.models import Lottery
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings
 from modules.member.models import MemberMarketUrl
 
-
 from core import dateutil
 
 @when(u"微信用户已参加'微信抽奖'营销活动")
@@ -36,7 +35,7 @@ def step_impl(context):
 		user_name = row['participant']
 		responsible_person = row['responsible_person']
 
-		member_source = row['member_source']
+		member_source = row.get('member_source')
 		print('member_source: [{}]'.format(member_source))
 		if member_source == u'会员分享':
 			share_link_attention = row['share_link_attention']

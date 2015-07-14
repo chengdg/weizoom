@@ -86,7 +86,7 @@ Background:
 	And kate关注jobs的公众号
 	And bob关注jobs的公众号
 
-@stats @stats.marketing
+@stats @stats.marketing @wip.marketing1
 Scenario: '微信抽奖'营销活动分析及分页
 	Given jobs登录系统
 
@@ -147,7 +147,7 @@ Scenario: '渠道扫码'营销活动分析及分页
 		| 渠道扫码02    | jobs              |        1 | 1                 |  -  | 1   | 已启动 |
 
 
-@stats @stats.marketing
+@stats @stats.marketing @wip.channel
 Scenario: 一个用户扫描2个渠道二维码
 	前提：已建立渠道扫码01和渠道扫码02（均设置已关注会员可参与）
 	1、用户a扫"渠道扫码01"的二维码
@@ -176,7 +176,7 @@ Scenario: 一个用户扫描2个渠道二维码
 	Then 获取'渠道扫码'营销活动分析列表
 		|name  | manager | parti_times | parti_person_cnt |  end_at              | status   | status_text |
 		| 渠道扫码01    | jobs              |        1 | 1                 |  -  | 1   | 已启动 |
-		| 渠道扫码02    | jobs              |        1 | 1                 |  -  | 1   | 已启动 |
+		| 渠道扫码02    | jobs              |        0 | 0                 |  -  | 1   | 已启动 |
 
 
 @stats @wip.marketing2
@@ -454,23 +454,23 @@ Scenario: 渠道扫码
 	When jobs已添加'渠道扫码'营销活动
 		"""
 		[{
-		"name":"渠道扫码13",
-		"authority":"是",
-		"creat_time":"2015-06-20 21:00:00",
-		"awards":
-		[{
-		"type":"积分",
-		"value":20
-		}]    
+			"name":"渠道扫码13",
+			"authority":"是",
+			"creat_time":"2015-06-20 21:00:00",
+			"awards":
+			[{
+				"type":"积分",
+				"value":20
+			}]    
 		},{
-		"name":"渠道扫码04",
-		"authority":"是",
-		"creat_time":"2015-06-20 08:00:00",
-		"awards":
-		[{
-		"type":"无奖励",
-		"value":""
-		}]    
+			"name":"渠道扫码04",
+			"authority":"是",
+			"creat_time":"2015-06-20 08:00:00",
+			"awards":
+			[{
+				"type":"无奖励",
+				"value":""
+			}]    
 		}]
 		"""
 	When jobs已设置分页条件
