@@ -44,17 +44,19 @@ def product_stocks(request):
 
 	if product_id:
 		models = ProductModel.objects.filter(product_id=product_id)
-	if model_ids:
+	elif model_ids:
 		model_ids = model_ids.split(",")
 		models = ProductModel.objects.filter(id__in=model_ids)
+	else:
+		models = []
 
 	response = create_response(200)
-	if models.count() == 1:
+	if len(models) == 1:
 		model_data = dict()
 		model_data["stocks"] = models[0].stocks
 		model_data["stock_type"] = models[0].stock_type
 		response.data = model_data
-	elif models.count() > 1:
+	elif len(models) > 1:
 		for model in models:
 			model_data = dict()
 			model_data["stocks"] = model.stocks
