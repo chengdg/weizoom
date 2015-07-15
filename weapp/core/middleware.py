@@ -183,8 +183,9 @@ class UserAgentMiddleware(object):
 	@note 该中间件必须置于RequestUserSourceDetectMiddleware之后。该中间件处理对管理后台的请求的UserAgent进行处理，（对于api的调用不进行处理）。如果不是所指定的列表（Firefox, Chrome和Safari），则返回特殊页面禁止进行任何操作。
 	"""
 	def process_request(self, request):
-		#支持bdd测试
-		if request.META['REMOTE_ADDR'] == '127.0.0.1':
+		remote_addr = request.META['REMOTE_ADDR']
+		if remote_addr == '127.0.0.1':
+			#支持bdd测试
 			return None
 		
 		# if not settings.MODE == 'deploy':
@@ -212,6 +213,11 @@ class UserAgentMiddleware(object):
 		user_agent_str = request.META.get('HTTP_USER_AGENT', '')
 		if user_agent_str.find('Flash') >= 0:
 			#对于Flash的请求不做任何处理
+			return None
+
+		if user_agent_str.find('ApacheBench') >= 0 and (
+			remote_addr in ['1.202.255.198', '118.26.196.238'] or remote_addr.find('192.168.') == 0):
+			# 对于公司内部ab命令不做任何处理
 			return None
 
 		user_agent = parse(user_agent_str)
