@@ -43,7 +43,7 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
 		except:
 			error_msg = u"获得user('{}')对应的mpuser_preview_info构建cache失败, cause:\n{}"\
 					.format(webapp_owner_id, unicode_full_stack())
-			watchdog_warning(error_msg, user_id=webapp_owner_id, noraise=True)
+			watchdog_warning(error_msg, user_id=webapp_owner_id)
 			mpuser_preview_info = weixin_user_models.MpuserPreviewInfo()
 			weixin_mp_user_access_token = weixin_user_models.WeixinMpUserAccessToken()
 			mpuser = weixin_user_models.WeixinMpUser()
