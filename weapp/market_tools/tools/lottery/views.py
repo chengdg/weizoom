@@ -148,7 +148,8 @@ def edit_lottery_view(request, id):
 def stop_lottery(request, id):
 	Lottery.objects.filter(id=id).update(status=LOTTERY_STATUS_STOP)
 	
-	return HttpResponseRedirect(request.META['HTTP_REFERER'])
+	HTTP_REFERER = request.META.get('HTTP_REFERER', '/market_tools/lottery/')
+	return HttpResponseRedirect(HTTP_REFERER)
 	
 
 ########################################################################
@@ -158,7 +159,8 @@ def stop_lottery(request, id):
 def start_lottery(request, id):
 	Lottery.objects.filter(id=id).update(status=LOTTERY_STATUS_RUNING)
 	
-	return HttpResponseRedirect(request.META['HTTP_REFERER'])
+	HTTP_REFERER = request.META.get('HTTP_REFERER', '/market_tools/lottery/')
+	return HttpResponseRedirect(HTTP_REFERER)
 
 
 ########################################################################
@@ -168,7 +170,8 @@ def start_lottery(request, id):
 def delete_lottery(request, id):
 	Lottery.objects.filter(id=id).delete()
 	
-	return HttpResponseRedirect('/market_tools/lottery/list/')
+	HTTP_REFERER = request.META.get('HTTP_REFERER', '/market_tools/lottery/')
+	return HttpResponseRedirect(HTTP_REFERER)
 
 
 ########################################################################
@@ -178,4 +181,5 @@ def delete_lottery(request, id):
 def award_prize(request, id):
 	LotteryRecord.objects.filter(id=id).update(is_awarded=True, awarded_at=datetime.today())
 	
-	return HttpResponseRedirect(request.META['HTTP_REFERER'])
+	HTTP_REFERER = request.META.get('HTTP_REFERER', '/market_tools/lottery/')
+	return HttpResponseRedirect(HTTP_REFERER)
