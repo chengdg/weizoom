@@ -3,7 +3,6 @@
 import json
 import qrcode, os
 
-from weixin2 import export
 from core import resource
 from core.jsonresponse import create_response, JsonResponse
 from django.template import RequestContext
