@@ -228,6 +228,9 @@ class Product(models.Model):
 				models = self.models[1:]
 			else:
 				models = self.models
+			if len(models) == 0:
+				self._total_stocks = 0
+				return self._total_stocks
 			is_dict = (type(models[0]) == dict)
 
 			for model in models:
@@ -448,6 +451,8 @@ class Product(models.Model):
 				product.user_code = product.user_code
 				product.stock_type = PRODUCT_STOCK_TYPE_LIMIT
 				product.stocks = 0
+				product.standard_model = {}
+				product.models = []
 
 
 	@staticmethod

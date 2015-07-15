@@ -237,10 +237,10 @@ def create_product(request):
             )
 
         #商品后处理
-        if swipe_images:
-            thumbnails_url = swipe_images[0]["url"]
-        else:
+        if len(swipe_images) == 0:
             thumbnails_url = ''
+        else:
+            thumbnails_url = swipe_images[0]["url"]
         product.thumbnails_url = thumbnails_url
         product.save()
 
@@ -349,7 +349,10 @@ def update_product(request):
         #获取轮播图集合
         #
         swipe_images = json.loads(request.POST.get('swipe_images', '[]'))
-        thumbnails_url = swipe_images[0]["url"]
+        if len(swipe_images) ==0:
+            thumbnails_url = ''
+        else:
+            thumbnails_url = swipe_images[0]["url"]
 
         #
         #更新product
