@@ -8,7 +8,7 @@ from django.db.models.loading import get_model
 from django.db.models import Q
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
-from watchdog.utils import watchdog_alert, watchdog_fatal
+from watchdog.utils import watchdog_alert, watchdog_warning
 
 import crm_settings
 
@@ -289,7 +289,7 @@ def get_time_person_cards(phone_number, company, status=0):
         crm_accounts = CRMAccount.objects.using(crm_settings.SHENGJINGD_DB).filter(Q(account_mobile_phone__icontains=phone_number) | Q(account_id__in=account_ids), account_name=company)
         if crm_accounts.count() == 0:
             fatal_message = u'账单(获取时间卡、人次卡信息),未获取到CRMAccount phone:{}; account_ids: {}, company:{}'.format(phone_number, account_ids, company)
-            watchdog_fatal(fatal_message, user_id=211)
+            watchdog_warning(fatal_message, user_id=211)
             return None
         crm_account = crm_accounts[0]
 
@@ -298,8 +298,8 @@ def get_time_person_cards(phone_number, company, status=0):
         if CRMContract.exist_office_order(crm_account.account_id):
             crm_contracts = CRMContract.objects.using(crm_settings.SHENGJINGD_DB).filter(account_id=crm_account.account_id, contract_type=OFFICIAL_CONTRACT, close_flag=0, is_deleted=0)
         else:
-            fatal_message = u'账单(获取时间卡、人次卡信息),未获取到账单 phone:{}; account_id: {}, company:{}'.format(phone_number, crm_contract.account_id, company)
-            watchdog_fatal(fatal_message, user_id=211)
+            fatal_message = u'账单(获取时间卡、人次卡信息),未获取到账单 phone:{}; account_ids: {}, company:{}'.format(phone_number, account_ids, company)
+            watchdog_warning(fatal_message, user_id=211)
             return None
 
         #对订单信息进行封装
