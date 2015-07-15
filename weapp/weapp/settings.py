@@ -214,6 +214,7 @@ TEMPLATE_LOADERS = [
     #     'django.template.loaders.eggs.Loader',
 ]
 MIDDLEWARE_CLASSES = [
+    'core.resource_middleware.RestfulUrlMiddleware',
     'django.middleware.common.CommonMiddleware',
     'core.middleware.ExceptionMiddleware',
     'core.debug_middleware.SimulateWeixinMiddleware',
@@ -229,7 +230,6 @@ MIDDLEWARE_CLASSES = [
 
     # REST resorce manage
     'core.resource_middleware.ResourceJsMiddleware',
-    'core.resource_middleware.RestfulUrlMiddleware',
 
     # Uncomment this middleware to get POST api call's sql sequence
     # 'core.debug_middleware.JsonToHtmlMiddleware',
