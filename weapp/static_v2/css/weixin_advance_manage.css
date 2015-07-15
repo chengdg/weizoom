@@ -997,12 +997,11 @@
 
 .xui-editMaterialPage .xui-menu-right-item {
 	border: 1px solid #cccccc;
-	/*position: absolute;*/
-	top:38px;
 	margin-left: 40%;
 	width: 57%;
 	margin-top: 25px;
 	min-height: 320px;
+	position: relative;
 }
 
 .xui-editMaterialPage .xui-menu-right-item .xui-menu-right-item-inner {
@@ -1095,9 +1094,9 @@
 }
 
 .xui-editMaterialPage .xui-menu-right-item-inner .wui-messageEditor {
-	margin-left: -7px;
+	margin-left: -6px;
 	margin-top: 2px;
-	width: 335px;
+	width: 334px;
 }
 
 .xui-editMaterialPage .xui-menu-right-item-inner .wui-messageEditor li {
