@@ -43,6 +43,7 @@ VALID_FOR_BRAND_VALUE = set([
     "larhea",
     "ainicoffee",
     "gangshanxigu",
+    "aodahang",
 
     "jobs",
     ])
