@@ -2,7 +2,7 @@
 
 import time
 
-from watchdog.utils import watchdog_info, watchdog_error
+from watchdog.utils import watchdog_info, watchdog_error, watchdog_warning
 
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
@@ -111,9 +111,11 @@ def get_unifiedorder(request):
 		response.data = data
 		return response.get_response()
 	except:
-		if data and ( not data.has_key('prepay_id') or not data.has_key('nonce_str') ):
+		if data and ( not data.has_key('nonce_str') ):
+			# 条件弃用 TODO 查询其他状况
+			# not data.has_key('prepay_id') or
 			notify_message = u"weixin pay, stage:[get unifiedorder], order_id:{}, result:\n{}, exception:\n{}".format(out_trade_no, data, unicode_full_stack())
-			watchdog_info(notify_message)
+			watchdog_warning(notify_message)
 		else:
 			notify_message = u"weixin pay, stage:[get unifiedorder], order_id:{}, result:\n{}, exception:\n{}".format(out_trade_no, data, unicode_full_stack())
 			watchdog_error(notify_message)
