@@ -66,9 +66,8 @@ def handle(request, webapp_id):
 		try:
 			content = message_pipeline.handle(request, webapp_id)
 		except:
-			notify_message = u"进行消息处理失败，cause:\n{}".format(unicode_full_stack())
+			notify_message = u"进行消息处理失败，webapp_id:{} cause:\n{}".format(webapp_id, unicode_full_stack())
 			watchdog_fatal(notify_message)
-
 			content =None
 		
 		if content is None or len(content) == 0:

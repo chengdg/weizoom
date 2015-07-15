@@ -82,7 +82,8 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 	},
 
 	render: function() {
-		var index = this.$el.attr('index');
+		var index = this.currentMenuId;
+		var dataId = this.currentMenuId;
 		if (!index) {
 			index = $('.xui-i-menu-item').length;
 		}
@@ -177,4 +178,10 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 		
 		return model;
 	},
+
+	setContentData: function(currentId, content ,type){
+		var model = this.getMenuModel(currentId);
+		model.set('answer', {content: content, type: type});
+		console.log('---set:',currentId,model.get('answer'))
+	}
 });

@@ -19,9 +19,8 @@ from account.models import UserProfile
 class Command(BaseCommand):
 	help = "init global navbar for all user"
 	args = ''
-	component = ComponentInfo.objects.all()
 	def handle(self, **options):
-		for component in ComponentInfo.objects.all():
+		for component in ComponentInfo.objects.filter(is_active=True):
 			weixin_api = WeixinApi(None, weixin_http_client)
 			result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)
 			#try:

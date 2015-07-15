@@ -1213,11 +1213,16 @@ def get_oauthinfo_by(request):
 			response_data = eval(req.read())
 			return response_data, None
 		except :
-			notify_message = u"oauth2 access_token: cause:\n{}".format(unicode_full_stack())
-			watchdog_fatal(notify_message)
-			response = process_to_oauth(request,weixin_mp_user_access_token)
-			if response:
-				return None, response
+			try:
+				req = urllib2.urlopen(url, urllib.urlencode(data))
+				response_data = eval(req.read())
+				return response_data, None
+			except :
+				notify_message = u"oauth2 access_token: cause:\n{}".format(unicode_full_stack())
+				watchdog_fatal(notify_message)
+				response = process_to_oauth(request,weixin_mp_user_access_token)
+				if response:
+					return None, response
 
 
 def process_to_oauth(request, weixin_mp_user_access_token, code=None, appid=None):

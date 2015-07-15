@@ -2,7 +2,23 @@
 
 {% load common_tag %}
 {% load account_filter %}
-
+{% block css %}
+<style type="text/css">
+.xui-editCover{
+  position:absolute;
+  z-index:1000;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background:rgba(255,255,255,1) ;
+  text-align: center;
+  padding-top: 140px !important;
+  margin-left: 3px;
+  color: #cccccc;
+}
+</style>
+{% endblock %}
 {% block content-panel %}
   <div class="xui-editMaterialPage xa-editMaterialPage pr" is_weizoom_mall="{{is_weizoom_mall}}" is_certified_service="{{is_certified_service}}"></div>
 {% endblock %}

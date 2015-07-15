@@ -514,7 +514,7 @@ def update_member(request):
 		if name:
 			member_info_update['name'] = name
 		if phone_number:
-			member_info_update['phone_number'] = phone_number
+			member_info_update['phone_number'] = phone_number.strip()
 
 		if sex != None:
 			member_info_update['sex'] = sex

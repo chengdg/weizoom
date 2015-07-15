@@ -55,12 +55,15 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 						$menuItem.prepend('<img src="/static_v2/img/weixin/menu_item.png" class="mr5 mb3">');
 					}
 				});
+				
+				
 			},
 			error: function(resp) {
 				W.getLoadingView().hide();
 				W.showHint('error', '加载菜单数据失败!');
 			}
 		});
+
     },
     
     //初始化自定义菜单
@@ -82,21 +85,31 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 				this.$('.xui-i-editor-panel').css('height', top + 260);
 			}
 		}
+		//this. $('.xa-menu-content').html('点击左侧编辑');
+		//this.$('.xa-menu-content').addClass('pr').append('<div style="position:absolute;z-index:1000;width:100%;height:100%;top:0;left:0;background:rgba(0,0,0,0)"></div>');
+
+		$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
     },
     
     render: function() {
         //创建html
+
         return this;
     },
 	
 	//添加一级菜单导航
 	onAddOneMenu: function(event) {
+		if (this.validateItem()  == false) {
+			return ;
+		}
 		var length = parseInt(this.$('.xui-i-menu-item').length);
 		if (length >= 3) {
 			W.showHint('error', '最多只能创建3个一级菜单！');
 			return;
 		}
-    	
+		//$('.xa-menu-content').addClass('pr').append('<div class="xui-editCover"></div>');
+    	$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
+    	//$('.xa-menu-content').html('<label class="xui-i-unvalid">使用二级菜单后主回复已失效</label>')
     	var $menu = this.$('.xui-i-menu').append('<div class="xui-i-menu-item"></div>');
 	    var $oneMenuDiv = $("div[class=xui-i-menu-item]:last");
     	var menuItem = new W.view.weixin.MenuItem({
@@ -116,6 +129,8 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 		var width = W.menuPhone.menubar.getNewMenuWidth(length);
 		var menuId = W.menuPhone.menubar.addNewMenu(width);
 		$input.attr('data-menu-id', menuId);
+
+
 		W.menuPhone.menubar.getMenu(menuId).set('name', $input.val());
 		W.menuPhone.menubar.refresh();
 		if (W.menuPhone.menubar.activeMenuId) {
@@ -131,8 +146,97 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 				$menuItem.prepend('<img src="/static_v2/img/weixin/menu_item.png" class="mr5 mb3">');
 			}
 		});
+		//xui-menu-right-item
+
 	},
 	
+	validateItem: function(){
+		var data = W.menuPhone.getMenuData();
+		var tipType = -1;
+		var tipId = -1;
+		// 提交数据前判断类型是url的内容未以http://开头，自动添加http://开头
+		$.each(data, function(i, n) {
+			if (tipType !== -1) {
+				return false;
+			}
+			tipId = n.id;
+			if (n.name.length == 0 && tipType == -1) {
+				tipType = 0;
+				return false;
+			}
+			if (n.answer.type === 'text' && n.answer.content.length > 600){
+				tipType = 2;
+				return false;
+			}
+
+			if (n.items.length == 0 && n.answer.content.length == 0) {
+				tipType = 4;
+				return false;
+			}
+			n.name = W.getString().cut(n.name, 16, 0);
+			$.each(n.items, function(j, m) {
+				tipId = m.id;
+				if (m.name.length == 0 && tipType == -1) {
+					tipType = 1;
+					return false;
+				}
+				if (m.answer.type === 'text' && m.answer.content.length > 600){
+					tipType = 3;
+					return false;
+				}
+				if (m.answer.content.length == 0) {
+					tipType = 5;
+					return false;
+				}
+				m.name = W.getString().cut(m.name, 40, 0);
+				/*
+				if(m.answer && m.answer.type === 'url' && m.answer.content.indexOf('http://') === -1) {
+					m.answer.content = 'http://'+m.answer.content;
+				}
+				*/
+			});
+		});
+		this.$('input').attr('readonly', 'readonly');
+		var $input = $('input[data-menu-id="' + tipId + '"]');
+		var $inputParentDiv = $input.parent('div');
+		var $menuItemDiv = $inputParentDiv.parents('.xui-i-menu-item');
+		var $editMessagePanel = $menuItemDiv.find('#edit-message-panel');
+		$menuItemDiv.find('.xui-menu-left-item div.active').removeClass('active');
+		$inputParentDiv.addClass('active');
+		$input.focus();
+		var menuItem = new W.view.weixin.MenuItem({el: '', messageEl: $editMessagePanel});
+		if (tipType === 0) {
+			W.showHint('error', '一级菜单不能为空');
+			menuItem.changeEditMessagePanel($inputParentDiv, 1);
+			return false;
+		} else if (tipType === 1) {
+			W.showHint('error', '二级菜单不能为空');
+			menuItem.changeEditMessagePanel($inputParentDiv, 2);
+			return false;
+		} else if (tipType === 2 || tipType === 3) {
+			W.showHint('error', '内容不能超过600字');
+			menuItem.changeEditMessagePanel($inputParentDiv, tipType - 1);
+			var $iframe = $editMessagePanel.find('iframe');
+			var tid = setInterval(function() {
+				var $iframeBody = $iframe.contents().find('body');
+				if ($iframeBody.length > 0) {
+					$iframeBody.css('overflow-y', 'auto');
+					$iframeBody.css('height', '184px');
+					
+					clearInterval(tid);
+				}
+			}, 100); 
+			
+			return false;
+		} else if (tipType === 4 || tipType === 5) {
+			W.showHint('error', '回复内容不能为空');
+			menuItem.changeEditMessagePanel($inputParentDiv, tipType - 3);
+			
+			return false;
+		}
+		return true;
+	},
+
 	onSubmitCustomMenus: function(event) {
 		var data = W.menuPhone.getMenuData();
 		var tipType = -1;
