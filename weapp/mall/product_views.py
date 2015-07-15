@@ -348,7 +348,11 @@ def update_product(request):
         #
         #获取轮播图集合
         #
-        swipe_images = json.loads(request.POST.get('swipe_images', '[]'))
+        swipe_images = request.POST.get('swipe_images', '[]')
+        if len(swipe_images) == 0:
+            swipe_images = []
+        else:
+            swipe_images = json.loads(swipe_images)
         if len(swipe_images) ==0:
             thumbnails_url = ''
         else:
