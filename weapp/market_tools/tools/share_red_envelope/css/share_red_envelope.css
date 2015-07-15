@@ -286,9 +286,6 @@ body{
 	top: .5rem;
 	overflow: hidden;
 }
-.xui-friends .xui-avatar img{
-	border-radius: 50%;
-}
 .xui-friends .xui-info{
 	padding: .5rem 0 .35rem 2.3rem;
 }

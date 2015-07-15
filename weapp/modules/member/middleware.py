@@ -58,17 +58,17 @@ class CleanUpCookieMiddleware(object):
 		#added by slzhu
 		# if settings.MODE != "develop":
 		# 	real_ip=request.META.get('HTTP_X_FORWARDED_FOR', None)
-
+			
 		# 	if real_ip is None:
 		# 		real_ip = request.META.get('REMOTE_ADDR', None)
 
 		# 	if real_ip:
 		# 		ip = "request ip: %s" % real_ip
 		# 		watchdog_error(ip)
-
+				
 		if is_pay_request(request):
 			return None
-
+		
 		if not is_request_for_webapp(request):
 			#如果是对webapp的请求，不进行任何处理
 			return None
@@ -97,9 +97,9 @@ class CleanUpCookieMiddleware(object):
 
 		url_sct = request.GET.get(member_settings.SOCIAL_ACCOUNT_TOKEN_URL_QUERY_FIELD, None)
 		cookie_sct = request.COOKIES.get(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, None)
-		url_openid = request.GET.get(member_settings.URL_OPENID, None)
+		url_openid = request.GET.get(member_settings.URL_OPENID, None) 
 
-
+	
 		is_response = False
 		if webapp_id != request.user_profile.webapp_id:
 			is_response = True
@@ -139,7 +139,7 @@ class MemberCacheMiddleware(object):
 		if not is_request_for_webapp(request):
 			#如果是对webapp的请求，不进行任何处理
 			return None
-
+		
 		request.webapp_user = None
 		request.member = None
 		request.social_account = None
@@ -158,7 +158,7 @@ class MemberCacheMiddleware(object):
 				request.webapp_user = webapp_user
 				request.social_account = social_account
 				request.member = member
-
+				
 				request.webapp_user.member = request.member
 				request.webapp_user.webapp_owner_info = request.webapp_owner_info
 				request.found_member_in_cache = True
@@ -166,7 +166,7 @@ class MemberCacheMiddleware(object):
 				pass
 		except:
 			pass
-
+		
 
 class RedirectBySctMiddleware(object):
 	"""
@@ -213,13 +213,13 @@ class RedirectBySctMiddleware(object):
 						pass
 					else: # cookie_sct != url_sct
 						response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, url_sct, max_age=3600*24*1000)
-
+				
 				#向cookie中设置mt
 				if social_account:
 					#member_cookie = '%s_%s' % (social_account., request.user_profile.webapp_id)
 					#response.set_cookie(member_settings.MEMBER_TOKEN_SESSION_KEY, member_cookie, max_age=3600*24*1000)
 					response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, "%s____%s" % (social_account.openid, social_account.webapp_id), max_age=60*60*24*365)
-
+		
 				return response
 			except:
 				notify_message = u"处理url sct失败，url_sct={}, cause:\n{}".format(url_sct, unicode_full_stack())
@@ -293,14 +293,14 @@ class RedirectBySctMiddleware(object):
 		if request.COOKIES.has_key(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY):
 			request.COOKIES.pop(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 
-	def process_request(self, request):
+	def process_request(self, request):	
 		#added by slzhu
 		if is_pay_request(request):
 			return None
 
 		if request.is_access_temporary_qrcode_image:
 			return None
-
+			
 		# 不处理临时二维码请求 by liupeiyu
 		if request.is_access_temporary_qrcode_image:
 			return None
@@ -312,7 +312,7 @@ class RedirectBySctMiddleware(object):
 			return None
 
 		if request.user_profile and request.user_profile.is_oauth:
-			return None
+			return None	
 
 		if is_js_config(request):
 			return None
@@ -324,7 +324,7 @@ class RedirectBySctMiddleware(object):
 		response = self.process_sct_in_cookie(request)
 		if response:
 			return response
-
+		
 		return None
 
 	# def process_response(self, request, response):
@@ -359,7 +359,7 @@ class RedirectByFmtMiddleware(object):
 					return response
 		else:
 			new_url = url_helper.remove_querystr_filed_from_request_url(request, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD)
-			response = HttpResponseRedirect(new_url)
+			response = HttpResponseRedirect(new_url)	
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, url_fmt, max_age=60*60*24*365)
 			return response
 
@@ -387,7 +387,7 @@ class RedirectByFmtMiddleware(object):
 			return None
 
 		if request.user_profile and request.user_profile.is_oauth:
-			return None
+			return None	
 
 		#不处理url没有有效fmt的请求
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
@@ -406,7 +406,7 @@ class RedirectByFmtMiddleware(object):
 			shared_url_digest = visit_session_util.get_request_url_digest(request)
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
 			return response
-
+		
 		return None
 
 
@@ -420,10 +420,10 @@ class RequestSocialAccountMiddleware(object):
 	对于微信用户和非微信用户有些区别
 
 	微信用户
-
+	
 	由于微信用户访问微站不需要登录，在微信中进入微站就要做到识别当前
 	所请求的微信用户，在微信中会通过两种方式进入微站：
-
+	
 	1. 在微站所绑定的公众号的会话环境中
 	2. 其他方式
 
@@ -456,7 +456,7 @@ class RequestSocialAccountMiddleware(object):
 
 		if is_js_config(request):
 			return None
-
+		
 		# 不处理临时二维码请求 by liupeiyu
 		if request.is_access_temporary_qrcode_image:
 			return None
@@ -539,7 +539,7 @@ class MemberMiddleware(object):
 			pass
 		#if MemberHasSocialAccount.objects.filter(account=social_account).count() > 0:
 		#	member = MemberHasSocialAccount.objects.filter(account=social_account)[0].member
-
+		
 		#TODO: 什么时候有social acount无member?
 		if not member:
 			member = member_util.create_member_by_social_account(user_profile, social_account)
@@ -554,7 +554,7 @@ class MemberMiddleware(object):
 
 		if is_js_config(request):
 			return None
-
+		
 		# 不处理临时二维码请求 by liupeiyu
 		if request.is_access_temporary_qrcode_image:
 			return None
@@ -575,7 +575,7 @@ class MemberMiddleware(object):
 
 		if not request.member and request.social_account:
 			request.member = self.get_member_by_social_account(request.user_profile, request.social_account)
-
+		
 		assert hasattr(request, 'member')
 		return None
 
@@ -597,7 +597,7 @@ class MemberSessionMiddleware(object):
 
 
 		if is_js_config(request):
-			return None
+			return None	
 
 		#对于非webapp请求和非pc商城地方请求不进行处理
 		if (not is_request_for_webapp(request)) and (not is_request_for_pcmall(request)):
@@ -615,7 +615,7 @@ class MemberSessionMiddleware(object):
 		else:
 			#更新会员最近访问时间
 			Member.update_last_visit_time(request.member)
-
+		
 		if request.member is not None:
 			try:
 				update_member_group(request.user_profile, request.member, request.social_account)
@@ -628,7 +628,7 @@ class MemberSessionMiddleware(object):
 
 	def get_request_member(self, request):
 		member = get_member(request)
-		if member is None and request.social_account:
+		if member is None and request.social_account: 
 			#还不是会员，且可以获取到当前请求的社交账号信息，则创建会员信息
 			member = create_member(request)
 			#首次绑定为会员，需要对积分进行计算；判断是否是新创建会员 如果是，则增加首次关注积分
@@ -694,7 +694,7 @@ class MemberRelationMiddleware(object):
 		#对于管理后台的请求不进行任何处理
 		if is_request_for_editor(request):
 			return None
-
+		
 		#TODO 是否需要考虑避免每次都尝试建立关系
 		build_member_follow_relation(request)
 		return None
@@ -720,7 +720,7 @@ class WebAppUserMiddleware(object):
 
 		if is_js_config(request):
 			return None
-
+		
 		# 不处理临时二维码请求 by liupeiyu
 		if request.is_access_temporary_qrcode_image:
 			return None
@@ -780,7 +780,7 @@ class WebAppUserMiddleware(object):
 		except:
 			notify_message = u"WebAppUserMiddleware error, cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_message)
-
+		
 
 class MemberSouceMiddleware(object):
 	"""
@@ -795,8 +795,8 @@ class MemberSouceMiddleware(object):
 
 			if is_js_config(request):
 				return None
-
-
+		
+		
 			if request.app is None:
 				return None
 
@@ -824,19 +824,19 @@ class MemberSouceMiddleware(object):
 		except:
 			notify_message = u"MemberSouceMiddleware error, cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_message)
-
+		
 
 
 class AddUuidSessionMiddleware(object):
 	"""
-	AddUuidSessionMiddleware : uuid 在系统中唯一标识
+	AddUuidSessionMiddleware : uuid 在系统中唯一标识 
 	流程经过AddUuidSessionMiddleware后，request中一定有request.uuid
 	"""
 	def process_request(self, request):
 		#added by slzhu
 		if is_pay_request(request):
 			return None
-
+		
 		#对于支付请求，不处理
 		if request.is_access_pay or request.is_access_paynotify_callback:
 			return None
@@ -877,7 +877,7 @@ class AddUuidSessionMiddleware(object):
 
 from modules.member.integral_new import increase_for_click_shared_url
 import urllib2
-import urllib
+import urllib 
 import json
 import hashlib
 from BeautifulSoup import BeautifulSoup
@@ -899,7 +899,7 @@ class OAUTHMiddleware(object):
 		#added by slzhu
 		if is_pay_request(request):
 			return None
-
+		
 		if is_js_config(request):
 			return None
 
@@ -929,7 +929,7 @@ class OAUTHMiddleware(object):
 			request.webapp_owner_info.mpuser.is_active and request.user_profile and request.user_profile.is_oauth:
 			is_oauth = False
 			#cookie_openid_webapp_id  ==  'openid____webappid'
-			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)
+			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)	
 			request_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 			if is_request_for_api(request):
 				request_fmt = True
@@ -988,7 +988,6 @@ class OAUTHMiddleware(object):
 
 				if response_data.has_key('openid'):
 					weixin_user_name = response_data['openid']
-					access_token = response_data['access_token']
 					social_accounts = SocialAccount.objects.filter(openid=weixin_user_name, webapp_id=request.user_profile.webapp_id)
 					if social_accounts.count() > 0:
 						social_account = social_accounts[0]
@@ -997,17 +996,13 @@ class OAUTHMiddleware(object):
 						social_account = member_util.create_social_account(request.user_profile.webapp_id, weixin_user_name, token, SOCIAL_PLATFORM_WEIXIN)
 
 					member, response = get_member_by(request, social_account)
-
-					if not member.user_icon.startswith('http'):
-						get_user_info(weixin_user_name, access_token, member)
-
 					if response:
 						return response
 					request.social_account = social_account
 					request.member = member
 					#处理分享链接
 					self.process_shared_url(request, member.is_new_created_member)
-
+					
 					response = self.process_current_url(request)
 					return response
 		return None
@@ -1021,7 +1016,7 @@ class OAUTHMiddleware(object):
 		new_url = request.get_full_path()
 		if fmt != member.token:
 			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD)
-
+			
 		if 'code' in request.GET:
 			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'code')
 
@@ -1029,11 +1024,11 @@ class OAUTHMiddleware(object):
 			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'appid')
 
 		if member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY in request.GET:
-			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
+			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)	
 
 		if member_settings.URL_OPENID in request.GET:
-			new_url = url_helper.remove_querystr_filed_from_request_url(new_url, member_settings.URL_OPENID)
-
+			new_url = url_helper.remove_querystr_filed_from_request_url(new_url, member_settings.URL_OPENID)					
+		
 		new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, member.token)
 		response = HttpResponseRedirect(new_url)
 		response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, "%s____%s" % (social_account.openid, request.user_profile.webapp_id), max_age=60*60*24*365)
@@ -1083,10 +1078,10 @@ class OAUTHMiddleware(object):
 
 				new_url = url_helper.remove_querystr_filed_from_request_url(request, member_settings.SOCIAL_ACCOUNT_TOKEN_URL_QUERY_FIELD)
 				new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, fmt)
-
+				
 				if member_settings.URL_OPENID not in request.GET:
 					new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, fmt)
-
+				
 				response = HttpResponseRedirect(new_url)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
@@ -1107,7 +1102,7 @@ class OAUTHMiddleware(object):
 		# if member:
 		# 	from modules.member.tasks import process_oauth_member_relation_and_source
 		# 	process_oauth_member_relation_and_source.delay(fmt, member.id, is_new_created_member)
-
+		
 def _create_webapp_user(member):
 	try:
 		if WebAppUser.objects.filter(token = member.token, webapp_id = member.webapp_id, member_id = member.id).count() == 0:
@@ -1150,8 +1145,8 @@ def get_member_by(request, social_account):
 			except:
 				notify_message = u"get_member_by中MemberMarketUrl失败，会员id:{}, cause:\n{}".format(member.id, unicode_full_stack())
 				watchdog_error(notify_message)
-
-			return member,None
+		
+			return member,None			
 		except:
 			notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
 				social_account.openid, unicode_full_stack())
@@ -1224,40 +1219,6 @@ def get_oauthinfo_by(request):
 			if response:
 				return None, response
 
-def get_user_info(openid, access_token, member):
-	url = 'https://api.weixin.qq.com/sns/userinfo'
-	data = {
-		'access_token': access_token,
-		'openid': openid,
-		'lang': 'zh_CN'
-	}
-	response_data = {}
-	try:
-		req = urllib2.urlopen(url, urllib.urlencode(data))
-		response_data = eval(req.read())
-	except:
-		try:
-			req = urllib2.urlopen(url, urllib.urlencode(data))
-			response_data = eval(req.read())
-		except :
-			notify_message = u"userinfo: cause:\n{}".format(unicode_full_stack())
-			watchdog_fatal(notify_message)
-
-	if response_data.has_key('openid'):
-		nickname = response_data['nickname']
-		if isinstance(nickname, unicode):
-			member_nickname_str = nickname.encode('utf-8')
-		else:
-			member_nickname_str = nickname
-		username_hexstr = byte_to_hex(member_nickname_str)
-		Member.objects.filter(id=member.id).update(
-					username_hexstr=username_hexstr,
-					user_icon=response_data['headimgurl'],
-					sex=response_data['sex'],
-					province=response_data['province'],
-					city=response_data['city'],
-					country=response_data['country']
-			)
 
 def process_to_oauth(request, weixin_mp_user_access_token, code=None, appid=None):
 	if not code or not appid:# 没有code需要跳转至微信授权页面
@@ -1267,23 +1228,17 @@ def process_to_oauth(request, weixin_mp_user_access_token, code=None, appid=None
 
 		if not redirect_url.startswith('http'):
 			redirect_url = "http://%s%s" % (request.META['HTTP_HOST'], redirect_url)
-
-		if "share_red_envelope" in request.get_full_path():
-			api_style = "snsapi_userinfo"
-		else:
-			api_style = "snsapi_base"
-
 		component_info = ComponentAuthedAppid.objects.filter(authorizer_appid=weixin_mp_user_access_token.app_id)[0].component_info
 		weixin_auth_url = 'https://open.weixin.qq.com/connect/oauth2/authorize' \
-			+ '?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=123&component_appid=%s#wechat_redirect' \
-			% (weixin_mp_user_access_token.app_id, urllib.quote(redirect_url).replace('/','%2F'), api_style, component_info.app_id)
+			+ '?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=123&component_appid=%s#wechat_redirect' \
+			% (weixin_mp_user_access_token.app_id, urllib.quote(redirect_url).replace('/','%2F'), component_info.app_id)
 		return HttpResponseRedirect(weixin_auth_url)
 	else:
 		return None
 
 class ProcessOpenidMiddleware(object):
 	"""替换url中的opid to sct = xx"""
-
+	
 	def process_request(self, request):
 		#对于非webapp请求和非pc商城的请求不进行任何处理
 		openid = request.GET.get('opid', '')
@@ -1303,22 +1258,22 @@ class ProcessOpenidMiddleware(object):
 			if member and social_account:
 				new_url = url_helper.remove_querystr_filed_from_request_url(request, member_settings.SOCIAL_ACCOUNT_TOKEN_URL_QUERY_FIELD)
 				fmt = member.token
-
+				
 				if member_settings.URL_OPENID in request.GET:
-					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, member_settings.URL_OPENID)
-
+					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, member_settings.URL_OPENID)					
+		
 				new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, fmt)
 
 				response = HttpResponseRedirect(new_url)
 				response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, social_account.openid+"____"+social_account.webapp_id, max_age=60*60*24*365)
 				response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, social_account.token, max_age=60*60*24*365)
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
-
+				
 				return response
 			else:
 				new_url = str(request.get_full_path())
 				if member_settings.URL_OPENID in request.GET:
-					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, member_settings.URL_OPENID)
+					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, member_settings.URL_OPENID)					
 				response = HttpResponseRedirect(new_url)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
@@ -1326,7 +1281,7 @@ class ProcessOpenidMiddleware(object):
 				response.delete_cookie(member_settings.OPENID_WEBAPP_ID_KEY)
 				return response
 		return None
-
+		
 from weixin.user.models import WeixinUser, get_token_for
 def _process_error_openid(openid, user_profile, request=None):  #response_rule, from_weixin_user, is_from_simulator):
 	member = None
@@ -1352,9 +1307,9 @@ def _process_error_openid(openid, user_profile, request=None):  #response_rule, 
 				is_access_openid = check_openid_by_api(user_profile, openid)
 			if is_access_openid:
 				weixin_user = WeixinUser.objects.create(
-						username =openid,
-						webapp_id = webapp_id,
-						nick_name = '',
+						username =openid, 
+						webapp_id = webapp_id, 
+						nick_name = '', 
 						weixin_user_icon = '',
 						is_subscribed = True
 						)
@@ -1367,7 +1322,7 @@ def _process_error_openid(openid, user_profile, request=None):  #response_rule, 
 				except:
 					notify_message = u"_process_error_openid update_member_basic_info cause:\n{}".format(unicode_full_stack())
 					watchdog_error(notify_message)
-
+				
 				try:
 					integral.increase_for_be_member_first(user_profile, member)
 				except:
