@@ -182,6 +182,12 @@ ORDER_NAV = {
             'title': u'批量发货',
             'url': 'javascript:void(0);',
             'need_permissions': ['manage_order_batch_delivery', ]
+        },
+        {
+            'name': ORDER_RED_ENVELOPE,
+            'title': u'分享红包',
+            'url': '/mall/red_envelope_rule/get/',
+            'need_permissions': ['manage_order_red_envelope', ]
         }
     ]
 }

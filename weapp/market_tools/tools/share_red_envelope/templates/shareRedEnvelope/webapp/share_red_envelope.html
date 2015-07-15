@@ -83,15 +83,9 @@
           <p>在商城支付的订单满{{red_envelope_rule.limit_order_money|floatformat}}元，就会赠送给你一个红包。支付的订单越多，获得的红包就越多哦！</p>
       {% else %}
           <!-- ↓不限制订单金额时显示↓ -->
-          <p>在商城只要支付订单，就会赠送给你一个红包。支付的订单越多，获得的红包就越哦！</p>
+          <p>在商城只要支付订单，就会赠送给你一个红包。支付的订单越多，获得的红包就越多哦！</p>
       {% endif %}
       <p style="margin-bottom:.75rem;">好友分享的红包，只能领取一个。</p>
-      {% if coupon_rule %}
-      <div class="xui-gotCoupon">
-        我领到的优惠券
-        <span>{{ coupon_rule.money|floatformat }}元</span>
-      </div>
-      {% endif %}
     </div>
     <div class="xui-friends">
       <h3 class="xui-guideTitle">

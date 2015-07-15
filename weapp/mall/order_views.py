@@ -443,7 +443,7 @@ def _export_orders_json(request):
 
 	orders = [
 		[u'订单号', u'下单时间',u'付款时间', u'商品名称', u'规格',
-		u'商品单价', u'商品数量', u'支付方式', u'支付金额',u'现金支付金额',u'微众卡支付金额',
+		u'商品单价', u'商品数量', u'商品总重量（斤）', u'支付方式', u'支付金额',u'现金支付金额',u'微众卡支付金额',
 		u'运费', u'积分抵扣金额', u'优惠券金额',u'优惠券名称', u'订单状态', u'购买人',
 		u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'备注', u'来源', u'物流公司', u'快递单号', u'发货时间']
 	]
@@ -546,7 +546,6 @@ def _export_orders_json(request):
 					model_value_ids.append(mod[i:])
 
 
-
 	# print 'begin step 3 products - '+str(time.time() - begin_time)
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
 
@@ -563,6 +562,9 @@ def _export_orders_json(request):
 	# print 'begin step 5 models - '+str(time.time() - begin_time)
 	id2modelname = dict([(str(value.id), value.name) for value in ProductModelPropertyValue.objects.filter(id__in = model_value_ids)])
 	# print 'end step 6 coupons - '+str(time.time() - begin_time)
+
+	#获取商品对应的重量
+	product_idandmodel_value2weigth = dict([((model.product_id, model.name), model.weight) for model in ProductModel.objects.filter(product_id__in = product_ids)])
 
 	#获取order对应的会员
 	webapp_user_ids = set([order.webapp_user_id for order in order_list])
@@ -722,6 +724,7 @@ def _export_orders_json(request):
 					model_value[1:].encode('utf8'),
 					relation.price,
 					relation.number,
+					product_idandmodel_value2weigth[(relation.product_id, relation.product_model_name)] * 2 * relation.number,
 					payment_type[str(int(order.pay_interface_type))],
 					final_price + weizoom_card_money,
 					final_price,
@@ -754,6 +757,7 @@ def _export_orders_json(request):
 				model_value[1:],
 				relation.price,
 				relation.number,
+				product_idandmodel_value2weigth[(relation.product_id, relation.product_model_name)] * 2 * relation.number,
 				payment_type[str(int(order.pay_interface_type))],
 					u'',
 					u'',
