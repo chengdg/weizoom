@@ -69,11 +69,15 @@ def get_express_details_by_order(order):
 	if details.count() > 0:
 		return list(details)
 
-	try:
-		express = ExpressHasOrderPushStatus.objects.get(
+	expresses = ExpressHasOrderPushStatus.objects.filter(
 			express_company_name = order.express_company_name,
 			express_number = order.express_number
 		)
+	if expresses.count() == 0:
+		return list([])
+
+	try:
+		express = expresses[0]
 		return list(ExpressDetail.objects.filter(express_id=express.id).order_by('-display_index'))
 	except:
 		innerErrMsg = full_stack()
