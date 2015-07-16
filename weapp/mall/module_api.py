@@ -1032,6 +1032,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	order.final_price = order.product_price
 
 	mall_signals.pre_save_order.send(sender=mall_signals, pre_order=fake_order, order=order, products=products, product_groups=product_groups)
+	order.final_price = round(order.final_price, 2)
 	if order.final_price < 0:
 		order.final_price = 0
 
