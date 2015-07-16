@@ -11,7 +11,7 @@ DUMP_DEBUG_MSG = DEBUG
 IS_UNDER_BDD = False
 
 IS_UNDER_CODE_GENERATION = False
-WEIZOOM_CARD_ADMIN_USERS = ('weshop',)
+WEIZOOM_CARD_ADMIN_USERS = ('card_admin',)
 
 MODE = 'develop'
 
@@ -43,7 +43,6 @@ TASKQUEUE_ENABLED = True
 EVENT_DISPATCHER = 'redis'
 
 DATETIME_FORMAT = 'Y m d, H:i:s.u'
-
 
 DATABASES = {
     'default': {
@@ -235,7 +234,7 @@ MIDDLEWARE_CLASSES = [
     # 'core.debug_middleware.JsonToHtmlMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
     'core.middleware.GetRequestInfoMiddleware',
@@ -357,7 +356,7 @@ TEMPLATE_DIRS = [
     CUSTOMERIZED_TEMPLATES_DIR,
     CUSTOMIZED_APP_TEMPLATES_DIR,
     PAY_TEMPLATES_DIR,
-    TERMITE2_TEMPLATES_DIR
+    TERMITE2_TEMPLATES_DIR,
 ]
 
 
@@ -413,7 +412,7 @@ INSTALLED_APPS = [
     'webapp',
     'webapp.modules.cms',
     'webapp.modules.user_center',
-    #'webapp.modules.shop',
+    # 'webapp.modules.shop',
     'termite.workbench',
 
     'manage_tools',
@@ -451,7 +450,7 @@ INSTALLED_APPS = [
     # Third-party apps
     # 'django_extensions',
 
-    #'new_mall', # for exercises
+    # 'new_mall', # for exercises
 ]
 
 
@@ -478,8 +477,8 @@ INSTALLED_TASKS = [
 
     'services.daily_page_visit_statistic_service',
     'services.update_mp_token_service',
-    'services.cancel_not_pay_order_service.tasks.cancel_not_pay_order_timeout',
-    'services.update_component_mp_token_service',
+    'services.cancel_not_pay_order_service',
+    # 'services.update_component_mp_token_service',
     'services.analysis_message_service',
     'services.count_keyword_service',
 ]
@@ -540,7 +539,7 @@ if 'develop' == MODE:
     WATCH_DOG_LEVEL = 0
     RECORD_SIMULATOR_MESSAGE = True
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 3 * 60
-#    USE_MOCK_PAY_API = True
+    # USE_MOCK_PAY_API = True
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
     EVENT_DISPATCHER = 'local'
@@ -576,6 +575,8 @@ else:
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 24 * 60 * 60
     USE_MOCK_PAY_API = False
     CDN_HOST = 'http://weappstatic.b0.upaiyun.com'
+    DEBUG_MERGED_JS = False
+    USE_DEV_JS = False
 
 IN_DEVELOP_MODE = (MODE == 'develop')
 ALLOWED_HOSTS = ['*', ]
