@@ -3,100 +3,125 @@
 html{
 	font-family:Arial,Tahoma,Roboto,"Droid Sans","Helvetica Neue","Droid Sans Fallback","Heiti SC","Hiragino Sans GB",'Microsoft Yahei',Simsun,sans-serif;
 }
-html,body{
+body{
 	background: #e93131;
 }
 .xui-attentionAlert{
 	display: none;
 }
 .xui-content{
-	background-image: url(/markettools_static/share_red_envelope/img/bg_bottom.png),url(/markettools_static/share_red_envelope/img/bg.jpg);
+	background-image: url(/markettools_static/share_red_envelope/img/bg.jpg),url(/markettools_static/share_red_envelope/img/line.jpg) ;
 	background-size: 100% auto;
 	background-repeat: no-repeat;
-	background-position:bottom center,top center;
-	background-color: #ffd350;
-	padding-top:7.35rem;
-	padding-bottom: 3.45rem;
+	background-position:top center,bottom center;
+	background-color: #ffd800;
+	padding-bottom: .75rem;
 }
-.xui-env,
-.xui-empty-env{
-	width:11.9rem;
-	background-size: 100% auto;
-	background-repeat: no-repeat;	
+.xui-envelope{
+	width:12.5rem;
 	margin:0 auto;
+	padding-top:6.7rem;
 	position: relative;
 }
-.xui-env{
-	height:11.15rem;
-	background-image: url(/markettools_static/share_red_envelope/img/env1.png);
+.xui-top{
+	width: 100%;
+	height:3rem;
+	background-image: url(/markettools_static/share_red_envelope/img/env_top.png);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	padding:.75rem 0 0 0;
 }
-.xui-empty-env{
-	height:10.7rem;
-	margin-bottom:.25rem;
-	background-image: url(/markettools_static/share_red_envelope/img/env2.png);
+.xui-bg{
+	width: 100%;
+	background-image: url(/markettools_static/share_red_envelope/img/env_bg.jpg);
+	background-size: 100% auto;
+	background-repeat: repeat-y;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.xui-middle{
+	width: 100%;
+	height:2.05rem;
+	background-image: url(/markettools_static/share_red_envelope/img/env_middle.jpg);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+}
+.xui-bottom{
+	width: 100%;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	padding:.375rem .85rem .7rem;
+	background-color: #e93131;
+	border-radius: 0 0 4px 4px;
+	margin-bottom:.5rem;
+}
+/*获得优惠券信息*/
+.xui-prizeInfo p{
+	color:#666;
+	margin: 0;
+	text-align: center;
+}
+.xui-prizeInfo .xui-memberName{
+	font-size: 0.75rem;
+	padding:0 1.5rem; 
+	text-align: left;
+}
+.xui-prizeInfo .xui-cName{
+	font-size: .7rem;
+}
+.xui-prizeInfo .xui-cType{
+	color:#e93131;
+	font-size:0.6rem;
+}
+.xui-prizeInfo .xui-couponFinish{
+	font-size: .9rem;
+	padding-top:.85rem;
 }
 /*优惠券*/
 .xui-coupon{
-	width:9.2rem;
-	height: 4.85rem;
+	width:8.7rem;
+	height: 4.35rem;
 	margin:0 auto;
+	background-image: url(/markettools_static/share_red_envelope/img/coupon_bg.jpg);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
 	-webkit-box-sizing:border-box;
 	box-sizing:border-box;
-	padding-top: .5rem;
+	padding: 0 .8rem 0 2.6rem;
+	line-height: 4.35rem;
 	text-align: center;
-	color:#fa4444;
+	color:#e61835;
 	white-space: nowrap;
 	overflow: hidden;
 }
 .xui-coupon span:first-child{
-	font-size: 1.25rem;
-}
-.xui-coupon span:last-child{
-	font-size: 3.25rem;
+	font-size: 2.1rem;
 	font-weight: bold;
-}
-/*获得优惠券信息*/
-.xui-prizeInfo p{
-	color:#fff;
-	margin: .5rem 0 0 0;
-	text-align: center;
-	font-size: .8rem;
-}
-.xui-prizeInfo .xui-couponFinish{
-	font-size: .8rem;
-	padding-top:1.25rem;
-	color:#666;
-}
-.xui-btnGroup{
-	text-align: center;
-	margin-top:1.75rem;
+};
+.xui-coupon span:last-child{
+	font-size: .85rem;
 }
 /*红包底部内容*/
-.xui-qrSection{
-	font-size: .55rem;
-	margin-top:.4rem;
-	padding:0 6.32rem 0 .5rem;
-	position: relative;
+.xui-memberTip,
+.xui-notMemberTip{
+	font-size: .6rem;
+	margin: 0 0 .5rem 0;
 }
-.xui-qrSection p{
+.xui-memberTip{
+	color:#6d000f;
+}
+.xui-notMemberTip{
 	color:#fff;
-	padding-top:.3rem;
-	-webkit-transform:scale(.95);
-	-moz-transform:scale(.95);
-	-ms-transform:scale(.95);
-	transform:scale(.95);
 }
-.xui-qrSection span{
+.xui-memberTip span,
+.xui-notMemberTip span{
 	color:#ffef9a;
 }
 .xui-qrCode{
-	padding-bottom:3.2rem;
-	width:3.5rem;
-	height:3.5rem;
-	position: absolute;
-	right:1rem;
-	top:0;
-	z-index: 100;
+	width:5.25rem;
+	height:5.25rem;
 }
 .xui-use-btn:link,
 .xui-use-btn:active,
@@ -112,47 +137,47 @@ html,body{
 .xui-myCoupon-btn{
 	display: inline-block;
 	height:1.6rem;
-	width:5rem;
 	line-height: 1.6rem;
-	border-radius:.1rem;
+	border-radius:.15rem;
 	font-size:.65rem;
 }
 .xui-myCoupon-btn{
+	width:5.5rem;
 	background: #ffef9a;
 	color:#e72842;
-	margin-right: .95rem;
+	margin-left: .65rem;
 }
 .xui-use-btn{
+	width:4.65rem;
 	background: #fff;
 	color:#333;
 }
 .xui-shareEnv-btn{
 	color:#fff;
-	width:11.9rem;;
+	width:12.5rem;
 	line-height: 2rem;
 	height:2rem;
 	text-align: center;
 	display: block;
-	margin:.5rem auto 0 auto;
+	margin:0 auto 0.5rem auto;
 	font-size: .8rem;
 	-webkit-border-radius: .15rem;
 	border-radius: .15rem;
-	background-color: #dc3434;
-	box-shadow: 0 .1rem #ac0101;
+	background-color: #cf0404;
+	box-shadow: 0 .1rem #8d0100;
 }
 .xui-shopping-btn{
-	display: block;
+	display: inline-block;
 	line-height:1.875rem;
 	height:1.875rem;
-	width: 10.5rem;
-	font-weight: bold;
-	margin:3.85rem auto 0;
+	width: 100%;
 	font-size: .8rem;
 	background: #fff;
 	color:#f1354f;
 	-webkit-border-radius: .15rem;
 	border-radius: .15rem;
-	box-shadow: 0 .1rem #f1354f;
+	box-shadow: 0 .1rem #c00006;
+	margin-top:.625rem;
 }
 .xui-shopping-btn:link,
 .xui-shopping-btn:active,
@@ -171,7 +196,7 @@ html,body{
 }
 .xui-guideTitle{
 	font-size: .7rem;
-	color:#8e0000;
+	color:#650202;
 	text-align: center;
 	font-weight: bold;
 	margin:0;
@@ -198,10 +223,7 @@ html,body{
 .xui-guideTitle::before,.xui-guideTitle::after{
 	position: absolute;
 	content: "";
-	border-top: solid 1px #8e0000;
-	-webkit-transform: scaleY(.5);
-	-moz-transform: scaleY(.5);
-	transform: scaleY(.5);
+	border-top: solid 1px #8d0215;
 	top: .5rem;
 }
 .xui-rule .xui-guideTitle::before,.xui-rule .xui-guideTitle::after{
@@ -291,16 +313,8 @@ html,body{
 	font-size: .65rem;
 }
 .xui-friends ul li{
-	position: relative;
-}
-.xui-friends ul li:after{
-	content: "";
-	width: 100%;
-	display: block;
 	border-bottom:1px solid #a91127;
-	-webkit-transform: scaleY(.5);
-	-moz-transform: scaleY(.5);
-	transform: scaleY(.5);
+	position: relative; 
 }
 .xui-cover{
 	background: rgba(0, 0, 0, 0.85);
