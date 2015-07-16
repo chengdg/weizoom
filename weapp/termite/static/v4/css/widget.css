@@ -1108,7 +1108,7 @@ ul.wui-relatelink li h3{
 .wui-imagenav{
     background: #fff;
     overflow: hidden;
-    padding: 10px;
+    padding: 5px;
 }
 .wui-imagenav li{
     text-align: center;
@@ -1126,7 +1126,7 @@ ul.wui-relatelink li h3{
 .wui-imagenav li a p {
     font-size: 13px;
     color: #333;
-    padding-top: 10px;
+    padding-top: 5px;
 }
 .wui-imagenav .wui-inner-pic{
     height: 75px;
@@ -1145,7 +1145,6 @@ ul.wui-relatelink li h3{
     overflow: hidden;
     background: #fff;
     box-sizing:border-box;
-    margin-bottom: 10px;
     padding-top: 1px;
 }
 .wui-imagedisplay .wui-inner-pic{

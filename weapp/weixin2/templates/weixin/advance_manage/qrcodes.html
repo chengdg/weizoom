@@ -18,7 +18,7 @@
 	.xui-weixin-qrcodePage .icon-arrow-down{
 		/*background: #f00;*/
 		background: url('/static_v2/img/weixin/storing.png') no-repeat;
-		
+
 	}
 </style>
 {% endblock%}
@@ -33,20 +33,21 @@
 	</div>
 	<div class="xui-rightPanel pr">
 
-	<div 
-		data-ui-role="advanced-table" 
-		data-app="new_weixin" 
-		data-resource="qrcodes" 
-		data-template-id="#setting_list_view" 
-		data-init-sort="-created_at" 
-		data-item-count-per-page="20" 
+	<div
+		data-ui-role="advanced-table"
+		data-app="new_weixin"
+		data-resource="qrcodes"
+		data-template-id="#setting_list_view"
+		data-init-sort="-created_at"
+		data-item-count-per-page="20"
 		data-enable-paginator="true"
 		class="panel-body mt40"
 		>
 	</div>
 
 	<span class="breadcrumRightButton">
-		<a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode" href="/new_weixin/qrcode/"><span class="xui-add-btn-icon">+</span>新建二维码<i class="icon-plus icon-white"></i></a>
+		<a class="btn btn-success lh20 xui-i-btnWidth xa-addQrcode" href="/new_weixin/qrcode/"><span class="xui-add-btn-icon">+</span>新建二维码</a>&nbsp;&nbsp;
+		<a class="btn btn-default lh20 xui-i-btnWidth xa-exportQrcode" href="javascript:void(0);" style="width:100px!important;">导出</a>
 		<div class="fr">
 			<input class="xui-searchInput  w250 xa-search-title h30" type="text"><a class="xui-searchBtn btn btn-default xa-searchBtn xa-search h30 ml0 mr5" style="min-width:50px!important;background: #f2f2f2;border-left-width: 0px; border-radius:0px;">搜索</a>
 		</div>
@@ -67,9 +68,9 @@
 								<span class="">二维码名称</span>
 							</p>
 						</th>
-						
+
 						<th style="width:10%;" class="tx_sortable xa-sorting" data-sort-attr='count' data-sort-direction="up"><a href="javascript:;">关注数量</a> <img class="xa-storingimg" src="" alt=""> </th>
-						<th style="width:10%;" class="tx_sortable" data-sort-attr='total_final_price'><a href="javascript:void(0);">成交金额</a></th>
+						<th style="width:15%;" class="tx_sortable" data-sort-attr='total_final_price'><a href="javascript:void(0);">扫码后成交金额</a></th>
 						<th style="width:15%;">扫码奖励</th>
 						<th style="width:15%;" class="tx_sortable" data-sort-attr='created_at'>创建时间</th>
 						<th style="width:10%;">备注</th>

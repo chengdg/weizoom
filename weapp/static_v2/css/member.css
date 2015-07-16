@@ -165,14 +165,15 @@
 }
 .xui-memberListPage  .xui-memberHeader{
 	margin-bottom: 5px;
+	position: relative;
 }
 .xui-memberListPage .xui-cancelCover{
 	width:50%;
-	background-color:rgba(0, 0, 0, 0.8);
+	background-color:rgba(0, 0, 0, 0.5);
 	position:absolute;
-	top:0;
+	bottom:0;
 	color:#fff;
-	line-height:41px;
+	line-height:15px;
 }
 .xui-memberListPage .xui-productList td:nth-child(2){
  text-align: left;

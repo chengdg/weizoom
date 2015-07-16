@@ -17,6 +17,7 @@ W.component.wepage.ImageNav = W.component.Component.extend({
                 isUserProperty: true,
                 triggerButton: '选择图片...',
                 selectedButton: '重新上传',
+                // help:'建议图片尺寸：260*260',
                 validate: 'data-validate="require-notempty::请添加一张图片"',
                 dialog: 'W.dialog.termite.SelectImagesDialog',
                 default: ''

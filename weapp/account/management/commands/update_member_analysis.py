@@ -12,6 +12,7 @@ from modules.member.models import *
 from account.models import *
 from account.util import *
 from core.wxapi import get_weixin_api
+from weixin.user.models import *
 import datetime
 
 class Command(BaseCommand):
@@ -24,8 +25,11 @@ class Command(BaseCommand):
 
 		date_time = datetime.datetime.now() + datetime.timedelta(days=-1)
 		date_time = date_time.strftime("%Y-%m-%d")
+
+		auth_appids = ComponentAuthedAppid.objects.filter(is_active=True)
+		user_ids = [auth_appid.user_id for auth_appid in auth_appids]
 		print date_time
-		user_profiles = UserProfile.objects.filter(is_mp_registered=True)
+		user_profiles = UserProfile.objects.filter(user_id__in=user_ids, is_mp_registered=True)
 		for user_profile in user_profiles:
 			print user_profile.webapp_id
 			try:

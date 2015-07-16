@@ -53,6 +53,11 @@
 		"id": "00011",
 		"name": "宅急送",
 		"value": "zhaijisong"
+	},
+	{
+		"id": "00012",
+		"name": "快捷速递",
+		"value": "kuaijiesudi"
 	}
 ]
 

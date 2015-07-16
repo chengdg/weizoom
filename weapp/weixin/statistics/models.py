@@ -45,7 +45,12 @@ def increase_weixin_user_statistics(user):
 	if count > 0:
 		WeixinUserDailyStatistics.objects.filter(data_date=today, owner=user).update(count = F('count') + 1)
 	else:
-		WeixinUserDailyStatistics.objects.create(owner=user, count=1)
+		try:
+			WeixinUserDailyStatistics.objects.create(owner=user, count=-1)
+		except:
+			WeixinUserDailyStatistics.objects.filter(data_date=today, owner=user).update(count = F('count') - 1)
+		
+
 
 #===============================================================================
 # decrease_weixin_user_statistics : 减少weixin user统计计数
@@ -56,4 +61,8 @@ def decrease_weixin_user_statistics(user):
 	if count > 0:
 		WeixinUserDailyStatistics.objects.filter(data_date=today, owner=user).update(count = F('count') - 1)
 	else:
-		WeixinUserDailyStatistics.objects.create(owner=user, count=-1)
+		try:
+			WeixinUserDailyStatistics.objects.create(owner=user, count=-1)
+		except:
+			WeixinUserDailyStatistics.objects.filter(data_date=today, owner=user).update(count = F('count') - 1)
+		

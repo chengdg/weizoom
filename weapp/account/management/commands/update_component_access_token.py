@@ -19,6 +19,7 @@ from account.models import UserProfile
 class Command(BaseCommand):
 	help = "init global navbar for all user"
 	args = ''
+
 	def handle(self, **options):
 		for component in ComponentInfo.objects.filter(is_active=True):
 			weixin_api = WeixinApi(None, weixin_http_client)
@@ -39,10 +40,7 @@ class Command(BaseCommand):
 					UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=False)
 					continue
 
-				print '-----1',component.app_id,auth_appid.authorizer_appid,auth_appid.authorizer_refresh_token
 				result = weixin_api.api_authorizer_token(component.app_id, auth_appid.authorizer_appid, auth_appid.authorizer_refresh_token)
-				print result
-				print '-----2'
 				#print result['authorizer_access_token']
 				if result.has_key('authorizer_access_token'):
 					authorizer_access_token = result['authorizer_access_token']

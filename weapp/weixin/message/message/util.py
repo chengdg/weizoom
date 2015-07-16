@@ -49,6 +49,7 @@ def record_message(args):
 	pic_url = args['pic_url']
 	message_type = args['message_type']
 	media_id = args['media_id']
+	is_un_read_msg = args['is_un_read_msg']
 
 	session = None
 
@@ -97,7 +98,8 @@ def record_message(args):
 		session.latest_contact_content = content
 		session.latest_contact_created_at = datetime.today()
 		session.is_latest_contact_by_viper = False
-		session.unread_count +=  1
+		if is_un_read_msg:
+			session.unread_count +=  1
 		session.retry_count = 0
 		session.weixin_created_at = weixin_created_at
 		#更新微信用户session信息, added by slzhu
@@ -122,13 +124,17 @@ def record_message(args):
 		type, value, tb = sys.exc_info()
 
 		traceback.print_tb(tb)
+		if is_un_read_msg:
+			unread_count = 1
+		else:
+			unread_count = 0
 		if mode == 'test' or mode == 'develop':
 			session = Session.objects.create(
 				mpuser=mpuser,
 				weixin_user=sender, 
 				weixin_created_at = weixin_created_at,
 				latest_contact_content=content, 
-				unread_count=1, 
+				unread_count=unread_count, 
 				is_show=False,
 				member_user_username = sender.username,
 				member_latest_content = content,
@@ -146,7 +152,7 @@ def record_message(args):
 				weixin_user=sender, 
 				weixin_created_at = weixin_created_at,
 				latest_contact_content=content, 
-				unread_count=1, 
+				unread_count=unread_count, 
 				is_show=True,
 				member_user_username = sender.username,
 				member_latest_content = content,
@@ -155,11 +161,11 @@ def record_message(args):
 			)
 
 			#增加未读数
-			count = Message.objects.filter(session_id=session.id, is_reply=False).count()
-			RealTimeInfo.objects.filter(mpuser=mpuser).update(unread_count = F('unread_count') + count)
+			# count = Message.objects.filter(session_id=session.id, is_reply=False).count()
+			# RealTimeInfo.objects.filter(mpuser=mpuser).update(unread_count = F('unread_count') + count)
 
-			#增加首页显示的new message count
-			increase_new_message_count(user=mpuser.owner, count=session.unread_count)
+			# #增加首页显示的new message count
+			# increase_new_message_count(user=mpuser.owner, count=session.unread_count)
 
 			#通知客户端
 			#TODO 改用其他通知方式？
@@ -172,15 +178,15 @@ def record_message(args):
 			# except:
 			# 	pass
 
-	try:
-		realtime_info = RealTimeInfo.objects.get(mpuser=mpuser)
-		if should_increase_realtime_unread_count:
-			RealTimeInfo.objects.filter(mpuser=mpuser).update(unread_count=F('unread_count')+1)
+	# try:
+	# 	realtime_info = RealTimeInfo.objects.get(mpuser=mpuser)
+	# 	if should_increase_realtime_unread_count:
+	# 		RealTimeInfo.objects.filter(mpuser=mpuser).update(unread_count=F('unread_count')+1)
 
-		if should_increase_new_message_count:
-			increase_new_message_count(user=mpuser.owner, count=1)
-	except:	
-		RealTimeInfo.objects.create(mpuser=mpuser, unread_count=0)
+	# 	if should_increase_new_message_count:
+	# 		increase_new_message_count(user=mpuser.owner, count=1)
+	# except:	
+	# 	RealTimeInfo.objects.create(mpuser=mpuser, unread_count=0)
 
 	if message_type == WeixinMessageTypes.VOICE:
 		is_updated = False

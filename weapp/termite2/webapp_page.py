@@ -43,9 +43,13 @@ class WebappPage(resource.Resource):
 			end = html.find(end_tag, beg)
 			page_title = html[beg:end]
 
+		# 获取页面描述
+		site_description = pagecreater.get_site_description(request)
+
 		c = RequestContext(request, {
 			'page_title': page_title,
 			'page_html_content': html,
+			'share_page_desc': site_description,
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})
 

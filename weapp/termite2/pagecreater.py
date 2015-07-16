@@ -105,3 +105,9 @@ def create_component(request):
 	response = create_response(200)
 	response.data = html
 	return response.get_response()
+
+
+def get_site_description(request):
+	project, page = __preprocess_page(request)
+	return page['component']['model']['site_description']
+

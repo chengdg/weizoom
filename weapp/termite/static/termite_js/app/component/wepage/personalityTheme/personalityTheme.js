@@ -18,7 +18,7 @@ W.component.wepage.personalityTheme = W.component.Component.extend({
                 displayName: '导航名称',
                 validate: 'data-validate="require-notempty::导航名称不能为空"',
                 validateIgnoreDefaultValue: true,
-                maxLength:5,
+                maxLength:7,
                 isUserProperty: true,
                 placeholder:'',
                 default: ''

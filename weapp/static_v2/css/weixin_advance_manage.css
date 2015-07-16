@@ -1127,8 +1127,9 @@
 .xui-qrcode-table .xui-cancelCover {
 	width: 40px;
 	background-color: rgba(0, 0, 0, 0.4);
-	top: 30px;
+	bottom: 0;
 	color: #fff;
+	height: 15px;
 }
 
 .xui-qrcode-table .xui-cancelCover span{
@@ -1136,7 +1137,8 @@
 }
 
 .xui-qrcode-table .xui-i-link {
-	width: auto;
+	/*width: auto;*/
+	/*带参数二维码影响*/
 	color:#086cb2;
 }
 
@@ -1144,7 +1146,7 @@
 	overflow: hidden;
 	text-overflow:ellipsis; 
 	white-space:nowrap; 
-	max-width: 340px;
+	max-width: 70px;
 	float: left;
 	padding: 0 0 0 10px;
 }

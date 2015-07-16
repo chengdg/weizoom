@@ -60,6 +60,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         })
         console.log(tag_values);
         args  = {checked_ids : check_value.join("_"), type : type, member_id : memberId}
+        var _this = this;
         if (this.isPostData){ 
             W.getApi().call({
                     app: 'member',
@@ -67,7 +68,8 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
                     method: 'post',
                     args: args,
                     success: function(data) {
-                        window.location.reload();
+                        //window.location.reload();
+                        _this.dataView.reload();
                     },
                     error: function() {
                     }
@@ -91,7 +93,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         this.isUpdateGrade = options.isUpdateGrade;
         this.memberId = options.memberId;
         this.isPostData = options.isPostData;
-
+        this.dataView = options.dataView;
 
         console.log( this.isPostData);
         W.getApi().call({

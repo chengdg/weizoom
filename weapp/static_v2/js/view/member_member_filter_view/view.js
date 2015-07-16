@@ -135,7 +135,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
             }
         });
         if (integral.length > 0) {
-            dataValue.push("integral:" + integral.join('-'))
+            dataValue.push("integral:" + integral.join('--'))
         }
        // var friend_count = [];
         //$('.friend_count').each(function(i, val){

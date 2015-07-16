@@ -48,6 +48,7 @@ W.view.member.MemberUpdateIntegralView = W.view.common.DropBox.extend({
 
     submitSendApi: function(memberId, integral, reason){
         this.hide()
+        var _this = this;
         W.getApi().call({
             app: 'member',
             api: 'integral/update',
@@ -59,7 +60,8 @@ W.view.member.MemberUpdateIntegralView = W.view.common.DropBox.extend({
                 reason: reason
                 },
             success: function(data) {
-                window.location.reload();
+                //window.location.reload();
+                _this.dataView.reload();
             },
             error: function(resp) {
             }
@@ -76,7 +78,8 @@ W.view.member.MemberUpdateIntegralView = W.view.common.DropBox.extend({
     },
     
     showPrivate: function(options) {
-        this.memberId = options.memberId
+        this.memberId = options.memberId;
+        this.dataView = options.dataView;
     },
 });
 

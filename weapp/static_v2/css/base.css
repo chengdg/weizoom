@@ -1016,8 +1016,7 @@ button.xui-close{
 	background-position: -120px 0;
 }
 .wui-rightNav a:last-child{
-	position: relative;	
-	background-color: #bebebe;
+	position: relative;
 	background-position: -160px 0;
 }
 

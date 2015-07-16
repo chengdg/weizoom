@@ -89,7 +89,7 @@ def __get_request_members_list(request):
 					pass
 				else:
 					filter_data_args["source"] = value
-			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price', 'integral']:
+			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price']:
 				if value.find('-') > -1:
 					val1,val2 = value.split('-')
 					if float(val1) > float(val2):
@@ -101,15 +101,18 @@ def __get_request_members_list(request):
 				else:
 					filter_data_args['%s__gte' % key] = value
 
-			if key in ['first_pay', 'sub_date'] :
+			if key in ['first_pay', 'sub_date', 'integral'] :
 				if value.find('-') > -1:
 					val1,val2 = value.split('--')
 					if key == 'first_pay':
 						filter_data_args['last_pay_time__gte'] = val1
 						filter_data_args['last_pay_time__lte'] =  val2
-					else:
+					elif key == 'sub_date':
 						filter_data_args['created_at__gte'] = val1
 						filter_data_args['created_at__lte'] = val2
+					else:
+						filter_data_args['integral__gte'] = val1
+						filter_data_args['integral__lte'] = val2
 
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 	total_count = members.count()

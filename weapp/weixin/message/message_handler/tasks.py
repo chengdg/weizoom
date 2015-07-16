@@ -57,7 +57,6 @@ def _get_info_from_context(context):
 	else:
 		message = None
 	if context["user_profile_id"]:
-		print 
 		user_profile = account_models.UserProfile.objects.get(id = context["user_profile_id"])
 	else:
 		user_profile = None
@@ -154,6 +153,10 @@ def get_or_create_messge(context, from_weixin_user):
 	if response_rule:
 		is_from_mp_user = True
 
+	is_un_read_msg = True
+	if response_rule and response_rule.has_key('type') and response_rule['type'] == 1:
+		is_un_read_msg = False
+
 	params = {
 		'sender_username': from_weixin_user.username,
 		'sender_nickname': from_weixin_user.username,
@@ -171,7 +174,8 @@ def get_or_create_messge(context, from_weixin_user):
 		'msg_id': message["msgId"],
 		'pic_url': picUrl,
 		'media_id': mediaId,
-		'is_from_mp_user': is_from_mp_user
+		'is_from_mp_user': is_from_mp_user,
+		'is_un_read_msg': is_un_read_msg
 	}
 	# if 'sender_fake_id' in request["POST"]:
 	# 	params['sender_fake_id'] = request["POST"]['sender_fake_id']

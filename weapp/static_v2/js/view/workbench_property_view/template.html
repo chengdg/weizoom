@@ -30,7 +30,7 @@
 								{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
 								{{if field.validate}}{{html field.validate}}{{/if}} />
 							{{if field.help}}
-							<div style="color: #888;">
+							<div class="xui-help" style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -45,7 +45,7 @@
 							<input class="xa-time xui-datePicker pl5" data-field="${field.name}" value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}" placeholder="${field.placeholder}" {{if field.validate}}data-validate="${field.validate}"{{/if}}
 								data-ui-role="date-picker" data-format="yy-mm-dd HH:MM" data-enable-select-time="true"/>
 							{{if field.help}}
-							<div style="color: #888;">
+							<div class="xui-help" style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -72,7 +72,7 @@
 						<div class="propertyGroup_property_input pl5" style="width: 90%; margin: 5px auto;">
 							<textarea class="" style="height: 100px; width: 95%;" data-field="${field.name}" {{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
 							{{if field.help}}
-							<div style="color: #888;">
+							<div class="xui-help" style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -187,7 +187,7 @@
 							{{/if}}
 							
 							{{if field.help}}
-							<div style="color: #666;">
+							<div class="xui-help" style="color: #666;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -236,7 +236,7 @@
 						<div class="propertyGroup_property_input" style="width: 100%; margin: 5px auto;">
 							<textarea class="xa-rich-text" style="height: 100px; width: 100%;" data-field="${field.name}">${model.get(field.name)}</textarea>
 							{{if field.help}}
-							<div style="color: #888;">
+							<div class="xui-help" style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -341,7 +341,7 @@
 											data-force-validate="true"
 											{{/if}} />
 										{{if dynamicComponentField.help}}
-										<div style="color: #888;">
+										<div class="xui-help" style="color: #888;">
 											{{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
 										</div>
 										{{/if}}
@@ -405,7 +405,7 @@
 										{{/if}}
 									</div>
 									{{if dynamicComponentField.help}}
-									<div style="color: #656565;">
+									<div class="xui-help" style="color: #908E8E;">
 										{{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
 									</div>
 									{{/if}}
