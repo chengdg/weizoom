@@ -51,27 +51,30 @@ def get_brand_value(webapp_id, date_str):
 
 	@retval brand_value(整型，单位元)
 	"""
-	cached = BrandValueHistory.objects.filter(webapp_id=webapp_id, value_date=date_str)
+	cached, created = BrandValueHistory.objects.get_or_create(webapp_id=webapp_id, value_date=date_str)
 	today = util_dateutil.date2string(util_dateutil.now())
 
 	# 如果有缓存的数据，从数据库取数据
 	#print("date_str: {}, count: {}".format(date_str, cached.count()))
-	if date_str != today and cached.count()>0:
-		brand_value = int(cached[0].value)
+	if date_str != today and not created:
+		brand_value = int(cached.value)
 	else:
-		if cached.count()>0:
-			cached.delete()
-		brand_value = compute_brand_value(webapp_id, date_str)
-		#print("date_str: {}, value: {}".format(date_str, brand_value))
+		brand_value = 0
 		try:
-			BrandValueHistory.objects.create(
-				webapp_id=webapp_id,
-				value_date=date_str,
-				value=brand_value)
+			brand_value = compute_brand_value(webapp_id, date_str)
+			#print("date_str: {}, value: {}".format(date_str, brand_value))
+			#BrandValueHistory.objects.create(
+			#	webapp_id=webapp_id,
+			#	value_date=date_str,
+			#	value=brand_value)
+			cached.webapp_id = webapp_id
+			cached.value_date = date_str
+			cached.value = brand_value
+			cached.save()
+			brand_value = int(brand_value)
 		except:
 			notify_msg = u"存微品牌数据失败, cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_msg)
-		brand_value = int(brand_value)
 	return brand_value
 
 
