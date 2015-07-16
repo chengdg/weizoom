@@ -67,7 +67,7 @@ def get_share_red_envelope(request):
 
     if relation.count() > 0:
         #分享获取红包
-        record = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_relation_id=relation[0].id)
+        record = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
         friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=relation[0].id).order_by("-id")
         if friends.count()>4:
             friends = friends[:4]
