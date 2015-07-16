@@ -6,69 +6,49 @@
 {% block content-panel %}
 <div class="xui-wrap">
   <section class="xui-content">
-    <div class="xui-envelope">
-        {% if coupon_rule %}
-            <div class="xui-top">
-                <div class="xui-prizeInfo">
-                 <!-- 会员领取时显示 -->
-                  {% if has_red_envelope %}
-                      <!-- 已经领过时显示 -->
-                      <p class="xui-cName">亲，您已经领过优惠券了哦！</p>
-                  {% else %}
-                        {% if member %}
-                            <p class="xui-memberName xui-ellipsis-1 xa-memberName">{{member.member_name|safe}}</p>
-                        {% endif%}
-                      <p class="xui-cName">恭喜您获得{{coupon_rule.money|floatformat }}元优惠券</p>
-                  {% endif %}
-                  <!-- 优惠券类型 -->
-                  <p class="xui-cType">
-                    {% if coupon_rule.limit_product %}
-                        {{coupon_rule.limit_product_name}}优惠券
-                    {%else%}
-                        全店通用优惠券
-                    {%endif%}
-                  </p>
-                </div>
-            </div>
-            <div class="xui-bg xa-bg">
-                <div class="xui-coupon">
-                    <span>{{coupon_rule.money|floatformat }}</span><span>元</span>
-                </div>
-            </div>
-            <div class="xui-middle"></div>
-            <div class="xui-bottom tc">
-                {% if member %}
-                    <!-- 会员领取后显示 -->
-                    <p class="xui-memberTip">已放入你的账户里，请在{{shop_name}}商城<br><span>“个人中心”</span> 查看</p>
-                    <div class="xui-btnGroup">
-                    <!-- 单品券应跳到对应商品详情 -->
-                        {% if coupon_rule.limit_product %}<a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{coupon_rule.limit_product_id}}" class="xui-use-btn">立即使用
-                        </a>{%else%}<a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-use-btn">立即使用
-                        </a>{% endif %}<a href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" class="xui-myCoupon-btn">我的优惠券</a>
-                    </div>
-                {% else %}
-                    <!-- 非会员领取后显示 -->
-                    <p class="xui-notMemberTip">请长按二维码关注{{shop_name}}商城<br>在 <span>“个人中心”</span> 即可使用优惠券</p>
-                    <img src="{{qcode_img_url}}" alt="" class="xui-qrCode">
-                {% endif %}
-            </div>
-        {% else %}
-            <div class="xui-top">
-              <div class="xui-prizeInfo">
-                  <!-- 优惠券领完时显示 -->
-                <p class="xui-couponFinish">很遗憾，红包已经领<br>完了!</p>
-              </div>
-            </div>
-            <div class="xui-bg" style="padding: .8rem 0 0 0;"></div>
-            <div class="xui-middle"></div>
-            <div class="xui-bottom tc">
-                <!-- 红包领完了显示 -->
-                <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-shopping-btn tc">进入商城</a>
-            </div>
-        {% endif %}
-    </div>
     {% if coupon_rule %}
-        <a href="javascript:void(0);" class="xui-shareEnv-btn xa-share">我要分享红包</a>
+    <div class="xui-env">
+      <div class="xui-coupon">
+          <span>￥</span><span>{{coupon_rule.money|floatformat }}</span>
+      </div>
+      <div class="xui-prizeInfo">
+        {% if has_red_envelope %}
+            <!-- 已经领过时显示 -->
+            <p class="xui-tip">你已经领取过优惠券了哦！</p>
+        {% else %}
+            <p class="xui-tip">恭喜你，获得{{coupon_rule.money|floatformat }}元优惠券！</p>
+        {% endif %}
+      </div>
+      <div class="xui-bottom">
+          {% if member %}
+              <!-- 会员领取后显示 -->
+              <div class="xui-btnGroup">
+              <!-- 单品券应跳到对应商品详情 -->
+                  <a href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" class="xui-myCoupon-btn">我的优惠券</a>{% if coupon_rule.limit_product %}<a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{coupon_rule.limit_product_id}}" class="xui-use-btn">立即使用
+                  </a>{%else%}<a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-use-btn">立即使用
+                  </a>{% endif %}
+              </div>
+          {% else %}
+              <!-- 非会员领取后显示 -->
+              <div class="xui-qrSection">
+                <p>请长按二维码关注{{shop_name}}商城在 <span>“个人中心”</span> 即可使用优惠券</p>
+                <img src="{{qcode_img_url}}" alt="" class="xui-qrCode">
+              </div>
+          {% endif %}
+      </div>
+    </div>
+    <a href="javascript:void(0);" class="xui-shareEnv-btn xa-share">我要分享红包</a>      
+    {% else %}
+      <div class="xui-empty-env">
+        <div class="xui-prizeInfo">
+            <!-- 优惠券领完时显示 -->
+          <p class="xui-couponFinish">很遗憾，红包已经领<br>完了!</p>
+        </div>
+        <div class="xui-bottom">
+            <!-- 红包领完了显示 -->
+            <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-shopping-btn tc">进入商城</a>
+        </div>
+      </div>
     {% endif %}
   </section>
   <section class="xui-other">
@@ -143,9 +123,6 @@
     doc.addEventListener('DOMContentLoaded', recalc, false);
 })(document, window);
 $(document).ready(function() {
-  if($('.xa-memberName').length > 0 && $('.xa-memberName').height() > 0){
-    $('.xa-bg').css('padding', '.8rem 0 0 0');
-  } 
   $('.xa-share').click(function(event) {
     $('.xa-cover').removeClass('hidden');
   });

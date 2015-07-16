@@ -21,11 +21,11 @@
 <div class="panel panel-default mt20 xui-bigBoxbg">
 <div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
     <div class="panel-heading xui-headStyle clearfix">
-        <a href="/mall/red_envelope_rule/create/" class="btn btn-success ml10 fr xui-btnSetting"><span class="xui-add-btn-icon">+</span>新建分享红包</a>
+        <a href="/mall_promotion/red_envelope_rule/create/" class="btn btn-success ml10 fr xui-btnSetting"><span class="xui-add-btn-icon">+</span>新建分享红包</a>
     </div>
     <div
         data-ui-role="advanced-table"
-        data-app="mall"
+        data-app="mall_promotion"
         data-api="red_envelope_rules/get"
         data-template-id="#red_envelope_rule_list_view"
         data-enable-paginator="true"
@@ -124,7 +124,7 @@ $(document).ready(function() {
             var status = $td.data('status');
             var id = $td.parents('tr').data('id');
             W.getApi().call({
-                app: 'mall',
+                app: 'mall_promotion',
                 api: 'red_envelope_rule/update',
                 method: 'post',
                 args: {
@@ -165,7 +165,7 @@ $(document).ready(function() {
 
     function deleteRedEnvelope(id){
         W.getApi().call({
-            app: 'mall',
+            app: 'mall_promotion',
             api: 'red_envelope_rule/update',
             method: 'post',
             args: {
