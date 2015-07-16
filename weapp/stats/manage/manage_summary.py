@@ -80,7 +80,9 @@ class ManageSummary(resource.Resource):
             'start_date': start_date,
             'end_date': end_date,
 
-            'is_valid_for_bv': is_valid_for_brandvalue(request.user.username),
+            #'is_valid_for_bv': is_valid_for_brandvalue(request.user.username),
+            # TODO: 需要清除html中的代码
+            'is_valid_for_bv': True, # 全部开启
 
             # 当日微品牌价值数据
             'brand_value': format(today_value, ','),
