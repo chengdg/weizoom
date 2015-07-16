@@ -15,7 +15,7 @@ COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
 FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
 
-@view(app="mall", resource="red_envelope_rule", action="get")
+@view(app="mall_promotion", resource="red_envelope_rule", action="get")
 @login_required
 def get_red_envelope_rule(request):
     """
@@ -35,12 +35,12 @@ def get_red_envelope_rule(request):
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV_NAME,
         'second_navs': export.get_promotion_second_navs(request),
-        'second_nav_name': export.ORDER_RED_ENVELOPE,
+        'second_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
         "coupon_rule_info": json.dumps(coupon_rule_info)
     })
     return render_to_response('mall/editor/red_envelope_rules.html',c)
 
-@view(app="mall", resource="red_envelope_rule", action="create")
+@view(app="mall_promotion", resource="red_envelope_rule", action="create")
 @login_required
 def create_red_envelope_rule(request):
     """
@@ -50,12 +50,12 @@ def create_red_envelope_rule(request):
     c = RequestContext(request, {
         'first_nav_name': FIRST_NAV_NAME,
         'second_navs': export.get_promotion_second_navs(request),
-        'second_nav_name': export.ORDER_RED_ENVELOPE,
+        'second_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
         'coupon_rules': coupon_rules
     })
     return render_to_response('mall/editor/create_red_envelope_rule.html',c)
 
-@view(app="mall", resource="red_envelope_rule", action="select")
+@view(app="mall_promotion", resource="red_envelope_rule", action="select")
 @login_required
 def select_red_envelope_rule(request):
     """
@@ -68,7 +68,7 @@ def select_red_envelope_rule(request):
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.ORDER_RED_ENVELOPE,
+            'second_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
             'coupon_rule': coupon_rule,
             'red_envelope_rule': red_envelope_rule,
         })

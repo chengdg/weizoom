@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import urllib2
+import urllib
+import json
 
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import Context, RequestContext
@@ -54,6 +57,14 @@ def get_share_red_envelope(request):
 
     relation = RedEnvelopeToOrder.objects.filter(order_id=order_id, red_envelope_rule_id=red_envelope_rule_id)
 
+    return_data = {
+        'red_envelope_rule': red_envelope_rule,
+        'shop_name': shop_name,
+        'page_title': "红包大放送",
+        'share_page_desc': red_envelope_rule.share_title,
+        'share_img_url': red_envelope_rule.share_pic
+    }
+
     if relation.count() > 0:
         #分享获取红包
         record = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_relation_id=relation[0].id)
@@ -62,31 +73,18 @@ def get_share_red_envelope(request):
             friends = friends[:4]
         if record.count() > 0:
             #会员已经领了
-            c = RequestContext(request, {
-                    'has_red_envelope': True,
-                    'coupon_rule': coupon_rule,
-                    'red_envelope_rule': red_envelope_rule,
-                    'member': member if member.is_subscribed else "",
-                    'qcode_img_url': qcode_img_url,
-                    'friends': friends,
-                    'shop_name': shop_name,
-                    'share_page_title': red_envelope_rule.name,
-                    'share_page_desc': red_envelope_rule.share_title,
-                    'share_img_url': red_envelope_rule.share_pic
-                })
+            return_data['has_red_envelope'] = True
+            return_data['coupon_rule'] = coupon_rule
+            return_data['member'] = member if member.is_subscribed else ""
+            return_data['qcode_img_url'] = qcode_img_url
+            return_data['friends'] = friends
         else:
             if member.is_subscribed:
                 if not(coupon_rule.is_active
                     and coupon_rule.remained_count
                     and coupon_rule.end_date > datetime.now()
                     and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
-                    c = RequestContext(request, {
-                        'red_envelope_rule': red_envelope_rule,
-                        'shop_name': shop_name,
-                        'share_page_title': red_envelope_rule.name,
-                        'share_page_desc': red_envelope_rule.share_title,
-                        'share_img_url': red_envelope_rule.share_pic
-                        })
+                    pass
                 else:
                     coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
                     if coupon:
@@ -99,25 +97,12 @@ def get_share_red_envelope(request):
                                     member_name=member.username_for_html,
                                     member_header_img=member.user_icon
                             )
-                        c = RequestContext(request, {
-                                'has_red_envelope': False,
-                                'coupon_rule': coupon_rule,
-                                'red_envelope_rule': red_envelope_rule,
-                                'member': member,
-                                'friends':friends,
-                                'shop_name': shop_name,
-                                'share_page_title': red_envelope_rule.name,
-                                'share_page_desc': red_envelope_rule.share_title,
-                                'share_img_url': red_envelope_rule.share_pic
-                            })
+                        return_data['has_red_envelope'] = False
+                        return_data['coupon_rule'] = coupon_rule
+                        return_data['member'] = member
+                        return_data['friends'] = friends
                     else:
-                        c = RequestContext(request, {
-                                'red_envelope_rule': red_envelope_rule,
-                                'shop_name': shop_name,
-                                'share_page_title': red_envelope_rule.name,
-                                'share_page_desc': red_envelope_rule.share_title,
-                                'share_img_url': red_envelope_rule.share_pic
-                            })
+                        pass
             else:
                 #不是会员
                 coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
@@ -131,25 +116,13 @@ def get_share_red_envelope(request):
                                 member_name=member.username_for_html,
                                 member_header_img=member.user_icon
                         )
-                    c = RequestContext(request, {
-                                    'has_red_envelope': False,
-                                    'coupon_rule': coupon_rule,
-                                    'red_envelope_rule': red_envelope_rule,
-                                    'friends':friends,
-                                    'shop_name': shop_name,
-                                    'qcode_img_url': qcode_img_url,
-                                    'share_page_title': red_envelope_rule.name,
-                                    'share_page_desc': red_envelope_rule.share_title,
-                                    'share_img_url': red_envelope_rule.share_pic
-                                })
+
+                    return_data['has_red_envelope'] = False
+                    return_data['coupon_rule'] = coupon_rule
+                    return_data['qcode_img_url'] = qcode_img_url
+                    return_data['friends'] = friends
                 else:
-                    c = RequestContext(request, {
-                        'red_envelope_rule': red_envelope_rule,
-                        'shop_name': shop_name,
-                        'share_page_title': red_envelope_rule.name,
-                        'share_page_desc': red_envelope_rule.share_title,
-                        'share_img_url': red_envelope_rule.share_pic
-                    })
+                    pass
     else:
         #用户订单获取
         # if not order.webapp_user_id == member_id:
@@ -159,13 +132,7 @@ def get_share_red_envelope(request):
             and coupon_rule.remained_count
             and coupon_rule.end_date > datetime.now()
             and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
-            c = RequestContext(request, {
-                    'red_envelope_rule': red_envelope_rule,
-                    'shop_name': shop_name,
-                    'share_page_title': red_envelope_rule.name,
-                    'share_page_desc': red_envelope_rule.share_title,
-                    'share_img_url': red_envelope_rule.share_pic
-                })
+            pass
         else:
             coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
             if coupon:
@@ -185,24 +152,13 @@ def get_share_red_envelope(request):
                             member_name=member.username_for_html,
                             member_header_img=member.user_icon
                     )
-                c = RequestContext(request, {
-                        'has_red_envelope': False,
-                        'coupon_rule': coupon_rule,
-                        'red_envelope_rule': red_envelope_rule,
-                        'member': member if member.is_subscribed else "",
-                        'shop_name': shop_name,
-                        'qcode_img_url': qcode_img_url,
-                        'page_title': red_envelope_rule.share_title,
-                        'share_page_desc': red_envelope_rule.share_title,
-                        'share_img_url': red_envelope_rule.share_pic
-                    })
-            else:
-                c = RequestContext(request, {
-                        'red_envelope_rule': red_envelope_rule,
-                        'shop_name': shop_name,
-                        'page_title': red_envelope_rule.share_title,
-                        'share_page_desc': red_envelope_rule.share_title,
-                        'share_img_url': red_envelope_rule.share_pic
-                    })
 
+                return_data['has_red_envelope'] = False
+                return_data['coupon_rule'] = coupon_rule
+                return_data['member'] = member if member.is_subscribed else ""
+                return_data['qcode_img_url'] = qcode_img_url
+            else:
+                pass
+
+    c = RequestContext(request, return_data)
     return render_to_response('shareRedEnvelope/webapp/share_red_envelope.html', c)

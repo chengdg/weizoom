@@ -20,7 +20,7 @@ RULE_FILTERS = {
             'query_string_field': 'name'
         }, {
             'comparator': lambda rule, filter_value: int(filter_value) == rule.coupon_rule_id,
-            'query_string_field': 'couponRule'
+            'query_string_field': 'coupon_rule_id'
         }, {
             'comparator': lambda rule, filter_value: filter_value <= rule.start_time.strftime("%Y-%m-%d %H:%M"),
             'query_string_field': 'startDate'
@@ -41,7 +41,7 @@ def __filter_rules(request, rules):
 
     return rules
 
-@api(app='mall', resource='red_envelope_rule', action='create')
+@api(app='mall_promotion', resource='red_envelope_rule', action='create')
 @login_required
 def create_red_envelope_rule(request):
     limit_money = request.POST.get('limit_money', 0)
@@ -72,7 +72,7 @@ def create_red_envelope_rule(request):
         )
     return create_response(200).get_response()
 
-@api(app="mall", resource="red_envelope_rules", action="get")
+@api(app="mall_promotion", resource="red_envelope_rules", action="get")
 @login_required
 def get_red_envelope_rules(request):
     """
@@ -137,7 +137,7 @@ def get_red_envelope_rules(request):
     response.data = data
     return response.get_response()
 
-@api(app="mall", resource="red_envelope_rule", action="update")
+@api(app="mall_promotion", resource="red_envelope_rule", action="update")
 @login_required
 def update_red_envelope_rule(request):
     """

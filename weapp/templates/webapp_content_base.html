@@ -8,14 +8,14 @@
         {% if request.enable_sql_monitor %}
         <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
         {% endif %}
-        
+
         <!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
         {% if is_use_dev_resource %}
         <!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/base.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/webapp_default.css">
-        <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/widget.css">        
-        <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/idangerous.swiper.css">        
+        <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/widget.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/idangerous.swiper.css">
         <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
         {% else %}
         <link type="text/css" rel="stylesheet" media="all" href="{{cdn_host}}/standard_static/css/webapp_content_base_all.css">
@@ -82,7 +82,7 @@
     <body data-ui-role="integralMechanism" data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}">
         <!-- xt-errMsg for test -->
         <input id="xt-errMsg" type="hidden" value="" />
-        
+
         <div id="homePageUrlZone" style="display: none;">/workbench/jqm/preview/?{{homepage_workspace_info|safe}}</div>
         {% if is_deleted_data %}
             <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
@@ -92,7 +92,7 @@
         {% else %}
             <div data-ui-role="attentionAlert" class="xui-attentionAlert"
                 {% if not cur_request_member %}
-                    data-is-show-button="true" 
+                    data-is-show-button="true"
                 {% endif %}
                 {% if not hide_non_member_cover %}
                     data-is-show-cover="true"
@@ -105,7 +105,7 @@
             {% block content-panel %}{% endblock %}
         {% endif %}
 
-        
+
         <div id="jsons" style="display: none;">
             {% for json in jsons %}
             <div id="__json-{{json.name}}">
@@ -137,7 +137,7 @@
 
             W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
             W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-                  
+
             W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
                     W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
@@ -154,7 +154,7 @@
                 FastClick.attach(document.body);
                 var hm = document.createElement("script");
                 hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
-                var s = document.getElementsByTagName("script")[0]; 
+                var s = document.getElementsByTagName("script")[0];
                 s.parentNode.insertBefore(hm, s);
                 /* 微信分享按钮事件
                  * 注意：
@@ -209,8 +209,47 @@
                     //      },
                     //fail: function (res) {
                     //    alert(JSON.stringify(res));
-                    //}     
+                    //}
                 };
+
+                if (window.location.href.indexOf('share_red_envelope') > 0){
+                    W.wxShareTimelineData = {
+                        "imgUrl" : W.sharePageImg,
+                        "link" : window.location.href,
+                        "desc" : W.sharePageDesc,
+                        "title" : W.sharePageDesc,
+                        // 点击分享按钮
+                        trigger: function (res) {
+                           //alert('用户点击分享按钮'+res);
+                        },
+                        // 分享成功
+                        success : function(res) {
+                           W.getApi().call({
+                                app: 'webapp',
+                                api: 'project_api/call',
+                                method: 'post',
+                                args: _.extend({
+                                    woid: W.webappOwnerId,
+                                    project_id: W.projectId,
+                                    module: 'user_center',
+                                    target_api: 'shared_url/record',
+                                    link: window.location.href,
+                                    title:W.sharePageTitle
+                                }),
+                                success: function(data) {
+                                    alert("分享链接成功")
+                                },
+                                error: function(data){
+                                    alert("分享链接失败")
+                                }
+                            });
+                        }
+                    };
+                }else{
+                    W.wxShareTimelineData = W.wxShareData;
+                }
+
+
                 wx.ready(function () {
                   // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
                   wx.checkJsApi({
@@ -235,12 +274,12 @@
                     if(res.onMenuShareAppMessage)
                        wx.onMenuShareAppMessage(W.wxShareData)
                     if(res.onMenuShareTimeline)
-                       wx.onMenuShareTimeline(W.wxShareData)
+                       wx.onMenuShareTimeline(W.wxShareTimelineData)
                     if(res.onMenuShareQQ)
                        wx.onMenuShareQQ(W.wxShareData)
                     if(res.previewImage)
                        W.ImagePreview(wx)
-                   
+
                     if(res.showOptionMenu && !isHideWeixinOptionMenu)
                        wx.showOptionMenu()
                     }
