@@ -116,7 +116,7 @@ def get_share_red_envelope(request):
                             coupon_id=coupon.id,
                             red_envelope_rule_id=red_envelope_rule_id,
                             red_envelope_relation_id=relation.id,
-                            member=member
+                            member_id=member.id
                     )
 
                 return_data['has_red_envelope'] = False

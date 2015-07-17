@@ -608,7 +608,6 @@ class GetRedEnvelopeRecord(models.Model):
 	coupon_id = models.CharField(max_length=50)
 	red_envelope_rule_id = models.IntegerField(default=0)
 	red_envelope_relation_id = models.IntegerField(default=0)
-	member_id = models.IntegerField(default=0)
 	member = models.ForeignKey(Member)
 	#member_name = models.CharField(max_length=128, null=True)
 	#member_header_img = models.CharField(max_length=256, null=True)
