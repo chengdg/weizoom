@@ -7,7 +7,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from mall.models import Product
-from modules.member.models import Members
+from modules.member.models import Member
 
 DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
 
