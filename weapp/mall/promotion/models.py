@@ -7,6 +7,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from mall.models import Product
+from modules.member.models import Members
 
 DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
 
@@ -608,8 +609,9 @@ class GetRedEnvelopeRecord(models.Model):
 	red_envelope_rule_id = models.IntegerField(default=0)
 	red_envelope_relation_id = models.IntegerField(default=0)
 	member_id = models.IntegerField(default=0)
-	member_name = models.CharField(max_length=128, null=True)
-	member_header_img = models.CharField(max_length=256, null=True)
+	member = models.ForeignKey(Member)
+	#member_name = models.CharField(max_length=128, null=True)
+	#member_header_img = models.CharField(max_length=256, null=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):

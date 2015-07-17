@@ -38,5 +38,11 @@ def get_mp_nick_name(user_id):
 	else:
 		return None
 
+def get_mp_info(user_id):
+	if ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id=user_id).count() > 0:
+		return ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id=user_id)[0]
+	else:
+		return None	
+
 
 
