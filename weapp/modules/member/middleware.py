@@ -998,8 +998,10 @@ class OAUTHMiddleware(object):
 
 					member, response = get_member_by(request, social_account)
 
-					if 'share_red_envelope' in request.get_full_path() and member and (not member.user_icon.startswith('http')):
-						get_user_info(weixin_user_name, access_token, member)
+					if 'share_red_envelope' in request.get_full_path() and member:
+						if (not member.user_icon) or (not member.user_icon.startswith('http')):
+							get_user_info(weixin_user_name, access_token, member)
+					
 					if response:
 						return response
 					request.social_account = social_account
