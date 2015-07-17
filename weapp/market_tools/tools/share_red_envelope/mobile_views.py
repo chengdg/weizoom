@@ -60,7 +60,7 @@ def get_share_red_envelope(request):
     return_data = {
         'red_envelope_rule': red_envelope_rule,
         'shop_name': shop_name,
-        'page_title': "红包大放送",
+        'page_title': "微购送优惠",
         'share_page_desc': red_envelope_rule.share_title,
         'share_img_url': red_envelope_rule.share_pic
     }
