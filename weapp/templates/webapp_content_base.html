@@ -213,8 +213,6 @@
                 };
 
                 if (window.location.href.indexOf('share_red_envelope') > 0){
-                    alert(window.location.href);
-                    alert(W.sharePageDesc);
                     W.wxShareTimelineData = {
                         "imgUrl" : W.sharePageImg,
                         "link" : window.location.href,
@@ -236,7 +234,7 @@
                                     module: 'user_center',
                                     target_api: 'shared_url/record',
                                     link: window.location.href,
-                                    title: W.sharePageDesc
+                                    title:W.sharePageTitle
                                 }),
                                 success: function(data) {
                                     alert("分享链接成功")
@@ -248,7 +246,6 @@
                         }
                     };
                 }else{
-                    alert("hhahhahah");
                     W.wxShareTimelineData = W.wxShareData;
                 }
 
