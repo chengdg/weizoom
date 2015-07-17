@@ -69,10 +69,10 @@ def get_share_red_envelope(request):
             return_data['qcode_img_url'] = qcode_img_url
             return_data['friends'] = friends
         else:
-            if coupon_rule.is_active
+            if (coupon_rule.is_active 
                     and coupon_rule.remained_count
                     and coupon_rule.end_date > datetime.now()
-                    and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time):
+                    and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
                 coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
                 if coupon:
                     GetRedEnvelopeRecord.objects.create(
@@ -98,10 +98,10 @@ def get_share_red_envelope(request):
         # if not order.webapp_user_id == member_id:
         #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
         member.member_name = member.username_for_html
-        if coupon_rule.is_active
+        if (coupon_rule.is_active
             and coupon_rule.remained_count
             and coupon_rule.end_date > datetime.now()
-            and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time):
+            and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
             coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
             if coupon:
                 relation = RedEnvelopeToOrder.objects.create(
