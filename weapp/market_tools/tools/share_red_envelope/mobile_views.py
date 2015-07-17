@@ -69,7 +69,7 @@ def get_share_red_envelope(request):
             return_data['qcode_img_url'] = qcode_img_url
             return_data['friends'] = friends
         else:
-            if (coupon_rule.is_active 
+            if (coupon_rule.is_active
                     and coupon_rule.remained_count
                     and coupon_rule.end_date > datetime.now()
                     and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
@@ -116,9 +116,7 @@ def get_share_red_envelope(request):
                             coupon_id=coupon.id,
                             red_envelope_rule_id=red_envelope_rule_id,
                             red_envelope_relation_id=relation.id,
-                            member_id=member.id,
-                            member_name=member.username_for_html,
-                            member_header_img=member.user_icon
+                            member=member
                     )
 
                 return_data['has_red_envelope'] = False
