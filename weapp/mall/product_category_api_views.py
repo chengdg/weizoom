@@ -73,6 +73,7 @@ def get_category_products(request):
 	pageinfo, products = paginator.paginate(products, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 	
 	Product.fill_display_price(products)
+	Product.fill_sales_detail(request.manager.id, products, [product.id for product in products])
 	result_products = []
 	for product in products:
 		relation = '%s_%s' % (category_id, product.id)
@@ -81,7 +82,7 @@ def get_category_products(request):
 			"name": product.name,
 			"display_price": product.display_price,
 			"status": product.status,
-			"sales": -1,
+			"sales": product.sales,
 			"update_time": product.update_time.strftime("%Y-%m-%d")
 		})
 	result_products.sort(lambda x,y: cmp(y['id'], x['id']))
