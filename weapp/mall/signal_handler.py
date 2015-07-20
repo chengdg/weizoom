@@ -100,7 +100,8 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 def post_pay_order_handler(order, request, **kwargs):
 	try:
 		#支付完成之后的webapp_user操作
-		request.webapp_user.complete_payment(request, order)
+		if hasattr(request, 'webapp_user'):
+			request.webapp_user.complete_payment(request, order)
 		#更新order的payment_time字段
 		dt = datetime.now()
 		payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')

@@ -2069,6 +2069,7 @@ def update_order_status(user, action, order, request=None):
 			order_price = order.final_price,
 			date = dateutil.get_today()
 		)
+		mall_signals.post_pay_order.send(sender=Order, order=order, request=request)
 	elif action == 'ship':
 		action_msg = '发货'
 		target_status = ORDER_STATUS_PAYED_SHIPED
@@ -2104,6 +2105,13 @@ def update_order_status(user, action, order, request=None):
 				from modules.member.integral import increase_member_integral
 				member = WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
 				increase_member_integral(member, order.integral, u'取消订单回收积分')
+			if order.status > mall_models.ORDER_STATUS_CANCEL:
+				# 已经支付过得订单回退销量
+				for relation in OrderHasProduct.objects.filter(order_id=order.id):
+					product_id = relation.product_id
+					count = relation.number
+					if ProductSales.objects.filter(product_id=product_id).count() > 0:
+						ProductSales.objects.filter(product_id=product_id).update(sales = F('sales') - count)
 
 		except :
 			notify_message = u"取消订单业务处理异常，cause:\n{}".format(unicode_full_stack())
