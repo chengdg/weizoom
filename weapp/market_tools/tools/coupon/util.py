@@ -171,14 +171,14 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 		today = datetime.today()
 		if coupon.expired_time < today:
 			return '该优惠券已过期', None
-		if coupon.start_date > today:
-			return'该优惠券活动尚未开始', None
 		if coupon.status != promotion_models.COUPON_STATUS_UNUSED and coupon.status != promotion_models.COUPON_STATUS_UNGOT:
 			return '该优惠券已使用', None
 		if coupon.member_id > 0 and coupon.member_id != member_id:
 			return '该优惠券已被他人领取不能使用', None
 		coupon_rule = promotion_models.CouponRule.objects.get(id=coupon.coupon_rule_id)
 		order_price = sum(product_prices)
+		if coupon_rule.start_date > today:
+			return'该优惠券活动尚未开始', None
 		if coupon_rule.valid_restrictions > order_price and coupon_rule.valid_restrictions != -1:
 			return '该优惠券不满足使用金额限制', None
 		if coupon_rule.limit_product:
