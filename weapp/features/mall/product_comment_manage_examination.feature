@@ -12,6 +12,7 @@ Feature: jobs在后台对已有评价进行审核
 Background:
 
     Given jobs登录系统
+    And jobs设置积分策略
     And jobs已添加商品
     """
     [{
