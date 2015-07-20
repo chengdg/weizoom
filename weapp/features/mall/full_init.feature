@@ -598,7 +598,8 @@ Scenario: 安装完整测试数据
 		}]
 		"""
 	#And bill关注jobs的公众号
-	When bill参加抽奖活动'抽奖测试1'
+	When bill访问jobs的webapp
+	And bill参加抽奖活动'抽奖测试1'
 	And tom参加抽奖活动'抽奖测试1'
 	And nokia参加抽奖活动'抽奖测试1'
 	And guo参加抽奖活动'抽奖测试1'

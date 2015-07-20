@@ -270,10 +270,8 @@ def get_weixin_account_info(user_profile, social_account, can_use_local=True):
 def get_social_account_info(social_account, user_profile, can_use_local=True):
 	if social_account is None or user_profile is None:
 		return None
-	if settings.MODE == 'develop':
-		return SocialAccountInfo(u'预览', DEFAULT_ICON)
-	if social_account.is_for_test:
-		return SocialAccountInfo(u'预览', DEFAULT_ICON)
+	if settings.MODE == 'develop' or social_account.is_for_test:
+		return SocialAccountInfo(None, DEFAULT_ICON, subscribe=True)
 
 	#判断社交账号所在平台，使用各个平台获取用户的响应
 	#api去获取社交账号的详细信息
