@@ -264,6 +264,14 @@ html,body{
 	top: .5rem;
 	overflow: hidden;
 }
+.xui-friends .xui-avatar img{
+	border-radius: 50%;
+	width:1.55rem;
+	height:1.55rem;
+	background-image: url(/markettools_static/share_red_envelope/img/avatar.jpg);
+	-webkit-background-size: cover;
+	background-size: cover;
+}
 .xui-friends .xui-info{
 	padding: .5rem 0 .35rem 2.3rem;
 }

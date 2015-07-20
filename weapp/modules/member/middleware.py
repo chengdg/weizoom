@@ -1256,9 +1256,12 @@ def get_user_info(openid, access_token, member):
 		else:
 			member_nickname_str = nickname
 		username_hexstr = byte_to_hex(member_nickname_str)
+		user_icon = ''
+		if '\/' in response_data['headimgurl']:
+			user_icon = response_data['headimgurl'].replace('\/', '/')
 		Member.objects.filter(id=member.id).update(
 					username_hexstr=username_hexstr,
-					user_icon=response_data['headimgurl'],
+					user_icon=user_icon,
 					sex=response_data['sex'],
 					province=response_data['province'],
 					city=response_data['city'],
