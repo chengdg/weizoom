@@ -76,13 +76,14 @@ def index(request):
 	#return HttpResponseRedirect('/shop/editor/categories/')
 	if request.user.is_superuser:
 		return render_to_response('account/login.html', {})
-
 	if request.user.username in settings.WEIZOOM_CARD_ADMIN_USERS:
 		return HttpResponseRedirect('/card/cards/get/')
-			
 	if request.user.username == 'operator':
 		#operator用户转入反馈意见列表
 		return HttpResponseRedirect('/operation/editor/feedbacks/')
+	elif request.user.username == 'manager':
+		# manager用户直接跳账户列表
+		return HttpResponseRedirect('/account/accounts/')
 	else:
 		user_profile = request.user_profile
 		if not user_profile.is_mp_registered:

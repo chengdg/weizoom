@@ -878,22 +878,22 @@ ONLY_ONE = 3 #仅可用一项
 class IntegralStrategySttings(models.Model):
 	webapp_id = models.CharField(max_length=20, verbose_name='webapp id', db_index=True, unique=True)
 
-	click_shared_url_increase_count_after_buy = models.IntegerField(verbose_name='点击分享链接为购买后的分享者增加的额度', default=30)
-	click_shared_url_increase_count_before_buy = models.IntegerField(verbose_name='点击分享链接为未购买的分享者增加的额度', default=10)
-	buy_increase_count_for_father = models.IntegerField(verbose_name='成为会员增加额度', default=10)
-	increase_integral_count_for_brring_customer_by_qrcode = models.IntegerField(verbose_name='使用二维码带来用户增加的额度', default=60)
-	integral_each_yuan = models.IntegerField(verbose_name='一元是多少积分', default=100)
+	click_shared_url_increase_count_after_buy = models.IntegerField(verbose_name='点击分享链接为购买后的分享者增加的额度', default=0)
+	click_shared_url_increase_count_before_buy = models.IntegerField(verbose_name='点击分享链接为未购买的分享者增加的额度', default=0)
+	buy_increase_count_for_father = models.IntegerField(verbose_name='成为会员增加额度', default=0)
+	increase_integral_count_for_brring_customer_by_qrcode = models.IntegerField(verbose_name='使用二维码带来用户增加的额度', default=0)
+	integral_each_yuan = models.IntegerField(verbose_name='一元是多少积分', default=0)
 	usable_integral_or_conpon = models.IntegerField(verbose_name='积分与优惠券可同时使用', default=USABLE_BOTH)
 	#v2
-	be_member_increase_count = models.IntegerField(verbose_name='成为会员增加额度', default=20)
+	be_member_increase_count = models.IntegerField(verbose_name='成为会员增加额度', default=0)
 	order_money_percentage_for_each_buy = models.CharField(max_length=25, verbose_name="每次购物后，额外积分（以订单金额的百分比计算）", default="0.0")
-	buy_via_offline_increase_count_for_author = models.IntegerField(verbose_name='线下会员购买为推荐者增加的额度', default=30)
-	click_shared_url_increase_count = models.IntegerField(verbose_name='分享链接给好友点击', default=25)
-	buy_award_count_for_buyer = models.IntegerField(verbose_name='购物返积分额度', default=20)
-	buy_via_shared_url_increase_count_for_author = models.IntegerField(verbose_name='通过分享链接购买为分享者增加的额度', default=30)
+	buy_via_offline_increase_count_for_author = models.IntegerField(verbose_name='线下会员购买为推荐者增加的额度', default=0)
+	click_shared_url_increase_count = models.IntegerField(verbose_name='分享链接给好友点击', default=0)
+	buy_award_count_for_buyer = models.IntegerField(verbose_name='购物返积分额度', default=0)
+	buy_via_shared_url_increase_count_for_author = models.IntegerField(verbose_name='通过分享链接购买为分享者增加的额度', default=0)
 	buy_via_offline_increase_count_percentage_for_author = models.CharField(max_length=25, verbose_name="线下会员购买为推荐者额外增加的额度(以订单金额的百分比计算）", default="0.0")
 	use_ceiling = models.IntegerField(default=-1, verbose_name='订单积分抵扣上限')
-	review_increase = models.IntegerField(default=10, verbose_name='商品好评送积分')
+	review_increase = models.IntegerField(default=0, verbose_name='商品好评送积分')
 
 	class Meta(object):
 		db_table = 'member_integral_strategy_settings'
@@ -917,19 +917,7 @@ def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
 			webapp_id = '%d' % (settings.MIXUP_FACTOR + instance.id)
 
 		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
-			if settings.MODE == 'develop':
-				IntegralStrategySttings.objects.create(
-					webapp_id = webapp_id,
-					integral_each_yuan = 5,
-					buy_award_count_for_buyer = 21,
-					be_member_increase_count = 20,
-					buy_via_shared_url_increase_count_for_author = 11,
-					click_shared_url_increase_count_before_buy = 3,
-					click_shared_url_increase_count_after_buy = 4,
-					increase_integral_count_for_brring_customer_by_qrcode = 5,
-				)
-			else:
-				IntegralStrategySttings.objects.create(webapp_id=webapp_id)
+			IntegralStrategySttings.objects.create(webapp_id=webapp_id)
 
 signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
 
