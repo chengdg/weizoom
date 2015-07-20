@@ -12,7 +12,10 @@ Feature: jobs在后台对已有评价进行审核
 Background:
 
     Given jobs登录系统
-    And jobs设置积分策略
+    And jobs设定会员积分策略
+    """
+    {}
+    """
     And jobs已添加商品
     """
     [{
@@ -575,8 +578,6 @@ Scenario: 7.jobs通过审核评价，给用户加积分
     tom评价jobs的商品，jobs通过审核，给tom加相应的积分
 
     When tom访问jobs的webapp
-    When tom获得jobs的20会员积分
-    Then tom在jobs的webapp中拥有20会员积分
     Then tom在jobs的webapp中获得积分日志
         """
         [{
