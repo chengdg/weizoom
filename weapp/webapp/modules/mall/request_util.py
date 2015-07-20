@@ -235,7 +235,7 @@ def get_product(request):
 		'use_integral': use_integral,
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
-		#add by bert 增加分享时显示信息	
+		#add by bert 增加分享时显示信息
 		'share_page_desc':product.name,
 		'share_img_url':product.thumbnails_url
 	})
@@ -474,10 +474,13 @@ def get_pay_result(request):
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
 	red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
+
 	if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
-		if order.product_price + order.postage > red_envelope_rule[0].limit_order_money:
-			is_show_red_envelope = True
-			red_envelope_rule_id = red_envelope_rule[0].id
+		coupon_rule = promotion_models.CouponRule.objects.get(id=red_envelope_rule[0].coupon_rule_id)
+		if coupon_rule.is_active and coupon_rule.end_date > datetime.now() and coupon_rule.remained_count > 0:
+			if order.product_price + order.postage > red_envelope_rule[0].limit_order_money:
+				is_show_red_envelope = True
+				red_envelope_rule_id = red_envelope_rule[0].id
 
 
 	#获取订单包含商品
