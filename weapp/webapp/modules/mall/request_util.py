@@ -834,7 +834,7 @@ def __fill_coupons_for_edit_order(webapp_user, products):
 		valid = coupon.valid_restrictions
 		limit_id = coupon.limit_product_id
 
-		if coupon.start_time > today:
+		if coupon.start_date > today:
 			#兼容历史数据
 			if coupon.status == promotion_models.COUPON_STATUS_USED:
 				coupon.display_status = 'used'

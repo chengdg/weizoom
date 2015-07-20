@@ -54,7 +54,8 @@ def get_product_categories(request):
 		product_ids.add(relation.product_id)
 
 	products = list(product for product in Product.objects.filter(owner=request.manager, id__in=product_ids) if not product.is_deleted)
-	Product.fill_display_price(products) 
+	Product.fill_display_price(products)
+	Product.fill_sales_detail(request.manager.id, products, [product.id for product in products])
 	id2product = dict([(product.id, product) for product in products])
 
 	empty_list = []
