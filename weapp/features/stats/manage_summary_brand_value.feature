@@ -141,17 +141,17 @@ Scenario: 测试只有1个消费用户、1个商品的品牌价值
 			},{
 			"value": 40
 			},{
-			"value": 40
-			},{
-			"value": 40
-			},{
-			"value": 40
-			},{
-			"value": 40
-			},{
-			"value": 40
-			},{
 			"value": 30
+			},{
+			"value": 20
+			},{
+			"value": 20
+			},{
+			"value": 20
+			},{
+			"value": 20
+			},{
+			"value": 20
 			},{
 			"value": 30
 		}]
@@ -205,21 +205,21 @@ Scenario: 测试2个消费用户、2个商品的品牌价值
 		}, {
 		    "value": 140
 		}, {
-		    "value": 140
+		    "value": 40
 		}, {
-		    "value": 140
+		    "value": 30
 		}, {
-		    "value": 140
+		    "value": 20
 		}, {
-		    "value": 140
+		    "value": 20
 		}, {
-		    "value": 140
+		    "value": 20
 		}, {
-		    "value": 50
+		    "value": 40
 		}, {
-		    "value": 140
+		    "value": 220
 		}, {
-		    "value": 250
+		    "value": 240
 		}]
 		"""
 

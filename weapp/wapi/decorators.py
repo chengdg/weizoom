@@ -32,10 +32,12 @@ def user_passes_test(test_func):
 
 			if test_func(access_token):
 				return view_func(request, *args, **kwargs)
+			return failure_response()
 		return _wrapped_view
 	return decorator
 
-		
+# TODO: 需要增加检查参数的decorator
+	
 def wapi_access_required(function=None):
 	"""
 	Decorator for views that checks that the user is using the inner secret key, 

@@ -86,12 +86,12 @@ Background:
 	And kate关注jobs的公众号
 	And bob关注jobs的公众号
 
-@stats @stats.marketing @wip.marketing1
+@ignore  @stats.marketing @wip.marketing1
 Scenario: '微信抽奖'营销活动分析及分页
 	Given jobs登录系统
 
 	When 微信用户已参加'微信抽奖'营销活动
-		|activity_name  | responsible_person | start_time          |end_time             |status  | participant |share_to       |from_who |
+		|activity_name  | responsible_person | start_time          |end_time             |status  | participant |share_to       |member_source |
 		| 微信抽奖01    | jobs               | 2015-06-15 09:00:00 | 2025-06-30 09:00:00 |已启动  | bill        | tom,jim,kate  |         |
 		| 微信抽奖01    | jobs               | 2015-06-15 09:00:00 | 2025-06-30 09:00:00 |已启动  | bill        |  mary         |         |
 		| 微信抽奖01    | jobs               | 2015-06-15 09:00:00 | 2025-06-30 09:00:00 |已启动  | tom         |  mary         |         |
@@ -112,7 +112,7 @@ Scenario: '微信抽奖'营销活动分析及分页
 		| 微信抽奖02    | jobs              |        2 | 2                 | 2015-06-15 08:00:00 | 2025-06-17 08:00:00  | 1   | 已启动 |
 
 
-@stats @wip.marketing
+@ignore 
 Scenario: '渠道扫码'营销活动分析及分页
 	Given jobs登录系统
 	Then jobs能看到的渠道扫码列表
@@ -131,7 +131,7 @@ Scenario: '渠道扫码'营销活动分析及分页
 
 	When 微信用户已参加'渠道扫码'营销活动
 		# bill1 --> tom, bill01 --> mary
-		|activity_name  | responsible_person | authority |awards      |creat_time          | participant |share_to        |from_who |
+		|activity_name  | responsible_person | authority |awards      |creat_time          | participant |share_to        |member_source |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bill        |                |         |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bill        | bill1          |         |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bob      |                |         |
@@ -147,7 +147,7 @@ Scenario: '渠道扫码'营销活动分析及分页
 		| 渠道扫码02    | jobs              |        1 | 1                 |  -  | 1   | 已启动 |
 
 
-@stats @stats.marketing @wip.channel
+@ignore 
 Scenario: 一个用户扫描2个渠道二维码
 	前提：已建立渠道扫码01和渠道扫码02（均设置已关注会员可参与）
 	1、用户a扫"渠道扫码01"的二维码
@@ -179,7 +179,7 @@ Scenario: 一个用户扫描2个渠道二维码
 		| 渠道扫码02    | jobs              |        0 | 0                 |  -  | 1   | 已启动 |
 
 
-@stats @wip.marketing2
+@ignore 
 Scenario: 【营销传播分析】同一用户多次扫同一个二维码时，参与次数不累加
 	前提：已添加“渠道扫码01”
 	1、用户a扫“渠道扫码01”；（参与次数/人数为：1/1）
@@ -231,10 +231,10 @@ Scenario: 【营销传播分析】同一用户多次扫同一个二维码时，�
 
 
 
-@wip.marketing
+@ignore 
 Scenario: 微信抽奖按照结束时间逆序展示
 
-
+@ignore 
 Scenario: 测试
 	And jobs获取'微信抽奖01'的活动跟踪图
 	 """

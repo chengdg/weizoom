@@ -56,7 +56,8 @@ class BrandValue(resource.Resource):
 		else:
 			dates = dates.split(',')
 
-		values = [ {"date":date_str, "bv":get_brand_value(webapp_id, date_str)} for date_str in dates ]
+		#values = [ {"date":date_str, "bv":get_brand_value(webapp_id, date_str)} for date_str in dates ]
+		values = {date_str: get_brand_value(webapp_id, date_str) for date_str in dates}
 
 		response = create_response(200)
 		response.data = {

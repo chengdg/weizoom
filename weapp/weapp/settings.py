@@ -546,6 +546,8 @@ if 'develop' == MODE:
     EVENT_DISPATCHER = 'local'
     ENABLE_WEPAGE_CACHE = True
 
+    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+
     import logging
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 
@@ -561,6 +563,8 @@ elif 'test' == MODE:
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 3 * 60
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
+
+    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
@@ -578,6 +582,9 @@ else:
     CDN_HOST = 'http://weappstatic.b0.upaiyun.com'
     DEBUG_MERGED_JS = False
     USE_DEV_JS = False
+
+    WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+
 
 IN_DEVELOP_MODE = (MODE == 'develop')
 ALLOWED_HOSTS = ['*', ]
@@ -717,9 +724,6 @@ DJANGO_HACK_PARAMS = {
 
 RESOURCE_LOADED = False
 RESOURCES = ['stats', 'termite2', 'weixin2']
-
-#WAPI_SECRET_ACCESS_TOKEN = '!@#$1asDkl;fffo!&^OumsG#$RvZzhHQ!piuqwe;laasdf@'
-WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
 
 
 from weapp import hack_django

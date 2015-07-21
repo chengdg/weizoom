@@ -22,7 +22,6 @@ Feature:营销活动分析-渠道扫码
 
 Background:
 	Given jobs登录系统
-
 	And jobs设定会员积分策略
 		#"integral_each_yuan": 10
 		"""
@@ -41,30 +40,30 @@ Background:
 			"reply_material_id": 0,
 			"re_old_member": 0,
 			"remark": "备注1",
-			"create_time":"2015-06-25 09:00:00",
-			"authority":"否"
+			"ticket": "ticket3",
+			"create_time":"2015-06-25 09:00:00"
 		}, {
 			"setting_id": 0,
 			"name": "渠道扫码02",
 			"prize_info": "{\"id\":-1, \"name\": \"non-prize\", \"type\": \"积分\"}",
 			"reply_type": 0,
 			"reply_material_id": 0,
-			"re_old_member": 0,
+			"re_old_member": 1,
 			"grade_id": 16,
 			"remark": "备注2",
-			"create_time":"2015-06-24 10:00:00",
-			"authority":"是"
+			"ticket": "ticket2",
+			"create_time":"2015-06-24 10:00:00"
 		}, {
 			"setting_id": 0,
 			"name": "渠道扫码01",
 			"prize_info": "{\"id\":-1, \"name\": \"non-prize\", \"type\": \"积分\"}",
 			"reply_type": 0,
 			"reply_material_id": 0,
-			"re_old_member": 0,
+			"re_old_member": 1,
 			"grade_id": 16,
 			"remark": "备注3",
-			"create_time":"2015-06-24 09:00:00",
-			"authority":"是"
+			"ticket": "ticket1",
+			"create_time":"2015-06-24 09:00:00"
 		}]
 		"""
      When jobs已设置未付款订单过期时间
@@ -75,45 +74,19 @@ Background:
          """
 
 	When jobs已添加商品
-		"""
+	 """
 		[{
 			"name": "商品1",
-			"promotion_title": "促销商品1",
-			"detail": "商品1详情",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 100.00,
-						"freight":"10",
-						"weight": 5.0,
-						"stock_type": "无限"
-					}
-				}
-			},
+			"price": 100.00,
+			"postage":10,
 			"synchronized_mall":"是"
 		}, {
 			"name": "商品2",
-			"promotion_title": "促销商品2",
-			"detail": "商品2详情",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 100.00,
-						"freight":"15",
-						"weight": 5.0,
-						"stock_type": "无限"
-					}
-				}
-			},
+			"price": 100.00,
+			"postage":10,
 			"synchronized_mall":"是"
 		}]
-		"""
+	 """
 	And jobs已添加支付方式
 		"""
 		[{
@@ -156,7 +129,7 @@ Background:
 
 
 #营销活动分析-'渠道扫码'
-@stats @wip.channel
+@stats @stats.marketing @wip.channel0
 Scenario:0 一个用户扫描多个渠道二维码,均设置已关注会员可参与
      #1、bill扫'渠道扫码01'
      #2、bill取消关注，扫'渠道扫码02'，只扫码不关注
@@ -187,17 +160,7 @@ Scenario:0 一个用户扫描多个渠道二维码,均设置已关注会员可�
 		| 渠道扫码03     | jobs     |        0    | 0                | 1        | 已启动      |
 
 	When bill取消关注jobs的公众号
-	#When bill扫描'渠道扫码02'二维码
-	#When bill通过扫描'渠道扫码02'二维码关注
-	
-	#Given jobs登录系统
-	#Then 获取'渠道扫码'营销活动分析列表
-	#	|name            | manager  | parti_times | parti_person_cnt | status   | status_text |
-	#	| 渠道扫码01     | jobs     |        1    | 1                | 1        | 已启动      |
-	#	| 渠道扫码02     | jobs     |        0    | 0                | 1        | 已启动      |
-	#	| 渠道扫码03     | jobs     |        0    | 0                | 1        | 已启动      |
 
-	#When bill扫描'渠道扫码02'二维码关注
 	When bill通过扫描'渠道扫码02'二维码关注
 	Given jobs登录系统
 	Then 获取'渠道扫码'营销活动分析列表
@@ -220,7 +183,7 @@ Scenario:0 一个用户扫描多个渠道二维码,均设置已关注会员可�
 
 
 # TODO: 目前的渠道扫码状态是，扫了就算次数
-@stats @wip.channel2
+@stats @stats.marketing @wip.channel2
 Scenario:1 同一用户多次扫同一个二维码不重复记(设置已关注会员可参与)
 	#1、bill扫“渠道扫码01”；（参与次数/人数为：1/1）
 	#2、bill再扫“渠道扫码01”；(参与次数/人数为：1/1)
@@ -274,7 +237,7 @@ Scenario:1 同一用户多次扫同一个二维码不重复记(设置已关注�
 		| 渠道扫码03     | jobs     |        0    | 0                | 1        | 已启动      |
 
 
-@stats @wip.channel3
+@stats @stats.marketing @wip.channel3
 Scenario:2 同一用户扫多个二维码，已关注会员扫'已关注会员不可参与'的二维码
 """
 	1、bill扫“渠道扫码01”；（参与次数/人数为：1/1 参与次数/人数为：0/0）
@@ -355,7 +318,7 @@ Scenario:3 '渠道扫码'活动分析的参与传播和结果分析
 	 #bob jim kate 为通过渠道扫码01新关注的会员	
 	When tom取消关注jobs的公众号
 	And 微信用户已参加'渠道扫码'营销活动
-		| activity_name  | responsible_person | authority |awards      |creat_time          | participant |share_to        |from_who |
+		| activity_name  | responsible_person | authority |awards      |creat_time          | participant |share_to        |member_source |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bill 	|                |         |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | tom	| bill1          |         |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | -bob	|                |         |
@@ -413,12 +376,12 @@ Scenario:3 '渠道扫码'活动分析的参与传播和结果分析
 		{
 			"被推荐用户数": 3,
 			"被推荐用户下单人数": 2,
-			"被推荐用户下单单数": 4,
+			"被推荐用户下单单数": 6,
 			"被推荐用户下单金额": 660,
 			"推荐扫码下单转换率": "66.67%",
-			"复购用户数": 1,
-			"复购订单数": 2,
-			"复购总金额": 335
+			"复购用户数": 2,
+			"复购订单数": 4,
+			"复购总金额": 440
 		}
 		"""
      #suggested_members-被推荐用户数
