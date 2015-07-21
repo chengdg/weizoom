@@ -102,7 +102,9 @@ def start_advance_simulator(request):
 		for mp_user in id2mpuser.values():
 			user_id = mp_user.owner_id
 			user_name = id2user[user_id].username
-			profile = user2profile[user_id]
+			profile = user2profile.get(user_id, None)
+			if not profile:
+				continue
 			mp_users.append({
 				'webapp_id': profile.webapp_id,
 				'mp_user_name': user_name
