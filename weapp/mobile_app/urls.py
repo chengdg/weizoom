@@ -61,4 +61,11 @@ urlpatterns = patterns('',
 	(r'^api/mui/messages/$', messages_view.mui_list_messages),
 	(r'^api/mui/messages/session_history/$', messages_view.mui_get_session_histories),
 	(r'^api/mui/messages/additional_history/$', messages_view.mui_get_additional_histories),
+
+    #新增数据罗盘
+   	(r'^api/stats/brand_value/$', api_views.brand_value),
+    (r'^api/stats/overview_board/$',api_views.overview_board),
+    (r'^api/stats/order_value/$', api_views.order_value),
+    (r'^api/stats/sales_chart/get/$', api_views.sales_chart),
+
 )

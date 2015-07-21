@@ -1,6 +1,6 @@
 /*!
  * =====================================================
- * Mui v1.1.0 (https://github.com/dcloudio/mui)
+ * Mui v1.9.0 (https://github.com/dcloudio/mui)
  * =====================================================
  */
 /**
@@ -9,7 +9,7 @@
  */
 var mui = (function(document, undefined) {
 	var readyRE = /complete|loaded|interactive/;
-	var idSelectorRE = /^#([\w-]*)$/;
+	var idSelectorRE = /^#([\w-]+)$/;
 	var classSelectorRE = /^\.([\w-]+)$/;
 	var tagSelectorRE = /^[\w-]+$/;
 	var translateRE = /translate(?:3d)?\((.+?)\)/;
@@ -23,14 +23,15 @@ var mui = (function(document, undefined) {
 			return wrap([selector], null);
 		if (typeof selector === 'function')
 			return $.ready(selector);
-		try {
-			if (idSelectorRE.test(selector)) {
-				var found = document.getElementById(RegExp.$1);
-				return wrap(found ? [found] : []);
-			}
-			return wrap($.qsa(selector, context), selector);
-		} catch (e) {
-
+		if (typeof selector === 'string') {
+			try {
+				selector = selector.trim();
+				if (idSelectorRE.test(selector)) {
+					var found = document.getElementById(RegExp.$1);
+					return wrap(found ? [found] : []);
+				}
+				return wrap($.qsa(selector, context), selector);
+			} catch (e) {}
 		}
 		return wrap();
 	};
@@ -113,9 +114,13 @@ var mui = (function(document, undefined) {
 	 * mui slice(array)
 	 */
 	$.slice = [].slice;
+	/**
+	 * mui filter(array)
+	 */
+	$.filter = [].filter;
 
 	$.type = function(obj) {
-		return obj === null ? String(obj) : class2type[{}.toString.call(obj)] || "object";
+		return obj == null ? String(obj) : class2type[{}.toString.call(obj)] || "object";
 	};
 	/**
 	 * mui isArray
@@ -125,10 +130,10 @@ var mui = (function(document, undefined) {
 			return object instanceof Array;
 		};
 	/**
-	 * mui isWindow
+	 * mui isWindow(需考虑obj为undefined的情况)
 	 */
 	$.isWindow = function(obj) {
-		return obj !== null && obj === obj.window;
+		return obj != null && obj === obj.window;
 	};
 	/**
 	 * mui isObject
@@ -141,6 +146,18 @@ var mui = (function(document, undefined) {
 	 */
 	$.isPlainObject = function(obj) {
 		return $.isObject(obj) && !$.isWindow(obj) && Object.getPrototypeOf(obj) === Object.prototype;
+	};
+	/**
+	 * mui isEmptyObject
+	 * @param {Object} o
+	 */
+	$.isEmptyObject = function(o) {
+		for (var p in o) {
+			if (p !== undefined) {
+				return false;
+			}
+		}
+		return true;
 	};
 	/**
 	 * mui isFunction
@@ -179,15 +196,15 @@ var mui = (function(document, undefined) {
 	$.map = function(elements, callback) {
 		var value, values = [],
 			i, key;
-		if (typeof elements.length === 'number') {
+		if (typeof elements.length === 'number') { //TODO 此处逻辑不严谨，可能会有Object:{a:'b',length:1}的情况未处理
 			for (i = 0, len = elements.length; i < len; i++) {
 				value = callback(elements[i], i);
-				if (value !== null) values.push(value);
+				if (value != null) values.push(value);
 			}
 		} else {
 			for (key in elements) {
 				value = callback(elements[key], key);
-				if (value !== null) values.push(value);
+				if (value != null) values.push(value);
 			}
 		}
 		return values.length > 0 ? [].concat.apply([], values) : values;
@@ -198,7 +215,7 @@ var mui = (function(document, undefined) {
 	 * @param {type} callback
 	 * @returns {_L8.$}
 	 */
-	$.each = function(elements, callback) {
+	$.each = function(elements, callback, hasOwnProperty) {
 		if (!elements) {
 			return this;
 		}
@@ -208,7 +225,13 @@ var mui = (function(document, undefined) {
 			});
 		} else {
 			for (var key in elements) {
-				if (callback.call(elements[key], key, elements[key]) === false) return elements;
+				if (hasOwnProperty) {
+					if (elements.hasOwnProperty(key)) {
+						if (callback.call(elements[key], key, elements[key]) === false) return elements;
+					}
+				} else {
+					if (callback.call(elements[key], key, elements[key]) === false) return elements;
+				}
 			}
 		}
 		return this;
@@ -303,7 +326,7 @@ var mui = (function(document, undefined) {
 		return result;
 	};
 
-	$.regesterHandler = function(type, handler) {
+	$.registerHandler = function(type, handler) {
 		var handlers = $[type];
 		if (!handlers) {
 			handlers = [];
@@ -315,6 +338,40 @@ var mui = (function(document, undefined) {
 		});
 		$[type] = handlers;
 		return $[type];
+	};
+	/**
+	 * setTimeout封装
+	 * @param {Object} fn
+	 * @param {Object} when
+	 * @param {Object} context
+	 * @param {Object} data
+	 */
+	$.later = function(fn, when, context, data) {
+		when = when || 0;
+		var m = fn;
+		var d = data;
+		var f;
+		var r;
+
+		if (typeof fn === 'string') {
+			m = context[fn];
+		}
+
+		f = function() {
+			m.apply(context, $.isArray(d) ? d : [d]);
+		};
+
+		r = setTimeout(f, when);
+
+		return {
+			id: r,
+			cancel: function() {
+				clearTimeout(r);
+			}
+		};
+	};
+	$.now = Date.now || function() {
+		return +new Date();
 	};
 	var class2type = {};
 	$.each(['Boolean', 'Number', 'String', 'Function', 'Array', 'Date', 'RegExp', 'Object', 'Error'], function(i, name) {
@@ -334,6 +391,16 @@ var mui = (function(document, undefined) {
 			return this;
 		}
 	};
+
+	/**
+	 * 兼容 AMD 模块
+	 **/
+	if (typeof define === 'function' && define.amd) {
+		define('mui', [], function() {
+			return $;
+		});
+	}
+
 	return $;
 })(document);
 //window.mui = mui;
@@ -348,6 +415,15 @@ var mui = (function(document, undefined) {
 		this.os = {};
 		var funcs = [
 
+			function() { //wechat
+				var wechat = ua.match(/(MicroMessenger)\/([\d\.]+)/i);
+				if (wechat) { //wechat
+					this.os.wechat = {
+						version: wechat[2].replace(/_/g, '.')
+					};
+				}
+				return false;
+			},
 			function() { //android
 				var android = ua.match(/(Android);?[\s\/]+([\d.]+)?/);
 				if (android) {
@@ -384,17 +460,19 @@ var mui = (function(document, undefined) {
  * @param {type} $
  * @returns {undefined}
  */
-(function($) {
-    function detect(ua) {
-        this.os = this.os || {};
-        var plus = ua.match(/Html5Plus/i);//TODO 5\+Browser?
-        if (plus) {
-            this.os.plus = true;
-        }
-    }
-    detect.call($, navigator.userAgent);
-})(mui);
-
+(function($, document) {
+	function detect(ua) {
+		this.os = this.os || {};
+		var plus = ua.match(/Html5Plus/i); //TODO 5\+Browser?
+		if (plus) {
+			this.os.plus = true;
+			$(function() {
+				document.body.classList.add('mui-plus');
+			});
+		}
+	}
+	detect.call($, navigator.userAgent);
+})(mui, document);
 /**
  * mui target(action>popover>modal>tab>toggle)
  */
@@ -484,10 +562,8 @@ var mui = (function(document, undefined) {
 			};
 			var evt = document.createEvent('Events');
 			var bubbles = true;
-			if (params) {
-				for (var name in params) {
-					(name === 'bubbles') ? (bubbles = !!params[name]) : (evt[name] = params[name]);
-				}
+			for (var name in params) {
+				(name === 'bubbles') ? (bubbles = !!params[name]) : (evt[name] = params[name]);
 			}
 			evt.initEvent(event, bubbles, true);
 			return evt;
@@ -553,27 +629,21 @@ var mui = (function(document, undefined) {
  * @returns {undefined}
  */
 (function(window) {
-    var lastTime = 0;
-    if (!window.requestAnimationFrame) {
-        window.requestAnimationFrame = window.webkitRequestAnimationFrame;
-        window.cancelAnimationFrame = window.webkitCancelAnimationFrame || window.webkitCancelRequestAnimationFrame;
-    }
-    if (!window.requestAnimationFrame) {
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16.7 - (currTime - lastTime));
-            var id = window.setTimeout(function() {
-                callback(currTime + timeToCall);
-            }, timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
-    }
-    if (!window.cancelAnimationFrame) {
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-    }
+	if (!window.requestAnimationFrame) {
+		var lastTime = 0;
+		window.requestAnimationFrame = window.webkitRequestAnimationFrame || function(callback, element) {
+			var currTime = new Date().getTime();
+			var timeToCall = Math.max(0, 16.7 - (currTime - lastTime));
+			var id = window.setTimeout(function() {
+				callback(currTime + timeToCall);
+			}, timeToCall);
+			lastTime = currTime + timeToCall;
+			return id;
+		};
+		window.cancelAnimationFrame = window.webkitCancelAnimationFrame || window.webkitCancelRequestAnimationFrame || function(id) {
+			clearTimeout(id);
+		};
+	};
 }(window));
 /**
  * fastclick(only for radio,checkbox)
@@ -584,7 +654,12 @@ var mui = (function(document, undefined) {
 	}
 
 	var handle = function(event, target) {
-		if (target.type && (target.type === 'radio' || target.type === 'checkbox')) {
+		if (target.tagName === 'LABEL') {
+			if (target.parentNode) {
+				target = target.parentNode.querySelector('input');
+			}
+		}
+		if (target && (target.type === 'radio' || target.type === 'checkbox')) {
 			if (!target.disabled) { //disabled
 				return target;
 			}
@@ -612,6 +687,7 @@ var mui = (function(document, undefined) {
 			clickEvent.initMouseEvent('click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
 			clickEvent.forwardedTouchEvent = true;
 			targetElement.dispatchEvent(clickEvent);
+			event.detail && event.detail.gesture.preventDefault();
 		}
 	};
 	window.addEventListener('tap', dispatchEvent);
@@ -649,8 +725,18 @@ var mui = (function(document, undefined) {
 		// 	document.body.insertBefore(content, document.body.firstElementChild);
 		// }
 		document.addEventListener('focusin', function(e) {
+			if ($.os.plus) { //在父webview里边不fix
+				if (window.plus) {
+					if (plus.webview.currentWebview().children().length > 0) {
+						return;
+					}
+				}
+			}
 			var target = e.target;
-			if (target.tagName && target.tagName === 'INPUT' && target.type === 'text') {
+			if (target.tagName && target.tagName === 'INPUT' && (target.type === 'text' || target.type === 'search' || target.type === 'number')) {
+				if (target.disabled || target.readOnly) {
+					return;
+				}
 				document.body.classList.add(CLASS_FOCUSIN);
 				var isFooter = false;
 				for (; target && target !== document; target = target.parentNode) {
@@ -717,6 +803,175 @@ var mui = (function(document, undefined) {
 })(mui);
 
 /**
+ * 仅提供简单的on，off(仅支持事件委托，不支持当前元素绑定，当前元素绑定请直接使用addEventListener,removeEventListener)
+ * @param {Object} $
+ */
+(function($) {
+
+	var _mid = 1;
+	var delegates = {};
+	//需要wrap的函数
+	var eventMethods = {
+		preventDefault: 'isDefaultPrevented',
+		stopImmediatePropagation: 'isImmediatePropagationStopped',
+		stopPropagation: 'isPropagationStopped'
+	};
+	//默认true返回函数
+	var returnTrue = function() {
+		return true
+	};
+	//默认false返回函数
+	var returnFalse = function() {
+		return false
+	};
+	//wrap浏览器事件
+	var compatible = function(event, target) {
+		if (!event.detail) {
+			event.detail = {
+				currentTarget: target
+			};
+		} else {
+			event.detail.currentTarget = target;
+		}
+		$.each(eventMethods, function(name, predicate) {
+			var sourceMethod = event[name];
+			event[name] = function() {
+				this[predicate] = returnTrue;
+				return sourceMethod && sourceMethod.apply(event, arguments)
+			}
+			event[predicate] = returnFalse;
+		}, true);
+		return event;
+	};
+	//简单的wrap对象_mid
+	var mid = function(obj) {
+		return obj._mid || (obj._mid = _mid++);
+	};
+	//事件委托对象绑定的事件回调列表
+	var delegateFns = {};
+	//返回事件委托的wrap事件回调
+	var delegateFn = function(element, event, selector, callback) {
+		return function(e) {
+			//same event
+			var callbackObjs = delegates[element._mid][event];
+			var handlerQueue = [];
+			var target = e.target;
+			var selectorAlls = {};
+			for (; target && target !== document; target = target.parentNode) {
+				if (target === element) {
+					break;
+				}
+				if (~['click', 'tap', 'doubletap', 'longtap', 'hold'].indexOf(event) && (target.disabled || target.classList.contains('mui-disabled'))) {
+					break;
+				}
+				var matches = {};
+				$.each(callbackObjs, function(selector, callbacks) { //same selector
+					selectorAlls[selector] || (selectorAlls[selector] = $.qsa(selector, element));
+					if (selectorAlls[selector] && ~(selectorAlls[selector]).indexOf(target)) {
+						if (!matches[selector]) {
+							matches[selector] = callbacks;
+						}
+					}
+				}, true);
+				if (!$.isEmptyObject(matches)) {
+					handlerQueue.push({
+						element: target,
+						handlers: matches
+					});
+				}
+			}
+			selectorAlls = null;
+			e = compatible(e); //compatible event
+			$.each(handlerQueue, function(index, handler) {
+				target = handler.element;
+				var tagName = target.tagName;
+				if (event === 'tap' && (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'SELECT')) {
+					e.preventDefault();
+					e.detail && e.detail.gesture && e.detail.gesture.preventDefault();
+				}
+				$.each(handler.handlers, function(index, handler) {
+					$.each(handler, function(index, callback) {
+						if (callback.call(target, e) === false) {
+							e.preventDefault();
+							e.stopPropagation();
+						}
+					}, true);
+				}, true)
+				if (e.isPropagationStopped()) {
+					return false;
+				}
+			}, true);
+		};
+	};
+	var preventDefaultException = /^(INPUT|TEXTAREA|BUTTON|SELECT)$/;
+	/**
+	 * mui delegate events
+	 * @param {type} event
+	 * @param {type} selector
+	 * @param {type} callback
+	 * @returns {undefined}
+	 */
+	$.fn.on = function(event, selector, callback) { //仅支持简单的事件委托,主要是tap事件使用，类似mouse,focus之类暂不封装支持
+		return this.each(function() {
+			var element = this;
+			mid(element);
+			mid(callback);
+			var isAddEventListener = false;
+			var delegateEvents = delegates[element._mid] || (delegates[element._mid] = {});
+			var delegateCallbackObjs = delegateEvents[event] || ((delegateEvents[event] = {}));
+			if ($.isEmptyObject(delegateCallbackObjs)) {
+				isAddEventListener = true;
+			}
+			var delegateCallbacks = delegateCallbackObjs[selector] || (delegateCallbackObjs[selector] = []);
+			delegateCallbacks.push(callback);
+			if (isAddEventListener) {
+				delegateFns[mid(element)] = delegateFn(element, event, selector, callback);
+				element.addEventListener(event, delegateFns[mid(element)]);
+				if (event === 'tap') { //TODO 需要找个更好的解决方案
+					element.addEventListener('click', function(e) {
+						if (e.target) {
+							var tagName = e.target.tagName;
+							if (!preventDefaultException.test(tagName)) {
+								if (tagName === 'A') {
+									var href = e.target.href;
+									if (!(href && ~href.indexOf('tel:'))) {
+										e.preventDefault();
+									}
+								} else {
+									e.preventDefault();
+								}
+							}
+						}
+					});
+				}
+			}
+		});
+	};
+	$.fn.off = function(event, selector, callback) {
+		return this.each(function() {
+			var _mid = mid(this);
+			if (!callback) {
+				if (delegates[_mid] && delegates[_mid][event]) {
+					delete delegates[_mid][event][selector];
+				}
+			} else {
+				var delegateCallbacks = delegates[_mid] && delegates[_mid][event] && delegates[_mid][event][selector];
+				$.each(delegateCallbacks, function(index, delegateCallback) {
+					if (mid(delegateCallback) === mid(callback)) {
+						delegateCallbacks.splice(index, 1);
+						return false;
+					}
+				}, true);
+			}
+			//如果off掉了所有当前element的指定的event事件，则remove掉当前element的delegate回调
+			if (delegates[_mid] && $.isEmptyObject(delegates[_mid][event])) {
+				this.removeEventListener(event, delegateFns[_mid]);
+				delete delegateFns[_mid];
+			}
+		})
+	};
+})(mui);
+/**
  * mui gestures
  * @param {type} $
  * @param {type} window
@@ -751,7 +1006,7 @@ var mui = (function(document, undefined) {
 	 * @returns {$.gestures}
 	 */
 	$.registerGesture = function(gesture) {
-		return $.regesterHandler('gestures', gesture);
+		return $.registerHandler('gestures', gesture);
 
 	};
 	/**
@@ -809,18 +1064,17 @@ var mui = (function(document, undefined) {
 			}
 		});
 	};
-	var touch = {};
 	var detectTouchStart = function(event) {
 		$.gestures.stoped = false;
-		var now = Date.now();
+		var now = $.now();
 		var point = event.touches ? event.touches[0] : event;
-		touch = {
+		$.gestures.touch = {
 			target: event.target,
-			lastTarget: (touch.lastTarget ? touch.lastTarget : null),
+			lastTarget: ($.gestures.touch && $.gestures.touch.lastTarget ? $.gestures.touch.lastTarget : null),
 			startTime: now,
 			touchTime: 0,
 			flickStartTime: now,
-			lastTapTime: (touch.lastTapTime ? touch.lastTapTime : 0),
+			lastTapTime: ($.gestures.touch && $.gestures.touch.lastTapTime ? $.gestures.touch.lastTapTime : 0),
 			start: {
 				x: point.pageX,
 				y: point.pageY
@@ -841,22 +1095,26 @@ var mui = (function(document, undefined) {
 			lastDeltaY: 0,
 			angle: '',
 			direction: '',
+			lockDirection: false,
+			startDirection: '',
 			distance: 0,
 			drag: false,
 			swipe: false,
+			hold: false,
 			gesture: event
 		};
 
-		detect(event, touch);
+		detect(event, $.gestures.touch);
 	};
 	var detectTouchMove = function(event) {
-		if ($.gestures.stoped) {
+		if ($.gestures.stoped || !$.gestures.touch) {
 			return;
 		}
+		var touch = $.gestures.touch;
 		if (event.target != touch.target) {
 			return;
 		}
-		var now = Date.now();
+		var now = $.now();
 		var point = event.touches ? event.touches[0] : event;
 		touch.touchTime = now - touch.startTime;
 		touch.move = {
@@ -879,13 +1137,14 @@ var mui = (function(document, undefined) {
 		detect(event, touch);
 	};
 	var detectTouchEnd = function(event) {
-		if ($.gestures.stoped) {
+		if ($.gestures.stoped || !$.gestures.touch) {
 			return;
 		}
+		var touch = $.gestures.touch;
 		if (event.target != touch.target) {
 			return;
 		}
-		var now = Date.now();
+		var now = $.now();
 		touch.touchTime = now - touch.startTime;
 		touch.flickTime = now - touch.flickStartTime;
 		touch.flickDistanceX = touch.move.x - touch.flickStart.x;
@@ -907,48 +1166,17 @@ var mui = (function(document, undefined) {
 		}
 	}, true);
 
-	/**
-	 * mui delegate events
-	 * @param {type} event
-	 * @param {type} selector
-	 * @param {type} callback
-	 * @returns {undefined}
-	 */
-	$.fn.on = function(event, selector, callback) {
-		this.each(function() {
-			var element = this;
-			element.addEventListener(event, function(e) {
-				var delegates = $.qsa(selector, element);
-				var target = e.target;
-				if (delegates && delegates.length > 0) {
-					for (; target && target !== document; target = target.parentNode) {
-						if (target === element) {
-							break;
-						}
-						if (target && ~delegates.indexOf(target)) {
-							if (!e.detail) {
-								e.detail = {
-									currentTarget: target
-								};
-							} else {
-								e.detail.currentTarget = target;
-							}
-							callback.call(target, e);
-						}
-					}
-				}
-			});
-			////避免多次on的时候重复绑定
-			element.removeEventListener($.EVENT_CLICK, preventDefault);
-			//click event preventDefault
-			element.addEventListener($.EVENT_CLICK, preventDefault);
-		});
-	};
-	var preventDefault = function(e) {
-		if (e.target && e.target.tagName !== 'INPUT') {
-			e.preventDefault();
-		}
-	};
+
+	//增加原生滚动识别
+	$.isScrolling = false;
+	var scrollingTimeout = null;
+	window.addEventListener('scroll', function() {
+		$.isScrolling = true;
+		scrollingTimeout && clearTimeout(scrollingTimeout);
+		scrollingTimeout = setTimeout(function() {
+			$.isScrolling = false;
+		}, 250);
+	});
 })(mui, window);
 /**
  * mui gesture flick[left|right|up|down]
@@ -1016,20 +1244,19 @@ var mui = (function(document, undefined) {
  * @returns {undefined}
  */
 (function($, name) {
-	var last_direction = false;
 	var handle = function(event, touch) {
 		switch (event.type) {
 			case $.EVENT_MOVE:
 				if (touch.direction) { //drag
 					//修正direction
 					//默认锁定单向drag(后续可能需要额外配置支持)
-					if (!last_direction) {
-						last_direction = touch.direction;
-					} else if (last_direction && last_direction !== touch.direction) {
-						if (last_direction === 'up' || last_direction === 'down') {
-							touch.direction = touch.deltaY < 0 ? 'up' : 'down';
-						} else {
-							touch.direction = touch.deltaX < 0 ? 'left' : 'right';
+					if (touch.lockDirection && touch.startDirection) {
+						if (touch.startDirection && touch.startDirection !== touch.direction) {
+							if (touch.startDirection === 'up' || touch.startDirection === 'down') {
+								touch.direction = touch.deltaY < 0 ? 'up' : 'down';
+							} else {
+								touch.direction = touch.deltaX < 0 ? 'left' : 'right';
+							}
 						}
 					}
 					if (!touch.drag) {
@@ -1045,7 +1272,6 @@ var mui = (function(document, undefined) {
 				if (touch.drag) {
 					$.trigger(event.target, name + 'end', touch);
 				}
-				last_direction = false;
 				break;
 		}
 	};
@@ -1074,13 +1300,13 @@ var mui = (function(document, undefined) {
 				if ($.options.gestureConfig.doubletap && touch.lastTarget && (touch.lastTarget === event.target)) { //same target
 					if (touch.lastTapTime && (touch.startTime - touch.lastTapTime) < options.tapMaxInterval) {
 						$.trigger(event.target, 'doubletap', touch);
-						touch.lastTapTime = Date.now();
+						touch.lastTapTime = $.now();
 						touch.lastTarget = event.target;
 						return;
 					}
 				}
 				$.trigger(event.target, name, touch);
-				touch.lastTapTime = Date.now();
+				touch.lastTapTime = $.now();
 				touch.lastTarget = event.target;
 			}
 		}
@@ -1130,18 +1356,59 @@ var mui = (function(document, undefined) {
 		}
 	};
 	/**
-	 * mui gesture drag
+	 * mui gesture longtap
 	 */
 	$.registerGesture({
-		name : name,
-		index : 10,
-		handle : handle,
-		options : {
-			holdTimeout : 500,
-			holdThreshold : 2
+		name: name,
+		index: 10,
+		handle: handle,
+		options: {
+			holdTimeout: 500,
+			holdThreshold: 2
 		}
 	});
-})(mui, 'longtap'); 
+})(mui, 'longtap');
+/**
+ * mui gesture hold
+ * @param {type} $
+ * @param {type} name
+ * @returns {undefined}
+ */
+(function($, name) {
+	var timer;
+	var handle = function(event, touch) {
+		var options = this.options;
+		switch (event.type) {
+			case $.EVENT_START:
+				clearTimeout(timer);
+				timer = setTimeout(function() {
+					touch.hold = true;
+					$.trigger(event.target, name, touch);
+				}, options.holdTimeout);
+				break;
+			case $.EVENT_MOVE:
+				break;
+			case $.EVENT_END:
+			case $.EVENT_CANCEL:
+				clearTimeout(timer);
+				if ($.options.gestureConfig.hold && touch.hold) {
+					$.trigger(event.target, 'release', touch);
+				}
+				break;
+		}
+	};
+	/**
+	 * mui gesture hold
+	 */
+	$.registerGesture({
+		name: name,
+		index: 10,
+		handle: handle,
+		options: {
+			holdTimeout: 0
+		}
+	});
+})(mui, 'hold');
 /**
  * mui.init
  * @param {type} $
@@ -1153,6 +1420,7 @@ var mui = (function(document, undefined) {
 			tap: true,
 			doubletap: false,
 			longtap: false,
+			hold: false,
 			flick: true,
 			swipe: true,
 			drag: true
@@ -1202,13 +1470,42 @@ var mui = (function(document, undefined) {
 	 * @param {function} init
 	 */
 	$.registerInit = function(init) {
-		return $.regesterHandler('inits', init);
+		return $.registerHandler('inits', init);
 	};
 	$(function() {
+		var classList = document.body.classList;
+		var os = [];
 		if ($.os.ios) {
-			document.body.classList.add('mui-ios');
+			os.push({
+				os: 'ios',
+				version: $.os.version
+			});
+			classList.add('mui-ios');
 		} else if ($.os.android) {
-			document.body.classList.add('mui-android');
+			os.push({
+				os: 'android',
+				version: $.os.version
+			});
+			classList.add('mui-android');
+		}
+		if ($.os.wechat) {
+			os.push({
+				os: 'wechat',
+				version: $.os.wechat.version
+			});
+			classList.add('mui-wechat');
+		}
+		if (os.length) {
+			$.each(os, function(index, osObj) {
+				var version = '';
+				var classArray = [];
+				if (osObj.version) {
+					$.each(osObj.version.split('.'), function(i, v) {
+						version = version + (version ? '-' : '') + v;
+						classList.add($.className(osObj.os + '-' + version));
+					});
+				}
+			});
 		}
 	});
 })(mui);
@@ -1281,7 +1578,9 @@ var mui = (function(document, undefined) {
 	 */
 	$.plusReady = function(callback) {
 		if (window.plus) {
-			callback();
+			setTimeout(function() { //解决callback与plusready事件的执行时机问题(典型案例:showWaiting,closeWaiting)
+				callback();
+			}, 0);
 		} else {
 			document.addEventListener("plusready", function() {
 				callback();
@@ -1298,7 +1597,7 @@ var mui = (function(document, undefined) {
 	 */
 	$.fire = function(webview, eventType, data) {
 		if (webview) {
-			webview.evalJS("typeof mui!=='undefined'&&mui.receive('" + eventType + "','" + JSON.stringify(data || {}) + "')");
+			webview.evalJS("typeof mui!=='undefined'&&mui.receive('" + eventType + "','" + JSON.stringify(data || {}).replace(/\'/g, "\\u0027").replace(/\\/g, "\\u005c") + "')");
 		}
 	};
 	/**
@@ -1393,6 +1692,17 @@ var mui = (function(document, undefined) {
 			webviewCache.afterShowMethodName && webview.evalJS(webviewCache.afterShowMethodName + '(\'' + JSON.stringify(params) + '\')');
 			return webview;
 		} else { //新窗口
+			if (options.createNew !== true) {
+				webview = plus.webview.getWebviewById(id);
+				if (webview) { //如果已存在
+					nShow = $.showOptions(options.show);
+					webview.show(nShow.aniShow, nShow.duration, function() {
+						triggerPreload(webview);
+						trigger(webview, 'pagebeforeshow', false);
+					});
+					return webview;
+				}
+			}
 			//显示waiting
 			var waitingConfig = $.waitingOptions(options.waiting);
 			if (waitingConfig.autoShow) {
@@ -1403,6 +1713,7 @@ var mui = (function(document, undefined) {
 				id: id,
 				url: url
 			});
+
 			webview = $.createWindow(options);
 			//显示
 			nShow = $.showOptions(options.show);
@@ -1560,10 +1871,14 @@ var mui = (function(document, undefined) {
 		if (!$.webviews[id]) { //保证执行一遍
 			//TODO 这里也有隐患，比如某个webview不是作为subpage创建的，而是作为target webview的话；
 			webview = plus.webview.create(options.url, id, options.styles, options.extras);
-			//TODO 理论上，子webview也应该计算到预加载队列中，但这样就麻烦了，要退必须退整体，否则可能出现问题；
-			webview.addEventListener('loaded', function() {
-				$.currentWebview.append(webview);
-			});
+			//之前的实现方案：子窗口loaded之后再append到父窗口中；
+			//问题：部分子窗口loaded事件发生较晚，此时执行父窗口的children方法会返回空，导致父子通讯失败；
+			//     比如父页面执行完preload事件后，需触发子页面的preload事件，此时未append的话，就无法触发；
+			//修改方式：不再监控loaded事件，直接append
+			//by chb@20150521
+			// webview.addEventListener('loaded', function() {
+			plus.webview.currentWebview().append(webview);
+			// });
 			$.webviews[id] = options;
 		}
 		return webview;
@@ -1591,17 +1906,29 @@ var mui = (function(document, undefined) {
 						$.appendWebview(subpage);
 					});
 					//判断是否首页
-					if ($.currentWebview === plus.webview.getWebviewById(plus.runtime.appid)) {
+					if (plus.webview.currentWebview() === plus.webview.getWebviewById(plus.runtime.appid)) {
 						$.isHomePage = true;
 						//首页需要自己激活预加载；
 						//timeout因为子页面loaded之后才append的，防止子页面尚未append、从而导致其preload未触发的问题；
 						setTimeout(function() {
-							triggerPreload($.currentWebview);
+							triggerPreload(plus.webview.currentWebview());
 						}, 300);
 					}
 					//设置ios顶部状态栏颜色；
 					if ($.os.ios && $.options.statusBarBackground) {
 						plus.navigator.setStatusBarBackground($.options.statusBarBackground);
+					}
+					if ($.os.android && parseFloat($.os.version) < 4.4) {
+						//解决Android平台4.4版本以下，resume后，父窗体标题延迟渲染的问题；
+						if (plus.webview.currentWebview().parent() == null) {
+							document.addEventListener("resume", function() {
+								var body = document.body;
+								body.style.display = 'none';
+								setTimeout(function() {
+									body.style.display = '';
+								}, 10);
+							});
+						}
 					}
 				});
 			} else {
@@ -1650,7 +1977,7 @@ var mui = (function(document, undefined) {
 	 * @returns {$.gestures}
 	 */
 	$.registerBack = function(back) {
-		return $.regesterHandler('backs', back);
+		return $.registerHandler('backs', back);
 	};
 	/**
 	 * default
@@ -1670,8 +1997,8 @@ var mui = (function(document, undefined) {
 	 * 后退
 	 */
 	$.back = function() {
-		if (typeof $.options.back === 'function') {
-			if ($.options.back() === false) {
+		if (typeof $.options.beforeback === 'function') {
+			if ($.options.beforeback() === false) {
 				return;
 			}
 		}
@@ -1687,7 +2014,7 @@ var mui = (function(document, undefined) {
 	});
 	window.addEventListener('swiperight', function(e) {
 		var detail = e.detail;
-		if ($.options.swipeBack === true && Math.abs(detail.angle)< 3) {
+		if ($.options.swipeBack === true && Math.abs(detail.angle) < 3) {
 			$.back();
 		}
 	});
@@ -1706,7 +2033,7 @@ var mui = (function(document, undefined) {
 			index: 5,
 			handle: function() {
 				//popover
-				if ($.targets._popover) {
+				if ($.targets._popover && $.targets._popover.classList.contains('mui-active')) {
 					$($.targets._popover).popover('hide');
 					return true;
 				}
@@ -1729,28 +2056,28 @@ var mui = (function(document, undefined) {
 			if (!window.plus) {
 				return false;
 			}
-			var wobj = $.currentWebview;
+			var wobj = plus.webview.currentWebview();
 			var parent = wobj.parent();
 			if (parent) {
-				parent.evalJS('mui.back();');
-			}else{
+				parent.evalJS('mui&&mui.back();');
+			} else {
 				wobj.canBack(function(e) {
 					//by chb 暂时注释，在碰到类似popover之类的锚点的时候，需多次点击才能返回；
 					if (e.canBack) { //webview history back
 						window.history.back();
 					} else { //webview close or hide
-						var opener = wobj.opener();
-						if (opener) {
+						//fixed by fxy 此处不应该用opener判断，因为用户有可能自己close掉当前窗口的opener。这样的话。opener就为空了，导致不能执行close
+						if (wobj.id === plus.runtime.appid) { //首页
+							//首页不存在opener的情况下，后退实际上应该是退出应用；
+							//这个交给项目具体实现，框架暂不处理；
+							//plus.runtime.quit();	
+						} else { //其他页面，
 							if (wobj.preload) {
 								wobj.hide("auto");
 							} else {
 								//关闭页面时，需要将其打开的所有子页面全部关闭；
 								$.closeAll(wobj);
 							}
-						} else {
-							//首页不存在opener的情况下，后退实际上应该是退出应用；
-							//这个交给项目具体实现，框架暂不处理；
-							//plus.runtime.quit();
 						}
 					}
 				});
@@ -1763,7 +2090,7 @@ var mui = (function(document, undefined) {
 	$.menu = function() {
 		var menu = document.querySelector('.mui-action-menu');
 		if (menu) {
-			$.trigger(menu, 'touchstart');//临时处理menu无touchstart的话，找不到当前targets的问题
+			$.trigger(menu, 'touchstart'); //临时处理menu无touchstart的话，找不到当前targets的问题
 			$.trigger(menu, 'tap');
 		} else { //执行父窗口的menu
 			if (window.plus) {
@@ -1775,17 +2102,33 @@ var mui = (function(document, undefined) {
 			}
 		}
 	};
+	var __back = function() {
+		$.back();
+	};
+	var __menu = function() {
+		$.menu();
+	};
+	//默认监听
+	$.plusReady(function() {
+		if ($.options.keyEventBind.backbutton) {
+			plus.key.addEventListener('backbutton', __back, false);
+		}
+		if ($.options.keyEventBind.menubutton) {
+			plus.key.addEventListener('menubutton', __menu, false);
+		}
+	});
 	//处理按键监听事件
 	$.registerInit({
 		name: 'keyEventBind',
 		index: 1000,
 		handle: function() {
 			$.plusReady(function() {
-				if ($.options.keyEventBind.backbutton) {
-					plus.key.addEventListener('backbutton', $.back, false);
+				//如果不为true，则移除默认监听
+				if (!$.options.keyEventBind.backbutton) {
+					plus.key.removeEventListener('backbutton', __back);
 				}
-				if ($.options.keyEventBind.menubutton) {
-					plus.key.addEventListener('menubutton', $.menu, false);
+				if (!$.options.keyEventBind.menubutton) {
+					plus.key.removeEventListener('menubutton', __menu);
 				}
 			});
 		}
@@ -1835,7 +2178,7 @@ var mui = (function(document, undefined) {
 										downOptions.down = $.extend({}, pullRefreshOptions.down);
 										downOptions.down.callback = '_CALLBACK';
 										//父页面初始化pulldown
-										parent.evalJS("mui(document.querySelector('.mui-content')).pullRefresh('" + JSON.stringify(downOptions) + "')");
+										parent.evalJS("mui&&mui(document.querySelector('.mui-content')).pullRefresh('" + JSON.stringify(downOptions) + "')");
 									}
 								}
 							});
@@ -1864,6 +2207,7 @@ var mui = (function(document, undefined) {
 
 	$.ajaxSettings = {
 		type: 'GET',
+		beforeSend: $.noop,
 		success: $.noop,
 		error: $.noop,
 		complete: $.noop,
@@ -1882,7 +2226,12 @@ var mui = (function(document, undefined) {
 		processData: true,
 		cache: true
 	};
-
+	var ajaxBeforeSend = function(xhr, settings) {
+		var context = settings.context
+		if (settings.beforeSend.call(context, xhr, settings) === false) {
+			return false;
+		}
+	};
 	var ajaxSuccess = function(data, xhr, settings) {
 		settings.success.call(settings.context, data, 'success', xhr);
 		ajaxComplete('success', xhr, settings);
@@ -1963,7 +2312,7 @@ var mui = (function(document, undefined) {
 		}
 		var settings = options || {};
 		settings.url = url || settings.url;
-		for (key in $.ajaxSettings) {
+		for (var key in $.ajaxSettings) {
 			if (settings[key] === undefined) {
 				settings[key] = $.ajaxSettings[key];
 			}
@@ -1972,7 +2321,7 @@ var mui = (function(document, undefined) {
 		var dataType = settings.dataType;
 
 		if (settings.cache === false || ((!options || options.cache !== true) && ('script' === dataType))) {
-			settings.url = appendQuery(settings.url, '_=' + Date.now());
+			settings.url = appendQuery(settings.url, '_=' + $.now());
 		}
 		var mime = settings.accepts[dataType];
 		var headers = {};
@@ -1980,7 +2329,7 @@ var mui = (function(document, undefined) {
 			headers[name.toLowerCase()] = [name, value];
 		};
 		var protocol = /^([\w-]+:)\/\//.test(settings.url) ? RegExp.$1 : window.location.protocol;
-		var xhr = settings.xhr(protocol);
+		var xhr = settings.xhr(settings);
 		var nativeSetHeader = xhr.setRequestHeader;
 		var abortTimeout;
 
@@ -1996,7 +2345,7 @@ var mui = (function(document, undefined) {
 			setHeader('Content-Type', settings.contentType || 'application/x-www-form-urlencoded');
 		}
 		if (settings.headers) {
-			for (name in settings.headers)
+			for (var name in settings.headers)
 				setHeader(name, settings.headers[name]);
 		}
 		xhr.setRequestHeader = setHeader;
@@ -2032,23 +2381,23 @@ var mui = (function(document, undefined) {
 				}
 			}
 		};
-		//		if (ajaxBeforeSend(xhr, settings) === false) {
-		//			xhr.abort();
-		//			ajaxError(null, 'abort', xhr, settings);
-		//			return xhr;
-		//		}
+		if (ajaxBeforeSend(xhr, settings) === false) {
+			xhr.abort();
+			ajaxError(null, 'abort', xhr, settings);
+			return xhr;
+		}
 
 		if (settings.xhrFields) {
-			for (name in settings.xhrFields) {
+			for (var name in settings.xhrFields) {
 				xhr[name] = settings.xhrFields[name];
 			}
 		}
 
 		var async = 'async' in settings ? settings.async : true;
 
-		xhr.open(settings.type, settings.url, async, settings.username, settings.password);
+		xhr.open(settings.type.toUpperCase(), settings.url, async, settings.username, settings.password);
 
-		for (name in headers) {
+		for (var name in headers) {
 			nativeSetHeader.apply(xhr, headers[name]);
 		}
 		if (settings.timeout > 0) {
@@ -2123,13 +2472,25 @@ var mui = (function(document, undefined) {
  * 5+ ajax
  */
 (function($) {
+	var originAnchor = document.createElement('a');
+	originAnchor.href = window.location.href;
 	$.plusReady(function() {
 		$.ajaxSettings = $.extend($.ajaxSettings, {
-			xhr: function(protocol) {
-				if (protocol === 'file:') { //本地文件使用标准XMLHttpRequest
-					return new window.XMLHttpRequest();
+			xhr: function(settings) {
+				if (settings.crossDomain) { //强制使用plus跨域
+					return new plus.net.XMLHttpRequest();
 				}
-				return new plus.net.XMLHttpRequest();
+				//仅在webview的url为远程文件，且ajax请求的资源不同源下使用plus.net.XMLHttpRequest
+				if (originAnchor.protocol !== 'file:') {
+					var urlAnchor = document.createElement('a');
+					urlAnchor.href = settings.url;
+					urlAnchor.href = urlAnchor.href;
+					settings.crossDomain = (originAnchor.protocol + '//' + originAnchor.host) !== (urlAnchor.protocol + '//' + urlAnchor.host);
+					if (settings.crossDomain) {
+						return new plus.net.XMLHttpRequest();
+					}
+				}
+				return new window.XMLHttpRequest();
 			}
 		});
 	});
@@ -2167,6 +2528,7 @@ var mui = (function(document, undefined) {
 		duration = duration || 1000;
 		var scroll = function(duration) {
 			if (duration <= 0) {
+				window.scrollTo(0, scrollTop);
 				callback && callback();
 				return;
 			}
@@ -2240,13 +2602,16 @@ var mui = (function(document, undefined) {
 	var CLASS_PULL = 'mui-pull';
 	var CLASS_PULL_LOADING = 'mui-pull-loading';
 	var CLASS_PULL_CAPTION = 'mui-pull-caption';
+	var CLASS_PULL_CAPTION_DOWN = 'mui-pull-caption-down';
+	var CLASS_PULL_CAPTION_REFRESH = 'mui-pull-caption-refresh';
+	var CLASS_PULL_CAPTION_NOMORE = 'mui-pull-caption-nomore';
 
 	var CLASS_ICON = 'mui-icon';
 	var CLASS_SPINNER = 'mui-spinner';
 	var CLASS_ICON_PULLDOWN = 'mui-icon-pulldown';
 
-	var CLASS_IN = 'mui-in';
 	var CLASS_BLOCK = 'mui-block';
+	var CLASS_HIDDEN = 'mui-hidden';
 	var CLASS_VISIBILITY = 'mui-visibility';
 
 	var CLASS_LOADING_UP = CLASS_PULL_LOADING + ' ' + CLASS_ICON + ' ' + CLASS_ICON_PULLDOWN;
@@ -2261,6 +2626,7 @@ var mui = (function(document, undefined) {
 				scrollY: true,
 				scrollX: false,
 				indicators: true,
+				deceleration:0.003,
 				down: {
 					height: 50,
 					contentdown: '下拉可以刷新',
@@ -2269,6 +2635,7 @@ var mui = (function(document, undefined) {
 				},
 				up: {
 					height: 50,
+					auto: false,
 					contentdown: '上拉显示更多',
 					contentrefresh: '正在加载...',
 					contentnomore: '没有更多数据了',
@@ -2335,6 +2702,21 @@ var mui = (function(document, undefined) {
 				loading.className = CLASS_LOADING_DOWN;
 			}
 		},
+		_setCaptionClass: function(isPulldown, caption, title) {
+			if (!isPulldown) {
+				switch (title) {
+					case this.options.up.contentdown:
+						caption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_DOWN;
+						break;
+					case this.options.up.contentrefresh:
+						caption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_REFRESH
+						break;
+					case this.options.up.contentnomore:
+						caption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_NOMORE;
+						break;
+				}
+			}
+		},
 		_setCaption: function(title, reset) {
 			if (this.loading) {
 				return;
@@ -2344,13 +2726,15 @@ var mui = (function(document, undefined) {
 			var caption = this.pullCaption;
 			var loading = this.pullLoading;
 			var isPulldown = this.pulldown;
+			var self = this;
 			if (pocket) {
 				if (reset) {
 					setTimeout(function() {
-						caption.innerHTML = title;
+						caption.innerHTML = self.lastTitle = title;
 						if (isPulldown) {
 							loading.className = CLASS_LOADING_DOWN;
 						} else {
+							self._setCaptionClass(false, caption, title);
 							loading.className = CLASS_LOADING;
 						}
 						loading.style.webkitAnimation = "";
@@ -2375,10 +2759,11 @@ var mui = (function(document, undefined) {
 							}
 						} else {
 							if (title === options.up.contentrefresh) {
-								loading.className = CLASS_LOADING + ' ' + CLASS_IN;
+								loading.className = CLASS_LOADING + ' ' + CLASS_VISIBILITY;
 							} else {
-								loading.className = CLASS_LOADING;
+								loading.className = CLASS_LOADING + ' ' + CLASS_HIDDEN;
 							}
+							self._setCaptionClass(false, caption, title);
 						}
 						this.lastTitle = title;
 					}
@@ -2621,8 +3006,9 @@ var mui = (function(document, undefined) {
 			if (this.options.scrollX) {
 				this.wrapper.addEventListener('swiperight', this);
 			}
-			if (this.wrapper.classList.contains('mui-segmented-control')) { //靠，这个bug排查了一下午
-				mui(this.wrapper).on('click', 'a', $.preventDefault);
+			var segmentedControl = this.wrapper.querySelector('.mui-segmented-control');
+			if (segmentedControl) { //靠，这个bug排查了一下午，阻止hash跳转，一旦hash跳转会导致可拖拽选项卡的tab不见
+				mui(segmentedControl).on('click', 'a', $.preventDefault);
 			}
 		},
 		handleEvent: function(e) {
@@ -2653,6 +3039,7 @@ var mui = (function(document, undefined) {
 					break;
 				case 'scrollend':
 					this._scrollend(e);
+					e.stopPropagation();
 					break;
 				case 'orientationchange':
 				case 'resize':
@@ -2667,18 +3054,30 @@ var mui = (function(document, undefined) {
 		_start: function(e) {
 			this.moved = this.needReset = false;
 			this._transitionTime();
-			if (this.isInTransition) {
+			if (this.isInTransition && this.moved) {
 				this.needReset = true;
 				this.isInTransition = false;
 				var pos = $.parseTranslateMatrix($.getStyles(this.scroller, 'webkitTransform'));
 				this.setTranslate(Math.round(pos.x), Math.round(pos.y));
 				this.resetPosition(); //reset
-				$.trigger(this.wrapper, 'scrollend', this);
+				$.trigger(this.scroller, 'scrollend', this);
 				//				e.stopPropagation();
 				e.preventDefault();
 			}
 			this.reLayout();
-			$.trigger(this.wrapper, 'beforescrollstart', this);
+			$.trigger(this.scroller, 'beforescrollstart', this);
+		},
+		_getDirectionByAngle: function(angle) {
+			if (angle < -80 && angle > -100) {
+				return 'up';
+			} else if (angle >= 80 && angle < 100) {
+				return 'down';
+			} else if (angle >= 170 || angle <= -170) {
+				return 'left';
+			} else if (angle >= -35 && angle <= 10) {
+				return 'right';
+			}
+			return null;
 		},
 		_drag: function(e) {
 			//			if (this.needReset) {
@@ -2698,18 +3097,38 @@ var mui = (function(document, undefined) {
 				}
 			}
 			var isPreventDefault = isReturn = false;
+			var direction = this._getDirectionByAngle(detail.angle);
 			if (detail.direction === 'left' || detail.direction === 'right') {
 				if (this.options.scrollX) {
 					isPreventDefault = true;
+					if (!this.moved) { //识别角度(该角度导致轮播不灵敏)
+						//						if (direction !== 'left' && direction !== 'right') {
+						//							isReturn = true;
+						//						} else {
+						$.gestures.touch.lockDirection = true; //锁定方向
+						$.gestures.touch.startDirection = detail.direction;
+						//						}
+					}
 				} else if (this.options.scrollY && !this.moved) {
 					isReturn = true;
 				}
 			} else if (detail.direction === 'up' || detail.direction === 'down') {
 				if (this.options.scrollY) {
 					isPreventDefault = true;
+					//					if (!this.moved) { //识别角度,竖向滚动似乎没必要进行小角度验证
+					//						if (direction !== 'up' && direction !== 'down') {
+					//							isReturn = true;
+					//						}
+					//					}
+					if (!this.moved) {
+						$.gestures.touch.lockDirection = true; //锁定方向
+						$.gestures.touch.startDirection = detail.direction;
+					}
 				} else if (this.options.scrollX && !this.moved) {
 					isReturn = true;
 				}
+			} else {
+				isReturn = true;
 			}
 			if (isPreventDefault) {
 				e.stopPropagation(); //阻止冒泡(scroll类嵌套)
@@ -2719,13 +3138,19 @@ var mui = (function(document, undefined) {
 				return;
 			}
 			if (!this.moved) {
-				$.trigger(this.wrapper, 'scrollstart', this);
+				$.trigger(this.scroller, 'scrollstart', this);
 			} else {
 				e.stopPropagation(); //move期间阻止冒泡(scroll嵌套)
 			}
-
-			var deltaX = detail.deltaX - detail.lastDeltaX;
-			var deltaY = detail.deltaY - detail.lastDeltaY;
+			var deltaX = 0;
+			var deltaY = 0;
+			if (!this.moved) { //start
+				deltaX = detail.deltaX;
+				deltaY = detail.deltaY;
+			} else { //move
+				deltaX = detail.deltaX - detail.lastDeltaX;
+				deltaY = detail.deltaY - detail.lastDeltaY;
+			}
 			var absDeltaX = Math.abs(detail.deltaX);
 			var absDeltaY = Math.abs(detail.deltaY);
 			if (absDeltaX > absDeltaY + this.options.directionLockThreshold) {
@@ -2753,7 +3178,7 @@ var mui = (function(document, undefined) {
 			this.moved = true;
 			this.x = newX;
 			this.y = newY;
-			$.trigger(this.wrapper, 'scroll', this);
+			$.trigger(this.scroller, 'scroll', this);
 		},
 		_flick: function(e) {
 			//			if (!this.moved || this.needReset) {
@@ -2781,7 +3206,7 @@ var mui = (function(document, undefined) {
 			this.scrollTo(newX, newY); // ensures that the last position is rounded
 
 			if (e.type === 'dragend') { //dragend
-				$.trigger(this.wrapper, 'scrollend', this);
+				$.trigger(this.scroller, 'scrollend', this);
 				return;
 			}
 			var time = 0;
@@ -2810,7 +3235,7 @@ var mui = (function(document, undefined) {
 				return;
 			}
 
-			$.trigger(this.wrapper, 'scrollend', this);
+			$.trigger(this.scroller, 'scrollend', this);
 			//			e.stopPropagation();
 		},
 		_end: function(e) {
@@ -2826,12 +3251,12 @@ var mui = (function(document, undefined) {
 			this._transitionTime();
 			if (!this.resetPosition(this.options.bounceTime)) {
 				this.isInTransition = false;
-				$.trigger(this.wrapper, 'scrollend', this);
+				$.trigger(this.scroller, 'scrollend', this);
 			}
 		},
 		_scrollend: function(e) {
 			if (Math.abs(this.y) > 0 && this.y <= this.maxScrollY) {
-				$.trigger(this.wrapper, 'scrollbottom', this);
+				$.trigger(this.scroller, 'scrollbottom', this);
 			}
 		},
 		_resize: function() {
@@ -2966,6 +3391,12 @@ var mui = (function(document, undefined) {
 				duration: duration
 			};
 		},
+		_getTranslateStr: function(x, y) {
+			if (this.options.hardwareAccelerated) {
+				return 'translate3d(' + x + 'px,' + y + 'px,0px) ' + this.translateZ;
+			}
+			return 'translate(' + x + 'px,' + y + 'px) ';
+		},
 		//API
 		setStopped: function(stopped) {
 			this.stopped = !!stopped;
@@ -2973,16 +3404,16 @@ var mui = (function(document, undefined) {
 		setTranslate: function(x, y) {
 			this.x = x;
 			this.y = y;
-			this.scrollerStyle['webkitTransform'] = 'translate3d(' + x + 'px,' + y + 'px,0px)' + this.translateZ;
+			this.scrollerStyle['webkitTransform'] = this._getTranslateStr(x, y);
 			if (this.parallaxElement && this.options.scrollY) { //目前仅支持竖向视差效果
 				var parallaxY = y * this.options.parallaxRatio;
 				var scale = 1 + parallaxY / ((this.parallaxHeight - parallaxY) / 2);
 				if (scale > 1) {
 					this.parallaxImgStyle['opacity'] = 1 - parallaxY / 100 * this.options.parallaxRatio;
-					this.parallaxStyle['webkitTransform'] = 'translate3d(0px,' + -parallaxY + 'px,0px) scale(' + scale + ',' + scale + ') ' + this.translateZ;
+					this.parallaxStyle['webkitTransform'] = this._getTranslateStr(0, -parallaxY) + ' scale(' + scale + ',' + scale + ')';
 				} else {
 					this.parallaxImgStyle['opacity'] = 1;
-					this.parallaxStyle['webkitTransform'] = 'translate3d(0px,-10px,0px) scale(1,1) ' + this.translateZ;
+					this.parallaxStyle['webkitTransform'] = this._getTranslateStr(0, -1) + ' scale(1,1)';
 				}
 			}
 			if (this.indicators) {
@@ -3042,7 +3473,7 @@ var mui = (function(document, undefined) {
 		},
 		refresh: function() {
 			this.reLayout();
-			$.trigger(this.wrapper, 'refresh', this);
+			$.trigger(this.scroller, 'refresh', this);
 			this.resetPosition();
 		},
 		scrollTo: function(x, y, time, easing) {
@@ -3183,7 +3614,7 @@ var mui = (function(document, undefined) {
 			this.x = x;
 			this.y = y;
 
-			this.indicatorStyle['webkitTransform'] = 'translate3d(' + x + 'px,' + y + 'px,0px)' + this.scroller.translateZ;
+			this.indicatorStyle['webkitTransform'] = this.scroller._getTranslateStr(x, y);
 
 		},
 		fade: function(val, hold) {
@@ -3246,7 +3677,9 @@ var mui = (function(document, undefined) {
 		handleEvent: function(e) {
 			this._super(e);
 			if (e.type === 'scrollbottom') {
-				this._scrollbottom();
+				if (e.target === this.scroller) {
+					this._scrollbottom();
+				}
 			}
 		},
 		_scrollbottom: function() {
@@ -3279,20 +3712,20 @@ var mui = (function(document, undefined) {
 		//API
 		resetPosition: function(time) {
 			if (this.pulldown && this.y >= this.options.down.height) {
-				this.pulldownLoading(0, time || 0);
+				this.pulldownLoading(undefined, time || 0);
 				return true;
 			}
 			return this._super(time);
 		},
-		pulldownLoading: function(x, time) {
-			x = x || 0;
-			this.scrollTo(x, this.options.down.height, time, this.options.bounceEasing);
+		pulldownLoading: function(y, time) {
+			typeof y === 'undefined' && (y = this.options.down.height); //默认高度
+			this.scrollTo(0, y, time, this.options.bounceEasing);
 			if (this.loading) {
 				return;
 			}
-			if (!this.pulldown) {
-				this._initPulldownRefresh();
-			}
+			//			if (!this.pulldown) {
+			this._initPulldownRefresh();
+			//			}
 			this._setCaption(this.options.down.contentrefresh);
 			this.loading = true;
 			this.indicators.map(function(indicator) {
@@ -3312,7 +3745,7 @@ var mui = (function(document, undefined) {
 				}, 350);
 			}
 		},
-		pullupLoading: function(x, time) {
+		pullupLoading: function(callback, x, time) {
 			x = x || 0;
 			this.scrollTo(x, this.maxScrollY, time, this.options.bounceEasing);
 			if (this.loading) {
@@ -3324,7 +3757,7 @@ var mui = (function(document, undefined) {
 				indicator.fade(0);
 			});
 			this.loading = true;
-			var callback = this.options.up.callback;
+			callback = callback || this.options.up.callback;
 			callback && callback.call(this);
 		},
 		endPullupToRefresh: function(finished) {
@@ -3332,6 +3765,7 @@ var mui = (function(document, undefined) {
 			if (self.bottomPocket && self.loading && !this.pulldown) {
 				self.loading = false;
 				if (finished) {
+					this.finished = true;
 					self._setCaption(self.options.up.contentnomore);
 					//					self.bottomPocket.classList.remove(CLASS_VISIBILITY);
 					//					self.bottomPocket.classList.add(CLASS_HIDDEN);
@@ -3345,13 +3779,12 @@ var mui = (function(document, undefined) {
 			}
 		},
 		refresh: function(isReset) {
-			if (isReset) {
-				//				var classList = this.bottomPocket.classList;
-				//				if (classList.contains(CLASS_HIDDEN)) {
-				//					classList.remove(CLASS_HIDDEN);
-				//				this._setCaption(self.options.up.contentdown);
+			if (isReset && this.finished) {
+				this._initPullupRefresh();
+				this.bottomPocket.classList.remove(CLASS_HIDDEN);
+				this._setCaption(this.options.up.contentdown);
 				this.wrapper.addEventListener('scrollbottom', this);
-				//				}
+				this.finished = false;
 			}
 			this._super();
 		},
@@ -3359,23 +3792,27 @@ var mui = (function(document, undefined) {
 	$.fn.pullRefresh = function(options) {
 		if (this.length === 1) {
 			var self = this[0];
-			var pullrefreshApi = null;
+			var pullRefreshApi = null;
+			options = options || {};
 			var id = self.getAttribute('data-pullrefresh');
 			if (!id) {
 				id = ++$.uuid;
-				$.data[id] = pullrefreshApi = new PullRefresh(self, options);
+				$.data[id] = pullRefreshApi = new PullRefresh(self, options);
 				self.setAttribute('data-pullrefresh', id);
 			} else {
-				pullrefreshApi = $.data[id];
+				pullRefreshApi = $.data[id];
+			}
+			if (options.up && options.up.auto) { //如果设置了auto，则自动上拉一次
+				pullRefreshApi.pullupLoading();
 			}
 			//暂不提供这种调用方式吧			
 			//			if (typeof options === 'string') {
-			//				var methodValue = pullrefreshApi[options].apply(pullrefreshApi, $.slice.call(arguments, 1));
+			//				var methodValue = pullRefreshApi[options].apply(pullRefreshApi, $.slice.call(arguments, 1));
 			//				if (methodValue !== undefined) {
 			//					return methodValue;
 			//				}
 			//			}
-			return pullrefreshApi;
+			return pullRefreshApi;
 		}
 	};
 })(mui, window, document);
@@ -3448,7 +3885,6 @@ var mui = (function(document, undefined) {
 			self.wrapper.addEventListener('scrollend', function() {
 				self.isInTransition = false;
 				var page = self.currentPage;
-				var oldSlideNumber = self.slideNumber;
 				self.slideNumber = self._fixedSlideNumber();
 				if (self.loop) {
 					if (self.slideNumber === 0) {
@@ -3457,11 +3893,13 @@ var mui = (function(document, undefined) {
 						self.setTranslate(self.pages[self.itemLength - 2][0].x, 0);
 					}
 				}
-				if (oldSlideNumber != self.slideNumber) {
+				if (self.lastSlideNumber != self.slideNumber) {
+					self.lastSlideNumber = self.slideNumber;
 					$.trigger(self.wrapper, 'slide', {
 						slideNumber: self.slideNumber
 					});
 				}
+				self._initTimer();
 			});
 
 			self.wrapper.addEventListener('slide', function(e) {
@@ -3531,6 +3969,10 @@ var mui = (function(document, undefined) {
 			this._super(e);
 			var direction = e.detail.direction;
 			if (direction === 'left' || direction === 'right') {
+				//拖拽期间取消定时
+				var slidershowTimer = this.wrapper.getAttribute('data-slidershowTimer');
+				slidershowTimer && window.clearTimeout(slidershowTimer);
+
 				e.stopPropagation();
 			}
 		},
@@ -3588,17 +4030,20 @@ var mui = (function(document, undefined) {
 			$.trigger(this.wrapper, 'scrollend', this);
 		},
 		_flick: function(e) {
+			if (!this.moved) { //无moved
+				return;
+			}
 			var detail = e.detail;
 			var direction = detail.direction;
 			this._clearRequestAnimationFrame();
 			this.isInTransition = true;
-			if (direction === 'up' || direction === 'down') {
-				this.resetPosition(this.options.bounceTime);
-				return;
-			}
+			//			if (direction === 'up' || direction === 'down') {
+			//				this.resetPosition(this.options.bounceTime);
+			//				return;
+			//			}
 			if (e.type === 'flick') {
 				if (detail.touchTime < 200) { //flick，太容易触发，额外校验一下touchtime
-					this.x = this._getPage((this.slideNumber + (direction === 'left' ? 1 : -1)), true).x;
+					this.x = this._getPage((this.slideNumber + (direction === 'right' ? -1 : 1)), true).x;
 				}
 				this.resetPosition(this.options.bounceTime);
 			} else if (e.type === 'dragend' && !detail.flick) {
@@ -3614,10 +4059,15 @@ var mui = (function(document, undefined) {
 				//当slider处于隐藏状态时，导致snap计算是错误的，临时先这么判断一下，后续要考虑解决所有scroll在隐藏状态下初始化属性不正确的问题
 				var currentPage = this.pages[this.loop ? 1 : 0];
 				currentPage = currentPage || this.pages[0];
+				if (!currentPage) {
+					return;
+				}
 				this.currentPage = currentPage[0];
 				this.slideNumber = 0;
+				this.lastSlideNumber = typeof this.lastSlideNumber === 'undefined' ? 0 : this.lastSlideNumber;
 			} else {
 				this.slideNumber = this._fixedSlideNumber();
+				this.lastSlideNumber = typeof this.lastSlideNumber === 'undefined' ? this.slideNumber : this.lastSlideNumber;
 			}
 			this.options.startX = this.currentPage.x || 0;
 		},
@@ -3650,19 +4100,18 @@ var mui = (function(document, undefined) {
 			return this.pages[slideNumber][0];
 		},
 		_gotoItem: function(slideNumber, time) {
-			this.currentPage = this._getPage(slideNumber);
+			this.currentPage = this._getPage(slideNumber, true); //此处传true。可保证程序切换时，动画与人手操作一致(第一张，最后一张的切换动画)
 			this.scrollTo(this.currentPage.x, 0, time, this.options.bounceEasing);
 			if (time === 0) {
 				$.trigger(this.wrapper, 'scrollend', this);
 			}
-			this._initTimer();
 		},
 		//API
 		setTranslate: function(x, y) {
 			this._super(x, y);
 			var progressBar = this.progressBar;
 			if (progressBar) {
-				this.progressBarStyle.webkitTransform = 'translate3d(' + (-x * (this.progressBarWidth / this.wrapperWidth)) + 'px,0,0)';
+				this.progressBarStyle.webkitTransform = this._getTranslateStr((-x * (this.progressBarWidth / this.wrapperWidth)), 0);
 			}
 		},
 		resetPosition: function(time) {
@@ -3677,7 +4126,7 @@ var mui = (function(document, undefined) {
 			return true;
 		},
 		gotoItem: function(slideNumber, time) {
-			this._gotoItem(slideNumber, time || this.options.bounceTime);
+			this._gotoItem(slideNumber, typeof time === 'undefined' ? this.options.bounceTime : time);
 		},
 		nextItem: function() {
 			this._gotoItem(this.slideNumber + 1, this.options.bounceTime);
@@ -3705,7 +4154,7 @@ var mui = (function(document, undefined) {
 			if (!this.classList.contains(CLASS_SLIDER)) {
 				sliderElement = this.querySelector('.' + CLASS_SLIDER);
 			}
-			if (sliderElement) {
+			if (sliderElement && sliderElement.querySelector(SELECTOR_SLIDER_ITEM)) {
 				var id = sliderElement.getAttribute('data-slider');
 				if (!id) {
 					id = ++$.uuid;
@@ -3744,9 +4193,14 @@ var mui = (function(document, undefined) {
 		return;
 	}
 	var CLASS_PLUS_PULLREFRESH = 'mui-plus-pullrefresh';
-	var CLASS_IN = 'mui-in';
+	var CLASS_VISIBILITY = 'mui-visibility';
 	var CLASS_HIDDEN = 'mui-hidden';
 	var CLASS_BLOCK = 'mui-block';
+
+	var CLASS_PULL_CAPTION = 'mui-pull-caption';
+	var CLASS_PULL_CAPTION_DOWN = 'mui-pull-caption-down';
+	var CLASS_PULL_CAPTION_REFRESH = 'mui-pull-caption-refresh';
+	var CLASS_PULL_CAPTION_NOMORE = 'mui-pull-caption-nomore';
 
 	var PlusPullRefresh = $.Class.extend({
 		init: function(element, options) {
@@ -3757,8 +4211,19 @@ var mui = (function(document, undefined) {
 			this._initPulldownRefreshEvent();
 		},
 		_init: function() {
+			var self = this;
 			//			document.addEventListener('plusscrollbottom', this);
-			window.addEventListener('dragup', this);
+			window.addEventListener('dragup', self);
+			self.scrollInterval = window.setInterval(function() {
+				if (self.isScroll && !self.loading) {
+					if (window.pageYOffset + window.innerHeight + 10 >= document.documentElement.scrollHeight) {
+						self.isScroll = false; //放在这里是因为快速滚动的话，有可能检测时，还没到底，所以只要有滚动，没到底之前一直检测高度变化
+						if (self.bottomPocket) {
+							self.pullupLoading();
+						}
+					}
+				}
+			}, 100);
 		},
 		_initPulldownRefreshEvent: function() {
 			var self = this;
@@ -3786,7 +4251,7 @@ var mui = (function(document, undefined) {
 								break;
 							case "dragEndAfterChangeOffset": //正在刷新状态
 								//执行下拉刷新所在webview的回调函数
-								webview.evalJS("mui.options.pullRefresh.down.callback()");
+								webview.evalJS("mui&&mui.options.pullRefresh.down.callback()");
 								self._setCaption(downOptions.contentrefresh);
 								break;
 							default:
@@ -3815,19 +4280,12 @@ var mui = (function(document, undefined) {
 			//					this.pullupLoading();
 			//				}
 			//			}
-			var isScroll = false;
-			setInterval(function() {
-				if (isScroll) {
-					if (window.pageYOffset + window.innerHeight + 10 >= document.documentElement.scrollHeight) {
-						isScroll = false; //放在这里是因为快速滚动的话，有可能检测时，还没到底，所以只要有滚动，没到底之前一直检测高度变化
-						if (self.bottomPocket) {
-							self.pullupLoading();
-						}
-					}
-				}
-			}, 100);
+			self.isScroll = false;
 			if (e.type === 'dragup') {
-				isScroll = true;
+				self.isScroll = true;
+				setTimeout(function() {
+					self.isScroll = false;
+				}, 1000);
 			}
 		}
 	}).extend($.extend({
@@ -3860,12 +4318,12 @@ var mui = (function(document, undefined) {
 			}
 		},
 		pulldownLoading: function() {
-			//TODO
-			throw new Error('暂不支持');
+			var callback = $.options.pullRefresh.down.callback;
+			callback && callback.call(this);
 		},
 		endPulldownToRefresh: function() { //该方法是子页面调用的
 			var webview = plus.webview.currentWebview();
-			webview.parent().evalJS("mui(document.querySelector('.mui-content')).pullRefresh('" + JSON.stringify({
+			webview.parent().evalJS("mui&&mui(document.querySelector('.mui-content')).pullRefresh('" + JSON.stringify({
 				webviewId: webview.id
 			}) + "')._endPulldownToRefresh()");
 		},
@@ -3880,7 +4338,7 @@ var mui = (function(document, undefined) {
 				}, 350);
 			}
 		},
-		pullupLoading: function() {
+		pullupLoading: function(callback) {
 			var self = this;
 			if (self.isLoading) return;
 			self.isLoading = true;
@@ -3890,25 +4348,31 @@ var mui = (function(document, undefined) {
 				this.pullPocket.classList.add(CLASS_BLOCK);
 			}
 			setTimeout(function() {
-				self.pullLoading.classList.add(CLASS_IN);
+				self.pullLoading.classList.add(CLASS_VISIBILITY);
+				self.pullLoading.classList.remove(CLASS_HIDDEN);
 				self.pullCaption.innerHTML = ''; //修正5+里边第一次加载时，文字显示的bug(还会显示出来个“多”,猜测应该是渲染问题导致的)
+				self.pullCaption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_REFRESH;
 				self.pullCaption.innerHTML = self.options.up.contentrefresh;
-				var callback = self.options.up.callback;
+				callback = callback || self.options.up.callback;
 				callback && callback.call(self);
 			}, 300);
 		},
 		endPullupToRefresh: function(finished) {
 			var self = this;
 			if (self.pullLoading) {
-				self.pullLoading.classList.remove(CLASS_IN);
+				self.pullLoading.classList.remove(CLASS_VISIBILITY);
+				self.pullLoading.classList.add(CLASS_HIDDEN);
 				self.isLoading = false;
 				if (finished) {
+					self.finished = true;
+					self.pullCaption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_NOMORE;
 					self.pullCaption.innerHTML = self.options.up.contentnomore;
 					//					self.bottomPocket.classList.remove(CLASS_BLOCK);
 					//					self.bottomPocket.classList.add(CLASS_HIDDEN);
 					//					document.removeEventListener('plusscrollbottom', self);
 					window.removeEventListener('dragup', self);
 				} else { //初始化时隐藏，后续不再隐藏
+					self.pullCaption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_DOWN;
 					self.pullCaption.innerHTML = self.options.up.contentdown;
 					//					setTimeout(function() {
 					//						self.loading || self.bottomPocket.classList.remove(CLASS_BLOCK);
@@ -3916,14 +4380,17 @@ var mui = (function(document, undefined) {
 				}
 			}
 		},
+		scrollTo: function(x, y, time) {
+			$.scrollTo(x, y, time);
+		},
 		refresh: function(isReset) {
-			if (isReset) {
-				//				var classList = this.bottomPocket.classList;
-				//				if (classList.contains(CLASS_HIDDEN)) {
-				//					classList.remove(CLASS_HIDDEN);
-				//				document.addEventListener('plusscrollbottom', this);
+			if (isReset && this.finished) {
+				this._initPullupRefresh();
+				this.bottomPocket.classList.remove(CLASS_HIDDEN);
+				this.pullCaption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_DOWN;
+				this.pullCaption.innerHTML = this.options.up.contentdown;
 				window.addEventListener('dragup', this);
-				//				}
+				this.finished = false;
 			}
 		}
 	}, $.PullRefresh));
@@ -3939,12 +4406,11 @@ var mui = (function(document, undefined) {
 			self = this[0];
 		}
 		//一个父需要支持多个子下拉刷新
-		options = options || {
-			webviewId: plus.webview.currentWebview().id || plus.webview.currentWebview().getURL()
-		}
+		options = options || {}
 		if (typeof options === 'string') {
 			options = $.parseJSON(options);
-		}
+		};
+		!options.webviewId && (options.webviewId = (plus.webview.currentWebview().id || plus.webview.currentWebview().getURL()));
 		var pullRefreshApi = null;
 		var attrWebviewId = options.webviewId && options.webviewId.replace(/\//g, "_"); //替换所有"/"
 		var id = self.getAttribute('data-pullrefresh-plus-' + attrWebviewId);
@@ -3955,6 +4421,9 @@ var mui = (function(document, undefined) {
 			$.data[id] = pullRefreshApi = new PlusPullRefresh(self, options);
 		} else {
 			pullRefreshApi = $.data[id];
+		}
+		if (options.up && options.up.auto) { //如果设置了auto，则自动上拉一次
+			pullRefreshApi.pullupLoading();
 		}
 		return pullRefreshApi;
 	};
@@ -3996,29 +4465,39 @@ var mui = (function(document, undefined) {
 				this.initEvent();
 			}
 		},
-		refresh: function() {
-			this.classList.remove(CLASS_ACTIVE);
+		refresh: function(offCanvas) {
+			//			offCanvas && !offCanvas.classList.contains(CLASS_ACTIVE) && this.classList.remove(CLASS_ACTIVE);
 			this.slideIn = this.classList.contains(CLASS_SLIDE_IN);
 			this.scroller = this.wrapper.querySelector(SELECTOR_INNER_WRAP);
-			this.scroller.classList.remove(CLASS_TRANSITIONING);
-			this.scroller.setAttribute('style', '');
-			this.offCanvasRight = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT);
-			this.offCanvasLeft = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_LEFT);
+			//			!offCanvas && this.scroller.classList.remove(CLASS_TRANSITIONING);
+			//			!offCanvas && this.scroller.setAttribute('style', '');
+			this.offCanvasLefts = this.wrapper.querySelectorAll('.' + CLASS_OFF_CANVAS_LEFT);
+			this.offCanvasRights = this.wrapper.querySelectorAll('.' + CLASS_OFF_CANVAS_RIGHT);
+			if (offCanvas) {
+				if (offCanvas.classList.contains(CLASS_OFF_CANVAS_LEFT)) {
+					this.offCanvasLeft = offCanvas;
+				} else if (offCanvas.classList.contains(CLASS_OFF_CANVAS_RIGHT)) {
+					this.offCanvasRight = offCanvas;
+				}
+			} else {
+				this.offCanvasRight = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT);
+				this.offCanvasLeft = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_LEFT);
+			}
 			this.offCanvasRightWidth = this.offCanvasLeftWidth = 0;
 			this.offCanvasLeftSlideIn = this.offCanvasRightSlideIn = false;
 			if (this.offCanvasRight) {
 				this.offCanvasRightWidth = this.offCanvasRight.offsetWidth;
 				this.offCanvasRightSlideIn = this.slideIn && (this.offCanvasRight.parentNode === this.wrapper);
-				this.offCanvasRight.classList.remove(CLASS_TRANSITIONING);
-				this.offCanvasRight.classList.remove(CLASS_ACTIVE);
-				this.offCanvasRight.setAttribute('style', '');
+				//				this.offCanvasRight.classList.remove(CLASS_TRANSITIONING);
+				//				this.offCanvasRight.classList.remove(CLASS_ACTIVE);
+				//				this.offCanvasRight.setAttribute('style', '');
 			}
 			if (this.offCanvasLeft) {
 				this.offCanvasLeftWidth = this.offCanvasLeft.offsetWidth;
 				this.offCanvasLeftSlideIn = this.slideIn && (this.offCanvasLeft.parentNode === this.wrapper);
-				this.offCanvasLeft.classList.remove(CLASS_TRANSITIONING);
-				this.offCanvasLeft.classList.remove(CLASS_ACTIVE);
-				this.offCanvasLeft.setAttribute('style', '');
+				//				this.offCanvasLeft.classList.remove(CLASS_TRANSITIONING);
+				//				this.offCanvasLeft.classList.remove(CLASS_ACTIVE);
+				//				this.offCanvasLeft.setAttribute('style', '');
 			}
 			this.backdrop = this.scroller.querySelector('.' + CLASS_ACTION_BACKDEOP);
 
@@ -4033,7 +4512,10 @@ var mui = (function(document, undefined) {
 		handleEvent: function(e) {
 			switch (e.type) {
 				case 'touchstart':
-					e.preventDefault();
+					var tagName = e.target && e.target.tagName;
+					if (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'SELECT') {
+						e.preventDefault();
+					}
 					break;
 				case 'webkitTransitionEnd': //有个bug需要处理，需要考虑假设没有触发webkitTransitionEnd的情况
 					if (e.target === this.scroller) {
@@ -4065,6 +4547,10 @@ var mui = (function(document, undefined) {
 						if (this.scroller) {
 							this.startX = this.lastX;
 							this.isDragging = true;
+
+							$.gestures.touch.lockDirection = true; //锁定方向
+							$.gestures.touch.startDirection = detail.direction;
+
 							this.scroller.classList.remove(CLASS_TRANSITIONING);
 							this.offsetX = this.getTranslateX();
 							this._initOffCanvasVisible();
@@ -4232,7 +4718,13 @@ var mui = (function(document, undefined) {
 						this.rightShowing = false;
 						if (x > 0) {
 							if (this.offCanvasLeft) {
-								this.offCanvasLeft.style.zIndex = 0;
+								$.each(this.offCanvasLefts, function(index, offCanvas) {
+									if (offCanvas === this.offCanvasLeft) {
+										this.offCanvasLeft.style.zIndex = 0;
+									} else {
+										offCanvas.style.zIndex = -1;
+									}
+								}.bind(this));
 							}
 							if (this.offCanvasRight) {
 								this.offCanvasRight.style.zIndex = -1;
@@ -4242,7 +4734,13 @@ var mui = (function(document, undefined) {
 						this.rightShowing = true;
 						this.leftShowing = false;
 						if (this.offCanvasRight) {
-							this.offCanvasRight.style.zIndex = 0;
+							$.each(this.offCanvasRights, function(index, offCanvas) {
+								if (offCanvas === this.offCanvasRight) {
+									offCanvas.style.zIndex = 0;
+								} else {
+									offCanvas.style.zIndex = -1;
+								}
+							}.bind(this));
 						}
 						if (this.offCanvasLeft) {
 							this.offCanvasLeft.style.zIndex = -1;
@@ -4298,11 +4796,11 @@ var mui = (function(document, undefined) {
 				}
 			} else {
 				if (direction === 'left') {
-					shown = this.offCanvasLeft && this.offCanvasLeft.classList.contains(CLASS_ACTIVE);
+					shown = this.classList.contains(CLASS_ACTIVE) && this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_LEFT + '.' + CLASS_ACTIVE);
 				} else if (direction === 'right') {
-					shown = this.offCanvasRight && this.offCanvasRight.classList.contains(CLASS_ACTIVE);
+					shown = this.classList.contains(CLASS_ACTIVE) && this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT + '.' + CLASS_ACTIVE);
 				} else {
-					shown = (this.offCanvasLeft && this.offCanvasLeft.classList.contains(CLASS_ACTIVE)) || (this.offCanvasRight && this.offCanvasRight.classList.contains(CLASS_ACTIVE));
+					shown = this.classList.contains(CLASS_ACTIVE) && (this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_LEFT + '.' + CLASS_ACTIVE) || this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT + '.' + CLASS_ACTIVE));
 				}
 			}
 			return shown;
@@ -4310,7 +4808,7 @@ var mui = (function(document, undefined) {
 		close: function() {
 			this._initOffCanvasVisible();
 			if (this.slideIn) {
-				this.scroller = this.offCanvasRight && this.offCanvasRight.classList.contains(CLASS_ACTIVE) ? this.offCanvasRight : this.offCanvasLeft;
+				this.scroller = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT + '.' + CLASS_ACTIVE) || this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_LEFT + '.' + CLASS_ACTIVE);
 			}
 			if (this.scroller) {
 				this.scroller.classList.add(CLASS_TRANSITIONING);
@@ -4320,7 +4818,7 @@ var mui = (function(document, undefined) {
 		show: function(direction) {
 			this._initOffCanvasVisible();
 			if (this.isShown(direction)) {
-				return;
+				return false;
 			}
 			if (!direction) {
 				direction = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT) ? 'right' : 'left';
@@ -4332,12 +4830,16 @@ var mui = (function(document, undefined) {
 				this.scroller.classList.add(CLASS_TRANSITIONING);
 				this.openPercentage(direction === 'left' ? 100 : -100);
 			}
+			return true;
 		},
-		toggle: function(direction) {
-			if (this.isShown(direction)) {
+		toggle: function(directionOrOffCanvas) {
+			var direction = directionOrOffCanvas;
+			if (directionOrOffCanvas && directionOrOffCanvas.classList) {
+				direction = directionOrOffCanvas.classList.contains(CLASS_OFF_CANVAS_LEFT) ? 'left' : 'right';
+				this.refresh(directionOrOffCanvas);
+			}
+			if (!this.show(direction)) {
 				this.close();
-			} else {
-				this.show(direction);
 			}
 		}
 	});
@@ -4363,7 +4865,6 @@ var mui = (function(document, undefined) {
 				var container = findOffCanvasContainer(offcanvas);
 				if (container) {
 					$.targets._container = container;
-					event.preventDefault(); //fixed hashchange
 					return offcanvas;
 				}
 			}
@@ -4388,7 +4889,8 @@ var mui = (function(document, undefined) {
 		var target = e.target;
 		for (; target && target !== document; target = target.parentNode) {
 			if (target.tagName === 'A' && target.hash && target.hash === ('#' + $.targets.offcanvas.id)) {
-				$($.targets._container).offCanvas('toggle');
+				e.detail.gesture.preventDefault(); //fixed hashchange
+				$($.targets._container).offCanvas().toggle($.targets.offcanvas);
 				$.targets.offcanvas = $.targets._container = null;
 				break;
 			}
@@ -4434,7 +4936,9 @@ var mui = (function(document, undefined) {
 
 	var handle = function(event, target) {
 		if (target.className && ~target.className.indexOf(CLASS_ACTION)) {
-			event.preventDefault();
+			if (target.classList.contains('mui-action-back')) {
+				event.preventDefault();
+			}
 			return target;
 		}
 		return false;
@@ -4464,7 +4968,6 @@ var mui = (function(document, undefined) {
 		if (target.tagName === 'A' && target.hash) {
 			var modal = document.getElementById(target.hash.replace('#', ''));
 			if (modal && modal.classList.contains(CLASS_MODAL)) {
-				event.preventDefault(); //fixed hashchange
 				return modal;
 			}
 		}
@@ -4482,6 +4985,7 @@ var mui = (function(document, undefined) {
 
 	window.addEventListener('tap', function(event) {
 		if ($.targets.modal) {
+			event.detail.gesture.preventDefault(); //fixed hashchange
 			$.targets.modal.classList.toggle('mui-active');
 		}
 	});
@@ -4513,7 +5017,6 @@ var mui = (function(document, undefined) {
 		if (target.tagName === 'A' && target.hash) {
 			$.targets._popover = document.getElementById(target.hash.replace('#', ''));
 			if ($.targets._popover && $.targets._popover.classList.contains(CLASS_POPOVER)) {
-				event.preventDefault(); //fixed hashchange
 				return target;
 			} else {
 				$.targets._popover = null;
@@ -4544,7 +5047,7 @@ var mui = (function(document, undefined) {
 		$.trigger(this, 'shown', this);
 	}
 	var onPopoverHidden = function(e) {
-		this.setAttribute('style', '');
+		setStyle(this, 'none');
 		this.removeEventListener('webkitTransitionEnd', onPopoverHidden);
 		this.removeEventListener('touchmove', $.preventDefault);
 		fixedPopoverScroll(false);
@@ -4588,6 +5091,7 @@ var mui = (function(document, undefined) {
 			}
 		}
 		if (toggle) {
+			e.detail.gesture.preventDefault(); //fixed hashchange
 			togglePopover($.targets._popover, $.targets.popover);
 		}
 
@@ -4631,7 +5135,7 @@ var mui = (function(document, undefined) {
 				//				}
 			}
 		}
-		popover.setAttribute('style', 'display:block'); //actionsheet transform
+		setStyle(popover, 'block'); //actionsheet transform
 		popover.offsetHeight;
 		popover.classList.add(CLASS_ACTIVE);
 		backdrop.setAttribute('style', '');
@@ -4640,6 +5144,15 @@ var mui = (function(document, undefined) {
 		calPosition(popover, anchor, isActionSheet); //position
 		backdrop.classList.add(CLASS_ACTIVE);
 		popover.addEventListener('webkitTransitionEnd', onPopoverShown);
+	};
+	var setStyle = function(popover, display, top, left) {
+		var style = popover.style;
+		if (typeof display !== 'undefined')
+			style.display = display;
+		if (typeof top !== 'undefined')
+			style.top = top + 'px';
+		if (typeof left !== 'undefined')
+			style.left = left + 'px';
 	};
 	var calPosition = function(popover, anchor, isActionSheet) {
 		if (!popover || !anchor) {
@@ -4651,7 +5164,7 @@ var mui = (function(document, undefined) {
 		var pWidth = popover.offsetWidth;
 		var pHeight = popover.offsetHeight;
 		if (isActionSheet) { //actionsheet
-			popover.setAttribute('style', 'display:block;top:' + (wHeight - pHeight + window.pageYOffset) + 'px;left:' + (wWidth - pWidth) / 2 + 'px;');
+			setStyle(popover, 'block', (wHeight - pHeight + window.pageYOffset), (wWidth - pWidth) / 2)
 			return;
 		}
 		var aWidth = anchor.offsetWidth;
@@ -4705,7 +5218,7 @@ var mui = (function(document, undefined) {
 		} else if (position === 'middle') {
 			arrow.setAttribute('style', 'display:none');
 		}
-		popover.setAttribute('style', 'display:block;top:' + pTop + 'px;left:' + pLeft + 'px;');
+		setStyle(popover, 'block', pTop, pLeft);
 	};
 
 	$.createMask = function(callback) {
@@ -4713,29 +5226,35 @@ var mui = (function(document, undefined) {
 		element.classList.add(CLASS_BACKDROP);
 		element.addEventListener('touchmove', $.preventDefault);
 		element.addEventListener('tap', function() {
-			callback && callback();
 			mask.close();
 		});
 		var mask = [element];
 		mask._show = false;
 		mask.show = function() {
-			this._show = true;
+			mask._show = true;
 			element.setAttribute('style', 'opacity:1');
 			document.body.appendChild(element);
-			return this;
+			return mask;
 		};
 		mask._remove = function() {
-			if (this._show) {
-				this._show = false;
+			if (mask._show) {
+				mask._show = false;
 				element.setAttribute('style', 'opacity:0');
-				setTimeout(function() {
-					document.body.removeChild(element);
+				$.later(function() {
+					var body = document.body;
+					element.parentNode === body && body.removeChild(element);
 				}, 350);
 			}
-			return this;
+			return mask;
 		};
 		mask.close = function() {
-			return this._remove();
+			if (callback) {
+				if (callback() !== false) {
+					mask._remove();
+				}
+			} else {
+				mask._remove();
+			}
 		};
 		return mask;
 	};
@@ -4795,7 +5314,7 @@ var mui = (function(document, undefined) {
 		var targetBody;
 		var className = 'mui-active';
 		var classSelector = '.' + className;
-		segmentedControl = targetTab.parentNode;
+		var segmentedControl = targetTab.parentNode;
 
 		for (; segmentedControl && segmentedControl !== document; segmentedControl = segmentedControl.parentNode) {
 			if (segmentedControl.classList.contains(CLASS_SEGMENTED_CONTROL)) {
@@ -4863,6 +5382,8 @@ var mui = (function(document, undefined) {
 	var CLASS_ACTIVE = 'mui-active';
 	var CLASS_DRAGGING = 'mui-dragging';
 
+	var CLASS_DISABLED = 'mui-disabled';
+
 	var SELECTOR_SWITCH_HANDLE = '.' + CLASS_SWITCH_HANDLE;
 
 	var handle = function(event, target) {
@@ -4901,6 +5422,9 @@ var mui = (function(document, undefined) {
 
 	};
 	Toggle.prototype.handleEvent = function(e) {
+		if (this.classList.contains(CLASS_DISABLED)) {
+			return;
+		}
 		switch (e.type) {
 			case 'touchstart':
 				this.start(e);
@@ -4959,10 +5483,10 @@ var mui = (function(document, undefined) {
 		var classList = this.classList;
 		if (classList.contains(CLASS_ACTIVE)) {
 			classList.remove(CLASS_ACTIVE);
-			this.handle.style.webkitTransform = 'translate3d(0,0,0)';
+			this.handle.style.webkitTransform = 'translate(0,0)';
 		} else {
 			classList.add(CLASS_ACTIVE);
-			this.handle.style.webkitTransform = 'translate3d(' + this.handleX + 'px,0,0)';
+			this.handle.style.webkitTransform = 'translate(' + this.handleX + 'px,0)';
 		}
 		$.trigger(this.element, 'toggle', {
 			isActive: this.classList.contains(CLASS_ACTIVE)
@@ -4978,10 +5502,10 @@ var mui = (function(document, undefined) {
 		}
 		if (this.lastChanged !== isChanged) {
 			if (isChanged) {
-				this.handle.style.webkitTransform = 'translate3d(' + (this.initialState ? 0 : this.handleX) + 'px,0,0)';
+				this.handle.style.webkitTransform = 'translate(' + (this.initialState ? 0 : this.handleX) + 'px,0)';
 				this.classList[this.initialState ? 'remove' : 'add'](CLASS_ACTIVE);
 			} else {
-				this.handle.style.webkitTransform = 'translate3d(' + (this.initialState ? this.handleX : 0) + 'px,0,0)';
+				this.handle.style.webkitTransform = 'translate(' + (this.initialState ? this.handleX : 0) + 'px,0)';
 				this.classList[this.initialState ? 'add' : 'remove'](CLASS_ACTIVE);
 			}
 			this.lastChanged = isChanged;
@@ -4989,7 +5513,7 @@ var mui = (function(document, undefined) {
 
 	});
 
-	$.fn.switch = function(options) {
+	$.fn['switch'] = function(options) {
 		var switchApis = [];
 		this.each(function() {
 			var switchApi = null;
@@ -5006,7 +5530,7 @@ var mui = (function(document, undefined) {
 		return switchApis.length > 1 ? switchApis : switchApis[0];
 	};
 	$.ready(function() {
-		$('.' + CLASS_SWITCH).switch();
+		$('.' + CLASS_SWITCH)['switch']();
 	});
 })(mui, window, 'toggle');
 /**
@@ -5021,6 +5545,7 @@ var mui = (function(document, undefined) {
 	var CLASS_ACTIVE = 'mui-active';
 	var CLASS_SELECTED = 'mui-selected';
 	var CLASS_GRID_VIEW = 'mui-grid-view';
+	var CLASS_RADIO_VIEW = 'mui-table-view-radio';
 	var CLASS_TABLE_VIEW_CELL = 'mui-table-view-cell';
 	var CLASS_COLLAPSE_CONTENT = 'mui-collapse-content';
 	var CLASS_DISABLED = 'mui-disabled';
@@ -5043,7 +5568,7 @@ var mui = (function(document, undefined) {
 
 	var isMoved = isOpened = openedActions = progress = false;
 	var sliderHandle = sliderActionLeft = sliderActionRight = buttonsLeft = buttonsRight = sliderDirection = sliderRequestAnimationFrame = false;
-	var translateX = lastTranslateX = sliderActionLeftWidth = sliderActionRightWidth = 0;
+	var timer = translateX = lastTranslateX = sliderActionLeftWidth = sliderActionRightWidth = 0;
 
 
 
@@ -5055,6 +5580,7 @@ var mui = (function(document, undefined) {
 				cell.classList.add(CLASS_ACTIVE);
 			}
 		} else {
+			timer && timer.cancel();
 			if (a) {
 				a.classList.remove(CLASS_ACTIVE);
 			} else if (cell) {
@@ -5084,7 +5610,7 @@ var mui = (function(document, undefined) {
 				if (translateX > sliderActionLeftWidth) {
 					translateX = sliderActionLeftWidth + Math.pow(translateX - sliderActionLeftWidth, overFactor);
 				}
-				for (i = 0, len = buttonsLeft.length; i < len; i++) {
+				for (var i = 0, len = buttonsLeft.length; i < len; i++) {
 					var buttonLeft = buttonsLeft[i];
 					if (typeof buttonLeft._buttonOffset === 'undefined') {
 						buttonLeft._buttonOffset = sliderActionLeftWidth - buttonLeft.offsetLeft - buttonLeft.offsetWidth;
@@ -5130,7 +5656,7 @@ var mui = (function(document, undefined) {
 					cell = target;
 					//TODO swipe to delete close
 					var selected = cell.parentNode.querySelector(SELECTOR_SELECTED);
-					if (selected && selected !== cell) {
+					if (!cell.parentNode.classList.contains(CLASS_RADIO_VIEW) && selected && selected !== cell) {
 						$.swipeoutClose(selected);
 						cell = isDisabled = false;
 						return;
@@ -5141,12 +5667,20 @@ var mui = (function(document, undefined) {
 							a = link;
 						}
 					}
-					if (cell.querySelector(SELECTOR_SLIDER_HANDLE)) {
+					var handle = cell.querySelector(SELECTOR_SLIDER_HANDLE);
+					if (handle) {
 						toggleEvents(cell);
 						event.stopPropagation();
 					}
 					if (!isDisabled) {
-						if (!(cell.querySelector('input') || cell.querySelector(SELECTOR_BUTTON) || cell.querySelector('.' + CLASS_TOGGLE))) {
+						if (handle) {
+							if (timer) {
+								timer.cancel();
+							}
+							timer = $.later(function() {
+								toggleActive(true);
+							}, 100);
+						} else{
 							toggleActive(true);
 						}
 					}
@@ -5295,7 +5829,7 @@ var mui = (function(document, undefined) {
 				buttons = sliderDirection === 'toLeft' ? buttonsRight : buttonsLeft;
 				if (typeof buttons !== 'undefined') {
 					var button = null;
-					for (i = 0; i < buttons.length; i++) {
+					for (var i = 0; i < buttons.length; i++) {
 						button = buttons[i];
 						setTranslate(button, newTranslate);
 					}
@@ -5426,17 +5960,23 @@ var mui = (function(document, undefined) {
 		toggleActive(false);
 		sliderHandle && toggleEvents(cell, true);
 	});
-	var radioOrCheckboxClick = function() {
+	var radioOrCheckboxClick = function(event) {
+		var type = event.target&&event.target.type||'';
+		if(type==='radio'||type==='checkbox'){
+			return;
+		}
 		var classList = cell.classList;
 		if (classList.contains('mui-radio')) {
 			var input = cell.querySelector('input[type=radio]');
 			if (input) {
-				input.click();
+				//				input.click();
+				input.checked = !input.checked;
 			}
 		} else if (classList.contains('mui-checkbox')) {
 			var input = cell.querySelector('input[type=checkbox]');
 			if (input) {
-				input.click();
+				//				input.click();
+				input.checked = !input.checked;
 			}
 		}
 	};
@@ -5448,17 +5988,36 @@ var mui = (function(document, undefined) {
 	});
 	window.addEventListener('doubletap', function(event) {
 		if (cell) {
-			radioOrCheckboxClick();
+			radioOrCheckboxClick(event);
 		}
 	});
+	var preventDefaultException = /^(INPUT|TEXTAREA|BUTTON|SELECT)$/;
 	window.addEventListener('tap', function(event) {
 		if (!cell) {
 			return;
 		}
 		var isExpand = false;
 		var classList = cell.classList;
+		var ul = cell.parentNode;
+		if (ul && ul.classList.contains(CLASS_RADIO_VIEW)) {
+			if (classList.contains(CLASS_SELECTED)) {
+				return;
+			}
+			var selected = ul.querySelector('li' + SELECTOR_SELECTED);
+			if (selected) {
+				selected.classList.remove(CLASS_SELECTED);
+			}
+			classList.add(CLASS_SELECTED);
+			$.trigger(cell, 'selected', {
+				el: cell
+			});
+			return;
+		}
 		if (classList.contains('mui-collapse') && !cell.parentNode.classList.contains('mui-unfold')) {
-			event.detail.gesture.preventDefault();
+			if (!preventDefaultException.test(event.target.tagName)) {
+				event.detail.gesture.preventDefault();
+			}
+
 			if (!classList.contains(CLASS_ACTIVE)) { //展开时,需要收缩其他同类
 				var collapse = cell.parentNode.querySelector('.mui-collapse.mui-active');
 				if (collapse) {
@@ -5484,8 +6043,9 @@ var mui = (function(document, undefined) {
 				// 	$.scrollTo(cellHeight - height + scrollTop, 300);
 				// }
 			}
+		} else {
+			radioOrCheckboxClick(event);
 		}
-		radioOrCheckboxClick();
 	});
 })(mui, window, document);
 (function($, window) {
@@ -5519,25 +6079,33 @@ var mui = (function(document, undefined) {
 	/**
 	 * 确认消息框
 	 */
-	$.confirm = function(message,title,btnArray,callback) {
+	$.confirm = function(message, title, btnArray, callback) {
 		if ($.os.plus) {
-			if(typeof message === undefined){
+			if (typeof message === undefined) {
 				return;
-			}else{
-				if(typeof title ==='function'){
+			} else {
+				if (typeof title === 'function') {
 					callback = title;
 					title = null;
 					btnArray = null;
-				}else if(typeof btnArray ==='function'){
+				} else if (typeof btnArray === 'function') {
 					callback = btnArray;
 					btnArray = null;
 				}
-				plus.nativeUI.confirm(message,callback,title,btnArray);
+				plus.nativeUI.confirm(message, callback, title, btnArray);
 			}
 
-		}else{
-			//TODO H5版本
-			window.confirm(message);
+		} else {
+			//H5版本，0为确认，1为取消
+			if (window.confirm(message)) {
+				callback({
+					index: 0
+				});
+			} else {
+				callback({
+					index: 1
+				});
+			}
 		}
 	};
 
@@ -5546,31 +6114,42 @@ var mui = (function(document, undefined) {
 	/**
 	 * 输入对话框
 	 */
-	$.prompt = function(text,defaultText,title,btnArray,callback) {
+	$.prompt = function(text, defaultText, title, btnArray, callback) {
 		if ($.os.plus) {
-			if(typeof message === undefined){
+			if (typeof message === undefined) {
 				return;
-			}else{
+			} else {
 
-				if(typeof defaultText ==='function'){
+				if (typeof defaultText === 'function') {
 					callback = defaultText;
 					defaultText = null;
 					title = null;
 					btnArray = null;
-				}else if(typeof title === 'function'){
+				} else if (typeof title === 'function') {
 					callback = title;
 					title = null;
 					btnArray = null;
-				}else if(typeof btnArray ==='function'){
+				} else if (typeof btnArray === 'function') {
 					callback = btnArray;
 					btnArray = null;
 				}
-				plus.nativeUI.prompt(text,callback,title,defaultText,btnArray);
+				plus.nativeUI.prompt(text, callback, title, defaultText, btnArray);
 			}
 
-		}else{
-			//TODO H5版本
-			window.prompt(text);
+		} else {
+			//H5版本(确认index为0，取消index为1)
+			var result = window.prompt(text);
+			if (result) {
+				callback({
+					index: 0,
+					value: result
+				});
+			} else {
+				callback({
+					index: 1,
+					value: ''
+				});
+			}
 		}
 	};
 
@@ -5635,7 +6214,7 @@ var mui = (function(document, undefined) {
 			this.sliderActionSelector = SELECTOR_TOOLTIP;
 		} else { //clear,speech,search
 			if (~this.options.actions.indexOf('clear')) {
-				this.clearActionClass = CLASS_ICON + ' ' + CLASS_ICON_CLEAR + (element.value ? '' : (' ' + CLASS_HIDDEN));
+				this.clearActionClass = CLASS_ICON + ' ' + CLASS_ICON_CLEAR +' '+ CLASS_HIDDEN;
 				this.clearActionSelector = SELECTOR_ICON_CLOSE;
 			}
 			if (~this.options.actions.indexOf('speech')) { //only for 5+
@@ -5691,8 +6270,11 @@ var mui = (function(document, undefined) {
 			var action = document.createElement('span');
 			action.className = actionClass;
 			if (actionClass === this.searchActionClass) {
-				action.innerHTML = '<span class="' + CLASS_ICON + ' ' + CLASS_ICON_SEARCH + '"></span>' + this.element.getAttribute('placeholder');
+				action.innerHTML = '<span class="' + CLASS_ICON + ' ' + CLASS_ICON_SEARCH + '"></span><span>' + this.element.getAttribute('placeholder') + '</span>';
 				this.element.setAttribute('placeholder', '');
+				if (this.element.value.trim()) {
+					row.classList.add('mui-active');
+				}
 			}
 			row.insertBefore(action, this.element.nextSibling);
 		}
@@ -5734,12 +6316,15 @@ var mui = (function(document, undefined) {
 				if (!action) {
 					return;
 				}
-				$.each(['keyup', 'change', 'input', 'focus', 'blur', 'cut', 'paste'], function(index, type) {
+				$.each(['keyup', 'change', 'input', 'focus', 'cut', 'paste'], function(index, type) {
 					(function(type) {
 						element.addEventListener(type, function() {
 							action.classList[element.value.trim() ? 'remove' : 'add'](CLASS_HIDDEN);
 						});
 					})(type);
+				});
+				element.addEventListener('blur', function() {
+					action.classList.add(CLASS_HIDDEN);
 				});
 			}
 			if (this.searchActionClass) {
@@ -5754,6 +6339,14 @@ var mui = (function(document, undefined) {
 			}
 		}
 	};
+	Input.prototype.setPlaceholder = function(text) {
+		if (this.searchActionClass) {
+			var placeholder = this.element.parentNode.querySelector(SELECTOR_PLACEHOLDER);
+			placeholder && (placeholder.getElementsByTagName('span')[1].innerText = text);
+		} else {
+			this.element.setAttribute('placeholder', text);
+		}
+	};
 	Input.prototype.clearActionClick = function(event) {
 		var self = this;
 		self.element.value = '';
@@ -5764,6 +6357,7 @@ var mui = (function(document, undefined) {
 	Input.prototype.speechActionClick = function(event) {
 		if (window.plus) {
 			var self = this;
+			var oldValue = self.element.value;
 			self.element.value = '';
 			document.body.classList.add(CLASS_FOCUSIN);
 			plus.speech.startRecognize({
@@ -5775,6 +6369,10 @@ var mui = (function(document, undefined) {
 				$.trigger(self.element, 'recognized', {
 					value: self.element.value
 				});
+				if (oldValue !== self.element.value) {
+					$.trigger(self.element, 'change');
+					$.trigger(self.element, 'input');
+				}
 				// document.body.classList.remove(CLASS_FOCUSIN);
 			}, function(e) {
 				document.body.classList.remove(CLASS_FOCUSIN);
@@ -5785,20 +6383,11 @@ var mui = (function(document, undefined) {
 		event.preventDefault();
 	};
 	$.fn.input = function(options) {
+		var inputApis = [];
 		this.each(function() {
+			var inputApi = null;
 			var actions = [];
 			var row = findRow(this.parentNode);
-			var label = row.querySelector('label');
-			if (label) { //该处理方案有点临时,暂不支持动态添加的元素
-				var self = this;
-				label.addEventListener('tap', function() {
-					if (self.type === 'text') {
-						//$.focus(self);//暂时不处理text
-					} else {
-						self.click();
-					}
-				});
-			}
 			if (this.type === 'range' && row.classList.contains('mui-input-range')) {
 				actions.push('slider');
 			} else {
@@ -5816,17 +6405,120 @@ var mui = (function(document, undefined) {
 			var id = this.getAttribute('data-input-' + actions[0]);
 			if (!id) {
 				id = ++$.uuid;
-				$.data[id] = new Input(this, {
+				inputApi = $.data[id] = new Input(this, {
 					actions: actions.join(',')
 				});
 				for (var i = 0, len = actions.length; i < len; i++) {
 					this.setAttribute('data-input-' + actions[i], id);
 				}
+			} else {
+				inputApi = $.data[id];
 			}
-
+			inputApis.push(inputApi);
 		});
+		return inputApis.length === 1 ? inputApis[0] : inputApis;
 	};
 	$.ready(function() {
 		$('.mui-input-row input').input();
 	});
 })(mui, window, document);
+/**
+ * 数字输入框
+ * varstion 1.0.1
+ * by Houfeng
+ * Houfeng@DCloud.io
+ */
+
+(function($) {
+
+	var touchSupport = ('ontouchstart' in document);
+	var tapEventName = touchSupport ? 'tap' : 'click';
+	var changeEventName = 'change';
+	var holderClassName = 'mui-numbox';
+	var plusClassName = 'mui-numbox-btn-plus';
+	var minusClassName = 'mui-numbox-btn-minus';
+	var inputClassName = 'mui-numbox-input';
+
+	var Numbox = $.Numbox = $.Class.extend({
+		init: function(holder, options) {
+			var self = this;
+			if (!holder) {
+				throw "构造 numbox 时缺少容器元素";
+			}
+			self.holder = holder;
+			//避免重复初始化开始
+			if (self.holder.__numbox_inited) return;
+			self.holder.__numbox_inited = true;
+			//避免重复初始化结束
+			options = options || {};
+			options.step = parseInt(options.step || 1);
+			self.options = options;
+			self.input = $.qsa('.' + inputClassName, self.holder)[0];
+			self.plus = $.qsa('.' + plusClassName, self.holder)[0];
+			self.minus = $.qsa('.' + minusClassName, self.holder)[0];
+			self.checkValue();
+			self.initEvent();
+		},
+		initEvent: function() {
+			var self = this;
+			self.plus.addEventListener(tapEventName, function(event) {
+				var val = parseInt(self.input.value) + self.options.step;
+				self.input.value = val.toString();
+				$.trigger(self.input, changeEventName, null);
+			});
+			self.minus.addEventListener(tapEventName, function(event) {
+				var val = parseInt(self.input.value) - self.options.step;
+				self.input.value = val.toString();
+				$.trigger(self.input, changeEventName, null);
+			});
+			self.input.addEventListener(changeEventName, function(event) {
+				self.checkValue();
+			});
+		},
+		checkValue: function() {
+			var self = this;
+			var val = self.input.value;
+			if (val == null || val == '' || isNaN(val)) {
+				self.input.value = self.options.min || 0;
+				self.minus.disabled = self.options.min != null;
+			} else {
+				var val = parseInt(val);
+				if (self.options.max != null && !isNaN(self.options.max) && val >= parseInt(self.options.max)) {
+					val = self.options.max;
+					self.plus.disabled = true;
+				} else {
+					self.plus.disabled = false;
+				}
+				if (self.options.min != null && !isNaN(self.options.min) && val <= parseInt(self.options.min)) {
+					val = self.options.min;
+					self.minus.disabled = true;
+				} else {
+					self.minus.disabled = false;
+				}
+				self.input.value = val;
+			}
+		}
+	});
+
+	$.fn.numbox = function(options) {
+		//遍历选择的元素
+		this.each(function(i, element) {
+			if (options) {
+				new Numbox(element, options);
+			} else {
+				var optionsText = element.getAttribute('data-numbox-options');
+				var options = optionsText ? JSON.parse(optionsText) : {};
+				options.step = element.getAttribute('data-numbox-step') || options.step;
+				options.min = element.getAttribute('data-numbox-min') || options.min;
+				options.max = element.getAttribute('data-numbox-max') || options.max;
+				new Numbox(element, options);
+			}
+		});
+		return this;
+	}
+
+	//自动处理 class='mui-locker' 的 dom
+	$.ready(function() {
+		$('.' + holderClassName).numbox();
+	});
+}(mui))

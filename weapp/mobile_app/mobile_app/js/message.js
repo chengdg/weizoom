@@ -34,6 +34,10 @@ function loadMsg(){
 			showNoMessage('加载消息列表失败，下拉刷新');
 			return;
 		}
+		if(response.data.iterms.length <= 0){
+			showNoMessage();
+			return;
+		}
 		message_list_curr_page++;
 		var msgList = baidu.template('messages_list_template');
 		var content = msgList(response.data);
@@ -50,6 +54,7 @@ function loadMsg(){
 			});
 			loadBtn.appendToTail();
 		}
+		plus.nativeUI.closeWaiting();
 	},function(){
 		showNoMessage('加载消息列表失败，下拉刷新');
 		mui.toast('加载消息列表失败，请稍后重试...');
@@ -141,6 +146,5 @@ function showNoMessage(msg){
 			mui('#pullrefresh').pullRefresh().setStopped(true);//阻止下拉刷新
 		},200);
 	}
-
-
+	plus.nativeUI.closeWaiting();
 }

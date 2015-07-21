@@ -10,10 +10,10 @@
 var USER_ID = 0;
 
 //版本号
-var VERSION_ID = '1.5';
+var VERSION_ID = '2.4';
 
 //消息自动更新的频率
-var message_auto_update_time = 10 * 1000;
+var message_auto_update_time = 200 * 1000;
 
 //消息列表的当前页
 var message_list_curr_page = 1;
@@ -32,8 +32,8 @@ var max_message_list_loaded_count = 10;
 var max_message_history_loaded_count = 10;
 var max_order_list_loaded_count = 10;
 
-var ACCOUNTS = [{'id':10,'name':'微众商城'},{'id':11,'name':'纽仕兰'},{'id':12,'name':'米奇尔'}];
-//var ACCOUNTS = [{'id':216,'name':'微众商城'},{'id':185,'name':'纽仕兰'},{'id':102,'name':'米奇尔'}];
+//var ACCOUNTS = [{'id':10,'name':'微众商城'},{'id':11,'name':'纽仕兰'},{'id':12,'name':'米奇尔'}];
+var ACCOUNTS = [{'id':216,'name':'微众商城'},{'id':185,'name':'纽仕兰'},{'id':102,'name':'米奇尔'}];
 var isSystemMenager = false;
 // 系统管理员用户名与密码，需与get_login方法内校验一致
 var SYSTEMUSERNAME = 'system';

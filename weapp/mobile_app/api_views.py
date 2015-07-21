@@ -1,15 +1,21 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 import json
 import copy
+import pandas as pd
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import auth
-from core import apiview_util, dateutil
+from core.charts_apis import create_line_chart_response
+from utils import dateutil as util_dateutil
+import stats.util as stats_util
 from core import paginator
 from core.jsonresponse import JsonResponse, create_response
 from django.http import HttpResponseRedirect, HttpResponse
+import datetime
 
+from stats.manage.brand_value_utils import get_brand_value, get_latest_brand_value
 from account.models import *
 from mall.models import *
 from webapp.statistics_views import get_buy_trend as webapp_get_buy_trend, get_visit_daily_trend as webapp_get_visit_daily_trend
@@ -17,7 +23,7 @@ from weixin.statistics.api_views import get_message_daily_trend as webapp_get_me
 from mall import models
 from settings import APP_VERSION, APP_DOWNLOAD_URL
 
-
+ORDER_SOURCE = [ORDER_STATUS_PAYED_NOT_SHIP,ORDER_STATUS_PAYED_SHIPED,ORDER_STATUS_SUCCESSED]
 #===============================================================================
 # get_login: 登录
 #===============================================================================
@@ -386,3 +392,189 @@ def show_index(request):
 	response = create_response(200)
 	response.data = '\n'.join(html_content)
 	return HttpResponse(response.data)
+
+# 手机EChart上显示点的个数
+DISPLAY_PERIODS_IN_APP_CHARTS = 7
+
+def brand_value(request):
+	"""
+	返回微品牌价值的EChart数据
+	"""
+	freq_type = request.GET.get('freq_type','W')
+	end_date = util_dateutil.now()
+	webapp_id = request.user_profile.webapp_id
+	# 以end_date为基准倒推DISPLAY_PERIODS_IN_CHARTS 个日期(点)
+	date_range = pd.date_range(end=end_date, periods=DISPLAY_PERIODS_IN_APP_CHARTS, freq=freq_type)
+	date_list = []
+	values = []
+	# TODO: 需要优化。可以一次计算完成
+	for date in date_range:
+		date_str = util_dateutil.date2string(date.to_datetime())  # 将pd.Timestamp转成datetime
+		date_list.append(date_str[date_str.find('-')+1:])
+		values.append(get_brand_value(webapp_id, date_str))
+
+	response = create_line_chart_response(
+		"",
+		"",
+		date_list,
+		[{
+			"name": "品牌价值",
+			"values" : values
+		}]
+	)
+	return response
+
+def overview_board(request):
+	'''
+	数据罗盘，数据一览表
+
+	ORDER_STATUS_NOT = 0  # 待支付：已下单，未付款
+	ORDER_STATUS_CANCEL = 1  # 已取消：取消订单
+	ORDER_STATUS_PAYED_SUCCESSED = 2  # 已支付：已下单，已付款
+	ORDER_STATUS_PAYED_NOT_SHIP = 3  # 待发货：已付款，未发货
+	ORDER_STATUS_PAYED_SHIPED = 4  # 已发货：已付款，已发货
+	ORDER_STATUS_SUCCESSED = 5  # 已完成：自下单10日后自动置为已完成状态
+	ORDER_STATUS_REFUNDING = 6  # 退款中
+	ORDER_STATUS_REFUNDED = 7  # 退款完成
+
+	'''
+	webapp_id = request.user.get_profile().webapp_id
+	date_str = util_dateutil.date2string(datetime.today())
+	today = datetime.today()
+
+	try:
+		# ORDER_STATUS_PAYED_NOT_SHIP = 3  # 待发货：已付款，未发货
+		#ORDER_STATUS_REFUNDING = 6 #退款中
+		#品牌价值
+		(brand_value, yesterday_value, increase_sign, increase_percent) = get_latest_brand_value(webapp_id)
+		#关注会员总数
+		subscribed_member_count = stats_util.get_subscribed_member_count(webapp_id)
+		#总成交订单
+		all_order = Order.objects.filter(webapp_id=webapp_id,status__in=ORDER_SOURCE)
+		all_deal_order_count = all_order.count()
+		#总成交额 cash + weizoom_card
+		all_deal_order_money = float(sum([(order.final_price + order.weizoom_card_money) for order in all_order]))
+
+		#待发货订单
+		total_to_be_shipped_order_count = Order.objects.filter(webapp_id=webapp_id,status=ORDER_STATUS_PAYED_NOT_SHIP).count()
+		#待退款订单
+		total_refunding_order_count = Order.objects.filter(webapp_id=webapp_id,status=ORDER_STATUS_REFUNDING).count()
+
+		#今日订单
+		today_begin_str = datetime.today().strftime('%Y-%m-%d')+' 00:00:00'
+		today_now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+		today_begin=datetime.strptime(today_begin_str,'%Y-%m-%d %H:%M:%S')
+		today_now = datetime.strptime(today_now_str,'%Y-%m-%d %H:%M:%S')
+
+		today_deal_order= all_order.filter(update_at__gte=today_begin,update_at__lte=today_now)
+		today_deal_order_count = today_deal_order.count()
+		#今日成交额 cash + weizoom_card
+		today_deal_money = float(sum([(order.final_price + order.weizoom_card_money) for order in today_deal_order]))
+
+		data = {
+			'webapp_id':webapp_id,
+			'brand_value':format(brand_value, ','),
+			'subscribed_member_count':subscribed_member_count,
+			'all_deal_order_money':'%.2f'%all_deal_order_money,
+			'all_deal_order_count':all_deal_order_count,
+			'today_deal_money':'%.2f'%today_deal_money,
+			'today_deal_order_count':today_deal_order_count,
+			'total_to_be_shipped_order_count':total_to_be_shipped_order_count,
+			'total_refunding_order_count':total_refunding_order_count
+		}
+
+		response = create_response(200)
+		response.data = data
+	except:
+		response = create_response(500)
+		response.errMsg = u'系统繁忙，请稍后重试'
+	return response.get_response()
+
+def order_value(request):
+	webapp_id = request.user.get_profile().webapp_id
+	freq_type = request.GET.get('freq_type','W')
+	priods = 7 if freq_type == 'W' else 30
+	end_date = util_dateutil.now()
+	# 如果不指定start_date，则以end_date为基准倒推DISPLAY_PERIODS_IN_CHARTS 个日期(点)
+	date_range = pd.date_range(end=end_date, periods=priods, freq='D')
+
+	start_date = util_dateutil.date2string(date_range[0].to_datetime())
+	try:
+		orders = Order.objects.filter(webapp_id=webapp_id,created_at__gte=start_date,created_at__lte=end_date,status__in=ORDER_SOURCE).order_by('created_at')
+		order_items = OrderedDict()
+		for order in orders:
+			date = order.created_at.strftime('%Y-%m-%d')
+			if not order_items.has_key(date):
+				order_items[date] = 1
+			else:
+				order_items[date] += 1
+		date_list = []
+		values =[]
+		for date in date_range:
+			date = util_dateutil.date2string(date.to_datetime())
+			date_list.append(date[date.find('-')+1:])
+			if not order_items.has_key(date):
+				values.append(0)
+			else:
+				values.append(order_items[date])
+		response = create_line_chart_response(
+			"",
+			"",
+			date_list,
+			[{
+				"name": "订单量",
+				"values" : values
+			}]
+			)
+		return response
+	except:
+		response = create_response(500)
+		response.errMsg = u'系统繁忙，请稍后重试'
+		return response.get_response()
+
+
+def sales_chart(request):
+	freq_type = request.GET.get('freq_type','W')
+	priods = 7 if freq_type == 'W' else 30
+	end_date = util_dateutil.now()
+	# 如果不指定start_date，则以end_date为基准倒推DISPLAY_PERIODS_IN_CHARTS 个日期(点)
+	date_range = pd.date_range(end=end_date, periods=priods, freq='D')
+
+	start_date = util_dateutil.date2string(date_range[0].to_datetime())
+	try:
+		webapp_id = request.user.get_profile().webapp_id
+		orders = Order.objects.filter(webapp_id=webapp_id,created_at__gte=start_date,created_at__lte=end_date,status__in=ORDER_SOURCE).order_by('created_at')
+		order_price2time = OrderedDict()
+		for order in orders:
+			created_at = order.created_at.strftime("%Y-%m-%d")
+			use_price = order.final_price + order.weizoom_card_money
+			if not order_price2time.has_key(created_at):
+				order_price2time[created_at] = use_price
+			else:
+				order_price2time[created_at] += use_price
+
+		date_list = []
+		values =[]
+		for date in date_range:
+			date = util_dateutil.date2string(date.to_datetime())
+			date_list.append(date[date.find('-')+1:])
+			if not order_price2time.has_key(date):
+				values.append(0)
+			else:
+				values.append(int(order_price2time[date]))
+
+		response = create_line_chart_response(
+			"",
+			"",
+			date_list,
+			[{
+				"name": "销售额",
+				"values" : values
+			}]
+		)
+		return response
+	except:
+		response = create_response(500)
+		response.errMsg = u'系统繁忙，请稍后重试'
+		return response.get_response()	

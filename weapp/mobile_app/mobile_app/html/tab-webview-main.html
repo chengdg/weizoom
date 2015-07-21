@@ -2,14 +2,13 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Hello MUI</title>
+		<title>概览</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<script src="../js/mui.min.js"></script>
-		<!--<script src="../js/app.js"></script>-->
 		<script src="../js/config.js"></script>
 		<script src="../js/system.js"></script>
 		<style>
@@ -23,22 +22,22 @@
 		<audio style="display: none;" src="../img/beep.aac" id="beep"></audio>
 		<header class="mui-bar mui-bar-nav">
 			<h1 id="title" class="mui-title">首页</h1>
-			<a id="menu" href="#topPopover" class="mui-icon mui-action-menu mui-icon-bars mui-pull-right" style="visibility: visible;"></a>
+			<a id="menu" class="mui-icon mui-action-menu mui-icon-bars mui-pull-right" style="visibility: visible;"></a>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
 			<a id="defaultTab" class="mui-tab-item mui-active" href="overview.html">
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">概览</span>
 			</a>
-			<a class="mui-tab-item" href="message.html">
+			<a class="mui-tab-item" href="message.html" id="message_tag">
 				<span class="mui-icon mui-icon-chat"><span class="mui-badge" style="visibility: hidden;" id="msg_count"></span></span>
 				<span class="mui-tab-label">消息</span>
 			</a>
-			<a class="mui-tab-item" href="order.html">
+			<a class="mui-tab-item" href="order.html" id="order_tag">
 				<span class="mui-icon mui-icon-list"></span>
 				<span class="mui-tab-label">订单</span>
 			</a>
-			<a class="mui-tab-item" href="setting.html">
+			<a class="mui-tab-item" href="setting.html" id="setting_tag">
 				<span class="mui-icon mui-icon-gear"><span id="updateDot" class="mui-badge mui-badge-danger" style="visibility: hidden;">1</span></span>
 				<span class="mui-tab-label">设置</span>
 			</a>
@@ -50,23 +49,19 @@
 				top: '46px',
 				bottom: '50px'
 			};
-			var firstTap = true;
-			//创建子页面，首个选项卡页面显示，其它均隐藏；
+			var viewObjs = [];
 			mui.plusReady(function(){
 				W.init();
-				//开启新消息定时刷新
-				start_auto_update_messages();
+				listenBackButton();
 				//设置上的更新小点
 				if(plus.storage.getItem("is_update")=='true'){
 					var updateDot = document.getElementById("updateDot");
 					updateDot.style.visibility = 'visible';
 				};
-				var self = plus.webview.currentWebview();
-//				plus.nativeUI.showWaiting();
-				for(var i=3;i>=0;i--){
-					var sub = plus.webview.create(subpages[i],subpages[i],subpage_style);
-					self.append(sub);
-				}
+				var selfView = plus.webview.currentWebview();
+				var overview = plus.webview.create('overview.html','overview.html',subpage_style);
+				selfView.append(overview);
+				viewObjs['overview.html'] = overview;
 				//当前激活选项
 				var activeTab = subpages[0];
 				var title = document.getElementById("title");
@@ -76,23 +71,25 @@
 					if (targetTab == activeTab) {
 						return;
 					}
-					//更换标题
-					var title_text = this.querySelector('.mui-tab-label').innerHTML;
-					if (title_text == "概览") {
+					if(!viewObjs[targetTab]){
+						plus.nativeUI.showWaiting();
+						var currentView = plus.webview.create(targetTab,targetTab,subpage_style);
+						selfView.append(currentView);
+						viewObjs[targetTab] = currentView;
+					}
+					if (targetTab == "overview.html") {
 						document.getElementById("menu").style.visibility = "visible";
 					} else {
 						document.getElementById("menu").style.visibility = "hidden";
 					}
+					//更换标题
+					var title_text = this.querySelector('.mui-tab-label').innerHTML;
 					title.innerHTML = title_text;
 
-					if(firstTap){
-						toogleView(targetTab);
-					}else{
 						//显示目标选项卡
 						plus.webview.show(targetTab);
 						//隐藏当前;
 						plus.webview.hide(activeTab);
-					}
 					//更改当前活跃的选项卡
 					activeTab = targetTab;
 
@@ -100,27 +97,37 @@
 				document.getElementById("menu").addEventListener('tap', function() {
 					plus.webview.getWebviewById("overview.html").evalJS('mui("#topPopover").popover("toggle")');
 				});
-			})
+				//开启新消息定时刷新
+				start_auto_update_messages();
+			});
 
-			function toogleView(targetTab){
-				var s;
-				for(s in subpages){
-					if(subpages[s] == targetTab){
-						plus.webview.getWebviewById(subpages[s]).show();
-					}else{
-						plus.webview.getWebviewById(subpages[s]).hide();
-					}
+			function toggle_menu(action){
+				var el = document.getElementById("menu");
+				if(action){
+					el.style.visibility = 'hidden';
+				}else{
+					el.style.visibility = 'visible';
 				}
-				firstTap = false;
 			}
 
-			listenBackButton();
 			function updateMsgCount(count){
 				var bdge = document.querySelector("#msg_count");
 				bdge.innerText = count;
 				bdge.style.visibility = 'visible';
 				//设置图标的气泡数字
 				plus.runtime.setBadgeNumber(count+'');
+				//绑定消息标签的点击刷新事件
+				if(viewObjs['message.html']){
+					document.getElementById('message_tag').addEventListener('tap',tapToFresh,false);
+				}
+				//将最新的消息数保存到本地存储，方便其他地方使用
+				plus.storage.setItem('message_count',count);
+			}
+
+			function tapToFresh(){
+				console.log('fresh message list');
+				plus.webview.getWebviewById('message.html').evalJS("message_list_curr_page = 1;loadMsg();");
+				this.removeEventListener('tap',tapToFresh);
 			}
 
 			//定时刷新消息函数
@@ -177,32 +184,6 @@
 				clearInterval(messages_auto_update_interval);
 				messages_auto_update_interval = null;
 			}
-
-			/**
-			 * NJS的push写法，但是目前没有实现点击转到应用
-			 * @param {Object} count
-			 */
-			function pushNJSNotification(count){
-				var NotifyID = 1;
-				var Context = plus.android.importClass("android.content.Context");
-				var main = plus.android.runtimeMainActivity();
-				var Noti = plus.android.importClass("android.app.Notification");
-				var NotificationManager = plus.android.importClass("android.app.NotificationManager");
-				var nm = main.getSystemService(Context.NOTIFICATION_SERVICE)
-				var Notification = plus.android.importClass("android.app.Notification");
-				var mNotification = new Notification.Builder(main);
-				mNotification.setOngoing(true); //無效
-				mNotification.setContentTitle("微众");
-				mNotification.setContentText("你有"+count+"条新消息");
-				mNotification.setSmallIcon(17301620);
-				mNotification.setTicker("PadInfo");
-
-
-				mNotification.setNumber(count);
-				var mNb = mNotification.build();
-				nm.notify(NotifyID , mNb);
-			}
-
 		</script>
 	</body>
 </html>

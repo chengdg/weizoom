@@ -1,18 +1,52 @@
 
 //全局工具对象
-var W = {
-	active : false,	//W是否具有plus能力，默认没有，调用init后置为true
-	timeout : 60*1000
-};
 
 /**
- * 滚动到底部
- * wrapCSS ： 承载内容的元素css定位，暂时只有id
+ * 调用原生js选择器方法查找dom元素
+ * @param {String} selector css选择器字符串，如'.xa-item input'
+ * @param {DOM Object} context dom对象，作为选择器的上下文
  */
-W.scrollToBottom = function(wrapCSS){
-	var scrollHeight = document.getElementById(wrapCSS).clientHeight;
-	document.body.scrollTop = scrollHeight;
+var W = function(selector, context){
+	context = context || document;
+	if(/\s?./.test(selector)){
+		return context.querySelector(selector);
+	}else if(/^#/.test(selector)){
+		return document.getElementById(selector.substr(1));
+	}else{
+		return context.getElementsByTagName(selector);
+	}
+}
+
+/**
+ * 扩展对象 用src扩展target
+ * @param target 目标
+ * @param src 源
+ * @returns target
+ */
+W.extendObj = function(target,src){
+	for(var i in src){
+		if(src.hasOwnProperty(i) && !target[i]){
+			target[i] = src[i];
+		}
+	}
+	return target;
 };
+
+W.extendObj(W, {
+	active : false,	//W是否具有plus能力，默认没有，调用init后置为true
+	timeout : 60*1000,
+	/**
+	 * 滚动到底部
+	 * wrapCSS ： 承载内容的元素css定位，暂时只有id
+	 */
+	scrollToBottom : function(wrapCSS){
+		var scrollHeight = document.getElementById(wrapCSS).clientHeight;
+		document.body.scrollTop = scrollHeight;
+	},
+
+});
+
+
 
 W.init = function(){
 	W.active = true;
@@ -63,6 +97,26 @@ W.init = function(){
 		return null;
 	};
 };
+/**
+ * 回调
+ * @param {Object} callback
+ */
+W.next = new function(){
+	if(!W.messageAPI){
+		window.addEventListener('message', function(e){
+			W.messageAPI = true;
+			var source = e.source;
+            if ((source === window || source === null) && e.data === 'chart_is_ready') {
+                e.stopPropagation();
+//	                callback();
+            }
+		}, false);
+	}
+	window.postMessage('chart_is_ready', '*');
+	return function(fn){
+		//TODO 未完成
+	}
+}
 
 function listenBackButton(){
 		//返回键处理

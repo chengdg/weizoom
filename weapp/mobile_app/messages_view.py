@@ -13,7 +13,6 @@ from django.contrib import auth
 from core.paginator import paginate
 
 from account.models import *
-from mall.models import *
 from account.social_account.models import SocialAccount
 
 import types
@@ -23,7 +22,6 @@ from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import JsonResponse, create_response
 from core import paginator
 from weixin.message.message.models import *
-from watchdog.utils import watchdog_notice
 import emotion
 from market_tools import export
 from modules.member.models import Member,MemberHasSocialAccount
@@ -129,8 +127,8 @@ def list_messages(request):
 			# notify_message = u"设置会话信息失败, weixin_user_openid:{}, cause:\n{}".format(
 			# 	session.weixin_user_id, unicode_full_stack())
 			# watchdog_notice(notify_message)
-			# continue
-			raise
+			continue
+			#raise
 		sessions_list_json.append(one_session)
 	response = create_response(200)
 	response.data.iterms = sessions_list_json
@@ -531,7 +529,8 @@ def mui_get_session_histories(request):
 
 	try:
 		mpuser_preview_info = MpuserPreviewInfo.objects.get(mpuser=mpuser)
-	except:
+	except Exception,e:
+		print e.message
 		response = create_response(500)
 		response.errMsg = u'获取公众号预览信息失败'
 		return response.get_jsonp_response(request)

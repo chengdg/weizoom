@@ -3,7 +3,7 @@
     "id": "H51206167",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "微众",/*应用名称，程序桌面图标名称*/
     "version": {
-        "name": "1.0.0",/*应用版本名称*/
+        "name": "2.4.0",/*应用版本名称*/
         "code": "83"
     },
     "description": "",/*应用描述信息*/
@@ -12,9 +12,9 @@
     },
     "launch_path": "index.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
-        "name": "",/*开发者名称*/
+        "name": "微众",/*开发者名称*/
         "email": "",/*开发者邮箱地址*/
-        "url": "http://www.dcloud.io"/*开发者个人主页地址*/
+        "url": "http://fans.weapp.com"/*开发者个人主页地址*/
     },
     "permissions": {
         "Accelerometer": {
@@ -32,9 +32,7 @@
         "Console": {
             "description": "跟踪调试输出日志"
         },
-        "Contacts": {
-            "description": "访问系统联系人信息"
-        },
+
         "Device": {
             "description": "访问设备信息"
         },
@@ -50,15 +48,11 @@
         "Gallery": {
             "description": "访问系统相册"
         },
-        "Geolocation": {
-            "description": "访问位置信息"
-        },
+
          "Invocation": {
             "description": "使用Native.js能力"
         },
-        "Messaging": {
-            "description": "访问通讯能力"
-        },
+
         "Orientation": {
             "description": "访问方向感应器"
         },
@@ -68,9 +62,7 @@
         "Storage": {
             "description": "管理应用本地数据"
         },
-        "UI": {
-            "description": "管理系统原生控件"
-        },
+
         "Uploader": {
             "description": "管理文件上传任务"
         },
@@ -80,30 +72,15 @@
         "XMLHttpRequest": {
             "description": "跨域网络访问"
         },
-        "Zip": {
-            "description": "文件压缩与解压缩"
-        },
-        "Barcode": {
-            "description": "管理二维码扫描插件"
-        },
-        "Maps": {
-            "description": "管理地图插件"
-        },
-        "Payment": {
-            "description": "管理支付插件"
-        },
-        "Push": {
-            "description": "管理推送消息插件"
-        },
-        "Share": {
-            "description": "管理社交分享插件"
-        },
+
+
+
+
+
+
         "Speech": {
             "description": "管理语音识别插件"
-        },
-        "Statistic": {
-            "description": "管理统计插件"
-        }
+        },"Webview":{},"NativeUI":{},"Navigator":{}
     },
     "plus": {
         "splashscreen": {
@@ -127,10 +104,7 @@
                 "keystore": "",/*Android应用打包使用的密钥库文件*/
                 "password": "",/*Android应用打包使用密钥库中证书的密码*/
                 "aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-                "permissions": [
-                    "<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>",
-                    "<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>"
-                ]/*使用Native.js调用原生安卓API需要使用到的系统权限*/
+                "permissions": ["<uses-permission android:name=\"android.permission.SET_ORIENTATION\"/>","<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>","<uses-permission android:name=\"android.permission.MASTER_CLEAR\"/>","<uses-permission android:name=\"android.permission.ACCESS_SURFACE_FLINGER\"/>","<uses-permission android:name=\"android.permission.FORCE_BACK\"/>","<uses-permission android:name=\"android.permission.LOCATION_HARDWARE\"/>","<uses-permission android:name=\"android.permission.STATUS_BAR\"/>","<uses-permission android:name=\"android.permission.BROADCAST_PACKAGE_REMOVED\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.READ_CALL_LOG\"/>","<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>","<uses-permission android:name=\"android.permission.WRITE_SECURE_SETTINGS\"/>","<uses-permission android:name=\"android.permission.WRITE_SOCIAL_STREAM\"/>","<uses-permission android:name=\"android.permission.CAPTURE_VIDEO_OUTPUT\"/>","<uses-permission android:name=\"android.permission.ADD_VOICEMAIL\"/>","<uses-permission android:name=\"android.permission.BIND_WALLPAPER\"/>","<uses-permission android:name=\"android.permission.USE_CREDENTIALS\"/>","<uses-permission android:name=\"android.permission.BROADCAST_WAP_PUSH\"/>","<uses-permission android:name=\"android.permission.INTERNAL_SYSTEM_WINDOW\"/>","<uses-permission android:name=\"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS\"/>","<uses-permission android:name=\"android.permission.GLOBAL_SEARCH\"/>","<uses-permission android:name=\"android.permission.BROADCAST_STICKY\"/>","<uses-permission android:name=\"android.permission.SET_POINTER_SPEED\"/>","<uses-permission android:name=\"android.permission.READ_SYNC_STATS\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.RESTART_PACKAGES\"/>","<uses-permission android:name=\"android.permission.CHANGE_CONFIGURATION\"/>","<uses-permission android:name=\"android.permission.TRANSMIT_IR\"/>","<uses-permission android:name=\"android.permission.BIND_REMOTEVIEWS\"/>","<uses-permission android:name=\"android.permission.DUMP\"/>","<uses-permission android:name=\"android.permission.READ_SYNC_SETTINGS\"/>","<uses-permission android:name=\"android.permission.READ_SOCIAL_STREAM\"/>","<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>","<uses-permission android:name=\"android.permission.MOUNT_FORMAT_FILESYSTEMS\"/>","<uses-permission android:name=\"android.permission.INJECT_EVENTS\"/>","<uses-permission android:name=\"android.permission.WRITE_SMS\"/>","<uses-permission android:name=\"android.permission.READ_PROFILE\"/>","<uses-permission android:name=\"android.permission.HARDWARE_TEST\"/>","<uses-permission android:name=\"android.permission.GET_PACKAGE_SIZE\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.SET_ANIMATION_SCALE\"/>","<uses-permission android:name=\"android.permission.SET_PROCESS_LIMIT\"/>","<uses-feature android:name=\"android.hardware.camera.autofocus\"/>","<uses-permission android:name=\"android.permission.BODY_SENSORS\"/>","<uses-permission android:name=\"android.permission.CAPTURE_SECURE_VIDEO_OUTPUT\"/>","<uses-permission android:name=\"android.permission.SYSTEM_ALERT_WINDOW\"/>","<uses-permission android:name=\"android.permission.RECEIVE_SMS\"/>","<uses-permission android:name=\"android.permission.GET_TOP_ACTIVITY_INFO\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.MEDIA_CONTENT_CONTROL\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>","<uses-permission android:name=\"android.permission.SET_ALARM\"/>","<uses-permission android:name=\"android.permission.MODIFY_PHONE_STATE\"/>","<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>","<uses-permission android:name=\"android.permission.CLEAR_APP_USER_DATA\"/>","<uses-permission android:name=\"android.permission.WRITE_HISTORY_BOOKMARKS\"/>","<uses-permission android:name=\"android.permission.SEND_SMS\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.BLUETOOTH_ADMIN\"/>","<uses-permission android:name=\"android.permission.READ_CALENDAR\"/>","<uses-permission android:name=\"android.permission.SET_TIME_ZONE\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.AUTHENTICATE_ACCOUNTS\"/>","<uses-permission android:name=\"android.permission.NFC\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-permission android:name=\"android.permission.CHANGE_COMPONENT_ENABLED_STATE\"/>","<uses-permission android:name=\"android.permission.DIAGNOSTIC\"/>","<uses-permission android:name=\"android.permission.ACCOUNT_MANAGER\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_MULTICAST_STATE\"/>","<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>","<uses-permission android:name=\"android.permission.RECEIVE_WAP_PUSH\"/>","<uses-permission android:name=\"android.permission.SET_TIME\"/>","<uses-permission android:name=\"android.permission.SET_WALLPAPER_HINTS\"/>","<uses-permission android:name=\"android.permission.BATTERY_STATS\"/>","<uses-permission android:name=\"android.permission.WRITE_CALL_LOG\"/>","<uses-permission android:name=\"android.permission.SET_ACTIVITY_WATCHER\"/>","<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.READ_USER_DICTIONARY\"/>","<uses-permission android:name=\"android.permission.DELETE_PACKAGES\"/>","<uses-permission android:name=\"android.permission.WRITE_VOICEMAIL\"/>","<uses-permission android:name=\"android.permission.CLEAR_APP_CACHE\"/>","<uses-permission android:name=\"android.permission.BLUETOOTH_PRIVILEGED\"/>","<uses-permission android:name=\"android.permission.MANAGE_APP_TOKENS\"/>","<uses-permission android:name=\"android.permission.USE_SIP\"/>","<uses-permission android:name=\"android.permission.KILL_BACKGROUND_PROCESSES\"/>","<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>","<uses-permission android:name=\"android.permission.ACCESS_CHECKIN_PROPERTIES\"/>","<uses-permission android:name=\"android.permission.EXPAND_STATUS_BAR\"/>","<uses-permission android:name=\"android.permission.WRITE_CALENDAR\"/>","<uses-permission android:name=\"android.permission.UPDATE_DEVICE_STATS\"/>","<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>","<uses-permission android:name=\"android.permission.DEVICE_POWER\"/>","<uses-permission android:name=\"android.permission.WRITE_SYNC_SETTINGS\"/>","<uses-permission android:name=\"android.permission.INTERNET\"/>","<uses-permission android:name=\"android.permission.SUBSCRIBED_FEEDS_WRITE\"/>","<uses-permission android:name=\"android.permission.BIND_NFC_SERVICE\"/>","<uses-permission android:name=\"android.permission.REORDER_TASKS\"/>","<uses-permission android:name=\"android.permission.MANAGE_DOCUMENTS\"/>","<uses-permission android:name=\"android.permission.INSTALL_PACKAGES\"/>","<uses-permission android:name=\"android.permission.RECEIVE_MMS\"/>","<uses-permission android:name=\"android.permission.BIND_VOICE_INTERACTION\"/>","<uses-permission android:name=\"android.permission.CONTROL_LOCATION_UPDATES\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.INSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>","<uses-permission android:name=\"android.permission.CAPTURE_AUDIO_OUTPUT\"/>","<uses-permission android:name=\"android.permission.FACTORY_TEST\"/>","<uses-permission android:name=\"android.permission.WRITE_PROFILE\"/>","<uses-permission android:name=\"android.permission.ACCESS_MOCK_LOCATION\"/>","<uses-permission android:name=\"android.permission.DELETE_CACHE_FILES\"/>","<uses-permission android:name=\"android.permission.BRICK\"/>","<uses-permission android:name=\"android.permission.BIND_PRINT_SERVICE\"/>","<uses-permission android:name=\"android.permission.PERSISTENT_ACTIVITY\"/>","<uses-permission android:name=\"android.permission.SEND_RESPOND_VIA_MESSAGE\"/>","<uses-permission android:name=\"android.permission.BIND_DEVICE_ADMIN\"/>","<uses-permission android:name=\"android.permission.BIND_CARRIER_MESSAGING_SERVICE\"/>","<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>","<uses-permission android:name=\"android.permission.SET_WALLPAPER\"/>","<uses-permission android:name=\"android.permission.READ_FRAME_BUFFER\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.READ_HISTORY_BOOKMARKS\"/>","<uses-permission android:name=\"android.permission.READ_INPUT_STATE\"/>","<uses-permission android:name=\"android.permission.WRITE_USER_DICTIONARY\"/>","<uses-permission android:name=\"android.permission.BIND_INPUT_METHOD\"/>","<uses-permission android:name=\"android.permission.BIND_VPN_SERVICE\"/>","<uses-permission android:name=\"android.permission.CALL_PRIVILEGED\"/>","<uses-permission android:name=\"android.permission.WRITE_GSERVICES\"/>","<uses-permission android:name=\"android.permission.BIND_DREAM_SERVICE\"/>","<uses-permission android:name=\"android.permission.SET_DEBUG_APP\"/>","<uses-permission android:name=\"android.permission.BIND_NOTIFICATION_LISTENER_SERVICE\"/>","<uses-permission android:name=\"android.permission.SET_ALWAYS_FINISH\"/>","<uses-permission android:name=\"android.permission.BLUETOOTH\"/>","<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>","<uses-permission android:name=\"android.permission.READ_VOICEMAIL\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.MANAGE_ACCOUNTS\"/>","<uses-permission android:name=\"android.permission.WRITE_APN_SETTINGS\"/>","<uses-permission android:name=\"android.permission.BIND_APPWIDGET\"/>","<uses-permission android:name=\"android.permission.DISABLE_KEYGUARD\"/>","<uses-permission android:name=\"android.permission.REBOOT\"/>","<uses-permission android:name=\"android.permission.SIGNAL_PERSISTENT_PROCESSES\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.UNINSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.INSTALL_LOCATION_PROVIDER\"/>","<uses-permission android:name=\"android.permission.BIND_ACCESSIBILITY_SERVICE\"/>","<uses-permission android:name=\"android.permission.PROCESS_OUTGOING_CALLS\"/>","<uses-permission android:name=\"android.permission.SET_PREFERRED_APPLICATIONS\"/>","<uses-permission android:name=\"android.permission.BIND_TEXT_SERVICE\"/>","<uses-permission android:name=\"android.permission.BIND_TV_INPUT\"/>","<uses-permission android:name=\"android.permission.BROADCAST_SMS\"/>","<uses-permission android:name=\"android.permission.SUBSCRIBED_FEEDS_READ\"/>","<uses-permission android:name=\"android.permission.READ_SMS\"/>"]/*使用Native.js调用原生安卓API需要使用到的系统权限*/
             },
             "orientation": ["portrait-primary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
             "icons": {
@@ -138,34 +112,34 @@
                     "prerendered": true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
                     "auto": "", /*应用图标，分辨率：512x512，用于自动生成各种尺寸程序图标*/
                     "iphone": {
-                        "normal": "",/*iPhone普通屏幕程序图标，分辨率：57x57*/
-                        "retina": "",/*iPhone高分屏程序图标，分辨率：114x114*/
-                        "retina7": "",/*iPhone iOS7高分屏程序图标，分辨率：120x120*/
-                        "spotlight-normal": "", /*iPhone Spotlight搜索程序图标，分辨率：29x29*/
-                        "spotlight-retina": "", /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
-                        "spotlight-retina7": "",/*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
-                        "settings-normal": "", /*iPhone设置页面程序图标，分辨率：29x29*/
-                        "settings-retina": ""/*iPhone 高分屏设置页面程序图标，分辨率：58x58*/
+                        "normal": "unpackage/res/icons/57x57.png",/*iPhone普通屏幕程序图标，分辨率：57x57*/
+                        "retina": "unpackage/res/icons/114x114.png",/*iPhone高分屏程序图标，分辨率：114x114*/
+                        "retina7": "unpackage/res/icons/120x120.png",/*iPhone iOS7高分屏程序图标，分辨率：120x120*/
+                        "spotlight-normal": "unpackage/res/icons/29x29.png", /*iPhone Spotlight搜索程序图标，分辨率：29x29*/
+                        "spotlight-retina": "unpackage/res/icons/58x58.png", /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
+                        "spotlight-retina7": "unpackage/res/icons/80x80.png",/*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+                        "settings-normal": "unpackage/res/icons/29x29.png", /*iPhone设置页面程序图标，分辨率：29x29*/
+                        "settings-retina": "unpackage/res/icons/58x58.png","retina8":"unpackage/res/icons/180x180.png","settings-retina8":"unpackage/res/icons/87x87.png"/*iPhone 高分屏设置页面程序图标，分辨率：58x58*/
                     },
                     "ipad": {
-                        "normal": "", /*iPad普通屏幕程序图标，分辨率：72x72*/
-                        "retina": "", /*iPad高分屏程序图标，分辨率：144x144*/
-                        "normal7": "", /*iPad iOS7程序图标，分辨率：76x76*/
-                        "retina7": "", /*iPad iOS7高分屏程序图标，分辨率：152x152*/
-                        "spotlight-normal": "", /*iPad Spotlight搜索程序图标，分辨率：50x50*/
-                        "spotlight-retina": "", /*iPad高分屏Spotlight搜索程序图标，分辨率：100x100*/
-                        "spotlight-normal7": "",/*iPad iOS7 Spotlight搜索程序图标，分辨率：40x40*/
-                        "spotlight-retina7": "",/*iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
-                        "settings-normal": "",/*iPad设置页面程序图标，分辨率：29x29*/
-                        "settings-retina": "" /*iPad高分屏设置页面程序图标，分辨率：58x58*/
+                        "normal": "unpackage/res/icons/72x72.png", /*iPad普通屏幕程序图标，分辨率：72x72*/
+                        "retina": "unpackage/res/icons/144x144.png", /*iPad高分屏程序图标，分辨率：144x144*/
+                        "normal7": "unpackage/res/icons/76x76.png", /*iPad iOS7程序图标，分辨率：76x76*/
+                        "retina7": "unpackage/res/icons/152x152.png", /*iPad iOS7高分屏程序图标，分辨率：152x152*/
+                        "spotlight-normal": "unpackage/res/icons/50x50.png", /*iPad Spotlight搜索程序图标，分辨率：50x50*/
+                        "spotlight-retina": "unpackage/res/icons/100x100.png", /*iPad高分屏Spotlight搜索程序图标，分辨率：100x100*/
+                        "spotlight-normal7": "unpackage/res/icons/40x40.png",/*iPad iOS7 Spotlight搜索程序图标，分辨率：40x40*/
+                        "spotlight-retina7": "unpackage/res/icons/80x80.png",/*iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+                        "settings-normal": "unpackage/res/icons/29x29.png",/*iPad设置页面程序图标，分辨率：29x29*/
+                        "settings-retina": "unpackage/res/icons/58x58.png" /*iPad高分屏设置页面程序图标，分辨率：58x58*/
                     }
                 },
                 "android": {
-                    "mdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\48x48.png", /*普通屏程序图标，分辨率：48x48*/
-                    "ldpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\48x48.png", /*大屏程序图标，分辨率：48x48*/
-                    "hdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\72x72.png", /*高分屏程序图标，分辨率：72x72*/
-                    "xhdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\96x96.png",/*720P高分屏程序图标，分辨率：96x96*/
-                    "xxhdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\144x144.png"/*1080P 高分屏程序图标，分辨率：144x144*/
+                    "mdpi": "unpackage/res/icons/48x48.png", /*普通屏程序图标，分辨率：48x48*/
+                    "ldpi": "unpackage/res/icons/48x48.png", /*大屏程序图标，分辨率：48x48*/
+                    "hdpi": "unpackage/res/icons/72x72.png", /*高分屏程序图标，分辨率：72x72*/
+                    "xhdpi": "unpackage/res/icons/96x96.png",/*720P高分屏程序图标，分辨率：96x96*/
+                    "xxhdpi": "unpackage/res/icons/144x144.png"/*1080P 高分屏程序图标，分辨率：144x144*/
                 }
             },
             "splashscreen": {
@@ -187,13 +161,13 @@
                     }
                 },
                 "android": {
-                    "mdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\240x282.png", /*普通屏启动图片，分辨率：240x282*/
-                    "ldpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\320x442.png", /*大屏启动图片，分辨率：320x442*/
-                    "hdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\480x762.png", /*高分屏启动图片，分辨率：480x762*/
-                    "xhdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\480x762.png", /*720P高分屏启动图片，分辨率：720x1242*/
-                    "xxhdpi": "E:\\weapp\\MuiWorkspace\\mobile_6.0\\img\\480x762.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
+                    "mdpi": "E:/weapp/MuiWorkspace/mobile_6.0/img/240x282.png", /*普通屏启动图片，分辨率：240x282*/
+                    "ldpi": "E:/weapp/MuiWorkspace/mobile_6.0/img/320x442.png", /*大屏启动图片，分辨率：320x442*/
+                    "hdpi": "E:/weapp/MuiWorkspace/mobile_6.0/img/480x762.png", /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi": "E:/weapp/MuiWorkspace/mobile_6.0/img/480x762.png", /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi": "E:/weapp/MuiWorkspace/mobile_6.0/img/480x762.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
-            }
+            },"debug":true
         }
     }
 }

@@ -55,36 +55,35 @@ def _get_order_items(user, query, filter_value, sort_attr, query_string, count_p
 	if filter_value and (filter_value != '-1'):
 		params, source_value = UserHasOrderFilter.get_filter_params_by_value(filter_value)
 		orders = orders.filter(**params)
-		orders = orders.filter(order_source=source_value)
-	# 	if source_value == 1:
-	# 		source = 'weizoom_mall'
-	# 	elif source_value == 0:
-	# 		source = 'mine_mall'
-	# ###################################################
-	# if user.is_weizoom_mall:
-	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_orders_weizoom_mall_for_other_mall(webapp_id)
-	# else:
-	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+		if source_value == 1:
+			source = 'weizoom_mall'
+		elif source_value == 0:
+			source = 'mine_mall'
+	###################################################
+	if user.is_weizoom_mall:
+		weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_orders_weizoom_mall_for_other_mall(webapp_id)
+	else:
+		weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
 
-	# order_id_list = []
-	# if source:
-	# 	for order in orders:
-	# 		if weizoom_mall_order_ids:
-	# 			if order.order_id in weizoom_mall_order_ids:
-	# 				if user.is_weizoom_mall:
-	# 					order.come = 'weizoom_mall'
-	# 				else:
-	# 					order.come = 'weizoom_mall'
-	# 			else:
-	# 				order.come = 'mine_mall'
-	# 		else:
-	# 			order.come = 'mine_mall'
-	# 		if source and order.come != source:
-	# 			continue
-	# 		order_id_list.append(order.id)
+	order_id_list = []
+	if source:
+		for order in orders:
+			if weizoom_mall_order_ids:
+				if order.order_id in weizoom_mall_order_ids:
+					if user.is_weizoom_mall:
+						order.come = 'weizoom_mall'
+					else:
+						order.come = 'weizoom_mall'
+				else:
+					order.come = 'mine_mall'
+			else:
+				order.come = 'mine_mall'
+			if source and order.come != source:
+				continue
+			order_id_list.append(order.id)
 
-	# if order_id_list:
-	# 	orders = orders.filter(id__in=order_id_list)
+	if order_id_list:
+		orders = orders.filter(id__in=order_id_list)
 	###################################################
 	#处理排序
 	if sort_attr != 'created_at':
@@ -131,22 +130,18 @@ def _get_order_items(user, query, filter_value, sort_attr, query_string, count_p
 		else:
 			payment_time = __data_format(order.payment_time)
 
-		# if weizoom_mall_order_ids:
-		# 	if order.order_id in weizoom_mall_order_ids:
-		# 		if user.is_weizoom_mall:
-		# 			order.come = 'weizoom_mall'
-		# 		else:
-		# 			order.come = 'weizoom_mall'
-		# 	else:
-		# 		order.come = 'mine_mall'
-		# else:
-		# 	order.come = 'mine_mall'
-		# if source and order.come != source:
-		# 	continue
-		if order.order_source:
-			order.come = 'weizoom_mall'
+		if weizoom_mall_order_ids:
+			if order.order_id in weizoom_mall_order_ids:
+				if user.is_weizoom_mall:
+					order.come = 'weizoom_mall'
+				else:
+					order.come = 'weizoom_mall'
+			else:
+				order.come = 'mine_mall'
 		else:
 			order.come = 'mine_mall'
+		if source and order.come != source:
+			continue
 
 		# liupeiyu 该订单中的会员是否可点击
 		# 来自本店的订单,会员不可点击
@@ -154,7 +149,7 @@ def _get_order_items(user, query, filter_value, sort_attr, query_string, count_p
 		if order.come is 'weizoom_mall' and user.is_weizoom_mall is False:
 			order.member_id = 0
 
-		#order_id_list.append(order.id)
+		order_id_list.append(order.id)
 		items.append({
 			'id': order.id,
 			'order_id': order.order_id,
@@ -266,7 +261,7 @@ def get_order(request):
 
 
 
-	products = mall_api.get_order_products(order.id)
+	products = mall_api.get_order_products(order)
 	#商品
 	cur_product_json = []
 	for product in products:

@@ -33,23 +33,6 @@
 			  display: none;
 			}
 		</style>
-		<script type="text/javascript">
-		//根据不同身份显示不同内容
-		mui.ready(function(){
-			mui.plusReady(function(){
-	    		var username = plus.storage.getItem('username');
-	    		$("#show_username").html(username);
-				if(plus.storage.getItem('isSystemMenager')=='true'){
-					$("#show_username").html('系统管理员');
-					$("#account_content p").html(plus.storage.getItem('currentUser'));
-					showSystemMenager();
-				};
-				if(plus.storage.getItem("is_update")=='true'){
-					$("#updateDot").show();
-				};
-			});
-		});
-		</script>
 	</head>
 
 	<body>
@@ -111,21 +94,34 @@
 				swipeBack: false,
 			});
 
-			mui.plusReady(function() {
-				$("#logout").bind("click", logoutFunction);
-				//主列表点击事件
-				mui('#list').on('tap', 'a', function() {
-					var id = this.getAttribute('href');
-					mui.openWindow({
-						id: id,
-						url: this.href,
-						waiting: {
-							autoShow: false
-						}
+			//根据不同身份显示不同内容
+			mui.ready(function(){
+				mui.plusReady(function(){
+		    		var username = plus.storage.getItem('username');
+		    		$("#show_username").html(username);
+					if(plus.storage.getItem('isSystemMenager')=='true'){
+						$("#show_username").html('系统管理员');
+						$("#account_content p").html(plus.storage.getItem('currentUser'));
+						showSystemMenager();
+					}
+					if(plus.storage.getItem("is_update")=='true'){
+						$("#updateDot").show();
+					}
+					$("#logout").bind("click", logoutFunction);
+					//主列表点击事件
+					mui('#list').on('tap', 'a', function() {
+						var id = this.getAttribute('href');
+						mui.openWindow({
+							id: id,
+							url: this.href,
+							waiting: {
+								autoShow: false
+							}
+						});
 					});
+					plus.nativeUI.closeWaiting();
 				});
 			});
-
 		</script>
 	</body>
 

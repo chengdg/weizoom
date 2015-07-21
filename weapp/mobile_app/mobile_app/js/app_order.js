@@ -39,6 +39,7 @@ function showOrderList(){
 //					mui('#pullrefresh').pullRefresh().setStopped(true);
 //				},200);
 				$("#order_list_content").html("<div style='margin-top:10px;text-align:center;'>没有订单</div>");
+				plus.nativeUI.closeWaiting();
 				return;
 			}
 			$('#orderstatus').unbind('click');
@@ -61,10 +62,11 @@ function showOrderList(){
 				addLoadNextPage(order_count_per_page,query);
 			}
 			searchOrder();
+			plus.nativeUI.closeWaiting();
 		},function(){
 			mui.toast('订单列表加载失败！');
-		}
-		);
+			plus.nativeUI.closeWaiting();
+		});
 }
 //执行加载更多
 function addOrderList(response){

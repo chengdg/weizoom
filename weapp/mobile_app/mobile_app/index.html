@@ -76,9 +76,8 @@
 			</div>
 		</div>
 		<script>
+			mui.init();
 			mui.ready(function(){
-				mui.init();
-
 				mui.plusReady(function(){
 					//记录安装后第一次登陆
 					if(plus.storage.getItem('firstUse')==null){
