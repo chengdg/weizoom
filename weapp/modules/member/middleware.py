@@ -972,7 +972,13 @@ class OAUTHMiddleware(object):
 							response = self.process_fmt_in_url(request)
 							if response:
 								return response
-							return None
+
+							if 'share_red_envelope' in request.get_full_path() and (not request.member.user_icon):
+								# 分享红包没有用户头像时跳转授权接口
+								is_oauth = True
+							else:
+								return None
+
 						except:
 							notify_message = u"OAUTHMiddleware error 获取socialaccount, cause:\n{}".format(unicode_full_stack())
 							watchdog_error(notify_message)
