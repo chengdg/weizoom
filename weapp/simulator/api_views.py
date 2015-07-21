@@ -27,6 +27,7 @@ from core.exceptionutil import unicode_full_stack
 from core import apiview_util
 from termite import pagestore as pagestore_manager
 from account.social_account.models import SocialAccount
+from modules.member import member_settings 
 
 
 #################################################################################
@@ -105,6 +106,7 @@ def get_sct_cookie_url(request):
 		"url": url
 	}
 	response = response.get_response()
+	response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, "%s____%s" % (openid, webapp_id), max_age=60*60*24*365)
 
 	return response
 

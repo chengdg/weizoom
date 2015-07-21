@@ -317,7 +317,13 @@ W.view.common.advanceWeixinSimulator.MessagePage = Backbone.View.extend({
                     'webapp_owner_name': W.view.common.advanceWeixinSimulator.mpUserName
                 },
                 success: function(data) {
-                    _this.$('.xa-homepageLink').attr('href', '/workbench/jqm/preview/?project_id='+data['project_id']+'&woid='+data['webapp_owner_id'])
+<<<<<<< .working
+                    _this.$('.xa-homepageLink').attr('href', '/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id='
+                        +data['owner_id']+'&project_id=0&workspace_id='+data['workspace_id']+'&woid='+data['webapp_owner_id'])
+=======
+                    _this.$('.xa-homepageLink').attr('href', '/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id='
+                        +data['webapp_owner_id']+'&project_id=0&workspace_id='+data['workspace_id'])
+>>>>>>> .merge-right.r16980
                 }
             })
             _this.$('[data-role="header"] h1').text(W.view.common.advanceWeixinSimulator.mpUserName + '的公众号');

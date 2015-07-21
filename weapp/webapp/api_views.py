@@ -63,12 +63,12 @@ def get_unread_count_notify(request):
 def get_homepage_info(request):
 	webapp_owner = User.objects.get(username=request.GET['webapp_owner_name'])
 	homepage_workspace = Workspace.objects.get(owner=webapp_owner, inner_name='home_page')
-	homepage_project = Project.objects.get(workspace=homepage_workspace, inner_name=homepage_workspace.template_name)
+	# homepage_project = Project.objects.get(workspace=homepage_workspace, inner_name=homepage_workspace.template_name)
 
 	response = create_response(200)
 	response.data = {
-		'project_id': homepage_project.id,
-		'webapp_owner_id': homepage_project.owner_id
+		'workspace_id': homepage_workspace.id,
+		'webapp_owner_id': webapp_owner.id
 	}
 
 	return response.get_response()

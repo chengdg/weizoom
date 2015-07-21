@@ -34,7 +34,7 @@ def is_from_mobile(request):
 
 def is_from_simulator(request):
     lower_user_agent = _get_lower_user_agent(request)
-    return 'simulator' in lower_user_agent
+    return 'simulator' in lower_user_agent or request.COOKIES.get('wx-simulate-weixin', None) == 'true'
 
 def is_from_weixin(request):
     user_agent = _get_user_agent(request)
