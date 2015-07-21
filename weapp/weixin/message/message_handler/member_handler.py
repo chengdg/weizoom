@@ -85,6 +85,9 @@ class MemberHandler(MessageHandler):
 			#创建会员信息
 			try:
 				member = create_member_by_social_account(user_profile, social_account, False)
+				if is_from_simulator:
+					member.is_for_test = True
+					member.save()
 				#之后创建对应的webappuser
 				# if MemberHasSocialAccount.objects.filter(account=social_account, member=member).count() == 0:
 				# 	MemberHasSocialAccount.objects.create(account=social_account, member=member, webapp_id=social_account.webapp_id)

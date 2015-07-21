@@ -152,7 +152,7 @@ class MessagePipeline(object):
 			watchdog_info(notify_msg)
 			return None
 		wxiz_msg_crypt = None
-		is_from_simulator = False
+		is_from_simulator = request.GET.get('weizoom_test_data', False)
 		msg_signature = request.GET.get('msg_signature', None)
 		timestamp = request.GET.get('timestamp', None)
 		nonce = request.GET.get('nonce', None)
