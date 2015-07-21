@@ -49,6 +49,7 @@ for k,v in CELERY_BUILTINS.iteritems():
     if not SERVICE_BLACKLIST.has_key(k):
         SERVICE_BLACKLIST[k] = v
 
+print("in run_celery.py")
 
 def svslog(t, pid, task_id, status, message):
     obj=Svsmon(task=t, pid=pid, task_id=task_id, status = status, message=(message  and dumps(message) or ''))

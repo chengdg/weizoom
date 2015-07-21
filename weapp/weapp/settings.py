@@ -387,6 +387,7 @@ INSTALLED_APPS = [
     'weixin2',
     'termite2',
     'stats',
+    'wapi',
 
     'weixin.message.material',
     'weixin.message.message',
@@ -716,6 +717,10 @@ DJANGO_HACK_PARAMS = {
 
 RESOURCE_LOADED = False
 RESOURCES = ['stats', 'termite2', 'weixin2']
+
+#WAPI_SECRET_ACCESS_TOKEN = '!@#$1asDkl;fffo!&^OumsG#$RvZzhHQ!piuqwe;laasdf@'
+WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+
 
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)

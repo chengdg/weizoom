@@ -33,19 +33,28 @@ def get_lottery_stats(lottery_id):
 	"""
 	获取微信抽奖的统计数据
 	"""
-	#lottery = Lottery.objects.get(id=lottery_id)
-	#created_at = lottery.start_at
+	#获取活动的开始时间，认为活动开始时间后来的用户为新用户
+	lottery = Lottery.objects.get(id=lottery_id)
+	created_at = lottery.start_at
 
 	relations = LotteryRecord.objects.filter(lottery_id=lottery_id).order_by('created_at')
+	owner_id = relations[0].owner_id
+
 	# 获得member_id和最早created_at
 	member_ids = {relation.member_id:relation.created_at for relation in relations} # id=>created_at
 	#统计人数
 	all_member_count = len(member_ids)
 
-	existed_member_map = {record.member_id: record.created_at for record in MemberMarketUrl.objects.filter(market_tool_name='lottery')}
+	#为了计算新增用户计算商户下的用户第一次消费记录,结果按create_at倒叙排列
+	relations_member = LotteryRecord.objects.filter(owner_id=owner_id).order_by('-created_at')
+	#由上一条结果，选出一个用户最早参加的活动
+	relations_member_map = {relation.member_id:relation.lottery_id for relation in relations_member}
 
+	#过滤出新用户记录的时间
+	existed_member_map = {record.member_id: record.created_at for record in MemberMarketUrl.objects.filter(market_tool_name='lottery')}
 	# 记录的时间小于member活动记录的时间
-	new_added = len(filter(lambda x: (x in existed_member_map), member_ids.keys()))
+	new_added = len(filter(lambda x: ( relations_member_map[x] == int(lottery_id) and x in existed_member_map and created_at < existed_member_map[x]), relations_member_map.keys()))
+	
 
 	stats = [
 		{
@@ -153,21 +162,21 @@ class ActivityStats(resource.Resource):
 		activity_id = request.GET.get('id')
 		activity_type = request.GET.get('type', 'qrcode')
 
-		try:
-			if activity_type == 'qrcode':
-				# 处理渠道扫码的数据
-				stats = get_channel_qrcode_stats(activity_id)
-			elif activity_type == 'lottery':
-				# 处理微信抽奖的数据
-				stats = get_lottery_stats(activity_id)
+		#try:
+		if activity_type == 'qrcode':
+			# 处理渠道扫码的数据
+			stats = get_channel_qrcode_stats(activity_id)
+		elif activity_type == 'lottery':
+			# 处理微信抽奖的数据
+			stats = get_lottery_stats(activity_id)
 
-			response = create_response(200)
-			response.data = {
-				'stats': stats,
-				'type': activity_type
-			}
-		except:
-			response = create_response(500)
-			response.errMsg = u"出现异常"
-			response.innerErrMsg = unicode_full_stack()
+		response = create_response(200)
+		response.data = {
+			'stats': stats,
+			'type': activity_type
+		}
+		#except:
+		#	response = create_response(500)
+		#	response.errMsg = u"出现异常"
+		#	response.innerErrMsg = unicode_full_stack()
 		return response.get_response()

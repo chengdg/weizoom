@@ -49,8 +49,11 @@ def __do_weixin_pay(context, pay_url):
 	pay_url_response = context.client.get(pay_url, follow=True)
 	html_page = pay_url_response.content
 
-	pay_info = json.loads(context.text)
-	is_sync = pay_info['is_sync']
+	is_sync = True
+	if context.text != None:
+		pay_info = json.loads(context.text)
+		is_sync = pay_info['is_sync']
+	
 	if is_sync:
 		#同步支付
 		pay_interface_type = __get_js_value_from_html_page(html_page, 'var payInterfaceType')
@@ -125,6 +128,11 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		context.pay_result_url = response_data['url']
 		url = '/workbench/jqm/preview/%s' % context.pay_result_url[2:]
 		response = context.client.get(bdd_util.nginx(url), follow=True)
+	# 直接修改数据库的订单状态
+	elif pay_interface.type == PAY_INTERFACE_ALIPAY:
+		order.pay_interface_type = PAY_INTERFACE_ALIPAY
+		order.status = ORDER_STATUS_PAYED_NOT_SHIP
+		order.save()
 
 	context.pay_order_id = order.order_id
 

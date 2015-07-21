@@ -365,8 +365,16 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response = context.client.post(url, data)
 	context.response = response
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
-
+	
+	# print 'post data ------------', data
 	response_json = json.loads(context.response.content)
+	# print 'response json----------', response_json
+	# if response_json['data'].get('msg', None):
+	#	print 'response error message ---------------', response_json['data']['msg']
+	# if response_json['data'].get('detail', None):
+	#	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
+	
+	# raise '----------------debug test----------------------'
 
 	# print("*"*80, "bill购买jobs的商品")
 	# from pprint(import pprint)
@@ -388,6 +396,13 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.product_model_names = product_model_names
 	context.webapp_owner_name = webapp_owner_name
 
+OPERATION2STEPID = {
+	u'支付': u"When %s支付最新订单",
+	u'发货': u"When %s对最新订单进行发货",
+	u'完成': u"When %s完成最新订单",
+	u'退款': u"When %s对最新订单进行退款",
+	u'完成退款': u"When %s完成最新订单退款"
+}
 
 @when(u"微信用户批量消费{webapp_owner_name}的商品")
 def step_impl(context, webapp_owner_name):
@@ -413,20 +428,62 @@ def step_impl(context, webapp_owner_name):
 		}
 		if purchase_type:
 			data['type'] = purchase_type
+
+		if row.get('integral', None):
+			tmp = 0
+			try:
+				tmp = int(row['integral'])
+			except:
+				pass
+			
+			if tmp > 0:
+				# 先为会员赋予积分,再使用积分
+				context.execute_steps(u"when %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
+				data['products'][0]['integral'] = row['integral']
+		
+		if row.get('coupon', None) and ',' in row['coupon']:
+			coupon_name, coupon_id = row['coupon'].strip().split(',')
+			coupon_dict = {}
+			coupon_dict['name'] = coupon_name
+			coupon_dict['coupon_ids'] = [ coupon_id ]
+			coupon_list = [ coupon_dict ]
+			context.coupon_list = coupon_list
+			context.execute_steps(u"when %s领取%s的优惠券" % (webapp_user_name, webapp_owner_name))
+			data['coupon'] = coupon_id
+		
+		if row.get('weizoom_card', None) and ',' in row['weizoom_card']:
+			card_name, card_pass = row['weizoom_card'].strip().split(',')
+			card_dict = {}
+			card_dict['card_name'] = card_name
+			card_dict['card_pass'] = card_pass
+			data['weizoom_card'] = [ card_dict ]
+			
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
 
 		#支付订单
 		if row['payment'] == u'支付':
-			context.execute_steps(u"when %s使用支付方式'货到付款'进行支付" % webapp_user_name)
-
-		#取消订单
+			if row.get('payment_method', None):
+				context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, row['payment_method']))
+			else:
+				context.execute_steps(u"when %s使用支付方式'货到付款'进行支付" % webapp_user_name)
+ 				
+		# 操作订单
 		action = row['action'].strip()
 		if action:
 			actor, operation = action.split(',')
 			context.execute_steps(u"given %s登录系统" % actor)
-			context.caller_step_cancel_reason = {"reason":"cancel"}
-			context.execute_steps(u"When %s取消最新订单" % actor)
+			step_id = OPERATION2STEPID.get(operation, None)
+			if step_id:
+				order = Order.objects.all().order_by('-id')[0]
+				context.latest_order_id = order.id
+				context.execute_steps(step_id % actor)
+			elif operation == u'无操作':
+				# 为了兼容之前默认为取消操作所做的处理
+				pass
+			else:
+				context.caller_step_cancel_reason = {"reason":"cancel"}
+				context.execute_steps(u"When %s取消最新订单" % actor)
 
 		order_id = row.get('order_id', None)
 		if order_id:

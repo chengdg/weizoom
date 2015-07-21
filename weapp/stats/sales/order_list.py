@@ -529,10 +529,10 @@ def _get_stats_data(user, params, is_export):
 	# print q_obj
 	
 	# 提前获取所需内容
-	qualified_orders = total_orders.prefetch_related('orderhasproduct_set__product').filter(q_obj)
-	
-	if params['sort_attr'] != 'created_at':
-		qualified_orders = qualified_orders.order_by(params['sort_attr'])
+	if params['repeat_buy'] == -1 or params['sort_attr'] == 'id':
+		qualified_orders = total_orders.prefetch_related('orderhasproduct_set__product').filter(q_obj).order_by(params['sort_attr'])
+	else:
+		qualified_orders = total_orders.prefetch_related('orderhasproduct_set__product').filter(q_obj)
 	
 	wuid_dict = { 'pos': 0 }
 	items = []
@@ -542,7 +542,8 @@ def _get_stats_data(user, params, is_export):
 		if not _check_buyer_source(params['buyer_source'], tmp_member):
 			continue
 
-		if not __check_repeat_buy(params['repeat_buy'], order.webapp_user_id, wuid_dict, tmp_member, webappuser2member, pre_status_qualified_orders):
+		checked = __check_repeat_buy(params['repeat_buy'], order.webapp_user_id, wuid_dict, tmp_member, webappuser2member, pre_status_qualified_orders)
+		if not checked:
 			continue
 		
 		# clock_t_3 = time.clock()
@@ -576,6 +577,9 @@ def _get_stats_data(user, params, is_export):
 				'order_status': order.get_status_text()
 			})
 		# __report_performance(clock_t_3, wall_t_3, 'doubt part')
+	
+	if params['repeat_buy'] != -1 and params['sort_attr'] == '-id':
+		items.reverse()
 	
 	if is_export:
 		return items

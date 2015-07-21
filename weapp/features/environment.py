@@ -65,6 +65,7 @@ from market_tools.tools.channel_qrcode import models as channel_qrcode_models
 from market_tools.tools.member_qrcode import models as member_qrcode_models
 from weixin2 import models as weixin2_models
 from stats import models as stats_models
+from modules.member import models as modules_member_models
 
 from selenium import webdriver
 from test.pageobject.page_frame import PageFrame
@@ -265,6 +266,7 @@ def __clear_all_app_data():
 	# 会员扫码
 	member_qrcode_models.MemberQrcode.objects.all().delete()
 	member_qrcode_models.MemberQrcodeLog.objects.all().delete()
+	modules_member_models.MemberMarketUrl.objects.all().delete()
 
 	# 店铺装修
 	termite2_models.TemplateCustomModule.objects.all().delete()

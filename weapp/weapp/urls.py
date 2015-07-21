@@ -101,6 +101,8 @@ urlpatterns = patterns('',
     url(r'^card/', restful_url('card')),
 
     url(r'^stats/', restful_url2('stats')),
+    # WGlass用的接口
+    url(r'^wapi/', restful_url2('wapi')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

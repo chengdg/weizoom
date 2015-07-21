@@ -42,9 +42,10 @@ def step_impl(context):
 			some_user,activity = share_link_attention.split(',')
 			# 模拟通过微信抽奖关注
 			context.execute_steps(u"Given %s关注%s的公众号" % (user_name, responsible_person))
-			
+
 			# 模拟在MemberMarketUrl中添加记录。实际应该在oauth_shared_url_service中添加记录。
 			webapp_id = bdd_util.get_webapp_id_for(responsible_person)
+
 			member = bdd_util.get_member_for(user_name, webapp_id)
 			if MemberMarketUrl.objects.filter(member=member).count()==0:
 				# 只在创建时添加记录
@@ -53,9 +54,9 @@ def step_impl(context):
 					market_tool_name = 'lottery',
 					url = share_link_attention,
 					page_title = '微信抽奖新增会员记录',
-					follower_member_token = '-'
+					follower_member_token = '-',
+					created_at = row['start_time'],
 				)
-			time.sleep(2) # 2 seconds
 
 		context.execute_steps(u"When %s参加抽奖活动'%s'" % (user_name, activity_name))
 
@@ -191,7 +192,6 @@ def step_impl(context, type, activity_name):
 	elif type == u'渠道扫码':
 		setting = ChannelQrcodeSettings.objects.get(name=activity_name)
 		url = '/stats/api/activity_stats/?design_mode=0&version=1&id={}&type=qrcode'.format(setting.id)
-		
 	response = client.get(url)
 	bdd_util.assert_api_call_success(response)
 	data = json.loads(response.content)['data']
@@ -199,6 +199,8 @@ def step_impl(context, type, activity_name):
 	stats_list = data['stats']
 	#print("stats_list: {}".format(stats_list))
 	real_dict = {e['name']: e['value'] for e in stats_list}
+	real_dict[u'复购总金额'] = float(real_dict.get(u'复购总金额',0))
+	real_dict[u'被推荐用户下单金额'] = float(real_dict.get(u'被推荐用户下单金额',0))
 	print("real_dict: {}".format(real_dict))
 
 	bdd_util.assert_dict(expected_dict, real_dict)

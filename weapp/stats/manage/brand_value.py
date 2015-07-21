@@ -70,8 +70,6 @@ class BrandValue(resource.Resource):
 			freq = 'W'
 		elif freq_type == 'month':
 			freq = 'M'
-		elif freq_type == 'year':
-			freq = 'Y'
 		else:
 			freq = 'D'
 

@@ -19,30 +19,65 @@ from stats.models import BrandValueHistory
 from core.exceptionutil import unicode_full_stack
 #from watchdog.utils import watchdog_error, watchdog_warning
 import numpy as np
+from stats import order_utils
 
-def compute_brand_value(webapp_id, end_date):
+# 用户有效购买周期(即微品牌统计中，只算一个用户在CPP范围内的订单。单位:自然日)
+CUSTOMER_PURCHASE_PERIOD = 360
+
+def compute_brand_value(webapp_id, end_date, period=CUSTOMER_PURCHASE_PERIOD):
 	"""
 	根据webapp_id计算品牌end_date当天的价值
 	"""
 	end_date = util_dateutil.parse_datetime(end_date+" 23:59:59")
-	start_date = util_dateutil.get_date_after_days(end_date, -365) # 一年前
+	start_date = util_dateutil.get_date_after_days(end_date, -period) # 一年前
 	print("start_date:{}, end_date:{}".format(start_date, end_date))
-	orders = Order.objects.filter(webapp_id=webapp_id, created_at__range=(start_date, end_date))
+	# 获取已经支付过的订单
+	orders = order_utils.get_paid_orders(webapp_id, start_date, end_date)
 	order_count = orders.count()
 	print("order count: {}".format(orders.count()))
 	if order_count<1:
 		return 0.0
 	order_data = [(order.webapp_user_id, order.final_price, order.created_at, order.id) for order in orders]
 	df = pd.DataFrame(order_data, columns=['wuid', 'fp', 'at', 'id'])
-	# 计算购买用户前1000人的平均消费金额
-	user_avg_consumption = df[['wuid', 'fp']].groupby('wuid').sum().sort('fp', ascending=False).head(1000).mean()['fp']  # type: numpy.float64
-	print("user average consumption: {}".format(user_avg_consumption))
+	# 计算购买用户前20%人的平均消费金额
+	head_count= int(order_count*0.2+1)
+	user_avg_consumption = df[['wuid', 'fp']].groupby('wuid').sum().sort('fp', ascending=False).head(head_count).mean()['fp']  # type: numpy.float64
 	# 计算多次购买的用户数数
 	buyer_counts = df[df['fp']>1]['wuid'].value_counts()
 	buyer_count = len(buyer_counts.keys())
-	print("buyer count: {}".format(buyer_count))
+	print("head_order_cnt:{}, user_avg_consumption:{}, buyer_cnt:{}".format(head_count, user_avg_consumption, buyer_count))
+	#print("buyer count: {}".format(buyer_count))
 	value = user_avg_consumption * buyer_count
 	return value
+
+
+def compute_buyer_count(webapp_id, start_date, period_days):
+	"""
+	计算webapp用户的已购客户数
+	
+	@param start_date 开始日期str(年月日)
+
+	"""
+	end_date = util_dateutil.get_date_after_days(util_dateutil.parse_date(start_date), period_days) # 一年前
+	#print("start_date:{}, end_date:{}".format(start_date, end_date))
+	# 获取已经支付过的订单
+	orders = order_utils.get_paid_orders(webapp_id, start_date, end_date)
+	order_count = orders.count()
+	#print("order count: {}".format(orders.count()))
+	if order_count<1:
+		return 0
+	order_data = [(order.webapp_user_id, order.final_price, order.created_at, order.id) for order in orders]
+	df = pd.DataFrame(order_data, columns=['wuid', 'fp', 'at', 'id'])
+	# 计算购买用户前20%人的平均消费金额
+	#head_count= int(order_count*0.2+1)
+	#user_avg_consumption = df[['wuid', 'fp']].groupby('wuid').sum().sort('fp', ascending=False).head(head_count).mean()['fp']  # type: numpy.float64
+	# 计算多次购买的用户数数
+	buyer_counts = df[df['fp']>0]['wuid'].value_counts()
+	buyer_count = len(buyer_counts.keys())
+	#print("head_order_cnt:{}, user_avg_consumption:{}, buyer_cnt:{}".format(head_count, user_avg_consumption, buyer_count))
+	#print("buyer count: {}".format(buyer_count))
+	#value = user_avg_consumption * buyer_count
+	return buyer_count
 
 
 def get_brand_value(webapp_id, date_str):

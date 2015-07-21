@@ -278,8 +278,10 @@ def _get_stats_data(user, start_time, end_time):
 			cod_order_num += 1
 			cod_amount += float(order.final_price)
 		else:
-			online_order_num += 1
-			online_paid_amount += tmp_paid_amount
+			# 在线付款需求修改时去掉
+			# online_order_num += 1
+			# online_paid_amount += tmp_paid_amount
+			
 			if order.pay_interface_type == models.PAY_INTERFACE_ALIPAY:
 				alipay_amount += float(order.final_price)
 			elif order.pay_interface_type == models.PAY_INTERFACE_WEIXIN_PAY:
@@ -310,6 +312,10 @@ def _get_stats_data(user, start_time, end_time):
 	# print "repeated orders:\n %s" % repeated_order_id_str 
 	
 	discount_stats['discount_order_num'] = discount_stats['wezoom_num'] + discount_stats['coupon_num'] + discount_stats['integral_num'] + discount_stats['wezoom_coupon_num'] + discount_stats['wezoom_integral_num']
+	
+	#在线付款需求修改时添加
+	online_order_num = order_num - cod_order_num
+	online_paid_amount = paid_amount - cod_amount
 	
 	result = {
 		'start_time': start_time,

@@ -328,8 +328,6 @@ def step_impl(context, user_name):
 def step_impl(context, user_name):
 	expected = json.loads(context.text)
 	error_data = json.loads(context.response.content)
-	print "-------------"
-	print context.text
 	actual = dict(
 		error_message=error_data['errMsg']
 	)
@@ -362,7 +360,10 @@ def step_impl(context, user_name):
 
 @when(u"{webapp_user_name}领取{webapp_owner_name}的优惠券")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	infos = json.loads(context.text)
+	if context.coupon_list:
+		infos = context.coupon_list
+	else:
+		infos = json.loads(context.text)
 
 	for info in infos:
 		coupon_rule = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=info['name'])
