@@ -658,7 +658,7 @@ def get_buyer_count(webapp_id, low_date, high_date):
 				Q(webapp_id = webapp_id) | Q(order_id__in=weizoom_mall_order_ids), 
 				Q(status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
 				Q(created_at__range=(low_date, high_date))
-			).exclude(type='test').values('webapp_user_id').distinct().count()
+			).values('webapp_user_id').distinct().count()
 	return buyer_count
 
 def get_order_count(webapp_id, low_date, high_date):
@@ -682,7 +682,7 @@ def get_deal_product_count(webapp_id, low_date, high_date):
 			Q(order__webapp_id=webapp_id) | Q(order__order_id__in=weizoom_mall_order_ids), 
 			Q(order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
 			Q(order__created_at__range=(low_date, high_date))
-		).exclude(order__type='test')
+		)
 	deal_product_count = 0
 	for product in products:
 		deal_product_count += product.number
@@ -697,7 +697,7 @@ def get_top10_product(webapp_id, low_date, high_date):
 			Q(order__webapp_id=webapp_id) | Q(order__order_id__in=weizoom_mall_order_ids), 
 			Q(order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
 			Q(order__created_at__range=(low_date, high_date))
-		).exclude(order__type='test')
+		)
 	product_id2num = {}
 	for product in products:
 		if not product_id2num.has_key(product.product_id):
