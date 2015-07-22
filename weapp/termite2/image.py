@@ -28,11 +28,16 @@ class Image(resource.Resource):
 		"""
 		图片
 		"""
+		url = request.POST.get('url', '')
+		if url is '':			
+			response = create_response(500)
+			return response.get_response()
+
 		image = termite_models.Image.objects.create(
 			owner = request.user, 
-			url = request.POST['url'],
-			width = request.POST['width'],
-			height = request.POST['height'],
+			url = url,
+			width = request.POST.get('width', 60),
+			height = request.POST.get('height', 60),
 		)
 
 		response = create_response(200)
