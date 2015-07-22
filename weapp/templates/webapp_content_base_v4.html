@@ -172,7 +172,7 @@
                 $imageDisplay.each(function() {
                     var $imgGroup = $(this).find('.wui-grid-e');
                     console.log($imgGroup,55555)
-                    $imgGroup.find('li').eq(0).width(width*2);
+                    $imgGroup.find('li').eq(0).width(parseInt(width*2));
                     $imgGroup.find('li').height(width)
                     $imgGroup.find('li').eq(0).height(width*2);
                     $imgGroup.find('li').eq(2).height(width-1);
