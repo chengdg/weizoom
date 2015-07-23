@@ -25,7 +25,6 @@ from core import paginator
 from models import *
 from promotion import models as promotion_model
 from modules.member.models import *
-from modules.member import integral
 from market_tools.tools.channel_qrcode.models import *
 import module_api as mall_api
 # import models
@@ -729,6 +728,7 @@ def update_remark_order(request):
 @api(app='mall', resource='order_info', action='update')
 @login_required
 def update_order_info(request):
+	from modules.member import integral
 	order_id = request.POST['order_id']
 	order_status = request.POST.get('order_status', None)
 	bill_type = int(request.POST.get('bill_type', ORDER_BILL_TYPE_NONE))
