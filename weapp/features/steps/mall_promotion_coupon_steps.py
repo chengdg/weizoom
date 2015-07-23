@@ -360,7 +360,7 @@ def step_impl(context, user_name):
 
 @when(u"{webapp_user_name}领取{webapp_owner_name}的优惠券")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	if context.coupon_list:
+	if hasattr(context, 'coupon_list') and context.coupon_list:
 		infos = context.coupon_list
 	else:
 		infos = json.loads(context.text)
