@@ -238,7 +238,7 @@ class IntegralCaculator(object):
 						if (increase_count - int(increase_count)) > 0:
 							increase_count = int(increase_count) + 1
 						if int(increase_count) != 0:
-							self.increase_member_integral(followed_member, int(increase_count), u'好友奖励', member)
+							self.increase_member_integral(followed_member, int(increase_count), FOLLOWER_BUYED_VIA_SHARED_URL, member)
 
 	def return_integral(self, member, return_count):
 		if return_count <= 0:
@@ -429,7 +429,7 @@ def increase_father_member_integral_by_child_member_buyed(webapp_user_id, webapp
 	if integral_settings.count() > 0 and member:
 		father_member = MemberFollowRelation.get_father_member(member.id)
 		if father_member and integral_settings[0].buy_increase_count_for_father != 0:
-			increase_member_integral(father_member, integral_settings[0].buy_increase_count_for_father, u'好友奖励')
+			increase_member_integral(father_member, integral_settings[0].buy_increase_count_for_father, BUY_INCREST_COUNT_FOR_FATHER)
 
 def is_integral_detail_used(webapp_id):
 	if IntegralStrategySttingsDetail.objects.filter(webapp_id=webapp_id).count() > 0:
