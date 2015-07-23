@@ -3,7 +3,6 @@
 数据统计(BI)之销售订单分析的BDD steps
 
 """
-from _sqlite3 import Row
 from celery.task.http import URL
 
 __author__ = 'victor'
