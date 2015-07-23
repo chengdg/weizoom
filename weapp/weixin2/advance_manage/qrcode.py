@@ -90,7 +90,7 @@ class Qrcodes(resource.Resource):
 		return response.get_response()
 
 def _get_qrcode_items(request):
-	from mall.models import Order
+	from mall.models import *
 	#处理搜索
 	query = request.GET.get('query', '').strip()
 	sort_attr = request.GET.get('sort_attr', '-created_at')
