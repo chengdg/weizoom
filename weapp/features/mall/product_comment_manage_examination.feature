@@ -605,7 +605,7 @@ Scenario: 7.jobs通过审核评价，给用户加积分
     Then tom在jobs的webapp中获得积分日志
         """
         [{
-            "content": "商品评价奖励",
+            "content": "商品好评返利",
             "integral": 20
         },{
             "content": "首次关注",
