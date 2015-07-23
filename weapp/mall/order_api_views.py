@@ -677,7 +677,7 @@ def _read_file(file_url):
 				if len(row) > 0:
 					item = dict()
 					row = row[0].split(',')
-					if not (len(row[0]) or len(row[1]) or len(row[2])):
+					if not (len(row[0]) or len(row[1]) or len(row[2])) or not row[0].isdigit():
 						continue
 					item['order_id'] = row[0]
 					item['express_company_name'] = row[1].decode('gbk')
