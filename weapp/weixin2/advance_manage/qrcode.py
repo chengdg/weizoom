@@ -29,6 +29,7 @@ import json
 from mall.promotion.models import CouponRule
 from excel_response import ExcelResponse
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
+from core.wxapi import get_weixin_api
 
 
 #COUNT_PER_PAGE = 2
