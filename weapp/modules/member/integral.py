@@ -70,7 +70,7 @@ class IntegralCaculator(object):
 		# if to_task :
 		# 	update_member_integral.delay(member.id, follower_member_id, integral_increase_count, event_type, webapp_user_id)
 		# else:
-		print '-------------------------------in update_member_integral',member.id,integral_increase_count, event_type
+		#print '-------------------------------in update_member_integral',member.id,integral_increase_count, event_type
 		update_member_integral(member.id, follower_member_id, integral_increase_count, event_type, webapp_user_id)
 		
 	def _get_integral_strategy(self, request):
