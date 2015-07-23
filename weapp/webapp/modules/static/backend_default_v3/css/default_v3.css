@@ -2772,7 +2772,7 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-shoppingCartPage .xui-deleteBtn{
     width: 17px;
     height:17px;
-    right: 0;
+    right: -12px;
     top:4px;
 }
 .xui-shoppingCartPage .xui-selectedProductList>label{

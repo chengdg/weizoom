@@ -476,7 +476,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.is_deleted = True
 
 		return {
-			'value': product.to_dict('swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'integral_sale', 'properties', 'product_review')
+			'value': product.to_dict('min_limit', 'swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'integral_sale', 'properties', 'product_review')
 		}
 
 	return inner_func

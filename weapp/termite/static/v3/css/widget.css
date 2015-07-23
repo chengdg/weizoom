@@ -190,7 +190,13 @@ ul{
     border:1px solid #ccc;
     color: #999;
 }
-
+.wui-counter .wui-limit{
+    vertical-align: middle;
+    display: inline-block;
+    font-size: .7rem!important;
+    color: #cf0404;
+    margin-left: 5px;
+}
 .wui-counter span{
     text-align: center;
 }

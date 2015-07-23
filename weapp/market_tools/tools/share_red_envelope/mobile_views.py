@@ -54,14 +54,20 @@ def get_share_red_envelope(request):
 
     if relation.count() > 0:
         #分享获取红包
-        record = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
+        records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
         friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=relation[0].id).order_by("-id")[:4]
 
         for friend in friends:
             friend.member_name = friend.member.username
             friend.member_header_img = friend.member.user_icon
 
-        if record.count() > 0:
+        member_red_envelope_relation = RedEnvelopeToOrder.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
+
+        red_envelope_relation_ids = [record.red_envelope_relation_id for record in records]
+
+        if (records.count() > 0
+            and ((relation[0].id in red_envelope_relation_ids)
+            or records.count() > member_red_envelope_relation.count())):
             #会员已经领了
             return_data['has_red_envelope'] = True
             return_data['coupon_rule'] = coupon_rule

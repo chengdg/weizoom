@@ -172,6 +172,10 @@ def create_product(request):
         else:
             postage_id = 0
             unified_postage_money = 0.0
+
+        min_limit = request.POST.get('min_limit', '0')
+        if not min_limit.isdigit():
+            min_limit = 0
         product = mall_models.Product.objects.create(
             owner = request.manager,
             name = request.POST.get('name', '').strip(),
@@ -187,7 +191,8 @@ def create_product(request):
             postage_type = postage_type,
             postage_id = postage_id,
             unified_postage_money = unified_postage_money,
-            weshop_sync = request.POST.get('weshop_sync', 0)
+            weshop_sync = request.POST.get('weshop_sync', 0),
+            stocks = min_limit,
         )
         first_product = Product.objects.filter(owner=request.manager).order_by('-display_index')[0]
         product.display_index = first_product.display_index+1
@@ -370,6 +375,9 @@ def update_product(request):
             unified_postage_money = 0.0
         product_id = request.GET['id']
 
+        min_limit = request.POST.get('min_limit', '0')
+        if not min_limit.isdigit():
+            min_limit = 0
         if request.POST.get('weshop_sync', None):
             Product.objects.record_cache_args(ids=[product_id]).filter(owner=request.manager, id=product_id).update(
                 name = request.POST.get('name', '').strip(),
@@ -383,7 +391,8 @@ def update_product(request):
                 postage_id = postage_id,
                 unified_postage_money = unified_postage_money,
                 postage_type = postage_type,
-                weshop_sync = request.POST.get('weshop_sync', None)
+                weshop_sync = request.POST.get('weshop_sync', None),
+                stocks = min_limit,
             )
         else:
             Product.objects.record_cache_args(ids=[product_id]).filter(owner=request.manager, id=product_id).update(
@@ -397,7 +406,9 @@ def update_product(request):
                 is_use_cod_pay_interface = 'is_enable_cod_pay_interface' in request.POST,
                 postage_id = postage_id,
                 unified_postage_money = unified_postage_money,
-                postage_type = postage_type)
+                postage_type = postage_type,
+                stocks = min_limit,
+            )
 
         #
         #处理商品规格

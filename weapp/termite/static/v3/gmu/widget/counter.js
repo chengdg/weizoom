@@ -18,7 +18,8 @@
         template: function(count) {
             return '<span class="wa-down wui-down" style="border-right:0;border-radius:2px 0 0 2px;">-</span>'
                     +'<span class="wui-counterText"></span>'
-                    +'<span class="wa-up wui-up" style="border-left:0;border-radius:0 2px 2px 0;">+</span>';
+                    +'<span class="wa-up wui-up" style="border-left:0;border-radius:0 2px 2px 0;">+</span>'
+                    +'<div class="wui-limit wa-limit"></div>';
         },
 
         initialize: function(count) {
@@ -26,7 +27,14 @@
             this.$parent = this.$el.parent('.wui-counter');
             this.$parent.append(this.template());
             this.count = parseInt(this.$el.val() || 1);
-            if(this.count === 1){
+            this.minCount = this.$el.data('minlimit');
+            if(this.minCount <= 1){
+                this.minCount = 1;
+            }else{
+                this.$parent.find('.wa-limit').html('至少购买'+this.minCount+'件');
+            }
+            if(this.count < this.minCount){
+                this.count = this.minCount;
                 this.$el.siblings('.wa-down').css('border-color','#e5e5e5');
             }
             this.maxCount = parseInt(this.$el.attr('data-max-count') || -99999);
@@ -65,18 +73,18 @@
                 this.$el.trigger('click-disabledCounter', this.count);
                 return;
             }
-            if (this.count === 1 && delta === -1) {
-                return;
-            }
             if (this.maxCount === 0) {
                 return;
             }
             if (this.maxCount > 0) {
-                if(this.count >= this.maxCount && delta > 0) {
+                if((this.count >= this.maxCount && delta > 0) || (this.maxCount < this.minCount)) {
                     //不能超过最大数量
                     this.$el.trigger('reach-max-count', this.maxCount);
                     return;
                 }
+            }
+            if (this.count === this.minCount && delta < 0) {
+                return;
             }
             this.count = this.count + delta;
             if (this.count < 0) {
@@ -99,7 +107,6 @@
 
             this.$textValue.text(this.count);
             this.$el.val(this.count);
-
             this.$el.trigger('count-changed', this.count);
 
             var borderColor = '#ccc';
@@ -114,13 +121,16 @@
 
         changeCountTo: function(count) {
             var delta = count - this.count;
-            xlog('change delta is ' + delta);
+            // xlog('change delta is ' + delta);
             this.changeCount(delta);
             return this;
         },
 
         reset: function() {
-            this.count = 1;
+            this.count = this.minCount;
+            if(this.count<this.maxCount || this.maxCount<-1){
+                this.changeCountTo(this.count);
+            }
             return this;
         },
 
@@ -134,15 +144,15 @@
                 this.$el.val(this.count);
                 this.$el.siblings('.wa-up,.wa-down').css('border-color', '#e5e5e5');
             } else {
-                var count = 1;
                 if (this.count >= this.maxCount && this.maxCount > 0) {
-                    count = this.maxCount;
-                    xlog('change to ' + count);
-                    this.changeCountTo(count);
+                    xlog('change to ' + this.maxCount);
+                    this.changeCountTo(this.maxCount);
+                }else if (this.count <= 1) {
+                    xlog('change to ' + 1);
+                    this.changeCountTo(1);
                 }
-                if (this.count == 1) {
-                    xlog('change to ' + count);
-                    this.changeCountTo(count);
+                if (this.maxCount < this.minCount) {
+                    this.$el.trigger('reach-max-count', this.maxCount);
                 }
             }
             return this;

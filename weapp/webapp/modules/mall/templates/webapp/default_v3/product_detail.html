@@ -146,6 +146,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 .xui-productDetailPage .xui-shoppingCartBtn .xui-shoppingCartBtn{
     width:auto;
 }
+.xui-productDetailPage .wui-limit{
+    vertical-align: top;
+}
 </style>
 {% endblock %}
 
@@ -259,9 +262,10 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 {% endif %}
             {% else %}
                 <div class="xui-section-item xui-section-title pt10 pb10 xui-standard">
-                    <label for="" class="pa" style="top:18px;">请选择</label>
+                    <label for="" class="pa" style="top:20px;">请选择</label>
                     <input
                         data-ui-role="counter"
+                        data-minlimit="{{product.min_limit}}"
                         {% ifequal product.stock_type 1 %}
                             {% if product.promotion.type == 1 and product.promotion.detail.count_per_purchase < product.stocks %}
                             data-max-count="{{product.promotion.detail.count_per_purchase}}"
@@ -466,6 +470,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         <div class="" style="padding-left:3rem;">
                             <input
                                 data-ui-role="counter"
+                                data-minlimit="{{product.min_limit}}"
                                 {% ifequal product.stock_type 1 %}
                                     {% if product.promotion.type == 1 and product.promotion.detail.count_per_purchase < product.stocks %}
                                     data-max-count="{{product.promotion.detail.count_per_purchase}}"

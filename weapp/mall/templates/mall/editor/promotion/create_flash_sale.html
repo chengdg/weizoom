@@ -200,7 +200,8 @@ $(document).ready(function() {
 	var productSelector = new W.view.mall.PromotionSelectProductView({
 		el: '.xa-productSelector',
 		promotionId: promotionId,
-		tableTemplate: 'selected-promotion-products-view-tmpl-src'
+		tableTemplate: 'selected-promotion-products-view-tmpl-src',
+		filter_type: 'flash_sale'
 	});
 	productSelector.render();
 

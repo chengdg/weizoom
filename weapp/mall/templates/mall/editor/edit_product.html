@@ -80,6 +80,14 @@
 					<div class="errorHint"></div>
 				</div>
 			</div>
+			<div class="form-group nostar ">
+				<label class="control-label fl" for="min_limit">起购数量：</label>
+				<div class="fl w700 pl5">
+					<input type="text" class="form-control w106 fl" id="min_limit" name="min_limit" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
+					<span class="xui-fontGary">（设置起购数量大于1的商品，将不能才加限时抢购活动）</span>
+					<div class="errorHint"></div>
+				</div>
+			</div>
 			{%if not request.manager.is_weizoom_mall%}
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="bar_code">同步到微众商城：</label>

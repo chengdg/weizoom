@@ -169,7 +169,7 @@ class Product(models.Model):
 	shelve_end_time = models.CharField(max_length=50, null=True)  # 定时上架:下架时间
 	stock_type = models.IntegerField(
 		default=PRODUCT_STOCK_TYPE_UNLIMIT)  # 0:无限 1:有限
-	stocks = models.IntegerField(default=-1)  # 有限：数量
+	stocks = models.IntegerField(default=-1)  # 起购数量
 	is_deleted = models.BooleanField(default=False)  # 是否删除
 	is_support_make_thanks_card = models.BooleanField(
 		default=False)  # 是否支持制作感恩贺卡
@@ -204,6 +204,7 @@ class Product(models.Model):
 			self.price = product_model.price
 			self.weight = product_model.weight
 			self.stock_type = product_model.stock_type
+			self.min_limit = self.stocks
 			self.stocks = product_model.stocks
 			self.market_price = product_model.market_price
 			return product_model
@@ -440,6 +441,7 @@ class Product(models.Model):
 				product.display_price_range = display_price_range
 				product.user_code = target_model['user_code']
 				product.stock_type = target_model['stock_type']
+				product.min_limit = product.stocks
 				product.stocks = u'无限' if target_model[
 					'stock_type'] == PRODUCT_STOCK_TYPE_UNLIMIT else target_model['stocks']
 			else:
@@ -644,6 +646,7 @@ class Product(models.Model):
 		product.price = model.price
 		product.weight = model.weight
 		product.stock_type = model.stock_type
+		product.min_limit = product.stocks
 		product.stocks = model.stocks
 		product.model_name = product_model_name
 		product.market_price = model.market_price
@@ -689,6 +692,8 @@ class Product(models.Model):
 				product.price = model['price']
 				product.weight = model['weight']
 				product.stock_type = model['stock_type']
+				if not hasattr(product, 'min_limit'):
+					product.min_limit = product.stocks
 				product.stocks = model['stocks']
 				product.model_name = model_name
 				product.model = model
@@ -708,6 +713,8 @@ class Product(models.Model):
 				product.price = model.price
 				product.weight = model.weight
 				product.stock_type = model.stock_type
+				if not hasattr(product, 'min_limit'):
+					product.min_limit = product.stocks
 				product.stocks = model.stocks
 				product.model_name = model_name
 				product.model = {"name": model.name}
@@ -721,6 +728,8 @@ class Product(models.Model):
 			product.price = model.price
 			product.weight = model.weight
 			product.stock_type = model.stock_type
+			if not hasattr(product, 'min_limit'):
+				product.min_limit = product.stocks
 			product.stocks = model.stocks
 			product.model_name = model_name
 			product.model = model
@@ -761,6 +770,8 @@ class Product(models.Model):
 				product.custom_model_properties = None
 
 		if product.stock_type == PRODUCT_STOCK_TYPE_UNLIMIT:
+			if not hasattr(product, 'min_limit'):
+				product.min_limit = product.stocks
 			product.stocks = -1
 
 		return product.custom_model_properties
@@ -996,6 +1007,7 @@ class Product(models.Model):
 			'display_price_range': self.display_price_range,
 			'user_code': self.user_code,
 			'bar_code': self.bar_code,
+			'min_limit': self.min_limit,
 			'stocks': self.stocks,
 			'sales': getattr(self, 'sales', 0),
 			'is_use_custom_model': self.is_use_custom_model,

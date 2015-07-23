@@ -240,6 +240,8 @@ def get_usable_promotion_products(request):
         products = products.filter(name__contains=name)
     if barCode:
         products = products.filter(bar_code=barCode)
+    if filter_type == 'flash_sale':
+        products = products.filter(stocks__lt=2)
 
     #进行分页
     count_per_page = int(request.GET.get('count_per_page', 10))
@@ -259,10 +261,11 @@ def get_usable_promotion_products(request):
         id2product[product.id] = data
 
     #获得已经与promotion关联的product
-    if filter_type == 'all':
-        promotions = list(Promotion.objects.exclude(type=PROMOTION_TYPE_INTEGRAL_SALE).filter(owner=request.manager, status__in=[PROMOTION_STATUS_NOT_START, PROMOTION_STATUS_STARTED]))
-    elif filter_type == 'integral_sale':
+    if filter_type == 'integral_sale':
         promotions = list(Promotion.objects.filter(owner=request.manager, type=PROMOTION_TYPE_INTEGRAL_SALE, status__in=[PROMOTION_STATUS_NOT_START, PROMOTION_STATUS_STARTED]))
+    else:
+        promotions = list(Promotion.objects.exclude(type=PROMOTION_TYPE_INTEGRAL_SALE).filter(owner=request.manager, status__in=[PROMOTION_STATUS_NOT_START, PROMOTION_STATUS_STARTED]))
+    
 
     id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
     promotion_ids = [promotion.id for promotion in promotions]
