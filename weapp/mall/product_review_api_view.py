@@ -177,12 +177,12 @@ def update_product_review_status(request):
                 mall_models.ProductReview.objects.filter(id=product_review_id).update(status=int(status), top_time=datetime.now())
         else:
             review = mall_models.ProductReview.objects.filter(id=product_review_id)
-            if int(status) == 1 and len(review) == 1 and int(review[0].status) == 0:
+            if len(review) == 1 and int(review[0].status) == 0:
                 settings = member_models.IntegralStrategySttings.objects.get(webapp_id=request.user_profile.webapp_id)
                 if settings.review_increase > 0:
                     member = member_models.Member.objects.get(id=review[0].member_id)
                     increase_member_integral(member, settings.review_increase, '商品好评返利')
-            review.update(status=int(status), top_time=mall_models.DEFAULT_DATETIME)
+            review.update(status=status, top_time=mall_models.DEFAULT_DATETIME)
         return create_response(200).get_response()
     else:
         return create_response(500).get_response()
