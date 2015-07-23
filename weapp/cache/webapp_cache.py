@@ -249,6 +249,19 @@ def update_webapp_product_detail_cache(**kwargs):
 post_update_signal.connect(update_webapp_product_detail_cache, sender=mall_models.Product, dispatch_uid = "product_detail.update")
 signals.post_save.connect(update_webapp_product_detail_cache, sender=mall_models.Product, dispatch_uid = "product_detail.save")
 
+def update_webapp_product_model_cache(**kwargs):
+	model = kwargs.get('instance', None)
+	if model and model[0].stocks < 1:
+		model = model[0]
+		key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (model.owner_id, model.product_id)
+		cache_util.delete_cache(key)
+
+		if model.owner_id != 216:
+			key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (model.product_id)
+			cache_util.delete_cache(key)
+
+post_update_signal.connect(update_webapp_product_model_cache, sender=mall_models.ProductModel, dispatch_uid = "product_model.update")
+
 def update_webapp_product_detail_by_review_cache(**kwargs):
 	if hasattr(cache, 'request'):
 		webapp_owner_id = cache.request.user_profile.user_id
