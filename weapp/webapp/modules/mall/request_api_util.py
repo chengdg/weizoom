@@ -183,6 +183,8 @@ def save_order(request):
 	order_type = request.POST.get('order_type', PRODUCT_DEFAULT_TYPE)
 	pay_interface = request.POST.get('xa-choseInterfaces', '-1')
 
+	refueling_order = request.POST.get('refueling_order', '')
+
 	# 获取地址信息
 	area = request.POST.get('area', '')
 
@@ -259,7 +261,17 @@ def save_order(request):
 		data['msg'] = u'创建订单失败，请稍后重试'
 		data['exception'] = stack
 		return response.get_response()
-
+	try:
+		#加油集赞订单支付
+		if refueling_order and '_49' in refueling_order:
+			refueling_id = refueling_order.split('_')[0]
+			MemberRefuelingHasOrder.objects.create(member_refueling_id=refueling_id, order_id=order.id)
+			order.final_price = 49
+			order.save()
+	except:
+		stack = unicode_full_stack()
+		watchdog_error(stack, 'mall')
+	
 	if order:
 		data = {
 			'order_id' : order.order_id,

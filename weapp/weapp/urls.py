@@ -103,6 +103,8 @@ urlpatterns = patterns('',
     url(r'^stats/', restful_url2('stats')),
     # WGlass用的接口
     url(r'^wapi/', restful_url2('wapi')),
+    
+	url(r'^cloud_housekeeper/', restful_url2('cloud_housekeeper')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

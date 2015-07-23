@@ -2,6 +2,7 @@ ensureNS('W.view.weixin');
 W.view.weixin.RealtimeMessageFilterView = Backbone.View.extend({
     events: {
     	'click .xa-search-realtime-message': 'doSeacrh',
+        'click .xa-reset': 'onClickReset'
     },
     
     initialize: function(options) {
@@ -17,9 +18,36 @@ W.view.weixin.RealtimeMessageFilterView = Backbone.View.extend({
     },
     
     render: function() {
-    	var html = $.tmpl(this.getTemplate(), {});
-       	this.$el.append(html);
-       	this.addDatepicker();
+        var _this = this;
+        W.getApi().call({
+            method: 'post',
+            app: 'member',
+            api: 'members_filter_params/get',
+            args:{status:status},
+            success: function(data) {
+                 var html = $.tmpl(_this.getTemplate(), {
+                    grades: data.grades,
+                    tags: data.tags
+                });
+                /*var html = $.tmpl(this.getTemplate(), {
+                    filters: _this.filterData,
+                    types: data.type || [],
+                    statuses: data.status || [],
+                    payTypes: data.pay_interface_type || [],
+                    orderSources: data.source || []
+                });*/
+                //var html = $.tmpl(_this.getTemplate(), {});
+                _this.$el.append(html);
+                _this.addDatepicker();
+               // $('.xa-showFilterBox').append($('.xa-timelineControl'));
+            },
+            error: function(response) {
+                alert('加载失败！请刷新页面重试！');
+            }
+        });
+    	//var html = $.tmpl(this.getTemplate(), {});
+       	//this.$el.append(html);
+       	//this.addDatepicker();
     },
     
     getTemplate: function() {
@@ -63,13 +91,25 @@ W.view.weixin.RealtimeMessageFilterView = Backbone.View.extend({
         var content = $('#content').val();
         var startDate = $('#start_date').val().trim();
         var endDate = $('#end_date').val().trim();
+        var memberTag = $('#member_tag').val().trim();
+        var grade = $('#grade').val().trim();
+        var name = $('#name').val().trim();
+
         if (this.status !== -1) {
             dataValue.push('status:' + this.status);
         }
         if (content && content.length > 0) {
             dataValue.push('content:' + content);
         }
-        
+        if (memberTag !== '-1') {
+            dataValue.push('tag_id:' + memberTag);
+        }
+        if (grade !== '-1') {
+            dataValue.push('grade_id:' + grade);
+        }
+        if (name != '') {
+            dataValue.push('name:' + name);
+        }
         var args = [];
         var filter_value = dataValue.join('|');
         if (filter_value != ''){
@@ -161,7 +201,22 @@ W.view.weixin.RealtimeMessageFilterView = Backbone.View.extend({
     	// 清空搜索区域内容
     	this.$el.find('input').val('')
         this.status = status_value;
+        this.resetFrom();
         // 调用搜索事件
         this.doSeacrh('filter');
+    },
+
+    resetFrom: function(){
+        $('#start_date').val('');
+        $('#end_date').val('');
+        $('#name').val('');
+        $('#member_tag').val('-1');
+        $('#grade').val(-1);
+        $('#content').val('');
+       
+    },
+
+    onClickReset:function(){
+        this.resetFrom();
     }
 });

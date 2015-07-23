@@ -1,0 +1,495 @@
+{% extends "webapp_content_base.html" %}
+{% load mall_filter %}
+{% load common_tag %}
+
+{% block css%}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
+<style>
+
+html{
+font-family:Arial,Tahoma,Roboto,"Droid Sans","Helvetica Neue","Droid Sans Fallback","Heiti SC","Hiragino Sans GB",'Microsoft Yahei',Simsun,sans-serif;
+}
+html,body{
+	background: #fff;
+}
+body .wui-alert{
+	font-size: .8rem;
+}
+.xui-info{
+	padding:.6rem .75rem .5rem .75rem;
+	border-top:1px solid #e5e5e5;
+}
+.xui-info h2,
+.xui-info h3{
+	font-weight: normal;
+}
+.xui-info h2{
+	font-size: .75rem;
+	margin:0 0 .35rem 0;
+}
+.xui-info h3{
+	color:#cf0404;
+	font-size: .6rem;
+	margin:0 0 .5rem 0;
+}
+.xui-info label{
+	display: block;
+}
+.xui-info .xui-oShopping,
+.xui-info .xui-oShopping:visited{
+	color:#a4a4a4;
+	font-size:.6rem;
+	float: right;
+}
+.xui-countPrice{
+	font-size: .6rem;
+	color:#4a4a4a;
+}
+.xui-price{
+	font-size: .55rem;
+	color:#a4a4a4;
+}
+.xui-price span{
+	display: inline-block;
+	-webkit-transform:scale(.98);
+	transform:scale(.98);
+}
+.xui-images img{
+	display: block;
+}
+.xui-tips{
+	font-size: .65rem;
+	color:#cf0404;
+	padding:.15rem .1rem;
+}
+.xui-orange{
+	color:#ff8502;
+}
+.xui-borderBtn{
+	display: block;
+	text-align: center;
+	width:100%;
+	border:.05rem solid #ff8502;
+	color:#ff8502;
+	border-radius:.1rem;
+	background: #fff;
+	font-size: .7rem;
+	line-height: 2rem;
+	-webkit-appearance:none;
+	box-sizing:border-box;
+	padding:0;
+	margin:.4rem 0;
+}
+.xui-borderBtn span{
+	font-weight:bold;
+}
+.xui-progress,
+.xui-successBtn{
+	color:#fff;
+	font-size: .7rem;
+	line-height: 2rem;
+	height: 2rem;
+	border-radius:.1rem;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+	margin: .4rem 0;
+}
+.xui-progress{
+	background: rgba(255,133,2,.5);
+}
+.xui-successBtn{
+	display: block;
+	background: #ff8502;
+}
+/*安卓a标记兼容*/
+.xui-successBtn:link,
+.xui-successBtn:active,
+.xui-successBtn:visited{
+	color:#fff;
+}
+.xui-progress label{
+	display: block;
+	position: absolute;
+	width: 100%;
+}
+.xui-progressBar{
+	position: absolute;
+	left:0;
+	top: 0;
+	height: 2rem;
+	width:10%;
+	background: #ff8502;
+	transition-delay: 0s;
+    transition-duration: 0.4s;
+    transition-property: width, background-color;
+    transition-timing-function: linear;
+}
+.xui-panel{
+	width: 11.5rem;
+	margin: 6rem auto 0 auto;
+	padding:1.4rem .7rem 1rem .7rem;
+	box-sizing:border-box;
+	background: #fff;
+	border-radius:.2rem;
+}
+.xui-rule{
+	width: 12rem;
+	padding:1.4rem .85rem 1.2rem .85rem;
+}
+.xui-panel h3{
+	font-size: .75rem;
+	color: #8a8a8a;
+	font-weight:normal;
+	position: relative;
+	text-align: center;
+	padding:0 0 .15rem 0;
+	margin: 0;
+}
+.xui-panel h3::before,
+.xui-panel h3::after{
+	position: absolute;
+	content: "";
+	width:3.05rem;
+	border-top: solid 1px #ccc;
+	-webkit-transform: scaleY(.5);
+	-moz-transform: scaleY(.5);
+	transform: scaleY(.5);
+	top: .5rem;
+}
+.xui-rule h3::before,
+.xui-rule h3::after{
+	width:3.1rem;
+}
+.xui-members{
+	padding-bottom: .75rem;
+}
+.xui-members h3::before,
+.xui-members h3::after{
+	width:2.8rem;
+}
+.xui-success h3,
+.xui-success h4{
+	color:#60b82b;
+	font-size: .75rem;
+}
+.xui-success h4 i{
+	content: "";
+	display: inline-block;
+	width: 1.35rem;
+	height: 1.35rem;
+	background: url(/static_v2/img/webapp/usercenter/socketPage/succ_icon.jpg) no-repeat;
+	background-size: cover;
+	vertical-align: middle;
+	margin-right: .5rem;
+}
+.xui-success img{
+	width:7.5rem;
+	margin:0 auto;
+	display: block;
+	margin-top: .75rem;
+}
+.xui-success p{
+	font-size: .55rem;
+	-webkit-transform: scale(.9);
+	transform: scale(.9);
+	text-align: center;
+	margin-top: .5rem;
+	white-space: nowrap;
+}
+.xui-panel h3::before{
+	left: 0;
+}
+.xui-panel h3::after{
+	right: 0;
+}
+.xui-panel li{
+	color:#4a4a4a;
+	margin-top: .6rem;
+	font-size: .6rem;
+}
+.xui-guideTip{
+	position: absolute;
+	width:9.5rem;
+	height:3.5rem;
+	top: 0;
+	right: .75rem;
+	background: url(/static_v2/img/webapp/usercenter/socketPage/guide_tip.png) no-repeat;
+	background-size:100% auto;
+}
+.xui-members .xui-avatar{
+	width:2.6rem;
+	height: 2.6rem;
+	border-radius:.15rem;
+	display: block;
+}
+.xui-members ul{
+	padding:.05rem .2rem 0 .2rem;
+	height: 12rem;
+	overflow-y:auto; 
+}
+.xui-members ul li{
+	width: 2.6rem;
+	display: inline-block;
+	margin-right:.95rem;
+	float: left;
+	margin-top: .5rem;
+}
+.xui-members ul li:nth-child(3n){
+	margin-right: 0;
+}
+.xui-members p{
+	font-size: .6rem;
+	margin-top:.08rem;
+	text-align: center;
+}
+.wui-i-dotPositions{
+	position: absolute;
+	right: 0;
+	left: 0;
+	bottom: 1rem;
+	text-align: center;	
+}
+.wui-i-dotPosition{
+	display: inline-block;
+	width: .3rem;
+	height: .3rem;
+	background: #eaeaea;
+	border-radius:50%;
+}
+.wui-i-activeDotPosition{
+	background: #ff8502;
+}
+.xui-loadingContainer{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0);
+	z-index: 10000;
+}
+.xui-loading{
+	top:12.35rem;
+}
+.hidden{
+	display: none!important;
+}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-socketPage">
+		<div
+            data-ui-role="swipeimage"
+            data-jsondata='{{product.swipe_images_json|safe}}'
+            data-width='320'
+            data-height='200'
+            style="background:#fff"
+            data-positionMode= 'dot'
+        >
+        </div>
+	<section class="xui-info clearfix pr">
+		<h2>插控儿 16A空调专用智能插座（2500W-3500W空调专用）</h2>
+		<h3>邀请15个好友帮你加油即可享受79元活动价购买权</h3>
+		<label for="" class="xui-countPrice">活动价：<span class="xui-orange">￥<span style="font-size:.95rem;">79.</span>00</span></label>
+		<label for="" class="xui-price"><span>原价：￥99.00</span></label>
+		<!-- if 分享过 -->
+		{% if member_refuelings %}
+			<!-- 满15-->
+			{% if refueling_count >= 15 %}
+				{% if current_member %}
+				<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=refueling_order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard&refueling_id={{member_refueling.id}}" class="xui-successBtn">加油完成，立即购买</a>
+				{% else %}
+				<a href="javascript:void(0);" class="xui-successBtn xa-showRule">加油完成，我也要分享</a>
+				{% endif %}
+			<!-- 未满15-->
+			{% else %}
+				{% if current_member %}
+					<div class="xui-progress xa-showMembers">
+						<div class="xui-progressBar xa-progress"></div>
+						<label>已有<span class="xa-member-count">{{refueling_count}}</span>人帮你加油，进度<span class="xa-percent"></span>%</label>
+					</div>
+				{% else %}
+					{% if refuelinged %}
+						<div class="xui-progress xa-showMembers">
+							<div class="xui-progressBar xa-progress"></div>
+							<label>已有<span class="xa-member-count">{{refueling_count}}</span>人帮他加油，进度<span class="xa-percent"></span>%</label>
+						</div>
+					{% else %}
+						<a href="javascript:void(0);" class="xui-borderBtn xa-refueling">帮&nbsp;&nbsp;<span>{{friend_member.username_truncated | safe}}</span>&nbsp;&nbsp;加油</a>
+					
+						<div class="xui-progress xa-showMembers hidden">
+							<div class="xui-progressBar xa-progress"></div>
+							<label>已有<span class="xa-member-count">{{refueling_count}}</span>人帮他加油，进度<span class="xa-percent"></span>%</label>
+						</div>
+					{% endif %}
+				{% endif %}
+
+				
+			{% endif %}
+		<!--未分享过 -->
+		{% else %}
+			<a href="javascript:void(0);" class="xui-borderBtn xa-showRule">立即参与活动</a>
+		{% endif %}
+
+		
+		
+		<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-oShopping">原价购买>></a>
+	</section>
+	<section class="xui-images">
+		<img src="/static_v2/img/webapp/usercenter/socketPage/img1.jpg" alt="">
+		<img src="/static_v2/img/webapp/usercenter/socketPage/img2.jpg" alt="">
+		<img src="/static_v2/img/webapp/usercenter/socketPage/img3.jpg" alt="">
+		<img src="/static_v2/img/webapp/usercenter/socketPage/img4.jpg" alt="">
+		<img src="/static_v2/img/webapp/usercenter/socketPage/img5.jpg" alt="">
+		<img src="/static_v2/img/webapp/usercenter/socketPage/img6.jpg" alt="">
+		<img src="/static_v2/img/webapp/usercenter/socketPage/img7.jpg" alt="">
+		<p class="xui-tips">更多使用指南请在Wifi下观看买家秀</p>
+		<embed src="http://player.youku.com/player.php/sid/XOTMzMjUxMDE2/v.swf" allowFullScreen="true" quality="high" width="100%" height="400" align="middle"allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+	</section>
+	<div class="xui-cover xa-ruleCover hidden">
+		<div class="xui-panel xui-rule">
+			<i class="xui-guideTip"></i>
+			<h3>活动规则</h3>
+			<ul>
+				<li>1.活动时间：即日起至2015年8月4日</li>
+				<li>2.分享本活动页面给好友，邀请好友帮你来加油</li>
+				<li>3.好友进入活动页后点击　“帮 XXX 加油”　即可</li>
+				<li>4.只要邀请<span class="cRed">15个</span>好友帮你加油即可享受超低活动价79元</li>
+				<li>5.被邀请的好友关注公众号后可获得10元代金券</li>
+				<li>6.本页面分享完成后待系统弹框提示“分享链接成功”则表示分享成功，否则请重新分享。</li>
+			</ul>
+		</div>
+	</div>
+	<div class="xui-cover xa-membersCover hidden">
+		<div class="xui-panel xui-members">
+			<h3>加油帮成员</h3>
+			<ul class="clearfix xa-members">
+				{% if member_refueling_infos %}
+
+				{% for member_refueling_info in member_refueling_infos %}
+				<li>
+					<img src="{{member_refueling_info.follow_member.user_icon}}" alt="" class="xui-avatar">
+					<p class="xui-ellipsis-1">{{ member_refueling_info.follow_member.username | safe}}</p>
+				</li>
+				{% endfor %}
+				{% endif %}
+				<li class="xa-success-refueling hidden">
+					<img src="{{member.user_icon}}" alt="" class="xui-avatar">
+					<p class="xui-ellipsis-1">{{ member.username | safe}}</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="xui-cover xa-successCover hidden">
+		<div class="xui-panel xui-success tc">
+			{% if member.is_subscribed %}
+			<!--   有二维码 -->
+			<h3>加油成功!</h3>
+			 <img src="/static_v2/img/webapp/usercenter/socketPage/qrcode.jpg" alt="">
+			<p>长按二维码关注我们可领取<span class="cRed">10元</span>抵扣券</p> 
+			{% else %}
+			<!-- 无二维码 -->
+			<h4><i></i>加油成功!</h4>
+			{% endif %}
+		</div>
+	</div>
+	<div class="xui-loadingContainer xa-loading hidden">
+		<div class="xui-loading">
+			<div class="xui-loading-container container1">
+				<div class="circle1"></div>
+				<div class="circle2"></div>
+				<div class="circle3"></div>
+				<div class="circle4"></div>
+			</div>
+			<div class="xui-loading-container container2">
+				<div class="circle1"></div>
+				<div class="circle2"></div>
+				<div class="circle3"></div>
+				<div class="circle4"></div>
+			</div>
+			<div class="xui-loading-container container3">
+				<div class="circle1"></div>
+				<div class="circle2"></div>
+				<div class="circle3"></div>
+				<div class="circle4"></div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+(function (doc, win) {
+    var docEl = doc.documentElement,
+    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+    recalc = function () {
+      var clientWidth = docEl.clientWidth;
+      if (!clientWidth) return;
+      docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+    };
+
+    if (!doc.addEventListener) return;
+    win.addEventListener(resizeEvt, recalc, false);
+    doc.addEventListener('DOMContentLoaded', recalc, false);
+})(document, window);
+
+$(document).ready(function() {
+	changeProgressBar = function(){
+		var count = $('.xa-member-count').text();
+		var width = count >= 15 ? 100:(count * 6.67);
+		var percent = Math.round(width);
+		$('.xa-progress').css('width', width + '%');
+		$('.xa-percent').text(percent);
+	}
+	if( $('.xa-member-count').length){
+		changeProgressBar();
+	}
+	
+	
+	$('.xa-showRule').click(function(event) {
+		$('.xa-ruleCover').removeClass('hidden');
+	});
+	$('.xa-showMembers').click(function(event) {
+		$('.xa-membersCover').removeClass('hidden');
+	});
+	$('.xui-cover').click(function(event) {
+		if($(event.target).hasClass('xui-cover') || $(event.target).hasClass('xui-guideTip')){
+			$(this).addClass('hidden');
+		}
+	});
+	 $('.xa-refueling').click(function(){
+	 	$('.xa-loading').removeClass('hidden');
+        W.getApi().call({
+        app: 'webapp',
+        api: 'project_api/call',
+        method: 'get',
+        args: {
+            woid: W.webappOwnerId,
+            module: 'user_center',
+            target_api: 'refueling_log/record',
+            fid: '{{cookie_fid}}'
+	        },
+        success: function(data) {
+        	$('.xa-loading').addClass('hidden');
+	 		$('.xa-successCover').removeClass('hidden');
+            $('.xa-refueling').addClass('hidden');
+            $('.xa-showMembers').removeClass('hidden');
+            $('.xa-success-refueling').removeClass('hidden');
+            $('.xa-member-count').text({{refueling_count}}+1);
+            changeProgressBar();
+        },
+        error: function(data) {
+        	$('.xa-loading').addClass('hidden');
+            $('body').alert({
+                isShow: true,
+                info: data['data']['msg'],
+                speed:2000
+            });
+        }
+        });
+    });
+});
+</script>
+{% endblock %}

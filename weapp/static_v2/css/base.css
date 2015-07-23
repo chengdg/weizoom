@@ -610,6 +610,9 @@ select{
 .xui-mainPanel .xui-sideBar-order_list {
 	background-position: 50px -402px;
 }
+.xui-mainPanel  .xui-sideBar-qrcode{
+	background-position: -48px -480px;
+}
 .xui-mainPanel .xui-sideBar-wepage {
 	background-position:-49px -402px;
 }

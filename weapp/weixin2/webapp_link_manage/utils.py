@@ -19,6 +19,7 @@ from webapp.models import Project
 from market_tools.tools.member_qrcode.export import get_member_qrcode_webapp_link
 from market_tools.tools.complain.export import get_complain_webapp_link
 from apps.customerized_apps.shengjing.export import get_shengjing_link_targets
+from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_link
 
 def get_webapp_link_menu_objectes(request):
 	"""
@@ -112,6 +113,11 @@ def get_webapp_link_menu_objectes(request):
 			'id': 6,
 			'name': '推广扫码',
 			'link': get_member_qrcode_webapp_link(request)
+		},
+		'channelQrcode': {
+			'id': 10,
+			'name': '代言人二维码',
+			'link': get_channel_qrcode_webapp_link(request)
 		},
 		
 		'myOrder': {

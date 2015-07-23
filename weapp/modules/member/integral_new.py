@@ -178,7 +178,7 @@ class IntegralCaculator(object):
 			watchdog_error(notify_message)
 		else:
 			self.increase_member_integral(followed_member, \
-				integral_strategy.click_shared_url_increase_count,  u'好友奖励', member, webapp_user)
+				integral_strategy.click_shared_url_increase_count, FOLLOWER_CLICK_SHARED_URL, member, webapp_user)
 		try:
 			print '--------------------create MemberClickedUrl start'
 			MemberClickedUrl.objects.create(
@@ -450,7 +450,7 @@ def increase_detail_integral_for_after_buy(webapp_user_id, webapp_id, final_pric
 					increase_count = float(integral_settings_detail.increase_count_after_buy) * final_price
 					if (increase_count - int(increase_count)) > 0:
 						increase_count = int(increase_count) + 1
-					increase_member_integral(member, increase_count, u'购买奖励')
+					increase_member_integral(member, increase_count, u'购买返利')
 
 def increase_detail_father_member_integral_by_child_member_buyed(webapp_user_id, webapp_id, final_price):
 	integral_settings_detail =	module_api.get_integral_detail(webapp_id)
@@ -464,7 +464,7 @@ def increase_detail_father_member_integral_by_child_member_buyed(webapp_user_id,
 				if (increase_count - int(increase_count)) > 0:
 					increase_count = int(increase_count) + 1
 
-				increase_member_integral(father_member, increase_count, u'好友奖励')
+				increase_member_integral(father_member, increase_count, BUY_INCREST_COUNT_FOR_FATHER)
 
 def increase_detail_integral(webapp_user_id, webapp_id, final_price):
 	if is_integral_detail_used(webapp_id):

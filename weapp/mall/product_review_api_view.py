@@ -181,7 +181,7 @@ def update_product_review_status(request):
                 settings = member_models.IntegralStrategySttings.objects.get(webapp_id=request.user_profile.webapp_id)
                 if settings.review_increase > 0:
                     member = member_models.Member.objects.get(id=review[0].member_id)
-                    increase_member_integral(member, settings.review_increase, '商品评价奖励')
+                    increase_member_integral(member, settings.review_increase, '商品好评返利')
             review.update(status=int(status), top_time=mall_models.DEFAULT_DATETIME)
         return create_response(200).get_response()
     else:

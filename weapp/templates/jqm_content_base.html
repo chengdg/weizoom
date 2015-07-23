@@ -130,12 +130,20 @@
                 W.urlTitle = '{{ show_system_name }}';
             } 
 
-            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
             W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageImg = "{{ request.share_img_url }}";
-            if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
-                W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
 
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
+            if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
+                    W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
+            var link = window.location.href;
+            if (link.indexOf('fmt') === -1){
+                if (link.indexOf('&') === -1){
+                    link = link +"?fmt="+W.curRequestMemberToken;
+                } else {
+                    link = link +"&fmt="+W.curRequestMemberToken;
+                }
+            }
             $(document).ready(function() {
                 var hm = document.createElement("script");
                 hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
@@ -152,19 +160,49 @@
                  * 2、分享到微信朋友圈
                  * 3、分享到腾讯微博
                  */
-                W.wxShareData = {
+                 W.wxShareData = {
                     "imgUrl" : W.sharePageImg,
-                    "link" : window.location.href,
+                    "link" : link,
                     "desc" : W.sharePageDesc,
                     "title" : W.sharePageTitle,
                     // 点击分享按钮
                     trigger: function (res) {
-                       // alert('用户点击分享按钮'+res);
+                       //alert('用户点击分享按钮'+res);
                     },
                     // 分享成功
                     success : function(res) {
-                       // alert('success'+res);
+                       //alert('success'+res); 增加分享链接api
+                     //  alert('success1')
+                       W.getApi().call({
+                            app: 'webapp',
+                            api: 'project_api/call',
+                            method: 'post',
+                            args: _.extend({
+                                woid: W.webappOwnerId,
+                                project_id: W.projectId,
+                                module: 'user_center',
+                                target_api: 'shared_url/record',
+                                link: link,
+                                title:W.sharePageTitle
+                            }),
+                            success: function(data) {
+                                alert("分享链接成功")
+                            },
+                            error: function(data){
+                                alert("分享链接失败")
+                            }
+                        });
+                      // alert('success2')
                     }
+                    //error : function(res) {
+                    //           alert('error'+res);
+                    //},
+                    //cancel: function (res) {
+                    //     alert('已取消');
+                    //      },
+                    //fail: function (res) {
+                    //    alert(JSON.stringify(res));
+                    //}
                 };
                 wx.ready(function () {
                   // 1 判断当前版本是否支持指定 JS 接口，支持批量判断

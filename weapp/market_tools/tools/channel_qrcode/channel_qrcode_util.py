@@ -8,6 +8,7 @@ from weixin.message.material.models import News
 
 from watchdog.utils import watchdog_warning, watchdog_error
 from core.exceptionutil import full_stack, unicode_full_stack
+from modules.member.models import CHANNEL_QRCODE
 
 def check_channel_qrcode_ticket(ticket, user_profile):
 	return True if ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0 else False
@@ -30,7 +31,7 @@ def create_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_membe
 
 			if member:
 				prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
-				award(prize_info, member, u'渠道扫码奖励')
+				award(prize_info, member, CHANNEL_QRCODE)
 			
 			try:
 				if channel_qrcode.grade_id > 0:

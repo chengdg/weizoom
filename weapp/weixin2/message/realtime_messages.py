@@ -24,9 +24,11 @@ from weixin.user.module_api import get_mp_head_img
 from weixin2 import export
 from weixin2.models import *
 
-from modules.member.models import MemberHasSocialAccount, Member
+from modules.member.models import MemberHasSocialAccount, Member,MemberHasTag
 from account.social_account.models import SocialAccount
 from watchdog.utils import *
+
+from utils.string_util import byte_to_hex
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.MESSAGE_FIRST_NAV
@@ -83,6 +85,9 @@ class RealtimeMessages(resource.Resource):
         status = STATUS_ALL
         #消息内容
         content = ''
+        nick_name = ''
+        grade_id = '-1'
+        tag_id = '-1'
         filter_value_items = filter_value.split('|')
         for filter_value_item in filter_value_items:
             filter_items = filter_value_item.split(':')
@@ -91,6 +96,12 @@ class RealtimeMessages(resource.Resource):
                     status = int(filter_items[1])
                 if filter_items[0].find('content') >= 0:
                     content = filter_items[1]
+                if filter_items[0].find('tag_id') >= 0:
+                    tag_id = filter_items[1]
+                if filter_items[0].find('grade_id') >= 0:
+                    grade_id = filter_items[1]
+                if filter_items[0].find('name') >= 0:
+                    nick_name = filter_items[1]
             except:
                 pass
         #解析时间条件
@@ -103,10 +114,9 @@ class RealtimeMessages(resource.Resource):
                 end_time = date_items[1].strip()
             except:
                 pass
-
-        if content or (start_time and end_time):
+        if content or (start_time and end_time) or nick_name or grade_id != '-1' or tag_id != '-1':
             status = STATUS_ALL
-            pageinfo, realtime_messages = get_messages_from_messages(request.user, request.user_profile, cur_page, count_per_page, content, start_time, end_time, request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_messages_from_messages(request.user, request.user_profile, cur_page, count_per_page, content, start_time, end_time, filter_value_items,request.META['QUERY_STRING'])
         elif status == STATUS_COLLECT:
             pageinfo, realtime_messages = get_messages_from_collected(request.user, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
         elif status == STATUS_REMARK:
@@ -263,6 +273,24 @@ def get_social_member_dict(webapp_id, weixin_user_usernames):
     
     return username2weixin_account, account2member, id2member
 
+def get_weixin_user_names_from(webapp_id,weixin_user_usernames, tag_id, grade_id, nick_name):
+    accounts = SocialAccount.objects.filter(webapp_id=webapp_id, openid__in=weixin_user_usernames)
+    username2weixin_account = dict([(a.webapp_id + '_' + a.openid, a) for a in accounts])
+    filter_data = {}
+    filter_data['account__in'] = accounts
+
+    if grade_id != '-1':
+        filter_data['member__grade_id'] = grade_id
+    if tag_id != '-1':
+        member_ids = [member_tag.member_id for member_tag in MemberHasTag.objects.filter(member_tag_id=tag_id)]
+        filter_data['member_id__in'] = member_ids
+    if nick_name:
+        query_hex = byte_to_hex(nick_name)
+        filter_data['member__username_hexstr__contains'] = query_hex
+    member_has_accounts = MemberHasSocialAccount.objects.filter(**filter_data)
+
+    now_weixin_user_usernames = [member_has_account.account.openid for member_has_account in member_has_accounts]
+    return now_weixin_user_usernames
 
 def get_collect_message_dict(session_message_ids):
     collect_messages = CollectMessage.objects.filter(message_id__in=session_message_ids)
@@ -421,7 +449,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
 
 
 #根据weixin_message_message表获取微信信息
-def get_messages_from_messages(user, user_profile, cur_page, count, content=None, start_time=None, end_time=None, query_string=None):
+def get_messages_from_messages(user, user_profile, cur_page, count, content=None, start_time=None, end_time=None,  filter_items=None,query_string=None):
     mpuser = get_system_user_binded_mpuser(user)
     if mpuser is None:
         return []
@@ -432,10 +460,10 @@ def get_messages_from_messages(user, user_profile, cur_page, count, content=None
     if start_time and end_time:
         messages = messages.filter(weixin_created_at__gte=start_time, weixin_created_at__lte=end_time)
     messages = messages.filter(is_reply=False)
-
+    messages =  get_message_detail_items(user, user_profile.webapp_id, messages, filter_items)
     pageinfo, messages = paginator.paginate(messages, cur_page, count, query_string=query_string)
 
-    return pageinfo, get_message_detail_items(user, user_profile.webapp_id, messages)
+    return pageinfo, messages
 
 
 #更新weixin_collect_message表获取微信信息
@@ -457,13 +485,33 @@ def get_messages_from_remarked(user, user_profile, cur_page, count, query_string
 
 
 #获取微信message
-def get_message_detail_items(user, webapp_id, messages):
+def get_message_detail_items(user, webapp_id, messages, filter_items=None):
     weixin_user_usernames = [m.from_weixin_user_username for m in messages]
     weixin_users = WeixinUser.objects.filter(username__in=weixin_user_usernames)
     username2weixin_user = dict([(u.username, u) for u in weixin_users])
     
     #会员相关信息
     username2weixin_account, account2member, id2member = get_social_member_dict(webapp_id, weixin_user_usernames)
+
+    tag_id = '-1'
+    grade_id = '-1'
+    name = ''
+    if filter_items:
+        for filter_value_item in filter_items:
+            filter_items = filter_value_item.split(':')
+            try:
+                if filter_items[0].find('tag_id') >= 0:
+                    tag_id = filter_items[1]
+                if filter_items[0].find('grade_id') >= 0:
+                    grade_id = filter_items[1]
+                if filter_items[0].find('name') >= 0:
+                    name = filter_items[1]
+            except:
+                pass
+
+    if tag_id != '-1' or grade_id != '-1' or name != '':
+        weixin_user_usernames = get_weixin_user_names_from(webapp_id,weixin_user_usernames, tag_id, grade_id, name)
+        messages = messages.filter(from_weixin_user_username__in=weixin_user_usernames)
 
     #备注相关信息
     msginfo = MessageRemarkMessage.objects.filter(owner = user, status = 1)
@@ -483,17 +531,7 @@ def get_message_detail_items(user, webapp_id, messages):
         one_message['message_id'] = message.id
         one_message['sender_username'] = weixin_user.username
         one_message['name'] = weixin_user.nickname_for_html
-        if message.is_reply:
-            head_img = get_mp_head_img(user.id)
-            if head_img:
-                one_message['user_icon'] = head_img
-            else:
-                one_message['user_icon'] = DEFAULT_ICON
-        else:
-            if weixin_user.weixin_user_icon:
-                one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
-            else:
-                one_message['user_icon'] =  DEFAULT_ICON
+        
         one_message['text'] = emotion.change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -544,14 +582,23 @@ def get_message_detail_items(user, webapp_id, messages):
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
             member = id2member[member_id]
+            one_message['user_icon'] =  DEFAULT_ICON
             if member:
                 one_message['member_id'] = member.id
                 one_message['is_subscribed'] = member.is_subscribed
+                one_message['user_icon'] =  member.user_icon
                 if not member.is_subscribed:
                     one_message['could_replied'] = 0
         except:
             one_message['member_id'] = ''
-        
+
+        if message.is_reply:
+            head_img = get_mp_head_img(user.id)
+            if head_img:
+                one_message['user_icon'] = head_img
+            else:
+                one_message['user_icon'] = DEFAULT_ICON
+
         items.append(one_message)
         
     #星标消息

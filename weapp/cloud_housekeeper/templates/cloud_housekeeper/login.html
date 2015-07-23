@@ -1,0 +1,103 @@
+{% extends "cloudHousekeeper.html" %}
+{% load common_tag %}
+{% block css %}
+{% endblock %}
+{% block content-panel %}
+<div class="xui-loginPage xa-loginPage">
+    <div class="xui-title">
+        微众·云管家
+    </div>
+    <div class="xui-loginInfo">
+        <div class="xui-tel">
+            <input type="text" placeholder="手机号" class="xa-phoneNum">
+        </div>
+        <div class="xui-verification fl">
+            <input type="text" placeholder="验证码" class="xa-phoneCode">
+        </div>
+        <div class="xui-getVerification xa-getVerification fr">
+            获取验证码
+        </div>
+    </div>
+    <div class="xui-loginBtn xa-loginBtn">
+        登陆
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+	var phoneNum = $('.xa-phoneNum').val();
+	var phoneCode = $('.xa-phoneCode').val();
+	var wait = 60;
+
+	function validate_phone(phone_number){
+		var reg = /^1[3|4|5|8][0-9]\d{4,8}$/;
+		if(!reg.test(phone_number) || phone_number.length !=11){
+			$('.xa-loginPage').alert({
+				isShow:true,
+				info:"请填写有效的手机号",
+				isSlide:true,
+				speed:2000
+			});
+			return false;
+		}
+		return true;
+	}
+
+   $('.xa-getVerification').click(function() {
+   	var phone_number = $('.xa-phoneNum').val();
+   	if(validate_phone(phone_number)){
+        W.getApi().call({
+            app: 'cloud_housekeeper',
+            api: 'captcha',
+            method: 'get',
+            args: {
+                "phone_number": phone_number
+            },
+            success: function(data) {
+            	$('.xa-loginPage').alert({
+					isShow:true,
+					info:"验证码已发送",
+					isSlide:true,
+					speed:2000
+				});
+            },
+            error: function(resp) {
+            	$('.xa-loginPage').alert({
+					isShow:true,
+					info:resp.data.msg,
+					isSlide:true,
+					speed:2000
+				});
+            }
+        });
+   	}
+   });
+   $('.xa-loginBtn').click(function() {
+   	var phone_number = $('.xa-phoneNum').val();
+   	var phone_code = $('.xa-phoneCode').val();
+   	   W.getApi().call({
+            app: 'cloud_housekeeper',
+            api: 'login',
+            method: 'post',
+            args: {
+                "phone_number": phone_number,
+                "captcha":phone_code
+            },
+            success: function(data) {
+                window.location.href = '/cloud_housekeeper/home/';
+            },
+            error: function(resp) {
+            	$('.xa-loginPage').alert({
+					isShow:true,
+					info:resp.data.msg,
+					isSlide:true,
+					speed:2000
+				});
+            }
+        });
+   });
+});
+</script>
+{% endblock %}

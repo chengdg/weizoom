@@ -44,7 +44,8 @@ class MemberHandler(MessageHandler):
 
 		user_profile = context.user_profile
 		weixin_user = context.weixin_user
-		context.member = self._handle_member(user_profile, weixin_user, is_from_simulator)
+		request = context.request
+		context.member = self._handle_member(user_profile, weixin_user, is_from_simulator, request)
 
 		return None
 
@@ -67,7 +68,7 @@ class MemberHandler(MessageHandler):
 				weixin_user_name in ('weizoom', 'zhouxun', 'yangmi') or\
 				len(weixin_user_name) < 16
 
-	def _handle_member(self, user_profile, weixin_user, is_from_simulator):
+	def _handle_member(self, user_profile, weixin_user, is_from_simulator, request):
 		#是否已经存在会员信息，如果否则进行创建
 		weixin_user_name = weixin_user.username
 		token = get_token_for(user_profile.webapp_id, weixin_user_name, is_from_simulator)
@@ -96,10 +97,14 @@ class MemberHandler(MessageHandler):
 				notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
 					social_account.openid, unicode_full_stack())
 				watchdog_fatal(notify_message)
-
+			try:
+				integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+			except:
+				integral_strategy_settings = None
+			
 			if member and hasattr(member, 'is_new') and member.is_new:
 				try:
-					increase_for_be_member_first(user_profile, member)
+					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 					member.is_new = True
 				except:
 					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(

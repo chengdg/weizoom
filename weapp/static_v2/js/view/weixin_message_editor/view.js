@@ -26,7 +26,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 	initialize: function(options) {
 		this.$el = $(this.el);
 		this.template = this.getTemplate();
-		
+
 		//控制按钮显示
 		this.enableSubmitBtn = options.enableSubmitBtn || 'true';
 		this.enableCancelBtn = options.enableCanelBtn || 'true';
@@ -47,12 +47,12 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 		this.$textMessageTab = this.$('a[href="#weixinMessageEditer-textMessageZone"]');
 		this.$newsMessageTab = this.$('a[href="#weixinMessageEditer-newsMessageZone"]');
 		this.$newsMessageZone = this.$('.xa-newsMessageZone');
- 
+
 		//创建富文本编辑器
 		var width = options.richTextEditorWidth || this.$el.outerWidth();
 		var height = options.richTextEditorHeight;
 		this.editor = new W.view.common.RichTextEditor({
-			el: 'textarea',
+			el: '#weixinMessageText',
 			type: 'text',
 			maxCount: this.editorMaxCount,
 			width: width,
@@ -117,7 +117,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 	},
 
 	/**
-	 * onClickTextMessageTab: 点击“文字”tab的响应函数 
+	 * onClickTextMessageTab: 点击“文字”tab的响应函数
 	 */
 	onClickTextMessageTab: function(){
 		this.materialId = 0;
@@ -132,7 +132,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 	},
 
 	/**
-	 * onClickNewsMessageTab: 点击“图文”tab的响应函数 
+	 * onClickNewsMessageTab: 点击“图文”tab的响应函数
 	 */
 	onClickNewsMessageTab: function(event){
 		event.stopPropagation();
@@ -169,7 +169,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 				return;
 			}
 		}
-		
+
 		var patterns = "";
 		var $patternsInput = $('#weixinMessageEditor-patternsInput');
 		if ($patternsInput.length > 0) {
@@ -195,7 +195,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 		this.trigger('finish-edit', message);
 	},
 
-	setContent: function(content){		
+	setContent: function(content){
 		this.editor.setContent(content);
 		this.$('[name="text_content"]').val(content);
 	},

@@ -1,0 +1,87 @@
+{% extends "cloudHousekeeper.html" %}
+{% load common_tag %}
+{% block css %}
+{% endblock %}
+{% block content-panel %}
+
+<div class="xui-reportPage">
+    <div class="wui-tabs">
+        <a href="javascript:void(0)" class="active">月报</a>
+        <a href="javascript:void(0)">周报</a>
+    </div>
+    <div class="wui-swiper-container">    
+        <div class="wui-swiper-wrapper">
+          <div class="wui-swiper-slide">
+                <div class="wui-content-slide">
+                    <ul class="">
+                        {% for month in months %}                            
+                        <li>
+                            <a href="/cloud_housekeeper/report/?id={{month.id}}" class="c65">
+                                <span class="xui-date">
+                                    {{month.start_date|date:"Y-m-d"}}至
+                                    {{month.end_date|date:"Y-m-d"}}
+                                </span>
+                                <span class="xui-details">详情</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="wui-swiper-slide">
+                <div class="wui-content-slide">
+                    <ul class="">
+                        {% for week in weeks %}                            
+                        <li>
+                            <a href="/cloud_housekeeper/report/?id={{week.id}}" class="c65">
+                                <span class="xui-date">
+                                    {{week.start_date|date:"Y-m-d"}}至
+                                    {{week.end_date|date:"Y-m-d"}}
+                                </span>
+                                <span class="xui-details">详情</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="xui-footNav">
+        <a href="/cloud_housekeeper/home/">实时统计</a>
+        <a href="/cloud_housekeeper/reports/">历史报告</a>
+    </div>
+</div>
+    
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var $slide = $('.wui-content-slide');
+    $slide.each(function(){
+        var slideHeight = $(this).height();
+        $(this).parent('.wui-swiper-slide').css('height','slideHeight!important');
+        // $(this).parent('.wui-swiper-slide').height(slideHeight);
+        // $(this).parents('.wui-swiper-wrapper').height(slideHeight);
+        $(this).parents('.wui-swiper-container').height(slideHeight);
+    });
+    var tabsSwiper = new Swiper('.wui-swiper-container',{
+         speed:500,
+         onSlideChangeStart: function() { 
+            xlog('tabsSwiper');
+            $(".wui-tabs .active").removeClass('active');
+            $(".wui-tabs a").eq(tabsSwiper.activeIndex).addClass('active');
+         }
+     });
+ 
+     $(".wui-tabs a").on('touchstart mousedown',function(e){
+         e.preventDefault();
+         $(".wui-tabs .active").removeClass('active');
+         $(this).addClass('active');
+         tabsSwiper.swipeTo($(this).index());
+     });
+});
+</script>
+{% endblock %}

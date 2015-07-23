@@ -125,3 +125,8 @@ def is_js_config(request):
 		return True
 	else:
 		return False
+
+
+def is_request_for_cloud_housekeeper(request):
+	url = __get_request_url(request)
+	return url.find('/cloud_housekeeper/') >= 0

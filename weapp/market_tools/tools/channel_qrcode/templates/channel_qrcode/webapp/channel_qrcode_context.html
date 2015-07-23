@@ -1,0 +1,47 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css%}
+<style>
+	html,body{
+		background: #ececec;
+	}
+	.xui-spokesmanPage p{
+		font-size: .7rem;
+		padding: 3.15rem 0;
+	}
+	.xui-spokesmanPage img{
+		width:11rem;
+	}
+
+    @media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+    	.xui-spokesmanPage p{
+			padding: 2.25rem 0 1.25rem 0;
+		}
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-spokesmanPage tc">
+	<p>您现在还不是代言人,如果您想成为代言人，<br>可通过公众号联系我们哦！</p>
+	<img src="/static_v2/img/webapp/usercenter/spokesman_img.jpg" alt="" data-allow-autoplay=false>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	(function (doc, win) {
+    var docEl = doc.documentElement,
+    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+    recalc = function () {
+      var clientWidth = docEl.clientWidth;
+      if (!clientWidth) return;
+      docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+    };
+
+    if (!doc.addEventListener) return;
+    win.addEventListener(resizeEvt, recalc, false);
+    doc.addEventListener('DOMContentLoaded', recalc, false);
+})(document, window);
+</script>
+{% endblock %}

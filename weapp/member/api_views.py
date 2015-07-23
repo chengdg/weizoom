@@ -49,6 +49,14 @@ def __get_request_members_list(request):
 	filter_data_args['webapp_id'] = request.user_profile.webapp_id
 	filter_data_args['is_for_test'] = False
 
+	#处理已经被选的会员
+	selected_member_ids_str = request.GET.get('selectedMemberIds',"")
+	selected_member_ids = []
+	if selected_member_ids_str:
+		selected_member_ids = selected_member_ids_str.split(",")
+
+	#处理当前选择的会员
+	current_member_id = int(request.GET.get('currentMemberId',"0"))
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
 	status = request.GET.get('status', '-1')
@@ -119,6 +127,16 @@ def __get_request_members_list(request):
 
 	pageinfo, members = paginator.paginate(members, cur_page, count, query_string=request.GET.get('query', None))
 	for member in members:
+		if str(member.id) in selected_member_ids:
+			member.is_selected = True
+		else:
+			member.is_selected = False
+
+		if member.id == current_member_id:
+			member.is_current_select = True
+		else:
+			member.is_current_select = False
+
 		if request.user.username == 'shengjing360':
 			try:
 				sj_binding_id = ShengjingBindingMember.objects.get(member_id=member.id).id
@@ -160,7 +178,9 @@ def __build_return_member_json(member):
 		'is_subscribed':member.is_subscribed,
 		'pay_money': '%.2f' % member.pay_money,
 		'pay_times': member.pay_times,
-		'unit_price': '%.2f' % member.unit_price
+		'unit_price': '%.2f' % member.unit_price,
+		'is_selected': member.is_selected,
+		'is_current_select': member.is_current_select
 	}
 
 def __count_member_follow_relations(member):

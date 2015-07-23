@@ -25,6 +25,7 @@ from core import paginator
 from models import *
 from promotion import models as promotion_model
 from modules.member.models import *
+from modules.member import integral
 from market_tools.tools.channel_qrcode.models import *
 import module_api as mall_api
 # import models

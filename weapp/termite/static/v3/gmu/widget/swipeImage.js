@@ -16,12 +16,10 @@ gmu.define('SwipeImage', {
 	
 	_create: function() {
 		var $el = this.$el;
-
 		//确定轮播图区域的高度
 		//var ratio = (this._options.width+0.0) / ($el.width() * 1.0);
         //var height = this._options.height / ratio;
         var height = $el.width();
-        console.log(height);
         $el.height(height+'px').css('visibility', 'hidden');
 
 		//生成html
@@ -45,7 +43,6 @@ gmu.define('SwipeImage', {
 			if (this._options.showtitle) {
 				htmls.push('<span class="wui-i-bottomTitle wa-title" style="display:none;">'+swipeImages[0].title+'</span>');
 			}
-
 			if (positionMode === 'dot') {
 				htmls.push('<div class="wui-i-dotPositions">');
 				for (var i = 0; i < swipeImages.length; ++i) {

@@ -1,0 +1,110 @@
+<script id="select-member-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade xui-selectCouponDialog" id="commonSelectCouponDialog">
+    <div class="modal-dialog modal-lg" style="width: 820px;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">选择会员</h3>
+        </div>
+
+        <div class="modal-body" style="min-height: 300px; max-height: 500px; overflow: auto;">
+            <div style="display:inline-block;" class="xa-searchMember"></div>
+            <div
+                    data-ui-role="advanced-table"
+                    data-app="member"
+                    data-api="members/get"
+                    data-template-id="#add-select-member-dialog-tmpl"
+                    data-enable-paginator="true"
+                    data-enable-sort="false"
+                    data-args='{"status":"1","selectedMemberIds":"${selectedMemberIds}"}'
+                    data-item-count-per-page="8"
+                    data-auto-load="false"
+                    class="mt10 mb20"
+                ></div>
+        </div>
+
+        <div class="modal-footer modal-footerBg">
+            <button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">确&nbsp;&nbsp;定</button>
+        </div>
+    </div>
+    </div>
+    </div>
+</script>
+
+<script id="add-select-member-dialog-tmpl" type="text/x-jquery-tmpl">
+    <table id="vipListTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition mb10">
+        <thead style="background:#c8d2e5;">
+            <tr>
+                <th width="170">用户名称</th>
+                <th>用户等级</th>
+                <th width="120">消费总额</th>
+                <th width="80">平均客单价</th>
+                <th width="120">购买次数</th>
+                <th width="120">拥有积分</th>
+                <th width="40">操作</th>
+            </tr>
+        </thead>
+        <tbody id='vip_list'>
+            {{if items.length}}
+                {{each(i, vip) items}}
+                <tr class="xb-stripedTable" data-id="${vip.id}">
+                    <td class="text_nowrap" style="max-width:170px;">
+                        {{html vip.username_truncated}}
+                    </td>
+                    <td>
+                        ${vip.grade_name}
+                    </td>
+                    <td>
+                        ${vip.pay_money}
+                    </td>
+                    <td>
+                        ${vip.unit_price}
+                    </td>
+                    <td>
+                        ${vip.pay_times}
+                    </td>
+                    <td>
+                        ${vip.integral}
+                    </td>
+                    <td>
+                    {{if !vip.is_selected}}
+                        {{if vip.is_current_select}}
+                            <label class="btn lh20 btn-primary m0 checked" style="border-radius:3px;">
+                            <input type="checkbox" autocomplete="off" class="" ><span>已选择</span>
+                            </label>
+                        {{else}}
+                            <label class="btn lh20 btn-primary m0" style="border-radius:3px;">
+                            <input type="checkbox" autocomplete="off" class="xa-selectMember" ><span>选取</span>
+                            </label>
+                        {{/if}}
+                    {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+            {{else}}
+                <tr><td colspan='7'>还没有数据</td></tr>
+            {{/if}}
+        </tbody>
+    </table>
+</script>
+
+<script id="search-member-tmpl-src" type="text/x-jquery-tmpl">
+    <span class="m10">会员昵称</span>
+    <input style="width:150px;"type="text" name="member_name" id="member_name">
+    <span class="m10">分组</span>
+    <select style="width: 120px;" id="member_group">
+        <option value="-1">全部</option>
+        {{each(i, tag) tags}}
+        <option value="${tag.id}" name="tag">${tag.name}</option>
+        {{/each}}
+    </select>
+    <span class="m10">等级</span>
+    <select style="width: 120px;" id="member_grade">
+        <option value="-1">全部</option>
+        {{each(i, grade) grades}}
+        <option value="${grade.id}" name="grade">${grade.name}</option>
+        {{/each}}
+    </select>
+    <a class="btn btn-primary ml30 mr10 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+    <a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
+</script>

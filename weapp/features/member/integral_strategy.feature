@@ -22,6 +22,7 @@ Background:
 			"click_shared_url_increase_count_for_author":21, 
 			"buy_via_shared_url_increase_count_for_author":31, 
 			"increase_count_after_buy":11,
+			"click_shared_url_increase_count":11,
 			"buy_increase_count_for_father":10,
 			"member_integral_strategy_settings_detail":[{
 				"increase_count_after_buy":"基础奖励+0.3*成交金额",
@@ -77,7 +78,7 @@ Scenario:点击分享的链接给分享者增加积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
-			"content":"好友奖励",
+			"content":"好友点击分享链接奖励奖励",
 			"integral":21
 		},{
 			"content":"首次关注",
@@ -92,10 +93,10 @@ Scenario:点击分享的链接给分享者增加积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
-			"content":"好友奖励",
+			"content":"好友点击分享链接奖励奖励",
 			"integral":21
 		},{
-			"content":"好友奖励",
+			"content":"好友点击分享链接奖励奖励",
 			"integral":21
 		},{
 			"content":"首次关注",
@@ -109,13 +110,13 @@ Scenario:点击分享的链接给分享者增加积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
-			"content":"好友奖励",
+			"content":"好友点击分享链接奖励奖励",
 			"integral":21
 		},{
-			"content":"好友奖励",
+			"content":"好友点击分享链接奖励奖励",
 			"integral":21
 		},{
-			"content":"好友奖励",
+			"content":"好友点击分享链接奖励奖励",
 			"integral":21
 		},{
 			"content":"首次关注",

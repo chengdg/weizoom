@@ -254,6 +254,7 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.MemberMiddleware',
     'modules.member.middleware.WebAppUserMiddleware',
     'modules.member.middleware.RedirectByFmtMiddleware',
+    'modules.member.middleware.RefuelingMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -448,6 +449,7 @@ INSTALLED_APPS = [
     'notice',
     'svsmon',
 
+    'cloud_housekeeper',
     # Third-party apps
     # 'django_extensions',
 
@@ -682,6 +684,9 @@ MIDDLEWARE_CLASSES.extend([
     'core.middleware.WeizoomMallMiddleware',
     'core.middleware.WebAppPageVisitMiddleware',
     'core.middleware.LocalCacheMiddleware',
+
+    # 云管家
+    'cloud_housekeeper.middleware.CloudSessionMiddleware',
 ])
 
 

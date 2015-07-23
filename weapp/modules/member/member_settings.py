@@ -27,3 +27,7 @@ else:
 	MESSAGE_URL_QUERY_FIELD = 'sct'
 
 URL_OPENID = 'opid'
+
+
+REFUELING_FID = 'fid'
+

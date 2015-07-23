@@ -17,7 +17,7 @@ import member_settings
 from models import *
 from mall.models import Order
 
-from watchdog.utils import watchdog_error, watchdog_fatal, watchdog_info
+from watchdog.utils import watchdog_error, watchdog_fatal, watchdog_info, watchdog_warning
 import module_api
 import hashlib
 
@@ -70,6 +70,7 @@ class IntegralCaculator(object):
 		# if to_task :
 		# 	update_member_integral.delay(member.id, follower_member_id, integral_increase_count, event_type, webapp_user_id)
 		# else:
+		print '-------------------------------in update_member_integral',member.id,integral_increase_count, event_type
 		update_member_integral(member.id, follower_member_id, integral_increase_count, event_type, webapp_user_id)
 		
 	def _get_integral_strategy(self, request):
@@ -90,7 +91,7 @@ class IntegralCaculator(object):
 			return IntegralStrategySttings.objects.get(webapp_id=webapp_id)
 		except:
 			notify_message = u"根据webapp_id获取积分策略失败, webapp_id={}".format(webapp_id)
-			watchdog_fatal(notify_message)
+			watchdog_warning(notify_message)
 			return None
 
 	def increase_for_bring_new_customer_by_qrcode(self, user_profile, member, followed_member):
@@ -116,12 +117,30 @@ class IntegralCaculator(object):
 			watchdog_error(notify_message)
 
 	#成为会员时增加积分
-	def increase_for_be_member_first(self, user_profile, member):
+	def increase_for_be_member_first(self, user_profile, member, integral_settings=None):
 		if user_profile is None:
 			#如果request没有user_profile信息，即不知道所访问的店铺，那么不
 			#进行任何操作
 			return
-		self._increase_for_be_member_first(user_profile, member)
+
+		if integral_settings is None:
+			integral_settings = self._get_integral_strategy_by_webappid(user_profile.webapp_id)
+
+		if integral_settings is None:
+			notify_message = u'分享二维码带来关注增加积分失败，因为获取不到对应的积分策略，会员id:{}'.format(member.id)
+			wat(notify_message)
+			return
+		else:
+			be_member_increase_count = integral_settings.be_member_increase_count
+			if be_member_increase_count > 0:
+				self.increase_member_integral(
+					member,
+					be_member_increase_count,
+					FIRST_SUBSCRIBE,
+					)
+
+
+		#self._increase_for_be_member_first(user_profile, member)
 
 	#成为会员时增加积分
 	def _increase_for_be_member_first(self, user_profile, member):
@@ -203,6 +222,7 @@ class IntegralCaculator(object):
 
 	#有人通过a用户分享的链接成功购买后对a增加相应的积分
 	def increase_for_buy_via_shared_url(self, request, order=None):
+		#print '=====================in increase_for_buy_via_shared_url',request.user_profile
 		if request.user_profile is None:
 			#如果request没有user_profile信息，即不知道所访问呢的店铺，那么不
 			#进行任何操作
@@ -223,7 +243,7 @@ class IntegralCaculator(object):
 					increase_count_integral = int(order_money_percentage_for_each_buy * float(order.final_price))
 					if increase_count_integral > 0:
 						self.increase_member_integral(member, increase_count_integral, BUY_AWARD)
-						
+		#print '======================1=', request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		#获取分享者信息
 		followed_member_token = get_followed_member_token_from_cookie(request)
 		if followed_member_token is None or len(followed_member_token) == 0:
@@ -232,7 +252,7 @@ class IntegralCaculator(object):
 			followed_member = get_member_by_member_token(followed_member_token)
 		#获取购买者信息
 
-
+		#print '======================2='
 		if followed_member and member and followed_member.id == member.id:
 			#如果是同一人不进行任何操作
 			return
@@ -240,7 +260,7 @@ class IntegralCaculator(object):
 		
 		#为购买者增加积分
 		
-
+		#print '======================3=',followed_member_token
 		#为分享者增加积分
 		if followed_member:
 			if integral_strategy is None:
@@ -249,6 +269,7 @@ class IntegralCaculator(object):
 				watchdog_error(notify_message)
 			else:
 				increase_count = integral_strategy.buy_via_shared_url_increase_count_for_author
+				#print '======================4=',
 				if increase_count > 0:
 					# order_money_percentage_for_each_buy = float(integral_strategy.order_money_percentage_for_each_buy)
 					# if order and order.final_price > 0 and order_money_percentage_for_each_buy > 0:
@@ -462,12 +483,12 @@ def increase_father_member_integral_by_child_member_buyed(order, webapp_id):
 	if integral_settings.count() > 0 and member:
 		father_member = MemberFollowRelation.get_father_member(member.id)
 		if father_member and integral_settings[0].buy_via_offline_increase_count_for_author != 0:
-			increase_member_integral(father_member, integral_settings[0].buy_via_offline_increase_count_for_author, u'好友奖励')
+			increase_member_integral(father_member, integral_settings[0].buy_via_offline_increase_count_for_author, BUY_INCREST_COUNT_FOR_FATHER)
 			if order.final_price > 0 and integral_settings[0].buy_via_offline_increase_count_percentage_for_author:
 				try:
 					buy_via_offline_increase_count_percentage_for_author = float(integral_settings[0].buy_via_offline_increase_count_percentage_for_author)
 					integral_count = int(order.final_price * buy_via_offline_increase_count_percentage_for_author)
-					increase_member_integral(father_member, integral_count, u'好友奖励')
+					increase_member_integral(father_member, integral_count, BUY_INCREST_COUNT_FOR_FATHER)
 				except:
 					notify_message = u"increase_father_member_integral_by_child_member_buyed cause:\n{}".format(unicode_full_stack())
 					watchdog_error(notify_message)
@@ -491,7 +512,7 @@ def increase_detail_integral_for_after_buy(webapp_user_id, webapp_id, final_pric
 					increase_count = float(integral_settings_detail.increase_count_after_buy) * final_price
 					if (increase_count - int(increase_count)) > 0:
 						increase_count = int(increase_count) + 1
-					increase_member_integral(member, increase_count, u'购买奖励')
+					increase_member_integral(member, increase_count, BUY_AWARD)
 
 def increase_detail_father_member_integral_by_child_member_buyed(webapp_user_id, webapp_id, final_price):
 	integral_settings_detail =	module_api.get_integral_detail(webapp_id)
@@ -505,7 +526,7 @@ def increase_detail_father_member_integral_by_child_member_buyed(webapp_user_id,
 				if (increase_count - int(increase_count)) > 0:
 					increase_count = int(increase_count) + 1
 
-				increase_member_integral(father_member, increase_count, u'好友奖励')
+				increase_member_integral(father_member, increase_count, BUY_INCREST_COUNT_FOR_FATHER)
 
 def increase_detail_integral(webapp_user_id, webapp_id, final_price):
 	if is_integral_detail_used(webapp_id):

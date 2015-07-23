@@ -377,15 +377,12 @@ class RedirectByFmtMiddleware(object):
 		# 不处理临时二维码请求 by liupeiyu
 		if request.is_access_temporary_qrcode_image:
 			return None
-
 		#不处理非webapp和非pcmall的请求
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
-
 		#不处理非微信请求
 		if not request.user.is_from_weixin:
 			return None
-
 		if request.user_profile and request.user_profile.is_oauth:
 			return None
 
@@ -393,7 +390,6 @@ class RedirectByFmtMiddleware(object):
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
 		if (url_fmt is None) or (len(url_fmt) == 0):
 			return None
-
 		#不处理post请求
 		if request.POST:
 			return None
@@ -403,7 +399,8 @@ class RedirectByFmtMiddleware(object):
 			request.event_data = event_handler_util.extract_data(request)
 			event_handler_util.handle(request, 'shared_url_page_visit')
 			#将fmsurl放入cookie
-			shared_url_digest = visit_session_util.get_request_url_digest(request)
+			#shared_url_digest = visit_session_util.get_request_url_digest(request)
+			shared_url_digest = _get_hexdigest_url(request.get_full_path())
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
 			return response
 
@@ -931,10 +928,11 @@ class OAUTHMiddleware(object):
 			#cookie_openid_webapp_id  ==  'openid____webappid'
 			cookie_openid_webapp_id = request.COOKIES.get(member_settings.OPENID_WEBAPP_ID_KEY, None)
 			request_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
-			if is_request_for_api(request):
+			if is_request_for_api(request) or 'pay' in request.get_full_path():
 				request_fmt = True
 			#cookie_webapp_id = request.COOKIES.get('webapp_id', None)
 			#1 如果cookie中没有 cookie_open_id or cookie_opeqqqn_id 则进行授权
+			#print '================middleware cookie :', request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 			if (cookie_openid_webapp_id is None) or (not request_fmt):
 				is_oauth = True
 			else:
@@ -963,7 +961,6 @@ class OAUTHMiddleware(object):
 								request.member = member
 								request.social_account = social_account
 								request.webapp_user = self._get_webapp_user(request.member)
-
 							#处理sct
 							response = self.process_sct_in_url(request)
 							if response:
@@ -992,7 +989,7 @@ class OAUTHMiddleware(object):
 				if response:
 					return response
 
-				if response_data.has_key('openid'):
+				if response_data.has_key('openid'):	
 					weixin_user_name = response_data['openid']
 					access_token = response_data['access_token']
 					social_accounts = SocialAccount.objects.filter(openid=weixin_user_name, webapp_id=request.user_profile.webapp_id)
@@ -1047,8 +1044,9 @@ class OAUTHMiddleware(object):
 		response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, social_account.token, max_age=60*60*24*365)
 		if fmt != member.token:
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
-			shared_url_digest = hashlib.md5(request.get_full_path()).hexdigest()
+			shared_url_digest = _get_hexdigest_url(request.get_full_path())
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
+		print '----------process_current_url', new_url
 		return response
 
 	def process_fmt_in_url(self, request):
@@ -1070,9 +1068,13 @@ class OAUTHMiddleware(object):
 
 				new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, new_fmt)
 				response = HttpResponseRedirect(new_url)
+
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, url_fmt, max_age=60*60*24*365)
-				shared_url_digest = hashlib.md5(request.get_full_path()).hexdigest()
+				
+				shared_url_digest = _get_hexdigest_url(request.get_full_path())
+				
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
+				print '----------process_fmt_in_url', new_url
 				return response
 		return None
 
@@ -1097,6 +1099,7 @@ class OAUTHMiddleware(object):
 				response = HttpResponseRedirect(new_url)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
+				print '----------process_sct_in_url', new_url
 				return response
 			except:
 				notify_message = u"处理url sct失败 cause:\n{}".format(unicode_full_stack())
@@ -1202,7 +1205,7 @@ def get_oauthinfo_by(request):
 	# }
 
 	# url = 'https://api.weixin.qq.com/sns/oauth2/access_token?'
-	component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=appid)[0]
+	component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=appid, user_id=request.user_profile.user_id)[0]
 	component_info = component_authed_appid.component_info
 	component_access_token = component_info.component_access_token
 	data = {
@@ -1280,6 +1283,18 @@ def process_to_oauth(request, weixin_mp_user_access_token, code=None, appid=None
 		if 'code' in request.GET:
 			redirect_url = url_helper.remove_querystr_filed_from_request_url(request, 'code')
 
+		if 'appid' in request.GET:
+			redirect_url = url_helper.remove_querystr_filed_from_request_path(redirect_url, 'appid')
+
+		if 'scope' in request.GET:
+			redirect_url = url_helper.remove_querystr_filed_from_request_path(redirect_url, 'scope')
+
+		if 'state' in request.GET:
+			redirect_url = url_helper.remove_querystr_filed_from_request_path(redirect_url, 'state')
+
+		if 'component_appid' in request.GET:
+			redirect_url = url_helper.remove_querystr_filed_from_request_path(redirect_url, 'component_appid')
+
 		if not redirect_url.startswith('http'):
 			redirect_url = "http://%s%s" % (request.META['HTTP_HOST'], redirect_url)
 
@@ -1328,7 +1343,7 @@ class ProcessOpenidMiddleware(object):
 				response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, social_account.openid+"____"+social_account.webapp_id, max_age=60*60*24*365)
 				response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, social_account.token, max_age=60*60*24*365)
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
-
+				print '----------ProcessOpenidMiddleware', new_url
 				return response
 			else:
 				new_url = str(request.get_full_path())
@@ -1339,6 +1354,7 @@ class ProcessOpenidMiddleware(object):
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
 				response.delete_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.OPENID_WEBAPP_ID_KEY)
+				print '----------ProcessOpenidMiddleware2', new_url
 				return response
 		return None
 
@@ -1400,3 +1416,69 @@ def _process_error_openid(openid, user_profile, request=None):  #response_rule, 
 						url = request.get_full_path(),
 						)
 	return member, social_account
+
+class RefuelingMiddleware(object):
+	"""
+	加油活动中间件
+	"""
+	def process_request(self, request):
+		#added by slzhu
+		if is_pay_request(request):
+			return None
+
+		#对于支付请求，不处理
+		if request.is_access_pay or request.is_access_paynotify_callback:
+			return None
+
+		# 不处理临时二维码请求 by liupeiyu
+		if request.is_access_temporary_qrcode_image:
+			return None
+
+		#对于非webapp请求和非pc商城地方请求不进行处理
+		if (not request.is_access_webapp) and (not request.is_access_pcmall):
+			return None
+
+		if '/weixin/js/config' in request.get_full_path():
+			return None
+
+		#设置request.uuid
+
+		if request.member:
+			if 'refueling_page' in request.get_full_path():
+				url_fid = request.GET.get(member_settings.REFUELING_FID, None)
+				cookie_fid = request.COOKIES.get(member_settings.REFUELING_FID, None)
+				crmid = request.GET.get('crmid', None)
+				if not url_fid:
+					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), member_settings.REFUELING_FID, request.member.id)
+					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, 'crmid')
+					response = HttpResponseRedirect(new_url)
+					response.set_cookie(member_settings.REFUELING_FID, request.member.id, max_age=60*60*24*365)
+					return response
+				else:
+
+					if url_fid != str(request.member.id):
+						new_url = url_helper.remove_querystr_filed_from_request_url(request, 'crmid')
+						new_url = url_helper.remove_querystr_filed_from_request_url(new_url, member_settings.REFUELING_FID)
+						new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.REFUELING_FID, request.member.id)
+						response = HttpResponseRedirect(new_url)
+						response.set_cookie(member_settings.REFUELING_FID, url_fid, max_age=60*60*24*365)
+						return response
+					elif crmid and crmid == str(request.member.id):
+						print '==================>>>crmid:', crmid,  crmid == str(request.member.id), request.member.id
+						new_url = url_helper.remove_querystr_filed_from_request_url(request, 'crmid')
+						new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.REFUELING_FID, request.member.id)
+						response = HttpResponseRedirect(new_url)
+						response.set_cookie(member_settings.REFUELING_FID, request.member.id, max_age=60*60*24*365)
+						return response
+		return None
+
+def _get_hexdigest_url(shared_url):
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'from')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'isappinstalled')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'code')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'state')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'appid')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
+	shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
+	shared_url_digest = hashlib.md5(shared_url).hexdigest()
+	return shared_url_digest

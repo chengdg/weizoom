@@ -1,6 +1,6 @@
 @charset "utf-8";
 /*CSS reset*/
-html{color:#000;background:#FFF;}
+html{color:#333;background:#FFF;}
 body{font-family:Arial;word-wrap:break-word;}
 body,div,dl,dt,dd,ul,ol,li{margin:0;padding:0;}
 .xui-clearListStyle{

@@ -1,0 +1,95 @@
+{% extends "cloudHousekeeper.html" %}
+{% load common_tag %}
+{% block css %}
+{% endblock %}
+{% block content-panel %}
+
+<div class="xui-reportDetailPage">
+    <div class="xui-section xui-head">
+        <div class="xui-interval">
+            日期：{{ report.start_date|date:"Y-m-d" }}至{{ report.end_date|date:"Y-m-d" }}
+        </div>
+        <div class="xui-brandValue">
+            <span class="xui-title">微品牌价值</span>
+            <span class="xui-Value"><span style="font-size:15px;">￥</span>1024</span>
+            <span class="xui-down"><i class="xui-change"></i>￥865</span>
+        </div>
+        <div class="xui-table">
+            <table>
+                <tr class="xui-title">
+                    {% if report.status == 1 %}
+                        <td class="xui-first">本周成交额</td>
+                    {% else %}
+                        <td class="xui-first">本月成交额</td>
+                    {% endif %}
+                    
+                    {% if report.status == 1 %}
+                        <td class="xui-second">本周成交订单</td>
+                    {% else %}
+                        <td class="xui-second">本月成交订单</td>
+                    {% endif %}
+                    <td class="xui-third">客单价</td>
+                </tr>
+                <tr class="xui-figure">
+                    <td>￥{{ transaction_money }}</td>
+                    <td>{{ transaction_count }}</td>
+                    <td>￥{{ vis_price }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="xui-table pb0">
+            <table>
+                <tr class="xui-title">
+                    <td class="xui-first">新增会员数</td>
+                    <td class="xui-second">购买人数</td>
+                    <td class="xui-third">待发货订单</td>
+                </tr>
+                <tr class="xui-figure">
+                    <td>{{ new_member_count }}</td>
+                    <td>{{ buyer_count }}</td>
+                    <td>56</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="xui-section">
+        <span class="xui-chartTitle">微品牌价值趋势图</span>
+        <div class="xui-timeBtn">
+            <div class="xui-active">周</div>
+            <div>月</div>
+        </div>
+        <div class=""></div>
+    </div>
+    <div class="xui-section">
+        <span class="xui-chartTitle">销售额趋势图</span>
+        <div class="xui-timeBtn">
+            <div class="xui-active">周</div>
+            <div>月</div>
+        </div>
+        <div class=""></div>
+    </div>
+    <div class="xui-section">
+        <span class="xui-chartTitle">成交额趋势图</span>
+        <div class="xui-timeBtn">
+            <div class="xui-active">周</div>
+            <div>月</div>
+        </div>
+        <div class=""></div>
+    </div>
+    <div class="xui-footNav">
+        <a href="/cloud_housekeeper/home/">实时统计</a>
+        <a href="/cloud_housekeeper/reports/">历史报告</a>
+    </div>
+</div>
+    
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src=""></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+</script>
+{% endblock %}

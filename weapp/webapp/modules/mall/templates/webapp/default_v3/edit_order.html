@@ -55,7 +55,6 @@
                 </div> -->
 
             </fieldset>
-
             <fieldset class="hidden">
                 <input id="ship_id" name="ship_id" value="{% if order %}{{ order.ship_id }}{% endif %}" type="hidden" >
                 <input id="delivery_plan_id" name="delivery_plan_id" value="{{ delivery_plan_id }}" type="hidden" >
@@ -64,6 +63,7 @@
                 <input id="ship_tel" name="ship_tel" type="hidden" value="{% if order %}{{ order.ship_tel }}{% endif %}" >
                 <input id="area" name="area" class="xa-areaInput" data-ui-role="areaPop" type="hidden" value="{% if order %}{{ order.area }}{% endif %}" data-area-str="{% if order %}{{order.get_str_area}}{% endif %}">
                 <input id="ship_address" name="ship_address" type="hidden" value="{% if order %}{{ order.ship_address }}{% endif %}" >
+                <input id="refueling_order" name="refueling_order" value="{{ refueling_order }}" type="hidden" >
             </fieldset>
             <input type="hidden" name="integral" id="integral" value="0" />
 

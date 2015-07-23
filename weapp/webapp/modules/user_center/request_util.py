@@ -228,7 +228,7 @@ def get_integral_log(request):
 		raise Http404('不存在该会员')
 
 	# 2. 获取与该会员对应的积分日志列表（按日期倒叙）
-	member_integral_logs = list(MemberIntegralLog.objects.filter(member=member).order_by('-created_at'))
+	member_integral_logs = MemberIntegralLog.objects.filter(member=member).order_by('-created_at')
 
 	# 3. 组织积分日志结构，将同一天好友奖励的积分日志在一条记录中显示，并且显示好友头像
 	organized_integral_log_list = __get_organized_integral_log_list(member_integral_logs)
@@ -290,8 +290,8 @@ def __is_dueto_friend_action(log):
 	存在follower_member_token或者event_type是‘好友奖励’的日志为‘好友奖励’日志，返回True；
 	否者返回False
 	"""
-	if log and (log.follower_member_token or log.event_type == FOLLOWER_CLICK_SHARED_URL):
-		return True
+	# if log and (log.follower_member_token or log.event_type == FOLLOWER_CLICK_SHARED_URL):
+	# 	return True
 
 	return False
 
@@ -478,3 +478,127 @@ def get_binded_user_info(request):
 	})
 	return render_to_response('%s/binding_info.html' % request.template_dir, c)
 
+
+def get_refueling_page(request):
+	member = Member.objects.get(id=request.member.id)
+	webapp_user = request.webapp_user
+	member_refuelings = MemberRefueling.objects.filter(member=member)
+	product_id = Product.objects.filter(owner_id=request.webapp_owner_id)[0].id
+	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member.grade_id)
+	can_buy = False
+	cookie_fid = request.COOKIES.get('fid', '')
+	member_fid = cookie_fid
+	member_refueling = None
+	member_refueling_infos = None
+	friend_member = None
+	current_member = False
+	refuelinged = False
+	if cookie_fid:
+		if cookie_fid == str(member.id):
+			"""
+				当前会员信息
+			"""
+			current_member = True
+			if member_refuelings.count() == 0:
+				"""
+				 还没有参加活动
+				"""
+				pass
+			else:
+				member_refueling = member_refuelings[0]
+				member_refueling_infos = MemberRefuelingInfo.objects.filter(member_refueling=member_refueling)
+				if member_refueling_infos.count() >= 15:
+					"""
+						已经符合活动要求
+					"""
+					can_buy = True
+					for member_refueling_has_order in MemberRefuelingHasOrder.objects.filter(member_refueling=member_refueling):
+						if member_refueling_has_order.order_id and Order.objects.get(id=member_refueling_has_order.order_id).status >=3:
+							can_buy = False
+							break
+		else:
+			"""
+				给好友集赞页面
+			"""
+			friend_member = Member.objects.get(id=cookie_fid)
+			member_refuelings = MemberRefueling.objects.filter(member=friend_member)
+
+			if member_refuelings.count() > 0:
+				"""
+					好友分享链接成功
+				"""
+				member_refueling = member_refuelings[0]
+			else:
+				"""
+					好友分享链接失败 创建链接
+				"""
+				try:
+					member_refueling = MemberRefueling.objects.create(member=friend_member)
+				except :
+					member_refueling = MemberRefueling.objects.filter(member=friend_member)[0]
+				
+
+			member_refueling_infos = MemberRefuelingInfo.objects.filter(member_refueling=member_refueling)[:15]
+
+			"""
+				判断是否加油
+			"""
+			refuelinged = True if MemberRefuelingInfo.objects.filter(member_refueling=member_refueling, follow_member=member).count() > 0 else False
+
+	# if member_refuelings.count() > 0:
+	# 	"""
+	# 		已经分享活动
+	# 	"""
+	# 	member_refueling = member_refuelings[0]
+	# 	member_refueling_infos = MemberRefuelingInfo.objects.filter(member_refueling=member_refueling)
+	# 	if member_refueling_infos.count() >= 15:
+	# 		"""
+	# 			已经符合活动要求
+	# 		"""
+			
+	# 		can_buy = True
+	# 		for member_refueling_has_order in MemberRefuelingHasOrder.objects.filter(member_refueling=member_refueling):
+	# 			if member_refueling_has_order.order_id and Order.objects.get(id=member_refueling_has_order.order_id):
+	# 				can_buy = False
+	# 				break
+	# 	else:
+	# 		pass
+	# else:
+	# 	"""
+	# 		未分享活动
+	# 	"""
+	# 	pass
+	# if fid:
+	# 	"""
+	# 	点击好友分享链接而来：显示集赞新
+	# 	"""
+	# 	member_fid = Member.objects.get(id=fid)
+	# 	member_refueling_fms = MemberRefueling.objects.filter(member=member_fid)
+	# 	if member_refueling_fms.count() > 0:
+	# 		member_refueling_fm_infos = MemberRefuelingInfo.objects.filter(member_refueling=member_refueling_fms[0])
+	# else:
+	# 	"""
+	# 	不是通过链接而来 显示普通活动
+	# 	"""
+	# 	pass
+
+	c = RequestContext(request, {
+		'is_hide_weixin_option_menu': False,
+		'page_title': u'找小伙伴帮你加油',
+		'member': request.member,
+		'product': product,
+		'can_buy': can_buy,
+		'member_fid':member_fid,
+		'hide_non_member_cover':True,
+		'member_refueling':member_refueling,
+		'member_refueling_infos':member_refueling_infos,
+		'refueling_count':member_refueling_infos.count() if member_refueling_infos else 0,
+		'cookie_fid':cookie_fid,
+		'member_refuelings':member_refuelings,
+		#'member_refueling_fm_infos': member_refueling_fm_infos,
+		'friend_member':friend_member,
+		'current_member':current_member,
+		'refuelinged': refuelinged
+	})
+	return render_to_response('%s/refueling_page.html' % request.template_dir, c)
+	

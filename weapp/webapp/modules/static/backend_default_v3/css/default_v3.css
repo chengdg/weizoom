@@ -5112,6 +5112,80 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     color:#d00405;
     font-size: 0.8rem;
 }
+/*
+*我的推荐
+*/
+.xui-myRecPage{
+    padding-bottom: 20px;
+}
+.xui-myRecPage .xui-header{
+    padding:20px 15px 20px 93px;
+    border-bottom:1px dashed #eee;
+    margin-bottom: 25px;
+}
+.xui-myRecPage .xui-header img{
+    width:60px;
+    height:60px;
+    border-radius:2px;
+    box-shadow: 0 0 0 1px #eee;
+    position: absolute;
+    left:18px;
+}
+.xui-myRecPage .xui-tag{
+    display: inline-block;
+    background: #cf0404;
+    color:#fff;
+    font-size: .75rem;
+    padding:2px 3px;
+    border-radius: 2px;
+    margin-top: 5px;
+}
+.xui-myRecPage .xui-hasRec{
+    text-align: right;
+    color:#0580ce;
+    font-size: .8rem;
+}
+.xui-myRecPage .xui-qrcode{
+    box-shadow: 0 0 0 1px #eee;
+}
+.xui-myRecPage h2{
+    font-size: .95rem;
+    font-weight: normal;
+    text-align: center;
+    position: relative;
+    margin: 20px 0;
+}
+.xui-myRecPage h2::before,.xui-myRecPage h2::after{
+    position: absolute;
+    content: "";
+    width: 35.2125%;
+    border-top: solid 1px #ccc;
+    -webkit-transform: scaleY(.3);
+    -moz-transform: scaleY(.3);
+    transform: scaleY(.3);
+    top: .5rem;
+}
+.xui-myRecPage h2::before{
+    left: 0;
+}
+.xui-myRecPage h2::after{
+    right: 0;
+}
+.xui-myRecPage .xui-info{
+    width: 90.625%;
+    margin: 0 auto;
+    background: #f9f9f9;
+    border:1px dashed #eee;
+    border-radius: 2px;
+    padding:12px; 
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    font-size: .8rem;
+}
+.xui-myRecPage .xui-info p:first-child{
+    color:#1a1a1a;
+    line-height: 1.2rem;    
+}
 /**
 *媒体查询
 **/

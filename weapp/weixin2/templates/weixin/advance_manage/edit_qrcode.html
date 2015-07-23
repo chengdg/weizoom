@@ -18,13 +18,13 @@
 	<fieldset>
 		<input id="qrcode_id" name="qrcode_id" class="hide" value="{% if qrcode %}{{qrcode.id}}{% else %}0{% endif %}">
 		<div class="control-group mt20 mb15 pl10" >
-			<label class="control-label fl mr10" for="parents_name">二维码名称</label>
-			<div class="controls"> 
+			<label class="control-label fl mr10" for="parents_name" style="font-weight:normal">二维码名称</label>
+			<div class="controls">
 				<input type="text" class="input-xlarge mt3" id="name" name="name" placeholder="输入名称" value="{% if qrcode %}{{ qrcode.name }}{% endif %}" data-validate="required-none" data-validate-name="{{ qrcode.id }}" />
 				<div class="errorHint"></div>
 			</div>
 		</div>
-		<div class="xui-setting mb100 pb100 ml10 mr10">
+		<div class="xui-setting ml10 mr10 clearfix">
 				<div class="xui-row pr" style="border-bottom: none;">
 					<div class="xui-i-left fl"> 扫码奖励： </div>
 					<div class=" fl mt18 ml20">
@@ -34,8 +34,8 @@
 				</div>
 				<div class="xui-row">
 					<div class="xui-i-left fl lh1">成为指定等级会员： </div>
-					<div class="fl mt20 ml10"> 
-						<select class="ml10" name="group_id" id="group_id" data-validate="require-select">
+					<div class="fl mt20 ml10">
+						<select class="ml10 w120" name="group_id" id="group_id" data-validate="require-select">
 						{% for group in groups %}
 							<option value="{{group.id}}"{% if qrcode.grade_id == group.id %}selected="selected"{% endif%}>{{group.name}}</option>
 						{% endfor %}
@@ -50,17 +50,49 @@
 					<input type="radio" value="0" {% if qrcode %}{% ifequal qrcode.re_old_member 0 %}checked{% endifequal %}{% else %}checked{% endif %} style="vertical-align: sub;" class="re_old_member ml10" name="re_old_member" id="re_old_member" class="m10 p20" value='0'>&nbsp; 否
 					</div>
 				</div>
-				<div class="xui-row" style="border-bottom: none;">
+				<div class="xui-row" style="border-bottom: none;min-heigth:60px;">
 					<div class="xui-i-left fl lh1"> 备注： </div>
 					<div class=" fl mt18 ml20">
 						<input style="width:448px;" type="text" id="remark" name="remark" value="{% if qrcode %}{{ qrcode.remark }}{% endif %}">
 					</div>
 				</div>
+				<div class="xui-row xa-bingMember" style="border-bottom: none; {% if qrcode %}{% ifequal qrcode.is_bing_member 1 %}height: 240px;{% endifequal %}{% else %}{% endif %}">
+					<div class="xui-i-left fl lh1"> 关联会员： </div>
+					<div class="fl mt18 ml20" style="text-align:left;">
+						<div class="xa-isBingMember">
+							<input type="radio" style="vertical-align: sub;" {% if qrcode %}{% ifequal qrcode.is_bing_member 0 %}checked{% endifequal %}{% else %}checked{% endif %} class="is_bing_member" name="is_bing_member" id="not_is_bing_member" value='0'>&nbsp; 否
+
+							<input type="radio" value="1" style="vertical-align: sub;" {% if qrcode %}{% ifequal qrcode.is_bing_member 1 %}checked{% endifequal %}{% else %}{% endif %} class="is_bing_member ml10 m10 p20" name="is_bing_member" id="is_bing_member">是
+							{% if qrcode %}
+								{% if qrcode.bing_member_id %}
+									<span class="xa-selectMemberName ml10 {%ifequal qrcode.is_bing_member 0 %}hide{%endifequal%}" data-id="{{qrcode.bing_member_id}}">
+										会员昵称：{{qrcode.bing_member_name|safe}}
+									</span>
+								{% else %}
+									<span class="xa-selectMemberName ml10"></span>
+									<span class="ml10 xa-selectMemberDailog hide">
+										<a href="javascript:void(0);">选择会员</a>
+									</span>
+								{% endif %}
+							{% else %}
+								<span class="xa-selectMemberName ml10"></span>
+								<span class="ml10 xa-selectMemberDailog hide">
+									<a href="javascript:void(0);">选择会员</a>
+								</span>
+							{% endif %}
+						</div>
+						<div class="mt10 xa-memberInfo {% if qrcode %}{% ifequal qrcode.is_bing_member 0 %}hide{% endifequal %}{% else %}hide{% endif %}">
+							<input style="width:348px;" type="text" id="member_title" name="member_title"  placeholder="设置会员头衔" value="{% if qrcode and qrcode.bing_member_id %}{{qrcode.bing_member_title}}{% endif %}" maxlength="5">
+							<p class="mt10" style="color:#9a9a9a;">设置后会在二维码页面显示头像名称，限制在5个字以内</p>
+							<textarea class="mt10 md10" name="qrcode_desc" id="qrcode_desc" placeholder="二维码描述语" style="width:448px; height: 88px;">{% if qrcode and qrcode.bing_member_id %}{{qrcode.qrcode_desc}}{% endif %}</textarea>
+						</div>
+					</div>
+				</div>
 			</div>
 <!-- 			<div class="xui-setting ml10 mr10 mt80"> -->
-			<div class="xui-Sweep1 mt20 disT" style="">
+			<div class="xui-Sweep1 mt20 disT" style="float:none;">
 					<div class="xui-i-left lh42 tr xui-Sweep pr10 disTc vt" style="width:133px;">扫码后回复：</div>
-					<div class="fl" id="prize_qrcode"> 
+					<div class="fl" id="prize_qrcode">
 						<div id="edit-message-panel"></div>
 					</div>
 				<!-- </div> -->
@@ -69,7 +101,7 @@
 				<div id="weixinMessageEdite r-textMessageZone" style="width: 350px">
 					<div class="control-group mr5 mt5">
 						<div class="controls ml20">
-							<textarea class="input-xlarge hide" id="reply_detail" name="reply_detail" data-ui-role="richtext-editor" data-height="300" data-width="350">{% if qrcode %}{{ qrcode.reply_detail|format_emotion|safe }}{% endif %}</textarea>
+							<textarea class="input-xlarge hide xa-a" id="reply_detail" name="reply_detail" data-ui-role="richtext-editor" data-height="300" data-width="350">{% if qrcode %}{{ qrcode.reply_detail|format_emotion|safe }}{% endif %}</textarea>
 						</div>
 					</div>
 				</div>
@@ -85,7 +117,7 @@
 			<input type="buttom" class="btn btn-defalte w105 h30 xa-cancel" style="background:#fff;" id="submitBtn" value="取&nbsp;&nbsp;消">
 		</div>
 		</div>
-		
+
 	</fieldset>
 
 	<fieldset>
@@ -108,7 +140,52 @@
 		$(".xa-footerBtn").delegate('.xa-cancel','click',function() {
 			window.location.href="/new_weixin/qrcodes/";
 		});
-		
+
+		var is_have_bing_member = {% if qrcode %}{%if qrcode.bing_member_id %}1{%else%}0{%endif%}{%else%}0{% endif %};
+
+		$("#not_is_bing_member").on('click', function(e){
+			var $current = $(e.target);
+			if($current.prop('checked')) {
+				if(is_have_bing_member) {
+					$(".xa-selectMemberName").addClass('hide');
+					$(".xa-memberInfo").addClass("hide");
+				}else{
+					$(".xa-selectMemberDailog").addClass("hide").next().text("选择会员");
+					$(".xa-selectMemberName").text("").removeAttr("data-id");
+					$(".xa-memberInfo").addClass("hide");
+					$(".xa-memberInfo input").val("");
+					$(".xa-memberInfo textarea").val("");
+				}
+				$(".xa-bingMember").css('height', 60);
+			}
+		});
+
+		$("#is_bing_member").on('click', function(e){
+			var $current = $(e.target);
+			if($current.prop('checked')) {
+				if(is_have_bing_member){
+					$(".xa-bingMember").css('height', 240);
+					$(".xa-selectMemberName").removeClass('hide');
+				}else{
+					$(".xa-bingMember").css('height', 240);
+				}
+				$(".xa-selectMemberDailog").removeClass('hide');
+				$(".xa-memberInfo").removeClass("hide");
+			}
+		});
+
+		$(document).delegate('.xa-selectMemberDailog', 'click', function(event) {
+			options = {
+				webapp_id:{{webapp_id}},
+				selectedMemberIds:{{selectedMemberIds}}
+			};
+			options.success = function(data) {
+            	$('.xa-selectMemberName').html("会员昵称："+data[0].username_truncated).attr('data-id', data[0].id);
+            	$('.xa-selectMemberDailog a').text("修改");
+            };
+			W.dialog.showDialog('W.dialog.mall.SelectMemberDialog', options);
+		});
+
 		//提交二维码表单
 		$(".xa-footerBtn").delegate('.xa-submit','click',function() {
 			var name = $.trim($('[name="name"]').val());
@@ -145,6 +222,28 @@
 				materialId = parseInt(paramFields[1]);
 			}
 
+			//验证关联会员
+			if($(":input[name='is_bing_member']:radio:checked").val() == "1"){
+				if(!$('.xa-selectMemberName').attr('data-id')){
+					W.showHint('error', '请选择关联会员');
+					return;
+				}else if(!$.trim($('#member_title').val())){
+					W.showHint('error', '请设置会员头衔');
+					return;
+				}else if(!$.trim($('#qrcode_desc').val())){
+					W.showHint('error', '请设置二维码描述语');
+					return;
+				}
+				else{
+					var is_bing_member = true;
+					var bing_member_id = $('.xa-selectMemberName').attr('data-id');
+					var bing_member_title = $.trim($('#member_title').val());
+					var qrcode_desc = $.trim($('#qrcode_desc').val());
+				}
+			}else{
+				var is_bing_member = false;
+			}
+
 			if (!textContent && materialId == 0) {
 				W.showHint('error', '扫码后回复内容不能为空');
 				return;
@@ -166,31 +265,53 @@
 			var prize_info = JSON.stringify($('#prize_selector').data('view').getPrizeInfo());
 			var args = new Object();
 			var qrcode_id = $.trim($('#qrcode_id').val());
-			if(qrcode_id=="0") 
+			if(qrcode_id=="0")
 			{
-				methodstr="put"; 
+				methodstr="put";
 				args.setting_id=-1;
 			} else {
 				methodstr="post";
 				args.setting_id=qrcode_id;
 			};
-			
+
 			var remark = $.trim($('[name="remark"]').val());
 			var grade_id = $.trim($('[name="group_id"]').val());
 			var re_old_member = $('input[name="re_old_member"]:checked').val();
+
+			if(is_bing_member){
+				var data = {
+					name: name,
+					setting_id: qrcode_id,
+					prize_info: prize_info,
+					grade_id: grade_id,
+					remark: remark,
+					reply_type: replyType,
+					reply_detail: textContent,
+					reply_material_id: materialId,
+					re_old_member: re_old_member,
+					is_bing_member: is_bing_member,
+					bing_member_id: bing_member_id,
+					bing_member_title: bing_member_title,
+					qrcode_desc: qrcode_desc
+				}
+			}else{
+				var data = {
+					name: name,
+					setting_id: qrcode_id,
+					prize_info: prize_info,
+					grade_id: grade_id,
+					remark: remark,
+					reply_type: replyType,
+					reply_detail: textContent,
+					reply_material_id: materialId,
+					re_old_member: re_old_member,
+					is_bing_member: is_bing_member
+				}
+			}
+
 			if (methodstr == 'post'){
 				W.resource.new_weixin.Qrcode.post({
-					data:{
-						name: name,
-						setting_id: qrcode_id,
-						prize_info: prize_info,
-						grade_id: grade_id,
-						remark: remark,
-						reply_type: replyType,
-						reply_detail: textContent,
-						reply_material_id: materialId,
-						re_old_member: re_old_member
-					},
+					data:data,
 					success: function(data) {
 						W.showHint('success', '保存成功');
 						window.location.href="/new_weixin/qrcodes/";
@@ -202,18 +323,7 @@
 			}
 			if (methodstr == 'put'){
 				W.resource.new_weixin.Qrcode.put({
-					data:{
-						name: name,
-						setting_id: qrcode_id,
-						prize_info: prize_info,
-						reply_type: replyType,
-						grade_id: grade_id,
-						remark: remark,
-						reply_type: replyType,
-						reply_detail: textContent,
-						reply_material_id: materialId,
-						re_old_member: re_old_member
-					},
+					data:data,
 					success: function(data) {
 						W.showHint('success', '保存成功');
 						window.location.href="/new_weixin/qrcodes/";
@@ -224,9 +334,9 @@
 					}
 				});
 			}
-			
+
 		});
-		
+
 
 		var answerContent = W.loadJSON('qrcode_answer');
 		var options = {

@@ -1,3 +1,4 @@
+
 {% load webapp_filter %}
 {% load project_filter %}
 <!DOCTYPE html>
@@ -119,6 +120,7 @@
 
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";
+            W.memberId = "{{request.member.id}}";
             W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
             W.curRequestMemberToken = "{{ cur_request_member.token }}";
             W.visitHistory = "{{ visit_histroy_url }}";
@@ -149,6 +151,10 @@
                     link = link +"&fmt="+W.curRequestMemberToken;
                 }
             }
+            if (link.indexOf('refueling') != -1){
+                link = link +"&crmid="+ W.memberId;
+            }
+
             $(document).ready(function() {
                 $('a').highlight();
                 FastClick.attach(document.body);
@@ -180,6 +186,7 @@
                     success : function(res) {
                        //alert('success'+res); 增加分享链接api
                      //  alert('success1')
+            
                        W.getApi().call({
                             app: 'webapp',
                             api: 'project_api/call',

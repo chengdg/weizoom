@@ -1563,3 +1563,79 @@ def redirect_product_review(request):
                        })
     return render_to_response(
         '%s/product_review_successful.html' % request.template_dir, c)
+
+
+########################################################################
+# edit_order: 编辑订单
+########################################################################
+def edit_refueling_order(request):
+	refueling_id = request.GET.get('refueling_id', None)
+	member_refueling = MemberRefueling.objects.get(id=refueling_id)
+	products = _get_products(request)
+
+	product = products[0]
+	product.price = 49
+	webapp_user = request.webapp_user
+	webapp_owner_id = request.webapp_owner_id
+
+	#创建order对象
+	order = mall_api.create_order(webapp_owner_id, webapp_user, product)
+	order.product_groups = mall_api.group_product_by_promotion(request, products)
+
+	#测试订单，修改价钱和订单类型
+	type = request.GET.get('type', '')
+	order = mall_api.update_order_type_test(type, order)
+	order.final_price = 49
+	#获得运费计算因子
+	#postage_factor = order.used['postage_config'].factor
+	#获得运费配置，支持前端修改数量、优惠券等后实时计算运费
+	postage_factor = product.postage_config['factor']
+	#获取积分信息
+	integral_info = webapp_user.integral_info
+	integral_info['have_integral'] = (integral_info['count'] > 0)
+
+	#获取优惠券
+	coupons, limit_coupons = __fill_coupons_for_edit_order(webapp_user, products)
+
+	#获取订单中用户的可用积分
+	order.usable_integral = 0#mall_api.get_order_usable_integral(order, integral_info)
+
+	#获取商城配置
+	mall_config = request.webapp_owner_info.mall_data['mall_config']#MallConfig.objects.get(owner_id=webapp_owner_id)
+	use_ceiling = request.webapp_owner_info.integral_strategy_settings.use_ceiling
+
+	request.should_hide_footer = True
+	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
+	# delivery_dates = request.REQUEST.get('delivery_dates', '')
+	
+
+	jsons = [{
+		"name": "postageFactor",
+		"content": postage_factor
+	}, {
+		"name": "integralInfo",
+		"content": integral_info
+	}, {
+		"name": "productGroups",
+		"content": __format_product_group_price_factor(order.product_groups)
+	}]
+	refueling_order = '%s_49' % refueling_id
+	c = RequestContext(request, {
+		'is_hide_weixin_option_menu': True,
+		'page_title': u'编辑订单',
+		'order': order,
+		'mall_config': mall_config,
+		'integral_info': 0,
+		'coupons': None,
+		'limit_coupons': None,
+		# 'is_delivery_plan': 1 if product.type == 'delivery' else 0,	#通过该类型判断商品是配送套餐还是其他商品
+		# 'delivery_plan_id': delivery_plan_id,	#配送套餐id
+		# 'delivery_dates': delivery_dates,	#配送套餐计划,
+		'hide_non_member_cover': True,
+		'use_ceiling': None,
+		'jsons': jsons,
+		'refueling_order': refueling_order
+	})
+	if hasattr(request, 'is_return_context'):
+		return c
+	return render_to_response('%s/edit_order.html' % request.template_dir, c)

@@ -128,7 +128,7 @@ def record_shared_url(request):
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
 			shared_url = remove_querystr_filed_from_request_url(shared_url, 'workspace_id')
 			shared_url_digest = hashlib.md5(shared_url).hexdigest()
-
+			# try:
 			if MemberSharedUrlInfo.objects.filter(member=member, shared_url_digest=shared_url_digest).count() == 0:
 				MemberSharedUrlInfo.objects.create(
 					member = member,
@@ -137,7 +137,44 @@ def record_shared_url(request):
 					shared_url_digest = shared_url_digest,
 					title=title
 					)
+			# except:
+			# 	pass
+
+			if 'refueling' in shared_url:
+				if MemberRefueling.objects.filter(member=member).count() == 0:
+					MemberRefueling.objects.create(member=member)
+			
 	else:
 		print 'no-------------------member'
 	response = create_response(200)
+	return response.get_response()
+
+def record_refueling_log(request):
+	fid = request.GET.get('fid', None)
+	current_member = request.member
+	data = dict()
+	response = create_response(200)
+	if fid:
+		member = Member.objects.get(id=fid) 
+		if MemberRefueling.objects.filter(member=member).count() > 0:
+			member_refueling = MemberRefueling.objects.filter(member=member)[0]
+			if MemberRefuelingInfo.objects.filter(member_refueling=member_refueling, follow_member=current_member).count() == 0:
+				try:
+					MemberRefuelingInfo.objects.create(member_refueling=member_refueling, follow_member=current_member)
+					data['msg'] = u'加油成功'
+				except:
+					"""
+						已经存在
+					"""
+					data['msg'] = u'已加油成功'
+			else:
+				response = create_response(501)
+				data['msg'] = u'已加油成功'
+		else:
+			data['msg'] = u'加油失败,好友未正确分享'
+	else:
+		response = create_response(502)
+		data['msg'] = u'加油失败，无目标会员，请重新点击'
+	response.data = data
+
 	return response.get_response()

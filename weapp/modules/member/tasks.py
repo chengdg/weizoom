@@ -51,8 +51,6 @@ def update_member_pay_info(order):
 			watchdog_error(notify_message)
 
 
-
-@task
 def update_member_integral(member_id, follower_member_id, integral_increase_count, event_type, webapp_user_id, reason="", manager=""):
 	#time.sleep(0.5)
 	integral_increase_count = int(integral_increase_count)

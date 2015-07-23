@@ -2,13 +2,37 @@
 <div class="xui-form disT">
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
-			<label class="">消息内容：</label>
-			<input type="text" class="form-control" id="content" name="content" value="">
+			<label class="">微信昵称：</label>
+			<input type="text" class="form-control" id="name" name="content" value="">
+		</div>
+		<div class="xui-i-item">
+			<label>会员分组：</label>
+			<select id="member_tag" name="member_tag">
+				<option value="-1">全部</option>
+				{{each(i, tag) tags}}
+				<option value="${tag.id}" name="tag">${tag.name}</option>
+				{{/each}}
+			</select>
 		</div>
 	</div>
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
-			<label></label>
+			<label class="">消息内容：</label>
+			<input type="text" class="form-control" id="content" name="content" value="">
+		</div>
+        <div class="xui-i-item">
+            <label>会员等级：</label>
+            <select id="grade" name="grade">
+                <option value="-1">全部</option>
+                {{each(i, grade) grades}}
+                <option value="${grade.id}" name="grade">${grade.name}</option>
+                {{/each}}
+            </select>
+        </div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>消息时间：</label>
 			<input
 				type="text"
 				class="form-control xui-datePicker"
@@ -38,11 +62,11 @@
 			    data-min-el="#start_date"/>
 		</div>
 	</div>
-	<div class="xui-col disTc">
-		<div class="xui-i-item" style="margin-top: -15px;">
-			<label></label>
-			<a type="button" class="xa-search-realtime-message btn btn-primary mr40 xui-fontBold">查&nbsp; &nbsp;询</a>
-		</div>
-	</div>
+	
+</div>
+<div class="tc">
+	<a class="btn btn-primary mr40 xa-search-realtime-message xui-fontBold" href="javascript:void(0);">查询</a>
+	<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重置</a>
+	
 </div>
 </script>

@@ -98,7 +98,7 @@ def get_followed_member_shared_url_info(request):
 	try:
 		return MemberSharedUrlInfo.objects.get(member=followed_member, shared_url_digest=shared_url_digest)
 	except:
-		notify_message = u"从数据库获取会员分享链接信息失败，会员id:{}, shared_url_digest:{}}, cause:\n{}".format(
+		notify_message = u"从数据库获取会员分享链接信息失败，会员id:{}, shared_url_digest:{}, cause:\n{}".format(
 			followed_member.id, shared_url_digest, unicode_full_stack()
 		)
 		watchdog_warning(notify_message)

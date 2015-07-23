@@ -141,3 +141,11 @@ def get_binded_user_info(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.get_binded_user_info(request)
 
+@member_required
+def get_refueling_page(request):
+	"""
+	加油活动页面
+	"""
+	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+	return request_util.get_refueling_page(request)
+

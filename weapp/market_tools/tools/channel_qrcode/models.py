@@ -29,6 +29,10 @@ class ChannelQrcodeSettings(models.Model):
 	ticket = models.TextField() #获取的ticket值
 	grade_id = models.IntegerField(default=-1) #关注后等级id
 	re_old_member = models.IntegerField(default=0) #是否关联已关注会员
+	is_bing_member = models.BooleanField(default=False) #是否关联单个会员
+	bing_member_id = models.IntegerField(default=0) # 关联会员的ID
+	bing_member_title = models.CharField(max_length=512) #关联会员头衔
+	qrcode_desc = models.TextField() #二维码描述
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 
 	class Meta(object):
@@ -37,12 +41,24 @@ class ChannelQrcodeSettings(models.Model):
 		verbose_name_plural = '渠道扫码配置'
 		ordering = ['-id']
 
+#记录绑定会员的信息
+class ChannelQrcodeBingMember(models.Model):
+	channel_qrcode = models.ForeignKey(ChannelQrcodeSettings)
+	member = models.ForeignKey(Member)
+	cancel_bing_time = models.DateTimeField(blank=True, null=True, default=None) #取消关联的时间
+	created_at = models.DateTimeField(auto_now_add=True) #添加时间
+
+	class Meta(object):
+		db_table = 'market_tool_channel_qrcode_bing_member'
+		verbose_name = '渠道扫码绑定会员'
+		verbose_name_plural = '渠道扫码绑定会员'
+
 class ChannelQrcodeHasMember(models.Model):
 	channel_qrcode = models.ForeignKey(ChannelQrcodeSettings)
 	member = models.ForeignKey(Member)
 	is_new = models.BooleanField(default=True)
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
-	
+
 	class Meta(object):
 		db_table = 'market_tool_channel_qrcode_has_member'
 		verbose_name = '渠道扫码配置'

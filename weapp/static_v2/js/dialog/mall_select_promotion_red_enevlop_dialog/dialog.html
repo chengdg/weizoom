@@ -19,10 +19,10 @@
 
 			data-auto-load="false"
 		></div>
-		
+
 		</div>
 		<div class="modal-footer modal-footerBg">
-			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">确&nbsp;&nbsp;定</button> 
+			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">确&nbsp;&nbsp;定</button>
             <label class="pa" style="right:25px;"><input class="xa-allin pr" style="top:3px;right:3px;" type="checkbox">筛选出来的人(已取消关注的除外)</label>
 		</div>
 	</div>
@@ -49,7 +49,7 @@
 	            {{each(i, vip) items}}
 				<tr class="xb-stripedTable" data-id="${vip.id}">
 					<td class="text_nowrap" style="max-width:180px;">
-                        {{html vip.username}}
+                        {{html vip.username_truncated}}
 					</td>
 					<td>
 						${vip.grade_name}
@@ -63,7 +63,7 @@
 					<td>
 						${vip.pay_times}
 					</td>
-					<td>	
+					<td>
                         ${vip.integral}
 					</td>
                     <td>

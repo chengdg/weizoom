@@ -20,7 +20,7 @@ from django.template import RequestContext, Context
 #from django.conf import settings
 
 #from utils.url_helper import remove_querystr_filed_from_request_url
-from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image, is_request_for_cloud_housekeeper
 from account.models import WEBAPP_TYPE_WEIZOOM_MALL
 
 #from core import dateutil
@@ -210,6 +210,10 @@ class UserAgentMiddleware(object):
 			#如果是对webapp的请求，不进行任何处理
 			return None
 
+		if is_request_for_cloud_housekeeper(request):
+			# 如果是微众云商通，不进行任何处理
+			return None
+
 		user_agent_str = request.META.get('HTTP_USER_AGENT', '')
 		if user_agent_str.find('Flash') >= 0:
 			#对于Flash的请求不做任何处理
@@ -261,6 +265,7 @@ class UserProfileMiddleware(object):
 		webapp_owner_id = -1
 		request.user_profile = None
 		if request.user.is_authenticated() and not request.user.is_superuser and not request.is_access_webapp and not request.is_access_webapp_api:
+
 			if hasattr(request, 'manager'):
 				request.user_profile = request.manager.get_profile()
 			# else:

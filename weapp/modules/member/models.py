@@ -252,6 +252,7 @@ class WebAppUser(models.Model):
 
 		from integral import increase_for_buy_via_shared_url
 		#首先进行积分的处理
+		#print '===========innnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
 		increase_for_buy_via_shared_url(request, order)
 		#进行分享链接的相关计算
 		from modules.member.util import  process_payment_with_shared_info
@@ -922,16 +923,20 @@ def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
 signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
 
 FIRST_SUBSCRIBE = u'首次关注'
-FOLLOWER_CLICK_SHARED_URL = u'好友奖励'
-USE = '使用积分'
+#FOLLOWER_CLICK_SHARED_URL = u'好友奖励'
+FOLLOWER_CLICK_SHARED_URL = u'好友点击分享链接奖励'
+USE = '购物抵扣'
 RETURN_BY_SYSTEM = '积分返还'
 AWARD = '积分领奖'
 BUY_AWARD = '购物返利'
-FOLLOWER_BUYED_VIA_SHARED_URL = u'好友奖励'
-BRING_NEW_CUSTOMER_VIA_QRCODE = u'好友奖励'
+#FOLLOWER_BUYED_VIA_SHARED_URL = u'好友奖励'
+FOLLOWER_BUYED_VIA_SHARED_URL = u'好友通过分享链接购买奖励'
+BRING_NEW_CUSTOMER_VIA_QRCODE = u'推荐扫码奖励'
 MANAGER_MODIFY = '系统管理员修改'
 MANAGER_MODIFY_ADD = '管理员赠送'
 MANAGER_MODIFY_REDUCT = '管理员扣减'
+CHANNEL_QRCODE = u'渠道扫码奖励'
+BUY_INCREST_COUNT_FOR_FATHER = u'推荐关注的好友购买奖励'
 
 class MemberIntegralLog(models.Model):
 	member = models.ForeignKey(Member)
@@ -1202,3 +1207,34 @@ class MemberMarketUrl(models.Model):
 		verbose_name = '营销工具引流'
 		verbose_name_plural = '营销工具引流'
 
+
+class MemberRefueling(models.Model):
+	member = models.ForeignKey(Member)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'member_refueling'
+		verbose_name = '加油分享活动'
+		verbose_name_plural = '加油分享活动'
+
+
+class MemberRefuelingInfo(models.Model):
+	member_refueling = models.ForeignKey(MemberRefueling)
+	follow_member = models.ForeignKey(Member)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'member_refueling_info'
+		verbose_name = '加油分享活动信息'
+		verbose_name_plural = '加油分享活动信息'
+		unique_together = ('member_refueling', 'follow_member')		
+
+class MemberRefuelingHasOrder(models.Model):
+	member_refueling = models.ForeignKey(MemberRefueling)
+	order_id = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'member_refueling_has_order'
+		verbose_name = '加油分享活动下单记录'
+		verbose_name_plural = '加油分享活动下单记录'

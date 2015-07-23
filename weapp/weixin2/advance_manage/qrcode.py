@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from django.template import RequestContext
 from django.db.models import Q
@@ -16,7 +17,7 @@ from weixin2.models import MessageRemarkMessage,Message,FanCategory,FanHasCatego
 from modules.member.models import *
 from .util import get_members
 from .fans_category import DEFAULT_CATEGORY_NAME
-from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember,ChannelQrcodeBingMember
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from mall.models import *
@@ -27,6 +28,7 @@ from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
 import json
 from mall.promotion.models import CouponRule
 from excel_response import ExcelResponse
+from modules.member.module_api import get_member_by_id_list, get_member_by_id
 
 
 #COUNT_PER_PAGE = 2
@@ -100,7 +102,17 @@ def _get_qrcode_items(request):
 	else:
 		settings = ChannelQrcodeSettings.objects.filter(owner=request.user).order_by(created_at)
 
-	setting_ids = [s.id for s in settings]
+	setting_ids = []
+	bing_member_ids = []
+	setting_id2bing_member_id = {}
+	for setting in settings:
+		setting_ids.append(setting.id)
+		bing_member_ids.append(setting.bing_member_id)
+		setting_id2bing_member_id[setting.id] = setting.bing_member_id
+
+	bing_members = get_member_by_id_list(bing_member_ids)
+	id2member = dict([(m.id, m) for m in bing_members])
+
 	relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
 	setting_id2count = {}
 	member_id2setting_id = {}
@@ -114,6 +126,12 @@ def _get_qrcode_items(request):
 			setting_id2count[r.channel_qrcode_id] += 1
 		else:
 			setting_id2count[r.channel_qrcode_id] = 1
+
+	relations = ChannelQrcodeBingMember.objects.filter(channel_qrcode_id__in=setting_ids)
+	qrcode_id_and_member_id2relation = {}
+	for r in relations:
+		qrcode_id_and_member_id2relation[(r.channel_qrcode_id, r.member_id)] = r
+
 
 	webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
 	webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
@@ -184,6 +202,19 @@ def _get_qrcode_items(request):
 			setting.cash_money = 0
 			setting.weizoom_card_money = 0
 
+
+		#获取绑定会员的名称，添加绑定时间和取消绑定的时间
+		bing_member_name = ''
+		bing_time = ''
+		cancel_time = ''
+		if setting_id2bing_member_id[setting.id]:
+			bing_member_name = id2member[setting_id2bing_member_id[setting.id]].username_truncated
+			if qrcode_id_and_member_id2relation.has_key((setting.id, setting.bing_member_id)):
+				r = qrcode_id_and_member_id2relation[(setting.id, setting.bing_member_id)]
+				bing_time = r.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				if (not setting.is_bing_member) and setting.bing_member_id:
+					cancel_time = r.cancel_bing_time.strftime("%Y-%m-%d %H:%M:%S")
+
 		#如果没有ticket信息则获取ticket信息
 		if not setting.ticket:
 			try:
@@ -208,6 +239,10 @@ def _get_qrcode_items(request):
 		current_setting.cur_prize = setting.cur_prize
 		current_setting.ticket = setting.ticket
 		current_setting.remark = setting.remark
+		current_setting.bing_member_id = setting.bing_member_id
+		current_setting.bing_member_name = bing_member_name
+		current_setting.bing_time = bing_time
+		current_setting.cancel_time = cancel_time
 		current_setting.created_at = setting.created_at.strftime('%Y-%m-%d %H:%M:%S')
 
 		items.append(current_setting)
@@ -298,15 +333,25 @@ class Qrcode(resource.Resource):
 					answer_content['type'] = 'text'
 					answer_content['content'] = emotion.change_emotion_to_img(qrcode.reply_detail)
 
+				if qrcode.bing_member_id:
+					bing_member = get_member_by_id(int(qrcode.bing_member_id))
+					qrcode.bing_member_name = bing_member.username_for_html
+
+		settings = ChannelQrcodeSettings.objects.filter(owner=request.user, bing_member_id__gt=0)
+		selectedMemberIds = [setting.bing_member_id for setting in settings]
+
 		jsons = [{
-			"name": "qrcode_answer", "content": answer_content
+			"name": "qrcode_answer",
+			"content": answer_content
 		}]
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_advance_manage_second_navs(request),
 			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'webapp_id': webapp_id,
 			'qrcode': qrcode,
 			'groups': groups,
+			'selectedMemberIds': json.dumps(selectedMemberIds),
 			'jsons': jsons
 		})
 		return render_to_response('weixin/advance_manage/edit_qrcode.html', c)
@@ -332,6 +377,10 @@ class Qrcode(resource.Resource):
 		remark = request.POST.get("remark", '')
 		grade_id = int(request.POST.get("grade_id", -1))
 		re_old_member = int(request.POST.get("re_old_member", 0))
+		is_bing_member = request.POST.get("is_bing_member", 0)
+		bing_member_id = int(request.POST.get("bing_member_id", 0))
+		bing_member_title = request.POST.get("bing_member_title", "")
+		qrcode_desc = request.POST.get("qrcode_desc", "")
 
 		if reply_type == 0:
 			reply_material_id = 0
@@ -350,8 +399,18 @@ class Qrcode(resource.Resource):
 			reply_material_id=reply_material_id,
 			remark=remark,
 			grade_id=grade_id,
-			re_old_member=re_old_member
+			re_old_member=re_old_member,
+			is_bing_member=True if is_bing_member == "true" else False,
+			bing_member_id=bing_member_id,
+			bing_member_title=bing_member_title,
+			qrcode_desc=qrcode_desc
 		)
+
+		if cur_setting.is_bing_member:
+			ChannelQrcodeBingMember.objects.create(
+				channel_qrcode=cur_setting,
+				member_id=bing_member_id
+			)
 
 		mp_user = get_binding_weixin_mpuser(request.user)
 		mpuser_access_token = get_mpuser_accesstoken(mp_user)
@@ -396,6 +455,10 @@ class Qrcode(resource.Resource):
 		remark = request.POST.get("remark", '')
 		grade_id = int(request.POST.get("grade_id", -1))
 		re_old_member = int(request.POST.get("re_old_member", 0))
+		is_bing_member = request.POST.get("is_bing_member", 0)
+		bing_member_id = int(request.POST.get("bing_member_id", 0))
+		bing_member_title = request.POST.get("bing_member_title", "")
+		qrcode_desc = request.POST.get("qrcode_desc", "")
 
 		if reply_type == 0:
 			reply_material_id = 0
@@ -405,16 +468,43 @@ class Qrcode(resource.Resource):
 		elif reply_type == 2:
 			reply_detail = ''
 
-		ChannelQrcodeSettings.objects.filter(owner=request.user, id=setting_id).update(
-			name=name,
-			award_prize_info=award_prize_info,
-			reply_type=reply_type,
-			reply_detail=reply_detail,
-			reply_material_id=reply_material_id,
-			remark=remark,
-			grade_id=grade_id,
-			re_old_member=re_old_member
-		)
+		setting = ChannelQrcodeSettings.objects.filter(owner=request.user, id=setting_id)
+		if setting[0].bing_member_id and is_bing_member == 'false':
+			#取消关联
+			setting.update(
+				name=name,
+				award_prize_info=award_prize_info,
+				reply_type=reply_type,
+				reply_detail=reply_detail,
+				reply_material_id=reply_material_id,
+				remark=remark,
+				grade_id=grade_id,
+				re_old_member=re_old_member,
+				is_bing_member=True if is_bing_member == "true" else False,
+			)
+			ChannelQrcodeBingMember.objects.filter(channel_qrcode=setting[0]).update(
+				cancel_bing_time=datetime.now()
+			)
+		else:
+			if not setting[0].bing_member_id and is_bing_member == 'true':
+				ChannelQrcodeBingMember.objects.create(
+					channel_qrcode=setting[0],
+					member_id=bing_member_id,
+				)
+			setting.update(
+				name=name,
+				award_prize_info=award_prize_info,
+				reply_type=reply_type,
+				reply_detail=reply_detail,
+				reply_material_id=reply_material_id,
+				remark=remark,
+				grade_id=grade_id,
+				re_old_member=re_old_member,
+				is_bing_member=True if is_bing_member == "true" else False,
+				bing_member_id=bing_member_id,
+				bing_member_title=bing_member_title,
+				qrcode_desc=qrcode_desc
+			)
 
 		return create_response(200).get_response()
 

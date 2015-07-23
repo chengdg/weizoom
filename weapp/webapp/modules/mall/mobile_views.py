@@ -259,3 +259,9 @@ def update_product_review_picture(request):
 def redirect_product_review(request):
     request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
     return request_util.redirect_product_review(request)
+
+
+#add by bert 
+def edit_refueling_order(request):
+    request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+    return request_util.edit_refueling_order(request)	
