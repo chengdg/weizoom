@@ -127,7 +127,7 @@ body .wui-alert{
 }
 .xui-panel{
 	width: 11.5rem;
-	margin: 6rem auto 0 auto;
+	margin: 5rem auto 0 auto;
 	padding:1.4rem .7rem 1rem .7rem;
 	box-sizing:border-box;
 	background: #fff;
@@ -275,6 +275,15 @@ body .wui-alert{
 .hidden{
 	display: none!important;
 }
+@media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+	.xui-guideTip{
+		width:8.3rem;
+		height:3.05rem;
+	}
+	.xui-panel{
+		margin: 3.8rem auto 0 auto;
+	}
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -345,7 +354,12 @@ body .wui-alert{
 		<img src="/static_v2/img/webapp/usercenter/socketPage/img6.jpg" alt="">
 		<img src="/static_v2/img/webapp/usercenter/socketPage/img7.jpg" alt="">
 		<p class="xui-tips">更多使用指南请在Wifi下观看买家秀</p>
-		<embed src="http://player.youku.com/player.php/sid/XOTMzMjUxMDE2/v.swf" allowFullScreen="true" quality="high" width="100%" height="400" align="middle"allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+		
+		<video src="/static_v2/img/webapp/usercenter/socketPage/1.mp4" width="100%" controls="controls" style="display:block;">
+		您的浏览器不支持 video 标签。
+		</video>
+		
+
 	</section>
 	<div class="xui-cover xa-ruleCover hidden">
 		<div class="xui-panel xui-rule">
@@ -446,8 +460,6 @@ $(document).ready(function() {
 	if( $('.xa-member-count').length){
 		changeProgressBar();
 	}
-	
-	
 	$('.xa-showRule').click(function(event) {
 		$('.xa-ruleCover').removeClass('hidden');
 	});
