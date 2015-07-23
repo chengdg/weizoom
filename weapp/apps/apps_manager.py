@@ -172,7 +172,7 @@ class AppManager(object):
 
 	def __init__(self):
 		sys.path.insert(0, self.CUSTOMERIZED_APPS_ROOT)		
-		app_tasks.init_workdir()
+		# app_tasks.init_workdir()
 
 	def all_app_modules(self):
 		return self.APPNAMES_2_MODULES.values()
