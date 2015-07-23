@@ -23,5 +23,4 @@ class CloudSessionMiddleware(object):
 				user = None
 			request.cloud_user = user
 
-		print request.cloud_user
 		return None
