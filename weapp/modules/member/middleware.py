@@ -970,7 +970,7 @@ class OAUTHMiddleware(object):
 							if response:
 								return response
 
-							if 'share_red_envelope' in request.get_full_path() and (not request.member.user_icon):
+							if ('share_red_envelope' in request.get_full_path() or 'refueling' in request.get_full_path()) and (not request.member.user_icon):
 								# 分享红包没有用户头像时跳转授权接口
 								is_oauth = True
 							else:
@@ -1001,7 +1001,7 @@ class OAUTHMiddleware(object):
 
 					member, response = get_member_by(request, social_account)
 
-					if 'share_red_envelope' in request.get_full_path() and member:
+					if ('share_red_envelope' in request.get_full_path() or 'refueling' in request.get_full_path())and member:
 						if (not member.user_icon) or (not member.user_icon.startswith('http')):
 							get_user_info(weixin_user_name, access_token, member)
 					

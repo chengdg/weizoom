@@ -16,7 +16,7 @@ from core.exceptionutil import unicode_full_stack
 from modules.member.models import *
 from modules.member.integral import increase_for_be_member_first
 from modules.member.util import (get_member_by_binded_social_account, 
-	create_member_by_social_account, create_social_account)
+	create_member_by_social_account, create_social_account,member_basic_info_updater)
 
 from watchdog.utils import watchdog_error, watchdog_fatal
 
@@ -115,8 +115,15 @@ class MemberHandler(MessageHandler):
 			member.is_subscribed = True
 			member.save()
 			member.is_new = False
-
+				
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
+
+		try:
+			member_basic_info_updater(request.user_profile, member)
+		except:
+			notify_message = u"关注时,更新会员头像会员失败,id:{}, cause:\n{}".format(
+							member.id, unicode_full_stack())
+			watchdog_error(notify_message)	
 
 		return member
