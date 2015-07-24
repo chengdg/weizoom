@@ -59,6 +59,9 @@ class AutoQaMessageHandler(KeywordHandler):
 			self._process_recorde_message(context, response_rule, from_weixin_user, is_from_simulator)
 		except:
 			notify_message = u"_process_recorde_message, cause:\n{}".format(unicode_full_stack())
+			message_tail = '\nanswer:%s,patterns:%s,owner_id:%d,id:%d' % (response_rule.answer, response_rule.patterns, response_rule.owner_id, response_rule.id)
+			notify_message += message_tail
+			print notify_message
 			watchdog_error(notify_message)
 	
 		return response
