@@ -39,7 +39,8 @@ def step_impl(context, user):
 		channel_setting = bdd_util.get_channel_qrcode_setting(setting['name'])
 		assert channel_setting is not None 
 		owner_id = channel_setting.owner_id
-		ChannelQrcodeSettings.objects.filter(owner_id=owner_id,name=setting['name']).update(ticket=setting['ticket'])
+		ticket = setting.get('ticket', '')
+		ChannelQrcodeSettings.objects.filter(owner_id=owner_id,name=setting['name']).update(ticket=ticket)
 
 
 @then(u'{user}能看到的渠道扫码列表')
