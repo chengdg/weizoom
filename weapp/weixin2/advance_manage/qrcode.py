@@ -20,7 +20,7 @@ from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember,ChannelQrcodeBingMember
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
-# from mall.models import *
+from mall.models import *
 from mall import module_api as mall_api
 from weixin2.message.util import get_member_groups
 from modules.member.models import MemberGrade
@@ -91,7 +91,6 @@ class Qrcodes(resource.Resource):
 		return response.get_response()
 
 def _get_qrcode_items(request):
-	from mall.models import *
 	#处理搜索
 	query = request.GET.get('query', '').strip()
 	sort_attr = request.GET.get('sort_attr', '-created_at')
@@ -622,7 +621,6 @@ class QrcodeOrder(resource.Resource):
 	@login_required
 	@mp_required
 	def api_get(request):
-		from mall.models import Order
 		channel_qrcode_id = request.GET.get('setting_id', None)
 		start_date = request.GET.get('start_date', '')
 		end_date = request.GET.get('end_date', '')
