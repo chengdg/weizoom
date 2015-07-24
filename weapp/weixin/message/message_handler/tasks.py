@@ -104,9 +104,11 @@ def _should_record_message(is_from_simulator, request):
 	'''
 	if settings.MODE == 'deploy' and is_from_simulator:
 		should_record_message = False
-	elif (settings.MODE == 'develop' or settings.MODE == 'test') and\
-			(is_from_simulator and int(request["POST"].get('is_user_logined', 0)) == 1):
+	# elif (settings.MODE == 'develop' or settings.MODE == 'test') and\
+	# 		(is_from_simulator and int(request["POST"].get('is_user_logined', 0)) == 1):
 		#用户登录情况下启动的模拟器，不能记录其信息流
+	elif (settings.MODE == 'develop' or settings.MODE == 'test') and\
+	 		(is_from_simulator):
 		should_record_message = False
 
 	return should_record_message

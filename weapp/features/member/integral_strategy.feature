@@ -18,7 +18,7 @@ Background:
 	And jobs设置积分策略
 		"""
 		[{	
-			"first_attention":20,
+			"be_member_increase_count":20,
 			"click_shared_url_increase_count_for_author":21, 
 			"buy_via_shared_url_increase_count_for_author":31, 
 			"increase_count_after_buy":11,
