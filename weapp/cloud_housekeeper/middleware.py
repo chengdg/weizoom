@@ -16,11 +16,14 @@ class CloudSessionMiddleware(object):
 		request.cloud_user = get_request_cloud_user(request)
 		if request.cloud_user is None:
 			user_id = get_cloud_user_from_cookie(request)
-			try:
-				user = CloudUser.objects.get(id=user_id)
-			except:
-				request.META[self.NEED_REMOVE_CLOUD_USER_SESSION_FLAG] = True
-				user = None
+			user = None
+			
+			if user_id:
+				try:
+					user = CloudUser.objects.get(id=user_id)
+				except:
+					request.META[self.NEED_REMOVE_CLOUD_USER_SESSION_FLAG] = True
+
 			request.cloud_user = user
 
 		return None
