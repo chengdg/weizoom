@@ -20,6 +20,10 @@ def get_settings(request):
             member = Member.objects.get(id=request.member.id)
             member.user_name = member.username_for_html
             setting.count = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id).count()
+            if user_id == '467':
+                from django.http import HttpResponseRedirect
+                response = HttpResponseRedirect('https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=%s' % setting.ticket)
+                return response
             c = RequestContext(request, {
                 'page_title': u'代言人二维码',
                 'member': member,
