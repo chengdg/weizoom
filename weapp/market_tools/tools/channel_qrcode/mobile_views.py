@@ -31,7 +31,8 @@ def get_settings(request):
                     'setting': setting,
                     'is_hide_weixin_option_menu': False,
                     'head_img': get_mp_head_img(user_id),
-                    'show_head': show_head
+                    'show_head': show_head,
+                    'hide_non_member_cover':True
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
         else:
@@ -57,7 +58,8 @@ def get_settings(request):
                     'member': member,
                     'setting': setting,
                     'is_hide_weixin_option_menu': True,
-                    'head_img': get_mp_head_img(user_id)
+                    'head_img': get_mp_head_img(user_id),
+                    'hide_non_member_cover':True
                 })
                 return render_to_response('%s/channel_qrcode/webapp/channel_qrcode.html' % TEMPLATE_DIR, c)
 
