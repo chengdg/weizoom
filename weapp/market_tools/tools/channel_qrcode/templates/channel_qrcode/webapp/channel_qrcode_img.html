@@ -19,6 +19,14 @@
 {% endblock %}
 {% block content-panel %}
 <div class="xui-myRecPage">
+    {% if show_head %}
+    <section class="xui-header">
+        <img src="{{member.user_icon}}" alt="" class="pa">
+        <p class="xui-memberName">{{member.user_name | safe}}</p>
+        <span class="xui-tag">{{setting.bing_member_title}}</span>
+        <p class="xui-hasRec">已推荐{{setting.count}}人扫码</p>
+    </section>
+    {% endif %}
 	<section>
 		<div class="pr tc">
         	<img width="250" height="250" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={{setting.ticket}}" class="xui-qrcode">
@@ -29,7 +37,6 @@
         	<p>{{setting.qrcode_desc}}</p>
         </div>
 	</section>
-
 </div>
 
 {% endblock %}
