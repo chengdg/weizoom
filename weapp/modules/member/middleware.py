@@ -1046,7 +1046,6 @@ class OAUTHMiddleware(object):
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
 			shared_url_digest = _get_hexdigest_url(request.get_full_path())
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
-		print '----------process_current_url', new_url
 		return response
 
 	def process_fmt_in_url(self, request):
@@ -1074,7 +1073,6 @@ class OAUTHMiddleware(object):
 				shared_url_digest = _get_hexdigest_url(request.get_full_path())
 				
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
-				print '----------process_fmt_in_url', new_url
 				return response
 		return None
 
@@ -1099,7 +1097,6 @@ class OAUTHMiddleware(object):
 				response = HttpResponseRedirect(new_url)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
-				print '----------process_sct_in_url', new_url
 				return response
 			except:
 				notify_message = u"处理url sct失败 cause:\n{}".format(unicode_full_stack())
@@ -1298,7 +1295,7 @@ def process_to_oauth(request, weixin_mp_user_access_token, code=None, appid=None
 		if not redirect_url.startswith('http'):
 			redirect_url = "http://%s%s" % (request.META['HTTP_HOST'], redirect_url)
 
-		if "share_red_envelope" in request.get_full_path():
+		if "share_red_envelope" in request.get_full_path() or "refueling" in request.get_full_path():
 			api_style = "snsapi_userinfo"
 		else:
 			api_style = "snsapi_base"
