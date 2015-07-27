@@ -275,6 +275,9 @@ body .wui-alert{
 .hidden{
 	display: none!important;
 }
+.no-code{
+	margin-top:9rem;
+}
 @media only screen and (min-device-width: 320px) and (max-device-height: 480px){
 	.xui-guideTip{
 		width:8.3rem;
@@ -282,6 +285,12 @@ body .wui-alert{
 	}
 	.xui-panel{
 		margin: 3.8rem auto 0 auto;
+	}
+	.no-code{
+		margin-top:8rem;
+	}
+	.xui-loading{
+		top:11rem;
 	}
 }
 </style>
@@ -396,8 +405,8 @@ body .wui-alert{
 		</div>
 	</div>
 	<div class="xui-cover xa-successCover hidden">
-		<div class="xui-panel xui-success tc">
-			{% if member.is_subscribed %}
+		<div class="xui-panel xui-success tc{% if member.is_subscribed %} no-code{% endif %}">
+			{% if not member.is_subscribed %}
 			<!--   有二维码 -->
 			<h3>加油成功!</h3>
 			 <img src="/static_v2/img/webapp/usercenter/socketPage/qrcode.jpg" alt="">
@@ -450,21 +459,34 @@ body .wui-alert{
 })(document, window);
 
 $(document).ready(function() {
-	changeProgressBar = function(){
-		var count = $('.xa-member-count').text();
-		var width = count >= 15 ? 100:(count * 6.67);
+	var count = 0;
+	var totalCount = 15;
+	var changeProgressBar = function(){
+		count = parseInt($('.xa-member-count').text());
+		var width = count >= totalCount ? 100:(count * 6.67);
 		var percent = Math.round(width);
 		$('.xa-progress').css('width', width + '%');
-		$('.xa-percent').text(percent);
+		// $('.xa-percent').text(percent);
+		if(count >= totalCount){
+			$('.xa-progress').siblings('label').html('加油完成，我也要分享');
+			$('.xa-progress').parent('.xui-progress').removeClass('xa-showMembers').addClass('xa-showRule');
+		}else{
+			$('.xa-percent').text(percent);
+		}
+		
 	}
 	if( $('.xa-member-count').length){
 		changeProgressBar();
 	}
-	$('.xa-showRule').click(function(event) {
+
+	$('body').delegate('.xa-showRule', 'click', function(event) {
 		$('.xa-ruleCover').removeClass('hidden');
 	});
+
 	$('.xa-showMembers').click(function(event) {
-		$('.xa-membersCover').removeClass('hidden');
+		if (count < totalCount) {
+			$('.xa-membersCover').removeClass('hidden');
+		}
 	});
 	$('.xui-cover').click(function(event) {
 		if($(event.target).hasClass('xui-cover') || $(event.target).hasClass('xui-guideTip')){

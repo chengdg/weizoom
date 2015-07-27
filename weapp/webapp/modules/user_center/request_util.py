@@ -483,8 +483,9 @@ def get_refueling_page(request):
 	member = Member.objects.get(id=request.member.id)
 	webapp_user = request.webapp_user
 	member_refuelings = MemberRefueling.objects.filter(member=member)
-	product_id = Product.objects.filter(owner_id=request.webapp_owner_id)[0].id
-	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member.grade_id)
+
+	#product_id = Product.objects.filter(owner_id=request.webapp_owner_id)[0].id
+	product = mall_api.get_product_detail(request.webapp_owner_id, 2565, webapp_user, member.grade_id)
 	can_buy = False
 	cookie_fid = request.COOKIES.get('fid', '')
 	member_fid = cookie_fid

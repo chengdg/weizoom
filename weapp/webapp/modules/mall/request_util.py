@@ -1574,7 +1574,7 @@ def edit_refueling_order(request):
 	products = _get_products(request)
 
 	product = products[0]
-	product.price = 49
+	product.price = 79
 	webapp_user = request.webapp_user
 	webapp_owner_id = request.webapp_owner_id
 
@@ -1585,7 +1585,7 @@ def edit_refueling_order(request):
 	#测试订单，修改价钱和订单类型
 	type = request.GET.get('type', '')
 	order = mall_api.update_order_type_test(type, order)
-	order.final_price = 49
+	order.final_price = 79
 	#获得运费计算因子
 	#postage_factor = order.used['postage_config'].factor
 	#获得运费配置，支持前端修改数量、优惠券等后实时计算运费
@@ -1619,7 +1619,7 @@ def edit_refueling_order(request):
 		"name": "productGroups",
 		"content": __format_product_group_price_factor(order.product_groups)
 	}]
-	refueling_order = '%s_49' % refueling_id
+	refueling_order = '%s_79' % refueling_id
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑订单',

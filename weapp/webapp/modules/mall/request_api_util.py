@@ -261,12 +261,13 @@ def save_order(request):
 		data['msg'] = u'创建订单失败，请稍后重试'
 		data['exception'] = stack
 		return response.get_response()
+		
 	try:
 		#加油集赞订单支付
-		if refueling_order and '_49' in refueling_order:
+		if refueling_order and '_79' in refueling_order:
 			refueling_id = refueling_order.split('_')[0]
 			MemberRefuelingHasOrder.objects.create(member_refueling_id=refueling_id, order_id=order.id)
-			order.final_price = 49
+			order.final_price = 79
 			order.save()
 	except:
 		stack = unicode_full_stack()
