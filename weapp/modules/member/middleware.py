@@ -1295,7 +1295,7 @@ def process_to_oauth(request, weixin_mp_user_access_token, code=None, appid=None
 		if not redirect_url.startswith('http'):
 			redirect_url = "http://%s%s" % (request.META['HTTP_HOST'], redirect_url)
 
-		if "share_red_envelope" in request.get_full_path() or "refueling" in request.get_full_path():
+		if "share_red_envelope" in request.get_full_path() or "refueling_page" in request.get_full_path():
 			api_style = "snsapi_userinfo"
 		else:
 			api_style = "snsapi_base"
