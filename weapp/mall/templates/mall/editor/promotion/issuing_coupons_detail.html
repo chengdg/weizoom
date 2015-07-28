@@ -17,8 +17,8 @@
     <div class="relative">
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
-            <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
-            <li class="active"><a href="/mall_promotion/issuing_coupons_record/get/">发优惠券</a></li>
+            <li><a href="/mall2/promotion_list/">促销管理</a></li>
+            <li class="active"><a href="/mall2/issuing_coupons_record_list/">发优惠券</a></li>
             <li class="active">发优惠券详情</li>
         </ul>
     </div>
@@ -29,8 +29,8 @@
         <div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
             <div
                 data-ui-role="advanced-table"
-                data-app="mall_promotion"
-                data-api="issuing_coupons_detail/get"
+                data-app="mall2"
+                data-resource="issuing_coupons_detail"
                 data-args='{"id": {{ record_id }}}'
                 data-template-id="#detail_list_view"
                 data-enable-paginator="true"
@@ -70,7 +70,7 @@
             <td>${ coupon.start_time }&nbsp;至&nbsp;${ coupon.end_time }</td>
             <td class="text_nowrap" style="max-width:100px;"><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.member.id }">{{html coupon.member.username_for_html}}</a></td>
             <td>${ coupon.use_time }</td>
-            <td><a target="_blank" href="/mall/order_detail/get/?order_id=${ coupon.order_id }">${ coupon.order_fullid }</a></td>
+            <td><a target="_blank" href="/mall2/order/?order_id=${ coupon.order_id }">${ coupon.order_fullid }</a></td>
             <td>${ coupon.status }</td>
         </tr>
         {{/each}}

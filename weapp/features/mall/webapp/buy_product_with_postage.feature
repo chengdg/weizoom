@@ -135,7 +135,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@mall2 @mall.postage @mall.webapp 
+@mall2 @mall.postage @mall.webapp
 Scenario: 购买单个商品，使用系统运费模板，满足续重
 	
 	When bill访问jobs的webapp

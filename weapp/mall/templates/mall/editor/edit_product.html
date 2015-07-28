@@ -9,12 +9,15 @@
 	<ul class="breadcrumb" style="margin-bottom:-12px;">
 		<li>您当前所在位置</li>
 		<li>
-			<a href="/mall/onshelf_products/get/">商品管理</a>
+			<a href="/mall2/product_list/?shelve_type=1">商品管理</a>
 		</li>
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
 
-	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="post" id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}">
+	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
+        action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
+        id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
+  >
 		<section>
 		<header>
 			<span class="xui-fontBold">基本信息</span>
@@ -177,7 +180,7 @@
 	             	    />
                         <span class="xui-bold">使用系统运费模板：</span>
                         {{postage_config_info.system_postage_config.name}}
-                        <a class="ml5" href="/mall/postage_templates/get/" target="_blank">新建运费模板</a>
+                        <a class="ml5" href="/mall2/postage_list/" target="_blank">新建运费模板</a>
 	         		</label>
 				{%else%}
 					<label id="unified_freight" class="radio" >包邮</label>
@@ -213,7 +216,7 @@
 	             			   value="1"
                          />
                         <p class="xui-bold">在线支付</p>
-                        <p class="tx-pay-interface-item-p">当前没有启用在线支付接口，请前往<a href="/mall/pay_interfaces/get/" target="_blank">启用在线支付接口</a></p>
+                        <p class="tx-pay-interface-item-p">当前没有启用在线支付接口，请前往<a href="/mall2/pay_interface_list/" target="_blank">启用在线支付接口</a></p>
                     {% endif %}
 	         		</label>
 
@@ -231,7 +234,7 @@
 	             		{% if pay_interface_config.is_enable_cod_pay_interface %}
 	             		<p class="tx-pay-interface-item-p">启用后买家可选择货到付款下单，您需自行通过合作快速安排配送。买家开箱验货无误后，快递公司向买家收款并与您结算费用。</p>
 	             		{% else %}
-	             		<p class="tx-pay-interface-item-p">当前没有启用货到付款，请前往<a href="/mall/pay_interfaces/get/" target="_blank">启用货到付款</a></p>
+	             		<p class="tx-pay-interface-item-p">当前没有启用货到付款，请前往<a href="/mall2/pay_interface_list/" target="_blank">启用货到付款</a></p>
 	             		{% endif %}
 	         		</label>
 	         		 <div class="errorHint" date-error-Hint="请至少输入一种支付方式"></div>
@@ -248,7 +251,7 @@
 		<header>
 			<span  class="xui-fontBold">商品属性</span>
 			{% if not property_templates %}
-				<span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall/property_templates/get/" target="_blank">配置属性模板</a></span>
+				<span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall2/property/" target="_blank">配置属性模板</a></span>
 			{% else %}
 			<select class="ml20 xa-propertyTemplateSelector">
 				<option value="-1">选择属性模板</option>
@@ -298,7 +301,7 @@
 			<div class="ml100">
 				<div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
 				<div>
-					{% if request.manager.id == product.owner.id or not product %}
+                    {% if request.manager.id == product.owner.id or not product %}
 					<input type="submit" class="btn btn-primary mr40" id="submitBtn" value="保存" />
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
@@ -363,11 +366,11 @@ $('.xa-freight').on('click', function(e){
 $('.xa-check').on('click', function(){
 	W.getApi().call({
         method: 'post',
-        app: 'mall',
-        api: 'product_shelve_type/update',
+        app: 'mall2',
+        resource: 'product_list',
         args: {
             id: {{product.id}},
-            shelve_type: 1
+            shelve_type: "onshelf"
         },
         scope: this,
         success: function(data) {

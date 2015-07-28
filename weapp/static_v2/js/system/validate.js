@@ -55,7 +55,7 @@ W.ValidaterClass = function() {
         'require-price': {
             type: 'regex',
             extract: 'value',
-            regex: /^\d+(\.\d+)?$/g,
+            regex: /^\d+(\.\d{0,2})?$/g,
             errorHint: '价格不正确，请输入0-999999999之间的价格'
         },
         'require-date': {

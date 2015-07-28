@@ -40,7 +40,7 @@
 			    data-format="yy-mm-dd"
 			    data-max="now"
 			    data-min-el="#start_date"/>
-			
+
 			<a class="btn btn-primary xa-search xui-fontBold" href="javascript:void(0);">查询</a>
 			<a class="xa-reset btn btn-primary xui-fontBold" href="javascript:void(0);">重置</a>
 		</div>
@@ -113,7 +113,7 @@
 					<div class="fl">
 						<p class="ml20 fl">
 						订单编号：
-						<a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${order.id}" target="_blank">${order.order_id}</a>
+						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}</a>
 						</p>
 						<p class="ml10 fl w60">
 						&nbsp;
@@ -144,7 +144,7 @@
 							</div>
 							<div style="width:235px;display:table-cell">
 								<p class="tl">
-								<a href="/mall/product/update/?id=${product.id}&source=onshelf" class="xa-productName" name="xa-productName">
+								<a href="/mall2/product/?id=${product.id}" class="xa-productName" name="xa-productName">
 									{{if product.promotion }}
 										{{if product.promotion.type == "flash_sale"}}【限时抢购】{{/if}}
 										{{if product.promotion.type == "premium_sale:premium_product"}}【赠品】 {{/if}}
@@ -181,7 +181,7 @@
 							{{html order.buyer_name}}
 						{{/if}}
 						{{if order.customer_message}}
-							
+
 						{{/if}}
 						<!--${order.customer_message}-->
 					</td>

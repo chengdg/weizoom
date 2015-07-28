@@ -168,7 +168,7 @@ Scenario: 永久删除商品
 			"name": "东坡肘子"
 		}]
 		"""
-	When jobs永久删除商品'东坡肘子'
+	When jobs-永久删除商品'东坡肘子'
 	Then jobs能获得'待售'商品列表
 		"""
 		[]

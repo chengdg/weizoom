@@ -369,3 +369,47 @@ Scenario:没有货到付款的商品只有一种支付方式
 		"""
 	Then bill'能'使用支付方式'微众卡支付'进行支付
 	Then bill'不能'使用支付方式'货到付款'进行支付
+
+
+
+#后续补充.雪静
+Scenario: 购买库存为零的商品
+	bill可能会在以下情景下购买库存不足的商品A：
+	1. bill打开商品A的详情页面
+	2. bill调整数量为2个点击“购买”，进入商品A的订单编辑页面
+	3. bill点击“支付”，完成订单
+	4. bill再次购买商品A
+	5. jobs查看库存
+
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品5",
+				"count": 2
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 10.0,
+			"products": [{
+				"name": "商品5",
+				"price": 5.0,
+				"count": 2
+			}]
+		}
+		"""
+	#bill从新进入商品详情页
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品5"
+			}]
+		}
+		"""
+	Then bill获得提示'商品已售罄,非常抱歉'

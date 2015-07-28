@@ -16,7 +16,7 @@
     <div class="relative">
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
-            <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+            <li><a href="/mall2/promotion_list/">促销管理</a></li>
             <li class="active">发优惠券</li>
         </ul>
     </div>
@@ -120,7 +120,7 @@ $(document).ready(function() {
                 selectCouponMoney = data[0].money;
                 couponRuleId = data[0].id;
                 $(".xa-couponName").text(data[0].name+couponType);
-                $(".xa-couponInfo").empty().append(' 当前库存:'+remained_count+' 每人限领：'+limit).append($('<a/>').attr('href','/mall_promotion/coupon/create/?rule_id='+data[0].id).html('增加库存'));
+                $(".xa-couponInfo").empty().append(' 当前库存:'+remained_count+' 每人限领：'+limit).append($('<a/>').attr('href','/mall2/coupon/?rule_id='+data[0].id).html('增加库存'));
                 $(".xa-selectCoupon").text("修改");
                 var totalMoney = parseFloat(selectCouponMoney) * parseInt(count);
                 $(".xa-totalMoney").text("总价值："+ totalMoney.toFixed(2) +"元");
@@ -158,15 +158,15 @@ $(document).ready(function() {
         args.coupon_rule_id = couponRuleId;
         args.member_id=member_ids;
 		W.getApi().call({
-			method: 'post',
-			app: 'mall_promotion',
-			api: 'issuing_coupons_record/create',
+			method: 'put',
+			app: 'mall2',
+			resource: 'issuing_coupons_record',
 			args: W.toFormData(args),
 			scope: this,
 			success: function(data) {
 				W.showHint('success', '发放成功');
 				_.delay(function() {
-					window.location.href = '/mall_promotion/issuing_coupons_record/get/';
+					window.location.href = '/mall2/issuing_coupons_record_list/';
 				}, 500)
 			},
 			error: function(resp) {

@@ -18,8 +18,8 @@
 
 				<div
 					data-ui-role="advanced-table"
-					data-app="mall"
-					data-api="category_products/get"
+					data-app="mall2"
+					data-api="category_list"
 					data-template-id="#mall-add-product-category-dialog-products-tmpl"
 					data-enable-paginator="true"
 					data-enable-sort="false"
@@ -29,7 +29,7 @@
 					class="mt10 mb20"
 				></div>
 			</div>
-			
+
 		</div>
 		<div class="modal-footer">
 			<button class="btn btn-primary xa-submit-dialog" id="change_password">确认添加</button>
@@ -57,7 +57,7 @@
 			<td>${product.name}</td>
 			<td>${product.display_price}</td>
 			<td>${product.status}</td>
-			<td>${product.sales}</td>
+			<td>{{if product.sales < 0}}0{{else}}${product.sales}{{/if}}</td>
 			<td>${product.update_time}</td>
 		</tr>
 		{{/each}}

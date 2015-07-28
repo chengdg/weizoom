@@ -384,7 +384,7 @@ $(document).ready(function() {
 	});
 	
 	// 导出
-	$('#exportBtn').click(function(event) {		
+	$('#exportBtn').click(function(event) {
 		var url = '/mall/editor/orders/export/';
 		if (filterBox.filter_value) {
 			url = url + '?filter_value='+filterBox.filter_value+'&date_interval='+DATA_INTERVAL;

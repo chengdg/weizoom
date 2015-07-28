@@ -11,7 +11,7 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li>
-				<a href="/mall/orders/get/">订单管理</a>
+				<a href="/mall2/order_list/">订单管理</a>
 			</li>
 			<li class="active">退款订单</li>
 		</ul>
@@ -21,8 +21,9 @@
 	{% if has_order %}
 		<div
 			data-ui-role="advanced-table"
-			data-app="mall"
-			data-api="refund_orders/get"
+			data-app="mall2"
+            data-args='{"belong":"refund"}'
+			data-resource="order_list"
 			data-enable-paginator="true"
 			data-template-id="#mall-orders-view"
 			data-init-sort="-created_at"
@@ -94,7 +95,7 @@
 					<div class="fl">
 						<span class="ml20 fl">
 						订单编号：
-						<a title="查看" class="xt-orderLink" href="/mall/refund_order_detail/get/?order_id=${order.id}" target="_blank">${order.order_id}</a>
+						<a title="查看" class="xt-orderLink" href="/mall2/order/?belong=refund&order_id=${order.id}" target="_blank">${order.order_id}</a>
 						</span>
 						<span class="ml10 fl w60">
 						&nbsp;
@@ -111,7 +112,7 @@
 						</span>
 					</div>
 					<div class="fr">
-						<a title="查看" href="/mall/refund_order_detail/get/?order_id=${order.id}" target="_blank" class="mr10">查看详情</a>
+						<a title="查看" href="/mall2/order/?belong=refund&order_id=${order.id}" target="_blank" class="mr10">查看详情</a>
 						-
 						<a href='javascript:void(0);' class="ml10 mr15 xa-order-remark" data-order-id="${order.id}" data-order-value="${order.remark}">备注</a>
 					</div>
@@ -305,18 +306,18 @@ $(document).ready(function() {
 	});
 
 	// 导出
-	$('#exportBtn').click(function(event) {
-		var url = '/mall/editor/orders/export/';
-		if (filterBox.filter_value) {
-			url = url + '?filter_value='+filterBox.filter_value+'&date_interval='+DATA_INTERVAL;
-		}
-		console.log(url, filterBox.filter_value)
-		W.getLoadingView().show();
-		$('#spin-hint').html('玩命导出中...');
-		var $frame=$('<iframe>').hide().attr('src',url);
-		$('body').append($frame);
-		setTimeout(function(){W.getLoadingView().hide()}, 5000);
-	});
+	// $('#exportBtn').click(function(event) {
+	// 	var url = '/mall/editor/orders/export/';
+	// 	if (filterBox.filter_value) {
+	// 		url = url + '?filter_value='+filterBox.filter_value+'&date_interval='+DATA_INTERVAL;
+	// 	}
+	// 	console.log(url, filterBox.filter_value)
+	// 	W.getLoadingView().show();
+	// 	$('#spin-hint').html('玩命导出中...');
+	// 	var $frame=$('<iframe>').hide().attr('src',url);
+	// 	$('body').append($frame);
+	// 	setTimeout(function(){W.getLoadingView().hide()}, 5000);
+	// });
 
 	// 时间确定按钮
 	$('#dateTimeBtn').click(function(event){
@@ -348,8 +349,8 @@ $(document).ready(function() {
 				return;
 			}
 			W.getApi().call({
-				app: 'mall',
-				api: 'order_products/get',
+				app: 'mall2',
+				resource: 'order_product',
 				args: {
 					order_id: order_id
 				},

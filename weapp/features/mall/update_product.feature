@@ -12,7 +12,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	When jobs已添加支付方式
 		"""
@@ -24,9 +24,9 @@ Background:
 			"type": "微信支付",
 			"description": "我的微信支付",
 			"is_active": "启用",
-			"weixin_appid": "12345", 
-			"weixin_partner_id": "22345", 
-			"weixin_partner_key": "32345", 
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
 			"weixin_sign": "42345"
 		}]
 		"""
@@ -109,9 +109,9 @@ Background:
 				"type": "在线支付"
 			}],
 			"postage": "免运费"
-		}]	
+		}]
 		"""
-		
+
 
 @mall @mall.product
 Scenario: 更新商品
@@ -120,14 +120,14 @@ Scenario: 更新商品
 	When jobs更新商品'商品1'
 		"""
 		{
-			"name": "商品1*",
+			"name": "商品11",
 			"category": "分类2,分类3",
 			"physical_unit": "包*",
 			"thumbnails_url": "/standard_static/test_resource_img/hangzhou3.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-			"introduction": "商品1*的简介",
-			"detail": "商品1*的详情",
-			"remark": "商品1*的备注",
+			"introduction": "商品1的简介",
+			"detail": "商品1的详情",
+			"remark": "商品1的备注",
 			"shelve_type": "下架",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
@@ -146,7 +146,7 @@ Scenario: 更新商品
 				"type": "在线支付"
 			}],
 			"postage": "免运费"
-		}	
+		}
 		"""
 	When jobs更新商品'商品2'
 		"""
@@ -179,19 +179,19 @@ Scenario: 更新商品
 			}],
 			"postage": "顺丰"
 		}
-		"""	
+		"""
 	Then jobs找不到商品'商品1'
-	And jobs能获取商品'商品1*'
+	And jobs能获取商品'商品11'
 		"""
 		{
-			"name": "商品1*",
+			"name": "商品11",
 			"category": "分类2,分类3",
 			"physical_unit": "包*",
 			"thumbnails_url": "/standard_static/test_resource_img/hangzhou3.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-			"introduction": "商品1*的简介",
-			"detail": "商品1*的详情",
-			"remark": "商品1*的备注",
+			"introduction": "商品1的简介",
+			"detail": "商品1的详情",
+			"remark": "商品1的备注",
 			"shelve_type": "下架",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
@@ -210,7 +210,7 @@ Scenario: 更新商品
 				"type": "在线支付"
 			}],
 			"postage": "免运费"
-		}	
+		}
 		"""
 	And jobs能获取商品'商品2'
 		"""
@@ -244,26 +244,26 @@ Scenario: 更新商品
 			"postage": "顺丰"
 		}
 		"""
-	When jobs更新商品'商品1*'
+	When jobs更新商品'商品1'
 		"""
 		{
-			"name": "商品1**",
+			"name": "商品1",
 			"category": ""
-		}	
+		}
 		"""
-	Then jobs能获取商品'商品1**'
+	Then jobs能获取商品'商品1'
 		"""
 		{
-			"name": "商品1**",
+			"name": "商品1",
 			"category": ""
-		}	
+		}
 		"""
 
 @mall @mall.product
 Scenario: 切换邮费配置
 	jobs把运费配置更改为'圆通'
 	jobs查看商品详情
-	
+
 	When jobs选择'圆通'运费配置
 	Then jobs能获取商品'商品1'
 		"""

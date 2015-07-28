@@ -1,7 +1,6 @@
 @func:webapp.modules.mall.views.list_mall_settings
 Feature:添加支付方式
 	Jobs能通过管理系统添加"支付方式"
-
 @mall @mall.pay_interface @mall2
 Scenario: 添加支付方式:微信支付
 	Jobs添加"微信支付"后

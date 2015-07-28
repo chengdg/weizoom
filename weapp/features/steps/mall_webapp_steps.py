@@ -16,6 +16,9 @@ from mall.models import *
 from mall.promotion.models import *
 from modules.member.models import *
 import mall_product_steps as product_step_util
+from .steps_db_util import (
+    get_custom_model_id_from_name
+)
 
 def __get_date(str):
 	#处理expected中的参数
@@ -113,30 +116,30 @@ def step_impl(context, webapp_user_name):
 	bdd_util.assert_dict(expected, actual)
 
 
-@then(u"{webapp_user_name}获得待编辑订单")
-def step_impl(context, webapp_user_name):
-	"""
-		e.g.:
-		[{'name': "asdfasdfa",
-		  'count': "111"
-		},{...}]
-	"""
-	context_text = json.loads(context.text)
-	if context_text == []:
-		actual = []
-		expected_products = []
-	else:
-		actual = []
-		expected_products = context_text['products']
-		product_groups = context.response.context['product_groups']
-		for i in product_groups:
-			for product in i['products']:
-				_a = {}
-				_a['name'] = product.name
-				_a['count'] = product.count
-				actual.append(_a)
-
-	bdd_util.assert_list(expected_products, actual)
+# @then(u"{webapp_user_name}获得待编辑订单")
+# def step_impl(context, webapp_user_name):
+# 	"""
+# 		e.g.:
+# 		[{'name': "asdfasdfa",
+# 		  'count': "111"
+# 		},{...}]
+# 	"""
+# 	context_text = json.loads(context.text)
+# 	if context_text == []:
+# 		actual = []
+# 		expected_products = []
+# 	else:
+# 		actual = []
+# 		expected_products = context_text['products']
+# 		product_groups = context.response.context['product_groups']
+# 		for i in product_groups:
+# 			for product in i['products']:
+# 				_a = {}
+# 				_a['name'] = product.name
+# 				_a['count'] = product.count
+# 				actual.append(_a)
+#
+# 	bdd_util.assert_list(expected_products, actual)
 
 
 
@@ -401,7 +404,8 @@ OPERATION2STEPID = {
 	u'发货': u"When %s对最新订单进行发货",
 	u'完成': u"When %s完成最新订单",
 	u'退款': u"When %s对最新订单进行退款",
-	u'完成退款': u"When %s完成最新订单退款"
+	u'完成退款': u"When %s完成最新订单退款",
+	u'取消': u"When %s-取消最新订单",
 }
 
 @when(u"微信用户批量消费{webapp_owner_name}的商品")
@@ -467,7 +471,11 @@ def step_impl(context, webapp_owner_name):
 				context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, row['payment_method']))
 			else:
 				context.execute_steps(u"when %s使用支付方式'货到付款'进行支付" % webapp_user_name)
- 				
+
+		order = Order.objects.all().order_by('-id')[0]
+		if row.get('order_id', None):
+			order.order_id = row.get('order_id')
+			order.save()
 		# 操作订单
 		action = row['action'].strip()
 		if action:
@@ -475,21 +483,15 @@ def step_impl(context, webapp_owner_name):
 			context.execute_steps(u"given %s登录系统" % actor)
 			step_id = OPERATION2STEPID.get(operation, None)
 			if step_id:
-				order = Order.objects.all().order_by('-id')[0]
 				context.latest_order_id = order.id
 				context.execute_steps(step_id % actor)
 			elif operation == u'无操作':
 				# 为了兼容之前默认为取消操作所做的处理
 				pass
 			else:
-				context.caller_step_cancel_reason = {"reason":"cancel"}
-				context.execute_steps(u"When %s取消最新订单" % actor)
-
-		order_id = row.get('order_id', None)
-		if order_id:
-			latest_order = Order.objects.all().order_by('-id')[0]
-			latest_order.order_id = order_id
-			latest_order.save()
+				raise
+				# context.caller_step_cancel_reason = {"reason":"cancel"}
+				# context.execute_steps(u"When %s'取消'最新订单" % actor)
 
 
 @when(u"微信用户批量访问{webapp_owner_name}的webapp")
@@ -528,24 +530,49 @@ def step_impl(context, webapp_owner_name):
 def _get_product_model_ids_from_name(webapp_owner_id, model_name):
 	if model_name is None or model_name == "standard":
 		return "standard"
-	return product_step_util.__get_custom_model_id_from_name(webapp_owner_id ,model_name)
+	return get_custom_model_id_from_name(webapp_owner_id ,model_name)
 
 # 获取规格名称, 根据ids
 def _get_product_model_name_from_ids(webapp_owner_id, ids):
 	if ids is None or ids == "standard":
 		return "standard"
-	return product_step_util.__get_custom_model_name_from_id(webapp_owner_id ,ids)
+	return get_custom_model_id_from_name(webapp_owner_id ,ids)
 
-@then(u"{webapp_user_name}成功创建订单")
-def step_impl(context, webapp_user_name):
-	order_id = context.created_order_id
-	if order_id == -1:
-		print('Server Error: ', json.dumps(json.loads(context.response.content), indent=True))
-		assert False, "order_id must NOT be -1"
-		return
-
-	order = Order.objects.get(order_id=order_id)
-
+# @then(u"{webapp_user_name}成功创建订单")
+# def step_impl(context, webapp_user_name):
+# 	order_id = context.created_order_id
+# 	if order_id == -1:
+# 		print('Server Error: ', json.dumps(json.loads(context.response.content), indent=True))
+# 		assert False, "order_id must NOT be -1"
+# 		return
+# @then(u"{webapp_user_name}成功创建订单")
+# def step_impl(context, webapp_user_name):
+# 	order_id = context.created_order_id
+# 	if order_id == -1:
+# 		print 'Server Error: ', json.dumps(json.loads(context.response.content), indent=True)
+# 		assert False, "order_id must NOT be -1"
+# 		return
+#
+# 	order = Order.objects.get(order_id=order_id)
+#
+# 	url = '/workbench/jqm/preview/?woid=%s&module=mall&model=order&action=pay&order_id=%s' % (context.webapp_owner_id, order_id)
+# 	response = context.client.get(bdd_util.nginx(url), follow=True)
+# 	actual_order = response.context['order']
+# 	actual_order.ship_area = actual_order.area
+# 	actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
+# 	#获取coupon规则名
+# 	if (actual_order.coupon_id != 0) and (actual_order.coupon_id != -1):
+# 		coupon = Coupon.objects.get(id=actual_order.coupon_id)
+# 		actual_order.coupon_id = coupon.coupon_rule.name
+#
+# 	for product in actual_order.products:
+# 		# print '---product---', product
+# 		if 'custom_model_properties' in product and product['custom_model_properties']:
+# 			product['model'] = ' '.join([property['property_value'] for property in product['custom_model_properties']])
+#
+# 	# print '---actual_order---', actual_order
+# 	expected = json.loads(context.text)
+# 	bdd_util.assert_dict(expected, actual_order)
 	url = '/workbench/jqm/preview/?woid=%s&module=mall&model=order&action=pay&order_id=%s' % (context.webapp_owner_id, order_id)
 	response = context.client.get(bdd_util.nginx(url), follow=True)
 	actual_order = response.context['order']
@@ -600,41 +627,51 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 		context.tc.assertTrue(pay_interface not in pay_interface_names)
 
 
-@then(u"{webapp_user_name}获得创建订单失败的信息'{error_msg}'")
-def step_impl(context, webapp_user_name, error_msg):
-	error_data = json.loads(context.response.content)
-	# print(error_data)
-	# print(error_msg)
-	context.tc.assertTrue(200 != error_data['code'])
-	response_msg = error_data['data']['msg']
-	if response_msg == '':
-		response_msg = error_data['data']['detail'][0]['msg']
-	context.tc.assertEquals(error_msg, response_msg)
+# @then(u"{webapp_user_name}获得创建订单失败的信息'{error_msg}'")
+# def step_impl(context, webapp_user_name, error_msg):
+# 	error_data = json.loads(context.response.content)
+# 	# print(error_data)
+# 	# print(error_msg)
+# 	context.tc.assertTrue(200 != error_data['code'])
+# 	response_msg = error_data['data']['msg']
+# 	if response_msg == '':
+# 		response_msg = error_data['data']['detail'][0]['msg']
+# 	context.tc.assertEquals(error_msg, response_msg)
+# @then(u"{webapp_user_name}获得创建订单失败的信息'{error_msg}'")
+# def step_impl(context, webapp_user_name, error_msg):
+# 	error_data = json.loads(context.response.content)
+# 	# print error_data
+# 	# print error_msg
+# 	context.tc.assertTrue(200 != error_data['code'])
+# 	response_msg = error_data['data']['msg']
+# 	if response_msg == '':
+# 		response_msg = error_data['data']['detail'][0]['msg']
+# 	context.tc.assertEquals(error_msg, response_msg)
+#
+#
+# @then(u"{webapp_user_name}获得创建订单失败的信息")
+# def step_impl(context, webapp_user_name):
+# 	error_data = json.loads(context.response.content)
+# 	expected = json.loads(context.text)
+# 	webapp_owner_id = bdd_util.get_user_id_for(context.webapp_owner_name)
+# 	for detail in expected['detail']:
+# 		product = Product.objects.get(owner_id=webapp_owner_id, name=detail['id'])
+# 		detail['id'] = product.id
+#
+# 	actual = error_data['data']
+# 	context.tc.assertTrue(200 != error_data['code'])
+# 	bdd_util.assert_dict(expected, actual)
 
 
-@then(u"{webapp_user_name}获得创建订单失败的信息")
-def step_impl(context, webapp_user_name):
-	error_data = json.loads(context.response.content)
-	expected = json.loads(context.text)
-	webapp_owner_id = bdd_util.get_user_id_for(context.webapp_owner_name)
-	for detail in expected['detail']:
-		product = Product.objects.get(owner_id=webapp_owner_id, name=detail['id'])
-		detail['id'] = product.id
-
-	actual = error_data['data']
-	context.tc.assertTrue(200 != error_data['code'])
-	bdd_util.assert_dict(expected, actual)
-
-
-@then(u"{webapp_owner_name}能获取订单")
-def step_impl(context, webapp_owner_name):
-	db_order = Order.objects.all().order_by('-id')[0]
-	response = context.client.get('/mall/order_detail/get/?order_id=%d' % db_order.id, follow=True)
-
-	order = response.context['order']
-
-	expected = json.loads(context.text)
-	bdd_util.assert_dict(expected, order)
+# @then(u"{webapp_owner_name}能获取订单")
+# def step_impl(context, webapp_owner_name):
+# 	db_order = Order.objects.all().order_by('-id')[0]
+# 	response = context.client.get('/mall/order_detail/get/?order_id=%d' % db_order.id, follow=True)
+#
+# 	order = response.context['order']
+#
+# 	expected = json.loads(context.text)
+# 	bdd_util.assert_dict(expected, order)
 
 
 @when(u"{webapp_user_name}加入{webapp_owner_name}的商品到购物车")
@@ -1066,86 +1103,48 @@ def get_prodcut_ids_info(order):
 			}
 
 
-@when(u"{webapp_user_name}在购物车订单编辑中点击提交订单")
-def step_click_check_out(context, webapp_user_name):
-	"""
-	{
-		"pay_type":  "货到付款",
-	}
-	"""
-	from mall.models import PAYNAME2TYPE
-	argument = json.loads(context.text)
-	pay_type = argument.get(argument['pay_type'])
-
-	order = context.response.context['order']
-	argument_request = get_prodcut_ids_info(order)
-
-	url = '/webapp/api/project_api/call/'
-	data = {
-		'module': 'mall',
-		'target_api': 'order/save',
-		'is_order_from_shopping_cart': 'true',
-		'woid': context.webapp_owner_id,
-		'ship_id': order.ship_id,
-		'ship_name': order.ship_name,
-		'ship_tel': order.ship_tel,
-		'area': order.area,
-		'ship_address': order.ship_address,
-		'xa-choseInterfaces': PAYNAME2TYPE.get(pay_type, -1),
-		'bill': order.ship_name,
-		'group2integralinfo': {},
-	}
-	data.update(argument_request)
-	response = context.client.post(url, data)
-	content = json.loads(response.content)
-	msg = content["data"].get("msg", "")
-	match_str = u"有商品已下架<br/>2秒后返回购物车<br/>请重新下单"
-	if match_str == msg:
-		context.server_error_msg = msg
-	else:
-		context.created_order_id = content['data']['order_id']
-		context.response = response
+# @when(u"{webapp_user_name}在购物车订单编辑中点击提交订单")
+# def step_click_check_out(context, webapp_user_name):
+# 	"""
+# 	{
+# 		"pay_type":  "货到付款",
+# 	}
+# 	"""
+# 	from mall.models import PAYNAME2TYPE
+# 	argument = json.loads(context.text)
+# 	pay_type = argument.get(argument['pay_type'])
+#
+# 	order = context.response.context['order']
+# 	argument_request = get_prodcut_ids_info(order)
+#
+# 	url = '/webapp/api/project_api/call/'
+# 	data = {
+# 		'module': 'mall',
+# 		'target_api': 'order/save',
+# 		'is_order_from_shopping_cart': 'true',
+# 		'woid': context.webapp_owner_id,
+# 		'ship_id': order.ship_id,
+# 		'ship_name': order.ship_name,
+# 		'ship_tel': order.ship_tel,
+# 		'area': order.area,
+# 		'ship_address': order.ship_address,
+# 		'xa-choseInterfaces': PAYNAME2TYPE.get(pay_type, -1),
+# 		'bill': order.ship_name,
+# 		'group2integralinfo': {},
+# 	}
+# 	data.update(argument_request)
+# 	response = context.client.post(url, data)
+# 	content = json.loads(response.content)
+# 	msg = content["data"].get("msg", "")
+# 	match_str = u"有商品已下架<br/>2秒后返回购物车<br/>请重新下单"
+# 	if match_str == msg:
+# 		context.server_error_msg = msg
+# 	else:
+# 		context.created_order_id = content['data']['order_id']
+# 		context.response = response
 	# print("*"*80)
 	# from pprint import pprint
 	# pprint(response_data)
 	# raise Exception("hello")
 
 
-# def get_use_integral(webapp_user_name, webapp_id, data):
-# 	member = bdd_util.get_member_for(webapp_user_name, webapp_id)
-# 	product = Product.objects.get(id=data['product_ids'])
-# 	product.fill_standard_model()
-# 	totel = int(product.price * float(data['product_counts']))
-
-# 	coupon_id = data.get('coupon_id', None)
-# 	if coupon_id:
-# 		coupon = Coupon.objects.get(id=coupon_id)
-# 		totel = totel - coupon.money
-
-# 	try:
-# 		grade = MemberGrade.objects.get(id=member.grade_id)
-# 		usable_integral_percentage_in_order = grade.usable_integral_percentage_in_order
-# 		# 加运费
-# 		pro_id = data.get('area','').split('_')[0]
-# 		ps = PostageConfigSpecialHasProvince.objects.filter(province_id=pro_id)
-# 		weight_price = 0
-# 		if ps.count() > 0:
-# 			weight_price = ps[0].postage_config_special.first_weight_price
-
-# 		totel = totel + weight_price
-
-# 		totel = float(totel) * float(usable_integral_percentage_in_order)/float(100)
-# 	except:
-# 		pass
-
-# 	# 一元等价积分
-# 	integral_each_yuan = 10
-# 	settings = IntegralStrategySttings.objects.filter(webapp_id=webapp_id)
-# 	if settings.count() > 0:
-# 		integral_each_yuan = settings[0].integral_each_yuan
-
-# 	totel = int(totel * integral_each_yuan)
-# 	if member.integral > totel:
-# 		return totel
-# 	else:
-# 		return member.integral

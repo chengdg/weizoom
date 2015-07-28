@@ -4,7 +4,7 @@ raise DeprecationWarning(
     "'webapp.modules.mall.urls' is deprecated in favor of 'mall.urls'. "
     "Please use 'mall.urls' instead!")
 
-from django.conf.urls import *
+# from django.conf.urls import *
 
 # import views
 # import api_views
@@ -15,8 +15,8 @@ from django.conf.urls import *
 # import product_model_views
 # import product_model_api_views
 
-urlpatterns = patterns('',
-)
+# urlpatterns = patterns('',
+# )
 # 	# Termite GENERATED START: url
 # 	(r'^$', order_views.list_orders),
 

@@ -25,7 +25,7 @@
 			{% endif %}
 		</div>
 		<span class="xui-systemName"></span>
-		
+
 	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
@@ -39,22 +39,22 @@
 				{% else %}
 					{% if 'manage_index'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/mall/outline/get/' title='首页'>首页</a>
+						<a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/mall2/outline/' title='首页'>首页</a>
 					</li>
 					{% endif %}
 					{% if 'manage_product'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'product' %}class="active"{% endifequal %} href='/mall/onshelf_products/get/' title='商品管理'>商品管理</a>
+						<a {% ifequal first_nav_name 'product' %}class="active"{% endifequal %} href='/mall2/product_list/?shelve_type=1' title='商品管理'>商品管理</a>
 					</li>
 					{% endif %}
 					{% if 'manage_order'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'order' %}class="active"{% endifequal %} href='/mall/orders/get/' title='订单管理'>订单管理</a>
+						<a {% ifequal first_nav_name 'order' %}class="active"{% endifequal %} href='/mall2/order_list/' title='订单管理'>订单管理</a>
 					</li>
 					{% endif %}
 					{% if 'manage_promotion'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall_promotion/promotion_list/get/' title='促销管理'>促销管理</a>
+						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall2/promotion_list/' title='促销管理'>促销管理</a>
 					</li>
 					{% endif %}
 					{% if 'manage_member'|satisfy_permission:request %}
@@ -75,10 +75,10 @@
 					{% endif %}
 					{% if 'manage_mall_config'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'config' %}class="active"{% endifequal %} href='/mall/pay_interfaces/get/' title='配置管理'>配置管理</a>
+						<a {% ifequal first_nav_name 'config' %}class="active"{% endifequal %} href='/mall2/pay_interface_list/' title='配置管理'>配置管理</a>
 					</li>
 					{% endif %}
-					
+
 				{% endif %}
 			</ul>
 			<div class="xui-headerActionBar" style="bottom:40px">
@@ -113,7 +113,7 @@
 					{% endif %} -->
 					{% for nav in second_nav.navs %}
 					{% if nav|satisfy_permission:request %}
-						{% if not forloop.last %} 
+						{% if not forloop.last %}
 						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
 					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
 						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
@@ -152,7 +152,7 @@
 								{% endfor %}
 							{% endif %}
 						{% endif %}
-					
+
 					{% endif %}
 					{% endfor %}
 				{% endfor %}
@@ -219,7 +219,7 @@
       W.previewName = "信息预览";
       W.previewImage = "/static/img/user-1.jpg";
     {% endif %}
-    
+
 </script>
  <script type="text/javascript">
  	  function unReadCountCheck() {
@@ -242,8 +242,8 @@
                	} else {
                		$('.xa-num-unread-message-count').css('display', 'none');
                	}
-              
-             
+
+
             },
             error: function(resp) {
               //TODO 进行错误通知
@@ -291,8 +291,8 @@ $(document).ready(function($) {
     			// W.getLoadingView().show();
 
 				W.getApi().call({
-					app: 'mall',
-					api: 'bulk_shipments/update',
+					app: 'mall2',
+					resource: 'bulk_shipment',
 					method: 'post',
 					args: {
 						file_url: data
@@ -313,12 +313,12 @@ $(document).ready(function($) {
 					},
 					error: function(resp) {
 						W.getLoadingView().hide();
-						W.getErrorHintView().show('处理失败，请稍后重试！');
+						W.getErrorHintView().show('处理失败，请稍后重试！66666');
 					}
 				})
 		    }
 		});
-		
+
 
 
 

@@ -13,7 +13,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 
 @mall @mall.product @mall.product.integral
@@ -73,7 +73,7 @@ Scenario:添加积分商品
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	Then jobs能获取商品'东坡肘子'
 		"""
@@ -142,8 +142,8 @@ Scenario:添加积分商品
 @mall @mall.product @mall.product.integral
 Scenario: 添加商品按倒序排列
 	Jobs添加多个商品后，"商品列表"会按照添加的顺序倒序排列
-	
-	When jobs添加商品
+
+	When "jobs"添加商品
 		"""
 		[{
 			"name": "商品1"
@@ -151,7 +151,7 @@ Scenario: 添加商品按倒序排列
 			"name": "商品2"
 		}, {
 			"name": "商品3"
-		}]	
+		}]
 		"""
 	Then jobs能获取商品列表
 		"""

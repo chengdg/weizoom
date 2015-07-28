@@ -157,7 +157,7 @@ Scenario: 获得购买趋势
 		| 今天       | 1             | 11.1  |
 
 
-@mall2 @mall.outline
+@mall2 @mall.outline 
 Scenario: 获得商铺首页的代发货订单列表
 	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
 

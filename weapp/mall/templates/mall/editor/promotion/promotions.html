@@ -6,7 +6,7 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+		<li><a href="/mall2/promotion_list/">促销管理</a></li>
 		<li class="active">促销查询</li>
 	</ul>
 </div>
@@ -21,8 +21,8 @@
 	</div>
 	<div
 		data-ui-role="advanced-table"
-		data-app="mall_promotion"
-		data-api="promotions/get"
+		data-app="mall2"
+		data-api="promotion_list"
 		data-template-id="#promotions-view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
@@ -144,10 +144,10 @@
 					<td>
 
 						{{if (promotion.status === '已结束')}}
-						<a target="_blank" href="/mall_promotion/${promotion.type.name}_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a target="_blank" href="/mall2/${promotion.type.name}/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
 						<a href="javascript:void(0);" class="xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
 						{{else}}
-						<a target="_blank" href="/mall_promotion/${promotion.type.name}_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a target="_blank" href="/mall2/${promotion.type.name}/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
 						<a href="javascript:void(0);" class="xa-notFinishInfo xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
 						<a href="javascript:void(0);" class="xui-hide xa-finishInfo xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
 						{{/if}}

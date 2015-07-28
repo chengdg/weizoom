@@ -84,7 +84,7 @@ $(document).ready(function() {
     $('body').delegate('[name="prize_source|0"]', 'change', function(){
         var count = $(':selected', this).data('count');
         if(count || count == 0){
-            $(this).next('.xua-remainedCount').html('当前库存:'+count).show().append($('<a/>').attr('href','/mall_promotion/coupon/create/?rule_id='+$(this).val()).html('增加库存'));
+            $(this).next('.xua-remainedCount').html('当前库存:'+count).show().append($('<a/>').attr('href','/mall2/coupon/?rule_id='+$(this).val()).html('增加库存'));
         }
     })
 	$("select[name='prize_type|0']").find("option[value='{% if award_content %}{{ award_content.award_type }}{% else %}0{% endif %}']").attr("selected",true);

@@ -66,7 +66,7 @@ def show_webapp(request):
 	if request.user.username == 'manager':
 		return show_workspaces(request)
 	else:
-		return HttpResponseRedirect('/webapp/mall/')
+		return HttpResponseRedirect('/')
 
 
 @login_required

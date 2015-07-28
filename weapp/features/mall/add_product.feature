@@ -40,23 +40,12 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.product @after_rebuild
+@mall2 @mall.product @after_rebuild @zy_ap01
 Scenario: 添加商品
 	Jobs添加商品后，能获取他添加的商品
 
 	Given jobs登录系统
-	When jobs添加邮费配置
-		"""
-		[{
-			"name":"顺丰",
-			"first_weight":1,
-			"first_weight_price":15.00,
-			"added_weight":1,
-			"added_weight_price":5.00
-		}]
-		"""
-	#When jobs选择'顺丰'运费配置
-	When jobs添加商品
+	And jobs已添加商品
 		#东坡肘子(有分类，上架，无限库存，多轮播图), 叫花鸡(无分类，下架，有限库存，单轮播图)
 		"""
 		[{
@@ -101,6 +90,17 @@ Scenario: 添加商品
 			}
 		}]
 		"""
+	When jobs添加邮费配置
+		"""
+		[{
+			"name":"顺丰",
+			"first_weight":1,
+			"first_weight_price":15.00,
+			"added_weight":1,
+			"added_weight_price":5.00
+		}]
+		"""
+	#When jobs选择'顺丰'运费配置
 	Then jobs能获取商品'东坡肘子'
 		"""
 		{
@@ -159,12 +159,12 @@ Scenario: 添加商品
 		"""
 
 
-@mall2 @mall.product
+@mall2 @mall.product @zy_ap02
 Scenario: 添加'免运费'配置的商品
 	Jobs添加商品后，能获取他添加的商品
 
 	Given jobs登录系统
-	When jobs已添加商品
+	And jobs已添加商品
 		"""
 		[{
 			"name": "红烧肉",
@@ -225,11 +225,11 @@ Scenario: 添加'免运费'配置的商品
 		}
 		"""
 
-@mall2 @mall.product
+@mall2 @mall.product @zy_ap03
 Scenario: 添加商品按倒序排列
 	Jobs添加多个商品后，"商品列表"会按照添加的顺序倒序排列
 
-	When jobs添加商品
+	Given jobs已添加商品
 		"""
 		[{
 			"name": "商品1"

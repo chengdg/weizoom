@@ -21,7 +21,7 @@ W.component.wepage.ItemList = W.component.Component.extend({
                 triggerButton: '从商品分类中选择',
                 selectedButton: '修改',
                 dialog: 'W.dialog.termite.SelectCategoriesDialog',
-                dialogParameter: '{"enableMultiSelection":false, "title":[{"name":"商品分组", "type":"category"}], "navData":{"category":{"dataName":"商品分组", "dataLink": "/mall/product_categories/get/"}}}'
+                dialogParameter: '{"enableMultiSelection":false, "title":[{"name":"商品分组", "type":"category"}], "navData":{"category":{"dataName":"商品分组", "dataLink": "/mall2/category_list/"}}}'
             },{
                 name: 'type',
                 type: 'radio',
@@ -155,7 +155,7 @@ W.component.wepage.ItemList = W.component.Component.extend({
                     W.getLoadingView().hide();   
 
                     // 加入 dailog默认选中 某一条数据
-                    var dialogParameter = '{"selectedId": '+categoryId+', "enableMultiSelection":false, "title":[{"name":"商品分组", "type":"category"}], "navData":{"category":{"dataName":"商品分组", "dataLink": "/mall/product_categories/get/"}}}';
+                    var dialogParameter = '{"selectedId": '+categoryId+', "enableMultiSelection":false, "title":[{"name":"商品分组", "type":"category"}], "navData":{"category":{"dataName":"商品分组", "dataLink": "/mall2/category_list/"}}}';
                     $propertyViewNode.find('button').attr('data-dialog-parameter', dialogParameter);
                 },
                 error: function(resp) {

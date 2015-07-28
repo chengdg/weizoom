@@ -5,7 +5,7 @@ Feature: 添加商品规格
 Background:
 	Given jobs登录系统
 
-@mall @mall.product @mall.product_model @drop_in_mall2
+@mall @mall.product @mall.product_model @drop_in_mall2 @zy_apm01 @mall2
 Scenario: 添加商品规格
 	Jobs添加商品规格后
 	1. jobs能获取商品规格
@@ -31,7 +31,7 @@ Scenario: 添加商品规格
 			}, {
 				"name": "S"
 			}]
-		}]	
+		}]
 		"""
 	Then jobs能获取商品规格'颜色'
 		"""
@@ -71,7 +71,7 @@ Scenario: 添加多个商品规格后，获取商品规格列表
 	Jobs添加多个商品规格后
 	1. jobs能获取商品规格列表
 	2. 商品规格列表按创建顺序正序排列
-	
+
 	When jobs已添加商品规格
 		"""
 		[{
@@ -92,7 +92,7 @@ Scenario: 添加多个商品规格后，获取商品规格列表
 			}, {
 				"name": "S"
 			}]
-		}]	
+		}]
 		"""
 	Then jobs能获取商品规格列表
 		"""

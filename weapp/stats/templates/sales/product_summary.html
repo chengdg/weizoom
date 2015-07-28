@@ -11,10 +11,10 @@
             <li class="active">商品概况分析</li>
         </ul>
     </div>
-    
+
     <div id="stats-date-filter-view" class="xui-filter xui-filterPanel "></div>
-    
-    <div 
+
+    <div
         data-ui-role="product-summary-base-data-advanced-table"
         data-app="stats"
         data-resource="product_summary"
@@ -24,11 +24,11 @@
         data-selectable="false"
         data-item-count-per-page="10"
         data-disable-header-select="true"
-        data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}' 
+        data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}'
     ></div>
 
     <div class="xui-chart">
-    
+
     <div class="xui-charWrap">
         <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">下单单量排行TOP10</span></div>
         <div class="xui-productEchart" id="productNum" data-ui-role="fansEchart" data-app="stats" data-resource="deal_order_rank_bar_chart" data-wrap-el=".xa-message-tips-wrap"></div>
@@ -42,11 +42,11 @@
             data-selectable="false"
             data-item-count-per-page="10"
             data-disable-header-select="true"
-            class="panel-body" 
+            class="panel-body"
             data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}'
             style="width:338px;float:right;"
         ></div>
-    </div> 
+    </div>
     <!--
     <div class="xui-charWrap">
         <div class="xui-i-title"> <div class="xui-i-block"></div>  <span class="ml5">商品被分享次数排行榜TOP10</span></div>
@@ -61,15 +61,15 @@
             data-selectable="false"
             data-item-count-per-page="10"
             data-disable-header-select="true"
-            class="panel-body" 
+            class="panel-body"
             data-args='{"start_date":"{{start_date}}", "end_date":"{{end_date}}"}'
             style="width:338px;float:right;"
         ></div>
-    </div> 
+    </div>
     -->
     </div>
     <div class="cb"></div>
-    
+
 </div>
 {% endblock %}
 
@@ -126,7 +126,7 @@
                         ${item.rank}
                     </td>
                     <td>
-                        <a href="/mall/product/update/?id=${item.product_id}" target='_blank'>
+                        <a href="/mall2/product/?id=${item.product_id}" target='_blank'>
                             {{html item.product_name}}
                         </a>
                     </td>
@@ -153,7 +153,7 @@
 
         stats_data = W.loadJSON('stats_data');
         xlog("in ready()");
-        
+
         $('#start_date').val('{{start_date}}');
         $('#end_date').val('{{end_date}}');
         view.updateTimeTags();
@@ -176,7 +176,7 @@
             view.updateTimeTags();
         });
     });
-	
+
 </script>
 
 {% endblock %}

@@ -127,8 +127,8 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 //		} else {
             this.$('.xa-customProperties ul').empty();
 			W.getApi().call({
-				app: 'mall',
-				api: 'template_properties/get',
+				app: 'mall2',
+				resource: 'property_list',
 				args: {id: templateId},
 				scope: this,
 				success: function(data) {

@@ -31,12 +31,12 @@ W.dialog.mall.SelectProductModelPropertyDialog = W.dialog.Dialog.extend({
     onShow: function(options) {
         var _this = this;
         W.getApi().call({
-            app: 'mall',
-            api: 'product_model_properties/get',
+            app: 'mall2',
+            resource: 'model_property_list',
             args: {},
             success: function(data) {
                 if (data.length === 0) {
-                    _this.$dialog.find('.modal-body').html('您还没有定制的规格属性，请关闭或<a href="/mall/model_properties/get/">定制规格属性</a>')
+                    _this.$dialog.find('.modal-body').html('您还没有定制的规格属性，请关闭或<a href="/mall2/model_property_list/">定制规格属性</a>')
                 } else {
                     var $node = $.tmpl(_this.propertyTableTemplate, {properties: data, selectedValues: options.selectedValues});
                     _this.$dialog.find('.modal-body').empty().append($node);

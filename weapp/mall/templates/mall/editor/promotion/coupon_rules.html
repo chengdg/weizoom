@@ -14,7 +14,7 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/mall_promotion/promotion_lists/get/">促销管理</a></li>
+		<li><a href="/mall2/promotion_list/">促销管理</a></li>
 		<li class="active">优惠券</li>
 	</ul>
 </div>
@@ -25,12 +25,12 @@
 <div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
 	<div class="panel-heading xui-headStyle"  style="background:#E9EDF5;padding-bottom:11px!important; margin-left:-2px;">
 		<b style="line-height: 30px;">所有优惠</b>
-		<a href="/mall_promotion/coupon_rules/create/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建优惠券</a>
+		<a href="/mall2/coupon_rule/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建优惠券</a>
 	</div>
 	<div
 		data-ui-role="advanced-table"
-		data-app="mall_promotion"
-		data-api="promotions/get"
+		data-app="mall2"
+		data-resource="coupon_rule_list"
 		data-args='{"type": "coupon"}'
 		data-template-id="#coupons_list_view"
 		data-enable-paginator="true"
@@ -88,15 +88,15 @@
 			<td>${ promotion.detail.use_count }
 			</td>
 			<td>
-				<a href="../../coupons/get?id=${ promotion.detail.id }">码库</a>
+				<a href="/mall2/coupon_list/?id=${ promotion.detail.id }">码库</a>
 				{{if promotion.status == '已结束' }}
 					&nbsp;-&nbsp;<a href="javascript:void(0);" class="xa-delete">删除</a>
 				{{/if}}
 				{{if promotion.status != '已结束' && promotion.status != '已失效'}}
 				<span class="xa-notFinishInfo">&nbsp;-&nbsp;
 				<a class="xa-copyLinkBtn" href="javascript:void(0);" data-url="/termite/workbench/jqm/preview/?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=${ promotion.detail.owner_id }&project_id=0&rule_id=${promotion.detail.id}">链接</a>&nbsp;-&nbsp;
-				<a href="../update?id=${ promotion.id }">编辑</a>&nbsp;-&nbsp;
-				<a href="../select?id=${ promotion.id }">查看</a>
+				<a href="/mall2/coupon_rule/?id=${ promotion.id }">编辑</a>&nbsp;-&nbsp;
+				<a href="/mall2/coupon_rule/?id=${ promotion.id }&action=get">查看</a>
 				<br/>
 				<a href="javascript:void(0);" class="xa-finish">使失效</a></span>
 				{{/if}}

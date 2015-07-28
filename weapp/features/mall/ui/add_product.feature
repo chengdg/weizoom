@@ -11,14 +11,14 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	And jobs登录系统:ui
 
 @ui @ui-mall @ui-mall.product
 Scenario: 添加商品
 	Jobs添加商品后，能获取他添加的商品
-	
+
 	When jobs添加商品:ui
 		#东坡肘子(有分类，上架，无限库存，多轮播图), 叫花鸡(无分类，下架，有限库存，单轮播图)
 		"""
@@ -74,7 +74,7 @@ Scenario: 添加商品
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	Then jobs能获取商品'东坡肘子':ui
 		"""
@@ -128,9 +128,9 @@ Scenario: 添加商品
 @ui @ui-mall @ui-mall.product
 Scenario: 添加商品按倒序排列
 	Jobs添加多个商品后，"商品列表"会按照添加的顺序倒序排列
-	
+
 	Given jobs登录系统
-	When jobs添加商品
+	When "jobs"添加商品
 		"""
 		[{
 			"name": "商品1"
@@ -138,7 +138,7 @@ Scenario: 添加商品按倒序排列
 			"name": "商品2"
 		}, {
 			"name": "商品3"
-		}]	
+		}]
 		"""
 	Then jobs能获取商品列表:ui
 		"""

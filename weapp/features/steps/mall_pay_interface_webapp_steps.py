@@ -137,35 +137,35 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 	context.pay_order_id = order.order_id
 
 
-@then(u"{webapp_user_name}支付订单成功")
-def step_impl(context, webapp_user_name):
-	order, order_has_products = _get_order_has_products(context)
-
-	actual_order = order
-	actual_order.ship_area = actual_order.area
-	actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
-	actual_order.pay_interface_type = PAYTYPE2NAME[actual_order.pay_interface_type]
-
-	#获取order的products
-	actual_order.products = []
-	for relation in order_has_products:
-		product = relation.product
-		product.count = relation.number
-		product.fill_specific_model('standard')
-		actual_order.products.append(product)
-
-	expected = json.loads(context.text)
-
-	bdd_util.assert_dict(expected, actual_order)
-
-def _get_order_has_products(context):
-	order = Order.objects.get(order_id=context.pay_order_id)
-	order_has_products = None
-	if hasattr(context.response, 'order_has_products'):
-		order_has_products = context.response.context['order_has_products']
-	else:
-		order_has_products = OrderHasProduct.objects.filter(order=order)
-	return order, order_has_products
+# @then(u"{webapp_user_name}支付订单成功")
+# def step_impl(context, webapp_user_name):
+# 	order, order_has_products = _get_order_has_products(context)
+#
+# 	actual_order = order
+# 	actual_order.ship_area = actual_order.area
+# 	actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
+# 	actual_order.pay_interface_type = PAYTYPE2NAME[actual_order.pay_interface_type]
+#
+# 	#获取order的products
+# 	actual_order.products = []
+# 	for relation in order_has_products:
+# 		product = relation.product
+# 		product.count = relation.number
+# 		product.fill_specific_model('standard')
+# 		actual_order.products.append(product)
+#
+# 	expected = json.loads(context.text)
+#
+# 	bdd_util.assert_dict(expected, actual_order)
+#
+# def _get_order_has_products(context):
+# 	order = Order.objects.get(order_id=context.pay_order_id)
+# 	order_has_products = None
+# 	if hasattr(context.response, 'order_has_products'):
+# 		order_has_products = context.response.context['order_has_products']
+# 	else:
+# 		order_has_products = OrderHasProduct.objects.filter(order=order)
+# 	return order, order_has_products
 
 def _pay_weizoom_card(context, data, order):
 	url = '/webapp/api/project_api/call/'
@@ -192,26 +192,26 @@ def _pay_weizoom_card(context, data, order):
 	response_json = json.loads(response.content)
 
 
-@then(u"{webapp_user_name}查看订单")
-def step_impl(context, webapp_user_name):
-	actual_order = {}
-
-	if hasattr(context, 'pay_order_id'):
-		order, order_has_products = _get_order_has_products(context)
-
-		actual_order = order
-		actual_order.ship_area = actual_order.area
-		actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
-		actual_order.pay_interface_type = PAYTYPE2NAME[actual_order.pay_interface_type]
-
-		#获取order的products
-		actual_order.products = []
-		for relation in order_has_products:
-			product = relation.product
-			product.count = relation.number
-			product.fill_specific_model('standard')
-			actual_order.products.append(product)
-
-	expected = json.loads(context.text)
-
-	bdd_util.assert_dict(expected, actual_order)
+# @then(u"{webapp_user_name}查看订单")
+# def step_impl(context, webapp_user_name):
+# 	actual_order = {}
+#
+# 	if hasattr(context, 'pay_order_id'):
+# 		order, order_has_products = _get_order_has_products(context)
+#
+# 		actual_order = order
+# 		actual_order.ship_area = actual_order.area
+# 		actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
+# 		actual_order.pay_interface_type = PAYTYPE2NAME[actual_order.pay_interface_type]
+#
+# 		#获取order的products
+# 		actual_order.products = []
+# 		for relation in order_has_products:
+# 			product = relation.product
+# 			product.count = relation.number
+# 			product.fill_specific_model('standard')
+# 			actual_order.products.append(product)
+#
+# 	expected = json.loads(context.text)
+#
+# 	bdd_util.assert_dict(expected, actual_order)

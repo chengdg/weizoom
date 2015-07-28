@@ -149,7 +149,7 @@ Scenario: 上架商品
 	2. jobs的在售商品列表发生变化
 
 	Given jobs登录系统
-	When jobs上架商品'东坡肘子'
+	When jobs-上架商品'东坡肘子'
 	Then jobs能获得'待售'商品列表
 		"""
 		[{

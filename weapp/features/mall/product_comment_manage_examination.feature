@@ -573,9 +573,12 @@ Scenario: 6.同款商品，最多可置顶3条评价信息，第4条置顶时，
     """
 
 #后续补充.雪静
-@mall2 @mall.webapp.comment @prm7
+@mall.webapp.comment @prm7
 Scenario: 7.jobs通过审核评价，给用户加积分
-    tom评价jobs的商品，jobs通过审核，给tom加相应的积分
+   1.tom评价jobs的商品，jobs通过审核，给tom加相应的积分
+   2.tom评价jobs的商品，jobs通过并置顶，给tom加相应的积分
+   3.jobs取消置顶，屏蔽评论，tom的积分不变
+
 
     When tom访问jobs的webapp
     Then tom在jobs的webapp中获得积分日志
@@ -593,18 +596,114 @@ Scenario: 7.jobs通过审核评价，给用户加积分
         }]
         """
     When jobs已完成对商品的评价信息审核
-    """
+        """
         [{
             "product_name": "商品1",
             "order_no": "3",
             "member": "tom",
             "status": "1"
-       }]
+        }]
         """
     When tom访问jobs的webapp
     Then tom在jobs的webapp中获得积分日志
         """
         [{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息审核并置顶
+        """
+        [{
+            "product_name": "商品2",
+            "order_no": "4",
+            "member": "tom",
+            "status": "1"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs取消对商品的评价信息置顶
+        """
+        [{
+            "product_name": "商品2",
+            "order_no": "4",
+            "member": "tom",
+            "status": "1"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs屏蔽对商品的评价信息
+        """
+        [{
+            "product_name": "商品2",
+            "order_no": "4",
+            "member": "tom",
+            "status": "1"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息置顶
+        """
+        [{
+            "product_name": "商品1",
+            "order_no": "3",
+            "member": "tom",
+            "status": "1"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品好评返利",
+            "integral": 20
+        },{
             "content": "商品好评返利",
             "integral": 20
         },{

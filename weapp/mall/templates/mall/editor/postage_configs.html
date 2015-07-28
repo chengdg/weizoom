@@ -10,7 +10,7 @@
     <div class="xui-i-box xui-rightPanelBg xui-tableList-content pr">
         <hr class="mt40" style="border:1px solid #1183ca;">
         <div>
-            <a class="btn btn-success xui-addNewGroup pa  xui-btnPosition" href="/mall/postage_template/create/">
+            <a class="btn btn-success xui-addNewGroup pa  xui-btnPosition" href="/mall2/postage/">
                 <img src="/static_v2/img/editor/plusOpcity.png" alt="">添加运费模板</a>
         </div>
         {% if postage_configs %}
@@ -27,7 +27,7 @@
                 <div class="xui-i-actionBar fr">
                     <div class="xui-i-actionItem xui-fontGary">最后编辑时间: {{postage_config.update_time|date:"Y-m-j H:i"}}</div>
                     <div class="ml20 xui-i-actionItem">
-                        <a href="/mall/postage_template/edit/?id={{postage_config.id}}" class="btn btn-xs xa-edit xui-edit xui-inline">修改</a>
+                        <a href="/mall2/postage/?id={{postage_config.id}}" class="btn btn-xs xa-edit xui-edit xui-inline">修改</a>
                         <a href="javascript:void(0)" class="btn btn-xs xa-cancelBtn xui-delete xui-redBtn xui-inline">删除</a>
                     </div>
                 </div>
@@ -99,9 +99,9 @@ $(document).ready(function() {
             msg:'是否确定删除',
             confirm:function(){
                 W.getApi().call({
-                    method: 'post',
-                    app: 'mall',
-                    api: 'postage_template/delete',
+                    method: 'delete',
+                    app: 'mall2',
+                    resource: 'postage',
                     args: {id: templateId},
                     success: function(data) {
                         window.location.reload();
@@ -120,10 +120,11 @@ $(document).ready(function() {
         var postageTemplateId = $postageTemplate.data('postageTemplateId');
         W.getApi().call({
             method: 'post',
-            app: 'mall',
-            api: 'used_postage_template/create',
+            app: 'mall2',
+            resource: 'postage',
             args: {
-                id: postageTemplateId
+                id: postageTemplateId,
+                is_used: 1,
             },
             success: function() {
                 W.showHint('success', '切换运费模板成功');

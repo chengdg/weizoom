@@ -78,6 +78,7 @@ def index(request):
 		return render_to_response('account/login.html', {})
 	if request.user.username in settings.WEIZOOM_CARD_ADMIN_USERS:
 		return HttpResponseRedirect('/card/cards/get/')
+
 	if request.user.username == 'operator':
 		#operator用户转入反馈意见列表
 		return HttpResponseRedirect('/operation/editor/feedbacks/')
@@ -89,7 +90,7 @@ def index(request):
 		if not user_profile.is_mp_registered:
 			return HttpResponseRedirect('/account/')
 		elif request.user.id != request.manager.id:
-			return HttpResponseRedirect('/mall/outline/get/')
+			return HttpResponseRedirect('/mall2/outline/')
 		else:
 			#add by jiangzhe 20150706 直接跳转到微信互动页面
 			return HttpResponseRedirect('/new_weixin/outline/')

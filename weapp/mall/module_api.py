@@ -2092,6 +2092,12 @@ def update_order_status(user, action, order, request=None):
 			target_status = ORDER_STATUS_REFUNDED
 
 		try:
+			# 返回订单使用的积分
+			if order.integral:
+				from modules.member.models import WebAppUser
+				from modules.member.integral import increase_member_integral
+				member = WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
+				increase_member_integral(member, order.integral, u'取消订单回收积分')
 			# 返回订单使用的优惠劵
 			if order.coupon_id:
 				from market_tools.tools.coupon.util import restore_coupon
@@ -2099,19 +2105,7 @@ def update_order_status(user, action, order, request=None):
 			# 返回商品的数量
 			__restore_product_stock_by_order(order)
 			mall_signals.cancel_order.send(sender=Order, order=order)
-			# 返回订单使用的积分
-			if order.integral:
-				from modules.member.models import WebAppUser
-				from modules.member.integral import increase_member_integral
-				member = WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
-				increase_member_integral(member, order.integral, u'取消订单回收积分')
-			if order.status > mall_models.ORDER_STATUS_CANCEL:
-				# 已经支付过得订单回退销量
-				for relation in OrderHasProduct.objects.filter(order_id=order.id):
-					product_id = relation.product_id
-					count = relation.number
-					if ProductSales.objects.filter(product_id=product_id).count() > 0:
-						ProductSales.objects.filter(product_id=product_id).update(sales = F('sales') - count)
+
 
 		except :
 			notify_message = u"取消订单业务处理异常，cause:\n{}".format(unicode_full_stack())
@@ -2121,7 +2115,8 @@ def update_order_status(user, action, order, request=None):
 	expired_status = order.status
 	if target_status:
 		if 'cancel' in action and request:
-			Order.objects.filter(id=order_id).update(status=target_status, reason=request.GET.get('reason', ''))
+			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''))
+
 		elif 'pay' in action:
 			payment_time = datetime.now()
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
@@ -2163,6 +2158,7 @@ def __restore_product_stock_by_order(order):
 	"""
 	返回商品的库存
 	包括赠品库存
+	和销量
 	"""
 	products = get_order_products(order)
 	for product in products:
@@ -2172,6 +2168,13 @@ def __restore_product_stock_by_order(order):
 			product_model = models[0]
 			product_model.stocks = product_model.stocks + product['count']
 			product_model.save()
+		# product sales update
+		_id = product.get('id')
+		productsales = ProductSales.objects.get(product_id=_id)
+		ProductSales.objects.filter(
+			product_id=_id
+		).update(sales=productsales.sales-1)
+
 
 
 ########################################################################
@@ -2189,7 +2192,7 @@ def get_order_fitlers_by_user(user):
 
 	return filters
 
-
+# mobile_app/order_api_views.py和mall.order使用
 def get_pay_interfaces_by_user(user):
 	"""
 	获取该用户的所有的支付方式
@@ -2224,100 +2227,161 @@ def get_order_status_text(status):
 	return STATUS2TEXT[status]
 
 
-def get_select_params(request):
-	"""
-	构造查询条件
-	"""
-	query = request.GET.get('query', '').strip()
-	ship_name = request.GET.get('ship_name', '').strip()
-	ship_tel = request.GET.get('ship_tel', '').strip()
-	product_name = request.GET.get('product_name', '').strip()
-	pay_type = request.GET.get('pay_type', '').strip()
-	express_number = request.GET.get('express_number', '').strip()
-	order_source = request.GET.get('order_source', '').strip()
-	order_status = request.GET.get('order_status', '').strip()
-	isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
+# def get_select_params(request):
+# 	"""
+# 	构造查询条件
+# 	"""
+# 	query = request.GET.get('query', '').strip()
+# 	ship_name = request.GET.get('ship_name', '').strip()
+# 	ship_tel = request.GET.get('ship_tel', '').strip()
+# 	product_name = request.GET.get('product_name', '').strip()
+# 	pay_type = request.GET.get('pay_type', '').strip()
+# 	express_number = request.GET.get('express_number', '').strip()
+# 	order_source = request.GET.get('order_source', '').strip()
+# 	order_status = request.GET.get('order_status', '').strip()
+# 	isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
+#
+# 	# 填充query
+# 	query_dict = dict()
+# 	if len(query):
+# 		query_dict['order_id'] = query.strip().split('-')[0]
+# 	if len(ship_name):
+# 		query_dict['ship_name'] = ship_name
+# 	if len(ship_tel):
+# 		query_dict['ship_tel'] = ship_tel
+# 	if len(express_number):
+# 		query_dict['express_number'] = express_number
+# 	if len(product_name):
+# 		query_dict['product_name'] = product_name
+# 	if len(pay_type):
+# 		query_dict['pay_interface_type'] = int(pay_type)
+# 	if len(order_source):
+# 		query_dict['order_source'] = int(order_source)
+# 	if len(order_status):
+# 		query_dict['status'] = int(order_status)
+# 	if isUseWeizoomCard:
+# 		query_dict['isUseWeizoomCard'] = isUseWeizoomCard
+#
+#
+# 	# 时间区间
+# 	try:
+# 		date_interval = request.GET.get('date_interval', '')
+# 		if date_interval:
+# 			date_interval = date_interval.split('|')
+# 			if " " in date_interval[0]:
+# 				date_interval[0] = date_interval[0] +':00'
+# 			else:
+# 				date_interval[0] = date_interval[0] +' 00:00:00'
+#
+# 			if " " in date_interval[1]:
+# 				date_interval[1] = date_interval[1] +':00'
+# 			else:
+# 				date_interval[1] = date_interval[1] +' 23:59:59'
+# 		else:
+# 			date_interval = None
+# 	except:
+# 		date_interval = None
+#
+# 	return query_dict, date_interval
 
-	# 填充query
-	query_dict = dict()
-	if len(query):
-		query_dict['order_id'] = query.strip().split('-')[0]
-	if len(ship_name):
-		query_dict['ship_name'] = ship_name
-	if len(ship_tel):
-		query_dict['ship_tel'] = ship_tel
-	if len(express_number):
-		query_dict['express_number'] = express_number
-	if len(product_name):
-		query_dict['product_name'] = product_name
-	if len(pay_type):
-		query_dict['pay_interface_type'] = int(pay_type)
-	if len(order_source):
-		query_dict['order_source'] = int(order_source)
-	if len(order_status):
-		query_dict['status'] = int(order_status)
-	if isUseWeizoomCard:
-		query_dict['isUseWeizoomCard'] = isUseWeizoomCard
+# def get_orders_by_params(query_dict, date_interval, orders):
+# 	"""
+# 	按照查询条件筛选符合条件的订单
+# 	"""
+# 	#商品名称
+# 	product_name = ""
+# 	if query_dict.has_key("product_name"):
+# 		product_name = query_dict["product_name"]
+# 		query_dict.pop("product_name")
+#
+# 	#处理搜索
+# 	if len(query_dict):
+# 		if query_dict.has_key("isUseWeizoomCard"):
+# 			query_dict.pop("isUseWeizoomCard")
+# 			orders = orders.exclude(weizoom_card_money=0)
+# 		orders = orders.filter(**query_dict)
+#
+# 	#处理 时间区间筛选
+# 	if date_interval:
+# 		start_time = date_interval[0]
+# 		end_time = date_interval[1]
+# 		orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
+#
+# 	# #处理商品名称筛选条件
+# 	# if product_name:
+# 	# 	filter_orders = []
+# 	# 	order2products = {}
+# 	# 	for order in orders:
+# 	# 		products = get_order_products(order)
+# 	# 		for product in products:
+# 	# 			if product_name in product['name']:
+# 	# 				filter_orders.append(order)
+# 	# 				break
+# 	# 	orders = filter_orders
+#
+# 	# #处理商品名称筛选条件
+# 	# if product_name:
+# 	# 	filter_orders = []
+#     #
+# 	# 	order_ids = [order.id for order in orders]
+# 	# 	orderHasProducts = OrderHasProduct.objects.filter(order_id__in=order_ids)
+#     #
+# 	# 	orderId2orderHasProducts = dict()
+# 	# 	for orderHasProduct in orderHasProducts:
+# 	# 		if not orderId2orderHasProducts.get(orderHasProduct.order_id):
+# 	# 			orderId2orderHasProducts[orderHasProduct.order_id] = []
+# 	# 		orderId2orderHasProducts.get(orderHasProduct.order_id).append(orderHasProduct)
+#     #
+# 	# 	order_promotion_relations = list(OrderHasPromotion.objects.filter(order_id__in=order_ids))
+# 	# 	id2promotion = dict([(relation.promotion_id, relation) for relation in order_promotion_relations])
+#     #
+# 	# 	product_ids = [orderHasProduct.product_id for orderHasProduct in orderHasProducts]
+# 	# 	products = Product.objects.filter(id__in=product_ids)
+# 	# 	id2product = dict([(product.id, product) for product in products])
+#     #
+# 	# 	for order in orders:
+# 	# 		for orderHasProduct in orderId2orderHasProducts[order.id]:
+#     #
+# 	# 			if product_name in id2product.get(orderHasProduct.product_id, None).name:
+# 	# 				filter_orders.append(order)
+# 	# 				break
+#     #
+# 	# 			promotion_relation = id2promotion.get(orderHasProduct.promotion_id, None)
+# 	# 			if promotion_relation:
+#     #
+# 	# 				promotion_result = promotion_relation.promotion_result
+#     #
+# 	# 				if promotion_result.has_key('premium_products'):
+# 	# 					for premium_product in promotion_relation.promotion_result['premium_products']:
+#     #
+# 	# 						if product_name in premium_product['name']:
+# 	# 							filter_orders.append(order)
+# 	# 							break
+#     #
+# 	# 	orders = filter_orders
+#
+#
+# 	if product_name:
+# 		product_list = Product.objects.filter(name__contains=product_name)
+# 		product_ids = [product.id for product in product_list]
+#
+# 		orderHasProduct_list = OrderHasProduct.objects.filter(product_id__in=product_ids)
+#
+#
+# 		order_ids = [orderHasProduct.order_id for orderHasProduct in orderHasProduct_list]
+#
+# 		orderHasPromotions = OrderHasPromotion.objects.filter(promotion_type="premium_sale")
+#
+# 		for orderHasPromotion in orderHasPromotions:
+# 			for premium_product in orderHasPromotion.promotion_result['premium_products']:
+# 				if premium_product['id'] in product_ids and orderHasPromotion.order_id not in order_ids:
+#
+# 					order_ids.append(orderHasPromotion.order_id)
+#
+#
+# 		orders =orders.filter(id__in=order_ids)
+# 	return orders
 
-
-	# 时间区间
-	try:
-		date_interval = request.GET.get('date_interval', '')
-		if date_interval:
-			date_interval = date_interval.split('|')
-			if " " in date_interval[0]:
-				date_interval[0] = date_interval[0] +':00'
-			else:
-				date_interval[0] = date_interval[0] +' 00:00:00'
-
-			if " " in date_interval[1]:
-				date_interval[1] = date_interval[1] +':00'
-			else:
-				date_interval[1] = date_interval[1] +' 23:59:59'
-		else:
-			date_interval = None
-	except:
-		date_interval = None
-
-	return query_dict, date_interval
-
-def get_orders_by_params(query_dict, date_interval, orders):
-	"""
-	按照查询条件筛选符合条件的订单
-	"""
-	#商品名称
-	product_name = ""
-	if query_dict.has_key("product_name"):
-		product_name = query_dict["product_name"]
-		query_dict.pop("product_name")
-
-	#处理搜索
-	if len(query_dict):
-		if query_dict.has_key("isUseWeizoomCard"):
-			query_dict.pop("isUseWeizoomCard")
-			orders = orders.exclude(weizoom_card_money=0)
-		orders = orders.filter(**query_dict)
-
-	#处理 时间区间筛选
-	if date_interval:
-		start_time = date_interval[0]
-		end_time = date_interval[1]
-		orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
-
-	#处理商品名称筛选条件
-	if product_name:
-		filter_orders = []
-		order2products = {}
-		for order in orders:
-			products = get_order_products(order)
-			for product in products:
-				if product_name in product['name']:
-					filter_orders.append(order)
-					break
-
-		orders = filter_orders
-
-	return orders
 
 ########################################################################
 # get_order_list: 获取订单列表
@@ -2418,24 +2482,24 @@ def get_order_list(user, query_dict, sort_attr, query_string, count_per_page=15,
 	return orders, pageinfo, order_total_count, order_return_count
 
 
-########################################################################
-# _get_orders_total_count: 获得订单中的各种总数
-########################################################################
-def _get_orders_total_count(orders):
-	count = orders.count()
-	status_not_count = orders.filter(status=ORDER_STATUS_NOT).count()
-	status_payed_not_ship_total = orders.filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
-	status_payed_shiped_total = orders.filter(status=ORDER_STATUS_PAYED_SHIPED).count()
-	status_cancel_count = orders.filter(status=ORDER_STATUS_CANCEL).count()
-	status_successed_count = orders.filter(status=ORDER_STATUS_SUCCESSED).count()
-	return {
-		'total_count': count,
-		'status_not_count': status_not_count,
-		'status_payed_not_ship_total': status_payed_not_ship_total,
-		'status_payed_shiped_total': status_payed_shiped_total,
-		'status_cancel_count': status_cancel_count,
-		'status_successed_count': status_successed_count
-	}
+# ########################################################################
+# # _get_orders_total_count: 获得订单中的各种总数
+# ########################################################################
+# def _get_orders_total_count(orders):
+# 	count = orders.count()
+# 	status_not_count = orders.filter(status=ORDER_STATUS_NOT).count()
+# 	status_payed_not_ship_total = orders.filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
+# 	status_payed_shiped_total = orders.filter(status=ORDER_STATUS_PAYED_SHIPED).count()
+# 	status_cancel_count = orders.filter(status=ORDER_STATUS_CANCEL).count()
+# 	status_successed_count = orders.filter(status=ORDER_STATUS_SUCCESSED).count()
+# 	return {
+# 		'total_count': count,
+# 		'status_not_count': status_not_count,
+# 		'status_payed_not_ship_total': status_payed_not_ship_total,
+# 		'status_payed_shiped_total': status_payed_shiped_total,
+# 		'status_cancel_count': status_cancel_count,
+# 		'status_successed_count': status_successed_count
+# 	}
 
 
 ########################################################################

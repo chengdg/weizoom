@@ -1,4 +1,4 @@
-{% extends "content_base_v2.html" %}
+{# 准备清理 {% extends "content_base_v2.html" %} #}
 
 {% block content-panel %}
 <div class="relative">
@@ -15,15 +15,15 @@
 	</span>
 </div>
 {% if has_product %}
-<div 
-	data-ui-role="advanced-table" 
-	data-app="mall" 
-	data-api="products/get" 
+<div
+	data-ui-role="advanced-table"
+	data-app="mall2"
+	data-api="product_list"
 	data-template-id="#products-view"
-	data-enable-paginator="true" 
-	data-enable-sort="true" 
+	data-enable-paginator="true"
+	data-enable-sort="true"
 	data-sort-api="product_display_index/update"
-	data-item-count-per-page="50" 
+	data-item-count-per-page="50"
 ></div>
 {% else %}
 	目前还没有数据
@@ -82,7 +82,7 @@
 	                        <li><a href="javascript:void(0);" data-attr='source' data-value="-1">全部</a></li>
 							<li><a href="javascript:void(0);" data-attr='source' data-value="0">本店</a></li>
 							<li><a href="javascript:void(0);" data-attr='source' data-value="1">商户</a></li>
-						
+
 						</ul>
 					</div>
 				</th>
@@ -139,7 +139,7 @@
 						{{if product.is_from_other_mall == false}}
 							本店
 						{{/if}}
-						
+
 					</td>
 					<td class="nowrap">
 						{{if product.is_checked == true}}
@@ -158,7 +158,7 @@
             {{else}}
                 <tr><td colspan='7'>还没有数据</td></tr>
             {{/if}}
-		</tbody>        
+		</tbody>
 	</table>
 </script>
 {% endverbatim %}
@@ -166,7 +166,7 @@
 <script type="text/javascript">
 	/*
 	var maxProductCount = {{ max_product_count }};
-	
+
 	$(document).ready(function() {
 		$('#addProductBtn').click(function(event) {
 			var productCount = $('#product_list tr').length;

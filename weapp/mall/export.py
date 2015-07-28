@@ -12,19 +12,19 @@ PRODUCT_REVIEW_NAV = 'reviewManagement'
 
 FIRST_NAVS = [{
     'name': u'首页',
-    'url': '/mall/outline/get/',
+    'url': '/mall2/outline/',
     'permission': 'manage_index'
 }, {
     'name': u'商品管理',
-    'url': '/mall/onshelf_products/get/',
+    'url': '/mall2/product_list/?shelve_type=1',
     'permission': 'manage_product'
 }, {
     'name': u'订单管理',
-    'url': '/mall/orders/get/',
+    'url': '/mall2/order',
     'permission': 'manage_order'
 }, {
     'name': u'促销管理',
-    'url': '/mall_promotion/promotion_list/get/',
+    'url': '/mall2/promotion_list/',
     'permission': 'manage_promotion'
 }, {
     'name': u'会员管理',
@@ -41,7 +41,7 @@ FIRST_NAVS = [{
     'permission': 'manage_auth'
 }, {
     'name': u'配置管理',
-    'url': '/mall/pay_interfaces/get/',
+    'url': '/mall2/pay_interface/',
     'permission': 'manage_mall_config'
 }]
 
@@ -77,50 +77,50 @@ NAV = {
         {
             'name': PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV,
             'title': u'在售商品管理',
-            'url': '/mall/onshelf_products/get/',
+            'url': '/mall2/product_list/?shelve_type=1',
             'need_permissions': ['manage_product_onshelf', ]
         },
 
         {
             'name': PRODUCT_ADD_PRODUCT_NAV,
             'title': u'添加新商品',
-            'url': '/mall/product/create/',
+            'url': '/mall2/product/',
             'need_permissions': ['manage_product_add', ]
         },
         {
             'name': PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV,
             'title': u'待售商品管理',
-            'url': '/mall/offshelf_products/get/',
+            'url': '/mall2/product_list/?shelve_type=0',
             'need_permissions': ['manage_product_offshelf', ]
         },
         {
             'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
             'title': u'商品回收站',
-            'url': '/mall/recycled_products/get/',
+            'url': '/mall2/product_list/?shelve_type=2',
             'need_permissions': ['manage_product_deleted', ]
         },
         {
             'name': PRODUCT_MANAGE_IMAGE_NAV,
             'title': u'图片管理',
-            'url': '/mall/image_groups/get/',
+            'url': '/mall2/image_group_list/',
             'need_permissions': ['manage_product_image', ]
         },
         {
             'name': PRODUCT_MANAGE_CATEGORY_NAV,
             'title': u'分组管理',
-            'url': '/mall/product_categories/get/',
+            'url': '/mall2/category_list/',
             'need_permissions': ['manage_product_category', ]
         },
         {
             'name': PRODUCT_MANAGE_MODEL_NAV,
             'title': u'属性规格管理',
-            'url': '/mall/model_properties/get/',
+            'url': '/mall2/model_property_list/',
             'need_permissions': ['manage_product_property_and_model_property', ]
         },
         {
             'name': PRODUCT_REVIEW_NAV,
             'title': u'评价管理',
-            'url': '/mall/product_review/get/',
+            'url': '/mall2/product_review_list/',
             'need_permissions': ['manage_product_review', ],
         },
     ]
@@ -156,25 +156,25 @@ ORDER_NAV = {
         {
             'name': ORDER_ALL,
             'title': u'所有订单',
-            'url': '/mall/orders/get/',
+            'url': '/mall2/order_list/',
             'need_permissions': ['manage_order_all', ]
         },
         {
             'name': ORDER_REFUND,
             'title': u'退款订单',
-            'url': '/mall/refund_orders/get/',
+            'url': '/mall2/order_list/?belong=refund',
             'need_permissions': ['manage_order_refund', ]
         },
         {
             'name': ORDER_EXPIRED_TIME,
             'title': u'订单设置',
-            'url': '/mall/expired_time/edit/',
+            'url': '/mall2/expired_time/',
             'need_permissions': ['manage_order_expired_time', ]
         },
         {
             'name': ORDER_AUDIT,
             'title': u'财务审核',
-            'url': '/mall/audit_orders/get/',
+            'url': '/mall2/order_list/?belong=audit',
             'need_permissions': ['manage_order_audit', ]
         },
         {
@@ -214,49 +214,49 @@ PROMOTION_NAV = {
         {
             'name': MALL_PROMOTION_PROMOTIONS_NAV,
             'title': u'促销查询',
-            'url': '/mall_promotion/promotion_list/get/',
+            'url': '/mall2/promotion_list/',
             'need_permissions': ['search_promotion', ]
         },
         {
             'name': MALL_PROMOTION_FLASH_SALE_NAV,
             'title': u'限时抢购',
-            'url': '/mall_promotion/flash_sales/get/',
+            'url': '/mall2/flash_sale_list/',
             'need_permissions': ['manage_flash_sale', ]
         },
         {
             'name': MALL_PROMOTION_PREMIUM_SALE_NAV,
             'title': u'买赠',
-            'url': '/mall_promotion/premium_sales/get/',
+            'url': '/mall2/premium_sale_list/',
             'need_permissions': ['manage_premium_sale', ]
         },
         # {
         #     'name': MALL_PROMOTION_PRICE_CUT_NAV,
         #     'title': u'满减',
-        #     'url': '/mall_promotion/price_cuts/get/',
+        #     'url': '/mall2/price_cut_list/',
         #     'need_permissions': ['manage_price_cut', ]
         # },
         {
             'name': MALL_PROMOTION_INTEGRAL_SALE_NAV,
             'title': u'积分应用',
-            'url': '/mall_promotion/integral_sales/get/',
+            'url': '/mall2/integral_sales_list/',
             'need_permissions': ['manage_integral_sale', ]
         },
         {
             'name': MALL_PROMOTION_COUPON_NAV,
             'title': u'优惠券',
-            'url': '/mall_promotion/coupon_rules/get/',
+            'url': '/mall2/coupon_rule_list/',
             'need_permissions': ['manage_coupon', ]
         },
         {
             'name': MALL_PROMOTION_ISSUING_COUPONS_NAV,
             'title': u'发优惠券',
-            'url': '/mall_promotion/issuing_coupons_record/get/',
+            'url': '/mall2/issuing_coupons_record_list/',
             'need_permissions': ['manage_send_coupon', ]
         },
         {
             'name': MALL_PROMOTION_ORDER_RED_ENVELOPE,
             'title': u'分享红包',
-            'url': '/mall_promotion/red_envelope_rule/get/',
+            'url': '/mall2/red_envelope_rule_list/',
             'need_permissions': ['manage_order_red_envelope', ]
         }
     ]
@@ -290,25 +290,25 @@ CONFIG_NAV = {
         {
             'name': MALL_CONFIG_POSTAGE_NAV,
             'title': u'运费模板',
-            'url': '/mall/postage_templates/get/',
+            'url': '/mall2/postage_list/',
             'need_permissions': ['manage_postage_template', ]
         },
         {
             'name': MALL_CONFIG_EXPRESS_COMOANY_NAV,
             'title': u'物流名称管理',
-            'url': '/mall/express_delivery/get/',
+            'url': '/mall2/express_delivery_list/',
             'need_permissions': ['manage_express', ]
         },
         {
             'name': MALL_CONFIG_PAYINTERFACE_NAV,
             'title': u'支付方式',
-            'url': '/mall/pay_interfaces/get/',
+            'url': '/mall2/pay_interface_list/',
             'need_permissions': ['manage_pay_interface', ]
         },
         {
             'name': MALL_CONFIG_MAIL_NOTIFY_NAV,
             'title': u'运营邮件通知',
-            'url': '/mall/email_notify/get/',
+            'url': '/mall2/email_notify_list/',
             'need_permissions': ['manage_config_mail', ]
         },
     ]
@@ -341,19 +341,19 @@ HOME_NAV = {
         {
             'name': MALL_HOME_OUTLINE_NAV,
             'title': u'统计概况',
-            'url': '/mall/outline/get/',
+            'url': '/mall2/outline/',
             'need_permissions': ['manage_index_outline', ]
         },
         {
             'name': MALL_HOME_INTEGRAL_NAV,
             'title': u'积分规则',
-            'url': '/mall/integral_strategy/get/',
+            'url': '/mall2/integral_strategy/',
             'need_permissions': ['manage_index_integral', ]
         },
         {
             'name': MALL_HOME_NOTICES_NAV,
             'title': u'消息中心',
-            'url': '/mall/notice_list/get',
+            'url': '/mall2/notice_list/',
             'need_permissions': ['manage_index_notice'],
         },
         {

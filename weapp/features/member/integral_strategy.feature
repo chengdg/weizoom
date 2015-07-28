@@ -304,7 +304,7 @@ Scenario:每次购买给邀请者增加积分
 			}]
 		}
 		"""
-	When jobs支付最新订单
+	When jobs'支付'最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -320,7 +320,7 @@ Scenario:每次购买给邀请者增加积分
 			"actions": ["标记完成", "修改物流","取消订单"]
 		}
 		"""
-	When jobs完成最新订单
+	When jobs'完成'最新订单
 	When 清空浏览器
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有61会员积分
@@ -391,7 +391,7 @@ Scenario: 购买商品返积分
 			}]
 		}
 		"""
-	When jobs支付最新订单
+	When jobs'支付'最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -407,7 +407,7 @@ Scenario: 购买商品返积分
 			"actions": ["标记完成", "修改物流","取消订单"]
 		}
 		"""
-	When jobs完成最新订单
+	When jobs'完成'最新订单
 	When 清空浏览器
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有61会员积分
@@ -457,7 +457,7 @@ Scenario: 购买商品返积分
 			}]
 		}
 		"""
-	When jobs支付最新订单
+	When jobs'支付'最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -473,7 +473,7 @@ Scenario: 购买商品返积分
 			"actions": ["标记完成", "修改物流","取消订单"]
 		}
 		"""
-	When jobs完成最新订单
+	When jobs'完成'最新订单
 	When 清空浏览器
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有102会员积分
@@ -568,7 +568,7 @@ Scenario: 购买商品返积分
 #			"actions": ["完成", "修改物流","取消"]
 #		}
 #		"""
-#	When jobs完成最新订单
+#	When jobs'完成'最新订单
 #	When 清空浏览器
 #	When bill访问jobs的webapp
 #	Then bill在jobs的webapp中拥有20会员积分
@@ -763,7 +763,7 @@ Scenario: 购买商品返积分
 #			}]
 #		}
 #		"""
-#	When jobs支付最新订单
+#	When jobs'支付'最新订单
 #	Then jobs可以获得最新订单详情
 #		"""
 #		{
@@ -781,7 +781,7 @@ Scenario: 购买商品返积分
 #			"actions": ["完成", "修改物流","取消"]
 #		}
 #		"""
-#	When jobs完成最新订单
+#	When jobs'完成'最新订单
 #	When 清空浏览器
 #	When bill访问jobs的webapp
 #	Then bill在jobs的webapp中拥有41会员积分

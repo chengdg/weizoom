@@ -5,10 +5,10 @@
     <ul class="breadcrumb">
         <li>您当前所在位置</li>
         <li>
-            <a href="/mall/onshelf_products/get/">商品管理</a>
+            <a href="/mall2/product_list/?shelve_type=1">商品管理</a>
         </li>
         <li>
-            <a href="#">评价管理</a>
+            <a href="/mall2/product_review_list/">评价管理</a>
         </li>
         <li class="active">评价审核</li>
     </ul>
@@ -85,8 +85,8 @@
             var $el = $(event.currentTarget);
             var status = $el.attr("data-status");
             W.getApi().call({
-                app: 'mall',
-                api: 'product_review_status/update',
+                app: 'mall2',
+                resource: 'product_review',
                 method: 'post',
                 args: {
                     product_review_id: product_review_id,

@@ -6,7 +6,7 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li>
-				<a href="/mall/outline/get/">首页</a>
+				<a href="/mall2/outline/">首页</a>
 			</li>
 			<li class="active">统计概况</li>
 		</ul>
@@ -28,7 +28,7 @@
 							{% for order in orders.items %}
 							<ul class="pl20">
 								<li class="mt5">
-									<a href="/mall/order_detail/get/?order_id={{order.id}}" target="_blank" class="xui-block">{{order.order_id}}</a>
+									<a href="/mall2/order/?order_id={{order.id}}" target="_blank" class="xui-block">{{order.order_id}}</a>
 									<p class="fl">订单金额：</p><p class=" w80 fl">{{order.final_price}}</p><p class="fl">数量：</p><p class="fl w50 ml10">{{order.product_count}}</p>
 								</li>
 							</ul>
@@ -37,7 +37,7 @@
 						{% endfor %}
 					</div>
 					<footer class="xui-i-moreOrder">
-					<a href='/mall/orders/get/'>更多...</a>
+					<a href='/mall2/order_list/'>更多...</a>
 					</footer>
 				</section>
 
@@ -58,7 +58,7 @@
 
 						{% for message in system_messages %}
 						<div class="xui-i-message ml80">
-							<a href='/mall/notice_detail/get?pk={{message.id}}' class="xui-i-messageLink">［{{message.created_at|date:"o-m-d"}}］{{message.title}}</a>
+							<a href='/mall2/notice/?pk={{message.id}}' class="xui-i-messageLink">［{{message.created_at|date:"o-m-d"}}］{{message.title}}</a>
 							<div class="xui-i-messageSummary">
 								{{message.summary}}
 							</div>
@@ -69,12 +69,12 @@
 			</div>
 			<div class="xui-ChartContent">
 				 <div class="panel-heading xui-bold">购买趋势</div>
-			     <div  class="xui-ChartBody" id="purchaseTrend" data-ui-role="echart" data-app="mall" data-api="purchase_trend/get">
+			     <div  class="xui-ChartBody" id="purchaseTrend" data-ui-role="echart" data-app="mall2" data-api="outline" data-args='{"type":"purchase_trend"}'>
 			     </div>
 			</div>
 			<div class="xui-ChartContent mb50">
 				<div class="panel-heading xui-bold">页面访问</div>
-				<div class="xui-ChartBody" id="visitTrend" data-ui-role="echart" data-app="mall" data-api="visit_daily_trend/get">
+				<div class="xui-ChartBody" id="visitTrend" data-ui-role="echart" data-app="mall2" data-api="outline" data-args='{"type":"visit_daily_trend"}'>
 			   </div>
 			</div>
 		</div>
@@ -85,7 +85,7 @@
 
 
 {% block js %}
-<script type="text/javascript">	
+<script type="text/javascript">
 $(document).ready(function() {
 	// var view = new W.view.mall.ProductListView({
 	// 	el: '.xui-productsPage',

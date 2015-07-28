@@ -70,7 +70,7 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.order_cancel_status @mall.order_cancel_status.member @pyliu
+@mall2 @mall.order_cancel_status @mall.order_cancel_status.member
 Scenario:bill取消订单
 	bill取消订单'001'
 	1. bill手机端订单状态改变为'已取消'
@@ -93,7 +93,7 @@ Scenario:bill取消订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取商品库存
+	Then job后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",
@@ -125,7 +125,7 @@ Scenario:bill取消使用了优惠券的订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取商品库存
+	Then job后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",
@@ -140,7 +140,7 @@ Scenario:bill取消使用了优惠券的订单
 		}
 		"""
 
-@mall2 @mall.order_cancel_status @mall.order_cancel_status.integral_member @pyliu
+@mall2 @mall.order_cancel_status @mall.order_cancel_status.integral_member @pyliu02
 Scenario:bill取消使用了积分的订单
 	bill取消订单'003'
 	1. bill手机端订单状态改变为'已取消'
@@ -148,7 +148,6 @@ Scenario:bill取消使用了积分的订单
 	3. '商品1'库存改为为:2
 	4. 积分数值改变为：'100'
 
-	When bill访问jobs的webapp
 	When bill取消订单'003'
 	Then bill手机端获取订单'003'状态
 		"""
@@ -164,7 +163,7 @@ Scenario:bill取消使用了积分的订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取商品库存
+	Then job后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",
@@ -203,7 +202,7 @@ Scenario:bill取消使用积分和优惠券的订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取商品库存
+	Then job后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",

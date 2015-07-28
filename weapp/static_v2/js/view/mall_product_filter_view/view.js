@@ -20,9 +20,9 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
     render: function() {
         var _this = this;
         W.getApi().call({
-            method: 'post',
-            app: 'mall',
-            api: 'products_filter_params/get',
+            method: 'get',
+            app: 'mall2',
+            resource: 'product_filter_param',
             args:{},
             success: function(data) {
                 var html = $.tmpl(this.getTemplate(), {

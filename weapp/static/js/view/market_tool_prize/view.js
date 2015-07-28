@@ -165,7 +165,7 @@ W.view.markettool.prize.PrizeSelector = Backbone.View.extend({
                         var count = $(':selected', this).data('count');
                         if(count || count == 0){
                             $(this).nextAll('p').find('.xua-remainedCount').html('当前库存:'+count).show();
-                            $(this).nextAll('p').find('a').attr('href','/mall_promotion/coupon/create/?rule_id='+$(this).val()).show();
+                            $(this).nextAll('p').find('a').attr('href','/mall2/coupon/?rule_id='+$(this).val()).show();
                         }
                     })
                 },

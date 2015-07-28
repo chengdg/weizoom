@@ -7,7 +7,7 @@
 		<li>您当前所在位置</li>
 		<li>配置管理</li>
 		<li>
-			<a href="/mall/postage_templates/get/">运费模板</a>
+			<a href="/mall2/postage_list/">运费模板</a>
 		</li>
 		<li class="active">编辑运费模板</li>
 	</ul>
@@ -256,18 +256,18 @@ $(document).ready(function() {
 	$('.xa-submit').click(function() {
         if(W.validate()){
             var data = W.toFormData(view.getData());
-            var api_url = 'postage_template/create';
+            var submit_method = 'put';
             if (isUpdate) {
-                api_url = 'postage_template/update';
+                submit_method = 'post';
             }
             W.getApi().call({
-                method: 'post',
-                app: 'mall',
-                api: api_url,
+                method: submit_method,
+                app: 'mall2',
+                resource: 'postage',
                 args: data,
                 scope: this,
                 success: function(data) {
-                    window.location.href = '/mall/postage_templates/get/';
+                    window.location.href = '/mall2/postage_list/';
                 },
                 error: function(resp) {
                     alert('创建运费模板失败')

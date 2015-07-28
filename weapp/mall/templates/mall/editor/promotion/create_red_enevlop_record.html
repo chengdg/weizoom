@@ -1,4 +1,4 @@
-{% extends "content_base_v2.html" %}
+{# 待清理 {% extends "content_base_v2.html" %} #}
 {% load staticfiles %}
 {% block content-panel %}
 <div class="xui-promotion-RedEnevlopPage">
@@ -6,8 +6,8 @@
     <div class="relative">
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
-            <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
-            <li><a href="/mall_promotion/integral_sales/get/">积分应用</a></li>
+            <li><a href="/mall2/promotion_list/">促销管理</a></li>
+            <li><a href="/mall2/integral_sales/get/">积分应用</a></li>
             <li class="active">新建积分应用</li>
         </ul>
     </div>
@@ -59,8 +59,8 @@ $(document).ready(function() {
 		args.vips_id = productSelector.getData();
 		args.rules = rules;
 		W.getApi().call({
-			method: 'post',
-			app: 'mall_promotion',
+			method: 'put',
+			app: 'mall2',
 			api: 'red_enevlop_record/create',
 			args: W.toFormData(args),
 			scope: this,

@@ -6,7 +6,8 @@
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
             <li>
-                <a href="/mall/onshelf_products/get/">商品管理</a>
+                <a href="/mall2/product_list/?shelve_type=1">商品管理</a>
+
             </li>
             <li class="active">评价管理</li>
         </ul>
@@ -16,8 +17,8 @@
     <div class="panel panel-default mt20 xb-rightPanel">
         <div
             data-ui-role="advanced-table"
-            data-app="mall"
-            data-api="product_reviews/get"
+            data-app="mall2"
+            data-resource="product_review_list"
             data-template-id="#products-review"
             data-enable-paginator="true"
             data-enable-sort="false"
@@ -66,18 +67,18 @@
             <td width="100">${review.status.name}<td>
             <td width="80">
                 {{if review.status.value === '0'}}
-                    <a href="/mall/product_review/update?id=${review.id}">审核</a>
+                    <a href="/mall2/product_review/?id=${review.id}">审核</a>
                 {{/if}}
                 {{if review.status.value === '1'}}
-                    <a href="/mall/product_review/update?id=${review.id}">修改</a>&nbsp;&nbsp;
+                    <a href="/mall2/product_review/?id=${review.id}">修改</a>&nbsp;&nbsp;
                     <a href="javascript:void(0);" class="xa-modify" data-product-review-id="${review.id}" data-status="2">置顶</a>
                 {{/if}}
                 {{if review.status.value === '2'}}
-                    <a href="/mall/product_review/update?id=${review.id}">修改</a><br>
+                    <a href="/mall2/product_review/?id=${review.id}">修改</a><br>
                     <a href="javascript:void(0);" class="xa-modify" data-product-review-id="${review.id}" data-status="1">取消置顶</a>
                 {{/if}}
                 {{if review.status.value === '-1'}}
-                    <a href="/mall/product_review/update?id=${review.id}">修改</a>
+                    <a href="/mall2/product_review/?id=${review.id}">修改</a>
                 {{/if}}
             </td>
         </tr>
@@ -91,7 +92,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     var view = new W.view.mall.ProductReviewListView({
-        el: '.xui-productsPage',
+        el: '.xui-productsPage'
     });
     view.render();
   })

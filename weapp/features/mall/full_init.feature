@@ -41,7 +41,7 @@ Scenario: 安装完整测试数据
 			"name": "分类3"
 		}]	
 		"""
-	When jobs已添加商品
+	And jobs已添加商品
 		"""
 		[{
 			"name": "东坡肘子",
@@ -324,29 +324,29 @@ Scenario: 安装完整测试数据
 			"is_enable_cycle_mode": true
 		}]
 		"""
-	#When jobs创建积分应用活动
-	#	"""
-	#	[{
-	#		"name": "冬荫功汤积分应用",
-	#		"start_date": "今天",
-	#		"end_date": "1天后",
-	#		"products": ["冬荫功汤"],
-	#		"discount": 100,
-	#		"discount_money": 0.0,
-	#		"is_permanant_active": false
-	#	}, {
-	#		"name": "松鼠桂鱼积分应用",
-	#		"promotion_title": "松鼠桂鱼积分应用年末大放血",
-	#		"start_date": "今天",
-	#		"end_date": "2天后",
-	#		"products": ["松鼠桂鱼"],
-	#		"discount": 50,
-	#		"discount_money": 6.0,
-	#		"is_permanant_active": true
-	#	}]
-	#	"""
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "冬荫功汤积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["冬荫功汤"],
+			"discount": 100,
+			"discount_money": 0.0,
+			"is_permanant_active": false
+		}, {
+			"name": "松鼠桂鱼积分应用",
+			"promotion_title": "松鼠桂鱼积分应用年末大放血",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"products": ["松鼠桂鱼"],
+			"discount": 50,
+			"discount_money": 6.0,
+			"is_permanant_active": true
+		}]
+		"""
 	#邮费配置
-	When jobs已添加了邮费配置
+	When jobs添加邮费配置
 		"""
 		[{
 			"name" : "圆通",

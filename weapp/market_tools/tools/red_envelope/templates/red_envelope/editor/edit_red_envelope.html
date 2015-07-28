@@ -227,7 +227,7 @@
         var count = $(':selected', this).data('count');
         if(count || count == 0){
             $(this).next('.xua-remainedCount').html('当前库存:'+count).show();
-            $(this).nextAll('p:last').show().find('a').attr('href','/mall_promotion/coupon/create/?rule_id='+$(this).val()).show();
+            $(this).nextAll('p:last').show().find('a').attr('href','/mall2/coupon/?rule_id='+$(this).val()).show();
         }
     })
     function validatePrizeCount(el){

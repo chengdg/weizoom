@@ -12,7 +12,7 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li>
-				<a href="/mall/orders/get/">订单管理</a>
+				<a href="/mall2/order_list">订单管理</a>
 			</li>
 			<li class="active">所有订单</li>
 		</ul>
@@ -22,8 +22,8 @@
 	{% if has_order %}
 		<div
 			data-ui-role="advanced-table"
-			data-app="mall"
-			data-api="orders/get"
+			data-app="mall2"
+			data-resource="order_list"
 			data-enable-paginator="true"
 			data-template-id="#mall-orders-view"
 			data-init-sort="-created_at"
@@ -101,7 +101,7 @@
 					<div class="fl">
 						<p class="ml20 fl">
 						订单编号：
-						<a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${order.id}" target="_blank">${order.order_id}{{if order.edit_money}}-${order.edit_money}{{/if}}</a>
+						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}{{if order.edit_money}}-${order.edit_money}{{/if}}</a>
 						</p>
 						<p class="ml10 fl w60">
 						&nbsp;
@@ -118,7 +118,7 @@
 						</span>
 					</div>
 					<div class="fr mr15">
-						<a title="查看" href="/mall/order_detail/get/?order_id=${order.id}" target="_blank" class="mr10">查看详情</a>
+						<a title="查看" href="/mall2/order/?order_id=${order.id}" target="_blank" class="mr10">查看详情</a>
 						-
 						<a href='javascript:void(0);' class="xa-order-remark ml10" data-order-id="${order.id}" data-order-value="${order.remark}">备注</a>
 					</div>
@@ -222,22 +222,22 @@
 								<a href='javascript:void(0);' class="xa-order-pay">支付</a>
 
 								<a href='javascript:void(0);' class="xa-order-update-price">修改价格</a>
-								<a href='/mall/order/update/?order_id=${order.id}&action=cancel' class="xa-cancelOrder">取消订单</a>
+								<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
 							{{/if}}
 							{{if order.order_status == 3 }}
 								<a href='javascript:void(0);' class="xa-order-delivery" data-order-id="${order.id}">发货</a>
 								{{if order.total_price > 0 }}
-									<a href='/mall/order/update/?order_id=${order.id}&action=return_pay' class="xa-applyRefund">申请退款</a>
+									<a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
 								{{else}}
-									<a href='/mall/order/update/?order_id=${order.id}&action=cancel' class="xa-cancelOrder">取消订单</a>
+									<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
 								{{/if}}
 							{{/if}}
 							{{if order.order_status == 4 }}
-								<a href='/mall/order/update/?order_id=${order.id}&action=finish' class="xa-markFinish">标记完成</a>
+								<a href='javascript:void(0);' class="xa-markFinish">标记完成</a>
 								{{if order.total_price > 0 }}
-									<a href='/mall/order/update/?order_id=${order.id}&action=return_pay' class="xa-applyRefund">申请退款</a>
+									<a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
 								{{else}}
-									<a href='/mall/order/update/?order_id=${order.id}&action=cancel' class="xa-cancelOrder">取消订单</a>
+									<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
 								{{/if}}
 								<a href='javascript:void(0);' class="xa-order-delivery"
 								 data-order-id="${order.id}"
@@ -248,9 +248,9 @@
 							{{/if}}
 							{{if order.order_status == 5 }}
 								{{if order.total_price > 0 }}
-									<a href='/mall/order/update/?order_id=${order.id}&action=return_pay' class="xa-applyRefund">申请退款</a>
+									<a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
 								{{else}}
-									<a href='/mall/order/update/?order_id=${order.id}&action=cancel' class="xa-cancelOrder">取消订单</a>
+									<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
 								{{/if}}
 							{{/if}}
 					</td>
@@ -366,15 +366,17 @@ $(document).ready(function() {
 
 	// 获取商品
 	$('#order-products-table-tmpl-src').template('order-products-table-tmpl-src');
+    xlog('aaaaaaaaaaaaaaaa');
 	if($('[data-ui-role="advanced-table"]').length>0)// 避免没有数据时报空
+
 		$('[data-ui-role="advanced-table"]').data('view').on('table-row-expanded', function(order_id, $tr) {
 			if ($tr.find('table').length !== 0) {
-				xlog('already loaded');
 				return;
 			}
 			W.getApi().call({
-				app: 'mall',
-				api: 'order_products/get',
+				app: 'mall2',
+				resource: 'order_product',
+                method: 'get',
 				args: {
 					order_id: order_id
 				},
@@ -396,6 +398,7 @@ $(document).ready(function() {
 	// 	});
 	// });
 	// 发货
+    // todo
 	$('body').delegate('.xa-order-delivery', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var orderId = $el.attr('data-order-id');
@@ -485,7 +488,21 @@ $(document).ready(function() {
 		W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
 			orderId: orderId,
 		    success: function(data) {
-		    	window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=pay';
+                var args = {
+                    'order_id': orderId,
+                    'action' : 'pay'
+                }
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function() {
+                        }
+                })
 		    }
 
 		});
@@ -503,8 +520,8 @@ $(document).ready(function() {
 		    success: function(data) {
 		    	console.log(data);
 				W.getApi().call({
-					app: 'mall',
-					api: 'order_info/update',
+					app: 'mall2',
+					resource: 'order',
 					method: 'post',
 					args: {
 						order_id: orderId,
@@ -527,7 +544,7 @@ $(document).ready(function() {
         event.stopPropagation();
         event.preventDefault();
         var $el = $(event.currentTarget);
-        var href = $el.attr('href');
+        var orderId = $el.parents('li').attr('data-order-id');
         W.requireConfirm({
         	$el: $(this),
         	width:445,
@@ -536,7 +553,22 @@ $(document).ready(function() {
 			privateContainerClass:'xui-orderConfirmPop',
         	msg:'确定将该订单标记为完成？',
         	confirm:function(){
-        		window.location.href = href;
+                var args = {
+                    'order_id': orderId,
+                    'action' : 'finish'
+                }
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function() {
+                        }
+                })
+
         	}
         })
     });
@@ -545,7 +577,7 @@ $(document).ready(function() {
         event.stopPropagation();
         event.preventDefault();
         var $el = $(event.currentTarget);
-        var href = $el.attr('href');
+        var orderId = $el.parents('li').attr('data-order-id');
         W.requireConfirm({
         	$el: $(this),
         	viewName: 'order-list-confirm',
@@ -554,8 +586,24 @@ $(document).ready(function() {
 			isTitle: false,
 			privateContainerClass:'xui-orderConfirmPop',
         	msg:'确定取消订单？',
+
         	confirm:function(){
-        		window.location.href = href;
+                var args = {
+                    'order_id': orderId,
+                    'action' : 'cancel'
+                }
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function() {
+                        }
+                })
+
         	}
         })
     });
@@ -564,7 +612,7 @@ $(document).ready(function() {
         event.stopPropagation();
         event.preventDefault();
         var $el = $(event.currentTarget);
-        var href = $el.attr('href');
+        var orderId = $el.parents('li').attr('data-order-id');
         W.requireConfirm({
         	$el: $(this),
         	width:380,
@@ -573,7 +621,21 @@ $(document).ready(function() {
 			privateContainerClass:'xui-orderConfirmPop',
         	msg:'确定申请退款？',
         	confirm:function(){
-        		window.location.href = href;
+                var args = {
+                    'order_id': orderId,
+                    'action' : 'return_pay'
+                }
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function() {
+                        }
+                })
         	}
         })
 

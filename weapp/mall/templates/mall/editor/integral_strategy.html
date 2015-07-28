@@ -33,7 +33,7 @@
 }
 .xui-close{
 	width: 49px;
-	height: 49px;	
+	height: 49px;
 	right:85px;
 	top:0;
 	background-position:0 -168px;
@@ -49,13 +49,13 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li>
-				<a href="/mall/outline/get/">首页</a>
+				<a href="/mall2/outline/">首页</a>
 			</li>
 			<li class="active">积分规则</li>
 		</ul>
 	</div>
 
-	<form class="xa-form xui-rightPanelBg xui-form" action="/mall/integral_strategy/update/" method="post">
+	<form class="xa-form xui-rightPanelBg xui-form" action="/mall2/integral_strategy/" method="post">
 		<section>
 			<div class="xui-legend">
 			积分规则
@@ -149,7 +149,7 @@
 							</span>
 							{% endif %}
 							<span class="fl ml25 xui-useHint"{% if not has_a_integral_strategy %} style="line-height:40px;"{% endif %}>
-								<span class="xui-block">如需要设置单品积分抵扣上限，请<a href="../../../mall_promotion/integral_sales/get/">点击这里</a></span>
+								<span class="xui-block">如需要设置单品积分抵扣上限，请<a href="/mall2/integral_sales_list/">点击这里</a></span>
 								{% if has_a_integral_strategy %}
 									<span class="cRed">提示：请先结束单品积分促销应用设置！</span>
 								{% endif %}

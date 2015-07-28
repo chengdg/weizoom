@@ -46,16 +46,16 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
             var isNeedLogistics = $('[name="is_need_logistics"]:checked').val();
             if(isNeedLogistics === '0'){
                 // 不需要物流
+                // 向order发送finish
                 var args = {
                     'order_id': this.orderId,
-                    'express_company_name': '0',
-                    'express_number': -1,
-                    'leader_name': -1,
-                    'is_update_express': isUpdateExpress
+                    'action': 'finish'
                 }
-                window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=finish';
+                //window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=finish';
+                this.sendToOrder(args);
             }else{
                 // 需要物流
+                // 向order_deliver发送信息
                 var args = {
                     'order_id': this.orderId,
                     'express_company_name': logistics,
@@ -63,7 +63,7 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                     'leader_name': leaderName,
                     'is_update_express': isUpdateExpress
                 }
-                this.submitSendApi(args);
+                this.sendToDelivery(args);
             }
     		// window.location.href = '/mall/editor/order_express/add/?order_id=' +
       //       this.orderId + '&=' + logistics + '&express_number=' + logisticsOrderId +
@@ -79,10 +79,25 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
         this.hide(event);
     },
 
-    submitSendApi: function(args){
+    sendToOrder: function(args){
         W.getApi().call({
-            app: 'mall',
-            api: 'order_delivery/update',
+            method: 'post',
+            app: 'mall2',
+            resource: 'order',
+            args: args,
+            success: function(data) {
+                window.location.reload();
+            },
+            error: function() {
+            }
+        })
+    },
+
+    sendToDelivery: function(args){
+        W.getApi().call({
+            method: 'post',
+            app: 'mall2',
+            resource: 'delivery',
             args: args,
             success: function(data) {
                 window.location.reload();
@@ -130,9 +145,9 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
     getLogisticsInfo: function() {
     	var _this = this;
     	W.getApi().call({
-    		app: 'mall',
-    		api: 'shipping_express_companies/get',
-    		args: {},
+    		app: 'mall2',
+    		resource: 'express_delivery_company',
+    		args: {'source':'shipping_express_companies'},
     		success: function(data) {
     			_this.render();
     			var $container = $('.ua-logistics');

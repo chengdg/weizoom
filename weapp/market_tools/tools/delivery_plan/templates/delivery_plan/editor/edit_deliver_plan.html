@@ -18,7 +18,7 @@
 				<div class="errorHint"></div>
 			</div>
 		</div>
-		
+
 		<div class="control-group">
 			<label class="control-label" for="parents_name">包含商品：</label>
 			<div class="controls">
@@ -26,7 +26,7 @@
 				</select>
 			</div>
 		</div>
-		
+
 		<div class="control-group">
 			<label class="control-label" for="parents_name">配送频率：</label>
 			<div class="controls">
@@ -40,7 +40,7 @@
 				/次
 			</div>
 		</div>
-		
+
 		<div class="control-group">
 			<label class="control-label" for="parents_name">配送次数：</label>
 			<div class="controls">
@@ -48,7 +48,7 @@
 				<div class="errorHint"></div>
 			</div>
 		</div>
-		
+
 		<div class="control-group">
 			<label class="control-label" for="parents_name">商品价格：</label>
 			<div class="controls">
@@ -56,7 +56,7 @@
 				<div class="errorHint"></div>
 			</div>
 		</div>
-		
+
 		<div class="control-group">
 			<label class="control-label" for="parents_name">商品原价：</label>
 			<div class="controls">
@@ -64,9 +64,9 @@
 				<div class="errorHint"></div>
 			</div>
 		</div>
-		
+
 	</fieldset>
-	{% if not delivery_plan %} 
+	{% if not delivery_plan %}
 	<fieldset class="xa-activeButtonBox">
 		<legend></legend>
 		<div class="control-group">
@@ -75,7 +75,7 @@
 			</div>
 		</div>
 	</fieldset>
-	{% endif %} 
+	{% endif %}
 </form>
 
 {% endblock %}
@@ -84,15 +84,15 @@
 <script>
 	var deliveryPlanProductId = '{{delivery_plan.original_product_id}}';
 	W.getApi().call({
-		app: 'mall',
-		api: 'products/get',
+		app: 'mall2',
+		resource: 'product_list',
 		args: {
 			'page': 1,
 			'count_per_page': 100000
 		},
 		success: function(data) {
 			var products = data.items || [];
-			
+
 			var $content = $('.ua-productListView');
 			var selected = '';
 			for (var i=0; i<products.length; i++){
@@ -105,7 +105,7 @@
 			}
 		},
 		error: function() {}
-		
+
 	})
 	$('form').submit(function() {
 		 if (!W.validate()) {

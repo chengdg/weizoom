@@ -5,14 +5,14 @@
     <ul class="breadcrumb">
         <li>您当前所在位置</li>
         <li>
-            <a href="/mall/onshelf_products/get/">商品管理</a>
+            <a href="/mall2/product_list/?shelve_type=1">商品管理</a>
         </li>
         <li class="active">属性规格管理</li>
     </ul>
 
     <ul class="nav nav-tabs">
         <li>
-            <a href="/mall/property_templates/get/">属性管理</a>
+            <a href="/mall2/property_list/">属性管理</a>
         </li>
         <li class="active">
             <a href="javascript:void(0);">规格管理</a>
@@ -164,9 +164,9 @@ var ModelPropertyPage = Backbone.View.extend({
         console.log($tbody);
         if(W.validate($tbody)){
             W.getApi().call({
-                method: 'post',
-                app: 'mall',
-                api: 'product_model_property/create',
+                method: 'put',
+                app: 'mall2',
+                resource: 'model_property',
                 args: {},
                 scope: this,
                 success: function(data) {
@@ -210,9 +210,9 @@ var ModelPropertyPage = Backbone.View.extend({
             msg:'确定删除?',
             confirm:function(){
                 W.getApi().call({
-                    method: 'post',
-                    app: 'mall',
-                    api: 'product_model_property/delete',
+                    method: 'delete',
+                    app: 'mall2',
+                    resource: 'model_property',
                     args: {
                         id: propertyId
                     },
@@ -220,7 +220,7 @@ var ModelPropertyPage = Backbone.View.extend({
                     success: function(data) {
                         // window.location.reload();
                         $tr.remove();
-                        
+
                     },
                     error: function(resp) {
                         alert('删除规格失败!');
@@ -248,8 +248,8 @@ var ModelPropertyPage = Backbone.View.extend({
         if(W.validate($tr)){
             W.getApi().call({
                 method: 'post',
-                app: 'mall',
-                api: 'product_model_property/update',
+                app: 'mall2',
+                resource: 'model_property',
                 args: {
                     id: propertyId,
                     field: 'type',
@@ -277,9 +277,9 @@ var ModelPropertyPage = Backbone.View.extend({
                 success: function(data) {
                     data['pic_url'] = data['picUrl'];
                     W.getApi().call({
-                        method: 'post',
-                        app: 'mall',
-                        api: 'product_model_property_value/create',
+                        method: 'put',
+                        app: 'mall2',
+                        api: 'model_property_value',
                         args: _.extend(data, {
                             id: propertyId,
                         }),
@@ -313,9 +313,9 @@ var ModelPropertyPage = Backbone.View.extend({
         var $li = $link.parents('li');
         var propertyValueId = $li.data('valueId');
         W.getApi().call({
-            method: 'post',
-            app: 'mall',
-            api: 'product_model_property_value/delete',
+            method: 'delete',
+            app: 'mall2',
+            resource: 'model_property_value',
             args: {
                 id: propertyValueId,
             },
@@ -340,8 +340,8 @@ var ModelPropertyPage = Backbone.View.extend({
         var propertyId = $tr.data('propertyId');
         W.getApi().call({
             method: 'post',
-            app: 'mall',
-            api: 'product_model_property/update',
+            app: 'mall2',
+            resource: 'model_property',
             args: {
                 id: propertyId,
                 field: 'name',

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import datetime
-import urllib, urllib2
+import urllib
+import urllib2
 import json
-import math
+import logging
+logger = logging.getLogger(__name__)
 
 from django.conf import settings
 
@@ -208,6 +209,14 @@ def save_order(request):
 	fake_order = common_util.Object("order")
 	fake_order.products = products
 	fake_order.product_groups = mall_api.group_product_by_promotion(request, products)
+	# from pprint import pprint
+	# print("*"*29, "fake_order.product_groups_by_promotion", "*"*29)
+	# pprint(fake_order.product_groups)
+	# print("*"*79)
+	logger.debug(
+			"fake_order.product_groups",
+			exc_info=fake_order.product_groups
+	)
 	signal_responses = mall_signals.check_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
 	http_response = common_util.check_failed_signal_response(signal_responses)
 	if http_response:

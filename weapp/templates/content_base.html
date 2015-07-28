@@ -20,7 +20,7 @@
   <div id="header">
     <div class="head">
         <h1 id="headerTitle"><a href="/">{{ system_name }}</a></h1>
-        <ul class="headerMenu clearStyle">            
+        <ul class="headerMenu clearStyle">
             <!--<li>
                 <a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/' title='首页'>首页</a>
             </li>-->
@@ -32,7 +32,7 @@
                 <a {% ifequal first_nav_name 'webapp' %}class="active"{% endifequal %} href="/webapp/" title='微站'>微站<span class="unreadMenu" id="	" style="display:none;">5</span></a>
             </li>
             <li>
-                <a {% ifequal first_nav_name 'mall' %}class="active"{% endifequal %} href="/mall/outline/get/" title='微商城'>微商城</a>
+                <a {% ifequal first_nav_name 'mall' %}class="active"{% endifequal %} href="/mall2/outline/" title='微商城'>微商城</a>
             </li>
             -->
             <li>
@@ -81,7 +81,7 @@
             	<span title="{{ user.username }}" class="trialUserStatus system-username-box">
             你好，{{ user.username }} </span>
             {% endif %}
-           
+
             <!-- <a href="/mail/"><img title="消息" class="mailAlert" src="/static/resources/img/top_nav_info_bg.jpg"><span style="display:none;" class="mail_alert tx_mailAlert  mr10"><span class="tx_count">5</span></span></a> -->
             <span href="javascript:void(0)" style="cursor: pointer;" class="ua-set set">
             	<img title="设置" src="/static/img/top_nav_set.png">
@@ -210,7 +210,7 @@
   <div class="footer">
     <span>
       <a target="_blank" href="http://www.weizoom.com">关于微众</a>&nbsp;|&nbsp;
-      <a href="http://bizapp.qq.com/webc.htm?new=0&sid=800051878&eid=&o=http://www.weizoom.com/&q=7&ref=http://www.weizoom.com/" target="_blank">在线客服</a>&nbsp;|&nbsp;      
+      <a href="http://bizapp.qq.com/webc.htm?new=0&sid=800051878&eid=&o=http://www.weizoom.com/&q=7&ref=http://www.weizoom.com/" target="_blank">在线客服</a>&nbsp;|&nbsp;
       <a target="_blank" href="mailto:service@weizoom.com">联系邮箱</a>
       {% if under_develop %}
       &nbsp;|&nbsp;<a target="_blank" href="/example/db/">Django DB</a>
@@ -236,10 +236,10 @@
 
 {% block base_js %}
     <!-- start of ueditor -->
-    
+
     <script type="text/javascript">
      window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
-    </script>  
+    </script>
     <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
     <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
     <!-- end of ueditor -->
@@ -277,7 +277,7 @@
           W.previewName = "信息预览";
           W.previewImage = "/static/img/user-1.jpg";
         {% endif %}
-        
+
         //added by chuter
         function unReadCountCheck() {
           alert(2)
@@ -376,14 +376,14 @@
             var url = '/webapp/preview/';
             window.open(url, '_blank', 'top=50, left=300, width=430, height=600,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=yes');
           });
- 
+
 	        $('#x-simulator-btn').click(function(event) {
 		        window.open('/simulator/', '_blank', 'top=50, left=300, width=430, height=700,location=no,menubar=no,resizable=yes,scrollbars=no,status=no,toolbar=no');
 		        event.stopPropagation();
 		        event.preventDefault();
 	        });
 
-          
+
 
 	        $('#x-embed-simulator-btn').click(function(event) {
 		        var text = $('#x-embed-simulator-btn').text();
@@ -425,7 +425,7 @@
                     W.getLoadingView().hide();
                     alert('设置页面帮助文档失败!');
                   }
-                }) 
+                })
               }
             })
           });
@@ -493,7 +493,7 @@
                 }
               })
             }
-            
+
             if ($pageHelpDocumentContainer.is(':visible')) {
               $pageHelpDocumentContainer.fadeOut('fast');
             } else {

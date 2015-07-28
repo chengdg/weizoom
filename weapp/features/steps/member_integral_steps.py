@@ -31,7 +31,7 @@ def step_impl(context, user):
 		"review_increase": info.get(u"review_increase", 0)
 	}
 
-	url = '/mall/integral_strategy/update/'
+	url = '/mall2/integral_strategy/'
 	response = context.client.post(url, data)
 	# TODO open
 	# response = json.loads(response.content)

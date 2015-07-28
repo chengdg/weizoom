@@ -150,9 +150,9 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
     	var _this = this;
         var status = this.options.status || '';
         W.getApi().call({
-            method: 'post',
-            app: 'mall',
-            api: 'order_filter_params/get',
+            method: 'get',
+            app: 'mall2',
+            resource: 'order_filter_params',
             args:{status:status},
             success: function(data) {
                 var html = $.tmpl(this.getTemplate(), {
@@ -249,7 +249,7 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
     exportBtn: function(event){
         console.log('导出');
         var status = this.options.status || '';
-        var url = '/mall/orders/export/';
+        var url = '/mall2/order_export/';
         var args = this.getFilterValue();
         args = this.getArgsExportValueByDict(args);
         if (args.length > 0) {

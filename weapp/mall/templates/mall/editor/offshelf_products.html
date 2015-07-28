@@ -7,7 +7,7 @@
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li>
-				<a href="/mall/onshelf_products/get/">商品管理</a>
+				<a href="/mall2/product_list?shelve_type=1">商品管理</a>
 			</li>
 			<li class="active">待售商品管理</li>
 		</ul>
@@ -22,12 +22,12 @@
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchRecycle">移动到回收站</a>
-			<a href="/mall/product/create/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
+			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
 		</div>
 		<div
 			data-ui-role="advanced-table"
-			data-app="mall"
-			data-api="products/get"
+			data-app="mall2"
+			data-api="product_list"
 			data-args='{"type":"offshelf"}'
 			data-template-id="#products-view"
 			data-enable-paginator="true"
@@ -50,7 +50,7 @@
 	{% else %}
 	<div class="panel panel-default mt20 xb-rightPanel">
 		<div class="panel-heading">
-			<a href="/mall/product/create/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr">
+			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr">
 			<span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>
 					添加新商品</a>
 		</div>
@@ -93,7 +93,7 @@
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">
-								<a href="/mall/product/update/?id=${product.id}&source=offshelf">
+								<a href="/mall2/product/?id=${product.id}">
                                   {{if product.thumbnails_url.search('http://weappimg') != -1}}
                                     <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
                                   {{else}}
@@ -148,7 +148,7 @@
 					<td>${product.created_at}</td>
 					<td>
 					   <div style=" width:74px; margin:auto;">
-						<a href="/mall/product/update/?id=${product.id}&source=offshelf" class="xa-modify fl" style="width: 39px;">
+						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">
 						{{if product.is_self}}修改{{else}}审核{{/if}}</a>
 						<a href="javascript:void(0);" class="xa-onshelf fl" style="width: 30px;">上架</a>
 						</div>

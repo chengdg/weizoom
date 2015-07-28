@@ -40,12 +40,13 @@ W.view.mall.ProductReviewListView = Backbone.View.extend({
 
     //置顶
     onClickModify: function(event){
+
         var $el = $(event.currentTarget);
         var product_review_id = $el.attr("data-product-review-id");
         var status = $el.attr("data-status");
         W.getApi().call({
-            app: 'mall',
-            api: 'product_review_status/update',
+            app: 'mall2',
+            resource: 'product_review',
             method: 'post',
             args: {
                 product_review_id: product_review_id,
@@ -80,8 +81,8 @@ W.view.mall.ProductReviewListView = Backbone.View.extend({
     batchUpdateReviews: function(reviewIds, action) {
         W.getApi().call({
             method: 'post',
-            app: 'mall',
-            api: 'product_review_status_batch/update',
+            app: 'mall2',
+            resource: 'product_review',
             args:{
                 ids: reviewIds.join(','),
                 action: action

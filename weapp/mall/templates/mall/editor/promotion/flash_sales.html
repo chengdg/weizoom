@@ -6,7 +6,7 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
+		<li><a href="/mall2/promotion_list/">促销管理</a></li>
 		<li class="active">限时抢购</li>
 	</ul>
 </div>
@@ -19,13 +19,13 @@
 		<label for="topSelectAll" class="xui-topSelectAll">全选</label>
 		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
 		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">删&nbsp;&nbsp;&nbsp;&nbsp;除</a>
-		<a href="/mall_promotion/flash_sale/create/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建活动</a>
+		<a href="/mall2/flash_sale/?type=create" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建活动</a>
 	</div>
 
 	<div
 		data-ui-role="advanced-table"
-		data-app="mall_promotion"
-		data-api="promotions/get"
+		data-app="mall2"
+		data-api="promotion_list"
 		data-args='{"type": "flash_sale"}'
 		data-template-id="#promotions-view"
 		data-enable-paginator="true"
@@ -132,12 +132,12 @@
 					<td>
 						{{if (promotion.status === '已结束')}}
 						<!--
-						<a href="/mall_promotion/flash_sale/copy/?id=${promotion.id}" class="xa-copy fl" style="width: 40px;text-decoration:none;">复制</a>
+						<a href="/mall2/flash_sale/?id=${promotion.id}&type=copy" class="xa-copy fl" style="width: 40px;text-decoration:none;">复制</a>
 						-->
-						<a href="/mall_promotion/flash_sale_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a href="/mall2/flash_sale/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
 						<a href="javascript:void(0);" class="xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
 						{{else}}
-						<a href="/mall_promotion/flash_sale_detail/get/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
+						<a href="/mall2/flash_sale/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
 						<a href="javascript:void(0);" class="xa-notFinishInfo xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
 						<a href="javascript:void(0);" class="xui-hide xa-finishInfo xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
 						{{/if}}

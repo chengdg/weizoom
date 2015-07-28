@@ -60,6 +60,7 @@ urlpatterns = patterns('',
 	#url(r'^shop/', include('webapp.modules.shop.urls')),
 
 	url(r'^mall/', restful_url('mall')),
+	url(r'^mall2/', restful_url2('mall2')),
 	url(r'^mall_promotion/', restful_url('mall_promotion')),
 	url(r'^auth/', restful_url('auth')),
 	url(r'^cms/', include('webapp.modules.cms.urls')),

@@ -5,7 +5,7 @@
 <div class="xui-procateCategoriesPage">
 <ul class="breadcrumb">
 	<li>您当前所在位置</li>
-	<li><a href="/mall/onshelf_products/get/">商品管理</a></li>
+	<li><a href="/mall2/product_list/?shelve_type=1">商品管理</a></li>
 	<li class="active">分组管理</li>
 </ul>
 
@@ -59,8 +59,9 @@
 $(document).ready(function() {
 	function addCategory() {
 		W.getAip().call({
-			app: 'mall',
-			api: 'product_category/add',
+			method: 'put',
+			app: 'mall2',
+			resource: 'category',
 		})
 	}
 
@@ -69,9 +70,9 @@ $(document).ready(function() {
 			canEditTitle: true,
 			success: function(data) {
 				W.getApi().call({
-					method: 'post',
-					app: 'mall',
-					api: 'product_category/create',
+					method: 'put',
+					app: 'mall2',
+					resource: 'category',
 					args: data,
 					success: function(data) {
 						window.location.reload();
@@ -96,8 +97,8 @@ $(document).ready(function() {
 			success: function(data) {
 				W.getApi().call({
 					method: 'post',
-					app: 'mall',
-					api: 'product_category/update',
+					app: 'mall2',
+					resource: 'category',
 					args: _.extend(data, {
 						id: categoryId
 					}),
@@ -125,11 +126,11 @@ $(document).ready(function() {
         	msg:'确定删除分组？',
         	confirm:function(){
         		W.getApi().call({
-					method: 'post',
-					app: 'mall',
-					api: 'product_category/delete',
+					method: 'delete',
+					app: 'mall2',
+					resource: 'category',
 					args: {
-						id: categoryId
+						category_id: categoryId
 					},
 					success: function(data) {
 						window.location.reload();
@@ -157,9 +158,9 @@ $(document).ready(function() {
         	msg:'确定删除？',
         	confirm:function(){
         		W.getApi().call({
-					method: 'post',
-					app: 'mall',
-					api: 'product_in_category/delete',
+					method: 'delete',
+					app: 'mall2',
+					resource: 'category',
 					args: {
 						category_id: categoryId,
 						product_id: productId

@@ -55,9 +55,9 @@ W.view.mall.CouponListView = Backbone.View.extend({
 
     deleteCoupons: function(couponsId) {
         W.getApi().call({
-            method: 'post',
-            app: 'mall_promotion',
-            api: 'coupons/delete',
+            method: 'delete',
+            app: 'mall2',
+            api: 'coupon_list',
             args: {
                 ids: couponsId,
             },

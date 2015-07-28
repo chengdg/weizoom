@@ -9,8 +9,8 @@
 <div class="xui-editProductPage xui-mall-addProductForm">
 <ul class="breadcrumb">
     <li>您当前所在位置</li>
-    <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
-    <li><a href="/mall_promotion/coupon_rule/get/">优惠券</a></li>
+    <li><a href="/mall2/promotion_list/">促销管理</a></li>
+    <li><a href="/mall2/coupon_rule_list/">优惠券</a></li>
     <li class="active">码库</li>
 </ul>
 <form method="post" class="form-horizontal xui-formPanel xa-form pt0">
@@ -73,14 +73,14 @@ $(function(){
     // args.products = productSelector.getData();
     W.getApi().call({
       method: 'post',
-      app: 'mall_promotion',
-      api: 'coupon/create',
+      app: 'mall2',
+      api: 'coupon',
       args: W.toFormData(args),
       scope: this,
       success: function(data) {
         W.showHint('success', '批量添加优惠码成功');
         _.delay(function() {
-          window.location.href = '/mall_promotion/coupons/get/?id={{ rule.id }}';
+          window.location.href = '/mall2/coupon_list/?id={{ rule.id }}';
         }, 500)
       },
       error: function(resp) {

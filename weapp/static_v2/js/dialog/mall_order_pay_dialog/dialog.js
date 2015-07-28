@@ -75,8 +75,8 @@ W.dialog.mall.UpdateOrderDialog = W.dialog.Dialog.extend({
 
     reloadProducts: function(orderId){
         W.getApi().call({
-            app: 'mall',
-            api: 'order_products/get',
+            app: 'mall2',
+            resource: 'order_product',
             args: {
                 order_id: orderId
             },

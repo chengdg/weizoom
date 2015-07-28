@@ -652,20 +652,6 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 						'short_msg': '限制购买'
 					})
 					continue
-				# count = 0
-				# for record in purchase_records:
-				# 	if record.created_at > delta and recode.order.status != ORDER_STATUS_CANCEL:
-				# 		for order_has_product in recode.order.get_products:
-				# 			if order_has_product.product_id == product.id
-				# 				count += order_has_product.number
-				# if count > detail['count_per_purchase']:
-					# data_detail.append({
-					# 	'id': product.id,
-					# 	'model_name': product.model_name,
-					# 	'msg': '在限购周期内不能多次购买',
-					# 	'short_msg': '限制购买'
-					# })
-					# continue
 
 			if promotion_id in id2flashsale:
 				flash_sale = id2flashsale[promotion_id]

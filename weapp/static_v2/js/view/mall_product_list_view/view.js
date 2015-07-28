@@ -68,8 +68,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var updateAction = function() {
             W.getApi().call({
                 method: 'post',
-                app: 'mall',
-                api: 'product_shelve_type/batch_update',
+                app: 'mall2',
+                resource: 'product_list',
                 args: {
                     ids: ids,
                     shelve_type: shelveType
@@ -123,8 +123,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var updateAction = function() {
             W.getApi().call({
                 method: 'post',
-                app: 'mall',
-                api: 'product_shelve_type/update',
+                app: 'mall2',
+                resource: 'product_list',
                 args: {
                     id: productId,
                     shelve_type: shelveType
@@ -186,8 +186,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 var newModelInfos = data;
                 W.getApi().call({
                 method: 'post',
-                app: 'mall',
-                api: 'product_model_stocks/update',
+                app: 'mall2',
+                resource: 'product_model',
                 args: W.toFormData({'model_infos': newModelInfos}),
                 scope: this,
                 success: function(data) {
@@ -280,8 +280,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
             }]};
             W.getApi().call({
                 method: 'post',
-                app: 'mall',
-                api: 'product_model_stocks/update',
+                app: 'mall2',
+                resource: 'product_model',
                 args: W.toFormData(data),
                 scope: this,
                 success: function(data) {
@@ -311,8 +311,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
             }]};
             W.getApi().call({
                 method: 'post',
-                app: 'mall',
-                api: 'product_model_stocks/update',
+                app: 'mall2',
+                resource: 'product_model',
                 args: W.toFormData(data),
                 scope: this,
                 success: function(data) {

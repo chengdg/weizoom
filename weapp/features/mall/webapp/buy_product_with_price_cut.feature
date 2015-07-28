@@ -70,7 +70,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall.promotion @mall.webapp.promotion
 Scenario: 购买单个满减商品，满足价格阈值
 	
 	When bill访问jobs的webapp
@@ -104,7 +104,7 @@ Scenario: 购买单个满减商品，满足价格阈值
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall.promotion @mall.webapp.promotion
 Scenario: 购买单个满减商品，超出价格阈值，但不是循环满减
 	
 	When bill访问jobs的webapp
@@ -137,7 +137,7 @@ Scenario: 购买单个满减商品，超出价格阈值，但不是循环满减
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall.promotion @mall.webapp.promotion
 Scenario: 购买单个满减商品，超出价格阈值，同时也是循环满减
 	
 	When bill访问jobs的webapp
@@ -171,7 +171,7 @@ Scenario: 购买单个满减商品，超出价格阈值，同时也是循环满�
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall.promotion @mall.webapp.promotion
 Scenario: 购买多个满减商品
 	
 	When bill访问jobs的webapp
@@ -208,7 +208,7 @@ Scenario: 购买多个满减商品
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall.promotion @mall.webapp.promotion
 Scenario: 购买单个满减商品，超出库存限制
 	第一次购买1个，成功；第二次购买2个，超出商品库存，确保缓存更新
 	

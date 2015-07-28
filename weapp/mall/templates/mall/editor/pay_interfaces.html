@@ -43,7 +43,7 @@
 					{% for config in pay_interface.configs %}
 					<li style="line-height:28px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width: 40em;">{{config.name}}: {{config.value}}</li>
 					{% endfor %} 
-					<li style="line-height:28px;"><a href="/mall/pay_interface/update/?id={{pay_interface.id}}">修改</a></li>
+					<li style="line-height:28px;"><a href="/mall2/pay_interface/?id={{pay_interface.id}}">修改</a></li>
 				</ul>
 					
 			</div>
@@ -71,7 +71,7 @@
 					{% for config in pay_interface.configs %}
 					<li style="line-height:28px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width: 40em;">{{config.name}}: {{config.value}}</li>
 					{% endfor %} 
-					<li style="line-height:28px;"><a href="/mall/pay_interface/update/?id={{pay_interface.id}}">修改</a></li>
+					<li style="line-height:28px;"><a href="/mall2/pay_interface/?id={{pay_interface.id}}">修改</a></li>
 				</ul>
 			</div>
 		</div>
@@ -105,7 +105,7 @@ $(document).ready(function() {
 			if (shouldCreate) {
 				shouldUpdate = false
 				if(confirm("您还没有配置"+data_value+"，点击确定，前往配置")) {
-					window.location = '/mall/pay_interface/create/?id='+payInterfaceId;
+					window.location = '/mall2/pay_interface/?id='+payInterfaceId+'&is_new=true';
 				}
 			} else {
 				$checkbox.addClass('active');
@@ -123,8 +123,8 @@ $(document).ready(function() {
 		if (shouldUpdate) {
 			W.getApi().call({
 				method: 'post',
-				app: 'mall',
-				api: 'pay_interface/enable',
+				app: 'mall2',
+				api: 'pay_interface',
 				args: {
 					id: payInterfaceId,
 					is_enable: !isOn

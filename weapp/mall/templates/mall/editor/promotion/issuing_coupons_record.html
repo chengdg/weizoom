@@ -20,7 +20,7 @@
 <div class="relative">
     <ul class="breadcrumb">
         <li>您当前所在位置</li>
-        <li><a href="/mall_promotion/promotion_lists/get/">促销管理</a></li>
+        <li><a href="/mall2/promotion_list/">促销管理</a></li>
         <li class="active">发优惠券</li>
     </ul>
 </div>
@@ -31,12 +31,12 @@
 <div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
     <div class="panel-heading xui-headStyle"  style="background:#E9EDF5;padding-bottom:11px!important; margin-left:-2px;">
         <b style="line-height: 30px;">发放优惠券记录</b>
-        <a href="/mall_promotion/issuing_coupons_record/create/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;发优惠券</a>
+        <a href="/mall2/issuing_coupons_record/" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;发优惠券</a>
     </div>
     <div
         data-ui-role="advanced-table"
-        data-app="mall_promotion"
-        data-api="issuing_coupons_record/get"
+        data-app="mall2"
+        data-resource="issuing_coupons_record_list"
         data-template-id="#red_enevlop_record_list_view"
         data-enable-paginator="true"
         data-enable-sort="false"
@@ -88,7 +88,7 @@
             <td style="color:#086cb2">${ record.used_count }
             </td>
             <td>
-                <a href="../../issuing_coupons_detail/get?id=${ record.id }">详情</a>
+                <a href="/mall2/issuing_coupons_detail/?id=${ record.id }">详情</a>
             </td>
         </tr>
         {{/each}}

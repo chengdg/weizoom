@@ -71,7 +71,8 @@ W.dialog.mall.ExpressDeliverDialog = W.dialog.Dialog.extend({
                 'express_value': value,
                 'remark': remark
             }
-            var api = 'express_delivery/create';
+            //var api = 'express_delivery/create';
+            var method = 'put'
         }else{
             var args = {
                 'id': this.dataId,
@@ -80,9 +81,10 @@ W.dialog.mall.ExpressDeliverDialog = W.dialog.Dialog.extend({
                 'express_value': value,
                 'remark': remark
             }
-            var api = 'express_delivery/update';
+            //var api = 'express_delivery/update';
+            var method = 'post'
         }
-        this.sendExpressDeliverData(args, api);
+        this.sendExpressDeliverData(args, method);
         // name = request.POST.get('name'),
         // express_number = request.POST.get('express_number'),
         // express_value = request.POST.get('express_value'),
@@ -93,9 +95,9 @@ W.dialog.mall.ExpressDeliverDialog = W.dialog.Dialog.extend({
     initExpressDeliverSelect: function(){        
         var _this = this;
         W.getApi().call({
-            app: 'mall',
-            api: 'init_express_deliverys/get',
-            args: {},
+            app: 'mall2',
+            resource: 'express_delivery_company',
+            args: {'source': 'init_express_deliverys'},
             success: function(data) {
                 for (var i=0; i<data.length; i++ ) {
                     var $option = $.tmpl(_this.oneOption, data[i]);
@@ -115,12 +117,12 @@ W.dialog.mall.ExpressDeliverDialog = W.dialog.Dialog.extend({
     /*
      * 发送物流信息 'express_delivery/create'
      */
-    sendExpressDeliverData:function(args, api){
+    sendExpressDeliverData:function(args, method){
         W.getApi().call({
-            app: 'mall',
-            api: api,
+            app: 'mall2',
+            resource: 'express_delivery',
             args: args,
-            method: 'post',
+            method: method,
             success: function(data) {
             },
             error: function() {

@@ -12,7 +12,7 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
 	When jobs已添加商品
 		#东坡肘子(有分类，上架，无限库存，多轮播图), 叫花鸡(无分类，下架，有限库存，单轮播图)
@@ -53,7 +53,7 @@ Background:
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 
 @mall @mall.product_category @mall2
@@ -61,13 +61,13 @@ Scenario: Jobs更新已存在的商品分类
 	When jobs更新商品分类'分类1'为
 		"""
 		{
-			"name": "分类1*"
-		}	
+			"name": "分类1s"
+		}
 		"""
 	Then jobs能获取商品分类列表
 		"""
 		[{
-			"name": "分类1*"
+			"name": "分类1s"
 		}, {
 			"name": "分类2"
 		}, {
@@ -89,7 +89,7 @@ Scenario: Jobs删除已存在的商品分类
 
 @mall.product_category @mall @mall2
 Scenario: 从分类中删除商品
-	
+
 	Given jobs登录系统
 	Then jobs能获取商品分类列表
 		"""
@@ -132,7 +132,7 @@ Scenario: 从分类中删除商品
 
 @mall.product_category @mall @mall2
 Scenario: 向分类中添加商品
-	
+
 	Given jobs登录系统
 	Then jobs能获取商品分类列表
 		"""

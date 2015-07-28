@@ -5,7 +5,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 
 /**
  * 选择轮播图的对话框
- * 
+ *
  * author: robert
  */
 ensureNS('W.dialog.mall');
@@ -24,7 +24,7 @@ W.dialog.mall.AddMallImageGroupImageDialog = W.dialog.Dialog.extend({
     events: _.extend({
         'click .xa-delete': 'onClickDeleteButton'
     }, W.dialog.Dialog.prototype.events),
-  
+
     onInitialize: function(options) {
         this.imageUploader = new W.view.common.ImageView({
             el: this.$('.xa-imageUploader').get(0),
@@ -59,8 +59,8 @@ W.dialog.mall.AddMallImageGroupImageDialog = W.dialog.Dialog.extend({
     afterShow: function(options) {
         if (this.groupId !== -1) {
             W.getApi().call({
-                app: 'mall',
-                api: 'image_group_images/get',
+                app: 'mall2',
+                resource: 'image_group',
                 args: {
                     id: this.groupId
                 },
@@ -72,11 +72,11 @@ W.dialog.mall.AddMallImageGroupImageDialog = W.dialog.Dialog.extend({
                         var $node = $.tmpl(this.imageTemplate, {image:image});
                         buf.push($node);
                     }, this);
-                    
+
                     this.$('.xa-images').empty().append(buf);
                 },
                 error: function(resp) {
-                    
+
                 }
             });
         }

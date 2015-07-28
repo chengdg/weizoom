@@ -45,12 +45,12 @@ def get_webapp_link_menu_objectes(request):
 				'name': '已上架商品',
 				'type': 'product',
 				'add_btn_title': '新建商品',
-				'add_link': '/mall/product/create/'
+				'add_link': '/mall2/product/'
 			},{
 				'name': '商品分组',
 				'type': 'category',
 				'add_btn_title': '新建分组',
-				'add_link': '/mall/product_categories/get/'
+				'add_link': '/mall2/category_list/'
 			}]
 		},
 		'webappHome':{
@@ -81,7 +81,7 @@ def get_webapp_link_menu_objectes(request):
 				'name': '优惠券',
 				'type': 'coupon',
 				'add_btn_title': '新建优惠券',
-				'add_link': '/mall_promotion/coupon_rules/create/'
+				'add_link': '/mall2/coupon_rule/'
 			}, {
 				'name': '微信投票',
 				'type': 'vote',
@@ -136,7 +136,7 @@ def get_webapp_link_menu_objectes(request):
 			'title': [{
 				'name': '盛景定制APP',
 				'type': 'shengjing_app',
-				'add_link': '/mall/product/create/'
+				'add_link': '/mall2/product/'
 			}]
 		}
 	}

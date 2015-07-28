@@ -50,9 +50,9 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		this.$('.xa-productSelectConditionPanel').empty().append($node);
 		if (this.promotionId !== 0) {
 			W.getApi().call({
-				app: 'mall_promotion',
-				api: 'promotion_products/get',
-				args: {id: this.promotionId},
+				app: 'mall2',
+				resource: 'promotion',
+				args: {type: 'promotion_products', id: this.promotionId},
 				scope: this,
 				success: function(data) {
                     alert(data);
@@ -104,7 +104,7 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		}
 
 		var $node = $.tmpl(this.tableTemplate, {products: products});
-		if (this.enableTableItemSelectable) { 
+		if (this.enableTableItemSelectable) {
 			$node.find('thead tr').prepend('<th width="30"><input type="checkbox" class="xa-selectAll" /></th>');
 			$node.find('tbody tr').each(function() {
 				var $tr = $(this);
@@ -150,7 +150,7 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 			name: name,
 			barCode: barCode,
 			selectedProductIds: _this.selectedProductIds,
-			success: function(data) {		
+			success: function(data) {
 				_this.addProducts(data);
 				_this.trigger('finish-select-products', data);
 			},
@@ -171,7 +171,7 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		if (this.$('tbody tr').length === 0) {
 			this.$('.xa-selectedProductList').empty().text('请通过查询选择参与活动的商品');
 		}
-		
+
 		for (var i = 0; i < this.selectedProductIds.length; i++) {
 			if (this.selectedProductIds[i] === productId) {
 				this.selectedProductIds.splice(i, 1);

@@ -6,7 +6,7 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/mall/outline/get/">首页</a></li>
+		<li><a href="/mall2/outline/">首页</a></li>
 		<li class="active">消息中心</li>
 	</ul>
 </div>
@@ -15,8 +15,8 @@
 
 	<div
 		data-ui-role="advanced-table"
-		data-app="mall"
-		data-api="notice_list/get"
+		data-app="mall2"
+		data-api="notice_list"
 		data-template-id="#notice-view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
@@ -39,7 +39,7 @@
 <script id="notice-view" type="text/x-jquery-tmpl">
 <div class="xui-fontBold mb10">消息列表</div>
 {{each(i, notice) items}}
-    <li{{if i>0}} style="border-top:1px dotted #c3c3c3;"{{/if}}><a href="/mall/notice_detail/get?pk=${notice.id}">${notice.title} <span class="fr c65">${notice.created_at}</span></a></li>
+    <li{{if i>0}} style="border-top:1px dotted #c3c3c3;"{{/if}}><a href="/mall2/notice/?pk=${notice.id}">${notice.title} <span class="fr c65">${notice.created_at}</span></a></li>
 {{/each}}
 </ul>
 </script>

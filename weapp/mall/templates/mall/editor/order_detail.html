@@ -15,26 +15,26 @@
     <li>您当前所在位置</li>
     {% if second_nav_name == 'allOrder' %}
     <li>
-    <a href="/mall/orders/get/">订单管理</a>
+    <a href="/mall2/order_list/">订单管理</a>
     </li>
     <li>
-    <a href="/mall/orders/get/">所有订单</a>
+    <a href="/mall2/order_list/">所有订单</a>
     </li>
     {% endif %}
     {% if second_nav_name == 'refundOrder' %}
     <li>
-    <a href="/mall/orders/get/">订单管理</a>
+    <a href="/mall2/order_list/">订单管理</a>
     </li>
     <li>
-    <a href="/mall/refund_orders/get/">退款订单</a>
+    <a href="/mall2/order_list/?belong=refund">退款订单</a>
     </li>
     {% endif %}
     {% if second_nav_name == 'financialCheck' %}
     <li>
-    <a href="/mall/orders/get/">订单管理</a>
+    <a href="/mall2/order_list/">订单管理</a>
     </li>
     <li>
-    <a href="/mall/audit_orders/get/">财务审核</a>
+    <a href="/mall2/order_list/?belong=audit">财务审核</a>
     </li>
     {% endif %}
     <li class="active">订单详情</li>
@@ -422,9 +422,24 @@
               isTitle: false,
               privateContainerClass:'xui-orderConfirmPop',
                   msg:'确定取消订单？',
-                  confirm:function(){
-                   window.location.href = '/mall/order/update/?order_id='+orderId+'&action=cancel';
-                  }
+                confirm:function(){
+                    var args = {
+                        'order_id': orderId,
+                        'action' : 'cancel'
+                    }
+                    W.getApi().call({
+                        method: 'post',
+                        app: 'mall2',
+                        resource: 'order',
+                        args: args,
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function() {
+                            }
+                    })
+
+                }
             })
         })
         //标记完成
@@ -442,7 +457,22 @@
             privateContainerClass:'xui-orderConfirmPop',
                 msg:'确定将该订单标记为完成？',
                 confirm:function(){
-                 window.location.href = '/mall/order/update/?order_id='+orderId+'&action=finish';
+                    var args = {
+                        'order_id': orderId,
+                        'action' : 'finish'
+                    }
+                    W.getApi().call({
+                        method: 'post',
+                        app: 'mall2',
+                        resource: 'order',
+                        args: args,
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function() {
+                            }
+                    })
+
                 }
           })
         });
@@ -460,9 +490,23 @@
             isTitle: false,
             privateContainerClass:'xui-orderConfirmPop',
                 msg:'确定申请退款？',
-                confirm:function(){
-                 window.location.href = '/mall/order/update/?order_id='+orderId+'&action=return_pay';
+        	confirm:function(){
+                var args = {
+                    'order_id': orderId,
+                    'action' : 'return_pay'
                 }
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function() {
+                        }
+                })
+        	}
           })
         });
         //退款完成
@@ -479,7 +523,21 @@
                 privateContainerClass:'xui-orderAuditConfirmPop',
                 msg:'请您与买家私下协商退款且退款成功后，再使用该功能哦!',
                 confirm:function(){
-                  window.location.href = '/mall/order/update/?order_id='+orderId+'&action=return_success';
+                    var args = {
+                        'order_id': orderId,
+                        'action' : 'return_success'
+                    }
+                    W.getApi().call({
+                        method: 'post',
+                        app: 'mall2',
+                        resource: 'order',
+                        args: args,
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function() {
+                            }
+                    })
                 }
               })
           });
@@ -512,8 +570,22 @@
           W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
               orderId: orderId,
               success: function(data) {
-                window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=pay';
-              }
+                var args = {
+                    'order_id': orderId,
+                    'action' : 'pay'
+                }
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function() {
+                        }
+                })
+		    }
           });
         });
 
@@ -528,8 +600,8 @@
               isUpdatePrice: true,
               success: function(data) {
                 W.getApi().call({
-                  app: 'mall',
-                  api: 'order_info/update',
+                  app: 'mall2',
+                  resource: 'order',
                   method: 'post',
                   args: {
                     order_id: orderId,

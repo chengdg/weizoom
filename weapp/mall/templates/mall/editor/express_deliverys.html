@@ -14,12 +14,12 @@
 	{% if has_express_delivery %}
 	<div 
 	data-ui-role="advanced-table" 
-	data-app="mall" 
-	data-api="express_deliverys/get"
+	data-app="mall2"
+	data-resource="express_delivery_list"
 	data-template-id="#express-deliverys-view"
 	data-enable-paginator="false" 
 	data-enable-sort="true" 
-	data-sort-api="express_delivery_display_index/update"
+	data-sort-api="express_delivery_display_index"
 	data-item-count-per-page="50" 
 	data-init-sort="-display_index"
     ></div>
@@ -112,10 +112,10 @@ $(document).ready(function() {
 		var id = $(this).attr('data-id');
 
         W.getApi().call({
-            app: 'mall',
-            api: 'express_delivery/delete',
+            app: 'mall2',
+            api: 'express_delivery',
             args: {id: id},
-            method: 'post',
+            method: 'delete',
             success: function(data) {
     			window.location.reload();
             },

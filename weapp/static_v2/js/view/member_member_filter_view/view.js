@@ -350,7 +350,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
     exportBtn: function(event){
         console.log('导出');
         var status = this.options.status || '';
-        var url = '/mall/orders/export/';
+        var url = '/mall2/order_export/';
         var args = this.getFilterValue();
         args = this.getArgsExportValueByDict(args);
         if (args.length > 0) {

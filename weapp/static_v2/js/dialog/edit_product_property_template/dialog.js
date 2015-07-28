@@ -5,7 +5,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 
 /**
  * 选择轮播图的对话框
- * 
+ *
  * author: robert
  */
 ensureNS('W.dialog.mall');
@@ -105,8 +105,8 @@ W.dialog.mall.EditProductPropertyDialog = W.dialog.Dialog.extend({
         this.$dialog.find('input[type="text"]').eq(0).focus();
 
         W.getApi().call({
-            app: 'mall',
-            api: 'template_properties/get',
+            app: 'mall2',
+            resource: 'property_list',
             args: {
                 id: this.templateId
             },
@@ -116,7 +116,7 @@ W.dialog.mall.EditProductPropertyDialog = W.dialog.Dialog.extend({
                 this.$('.xa-propertyTable').empty().append($node);
             },
             error: function(resp) {
-                
+
             }
         });
     },

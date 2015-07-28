@@ -56,8 +56,8 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
     submitSendApi: function(args){
         W.getApi().call({
             method:'post',
-            app: 'mall',
-            api: 'order_remark/update',
+            app: 'mall2',
+            resource: 'order',
             args: args,
             success: function(data) {
                 window.location.reload();

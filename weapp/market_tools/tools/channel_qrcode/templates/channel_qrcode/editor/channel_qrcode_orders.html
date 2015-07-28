@@ -16,8 +16,8 @@
 	{% if setting_id %}
 		<div
 			data-ui-role="advanced-table"
-			data-app="mall"
-			data-api="channel_qrcode_payed_orders/get"
+			data-app="mall2"
+			resource="channel_qrcode_payed_order"
 			data-enable-paginator="true"
 			data-template-id="#mall-orders-view"
 			data-args='{"id":{{setting_id}} }'
@@ -63,7 +63,7 @@
 				<td class="w10 tx_expandTrigger" data-expand-source="${order.id}" style="cursor: pointer;"> + </td>
 				<td class="nowrap">
 					<div>
-						<a title="查看" href="/mall/order_detail/get/?order_id=${order.id}">${order.order_id}</a>
+						<a title="查看" href="/mall2/order/?order_id=${order.id}">${order.order_id}</a>
 					</div>
 				</td>
                 <td class="nowrap">
@@ -173,10 +173,10 @@ function formatOrderStatus(status) {
 }
 
 $(document).ready(function() {
-	$('#exportBtn').click(function(event) {
-      var url = '/mall/editor/orders/export/';
-      window.open(url);
-	});
+	// $('#exportBtn').click(function(event) {
+ //      var url = '/mall/editor/orders/export/';
+ //      window.open(url);
+	// });
 
 	$('#order-products-table-tmpl-src').template('order-products-table-tmpl-src');
 	if($('[data-ui-role="advanced-table"]').length>0)// 避免没有数据时报空

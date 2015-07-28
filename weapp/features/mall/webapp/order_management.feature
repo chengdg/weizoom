@@ -483,7 +483,7 @@ Scenario: 3 bill在下单购买jobs的商品后，jobs发货方式为"不需要�
 		}]
 		"""
 
-@mall @mall.webapp @mall.pay_order 
+@mall @mall.webapp @mall.pay_order
 Scenario: 4 bill 在不同时段下订单，订单列表按下订单的时间倒序排列
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -498,8 +498,6 @@ Scenario: 4 bill 在不同时段下订单，订单列表按下订单的时间倒
 	Then bill成功创建订单
 		"""
 		{
-			"order_time": "2015-05-04 16:11:12",
-			"order_id": "20150504161112",
 			"status": "待支付",
 			"final_price": 10.00,
 			"products": [{
@@ -521,8 +519,6 @@ Scenario: 4 bill 在不同时段下订单，订单列表按下订单的时间倒
 	Then bill成功创建订单
 		"""
 		{
-			"order_time": "2015-05-03 16:11:12",
-			"order_id": "20150503161112",
 			"status": "待支付",
 			"final_price": 20.00,
 			"products": [{

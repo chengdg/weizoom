@@ -227,7 +227,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			}]
 		}
 		"""
-	When jobs支付最新订单
+	When jobs'支付'最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -245,7 +245,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			"actions": ["完成", "修改物流", "取消"]
 		}
 		"""
-	When jobs完成最新订单
+	When jobs'完成'最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -254,7 +254,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			"actions": ["修改物流", "取消"]
 		}
 		"""
-	When jobs取消最新订单
+	When jobs'取消'最新订单
 		"""
 		{
 			"reason": "不想要了"
@@ -345,7 +345,7 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有50会员积分
 	Given jobs登录系统
-	When jobs取消最新订单
+	When jobs'取消'最新订单
 		"""
 		{
 			"reason": "不想要了"

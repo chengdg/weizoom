@@ -14,7 +14,7 @@
 		<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li>
-			<a href="/mall/orders/get/">订单管理</a>
+			<a href="/mall2/order_list/">订单管理</a>
 		</li>
 		<li class="active">财务审核</li>
 	</ul>
@@ -26,8 +26,9 @@
 	{% if has_order %}
 		<div
 			data-ui-role="advanced-table"
-			data-app="mall"
-			data-api="audit_orders/get"
+			data-app="mall2"
+            data-args='{"belong":"audit"}'
+			data-resource="order_list"
 			data-enable-paginator="true"
 			data-template-id="#mall-orders-view"
 			data-init-sort="-created_at"
@@ -92,14 +93,14 @@
 	{{/if}}
 	<ul>
     {{each(i, order) items}}
-		<li>
+		<li data-order-id="${order.id}">
 			<table width="100%" class="table mb15 xui-table-orderDetail">
 				<tr class="xui-order-firstTr">
 					<td colspan="8">
 					<div class="fl">
 						<span class="ml20 fl">
 						订单编号：
-						<a title="查看" class="xt-orderLink" href="/mall/audit_order_detail/get/?order_id=${order.id}" target="_blank">${order.order_id}</a>
+						<a title="查看" class="xt-orderLink" href="/mall2/order/?belong=audit&order_id=${order.id}" target="_blank">${order.order_id}</a>
 						</span>
 						<span class="ml10 fl w60">
 						&nbsp;
@@ -116,7 +117,7 @@
 						</span>
 					</div>
 					<div class="fr">
-						<a title="查看" href="/mall/audit_order_detail/get/?order_id=${order.id}" target="_blank" class="mr10">查看详情</a>
+						<a title="查看" href="/mall2/order/?belong=audit&order_id=${order.id}" target="_blank" class="mr10">查看详情</a>
 						-
 						<a href='javascript:void(0);' class="ml10 mr15 xa-order-remark" data-order-id="${order.id}" data-order-value="${order.remark}">备注</a>
 					</div>
@@ -216,7 +217,7 @@
 					</td>-->
 					<td class="nowrap xui-operation" width="90">
 							{{if order.order_status == 6 }}
-								<a class="xa-refundSuccess" href='/mall/order/update/?order_id=${order.id}&action=return_success'>退款成功</a>
+								<a class="xa-refundSuccess" href='javascript:void(0);''>退款成功</a>
 							{{/if}}
 					</td>
 				</tr>
@@ -312,18 +313,18 @@ $(document).ready(function() {
 	});
 
 	// 导出
-	$('#exportBtn').click(function(event) {
-		var url = '/mall/editor/orders/export/';
-		if (filterBox.filter_value) {
-			url = url + '?filter_value='+filterBox.filter_value+'&date_interval='+DATA_INTERVAL;
-		}
-		console.log(url, filterBox.filter_value)
-		W.getLoadingView().show();
-		$('#spin-hint').html('玩命导出中...');
-		var $frame=$('<iframe>').hide().attr('src',url);
-		$('body').append($frame);
-		setTimeout(function(){W.getLoadingView().hide()}, 5000);
-	});
+	// $('#exportBtn').click(function(event) {
+	// 	var url = '/mall/editor/orders/export/';
+	// 	if (filterBox.filter_value) {
+	// 		url = url + '?filter_value='+filterBox.filter_value+'&date_interval='+DATA_INTERVAL;
+	// 	}
+	// 	console.log(url, filterBox.filter_value)
+	// 	W.getLoadingView().show();
+	// 	$('#spin-hint').html('玩命导出中...');
+	// 	var $frame=$('<iframe>').hide().attr('src',url);
+	// 	$('body').append($frame);
+	// 	setTimeout(function(){W.getLoadingView().hide()}, 5000);
+	// });
 
 	// 时间确定按钮
 	$('#dateTimeBtn').click(function(event){
@@ -355,8 +356,8 @@ $(document).ready(function() {
 				return;
 			}
 			W.getApi().call({
-				app: 'mall',
-				api: 'order_products/get',
+				app: 'mall2',
+				resource: 'order',
 				args: {
 					order_id: order_id
 				},
@@ -416,6 +417,7 @@ $(document).ready(function() {
         event.preventDefault();
         var $el = $(event.currentTarget);
         var href = $el.attr('href');
+        var orderId = $el.parents('li').attr('data-order-id');
         W.requireConfirm({
         	$el: $(this),
         	width:442,
@@ -424,7 +426,21 @@ $(document).ready(function() {
 			privateContainerClass:'xui-orderAuditConfirmPop',
         	msg:'请您与买家私下协商退款且退款成功后，再使用该功能哦!',
         	confirm:function(){
-        		window.location.href = href;
+                var args = {
+                    'order_id': orderId,
+                    'action' : 'return_success'
+                }
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        window.location.reload();
+                    },
+                    error: function() {
+                        }
+                })
         	}
         })
     });

@@ -65,7 +65,7 @@ Scenario: 删除商品
 			"products":[]
 		}]
 		"""
-	When jobs永久删除商品'商品3'
+	When jobs-永久删除商品'商品3'
 	Then jobs能获取商品列表
 		"""
 		[{"name":"商品4"}, {"name":"商品2"}, {"name":"商品1"}]
@@ -94,7 +94,7 @@ Scenario: 删除商品
 			}
 		]
 		"""
-	When jobs永久删除商品'商品2'
+	When jobs-永久删除商品'商品2'
 	Then jobs能获取商品列表
 		"""
 		[{"name":"商品4"}, {"name":"商品1"}]
@@ -120,8 +120,8 @@ Scenario: 删除商品
 			"products": []
 		}]
 		"""
-	When jobs永久删除商品'商品1'
-	When jobs永久删除商品'商品4'
+	When jobs-永久删除商品'商品1'
+	When jobs-永久删除商品'商品4'
 	Then jobs能获取商品列表
 		"""
 		[]

@@ -5,6 +5,7 @@ from datetime import datetime
 from django.db.models import F
 
 from . import models as promotion_models
+from core import search_util
 
 
 def get_coupon_rules(owner):
@@ -72,3 +73,90 @@ def award_coupon_for_member(coupon_rule_info, member):
 def coupon_id_maker(a, b):
     random_args_value = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
     return '%03d%04d%s' % (a, b, ''.join(random.sample(random_args_value, 6)))
+
+
+PROMOTION_FILTERS = {
+    'promotion': [
+        {
+            'comparator': lambda promotion, filter_value: (filter_value == 'all') or (promotion_models.PROMOTION2TYPE[promotion.type]['name'] == filter_value),
+            'query_string_field': 'promotionType'
+        }, {
+            'comparator': lambda promotion, filter_value: (int(filter_value) == -1) or (int(filter_value) == promotion.status),
+            'query_string_field': 'promotionStatus'
+        }, {
+            'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime("%Y-%m-%d %H:%M"),
+            'query_string_field': 'startDate'
+        }, {
+            'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime("%Y-%m-%d %H:%M"),
+            'query_string_field': 'endDate'
+        }
+    ],
+    'coupon': [{
+            'comparator': lambda promotion, filter_value: filter_value in promotion.name,
+            'query_string_field': 'name'
+        }, {
+            'comparator': lambda promotion, filter_value: filter_value in promotion.name,
+            'query_string_field': 'coupon_type'
+        }, {
+            'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime("%Y-%m-%d %H:%M"),
+            'query_string_field': 'startDate'
+        }, {
+            'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime("%Y-%m-%d %H:%M"),
+            'query_string_field': 'endDate'
+        }
+    ],
+    'product': [{
+            'comparator': lambda product, filter_value: filter_value in product.name,
+            'query_string_field': 'name'
+        }, {
+            'comparator': lambda product, filter_value: filter_value == product.bar_code,
+            'query_string_field': 'barCode',
+        }
+    ],
+}
+
+
+def filter_promotions(request, promotions):
+    has_filter = search_util.init_filters(request, PROMOTION_FILTERS)
+    if not has_filter:
+        # 没有filter，直接返回
+        return promotions
+
+    filtered_promotions = []
+    if request.GET.get('type', 'all') == 'coupon':
+        promotions = search_util.filter_objects(
+            promotions, PROMOTION_FILTERS['coupon']
+        )
+        coupon_type = request.GET.get('couponPromotionType', None)
+        if coupon_type != '-1':
+            coupon_type = coupon_type == '2'
+            promotion_models.Promotion.fill_details(
+                request.manager,
+                promotions,
+                {'with_concrete_promotion': True})
+            promotions = [promotion for promotion in promotions if promotion.detail['limit_product'] == coupon_type]
+        return promotions
+        #过滤promotion集合
+    promotions = search_util.filter_objects(
+        promotions, PROMOTION_FILTERS['promotion']
+    )
+    promotion_models.Promotion.fill_details(
+        request.manager,
+        promotions,
+        {'with_product': True})
+
+    if not promotions:
+        return filtered_promotions
+
+    for promotion in promotions:
+        products = search_util.filter_objects(
+            promotion.products, PROMOTION_FILTERS['product']
+        )
+        if not products:
+            #product filter没有通过，跳过该promotion
+            print 'end in product filter'
+            continue
+        else:
+            print 'pass product filter'
+            filtered_promotions.append(promotion)
+    return filtered_promotions

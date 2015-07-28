@@ -6,8 +6,8 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
-		<li><a href="/mall_promotion/integral_sales/get/">积分应用</a></li>
+		<li><a href="/mall2/promotion_list/">促销管理</a></li>
+		<li><a href="/mall2/integral_sales_list/">积分应用</a></li>
 		<li class="active">新建积分应用</li>
 	</ul>
 </div>
@@ -155,7 +155,7 @@
 
 		<div class="tc mt20">
 			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
-			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall_promotion/integral_sales/get/">取消创建</a>
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/integral_sales/">取消创建</a>
 		</div>
 	</form>
 </div>
@@ -355,15 +355,15 @@ $(document).ready(function() {
 		args.products = productSelector.getData();
 		args.rules = rules;
 		W.getApi().call({
-			method: 'post',
-			app: 'mall_promotion',
-			api: 'integral_sale/create',
+			method: 'put',
+			app: 'mall2',
+			resource: 'integral_sales',
 			args: W.toFormData(args),
 			scope: this,
 			success: function(data) {
 				W.showHint('success', '创建积分应用成功');
 				_.delay(function() {
-					window.location.href = '/mall_promotion/integral_sales/get/';
+					window.location.href = '/mall2/integral_sales_list/';
 				}, 500)
 			},
 			error: function(resp) {

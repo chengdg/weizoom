@@ -9,8 +9,8 @@
 <div class="xui-editProductPage xui-mall-addProductForm">
 <ul class="breadcrumb">
     <li>您当前所在位置</li>
-    <li><a href="/mall_promotion/promotion_list/get/">促销管理</a></li>
-    <li><a href="/mall_promotion/coupon_rules/get/">优惠券</a></li>
+    <li><a href="/mall2/promotion_list/">促销管理</a></li>
+    <li><a href="/mall2/coupon_rule_list/">优惠券</a></li>
     <li class="active">新建优惠券</li>
 </ul>
 <form class="form-horizontal xui-formPanel xa-form pt0" method="post">
@@ -233,7 +233,7 @@ margin-top: -29px;"></div>
     <div class="form-group mt5 mr5 xa-operateBtns" id="operateBtns">
       <div class="controls ml20 tc">
           <a class="btn btn-primary xa-submit mr80">保&nbsp;存</a>
-          <a class="btn btn-default xa-cancel xui-fontBold" href="/mall_promotion/coupon_rules/get/">取&nbsp;消</a>
+          <a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/coupon_rule_list/">取&nbsp;消</a>
       </div>
     </div>
   </fieldset>
@@ -393,14 +393,14 @@ $(function(){
     var args = $('.xa-form').serializeObject();
     W.getApi().call({
       method: 'post',
-      app: 'mall_promotion',
-      api: 'coupon_rules/create',
+      app: 'mall2',
+      resource: 'coupon_rule',
       args: W.toFormData(args),
       scope: this,
       success: function() {
         W.showHint('success', msg+'优惠券规则成功');
         _.delay(function() {
-          window.location.href = '/mall_promotion/coupon_rules/get/';
+          window.location.href = '/mall2/coupon_rule_list/';
         }, 500)
       },
       error: function() {

@@ -40,8 +40,8 @@ W.mall.ProductCategory = Backbone.Model.extend({
             W.getLoadingView().show();
             xlog('get products for category ' + this.get('id'));
             W.getApi().call({
-                app: 'mall',
-                api: 'products/get',
+                app: 'mall2',
+                api: 'product_list',
                 args: {
                     category_id: this.get('id')
                 },

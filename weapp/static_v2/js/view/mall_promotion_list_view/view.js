@@ -51,8 +51,8 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 		var _this = this;
 		W.getApi().call({
 			method: 'post',
-			app: 'mall_promotion',
-			api: 'promotions/finish',
+			app: 'mall2',
+			resource: 'promotion',
 			args: {ids: promotionIds, type: this.promotionType, start: start},
 			scope: this,
 			success: function(data) {
@@ -79,9 +79,9 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 	deletePromotions: function($trs, promotionIds) {
 		var _this = this;
 		W.getApi().call({
-			method: 'post',
-			app: 'mall_promotion',
-			api: 'promotions/delete',
+			method: 'delete',
+			app: 'mall2',
+			resource: 'promotion',
 			args: {
 				ids: promotionIds,
 				type: this.promotionType

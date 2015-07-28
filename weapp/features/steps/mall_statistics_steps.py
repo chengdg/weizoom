@@ -16,7 +16,7 @@ def step_impl(context, user, days):
 	if u'天' in days:
 		days = days[:-1]
 
-	url = '/mall/api/purchase_trend/get/?days=%s' % days
+	url = '/mall2/api/outline/?type=purchase_trend&days=%s' % days
 	response = context.client.get(url)
 	data = json.loads(response.content)['data']
 	dates = data['xAxis']['data']
@@ -47,7 +47,7 @@ def step_impl(context, user, days):
 	if u'天' in days:
 		days = days[:-1]
 
-	url = '/mall/api/visit_daily_trend/get/?days=%s' % days
+	url = '/mall2/api/outline/?type=visit_daily_trend&days=%s' % days
 	response = context.client.get(url)
 	data = json.loads(response.content)['data']
 	dates = data['xAxis']['data']

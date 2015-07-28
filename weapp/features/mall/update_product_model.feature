@@ -47,7 +47,7 @@ Background:
 			}, {
 				"name": "S"
 			}]
-		}]	
+		}]
 		"""
 
 @mall @mall.product @mall.product_model @mall2
@@ -58,14 +58,14 @@ Scenario: 更新商品规格信息
 	更新后的结果:
 		1. jobs能获得更新后的商品规格
 		2. jobs能获得更新后的商品规格列表
-	
+
 	Given jobs登录系统
 	When jobs更新商品规格'颜色'为
 		"""
 		{
 			"name": "颜色*",
 			"type": "文字"
-		} 
+		}
 		"""
 	And jobs更新商品规格'尺寸'为
 		"""
@@ -79,7 +79,7 @@ Scenario: 更新商品规格信息
 			"delete_values": [{
 				"name": "S"
 			}]
-		}	
+		}
 		"""
 	Then jobs能获取商品规格列表
 		"""
@@ -101,7 +101,7 @@ Scenario: 更新商品规格信息
 				"name": "L",
 				"image": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}]
-		}]	
+		}]
 		"""
 	Given bill登录系统
 	Then bill能获取商品规格列表
@@ -124,10 +124,10 @@ Scenario: 更新商品规格信息
 			}, {
 				"name": "S"
 			}]
-		}]	
+		}]
 		"""
 
- 
+
 @mall @mall.product @mall.product_model @drop_in_mall2
 Scenario: 更新商品规格值影响商品
 	Jobs更新一条商品规格值后
@@ -152,18 +152,20 @@ Scenario: 更新商品规格值影响商品
 					"白色 S": {}
 				}
 			}
-		}]	
+		}]
 		"""
 	When jobs更新商品规格'尺寸'为
 		"""
 		{
 			"name": "尺寸",
 			"type": "文字",
-			"values": [{
-				"original_name": "S",
+			"add_values": [{
 				"name": "S*"
+			}],
+			"delete_values": [{
+				"name": "S"
 			}]
-		}	
+		}
 		"""
 	Then jobs能获取商品'商品1'
 		"""
@@ -175,7 +177,7 @@ Scenario: 更新商品规格值影响商品
 					"黑色 S*": {}
 				}
 			}
-		}	
+		}
 		"""
 	And jobs能获取商品'商品2'
 		"""
@@ -187,9 +189,9 @@ Scenario: 更新商品规格值影响商品
 					"白色 S*": {}
 				}
 			}
-		}	
+		}
 		"""
-	
+
 
 
 @mall @mall.product @mall.product_model @mall2
@@ -197,7 +199,7 @@ Scenario: 删除商品规格值影响商品
 	Jobs删除一条商品规格值后
 	1. 删除后商品中规格不为空，直接去除这条规格值的组合规格
 	2. 删除后商品中规格为空，商品转为“下架”状态
-	
+
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
@@ -220,7 +222,7 @@ Scenario: 删除商品规格值影响商品
 					"白色 S": {}
 				}
 			}
-		}]	
+		}]
 		"""
 	Then jobs能获取商品'商品1'
 		"""
@@ -235,7 +237,7 @@ Scenario: 删除商品规格值影响商品
 					"白色 M": {}
 				}
 			}
-		}	
+		}
 		"""
 	When jobs删除商品规格'颜色'的值'白色'
 	Then jobs能获取商品'商品1'
@@ -250,13 +252,13 @@ Scenario: 删除商品规格值影响商品
 					"黑色 M": {}
 				}
 			}
-		}	
+		}
 		"""
 	And jobs能获取商品'商品2'
 		"""
 		{
 			"name": "商品2",
 			"shelve_type": "下架"
-		}	
+		}
 		"""
 	#And jobs收到商品'商品2'的下架提示'因为该规格被删除，商品"商品2"已下架'

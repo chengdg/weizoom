@@ -101,8 +101,6 @@ def increase_unread_order(webapp_owner_id, count):
 
 
 # MODULE START: productcategory
-
-
 class ProductCategory(models.Model):
 
 	"""
@@ -181,6 +179,7 @@ class Product(models.Model):
 	is_use_online_pay_interface = models.BooleanField(default=True)  # 在线支付方式
 	is_use_cod_pay_interface = models.BooleanField(default=False)  # 货到付款支付方式
 	# v2
+	# product_mode = models.ForeignKey(ProductModel, blank=True, null=True)
 	promotion_title = models.CharField(max_length=256, default='')  # 促销标题
 	user_code = models.CharField(max_length=256, default='')  # 编码
 	bar_code = models.CharField(max_length=256, default='')  # 条码
@@ -193,6 +192,7 @@ class Product(models.Model):
 		db_table = 'mall_product'
 		verbose_name = '商品'
 		verbose_name_plural = '商品'
+		# unique_together = ("name", "product_mode")
 
 	# 填充标准商品规格信息
 	def fill_standard_model(self):
@@ -599,7 +599,7 @@ class Product(models.Model):
 		product_ids = [product.id for product in products]
 
 		for product in products:
-			product.detail_link = '/mall/product/update/?id=%d&source=onshelf' % product.id
+			product.detail_link = '/mall2/product/?id=%d&source=onshelf' % product.id
 
 		if options.get('with_product_model', False):
 			Product.fill_model_detail(
@@ -1000,7 +1000,7 @@ class Product(models.Model):
 			'id': self.id,
 			'name': self.name,
 			'thumbnails_url': self.thumbnails_url,
-			'detail_link': '/mall/product/update/?id=%d&source=onshelf' % self.id,
+			'detail_link': '/mall2/product/?id=%d&source=onshelf' % self.id,
 			'categories': getattr(self, 'categories', []),
 			'properties': getattr(self, 'properties', []),
 			'display_price': self.display_price,

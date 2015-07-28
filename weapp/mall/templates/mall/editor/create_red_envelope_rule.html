@@ -86,7 +86,7 @@
 <div class="xui-editProductPage xui-create-redEnvelope-page">
 <ul class="breadcrumb">
     <li>您当前所在位置</li>
-    <li><a href="/mall/red_envelope_rule/get/">促销管理</a></li>
+    <li><a href="/mall2/promotion_list/">促销管理</a></li>
     <li class="active">分享红包</li>
 </ul>
 <form class="form-horizontal xui-formPanel xa-form pt0 pr" method="post">
@@ -259,7 +259,7 @@ $(document).ready(function(){
             var count = $('option[value="'+coupon_rule_id+'"]').data('remained-count');
             $('.xa-couponTip').removeClass('hidden');
             $('#coupon_rule').siblings('.errorHint').text('');
-            $('#coupon_rule').next().removeClass('hidden').children('a').attr('href', '/mall_promotion/coupon/create/?rule_id='+coupon_rule_id);
+            $('#coupon_rule').next().removeClass('hidden').children('a').attr('href', '/mall2/coupon/?rule_id='+coupon_rule_id);
             $('#coupon_rule').next().children('span').text("库存："+count+"份");
 
         }
@@ -279,15 +279,15 @@ $(document).ready(function(){
     }
     var args = $('.xa-form').serializeObject();
     W.getApi().call({
-      method: 'post',
-      app: 'mall_promotion',
-      api: 'red_envelope_rule/create',
+      method: 'put',
+      app: 'mall2',
+      resource: 'red_envelope_rule',
       args: W.toFormData(args),
       scope: this,
       success: function() {
         W.showHint('success', '创建红包成功！');
         _.delay(function() {
-          window.location.href = '/mall_promotion/red_envelope_rule/get/';
+          window.location.href = '/mall2/red_envelope_rule_list/';
         }, 500)
       },
       error: function() {

@@ -31,8 +31,8 @@ W.dialog.mall.SelectProductModelPropertyDialog = W.dialog.Dialog.extend({
         W.getLoadingView().hint('加载数据...').show();
         var _this = this;
         W.getApi().call({
-            app: 'mall',
-            api: 'product_model_properties/get',
+            app: 'mall2',
+            resource: 'model_property_list',
             args: {},
             success: function(data) {
                 W.getLoadingView().hide();
