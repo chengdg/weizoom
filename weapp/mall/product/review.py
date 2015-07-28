@@ -109,6 +109,15 @@ class ProductReviewInfo(resource.Resource):
             from modules.member import models as member_models
 
             if product_review_id:
+                if status == '2' or status == '1':
+                    review = mall_models.ProductReview.objects.filter(id=product_review_id)
+                    if len(review) == 1 and int(review[0].status) == 0:
+                        settings = member_models.IntegralStrategySttings.objects.get(
+                            webapp_id=request.user_profile.webapp_id)
+                        if settings.review_increase > 0:
+                            member = member_models.Member.objects.get(id=review[0].member_id)
+                            increase_member_integral(member, settings.review_increase, '商品评价奖励')
+
                 if status == '2':
                     product_review = mall_models.ProductReview.objects.get(id=product_review_id)
                     top_reviews = mall_models.ProductReview.objects.filter(product_id=product_review.product_id,
@@ -123,13 +132,6 @@ class ProductReviewInfo(resource.Resource):
                         mall_models.ProductReview.objects.filter(id=product_review_id).update(status=int(status),
                                                                                               top_time=datetime.now())
                 else:
-                    review = mall_models.ProductReview.objects.filter(id=product_review_id)
-                    if int(status) == 1 and len(review) == 1 and int(review[0].status) == 0:
-                        settings = member_models.IntegralStrategySttings.objects.get(
-                            webapp_id=request.user_profile.webapp_id)
-                        if settings.review_increase > 0:
-                            member = member_models.Member.objects.get(id=review[0].member_id)
-                            increase_member_integral(member, settings.review_increase, '商品评价奖励')
                     review.update(status=int(status), top_time=mall_models.DEFAULT_DATETIME)
                 return create_response(200).get_response()
             else:
