@@ -447,8 +447,7 @@ def page_features(request):
 # detect_member_operate_capability ：获取用户是否可操作
 #===============================================================================
 def detect_member_operate_capability(request):
-	a = request.context_dict
-	if (request.context_dict is not None) and (request.context_dict.get('hide_non_member_cover', None) is not None):
+	if hasattr(request, 'context_dict') and (request.context_dict is not None) and (request.context_dict.get('hide_non_member_cover', None) is not None):
 		return {}
 		
 	# 针对gaoge1账号，webapp_owner_id为16的账号，首页可以点击

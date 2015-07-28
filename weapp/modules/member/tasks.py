@@ -186,8 +186,20 @@ def update_member_from_weixin_api(member_id, webapp_id):
 
 	create_member_info(member_id, '', sex)
 
-
-
-
-
-
+@task(bind=True)
+def record_member_pv(self, member_id, url, page_title=''):
+	try:
+		"""
+		记录会员访问轨迹
+		"""
+		member = Member.objects.get(id=member_id)
+		if member and url.find('api') == -1:
+			MemberBrowseRecord.objects.create(
+				title = page_title, 
+				url = url, 
+				member=member
+			)
+	except:
+		notify_message = u"record_member_pv,member_id:{} cause:\n{}".format(member_id, unicode_full_stack())
+		watchdog_error(notify_message)
+		raise self.retry()

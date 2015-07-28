@@ -52,6 +52,8 @@ import cache
 from auth import models as auth_models
 from auth import module_api as auth_api
 from cache.service_cache import set_service_time, get_service_time, get_service_urls
+from modules.member.tasks import record_member_pv
+
 __author__ = 'bert'
 
 class ServiceMiddleware(object):
@@ -467,6 +469,29 @@ class WebAppPageVisitMiddleware(object):
 		event_handler_util.handle(request, 'page_visit')
 		return None
 		
+	def process_response(self, request, response):
+		if is_pay_request(request):
+			return response
+		
+		if (not request.is_access_webapp):
+			#对于非webapp的请求不进行记录
+			return response
+
+		if request.is_access_webapp_api:
+			#不处理对api的访问
+			return response
+		try:
+			if hasattr(request,'member') and request.member:
+				page_title = ''
+				if hasattr(request, 'context_dict'):
+					page_title = request.context_dict.get('page_title', '')
+
+				record_member_pv.delay(request.member.id, request.get_full_path(), page_title)
+		except:
+			pass
+		
+		return response
+
 
 class ModuleNameMiddleware(object):
 	"""

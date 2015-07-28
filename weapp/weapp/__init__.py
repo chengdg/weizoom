@@ -18,8 +18,19 @@ def enhanced_init(self, request, dict_=None, processors=None, current_app=None, 
 		processors = ()
 	else:
 		processors = tuple(processors)
+	#update by bery at 20150728
+	if dict_:
+		page_title = dict_.get('page_title','')
+	else:
+		page_title = ''
+		
+	try:
+		request.context_dict = dict_
+	except:
+		context_dict = {}
+		context_dict['page_title'] = page_title
+		request.context_dict = context_dict
 
-	request.context_dict = dict_
 	for processor in get_standard_processors() + processors:
 		self.update(processor(request))
 

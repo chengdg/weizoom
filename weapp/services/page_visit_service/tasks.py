@@ -20,20 +20,27 @@ def record_pv(request, args):
 	"""
 	记录Page Visit(PV)
 	"""
-	member = member_info_util.get_request_member(request)
-	try:
-		"""
-		记录会员访问轨迹
-		"""
-		if member and request.get_full_path().find('api') == -1:
-			member_models.MemberBrowseRecord.objects.create(
-				title = '', 
-				url = request.get_full_path(), 
-				member=member
-			)
-	except:
-		notify_message = u"record_pv, cause:\n{}".format(unicode_full_stack())
-		watchdog_error(notify_message)
+
+	# member = member_info_util.get_request_member(request)
+	# page_title = ''
+	# if hasattr(request, 'context_dict'):
+	# 	if request.context_dict.has_key('page_title'):
+	# 		page_title = request.context_dict.get('page_title', '')
+
+
+	# try:
+	# 	"""
+	# 	记录会员访问轨迹
+	# 	"""
+	# 	if member and request.get_full_path().find('api') == -1:
+	# 		member_models.MemberBrowseRecord.objects.create(
+	# 			title = '', 
+	# 			url = request.get_full_path(), 
+	# 			member=member
+	# 		)
+	# except:
+	# 	notify_message = u"record_pv, cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_error(notify_message)
 
 	token = get_social_account_token(request, '')
 	#add by bert 当token为null的时候是否统计?
