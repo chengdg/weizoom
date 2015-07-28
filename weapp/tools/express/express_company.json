@@ -58,6 +58,11 @@
 		"id": "00012",
 		"name": "快捷速递",
 		"value": "kuaijiesudi"
+	},
+	{
+		"id": "00013",
+		"name": "比利时邮政",
+		"value": "bpost"		
 	}
 ]
 
