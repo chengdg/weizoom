@@ -12,9 +12,9 @@
 # import random
 # import string
 
-# from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect
 # from django.template import Context, RequestContext
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 # from django.conf import settings
 # from django.shortcuts import render_to_response
 # from django.contrib.auth.models import User, Group, Permission
@@ -27,7 +27,7 @@
 # from models import *
 # import export
 # from core import dateutil
-# from core.restful_url_route import *
+from core.restful_url_route import *
 # from modules.member import models as member_models
 # from .notices_models import Notice
 
@@ -83,9 +83,10 @@
 # 	}
 
 
-# @view(app='mall', resource='outline', action='get')
-# @login_required
-# def get_outline(request):
+@view(app='mall', resource='outline', action='get')
+@login_required
+def get_outline(request):
+	return HttpResponseRedirect('/mall2/outline/', {})
 # 	webapp_id = request.user_profile.webapp_id
 # 	if not settings.IS_UNDER_BDD:
 # 		if request.manager.id != request.user.id:

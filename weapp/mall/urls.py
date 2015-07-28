@@ -16,7 +16,7 @@
 # import product_image_api_views
 # import product_review_api_view
 # import product_review_view
-# import home_views
+import home_views
 # import home_api_views
 # import notices_views
 # import notices_api_views
