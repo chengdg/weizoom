@@ -70,12 +70,12 @@ SALES_NAVS = {
             'url': '/stats/order_summary/',
             'need_permissions': []
         },
-        {
-            'name': SALES_ORDER_LIST_NAV,
-            'title': u'订单明细分析',
-            'url': '/stats/order_list/',
-            'need_permissions': []
-        },
+        # {
+        #     'name': SALES_ORDER_LIST_NAV,
+        #     'title': u'订单明细分析',
+        #     'url': '/stats/order_list/',
+        #     'need_permissions': []
+        # },
         {
             'name': PRODUCT_SUMMARY_NAV,
             'title': u'商品概况分析',

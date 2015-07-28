@@ -170,9 +170,9 @@ class MemberIncreasement(resource.Resource):
 			},{
 				"name": "下单会员数",
 				"values" : bought_member_count_list,
-			},{
-				"name": "绑定手机会员数",
-				"values" : binding_phone_member_count_list,
+			# },{
+			# 	"name": "绑定手机会员数",
+			# 	"values" : binding_phone_member_count_list,
 			}
 		]
 		return create_line_chart_response('', '', x_values, y_values)
