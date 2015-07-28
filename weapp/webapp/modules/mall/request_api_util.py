@@ -779,14 +779,13 @@ def create_product_review(request):
 
 			for picture in picture_list:
 				att_url=save_base64_img_file_local_for_webapp(request, picture)
-				picture_model_list.append(mall_models.ProductReviewPicture(
+				mall_models.ProductReviewPicture(
 					product_review=product_review,
 					order_has_product_id=order_has_product_id,
 					att_url=att_url
-				))
+				).save()
 				watchdog_info(u"create_product_review after save img  %s" %\
 					(att_url), type="mall", user_id=owner_id)
-			mall_models.ProductReviewPicture.objects.bulk_create(picture_model_list)
 
 		response = create_response(200)
 		response.data = get_review_status(request)
