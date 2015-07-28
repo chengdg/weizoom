@@ -80,6 +80,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             'reach-max-count',
             _.bind(this.showUnderStock, this)
         );
+        var counter = $('input[data-ui-role="counter"]').data('view');
+        if(counter.minCount>1)this.updateCountInByLink(counter.minCount)
         this.disableUnselectableModelPropertyValue();
 
         //隐藏商品信息区域

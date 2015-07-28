@@ -233,6 +233,10 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
             var $product = $counter.parents('.xa-product')
             var stocks = parseInt($counter.attr('data-max-count'));
             var count = $counter.val();
+            if($counter.data('view').minCount>count){
+                count = $counter.data('view').minCount
+                $counter.val(count)
+            }
             var $stockTip = $counter.parents('.xa-product').find('.xa-stockTip');
             if(stocks != null && stocks != -99999){
                 var $check = $product.find('.xa-check');
