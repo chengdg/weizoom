@@ -270,7 +270,7 @@ class ProductReviewList(resource.Resource):
                 review.product_model_name = review_product.product_model_name
                 product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
                 product.fill_specific_model(review.product_model_name, product.models)
-                review.product_user_code = product.model['user_code']
+                review.product_user_code = product.model.get('user_code', '')
             items.append({
                 'id': review.id,
                 'product_user_code': review.product_user_code,
