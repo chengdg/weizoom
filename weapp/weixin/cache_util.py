@@ -113,8 +113,7 @@ def _parse_rule(user_profile, reply_rule):
 		else:
 			reply_rule.answer = emotion.change_img_to_emotion(answer_data['content'])
 	except Exception, e:
-		print e
-		print reply_rule.answer, 'is just single answer'
+		print reply_rule.answer, 'is just single answer,Exception:', e
 
 	if reply_rule.is_news_type:
 		reply_rule.newses = list(News.objects.filter(material_id=reply_rule.material_id))
