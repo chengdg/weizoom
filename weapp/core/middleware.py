@@ -472,12 +472,8 @@ class WebAppPageVisitMiddleware(object):
 	def process_response(self, request, response):
 		if is_pay_request(request):
 			return response
-		
-		if (not request.is_access_webapp):
-			#对于非webapp的请求不进行记录
-			return response
-
-		if request.is_access_webapp_api:
+			
+		if 'api' in request.get_full_path() or 'resource_js' in request.get_full_path():
 			#不处理对api的访问
 			return response
 		try:
