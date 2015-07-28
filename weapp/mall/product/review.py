@@ -109,8 +109,8 @@ class ProductReviewInfo(resource.Resource):
             from modules.member import models as member_models
 
             if product_review_id:
+                review = mall_models.ProductReview.objects.filter(id=product_review_id)
                 if status == '2' or status == '1':
-                    review = mall_models.ProductReview.objects.filter(id=product_review_id)
                     if len(review) == 1 and int(review[0].status) == 0:
                         settings = member_models.IntegralStrategySttings.objects.get(
                             webapp_id=request.user_profile.webapp_id)
