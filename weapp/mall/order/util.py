@@ -66,7 +66,7 @@ def export_orders_json(request):
 
     orders = [
         [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
-         u'商品单价', u'商品数量', u'支付方式', u'支付金额', u'现金支付金额', u'微众卡支付金额',
+         u'商品单价', u'商品数量', u'商品总重量（斤）', u'支付方式', u'支付金额', u'现金支付金额', u'微众卡支付金额',
          u'运费', u'积分抵扣金额', u'优惠券金额', u'优惠券名称', u'订单状态', u'购买人',
          u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'备注', u'来源', u'物流公司', u'快递单号', u'发货时间']
     ]
@@ -188,10 +188,6 @@ def export_orders_json(request):
         [(str(value.id), value.name) for value in ProductModelPropertyValue.objects.filter(id__in=model_value_ids)])
     # print 'end step 6 coupons - '+str(time.time() - begin_time)
 
-    # 获取商品对应的重量
-    product_idandmodel_value2weigth = dict([((model.product_id, model.name), model.weight) for model in
-                                            ProductModel.objects.filter(product_id__in=product_ids)])
-
     # 获取order对应的会员
     webapp_user_ids = set([order.webapp_user_id for order in order_list])
     from modules.member.models import Member
@@ -205,17 +201,27 @@ def export_orders_json(request):
         [(order_promotion_relation.order_id, order_promotion_relation.promotion_result) for order_promotion_relation in
          OrderHasPromotion.objects.filter(order_id__in=order_ids, promotion_id__in=promotion_ids,
                                           promotion_type='premium_sale')])
+
+    premium_product_ids = []
     for order_id in order2promotion:
         temp_premium_products = []
         if order2promotion[order_id].has_key('premium_products'):
             for premium_product in order2promotion[order_id]['premium_products']:
                 temp_premium_products.append({
+                    'id': premium_product['id'],
                     'name': premium_product['name'],
                     'count': premium_product['count'],
                     'price': premium_product['price']
                 })
+                premium_product_ids.append(premium_product['id'])
         order2premium_product[order_id] = temp_premium_products
 
+        # 获取商品对应的重量
+    product_idandmodel_value2weigth = dict([((model.product_id, model.name), model.weight) for model in
+                                            ProductModel.objects.filter(product_id__in=product_ids)])
+    # 赠品为单规格
+    premium_product_id2weight = dict([(model.product_id, model.weight) for model in
+                                      ProductModel.objects.filter(product_id__in=premium_product_ids)])
 
     # 获取order对应的发货时间
     order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
@@ -423,6 +429,7 @@ def export_orders_json(request):
                         u'',
                         premium_product['price'],
                         premium_product['count'],
+                        premium_product_id2weight[premium_product['id']] * 2 * relation.number,
                         payment_type[str(int(order.pay_interface_type))],
                         u'',
                         u'',

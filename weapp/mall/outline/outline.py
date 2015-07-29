@@ -144,7 +144,7 @@ class Outline(resource.Resource):
                 price_trend_values = []
                 for date in date_list:
                     count_trend_values.append(date2count.get(date, 0))
-                    price_trend_values.append(date2price.get(date, 0.0))
+                    price_trend_values.append(round(date2price.get(date, 0.0), 2))
 
                 return create_line_chart_response(
                         '',
@@ -155,7 +155,7 @@ class Outline(resource.Resource):
                             "values" : count_trend_values
                         }, {
                             "name": "销售额",
-                            "values" : round(price_trend_values, 2)
+                            "values" : price_trend_values
                         }]
                     )
             except:
