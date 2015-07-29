@@ -13,7 +13,7 @@ from core.exceptionutil import unicode_full_stack
 
 from django.conf import settings
 
-from watchdog.utils import watchdog_fatal, watchdog_info
+from watchdog.utils import watchdog_fatal, watchdog_info, watchdog_error
 from weixin.user.models import *
 from weixin.user.util import *
 from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
@@ -219,7 +219,7 @@ class MessagePipeline(object):
 						break
 
 			#后处理
-			self._post_processing(handling_context, process_handler, response_content, is_from_simulator)
+			#self._post_processing(handling_context, process_handler, response_content, is_from_simulator)
 		else:
 			content	= 'SUCCESS'
 			if message.toUserName ==  "gh_3c884a361561":
@@ -257,7 +257,7 @@ class MessagePipeline(object):
 				content	= 'SUCCESS'
 
 			response_content = generator.get_text_request(message.fromUserName, message.toUserName, content)
-
+		
 		if response_content and wxiz_msg_crypt:
 			_,response_content = wxiz_msg_crypt.EncryptMsg(response_content.encode('utf-8'), nonce, timestamp)
 		return response_content
@@ -279,19 +279,20 @@ class MessagePipeline(object):
 			webapp_id = None
 			user_profile = None
 		else:
-
-			if ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True).count() > 0:
+			try:
 				authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
 				user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
 				request.user_profile = user_profile
 				request.webapp_owner_id = authed_appid.user_id
 				webapp_id = user_profile.webapp_id
-			else:
-				# webapp_id = None
-				# user_profile = None
+			except:
+				notify_msg = u"消息处理MessagePipeline.handle_component, appid:{} cause:\n{}".format(appid, unicode_full_stack())
+				watchdog_error(notify_msg)
 				return None
-
-		
+				# if ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True).count() > 0:
+					
+				# else:
+				# 	return None
 		
 		if 'weizoom_test_data' in request.GET:
 			xml_message = self._get_raw_message(request)
@@ -304,7 +305,7 @@ class MessagePipeline(object):
 			return None
 		
 		message = parse_weixin_message_from_xml(xml_message)
-		
+		response_content = ''
 		if webapp_id != None:
 			handling_context = MessageHandlingContext(message, xml_message, user_profile, request)
 
@@ -313,17 +314,10 @@ class MessagePipeline(object):
 			if not handling_context.should_process:
 				return None
 
-			prcoess_handler = None
-			response_content = None
 			for handler in self.handlers:
 				process_handler = handler
 				try:
 					response_content = handler.handle(handling_context, is_from_simulator)
-
-					if EMPTY_RESPONSE_CONTENT == response_content:
-						response_content = None
-						break
-
 					if response_content:
 						break
 				except:
@@ -332,8 +326,8 @@ class MessagePipeline(object):
 					if self.haltonfailure:
 						break
 
-			#后处理
-			self._post_processing(handling_context, process_handler, response_content, is_from_simulator)
+				#后处理
+				#self._post_processing(handling_context, process_handler, response_content, is_from_simulator)
 		else:
 			content	= 'SUCCESS'
 			if message.toUserName ==  "gh_3c884a361561":
@@ -360,11 +354,8 @@ class MessagePipeline(object):
 						authorizer_refresh_token=authorization_info['authorizer_refresh_token']
 						url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % authorizer_access_token
 						post_json = '{ "touser":"%s", "msgtype":"text", "text": {"content":"%s_from_api" } }' % (message.fromUserName, auth_code)
-						print '----0'
-						print post_json
-						print '---1'
+						
 						result = weixin_http_client.post(url, post_json)
-						print result
 						content = "%s_from_api" % auth_code
 					else:
 						print '---------------------Error----------------------'

@@ -50,10 +50,13 @@ class AutoQaMessageHandler(KeywordHandler):
 		#response_rule = qa_util.find_answer_for(user_profile.webapp_id, message.content.lower())
 		#从缓存中获取数据  duhao  2015-03-09
 		response_rule = cache_util.find_answer_from_cache_for(user_profile, message.content.lower())
-		if (response_rule is None) or (not response_rule.is_active):
-			response_rule, response = self._build_response_without_auto_response_rule(user_profile, message, is_from_simulator)
-		else:
+		# if (response_rule is None) or (not response_rule.is_active):
+		# 	response_rule, response = self._build_response_without_auto_response_rule(user_profile, message, is_from_simulator)
+		# else:
+		# 	response = self._build_response_with_auto_response_rule(user_profile, message, response_rule, is_from_simulator)
+		if response_rule:
 			response = self._build_response_with_auto_response_rule(user_profile, message, response_rule, is_from_simulator)
+
 
 		try:
 			self._process_recorde_message(context, response_rule, from_weixin_user, is_from_simulator)

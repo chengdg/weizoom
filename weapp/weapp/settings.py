@@ -288,8 +288,8 @@ OPTIMIZATION_MSG_HANDLER_CLASSES = (
     'modules.member.send_mass_msg_result_handler.SendMassMessageResultHandler',
     'weixin.message.message_handler.default_event_handler.DefaultEventHandler',
     'weixin.message.message_handler.auto_qa_message_handler.AutoQaMessageHandler',
-    'modules.member.update_member_group_handler.UpdateMemberGroupHandler',
-    'weixin.message.message_handler.auto_qa_default_message_handler.AutoQaDefaultMessageHandler'
+    #'modules.member.update_member_group_handler.UpdateMemberGroupHandler',
+    #'weixin.message.message_handler.auto_qa_default_message_handler.AutoQaDefaultMessageHandler'
 )
 
 ROOT_URLCONF = 'weapp.urls'

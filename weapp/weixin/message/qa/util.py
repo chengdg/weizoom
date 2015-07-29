@@ -16,7 +16,7 @@ from .tasks import record_keyword
 ########################################################################
 def find_answer_for(user_profile, query):
 	#获得关键词消息
-	rules = list(Rule.objects.filter(owner=user_profile.user).order_by('-created_at'))
+	rules = Rule.objects.filter(owner=user_profile.user).order_by('-created_at')
 
 	#允许部分匹配的列表
 	pattern2rule_sub_match_key = []
