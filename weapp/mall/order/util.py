@@ -868,7 +868,7 @@ def __get_orders_by_params(query_dict, date_interval, orders):
         orderHasPromotions = OrderHasPromotion.objects.filter(promotion_type="premium_sale")
 
         for orderHasPromotion in orderHasPromotions:
-            for premium_product in orderHasPromotion.promotion_result['premium_products']:
+            for premium_product in orderHasPromotion.promotion_result.get('premium_products', []):
                 if premium_product['id'] in product_ids and orderHasPromotion.order_id not in order_ids:
                     order_ids.append(orderHasPromotion.order_id)
 
