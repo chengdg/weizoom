@@ -326,7 +326,9 @@ class Product(resource.Resource):
         if postage_type == models.POSTAGE_TYPE_UNIFIED:
             postage_id = -1
             unified_postage_money = request.POST.get(
-                'unified_postage_money', 0.0)
+                'unified_postage_money', '')
+            if unified_postage_money == '':
+                unified_postage_money = 0.0
         else:
             postage_id = 0
             unified_postage_money = 0.0
@@ -479,7 +481,9 @@ class Product(resource.Resource):
         if postage_type == models.POSTAGE_TYPE_UNIFIED:
             postage_id = -1
             unified_postage_money = request.POST.get(
-                'unified_postage_money', 0.0)
+                'unified_postage_money', '')
+            if unified_postage_money == '':
+                unified_postage_money = 0.0
         else:
             postage_id = 999  # request.POST['postage_config_id']
             unified_postage_money = 0.0
