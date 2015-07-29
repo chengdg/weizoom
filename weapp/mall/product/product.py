@@ -288,11 +288,10 @@ class Product(resource.Resource):
             system_postage_config = None
         postage_config_info = {
             'system_postage_config': system_postage_config,
-            'is_use_system_postage_config': True
+            'is_use_system_postage_config': False
         }
 
-        if (
-                hasattr(product, 'postage_type') and
+        if (hasattr(product, 'postage_type') and
                 product.postage_type == models.POSTAGE_TYPE_CUSTOM):
             postage_config_info['is_use_system_postage_config'] = True
 
