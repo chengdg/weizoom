@@ -67,12 +67,12 @@ def get_auto_qa_message_material_for_cache(user_profile, query):
 		webapp_id = user_profile.webapp_id
 
 		if not response_rule:
-			print '=======================find_follow_answer_for'
 			response_rule = qa_util.find_follow_answer_for(user_profile)
+			print '=======================find_follow_answer_for',response_rule
 
 		if not response_rule:
-			print '=======================find_unmatch_answer_for'
 			response_rule = qa_util.find_unmatch_answer_for(user_profile)
+			print '=======================find_unmatch_answer_for',response_rule
 
 		# if reply_type == FOLLOW_TYPE:
 		# 	reply_rule = qa_util.find_follow_answer_for(user_profile)
