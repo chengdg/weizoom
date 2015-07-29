@@ -47,7 +47,7 @@ class CloudHome(resource.Resource):
         today_transaction_money, today_order_count = get_transaction_count(webapp_id, 'today')
 
         c = RequestContext(request, {
-            'page_title': '云管家',
+            'page_title': '微众云管家',
             # 当日微品牌价值数据
             'brand_value': format(today_value, ','),
             'value_sign': increase_sign,

@@ -5,7 +5,7 @@
 {% block content-panel %}
 <div class="xui-loginPage xa-loginPage">
     <div class="xui-title">
-        微众·云管家
+       <div class="xui-bgImg">微众·云管家</div> 
     </div>
     <div class="xui-loginInfo">
         <div class="xui-tel">
@@ -27,6 +27,7 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    // 验证码，登陆
 	var phoneNum = $('.xa-phoneNum').val();
 	var phoneCode = $('.xa-phoneCode').val();
 	var wait = 60;
@@ -97,6 +98,28 @@ $(document).ready(function() {
 				});
             }
         });
+   });
+   // 获取页面高度，百分比适配
+   var bodyHeight = $(document).height();
+   var averageHeight = bodyHeight/100;
+   $('.xui-title').height(20*averageHeight);
+   $('.xui-bgImg').height(6*averageHeight);
+   $('.xui-loginInfo input').height(5.4*averageHeight);
+   $('.xui-tel').css({
+       height: 6*averageHeight,
+       'padding-top': 2*averageHeight
+   });
+   $('.xui-verification').css({
+       height: 6*averageHeight,
+       'padding-top': 2*averageHeight
+   });
+   $('.xa-getVerification').css({
+       height: 6*averageHeight,
+       'margin-top': 2*averageHeight
+   }); 
+   $('.xui-loginBtn').css({
+       height: 6*averageHeight,
+       top: 45*averageHeight
    });
 });
 </script>

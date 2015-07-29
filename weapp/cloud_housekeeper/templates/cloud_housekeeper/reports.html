@@ -9,39 +9,19 @@
         <a href="javascript:void(0)" class="active">月报</a>
         <a href="javascript:void(0)">周报</a>
     </div>
-    <div class="wui-swiper-container">    
+    <div class="wui-swiper-container" style="background:#f2f2f2;">    
         <div class="wui-swiper-wrapper">
           <div class="wui-swiper-slide">
                 <div class="wui-content-slide">
-                    <ul class="">
-                        {% for month in months %}                            
-                        <li>
-                            <a href="/cloud_housekeeper/report/?id={{month.id}}" class="c65">
-                                <span class="xui-date">
-                                    {{month.start_date|date:"Y-m-d"}}至
-                                    {{month.end_date|date:"Y-m-d"}}
-                                </span>
-                                <span class="xui-details">详情</span>
-                            </a>
-                        </li>
-                        {% endfor %}
+                    <ul class="xa-month-list">
+                        <li>暂无月报</li>
                     </ul>
                 </div>
             </div>
             <div class="wui-swiper-slide">
                 <div class="wui-content-slide">
-                    <ul class="">
-                        {% for week in weeks %}                            
-                        <li>
-                            <a href="/cloud_housekeeper/report/?id={{week.id}}" class="c65">
-                                <span class="xui-date">
-                                    {{week.start_date|date:"Y-m-d"}}至
-                                    {{week.end_date|date:"Y-m-d"}}
-                                </span>
-                                <span class="xui-details">详情</span>
-                            </a>
-                        </li>
-                        {% endfor %}
+                    <ul class="xa-week-list">
+                        <li>暂无周报</li>
                     </ul>
                 </div>
             </div>
@@ -55,33 +35,93 @@
     
 
 {% endblock %}
-
 {% block js %}
+{% verbatim %}
+<script id="week-item-tmpl-src" type="text/x-jquery-tmpl">
+<li style="background:#fff;">
+    <a href="/cloud_housekeeper/report/?id=${id}&type=${type}&start=${start}&end=${end}" class="c65">
+        <span class="xui-date">
+            ${start}至
+            ${end}
+        </span>
+        <span class="xui-details">详情</span>
+    </a>
+</li>
+</script>
+{% endverbatim %}
 <script type="text/javascript">
-$(document).ready(function() {
+var webapp_id = W.webapp_id;
+var weekUrl = W.wglass_host + "/app/period_report/api/weekly_report/list/get/";
+
+/**添加list**/
+var addTemplateList = function(sign, data){
+    if (sign == 'week' && data.length > 0) {
+        var $weekList = $('.xa-week-list').empty();
+        $weekList.css('height', '100%');
+        for (var i=0; i< data.length; i++) {
+            var item = data[i];
+            item.type = 'week';
+            console.log(i, item)
+            var html = $.tmpl($("#week-item-tmpl-src"), item);
+            $weekList.append(html);
+        };
+    }
+};
+
+/** 设置高度 **/
+var setSlideHeight = function(){
     var $slide = $('.wui-content-slide');
     $slide.each(function(){
         var slideHeight = $(this).height();
         $(this).parent('.wui-swiper-slide').css('height','slideHeight!important');
-        // $(this).parent('.wui-swiper-slide').height(slideHeight);
-        // $(this).parents('.wui-swiper-wrapper').height(slideHeight);
+        $(this).parent('.wui-swiper-slide').height(slideHeight);
+        $(this).parents('.wui-swiper-wrapper').height(slideHeight);
         $(this).parents('.wui-swiper-container').height(slideHeight);
     });
+}
+
+/**发送api请求**/
+var get_api = function(sign, url){
+    $.ajax({
+        url: url,
+        type: 'get',
+        data:{
+            'webapp_id': webapp_id
+        },  
+        dataType: 'jsonp',  
+        jsonp: "callback",
+        jsonpCallback:"success_jsonp",
+        success: function(response){
+            console.log(response)
+            addTemplateList(sign, response.data);
+            setSlideHeight();
+        },
+        error:function(){
+
+        }
+    });
+};
+
+$(document).ready(function() {
     var tabsSwiper = new Swiper('.wui-swiper-container',{
-         speed:500,
-         onSlideChangeStart: function() { 
+        speed:500,
+        onSlideChangeStart: function() { 
             xlog('tabsSwiper');
             $(".wui-tabs .active").removeClass('active');
             $(".wui-tabs a").eq(tabsSwiper.activeIndex).addClass('active');
-         }
-     });
- 
-     $(".wui-tabs a").on('touchstart mousedown',function(e){
-         e.preventDefault();
-         $(".wui-tabs .active").removeClass('active');
-         $(this).addClass('active');
-         tabsSwiper.swipeTo($(this).index());
-     });
+        }
+    });
+
+    $(".wui-tabs a").on('touchstart mousedown',function(e){
+        e.preventDefault();
+        $(".wui-tabs .active").removeClass('active');
+        $(this).addClass('active');
+        tabsSwiper.swipeTo($(this).index());
+    });
+
+    // addTemplateList('week',[{id: 1, start: "2015-07-05", end:"2015-07-11"}])
+    get_api('week', weekUrl);
+
 });
 </script>
 {% endblock %}

@@ -22,7 +22,7 @@ def get_cloud_user_from_cookie(request):
 
 def save_session_cloud_user(response, user_id):
 	sign = '%s' % user_id
-	response.set_cookie(get_session_cloud_user_name(), sign, max_age=3600*24)
+	response.set_cookie(get_session_cloud_user_name(), sign, max_age=3600*24*24*24)
 #	watchdog_info(u"freight login success save_session sign: %s, name: %s" % (sign, get_session_cloud_user_name()))
 
 

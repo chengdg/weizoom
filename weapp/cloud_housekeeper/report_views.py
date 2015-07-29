@@ -31,36 +31,38 @@ class CloudReport(resource.Resource):
         记录
         """
         report_id = request.GET.get('id', 0)
+        report_type = request.GET.get('type', 'week')
+        start_date = request.GET.get('start', '')
+        end_date = request.GET.get('end', '')
+
         owner_user = request.cloud_user.owner
         webapp_id = request.cloud_user.get_webapp_id()
-        try:
-            report = models.CloudReport.objects.get(id=report_id)
-        except:
-            raise Http404(u"不存在该报告")
 
-        start_date = report.start_date.strftime('%Y-%m-%d')
-        end_date = report.end_date.strftime('%Y-%m-%d')
 
         # 当日微品牌价值数据
         # (today_value, yesterday_value, increase_sign, increase_percent) = brand_value_utils.get_latest_brand_value(webapp_id)
 
         # 成交额, 成交订单, 客单价
-        transaction_money, transaction_count, vis_price = get_transaction_count(webapp_id, start_date, end_date)
+        # transaction_money, transaction_count, vis_price = get_transaction_count(webapp_id, start_date, end_date)
 
-        #购买总人数
-        buyer_count = stats_util.get_buyer_count(webapp_id, start_date, end_date)
+        # #购买总人数
+        # buyer_count = stats_util.get_buyer_count(webapp_id, start_date, end_date)
 
-        #新增会员
-        new_member_count = stats_util.get_new_member_count(webapp_id, start_date, end_date)
+        # #新增会员
+        # new_member_count = stats_util.get_new_member_count(webapp_id, start_date, end_date)
 
         c = RequestContext(request, {
-            'page_title': '云管家',
-            'report': report,
-            'transaction_money': transaction_money,
-            'transaction_count': transaction_count,
-            'vis_price': vis_price,
-            'buyer_count': buyer_count,
-            'new_member_count': new_member_count
+            'page_title': '报告',
+            'start_date': start_date,
+            'end_date': end_date,
+            'report_id': report_id,
+            'report_type': report_type
+            # 'report': report,
+            # 'transaction_money': transaction_money,
+            # 'transaction_count': transaction_count,
+            # 'vis_price': vis_price,
+            # 'buyer_count': buyer_count,
+            # 'new_member_count': new_member_count
         })
         return render_to_response('cloud_housekeeper/reportDetails.html', c)
 

@@ -1,9 +1,30 @@
 {% extends "cloudHousekeeper.html" %}
 {% load common_tag %}
 {% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
 {% endblock %}
 {% block content-panel %}
-
+    <!-- 控制 loading -->
+<div class="xui-loading" style="display: none">
+    <div class="xui-loading-container container1">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+    <div class="xui-loading-container container2">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+    <div class="xui-loading-container container3">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+    </div>
+</div>
 <div class="xui-statisticsPage">
     <div class="xui-section xui-head">
         <div class="xui-brandValue">
@@ -15,6 +36,7 @@
             {% ifequal value_sign -1 %}
             <span class="xui-down"><i class="xui-change"></i>￥{{ bv_diff }}</span>
             {% endifequal %}
+
         </div>
         <div class="xui-table">
             <table>
@@ -45,37 +67,32 @@
             </table>
         </div>
     </div>
-    <div class="xui-section">
-        <span class="xui-chartTitle">微品牌价值趋势图</span>
-        <div class="xui-timeBtn">
-            <div class="xui-active">周</div>
-            <div>月</div>
-        </div>
-        <div data-ui-role="statisticsEchart" 
-        	data-app="cloud_housekeeper" 
-        	data-resource="brand_values"
-        ></div>
+
+
+    <div class="xui-section xa-statisticsBox pr"  
+        data-is-external="true"  
+        data-app="/app/period_report/" 
+        data-resource="/report_detail/brand_value/get/"
+        data-ponint="7"
+        >
     </div>
-    <div class="xui-section">
-        <span class="xui-chartTitle">销售额趋势图</span>
-        <div class="xui-timeBtn">
-            <div class="xui-active">周</div>
-            <div>月</div>
-        </div>
-        <div class=""></div>
+
+    <div class="xui-section xa-saleBox pr"
+        data-is-external="true"
+		data-app="/app/period_report/" 
+    	data-resource="/report_detail/sale_trend/get/"
+        data-ponint="7"
+        >
     </div>
-    <div class="xui-section">
-        <span class="xui-chartTitle">成交额趋势图</span>
-        <div class="xui-timeBtn">
-            <div class="xui-active">周</div>
-            <div>月</div>
-        </div>
-        <div class=""></div>
+
+    <div class="xui-section xa-saleAmountBox pr"
+        data-is-external="true"
+    	data-app="/app/period_report/" 
+    	data-resource="/report_detail/order_trend/get/"
+        data-ponint="7"
+        >
     </div>
-    <div class="xui-footNav">
-        <a href="/cloud_housekeeper/home/">实时统计</a>
-        <a href="/cloud_housekeeper/reports/">历史报告</a>
-    </div>
+
 </div>
     
 
@@ -84,18 +101,48 @@
 {% block js %}
 {% verbatim %}
 <script id="statistics-echart-tmpl-src" type="text/x-jquery-tmpl">
-<div
-	id="${id}Chart"   
-	class="wui-i-content"
-	style="width:400px; height:200px"
->
+<div>
+    <span class="xui-chartTitle">${title}</span>
+    <div class="xui-timeBtn">
+        <div class="xui-active xa-switchingBtn" data-value="W">周</div>
+        <div class="xa-switchingBtn" data-value="M">月</div>
+    </div>
+    <div class="xui-box">        
+        <div
+            id="${id}Chart"   
+            class="wui-i-content"
+            style="width:400px; height:250px;overflow:hidden;"
+        >
+        </div>
+    </div>
+    <div class="pa" style="color:#939699;font-size:14px;text-align:center;bottom:18px;left:50%;margin-left:-63px;">点击图表可查看数值</div>
 </div>
 </script>
 {% endverbatim %}
-<script type="text/javascript" src="" ></script>
 <script type="text/javascript">
 $(document).ready(function() {
+    var echart = new W.view.common.StatisticsECharts({
+        el: $('.xa-statisticsBox'),
+        title: '微品牌价值趋势图',
+        chartPrompt: '品牌价值'
+    });
+    echart.render();
+
+    var saleEchart = new W.view.common.StatisticsECharts({
+        el: $('.xa-saleBox'),
+        title: '销售额趋势图',
+        chartPrompt: '销售额'
+    });
+    saleEchart.render();
+
+    var saleAmountEchart = new W.view.common.StatisticsECharts({
+        el: $('.xa-saleAmountBox'),
+        title: '成交订单趋势图',
+        chartPrompt: '成交订单'
+    });
+    saleAmountEchart.render();
 
 });
 </script>
+
 {% endblock %}

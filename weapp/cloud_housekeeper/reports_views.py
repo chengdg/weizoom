@@ -36,7 +36,7 @@ class CloudReports(resource.Resource):
         weeks = list(CloudReport.get_weeklys_by_webapp_id(webapp_id))
         months = list(CloudReport.get_monthlys_by_webapp_id(webapp_id))
         c = RequestContext(request, {
-            'page_title': '云管家',
+            'page_title': '历史报告',
             'weeks': weeks,
             'months': months
         })

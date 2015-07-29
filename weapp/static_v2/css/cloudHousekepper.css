@@ -15,40 +15,43 @@
     font-family:'Arial' ,'Microsoft Yahei';
 }
 .xui-loginPage .xui-title{
-     padding-bottom: 6vh;
      width: 100%;
-     height: 5vh;
-     position: absolute;
-     top:9vh;
-     left: 50%;
-     margin-left: -50%;
+     height: 20vh;
+     position: relative;
      font-size: 1.5625rem;
-     background: url(/static_v2/img/cloudHousekeeper/title_5.png) no-repeat;
-     -webkit-background-size: 100%;
-     background-size: 100%;
      text-indent: -10000px;
      text-align: center;
 }
+.xui-loginPage .xui-title .xui-bgImg{
+	width:100%;
+	height: 5vh;
+	position: absolute;
+	bottom: 30px;
+	background: url(/static_v2/img/cloudHousekeeper/title_5.png) no-repeat;
+	-webkit-background-size: 100%;
+	background-size: 100%;
+
+}
 .xui-loginPage .xui-loginInfo{
-    position: absolute;
-    top: 23vh;
-    width: 90%;
+    width: 100%;
+    overflow: hidden;
 }
 .xui-loginPage .xui-loginInfo .xui-tel,.xui-loginPage .xui-loginInfo .xui-verification{
-    height: 9vh;
+    height: 6vh;
     border-bottom: 1px solid #999;
     width: 100%;
+    padding-top: 2vh;
 }
 .xui-loginPage .xui-loginInfo .xui-verification{
     width: 65%;
 }
 .xui-loginPage .xui-loginInfo input{
-    padding-top: 4vh;
-    height: 3vh;
+    height: 5.8vh;
     border: none;
     font-size: 0.875rem;
     outline: none;
     padding-left: 0.875rem;
+    padding-bottom: 0;
 }
 .xui-loginPage .xui-loginInfo .xui-getVerification{
     width: 32%;
@@ -58,7 +61,7 @@
     border-radius: 2px;
     line-height: 6vh;
     text-align: center;
-    margin-top: 2.8vh;
+    margin-top: 2vh;
     font-size: 0.875rem;
 }
 .xui-loginPage .xui-loginBtn{
@@ -75,33 +78,33 @@
     color: #0785E9;
     font-size: 1rem;
 }
-.xui-loginPage .xui-alert{
+/*.xui-loginPage .xui-alert{
     width: 54%;
     color: #fff;
     background: rgba(0,0,0,0.5);
     height: 8vh;
     line-height: 8vh;
-    position: absolute;
+    position: relative;
     top:56vh;
     left: 50%;
     margin-left: -26%;
     text-align: center;
     border-radius: 3px;
-}
+}*/
 /*统计页,详情页*/
 .xui-statisticsPage,.xui-reportDetailPage{
 	background: #eee;
 	font-family:'Arial' ,'Microsoft Yahei';
 }
 .xui-statisticsPage .xui-brandValue,.xui-statisticsPage .xui-table,
-.xui-reportDetailPage .xui-brandValue,.xui-reportDetailPage .xui-table{
+.xui-reportDetailPage .xui-brandValue,.xui-reportDetailPage .xui-table,.xui-reportDetailPage .xui-interval{
  	padding-left: 3.75%;
 	padding-right: 3.75%;
 } 
 .xui-statisticsPage .xui-section,.xui-reportDetailPage .xui-section{
 	background: #fff;
  	border-bottom: 1px solid #ccc;
- 	margin-bottom: 20px;
+ 	margin-bottom: 10px;
 	padding-top: 20px;
 	padding-bottom: 20px;
 	padding-left: 3.75%;
@@ -110,9 +113,12 @@
 .xui-statisticsPage .xui-section:first-child,.xui-reportDetailPage .xui-section:first-child{
 	padding-left: 0;
 	padding-right: 0;
+	padding-top: 0;
+	padding-bottom: 1.3vh;
 }
 .xui-statisticsPage .xui-brandValue,.xui-reportDetailPage .xui-brandValue{
 	height: 9vh;
+	line-height: 9vh;
 }
 .xui-statisticsPage .xui-brandValue .xui-title,.xui-reportDetailPage .xui-brandValue .xui-title{
 	padding-right: 5.5%;
@@ -120,10 +126,14 @@
 .xui-statisticsPage .xui-head .xui-title,.xui-reportDetailPage .xui-head .xui-title{
 	font-size:0.75rem;
 	color: #939699;
+	text-align: center;
+}
+.xui-statisticsPage .xui-head .xui-title td{
+	padding-bottom: 7px;
 }
 .xui-statisticsPage .xui-table,.xui-reportDetailPage .xui-table{
-	padding-top: 2vh;
-	padding-bottom: 2vh;
+	padding-top: 1.5vh;
+	padding-bottom: 1.5vh;
 	border-top: 1px solid #e5e5e5;
 }
 /*.xui-statisticsPage .xui-table:nth-child(3){
@@ -135,24 +145,25 @@
 .xui-statisticsPage .xui-figure,.xui-reportDetailPage .xui-figure{
 	color: #0785E9;
 	font-weight: bold;
+	text-align: center;
 }
 .xui-statisticsPage .xui-first,.xui-reportDetailPage .xui-first{
-	width: 36.35%;
+	width: 30%;
 }
 .xui-statisticsPage .xui-second,.xui-reportDetailPage .xui-second{
-	width: 33.75%;
+	width: 45%;
 }
 .xui-statisticsPage .xui-third,.xui-reportDetailPage .xui-third{
-	width: 22.5%;
+	width: 25%;
 }
 .xui-statisticsPage .xui-Value,.xui-reportDetailPage .xui-Value{
 	color: #CF0B0B;
-	font-size: 22px;
+	font-size: 24px;
 	padding-right: 3.5%;
 	font-weight: bold;
 }
 .xui-statisticsPage .xui-up,.xui-reportDetailPage .xui-up{
-	color: #F66C6C;
+	color: #CF0B0B;
 	font-weight: bold;
 }
 .xui-statisticsPage .xui-down,.xui-reportDetailPage .xui-down{
@@ -194,13 +205,12 @@
 	display: inline-block;
 	border: 1px solid #0785E9;
 	width: 15%;
-	
-	line-height: 3.5vh;
+	line-height: 4vh;
 	border-radius: 1px;
 	float: right;
 }
 .xui-statisticsPage .xui-timeBtn div,.xui-reportDetailPage .xui-timeBtn div{
-	height: 3.5vh;
+	height: 4vh;
 	float: left;
 	width: 50%;
 	box-sizing:border-box;
@@ -210,6 +220,13 @@
 .xui-statisticsPage .xui-timeBtn .xui-active,.xui-reportDetailPage .xui-timeBtn .xui-active{
 	background: #0785E9;
 	color: #fff;
+}
+.xui-reportDetailPage .xui-interval{
+	height: 6vh;
+	line-height: 6vh;
+	color: #5E6164;
+	font-size: 12px;
+	border-bottom: 1px dashed #5E6164;
 }
 /*报告页*/
 .xui-reportPage{
@@ -291,8 +308,8 @@
 .xui-footNav{
 	width: 100%;
 	background: #fff;
-	height: 43px;
-	line-height: 43px;
+	height: 7vh;
+	line-height: 7vh;
 	position: fixed;
 	bottom: 0;
 	border-top: 1px solid #b0b0b0;
@@ -312,3 +329,42 @@
 /*.xui-footNav a:last-child{
 	float: left;
 }*/
+.wui-i-content>div{
+	position: absolute!important;
+	left: 50%;
+	margin-left: -200px;
+}
+.xui-box{
+	overflow: hidden;
+}
+
+.xui-loading{
+	position: fixed!important;
+	top: 43%;
+}
+.echarts-tooltip{
+	z-index: 1;
+}
+/*米3*/
+@media (min-width:359px){
+	.xui-statisticsPage .xui-head .xui-title, .xui-reportDetailPage .xui-head .xui-title,
+	.xui-statisticsPage .xui-chartTitle, .xui-reportDetailPage .xui-chartTitle{
+		font-size: 14px;
+	}
+	.xui-statisticsPage .xui-figure, .xui-reportDetailPage .xui-figure{
+		font-size: 18px;
+	}
+}
+/*6p*/
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3) { 
+	.xui-statisticsPage .xui-head .xui-title, .xui-reportDetailPage .xui-head .xui-title,
+	.xui-statisticsPage .xui-chartTitle, .xui-reportDetailPage .xui-chartTitle{
+		font-size: 16px;
+	}
+	.xui-statisticsPage .xui-figure, .xui-reportDetailPage .xui-figure{
+		font-size: 20px;
+	}
+}
