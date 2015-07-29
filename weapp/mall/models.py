@@ -1009,7 +1009,7 @@ class Product(models.Model):
 			'user_code': self.user_code,
 			'bar_code': self.bar_code,
 			'min_limit': self.min_limit,
-			'stocks': self.stocks,
+			'stocks': self.stocks if self.stock_type else '无限',
 			'sales': getattr(self, 'sales', 0),
 			'is_use_custom_model': self.is_use_custom_model,
 			'models': self.models[1:],

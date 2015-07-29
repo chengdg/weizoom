@@ -160,7 +160,8 @@ class PayInterfaceInfo(resource.Resource):
             'second_navs': export.get_config_second_navs(request),
             'second_nav_name': export.MALL_CONFIG_PAYINTERFACE_NAV,
             'pay_interface_id': pay_interface_id,
-            'pay_interface': pay_interface
+            'pay_interface': pay_interface,
+            'is_new': is_new,
         })
         return render_to_response('mall/editor/edit_pay_interface.html', c)
 

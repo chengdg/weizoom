@@ -11,6 +11,7 @@
 </ul>
 <div class="xui-PayInterfacePage">
 	<form class="form-horizontal" method="post" id="editForm">
+		<input type="hidden" name="_method" value="{% if is_new %}put{% else %}post{% endif %}"/>
 		<fieldset>
 			<!-- 通用配置 -->
 			<div id="generalConfig" style="margin-top:28px;">
