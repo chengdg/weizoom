@@ -122,7 +122,7 @@ class ExceptionMiddleware(object):
 	"""
 
 	def process_exception(self, request, exception):
-		print '>>>>>>> process exception <<<<<<<'
+		# print '>>>>>>> process exception <<<<<<<'
 		# exception_stack_str = unicode_full_stack()
 
 		# alert_message = u"request url:{}\nrequest params:\n{}\n cause:\n{}"\

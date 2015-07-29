@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from modules.member import models as member_models
 from core import resource, dateutil
 from core.charts_apis import create_line_chart_response
+from core.jsonresponse import create_response
 from mall import export, notices_models
 from mall import models as mall_models
 from .utils import get_to_be_shipped_order_infos
@@ -154,7 +155,7 @@ class Outline(resource.Resource):
                             "values" : count_trend_values
                         }, {
                             "name": "销售额",
-                            "values" : price_trend_values
+                            "values" : round(price_trend_values, 2)
                         }]
                     )
             except:
