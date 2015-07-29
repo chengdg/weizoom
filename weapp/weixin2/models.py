@@ -198,8 +198,17 @@ class Rule(models.Model):
 					content2type['content'] = self.material_id
 					content2type['type'] = 'news'
 				else:
-					content2type['content'] = emotion.change_emotion_to_img(self.answer)
+					#content2type['content'] = emotion.change_emotion_to_img(self.answer)
+					try:
+						news_answer = eval(self.answer)
+						content2type['content'] = emotion.change_emotion_to_img(news_answer['content'])
+					except:
+						content2type['content'] = emotion.change_emotion_to_img(self.answer)
+					
 					content2type['type'] = 'text'
+
+					#answers_dict = json.loads(self.answer)
+					#content2type['content_content'] = emotion.change_emotion_to_img(answers_dict.content)
 
 				answer_array.append(content2type)
 				
