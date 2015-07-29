@@ -453,6 +453,7 @@ class Product(models.Model):
 				product.user_code = product.user_code
 				product.stock_type = PRODUCT_STOCK_TYPE_LIMIT
 				product.stocks = 0
+				product.min_limit = 0
 				product.standard_model = {}
 				product.models = []
 
