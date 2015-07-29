@@ -215,7 +215,7 @@ class ProductList(resource.Resource):
         if is_prev_shelve and is_not_sale:
             product_ids = [int(id) for id in ids]
             mall_signals.products_not_online.send(
-                sender=models.Product,
+                sender=Product,
                 product_ids=product_ids,
                 request=request
             )
