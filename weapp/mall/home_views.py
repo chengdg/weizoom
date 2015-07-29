@@ -83,8 +83,6 @@ from core.restful_url_route import *
 # 	}
 
 
-@view(app='mall', resource='outline', action='get')
-@login_required
 def get_outline(request):
 	return HttpResponseRedirect('/mall2/outline/', {})
 # 	webapp_id = request.user_profile.webapp_id
