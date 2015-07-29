@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import date
+from datetime import date, datetime
 
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
