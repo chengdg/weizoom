@@ -53,17 +53,17 @@
         </div>
         <div class="control-group">
             <p class="pt5 m0">订单状态：
-               {% ifequal order.status 1 %}
-               		已取消
-               {% endifequal %}
                {% ifequal order.status 0 %}
                		待支付
+               {% endifequal %}
+               {% ifequal order.status 1 %}
+                  已取消
                {% endifequal %}
                {% ifequal order.status 3 %}
                		待发货
                {% endifequal %}
                {% ifequal order.status 4 %}
-               		已发货
+               		待收货
                {% endifequal %}
                {% ifequal order.status 5 %}
                		已完成

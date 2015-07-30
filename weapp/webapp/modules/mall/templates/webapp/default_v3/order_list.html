@@ -46,7 +46,7 @@
                                             <span class="c3">退款中</span>
                                         {% endifequal %}
                                         {% ifequal order.status 7 %}
-                                            <span class="c3">已取消</span>
+                                            <span class="c3">退款成功</span>
                                         {% endifequal %}
                                     </div>
                                     <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
