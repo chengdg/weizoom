@@ -578,18 +578,18 @@
 #                 pay_interface_config['online_pay_interfaces'].append(pay_interface)
 
 #         #确定运费配置
-#         system_postage_configs = list(PostageConfig.objects.filter(owner=request.manager, is_used=True))
-#         if len(system_postage_configs) > 0:
-#             system_postage_config = system_postage_configs[0]
-#         else:
-#             system_postage_config = None
-#         postage_config_info = {
-#             'system_postage_config': system_postage_config,
-#             'is_use_system_postage_config': False
-#         }
+        # system_postage_configs = list(PostageConfig.objects.filter(owner=request.manager, is_used=True))
+        # if len(system_postage_configs) > 0:
+        #     system_postage_config = system_postage_configs[0]
+        # else:
+        #     system_postage_config = None
+        # postage_config_info = {
+        #     'system_postage_config': system_postage_config,
+        #     'is_use_system_postage_config': False
+        # }
 
-#         if product.postage_type == POSTAGE_TYPE_CUSTOM:
-#             postage_config_info['is_use_system_postage_config'] = True
+        # if product.postage_type == POSTAGE_TYPE_CUSTOM:
+        #     postage_config_info['is_use_system_postage_config'] = True
 #         '''
 #         if product.postage_id != -1:
 #             postage_config_info['is_use_system_postage_config'] = True

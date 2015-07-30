@@ -195,11 +195,11 @@ W.view.common.DropBox = Backbone.View.extend({
         if(this.isDisabledClose) {
             return;
         }
+        this.minClickTime = options.minClickTime ? options.minClickTime : 0;
         // console.log('show bengin')
         this.bind('loading', this.bindLoading, this);
         this.close();
         this.trigger('show');
-        this.bindHtmlClickEvent();
 
         if (options.msg) {
             if (_.isObject(options.msg)) {
@@ -214,6 +214,7 @@ W.view.common.DropBox = Backbone.View.extend({
         this.setSize(options.width, options.height);
         this.setPosition(options.position);
         this.$el.show();
+        this.bindHtmlClickEvent();
     },
     
     bindHtmlClickEvent: function() {
@@ -226,6 +227,9 @@ W.view.common.DropBox = Backbone.View.extend({
                 return;
             }
             if(event.target === _this.$action[0]) {
+                return;
+            }
+            if(_this.minClickTime > 0){
                 return;
             }
             _this.isInFileInput = false;

@@ -11,7 +11,7 @@ from core import dateutil
 from core import paginator
 from modules.member.models import Member, MemberSharedUrlInfo, MemberInfo, WebAppUser, SOURCE_BY_URL, SOURCE_MEMBER_QRCODE
 from market_tools.tools.member_qrcode.models import MemberQrcode, MemberQrcodeLog
-from mall.models import Order, WeizoomMallHasOtherMallProductOrder, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
+from mall.models import Order, belong_to, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
 from mall.models import OrderHasProduct, Product, PRODUCT_SHELVE_TYPE_ON
 
 
@@ -652,10 +652,9 @@ def get_buyer_count(webapp_id, low_date, high_date):
 	"""
 	获取购买总人数，包括会员、已取消关注的会员和非会员
 	"""
-	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+	orders = belong_to(webapp_id)
 	#使用授权机制后，webapp_user_id对应唯一一个member_id了，不会再有多个webapp_user_idduiying
-	buyer_count = Order.objects.filter(
-				Q(webapp_id = webapp_id) | Q(order_id__in=weizoom_mall_order_ids), 
+	buyer_count = orders.filter(
 				Q(status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
 				Q(created_at__range=(low_date, high_date))
 			).values('webapp_user_id').distinct().count()
@@ -665,9 +664,8 @@ def get_order_count(webapp_id, low_date, high_date):
 	"""
 	获取下单单量
 	"""
-	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
-	order_count = Order.objects.filter(
-				Q(webapp_id = webapp_id) | Q(order_id__in=weizoom_mall_order_ids), 
+	orders = belong_to(webapp_id)
+	order_count = orders.filter(
 				Q(status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
 				Q(created_at__range=(low_date, high_date))
 			).count()
@@ -677,9 +675,11 @@ def get_deal_product_count(webapp_id, low_date, high_date):
 	"""
 	获取总成交件数
 	"""
-	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+	orders =belong_to(webapp_id)
+	order_ids = [order.id for order in orders]
+
 	products = OrderHasProduct.objects.filter(
-			Q(order__webapp_id=webapp_id) | Q(order__order_id__in=weizoom_mall_order_ids), 
+			Q(order__order_id__in=order_ids),
 			Q(order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
 			Q(order__created_at__range=(low_date, high_date))
 		)
@@ -692,9 +692,10 @@ def get_top10_product(webapp_id, low_date, high_date):
 	"""
 	获取下单单量排行前10的商品
 	"""
-	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+	orders =belong_to(webapp_id)
+	order_ids = [order.id for order in orders]
 	products = OrderHasProduct.objects.filter(
-			Q(order__webapp_id=webapp_id) | Q(order__order_id__in=weizoom_mall_order_ids), 
+			Q(order__order_id__in=order_ids),
 			Q(order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
 			Q(order__created_at__range=(low_date, high_date))
 		)

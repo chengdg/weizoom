@@ -13,7 +13,7 @@ from core import resource
 from core.jsonresponse import create_response
 import stats.util as stats_util
 from modules.member.models import Member
-from mall.models import Order, WeizoomMallHasOtherMallProductOrder, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
+from mall.models import Order, belong_to, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
 from .brand_value_utils import get_latest_brand_value
 
 
@@ -172,10 +172,8 @@ class ManageSummary(resource.Resource):
 
 #获取成交订单
 def get_transaction_orders(webapp_id,low_date,high_date):
-    weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
-    tmp_q = Q(webapp_id=webapp_id) | Q(order_id__in=weizoom_mall_order_ids)
-    transaction_orders = Order.objects.filter(
-        tmp_q,
+    orders = belong_to(webapp_id)
+    transaction_orders = orders.filter(
         Q(created_at__range=(low_date,high_date)),
         Q(status__in=(ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
         )

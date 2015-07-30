@@ -5,7 +5,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 
 /**
  * 发货的对话框
- * 
+ *
  * author: liupeiyu
  */
 ensureNS('W.view.mall');
@@ -14,12 +14,12 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
         $('#remark-info-view').template('remark-info-view-dialog-tmpl');
         return "remark-info-view-dialog-tmpl";
     },
-    
+
     getOneTemplate: function() {
     	$('#single-logistics-info-view').template('single-logistics-info-view-dialog-tmpl');
         return "single-logistics-info-view-dialog-tmpl";
     },
-    
+
     events:{
      	'click .xa-submit': 'submit',
     },
@@ -30,7 +30,7 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
         this.privateContainerClass = options.privateContainerClass;
         this.$content.parent().addClass(this.privateContainerClass);
     },
-    
+
     submit: function(event) {
     	var $el = $(event.currentTarget);
         //var orderId = options.orderId;
@@ -41,11 +41,11 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
     	/*var validate = this.validate();
     	if(validate.is_submit) {
             // true为修改物流信息，只修改，不改变状态
-            
+
 
             // 是否需要物流
 
-    		// window.location.href = '/mall/editor/order_express/add/?order_id=' + 
+    		// window.location.href = '/mall/editor/order_express/add/?order_id=' +
       //       this.orderId + '&=' + logistics + '&express_number=' + logisticsOrderId +
       //        '&leader_name=' + leaderName+ '&is_update_express='+isUpdateExpress;
     	} else {
@@ -60,20 +60,30 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
             resource: 'order',
             args: args,
             success: function(data) {
-                window.location.reload();
+                order_id = args['order_id'];
+                remark = args['remark'];
+                $el = $("li[data-order-id=" + order_id + "] table tbody");
+                if($el.find(".xa-remark").length>0)
+                    $el.find(".xa-remark").html('<img src="/static_v2/img/editor/attention.jpg"> 卖家备注：'+ remark);
+                else
+                {
+                    $el.append('<tr> <td class="xui-remark xa-remark" colspan="8"> <img src="/static_v2/img/editor/attention.jpg"> 卖家备注：'+ remark +'</td> </tr>');
+                }
+
+                $(".xa-remarkDropBox").hide();
             },
             error: function() {
             }
         })
     },
-    
+
     validate: function() {
-    	
+
     },
-    
+
     getLogisticsInfo: function() {
     },
-    
+
     render: function() {
     	this.$content.html($.tmpl(this.getTemplate()));
 	},
@@ -81,13 +91,13 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
     onShow: function(options) {
         this.$content.html($.tmpl(this.getTemplate()));
         this.position = options.position;
-        
+
     	$('.modal-backdrop').css({
     		 'background-color': '#fff',
     		 'opacity': '0'
     	})
     },
-    
+
     showPrivate: function(options) {
     	this.orderId = options.orderId;
         //this.expressCompanyValue = options.expressCompanyValue;

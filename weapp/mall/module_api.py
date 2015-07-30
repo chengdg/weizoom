@@ -7,6 +7,7 @@ import json
 import copy
 import random
 import math
+import operator
 
 # from itertools import chain
 
@@ -40,6 +41,7 @@ from mall import signals as mall_signals
 from mall.promotion import models as promotion_models
 from mall import models as mall_models
 from modules.member.module_api import get_member_by_id_list
+from webapp.models import WebApp
 random.seed(time.time())
 
 NO_PROMOTION_ID = -1
@@ -297,18 +299,20 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 			# 非微众商城
 			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
 			products = Product.objects.filter(
-											  owner_id=webapp_owner_id,
-											  shelve_type=PRODUCT_SHELVE_TYPE_ON,
-											  is_deleted=False
-			).filter(~Q(id__in=product_ids_in_weizoom_mall)
-					).exclude(type=PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
+				Q(owner_id=webapp_owner_id) &
+				Q(shelve_type=PRODUCT_SHELVE_TYPE_ON) &
+				Q(is_deleted=False) &
+				~Q(id__in=product_ids_in_weizoom_mall) &
+				~Q(type=PRODUCT_DELIVERY_PLAN_TYPE)
+			).order_by('-id', 'display_index')
 		else:
 			# other_mall_products, other_mall_product_ids = get_verified_weizoom_mall_partner_products_and_ids(webapp_id)
 			products = Product.objects.filter(
-											  owner_id=webapp_owner_id,
-											  shelve_type=PRODUCT_SHELVE_TYPE_ON,
-											  is_deleted = False
-			).exclude(type = PRODUCT_DELIVERY_PLAN_TYPE).order_by('-display_index')
+				Q(owner_id=webapp_owner_id) &
+				Q(shelve_type=PRODUCT_SHELVE_TYPE_ON) &
+				Q(is_deleted=False) &
+				~Q(type=PRODUCT_DELIVERY_PLAN_TYPE)
+			).order_by('-id', 'display_index')
 			# if other_mall_products:
 			# 	products = list(products) + list(other_mall_products)
 		category = ProductCategory()
@@ -333,7 +337,8 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 					if product.is_deleted or product.type == PRODUCT_DELIVERY_PLAN_TYPE or product.id in product_ids_in_weizoom_mall or product.id in other_mall_product_ids_not_checked or product.shelve_type != PRODUCT_SHELVE_TYPE_ON:
 						continue
 					products.append(category_has_product.product)
-			products.sort(lambda x,y: cmp(y.display_index, x.display_index))
+			products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+			products = sorted(products, key=operator.attrgetter('display_index'))
 		except:
 			products = []
 			category = ProductCategory()
@@ -1049,6 +1054,15 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	# print promotion_saved_money
 	order.promotion_saved_money = promotion_saved_money
 
+	# 订单来自商铺
+	if products[0].owner_id ==  webapp_owner_id:
+		order.webapp_source_id = webapp_id
+		order.order_source = ORDER_SOURCE_OWN
+	# 订单来自微众商城
+	else:
+		order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
+		order.order_source = ORDER_SOURCE_WEISHOP
+
 	order.save()
 
 	#更新库存
@@ -1070,12 +1084,12 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			promotion_id = product.promotion['id'] if product.promotion else 0,
 			promotion_money = product.promotion_money if hasattr(product, 'promotion_money') else 0,
 		)
-		if product.owner_id != webapp_owner_id:
-			order.order_source = ORDER_SOURCE_WEISHOP
-			WeizoomMallHasOtherMallProductOrder.create(webapp_id, product, order)
-
-	if order.order_source == ORDER_SOURCE_WEISHOP:
-		order.save()
+	# 	if product.owner_id != webapp_owner_id:
+	# 		order.order_source = ORDER_SOURCE_WEISHOP
+	# 		WeizoomMallHasOtherMallProductOrder.create(webapp_id, product, order)
+    #
+	# if order.order_source == ORDER_SOURCE_WEISHOP:
+	# 	order.save()
 	# 注意强制提交时这里可能会修改赠品数量，所以要在建立促销结果之前运行
 	mall_signals.post_save_order.send(sender=mall_signals, order=order, webapp_user=webapp_user, product_groups=product_groups)
 

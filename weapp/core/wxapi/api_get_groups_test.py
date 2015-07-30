@@ -45,7 +45,7 @@ class GetGroupsApiTestCase(unittest.TestCase):
 
 	def test_userinfo_get(self):
 		result = self.api.get_groups(self.dummy_access_token_str)
-		
+
 		print type(result)
 		print result['groups']
 		print type(result['groups'])

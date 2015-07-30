@@ -195,228 +195,228 @@ class CouponRuleList(resource.Resource):
         })
         return render_to_response('mall/editor/promotion/coupon_rules.html', c)
 
-    @login_required
-    def api_get(request):
-        """
-        优惠券规则列表
-        """
-        name = request.GET.get('name', '')
-        bar_code = request.GET.get('barCode', '')
-        promotion_status = int(request.GET.get('promotionStatus', -1))
-        start_date = request.GET.get('startDate', '')
-        end_date = request.GET.get('endDate', '')
-        type_str = request.GET.get('type', 'all')
-        coupon_id = request.GET.get('couponId', '')
-        promotion_type = PROMOTIONSTR2TYPE[type_str]
+    # @login_required
+    # def api_get(request):
+    #     """
+    #     优惠券规则列表
+    #     """
+    #     name = request.GET.get('name', '')
+    #     bar_code = request.GET.get('barCode', '')
+    #     promotion_status = int(request.GET.get('promotionStatus', -1))
+    #     start_date = request.GET.get('startDate', '')
+    #     end_date = request.GET.get('endDate', '')
+    #     type_str = request.GET.get('type', 'all')
+    #     coupon_id = request.GET.get('couponId', '')
+    #     promotion_type = PROMOTIONSTR2TYPE[type_str]
 
-        is_fetch_all_promotions = (not name) and (not bar_code) and (not start_date) and (not end_date) and (
-            not coupon_id) and (promotion_status == -1) and (promotion_type == 'all')
-        if is_fetch_all_promotions:
-            # 获取promotion列表
-            if promotion_type == PROMOTION_TYPE_ALL:
-                # 全部类型不查询优惠券数据
-                promotions = [promotion for promotion in list(Promotion.objects.filter(owner=request.manager)) if
-                              promotion.status != PROMOTION_STATUS_DELETED and promotion.type != PROMOTION_TYPE_COUPON]
-            else:
-                promotions = [promotion for promotion in
-                              list(Promotion.objects.filter(owner=request.manager, type=promotion_type)) if
-                              promotion.status != PROMOTION_STATUS_DELETED]
-            promotions.sort(lambda x, y: cmp(y.id, x.id))
+    #     is_fetch_all_promotions = (not name) and (not bar_code) and (not start_date) and (not end_date) and (
+    #         not coupon_id) and (promotion_status == -1) and (promotion_type == 'all')
+    #     if is_fetch_all_promotions:
+    #         # 获取promotion列表
+    #         if promotion_type == PROMOTION_TYPE_ALL:
+    #             # 全部类型不查询优惠券数据
+    #             promotions = [promotion for promotion in list(Promotion.objects.filter(owner=request.manager)) if
+    #                           promotion.status != PROMOTION_STATUS_DELETED and promotion.type != PROMOTION_TYPE_COUPON]
+    #         else:
+    #             promotions = [promotion for promotion in
+    #                           list(Promotion.objects.filter(owner=request.manager, type=promotion_type)) if
+    #                           promotion.status != PROMOTION_STATUS_DELETED]
+    #         promotions.sort(lambda x, y: cmp(y.id, x.id))
 
-            # 进行分页
-            count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-            cur_page = int(request.GET.get('page', '1'))
-            pageinfo, promotions = paginator.paginate(promotions, cur_page, count_per_page,
-                                                      query_string=request.META['QUERY_STRING'])
-            # id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
-            Promotion.fill_details(request.manager, promotions, {
-                'with_product': True,
-                'with_concrete_promotion': True
-            })
-        else:
-            # 获得promotion集合并过滤
-            if promotion_type == PROMOTION_TYPE_ALL:
-                # 全部类型不查询优惠券数据
-                promotions = [promotion for promotion in
-                              list(Promotion.objects.filter(owner=request.manager).order_by('-id')) if
-                              promotion.status != PROMOTION_STATUS_DELETED and promotion.type != PROMOTION_TYPE_COUPON]
-            else:
-                promotions = [promotion for promotion in
-                              list(Promotion.objects.filter(owner=request.manager, type=promotion_type).order_by('-id'))
-                              if promotion.status != PROMOTION_STATUS_DELETED]
-            # if promotion_type != PROMOTION_TYPE_COUPON:
-            promotions = _filter_promotions(request, promotions)
+    #         # 进行分页
+    #         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+    #         cur_page = int(request.GET.get('page', '1'))
+    #         pageinfo, promotions = paginator.paginate(promotions, cur_page, count_per_page,
+    #                                                   query_string=request.META['QUERY_STRING'])
+    #         # id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
+    #         Promotion.fill_details(request.manager, promotions, {
+    #             'with_product': True,
+    #             'with_concrete_promotion': True
+    #         })
+    #     else:
+    #         # 获得promotion集合并过滤
+    #         if promotion_type == PROMOTION_TYPE_ALL:
+    #             # 全部类型不查询优惠券数据
+    #             promotions = [promotion for promotion in
+    #                           list(Promotion.objects.filter(owner=request.manager).order_by('-id')) if
+    #                           promotion.status != PROMOTION_STATUS_DELETED and promotion.type != PROMOTION_TYPE_COUPON]
+    #         else:
+    #             promotions = [promotion for promotion in
+    #                           list(Promotion.objects.filter(owner=request.manager, type=promotion_type).order_by('-id'))
+    #                           if promotion.status != PROMOTION_STATUS_DELETED]
+    #         # if promotion_type != PROMOTION_TYPE_COUPON:
+    #         promotions = _filter_promotions(request, promotions)
 
-            #
-            if coupon_id:
-                coupon_rule_id2promotion = dict([(promotion.detail_id, promotion) for promotion in promotions])
-                coupon = Coupon.objects.filter(coupon_id=coupon_id)
-                if coupon.count() > 0:
-                    promotions = [coupon_rule_id2promotion[coupon[0].coupon_rule_id]]
-                else:
-                    promotions = []
+    #         #
+    #         if coupon_id:
+    #             coupon_rule_id2promotion = dict([(promotion.detail_id, promotion) for promotion in promotions])
+    #             coupon = Coupon.objects.filter(coupon_id=coupon_id)
+    #             if coupon.count() > 0:
+    #                 promotions = [coupon_rule_id2promotion[coupon[0].coupon_rule_id]]
+    #             else:
+    #                 promotions = []
 
-            # 进行分页
-            count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-            cur_page = int(request.GET.get('page', '1'))
-            pageinfo, promotions = paginator.paginate(promotions, cur_page, count_per_page,
-                                                      query_string=request.META['QUERY_STRING'])
-            Promotion.fill_details(request.manager, promotions, {
-                'with_product': True,
-                'with_concrete_promotion': True
-            })
+    #         # 进行分页
+    #         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+    #         cur_page = int(request.GET.get('page', '1'))
+    #         pageinfo, promotions = paginator.paginate(promotions, cur_page, count_per_page,
+    #                                                   query_string=request.META['QUERY_STRING'])
+    #         Promotion.fill_details(request.manager, promotions, {
+    #             'with_product': True,
+    #             'with_concrete_promotion': True
+    #         })
 
-        # 获取返回数据
-        promotions.sort(lambda x, y: cmp(y.id, x.id))
-        items = []
-        for promotion in promotions:
-            if promotion.detail.has_key('money'):
-                promotion.detail['money'] = str(promotion.detail['money'])
-            data = {
-                "id": promotion.id,
-                "status": promotion.status_name,
-                "name": promotion.name,
-                "promotionTitle": promotion.promotion_title,
-                "type": PROMOTION2TYPE[promotion.type],
-                "start_date": promotion.start_date.strftime("%Y-%m-%d %H:%M"),
-                "end_date": promotion.end_date.strftime("%Y-%m-%d %H:%M"),
-                "created_at": promotion.created_at.strftime("%Y-%m-%d"),
-                "detail": promotion.detail,
-                "products": []
-            }
-            if hasattr(promotion, 'products'):
-                for product in promotion.products:
-                    data["products"].append({
-                        'id': product.id,
-                        'name': product.name,
-                        'thumbnails_url': product.thumbnails_url,
-                        'display_price': product.display_price,
-                        'display_price_range': product.display_price_range,
-                        'bar_code': product.bar_code,
-                        'stocks': product.stocks,
-                        'sales': product.sales,
-                        'is_use_custom_model': product.is_use_custom_model,
-                        'models': product.models[1:],
-                        'standard_model': product.standard_model,
-                        'current_used_model': product.current_used_model,
-                        'created_at': datetime.strftime(product.created_at, '%Y-%m-%d %H:%M'),
-                        "detail_link": '/mall2/product/?id=%d&source=onshelf' % product.id
-                    })
+    #     # 获取返回数据
+    #     promotions.sort(lambda x, y: cmp(y.id, x.id))
+    #     items = []
+    #     for promotion in promotions:
+    #         if promotion.detail.has_key('money'):
+    #             promotion.detail['money'] = str(promotion.detail['money'])
+    #         data = {
+    #             "id": promotion.id,
+    #             "status": promotion.status_name,
+    #             "name": promotion.name,
+    #             "promotionTitle": promotion.promotion_title,
+    #             "type": PROMOTION2TYPE[promotion.type],
+    #             "start_date": promotion.start_date.strftime("%Y-%m-%d %H:%M"),
+    #             "end_date": promotion.end_date.strftime("%Y-%m-%d %H:%M"),
+    #             "created_at": promotion.created_at.strftime("%Y-%m-%d"),
+    #             "detail": promotion.detail,
+    #             "products": []
+    #         }
+    #         if hasattr(promotion, 'products'):
+    #             for product in promotion.products:
+    #                 data["products"].append({
+    #                     'id': product.id,
+    #                     'name': product.name,
+    #                     'thumbnails_url': product.thumbnails_url,
+    #                     'display_price': product.display_price,
+    #                     'display_price_range': product.display_price_range,
+    #                     'bar_code': product.bar_code,
+    #                     'stocks': product.stocks,
+    #                     'sales': product.sales,
+    #                     'is_use_custom_model': product.is_use_custom_model,
+    #                     'models': product.models[1:],
+    #                     'standard_model': product.standard_model,
+    #                     'current_used_model': product.current_used_model,
+    #                     'created_at': datetime.strftime(product.created_at, '%Y-%m-%d %H:%M'),
+    #                     "detail_link": '/mall2/product/?id=%d&source=onshelf' % product.id
+    #                 })
 
-                if len(data['products']) == 1:
-                    data['product'] = data['products'][0]
-                else:
-                    data['product'] = []
-            items.append(data)
+    #             if len(data['products']) == 1:
+    #                 data['product'] = data['products'][0]
+    #             else:
+    #                 data['product'] = []
+    #         items.append(data)
 
-        data = {
-            "items": items,
-            'pageinfo': paginator.to_dict(pageinfo),
-            'sortAttr': 'id',
-            'data': {}
-        }
-        response = create_response(200)
-        response.data = data
-        return response.get_response()
-
-
-PROMOTION_FILTERS = {
-    'promotion': [{
-                      'comparator': lambda promotion, filter_value: (filter_value == 'all') or (
-                          PROMOTION2TYPE[promotion.type]['name'] == filter_value),
-                      'query_string_field': 'promotionType'
-                  }, {
-                      'comparator': lambda promotion, filter_value: (int(filter_value) == -1) or (
-                          int(filter_value) == promotion.status),
-                      'query_string_field': 'promotionStatus'
-                  }, {
-                      'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime(
-                          "%Y-%m-%d %H:%M"),
-                      'query_string_field': 'startDate'
-                  }, {
-                      'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime(
-                          "%Y-%m-%d %H:%M"),
-                      'query_string_field': 'endDate'
-                  }
-    ],
-    'coupon': [{
-                   'comparator': lambda promotion, filter_value: filter_value in promotion.name,
-                   'query_string_field': 'name'
-               }, {
-                   'comparator': lambda promotion, filter_value: filter_value in promotion.name,
-                   'query_string_field': 'coupon_type'
-               }, {
-                   'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime(
-                       "%Y-%m-%d %H:%M"),
-                   'query_string_field': 'startDate'
-               }, {
-                   'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime(
-                       "%Y-%m-%d %H:%M"),
-                   'query_string_field': 'endDate'
-               }
-    ],
-    'product': [{
-                    'comparator': lambda product, filter_value: filter_value in product.name,
-                    'query_string_field': 'name'
-                }, {
-                    'comparator': lambda product, filter_value: filter_value == product.bar_code,
-                    'query_string_field': 'barCode',
-                }
-    ],
-}
+    #     data = {
+    #         "items": items,
+    #         'pageinfo': paginator.to_dict(pageinfo),
+    #         'sortAttr': 'id',
+    #         'data': {}
+    #     }
+    #     response = create_response(200)
+    #     response.data = data
+    #     return response.get_response()
 
 
-def _filter_promotions(request, promotions):
-    has_filter = search_util.init_filters(request, PROMOTION_FILTERS)
-    if not has_filter:
-        # 没有filter，直接返回
-        return promotions
+# PROMOTION_FILTERS = {
+#     'promotion': [{
+#                       'comparator': lambda promotion, filter_value: (filter_value == 'all') or (
+#                           PROMOTION2TYPE[promotion.type]['name'] == filter_value),
+#                       'query_string_field': 'promotionType'
+#                   }, {
+#                       'comparator': lambda promotion, filter_value: (int(filter_value) == -1) or (
+#                           int(filter_value) == promotion.status),
+#                       'query_string_field': 'promotionStatus'
+#                   }, {
+#                       'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime(
+#                           "%Y-%m-%d %H:%M"),
+#                       'query_string_field': 'startDate'
+#                   }, {
+#                       'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime(
+#                           "%Y-%m-%d %H:%M"),
+#                       'query_string_field': 'endDate'
+#                   }
+#     ],
+#     'coupon': [{
+#                    'comparator': lambda promotion, filter_value: filter_value in promotion.name,
+#                    'query_string_field': 'name'
+#                }, {
+#                    'comparator': lambda promotion, filter_value: filter_value in promotion.name,
+#                    'query_string_field': 'coupon_type'
+#                }, {
+#                    'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime(
+#                        "%Y-%m-%d %H:%M"),
+#                    'query_string_field': 'startDate'
+#                }, {
+#                    'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime(
+#                        "%Y-%m-%d %H:%M"),
+#                    'query_string_field': 'endDate'
+#                }
+#     ],
+#     'product': [{
+#                     'comparator': lambda product, filter_value: filter_value in product.name,
+#                     'query_string_field': 'name'
+#                 }, {
+#                     'comparator': lambda product, filter_value: filter_value == product.bar_code,
+#                     'query_string_field': 'barCode',
+#                 }
+#     ],
+# }
 
-    filtered_promotions = []
-    if request.GET.get('type', 'all') == 'coupon':
-        promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['coupon'])
-        coupon_type = request.GET.get('couponPromotionType', None)
-        if coupon_type != '-1':
-            coupon_type = coupon_type == '2'
-            Promotion.fill_details(request.manager, promotions, {
-                'with_concrete_promotion': True
-            })
-            promotions = [promotion for promotion in promotions if promotion.detail['limit_product'] == coupon_type]
-        return promotions
-        # 过滤promotion集合
-    promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['promotion'])
-    Promotion.fill_details(request.manager, promotions, {
-        'with_product': True
-    })
 
-    if not promotions:
-        return filtered_promotions
+# def _filter_promotions(request, promotions):
+#     has_filter = search_util.init_filters(request, PROMOTION_FILTERS)
+#     if not has_filter:
+#         # 没有filter，直接返回
+#         return promotions
 
-    for promotion in promotions:
-        products = search_util.filter_objects(promotion.products, PROMOTION_FILTERS['product'])
-        if not products:
-            # product filter没有通过，跳过该promotion
-            print 'end in product filter'
-            continue
-        else:
-            print 'pass product filter'
-            filtered_promotions.append(promotion)
+#     filtered_promotions = []
+#     if request.GET.get('type', 'all') == 'coupon':
+#         promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['coupon'])
+#         coupon_type = request.GET.get('couponPromotionType', None)
+#         if coupon_type != '-1':
+#             coupon_type = coupon_type == '2'
+#             Promotion.fill_details(request.manager, promotions, {
+#                 'with_concrete_promotion': True
+#             })
+#             promotions = [promotion for promotion in promotions if promotion.detail['limit_product'] == coupon_type]
+#         return promotions
+#         # 过滤promotion集合
+#     promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['promotion'])
+#     Promotion.fill_details(request.manager, promotions, {
+#         'with_product': True
+#     })
 
-            # filtered_products = []
-            # for product in products:
-            # models = search_util.filter_objects(product.models, PROMOTION_FILTERS['model'])
-            #             if models:
-            #                 print 'pass model filter'
-            #                 filtered_products.append(product)
-            #             else:
-            #                 print 'end in model filter'
-            #
-            #         if filtered_products:
-            #             #promotion有通过了product filter和model filter的商品，将promotion放入结果
-            #             filtered_promotions.append(promotion)
-            #         else:
-            #             pass
-    return filtered_promotions
+#     if not promotions:
+#         return filtered_promotions
+
+#     for promotion in promotions:
+#         products = search_util.filter_objects(promotion.products, PROMOTION_FILTERS['product'])
+#         if not products:
+#             # product filter没有通过，跳过该promotion
+#             print 'end in product filter'
+#             continue
+#         else:
+#             print 'pass product filter'
+#             filtered_promotions.append(promotion)
+
+#             # filtered_products = []
+#             # for product in products:
+#             # models = search_util.filter_objects(product.models, PROMOTION_FILTERS['model'])
+#             #             if models:
+#             #                 print 'pass model filter'
+#             #                 filtered_products.append(product)
+#             #             else:
+#             #                 print 'end in model filter'
+#             #
+#             #         if filtered_products:
+#             #             #promotion有通过了product filter和model filter的商品，将promotion放入结果
+#             #             filtered_promotions.append(promotion)
+#             #         else:
+#             #             pass
+#     return filtered_promotions
 
 
 def _create_coupons(couponRule, count, promotion=None):

@@ -587,15 +587,12 @@ def get_detail_response(request, belong='all'):
 
 def is_has_order(request, is_refund=False):
     webapp_id = request.user_profile.webapp_id
-    weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+    # weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
     if is_refund:
-        has_order = (mall.models.Order.objects.filter(Q(webapp_id=webapp_id) | Q(order_id__in=weizoom_mall_order_ids),
-                                                      status__in=[ORDER_STATUS_REFUNDING,
-                                                                  ORDER_STATUS_REFUNDED]).count() > 0)
+        orders = belong_to(webapp_id)
+        has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]).count() > 0
     else:
-        has_order = (
-            mall.models.Order.objects.filter(
-                Q(webapp_id=webapp_id) | Q(order_id__in=weizoom_mall_order_ids)).count() > 0)
+        has_order = (belong_to(webapp_id).count() > 0)
     MallCounter.clear_unread_order(webapp_owner_id=request.manager.id)  # 清空未读订单数量
     return has_order
 

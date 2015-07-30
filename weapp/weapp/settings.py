@@ -649,7 +649,7 @@ WEAPP_WEB_MODEL_DIRS_V2 = [
 # import termite content
 #####################################################################
 from termite import embed_settings as termite_settings
- 
+
 TEMPLATE_LOADERS.extend(termite_settings.TEMPLATE_LOADERS)
 MIDDLEWARE_CLASSES.extend(termite_settings.MIDDLEWARE_CLASSES)
 TEMPLATE_CONTEXT_PROCESSORS.extend(termite_settings.TEMPLATE_CONTEXT_PROCESSORS)

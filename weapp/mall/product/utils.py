@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
-import logging
+import re
 from datetime import datetime
-
-logger = logging.getLogger('console')
 
 from mall import models
 from core import search_util
@@ -166,3 +164,45 @@ def filter_products(request, products):
         if models:
             filtered_products.append(product)
     return filtered_products
+
+# TODO: update models ref
+#
+# def update_one_product(request):
+#     try:
+#         name = request.POST.get('name')
+#         product = models.Product.objects.get(name=name)
+#     except models.Product.DoesNotExist:
+#         print("Product with id does not exist")
+
+
+# def validate_product_necessary_arguments(request):
+#     """验证商品必要的参数是否已提供
+
+#     Return:
+
+#     """
+#     try:
+#         # 商品名称验证
+#         name_pattern = r'\A\w{1,20}\Z'  # 1 到 20 个字符
+#         name = request.POST['name']
+#         result = re.match(name_pattern, name, re.UNICODE)
+#         name = True if result else False
+
+#         # 商品图片验证
+#         swipe_images = json.loads(request.POST['swipe_images'])
+#         swipe_images = True if swipe_images else False
+
+#         # 无规格商品必要参数验证
+#         if not request.POST.get('is_use_custom_model'):
+#             price = request.POST['price']
+#             weight = request.POST['weight']
+#         # 有规格商品必要参数验证
+#         else:
+#             is_custom_model_validation = True
+#             custom_model = json.loads(request.POST['customModels'])
+#             for i in customModels:
+#                 price = i['price']
+#                 weight = i['weight']
+#     except KeyError:
+#         return False
+

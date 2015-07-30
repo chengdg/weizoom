@@ -1101,17 +1101,24 @@ def send_request_to_kuaidi(order, **kwargs):
 def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
 	from mall.promotion import models as promotion_models
 	from webapp.handlers import event_handler_util
-	promotion_ids = [promotion.id for promotion in promotion_models.Promotion.objects.filter(owner_id=request.user.id, status=promotion_models.PROMOTION_STATUS_STARTED)]
+	promotions = promotion_models.Promotion.objects.filter(
+			owner_id=request.user.id, status=promotion_models.PROMOTION_STATUS_STARTED)
+	shelve_type = request.POST.get('shelve_type')
+	if not shelve_type or shelve_type != 'delete':
+		promotions = promotions.exclude(type=promotion_models.PROMOTION_TYPE_COUPON)
+	promotion_ids = [promotion.id for promotion in promotions]
 	target_product_id_set = set(product_ids)
+	print 'jz----test', target_product_id_set, '---------', promotion_ids
 
 	target_promotion_ids = []
-	relations = []
-	for relation in promotion_models.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids):
-		relations.append(relation)
+	for relation in promotion_models.ProductHasPromotion.objects.filter(
+		promotion_id__in=promotion_ids):
+		print 'jz----test', relation.product_id, relation.product_id in target_product_id_set
 		if relation.product_id in target_product_id_set:
 			target_promotion_ids.append(str(relation.promotion_id))
 
-	event_data = {
-		"id": ','.join(target_promotion_ids)
-	}
-	event_handler_util.handle(event_data, 'finish_promotion')
+	if len(target_promotion_ids) > 0:
+		event_data = {
+			"id": ','.join(target_promotion_ids)
+		}
+		event_handler_util.handle(event_data, 'finish_promotion')

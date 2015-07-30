@@ -1198,6 +1198,20 @@
 	bottom: 0;
 	padding-left: 15px;
 }
+.xui-productsPage .icon-arrow-down{
+	 background: rgba(0, 0, 0, 0) url("/static_v2/img/weixin/storing.png") no-repeat scroll 0 0;
+}
+.xui-productsPage .icon-arrow-up{
+	 background: rgba(0, 0, 0, 0) url("/static_v2/img/weixin/storingUp.png") no-repeat scroll 0 0;
+}
+.xui-productsPage [class^="icon-"] {
+    display: inline-block;
+    height: 14px;
+    line-height: 14px;
+    margin-top: 1px;
+    vertical-align: text-top;
+    width: 14px;
+}
 /*在售商品管理，多规格修改库存弹窗*/
 .xui-updateProductModelStocksDialog .modal-dialog{
 	width: 500px;

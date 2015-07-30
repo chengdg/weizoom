@@ -181,7 +181,7 @@
 					</td>
 					<td width="100">
 						{{if order.member_id > 0}}
-							<a href="/member/member_detail/edit/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+							<a target="_blank" href="/member/member_detail/edit/?id=${ order.member_id }">{{html order.buyer_name}}</a>
 						{{else}}
 							{{html order.buyer_name}}
 						{{/if}}
@@ -257,7 +257,7 @@
 				</tr>
 				{{if order.remark }}
 				<tr>
-					<td colspan="8" class="xui-remark">
+					<td colspan="8" class="xui-remark xa-remark">
 					<img src="/static_v2/img/editor/attention.jpg">卖家备注：${order.remark}
 					</td>
 				</tr>
@@ -416,7 +416,7 @@ $(document).ready(function() {
 			title: '发货',
 			position:'top',
 			isTitle: false,
-			privateContainerClass:'xui-shipDropBox'
+			privateContainerClass:'xui-shipDropBox xa-shipDropBox'
 		});
 		mallOrderShipView.show({
 			$action: $el,
@@ -440,7 +440,7 @@ $(document).ready(function() {
 			title: '备注',
 			position:'top',
 			isTitle: false,
-			privateContainerClass:'xui-remarkDropBox'
+			privateContainerClass:'xui-remarkDropBox xa-remarkDropBox'
 
 		});
 		mallOrderRemarkView.show({
@@ -498,7 +498,7 @@ $(document).ready(function() {
                     resource: 'order',
                     args: args,
                     success: function(data) {
-                        window.location.reload();
+                        $('[data-ui-role="advanced-table"]').data('view').reload();
                     },
                     error: function() {
                         }
@@ -529,7 +529,7 @@ $(document).ready(function() {
 						final_price: data.finalPrice
 					},
 					success: function(data) {
-						window.location.reload();
+						$('[data-ui-role="advanced-table"]').data('view').reload();
 					},
 					error: function(resp) {
 
@@ -563,7 +563,9 @@ $(document).ready(function() {
                     resource: 'order',
                     args: args,
                     success: function(data) {
-                        window.location.reload();
+{#                        $el.parent().prev().text("已完成");#}
+{#                        $el.parent().html('<a class="xa-applyRefund" href="javascript:void(0);">申请退款</a>');#}
+                        $('[data-ui-role="advanced-table"]').data('view').reload();
                     },
                     error: function() {
                         }
@@ -598,7 +600,8 @@ $(document).ready(function() {
                     resource: 'order',
                     args: args,
                     success: function(data) {
-                        window.location.reload();
+{#                        window.location.reload();#}
+                        $('[data-ui-role="advanced-table"]').data('view').reload();
                     },
                     error: function() {
                         }
@@ -631,7 +634,7 @@ $(document).ready(function() {
                     resource: 'order',
                     args: args,
                     success: function(data) {
-                        window.location.reload();
+                        $('[data-ui-role="advanced-table"]').data('view').reload();
                     },
                     error: function() {
                         }

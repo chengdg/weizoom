@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
-import re
+import operator
 from itertools import chain
 from django.db.models import F
-from core import paginator
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from watchdog.utils import watchdog_warning
 
+from core import paginator
 from core import resource
+from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from mall import models  # 注意不要覆盖此module
 from mall import signals as mall_signals
 from . import utils
 from mall import export
+
 
 import logging
 logger = logging.getLogger('console')
@@ -115,10 +119,9 @@ class ProductList(resource.Resource):
                 owner=request.manager,
                 is_deleted=False)
 
+        # import pdb
+        # pdb.set_trace()
         #未回收的商品
-        products = products.order_by(sort_attr)
-
-        products = list(products)
         models.Product.fill_details(request.manager, products, {
             "with_product_model": True,
             "with_model_property_info": True,
@@ -127,6 +130,19 @@ class ProductList(resource.Resource):
             'with_property': True,
             'with_sales': True
         })
+        # pdb.set_trace()
+        # products = products.order_by(sort_attr)
+        if '-' in sort_attr:
+            sort_attr = sort_attr.replace('-', '')
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
+            sort_attr = '-' + sort_attr
+        else:
+            products = sorted(products, key=operator.attrgetter('id'))
+            products = sorted(products, key=operator.attrgetter(sort_attr))
+
+
+
         products = utils.filter_products(request, products)
 
         #进行分页
@@ -212,10 +228,10 @@ class ProductList(resource.Resource):
         is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
         #商品不再处于上架状态，发出product_not_offline signal
-        if is_prev_shelve and is_not_sale:
+        if is_prev_shelve and is_not_sale or is_deleted:
             product_ids = [int(id) for id in ids]
             mall_signals.products_not_online.send(
-                sender=Product,
+                sender=models.Product,
                 product_ids=product_ids,
                 request=request
             )
@@ -336,6 +352,9 @@ class Product(resource.Resource):
         min_limit = request.POST.get('min_limit', '0')
         if not min_limit.isdigit():
             min_limit = 0
+        else:
+            min_limit = float(min_limit)
+
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -468,12 +487,15 @@ class Product(resource.Resource):
             <product, category>关系，并更新category中的product计数.
         """
 
-        # 验证商品必要参数，无则返回error
-
-
         # 获取默认运费
-        postage = None
-        swipe_images = json.loads(request.POST.get('swipe_images', '[]'))
+        source = int(request.GET.get('shelve_type', 0))
+        swipe_images = request.POST.get('swipe_images', '[]')
+        print 'jz-----', swipe_images
+        if not swipe_images:
+            url = '/mall2/product_list/?shelve_type=%d' % int(request.GET.get('shelve_type', 0))
+            return HttpResponseRedirect(url)
+        else:
+            swipe_images = json.loads(swipe_images)
         thumbnails_url = swipe_images[0]["url"]
 
         # 更新product
@@ -495,6 +517,8 @@ class Product(resource.Resource):
         min_limit = request.POST.get('min_limit', '0')
         if not min_limit.isdigit():
             min_limit = 0
+        else:
+            min_limit = float(min_limit)
         if request.POST.get('weshop_sync', None):
             models.Product.objects.record_cache_args(
                 ids=[product_id]
@@ -697,7 +721,6 @@ class Product(resource.Resource):
                 id__in=old_category_ids
             ).update(product_count=F('product_count') - 1)
 
-        source = int(request.GET.get('shelve_type', 0))
         if source == models.PRODUCT_SHELVE_TYPE_OFF:
             url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_OFF, )
             return HttpResponseRedirect(url)
@@ -707,6 +730,30 @@ class Product(resource.Resource):
         else:
             url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_RECYCLED, )
             return HttpResponseRedirect(url)
+
+    def api_post(request):
+        """根据update_type，更新对应的商品信息.
+
+        Args:
+          update_type:
+            update_pos: 更新商品位置信息
+              id: product.id
+              pos: product new position
+        """
+        try:
+            if request.POST.get('update_type', '') == 'update_pos':
+                id = request.POST.get('id')
+                pos = int(request.POST.get('pos'))
+                product = models.Product.objects.get(id=id)
+                product.move_to_position(pos)
+                response = create_response(200)
+                return response.get_response()
+        except:
+            watchdog_warning(
+                u"failed to update, cause:\n{}".format(unicode_full_stack())
+            )
+            response = create_response(500)
+            return response.get_response()
 
 
 class ProductFilterParams(resource.Resource):
@@ -790,47 +837,3 @@ class ProductModel(resource.Resource):
 
         response = create_response(200)
         return response.get_response()
-
-
-def update_one_product(request):
-    try:
-        name = request.POST.get('name')
-        product = models.Product.objects.get(name=name)
-    except models.Product.DoesNotExist:
-        print("Product with id does not exist")
-
-
-def validate_product_necessary_arguments(request):
-    """验证商品必要的参数是否已提供
-
-    Return:
-
-    """
-    try:
-        # 商品名称验证
-        name_pattern = r'\A\w{1,20}\Z'  # 1 到 20 个字符
-        name = request.POST['name']
-        result = re.match(name_pattern, name, re.UNICODE)
-        name = True if result else False
-
-        # 商品图片验证
-        swipe_images = json.loads(request.POST['swipe_images'])
-        swipe_images = True if swipe_images else False
-
-        # 无规格商品必要参数验证
-        if not request.POST.get('is_use_custom_model'):
-            price = request.POST['price']
-            weight = request.POST['weight']
-        # 有规格商品必要参数验证
-        else:
-            is_custom_model_validation = True
-            custom_model = json.loads(request.POST['customModels'])
-            for i in customModels:
-                price = i['price']
-                weight = i['weight']
-    except KeyError:
-        return False
-
-
-
-

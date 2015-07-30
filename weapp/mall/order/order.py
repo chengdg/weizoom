@@ -247,8 +247,12 @@ class OrderFilterParams(resource.Resource):
                 status.append({'name': value, 'value': key})
 
         # 来源
-        if WeizoomMallHasOtherMallProductOrder.objects.filter(
-                webapp_id=request.manager.get_profile().webapp_id).count() > 0:
+        # if WeizoomMallHasOtherMallProductOrder.objects.filter(
+        #         webapp_id=request.manager.get_profile().webapp_id).count() > 0:
+
+        orders = belong_to(request.manager.get_profile().webapp_id)
+
+        if orders.filter(order_source=ORDER_SOURCE_WEISHOP).count() >0:
             source = [{'name': u'本店', 'value': 0},
                       {'name': u'商城', 'value': 1}]
         else:

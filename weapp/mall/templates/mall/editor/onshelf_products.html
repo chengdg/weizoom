@@ -78,14 +78,15 @@
 	<table id="productListTable" class="table table-bordered table-condensed xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
 		<thead>
 			<tr>
-				<th width="308">商品信息</th>
+				<th width="260">商品信息</th>
 				<th width="100">条码</th>
 				<th width="100">分组</th>
 				<th width="105">商品价格（元）</th>
 				<th width="50">库存</th>
-				<th width="58">总销量</th>
-				<th width="120">创建时间</th>
-				<th width="110">操作</th>
+				<th width="68" class="tx_sortable" data-sort-attr="sales"><a href="javascript:;">总销量</a></th>
+				<th width="120" class="tx_sortable" data-sort-attr="created_at"><a href="javascript:;">创建时间</a></th>
+				<th width="58" class="tx_sortable" data-sort-attr="display_index"><a href="javascript:;">排序</a></th>
+				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody id='product_list'>
@@ -149,6 +150,10 @@
 					</td>
 					<td>${product.sales}</td>
 					<td>${product.created_at}</td>
+					<td style="padding:0 15px;">
+						<input width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
+						 			 value="${product.display_index}" data-display-index="${product.display_index}">
+					</td>
 					<td>
 					<div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}&shelve_type=1" class="xa-modify fl" style="width: 37px;">

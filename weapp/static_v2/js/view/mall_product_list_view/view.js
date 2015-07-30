@@ -35,6 +35,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
         'click .xa-modifyCustomModelStocks': 'onClickModifyCustomModelStocksLink',
         'blur .xa-stockInput': 'onConfirmStockInput',
         'keypress .xa-stockInput': 'onPressKeyInStockInput',
+        'blur .xa-rank': 'onBlurRank',
+        'keypress .xa-rank': 'onPressKeyRank',
         'click .xa-showAllModels': 'onClickShowAllModelsButton',
 
         'click .xa-selectAll':'onClickSelectAll',
@@ -335,7 +337,85 @@ W.view.mall.ProductListView = Backbone.View.extend({
             this.onConfirmStockInput(event);
         }
     },
+    onPressKeyRank:function(event){
+        var keyCode = event.keyCode;
+        if(keyCode === 13) {
+            this.onConfirmRankInput(event);
+        }     
+    },
+    onBlurRank:function(event){
+        var oldConfirmView = W.registry['common-popup-confirm-view'];
+        var oldPos = $.trim($(event.currentTarget).data('display-index'));
+        var rankText = $.trim($(event.currentTarget).val());
+        if(rankText == oldPos){
+            return;
+        }
+        if(!oldConfirmView || oldConfirmView.$el.css('display') == 'none'){
+            this.onConfirmRankInput(event);
+        }
+    },
+    /**
+     * onConfirmRankInput: 在排序框失去焦点时的响应函数
+     */
+    onConfirmRankInput:function(event){
+            _this = this;
+            var $link = $(event.currentTarget);
+            var rankText = $.trim($(event.currentTarget).val());/*文本框的值*/
+            var id = $.trim($(event.currentTarget).data('id'));
+            var oldPos = $.trim($(event.currentTarget).data('display-index'));
+            var updateAction = function() {
+                try{
+                    has_index.val('0').data('display-index', 0);
+                }
+                catch(e){
+                }
+                finally{
+                    W.getApi().call({
+                        method: 'post',
+                        app: 'mall2',
+                        resource: 'product',
+                        args: {
+                            update_type: 'update_pos',
+                            id: id,
+                            pos: rankText,
+                        },
+                        success: function(data){
+                           $(event.currentTarget).data('display-index', rankText).val(rankText);
+                        },
+                        error: function(response){
+                            W.showHint('error', '更新产品位置失效');
+                        }
 
+                    });
+                }
+            }
+            var has_index = false
+            var rankTextList = $(event.currentTarget).parents('tr').siblings().find('.xa-rank').each(function(i){
+                var a_rank = $.trim($(this).data('display-index'));
+                if(rankText == a_rank){
+                    has_index = $(this);
+                }
+            });
+            var cancel = function(){
+                $(event.currentTarget).val(oldPos);
+            }
+            if (has_index){
+                    var msg = "位置"+rankText+"已存在商品， 是否替换"
+                    W.requireConfirm({
+                        $el: $link,
+                        width:480,
+                        height:55,
+                        position:'top',
+                        isTitle: false,
+                        msg: msg,
+                        confirm: updateAction,
+                        cancel:cancel,
+                        minClickTime:1
+                    });
+            }else{
+                updateAction();
+            }
+    },
     /**
      * onSearch: 响应filter view抛出的search事件
      */

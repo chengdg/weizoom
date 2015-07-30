@@ -119,6 +119,7 @@ W.Api = function() {
             args['timestamp'] = new Date().getTime();
         }
         var async_val = options.async == false ? false : true;
+        _options = options;
 
 		var _this = this;
 		var options = {
@@ -130,7 +131,7 @@ W.Api = function() {
 				if (showLoading && W.getLoadingView) {
 					W.getLoadingView().hide();
 				}
-				if (W.isRequireConfirmViewDisplayed) {
+				if (!(_options.app == 'new_weixin' && _options.resource == 'outline') && W.isRequireConfirmViewDisplayed) {
 					W.finishConfirm();
 				}
 				if (resp.code !== 200) {
@@ -167,7 +168,7 @@ W.Api = function() {
 				if (showLoading && W.getLoadingView) {
 					W.getLoadingView().hide();
 				}
-				if (W.isRequireConfirmViewDisplayed) {
+				if (!(_options.app == 'new_weixin' && _options.resource == 'outline') && W.isRequireConfirmViewDisplayed) {
 					W.finishConfirm();
 				}
 				_this.reportError(url, xhr.responseText);

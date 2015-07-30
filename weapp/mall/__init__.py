@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#import signal_settings
+import signal_settings
 # import urls
 
 import config

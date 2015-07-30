@@ -77,7 +77,6 @@
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
 			<label class="">优惠券名称：</label>
-			<input type="hidden" id="promotion_status" value="0" />
 			<input type="text" class="form-control" id="name" name="name" value="" />
 		</div>
 	</div>
@@ -99,6 +98,18 @@
 	</div>
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
+			<label>促销状态：</label>
+			<select class="" id="promotion_status" name="promotion_status">
+				<option value="-1">全部</option>
+				<option value="1">未开始</option>
+				<option value="2">进行中</option>
+				<option value="3">已过期</option>
+				<option value="5">已失效</option>
+			</select>
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item ml15">
 			<label>活动时间
 			：</label>
 			<input

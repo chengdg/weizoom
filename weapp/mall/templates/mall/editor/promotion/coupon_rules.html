@@ -30,7 +30,7 @@
 	<div
 		data-ui-role="advanced-table"
 		data-app="mall2"
-		data-resource="coupon_rule_list"
+		data-resource="promotion_list"
 		data-args='{"type": "coupon"}'
 		data-template-id="#coupons_list_view"
 		data-enable-paginator="true"
@@ -100,8 +100,12 @@
 				<br/>
 				<a href="javascript:void(0);" class="xa-finish">使失效</a></span>
 				{{/if}}
-				<!--a href="#">查看</a-->
-				<p class="xui-greyColor xa-finishInfo"{{if promotion.status != '已结束' && promotion.status != '已失效'}} style="display:none;"{{/if}}>已失效</p>
+				{{if promotion.status == '已结束' }} 
+					<p class="xui-greyColor xa-finishInfo">已过期</p>
+				{{/if}}
+				{{if promotion.status == '已失效'}}
+					<p class="xui-greyColor xa-finishInfo">已失效</p>
+				{{/if}}
 			</td>
 		</tr>
 		{{/each}}

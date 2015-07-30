@@ -98,6 +98,9 @@ PROMOTION_FILTERS = {
             'comparator': lambda promotion, filter_value: filter_value in promotion.name,
             'query_string_field': 'coupon_type'
         }, {
+            'comparator': lambda promotion, filter_value: (int(filter_value) == -1) or (int(filter_value) == promotion.status),
+            'query_string_field': 'promotionStatus'
+        }, {
             'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime("%Y-%m-%d %H:%M"),
             'query_string_field': 'startDate'
         }, {

@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from modules.member import models as member_models
 from core import resource, dateutil
+from core.exceptionutil import unicode_full_stack
 from core.charts_apis import create_line_chart_response
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
@@ -125,7 +126,7 @@ class Outline(resource.Resource):
                     # date = dateutil.normalize_date(order.created_at)
                     date = order.created_at.strftime("%Y-%m-%d")
                     if order.webapp_id != webapp_id:
-                        order_price =  mall_models.Order.get_order_has_price_number(order) + order.postage
+                        order_price = mall_models.Order.get_order_has_price_number(order) + order.postage
                     else:
                         order_price = order.final_price + order.weizoom_card_money
 
@@ -153,10 +154,10 @@ class Outline(resource.Resource):
                         date_list,
                         [{
                             "name": "订单数",
-                            "values" : count_trend_values
+                            "values": count_trend_values
                         }, {
                             "name": "销售额",
-                            "values" : price_trend_values
+                            "values": price_trend_values
                         }]
                     )
             except:
@@ -198,9 +199,9 @@ class Outline(resource.Resource):
                 date_list,
                 [{
                     "name": "PV",
-                    "values" : pv_trend_values
+                    "values": pv_trend_values
                 }, {
                     "name": "UV",
-                    "values" : uv_trend_values
+                    "values": uv_trend_values
                 }]
             )

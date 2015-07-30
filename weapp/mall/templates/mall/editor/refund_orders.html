@@ -88,7 +88,7 @@
 	{{/if}}
 	<ul>
     {{each(i, order) items}}
-		<li>
+		<li data-order-id="${order.id}">
 			<table width="100%" class="table mb15 xui-table-orderDetail">
 				<tr class="xui-order-firstTr">
 					<td colspan="8">
@@ -216,7 +216,7 @@
 
 					{{if order.remark}}
 					<tr>
-						<td colspan="8" class="xui-remark">
+						<td colspan="8" class="xui-remark xa-remark">
 							<img src="/static_v2/img/editor/attention.jpg">卖家备注：${order.remark}
 						</td>
 				    </tr>
@@ -375,7 +375,7 @@ $(document).ready(function() {
 			title: '备注',
 			position:'top',
 			isTitle: false,
-			privateContainerClass:'xui-remarkDropBox'
+			privateContainerClass:'xui-remarkDropBox xa-remarkDropBox'
 
 		});
 		mallOrderRemarkView.show({

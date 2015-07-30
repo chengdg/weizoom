@@ -7,18 +7,18 @@ Copyright (c) 2011-2012 Weizoom Inc
 ensureNS('W.view.common');
 W.view.common.ConfirmView = W.view.common.DropBox.extend({
     SUBMIT_EVENT: 'submit',
-    
+
     CLOSE_EVENT: 'close',
-    
+
     isArrow: true,
-    
+
     isTitle: false,
-    
+
     events:{
         'click .xa-confirm': 'submit',
-        'click .xa-cancel': 'close'
+        'click .xa-cancel': 'hide'
     },
-    
+
     getTemplate: function() {
         var template = '<dl class="itemDeleteView wui-confirmView">'
                 +'<dd>'
@@ -46,10 +46,10 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
             this.show_icon = true;
         xlog(this.show_icon)
     },
-    
-    render: function() {        
+
+    render: function() {
     },
-    
+
     showPrivate: function(options) {
         this.$('.xa-msg').html(options.msg);
         this.$('.xa-submit').focus();
@@ -59,12 +59,12 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
             this.$content.find('i').hide();
         }
     },
-    
+
     submit: function() {
         this.$('.xa-submit').bottonLoading({status:'show'});
-        this.trigger(this.SUBMIT_EVENT);        
+        this.trigger(this.SUBMIT_EVENT);
     },
-    
+
     closePrivate: function() {
         this.$('.xa-submit').bottonLoading({status:'hide'});
         this.trigger(this.CLOSE_EVENT);
@@ -88,13 +88,17 @@ W.requireConfirm = function(options) {
     if (options.confirm) {
         view.bind(view.SUBMIT_EVENT, options.confirm);
     }
+    if(options.cancel){
+       view.bind(view.CLOSE_EVENT, options.cancel);
+    }
 
     view.show({
         width:options.width,
         height:options.height,
         $action: options.$el,
         msg: options.msg || '确定删除吗？',
-        warning_msg: options.warning_msg || ''
+        warning_msg: options.warning_msg || '',
+        minClickTime: options.minClickTime
     });
     W.isRequireConfirmViewDisplayed = true;
 };

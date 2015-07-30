@@ -52,18 +52,72 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                     'action': 'finish'
                 }
                 //window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=finish';
-                this.sendToOrder(args);
+                W.getApi().call({
+                    method: 'post',
+                    app: 'mall2',
+                    resource: 'order',
+                    args: args,
+                    success: function(data) {
+                        $(".xa-shipDropBox").hide();
+                        $('[data-ui-role="advanced-table"]').data('view').reload();
+                    },
+                    error: function() {
+                    }
+                })
+
             }else{
-                // 需要物流
-                // 向order_deliver发送信息
-                var args = {
-                    'order_id': this.orderId,
-                    'express_company_name': logistics,
-                    'express_number': logisticsOrderId,
-                    'leader_name': leaderName,
-                    'is_update_express': isUpdateExpress
-                }
-                this.sendToDelivery(args);
+                    // 需要物流
+                    // 向order_deliver发送信息
+                    var args = {
+                        'order_id': this.orderId,
+                        'express_company_name': logistics,
+                        'express_number': logisticsOrderId,
+                        'leader_name': leaderName,
+                        'is_update_express': isUpdateExpress
+                    }
+
+                    W.getApi().call({
+                        method: 'post',
+                        app: 'mall2',
+                        resource: 'delivery',
+                        args: args,
+                        success: function(data) {
+                            //$el = $(".xa-order-delivery[data-order-id=" + args['order_id'] + "]");
+                            //if (typeof($el.attr("data-express-number"))=="undefined")
+                            //{
+                            //    $el.parent().prev().text("已发货");
+                            //    $el.parent().html('<a class="xa-markFinish" href="javascript:void(0);">标记完成</a> \
+                            //            <a class="xa-cancelOrder" href="javascript:void(0);">取消订单</a> \
+                            //            <a class="xa-order-delivery" \
+                            //            data-leader-name="' + args["leader_name"] +  '" \
+                            //            data-express-number="' + args["express_number"] +  '" \
+                            //            data-express-company-name="' + args["express_company_name"] +  '" \
+                            //            data-is-update="true" \
+                            //            data-order-id="' + args["order_id"] +  '" \
+                            //            href="javascript:void(0);">修改物流</a> \
+                            //    ')
+                            //
+                            //
+                            //}
+                            //else
+                            //{
+                            //    $el.attr({
+                            //        "data-express-number" : args["express_number"],
+                            //        "data-express-company-name" : args["express_company_name"],
+                            //        "data-leader-name": args["leader_name"]
+                            //      })
+                            //}
+                            //
+                            //$(".xa-shipDropBox").hide();
+                            $(".xa-shipDropBox").hide();
+                            $('[data-ui-role="advanced-table"]').data('view').reload();
+
+                        },
+                        error: function() {
+
+                        }
+                    })
+
             }
     		// window.location.href = '/mall/editor/order_express/add/?order_id=' +
       //       this.orderId + '&=' + logistics + '&express_number=' + logisticsOrderId +
@@ -79,33 +133,9 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
         this.hide(event);
     },
 
-    sendToOrder: function(args){
-        W.getApi().call({
-            method: 'post',
-            app: 'mall2',
-            resource: 'order',
-            args: args,
-            success: function(data) {
-                window.location.reload();
-            },
-            error: function() {
-            }
-        })
-    },
 
-    sendToDelivery: function(args){
-        W.getApi().call({
-            method: 'post',
-            app: 'mall2',
-            resource: 'delivery',
-            args: args,
-            success: function(data) {
-                window.location.reload();
-            },
-            error: function() {
-            }
-        })
-    },
+
+
 
     validate: function() {
         // 是否需要物流

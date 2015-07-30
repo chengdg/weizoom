@@ -362,6 +362,7 @@ def get_categories(request):
 ########################################################################
 EXPIRE_DAYS = 10
 @login_required
+# 废弃函数
 def get_orders(request):
 	order_id = request.GET.get('order_id', '')
 	order_source = request.GET.get('source', '')
@@ -373,7 +374,8 @@ def get_orders(request):
 	webapp_id = request.user.get_profile().webapp_id
 	created_at = request.GET.get('created_at', None)
 
-	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_weizoom_mall_order_id(webapp_id)
+	weizoom_orders = Order.objects.filter(webapp_id=webapp_id,order_source=ORDER_SOURCE_WEISHOP)
+	weizoom_mall_order_ids = [order.id for order in weizoom_orders]
 
 	is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.user.id)
 	if request.user.is_weizoom_mall:

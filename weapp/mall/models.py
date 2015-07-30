@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import absolute_import
 from datetime import datetime, timedelta
 
 # from hashlib import md5
 import json
 
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Count
@@ -13,18 +14,19 @@ from django.db.models import F, Sum, Q
 from django.conf import settings
 from django.dispatch.dispatcher import receiver
 from django.utils.functional import cached_property
+
 from utils import area_util
 from core.alipay.alipay_notify import AlipayNotify
-from core.alipay.alipay_submit import AlipaySubmit
+# from core.alipay.alipay_submit import AlipaySubmit
 from core.tenpay.tenpay_submit import TenpaySubmit
-from core import upyun_util
+# from core import upyun_util
 from core.wxpay.wxpay_notify import WxpayNotify
 from account.models import UserAlipayOrderConfig
-# from webapp.modules.mall import signals as mall_signals
-import signals as mall_signals
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import *
 from tools.express import util as express_util
+from . import signals as mall_signals
+
 
 MALL_CONFIG_PRODUCT_COUNT_NO_LIMIT = 999999999
 MALL_CONFIG_PRODUCT_NORMAL = 7
@@ -140,6 +142,8 @@ PRODUCT_TYPE2TEXT = {
 	PRODUCT_DELIVERY_PLAN_TYPE: u'套餐商品',
 	PRODUCT_INTEGRAL_TYPE: u'积分商品'
 }
+MAX_INDEX = 2**16 - 1
+
 
 
 class Product(models.Model):
@@ -158,7 +162,7 @@ class Product(models.Model):
 	pic_url = models.CharField(max_length=1024)  # 商品图
 	detail = models.TextField(default='')  # 商品详情
 	remark = models.TextField(default='')  # 备注
-	display_index = models.IntegerField(default=1, db_index=True)  # 显示的排序
+	display_index = models.IntegerField(default=0, db_index=True, blank=True)  # 显示的排序
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	shelve_type = models.IntegerField(
 		default=PRODUCT_SHELVE_TYPE_OFF,
@@ -193,6 +197,33 @@ class Product(models.Model):
 		verbose_name = '商品'
 		verbose_name_plural = '商品'
 		# unique_together = ("name", "product_mode")
+
+	def move_to_position(self, pos):
+		"""将商品A移动到指定位置.如果所指定的位置存在商品B，商品B将失去位置信息， 安创建时间
+		排序. 注意仅支持1-65534之间的排序
+
+		Args:
+		  pos(int): pos >=1
+
+		Raises:
+		  IndexError: 如果排序失败
+		"""
+		if pos < 0 or pos >= MAX_INDEX:
+			raise IndexError('{} out of range [1, 65535)'.format(pos))
+		# 查看指定的位置是否存在元素
+		try:
+			obj_b = Product.objects.get(display_index=pos)
+		except ObjectDoesNotExist:
+			obj_b = None
+		except MultipleObjectsReturned:
+			obj_b = None
+
+		if obj_b:
+			obj_b.display_index = 0
+			obj_b.save()
+
+		self.display_index = pos
+		self.save()
 
 	# 填充标准商品规格信息
 	def fill_standard_model(self):
@@ -778,11 +809,15 @@ class Product(models.Model):
 		return product.custom_model_properties
 
 	# 填充所有商品规格信息
-	def fill_model(self):
+	def fill_model(self, show_delete=False):
 		standard_model = self.fill_standard_model()
 
 		if self.is_use_custom_model:
-			self.custom_models = [model for model in ProductModel.objects.filter(product=self) if (model.name != 'standard') and (not model.is_deleted)]
+			self.custom_models = ProductModel.objects.filter(
+				Q(product=self) &
+				~Q(name='standard') &
+				Q(is_deleted=show_delete)
+			)
 		else:
 			self.custom_models = []
 
@@ -1017,7 +1052,8 @@ class Product(models.Model):
 			'is_sellout': self.is_sellout,
 			'standard_model': self.standard_model,
 			'current_used_model': self.current_used_model,
-			'created_at': datetime.strftime(self.created_at, '%Y-%m-%d %H:%M')
+			'created_at': datetime.strftime(self.created_at, '%Y-%m-%d %H:%M'),
+			'display_index': self.display_index
 		}
 
 
@@ -1302,7 +1338,8 @@ class Order(models.Model):
 	"""
 	order_id = models.CharField(max_length=100)  # 订单号
 	webapp_user_id = models.IntegerField()  # WebApp用户的id
-	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp
+	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp,订单成交的店铺id
+	webapp_source_id = models.CharField(max_length=20, verbose_name='商品来源店铺ID')  # 订单内商品实际来源店铺的id
 	buyer_name = models.CharField(max_length=100)  # 购买人姓名
 	buyer_tel = models.CharField(max_length=100)  # 购买人电话
 	ship_name = models.CharField(max_length=100)  # 收货人姓名
@@ -1528,10 +1565,20 @@ class Order(models.Model):
 
 
 def belong_to(webapp_id):
-	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(
-		webapp_id)
-	return Order.objects.filter(
-		Q(webapp_id=webapp_id) | Q(order_id__in=weizoom_mall_order_ids))
+	"""
+	webapp_id为request中的商铺id
+	返回输入该id的所有Order的QuerySet
+	"""
+	if webapp_id == '3394':
+		return Order.objects.filter(webapp_id=webapp_id)
+	else:
+		return Order.objects.filter(webapp_source_id=webapp_id)
+
+
+	# weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(
+	# 	webapp_id)
+	# return Order.objects.filter(
+	# 	Q(webapp_id=webapp_id) | Q(order_id__in=weizoom_mall_order_ids))
 Order.objects.belong_to = belong_to
 #from django.db.models import signals
 # def after_save_order(instance, created, **kwargs):
@@ -2272,9 +2319,6 @@ class ExpressDelivery(models.Model):
 		verbose_name = '物流名称'
 		verbose_name_plural = '物流名称'
 
-
-# 导入signal handler
-import signal_handler
 
 class MemberProductWishlist(models.Model):
 	owner = models.ForeignKey(User)

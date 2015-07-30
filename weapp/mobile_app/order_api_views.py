@@ -60,10 +60,13 @@ def _get_order_items(user, query, filter_value, sort_attr, query_string, count_p
 		elif source_value == 0:
 			source = 'mine_mall'
 	###################################################
-	if user.is_weizoom_mall:
-		weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_orders_weizoom_mall_for_other_mall(webapp_id)
-	else:
-		weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+	# if user.is_weizoom_mall:
+	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_orders_weizoom_mall_for_other_mall(webapp_id)
+	# else:
+	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
+
+	weizoom_orders = Order.objects.filter(webapp_id=webapp_id,order_source=ORDER_SOURCE_WEISHOP)
+	weizoom_mall_order_ids = [order.id for order in weizoom_orders]
 
 	order_id_list = []
 	if source:
