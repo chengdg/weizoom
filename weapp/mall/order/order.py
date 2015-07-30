@@ -194,6 +194,7 @@ class OrderProduct(resource.Resource):
     app = "mall2"
     resource = "order_product"
 
+    @login_required
     def api_get(request):
         order_id = request.GET['order_id']
         order = Order.objects.get(id=order_id)
@@ -214,6 +215,7 @@ class OrderFilterParams(resource.Resource):
     app = "mall2"
     resource = "order_filter_params"
 
+    @login_required
     def api_get(request):
         response = create_response(200)
         # 类型
@@ -276,6 +278,7 @@ class OrderExport(resource.Resource):
     app = "mall2"
     resource = "order_export"
 
+    @login_required
     def get(request):
         orders = util.export_orders_json(request)
         return ExcelResponse(orders, output_name=u'订单列表'.encode('utf8'), force_csv=False)
@@ -285,6 +288,7 @@ class ChannelQrcodePayedOrder(resource.Resource):
     app = "mall2"
     resource = "channel_qrcode_payed_order"
 
+    @login_required
     def api_get(request):
         channel_qrcode_id = request.GET.get('id', None)
         relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)

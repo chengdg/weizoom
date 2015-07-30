@@ -104,7 +104,7 @@ class Outline(resource.Resource):
         })
         return render_to_response('mall/editor/outline.html', c)
 
-
+    @login_required
     def api_get(request):
         type = request.GET.get('type', None)
         days = request.GET.get('days', 7)
