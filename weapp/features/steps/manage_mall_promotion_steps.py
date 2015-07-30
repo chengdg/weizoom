@@ -66,7 +66,7 @@ def step_impl(context, user):
             'is_permanant_active': "true" if promotion.get('is_permanant_active', False) else "false",
         }
 
-        url = '/mall2/api/integral_sales/?_method=put'
+        url = '/mall2/api/integral_sale/?_method=put'
         response = context.client.post(url, data)
         bdd_util.assert_api_call_success(response)
 

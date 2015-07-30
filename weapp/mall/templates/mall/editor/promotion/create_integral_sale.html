@@ -155,7 +155,7 @@
 
 		<div class="tc mt20">
 			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
-			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/integral_sales/">取消创建</a>
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/integral_sale/">取消创建</a>
 		</div>
 	</form>
 </div>
@@ -357,7 +357,7 @@ $(document).ready(function() {
 		W.getApi().call({
 			method: 'put',
 			app: 'mall2',
-			resource: 'integral_sales',
+			resource: 'integral_sale',
 			args: W.toFormData(args),
 			scope: this,
 			success: function(data) {

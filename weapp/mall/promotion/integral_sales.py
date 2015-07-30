@@ -16,7 +16,7 @@ from modules.member.models import MemberGrade, IntegralStrategySttings
 
 class IntegralSales(resource.Resource):
     app = 'mall2'
-    resource = 'integral_sales'
+    resource = 'integral_sale'
     
     @login_required
     def get(request):
