@@ -150,6 +150,8 @@ class Promotion(resource.Resource):
         status = None
         if start == 'true':
             status = models.PROMOTION_STATUS_STARTED
+        elif promotion_type == models.PROMOTION_TYPE_COUPON:
+            status = models.PROMOTION_STATUS_DISABLE
         else:
             status = models.PROMOTION_STATUS_FINISHED
         models.Promotion.objects.filter(
