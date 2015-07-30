@@ -91,7 +91,7 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.order_filter @mall.order_filter.bulk_shipments
+@mall2 @mall.order_filter @mall.order_filter.bulk_shipments @jz
 Scenario: 对多个订单同时进行发货
 	jobs填写多个订单号和快递信息进行发货
 	1.填写信息正确,发货成功

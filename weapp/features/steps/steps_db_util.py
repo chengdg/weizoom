@@ -164,7 +164,8 @@ def set_order_dict(order, profile):
         integral=order.get('integral', 0),
         webapp_user_id=webapp_user_id,
         ship_name=order.get('ship_name', u'收货人'),
-        ship_tel=order.get('ship_tel', u'1333333333')
+        ship_tel=order.get('ship_tel', u'1333333333'),
+        webapp_source_id=profile.webapp_id,
     )
     order_model.product_price = 0
     if order.get('order_time'):

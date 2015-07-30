@@ -23,7 +23,7 @@ def step_impl(context, user_name):
 @then(u'{user_name}能获得优惠券规则列表')
 def step_impl(context, user_name):
     response = context.client.get(
-        '/mall2/api/coupon_rule_list/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1')
+        '/mall2/api/promotion_list/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1')
     coupon_rules = json.loads(response.content)['data']['items']
 
     actual = []
