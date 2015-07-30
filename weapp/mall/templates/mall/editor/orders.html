@@ -366,7 +366,6 @@ $(document).ready(function() {
 
 	// 获取商品
 	$('#order-products-table-tmpl-src').template('order-products-table-tmpl-src');
-    xlog('aaaaaaaaaaaaaaaa');
 	if($('[data-ui-role="advanced-table"]').length>0)// 避免没有数据时报空
 
 		$('[data-ui-role="advanced-table"]').data('view').on('table-row-expanded', function(order_id, $tr) {

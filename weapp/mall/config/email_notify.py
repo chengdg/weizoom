@@ -5,12 +5,12 @@
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.contrib.auth.decorators import login_required
 
 from core import resource
 from mall import export
 from modules.member.models import IntegralStrategySttings
 from account.models import OperationSettings, UserOrderNotifySettings
-
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.MALL_CONFIG_FIRST_NAV
@@ -19,6 +19,7 @@ class EmailNotifyList(resource.Resource):
     app = "mall2"
     resource = "email_notify_list"
 
+    @login_required
     def get(request):
         interal_strategy_settings = IntegralStrategySttings.objects.get(webapp_id=request.user_profile.webapp_id)
         operation_settings_objs = OperationSettings.objects.filter(owner=request.manager)
@@ -48,6 +49,7 @@ class EmailNotify(resource.Resource):
     app = "mall2"
     resource = "email_notify"
 
+    @login_required
     def get(request):
         status = request.GET.get('status', None)
         notify_settings = UserOrderNotifySettings.objects.filter(user=request.manager, status=status)
@@ -64,6 +66,7 @@ class EmailNotify(resource.Resource):
         })
         return render_to_response('mall/editor/edit_email_notify_setting.html', c)
 
+    @login_required
     def post(request):
         status = request.GET.get('status', None)
         emails = request.POST.get('emails', '')

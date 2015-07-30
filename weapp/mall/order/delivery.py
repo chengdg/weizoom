@@ -7,7 +7,7 @@ import mall.module_api as mall_api
 from watchdog.utils import watchdog_warning
 from core.exceptionutil import unicode_full_stack
 from core import resource
-
+from django.contrib.auth.decorators import login_required
 
 class BulkShipment(resource.Resource):
     """
@@ -16,6 +16,7 @@ class BulkShipment(resource.Resource):
     app = "mall2"
     resource = "bulk_shipment"
 
+    @login_required
     def api_post(request):
         response = create_response(200)
         file_url = request.POST.get('file_url', '')
@@ -95,6 +96,7 @@ class Delivery(resource.Resource):
     app = "mall2"
     resource = "delivery"
 
+    @login_required
     def api_post(request):
         order_id = request.POST.get('order_id', None)
         express_company_name = request.POST.get('express_company_name')
