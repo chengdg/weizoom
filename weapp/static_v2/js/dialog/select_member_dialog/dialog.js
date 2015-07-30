@@ -45,11 +45,13 @@ W.dialog.mall.SelectMemberDialog = W.dialog.Dialog.extend({
 
     renderMemberFilter: function() {
         var _this = this;
-        var args = {};
-        args.webapp_id = this.webapp_id;
+        var args = {
+            webapp_id: this.webapp_id,
+            filter_type: 'member'
+        };
         W.getApi().call({
-            app: 'mall_promotion',
-            api: 'all_vip_search_info/get',
+            app: 'mall2',
+            resource: 'issuing_coupons_filter',
             args: args,
             success: function(data){
                 var $node = $.tmpl(
