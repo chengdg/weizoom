@@ -264,11 +264,13 @@ def save_order(request):
 		})
 		event_handler_util.handle(request, 'post_save_order')
 	except Exception, e:
-		response = create_response(500)
 		stack = unicode_full_stack()
 		watchdog_error(stack, 'mall')
+		data = dict()
 		data['msg'] = u'创建订单失败，请稍后重试'
 		data['exception'] = stack
+		response = create_response(500)
+		response.data = data
 		return response.get_response()
 		
 	try:

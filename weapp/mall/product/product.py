@@ -374,9 +374,9 @@ class Product(resource.Resource):
             stocks = min_limit,
         )
         # 设置新商品显示顺序
-        product.display_index = models.Product.objects.filter(
-            owner=request.manager
-        ).order_by('-display_index').first().display_index + 1
+        # product.display_index = models.Product.objects.filter(
+        #     owner=request.manager
+        # ).order_by('-display_index').first().display_index + 1
 
         # 处理standard商品规格
         models.ProductModel.objects.create(

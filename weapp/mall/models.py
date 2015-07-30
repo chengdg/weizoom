@@ -1275,13 +1275,13 @@ class TemplateProperty(models.Model):
 
 
 ORDER_STATUS_NOT = 0  # 待支付：已下单，未付款
-ORDER_STATUS_CANCEL = 1  # 已取消：取消订单
-ORDER_STATUS_PAYED_SUCCESSED = 2  # 已支付：已下单，已付款
+ORDER_STATUS_CANCEL = 1  # 已取消：取消订单(回退销量)
+ORDER_STATUS_PAYED_SUCCESSED = 2  # 已支付：已下单，已付款，已不存此状态
 ORDER_STATUS_PAYED_NOT_SHIP = 3  # 待发货：已付款，未发货
 ORDER_STATUS_PAYED_SHIPED = 4  # 已发货：已付款，已发货
 ORDER_STATUS_SUCCESSED = 5  # 已完成：自下单10日后自动置为已完成状态
 ORDER_STATUS_REFUNDING = 6  # 退款中
-ORDER_STATUS_REFUNDED = 7  # 退款完成
+ORDER_STATUS_REFUNDED = 7  # 退款完成(回退销量)
 
 ORDER_BILL_TYPE_NONE = 0  # 无发票
 ORDER_BILL_TYPE_PERSONAL = 1  # 个人发票
