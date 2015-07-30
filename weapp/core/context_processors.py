@@ -395,7 +395,7 @@ def homepage_workspace_info(request):
 	if not request.user_profile:
 		return {}
 		
-	return {'homepage_workspace_info': 'workspace_id=%s&project_id=0&webapp_owner_id=%s' % (request.user_profile.homepage_workspace_id, request.webapp_owner_id)}
+	return {'homepage_workspace_info': 'workspace_id=home_page&webapp_owner_id=%s&workspace_id=%s&project_id=0' % (request.webapp_owner_id, request.user_profile.homepage_workspace_id)}
 		
 #===============================================================================
 # page_help_document ： 获取页面帮助文档

@@ -4,45 +4,7 @@
 {% block css %}
 <link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
 <style>
-/*html,body,.ui-page{
-    background: #efeff4;
-}*/
-/*.xui-section{
-    margin:0;
-    -webkit-border-radius:0;
-    border-radius:0;
-    border-bottom:1px solid #dfdfdd;
-    border-left: none;
-    border-right: none;
-    border-top:none;
-    box-shadow: none;
-}
-.xui-section-item{
-    border-bottom: none;
-}*/
 a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
-/*.xui-btn{
-    display: inline-block;
-    height: 42px;
-    line-height: 42px;
-    -webkit-border-radius:4px;
-    border-radius: 4px;
-    color:#fff;
-    font-size: 0.95em;
-}*/
-/*.xui-tab-wrap{
-    position:relative;
-}
-.xui-tab-fixed .xui-tab-wrap{
-    left: 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: #fff;
-    z-index: 998;
-    padding: 5px 0;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-}*/
 .xui-cf6{
     background: #f6f6f9;
 }
@@ -71,29 +33,12 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 .xui-w78{
     width: 78%;
 }
-/*.xui-poaR4{
-    position: absolute;
-    right: 4%;
-}
-.xui-poaR40{
-    position: absolute;
-    right: 40%;
-}*/
-/*.xui-pl{
-    padding-left: 3.5%;
-}
-.xui-pr{
-    padding-right: 7.5%;
-}*/
 .xui-pl15{
     padding-left: 15px!important;
 }
 .xui-pl0{
     padding: 0;
 }
-/*.xui-pb0{
-    padding-bottom: 0;
-}*/
 .xui-mb10{
     margin-bottom: 10px;
 }
@@ -103,18 +48,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 .xui-colorRed{
     background: #D10000!important;
 }
-/*.xui-productDetailPage .xui-shoppingCartBtn{
-    width: 15.625%;
-    height: 50px;
-    background-color: rgba(0,0,0,.7);
-    background-image: url(/static_v2/img/webapp/mall/shopCar.png);
-    background-position: center;
-    -webkit-background-size: 100%;
-    background-size: 100%;
-    bottom: 9px;
-    left: 8px;
-    border-radius: 0;
-}*/
 .xui-integral{
     color: #D10000;
     border-top:1px dashed #cdd1d4;
@@ -134,15 +67,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     position: absolute;
     top: 15px;
 }
-
-/*.xui-productDetailPage .xui-inner-count{
-    background: none repeat scroll 0 0 #d84738;
-    border-radius: 8px;
-    height: 16px;
-    width: auto;
-    min-width: 8px;
-    padding:0px 4px;
-}*/
 .xui-productDetailPage .xui-shoppingCartBtn .xui-shoppingCartBtn{
     width:auto;
 }
@@ -517,6 +441,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% endblock %}
 
 {% block js %}
+{% if not is_deleted_data %}
 <script type="text/javascript">
 //运费计算因子
 var postageFactor = {};
@@ -643,4 +568,5 @@ if (document.getElementById('total_count')) {
     document.getElementById('total_count').value = 1;
 }
 </script>
+{% endif %}
 {% endblock %}
