@@ -25,10 +25,14 @@ MONTH_MODE = 'month'
 RANGE_MODE = 'range'
 
 
-#===============================================================================
-# get_date_range : 获取一段时间的第一天和最后一天
-#===============================================================================
 def get_date_range(date_str, past_days, future_days=0):
+	"""
+	获取一段时间的第一天和最后一天
+	参数:
+		date_str: 基准日期 格式 '%Y-%m-%d'
+		past_days: 
+		future_days:
+	"""
 	#获取基准日期
 	cur_date = datetime.strptime(date_str, date_fmt).date()
 	

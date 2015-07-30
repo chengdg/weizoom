@@ -108,7 +108,7 @@ class Outline(resource.Resource):
     @login_required
     def api_get(request):
         type = request.GET.get('type', None)
-        days = request.GET.get('days', 7)
+        days = request.GET.get('days', 6)
         if type and type == 'purchase_trend':
             try:
                 webapp_id = request.user_profile.webapp_id
