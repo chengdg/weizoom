@@ -130,6 +130,10 @@ class ExpressPoll(object):
 
 	def _parse_result(self, result):
 		data = dict()
+		
+		if result is None or len(result) == 0:
+			return data
+
 		try:
 			data = json.loads(result)
 			watchdog_info(u'从快递100获取订单信息，data{}'.format(result), self.express_config.watchdog_type)
