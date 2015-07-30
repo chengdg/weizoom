@@ -304,7 +304,7 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 				Q(is_deleted=False) &
 				~Q(id__in=product_ids_in_weizoom_mall) &
 				~Q(type=PRODUCT_DELIVERY_PLAN_TYPE)
-			).order_by('-id', 'display_index')
+			).order_by('display_index', '-id')
 		else:
 			# other_mall_products, other_mall_product_ids = get_verified_weizoom_mall_partner_products_and_ids(webapp_id)
 			products = Product.objects.filter(

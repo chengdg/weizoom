@@ -99,7 +99,7 @@ class Promotion(models.Model):
 			# 	"id": self.id
 			# }
 			# event_handler_util.handle(event_data, 'start_promotion')
-		elif end_date <= now and (self.status == PROMOTION_STATUS_NOT_START or self.status == PROMOTION_STATUS_STARTED or self.status == PROMOTION_STATUS_DISABLE):
+		elif end_date <= now and (self.status == PROMOTION_STATUS_NOT_START or self.status == PROMOTION_STATUS_STARTED):
 			#from webapp.handlers import event_handler_util
 			self.status = PROMOTION_STATUS_FINISHED
 			# event_data = {
