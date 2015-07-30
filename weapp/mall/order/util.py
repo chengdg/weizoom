@@ -842,7 +842,7 @@ def __get_select_params(request):
                 date_interval[0] = date_interval[0] + ' 00:00:00'
 
             if " " in date_interval[1]:
-                date_interval[1] = date_interval[1] + ':00'
+                date_interval[1] = date_interval[1] + ':59'
             else:
                 date_interval[1] = date_interval[1] + ' 23:59:59'
         else:

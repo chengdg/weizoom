@@ -14,8 +14,8 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var today = new Date(); // 获取今天时间
 
         today.setTime(today.getTime()-day*24*3600*1000);
-        var begin = $.datepicker.formatDate('yy-mm-dd', today);
-        var end = $.datepicker.formatDate('yy-mm-dd', new Date());
+        var begin = $.datepicker.formatDate('yy-mm-dd 00:00', today);
+        var end = $.datepicker.formatDate('yy-mm-dd 23:59', new Date());
 
         $('#start_date').val(begin);
         $('#end_date').val(end);
