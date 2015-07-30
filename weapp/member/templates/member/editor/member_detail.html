@@ -174,7 +174,7 @@
 		        	{% if orders %}
 						{% for order in orders %}
 		        		<tr>
-			        		<td><span class="xui-color-blue"><a href="/mall/order_detail/get/?order_id={{order.id}}" target="_blank">{{order.order_id}}</a><span></td>
+			        		<td><span class="xui-color-blue"><a href="/mall2/order/?order_id={{order.id}}" target="_blank">{{order.order_id}}</a><span></td>
 			        		<td>{{ order.final_price|floatformat:"-2" }}</td>
 			        		<td>{{ order.created_at|unify_datetime }}</td>
 			        		<td>
