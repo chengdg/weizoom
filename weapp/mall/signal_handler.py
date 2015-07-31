@@ -1103,7 +1103,7 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
 	from webapp.handlers import event_handler_util
 	disable_coupon = False
 	shelve_type = request.POST.get('shelve_type')
-	if shelve_type or shelve_type == 'delete':
+	if shelve_type and shelve_type == 'delete':
 		disable_coupon = True
 
 	target_promotion_ids = []
