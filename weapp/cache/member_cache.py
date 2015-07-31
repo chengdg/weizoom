@@ -20,7 +20,7 @@ from django.db.models import signals
 def get_accounts_for_cache(openid, webapp_id):
 	def inner_func():
 		social_account = member_models.SocialAccount.objects.get(webapp_id=webapp_id, openid=openid)
-		member = member_models.Member.objects.select_related('grade').get(id=member_models.MemberHasSocialAccount.objects.filter(account=social_account)[0].member.id)
+		member = member_models.Member.objects.get(id=member_models.MemberHasSocialAccount.objects.filter(account=social_account)[0].member.id)
 		if member_models.WebAppUser.objects.filter(webapp_id=webapp_id, member_id=member.id, father_id=0).count() == 0:
 			webapp_user = member_models.WebAppUser.objects.create(webapp_id=webapp_id, member_id=member.id, father_id=0, token=member.id)			
 		else:

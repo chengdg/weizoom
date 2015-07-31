@@ -53,7 +53,7 @@ def __get_current_user_info(request, member):
 	if member.update_time.strftime("%Y-%m-%d") != today_str:
 	# 	return None
 		member_util.member_basic_info_updater(request.user_profile, member)
-		return Member.objects.select_related().get(id = member.id)
+		return Member.objects.get(id = member.id)
 	return member
 
 
