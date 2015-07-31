@@ -274,7 +274,9 @@ def update_member_basic_info(user_profile, member):
 		return None
 
 	social_account = get_member_binded_social_account(member)
+	print '999999999-------------------1'
 	social_account_info = get_social_account_info(social_account, user_profile, False)
+	print '999999999-------------------2', social_account_info
 	if social_account_info:
 		member.user_icon = social_account_info.head_img
 
