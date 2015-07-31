@@ -219,7 +219,7 @@ class ProductList(resource.Resource):
         if is_deleted:
             products.update(is_deleted=True)
         else:
-            if request.manager.id == product[0].owner_id:
+            if request.manager.id == products[0].owner_id:
                 if shelve_type != PRODUCT_SHELVE_TYPE_ON:
                     products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False)
                 else:
