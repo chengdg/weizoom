@@ -24,6 +24,7 @@ from django.shortcuts import render_to_response
 #from core.dateutil import get_today
 #from core.exceptionutil import full_stack, unicode_full_stack
 
+from datetime import datetime
 from mall.models import *
 from modules.member.models import *
 from modules.member import util as member_util
@@ -45,7 +46,12 @@ def __get_current_user_info(request, member):
 	"""
 	获取当前用户的头像和名称信息
 	"""
-	if (not member.user_icon) or ('user-1.jpg' in member.user_icon) or member.is_subscribed is False:
+
+	#if (not member.user_icon) or ('user-1.jpg' in member.user_icon) or member.is_subscribed is False:
+	today = datetime.now()
+	today_str = datetime.today().strftime('%Y-%m-%d')
+	if member.update_time.strftime("%Y-%m-%d") == today_str:
+	# 	return None
 		member_util.member_basic_info_updater(request.user_profile, member)
 		return Member.objects.select_related().get(id = member.id)
 	return member

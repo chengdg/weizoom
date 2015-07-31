@@ -265,10 +265,10 @@ def update_member_basic_info(user_profile, member):
 	if member.is_for_test:
 		return
 	#系统网络问题会员信息更新不下了 改正
-	today = datetime.now()
-	today_str = datetime.today().strftime('%Y-%m-%d')
-	if member.update_time.strftime("%Y-%m-%d") == today_str:
-		return None
+	# today = datetime.now()
+	# today_str = datetime.today().strftime('%Y-%m-%d')
+	# if member.update_time.strftime("%Y-%m-%d") == today_str:
+	# 	return None
 
 	if user_profile is None:
 		return None
