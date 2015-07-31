@@ -1389,7 +1389,7 @@ class Order(models.Model):
 		if self.coupon_id == 0:
 			return None
 		else:
-			from promotion import models as coupon_model
+			from mall.promotion import models as coupon_model
 			coupon = coupon_model.Coupon.objects.filter(id=self.coupon_id)
 			if len(coupon) == 1:
 				return coupon[0]
