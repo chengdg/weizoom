@@ -47,7 +47,7 @@ def __get_current_user_info(request, member):
 	"""
 	if (member.user_icon is None) or ('user-1.jpg' in member.user_icon) or member.is_subscribed is False:
 		member_util.member_basic_info_updater(request.user_profile, member)
-		return Member.objects.get(id = member.id)
+		return Member.objects.select_related().get(id = member.id)
 	return member
 
 
