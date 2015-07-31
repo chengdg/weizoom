@@ -51,7 +51,7 @@ def __get_current_user_info(request, member):
 	today = datetime.now()
 	today_str = datetime.today().strftime('%Y-%m-%d')
 	print '9aaaaaaaaaaaaaaaaaaaaaaaaa============', member.update_time.strftime("%Y-%m-%d") == today_str
-	if member.update_time.strftime("%Y-%m-%d") == today_str:
+	if member.update_time.strftime("%Y-%m-%d") != today_str:
 	# 	return None
 		print '=======asdfasdfasdfasf-------------'
 		member_util.member_basic_info_updater(request.user_profile, member)
