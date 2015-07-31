@@ -162,6 +162,7 @@ class ProductList(resource.Resource):
             items.append(product_dict)
 
         data = dict()
+        data['owner_id'] = request.manager.id
         response = create_response(200)
         response.data = {
             'items': items,
