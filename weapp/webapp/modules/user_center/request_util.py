@@ -52,6 +52,7 @@ def __get_current_user_info(request, member):
 	today_str = datetime.today().strftime('%Y-%m-%d')
 	if member.update_time.strftime("%Y-%m-%d") == today_str:
 	# 	return None
+		print '=======asdfasdfasdfasf-------------'
 		member_util.member_basic_info_updater(request.user_profile, member)
 		return Member.objects.select_related().get(id = member.id)
 	return member
