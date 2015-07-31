@@ -707,9 +707,9 @@ class MemberInfo(models.Model):
 	def get_member_info(member_id):
 		if member_id is None or member_id <= 0:
 			return None
-		if MemberInfo.objects.filter(member_id=member_id).count() > 0:
+		try:
 			return MemberInfo.objects.filter(member_id=member_id)[0] 
-		else:
+		except:
 			return MemberInfo.objects.create(
 					member_id=member_id,
 					name='',
