@@ -50,10 +50,8 @@ def __get_current_user_info(request, member):
 	#if (not member.user_icon) or ('user-1.jpg' in member.user_icon) or member.is_subscribed is False:
 	today = datetime.now()
 	today_str = datetime.today().strftime('%Y-%m-%d')
-	print '9aaaaaaaaaaaaaaaaaaaaaaaaa============', member.update_time.strftime("%Y-%m-%d") == today_str
 	if member.update_time.strftime("%Y-%m-%d") != today_str:
 	# 	return None
-		print '=======asdfasdfasdfasf-------------'
 		member_util.member_basic_info_updater(request.user_profile, member)
 		return Member.objects.select_related().get(id = member.id)
 	return member

@@ -265,7 +265,7 @@ def update_member_basic_info(user_profile, member):
 	if member.is_for_test:
 		return
 	#系统网络问题会员信息更新不下了 改正
-	# today = datetime.now()
+	today = datetime.now()
 	# today_str = datetime.today().strftime('%Y-%m-%d')
 	# if member.update_time.strftime("%Y-%m-%d") == today_str:
 	# 	return None
@@ -274,9 +274,7 @@ def update_member_basic_info(user_profile, member):
 		return None
 
 	social_account = get_member_binded_social_account(member)
-	print '999999999-------------------1'
 	social_account_info = get_social_account_info(social_account, user_profile, False)
-	print '999999999-------------------2', social_account_info
 	if social_account_info:
 		member.user_icon = social_account_info.head_img
 

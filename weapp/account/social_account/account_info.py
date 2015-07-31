@@ -166,7 +166,6 @@ def _get_weixin_account_info_via_api(user_profile, social_account):
 	mp_user = get_binding_weixin_mpuser(user_profile.user_id)
 	if mp_user is None:
 		return None
-	print '========================2'
 	mpuser_access_token = get_mpuser_accesstoken(mp_user)
 	if mpuser_access_token is None:
 		return None
@@ -174,7 +173,6 @@ def _get_weixin_account_info_via_api(user_profile, social_account):
 	if mp_user.is_certified and mpuser_access_token.is_active:
 		weixin_api = get_weixin_api(mpuser_access_token)
 		userinfo = weixin_api.get_user_info(social_account.openid)
-		print '========================3',userinfo
 		if userinfo is None:
 			return None
 		else:
@@ -250,7 +248,6 @@ def get_weixin_account_info(user_profile, social_account, can_use_local=True):
 
 	#需要进行方式微信api进行实时获取
 	try:
-		print '--------------------1'
 		weixin_account_info = _get_weixin_account_info_via_api(user_profile, social_account)
 	except:
 		notify_message = u"访问微信api获取微信账号基本信息失败，openid:{}, cause:\n{}".format(
@@ -269,12 +266,10 @@ def get_weixin_account_info(user_profile, social_account, can_use_local=True):
 
 #给定系统用户配置和社交账号获取社交账号的详细信息
 def get_social_account_info(social_account, user_profile, can_use_local=True):
-	print '000000000000000000------------------1'
 	if social_account is None or user_profile is None:
 		return None
 	if settings.MODE == 'develop' or social_account.is_for_test:
 		return SocialAccountInfo(None, DEFAULT_ICON, subscribe=True)
-	print '000000000000000000------------------2'
 	#判断社交账号所在平台，使用各个平台获取用户的响应
 	#api去获取社交账号的详细信息
 	social_account_info = None
