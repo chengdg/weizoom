@@ -215,14 +215,17 @@ class ProductList(resource.Resource):
         elif shelve_type == 'delete':
             is_deleted = True
 
+        products = models.Product.objects.filter(id__in=ids)
         if is_deleted:
-            models.Product.objects.filter(
-                id__in=ids
-            ).update(is_deleted=True)
+            products.update(is_deleted=True)
         else:
-            models.Product.objects.filter(
-                id__in=ids
-            ).update(shelve_type=shelve_type, is_deleted=False)
+            if request.manager.id == product[0].owner_id:
+                if shelve_type != PRODUCT_SHELVE_TYPE_ON:
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False)
+                else:
+                    products.update(shelve_type=shelve_type, is_deleted=False)
+            else:
+                products.update(weshop_status=shelve_type)
 
         is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
         is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
@@ -490,7 +493,6 @@ class Product(resource.Resource):
         # 获取默认运费
         source = int(request.GET.get('shelve_type', 0))
         swipe_images = request.POST.get('swipe_images', '[]')
-        print 'jz-----', swipe_images
         if not swipe_images:
             url = '/mall2/product_list/?shelve_type=%d' % int(request.GET.get('shelve_type', 0))
             return HttpResponseRedirect(url)
