@@ -166,7 +166,7 @@ def _get_weixin_account_info_via_api(user_profile, social_account):
 	mp_user = get_binding_weixin_mpuser(user_profile.user_id)
 	if mp_user is None:
 		return None
-	print '========================2',userinfo
+	print '========================2'
 	mpuser_access_token = get_mpuser_accesstoken(mp_user)
 	if mpuser_access_token is None:
 		return None
