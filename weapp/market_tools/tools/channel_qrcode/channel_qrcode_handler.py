@@ -69,7 +69,7 @@ class ChannelQrcodeHandler(MessageHandler):
 
 			if msg_type != None:
 				from_weixin_user = self._get_from_weixin_user(message)
-				token = self._get_token_for_weixin_user(user_profile, from_weixin_user, is_from_simulator)
+				#token = self._get_token_for_weixin_user(user_profile, from_weixin_user, is_from_simulator)
 				if msg_type == 'text' and detail:
 					if is_from_simulator:
 						return generator.get_text_response(username, message.toUserName, emotion.change_emotion_to_img(detail), username, user_profile)

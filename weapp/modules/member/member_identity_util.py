@@ -29,11 +29,11 @@ def get_request_webapp_user_by_uuid(uuid, webapp_id):
 	if (uuid is None) or (webapp_id is None):
 		return None
 
-	users = list(WebAppUser.objects.filter(token=uuid, webapp_id=webapp_id))
-	if len(users) == 0:
+	#update by bert at wechat_cache_1
+	try:
+		return WebAppUser.objects.filter(token=uuid, webapp_id=webapp_id)[0]
+	except:
 		return None
-	else:
-		return users[0]
 
 from core.alipay.alipay_notify import AlipayNotify
 from core.wxpay.wxpay_notify import WxpayNotify
