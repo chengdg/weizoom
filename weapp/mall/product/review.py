@@ -236,7 +236,7 @@ class ProductReviewList(resource.Resource):
                     review_product = mall_models.OrderHasProduct.objects.get(id=review.order_has_product_id)
                     product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
                     product.fill_specific_model(review_product.product_model_name)
-                    if product.model['user_code'] == user_code:
+                    if product.model.user_code == user_code:
                         review.product_user_code = user_code
                         product_reviews.append(review)
             else:
@@ -270,7 +270,7 @@ class ProductReviewList(resource.Resource):
                 review.product_model_name = review_product.product_model_name
                 product = webapp_cache.get_webapp_product_detail(request.webapp_owner_id, review.product_id)
                 product.fill_specific_model(review.product_model_name)
-                review.product_user_code = product.model.get('user_code', '')
+                review.product_user_code = product.model.user_code
             items.append({
                 'id': review.id,
                 'product_user_code': review.product_user_code,
