@@ -4,7 +4,7 @@ __author__ = 'liupeiyu'
 
 from cloud_user_util import *
 from models import *
-
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_js_config
 
 #===============================================================================
 # CloudSessionMiddleware : 获取当前请求的用户信息

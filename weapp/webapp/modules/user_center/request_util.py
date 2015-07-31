@@ -45,7 +45,7 @@ def __get_current_user_info(request, member):
 	"""
 	获取当前用户的头像和名称信息
 	"""
-	if (member.user_icon is None) or ('user-1.jpg' in member.user_icon):
+	if (member.user_icon is None) or ('user-1.jpg' in member.user_icon) or member.is_subscribed is False:
 		member_util.member_basic_info_updater(request.user_profile, member)
 		return Member.objects.get(id = member.id)
 	return member
@@ -73,13 +73,14 @@ def get_user_info(request):
 	`get_all_cusapps_usage_link` (实际上是 `apps.export.get_webapp_usage_link`)
 
 	"""
+
 	profile = request.user_profile
 	member = request.member
 	#member = Member.objects.get(id=request.member.id)
 	week = None
 	# TODO: 优化获取头像信息
 	member = __get_current_user_info(request, member)
-	
+	cur_request_member = member
 	member_info = MemberInfo.get_member_info(request.member.id)
 	if member_info and member_info.phone_number and len(member_info.phone_number) > 10:
 		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
@@ -104,7 +105,7 @@ def get_user_info(request):
 	market_tools = get_market_tool_webapp_usage_links(request.webapp_owner_id, request.member)
 	#添加定制化app在个人中心页面显示的"我的**"
 	# TODO: 优化，避免重复从数据库中读入
-	market_tools += get_all_cusapps_usage_link(request.webapp_owner_id, request.member)
+	#market_tools += get_all_cusapps_usage_link(request.webapp_owner_id, request.member)
 	#经验值 (bert add at 14 )
 	#grade_lists = MemberGrade.get_all_grades_list(member.webapp_id)
 	# 是否允许用微众卡？
@@ -117,9 +118,10 @@ def get_user_info(request):
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'个人中心',
 		'member': member,
-		'member_info':member_info,		
+		'member_info':member_info,
 		'request': request,
 	 	'market_tools': market_tools,
+	 	'cur_request_member':cur_request_member
 	})
 	return render_to_response('%s/user_center.html' % request.template_dir, c)
 
@@ -448,7 +450,7 @@ def get_binding_page(request):
 	page_title =  u'绑定会员'
 	if member_info.is_binded:
 		page_title =  u'绑定信息'
-		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
+		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
@@ -459,7 +461,7 @@ def get_binding_page(request):
 	})
 	if member_info.is_binded:
 		return render_to_response('%s/binding_info.html' % request.template_dir, c)
-	else:	
+	else:
 		return render_to_response('%s/binding_page.html' % request.template_dir, c)
 
 def get_binded_user_info(request):
@@ -468,7 +470,7 @@ def get_binded_user_info(request):
 	"""
 	member_info = MemberInfo.objects.get(member=request.member)
 	if member_info.is_binded:
-		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])	
+		member_info.phone =  '%s****%s' % (member_info.phone_number[:3],member_info.phone_number[-4:])
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
@@ -537,7 +539,7 @@ def get_refueling_page(request):
 					member_refueling = MemberRefueling.objects.create(member=friend_member)
 				except :
 					member_refueling = MemberRefueling.objects.filter(member=friend_member)[0]
-				
+
 
 			member_refueling_infos = MemberRefuelingInfo.objects.filter(member_refueling=member_refueling)[:15]
 
@@ -556,7 +558,7 @@ def get_refueling_page(request):
 	# 		"""
 	# 			已经符合活动要求
 	# 		"""
-			
+
 	# 		can_buy = True
 	# 		for member_refueling_has_order in MemberRefuelingHasOrder.objects.filter(member_refueling=member_refueling):
 	# 			if member_refueling_has_order.order_id and Order.objects.get(id=member_refueling_has_order.order_id):
@@ -602,4 +604,4 @@ def get_refueling_page(request):
 		'refuelinged': refuelinged
 	})
 	return render_to_response('%s/refueling_page.html' % request.template_dir, c)
-	
+
