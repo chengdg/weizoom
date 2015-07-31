@@ -8,6 +8,7 @@ import copy
 import random
 import math
 import operator
+import itertools
 
 # from itertools import chain
 
@@ -304,7 +305,7 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 				Q(is_deleted=False) &
 				~Q(id__in=product_ids_in_weizoom_mall) &
 				~Q(type=PRODUCT_DELIVERY_PLAN_TYPE)
-			).order_by('-display_index', '-id')
+			).order_by('display_index', '-id')
 		else:
 			# other_mall_products, other_mall_product_ids = get_verified_weizoom_mall_partner_products_and_ids(webapp_id)
 			products = Product.objects.filter(
@@ -312,38 +313,50 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 				Q(shelve_type=PRODUCT_SHELVE_TYPE_ON) &
 				Q(is_deleted=False) &
 				~Q(type=PRODUCT_DELIVERY_PLAN_TYPE)
-			).order_by('-display_index', '-id')
-			# if other_mall_products:
-			# 	products = list(products) + list(other_mall_products)
+			).order_by('display_index', '-id')
+
+		products_0 = products.filter(display_index=0)
+		products_not_0 = products.exclude(display_index=0)
+		products = list(itertools.chain(products_not_0, products_0))
+
 		category = ProductCategory()
 		category.name = u'全部'
 	else:
-		try:
-			if not is_access_weizoom_mall:
-				# 非微众商城
-				product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
-				other_mall_product_ids_not_checked = []
-			else:
-				product_ids_in_weizoom_mall = []
-				_, other_mall_product_ids_not_checked = get_not_verified_weizoom_mall_partner_products_and_ids(webapp_id)
+		# try:
+		if not is_access_weizoom_mall:
+			# 非微众商城
+			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
+			other_mall_product_ids_not_checked = []
+		else:
+			product_ids_in_weizoom_mall = []
+			_, other_mall_product_ids_not_checked = get_not_verified_weizoom_mall_partner_products_and_ids(webapp_id)
 
-			category = ProductCategory.objects.get(id=category_id)
-			category_has_products = CategoryHasProduct.objects.filter(category=category)
-			products = []
-			for category_has_product in category_has_products:
-				if category_has_product.product.shelve_type == PRODUCT_SHELVE_TYPE_ON:
-					product = category_has_product.product
-					#过滤已删除商品和套餐商品
-					if product.is_deleted or product.type == PRODUCT_DELIVERY_PLAN_TYPE or product.id in product_ids_in_weizoom_mall or product.id in other_mall_product_ids_not_checked or product.shelve_type != PRODUCT_SHELVE_TYPE_ON:
-						continue
-					products.append(category_has_product.product)
-			products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-			products = sorted(products, key=operator.attrgetter('display_index'), reverse=True)
-		except:
-			products = []
-			category = ProductCategory()
-			category.is_deleted = True
-			category.name = u'全部'
+		category = ProductCategory.objects.get(id=category_id)
+		category_has_products = CategoryHasProduct.objects.filter(category=category)
+		products_0 = []  # 商品排序， 过滤0
+		products_not_0 = []  # 商品排序， 过滤!0
+		for category_has_product in category_has_products:
+			if category_has_product.product.shelve_type == PRODUCT_SHELVE_TYPE_ON:
+				product = category_has_product.product
+				#过滤已删除商品和套餐商品
+				if(product.is_deleted or product.type == PRODUCT_DELIVERY_PLAN_TYPE or
+							product.id in product_ids_in_weizoom_mall or
+							product.id in other_mall_product_ids_not_checked or
+							product.shelve_type != PRODUCT_SHELVE_TYPE_ON):
+					continue
+				# # 商品排序， 过滤
+				if product.display_index == 0:
+					products_0.append(product)
+				else:
+					products_not_0.append(product)
+		products_0 = sorted(products_0, key=operator.attrgetter('id'), reverse=True)
+		products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
+		products = products_not_0 + products_0
+		# except :
+		# 	products = []
+		# 	category = ProductCategory()
+		# 	category.is_deleted = True
+		# 	category.name = u'全部'
 
 	#处理search信息
 	# if 'search_info' in options:

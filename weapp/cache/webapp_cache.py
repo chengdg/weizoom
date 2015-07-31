@@ -83,7 +83,6 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
 				raise
 			else:
 				return None
-
 	return inner_func
 
 

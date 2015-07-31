@@ -1637,7 +1637,7 @@ def edit_refueling_order(request):
 	request.should_hide_footer = True
 	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
 	# delivery_dates = request.REQUEST.get('delivery_dates', '')
-	
+
 
 	jsons = [{
 		"name": "postageFactor",

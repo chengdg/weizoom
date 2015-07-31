@@ -162,7 +162,7 @@ class Product(models.Model):
 	pic_url = models.CharField(max_length=1024)  # 商品图
 	detail = models.TextField(default='')  # 商品详情
 	remark = models.TextField(default='')  # 备注
-	display_index = models.IntegerField(default=0, db_index=True, blank=True)  # 显示的排序
+	display_index = models.IntegerField(default=0, blank=True)  # 显示的排序
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	shelve_type = models.IntegerField(
 		default=PRODUCT_SHELVE_TYPE_OFF,
