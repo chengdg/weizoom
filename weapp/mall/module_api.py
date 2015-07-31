@@ -296,24 +296,15 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	category = None
 	products = None
 	if category_id == 0:
+		products = Product.objects.filter(
+			owner_id=webapp_owner_id, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False).exclude(
+			type=PRODUCT_DELIVERY_PLAN_TYPE)
 		if not is_access_weizoom_mall:
 			# 非微众商城
 			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
-			products = Product.objects.filter(
-				Q(owner_id=webapp_owner_id) &
-				Q(shelve_type=PRODUCT_SHELVE_TYPE_ON) &
-				Q(is_deleted=False) &
-				~Q(id__in=product_ids_in_weizoom_mall) &
-				~Q(type=PRODUCT_DELIVERY_PLAN_TYPE)
-			).order_by('display_index', '-id')
-		else:
-			# other_mall_products, other_mall_product_ids = get_verified_weizoom_mall_partner_products_and_ids(webapp_id)
-			products = Product.objects.filter(
-				Q(owner_id=webapp_owner_id) &
-				Q(shelve_type=PRODUCT_SHELVE_TYPE_ON) &
-				Q(is_deleted=False) &
-				~Q(type=PRODUCT_DELIVERY_PLAN_TYPE)
-			).order_by('display_index', '-id')
+			products.exclude(id__in=product_ids_in_weizoom_mall)
+
+		products.order_by('display_index', '-id')
 
 		products_0 = products.filter(display_index=0)
 		products_not_0 = products.exclude(display_index=0)
