@@ -129,7 +129,8 @@ window.onerror = function() { // install new error handler
 	if (typeError) {
 		xlog(typeof typeError.stack);
 	}
-	if (msg.indexOf('WeixinJSBridge is not defined') >= 0){
+	if ((msg.indexOf('WeixinJSBridge') >= 0 && line <= 1) ||
+		(msg.indexOf('Script error.') >= 0 && line == 0)){
 		return;
 	}
     Logger.logJsError( msg, url, line );

@@ -120,7 +120,7 @@ def handle(request, event):
 	if settings.TASKQUEUE_ENABLED and REGISTERED_EVENTS.has_key(event):
 		# 如果event是测试的service，以Celery方式处理
 		task_name = REGISTERED_EVENTS[event]
-		print("found sepecial event '{}'".format(event))
+		# print("found sepecial event '{}'".format(event))
 		result = send_task(task_name, args=[None, event_data])
 		#print("called service: name:'{}', result:{}".format(task_name, result))
 	else:

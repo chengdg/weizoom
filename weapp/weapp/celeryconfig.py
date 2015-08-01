@@ -57,7 +57,7 @@ CELERY_DEFAULT_ROUTING_KEY = 'default'
 class MyRouter(object):
 
 	def route_for_task(self, task, args=None, kwargs=None):
-		print settings.INSTALLED_TASKS
+		# print settings.INSTALLED_TASKS
 
 		if task == 'watchdog.send':
 			return {
