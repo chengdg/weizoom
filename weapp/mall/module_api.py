@@ -298,13 +298,11 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	if category_id == 0:
 		products = Product.objects.filter(
 			owner_id=webapp_owner_id, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False).exclude(
-			type=PRODUCT_DELIVERY_PLAN_TYPE)
+			type=PRODUCT_DELIVERY_PLAN_TYPE).order_by('display_index', '-id')
 		if not is_access_weizoom_mall:
 			# 非微众商城
 			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
 			products.exclude(id__in=product_ids_in_weizoom_mall)
-
-		products.order_by('display_index', '-id')
 
 		products_0 = products.filter(display_index=0)
 		products_not_0 = products.exclude(display_index=0)
@@ -313,6 +311,7 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 		category = ProductCategory()
 		category.name = u'全部'
 	else:
+		watchdog_alert('过期的方法分支module_api.get_products_in_webapp else', type='mall')
 		# try:
 		if not is_access_weizoom_mall:
 			# 非微众商城
@@ -367,6 +366,7 @@ def get_products(webapp_id, is_access_weizoom_mall, webapp_owner_id, webapp_user
 
 	  1. search_info: 搜索
 	"""
+	watchdog_alert('过期的方法module_api.get_products', type='mall')
 	category, products = get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id, options)
 
 	for product in products:
