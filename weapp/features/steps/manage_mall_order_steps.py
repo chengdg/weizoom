@@ -276,13 +276,16 @@ def step_impl(context, user):
         order_id = order_item['id']
         buy_product_response = context.client.get(
             '/mall2/api/order_product/?version=1&order_id=%d&timestamp=1406172500320' % (order_id))
+
         buy_products = json.loads(buy_product_response.content)['data']['products']
+        actural_order['products_count'] = len(buy_products)
         buy_product_results = []
         for buy_product in buy_products:
             buy_product_result = {}
             buy_product_result['product_name'] = buy_product['name']
             buy_product_result['count'] = buy_product['count']
             buy_product_result['total_price'] = buy_product['total_price']
+            buy_product_result['img_url'] = buy_product['thumbnails_url']
             buy_product_results.append(buy_product_result)
 
         actural_order['products'] = buy_product_results

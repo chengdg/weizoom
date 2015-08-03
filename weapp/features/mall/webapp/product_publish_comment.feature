@@ -77,7 +77,7 @@ Background:
     }]
     """
    
-@ignore @mall.webapp.comment.dd
+@mall2 @mall.webapp.comment.dd
 Scenario: 1 评价包括文字与晒图
     When bill访问jobs的webapp
     And bill完成订单'1'中'商品1'的评价包括'文字与晒图'

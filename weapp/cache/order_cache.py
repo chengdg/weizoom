@@ -6,6 +6,7 @@ BDD feature: `user_center_cache.feature`
 
 
 """
+from __future__ import absolute_import
 from mall.models import *
 from mall import models as mall_models
 
