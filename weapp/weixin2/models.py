@@ -223,13 +223,6 @@ class Rule(models.Model):
 			_fill_answer_dict(answer_dict)
 		else:
 			for answer_dict in self.answer:
-				if not type(answer_dict) == dict:
-					print '===duhao test=== type of answer_dict:',type(answer_dict)
-					print '===duhao test=== answer_dict:',answer_dict
-					print '===duhao test=== self.answer:',self.answer
-					print '===duhao test=== self.patterns:',self.patterns
-					print '===duhao test=== self.owner_id:',self.owner_id
-					print '===duhao test=== self.rule_id:',self.id
 				_fill_answer_dict(answer_dict)
 
 		try:
