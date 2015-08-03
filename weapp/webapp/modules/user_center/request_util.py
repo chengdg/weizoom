@@ -264,22 +264,22 @@ def __get_organized_integral_log_list(log_list):
 
 	for log in log_list:
 		# 是否是为好友奖励
-		if __is_dueto_friend_action(log):
-			if current_friend_log_list_date == log.created_at.strftime('%Y%m%d'):
-				# 是当天日期的好友奖励日志，加入current_friend_log_list
-				current_friend_log_list = __append_current_friend_day_logs(current_friend_log_list, log)
-			else:
-				# 不是是当天日期的好友奖励日志
-				# 初始化当前好友奖励current_friend_log_list，并加入日志
-				# 更改当前日志日期
-				current_friend_log_list = __create_current_friend_day_logs(log)
-				current_friend_log_list = __append_current_friend_day_logs(current_friend_log_list, log)
-
-				organized_log_list.append(current_friend_log_list)
-				current_friend_log_list_date = log.created_at.strftime('%Y%m%d')
+		#if __is_dueto_friend_action(log):
+		if current_friend_log_list_date == log.created_at.strftime('%Y%m%d'):
+			# 是当天日期的好友奖励日志，加入current_friend_log_list
+			current_friend_log_list = __append_current_friend_day_logs(current_friend_log_list, log)
 		else:
-			# 将非好友奖励的日志，加入列表中
-			organized_log_list = __append_organized_log_list(organized_log_list, log)
+			# 不是是当天日期的好友奖励日志
+			# 初始化当前好友奖励current_friend_log_list，并加入日志
+			# 更改当前日志日期
+			current_friend_log_list = __create_current_friend_day_logs(log)
+			current_friend_log_list = __append_current_friend_day_logs(current_friend_log_list, log)
+
+			organized_log_list.append(current_friend_log_list)
+			current_friend_log_list_date = log.created_at.strftime('%Y%m%d')
+		# else:
+		# 	# 将非好友奖励的日志，加入列表中
+		# 	organized_log_list = __append_organized_log_list(organized_log_list, log)
 
 	return organized_log_list
 
