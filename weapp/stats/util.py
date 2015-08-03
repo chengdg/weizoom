@@ -291,8 +291,6 @@ def get_date2bought_member_count(webapp_id, low_date, high_date, date_formatter 
 
 	date2member_set = {}
 	for order in orders:
-		if order.type == 'test':
-			continue
 		if order.webapp_user_id != -1 and order.webapp_user_id != 0:
 			# webapp_users = WebAppUser.objects.filter(id=order.webapp_user_id)
 			# if webapp_users.count() > 0:

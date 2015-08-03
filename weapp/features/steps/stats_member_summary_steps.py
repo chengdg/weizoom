@@ -132,4 +132,3 @@ def step_impl(context, user):
 		expected.append(expected_dict)
 
 	bdd_util.assert_list(expected, actual)
-

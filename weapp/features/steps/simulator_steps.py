@@ -132,6 +132,8 @@ def step_impl(context, user, mp_user_name):
 	context.webapp_owner_id = webapp_owner_id
 	context.webapp_id = profile.webapp_id
 	__fill_member_info(context, user, openid)
+	#把会员设置为真实用户 add by duhao 2015-07-29
+	Member.objects.update(is_for_test=False)
 
 
 @when(u"{user}关注{mp_user_name}的公众号于'{date}'")
