@@ -743,7 +743,7 @@ DJANGO_HACK_PARAMS = {
 }
 
 RESOURCE_LOADED = False
-RESOURCES = ['stats', 'termite2', 'weixin2', 'mall2']
+RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
 
 
 from weapp import hack_django
