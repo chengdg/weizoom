@@ -999,14 +999,18 @@ class OAUTHMiddleware(object):
 						token = get_token_for(request.user_profile.webapp_id, weixin_user_name)
 						social_account = member_util.create_social_account(request.user_profile.webapp_id, weixin_user_name, token, SOCIAL_PLATFORM_WEIXIN)
 
-					member, response = get_member_by(request, social_account)
+					member = self.get_member_by(request, social_account)
+
+					if not member:
+						print u'------------------授权时创建会员信息失败1 %s' % weixin_user_name
+						watchdog_error(u'授权时创建会员信息失败1 %s' % weixin_user_name)
+						member = self.get_member_by(request, social_account)
+						watchdog_error(u'授权时创建会员信息失败2 %s' % weixin_user_name)						
 
 					if ('share_red_envelope' in request.get_full_path() or 'refueling' in request.get_full_path())and member:
 						if (not member.user_icon) or (not member.user_icon.startswith('http')):
 							get_user_info(weixin_user_name, access_token, member)
 					
-					if response:
-						return response
 					request.social_account = social_account
 					request.member = member
 					#处理分享链接
@@ -1015,6 +1019,69 @@ class OAUTHMiddleware(object):
 					response = self.process_current_url(request)
 					return response
 		return None
+
+
+	def get_member_by(self, request, social_account):
+		member = member_util.get_member_by_binded_social_account(social_account)
+		if member is None:
+			#创建会员信息
+			try:
+				member = member_util.create_member_by_social_account(request.user_profile, social_account)
+				member_util.member_basic_info_updater(request.user_profile, member, True)
+				#member = Member.objects.get(id=member.id)
+				#之后创建对应的webappuser
+				_create_webapp_user(member)
+				member.is_new_created_member = True
+				"""
+					不增加积分，关注时候增加积分
+				"""
+				# try:
+				# 	integral.increase_for_be_member_first(request.user_profile, member)
+				# except:
+				# 	notify_message = u"get_member_by中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+				# 			member.id, unicode_full_stack())
+				# 	watchdog_error(notify_message)
+				try:
+					name = url_helper.get_market_tool_name_from(request.get_full_path())
+					#if name:
+					if not name:
+						name = ''
+					if request:
+						MemberMarketUrl.objects.create(
+							member = member,
+							market_tool_name = name,
+							url = request.get_full_path(),
+							)
+				except:
+					notify_message = u"get_member_by中MemberMarketUrl失败，会员id:{}, cause:\n{}".format(member.id, unicode_full_stack())
+					watchdog_error(notify_message)
+
+				return member
+			except:
+				notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
+					social_account.openid, unicode_full_stack())
+				watchdog_fatal(notify_message)
+				try:
+					member = member_util.create_member_by_social_account(request.user_profile, social_account)
+					#之后创建对应的webappuser
+					_create_webapp_user(member)
+					member.is_new_created_member = True
+					# try:
+					# 	integral.increase_for_be_member_first(request.user_profile, member)
+					# except:
+					# 	notify_message = u"get_member_by中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+					# 			member.id, unicode_full_stack())
+					# 	watchdog_error(notify_message)
+					return member
+				except:
+					#response = process_to_oauth(request,weixin_mp_user_access_token)
+					#if response:
+					#	return None,response
+					return None
+
+		else:
+			member.is_new_created_member = False
+			return member
 
 	# 授权并且创建结束后进行跳转并且设置cookie 信息
 	# 删除 当前url中的fmt

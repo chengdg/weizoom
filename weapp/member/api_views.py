@@ -48,6 +48,7 @@ def __get_request_members_list(request):
 	filter_data_args = {}
 	filter_data_args['webapp_id'] = request.user_profile.webapp_id
 	filter_data_args['is_for_test'] = False
+	filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
 
 	#处理已经被选的会员
 	selected_member_ids_str = request.GET.get('selectedMemberIds',"")

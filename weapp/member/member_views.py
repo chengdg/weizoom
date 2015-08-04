@@ -45,7 +45,7 @@ def get_members(request):
 		'should_show_authorize_cover' : get_should_show_authorize_cover(request),
 		'user_tags': MemberTag.get_member_tags(webapp_id),
 		'grades': MemberGrade.get_all_grades_list(webapp_id),
-		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0).count(), 
+		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(), 
 		'status': status
 	})
 

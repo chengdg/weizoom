@@ -113,11 +113,26 @@ class MemberHandler(MessageHandler):
 
 		else:
 			member.is_subscribed = True
+			if member.status == 0:
+				try:
+					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
+					member.is_new = True
+				except:
+					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+							member.id, unicode_full_stack())
+					watchdog_error(notify_message)
+			member.status = 1				
 			member.save()
+			
+
 			member.is_new = False
 				
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
+
+		"""
+			更新头像放到celery里
+		"""
 
 		try:
 			member_basic_info_updater(request.user_profile, member)
