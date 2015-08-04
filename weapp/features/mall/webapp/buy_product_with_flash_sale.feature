@@ -1029,6 +1029,7 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 		}
 		"""
 	And jobs修改“商品5”
+	"""
 	{
 			"name": "商品5",
 			"member_price": "True",
