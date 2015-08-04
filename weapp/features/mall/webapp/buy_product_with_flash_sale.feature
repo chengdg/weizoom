@@ -104,22 +104,6 @@ Background:
 			"promotion_price": 3.1
 		}]
 		"""
-	Given bill关注jobs的公众号
-	And tom关注jobs的公众号
-	And sam关注jobs的公众号
-	Then jobs可以获得会员列表
-	"""
-		[{
-			"name": "bill",
-			"member_rank": "普通会员"
-		}, {
-			"name": "tom",
-			"member_rank": "铜牌会员"
-		}, {
-			"name": "sam",
-			"member_rank": "银牌会员"
-		}]
-	"""
 	#会员等级
 	When jobs添加会员等级
 		"""
@@ -157,6 +141,23 @@ Background:
 			"shop_discount": "70%"
 		}]
 		"""
+	Given bill关注jobs的公众号
+	And tom关注jobs的公众号
+	And sam关注jobs的公众号
+	Then jobs可以获得会员列表
+	"""
+		[{
+			"name": "bill",
+			"member_rank": "普通会员"
+		}, {
+			"name": "tom",
+			"member_rank": "铜牌会员"
+		}, {
+			"name": "sam",
+			"member_rank": "银牌会员"
+		}]
+	"""
+
 
 
 @mall2 @mall.promotion @mall.webapp.promotion
@@ -730,6 +731,7 @@ Scenario:12 不同等级的会员购买有会员价同时有限时抢购的商�
 			"promotion_price": 11.5
 		}]
 	"""
+	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
 		{
@@ -759,7 +761,8 @@ Scenario:12 不同等级的会员购买有会员价同时有限时抢购的商�
 			}]
 		}
 		"""
-	When tom购买jobs的商品
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
 		"""
 		{
 			"products": [{
@@ -818,6 +821,7 @@ Scenario:13 不同等级的会员购买有会员价同时有会员等级限时�
 			"promotion_price": 50.0
 		}]
 	"""
+	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
 		{
@@ -839,15 +843,12 @@ Scenario:13 不同等级的会员购买有会员价同时有会员等级限时�
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
-				"count": 2,
-				"promotion": {
-					"promotioned_product_price": 100.0,
-					"type": "flash_sale"
-				}
+				"count": 2
 			}]
 		}
 		"""
-	When tom购买jobs的商品
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
 		"""
 		{
 			"products": [{
@@ -868,15 +869,12 @@ Scenario:13 不同等级的会员购买有会员价同时有会员等级限时�
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
-				"count": 2,
-				"promotion": {
-					"promotioned_product_price": 100,
-					"type": "flash_sale"
-				}
+				"count": 2
 			}]
 		}
 		"""
-	When sam购买jobs的商品
+	When sam访问jobs的webapp
+	And sam购买jobs的商品
 		"""
 		{
 			"products": [{
@@ -935,6 +933,7 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 			"promotion_price": 50.0
 		}]
 	"""
+	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
 		{
@@ -956,15 +955,12 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
-				"count": 2,
-				"promotion": {
-					"promotioned_product_price": 100.0,
-					"type": "flash_sale"
-				}
-			}]
+				"count": 2
+				}]
 		}
 		"""
-	When tom购买jobs的商品
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
 		"""
 		{
 			"products": [{
@@ -985,15 +981,13 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
-				"count": 2,
-				"promotion": {
-					"promotioned_product_price": 100,
-					"type": "flash_sale"
+				"count": 2
 				}
 			}]
 		}
 		"""
-	When sam购买jobs的商品
+	When sam访问jobs的webapp
+	And sam购买jobs的商品
 		"""
 		{
 			"products": [{
@@ -1034,6 +1028,25 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 			"订单积分抵扣上限": 50
 		}
 		"""
+	And jobs修改“商品5”
+	{
+			"name": "商品5",
+			"member_price": "True",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"M": {
+						"price": 40.00,
+						"stock_type": "无限"
+					},
+					"S": {
+						"price": 40.00,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}]
+		"""
 
 
 	When jobs创建限时抢购活动
@@ -1054,7 +1067,8 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 	Then tom在jobs的webapp中拥有100会员积分
 	When sam获得jobs的100会员积分
 	Then sam在jobs的webapp中拥有100会员积分
-	When bill购买jobs的商品
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
 		"""
 		{
 			"integral_money":40.00,
@@ -1093,7 +1107,8 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 		}
 		"""
 	Then bill在jobs的webapp中拥有20会员积分
-	When tom购买jobs的商品
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
 		"""
 		{
 			"integral_money":36.00,
@@ -1132,7 +1147,8 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 		}
 		"""
 	Then tom在jobs的webapp中拥有28会员积分
-	When sam购买jobs的商品
+	When sam访问jobs的webapp
+	And sam购买jobs的商品
 		"""
 		{
 			"integral_money":10.00,
@@ -1156,7 +1172,7 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 			"product_price": 20.00,
 			"promotion_saved_money":0.00,
 			"postage": 0.00,
-			"integral_money":40.00,
+			"integral_money":10.00,
 			"integral":20.00,
 			"coupon_money":0.00,
 			"products": [{
