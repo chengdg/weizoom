@@ -97,7 +97,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall @mall2 @mall.webapp @zy_bp01
+@mall2 @mall.webapp @zy_bp01
 Scenario: 购买单个商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs添加的商品
@@ -135,7 +135,7 @@ Scenario: 购买单个商品
 		"""
 
 
-@mall @mall.webapp @mall2 @zy_bp02
+@mall.webapp @mall2 @zy_bp02
 Scenario: 购买商品时，使用订单备注
 	bill在购买jobs添加的商品时
 	1. 添加了"订单备注"，则jobs能在管理系统中看到该"订单备注"
@@ -186,7 +186,7 @@ Scenario: 购买商品时，使用订单备注
 		}
 		"""
 
-@mall @mall.webapp @mall2 @zy_bp03
+@mall.webapp @mall2 @zy_bp03
 Scenario: 购买有规格的商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs添加的商品
@@ -227,7 +227,7 @@ Scenario: 购买有规格的商品
 		"""
 
 
-@mall @mall.webapp @mall2 @zy_bp04
+@mall.webapp @mall2 @zy_bp04
 Scenario: 购买已经下架的商品
 	bill可能会在以下情景下购买已下架的商品A：
 	1. bill打开商品A的详情页面
@@ -249,7 +249,7 @@ Scenario: 购买已经下架的商品
 		"""
 	Then bill获得错误提示'商品已下架<br/>2秒后返回商城首页'
 
-@mall @mall.webapp @mall2 @zy_bp05
+@mall.webapp @mall2 @zy_bp05
 Scenario: 购买的商品数量等于库存数量
 	jobs添加有限商品后
 	1. bill能在webapp中购买jobs添加的商品
@@ -295,7 +295,7 @@ Scenario: 购买的商品数量等于库存数量
 		}
 		"""
 
-@mall @mall.webapp @mall2 @zy_bp06
+@mall.webapp @mall2 @zy_bp06
 Scenario:购买库存不足的商品
 	bill可能会在以下情景下购买库存不足的商品A：
 	1. bill打开商品A的详情页面
@@ -332,7 +332,7 @@ Scenario:购买库存不足的商品
 		}
 		"""
 
-@mall @mall.webapp @mall2 @zy_bp07
+@mall.webapp @mall2 @zy_bp07
 Scenario:货到付款的商品有两种支付方式
 	bill购买jobs配有'货到付款'的商品时
 	1.bill可以使用'在线支付'进行支付
@@ -351,7 +351,7 @@ Scenario:货到付款的商品有两种支付方式
 	Then bill'能'使用支付方式'微众卡支付'进行支付
 	Then bill'能'使用支付方式'货到付款'进行支付
 
-@mall @mall.webapp @mall2 @zy_bp08
+@mall.webapp @mall2 @zy_bp08
 Scenario:没有货到付款的商品只有一种支付方式
 	bill购买jobs没有配'货到付款'的商品时
 	1.bill可以使用'在线支付'进行支付
@@ -373,6 +373,7 @@ Scenario:没有货到付款的商品只有一种支付方式
 
 
 #后续补充.雪静
+@mall.webapp @mall2 @zy_bp09
 Scenario: 购买库存为零的商品
 	bill可能会在以下情景下购买库存不足的商品A：
 	1. bill打开商品A的详情页面
@@ -408,8 +409,9 @@ Scenario: 购买库存为零的商品
 		"""
 		{
 			"products": [{
-				"name": "商品5"
+				"name": "商品5",
+				"count": 1
 			}]
 		}
 		"""
-	Then bill获得提示'商品已售罄,非常抱歉'
+	Then bill获得错误提示'有商品库存不足<br/>2秒后返回购物车<br/>请重新下单'

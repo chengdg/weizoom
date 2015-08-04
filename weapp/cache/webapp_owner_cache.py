@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
-
-import time
-from datetime import timedelta, datetime, date
-import urllib, urllib2
-import os
-import json
-import shutil
-
-from django.conf import settings
-from django.contrib.auth.models import User
+from __future__ import absolute_import
 
 from utils import cache_util
 import cache

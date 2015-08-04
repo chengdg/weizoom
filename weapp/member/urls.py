@@ -42,5 +42,7 @@ from django.conf.urls import *
 import member_views
 import api_views
 
+import member_grade
+
 urlpatterns = patterns('',
 )

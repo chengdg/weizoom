@@ -434,6 +434,10 @@ class Member(models.Model):
 	def get_webapp_user_ids(self):
 		return [webapp_user.id for webapp_user in WebAppUser.objects.filter(member_id=self.id)]
 
+	@property
+	def discount(self):
+		return 1
+
 	@staticmethod
 	def from_webapp_user(webapp_user):
 		if (webapp_user is None) or (not webapp_user.is_member):
@@ -689,7 +693,7 @@ class MemberInfo(models.Model):
 	qq_number = models.CharField(max_length=13, blank=True)
 	weibo_nickname = models.CharField(max_length=16, verbose_name='微博昵称')
 	member_remarks = models.TextField(max_length=1024, blank=True)
-	#new add by bert 
+	#new add by bert
 	is_binded = models.BooleanField(default=False)
 	session_id = models.CharField(max_length=1024, blank=True)
 	captcha = models.CharField(max_length=11, blank=True) #验证码
@@ -708,7 +712,7 @@ class MemberInfo(models.Model):
 		if member_id is None or member_id <= 0:
 			return None
 		try:
-			return MemberInfo.objects.filter(member_id=member_id)[0] 
+			return MemberInfo.objects.filter(member_id=member_id)[0]
 		except:
 			return MemberInfo.objects.create(
 					member_id=member_id,
@@ -718,7 +722,7 @@ class MemberInfo(models.Model):
 					)
 	@staticmethod
 	def is_can_binding(phone_number, member_id, webapp_id):
-		return not MemberInfo.objects.filter(member__webapp_id=webapp_id, is_binded=True, phone_number=phone_number).count() > 0 
+		return not MemberInfo.objects.filter(member__webapp_id=webapp_id, is_binded=True, phone_number=phone_number).count() > 0
 
 
 
@@ -1227,7 +1231,7 @@ class MemberRefuelingInfo(models.Model):
 		db_table = 'member_refueling_info'
 		verbose_name = '加油分享活动信息'
 		verbose_name_plural = '加油分享活动信息'
-		unique_together = ('member_refueling', 'follow_member')		
+		unique_together = ('member_refueling', 'follow_member')
 
 class MemberRefuelingHasOrder(models.Model):
 	member_refueling = models.ForeignKey(MemberRefueling)

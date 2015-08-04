@@ -359,16 +359,10 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	# 	data['is_use_integral'] = 'true'
 	# 	data['integral'] = get_use_integral(webapp_user_name, context.webapp_id, data)
 
-	# 访问下订单的API
-	# print("*"*80, "consumer buy producer goods")
-	# from pprint(import pprint)
-	# pprint(data)
-	# print("*"*120)
-
 	response = context.client.post(url, data)
 	context.response = response
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
-	
+
 	# print 'post data ------------', data
 	response_json = json.loads(context.response.content)
 	# print 'response json----------', response_json
@@ -376,13 +370,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#	print 'response error message ---------------', response_json['data']['msg']
 	# if response_json['data'].get('detail', None):
 	#	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
-	
-	# raise '----------------debug test----------------------'
 
-	# print("*"*80, "bill购买jobs的商品")
-	# from pprint(import pprint)
-	# pprint(response_json['data'])
-	# print("*"*120)
+	# raise '----------------debug test----------------------'
 
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
@@ -439,12 +428,12 @@ def step_impl(context, webapp_owner_name):
 				tmp = int(row['integral'])
 			except:
 				pass
-			
+
 			if tmp > 0:
 				# 先为会员赋予积分,再使用积分
 				context.execute_steps(u"when %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
 				data['products'][0]['integral'] = row['integral']
-		
+
 		if row.get('coupon', None) and ',' in row['coupon']:
 			coupon_name, coupon_id = row['coupon'].strip().split(',')
 			coupon_dict = {}
@@ -454,14 +443,14 @@ def step_impl(context, webapp_owner_name):
 			context.coupon_list = coupon_list
 			context.execute_steps(u"when %s领取%s的优惠券" % (webapp_user_name, webapp_owner_name))
 			data['coupon'] = coupon_id
-		
+
 		if row.get('weizoom_card', None) and ',' in row['weizoom_card']:
 			card_name, card_pass = row['weizoom_card'].strip().split(',')
 			card_dict = {}
 			card_dict['card_name'] = card_name
 			card_dict['card_pass'] = card_pass
 			data['weizoom_card'] = [ card_dict ]
-			
+
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
 

@@ -339,6 +339,7 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 					products_0.append(product)
 				else:
 					products_not_0.append(product)
+		# 处理商品排序
 		products_0 = sorted(products_0, key=operator.attrgetter('id'), reverse=True)
 		products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 		products = products_not_0 + products_0

@@ -108,30 +108,13 @@ def get_productcategory(request):
 # list_products: 显示"商品列表"页面
 ########################################################################
 def list_products(request):
-	profile = request.user_profile
-	webapp_owner_id = profile.user_id
+	# 得到会员对应的折扣
+	# discount = get_member_discount(member)
+
 	category_id = int(request.GET.get('category_id', 0))
-	query = request.GET.get('query', None)
-	options = {
-		'search_info': {
-			'query': query
-		}
-	}
 
 	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
-	#5/0
-
-	#product_categories = ProductCategory.objects.filter(owner_id=request.webapp_owner_id)
-	#category, products = mall_api.get_products(profile.webapp_id, request.is_access_weizoom_mall, webapp_owner_id, request.webapp_user, category_id, options)
-
-	#Product.fill_display_price(products)
-
-	# 列表页中的价格显示会员价格
-	# add by liupeiyu to 19.0
-	#for product in products:
-	#	product.display_price, _ = request.webapp_user.get_discounted_money(product.display_price, product_type=product.type)
-
 	has_category = False
 	if len(product_categories) > 0:
 		has_category = True
@@ -152,6 +135,7 @@ def list_products(request):
 	else:
 		return render_to_response('%s/products_original.html' % request.template_dir, c)
 
+
 #added by chuter
 def _get_has_deleted_product_response(request, webapp_user, product):
 	#获得购物车数量
@@ -166,84 +150,6 @@ def _get_has_deleted_product_response(request, webapp_user, product):
 		'is_enable_get_coupons': settings.IS_IN_TESTING
 	})
 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
-
-
-########################################################################
-# get_product: 显示“商品详情”页面
-########################################################################
-def get_product(request):
-	product_id = request.GET['rid']
-	webapp_user = request.webapp_user
-
-	member_grade_id = request.member.grade_id if request.member else None
-	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
-	#product.fill_model()
-
-	if product.is_deleted:
-		c = RequestContext(request, {
-			'is_deleted_data': True
-		})
-		return render_to_response('%s/product_detail.html' % request.template_dir, c)
-
-
-	if product.promotion:
-		product.promotion['is_active'] = product.promotion_model.is_active
-	jsons = [{
-		"name": "models",
-		"content": product.models
-	}, {
-		'name': 'priceInfo',
-		'content': product.price_info
-	}, {
-		'name': 'promotion',
-		'content': product.promotion
-	}]
-	#获得运费计算因子
-	#postage_factor = mall_util.get_postage_factor(request.webapp_owner_id, product=product)
-
-	###################################################
-	non_member_followurl = None
-	if request.user.is_weizoom_mall:
-		product.is_can_buy_by_product(request)
-		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
-		otherSettings = OperationSettings.objects.get(owner = otherProfile.user)
-		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
-			non_member_followurl = otherSettings.weshop_followurl
-
-			# liupeiyu 记录点击关注信息
-			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product.id, product.owner.id)
-
-	request.should_hide_footer = True
-
-	usable_integral = request.member.integral if request.member else 0
-	use_integral = request.member.integral if request.member else 0
-
-	is_non_member = True if request.member else False
-
-	c = RequestContext(request, {
-		'page_title': product.name,
-		'product': product,
-		'jsons': jsons,
-		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
-		'is_enable_get_coupons': settings.IS_IN_TESTING,
-		'model_property_size': len(product.product_model_properties),
-		# 'postage_factor': json.dumps(product.postage_factor),
-		'hide_non_member_cover': True,
-		'non_member_followurl': non_member_followurl,
-		'price_info': product.price_info,
-		'usable_integral': usable_integral,
-		'use_integral': use_integral,
-		'is_non_member': is_non_member,
-		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
-		#add by bert 增加分享时显示信息
-		'share_page_desc':product.name,
-		'share_img_url':product.thumbnails_url
-	})
-
-	if hasattr(request, 'is_return_context'):
-		return c, product
-	else:
-		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 
 ########################################################################
