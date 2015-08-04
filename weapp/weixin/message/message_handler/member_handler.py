@@ -113,7 +113,7 @@ class MemberHandler(MessageHandler):
 
 		else:
 			member.is_subscribed = True
-			if member.status == 0:
+			if member.status == NOT_SUBSCRIBED:
 				try:
 					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 					member.is_new = True
@@ -121,7 +121,7 @@ class MemberHandler(MessageHandler):
 					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
 							member.id, unicode_full_stack())
 					watchdog_error(notify_message)
-			member.status = 1				
+			member.status = SUBSCRIBED
 			member.save()
 			
 

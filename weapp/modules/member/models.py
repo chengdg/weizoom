@@ -394,9 +394,9 @@ SOURCE_MEMBER_QRCODE = 1  # 推广扫码
 SOURCE_BY_URL = 2  # 会员分享
 
 #status  会员状态
-NOT_SUBSCRIBED = 0
+CANCEL_SUBSCRIBED = 0
 SUBSCRIBED = 1
-CANCEL_SUBSCRIBED = 2
+NOT_SUBSCRIBED = 2
 class Member(models.Model):
 	token = models.CharField(max_length=255, db_index=True, unique=True)
 	webapp_id = models.CharField(max_length=16, db_index=True)
