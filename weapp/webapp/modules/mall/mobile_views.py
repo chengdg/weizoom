@@ -35,10 +35,9 @@ def list_coupons(request):
 # 	return request_util.get_productcategory(request)
 
 
-########################################################################
-# list_products: 显示"商品列表"页面
-########################################################################
 def list_products(request):
+	"""显示"商品列表"页面
+	"""
 	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	category_id = int(request.GET.get('category_id', 0))
 	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
