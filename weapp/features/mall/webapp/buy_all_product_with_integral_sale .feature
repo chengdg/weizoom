@@ -393,7 +393,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 				"price": 100.00,
 				"member_price": true,
 			}]
-		"""	
+		"""
 
 	And	tom1关注jobs的公众号
 	And	tom2关注jobs的公众号
@@ -413,7 +413,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			"shop_discount": "70%"
 		}]
 		"""
-	Given jobs已获取会员列表
+ Given jobs已获取会员列表
 	|name     | name_rank    |
 	|tom1     |普通会员      |
 	|tom2     |铜牌会员      |
