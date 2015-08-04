@@ -766,9 +766,9 @@ class MemberFollowRelation(models.Model):
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
 
 			if is_from_qrcode:
-				return Member.objects.filter(id__in=follow_member_ids,source=SOURCE_MEMBER_QRCODE)
+				return Member.objects.filter(id__in=follow_member_ids,source=SOURCE_MEMBER_QRCODE,status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 			else:
-				return Member.objects.filter(id__in=follow_member_ids)
+				return Member.objects.filter(id__in=follow_member_ids, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 		except:
 			return []
 

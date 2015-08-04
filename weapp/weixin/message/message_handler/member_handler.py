@@ -112,8 +112,12 @@ class MemberHandler(MessageHandler):
 					watchdog_error(notify_message)
 
 		else:
-			member.is_subscribed = True
-			if member.status == NOT_SUBSCRIBED:
+			status = member.status
+			member.is_subscribed = True			
+			member.status = SUBSCRIBED
+			member.save()
+
+			if status == NOT_SUBSCRIBED:
 				try:
 					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 					member.is_new = True
@@ -121,8 +125,10 @@ class MemberHandler(MessageHandler):
 					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
 							member.id, unicode_full_stack())
 					watchdog_error(notify_message)
-			member.status = SUBSCRIBED
-			member.save()
+				"""
+				TODO:
+					 更新好友数量
+				"""	
 			
 
 			member.is_new = False
