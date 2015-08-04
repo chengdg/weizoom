@@ -1,4 +1,4 @@
-#By---师帅
+# __author__ : "师帅"
 Feature:product_batch_shelves
 		Jobs能通过管理系统在商城中对“商品”进行批量上架，批量下架
 
