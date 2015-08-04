@@ -1,4 +1,6 @@
-# FAQ
+**云商通(Weapp)系统**
+
+# FAQ #
 
 **问：如何rebuild本地环境？**
 
@@ -42,8 +44,12 @@ python manage.py sqldiff --old old.sql --new new.sql
 mysql -u xxx -p weapp < migrate.sql
 ```
 
+# 参考资料 #
 
-# 积分测试用例
+* [Weapp Wiki文档](http://wiki.weizoom.com/weapp)
+* [Web开发指南](http://git.weizzz.com:8082/weizoom/DevGuide/tree/master)
+
+# 积分测试用例(deprecated) #
 
 ```
 水晶虾仁
