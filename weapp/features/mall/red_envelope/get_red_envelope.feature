@@ -834,6 +834,7 @@ Scenario: 不同等级的会员购买有会员价同时有分享红包设置的�
 		}]
 		"""
 	Then jobs可以获得会员列表
+		"""
 		[{
 			"name": "tom",
 			"member_rank": "普通会员"
