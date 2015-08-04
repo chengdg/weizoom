@@ -37,7 +37,6 @@ def get_members(request):
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
 	status = request.GET.get('status' , '-1')
-	print '==============',Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count()
 	c = RequestContext(request, {
 		'first_nav_name': export.MEMBER_FIRST_NAV,
 		'second_navs': export.get_second_navs(request),
