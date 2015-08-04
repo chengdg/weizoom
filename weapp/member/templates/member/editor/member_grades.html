@@ -52,12 +52,12 @@
                             </div>
 						</td>
 
-                        <td class="td-auto-update">
+                        <td class="td-auto-upgrade">
 							<div>
                                 {% if grade.is_auto_upgrade %}
-                                    <input type="checkbox" class="xa-auto-update" checked value="true">自动升级
+                                    <input type="checkbox" class="xa-auto-upgrade" checked value="true">自动升级
                                 {% else %}
-                                    <input type="checkbox" class="xa-auto-update" value="false">自动升级
+                                    <input type="checkbox" class="xa-auto-upgrade" value="false">自动升级
                                 {% endif %}
 							</div>
                             <div class="errorHint" >
@@ -70,9 +70,9 @@
 								所有关注过您的公众号的用户
 							{% else %}
 								<div class="xui-td-left"><div><span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-money"  id="grade_money_term_{{grade.id}}" name="grade_money_term_{{grade.id}}" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-								<div><span class="xui-td-span">购买次数：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+								<div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
 								<div><span class="xui-td-span">
-								活动积分：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-integral"  id="grade_integral_term_{{grade.id}}" name="grade_integral_term_{{grade.id}}" placeholder="" value="{{ grade.integral }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div>
+								经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-bound"  id="grade_bound_term_{{grade.id}}" name="grade_bound_term_{{grade.id}}" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div>
 							   </div>
 							    </div>
 							{% endif %}
@@ -82,7 +82,7 @@
 						<td class="td-thrid">
 
 							<div class="controls">
-                                <div><span class="xui-td-span"></span><input type="text" class="form-control fr xui-input xa-discount"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ shop_discount }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                <div><span class="xui-td-span"></span><input type="text" class="form-control fr xui-input xa-discount"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>折<div class="errorHint" data-error-hint="请输入数字"></div></div>
 							</div>
 						</td>
 						<td class="td-fouth">{% if grade.is_default_grade %}
@@ -134,7 +134,7 @@
             //var data_id = $(".domain_data").last().attr('data-id');
             data_id = parseInt(data_id) + 1;
             var new_data_id = parseInt(data_id) + 1;
-            $(".tags_tbody .last_tr").before('<tr data-id="' + new_data_id + '" class="domain_data"><td class="w150"><div><input data-validate="required-none::不能为空" type="text" class="form-control xui-grade xa-grade-name"  id="grade_id_' + new_data_id + '" name="grade_id_' + new_data_id + '" placeholder="" value="{{ grade.name }}" maxlength="100"/><div class="errorHint"></div></div></td><td> <div class="xui-td-left">  <div> <span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_money_term_' + new_data_id + '" name="grade_money_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div><div> <span class="xui-td-span">购买次数：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_paytimes_term_' + new_data_id + '" name="grade_paytimes_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div><div><span class="xui-td-span">活动积分：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_integral_term_' + new_data_id + '" name="grade_integral_term_' + new_data_id + '" placeholder="" value="{{ grade.integral }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div></div> <div class="xui-td-right"><p class="xui-p">满足任一条件即可</p></div> </td><td><a href="javascript:void(0);" class="delete_tr">删除</a></td></tr>');
+            $(".tags_tbody .last_tr").before('<tr data-id="' + new_data_id + '" class="domain_data"><td class="w150"><div><input data-validate="required-none::不能为空" type="text" class="form-control xui-grade xa-grade-name"  id="grade_id_' + new_data_id + '" name="grade_id_' + new_data_id + '" placeholder="" value="{{ grade.name }}" maxlength="100"/><div class="errorHint"></div></div></td><td> <div class="xui-td-left">  <div> <span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_money_term_' + new_data_id + '" name="grade_money_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div><div> <span class="xui-td-span">购买次数：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_paytimes_term_' + new_data_id + '" name="grade_paytimes_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div><div><span class="xui-td-span">活动积分：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_bound_term_' + new_data_id + '" name="grade_bound_term_' + new_data_id + '" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div></div> <div class="xui-td-right"><p class="xui-p">满足任一条件即可</p></div> </td><td><a href="javascript:void(0);" class="delete_tr">删除</a></td></tr>');
 
         });
 
@@ -148,42 +148,45 @@
 
 
         $('body').delegate('.xa-submit', 'click', function (event) {
-
+            if (!W.validate()) {
+                $(".xa-error-hint").show();
+                return false;
+            }
             var tr_list = $("tr.domain_data");
             tmp_money = 0;
             tmp_paytimes = 0;
-            tmp_integral = 0;
-            tmp_discount = $(tr_list[0]).find('input.xa-discount').attr("value");
+            tmp_bound = 0;
+{#            tmp_discount = $(tr_list[0]).find('input.xa-discount').attr("value");#}
 
             xlog("99999999999999999999999999999999");
-            xlog(tmp_discount);
+{#            xlog(tmp_discount);#}
 
             console.log("------------------------_---------------------------");
             var grades = [];
             tr_list.each(function () {
-                var id =111;
+                var id =$(this).attr("data-id");
                 var name = $(this).find('input.xa-grade-name').attr("value");
-                var auto_update = $(this).find('input.xa-auto-update').attr("value");
+                var is_auto_upgrade = $(this).find('input.xa-auto-upgrade').attr("value");
 
                 var money = $(this).find('input.xa-money').attr("value");
                 var paytimes = $(this).find('input.xa-paytimes').attr("value");
-                var integral = $(this).find('input.xa-integral').attr("value");
+                var bound = $(this).find('input.xa-bound').attr("value");
                 var discount = $(this).find('input.xa-discount').attr("value");
-                console.log(name, auto_update, money, paytimes, integral, integral, discount);
+                console.log(id,name, is_auto_upgrade, money, paytimes, bound, discount);
 
                 xlog("######")
                 console.log(money,"uuu",tmp_money);
                 console.log(money);
                 if(money<tmp_money){
                     console.log("<<<<<<<<");
-                    $("xa-error-hint").show();
-                    return false;
+                    $(".xa-error-hint").show();
+{#                    return false;#}
                 }
                 else{
                     tmp_money=money;
                 }
 
-                grades.push({ 'id': id,  'name': name});
+                grades.push({ 'id': id,  'name': name, 'is_auto_upgrade':is_auto_upgrade, 'money':money, 'paytimes':paytimes, 'bound':bound, 'discount':discount});
             });
             xlog(JSON.stringify(grades))
 
@@ -205,14 +208,14 @@
         });
 
             {#        #}
-            {#		$('#editForm').submit(function() {#}
-            {#			if (!W.validate()) {#}
-            {#				return false;#}
-            {#			}#}
-            {#			var $tagName = $('input.xa-grade-name');#}
-            {#			var flag = true;#}
-            {#			$tagName.each(function(i, value) {#}
-            {#				console.log(value)#}
+{#            		$('#editForm').submit(function() {#}
+{#            			if (!W.validate()) {#}
+{#            				return false;#}
+{#            			}#}
+{#            			var $tagName = $('input.xa-grade-name');#}
+{#            			var flag = true;#}
+{#            			$tagName.each(function(i, value) {#}
+{#            				console.log(value)#}
             {#				var tag_name = value.value;#}
             {#				console.log(tag_name)#}
             {#				if (!$.trim(tag_name)) {#}

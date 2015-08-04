@@ -33,14 +33,54 @@ class MemberGradeList(resource.Resource):
     @login_required
     def api_post(request):
         # print(request)
-        info = json.loads(request.POST.get('json', []))
+        post_grades = json.loads(request.POST.get('json', []))
+        # print(post_grades)
+        webapp_id = request.user_profile.webapp_id
+        member_grades = MemberGrade.get_all_grades_list(webapp_id)
+        member_grade_ids = [grade.id for grade in member_grades]
+        default_grade = MemberGrade.get_default_grade(webapp_id)
+
+        print(webapp_id)
+        print(default_grade.id)
         print("-----------")
-        print(info)
-        # webapp_id = request.user_profile.webapp_id
-        # member_grades = MemberGrade.get_all_grades_list(webapp_id)
-        # member_grade_ids = [grade.id for grade in member_grades]
-        # default_grade = MemberGrade.get_default_grade(webapp_id)
-        #
+
+        post_ids = []
+        for grade in post_grades:
+            grade_id = int(grade.get("id", None))
+
+            post_ids.append(grade_id)
+
+            name = grade.get("name", None)
+            is_auto_upgrade = grade.get("is_auto_upgrade", False)
+            pay_money = grade.get("money", None)
+            pay_times = grade.get("paytimes", None)
+            upgrade_lower_bound = grade.get("bound", None)
+            shop_discount = grade.get("discount", None)
+
+
+            print(grade_id, name,is_auto_upgrade,pay_money,pay_times,upgrade_lower_bound,shop_discount)
+
+            if grade_id == default_grade.id:
+                print("default")
+                MemberGrade.objects.filter(id=grade_id).update(name=name, is_auto_upgrade=is_auto_upgrade,
+                                                               shop_discount=shop_discount)
+
+            elif grade_id in member_grade_ids:
+                MemberGrade.objects.filter(id=grade_id).update(pay_money=pay_money, pay_times=pay_times,
+                                                               upgrade_lower_bound=upgrade_lower_bound, name=name,
+                                                               is_auto_upgrade=is_auto_upgrade,
+                                                               shop_discount=shop_discount, )
+            else:
+                MemberGrade.objects.create(pay_money=pay_money, pay_times=pay_times,
+                                           upgrade_lower_bound=upgrade_lower_bound, name=name,
+                                           is_auto_upgrade=is_auto_upgrade,
+                                           shop_discount=shop_discount, webapp_id=webapp_id)
+
+        # delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
+        # MemberGrade.objects.filter(id__in=delete_ids).delete()
+        # if delete_ids:
+        #     update_promotion_status_by_member_grade(delete_ids)
+
         # post_ids = []
         # for key, value in request.POST.dict().items():
         #     if key.startswith('grade_id_'):
