@@ -380,51 +380,51 @@ Scenario: 6 购买单个限时抢购商品， 买赠商品，同时使用积分�
 
 #补充：张三香
 Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50%的商品
- #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
+#会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 
- Given jobs已添加商品
-	"""
-		[{
-			"name": "商品10",
-			"price": 100.00,
-			"member_price": true,
-		}, {
-			"name": "商品11",
-			"price": 100.00,
-			"member_price": true,
-		}]
-	"""	
+	Given jobs已添加商品
+		"""
+			[{
+				"name": "商品10",
+				"price": 100.00,
+				"member_price": true,
+			},{
+				"name": "商品11",
+				"price": 100.00,
+				"member_price": true,
+			}]
+		"""	
 
- And tom1关注jobs的公众号
- And tom2关注jobs的公众号
- And tom3关注jobs的公众号
- And tom4关注jobs的公众号
+	And	tom1关注jobs的公众号
+	And	tom2关注jobs的公众号
+	And	tom3关注jobs的公众号
+	And	tom4关注jobs的公众号
 
- When jobs添加会员等级
+	When jobs添加会员等级
 		"""
 		[{
 			"name": "铜牌会员",
 			"shop_discount": "90%"
-		}, {
+		},{
 			"name": "银牌会员",
 			"shop_discount": "80%"
-		}, {
+		},{
 			"name": "金牌会员",
 			"shop_discount": "70%"
 		}]
 		"""
- Given jobs已获取会员列表
-     | name    | name_rank    |
-     |tom1     |普通会员      |
-     |tom2     |铜牌会员      |
-     |tom3     |银牌会员      |
-     |tom4     |金牌会员      |
+	Given jobs已获取会员列表
+	|name     | name_rank    |
+	|tom1     |普通会员      |
+	|tom2     |铜牌会员      |
+	|tom3     |银牌会员      |
+	|tom4     |金牌会员      |
 
- #701会员tom1购买商品10，使用积分抵扣最高：50元，订单金额：50元
-      When tom1访问jobs的webapp
-	  When tom1获得jobs的100会员积分
-	  Then tom1在jobs的webapp中拥有100会员积分
-	  When tom1购买jobs的商品
+#701会员tom1购买商品10，使用积分抵扣最高：50元，订单金额：50元
+	When tom1访问jobs的webapp
+	When tom1获得jobs的100会员积分
+	Then tom1在jobs的webapp中拥有100会员积分
+	When tom1购买jobs的商品
 		"""
 		{	"integral_money":50.00,
 			"integral":100.00,
@@ -434,7 +434,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			}]
 		}
 		"""
-	 Then tom1成功创建订单
+	Then tom1成功创建订单
 		"""
 		{
 			"status": "待支付",
@@ -453,13 +453,13 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			}]
 		}
 		"""
-	 Then tom1在jobs的webapp中拥有0会员积分
+	Then tom1在jobs的webapp中拥有0会员积分
 
- #702会员tom2购买商品10，使用积分抵扣最高：45元，订单金额：45元
-      When tom2访问jobs的webapp
-	  When tom2获得jobs的200会员积分
-	  Then tom2在jobs的webapp中拥有200会员积分
-	  When tom2购买jobs的商品
+#702会员tom2购买商品10，使用积分抵扣最高：45元，订单金额：45元
+	When tom2访问jobs的webapp
+	When tom2获得jobs的200会员积分
+	Then tom2在jobs的webapp中拥有200会员积分
+	When tom2购买jobs的商品
 		"""
 		{	"integral_money":45.00,
 			"integral":90.00,
@@ -469,7 +469,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			}]
 		}
 		"""
-	 Then tom2成功创建订单
+	Then tom2成功创建订单
 		"""
 		{
 			"status": "待支付",
@@ -488,13 +488,13 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			}]
 		}
 		"""
-	 Then tom2在jobs的webapp中拥有110会员积分
+	Then tom2在jobs的webapp中拥有110会员积分
 
- #703会员tom4购买商品10+商品11，使用积分抵扣最高：70元，订单金额：70元
-      When tom4访问jobs的webapp
-	  When tom4获得jobs的400会员积分
-	  Then tom4在jobs的webapp中拥有400会员积分
-	  When tom4购买jobs的商品
+#703会员tom4购买商品10+商品11，使用积分抵扣最高：70元，订单金额：70元
+	When tom4访问jobs的webapp
+	When tom4获得jobs的400会员积分
+	Then tom4在jobs的webapp中拥有400会员积分
+	When tom4购买jobs的商品
 		"""
 		{	"integral_money":70.00,
 			"integral":140.00,
@@ -507,7 +507,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			}]
 		}
 		"""
-	 Then tom4成功创建订单
+	Then tom4成功创建订单
 		"""
 		{
 			"status": "待支付",
@@ -529,4 +529,4 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			}]
 		}
 		"""
-	 Then tom4在jobs的webapp中拥有260会员积分
+	Then tom4在jobs的webapp中拥有260会员积分
