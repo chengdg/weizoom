@@ -33,6 +33,7 @@ class MemberGradeList(resource.Resource):
     @login_required
     def api_post(request):
         # print(request)
+        print("xxx")
         post_grades = json.loads(request.POST.get('json', []))
         # print(post_grades)
         webapp_id = request.user_profile.webapp_id
