@@ -179,7 +179,7 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 		"""
 		[{
 			"name": "普通会员",
-			"upgrade": "手动升级",
+			"upgrade": "自动升级",
 			"shop_discount": "100%"
 		}, {
 			"name": "蓝钻会员",
@@ -205,16 +205,18 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 		}]
 		"""
 	When jobs更新会员等级'红钻会员'
+		"""
 		{
 			"name": "红钻会员",
 			"upgrade": "手动升级",
 			"shop_discount": "70%"
 		}
+		"""
 	Then jobs能获取会员等级列表
 		"""
 		[{
 			"name": "普通会员",
-			"upgrade": "手动升级",
+			"upgrade": "自动升级",
 			"shop_discount": "100%"
 		}, {
 			"name": "蓝钻会员",
