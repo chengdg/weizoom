@@ -3,7 +3,7 @@
 /* 普通全局样式 */
 html, body {
     background-color: #f0f0f0;
-    height: 100%;
+    min-height: 100%;
     -webkit-tap-highlight-color:rgba(0,0,0,0);
 } 
 input,textarea{
@@ -5148,18 +5148,14 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-myRecPage .xui-qrcode{
     box-shadow: 0 0 0 1px #eee;
 }
-.xui-myRecPage h2,
-.xui-memberQrcode-page h2{
+.xui-myRecPage h2{
     font-size: .95rem;
     font-weight: normal;
     text-align: center;
     position: relative;
     margin: 20px 0;
 }
-.xui-myRecPage h2::before,
-.xui-myRecPage h2::after,
-.xui-memberQrcode-page h2::before,
-.xui-memberQrcode-page h2::after{
+.xui-myRecPage h2::before,.xui-myRecPage h2::after{
     position: absolute;
     content: "";
     width: 35.2125%;
@@ -5169,16 +5165,13 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     transform: scaleY(.3);
     top: .5rem;
 }
-.xui-myRecPage h2::before,
-.xui-memberQrcode-page h2::before{
+.xui-myRecPage h2::before{
     left: 0;
 }
-.xui-myRecPage h2::after,
-.xui-memberQrcode-page h2::after{
+.xui-myRecPage h2::after{
     right: 0;
 }
-.xui-myRecPage .xui-info,
-.xui-memberQrcode-page .xui-info{
+.xui-myRecPage .xui-info{
     width: 90.625%;
     margin: 0 auto;
     background: #f9f9f9;
@@ -5188,8 +5181,10 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     -webkit-box-sizing:border-box;
     box-sizing:border-box;
     font-size: .8rem;
+}
+.xui-myRecPage .xui-info p:first-child{
     color:#1a1a1a;
-    line-height: 1.2rem;
+    line-height: 1.2rem;    
 }
 /**
 *媒体查询
