@@ -44,9 +44,9 @@
 				<tbody class = 'tags_tbody'>
 					{% for grade in member_grades %}
 					<tr data-id="{{ grade.id }}" class="domain_data">
-						<td class="td-first">
+						<td class="td-name">
 							<div>
-							<input data-validate="required-none::不能为空"  type="text" class="form-control  xa-grade-name xui-grade"  id="grade_id_{{grade.id}}" name="grade_id_{{grade.id}}" placeholder="" value="{{ grade.name }}" maxlength="100"/>
+							<input data-validate="required-none::不能为空"  type="text" class="form-control  xa-grade-name xui-grade"  placeholder="" value="{{ grade.name }}" maxlength="100"/>
 							</div>
                             <div class="errorHint" >
                             </div>
@@ -54,35 +54,53 @@
 
                         <td class="td-auto-upgrade">
 							<div>
+                            {% if grade.is_default_grade %}
+                                自动升级
+                            {% else %}
                                 {% if grade.is_auto_upgrade %}
-                                    <input type="checkbox" class="xa-auto-upgrade" checked value="true">自动升级
+                                    <input type="checkbox" class="xa-auto-upgrade" checked value="1" data-id="{{ grade.id }}">自动升级
                                 {% else %}
-                                    <input type="checkbox" class="xa-auto-upgrade" value="false">自动升级
+                                    <input type="checkbox" class="xa-auto-upgrade" value="0" data-id="{{ grade.id }}">自动升级
                                 {% endif %}
+                            {% endif %}
 							</div>
                             <div class="errorHint" >
                             </div>
 						</td>
 
-						<td class="td-second">
-
+						<td class="td-requirement">
 							{% if grade.is_default_grade %}
 								所有关注过您的公众号的用户
 							{% else %}
-								<div class="xui-td-left"><div><span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-money"  id="grade_money_term_{{grade.id}}" name="grade_money_term_{{grade.id}}" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-								<div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-								<div><span class="xui-td-span">
-								经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-bound"  id="grade_bound_term_{{grade.id}}" name="grade_bound_term_{{grade.id}}" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div>
-							   </div>
-							    </div>
+                                {% if grade.is_auto_upgrade %}
+                                <div class="xui-td-left xa-requirement-able" data-id="{{ grade.id }}" >
+                                    <div><span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+							    </div >
+                                <div class="xui-td-left xa-requirement-disabled" data-id="{{ grade.id }}" style="display: none">
+                                        交易金额：<input disabled/>
+                                        购买次数：<input disabled/>
+                                        经验值：<input disabled/>
+                                </div>
+                                {% else %}
+                                <div class="xui-td-left xa-requirement-able" data-id="{{ grade.id }}" style="display: none">
+                                    <div><span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+							    </div >
+                                <div class="xui-td-left xa-requirement-disabled" data-id="{{ grade.id }}">
+                                        交易金额：<input disabled/>
+                                        购买次数：<input disabled/>
+                                        经验值：<input disabled/>
+                                </div>
+                                {% endif %}
 							{% endif %}
-
-
 						</td>
-						<td class="td-thrid">
+						<td class="td-discount">
 
 							<div class="controls">
-                                <div><span class="xui-td-span"></span><input type="text" class="form-control fr xui-input xa-discount"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>折<div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                <div><span class="xui-td-span"></span><input type="text" class="form-control fr xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>折<div class="errorHint" data-error-hint="请输入数字"></div></div>
 							</div>
 						</td>
 						<td class="td-fouth">{% if grade.is_default_grade %}
@@ -143,6 +161,31 @@
             $el.parent().parent().remove();
         });
 
+        // 自动升级
+        $('tbody').delegate('.xa-auto-upgrade', 'click', function (event) {
+            var $el = $(event.currentTarget);
+            var value = $el.attr("value");
+            var id = $el.attr("data-id");
+
+            console.log("check_value",value);
+
+            if(value == '1') {
+                // 取消自动升级
+                value = 0;
+                $('div[data-id=' + id + '].xa-requirement-able').hide();
+                $('div[data-id=' + id + '].xa-requirement-disabled').show();
+            }
+            else {
+                // 开启自动升级
+                value = 1;
+                $('div[data-id=' + id + '].xa-requirement-able').show();
+                $('div[data-id=' + id + '].xa-requirement-disabled').hide();
+{#                $el.find('.xa-requirement-able').show();#}
+{#                $el.find('.xa-requirement-disabled').hide();#}
+            }
+            $el.attr("value",value);
+        });
+
 
 
 
@@ -153,41 +196,84 @@
                 return false;
             }
             var tr_list = $("tr.domain_data");
+            var grades = [];
             tmp_money = 0;
             tmp_paytimes = 0;
             tmp_bound = 0;
-{#            tmp_discount = $(tr_list[0]).find('input.xa-discount').attr("value");#}
+            tmp_discount = $(tr_list[0]).find('input.xa-discount').attr("value");
 
-            xlog("99999999999999999999999999999999");
+
+
+
 {#            xlog(tmp_discount);#}
 
             console.log("------------------------_---------------------------");
-            var grades = [];
-            tr_list.each(function () {
-                var id =$(this).attr("data-id");
-                var name = $(this).find('input.xa-grade-name').attr("value");
-                var is_auto_upgrade = $(this).find('input.xa-auto-upgrade').attr("value");
 
-                var money = $(this).find('input.xa-money').attr("value");
-                var paytimes = $(this).find('input.xa-paytimes').attr("value");
-                var bound = $(this).find('input.xa-bound').attr("value");
-                var discount = $(this).find('input.xa-discount').attr("value");
-                console.log(id,name, is_auto_upgrade, money, paytimes, bound, discount);
 
-                xlog("######")
-                console.log(money,"uuu",tmp_money);
-                console.log(money);
-                if(money<tmp_money){
-                    console.log("<<<<<<<<");
-                    $(".xa-error-hint").show();
-{#                    return false;#}
+            var id;
+            var name;
+            var is_auto_upgrade;
+            var money;
+            var paytimes;
+            var bound;
+            var discount;
+
+            for(var i=0;i<tr_list.length;i++)
+            {
+                is_auto_upgrade = tr_list.eq(i).find('input.xa-auto-upgrade').attr("value");
+
+                id =tr_list.eq(i).attr("data-id");
+                name = tr_list.eq(i).find('input.xa-grade-name').attr("value");
+
+
+                if(i==0) {
+                    money = 0;
+                    paytimes = 0;
+                    bound = 0;
                 }
                 else{
-                    tmp_money=money;
+                    money = tr_list.eq(i).find('input.xa-money').attr("value");
+                    paytimes = tr_list.eq(i).find('input.xa-paytimes').attr("value");
+                    bound = tr_list.eq(i).find('input.xa-bound').attr("value");
                 }
 
+
+                discount = tr_list.eq(i).find('input.xa-discount').attr("value");
+
+
                 grades.push({ 'id': id,  'name': name, 'is_auto_upgrade':is_auto_upgrade, 'money':money, 'paytimes':paytimes, 'bound':bound, 'discount':discount});
-            });
+                console.log(name,is_auto_upgrade)
+
+            }
+
+
+{#            tr_list.each(function () {#}
+{#                var id =$(this).attr("data-id");#}
+{#                var name = $(this).find('input.xa-grade-name').attr("value");#}
+{#                var is_auto_upgrade = $(this).find('input.xa-auto-upgrade').attr("value");#}
+{##}
+{#                var money = $(this).find('input.xa-money').attr("value");#}
+{#                var paytimes = $(this).find('input.xa-paytimes').attr("value");#}
+{#                var bound = $(this).find('input.xa-bound').attr("value");#}
+{#                var discount = $(this).find('input.xa-discount').attr("value");#}
+{#                console.log(id,name, is_auto_upgrade, money, paytimes, bound, discount);#}
+{##}
+{#                xlog("######")#}
+{#                console.log(money,"uuu",tmp_money);#}
+{#                console.log(money);#}
+{#                if(money<tmp_money){#}
+{#                    console.log("<<<<<<<<");#}
+{#                    $(".xa-error-hint").show();#}
+{#                    return false;#}
+{#                }#}
+{#                else{#}
+{#                    tmp_money=money;#}
+{#                }#}
+{##}
+{#                grades.push({ 'id': id,  'name': name, 'is_auto_upgrade':is_auto_upgrade, 'money':money, 'paytimes':paytimes, 'bound':bound, 'discount':discount});#}
+{#            });#}
+
+
             xlog(JSON.stringify(grades))
 
             W.getApi().call({
