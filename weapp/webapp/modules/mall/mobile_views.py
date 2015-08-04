@@ -40,7 +40,11 @@ def list_products(request):
 	"""
 	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	category_id = int(request.GET.get('category_id', 0))
-	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
+	discount = utils.get_vip_discount(request)
+	member_grade_id = utils.get_user_member_grade_id(request)
+	category, products = webapp_cache.get_webapp_products(
+		request.user_profile, request.is_access_weizoom_mall,
+		category_id, discount, member_grade_id)
 	products = utils.get_processed_products(request, products)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 	has_category = False

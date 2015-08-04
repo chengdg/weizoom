@@ -418,10 +418,10 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			product.swipe_images_json = json.dumps(product.swipe_images)
 
 			#获取商品的评论
-			product_review  = ProductReview.objects.filter(
+			product_review = ProductReview.objects.filter(
 										Q(product_id=product.id) &
 										Q(status__in=['1', '2'])
-							  ).order_by('-top_time', '-id')[:2]
+							).order_by('-top_time', '-id')[:2]
 			product.product_review = product_review
 
 			if product_review:
