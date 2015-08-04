@@ -108,6 +108,7 @@ Background:
 	And tom关注jobs的公众号
 	And sam关注jobs的公众号
 	Then jobs可以获得会员列表
+	"""
 		[{
 			"name": "bill",
 			"member_rank": "普通会员"
@@ -118,7 +119,7 @@ Background:
 			"name": "sam",
 			"member_rank": "银牌会员"
 		}]
-		"""
+	"""
 	#会员等级
 	When jobs添加会员等级
 		"""

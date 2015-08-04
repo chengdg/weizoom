@@ -579,7 +579,7 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
  #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 
  Given jobs已添加商品
-     """
+	"""
 		[{
 			"name": "商品10",
 			"price": 100.00,
@@ -589,7 +589,7 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			"price": 100.00,
 			"member_price": true,
 		}]
-	 """	
+	"""	
  When jobs创建积分应用活动
 	 """
 		[{
@@ -720,8 +720,8 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			}]
 		}
 		"""
-	 Then tom4成功创建订单
-	   """
+	Then tom4成功创建订单
+	"""
 		{
 			"status": "待支付",
 			"final_price": 105.0,
@@ -737,24 +737,24 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 				"name": "商品10",
 				"count": 1
 			},{
-			    "name": "商品11",
+				"name": "商品11",
 				"count": 1
 			}]
 		}
-	  """
-     Then bill在jobs的webapp中拥有330会员积分
+	"""
+	Then bill在jobs的webapp中拥有330会员积分
 
 Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置积分抵扣的商品
  #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 
  Given jobs已添加商品
-     """
+	"""
 		[{
 			"name": "商品12",
 			"price": 100.00,
 			"member_price": true
 		}]
-	 """	
+	"""	
 
  And bill1关注jobs的公众号
  And bill2关注jobs的公众号
@@ -957,13 +957,13 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分抵扣的商品
 
  Given jobs已添加商品
-     """
+	"""
 		[{
 			"name": "商品13",
 			"price": 100.00,
 			"member_price": false
 		}]
-	 """	
+	"""	
  And bill1关注jobs的公众号
  And bill2关注jobs的公众号
  And bill3关注jobs的公众号
