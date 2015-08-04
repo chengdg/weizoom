@@ -393,12 +393,12 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 				"price": 100.00,
 				"member_price": true,
 			}]
-		"""	
+		"""
 
-	And	tom1关注jobs的公众号
-	And	tom2关注jobs的公众号
-	And	tom3关注jobs的公众号
-	And	tom4关注jobs的公众号
+	And tom1关注jobs的公众号
+	And tom2关注jobs的公众号
+	And tom3关注jobs的公众号
+	And tom4关注jobs的公众号
 
 	When jobs添加会员等级
 		"""
