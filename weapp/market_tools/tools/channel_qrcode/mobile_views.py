@@ -78,6 +78,7 @@ def get_new_settings(request):
     if ticketid:
         setting = MemberChannelQrcode.objects.get(id=ticketid)
         if not setting.ticket:
+            print "--------0---------"
             ticket = _get_ticket(user_id)
             setting.ticket = ticket
             setting.save()
@@ -100,6 +101,7 @@ def get_new_settings(request):
             })
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
     else:
+        print "--------4---------"
         if request.member:
             qrcode = MemberChannelQrcode.objects.filter(member_id=request.member.id)
             if qrcode.count() > 0:
@@ -107,6 +109,7 @@ def get_new_settings(request):
                 new_url = '%s&ticketid=%s' % (request.get_full_path(), qrcode.id)
                 return HttpResponseRedirect(new_url)
             else:
+                print "--------5---------"
                 setting = MemberChannelQrcodeSettings.objects.get(owner_id=user_id)
                 ticket = _get_ticket(user_id)
                 new_qrcode = MemberChannelQrcode.objects.create(
@@ -122,16 +125,19 @@ def get_new_settings(request):
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
 
 def _get_ticket(user_id):
+    print "-------create-------ticket-------"
     mp_user = get_binding_weixin_mpuser(user_id)
     mpuser_access_token = get_mpuser_accesstoken(mp_user)
     weixin_api = get_weixin_api(mpuser_access_token)
     if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
+        print "--------1---------"
         try:
             qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
             return qrcode_ticket.ticket
         except:
             return _get_ticket(user_id)
     else:
+        print "--------2---------"
         try:
             qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
             return qrcode_ticket.ticket
