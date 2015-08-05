@@ -64,3 +64,64 @@ class ChannelQrcodeHasMember(models.Model):
 		verbose_name = '渠道扫码配置'
 		verbose_name_plural = '渠道扫码配置'
 
+
+AWARD_INTEGRAL = 3 #积分
+AWARD_COUPON = 1 #优惠劵
+AWARD_MEMBER_TYPE_ALL = 1 #统一奖励
+AWARD_MEMBER_TYPE_LEVEL = 0 #按会员等级奖励
+
+class MemberChannelQrcodeSettings(models.Model):
+	"""
+	会员渠道扫码的配置信息
+	"""
+	owner = models.ForeignKey(User)
+	detail = models.TextField(verbose_name=u'详情', null=True, blank=True, default='')
+	award_member_type = models.IntegerField(max_length=1, verbose_name=u'扫码后奖励会员', default=AWARD_MEMBER_TYPE_ALL) #扫码后奖励类型
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'market_tool_member_channel_qrcode_settings'
+		verbose_name = '会员渠道二维码配置'
+		verbose_name_plural = '会员渠道二维码配置'
+
+class MemberChannelQrcodeAwardContent(models.Model):
+	"""
+	会员渠道扫码奖励类容
+	"""
+	member_channel_qrcode_settings = models.ForeignKey(MemberChannelQrcodeSettings)
+	scanner_award_type = models.IntegerField(max_length=1, verbose_name=u"扫码后奖励类型", default=AWARD_INTEGRAL)
+	scanner_award_content = models.CharField(max_length=256, verbose_name=u'扫码后奖励内容') #目前奖励内容为：1，奖励积分分值 2，优惠券id
+	share_award_type = models.IntegerField(max_length=1, verbose_name=u"分享后奖励类型", default=AWARD_INTEGRAL)
+	share_award_content = models.CharField(max_length=256, verbose_name=u'分享后奖励内容') #目前奖励内容为：1，奖励积分分值 2，优惠券id
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'market_tool_member_channel_qrcode_award_content'
+		verbose_name = '会员渠道二维码奖励内容'
+		verbose_name_plural = '会员渠道二维码奖励内容'
+
+class MemberChannelQrcode(models.Model):
+	"""
+	会员渠道扫码配置对应会员的信息
+	"""
+	owner = models.ForeignKey(User)
+	member_channel_qrcode_setting = models.ForeignKey(MemberChannelQrcodeSettings)
+	member = models.ForeignKey(Member)
+	ticket = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'market_tool_member_channel_qrcode_to_member'
+		verbose_name = '会员渠道扫码配置对应会员'
+		verbose_name_plural = '会员渠道扫码配置对应会员'
+
+class MemberChannelQrcodeHasMember(models.Model):
+	member_channel_qrcode = models.ForeignKey(MemberChannelQrcode)
+	member = models.ForeignKey(Member)
+	is_new = models.BooleanField(default=True)
+	created_at = models.DateTimeField(auto_now_add=True) #添加时间
+
+	class Meta(object):
+		db_table = 'market_tool_member_channel_qrcode_has_member'
+		verbose_name = '扫描会员渠道码带来的会员'
+		verbose_name_plural = '扫描会员渠道码带来的会员'
