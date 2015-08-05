@@ -93,8 +93,8 @@ def get_request_member(request):
 def get_member_binded_social_account(member):
 	return member_info_util.get_member_binded_social_account(member)
 
-def update_member_basic_info(user_profile, member):
-	member_info_util.update_member_basic_info(user_profile, member)
+def update_member_basic_info(user_profile, member, oauth_create=False):
+	member_info_util.update_member_basic_info(user_profile, member, oauth_create)
 
 member_basic_info_updater = update_member_basic_info
 

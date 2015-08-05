@@ -307,9 +307,9 @@ def update_member_basic_info(user_profile, member, oauth_create=False):
 					)
 		else:
 			if oauth_create:
-				status = 0 #未关注
+				status = NOT_SUBSCRIBED #未关注
 			else:
-				status = 2 #取消关注
+				status = CANCEL_SUBSCRIBED #取消关注
 			Member.objects.filter(id=member.id).update( 
 					update_time = today, 
 					is_subscribed=social_account_info.is_subscribed,
