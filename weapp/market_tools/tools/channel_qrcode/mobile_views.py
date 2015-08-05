@@ -138,17 +138,18 @@ def _get_ticket(user_id):
     print '==============', mp_user.is_certified, mp_user.is_service,mpuser_access_token.is_active
     if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
         print "--------1---------"
-        try:
-            qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
-            print "-----print---qrcode_ticket", qrcode_ticket
-            return qrcode_ticket.ticket
-        except:
-            return _get_ticket(user_id)
-
+        #try:
+        qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
+        print "-----print---qrcode_ticket", qrcode_ticket
+        return qrcode_ticket.ticket
+        # except:
+        #     return _get_ticket(user_id)
     else:
-        print "--------2---------"
-        try:
-            qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
-            return qrcode_ticket.ticket
-        except:
-            return ''
+        return ''
+    # else:
+    #     print "--------2---------"
+    #     try:
+    #         qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
+    #         return qrcode_ticket.ticket
+    #     except:
+    #         return ''
