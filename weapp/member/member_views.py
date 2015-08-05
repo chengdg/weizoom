@@ -129,35 +129,35 @@ def list_grades(request):
 		})
 		return render_to_response('member/editor/member_grades.html', c)
 	else:
-		# member_grade_ids = [grade.id for grade in member_grades]
-        #
-		# print("3333333333333333333333333333333333333333333333333")
-		# print(request.POST)
-		# print("3333333333333333333333333333333333333333333333333")
-        #
-		# post_ids = []
-		# for key, value in request.POST.dict().items():
-		# 	if key.startswith('grade_id_'):
-		# 		post_ids.append(int(key.split('_')[2]))
-		# post_ids.sort()
-		# for id in post_ids:
-		# 	grade_name = request.POST.get('grade_id_%s' % id , 'get none value')
-		# 	grade_integral_term = request.POST.get('grade_integral_term_%s' % id , 0)
-		# 	grade_money_term = request.POST.get('grade_money_term_%s' % id , 0)
-		# 	grade_paytimes_term = request.POST.get('grade_paytimes_term_%s' % id , 0)
-		# 	shop_discount = request.POST.get('shop_discount_%s' % id , 100)
-		# 	if id == default_grade.id:
-		# 		MemberGrade.objects.filter(id=id).update(shop_discount=shop_discount, name=grade_name)
-		# 	elif id in member_grade_ids:
-		# 		MemberGrade.objects.filter(id=id).update(pay_money=grade_money_term, pay_times=grade_paytimes_term, integral=grade_integral_term, name=grade_name, shop_discount=shop_discount,)
-		# 	else:
-		# 		MemberGrade.objects.create(pay_money=grade_money_term, pay_times=grade_paytimes_term, integral=grade_integral_term, name=grade_name, webapp_id=webapp_id, upgrade_lower_bound=0, shop_discount=shop_discount,)
-        #
-		# delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
-		# MemberGrade.objects.filter(id__in=delete_ids).delete()
-		# if delete_ids:
-		# 	from mall.module_api import update_promotion_status_by_member_grade
-		# 	update_promotion_status_by_member_grade(delete_ids)
+		member_grade_ids = [grade.id for grade in member_grades]
+
+		print("3333333333333333333333333333333333333333333333333")
+		print(request.POST)
+		print("3333333333333333333333333333333333333333333333333")
+
+		post_ids = []
+		for key, value in request.POST.dict().items():
+			if key.startswith('grade_id_'):
+				post_ids.append(int(key.split('_')[2]))
+		post_ids.sort()
+		for id in post_ids:
+			grade_name = request.POST.get('grade_id_%s' % id , 'get none value')
+			grade_integral_term = request.POST.get('grade_integral_term_%s' % id , 0)
+			grade_money_term = request.POST.get('grade_money_term_%s' % id , 0)
+			grade_paytimes_term = request.POST.get('grade_paytimes_term_%s' % id , 0)
+			shop_discount = request.POST.get('shop_discount_%s' % id , 100)
+			if id == default_grade.id:
+				MemberGrade.objects.filter(id=id).update(shop_discount=shop_discount, name=grade_name)
+			elif id in member_grade_ids:
+				MemberGrade.objects.filter(id=id).update(pay_money=grade_money_term, pay_times=grade_paytimes_term, integral=grade_integral_term, name=grade_name, shop_discount=shop_discount,)
+			else:
+				MemberGrade.objects.create(pay_money=grade_money_term, pay_times=grade_paytimes_term, integral=grade_integral_term, name=grade_name, webapp_id=webapp_id, upgrade_lower_bound=0, shop_discount=shop_discount,)
+
+		delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
+		MemberGrade.objects.filter(id__in=delete_ids).delete()
+		if delete_ids:
+			from mall.module_api import update_promotion_status_by_member_grade
+			update_promotion_status_by_member_grade(delete_ids)
 		return HttpResponseRedirect('/member/member_grades/get/')
 
 ########################################################################

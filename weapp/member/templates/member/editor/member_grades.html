@@ -252,18 +252,11 @@
             }
             var tr_list = $("tr.domain_data");
             var grades = [];
-            tmp_money = 0;
-            tmp_paytimes = 0;
-            tmp_bound = 0;
-            tmp_discount = $(tr_list[0]).find('input.xa-discount').attr("value");
 
-
-
-
-{#            xlog(tmp_discount);#}
-
-            console.log("------------------------_---------------------------");
-
+            var tmp_money = 0;
+            var tmp_paytimes = 0;
+            var tmp_bound = 0;
+            var tmp_discount = $(tr_list[0]).find('input.xa-discount').attr("value");
 
             var id;
             var name;
@@ -273,76 +266,100 @@
             var bound;
             var discount;
 
-            for(var i=0;i<tr_list.length;i++)
-            {
-                is_auto_upgrade = tr_list.eq(i).find('input.xa-auto-upgrade').attr("value");
+            var flag = true;
 
-                id =tr_list.eq(i).attr("data-id");
-                name = tr_list.eq(i).find('input.xa-grade-name').attr("value");
+            tr_list.each(function () {
+
+                is_auto_upgrade = $(this).find('input.xa-auto-upgrade').attr("value");
+
+                id =$(this).attr("data-id");
+                name = $(this).find('input.xa-grade-name').attr("value");
+                discount = parseFloat($(this).find('input.xa-discount').attr("value"));
 
 
-                if(i==0) {
-                    money = 0;
-                    paytimes = 0;
-                    bound = 0;
+                paytimes = parseInt($(this).find('input.xa-paytimes').attr("value"));
+                bound = parseFloat($(this).find('input.xa-bound').attr("value"));
+                money = parseFloat($(this).find('input.xa-money').attr("value"));
+
+                
+                if(is_auto_upgrade=='1'){
+                    if(paytimes<tmp_paytimes){
+                        flag=false;
+                        $(this).find('.xa-paytimes').parent().addClass('has-error');
+                    }
+                    else{
+                        tmp_paytimes = paytimes;
+                        $(this).find('.xa-paytimes').parent().removeClass('has-error');
+                    }
+                    
+                    if(bound<tmp_bound){
+                        flag=false;
+                        $(this).find('.xa-bound').parent().addClass('has-error');
+                    }
+                    else{
+                        tmp_bound = bound;
+                        $(this).find('.xa-bound').parent().removeClass('has-error');
+                    }
+                    
+                    if(money<tmp_money){
+                        flag=false;
+                        $(this).find('.xa-money').parent().addClass('has-error');
+                    }
+                    else{
+                        tmp_money = money;
+                        $(this).find('.xa-money').parent().removeClass('has-error');
+                    }
+                    
+                }
+
+                if(discount>10 || discount<0){
+                    $(this).find('.xa-discount').parent().addClass('has-error');
+                    flag = false;
                 }
                 else{
-                    money = tr_list.eq(i).find('input.xa-money').attr("value");
-                    paytimes = tr_list.eq(i).find('input.xa-paytimes').attr("value");
-                    bound = tr_list.eq(i).find('input.xa-bound').attr("value");
+                    if(discount>tmp_discount){
+                        $(this).find('.xa-discount').parent().addClass('has-error');
+                        console.log(discount+">"+tmp_discount);
+                        flag=false;
+
+                    }
+                    else if(discount<tmp_discount||discount==tmp_discount){
+
+                        tmp_discount = discount;
+                        $(this).find('.xa-discount').parent().removeClass('has-error');
+                    }
+
                 }
 
-
-                discount = tr_list.eq(i).find('input.xa-discount').attr("value");
-
-
                 grades.push({ 'id': id,  'name': name, 'is_auto_upgrade':is_auto_upgrade, 'money':money, 'paytimes':paytimes, 'bound':bound, 'discount':discount});
-                console.log(name,is_auto_upgrade)
+            });
 
-            }
+            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+            console.log(grades);
 
-
-{#            tr_list.each(function () {#}
-{#                var id =$(this).attr("data-id");#}
-{#                var name = $(this).find('input.xa-grade-name').attr("value");#}
-{#                var is_auto_upgrade = $(this).find('input.xa-auto-upgrade').attr("value");#}
-{##}
-{#                var money = $(this).find('input.xa-money').attr("value");#}
-{#                var paytimes = $(this).find('input.xa-paytimes').attr("value");#}
-{#                var bound = $(this).find('input.xa-bound').attr("value");#}
-{#                var discount = $(this).find('input.xa-discount').attr("value");#}
-{#                console.log(id,name, is_auto_upgrade, money, paytimes, bound, discount);#}
-{##}
-{#                xlog("######")#}
-{#                console.log(money,"uuu",tmp_money);#}
-{#                console.log(money);#}
-{#                if(money<tmp_money){#}
-{#                    console.log("<<<<<<<<");#}
-{#                    $(".xa-error-hint").show();#}
-{#                    return false;#}
-{#                }#}
-{#                else{#}
-{#                    tmp_money=money;#}
-{#                }#}
-{##}
-{#                grades.push({ 'id': id,  'name': name, 'is_auto_upgrade':is_auto_upgrade, 'money':money, 'paytimes':paytimes, 'bound':bound, 'discount':discount});#}
-{#            });#}
-
-
-            xlog(JSON.stringify(grades))
-
-            W.getApi().call({
+            if(flag){
+                xlog(JSON.stringify(grades));
+                var is_all_conditions = '1'
+                W.getApi().call({
                     method: 'post',
                     app: 'mall2',
                     resource: 'member_grade_list',
-                    args: {'json': JSON.stringify(grades)},
+                    args: {'grades': JSON.stringify(grades),'is_all_conditions':is_all_conditions},
                     success: function(data) {
-                        //window.location.reload();
                         W.showHint('success', '保存成功');
+                        window.location.reload();
+
                     },
                     error: function() {
+                        W.showHint('error', '保存失败');
                         }
                 })
+
+            }
+            else{
+                $(".xa-error-hint").show();
+{#                W.showHint('error', '保存失败');#}
+            }
 
 
 
