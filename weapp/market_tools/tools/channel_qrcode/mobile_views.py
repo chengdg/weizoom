@@ -106,21 +106,23 @@ def get_new_settings(request):
                 setting = MemberChannelQrcodeSettings.objects.get(owner_id=user_id)
                 mp_user = get_binding_weixin_mpuser(user)
                 mpuser_access_token = get_mpuser_accesstoken(mp_user)
+                new_qrcode = MemberChannelQrcode.objects.created(
+                    owner_id=user_id,
+                    member_channel_qrcode_setting_id=setting.id,
+                    member_id=member.id,
+                    ticket=""
+                )
                 if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
                     weixin_api = get_weixin_api(mpuser_access_token)
-                    qrcode_ticket = weixin_api.create_qrcode_ticket(int(qrcode.id), QrcodeTicket.PERMANENT)
+                    qrcode_ticket = weixin_api.create_qrcode_ticket(new_qrcode.id, QrcodeTicket.PERMANENT)
 
                     try:
                         ticket = qrcode_ticket.ticket
                     except:
                         ticket = ''
+                    new_qrcode.ticket = ticket
+                    new_qrcode.save()
 
-                    MemberChannelQrcode.objects.created(
-                        owner_id=user_id,
-                        member_channel_qrcode_setting_id=setting.id,
-                        member_id=member.id,
-                        ticket=ticket
-                    )
         c = RequestContext(request, {
                 'page_title': u'代言人二维码',})
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_context.html' % TEMPLATE_DIR, c)
