@@ -97,10 +97,7 @@ class MemberHandler(MessageHandler):
 				notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
 					social_account.openid, unicode_full_stack())
 				watchdog_fatal(notify_message)
-			try:
-				integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
-			except:
-				integral_strategy_settings = None
+			
 			
 			if member and hasattr(member, 'is_new') and member.is_new:
 				try:
@@ -118,6 +115,10 @@ class MemberHandler(MessageHandler):
 			member.save()
 
 			if status == NOT_SUBSCRIBED:
+				try:
+					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+				except:
+					integral_strategy_settings = None
 				try:
 					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 					member.is_new = True
@@ -141,7 +142,8 @@ class MemberHandler(MessageHandler):
 		"""
 
 		try:
-			member_basic_info_updater(request.user_profile, member)
+			if not member.user_icon or member.user_icon == '':
+				member_basic_info_updater(request.user_profile, member)
 		except:
 			notify_message = u"关注时,更新会员头像会员失败,id:{}, cause:\n{}".format(
 							member.id, unicode_full_stack())
