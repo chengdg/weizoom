@@ -18,6 +18,7 @@ from weixin.user.models import DEFAULT_ICON, get_system_user_binded_mpuser
 from market_tools.tools.coupon.util import get_coupon_rules, get_my_coupons
 from market_tools.tools.channel_qrcode.models import MemberChannelQrcodeSettings, MemberChannelQrcode, MemberChannelQrcodeHasMember, MemberChannelQrcodeAwardContent
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
+from modules.member import models as member_model
 from core.wxapi import get_weixin_api
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
