@@ -391,3 +391,221 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 			}
 		}
 		'''
+
+#后续补充.雪静
+Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
+	1. 单品券和会员价不能同时使用
+	2. 选择单品券，商品价格变回原价，取消使用单品券，价格变回会员价
+	3. 和有会员价的商品同时购买，不影响其他会员价的商品
+
+	Given jobs登录系统
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "70%"
+		}]
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "手动升级",
+			"shop_discount": "100%"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "70%"
+		}]
+		"""
+	Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "金牌会员"
+		}]
+		"""
+	When jobs更新商品'商品1'
+		"""
+		{
+			"name": "商品1",
+			"price": 200.00,
+			"member_price": true
+		}
+		"""
+	Then jobs能获取商品'商品1'
+		"""
+		{
+			"name": "商品1",
+			"price": 200.00,
+			"member_price": true
+		}
+		"""
+	When jobs更新商品'商品2'
+		"""
+		{
+			"name": "商品2",
+			"price": 200.00,
+			"member_price": true
+		}
+		"""
+	Then jobs能获取商品'商品2'
+		"""
+		{
+			"name": "商品2",
+			"price": 200.00,
+			"member_price": true
+		}
+		"""
+	Then jobs能获得优惠券'优惠券1'的码库
+		'''
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		'''
+	When bill访问jobs的webapp
+	#使用单品券，商品金额就是原价
+	When bill购买jobs的商品
+		'''
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_1"
+		}
+		'''
+	Then bill成功创建订单
+		'''
+		{
+			"status": "待支付",
+			"final_price": 199.0,
+			"product_price": 200.0,
+			"coupon_money": 1.0,
+			"members_money": 0.0,
+			"promotion_saved_money": 0.0,
+			"postage": 0.00,
+			"integral_money":0.00
+		}
+		'''
+	#用会员价购买商品，就不能使用单品券
+	When bill购买jobs的商品
+		'''
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		'''
+	Then bill成功创建订单
+		'''
+		{
+			"status": "待支付",
+			"final_price": 140.0,
+			"product_price": 200.0,
+			"coupon_money": 0.0,
+			"members_money": 60.0,
+			"promotion_saved_money": 0.0,
+			"postage": 0.00,
+			"integral_money":0.00
+		}
+		'''
+	#购买多种会员价的商品，使用单品券，不影响其他会员价商品
+	When bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品1",
+			"count": 1
+		}, {
+			"name": "商品2",
+			"count": 1
+		}]
+		"""
+	Then bill能获得购物车
+		"""
+		{
+			"product_groups": [{
+				"products": [{
+					"name": "商品1",
+					"member_price": 140.00,
+					"count": 1
+				}]
+			}, {
+				"products": [{
+					"name": "商品2",
+					"member_price": 140.00,
+					"count": 1
+				}]
+			}],
+			"invalid_products": []
+		}
+		"""
+	When bill从购物车发起购买操作
+		"""
+		{
+			"action": "click",
+			"context": [{
+				"name": "商品1"
+			}, {
+				"name": "商品2"
+			}],
+			"coupon": "coupon1_id_2"
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 339.00,
+			"product_price": 400.0,
+			"coupon_money": 1.0,
+			"members_money": 60.0,
+			"promotion_saved_money": 0.0,
+			"postage": 0.00,
+			"integral_money":0.00
+			"products": [{
+				"name": "商品1",
+				"price": 200.00,
+				"count": 1
+			}, {
+				"name": "商品2",
+				"member_price": 140.00,
+				"count": 1
+			}]
+		}
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		'''
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			}
+		}
+		'''
+
