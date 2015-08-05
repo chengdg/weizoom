@@ -113,9 +113,10 @@ def get_new_settings(request):
                     ticket=""
                 )
                 if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
+                    print "---------create ticket--------"
                     weixin_api = get_weixin_api(mpuser_access_token)
                     qrcode_ticket = weixin_api.create_qrcode_ticket(new_qrcode.id, QrcodeTicket.PERMANENT)
-
+                    print "---bug1------", qrcode_ticket
                     try:
                         ticket = qrcode_ticket.ticket
                     except:
