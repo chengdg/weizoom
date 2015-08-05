@@ -952,9 +952,12 @@ class OAUTHMiddleware(object):
 							if request.found_member_in_cache is False:
 								print '====================aaaaaa2'
 								social_accounts = SocialAccount.objects.filter(openid=openid, webapp_id=request.user_profile.webapp_id)
+								print social_accounts,'===========asdfasdf',openid, request.user_profile.webapp_id
 								if social_accounts.count() > 0:
+									print '=============aa',social_accounts
 									social_account = social_accounts[0]
 									member, response = get_member_by(request, social_account)
+									print '=============aa1',social_account
 								else:
 									print '====================aaaaaa3'
 									token = get_token_for(request.user_profile.webapp_id, openid)
@@ -976,7 +979,7 @@ class OAUTHMiddleware(object):
 							if response:
 								return response
 							#处理fmt
-							print '====================aaaaaa6'
+							print '====================aaaaaa6',request.member
 							response = self.process_fmt_in_url(request, is_new_created_member)
 							if response:
 								return response
@@ -986,7 +989,7 @@ class OAUTHMiddleware(object):
 								is_oauth = True
 							else:
 								return None
-
+							print '====================aaaaaa7',request.member
 						except:
 							print '================error---------'
 							notify_message = u"OAUTHMiddleware error 获取socialaccount, cause:\n{}".format(unicode_full_stack())
