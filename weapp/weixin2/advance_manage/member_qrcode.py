@@ -407,10 +407,10 @@ class ChannelQrcodeOrder(resource.Resource):
         for r in relations:
             member_ids.append(r.member_id)
             member_id2setting_id[r.member_id] = r.member_channel_qrcode_id
-            if r.channel_qrcode_id in setting_id2count:
-                setting_id2count[r.channel_qrcode_id] += 1
+            if r.member_channel_qrcode_id in setting_id2count:
+                setting_id2count[r.member_channel_qrcode_id] += 1
             else:
-                setting_id2count[r.channel_qrcode_id] = 1
+                setting_id2count[r.member_channel_qrcode_id] = 1
             if r.is_new:
                 new_member_id2_create_at[r.member_id] = r.created_at
             else:
