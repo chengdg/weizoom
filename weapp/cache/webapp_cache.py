@@ -18,28 +18,93 @@ from weapp.hack_django import post_update_signal, post_delete_signal
 local_cache = {}
 
 
-def get_product_display_price(product, webapp_owner_id):
-    """根据促销类型返回商品价格
+# def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
+#     """根据促销类型返回商品价格
+#     """
+#     # Set member's discount of the product
+#     if hasattr(product, 'integral_sale') and product.integral_sale \
+#             and product.integral_sale['detail'].get('rules', None):
+#         for i in product.integral_sale['detail']['rules']:
+#             if i['member_grade_id'] == member_grade_id:
+#                 product.integral_sale['detail']['discount'] = str(i['discount']) + "%"
+#                 break
+
+#     if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+#         return round(product.display_price * 1.1, 2)
+#     elif (hasattr(product, 'promotion') and
+#           (product.promotion is not None) and
+#           product.promotion['type'] == PROMOTION_TYPE_FLASH_SALE):
+#         return product.promotion['detail']['promotion_price']
+#     else:
+#         return product.display_price
+def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
+    """判断促销是否对用户开放.
+
+    Args:
+      user_member_grade_id(int): 用户会员等价
+      promotion_member_grade_id(int): 促销制定的会员等级
+
+    Return:
+      True - if 促销对用户开放
+      False - if 促销不对用户开放
     """
-    if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
-        return round(product.display_price * 1.1, 2)
-    elif (hasattr(product, 'promotion') and
-          (product.promotion is not None) and
-          product.promotion['type'] == PROMOTION_TYPE_FLASH_SALE):
-        return product.promotion['detail']['promotion_price']
+    if promotion_member_grade_id == 0:
+        return True
+    elif promotion_member_grade_id == user_member_grade_id:
+        return True
     else:
-        return product.display_price
+        return False
 
 
-def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall):
+def get_display_price(discount, member_grade_id, product):
+    """商品促销类型，更新商品价格
+
+    Return:
+      product
+    """
+
+    # 商品参加促销
+    if hasattr(product, 'promotion'):
+        promotion_type = int(product.promotion.get('type'))
+        # 限时抢购
+        if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
+            # user是否满足限时抢购条件
+            if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
+                product.display_price = product.promotion['promotion_price']
+                return product
+        # 买赠
+        elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+            if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
+                return product
+
+        # 满减
+        elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
+            pass
+        # 优惠券
+        elif promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
+            pass
+        # 积分抵扣
+        elif promotion_type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
+            if has_promotion(member_grade_id, int(product.integral_sale['member_grade_id'])):
+                return product
+    # 商品不参加促销
+    product.display_price = product.display_price * discount
+    return product
+
+
+def get_webapp_products_from_db(webapp_owner_user_profile,
+                                is_access_weizoom_mall,
+                                discount=1.00,
+                                member_grade_id=None):
 
     def inner_func():
         webapp_id = webapp_owner_user_profile.webapp_id
         webapp_owner_id = webapp_owner_user_profile.user_id
 
-        _, products = mall_api.get_products_in_webapp(
-            webapp_id, is_access_weizoom_mall, webapp_owner_id, 0)
-
+        _, products = mall_api.get_products_in_webapp(webapp_id,
+                                                      is_access_weizoom_mall,
+                                                      webapp_owner_id,
+                                                      0)
         categories = mall_models.ProductCategory.objects.filter(
             owner_id=webapp_owner_id)
 
@@ -58,18 +123,18 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
             # Fill detail
             new_products = []
             for product in products:
-                new_product = get_webapp_product_detail(
-                    webapp_owner_id, product.id)
+                new_product = get_webapp_product_detail(webapp_owner_id,
+                                                        product.id)
                 new_products.append(new_product)
 
             mall_models.Product.fill_display_price(new_products)
 
             for product in new_products:
+                product = get_display_price(discount,
+                                            member_grade_id,
+                                            product)
                 product_dict = product.to_dict()
-                product_dict['display_price'] = get_product_display_price(
-                    product, webapp_owner_id)
-                product_dict['categories'] = product2categories.get(
-                    product.id, set())
+                product_dict['categories'] = product2categories.get(product.id, set())
                 product_dicts.append(product_dict)
             return {
                 'value': {
@@ -85,7 +150,11 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
     return inner_func
 
 
-def get_webapp_products(webapp_owner_user_profile, is_access_weizoom_mall, category_id):
+def get_webapp_products(webapp_owner_user_profile,
+                        is_access_weizoom_mall,
+                        category_id,
+                        discount=1,
+                        member_grade_id=0):
     """
     """
 
@@ -93,7 +162,12 @@ def get_webapp_products(webapp_owner_user_profile, is_access_weizoom_mall, categ
     if key in local_cache:
         data = local_cache[key]
     else:
-        data = cache_util.get_from_cache(key, get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall))
+        data = cache_util.get_from_cache(
+            key,
+            get_webapp_products_from_db(webapp_owner_user_profile,
+                                        is_access_weizoom_mall,
+                                        discount,
+                                        member_grade_id))
         local_cache[key] = data
 
     if category_id == 0:
@@ -210,16 +284,8 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         webapp_owner_id, product_id)
     data = cache_util.get_from_cache(
         key, mall_api.get_product_detail_for_cache(webapp_owner_id, product_id))
-    product = mall_models.Product.from_dict(data)
 
-    # Set member's discount of the product
-    if hasattr(product, 'integral_sale') and product.integral_sale \
-            and product.integral_sale['detail'].get('rules', None):
-        for i in product.integral_sale['detail']['rules']:
-            if i['member_grade_id'] == member_grade_id:
-                product.integral_sale['detail'][
-                    'discount'] = str(i['discount']) + "%"
-                break
+    product = mall_models.Product.from_dict(data)
 
     promotion_data = data['promotion']
     if promotion_data and len(promotion_data) > 0:
