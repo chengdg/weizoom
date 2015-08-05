@@ -108,7 +108,7 @@ def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_m
 				_add_award_to_member(user_profile,
 					qrcode_award.share_award_type,
 					qrcode_award.share_award_content,
-					qrcode_setting.member,
+					new_channel_qrcode.member,
 					BRING_NEW_CUSTOMER_VIA_QRCODE
 					)
 
