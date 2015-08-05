@@ -300,8 +300,8 @@ class ChannelQrcodeMember(resource.Resource):
         qrcode_id = request.GET.get('qrcode_id', None)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV(request),
-            'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+            'second_navs': export.get_advance_manage_second_navs(request),
+            'second_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
             'qrcode_id': qrcode_id
         })
 
