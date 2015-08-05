@@ -1026,6 +1026,7 @@ class OAUTHMiddleware(object):
 		if member is None:
 			#创建会员信息
 			try:
+				print '==========================1'
 				member = member_util.create_member_by_social_account(request.user_profile, social_account)
 				member_util.member_basic_info_updater(request.user_profile, member, True)
 				#member = Member.objects.get(id=member.id)
@@ -1055,32 +1056,37 @@ class OAUTHMiddleware(object):
 				except:
 					notify_message = u"get_member_by中MemberMarketUrl失败，会员id:{}, cause:\n{}".format(member.id, unicode_full_stack())
 					watchdog_error(notify_message)
-
+				print '==========================2'
 				return member
 			except:
 				notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
 					social_account.openid, unicode_full_stack())
 				watchdog_fatal(notify_message)
+				print '==========================22221'
 				try:
 					member = member_util.create_member_by_social_account(request.user_profile, social_account)
 					#之后创建对应的webappuser
 					_create_webapp_user(member)
 					member.is_new_created_member = True
+					member_util.member_basic_info_updater(request.user_profile, member, True)
 					# try:
 					# 	integral.increase_for_be_member_first(request.user_profile, member)
 					# except:
 					# 	notify_message = u"get_member_by中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
 					# 			member.id, unicode_full_stack())
 					# 	watchdog_error(notify_message)
+					print '==========================22222'
 					return member
 				except:
 					#response = process_to_oauth(request,weixin_mp_user_access_token)
 					#if response:
 					#	return None,response
+					print '==========================22223'
 					return None
 
 		else:
 			member.is_new_created_member = False
+			print '=======================has member===22224'
 			return member
 
 	# 授权并且创建结束后进行跳转并且设置cookie 信息

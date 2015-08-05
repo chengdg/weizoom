@@ -742,7 +742,7 @@ DJANGO_HACK_PARAMS = {
     'enable_record_sql_stacktrace': True
 }
 
-RESOURCE_LOADED = False
+RESOURCE_LOADED = True
 RESOURCES = ['stats', 'termite2', 'weixin2', 'mall2']
 
 
