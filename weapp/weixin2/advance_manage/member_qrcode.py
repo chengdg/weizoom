@@ -334,7 +334,7 @@ class ChannelQrcodeMember(resource.Resource):
         if end_date:
             filter_data_args['created_at__lte'] = end_date
 
-        channel_members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
+        channel_members = member_model.Member.objects.filter(**filter_data_args).order_by(sort_attr)
         count_per_page = int(request.GET.get('count_per_page', 15))
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, channel_members = paginator.paginate(channel_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -465,8 +465,7 @@ class ChannelQrcodeOrder(resource.Resource):
 
         #获取order对应的会员
         webapp_user_ids = set([order.webapp_user_id for order in orders])
-        from modules.member.models import Member
-        webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+        webappuser2member = member_model.Member.members_from_webapp_user_ids(webapp_user_ids)
 
         #获得order对应的商品数量
         order_ids = [order.id for order in orders]
