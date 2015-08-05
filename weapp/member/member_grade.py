@@ -24,7 +24,9 @@ class MemberGradeList(resource.Resource):
         member_grades = MemberGrade.get_all_grades_list(webapp_id)
 
         for grade in member_grades:
-            grade.shop_discount *= 10
+            grade.shop_discount /= 10.0
+
+        is_all_conditions = IntegralStrategySttings.objects.get(webapp_id=webapp_id).is_all_conditions
 
         if request.method == "GET":
             c = RequestContext(request, {
@@ -32,26 +34,22 @@ class MemberGradeList(resource.Resource):
                 'second_navs': export.get_second_navs(request),
                 'second_nav_name': export.MEMBER_GRADE,
                 'member_grades': member_grades,
+                'is_all_conditions': is_all_conditions,
             })
             return render_to_response('member/editor/member_grades.html', c)
 
     @login_required
     def api_post(request):
-        # print(request)
-        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+
         post_grades = json.loads(request.POST.get('grades', []))
-        # print(post_grades)
         webapp_id = request.user_profile.webapp_id
         member_grades = MemberGrade.get_all_grades_list(webapp_id)
         member_grade_ids = [grade.id for grade in member_grades]
         default_grade = MemberGrade.get_default_grade(webapp_id)
 
         is_all_conditions = request.POST.get('is_all_conditions', '0')
-        IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=is_all_conditions)
+        IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=int(is_all_conditions))
 
-        print(webapp_id)
-
-        print("-----------")
         post_ids = []
         for grade in post_grades:
             grade_id = int(grade.get("id", None))
@@ -65,14 +63,10 @@ class MemberGradeList(resource.Resource):
             upgrade_lower_bound = grade.get("bound", 0)
             shop_discount = grade.get("discount", '10')
 
-            shop_discount = float(shop_discount) / 10
+            shop_discount = int(float(shop_discount) * 10)
 
-            print("zzzzzzz", shop_discount)
-
-            # print(grade_id, name, is_auto_upgrade, pay_money, pay_times, upgrade_lower_bound, shop_discount)
-            print(grade.get("is_auto_upgrade", False), is_auto_upgrade)
             if grade_id == default_grade.id:
-                print("default")
+
                 MemberGrade.objects.filter(id=grade_id).update(name=name, shop_discount=shop_discount)
 
             elif grade_id in member_grade_ids:
