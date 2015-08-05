@@ -289,7 +289,7 @@ def _get_channel_qrcode_items(request):
         current_qrcode.id = qrcode.id
         current_qrcode.name = qrcode.member.username_for_html
         current_qrcode.count = qrcode.count
-        current_qrcode.total_final_price = round(q.total_final_price,2)
+        current_qrcode.total_final_price = round(qrcode.total_final_price,2)
         current_qrcode.ticket = qrcode.ticket
         current_qrcode.created_at = qrcode.created_at.strftime('%Y-%m-%d %H:%M:%S')
 
