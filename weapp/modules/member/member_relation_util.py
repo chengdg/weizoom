@@ -71,7 +71,8 @@ def build_member_follow_relation(request):
 		try:
 			Member.update_factor(member)
 			Member.update_factor(followed_member)
-			Member.increase_friend_count(('%d, %d') % (member.id, followed_member.id))
+			if followed_member.status != NOT_SUBSCRIBED:
+				Member.increase_friend_count(('%d, %d') % (member.id, followed_member.id))
 		except:
 			notify_message = u"点击分享链接更新好友数量异常 cause:\n{}".format(unicode_full_stack()
 			)

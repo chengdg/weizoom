@@ -261,7 +261,7 @@ def get_member_binded_social_account(member):
 
 		return None		
 
-def update_member_basic_info(user_profile, member):
+def update_member_basic_info(user_profile, member, oauth_create=False):
 	if member.is_for_test:
 		return
 	#系统网络问题会员信息更新不下了 改正
@@ -292,6 +292,8 @@ def update_member_basic_info(user_profile, member):
 			username_hexstr = byte_to_hex(member_nickname_str)
 		else:
 			username_hexstr = member.username_hexstr
+
+
 		if social_account_info.is_subscribed:
 			Member.objects.filter(id=member.id).update(user_icon=member.user_icon, 
 					update_time = today, 
@@ -301,11 +303,17 @@ def update_member_basic_info(user_profile, member):
 					province=social_account_info.province,
 					country=social_account_info.country,
 					sex=social_account_info.sex,
+					status=1
 					)
 		else:
+			if oauth_create:
+				status = 0 #未关注
+			else:
+				status = 2 #取消关注
 			Member.objects.filter(id=member.id).update( 
 					update_time = today, 
 					is_subscribed=social_account_info.is_subscribed,
+					status=status
 					)
 		# member.update_time = today
 		# member.save()

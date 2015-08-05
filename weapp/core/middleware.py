@@ -52,7 +52,7 @@ import cache
 from auth import models as auth_models
 from auth import module_api as auth_api
 from cache.service_cache import set_service_time, get_service_time, get_service_urls
-from modules.member.tasks import record_member_pv
+
 
 __author__ = 'bert'
 
@@ -481,7 +481,7 @@ class WebAppPageVisitMiddleware(object):
 				page_title = ''
 				if hasattr(request, 'context_dict'):
 					page_title = request.context_dict.get('page_title', '')
-
+				from modules.member.tasks import record_member_pv
 				record_member_pv.delay(request.member.id, request.get_full_path(), page_title)
 		except:
 			pass

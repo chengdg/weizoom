@@ -37,7 +37,6 @@ def get_members(request):
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
 	status = request.GET.get('status' , '-1')
-
 	c = RequestContext(request, {
 		'first_nav_name': export.MEMBER_FIRST_NAV,
 		'second_navs': export.get_second_navs(request),
@@ -45,7 +44,7 @@ def get_members(request):
 		'should_show_authorize_cover' : get_should_show_authorize_cover(request),
 		'user_tags': MemberTag.get_member_tags(webapp_id),
 		'grades': MemberGrade.get_all_grades_list(webapp_id),
-		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0).count(), 
+		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(), 
 		'status': status
 	})
 
@@ -366,7 +365,12 @@ def edit_member(request):
 	return render_to_response('member/editor/member_detail.html', c)
 
 def __count_member_follow_relations(member):
-	return MemberFollowRelation.objects.filter(member_id=member.id).count()
+	count = 0
+	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
+		follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
+		if follower_member.status != NOT_SUBSCRIBED:
+			count = count + 1
+	return count
 
 def __get_member_orders(member):
 	if member is None:
