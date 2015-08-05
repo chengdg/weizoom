@@ -538,3 +538,6 @@ def build_member_basic_json(member):
         "follow_time": member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
         "is_subscribed": member.is_subscribed
     }
+
+def get_order_status_text(status):
+    return STATUS2TEXT[status]
