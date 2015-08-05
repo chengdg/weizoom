@@ -159,12 +159,6 @@ ADVANCE_MANAGE_NAV = {
             'title': u'带参数二维码',
             'url': '/new_weixin/qrcodes/',
             'need_permissions': []
-        },
-        {
-            'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
-            'title': u'渠道扫码',
-            'url': '/new_weixin/channel_qrcode/',
-            'need_permissions': []
         }
     ]
 }
@@ -174,6 +168,24 @@ def get_advance_manage_second_navs(request):
         pass
     else:
         # webapp_module_views.get_modules_page_second_navs(request)
+        print request.user.id,'-------'
+        if request.user_profile.user_id in [467,145,3]:
+            navs = ADVANCE_MANAGE_NAV['navs']
+            qrcode_nav = {
+                'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
+                'title': u'渠道扫码',
+                'url': '/new_weixin/channel_qrcode/',
+                'need_permissions': []
+                }
+            if qrcode_nav not in navs:
+                navs.append({
+                    'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
+                    'title': u'渠道扫码',
+                    'url': '/new_weixin/channel_qrcode/',
+                    'need_permissions': []
+                    })
+                ADVANCE_MANAGE_NAV['navs'] = navs
+
         second_navs = [ADVANCE_MANAGE_NAV]
 
     return second_navs

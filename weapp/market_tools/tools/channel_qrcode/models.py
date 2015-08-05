@@ -106,7 +106,7 @@ class MemberChannelQrcode(models.Model):
 	"""
 	owner = models.ForeignKey(User)
 	member_channel_qrcode_setting = models.ForeignKey(MemberChannelQrcodeSettings)
-	member = models.ForeignKey(Member)
+	member = models.ForeignKey(Member, db_index=True, unique=True)
 	ticket = models.TextField()
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
 

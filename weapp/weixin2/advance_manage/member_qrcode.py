@@ -18,6 +18,8 @@ from weixin.user.models import DEFAULT_ICON, get_system_user_binded_mpuser
 from market_tools.tools.coupon.util import get_coupon_rules, get_my_coupons
 from market_tools.tools.channel_qrcode.models import MemberChannelQrcodeSettings, MemberChannelQrcode, MemberChannelQrcodeHasMember, MemberChannelQrcodeAwardContent
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
+from modules.member import models as member_model
+from mall import module_api as mall_api
 from core.wxapi import get_weixin_api
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
@@ -250,13 +252,13 @@ def _get_channel_qrcode_items(request):
         current_qrcode = JsonResponse()
 
         if qrcode.id in member_channel_qrcode_id2count:
-            qrcode.count = member_channel_qrcode_id2count[q.id]
+            qrcode.count = member_channel_qrcode_id2count[qrcode.id]
         else:
             qrcode.count = 0
         if qrcode.id in member_channel_qrcode_id2total_final_price:
-            qrcode.total_final_price = member_channel_qrcode_id2total_final_price[q.id]
-            qrcode.cash_money = member_channel_qrcode_id2cash_money[q.id]
-            qrcode.weizoom_card_money = member_channel_qrcode_id2weizoom_card_money[q.id]
+            qrcode.total_final_price = member_channel_qrcode_id2total_final_price[qrcode.id]
+            qrcode.cash_money = member_channel_qrcode_id2cash_money[qrcode.id]
+            qrcode.weizoom_card_money = member_channel_qrcode_id2weizoom_card_money[qrcode.id]
         else:
             qrcode.total_final_price = 0
             qrcode.cash_money = 0
@@ -300,8 +302,8 @@ class ChannelQrcodeMember(resource.Resource):
         qrcode_id = request.GET.get('qrcode_id', None)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV(request),
-            'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+            'second_navs': export.get_advance_manage_second_navs(request),
+            'second_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
             'qrcode_id': qrcode_id
         })
 
@@ -319,10 +321,10 @@ class ChannelQrcodeMember(resource.Resource):
 
         if is_show == '1':
             member_ids = [relation.member_id for relation in \
-                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=member_channel_qrcode_id, is_new=True)]
+                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=channel_qrcode_id, is_new=True)]
         else:
             member_ids = [relation.member_id for relation in \
-                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=member_channel_qrcode_id)]
+                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=channel_qrcode_id)]
 
         filter_data_args = {}
         filter_data_args['id__in'] = member_ids
@@ -333,7 +335,7 @@ class ChannelQrcodeMember(resource.Resource):
         if end_date:
             filter_data_args['created_at__lte'] = end_date
 
-        channel_members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
+        channel_members = member_model.Member.objects.filter(**filter_data_args).order_by(sort_attr)
         count_per_page = int(request.GET.get('count_per_page', 15))
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, channel_members = paginator.paginate(channel_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -405,11 +407,11 @@ class ChannelQrcodeOrder(resource.Resource):
         new_member_id2_create_at = {}
         for r in relations:
             member_ids.append(r.member_id)
-            member_id2setting_id[r.member_id] = r.channel_qrcode_id
-            if r.channel_qrcode_id in setting_id2count:
-                setting_id2count[r.channel_qrcode_id] += 1
+            member_id2setting_id[r.member_id] = r.member_channel_qrcode_id
+            if r.member_channel_qrcode_id in setting_id2count:
+                setting_id2count[r.member_channel_qrcode_id] += 1
             else:
-                setting_id2count[r.channel_qrcode_id] = 1
+                setting_id2count[r.member_channel_qrcode_id] = 1
             if r.is_new:
                 new_member_id2_create_at[r.member_id] = r.created_at
             else:
@@ -417,11 +419,11 @@ class ChannelQrcodeOrder(resource.Resource):
 
         if is_show == '1':
             #获取新会员的webapp_user
-            new_webapp_users = WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
+            new_webapp_users = member_model.WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
             new_webapp_user_ids = [u.id for u in new_webapp_users]
 
             #获取old会员的webapp_user
-            old_webapp_users = WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
+            old_webapp_users = member_model.WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
             old_member_order_ids = []
             for webapp_user in old_webapp_users:
                 created_at = old_member_id2_create_at[webapp_user.member_id]
@@ -439,7 +441,7 @@ class ChannelQrcodeOrder(resource.Resource):
             else:
                 orders = []
         else:
-            webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
+            webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
             webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
             webapp_user_ids = set(webapp_user_id2member_id.keys())
             if webapp_user_ids:
@@ -464,8 +466,7 @@ class ChannelQrcodeOrder(resource.Resource):
 
         #获取order对应的会员
         webapp_user_ids = set([order.webapp_user_id for order in orders])
-        from modules.member.models import Member
-        webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+        webappuser2member = member_model.Member.members_from_webapp_user_ids(webapp_user_ids)
 
         #获得order对应的商品数量
         order_ids = [order.id for order in orders]
@@ -524,3 +525,20 @@ class ChannelQrcodeOrder(resource.Resource):
             'data': {}
         }
         return response.get_response()
+
+def build_member_basic_json(member):
+    return {
+        'id': member.id,
+        'username': member.username_for_html,
+        'name': member.name,
+        'user_icon': member.user_icon,
+        'integral': member.integral,
+        'pay_money': '%.2f' % member.pay_money,
+        'pay_times': member.pay_times,
+        'grade_name': member.grade.name,
+        "follow_time": member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        "is_subscribed": member.is_subscribed
+    }
+
+def get_order_status_text(status):
+    return STATUS2TEXT[status]
