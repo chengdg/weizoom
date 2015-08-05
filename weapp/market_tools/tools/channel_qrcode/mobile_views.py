@@ -99,7 +99,7 @@ def get_new_settings(request):
                 'show_head': show_head,
                 'hide_non_member_cover':True
             })
-        return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
+        return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
     else:
         if request.member:
             qrcode = MemberChannelQrcode.objects.filter(member_id=request.member.id)
@@ -116,6 +116,7 @@ def get_new_settings(request):
                     member_id=member.id,
                     ticket=ticket
                 )
+                new_qrcode.count = 0
 
         c = RequestContext(request, {
                 'page_title': u'首草送好礼，接力扫码等你来传递',
@@ -124,7 +125,7 @@ def get_new_settings(request):
                 'show_head': True,
                 'head_img': get_mp_head_img(user_id)
                 })
-        return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
+        return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
 
 def _get_ticket(user_id):
     mp_user = get_binding_weixin_mpuser(user_id)
