@@ -39,10 +39,7 @@ local_cache = {}
 #         return product.display_price
 
 
-def get_webapp_products_from_db(webapp_owner_user_profile,
-                                is_access_weizoom_mall,
-                                discount=1.00,
-                                member_grade_id=None):
+def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall):
 
     def inner_func():
         webapp_id = webapp_owner_user_profile.webapp_id
@@ -77,7 +74,10 @@ def get_webapp_products_from_db(webapp_owner_user_profile,
             mall_models.Product.fill_display_price(new_products)
 
             for product in new_products:
+                # import pdb
+                # pdb.set_trace()
                 product_dict = product.to_dict()
+                # pdb.set_trace()
                 product_dict['display_price'] = product.display_price
                 product_dict['categories'] = product2categories.get(product.id, set())
                 product_dicts.append(product_dict)
@@ -97,9 +97,7 @@ def get_webapp_products_from_db(webapp_owner_user_profile,
 
 def get_webapp_products(webapp_owner_user_profile,
                         is_access_weizoom_mall,
-                        category_id,
-                        discount=1,
-                        member_grade_id=0):
+                        category_id):
     """
     """
 
@@ -110,9 +108,7 @@ def get_webapp_products(webapp_owner_user_profile,
         data = cache_util.get_from_cache(
             key,
             get_webapp_products_from_db(webapp_owner_user_profile,
-                                        is_access_weizoom_mall,
-                                        discount,
-                                        member_grade_id))
+                                        is_access_weizoom_mall))
         local_cache[key] = data
 
     if category_id == 0:
@@ -231,13 +227,6 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         key, mall_api.get_product_detail_for_cache(webapp_owner_id, product_id))
 
     product = mall_models.Product.from_dict(data)
-
-    promotion_data = data['promotion']
-    if promotion_data and len(promotion_data) > 0:
-        product.promotion_model = promotion_models.Promotion.from_dict(
-            promotion_data)
-    else:
-        product.promotion_model = dict()
 
     integral_sale_data = data['integral_sale']
     if integral_sale_data and len(integral_sale_data) > 0:

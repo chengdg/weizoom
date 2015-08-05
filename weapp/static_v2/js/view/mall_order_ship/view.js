@@ -59,7 +59,15 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                     args: args,
                     success: function(data) {
                         $(".xa-shipDropBox").hide();
-                        $('[data-ui-role="advanced-table"]').data('view').reload();
+                        if($('[data-ui-role="advanced-table"]').length>0)
+                        {
+                            $('[data-ui-role="advanced-table"]').data('view').reload();
+                        }
+
+                        else
+                        {
+                            window.location.reload();
+                        }
                     },
                     error: function() {
                     }
@@ -82,39 +90,16 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                         resource: 'delivery',
                         args: args,
                         success: function(data) {
-                            //$el = $(".xa-order-delivery[data-order-id=" + args['order_id'] + "]");
-                            //if (typeof($el.attr("data-express-number"))=="undefined")
-                            //{
-                            //    $el.parent().prev().text("已发货");
-                            //    $el.parent().html('<a class="xa-markFinish" href="javascript:void(0);">标记完成</a> \
-                            //            <a class="xa-cancelOrder" href="javascript:void(0);">取消订单</a> \
-                            //            <a class="xa-order-delivery" \
-                            //            data-leader-name="' + args["leader_name"] +  '" \
-                            //            data-express-number="' + args["express_number"] +  '" \
-                            //            data-express-company-name="' + args["express_company_name"] +  '" \
-                            //            data-is-update="true" \
-                            //            data-order-id="' + args["order_id"] +  '" \
-                            //            href="javascript:void(0);">修改物流</a> \
-                            //    ')
-                            //
-                            //
-                            //}
-                            //else
-                            //{
-                            //    $el.attr({
-                            //        "data-express-number" : args["express_number"],
-                            //        "data-express-company-name" : args["express_company_name"],
-                            //        "data-leader-name": args["leader_name"]
-                            //      })
-                            //}
-                            //
-                            //$(".xa-shipDropBox").hide();
                             $(".xa-shipDropBox").hide();
                             if($('[data-ui-role="advanced-table"]').length>0)
+                            {
                                 $('[data-ui-role="advanced-table"]').data('view').reload();
-                            else
-                                window.location.reload();
+                            }
 
+                            else
+                            {
+                                window.location.reload();
+                            }
 
                         },
                         error: function() {
