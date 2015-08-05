@@ -80,7 +80,7 @@ def get_new_settings(request):
     if ticketid:
         qrcode = MemberChannelQrcode.objects.get(id=ticketid)
         if not qrcode.ticket:
-            ticket = _get_ticket(user_id, member.id)
+            ticket = _get_ticket(user_id, qrcode.id)
             qrcode.ticket = ticket
             qrcode.save()
 
@@ -110,13 +110,16 @@ def get_new_settings(request):
                 new_url = '%s&ticketid=%s' % (request.get_full_path(), qrcode.id)
                 return HttpResponseRedirect(new_url)
             else:
-                ticket = _get_ticket(user_id, member.id)
+
                 new_qrcode = MemberChannelQrcode.objects.create(
                     owner_id=user_id,
                     member_channel_qrcode_setting_id=qrcode_setting.id,
                     member_id=member.id,
                     ticket=ticket
                 )
+                ticket = _get_ticket(user_id, new_qrcode.id)
+                new_qrcode.ticket = ticket
+                new_qrcode.save()
                 new_qrcode.count = 0
 
         c = RequestContext(request, {
@@ -129,20 +132,20 @@ def get_new_settings(request):
                 })
         return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
 
-def _get_ticket(user_id, member_id):
+def _get_ticket(user_id, screen_id):
     mp_user = get_binding_weixin_mpuser(user_id)
     mpuser_access_token = get_mpuser_accesstoken(mp_user)
     weixin_api = get_weixin_api(mpuser_access_token)
     if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
         try:
-            qrcode_ticket = weixin_api.create_qrcode_ticket(member_id, QrcodeTicket.PERMANENT)
+            qrcode_ticket = weixin_api.create_qrcode_ticket(screen_id, QrcodeTicket.PERMANENT)
             return qrcode_ticket.ticket
         except:
-            return _get_ticket(user_id, member_id)
+            return _get_ticket(user_id, screen_id)
 
     else:
         try:
-            qrcode_ticket = weixin_api.create_qrcode_ticket(member_id, QrcodeTicket.PERMANENT)
+            qrcode_ticket = weixin_api.create_qrcode_ticket(screen_id, QrcodeTicket.PERMANENT)
             return qrcode_ticket.ticket
         except:
             return ''
