@@ -106,7 +106,7 @@ def get_new_settings(request):
                 setting = MemberChannelQrcodeSettings.objects.get(owner_id=user_id)
                 mp_user = get_binding_weixin_mpuser(user)
                 mpuser_access_token = get_mpuser_accesstoken(mp_user)
-                new_qrcode = MemberChannelQrcode.objects.created(
+                new_qrcode = MemberChannelQrcode.objects.create(
                     owner_id=user_id,
                     member_channel_qrcode_setting_id=setting.id,
                     member_id=member.id,
