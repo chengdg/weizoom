@@ -249,6 +249,7 @@ def get_weixin_account_info(user_profile, social_account, can_use_local=True):
 	#需要进行方式微信api进行实时获取
 	try:
 		weixin_account_info = _get_weixin_account_info_via_api(user_profile, social_account)
+		print '-------------------weixin_account_info',weixin_account_info
 	except:
 		notify_message = u"访问微信api获取微信账号基本信息失败，openid:{}, cause:\n{}".format(
 				social_account.openid, unicode_full_stack())
