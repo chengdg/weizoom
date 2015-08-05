@@ -242,7 +242,77 @@ Scenario: 4 添加自动升级的会员等级时有冲突
 			"condition": ["必须满足全部条件"]
 		}
 		"""
-	#填充框为空时，保存验证，提示错误信息
+	#验证升级条件
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 1000.00,
+			"buy_counts": 20,
+			"empirical_value": 10000,
+			"shop_discount": "90%"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 3000.00,
+			"buy_counts": 10,
+			"empirical_value": 30000,
+			"shop_discount": "80%"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 5000.00,
+			"buy_counts": 50,
+			"empirical_value": 50000,
+			"shop_discount": "70%"
+		}]
+		"""
+	Then jobs获得提示错误信息'等级升级条件必须逐级递增'
+	And jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"shop_discount": "100%"
+		}]
+		"""
+	#验证折扣
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 1000.00,
+			"buy_counts": 20,
+			"empirical_value": 10000,
+			"shop_discount": "90%"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 3000.00,
+			"buy_counts": 30,
+			"empirical_value": 30000,
+			"shop_discount": "80%"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 5000.00,
+			"buy_counts": 50,
+			"empirical_value": 50000,
+			"shop_discount": "90%"
+		}]
+		"""
+	Then jobs获得提示错误信息'等级折扣必须逐级递减或相同'
+	And jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"shop_discount": "100%"
+		}]
+		"""
+	#验证空
 	When jobs添加会员等级
 		"""
 		[{
@@ -256,7 +326,7 @@ Scenario: 4 添加自动升级的会员等级时有冲突
 			"name": "",
 			"upgrade": "自动升级",
 			"deal_price": 3000.00,
-			"buy_counts": 10,
+			"buy_counts": 30,
 			"empirical_value": 30000,
 			"shop_discount": "80%"
 		}, {
@@ -265,10 +335,10 @@ Scenario: 4 添加自动升级的会员等级时有冲突
 			"deal_price": 5000.00,
 			"buy_counts": 50,
 			"empirical_value": 50000,
-			"shop_discount": "90%"
+			"shop_discount": "70%"
 		}]
 		"""
-	Then jobs获得提示错误信息'等级升级条件必须逐级递增,等级折扣必须逐级递减或相同'
+	Then jobs获得提示错误信息'内容不能为空'
 	And jobs能获取会员等级列表
 		"""
 		[{
@@ -277,3 +347,5 @@ Scenario: 4 添加自动升级的会员等级时有冲突
 			"shop_discount": "100%"
 		}]
 		"""
+	#条件为空/输入错误，金额提示'请输入正确的金额'，购买次数和经验值提示'请输入正整数'
+	#折扣为空/输入错误，提示'请输入1.0~10的数'

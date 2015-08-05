@@ -811,6 +811,32 @@ def get_products_detail(webapp_owner_id, product_ids, webapp_user=None, member_g
 
 	return products
 
+
+def get_product_detail_refactor(webapp_owner_id, product_id, member_grade_id=None):
+	"""获取商品的详细信息
+	"""
+	from cache import webapp_cache
+	try:
+		product = webapp_cache.get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id)
+		if product.is_deleted:
+			return product
+		mall_models.Product.fill_display_price([product])
+		product.price_info = {
+			"display_price": product.display_price
+		}
+		return product
+	except:
+		if settings.DEBUG:
+			raise
+		else:
+			#记录日志
+			alert_message = u"获取商品记录失败,商品id: {} cause:\n{}".format(product_id, unicode_full_stack())
+			watchdog_alert(alert_message, type='WEB')
+			#返回"被删除"商品
+			product = Product()
+			product.is_deleted = True
+
+
 def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_grade_id=None):
 	"""
 	获取商品的详细信息
@@ -848,7 +874,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 				product_model['price'] = round(product_model['price'] * 1.1, 2)
 
 		# 商品规格
-		p_type = product.type
 
 		#获取product的price info
 		if product.is_use_custom_model:
@@ -944,6 +969,9 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 			product.is_deleted = True
 
 	return product
+
+
+
 
 # def str("%.2f" % price):
 # 	if p_type == PRODUCT_INTEGRAL_TYPE:
