@@ -76,7 +76,7 @@ def get_new_settings(request):
     ticketid = request.GET.get('ticketid', 0)
     member = request.member
     if ticketid:
-        qrcode = MemberChannelQrcode.objects.get(id=ticketid)
+        setting = MemberChannelQrcode.objects.get(id=ticketid)
         show_head = False
         if setting.member_id == request.member.id:
             show_head = True
