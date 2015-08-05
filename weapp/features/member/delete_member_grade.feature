@@ -39,7 +39,7 @@ Scenario: 1 删除已存在的手动升级的会员等级
 		"""
 		[{
 			"name": "普通会员",
-			"upgrade": "手动升级",
+			"upgrade": "自动升级",
 			"shop_discount": "100%"
 		}, {
 			"name": "铜牌会员",
