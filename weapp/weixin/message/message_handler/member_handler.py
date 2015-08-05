@@ -125,7 +125,6 @@ class MemberHandler(MessageHandler):
 					integral_strategy_settings = None
 				try:
 					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
-					member.is_new = True
 				except:
 					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
 							member.id, unicode_full_stack())
@@ -134,6 +133,7 @@ class MemberHandler(MessageHandler):
 				TODO:
 					 更新好友数量
 				"""	
+				member.is_new = True
 			
 
 			member.is_new = False
