@@ -74,15 +74,12 @@ def get_settings(request):
 
 def get_new_settings(request):
     user_id = request.webapp_owner_id
-    print '==============get_new_settings',request.get_full_path()
     ticketid = request.GET.get('ticketid', 0)
     member = request.member
     if ticketid:
         setting = MemberChannelQrcode.objects.get(id=ticketid)
         if not setting.ticket:
-            print "--------0---------"
             ticket = _get_ticket(user_id)
-            print "-------0-------", ticket
             setting.ticket = ticket
             setting.save()
 
@@ -104,7 +101,6 @@ def get_new_settings(request):
             })
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
     else:
-        print "--------4---------"
         if request.member:
             qrcode = MemberChannelQrcode.objects.filter(member_id=request.member.id)
             if qrcode.count() > 0:
@@ -112,10 +108,8 @@ def get_new_settings(request):
                 new_url = '%s&ticketid=%s' % (request.get_full_path(), qrcode.id)
                 return HttpResponseRedirect(new_url)
             else:
-                print "--------5---------"
                 setting = MemberChannelQrcodeSettings.objects.get(owner_id=user_id)
                 ticket = _get_ticket(user_id)
-                print "---------5.1-----", ticket
                 new_qrcode = MemberChannelQrcode.objects.create(
                     owner_id=user_id,
                     member_channel_qrcode_setting_id=setting.id,
@@ -133,13 +127,10 @@ def get_new_settings(request):
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
 
 def _get_ticket(user_id):
-    print "-------create-------ticket-------"
     mp_user = get_binding_weixin_mpuser(user_id)
     mpuser_access_token = get_mpuser_accesstoken(mp_user)
     weixin_api = get_weixin_api(mpuser_access_token)
-    print '==============', mp_user.is_certified, mp_user.is_service,mpuser_access_token.is_active
     if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
-        print "--------1---------"
         try:
             qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
             return qrcode_ticket.ticket
@@ -147,7 +138,6 @@ def _get_ticket(user_id):
             return _get_ticket(user_id)
 
     else:
-        print "--------2---------"
         try:
             qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
             return qrcode_ticket.ticket
