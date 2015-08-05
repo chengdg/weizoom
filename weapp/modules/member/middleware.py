@@ -976,7 +976,7 @@ class OAUTHMiddleware(object):
 							if response:
 								return response
 							#处理fmt
-							print '====================aaaaaa6'
+							print '====================aaaaaa6',request.member
 							response = self.process_fmt_in_url(request, is_new_created_member)
 							if response:
 								return response
@@ -986,7 +986,7 @@ class OAUTHMiddleware(object):
 								is_oauth = True
 							else:
 								return None
-
+							print '====================aaaaaa7',request.member
 						except:
 							print '================error---------'
 							notify_message = u"OAUTHMiddleware error 获取socialaccount, cause:\n{}".format(unicode_full_stack())
