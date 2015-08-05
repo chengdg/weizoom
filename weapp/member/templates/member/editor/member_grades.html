@@ -113,7 +113,7 @@
 						</td>
 						<td class="td-discount tc">
                             <input data-validate="require-float-one" type="text" class="form-control xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>
-                            <div class="errorHint" data-error-hint="请输入1.0~10的数"></div>
+                            <div class="errorHint xa-discount-tr-hint" data-error-hint="请输入1.0~10的数"></div>
 						</td>
 						<td class="td-fouth">
                         {% if grade.is_default_grade %}
@@ -190,7 +190,7 @@
                             +'</td>'
                             +'<td class="td-discount tc">'
                                 +'<input data-validate="require-float-one" type="text" class="form-control xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>'
-                                +'<div class="errorHint" data-error-hint="请输入1.0~10的数"></div>'
+                                +'<div class="errorHint xa-discount-tr-hint" data-error-hint="请输入1.0~10的数"></div>'
                             +'</td>'
                             +'<td class="td-fouth">'
                                 +'<a href="javascript:void(0);" class="delete_tr">删除</a>'
@@ -269,6 +269,7 @@
 
             var conditions_flag = true;
             var discount_flag = true;
+            var discount_number_flag = true
 
             tr_list.each(function () {
 
@@ -316,12 +317,14 @@
 
                 if(discount>10 || discount<1){
                     $(this).find('.xa-discount').parent().addClass('has-error');
-                    discount_flag = false;
+                    $(this).find('.xa-discount-tr-hint').text("请输入1.0~10的数");
+                    $(this).find('.xa-discount-tr-hint').show();
+                    discount_number_flag = false;
                 }
                 else{
                     if(discount>tmp_discount){
                         $(this).find('.xa-discount').parent().addClass('has-error');
-                        console.log(discount+">"+tmp_discount);
+                        $(this).find('.xa-discount-tr-hint').show();
                         discount_flag=false;
 
                     }
@@ -329,6 +332,7 @@
 
                         tmp_discount = discount;
                         $(this).find('.xa-discount').parent().removeClass('has-error');
+                        $(this).find('.xa-discount-tr-hint').text("");
                     }
 
                 }
@@ -336,7 +340,7 @@
                 grades.push({ 'id': id,  'name': name, 'is_auto_upgrade':is_auto_upgrade, 'money':money, 'paytimes':paytimes, 'bound':bound, 'discount':discount});
             });
 
-            if(conditions_flag&&discount){
+            if(conditions_flag && discount_flag && discount_number_flag){
                 xlog(JSON.stringify(grades));
                 var is_all_conditions = $('input[name="is_all_conditions"]:checked').val();
                 W.getApi().call({
