@@ -418,11 +418,11 @@ class ChannelQrcodeOrder(resource.Resource):
 
         if is_show == '1':
             #获取新会员的webapp_user
-            new_webapp_users = WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
+            new_webapp_users = member_model.WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
             new_webapp_user_ids = [u.id for u in new_webapp_users]
 
             #获取old会员的webapp_user
-            old_webapp_users = WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
+            old_webapp_users = member_model.WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
             old_member_order_ids = []
             for webapp_user in old_webapp_users:
                 created_at = old_member_id2_create_at[webapp_user.member_id]
@@ -440,7 +440,7 @@ class ChannelQrcodeOrder(resource.Resource):
             else:
                 orders = []
         else:
-            webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
+            webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
             webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
             webapp_user_ids = set(webapp_user_id2member_id.keys())
             if webapp_user_ids:
