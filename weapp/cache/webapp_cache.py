@@ -74,10 +74,8 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
             mall_models.Product.fill_display_price(new_products)
 
             for product in new_products:
-                # import pdb
-                # pdb.set_trace()
                 product_dict = product.to_dict()
-                # pdb.set_trace()
+                product_dict['promotion'] = product.promotion
                 product_dict['display_price'] = product.display_price
                 product_dict['categories'] = product2categories.get(product.id, set())
                 product_dicts.append(product_dict)
