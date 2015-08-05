@@ -524,3 +524,17 @@ class ChannelQrcodeOrder(resource.Resource):
             'data': {}
         }
         return response.get_response()
+
+def build_member_basic_json(member):
+    return {
+        'id': member.id,
+        'username': member.username_for_html,
+        'name': member.name,
+        'user_icon': member.user_icon,
+        'integral': member.integral,
+        'pay_money': '%.2f' % member.pay_money,
+        'pay_times': member.pay_times,
+        'grade_name': member.grade.name,
+        "follow_time": member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        "is_subscribed": member.is_subscribed
+    }
