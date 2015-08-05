@@ -37,7 +37,7 @@ Background:
 		"""
 		[{
 			"name": "普通会员",
-			"upgrade": "手动升级",
+			"upgrade": "自动升级",
 			"shop_discount": "100%"
 		}, {
 			"name": "铜牌会员",
