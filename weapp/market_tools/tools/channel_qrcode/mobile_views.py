@@ -80,6 +80,7 @@ def get_new_settings(request):
         if not setting.ticket:
             print "--------0---------"
             ticket = _get_ticket(user_id)
+            print "-------0-------", ticket
             setting.ticket = ticket
             setting.save()
 
@@ -112,6 +113,7 @@ def get_new_settings(request):
                 print "--------5---------"
                 setting = MemberChannelQrcodeSettings.objects.get(owner_id=user_id)
                 ticket = _get_ticket(user_id)
+                print "---------5.1-----", ticket
                 new_qrcode = MemberChannelQrcode.objects.create(
                     owner_id=user_id,
                     member_channel_qrcode_setting_id=setting.id,
@@ -129,13 +131,14 @@ def _get_ticket(user_id):
     mp_user = get_binding_weixin_mpuser(user_id)
     mpuser_access_token = get_mpuser_accesstoken(mp_user)
     weixin_api = get_weixin_api(mpuser_access_token)
-    if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
+    if mp_user.is_certified and mp_user.is_service:
         print "--------1---------"
         try:
             qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
             return qrcode_ticket.ticket
         except:
             return _get_ticket(user_id)
+        print "-----print---qrcode_ticket", qrcode_ticket
     else:
         print "--------2---------"
         try:
