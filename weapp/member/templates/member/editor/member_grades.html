@@ -286,7 +286,7 @@
 
                 
                 if(is_auto_upgrade=='1'){
-                    if(paytimes<tmp_paytimes){
+                    if(paytimes<tmp_paytimes||paytimes == tmp_paytimes){
                         conditions_flag=false;
                         $(this).find('.xa-paytimes').parent().addClass('has-error');
                     }
@@ -295,7 +295,7 @@
                         $(this).find('.xa-paytimes').parent().removeClass('has-error');
                     }
                     
-                    if(bound<tmp_bound){
+                    if(bound<tmp_bound || bound==tmp_bound){
                         conditions_flag=false;
                         $(this).find('.xa-bound').parent().addClass('has-error');
                     }
@@ -304,7 +304,7 @@
                         $(this).find('.xa-bound').parent().removeClass('has-error');
                     }
                     
-                    if(money<tmp_money){
+                    if(money<tmp_money||money==tmp_money){
                         conditions_flag=false;
                         $(this).find('.xa-money').parent().addClass('has-error');
                     }
