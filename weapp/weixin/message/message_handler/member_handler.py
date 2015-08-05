@@ -101,6 +101,10 @@ class MemberHandler(MessageHandler):
 			
 			if member and hasattr(member, 'is_new') and member.is_new:
 				try:
+					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+				except:
+					integral_strategy_settings = None
+				try:
 					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 					member.is_new = True
 				except:
@@ -143,7 +147,9 @@ class MemberHandler(MessageHandler):
 
 		try:
 			if not member.user_icon or member.user_icon == '':
+				print '-----------go to update user_icon start',member.user_icon
 				member_basic_info_updater(request.user_profile, member)
+				print '-----------go to update user_icon end', member.user_icon
 		except:
 			notify_message = u"关注时,更新会员头像会员失败,id:{}, cause:\n{}".format(
 							member.id, unicode_full_stack())
