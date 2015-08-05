@@ -23,20 +23,20 @@
     <section class="xui-header">
         <img src="{{member.user_icon}}" alt="" class="pa">
         <p class="xui-memberName">{{member.user_name | safe}}</p>
-        {% if setting.bing_member_title %}
-        <span class="xui-tag">{{setting.bing_member_title}}</span>
+        {% if qrcode.bing_member_title %}
+        <span class="xui-tag">{{qrcode.bing_member_title}}</span>
         {% endif %}
-        <p class="xui-hasRec">已推荐{{setting.count}}人扫码</p>
+        <p class="xui-hasRec">已推荐{{qrcode.count}}人扫码</p>
     </section>
     {% endif %}
     <section>
         <div class="pr tc">
-            <img width="250" height="250" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={{setting.ticket}}" class="xui-qrcode">
+            <img width="250" height="250" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={{qrcode.ticket}}" class="xui-qrcode">
             <img src="{% if head_img %}{{ head_img }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
         </div>
         <h2>活动说明</h2>
         <div class="xui-info">
-            <p>{{setting.qrcode_desc}}</p>
+            <p>{{qrcode_setting.detail|safe}}</p>
         </div>
     </section>
 </div>
