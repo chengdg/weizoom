@@ -89,9 +89,7 @@ class MemberGradeList(resource.Resource):
                     MemberGrade.objects.create(name=name, is_auto_upgrade=is_auto_upgrade,
                                                shop_discount=shop_discount, webapp_id=webapp_id)
 
-
         delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
-
         Member.objects.filter(grade_id__in=delete_ids).update(grade=default_grade)
 
         MemberGrade.objects.filter(id__in=delete_ids).delete()
