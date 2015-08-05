@@ -319,10 +319,10 @@ class ChannelQrcodeMember(resource.Resource):
 
         if is_show == '1':
             member_ids = [relation.member_id for relation in \
-                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=member_channel_qrcode_id, is_new=True)]
+                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=channel_qrcode_id, is_new=True)]
         else:
             member_ids = [relation.member_id for relation in \
-                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=member_channel_qrcode_id)]
+                MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=channel_qrcode_id)]
 
         filter_data_args = {}
         filter_data_args['id__in'] = member_ids
