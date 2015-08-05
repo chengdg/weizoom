@@ -226,6 +226,13 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
 
     product = mall_models.Product.from_dict(data)
 
+    promotion_data = data['promotion']
+    if promotion_data and len(promotion_data) > 0:
+        product.promotion_model = promotion_models.Promotion.from_dict(
+            promotion_data)
+    else:
+        product.promotion_model = dict()
+
     integral_sale_data = data['integral_sale']
     if integral_sale_data and len(integral_sale_data) > 0:
         product.integral_sale_model = promotion_models.Promotion.from_dict(
