@@ -93,7 +93,7 @@ def get_new_settings(request):
                 'hide_non_member_cover':True
             })
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
-     else:
+    else:
         if request.member:
             qrcode = MemberChannelQrcode.objects.filter(member_id=request.member.id)
             if qrcode.count() > 0:
