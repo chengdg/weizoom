@@ -190,7 +190,7 @@ def _get_channel_qrcode_items(request):
     if query:
         #处理搜索
         member_channel_qrcode_ids = []
-        query_hex = byte_to_hex(value)
+        query_hex = byte_to_hex(query)
         members = member_model.Member.objects.filter(id__in=bing_member_ids).filter(username_hexstr__contains=query_hex)
         for member in members:
             member_channel_qrcode_ids.append(bing_member_id2member_channel_qrcode_id[member.id])
