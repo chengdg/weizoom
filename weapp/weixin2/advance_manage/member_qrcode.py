@@ -172,28 +172,17 @@ def _get_channel_qrcode_items(request):
     setting = MemberChannelQrcodeSettings.objects.filter(owner=request.user)
 
     if setting.count() > 0:
-        member_channel_qrcodes = MemberChannelQrcode.objects.filter(\
+        member_channel_qrcodes = MemberChannelQrcode.objects.filter(
             member_channel_qrcode_setting=setting[0])
+        if query:
+            member_ids = [qrcode.member_id for qrcode in member_channel_qrcodes]
+            members = member_model.Member.objects.filter(id__in=bing_member_ids).filter(username_hexstr__contains=query_hex)
+            member_ids = [m.id for m in members]
+            member_channel_qrcodes = member_channel_qrcodes.filter(member_id__in=member_ids)
     else:
         return create_response(500).get_response()
 
-    member_channel_qrcode_ids = []
-    bing_member_ids = []
-    bing_member_id2member_channel_qrcode_id = {}
-    members = []
-    for qrcode in member_channel_qrcodes:
-        bing_member_id2member_channel_qrcode_id[qrcode.member_id] = qrcode.id
-        member_channel_qrcode_ids.append(qrcode.id)
-        bing_member_ids.append(qrcode.member_id)
-
-
-    if query:
-        #处理搜索
-        member_channel_qrcode_ids = []
-        query_hex = byte_to_hex(query)
-        members = member_model.Member.objects.filter(id__in=bing_member_ids).filter(username_hexstr__contains=query_hex)
-        for member in members:
-            member_channel_qrcode_ids.append(bing_member_id2member_channel_qrcode_id[member.id])
+    member_channel_qrcode_ids = [qrcode.id for qrcode in member_channel_qrcodes]
 
     relations = MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode__in=member_channel_qrcode_ids)
     member_channel_qrcode_id2count = {}
