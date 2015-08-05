@@ -380,7 +380,7 @@ class MemberGrade(models.Model):
 	def get_all_grades_list(webapp_id):
 		if webapp_id is None:
 			return []
-		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id).order_by(id)
+		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id).order_by('id')
 
 		for member_grade in member_grades:
 			member_grade.pay_money = '%.2f' % member_grade.pay_money
@@ -390,7 +390,7 @@ class MemberGrade(models.Model):
 	def get_all_auto_grades_list(webapp_id):
 		if webapp_id is None:
 			return []
-		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id,is_auto_upgrade=True).order_by(id)
+		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id,is_auto_upgrade=True).order_by('id')
 
 		for member_grade in member_grades:
 			member_grade.pay_money = '%.2f' % member_grade.pay_money
