@@ -190,8 +190,9 @@ class Product(models.Model):
 	bar_code = models.CharField(max_length=256, default='')  # 条码
 	unified_postage_money = models.FloatField(default=0.0)  # 统一运费金额
 	postage_type = models.CharField(max_length=125, default=POSTAGE_TYPE_UNIFIED)  # 运费类型
-	weshop_sync = models.IntegerField(default=0) # 0不同步 1普通同步 2加价同步
-	weshop_status = models.IntegerField(default=0) # 0待售 1上架 2回收站
+	weshop_sync = models.IntegerField(default=0)  # 0不同步 1普通同步 2加价同步
+	weshop_status = models.IntegerField(default=0)  # 0待售 1上架 2回收站
+	is_member_product = models.BooleanField(default=False)  # 是否参加会员折扣
 
 	class Meta(object):
 		db_table = 'mall_product'

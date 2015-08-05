@@ -10,7 +10,7 @@ from mall.models import WeizoomMall
 from mall import module_api as mall_api
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
-from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
+# from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
 
 
 from weapp.hack_django import post_update_signal, post_delete_signal
@@ -37,59 +37,6 @@ local_cache = {}
 #         return product.promotion['detail']['promotion_price']
 #     else:
 #         return product.display_price
-def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
-    """判断促销是否对用户开放.
-
-    Args:
-      user_member_grade_id(int): 用户会员等价
-      promotion_member_grade_id(int): 促销制定的会员等级
-
-    Return:
-      True - if 促销对用户开放
-      False - if 促销不对用户开放
-    """
-    if promotion_member_grade_id == 0:
-        return True
-    elif promotion_member_grade_id == user_member_grade_id:
-        return True
-    else:
-        return False
-
-
-def get_display_price(discount, member_grade_id, product):
-    """商品促销类型，更新商品价格
-
-    Return:
-      product
-    """
-
-    # 商品参加促销
-    if hasattr(product, 'promotion'):
-        promotion_type = int(product.promotion.get('type'))
-        # 限时抢购
-        if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-            # user是否满足限时抢购条件
-            if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
-                product.display_price = product.promotion['promotion_price']
-                return product
-        # 买赠
-        elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-            if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
-                return product
-
-        # 满减
-        elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
-            pass
-        # 优惠券
-        elif promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
-            pass
-        # 积分抵扣
-        elif promotion_type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
-            if has_promotion(member_grade_id, int(product.integral_sale['member_grade_id'])):
-                return product
-    # 商品不参加促销
-    product.display_price = product.display_price * discount
-    return product
 
 
 def get_webapp_products_from_db(webapp_owner_user_profile,
@@ -130,10 +77,8 @@ def get_webapp_products_from_db(webapp_owner_user_profile,
             mall_models.Product.fill_display_price(new_products)
 
             for product in new_products:
-                product = get_display_price(discount,
-                                            member_grade_id,
-                                            product)
                 product_dict = product.to_dict()
+                product_dict['display_price'] = product.display_price
                 product_dict['categories'] = product2categories.get(product.id, set())
                 product_dicts.append(product_dict)
             return {

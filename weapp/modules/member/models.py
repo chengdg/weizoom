@@ -434,9 +434,6 @@ class Member(models.Model):
 	def get_webapp_user_ids(self):
 		return [webapp_user.id for webapp_user in WebAppUser.objects.filter(member_id=self.id)]
 
-	@property
-	def discount(self):
-		return 1
 
 	@staticmethod
 	def from_webapp_user(webapp_user):
