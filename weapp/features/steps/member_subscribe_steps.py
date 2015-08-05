@@ -11,21 +11,26 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 
 from mall.models import *
-from modules.member.models import * 
+# from modules.member.models import * 
+from modules.member.models import MemberGrade, Member
 from weixin.user import models as weixn_models
 from account import models as account_models
 from utils.string_util import byte_to_hex
 
-def __get_user(user_name):
-	return User.objects.get(username=user_name)
+# def __get_user(user_name):
+# 	return User.objects.get(username=user_name)
 
 @given(u'{user}设置积分策略')
 def step_impl(context, user):
-	if hasattr(context, 'client'):
-		context.client.logout()
-	context.client = bdd_util.login(user)
-	client = context.client
-	user = UserFactory(username=user)
+	"""
+	此方法要删除掉 换成 设定会员积分策略
+	"""
+	# if hasattr(context, 'client'):
+	# 	context.client.logout()
+	# context.client = bdd_util.login(user)
+	# client = context.client
+	# user = UserFactory(username=user)
+	user = context.client.user
 	profile = UserProfile.objects.get(user_id=user.id)
 	json_data = json.loads(context.text)
 
@@ -60,30 +65,32 @@ def step_impl(context, user):
 
 @Then(u'{user}可以获得会员列表')
 def step_impl(context, user):
-	if hasattr(context, 'client'):
-		context.client.logout()
-	context.client = bdd_util.login(user)
-	client = context.client
-	user = UserFactory(username=user)
+	user = context.client.user
 	json_data = json.loads(context.text)
 	Member.objects.all().update(is_for_test=False)
-	url = '/webapp/user_center/api/members/get/'
+	url = '/member/api/members/get/'
 	response = context.client.get(bdd_util.nginx(url))
 	profile = UserProfile.objects.get(user_id=user.id)
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
 	for member_item in items:
-		actual_member = {}
-		actual_member['name'] = member_item['username']
-		actual_member['integral'] = member_item['integral']
+		member_item['name'] = member_item['username']
 		if member_item['is_subscribed']:
-			actual_member['status'] = u"已关注"
+			member_item['status'] = u"已关注"
 		else:
-			actual_member['status'] = u"已取消"
-		actual_members.append(actual_member)
+			member_item['status'] = u"已取消"
+		actual_members.append(member_item)
 
-	bdd_util.assert_list(actual_members, json_data)
+	bdd_util.assert_list(json_data, actual_members)
 
+
+@Given(u'{webapp_owner_name}调{webapp_user_name}等级为{grade_name}')
+def step_impl(context, webapp_owner_name, webapp_user_name, grade_name):
+	user = context.client.user
+	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
+	db_grade = MemberGrade.objects.get(name=grade_name, webapp_id=user.get_profile().webapp_id)
+	context.client.post('/member/api/tag/update/', {
+		'checked_ids':	db_grade.id, 'member_id': member.id, 'type': 'grade'})
 
 @then(u'{webapp_owner_name}能获得{webapp_user_name}的积分日志')
 def step_impl(context, webapp_owner_name, webapp_user_name):
@@ -99,12 +106,13 @@ def step_impl(context, webapp_owner_name, webapp_user_name):
 
 @when(u'{member_a}取消关注{user}的公众号')
 def step_impl(context, member_a, user):
-	if hasattr(context, 'client'):
-		context.client.logout()
-	context.client = bdd_util.login(user)
-	client = context.client
-	user = UserFactory(username=user)
-	user_profile = UserProfile.objects.get(user_id=user.id)
+	# if hasattr(context, 'client'):
+	# 	context.client.logout()
+	# context.client = bdd_util.login(user)
+	# client = context.client
+	# user = UserFactory(username=user)
+	user = context.client.user
+	user_profile = user.get_profile()
 	openid = '%s_%s' % (member_a, user)
 	post_data = """
 				<xml><ToUserName><![CDATA[weizoom]]></ToUserName>

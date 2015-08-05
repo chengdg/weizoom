@@ -43,7 +43,7 @@ class MemberGradeList(resource.Resource):
 
         post_grades = json.loads(request.POST.get('grades', []))
         webapp_id = request.user_profile.webapp_id
-        member_grades = MemberGrade.get_all_grades_list(webapp_id)
+        member_grades = MemberGrade.get_all_grades_list(webapp_id).exclude(name = u'普通会员')
         member_grade_ids = [grade.id for grade in member_grades]
         default_grade = MemberGrade.get_default_grade(webapp_id)
 
@@ -52,9 +52,9 @@ class MemberGradeList(resource.Resource):
 
         post_ids = []
         for grade in post_grades:
-            grade_id = int(grade.get("id", None))
-
-            post_ids.append(grade_id)
+            grade_id = int(grade.get("id", '0'))
+            if grade_id > 0:
+                post_ids.append(grade_id)
 
             name = grade.get("name", 'get none value')
             is_auto_upgrade = bool(int(grade.get("is_auto_upgrade", 0)))
