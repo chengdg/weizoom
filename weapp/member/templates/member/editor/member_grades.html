@@ -27,16 +27,27 @@
 	</div>
 
 	<div class="xui-content">
-		<div class="xui-content-top">
-			<p class="xui-p-title">等级设置</p>
-		</div>
-		<form class="xui-mall-addProductForm" method="post" id="editForm" >
+		<p class="xui-rightPanelTitle mb10">等级设置</p>
+		<form class="xui-mall-addProductForm pl20 pr20 clearfix pr" method="post" id="editForm" >
+            <label for="">自动升级条件：</label>
+            <input type="radio" name="auto" id="one" class="vm m0" checked><label for="one" class="xui-selectAll mr30">&nbsp;&nbsp;满足一个条件即可</label>
+            <input type="radio" name="auto" id="all" class="vm m0"><label for="all" class="xui-selectAll">&nbsp;&nbsp;必须满足全部条件</label>
+            <a class="fr xa-tips" href="javascript:void(0);">操作说明</a>
+            <ul class="xui-tips hidden xa-tipInfo">
+                <li><span>1.</span>不启用自动升级：该等级下的会员不会自动升级为其他等级的会员，需手动调整,但可享受设置的购物折扣。</li>
+                <li><span>2.</span> 自动升级：创建完成后，会员满足升级条件时，自动变为该等级会员，无需手动调整；</li>
+                <li><span>3.</span>满足一个条件：会员满足升级条件中的任意一个，即可升级为该等级会员；</li>
+                <li><span>4.</span> 满足所有条件：会员必须满足所有升级条件，才可升级为该等级会员；</li>
+                <li><span>5.</span> 交易金额：已完成的订单的师傅金额（包括微众卡支付的金额）；</li>
+                <li><span>6.</span> 购买次数：已完成的订单数；</li>
+                <li><span>7.</span> 经验值：累计获得积分总数，积分消费后经验值不减少。</li>
+            </ul>
 			<table class="table table-bordered table-condensed xb-stripedTable">
 				<thead>
 					<tr>
-						<th>会员等级</th>
-						<th>升级模式</th>
-						<th>满足条件</th>
+						<th width="150">会员等级</th>
+						<th width="170">升级模式</th>
+						<th width="335">满足条件</th>
 						<th>购物折扣</th>
 						<th>操作</th>
 					</tr>
@@ -44,23 +55,20 @@
 				<tbody class = 'tags_tbody'>
 					{% for grade in member_grades %}
 					<tr data-id="{{ grade.id }}" class="domain_data">
-						<td class="td-name">
-							<div>
+						<td class="td-name" width="150">
 							<input data-validate="required-none::不能为空"  type="text" class="form-control  xa-grade-name xui-grade"  placeholder="" value="{{ grade.name }}" maxlength="100"/>
-							</div>
-                            <div class="errorHint" >
-                            </div>
+                            <div class="errorHint" ></div>
 						</td>
 
-                        <td class="td-auto-upgrade">
-							<div>
+                        <td class="td-auto-upgrade" width="170">
+							<div class="checkbox">
                             {% if grade.is_default_grade %}
                                 自动升级
                             {% else %}
                                 {% if grade.is_auto_upgrade %}
-                                    <input type="checkbox" class="xa-auto-upgrade" checked value="1" data-id="{{ grade.id }}">自动升级
+                                    <input type="checkbox" class="xa-auto-upgrade" checked value="1" data-id="{{ grade.id }}" id="{{ grade.id }}"><label for="{{ grade.id }}">自动升级</label>
                                 {% else %}
-                                    <input type="checkbox" class="xa-auto-upgrade" value="0" data-id="{{ grade.id }}">自动升级
+                                    <input type="checkbox" class="xa-auto-upgrade" value="0" data-id="{{ grade.id }}" id="{{ grade.id }}"><label for="{{ grade.id }}">自动升级</label>
                                 {% endif %}
                             {% endif %}
 							</div>
@@ -68,47 +76,46 @@
                             </div>
 						</td>
 
-						<td class="td-requirement">
+						<td class="td-requirement" width="335">
 							{% if grade.is_default_grade %}
 								所有关注过您的公众号的用户
 							{% else %}
                                 {% if grade.is_auto_upgrade %}
-                                <div class="xui-td-left xa-requirement-able" data-id="{{ grade.id }}" >
-                                    <div><span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+                                <div class="xa-requirement-able" data-id="{{ grade.id }}" >
+                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">活动积分：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
 							    </div >
-                                <div class="xui-td-left xa-requirement-disabled" data-id="{{ grade.id }}" style="display: none">
-                                        交易金额：<input disabled/>
-                                        购买次数：<input disabled/>
-                                        经验值：<input disabled/>
+                                <div class="xa-requirement-disabled" data-id="{{ grade.id }}" style="display: none">
+                                    <div><span class="xui-td-span">交易金额￥：</span><input disabled type="text"  class="form-control xui-input"/></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input disabled type="text"  class="form-control xui-input"/></div>
+                                    <div><span class="xui-td-span">活动积分：</span><input disabled type="text"  class="form-control xui-input"/></div>
                                 </div>
                                 {% else %}
-                                <div class="xui-td-left xa-requirement-able" data-id="{{ grade.id }}" style="display: none">
-                                    <div><span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control fr xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+                                <div class="xa-requirement-able" data-id="{{ grade.id }}" style="display: none">
+                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
+                                    <div><span class="xui-td-span">活动积分：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
 							    </div >
-                                <div class="xui-td-left xa-requirement-disabled" data-id="{{ grade.id }}">
-                                        交易金额：<input disabled/>
-                                        购买次数：<input disabled/>
-                                        经验值：<input disabled/>
+                                <div class="xa-requirement-disabled" data-id="{{ grade.id }}">
+                                    <div><span class="xui-td-span">交易金额￥：</span><input disabled type="text"  class="form-control xui-input"/></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input disabled type="text"  class="form-control xui-input"/></div>
+                                    <div><span class="xui-td-span">活动积分：</span><input disabled type="text"  class="form-control xui-input"/></div>
                                 </div>
                                 {% endif %}
 							{% endif %}
 						</td>
-						<td class="td-discount">
-
-							<div class="controls">
-                                <div><span class="xui-td-span"></span><input type="text" class="form-control fr xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>折<div class="errorHint" data-error-hint="请输入数字"></div></div>
-							</div>
+						<td class="td-discount tc">
+                            <input type="text" class="form-control xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>
+                            <div class="errorHint" data-error-hint="请输入数字"></div>
 						</td>
-						<td class="td-fouth">{% if grade.is_default_grade %}
+						<td class="td-fouth">
+                        {% if grade.is_default_grade %}
 							{% else %}
 							<a  href="javascript:void(0);" class="delete_tr">
 							删除
 							</a>
-							{% endif %}
+						{% endif %}
 						</td>
 					</tr>
 					{% endfor %}
@@ -123,11 +130,11 @@
 					</tr>
 				</tbody>
 			</table>
-                <div class="xa-error-hint" style="display: none">
+                <div class="xa-error-hint red tc" style="display: none">
                     等级升级条件必须逐级递增</br>
                     等级折扣必须主机递减或相同
                 </div>
-				<div class="xui-btn-group tc mt50">
+				<div class="xui-btn-group tc">
 {#					<input type="submit" class="btn btn-primary xa-submit" id="submitBtn" value="保存" />#}
                     <a href="javascript:void(0);" class="btn btn-primary xa-submit">保存</a>
 				</div>
@@ -152,13 +159,56 @@
             //var data_id = $(".domain_data").last().attr('data-id');
             data_id = parseInt(data_id) + 1;
             var new_data_id = parseInt(data_id) + 1;
-            $(".tags_tbody .last_tr").before('<tr data-id="' + new_data_id + '" class="domain_data"><td class="w150"><div><input data-validate="required-none::不能为空" type="text" class="form-control xui-grade xa-grade-name"  id="grade_id_' + new_data_id + '" name="grade_id_' + new_data_id + '" placeholder="" value="{{ grade.name }}" maxlength="100"/><div class="errorHint"></div></div></td><td> <div class="xui-td-left">  <div> <span class="xui-td-span">交易金额：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_money_term_' + new_data_id + '" name="grade_money_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div><div> <span class="xui-td-span">购买次数：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_paytimes_term_' + new_data_id + '" name="grade_paytimes_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div><div><span class="xui-td-span">活动积分：</span><input data-validate="require-price" type="text" class="form-control fr xui-input"  id="grade_bound_term_' + new_data_id + '" name="grade_bound_term_' + new_data_id + '" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/> <div class="errorHint" data-error-hint="请输入数字"></div></div></div> <div class="xui-td-right"><p class="xui-p">满足任一条件即可</p></div> </td><td><a href="javascript:void(0);" class="delete_tr">删除</a></td></tr>');
-
+            var templ = '<tr data-id="' + new_data_id + '" class="domain_data">'
+                            +'<td class="td-name" width="150">'
+                                +'<input data-validate="required-none::不能为空"  type="text" class="form-control  xa-grade-name xui-grade" id="grade_id_' + new_data_id + '" name="grade_id_' + new_data_id + '" value="{{ grade.name }}" maxlength="100"/>'
+                                +'<div class="errorHint">'
+                            +'</td>'
+                            +'<td>'
+                                +'<div class="checkbox">'
+                                    +'<input type="checkbox" class="xa-auto-upgrade" value="0" data-id="' + new_data_id + '" id="' + new_data_id + '"><label for="' + new_data_id + '">自动升级</label>'
+                                +'</div>'
+                                +'<div class="errorHint" ></div>'
+                            +'</td>'
+                            +'<td class="td-requirement" width="335">'
+                                +'<div class="xa-requirement-able" data-id="' + new_data_id + '" style="display: none">'
+                                    +'<div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>'
+                                    +'<div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_' + new_data_id + '" name="grade_paytimes_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>'
+                                    +'<div><span class="xui-td-span">活动积分：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>'
+                                +'</div>'
+                                +'<div class="xa-requirement-disabled" data-id="' + new_data_id + '">'
+                                    +'<div><span class="xui-td-span">交易金额￥：</span><input disabled type="text"  class="form-control xui-input"/></div>'
+                                    +'<div><span class="xui-td-span">购买次数：</span><input disabled type="text"  class="form-control xui-input"/></div>'
+                                    +'<div><span class="xui-td-span">活动积分：</span><input disabled type="text"  class="form-control xui-input"/></div>'
+                                +'</div>'
+                            +'</td>'
+                            +'<td class="td-discount tc">'
+                                +'<input type="text" class="form-control xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>'
+                                +'<div class="errorHint" data-error-hint="请输入数字"></div>'
+                            +'</td>'
+                            +'<td class="td-fouth">'
+                                +'<a href="javascript:void(0);" class="delete_tr">删除</a>'
+                            +'</td>'
+                        +'</tr>';
+            $(".tags_tbody .last_tr").before(templ);
         });
 
         $('tbody').delegate('.delete_tr', 'click', function (event) {
             var $el = $(event.currentTarget);
-            $el.parent().parent().remove();
+            var msg = "删除后，该等级下的所有会员将划分至其满足升级条件的等级！";
+            W.requireConfirm({
+                $el: $el,
+                width:425,
+                height:72,
+                position:'top',
+                isTitle: false,
+                msg: msg,
+                show_icon:false,
+                confirm: function(){
+                    $el.parents('tr').remove();
+                    $(this).close();
+                }
+            });
         });
 
         // 自动升级
@@ -185,7 +235,12 @@
             }
             $el.attr("value",value);
         });
-
+        $('.xa-tips').mouseover(function(event) {
+            $('.xa-tipInfo').removeClass('hidden');
+        });
+        $('.xa-tips').mouseleave(function(event) {
+            $('.xa-tipInfo').addClass('hidden');
+        });
 
 
 
