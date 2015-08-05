@@ -110,8 +110,8 @@ def step_impl(context, member_a, user):
 	# 	context.client.logout()
 	# context.client = bdd_util.login(user)
 	# client = context.client
-	# user = UserFactory(username=user)
-	user = context.client.user
+	user = UserFactory(username=user)
+	# user = context.client.user
 	user_profile = user.get_profile()
 	openid = '%s_%s' % (member_a, user)
 	post_data = """
@@ -124,6 +124,6 @@ def step_impl(context, member_a, user):
 				</xml>
 	""" % openid
 	url = '/weixin/%s/'% user_profile.webapp_id
-	client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
+	context.client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
 
 	
