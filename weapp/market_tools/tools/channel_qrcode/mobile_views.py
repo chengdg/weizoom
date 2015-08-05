@@ -122,8 +122,12 @@ def get_new_settings(request):
                 )
 
         c = RequestContext(request, {
-                'page_title': u'代言人二维码',
-                'show_head': True})
+                'page_title': u'首草送好礼，接力扫码等你来传递',
+                'member': member,
+                'setting': new_qrcode,
+                'show_head': True,
+                'head_img': get_mp_head_img(user_id)
+                })
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
 
 def _get_ticket(user_id):
@@ -136,10 +140,11 @@ def _get_ticket(user_id):
         print "--------1---------"
         try:
             qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
+            print "-----print---qrcode_ticket", qrcode_ticket
             return qrcode_ticket.ticket
         except:
             return _get_ticket(user_id)
-        print "-----print---qrcode_ticket", qrcode_ticket
+
     else:
         print "--------2---------"
         try:
