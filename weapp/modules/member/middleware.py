@@ -952,9 +952,12 @@ class OAUTHMiddleware(object):
 							if request.found_member_in_cache is False:
 								print '====================aaaaaa2'
 								social_accounts = SocialAccount.objects.filter(openid=openid, webapp_id=request.user_profile.webapp_id)
+								print social_accounts,'===========asdfasdf',openid, request.user_profile.webapp_id
 								if social_accounts.count() > 0:
+									print '=============aa',social_accounts
 									social_account = social_accounts[0]
 									member, response = get_member_by(request, social_account)
+									print '=============aa1',social_account
 								else:
 									print '====================aaaaaa3'
 									token = get_token_for(request.user_profile.webapp_id, openid)
