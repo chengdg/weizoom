@@ -946,31 +946,37 @@ class OAUTHMiddleware(object):
 						is_oauth =True
 					else:
 						try:
+							print '====================aaaaaa1'
 							#通过openid_webapp_id获取用户信息
 							is_new_created_member = False
 							if request.found_member_in_cache is False:
+								print '====================aaaaaa2'
 								social_accounts = SocialAccount.objects.filter(openid=openid, webapp_id=request.user_profile.webapp_id)
 								if social_accounts.count() > 0:
 									social_account = social_accounts[0]
 									member, response = get_member_by(request, social_account)
 								else:
+									print '====================aaaaaa3'
 									token = get_token_for(request.user_profile.webapp_id, openid)
 									social_account = member_util.create_social_account(request.user_profile.webapp_id, openid, token, SOCIAL_PLATFORM_WEIXIN)
 									member = self.get_member_by(request, social_account)
 								# if response:
 								# 	return response
+								print '====================aaaaaa4',member
 								if member and hasattr(member, 'is_new_created_member'):
 									is_new_created_member = member.is_new_created_member
 
 								request.member = member
 								request.social_account = social_account
 								request.webapp_user = self._get_webapp_user(request.member)
+								print '====================aaaaaa5'
 							#处理sct
 
 							response = self.process_sct_in_url(request)
 							if response:
 								return response
 							#处理fmt
+							print '====================aaaaaa6'
 							response = self.process_fmt_in_url(request, is_new_created_member)
 							if response:
 								return response
@@ -982,6 +988,7 @@ class OAUTHMiddleware(object):
 								return None
 
 						except:
+							print '================error---------'
 							notify_message = u"OAUTHMiddleware error 获取socialaccount, cause:\n{}".format(unicode_full_stack())
 							watchdog_error(notify_message)
 							is_oauth = True
