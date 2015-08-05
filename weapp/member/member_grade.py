@@ -9,8 +9,10 @@ from django.shortcuts import render_to_response
 from core import resource
 import export
 from mall.module_api import update_promotion_status_by_member_grade
-from modules.member.models import MemberGrade, IntegralStrategySttings, Member
+from modules.member.models import MemberGrade, IntegralStrategySttings, Member, WebAppUser
 from core.jsonresponse import create_response
+from mall.models import Order
+import mall.models as mall_models
 
 
 class MemberGradeList(resource.Resource):
@@ -102,3 +104,49 @@ class MemberGradeList(resource.Resource):
 
 def _is_auto(grade_id):
     return MemberGrade.objects.get(id=grade_id).is_auto_upgrade
+
+
+def set_grade(member, is_auto=True):
+    # members = [members]
+    #
+    # for member in members:
+
+    member_grade = member.grade
+
+    webapp_id = member.webapp_id
+
+    webapp_user_id = WebAppUser.objects.get(member_id=member.id)
+
+    orders = mall_models.belong_to(webapp_id)
+
+    paid_orders = orders.filter(status=mall_models.ORDER_STATUS_SUCCESSED, webapp_user_id=webapp_user_id)
+
+    pay_times = paid_orders.count()
+
+    bound = Member.objects.get(id=member.id).experience
+
+    pay_money = 0
+    for order in paid_orders:
+        # total_money += (order.product_price + order.postage) - (order.coupon_money +
+        #                                                         order.integral_money + order.weizoom_card_money +
+        #                                                         order.promotion_saved_money + order.edit_money)
+
+        pay_money += order.get_final_price(webapp_id)
+
+    all_grades_list = MemberGrade.get_all_auto_grades_list(webapp_id)
+    if not is_auto:
+        all_grades_list = filter(lambda x: x >= member.grade_id, all_grades_list)
+
+    is_all_conditions = IntegralStrategySttings.objects.get(webapp_id=webapp_id)
+
+    if is_all_conditions:
+        for grade in all_grades_list:
+            if pay_money >= grade.pay_money and pay_times >= grade.pay_times and bound >= grade.upgrade_lower_bound:
+                member_grade = grade
+
+    else:
+        for grade in all_grades_list:
+            if pay_money >= grade.pay_money or pay_times >= grade.pay_times or bound >= grade.upgrade_lower_bound:
+                member_grade = grade
+
+    Member.objects.filter(id=member.id).update(grade=member_grade)
