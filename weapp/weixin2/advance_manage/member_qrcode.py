@@ -176,7 +176,8 @@ def _get_channel_qrcode_items(request):
             member_channel_qrcode_setting=setting[0])
         if query:
             member_ids = [qrcode.member_id for qrcode in member_channel_qrcodes]
-            members = member_model.Member.objects.filter(id__in=bing_member_ids).filter(username_hexstr__contains=query_hex)
+            query_hex = byte_to_hex(query)
+            members = member_model.Member.objects.filter(id__in=member_ids).filter(username_hexstr__contains=query_hex)
             member_ids = [m.id for m in members]
             member_channel_qrcodes = member_channel_qrcodes.filter(member_id__in=member_ids)
     else:
