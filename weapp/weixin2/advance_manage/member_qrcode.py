@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 
 from core import resource
 from core import paginator
+from utils.string_util import byte_to_hex
 from weixin2 import export
 from mall.models import *
 from modules.member import models as member_model
@@ -177,12 +178,22 @@ def _get_channel_qrcode_items(request):
         return create_response(500).get_response()
 
     member_channel_qrcode_ids = []
+    bing_member_ids = []
+    bing_member_id2member_channel_qrcode_id = {}
     members = []
     for qrcode in member_channel_qrcodes:
+        bing_member_id2member_channel_qrcode_id[qrcode.member_id] = qrcode.id
         member_channel_qrcode_ids.append(qrcode.id)
-        members.append(qrcode.member)
+        bing_member_ids.append(qrcode.member_id)
 
-    id2member = dict([(m.id, m) for m in members])
+
+    if query:
+        #处理搜索
+        member_channel_qrcode_ids = []
+        query_hex = byte_to_hex(value)
+        members = member_model.Member.objects.filter(id__in=bing_member_ids).filter(username_hexstr__contains=query_hex)
+        for member in members:
+            member_channel_qrcode_ids.append(bing_member_id2member_channel_qrcode_id[member.id])
 
     relations = MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode__in=member_channel_qrcode_ids)
     member_channel_qrcode_id2count = {}
