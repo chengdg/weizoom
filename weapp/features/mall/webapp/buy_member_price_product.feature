@@ -108,6 +108,7 @@ Background:
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
 	Then jobs可以获得会员列表
+		"""
 		[{
 			"name": "tom",
 			"member_rank": "普通会员"
