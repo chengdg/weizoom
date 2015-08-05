@@ -947,6 +947,7 @@ class OAUTHMiddleware(object):
 					else:
 						try:
 							#通过openid_webapp_id获取用户信息
+							is_new_created_member = False
 							if request.found_member_in_cache is False:
 								social_accounts = SocialAccount.objects.filter(openid=openid, webapp_id=request.user_profile.webapp_id)
 								if social_accounts.count() > 0:
@@ -958,16 +959,19 @@ class OAUTHMiddleware(object):
 									member = self.get_member_by(request, social_account)
 								# if response:
 								# 	return response
+								if member and hasattr(member, 'is_new_created_member'):
+									is_new_created_member = member.is_new_created_member
 
 								request.member = member
 								request.social_account = social_account
 								request.webapp_user = self._get_webapp_user(request.member)
 							#处理sct
+
 							response = self.process_sct_in_url(request)
 							if response:
 								return response
 							#处理fmt
-							response = self.process_fmt_in_url(request)
+							response = self.process_fmt_in_url(request, is_new_created_member)
 							if response:
 								return response
 
@@ -1122,10 +1126,10 @@ class OAUTHMiddleware(object):
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
 		return response
 
-	def process_fmt_in_url(self, request):
+	def process_fmt_in_url(self, request, is_new_created_member=False):
 		cookie_fmt = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
-		self.process_shared_url(request,False)
+		self.process_shared_url(request,is_new_created_member)
 		if cookie_fmt == url_fmt:
 			return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
