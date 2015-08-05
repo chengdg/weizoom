@@ -115,7 +115,7 @@ def get_new_settings(request):
                     owner_id=user_id,
                     member_channel_qrcode_setting_id=qrcode_setting.id,
                     member_id=member.id,
-                    ticket=ticket
+                    ticket=''
                 )
                 ticket = _get_ticket(user_id, new_qrcode.id)
                 new_qrcode.ticket = ticket
