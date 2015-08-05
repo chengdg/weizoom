@@ -110,7 +110,11 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                             //
                             //$(".xa-shipDropBox").hide();
                             $(".xa-shipDropBox").hide();
-                            $('[data-ui-role="advanced-table"]').data('view').reload();
+                            if($('[data-ui-role="advanced-table"]').length>0)
+                                $('[data-ui-role="advanced-table"]').data('view').reload();
+                            else
+                                window.location.reload();
+
 
                         },
                         error: function() {

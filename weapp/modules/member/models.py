@@ -329,7 +329,7 @@ class MemberGrade(models.Model):
 	webapp_id = models.CharField(max_length=16, db_index=True, verbose_name='所关联的app id')
 	name = models.TextField()
 	is_auto_upgrade = models.BooleanField(default=False, verbose_name='是否凭经验值自动升级')
-	upgrade_lower_bound = models.IntegerField(verbose_name='该等级的经验值下限')
+	upgrade_lower_bound = models.IntegerField(default=0, verbose_name='该等级的经验值下限')
 	shop_discount = models.IntegerField(default=100, verbose_name='购物折扣')
 	is_default_grade = models.BooleanField(default=False)
 	# 14迭代 bert add
@@ -896,6 +896,7 @@ class IntegralStrategySttings(models.Model):
 	buy_via_offline_increase_count_percentage_for_author = models.CharField(max_length=25, verbose_name="线下会员购买为推荐者额外增加的额度(以订单金额的百分比计算）", default="0.0")
 	use_ceiling = models.IntegerField(default=-1, verbose_name='订单积分抵扣上限')
 	review_increase = models.IntegerField(default=0, verbose_name='商品好评送积分')
+	is_all_conditions = models.BooleanField(default=False,verbose_name='自动升级条件')
 
 	class Meta(object):
 		db_table = 'member_integral_strategy_settings'
