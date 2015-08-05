@@ -21,7 +21,7 @@
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchRecycle">移动到回收站</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
 			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
 		</div>
 		<div
@@ -44,7 +44,7 @@
 				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOnshelf">批量上架</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchRecycle">移动到回收站</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">彻底删除</a>
 		</div>
 	</div>
 	{% else %}
@@ -153,7 +153,7 @@
 						<a href="javascript:void(0);" class="xa-onshelf fl" style="width: 30px;">上架</a>
 						</div>
 						</br>
-						<a href="javascript:void(0);" class="xa-recycle">移至回收站</a>
+						<a href="javascript:void(0);" class="xa-delete">彻底删除</a>
 					</td>
 				</tr>
 				{{/each}}
