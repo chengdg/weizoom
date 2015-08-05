@@ -131,7 +131,8 @@ def _get_ticket(user_id):
     mp_user = get_binding_weixin_mpuser(user_id)
     mpuser_access_token = get_mpuser_accesstoken(mp_user)
     weixin_api = get_weixin_api(mpuser_access_token)
-    if mp_user.is_certified and mp_user.is_service:
+    print '==============', mp_user.is_certified, mp_user.is_service,mpuser_access_token.is_active
+    if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
         print "--------1---------"
         try:
             qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
