@@ -441,6 +441,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					continue
 				if one_promotion.type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
 					integral_sale = one_promotion
+				# RFC
 				elif one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
 					promotion = one_promotion
 
