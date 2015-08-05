@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response
 from core import resource
 import export
 from mall.module_api import update_promotion_status_by_member_grade
-from modules.member.models import MemberGrade, IntegralStrategySttings
+from modules.member.models import MemberGrade, IntegralStrategySttings, Member
 from core.jsonresponse import create_response
 
 
@@ -89,10 +89,18 @@ class MemberGradeList(resource.Resource):
                     MemberGrade.objects.create(name=name, is_auto_upgrade=is_auto_upgrade,
                                                shop_discount=shop_discount, webapp_id=webapp_id)
 
+
         delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
+
+        Member.objects.filter(grade_id__in=delete_ids).update(grade=default_grade)
+
         MemberGrade.objects.filter(id__in=delete_ids).delete()
         if delete_ids:
             update_promotion_status_by_member_grade(delete_ids)
 
         response = create_response(200)
         return response.get_response()
+
+
+def _is_auto(grade_id):
+    return MemberGrade.objects.get(id=grade_id).is_auto_upgrade

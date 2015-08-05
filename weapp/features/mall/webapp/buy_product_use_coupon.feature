@@ -796,7 +796,7 @@ Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣�
 			}
 		}
 		'''
-@wxr09
+
 # __edit__ : "新新"
 Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 #（全体券和会员价可以同时使用，但是满多少钱可以使用计算的是会员价）
@@ -868,7 +868,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"money": 20,
 			"limit_counts": 10,
 			"start_date": "2天前",
-			"end_date": "1天前",
+			"end_date": "2天后",
 			"using_limit": "满100元可以使用",
 			"coupon_id_prefix": "coupon9_id_"
 		}]
