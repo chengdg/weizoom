@@ -134,9 +134,8 @@ class MemberHandler(MessageHandler):
 					 更新好友数量
 				"""	
 				member.is_new = True
-			
-
-			member.is_new = False
+			else:
+				member.is_new = False
 				
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
