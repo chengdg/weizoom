@@ -250,13 +250,13 @@ def _get_channel_qrcode_items(request):
         current_qrcode = JsonResponse()
 
         if qrcode.id in member_channel_qrcode_id2count:
-            qrcode.count = member_channel_qrcode_id2count[q.id]
+            qrcode.count = member_channel_qrcode_id2count[qrcode.id]
         else:
             qrcode.count = 0
         if qrcode.id in member_channel_qrcode_id2total_final_price:
-            qrcode.total_final_price = member_channel_qrcode_id2total_final_price[q.id]
-            qrcode.cash_money = member_channel_qrcode_id2cash_money[q.id]
-            qrcode.weizoom_card_money = member_channel_qrcode_id2weizoom_card_money[q.id]
+            qrcode.total_final_price = member_channel_qrcode_id2total_final_price[qrcode.id]
+            qrcode.cash_money = member_channel_qrcode_id2cash_money[qrcode.id]
+            qrcode.weizoom_card_money = member_channel_qrcode_id2weizoom_card_money[qrcode.id]
         else:
             qrcode.total_final_price = 0
             qrcode.cash_money = 0
