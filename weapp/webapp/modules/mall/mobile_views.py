@@ -84,8 +84,9 @@ def get_product(request):
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-	# if product.promotion:
-	# 	product.promotion['is_active'] = product.promotion_model.is_active
+	if product.promotion:
+		product.promotion['is_active'] = product.promotion_model.is_active
+		product.promotion['detail']['cut_price'] = product.price_info['display_price'] - product.display_price
 	jsons = [{
 		"name": "models",
 		"content": product.models
