@@ -589,7 +589,7 @@ Scenario: 7.jobs通过审核评价，给用户加积分
         }]
         """
     Given jobs登录系统
-    And jobs设置积分策略
+    And jobs设定会员积分策略
         """
         [{
             "review_increase": 20

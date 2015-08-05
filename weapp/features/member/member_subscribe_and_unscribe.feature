@@ -6,7 +6,7 @@ Feature: 微信用户关注公众号成为系统会员
 	
 Background:
 	Given jobs登录系统
-	And jobs设置积分策略
+	And jobs设定会员积分策略
 		"""
 		[{ 
 			"be_member_increase_count": 20 
