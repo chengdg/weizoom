@@ -40,11 +40,9 @@ def list_products(request):
 	"""
 	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	category_id = int(request.GET.get('category_id', 0))
-	discount = utils.get_vip_discount(request)
-	member_grade_id = utils.get_user_member_grade_id(request)
 	category, products = webapp_cache.get_webapp_products(
 		request.user_profile, request.is_access_weizoom_mall,
-		category_id, discount, member_grade_id)
+		category_id)
 	products = utils.get_processed_products(request, products)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 	has_category = False
@@ -71,13 +69,13 @@ def list_products(request):
 def get_product(request):
 	"""显示“商品详情”页面
 	"""
+	discount = utils.get_vip_discount(request)
+	member_grade_id = utils.get_user_member_grade_id(request)
 	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	product_id = request.GET['rid']
-	webapp_user = request.webapp_user
-
 	member_grade_id = request.member.grade_id if request.member else None
-	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
-	product = utils.get_processed_product(request, product)
+	product = mall_api.get_product_detail_refactor(request.webapp_owner_id, product_id, member_grade_id)
+	product = utils.get_display_price(discount, member_grade_id, product)
 	#product.fill_model()
 
 	if product.is_deleted:
@@ -86,8 +84,8 @@ def get_product(request):
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-	if product.promotion:
-		product.promotion['is_active'] = product.promotion_model.is_active
+	# if product.promotion:
+	# 	product.promotion['is_active'] = product.promotion_model.is_active
 	jsons = [{
 		"name": "models",
 		"content": product.models
