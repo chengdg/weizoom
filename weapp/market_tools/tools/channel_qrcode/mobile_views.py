@@ -9,6 +9,7 @@ from models import *
 from modules.member.models import Member
 from  weixin.user.module_api import get_mp_head_img
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
+from core.wxapi import get_weixin_api
 
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
