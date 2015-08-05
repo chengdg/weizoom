@@ -97,7 +97,7 @@
                         {{each(i, qrcode) items}}
                             <tr class="h40" data-id="${qrcode.id}">
                                 <td style="word-break:break-all; overflow:auto;padding:0 20px;text-align:left;170px;">
-                                    ${qrcode.name}
+                                    {{html qrcode.name }}
                                 </td>
                                 <td >
                                     {{if qrcode.count > 0}}

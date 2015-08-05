@@ -63,7 +63,9 @@ class ChannelQrcodeHandler(MessageHandler):
 
 		if user_profile.user_id in [467,145] and \
 			check_new_channel_qrcode_ticket(ticket, user_profile):
+			print "------log--1-------"
 			if member.is_new:
+				print "------log--2-------"
 				create_new_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
 			return None
 		elif check_channel_qrcode_ticket(ticket, user_profile):
