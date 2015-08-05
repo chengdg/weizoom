@@ -10,6 +10,7 @@ from modules.member.models import Member
 from  weixin.user.module_api import get_mp_head_img
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi import get_weixin_api
+from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
 
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
@@ -73,6 +74,7 @@ def get_settings(request):
 
 def get_new_settings(request):
     user_id = request.webapp_owner_id
+    print '==============get_new_settings',request.get_full_path()
     ticketid = request.GET.get('ticketid', 0)
     member = request.member
     if ticketid:
@@ -138,18 +140,16 @@ def _get_ticket(user_id):
     print '==============', mp_user.is_certified, mp_user.is_service,mpuser_access_token.is_active
     if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
         print "--------1---------"
-        #try:
-        qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
-        print "-----print---qrcode_ticket", qrcode_ticket
-        return qrcode_ticket.ticket
-        # except:
-        #     return _get_ticket(user_id)
+        try:
+            qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
+            return qrcode_ticket.ticket
+        except:
+            return _get_ticket(user_id)
+
     else:
-        return ''
-    # else:
-    #     print "--------2---------"
-    #     try:
-    #         qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
-    #         return qrcode_ticket.ticket
-    #     except:
-    #         return ''
+        print "--------2---------"
+        try:
+            qrcode_ticket = weixin_api.create_qrcode_ticket(user_id, QrcodeTicket.PERMANENT)
+            return qrcode_ticket.ticket
+        except:
+            return ''
