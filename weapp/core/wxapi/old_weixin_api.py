@@ -343,9 +343,7 @@ class WeixinApi(object):
 		request_url = self._complete_weixin_api_get_request_url('cgi-bin/qrcode/create', {})
 
 		try:
-			print '================================1'
 			api_response = self.weixin_http_client.post(request_url, post_param_json)
-			print '================================api_response',api_response
 		except:
 			self._raise_system_error(u'创建带参数的二维码')
 
