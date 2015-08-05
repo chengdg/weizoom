@@ -52,7 +52,7 @@
 .xui-members-page .xui-content{
 	margin-left: 0px !important;
 	background-color:#EAEEF5;
-	height: 960px;
+	min-height: 830px;
 }
 .xui-members-page .xui-tips{
 	position:absolute;
