@@ -15,7 +15,7 @@ from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import Template
-from termite.core import stripper
+# from termite.core import stripper
 from webapp import views as webapp_views 
 from models import *
 from mall.models import ProductCategory
