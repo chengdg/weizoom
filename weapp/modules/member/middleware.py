@@ -951,12 +951,13 @@ class OAUTHMiddleware(object):
 								social_accounts = SocialAccount.objects.filter(openid=openid, webapp_id=request.user_profile.webapp_id)
 								if social_accounts.count() > 0:
 									social_account = social_accounts[0]
+									member, response = get_member_by(request, social_account)
 								else:
 									token = get_token_for(request.user_profile.webapp_id, openid)
 									social_account = member_util.create_social_account(request.user_profile.webapp_id, openid, token, SOCIAL_PLATFORM_WEIXIN)
-								member, response = get_member_by(request, social_account)
-								if response:
-									return response
+									member = self.get_member_by(request, social_account)
+								# if response:
+								# 	return response
 
 								request.member = member
 								request.social_account = social_account
