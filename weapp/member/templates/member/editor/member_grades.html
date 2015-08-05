@@ -88,7 +88,7 @@
 							{% else %}
                                 {% if grade.is_auto_upgrade %}
                                 <div class="xa-requirement-able" data-id="{{ grade.id }}" >
-                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的价格"></div></div>
+                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的金额"></div></div>
                                     <div><span class="xui-td-span">购买次数：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
                                     <div><span class="xui-td-span">经验值：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
 							    </div >
@@ -99,7 +99,7 @@
                                 </div>
                                 {% else %}
                                 <div class="xa-requirement-able" data-id="{{ grade.id }}" style="display: none">
-                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的价格"></div></div>
+                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的金额"></div></div>
                                     <div><span class="xui-td-span">购买次数：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
                                     <div><span class="xui-td-span">经验值：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
 							    </div >
@@ -178,7 +178,7 @@
                             +'</td>'
                             +'<td class="td-requirement" width="335">'
                                 +'<div class="xa-requirement-able" data-id="' + new_data_id + '" style="display: none">'
-                                    +'<div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的价格"></div></div>'
+                                    +'<div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的金额"></div></div>'
                                     +'<div><span class="xui-td-span">购买次数：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_' + new_data_id + '" name="grade_paytimes_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>'
                                     +'<div><span class="xui-td-span">经验值：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>'
                                 +'</div>'
