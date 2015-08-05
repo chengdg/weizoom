@@ -256,7 +256,7 @@ def _get_channel_qrcode_items(request):
     mpuser_access_token = get_mpuser_accesstoken(mp_user)
 
     for qrcode in member_channel_qrcodes:
-        current_setting = JsonResponse()
+        current_qrcode = JsonResponse()
 
         if qrcode.id in member_channel_qrcode_id2count:
             qrcode.count = member_channel_qrcode_id2count[q.id]
@@ -293,7 +293,7 @@ def _get_channel_qrcode_items(request):
         current_qrcode.ticket = qrcode.ticket
         current_qrcode.created_at = qrcode.created_at.strftime('%Y-%m-%d %H:%M:%S')
 
-        items.append(current_setting)
+        items.append(current_qrcode)
     return items
 
 class ChannelQrcodeMember(resource.Resource):
