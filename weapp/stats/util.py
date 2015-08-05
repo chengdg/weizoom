@@ -692,13 +692,15 @@ def get_top10_product(webapp_id, low_date, high_date):
 	"""
 	获取下单单量排行前10的商品
 	"""
-	orders =belong_to(webapp_id)
+	orders =belong_to(webapp_id).filter(
+		status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED),
+		created_at__range=(low_date, high_date)
+	)
 	order_ids = [order.id for order in orders]
 	products = OrderHasProduct.objects.filter(
-			Q(order__order_id__in=order_ids),
-			Q(order__status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)), 
-			Q(order__created_at__range=(low_date, high_date))
-		)
+		order_id__in=order_ids
+	)
+
 	product_id2num = {}
 	for product in products:
 		if not product_id2num.has_key(product.product_id):
