@@ -137,6 +137,7 @@ ADVANCE_MANAGE_FIRST_NAV = 'advance_manage'
 ADVANCE_MANAGE_MATERIAL_NAV = 'material'
 ADVANCE_MANAGE_FANS_NAV = 'fans'
 ADVANCE_MANAGE_QRCODE_NAV = 'qrcode'
+ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV = 'member_channel_qrcode'
 
 ADVANCE_MANAGE_NAV = {
     'section': u'高级管理',
@@ -157,6 +158,12 @@ ADVANCE_MANAGE_NAV = {
             'name': ADVANCE_MANAGE_QRCODE_NAV,
             'title': u'带参数二维码',
             'url': '/new_weixin/qrcodes/',
+            'need_permissions': []
+        },
+        {
+            'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
+            'title': u'渠道扫码',
+            'url': '/new_weixin/channel_qrcode/',
             'need_permissions': []
         }
     ]
