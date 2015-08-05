@@ -3,6 +3,7 @@ __author__ = 'liupeiyu'
 
 import datetime
 import hashlib
+from django.conf import settings
 
 class ShengjingAPIConfig(object):
 	"""
@@ -27,6 +28,12 @@ class ShengjingAPIConfig(object):
 
 	# 检验验证码 的 Method
 	method_captcha_verify = 'CaptchaVerify'
+
+	# 通过“手机号”和“公司名称”获取学习计划数据接口 的 Method
+	method_get_learn_plan_list = 'GetLearnPlan'
+
+	# 学员确认学习计划 的 Method
+	method_confirm_learn_plan = 'ConfirmLearnPlan'
 
 	# 版本号
 	version = '1.0'
@@ -128,3 +135,16 @@ class ShengjingAPIConfig(object):
 		CODE_SESSION_EXPIRES: "签到码已过期",
 		CODE_SESSION_ERROR: "无效的签到码"
 	}
+
+
+	# 微众蓝标测试账号
+	test_message_template_id = "d66HzCDYTWwEkE2nbUN7mYprkIKsDkjL-oAEBMOTmeM"	
+
+	# 盛景正式账号
+	message_template_id = "N-uYx5k4iUuwXwNhfU7Zo-cwvBJ3KG0AAA7NcMW3jvc"	
+
+	def get_message_template_id(self):
+		if settings.MODE == 'deploy':
+			return self.message_template_id
+		else:
+			return self.test_message_template_id

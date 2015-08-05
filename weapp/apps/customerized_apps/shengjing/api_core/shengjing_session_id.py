@@ -53,8 +53,8 @@ class ShengjingSessionID(object):
 		verified_result = ''
 		try:
 			param_data = urllib.urlencode(param_data)
-			print '-------------------------------------------'
-			print param_data
+			# print '-------------------------------------------'
+			# print param_data
 
 			request = urllib2.Request(self.api_url, param_data)
 			response = urllib2.urlopen(request)
@@ -122,6 +122,6 @@ class ShengjingSessionID(object):
 		data = self._session_id()
 		watchdog_info(u"get_session_id_data data:\n{}".format(data), self.shengjing_params.WATCHDOG_TYPE_SHENGJING)
 		session_id = self._resolve_session_id_json(data)
-		print '>>>>>>>>>>>>>>>>>>>>>>>'
-		print session_id
+		# print '>>>>>>>>>>>>>>>>>>>>>>>'
+		# print session_id
 		return session_id
