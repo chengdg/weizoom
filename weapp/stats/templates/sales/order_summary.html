@@ -188,9 +188,34 @@
 
 	function updateOrderTrendData() {
 		var order_trend_stats = stats_data.order_trend_stats;
+		var data_array = new Array();
+
+		if(order_trend_stats.not_shipped_num > 0) {
+			data_array.push({
+				value: order_trend_stats.not_shipped_num,
+				name: '待发货'
+			});
+		}
+
+		if(order_trend_stats.shipped_num > 0) {
+			data_array.push({
+				value: order_trend_stats.shipped_num,
+				name: '已发货'
+			});
+		}
+
+		if(order_trend_stats.succeeded_num > 0) {
+			data_array.push({
+				value: order_trend_stats.succeeded_num,
+				name: '已完成'
+			});
+		}
+		if(data_array.length == 0){
+			data_array.push({});
+		}
+
 		var formatter_func = function(params, ticket, callback) {
-			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%<br/><a href='";
-			res = res + getWhere2go(true, false, { order_status : params.data.extra }) + "'>详情>></a>";
+			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%'";
 			return res;
 		}
 		option = {
@@ -227,19 +252,7 @@
 				type : 'pie',
 				radius : '55%',
 				center : [ '50%', '60%' ],
-				data : [{
-					value : order_trend_stats.not_shipped_num,
-					extra : "iswait_send",
-					name : '待发货'
-				}, {
-					value : order_trend_stats.shipped_num,
-					extra : 'isalready_send',
-					name : '已发货'
-				}, {
-					value : order_trend_stats.succeeded_num,
-					extra : 'isalready_complete',
-					name : '已完成'
-				}]
+				data : data_array
 			} ]
 		};
 
@@ -251,10 +264,28 @@
 	function updateRepeatedRatioData() {
 		var total_num = stats_data.order_num;
 		var repeated_num = stats_data.repeated_num;
+		var first_num = total_num - repeated_num;
+		var data_array = new Array();
+
+		if(first_num > 0) {
+			data_array.push({
+				value: first_num,
+				name: '初次购买'
+			});
+		}
+
+		if(repeated_num > 0) {
+			data_array.push({
+				value: repeated_num,
+				name: '重复购买'
+			});
+		}
+		if(data_array.length == 0){
+			data_array.push({});
+		}
 		
 		var formatter_func = function(params, ticket, callback) {
-			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%<br/><a href='";
-			res = res + getWhere2go(true, true, { repeat_buy : params.data.extra }) + "'>详情>></a>";
+			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%'";
 			return res;
 		}
 		option = {
@@ -291,15 +322,7 @@
 					type : 'pie',
 					radius : '55%',
 					center : [ '50%', '60%' ],
-					data : [ {
-						value : total_num - repeated_num,
-						extra : 1,
-						name : '初次购买'
-					}, {
-						value : repeated_num,
-						extra : 2,
-						name : '重复购买'
-					} ]
+					data : data_array
 				} ]
 			};
 		
@@ -310,10 +333,41 @@
 	
 	function updateBuyerSourceData() {
 		var buyer_source_stats = stats_data.buyer_source_stats;
+		var data_array = new Array();
+
+		if(buyer_source_stats.sub_source_num > 0) {
+			data_array.push({
+				value: buyer_source_stats.sub_source_num,
+				name: '直接关注购买'
+			});
+		}
+
+		if(buyer_source_stats.qrcode_source_num > 0) {
+			data_array.push({
+				value: buyer_source_stats.qrcode_source_num,
+				name: '推广扫码关注购买'
+			});
+		}
+
+		if(buyer_source_stats.url_source_num > 0) {
+			data_array.push({
+				value: buyer_source_stats.url_source_num,
+				name: '分享链接关注购买'
+			});
+		}
+
+		if(buyer_source_stats.other_source_num > 0) {
+			data_array.push({
+				value: buyer_source_stats.other_source_num,
+				name: '其他'
+			});
+		}
+		if(data_array.length == 0){
+			data_array.push({});
+		}
 		
 		var formatter_func = function(params, ticket, callback) {
-			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%<br/><a href='";
-			res = res + getWhere2go(true, true, { buyer_source: params.data.extra }) + "'>详情>></a>";
+			var res = "<b>" + params.name + "</b><br/>订单量：" + params.value + "<br/>订单量占比：" + params.percent + "%";
 			return res;
 		}
 		option = {
@@ -350,23 +404,7 @@
 					type : 'pie',
 					radius : '55%',
 					center : [ '50%', '60%' ],
-					data : [ {
-						value : buyer_source_stats.sub_source_num,
-						extra : 0,
-						name : '直接关注购买'
-					}, {
-						value : buyer_source_stats.qrcode_source_num,
-						extra : 1,
-						name : '推广扫码关注购买'
-					}, {
-						value : buyer_source_stats.url_source_num,
-						extra : 2,
-						name : '分享链接关注购买'
-					}, {
-						value : buyer_source_stats.other_source_num,
-						extra : 3,
-						name : '其他'
-					} ]
+					data : data_array
 				} ]
 			};
 		
@@ -376,6 +414,38 @@
 	}
 
 	function updatePaymentsData() {
+		var data_array = new Array();
+
+		if(stats_data.alipay_amount > 0) {
+			data_array.push({
+				value: stats_data.alipay_amount.toFixed(2),
+				name: '支付宝'
+			});
+		}
+
+		if(stats_data.weixinpay_amount > 0) {
+			data_array.push({
+				value: stats_data.weixinpay_amount.toFixed(2),
+				name: '微信支付'
+			});
+		}
+
+		if(stats_data.cod_amount > 0) {
+			data_array.push({
+				value: stats_data.cod_amount.toFixed(2),
+				name: '货到付款'
+			});
+		}
+
+		if(stats_data.wezoom_card_amount > 0) {
+			data_array.push({
+				value: stats_data.wezoom_card_amount.toFixed(2),
+				name: '微众卡支付'
+			});
+		}
+		if(data_array.length == 0){
+			data_array.push({});
+		}
 		option = {
 				tooltip : {
 					trigger : 'item',
@@ -410,19 +480,7 @@
 					type : 'pie',
 					radius : '55%',
 					center : [ '50%', '60%' ],
-					data : [ {
-						value : stats_data.alipay_amount.toFixed(2),
-						name : '支付宝'
-					}, {
-						value : stats_data.weixinpay_amount.toFixed(2),
-						name : '微信支付'
-					}, {
-						value : stats_data.cod_amount.toFixed(2),
-						name : '货到付款'
-					}, {
-						value : stats_data.wezoom_card_amount.toFixed(2),
-						name : '微众卡支付'
-					} ]
+					data : data_array
 				} ]
 			};
 		
@@ -447,7 +505,6 @@
 				}
 				res += '<br/>订单金额: ' + params[i].data.extra[0];
 			}
-			res = res + "<br/><a href='" + getWhere2go(true, true, { discount_type: params[0].data.extra[1] }) + "'>详情>></a>";
 
 			return res;
 		}
