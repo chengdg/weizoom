@@ -76,6 +76,7 @@ def get_new_settings(request):
     user_id = request.webapp_owner_id
     ticketid = request.GET.get('ticketid', 0)
     member = request.member
+    member = Member.objects.get(id=request.member.id)
     qrcode_setting = MemberChannelQrcodeSettings.objects.get(owner_id=user_id)
     if ticketid:
         qrcode = MemberChannelQrcode.objects.get(id=ticketid)
@@ -85,9 +86,8 @@ def get_new_settings(request):
             qrcode.save()
 
         show_head = False
-        if qrcode.member_id == request.member.id:
+        if qrcode.member_id == member.id:
             show_head = True
-            member = Member.objects.get(id=request.member.id)
             member.user_name = member.username_for_html
             qrcode.count = MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=qrcode.id).count()
 
@@ -103,6 +103,7 @@ def get_new_settings(request):
             })
         return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
     else:
+        member.user_name = member.username_for_html
         if request.member:
             qrcode = MemberChannelQrcode.objects.filter(member_id=request.member.id)
             if qrcode.count() > 0:

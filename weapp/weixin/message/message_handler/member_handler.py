@@ -19,6 +19,7 @@ from modules.member.util import (get_member_by_binded_social_account,
 	create_member_by_social_account, create_social_account,member_basic_info_updater)
 
 from watchdog.utils import watchdog_error, watchdog_fatal
+import datetime
 
 """
 根据消息创建会员
@@ -116,6 +117,8 @@ class MemberHandler(MessageHandler):
 			status = member.status
 			member.is_subscribed = True			
 			member.status = SUBSCRIBED
+			if status == NOT_SUBSCRIBED:
+				member.created_at = datetime.datetime.now()
 			member.save()
 
 			if status == NOT_SUBSCRIBED:
@@ -136,7 +139,7 @@ class MemberHandler(MessageHandler):
 				member.is_new = True
 			else:
 				member.is_new = False
-				
+			member.old_status = status	
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
 
@@ -146,9 +149,7 @@ class MemberHandler(MessageHandler):
 
 		try:
 			if not member.user_icon or member.user_icon == '':
-				print '-----------go to update user_icon start',member.user_icon
 				member_basic_info_updater(request.user_profile, member)
-				print '-----------go to update user_icon end', member.user_icon
 				if not member.user_icon or member.user_icon == '':
 					member_basic_info_updater(request.user_profile, member)
 		except:
