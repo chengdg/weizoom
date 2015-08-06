@@ -105,15 +105,14 @@ def receiveauthcode(request):
 			_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
 			print xml_message
 			xml_message = BeautifulSoup(xml_message)
-			if xml_message.componentverifyticket:
-				ticket = xml_message.componentverifyticket.text
+			ticket = xml_message.componentverifyticket.text
 
-				if appid and ticket:
-					if ComponentInfo.objects.filter(app_id=appid).count() > 0:
-						ComponentInfo.objects.filter(app_id=appid).update(component_verify_ticket=ticket, last_update_time=datetime.datetime.now())
-					else:
-						ComponentInfo.objects.create(app_id=appid,component_verify_ticket=ticket)
-					return HttpResponse('success') 
+			if appid and ticket:
+				if ComponentInfo.objects.filter(app_id=appid).count() > 0:
+					ComponentInfo.objects.filter(app_id=appid).update(component_verify_ticket=ticket, last_update_time=datetime.datetime.now())
+				else:
+					ComponentInfo.objects.create(app_id=appid,component_verify_ticket=ticket)
+				return HttpResponse('success') 
 	else:
 		auth_code = request.GET.get('auth_code', None)
 		expires_in = request.GET.get('expires_in', None)
