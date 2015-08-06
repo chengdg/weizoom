@@ -43,13 +43,15 @@ class ChannelQrcode(resource.Resource):
             should_show_authorize_cover = False
 
         coupon_rules = get_coupon_rules(request.user)
-        member_qrcode_settings = MemberChannelQrcodeSettings.objects.filter(owner=request.user)
-        member_qrcode_setting = member_qrcode_settings[0] if member_qrcode_settings.count() > 0 else None
+        try:
+            member_qrcode_setting = MemberChannelQrcodeSettings.objects.get(owner=request.user)
+        except:
+            member_qrcode_setting = None
+
         if member_qrcode_setting:
-            award_contents = MemberChannelQrcodeAwardContent.objects.filter(member_channel_qrcode_settings=member_qrcode_setting)
-            if award_contents.count() > 0:
-                award_content = award_contents[0] if member_qrcode_setting.award_member_type else None
-            else:
+            try:
+                award_content = MemberChannelQrcodeAwardContent.objects.get(owner=request.user)
+            except:
                 award_content = None
         else:
             award_contents = None
@@ -92,23 +94,34 @@ class ChannelQrcode(resource.Resource):
                 return response.get_response()
 
             if id:
-                MemberChannelQrcodeSettings.objects.filter(id=id).update(award_member_type=int(reward), detail=detail)
-                MemberChannelQrcodeAwardContent.objects.filter(member_channel_qrcode_settings_id=id).delete()
-                MemberChannelQrcodeAwardContent.objects.create(member_channel_qrcode_settings_id=id,
-                                                        scanner_award_type=scanner_award_type,
-                                                        scanner_award_content=scanner_award_content,
-                                                        share_award_content=share_award_content,
-                                                        share_award_type=share_award_type)
+                MemberChannelQrcodeSettings.objects.filter(id=id).update(
+                    award_member_type=int(reward),
+                    detail=detail
+                )
+                MemberChannelQrcodeAwardContent.objects.filter(owner=request.user).delete()
+                MemberChannelQrcodeAwardContent.objects.create(
+                        owner=request.user,
+                        member_channel_qrcode_settings_id=id,
+                        scanner_award_type=scanner_award_type,
+                        scanner_award_content=scanner_award_content,
+                        share_award_content=share_award_content,
+                        share_award_type=share_award_type
+                )
             else:
-                member_qrcode_settings = MemberChannelQrcodeSettings.objects.create(owner=request.user,
-                                                                            award_member_type=int(reward),
-                                                                            detail=detail)
+                member_qrcode_settings = MemberChannelQrcodeSettings.objects.create(
+                        owner=request.user,
+                        award_member_type=int(reward),
+                        detail=detail
+                    )
 
-                MemberChannelQrcodeAwardContent.objects.create(member_channel_qrcode_settings=member_qrcode_settings,
-                                                        scanner_award_type=scanner_award_type,
-                                                        scanner_award_content=scanner_award_content,
-                                                        share_award_content=share_award_content,
-                                                        share_award_type=share_award_type)
+                MemberChannelQrcodeAwardContent.objects.create(
+                        owner=request.user,
+                        member_channel_qrcode_settings=member_qrcode_settings,
+                        scanner_award_type=scanner_award_type,
+                        scanner_award_content=scanner_award_content,
+                        share_award_content=share_award_content,
+                        share_award_type=share_award_type
+                    )
 
         response = create_response(200)
         return response.get_response()
