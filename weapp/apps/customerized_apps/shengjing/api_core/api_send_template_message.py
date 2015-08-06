@@ -26,7 +26,7 @@ class TemplateDetail(object):
 		self.first = first
 		self.remark = remark
 		self.name = name
-		self.date_time
+		self.date_time = date_time
 		
 
 """"

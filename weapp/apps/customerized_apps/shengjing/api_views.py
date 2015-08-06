@@ -17,14 +17,14 @@ def send_template_message(request):
 	'''
 	try:	
 		if request.POST:		
-			webapp_user_id = int(request.POST.get('webapp_user_id', "1306130"))
+			webapp_user_id = int(request.POST.get('webapp_user_id', 0))
 			first = request.POST.get('first', None)
 			remark = request.POST.get('remark', None)
 			name = request.POST.get('name', None)
 			date_time = request.POST.get('date_time', None)
 			phone_number = request.POST.get('phone_number', None)
 		else:
-			webapp_user_id = int(request.GET.get('webapp_user_id', "4567890"))
+			webapp_user_id = int(request.GET.get('webapp_user_id', 0))
 			first = request.GET.get('first', None)
 			remark = request.GET.get('remark', None)
 			name = request.GET.get('name', None)
@@ -32,14 +32,14 @@ def send_template_message(request):
 			phone_number = request.GET.get('phone_number', None)
 
 		# 测试数据
-		if webapp_user_id == 4567890:
-			response = create_response(200)
-			response.data = {
-				'msg': '发送成功！',
-				# 'message_dict': json,
-				'result_code': True
-			}
-			return response.get_response()
+		# if webapp_user_id == 4567890:
+		# 	response = create_response(200)
+		# 	response.data = {
+		# 		'msg': '发送成功！',
+		# 		# 'message_dict': json,
+		# 		'result_code': True
+		# 	}
+		# 	return response.get_response()
 
 		if webapp_user_id is None or first is None or remark is None or name is None or date_time is None or phone_number is None:
 			response = create_response(501)
