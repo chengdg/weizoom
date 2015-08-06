@@ -4096,7 +4096,7 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     line-height:40px;
     /*width:70px;*/
     text-align: left;
-    padding-left: 20px;
+    padding-left: 10px;
     color:#fff;
     background: #f6f6f6;
     color:#999999;
@@ -4130,7 +4130,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-integralLogPage .xui-integralLogList .xui-usericon {
     width:40px;
     height:40px;
-    border: 1px solid #ccc;
     margin-right: 12px;
 }
 .xui-integralLogPage .xui-integralLogList .xui-zoom {

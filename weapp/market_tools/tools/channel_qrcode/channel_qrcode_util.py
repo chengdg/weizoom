@@ -111,9 +111,9 @@ def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_m
 
 def _add_award_to_member(user_profile, award_type, award_content, member, integral_type):
 	if award_type:
-		if award_content == AWARD_COUPON:
+		if award_type == AWARD_COUPON:
 			consume_coupon(user_profile.user.id, award_content, member.id)
-		elif award_content == AWARD_INTEGRAL:
+		elif award_type == AWARD_INTEGRAL:
 			try:
 				increase_member_integral(member, award_content, integral_type)
 			except:
