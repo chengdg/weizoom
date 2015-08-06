@@ -432,7 +432,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					review.member_name = member_id2member[review.member_id].username_for_html
 
 			#获取促销活动和积分折扣信息
-			promotion_ids = map(lambda x: x.id, promotion_models.ProductHasPromotion.objects.filter(product=product))
+			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))
 			# Todo: 促销已经结束， 但数据库状态未更改
 			promotions = promotion_models.Promotion.objects.filter(
 				owner_id=webapp_owner_id,
@@ -1085,14 +1085,10 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 		if promotion_result:
 			saved_money = promotion_result.get('promotion_saved_money', 0.0)
 			promotion_saved_money += saved_money
-	# print '$' * 60
-	# for product_group in product_groups:
-	# 	print product_group['promotion_result']
-	# print promotion_saved_money
 	order.promotion_saved_money = promotion_saved_money
 
 	# 订单来自商铺
-	if products[0].owner_id ==  webapp_owner_id:
+	if products[0].owner_id == webapp_owner_id:
 		order.webapp_source_id = webapp_id
 		order.order_source = ORDER_SOURCE_OWN
 	# 订单来自微众商城

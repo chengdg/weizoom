@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 
 # from hashlib import md5
 import json
-import re
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import models

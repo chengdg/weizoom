@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import absolute_import
 import time
 from datetime import datetime
-# import urllib2
-# import os
 import json
 import copy
 
@@ -15,7 +13,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render_to_response
 # from django.contrib.auth.models import User, Group, Permission
 # from django.contrib import auth
-from django.db.models import Q
 # from django.contrib import messages
 
 # from core.jsonresponse import JsonResponse, create_response
@@ -27,6 +24,7 @@ from mall.models import *
 from mall import models as mall_models
 from mall import signals as mall_signals
 from mall import module_api as mall_api
+from . import utils
 from webapp.modules.mall import util as mall_util
 from modules.member import util as member_util
 from modules.member import member_settings
@@ -548,113 +546,11 @@ def _sorted_product_groups_by_promotioin(product_groups):
 	return product_groups
 
 
-def _get_products(request):
-	'''
-	获取订单商品，根据request参数返回商品列表，以及是否有已失效商品
-	供下单、购物车页面调用
-	'''
-	product_ids, promotion_ids, product_counts, product_model_names = _get_product_param(request)
-
-	#id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
-	products = []
-	product_infos = []
-	product2count = {}
-	product2promotion = {}
-
-	for i in range(len(product_ids)):
-		product_id = int(product_ids[i])
-		product_model_name = product_model_names[i]
-		product_infos.append({"id":product_id, "model_name":product_model_name})
-		product_model_id = '%s_%s' % (product_id, product_model_name)
-		product2count[product_model_id] = int(product_counts[i])
-		product2promotion[product_model_id] = promotion_ids[i] if promotion_ids[i] else 0
-
-	postage_configs = request.webapp_user.webapp_owner_info.mall_data['postage_configs']
-	system_postage_config = filter(lambda c: c.is_used, postage_configs)[0]
-	products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
-	for product in products:
-		product_model_id = '%s_%s' % (product.id, product.model['name'])
-
-		product.purchase_count = product2count[product_model_id]
-		product.used_promotion_id = int(product2promotion[product_model_id])
-		product.total_price = float(product.price)*product.purchase_count
-
-		# 确定商品的运费策略
-		if product.postage_type == POSTAGE_TYPE_UNIFIED:
-			#使用统一运费
-			product.postage_config = {
-				"id": -1,
-				"money": product.unified_postage_money,
-				"factor": None
-			}
-		else:
-			if isinstance(system_postage_config.created_at, datetime):
-				system_postage_config.created_at = system_postage_config.created_at.strftime('%Y-%m-%d %H:%M:%S')
-			if isinstance(system_postage_config.update_time, datetime):
-				system_postage_config.update_time = system_postage_config.update_time.strftime('%Y-%m-%d %H:%M:%S')
-			product.postage_config = system_postage_config.to_dict('factor')
-			# postage_config.to_dict('factor')
-	return products
-
-
-def _get_product_param(request):
-	'''
-	获取订单商品id，数量，规格
-	供_get_products调用
-	'''
-	if hasattr(request, 'redirect_url_query_string'):
-		query_string = _get_query_string_dict_to_str(request.redirect_url_query_string)
-	else:
-		query_string = request.REQUEST
-
-	if 'product_ids' in query_string:
-		product_ids = query_string.get('product_ids', None)
-		if product_ids:
-			product_ids = product_ids.split('_')
-		promotion_ids = query_string.get('promotion_ids', None)
-		if promotion_ids:
-			promotion_ids = promotion_ids.split('_')
-		else:
-			promotion_ids = [0] * len(product_ids)
-		product_counts = query_string.get('product_counts', None)
-		if product_counts:
-			product_counts = product_counts.split('_')
-		product_model_names = query_string.get('product_model_names', None)
-		if product_model_names:
-			if '$' in product_model_names:
-				product_model_names = product_model_names.split('$')
-			else:
-				product_model_names = product_model_names.split('%24')
-		product_promotion_ids = query_string.get('product_promotion_ids', None)
-		if product_promotion_ids:
-			product_promotion_ids = product_promotion_ids.split('_')
-		product_integral_counts = query_string.get('product_integral_counts', None)
-		if product_integral_counts:
-			product_integral_counts = product_integral_counts.split('_')
-	else:
-		product_ids = [query_string.get('product_id', None)]
-		promotion_ids = [query_string.get('promotion_id', None)]
-		product_counts = [query_string.get('product_count', None)]
-		product_model_names = [query_string.get('product_model_name', 'standard')]
-		product_promotion_ids = [query_string.get('product_promotion_id', None)]
-		product_integral_counts = [query_string.get('product_integral_count', None)]
-
-	return product_ids, promotion_ids, product_counts, product_model_names
-
-
-def _get_query_string_dict_to_str(str):
-	data = dict()
-	for item in str.split('&'):
-		values = item.split('=')
-		data[values[0]] = values[1]
-	return data
-
-
 ########################################################################
 # edit_order: 编辑订单
 ########################################################################
 def edit_order(request):
-	products = _get_products(request)
+	products = utils.get_products(request)
 
 	product = products[0]
 
@@ -823,7 +719,7 @@ def get_member_discount(request):
 def edit_shopping_cart_order(request):
 	webapp_user = request.webapp_user
 	webapp_owner_id = request.webapp_owner_id
-	products = _get_products(request)
+	products = utils.get_products(request)
 	buf = []
 
 	for product in products:
@@ -1173,7 +1069,7 @@ def get_express_detail(request):
 # edit_order_review: 评论信息
 ########################################################################
 def edit_order_review(request):
-    products = _get_products(request)
+    products = utils.get_products(request)
     c = RequestContext(request,
                        {
                            'is_hide_weixin_option_menu': True,
@@ -1507,7 +1403,7 @@ def redirect_product_review(request):
 def edit_refueling_order(request):
 	refueling_id = request.GET.get('refueling_id', None)
 	member_refueling = MemberRefueling.objects.get(id=refueling_id)
-	products = _get_products(request)
+	products = utils.get_products(request)
 
 	product = products[0]
 	product.price = 79
