@@ -146,7 +146,6 @@ PRODUCT_TYPE2TEXT = {
 MAX_INDEX = 2**16 - 1
 
 
-
 class Product(models.Model):
 	"""
 	商品

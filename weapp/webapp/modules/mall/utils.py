@@ -117,3 +117,45 @@ def get_display_price(discount, member_grade_id, product):
             return product
         else:
             return product
+
+
+def sorted_product_groups_by_promotioin(product_groups):
+    '''按商品促销信息排序，先按促销id升序排，再按促销类型升序排，无促销信息的排到后面
+    供获取订单商品、显示购物车详情调用.
+    '''
+    product_groups = sorted(
+        product_groups,
+        cmp=lambda x, y: cmp(x['promotion']['id'] if x['promotion'] else 0, y['promotion']['id'] if y['promotion'] else 0 ))
+    product_groups = sorted(product_groups, cmp=lambda x, y:
+        cmp(x['promotion']['type'] if x['promotion'] else 9, y['promotion']['type'] if y['promotion'] else 9 ))
+    return product_groups
+
+
+def format_product_group_price_factor(product_groups):
+    factors = []
+    for product_group in product_groups:
+        product_factors = []
+        for product in product_group['products']:
+            product_factors.append({
+                "id": product.id,
+                "model": product.model_name,
+                "count": product.purchase_count,
+                "price": product.price,
+                "weight": product.weight,
+                "active_integral_sale_rule": getattr(product, 'active_integral_sale_rule', None),
+                "postageConfig": product.postage_config if hasattr(product, 'postage_config') else {}
+            })
+
+        factor = {
+            'id': product_group['id'],
+            'uid': product_group['uid'],
+            'products': product_factors,
+            'promotion': product_group['promotion'],
+            'promotion_type': product_group['promotion_type'],
+            'promotion_result': product_group['promotion_result'],
+            'integral_sale_rule': product_group['integral_sale_rule'],
+            'can_use_promotion': product_group['can_use_promotion']
+        }
+        factors.append(factor)
+
+    return factors
