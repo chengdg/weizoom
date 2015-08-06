@@ -1231,7 +1231,8 @@ input.ui-input-text, textarea.ui-input-text {
     background-position: -74px -16px;
     right:0;
 }
-.xui-productDetailPage .xui-promotionName{
+.xui-productDetailPage .xui-promotionName,
+.xui-productDetailPage .xui-memberPriceTag{
     background: #cf0404;
     font-size: 0.8rem;
     min-width:3.4rem;
@@ -1244,6 +1245,21 @@ input.ui-input-text, textarea.ui-input-text {
     /*padding:0px 3px;*/
     padding-top:1px;
 }
+/*会员价标签*/
+/*.xui-productDetailPage .xui-memberPriceTag{
+    min-width: 2.8rem;
+    vertical-align: inherit;
+}
+.xui-productDetailPage .xui-orPrice{
+    color:#999;
+    font-size: .7rem;
+    display: inline-block;
+    margin-left: 5px;
+    -webkit-transform:scale(.95);
+    transform:scale(.95);
+}*/
+
+
 /*.xui-productDetailPage .xui-promotion-gift li{
     margin-bottom:-6px;
 }
@@ -1594,7 +1610,7 @@ input.ui-input-text, textarea.ui-input-text {
     box-shadow: none;
 }
 .xui-reviewAllPage .xui-user{
-    box-shadow: 0 0 0 1px #e3e3e3;
+    box-shadow: 0 0 0 1px rgba(227,227,227,.5);
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -3144,10 +3160,10 @@ input.ui-input-text, textarea.ui-input-text {
 
 }
 .xui-orderListPage .xui-btLine{
-    border-bottom: 1px solid #DBDBDB;
+    border-bottom: 1px solid #dbdbdb;
 }
 .xui-orderListPage .xui-tPLine{
-    border-top: 1px solid #DBDBDB;
+    border-top: 1px solid #dbdbdb;
 }
 .xui-orderListPage .wui-swiper-tabs {
     position:fixed;
@@ -3302,8 +3318,15 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-orderListPage .wui-swiper-slide li:first-child{
     margin-top: 0;
 }
-
-
+/*.xui-orderListPage .xui-getRedTip{
+    display: inline-block;
+    width: 14px;
+    height: 15px;
+    background: url(/static_v2/img/webapp/usercenter/getRedTip.jpg) no-repeat;
+    background-size: cover;
+    vertical-align: middle;
+    margin: -3px auto 0 6px;
+}*/
 
 
 
@@ -3647,6 +3670,25 @@ position: absolute;
 .xui-payOrderPage .xui-priceItem p:not(:first-child) {
     margin-top: 5px;
 }
+/*.xui-payOrderPage .xui-toGetRedBtn,
+.xui-payOrderPage .xui-gotRedBtn{
+    display: inline-block;
+    border-radius: 2px;
+    line-height: 33px;
+    height:33px;
+    font-size: .9rem;
+    padding:0 6px;
+}
+.xui-payOrderPage .xui-toGetRedBtn{
+    color:#fff;
+    background:#cf0404;
+}
+.xui-payOrderPage .xui-gotRedBtn{
+    color:#cf0404;
+    border:1px solid #cf0404;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+}*/
 .xui-expressPage{
     background-image:-webkit-linear-gradient(left, #f0f0f0 21px, #e0e0e0 21px, #e0e0e0 24px, #f0f0f0 24px);
     background-image:-o-linear-gradient(left, #f0f0f0 21px, #e0e0e0 21px, #e0e0e0 24px, #f0f0f0 24px);
@@ -3667,9 +3709,6 @@ position: absolute;
 .xui-expressPage .xui-expressPo{
     padding-left: 32px;
     padding-top: 18px;
-}
-.xui-expressPage ul li:last-child{
-    
 }
 /*
  *感恩密码样式
@@ -5177,8 +5216,7 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-memberQrcode-page h2::after{
     right: 0;
 }
-.xui-myRecPage .xui-info,
-.xui-memberQrcode-page .xui-info{
+.xui-myRecPage .xui-info{
     width: 90.625%;
     margin: 0 auto;
     background: #f9f9f9;
