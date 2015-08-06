@@ -136,7 +136,6 @@ class MemberHandler(MessageHandler):
 				TODO:
 					 更新好友数量
 				"""	
-				member.
 				member.is_new = True
 			else:
 				member.is_new = False
