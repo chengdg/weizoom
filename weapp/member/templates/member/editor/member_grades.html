@@ -350,6 +350,8 @@
                     args: {'grades': JSON.stringify(grades),'is_all_conditions':is_all_conditions},
                     success: function(data) {
                         W.showHint('success', '保存成功');
+                        $(".xa-conditions-error-hint").hide();
+                        $(".xa-discount-error-hint").hide();
 
                     },
                     error: function() {
