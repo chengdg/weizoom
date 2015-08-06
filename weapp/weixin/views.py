@@ -106,15 +106,14 @@ def receiveauthcode(request):
 			print xml_message
 			xml_message = BeautifulSoup(xml_message)
 			if not xml_message.componentverifyticket:
-				return HttpResponse('success')
-			ticket = xml_message.componentverifyticket.text
+				ticket = xml_message.componentverifyticket.text
 
-			if appid and ticket:
-				if ComponentInfo.objects.filter(app_id=appid).count() > 0:
-					ComponentInfo.objects.filter(app_id=appid).update(component_verify_ticket=ticket, last_update_time=datetime.datetime.now())
-				else:
-					ComponentInfo.objects.create(app_id=appid,component_verify_ticket=ticket)
-				return HttpResponse('success') 
+				if appid and ticket:
+					if ComponentInfo.objects.filter(app_id=appid).count() > 0:
+						ComponentInfo.objects.filter(app_id=appid).update(component_verify_ticket=ticket, last_update_time=datetime.datetime.now())
+					else:
+						ComponentInfo.objects.create(app_id=appid,component_verify_ticket=ticket)
+					return HttpResponse('success') 
 	else:
 		auth_code = request.GET.get('auth_code', None)
 		expires_in = request.GET.get('expires_in', None)
