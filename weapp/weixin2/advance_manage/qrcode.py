@@ -208,7 +208,8 @@ def _get_qrcode_items(request):
 		bing_member_name = ''
 		bing_time = ''
 		cancel_time = ''
-		if setting_id2bing_member_id[setting.id]:
+		if setting_id2bing_member_id.has_key(setting.id) and \
+		id2member.has_key(setting_id2bing_member_id[setting.id]):
 			bing_member_name = id2member[setting_id2bing_member_id[setting.id]].username_truncated
 			if qrcode_id_and_member_id2relation.has_key((setting.id, setting.bing_member_id)):
 				r = qrcode_id_and_member_id2relation[(setting.id, setting.bing_member_id)]
