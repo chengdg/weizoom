@@ -754,7 +754,7 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			"price": 100.00,
 			"member_price": true
 		}]
-	"""	
+	"""
 
 	And bill1关注jobs的公众号
 	And bill2关注jobs的公众号
@@ -920,10 +920,10 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 
 
  #1204会员bill4购买商品12，使用积分抵扣最高：49元，订单金额：21元
-      When bill4访问jobs的webapp
-	  When bill4获得jobs的500会员积分
-	  Then bill4在jobs的webapp中拥有500会员积分
-	  When bill4购买jobs的商品
+		When bill4访问jobs的webapp
+		When bill4获得jobs的500会员积分
+		Then bill4在jobs的webapp中拥有500会员积分
+		When bill4购买jobs的商品
 		"""
 		{	"integral_money":49.00,
 			"integral":98.00,
@@ -933,7 +933,7 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			}]
 		}
 		"""
-	 Then bill4成功创建订单
+		Then bill4成功创建订单
 		"""
 		{
 			"status": "待支付",
@@ -952,7 +952,7 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			}]
 		}
 		"""
-	 Then bill4在jobs的webapp中拥有402会员积分
+		Then bill4在jobs的webapp中拥有402会员积分
 
 Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分抵扣的商品
 
