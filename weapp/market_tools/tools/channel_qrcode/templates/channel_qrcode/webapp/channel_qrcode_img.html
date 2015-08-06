@@ -23,9 +23,6 @@
     <section class="xui-header">
         <img src="{{member.user_icon}}" alt="" class="pa">
         <p class="xui-memberName">{{member.user_name | safe}}</p>
-        {% if setting.bing_member_title %}
-        <span class="xui-tag">{{setting.bing_member_title}}</span>
-        {% endif %}
         <p class="xui-hasRec">已推荐{{setting.count}}人扫码</p>
     </section>
     {% endif %}

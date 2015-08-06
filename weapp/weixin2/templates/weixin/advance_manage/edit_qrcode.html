@@ -188,9 +188,11 @@
 
 		//提交二维码表单
 		$(".xa-footerBtn").delegate('.xa-submit','click',function() {
+			$('.xa-submit').attr('disabled','disabled');
 			var name = $.trim($('[name="name"]').val());
 			if(name==''){
 				W.showHint('error', '二维码名称不能为空');
+				$('.xa-submit').removeAttr('disabled');
 				return false;
 			}
 			var selectVal = $.trim($('[name="prize_type"]').val());
@@ -198,12 +200,14 @@
 			if(selectVal == "积分"){
 				if(jifen==''){
 				W.showHint('error', '积分值不能为空');
+				$('.xa-submit').removeAttr('disabled');
 				return false;
 				}
 			}
 
 			if(!W.validate()){
 				W.showHint('error', '积分值格式错误！');
+				$('.xa-submit').removeAttr('disabled');
 				return false;
 			}
 			var textContent = $.trim($('[name="text_content"]').val());
@@ -211,6 +215,7 @@
 			var chose = $(".xa-choseCoupon").html();
 			if(chose == "添加"){
 				W.showHint('error', '优惠券内容不能为空');
+				$('.xa-submit').removeAttr('disabled');
 				return false;
 			}
 
@@ -226,12 +231,15 @@
 			if($(":input[name='is_bing_member']:radio:checked").val() == "1"){
 				if(!$('.xa-selectMemberName').attr('data-id')){
 					W.showHint('error', '请选择关联会员');
+					$('.xa-submit').removeAttr('disabled');
 					return;
 				}else if(!$.trim($('#member_title').val())){
 					W.showHint('error', '请设置会员头衔');
+					$('.xa-submit').removeAttr('disabled');
 					return;
 				}else if(!$.trim($('#qrcode_desc').val())){
 					W.showHint('error', '请设置二维码描述语');
+					$('.xa-submit').removeAttr('disabled');
 					return;
 				}
 				else{
@@ -246,10 +254,12 @@
 
 			if (!textContent && materialId == 0) {
 				W.showHint('error', '扫码后回复内容不能为空');
+				$('.xa-submit').removeAttr('disabled');
 				return;
 			}
 			if(materialId == 0 && textContent.length > 600){
 				W.showHint('error', '扫码后回复内容不能超过600字');
+				$('.xa-submit').removeAttr('disabled');
 				return;
 			}
 
@@ -317,6 +327,7 @@
 						window.location.href="/new_weixin/qrcodes/";
 					},
 					error: function(resp) {
+						$('.xa-submit').removeAttr('disabled');
 						W.showHint('error', '保存失败！');
 					}
 				});
@@ -330,6 +341,7 @@
 
 					},
 					error: function(resp) {
+						$('.xa-submit').removeAttr('disabled');
 						W.showHint('error', '保存失败！');
 					}
 				});
