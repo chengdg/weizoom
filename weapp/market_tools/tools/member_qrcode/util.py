@@ -11,7 +11,7 @@ from market_tools.tools.coupon import util as coupon_util
 
 from watchdog.utils import watchdog_fatal, watchdog_error
 
-from modules.member.models import Member, MemberGrade, BRING_NEW_CUSTOMER_VIA_QRCODE, SOURCE_MEMBER_QRCODE, MemberFollowRelation
+from modules.member.models import Member, MemberGrade, BRING_NEW_CUSTOMER_VIA_QRCODE, SOURCE_MEMBER_QRCODE, MemberFollowRelation, NOT_SUBSCRIBED
 from models import *
 from modules.member.integral import increase_member_integral
 from market_tools.tools.coupon.util import consume_coupon
@@ -145,6 +145,9 @@ def check_member_qrcode_ticket(ticket):
 ###########################################################
 def update_member_qrcode_log(user_profile, member, ticket):
 	try:
+		only_create_friend = False
+		if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
+			only_create_friend = True
 		if member and  member.is_new:
 			if MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
 				member_qrcode =  MemberQrcode.objects.filter(ticket=ticket)[0] if MemberQrcode.objects.filter(ticket=ticket).count() > 0 else None
@@ -152,9 +155,10 @@ def update_member_qrcode_log(user_profile, member, ticket):
 					MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
 					_add_award_to_member(user_profile, member, member_qrcode)
 					#修改来源
-					_update_member_source(member)
+					if not only_create_friend:
+						_update_member_source(member)
 					#建立关系
-					_add_member_relation(member, member_qrcode.member)
+					_add_member_relation(member, member_qrcode.member, only_create_friend)
 	except:
 		notify_msg = u"微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
 		watchdog_fatal(notify_msg)
@@ -205,21 +209,27 @@ def _update_member_source(member):
 		watchdog_fatal(notify_msg)
 	
 
-def _add_member_relation(new_member, old_member):
-	try:
-		is_fans = False if MemberFollowRelation.objects.filter(follower_member_id=new_member.id,is_fans=True).count() > 0 else True
+def _add_member_relation(new_member, old_member, only_create_friend=False):
+	if only_create_friend and MemberFollowRelation.objects.filter(member_id=new_member.id, follower_member_id=old_member.id) == 0:
 		MemberFollowRelation.objects.create(member_id=new_member.id, follower_member_id=old_member.id)
 		MemberFollowRelation.objects.create(member_id=old_member.id, follower_member_id=new_member.id, is_fans=is_fans)
 		Member.objects.filter(id=new_member.id).update(friend_count = F('friend_count') + 1)
 		Member.objects.filter(id=old_member.id).update(friend_count = F('friend_count') + 1)
-		# from django.db import connection, transaction
-		# cursor = connection.cursor()
-		# cursor.execute('update member_member set friend_count=friend_count+1 where id in (%d,%d)' % (new_member.id, old_member.id))
-		# watchdog_error('update member_member set friend_count=friend_count+1 where id in (%d,%d)' % (new_member.id, old_member.id))
-		# transaction.commit_unless_managed()
-		Member.update_factor(old_member)
-		Member.update_factor(new_member)
-	except:
-		notify_msg = u"微信会员二维码扫描建立粉丝关系new_member_id :{}, follower_member_id:{} cause:\n{}".format(new_member.id, old_member.id, unicode_full_stack())
-		watchdog_fatal(notify_msg)
+	else:
+		try:
+			is_fans = False if MemberFollowRelation.objects.filter(follower_member_id=new_member.id,is_fans=True).count() > 0 else True
+			MemberFollowRelation.objects.create(member_id=new_member.id, follower_member_id=old_member.id)
+			MemberFollowRelation.objects.create(member_id=old_member.id, follower_member_id=new_member.id, is_fans=is_fans)
+			Member.objects.filter(id=new_member.id).update(friend_count = F('friend_count') + 1)
+			Member.objects.filter(id=old_member.id).update(friend_count = F('friend_count') + 1)
+			# from django.db import connection, transaction
+			# cursor = connection.cursor()
+			# cursor.execute('update member_member set friend_count=friend_count+1 where id in (%d,%d)' % (new_member.id, old_member.id))
+			# watchdog_error('update member_member set friend_count=friend_count+1 where id in (%d,%d)' % (new_member.id, old_member.id))
+			# transaction.commit_unless_managed()
+			# Member.update_factor(old_member)
+			# Member.update_factor(new_member)
+		except:
+			notify_msg = u"微信会员二维码扫描建立粉丝关系new_member_id :{}, follower_member_id:{} cause:\n{}".format(new_member.id, old_member.id, unicode_full_stack())
+			watchdog_fatal(notify_msg)
 	
