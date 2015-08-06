@@ -589,7 +589,7 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			"price": 100.00,
 			"member_price": true,
 		}]
-	"""	
+	"""
 	When jobs创建积分应用活动
 	"""
 		[{
