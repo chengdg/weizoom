@@ -105,7 +105,7 @@ def receiveauthcode(request):
 			_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
 			print xml_message
 			xml_message = BeautifulSoup(xml_message)
-			if not xml_message.componentverifyticket:
+			if xml_message.componentverifyticket:
 				ticket = xml_message.componentverifyticket.text
 
 				if appid and ticket:
