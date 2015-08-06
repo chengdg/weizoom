@@ -110,51 +110,53 @@ Background:
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
 	Then jobs能获取会员等级列表
 		"""
 		[{
 			"name": "普通会员",
-			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"discount": "10.0"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"discount": "9.0"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"discount": "8.0"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7.0"
 		}]
 		"""
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
 	And sam关注jobs的公众号
+	And jobs登录系统
+	And jobs调tom等级为铜牌会员
+	And jobs调sam等级为银牌会员
 	Then jobs可以获得会员列表
 	"""
 		[{
-			"name": "bill",
-			"member_rank": "普通会员"
+			"name": "sam",
+			"grade_name": "银牌会员"
 		}, {
 			"name": "tom",
-			"member_rank": "铜牌会员"
+			"grade_name": "铜牌会员"
 		}, {
-			"name": "sam",
-			"member_rank": "银牌会员"
+			"name": "bill",
+			"grade_name": "普通会员"
 		}]
 	"""
 
@@ -211,7 +213,7 @@ Scenario: 1 购买单个限时抢购商品，限时抢购进行中
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion @zy_fs02
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs02 
 Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车中是限时抢购商品，但，去提交订单时已经不是限时抢购商品）
 
 	When bill访问jobs的webapp
@@ -506,8 +508,8 @@ Scenario: 9 购买多规格限时抢购商品同时适用于积分规则
 	And jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 2,
-			"订单积分抵扣上限": 50
+			"integral_each_yuan": 2,
+			"use_ceiling": 50
 		}
 		"""
 
@@ -1024,8 +1026,8 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 	And jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 2,
-			"订单积分抵扣上限": 50
+			"integral_each_yuan": 2,
+			"use_ceiling": 50
 		}
 		"""
 	And jobs修改“商品5”

@@ -130,7 +130,7 @@ def __clear_all_account_data():
 	User.objects.filter(id__gt=2).delete()
 
 	#会员
-	#member_models.MemberGrade.objects.all().delete()
+	member_models.MemberGrade.objects.all().delete()
 	SocialAccount.objects.all().delete()
 	member_models.WebAppUser.objects.all().delete()
 	member_models.Member.objects.all().delete()
@@ -376,8 +376,8 @@ def __create_system_user(username):
 
 def __create_member_grade(user):
 	member_models.MemberGrade.get_default_grade(user.get_profile().webapp_id)
-	member_grade = member_models.MemberGrade.objects.create(name=u'银牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
-	member_grade = member_models.MemberGrade.objects.create(name=u'金牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
+	# member_grade = member_models.MemberGrade.objects.create(name=u'银牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
+	# member_grade = member_models.MemberGrade.objects.create(name=u'金牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
 
 def __create_system_member(username, user):
 	"""

@@ -3,14 +3,16 @@ import json
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 
 from core import resource
 import export
 from mall.module_api import update_promotion_status_by_member_grade
-from modules.member.models import MemberGrade, IntegralStrategySttings, Member
+from modules.member.models import MemberGrade, IntegralStrategySttings, Member, WebAppUser
 from core.jsonresponse import create_response
+from mall.models import Order
+import mall.models as mall_models
 
 
 class MemberGradeList(resource.Resource):
@@ -42,6 +44,9 @@ class MemberGradeList(resource.Resource):
     def api_post(request):
 
         post_grades = json.loads(request.POST.get('grades', []))
+        if not post_grades:
+            return HttpResponseRedirect('/mall2/member_grade_list/')
+
         webapp_id = request.user_profile.webapp_id
         member_grades = MemberGrade.get_all_grades_list(webapp_id)
         member_grade_ids = [grade.id for grade in member_grades]
@@ -52,9 +57,9 @@ class MemberGradeList(resource.Resource):
 
         post_ids = []
         for grade in post_grades:
-            grade_id = int(grade.get("id", None))
-
-            post_ids.append(grade_id)
+            grade_id = int(grade.get("id", '0'))
+            if grade_id > 0:
+                post_ids.append(grade_id)
 
             name = grade.get("name", 'get none value')
             is_auto_upgrade = bool(int(grade.get("is_auto_upgrade", 0)))
@@ -89,9 +94,10 @@ class MemberGradeList(resource.Resource):
                     MemberGrade.objects.create(name=name, is_auto_upgrade=is_auto_upgrade,
                                                shop_discount=shop_discount, webapp_id=webapp_id)
 
-
         delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
 
+        if default_grade.id in delete_ids:
+            delete_ids.remove(default_grade.id)
         Member.objects.filter(grade_id__in=delete_ids).update(grade=default_grade)
 
         MemberGrade.objects.filter(id__in=delete_ids).delete()
@@ -104,3 +110,49 @@ class MemberGradeList(resource.Resource):
 
 def _is_auto(grade_id):
     return MemberGrade.objects.get(id=grade_id).is_auto_upgrade
+
+
+def set_grade(member, is_auto=True):
+    # members = [members]
+    #
+    # for member in members:
+
+    member_grade = member.grade
+
+    webapp_id = member.webapp_id
+
+    webapp_user_id = WebAppUser.objects.get(member_id=member.id)
+
+    orders = mall_models.belong_to(webapp_id)
+
+    paid_orders = orders.filter(status=mall_models.ORDER_STATUS_SUCCESSED, webapp_user_id=webapp_user_id)
+
+    pay_times = paid_orders.count()
+
+    bound = Member.objects.get(id=member.id).experience
+
+    pay_money = 0
+    for order in paid_orders:
+        # total_money += (order.product_price + order.postage) - (order.coupon_money +
+        #                                                         order.integral_money + order.weizoom_card_money +
+        #                                                         order.promotion_saved_money + order.edit_money)
+
+        pay_money += order.get_final_price(webapp_id)
+
+    all_grades_list = MemberGrade.get_all_auto_grades_list(webapp_id)
+    if not is_auto:
+        all_grades_list = filter(lambda x: x >= member.grade_id, all_grades_list)
+
+    is_all_conditions = IntegralStrategySttings.objects.get(webapp_id=webapp_id)
+
+    if is_all_conditions:
+        for grade in all_grades_list:
+            if pay_money >= grade.pay_money and pay_times >= grade.pay_times and bound >= grade.upgrade_lower_bound:
+                member_grade = grade
+
+    else:
+        for grade in all_grades_list:
+            if pay_money >= grade.pay_money or pay_times >= grade.pay_times or bound >= grade.upgrade_lower_bound:
+                member_grade = grade
+
+    Member.objects.filter(id=member.id).update(grade=member_grade)

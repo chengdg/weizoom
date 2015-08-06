@@ -31,7 +31,7 @@ Background:
 	And jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 5
+			"integral_each_yuan": 5
 		}
 		"""
 	When jobs添加支付方式

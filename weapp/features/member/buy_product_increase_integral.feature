@@ -15,7 +15,7 @@ Background:
 			"price":100.00
 		}]	
 		"""
-	And jobs设置积分策略
+	And jobs设定会员积分策略
 		"""
 		[{
 			"be_member_increase_count":20,
