@@ -177,12 +177,7 @@ def get_advance_manage_second_navs(request):
                 'need_permissions': []
                 }
             if qrcode_nav not in navs:
-                navs.append({
-                    'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
-                    'title': u'首草渠道扫码',
-                    'url': '/new_weixin/channel_qrcode/',
-                    'need_permissions': []
-                    })
+                navs.append(qrcode_nav)
                 ADVANCE_MANAGE_NAV['navs'] = navs
 
         second_navs = [ADVANCE_MANAGE_NAV]
