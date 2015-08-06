@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import absolute_import
 import time
 import urllib
 import urllib2
@@ -19,16 +19,12 @@ from modules.member.util import *
 from mall.models import *
 from mall import models as mall_models
 from mall import module_api as mall_api
-from webapp.modules.mall import util as mall_util
 from mall import signals as mall_signals
 from account.models import *
 from account.views import save_base64_img_file_local_for_webapp
 from . import request_util
+from . import utils
 from core.send_order_email_code import *
-from market_tools.tools.weizoom_card import models as weizoom_card_model
-from market_tools.tools.weizoom_card import module_api as weizoom_card_api
-from mall.promotion import models as promotion_models
-import request_util
 from market_tools.tools.coupon import util as coupon_util
 
 from webapp.handlers import event_handler_util
@@ -180,7 +176,7 @@ def save_order(request):
 	ship_name = request.POST['ship_name']
 	ship_address = request.POST['ship_address']
 	ship_tel = request.POST['ship_tel']
-	ship_id = request.POST.get('ship_id', None)
+	# ship_id = request.POST.get('ship_id', None)  # never used ???
 	order_type = request.POST.get('order_type', PRODUCT_DEFAULT_TYPE)
 	pay_interface = request.POST.get('xa-choseInterfaces', '-1')
 
@@ -203,20 +199,12 @@ def save_order(request):
 	customer_message = request.POST.get('message', '')
 
 	# 获取购买的商品集合
-	products = request_util._get_products(request)
+	products = utils.get_products(request)
 
 	# 发送下单检查信号
 	fake_order = common_util.Object("order")
 	fake_order.products = products
 	fake_order.product_groups = mall_api.group_product_by_promotion(request, products)
-	# from pprint import pprint
-	# print("*"*29, "fake_order.product_groups_by_promotion", "*"*29)
-	# pprint(fake_order.product_groups)
-	# print("*"*79)
-	logger.debug(
-			"fake_order.product_groups",
-			exc_info=fake_order.product_groups
-	)
 	signal_responses = mall_signals.check_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
 	http_response = common_util.check_failed_signal_response(signal_responses)
 	if http_response:
@@ -272,7 +260,7 @@ def save_order(request):
 		response = create_response(500)
 		response.data = data
 		return response.get_response()
-		
+
 	try:
 		#加油集赞订单支付
 		if refueling_order and '_79' in refueling_order:
@@ -283,7 +271,7 @@ def save_order(request):
 	except:
 		stack = unicode_full_stack()
 		watchdog_error(stack, 'mall')
-	
+
 	if order:
 		data = {
 			'order_id' : order.order_id,
@@ -642,7 +630,7 @@ def check_shopping_cart_products(request):
 	"""
 	检查商品是否满足"去结算"条件
 	"""
-	msg, products = request_util._get_products(request)
+	msg, products = utils.get_products(request)
 
 	fake_order = common_util.Object("order")
 	fake_order.products = products

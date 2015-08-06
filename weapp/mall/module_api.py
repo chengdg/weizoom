@@ -432,13 +432,16 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					review.member_name = member_id2member[review.member_id].username_for_html
 
 			#获取促销活动和积分折扣信息
-			promotion_ids = [relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(product=product)]
-			promotions = promotion_models.Promotion.objects.filter(owner_id=webapp_owner_id, id__in=promotion_ids)
+			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))
+			# Todo: 促销已经结束， 但数据库状态未更改
+			promotions = promotion_models.Promotion.objects.filter(
+				owner_id=webapp_owner_id,
+				id__in=promotion_ids,
+				status=promotion_models.PROMOTION_STATUS_STARTED
+			)
 			promotion = None
 			integral_sale = None
 			for one_promotion in promotions:
-				if not one_promotion.status == promotion_models.PROMOTION_STATUS_STARTED:
-					continue
 				if one_promotion.type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
 					integral_sale = one_promotion
 				# RFC
@@ -1082,14 +1085,10 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 		if promotion_result:
 			saved_money = promotion_result.get('promotion_saved_money', 0.0)
 			promotion_saved_money += saved_money
-	# print '$' * 60
-	# for product_group in product_groups:
-	# 	print product_group['promotion_result']
-	# print promotion_saved_money
 	order.promotion_saved_money = promotion_saved_money
 
 	# 订单来自商铺
-	if products[0].owner_id ==  webapp_owner_id:
+	if products[0].owner_id == webapp_owner_id:
 		order.webapp_source_id = webapp_id
 		order.order_source = ORDER_SOURCE_OWN
 	# 订单来自微众商城
@@ -1559,7 +1558,6 @@ def get_shopping_cart_products(webapp_user, webapp_owner_id):
 
 	@todo 直接使用已在缓存中的model数据来改进fill_specific_model的性能
 	"""
-	from cache import webapp_cache
 	shopping_cart_items = list(ShoppingCart.objects.filter(webapp_user_id=webapp_user.id))
 
 	#product_ids = []
@@ -1567,7 +1565,7 @@ def get_shopping_cart_products(webapp_user, webapp_owner_id):
 	productmodel2shoppingcartitem = dict()
 	for shopping_cart_item in shopping_cart_items:
 		#product_ids.append(shopping_cart_item.product_id)
-		product_infos.append({"id":shopping_cart_item.product_id, "model_name":shopping_cart_item.product_model_name})
+		product_infos.append({"id": shopping_cart_item.product_id, "model_name": shopping_cart_item.product_model_name})
 		product_model_id = '%s_%s' % (shopping_cart_item.product_id, shopping_cart_item.product_model_name)
 		productmodel2shoppingcartitem[product_model_id] = shopping_cart_item
 
@@ -1619,7 +1617,7 @@ def get_shopping_cart_products(webapp_user, webapp_owner_id):
 
 	product_groups = group_product_by_promotion(None, valid_products)
 
-	invalid_products.sort(lambda x,y: cmp(x.shopping_cart_id, y.shopping_cart_id))
+	invalid_products.sort(lambda x, y: cmp(x.shopping_cart_id, y.shopping_cart_id))
 
 	return product_groups, invalid_products
 

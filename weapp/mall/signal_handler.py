@@ -353,36 +353,47 @@ def postage_pre_save_order(pre_order, order, products, product_groups, **kwargs)
 
 @receiver(mall_signals.pre_save_order, sender=mall_signals)
 def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
-	"""
-	使用优惠券
+	"""使用优惠券
 	"""
 	from mall.promotion import models as promotion_models
 
-	if not pre_order.session_data.has_key('coupon'):
+	if not pre_order.session_data.get('coupon', ''):
 		return
 	coupon = pre_order.session_data['coupon']
+
 	order.coupon_id = coupon.id
+
+	# 如果去掉优惠券价格后商品终价低于运费
 	if order.final_price - coupon.money < order.postage:
-		tmp = order.postage + coupon.money - order.final_price
 		order.final_price = order.postage
-		order.coupon_money = coupon.money - tmp
+		order.coupon_money = order.final_price - order.postage
 	else:
 		order.coupon_money = coupon.money
 		order.final_price -= coupon.money
 
-	coupon = promotion_models.Coupon.objects.filter(id = coupon.id)
-	coupon_rule = promotion_models.CouponRule.objects.filter(id = coupon[0].coupon_rule_id)
+	# 如果是通用优惠券
+	if not coupon.coupon_rule.limit_product:
+		# 会员折扣优惠的价格
+		cut = sum(map(lambda x: x.price*(1-x.member_discount)*x.purchase_count, products))
+
+		if order.final_price - cut < order.postage:
+			order.final_price = order.postage
+		else:
+			order.final_price -= cut
+
+	coupon = promotion_models.Coupon.objects.filter(id=coupon.id)
+	coupon_rule = promotion_models.CouponRule.objects.filter(id=coupon[0].coupon_rule_id)
 	if not coupon[0].member_id:
-		coupon_rule.update(remained_count = F('remained_count') - 1)
-	coupon.update(status = promotion_models.COUPON_STATUS_USED)
-	coupon_rule.update(use_count = F('use_count') + 1)
+		coupon_rule.update(remained_count=F('remained_count') - 1)
+	coupon.update(status=promotion_models.COUPON_STATUS_USED)
+	coupon_rule.update(use_count=F('use_count') + 1)
+
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
 def check_coupon_for_order(pre_order, args, request, **kwargs):
 	"""
 	检查优惠券
 	"""
-	# from mall.promotion import models as promotion_models
 	if not hasattr(pre_order, 'session_data'):
 		pre_order.session_data = dict()
 

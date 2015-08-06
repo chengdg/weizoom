@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 
 # from hashlib import md5
 import json
-import re
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import models
@@ -144,7 +143,6 @@ PRODUCT_TYPE2TEXT = {
 	PRODUCT_INTEGRAL_TYPE: u'积分商品'
 }
 MAX_INDEX = 2**16 - 1
-
 
 
 class Product(models.Model):
