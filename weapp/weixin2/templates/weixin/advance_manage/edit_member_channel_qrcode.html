@@ -46,7 +46,7 @@
                     </select>
                     <span name="prize_source|0" class="xua-remainedCount"></span>
                     <input type="text" class="" name="prize_source|0" for_type="3"
-                    {% if award_content.award_type == 3 %}
+                    {% if award_content.scanner_award_type == 3 %}
                         value='{{ award_content.scanner_award_content }}'
                         data-validate="require-int"
                     {% else %}

@@ -168,9 +168,8 @@ def get_advance_manage_second_navs(request):
         pass
     else:
         # webapp_module_views.get_modules_page_second_navs(request)
-        print request.user.id,'-------'
-        if request.user_profile.user_id in [467,145,3]:
-            navs = ADVANCE_MANAGE_NAV['navs']
+        if request.user_profile.user_id in [3,467,145,146,147,148,149]:
+            navs = ADVANCE_MANAGE_NAV['navs'][:-1]
             qrcode_nav = {
                 'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
                 'title': u'渠道扫码',

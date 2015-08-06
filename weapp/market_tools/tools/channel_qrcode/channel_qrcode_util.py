@@ -79,12 +79,10 @@ def check_new_channel_qrcode_ticket(ticket, user_profile):
 	return True if MemberChannelQrcode.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0 else False
 
 def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_member):
-	print "------log---3-----"
 	try:
 		new_channel_qrcodes = MemberChannelQrcode.objects.filter(ticket=ticket, owner_id=user_profile.user_id)
 		print("new_channel_qrcodes: {}, ticket: {}, owner_id: {}".format(new_channel_qrcodes, ticket, user_profile.user_id))
 		if new_channel_qrcodes.count() > 0:
-			print "------log---4-----"
 			new_channel_qrcode = new_channel_qrcodes[0]
 			qrcode_setting = MemberChannelQrcodeSettings.objects.get(id=new_channel_qrcode.member_channel_qrcode_setting_id)
 			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(member_channel_qrcode_settings=qrcode_setting)
@@ -92,13 +90,11 @@ def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_m
 			# 	return
 
 			if MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode=new_channel_qrcode, member=member).count() == 0:
-				print "------log---5-----"
 				MemberChannelQrcodeHasMember.objects.create(member_channel_qrcode=new_channel_qrcode, member=member, is_new=is_new_member)
 			else:
 				return
 
 			if member:
-				print "------log---6-----"
 				_add_award_to_member(user_profile,
 					qrcode_award.scanner_award_type,
 					qrcode_award.scanner_award_content,
