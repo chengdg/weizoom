@@ -583,11 +583,11 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 		[{
 			"name": "商品10",
 			"price": 100.00,
-			"member_price": true,
+			"member_price": true
 		},{
 			"name": "商品11",
 			"price": 100.00,
-			"member_price": true,
+			"member_price": true
 		}]
 	"""
 	When jobs创建积分应用活动
