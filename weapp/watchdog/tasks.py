@@ -53,6 +53,7 @@ def _watchdog(type, message, severity=WATCHDOG_INFO, user_id='0', db_name='defau
 			except:
 				logging.error(u'>>>>>>>>>>>>>>>>> not connection operation databases settings.WATCHDOG_DB={}'.format(settings.WATCHDOG_DB))
 				logging.error("Cause:\n{}".format(full_stack()))
+				print 'error message==============', message
 				Message.objects.create(type=type, message=message, severity=severity, user_id=user_id)
 	except:
 		#TODO, 通过监控和心跳来发现
