@@ -365,8 +365,8 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
 
 	# 如果去掉优惠券价格后商品终价低于运费
 	if order.final_price - coupon.money < order.postage:
-		order.final_price = order.postage
 		order.coupon_money = order.final_price - order.postage
+		order.final_price = order.postage
 	else:
 		order.coupon_money = coupon.money
 		order.final_price -= coupon.money

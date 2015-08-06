@@ -244,7 +244,7 @@ Scenario: 1 使用少于商品价格的优惠券金额进行购买
 		'''
 
 
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 2 使用多于商品价格的优惠券金额进行购买
 	bill购买jobs的商品时，能使用多于商品价格的优惠券
 	1. 订单状态直接变为'等待发货'
@@ -740,7 +740,7 @@ Scenario: 11 购买多规格商品，买1个商品的两个规格，总价格满
 		}
 		'''
 
-@mall2 @mall.webapp @mall.coupon
+@mall2 @mall.webapp @mall.coupon @jz
 Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣运费
 	bill购买jobs的商品时，优惠券金额大于商品金额时
 	1.只抵扣商品金额，不能抵扣运费

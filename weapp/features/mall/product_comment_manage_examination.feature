@@ -573,7 +573,7 @@ Scenario: 6.同款商品，最多可置顶3条评价信息，第4条置顶时，
     """
 
 #后续补充.雪静
-@mall2 @mall.webapp.comment @prm7 @jz
+@mall2 @mall.webapp.comment @prm7
 Scenario: 7.jobs通过审核评价，给用户加积分
    1.tom评价jobs的商品，jobs通过审核，给tom加相应的积分
    2.tom评价jobs的商品，jobs通过并置顶，给tom加相应的积分
