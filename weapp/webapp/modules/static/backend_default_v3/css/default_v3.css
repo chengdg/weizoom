@@ -5216,7 +5216,8 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-memberQrcode-page h2::after{
     right: 0;
 }
-.xui-myRecPage .xui-info{
+.xui-myRecPage .xui-info,
+.xui-memberQrcode-page .xui-info{
     width: 90.625%;
     margin: 0 auto;
     background: #f9f9f9;
