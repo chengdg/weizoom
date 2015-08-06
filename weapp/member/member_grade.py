@@ -3,7 +3,7 @@ import json
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 
 from core import resource
@@ -44,8 +44,11 @@ class MemberGradeList(resource.Resource):
     def api_post(request):
 
         post_grades = json.loads(request.POST.get('grades', []))
+        if not post_grades:
+            return HttpResponseRedirect('/mall2/member_grade_list/')
+
         webapp_id = request.user_profile.webapp_id
-        member_grades = MemberGrade.get_all_grades_list(webapp_id).exclude(name = u'普通会员')
+        member_grades = MemberGrade.get_all_grades_list(webapp_id)
         member_grade_ids = [grade.id for grade in member_grades]
         default_grade = MemberGrade.get_default_grade(webapp_id)
 
@@ -92,6 +95,9 @@ class MemberGradeList(resource.Resource):
                                                shop_discount=shop_discount, webapp_id=webapp_id)
 
         delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
+
+        if default_grade.id in delete_ids:
+            delete_ids.remove(default_grade.id)
         Member.objects.filter(grade_id__in=delete_ids).update(grade=default_grade)
 
         MemberGrade.objects.filter(id__in=delete_ids).delete()
