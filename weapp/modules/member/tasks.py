@@ -69,8 +69,9 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 	#else:
 		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)
 	try:
-		member.integral = F('integral') + integral_increase_count
-		member.save()	
+		# member.integral = F('integral') + integral_increase_count
+		# member.save()
+		Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)
 		MemberIntegralLog.objects.create(
 				member = member, 
 				follower_member_token = follower_member.token if follower_member else '', 
