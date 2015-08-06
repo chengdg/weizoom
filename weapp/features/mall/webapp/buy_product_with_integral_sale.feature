@@ -963,7 +963,7 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 			"price": 100.00,
 			"member_price": false
 		}]
-	"""	
+	"""
 	And bill1关注jobs的公众号
 	And bill2关注jobs的公众号
 	And bill3关注jobs的公众号
