@@ -65,12 +65,12 @@
     color:#3333333;
 }
 .xui-integralLogPage .xui-integralLogList .xui-type {
-    font-size: 12px;
+    font-size: 13px;
     color:#666666;
 }
 .xui-integralLogPage .xui-integralLogList .xui-inner-time {
-    height:40px;
-    line-height:40px;
+    height:36px;
+    line-height:36px;
     /*width:70px;*/
     text-align: left;
     padding-left: 10px;
@@ -79,7 +79,7 @@
     color:#999999;
 
     /*margin-top:15px;*/
-    font-size:0.75rem;
+    font-size:13px;
 }
 .xui-integralLogPage .xui-integralLogList .xui-inner-dot {
     background:#fff;
@@ -105,8 +105,8 @@
     /*margin-top:10px;*/
 }
 .xui-integralLogPage .xui-integralLogList .xui-usericon {
-    width:40px;
-    height:40px;
+    width:42px;
+    height:42px;
     margin-right: 12px;
 }
 .xui-integralLogPage .xui-integralLogList .xui-zoom {
@@ -120,8 +120,8 @@
     -moz-border-radius: 8px;
     border-radius: 8px;*/
     height: 40px;
-    margin-top: 12px;
-    margin-bottom:12px; 
+    padding-top: 10px;
+    padding-bottom:12px; 
     padding-right: 10px;
     padding-left: 10px;
 }
@@ -151,6 +151,9 @@
 }
 .xui-integralLogPage .xui-text-blue{
     color: #057FCD;
+}
+.xui-integralLogPage .xui-count{
+    font-size: 18px;
 }
     </style>
 {% endblock %}
@@ -184,9 +187,9 @@
                                 {% endif %}
                                 <p class="xui-right fr tr">
                                     {% if log.integral_count > 0 %}
-                                    <span class=" xui-text-blue em8">+{{log.integral_count}}</span>
+                                    <span class=" xui-text-blue xui-count">+{{log.integral_count}}</span>
                                     {% else %}
-                                    <span class=" xui-text-red em8">-{{log.integral_count}}</span>
+                                    <span class=" xui-text-red xui-count">{{log.integral_count}}</span>
                                     {% endif %}
                                 </p>
                             </div>
@@ -206,7 +209,7 @@
 {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('.xui-integralLogPage').css('min-height', screen.height+'px');
+		$('.xui-integralLogPage').css('min-height', document.body.clientHeight+'px');
 	})
 </script>
 {% endblock %}
