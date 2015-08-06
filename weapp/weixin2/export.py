@@ -167,19 +167,19 @@ def get_advance_manage_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
-        # webapp_module_views.get_modules_page_second_navs(request)
+        #webapp_module_views.get_modules_page_second_navs(request)
         if request.user_profile.user_id in [3,467,145,146,147,148,149]:
             navs = ADVANCE_MANAGE_NAV['navs'][:-1]
             qrcode_nav = {
                 'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
-                'title': u'渠道扫码',
+                'title': u'首草渠道扫码',
                 'url': '/new_weixin/channel_qrcode/',
                 'need_permissions': []
                 }
             if qrcode_nav not in navs:
                 navs.append({
                     'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
-                    'title': u'渠道扫码',
+                    'title': u'首草渠道扫码',
                     'url': '/new_weixin/channel_qrcode/',
                     'need_permissions': []
                     })

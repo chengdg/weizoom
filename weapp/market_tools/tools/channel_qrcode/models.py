@@ -88,6 +88,7 @@ class MemberChannelQrcodeAwardContent(models.Model):
 	"""
 	会员渠道扫码奖励类容
 	"""
+	owner = models.ForeignKey(User)
 	member_channel_qrcode_settings = models.ForeignKey(MemberChannelQrcodeSettings)
 	scanner_award_type = models.IntegerField(max_length=1, verbose_name=u"扫码后奖励类型", default=AWARD_INTEGRAL)
 	scanner_award_content = models.CharField(max_length=256, verbose_name=u'扫码后奖励内容') #目前奖励内容为：1，奖励积分分值 2，优惠券id

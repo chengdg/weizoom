@@ -84,10 +84,7 @@ def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_m
 		print("new_channel_qrcodes: {}, ticket: {}, owner_id: {}".format(new_channel_qrcodes, ticket, user_profile.user_id))
 		if new_channel_qrcodes.count() > 0:
 			new_channel_qrcode = new_channel_qrcodes[0]
-			qrcode_setting = MemberChannelQrcodeSettings.objects.get(id=new_channel_qrcode.member_channel_qrcode_setting_id)
-			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(member_channel_qrcode_settings=qrcode_setting)
-			# if (is_new_member is False) and channel_qrcode.re_old_member == 0:
-			# 	return
+			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
 
 			if MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode=new_channel_qrcode, member=member).count() == 0:
 				MemberChannelQrcodeHasMember.objects.create(member_channel_qrcode=new_channel_qrcode, member=member, is_new=is_new_member)
