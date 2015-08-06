@@ -124,7 +124,7 @@ class AutoQaMessageHandler(KeywordHandler):
 				response = generator.get_news_response(message.fromUserName, message.toUserName, response_rule.newses, message.fromUserName)
 			else:
 				if is_from_simulator:
-					response = generator.get_text_response(message.fromUserName, message.toUserName, emotion.change_emotion_to_img(response_rule.answer), token, user_profile)
+					response = generator.get_text_response(message.fromUserName, message.toUserName, emotion.change_emotion_to_img(response_rule.answer), message.fromUserName, user_profile)
 				else:
 					response = generator.get_text_response(message.fromUserName, message.toUserName, response_rule.answer, message.fromUserName, user_profile)
 

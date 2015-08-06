@@ -149,9 +149,7 @@ class MemberHandler(MessageHandler):
 
 		try:
 			if not member.user_icon or member.user_icon == '':
-				print '-----------go to update user_icon start',member.user_icon
 				member_basic_info_updater(request.user_profile, member)
-				print '-----------go to update user_icon end', member.user_icon
 				if not member.user_icon or member.user_icon == '':
 					member_basic_info_updater(request.user_profile, member)
 		except:
