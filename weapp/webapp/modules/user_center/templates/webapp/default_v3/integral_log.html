@@ -152,6 +152,9 @@
 .xui-integralLogPage .xui-text-blue{
     color: #057FCD;
 }
+.xui-integralLogPage .xui-count{
+    font-size: 18px;
+}
     </style>
 {% endblock %}
 
@@ -184,9 +187,9 @@
                                 {% endif %}
                                 <p class="xui-right fr tr">
                                     {% if log.integral_count > 0 %}
-                                    <span class=" xui-text-blue em8">+{{log.integral_count}}</span>
+                                    <span class=" xui-text-blue xui-count">+{{log.integral_count}}</span>
                                     {% else %}
-                                    <span class=" xui-text-red em8">{{log.integral_count}}</span>
+                                    <span class=" xui-text-red xui-count">{{log.integral_count}}</span>
                                     {% endif %}
                                 </p>
                             </div>
