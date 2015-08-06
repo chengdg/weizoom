@@ -163,24 +163,39 @@ ADVANCE_MANAGE_NAV = {
     ]
 }
 
+
+SHOUCAO_ADVANCE_MANAGE_NAV = {
+    'section': u'高级管理',
+    'navs': [
+        {
+            'name': ADVANCE_MANAGE_MATERIAL_NAV,
+            'title': u'图文管理',
+            'url': '/new_weixin/materials/',
+            'need_permissions': []
+        },
+        {
+            'name': ADVANCE_MANAGE_FANS_NAV,
+            'title': u'粉丝管理',
+            'url': '/new_weixin/fanses/',
+            'need_permissions': []
+        },
+        {
+            'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
+            'title': u'首草渠道扫码',
+            'url': '/new_weixin/channel_qrcode/',
+            'need_permissions': []
+        }
+    ]
+}
 def get_advance_manage_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
         #webapp_module_views.get_modules_page_second_navs(request)
         if request.user_profile.user_id in [467,151]:
-            navs = ADVANCE_MANAGE_NAV['navs'][:-1]
-            qrcode_nav = {
-                'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
-                'title': u'首草渠道扫码',
-                'url': '/new_weixin/channel_qrcode/',
-                'need_permissions': []
-                }
-            if qrcode_nav not in navs:
-                navs.append(qrcode_nav)
-                ADVANCE_MANAGE_NAV['navs'] = navs
-
-        second_navs = [ADVANCE_MANAGE_NAV]
+            second_navs = [SHOUCAO_ADVANCE_MANAGE_NAV]
+        else:
+            second_navs = [ADVANCE_MANAGE_NAV]
 
     return second_navs
 
