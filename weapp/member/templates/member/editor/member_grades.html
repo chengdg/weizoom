@@ -350,10 +350,6 @@
                     args: {'grades': JSON.stringify(grades),'is_all_conditions':is_all_conditions},
                     success: function(data) {
                         W.showHint('success', '保存成功');
-                        setTimeout(function(){
-                            window.location.reload();//2秒后执行
-                        },2000);
-
 
                     },
                     error: function() {
