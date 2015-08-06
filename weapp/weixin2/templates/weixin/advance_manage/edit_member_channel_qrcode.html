@@ -36,7 +36,7 @@
                     <select class="" name="prize_source|0" for_type="1"
                     {% if award_content.scanner_award_type == 1 %}
                         value='{{ award_content.scanner_award_content }}'
-                        data-validate="Weapp"
+                        data-validate="require-select::请选择优惠劵"
                     {% else %}
                         style="display:none;"
                     {% endif %} >
@@ -48,12 +48,13 @@
                     <span name="prize_source|0" class="xua-remainedCount"></span>
                     <input type="text" class="" name="prize_source|0" for_type="3"
                     {% if award_content.scanner_award_type == 3 %}
+                        style="width:120px;"
                         value='{{ award_content.scanner_award_content }}'
                         data-validate="require-int"
                     {% else %}
-                        style="display:none;"
+                        style="display:none; width:120px;"
                     {% endif %} placeholder="请输入积分数值">
-                    <div class="errorHint" style="margin-left: 60px;"></div>
+                    <div class="errorHint" style="display: inline;"></div>
                 </fieldset>
                 <!--######-->
                 <fieldset class="xui-prize">
@@ -70,7 +71,7 @@
                     <select class="" name="prize_source|1" for_type="1"
                     {% if award_content.share_award_type == 1 %}
                         value='{{ award_content.share_award_content }}'
-                        data-validate="require-select-valid-option"
+                        data-validate="require-select::请选择优惠劵"
                     {% else %}
                         style="display:none;"
                     {% endif %} >
@@ -84,10 +85,11 @@
                     {% if award_content.share_award_type == 3 %}
                         value='{{ award_content.share_award_content }}'
                         data-validate="require-int"
+                        style="width:120px;"
                     {% else %}
-                        style="display:none;"
+                        style="display:none;width:120px;"
                     {% endif %} placeholder="请输入积分数值">
-                    <div class="errorHint" style="margin-left: 60px;"></div>
+                    <div class="errorHint" style="display: inline;"></div>
                 </fieldset>
                 <fieldset class="xui-info">
                     <label for="" class="star_show">页面描述：</label>
@@ -150,7 +152,7 @@ $(document).ready(function() {
 
         switch(type) {
         case '1':
-            $coupon_id.attr('data-validate', 'require-select-valid-option');
+            $coupon_id.attr('data-validate', 'require-select::请选择优惠劵');
             break;
         case '3':
             $integral.attr('data-validate', 'require-int');
@@ -160,10 +162,11 @@ $(document).ready(function() {
 
     $('select[name*="prize_type"]').change(function(event){
         var $el = event.currentTarget ? $(event.currentTarget) : event;
+        $el.siblings('.errorHint').text("");
         var target_name = $el.attr('name');
         var value = $el.val();
 
-        var $coupon_id = $('[name="prize_source|'+target_name[target_name.length - 1]+'"]');
+        var $coupon_id = $('select[name="prize_source|'+target_name[target_name.length - 1]+'"]');
         var $integral = $('input[name="prize_source|'+target_name[target_name.length - 1]+'"]');
         if (value == 1) {
             $coupon_id.show();
