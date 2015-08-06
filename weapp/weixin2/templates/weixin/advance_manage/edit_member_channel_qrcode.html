@@ -134,6 +134,7 @@ $(document).ready(function() {
         var count = $(':selected', this).data('count');
         if(count || count == 0){
             $(this).next('.xua-remainedCount').html('当前库存:'+count).show().append($('<a/>').attr('href','/mall2/coupon/?rule_id='+$(this).val()).html('增加库存'));
+            $(this).siblings('.errorHint').text("");
         }else{
             $(this).next('.xua-remainedCount').html("");
         }
