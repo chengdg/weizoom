@@ -241,6 +241,9 @@ def edit_member(request):
 		raise Http404(u"不存在该会员")
 	#except:
 	#	raise Http404(u"不存在该会员")
+	from modules.member.member_info_util import update_member_basic_info
+	if not member.user_icon or not member.username_hexstr:
+		update_member_basic_info(request.user_profile, member)
 
 	#完善会员的基本信息
 	if member.user_icon:
