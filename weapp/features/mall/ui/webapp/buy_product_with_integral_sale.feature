@@ -53,7 +53,7 @@ Background:
 	Given jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 2
+			"integral_each_yuan": 2
 		}
 		"""
 	When jobs创建积分应用活动

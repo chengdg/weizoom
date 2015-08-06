@@ -109,13 +109,13 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         {% if product.promotion and product.promotion.type == 1 %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
+                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
                         {% endif %}
                     {% else %}
                         {% if product.promotion and product.promotion.type == 1 %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
+                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
                         {% endif %}
                     {% endif %}
                 </p>
@@ -141,7 +141,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     {% endfor %}
                 </span>
                 {% else %}
-                    <span class="ml5 xa-promotionNormal-info">{{ product.promotion.promotion_title }}</span>
+                    <span class="ml5 xa-promotionNormal-info">{{ product.promotion.detail.cut_price }}</span>
                 {% endif %}
                 </div>
             </div>

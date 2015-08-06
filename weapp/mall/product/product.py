@@ -374,7 +374,7 @@ class Product(resource.Resource):
             unified_postage_money=unified_postage_money,
             weshop_sync=request.POST.get('weshop_sync', 0),
             stocks=min_limit,
-            is_member_product=json.loads(request.POST.get("is_member_product", "false"))
+            is_member_product=request.POST.get("is_member_product", False) == 'on'
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -542,7 +542,8 @@ class Product(resource.Resource):
                 postage_type=postage_type,
                 weshop_sync=request.POST.get('weshop_sync', None),
                 stocks=min_limit,
-                is_member_product=json.loads(request.POST.get("is_member_product", "false"))
+                is_member_product=request.POST.get("is_member_product", False) == 'on'
+
             )
         else:
             models.Product.objects.record_cache_args(
@@ -564,7 +565,7 @@ class Product(resource.Resource):
                 unified_postage_money=unified_postage_money,
                 postage_type=postage_type,
                 stocks=min_limit,
-                is_member_product=json.loads(request.POST.get("is_member_product", "false"))
+                is_member_product=request.POST.get("is_member_product", False) == 'on'
             )
 
         # 处理商品规格

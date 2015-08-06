@@ -118,10 +118,10 @@ Background:
 		"""
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
-	And marry1关注job的公众账号
-	And marry2关注job的公众账号
-	And marry3关注job的公众账号
-	And marry4关注job的公众账号
+	And marry1关注jobs的公众号
+	And marry2关注jobs的公众号
+	And marry3关注jobs的公众号
+	And marry4关注jobs的公众号
 
 
 @mall2 @mall.promotion @mall.webapp.promotion

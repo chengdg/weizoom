@@ -9,7 +9,7 @@ def step_webapp_owner_verified_review(context, webapp_owner):
     """
      [{
         "member": "tom",
-        "status": "-1",  -> ('-1', '已屏蔽'),  ('0', '待审核'),  ('1', '已通过'),  ('2', '通过并置顶')
+        "status": "-1",  -> ('-1', '已屏蔽'),  ('0', '待审核'),  ('1', '已通过'),  ('1', '取消置顶'),  ('2', '通过并置顶')
         "product_name": "商品1",
         "order_no": "3"
     }, {
@@ -32,3 +32,19 @@ def step_webapp_owner_verified_review(context, webapp_owner):
             "status": i.get("status")
         }
         context.client.post(url, args)
+
+@when(u'{webapp_owner}已完成对商品的评价信息审核并置顶')
+def step_impl(context, webapp_owner):
+    assert False
+
+@when(u'{webapp_owner}取消对商品的评价信息置顶')
+def step_impl(context, webapp_owner):
+    assert False
+
+@when(u'{webapp_owner}屏蔽对商品的评价信息')
+def step_impl(context, webapp_owner):
+    assert False
+
+@when(u'{webapp_owner}已完成对商品的评价信息置顶')
+def step_impl(context, webapp_owner):
+    assert False

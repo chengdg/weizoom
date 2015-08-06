@@ -117,7 +117,7 @@ Background:
 		}]
 		"""
 
-	And jobs设置积分策略
+	And jobs设定会员积分策略
 		"""
 		[{ 
 			"integral_each_yuan": 10

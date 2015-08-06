@@ -1,6 +1,6 @@
 #  "benchi"
 Feature: 在webapp中购买参与积分应用活动的商品
-	jobs 设置 订单积分抵扣上限 后 用户能在webapp中能够对所有商品使用积分购买
+	jobs 设置 use_ceiling 后 用户能在webapp中能够对所有商品使用积分购买
 Background:
 	Given jobs登录系统
 
@@ -68,8 +68,8 @@ Background:
 	Given jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 2,
-			"订单积分抵扣上限": 50
+			"integral_each_yuan": 2,
+			"use_ceiling": 50
 		}
 		"""
 	#支付方式

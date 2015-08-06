@@ -93,12 +93,12 @@ NAV = {
             'url': '/mall2/product_list/?shelve_type=0',
             'need_permissions': ['manage_product_offshelf', ]
         },
-        {
-            'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
-            'title': u'商品回收站',
-            'url': '/mall2/product_list/?shelve_type=2',
-            'need_permissions': ['manage_product_deleted', ]
-        },
+        # {
+        #     'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
+        #     'title': u'商品回收站',
+        #     'url': '/mall2/product_list/?shelve_type=2',
+        #     'need_permissions': ['manage_product_deleted', ]
+        # },
         {
             'name': PRODUCT_MANAGE_IMAGE_NAV,
             'title': u'图片管理',

@@ -20,7 +20,7 @@ Background:
 		# 即: "integral_each_yuan": 10	
 		"""
 		{
-			"一元等价的积分数量": 10
+			"integral_each_yuan": 10
 		}
 		"""
 	When jobs已添加支付方式
