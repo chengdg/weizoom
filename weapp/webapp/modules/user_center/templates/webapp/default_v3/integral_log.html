@@ -7,12 +7,103 @@
     <div class="influence-log-list error-info">您还没有积分日志</div>
     {% else %}
     <ul class="clearStyle xui-integralLogList">
+                <div class="xui-inner-infoBox">
+                    <div class="xui-inner-time">2015. 08. 6</div>
+                     <li class="xui-listItem">
+                        <div class="xui-inner-content">
+                            <img src="" class="xui-usericon fl"/>
+                            <p class="xui-zoom fl">
+                                <span class=" xui-username">好友奖励gggg</span>
+                                <br/>
+                                <span class=" xui-type">gggg</span>
+                            </p>
+                            <p class="xui-right fr tr">
+                                <span class=" xui-text-blue em8">+44444</span>
+                            </p>
+                        </div>
+                    </li>
+                     <li class="xui-listItem">
+                        <div class="xui-inner-content">
+                            <img src="" class="xui-usericon fl"/>
+                            <p class="xui-zoom fl">
+                                <span class=" xui-username">好友奖励gggg</span>
+                                <br/>
+                                <span class=" xui-type">gggg</span>
+                            </p>
+                            <p class="xui-right fr tr">
+                                
+                                <span class=" xui-text-blue em8">+44444</span>
+                            </p>
+                   
+                        </div>
+                    </li>
+                     <li class="xui-listItem">
+                        <div class="xui-inner-content">
+                            <img src="" class="xui-usericon fl"/>
+                            <p class="xui-zoom fl">
+                                <span class=" xui-username">好友奖励gggg</span>
+                                <br/>
+                                <span class=" xui-type">gggg</span>
+                            </p>
+                            <p class="xui-right fr tr">
+                                
+                                <span class=" xui-text-blue em8">+44444</span>
+                            </p>
+                   
+                        </div>
+                    </li>
+                     <li class="xui-listItem">
+                        <div class="xui-inner-content">
+                            <img src="" class="xui-usericon fl"/>
+                            <p class="xui-zoom fl">
+                                <span class=" xui-username">好友奖励gggg</span>
+                                <br/>
+                                <span class=" xui-type">gggg</span>
+                            </p>
+                            <p class="xui-right fr tr">
+                                
+                                <span class=" xui-text-blue em8 ">+44444</span>
+                            </p>
+                   
+                        </div>
+                    </li>
+                     <li class="xui-listItem">
+                        <div class="xui-inner-content">
+                            <img src="" class="xui-usericon fl"/>
+                            <p class="xui-zoom fl">
+                                <span class=" xui-username">好友奖励gggg</span>
+                                <br/>
+                                <span class=" xui-type">gggg</span>
+                            </p>
+                            <p class="xui-right fr tr">
+                                
+                                <span class=" xui-text-blue em8">+44444</span>
+                            </p>
+                   
+                        </div>
+                    </li>
+                     <li class="xui-listItem">
+                        <div class="xui-inner-content">
+                            <img src="" class="xui-usericon fl"/>
+                            <p class="xui-zoom fl">
+                                <span class=" xui-username">好友奖励gggg</span>
+                                <br/>
+                                <span class=" xui-type">gggg</span>
+                            </p>
+                            <p class="xui-right fr tr">
+                                
+                                <span class=" xui-text-blue em8">+44444</span>
+                            </p>
+                   
+                        </div>
+                    </li>
+                </div>
+
+           
+
         {% for member_integral_log in member_integral_logs %}
             <li class="xui-listItem">
-                <div class="xui-inner-dotBox pr">
-                    <span class="xui-inner-dot"></span>
-                    <span class="xui-timeLine"></span>
-                </div>
+               
                 <div class="xui-inner-infoBox">
                     <span class="xui-inner-time">{{ member_integral_log.created_at|date:"Y. m. j" }}</span>
                     {% ifequal member_integral_log.event_type '好友奖励' %}

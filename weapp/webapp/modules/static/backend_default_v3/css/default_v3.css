@@ -4059,11 +4059,11 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-integralLogPage .xui-integralLogList {
     margin: 0;
     padding-top: 35px;
-    padding-right: 15px;
 }
 .xui-integralLogPage .xui-listItem{
     display:table;
     width:100%;
+    border-bottom: 1px solid #ebebeb;
 }
 .xui-integralLogPage .xui-listItem .xui-inner-dotBox{
     display:table-cell;
@@ -4083,15 +4083,24 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     border-bottom: 1px solid #dfdfdd;
     padding-top: 15px;
 }
+.xui-integralLogPage .xui-integralLogList .xui-username {
+    font-size: 13px;
+    color:#3333333;
+}
+.xui-integralLogPage .xui-integralLogList .xui-type {
+    font-size: 12px;
+    color:#666666;
+}
 .xui-integralLogPage .xui-integralLogList .xui-inner-time {
-    height:30px;
-    line-height:30px;
+    height:40px;
+    line-height:40px;
     /*width:70px;*/
-    padding:3px 2px;
-    margin-left:-2px;
+    text-align: left;
+    padding-left: 20px;
     color:#fff;
-    background: #CBCBCB;
-    text-align:center;
+    background: #f6f6f6;
+    color:#999999;
+
     /*margin-top:15px;*/
     font-size:0.75rem;
 }
@@ -4118,14 +4127,27 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     left:24px;
     /*margin-top:10px;*/
 }
+.xui-integralLogPage .xui-integralLogList .xui-usericon {
+    width:40px;
+    height:40px;
+    border: 1px solid #ccc;
+    margin-right: 12px;
+}
+.xui-integralLogPage .xui-integralLogList .xui-zoom {
+    width: 200px;
+    height: 40px;
+}
 .xui-integralLogPage .xui-integralLogList .xui-inner-content {
     /*border:1px solid #CECECE;
     margin-left:117px;
     -webkit-border-radius:8px;
     -moz-border-radius: 8px;
     border-radius: 8px;*/
-    padding: 5px 0px 9px 0;
-    color:#444444;
+    height: 40px;
+    margin-top: 12px;
+    margin-bottom:12px; 
+    padding-right: 10px;
+    padding-left: 10px;
 }
 .xui-userCenter-friendList{
     padding-top:5px;
@@ -4138,10 +4160,7 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     margin-top:0px;
     padding-right:10px;
 }
-.xui-userCenter-friendList li .xui-userImg{
-    width: 46px;
-    height: 46px;
-}
+
 .xui-userCenter-friendList li img{
     margin:0 auto;
 }
