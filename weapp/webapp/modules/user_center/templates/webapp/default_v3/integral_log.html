@@ -8,147 +8,41 @@
     {% else %}
     <ul class="clearStyle xui-integralLogList">
                 <div class="xui-inner-infoBox">
-                    <div class="xui-inner-time">2015. 08. 6</div>
-                     <li class="xui-listItem">
-                        <div class="xui-inner-content">
-                            <img src="" class="xui-usericon fl"/>
-                            <p class="xui-zoom fl">
-                                <span class=" xui-username">好友奖励gggg</span>
-                                <br/>
-                                <span class=" xui-type">gggg</span>
-                            </p>
-                            <p class="xui-right fr tr">
-                                <span class=" xui-text-blue em8">+44444</span>
-                            </p>
-                        </div>
-                    </li>
-                     <li class="xui-listItem">
-                        <div class="xui-inner-content">
-                            <img src="" class="xui-usericon fl"/>
-                            <p class="xui-zoom fl">
-                                <span class=" xui-username">好友奖励gggg</span>
-                                <br/>
-                                <span class=" xui-type">gggg</span>
-                            </p>
-                            <p class="xui-right fr tr">
-                                
-                                <span class=" xui-text-blue em8">+44444</span>
-                            </p>
-                   
-                        </div>
-                    </li>
-                     <li class="xui-listItem">
-                        <div class="xui-inner-content">
-                            <img src="" class="xui-usericon fl"/>
-                            <p class="xui-zoom fl">
-                                <span class=" xui-username">好友奖励gggg</span>
-                                <br/>
-                                <span class=" xui-type">gggg</span>
-                            </p>
-                            <p class="xui-right fr tr">
-                                
-                                <span class=" xui-text-blue em8">+44444</span>
-                            </p>
-                   
-                        </div>
-                    </li>
-                     <li class="xui-listItem">
-                        <div class="xui-inner-content">
-                            <img src="" class="xui-usericon fl"/>
-                            <p class="xui-zoom fl">
-                                <span class=" xui-username">好友奖励gggg</span>
-                                <br/>
-                                <span class=" xui-type">gggg</span>
-                            </p>
-                            <p class="xui-right fr tr">
-                                
-                                <span class=" xui-text-blue em8 ">+44444</span>
-                            </p>
-                   
-                        </div>
-                    </li>
-                     <li class="xui-listItem">
-                        <div class="xui-inner-content">
-                            <img src="" class="xui-usericon fl"/>
-                            <p class="xui-zoom fl">
-                                <span class=" xui-username">好友奖励gggg</span>
-                                <br/>
-                                <span class=" xui-type">gggg</span>
-                            </p>
-                            <p class="xui-right fr tr">
-                                
-                                <span class=" xui-text-blue em8">+44444</span>
-                            </p>
-                   
-                        </div>
-                    </li>
-                     <li class="xui-listItem">
-                        <div class="xui-inner-content">
-                            <img src="" class="xui-usericon fl"/>
-                            <p class="xui-zoom fl">
-                                <span class=" xui-username">好友奖励gggg</span>
-                                <br/>
-                                <span class=" xui-type">gggg</span>
-                            </p>
-                            <p class="xui-right fr tr">
-                                
-                                <span class=" xui-text-blue em8">+44444</span>
-                            </p>
-                   
-                        </div>
-                    </li>
+                    {% for value in member_integral_logs %}
+                    <div class="xui-inner-time">{{value.0}}</div>
+                       {% for log in value.1 %}
+                        <li class="xui-listItem">
+                            <div class="xui-inner-content">
+                                <img src="{{log.pic}}" class="xui-usericon fl"/>
+                                {% if log.is_friend %}
+                                <p class="xui-zoom fl">
+                                    <span class=" xui-username">{{log.event_type}}</span>
+                                    <br/>
+                                    <span class=" xui-type">{{log.name}}</span>
+                                </p>
+                                {% else %}
+                                <p class="xui-zoom fl">
+                                    <span class=" xui-username">{{log.event_type}}</span>
+                                    <br/>
+                                  <!--   <span class=" xui-type">gggg</span> -->
+                                </p>
+                                {% endif %}
+                                <p class="xui-right fr tr">
+                                    {% if log.integral_count > 0 %}
+                                    <span class=" xui-text-blue em8">{{log.integral_count}}</span>
+                                    {% else %}
+                                    <span class=" xui-text-blue em8">{{log.integral_count}}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                    {% endfor %}
+                    
                 </div>
 
            
-
-        {% for member_integral_log in member_integral_logs %}
-            <li class="xui-listItem">
-               
-                <div class="xui-inner-infoBox">
-                    <span class="xui-inner-time">{{ member_integral_log.created_at|date:"Y. m. j" }}</span>
-                    {% ifequal member_integral_log.event_type '好友奖励' %}
-                        <div class="xui-inner-content">
-                            <p class="zoom">
-                                <span class="fl em85 c65">好友奖励</span>
-                                <span class="fr xui-text-blue em8">+{{member_integral_log.integral_count}}</span>
-                            </p>
-
-                            {% if member_integral_log.logs %}
-                            <ul class="zoom clearStyle xui-userCenter-friendList">
-                                {% for log in member_integral_log.logs %}
-                                    {% if log.pic %}
-                                    <li>
-                                        <div class="xui-userImg">
-                                            <img src="{{ log.pic }}"/>
-                                        </div>
-                                        <div class="xui-userName em7 tc pt5">{{ log.name }}</div>
-                                    </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-               
-                            <!-- 推荐奖励静态页面 -->
-                        </div>
-                    {% else %}
-                        <div class="xui-inner-content">
-                            <p class="zoom xt-integral">
-                                <span class="fl xt-integralEvent em85 c65">
-                                    {{ member_integral_log.event_type }}
-                                </span>
-                                <span class="fr {% if member_integral_log.integral_count > 0 %} xui-text-blue {% else %}xui-text-red{% endif %} xt-integralCount em8">
-                                {% if member_integral_log.integral_count > 0 %}
-                                    +{{ member_integral_log.integral_count }}
-                                {% else %}
-                                    {{ member_integral_log.integral_count }}
-                                {% endif %}
-                                </span>
-                            </p>
-                        </div>
-                    {% endifequal %}
-                </div>
-            </li>
-        {% endfor %}
     </ul>
     {% endif %}
 </div>
