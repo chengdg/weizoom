@@ -91,7 +91,7 @@
 					<div class="errorHint"></div>
 				</div>
 			</div>
-			{% if not request.manager.is_weizoom_mall%}
+			{% if not request.manager.is_weizoom_mall %}
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="bar_code">同步到微众商城：</label>
 				<div class="fl w700">
@@ -102,11 +102,11 @@
 					<div class="errorHint"></div>
 				</div>
 			</div>
-			{%endif%}
+			{% endif %}
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="member_count">会员折扣：</label>
 				<div class="col-sm-2 fl pl5">
-					<input name="is_member_product" type="checkbox" {% if product.is_member_product %}checked{%endif%} id="member_count">
+					<input name="is_member_product" type="checkbox" {% if product.is_member_product %}checked{% endif %} id="member_count">
 				</div>
 	      </div>
 		</fieldset>
