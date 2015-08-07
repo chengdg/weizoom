@@ -202,7 +202,7 @@ def group_product_by_promotion(request, products):
                   ...
                ]
     """
-    member_grade_id = request.member.grade_id if request and request.member else -1
+    member_grade_id = get_user_member_grade_id(request)
     group_id = 0
     #按照促销对product进行聚类
     global NO_PROMOTION_ID
@@ -543,12 +543,11 @@ def _get_promotion_name(product):
         now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
         # 已过期或未开始活动的商品，做为 普通商品
         if promotion['start_date'] > now or promotion['end_date'] < now:
-            name = '%d_%s' % (promotion['id'], product.model['name'])
+            return '%d_%s' % (promotion['id'], product.model['name'])
         elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT or promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-            name = promotion['id']
+            return promotion['id']
         else:
-            name = '%d_%s' % (promotion['id'], product.model['name'])
-    return name
+            return '%d_%s' % (promotion['id'], product.model['name'])
 
 
 def __collect_integral_sale_rules(target_member_grade_id, products):

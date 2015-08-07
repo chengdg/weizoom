@@ -501,8 +501,6 @@ def __check_integral(request, product_groups, data_detail, pre_order):
 			integral_money = round(float(integral_info['money']), 2) #round(1.0 * use_integral / count_per_yuan, 2)
 			# 校验前台输入：积分金额不能大于使用上限、积分值不能小于积分金额对应积分值
 			# 根据用户会员与否返回对应的商品价格
-			# import pudb
-			# pudb.set_trace()
 			# for product in products:
 			# 	product.price = product.price * get_product_member_discount(product.member_discount, product)
 			product_price = sum([product.price * product.purchase_count for product in products])
