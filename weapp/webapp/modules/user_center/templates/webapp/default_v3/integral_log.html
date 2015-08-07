@@ -1,63 +1,206 @@
 {% extends "webapp_content_base.html" %}
 {% load common_tag %}
 
+
+{% block css%}
+    <style>
+
+/*
+ * user_center 积分日志页面样式
+ */
+.xui-integralLogPage {
+    background-color: #fff;
+    width:100%;
+    overflow-y:hidden; 
+   /* background-image: -webkit-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
+    background-image:    -moz-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
+    background-image:     -ms-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
+    background-image:      -o-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
+    background-image:         linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);*/
+}
+/*.xui-integralLogPage:before{
+    background: #dbdbdb;
+    content: "";
+    height: 100%;
+    left: 24px;
+    position: absolute;
+    top: 0;
+    bottom:0;
+    width: 1px;   
+}*/
+.xui-integralLogPage .ui-content {
+    background-color: rgba(255, 255, 255, 0);
+    overflow-x:inherit; 
+}
+.xui-integralLogPage .xui-integralLogList {
+    margin: 0;
+    padding-top: 0px;
+    width: 100%;
+}
+.xui-integralLogPage .xui-listItem{
+    display:table;
+    width:100%;
+    border-bottom: 1px solid #ebebeb;
+}
+.xui-integralLogPage .xui-listItem .xui-inner-dotBox{
+    display:table-cell;
+    width:50px;
+}
+/*.xui-integralLogPage .xui-listItem .xui-inner-dotBox:before{
+    content:"";
+    height:100%;
+    width:1px;
+    background: #f00;
+    top:0;
+    left:25px;
+    position: relative;
+}*/
+.xui-integralLogPage .xui-listItem .xui-inner-infoBox{
+    display:table-cell;
+    border-bottom: 1px solid #dfdfdd;
+    padding-top: 15px;
+}
+.xui-integralLogPage .xui-integralLogList .xui-username {
+    font-size: 13px;
+    color:#3333333;
+}
+.xui-integralLogPage .xui-integralLogList .xui-type {
+    font-size: 13px;
+    color:#666666;
+}
+.xui-integralLogPage .xui-integralLogList .xui-inner-time {
+    height:36px;
+    line-height:36px;
+    /*width:70px;*/
+    text-align: left;
+    padding-left: 10px;
+    color:#fff;
+    background: #f6f6f6;
+    color:#999999;
+
+    /*margin-top:15px;*/
+    font-size:13px;
+}
+.xui-integralLogPage .xui-integralLogList .xui-inner-dot {
+    background:#fff;
+    border-radius: 8px;
+    display: inline-block;
+    height: 9px;
+    margin-bottom: 4px;
+    margin-left: 19px;
+    width: 9px;
+    border:1.5px solid #ccc;
+    position: relative;
+    z-index: 10;
+}
+.xui-integralLogPage li.xui-listItem:first-child span.xui-timeLine{
+    margin-top:9px;
+}
+.xui-integralLogPage .xui-integralLogList .xui-timeLine{
+    height:100%;
+    width:1px;
+    background:#dbdbdb;
+    position:absolute;
+    left:24px;
+    /*margin-top:10px;*/
+}
+.xui-integralLogPage .xui-integralLogList .xui-usericon {
+    width:42px;
+    height:42px;
+    margin-right: 12px;
+}
+.xui-integralLogPage .xui-integralLogList .xui-zoom {
+    width: 200px;
+    height: 40px;
+}
+.xui-integralLogPage .xui-integralLogList .xui-inner-content {
+    /*border:1px solid #CECECE;
+    margin-left:117px;
+    -webkit-border-radius:8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;*/
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom:12px; 
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.xui-userCenter-friendList{
+    padding-top:5px;
+    max-width:400px;
+}
+.xui-userCenter-friendList li{
+    border-bottom:none;
+    float:left;
+    width:46px;
+    margin-top:0px;
+    padding-right:10px;
+}
+
+.xui-userCenter-friendList li img{
+    margin:0 auto;
+}
+.xui-userCenter-friendList li .xui-userName{
+    height: 14px;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+.xui-integralLogPage .xui-text-red{
+    color: #e44445;
+}
+.xui-integralLogPage .xui-text-blue{
+    color: #057FCD;
+}
+.xui-integralLogPage .xui-count{
+    font-size: 18px;
+}
+    </style>
+{% endblock %}
+
+
 {% block content-panel %}
 <div class="xui-integralLogPage">
     {%if not member_integral_logs%}
     <div class="influence-log-list error-info">您还没有积分日志</div>
     {% else %}
     <ul class="clearStyle xui-integralLogList">
-        {% for member_integral_log in member_integral_logs %}
-            <li class="xui-listItem">
-                <div class="xui-inner-dotBox pr">
-                    <span class="xui-inner-dot"></span>
-                    <span class="xui-timeLine"></span>
-                </div>
                 <div class="xui-inner-infoBox">
-                    <span class="xui-inner-time">{{ member_integral_log.created_at|date:"Y. m. j" }}</span>
-                    {% ifequal member_integral_log.event_type '好友奖励' %}
-                        <div class="xui-inner-content">
-                            <p class="zoom">
-                                <span class="fl em85 c65">好友奖励</span>
-                                <span class="fr xui-text-blue em8">+{{member_integral_log.integral_count}}</span>
-                            </p>
-
-                            {% if member_integral_log.logs %}
-                            <ul class="zoom clearStyle xui-userCenter-friendList">
-                                {% for log in member_integral_log.logs %}
-                                    {% if log.pic %}
-                                    <li>
-                                        <div class="xui-userImg">
-                                            <img src="{{ log.pic }}"/>
-                                        </div>
-                                        <div class="xui-userName em7 tc pt5">{{ log.name }}</div>
-                                    </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-               
-                            <!-- 推荐奖励静态页面 -->
-                        </div>
-                    {% else %}
-                        <div class="xui-inner-content">
-                            <p class="zoom xt-integral">
-                                <span class="fl xt-integralEvent em85 c65">
-                                    {{ member_integral_log.event_type }}
-                                </span>
-                                <span class="fr {% if member_integral_log.integral_count > 0 %} xui-text-blue {% else %}xui-text-red{% endif %} xt-integralCount em8">
-                                {% if member_integral_log.integral_count > 0 %}
-                                    +{{ member_integral_log.integral_count }}
+                    {% for value in member_integral_logs %}
+                    <div class="xui-inner-time">{{value.0}}</div>
+                       {% for log in value.1 %}
+                        <li class="xui-listItem">
+                            <div class="xui-inner-content">
+                                <img src="{{log.pic}}" class="xui-usericon fl"/>
+                                {% if log.is_friend %}
+                                <p class="xui-zoom fl">
+                                    <span class=" xui-username">{{log.event_type}}</span>
+                                    <br/>
+                                    <span class=" xui-type">{{log.name}}</span>
+                                </p>
                                 {% else %}
-                                    {{ member_integral_log.integral_count }}
+                                <p class="xui-zoom fl">
+                                    <span class=" xui-username">{{log.event_type}}</span>
+                                    <br/>
+                                  <!--   <span class=" xui-type">gggg</span> -->
+                                </p>
                                 {% endif %}
-                                </span>
-                            </p>
-                        </div>
-                    {% endifequal %}
+                                <p class="xui-right fr tr">
+                                    {% if log.integral_count > 0 %}
+                                    <span class=" xui-text-blue xui-count">+{{log.integral_count}}</span>
+                                    {% else %}
+                                    <span class=" xui-text-red xui-count">{{log.integral_count}}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                    {% endfor %}
+                    
                 </div>
-            </li>
-        {% endfor %}
+
+           
     </ul>
     {% endif %}
 </div>
@@ -66,7 +209,7 @@
 {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('.xui-integralLogPage').css('min-height', screen.height+'px');
+		$('.xui-integralLogPage').css('min-height', document.body.clientHeight+'px');
 	})
 </script>
 {% endblock %}

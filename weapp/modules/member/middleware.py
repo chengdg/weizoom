@@ -947,26 +947,31 @@ class OAUTHMiddleware(object):
 					else:
 						try:
 							#通过openid_webapp_id获取用户信息
+							is_new_created_member = False
 							if request.found_member_in_cache is False:
 								social_accounts = SocialAccount.objects.filter(openid=openid, webapp_id=request.user_profile.webapp_id)
 								if social_accounts.count() > 0:
 									social_account = social_accounts[0]
+									member, response = get_member_by(request, social_account)
 								else:
 									token = get_token_for(request.user_profile.webapp_id, openid)
 									social_account = member_util.create_social_account(request.user_profile.webapp_id, openid, token, SOCIAL_PLATFORM_WEIXIN)
-								member, response = get_member_by(request, social_account)
-								if response:
-									return response
+									member = self.get_member_by(request, social_account)
+								# if response:
+								# 	return response
+								if member and hasattr(member, 'is_new_created_member'):
+									is_new_created_member = member.is_new_created_member
 
 								request.member = member
 								request.social_account = social_account
 								request.webapp_user = self._get_webapp_user(request.member)
 							#处理sct
+
 							response = self.process_sct_in_url(request)
 							if response:
 								return response
 							#处理fmt
-							response = self.process_fmt_in_url(request)
+							response = self.process_fmt_in_url(request, is_new_created_member)
 							if response:
 								return response
 
@@ -975,7 +980,6 @@ class OAUTHMiddleware(object):
 								is_oauth = True
 							else:
 								return None
-
 						except:
 							notify_message = u"OAUTHMiddleware error 获取socialaccount, cause:\n{}".format(unicode_full_stack())
 							watchdog_error(notify_message)
@@ -999,14 +1003,17 @@ class OAUTHMiddleware(object):
 						token = get_token_for(request.user_profile.webapp_id, weixin_user_name)
 						social_account = member_util.create_social_account(request.user_profile.webapp_id, weixin_user_name, token, SOCIAL_PLATFORM_WEIXIN)
 
-					member, response = get_member_by(request, social_account)
+					member = self.get_member_by(request, social_account)
+
+					if not member:
+						watchdog_error(u'授权时创建会员信息失败1 %s' % weixin_user_name)
+						member = self.get_member_by(request, social_account)
+						watchdog_error(u'授权时创建会员信息失败2 %s' % weixin_user_name)						
 
 					if ('share_red_envelope' in request.get_full_path() or 'refueling' in request.get_full_path())and member:
 						if (not member.user_icon) or (not member.user_icon.startswith('http')):
 							get_user_info(weixin_user_name, access_token, member)
 					
-					if response:
-						return response
 					request.social_account = social_account
 					request.member = member
 					#处理分享链接
@@ -1015,6 +1022,69 @@ class OAUTHMiddleware(object):
 					response = self.process_current_url(request)
 					return response
 		return None
+
+
+	def get_member_by(self, request, social_account):
+		member = member_util.get_member_by_binded_social_account(social_account)
+		if member is None:
+			#创建会员信息
+			try:
+				member = member_util.create_member_by_social_account(request.user_profile, social_account)
+				member_util.member_basic_info_updater(request.user_profile, member, True)
+				#member = Member.objects.get(id=member.id)
+				#之后创建对应的webappuser
+				_create_webapp_user(member)
+				member.is_new_created_member = True
+				"""
+					不增加积分，关注时候增加积分
+				"""
+				# try:
+				# 	integral.increase_for_be_member_first(request.user_profile, member)
+				# except:
+				# 	notify_message = u"get_member_by中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+				# 			member.id, unicode_full_stack())
+				# 	watchdog_error(notify_message)
+				try:
+					name = url_helper.get_market_tool_name_from(request.get_full_path())
+					#if name:
+					if not name:
+						name = ''
+					if request:
+						MemberMarketUrl.objects.create(
+							member = member,
+							market_tool_name = name,
+							url = request.get_full_path(),
+							)
+				except:
+					notify_message = u"get_member_by中MemberMarketUrl失败，会员id:{}, cause:\n{}".format(member.id, unicode_full_stack())
+					watchdog_error(notify_message)
+				return member
+			except:
+				notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
+					social_account.openid, unicode_full_stack())
+				watchdog_fatal(notify_message)
+				try:
+					member = member_util.create_member_by_social_account(request.user_profile, social_account)
+					#之后创建对应的webappuser
+					_create_webapp_user(member)
+					member.is_new_created_member = True
+					member_util.member_basic_info_updater(request.user_profile, member, True)
+					# try:
+					# 	integral.increase_for_be_member_first(request.user_profile, member)
+					# except:
+					# 	notify_message = u"get_member_by中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+					# 			member.id, unicode_full_stack())
+					# 	watchdog_error(notify_message)
+					return member
+				except:
+					#response = process_to_oauth(request,weixin_mp_user_access_token)
+					#if response:
+					#	return None,response
+					return None
+
+		else:
+			member.is_new_created_member = False
+			return member
 
 	# 授权并且创建结束后进行跳转并且设置cookie 信息
 	# 删除 当前url中的fmt
@@ -1048,10 +1118,10 @@ class OAUTHMiddleware(object):
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
 		return response
 
-	def process_fmt_in_url(self, request):
+	def process_fmt_in_url(self, request, is_new_created_member=False):
 		cookie_fmt = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
-		self.process_shared_url(request,False)
+		self.process_shared_url(request,is_new_created_member)
 		if cookie_fmt == url_fmt:
 			return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
@@ -1340,7 +1410,6 @@ class ProcessOpenidMiddleware(object):
 				response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, social_account.openid+"____"+social_account.webapp_id, max_age=60*60*24*365)
 				response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, social_account.token, max_age=60*60*24*365)
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
-				print '----------ProcessOpenidMiddleware', new_url
 				return response
 			else:
 				new_url = str(request.get_full_path())
@@ -1351,7 +1420,6 @@ class ProcessOpenidMiddleware(object):
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
 				response.delete_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.OPENID_WEBAPP_ID_KEY)
-				print '----------ProcessOpenidMiddleware2', new_url
 				return response
 		return None
 

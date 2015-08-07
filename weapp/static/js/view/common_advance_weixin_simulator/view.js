@@ -319,7 +319,7 @@ W.view.common.advanceWeixinSimulator.MessagePage = Backbone.View.extend({
                 success: function(data) {
                     // _this.$('.xa-homepageLink').attr('href', '/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id='
                     //     +data['webapp_owner_id']+'&project_id=0&workspace_id='+data['workspace_id'])
-                    _this.$('.xa-homepageLink').attr('href', '/workbench/jqm/preview/?woid='
+                    _this.$('.xa-homepageLink').attr('href', '/termite/workbench/jqm/preview/?woid='
                         +data['webapp_owner_id']+'&module=mall&model=products&action=list');
                 }
             })

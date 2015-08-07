@@ -240,7 +240,8 @@ def get_integral_log(request):
 
 	# 3. 组织积分日志结构，将同一天好友奖励的积分日志在一条记录中显示，并且显示好友头像
 	organized_integral_log_list = __get_organized_integral_log_list(member_integral_logs)
-
+	if organized_integral_log_list:
+		organized_integral_log_list = sorted(organized_integral_log_list.items(), cmp=cmp_datetime, key=lambda x : x[0],  reverse=False)
 	# 4. 将组织后的日志信息，渲染到integral_log.html页面中
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
@@ -262,28 +263,53 @@ def __get_organized_integral_log_list(log_list):
 	# 当前日志日期
 	current_friend_log_list_date = None
 
+	log_dict = {}
+
 	for log in log_list:
-		# 是否是为好友奖励
-		if __is_dueto_friend_action(log):
-			if current_friend_log_list_date == log.created_at.strftime('%Y%m%d'):
-				# 是当天日期的好友奖励日志，加入current_friend_log_list
-				current_friend_log_list = __append_current_friend_day_logs(current_friend_log_list, log)
-			else:
-				# 不是是当天日期的好友奖励日志
-				# 初始化当前好友奖励current_friend_log_list，并加入日志
-				# 更改当前日志日期
-				current_friend_log_list = __create_current_friend_day_logs(log)
-				current_friend_log_list = __append_current_friend_day_logs(current_friend_log_list, log)
-
-				organized_log_list.append(current_friend_log_list)
-				current_friend_log_list_date = log.created_at.strftime('%Y%m%d')
+		current_date = log.created_at.strftime('%Y-%m-%d')
+		if log_dict.has_key(current_date):
+			date_info = log_dict[current_date]
+			date_info.append(_get_current_log_info(log))
+			log_dict[current_date] = date_info
 		else:
-			# 将非好友奖励的日志，加入列表中
-			organized_log_list = __append_organized_log_list(organized_log_list, log)
-
-	return organized_log_list
+			log_dict[current_date] = [_get_current_log_info(log)]
+	return log_dict
 
 
+def cmp_datetime(a, b):
+	a_datetime = datetime.strptime(a, '%Y-%m-%d')
+	b_datetime = datetime.strptime(b, '%Y-%m-%d')
+
+	if a_datetime > b_datetime:
+		return -1
+	elif a_datetime < b_datetime:
+		return 1
+	else:
+		return 0
+
+SHOPING_REWARDES_IMGE = '/static_v2/img/webapp/usercenter/Shoppingrewards.jpg'
+SCAN_REWARDES_IMGE = '/static_v2/img/webapp/usercenter/scanReawards.png'
+def _get_current_log_info(member_integral_log):
+	member_integral_log.is_friend = False
+	if u'好友' in member_integral_log.event_type:
+		member_integral_log.is_friend = True
+		try:
+			friend_member = Member.objects.get(token=member_integral_log.follower_member_token)
+			if friend_member.user_icon and friend_member.user_icon != '':
+				member_integral_log.pic = friend_member.user_icon
+				member_integral_log.name = friend_member.username
+			else:
+				member_integral_log.pic = SCAN_REWARDES_IMGE
+				member_integral_log.name = ''
+		except:
+			member_integral_log.pic = SCAN_REWARDES_IMGE
+			member_integral_log.name = ''
+	elif u'购物返利' in member_integral_log.event_type or u'评' in member_integral_log.event_type:
+		member_integral_log.pic = SHOPING_REWARDES_IMGE
+	else:
+		member_integral_log.pic = SCAN_REWARDES_IMGE
+	return member_integral_log
+	
 def __append_organized_log_list(log_list, current_log):
 	"""
 	将日志加入到组织后的列表中
