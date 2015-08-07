@@ -623,10 +623,10 @@ UNCATCHED_EXCEPTION_ACTION_URL = ''
 
 
 WEAPP_WEB_DIALOG_DIRS = [
-    ('static', '%s/../static/' %
-     PROJECT_HOME), ('markettools_static', '%s/../market_tools/tools/*' %
-                     PROJECT_HOME), ('customerized_apps_static', '%s/../apps/customerized_apps/*' %
-                                     PROJECT_HOME), ]
+    ('static', '%s/../static/' % PROJECT_HOME), 
+    ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME), 
+    #('customerized_apps_static', '%s/../apps/customerized_apps/*' % PROJECT_HOME)
+]
 WEAPP_WEB_VIEW_DIRS = [
     ('static', '%s/../static/' % PROJECT_HOME),
 ]

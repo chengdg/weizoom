@@ -78,6 +78,12 @@ W.ValidaterClass = function() {
 			regex: /^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g,
 			errorHint: '输入正确11位有效的手机号码'
 		},
+        'require-email': {
+            type: 'regex',
+            extract: 'value',
+            regex: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/g,
+            errorHint: '输入正确的邮箱'
+        },
 		'require-notempty': {
 			type: 'function',
 			extract: 'element',
@@ -93,6 +99,19 @@ W.ValidaterClass = function() {
 			},
 			errorHint: ''
 		},
+        'require-select-input': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                var $selectedInput = element.find('input:checked');
+                if ($selectedInput.length > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            errorHint: ''
+        },
         'require-select': {
             type: 'function',
             extract: 'value',

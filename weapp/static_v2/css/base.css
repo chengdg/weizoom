@@ -93,6 +93,7 @@ textarea{resize:none}
 .w70{width:70px !important;}
 .w75{width:75px !important;}
 .w80{width:80px!important;}
+.w88{width:88px!important;}
 .w90{width:90px!important;}
 .w95{width:95px!important;}
 .w100{width:100px;}
@@ -284,7 +285,6 @@ textarea{resize:none}
 .min220{min-height:220px !important;}
 
 /* 其他 */
-.xui-hide {display: none;}
 .xui-bold {font-weight: bold;}
 .xui-invisible {visibility: hidden;}
 .noborder{border: none;}
@@ -297,6 +297,7 @@ textarea{resize:none}
 .xui-aligntop {vertical-align: top !important;}
 .xui-alignsub {vertical-align: sub !important;}
 .xui-aligntexttop {vertical-align: text-top !important;}
+.xui-hide {display: none;}
 
 
 .text_nowrap{
@@ -926,7 +927,7 @@ button.xui-close{
 }
 .xui-formPanel .xui-datePicker {
 	line-height: 24px;
-    width: 100px !important;
+    width: 132px !important;
     background: url(/static_v2/img/editor/calendar.jpg) no-repeat !important;
     background-position: right !important;
     background-color: #f2f2f2 !important;

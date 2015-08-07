@@ -25,6 +25,13 @@ register = template.Library()
 RENDER_CONTEXT = {}
 
 
+@register.filter(name='load_wepage_components_handlebar_templates')
+def load_wepage_components_handlebar_templates(component_category):
+	components_dir = '%s/../termite/static/termite_js/app/component/%s' % (settings.PROJECT_HOME, component_category)
+	handlebar_template = component_template_util.generate_handlebar_template(components_dir)
+	return handlebar_template
+
+
 @register.filter(name='is_system_manager')
 def is_system_manager(user):
 	return user.username == 'manager'
@@ -36,6 +43,10 @@ def parse_json_str(json_str):
 		return json.loads(json_str)
 	else:
 		return None
+
+@register.filter(name='to_json')
+def to_json(obj):
+	return json.dumps(obj)
 	
 @register.filter(name='get_design_page')
 def get_design_page(request, project):
@@ -47,6 +58,8 @@ def get_design_page(request, project):
 		return '/workbench/jqm_design_page/get/?project_id=%d&design_mode=1' % project.id
 	elif 'wepage' == project.type:
 		return '/termite2/webapp_design_page/?project_id=%d&design_mode=1' % project.id
+	elif 'appkit' == project.type:
+		return '/workbench/jqm_design_page/get/?project_id=%d&design_mode=1' % project.id
 
 
 @register.filter(name='get_workbench_actions')

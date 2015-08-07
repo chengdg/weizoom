@@ -1,0 +1,19 @@
+{% load workbench_filter %}
+
+{% if component.type == 'appkit.pageheader' %}
+<div 
+    class="wui-pageheader" 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    data-ui-behavior="xub-selectable"
+    style="">
+    <div class="wa-shop-backgroud wui-shop-header" style="background: {% if component.model.backgroud %}url({{component.model.backgroud}}){% else %}#EF483F{% endif %} no-repeat;background-size:100%; ">
+        <div class="wui-shop-title"></div>
+        <div class="wui-shop-logo">
+            <img class="wa-shop-logo" src="{{component.model.logo}}">
+        </div>
+    </div>
+    <div class="h70"></div>
+</div>
+{% endif %}

@@ -266,6 +266,7 @@ W.validate = function(el, checkDynamicElement) {
                 //执行验证
                 var validater = W.Validater.getRule(validateRule);
                 if (!validater) {
+                    xerror('no validater for rule: ' + validateRule);
                     continue;
                 }
                 if (validater.type === 'function') {

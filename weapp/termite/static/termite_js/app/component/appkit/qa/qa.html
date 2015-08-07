@@ -1,0 +1,15 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.qa' %}
+<div  
+    class="wui-QA"  
+    data-component-cid="{{component.cid}}" 
+    style=""
+>
+	<h1 class="wui-i-title">{{component.model.title}} {% if component.model.is_mandatory == "true" %}<span class="wui-i-mandatory">(必填)</span>{% endif %}</h1>
+	<div class="xa-inputControl" data-input-type="textarea" data-input-name="{{component.model.title}}" data-control-type="appkit.qa">
+		<textarea class="wui-i-input" {% if component.model.is_mandatory == "true" %}data-validate='require-notempty::请填写项目"{{component.model.title}}"'{% endif %}></textarea>
+	</div>
+</div>
+{% endifequal %}

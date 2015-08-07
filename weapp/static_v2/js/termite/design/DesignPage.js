@@ -318,7 +318,9 @@ W.design.DesignPage = Backbone.View.extend({
 	 * onAddWidget: 收到cover manager的add-widget event的响应函数
 	 */
 	onAddWidget: function(offset, relatedCid) {
-		var componentAdders = this.page.getComponentsByType('wepage.componentadder');
+		var componentAdders = _.filter(this.page.components, function(component) {
+			return component.type.indexOf('.componentadder') !== -1;
+		});
 		if (componentAdders.length == 0) {
 			return;
 		}

@@ -63,6 +63,62 @@
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'date_range_selector')}}
+					<div class="propertyGroup_property_dateRangeSelectorField propertyGroup_property_horizontalField mt10">
+						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="daterange">
+							<input 
+								type="hidden" 
+								value="${component.model.get(field.name)}" 
+								name="${field.name}" 
+								data-field="${field.name}"
+								class="xa-dateRangeInput xa-valueInput" 
+								{{if field.validate}}data-validate="${field.validate}"{{/if}} />
+
+							<input
+								style="width:132px!important;"
+								type="text"
+								class="form-control xui-datePicker xui-inline ml5 xa-valueInput"
+								id="start_time"
+								name="start_time"
+								value="${component.model.get('start_time')}"
+								readonly="readonly"
+								data-field="start_time"
+								data-enable-select-time="true"
+								data-validate="require-notempty"
+								data-ui-role="date-picker"
+								data-format="yy-mm-dd HH:MM" />
+							至
+							<input
+								style="width:132px!important;"
+								type="text"
+								class="form-control xui-datePicker xui-inline xa-valueInput"
+								id="end_time"
+								name="end_time"
+								value="${component.model.get('end_time')}"
+								readonly="readonly"
+								data-field="end_time"
+								data-enable-select-time="true"
+								data-validate="require-notempty"
+								data-ui-role="date-picker"
+								data-format="yy-mm-dd HH:MM"
+								data-min-el="#start_time" />
+							<div class="errorHint pl5"></div>
+						</div>
+					</div>
+					{{/if}}
+
+					{{if (field.type == 'prize_selector')}}
+					<div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField mt10">
+						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="prize_selector" data-field="${field.name}">
+							<div 
+								data-ui-role="apps-prize-selector"
+								data-prize='${JSON.stringify(component.model.get(field.name))}'
+							></div>
+						</div>
+					</div>
+					{{/if}}
 
 					{{if (field.type == 'textarea')}}
 					<div class="propertyGroup_property_textareaField">
@@ -111,7 +167,7 @@
 						<div class="propertyGroup_property_label">${field.displayName}</div>
 						<div class="propertyGroup_property_input" style="display: inline;">
 						{{each(fi, checkbox) field.source}}
-						<label style="display:inline;"><input style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
+						<label style="display:inline;" class="ml5"><input style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
 						{{/each}}
 						</div>
 					</div>
@@ -232,11 +288,14 @@
 
 					
 					{{if (field.type == 'rich_text')}}
-					<div class="propertyGroup_property_richTextField">
-						<div class="propertyGroup_property_input" style="width: 100%; margin: 5px auto;">
-							<textarea class="xa-rich-text" style="height: 100px; width: 100%;" data-field="${field.name}">${model.get(field.name)}</textarea>
+					<div class="propertyGroup_property_richTextField propertyGroup_property_horizontalField">
+						{{if (field.displayName)}}
+						<div class="propertyGroup_property_label">${field.displayName}</div>
+						{{/if}}
+						<div class="propertyGroup_property_input" style="{{if (field.displayName)}}width:80%{{else}}width:100%{{/if}}; margin: 5px auto;">
+							<textarea class="xa-rich-text xa-thirdPartyPlugin" data-plugin="richtext" style="height: 100px; width: 100%;" data-field="${field.name}">${model.get(field.name)}</textarea>
 							{{if field.help}}
-							<div class="xui-help" style="color: #888;">
+							<div style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}

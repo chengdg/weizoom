@@ -439,6 +439,29 @@ def generate_handlebar_template(components_dir):
 	return '\n'.join(templates)
 
 
+def generate_component_template_to_handlebar_template(components_dir, component_name):
+	template_paths = []
+	template_name = '%s.html' % component_name
+	template_path = os.path.join(components_dir, component_name, template_name)
+	if not os.path.exists(template_path):
+		return ''
+	template_paths.append(template_path)
+	#template_paths.append(os.path.join(components_dir, '..', 'common', 'common.html'))
+
+	templates = []
+	for template_path in template_paths:
+		lines = []
+		src = open(template_path, 'rb')
+		for line in src:
+			lines.append(line.rstrip())
+		src.close()
+
+		handlebar_template = convert_to_handlebar_template(lines)		
+		templates.append(handlebar_template)
+
+	return '\n'.join(templates)
+
+
 
 if __name__ == '__main__':
 	DEBUG = True

@@ -330,6 +330,10 @@ class ProjectMiddleware(object):
 					request.webapp_owner_id_from_project_middleware = webapp_owner_id
 					request.app_name = app
 					request.project = None
+				elif 'new_app:' in project_id:
+					#_, app_project_id = project_id.split(':')
+					#request.webapp_owner_id_from_project_middleware = webapp_owner_id
+					request.project = None
 				else:
 					request.project = Project.objects.get(id=project_id)
 			else:

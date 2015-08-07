@@ -1,0 +1,28 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.textsurvey' %}
+<div  class="wui-image-advertisement"  data-cid="{{component.cid}}" 
+    data-ui-sortable="true" 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable" {% endifequal %}
+    {% if component.components.0.model.image %}
+    style="width: {{component.model.width}}; text-align: center; overflow: hidden;" 
+    {% else %}
+    style="width: {{component.model.width}}; height: 100px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8; text-align: center; overflow: hidden;" 
+    {% endif %}
+    >
+    {% if component.model.optionType == 'single' %}
+    (单选)
+    {% else %}
+    (多选)
+    {% endif %}    
+    <div><span class="wa-inner-title">{{ component.model.title }}</span></div>
+
+    <div><input type='{% ifequal component.optionType "single" %}radio{% else %}checkbox{% endifequal %}'>{{ component.model.option1 }}</input></div>
+
+    <div><input type='{% ifequal component.optionType "single" %}radio{% else %}checkbox{% endifequal %}'>{{ component.model.option2 }}</input></div>
+
+    <div><input type='{% ifequal component.optionType "single" %}radio{% else %}checkbox{% endifequal %}'>{{ component.model.option3 }}</input></div>
+
+</div>
+{% endifequal %}

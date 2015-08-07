@@ -1,0 +1,12 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.submitbutton' %}
+<div  
+    class="wui-submitButton xui-hide xa-submitButtonContainer"  
+    data-component-cid="{{component.cid}}" 
+    style=""
+>
+	<a class="xui-btn xui-btn-danger xa-submitTermite" data-role="button" href="javascript:void(0);" style="">{{component.model.text}}</a>
+</div>
+{% endifequal %}

@@ -78,11 +78,11 @@ def is_request_for_api(request):
 
 def is_request_for_webapp(request):
 	url = __get_request_url(request)
-	return ('/weixin/message/material/news_detail/mshow/' in url) or ('/termite2/webapp_page/' in url) or ('/jqm/preview/' in url) or ('/project_api/call' in url) or is_pay_request(request) or ('weshop/api/mall' in url) or is_pay_callback_request(request)
+	return ('/weixin/message/material/news_detail/mshow/' in url) or ('/termite2/webapp_page/' in url) or ('/m/' in url) or ('/jqm/preview/' in url) or ('/project_api/call' in url) or is_pay_request(request) or ('weshop/api/mall' in url) or is_pay_callback_request(request)
 
 def is_request_for_webapp_api(request):
 	url = __get_request_url(request)
-	return ('/webapp/api/project_api/call/' in url)
+	return ('/webapp/api/project_api/call/' in url) or (('/m/' in url) and ('/api/' in url))
 
 def is_request_for_pcmall(request):
 	url = __get_request_url(request)

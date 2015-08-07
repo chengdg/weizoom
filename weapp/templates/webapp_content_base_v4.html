@@ -14,7 +14,8 @@
         <!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/base.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/webapp_default.css">
-        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">        
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">     
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">   
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">  
         <link rel="stylesheet" type="text/css" href="/static_v2/css/cloudHousekepper.css">      
         <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
@@ -37,6 +38,8 @@
         <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
         <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/backbone_lite.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/system/validate.js"></script>
+
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/crypto-js.js"></script>
@@ -45,6 +48,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/weixinapi.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
         <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
@@ -57,7 +61,7 @@
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
         <meta content="telephone=no" name="format-detection">
     </head>
-    <body data-ui-role="integralMechanism" data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2;">
+    <body data-ui-role="integralMechanism" data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative;">
         <!-- xt-errMsg for test -->
         <input id="xt-errMsg" type="hidden" value="" />
         
@@ -240,6 +244,15 @@
                     link = link +"&fmt="+W.curRequestMemberToken;
                 }
             }
+
+            //for apps
+            W.appRecordId = "{{ record_id }}";
+            W.appName = "{{ app_name }}";
+            W.resource = "{{ resource }}";
+            W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
+            W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
+            W.activityStatus = "{{activity_status}}";
+
             $(document).ready(function() {
                 $('a').highlight();
                 FastClick.attach(document.body);
@@ -350,6 +363,113 @@
                         speed: 3000
                     });
                 }
+
+                //for apps
+                var $submitButtonContainer = $('.xa-submitButtonContainer');
+                if ($submitButtonContainer.length > 0) {
+                    var $button = $submitButtonContainer.find('.xa-submitTermite');
+                    if (W.activityStatus === '已结束') {
+                        $button.text('活动已结束');
+                        $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+                    } else if (W.isAlreadyParticipanted) {
+                        $button.text('您已参加过该活动');
+                        $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+                    } else if (W.activityStatus === '未开启') {
+                        $button.text('请等待活动开始...');
+                        $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+                    }
+                    $submitButtonContainer.show();
+                }
+                $('.xa-submitTermite').click(function() {
+                    if (!W.validate()) {
+                        return;
+                    }
+                    var data = {};
+                    var $controls = $('.xa-inputControl');
+                    var participanceType = null;
+                    for (var i = 0; i < $controls.length; ++i) {
+                        var $control = $controls.eq(i);
+                        var inputType = $control.attr('data-input-type');
+                        var name = $control.attr('data-input-name');
+                        var controlType = $control.attr('data-control-type');
+                        if (inputType === 'text') {
+                            var value = $.trim($control.find('input[type="text"]').val());
+                        } else if (inputType === 'textarea') {
+                            var value = $.trim($control.find('textarea').val());
+                        } else if (inputType === 'selection') {
+                            participanceType = '投票'
+                            var $inputs = $control.find('input');
+                            var value = {};
+                            var selectionInputType = $inputs.eq(0).attr('type');
+                            for (var j = 0; j < $inputs.length; ++j) {
+                                var $input = $inputs.eq(j);
+                                var selectionInputName = $input.attr('data-input-name');
+                                var isSelect = $input.is(':checked');
+                                value[selectionInputName] = {
+                                    type: selectionInputType,
+                                    isSelect: isSelect
+                                };
+                            }
+                        }
+
+                        data[name] = {
+                            type: controlType,
+                            value: value
+                        };
+                    };
+                    var participanceData = {
+                        webapp_owner_id: W.webappOwnerId,
+                        belong_to: W.appRecordId,
+                        termite_data: JSON.stringify(data)
+                    }
+                    if (participanceType === '投票'){
+                        participanceData['actionButtons'] = JSON.stringify([{
+                            'text': '查看结果',
+                            'url': '1'
+                        }]);
+                    }
+                    var $prizeContainer = $('.xa-prizeContainer');
+                    if ($prizeContainer.length > 0) {
+                        $prizeContainer = $prizeContainer.eq(0);
+                        participanceData['prize'] = $prizeContainer.attr('data-prize');
+                    }
+                    W.getApi().call({
+                      app: 'm/apps/'+W.appName,
+                      resource: W.resource+'_participance',
+                      method: 'put',
+                      args: participanceData,
+                      success: function(data) {
+                        $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
+                        var $button = $submitButtonContainer.find('.xa-submitTermite');
+                        $button.text('您已参加过该活动');
+                        $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+                        /*
+                        $('body').alert({
+                            isShow: true,
+                            isSlide: true,
+                            info: '参与成功',
+                            speed: 3000,
+                        });
+                        */
+                      },
+                      error: function(resp) {
+                        $('body').alert({
+                            isShow: true,
+                            isSlide: true,
+                            info: '参与失败，请稍后再试！',
+                            speed: 3000,
+                        });
+                      }
+                    });
+                    
+                    /*
+                    $('body').alert({
+                        isShow: true,
+                        isSlide: true,
+                        info: JSON.stringify(data)
+                    });
+                    */
+                });
             });
             {# 百度统计代码开始 #}
             var _hmt = _hmt || [];

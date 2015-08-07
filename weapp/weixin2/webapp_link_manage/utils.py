@@ -88,10 +88,10 @@ def get_webapp_link_menu_objectes(request):
 				'add_btn_title': '新建投票',
 				'add_link': '/market_tools/vote/add/'
 			}, {
-				'name': '微信调研',
-				'type': 'survey',
+				'name': '用户调研',
+				'type': 'weixin_prize',
 				'add_btn_title': '新建调研',
-				'add_link': '/market_tools/research/research/create/'
+				'add_link': '/apps/weixin_prize/activity/'
 			}, {
 				'name': '活动报名',
 				'type': 'activity',

@@ -93,6 +93,8 @@ def __get_absolute_url(orig_url, user_profile):
 	path = 'workbench/jqm/preview'
 	if user_profile.is_use_wepage and 'home_page' in orig_url:
 		path = 'termite2/webapp_page'
+	if '/apps/' in orig_url:
+		path = 'm'
 
 	if orig_url.startswith('/'):
 		absolute_url = u'http://%s/%s%s' % (user_profile.host, path, orig_url)

@@ -28,13 +28,27 @@ def __get_display_info(request):
 	pagestore = pagestore_manager.get_pagestore('mongo')
 
 	#获取project
-	project_id = int(request.REQUEST.get('project_id', 0))
-	if project_id != 0:
-		project = webapp_models.Project.objects.get(id=project_id)
+	project = None
+	project_id = request.REQUEST.get('project_id')
+	is_app_project = False
+	app_name = ''
+	if project_id.startswith('new_app:'):
+		_, app_name, project_id = project_id.split(':')
+		is_app_project = True
 	else:
-		workspace = webapp_models.Workspace.objects.get(owner=request.webapp_owner_id, inner_name='home_page')
-		project = webapp_models.Project.objects.get(workspace=workspace, type='wepage', is_active=True)
-		project_id = project.id
+		project_id = int(request.REQUEST.get('project_id', 0))
+
+	if is_app_project:
+		project = webapp_models.Project()
+		project.id = project_id
+		project.type = 'appkit'
+	else:
+		if project_id != 0:
+			project = webapp_models.Project.objects.get(id=project_id)
+		else:
+			workspace = webapp_models.Workspace.objects.get(owner=request.webapp_owner_id, inner_name='home_page')
+			project = webapp_models.Project.objects.get(workspace=workspace, type='wepage', is_active=True)
+			project_id = project.id
 
 	if request.in_design_mode and request.POST:
 		page_component = json.loads(request.POST['page'])
@@ -43,7 +57,16 @@ def __get_display_info(request):
 		page_id = page_component['cid']
 	else:
 		page_id = request.GET.get('page_id', 1)
-		page = pagestore.get_page(project_id, page_id)
+		if page_id == 'preview':
+			page = pagestore.get_page(project_id, page_id)
+		else:
+			if is_app_project and project_id == '0':
+				#新建app的project
+				app_settings_module_path = 'apps.customerized_apps.%s.settings' % app_name
+				app_settings_module = __import__(app_settings_module_path, {}, {}, ['*',])
+				page = json.loads(app_settings_module.NEW_PAGE_JSON)
+			else:
+				page = pagestore.get_page(project_id, page_id)
 
 	if page_id != 'preview':
 		try:
@@ -110,4 +133,3 @@ def create_component(request):
 def get_site_description(request):
 	project, page = __preprocess_page(request)
 	return page['component']['model'].get('site_description', '')
-

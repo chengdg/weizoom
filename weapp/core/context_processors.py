@@ -33,7 +33,7 @@ def first_navs(request):
 	根据request.path_info获取对应的first navs
 	"""
 	result = {}
-	if '/new_weixin/' in request.path_info:
+	if ('/new_weixin/' in request.path_info) or ('/apps2/' in request.path_info) or ('/apps/' in request.path_info):
 		if '/unbind_account/' in request.path_info:
 			result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
 		else:
@@ -328,7 +328,7 @@ def weapp_dialogs_old(request):
 #===============================================================================
 def weapp_dialogs(request):
 	items = []
-	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path):
+	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path) or ('apps2' in request.path) or ('apps' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -345,7 +345,7 @@ def weapp_dialogs(request):
 #===============================================================================
 def weapp_views(request):
 	items = []
-	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path):
+	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path) or ('apps2' in request.path) or ('apps' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -362,7 +362,7 @@ def weapp_views(request):
 #===============================================================================
 def weapp_models(request):
 	items = []
-	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path):
+	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path) or ('apps2' in request.path) or ('apps' in request.path):
 		version = '2'
 	else:
 		version = '1'
