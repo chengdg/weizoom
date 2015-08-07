@@ -104,3 +104,16 @@ class PageHasGlobalNavbar(models.Model):
 		)
 		return page_global_navbar
 
+
+	@staticmethod
+	def get_global_navbar(user, page_type):
+		try:			
+			page_global_navbar = PageHasGlobalNavbar.objects.get(
+				owner = user,
+				page_type = page_type,
+				is_enable = True
+			)
+			return page_global_navbar.global_navbar
+		except:
+			return None
+
