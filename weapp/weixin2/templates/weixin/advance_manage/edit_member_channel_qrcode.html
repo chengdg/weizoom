@@ -1,0 +1,222 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-memberQrcodePage">
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/member/members/get/">高级管理</a>
+        </li>
+        <li class="active">首草渠道扫码</li>
+    </ul>
+    <div class="xui-rightPanelBg">
+        <p class="xui-rightPanelTitle">
+            首草渠道扫码
+        </p>
+        <div class="xui-i-content mt20">
+            <form action="post">
+                <input type="hidden" value="1" name='reward'>
+                <fieldset class="xui-prize">
+                    <label for="" class="star_show">扫码奖励：</label>
+                    <select name="prize_type|0" class="" {% if award_content %} value='{{ award_content.scanner_award_type }}'{% else %}value='1'{% endif %}>
+                        <option value="0">无</option>
+                        {% if coupon_rules %}
+                        <option value="1">优惠劵</option>
+                        {% endif %}
+                        <!--<option value="2">兑换码</option>-->
+                        <option value="3">积分</option>
+
+                    </select>
+
+                    <select class="" name="prize_source|0" for_type="1"
+                    {% if award_content.scanner_award_type == 1 %}
+                        value='{{ award_content.scanner_award_content }}'
+                        data-validate="require-select::请选择优惠劵"
+                    {% else %}
+                        style="display:none;"
+                    {% endif %} >
+                        <option value="">请选择优惠劵</option>
+                        {% for rule in coupon_rules %}
+                        <option value="{{rule.id}}" data-count="{{rule.remained_count}}">{{rule.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <span name="prize_source|0" class="xua-remainedCount"></span>
+                    <input type="text" class="" name="prize_source|0" for_type="3"
+                    {% if award_content.scanner_award_type == 3 %}
+                        style="width:120px;"
+                        value='{{ award_content.scanner_award_content }}'
+                        data-validate="require-int"
+                    {% else %}
+                        style="display:none; width:120px;"
+                    {% endif %} placeholder="请输入积分数值">
+                    <div class="errorHint" style="display: inline;"></div>
+                </fieldset>
+                <!--######-->
+                <fieldset class="xui-prize">
+                    <label for="" class="star_show">分享奖励：</label>
+                    <select name="prize_type|1" class="" {% if award_content %} value='{{ award_content.share_award_type }}'{% else %}value='1'{% endif %}>
+                        <option value="0">无</option>
+                        {% if coupon_rules %}
+                        <option value="1">优惠劵</option>
+                        {% endif %}
+                        <!--<option value="2">兑换码</option>-->
+                        <option value="3">积分</option>
+
+                    </select>
+                    <select class="" name="prize_source|1" for_type="1"
+                    {% if award_content.share_award_type == 1 %}
+                        value='{{ award_content.share_award_content }}'
+                        data-validate="require-select::请选择优惠劵"
+                    {% else %}
+                        style="display:none;"
+                    {% endif %} >
+                        <option value="">请选择优惠劵</option>
+                        {% for rule in coupon_rules %}
+                        <option value="{{rule.id}}" data-count="{{rule.remained_count}}">{{rule.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <span name="prize_source|1" class="xua-remainedCount"></span>
+                    <input type="text" class="" name="prize_source|1" for_type="3"
+                    {% if award_content.share_award_type == 3 %}
+                        value='{{ award_content.share_award_content }}'
+                        data-validate="require-int"
+                        style="width:120px;"
+                    {% else %}
+                        style="display:none;width:120px;"
+                    {% endif %} placeholder="请输入积分数值">
+                    <div class="errorHint" style="display: inline;"></div>
+                </fieldset>
+                <fieldset class="xui-info">
+                    <label for="" class="star_show">页面描述：</label>
+                    <div style="padding-left:125px;">
+                        <textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="372" data-width="652">{{ member_qrcode_settings.detail|safe }}</textarea>
+                    </div>
+                </fieldset>
+                <div class="xui-btn-group tc">
+                    <input type="submit" class="btn btn-primary" id="submitBtn"  style="margin-left:-75px" value="保&nbsp;&nbsp;存" />
+                    <!-- <input id="submitBtn" class="btn btn-success" type="submit" style="margin-left:80px;" value="预&nbsp;&nbsp;览"> -->
+                    {% if member_qrcode_settings %}
+                    <a class="btn btn-primary" href="/new_weixin/channel_qrcodes/?setting_id={{ member_qrcode_settings.id }}">推广数据统计</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('body').delegate('[name="prize_source|0"]', 'change', function(){
+        var count = $(':selected', this).data('count');
+        if(count || count == 0){
+            $(this).next('.xua-remainedCount').html('当前库存:'+count).show().append($('<a/>').attr('href','/mall2/coupon/?rule_id='+$(this).val()).html('增加库存'));
+        }else{
+            $(this).next('.xua-remainedCount').html("");
+        }
+    });
+
+    $('body').delegate('[name="prize_source|1"]', 'change', function(){
+        var count = $(':selected', this).data('count');
+        if(count || count == 0){
+            $(this).next('.xua-remainedCount').html('当前库存:'+count).show().append($('<a/>').attr('href','/mall2/coupon/?rule_id='+$(this).val()).html('增加库存'));
+            $(this).siblings('.errorHint').text("");
+        }else{
+            $(this).next('.xua-remainedCount').html("");
+        }
+    });
+
+    $("select[name='prize_type|0']").find("option[value='{% if award_content %}{{ award_content.scanner_award_type }}{% else %}0{% endif %}']").attr("selected",true);
+    $("select[name='prize_source|0']").find("option[value='{% if award_content %}{{ award_content.scanner_award_content }}{% else %}0{% endif %}']").attr("selected",true);
+
+    $("select[name='prize_type|1']").find("option[value='{% if award_content %}{{ award_content.share_award_type }}{% else %}0{% endif %}']").attr("selected",true);
+    $("select[name='prize_source|1']").find("option[value='{% if award_content %}{{ award_content.share_award_content }}{% else %}0{% endif %}']").attr("selected",true);
+
+    function setValidateForPrizeSource(type, $integral, $coupon_id) {
+        $coupon_id.removeAttr('data-validate');
+        $integral.removeAttr('data-validate');
+        $integral.removeAttr('data-validate-max-length');
+
+        switch(type) {
+        case '1':
+            $coupon_id.attr('data-validate', 'require-select::请选择优惠劵');
+            break;
+        case '3':
+            $integral.attr('data-validate', 'require-int');
+            break;
+        }
+    };
+
+    $('select[name*="prize_type"]').change(function(event){
+        var $el = event.currentTarget ? $(event.currentTarget) : event;
+        $el.siblings('.errorHint').text("");
+        var target_name = $el.attr('name');
+        var value = $el.val();
+
+        var $coupon_id = $('select[name="prize_source|'+target_name[target_name.length - 1]+'"]');
+        var $integral = $('input[name="prize_source|'+target_name[target_name.length - 1]+'"]');
+        if (value == 1) {
+            $coupon_id.show();
+            $integral.hide();
+        }else if(value == 3){
+            $coupon_id.hide();
+            $integral.show();
+        }else{
+            $coupon_id.hide();
+            $integral.hide();
+        }
+        setValidateForPrizeSource(value, $integral, $coupon_id);
+    });
+
+    $('form').submit(function(){
+        if (!W.validate()) {
+            return false;
+        }
+        var args = $('form').serializeObject();
+        args.id = parseInt({{member_qrcode_settings.id}}) || 0;
+        if (args['prize_type|0'] == 1){
+            args['prize_source|0'] = $('select[name="prize_source|0"]').val();
+        }else if (args['prize_type|0'] == 3){
+            args['prize_source|0'] = $('input[name="prize_source|0"]').val();
+        }else{
+            args['prize_source|0'] = 0;
+        }
+
+        if (args['prize_type|1'] == 1){
+            args['prize_source|1'] = $('select[name="prize_source|1"]').val();
+        }else if (args['prize_type|1'] == 3){
+            args['prize_source|1'] = $('input[name="prize_source|1"]').val();
+        }else{
+            args['prize_source|1'] = 0;
+        }
+
+        W.resource.new_weixin.ChannelQrcode.post({
+            data: args,
+            success: function(data) {
+                W.showHint('success', '保存成功');
+                window.location.href = '/new_weixin/channel_qrcode/';
+            },
+            error: function(resp) {
+                W.showHint('error', '保存失败！');
+            }
+        });
+        return false;
+    });
+});
+</script>
+
+{% endblock %}

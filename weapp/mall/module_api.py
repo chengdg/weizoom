@@ -2190,7 +2190,7 @@ def update_order_status(user, action, order, request=None):
 				from modules.member.models import WebAppUser
 				from modules.member.integral import increase_member_integral
 				member = WebAppUser.get_member_by_webapp_user_id(order.webapp_user_id)
-				increase_member_integral(member, order.integral, u'取消订单回收积分')
+				increase_member_integral(member, order.integral, u'取消订单 返还积分')
 			# 返回订单使用的优惠劵
 			if order.coupon_id:
 				from market_tools.tools.coupon.util import restore_coupon

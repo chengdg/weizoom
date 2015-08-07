@@ -33,7 +33,7 @@ from channel_qrcode_util import *
 """
 """
 class ChannelQrcodeHandler(MessageHandler):
-	
+
 	def name(self):
 		return "ChannelQrcodeHandler"
 
@@ -43,7 +43,7 @@ class ChannelQrcodeHandler(MessageHandler):
 		if message.is_optimization_message:
 			print 'ChannelQrcodeHandler only handle is_optimization_message = true'
 			return None
-		
+
 		username = message.fromUserName
 		user_profile = context.user_profile
 		member = context.member
@@ -61,10 +61,15 @@ class ChannelQrcodeHandler(MessageHandler):
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
 
-		if check_channel_qrcode_ticket(ticket, user_profile):
+		if user_profile.user_id in [467,151] and \
+			check_new_channel_qrcode_ticket(ticket, user_profile):
+			if member.is_new:
+				create_new_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
+			return None
+		elif check_channel_qrcode_ticket(ticket, user_profile):
 			#if member.is_new:
 			create_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
-			
+
 			msg_type, detail = get_response_msg_info(ticket, user_profile)
 
 			if msg_type != None:
