@@ -54,7 +54,7 @@ var PostageCalculator = BackboneLite.View.extend({
 	getPostageForWeight: function(weight, postageFactor) {
 		if (weight == 0){
 			return 0.0;
-		}        
+		}
 
 		if (postageFactor.firstWeight == 0 && (postageFactor.addedWeight == 0 || postageFactor.addedWeight == undefined)) {
 			// 免运费
@@ -72,7 +72,7 @@ var PostageCalculator = BackboneLite.View.extend({
 		if (addedWeight == 0) {
 			return price;
 		}
-		
+
 		var addedCount = 1;
 		while (true) {
 			weight = weight - addedWeight;
@@ -210,7 +210,7 @@ var IntegralSaleView = BackboneLite.View.extend({
 		var productGroup = _.findWhere(this.productGroups, {"id": productGroupId});
 
 		var usableIntegral = this.integralManager.getUsableIntegral();
-		
+
 
 		if (this.isChecked) {
 			var usedIntegral = this.usedIntegral;
@@ -248,7 +248,7 @@ var IntegralSaleView = BackboneLite.View.extend({
 				totalProductPrice += product.count * product.price;
 			}
 		}
-		
+
 		//遍历product，使用每一个product的integral sale rule，计算每一个product的积分使用情况
 		var products = productGroup.products
 		var maxIntegral = 0;
@@ -361,7 +361,7 @@ var WeizoomCardView = BackboneLite.View.extend({
 	},
 
 	render: function() {
-		
+
 	},
 
 	/**
@@ -376,7 +376,7 @@ var WeizoomCardView = BackboneLite.View.extend({
 		}
 	},
 
-	onAddNewWeizoomCardButton: function(event){  
+	onAddNewWeizoomCardButton: function(event){
 		if (this.enableSubmitWeizoomCard) {
 			this.enableSubmitWeizoomCard = false;
 			var name = $('.xa-cardid').val().trim();
@@ -452,7 +452,7 @@ var WeizoomCardView = BackboneLite.View.extend({
 						+'</div>');
 					_this.useWeizoomCards.push({weizoomId: data.id, money: data.money, weizoomCardNum: name, weizoomCardPassWord: pass});
 					_this.fillWeizoomCardData();
-					
+
 					$('.xa-guideUse').hide();
 					$('.xa-cardInfo').show();
 					$('.xa-cardDialog').hide();
@@ -479,7 +479,7 @@ var WeizoomCardView = BackboneLite.View.extend({
 	},
 
 	/**
-	 * onClickRemoveWeizoomCardButton: 删除微众卡   
+	 * onClickRemoveWeizoomCardButton: 删除微众卡
 	*/
 	onClickRemoveWeizoomCardButton: function(event){
 		console.log('remove weizoom card');
@@ -578,7 +578,7 @@ var CouponManager = BackboneLite.View.extend({
 	},
 
 	render: function() {
-		
+
 	},
 
 	/**
@@ -646,7 +646,7 @@ var CouponManager = BackboneLite.View.extend({
 		var _this = this;
 
 		if (couponCouponId.length == 0) {
-			//用户没有输入coupon 
+			//用户没有输入coupon
 			this.onClickCloseCouponDialog(event);
 		} else if (couponCouponId.length < 10) {
 			$('.error-info').html('优惠券码格式不正确');
@@ -780,12 +780,12 @@ var PriceCutView = BackboneLite.View.extend({
         }
         productGroup.promotion_result.subtotal = totalPrice - cutMoney;
         // productGroup.totalCount = totalCount;
-        
+
         console.log('price cut totalCount', totalCount);
         $productGroup.find('.xa-promotion-info').html('共<span class="xt-subtotalCount">'+totalCount+'</span>件商品，');
         xlog($productGroup.find('.xa-price-cut-info'));
         $productGroup.find('.xa-price-cut-info').html(priceCutInfo);
-        $productGroup.find('.xa-subtotal').text(productGroup.promotion_result.subtotal.toFixed(2));        
+        $productGroup.find('.xa-subtotal').text(productGroup.promotion_result.subtotal.toFixed(2));
     }
 });
 
@@ -794,7 +794,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 	events: _.extend({
 		'click .xa-displayTrigger': 'onChangeDisplayTrigger',
 		//发票
-		'click .xa-choseBillType': 'onClickBillType', 
+		'click .xa-choseBillType': 'onClickBillType',
 		//支付方式
 		'change #xa-choseInterfaces': 'onChangeInterface',
 		//提交form
@@ -802,7 +802,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		'click .xa-deleteButton': 'removeCantBuyProduct',
 		'click .xa-deletePremiumButton': 'deletePremiumSubmit',
 	}, W.page.InputablePage.prototype.events),
-	
+
 	initialize: function(options) {
 		xlog('in EditOrderPage');
 		this.postageCalculator = new PostageCalculator({
@@ -853,7 +853,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 			});
 			view.render();
 		});
-		
+
 
 		//为price cut创建view
 		this.$('.xa-promotion-price_cut').each(function(){
@@ -890,7 +890,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		this.isOrderFromShoppingCart = options.isOrderFromShoppingCart;
 
 		//内部状态变量
-		this.enableSubmitOrder = true; //是否允许使用提交按钮		
+		this.enableSubmitOrder = true; //是否允许使用提交按钮
 		this.prices();
 		this.resetForm();
 
@@ -1043,7 +1043,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 				integralMoney = productGroupsPriceInfo.integralMoney;
 			}
 			totalPromotionedPrice = productGroupsPriceInfo.promotionedPrice - integralMoney;
-			
+
 			// 计算运费
 			var postage = this.postageCalculator.getPostage(options.products, this.getOrderAreaProvinceId());
 			// 商品总价 = 促销后的总价 + 运费 - 优惠券
@@ -1060,13 +1060,13 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 			var weizoomCardPrice = this.weizoomCardView.useWeizoomCard(totalPrice);
 			totalPrice -= weizoomCardPrice;
 			// totalPrice -= integralMoney;
-			
+
 		} else {
 			// 如果是测试够买，总价钱为0.01 by liupeiyu
 			totalProductPrice = 0.01;
 			var totalPrice = 0.01;
-		}       
-		
+		}
+
 		return {
 			'totalProductPrice': totalProductPrice.toFixed(2),
 			'totalPrice': totalPrice.toFixed(2),
@@ -1097,7 +1097,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		this.couponManager.changeCouponStatus(totalProductPricePostage);
 
 		this.orderPrice = priceInfo.totalPromotionedPrice;
-		
+
 		if(this.orderIntegralView)
 			this.orderIntegralView.render();
 
@@ -1412,7 +1412,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 	// 				// _this.enableSubmitOrderButton();
 	// 				window.location.reload();
 	// 			} else {
-	// 				window.location.href = data['url'];     
+	// 				window.location.href = data['url'];
 	// 			}
 	// 		},
 	// 		error: function(resp) {
@@ -1450,7 +1450,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 				return false;
 			}
 		}
-		
+
 		$('#integral').val(this.useIntegral);
 		var args = _.extend($('form').serializeObject(), this.getProductsInfo(), this.getIntegralSaleInfo());
 		$('body').alert({
@@ -1473,7 +1473,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 	 */
 	disableSubmitOrderButton: function() {
 		this.enableSubmitOrder = false;
-	}, 
+	},
 
 	/**
 	 * onChangeDisplayTrigger: 点击display trigger的响应函数
@@ -1497,7 +1497,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 				$checkbox.removeAttr('checked');
 				this.isChecked = false;
 			}
-			var css = this.isChecked ? 'block' : 'none';        
+			var css = this.isChecked ? 'block' : 'none';
 			var domTriggerGroup = $triggerGroup[0];
 			var $content = $triggerGroup.find(targetId);
 			var $title = $content.siblings();
@@ -1523,7 +1523,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 			xerror('wrong display mode : ' + displayMode);
 		}
 	},
-	
+
 	/**
 	 * onClickSubmitButton: 点击“提交”按钮的响应函数
 	 */
