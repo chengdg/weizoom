@@ -339,6 +339,10 @@ class MemberGrade(models.Model):
 	pay_times = models.IntegerField(default=0)
 	integral = models.IntegerField(default=0)
 
+	@staticmethod
+	def is_auto_grade(id):
+		return MemberGrade.objects.get(id=id).is_auto_upgrade
+
 	class Meta(object):
 		db_table = 'member_grade'
 		verbose_name = '会员等级'
@@ -386,15 +390,6 @@ class MemberGrade(models.Model):
 			member_grade.pay_money = '%.2f' % member_grade.pay_money
 		return member_grades
 
-	@staticmethod
-	def get_all_auto_grades_list(webapp_id):
-		if webapp_id is None:
-			return []
-		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id,is_auto_upgrade=True).order_by('id')
-
-		for member_grade in member_grades:
-			member_grade.pay_money = '%.2f' % member_grade.pay_money
-		return member_grades
 
 #===============================================================================
 # Member : 会员

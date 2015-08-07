@@ -43,6 +43,7 @@ from mall.promotion import models as promotion_models
 from mall import models as mall_models
 from modules.member.module_api import get_member_by_id_list
 from webapp.models import WebApp
+from member.member_grade import auto_update_grade
 random.seed(time.time())
 
 NO_PROMOTION_ID = -1
@@ -2245,6 +2246,10 @@ def update_order_status(user, action, order, request=None):
 	except :
 		notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
 		watchdog_alert(notify_message)
+
+	if target_status in [ORDER_STATUS_SUCCESSED,ORDER_STATUS_REFUNDING,ORDER_STATUS_CANCEL]:
+		auto_update_grade(webapp_user_id=order.webapp_user_id)
+
 
 
 def __restore_product_stock_by_order(order):

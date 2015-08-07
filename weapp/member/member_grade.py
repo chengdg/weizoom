@@ -5,14 +5,19 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.db.models import signals
 
 from core import resource
 import export
-from mall.module_api import update_promotion_status_by_member_grade
+import mall.module_api
 from modules.member.models import MemberGrade, IntegralStrategySttings, Member, WebAppUser
 from core.jsonresponse import create_response
 from mall.models import Order
 import mall.models as mall_models
+from mall import signals as mall_signals
+import cache.webapp_owner_cache as webapp_owner_cache
+from webapp import models as webapp_models
+from weapp.hack_django import post_update_signal, post_delete_signal
 
 
 class MemberGradeList(resource.Resource):
@@ -22,7 +27,7 @@ class MemberGradeList(resource.Resource):
     @login_required
     def get(request):
         webapp_id = request.user_profile.webapp_id
-
+        print(webapp_id)
         member_grades = MemberGrade.get_all_grades_list(webapp_id)
 
         for grade in member_grades:
@@ -30,15 +35,14 @@ class MemberGradeList(resource.Resource):
 
         is_all_conditions = IntegralStrategySttings.objects.get(webapp_id=webapp_id).is_all_conditions
 
-        if request.method == "GET":
-            c = RequestContext(request, {
-                'first_nav_name': export.MEMBER_FIRST_NAV,
-                'second_navs': export.get_second_navs(request),
-                'second_nav_name': export.MEMBER_GRADE,
-                'member_grades': member_grades,
-                'is_all_conditions': is_all_conditions,
-            })
-            return render_to_response('member/editor/member_grades.html', c)
+        c = RequestContext(request, {
+            'first_nav_name': export.MEMBER_FIRST_NAV,
+            'second_navs': export.get_second_navs(request),
+            'second_nav_name': export.MEMBER_GRADE,
+            'member_grades': member_grades,
+            'is_all_conditions': is_all_conditions,
+        })
+        return render_to_response('member/editor/member_grades.html', c)
 
     @login_required
     def api_post(request):
@@ -48,8 +52,8 @@ class MemberGradeList(resource.Resource):
             return HttpResponseRedirect('/mall2/member_grade_list/')
 
         webapp_id = request.user_profile.webapp_id
-        member_grades = MemberGrade.get_all_grades_list(webapp_id)
-        member_grade_ids = [grade.id for grade in member_grades]
+        original_member_grades = MemberGrade.get_all_grades_list(webapp_id)
+        original_member_grade_ids = [grade.id for grade in original_member_grades]
         default_grade = MemberGrade.get_default_grade(webapp_id)
 
         is_all_conditions = request.POST.get('is_all_conditions', '0')
@@ -74,7 +78,7 @@ class MemberGradeList(resource.Resource):
 
                 MemberGrade.objects.filter(id=grade_id).update(name=name, shop_discount=shop_discount)
 
-            elif grade_id in member_grade_ids:
+            elif grade_id in original_member_grade_ids:
                 if is_auto_upgrade:
                     MemberGrade.objects.filter(id=grade_id).update(pay_money=pay_money, pay_times=pay_times,
                                                                    upgrade_lower_bound=upgrade_lower_bound, name=name,
@@ -90,69 +94,129 @@ class MemberGradeList(resource.Resource):
                                                upgrade_lower_bound=upgrade_lower_bound, name=name,
                                                is_auto_upgrade=is_auto_upgrade,
                                                shop_discount=shop_discount, webapp_id=webapp_id)
+
                 else:
                     MemberGrade.objects.create(name=name, is_auto_upgrade=is_auto_upgrade,
                                                shop_discount=shop_discount, webapp_id=webapp_id)
 
-        delete_ids = list(set(member_grade_ids).difference(set(post_ids)))
+        delete_ids = list(set(original_member_grade_ids).difference(set(post_ids)))
 
-        if default_grade.id in delete_ids:
-            delete_ids.remove(default_grade.id)
-        Member.objects.filter(grade_id__in=delete_ids).update(grade=default_grade)
-
-        MemberGrade.objects.filter(id__in=delete_ids).delete()
         if delete_ids:
-            update_promotion_status_by_member_grade(delete_ids)
+            if default_grade.id in delete_ids:
+                delete_ids.remove(default_grade.id)
+
+            members = Member.objects.filter(grade_id__in=delete_ids)
+
+            for member in members:
+                auto_update_grade(member=member, delete=True)
+
+
+            # MemberGrade.objects.filter(id__in=delete_ids).delete()
+
+            mall.module_api.update_promotion_status_by_member_grade(delete_ids)
 
         response = create_response(200)
         return response.get_response()
 
 
-def _is_auto(grade_id):
-    return MemberGrade.objects.get(id=grade_id).is_auto_upgrade
+def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
+    """
 
+    :param member:
+    :return:bool,等级是否更新
+    """
 
-def set_grade(member, is_auto=True):
-    # members = [members]
-    #
-    # for member in members:
+    is_change = False
 
-    member_grade = member.grade
+    if webapp_user_id:
+        print("webapp_user_id", webapp_user_id)
+        member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+    elif member:
+        print("member", member.id)
+
+    if not member.grade.is_auto_upgrade and not delete:
+        return is_change
 
     webapp_id = member.webapp_id
+    # webapp_owner_id = webapp_models.WebApp.objects.get(appid=webapp_id).owner_id
+    webapp_user_ids = member.get_webapp_user_ids
 
-    webapp_user_id = WebAppUser.objects.get(member_id=member.id)
-
-    orders = mall_models.belong_to(webapp_id)
-
-    paid_orders = orders.filter(status=mall_models.ORDER_STATUS_SUCCESSED, webapp_user_id=webapp_user_id)
-
+    # 获取会员数据
+    paid_orders = Order.objects.filter(status=mall_models.ORDER_STATUS_SUCCESSED, webapp_user_id__in=webapp_user_ids)
     pay_times = paid_orders.count()
-
-    bound = Member.objects.get(id=member.id).experience
-
+    bound = member.experience
     pay_money = 0
     for order in paid_orders:
-        # total_money += (order.product_price + order.postage) - (order.coupon_money +
-        #                                                         order.integral_money + order.weizoom_card_money +
-        #                                                         order.promotion_saved_money + order.edit_money)
+        pay_money += order.get_final_price(webapp_id) + order.weizoom_card_money
 
-        pay_money += order.get_final_price(webapp_id)
+    if delete:
+        grades_list = MemberGrade.objects.filter(webapp_id=webapp_id, is_auto_upgrade=True).exclude(
+            id=member.grade_id).order_by('-id')
+    else:
+        grades_list = MemberGrade.objects.filter(webapp_id=webapp_id, is_auto_upgrade=True,
+                                                 id__gt=member.grade_id).order_by('-id')
 
-    all_grades_list = MemberGrade.get_all_auto_grades_list(webapp_id)
-    if not is_auto:
-        all_grades_list = filter(lambda x: x >= member.grade_id, all_grades_list)
+    is_all_conditions = IntegralStrategySttings.objects.get(webapp_id=webapp_id).is_all_conditions
+    # is_all_conditions = webapp_owner_cache.get_webapp_owner_info(webapp_owner_id).is_all_conditions
+    print("is_all_conditions:", is_all_conditions)
 
-    is_all_conditions = IntegralStrategySttings.objects.get(webapp_id=webapp_id)
+    # 计算条件
+
+    print("conditions:", pay_money, pay_times, bound)
+
+    print("len:", len(grades_list))
 
     if is_all_conditions:
-        for grade in all_grades_list:
+        for grade in grades_list:
             if pay_money >= grade.pay_money and pay_times >= grade.pay_times and bound >= grade.upgrade_lower_bound:
-                member_grade = grade
-
+                is_change = True
+                member.grade = grade
+                break
     else:
-        for grade in all_grades_list:
+        print "here----------------------"
+        for grade in grades_list:
+            print("one grade:", grade.name, grade.pay_money, grade.pay_times, grade.upgrade_lower_bound)
             if pay_money >= grade.pay_money or pay_times >= grade.pay_times or bound >= grade.upgrade_lower_bound:
-                member_grade = grade
+                is_change = True
+                member.grade = grade
+                break
+    if is_change:
+        print(member.grade.name)
+        print("changed")
+        member.save()
+    else:
+        print("not changed")
 
-    Member.objects.filter(id=member.id).update(grade=member_grade)
+    return is_change
+
+
+
+    ############################################
+
+
+# def update_grade_from_order(**kwargs):
+#     if 'model' in kwargs:
+#         for order in kwargs['instance']:
+#             auto_update_grade(webapp_user_id=order.webapp_user_id)
+#     else:
+#         auto_update_grade(webapp_user_id=kwargs['instance'].webapp_user_id)
+#
+#
+# def update_grade_from_member(**kwargs):
+#     if 'model' in kwargs:
+#         print("update")
+#         for member in kwargs['instance']:
+#             auto_update_grade(member=member)
+#     else:
+#         print('save')
+#         auto_update_grade(member=kwargs['instance'])
+#
+#
+# signals.post_save.connect(update_grade_from_order, sender=Order, dispatch_uid="member_grade.order_save")
+# post_update_signal.connect(update_grade_from_order,
+#                            sender=Order, dispatch_uid="member_grade.order_update")
+#
+# signals.post_save.connect(update_grade_from_member, sender=Member, dispatch_uid="member_grade.member_save")
+# #
+# post_update_signal.connect(update_grade_from_member,
+#                            sender=Member, dispatch_uid="member_grade.member_update")
