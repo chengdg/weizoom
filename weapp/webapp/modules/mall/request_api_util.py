@@ -200,8 +200,6 @@ def save_order(request):
 
 	# 获取购买的商品集合
 	products = utils.get_products(request)
-	import pudb
-	pudb.set_trace()
 
 	# 发送下单检查信号
 	fake_order = common_util.Object("order")
