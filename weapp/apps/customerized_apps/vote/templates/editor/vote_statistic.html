@@ -1,0 +1,72 @@
+{% extends "content_base_v2.html" %}
+
+{% block css %}
+    <style>
+        .table>tbody tr th:nth-child(2){
+            text-align: left;
+        }
+        .table>tbody tr th:nth-child(1){
+            width: 100px;
+            text-align: right;
+        }
+        .table>thead tr th:nth-child(2){
+            width: 680px;
+        }
+        .xui-progressBar{
+            position: relative;
+            background: limegreen;
+            vertical-align: middle;
+            height: 21px;
+        }
+        span{
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-voteParticipanceFormPage xui-appPage-commonStyle">
+	<ul class="breadcrumb" style="margin-bottom:-12px;">
+		<li>您当前所在位置</li>
+		<li><a href="/apps/">百宝箱</a></li>
+		<li><a href="/apps/vote/votes/">微信投票</a></li>
+		<li class="active">查看统计</li>
+	</ul>
+	
+    <div class="mt20">
+        <a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">批量导出</a>
+    </div>
+    <div class="panel">
+        <div class="fr"><b>总参与人数: {{ total_count }} 人</b></div><br><br>
+        {% for title in titles %}
+            <span class="mt20">{{ forloop.counter }}、{{ title.title_name }}</span>
+            <span class="fr mt20">有效参与人数:{{ title.title_valid_count }} 人</span>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>选项</th>
+                        <th></th>
+                        <th>参与人数</th>
+                        <th>百分比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for v in title.title_value %}
+                    <tr>
+                        <th>{{ v.item_name }} : </th>
+                        <th>
+                            <span class="xui-progressBar" style="width: {% ifequal v.percent '0%' %}0{% else %}{{ v.percent }}{% endifequal %}"></span>
+                        </th>
+                        <th>{{ v.counter }}</th>
+                        <th>{{ v.percent }}</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
+

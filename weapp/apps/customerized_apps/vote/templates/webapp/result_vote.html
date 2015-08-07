@@ -1,0 +1,82 @@
+{% extends "webapp_content_base_v4.html" %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="/termite_static/v3/css/progressbar.css" />
+    <style>
+    .xui-btn-primary {
+        background: #1BA3F9 none repeat scroll 0 0;
+        border: 1px solid #d10000;
+        color: #ffffff;
+    }
+    .wui-textSelection .wui-i-items {
+        color: #666666;
+    }
+    .wui-textSelection .wui-i-item {
+        border-bottom: 0;
+    }
+    .ui-progressbar-h .ui-progressbar-bg {
+        height: 10px;
+    }
+    .ui-progressbar-bg {
+        background: #eee none repeat scroll 0 0;
+        border-radius: 0;
+    }
+    .ui-progressbar-filled {
+        background: #1BA3F9;
+        border-radius: 0;
+    }
+
+    </style>
+
+{% endblock %}
+
+{% block content-panel %}
+    <div class="wa-page xui-default-background" data-page-title="">
+    <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
+<h1 class="wui-i-title xa-title">{{ vote_detail.name }}</h1>
+<h2 class="wui-i-subtitle xa-subtitle">sdf</h2>
+<div class="wui-i-description">
+<p>asdf</p>
+</div>
+<div class="wui-i-info">
+<div class="wui-i-time"> 活动时间：{{ vote_detail.start_time }}至{{ vote_detail.end_time }} </div>
+<div class="wui-i-prize"> 活动奖励：5积分 </div>
+</div>
+    </div>
+{% for item in q_vote %}
+    <div class="wui-textSelection" style="" data-component-cid="5">
+        <h1 class="wui-i-title">
+            {{ item.title }}
+        </h1>
+        <ul class="wui-i-items xa-inputControl">
+            {% for a in item.values %}
+            <li class="wui-i-item" style="" data-component-cid="6">
+                <label style="display:block; padding: 3px 0px;" for="radio_item_6">
+                    <span class="ml5 xa-itemTitle">{{ a.name }}</span>
+                    <span style="display: inline-block;float: right;">{{ a.per }}%</span>
+                    <div data-per="{{ a.per }}" id="progressbar-{{ item.title }}-{{ a.name }}" class="progressbar"></div>
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
+    <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" data-component-cid="3">
+<a class="xui-btn xui-btn-primary xa-submitTermite" style="" href="javascript:void(0);" data-role="button">个人中心</a>
+</div>
+</div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        var $progressbar = $('.progressbar');
+        for (var i in $progressbar){
+            var id = $progressbar[i].id;
+            $('#'+id).progressbar('value',$('#'+id).attr('data-per'));
+        }
+        $('.xa-toUserCenter').on('click', function(event) {
+            redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
+        });
+    });
+    </script>
+{% endblock %}
