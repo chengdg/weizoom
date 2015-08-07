@@ -1,0 +1,274 @@
+@charset "utf-8";
+
+.xui-hidden {
+	display: none;
+}
+.xui-btn {
+    background: #000000 none repeat scroll 0 0;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 1.1em;
+    height: 22px;
+    line-height: 22px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-shadow: none;
+    white-space: nowrap;
+}
+.xui-btn-danger {
+    background: #d10000 none repeat scroll 0 0;
+    border: 1px solid #d10000;
+    color: #ffffff;
+}
+.xui-btn-disable {
+	background-color: #AAAAAA;
+	border: 1px solid #d10000;
+    color: #ffffff;
+}
+.xui-mandatory:before {
+	font-size: 1.4em;
+	content: "*";
+	color: #FF0000;
+	vertical-align: middle;
+	position: relative;
+	top: 4px;
+	right: 5px;
+}
+
+
+
+
+/** 
+ * app cover样式
+ */
+.wui-appParticipantResult-Cover {
+	position: absolute;
+	width: 100%;
+	z-index: 9999;
+	background-color: rgba(0, 0, 0, 0.5);
+	top: 0px;
+	left: 0px;
+}
+.wui-appParticipantResult-Cover .wui-i-background {
+	background-color: #FFF;
+	width: 80%;
+	margin: 0px auto;
+	margin-top: 200px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	position: relative;
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+.wui-appParticipantResult-Cover .wui-i-successIcon {
+	border: solid 5px #59C969;
+	height: 80px;
+	width: 80px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	line-height: 80px;
+    text-align: center;
+    font-size: 60px;
+    color: #59C969;
+    margin: 0px auto;
+}
+.wui-appParticipantResult-Cover .wui-i-successText {
+	color: #333;
+	font-size: 40px;
+	text-align: center;
+	margin-top: 25px;
+}
+.wui-appParticipantResult-Cover .wui-i-info {
+	color: #999;
+	font-size: 25px;
+	text-align: center;
+	margin-top: 35px;
+}
+.wui-appParticipantResult-Cover .wui-i-button {
+	margin: 0px auto;
+	margin-top: 50px;
+	text-align: center;
+	margin-top: 35px;
+	background-color: #057FCD;
+	padding: 15px 0px;
+	font-size: 20px;
+	color: #FFF;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.wui-appParticipantResult-Cover .wui-i-buttons-1 .wui-i-button{
+	display: block;
+	width: 70%;
+}
+.wui-appParticipantResult-Cover .wui-i-buttons-2 .wui-i-button{
+	display: inline-block;
+	width: 45%;
+	margin:35px 0 0 5px;
+}
+
+.wui-appParticipantResult-Cover .wui-i-close {
+	border: solid 3px #999;
+	height: 30px;
+	width: 30px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	line-height: 30px;
+    text-align: center;
+    font-size: 20px;
+    color: #999;
+    margin: 0px auto;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+/**
+ * 用户调研survey description样式
+ */
+.wui-surveyDescription {
+    padding: 20px;
+}
+.wui-surveyDescription .wui-i-title {
+    margin-top: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.wui-surveyDescription .wui-i-subtitle {
+    margin-top: 20px;
+    color: #A0A0A0;
+    font-size: 20px;
+}
+.wui-surveyDescription .wui-i-description {
+    margin-top: 25px;
+    color: #666;
+    padding-bottom: 20px;
+}
+.wui-surveyDescription .wui-i-info {
+	border-top: solid 1px #E5E5E5;
+    padding: 25px 0px 5px 0px;
+    color: #999;
+}
+
+
+/**
+ * 用户调研qa样式
+ */
+.wui-QA {
+	padding: 15px 20px 0px 20px;
+}
+.wui-QA .wui-i-title {
+	color: #333;
+	margin-bottom: 10px;
+	font-size: 20px;
+	font-weight: bold;
+	border-left: solid 8px #1AA2F8;
+	padding-left: 10px;
+}
+.wui-QA .wui-i-mandatory {
+	color: #CDCDCD;
+}
+.wui-QA .wui-i-input {
+	min-height: 150px;
+	width: 100%;
+	border: solid 1px #E5E5E5;
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+	padding: 5px;
+}
+
+
+/**
+ * 用户调研的文本调研组件样式
+ */
+.wui-textSelection {
+	padding: 15px 20px 0px 20px;
+}
+.wui-textSelection .wui-i-title {
+	color: #333;
+	margin-bottom: 10px;
+	font-size: 20px;
+	font-weight: bold;
+	border-left: solid 8px #1AA2F8;
+	padding-left: 10px;
+}
+.wui-textSelection .wui-i-mandatory {
+	color: #CDCDCD;
+}
+.wui-textSelection .wui-i-items {
+	padding: 15px;
+	background-color: #FFF;
+}
+.wui-textSelection .wui-i-item {
+	padding: 3px 0px;
+	border-bottom: solid 1px #E5E5E5;
+}
+.wui-textSelection .wui-i-item:last-child {
+	border-bottom: none;
+}
+
+
+
+
+/**
+ * 用户调研的快捷模块组件样式
+ */
+.wui-shortcuts {
+	padding: 15px 0px;
+}
+.wui-shortcuts .wui-i-item {
+	margin-top: 10px;
+	background-color: #FFF;
+	width: 100%;
+	display: table;
+}
+.wui-shortcuts .wui-i-label {
+	width: 80px;
+	text-align: right;
+	color: #666;
+	display: table-cell;
+	vertical-align: middle;
+}
+.wui-shortcuts .wui-i-inputContainer {
+	padding: 5px;
+	display: table-cell;
+}
+.wui-shortcuts .wui-i-input {
+	display: block;
+	padding: 5px;
+	border: solid 1px transparent;
+	color: #878787;
+	vertical-align: middle;
+	width: 95%;
+}
+
+
+
+
+
+/** 
+ *
+ */
+.wui-submitButton {
+	margin: 26px 10px 0px 10px;
+}
+.notweixin .wui-submitButton {
+	display: none;
+}
+.wui-submitButton .xui-btn {
+	padding: 11px 0;
+    width: 100%;
+    border: none;
+}

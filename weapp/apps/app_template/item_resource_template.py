@@ -98,6 +98,7 @@ class {{resource.class_name}}(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		{{resource.lower_name}} = app_models.{{resource.class_name}}(**data)
 		{{resource.lower_name}}.save()
+		error_msg = None
 		{% if resource.is_participance %}
 		__STRIPPER_TAG__
 		#调整参与数量
@@ -105,7 +106,6 @@ class {{resource.class_name}}(resource.Resource):
 		__STRIPPER_TAG__
 		#活动奖励
 		prize = data.get('prize', None)
-		error_msg = None
 		if prize:
 			prize_type = prize['type']
 			if prize_type == 'no_prize':

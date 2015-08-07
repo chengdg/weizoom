@@ -115,7 +115,7 @@
 					{% if nav|satisfy_permission:request %}
 						{% if not forloop.last %}
 						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+						<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
 						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
 						<i class="xui-icon-arrow"></i>
 						</a>
@@ -132,8 +132,8 @@
 							{% endfor %}
 						{% endif %}
 					{% else %}
-					    <li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+						<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
 						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
 						{% if nav.name != 'orderBatchDelivery' %}
 						<i class="xui-icon-arrow"></i>
@@ -213,43 +213,42 @@
 	W.isUseWepage = {% if user.get_profile.is_use_wepage %}true{% else %}false{% endif %};
 
 	{% if preview_info %}
-      W.previewName = "{{ preview_info.name }}";
-      W.previewImage = "{{ preview_info.image_path }}";
-    {% else %}
-      W.previewName = "信息预览";
-      W.previewImage = "/static/img/user-1.jpg";
-    {% endif %}
+	  W.previewName = "{{ preview_info.name }}";
+	  W.previewImage = "{{ preview_info.image_path }}";
+	{% else %}
+	  W.previewName = "信息预览";
+	  W.previewImage = "/static/img/user-1.jpg";
+	{% endif %}
 
 </script>
  <script type="text/javascript">
- 	  function unReadCountCheck() {
-          W.getApi().call({
-            app: 'new_weixin',
-            resource: 'outline',
-            showLoading: false,
-            args: {
+ 	function unReadCountCheck() {
+		W.getApi().call({
+			app: 'new_weixin',
+			resource: 'outline',
+			showLoading: false,
+			args: {
 
-            },
-            success: function(data) {
-               var unreadRealtimeCount = data.unread_realtime_count;
-                // $('#message_notify').html('new');
-               	if (parseInt(unreadRealtimeCount) > 0){
-               		$('.xa-num-unread-message-count').css('display', 'block');
-               		if (parseInt(unreadRealtimeCount) > 99){
-               			unreadRealtimeCount = '99+'
-               		}
-               		$('.xa-num-unread-message-count').text(unreadRealtimeCount);
-               	} else {
-               		$('.xa-num-unread-message-count').css('display', 'none');
-               	}
+			},
+			success: function(data) {
+			   var unreadRealtimeCount = data.unread_realtime_count;
+				// $('#message_notify').html('new');
+				if (parseInt(unreadRealtimeCount) > 0){
+					$('.xa-num-unread-message-count').css('display', 'block');
+					if (parseInt(unreadRealtimeCount) > 99){
+						unreadRealtimeCount = '99+'
+					}
+					$('.xa-num-unread-message-count').text(unreadRealtimeCount);
+				} else {
+					$('.xa-num-unread-message-count').css('display', 'none');
+				}
+			},
+			error: function(resp) {
+			  //TODO 进行错误通知
+			}
+		});
+	}
 
-
-            },
-            error: function(resp) {
-              //TODO 进行错误通知
-            }
-          });
-        }
 	$(document).ready(function($) {
 		if($('.xui-navBar-box .active').length==0 && $('.xui-navBar-box a').length){
 			location.href = $('.xui-navBar-box a:first').attr('href');
@@ -258,24 +257,9 @@
 		}
 
 		unReadCountCheck();
-	    var unread_message_notify_interval = setInterval(
-	    unReadCountCheck, 10000); //10s进行一次未读消息数的检查
-// 	var scrollLeft = $(this).scrollLeft();
-// 	if(scrollLeft != 0){
-// 		$('.xa-sideBar').css('position', 'absolute');
-// 	}else{
-// 		$('.xa-sideBar').css('position', 'fixed');
-// 	}
-// 	if($('.xa-sideBar').length !== 0){
-// 		$(document).scroll(function(event) {
-// 			var scrollLeft = $(this).scrollLeft();
-// 			if(scrollLeft != 0){
-// 				$订单概况('.xa-sideBar').css('position', 'absolute');
-// 			}else{
-// 				$('.xa-sideBar').css('position', 'fixed');
-// 			}
-// 		});
-// 	}
+		var unread_message_notify_interval = setInterval(
+		unReadCountCheck, 10000); //10s进行一次未读消息数的检查
+
 		// 导航右边线选中无
 		$('.xui-navBar a.active').parent('li').prev().children('a').addClass('xui-rightBorder');
 	});
@@ -287,8 +271,8 @@ $(document).ready(function($) {
 	// 批量发货
 	$('a[name="orderBatchDelivery"]').click(function(event){
 		W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
-		    success: function(data) {
-    			// W.getLoadingView().show();
+			success: function(data) {
+				// W.getLoadingView().show();
 
 				W.getApi().call({
 					app: 'mall2',
@@ -316,7 +300,7 @@ $(document).ready(function($) {
 						W.getErrorHintView().show('处理失败，请稍后重试！66666');
 					}
 				})
-		    }
+			}
 		});
 
 
