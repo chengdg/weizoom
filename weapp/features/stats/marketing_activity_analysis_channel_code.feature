@@ -26,7 +26,7 @@ Background:
 		#"integral_each_yuan": 10
 		"""
 		{
-			"一元等价的积分数量": 10
+			"integral_each_yuan": 10
 		}
 		"""
 

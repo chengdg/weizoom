@@ -52,7 +52,7 @@
 .xui-members-page .xui-content{
 	margin-left: 0px !important;
 	background-color:#EAEEF5;
-	height: 960px;
+	min-height: 830px;
 }
 .xui-members-page .xui-tips{
 	position:absolute;
@@ -150,11 +150,7 @@
 	display: inline-block;
 }
 .xui-members-page .errorHint{
-	
-	width: 80px;
-	margin-left: 95px;
-	position: relative;
-	top:-3px;
+	text-align: center;
 }
 
 /*

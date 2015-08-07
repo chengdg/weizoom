@@ -1,4 +1,5 @@
 # __edit__ : "benchi"
+# __edit__ : "新新"
 @func:webapp.modules.mall.views.list_products
 Feature: 在webapp中使用优惠券购买商品（使用全局优惠劵）
 	bill能在webapp中使用优惠券购买jobs添加的"商品"
@@ -243,7 +244,7 @@ Scenario: 1 使用少于商品价格的优惠券金额进行购买
 		'''
 
 
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 2 使用多于商品价格的优惠券金额进行购买
 	bill购买jobs的商品时，能使用多于商品价格的优惠券
 	1. 订单状态直接变为'等待发货'
@@ -739,7 +740,7 @@ Scenario: 11 购买多规格商品，买1个商品的两个规格，总价格满
 		}
 		'''
 
-@mall2 @mall.webapp @mall.coupon
+@mall2 @mall.webapp @mall.coupon @jz
 Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣运费
 	bill购买jobs的商品时，优惠券金额大于商品金额时
 	1.只抵扣商品金额，不能抵扣运费
@@ -795,3 +796,274 @@ Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣�
 			}
 		}
 		'''
+
+# __edit__ : "新新"
+Scenario:不同等级的会员购买有会员价同时使用全体券的商品
+#（全体券和会员价可以同时使用，但是满多少钱可以使用计算的是会员价）
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "商品9",
+			"price": 100.00,
+			"member_price": true,
+			"weight": 1,
+			"postage": "系统"
+		},{
+			"name": "商品10",
+			"price": 100.00,
+			"member_price": true,
+			"weight": 1,
+			"postage": "系统"
+		}]
+		"""
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "90%"
+		},{
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "70%"
+		}]
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"shop_discount": "100%"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "90%"
+		},{
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "70%"
+		}]
+		"""
+	When tom关注jobs的公众号
+	When bill关注jobs的公众号
+	When nokin关注jobs的公众号
+	Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}, {
+			"name": "nokin",
+			"member_rank": "金牌会员"
+		}]
+		"""
+	Given jobs已添加了优惠券规则
+		"""
+		[{
+			"name": "全体券1",
+			"money": 20,
+			"limit_counts": 10,
+			"start_date": "2天前",
+			"end_date": "2天后",
+			"using_limit": "满100元可以使用",
+			"coupon_id_prefix": "coupon9_id_"
+		}]
+		"""
+	When tom访问jobs的webapp
+	When tom领取jobs的优惠券
+		"""
+		[{
+			"name": "全体券1",
+			"coupon_ids": ["coupon9_id_1"]
+		}]
+		"""
+	When bill访问jobs的webapp
+	When bill领取jobs的优惠券
+		"""
+		[{
+			"name": "全体券1",
+			"coupon_ids": ["coupon9_id_2"]
+		}]
+		"""	
+	When nokin访问jobs的webapp
+	When nokin领取jobs的优惠券
+		"""
+		[{
+			"name": "全体券1",
+			"coupon_ids": ["coupon9_id_3"]
+		}]
+		"""
+	Then jobs能获得优惠券'全体券1'的码库
+		"""
+		{
+			"coupon9_id_1": {
+				"money": 20.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "tom"
+			},
+			"coupon9_id_2": {
+				"money": 20.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon9_id_3": {
+				"money": 20.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "nokin"
+			},
+			"coupon9_id_4": {
+				"money": 20.0,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+		#可以使用全体券(满100元,会员价后也是100)
+	When tom购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品9",
+				"count": 1
+			}],
+			"coupon": "coupon9_id_1"
+		}
+		"""
+	Then tom成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 80.00,
+			"product_price": 100.0,
+			"members_money":0,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":20.00
+		}
+		"""
+		#不可以使用全体券(会员价后也是90,没有满足100元可使用条件)
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品9",
+				"count": 1
+			}],
+			"coupon": "coupon9_id_2"
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 90.00,
+			"product_price": 100.0,
+			"members_money":10,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00
+		}
+		"""
+		#购买多种会员价使用全体券
+	When nokin加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品9",
+			"count": 1
+		}, {
+			"name": "商品10",
+			"count": 1
+		}]
+		"""
+	Then nokin能获得购物车
+		"""
+		{
+			"product_groups": [{
+				"products": [{
+					"name": "商品9",
+					"member_price": 70.00,
+					"count": 1
+				}]
+			}, {
+				"products": [{
+					"name": "商品10",
+					"member_price": 70.00,
+					"count": 1
+				}]
+			}],
+			"invalid_products": []
+		}
+		"""
+	When nokin从购物车发起购买操作
+		"""
+		{
+			"action": "click",
+			"context": [{
+				"name": "商品9"
+			}, {
+				"name": "商品10"
+			}],
+			"coupon": "coupon9_id_3"
+		}
+		"""
+	Then nokin成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 120.00,
+			"product_price": 200.0,
+			"coupon_money": 20.0,
+			"members_money": 60.0,
+			"postage": 0.00,
+			"integral_money":0.00
+			"products": [{
+				"name": "商品9",
+				"member_price": 70.00,
+				"count": 1
+			}, {
+				"name": "商品10",
+				"member_price": 70.00,
+				"count": 1
+			}]
+		}
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'全体券1'的码库
+		"""
+		{
+			"coupon9_id_1": {
+				"money": 20.0,
+				"status": "已使用",
+				"consumer": "tom",
+				"target": "tom"
+			},
+			"coupon9_id_2": {
+				"money": 20.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			},
+			"coupon9_id_3": {
+				"money": 20.0,
+				"status": "已使用",
+				"consumer": "nokin",
+				"target": "nokin"
+			},
+			"coupon9_id_4": {
+				"money": 20.0,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+
+

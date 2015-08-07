@@ -57,3 +57,7 @@ Desktop.ini
 
 # Project settings
 site/
+
+# errer.html upload
+weapp/error.html
+weapp/static/upload

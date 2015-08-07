@@ -589,11 +589,11 @@ Scenario: 7.jobs通过审核评价，给用户加积分
         }]
         """
     Given jobs登录系统
-    And jobs设置积分策略
+    And jobs设定会员积分策略
         """
-        [{
+        {
             "review_increase": 20
-        }]
+        }
         """
     When jobs已完成对商品的评价信息审核
         """
@@ -608,7 +608,7 @@ Scenario: 7.jobs通过审核评价，给用户加积分
     Then tom在jobs的webapp中获得积分日志
         """
         [{
-            "content": "商品好评返利",
+            "content": "商品评价奖励",
             "integral": 20
         },{
             "content": "首次关注",
@@ -616,7 +616,31 @@ Scenario: 7.jobs通过审核评价，给用户加积分
         }]
         """
     Given jobs登录系统
-    When jobs已完成对商品的评价信息审核并置顶
+    When jobs已完成对商品的评价信息审核
+        """
+        [{
+            "product_name": "商品2",
+            "order_no": "4",
+            "member": "tom",
+            "status": "2"
+        }]
+        """
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中获得积分日志
+        """
+        [{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "商品评价奖励",
+            "integral": 20
+        },{
+            "content": "首次关注",
+            "integral": 20
+        }]
+        """
+    Given jobs登录系统
+    When jobs已完成对商品的评价信息审核
         """
         [{
             "product_name": "商品2",
@@ -629,10 +653,10 @@ Scenario: 7.jobs通过审核评价，给用户加积分
     Then tom在jobs的webapp中获得积分日志
         """
         [{
-            "content": "商品好评返利",
+            "content": "商品评价奖励",
             "integral": 20
         },{
-            "content": "商品好评返利",
+            "content": "商品评价奖励",
             "integral": 20
         },{
             "content": "首次关注",
@@ -640,47 +664,23 @@ Scenario: 7.jobs通过审核评价，给用户加积分
         }]
         """
     Given jobs登录系统
-    When jobs取消对商品的评价信息置顶
+    When jobs已完成对商品的评价信息审核
         """
         [{
             "product_name": "商品2",
             "order_no": "4",
             "member": "tom",
-            "status": "1"
+            "status": "-1"
         }]
         """
     When tom访问jobs的webapp
     Then tom在jobs的webapp中获得积分日志
         """
         [{
-            "content": "商品好评返利",
+            "content": "商品评价奖励",
             "integral": 20
         },{
-            "content": "商品好评返利",
-            "integral": 20
-        },{
-            "content": "首次关注",
-            "integral": 20
-        }]
-        """
-    Given jobs登录系统
-    When jobs屏蔽对商品的评价信息
-        """
-        [{
-            "product_name": "商品2",
-            "order_no": "4",
-            "member": "tom",
-            "status": "1"
-        }]
-        """
-    When tom访问jobs的webapp
-    Then tom在jobs的webapp中获得积分日志
-        """
-        [{
-            "content": "商品好评返利",
-            "integral": 20
-        },{
-            "content": "商品好评返利",
+            "content": "商品评价奖励",
             "integral": 20
         },{
             "content": "首次关注",
@@ -688,23 +688,23 @@ Scenario: 7.jobs通过审核评价，给用户加积分
         }]
         """
     Given jobs登录系统
-    When jobs已完成对商品的评价信息置顶
+    When jobs已完成对商品的评价信息审核
         """
         [{
             "product_name": "商品1",
             "order_no": "3",
             "member": "tom",
-            "status": "1"
+            "status": "2"
         }]
         """
     When tom访问jobs的webapp
     Then tom在jobs的webapp中获得积分日志
         """
         [{
-            "content": "商品好评返利",
+            "content": "商品评价奖励",
             "integral": 20
         },{
-            "content": "商品好评返利",
+            "content": "商品评价奖励",
             "integral": 20
         },{
             "content": "首次关注",

@@ -44,7 +44,7 @@
                 <li><span>2.</span> 自动升级：创建完成后，会员满足升级条件时，自动变为该等级会员，无需手动调整；</li>
                 <li><span>3.</span>满足一个条件：会员满足升级条件中的任意一个，即可升级为该等级会员；</li>
                 <li><span>4.</span> 满足所有条件：会员必须满足所有升级条件，才可升级为该等级会员；</li>
-                <li><span>5.</span> 交易金额：已完成的订单的师傅金额（包括微众卡支付的金额）；</li>
+                <li><span>5.</span> 交易金额：已完成的订单的实付金额（包括微众卡支付的金额）；</li>
                 <li><span>6.</span> 购买次数：已完成的订单数；</li>
                 <li><span>7.</span> 经验值：累计获得积分总数，积分消费后经验值不减少。</li>
             </ul>
@@ -88,9 +88,9 @@
 							{% else %}
                                 {% if grade.is_auto_upgrade %}
                                 <div class="xa-requirement-able" data-id="{{ grade.id }}" >
-                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的金额"></div></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
 							    </div >
                                 <div class="xa-requirement-disabled" data-id="{{ grade.id }}" style="display: none">
                                     <div><span class="xui-td-span">交易金额￥：</span><input disabled type="text"  class="form-control xui-input"/></div>
@@ -99,9 +99,9 @@
                                 </div>
                                 {% else %}
                                 <div class="xa-requirement-able" data-id="{{ grade.id }}" style="display: none">
-                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>
-                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+                                    <div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的金额"></div></div>
+                                    <div><span class="xui-td-span">购买次数：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_{{grade.id}}" name="grade_paytimes_term_{{grade.id}}" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
+                                    <div><span class="xui-td-span">经验值：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>
 							    </div >
                                 <div class="xa-requirement-disabled" data-id="{{ grade.id }}">
                                     <div><span class="xui-td-span">交易金额￥：</span><input disabled type="text"  class="form-control xui-input"/></div>
@@ -113,7 +113,7 @@
 						</td>
 						<td class="td-discount tc">
                             <input data-validate="require-float-one" type="text" class="form-control xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>
-                            <div class="errorHint" data-error-hint="请输入1~10的1位小数"></div>
+                            <div class="errorHint xa-discount-tr-hint" data-error-hint="请输入1.0~10的数"></div>
 						</td>
 						<td class="td-fouth">
                         {% if grade.is_default_grade %}
@@ -136,9 +136,11 @@
 					</tr>
 				</tbody>
 			</table>
-                <div class="xa-error-hint red tc" style="display: none">
-                    等级升级条件必须逐级递增</br>
-                    等级折扣必须主机递减或相同
+                <div class="xa-conditions-error-hint red tc" style="display: none">
+                    等级升级条件必须逐级递增
+                </div>
+                <div class="xa-discount-error-hint red tc" style="display: none">
+                    等级折扣必须逐级递增减或相同
                 </div>
 				<div class="xui-btn-group tc">
                     <a href="javascript:void(0);" class="btn btn-primary xa-submit">保存</a>
@@ -176,9 +178,9 @@
                             +'</td>'
                             +'<td class="td-requirement" width="335">'
                                 +'<div class="xa-requirement-able" data-id="' + new_data_id + '" style="display: none">'
-                                    +'<div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>'
-                                    +'<div><span class="xui-td-span">购买次数：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_' + new_data_id + '" name="grade_paytimes_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入数字"></div></div>'
-                                    +'<div><span class="xui-td-span">经验值：</span><input data-validate="require-nonnegative" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>'
+                                    +'<div><span class="xui-td-span">交易金额￥：</span><input data-validate="require-price" type="text" class="form-control xui-input xa-money" placeholder="" value="{{ grade.pay_money }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正确的金额"></div></div>'
+                                    +'<div><span class="xui-td-span">购买次数：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-paytimes"  id="grade_paytimes_term_' + new_data_id + '" name="grade_paytimes_term_' + new_data_id + '" placeholder="" value="{{ grade.pay_times }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>'
+                                    +'<div><span class="xui-td-span">经验值：</span><input data-validate="require-positive-int" type="text" class="form-control xui-input xa-bound" placeholder="" value="{{ grade.upgrade_lower_bound }}" maxlength="100"/><div class="errorHint" data-error-hint="请输入正整数"></div></div>'
                                 +'</div>'
                                 +'<div class="xa-requirement-disabled" data-id="' + new_data_id + '">'
                                     +'<div><span class="xui-td-span">交易金额￥：</span><input disabled type="text"  class="form-control xui-input"/></div>'
@@ -188,7 +190,7 @@
                             +'</td>'
                             +'<td class="td-discount tc">'
                                 +'<input data-validate="require-float-one" type="text" class="form-control xui-input xa-discount" placeholder="" value="{{ grade.shop_discount }}" maxlength="100"/>'
-                                +'<div class="errorHint" data-error-hint="请输入1~10的1位小数"></div>'
+                                +'<div class="errorHint xa-discount-tr-hint" data-error-hint="请输入1.0~10的数"></div>'
                             +'</td>'
                             +'<td class="td-fouth">'
                                 +'<a href="javascript:void(0);" class="delete_tr">删除</a>'
@@ -265,7 +267,9 @@
             var bound;
             var discount;
 
-            var flag = true;
+            var conditions_flag = true;
+            var discount_flag = true;
+            var discount_number_flag = true
 
             tr_list.each(function () {
 
@@ -282,8 +286,8 @@
 
                 
                 if(is_auto_upgrade=='1'){
-                    if(paytimes<tmp_paytimes){
-                        flag=false;
+                    if(paytimes<=tmp_paytimes){
+                        conditions_flag=false;
                         $(this).find('.xa-paytimes').parent().addClass('has-error');
                     }
                     else{
@@ -291,8 +295,8 @@
                         $(this).find('.xa-paytimes').parent().removeClass('has-error');
                     }
                     
-                    if(bound<tmp_bound){
-                        flag=false;
+                    if(bound<=tmp_bound){
+                        conditions_flag=false;
                         $(this).find('.xa-bound').parent().addClass('has-error');
                     }
                     else{
@@ -300,8 +304,8 @@
                         $(this).find('.xa-bound').parent().removeClass('has-error');
                     }
                     
-                    if(money<tmp_money){
-                        flag=false;
+                    if(money<=tmp_money){
+                        conditions_flag=false;
                         $(this).find('.xa-money').parent().addClass('has-error');
                     }
                     else{
@@ -311,21 +315,24 @@
                     
                 }
 
-                if(discount>10 || discount<0){
+                if(discount>10 || discount<1){
                     $(this).find('.xa-discount').parent().addClass('has-error');
-                    flag = false;
+                    $(this).find('.xa-discount-tr-hint').text("请输入1.0~10的数");
+                    $(this).find('.xa-discount-tr-hint').show();
+                    discount_number_flag = false;
                 }
                 else{
                     if(discount>tmp_discount){
                         $(this).find('.xa-discount').parent().addClass('has-error');
-                        console.log(discount+">"+tmp_discount);
-                        flag=false;
+                        $(this).find('.xa-discount-tr-hint').show();
+                        discount_flag=false;
 
                     }
-                    else if(discount<tmp_discount||discount==tmp_discount){
+                    else if(discount<=tmp_discount){
 
                         tmp_discount = discount;
                         $(this).find('.xa-discount').parent().removeClass('has-error');
+                        $(this).find('.xa-discount-tr-hint').text("");
                     }
 
                 }
@@ -333,7 +340,7 @@
                 grades.push({ 'id': id,  'name': name, 'is_auto_upgrade':is_auto_upgrade, 'money':money, 'paytimes':paytimes, 'bound':bound, 'discount':discount});
             });
 
-            if(flag){
+            if(conditions_flag && discount_flag && discount_number_flag){
                 xlog(JSON.stringify(grades));
                 var is_all_conditions = $('input[name="is_all_conditions"]:checked').val();
                 W.getApi().call({
@@ -343,7 +350,8 @@
                     args: {'grades': JSON.stringify(grades),'is_all_conditions':is_all_conditions},
                     success: function(data) {
                         W.showHint('success', '保存成功');
-                        window.location.reload();
+                        $(".xa-conditions-error-hint").hide();
+                        $(".xa-discount-error-hint").hide();
 
                     },
                     error: function() {
@@ -352,7 +360,15 @@
                 })
             }
             else{
-                $(".xa-error-hint").show();
+                if(conditions_flag)
+                    $(".xa-conditions-error-hint").hide();
+                else
+                    $(".xa-conditions-error-hint").show();
+
+                if(discount_flag)
+                    $(".xa-discount-error-hint").hide();
+                else
+                    $(".xa-discount-error-hint").show();
             }
         });
     });

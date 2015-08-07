@@ -40,11 +40,9 @@ def list_products(request):
 	"""
 	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	category_id = int(request.GET.get('category_id', 0))
-	discount = utils.get_vip_discount(request)
-	member_grade_id = utils.get_user_member_grade_id(request)
 	category, products = webapp_cache.get_webapp_products(
 		request.user_profile, request.is_access_weizoom_mall,
-		category_id, discount, member_grade_id)
+		category_id)
 	products = utils.get_processed_products(request, products)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 	has_category = False
@@ -71,13 +69,13 @@ def list_products(request):
 def get_product(request):
 	"""显示“商品详情”页面
 	"""
+	discount = utils.get_vip_discount(request)
+	member_grade_id = utils.get_user_member_grade_id(request)
 	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	product_id = request.GET['rid']
-	webapp_user = request.webapp_user
-
 	member_grade_id = request.member.grade_id if request.member else None
-	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
-	product = utils.get_processed_product(request, product)
+	product = mall_api.get_product_detail_refactor(request.webapp_owner_id, product_id, member_grade_id)
+	product = utils.get_display_price(discount, member_grade_id, product)
 	#product.fill_model()
 
 	if product.is_deleted:
@@ -88,6 +86,7 @@ def get_product(request):
 
 	if product.promotion:
 		product.promotion['is_active'] = product.promotion_model.is_active
+		product.promotion['detail']['cut_price'] = product.price_info['display_price'] - product.display_price
 	jsons = [{
 		"name": "models",
 		"content": product.models
@@ -205,8 +204,28 @@ def get_pay_result_success(request):
 # show_shopping_cart: 显示购物车详情
 ########################################################################
 def show_shopping_cart(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.show_shopping_cart(request)
+	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+	'''
+	显示购物车详情
+	'''
+	product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
+
+	product_groups = utils.sorted_product_groups_by_promotioin(product_groups)
+	request.should_hide_footer = True
+
+	jsons = [{
+		"name": "productGroups",
+		"content": utils.format_product_group_price_factor(product_groups)
+	}]
+
+	c = RequestContext(request, {
+		'is_hide_weixin_option_menu': True,
+		'page_title': u'购物车',
+		'product_groups': product_groups,
+		'invalid_products': invalid_products,
+		'jsons': jsons
+	})
+	return render_to_response('%s/shopping_cart.html' % template_dir, c)
 
 
 ########################################################################
@@ -366,3 +385,4 @@ def redirect_product_review(request):
 def edit_refueling_order(request):
     request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
     return request_util.edit_refueling_order(request)
+

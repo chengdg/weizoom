@@ -403,7 +403,7 @@ Scenario: 安装完整测试数据
 	Given jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 5
+			"integral_each_yuan": 5
 		}
 		"""
 	#优惠券
