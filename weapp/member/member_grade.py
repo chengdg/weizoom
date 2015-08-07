@@ -5,7 +5,6 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.db.models import signals
 
 from core import resource
 import export
@@ -14,10 +13,6 @@ from modules.member.models import MemberGrade, IntegralStrategySttings, Member, 
 from core.jsonresponse import create_response
 from mall.models import Order
 import mall.models as mall_models
-from mall import signals as mall_signals
-import cache.webapp_owner_cache as webapp_owner_cache
-from webapp import models as webapp_models
-from weapp.hack_django import post_update_signal, post_delete_signal
 
 
 class MemberGradeList(resource.Resource):
