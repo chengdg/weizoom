@@ -8,7 +8,7 @@ from weixin.user.models import *
 def get_component_info_from(request):
 	request_host = request.get_host()
 	if request_host == 'member.weapp.weizzz.com':
-		component_info = ComponentInfo.objects.filter(app_id='wx984abb2d00cc47b8')[0]
+		component_info = ComponentInfo.objects.filter(app_id='wxb04d4cdf32b59823')[0]
 	elif request_host == 'weixin.weapp.weizzz.com':
 		component_info = ComponentInfo.objects.filter(app_id='wxba6fccbdcccbea49')[0]
 	elif request_host == 'docker.test.weizzz.com':
