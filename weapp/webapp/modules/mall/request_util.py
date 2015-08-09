@@ -596,7 +596,7 @@ def show_shopping_cart(request):
 	'''
 	显示购物车详情
 	'''
-	product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
+	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 	request.should_hide_footer = True
 
@@ -642,8 +642,8 @@ def edit_order(request):
 	order.product_groups = mall_api.group_product_by_promotion(request, products)
 
 	#测试订单，修改价钱和订单类型
-	type = request.GET.get('type', '')
-	order = mall_api.update_order_type_test(type, order)
+	# type = request.GET.get('type', '')
+	# order = mall_api.update_order_type_test(type, order)
 
 	#获得运费计算因子
 	#postage_factor = order.used['postage_config'].factor

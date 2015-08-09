@@ -561,7 +561,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             if (this.promotion && this.promotion.isFlashSalePromotion) {
                 //do nothing
             } else {
-                $('.xa-singlePrice').text(this.priceInfo['min_price']);
+                var min_price = this.priceInfo['min_price']
+                if (this.discount){
+                    min_price = (min_price * this.discount / 100).toFixed(2)
+                }
+                $('.xa-singlePrice').text(min_price);
             }
             // $('.xa-market-price').text(this.priceInfo['display_market_price']);
             $('.xa-enabledBuyLinks').hide();

@@ -486,8 +486,10 @@ $(document).ready(function() {
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
-            if(view.is_member_product && data.discount){
+            if(view.is_member_product && data.discount < 100){
                 view.discount = data.discount;
+                // 处理会员价
+                $('.xa-singlePrice').text((view.priceInfo.min_price*view.discount/100).toFixed(2));
             }
         },
         error: function(data) {

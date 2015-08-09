@@ -22,21 +22,17 @@
             {% if products %}
             <ul data-role="listview" data-theme="x" data-icon="false">
                 {% for product in products %}
-                <li class="xui-inner-li xt-oneProduct">
+                <li class="xui-inner-li xt-oneProduct
+                {% if product.is_member_product %}
+                xa-member-product
+                {% endif %}
+                ">
                     <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
                         <div class="xui-inner-img">
                             <img src="{{ product.thumbnails_url }}">
                         </div>
                         <h3 class="xt-productName">{{ product.name|truncatechars:16 }}</h3>
-                        <p class="xt-productPrice">
-                        {% if product.type == 'integral' %}
-                            <!-- 积分商品 -->
-                            {{ product.display_price }}积分
-                        {% elif product.type == 'object' %}
-                            <!-- 普通商品 -->
-                            ￥{{ product.display_price }}
-                        {% endif %}
-                        </p>
+                        <p class="xt-productPrice">￥{{ product.display_price }}</p>
                     </a>
                 </li>
                 {% endfor %}
@@ -65,6 +61,13 @@ $(document).ready(function() {
         success: function(data) {
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+            }
+            if(data.discount<100){
+                $('.xa-member-product').each(function(i,n){
+                    var price = parseFloat($(n).find('.xt-productPrice').text().trim().replace('￥',''));
+                    price = (price * data.discount / 100).toFixed(2)
+                    $(n).find('.xt-productPrice').text('￥'+price)
+                })
             }
         },
         error: function(data) {

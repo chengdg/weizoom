@@ -46,7 +46,7 @@ from webapp.models import WebApp
 from member.member_grade import auto_update_grade
 random.seed(time.time())
 
-NO_PROMOTION_ID = -1
+# NO_PROMOTION_ID = -1
 
 
 # def _get_promotion_name(product):
@@ -160,14 +160,16 @@ def group_product_by_promotion(request, products):
 				  ...
 			   ]
 	"""
-	member_grade_id = request.member.grade_id if request and request.member else -1
-	group_id = 0
+	member_grade_id, discount = get_member_discount(request)
 	#按照促销对product进行聚类
-	global NO_PROMOTION_ID
-	NO_PROMOTION_ID = -1  # 负数的promotion id表示商品没有promotion
+	# global NO_PROMOTION_ID
+	# NO_PROMOTION_ID = -1  # 负数的promotion id表示商品没有promotion
 	product_groups = []
 	promotion2products = {}
+	group_id = 0
 	for product in products:
+		if product.is_member_product:
+			product.member_price = round(product.price * discount / 100, 2)
 		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
 		group_id += 1
 		default_products = {"group_id": group_id, "products": []}
@@ -181,7 +183,6 @@ def group_product_by_promotion(request, products):
 		products = group_info['products']
 		group_id = group_info['group_id']
 		group_unified_id = __get_group_name(products)
-		print 'jz----9', group_unified_id
 		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
 		# 商品没有参加促销
 		if promotion_id <= 0:
@@ -210,7 +211,6 @@ def group_product_by_promotion(request, products):
 		# 促销活动还未开始，或已结束
 		if promotion['start_date'] > now or promotion['end_date'] < now:
 			promotion['status'] = promotion_models.PROMOTION_STATUS_NOT_START if promotion['start_date'] > now else promotion_models.PROMOTION_STATUS_FINISHED
-			# promotion = None
 		# 限时抢购
 		elif promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
 			product = products[0]
@@ -1036,12 +1036,12 @@ def create_order(webapp_owner_id, webapp_user, product):
 #############################################################################
 # update_order_type_test: 修改订单的为测试订单，并且修改价钱
 #############################################################################
-def update_order_type_test(type, order):
-	if type == PRODUCT_TEST_TYPE:
-		order.type = PRODUCT_TEST_TYPE
-		order.final_price = 0.01
+# def update_order_type_test(type, order):
+# 	if type == PRODUCT_TEST_TYPE:
+# 		order.type = PRODUCT_TEST_TYPE
+# 		order.final_price = 0.01
 
-	return order
+# 	return order
 
 
 ########################################################################
@@ -1059,6 +1059,7 @@ def __create_random_order_id():
 def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None):
 	"""保存订单
 	"""
+	grade_id, discount = get_member_discount(request)
 	order = Order()
 	order.session_data = dict()
 	order.session_data['webapp_owner_id'] = webapp_owner_id
@@ -1077,6 +1078,8 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	order.status = ORDER_STATUS_NOT
 	order.webapp_id = webapp_id
 	order.webapp_user_id = webapp_user.id
+	order.member_grade_id = grade_id
+	order.member_grade_discount = discount
 
 	products = order_info['products']
 	fake_order = order_info['fake_order']
@@ -1577,12 +1580,14 @@ def remove_product_from_all_shopping_cart(product_id):
 ########################################################################
 # get_shopping_cart_products: 获取购物车中的product集合
 ########################################################################
-def get_shopping_cart_products(webapp_user, webapp_owner_id):
+def get_shopping_cart_products(request):
 	"""
 	获取购物车中的product集合
 
 	@todo 直接使用已在缓存中的model数据来改进fill_specific_model的性能
 	"""
+	webapp_user = request.webapp_user
+	webapp_owner_id = request.webapp_owner_id
 	shopping_cart_items = list(ShoppingCart.objects.filter(webapp_user_id=webapp_user.id))
 
 	#product_ids = []
@@ -1640,7 +1645,7 @@ def get_shopping_cart_products(webapp_user, webapp_owner_id):
 	# 		product.price, _ = webapp_user.get_discounted_money(product.price)
 	# 		products.append(product)
 
-	product_groups = group_product_by_promotion(None, valid_products)
+	product_groups = group_product_by_promotion(request, valid_products)
 
 	invalid_products.sort(lambda x, y: cmp(x.shopping_cart_id, y.shopping_cart_id))
 
@@ -2933,18 +2938,24 @@ def get_member_product_info(request):
 		else:
 			response.data.is_collect = 'false'
 	response.data.count = shopping_cart_count
-
-	member_grade_id = request.member.grade_id
-	member_grade = request.webapp_owner_info.member2grade.get(member_grade_id, '')
-	if member_grade:
-		response.data.discount = member_grade.shop_discount
-	else:
-		response.data.discount = 100
+	_, response.data.discount = get_member_discount(request)
 
 	# except:
 	# 	return create_response(500).get_response()
 
 	return response.get_response()
+def get_member_discount(request):
+	"""获取会员等级ID、折扣
+	"""
+	if not request or not request.member:
+		return -1, 100
+	member_grade_id = request.member.grade_id
+	member_grade = request.webapp_owner_info.member2grade.get(member_grade_id, '')
+	if member_grade:
+		return member_grade_id, member_grade.shop_discount
+	else:
+		return member_grade_id, 100
+
 
 def wishlist_product_count(webapp_owner_id, member_id):
 	"""
