@@ -432,14 +432,14 @@ def promotions_pre_save_order(pre_order, order, products, product_groups, **kwar
 		if promotion_result:
 			order.final_price -= promotion_result.get('final_saved_money', 0.000)
 
-		if product_group['integral_sale_rule']:
-			integral_sale_result = product_group['integral_sale_rule'].get('result', None)
-			if integral_sale_result:
-				use_integral = integral_sale_result['use_integral']
-				if use_integral > 0:
-					order.integral += use_integral
-					order.integral_money += integral_sale_result['final_saved_money']
-					order.final_price -= integral_sale_result['final_saved_money']
+		# if product_group['integral_sale_rule']:
+		# 	integral_sale_result = product_group['integral_sale_rule'].get('result', None)
+		# 	if integral_sale_result:
+		# 		use_integral = integral_sale_result['use_integral']
+		# 		if use_integral > 0:
+		# 			order.integral += use_integral
+		# 			order.integral_money += integral_sale_result['final_saved_money']
+		# 			order.final_price -= integral_sale_result['final_saved_money']
 	if hasattr(pre_order, 'integral') and hasattr(pre_order, 'integral_money'):
 		order.integral = pre_order.integral
 		order.integral_money = pre_order.integral_money

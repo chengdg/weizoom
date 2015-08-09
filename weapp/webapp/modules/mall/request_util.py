@@ -737,7 +737,7 @@ def edit_shopping_cart_order(request):
 		return HttpResponseRedirect(url)
 
 	order = mall_api.create_shopping_cart_order(webapp_owner_id, webapp_user, products)
-	order.product_groups = utils.group_product_by_promotion(request, products)
+	order.product_groups = mall_api.group_product_by_promotion(request, products)
 
 	#获得运费配置，支持前端修改数量、优惠券等后实时计算运费
 	postage_factor = None

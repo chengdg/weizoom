@@ -204,28 +204,28 @@ def get_pay_result_success(request):
 # show_shopping_cart: 显示购物车详情
 ########################################################################
 def show_shopping_cart(request):
-	template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	'''
 	显示购物车详情
 	'''
-	product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
+	# product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
 
-	product_groups = utils.sorted_product_groups_by_promotioin(product_groups)
-	request.should_hide_footer = True
+	# product_groups = utils.sorted_product_groups_by_promotioin(product_groups)
+	# request.should_hide_footer = True
 
-	jsons = [{
-		"name": "productGroups",
-		"content": utils.format_product_group_price_factor(product_groups)
-	}]
+	# jsons = [{
+	# 	"name": "productGroups",
+	# 	"content": utils.format_product_group_price_factor(product_groups)
+	# }]
 
-	c = RequestContext(request, {
-		'is_hide_weixin_option_menu': True,
-		'page_title': u'购物车',
-		'product_groups': product_groups,
-		'invalid_products': invalid_products,
-		'jsons': jsons
-	})
-	return render_to_response('%s/shopping_cart.html' % template_dir, c)
+	# c = RequestContext(request, {
+	# 	'is_hide_weixin_option_menu': True,
+	# 	'page_title': u'购物车',
+	# 	'product_groups': product_groups,
+	# 	'invalid_products': invalid_products,
+	# 	'jsons': jsons
+	# })
+	return request_util.show_shopping_cart(request)
 
 
 ########################################################################
