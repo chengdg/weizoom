@@ -309,21 +309,21 @@ def group_product_by_promotion(request, products):
 			'promotion': promotion,
 			'promotion_result': promotion_result,
 			# 'integral_sale_rule': integral_sale_rule,
-			'can_use_promotion': can_use_promotion
+			'can_use_promotion': can_use_promotion,
 			'promotion_json': json.dumps(promotion)
 		})
-		else:
-			#非促销商品
-			product_groups.append({
-				"id": group_id,
-				"uid": group_unified_id,
-				"promotion_type": type_name,
-				'products': products,
-				'promotion': None,
-				'promotion_result': None,
-				# 'integral_sale_rule': integral_sale_rule,
-				'can_use_promotion': False
-			})
+		# else:
+		# 	#非促销商品
+		# 	product_groups.append({
+		# 		"id": group_id,
+		# 		"uid": group_unified_id,
+		# 		"promotion_type": type_name,
+		# 		'products': products,
+		# 		'promotion': None,
+		# 		'promotion_result': None,
+		# 		# 'integral_sale_rule': integral_sale_rule,
+		# 		'can_use_promotion': False
+		# 	})
 	return product_groups
 
 
