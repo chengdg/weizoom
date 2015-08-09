@@ -58,9 +58,7 @@ Scenario: 从购物车中删除商品
 				"products": [{
 					"name": "商品1",
 					"count": 1
-				}]
-			},{
-				"products": [{
+				}, {
 					"name": "商品2",
 					"count": 2
 				}]
@@ -104,9 +102,7 @@ Scenario: 从购物车中删除商品
 				"products": [{
 					"name": "商品1",
 					"count": 1
-				}]
-			},{
-				"products": [{
+				}, {
 					"name": "商品2",
 					"count": 2
 				}]

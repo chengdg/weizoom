@@ -181,7 +181,6 @@ def step_impl(context, webapp_user_name):
 	expected = json.loads(context.text)
 
 	# profile = context.client.user.profile
-	# print 'jz----', context.client.user
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	actual_data = dict()
 	actual_data['integral'] = str(member.integral)

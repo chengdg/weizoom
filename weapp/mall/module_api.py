@@ -1305,6 +1305,8 @@ def get_orders(request):
 			# 订单满足红包条件
 			order.red_envelope = True
 			red_envelope_orderIds.append(order.id)
+		else:
+			order.red_envelope = False
 
 	order_product_has_review = {}
 	user_product_review = mall_models.ProductReview.objects.filter(
