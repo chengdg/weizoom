@@ -900,24 +900,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 		if product.is_deleted:
 			return product
 
-		# postage_configs = webapp_user.webapp_owner_info.mall_data['postage_configs']#webapp_cache.get_webapp_postage_configs(webapp_owner_id)
-		# if product.type != PRODUCT_INTEGRAL_TYPE:
-		# 	postage_config = filter(lambda c: c.id == product.postage_id, postage_configs)
-		# if product.type == PRODUCT_INTEGRAL_TYPE or len(postage_config) == 0:
-		# 	postage_config = filter(lambda c: c.is_system_level_config, postage_configs)
-
-		# if len(postage_config) > 0:
-		# 	postage_config = postage_config[0]
-		# else:
-		# 	print 'jz----ERROR: 没有运费配置。'
-
-
-		# #记录运费计算因子
-		# product.postage_factor = postage_config.factor
-
-		# #获取每个model的运费
-		# product.postage_config = mall_util.get_postage_for_all_models(product, postage_config)
-
 		for product_model in product.models:
 			#获取折扣后的价格
 			if webapp_user:

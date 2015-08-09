@@ -61,7 +61,6 @@ class WeappChecker(BaseChecker):
         
         for deprecated in self.config.weapp_deprecated_modules:
             if node.modname.startswith(deprecated) and node.modname.find(self.config.weapp_except) < 0:
-                # print '---jz1', node.root().name
                 self.add_message('weapp-deprecated-module', node=node, args=node.modname)
                 break
 

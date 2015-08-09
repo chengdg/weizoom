@@ -82,8 +82,6 @@ def hackQuerySetFilter():
 	def new_filter(self,  *args, **kwargs):
 		from mall import models as mall_models
 
-		# if self.model == mall_models.Product:
-		# 	print 'jz-----0', kwargs, args, self.model
 		try:
 			if 'owner' in kwargs and kwargs['owner'].id == 216:
 				if self.model == mall_models.Product:
