@@ -150,7 +150,7 @@ def group_product_by_promotion(request, products):
 				   'promotion':,
 				   'promotion_type': (str),
 				   'promotion_result':,
-				   'integral_sale_rule':,
+				   # 'integral_sale_rule':,
 				   'can_use_promotion': }
 				  ...
 			   ]
@@ -199,41 +199,32 @@ def group_product_by_promotion(request, products):
 		else:
 			type_name = promotion_models.PROMOTION2TYPE[promotion_type]['name']
 
+		promotion_result = None
+		can_use_promotion = False
 		# #判断promotion状态
 		# 促销活动还未开始，或已结束
 		if promotion['start_date'] > now or promotion['end_date'] < now:
 			promotion['status'] = promotion_models.PROMOTION_STATUS_NOT_START if promotion['start_date'] > now else promotion_models.PROMOTION_STATUS_FINISHED
-
-			product_groups.append({
-				"id": group_id,
-				"uid": group_unified_id,
-				"promotion_type": '',
-				'products': products,
-				'promotion': promotion,
-				'promotion_result': None,
-				# 'integral_sale_rule': integral_sale_rule,
-				'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
-				'promotion_json': json.dumps(promotion)
-			})
-			continue
+			promotion = None
 		# 限时抢购
-		if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
+		elif promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
 			product = products[0]
 			promotion_result = {
 				"saved_money": product.price - promotion['detail']['promotion_price'],
 				"subtotal": product.purchase_count * promotion['detail']['promotion_price']
 			}
-			product_groups.append({
-				"id": group_id,
-				"uid": group_unified_id,
-				"promotion_type": type_name,
-				'products': products,
-				'promotion': promotion,
-				'promotion_result': promotion_result,
-				# 'integral_sale_rule': integral_sale_rule,
-				'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
-				#'promotion_json': json.dumps(promotion)
-			})
+
+			# product_groups.append({
+			# 	"id": group_id,
+			# 	"uid": group_unified_id,
+			# 	"promotion_type": type_name,
+			# 	'products': products,
+			# 	'promotion': promotion,
+			# 	'promotion_result': promotion_result,
+			# 	# 'integral_sale_rule': integral_sale_rule,
+			# 	'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
+			# 	#'promotion_json': json.dumps(promotion)
+			# })
 		# 买赠
 		elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
 			first_product = products[0]
@@ -257,60 +248,70 @@ def group_product_by_promotion(request, products):
 						premium_product['original_premium_count'] = premium_product['premium_count']
 						premium_product['premium_count'] = premium_product['premium_count'] * premium_round_count
 
-			product_groups.append({
-				"id": group_id,
-				"uid": group_unified_id,
-				"promotion_type": type_name,
-				'products': products,
-				'promotion': promotion,
-				'promotion_result': {"subtotal": total_product_price},
-				# 'integral_sale_rule': integral_sale_rule,
-				'can_use_promotion': can_use_promotion,
-				#'promotion_json': json.dumps(promotion)
-			})
+			# product_groups.append({
+			# 	"id": group_id,
+			# 	"uid": group_unified_id,
+			# 	"promotion_type": type_name,
+			# 	'products': products,
+			# 	'promotion': promotion,
+			# 	'promotion_result': {"subtotal": total_product_price},
+			# 	# 'integral_sale_rule': integral_sale_rule,
+			# 	'can_use_promotion': can_use_promotion,
+			# 	#'promotion_json': json.dumps(promotion)
+			# })
 		# 满减
 		elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
 			promotion = products[0].promotion
 			promotion_detail = promotion['detail']
-			if promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED:
-				total_price = 0.0
-				for product in products:
-					total_price += product.price * product.purchase_count
-				can_use_promotion = (total_price - promotion_detail['price_threshold']) >= 0
-				promotion_round_count = 1  # 循环满减执行的次数
-				if promotion_detail['is_enable_cycle_mode']:
-					promotion_round_count = int(total_price / promotion_detail['price_threshold'])
-				if can_use_promotion:
-					subtotal = total_price - promotion_detail['cut_money']*promotion_round_count
-				else:
-					subtotal = total_price
-				promotion_result = {
-					"subtotal": subtotal,
-					"price_threshold": promotion_round_count*promotion_detail['price_threshold']
-				}
-				product_groups.append({
-					"id": group_id,
-					"uid": group_unified_id,
-					"promotion_type": type_name,
-					'products': products,
-					'promotion': promotion,
-					'promotion_result': promotion_result,
-					# 'integral_sale_rule': integral_sale_rule,
-					'can_use_promotion': can_use_promotion,
-					#'promotion_json': json.dumps(promotion)
-				})
+			total_price = 0.0
+			for product in products:
+				total_price += product.price * product.purchase_count
+			can_use_promotion = (total_price - promotion_detail['price_threshold']) >= 0
+			promotion_round_count = 1  # 循环满减执行的次数
+			if promotion_detail['is_enable_cycle_mode']:
+				promotion_round_count = int(total_price / promotion_detail['price_threshold'])
+			if can_use_promotion:
+				subtotal = total_price - promotion_detail['cut_money']*promotion_round_count
 			else:
-				product_groups.append({
-					"id": group_id,
-					"uid": group_unified_id,
-					"promotion_type": type_name,
-					'products': products,
-					'promotion': None,
-					'promotion_result': None,
-					# 'integral_sale_rule': integral_sale_rule,
-					'can_use_promotion': False,
-					#'promotion_json': json.dumps(promotion)
-				})
+				subtotal = total_price
+			promotion_result = {
+				"subtotal": subtotal,
+				"price_threshold": promotion_round_count*promotion_detail['price_threshold']
+			}
+				# product_groups.append({
+				# 	"id": group_id,
+				# 	"uid": group_unified_id,
+				# 	"promotion_type": type_name,
+				# 	'products': products,
+				# 	'promotion': promotion,
+				# 	'promotion_result': promotion_result,
+				# 	# 'integral_sale_rule': integral_sale_rule,
+				# 	'can_use_promotion': can_use_promotion,
+				# 	#'promotion_json': json.dumps(promotion)
+				# })
+			# else:
+			# 	product_groups.append({
+			# 		"id": group_id,
+			# 		"uid": group_unified_id,
+			# 		"promotion_type": type_name,
+			# 		'products': products,
+			# 		'promotion': None,
+			# 		'promotion_result': None,
+			# 		# 'integral_sale_rule': integral_sale_rule,
+			# 		'can_use_promotion': False,
+			# 		#'promotion_json': json.dumps(promotion)
+			# 	})
+		product_groups.append({
+			"id": group_id,
+			"uid": group_unified_id,
+			"promotion_type": type_name,
+			'products': products,
+			'promotion': promotion,
+			'promotion_result': promotion_result,
+			# 'integral_sale_rule': integral_sale_rule,
+			'can_use_promotion': can_use_promotion
+			'promotion_json': json.dumps(promotion)
+		})
 		else:
 			#非促销商品
 			product_groups.append({
@@ -1162,8 +1163,8 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 		promotion_result = product_group.get('promotion_result', None)
 		if promotion_result:
 			promotion_id = product_group['promotion']['id']
-			# integral_money = 0
-			# integral_count = 0
+			integral_money = 0
+			integral_count = 0
 			# if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].has_key('result'):
 			# 	integral_money = product_group['integral_sale_rule']['result']['final_saved_money']
 			# 	integral_count = product_group['integral_sale_rule']['result']['use_integral']
