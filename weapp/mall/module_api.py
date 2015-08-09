@@ -169,7 +169,7 @@ def group_product_by_promotion(request, products):
 	group_id = 0
 	for product in products:
 		if product.is_member_product:
-			product.member_price = round(product.price * discount / 100, 2)
+			product.price = round(product.price * discount / 100, 2)
 		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
 		group_id += 1
 		default_products = {"group_id": group_id, "products": []}
