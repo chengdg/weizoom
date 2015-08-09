@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+"""TODO 逐步作废，移动到 .utils.py中
+"""
 import time
 # from datetime import timedelta, datetime, date
 # import urllib, urllib2
