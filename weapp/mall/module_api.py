@@ -49,7 +49,33 @@ random.seed(time.time())
 NO_PROMOTION_ID = -1
 
 
-def _get_promotion_name(product):
+# def _get_promotion_name(product):
+# 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
+
+# 	Args:
+# 	  product -
+
+# 	Return:
+# 	  False - 商品没有促销
+# 	  'int_str' - 商品有促销
+# 	"""
+
+# 	if not product.promotion:
+# 		return None
+# 	else:
+# 		promotion = product.promotion
+# 		now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+# 		# 已过期或未开始活动的商品，做为 普通商品
+# 		if promotion['start_date'] > now or promotion['end_date'] < now:
+# 			name = '%d_%s' % (promotion['id'], product.model['name'])
+# 		elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT or promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+# 			name = promotion['id']
+# 		else:
+# 			name = '%d_%s' % (promotion['id'], product.model['name'])
+# 	return name
+
+
+def __get_promotion_name(product):
 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
 
 	Args:
@@ -59,23 +85,6 @@ def _get_promotion_name(product):
 	  False - 商品没有促销
 	  'int_str' - 商品有促销
 	"""
-
-	if not product.promotion:
-		return None
-	else:
-		promotion = product.promotion
-		now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-		# 已过期或未开始活动的商品，做为 普通商品
-		if promotion['start_date'] > now or promotion['end_date'] < now:
-			name = '%d_%s' % (promotion['id'], product.model['name'])
-		elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT or promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-			name = promotion['id']
-		else:
-			name = '%d_%s' % (promotion['id'], product.model['name'])
-	return name
-
-
-def __get_promotion_name(product):
 	global NO_PROMOTION_ID
 	name = None
 	if not product.promotion:
@@ -150,7 +159,7 @@ def group_product_by_promotion(request, products):
 				   'promotion':,
 				   'promotion_type': (str),
 				   'promotion_result':,
-				   # 'integral_sale_rule':,
+				   'integral_sale_rule':,
 				   'can_use_promotion': }
 				  ...
 			   ]
@@ -166,7 +175,7 @@ def group_product_by_promotion(request, products):
 		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
 		group_id += 1
 		default_products = {"group_id": group_id, "products": []}
-		promotion_name = _get_promotion_name(product)
+		promotion_name = __get_promotion_name(product)
 		promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
 
 	now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
@@ -177,9 +186,8 @@ def group_product_by_promotion(request, products):
 		group_id = group_info['group_id']
 		group_unified_id = __get_group_name(products)
 		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
-
 		# 商品没有参加促销
-		if not promotion_id:
+		if promotion_id <= 0:
 			product_groups.append({
 				"id": group_id,
 				"uid": group_unified_id,
@@ -205,7 +213,7 @@ def group_product_by_promotion(request, products):
 		# 促销活动还未开始，或已结束
 		if promotion['start_date'] > now or promotion['end_date'] < now:
 			promotion['status'] = promotion_models.PROMOTION_STATUS_NOT_START if promotion['start_date'] > now else promotion_models.PROMOTION_STATUS_FINISHED
-			promotion = None
+			# promotion = None
 		# 限时抢购
 		elif promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
 			product = products[0]
@@ -222,7 +230,7 @@ def group_product_by_promotion(request, products):
 			# 	'promotion': promotion,
 			# 	'promotion_result': promotion_result,
 			# 	# 'integral_sale_rule': integral_sale_rule,
-			# 	'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
+			can_use_promotion = (promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED)
 			# 	#'promotion_json': json.dumps(promotion)
 			# })
 		# 买赠
@@ -247,7 +255,6 @@ def group_product_by_promotion(request, products):
 					for premium_product in promotion_detail['premium_products']:
 						premium_product['original_premium_count'] = premium_product['premium_count']
 						premium_product['premium_count'] = premium_product['premium_count'] * premium_round_count
-
 			# product_groups.append({
 			# 	"id": group_id,
 			# 	"uid": group_unified_id,
@@ -515,7 +522,6 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
 				product.promotion = None
-			print 'jz----2', product.promotion
 			#填充积分折扣信息
 			if integral_sale:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
@@ -1143,9 +1149,9 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			promotion_id = product_group['promotion']['id']
 			integral_money = 0
 			integral_count = 0
-			# if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].has_key('result'):
-			# 	integral_money = product_group['integral_sale_rule']['result']['final_saved_money']
-			# 	integral_count = product_group['integral_sale_rule']['result']['use_integral']
+			if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].has_key('result'):
+				integral_money = product_group['integral_sale_rule']['result']['final_saved_money']
+				integral_count = product_group['integral_sale_rule']['result']['use_integral']
 			OrderHasPromotion.objects.create(
 				order = order,
 				webapp_user_id = webapp_user.id,

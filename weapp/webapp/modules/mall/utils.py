@@ -455,7 +455,6 @@ def get_products(request):
         product.member_discount = get_product_member_discount(member_discount, product)
         product.purchase_count = product2count[product_model_id]
         product.used_promotion_id = int(product2promotion[product_model_id])
-        print 'jz----', product.used_promotion_id
         product.total_price = float(product.price)*product.purchase_count
 
         # 确定商品的运费策略

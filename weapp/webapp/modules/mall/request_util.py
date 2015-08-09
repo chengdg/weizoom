@@ -771,7 +771,7 @@ def __format_product_group_price_factor(product_groups):
 			'promotion': product_group['promotion'],
 			'promotion_type': product_group['promotion_type'],
 			'promotion_result': product_group['promotion_result'],
-			# 'integral_sale_rule': product_group['integral_sale_rule'],
+			'integral_sale_rule': product_group['integral_sale_rule'],
 			'can_use_promotion': product_group['can_use_promotion']
 		}
 		factors.append(factor)
