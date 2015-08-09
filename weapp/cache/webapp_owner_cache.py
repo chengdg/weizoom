@@ -216,6 +216,7 @@ def update_red_envelope_cache(instance, **kwargs):
             key = 'red_envelope_{wo:%s}' % instance[0].owner_id
         elif isinstance(instance[0], promotion_models.CouponRule) and (
             instance[0].remained_count <= 0 or not instance[0].is_active):
+            print 'jz-----',instance[0]
             # 更新优惠券规则库存数量小于等于0时，清空红包分享缓存
             key = 'red_envelope_{wo:%s}' % instance[0].owner_id
     if key:
