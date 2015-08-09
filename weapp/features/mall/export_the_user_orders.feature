@@ -60,12 +60,13 @@ Background:
 			"integral": "500"
 		}]
 		"""
-	And jobs添加优惠券
+	And jobs添加优惠券规则
 		"""
 		[{
-			"coupon_code": "999",
 			"name": "优惠券",
-			"coupon_price": 100
+			"money": 100,
+			"count": 1,
+			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
 	And jobs已有的订单
@@ -192,7 +193,7 @@ Background:
 			"methods_of_payment":"优惠抵扣",
 			"sources":"商户",
 			"coupon":{
-				"coupon_code":"999",
+				"coupon_code":"coupon1_id_1",
 				"name":"优惠券",
 				"price":100.00
 			},

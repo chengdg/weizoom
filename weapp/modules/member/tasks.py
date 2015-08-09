@@ -64,12 +64,11 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 		return None
 
 	current_integral = member.integral + integral_increase_count
-	if integral_increase_count > 0:
-		Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count, experience=F('experience')+integral_increase_count)
-		auto_update_grade(member=member)
-	#else:
-		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)
 	try:
+		if integral_increase_count > 0:
+			# 处理经验值
+			member.experience= F('experience') + integral_increase_count
+			auto_update_grade(member=member)
 		member.integral = F('integral') + integral_increase_count
 		member.save()
 		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)

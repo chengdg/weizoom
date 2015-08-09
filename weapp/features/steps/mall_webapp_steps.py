@@ -150,6 +150,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	最近修改: yanzhao
 	e.g.:
 		{
+			"order_no": "" # 订单号
 			"ship_area": "",
 			"ship_name": "bill",
 			"ship_address": "",
@@ -159,7 +160,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			"integral_money": "10",
 			"weizoom_card": [{"card_name":"", "card_pass": ""}],
 			"coupon": "coupon_1",
-			"date": ""
+			"date": "" # 下单时间
 			"products": [
 				{
 					"count": "",
@@ -171,10 +172,10 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		}
 	"""
 	url = '/webapp/api/project_api/call/'
-	if hasattr(context, 'caller_step_purchase_info'):
-		args = context.caller_step_purchase_info
-	else:
-		args = json.loads(context.text)
+	# if hasattr(context, 'caller_step_purchase_info'):
+	# 	args = context.caller_step_purchase_info
+	# else:
+	args = json.loads(context.text)
 
 	def __get_current_promotion_id_for_product(product):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
@@ -183,10 +184,10 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			return promotions[0].id
 		else:
 			return 0
-	integral_each_yuan = 10
+
 	settings = IntegralStrategySttings.objects.filter(webapp_id=context.webapp_id)
-	if settings.count() > 0:
-		integral_each_yuan = settings[0].integral_each_yuan
+	integral_each_yuan = settings[0].integral_each_yuan
+
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	group2integralinfo = dict()
 
@@ -348,17 +349,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
 
-	#填充积分信息
-	# integral = args.get('integral', None)
-	# if integral:
-	# 	data['is_use_integral'] = 'true'
-	# 	data['integral'] = integral
-
-	# use_integral = args.get('use_integral', None)
-	# if use_integral == u"是":
-	# 	data['is_use_integral'] = 'true'
-	# 	data['integral'] = get_use_integral(webapp_user_name, context.webapp_id, data)
-
 	response = context.client.post(url, data)
 	context.response = response
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
@@ -367,9 +357,9 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response_json = json.loads(context.response.content)
 	# print 'response json----------', response_json
 	# if response_json['data'].get('msg', None):
-	#	print 'response error message ---------------', response_json['data']['msg']
+	# 	print 'response error message ---------------', response_json['data']['msg']
 	# if response_json['data'].get('detail', None):
-	#	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
+	# 	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
 
 	# raise '----------------debug test----------------------'
 
@@ -382,6 +372,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	if context.created_order_id != -1:
 		if 'date' in args:
 			Order.objects.filter(order_id=context.created_order_id).update(created_at=__get_date(args['date']))
+		if 'order_no' in args:
+			Order.objects.filter(order_id=context.created_order_id).update(order_id=args['order_no'])
 
 	context.product_ids = product_ids
 	context.product_counts = product_counts
