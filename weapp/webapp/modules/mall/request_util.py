@@ -197,7 +197,12 @@ def pay_order(request):
 		else:
 			error_msg = u'pay_order:异常, cause:\n{}'.format(unicode_full_stack())
 			watchdog_error(error_msg, db_name=settings.WATCHDOG_DB)
-		 	raise Http404(u'订单不存在')
+			raise Http404(u'订单不存在')
+	red_envelope = request.webapp_owner_info.red_envelope
+	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+		order.red_envelope = red_envelope.id
+		if promotion_models.RedEnvelopeToOrder.objects.filter(order_id=order.id).count():
+			order.red_envelope_created = True
 
 	# if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
 	# 	order.is_show_field = True
@@ -377,23 +382,15 @@ def get_pay_result(request):
 	#是否提示用户领红包
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
-	red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
-	print 'jz-----', request.webapp_owner_info.red_envelope
-	if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
-		coupon_rule = promotion_models.CouponRule.objects.get(id=red_envelope_rule[0].coupon_rule_id)
-		if coupon_rule.is_active and coupon_rule.end_date > datetime.now() and coupon_rule.remained_count > 0:
-			if order.product_price + order.postage >= red_envelope_rule[0].limit_order_money:
-				is_show_red_envelope = True
-				red_envelope_rule_id = red_envelope_rule[0].id
-
+	# red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
+	red_envelope = request.webapp_owner_info.red_envelope
+	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+		# 是可以显示分享红包按钮
+		is_show_red_envelope = True
+		red_envelope_rule_id = red_envelope.id
 
 	#获取订单包含商品
-	order_has_products = []
-	try:
-		order_has_products = OrderHasProduct.objects.filter(order=order)
-	except:
-		error_msg = u'weixin pay, stage:[get_pay_result], result:获取订单包含商品异常, exception:\n{}'.format(unicode_full_stack())
-		watchdog_error(error_msg)
+	order_has_products = OrderHasProduct.objects.filter(order=order)
 
 	# 更新order信息
 	#order = Order.objects.get(id=order.id)
@@ -446,11 +443,16 @@ def get_pay_result_success(request):
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
 	coupon_rule = None
-	red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
-	if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
-		if order.product_price + order.postage >= red_envelope_rule[0].limit_order_money:
-			is_show_red_envelope = True
-			red_envelope_rule_id = red_envelope_rule[0].id
+	# red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
+	# if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
+	# 	if order.product_price + order.postage >= red_envelope_rule[0].limit_order_money:
+	# 		is_show_red_envelope = True
+	# 		red_envelope_rule_id = red_envelope_rule[0].id
+	red_envelope = request.webapp_owner_info.red_envelope
+	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+		# 是可以显示分享红包按钮
+		is_show_red_envelope = True
+		red_envelope_rule_id = red_envelope.id
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,

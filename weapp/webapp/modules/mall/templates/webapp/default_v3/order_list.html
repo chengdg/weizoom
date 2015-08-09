@@ -49,7 +49,7 @@
                                             <span class="c3">退款成功</span>
                                         {% endifequal %}
                                     </div>
-                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
                                 </div>
                                 {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
@@ -149,7 +149,7 @@
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">待支付</span>
                                     </div>
-                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
                                 </div>
                                  {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
@@ -234,7 +234,7 @@
                                 <div class="xt-status fl">
                                     <span class="xui-text-red">待发货</span>
                                 </div>
-                                <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                                <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
                             </div>
                              {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
@@ -314,7 +314,7 @@
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">已发货</span>
                                     </div>
-                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
                                 </div>
                                  {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">

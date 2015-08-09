@@ -50,29 +50,29 @@ NO_PROMOTION_ID = -1
 
 
 def _get_promotion_name(product):
-    """判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
+	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
 
-    Args:
-      product -
+	Args:
+	  product -
 
-    Return:
-      False - 商品没有促销
-      'int_str' - 商品有促销
-    """
+	Return:
+	  False - 商品没有促销
+	  'int_str' - 商品有促销
+	"""
 
-    if not product.promotion:
-        return None
-    else:
-        promotion = product.promotion
-        now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-        # 已过期或未开始活动的商品，做为 普通商品
-        if promotion['start_date'] > now or promotion['end_date'] < now:
-            name = '%d_%s' % (promotion['id'], product.model['name'])
-        elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT or promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-            name = promotion['id']
-        else:
-            name = '%d_%s' % (promotion['id'], product.model['name'])
-    return name
+	if not product.promotion:
+		return None
+	else:
+		promotion = product.promotion
+		now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+		# 已过期或未开始活动的商品，做为 普通商品
+		if promotion['start_date'] > now or promotion['end_date'] < now:
+			name = '%d_%s' % (promotion['id'], product.model['name'])
+		elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT or promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+			name = promotion['id']
+		else:
+			name = '%d_%s' % (promotion['id'], product.model['name'])
+	return name
 
 
 def __get_promotion_name(product):
@@ -138,192 +138,192 @@ def __get_group_name(group_products):
 
 
 def group_product_by_promotion(request, products):
-    """根据商品促销类型对商品进行分类
-    Args:
-      products -
+	"""根据商品促销类型对商品进行分类
+	Args:
+	  products -
 
-    Return:
-      list - [
-                  {'id': ,
-                   'uid': ,
-                   'products':,
-                   'promotion':,
-                   'promotion_type': (str),
-                   'promotion_result':,
-                   'integral_sale_rule':,
-                   'can_use_promotion': }
-                  ...
-               ]
-    """
-    member_grade_id = request.member.grade_id if request and request.member else -1
-    group_id = 0
-    #按照促销对product进行聚类
-    global NO_PROMOTION_ID
-    NO_PROMOTION_ID = -1  # 负数的promotion id表示商品没有promotion
-    product_groups = []
-    promotion2products = {}
-    for product in products:
-        #对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
-        group_id += 1
-        default_products = {"group_id": group_id, "products": []}
-        promotion_name = _get_promotion_name(product)
-        promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
+	Return:
+	  list - [
+				  {'id': ,
+				   'uid': ,
+				   'products':,
+				   'promotion':,
+				   'promotion_type': (str),
+				   'promotion_result':,
+				   'integral_sale_rule':,
+				   'can_use_promotion': }
+				  ...
+			   ]
+	"""
+	member_grade_id = request.member.grade_id if request and request.member else -1
+	group_id = 0
+	#按照促销对product进行聚类
+	global NO_PROMOTION_ID
+	NO_PROMOTION_ID = -1  # 负数的promotion id表示商品没有promotion
+	product_groups = []
+	promotion2products = {}
+	for product in products:
+		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
+		group_id += 1
+		default_products = {"group_id": group_id, "products": []}
+		promotion_name = _get_promotion_name(product)
+		promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
 
-    now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    items = promotion2products.items()
-    items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))
-    for promotion_id, group_info in items:
-        products = group_info['products']
-        group_id = group_info['group_id']
-        group_unified_id = __get_group_name(products)
-        integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
+	now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+	items = promotion2products.items()
+	items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))
+	for promotion_id, group_info in items:
+		products = group_info['products']
+		group_id = group_info['group_id']
+		group_unified_id = __get_group_name(products)
+		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
 
-        # 商品没有参加促销
-        if not promotion_id:
-            product_groups.append({
-                "id": group_id,
-                "uid": group_unified_id,
-                'products': products,
-                'promotion': {},
-                "promotion_type": '',
-                'promotion_result': '',
-                'integral_sale_rule': integral_sale_rule,
-                'can_use_promotion': False
-            })
-            continue
+		# 商品没有参加促销
+		if not promotion_id:
+			product_groups.append({
+				"id": group_id,
+				"uid": group_unified_id,
+				'products': products,
+				'promotion': {},
+				"promotion_type": '',
+				'promotion_result': '',
+				'integral_sale_rule': integral_sale_rule,
+				'can_use_promotion': False
+			})
+			continue
 
-        promotion = products[0].promotion
-        promotion_type = promotion.get('type', 0)
-        if promotion_type == 0:
-            type_name = 'none'
-        else:
-            type_name = promotion_models.PROMOTION2TYPE[promotion_type]['name']
+		promotion = products[0].promotion
+		promotion_type = promotion.get('type', 0)
+		if promotion_type == 0:
+			type_name = 'none'
+		else:
+			type_name = promotion_models.PROMOTION2TYPE[promotion_type]['name']
 
-        # #判断promotion状态
-        # 促销活动还未开始，或已结束
-        if promotion['start_date'] > now or promotion['end_date'] < now:
-            promotion['status'] = promotion_models.PROMOTION_STATUS_NOT_START if promotion['start_date'] > now else promotion_models.PROMOTION_STATUS_FINISHED
+		# #判断promotion状态
+		# 促销活动还未开始，或已结束
+		if promotion['start_date'] > now or promotion['end_date'] < now:
+			promotion['status'] = promotion_models.PROMOTION_STATUS_NOT_START if promotion['start_date'] > now else promotion_models.PROMOTION_STATUS_FINISHED
 
-            product_groups.append({
-                "id": group_id,
-                "uid": group_unified_id,
-                "promotion_type": '',
-                'products': products,
-                'promotion': promotion,
-                'promotion_result': None,
-                'integral_sale_rule': integral_sale_rule,
-                'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
-                'promotion_json': json.dumps(promotion)
-            })
-            continue
-        # 限时抢购
-        if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-            product = products[0]
-            promotion_result = {
-                "saved_money": product.price - promotion['detail']['promotion_price'],
-                "subtotal": product.purchase_count * promotion['detail']['promotion_price']
-            }
-            product_groups.append({
-                "id": group_id,
-                "uid": group_unified_id,
-                "promotion_type": type_name,
-                'products': products,
-                'promotion': promotion,
-                'promotion_result': promotion_result,
-                'integral_sale_rule': integral_sale_rule,
-                'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
-                #'promotion_json': json.dumps(promotion)
-            })
-        # 买赠
-        elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-            first_product = products[0]
-            promotion = first_product.promotion
-            promotion_detail = promotion['detail']
-            can_use_promotion = (promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED)
+			product_groups.append({
+				"id": group_id,
+				"uid": group_unified_id,
+				"promotion_type": '',
+				'products': products,
+				'promotion': promotion,
+				'promotion_result': None,
+				'integral_sale_rule': integral_sale_rule,
+				'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
+				'promotion_json': json.dumps(promotion)
+			})
+			continue
+		# 限时抢购
+		if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
+			product = products[0]
+			promotion_result = {
+				"saved_money": product.price - promotion['detail']['promotion_price'],
+				"subtotal": product.purchase_count * promotion['detail']['promotion_price']
+			}
+			product_groups.append({
+				"id": group_id,
+				"uid": group_unified_id,
+				"promotion_type": type_name,
+				'products': products,
+				'promotion': promotion,
+				'promotion_result': promotion_result,
+				'integral_sale_rule': integral_sale_rule,
+				'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
+				#'promotion_json': json.dumps(promotion)
+			})
+		# 买赠
+		elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+			first_product = products[0]
+			promotion = first_product.promotion
+			promotion_detail = promotion['detail']
+			can_use_promotion = (promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED)
 
-            total_purchase_count = 0
-            total_product_price = 0.0
-            for product in products:
-                total_purchase_count += product.purchase_count
-                total_product_price += product.price * product.purchase_count
+			total_purchase_count = 0
+			total_product_price = 0.0
+			for product in products:
+				total_purchase_count += product.purchase_count
+				total_product_price += product.price * product.purchase_count
 
-            if total_purchase_count < promotion_detail['count']:
-                can_use_promotion = False
-            else:
-                #如果满足循环满赠，则调整赠品数量
-                if promotion_detail['is_enable_cycle_mode']:
-                    premium_round_count = total_purchase_count / promotion['detail']['count']
-                    for premium_product in promotion_detail['premium_products']:
-                        premium_product['original_premium_count'] = premium_product['premium_count']
-                        premium_product['premium_count'] = premium_product['premium_count'] * premium_round_count
+			if total_purchase_count < promotion_detail['count']:
+				can_use_promotion = False
+			else:
+				#如果满足循环满赠，则调整赠品数量
+				if promotion_detail['is_enable_cycle_mode']:
+					premium_round_count = total_purchase_count / promotion['detail']['count']
+					for premium_product in promotion_detail['premium_products']:
+						premium_product['original_premium_count'] = premium_product['premium_count']
+						premium_product['premium_count'] = premium_product['premium_count'] * premium_round_count
 
-            product_groups.append({
-                "id": group_id,
-                "uid": group_unified_id,
-                "promotion_type": type_name,
-                'products': products,
-                'promotion': promotion,
-                'promotion_result': {"subtotal": total_product_price},
-                'integral_sale_rule': integral_sale_rule,
-                'can_use_promotion': can_use_promotion,
-                #'promotion_json': json.dumps(promotion)
-            })
-        # 满减
-        elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
-            promotion = products[0].promotion
-            promotion_detail = promotion['detail']
-            if promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED:
-                total_price = 0.0
-                for product in products:
-                    total_price += product.price * product.purchase_count
-                can_use_promotion = (total_price - promotion_detail['price_threshold']) >= 0
-                promotion_round_count = 1  # 循环满减执行的次数
-                if promotion_detail['is_enable_cycle_mode']:
-                    promotion_round_count = int(total_price / promotion_detail['price_threshold'])
-                if can_use_promotion:
-                    subtotal = total_price - promotion_detail['cut_money']*promotion_round_count
-                else:
-                    subtotal = total_price
-                promotion_result = {
-                    "subtotal": subtotal,
-                    "price_threshold": promotion_round_count*promotion_detail['price_threshold']
-                }
-                product_groups.append({
-                    "id": group_id,
-                    "uid": group_unified_id,
-                    "promotion_type": type_name,
-                    'products': products,
-                    'promotion': promotion,
-                    'promotion_result': promotion_result,
-                    'integral_sale_rule': integral_sale_rule,
-                    'can_use_promotion': can_use_promotion,
-                    #'promotion_json': json.dumps(promotion)
-                })
-            else:
-                product_groups.append({
-                    "id": group_id,
-                    "uid": group_unified_id,
-                    "promotion_type": type_name,
-                    'products': products,
-                    'promotion': None,
-                    'promotion_result': None,
-                    'integral_sale_rule': integral_sale_rule,
-                    'can_use_promotion': False,
-                    #'promotion_json': json.dumps(promotion)
-                })
-        else:
-            #非促销商品
-            product_groups.append({
-                "id": group_id,
-                "uid": group_unified_id,
-                "promotion_type": type_name,
-                'products': products,
-                'promotion': None,
-                'promotion_result': None,
-                'integral_sale_rule': integral_sale_rule,
-                'can_use_promotion': False
-            })
-    return product_groups
+			product_groups.append({
+				"id": group_id,
+				"uid": group_unified_id,
+				"promotion_type": type_name,
+				'products': products,
+				'promotion': promotion,
+				'promotion_result': {"subtotal": total_product_price},
+				'integral_sale_rule': integral_sale_rule,
+				'can_use_promotion': can_use_promotion,
+				#'promotion_json': json.dumps(promotion)
+			})
+		# 满减
+		elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
+			promotion = products[0].promotion
+			promotion_detail = promotion['detail']
+			if promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED:
+				total_price = 0.0
+				for product in products:
+					total_price += product.price * product.purchase_count
+				can_use_promotion = (total_price - promotion_detail['price_threshold']) >= 0
+				promotion_round_count = 1  # 循环满减执行的次数
+				if promotion_detail['is_enable_cycle_mode']:
+					promotion_round_count = int(total_price / promotion_detail['price_threshold'])
+				if can_use_promotion:
+					subtotal = total_price - promotion_detail['cut_money']*promotion_round_count
+				else:
+					subtotal = total_price
+				promotion_result = {
+					"subtotal": subtotal,
+					"price_threshold": promotion_round_count*promotion_detail['price_threshold']
+				}
+				product_groups.append({
+					"id": group_id,
+					"uid": group_unified_id,
+					"promotion_type": type_name,
+					'products': products,
+					'promotion': promotion,
+					'promotion_result': promotion_result,
+					'integral_sale_rule': integral_sale_rule,
+					'can_use_promotion': can_use_promotion,
+					#'promotion_json': json.dumps(promotion)
+				})
+			else:
+				product_groups.append({
+					"id": group_id,
+					"uid": group_unified_id,
+					"promotion_type": type_name,
+					'products': products,
+					'promotion': None,
+					'promotion_result': None,
+					'integral_sale_rule': integral_sale_rule,
+					'can_use_promotion': False,
+					#'promotion_json': json.dumps(promotion)
+				})
+		else:
+			#非促销商品
+			product_groups.append({
+				"id": group_id,
+				"uid": group_unified_id,
+				"promotion_type": type_name,
+				'products': products,
+				'promotion': None,
+				'promotion_result': None,
+				'integral_sale_rule': integral_sale_rule,
+				'can_use_promotion': False
+			})
+	return product_groups
 
 
 def get_shopping_cart_product_nums(webapp_user):
@@ -1168,7 +1168,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	# 	if product.owner_id != webapp_owner_id:
 	# 		order.order_source = ORDER_SOURCE_WEISHOP
 	# 		WeizoomMallHasOtherMallProductOrder.create(webapp_id, product, order)
-    #
+	#
 	# if order.order_source == ORDER_SOURCE_WEISHOP:
 	# 	order.save()
 	# 注意强制提交时这里可能会修改赠品数量，所以要在建立促销结果之前运行
@@ -1292,8 +1292,7 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 
 
 def get_orders(request):
-	"""
-	用户中心 获取webapp user的订单列表
+	"""用户中心 获取webapp_user的订单列表
 	"""
 
 	orders = Order.objects.filter(webapp_user_id=request.webapp_user.id).order_by('-id')
@@ -1310,6 +1309,8 @@ def get_orders(request):
 			old_count = order2count[order_id]
 		order2count[order_id] = old_count + order_product_relation.number
 
+	red_envelope = request.webapp_owner_info.red_envelope
+	red_envelope_orderIds = []
 	for order in orders:
 		orderId2order[order.id] = order
 		order.product_count = order2count.get(order.id, 0)
@@ -1318,6 +1319,10 @@ def get_orders(request):
 			if not hasattr(order, 'session_data'):
 				order.session_data = dict()
 			order.session_data['has_comfire_button'] = '1'
+		if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+			# 订单满足红包条件
+			order.red_envelope = True
+			red_envelope_orderIds.append(order.id)
 
 	order_product_has_review = {}
 	user_product_review = mall_models.ProductReview.objects.filter(
@@ -1347,12 +1352,17 @@ def get_orders(request):
 		product.properties = product.fill_specific_model(orderHasProduct.product_model_name, cache_productId2cache_products[product.id].models)
 		orderId2order[orderHasProduct.order_id].products.append(product)
 
+	exist_red_envelope_orderIds = [relation.order_id for relation in 
+		promotion_models.RedEnvelopeToOrder.objects.filter(order_id__in=red_envelope_orderIds)]
 	for order in orders:
 		is_finished = True
 		for productId in orderId2productIds.get(order.id, []):
 			key = "%s_%s" % (order.id, productId)
 			is_finished = is_finished & order_product_has_review.get(key, False)
 		order.review_is_finished = is_finished
+		if order.red_envelope and order.id in exist_red_envelope_orderIds:
+			# 订单已经访问过领取红包页面，不显示红包标识
+			order.red_envelope = False
 
 	return orders
 
@@ -2420,42 +2430,42 @@ def get_order_status_text(status):
 # 	# #处理商品名称筛选条件
 # 	# if product_name:
 # 	# 	filter_orders = []
-#     #
+#	 #
 # 	# 	order_ids = [order.id for order in orders]
 # 	# 	orderHasProducts = OrderHasProduct.objects.filter(order_id__in=order_ids)
-#     #
+#	 #
 # 	# 	orderId2orderHasProducts = dict()
 # 	# 	for orderHasProduct in orderHasProducts:
 # 	# 		if not orderId2orderHasProducts.get(orderHasProduct.order_id):
 # 	# 			orderId2orderHasProducts[orderHasProduct.order_id] = []
 # 	# 		orderId2orderHasProducts.get(orderHasProduct.order_id).append(orderHasProduct)
-#     #
+#	 #
 # 	# 	order_promotion_relations = list(OrderHasPromotion.objects.filter(order_id__in=order_ids))
 # 	# 	id2promotion = dict([(relation.promotion_id, relation) for relation in order_promotion_relations])
-#     #
+#	 #
 # 	# 	product_ids = [orderHasProduct.product_id for orderHasProduct in orderHasProducts]
 # 	# 	products = Product.objects.filter(id__in=product_ids)
 # 	# 	id2product = dict([(product.id, product) for product in products])
-#     #
+#	 #
 # 	# 	for order in orders:
 # 	# 		for orderHasProduct in orderId2orderHasProducts[order.id]:
-#     #
+#	 #
 # 	# 			if product_name in id2product.get(orderHasProduct.product_id, None).name:
 # 	# 				filter_orders.append(order)
 # 	# 				break
-#     #
+#	 #
 # 	# 			promotion_relation = id2promotion.get(orderHasProduct.promotion_id, None)
 # 	# 			if promotion_relation:
-#     #
+#	 #
 # 	# 				promotion_result = promotion_relation.promotion_result
-#     #
+#	 #
 # 	# 				if promotion_result.has_key('premium_products'):
 # 	# 					for premium_product in promotion_relation.promotion_result['premium_products']:
-#     #
+#	 #
 # 	# 						if product_name in premium_product['name']:
 # 	# 							filter_orders.append(order)
 # 	# 							break
-#     #
+#	 #
 # 	# 	orders = filter_orders
 #
 #
