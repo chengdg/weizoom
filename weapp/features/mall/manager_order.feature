@@ -135,7 +135,7 @@ Background:
 			"status": "进行中"
 		}]
 		"""
-@mall @mall2 @mall.order @zy_mo1 @eugene
+@mall @mall2 @mall.order @zy_mo1 @eugene @jz
 Scenario: 购买商品后，可以获得订单列表
 	bill购买了商品1(只下单, 未支付)和商品2(已支付)
 
@@ -187,7 +187,7 @@ Scenario: 购买商品后，可以获得订单列表
 		}]
 		"""
 
-@mall @mall2 @mall.order @mall_a @zy_mo2
+@mall @mall2 @mall.order @mall_a @zy_mo2 @jz
 Scenario: 购买商品后，管理员通过后台管理系统可以查看订单详情
 	bill购买商品后
 	1. 能看到订单详情

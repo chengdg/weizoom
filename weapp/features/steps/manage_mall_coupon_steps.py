@@ -128,7 +128,7 @@ def step_impl(context, user_name):
     day_after_tomorrow = tomorrow + timedelta(1)
     yesterday = today - timedelta(1)
     day_before_yesterday = yesterday - timedelta(1)
-    t_format = "%Y-%m-%d %H:%M"
+    t_format = "%Y-%m-%d %H:%M:%S"
     today = today.strftime(t_format).decode('utf-8')
     tomorrow = tomorrow.strftime(t_format).decode('utf-8')
     day_after_tomorrow = day_after_tomorrow.strftime(t_format).decode('utf-8')

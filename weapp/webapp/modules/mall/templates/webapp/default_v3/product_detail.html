@@ -462,6 +462,9 @@ var postageConfigName = "{{product.postage_config.name}}";
 // 限购数量
 var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
 // 是否会员商品
+var is_member_product = '{{product.is_member_product}}'
+// 促销信息
+var promotion = W.loadJSON('promotion');
 
 $(document).ready(function() {
     //检查此商品是否被收藏和显示购物车的数量
@@ -483,6 +486,9 @@ $(document).ready(function() {
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
+            if(view.is_member_product && data.discount){
+                view.discount = data.discount;
+            }
         },
         error: function(data) {
 
@@ -491,8 +497,6 @@ $(document).ready(function() {
     // setTimeout(function(){
     //     $('.xui-applyBox').removeClass('hidden');
     // },200);
-    //绑定初始化数据
-    var promotion = W.loadJSON('promotion');
     view = new W.page.BuyProductPage({
         el: '.xui-page',
         postageFactor: postageFactor,
@@ -504,7 +508,8 @@ $(document).ready(function() {
         priceInfo: priceInfo,
         postageConfigName: postageConfigName,
         countPerPurchase: countPerPurchase,
-        promotion: promotion
+        promotion: promotion,
+        is_member_product: is_member_product
     });
 
     if(models.length > 1){

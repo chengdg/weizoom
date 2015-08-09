@@ -34,6 +34,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.isSideSlideOpen = false;
         this.maxCount = -1;
         this.promotion = options.promotion || null;
+        this.is_member_product = options.is_member_product == 'True'
 
         if (this.promotion) {//判断促销是否为限时抢购
             this.promotion.isFlashSalePromotion = (this.promotion.type === 1)
@@ -131,9 +132,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         counter.setMaxCount(maxCount);
         // 用于处理显示限时抢购信息
         if($('.xa-promotionNormal').data('type')==1){
-            var minPrice = this.priceInfo.display_price;
-            var promotionPrice = this.promotion.detail.cut_price;
-            var gapPrice = promotionPrice.toFixed(2);
+            // var minPrice = this.priceInfo.display_price;
+            var promotionPrice = this.promotion.detail.cut_price.toFixed(2);
+            // var gapPrice = promotionPrice.toFixed(2);
             $('.xa-promotionNormal-info').text('已优惠' + gapPrice + '元')
         }
         // 用于处理显示积分抵扣信息 提出单独的方法

@@ -138,7 +138,7 @@ def __get_group_name(group_products):
 	items = []
 	for product in group_products:
 		items.append('%s_%s' % (product.id, product.model['name']))
-	items.sort()
+	# items.sort()
 	return '-'.join(items)
 
 
@@ -181,6 +181,7 @@ def group_product_by_promotion(request, products):
 		products = group_info['products']
 		group_id = group_info['group_id']
 		group_unified_id = __get_group_name(products)
+		print 'jz----9', group_unified_id
 		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
 		# 商品没有参加促销
 		if promotion_id <= 0:
