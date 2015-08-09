@@ -41,8 +41,8 @@ def step_impl(context, user_name):
 
     expected = json.loads(context.text)
     for item in expected:
-        item["start_date"] = "{} 00:00".format(bdd_util.get_date_str(item["start_date"]))
-        item["end_date"] = "{} 00:00".format(bdd_util.get_date_str(item["end_date"]))
+        item["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["start_date"]))
+        item["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["end_date"]))
     bdd_util.assert_list(expected, actual)
 
 

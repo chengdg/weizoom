@@ -184,7 +184,7 @@ class Promotion(models.Model):
 		for promotion in promotions:
 			promotion.end_date = promotion.end_date if isinstance(promotion.end_date, str) else promotion.end_date.strftime('%Y-%m-%d %H:%M:%S')
 			promotion.created_at = promotion.created_at if isinstance(promotion.created_at, str) else promotion.created_at.strftime('%Y-%m-%d %H:%M:%S')
-			promotion.start_date = promotion.start_date if isinstance(promotion.start_date, str) else promotion.start_date.strftime('%Y-%m-%d %H:%M')
+			promotion.start_date = promotion.start_date if isinstance(promotion.start_date, str) else promotion.start_date.strftime('%Y-%m-%d %H:%M:%S')
 			type2promotions.setdefault(promotion.type, []).append(promotion)
 
 		#对每种类型的promotion，获取detail

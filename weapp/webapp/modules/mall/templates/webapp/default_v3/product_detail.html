@@ -461,6 +461,7 @@ var priceInfo = W.loadJSON('priceInfo');
 var postageConfigName = "{{product.postage_config.name}}";
 // 限购数量
 var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
+// 是否会员商品
 
 $(document).ready(function() {
     //检查此商品是否被收藏和显示购物车的数量

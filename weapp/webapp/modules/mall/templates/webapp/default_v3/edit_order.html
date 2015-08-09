@@ -623,7 +623,6 @@ if (/ipad|iphone|mac/i.test(navigator.userAgent)){
 
 var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %};
 
-var test_view;
 $(document).ready(function() {
     //绑定初始化数据
     _.delay(function() {
@@ -638,7 +637,6 @@ $(document).ready(function() {
             productGroups: productGroups,
             isOrderFromShoppingCart: isOrderFromShoppingCart
         });
-        test_view = view;
     }, 100);
 });
 

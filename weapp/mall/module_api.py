@@ -82,14 +82,11 @@ def __get_promotion_name(product):
 	  product -
 
 	Return:
-	  False - 商品没有促销
+	  None - 商品没有促销
 	  'int_str' - 商品有促销
 	"""
-	global NO_PROMOTION_ID
 	name = None
-	if not product.promotion:
-		name = NO_PROMOTION_ID
-	else:
+	if product.promotion:
 		promotion = product.promotion
 		now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 		# 已过期或未开始活动的商品，做为 普通商品
@@ -99,7 +96,6 @@ def __get_promotion_name(product):
 			name = promotion['id']
 		else:
 			name = '%d_%s' % (promotion['id'], product.model['name'])
-	NO_PROMOTION_ID -= 1
 
 	return name
 
@@ -2919,25 +2915,33 @@ def get_member_product_info(request):
 	获取购物车的数量和检查商品是否已被收藏
 	'''
 	response = create_response(200)
-	try:
-		shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
-		webapp_owner_id = request.webapp_owner_id
-		member_id = request.member.id
-		product_id = request.GET.get('product_id',"")
-		if product_id:
-			collect = MemberProductWishlist.objects.filter(
-				owner_id=webapp_owner_id,
-				member_id=member_id,
-				product_id=product_id,
-				is_collect=True
-			)
-			if collect.count() > 0:
-				response.data.is_collect = 'true'
-			else:
-				response.data.is_collect = 'false'
-		response.data.count = shopping_cart_count
-	except:
-		return create_response(500).get_response()
+	# try:
+	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
+	webapp_owner_id = request.webapp_owner_id
+	member_id = request.member.id
+	product_id = request.GET.get('product_id',"")
+	if product_id:
+		collect = MemberProductWishlist.objects.filter(
+			owner_id=webapp_owner_id,
+			member_id=member_id,
+			product_id=product_id,
+			is_collect=True
+		)
+		if collect.count() > 0:
+			response.data.is_collect = 'true'
+		else:
+			response.data.is_collect = 'false'
+	response.data.count = shopping_cart_count
+
+	member_grade_id = request.member.grade_id
+	member_grade = request.webapp_owner_info.member2grade.get(member_grade_id, '')
+	if member_grade:
+		response.data.discount = member_grade.shop_discount
+	else:
+		response.data.discount = 100
+
+	# except:
+	# 	return create_response(500).get_response()
 
 	return response.get_response()
 
