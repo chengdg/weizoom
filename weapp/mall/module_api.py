@@ -525,6 +525,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
 				integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
 				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
+				product.promotion = integral_sale.to_dict('detail', 'type_name')
 			else:
 				product.integral_sale = None
 

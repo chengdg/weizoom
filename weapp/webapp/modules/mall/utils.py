@@ -68,12 +68,12 @@ def get_processed_products(request, products):
 
     """
     # 得到商品的会员价
-    discount = get_vip_discount(request)
-    member_grade_id = get_user_member_grade_id(request)
-    new_products = []
-    for p in products:
-        new_products.append(get_display_price(discount, member_grade_id, p))
-    return new_products
+    # discount = get_vip_discount(request)
+    # member_grade_id = get_user_member_grade_id(request)
+    # new_products = []
+    # for p in products:
+    #     new_products.append(get_display_price(discount, member_grade_id, p))
+    return products
 
 
 def get_processed_product(request, product):
@@ -216,16 +216,19 @@ def group_product_by_promotion(request, products):
     NO_PROMOTION_ID = -1  # 负数的promotion id表示商品没有promotion
     product_groups = []
     promotion2products = {}
+    print 'jz---2', len(products)
     for product in products:
         #对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
         group_id += 1
         default_products = {"group_id": group_id, "products": []}
         promotion_name = _get_promotion_name(product)
+        print 'jz-----3', promotion_name
         promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
 
     now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     items = promotion2products.items()
     items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))
+    print 'jz----', len(items)
     for promotion_id, group_info in items:
         products = group_info['products']
         group_id = group_info['group_id']
@@ -452,6 +455,7 @@ def get_products(request):
         product.member_discount = get_product_member_discount(member_discount, product)
         product.purchase_count = product2count[product_model_id]
         product.used_promotion_id = int(product2promotion[product_model_id])
+        print 'jz----', product.used_promotion_id
         product.total_price = float(product.price)*product.purchase_count
 
         # 确定商品的运费策略
@@ -544,6 +548,7 @@ def _get_promotion_name(product):
     """
 
     if not product.promotion:
+        print 'jz----4'
         return None
     else:
         promotion = product.promotion
