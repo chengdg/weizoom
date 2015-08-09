@@ -109,19 +109,19 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         {% if product.promotion and product.promotion.type == 1 %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
+                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                         {% endif %}
                     {% else %}
                         {% if product.promotion and product.promotion.type == 1 %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
+                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                         {% endif %}
                     {% endif %}
                 </p>
             </div>
         </div>
-        {% if product.promotion and product.promotion_model.is_active %}
+        {% if product.promotion and product.promotion_model.is_active or product.integral_sale %}
         <div class="xui-section xui-section-title clearfix xa-promotionSection xui-promotionSection pr" style="min-height:17px;">
             <div class="xui-upDecorate-left"></div>
             <div class="xui-upDecorate-right"></div>
@@ -131,7 +131,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     <span style="margin-top:4px;display:inline-block;">优惠：</span>
                 </div>
                 <div class="disTc em85" style="width:3.4rem;">
-                    <span class="xui-promotionName xa-promotionNormal xa-promotion" data-type="{{ product.promotion.type}}" data-discount="{{product.promotion.detail.discount}}" data-per-yuan="{{per_yuan}}">{{ product.promotion.type_name|safe }}</span>
+                    <span class="xui-promotionName xa-promotionNormal" data-type="{{ product.promotion.type}}">{{ product.promotion.type_name|safe }}</span>
                 </div>
                 <div class="disTc c6 em8 pl5">
                 {% if product.promotion.type == 2 %}
@@ -140,13 +140,23 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         {{premium_product.name}}&nbsp; x&nbsp;{{premium_product.premium_count}}{{premium_product.premium_unit}}<br/>
                     {% endfor %}
                 </span>
-                {% elif product.promotion.type == 5 %}
+                {% else %}
+                    <span class="ml5 xa-promotionNormal-info">{{ product.promotion.promotion_title }}</span>
+                {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% if product.integral_sale %}
+            <div class="disT w">
+                <div class="disTc em85 c6" style="width:3rem;">
+                {% if not product.promotion or not product.promotion_model.is_active %}
+                    优惠：
+                {% endif %}</div>
+                <div class="disTc em85" style="width:3.1rem;">
+                    <span class="xui-promotionName xa-promotion" data-type="5" data-discount="{{product.integral_sale.detail.discount}}" data-per-yuan="{{per_yuan}}">积分抵扣</span>
+                </div>
                 <div class="disTc c6 em8 pl5">
                     <span class="xa-intergralInfo"></span>
-                </div>
-                {% else %}
-                    <span class="ml5 xa-promotionNormal-info">{{ product.promotion.detail.cut_price }}</span>
-                {% endif %}
                 </div>
             </div>
             {% endif %}

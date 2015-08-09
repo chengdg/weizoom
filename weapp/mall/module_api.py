@@ -95,38 +95,38 @@ def __get_promotion_name(product):
 	return name
 
 
-# def __collect_integral_sale_rules(target_member_grade_id, products):
-# 	"""
-# 	收集product_group积分规则抵扣规则
-# 	"""
-# 	merged_rule = {
-# 		"member_grade_id": target_member_grade_id,
-# 		"product_model_names": []
-# 	}
-# 	for product in products:
-# 		product.active_integral_sale_rule = None
-# 		product_model_name = '%s_%s' % (product.id, product.model['name'])
-# 		#判断积分应用是否不可用
-# 		if not product.integral_sale_model:
-# 			continue
-# 		if not product.integral_sale_model.is_active:
-# 			if product.integral_sale['detail']['is_permanant_active']:
-# 				pass
-# 			else:
-# 				continue
+def __collect_integral_sale_rules(target_member_grade_id, products):
+	"""
+	收集product_group积分规则抵扣规则
+	"""
+	merged_rule = {
+		"member_grade_id": target_member_grade_id,
+		"product_model_names": []
+	}
+	for product in products:
+		product.active_integral_sale_rule = None
+		product_model_name = '%s_%s' % (product.id, product.model['name'])
+		#判断积分应用是否不可用
+		if not product.integral_sale_model:
+			continue
+		if not product.integral_sale_model.is_active:
+			if product.integral_sale['detail']['is_permanant_active']:
+				pass
+			else:
+				continue
 
-# 		for rule in product.integral_sale['detail']['rules']:
-# 			member_grade_id = int(rule['member_grade_id'])
-# 			if member_grade_id < 0 or member_grade_id == target_member_grade_id:
-# 				# member_grade_id == -1则为全部会员等级
-# 				merged_rule['product_model_names'].append(product_model_name)
-# 				product.active_integral_sale_rule = rule
-# 				merged_rule['rule'] = rule
+		for rule in product.integral_sale['detail']['rules']:
+			member_grade_id = int(rule['member_grade_id'])
+			if member_grade_id < 0 or member_grade_id == target_member_grade_id:
+				# member_grade_id == -1则为全部会员等级
+				merged_rule['product_model_names'].append(product_model_name)
+				product.active_integral_sale_rule = rule
+				merged_rule['rule'] = rule
 
-# 	if len(merged_rule['product_model_names']) > 0:
-# 		return merged_rule
-# 	else:
-# 		return None
+	if len(merged_rule['product_model_names']) > 0:
+		return merged_rule
+	else:
+		return None
 
 
 def __get_group_name(group_products):
@@ -176,7 +176,7 @@ def group_product_by_promotion(request, products):
 		products = group_info['products']
 		group_id = group_info['group_id']
 		group_unified_id = __get_group_name(products)
-		# integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
+		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
 
 		# 商品没有参加促销
 		if not promotion_id:
@@ -187,7 +187,7 @@ def group_product_by_promotion(request, products):
 				'promotion': {},
 				"promotion_type": '',
 				'promotion_result': '',
-				# 'integral_sale_rule': integral_sale_rule,
+				'integral_sale_rule': integral_sale_rule,
 				'can_use_promotion': False
 			})
 			continue
@@ -308,7 +308,7 @@ def group_product_by_promotion(request, products):
 			'products': products,
 			'promotion': promotion,
 			'promotion_result': promotion_result,
-			# 'integral_sale_rule': integral_sale_rule,
+			'integral_sale_rule': integral_sale_rule,
 			'can_use_promotion': can_use_promotion,
 			'promotion_json': json.dumps(promotion)
 		})
@@ -492,20 +492,16 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				status=promotion_models.PROMOTION_STATUS_STARTED
 			)
 			promotion = None
-			# integral_sale = None
+			integral_sale = None
 			for one_promotion in promotions:
-				# if one_promotion.type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
-				# 	integral_sale = one_promotion
+				if one_promotion.type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
+					integral_sale = one_promotion
 				# RFC
-				if one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
+				elif one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
 					promotion = one_promotion
-
 			#填充促销活动信息
 			if promotion:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [promotion])
-				promotion.end_date = promotion.end_date.strftime('%Y-%m-%d %H:%M:%S')
-				promotion.created_at = promotion.created_at.strftime('%Y-%m-%d %H:%M:%S')
-				promotion.start_date = promotion.start_date.strftime('%Y-%m-%d %H:%M:%S')
 				if promotion.promotion_title:
 					product.promotion_title = promotion.promotion_title
 				if promotion.type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
@@ -519,16 +515,16 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
 				product.promotion = None
+			print 'jz----2', product.promotion
 			#填充积分折扣信息
-			# if integral_sale:
-			# 	promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
-			# 	integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
-			# 	integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
-			# 	integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
-			# 	product.integral_sale = integral_sale.to_dict('detail', 'type_name')
-			# 	product.promotion = integral_sale.to_dict('detail', 'type_name')
-			# else:
-			# 	product.integral_sale = None
+			if integral_sale:
+				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
+				# integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
+				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
+			else:
+				product.integral_sale = None
 
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
@@ -543,7 +539,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.is_deleted = True
 
 		return {
-			'value': product.to_dict('min_limit', 'swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'properties', 'product_review')
+			'value': product.to_dict('min_limit', 'swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'integral_sale', 'properties', 'product_review')
 		}
 
 	return inner_func
@@ -974,24 +970,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 				'min_price': standard_model['price'],
 				'max_price': standard_model['price']
 			}
-
-		#获取product的库存信息
-		# if product.is_use_custom_model:
-		# 	custom_models = product.models[1:]
-		# 	custom_model_ids = [custom_model['id'] for custom_model in custom_models]
-		# 	id2model = dict([(custom_model['id'], custom_model) for custom_model in custom_models])
-		# 	db_product_models = ProductModel.objects.filter(id__in=custom_model_ids)
-		# 	for db_product_model in db_product_models:
-		# 		id2model[db_product_model.id]['stocks'] = db_product_model.stocks
-		# else:
-		# 	standard_model = product.models[0]
-		# 	db_product_model = ProductModel.objects.get(id=standard_model['id'])
-		# 	product.stock_type = db_product_model.stock_type
-		# 	product.stocks = db_product_model.stocks
-		# 	if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.stocks <= 0:
-		# 		product.is_sellout = True
-
-		#__fill_realtime_stocks([product])
 
 	except:
 		if settings.DEBUG:

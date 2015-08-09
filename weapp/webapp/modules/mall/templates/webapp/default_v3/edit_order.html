@@ -77,7 +77,7 @@
                         xa-promotion-{{product_group.promotion_type}}
                         xt-productGroup
                         xa-productGroup
-                        {% if product_group.promotion_type = 'integral_sale' %}
+                        {% if product_group.integral_sale_rule %}
                         xa-has-integral-sale-rule
                         {% endif %}
                     "
@@ -175,7 +175,7 @@
                         </li>
                         {% endif %}
 
-                        {% if product_group.promotion_type = 'integral_sale' %}
+                        {% if product_group.integral_sale_rule %}
                         <li class="xui-promotion-section em85 xt-promotion">
                             <input
                                 type='checkbox'
