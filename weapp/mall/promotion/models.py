@@ -601,7 +601,7 @@ class RedEnvelopeRule(models.Model):
 		if red_envelope and (red_envelope.limit_time or red_envelope.end_time > now):
 			# 缓存里有分享红包规则，并且红包规则未到期，注：红包规则状态在缓存抓取时判断
 			coupon_rule = red_envelope.coupon_rule
-			if coupon_rule.get('end_date', now) > now:
+			if coupon_rule and coupon_rule.get('end_date', now) > now:
 				# 红包规则对应的优惠券未到期，注：优惠券库存在缓存抓取时判断
 				if order.product_price + order.postage >= red_envelope.limit_order_money:
 					# 商品价格+运费应大于等于红包规则订单金额设置
