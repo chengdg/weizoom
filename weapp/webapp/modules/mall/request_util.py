@@ -561,7 +561,7 @@ def edit_order(request):
 
 	#创建order对象
 	order = mall_api.create_order(webapp_owner_id, webapp_user, product)
-	order.product_groups = utils.group_product_by_promotion(request, products)
+	order.product_groups = mall_api.group_product_by_promotion(request, products)
 
 	#测试订单，修改价钱和订单类型
 	type = request.GET.get('type', '')
@@ -693,7 +693,7 @@ def __format_product_group_price_factor(product_groups):
 			'promotion': product_group['promotion'],
 			'promotion_type': product_group['promotion_type'],
 			'promotion_result': product_group['promotion_result'],
-			'integral_sale_rule': product_group['integral_sale_rule'],
+			# 'integral_sale_rule': product_group['integral_sale_rule'],
 			'can_use_promotion': product_group['can_use_promotion']
 		}
 		factors.append(factor)

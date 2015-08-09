@@ -95,38 +95,38 @@ def __get_promotion_name(product):
 	return name
 
 
-def __collect_integral_sale_rules(target_member_grade_id, products):
-	"""
-	收集product_group积分规则抵扣规则
-	"""
-	merged_rule = {
-		"member_grade_id": target_member_grade_id,
-		"product_model_names": []
-	}
-	for product in products:
-		product.active_integral_sale_rule = None
-		product_model_name = '%s_%s' % (product.id, product.model['name'])
-		#判断积分应用是否不可用
-		if not product.integral_sale_model:
-			continue
-		if not product.integral_sale_model.is_active:
-			if product.integral_sale['detail']['is_permanant_active']:
-				pass
-			else:
-				continue
+# def __collect_integral_sale_rules(target_member_grade_id, products):
+# 	"""
+# 	收集product_group积分规则抵扣规则
+# 	"""
+# 	merged_rule = {
+# 		"member_grade_id": target_member_grade_id,
+# 		"product_model_names": []
+# 	}
+# 	for product in products:
+# 		product.active_integral_sale_rule = None
+# 		product_model_name = '%s_%s' % (product.id, product.model['name'])
+# 		#判断积分应用是否不可用
+# 		if not product.integral_sale_model:
+# 			continue
+# 		if not product.integral_sale_model.is_active:
+# 			if product.integral_sale['detail']['is_permanant_active']:
+# 				pass
+# 			else:
+# 				continue
 
-		for rule in product.integral_sale['detail']['rules']:
-			member_grade_id = int(rule['member_grade_id'])
-			if member_grade_id < 0 or member_grade_id == target_member_grade_id:
-				# member_grade_id == -1则为全部会员等级
-				merged_rule['product_model_names'].append(product_model_name)
-				product.active_integral_sale_rule = rule
-				merged_rule['rule'] = rule
+# 		for rule in product.integral_sale['detail']['rules']:
+# 			member_grade_id = int(rule['member_grade_id'])
+# 			if member_grade_id < 0 or member_grade_id == target_member_grade_id:
+# 				# member_grade_id == -1则为全部会员等级
+# 				merged_rule['product_model_names'].append(product_model_name)
+# 				product.active_integral_sale_rule = rule
+# 				merged_rule['rule'] = rule
 
-	if len(merged_rule['product_model_names']) > 0:
-		return merged_rule
-	else:
-		return None
+# 	if len(merged_rule['product_model_names']) > 0:
+# 		return merged_rule
+# 	else:
+# 		return None
 
 
 def __get_group_name(group_products):
@@ -211,7 +211,7 @@ def group_product_by_promotion(request, products):
 				'products': products,
 				'promotion': promotion,
 				'promotion_result': None,
-				'integral_sale_rule': integral_sale_rule,
+				# 'integral_sale_rule': integral_sale_rule,
 				'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
 				'promotion_json': json.dumps(promotion)
 			})
@@ -230,7 +230,7 @@ def group_product_by_promotion(request, products):
 				'products': products,
 				'promotion': promotion,
 				'promotion_result': promotion_result,
-				'integral_sale_rule': integral_sale_rule,
+				# 'integral_sale_rule': integral_sale_rule,
 				'can_use_promotion': promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED,
 				#'promotion_json': json.dumps(promotion)
 			})
@@ -264,7 +264,7 @@ def group_product_by_promotion(request, products):
 				'products': products,
 				'promotion': promotion,
 				'promotion_result': {"subtotal": total_product_price},
-				'integral_sale_rule': integral_sale_rule,
+				# 'integral_sale_rule': integral_sale_rule,
 				'can_use_promotion': can_use_promotion,
 				#'promotion_json': json.dumps(promotion)
 			})
@@ -295,7 +295,7 @@ def group_product_by_promotion(request, products):
 					'products': products,
 					'promotion': promotion,
 					'promotion_result': promotion_result,
-					'integral_sale_rule': integral_sale_rule,
+					# 'integral_sale_rule': integral_sale_rule,
 					'can_use_promotion': can_use_promotion,
 					#'promotion_json': json.dumps(promotion)
 				})
@@ -307,7 +307,7 @@ def group_product_by_promotion(request, products):
 					'products': products,
 					'promotion': None,
 					'promotion_result': None,
-					'integral_sale_rule': integral_sale_rule,
+					# 'integral_sale_rule': integral_sale_rule,
 					'can_use_promotion': False,
 					#'promotion_json': json.dumps(promotion)
 				})
@@ -320,7 +320,7 @@ def group_product_by_promotion(request, products):
 				'products': products,
 				'promotion': None,
 				'promotion_result': None,
-				'integral_sale_rule': integral_sale_rule,
+				# 'integral_sale_rule': integral_sale_rule,
 				'can_use_promotion': False
 			})
 	return product_groups
@@ -1162,11 +1162,11 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 		promotion_result = product_group.get('promotion_result', None)
 		if promotion_result:
 			promotion_id = product_group['promotion']['id']
-			integral_money = 0
-			integral_count = 0
-			if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].has_key('result'):
-				integral_money = product_group['integral_sale_rule']['result']['final_saved_money']
-				integral_count = product_group['integral_sale_rule']['result']['use_integral']
+			# integral_money = 0
+			# integral_count = 0
+			# if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].has_key('result'):
+			# 	integral_money = product_group['integral_sale_rule']['result']['final_saved_money']
+			# 	integral_count = product_group['integral_sale_rule']['result']['use_integral']
 			OrderHasPromotion.objects.create(
 				order = order,
 				webapp_user_id = webapp_user.id,
