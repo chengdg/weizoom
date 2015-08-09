@@ -176,7 +176,7 @@ def group_product_by_promotion(request, products):
 		products = group_info['products']
 		group_id = group_info['group_id']
 		group_unified_id = __get_group_name(products)
-		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
+		# integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
 
 		# 商品没有参加促销
 		if not promotion_id:
@@ -187,7 +187,7 @@ def group_product_by_promotion(request, products):
 				'promotion': {},
 				"promotion_type": '',
 				'promotion_result': '',
-				'integral_sale_rule': integral_sale_rule,
+				# 'integral_sale_rule': integral_sale_rule,
 				'can_use_promotion': False
 			})
 			continue
@@ -491,12 +491,12 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				status=promotion_models.PROMOTION_STATUS_STARTED
 			)
 			promotion = None
-			integral_sale = None
+			# integral_sale = None
 			for one_promotion in promotions:
-				if one_promotion.type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
-					integral_sale = one_promotion
+				# if one_promotion.type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
+				# 	integral_sale = one_promotion
 				# RFC
-				elif one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
+				if one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
 					promotion = one_promotion
 
 			#填充促销活动信息
@@ -519,15 +519,15 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			else:
 				product.promotion = None
 			#填充积分折扣信息
-			if integral_sale:
-				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
-				integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
-				integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
-				integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
-				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
-				product.promotion = integral_sale.to_dict('detail', 'type_name')
-			else:
-				product.integral_sale = None
+			# if integral_sale:
+			# 	promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
+			# 	integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
+			# 	integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
+			# 	integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
+			# 	product.integral_sale = integral_sale.to_dict('detail', 'type_name')
+			# 	product.promotion = integral_sale.to_dict('detail', 'type_name')
+			# else:
+			# 	product.integral_sale = None
 
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
@@ -542,7 +542,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.is_deleted = True
 
 		return {
-			'value': product.to_dict('min_limit', 'swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'integral_sale', 'properties', 'product_review')
+			'value': product.to_dict('min_limit', 'swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'properties', 'product_review')
 		}
 
 	return inner_func

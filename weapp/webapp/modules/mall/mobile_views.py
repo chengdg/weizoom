@@ -75,7 +75,7 @@ def get_product(request):
 	product_id = request.GET['rid']
 	member_grade_id = request.member.grade_id if request.member else None
 	product = mall_api.get_product_detail_refactor(request.webapp_owner_id, product_id, member_grade_id)
-	product = utils.get_display_price(discount, member_grade_id, product)
+	# product = utils.get_display_price(discount, member_grade_id, product)
 	#product.fill_model()
 
 	if product.is_deleted:
