@@ -3687,11 +3687,17 @@ position: absolute;
     color:#fff;
     background:#cf0404;
 }
+.xui-payOrderPage .xui-toGetRedBtn:visited{
+    color:#fff;
+}
 .xui-payOrderPage .xui-gotRedBtn{
     color:#cf0404;
     border:1px solid #cf0404;
     -webkit-box-sizing:border-box;
     box-sizing:border-box;
+}
+.xui-payOrderPage .xui-gotRedBtn:visited{
+    color:#cf0404;
 }
 .xui-expressPage{
     background-image:-webkit-linear-gradient(left, #f0f0f0 21px, #e0e0e0 21px, #e0e0e0 24px, #f0f0f0 24px);
