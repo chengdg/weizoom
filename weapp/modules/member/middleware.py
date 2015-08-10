@@ -242,7 +242,6 @@ class RedirectBySctMiddleware(object):
 					social_account = SocialAccount.objects.get(token=cookie_sct)
 					if social_account.webapp_id == request.user_profile.webapp_id:
 						member = self.get_member_by_social_account(request.user_profile, social_account)
-						print 'jz----4', member
 						fmt = member.token
 						new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, fmt)
 						response = HttpResponseRedirect(new_url)
