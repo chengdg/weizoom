@@ -180,8 +180,7 @@ Background:
 	"""
 
 
-
-@mall2 @mall.promotion @mall.webapp.promotion @jz
+@mall2 @mall.promotion @mall.webapp.promotion
 Scenario: 1 购买单个限时抢购商品，限时抢购进行中
 	没有设置限购周期，可以连续购买
 

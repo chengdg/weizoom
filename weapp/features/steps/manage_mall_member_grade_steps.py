@@ -152,6 +152,7 @@ def step_impl(context, user, name):
             else:
                 content['is_auto_upgrade'] = 1
                 content['id'] = grade.id
+            content['shop_discount'] = content['discount']
             data_dict = content
         data.append(data_dict)
 
