@@ -1231,7 +1231,8 @@ input.ui-input-text, textarea.ui-input-text {
     background-position: -74px -16px;
     right:0;
 }
-.xui-productDetailPage .xui-promotionName{
+.xui-productDetailPage .xui-promotionName,
+.xui-productDetailPage .xui-memberPriceTag{
     background: #cf0404;
     font-size: 0.8rem;
     min-width:3.4rem;
@@ -1244,6 +1245,21 @@ input.ui-input-text, textarea.ui-input-text {
     /*padding:0px 3px;*/
     padding-top:1px;
 }
+/*会员价标签*/
+/*.xui-productDetailPage .xui-memberPriceTag{
+    min-width: 2.8rem;
+    vertical-align: inherit;
+}
+.xui-productDetailPage .xui-orPrice{
+    color:#999;
+    font-size: .7rem;
+    display: inline-block;
+    margin-left: 5px;
+    -webkit-transform:scale(.95);
+    transform:scale(.95);
+}*/
+
+
 /*.xui-productDetailPage .xui-promotion-gift li{
     margin-bottom:-6px;
 }
@@ -1594,7 +1610,7 @@ input.ui-input-text, textarea.ui-input-text {
     box-shadow: none;
 }
 .xui-reviewAllPage .xui-user{
-    box-shadow: 0 0 0 1px #e3e3e3;
+    box-shadow: 0 0 0 1px rgba(227,227,227,.5);
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -3144,10 +3160,10 @@ input.ui-input-text, textarea.ui-input-text {
 
 }
 .xui-orderListPage .xui-btLine{
-    border-bottom: 1px solid #DBDBDB;
+    border-bottom: 1px solid #dbdbdb;
 }
 .xui-orderListPage .xui-tPLine{
-    border-top: 1px solid #DBDBDB;
+    border-top: 1px solid #dbdbdb;
 }
 .xui-orderListPage .wui-swiper-tabs {
     position:fixed;
@@ -3302,8 +3318,15 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-orderListPage .wui-swiper-slide li:first-child{
     margin-top: 0;
 }
-
-
+/*.xui-orderListPage .xui-getRedTip{
+    display: inline-block;
+    width: 14px;
+    height: 15px;
+    background: url(/static_v2/img/webapp/usercenter/getRedTip.jpg) no-repeat;
+    background-size: cover;
+    vertical-align: middle;
+    margin: -3px auto 0 6px;
+}*/
 
 
 
@@ -3647,6 +3670,25 @@ position: absolute;
 .xui-payOrderPage .xui-priceItem p:not(:first-child) {
     margin-top: 5px;
 }
+/*.xui-payOrderPage .xui-toGetRedBtn,
+.xui-payOrderPage .xui-gotRedBtn{
+    display: inline-block;
+    border-radius: 2px;
+    line-height: 33px;
+    height:33px;
+    font-size: .9rem;
+    padding:0 6px;
+}
+.xui-payOrderPage .xui-toGetRedBtn{
+    color:#fff;
+    background:#cf0404;
+}
+.xui-payOrderPage .xui-gotRedBtn{
+    color:#cf0404;
+    border:1px solid #cf0404;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+}*/
 .xui-expressPage{
     background-image:-webkit-linear-gradient(left, #f0f0f0 21px, #e0e0e0 21px, #e0e0e0 24px, #f0f0f0 24px);
     background-image:-o-linear-gradient(left, #f0f0f0 21px, #e0e0e0 21px, #e0e0e0 24px, #f0f0f0 24px);
@@ -3667,9 +3709,6 @@ position: absolute;
 .xui-expressPage .xui-expressPo{
     padding-left: 32px;
     padding-top: 18px;
-}
-.xui-expressPage ul li:last-child{
-    
 }
 /*
  *感恩密码样式
@@ -4031,132 +4070,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 
 
 
-/*
- * user_center 积分日志页面样式
- */
-.xui-integralLogPage {
-    background-color: #fff;
-   /* background-image: -webkit-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
-    background-image:    -moz-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
-    background-image:     -ms-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
-    background-image:      -o-linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);
-    background-image:         linear-gradient(left, #FFFFFF 108px, #E0E0E0 108px, #E0E0E0 110px,  #FFFFFF 110px);*/
-}
-/*.xui-integralLogPage:before{
-    background: #dbdbdb;
-    content: "";
-    height: 100%;
-    left: 24px;
-    position: absolute;
-    top: 0;
-    bottom:0;
-    width: 1px;   
-}*/
-.xui-integralLogPage .ui-content {
-    background-color: rgba(255, 255, 255, 0);
-    overflow-x:inherit; 
-}
-.xui-integralLogPage .xui-integralLogList {
-    margin: 0;
-    padding-top: 35px;
-    padding-right: 15px;
-}
-.xui-integralLogPage .xui-listItem{
-    display:table;
-    width:100%;
-}
-.xui-integralLogPage .xui-listItem .xui-inner-dotBox{
-    display:table-cell;
-    width:50px;
-}
-/*.xui-integralLogPage .xui-listItem .xui-inner-dotBox:before{
-    content:"";
-    height:100%;
-    width:1px;
-    background: #f00;
-    top:0;
-    left:25px;
-    position: relative;
-}*/
-.xui-integralLogPage .xui-listItem .xui-inner-infoBox{
-    display:table-cell;
-    border-bottom: 1px solid #dfdfdd;
-    padding-top: 15px;
-}
-.xui-integralLogPage .xui-integralLogList .xui-inner-time {
-    height:30px;
-    line-height:30px;
-    /*width:70px;*/
-    padding:3px 2px;
-    margin-left:-2px;
-    color:#fff;
-    background: #CBCBCB;
-    text-align:center;
-    /*margin-top:15px;*/
-    font-size:0.75rem;
-}
-.xui-integralLogPage .xui-integralLogList .xui-inner-dot {
-    background:#fff;
-    border-radius: 8px;
-    display: inline-block;
-    height: 9px;
-    margin-bottom: 4px;
-    margin-left: 19px;
-    width: 9px;
-    border:1.5px solid #ccc;
-    position: relative;
-    z-index: 10;
-}
-.xui-integralLogPage li.xui-listItem:first-child span.xui-timeLine{
-    margin-top:9px;
-}
-.xui-integralLogPage .xui-integralLogList .xui-timeLine{
-    height:100%;
-    width:1px;
-    background:#dbdbdb;
-    position:absolute;
-    left:24px;
-    /*margin-top:10px;*/
-}
-.xui-integralLogPage .xui-integralLogList .xui-inner-content {
-    /*border:1px solid #CECECE;
-    margin-left:117px;
-    -webkit-border-radius:8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;*/
-    padding: 5px 0px 9px 0;
-    color:#444444;
-}
-.xui-userCenter-friendList{
-    padding-top:5px;
-    max-width:400px;
-}
-.xui-userCenter-friendList li{
-    border-bottom:none;
-    float:left;
-    width:46px;
-    margin-top:0px;
-    padding-right:10px;
-}
-.xui-userCenter-friendList li .xui-userImg{
-    width: 46px;
-    height: 46px;
-}
-.xui-userCenter-friendList li img{
-    margin:0 auto;
-}
-.xui-userCenter-friendList li .xui-userName{
-    height: 14px;
-    overflow: hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-}
-.xui-integralLogPage .xui-text-red{
-    color: #e44445;
-}
-.xui-integralLogPage .xui-text-blue{
-    color: #057FCD;
-}
 
 /*我的积分*/
 .xui-myIntegralPage .xui-bg{
@@ -5148,14 +5061,18 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-myRecPage .xui-qrcode{
     box-shadow: 0 0 0 1px #eee;
 }
-.xui-myRecPage h2{
+.xui-myRecPage h2,
+.xui-memberQrcode-page h2{
     font-size: .95rem;
     font-weight: normal;
     text-align: center;
     position: relative;
     margin: 20px 0;
 }
-.xui-myRecPage h2::before,.xui-myRecPage h2::after{
+.xui-myRecPage h2::before,
+.xui-myRecPage h2::after,
+.xui-memberQrcode-page h2::before,
+.xui-memberQrcode-page h2::after{
     position: absolute;
     content: "";
     width: 35.2125%;
@@ -5165,13 +5082,16 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     transform: scaleY(.3);
     top: .5rem;
 }
-.xui-myRecPage h2::before{
+.xui-myRecPage h2::before,
+.xui-memberQrcode-page h2::before{
     left: 0;
 }
-.xui-myRecPage h2::after{
+.xui-myRecPage h2::after,
+.xui-memberQrcode-page h2::after{
     right: 0;
 }
-.xui-myRecPage .xui-info{
+.xui-myRecPage .xui-info,
+.xui-memberQrcode-page .xui-info{
     width: 90.625%;
     margin: 0 auto;
     background: #f9f9f9;
@@ -5181,10 +5101,8 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     -webkit-box-sizing:border-box;
     box-sizing:border-box;
     font-size: .8rem;
-}
-.xui-myRecPage .xui-info p:first-child{
     color:#1a1a1a;
-    line-height: 1.2rem;    
+    line-height: 1.2rem;
 }
 /**
 *媒体查询

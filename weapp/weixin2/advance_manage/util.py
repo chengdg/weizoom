@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from modules.member.models import Member
+from modules.member.models import Member,SUBSCRIBED,CANCEL_SUBSCRIBED
 from weixin2.models import FanHasCategory
 from utils.string_util import byte_to_hex
 
 def get_members(request, filter_value, sort_attr):
     filter_data_args = {}
     filter_data_args['webapp_id'] = request.user_profile.webapp_id
+    filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
     filter_data_args['is_for_test'] = False
     exclude_data_args = {}
 
