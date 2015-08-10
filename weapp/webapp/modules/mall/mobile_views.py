@@ -14,9 +14,10 @@ TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 #
 # list_coupons: 显示"优惠券"页面
 ########################################################################
-def list_coupons(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.list_coupons(request)
+# jz 2015-08-10
+# def list_coupons(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.list_coupons(request)
 
 
 def list_products(request):
