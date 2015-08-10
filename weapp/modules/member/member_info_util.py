@@ -329,7 +329,7 @@ def _generate_member_token(member, social_account):
 		(''.join(random.sample(string.ascii_letters + string.digits, 6))) + str(member.id))
 
 #TODO 考虑数据库操作事务？
-def create_member_by_social_account(user_profile, social_account, is_checked=True):
+def create_member_by_social_account(user_profile, social_account, oauth_create=True):
 	#print '==========================1'
 	#if is_checked:
 	if MemberHasSocialAccount.objects.filter(webapp_id=user_profile.webapp_id, account=social_account).count() >  0:
@@ -338,6 +338,13 @@ def create_member_by_social_account(user_profile, social_account, is_checked=Tru
 	member_grade = MemberGrade.get_default_grade(social_account.webapp_id)
 	temporary_token = _create_random()
 	is_new = False
+	if oauth_create:
+		is_subscribed = False
+		status = NOT_SUBSCRIBED
+	else:
+		is_subscribed = True
+		status = SUBSCRIBED
+
 	try:
 		member = Member.objects.create(
 			webapp_id = social_account.webapp_id,
@@ -346,7 +353,9 @@ def create_member_by_social_account(user_profile, social_account, is_checked=Tru
 			grade = member_grade,
 			remarks_name = '',
 			token = temporary_token,
-			is_for_test = social_account.is_for_test
+			is_for_test = social_account.is_for_test,
+			is_subscribed = is_subscribed,
+			status = status
 		)
 		is_new = True
 	except:
@@ -362,6 +371,8 @@ def create_member_by_social_account(user_profile, social_account, is_checked=Tru
 				remarks_name = '',
 				token = temporary_token,
 				is_for_test = social_account.is_for_test,
+				is_subscribed = is_subscribed,
+				status = status
 			)
 			is_new = True
 		except:

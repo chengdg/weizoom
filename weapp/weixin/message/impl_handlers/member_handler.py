@@ -74,7 +74,7 @@ class MemberHandler(MessageHandler):
 		if member is None:
 			#创建会员信息
 			try:
-				member = create_member_by_social_account(user_profile, social_account, False)
+				member = create_member_by_social_account(user_profile, social_account)
 				#之后创建对应的webappuser
 				# if MemberHasSocialAccount.objects.filter(account=social_account, member=member).count() == 0:
 				# 	MemberHasSocialAccount.objects.create(account=social_account, member=member, webapp_id=social_account.webapp_id)
