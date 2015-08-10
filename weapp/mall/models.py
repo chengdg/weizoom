@@ -1404,8 +1404,8 @@ class Order(models.Model):
 	reason = models.CharField(max_length=256, default='')  # 取消订单原因
 	update_at = models.DateTimeField(auto_now=True)  # 订单信息更新时间 2014-11-11
 	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
-	promotion_saved_money = models.FloatField(default=0.0) #促销优惠金额
-	edit_money = models.FloatField(default=0.0) #商家修改差价
+	promotion_saved_money = models.FloatField(default=0.0)  # 促销优惠金额
+	edit_money = models.FloatField(default=0.0)  # 商家修改差价
 
 	class Meta(object):
 		db_table = 'mall_order'

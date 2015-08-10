@@ -30,7 +30,7 @@ from celery import task
 import util as member_util
 from account.social_account.account_info import get_social_account_info
 from utils.string_util import byte_to_hex, hex_to_byte
-
+from member.member_grade import auto_update_grade
 # @task
 # def process_error_openid(openid, user_profile):
 # 	print 'call process_error_openid start'
@@ -64,11 +64,11 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 		return None
 
 	current_integral = member.integral + integral_increase_count
-	#if integral_increase_count > 0:
-		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count, experience=F('experience')+integral_increase_count)
-	#else:
-		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)
 	try:
+		if integral_increase_count > 0:
+			# 处理经验值
+			member.experience= F('experience') + integral_increase_count
+			auto_update_grade(member=member)
 		member.integral = F('integral') + integral_increase_count
 		member.save()
 		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)

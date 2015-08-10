@@ -611,7 +611,7 @@ Scenario: 10 购买单个限时抢购商品，购买时活动进行中，提交�
 		"""
 
 
-# 后续补充.雪静
+# 雪静
 @zy_fs11 @mall2 @mall.promotion @mall.webapp.promotion
 Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还可以再次下单
 	有限购周期和限购数量设置

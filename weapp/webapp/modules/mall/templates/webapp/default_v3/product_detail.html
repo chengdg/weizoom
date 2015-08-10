@@ -109,13 +109,13 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         {% if product.promotion and product.promotion.type == 1 %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
+                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                         {% endif %}
                     {% else %}
                         {% if product.promotion and product.promotion.type == 1 %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
+                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                         {% endif %}
                     {% endif %}
                 </p>
@@ -141,7 +141,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     {% endfor %}
                 </span>
                 {% else %}
-                    <span class="ml5 xa-promotionNormal-info">{{ product.promotion.detail.cut_price }}</span>
+                    <span class="ml5 xa-promotionNormal-info">{{ product.promotion.promotion_title }}</span>
                 {% endif %}
                 </div>
             </div>
@@ -461,6 +461,10 @@ var priceInfo = W.loadJSON('priceInfo');
 var postageConfigName = "{{product.postage_config.name}}";
 // 限购数量
 var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
+// 是否会员商品
+var is_member_product = '{{product.is_member_product}}'
+// 促销信息
+var promotion = W.loadJSON('promotion');
 
 $(document).ready(function() {
     //检查此商品是否被收藏和显示购物车的数量
@@ -482,6 +486,11 @@ $(document).ready(function() {
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
+            if(view.is_member_product && data.discount < 100){
+                view.discount = data.discount;
+                // 处理会员价
+                $('.xa-singlePrice').text((view.priceInfo.min_price*view.discount/100).toFixed(2));
+            }
         },
         error: function(data) {
 
@@ -490,8 +499,6 @@ $(document).ready(function() {
     // setTimeout(function(){
     //     $('.xui-applyBox').removeClass('hidden');
     // },200);
-    //绑定初始化数据
-    var promotion = W.loadJSON('promotion');
     view = new W.page.BuyProductPage({
         el: '.xui-page',
         postageFactor: postageFactor,
@@ -503,7 +510,8 @@ $(document).ready(function() {
         priceInfo: priceInfo,
         postageConfigName: postageConfigName,
         countPerPurchase: countPerPurchase,
-        promotion: promotion
+        promotion: promotion,
+        is_member_product: is_member_product
     });
 
     if(models.length > 1){

@@ -10,7 +10,7 @@ from mall.models import WeizoomMall
 from mall import module_api as mall_api
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
-# from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
+from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
 
 
 from weapp.hack_django import post_update_signal, post_delete_signal
@@ -18,25 +18,17 @@ from weapp.hack_django import post_update_signal, post_delete_signal
 local_cache = {}
 
 
-# def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
-#     """根据促销类型返回商品价格
-#     """
-#     # Set member's discount of the product
-#     if hasattr(product, 'integral_sale') and product.integral_sale \
-#             and product.integral_sale['detail'].get('rules', None):
-#         for i in product.integral_sale['detail']['rules']:
-#             if i['member_grade_id'] == member_grade_id:
-#                 product.integral_sale['detail']['discount'] = str(i['discount']) + "%"
-#                 break
-
-#     if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
-#         return round(product.display_price * 1.1, 2)
-#     elif (hasattr(product, 'promotion') and
-#           (product.promotion is not None) and
-#           product.promotion['type'] == PROMOTION_TYPE_FLASH_SALE):
-#         return product.promotion['detail']['promotion_price']
-#     else:
-#         return product.display_price
+def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
+    """根据促销类型返回商品价格
+    """
+    if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+        return round(product.display_price * 1.1, 2)
+    elif (hasattr(product, 'promotion') and
+                (product.promotion is not None) and
+                product.promotion['type'] == PROMOTION_TYPE_FLASH_SALE):
+        return product.promotion['detail']['promotion_price']
+    else:
+        return product.display_price
 
 
 def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall):
@@ -45,38 +37,32 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
         webapp_id = webapp_owner_user_profile.webapp_id
         webapp_owner_id = webapp_owner_user_profile.user_id
 
-        _, products = mall_api.get_products_in_webapp(webapp_id,
-                                                      is_access_weizoom_mall,
-                                                      webapp_owner_id,
-                                                      0)
-        categories = mall_models.ProductCategory.objects.filter(
-            owner_id=webapp_owner_id)
+        _, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, 0)
+
+        categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
 
         product_ids = [product.id for product in products]
-        category_has_products = mall_models.CategoryHasProduct.objects.filter(
-            product_id__in=product_ids)
+        category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id__in=product_ids)
         product2categories = dict()
         for relation in category_has_products:
-            product2categories.setdefault(
-                relation.product_id, set()).add(relation.category_id)
+            product2categories.setdefault(relation.product_id, set()).add(relation.category_id)
+
+
         try:
-            categories = [{"id": category.id, "name": category.name}
-                          for category in categories]
+            categories = [{"id":category.id, "name":category.name} for category in categories]
             product_dicts = []
 
             # Fill detail
             new_products = []
             for product in products:
-                new_product = get_webapp_product_detail(webapp_owner_id,
-                                                        product.id)
+                new_product = get_webapp_product_detail(webapp_owner_id, product.id)
                 new_products.append(new_product)
 
             mall_models.Product.fill_display_price(new_products)
 
             for product in new_products:
                 product_dict = product.to_dict()
-                product_dict['promotion'] = product.promotion
-                product_dict['display_price'] = product.display_price
+                product_dict['display_price'] = get_product_display_price(product, webapp_owner_id)
                 product_dict['categories'] = product2categories.get(product.id, set())
                 product_dicts.append(product_dict)
             return {
@@ -96,17 +82,12 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
 def get_webapp_products(webapp_owner_user_profile,
                         is_access_weizoom_mall,
                         category_id):
-    """
-    """
-
     key = 'webapp_products_categories_{wo:%s}' % webapp_owner_user_profile.user_id
+    webapp_owner_id = webapp_owner_user_profile.user_id
     if key in local_cache:
         data = local_cache[key]
     else:
-        data = cache_util.get_from_cache(
-            key,
-            get_webapp_products_from_db(webapp_owner_user_profile,
-                                        is_access_weizoom_mall))
+        data = cache_util.get_from_cache(key, get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall))
         local_cache[key] = data
 
     if category_id == 0:
@@ -126,8 +107,7 @@ def get_webapp_products(webapp_owner_user_profile,
 
     products = mall_models.Product.from_list(data['products'])
     if category_id != 0:
-        products = [
-            product for product in products if category_id in product.categories]
+        products = [product for product in products if category_id in product.categories]
 
     return category, products
 
@@ -226,6 +206,14 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
 
     product = mall_models.Product.from_dict(data)
 
+    # Set member's discount of the product
+    if hasattr(product, 'integral_sale') and product.integral_sale \
+        and product.integral_sale['detail'].get('rules', None):
+        for i in product.integral_sale['detail']['rules']:
+            if i['member_grade_id'] == member_grade_id:
+                product.integral_sale['detail']['discount'] = str(i['discount'])+"%"
+                break
+                
     promotion_data = data['promotion']
     if promotion_data and len(promotion_data) > 0:
         product.promotion_model = promotion_models.Promotion.from_dict(

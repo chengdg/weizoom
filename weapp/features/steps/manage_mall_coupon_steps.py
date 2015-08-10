@@ -41,8 +41,8 @@ def step_impl(context, user_name):
 
     expected = json.loads(context.text)
     for item in expected:
-        item["start_date"] = "{} 00:00".format(bdd_util.get_date_str(item["start_date"]))
-        item["end_date"] = "{} 00:00".format(bdd_util.get_date_str(item["end_date"]))
+        item["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["start_date"]))
+        item["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["end_date"]))
     bdd_util.assert_list(expected, actual)
 
 
@@ -128,7 +128,7 @@ def step_impl(context, user_name):
     day_after_tomorrow = tomorrow + timedelta(1)
     yesterday = today - timedelta(1)
     day_before_yesterday = yesterday - timedelta(1)
-    t_format = "%Y-%m-%d %H:%M"
+    t_format = "%Y-%m-%d %H:%M:%S"
     today = today.strftime(t_format).decode('utf-8')
     tomorrow = tomorrow.strftime(t_format).decode('utf-8')
     day_after_tomorrow = day_after_tomorrow.strftime(t_format).decode('utf-8')
@@ -218,16 +218,16 @@ def __add_coupon_rule(context, webapp_owner_name):
         cr_name = coupon_rule['name']
         cr_money = coupon_rule['money']
         cr_count = coupon_rule.get('count', 4)
-        cr_limit_counts = coupon_rule.get('limit_counts', 9999)
-        cr_start_date = coupon_rule['start_date']
+        cr_limit_counts = coupon_rule.get('limit_counts', -1)
+        cr_start_date = coupon_rule.get('start_date', u'今天')
         start_date = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
-        cr_end_date = coupon_rule['end_date']
+        cr_end_date = coupon_rule.get('end_date', u'1天后')
         end_date = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
         post_data = {
             'name': cr_name,
             'money': cr_money,
             'count': cr_count,
-            'limit_counts': -1 if cr_limit_counts == '无限' else cr_limit_counts,
+            'limit_counts': -1 if cr_limit_counts == u'无限' else cr_limit_counts,
             'start_date': start_date,
             'end_date': end_date
         }

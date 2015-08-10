@@ -242,6 +242,7 @@ class RedirectBySctMiddleware(object):
 					social_account = SocialAccount.objects.get(token=cookie_sct)
 					if social_account.webapp_id == request.user_profile.webapp_id:
 						member = self.get_member_by_social_account(request.user_profile, social_account)
+						print 'jz----4', member
 						fmt = member.token
 						new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, fmt)
 						response = HttpResponseRedirect(new_url)
@@ -569,7 +570,7 @@ class MemberMiddleware(object):
 		if settings.MODE not in ['develop', 'test']:
 			if (not request.user.is_from_weixin) and (not request.user.is_from_simulator):
 				return None
-
+		print 'jz----3', request.social_account
 		if not request.member and request.social_account:
 			request.member = self.get_member_by_social_account(request.user_profile, request.social_account)
 
@@ -597,9 +598,11 @@ class MemberSessionMiddleware(object):
 			return None
 
 		#对于非webapp请求和非pc商城地方请求不进行处理
+		print 'jz----1', is_request_for_webapp(request), is_request_for_pcmall(request)
 		if (not is_request_for_webapp(request)) and (not is_request_for_pcmall(request)):
 			return None
 		request.member = self.get_request_member(request)
+		print 'jz----2', request.member
 
 		if request.member is None and request.uuid is None:
 			#获取不到当前请求的会员信息并且uuid是none 设置uuid 信息

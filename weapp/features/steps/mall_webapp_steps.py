@@ -150,6 +150,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	最近修改: yanzhao
 	e.g.:
 		{
+			"order_no": "" # 订单号
 			"ship_area": "",
 			"ship_name": "bill",
 			"ship_address": "",
@@ -159,7 +160,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			"integral_money": "10",
 			"weizoom_card": [{"card_name":"", "card_pass": ""}],
 			"coupon": "coupon_1",
-			"date": ""
+			"date": "" # 下单时间
 			"products": [
 				{
 					"count": "",
@@ -183,10 +184,10 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			return promotions[0].id
 		else:
 			return 0
-	integral_each_yuan = 10
+
 	settings = IntegralStrategySttings.objects.filter(webapp_id=context.webapp_id)
-	if settings.count() > 0:
-		integral_each_yuan = settings[0].integral_each_yuan
+	integral_each_yuan = settings[0].integral_each_yuan
+
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	group2integralinfo = dict()
 
@@ -200,6 +201,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 
 
 		products = context.response.context['order'].products
+		integral = 0
+		integral_group_items = []
 		for product in products:
 			product_counts.append(str(product.purchase_count))
 			product_ids.append(str(product.id))
@@ -210,14 +213,15 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			else:
 				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj)))
 			product_model_names.append(_get_product_model_ids_from_name(webapp_owner_id, product.model_name))
-			# TODO 没有用例
+
 			if hasattr(product, 'integral') and product.integral > 0:
-				group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
-					"member_grade_id": member.grade_id,
-					"product_model_names": '%s_%s' % (product_obj.id, _product_model_name),
-					"integral": product.integral,
-					"money": int(product.integral) / integral_each_yuan
-					}
+				integral += product.integral
+				integral_group_items.append('%s_%s' % (product.id, product.model['name']))
+		if integral:
+			group2integralinfo['-'.join(integral_group_items)] = {
+				"integral": integral,
+				"money": round(integral / integral_each_yuan, 2)
+			}
 	else:
 		is_order_from_shopping_cart = "false"
 		webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
@@ -226,6 +230,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		product_model_names = []
 		promotion_ids = []
 		products = args['products']
+		integral = 0
+		integral_group_items = []
 		for product in products:
 			product_counts.append(str(product['count']))
 			product_name = product['name']
@@ -239,12 +245,13 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			_product_model_name = _get_product_model_ids_from_name(webapp_owner_id, product.get('model', None))
 			product_model_names.append(_product_model_name)
 			if 'integral' in product and product['integral'] > 0:
-				group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
-					"member_grade_id": member.grade_id,
-					"product_model_names": '%s_%s' % (product_obj.id, _product_model_name),
-					"integral": product['integral'],
-					"money": int(product['integral']) / integral_each_yuan
-					}
+				integral += product['integral']
+				integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
+		if integral:
+			group2integralinfo['-'.join(integral_group_items)] = {
+				"integral": integral,
+				"money": round(integral / integral_each_yuan, 2)
+			}
 
 	order_type = args.get('type', 'normal')
 
@@ -348,17 +355,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
 
-	#填充积分信息
-	# integral = args.get('integral', None)
-	# if integral:
-	# 	data['is_use_integral'] = 'true'
-	# 	data['integral'] = integral
-
-	# use_integral = args.get('use_integral', None)
-	# if use_integral == u"是":
-	# 	data['is_use_integral'] = 'true'
-	# 	data['integral'] = get_use_integral(webapp_user_name, context.webapp_id, data)
-
 	response = context.client.post(url, data)
 	context.response = response
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
@@ -367,9 +363,9 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response_json = json.loads(context.response.content)
 	# print 'response json----------', response_json
 	# if response_json['data'].get('msg', None):
-	#	print 'response error message ---------------', response_json['data']['msg']
+	# 	print 'response error message ---------------', response_json['data']['msg']
 	# if response_json['data'].get('detail', None):
-	#	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
+	# 	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
 
 	# raise '----------------debug test----------------------'
 
@@ -382,6 +378,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	if context.created_order_id != -1:
 		if 'date' in args:
 			Order.objects.filter(order_id=context.created_order_id).update(created_at=__get_date(args['date']))
+		if 'order_no' in args:
+			Order.objects.filter(order_id=context.created_order_id).update(order_id=args['order_no'])
 
 	context.product_ids = product_ids
 	context.product_counts = product_counts

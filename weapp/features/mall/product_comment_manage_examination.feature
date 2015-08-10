@@ -14,7 +14,9 @@ Background:
     Given jobs登录系统
     And jobs设定会员积分策略
     """
-    {}
+    {
+            "be_member_increase_count": 20
+    }
     """
     And jobs已添加商品
     """
@@ -592,7 +594,8 @@ Scenario: 7.jobs通过审核评价，给用户加积分
     And jobs设定会员积分策略
         """
         {
-            "review_increase": 20
+            "review_increase": 20,
+            "be_member_increase_count": 20
         }
         """
     When jobs已完成对商品的评价信息审核

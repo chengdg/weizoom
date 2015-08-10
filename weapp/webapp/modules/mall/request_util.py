@@ -151,6 +151,84 @@ def _get_has_deleted_product_response(request, webapp_user, product):
 
 
 ########################################################################
+# get_product: 显示“商品详情”页面
+########################################################################
+def get_product(request):
+	product_id = request.GET['rid']
+	webapp_user = request.webapp_user
+
+	member_grade_id = request.member.grade_id if request.member else None
+	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
+	#product.fill_model()
+
+	if product.is_deleted:
+		c = RequestContext(request, {
+			'is_deleted_data': True
+		})
+		return render_to_response('%s/product_detail.html' % request.template_dir, c)
+
+
+	if product.promotion:
+		product.promotion['is_active'] = product.promotion_model.is_active
+	jsons = [{
+		"name": "models",
+		"content": product.models
+	}, {
+		'name': 'priceInfo',
+		'content': product.price_info
+	}, {
+		'name': 'promotion',
+		'content': product.promotion
+	}]
+	#获得运费计算因子
+	#postage_factor = mall_util.get_postage_factor(request.webapp_owner_id, product=product)
+
+	###################################################
+	non_member_followurl = None
+	if request.user.is_weizoom_mall:
+		product.is_can_buy_by_product(request)
+		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
+		otherSettings = OperationSettings.objects.get(owner = otherProfile.user)
+		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
+			non_member_followurl = otherSettings.weshop_followurl
+
+			# liupeiyu 记录点击关注信息
+			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product.id, product.owner.id)
+
+	request.should_hide_footer = True
+
+	usable_integral = request.member.integral if request.member else 0
+	use_integral = request.member.integral if request.member else 0
+
+	is_non_member = True if request.member else False
+
+	c = RequestContext(request, {
+		'page_title': product.name,
+		'product': product,
+		'jsons': jsons,
+		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
+		'is_enable_get_coupons': settings.IS_IN_TESTING,
+		'model_property_size': len(product.product_model_properties),
+		# 'postage_factor': json.dumps(product.postage_factor),
+		'hide_non_member_cover': True,
+		'non_member_followurl': non_member_followurl,
+		'price_info': product.price_info,
+		'usable_integral': usable_integral,
+		'use_integral': use_integral,
+		'is_non_member': is_non_member,
+		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
+		#add by bert 增加分享时显示信息
+		'share_page_desc':product.name,
+		'share_img_url':product.thumbnails_url
+	})
+
+	if hasattr(request, 'is_return_context'):
+		return c, product
+	else:
+		return render_to_response('%s/product_detail.html' % request.template_dir, c)
+
+
+########################################################################
 # get_order_list: 获取订单列表
 ########################################################################
 def get_order_list(request):
@@ -197,7 +275,12 @@ def pay_order(request):
 		else:
 			error_msg = u'pay_order:异常, cause:\n{}'.format(unicode_full_stack())
 			watchdog_error(error_msg, db_name=settings.WATCHDOG_DB)
-		 	raise Http404(u'订单不存在')
+			raise Http404(u'订单不存在')
+	red_envelope = request.webapp_owner_info.red_envelope
+	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+		order.red_envelope = red_envelope.id
+		if promotion_models.RedEnvelopeToOrder.objects.filter(order_id=order.id).count():
+			order.red_envelope_created = True
 
 	# if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
 	# 	order.is_show_field = True
@@ -377,23 +460,15 @@ def get_pay_result(request):
 	#是否提示用户领红包
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
-	red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
-	print 'jz-----', request.webapp_owner_info.red_envelope
-	if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
-		coupon_rule = promotion_models.CouponRule.objects.get(id=red_envelope_rule[0].coupon_rule_id)
-		if coupon_rule.is_active and coupon_rule.end_date > datetime.now() and coupon_rule.remained_count > 0:
-			if order.product_price + order.postage >= red_envelope_rule[0].limit_order_money:
-				is_show_red_envelope = True
-				red_envelope_rule_id = red_envelope_rule[0].id
-
+	# red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
+	red_envelope = request.webapp_owner_info.red_envelope
+	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+		# 是可以显示分享红包按钮
+		is_show_red_envelope = True
+		red_envelope_rule_id = red_envelope.id
 
 	#获取订单包含商品
-	order_has_products = []
-	try:
-		order_has_products = OrderHasProduct.objects.filter(order=order)
-	except:
-		error_msg = u'weixin pay, stage:[get_pay_result], result:获取订单包含商品异常, exception:\n{}'.format(unicode_full_stack())
-		watchdog_error(error_msg)
+	order_has_products = OrderHasProduct.objects.filter(order=order)
 
 	# 更新order信息
 	#order = Order.objects.get(id=order.id)
@@ -446,11 +521,16 @@ def get_pay_result_success(request):
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
 	coupon_rule = None
-	red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
-	if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
-		if order.product_price + order.postage >= red_envelope_rule[0].limit_order_money:
-			is_show_red_envelope = True
-			red_envelope_rule_id = red_envelope_rule[0].id
+	# red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
+	# if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
+	# 	if order.product_price + order.postage >= red_envelope_rule[0].limit_order_money:
+	# 		is_show_red_envelope = True
+	# 		red_envelope_rule_id = red_envelope_rule[0].id
+	red_envelope = request.webapp_owner_info.red_envelope
+	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+		# 是可以显示分享红包按钮
+		is_show_red_envelope = True
+		red_envelope_rule_id = red_envelope.id
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
@@ -516,7 +596,7 @@ def show_shopping_cart(request):
 	'''
 	显示购物车详情
 	'''
-	product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
+	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 	request.should_hide_footer = True
 
@@ -562,8 +642,8 @@ def edit_order(request):
 	order.product_groups = mall_api.group_product_by_promotion(request, products)
 
 	#测试订单，修改价钱和订单类型
-	type = request.GET.get('type', '')
-	order = mall_api.update_order_type_test(type, order)
+	# type = request.GET.get('type', '')
+	# order = mall_api.update_order_type_test(type, order)
 
 	#获得运费计算因子
 	#postage_factor = order.used['postage_config'].factor
