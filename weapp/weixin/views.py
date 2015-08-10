@@ -129,15 +129,9 @@ def receiveauthcode(request):
 			# 	ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).update(last_update_time=datetime.datetime.now(), auth_code=auth_code)
 			# else:
 			# 	ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id, auth_code=auth_code)
+			from weixin.user.util import get_component_info_from
 			request_host = request.get_host()
-			if request_host == 'member.weapp.weizzz.com':
-				component_info = ComponentInfo.objects.filter(app_id='wx984abb2d00cc47b8')[0]
-			elif request_host == 'weixin.weapp.weizzz.com':
-				component_info = ComponentInfo.objects.filter(app_id='wxba6fccbdcccbea49')[0]
-			elif request_host == 'docker.test.weizzz.com':
-				component_info = ComponentInfo.objects.filter(app_id='wx9b89fe19768a02d2')[0]
-			else:
-				component_info = ComponentInfo.objects.filter(app_id='wx8209f1f63f0b1d26')[0]
+			component_info = get_component_info_from(request)
 			component_authed_appid = ComponentAuthedAppid.objects.get(component_info=component_info, user_id=request.user.id)
 			component_info = component_authed_appid.component_info
 
