@@ -211,17 +211,11 @@ class Product(models.Model):
 		if pos < 0 or pos >= MAX_INDEX:
 			raise IndexError('{} out of range [1, 65535)'.format(pos))
 		# 查看指定的位置是否存在元素
-		try:
-			obj_b = Product.objects.get(display_index=pos)
-		except ObjectDoesNotExist:
-			obj_b = None
-		except MultipleObjectsReturned:
-			obj_b = None
-
-		if obj_b:
-			obj_b.display_index = 0
-			obj_b.save()
-
+		obj_bs = Product.objects.filter(display_index=pos)
+		if obj_bs.exists():
+			obj_bs.update(display_index=0)
+		else:
+			pass
 		self.display_index = pos
 		self.save()
 
