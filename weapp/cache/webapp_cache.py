@@ -83,7 +83,6 @@ def get_webapp_products(webapp_owner_user_profile,
                         is_access_weizoom_mall,
                         category_id):
     key = 'webapp_products_categories_{wo:%s}' % webapp_owner_user_profile.user_id
-    webapp_owner_id = webapp_owner_user_profile.user_id
     if key in local_cache:
         data = local_cache[key]
     else:
@@ -213,7 +212,7 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
             if i['member_grade_id'] == member_grade_id:
                 product.integral_sale['detail']['discount'] = str(i['discount'])+"%"
                 break
-                
+
     promotion_data = data['promotion']
     if promotion_data and len(promotion_data) > 0:
         product.promotion_model = promotion_models.Promotion.from_dict(

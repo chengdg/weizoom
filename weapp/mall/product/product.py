@@ -218,11 +218,12 @@ class ProductList(resource.Resource):
         if is_deleted:
             products.update(is_deleted=True)
         else:
+            # 更新商品上架状态以及商品排序
             if request.manager.id == products[0].owner_id:
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False)
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0)
                 else:
-                    products.update(shelve_type=shelve_type, is_deleted=False)
+                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0)
             else:
                 products.update(weshop_status=shelve_type)
 
@@ -512,9 +513,6 @@ class Product(resource.Resource):
             postage_id = 999  # request.POST['postage_config_id']
             unified_postage_money = 0.0
         product_id = request.GET.get('id')
-
-        # import pdb
-        # pdb.set_trace()
 
         min_limit = request.POST.get('min_limit', '0')
         if not min_limit.isdigit():

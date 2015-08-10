@@ -1322,7 +1322,7 @@ def get_orders(request):
 		product.properties = product.fill_specific_model(orderHasProduct.product_model_name, cache_productId2cache_products[product.id].models)
 		orderId2order[orderHasProduct.order_id].products.append(product)
 
-	exist_red_envelope_orderIds = [relation.order_id for relation in 
+	exist_red_envelope_orderIds = [relation.order_id for relation in
 		promotion_models.RedEnvelopeToOrder.objects.filter(order_id__in=red_envelope_orderIds)]
 	for order in orders:
 		is_finished = True
@@ -2916,6 +2916,7 @@ def check_product_in_wishlist(request):
 
 	return response.get_response()
 
+
 def get_member_product_info(request):
 	'''
 	获取购物车的数量和检查商品是否已被收藏
@@ -2925,7 +2926,7 @@ def get_member_product_info(request):
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
 	webapp_owner_id = request.webapp_owner_id
 	member_id = request.member.id
-	product_id = request.GET.get('product_id',"")
+	product_id = request.GET.get('product_id', "")
 	if product_id:
 		collect = MemberProductWishlist.objects.filter(
 			owner_id=webapp_owner_id,
@@ -2939,11 +2940,12 @@ def get_member_product_info(request):
 			response.data.is_collect = 'false'
 	response.data.count = shopping_cart_count
 	_, response.data.discount = get_member_discount(request)
-
 	# except:
 	# 	return create_response(500).get_response()
 
 	return response.get_response()
+
+
 def get_member_discount(request):
 	"""获取会员等级ID、折扣
 	"""
