@@ -9,7 +9,7 @@ Background:
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}]
 		"""
 	When jobs添加会员等级
@@ -17,19 +17,19 @@ Background:
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 
-
+@mall2
 Scenario: 1 更新已存在的会员等级
 	jobs添加会员等级后，可以更新等级
 
@@ -39,7 +39,7 @@ Scenario: 1 更新已存在的会员等级
 		{
 			"name": "钻石会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}
 		"""
 	Then jobs能获取会员等级列表
@@ -47,23 +47,23 @@ Scenario: 1 更新已存在的会员等级
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		}, {
 			"name": "钻石会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 
-
+@mall2
 Scenario: 2 更新手动升级会员等级为自动升级会员等级
 	jobs添加手动升级的会员等级后，可以更新为自动升级的会员等级
 
@@ -80,10 +80,10 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 		{
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "90%"
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "9"
 		}
 		"""
 	And jobs更新会员等级'银牌会员'
@@ -91,10 +91,10 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 		{
 			"name": "银牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 3000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
-			"shop_discount": "80%"
+			"pay_money": 3000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
+			"shop_discount": "8"
 		}
 		"""
 	And jobs更新会员等级'金牌会员'
@@ -102,10 +102,10 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 		{
 			"name": "金牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 5000.00,
-			"buy_counts": 50,
-			"empirical_value": 50000,
-			"shop_discount": "70%"
+			"pay_money": 5000.00,
+			"pay_times": 50,
+			"upgrade_lower_bound": 50000,
+			"shop_discount": "7"
 		}
 		"""
 	Then jobs能获取会员等级列表
@@ -113,32 +113,32 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "90%"
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 3000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
-			"shop_discount": "80%"
+			"pay_money": 3000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 5000.00,
-			"buy_counts": 50,
-			"empirical_value": 50000,
-			"shop_discount": "70%"
+			"pay_money": 5000.00,
+			"pay_times": 50,
+			"upgrade_lower_bound": 50000,
+			"shop_discount": "7"
 		}]
 		"""
 
-
+@mall2
 Scenario: 3 更新自动升级会员等级为手动升级会员等级
 	jobs添加自动升级的会员等级后，可以更新为自动升级的会员等级
 
@@ -155,24 +155,24 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 		[{
 			"name": "蓝钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "90%"
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "9"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 3000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
-			"shop_discount": "80%"
+			"pay_money": 3000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
+			"shop_discount": "8"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 5000.00,
-			"buy_counts": 50,
-			"empirical_value": 50000,
-			"shop_discount": "70%"
+			"pay_money": 5000.00,
+			"pay_times": 50,
+			"upgrade_lower_bound": 50000,
+			"shop_discount": "7"
 		}]
 		"""
 	Then jobs能获取会员等级列表
@@ -180,28 +180,28 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "蓝钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "90%"
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "9"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 3000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
-			"shop_discount": "80%"
+			"pay_money": 3000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
+			"shop_discount": "8"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 5000.00,
-			"buy_counts": 50,
-			"empirical_value": 50000,
-			"shop_discount": "70%"
+			"pay_money": 5000.00,
+			"pay_times": 50,
+			"upgrade_lower_bound": 50000,
+			"shop_discount": "7"
 		}]
 		"""
 	When jobs更新会员等级'红钻会员'
@@ -209,7 +209,7 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 		{
 			"name": "红钻会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}
 		"""
 	Then jobs能获取会员等级列表
@@ -217,24 +217,24 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "蓝钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "90%"
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "9"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 3000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
-			"shop_discount": "80%"
+			"pay_money": 3000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
+			"shop_discount": "8"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""

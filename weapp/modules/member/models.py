@@ -339,9 +339,9 @@ class MemberGrade(models.Model):
 	pay_times = models.IntegerField(default=0)
 	integral = models.IntegerField(default=0)
 
-	@staticmethod
-	def is_auto_grade(id):
-		return MemberGrade.objects.get(id=id).is_auto_upgrade
+	# @staticmethod
+	# def is_auto_grade(id):
+	# 	return MemberGrade.objects.get(id=id).is_auto_upgrade
 
 	class Meta(object):
 		db_table = 'member_grade'
@@ -377,7 +377,8 @@ class MemberGrade(models.Model):
 				webapp_id = webapp_id,
 				name = MemberGrade.DEFAULT_GRADE_NAME,
 				upgrade_lower_bound = 0,
-				is_default_grade = True
+				is_default_grade = True,
+				is_auto_upgrade = True
 			)
 
 	@staticmethod
@@ -645,11 +646,15 @@ class Member(models.Model):
 			return None
 
 	@staticmethod
-	def update_member_grade(member_id, grade_id):
-		from django.db import connection, transaction
-		cursor = connection.cursor()
-		cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member_id))
-		transaction.commit_unless_managed()
+	def update_member_grade(member, grade_id):
+		"""
+		updated by zhu tianqi,修改为会员等级高于目标等级时不降级
+		"""
+		if member.grade_id <grade_id:
+			from django.db import connection, transaction
+			cursor = connection.cursor()
+			cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member.id))
+			transaction.commit_unless_managed()
 
 	@property
 	def is_binded(self):

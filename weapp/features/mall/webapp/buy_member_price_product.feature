@@ -22,15 +22,15 @@ Background:
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 	Then jobs能获取会员等级列表
@@ -38,19 +38,19 @@ Background:
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 	When jobs已添加支付方式
@@ -354,10 +354,10 @@ Scenario: 4 订单完成后，达到自动升级的条件
 		{
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 500.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "90%"
+			"pay_money": 500.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "9"
 		}
 		"""
 	And jobs更新会员等级'银牌会员'
@@ -365,10 +365,10 @@ Scenario: 4 订单完成后，达到自动升级的条件
 		{
 			"name": "银牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
-			"shop_discount": "80%"
+			"pay_money": 1000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
+			"shop_discount": "8"
 		}
 		"""
 	Then jobs能获取会员等级列表
@@ -376,25 +376,25 @@ Scenario: 4 订单完成后，达到自动升级的条件
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 500.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "90%"
+			"pay_money": 500.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
-			"shop_discount": "80%"
+			"pay_money": 1000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 	When tom访问jobs的webapp
@@ -469,14 +469,14 @@ Scenario: 4 订单完成后，达到自动升级的条件
 		[{
 			"name": "tom",
 			"member_rank": "铜牌会员",
-			"deal_price": 600.00,
-			"buy_counts": 1,
-			"empirical_value": 0
+			"pay_money": 600.00,
+			"pay_times": 1,
+			"upgrade_lower_bound": 0
 		}, {
 			"name": "bill",
 			"member_rank": "铜牌会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 0
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 0
 		}]
 		"""
