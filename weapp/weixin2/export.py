@@ -192,7 +192,7 @@ def get_advance_manage_second_navs(request):
         pass
     else:
         #webapp_module_views.get_modules_page_second_navs(request)
-        if request.user_profile.user_id in [467,155]:
+        if request.user_profile.user_id in [467,154]:
             second_navs = [SHOUCAO_ADVANCE_MANAGE_NAV]
         else:
             second_navs = [ADVANCE_MANAGE_NAV]
