@@ -130,13 +130,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         }
         var counter = $('[data-ui-role="counter"]').data('view');
         counter.setMaxCount(maxCount);
-        // 用于处理显示限时抢购信息
-        if($('.xa-promotionNormal').data('type')==1){
-            // var minPrice = this.priceInfo.display_price;
-            var promotionPrice = this.promotion.detail.cut_price.toFixed(2);
-            // var gapPrice = promotionPrice.toFixed(2);
-            $('.xa-promotionNormal-info').text('已优惠' + gapPrice + '元')
-        }
         // 用于处理显示积分抵扣信息 提出单独的方法
         if($('.xa-promotion').data('type')==5){
             var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
