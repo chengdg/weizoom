@@ -39,25 +39,11 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     <span class="xui-text-red">{{ product.promotion_title }}</span>{% endif %}</h2>
                 </div>
                 {% endif %}
-                <p class="xui-section-boldItemText xui-text-red">
-                    {% if cur_request_member %}
-                        {% if product.promotion and product.promotion.type == 1 %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
-                        {% else %}
-                            {% ifequal product.display_price  price_info.display_price %}
-                            <span class="xui-memberPriceTag">会员价</span>
-                            <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
-                            <span class="xui-orPrice">原价￥{{ price_info.min_price }}</span>
-                            {% else %}
-                            <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
-                            {% endifequal %}
-                        {% endif %}
+                <p class="xui-section-boldItemText xui-text-red xa-priceSection">
+                    {% if product.promotion and product.promotion.type == 1 %}
+                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                     {% else %}
-                        {% if product.promotion and product.promotion.type == 1 %}     
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
-                        {% else %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
-                        {% endif %}
                     {% endif %}
                 </p>
             </div>
@@ -430,7 +416,10 @@ $(document).ready(function() {
             if(view.is_member_product && data.discount < 100){
                 view.discount = data.discount;
                 // 处理会员价
-                $('.xa-singlePrice').text((view.priceInfo.min_price*view.discount/100).toFixed(2));
+                var member_price = (view.priceInfo.min_price*view.discount/100).toFixed(2);
+                var original_price =(view.priceInfo.min_price).toFixed(2);
+                var temp = '<span class="xui-memberPriceTag">会员价</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ member_price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-singlePrice">'+ original_price +'</span></span>';
+                $('.xa-priceSection').html(temp);
             }
         },
         error: function(data) {

@@ -1644,6 +1644,7 @@ class OrderHasProduct(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	promotion_id = models.IntegerField(default=0)  # 促销信息id
 	promotion_money = models.FloatField(default=0.0)  # 促销抵扣金额
+	grade_discounted_money = models.FloatField(default=0.0)  # 折扣金额
 
 	class Meta(object):
 		db_table = 'mall_order_has_product'
