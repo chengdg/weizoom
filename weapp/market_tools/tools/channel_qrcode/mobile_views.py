@@ -104,8 +104,9 @@ def get_new_settings(request):
             })
         return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
     else:
-        member.user_name = member.username_for_html
+        content_dict = {}
         if member and member.is_subscribed:
+            member.user_name = member.username_for_html
             qrcode = MemberChannelQrcode.objects.filter(member_id=request.member.id)
             if qrcode.count() > 0:
                 qrcode = qrcode[0]
@@ -122,22 +123,23 @@ def get_new_settings(request):
                 new_qrcode.ticket = ticket
                 new_qrcode.save()
                 new_qrcode.count = 0
-                c = RequestContext(request, {
-                        'page_title': u'首草送好礼，接力扫码等你来传递',
-                        'member': member,
-                        'qrcode': new_qrcode,
-                        "qrcode_setting": qrcode_setting,
-                        'show_head': True,
-                        'head_img': get_mp_head_img(user_id)
-                        })
+                content_dict = {
+                    'page_title': u'首草送好礼，接力扫码等你来传递',
+                    'member': member,
+                    'qrcode': new_qrcode,
+                    "qrcode_setting": qrcode_setting,
+                    'show_head': True,
+                    'head_img': get_mp_head_img(user_id)
+                }
+                c = RequestContext(request, content_dict)
                 return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
 
         qrcode_img = get_mp_qrcode_img(user_id)
-        c = RequestContext(request, {
+        content_dict = {
             'page_title': u'首草送好礼，欢迎关注！',
             'qrcode_img': qrcode_img
-            })
-
+        }
+        c = RequestContext(request, content_dict)
         return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_error.html' % TEMPLATE_DIR, c)
 
 
