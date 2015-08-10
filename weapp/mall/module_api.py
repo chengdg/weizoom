@@ -2939,10 +2939,12 @@ def get_member_product_info(request):
 		else:
 			response.data.is_collect = 'false'
 	response.data.count = shopping_cart_count
-	_, response.data.discount = get_member_discount(request)
+	member_grade_id, discount = get_member_discount(request)
+	response.data.member_grade_id = member_grade_id
+	response.data.discount = discount
+
 	# except:
 	# 	return create_response(500).get_response()
-
 	return response.get_response()
 
 
