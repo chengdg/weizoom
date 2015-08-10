@@ -83,6 +83,9 @@ def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_m
 		new_channel_qrcodes = MemberChannelQrcode.objects.filter(ticket=ticket, owner_id=user_profile.user_id)
 		if new_channel_qrcodes.count() > 0:
 			new_channel_qrcode = new_channel_qrcodes[0]
+			#用户自己扫自己的码直接返回
+			if new_channel_qrcode.member_id != member.id:
+				return
 			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
 
 			if MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode=new_channel_qrcode, member=member).count() == 0:
