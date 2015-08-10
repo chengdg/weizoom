@@ -1,1 +1,55 @@
-sfdfsdf
+{% extends "content_base_v2.html" %}
+{% load workbench_filter %}
+{% block content-panel %}
+<div id="workbench" class="xui-wepage-globalNavPage clearfix pr">
+  <div class="relative">
+    <ul class="breadcrumb">
+      <li>您当前所在位置</li>
+      <li><a href="/termite2/pages/">店铺装修</a></li>
+      <li><a href="/termite2/pages/">店铺导航</a></li>
+    </ul>
+  </div>
+
+  <div style="background-color: #EAEEF7;" class="clearfix">
+  	<div class="xui-navbarHeader">
+  		<div class="xui-title mb15">店铺导航</div>
+  		<div class="f14">
+  			<div class="fl">
+  				通过设置自定义导航，使店铺各个页面之间可以相互连接，快速跳转到用户期望的页面。
+  			</div>
+  			<button class="btn btn-primary xa-startUseBtn xui-startUseBtn f12 fl">启用</button></div>
+  		
+  	</div>
+    <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
+    </div>
+    
+    <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
+      <div id="phone" class="xui-phone ">
+          <div id="phoneSkin" class="xui-i-skin">
+            <iframe name="phoneFrame" id="phoneIFrame" src="" height="100%" border="none"></iframe>
+          <div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
+        </div>
+      </div>
+    </div>
+    <div id="rightPanel" class="fl xui-workbench-rightPanel mb30">
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block global_elements %}
+<div class="xui-bottomActionBar">
+  <button class="xa-save btn btn-primary">保存</button>
+</div>
+{% endblock %}
+
+{% block base_js%}
+<script type="text/javascript">
+	 var globalNavView = new W.workbench.GlobalNavView({
+        el: '#rightPanel',
+        // left: propertyViewLeft,
+        onlyShowUserProperty: true//!W.isSystemManager
+      });
+	 globalNavView.render();
+</script>
+{% endblock %}
