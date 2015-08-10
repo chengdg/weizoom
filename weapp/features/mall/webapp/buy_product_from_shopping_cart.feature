@@ -196,11 +196,7 @@ Scenario: 从购物车购买单个商品
 				"products": [{
 					"name": "商品1",
 					"count": 1
-				}]
-			}, {
-				"promotion": null,
-				"can_use_promotion": false,
-				"products": [{
+				}, {
 					"name": "商品2",
 					"count": 2
 				}]
@@ -315,11 +311,7 @@ Scenario: 从购物车购买全部商品
         "products": [{
           "name": "商品1",
           "count": 1
-        }]
-      }, {
-        "promotion": null,
-        "can_use_promotion": false,
-        "products": [{
+        }, {
           "name": "商品2",
           "count": 2
         }]
@@ -354,16 +346,16 @@ Scenario: 从购物车购买部分商品
 		"""
 	When bill从购物车发起购买操作
 		"""
-				{
-					"action": "click",
-					"context": [{
-						"name": "商品1"
-					}, {
-						"name": "商品2"
-					}, {
-						"name": "商品3"
-					}]
-				}
+		{
+			"action": "click",
+			"context": [{
+				"name": "商品1"
+			}, {
+				"name": "商品2"
+			}, {
+				"name": "商品3"
+			}]
+		}
 		"""
 	Then bill能获得待编辑订单
 		"""
@@ -382,14 +374,14 @@ Scenario: 从购物车购买部分商品
 		"""
 	When bill从购物车发起购买操作
 		"""
-				{
-					"action": "pay",
-					"context": [{
-						"name": "商品1"
-					}, {
-						"name": "商品3"
-					}]
-				}
+		{
+			"action": "pay",
+			"context": [{
+				"name": "商品1"
+			}, {
+				"name": "商品3"
+			}]
+		}
 		"""
 	And bill填写收货信息
 		"""
@@ -429,15 +421,14 @@ Scenario: 从购物车购买部分商品
 	And bill能获得购物车
 		"""
 		{
-
 			"product_groups": [{
-        "promotion": null,
-        "can_use_promotion": false,
-        "products": [{
-          "name": "商品2",
-          "count": 1
-        }]
-      }],
+				"promotion": null,
+				"can_use_promotion": false,
+				"products": [{
+					"name": "商品2",
+					"count": 1
+				}]
+			}],
 			"invalid_products": []
 		}
 		"""
@@ -452,11 +443,7 @@ Scenario: 从购物车购买部分商品
         "products": [{
           "name": "商品1",
           "count": 1
-        }]
-      }, {
-        "promotion": null,
-        "can_use_promotion": false,
-        "products": [{
+        }, {
           "name": "商品2",
           "count": 2
         }]
@@ -532,18 +519,10 @@ Scenario: 从购物车购买空商品
 				"products": [{
 					"name": "商品1",
 					"count": 2
-				}]
-			}, {
-				"promotion": null,
-				"can_use_promotion": false,
-				"products": [{
+				}, {
 					"name": "商品2",
 					"count": 1
-				}]
-			}, {
-				"promotion": null,
-				"can_use_promotion": false,
-				"products": [{
+				}, {
 					"name": "商品3",
 					"count": 2
 				}]
@@ -561,11 +540,7 @@ Scenario: 从购物车购买空商品
         "products": [{
           "name": "商品1",
           "count": 1
-        }]
-      }, {
-        "promotion": null,
-        "can_use_promotion": false,
-        "products": [{
+        }, {
           "name": "商品2",
           "count": 2
         }]

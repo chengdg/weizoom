@@ -111,11 +111,23 @@
         </div>
     </fieldset>
     <!-- 订单商品列表 -->
+<<<<<<< HEAD
     <!-- 订单领红包提示 -->
     <fieldset class="xui-section clearfix" style="padding:9px 12px;">
         <!-- <a href="#" class="xui-toGetRedBtn fr">未领取的红包</a> -->
         <a href="#" class="xui-gotRedBtn fr">最近一次领取的红包</a>
     </fieldset>
+=======
+    {% if order.red_envelope %}
+    <fieldset class="xui-section xui-section-title">
+        <div class="xui-inner clearfix">
+            <a class="xui-getRedEnvelope-btn" href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{order.red_envelope}}">
+            {% if order.red_envelope_created %}最近一次领取红包
+            {% else %}未领取的红包{% endif %}</a>
+        </div>
+    </fieldset>
+    {% endif %}
+>>>>>>> d1cb23b982a10954db8dbe599ae7f4ff950b1cfd
     <!--支付方式及发票-->
     <fieldset class="xui-section xui-section-title">
         <div class="xui-inner clearfix">

@@ -146,10 +146,10 @@ def step_impl(context, user, order_id):
 
 @then(u"{user}后端订单状态改变为")
 def step_impl(context, user):
-    if hasattr(context, 'client'):
-        context.client.logout()
+    # if hasattr(context, 'client'):
+    #     context.client.logout()
 
-    context.client = bdd_util.login(user)
+    # context.client = bdd_util.login(user)
     profile = context.client.user.profile
     webapp_id = context.client.user.profile.webapp_id
 
@@ -465,11 +465,13 @@ def step_impl(context, webapp_owner_name):
 
 @given(u"{user}已有的订单")
 def step_impl(context, user):
+    """TODO 弃用 改用 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
+    """
     if hasattr(context, 'client'):
         context.client.logout()
     context.client = bdd_util.login(user)
     profile = context.client.user.profile
-    webapp_id = context.client.user.profile.webapp_id
+    # webapp_id = context.client.user.profile.webapp_id
 
     context.orders = json.loads(context.text)
     for order in context.orders:

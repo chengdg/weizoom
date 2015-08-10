@@ -158,20 +158,20 @@ class RedEnvelopeRule(resource.Resource):
         """
         id = request.POST.get('id', 0)
         status = request.POST.get('status', None)
-        try:
-            if status == 'over':
-                promotion_models.RedEnvelopeRule.objects.filter(id=id).update(status=False)
-            elif status == 'start':
-                start_rule = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, status=True)
-                if start_rule.count() > 0:
-                    response = create_response(500)
-                    response.errMsg = "请先关闭其他分享红包活动！"
-                    return response.get_response()
-                promotion_models.RedEnvelopeRule.objects.filter(id=id).update(status=True)
-            elif status == 'delete':
-                promotion_models.RedEnvelopeRule.objects.filter(id=id).update(status=False, is_delete=True)
-        except:
-            return create_response(500).get_response()
+        # try:
+        if status == 'over':
+            promotion_models.RedEnvelopeRule.objects.filter(id=id).update(status=False)
+        elif status == 'start':
+            start_rule = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, status=True)
+            if start_rule.count() > 0:
+                response = create_response(500)
+                response.errMsg = "请先关闭其他分享红包活动！"
+                return response.get_response()
+            promotion_models.RedEnvelopeRule.objects.filter(id=id).update(status=True)
+        elif status == 'delete':
+            promotion_models.RedEnvelopeRule.objects.filter(id=id).update(status=False, is_delete=True)
+        # except:
+        #     return create_response(500).get_response()
         return create_response(200).get_response()
 
     @login_required

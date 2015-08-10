@@ -339,6 +339,10 @@ class MemberGrade(models.Model):
 	pay_times = models.IntegerField(default=0)
 	integral = models.IntegerField(default=0)
 
+	@staticmethod
+	def is_auto_grade(id):
+		return MemberGrade.objects.get(id=id).is_auto_upgrade
+
 	class Meta(object):
 		db_table = 'member_grade'
 		verbose_name = '会员等级'
@@ -386,15 +390,6 @@ class MemberGrade(models.Model):
 			member_grade.pay_money = '%.2f' % member_grade.pay_money
 		return member_grades
 
-	@staticmethod
-	def get_all_auto_grades_list(webapp_id):
-		if webapp_id is None:
-			return []
-		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id,is_auto_upgrade=True).order_by('id')
-
-		for member_grade in member_grades:
-			member_grade.pay_money = '%.2f' % member_grade.pay_money
-		return member_grades
 
 #===============================================================================
 # Member : 会员
@@ -402,6 +397,11 @@ class MemberGrade(models.Model):
 SOURCE_SELF_SUB = 0  # 直接关注
 SOURCE_MEMBER_QRCODE = 1  # 推广扫码
 SOURCE_BY_URL = 2  # 会员分享
+
+#status  会员状态
+CANCEL_SUBSCRIBED = 0
+SUBSCRIBED = 1
+NOT_SUBSCRIBED = 2
 class Member(models.Model):
 	token = models.CharField(max_length=255, db_index=True, unique=True)
 	webapp_id = models.CharField(max_length=16, db_index=True)
@@ -431,6 +431,7 @@ class Member(models.Model):
 	province = models.CharField(default='', max_length=50)
 	country = models.CharField(default='', max_length=50)
 	sex = models.IntegerField(default=0, verbose_name='性别')
+	status = models.IntegerField(default=1, db_index=True)
 
 	class Meta(object):
 		db_table = 'member_member'
@@ -771,9 +772,9 @@ class MemberFollowRelation(models.Model):
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
 
 			if is_from_qrcode:
-				return Member.objects.filter(id__in=follow_member_ids,source=SOURCE_MEMBER_QRCODE)
+				return Member.objects.filter(id__in=follow_member_ids,source=SOURCE_MEMBER_QRCODE,status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 			else:
-				return Member.objects.filter(id__in=follow_member_ids)
+				return Member.objects.filter(id__in=follow_member_ids, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 		except:
 			return []
 

@@ -119,8 +119,11 @@ def get_webapp_owner_info(webapp_owner_id):
     }]
     data = cache_util.get_many_from_cache(key_infos)
     red_envelope = data[red_envelope_key]
-    if len(red_envelope):
+    if red_envelope:
         red_envelope = promotion_models.RedEnvelopeRule.from_dict(red_envelope)
+        # coupon_rule = red_envelope.coupon_rule
+        # if coupon_rule:
+        #     red_envelope.coupon_rule = promotion_models.CouponRule.from_dict(coupon_rule)
     data = data[webapp_owner_info_key]
     # data = cache_util.get_from_cache(key, get_webapp_owner_info_from_db(webapp_owner_id))
 
@@ -191,20 +194,35 @@ post_update_signal.connect(update_webapp_owner_info_cache_with_login,
 def get_red_envelope_for_cache(owner_id):
     def inner_func():
         red_envelope = promotion_models.RedEnvelopeRule.objects.filter(owner_id=owner_id, status=True)
-        result = ''
+        result = None
         if len(red_envelope):
-            result = red_envelope[0].to_dict()
+            red_envelope = red_envelope[0]
+            coupon_rule = promotion_models.CouponRule.objects.filter(id=red_envelope.coupon_rule_id)
+            if len(coupon_rule) and coupon_rule[0].remained_count > 0:
+                red_envelope.coupon_rule = {'end_date': coupon_rule[0].end_date}
+            else:
+                red_envelope.coupon_rule = None
+            result = red_envelope.to_dict('coupon_rule')
         return { 'value' : result }
     return inner_func
 
 def update_red_envelope_cache(instance, **kwargs):
     if not instance:
         return
-    key = 'red_envelope_{wo:%s}' % instance.owner_id
-    cache_util.delete_cache(key)
+    key = None
+    if len(instance):
+        if isinstance(instance[0], promotion_models.RedEnvelopeRule):
+            # 更新红包分享规则状态时，清空红包分享缓存
+            key = 'red_envelope_{wo:%s}' % instance[0].owner_id
+        elif isinstance(instance[0], promotion_models.CouponRule) and (
+            instance[0].remained_count <= 0 or not instance[0].is_active):
+            # 更新优惠券规则库存数量小于等于0时，清空红包分享缓存
+            key = 'red_envelope_{wo:%s}' % instance[0].owner_id
+    if key:
+        cache_util.delete_cache(key)
     # if instance.status:
 
-
-signals.post_save.connect(update_red_envelope_cache, sender=promotion_models.RedEnvelopeRule, dispatch_uid="red_envelope.save")
+post_update_signal.connect(update_red_envelope_cache, sender=promotion_models.CouponRule, dispatch_uid="coupon_rule.update_red_envelope.save")
+# 新建红包规则，默认状态为关闭
+# signals.post_save.connect(update_red_envelope_cache, sender=promotion_models.RedEnvelopeRule, dispatch_uid="red_envelope.save")
 post_update_signal.connect(update_red_envelope_cache, sender=promotion_models.RedEnvelopeRule, dispatch_uid="red_envelope.update")
-

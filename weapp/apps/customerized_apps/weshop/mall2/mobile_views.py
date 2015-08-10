@@ -124,7 +124,6 @@ def get_product(request):
 		# 		% (owner_id, rid, social_account[0].token))
 		# 未关注会员，需要引导关注
 		cache_key = 'from_weshop_%s' % openid
-		# print 'jz1---', cache_key, rid
 		cache.set(cache_key, rid, 5 * 60)
 	else:# openid 获取异常
 		openid = '0'

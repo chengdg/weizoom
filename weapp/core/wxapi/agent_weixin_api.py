@@ -41,7 +41,7 @@ get_qrcode
 
 create_qrcode_ticket
 	创建二维码ticket
-	文档参见http://mp.weixin.qq.com/wiki/index.php?title=%E7%94%9F%E6%88%90%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A0%81	
+	文档参见http://mp.weixin.qq.com/wiki/index.php?title=%E7%94%9F%E6%88%90%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A0%81
 
 send_custom_msg
 	发送客服消息
@@ -82,10 +82,10 @@ detail: 异常详情
 		c.  该方法处理请求的结果并组织相应结构返回结果
 			def parse_response(self, api_response):
 				pass
-		d. 	该方法针对post方式组织post数据	
+		d. 	该方法针对post方式组织post数据
 			def parse_post_param_json(self, varargs):
 				pass
-	
+
 """
 
 class WeixinApiResponse(object):
@@ -100,9 +100,9 @@ class WeixinApiResponse(object):
 
 	def is_failed(self):
 		return self.response_json.get('errcode', errorcodes.SUCCESS_CODE) != errorcodes.SUCCESS_CODE
-		
+
 	def get_errormsg_in_zh(self):
-		return errorcodes.code2msg.get(self.errcode, self.errmsg) 
+		return errorcodes.code2msg.get(self.errcode, self.errmsg)
 
 	def __parse_response(self, response_text):
 		response_text = response_text.strip()
@@ -162,17 +162,17 @@ def call_api(weixin_api, api_instance_class):
 			request_method = api_instance_class.request_method()
 		except:
 			raise ValueError(u'request method illegality')
-	
+
 		request_url, api_desc = api_instance_class.get_get_request_url_and_api_info(weixin_api.component_token, agrs)
 		api_response = None
 		try:
-			# get 
+			# get
 			if request_method == api_settings.API_GET:
 				api_response = weixin_api.weixin_http_client.get(request_url)
-			# post	
+			# post
 			if request_method == api_settings.API_POST:
 				post_param_json_str = api_instance_class.parese_post_param_json_str(agrs)
-				
+
 				if hasattr(api_instance_class, 'is_for_form') and api_instance_class.is_for_form:
 					is_for_form = True
 				else:
@@ -181,28 +181,28 @@ def call_api(weixin_api, api_instance_class):
 					except:
 						pass
 					is_for_form = False
-					
+
 				api_response = weixin_api.weixin_http_client.post(request_url, post_param_json_str, is_for_form)
 		except:
 			weixin_api._raise_system_error(api_desc, weixin_api.component_token)
 
 		result = api_response
-		
+
 		if hasattr(result, 'errcode'):
 			try:
 				result_code = int(result['errcode'])
 			except:
 				result_code = result['errcode']
-			
+
 			# if result_code == errorcodes.API_NOT_AUTHORIZED_CODE:
 			# 	mpuser_access_token = weixin_api.mpuser_access_token
 			# 	#mpuser_access_token.is_active = False
 			# 	mpuser_access_token.is_certified = False
 			# 	mpuser_access_token.save()
-			
+
 			# try:
 			# 	if result_code == errorcodes.INVALID_ACCESS_TOKEN_CODE or result_code == errorcodes.ILLEGAL_ACCESS_TOKEN_CODE or result_code == errorcodes.ACCESS_TOKEN_EXPIRED_CODE:
-			# 		update_access_token(weixin_api.mpuser_access_token)	
+			# 		update_access_token(weixin_api.mpuser_access_token)
 			# except:
 			# 	notify_message = u"weixin_api update_access_token error {}".format(unicode_full_stack())
 			# 	watchdog_error(notify_message)
@@ -219,22 +219,21 @@ def call_api(weixin_api, api_instance_class):
 		# 				weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner.id)
 		# 	else:
 		# 		weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner.id)
-		
+
 		return api_instance_class.parse_response(api_response)
 
 	return _call_api
 
 class WeixinApi(object):
 	def __init__(self, component_token, weixin_http_client):
-		
+
 		self.component_token = component_token
 		self.weixin_http_client = weixin_http_client
 
 	def __getattr__(self, name):
-		print name ,'============='
 		if not name in api_settings.API_CLASSES.keys():
 			raise ValueError(u'api_settings 里不存在该方法{}对应 api'.format(name))
-		
+
 		if not hasattr(self.__dict__, name):
 			handler_path = api_settings.API_CLASSES[name]
 
@@ -260,8 +259,8 @@ class WeixinApi(object):
 
 			self.__dict__[name] = call_api(self, api_class_instance)
 
-		return self.__dict__[name]		
-		
+		return self.__dict__[name]
+
 
 	# def upload_media(self):
 	# 	pass
@@ -276,7 +275,7 @@ class WeixinApi(object):
 	def _raise_request_error(self, response, api_name='' , user_id=0):
 		error_response = WeixinErrorResponse(response)
 
-		# if error_response.errcode in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE, 
+		# if error_response.errcode in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE,
 		# 	errorcodes.ACCESS_TOKEN_EXPIRED_CODE, errorcodes.INVALID_ACCESS_TOKEN_CODE):
 			#inactive_mpuser_access_token(self.mpuser_access_token)
 
@@ -302,10 +301,10 @@ class WeixinApi(object):
 
 	def _is_error_dueto_access_token(self, response):
 		if type(response) == dict:
-			return response.get('errcode', errorcodes.SUCCESS_CODE) in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE, 
+			return response.get('errcode', errorcodes.SUCCESS_CODE) in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE,
 				errorcodes.ACCESS_TOKEN_EXPIRED_CODE, errorcodes.INVALID_ACCESS_TOKEN_CODE)
 		else:
-			return False		
+			return False
 
 import json
 import urllib2

@@ -140,12 +140,12 @@ Background:
 		}]
 		"""
 
-	And toms已添加优惠券
+	And toms已添加了优惠券规则
 		"""
 		[{
 			"name": "商品2优惠券",
 			"money": 10,
-			"start_date": "2014-8-1",
+			"start_date": "今天",
 			"end_date": "10天后",
 			"coupon_id_prefix": "coupon1_id_"
 		}]

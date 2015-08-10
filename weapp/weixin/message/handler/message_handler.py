@@ -13,7 +13,7 @@ from weixin.message import generator
 
 from django.conf import settings
 
-EMPTY_RESPONSE_CONTENT = '@@'
+EMPTY_RESPONSE_CONTENT = ''
 
 class MessageHandler(object):
 	"""

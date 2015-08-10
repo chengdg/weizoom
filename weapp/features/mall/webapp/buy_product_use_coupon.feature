@@ -740,7 +740,7 @@ Scenario: 11 购买多规格商品，买1个商品的两个规格，总价格满
 		}
 		'''
 
-@mall2 @mall.webapp @mall.coupon @jz
+@mall2 @mall.webapp @mall.coupon
 Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣运费
 	bill购买jobs的商品时，优惠券金额大于商品金额时
 	1.只抵扣商品金额，不能抵扣运费

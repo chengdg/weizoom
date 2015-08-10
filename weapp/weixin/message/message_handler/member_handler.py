@@ -19,6 +19,7 @@ from modules.member.util import (get_member_by_binded_social_account,
 	create_member_by_social_account, create_social_account,member_basic_info_updater)
 
 from watchdog.utils import watchdog_error, watchdog_fatal
+import datetime
 
 """
 根据消息创建会员
@@ -97,12 +98,13 @@ class MemberHandler(MessageHandler):
 				notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
 					social_account.openid, unicode_full_stack())
 				watchdog_fatal(notify_message)
-			try:
-				integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
-			except:
-				integral_strategy_settings = None
+			
 			
 			if member and hasattr(member, 'is_new') and member.is_new:
+				try:
+					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+				except:
+					integral_strategy_settings = None
 				try:
 					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 					member.is_new = True
@@ -112,15 +114,44 @@ class MemberHandler(MessageHandler):
 					watchdog_error(notify_message)
 
 		else:
-			member.is_subscribed = True
+			status = member.status
+			member.is_subscribed = True			
+			member.status = SUBSCRIBED
+			if status == NOT_SUBSCRIBED:
+				member.created_at = datetime.datetime.now()
 			member.save()
-			member.is_new = False
-				
+
+			if status == NOT_SUBSCRIBED:
+				try:
+					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+				except:
+					integral_strategy_settings = None
+				try:
+					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
+				except:
+					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+							member.id, unicode_full_stack())
+					watchdog_error(notify_message)
+				"""
+				TODO:
+					 更新好友数量
+				"""	
+				member.is_new = True
+			else:
+				member.is_new = False
+			member.old_status = status	
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
 
+		"""
+			更新头像放到celery里
+		"""
+
 		try:
-			member_basic_info_updater(request.user_profile, member)
+			if not member.user_icon or member.user_icon == '':
+				member_basic_info_updater(request.user_profile, member)
+				if not member.user_icon or member.user_icon == '':
+					member_basic_info_updater(request.user_profile, member)
 		except:
 			notify_message = u"关注时,更新会员头像会员失败,id:{}, cause:\n{}".format(
 							member.id, unicode_full_stack())

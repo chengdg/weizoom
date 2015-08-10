@@ -138,7 +138,7 @@
                     W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
             var link = window.location.href;
             if (link.indexOf('fmt') === -1){
-                if (link.indexOf('&') === -1){
+                if (link.indexOf('/?') === -1){
                     link = link +"?fmt="+W.curRequestMemberToken;
                 } else {
                     link = link +"&fmt="+W.curRequestMemberToken;
