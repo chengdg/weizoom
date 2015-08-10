@@ -1246,7 +1246,7 @@ input.ui-input-text, textarea.ui-input-text {
     padding-top:1px;
 }
 /*会员价标签*/
-/*.xui-productDetailPage .xui-memberPriceTag{
+.xui-productDetailPage .xui-memberPriceTag{
     min-width: 2.8rem;
     vertical-align: inherit;
 }
@@ -1257,7 +1257,7 @@ input.ui-input-text, textarea.ui-input-text {
     margin-left: 5px;
     -webkit-transform:scale(.95);
     transform:scale(.95);
-}*/
+}
 
 
 /*.xui-productDetailPage .xui-promotion-gift li{
