@@ -159,7 +159,7 @@ Scenario:1 对上架商品进行批量下架
 			"shelve_type": "下架"
 		}]
 	"""
-
+# __editor__ : "新新"待售商品上架后,排序为0
 Scenario:2 对下架商品进行批量上架
 	When jobs获取待售商品列表
 	"""
@@ -224,6 +224,7 @@ Scenario:2 对下架商品进行批量上架
 			"price": 30.0,
 			"stock_type": "有限",
 			"stocks": 3,
+			"sort": 0,
 			"create_time": "2015-07-31 12:00",
 			"shelve_type": "上架"
 		}, {
@@ -231,6 +232,7 @@ Scenario:2 对下架商品进行批量上架
 			"category": "分类1,分类2,分类3",
 			"price": 20.0,
 			"stock_type": "无限",
+			"sort": 0,
 			"create_time": "2015-07-30 12:00",
 			"shelve_type": "上架"
 		}]
