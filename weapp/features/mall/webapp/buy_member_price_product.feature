@@ -334,3 +334,149 @@ Scenario: 3 购买多个商品包括会员价商品
 			}]
 		}
 		"""
+
+
+Scenario: 4 订单完成后，达到自动升级的条件
+	jobs添加商品后
+	1. tom能在webapp中购买jobs的商品后，完成订单后
+	2. tom达到自动升级的条件，并升级
+	
+	Given jobs登录系统
+	When jobs开启自动升级
+		"""
+		{
+			"upgrade": "自动升级",
+			"condition": ["满足一个条件即可"]
+		}
+		"""
+	When jobs更新会员等级'铜牌会员'
+		"""
+		{
+			"name": "铜牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 500.00,
+			"buy_counts": 20,
+			"empirical_value": 10000,
+			"shop_discount": "90%"
+		}
+		"""
+	And jobs更新会员等级'银牌会员'
+		"""
+		{
+			"name": "银牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 1000.00,
+			"buy_counts": 30,
+			"empirical_value": 30000,
+			"shop_discount": "80%"
+		}
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"shop_discount": "100%"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 500.00,
+			"buy_counts": 20,
+			"empirical_value": 10000,
+			"shop_discount": "90%"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "自动升级",
+			"deal_price": 1000.00,
+			"buy_counts": 30,
+			"empirical_value": 30000,
+			"shop_discount": "80%"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "70%"
+		}]
+		"""
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
+		"""
+		{
+			"ship_name": "tom",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
+			"products": [{
+				"name": "商品2",
+				"model": "M",
+				"count": 2
+			}]
+		}
+		"""
+	When tom使用支付方式'货到付款'进行支付
+	Then tom支付订单成功
+		"""
+		{
+			"status": "待发货",
+			"final_price": 600.00,
+			"products": [{
+				"name": "商品2",
+				"price": 300.00,
+				"model": "M",
+				"count": 2
+			}]
+		}
+		"""
+	Given jobs登录系统
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"status": "待发货",
+			"actions": ["发货", "取消订单"],
+			"final_price": 600.00,
+			"ship_name": "tom",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
+			"products": [{
+				"name": "商品2",
+				"price": 300.00,
+				"model": "M",
+				"count": 2
+			}]
+		}
+		"""
+	When jobs对最新订单进行发货
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"status": "已发货",
+			"actions": ["标记完成", "取消订单", "修改物流"]
+			"final_price": 600.00,
+			"ship_name": "tom",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
+			"products": [{
+				"name": "商品2",
+				"price": 300.00,
+				"model": "M",
+				"count": 2
+			}]
+		}
+		"""
+	#tom已经满足一个升级条件，自动升级为铜牌会员
+	When jobs'完成'最新订单
+	Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "铜牌会员",
+			"deal_price": 600.00,
+			"buy_counts": 1,
+			"empirical_value": 0
+		}, {
+			"name": "bill",
+			"member_rank": "铜牌会员",
+			"deal_price": 0.00,
+			"buy_counts": 0,
+			"empirical_value": 0
+		}]
+		"""

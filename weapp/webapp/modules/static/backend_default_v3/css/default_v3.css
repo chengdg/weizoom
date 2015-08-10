@@ -3281,6 +3281,7 @@ input.ui-input-text, textarea.ui-input-text {
     height: 49px;
     line-height: 49px;
     margin-left: 12px;
+    border-top: 1px solid #dbdbdb;
     position: relative;
 }
 .xui-orderListPage .xui-bottomBtn .xui-button{

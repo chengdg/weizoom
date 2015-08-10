@@ -35,15 +35,15 @@
                                         {% endifequal %}
                                         {% ifequal order.status 3 %}
                                             <span class="xui-text-red">待发货</span>
-                                            <i class="xui-getRedTip"></i>
+                                            {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
                                         {% endifequal %}
                                         {% ifequal order.status 4 %}
                                             <span class="xui-text-red">待收货</span>
-                                            <i class="xui-getRedTip"></i>
+                                            {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
                                         {% endifequal %}
                                         {% ifequal order.status 5 %}
                                             <span class="c3">已完成</span>
-                                            <i class="xui-getRedTip"></i>
+                                            {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
                                         {% endifequal %}
                                         {% ifequal order.status 6 %}
                                             <span class="c3">退款中</span>
@@ -52,7 +52,7 @@
                                             <span class="c3">退款成功</span>
                                         {% endifequal %}
                                     </div>
-                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                                 </div>
                                 {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
@@ -103,7 +103,7 @@
                                     </div>
                                     {% endfor %}
                                 {% endif %}
-                                <div class="pr15 xui-bottomBtn xui-tPLine tl">
+                                <div class="pr15 xui-bottomBtn tl">
                                     <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
                                     <span class="xui-button">
                                         {% ifequal order.status 0 %}
@@ -152,7 +152,7 @@
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">待支付</span>
                                     </div>
-                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                                 </div>
                                  {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
@@ -207,7 +207,7 @@
                                     </div>
                                     {% endfor %}
                                 {% endif %}
-                                <div class="pr15 xui-bottomBtn tl xui-tPLine">
+                                <div class="pr15 xui-bottomBtn tl">
                                      <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
                                      <span class="xui-button">
                                         <a href="javascript:void(0);" class="xui-forPay-btn xui-cancel update_order_cancel tc" data-id="{{order.id}}">取消订单</a>
@@ -236,9 +236,9 @@
                                 <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
                                 <div class="xt-status fl">
                                     <span class="xui-text-red">待发货</span>
-                                    <i class="xui-getRedTip"></i>
+                                    {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
                                 </div>
-                                <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
+                                <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                             </div>
                              {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
@@ -317,9 +317,9 @@
                                     <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">已发货</span>
-                                        <i class="xui-getRedTip"></i>
+                                        {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
                                     </div>
-                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
+                                    <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}</div>
                                 </div>
                                  {% if order.products|length >= 2 %}
                                 <div class="xui-userCenterOrderInfo">
@@ -375,7 +375,7 @@
                                     </div>
                                     {% endfor %}
                                 {% endif %}
-                                 <div class="pr15 xui-bottomBtn tl xui-tPLine">
+                                 <div class="pr15 xui-bottomBtn tl">
                                     <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
                                     <span class="xui-button">
                                         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
