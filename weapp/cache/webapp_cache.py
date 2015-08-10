@@ -64,6 +64,7 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
                 product_dict = product.to_dict()
                 product_dict['display_price'] = get_product_display_price(product, webapp_owner_id)
                 product_dict['categories'] = product2categories.get(product.id, set())
+                product_dict['promotion'] = product.promotion if hasattr(product, 'promotion') else None
                 product_dicts.append(product_dict)
             return {
                 'value': {

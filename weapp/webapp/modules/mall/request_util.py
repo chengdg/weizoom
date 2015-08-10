@@ -113,6 +113,11 @@ def list_products(request):
 
 	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
+
+	for p in products:
+		if p.promotion:
+			p.promotion_js = json.dumps(p.promotion)
+
 	has_category = False
 	if len(product_categories) > 0:
 		has_category = True
