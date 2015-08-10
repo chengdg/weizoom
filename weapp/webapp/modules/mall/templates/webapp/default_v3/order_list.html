@@ -35,12 +35,15 @@
                                         {% endifequal %}
                                         {% ifequal order.status 3 %}
                                             <span class="xui-text-red">待发货</span>
+                                            <i class="xui-getRedTip"></i>
                                         {% endifequal %}
                                         {% ifequal order.status 4 %}
                                             <span class="xui-text-red">待收货</span>
+                                            <i class="xui-getRedTip"></i>
                                         {% endifequal %}
                                         {% ifequal order.status 5 %}
                                             <span class="c3">已完成</span>
+                                            <i class="xui-getRedTip"></i>
                                         {% endifequal %}
                                         {% ifequal order.status 6 %}
                                             <span class="c3">退款中</span>
@@ -233,6 +236,7 @@
                                 <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
                                 <div class="xt-status fl">
                                     <span class="xui-text-red">待发货</span>
+                                    <i class="xui-getRedTip"></i>
                                 </div>
                                 <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
                             </div>
@@ -288,7 +292,7 @@
                                 </div>
                                 {% endfor %}
                             {% endif %}
-                            <div class="pr15 xui-bottomBtn tl xui-tPLine">
+                            <div class="pr15 xui-bottomBtn tl" style="border-color:#dbdbdb;">
                                 <span class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></span>
                             </div>
                         </a>
@@ -313,6 +317,7 @@
                                     <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">已发货</span>
+                                        <i class="xui-getRedTip"></i>
                                     </div>
                                     <div class="fr xui-inner-time">{{ order.created_at|date:"Y. m. j H:i" }}{{order.red_envelope}}</div>
                                 </div>

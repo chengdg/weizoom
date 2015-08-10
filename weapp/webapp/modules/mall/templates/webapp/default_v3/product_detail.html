@@ -5,73 +5,8 @@
 <link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
 <style>
 a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
-.xui-cf6{
-    background: #f6f6f9;
-}
-.xui-btn-commen{
-    background: #D10000;
-}
-.xui-btn-disable{
-    background: #ccc;
-}
-.xui-w93{
-    width: 93%;
-}
-
-.xui-w34{
-    width: 34%;
-}
-.xui-w44{
-    width: 44%;
-}
-.xui-w46{
-    width: 46%;
-}
-.xui-w76{
-    width: 76%;
-}
-.xui-w78{
-    width: 78%;
-}
-.xui-pl15{
-    padding-left: 15px!important;
-}
 .xui-pl0{
     padding: 0;
-}
-.xui-mb10{
-    margin-bottom: 10px;
-}
-.xui-colorGary{
-    background:#A09F9F!important;
-}
-.xui-colorRed{
-    background: #D10000!important;
-}
-.xui-integral{
-    color: #D10000;
-    border-top:1px dashed #cdd1d4;
-    position: relative;
-}
-.xui-integral .xui-inner{
-    display: block;
-    padding:15px 10px 15px 15px;
-}
-.xui-section-normalItemText i{
-    display: block;
-    width: 11px;
-    height: 14px;
-    background: url(/standard_static/img/webapp/wallet.png) no-repeat;
-    -webkit-background-size: 100%;
-    background-size: 100%;
-    position: absolute;
-    top: 15px;
-}
-.xui-productDetailPage .xui-shoppingCartBtn .xui-shoppingCartBtn{
-    width:auto;
-}
-.xui-productDetailPage .wui-limit{
-    vertical-align: top;
 }
 </style>
 {% endblock %}
@@ -109,10 +44,16 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         {% if product.promotion and product.promotion.type == 1 %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
+<<<<<<< HEAD
+                        <span class="xui-memberPriceTag">会员价</span>
+                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.display_price }}</span></span>
+                        <span class="xui-orPrice">原价￥222.00</span>
+=======
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
+>>>>>>> d1cb23b982a10954db8dbe599ae7f4ff950b1cfd
                         {% endif %}
                     {% else %}
-                        {% if product.promotion and product.promotion.type == 1 %}
+                        {% if product.promotion and product.promotion.type == 1 %}     
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
                         {% else %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
