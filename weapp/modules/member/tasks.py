@@ -65,10 +65,11 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 
 	current_integral = member.integral + integral_increase_count
 	try:
+		update_grade_flag =False
 		if integral_increase_count > 0:
 			# 处理经验值
-			member.experience= F('experience') + integral_increase_count
-			auto_update_grade(member=member)
+			member.experience += integral_increase_count
+			update_grade_flag = True
 		member.integral = F('integral') + integral_increase_count
 		member.save()
 		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)
@@ -85,6 +86,8 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 	except:
 		notify_message = u"update_member_integral member_id:{}, cause:\n{}".format(member.id, unicode_full_stack())
 		watchdog_error(notify_message)
+	if update_grade_flag:
+		auto_update_grade(member=member)
 
 @task(bind=True)
 def increase_intgral_for_be_member_first(self, member_id, webapp_id, event_type):

@@ -9,7 +9,7 @@ Background:
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}]
 		"""
 	When jobs添加会员等级
@@ -17,19 +17,19 @@ Background:
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 
-
+@mall2
 Scenario: 1 删除已存在的手动升级的会员等级
 	jobs能删除已存在的会员等级
 
@@ -40,20 +40,20 @@ Scenario: 1 删除已存在的手动升级的会员等级
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 
 
-
+@mall2
 Scenario: 2 删除已存在的自动升级的会员等级
 	jobs能删除已存在的会员等级
 
@@ -70,19 +70,19 @@ Scenario: 2 删除已存在的自动升级的会员等级
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 	When jobs添加会员等级
@@ -90,17 +90,17 @@ Scenario: 2 删除已存在的自动升级的会员等级
 		[{
 			"name": "蓝钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
-			"shop_discount": "60%"
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
+			"shop_discount": "6"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 5000.00,
-			"buy_counts": 50,
-			"empirical_value": 50000,
-			"shop_discount": "40%"
+			"pay_money": 5000.00,
+			"pay_times": 50,
+			"upgrade_lower_bound": 50000,
+			"shop_discount": "4"
 		}]
 		"""
 	When jobs删除会员等级'蓝钻会员'
@@ -109,25 +109,25 @@ Scenario: 2 删除已存在的自动升级的会员等级
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
-			"deal_price": 5000.00,
-			"buy_counts": 50,
-			"empirical_value": 50000,
-			"shop_discount": "40%"
+			"pay_money": 5000.00,
+			"pay_times": 50,
+			"upgrade_lower_bound": 50000,
+			"shop_discount": "4"
 		}]
 		"""

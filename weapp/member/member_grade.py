@@ -57,15 +57,15 @@ class MemberGradeList(resource.Resource):
         post_ids = []
         for grade in post_grades:
             grade_id = int(grade.get("id", '0'))
-            if grade_id > 0:
-                post_ids.append(grade_id)
+            # if grade_id > 0:
+            post_ids.append(grade_id)
 
             name = grade.get("name", 'get none value')
             is_auto_upgrade = bool(int(grade.get("is_auto_upgrade", 0)))
-            pay_money = grade.get("money", 0)
-            pay_times = grade.get("paytimes", 0)
-            upgrade_lower_bound = grade.get("bound", 0)
-            shop_discount = grade.get("discount", '10')
+            pay_money = grade.get("pay_money", 0)
+            pay_times = grade.get("pay_times", 0)
+            upgrade_lower_bound = grade.get("upgrade_lower_bound", 0)
+            shop_discount = grade.get("shop_discount", '10')
 
             shop_discount = int(float(shop_discount) * 10)
 
@@ -104,10 +104,7 @@ class MemberGradeList(resource.Resource):
 
             for member in members:
                 auto_update_grade(member=member, delete=True)
-
-
-            # MemberGrade.objects.filter(id__in=delete_ids).delete()
-
+            MemberGrade.objects.filter(id__in=delete_ids).delete()
             mall.module_api.update_promotion_status_by_member_grade(delete_ids)
 
         response = create_response(200)
@@ -116,10 +113,14 @@ class MemberGradeList(resource.Resource):
 
 def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     """
-
+    :param webapp_user_id:
     :param member:
-    :return:bool,等级是否更新
+    :param delete:
+    :param kwargs:
+    :return:是否改变了等级
     """
+
+    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
     is_change = False
 
@@ -127,9 +128,11 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         print("webapp_user_id", webapp_user_id)
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
     elif member:
-        print("member", member.id)
+        print("member", member.username,member.id,member.experience,member.created_at,member.integral,member.user_icon)
 
     if not member.grade.is_auto_upgrade and not delete:
+        print("ztq---------",member.grade.is_auto_upgrade,delete)
+        print("here")
         return is_change
 
     webapp_id = member.webapp_id
@@ -172,8 +175,13 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         for grade in grades_list:
             print("one grade:", grade.name, grade.pay_money, grade.pay_times, grade.upgrade_lower_bound)
             if pay_money >= grade.pay_money or pay_times >= grade.pay_times or bound >= grade.upgrade_lower_bound:
+                print(bound,grade.upgrade_lower_bound)
+
+                print("pay_times:",pay_times,grade.pay_times)
+
                 is_change = True
                 member.grade = grade
+
                 break
     if is_change:
         print(member.grade.name)
@@ -181,7 +189,8 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         member.save()
     else:
         print("not changed")
-
+    print("is_changed:",is_change)
+    print("end")
     return is_change
 
 

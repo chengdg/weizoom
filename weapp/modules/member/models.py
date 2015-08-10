@@ -261,19 +261,19 @@ class WebAppUser(models.Model):
 	#############################################################################
 	# get_discount: 获取折扣信息
 	#############################################################################
-	def get_discount(self):
-		if not hasattr(self, '_grade'):
-			if not self.is_member:
-				self._grade = {'grade':'', 'discount':100}
-			else:
-				target_grade_id = self.member.grade_id
-				target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
+	# def get_discount(self):
+	# 	if not hasattr(self, '_grade'):
+	# 		if not self.is_member:
+	# 			self._grade = {'grade':'', 'discount':100}
+	# 		else:
+	# 			target_grade_id = self.member.grade_id
+	# 			target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
 
-				if not target_member_grade:
-					self._grade = {'grade':'', 'discount':100}
-				else:
-					self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
-		return self._grade
+	# 			if not target_member_grade:
+	# 				self._grade = {'grade':'', 'discount':100}
+	# 			else:
+	# 				self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
+	# 	return self._grade
 
 	#############################################################################
 	# get_discounted_money: 获取折扣后的金额
@@ -281,8 +281,8 @@ class WebAppUser(models.Model):
 	# 1、如果折扣为100% 或者 商品类型为积分商品，返回当前的价格
 	# 2、折扣不为100% 并且不是积分商品，计算折扣
 	#############################################################################
-	def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
-		return money, 0
+	# def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
+	# 	return money, 0
 		'''
 		grade_discount = self.get_discount()
 		if grade_discount['discount'] == 100 or product_type == PRODUCT_INTEGRAL_TYPE:
@@ -339,9 +339,9 @@ class MemberGrade(models.Model):
 	pay_times = models.IntegerField(default=0)
 	integral = models.IntegerField(default=0)
 
-	@staticmethod
-	def is_auto_grade(id):
-		return MemberGrade.objects.get(id=id).is_auto_upgrade
+	# @staticmethod
+	# def is_auto_grade(id):
+	# 	return MemberGrade.objects.get(id=id).is_auto_upgrade
 
 	class Meta(object):
 		db_table = 'member_grade'
@@ -377,7 +377,8 @@ class MemberGrade(models.Model):
 				webapp_id = webapp_id,
 				name = MemberGrade.DEFAULT_GRADE_NAME,
 				upgrade_lower_bound = 0,
-				is_default_grade = True
+				is_default_grade = True,
+				is_auto_upgrade = True
 			)
 
 	@staticmethod
@@ -645,11 +646,15 @@ class Member(models.Model):
 			return None
 
 	@staticmethod
-	def update_member_grade(member_id, grade_id):
-		from django.db import connection, transaction
-		cursor = connection.cursor()
-		cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member_id))
-		transaction.commit_unless_managed()
+	def update_member_grade(member, grade_id):
+		"""
+		updated by zhu tianqi,修改为会员等级高于目标等级时不降级
+		"""
+		if member.grade_id <grade_id:
+			from django.db import connection, transaction
+			cursor = connection.cursor()
+			cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member.id))
+			transaction.commit_unless_managed()
 
 	@property
 	def is_binded(self):
