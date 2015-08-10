@@ -13,7 +13,9 @@
 				<li>
 			        <div class="clearfix pt10 pb10">
 			            <div class="fl">
-			                <img src="/static/img/user-1.jpg" data-allow-autoplay="true" class="xui-user">
+				            <div class="xui-user">
+				                <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" data-allow-autoplay="true">
+				            </div>
 			                <span class="ml5 xa-memberName">
 			                	{% autoescape off %}
 			                		{{review.member_name }}
@@ -22,23 +24,25 @@
 			            </div>
 			            <span class="fr">{{ review.created_at|date:"Y-m-j" }}</span>
 			        </div>
-			        <p class="pb5 em85 c6">{{ review.review_detail }}</p>
-					<div>
-						{% if review.custom_model_properties %}
-                            {% for property in review.custom_model_properties %}
-                            <span class="mr10">&nbsp;{{ property.property_value }}</span>
-                            {% endfor %}
-                        {% endif %}
+			        <p class="em85 c6">{{ review.review_detail }}</p>
+					{% if review.custom_model_properties %}
+					<div class="pt5">
+                        {% for property in review.custom_model_properties %}
+                        <span class="mr10">{{ property.property_value }}</span>
+                        {% endfor %}
 					</div>
+					{% endif %}
+					{% if review.pictures %}
 					<div class="xui-reviewImg clearfix mt10">
 						{% for picture in review.pictures %}
 			                {% ifequal picture|truncatechars:18 'http://weappimg...'%}
-							<img width="50" height="50" src="{{picture}}!60"  full-src="{{picture}}">
+							<img width="50" height="50" src="{{picture}}!60" full-src="{{picture}}">
 			                {% else %}
 							<img width="50" height="50" src="{{picture}}">
 			                {% endifequal%}
 						{% endfor %}
 					</div>
+					{% endif %}
 			    </li>
 			{% endfor %}
 		</ul>
