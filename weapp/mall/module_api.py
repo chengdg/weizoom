@@ -168,6 +168,7 @@ def group_product_by_promotion(request, products):
 	promotion2products = {}
 	group_id = 0
 	for product in products:
+		product.original_price = product.price
 		if product.is_member_product:
 			product.price = round(product.price * discount / 100, 2)
 		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
@@ -431,7 +432,7 @@ def get_products(webapp_id, is_access_weizoom_mall, webapp_owner_id, webapp_user
 		if not isinstance(product, Product):
 			continue
 		product.original_price = product.price
-		product.price, _ = webapp_user.get_discounted_money(product.price, product_type=product.type)
+		# product.price, _ = webapp_user.get_discounted_money(product.price, product_type=product.type)
 
 	return category, products
 
@@ -781,8 +782,8 @@ def get_products_detail(webapp_owner_id, product_ids, webapp_user=None, member_g
 
 			for product_model in product.models:
 				#获取折扣后的价格
-				if webapp_user:
-					product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
+				# if webapp_user:
+					# product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
 				if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
 					product_model['price'] = round(product_model['price'] * 1.1, 2)
 
@@ -903,8 +904,8 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 
 		for product_model in product.models:
 			#获取折扣后的价格
-			if webapp_user:
-				product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
+			# if webapp_user:
+				# product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
 			if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
 				product_model['price'] = round(product_model['price'] * 1.1, 2)
 
@@ -988,8 +989,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 	return product
 
 
-
-
 # def str("%.2f" % price):
 # 	if p_type == PRODUCT_INTEGRAL_TYPE:
 # 		return int(price)
@@ -1018,8 +1017,8 @@ def create_order(webapp_owner_id, webapp_user, product):
 
 	#计算折扣
 	product.original_price = product.price
-	if product.type==PRODUCT_DEFAULT_TYPE:
-		product.price, _ = webapp_user.get_discounted_money(product.price, product_type=product.type)
+	# if product.type==PRODUCT_DEFAULT_TYPE:
+	# 	product.price, _ = webapp_user.get_discounted_money(product.price, product_type=product.type)
 	order.products = [product]
 
 	order.postage = 0.0 #订单运费由前台计算
@@ -1086,9 +1085,9 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	product_groups = order_info['product_groups']
 
 	#处理订单中的product总价
-	order.product_price = sum([product.price * product.purchase_count for product in products])
-	order.final_price = order.product_price
-
+	order.product_price = sum([product.original_price * product.purchase_count for product in products])
+	order.final_price = sum([product.price * product.purchase_count for product in products])
+	order.member_grade_discounted_money = order.product_price - order.final_price
 	mall_signals.pre_save_order.send(sender=mall_signals, pre_order=fake_order, order=order, products=products, product_groups=product_groups)
 	order.final_price = round(order.final_price, 2)
 	if order.final_price < 0:
@@ -1122,16 +1121,17 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 
 	#建立<order, product>的关系
 	for product in products:
-		product_discounted_money, _ = webapp_user.get_discounted_money(product.price, product_type=order.type)
+		# product_discounted_money, _ = webapp_user.get_discounted_money(product.price, product_type=order.type)
 		OrderHasProduct.objects.create(
 			order = order,
 			product_id = product.id,
 			product_model_name = product.model['name'],
 			number = product.purchase_count,
 			total_price = product.total_price,
-			price = product_discounted_money,
+			price = product.original_price,
 			promotion_id = product.promotion['id'] if product.promotion else 0,
 			promotion_money = product.promotion_money if hasattr(product, 'promotion_money') else 0,
+			grade_discounted_money = product.total_price - product.price * product.purchase_count
 		)
 	# 	if product.owner_id != webapp_owner_id:
 	# 		order.order_source = ORDER_SOURCE_WEISHOP
@@ -1614,7 +1614,7 @@ def get_shopping_cart_products(request):
 		product.count = shopping_cart_item.count
 		product.purchase_count = shopping_cart_item.count
 		product.shopping_cart_id = shopping_cart_item.id
-		product.original_price = product.price
+		# product.original_price = product.price
 
 		if product.shelve_type == PRODUCT_SHELVE_TYPE_OFF or \
 			product.shelve_type == PRODUCT_SHELVE_TYPE_RECYCLED or\
@@ -1673,15 +1673,15 @@ def create_shopping_cart_order(webapp_owner_id, webapp_user, products):
 	#计算订单商品总重量的运费
 	total_weight = 0.0;
 	for product in products:
-		product.original_price = product.price
-		product.price, _ = webapp_user.get_discounted_money(product.price)
+		# product.original_price = product.price
+		# product.price, _ = webapp_user.get_discounted_money(product.price)
 		# 有运费商品
 		if product.postage_id > 0:
 			total_weight += float(product.purchase_count) * float(product.weight)
 	'''
 	# 运费临时使用，测试
 	'''
-	postage_config, order.postage = None, 0
+	# postage_config, order.postage = None, 0
 	# postage_config, order.postage = mall_util.get_postage_for_weight(webapp_owner_id, total_weight)
 	order.products = products
 
@@ -1979,6 +1979,7 @@ def get_order_products(order):
 		noline: 后台订单详情页使用,商品不需要上边框时值1
 		rowspan: 后台订单详情页使用,商品信息需要跨行组合时,值为rowspan行数
 		promotion: 促销详情 dict 对象
+		grade_discounted_money: 会员折扣金额
 	}
 
 	已知引用：
@@ -2016,7 +2017,8 @@ def get_order_products(order):
 			'custom_model_properties': product.custom_model_properties,
 			'product_model_name': relation.product_model_name,
 			'physical_unit': product.physical_unit,
-			'is_deleted': product.is_deleted
+			'is_deleted': product.is_deleted,
+			'grade_discounted_money': relation.grade_discounted_money
 		}
 
 		promotion_relation = id2promotion.get(relation.promotion_id, None)

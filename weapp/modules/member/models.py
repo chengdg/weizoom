@@ -261,19 +261,19 @@ class WebAppUser(models.Model):
 	#############################################################################
 	# get_discount: 获取折扣信息
 	#############################################################################
-	def get_discount(self):
-		if not hasattr(self, '_grade'):
-			if not self.is_member:
-				self._grade = {'grade':'', 'discount':100}
-			else:
-				target_grade_id = self.member.grade_id
-				target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
+	# def get_discount(self):
+	# 	if not hasattr(self, '_grade'):
+	# 		if not self.is_member:
+	# 			self._grade = {'grade':'', 'discount':100}
+	# 		else:
+	# 			target_grade_id = self.member.grade_id
+	# 			target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
 
-				if not target_member_grade:
-					self._grade = {'grade':'', 'discount':100}
-				else:
-					self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
-		return self._grade
+	# 			if not target_member_grade:
+	# 				self._grade = {'grade':'', 'discount':100}
+	# 			else:
+	# 				self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
+	# 	return self._grade
 
 	#############################################################################
 	# get_discounted_money: 获取折扣后的金额
@@ -281,8 +281,8 @@ class WebAppUser(models.Model):
 	# 1、如果折扣为100% 或者 商品类型为积分商品，返回当前的价格
 	# 2、折扣不为100% 并且不是积分商品，计算折扣
 	#############################################################################
-	def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
-		return money, 0
+	# def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
+	# 	return money, 0
 		'''
 		grade_discount = self.get_discount()
 		if grade_discount['discount'] == 100 or product_type == PRODUCT_INTEGRAL_TYPE:

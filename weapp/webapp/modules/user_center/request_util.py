@@ -132,12 +132,12 @@ def get_user_info(request):
 	return render_to_response('%s/user_center.html' % request.template_dir, c)
 
 
-def get_is_enjoy_member_discount(webapp_user):
-	member_discount = webapp_user.get_discount().get('discount', 100)
-	if member_discount < 100:
-		return True
+# def get_is_enjoy_member_discount(webapp_user):
+# 	member_discount = webapp_user.get_discount().get('discount', 100)
+# 	if member_discount < 100:
+# 		return True
 
-	return False
+# 	return False
 
 
 def influence_guide(request):
