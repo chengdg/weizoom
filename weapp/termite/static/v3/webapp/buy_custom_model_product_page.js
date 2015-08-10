@@ -556,7 +556,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             } else {
                 var min_price = this.priceInfo['min_price']
                 if (this.discount){
-                    min_price = (min_price * this.discount / 100).toFixed(2)
+                    $('.xa-orPrice').text(min_price);
+                    min_price = (min_price * this.discount / 100).toFixed(2);
                 }
                 $('.xa-singlePrice').text(min_price);
             }
@@ -578,14 +579,23 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-stock').hide();
         } else {
             if(this.targetModel){
+                var change_price = 0;
                 if (this.promotion && this.promotion.isFlashSalePromotion) {
                     //do nothing
                     if (this.promotion.type == 1) {
-                        $('.xa-singlePrice').text(this.promotion.detail.promotion_price.toFixed(2));//无规格时，显示抢购的价钱
+                        change_price = this.promotion.detail.promotion_price.toFixed(2)//无规格时，显示抢购的价钱
+                        
                     }
                 } else {
-                    $('.xa-singlePrice').text(model.price.toFixed(2));
+                    change_price = model.price.toFixed(2);
                 }
+                if(this.discount < 100){
+                    $('.xa-orPrice').text(change_price);
+                    change_price = (change_price * this.discount / 100).toFixed(2);
+                    // alert(change_price)
+                }
+                $('.xa-singlePrice').text(change_price);
+                // 是不是没有用 @洪大师
                 $('.xa-variablePrice').text(model.price);
 
                 // $('.xa-market-price').text(model.market_price);
@@ -714,123 +724,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 $(this).removeClass('xui-inner-selected-tag').addClass('xui-unSelectable');
             }
         });
-
-        /**
-         * 同一[规格名]下的[规格值]和其他[规格名]下已选[规格值]，组合出的可以选择[商品规格]
-         * usefulModels = {
-         *      model.id: [productModel.name]
-         * }
-         */
-        // var usefulModels = {};
-        // _.each(this.models, function(model) {
-        //     if(model.stock_type == 1 && model.stocks <= 0)// 库存为零不可选择
-        //         return
-        //     _.each(model.name.split('_'), function(name) {
-        //         var t = name.split(':')[0], flag = true; // [规格值]对应的[规格名]
-        //         _.each(selectedPropertyValues, function(value_name){
-        //             if(value_name.split(':')[0] == t)
-        //                 return
-        //             if(model.name.indexOf(value_name) < 0)// 在其他[规格名]下已选[规格值],不在[商品规格]中 不可选择
-        //                 flag = false;
-        //         })
-        //         if(!flag)
-        //             return
-        //         if(!usefulModels.hasOwnProperty(t))
-        //             usefulModels[t] = []
-        //         usefulModels[t].push(model.name)
-        //     })
-        // })
-        // xlog(usefulModels)
-        // $('.xa-propertyValue').each(function() {
-        //     if($(this).hasClass('xui-inner-selected-tag'))
-        //         return
-        //     var name = $(this).attr('name');
-        //     var curUsefulModels = usefulModels[name.split(':')[0]];
-        //     var flag = false;
-        //     _.each(curUsefulModels, function(models){
-        //         if(models.indexOf(name) >= 0){
-        //             flag = true
-        //         }
-        //     })
-        //     if (flag) {
-        //         $(this).removeClass('xui-unSelectable');
-        //     } else {
-        //         $(this).removeClass('xui-inner-selected-tag').addClass('xui-unSelectable');
-        //     }
-        // })
-
-
-        // if (selectedPropertyValues.length === 1 && currentPropertyId === -1) {
-        //     //当前只有一个规格属性，不用禁用任何规格属性值
-        //     return;
-        // }
-
-        // //判断一个model是否是selectedPropertyValues的候选model
-        // //当model的所有property value包含全部selected property value时，它是一个候选model
-        // function checkCandidate(model) {
-        //     if (model.stock_type === 1 && model.stocks === 0) {
-        //         //如果model无库存，直接返回
-        //         return {
-        //             isCandidate: false,
-        //             selectablePropertyValues: {}
-        //         }
-        //     }
-
-        //     var modelName = model.name;
-        //     var modelPropertyValues = modelName.split('_');
-        //     // var modelPropertyValueSet = _.object(modelPropertyValues, []);
-        //     // for (var i = 0; i < selectedPropertyValues.length; ++i) {
-        //     //     var selectedPropertyValue = selectedPropertyValues[i];
-        //     //     if (!modelPropertyValueSet.hasOwnProperty(selectedPropertyValue)) {
-        //     //         return {
-        //     //             isCandidate: false,
-        //     //             selectablePropertyValues: {}
-        //     //         };
-        //     //     }
-        //     // }
-
-        //     //收集candidate model中没有被选中的property value，这些property value就是还可以被操作的property value
-        //     //其他的property value都将被disable
-        //     var selectablePropertyValues = {};
-        //     for (var i = 0; i < modelPropertyValues.length; ++i) {
-        //         var modelPropertyValue = modelPropertyValues[i];
-        //         if (!selectedPropertyValueSet.hasOwnProperty(modelPropertyValue)) {
-        //             selectablePropertyValues[modelPropertyValue] = 1;
-        //         }
-        //     }
-        //     return {
-        //         isCandidate: true,
-        //         selectablePropertyValues: selectablePropertyValues
-        //     };
-        // }
-
-        // //遍历model
-        // var selectablePropertyValues = {};
-        // _.each(this.models, function(model) {
-        //     var checkResult = checkCandidate(model);
-        //     if (checkResult.isCandidate) {
-        //         _.extend(selectablePropertyValues, checkResult.selectablePropertyValues);
-        //     }
-        // });
-
-        // //检查所有的property value，禁用un-selectable的property value
-        // //如果：
-        // //1. property value在selectablePropertyValues
-        // //2. property value的property为currentPropertyId
-        // //两个条件都不满足，则该property value是un-seletable的
-        // $('.xa-propertyValue').each(function() {
-        //     var $propertyValue = $(this);
-        //     var propertyValue = $propertyValue.attr('name');
-        //     var items = propertyValue.split(':');
-        //     var propertyId = items[0];
-        //     if ((propertyId !== currentPropertyId)
-        //         && !(selectablePropertyValues.hasOwnProperty(propertyValue))
-        //         && !(selectedPropertyValueSet.hasOwnProperty(propertyValue))) {
-        //         $propertyValue.removeClass('xui-inner-selected-tag').addClass('xui-unSelectable');
-        //     } else {
-        //         $propertyValue.removeClass('xui-unSelectable');
-        //     }
-        // })
     },
 
     /**

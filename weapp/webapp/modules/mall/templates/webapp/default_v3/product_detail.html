@@ -418,7 +418,7 @@ $(document).ready(function() {
                 // 处理会员价
                 var member_price = (view.priceInfo.min_price*view.discount/100).toFixed(2);
                 var original_price =(view.priceInfo.min_price).toFixed(2);
-                var temp = '<span class="xui-memberPriceTag">会员价</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ member_price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-singlePrice">'+ original_price +'</span></span>';
+                var temp = '<span class="xui-memberPriceTag">会员价</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ member_price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice">'+ original_price +'</span></span>';
                 $('.xa-priceSection').html(temp);
             }
         },
