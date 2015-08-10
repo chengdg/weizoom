@@ -252,7 +252,7 @@ Scenario: 4 购买单个多规格商品+一个普通商品
 		"""
 	Then bill在jobs的webapp中拥有20会员积分
 
-@mall2 @mall.promotion @mall.webapp.promotion  @jz
+@mall2 @mall.promotion @mall.webapp.promotion 
 Scenario: 5 购买单个限时抢购商品，同时使用积分购买
 	
 	Given jobs登录系统

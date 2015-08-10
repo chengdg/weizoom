@@ -208,7 +208,13 @@ def __clear_all_app_data():
 	#会员
 	#member_models.MemberGrade.objects.all().update(usable_integral_percentage_in_order=100)
 	#member_models.WebAppUser.objects.all().delete()
-	#member_models.MemberGrade.objects.all().delete()
+	#
+	weapp_id2grade = dict((grade.webapp_id, grade)for grade in member_models.MemberGrade.objects.filter(is_default_grade=True))
+	not_default_grade = member_models.MemberGrade.objects.filter(is_default_grade=False)
+	for member in member_models.Member.objects.filter(grade_id__in=[grade.id for grade in not_default_grade]):
+		member.grade = weapp_id2grade.get(member.webapp_id)
+		member.save()
+	not_default_grade.delete()
 	member_models.Member.objects.all().delete()
 	member_models.MemberFollowRelation.objects.all().delete()
 	member_models.MemberSharedUrlInfo.objects.all().delete()
