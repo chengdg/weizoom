@@ -256,7 +256,7 @@ Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion @zy_fs03
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs03 
 Scenario:3 购买单个限时抢购商品，限时抢购活动没开始，按原价下单
 
 	Given jobs登录系统

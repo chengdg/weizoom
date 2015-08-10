@@ -146,8 +146,7 @@ def step_impl(context, webapp_user_name):
 
 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	"""
-	最近修改: yanzhao
+	"""最近修改: yanzhao
 	e.g.:
 		{
 			"order_no": "" # 订单号

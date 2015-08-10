@@ -1085,8 +1085,8 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	product_groups = order_info['product_groups']
 
 	#处理订单中的product总价
-	order.product_price = sum([product.original_price * product.purchase_count for product in products])
-	order.final_price = sum([product.price * product.purchase_count for product in products])
+	order.product_price = sum([product.price * product.purchase_count for product in products])
+	order.final_price = order.product_price
 	order.member_grade_discounted_money = order.product_price - order.final_price
 	mall_signals.pre_save_order.send(sender=mall_signals, pre_order=fake_order, order=order, products=products, product_groups=product_groups)
 	order.final_price = round(order.final_price, 2)
@@ -1128,7 +1128,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			product_model_name = product.model['name'],
 			number = product.purchase_count,
 			total_price = product.total_price,
-			price = product.original_price,
+			price = product.price,
 			promotion_id = product.promotion['id'] if product.promotion else 0,
 			promotion_money = product.promotion_money if hasattr(product, 'promotion_money') else 0,
 			grade_discounted_money = product.total_price - product.price * product.purchase_count
