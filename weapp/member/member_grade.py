@@ -57,8 +57,8 @@ class MemberGradeList(resource.Resource):
         post_ids = []
         for grade in post_grades:
             grade_id = int(grade.get("id", '0'))
-            if grade_id > 0:
-                post_ids.append(grade_id)
+            # if grade_id > 0:
+            post_ids.append(grade_id)
 
             name = grade.get("name", 'get none value')
             is_auto_upgrade = bool(int(grade.get("is_auto_upgrade", 0)))
