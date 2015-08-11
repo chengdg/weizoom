@@ -38,6 +38,7 @@
         <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/backbone_lite.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipemask.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/crypto-js.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/md5.js"></script>
@@ -82,7 +83,70 @@
 
             {% block content-panel %}{% endblock %}
         {% endif %}
+        <!-- 全局导航 -->
+        <div class="xui-template-globalNavbar">
+            <!-- 模板1 -->
+           <!--  <div class="xui-globalBottomBar">
+                <div class="xui-home">
+                    <a href="###" class="xui-bg"></a>
+                </div>
+                <div class="xui-flex xui-flex-two">
+                    <div class="xui-menu xa-menu f14">
+                        <a href="###">标题</a>
+                    </div>
+                    <div class="xui-subMenuContainer">
+                        <span class="xui-menuArrow"></span>
+                        <span class="xui-menuArrowBorder"></span>
+                        <ul class="xui-subMenu">
+                            <li class="f12"><a href="###">标题名</a></li>
+                            <li class="f12"><a href="###">标题名</a></li>
+                            <li class="f12"><a href="###">标题名</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="xui-flex xui-flex-two">标题</div>
+            </div> -->
+            
+            <!-- 模板2 -->
+            <div class="xui-globalSideBar">
+                <div class="xui-bottomNav">
+                    <ul class="xui-mainMenu">
+                        <li class="xa-bottomMenu "><i class="xui-bg"></i></li>
+                        <li class="xa-bottomMenu xa-categoryBtn"><i class="xui-bg"></i></li>
+                        <li class="xa-bottomMenu "><i class="xui-bg"></i></li>
+                        <li class="xa-bottomMenu "><i class="xui-bg"></i></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="xui-sidePanel xa-sidePanel">
+                <ul class="xui-mainMenu">
+                    <li class="xui-allProduct">全部商品</li>
+                    <li class="xui-firstNav xa-firstNav"> 
+                        <a href="###">
+                            <span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
+                        </a>
+                        <ul class="xui-subMenu">
+                            <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+                            <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+                            <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+                            <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+                        </ul>
+                    </li>
+                     <li class="xui-firstNav xa-firstNav"> 
+                        <span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
+                    </li>
+                     <li class="xui-firstNav xa-firstNav"> 
+                        <span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
+                        <ul class="xui-subMenu">
+                            <li class="pl50">衣服分类衣服分类衣服</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="xui-handleHint"></div>
 
+        </div>
+        <div class="mask" data-ui-role="swipemask"></div>
         <div id="jsons" style="display: none;">
             {% for json in jsons %}
             <div id="__json-{{json.name}}">
@@ -90,6 +154,9 @@
             </div>
             {% endfor %}
         </div>
+        
+
+
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
             // 定时器
@@ -203,7 +270,90 @@
         });
         
         </script>
-        
+        <!--店铺全局导航底部导航 -->
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.xa-menu').click(function(event) {
+                  var $subMenuContainer = $(this).siblings('.xui-subMenuContainer');
+                  if( $subMenuContainer.length >0 ){
+                    $subMenuContainer.toggleClass('xui-show');
+                    var width = $subMenuContainer.width();
+                    $subMenuContainer.css('margin-left',-width/2);
+                  }
+                });
+            });
+        </script>
+
+        <!-- 店铺全局导航侧滑 -->
+        <script type="text/javascript">
+         $(document).ready(function(){
+            var height = $(window).height(); 
+            var width = $(window).width();
+            var rest = (width-218)/2;
+            var $categoryBtn = $('.xa-categoryBtn');
+            var $leftPanel = $('.xa-sidePanel');
+            var $firstNav = $('.xa-firstNav');
+            var $bottomMenu = $('.xa-bottomMenu');
+            var $handleHint = $('.xui-handleHint');
+            var block = false;
+            // 点击出现侧滑面板
+            if ($categoryBtn.length >0) {
+                $leftPanel.height(height-10);  //左侧面板高度，100%会出现滚动条，导致后面内容跟着滚动
+                $categoryBtn.click(function() {
+                    if(!block){
+                        $('body').swipeMask('show');
+                        $handleHint.css({
+                            display: 'block',
+                            top: (height-50)/2,
+                            left:(rest+218)
+                        });
+                        $('.mask').css({
+                            height: height,
+                            background: 'rgba(160,160,160,0.5)'
+                        });
+                        $('.xui-sidePanel').addClass('xui-panelShow');
+                        block = true;
+                    }else{
+                        $('body').swipeMask('hide');
+                        $('.xui-sidePanel').removeClass('xui-panelShow');
+                        block = false;
+                    };
+
+                });
+            };
+            // 点击蒙版收回侧面板
+            $('.mask').click(function(event) {
+                $('body').swipeMask('hide');
+                $('.xui-sidePanel').removeClass('xui-panelShow');
+                 $bottomMenu.find('.xui-active').removeClass('xui-active');
+                block = false;
+            });
+            // 点击一级菜单
+            $firstNav.click(function() {
+                var $arrow = $(this).find('span i');
+                var $subMenu = $(this).find('.xui-subMenu');
+                if( $subMenu.length >0 ){
+                    var display = $subMenu.css('display');
+                    if( display != 'block'){
+                        $arrow.removeClass('xui-leftArrow');
+                        $arrow.addClass('xui-topArrow');
+                        $subMenu.show();
+                    }else{
+                        $arrow.removeClass('xui-topArrow');
+                        $arrow.addClass('xui-leftArrow');
+                        $subMenu.hide();
+                    }
+                }
+            });
+
+            // 点击底部导航图标改变
+            $bottomMenu.click(function() {
+                $(this).find('i').toggleClass('xui-active');
+                $(this).siblings().find('i').removeClass('xui-active')
+            });
+         });
+
+        </script>
 
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
