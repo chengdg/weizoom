@@ -43,9 +43,7 @@ def step_impl(context, user):
 
 @When(u"{user}添加会员等级")
 def step_impl(context, user):
-    user = context.client.user
     json_data = json.loads(context.text)
-
     response = context.client.get('/mall2/member_grade_list/')
     grades = response.context['member_grades']
     data = []
@@ -63,10 +61,6 @@ def step_impl(context, user):
             content = name2grade[grade.name]
             data_dict['is_auto_upgrade'] = (content.get('upgrade', u'手动升级') == u'自动升级')
             data_dict['shop_discount'] = content.get('discount', 10)
-            # if data_dict['is_auto_upgrade']:
-            #     data_dict["pay_times"] = grade.pay_times
-            #     data_dict["pay_money"] = grade.pay_money
-            #     data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
         elif grade.is_auto_upgrade:
             data_dict["pay_times"] = grade.pay_times
             data_dict["pay_money"] = grade.pay_money
@@ -117,13 +111,27 @@ def step_impl(context, user, name):
 
 @When(u"{user}开启自动升级")
 def step_impl(context, user):
-    # json_data = json.loads(context.text)
-    # condition = json_data['condition'][0]
-    # is_all_conditions = False if condition == u"满足一个条件即可" else True
-    # data = {
-    #     'is_all_conditions': is_all_conditions
-    # }
-    # context.client.post('/mall2/api/member_grade_list/?_method=post', json.dumps(data))
+    json_data = json.loads(context.text)
+    condition = json_data['condition'][0]
+    is_all_conditions = False if condition == u"满足一个条件即可" else True
+    response = context.client.get('/mall2/member_grade_list/')
+    grades = response.context['member_grades']
+    data = []
+    for grade in grades:
+        data_dict = {
+            "id": grade.id,
+            "name": grade.name,
+            "is_auto_upgrade": grade.is_auto_upgrade,
+            "shop_discount": grade.shop_discount
+        }
+
+        if grade.is_auto_upgrade:
+            data_dict["pay_times"] = grade.pay_times
+            data_dict["pay_money"] = grade.pay_money
+            data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
+        data.append(data_dict)
+
+    context.client.post('/mall2/api/member_grade_list/?_method=post', {'s_all_conditions':is_all_conditions,'grades':json.dumps(data)})
     pass
 
 

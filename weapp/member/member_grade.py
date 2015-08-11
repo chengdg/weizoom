@@ -128,7 +128,7 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         print("webapp_user_id", webapp_user_id)
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
     elif member:
-        print("member", member.username,member.id,member.experience,member.created_at,member.integral,member.user_icon)
+        print("member", member.username,member.id,member.experience,member.created_at,member.user_icon)
 
     if not member.grade.is_auto_upgrade and not delete:
         print("ztq---------",member.grade.is_auto_upgrade,delete)

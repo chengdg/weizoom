@@ -148,7 +148,6 @@ class Promotion(models.Model):
 
 	@staticmethod
 	def fill_product_detail(webapp_owner, promotions):
-		from mall import models as mall_models
 		promotions = [promotion for promotion in promotions if not hasattr(promotion, 'products')]
 
 		#获取product列表
@@ -158,7 +157,7 @@ class Promotion(models.Model):
 		id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
 		promotion_ids = [promotion.id for promotion in promotions]
 		product_ids = [relation.product_id for relation in ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
-		products = list(mall_models.Product.objects.filter(id__in=product_ids))
+		products = list(Product.objects.filter(id__in=product_ids))
 		Product.fill_details(webapp_owner, products, {
 			'with_product_model': True,
 			"with_model_property_info": True,
@@ -590,16 +589,19 @@ class RedEnvelopeRule(models.Model):
 	@staticmethod
 	def can_show_red_envelope(order, red_envelope):
 		"""判断订单是否能显示分享红包
-		## params
-		- order: 需要判断的订单，需要使用订单商品价格，订单运费等价格信息
-		- red_envelope: 红包规则，注意是从request.webapp_owner_info缓存中获取
+		@params order: 需要判断的订单，需要使用订单商品价格，订单运费等价格信息
+		@params red_envelope: 红包规则，注意是从request.webapp_owner_info缓存中获取
 			由缓存抓取时判断红包状态、优惠券库存问题
 
-		## return
+		@return
 			True: 订单可以显示分享红包按钮
 			False: 订单不可以显示分享红包按钮
 		### 注: 此方法不需要查询数据库
 		"""
+		from mall import models as mall_models
+		if order.status <= mall_models.ORDER_STATUS_CANCEL or order.status >= mall_models.ORDER_STATUS_REFUNDING:
+			return False
+
 		now = datetime.now()
 		if red_envelope and (red_envelope.limit_time or red_envelope.end_time > now):
 			# 缓存里有分享红包规则，并且红包规则未到期，注：红包规则状态在缓存抓取时判断

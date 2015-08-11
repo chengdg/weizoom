@@ -70,7 +70,7 @@ def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
 	url = '/member/api/members/get/'
 	response = context.client.get(bdd_util.nginx(url))
-	profile = UserProfile.objects.get(user_id=user.id)
+	# profile = UserProfile.objects.get(user_id=user.id)
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
 	for member_item in items:
