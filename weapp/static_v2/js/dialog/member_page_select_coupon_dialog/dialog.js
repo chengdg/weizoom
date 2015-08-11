@@ -2,7 +2,9 @@ ensureNS('W.dialog.mall');
 
 W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     events: _.extend({
-        'click .xa-selectCoupon': 'onSelectCoupon'
+        'click .xa-selectCoupon': 'onSelectCoupon',
+        'click .xa-up': 'upCounter',
+        'click .xa-down': 'downCounter'
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -48,6 +50,17 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
             $checkbox.parent().removeClass('checked');
             $checkbox.parent().find('span').text('选取');
         }
+    },
+
+    upCounter: function(event) {
+        var cur_up = $(event.currentTarget);
+        console.log(cur_up.parent().find('.xui-counterText').text())
+        console.log("+++++++");
+    },
+
+    downCounter: function(event) {
+        var cur_down = $(event.currentTarget);
+        console.log("--------");
     },
 
     onGetData: function(options) {

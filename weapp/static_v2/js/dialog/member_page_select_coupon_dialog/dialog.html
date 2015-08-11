@@ -63,15 +63,22 @@
                     <td>无限</td>
                 {{/if}}
                 <td>
+                {{if coupon.remained_count != 0}}
                     <input
                         data-ui-role="counter"
-                        data-minlimit="0"
+                        data-min-limit="0"
                         data-max-count="10"
                         type="hidden"
                         name="total_count"
                         id="total_count"
                         value="1"
                     >
+                    <span class="xa-down xui-down" style="border-right:0;border-radius:2px 0 0 2px;">-</span>
+                    <span class="xui-counterText">1</span>
+                    <span class="xa-up xui-up" style="border-left:0;border-radius:0 2px 2px 0;">+</span>
+                {{else}}
+                    <span>库存不足</span>
+                {{/if}}
                 </td>
                 <td>
                     <label class="btn  lh20  btn-primary" style="border-radius:3px;">
