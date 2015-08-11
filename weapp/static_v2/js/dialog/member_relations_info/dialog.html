@@ -1,10 +1,10 @@
 <script id="member-relations-tmpl-src" type="text/x-jquery-tmpl">
 <div class="modal logs" >
-	<div class="modal-dialog">
+	<div class="modal-dialog xui-firendlistdialog">
 	<div class="modal-content" style="width:667px">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
-			<h3 class="modal-title">	<strong class="show_fans" name="show_fans">推荐关注</strong>||<strong class="show_friends" name="show_friends">好友列表</strong>
+			<h3 class="modal-title">	<strong class="show_fans" name="show_fans">推荐关注</strong><strong class="show_friends xui-black" name="show_friends"><span class="ml10 mr10">|</span>好友列表</strong>
 			</h3>
 		</div>
 		<div class="modal-body" style="padding:0 20px;">
@@ -39,13 +39,13 @@
 				<thead style="background:#c8d2e5;">
 				<tr class="">
 					<th width="180">粉丝</th>
-					<th width="90">消费金额</th>
-					<th width="100">积分</th>
+					<th width="90" class="xui-blue">消费金额</th>
+					<th width="100" class="xui-blue">积分</th>
 					<th width="100">来源</th>
 					{{if data.only_fans==0}}
 						<th width="150">推荐人</th>
 					{{/if}}
-					<th width="90">时间</th>
+					<th width="90" class="xui-blue">关注时间</th>
 				</tr>
 				</thead>
 
@@ -53,20 +53,19 @@
 					{{each(i, log) items}}
 					<tr data-id="${log.id}">
 						<td>
-							<div style="display:table ">
+							<div style="display:table ;line-height:42px;">
 								<a href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
-								<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
+								<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
 								</a>
 								<div style="display: table-cell;vertical-align:top;padding-left:8px;">
-									<a href="/member/member_detail/edit/?id=${id}" >{{html username}}</a><br><br>
-									<div>${grade_name}</div>
+									<a href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
 								</div>
 							</div>
 						</td>
 					    <td>${log.pay_money} </td>
 					    <td class="text_nowrap" style="max-width:150px;" title="${log.reason}">${log.integral} </td>
-					    <td style="color:{{if log.integral_count >0}}#008620{{else}}#ff6600{{/if}};font-weight:bold;">
-					    		<span><span style="{{if log.is_fans}}background-color:#008000;color:#fff;border-radius:3px;{{/if}}{{if log.is_father}}background-color:#FF0000;color:#fff;border-radius:3px;{{/if}}">
+					    <td style="color:#333333;">
+					    		<span><span style="">
 								{{if log.source == 0}}
 									直接关注
 								{{/if}}
@@ -82,10 +81,11 @@
 								</span>
 							</span>
 					    </td>
+
 					    {{if data.only_fans==0}}
-							<td style="font-weight:bold;">${log.father_name} </td>
+							<td >${log.father_name} </td>
 						{{/if}}
-					    <td style="font-weight:bold;">${log.created_at} </td>
+					    <td >${log.created_at} </td>
 					</tr>
 					{{/each}}
 					</tbody>
