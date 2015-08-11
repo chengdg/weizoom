@@ -164,7 +164,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     <li class="c6">
                         <div class="clearfix pt10 pb10">
                             <div class="fl">
-                                <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" alt="">
+                                <div class="xui-user">
+                                    <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" alt="">
+                                </div>
                                 <span class="xa-memberName">
                                     {% autoescape off %}
                                         {{review.member_name }}
