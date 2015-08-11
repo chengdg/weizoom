@@ -269,26 +269,26 @@ Scenario: 安装完整测试数据
 			"promotion_price": 2
 		}]
 		"""
-	When jobs创建满减活动
-		"""
-		[{
-			"name": "水晶虾仁满减",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["水晶虾仁", "热干面"],
-			"price_threshold": 3.0,
-			"cut_money": 0.5
-		}, {
-			"name": "莲藕排骨汤满减",
-			"promotion_title": "莲藕排骨汤满减年末大放血",
-			"start_date": "今天",
-			"end_date": "2天后",
-			"products": ["莲藕排骨汤"],
-			"price_threshold": 1.0,
-			"cut_money": 0.6,
-			"is_enable_cycle_mode": true
-		}]
-		"""
+	# When jobs创建满减活动
+	#	"""
+	#	[{
+	#		"name": "水晶虾仁满减",
+	#		"start_date": "今天",
+	#		"end_date": "1天后",
+	#		"products": ["水晶虾仁", "热干面"],
+	#		"price_threshold": 3.0,
+	#		"cut_money": 0.5
+	#	}, {
+	#		"name": "莲藕排骨汤满减",
+	#		"promotion_title": "莲藕排骨汤满减年末大放血",
+	#		"start_date": "今天",
+	#		"end_date": "2天后",
+	#		"products": ["莲藕排骨汤"],
+	#		"price_threshold": 1.0,
+	#		"cut_money": 0.6,
+	#		"is_enable_cycle_mode": true
+	#	}]
+	#	"""
 	When jobs创建买赠活动
 		"""
 		[{

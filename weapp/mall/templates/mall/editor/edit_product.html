@@ -106,7 +106,9 @@
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="member_count">会员折扣：</label>
 				<div class="col-sm-2 fl pl5">
-					<input name="is_member_product" type="checkbox" {% if product.is_member_product %}checked{% endif %} id="member_count">
+					<label for="" class="xui-category checkbox-inline"><input name="is_member_product" type="checkbox" {% if product.is_member_product %}checked{% endif %} id="member_count">
+					参与会员折扣
+					</label>
 				</div>
 	      </div>
 		</fieldset>

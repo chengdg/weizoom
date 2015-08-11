@@ -22,15 +22,15 @@ Background:
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "9"
+			"discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "8"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "7"
+			"discount": "7"
 		}]
 		"""
 	Then jobs能获取会员等级列表
@@ -38,19 +38,19 @@ Background:
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "10"
+			"discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "9"
+			"discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "8"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "7"
+			"discount": "7"
 		}]
 		"""
 	When jobs已添加支付方式
@@ -335,7 +335,7 @@ Scenario: 3 购买多个商品包括会员价商品
 		}
 		"""
 
-
+@ztq
 Scenario: 4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后
@@ -357,7 +357,7 @@ Scenario: 4 订单完成后，达到自动升级的条件
 			"pay_money": 500.00,
 			"pay_times": 20,
 			"upgrade_lower_bound": 10000,
-			"shop_discount": "9"
+			"discount": "9"
 		}
 		"""
 	And jobs更新会员等级'银牌会员'
@@ -368,7 +368,7 @@ Scenario: 4 订单完成后，达到自动升级的条件
 			"pay_money": 1000.00,
 			"pay_times": 30,
 			"upgrade_lower_bound": 30000,
-			"shop_discount": "8"
+			"discount": "8"
 		}
 		"""
 	Then jobs能获取会员等级列表
@@ -376,25 +376,25 @@ Scenario: 4 订单完成后，达到自动升级的条件
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "10"
+			"discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
 			"pay_money": 500.00,
 			"pay_times": 20,
 			"upgrade_lower_bound": 10000,
-			"shop_discount": "9"
+			"discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "自动升级",
 			"pay_money": 1000.00,
 			"pay_times": 30,
 			"upgrade_lower_bound": 30000,
-			"shop_discount": "8"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "7"
+			"discount": "7"
 		}]
 		"""
 	When tom访问jobs的webapp
