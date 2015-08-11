@@ -12,7 +12,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% endblock %}
 
 {% block content-panel %}
-<div class="xui-productDetailPage xui-page">
+<div id="product-detail" data-user-is-member="{{request.member.grade_id}}" class="xui-productDetailPage xui-page">
     <div data-role="content" data-theme="x" class="xui-content xa-content">
         <div
             data-ui-role="swipeimage"
@@ -24,13 +24,12 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         </div>
         <!-- 返回上一页 -->
         <i data-ui-role="goBack"></i>
-        <div class="xui-section pt5 pb5" style="padding-right:0;">
+        <div id="product" data-is-member-product="{{product.is_member_product}}" class="xui-section pt5 pb5" style="padding-right:0;">
             <div class="xui-section-title xui-section-item xui-pl0">
                 {% if cur_request_member %}
                 <div class="disF">
                     <h2 class="xui-productName xt-productName">{{ product.name }}{% if product.promotion_title %}
                     <span class="xui-text-red">{{ product.promotion_title|safe }}</span>{% endif %}</h2>
-
                     <a href="javascript:void(0);" class="xui-fav xa-collectProduct" data-is-collect="false">收藏</a>
                 </div>
                 {% else %}
@@ -41,7 +40,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 {% endif %}
                 <p class="xui-section-boldItemText xui-text-red xa-priceSection">
                     {% if product.promotion and product.promotion.type == 1 %}
-                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ product.promotion.detail.promotion_price }}</span></span>
+                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                     {% else %}
                         <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                     {% endif %}
@@ -394,6 +393,17 @@ var is_member_product = '{{product.is_member_product}}'
 var promotion = W.loadJSON('promotion');
 
 $(document).ready(function() {
+    var user_member_grade_id = $("#product-detail").data('user-is-member');
+    var is_member_product = $("#product").data('is-member-product');
+    var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){return true;}
+        if(promotion_member_grade_id == user_member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
+    };
     //检查此商品是否被收藏和显示购物车的数量
     W.getApi().call({
         app: 'webapp',
@@ -413,12 +423,31 @@ $(document).ready(function() {
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
-            if(view.is_member_product && data.discount < 100){
+            if(view.is_member_product){
                 view.discount = data.discount;
+                // 商品原价
+                var price = view.priceInfo.min_price;
+
+                // 商品有促销
+                var product_promotion = view.promotion;
+                if(product_promotion){
+                    // 促销是否对此用户开发
+                    is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
+                    alert(is_user_has_promotion);
+                    if(is_user_has_promotion){
+                        price = (product_promotion.detail.promotion_price).toFixed(2);
+                    }
+                // 商品无促销
+                }else{
+                        // 商品是否折扣
+                        has_discount = is_member_product;
+                        if(has_discount === "True"){
+                            price = ((price * data.discount / 100).toFixed(2));
+                        }
+                }
+
                 // 处理会员价
-                var member_price = (view.priceInfo.min_price*view.discount/100).toFixed(2);
-                var original_price =(view.priceInfo.min_price).toFixed(2);
-                var temp = '<span class="xui-memberPriceTag">会员价</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ member_price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice">'+ original_price +'</span></span>';
+                var temp = '<span class="xui-memberPriceTag">优惠价</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice">'+ view.priceInfo.min_price +'</span></span>';
                 $('.xa-priceSection').html(temp);
             }
         },

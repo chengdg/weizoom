@@ -904,8 +904,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 
 		for product_model in product.models:
 			#获取折扣后的价格
-			# if webapp_user:
-				# product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
 			if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
 				product_model['price'] = round(product_model['price'] * 1.1, 2)
 
