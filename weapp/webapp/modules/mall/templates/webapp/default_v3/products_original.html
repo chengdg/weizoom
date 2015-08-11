@@ -79,21 +79,28 @@ $(document).ready(function() {
                 var price = $(this).data('product-price');
                 // 商品有促销
                 var product_promotion = $(this).data('product-promotion')
-                if(product_promotion != ''){
+                var is_user_has_promotion = false;
+                if(product_promotion){
                     // 促销是否对此用户开发
                     is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
                     if(is_user_has_promotion){
-                        price = (product_promotion.detail.promotion_price).toFixed(2);
-                    }
-                // 商品无促销
-                }else{
-                        // 商品是否折扣
-                        has_discount = $(this).hasClass('xa-member-product');
-                        if(has_discount){
-                            price = ((price * data.discount / 100).toFixed(2))
+                        try{
+                            price = (product_promotion.detail.promotion_price).toFixed(2);
+                        }catch(err){
+                            price = $(this).data('product-price');
                         }
+                    }
                 }
-                $(this).find('.xt-productPrice').text('￥'+price)
+                if(!is_user_has_promotion){
+                    // 商品是否折扣
+                    has_discount = $(this).hasClass('xa-member-product');
+                    if(has_discount){
+                        price = ((price * data.discount / 100).toFixed(2))
+                    }
+                }
+
+                // 设置显示价格
+                $(this).find('.xt-productPrice').text('￥'+price);
             });
         },
         error: function(data) {

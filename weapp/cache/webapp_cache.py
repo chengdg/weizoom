@@ -47,9 +47,8 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
         for relation in category_has_products:
             product2categories.setdefault(relation.product_id, set()).add(relation.category_id)
 
-
         try:
-            categories = [{"id":category.id, "name":category.name} for category in categories]
+            categories = [{"id": category.id, "name": category.name} for category in categories]
             product_dicts = []
 
             # Fill detail
@@ -62,7 +61,7 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
 
             for product in new_products:
                 product_dict = product.to_dict()
-                product_dict['display_price'] = get_product_display_price(product, webapp_owner_id)
+                product_dict['display_price'] = product.display_price
                 product_dict['categories'] = product2categories.get(product.id, set())
                 product_dict['promotion'] = product.promotion if hasattr(product, 'promotion') else None
                 product_dicts.append(product_dict)
