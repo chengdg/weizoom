@@ -137,8 +137,6 @@ Background:
 			"start_date": "今天",
 			"end_date": "2天后",
 			"products": ["商品5"],
-			"discount": 50,
-			"discount_money": 20.0,
 			"is_permanant_active": true,
 			"rules": [{
 				"member_grade_name": "全部会员",
