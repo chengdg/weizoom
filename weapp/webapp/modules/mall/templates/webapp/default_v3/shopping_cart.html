@@ -359,8 +359,8 @@ $(document).ready(function() {
         var product_promotion = $(this).data('product-promotion')
 
         var is_user_has_promotion = false;
-        is_product_promotion = $.isEmptyObject(product_promotion);
-        if(!is_product_promotion){
+        is_product_promotion = !($.isEmptyObject(product_promotion));
+        if(is_product_promotion){
             // 促销是否对此用户开发
             is_user_has_promotion = user_has_promotion(member_grade_id, product_promotion.member_grade_id);
             if(is_user_has_promotion){

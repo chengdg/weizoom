@@ -52,7 +52,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             <div class="xui-upDecorate-left"></div>
             <div class="xui-upDecorate-right"></div>
             {% if product.promotion and product.promotion_model.is_active %}
-            <div class="disT w">
+            <div class="disT w xa-display-promotion">
                 <div class="disTc em85 c6" style="width:3rem;">
                     <span style="margin-top:4px;display:inline-block;">优惠：</span>
                 </div>
@@ -425,24 +425,22 @@ $(document).ready(function() {
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
-
-            // //促销与会员价格处理
-            view.discount = data.discount;
+            // 优惠信息标签
+            var msg = '';
             // 商品原价
             var price = view.priceInfo.min_price;
 
             // 商品有促销
             var product_promotion = view.promotion;
+            is_product_promotion = !($.isEmptyObject(product_promotion));
             var is_user_has_promotion = false;
-            if(product_promotion){
+            if(is_product_promotion){
                 // 促销是否对此用户开发
                 is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
+                // 限时抢购
                 if(is_user_has_promotion){
-                    try{
-                        price = (product_promotion.detail.promotion_price).toFixed(2);
-                    }catch(err){
-                        price = view.priceInfo.min_price;
-                    }
+                    price = (product_promotion.detail.promotion_price).toFixed(2);
+                    msg = '促销价';
                 }
             // 商品无促销
             }
@@ -450,13 +448,24 @@ $(document).ready(function() {
                 // 商品是否折扣
                 has_discount = is_member_product;
                 if(has_discount === "True"){
+                    //促销与会员价格处理
+                    view.discount = data.discount;
                     price = ((price * data.discount / 100).toFixed(2));
+                    msg = '会员价';
                 }
             }
 
             // 处理会员价
-            var temp = '<span class="xui-memberPriceTag">优惠价</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice">'+ view.priceInfo.min_price +'</span></span>';
-            $('.xa-priceSection').html(temp);
+            if (msg){
+                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice">'+ view.priceInfo.min_price +'</span></span>';
+                $('.xa-priceSection').html(temp);
+
+            }else{
+                // 移除多余促销信息
+                if(product_promotion.type & product_promotion.type === 1){
+                    $('.xa-promotionSection').remove();
+                }
+            }
         },
         error: function(data) {
 
