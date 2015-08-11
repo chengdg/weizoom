@@ -68,7 +68,7 @@ def step_impl(context, user):
 	user = context.client.user
 	json_data = json.loads(context.text)
 	Member.objects.all().update(is_for_test=False)
-	url = '/member/api/members/get/'
+	url = '/member/api/members/get/?design_mode=0&version=1&status=-1&count_per_page=50&page=1&enable_paginate=1'
 	response = context.client.get(bdd_util.nginx(url))
 	# profile = UserProfile.objects.get(user_id=user.id)
 	items = json.loads(response.content)['data']['items']
@@ -79,6 +79,7 @@ def step_impl(context, user):
 			member_item['status'] = u"已关注"
 		else:
 			member_item['status'] = u"已取消"
+		member_item['member_rank'] = member_item['grade_name']
 		actual_members.append(member_item)
 
 	bdd_util.assert_list(json_data, actual_members)

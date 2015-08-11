@@ -93,10 +93,10 @@ def get_pay_result_success(request):
 # show_shopping_cart: 显示购物车详情
 ########################################################################
 def show_shopping_cart(request):
+	'''	显示购物车详情
+	'''
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	'''
-	显示购物车详情
-	'''
+
 	# product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
 
 	# product_groups = utils.sorted_product_groups_by_promotioin(product_groups)

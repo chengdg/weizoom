@@ -106,7 +106,7 @@ def list_tags(request):
 		MemberTag.objects.filter(id__in=delete_ids).delete()
 		return HttpResponseRedirect('/member/member_tags/get/')
 
-
+# todo delete_ztq 2015.8.11
 ########################################################################
 # list_grades: 获取会员等级分类
 ########################################################################

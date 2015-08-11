@@ -603,14 +603,18 @@ def get_pay_notify_result(request):
 
 	return HttpResponse(reply_response, 'text/html;charset=utf-8')
 
+
 def show_shopping_cart(request):
-	'''
-	显示购物车详情
+	'''显示购物车详情
 	'''
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
-	request.should_hide_footer = True
 
+	# json化的商品促销信息
+	for product_group in product_groups:
+		product_group['promotion_js'] = json.dumps(product_group['promotion'])
+
+	request.should_hide_footer = True
 	jsons = [{
 		"name": "productGroups",
 		"content": __format_product_group_price_factor(product_groups)
@@ -621,9 +625,11 @@ def show_shopping_cart(request):
 		'page_title': u'购物车',
 		'product_groups': product_groups,
 		'invalid_products': invalid_products,
-		'jsons': jsons
+		'jsons': jsons,
+		'discount': get_member_discount_percentage(request)
 	})
 	return render_to_response('%s/shopping_cart.html' % request.template_dir, c)
+
 
 def _sorted_product_groups_by_promotioin(product_groups):
 	'''
@@ -792,17 +798,37 @@ def __format_product_group_price_factor(product_groups):
 
 
 def get_member_discount(request):
-	"""返回产品与会员等级相关的折扣-> float:0.0~1.0
+	"""返回与会员等级相关的折扣
+
+	Return:
+	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回1.00
+
 	"""
 	if hasattr(request, 'member') and request.member:
 		member_grade_id = request.member.grade_id
 		member_grades = request.webapp_owner_info.member_grades
-		member_grade = filter(lambda x: x.id==member_grade_id, member_grades)[0]
+		member_grade = filter(lambda x: x.id == member_grade_id, member_grades)[0]
 
 		return member_grade.shop_discount / 100.00
 	else:
 		return 1.0
 
+
+def get_member_discount_percentage(request):
+	"""返回与会员等级相关的折扣
+
+	Return:
+	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回100
+
+	"""
+	if hasattr(request, 'member') and request.member:
+		member_grade_id = request.member.grade_id
+		member_grades = request.webapp_owner_info.member_grades
+		member_grade = filter(lambda x: x.id == member_grade_id, member_grades)[0]
+
+		return member_grade.shop_discount
+	else:
+		return 100
 
 ########################################################################
 # edit_shopping_cart_order: 编辑从购物车产生的订单

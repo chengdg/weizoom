@@ -107,6 +107,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
+  	Given jobs登录系统
 	Then jobs可以获得会员列表
 		"""
 		[{
