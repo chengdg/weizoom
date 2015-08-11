@@ -21,7 +21,6 @@
 					data-selectable="false"
 					data-item-count-per-page="5"
 					data-auto-load="false"
-					data-args='{"only_fans":"true"}'
 					class="mt10 mb20"
 				></div>
 				</table>
@@ -43,7 +42,7 @@
 					<th width="90">消费金额</th>
 					<th width="100">积分</th>
 					<th width="100">来源</th>
-					{{if data.only_fans==1}}
+					{{if data.only_fans==0}}
 						<th width="150">推荐人</th>
 					{{/if}}
 					<th width="90">时间</th>
@@ -83,7 +82,7 @@
 								</span>
 							</span>
 					    </td>
-					    {{if data.only_fans==1}}
+					    {{if data.only_fans==0}}
 							<td style="font-weight:bold;">${log.father_name} </td>
 						{{/if}}
 					    <td style="font-weight:bold;">${log.created_at} </td>
