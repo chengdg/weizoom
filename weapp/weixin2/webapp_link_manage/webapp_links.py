@@ -50,15 +50,15 @@ class WebappItemLinks(resource.Resource):
 	LOTTER_TYPE = [u'刮刮卡', u'砸金蛋', u'大转盘']
 	
 	@login_required
-	def api_get(request):
+	def api_post(request):
 		"""
 		获取链接集合的json表示
 		"""
-		query = request.GET.get('query', None)
-		link_type = request.GET.get('type', None)
-		menu_type = request.GET.get('menu_type', '')
-		selected_link_target = request.GET.get('selected_link_target', '')
-		order_by = request.GET.get('sort_attr', '-id')
+		query = request.POST.get('query', None)
+		link_type = request.POST.get('type', None)
+		menu_type = request.POST.get('menu_type', '')
+		selected_link_target = request.POST.get('selected_link_target', '')
+		order_by = request.POST.get('sort_attr', '-id')
 		objects, menu_item = webapp_link_utils.get_webapp_link_objectes_for_type(request, link_type, query, order_by)
 		selected_id = 0
 		# 根据link_target获取已选的id跟type
@@ -80,8 +80,8 @@ class WebappItemLinks(resource.Resource):
 			}
 			
 		else:	
-			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-			cur_page = int(request.GET.get('page', '1'))
+			count_per_page = int(request.POST.get('count_per_page', COUNT_PER_PAGE))
+			cur_page = int(request.POST.get('page', '1'))
 			pageinfo, objects = paginator.paginate(objects, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])	
 			items = []
 			for item in objects:
