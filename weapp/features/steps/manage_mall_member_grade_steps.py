@@ -13,20 +13,14 @@ from modules.member.models import MemberGrade
 
 @Then(u"{user}能获取会员等级列表")
 def step_impl(context, user):
-    # if hasattr(context, 'client'):
-    #     context.client.logout()
-    # context.client = bdd_util.login(user)
-    client = context.client
-    # user = UserFactory(username=user)
     json_data = json.loads(context.text)
     response = context.client.get('/mall2/member_grade_list/')
     member_grades = response.context['member_grades']
-    #context.tc.assertEquals(len(member_grades), len(json_data))
     response_data = []
     for grade in member_grades:
         data_dict = {}
         data_dict['name'] = grade.name
-        data_dict['discount'] =  grade.shop_discount
+        data_dict['discount'] = grade.shop_discount
         if grade.is_auto_upgrade:
             data_dict['upgrade'] = u"自动升级"
         else:
@@ -36,7 +30,7 @@ def step_impl(context, user):
             data_dict["pay_times"] = grade.pay_times
             data_dict["pay_money"] = grade.pay_money
             data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
-     
+
         response_data.append(data_dict)
     bdd_util.assert_list(json_data, response_data)
 
@@ -165,3 +159,19 @@ def step_impl(context, user, name):
         data.append(data_dict)
 
         context.client.post('/mall2/api/member_grade_list/?_method=post', {'grades': json.dumps(data)})
+
+
+@when(u'{user}更新"{webapp_user_name}"的会员等级')
+def step_impl(context, user, webapp_user_name):
+    json_data = json.loads(context.text)
+    grade_name = json_data['member_rank']
+    webapp_id = bdd_util.get_webapp_id_for(user)
+    member = bdd_util.get_member_for(webapp_user_name, webapp_id)
+    grade = MemberGrade.objects.get(name=grade_name, webapp_id=context.webapp_id)
+    print("...8888888888888888888888.",member.id,grade.id)
+    data = {
+        'type': 'grade',
+        'member_id': member.id,
+        'checked_ids': grade.id
+    }
+    context.client.post('/member/api/tag/update/', data)
