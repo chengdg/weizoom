@@ -331,12 +331,17 @@ def step_impl(context, webapp_user_name):
     actual_order.products = []
     for relation in order_has_products:
         product = relation.product
+        product.price = relation.price
         product.count = relation.number
-        product.fill_specific_model('standard')
+        product.model = relation.product_model_name
+        # product.fill_specific_model('standard')
         actual_order.products.append(product)
 
     expected = json.loads(context.text)
-
+    if 'products' in expected:
+        for product in expected['products']:
+            if 'model' in product:
+                product['model'] = steps_db_util.get_product_model_keys(product['model'])
     bdd_util.assert_dict(expected, actual_order)
 
 

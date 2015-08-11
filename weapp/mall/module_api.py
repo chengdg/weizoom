@@ -170,8 +170,8 @@ def group_product_by_promotion(request, products):
 	for product in products:
 		product.original_price = product.price
 		# 2015/08/11
-		# if product.is_member_product:
-		# 	product.price = round(product.price * discount / 100, 2)
+		if product.is_member_product:
+			product.price = round(product.price * discount / 100, 2)
 		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
 		group_id += 1
 		default_products = {"group_id": group_id, "products": []}
@@ -1214,8 +1214,10 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 				'price': '%.2f' % relation.price,
 				'custom_model_properties': product.custom_model_properties,
 				'physical_unit': product.physical_unit,
-				'is_deleted': product.is_deleted
+				'is_deleted': product.is_deleted,
+				'grade_discounted_money': relation.grade_discounted_money
 			}
+			print 'jz----111', product.custom_model_properties
 
 			promotion_relation = id2promotion.get(relation.promotion_id, None)
 			if promotion_relation:

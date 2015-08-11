@@ -762,6 +762,7 @@ class Product(models.Model):
 					product.custom_model_properties = [{'property_value': property_value['name']} for property_value in model['property_values']]
 			else:
 				temp_models = ProductModel.objects.filter(product_id=self.id, name=model_name)
+				print 'jz-----333', model_name
 				if len(temp_models) > 0:
 					model = temp_models[0]
 

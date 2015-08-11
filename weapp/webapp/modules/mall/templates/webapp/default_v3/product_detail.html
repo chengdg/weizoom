@@ -462,7 +462,7 @@ $(document).ready(function() {
 
             }else{
                 // 移除多余促销信息
-                if(product_promotion.type & product_promotion.type === 1){
+                if(product_promotion && product_promotion.type === 1){
                     $('.xa-promotionSection').remove();
                 }
             }

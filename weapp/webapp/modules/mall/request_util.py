@@ -7,14 +7,14 @@ import copy
 
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
-# from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render_to_response
+# jz 2015-08-11
+# from django.contrib.auth.decorators import login_required, permission_required
 # from django.contrib.auth.models import User, Group, Permission
 # from django.contrib import auth
 # from django.contrib import messages
-
 # from core.jsonresponse import JsonResponse, create_response
 # from core.dateutil import get_today
 from core.exceptionutil import unicode_full_stack

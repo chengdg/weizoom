@@ -74,7 +74,7 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 100.00,
-			"member_price": true,
+			"is_member_product": "on",
 			"model": {
 				"models": {
 					"standard": {
@@ -86,7 +86,7 @@ Background:
 			}
 		}, {
 			"name": "商品2",
-			"member_price": true,
+			"is_member_product": "on",
 			"is_enable_model": "启用规格",
 			"model": {
 				"models":{
@@ -126,7 +126,7 @@ Background:
 		}]
 		"""
 
-
+@mall2
 Scenario: 1 购买单个会员价商品
 	jobs添加商品后
 	1. tom能在webapp中购买jobs添加的会员价商品
@@ -171,17 +171,16 @@ Scenario: 1 购买单个会员价商品
 		{
 			"status": "待支付",
 			"final_price": 90.00,
-			"members_money": 10.00,
 			"products": [{
 				"name": "商品1",
-				"member_price": 90.00,
-				"type": "members",
+				"price": 90.00,
+				"grade_discounted_money": 10.00,
 				"count": 1
 			}]
 		}
 		"""
 
-
+@mall2
 Scenario: 2 购买多个会员价商品
 	jobs添加商品后
 	1. bill能在webapp中把jobs添加的会员价商品添加到购物车
@@ -220,20 +219,16 @@ Scenario: 2 购买多个会员价商品
 			"product_groups": [{
 				"products": [{
 					"name": "商品1",
-					"member_price": 90.00,
+					"price": 90.00,
 					"count": 1
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品2",
-					"member_price": 270.00,
+					"price": 270.00,
 					"count": 1,
 					"model": "M"
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品2",
-					"member_price": 270.00,
+					"price": 270.00,
 					"count": 1,
 					"model": "S"
 				}]
@@ -244,7 +239,7 @@ Scenario: 2 购买多个会员价商品
 	When bill从购物车发起购买操作
 		"""
 		{
-			"action": "click",
+			"action": "pay",
 			"context": [{
 				"name": "商品1"
 			}, {
@@ -256,31 +251,45 @@ Scenario: 2 购买多个会员价商品
 			}]
 		}
 		"""
+	And bill填写收货信息
+	"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
+	And bill在购物车订单编辑中点击提交订单
+	"""
+	{
+		"pay_type": "货到付款"
+	}
+	"""
 	Then bill成功创建订单
 		"""
 		{
 			"status": "待支付",
 			"final_price": 630.00,
-			"members_money": 70.00,
 			"products": [{
 				"name": "商品1",
-				"member_price": 90.00,
+				"grade_discounted_money": 10.00,
 				"count": 1
 			}, {
 				"name": "商品2",
-				"member_price": 270.00,
+				"grade_discounted_money": 30.00,
 				"count": 1,
 				"model": "M"
 			}, {
 				"name": "商品2",
-				"member_price": 270.00,
+				"grade_discounted_money": 30.00,
 				"count": 1,
 				"model": "S"
 			}]
 		}
 		"""
 
-
+@mall2
 Scenario: 3 购买多个商品包括会员价商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs的商品
@@ -303,13 +312,13 @@ Scenario: 3 购买多个商品包括会员价商品
 			"product_groups": [{
 				"products": [{
 					"name": "商品1",
-					"member_price": 90.00,
+					"price": 90.00,
+					"count": 1
+				}, {
+					"name": "商品3",
+					"price": 200.00,
 					"count": 1
 				}]
-			}, {
-				"products": [{
-					"name": "商品3",
-					"price": 200.00
 			}],
 			"invalid_products": []
 		}
@@ -317,7 +326,7 @@ Scenario: 3 购买多个商品包括会员价商品
 	When bill从购物车发起购买操作
 		"""
 		{
-			"action": "click",
+			"action": "pay",
 			"context": [{
 				"name": "商品1"
 			}, {
@@ -325,25 +334,41 @@ Scenario: 3 购买多个商品包括会员价商品
 			}]
 		}
 		"""
+	And bill填写收货信息
+	"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
+	And bill在购物车订单编辑中点击提交订单
+	"""
+	{
+		"pay_type": "货到付款"
+	}
+	"""
 	Then bill成功创建订单
 		"""
 		{
 			"status": "待支付",
 			"final_price": 290.00,
-			"members_money": 10.00,
 			"products": [{
 				"name": "商品1",
-				"member_price": 90.00,
+				"price": 90.00,
+				"grade_discounted_money": 10.00,
 				"count": 1
 			}, {
-				"name": "商品2",
+				"name": "商品3",
 				"price": 200.00,
+				"grade_discounted_money": 0.00,
 				"count": 1
 			}]
 		}
 		"""
 
-@ztq
+@mall2 @jz
 Scenario: 4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后
@@ -457,7 +482,7 @@ Scenario: 4 订单完成后，达到自动升级的条件
 		"""
 		{
 			"status": "已发货",
-			"actions": ["标记完成", "取消订单", "修改物流"]
+			"actions": ["标记完成", "取消订单", "修改物流"],
 			"final_price": 600.00,
 			"ship_name": "tom",
 			"ship_tel": "13811223344",
@@ -479,12 +504,12 @@ Scenario: 4 订单完成后，达到自动升级的条件
 			"member_rank": "铜牌会员",
 			"pay_money": 600.00,
 			"pay_times": 1,
-			"upgrade_lower_bound": 0
+			"experience": 0
 		}, {
 			"name": "bill",
-			"member_rank": "铜牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 0.00,
 			"pay_times": 0,
-			"upgrade_lower_bound": 0
+			"experience": 0
 		}]
 		"""

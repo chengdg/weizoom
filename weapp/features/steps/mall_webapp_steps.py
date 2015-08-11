@@ -2,7 +2,7 @@
 import json
 import logging
 logger = logging.getLogger(__name__)
-
+from urllib import unquote
 from datetime import datetime, timedelta
 
 from behave import *
@@ -17,7 +17,7 @@ from mall.promotion.models import *
 from modules.member.models import *
 import mall_product_steps as product_step_util
 from .steps_db_util import (
-    get_custom_model_id_from_name
+    get_custom_model_id_from_name, get_product_model_keys
 )
 
 def __get_date(str):
@@ -923,12 +923,13 @@ def _get_shopping_cart_parameters(webapp_user_id, context):
 		for product_info in product_infos:
 			product_name = product_info['name']
 			product_model_name = product_info.get('model', 'standard')
+			product_model_name = get_product_model_keys(product_model_name)
 			try:
 				product = Product.objects.get(name= product_info['name'])
 				cart = shopping_cart_items.get(product=product, product_model_name=product_model_name)
-				product_ids.append(str(cart.product.id))
+				product_ids.append(str(product.id))
 				product_counts.append(str(cart.count))
-				product_model_names.append(cart.product_model_name)
+				product_model_names.append(product_model_name)
 			except:
 				pass
 	else:
@@ -1029,14 +1030,15 @@ def step_add_address_info(context, webapp_user_name):
 	page_title = context.response.context['page_title']
 	if page_title == u'编辑收货地址':
 		address_info = json.loads(context.text)
-		redirect_url = context.response.context['redirect_url_query_string']
+		redirect_url = unquote(context.response.context['redirect_url_query_string'])
 		response = _create_address(context, address_info)
 		bdd_util.assert_api_call_success(response)
 		response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
 		assert response.status_code == 200
 		context.response = response
-	elif page_title == u"购物车订单编辑":
-		pass
+	# jz 2015-08-11
+	# elif page_title == u"购物车订单编辑":
+	# 	pass
 
 
 @when(u"{webapp_user_name}更新收货信息")

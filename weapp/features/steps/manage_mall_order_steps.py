@@ -384,7 +384,7 @@ def step_impl(context, user):
     order.order_type = ORDER_TYPE2TEXT[order.type]
     order.total_price = float(order.final_price)
     order.ship_area = order.area + ' ' + order.ship_address
-    from webapp.modules.mall.templatetags import mall_filter
+    from mall.templatetags import mall_filter
 
     actions = mall_filter.get_order_actions(order)
     order.actions = dict([(action['name'], 1) for action in actions])
@@ -395,6 +395,9 @@ def step_impl(context, user):
     for product in order.products:
         product['total_price'] = float(product['total_price'])
     order.status = STATUS2TEXT[order.status]
+    for product in order.products:
+        if 'custom_model_properties' in product and product['custom_model_properties']:
+            product['model'] = ' '.join([property['property_value'] for property in product['custom_model_properties']])
     actual = order
     actual.reason = order.reason
 
