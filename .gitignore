@@ -61,3 +61,4 @@ site/
 # errer.html upload
 weapp/error.html
 weapp/static/upload
+weapp/templates/content_base_v2.html

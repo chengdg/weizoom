@@ -488,6 +488,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				member_id2member = dict([(m.id, m) for m in members])
 				for review in product_review:
 					review.member_name = member_id2member[review.member_id].username_for_html
+					review.user_icon = member_id2member[review.member_id].user_icon
 
 			#获取促销活动和积分折扣信息
 			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))

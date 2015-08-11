@@ -599,7 +599,7 @@ class RedEnvelopeRule(models.Model):
 		### 注: 此方法不需要查询数据库
 		"""
 		from mall import models as mall_models
-		if order.status <= mall_models.ORDER_STATUS_CANCEL or order.status >= ORDER_STATUS_REFUNDING:
+		if order.status <= mall_models.ORDER_STATUS_CANCEL or order.status >= mall_models.ORDER_STATUS_REFUNDING:
 			return False
 
 		now = datetime.now()
