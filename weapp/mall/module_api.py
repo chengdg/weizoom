@@ -2187,11 +2187,18 @@ def __restore_product_stock_by_order(order):
 			product_model.stocks = product_model.stocks + product['count']
 			product_model.save()
 		# product sales update
-		_id = product.get('id')
-		productsales = ProductSales.objects.get(product_id=_id)
-		ProductSales.objects.filter(
-			product_id=_id
-		).update(sales=productsales.sales-1)
+		if order.status < mall_models.ORDER_STATUS_PAYED_SUCCESSED:
+			continue
+		productsales = ProductSales.objects.filter(product_id=product.get('id'))
+		if len(productsales):
+			ProductSales.objects.filter(
+				product_id=product.get('id')
+			).update(sales=productsales[0].sales - product['count'])
+		else:
+			ProductSales.objects.create(
+				product_id=product.get('id'),
+				sales=0
+			)
 
 
 
