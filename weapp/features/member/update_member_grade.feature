@@ -158,21 +158,21 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 			"pay_money": 1000.00,
 			"pay_times": 20,
 			"upgrade_lower_bound": 10000,
-			"discount": "9"
+			"discount": "6"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
 			"upgrade_lower_bound": 30000,
-			"discount": "8"
+			"discount": "5"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 5000.00,
 			"pay_times": 50,
 			"upgrade_lower_bound": 50000,
-			"discount": "7"
+			"discount": "4"
 		}]
 		"""
 	Then jobs能获取会员等级列表
@@ -199,21 +199,21 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 			"pay_money": 1000.00,
 			"pay_times": 20,
 			"upgrade_lower_bound": 10000,
-			"discount": "9"
+			"discount": "6"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
 			"upgrade_lower_bound": 30000,
-			"discount": "8"
+			"discount": "5"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 5000.00,
 			"pay_times": 50,
 			"upgrade_lower_bound": 50000,
-			"discount": "7"
+			"discount": "4"
 		}]
 		"""
 	When jobs更新会员等级'红钻会员'
@@ -221,7 +221,7 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 		{
 			"name": "红钻会员",
 			"upgrade": "手动升级",
-			"discount": "7"
+			"discount": "4"
 		}
 		"""
 	Then jobs能获取会员等级列表
@@ -248,17 +248,17 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 			"pay_money": 1000.00,
 			"pay_times": 20,
 			"upgrade_lower_bound": 10000,
-			"discount": "9"
+			"discount": "6"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
 			"upgrade_lower_bound": 30000,
-			"discount": "8"
+			"discount": "5"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "手动升级",
-			"discount": "7"
+			"discount": "4"
 		}]
 		"""
