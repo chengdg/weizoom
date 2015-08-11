@@ -214,7 +214,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 		{
 			"order_type": "普通订单",
 			"status": "待支付",
-			"actions": ["取消", "支付"],
+			"actions": ["取消订单", "支付"],
 			"total_price": 9.9,
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
@@ -233,7 +233,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 		{
 			"order_type": "普通订单",
 			"status": "待发货",
-			"actions": ["发货", "取消"]
+			"actions": ["发货", "取消订单"]
 		}
 		"""
 	When jobs对最新订单进行发货
@@ -242,7 +242,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 		{
 			"order_type": "普通订单",
 			"status": "已发货",
-			"actions": ["完成", "修改物流", "取消"]
+			"actions": ["标记完成", "修改物流", "取消订单"]
 		}
 		"""
 	When jobs'完成'最新订单
@@ -251,7 +251,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 		{
 			"order_type": "普通订单",
 			"status": "已完成",
-			"actions": ["修改物流", "取消"]
+			"actions": ["修改物流", "取消订单"]
 		}
 		"""
 	When jobs'取消'最新订单

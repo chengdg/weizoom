@@ -182,7 +182,7 @@ Scenario: 3 成功支付订单后，取消订单，商品销量不变
 		{
 			"status": "待发货",
 			"final_price": 100.00,
-			"actions": ["发货","取消"]
+			"actions": ["发货","取消订单"]
 		}
 		"""
 	When jobs'取消'最新订单

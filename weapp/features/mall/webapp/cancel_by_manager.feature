@@ -65,7 +65,7 @@ Scenario: 取消订单后,手机端订单状态为'已取消'
 		{
 			"order_type": "普通订单",
 			"status": "待支付",
-			"actions": ["取消", "支付"],
+			"actions": ["取消订单", "支付"],
 			"total_price": 19.8,
 			"ship_name": "bill",
 			"ship_tel": "13811223344",

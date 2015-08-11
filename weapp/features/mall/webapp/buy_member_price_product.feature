@@ -368,7 +368,7 @@ Scenario: 3 购买多个商品包括会员价商品
 		}
 		"""
 
-@mall2 @jz
+@mall2
 Scenario: 4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后
