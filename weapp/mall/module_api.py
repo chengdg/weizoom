@@ -2129,8 +2129,15 @@ def update_order_status(user, action, order, request=None):
 
 	已知引用：
 	mobile_app/order_api_views.py
-	mall/order_views.py
+	mall/order.py
+	mall/order.py
 	services/cancel_not_pay_order_service/tasks.py
+
+	已知action:
+	'action' : 'pay'
+	'action' : 'finish'
+	'action' : 'cancel'
+	'action' : 'return_pay'
 	"""
 	order_id = order.id
 	operation_name = user.username
@@ -2195,7 +2202,7 @@ def update_order_status(user, action, order, request=None):
 		if 'cancel' in action and request:
 			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''))
 
-		elif 'pay' in action:
+		elif 'pay' == action:
 			payment_time = datetime.now()
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
 
