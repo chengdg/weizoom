@@ -206,42 +206,42 @@ def step_impl(context, user):
     bdd_util.assert_list(expected, actual_orders)
 
 
-@then(u"{webapp_user_name}成功创建配送套餐订单")
-def step_impl(context, webapp_user_name):
-    expected_dates = json.loads(context.text)
-    expecteds = []
-    now = datetime.now()
-    for expected_date in expected_dates['delevery_date']:
-        expected = ''
-        if expected_date == u'今天':
-            expected = now.strftime('%Y-%m-%d')
-        elif expected_date == u'今天+1月':
-            delta = timedelta(days=30)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+2月':
-            delta = timedelta(days=30 * 2)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+1周':
-            delta = timedelta(days=7)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+2周':
-            delta = timedelta(days=7 * 2)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+3天':
-            delta = timedelta(days=3)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+6天':
-            delta = timedelta(days=3 * 2)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        expecteds.append(expected)
-
-    order = steps_db_util.get_order_by_order_id(context.created_order_id)
-    order_has_delivery_times = steps_db_util.get_order_has_delivery_times_by_order_id(order.id)
-    actual_dates = []
-    for dates in order_has_delivery_times:
-        actual_dates.append(dates.delivery_date.strftime('%Y-%m-%d'))
-
-    bdd_util.assert_list(expecteds, actual_dates)
+# @then(u"{webapp_user_name}成功创建配送套餐订单")
+# def step_impl(context, webapp_user_name):
+#     expected_dates = json.loads(context.text)
+#     expecteds = []
+#     now = datetime.now()
+#     for expected_date in expected_dates['delevery_date']:
+#         expected = ''
+#         if expected_date == u'今天':
+#             expected = now.strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+1月':
+#             delta = timedelta(days=30)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+2月':
+#             delta = timedelta(days=30 * 2)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+1周':
+#             delta = timedelta(days=7)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+2周':
+#             delta = timedelta(days=7 * 2)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+3天':
+#             delta = timedelta(days=3)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+6天':
+#             delta = timedelta(days=3 * 2)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         expecteds.append(expected)
+#
+#     order = steps_db_util.get_order_by_order_id(context.created_order_id)
+#     order_has_delivery_times = steps_db_util.get_order_has_delivery_times_by_order_id(order.id)
+#     actual_dates = []
+#     for dates in order_has_delivery_times:
+#         actual_dates.append(dates.delivery_date.strftime('%Y-%m-%d'))
+#
+#     bdd_util.assert_list(expecteds, actual_dates)
 
 
 @then(u"{user}获取对应的订单")
