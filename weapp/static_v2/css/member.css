@@ -678,3 +678,16 @@
 	padding: 5px 8px;
 	
 }
+.xui-firendlistdialog .xui-blue{
+	color: #1262b7;
+}
+.xui-firendlistdialog .xui-black{
+	color: #333333;
+}
+.xui-firendlistdialog .table>tbody>tr>td, .xui-firendlistdialog .table>tbody>tr>th{
+	padding:5px 
+}
+.xui-firendlistdialog .table>tbody>tr>td:first-child, .xui-firendlistdialog .table>tbody>tr>th:first-child{
+	padding-left:20px 
+}
+
