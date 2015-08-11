@@ -29,9 +29,10 @@ TEMPLATE_DIR = 'weshop/templates/mall'
 ########################################################################
 # get_productcategory: 显示“商品分类”页面
 ########################################################################
-def get_productcategory(request):
-	request.template_dir = TEMPLATE_DIR
-	return request_util.get_productcategory(request)
+# jz 2015-08-10
+# def get_productcategory(request):
+# 	request.template_dir = TEMPLATE_DIR
+# 	return request_util.get_productcategory(request)
 
 
 ########################################################################

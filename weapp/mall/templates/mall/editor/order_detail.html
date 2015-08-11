@@ -13,30 +13,20 @@
 <div class="xui-orderwrap">
 <ul class="breadcrumb" style="margin-bottom:-12px;">
     <li>您当前所在位置</li>
-    {% if second_nav_name == 'allOrder' %}
     <li>
     <a href="/mall2/order_list/">订单管理</a>
     </li>
     <li>
+    {% if second_nav_name == 'allOrder' %}
     <a href="/mall2/order_list/">所有订单</a>
-    </li>
     {% endif %}
     {% if second_nav_name == 'refundOrder' %}
-    <li>
-    <a href="/mall2/order_list/">订单管理</a>
-    </li>
-    <li>
     <a href="/mall2/order_list/?belong=refund">退款订单</a>
-    </li>
     {% endif %}
     {% if second_nav_name == 'financialCheck' %}
-    <li>
-    <a href="/mall2/order_list/">订单管理</a>
-    </li>
-    <li>
     <a href="/mall2/order_list/?belong=audit">财务审核</a>
-    </li>
     {% endif %}
+    </li>
     <li class="active">订单详情</li>
 </ul>
 <form class="form-horizontal"  id="order-form" >
@@ -105,11 +95,9 @@
           {% for log in order_status_logs %}
           <div class="progress-bar {% if log.is_current == 0 %}xb-imglightblue{% endif %}{% if log.is_current == 1 %}xb-imgdarkblue{% endif %} {% if log.is_current == 2 %}xb-imggray{% endif %} " style="width:{{log_count|formate_width}}%">
 
-
            <p  class="xui-log-status"> {{log.status}}</p>
            <p class="xui-backgroundpay" >{% if forloop.first and log.operator%}{% if log.operator == "客户" %}{% if log.status == 3 %} （商家后台支付){% endif %}{% endif %}{% endif %} </p>
            <div class=" {% if log.is_current == 0 %}xb-imglightblueCircle{% endif %}{% if log.is_current == 1 %}xb-imgdarkblueCircle{% endif %}  " ></div>
-
 
            <p class="xui-log-time">{{ log.created_at|date:"Y-m-j" }}<br/>{{ log.created_at|date:"H:i:s" }}</p>
           </div>
@@ -147,12 +135,10 @@
                                 {% endifequal %}
                                 <p class="xui-ml60">{{ order.bill }}</p>
                             {% endifequal %}</p>
-
                     </div>
                 </div>
                 <div class="col-md-4">
                     <p class="xui-title">商家备注</p>
-
                     <div class="xui-innerwrap">
                     	<img  data-order-id="{{order.id}}" data-order-value="{{order.remark}}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" />
                         <p>{{order.remark}}</p>
@@ -175,7 +161,6 @@
           运单号：{% if order.express_company_name %} <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ order.express_number }}</a>{% endif %}
         </p>
         <p>
-
           {% for detail in order.get_express_details %}
           <span class="mr30 ml50">{{ detail.ftime }}</span>
           <span>{{ detail.context }}</span>
@@ -216,7 +201,6 @@
         <p class="xui-info-p">订单来源<span class="xui-info-value">{{order.source}}</span></p>
         <p class="xui-info-p">运送方式<span class="xui-info-value">{{ order.express_company_name|get_company_name_by_value }}</span></p>
         <p class="xui-info-p">支付方式<span class="xui-info-value">{{order.pay_interface_name}}</span></p>
-
         <table class="xui-producttab table">
             <tr>
                <th class="xui-td-img"></th>
@@ -269,6 +253,9 @@
                 {% endif %}
                 {% if product.integral_count %}
                   <p>{{ product.integral_count }}积分，抵扣{{ product.integral_money }}元</p>
+                {% endif %}
+                {% if product.grade_discounted_money %}
+                  会员优惠：{{ product.grade_discounted_money }}
                 {% endif %}
               </td>
               {% if forloop.first %}

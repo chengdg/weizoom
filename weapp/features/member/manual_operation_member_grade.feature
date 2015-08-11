@@ -17,16 +17,16 @@ Background:
 		[{
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
 			"shop_discount": "90%"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 3000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
+			"pay_money": 3000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
 			"shop_discount": "80%"
 		}, {
 			"name": "金牌会员",
@@ -43,16 +43,16 @@ Background:
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
 			"shop_discount": "90%"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 3000.00,
-			"buy_counts": 30,
-			"empirical_value": 30000,
+			"pay_money": 3000.00,
+			"pay_times": 30,
+			"upgrade_lower_bound": 30000,
 			"shop_discount": "80%"
 		}, {
 			"name": "金牌会员",
@@ -67,15 +67,15 @@ Background:
 		[{
 			"name": "tom",
 			"member_rank": "铜牌会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 10000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 10000
 		}, {
 			"name": "bill",
 			"member_rank": "普通会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 1000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 1000
 		}]
 		"""
 
@@ -99,15 +99,15 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 		[{
 			"name": "tom",
 			"member_rank": "铜牌会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 10000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 10000
 		}, {
 			"name": "bill",
 			"member_rank": "银牌会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 1000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 1000
 		}]
 		"""
 	When jobs删除会员等级'银牌会员'
@@ -120,9 +120,9 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
 			"shop_discount": "90%"
 		}, {
 			"name": "金牌会员",
@@ -135,15 +135,15 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 		[{
 			"name": "tom",
 			"member_rank": "铜牌会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 10000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 10000
 		}, {
 			"name": "bill",
 			"member_rank": "普通会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 1000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 1000
 		}]
 		"""
 	When jobs更新"tom"的会员等级
@@ -158,15 +158,15 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 		[{
 			"name": "tom",
 			"member_rank": "金牌会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 10000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 10000
 		}, {
 			"name": "bill",
 			"member_rank": "普通会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 1000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 1000
 		}]
 		"""
 	When jobs删除会员等级'金牌会员'
@@ -179,9 +179,9 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "自动升级",
-			"deal_price": 1000.00,
-			"buy_counts": 20,
-			"empirical_value": 10000,
+			"pay_money": 1000.00,
+			"pay_times": 20,
+			"upgrade_lower_bound": 10000,
 			"shop_discount": "90%"
 		}]
 		"""
@@ -190,14 +190,14 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 		[{
 			"name": "tom",
 			"member_rank": "铜牌会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 10000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 10000
 		}, {
 			"name": "bill",
 			"member_rank": "普通会员",
-			"deal_price": 0.00,
-			"buy_counts": 0,
-			"empirical_value": 1000
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"upgrade_lower_bound": 1000
 		}]
 		"""

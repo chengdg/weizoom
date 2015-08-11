@@ -52,54 +52,56 @@ page_title = u'微众商城'
 #
 # list_coupons: 显示"优惠券"页面
 ########################################################################
-def list_coupons(request):
-	profile = request.user_profile
-	coupons = list(coupon_model.Coupon.objects.filter(owner=profile.user, member_id=0))
+# jz 2015-08-10
+# def list_coupons(request):
+# 	profile = request.user_profile
+# 	coupons = list(coupon_model.Coupon.objects.filter(owner=profile.user, member_id=0))
 
-	c = RequestContext(request, {
-		'is_hide_weixin_option_menu': True,
-		'page_title': u'【测试】优惠券列表',
-		'coupons': coupons
-	})
-	return render_to_response('%s/coupons.html' % request.template_dir, c)
+# 	c = RequestContext(request, {
+# 		'is_hide_weixin_option_menu': True,
+# 		'page_title': u'【测试】优惠券列表',
+# 		'coupons': coupons
+# 	})
+# 	return render_to_response('%s/coupons.html' % request.template_dir, c)
 
 
 ########################################################################
 # get_productcategory: 显示“商品分类”页面
 ########################################################################
-def get_productcategory(request):
-	category_id = request.GET['rid']
+# jz 2015-08-10
+# def get_productcategory(request):
+# 	category_id = request.GET['rid']
 
-	try:
-		product = Product.objects.get(id=product_id)
-	except:
-		product = {'is_deleted': True}
+# 	try:
+# 		product = Product.objects.get(id=product_id)
+# 	except:
+# 		product = {'is_deleted': True}
 
-	#获得swipe image
-	swipe_images = []
-	swipe_images.append({
-		"url": product.pic_url,
-		"caption": '',
-		"link_url": '#'
-	})
+# 	#获得swipe image
+# 	swipe_images = []
+# 	swipe_images.append({
+# 		"url": product.pic_url,
+# 		"caption": '',
+# 		"link_url": '#'
+# 	})
 
-	#获得购物车数量
-	shopping_cart_product_nums = mall_api.get_shopping_cart_product_nums(request.webapp_user)
+# 	#获得购物车数量
+# 	shopping_cart_product_nums = mall_api.get_shopping_cart_product_nums(request.webapp_user)
 
-	#获得运费
-	# product.postage_config, product.postage = mall_util.get_postage_for_weight(request.webapp_owner_id, product.weight)
+# 	#获得运费
+# 	# product.postage_config, product.postage = mall_util.get_postage_for_weight(request.webapp_owner_id, product.weight)
 
-	c = RequestContext(request, {
-		'is_hide_weixin_option_menu': True,
-		'page_title': u'商品分类',
-		'swipe_images': swipe_images,
-		'swipe_image_count': len(swipe_images),
-		'swipe_images_json': json.dumps(swipe_images),
-		'product': product,
-		'shopping_cart_product_nums': shopping_cart_product_nums,
-		'is_enable_get_coupons': settings.IS_IN_TESTING
-	})
-	return render_to_response('%s/product_detail.html' % request.template_dir, c)
+# 	c = RequestContext(request, {
+# 		'is_hide_weixin_option_menu': True,
+# 		'page_title': u'商品分类',
+# 		'swipe_images': swipe_images,
+# 		'swipe_image_count': len(swipe_images),
+# 		'swipe_images_json': json.dumps(swipe_images),
+# 		'product': product,
+# 		'shopping_cart_product_nums': shopping_cart_product_nums,
+# 		'is_enable_get_coupons': settings.IS_IN_TESTING
+# 	})
+# 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 
 ########################################################################
@@ -113,6 +115,11 @@ def list_products(request):
 
 	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
+
+	for p in products:
+		if p.promotion:
+			p.promotion_js = json.dumps(p.promotion)
+
 	has_category = False
 	if len(product_categories) > 0:
 		has_category = True
@@ -135,19 +142,20 @@ def list_products(request):
 
 
 #added by chuter
-def _get_has_deleted_product_response(request, webapp_user, product):
-	#获得购物车数量
-	shopping_cart_product_nums = mall_api.get_shopping_cart_product_nums(webapp_user)
+# jz 2015-08-10
+# def _get_has_deleted_product_response(request, webapp_user, product):
+# 	#获得购物车数量
+# 	shopping_cart_product_nums = mall_api.get_shopping_cart_product_nums(webapp_user)
 
-	c = RequestContext(request, {
-		'swipe_images': None,
-		'swipe_image_count': 0,
-		'swipe_images_json': '{}',
-		'product': product,
-		'shopping_cart_product_nums': shopping_cart_product_nums,
-		'is_enable_get_coupons': settings.IS_IN_TESTING
-	})
-	return render_to_response('%s/product_detail.html' % request.template_dir, c)
+# 	c = RequestContext(request, {
+# 		'swipe_images': None,
+# 		'swipe_image_count': 0,
+# 		'swipe_images_json': '{}',
+# 		'product': product,
+# 		'shopping_cart_product_nums': shopping_cart_product_nums,
+# 		'is_enable_get_coupons': settings.IS_IN_TESTING
+# 	})
+# 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 
 ########################################################################
@@ -159,6 +167,7 @@ def get_product(request):
 
 	member_grade_id = request.member.grade_id if request.member else None
 	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
+	# jz 2015-08-10
 	#product.fill_model()
 
 	if product.is_deleted:
@@ -166,7 +175,6 @@ def get_product(request):
 			'is_deleted_data': True
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
-
 
 	if product.promotion:
 		product.promotion['is_active'] = product.promotion_model.is_active
@@ -181,6 +189,7 @@ def get_product(request):
 		'content': product.promotion
 	}]
 	#获得运费计算因子
+	# jz 2015-08-10
 	#postage_factor = mall_util.get_postage_factor(request.webapp_owner_id, product=product)
 
 	###################################################
@@ -188,7 +197,7 @@ def get_product(request):
 	if request.user.is_weizoom_mall:
 		product.is_can_buy_by_product(request)
 		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
-		otherSettings = OperationSettings.objects.get(owner = otherProfile.user)
+		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
 		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
 			non_member_followurl = otherSettings.weshop_followurl
 
@@ -207,8 +216,10 @@ def get_product(request):
 		'product': product,
 		'jsons': jsons,
 		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
-		'is_enable_get_coupons': settings.IS_IN_TESTING,
+		# jz 2015-08-10
+		# 'is_enable_get_coupons': settings.IS_IN_TESTING,
 		'model_property_size': len(product.product_model_properties),
+		# jz 2015-08-10
 		# 'postage_factor': json.dumps(product.postage_factor),
 		'hide_non_member_cover': True,
 		'non_member_followurl': non_member_followurl,
@@ -218,8 +229,8 @@ def get_product(request):
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
-		'share_page_desc':product.name,
-		'share_img_url':product.thumbnails_url
+		'share_page_desc': product.name,
+		'share_img_url': product.thumbnails_url
 	})
 
 	if hasattr(request, 'is_return_context'):
@@ -258,9 +269,10 @@ def get_order_list(request):
 ########################################################################
 def pay_order(request):
 	webapp_user = request.webapp_user
-	is_delivery_plan = 0
-	delivery_plan = None
-	has_delivery_times = None
+	# jz 2015-08-10
+	# is_delivery_plan = 0
+	# delivery_plan = None
+	# has_delivery_times = None
 	try:
 		order_id = request.GET['order_id']
 		order_id = order_id.split('-')[0]
@@ -282,11 +294,11 @@ def pay_order(request):
 		if promotion_models.RedEnvelopeToOrder.objects.filter(order_id=order.id).count():
 			order.red_envelope_created = True
 
+	# jz 2015-08-10
 	# if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
 	# 	order.is_show_field = True
 	# else:
 	# 	order.is_show_field = False
-
 	#获取订单包含商品
 	# order_has_products = []
 	# try:
@@ -313,12 +325,13 @@ def pay_order(request):
 		'order_status_info': STATUS2TEXT[order.status],
 		'pay_interface': PAYTYPE2NAME[order.pay_interface_type],
 		'error_msg': None,
-		#'order_has_products': order_has_products,
 		'is_in_testing': settings.IS_IN_TESTING,
 		'is_hide_weixin_option_menu': True,
-		'is_delivery_plan': is_delivery_plan,
-		'delivery_plan': delivery_plan,
-		'has_delivery_times': has_delivery_times,
+		# jz 2015-08-10
+		# 'is_delivery_plan': is_delivery_plan,
+		# 'delivery_plan': delivery_plan,
+		# 'has_delivery_times': has_delivery_times,
+		#'order_has_products': order_has_products,
 		# 'is_support_thanks_card': is_support_thanks_card,
 		# 'thanks_cards': thanks_cards,
 		'hide_non_member_cover': True,
@@ -359,6 +372,7 @@ def __record_order_payment_info(order, pay_result):
 ########################################################################
 def get_pay_result(request):
 	'''
+	# jz 2015-08-10
 	order_id = request.GET.get('out_trade_no', None)
 	trade_status = request.GET.get('result', '')
 	is_trade_success = TRADE_SUCCESS == trade_status.lower()
@@ -370,6 +384,7 @@ def get_pay_result(request):
 	# 同步支付结果开始时间
 	get_pay_result_start_time = int(time.time() * 1000)
 
+	# jz 2015-08-10
 	# pay_interface = PayInterface.objects.get(owner_id=webapp_owner_id, type=type, related_config_id=related_config_id)
 	# if not pay_interface:
 	# 	msg = '支付方式(owner_id={},type={},related_config_id={})不存在'.format(webapp_owner_id, type, related_config_id)
@@ -418,6 +433,7 @@ def get_pay_result(request):
 			pass
 
 	#获取感恩贺卡密码
+	# jz 2015-08-10
 	# is_support_thanks_card = False
 	# thanks_cards = []
 	# try:
@@ -434,15 +450,14 @@ def get_pay_result(request):
 	# 	error_msg = u'weixin pay, stage:[get_pay_result], result:获取感恩贺卡密码异常, exception:\n{}'.format(unicode_full_stack())
 	# 	watchdog_error(error_msg)
 	# 	pass
-
 	#对于已取消的订单, 不展示感恩贺卡
 	#if order.status == ORDER_STATUS_CANCEL:
-	is_support_thanks_card = False
-	thanks_cards = []
+	# is_support_thanks_card = False
+	# thanks_cards = []
 
-	is_delivery_plan = False
-	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-		is_delivery_plan = True
+	# is_delivery_plan = False
+	# if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
+	# 	is_delivery_plan = True
 	#确定是否显示运费、积分、优惠券等信息
 	if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
 		order.is_show_field = True
@@ -460,7 +475,6 @@ def get_pay_result(request):
 	#是否提示用户领红包
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
-	# red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
 	red_envelope = request.webapp_owner_info.red_envelope
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
@@ -490,9 +504,10 @@ def get_pay_result(request):
 		'order_status_info': STATUS2TEXT[order.status],
 		'order_has_products': order_has_products,
 		'is_in_testing' : settings.IS_IN_TESTING,
-		'is_support_thanks_card': is_support_thanks_card,
-		'thanks_cards': thanks_cards,
-		'is_delivery_plan': is_delivery_plan,
+		# jz 2015-08-10
+		# 'is_support_thanks_card': is_support_thanks_card,
+		# 'thanks_cards': thanks_cards,
+		# 'is_delivery_plan': is_delivery_plan,
 		'hide_non_member_cover': True,
 		'is_show_success': is_show_success,
 		'is_show_red_envelope': is_show_red_envelope,
@@ -521,11 +536,6 @@ def get_pay_result_success(request):
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
 	coupon_rule = None
-	# red_envelope_rule = promotion_models.RedEnvelopeRule.objects.filter(owner_id=request.webapp_owner_id, status=True)
-	# if red_envelope_rule.count() > 0 and (red_envelope_rule[0].limit_time or red_envelope_rule[0].end_time > datetime.now()):
-	# 	if order.product_price + order.postage >= red_envelope_rule[0].limit_order_money:
-	# 		is_show_red_envelope = True
-	# 		red_envelope_rule_id = red_envelope_rule[0].id
 	red_envelope = request.webapp_owner_info.red_envelope
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
@@ -583,6 +593,7 @@ def get_pay_notify_result(request):
 			#记录订单对应的支付结果信息
 			__record_order_payment_info(order, pay_notify_result)
 
+			# jz 2015-08-10
 			#request.webapp_user.complete_payment(request)
 			mall_signals.post_pay_order.send(sender=Order, order=order, request=request)
 	try:
@@ -642,11 +653,14 @@ def edit_order(request):
 	order.product_groups = mall_api.group_product_by_promotion(request, products)
 
 	#测试订单，修改价钱和订单类型
+	# jz 2015-08-10
 	# type = request.GET.get('type', '')
 	# order = mall_api.update_order_type_test(type, order)
-
 	#获得运费计算因子
 	#postage_factor = order.used['postage_config'].factor
+	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
+	# delivery_dates = request.REQUEST.get('delivery_dates', '')
+
 	#获得运费配置，支持前端修改数量、优惠券等后实时计算运费
 	postage_factor = product.postage_config['factor']
 
@@ -665,9 +679,6 @@ def edit_order(request):
 	use_ceiling = request.webapp_owner_info.integral_strategy_settings.use_ceiling
 
 	request.should_hide_footer = True
-	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
-	# delivery_dates = request.REQUEST.get('delivery_dates', '')
-
 
 	jsons = [{
 		"name": "postageFactor",
@@ -688,6 +699,7 @@ def edit_order(request):
 		'integral_info': integral_info,
 		'coupons': coupons,
 		'limit_coupons': limit_coupons,
+		# jz 2015-08-10
 		# 'is_delivery_plan': 1 if product.type == 'delivery' else 0,	#通过该类型判断商品是配送套餐还是其他商品
 		# 'delivery_plan_id': delivery_plan_id,	#配送套餐id
 		# 'delivery_dates': delivery_dates,	#配送套餐计划,
@@ -780,8 +792,7 @@ def __format_product_group_price_factor(product_groups):
 
 
 def get_member_discount(request):
-	"""
-	返回产品与会员等级相关的折扣-> float:0.0~1.0
+	"""返回产品与会员等级相关的折扣-> float:0.0~1.0
 	"""
 	if hasattr(request, 'member') and request.member:
 		member_grade_id = request.member.grade_id
@@ -1041,6 +1052,7 @@ def show_concern_shop_url(request):
 	from_webapp_id = request.user_profile.webapp_id
 	to_webapp_id = None
 
+	# jz 2015-08-10
 	# otherProduct = WeizoomMallHasOtherMallProduct.objects.filter(product_id=product_id, weizoom_mall__webapp_id=from_webapp_id, is_checked=True)
 	# if otherProduct.count() > 0:
 	# to_webapp_id = otherProduct[0].webapp_id
@@ -1171,10 +1183,12 @@ def _get_order_review_list(request,need_product_detail=False):
 
     webapp_user_id = request.webapp_user.id  # 游客身份
     member_id = request.member.id            # 会员身份
+
+    # jz 2015-08-10
     # need_product_detail = request.GET.get("need_product_detail", False)
     #判断调用的页面是否需要产品信息
-
     # start
+
     # 得到会员的所有已完成的订单
     orders = Order.objects.filter(webapp_user_id=webapp_user_id, status=5)
     orderIds = [order.id for order in orders]
@@ -1517,6 +1531,7 @@ def edit_refueling_order(request):
 	use_ceiling = request.webapp_owner_info.integral_strategy_settings.use_ceiling
 
 	request.should_hide_footer = True
+	# jz 2015-08-10
 	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
 	# delivery_dates = request.REQUEST.get('delivery_dates', '')
 
@@ -1540,6 +1555,7 @@ def edit_refueling_order(request):
 		'integral_info': 0,
 		'coupons': None,
 		'limit_coupons': None,
+		# jz 2015-08-10
 		# 'is_delivery_plan': 1 if product.type == 'delivery' else 0,	#通过该类型判断商品是配送套餐还是其他商品
 		# 'delivery_plan_id': delivery_plan_id,	#配送套餐id
 		# 'delivery_dates': delivery_dates,	#配送套餐计划,

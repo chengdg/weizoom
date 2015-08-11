@@ -2,7 +2,8 @@
 {% load common_tag %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
+<div id='product_list_contain' data-user-is-member="{{request.member.grade_id}}" data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
+
     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
         <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
     </a>
@@ -22,17 +23,16 @@
             {% if products %}
             <ul data-role="listview" data-theme="x" data-icon="false">
                 {% for product in products %}
-                <li class="xui-inner-li xt-oneProduct
-                {% if product.is_member_product %}
-                xa-member-product
-                {% endif %}
-                ">
+                <li id="product" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
+                    data-product-promotion='{{product.promotion_js}}' data-product-price="{{product.display_price}}"
+                >
                     <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
                         <div class="xui-inner-img">
                             <img src="{{ product.thumbnails_url }}">
                         </div>
                         <h3 class="xt-productName">{{ product.name|truncatechars:16 }}</h3>
                         <p class="xt-productPrice">￥{{ product.display_price }}</p>
+
                     </a>
                 </li>
                 {% endfor %}
@@ -48,6 +48,17 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    var fmt = $('body').data('value');
+    var user_member_grade_id = $("#product_list_contain").data('user-is-member');
+    var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){return true;}
+        if(promotion_member_grade_id == user_member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
+    };
     //商品图片成1:1显示
     W.getApi().call({
         app: 'webapp',
@@ -56,19 +67,34 @@ $(document).ready(function() {
         args: {
             woid: W.webappOwnerId,
             module: 'mall',
-            target_api: 'member_product_info/get'
+            target_api: 'member_product_info/get',
+            fmt: fmt
         },
         success: function(data) {
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
-            if(data.discount<100){
-                $('.xa-member-product').each(function(i,n){
-                    var price = parseFloat($(n).find('.xt-productPrice').text().trim().replace('￥',''));
-                    price = (price * data.discount / 100).toFixed(2)
-                    $(n).find('.xt-productPrice').text('￥'+price)
-                })
-            }
+            $(".xa-product").each(function(){
+                // 商品原价
+                var price = $(this).data('product-price');
+                // 商品有促销
+                var product_promotion = $(this).data('product-promotion')
+                if(product_promotion != ''){
+                    // 促销是否对此用户开发
+                    is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
+                    if(is_user_has_promotion){
+                        price = (product_promotion.detail.promotion_price).toFixed(2);
+                    }
+                // 商品无促销
+                }else{
+                        // 商品是否折扣
+                        has_discount = $(this).hasClass('xa-member-product');
+                        if(has_discount){
+                            price = ((price * data.discount / 100).toFixed(2))
+                        }
+                }
+                $(this).find('.xt-productPrice').text('￥'+price)
+            });
         },
         error: function(data) {
 

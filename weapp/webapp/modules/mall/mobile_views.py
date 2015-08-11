@@ -3,15 +3,7 @@ from __future__ import absolute_import
 
 import os
 
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from django.conf import settings
-
 from webapp.modules.mall import request_util
-from mall import module_api as mall_api
-from account.models import UserProfile, OperationSettings
-from cache import webapp_cache
-from . import utils
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
@@ -22,9 +14,10 @@ TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 #
 # list_coupons: 显示"优惠券"页面
 ########################################################################
-def list_coupons(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.list_coupons(request)
+# jz 2015-08-10
+# def list_coupons(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.list_coupons(request)
 
 
 def list_products(request):
