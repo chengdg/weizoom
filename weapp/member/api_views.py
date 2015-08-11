@@ -287,6 +287,11 @@ def _get_tags_json(request):
 	return tags_json
 
 def __build_follow_member_basic_json(follow_member, member_id):
+	father_member = MemberFollowRelation.get_father_member(follow_member.id)
+	if father_member:
+		father_name = father_member.username_for_html
+	else:
+		father_name = ''
 
 	return {
 		'id': follow_member.id,
@@ -299,6 +304,7 @@ def __build_follow_member_basic_json(follow_member, member_id):
 		'is_fans': MemberFollowRelation.is_fan(member_id, follow_member.id),
 		'is_father': MemberFollowRelation.is_father(member_id, follow_member.id),
 		'pay_money': '%.2f' % follow_member.pay_money,
+		'father_name': father_name
 	}
 
 def __build_member_has_tags_json(member):
@@ -346,6 +352,7 @@ def get_member_follow_relations(request):
 	response.data = {
 		'items': return_follow_members_json_array,
 		'pageinfo': paginator.to_dict(pageinfo),
+		'only_fans':only_fans
 	}
 	return response.get_response()
 

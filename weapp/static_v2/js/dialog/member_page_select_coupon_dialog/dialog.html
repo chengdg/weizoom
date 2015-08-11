@@ -1,6 +1,6 @@
 <script id="member-page-select-coupon-dialog-tmpl-src" type="text/x-jquery-tmpl">
-    <div class="modal fade xui-selectCouponDialog" id="commonSelectCouponDialog">
-    <div class="modal-dialog modal-lg" style="width: 820px;">
+    <div class="modal fade xui-memberPageSelectCouponDialog " id="commonSelectCouponDialog">
+    <div class="modal-dialog modal-lg" style="width: 720px;">
     <div class="modal-content">
         <div class="modal-header">
             <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
@@ -23,7 +23,10 @@
         </div>
 
         <div class="modal-footer modal-footerBg">
-            <button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">发放</button>
+            <button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;font-weight:bold;">发&nbsp;&nbsp;放</button>
+            <br/>
+            <div class="xui-hint" style="float:left">
+            <p><img class="mr10" src="/static_v2/img/editor/hint.png" />您将为20人发放优惠券</p></div>
         </div>
     </div>
     </div>
@@ -56,26 +59,36 @@
                 {{/if}}
                 </td>
                 <td>${coupon.money}</td>
-                <td>${coupon.start_time}<br>-<br>${coupon.end_time}</td>
+                <td>${coupon.start_time}<div style="line-height:8px;"</div>${coupon.end_time}</td>
                 {{if coupon.limit_counts > 0}}
                     <td>每人${coupon.limit_counts}张</td>
                 {{else}}
                     <td>无限</td>
                 {{/if}}
                 <td>
+                
+                    {{if coupon.remained_count != 0}}
                     <input
                         data-ui-role="counter"
-                        data-minlimit="0"
+                        data-min-limit="0"
                         data-max-count="10"
                         type="hidden"
                         name="total_count"
                         id="total_count"
                         value="1"
                     >
+                    <span class="xui-btngroup">
+                    <span class="xa-down xui-down xui-btn" >-</span>
+                    <span class="xui-counterText">1</span>
+                    <span class="xa-up xui-up xui-btn" >+</span>
+                    </span>
+                {{else}}
+                    <span>库存不足</span>
+                {{/if}}
                 </td>
                 <td>
                     <label class="btn  lh20  btn-primary" style="border-radius:3px;">
-                        <input type="checkbox" autocomplete="off" class="xa-selectCoupon" ><span>选取</span>
+                        <input type="checkbox" style="display:none;" autocomplete="off" class="xa-selectCoupon" ><span>选取</span>
                     </label>
                 </td>
             </tr>

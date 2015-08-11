@@ -448,7 +448,6 @@ Scenario:每次购买给邀请者增加积分
 		"""
 
 
-@member @member.shared_integral 
 Scenario:消费返积分开启时"购买商品返积分"
 	bill购买jobs的商品1后
 	1.订单已完成状态，给bill增加积分
@@ -601,7 +600,6 @@ Scenario:消费返积分开启时"购买商品返积分"
 
 
 	
-@member @member.shared_integral  
 Scenario:关闭消费返积分，购买不返还积分
 	
 	When jobs关闭消费返积分
@@ -684,125 +682,7 @@ Scenario:关闭消费返积分，购买不返还积分
 		"""
 
 
-@member @member.shared_integral 
-Scenario: 关闭消费返积分，通过分享链接购买后给分享者增加积分
-	bill把jobs的商品2的链接分享到朋友圈
-	1.nokia点击bill分享的链接并购买，给bill增加积分
-	2.nokia再次点击bill分享的链接并购买，不给bill增加积分
-	3.tom点击bill分享的链接并购买，给bill增加积分
 
-	When 清空浏览器
-	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
-	Then bill在jobs的webapp中获得积分日志
-		"""
-		[{
-			"content":"首次关注",
-			"integral":20
-		}]
-		"""
-	When bill把jobs的商品"商品2"的链接分享到朋友圈
-
-	When 清空浏览器
-	When nokia点击bill分享链接
-	When nokia通过bill分享的链接购买jobs的商品
-		"""
-		{
-			"ship_name": "nokia",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
-			"products": [{
-				"name": "商品2",
-				"count": 1
-			}],
-			"customer_message": "nokia的订单备注1"
-		}
-		"""
-	When nokia使用支付方式'货到付款'进行支付
-	Then nokia支付订单成功
-		"""
-		{
-			"status": "待发货",
-			"final_price": 100.00,
-			"products": [{
-				"name": "商品2",
-				"price":100.00,
-				"count": 1
-			}]
-		}
-		"""
-	When nokia点击bill分享链接
-	When 清空浏览器
-	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有62会员积分
-	Then bill在jobs的webapp中获得积分日志
-		"""
-		[{
-			"content":"好友通过分享链接购买奖励",
-			"integral":31
-		},{
-			"content":"好友点击分享链接奖励",
-			"integral":11
-		},{
-			"content":"首次关注",
-			"integral":20
-		}]
-		"""
-	When 清空浏览器
-	When tom点击bill分享链接
-	When tom通过bill分享的链接购买jobs的商品
-		"""
-		{
-			"ship_name": "tom",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
-			"products": [{
-				"name": "商品2",
-				"count": 1
-			}],
-			"customer_message": "tom的订单备注1"
-		}
-		"""
-	When tom使用支付方式'货到付款'进行支付
-	Then tom支付订单成功
-		"""
-		{
-			"status": "待发货",
-			"final_price": 100.00,
-			"products": [{
-				"name": "商品2",
-				"price":100.00,
-				"count": 1
-			}]
-		}
-		"""
-
-	When 清空浏览器
-	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有104会员积分
-	Then bill在jobs的webapp中获得积分日志
-		"""
-		[{
-			"content":"好友通过分享链接购买奖励",
-			"integral":31
-		},{
-			"content":"好友点击分享链接奖励",
-			"integral":11
-		},{
-			"content":"好友通过分享链接购买奖励",
-			"integral":31
-		},{
-			"content":"好友点击分享链接奖励",
-			"integral":11
-		},{
-			"content":"首次关注",
-
-			"integral":20
-		}]
-		"""
 
 @member @member.shared_integral 
 Scenario:每次购买给邀请者增加积分
