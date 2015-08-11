@@ -169,8 +169,9 @@ def group_product_by_promotion(request, products):
 	group_id = 0
 	for product in products:
 		product.original_price = product.price
-		if product.is_member_product:
-			product.price = round(product.price * discount / 100, 2)
+		# 2015/08/11
+		# if product.is_member_product:
+		# 	product.price = round(product.price * discount / 100, 2)
 		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
 		group_id += 1
 		default_products = {"group_id": group_id, "products": []}
@@ -487,6 +488,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				member_id2member = dict([(m.id, m) for m in members])
 				for review in product_review:
 					review.member_name = member_id2member[review.member_id].username_for_html
+					review.user_icon = member_id2member[review.member_id].user_icon
 
 			#获取促销活动和积分折扣信息
 			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))

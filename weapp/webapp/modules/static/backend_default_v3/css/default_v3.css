@@ -1331,11 +1331,15 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-productDetailPage .xui-rate-panel li:last-child{
     padding-bottom:0px;
 }
-.xui-productDetailPage .xui-rate-panel img{
+.xui-productDetailPage .xui-rate-panel .xui-user{
+    background: url(/static/img/user-1.jpg) no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    display: inline-block;
     box-shadow: 0 0 0 1px #e3e3e3;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     vertical-align: middle;
 }
 .xui-productDetailPage .xui-productInfo-section dl{
