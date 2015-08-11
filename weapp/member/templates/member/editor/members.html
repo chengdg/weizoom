@@ -36,7 +36,7 @@
 			data-enable-sort="false"
 			data-selectable="true"
 			data-item-count-per-page="50"
-			class="panel-body" 
+			class="panel-body"
 			data-args='{"status":"{{status}}"}'
 		></div>
 		<div class="dropdown xui-operation update_dropdown">
@@ -92,6 +92,7 @@
 <script id="members-view" type="text/x-jquery-tmpl">
 	<div class="pa" style="top:10px;left:15px;">
 		<label class="">全部会员：${data.total_count}人</label>
+		<a href="javascript:void(0);" class="xa-issuing-coupons">发优惠券</a>
 		<a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
@@ -168,6 +169,7 @@
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
 			<td>
+				<a href="javascript:void(0);" class="xa-issuing-coupon">发优惠券</a>
 				<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">调等级</a></br>
 				<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a></br>
 				<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">调积分</a></br>
@@ -207,7 +209,7 @@ $(document).ready(function() {
 		DATA_INTERVAL = '';
 	});
 	//console.log('----------a:::',view.getFilterValue(),'--aaaaaa')
-	
+
 	// 修改等级
 	$('body').delegate('.xa-update-grade', 'click', function(event){
 		var $el = $(event.currentTarget);
@@ -339,6 +341,18 @@ $(document).ready(function() {
 
 	});
 
+	//发优惠券
+	$('.panel-body').delegate('.xa-issuing-coupon', 'click', function(event){
+		W.dialog.showDialog('W.dialog.mall.MemberPageSelectCouponDialog',{
+			success: function(data){
+				console.log("success");
+			},
+			error: function(data){
+				console.log("error");
+			}
+		})
+	});
+
 	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){
 		var url = '/member/members/export/';
@@ -378,7 +392,7 @@ $(document).ready(function() {
 			$('.xa-more-filter').trigger('click');
 			$("#status").val("1");
 		}, 500);
-		
+
 	}
 });
 </script>
