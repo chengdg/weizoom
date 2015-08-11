@@ -181,7 +181,8 @@ def __build_return_member_json(member):
 		'pay_times': member.pay_times,
 		'unit_price': '%.2f' % member.unit_price,
 		'is_selected': member.is_selected,
-		'is_current_select': member.is_current_select
+		'is_current_select': member.is_current_select,
+		'experience': member.experience
 	}
 
 def __count_member_follow_relations(member):
