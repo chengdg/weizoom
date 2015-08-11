@@ -4,18 +4,12 @@
 	<div class="modal-content" style="width:667px">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
-			<h3 class="modal-title">好友列表
+			<h3 class="modal-title">	<strong class="show_fans" name="show_fans">推荐关注</strong>||<strong class="show_friends" name="show_friends">好友列表</strong>
 			</h3>
 		</div>
 		<div class="modal-body" style="padding:0 20px;">
 			
 			<div class="form-inline" style="min-height:420px;">
-				<span style="margin-left: 333px;"><strong>好友：&nbsp;<font class="friend_count"></font> 
-					</strong>
-				</span>&nbsp;&nbsp;&nbsp;
-				<span> <strong>贡献：&nbsp;<font class="fans_count"></font></strong></span>
-				&nbsp;&nbsp;&nbsp;
-				<input type="checkbox" class="show_fans" name="show_fans" style="margin-right:5px;margin-top:2px;vertical-align: sub;"><strong>仅查看贡献会员</strong>
 				<table class="xa-logTable mt10 w">
 				<div
 					data-ui-role="advanced-table"
@@ -27,6 +21,7 @@
 					data-selectable="false"
 					data-item-count-per-page="5"
 					data-auto-load="false"
+					data-args='{"only_fans":"true"}'
 					class="mt10 mb20"
 				></div>
 				</table>
@@ -44,13 +39,17 @@
 		<table style="width:100%;border:1px solid #ddd" class="table xb-stripedTable xb-noBorder">
 				<thead style="background:#c8d2e5;">
 				<tr class="">
-					<th width="180">会员</th>
+					<th width="180">粉丝</th>
 					<th width="90">消费金额</th>
 					<th width="100">积分</th>
-					<th width="150">来源</th>
+					<th width="100">来源</th>
+					{{if data.only_fans==1}}
+						<th width="150">推荐人</th>
+					{{/if}}
 					<th width="90">时间</th>
 				</tr>
 				</thead>
+
 				<tbody>
 					{{each(i, log) items}}
 					<tr data-id="${log.id}">
@@ -84,6 +83,9 @@
 								</span>
 							</span>
 					    </td>
+					    {{if data.only_fans==1}}
+							<td style="font-weight:bold;">${log.father_name} </td>
+						{{/if}}
 					    <td style="font-weight:bold;">${log.created_at} </td>
 					</tr>
 					{{/each}}
