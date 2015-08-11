@@ -176,7 +176,6 @@ def get_product(request):
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-
 	if product.promotion:
 		product.promotion['is_active'] = product.promotion_model.is_active
 	jsons = [{
@@ -198,7 +197,7 @@ def get_product(request):
 	if request.user.is_weizoom_mall:
 		product.is_can_buy_by_product(request)
 		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
-		otherSettings = OperationSettings.objects.get(owner = otherProfile.user)
+		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
 		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
 			non_member_followurl = otherSettings.weshop_followurl
 
@@ -230,8 +229,8 @@ def get_product(request):
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
-		'share_page_desc':product.name,
-		'share_img_url':product.thumbnails_url
+		'share_page_desc': product.name,
+		'share_img_url': product.thumbnails_url
 	})
 
 	if hasattr(request, 'is_return_context'):
@@ -294,7 +293,7 @@ def pay_order(request):
 		order.red_envelope = red_envelope.id
 		if promotion_models.RedEnvelopeToOrder.objects.filter(order_id=order.id).count():
 			order.red_envelope_created = True
-	
+
 	# jz 2015-08-10
 	# if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
 	# 	order.is_show_field = True

@@ -2,7 +2,7 @@
 {% load common_tag %}
 
 {% block content-panel %}
-<div id='product_list_contain' data-user-is-member="{{request.member.grade_id}}", data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
+<div id='product_list_contain' data-user-is-member="{{request.member.grade_id}}" data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
 
     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
         <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
@@ -81,8 +81,8 @@ $(document).ready(function() {
                 var product_promotion = $(this).data('product-promotion')
                 if(product_promotion != ''){
                     // 促销是否对此用户开发
-                    user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
-                    if(user_has_promotion){
+                    is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
+                    if(is_user_has_promotion){
                         price = (product_promotion.detail.promotion_price).toFixed(2);
                     }
                 // 商品无促销
