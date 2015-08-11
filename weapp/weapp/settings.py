@@ -225,7 +225,7 @@ MIDDLEWARE_CLASSES = [
     'core.termite_middleware.WebappPageHomePageMiddleware',
 
     # termite middleware
-    'core.termite_middleware.WebappPageCacheMiddleware',
+    #'core.termite_middleware.WebappPageCacheMiddleware',
 
     # REST resorce manage
     'core.resource_middleware.ResourceJsMiddleware',
