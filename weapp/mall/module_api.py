@@ -2139,7 +2139,6 @@ def update_order_status(user, action, order, request=None):
 	已知引用：
 	mobile_app/order_api_views.py
 	mall/order.py
-	mall/order.py
 	services/cancel_not_pay_order_service/tasks.py
 
 	已知action:
