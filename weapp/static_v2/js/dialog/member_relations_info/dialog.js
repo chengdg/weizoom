@@ -59,21 +59,21 @@ W.dialog.member.RelationsDialog = W.dialog.Dialog.extend({
 
     onClickShowFansCheckbox: function(event){
         var $currentTarget = $(event.currentTarget); 
-        $currentTarget.css('color','#333333');  
+        $currentTarget.css('color','#fff');  
         this.memberId = $currentTarget.val();
         this.onlyFans = true;
-        this.$('.show_friends').css('color','#fff');
+        this.$('.show_friends').css('color','#333333');
         this.onFansShow(this);
 
     },
 
     onClickShowFrinedsCheckbox: function(event){
-        this.$('.show_fans').css('color','#fff');
+        this.$('.show_fans').css('color','#333333');
         var $currentTarget = $(event.currentTarget);   
         this.memberId = $currentTarget.val();
         this.onlyFans = false;
         this.onFansShow(this);
-         $currentTarget.css('color','#333333');  
+         $currentTarget.css('color','#fff');  
 
     },
 
