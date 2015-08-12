@@ -53,6 +53,7 @@ def get_settings(request):
     else:
         if request.member:
             setting = ChannelQrcodeSettings.objects.filter(bing_member_id=request.member.id, is_bing_member=True)
+
             if setting.count() > 0:
                 setting = setting[0]
                 member = Member.objects.get(id=request.member.id)
@@ -161,3 +162,29 @@ def _get_ticket(user_id, screen_id):
             return qrcode_ticket.ticket
         except:
             return ''
+
+def get_settings_detail(request):
+    sid = request.GET.get('sid', 0)
+    member = request.member
+    user_id = request.webapp_owner_id
+    if sid:
+        setting = ChannelQrcodeSettings.objects.get(id=sid)
+        
+        if setting.bing_member_id == request.member.id:
+            channel_qrcode_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
+
+            c = RequestContext(request, {
+                    'page_title': u'代言人二维码',
+                    'member': member,
+                    'setting': setting,
+                    'is_hide_weixin_option_menu': True,
+                    'head_img': get_mp_head_img(user_id),
+                    'hide_non_member_cover':True,
+                    'channel_qrcode_members':channel_qrcode_members
+                })
+            return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
+
+
+    c = RequestContext(request, {
+                'page_title': u'代言人二维码',})
+    return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_context.html' % TEMPLATE_DIR, c)
