@@ -458,7 +458,8 @@ $(document).ready(function() {
                 var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
                 $('.xa-priceSection').html(temp);
 
-            }else{
+            }
+            if(msg === '' || msg === "会员价"){
                 // 移除多余促销信息
                 if(is_product_promotion && !is_user_has_promotion){
                     $('.xa-promotionSection').remove();
