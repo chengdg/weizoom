@@ -179,8 +179,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	def __get_current_promotion_id_for_product(product, member_grade_id):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
 		promotions = Promotion.objects.filter(id__in=promotion_ids, status=PROMOTION_STATUS_STARTED).exclude(type__gt=3)
-		if len(promotions) > 0 and promotions[0].member_grade_id > 0 and \
-				promotions[0].member_grade_id == member_grade_id:
+		if len(promotions) > 0 and (promotions[0].member_grade_id <= 0 or \
+				promotions[0].member_grade_id == member_grade_id):
 			# 存在促销信息，且促销设置等级对该会员开放
 			return promotions[0].id
 		return 0
