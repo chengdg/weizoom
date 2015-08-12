@@ -209,7 +209,6 @@ class OrdernumValue(resource.Resource):
 	@login_required
 	def api_get(request):
 		low_date, high_date, date_range = stats_util.get_date_range(request)
-		print '222222222222',low_date,high_date,'3333333333'
 		today_date = dateutil.get_today()
 		if str(high_date)[0:10] == today_date:
 			high_date = high_date - timedelta(1)
@@ -280,7 +279,6 @@ class SaleroomValue(resource.Resource):
 	@login_required
 	def api_get(request):
 		low_date, high_date, date_range = stats_util.get_date_range(request)
-		print '333333333',low_date,high_date,'444444444444'
 		today_date = dateutil.get_today()
 		if str(high_date)[0:10] == today_date:
 			high_date = high_date - timedelta(1)
