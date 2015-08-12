@@ -431,11 +431,12 @@ $(document).ready(function() {
 
 	//执行发优惠券
 	function showDialogAndIssuingCoupon(member_ids, member_name){
-		W.dialog.showDialog('W.dialog.mall.MemberPageSelectCouponDialog',{
+		var dialog = W.dialog.showDialog('W.dialog.mall.MemberPageSelectCouponDialog',{
 			member_name: member_name,
 			member_count: member_ids.length,
 			success: function(data){
 				console.log(data, "success");
+
 				if (!data.couponRuleId){
 					W.showHint('error', '请选择优惠券！');
 					return;
@@ -466,7 +467,8 @@ $(document).ready(function() {
 			error: function(data){
 				W.showHint('error', '发放失败!');
 			}
-		})
+		});
+
 	};
 
 	// 导出
