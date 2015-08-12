@@ -94,10 +94,10 @@ def step_impl(context, webapp_owner_name, webapp_user_name, grade_name):
 @then(u'{webapp_owner_name}能获得{webapp_user_name}的积分日志')
 def step_impl(context, webapp_owner_name, webapp_user_name):
 	webapp_user_member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
-	url = '/user_center/member/%d/integral_log/' % webapp_user_member.id
+	url = '/member/api/member_logs/get/?design_mode=0&version=1&member_id=%d&count_per_page=10&page=1&enable_paginate=1' % webapp_user_member.id
 	response = context.client.get(url)
-	member_logs = response.context['member_logs']
-	actual = [{"content":log.event_type, "integral":log.integral_count} for log in member_logs]
+	member_logs = json.loads(response.content)['data']['items']
+	actual = [{"content":log['event_type'], "integral":log['integral_count']} for log in member_logs]
 
 	expected = json.loads(context.text)
 	bdd_util.assert_list(expected, actual)
