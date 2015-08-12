@@ -168,7 +168,6 @@ def step_impl(context, user, webapp_user_name):
     webapp_id = bdd_util.get_webapp_id_for(user)
     member = bdd_util.get_member_for(webapp_user_name, webapp_id)
     grade = MemberGrade.objects.get(name=grade_name, webapp_id=context.webapp_id)
-    print("...8888888888888888888888.",member.id,grade.id)
     data = {
         'type': 'grade',
         'member_id': member.id,

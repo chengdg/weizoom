@@ -119,7 +119,7 @@ def get_webapp_owner_info(webapp_owner_id):
     }]
     data = cache_util.get_many_from_cache(key_infos)
     red_envelope = data[red_envelope_key]
-    if red_envelope:
+    if red_envelope != '1':
         red_envelope = promotion_models.RedEnvelopeRule.from_dict(red_envelope)
         # coupon_rule = red_envelope.coupon_rule
         # if coupon_rule:
@@ -194,7 +194,7 @@ post_update_signal.connect(update_webapp_owner_info_cache_with_login,
 def get_red_envelope_for_cache(owner_id):
     def inner_func():
         red_envelope = promotion_models.RedEnvelopeRule.objects.filter(owner_id=owner_id, status=True)
-        result = None
+        result = {}
         if len(red_envelope):
             red_envelope = red_envelope[0]
             coupon_rule = promotion_models.CouponRule.objects.filter(id=red_envelope.coupon_rule_id)
