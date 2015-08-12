@@ -23,7 +23,6 @@
     <section class="xui-header">
         <img src="{{member.user_icon}}" alt="" class="pa">
         <p class="xui-memberName">{{member.user_name | safe}}</p>
-        <span class="xui-tag">{{setting.bing_member_title}}</span>
         <p class="xui-hasRec">已推荐{{setting.count}}人扫码</p>
     </section>
     {% endif %}
@@ -34,7 +33,7 @@
         </div>
         <h2>活动说明</h2>
         <div class="xui-info">
-        	<p>{{setting.qrcode_desc}}</p>
+        	{{setting.qrcode_desc}}
         </div>
 	</section>
 </div>

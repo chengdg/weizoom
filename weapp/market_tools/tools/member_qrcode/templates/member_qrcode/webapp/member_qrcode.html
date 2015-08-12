@@ -10,9 +10,6 @@
     h2.xui-content-layer-title{
         font-weight:normal;
     }
-    .ui-content{
-        padding:10px 15px!important;
-    }
     .xui-content-layer-content{
         line-height: 1.5em;
     }
@@ -23,18 +20,16 @@
         left:50%;
         margin-top:-20px;
         margin-left:-20px;
-        border-radius:8px;
+        border-radius:2px;
         border:1px solid #dfdfdf;
-        box-shadow:0 0 0 2px #fff,0px 8px 5px -5px #888;
     }
 </style>
 {% endblock %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
+<div data-role="page" data-theme="x" class="xui-memberQrcode-page {% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
 	<div data-role="content">
-            <br>
-            <div class="xui-two-dimensional-code pr"  style="text-align:center;">
+            <div class="xui-two-dimensional-code pr"  style="text-align:center;padding:35px 0 15px 0;">
 
                		{% if member %} 
                		<input type='hidden' id="member_id" value="{{member.id}}" />
@@ -52,13 +47,10 @@
                 	{% endif %}
                     
     		</div>
-    		<br>
-            <div class="xui-content-layer">
-	            <h2 class="xui-content-layer-title">活动说明</h2>
-	            <div class="xui-content-layer-content rawHtml">
-	                {{ member_qrcode_settings.detail|safe }}
-	            </div>
-	        </div>
+    		<h2>活动说明</h2>
+            <div class="xui-info">
+                {{ member_qrcode_settings.detail|safe }}
+            </div>
 	</div>
 </div>
 {% endblock %}

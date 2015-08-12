@@ -40,7 +40,7 @@ get_qrcode
 
 create_qrcode_ticket
 	创建二维码ticket
-	文档参见http://mp.weixin.qq.com/wiki/index.php?title=%E7%94%9F%E6%88%90%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A0%81	
+	文档参见http://mp.weixin.qq.com/wiki/index.php?title=%E7%94%9F%E6%88%90%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A0%81
 
 send_custom_msg
 	发送客服消息
@@ -101,9 +101,9 @@ class WeixinApiResponse(object):
 
 	def is_failed(self):
 		return self.response_json.get('errcode', errorcodes.SUCCESS_CODE) != errorcodes.SUCCESS_CODE
-		
+
 	def get_errormsg_in_zh(self):
-		return errorcodes.code2msg.get(self.errcode, self.errmsg) 
+		return errorcodes.code2msg.get(self.errcode, self.errmsg)
 
 	def __parse_response(self, response_text):
 		response_text = response_text.strip()
@@ -122,15 +122,15 @@ class WeixinApiError(Exception):
 
 	def __str__(self):
 		return self.__unicode__().encode('utf-8')
-		
+
 """
 微信Api提供的微信用户基本信息，包括以下属性：
 subscribe : 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息
 openid : 用户的标识，对当前公众号唯一
 nickname : 昵称
-sex : 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知 
+sex : 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
 city : 用户所在城市
-province : 用户所在省份 
+province : 用户所在省份
 language : 用户的语言，简体中文为zh_CN
 headimgurl : 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
 subscribe_time : 用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
@@ -155,7 +155,7 @@ class QrcodeTicket(ObjectAttrWrapedInDict):
 	MAX_EXPIRE_SECONDS = 1800
 
 	def __init__(self, src_dict):
-		super(QrcodeTicket, self).__init__(src_dict)	
+		super(QrcodeTicket, self).__init__(src_dict)
 
 """
 微信Api错误信息，包含以下属性：
@@ -193,7 +193,7 @@ class WeixinApi(object):
 		# 	raise ValueError(u'只有授权过的服务号才可以使用Api')
 
 		# if not mpuser_access_token.is_active:
-		# 	raise ValueError(u'授权已经过期')			
+		# 	raise ValueError(u'授权已经过期')
 
 		self.mpuser_access_token = mpuser_access_token
 		self.weixin_http_client = weixin_http_client
@@ -202,7 +202,7 @@ class WeixinApi(object):
 		param_dict = {'openid':openid}
 		request_url = self._complete_weixin_api_get_request_url('cgi-bin/user/info', param_dict)
 
-		try:	
+		try:
 			api_response = self.weixin_http_client.get(request_url)
 		except:
 			self._raise_system_error(u'获取用户基本信息')
@@ -271,7 +271,7 @@ class WeixinApi(object):
 	def create_customerized_menu(self, menu_json, is_retry=False):
 		if self.__should_change_to_delete_request(menu_json):
 			return self.delete_customerized_menu()
-		
+
 		if isinstance(menu_json, str):
 			try:
 				menu_json = json.loads(menu_json)
@@ -280,7 +280,7 @@ class WeixinApi(object):
 
 		request_url = self._complete_weixin_api_get_request_url('cgi-bin/menu/create', {})
 
-		try:	
+		try:
 			api_response = self.weixin_http_client.post(request_url, menu_json)
 		except:
 			self._raise_system_error(u'创建自定义菜单')
@@ -303,7 +303,7 @@ class WeixinApi(object):
 	def delete_customerized_menu(self, is_retry=False):
 		request_url = self._complete_weixin_api_get_request_url('cgi-bin/menu/delete', {})
 
-		try:	
+		try:
 			api_response = self.weixin_http_client.get(request_url)
 		except:
 			self._raise_system_error(u'删除自定义菜单')
@@ -342,7 +342,7 @@ class WeixinApi(object):
 
 		request_url = self._complete_weixin_api_get_request_url('cgi-bin/qrcode/create', {})
 
-		try:	
+		try:
 			api_response = self.weixin_http_client.post(request_url, post_param_json)
 		except:
 			self._raise_system_error(u'创建带参数的二维码')
@@ -368,7 +368,7 @@ class WeixinApi(object):
 		try:
 			post_param_json_str = build_custom_message_json_str(sendto_openid, custom_msg)
 		except:
-			self._raise_system_error(u'创建要发送的客服消息')			
+			self._raise_system_error(u'创建要发送的客服消息')
 
 		if post_param_json_str is None:
 			self._raise_system_error(u'要发送的客服消息为None')
@@ -376,7 +376,7 @@ class WeixinApi(object):
 		post_param_json = decode_json_str(post_param_json_str)
 		request_url = self._complete_weixin_api_get_request_url('cgi-bin/message/custom/send', {})
 
-		try:	
+		try:
 			api_response = self.weixin_http_client.post(request_url, post_param_json)
 		except:
 			self._raise_system_error(u"发送客服消息:\n{}".format(post_param_json_str))
@@ -399,7 +399,7 @@ class WeixinApi(object):
 	def _raise_request_error(self, response, api_name=''):
 		error_response = WeixinErrorResponse(response)
 
-		if error_response.errcode in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE, 
+		if error_response.errcode in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE,
 			errorcodes.ACCESS_TOKEN_EXPIRED_CODE, errorcodes.INVALID_ACCESS_TOKEN_CODE):
 			inactive_mpuser_access_token(self.mpuser_access_token)
 
@@ -425,10 +425,10 @@ class WeixinApi(object):
 
 	def _is_error_dueto_access_token(self, response):
 		if type(response) == dict:
-			return response.get('errcode', errorcodes.SUCCESS_CODE) in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE, 
+			return response.get('errcode', errorcodes.SUCCESS_CODE) in (errorcodes.ILLEGAL_ACCESS_TOKEN_CODE,
 				errorcodes.ACCESS_TOKEN_EXPIRED_CODE, errorcodes.INVALID_ACCESS_TOKEN_CODE)
 		else:
-			return False		
+			return False
 
 
 	def _complete_weixin_api_get_request_url(self, path, param_dict={}):
@@ -439,7 +439,7 @@ class WeixinApi(object):
 			param_dict['access_token'] = self.mpuser_access_token.access_token
 
 		return complete_get_request_url(
-			api_settings.WEIXIN_API_PROTOCAL, 
+			api_settings.WEIXIN_API_PROTOCAL,
 			api_settings.WEIXIN_API_DOMAIN,
 			path,
 			param_dict
@@ -458,15 +458,15 @@ class WeixinApi(object):
 
 正确信息针对具体api，例如对于获取用户信息api返回结果：
 {
-    "subscribe": 1, 
-    "openid": "o6_bmjrPTlm6_2sgVt7hMZOPfL2M", 
-    "nickname": "Band", 
-    "sex": 1, 
-    "language": "zh_CN", 
-    "city": "广州", 
-    "province": "广东", 
-    "country": "中国", 
-    "headimgurl":    "http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0", 
+    "subscribe": 1,
+    "openid": "o6_bmjrPTlm6_2sgVt7hMZOPfL2M",
+    "nickname": "Band",
+    "sex": 1,
+    "language": "zh_CN",
+    "city": "广州",
+    "province": "广东",
+    "country": "中国",
+    "headimgurl":    "http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0",
    "subscribe_time": 1382694957
 }
 

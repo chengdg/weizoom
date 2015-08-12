@@ -107,6 +107,11 @@ def __get_absolute_url(orig_url, user_profile):
 	return absolute_url if (absolute_url is not None) else orig_url
 
 def add_token_to_url(orig_url, token, user_profile):
+	"""
+		去掉opid sct  不再需要他们 
+	"""
+	return orig_url
+
 	if token is None:
 		return orig_url
 
