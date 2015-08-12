@@ -113,7 +113,7 @@ Background:
 		}]
 		"""
 	#10积分是一元等于10积分，20积分是首次关注的奖励，30积分是购买商品基础奖励,50积分是订单抵扣上限50%
-	And jobs设定会员积分策略
+	Given jobs设定会员积分策略
 		"""
 		{
 			"integral_each_yuan": 10,
@@ -407,7 +407,7 @@ Scenario: 3 购买多个商品包括会员价商品
 		}
 		"""
 
-@mall2 @meberGrade
+@meberGrade
 Scenario: 4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后
@@ -579,7 +579,7 @@ Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加�
 				"name": "商品1",
 				"count": 1
 			}],
-			"integral": 20
+			"integral": 2.00
 		}
 		"""
 	Then bill成功创建订单
