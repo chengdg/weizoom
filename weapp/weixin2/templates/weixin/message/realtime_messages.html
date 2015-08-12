@@ -293,9 +293,8 @@ $(document).ready(function() {
 		var replied = $current.attr('data-replied');
 		var sessionId = $current.parents('tr').attr('data-id')
 		var queryString = $('#query_string').attr('data-query-string');
-		localStorage['__realtimeMessageQueryString'] = queryString;
-		window.location.href = '/new_weixin/realtime_messages_detail/?session_id=' + sessionId + '&replied=' + replied
-
+		localStorage['__realtimeMessageQueryString'] = queryString;		
+		window.open('/new_weixin/realtime_messages_detail/?session_id=' + sessionId + '&replied=' + replied)
 	});
 	
 	$('body').delegate('.wx_collect_message', 'click', function(event){
