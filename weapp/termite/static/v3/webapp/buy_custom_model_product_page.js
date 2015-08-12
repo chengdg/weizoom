@@ -160,7 +160,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
                 }
                 $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
-                    alert(cut_price);
             }
         }
         // end用于处理显示积分抵扣信息 提出单独的方法
@@ -601,7 +600,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 if(this.discount < 100){
                     $('.xa-orPrice').text(change_price);
                     change_price = (change_price * this.discount / 100).toFixed(2);
-                    // alert(change_price)
                 }
                 $('.xa-singlePrice').text(change_price);
                 // 是不是没有用 @洪大师
@@ -609,11 +607,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
                 // $('.xa-market-price').text(model.market_price);
                 // if ('object' == '{{product.type}}'){
-                //     alert(1)
                 //     $('.xa-disabledBuyLinks').hide();
                 //     $('.xa-enabledBuyLinks').show();
                 // }else if (this.useIntegral < model.price) {
-                //     alert(2)
                 //     $('.xa-disabledIntegralBuyLinks').show();
                 //     $('.xa-disabledBuyLinks').hide();
                 //     $('.xa-enabledBuyLinks').hide();
