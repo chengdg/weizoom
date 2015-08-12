@@ -7,22 +7,22 @@ Feature: 会员管理-好友关系列表
 	1、"推荐关注"页签
 		当前会员推荐关注本店铺成为店铺会员的好友列表，按照[关注时间]倒序排列
 		（1）推荐关注好友列表展示字段
-			【粉丝】：推荐关注的好友的头像和昵称、会员等级，昵称有外链接，点击重新打开新页面此会员的"会员详情"
+			【会员】：推荐关注的好友的头像和昵称、会员等级，昵称有外链接，点击重新打开新页面此会员的"会员详情"
 			【消费金额】：此会员在本店铺提交并成功支付的订单的"实付金额"的总和
 			【积分】：此会员现在拥有的本店铺的积分数
 			【来源】：此会员的来源（推广扫码、会员分享）
-			【关注时间】：此会员关注本店铺公众账号成为会员的时间
+			【时间】：两者直接创建好友关系的时间
 		（2）分页展示，每页8条数据
 		（3）左下角显示"共XX条记录"
 	2、"好友列表"页签
 		当前会员的好友的列表（包含推荐关注的好友），按照[关注时间]倒序排列
 		（1）好友列表展示字段
-			【粉丝】：此好友的头像和昵称、会员等级，昵称有外链接，点击重新打开新页面此会员的"会员详情"
+			【会员】：此好友的头像和昵称、会员等级，昵称有外链接，点击重新打开新页面此会员的"会员详情"
 			【消费金额】：此会员在本店铺提交并成功支付的订单的"实付金额"的总和
 			【积分】：此会员现在拥有的本店铺的积分数
 			【来源】：此会员的来源（推广扫码、会员分享、直接关注）
 			【推荐人】：此好友的推荐人的昵称（本店铺的会员），直接关注的此项为"无"；昵称有外链接，点击重新打开新页面此会员的"会员详情"
-			【关注时间】：此会员关注本店铺公众账号成为会员的时间
+			【时间】：两者直接创建好友关系的时间
 		（2）分页展示，每页8条数据
 		（3）左下角显示"共XX条记录"
 """
@@ -83,7 +83,7 @@ Background:
 		}]
 		"""
 
-	#以bill和tom为基础创建数据
+	#以bill为基础创建数据
 		When 清空浏览器
 		When bill关注jobs的公众号于'2015-5-1'
 		When bill访问jobs的webapp
@@ -229,11 +229,6 @@ Background:
 		When 清空浏览器
 		When bill001点击bill分享链接
 
-	#访问链接成为好友
-		When tom关注jobs的公众账号于'2015-5-2'
-		When bill访问jobs的webapp
-		When tom点击bill的分享链接
-
 	#会员获取jobs的积分
 
 		When bill1访问jobs的webapp
@@ -282,7 +277,7 @@ Scenario:1 会员的好友列表和推荐关注列表
 
 	Given jobs登录系统
 	Then jobs获得bill的'推荐关注'
-		|   fans   | consumption_amount |  integral  |  Source  | attention_time |
+		|   fans   | consumption_amount |  integral  |  Source  |      time      |
 		|  bill1   |        0           |     50     | 会员分享 |      今天      |
 		|  bill3   |        0           |     0      | 会员分享 |      今天      |
 		|  bill11  |        0           |     70     | 会员分享 |      今天      |
@@ -297,7 +292,7 @@ Scenario:1 会员的好友列表和推荐关注列表
 		"""
 
 	Then jobs获得bill的'好友列表'
-		|   fans   | consumption_amount |  integral  |  Source  | recommended | attention_time |
+		|   fans   | consumption_amount |  integral  |  Source  | recommended |      time      |
 		|  bill1   |        0           |     50     | 会员分享 |    bill     |      今天      |
 		|  bill2   |        0           |     0      | 直接关注 |    无       |      今天      |
 		|  bill3   |        0           |     0      | 会员分享 |    bill     |      今天      |
@@ -311,7 +306,7 @@ Scenario:1 会员的好友列表和推荐关注列表
 		|  bill0011|        0           |     0      | 会员分享 |    bill     |      今天      |
 		|  bill0012|        0           |     0      | 直接关注 |    无       |      今天      |
 		|  bill0013|        0           |     0      | 会员分享 |    bill     |      今天      |
-		|  tom     |        0           |     0      | 直接关注 |    无       |     2015-5-2   |
+
 	Then jobs获得bill的'好友列表'记录数
 		"""
 		[{
@@ -334,22 +329,22 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 		Then jobs获取'推荐关注'列表显示共3页
 		When jobs浏览第1页
 		Then jobs获得bill的'推荐关注'
-			|   fans   | consumption_amount |  integral  |  Source  | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  |      time      |
 			|  bill1   |        0           |     50     | 会员分享 |      今天      |
 			|  bill3   |        0           |     0      | 会员分享 |      今天      |
 		When jobs浏览下一页
 		Then jobs获得bill的'推荐关注'
-			|   fans   | consumption_amount |  integral  |  Source  | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  |      time      |
 			|  bill11  |        0           |     70     | 会员分享 |      今天      |
 			|  bill13  |        330         |     0      | 会员分享 |      今天      |
 		When jobs浏览第3页
 		Then jobs获得bill的'推荐关注'
-			|   fans   | consumption_amount |  integral  |  Source  | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  |      time      |
 			|  bill0011|        0           |     0      | 会员分享 |      今天      |
 			|  bill0013|        0           |     0      | 会员分享 |      今天      |
 		When jobs浏览上一页
 		Then jobs获得bill的'推荐关注'
-			|   fans   | consumption_amount |  integral  |  Source  | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  |      time      |
 			|  bill11  |        0           |     70     | 会员分享 |      今天      |
 			|  bill13  |        330         |     0      | 会员分享 |      今天      |
 
@@ -357,22 +352,22 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 		Then jobs获取'好友列表'列表显示共3页
 		When jobs浏览第1页
 		Then jobs获得bill的'好友列表'
-			|   fans   | consumption_amount |  integral  |  Source  | recommended | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  | recommended |      time      |
 			|  bill1   |        0           |     50     | 会员分享 |    bill     |      今天      |
 			|  bill2   |        0           |     0      | 直接关注 |    无       |      今天      |
 		When jobs浏览下一页
 		Then jobs获得bill的'好友列表'
-			|   fans   | consumption_amount |  integral  |  Source  | recommended | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  | recommended |      time      |
 			|  bill3   |        0           |     0      | 会员分享 |    bill     |      今天      |
 			|  marry   |        0           |     0      | 直接关注 |    无       |      今天      |
 		When jobs浏览第3页
 		Then jobs获得bill的'好友列表'
-			|   fans   | consumption_amount |  integral  |  Source  | recommended | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  | recommended |      time      |
 			|  bill01  |        330         |     60     | 会员分享 |    marry    |      今天      |
 			|  bill11  |        0           |     70     | 会员分享 |    bill     |      今天      |
 		When jobs浏览上一页
 		Then jobs获得bill的'好友列表'
-			|   fans   | consumption_amount |  integral  |  Source  | recommended | attention_time |
+			|   fans   | consumption_amount |  integral  |  Source  | recommended |      time      |
 			|  bill3   |        0           |     0      | 会员分享 |    bill     |      今天      |
 			|  marry   |        0           |     0      | 直接关注 |    无       |      今天      |
 
