@@ -2013,3 +2013,17 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     margin-bottom: 0;
     vertical-align: middle;
 }
+
+
+
+
+/**
+ * 底部导航样式
+ */
+.wui-navbar {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(0, 0, 255, 0.3)
+}

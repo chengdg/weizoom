@@ -487,11 +487,21 @@ W.workbench.PropertyView = Backbone.View.extend({
      * onChangeCheckboxSelection: 改变checkbox的select的选项
      *********************************************************/
     onChangeCheckboxSelection: function(event) {
+        /*
         var $checkbox = $(event.currentTarget);
         var isSelected = $checkbox.prop('checked');
 
         var attr = $(event.currentTarget).attr('data-field');
         this.getTargetComponent($checkbox).model.set(attr, isSelected);
+        */
+        var $checkbox = $(event.currentTarget);
+        var isSelected = $checkbox.prop('checked');
+
+        var attr = $(event.currentTarget).attr('data-field');
+        var column = $(event.currentTarget).attr('data-column-name');
+        var attrValue = _.deepClone(this.getTargetComponent($checkbox).model.get(attr));
+        attrValue[column] = {select:isSelected};
+        this.getTargetComponent($checkbox).model.set(attr, attrValue);
     },
 
     /**

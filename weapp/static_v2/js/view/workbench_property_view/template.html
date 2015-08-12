@@ -9,6 +9,7 @@
 		<div id="propertyEditor" class="propertyView_actionTarget">
 		{{each(i, property_group) property_groups}}
 			{{if (!onlyShowUserProperty || property_group.isUserProperty)}}
+			<div class="${property_group.groupClass}-topGap propertyGroup-topGap"></div>
 			<div class="propertyGroup ${property_group.groupClass}" {{if property_group.groupName }}name="${property_group.groupName}"{{/if}}>
 				{{if i > 0}}
 				<div class="ml5 fb">${property_group.group}</div>
@@ -116,7 +117,7 @@
 						</div>
 					</div>
 					{{/if}}
-
+					
 
 					{{if (field.type == 'select')}}
 					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">

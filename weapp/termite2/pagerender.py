@@ -332,12 +332,14 @@ def __render_component(request, page, component, project):
 	component_category = project.type
 	template = __get_template(component_category, component)
 	content = stripper.strip_lines(template.render(context))
-	'''
-	print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-	print component
-	print content
-	print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
-	'''
+	# print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+	# types = list(type2template.keys())
+	# types.sort()
+	# print types
+	# print component_category
+	# print component
+	# print content
+	# print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
 	return content
 
 

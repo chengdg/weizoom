@@ -1,55 +1,152 @@
 {% extends "content_base_v2.html" %}
+
 {% load workbench_filter %}
+
 {% block content-panel %}
 <div id="workbench" class="xui-wepage-globalNavPage clearfix pr">
-  <div class="relative">
-    <ul class="breadcrumb">
-      <li>您当前所在位置</li>
-      <li><a href="/termite2/pages/">店铺装修</a></li>
-      <li><a href="/termite2/pages/">店铺导航</a></li>
-    </ul>
-  </div>
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/termite2/pages/">店铺装修</a></li>
+			<li><a href="/termite2/pages/">店铺导航</a></li>
+		</ul>
+	</div>
 
-  <div style="background-color: #EAEEF7;" class="clearfix">
-  	<div class="xui-navbarHeader">
-  		<div class="xui-title mb15">店铺导航</div>
-  		<div class="f14">
-  			<div class="fl">
-  				通过设置自定义导航，使店铺各个页面之间可以相互连接，快速跳转到用户期望的页面。
-  			</div>
-  			<button class="btn btn-primary xa-startUseBtn xui-startUseBtn f12 fl">启用</button></div>
-  		
-  	</div>
-    <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
-    </div>
-    
-    <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
-      <div id="phone" class="xui-phone ">
-          <div id="phoneSkin" class="xui-i-skin">
-            <iframe name="phoneFrame" id="phoneIFrame" src="" height="100%" border="none"></iframe>
-          <div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
-        </div>
-      </div>
-    </div>
-    <div id="rightPanel" class="fl xui-workbench-rightPanel mb30">
-    </div>
-  </div>
+	<div style="background-color: #EAEEF7;" class="clearfix">
+		<div class="xui-navbarHeader">
+			<div class="xui-title mb15">店铺导航</div>
+			<div class="f14">
+				<div class="fl">
+				通过设置自定义导航，使店铺各个页面之间可以相互连接，快速跳转到用户期望的页面。
+				</div>
+				<button class="btn btn-primary xa-startUseBtn xui-startUseBtn f12 fl">启用</button>
+			</div>
+	</div>
+
+	<div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
+	</div>
+	
+	<div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
+		<div id="phone" class="xui-phone ">
+			<div id="phoneSkin" class="xui-i-skin">
+				<div class="xui-i-title">
+					<span class="xa-title">底部导航</span>
+				</div>
+				<iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1" height="100%" border="none"></iframe>
+				<div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="rightPanel" class="fl xui-workbench-rightPanel mb30" style="padding: 0px; background-color: transparent; border: none;">
+	</div>
 </div>
 {% endblock %}
 
 {% block global_elements %}
 <div class="xui-bottomActionBar">
-  <button class="xa-save btn btn-primary">保存</button>
+	<button class="xa-save btn btn-primary">保存</button>
 </div>
 {% endblock %}
 
 {% block base_js%}
+  {% include 'wepage_components.html' %}
+
 <script type="text/javascript">
-	 var globalNavView = new W.workbench.GlobalNavView({
-        el: '#rightPanel',
-        // left: propertyViewLeft,
-        onlyShowUserProperty: true//!W.isSystemManager
-      });
-	 globalNavView.render();
+	W.uid = {{ user.id }};
+	W.projectId = "{{project_id}}";
+	W.API_VERSION = 1;
+	W.pagesJSON = '';
+	//W.data.htmlEditor = null;
+	W.projectType = "global_navbar";
+	var isCreateNewData = {% if is_new_navbar %}true{% else %}false{% endif %};
+	W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
+	var bottomDistance = 110;
+
+	var loadGlobalNavbar = function(pageManagerView) {
+		W.getApi().call({
+			app: 'termite2',
+			resource: 'global_navbar_json',
+			args: {
+				project_id: W.projectId
+			},
+			showLoading: false,
+			success: function(data) {
+				var pages = data;
+				var firstPage = null;
+				for (var i = 0; i < pages.length; ++i) {
+					var page = W.component.Component.parseJSON(pages[i]);
+					if (isCreateNewData) {
+						page.isNewCreated = true;
+					}
+					pageManagerView.addPage(page.getModel().get('title'), page, {silent: true});
+					if (!firstPage) {
+						firstPage = page;
+					}
+				}
+				if (firstPage) {
+					pageManagerView.activePage(page);
+				}
+			},
+			error: function(resp) {
+				W.showHint('error', '加载菜单失败，请稍后再试');
+			}
+		});
+	}
+
+	$(document).ready(function() {
+		var windowHeight = $(window).height();
+		var height = windowHeight - 350;
+
+		$('#leftPanel').css('min-height' ,height+ 'px');
+		$('#workbench').css('min-height' ,height+ 'px');
+
+		$(window).bind('beforeunload', function() {
+			//TODO: 检查页面是否保存
+		});
+
+		var pageManagerView = new W.workbench.PageManagerView({
+			el: '#leftPanel',
+			isSystemManager: W.isSystemManager
+		});
+		pageManagerView.render();
+
+		var phoneView = new W.workbench.PhoneView({
+			el: '#phonePanel'
+		});
+		phoneView.render();
+
+		var propertyViewLeft = phoneView.getRightBorderOffset() - $('#workbench').offset().left;
+		var propertyView = new W.workbench.PropertyView({
+			el: '#rightPanel',
+			left: propertyViewLeft,
+			onlyShowUserProperty: true//!W.isSystemManager
+		});
+		propertyView.render();
+
+		var synchronizer = new W.workbench.PageSynchronizer();
+		synchronizer.run();
+		W.Synchronizer = synchronizer;
+
+		loadGlobalNavbar(pageManagerView);
+
+		$('.xa-save').click(function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			// 保存model
+			W.Synchronizer.manualSync(function(data) {
+				W.showHint('success', '保存底部菜单成功');
+				W.projectId = data; //保存新的projectId;
+			});
+		});
+
+		W.isReady = true;
+
+		$(document).click(function() {
+			// 点击空白处，触发事件
+			W.Broadcaster.trigger('designpage:cancel_delete');
+		});
+	});
 </script>
 {% endblock %}

@@ -1,0 +1,11 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'wepage.navbar' %}
+<div 
+	class="wui-navbar"
+    data-component-cid="{{component.cid}}" 
+    style=""
+>
+    我是{{component.model.type}}底部导航
+</div>
+{% endifequal %}
