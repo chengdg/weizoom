@@ -1272,7 +1272,6 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 			products.extend(temp_premium_products)
 
 		order.products = products
-
 	return order
 
 

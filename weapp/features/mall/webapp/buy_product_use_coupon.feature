@@ -834,7 +834,7 @@ Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣�
 		'''
 
 # __edit__ : "新新" "雪静"
-@meberGrade @coupon
+@mall2 @meberGrade @coupon
 Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 #（全体券和会员价可以同时使用，但是满多少钱可以使用计算的是会员价）
 	Given jobs登录系统
@@ -884,6 +884,20 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 		"""
 	When nokia关注jobs的公众号
 	Given jobs登录系统
+	When jobs更新"nokia"的会员等级
+		"""
+		{
+			"name": "nokia",
+			"member_rank": "金牌会员"
+		}
+		"""
+	When jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
+		"""
 	Then jobs可以获得会员列表
 		"""
 		[{
@@ -933,6 +947,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"coupon_ids": ["coupon9_id_3"]
 		}]
 		"""
+	Given jobs登录系统
 	Then jobs能获得优惠券'全体券1'的码库
 		"""
 		{
@@ -989,7 +1004,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			}]
 		}
 		"""
-		#不可以使用全体券(会员价后也是90,没有满足100元可使用条件)
+	#不可以使用全体券(会员价后也是90,没有满足100元可使用条件)
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
@@ -1002,6 +1017,15 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 		}
 		"""
 	Then bill获得错误提示'该优惠券不满足使用金额限制'
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品9",
+				"count": 1
+			}]
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -1014,6 +1038,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"products": [{
 				"name": "商品9",
 				"count": 1
+			}]
 		}
 		"""
 		#购买多种会员价使用全体券
@@ -1036,9 +1061,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 					"name": "商品9",
 					"price": 70.00,
 					"count": 1
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品10",
 					"price": 70.00,
 					"count": 1
@@ -1059,6 +1082,21 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"coupon": "coupon9_id_3"
 		}
 		"""
+	And nokia填写收货信息
+	"""
+		{
+			"ship_name": "nokia",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
+	And nokia在购物车订单编辑中点击提交订单
+	"""
+	{
+		"pay_type": "微信付款"
+	}
+	"""
 	Then nokia成功创建订单
 		"""
 		{
@@ -1067,7 +1105,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"product_price": 140.0,
 			"coupon_money": 20.0,
 			"postage": 0.00,
-			"integral_money":0.00
+			"integral_money":0.00,
 			"products": [{
 				"name": "商品9",
 				"price": 70.00,
@@ -1091,8 +1129,8 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			},
 			"coupon9_id_2": {
 				"money": 20.0,
-				"status": "已使用",
-				"consumer": "bill",
+				"status": "未使用",
+				"consumer": "",
 				"target": "bill"
 			},
 			"coupon9_id_3": {

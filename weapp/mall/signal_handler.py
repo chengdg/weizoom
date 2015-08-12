@@ -363,35 +363,22 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
 
 	order.coupon_id = coupon.id
 
-	# 如果是通用优惠券
-	if not coupon.coupon_rule.limit_product:
-		# 会员折扣优惠的价格
-		# cut = sum(map(lambda x: x.price*(1-x.member_discount)*x.purchase_count, products))
+	if coupon.coupon_rule.limit_product:
+		# 单品券
+		for p in products:
+			if coupon.coupon_rule.limit_product_id == p.id:
+				p.price = p.original_price
+		order.product_price = sum(map(lambda x: x.price*x.purchase_count, products))
+		order.final_price = order.product_price + order.postage
 
-		# if order.final_price - cut < order.postage:
-		# 	order.final_price = order.postage
-		# else:
-		# 	order.final_price -= cut
-		order.final_price = sum(map(lambda x: x.price*x.purchase_count, products))
-	else:
-		limit_product_id = coupon.coupon_rule.limit_product_id
-		final_price = sum(map(lambda x: x.price*x.purchase_count, products))
-		limit_product = filter(lambda x: x.id == limit_product_id, products)
-		lack_price = 0.0
-		for p in limit_product:
-			lack = (p.original_price - p.price) * p.purchase_count
-			lack_price += lack
-		final_price += lack_price
-		order.final_price = final_price
-
-	# 如果去掉优惠券价格后商品终价低于运费
-	if order.final_price < coupon.money:
-		order.coupon_money = order.final_price
+	if order.final_price - order.postage < coupon.money:
+		# 优惠券不能抵扣运费
+		order.coupon_money = order.final_price - order.postage
 		order.final_price = order.postage
 	else:
 		order.coupon_money = coupon.money
 		order.final_price -= coupon.money
-
+	
 	coupon = promotion_models.Coupon.objects.filter(id=coupon.id)
 	coupon_rule = promotion_models.CouponRule.objects.filter(id=coupon[0].coupon_rule_id)
 	if not coupon[0].member_id:

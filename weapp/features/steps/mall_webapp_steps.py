@@ -889,6 +889,8 @@ def step_impl(context, webapp_user_name):
 			'product_counts': product_counts,
 			'product_model_names': product_model_names
 		}
+		if __i.get('coupon'):
+			product_infos['coupon_id'] = __i['coupon']
 
 	elif __i.get("action") == u"click":
 		# 加默认地址

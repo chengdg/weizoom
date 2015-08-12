@@ -370,7 +370,7 @@ Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满�
 		}
 		'''
 
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只适用于商品6
 	且不抵扣其他商品金额和运费金额
 
@@ -429,6 +429,7 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 		'''
 
 #后续补充.雪静
+@mall2
 Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 	1. 单品券和会员价不能同时使用
 	2. 选择单品券，商品价格变回原价，取消使用单品券，价格变回会员价
@@ -484,7 +485,6 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		"""
 		{
 			"name": "商品1",
-			"price": 200.00,
 			"is_member_product": "on"
 		}
 		"""
@@ -500,7 +500,6 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		"""
 		{
 			"name": "商品2",
-			"price": 200.00,
 			"is_member_product": "on"
 		}
 		"""
@@ -593,13 +592,11 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			"product_groups": [{
 				"products": [{
 					"name": "商品1",
-					"member_price": 140.00,
+					"price": 140.00,
 					"count": 1
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品2",
-					"member_price": 140.00,
+					"price": 140.00,
 					"count": 1
 				}]
 			}],
@@ -618,6 +615,21 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			"coupon": "coupon1_id_2"
 		}
 		"""
+	And bill填写收货信息
+	"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
+	And bill在购物车订单编辑中点击提交订单
+	"""
+	{
+		"pay_type": "微信付款"
+	}
+	"""
 	Then bill成功创建订单
 		"""
 		{
@@ -627,7 +639,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			"coupon_money": 1.0,
 			"promotion_saved_money": 0.0,
 			"postage": 0.00,
-			"integral_money":0.00
+			"integral_money":0.00,
 			"products": [{
 				"name": "商品1",
 				"price": 200.00,
