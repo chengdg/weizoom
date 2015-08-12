@@ -395,30 +395,54 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			}]
 		"""
 
-	And tom1关注jobs的公众号
-	And tom2关注jobs的公众号
-	And tom3关注jobs的公众号
 	And tom4关注jobs的公众号
+	And tom3关注jobs的公众号
+	And tom2关注jobs的公众号
+	And tom1关注jobs的公众号
 
 	When jobs添加会员等级
 		"""
 		[{
 			"name": "铜牌会员",
-			"shop_discount": "90%"
-		},{
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
 			"name": "银牌会员",
-			"shop_discount": "80%"
-		},{
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
 			"name": "金牌会员",
-			"shop_discount": "70%"
+			"upgrade": "手动升级",
+			"discount": "7"
 		}]
 		"""
-	Given jobs已获取会员列表
-	|name     | name_rank    |
-	|tom1     |普通会员      |
-	|tom2     |铜牌会员      |
-	|tom3     |银牌会员      |
-	|tom4     |金牌会员      |
+	When jobs更新"tom4"的会员等级
+		"""
+		{
+			"name": "tom4",
+			"member_rank": "金牌会员"
+		}
+		"""
+	And jobs更新"tom3"的会员等级
+		"""
+		{
+			"name": "tom3",
+			"member_rank": "银牌会员"
+		}
+		"""
+	And jobs更新"tom2"的会员等级
+		"""
+		{
+			"name": "tom2",
+			"member_rank": "铜牌会员"
+		}
+		"""
+	Then jobs可以获得会员列表
+		|name     | name_rank    |
+		|tom1     |普通会员      |
+		|tom2     |铜牌会员      |
+		|tom3     |银牌会员      |
+		|tom4     |金牌会员      |
 
 #701会员tom1购买商品10，使用积分抵扣最高：50元，订单金额：50元
 	When tom1访问jobs的webapp
@@ -426,7 +450,8 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 	Then tom1在jobs的webapp中拥有100会员积分
 	When tom1购买jobs的商品
 		"""
-		{	"integral_money":50.00,
+		{
+			"integral_money":50.00,
 			"integral":100.00,
 			"products": [{
 				"name": "商品10",
@@ -440,8 +465,6 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 100.00,
-			"member_price":100.00,
-			"members_money":0.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":50.00,
@@ -474,9 +497,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 		{
 			"status": "待支付",
 			"final_price": 45.0,
-			"product_price": 100.00,
-			"member_price":90.00,
-			"members_money":10.00,
+			"product_price": 90.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":45.00,
@@ -512,9 +533,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 		{
 			"status": "待支付",
 			"final_price": 70.0,
-			"product_price": 200.00,
-			"member_price":140.00,
-			"members_money":60.00,
+			"product_price": 140.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":70.00,
@@ -524,7 +543,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 				"name": "商品10",
 				"count": 1
 			},{
-			    "name": "商品11",
+				"name": "商品11",
 				"count": 1
 			}]
 		}
