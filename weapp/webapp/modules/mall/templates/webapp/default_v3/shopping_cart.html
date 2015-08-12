@@ -139,7 +139,7 @@
                     <div
                         class="xui-section xa-product disT xt-product"
                         data-id="{{product.id}}"
-                        data-product-price="{{product.price}}"
+                        data-product-price="{{product.original_price}}"
                         data-shopping-cart-id = "{{product.shopping_cart_id}}"
                         data-model-name="{{product.model_name}}"
                         data-stocks="{{product.stocks}}"
@@ -364,6 +364,7 @@ $(document).ready(function() {
             // 促销是否对此用户开发
             is_user_has_promotion = user_has_promotion(member_grade_id, product_promotion.member_grade_id);
             if(is_user_has_promotion){
+                // 限时抢购处理
                 try{
                     price = (product_promotion.detail.promotion_price).toFixed(2);
                 }catch(err){

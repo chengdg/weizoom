@@ -115,7 +115,7 @@ def get_display_price(discount, member_grade_id, product):
     """
     # 如果用户不是会员
     if not member_grade_id:
-        return product
+        return product.original_price
     # 如果用户是会员
     else:
         # 商品参加促销
@@ -125,28 +125,25 @@ def get_display_price(discount, member_grade_id, product):
             if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
                 # user是否满足限时抢购条件
                 if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
-                    product.display_price = product.promotion['detail']['promotion_price']
-                    return product
-            # 买赠
-            elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-                if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
-                    return product
-            # 满减
-            elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
-                pass
-            # 优惠券
-            elif promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
-                pass
-            # 积分抵扣
-            elif promotion_type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
-                if has_promotion(member_grade_id, int(product.integral_sale['member_grade_id'])):
-                    return product
+                    return product.promotion['detail']['promotion_price']
+            # # 买赠
+            # elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+            #     pass
+            # # 满减
+            # elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
+            #     pass
+            # # 优惠券
+            # elif promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
+            #     pass
+            # # 积分抵扣
+            # elif promotion_type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
+            #     if has_promotion(member_grade_id, int(product.integral_sale['member_grade_id'])):
+            #         return product
         # 商品是否参加会员折扣
         if product.is_member_product:
-            product.display_price = product.display_price * discount
-            return product
+            return product.original_price * discount
         else:
-            return product
+            return product.original_price
 
 
 def get_user_product_saved_price(discount, member_grade_id, product):

@@ -156,10 +156,12 @@ def group_product_by_promotion(request, products):
 				   'promotion_type': (str),
 				   'promotion_result':,
 				   'integral_sale_rule':,
-				   'can_use_promotion': }
+				   'can_use_promotion':,
+				   'member_grade_id': }
 				  ...
 			   ]
 	"""
+	from webapp.modules.mall import utils as mall_utils
 	member_grade_id, discount = get_member_discount(request)
 	#按照促销对product进行聚类
 	# global NO_PROMOTION_ID
@@ -169,7 +171,6 @@ def group_product_by_promotion(request, products):
 	group_id = 0
 	for product in products:
 		product.original_price = product.price
-		# 2015/08/11
 		if product.is_member_product:
 			product.price = round(product.price * discount / 100, 2)
 		#对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
@@ -196,7 +197,8 @@ def group_product_by_promotion(request, products):
 				"promotion_type": '',
 				'promotion_result': '',
 				'integral_sale_rule': integral_sale_rule,
-				'can_use_promotion': False
+				'can_use_promotion': False,
+				'member_grade_id': member_grade_id
 			})
 			continue
 
@@ -215,10 +217,14 @@ def group_product_by_promotion(request, products):
 			promotion['status'] = promotion_models.PROMOTION_STATUS_NOT_START if promotion['start_date'] > now else promotion_models.PROMOTION_STATUS_FINISHED
 		# 限时抢购
 		elif promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
+			# 商品促销价格处理
+			for p in products:
+				p.price = mall_utils.get_display_price(round(discount / 100, 3), member_grade_id, p)
 			product = products[0]
+			saved_money = product.original_price - product.price
 			promotion_result = {
-				"saved_money": product.price - promotion['detail']['promotion_price'],
-				"subtotal": product.purchase_count * promotion['detail']['promotion_price']
+				"saved_money": saved_money,
+				"subtotal": product.purchase_count * product.price
 			}
 
 			# product_groups.append({
@@ -316,7 +322,8 @@ def group_product_by_promotion(request, products):
 			'promotion_result': promotion_result,
 			'integral_sale_rule': integral_sale_rule,
 			'can_use_promotion': can_use_promotion,
-			'promotion_json': json.dumps(promotion)
+			'promotion_json': json.dumps(promotion),
+			'member_grade_id': member_grade_id
 		})
 		# else:
 		# 	#非促销商品
