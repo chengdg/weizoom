@@ -4,7 +4,7 @@
 	<div class="modal-content" style="width:667px">
 		<div class="modal-header">
 			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
-			<h3 class="modal-title">	<strong class="show_fans" name="show_fans">推荐关注</strong><strong class="show_friends xui-black" name="show_friends"><span class="ml10 mr10">|</span>好友列表</strong>
+			<h3 class="modal-title">	<strong class="show_fans" name="show_fans">推荐关注</strong><strong class="show_friends xui-black" name="show_friends"><span class="ml10 mr10 xui-black">|</span>好友列表</strong>
 			</h3>
 		</div>
 		<div class="modal-body" style="padding:0 20px;">
@@ -58,7 +58,7 @@
 								<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
 								</a>
 								<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">
-									<a href="/member/member_detail/edit/?id=${id}" >ggggggggggg{{html username}}</a>
+									<a href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
 									<div>${grade_name}</div>
 								</div>
 							</div>
