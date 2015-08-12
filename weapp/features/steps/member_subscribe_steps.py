@@ -65,12 +65,10 @@ from utils.string_util import byte_to_hex
 
 @Then(u'{user}可以获得会员列表')
 def step_impl(context, user):
-	user = context.client.user
 	json_data = json.loads(context.text)
 	Member.objects.all().update(is_for_test=False)
 	url = '/member/api/members/get/?design_mode=0&version=1&status=-1&count_per_page=50&page=1&enable_paginate=1'
 	response = context.client.get(bdd_util.nginx(url))
-	# profile = UserProfile.objects.get(user_id=user.id)
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
 	for member_item in items:
