@@ -105,11 +105,8 @@
                                     <!-- <i> {{product.promotion.name}},{{product.promotion.type}},{{product.promotion.money}}</i> -->
                                     <dd class="disTc xui-ellipsis-2 xa-name xt-name">{{ product.name }}</dd>
                                     <dd class="disTc vt tr">
-                                        {% if product_group.can_use_promotion and product_group.promotion_type == 'flash_sale' %}
-                                        <span class="ml15">￥<span class="xa-product-price xt-price">{{ product_group.promotion.detail.promotion_price }}</span></span>
-                                        {% else %}
+
                                         <span class="ml15">￥<span class="xa-product-price xt-price">{{ product.price|floatformat:2  }}</span></span>
-                                        {% endif %}
                                     </dd>
                                 </dl>
                                 <dl class="disT w em9 mt5 c9">

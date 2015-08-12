@@ -830,10 +830,10 @@ def get_member_discount_percentage(request):
 	else:
 		return 100
 
-########################################################################
-# edit_shopping_cart_order: 编辑从购物车产生的订单
-########################################################################
+
 def edit_shopping_cart_order(request):
+	"""编辑从购物车产生的订单
+	"""
 	webapp_user = request.webapp_user
 	webapp_owner_id = request.webapp_owner_id
 	products = utils.get_products(request)
