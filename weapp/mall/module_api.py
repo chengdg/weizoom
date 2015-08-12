@@ -218,7 +218,6 @@ def group_product_by_promotion(request, products):
 			                      'member_grade_id': member_grade_id
 			                      })
 			continue
-
 		promotion_type = promotion.get('type', 0)
 		if promotion_type == 0:
 			type_name = 'none'
@@ -238,9 +237,8 @@ def group_product_by_promotion(request, products):
 			product.price = promotion_price
 			# 会员价不和限时抢购叠加
 			product.member_discount_money = 0
-
 			promotion_result = {
-				"saved_money": product.price - promotion_price,
+				"saved_money": product.original_price - promotion_price,
 				"subtotal": product.purchase_count * product.price
 			}
 
@@ -3120,7 +3118,7 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
       True - if 促销对用户开放
       False - if 促销不对用户开放
     """
-    if promotion_member_grade_id == 0:
+    if promotion_member_grade_id <= 0:
         return True
     elif promotion_member_grade_id == user_member_grade_id:
         return True
