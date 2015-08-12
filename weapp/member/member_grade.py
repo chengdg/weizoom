@@ -55,7 +55,6 @@ class MemberGradeList(resource.Resource):
         IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=int(is_all_conditions))
 
         post_ids = []
-        new_member_grades = []
         for grade in post_grades:
             grade_id = int(grade.get("id", '0'))
             post_ids.append(grade_id)
@@ -83,19 +82,14 @@ class MemberGradeList(resource.Resource):
                                                                    shop_discount=shop_discount)
             else:
                 if is_auto_upgrade:
-                    new_member_grades.append(MemberGrade(
-                        pay_money=pay_money, pay_times=pay_times,
-                        upgrade_lower_bound=upgrade_lower_bound, name=name,
-                        is_auto_upgrade=is_auto_upgrade,
-                        shop_discount=shop_discount, webapp_id=webapp_id
-                    ))
-                else:
-                    new_member_grades.append(MemberGrade(name=name, is_auto_upgrade=is_auto_upgrade,
-                                                         shop_discount=shop_discount, webapp_id=webapp_id
-                                                         ))
+                    MemberGrade.objects.create(pay_money=pay_money, pay_times=pay_times,
+                                               upgrade_lower_bound=upgrade_lower_bound, name=name,
+                                               is_auto_upgrade=is_auto_upgrade,
+                                               shop_discount=shop_discount, webapp_id=webapp_id)
 
-        if new_member_grades:
-            MemberGrade.objects.bulk_create(new_member_grades)  # 批量插入
+                else:
+                    MemberGrade.objects.create(name=name, is_auto_upgrade=is_auto_upgrade,
+                                               shop_discount=shop_discount, webapp_id=webapp_id)
 
         delete_ids = list(set(original_member_grade_ids).difference(set(post_ids)))
         if delete_ids:
