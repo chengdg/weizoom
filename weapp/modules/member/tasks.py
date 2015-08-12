@@ -66,7 +66,7 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 	current_integral = member.integral + integral_increase_count
 	try:
 		update_grade_flag =False
-		if integral_increase_count > 0:
+		if integral_increase_count > 0 and event_type != RETURN_BY_SYSTEM:
 			# 处理经验值
 			member.experience += integral_increase_count
 			update_grade_flag = True

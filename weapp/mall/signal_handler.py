@@ -626,8 +626,6 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 					})
 			__fill_promotion_failed_reason(product_group, "活动过期2")
 			continue
-
-		member = request.member
 		if promotion['member_grade_id'] > 0 and promotion['member_grade_id'] != request.member.grade_id:
 			for product in product_group['products']:
 				data_detail.append({
