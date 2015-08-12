@@ -172,6 +172,13 @@ def get_settings_detail(request):
         
         if setting.bing_member_id == request.member.id:
             channel_qrcode_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
+            payed_count = 0
+            pay_money = 0
+            for channel_qrcode_member in channel_qrcode_members:
+                if channel_qrcode_member.member.pay_times > 0:
+                    payed_count = payed_count + 1
+                if channel_qrcode_member.member.pay_money > 0:
+                    payed_count = pay_money + channel_qrcode_member.member.pay_money
 
             c = RequestContext(request, {
                     'page_title': u'代言人二维码',
@@ -180,7 +187,10 @@ def get_settings_detail(request):
                     'is_hide_weixin_option_menu': True,
                     'head_img': get_mp_head_img(user_id),
                     'hide_non_member_cover':True,
-                    'channel_qrcode_members':channel_qrcode_members
+                    'channel_qrcode_members':channel_qrcode_members,
+                    'channel_qrcode_members_count':channel_qrcode_members.count(),
+                    'pay_money': '%.2f' %  pay_money,
+                    'payed_count': payed_count
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
 
