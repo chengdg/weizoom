@@ -22,7 +22,7 @@ CELERY_ACCEPT_CONTENT=['json']
 CELERY_TIMEZONE = 'Asia/Shanghai'
 CELERY_ENABLE_UTC = True
 CELERYD_CONCURRENCY =  15
-
+CELERYD_TASK_TIME_LIMIT = 60
 
 if CELERY_ALWAYS_EAGER:
 	logging.info("develop mode, no celery asynchronous behaviors")

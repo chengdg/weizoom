@@ -484,6 +484,7 @@ INSTALLED_TASKS = [
     # 'services.update_component_mp_token_service',
     'services.analysis_message_service',
     'services.count_keyword_service',
+    'services.send_express_poll_service',
 ]
 
 
@@ -742,8 +743,8 @@ DJANGO_HACK_PARAMS = {
     'enable_record_sql_stacktrace': True
 }
 
-RESOURCE_LOADED = True
-RESOURCES = ['stats', 'termite2', 'weixin2', 'mall2']
+RESOURCE_LOADED = False
+RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
 
 
 from weapp import hack_django

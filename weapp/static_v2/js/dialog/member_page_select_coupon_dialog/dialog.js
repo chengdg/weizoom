@@ -13,6 +13,7 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     },
 
     onInitialize: function(options) {
+        console.log(options);
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
     },
 
@@ -24,6 +25,12 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
         this.enableMultiSelection = false;
         if (options.hasOwnProperty('enableMultiSelection')) {
             this.enableMultiSelection = options.enableMultiSelection;
+        }
+        if (options.member_name){
+            $('.xa-member-info').append("您将为"+options.member_name+"发放优惠券");
+        }
+        if (options.member_count > 1){
+            $('.xa-member-info').append("您将为"+options.member_count+"人发放优惠券");
         }
     },
 
@@ -53,25 +60,56 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     },
 
     upCounter: function(event) {
-        var cur_up = $(event.currentTarget);
-        console.log(cur_up.parent().find('.xui-counterText').text())
-        console.log("+++++++");
+        var $cur_up = $(event.currentTarget);
+        var max_count = $cur_up.parent().prev().data('max-count');
+        var remained_count = parseInt($cur_up.parent().prev().data('remained-count'));
+        if (!max_count){
+            max_count = -1;
+        }
+        var cur_count = parseInt($cur_up.prevAll('.xa-counterText').text());
+        if($cur_up.hasClass("xui-btn")){
+            if(remained_count == cur_count){
+                $cur_up.parent().next().removeClass('hide');
+            }
+            return;
+        }else{
+            if(max_count == -1 || cur_count < max_count){
+                $cur_up.prevAll('.xa-down').removeClass("xui-btn");
+                $cur_up.prevAll('.xa-counterText').text(cur_count+1);
+            }
+            if(max_count && cur_count == max_count - 1){
+                $cur_up.addClass("xui-btn");
+            }
+        }
     },
 
     downCounter: function(event) {
-        var cur_down = $(event.currentTarget);
-        console.log("--------");
+        var $cur_down = $(event.currentTarget);
+        var cur_count = parseInt($cur_down.nextAll('.xa-counterText').text());
+        if($cur_down.hasClass("xui-btn")){
+            return;
+        }else{
+            if (cur_count > 1){
+                $cur_down.nextAll('.xa-counterText').text(cur_count-1);
+                $cur_down.nextAll('.xa-up').removeClass("xui-btn");
+                $cur_down.parent().next().addClass("hide");
+                if (cur_count == 2){
+                    $cur_down.addClass("xui-btn");
+                }
+            }
+        }
     },
 
     onGetData: function(options) {
-        var data = [];
+        var data = {};
         var _this = this;
 
         this.$('tbody tr').each(function() {
             var $tr = $(this);
             if ($tr.find('.xa-selectCoupon').is(':checked')) {
-                var couponId = $tr.data('id');
-                data.push(_this.table.getDataItem(couponId).toJSON());
+                data.couponId = $tr.data('id');
+                data.couponCount = parseInt($tr.find('.xa-counterText').text())
+
             }
         })
         return data;

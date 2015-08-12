@@ -13,7 +13,8 @@ ensureNS('W.dialog.member');
 W.dialog.member.RelationsDialog = W.dialog.Dialog.extend({
     events: _.extend({
        // 'change select': 'onChangeProjectType',
-        'click .show_fans': 'onClickShowFansCheckbox'
+        'click .show_fans': 'onClickShowFansCheckbox',
+        'click .show_friends': 'onClickShowFrinedsCheckbox'
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -31,19 +32,20 @@ W.dialog.member.RelationsDialog = W.dialog.Dialog.extend({
         this.getTemplate();
         this.memberLogsTemplate = this.getMemberLogsTemplate();
         this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
-        
         this.friendCount = options.friendCount;
         this.fansCount = options.fansCount;
         this.memberId = options.memberId;
         $('.show_fans').attr('value', this.memberId);
+        $('.show_friends').attr('value', this.memberId);
     },
 
     onShow: function(options) {
         console.log('onShow', options.memberId);
 
         this.memberId = options.memberId;
-        $('.show_fans').attr('checked',false);
+        //$('.show_fans').attr('checked',false);
         $('.show_fans').attr('value', this.memberId);
+        $('.show_friends').attr('value', this.memberId);
         var _this = this;
         if (options.isReload == true) {
             _this.table.curPage = 1;
@@ -57,13 +59,17 @@ W.dialog.member.RelationsDialog = W.dialog.Dialog.extend({
 
     onClickShowFansCheckbox: function(event){
         var $currentTarget = $(event.currentTarget);   
-        var is_checked = $currentTarget.is(':checked');
         this.memberId = $currentTarget.val();
-        if (is_checked){
-            this.onlyFans = true;
-        }else{
-            this.onlyFans = false;
-        }
+        this.onlyFans = true;
+      
+        this.onFansShow(this);
+
+    },
+
+    onClickShowFrinedsCheckbox: function(event){
+        var $currentTarget = $(event.currentTarget);   
+        this.memberId = $currentTarget.val();
+        this.onlyFans = false;
         this.onFansShow(this);
 
     },

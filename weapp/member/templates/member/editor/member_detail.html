@@ -112,6 +112,15 @@
 							 <a href="javascript:void(0);" class="xa-show-integral ml15">积分明细</a>
 						</div>
 				</div>
+				<div class="xui-fieldwrap tags">
+				    <div class="xui-name w268 ">好友数：</div>
+	        			<div class="w700 fl" style="padding-top:6px;">
+		        			<div class="fl ml10 relation-text" >
+		        				
+		        				<a class="relation-text" href="javascript:void(0);" style="" friend_count='{{show_member.friend_count}}'>{{show_member.friend_count}}</a>
+							</div>
+						</div>
+				</div>
 
         	<div class="xui-clear"></div>
         	<div class="xui-btn-group tc mb20">	
@@ -369,7 +378,20 @@
         memberIntegralUpdateView.render();
 		
 	});
+	$('.relation-text').click(function() {
+				var _this = this;
+				var $el = $(event.currentTarget);
 
+				if ($el.html() == '0') {
+					return false;
+				}
+				var memberId = {{ show_member.id }};
+				W.dialog.showDialog('W.dialog.member.RelationsDialog', {
+					memberId: memberId,
+					isReload:true,
+					onlyFans:true
+				});
+		});
 		//提交
 		$('#submitBtn').click(function() {
 			if (!W.validate()) {

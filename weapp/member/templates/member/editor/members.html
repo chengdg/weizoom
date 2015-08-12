@@ -169,7 +169,7 @@
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
 			<td>
-				<a href="javascript:void(0);" class="xa-issuing-coupon">发优惠券</a>
+				<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
 				<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">调等级</a></br>
 				<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a></br>
 				<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">调积分</a></br>
@@ -343,9 +343,13 @@ $(document).ready(function() {
 
 	//发优惠券
 	$('.panel-body').delegate('.xa-issuing-coupon', 'click', function(event){
+		member_ids = []
 		W.dialog.showDialog('W.dialog.mall.MemberPageSelectCouponDialog',{
+			member_name: $(event.currentTarget).data('member-name'),
+			member_counter: 0,
 			success: function(data){
-				console.log("success");
+				//TODO:获取member，ID
+				console.log(data, "success");
 			},
 			error: function(data){
 				console.log("error");
@@ -383,6 +387,7 @@ $(document).ready(function() {
 						friendCount: friend_count,
 						fansCount: fans_count,
 						isReload:true,
+						onlyFans:true
 					});
 			});
 
