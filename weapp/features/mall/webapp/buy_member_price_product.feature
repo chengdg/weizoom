@@ -118,7 +118,7 @@ Background:
 		{
 			"integral_each_yuan": 10,
 			"be_member_increase_count": 20,
-			"buy_via_shared_url_increase_count_for_author": 30,
+			"buy_award_count_for_buyer": 30,
 			"use_ceiling": 50
 		}
 		"""
@@ -407,7 +407,7 @@ Scenario: 3 购买多个商品包括会员价商品
 		}
 		"""
 
-@meberGrade
+@meberGrade @mall2
 Scenario: 4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后
