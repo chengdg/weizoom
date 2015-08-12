@@ -13,7 +13,7 @@
                     data-app="mall2"
                     data-resource="issuing_coupons_filter"
                     data-args='{"filter_type":"coupon"}'
-                    data-template-id="#add-select-dialog-coupons-tmpl"
+                    data-template-id="#add-member-page-select-dialog-coupons-tmpl"
                     data-enable-paginator="true"
                     data-enable-sort="false"
                     data-item-count-per-page="15"
@@ -26,14 +26,14 @@
             <button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;font-weight:bold;">发&nbsp;&nbsp;放</button>
             <br/>
             <div class="xui-hint" style="float:left">
-            <p class="xa-member-info"><img class="mr10 " src="/static_v2/img/editor/hint.png" /></p></div>
+            <p class="xa-member-info"></p></div>
         </div>
     </div>
     </div>
     </div>
 </script>
 
-<script id="add-select-dialog-coupons-tmpl" type="text/x-jquery-tmpl">
+<script id="add-member-page-select-dialog-coupons-tmpl" type="text/x-jquery-tmpl">
 <table class="table table-bordered xb-stripedTable xa-productTable">
     <thead style="background:#c8d2e5;">
         <tr>
@@ -66,7 +66,7 @@
                     <td>无限</td>
                 {{/if}}
                 <td>
-                {{if coupon.remained_count != 0}}
+                {{if coupon.has_remained }}
                     <input
                         data-ui-role="counter"
                         data-min-limit="0"
@@ -85,7 +85,7 @@
                     <span class="xui-btngroup">
                         <span class="xa-down xui-down xui-btn" >-</span>
                         <span class="xui-counterText xa-counterText">1</span>
-                        <span class="xa-up xui-up {{if coupon.remained_count ==1 || coupon.limit_counts ==1 }}xui-btn{{/if}}" >+</span>
+                        <span class="xa-up xui-up {{if coupon.remained_count ==1 || coupon.limit_counts ==1 || (coupon.member_count*2)>coupon.remained_count}}xui-btn{{/if}}" >+</span>
                     </span>
                     <div class="hide errorHint">库存不足</div>
                 {{else}}
@@ -93,9 +93,11 @@
                 {{/if}}
                 </td>
                 <td>
+                {{if coupon.has_remained }}
                     <label class="btn  lh20  btn-primary" style="border-radius:3px;">
                         <input type="checkbox" style="display:none;" autocomplete="off" class="xa-selectCoupon" ><span>选取</span>
                     </label>
+                {{/if}}
                 </td>
             </tr>
         {{/each}}

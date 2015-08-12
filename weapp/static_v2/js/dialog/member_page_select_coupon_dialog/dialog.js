@@ -13,7 +13,6 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     },
 
     onInitialize: function(options) {
-        console.log(options);
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
     },
 
@@ -23,19 +22,22 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
 
     onShow: function(options) {
         this.enableMultiSelection = false;
+        this.member_count = options.member_count;
         if (options.hasOwnProperty('enableMultiSelection')) {
             this.enableMultiSelection = options.enableMultiSelection;
         }
         if (options.member_name){
-            $('.xa-member-info').append("您将为"+options.member_name+"发放优惠券");
+            $('.xa-member-info').html('<img class="mr10 " src="/static_v2/img/editor/hint.png" />'+"您将为"+options.member_name+"发放优惠券");
         }
         if (options.member_count > 1){
-            $('.xa-member-info').append("您将为"+options.member_count+"人发放优惠券");
+            $('.xa-member-info').html('<img class="mr10 " src="/static_v2/img/editor/hint.png" />'+"您将为"+options.member_count+"人发放优惠券");
         }
     },
 
     afterShow: function(options) {
-        this.table.reload();
+        this.table.reload({
+            "member_count": this.member_count
+        });
     },
 
     onSelectCoupon: function(event) {
@@ -68,17 +70,22 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
         }
         var cur_count = parseInt($cur_up.prevAll('.xa-counterText').text());
         if($cur_up.hasClass("xui-btn")){
-            if(remained_count == cur_count){
+            if(remained_count < (cur_count + 1) * this.member_count){
                 $cur_up.parent().next().removeClass('hide');
             }
             return;
         }else{
-            if(max_count == -1 || cur_count < max_count){
+            if(max_count == -1 || (cur_count+1) * this.member_count <= max_count){
                 $cur_up.prevAll('.xa-down').removeClass("xui-btn");
                 $cur_up.prevAll('.xa-counterText').text(cur_count+1);
             }
-            if(max_count && cur_count == max_count - 1){
-                $cur_up.addClass("xui-btn");
+            if(max_count){
+                if(this.member_count == 1 && (cur_count+1 == max_count)){
+                    $cur_up.addClass("xui-btn");
+                }
+                if(this.member_count > 1 && (cur_count+2)*this.member_count > max_count){
+                    $cur_up.addClass("xui-btn");
+                }
             }
         }
     },
@@ -107,8 +114,8 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
         this.$('tbody tr').each(function() {
             var $tr = $(this);
             if ($tr.find('.xa-selectCoupon').is(':checked')) {
-                data.couponId = $tr.data('id');
-                data.couponCount = parseInt($tr.find('.xa-counterText').text())
+                data.couponRuleId = $tr.data('id');
+                data.prePersonCount = parseInt($tr.find('.xa-counterText').text())
 
             }
         })
