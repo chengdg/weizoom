@@ -80,8 +80,8 @@ class CouponRuleInfo(resource.Resource):
                 'second_navs': export.get_promotion_second_navs(request),
                 'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
                 'coupon_rule': coupon_rule,
-                'start_date': promotion.start_date.strftime("%Y-%m-%d %H:%M"),
-                'end_date': promotion.end_date.strftime("%Y-%m-%d %H:%M"),
+                'start_date': promotion.start_date[:16],
+                'end_date': promotion.end_date[:16],
                 'promotion': promotion
             })
             return render_to_response('mall/editor/promotion/create_coupon_rule.html', c)
