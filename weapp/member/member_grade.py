@@ -55,6 +55,7 @@ class MemberGradeList(resource.Resource):
         IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=int(is_all_conditions))
 
         post_ids = []
+        new_member_grades = []
         for grade in post_grades:
             grade_id = int(grade.get("id", '0'))
             # if grade_id > 0:
@@ -85,14 +86,19 @@ class MemberGradeList(resource.Resource):
                                                                    shop_discount=shop_discount)
             else:
                 if is_auto_upgrade:
-                    MemberGrade.objects.create(pay_money=pay_money, pay_times=pay_times,
-                                               upgrade_lower_bound=upgrade_lower_bound, name=name,
-                                               is_auto_upgrade=is_auto_upgrade,
-                                               shop_discount=shop_discount, webapp_id=webapp_id)
-
+                    new_member_grades.append(MemberGrade(
+                        pay_money=pay_money, pay_times=pay_times,
+                        upgrade_lower_bound=upgrade_lower_bound, name=name,
+                        is_auto_upgrade=is_auto_upgrade,
+                        shop_discount=shop_discount, webapp_id=webapp_id
+                    ))
                 else:
-                    MemberGrade.objects.create(name=name, is_auto_upgrade=is_auto_upgrade,
-                                               shop_discount=shop_discount, webapp_id=webapp_id)
+                    new_member_grades.append(MemberGrade(name=name, is_auto_upgrade=is_auto_upgrade,
+                                                         shop_discount=shop_discount, webapp_id=webapp_id
+                                                         ))
+
+        if new_member_grades:
+            MemberGrade.objects.bulk_create(new_member_grades)  #批量插入
 
         delete_ids = list(set(original_member_grade_ids).difference(set(post_ids)))
 
@@ -128,10 +134,10 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         print("webapp_user_id", webapp_user_id)
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
     elif member:
-        print("member", member.username,member.id,member.experience,member.created_at,member.user_icon)
+        print("member", member.username, member.id, member.experience, member.created_at, member.user_icon)
 
     if not member.grade.is_auto_upgrade and not delete:
-        print("ztq---------",member.grade.is_auto_upgrade,delete)
+        print("ztq---------", member.grade.is_auto_upgrade, delete)
         print("here")
         return is_change
 
@@ -175,9 +181,9 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         for grade in grades_list:
             print("one grade:", grade.name, grade.pay_money, grade.pay_times, grade.upgrade_lower_bound)
             if pay_money >= grade.pay_money or pay_times >= grade.pay_times or bound >= grade.upgrade_lower_bound:
-                print(bound,grade.upgrade_lower_bound)
+                print(bound, grade.upgrade_lower_bound)
 
-                print("pay_times:",pay_times,grade.pay_times)
+                print("pay_times:", pay_times, grade.pay_times)
 
                 is_change = True
                 member.grade = grade
@@ -189,14 +195,13 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         member.save()
     else:
         print("not changed")
-    print("is_changed:",is_change)
+    print("is_changed:", is_change)
     print("end")
     return is_change
 
 
 
     ############################################
-
 
 # def update_grade_from_order(**kwargs):
 #     if 'model' in kwargs:
