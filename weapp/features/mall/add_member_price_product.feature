@@ -22,15 +22,15 @@ Background:
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
 	Then jobs能获取会员等级列表
@@ -38,19 +38,19 @@ Background:
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
 	When jobs已添加支付方式
@@ -70,7 +70,7 @@ Background:
 		}]
 		"""
 
-
+@mall2 @jz
 Scenario: 添加有会员折扣的商品
 	jobs添加会员折扣的商品后，能获取他添加的商品
 
@@ -81,7 +81,7 @@ Scenario: 添加有会员折扣的商品
 		[{
 			"name": "商品1",
 			"price": 100.00,
-			"member_price": true,
+			"is_member_product": "on",
 			"model": {
 				"models": {
 					"standard": {
@@ -93,7 +93,7 @@ Scenario: 添加有会员折扣的商品
 			}
 		}, {
 			"name": "商品2",
-			"member_price": true,
+			"is_member_product": "on",
 			"is_enable_model": "启用规格",
 			"model": {
 				"models":{
@@ -113,8 +113,7 @@ Scenario: 添加有会员折扣的商品
 		"""
 		{
 			"name": "商品1",
-			"price": 100.00,
-			"member_price": true,
+			"is_member_product": "on",
 			"model": {
 				"models": {
 					"standard": {
@@ -126,11 +125,12 @@ Scenario: 添加有会员折扣的商品
 			}
 		}
 		"""
+		#	"price": 100.00,
 	Then jobs能获取商品'商品2'
 		"""
 		{
 			"name": "商品2",
-			"member_price": true,
+			"is_member_product": "on",
 			"is_enable_model": "启用规格",
 			"model": {
 				"models":{

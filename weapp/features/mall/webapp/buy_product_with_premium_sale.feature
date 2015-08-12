@@ -749,7 +749,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 		"""
 
 # __edit__ : 王丽   补充 "雪静"
-@mall2 @promotionPremium @meberGrade @jz
+@mall2 @promotionPremium @meberGrade
 Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠活动的商品
 	Given jobs登录系统
 	When jobs添加会员等级
