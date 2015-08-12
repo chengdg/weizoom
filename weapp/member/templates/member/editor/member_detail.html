@@ -131,6 +131,18 @@
 				<div class="xui-rightPanelTitle">
 					收货信息
 				</div>
+				{% if not ship_infos%}
+					<div class="xui-emptyBox ">
+						<div class="xui-i-emptyHint">
+							<img src="/static_v2/img/editor/empty.png"/>
+							<div>
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+					<div style="clear:both;"></div>
+				
+				{% else %}
 					 {% for ship_info in ship_infos %}
 					    <div class="xui-addresswaper fl">
 					 	<div class="xui-address-left">
@@ -140,12 +152,13 @@
 					 </div>
 					 {% endfor %}
 					 <div style="clear:both;"></div>
-
+				{% endif %}
 	   </div>
 	   <div class="xui-content">
 				<div class="xui-rightPanelTitle">
 					购买信息
 				</div>
+				{% if orders %}
 		        <div class="xui-p-infowrap">
 		        	<p class="xui-p-infowrap-left fl">
 		        		平均客单价：
@@ -180,7 +193,7 @@
 		        <table class="xui-tab-memberifo" style="border:none;">
 		        	
 		        	<tbody>
-		        	{% if orders %}
+		        
 						{% for order in orders %}
 		        		<tr>
 			        		<td><span class="xui-color-blue"><a href="/mall2/order/?order_id={{order.id}}" target="_blank">{{order.order_id}}</a><span></td>
@@ -213,15 +226,28 @@
 							</td>
 		        	    </tr>
 		        	    {% endfor %}
-		        	{% endif %}
+		        	
 		        	</tbody>
 				</table>
-		    </div>
+		    	</div>
+		    	{% else %}
+		    		<div class="xui-emptyBox ">
+						<div class="xui-i-emptyHint">
+							<img src="/static_v2/img/editor/empty.png"/>
+							<div>
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+					<div style="clear:both;"></div>
+		    	{% endif %}
+
 	   </div>
 	   <div class="xui-content">
 				<div class="xui-rightPanelTitle">
 					传播能力
 				</div>
+				{% if shared_url_infos %}
 				 <div class="xui-p-infowrap-num">
 				 	<div style="width: 332px;">
 			        	<p class="xui-p-infowrap-left fl " style="  width: 130px;" >
@@ -254,26 +280,38 @@
 		        	</thead>
 		        </table>
 		        <div style="height:225px; overflow-y:scroll;">
-				<table class="xui-tab-memberifo" style="border:none">
-		        	<tbody>
-		        		{% for info in shared_url_infos %}
-		        	    <tr>
+					<table class="xui-tab-memberifo" style="border:none">
+			        	<tbody>
+			        		{% for info in shared_url_infos %}
+			        	    <tr>
 
-			        		<td><strong>{{info.title}}</strong></td>
-			        		<td>{{info.pv}}</td>
-			        		<td>{{info.followers}}</td>
-			        		<td>{{info.leadto_buy_count }}</td>
-		        	    </tr>
-		        	    {% endfor %}
-		        	</tbody>
-		        	
-		        </table>
-		    </div>
+				        		<td><strong>{{info.title}}</strong></td>
+				        		<td>{{info.pv}}</td>
+				        		<td>{{info.followers}}</td>
+				        		<td>{{info.leadto_buy_count }}</td>
+			        	    </tr>
+			        	    {% endfor %}
+			        	</tbody>
+			        	
+			        </table>
+		        </div>
+		        {% else %}
+		        	<div class="xui-emptyBox ">
+						<div class="xui-i-emptyHint">
+							<img src="/static_v2/img/editor/empty.png"/>
+							<div>
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+					<div style="clear:both;"></div>
+		     {% endif %}
 	   </div>
 	   <div class="xui-content">
 				<div class="xui-rightPanelTitle">
 					<p class="xui-p-title">浏览轨迹</p>
 				</div>
+				{% if member_browse_records %}
 				<table class="xui-tab-memberifo">
 		        	<thead>
 		        		<tr>
@@ -298,6 +336,17 @@
 		        	</tbody>
 		        	
 		        </table>
+		        {% else %}
+		        	<div class="xui-emptyBox ">
+						<div class="xui-i-emptyHint">
+							<img src="/static_v2/img/editor/empty.png"/>
+							<div>
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+					<div style="clear:both;"></div>
+		        {% endif %}
 		    </div>
 	   </div>
 
