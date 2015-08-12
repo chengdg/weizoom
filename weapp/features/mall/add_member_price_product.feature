@@ -70,7 +70,7 @@ Background:
 		}]
 		"""
 
-@mall2 @jz
+@mall2
 Scenario: 添加有会员折扣的商品
 	jobs添加会员折扣的商品后，能获取他添加的商品
 
