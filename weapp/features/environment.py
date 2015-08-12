@@ -368,7 +368,7 @@ def __create_system_user(username):
 	"""
 	创建系统用户
 	"""
-	start = time.time()
+	#start = time.time()
 	user = UserFactory.create(username=username)
 	product = weapp_product_models.Product.objects.get(name=u'完整版')
 	weapp_product_api.install_product_for_user(user, product.id)
@@ -474,7 +474,7 @@ def before_all(context):
 	__create_weapp_product()
 	__create_system_user('jobs')
 	__create_system_user('nokia')
-	user_bill = __create_system_user('bill')
+	__create_system_user('bill')
 	__create_system_user('tom')
 	# __create_system_user('weizoom')
 	# __create_system_user('tom1')
@@ -484,7 +484,7 @@ def before_all(context):
 	# __create_system_user('tom5')
 	# __create_system_user('tom6')
 	__create_simulator_user()
-	user_guo = __create_system_user('guo')
+	__create_system_user('guo')
 	__create_system_user('manager')
 	#call_command('loaddata', 'regional')
 	__create_shengjing_app()

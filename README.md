@@ -42,6 +42,9 @@ python manage.py sqldiff --old old.sql --new new.sql
 mysql -u xxx -p weapp < migrate.sql
 ```
 
+# 集成测试
+
+* [Weapp每日BDD测试](http://192.168.1.21:8081/jenkins/view/bdd/job/weapp_2.0_trunk_bdd_everyday/)
 
 # 积分测试用例
 
