@@ -342,6 +342,18 @@
 	text-align: center;
 	width: 33.333333%;
 }
+.xui-page-memberDetail .xui-emptyBox {
+	background-color:transparent;
+	height: 110px;
+	margin-top: 36px;
+	padding-top: 5px;
+}
+.xui-emptyBox .xui-i-emptyHint span {
+	margin-top: 10px;
+}
+.xui-page-memberDetail .xui-emptyBox .xui-i-emptyHint {
+
+}
 .xui-page-memberDetail .xui-member-info-panel{
 	width: 996px;
 	min-height: 200px;
@@ -474,11 +486,10 @@
 .xui-page-memberDetail .xui-content{
 	margin-left: 0px !important;
 	background-color:#EAEEF5;
-	min-height: 214px;
+	
 }
 .xui-page-memberDetail .xui-content-address{
 	min-height: 108px;
-	padding-bottom: 20px;
 }
 .xui-page-memberDetail .xui-innerwrap-left
 {
