@@ -38,14 +38,14 @@
 		<table style="width:100%;border:1px solid #ddd" class="table xb-stripedTable xb-noBorder">
 				<thead style="background:#c8d2e5;">
 				<tr class="">
-					<th width="180">粉丝</th>
+					<th width="180">会员</th>
 					<th width="90" class="xui-blue">消费金额</th>
 					<th width="100" class="xui-blue">积分</th>
 					<th width="100">来源</th>
 					{{if data.only_fans==0}}
 						<th width="150">推荐人</th>
 					{{/if}}
-					<th width="90" class="xui-blue">关注时间</th>
+					<th width="90" class="xui-blue">时间</th>
 				</tr>
 				</thead>
 
@@ -57,8 +57,9 @@
 								<a href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
 								<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
 								</a>
-								<div style="display: table-cell;vertical-align:top;padding-left:8px;">
+								<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;">
 									<a href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
+									<div>${grade_name}</div>
 								</div>
 							</div>
 						</td>
