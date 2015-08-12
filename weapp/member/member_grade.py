@@ -147,14 +147,14 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         for grade in grades_list:
             if pay_money >= grade.pay_money and pay_times >= grade.pay_times and bound >= grade.upgrade_lower_bound:
                 is_change = True
-                member.grade = grade
+                new_grade = grade
                 break
     else:
         for grade in grades_list:
             if pay_money >= grade.pay_money or pay_times >= grade.pay_times or bound >= grade.upgrade_lower_bound:
                 is_change = True
-                member.grade = grade
+                new_grade = grade
                 break
     if is_change:
-        member.save()
+        Member.objects.filter(id=member.id).update(grade=new_grade)
     return is_change
