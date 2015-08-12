@@ -1,7 +1,14 @@
 # __author__ : "冯雪静"
 Feature: 在webapp中购买有会员折扣的商品
 	bill能在webapp中购买jobs添加的"会员价的商品"
-
+"""
+列表页、详情页、购物车页、下单页、订单页，全显示会员价
+1.购买单个会员价商品：直接下单
+2.购买多个会员价商品：从购物车下单
+3.购买多个商品包括会员价商品：从购物车下单，购买的商品有原价和会员价
+4.订单完成后，达到自动升级的条件：会员的订单完成后，满足自动升级的条件，自动升级
+5.使用积分购买商品后，取消订单，积分返回不增加经验值
+"""
 
 Background:
 	Given jobs登录系统
@@ -105,10 +112,34 @@ Background:
 			"price": 200.00
 		}]
 		"""
+	#10积分是一元等于10积分，20积分是首次关注的奖励，30积分是购买商品基础奖励,50积分是订单抵扣上限50%
+	And jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan": 10,
+			"be_member_increase_count": 20,
+			"buy_via_shared_url_increase_count_for_author": 30,
+			"use_ceiling": 50
+		}
+		"""
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
-  	Given jobs登录系统
-  	When jobs更新"bill"的会员等级
+	Given jobs登录系统
+	Then jobs能获得bill的积分日志
+		"""
+		[{
+			"content": "首次关注",
+			"integral": 20
+		}]
+		"""
+	And jobs能获得tom的积分日志
+		"""
+		[{
+			"content": "首次关注",
+			"integral": 20
+		}]
+		"""
+	When jobs更新"bill"的会员等级
 		"""
 		{
 			"name": "bill",
@@ -119,14 +150,22 @@ Background:
 		"""
 		[{
 			"name": "tom",
-			"member_rank": "普通会员"
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"experience": 20,
+			"integral": 20
 		}, {
 			"name": "bill",
-			"member_rank": "铜牌会员"
+			"member_rank": "铜牌会员",
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"experience": 20,
+			"integral": 20
 		}]
 		"""
 
-@mall2
+@mall2 @member_product
 Scenario: 1 购买单个会员价商品
 	jobs添加商品后
 	1. tom能在webapp中购买jobs添加的会员价商品
@@ -134,6 +173,7 @@ Scenario: 1 购买单个会员价商品
 	3. bill能在webapp中购买jobs添加的会员价商品
 	4. bill是铜牌会员有会员折扣
 
+	#无会员折扣的购买
 	When tom访问jobs的webapp
 	And tom购买jobs的商品
 		"""
@@ -156,6 +196,7 @@ Scenario: 1 购买单个会员价商品
 			}]
 		}
 		"""
+	#有会员折扣的购买
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -174,13 +215,12 @@ Scenario: 1 购买单个会员价商品
 			"products": [{
 				"name": "商品1",
 				"price": 90.00,
-				"grade_discounted_money": 10.00,
 				"count": 1
 			}]
 		}
 		"""
 
-@mall2
+@mall2 @member_product
 Scenario: 2 购买多个会员价商品
 	jobs添加商品后
 	1. bill能在webapp中把jobs添加的会员价商品添加到购物车
@@ -273,23 +313,24 @@ Scenario: 2 购买多个会员价商品
 			"final_price": 630.00,
 			"products": [{
 				"name": "商品1",
-				"grade_discounted_money": 10.00,
+				"price": 90.00,
 				"count": 1
 			}, {
 				"name": "商品2",
-				"grade_discounted_money": 30.00,
+				"price": 270.00,
 				"count": 1,
 				"model": "M"
 			}, {
 				"name": "商品2",
-				"grade_discounted_money": 30.00,
+				"price": 270.00,
 				"count": 1,
 				"model": "S"
 			}]
 		}
 		"""
 
-@mall2
+
+@mall2 @member_product
 Scenario: 3 购买多个商品包括会员价商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs的商品
@@ -357,18 +398,16 @@ Scenario: 3 购买多个商品包括会员价商品
 			"products": [{
 				"name": "商品1",
 				"price": 90.00,
-				"grade_discounted_money": 10.00,
 				"count": 1
 			}, {
 				"name": "商品3",
 				"price": 200.00,
-				"grade_discounted_money": 0.00,
 				"count": 1
 			}]
 		}
 		"""
 
-@mall2
+@mall2 @meberGrade
 Scenario: 4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后
@@ -497,19 +536,147 @@ Scenario: 4 订单完成后，达到自动升级的条件
 		"""
 	#tom已经满足一个升级条件，自动升级为铜牌会员
 	When jobs'完成'最新订单
-	Then jobs可以获得会员列表
+	Then jobs能获得tom的积分日志
+		"""
+		[{
+			"content": "购物返利",
+			"integral": 30
+		}, {
+			"content": "首次关注",
+			"integral": 20
+		}]
+		"""
+	And jobs可以获得会员列表
 		"""
 		[{
 			"name": "tom",
 			"member_rank": "铜牌会员",
 			"pay_money": 600.00,
 			"pay_times": 1,
-			"experience": 0
+			"experience": 50,
+			"integral": 50
 		}, {
 			"name": "bill",
+			"member_rank": "铜牌会员",
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"experience": 20,
+			"integral": 20
+		}]
+		"""
+
+@integral_experience
+Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加经验值
+	jobs添加商品后
+	1. bill能在webapp中使用积分购买jobs的商品后，创建订单后
+	2. jobs取消bill的订单，bill积分返还，经验值不变
+
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"integral": 20
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 88.00,
+			"integral": 2.00,
+			"products": [{
+				"name": "商品1",
+				"price": 90.00,
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'货到付款'进行支付
+	Then bill支付订单成功
+		"""
+		{
+			"status": "待发货",
+			"final_price": 88.00,
+			"integral": 2.00,
+			"products": [{
+				"name": "商品1",
+				"price": 90.00,
+				"count": 1
+			}]
+		}
+		"""
+	Then bill在jobs的webapp中拥有30会员积分
+	Then bill在jobs的webapp中获得积分日志
+		"""
+		[{
+			"content": "购物返利",
+			"integral": 30
+		}, {
+			"content": "购物抵扣",
+			"integral": 20
+		}, {
+			"content": "首次关注",
+			"integral": 20
+		}]
+		"""
+	Given jobs登录系统
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"status": "待发货",
+			"final_price": 88.00,
+			"actions": ["发货","取消订单"]
+		}
+		"""
+	When jobs'取消'最新订单
+		"""
+		{
+			"reason": "不想要了"
+		}
+		"""
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"status": "已取消",
+			"final_price": 88.00,
+			"actions": []
+		}
+		"""
+	And jobs能获得bill的积分日志
+		"""
+		[{
+			"content": "取消订单 返还积分",
+			"integral": 20
+		}, {
+			"content": "购物返利",
+			"integral": 30
+		}, {
+			"content": "购物抵扣",
+			"integral": 20
+		}, {
+			"content": "首次关注",
+			"integral": 20
+		}]
+		"""
+	And jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
 			"member_rank": "普通会员",
 			"pay_money": 0.00,
 			"pay_times": 0,
-			"experience": 0
+			"experience": 20,
+			"integral": 20
+		}, {
+			"name": "bill",
+			"member_rank": "铜牌会员",
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"experience": 50,
+			"integral": 50
 		}]
 		"""
