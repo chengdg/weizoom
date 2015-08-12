@@ -63,7 +63,7 @@ ensureNS('W.view.weixin');
     },
     onSearch: function(data) {
         this.table.reload(data, {
-            emptyDataHint: '没有符合条件的发放优惠券规则'
+            emptyDataHint: '没有符合条件的记录'
         });
     }
 

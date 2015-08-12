@@ -1,0 +1,142 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css%}
+<style>
+	html,body{
+		background: #ececec;
+		font-family: "华文细黑";
+	}
+	.xui-RecommendedDetailPage .xui-general{
+		height: 56px;
+		border-bottom: 1px solid #ccc;
+		padding-top: 16px;
+		padding-bottom: 16px;
+
+	}
+	
+	.xui-RecommendedDetailPage .xui-red{
+		
+		color:#cf0404;
+	}
+	.xui-RecommendedDetailPage .xui-general p{
+		font-size: 14px;
+		line-height: 20px;
+		color:#666666;
+	}
+	.xui-RecommendedDetailPage .xui-tableview{
+		width:100%;
+
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-img{
+		width:55px;
+		height: 55px;
+		border:1px solid #f2f2f2;
+		border-radius: 5px;
+		
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell{
+		float: left;
+		width: 55px;
+		height: 75px;
+		margin-left: 10px;
+		margin-top: 15px;
+		position: relative;
+		
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell .xui-yellowBar {
+		position: absolute;
+		top:35px;
+		width: 100%;
+		height: 20px;
+		background-color: #f9c831;
+		color: #fff;
+		font-family: "华文细黑";
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell .xui-p{
+		height: 20px;
+		width: 100%;
+		text-align: center;
+		font-size: 12px;
+		margin-top: 4px;
+		
+	}
+
+    @media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+    	.xui-spokesmanPage p{
+			padding: 2.25rem 0 1.25rem 0;
+		}
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-RecommendedDetailPage">
+	<div class="xui-general">
+		<div class=" xa-general">
+			<p>扫码人数：<span class="xui-red">200</span></p>
+			<p>下单人数：<span class="xui-red">2</span></p>
+			<p>成交金额：<span class="xui-red">￥200.00</span></p>
+		</div>
+	</div>
+	<div class="xui-tableview">
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+			<p class="xui-p"> 东方神起</p>
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+			<div class="xui-yellowBar">已跑路</div>
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	$(document).ready(function(){
+		var width=document.body.clientWidth;
+		if(width<420)
+		{
+			$('.xa-tableCell').css('margin-left',(width-55*4)/5+'px');
+			$('.xa-general').css('margin-left',(width-55*4)/5)
+		}
+		else{
+			if(width<480)
+			{
+				$('.xa-tableCell').css('margin-left',(width-55*5)/6+'px');
+				$('.xa-general').css('margin-left',(width-55*5)/6);
+			}
+			else
+			{
+				$('.xa-tableCell').css('margin-left',(width-55*6)/7+'px');
+				$('.xa-general').css('margin-left',(width-55*6)/7);
+			}
+		}
+		
+
+	});
+
+</script>
+{% endblock %}

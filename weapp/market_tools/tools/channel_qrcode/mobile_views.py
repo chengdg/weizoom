@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 from models import *
 from modules.member.models import Member
-from  weixin.user.module_api import get_mp_head_img
+from  weixin.user.module_api import get_mp_head_img, get_mp_qrcode_img
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi import get_weixin_api
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
@@ -53,6 +53,7 @@ def get_settings(request):
     else:
         if request.member:
             setting = ChannelQrcodeSettings.objects.filter(bing_member_id=request.member.id, is_bing_member=True)
+
             if setting.count() > 0:
                 setting = setting[0]
                 member = Member.objects.get(id=request.member.id)
@@ -76,6 +77,7 @@ def get_new_settings(request):
     user_id = request.webapp_owner_id
     ticketid = request.GET.get('ticketid', 0)
     member = request.member
+    member = Member.objects.get(id=request.member.id)
     qrcode_setting = MemberChannelQrcodeSettings.objects.get(owner_id=user_id)
     if ticketid:
         qrcode = MemberChannelQrcode.objects.get(id=ticketid)
@@ -85,11 +87,11 @@ def get_new_settings(request):
             qrcode.save()
 
         show_head = False
-        if qrcode.member_id == request.member.id:
+        if qrcode.member_id == member.id:
             show_head = True
-            member = Member.objects.get(id=request.member.id)
             member.user_name = member.username_for_html
             qrcode.count = MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode_id=qrcode.id).count()
+
 
         c = RequestContext(request, {
                 'page_title': u'首草送好礼，接力扫码等你来传递',
@@ -103,14 +105,15 @@ def get_new_settings(request):
             })
         return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
     else:
-        if request.member:
+        content_dict = {}
+        if member and member.is_subscribed:
+            member.user_name = member.username_for_html
             qrcode = MemberChannelQrcode.objects.filter(member_id=request.member.id)
             if qrcode.count() > 0:
                 qrcode = qrcode[0]
                 new_url = '%s&ticketid=%s' % (request.get_full_path(), qrcode.id)
                 return HttpResponseRedirect(new_url)
             else:
-
                 new_qrcode = MemberChannelQrcode.objects.create(
                     owner_id=user_id,
                     member_channel_qrcode_setting_id=qrcode_setting.id,
@@ -121,16 +124,26 @@ def get_new_settings(request):
                 new_qrcode.ticket = ticket
                 new_qrcode.save()
                 new_qrcode.count = 0
+                content_dict = {
+                    'page_title': u'首草送好礼，接力扫码等你来传递',
+                    'member': member,
+                    'qrcode': new_qrcode,
+                    "qrcode_setting": qrcode_setting,
+                    'show_head': True,
+                    'head_img': get_mp_head_img(user_id)
+                }
+                c = RequestContext(request, content_dict)
+                return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
 
-        c = RequestContext(request, {
-                'page_title': u'首草送好礼，接力扫码等你来传递',
-                'member': member,
-                'qrcode': new_qrcode,
-                "qrcode_setting": qrcode_setting,
-                'show_head': True,
-                'head_img': get_mp_head_img(user_id)
-                })
-        return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_img.html' % TEMPLATE_DIR, c)
+        qrcode_img = get_mp_qrcode_img(user_id)
+        content_dict = {
+            'page_title': u'首草送好礼，欢迎关注！',
+            'qrcode_img': qrcode_img
+        }
+        c = RequestContext(request, content_dict)
+        return render_to_response('%s/channel_qrcode/webapp/new_channel_qrcode_error.html' % TEMPLATE_DIR, c)
+
+
 
 def _get_ticket(user_id, screen_id):
     mp_user = get_binding_weixin_mpuser(user_id)
@@ -149,3 +162,29 @@ def _get_ticket(user_id, screen_id):
             return qrcode_ticket.ticket
         except:
             return ''
+
+def get_settings_detail(request):
+    sid = request.GET.get('sid', 0)
+    member = request.member
+    user_id = request.webapp_owner_id
+    if sid:
+        setting = ChannelQrcodeSettings.objects.get(id=sid)
+        
+        if setting.bing_member_id == request.member.id:
+            channel_qrcode_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
+
+            c = RequestContext(request, {
+                    'page_title': u'代言人二维码',
+                    'member': member,
+                    'setting': setting,
+                    'is_hide_weixin_option_menu': True,
+                    'head_img': get_mp_head_img(user_id),
+                    'hide_non_member_cover':True,
+                    'channel_qrcode_members':channel_qrcode_members
+                })
+            return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
+
+
+    c = RequestContext(request, {
+                'page_title': u'代言人二维码',})
+    return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_context.html' % TEMPLATE_DIR, c)

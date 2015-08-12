@@ -81,9 +81,11 @@ def check_new_channel_qrcode_ticket(ticket, user_profile):
 def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_member):
 	try:
 		new_channel_qrcodes = MemberChannelQrcode.objects.filter(ticket=ticket, owner_id=user_profile.user_id)
-		print("new_channel_qrcodes: {}, ticket: {}, owner_id: {}".format(new_channel_qrcodes, ticket, user_profile.user_id))
 		if new_channel_qrcodes.count() > 0:
 			new_channel_qrcode = new_channel_qrcodes[0]
+			#用户自己扫自己的码直接返回
+			if new_channel_qrcode.member_id == member.id:
+				return
 			qrcode_award = MemberChannelQrcodeAwardContent.objects.get(owner_id=user_profile.user_id)
 
 			if MemberChannelQrcodeHasMember.objects.filter(member_channel_qrcode=new_channel_qrcode, member=member).count() == 0:
@@ -111,9 +113,9 @@ def create_new_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_m
 
 def _add_award_to_member(user_profile, award_type, award_content, member, integral_type):
 	if award_type:
-		if award_content == AWARD_COUPON:
+		if award_type == AWARD_COUPON:
 			consume_coupon(user_profile.user.id, award_content, member.id)
-		elif award_content == AWARD_INTEGRAL:
+		elif award_type == AWARD_INTEGRAL:
 			try:
 				increase_member_integral(member, award_content, integral_type)
 			except:

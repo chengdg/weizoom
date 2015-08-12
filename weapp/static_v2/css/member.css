@@ -34,7 +34,7 @@
 .xui-memberQrcodePage .xui-i-content label{
 	width: 125px;
 	text-align: right;
-	display: inline-block;	
+	display: inline-block;
 }
 .xui-memberQrcodePage .xui-prize select{
 	background: none repeat scroll 0 0 #f2f2f2;
@@ -63,10 +63,10 @@
 	margin-top: 20px;
 }
 .xui-members-page .table tbody tr{
-    height:100px; 
+    height:100px;
 }
 .xui-members-page .table tbody tr:last-child{
-    height:60px; 
+    height:60px;
 }
 .xui-members-page .table tr:nth-child(even) {background:#EFF5FF}
 .xui-members-page .table tr:nth-child(odd) {background: #FFFFFF}
@@ -118,7 +118,7 @@
    width: 100px;
    margin: auto;
    text-align: center;
-} 
+}
 
 .xui-members-page .xui-p-title{
 	margin-left: 20px;
@@ -134,7 +134,7 @@
 	line-height: 30px;
 }
 .xui-members-page .errorHint{
-	
+
 	width: 80px;
 	margin-left: 95px;
 	position: relative;
@@ -220,7 +220,7 @@
 }
 .xui-memberListPage .xui-w218,
 .xui-memberListPage .xui-col .xui-i-item select{
-	
+
 }
 .xui-memberListPage .xui-w100{
 	width:66px!important;
@@ -231,7 +231,7 @@
 .xui-memberListPage .xui-memberHeader a,
 .xui-memberListPage .xui-memberHeader a > img{
 	width:41px;
-	height: 41px;	
+	height: 41px;
 }
 .xui-memberListPage .xb-pagination-component{
 	position: absolute;
@@ -243,8 +243,8 @@
 }
 .xui-updateGradeOrTagBox .btn-primary{
 	background: #207cbe;
-	color:#fff;		
-	margin-right: 15px;			
+	color:#fff;
+	margin-right: 15px;
 }
 .xui-updateGradeOrTagBox input[type="radio"],.xui-updateGradeOrTagBox input[type="checkbox"],{
 	margin-top:2px;
@@ -283,7 +283,7 @@
 	border-top:1px solid #c5c5c5;
 }
 .xui-memberListPage .xui-operation ul li a{
-	padding: 6px 12px;	
+	padding: 6px 12px;
 }
 .xui-memberListPage .xui-operation .caret{
 	margin-top: -2px;
@@ -341,6 +341,18 @@
 	height: 35px;
 	text-align: center;
 	width: 33.333333%;
+}
+.xui-page-memberDetail .xui-emptyBox {
+	background-color:transparent;
+	height: 110px;
+	margin-top: 36px;
+	padding-top: 5px;
+}
+.xui-emptyBox .xui-i-emptyHint span {
+	margin-top: 10px;
+}
+.xui-page-memberDetail .xui-emptyBox .xui-i-emptyHint {
+
 }
 .xui-page-memberDetail .xui-member-info-panel{
 	width: 996px;
@@ -404,7 +416,7 @@
   font-weight: bold;
 }
 .xui-page-memberDetail .xui-unknow{
-    position: relative;	
+    position: relative;
     left:-30px;
     background-color: #ccc;
     border-radius: 9px;
@@ -448,16 +460,16 @@
 
 
 .xui-page-memberDetail .xui-img-wrap
-{ 
+{
 	margin-top: 38px;
-	margin-left:30px; 
+	margin-left:30px;
 	width: 132px;
 	height: 46px;
-	
+
 }
 
 .xui-page-memberDetail .xui-img
-{ 
+{
 	width: 41px !important;
 	height: 41px !important;
 	margin-left: 32px;
@@ -474,11 +486,10 @@
 .xui-page-memberDetail .xui-content{
 	margin-left: 0px !important;
 	background-color:#EAEEF5;
-	min-height: 214px;
+	
 }
 .xui-page-memberDetail .xui-content-address{
 	min-height: 108px;
-	padding-bottom: 20px;
 }
 .xui-page-memberDetail .xui-innerwrap-left
 {
@@ -585,7 +596,7 @@
 	margin-right: 10px;
 }
  .xui-memberOrderPayDialog  .logtable th,.xui-memberOrderPayDialog  .logtable td{
-    width:33.3333%; 
+    width:33.3333%;
 }
 .xui-page-memberDetail  .xui-color-blue{
 	color:#1183CA;
@@ -614,4 +625,92 @@
 }
 .xui-page-memberDetail .form-control{
 	width: 130px;
+}
+
+.xui-chooseCouponCount {
+    line-height: 20px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    vertical-align: center;
+}
+.xui-memberPageSelectCouponDialog	.modal-dialog .modal-header{
+	margin-bottom: 0px;
+
+}
+.xui-memberPageSelectCouponDialog .modal-dialog .modal-body {
+	padding: 0px 20px;
+	width: 720px;
+}
+.xui-memberPageSelectCouponDialog .table>tbody>tr>td {
+	padding: 0px;
+	height: 52px;
+    padding-top: 8px;
+}
+.xui-memberPageSelectCouponDialog .xui-hint{
+	width:auto;
+	height: 36px;
+	line-height: 100%;
+	background:#fffadf;
+	color:#333333;
+	border-radius:5px;
+	border:1px solid #ffd4a2;
+	padding-top: 8px;
+	padding-left: 10px;
+	padding-right: 10px;
+	position: relative;
+	top:-54px;
+	left:425px;
+	}
+.xui-memberPageSelectCouponDialog .xui-btn {
+	background-color:#f0f0f0;
+	height: 28px;
+	width: 28px;
+	padding: 5px;
+}
+.xui-memberPageSelectCouponDialog .xui-btngroup {
+	border:1px solid #d6d6d6;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.xui-memberPageSelectCouponDialog .xui-down {
+	border-right:1px solid #d6d6d6;
+	border-bottom:1px solid #d6d6d6;
+	padding: 5px 10px;
+
+}
+.xui-memberPageSelectCouponDialog .xui-counterText {
+	padding: 0px 5px;
+}
+
+.xui-memberPageSelectCouponDialog .xui-up {
+	border-left:1px solid #d6d6d6;
+	border-bottom:1px solid #d6d6d6;
+	padding: 5px 8px;
+
+}
+
+.xui-memberPageSelectCouponDialog .btn-primary.checked{
+    background: #CBCBCB;
+    border:1px solid #CBCBCB;
+    color: #999999;
+}
+
+.xui-memberPageSelectCouponDialog .errorHint {
+    margin-top:3px;
+}
+
+}
+.xui-firendlistdialog .xui-blue{
+	color: #1262b7;
+}
+.xui-firendlistdialog .xui-black{
+	color: #333333;
+}
+.xui-firendlistdialog .table>tbody>tr>td, .xui-firendlistdialog .table>tbody>tr>th{
+	padding:5px
+}
+.xui-firendlistdialog .table>tbody>tr>td:first-child, .xui-firendlistdialog .table>tbody>tr>th:first-child{
+	padding-left:20px
 }

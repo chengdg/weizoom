@@ -36,7 +36,7 @@
 			data-enable-sort="false"
 			data-selectable="true"
 			data-item-count-per-page="50"
-			class="panel-body" 
+			class="panel-body"
 			data-args='{"status":"{{status}}"}'
 		></div>
 		<div class="dropdown xui-operation update_dropdown">
@@ -47,6 +47,23 @@
 							全选
 					</label>
 				</span>
+				<div class="pr xui-inlineblock">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						发优惠券</span>
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="tc xa-select-member" type="button"  href="javascript:void(0);">
+								给选中的人发优惠券（以跑路除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class="tc xa-all-member"  type="button"  href="javascript:void(0);" >
+								给筛选出来的所有人发优惠券（以跑路除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
 				<div class="pr xui-inlineblock">
 					<button type="button" class="pr btn btn-default dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 						添加到<span class="caret"></span>
@@ -74,6 +91,7 @@
 					    </li>
 					</ul>
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -92,6 +110,23 @@
 <script id="members-view" type="text/x-jquery-tmpl">
 	<div class="pa" style="top:10px;left:15px;">
 		<label class="">全部会员：${data.total_count}人</label>
+		<div class="pr xui-inlineblock">
+			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+				发优惠券</span>
+		   	</a>
+		   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+			    <li class="dropdown-submenu">
+			    	<a class="tc xa-select-member" type="button"  href="javascript:void(0);">
+						给选中的人发优惠券（以跑路除外）</span>
+				   	</a>
+			    </li>
+			    <li class="dropdown-submenu">
+			    	<a class="tc xa-all-member"  type="button"  href="javascript:void(0);" >
+						给筛选出来的所有人发优惠券（以跑路除外）</span>
+				   	</a>
+			    </li>
+			</ul>
+		</div>
 		<a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
@@ -115,7 +150,7 @@
 		<tbody>
 
 		{{each(i, member) items}}
-		<tr data-id="${member.id}">
+		<tr data-id="${member.id}" data-status="${member.is_subscribed}">
 			<td style="position:relative;" title='{{html member.username}}'>
 
 				<div class="column_block xui-memberHeader pr">
@@ -168,6 +203,7 @@
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
 			<td>
+				<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
 				<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">调等级</a></br>
 				<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a></br>
 				<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">调积分</a></br>
@@ -207,7 +243,7 @@ $(document).ready(function() {
 		DATA_INTERVAL = '';
 	});
 	//console.log('----------a:::',view.getFilterValue(),'--aaaaaa')
-	
+
 	// 修改等级
 	$('body').delegate('.xa-update-grade', 'click', function(event){
 		var $el = $(event.currentTarget);
@@ -339,6 +375,100 @@ $(document).ready(function() {
 
 	});
 
+	//给单人发优惠券
+	$('.panel-body').delegate('.xa-issuing-coupon', 'click', function(event){
+		var member_ids = [];
+		var member_name = $(event.currentTarget).data('member-name');
+		member_id = $(event.currentTarget).parents('tr').data("id");
+		member_ids.push(member_id);
+		showDialogAndIssuingCoupon(member_ids, member_name);
+	});
+
+	//给多人发优惠券
+	$(document).delegate('.xa-select-member', 'click', function(event){
+		var member_ids = [];
+		console.log("view.filter_value",view.filter_value);
+		$('input.xa-select:checked').each(function(){;
+			if($(this).parent().parent().data('status') == '1'){
+    			member_ids.push($(this).parent().parent().attr('data-id'));
+			}
+  		});
+  		if(member_ids.length == 0){
+  			W.showHint('error', '请先选择会员！');
+  			return;
+  		}
+  		showDialogAndIssuingCoupon(member_ids, "");
+	});
+
+	//给筛选出来的所有人发优惠券
+	$(document).delegate('.xa-all-member', 'click', function(event){
+		var filter_value = view.filter_value;
+		var args = {
+			'filter_value': filter_value,
+            'count_per_page':999999999999
+		};
+		var member_ids = [];
+		W.getApi().call({
+            app: 'member' ,
+            api: 'members/get',
+            args: args,
+            success: function(data){
+                for(var i=0; i<data.items.length; ++i){
+                	if(data.items[i].is_subscribed){
+                    	member_ids.push(data.items[i].id);
+                	}
+                }
+                if(member_ids.length == 0){
+		  			return;
+		  		}
+                showDialogAndIssuingCoupon(member_ids, "");
+            },
+            error: function(data){
+            	W.showHint('error', '发放失败!');
+            }
+        });
+	});
+
+	//执行发优惠券
+	function showDialogAndIssuingCoupon(member_ids, member_name){
+		W.dialog.showDialog('W.dialog.mall.MemberPageSelectCouponDialog',{
+			member_name: member_name,
+			member_count: member_ids.length,
+			success: function(data){
+				console.log(data, "success");
+				if (!data.couponRuleId){
+					W.showHint('error', '请选择优惠券！');
+					return;
+				}
+				var args = {};
+				args.coupon_rule_id = data.couponRuleId;
+				args.pre_person_count = data.prePersonCount;
+		        args.member_id=member_ids;
+				W.getApi().call({
+					method: 'put',
+					app: 'mall2',
+					resource: 'issuing_coupons_record',
+					args: W.toFormData(args),
+					scope: this,
+					success: function(data) {
+						W.showHint('success', '发放成功');
+					},
+					error: function(resp) {
+		                if (resp.errMsg) {
+		                    W.showHint('error', resp.errMsg);
+		                	W.showHint('error', '发放失败!');
+		                }else {
+						    W.showHint('error', '发放失败!');
+		                }
+					}
+				})
+			},
+			error: function(data){
+				W.showHint('error', '发放失败!');
+			}
+		})
+	};
+
 	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){
 		var url = '/member/members/export/';
@@ -369,6 +499,7 @@ $(document).ready(function() {
 						friendCount: friend_count,
 						fansCount: fans_count,
 						isReload:true,
+						onlyFans:true
 					});
 			});
 
@@ -378,7 +509,7 @@ $(document).ready(function() {
 			$('.xa-more-filter').trigger('click');
 			$("#status").val("1");
 		}, 500);
-		
+
 	}
 });
 </script>

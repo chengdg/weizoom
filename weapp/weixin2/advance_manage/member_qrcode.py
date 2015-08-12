@@ -54,7 +54,6 @@ class ChannelQrcode(resource.Resource):
             except:
                 award_content = None
         else:
-            award_contents = None
             award_content = None
 
         c = RequestContext(request, {

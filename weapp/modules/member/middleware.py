@@ -946,40 +946,31 @@ class OAUTHMiddleware(object):
 						is_oauth =True
 					else:
 						try:
-							print '====================aaaaaa1'
 							#通过openid_webapp_id获取用户信息
 							is_new_created_member = False
 							if request.found_member_in_cache is False:
-								print '====================aaaaaa2'
 								social_accounts = SocialAccount.objects.filter(openid=openid, webapp_id=request.user_profile.webapp_id)
-								print social_accounts,'===========asdfasdf',openid, request.user_profile.webapp_id
 								if social_accounts.count() > 0:
-									print '=============aa',social_accounts
 									social_account = social_accounts[0]
 									member, response = get_member_by(request, social_account)
-									print '=============aa1',social_account
 								else:
-									print '====================aaaaaa3'
 									token = get_token_for(request.user_profile.webapp_id, openid)
 									social_account = member_util.create_social_account(request.user_profile.webapp_id, openid, token, SOCIAL_PLATFORM_WEIXIN)
 									member = self.get_member_by(request, social_account)
 								# if response:
 								# 	return response
-								print '====================aaaaaa4',member
 								if member and hasattr(member, 'is_new_created_member'):
 									is_new_created_member = member.is_new_created_member
 
 								request.member = member
 								request.social_account = social_account
 								request.webapp_user = self._get_webapp_user(request.member)
-								print '====================aaaaaa5'
 							#处理sct
 
 							response = self.process_sct_in_url(request)
 							if response:
 								return response
 							#处理fmt
-							print '====================aaaaaa6',request.member
 							response = self.process_fmt_in_url(request, is_new_created_member)
 							if response:
 								return response
@@ -989,9 +980,7 @@ class OAUTHMiddleware(object):
 								is_oauth = True
 							else:
 								return None
-							print '====================aaaaaa7',request.member
 						except:
-							print '================error---------'
 							notify_message = u"OAUTHMiddleware error 获取socialaccount, cause:\n{}".format(unicode_full_stack())
 							watchdog_error(notify_message)
 							is_oauth = True
@@ -1017,7 +1006,6 @@ class OAUTHMiddleware(object):
 					member = self.get_member_by(request, social_account)
 
 					if not member:
-						print u'------------------授权时创建会员信息失败1 %s' % weixin_user_name
 						watchdog_error(u'授权时创建会员信息失败1 %s' % weixin_user_name)
 						member = self.get_member_by(request, social_account)
 						watchdog_error(u'授权时创建会员信息失败2 %s' % weixin_user_name)						
@@ -1041,8 +1029,7 @@ class OAUTHMiddleware(object):
 		if member is None:
 			#创建会员信息
 			try:
-				print '==========================1'
-				member = member_util.create_member_by_social_account(request.user_profile, social_account)
+				member = member_util.create_member_by_social_account(request.user_profile, social_account, True)
 				member_util.member_basic_info_updater(request.user_profile, member, True)
 				#member = Member.objects.get(id=member.id)
 				#之后创建对应的webappuser
@@ -1071,15 +1058,13 @@ class OAUTHMiddleware(object):
 				except:
 					notify_message = u"get_member_by中MemberMarketUrl失败，会员id:{}, cause:\n{}".format(member.id, unicode_full_stack())
 					watchdog_error(notify_message)
-				print '==========================2'
 				return member
 			except:
 				notify_message = u"MemberHandler中创建会员信息失败，社交账户信息:('openid':{}), cause:\n{}".format(
 					social_account.openid, unicode_full_stack())
 				watchdog_fatal(notify_message)
-				print '==========================22221'
 				try:
-					member = member_util.create_member_by_social_account(request.user_profile, social_account)
+					member = member_util.create_member_by_social_account(request.user_profile, social_account, True)
 					#之后创建对应的webappuser
 					_create_webapp_user(member)
 					member.is_new_created_member = True
@@ -1090,18 +1075,15 @@ class OAUTHMiddleware(object):
 					# 	notify_message = u"get_member_by中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
 					# 			member.id, unicode_full_stack())
 					# 	watchdog_error(notify_message)
-					print '==========================22222'
 					return member
 				except:
 					#response = process_to_oauth(request,weixin_mp_user_access_token)
 					#if response:
 					#	return None,response
-					print '==========================22223'
 					return None
 
 		else:
 			member.is_new_created_member = False
-			print '=======================has member===22224'
 			return member
 
 	# 授权并且创建结束后进行跳转并且设置cookie 信息

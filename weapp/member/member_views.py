@@ -235,12 +235,19 @@ def edit_member(request):
 		except:
 			member.unit_price = 0
 		
-		member.friend_count = __count_member_follow_relations(member)
+		try:
+			member.friend_count = __count_member_follow_relations(member)
+		except:
+			notify_message = u"更新会员好友数量失败:cause:\n{}".format(unicode_full_stack())
+			watchdog_error(notify_message)
 		member.save()
 	else:
 		raise Http404(u"不存在该会员")
 	#except:
 	#	raise Http404(u"不存在该会员")
+	from modules.member.member_info_util import update_member_basic_info
+	if not member.user_icon or not member.username_hexstr:
+		update_member_basic_info(request.user_profile, member)
 
 	#完善会员的基本信息
 	if member.user_icon:
@@ -367,9 +374,13 @@ def edit_member(request):
 def __count_member_follow_relations(member):
 	count = 0
 	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
-		follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
-		if follower_member.status != NOT_SUBSCRIBED:
-			count = count + 1
+		try:
+			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
+			if follower_member.status != NOT_SUBSCRIBED:
+				count = count + 1
+		except:
+			continue
+		
 	return count
 
 def __get_member_orders(member):

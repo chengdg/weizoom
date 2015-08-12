@@ -7,4 +7,6 @@
 
 */10 * * * * sh /weapp/web/weapp/services/service_ten_minutely.sh &> /weapp/web/log/services/service_ten_minutely.log
 
+*/* 1 * * * sh /weapp/web/weapp/services/service_hourly.sh &> /weapp/web/log/services/service_hourly.log
+
 #*/1 * * * * flock -xn /weapp/event_handler/event_handler.lock -c 'sh /weapp/event_handler/services/runner/service.sh > /weapp/event_handler/services/start_service.log 2>&1'

@@ -222,9 +222,9 @@ class ProductList(resource.Resource):
         else:
             if request.manager.id == products[0].owner_id:
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False)
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0)
                 else:
-                    products.update(shelve_type=shelve_type, is_deleted=False)
+                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0)
             else:
                 products.update(weshop_status=shelve_type)
 

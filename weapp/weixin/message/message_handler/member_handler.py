@@ -19,6 +19,7 @@ from modules.member.util import (get_member_by_binded_social_account,
 	create_member_by_social_account, create_social_account,member_basic_info_updater)
 
 from watchdog.utils import watchdog_error, watchdog_fatal
+import datetime
 
 """
 根据消息创建会员
@@ -85,7 +86,7 @@ class MemberHandler(MessageHandler):
 		if member is None:
 			#创建会员信息
 			try:
-				member = create_member_by_social_account(user_profile, social_account, False)
+				member = create_member_by_social_account(user_profile, social_account)
 				if is_from_simulator:
 					member.is_for_test = True
 					member.save()
@@ -100,35 +101,18 @@ class MemberHandler(MessageHandler):
 			
 			
 			if member and hasattr(member, 'is_new') and member.is_new:
-				try:
-					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
-				except:
-					integral_strategy_settings = None
-				try:
-					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
-					member.is_new = True
-				except:
-					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
-							member.id, unicode_full_stack())
-					watchdog_error(notify_message)
+				self.increase_for_be_member(request, user_profile, member)
 
 		else:
 			status = member.status
 			member.is_subscribed = True			
 			member.status = SUBSCRIBED
+			if status == NOT_SUBSCRIBED:
+				member.created_at = datetime.datetime.now()
 			member.save()
 
 			if status == NOT_SUBSCRIBED:
-				try:
-					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
-				except:
-					integral_strategy_settings = None
-				try:
-					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
-				except:
-					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
-							member.id, unicode_full_stack())
-					watchdog_error(notify_message)
+				self.increase_for_be_member(request, user_profile, member)
 				"""
 				TODO:
 					 更新好友数量
@@ -136,7 +120,7 @@ class MemberHandler(MessageHandler):
 				member.is_new = True
 			else:
 				member.is_new = False
-				
+			member.old_status = status	
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
 
@@ -146,9 +130,7 @@ class MemberHandler(MessageHandler):
 
 		try:
 			if not member.user_icon or member.user_icon == '':
-				print '-----------go to update user_icon start',member.user_icon
 				member_basic_info_updater(request.user_profile, member)
-				print '-----------go to update user_icon end', member.user_icon
 				if not member.user_icon or member.user_icon == '':
 					member_basic_info_updater(request.user_profile, member)
 		except:
@@ -157,3 +139,15 @@ class MemberHandler(MessageHandler):
 			watchdog_error(notify_message)	
 
 		return member
+
+	def increase_for_be_member(self, request, user_profile, member):
+		try:
+			integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+		except:
+			integral_strategy_settings = None
+		try:
+			increase_for_be_member_first(user_profile, member, integral_strategy_settings)
+		except:
+			notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+					member.id, unicode_full_stack())
+			watchdog_error(notify_message)
