@@ -23,7 +23,6 @@ class MemberGradeList(resource.Resource):
     @login_required
     def get(request):
         webapp_id = request.user_profile.webapp_id
-        print(webapp_id)
         member_grades = MemberGrade.get_all_grades_list(webapp_id)
 
         for grade in member_grades:
@@ -59,7 +58,6 @@ class MemberGradeList(resource.Resource):
         new_member_grades = []
         for grade in post_grades:
             grade_id = int(grade.get("id", '0'))
-            # if grade_id > 0:
             post_ids.append(grade_id)
 
             name = grade.get("name", 'get none value')
@@ -72,9 +70,7 @@ class MemberGradeList(resource.Resource):
             shop_discount = int(float(shop_discount) * 10)
 
             if grade_id == default_grade.id:
-
                 MemberGrade.objects.filter(id=grade_id).update(name=name, shop_discount=shop_discount)
-
             elif grade_id in original_member_grade_ids:
                 if is_auto_upgrade:
                     MemberGrade.objects.filter(id=grade_id).update(pay_money=pay_money, pay_times=pay_times,
@@ -102,14 +98,11 @@ class MemberGradeList(resource.Resource):
             MemberGrade.objects.bulk_create(new_member_grades)  # 批量插入
 
         delete_ids = list(set(original_member_grade_ids).difference(set(post_ids)))
-
         if delete_ids:
             if default_grade.id in delete_ids:
                 delete_ids.remove(default_grade.id)
 
-            members = Member.objects.filter(grade_id__in=delete_ids)
-
-            for member in members:
+            for member in Member.objects.filter(grade_id__in=delete_ids):
                 auto_update_grade(member=member, delete=True)
             MemberGrade.objects.filter(id__in=delete_ids).delete()
             mall.module_api.update_promotion_status_by_member_grade(delete_ids)
@@ -127,19 +120,10 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     :return:是否改变了等级
     """
 
-    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-
     is_change = False
-
     if webapp_user_id:
-        print("webapp_user_id", webapp_user_id)
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
-    elif member:
-        print("member", member.username, member.id, member.experience, member.created_at, member.user_icon)
-
     if not member.grade.is_auto_upgrade and not delete:
-        print("ztq---------", member.grade.is_auto_upgrade, delete)
-        print("here")
         return is_change
 
     webapp_id = member.webapp_id
@@ -164,14 +148,7 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     # 此处import写在文件头会报错
     is_all_conditions = get_webapp_owner_info(webapp_owner_id).integral_strategy_settings.is_all_conditions
 
-    print("is_all_conditions:", is_all_conditions)
-
     # 计算条件
-
-    print("conditions:", pay_money, pay_times, bound)
-
-    print("len:", len(grades_list))
-
     if is_all_conditions:
         for grade in grades_list:
             if pay_money >= grade.pay_money and pay_times >= grade.pay_times and bound >= grade.upgrade_lower_bound:
@@ -179,55 +156,11 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
                 member.grade = grade
                 break
     else:
-        print "here----------------------"
         for grade in grades_list:
-            print("one grade:", grade.name, grade.pay_money, grade.pay_times, grade.upgrade_lower_bound)
             if pay_money >= grade.pay_money or pay_times >= grade.pay_times or bound >= grade.upgrade_lower_bound:
-                print(bound, grade.upgrade_lower_bound)
-
-                print("pay_times:", pay_times, grade.pay_times)
-
                 is_change = True
                 member.grade = grade
-
                 break
     if is_change:
-        print(member.grade.name)
-        print("changed")
         member.save()
-    else:
-        print("not changed")
-    print("is_changed:", is_change)
-    print("end")
     return is_change
-
-
-
-    ############################################
-
-# def update_grade_from_order(**kwargs):
-#     if 'model' in kwargs:
-#         for order in kwargs['instance']:
-#             auto_update_grade(webapp_user_id=order.webapp_user_id)
-#     else:
-#         auto_update_grade(webapp_user_id=kwargs['instance'].webapp_user_id)
-#
-#
-# def update_grade_from_member(**kwargs):
-#     if 'model' in kwargs:
-#         print("update")
-#         for member in kwargs['instance']:
-#             auto_update_grade(member=member)
-#     else:
-#         print('save')
-#         auto_update_grade(member=kwargs['instance'])
-#
-#
-# signals.post_save.connect(update_grade_from_order, sender=Order, dispatch_uid="member_grade.order_save")
-# post_update_signal.connect(update_grade_from_order,
-#                            sender=Order, dispatch_uid="member_grade.order_update")
-#
-# signals.post_save.connect(update_grade_from_member, sender=Member, dispatch_uid="member_grade.member_save")
-# #
-# post_update_signal.connect(update_grade_from_member,
-#                            sender=Member, dispatch_uid="member_grade.member_update")
