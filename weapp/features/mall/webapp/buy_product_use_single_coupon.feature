@@ -440,20 +440,27 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		[{
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
 	Then jobs能获取会员等级列表
 		"""
 		[{
 			"name": "普通会员",
-			"upgrade": "手动升级",
-			"shop_discount": "100%"
+			"upgrade": "自动升级",
+			"discount": "10"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
+		"""
+	When jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "金牌会员"
+		}
 		"""
 	Then jobs可以获得会员列表
 		"""
@@ -470,7 +477,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		{
 			"name": "商品1",
 			"price": 200.00,
-			"member_price": true
+			"is_member_product": "on"
 		}
 		"""
 	Then jobs能获取商品'商品1'
@@ -478,7 +485,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		{
 			"name": "商品1",
 			"price": 200.00,
-			"member_price": true
+			"is_member_product": "on"
 		}
 		"""
 	When jobs更新商品'商品2'
@@ -486,7 +493,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		{
 			"name": "商品2",
 			"price": 200.00,
-			"member_price": true
+			"is_member_product": "on"
 		}
 		"""
 	Then jobs能获取商品'商品2'
@@ -494,7 +501,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		{
 			"name": "商品2",
 			"price": 200.00,
-			"member_price": true
+			"is_member_product": "on"
 		}
 		"""
 	Then jobs能获得优惠券'优惠券1'的码库
@@ -533,10 +540,14 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			"final_price": 199.0,
 			"product_price": 200.0,
 			"coupon_money": 1.0,
-			"members_money": 0.0,
 			"promotion_saved_money": 0.0,
 			"postage": 0.00,
-			"integral_money":0.00
+			"integral_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"price": 200.0,
+				"count": 1
+			}]
 		}
 		'''
 	#用会员价购买商品，就不能使用单品券
@@ -554,12 +565,15 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		{
 			"status": "待支付",
 			"final_price": 140.0,
-			"product_price": 200.0,
+			"product_price": 140.0,
 			"coupon_money": 0.0,
-			"members_money": 60.0,
 			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00
+			"integral_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"price": 140.0,
+				"count": 1
+			}]
 		}
 		'''
 	#购买多种会员价的商品，使用单品券，不影响其他会员价商品
@@ -595,7 +609,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 	When bill从购物车发起购买操作
 		"""
 		{
-			"action": "click",
+			"action": "pay",
 			"context": [{
 				"name": "商品1"
 			}, {
@@ -609,9 +623,8 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		{
 			"status": "待支付",
 			"final_price": 339.00,
-			"product_price": 400.0,
+			"product_price": 340.0,
 			"coupon_money": 1.0,
-			"members_money": 60.0,
 			"promotion_saved_money": 0.0,
 			"postage": 0.00,
 			"integral_money":0.00
@@ -621,7 +634,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 				"count": 1
 			}, {
 				"name": "商品2",
-				"member_price": 140.00,
+				"price": 140.00,
 				"count": 1
 			}]
 		}
