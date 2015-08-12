@@ -883,20 +883,18 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 		}]
 		"""
 	When nokia关注jobs的公众号
-	When bill关注jobs的公众号
-	When tom关注jobs的公众号
 	Given jobs登录系统
 	Then jobs可以获得会员列表
 		"""
 		[{
+			"name": "nokia",
+			"member_rank": "金牌会员"
+		}, {
 			"name": "tom",
 			"member_rank": "普通会员"
 		}, {
 			"name": "bill",
 			"member_rank": "铜牌会员"
-		}, {
-			"name": "nokia",
-			"member_rank": "金牌会员"
 		}]
 		"""
 	Given jobs已添加了优惠券规则
