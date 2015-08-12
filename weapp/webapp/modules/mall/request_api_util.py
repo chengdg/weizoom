@@ -166,8 +166,7 @@ WAIT_BUYER_CONFIRM_GOODS = 'WAIT_BUYER_CONFIRM_GOODS'
 
 
 def save_order(request):
-	"""
-	保存订单
+	"""保存订单
 	"""
 	profile = request.user_profile
 	webapp_id = profile.webapp_id
