@@ -161,7 +161,6 @@ def group_product_by_promotion(request, products):
 				  ...
 			   ]
 	"""
-	from webapp.modules.mall import utils as mall_utils
 	member_grade_id, discount = get_member_discount(request)
 	#按照促销对product进行聚类
 	# global NO_PROMOTION_ID
@@ -187,6 +186,7 @@ def group_product_by_promotion(request, products):
 		group_id = group_info['group_id']
 		group_unified_id = __get_group_name(products)
 		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
+
 		# 商品没有参加促销
 		if promotion_id <= 0:
 			product_groups.append({
@@ -203,6 +203,22 @@ def group_product_by_promotion(request, products):
 			continue
 
 		promotion = products[0].promotion
+
+		# 如果促销对此会员等级的用户不开放
+		if not has_promotion(member_grade_id, promotion.get('member_grade_id')):
+			product_groups.append({
+			                      "id": group_id,
+			                      "uid": group_unified_id,
+			                      'products': products,
+			                      'promotion': {},
+			                      "promotion_type": '',
+			                      'promotion_result': '',
+			                      'integral_sale_rule': integral_sale_rule,
+			                      'can_use_promotion': False,
+			                      'member_grade_id': member_grade_id
+			                      })
+			continue
+
 		promotion_type = promotion.get('type', 0)
 		if promotion_type == 0:
 			type_name = 'none'
@@ -217,13 +233,12 @@ def group_product_by_promotion(request, products):
 			promotion['status'] = promotion_models.PROMOTION_STATUS_NOT_START if promotion['start_date'] > now else promotion_models.PROMOTION_STATUS_FINISHED
 		# 限时抢购
 		elif promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-			# 商品促销价格处理
-			for p in products:
-				p.price = mall_utils.get_display_price(round(discount / 100, 3), member_grade_id, p)
 			product = products[0]
-			saved_money = product.original_price - product.price
+			promotion_price = product.promotion['detail'].get('promotion_price', 0)
+			product.price = promotion_price
+
 			promotion_result = {
-				"saved_money": saved_money,
+				"saved_money": product.price - promotion_price,
 				"subtotal": product.purchase_count * product.price
 			}
 
@@ -862,13 +877,6 @@ def get_products_detail(webapp_owner_id, product_ids, webapp_user=None, member_g
 						'min_price': standard_model['price'],
 						'max_price': standard_model['price']
 					}
-
-
-
-
-
-
-
 	except:
 		pass
 
@@ -1130,15 +1138,15 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	for product in products:
 		# product_discounted_money, _ = webapp_user.get_discounted_money(product.price, product_type=order.type)
 		OrderHasProduct.objects.create(
-			order = order,
-			product_id = product.id,
-			product_model_name = product.model['name'],
-			number = product.purchase_count,
-			total_price = product.total_price,
-			price = product.price,
-			promotion_id = product.promotion['id'] if product.promotion else 0,
-			promotion_money = product.promotion_money if hasattr(product, 'promotion_money') else 0,
-			grade_discounted_money = product.total_price - product.price * product.purchase_count
+			order=order,
+			product_id=product.id,
+			product_model_name=product.model['name'],
+			number=product.purchase_count,
+			total_price=product.total_price,
+			price=product.price,
+			promotion_id=product.promotion['id'] if product.promotion else 0,
+			promotion_money=product.promotion_money if hasattr(product, 'promotion_money') else 0,
+			grade_discounted_money=product.total_price - product.price * product.purchase_count
 		)
 	# 	if product.owner_id != webapp_owner_id:
 	# 		order.order_source = ORDER_SOURCE_WEISHOP
@@ -1156,17 +1164,17 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			promotion_id = product_group['promotion']['id']
 			integral_money = 0
 			integral_count = 0
-			if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].has_key('result'):
+			if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].get('result'):
 				integral_money = product_group['integral_sale_rule']['result']['final_saved_money']
 				integral_count = product_group['integral_sale_rule']['result']['use_integral']
 			OrderHasPromotion.objects.create(
-				order = order,
-				webapp_user_id = webapp_user.id,
-				promotion_id = promotion_id,
-				promotion_type = product_group['promotion_type'],
-				promotion_result_json = json.dumps(promotion_result),
-				integral_money = integral_money,
-				integral_count = integral_count,
+				order=order,
+				webapp_user_id=webapp_user.id,
+				promotion_id=promotion_id,
+				promotion_type=product_group['promotion_type'],
+				promotion_result_json=json.dumps(promotion_result),
+				integral_money=integral_money,
+				integral_count=integral_count,
 			)
 
 	if order.final_price == 0:
@@ -1656,9 +1664,20 @@ def get_shopping_cart_products(request):
 
 	product_groups = group_product_by_promotion(request, valid_products)
 
+
 	invalid_products.sort(lambda x, y: cmp(x.shopping_cart_id, y.shopping_cart_id))
 
 	return product_groups, invalid_products
+
+
+# def update_display_price(request, product_groups):
+# 	"""根据用户会员等级促销类型， 更新商品价格
+# 	"""
+# 	user_member_grade_id = get_user_member_grade_id(request)
+# 	user_member_grade_discount = get_user_member_discount(requset)
+# 	for product_group in product_groups:
+# 		pass
+
 
 
 #############################################################################
@@ -3086,3 +3105,22 @@ def save_image_and_update_att_url(request, picture, product_review):
 		product_review.save()
 		notify_msg = u"上传图片地址错误！"
 		watchdog_error(notify_msg, type="mall", user_id=int(request.webapp_owner_id))
+
+
+def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
+    """判断促销是否对用户开放.
+
+    Args:
+      user_member_grade_id(int): 用户会员等价
+      promotion_member_grade_id(int): 促销制定的会员等级
+
+    Return:
+      True - if 促销对用户开放
+      False - if 促销不对用户开放
+    """
+    if promotion_member_grade_id == 0:
+        return True
+    elif promotion_member_grade_id == user_member_grade_id:
+        return True
+    else:
+        return False

@@ -107,45 +107,6 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
         return False
 
 
-def get_display_price(discount, member_grade_id, product):
-    """商品促销类型，更新商品价格
-
-    Return:
-      product
-    """
-    # 如果用户不是会员
-    if not member_grade_id:
-        return product.original_price
-    # 如果用户是会员
-    else:
-        # 商品参加促销
-        if hasattr(product, 'promotion') and product.promotion:
-            promotion_type = int(product.promotion.get('type'))
-            # 限时抢购
-            if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-                # user是否满足限时抢购条件
-                if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
-                    return product.promotion['detail']['promotion_price']
-            # # 买赠
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-            #     pass
-            # # 满减
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
-            #     pass
-            # # 优惠券
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
-            #     pass
-            # # 积分抵扣
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
-            #     if has_promotion(member_grade_id, int(product.integral_sale['member_grade_id'])):
-            #         return product
-        # 商品是否参加会员折扣
-        if product.is_member_product:
-            return product.original_price * discount
-        else:
-            return product.original_price
-
-
 def get_user_product_saved_price(discount, member_grade_id, product):
     """根据用户的类别（会员/非会员）等级以及商品的促销返回商品优惠了多少钱.
          比如商品原价100， 促销价80， 这优惠了20元
