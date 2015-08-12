@@ -14,13 +14,13 @@
 		<div class="xui-form disT">
 			<div class="xui-col disTc">
 				<div class="xui-i-item">
-					<label class="">活动名称：</label>
+					<label class="">活动名称&nbsp;</label>
 					<input type="text" class="form-control" id="name" name="name" value="" />
 				</div>
 			</div>
 			<div class="xui-col disTc">
 				<div class="xui-i-item ml20">
-					<label>状态：</label>
+					<label>状态&nbsp;</label>
 					<select class="" id="status" name="status">
 						<option value="-1">所有投票</option>
 						<option value="0">未开始</option>
@@ -31,8 +31,7 @@
 			</div>
 			<div class="xui-col disTc">
 				<div class="xui-i-item">
-					<label>活动时间
-					：</label>
+					<label>活动时间&nbsp;</label>
 					<input
 						type="text"
 						class="form-control xui-datePicker"
@@ -44,7 +43,8 @@
 						data-enable-select-time="true"
 						data-validate="require-notempty"
 						data-ui-role="date-picker"
-					    data-format="yy-mm-dd HH:MM" />
+					    data-format="yy-mm-dd HH:MM"
+                        data-max-el="#end_time"/>
 					至
 					<input
 						type="text"
@@ -137,7 +137,7 @@
 					${item.status}
 				</td>
 				<td>
-					{{if (item.status === '未开启' || item.status === '已结束')}}
+					{{if (item.status === '未开始' || item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
 					{{if (item.status === '进行中')}}

@@ -24,6 +24,12 @@ from mall.promotion import utils as mall_api
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
+ITEM_FOR_DISPLAY = {
+	'phone': u'手机号',
+	'name': u'姓名',
+	'email': u'邮箱'
+}
+
 class voteParticipance(resource.Resource):
 	app = 'apps/vote'
 	resource = 'vote_participance'
@@ -39,7 +45,7 @@ class voteParticipance(resource.Resource):
 			termite_data = vote_participance.termite_data
 			item_data_list = []
 
-			for k, v in termite_data.items():
+			for k, v in sorted(termite_data.items()):
 				item_data = {}
 				item_data['item_name'] = k
 				if v['type'] == 'appkit.selection':
@@ -49,6 +55,7 @@ class voteParticipance(resource.Resource):
 							value_list.append(inner_k)
 					item_data['item_value'] = ','.join(value_list)
 				else:
+					item_data['item_name'] = ITEM_FOR_DISPLAY[k]
 					item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
 		else:

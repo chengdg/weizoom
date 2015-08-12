@@ -2,24 +2,40 @@
 
 {% block css %}
     <style>
+        .table>tbody tr th:nth-child(1){
+            text-align: left;
+            padding-left: 30px;
+            max-width: 25%;
+        }
         .table>tbody tr th:nth-child(2){
             text-align: left;
+            max-width: 680px;
+            min-width: 480px;
         }
-        .table>tbody tr th:nth-child(1){
+        .table>tbody tr th:nth-child(3), .table>tbody tr th:nth-child(4){
             width: 100px;
-            text-align: right;
-        }
-        .table>thead tr th:nth-child(2){
-            width: 680px;
         }
         .xui-progressBar{
             position: relative;
-            background: limegreen;
+            background: #66ABF6;
             vertical-align: middle;
             height: 21px;
+            border-radius: 3px;
         }
         span{
             display: inline-block;
+        }
+        .xui-i-totalcount{
+            margin: 7px;
+        }
+        .xui-i-tableHeader{
+            font-family: sans-serif;
+            color: #666666;
+            font-weight: 600;
+            background: #C8D1E4;
+            width: 98%;
+            margin-left: 10px;
+            padding: 15px;
         }
     </style>
 {% endblock %}
@@ -33,24 +49,32 @@
 		<li class="active">查看统计</li>
 	</ul>
 	
-    <div class="mt20">
-        <a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">批量导出</a>
-    </div>
-    <div class="panel">
-        <div class="fr"><b>总参与人数: {{ total_count }} 人</b></div><br><br>
+    <div class="panel panel-default xui-tableBox">
+        <div class="panel-header clearfix">
+            <b class="xui-i-totalcount fr">总参与人数: {{ total_count }} 人</b>
+            <a class="btn btn-default xui-fontBold fr xui-i-exportBtn" href="javascript:void(0);">批量导出</a>
+        </div>
         {% for title in titles %}
-            <span class="mt20">{{ forloop.counter }}、{{ title.title_name }}</span>
-            <span class="fr mt20">有效参与人数:{{ title.title_valid_count }} 人</span>
-            <table class="table">
-                <thead>
+            <div class="xui-i-tableHeader">
+                <span>{{ forloop.counter }}、{{ title.title_name }}</span>
+                <span class="fr">有效参与人数:{{ title.title_valid_count }} 人</span>
+            </div>
+            <table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder mb10">
+                <thead style="display: none">
                     <tr>
-                        <th>选项</th>
                         <th></th>
-                        <th>参与人数</th>
-                        <th>百分比</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                <tr style="color: #888888">
+                    <th>选项</th>
+                    <th></th>
+                    <th>参与人数</th>
+                    <th>百分比</th>
+                </tr>
                 {% for v in title.title_value %}
                     <tr>
                         <th>{{ v.item_name }} : </th>

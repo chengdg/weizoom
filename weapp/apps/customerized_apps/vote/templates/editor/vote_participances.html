@@ -1,6 +1,33 @@
 {% extends "content_base_v2.html" %}
 {% load apps_filter %}
+{% block css %}
+    <style>
+    .xui-result_fr-desc{
+        margin-top: 10px;
+    }
+    .xui-result_fr-desc{
+        color:#666666;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .xui-result_fr_table{
+        color:#666666;
+        font-size: 1.2em;
+    }
+    .xui-result_fr-i-td0{
+        width: 30% !important;
+        height: 3em;
+        padding-left: 18px !important;
+        text-align: left !important;
 
+   }
+    .xui-result_fr-i-td1{
+        width: auto !important;
+        height: 3em;
+    }
+
+    </style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-voteParticipancesAppPage xui-appPage-commonStyle">
 	<div class="relative">
@@ -15,14 +42,13 @@
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
-				<label class="">用户名：</label>
+				<label class="">用户名&nbsp;</label>
 				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
 			</div>
 		</div>
 		<div class="xui-i-col">
 			<div class="xui-i-item ml10">
-				<label>投票时间
-				：</label>
+				<label>投票时间&nbsp;</label>
 				<input
 					type="text"
 					class="form-control xui-datePicker"
@@ -34,7 +60,8 @@
 					data-enable-select-time="true"
 					data-validate="require-notempty"
 					data-ui-role="date-picker"
-					data-format="yy-mm-dd HH:MM" />
+					data-format="yy-mm-dd HH:MM"
+                    data-max-el="#end_time"/>
 				至
 				<input
 					type="text"

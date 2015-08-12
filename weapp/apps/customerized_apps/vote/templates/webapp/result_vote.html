@@ -33,13 +33,16 @@
     <div class="wa-page xui-default-background" data-page-title="">
     <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
 <h1 class="wui-i-title xa-title">{{ vote_detail.name }}</h1>
-<h2 class="wui-i-subtitle xa-subtitle">sdf</h2>
+<h2 class="wui-i-subtitle xa-subtitle">{{ vote_detail.subtitle }}</h2>
 <div class="wui-i-description">
-<p>asdf</p>
+    {{ vote_detail.description|safe }}
 </div>
 <div class="wui-i-info">
-<div class="wui-i-time"> 活动时间：{{ vote_detail.start_time }}至{{ vote_detail.end_time }} </div>
-<div class="wui-i-prize"> 活动奖励：5积分 </div>
+<div class="wui-i-time"> <i class="wui-i-sprite wui-i-sprite-timerange"><i>{{ vote_detail.start_time }}至{{ vote_detail.end_time }} </div>
+<div class="wui-i-prize">
+    <i class="wui-i-sprite wui-i-sprite-prize"><i>
+        {% if vote_detail.prize_type == 'integral' %}{{ vote_detail.prize_data }}积分{% endif %}
+</div>
 </div>
     </div>
 {% for item in q_vote %}

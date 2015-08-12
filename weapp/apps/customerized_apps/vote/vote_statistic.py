@@ -28,7 +28,10 @@ class voteStatistic(resource.Resource):
 			title2itemCount = {}
 			title_valid_dict = {}
 			for p in all_participances:
+				item_counter = 0
 				for title, data in p.termite_data.items():
+					item_counter += 1
+					title = '%s:%d' % (title, item_counter)
 					if data['type'] == 'appkit.selection':
 						is_valid = False
 						for item, value in data['value'].items():
@@ -49,6 +52,7 @@ class voteStatistic(resource.Resource):
 								title_valid_dict[title] = 1
 
 			for title, title_value in reversed(title2itemCount.items()):
+				title_valid_dict[title] = title_valid_dict[title] if title_valid_dict.has_key(title) else 0
 				single_title_dict = {}
 				single_title_dict['title_name'] = title
 				single_title_dict['title_valid_count'] = title_valid_dict[title]
