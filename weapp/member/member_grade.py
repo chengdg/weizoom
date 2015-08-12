@@ -13,6 +13,7 @@ from modules.member.models import MemberGrade, IntegralStrategySttings, Member, 
 from core.jsonresponse import create_response
 from mall.models import Order
 import mall.models as mall_models
+from webapp import models as webapp_models
 
 
 class MemberGradeList(resource.Resource):
@@ -98,7 +99,7 @@ class MemberGradeList(resource.Resource):
                                                          ))
 
         if new_member_grades:
-            MemberGrade.objects.bulk_create(new_member_grades)  #批量插入
+            MemberGrade.objects.bulk_create(new_member_grades)  # 批量插入
 
         delete_ids = list(set(original_member_grade_ids).difference(set(post_ids)))
 
@@ -142,7 +143,7 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         return is_change
 
     webapp_id = member.webapp_id
-    # webapp_owner_id = webapp_models.WebApp.objects.get(appid=webapp_id).owner_id
+    webapp_owner_id = webapp_models.WebApp.objects.get(appid=webapp_id).owner_id
     webapp_user_ids = member.get_webapp_user_ids
 
     # 获取会员数据
@@ -159,9 +160,10 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     else:
         grades_list = MemberGrade.objects.filter(webapp_id=webapp_id, is_auto_upgrade=True,
                                                  id__gt=member.grade_id).order_by('-id')
+    from cache.webapp_owner_cache import get_webapp_owner_info
+    # 此处import写在文件头会报错
+    is_all_conditions = get_webapp_owner_info(webapp_owner_id).integral_strategy_settings.is_all_conditions
 
-    is_all_conditions = IntegralStrategySttings.objects.get(webapp_id=webapp_id).is_all_conditions
-    # is_all_conditions = webapp_owner_cache.get_webapp_owner_info(webapp_owner_id).is_all_conditions
     print("is_all_conditions:", is_all_conditions)
 
     # 计算条件
