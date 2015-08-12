@@ -134,7 +134,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if($('.xa-promotion').data('type')==5){
             var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-            cut_price = (this.targetModel.price * discount).toFixed(2);
+            var price = this.targetModel.price;
+            if(this.discount){
+                price = price * this.discount / 100;
+            }
+            cut_price = (price * discount).toFixed(2);
             use_integral = parseInt(cut_price * perYuanOfPerIntegral);
             cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
             if(this.usableIntegral < use_integral){
@@ -156,6 +160,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
                 }
                 $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
+                    alert(cut_price);
             }
         }
         // end用于处理显示积分抵扣信息 提出单独的方法
@@ -270,7 +275,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if($('.xa-promotion').data('type')==5){
             var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-            cut_price = (this.priceInfo.min_price * discount).toFixed(2);
+            var price = this.priceInfo.min_price;
+            if(this.discount){
+                price = price * this.discount / 100;
+            }
+            cut_price = (price * discount).toFixed(2);
             use_integral = parseInt(cut_price * perYuanOfPerIntegral);
             cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
             if(this.usableIntegral < use_integral){
@@ -584,7 +593,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     //do nothing
                     if (this.promotion.type == 1) {
                         change_price = this.promotion.detail.promotion_price.toFixed(2)//无规格时，显示抢购的价钱
-                        
+
                     }
                 } else {
                     change_price = model.price.toFixed(2);
