@@ -12,7 +12,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% endblock %}
 
 {% block content-panel %}
-<div id="product-detail" data-member-grade-id="{{request.member.grade_id}}" class="xui-productDetailPage xui-page">
+<div id="product-detail" class="xui-productDetailPage xui-page">
     <div data-role="content" data-theme="x" class="xui-content xa-content">
         <div
             data-ui-role="swipeimage"
@@ -24,7 +24,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         </div>
         <!-- 返回上一页 -->
         <i data-ui-role="goBack"></i>
-        <div id="product" data-is-member-product="{{product.is_member_product}}" class="xui-section pt5 pb5" style="padding-right:0;">
+        <div id="product" class="xui-section pt5 pb5" style="padding-right:0;">
             <div class="xui-section-title xui-section-item xui-pl0">
                 {% if cur_request_member %}
                 <div class="disF">
@@ -395,8 +395,6 @@ var is_member_product = '{{product.is_member_product}}'
 var promotion = W.loadJSON('promotion');
 
 $(document).ready(function() {
-    var user_member_grade_id = $("#product-detail").data('member-grade-id');
-    var is_member_product = $("#product").data('is-member-product');
     var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
         if(promotion_member_grade_id == '0'){return true;}
         if(promotion_member_grade_id == user_member_grade_id){
@@ -418,6 +416,7 @@ $(document).ready(function() {
             product_id: productId,
         },
         success: function(data) {
+            var user_member_grade_id = data.member_grade_id;
             if(data.is_collect == 'true'){
                 $('.xa-collectProduct').addClass('faved').text('已收藏');
                 $('.xa-collectProduct').attr('data-is-collect', 'true');
@@ -438,7 +437,7 @@ $(document).ready(function() {
                 // 促销是否对此用户开发
                 is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
                 // 限时抢购
-                if(is_user_has_promotion){
+                if(is_user_has_promotion && product_promotion.detail.promotion_price){
                     price = (product_promotion.detail.promotion_price).toFixed(2);
                     msg = '促销价';
                 }

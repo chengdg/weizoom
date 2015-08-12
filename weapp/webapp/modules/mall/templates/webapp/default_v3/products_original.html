@@ -2,7 +2,7 @@
 {% load common_tag %}
 
 {% block content-panel %}
-<div id='product_list_contain' data-member-grade-id="{{request.member.grade_id}}" data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
+<div id='product_list_contain' data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
 
     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
         <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
@@ -49,7 +49,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var fmt = $('body').data('value');
-    var user_member_grade_id = $("#product_list_contain").data('member-grade-id');
     var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
         if(promotion_member_grade_id == '0'){return true;}
         if(promotion_member_grade_id == user_member_grade_id){
@@ -71,6 +70,7 @@ $(document).ready(function() {
             fmt: fmt
         },
         success: function(data) {
+            var user_member_grade_id = data.member_grade_id;
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
             }
@@ -83,12 +83,8 @@ $(document).ready(function() {
                 if(product_promotion){
                     // 促销是否对此用户开发
                     is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
-                    if(is_user_has_promotion){
-                        try{
+                    if(is_user_has_promotion && product_promotion.detail.promotion_price){
                             price = (product_promotion.detail.promotion_price).toFixed(2);
-                        }catch(err){
-                            price = $(this).data('product-price');
-                        }
                     }
                 }
                 if(!is_user_has_promotion){
