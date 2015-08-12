@@ -260,7 +260,8 @@ def get_unsubscribed_member_count(webapp_id):
 									webapp_id = webapp_id, 
 									is_subscribed = False, 
 									#is_for_buy_test = False, 
-									is_for_test = False
+									is_for_test = False, 
+									status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 								).count()
 	return unsubscribed_member_count
 
@@ -408,7 +409,8 @@ def get_date2member_from_share_url_count(webapp_id, low_date, high_date, date_fo
 						source=SOURCE_BY_URL, 
 						# is_subscribed=True, 
 						is_for_test=False, 
-						created_at__range=(low_date, high_date)
+						created_at__range=(low_date, high_date), 
+						status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 					)
 									
 	#收集数据
@@ -438,7 +440,8 @@ def get_member_from_share_url_count(webapp_id, low_date, high_date):
 						source=SOURCE_BY_URL, 
 						# is_subscribed=True, 
 						is_for_test=False, 
-						created_at__range=(low_date, high_date)
+						created_at__range=(low_date, high_date), 
+						status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 					)
 									
 	#收集数据
@@ -575,6 +578,7 @@ def get_ori_qrcode_member_count(webapp_id, low_date, high_date):
 						member__webapp_id=webapp_id,
 						# member__is_subscribed=True, 
 						member__is_for_test=False, 
+						member__status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED), 
 						created_at__range=(low_date, high_date)
 					)
 
@@ -591,7 +595,8 @@ def get_ori_qrcode_member_count(webapp_id, low_date, high_date):
 								# is_subscribed=True, 
 								is_for_test=False, 
 								source=SOURCE_MEMBER_QRCODE, 
-								created_at__range=(low_date, high_date)
+								created_at__range=(low_date, high_date), 
+								status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 							)
 	for member in members_from_qrcode:
 		member_from_qrcode_count += 1
@@ -609,7 +614,8 @@ def get_self_follow_member_count(webapp_id, low_date, high_date):
 								# is_subscribed=True, 
 								is_for_test=False, 
 								source__in = self_follow_sources, 
-								created_at__range=(low_date, high_date)
+								created_at__range=(low_date, high_date), 
+								status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 							).count()
 		
 	return self_follow_member_count
