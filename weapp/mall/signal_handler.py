@@ -677,7 +677,8 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 				}
 
 			product_group['promotion_result'] = {
-				'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
+				# 'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
+				'promotion_saved_money': (product.original_price - detail['promotion_price']) * product.purchase_count,
 				'promotioned_product_price': detail['promotion_price']
 			}
 			#用抢购价替换商品价格

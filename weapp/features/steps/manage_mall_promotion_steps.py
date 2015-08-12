@@ -159,10 +159,15 @@ def step_create_flash_sales(context, user):
                 'id': db_product.id
             })
 
+        member_grade = promotion.get('member_grade', 0)
+        if member_grade == u'全部':
+            member_grade = 0
+        elif member_grade:
+            member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=context.webapp_id).id
         data = {
             'name': promotion['name'],
             'promotion_title': promotion.get('promotion_title', ''),
-            'member_grade': promotion.get('member_grade', 0),
+            'member_grade': member_grade,
             'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
             'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
             'products': json.dumps(product_ids),
