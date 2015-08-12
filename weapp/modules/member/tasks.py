@@ -66,8 +66,7 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 	current_integral = member.integral + integral_increase_count
 	try:
 		update_grade_flag =False
-		if integral_increase_count > 0 and event_type != RETURN_BY_SYSTEM:
-			# 处理经验值
+		if integral_increase_count > 0 and event_type != u'取消订单 返还积分':
 			member.experience += integral_increase_count
 			update_grade_flag = True
 		member.integral = F('integral') + integral_increase_count
