@@ -30,7 +30,6 @@
 	.xui-RecommendedDetailPage .xui-tableview .xui-img{
 		width:55px;
 		height: 55px;
-		border:1px solid #f2f2f2;
 		border-radius: 5px;
 		
 	}
@@ -51,6 +50,8 @@
 		background-color: #f9c831;
 		color: #fff;
 		font-family: "华文细黑";
+		text-align: center;
+		border-radius: 5px;
 	}
 	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell .xui-p{
 		height: 20px;
@@ -72,41 +73,21 @@
 <div class="xui-RecommendedDetailPage">
 	<div class="xui-general">
 		<div class=" xa-general">
-			<p>扫码人数：<span class="xui-red">200</span></p>
-			<p>下单人数：<span class="xui-red">2</span></p>
-			<p>成交金额：<span class="xui-red">￥200.00</span></p>
+			<p>扫码人数：<span class="xui-red">{{channel_qrcode_members_count}}</span></p>
+			<p>下单人数：<span class="xui-red">{{payed_count}}</span></p>
+			<p>成交金额：<span class="xui-red">￥{{pay_money}}</span></p>
 		</div>
 	</div>
 	<div class="xui-tableview">
+		{% for channel_qrcode_member in channel_qrcode_members %}
 		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-			<p class="xui-p"> 东方神起</p>
-		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
+			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}" />
+			<p class="xui-p xui-ellipsis-1">{{channel_qrcode_member.member.username}}</p>
+			{% if not channel_qrcode_member.member.is_subscribed %}
 			<div class="xui-yellowBar">已跑路</div>
+			{% endif %}
 		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-		</div>
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" />
-		</div>
+		{% endfor %}
 	</div>
 
 </div>

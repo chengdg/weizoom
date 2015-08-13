@@ -54,11 +54,11 @@
 					<tr data-id="${log.id}">
 						<td>
 							<div style="display:table ;line-height:42px;">
-								<a href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
+								<a target="_blank" href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
 								<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
 								</a>
 								<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">
-									<a href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
+									<a target="_blank" href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
 									<div>${grade_name}</div>
 								</div>
 							</div>
@@ -84,7 +84,9 @@
 					    </td>
 
 					    {{if data.only_fans==0}}
-							<td >${log.father_name} </td>
+							<td >
+								<a target="_blank" href="/member/member_detail/edit/?id=${log.father_id}" >${log.father_name}</a>
+							</td>
 						{{/if}}
 					    <td >${log.created_at} </td>
 					</tr>

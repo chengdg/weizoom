@@ -73,23 +73,37 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
 
     upCounter: function(event) {
         var $cur_up = $(event.currentTarget);
+        var is_limit = true;
         var max_count = $cur_up.parent().prev().data('max-count');
+        var limit_count = parseInt($cur_up.parent().prev().data('min-limit'));
+        var remained_count = parseInt($cur_up.parent().prev().data('remained-count'));
+        if (!max_count){
+            max_count = remained_count;
+            is_limit = false;
+        }
         var cur_count = parseInt($cur_up.prevAll('.xa-counterText').text());
         if($cur_up.hasClass("xui-btn")){
-            if(max_count < (cur_count + 1) * this.member_count){
+            if(remained_count < (cur_count + 1) * this.member_count){
+                if(cur_count <= limit_count &&(remained_count > cur_count*this.member_count)){
+                    return;
+                }
                 $cur_up.parent().next().removeClass('hide');
             }
             return;
         }else{
-            if(((cur_count+1) * this.member_count <= max_count) || (cur_count+1) <= max_count){
+            if(!is_limit || (cur_count+1) * this.member_count <= max_count){
+                $cur_up.prevAll('.xa-down').removeClass("xui-btn");
+                $cur_up.prevAll('.xa-counterText').text(cur_count+1);
+            }
+            if(max_count<remained_count && (cur_count+1) * this.member_count <= remained_count && (cur_count+1<=max_count)){
                 $cur_up.prevAll('.xa-down').removeClass("xui-btn");
                 $cur_up.prevAll('.xa-counterText').text(cur_count+1);
             }
             if(max_count){
-                if(this.member_count == 1 && (cur_count+1 == max_count)){
+                if(cur_count+1 == max_count){
                     $cur_up.addClass("xui-btn");
                 }
-                if(this.member_count > 1 && (cur_count+2)*this.member_count > max_count){
+                if(this.member_count > 1 && (cur_count+2)*this.member_count > remained_count){
                     $cur_up.addClass("xui-btn");
                 }
             }

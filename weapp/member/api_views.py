@@ -290,8 +290,10 @@ def __build_follow_member_basic_json(follow_member, member_id):
 	father_member = MemberFollowRelation.get_father_member(follow_member.id)
 	if father_member:
 		father_name = father_member.username_for_html
+		father_id = father_member.id
 	else:
 		father_name = ''
+		father_id = ''
 
 	return {
 		'id': follow_member.id,
@@ -304,7 +306,8 @@ def __build_follow_member_basic_json(follow_member, member_id):
 		'is_fans': MemberFollowRelation.is_fan(member_id, follow_member.id),
 		'is_father': MemberFollowRelation.is_father(member_id, follow_member.id),
 		'pay_money': '%.2f' % follow_member.pay_money,
-		'father_name': father_name
+		'father_name': father_name,
+		'father_id': father_id
 	}
 
 def __build_member_has_tags_json(member):

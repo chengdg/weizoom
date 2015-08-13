@@ -54,12 +54,12 @@
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-send-message-select-member" type="button"  href="javascript:void(0);">
-								给选中的人发消息（以跑路除外）</span>
+								给选中的人发消息（已跑路除外）</span>
 						   	</a>
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发消息（以跑路除外）</span>
+								给筛选出来的所有人发消息（已跑路除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -72,12 +72,12 @@
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-select-member" type="button"  href="javascript:void(0);">
-								给选中的人发优惠券（以跑路除外）</span>
+								给选中的人发优惠券（已跑路除外）</span>
 						   	</a>
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发优惠券（以跑路除外）</span>
+								给筛选出来的所有人发优惠券（已跑路除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -114,6 +114,9 @@
 			</div>
 		</div>
 	</div>
+	<form class="hidden xa-postSendMessageAll" action="/new_weixin/mass_sending_messages/" method="post">
+        <input name="params"/>
+    </form>
 {% else %}
 	<div class="xui-emptyBox">
 		<img src="/static_v2/img/editor/empty.png">
@@ -136,12 +139,12 @@
 		   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-send-message-select-member" type="button"  href="javascript:void(0);">
-						给选中的人发消息（以跑路除外）</span>
+						给选中的人发消息（已跑路除外）</span>
 				   	</a>
 			    </li>
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-						给筛选出来的所有人发消息（以跑路除外）</span>
+						给筛选出来的所有人发消息（已跑路除外）</span>
 				   	</a>
 			    </li>
 			</ul>
@@ -154,12 +157,12 @@
 		   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-select-member" type="button"  href="javascript:void(0);">
-						给选中的人发优惠券（以跑路除外）</span>
+						给选中的人发优惠券（已跑路除外）</span>
 				   	</a>
 			    </li>
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-all-member"  type="button"  href="javascript:void(0);" >
-						给筛选出来的所有人发优惠券（以跑路除外）</span>
+						给筛选出来的所有人发优惠券（已跑路除外）</span>
 				   	</a>
 			    </li>
 			</ul>
@@ -185,7 +188,7 @@
 		</tr>
 		</thead>
 		<tbody>
-
+		<div id="__json-members" class="hidden">${JSON.stringify(items)}</div>
 		{{each(i, member) items}}
 		<tr data-id="${member.id}" data-status="${member.is_subscribed}">
 			<td style="position:relative;" title='{{html member.username}}'>
@@ -438,31 +441,35 @@ $(document).ready(function() {
 
 	//给筛选出来的所有人发优惠券
 	$(document).delegate('.xa-all-member', 'click', function(event){
-		var filter_value = view.filter_value;
-		var args = {
-			'filter_value': filter_value,
-            'count_per_page':999999999999
-		};
-		var member_ids = [];
-		W.getApi().call({
-            app: 'member' ,
-            api: 'members/get',
-            args: args,
-            success: function(data){
-                for(var i=0; i<data.items.length; ++i){
-                	if(data.items[i].is_subscribed){
-                    	member_ids.push(data.items[i].id);
-                	}
-                }
-                if(member_ids.length == 0){
-		  			return;
-		  		}
-                showDialogAndIssuingCoupon(member_ids, "");
-            },
-            error: function(data){
-            	W.showHint('error', '发放失败!');
-            }
-        });
+		if(W.loadJSON('members').length > 0){
+			var filter_value = view.filter_value;
+			var args = {
+				'filter_value': filter_value,
+	            'count_per_page':999999999999
+			};
+			var member_ids = [];
+			W.getApi().call({
+	            app: 'member' ,
+	            api: 'members/get',
+	            args: args,
+	            success: function(data){
+	                for(var i=0; i<data.items.length; ++i){
+	                	if(data.items[i].is_subscribed){
+	                    	member_ids.push(data.items[i].id);
+	                	}
+	                }
+	                if(member_ids.length == 0){
+			  			return;
+			  		}
+	                showDialogAndIssuingCoupon(member_ids, "");
+	            },
+	            error: function(data){
+	            	W.showHint('error', '发放失败!');
+	            }
+	        });
+	    } else {
+	    	W.showHint('error', "没有可已发优惠券的用户！");
+	    }
 	});
 
 	//执行发优惠券
@@ -487,7 +494,7 @@ $(document).ready(function() {
 					args: W.toFormData(args),
 					scope: this,
 					success: function(data) {
-						W.showHint('success', '发放成功');
+						W.showHint('success', '优惠券发放成功');
 					},
 					error: function(resp) {
 		                if (resp.errMsg) {
@@ -508,11 +515,30 @@ $(document).ready(function() {
 
 	//群发消息
 	$(document).delegate('.xa-send-message-all-member', 'click', function(event){
-		console.log("all");
+		var members = W.loadJSON('members');
+		var category = $('#member_tag option:selected').text();
+        var status = $('#status option:selected').text();
+        var sex = "全部";
+		var filter_value = view.filter_value;
+		var params = 'category=' + category + '&status=' + status + '&sex=' + sex + '&filter_value=' + filter_value;
+
+		if(members && members.length > 0){
+			$('form.xa-postSendMessageAll input').val(params);
+            $('form.xa-postSendMessageAll').submit();
+		} else {
+			W.showHint('error', "没有可已发送的用户");
+		}
 	});
 
 	$(document).delegate('.xa-send-message-select-member', 'click', function(event){
-		console.log("select");
+		var memberIdArray = $('[data-ui-role="advanced-table"]').data('view').getAllSelectedDataIds();
+        if (memberIdArray.length > 0) {
+            var memberIds = 'member_ids=' + memberIdArray.join('|');
+            $('form.xa-postSendMessageAll input').val(memberIds);
+            $('form.xa-postSendMessageAll').submit();
+        } else {
+            W.showHint('error', "没有选中的用户");
+        }
 	});
 
 	// 导出
