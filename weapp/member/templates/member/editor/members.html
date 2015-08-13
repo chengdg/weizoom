@@ -54,12 +54,12 @@
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-send-message-select-member" type="button"  href="javascript:void(0);">
-								给选中的人发消息（以跑路除外）</span>
+								给选中的人发消息（已跑路除外）</span>
 						   	</a>
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发消息（以跑路除外）</span>
+								给筛选出来的所有人发消息（已跑路除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -72,12 +72,12 @@
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-select-member" type="button"  href="javascript:void(0);">
-								给选中的人发优惠券（以跑路除外）</span>
+								给选中的人发优惠券（已跑路除外）</span>
 						   	</a>
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class="tc xa-all-member"  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人发优惠券（以跑路除外）</span>
+								给筛选出来的所有人发优惠券（已跑路除外）</span>
 						   	</a>
 					    </li>
 					</ul>
@@ -139,12 +139,12 @@
 		   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-send-message-select-member" type="button"  href="javascript:void(0);">
-						给选中的人发消息（以跑路除外）</span>
+						给选中的人发消息（已跑路除外）</span>
 				   	</a>
 			    </li>
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-						给筛选出来的所有人发消息（以跑路除外）</span>
+						给筛选出来的所有人发消息（已跑路除外）</span>
 				   	</a>
 			    </li>
 			</ul>
@@ -157,12 +157,12 @@
 		   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-select-member" type="button"  href="javascript:void(0);">
-						给选中的人发优惠券（以跑路除外）</span>
+						给选中的人发优惠券（已跑路除外）</span>
 				   	</a>
 			    </li>
 			    <li class="dropdown-submenu">
 			    	<a class="tc xa-all-member"  type="button"  href="javascript:void(0);" >
-						给筛选出来的所有人发优惠券（以跑路除外）</span>
+						给筛选出来的所有人发优惠券（已跑路除外）</span>
 				   	</a>
 			    </li>
 			</ul>
@@ -468,7 +468,7 @@ $(document).ready(function() {
 	            }
 	        });
 	    } else {
-	    	W.showHint('error', "没有可以发优惠券的用户！");
+	    	W.showHint('error', "没有可已发优惠券的用户！");
 	    }
 	});
 
@@ -526,7 +526,7 @@ $(document).ready(function() {
 			$('form.xa-postSendMessageAll input').val(params);
             $('form.xa-postSendMessageAll').submit();
 		} else {
-			W.showHint('error', "没有可以发送的用户");
+			W.showHint('error', "没有可已发送的用户");
 		}
 	});
 
