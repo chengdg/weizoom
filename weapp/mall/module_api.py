@@ -256,6 +256,7 @@ def group_product_by_promotion(request, products):
 			total_purchase_count = 0
 			total_product_price = 0.0
 			for product in products:
+				product.price = product.original_price
 				total_purchase_count += product.purchase_count
 				total_product_price += product.price * product.purchase_count
 
@@ -1655,7 +1656,6 @@ def get_shopping_cart_products(request):
 	# 		products.append(product)
 
 	product_groups = group_product_by_promotion(request, valid_products)
-
 
 	invalid_products.sort(lambda x, y: cmp(x.shopping_cart_id, y.shopping_cart_id))
 
