@@ -673,7 +673,7 @@
 .xui-memberPageSelectCouponDialog .table>tbody>tr>td {
 	padding: 0px;
 	height: 52px;
-    padding-top: 8px;
+    padding-top: 0px;
 }
 .xui-memberPageSelectCouponDialog .table>tbody>tr>td:last-child {
     padding-top: 0px;
