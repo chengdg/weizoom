@@ -8,6 +8,7 @@ from utils import cache_util
 from mall.models import ProductModel
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_error
+from django.db.models.query import QuerySet
 
 def get_webapp_by_appid(appid):
 	key = 'webapp_appid_%s' % appid
@@ -75,24 +76,29 @@ from weapp.hack_django import post_update_signal
 
 def update_mall_product_model_cache(**kwargs):
 	model = kwargs.get('instance', None)
-	if model:
-		model_id = model[0].id
-		product_id = model[0].product_id
+	product_model = None
+	if isinstance(model, QuerySet) and len(model) > 0:
+		product_model = model[0]
+	elif isinstance(model, ProductModel):
+		product_model = model
+
+	if product_model:
+		model_id = product_model.id
+		product_id = product_model.product_id
 
 		key_product_id = 'mall_product_model_product_id_%s' % (product_id)
 		key_model_ids = 'mall_product_model_ids_*%s*' % (model_id)
 		cache_util.delete_cache(key_product_id)
 		cache_util.delete_pattern(key_model_ids)
 
-		if model[0].stocks < 1:
-			model = model[0]
+		if product_model.stocks < 1:
 			key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
-				model.owner_id, model.product_id)
+				product_model.owner_id, product_model.product_id)
 			cache_util.delete_cache(key)
 
-			if model.owner_id != 216:
+			if product_model.owner_id != 216:
 				key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
-					model.product_id)
+					product_model.product_id)
 				cache_util.delete_cache(key)
 
 post_update_signal.connect(update_mall_product_model_cache, sender=ProductModel, dispatch_uid = "product_model.update")
