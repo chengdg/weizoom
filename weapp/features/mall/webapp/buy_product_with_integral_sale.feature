@@ -598,7 +598,7 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 	Then bill在jobs的webapp中拥有150会员积分
 
 #补充：张三香
-@mall2 @jz
+@mall2 @integral @meberGrade @jz
 Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置抵扣5的商品
 #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 	When tom1关注jobs的公众号

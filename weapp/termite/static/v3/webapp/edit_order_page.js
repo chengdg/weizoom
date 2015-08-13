@@ -21,7 +21,7 @@ var PostageCalculator = BackboneLite.View.extend({
 		var totalCount = 0;
 		for (var i = 0; i < products.length; ++i) {
 			var product = products[i];
-			totalPrice += product.price * product.count;
+			totalPrice += product.original_price * product.count;
 			totalCount += product.count;
 		}
 
@@ -607,6 +607,18 @@ var CouponManager = BackboneLite.View.extend({
 			$('.xa-coupon-money').html('已抵用'+money +'元');
 			$('.xa-no-use-coupon-show').hide();
 			$('.xa-use-coupon-show').show();
+
+			// 单品券对应商品显示原价
+			var productid = $('#coupon_id').data('productid');
+			$(view.products).each(function(i, n){
+				if(n.id == productid){
+					n.member_discount = n.price;
+					n.price = n.original_price;
+					view.prices();
+					$('[data-product-id="'+n.id+'"]').find('.xa-product-price').text(n.price.toFixed(2));
+				}
+			});
+
 		}
 		var $target = this.$el.find('.xa-couponItem');
 		this.trigger('use-coupon');
@@ -626,6 +638,18 @@ var CouponManager = BackboneLite.View.extend({
 		this.trigger('use-coupon');
 		$('.xa-integral').show();
 		$('.xa-order-integral').show();
+
+		//单品券恢复会员价格
+		var productid = $('#coupon_id').data('productid');
+		$(view.products).each(function(i, n){
+			if(n.id == productid && n.member_discount){
+				n.price = n.member_discount;
+				n.member_discount = null;
+				view.prices();
+				$('[data-product-id="'+n.id+'"]').find('.xa-product-price').text(n.price.toFixed(2));
+			}
+		});
+
 	},
 	onClickCouponDialog:function(event){
 		if(this.flag){

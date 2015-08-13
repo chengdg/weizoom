@@ -37,7 +37,7 @@ from webapp.handlers import event_handler_util
 from weixin.user.models import *
 
 
-from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_js_config
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_js_config, is_product_stocks_request
 
 #################
 # new add by bert
@@ -55,6 +55,11 @@ class CleanUpCookieMiddleware(object):
 	清除缓存的中间件
 	"""
 	def process_request(self, request):
+		
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		# if settings.MODE != "develop":
 		# 	real_ip=request.META.get('HTTP_X_FORWARDED_FOR', None)
@@ -128,6 +133,10 @@ class MemberCacheMiddleware(object):
 	从缓存中获取member的middleware
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		request.found_member_in_cache = False
 		if is_pay_request(request):
@@ -294,6 +303,10 @@ class RedirectBySctMiddleware(object):
 			request.COOKIES.pop(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -367,6 +380,10 @@ class RedirectByFmtMiddleware(object):
 
 
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -447,6 +464,10 @@ class RequestSocialAccountMiddleware(object):
 	NEED_SET_SOCIAL_ACCOUNT_SESSION_FLAG = 'need_set_social_account_session'
 
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -544,6 +565,10 @@ class MemberMiddleware(object):
 		return member
 
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -710,6 +735,10 @@ class WebAppUserMiddleware(object):
 	该中间件在处理过程中会统一同一用户在成为会员前和成为会员后对应的WebAppUser
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -892,6 +921,10 @@ class OAUTHMiddleware(object):
 		return webapp_user
 
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -1486,6 +1519,10 @@ class RefuelingMiddleware(object):
 	加油活动中间件
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
