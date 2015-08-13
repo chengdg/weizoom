@@ -252,9 +252,11 @@ def get_confirm_study_plan(request):
 		else:
 			response = create_response(501)
 			response.data.msg = u'{}'.format(items.get('Header').get('Info'))
+			response.errMsg = u'{}'.format(items.get('Header').get('Info'))
 	except:
 		response = create_response(500)
 		response.data.msg = u'获取数据失败，请重试'
+		response.errMsg = u'获取数据失败，请重试'
 
 	response.return_info = items
 	response.data.webapp_user_ids = webapp_user_ids
