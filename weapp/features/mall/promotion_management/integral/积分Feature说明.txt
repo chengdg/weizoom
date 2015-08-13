@@ -1,2 +1,0 @@
-1 微商城后台，积分管理Feature全部实现，但step没有实现；
-2 webapp积分购买Feature也已经全部实现；step已经实现，bdd通过
