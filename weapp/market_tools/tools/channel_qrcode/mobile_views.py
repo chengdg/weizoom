@@ -171,11 +171,10 @@ def get_settings_detail(request):
         setting = ChannelQrcodeSettings.objects.get(id=sid)
         
         if setting.bing_member_id == request.member.id:
-            channel_qrcode_members = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
+            relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
             payed_count = 0
             pay_money = 0
 
-            relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=channel_qrcode_id)
             setting_id2count = {}
             member_id2setting_id = {}
             member_ids = []
@@ -229,8 +228,8 @@ def get_settings_detail(request):
                     'is_hide_weixin_option_menu': True,
                     'head_img': get_mp_head_img(user_id),
                     'hide_non_member_cover':True,
-                    'channel_qrcode_members':channel_qrcode_members,
-                    'channel_qrcode_members_count':channel_qrcode_members.count(),
+                    'channel_qrcode_members':relations,
+                    'channel_qrcode_members_count':relations.count(),
                     'pay_money': '%.2f' %  pay_money,
                     'payed_count': payed_count
                 })
