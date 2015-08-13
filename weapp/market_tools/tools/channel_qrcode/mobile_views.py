@@ -178,7 +178,7 @@ def get_settings_detail(request):
                 if channel_qrcode_member.member.pay_times > 0:
                     payed_count = payed_count + 1
                 if channel_qrcode_member.member.pay_money > 0:
-                    payed_count = pay_money + channel_qrcode_member.member.pay_money
+                    pay_money = pay_money + channel_qrcode_member.member.pay_money
 
             c = RequestContext(request, {
                     'page_title': u'推荐详情',
