@@ -86,7 +86,7 @@ class MemberHandler(MessageHandler):
 		if member is None:
 			#创建会员信息
 			try:
-				member = create_member_by_social_account(user_profile, social_account, False)
+				member = create_member_by_social_account(user_profile, social_account)
 				if is_from_simulator:
 					member.is_for_test = True
 					member.save()
@@ -101,17 +101,7 @@ class MemberHandler(MessageHandler):
 			
 			
 			if member and hasattr(member, 'is_new') and member.is_new:
-				try:
-					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
-				except:
-					integral_strategy_settings = None
-				try:
-					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
-					member.is_new = True
-				except:
-					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
-							member.id, unicode_full_stack())
-					watchdog_error(notify_message)
+				self.increase_for_be_member(request, user_profile, member)
 
 		else:
 			status = member.status
@@ -122,16 +112,7 @@ class MemberHandler(MessageHandler):
 			member.save()
 
 			if status == NOT_SUBSCRIBED:
-				try:
-					integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
-				except:
-					integral_strategy_settings = None
-				try:
-					increase_for_be_member_first(user_profile, member, integral_strategy_settings)
-				except:
-					notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
-							member.id, unicode_full_stack())
-					watchdog_error(notify_message)
+				self.increase_for_be_member(request, user_profile, member)
 				"""
 				TODO:
 					 更新好友数量
@@ -158,3 +139,15 @@ class MemberHandler(MessageHandler):
 			watchdog_error(notify_message)	
 
 		return member
+
+	def increase_for_be_member(self, request, user_profile, member):
+		try:
+			integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+		except:
+			integral_strategy_settings = None
+		try:
+			increase_for_be_member_first(user_profile, member, integral_strategy_settings)
+		except:
+			notify_message = u"MemberHandler中创建会员后增加积分失败，会员id:{}, cause:\n{}".format(
+					member.id, unicode_full_stack())
+			watchdog_error(notify_message)

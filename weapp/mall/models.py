@@ -211,11 +211,10 @@ class Product(models.Model):
 		if pos < 0 or pos >= MAX_INDEX:
 			raise IndexError('{} out of range [1, 65535)'.format(pos))
 		# 查看指定的位置是否存在元素
-		obj_bs = Product.objects.filter(display_index=pos)
+		obj_bs = Product.objects.filter(owner_id=self.owner_id , display_index=pos)
 		if obj_bs.exists():
 			obj_bs.update(display_index=0)
-		else:
-			pass
+
 		self.display_index = pos
 		self.save()
 
@@ -1606,7 +1605,6 @@ def belong_to(webapp_id):
 Order.objects.belong_to = belong_to
 #from django.db.models import signals
 # def after_save_order(instance, created, **kwargs):
-#    print '>>>>>>>>>>>>>>>>>>>>> after_save_order <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
 #    print kwargs
 
 
