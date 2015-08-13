@@ -531,7 +531,9 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				elif promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
 					promotion.promotion_title = '%s * %s' % (promotion.detail['premium_products'][0]['name'], promotion.detail['count'])
 				elif promotion.type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-					promotion.promotion_title = '活动截止:%s' % (promotion.end_date)
+					# promotion.promotion_title = '活动截止:%s' % (promotion.end_date)
+					gapPrice = product.price - promotion.detail['promotion_price']
+					promotion.promotion_title = '已优惠%s元' % gapPrice
 				else:
 					promotion.promotion_title = ''
 				product.promotion = promotion.to_dict('detail', 'type_name')
