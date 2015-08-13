@@ -1061,7 +1061,7 @@ class OAUTHMiddleware(object):
 		if member is None:
 			#创建会员信息
 			try:
-				member = member_util.create_member_by_social_account(request.user_profile, social_account)
+				member = member_util.create_member_by_social_account(request.user_profile, social_account, True)
 				member_util.member_basic_info_updater(request.user_profile, member, True)
 				#member = Member.objects.get(id=member.id)
 				#之后创建对应的webappuser
@@ -1096,7 +1096,7 @@ class OAUTHMiddleware(object):
 					social_account.openid, unicode_full_stack())
 				watchdog_fatal(notify_message)
 				try:
-					member = member_util.create_member_by_social_account(request.user_profile, social_account)
+					member = member_util.create_member_by_social_account(request.user_profile, social_account, True)
 					#之后创建对应的webappuser
 					_create_webapp_user(member)
 					member.is_new_created_member = True

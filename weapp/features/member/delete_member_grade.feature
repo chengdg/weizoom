@@ -1,4 +1,5 @@
 # __author__ : "冯雪静"
+# __edite__ : "benchi" 没有问题，添加标签
 Feature: 删除会员等级
 	Jobs能删除会员管理中的会员等级
 
@@ -29,7 +30,7 @@ Background:
 		}]
 		"""
 
-@mall2
+@mall2 @member @meberGrade
 Scenario: 1 删除已存在的手动升级的会员等级
 	jobs能删除已存在的会员等级
 
@@ -52,7 +53,7 @@ Scenario: 1 删除已存在的手动升级的会员等级
 		}]
 		"""
 
-@mall2
+@mall2 @member @meberGrade
 Scenario: 2 删除已存在的自动升级的会员等级
 	jobs能删除已存在的会员等级
 

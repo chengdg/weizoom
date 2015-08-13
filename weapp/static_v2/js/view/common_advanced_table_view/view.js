@@ -201,6 +201,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
             app: this.options.app,
             api: this.options.api,
             args: args,
+            method: this.options.apiMethod,
             scope: this,
             success: function(data) {
                 _this.rawData = data;
@@ -638,10 +639,12 @@ W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
     var $div = $(this);
     var app = $div.attr('data-app');
     var api = $div.attr('data-api');
-    var resource = $div.attr('data-resource');
+    var resource = $div.attr('data-resource');    
     if (resource) {
         api = resource;
     }
+
+    var apiMethod = $div.attr('data-method') || 'get';
     var args = $div.attr('data-args');
     var template = $div.attr('data-template-id');
     var initSort = $div.attr('data-init-sort');
@@ -654,7 +657,7 @@ W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
     var sortApi = $div.attr('data-sort-api');
     var itemCountPerPage = $div.attr('data-item-count-per-page');
     var userWebappId = $div.attr('data-user-webapp-id');
-    var outerSelecter = $div.attr('data-outer-selecter');
+    var outerSelecter = $div.attr('data-outer-selecter');    
 
     var autoLoad = $div.data('autoLoad');
     if (autoLoad !== false) {
@@ -673,6 +676,7 @@ W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
         app: app,
         api: api,
         args: args,
+        apiMethod: apiMethod,
         initSort: initSort,
         itemCountPerPage: itemCountPerPage,
         enablePaginator: enablePaginator,

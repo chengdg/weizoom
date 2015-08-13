@@ -117,8 +117,8 @@ Scenario: 获得购买趋势
 
 	When 微信用户批量消费jobs的商品
 		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 7天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 7天前      | bill     | 测试 | jobs      |叫花鸡,1  |          |        | 支付    |           |
+		| 7天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |  1      | 支付    |           |
+		| 7天前      | bill     | 测试 | jobs      |叫花鸡,1  |          |  1      | 支付    |           |
 		| 7天前      | tom      | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
 		| 7天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        |         | jobs,取消 |
 		| 7天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |
@@ -154,10 +154,10 @@ Scenario: 获得购买趋势
 		| 3天前      | 2             | 22.2  |
 		| 2天前      | 0             | 0.0   |
 		| 1天前      | 3             | 33.3  |
-		| 今天       | 1             | 11.1  |
 
 
-@mall2 @mall.outline 
+
+@mall2 @mall.outline
 Scenario: 获得商铺首页的代发货订单列表
 	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
 
