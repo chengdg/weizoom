@@ -265,21 +265,21 @@ signals.post_save.connect(update_webapp_product_detail_cache,
 
 
 #这部分代码已经转移到webapp_cache.util中  duhao 2015-08-13
-# def update_webapp_product_model_cache(**kwargs):
-#     model = kwargs.get('instance', None)
-#     if model and model[0].stocks < 1:
-#         model = model[0]
-#         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
-#             model.owner_id, model.product_id)
-#         cache_util.delete_cache(key)
+def update_webapp_product_model_cache(**kwargs):
+    model = kwargs.get('instance', None)
+    if model and model[0].stocks < 1:
+        model = model[0]
+        key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
+            model.owner_id, model.product_id)
+        cache_util.delete_cache(key)
 
-#         if model.owner_id != 216:
-#             key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
-#                 model.product_id)
-#             cache_util.delete_cache(key)
+        if model.owner_id != 216:
+            key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
+                model.product_id)
+            cache_util.delete_cache(key)
 
-# post_update_signal.connect(update_webapp_product_model_cache,
-#                            sender=mall_models.ProductModel, dispatch_uid="product_model.update")
+post_update_signal.connect(update_webapp_product_model_cache,
+                           sender=mall_models.ProductModel, dispatch_uid="product_model.update")
 
 
 def update_webapp_product_detail_by_review_cache(**kwargs):
