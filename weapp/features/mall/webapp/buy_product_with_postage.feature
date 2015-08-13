@@ -740,6 +740,7 @@ Scenario: 更新邮费配置后进行购买
 		}
 		"""
 # _edit_ : "新新"
+@mall2
 Scenario: 不同等级的会员购买有会员价同时有运费配置
 #包邮条件:金额取商品原价的金额
 	Given jobs登录系统
@@ -750,7 +751,8 @@ Scenario: 不同等级的会员购买有会员价同时有运费配置
 			"price": 100.00,
 			"member_price": true,
 			"weight": 1,
-			"postage": "系统"
+			"postage": "系统",
+			"is_member_product": "on"
 		}]
 		"""
 	When jobs添加会员等级
@@ -758,22 +760,29 @@ Scenario: 不同等级的会员购买有会员价同时有运费配置
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"discount": "9"
 		}]
+		"""
+	And jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
 		"""
 	Then jobs能获取会员等级列表
 		"""
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"discount": "9"
 		}]
 		"""
-	Then jobs可以获得会员列表
+	And jobs可以获得会员列表
 		"""
 		[{
 			"name": "tom",
@@ -801,17 +810,17 @@ Scenario: 不同等级的会员购买有会员价同时有运费配置
 		{
 			"status": "待支付",
 			"final_price": 200.00,
-			"members_money": 0,
 			"postage": 0.00,
 			"integral_money":0.00,
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品14",
-				"member_price": 100.00,
+				"price": 100.00,
 				"count": 2
 			}]
 		}
 		"""
+		# "members_money": 0,
 			
 ###bill购买,订单金额
 	When bill访问jobs的webapp
@@ -831,16 +840,16 @@ Scenario: 不同等级的会员购买有会员价同时有运费配置
 		{
 			"status": "待支付",
 			"final_price": 180.00,
-			"members_money":20,
 			"postage": 0.00,
 			"integral_money":0.00,
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品14",
-				"member_price": 90.00,
-				"type": "members",
+				"price": 90.00,
 				"count": 2
 			}]
 		}
 		"""
+		# "members_money":20,
+		#		"type": "members",
 	

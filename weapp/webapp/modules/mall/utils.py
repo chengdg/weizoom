@@ -107,45 +107,6 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
         return False
 
 
-def get_display_price(discount, member_grade_id, product):
-    """商品促销类型，更新商品价格
-
-    Return:
-      product
-    """
-    # 如果用户不是会员
-    if not member_grade_id:
-        return product.original_price
-    # 如果用户是会员
-    else:
-        # 商品参加促销
-        if hasattr(product, 'promotion') and product.promotion:
-            promotion_type = int(product.promotion.get('type'))
-            # 限时抢购
-            if promotion_type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-                # user是否满足限时抢购条件
-                if has_promotion(member_grade_id, int(product.promotion['member_grade_id'])):
-                    return product.promotion['detail']['promotion_price']
-            # # 买赠
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-            #     pass
-            # # 满减
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
-            #     pass
-            # # 优惠券
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_COUPON:
-            #     pass
-            # # 积分抵扣
-            # elif promotion_type == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
-            #     if has_promotion(member_grade_id, int(product.integral_sale['member_grade_id'])):
-            #         return product
-        # 商品是否参加会员折扣
-        if product.is_member_product:
-            return product.original_price * discount
-        else:
-            return product.original_price
-
-
 def get_user_product_saved_price(discount, member_grade_id, product):
     """根据用户的类别（会员/非会员）等级以及商品的促销返回商品优惠了多少钱.
          比如商品原价100， 促销价80， 这优惠了20元
@@ -213,19 +174,16 @@ def group_product_by_promotion(request, products):
     NO_PROMOTION_ID = -1  # 负数的promotion id表示商品没有promotion
     product_groups = []
     promotion2products = {}
-    print 'jz---2', len(products)
     for product in products:
         #对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
         group_id += 1
         default_products = {"group_id": group_id, "products": []}
         promotion_name = _get_promotion_name(product)
-        print 'jz-----3', promotion_name
         promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
 
     now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     items = promotion2products.items()
     items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))
-    print 'jz----', len(items)
     for promotion_id, group_info in items:
         products = group_info['products']
         group_id = group_info['group_id']
@@ -544,7 +502,6 @@ def _get_promotion_name(product):
     """
 
     if not product.promotion:
-        print 'jz----4'
         return None
     else:
         promotion = product.promotion

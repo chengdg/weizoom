@@ -441,6 +441,19 @@ $(document).ready(function() {
                     price = (product_promotion.detail.promotion_price).toFixed(2);
                     msg = '促销价';
                 }
+                if(!is_user_has_promotion){
+                    // 促销bu对此用户开发
+                    var next_promotions = $('.xa-display-promotion').next('div');
+                    if(next_promotions.length==0){
+                        // mei ji fen ying yong
+                        $('.xa-promotionSection').remove()
+                    }else if(next_promotions.length == 1){
+                        // you ji fen ying yong
+                        $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
+                        next_promotions.remove()
+                    }
+
+                }
             // 商品无促销
             }
             if(!is_user_has_promotion){
@@ -453,18 +466,18 @@ $(document).ready(function() {
                     msg = '会员价';
                 }
             }
-
             // 处理会员价
             if (msg){
-                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice">'+ view.priceInfo.min_price +'</span></span>';
+                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
                 $('.xa-priceSection').html(temp);
 
-            }else{
-                // 移除多余促销信息
-                if(product_promotion && product_promotion.type === 1){
-                    $('.xa-promotionSection').remove();
-                }
             }
+            //(msg === '' || msg === "会员价"){
+            //  // 移除多余促销信息
+            //  if(is_product_promotion && !is_user_has_promotion){
+            //      //$('.xa-promotionSection').remove();
+            //  }
+            //
         },
         error: function(data) {
 

@@ -134,7 +134,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if($('.xa-promotion').data('type')==5){
             var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-            cut_price = (this.targetModel.price * discount).toFixed(2);
+            var price = this.targetModel.price;
+            if(this.discount){
+                price = price * this.discount / 100;
+            }
+            cut_price = (price * discount).toFixed(2);
             use_integral = parseInt(cut_price * perYuanOfPerIntegral);
             cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
             if(this.usableIntegral < use_integral){
@@ -270,7 +274,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if($('.xa-promotion').data('type')==5){
             var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-            cut_price = (this.priceInfo.min_price * discount).toFixed(2);
+            var price = this.priceInfo.min_price;
+            if(this.discount){
+                price = price * this.discount / 100;
+            }
+            cut_price = (price * discount).toFixed(2);
             use_integral = parseInt(cut_price * perYuanOfPerIntegral);
             cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
             if(this.usableIntegral < use_integral){
@@ -584,7 +592,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     //do nothing
                     if (this.promotion.type == 1) {
                         change_price = this.promotion.detail.promotion_price.toFixed(2)//无规格时，显示抢购的价钱
-                        
+
                     }
                 } else {
                     change_price = model.price.toFixed(2);
@@ -592,7 +600,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 if(this.discount < 100){
                     $('.xa-orPrice').text(change_price);
                     change_price = (change_price * this.discount / 100).toFixed(2);
-                    // alert(change_price)
                 }
                 $('.xa-singlePrice').text(change_price);
                 // 是不是没有用 @洪大师
@@ -600,11 +607,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
                 // $('.xa-market-price').text(model.market_price);
                 // if ('object' == '{{product.type}}'){
-                //     alert(1)
                 //     $('.xa-disabledBuyLinks').hide();
                 //     $('.xa-enabledBuyLinks').show();
                 // }else if (this.useIntegral < model.price) {
-                //     alert(2)
                 //     $('.xa-disabledIntegralBuyLinks').show();
                 //     $('.xa-disabledBuyLinks').hide();
                 //     $('.xa-enabledBuyLinks').hide();
