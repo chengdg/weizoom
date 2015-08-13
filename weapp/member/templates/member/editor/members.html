@@ -387,7 +387,6 @@ $(document).ready(function() {
 	//给多人发优惠券
 	$(document).delegate('.xa-select-member', 'click', function(event){
 		var member_ids = [];
-		console.log("view.filter_value",view.filter_value);
 		$('input.xa-select:checked').each(function(){;
 			if($(this).parent().parent().data('status') == '1'){
     			member_ids.push($(this).parent().parent().attr('data-id'));
@@ -435,7 +434,6 @@ $(document).ready(function() {
 			member_name: member_name,
 			member_count: member_ids.length,
 			success: function(data){
-				console.log(data, "success");
 
 				if (!data.couponRuleId){
 					W.showHint('error', '请选择优惠券！');

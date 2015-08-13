@@ -20,7 +20,8 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     beforeShow: function() {
         this.table.reset();
         $(".xa-member-coupon-send").removeClass('disabled');
-        $(".xa-member-info").removeClass('hide');
+        $(".xa-member-info-block").addClass('hide');
+        $(".xa-member-coupon-send").css('background-color',"#207cbe");
     },
 
     onShow: function(options) {
@@ -43,7 +44,9 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     afterShow: function(options) {
         if(!$('.xa-member-couponTable').data('length')){
             $(".xa-member-coupon-send").addClass('disabled');
-            $(".xa-member-info-block").addClass('hide');
+            $(".xa-member-coupon-send").css('background-color',"#ccc");
+        }else{
+            $(".xa-member-info-block").removeClass('hide');
         }
     },
 
