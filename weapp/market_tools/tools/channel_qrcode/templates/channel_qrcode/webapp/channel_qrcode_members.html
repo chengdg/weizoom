@@ -72,21 +72,41 @@
 <div class="xui-RecommendedDetailPage">
 	<div class="xui-general">
 		<div class=" xa-general">
-			<p>扫码人数：<span class="xui-red">{{channel_qrcode_members_count}}</span></p>
-			<p>下单人数：<span class="xui-red">{{payed_count}}</span></p>
-			<p>成交金额：<span class="xui-red">￥{{pay_money}}</span></p>
+			<p>扫码人数：<span class="xui-red">200</span></p>
+			<p>下单人数：<span class="xui-red">2</span></p>
+			<p>成交金额：<span class="xui-red">￥200.00</span></p>
 		</div>
 	</div>
 	<div class="xui-tableview">
-		{% for channel_qrcode_member in channel_qrcode_members %}
 		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}" />
-			<p class="xui-p">{{channel_qrcode_member.member.username}}</p>
-			{% if not channel_qrcode_member.member.is_subscribed %}
-			<div class="xui-yellowBar">已跑路</div>
-			{% endif %}
+			<img class="xui-img" />
+			<p class="xui-p"> 东方神起</p>
 		</div>
-		{% endfor %}
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+			<div class="xui-yellowBar">已跑路</div>
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" />
+		</div>
 	</div>
 
 </div>
