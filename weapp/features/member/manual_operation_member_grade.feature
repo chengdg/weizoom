@@ -79,7 +79,7 @@ Background:
 		}]
 		"""
 
-@mall2 @ztq
+@mall2
 Scenario: 1 手动把会员调到自动升级的会员等级里面
 	jobs手动调整已有会员的会员等级
 	1. jobs能获取会员列表
