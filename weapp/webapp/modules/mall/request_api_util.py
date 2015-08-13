@@ -28,6 +28,7 @@ from core.send_order_email_code import *
 from market_tools.tools.coupon import util as coupon_util
 
 from webapp.handlers import event_handler_util
+from webapp import cache_util
 
 
 def product_stocks(request):
@@ -37,31 +38,42 @@ def product_stocks(request):
 	product_id = request.GET.get('product_id', None)
 	model_ids = request.GET.get('model_ids', None)
 
-	result_data = dict()
-
-	if product_id:
-		models = ProductModel.objects.filter(product_id=product_id)
-	elif model_ids:
-		model_ids = model_ids.split(",")
-		models = ProductModel.objects.filter(id__in=model_ids)
-	else:
-		models = []
-
+	#改为从缓存读取库存数据 duhao 2015-08-13
 	response = create_response(200)
-	if len(models) == 1:
-		model_data = dict()
-		model_data["stocks"] = models[0].stocks
-		model_data["stock_type"] = models[0].stock_type
-		response.data = model_data
-	elif len(models) > 1:
-		for model in models:
-			model_data = dict()
-			model_data["stocks"] = model.stocks
-			model_data["stock_type"] = model.stock_type
-			result_data[model.id] = model_data
-		response.data = result_data
+	if product_id:
+		response.data = cache_util.get_product_stocks_from_cache(product_id)
+	elif model_ids:
+		response.data = cache_util.get_product_stocks_from_cache(model_ids, True)
 	else:
 		return create_response(500).get_response()
+
+	return response.get_response()
+
+	# result_data = dict()
+
+	# if product_id:
+	# 	models = ProductModel.objects.filter(product_id=product_id)
+	# elif model_ids:
+	# 	model_ids = model_ids.split(",")
+	# 	models = ProductModel.objects.filter(id__in=model_ids)
+	# else:
+	# 	models = []
+
+	# response = create_response(200)
+	# if len(models) == 1:
+	# 	model_data = dict()
+	# 	model_data["stocks"] = models[0].stocks
+	# 	model_data["stock_type"] = models[0].stock_type
+	# 	response.data = model_data
+	# elif len(models) > 1:
+	# 	for model in models:
+	# 		model_data = dict()
+	# 		model_data["stocks"] = model.stocks
+	# 		model_data["stock_type"] = model.stock_type
+	# 		result_data[model.id] = model_data
+	# 	response.data = result_data
+	# else:
+	# 	return create_response(500).get_response()
 
 	return response.get_response()
 
