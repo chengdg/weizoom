@@ -62,7 +62,6 @@ def __get_request_url(request):
 
 def is_product_stocks_request(request):
 	url = __get_request_url(request)
-	print '=======================',url
 	return ('target_api=product_stocks' in url)
 
 def is_pay_request(request):
