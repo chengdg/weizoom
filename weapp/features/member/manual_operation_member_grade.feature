@@ -206,50 +206,50 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 		"""
 
 
-@mall2
-Scenario: 2 手动添加积分使会员升级
-	手动添加积分使会员升级
-  	1. 添加少量积分会员不升级
-  	2. 添加足够积分后会员升级
-
-  	Given jobs给bill增加100积分
-  	Given jobs给tom增加100积分
-	Then jobs可以获得会员列表
-	"""
-		[{
-			"name": "tom",
-			"member_rank": "铜牌会员",
-			"pay_money": 0.00,
-			"pay_times": 0,
-			"experience": 10100,
-			"integral":10100
-		}, {
-			"name": "bill",
-			"member_rank": "普通会员",
-			"pay_money": 0.00,
-			"pay_times": 0,
-			"experience": 1100,
-			"integral":1100
-		}]
-	"""
-
-  	Given jobs给bill增加10000积分
-  	Given jobs给tom增加80000积分
-	Then jobs可以获得会员列表
-		"""
-		[{
-			"name": "tom",
-			"member_rank": "银牌会员",
-			"pay_money": 0.00,
-			"pay_times": 0,
-			"experience": 90100,
-			"integral":90100
-		}, {
-			"name": "bill",
-			"member_rank": "铜牌会员",
-			"pay_money": 0.00,
-			"pay_times": 0,
-			"experience": 11100,
-			"integral":11100
-		}]
-		"""
+#@mall2
+#Scenario: 2 手动添加积分使会员升级
+#	手动添加积分使会员升级
+#  	1. 添加少量积分会员不升级
+#  	2. 添加足够积分后会员升级
+#
+#  	Given jobs给bill增加100积分
+#  	Given jobs给tom增加100积分
+#	Then jobs可以获得会员列表
+#	"""
+#		[{
+#			"name": "tom",
+#			"member_rank": "铜牌会员",
+#			"pay_money": 0.00,
+#			"pay_times": 0,
+#			"experience": 10100,
+#			"integral":10100
+#		}, {
+#			"name": "bill",
+#			"member_rank": "普通会员",
+#			"pay_money": 0.00,
+#			"pay_times": 0,
+#			"experience": 1100,
+#			"integral":1100
+#		}]
+#	"""
+#
+#  	Given jobs给bill增加10000积分
+#  	Given jobs给tom增加80000积分
+#	Then jobs可以获得会员列表
+#		"""
+#		[{
+#			"name": "tom",
+#			"member_rank": "银牌会员",
+#			"pay_money": 0.00,
+#			"pay_times": 0,
+#			"experience": 90100,
+#			"integral":90100
+#		}, {
+#			"name": "bill",
+#			"member_rank": "铜牌会员",
+#			"pay_money": 0.00,
+#			"pay_times": 0,
+#			"experience": 11100,
+#			"integral":11100
+#		}]
+#		"""

@@ -60,6 +60,10 @@ def get_webappid_from_request(request):
 def __get_request_url(request):
 	return request.get_full_path()
 
+def is_product_stocks_request(request):
+	url = __get_request_url(request)
+	return ('target_api=product_stocks' in url)
+
 def is_pay_request(request):
 	url = __get_request_url(request)
 	return ('/webapp/wxpay/' in url) or ('/webapp/alipay/' in url) or ('/pay/' in url)

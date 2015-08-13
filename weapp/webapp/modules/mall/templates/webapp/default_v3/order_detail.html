@@ -75,6 +75,7 @@
                             </span>
                         {% endif %}
                         {% endif %}
+                        {% if product.grade_discounted_money %}<span class="xui-giftTag">会员优惠</span>{% endif %}
                         {% if not product.id %}<span class="xui-giftTag">赠品</span>{% endif %}
                         <img src="{{product.thumbnails_url}}"/>
                     </div>
@@ -149,13 +150,13 @@
         {% if order.integral %}
         <p class="zoom">
             <span class="fl">积分抵扣</span>
-            <span class="fr">-￥<span class="xa-integralMoney">{{ order.integral_money | floatformat:"2"}}</span>
+            <span class="fr">-￥<span class="xa-integralMoney">{{ order.integral_money | floatformat:"2"}}</span></span>
         </p>
         {% endif %}
         {% if order.has_promotion_saved_money %}
         <p class="zoom">
             <span class="fl">促销优惠</span>
-            <span class="fr">-￥<span class="">{{ order.promotion_saved_money | floatformat:"2"}}</span>
+            <span class="fr">-￥<span class="">{{ order.promotion_saved_money | floatformat:"2"}}</span></span>
         </p>
         {% endif %}
         {% if order.coupon_id %}
