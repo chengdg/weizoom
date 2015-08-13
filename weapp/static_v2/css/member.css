@@ -46,21 +46,39 @@
 /*
 *会员等级页面
 */
+.xui-members-page .errorHint{
+	padding-top: 0;
+}
 .xui-members-page .xui-content{
 	margin-left: 0px !important;
 	background-color:#EAEEF5;
-	height: 960px;
+	min-height: 830px;
 }
-
+.xui-members-page .xui-tips{
+	position:absolute;
+	right:0;
+	width:288px;
+	background:#fff;
+	border:1px solid #ccc;
+	color:#666;
+	padding:12px 10px 8px 25px;
+}
+.xui-members-page .checkbox input[type="checkbox"]{
+	margin-top:2px;
+}
+.xui-members-page .checkbox label{
+	padding-left: 0;
+}
+.xui-members-page .xui-tips li{
+	margin-bottom: 5px;
+}
+.xui-members-page .xui-tips li span{
+	position: absolute;
+	left: 10px;
+}
 .xui-members-page .table th{
 	height: 39px;
 	background-color: #C7D1E5;
-}
-.xui-members-page .table{
-
-	width: 95%;
-	margin: auto;
-	margin-top: 20px;
 }
 .xui-members-page .table tbody tr{
     height:100px; 
@@ -89,12 +107,11 @@
    width:10%;
 }
 
-.xui-members-page .table .xui-td-left{
+/*.xui-members-page .table .xui-td-left{
   float: left;
-  width:60%;
   padding-left: 30px;
   padding-top: 10px;
-}
+}*/
 .xui-members-page .table .xui-td-right{
   float: right;
   width:40%;
@@ -117,28 +134,23 @@
 .xui-members-page .table .xui-grade{
    width: 100px;
    margin: auto;
-   text-align: center;
-} 
-
-.xui-members-page .xui-p-title{
-	margin-left: 20px;
-	padding-top: 15px;
-
 }
-.xui-td-spanxui-p-title
-{
+.xui-td-span .xui-p-title{
 	font-weight:bold;
 	margin-left: 15px;
 }
 .xui-members-page .xui-td-span{
 	line-height: 30px;
+	text-align: right;
+	display: inline-block;
+	width: 72px;
+}
+.xui-members-page .td-requirement .form-control,
+.xui-members-page .td-discount .form-control{
+	display: inline-block;
 }
 .xui-members-page .errorHint{
-	
-	width: 80px;
-	margin-left: 95px;
-	position: relative;
-	top:-3px;
+	text-align: center;
 }
 
 /*

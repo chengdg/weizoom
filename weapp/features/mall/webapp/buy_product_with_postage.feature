@@ -1,4 +1,5 @@
-# __edit__ : "benchi"
+# _edit_ : "benchi"
+# _edit_ : "新新"
 Feature: 在webapp中购买有运费的商品
 	用户能在webapp中购买"有运费的商品"
 
@@ -738,5 +739,117 @@ Scenario: 更新邮费配置后进行购买
 			"coupon_money":0.00
 		}
 		"""
-
-
+# _edit_ : "新新"
+@mall2
+Scenario: 不同等级的会员购买有会员价同时有运费配置
+#包邮条件:金额取商品原价的金额
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "商品14",
+			"price": 100.00,
+			"member_price": true,
+			"weight": 1,
+			"postage": "系统",
+			"is_member_product": "on"
+		}]
+		"""
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}]
+		"""
+	And jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"discount": "10"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}]
+		"""
+	And jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}]
+		"""
+###tom购买,订单金额
+	When tom访问jobs的webapp
+	When tom购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品14",
+				"count": 2
+			}],
+			"ship_area":"北京市",
+			"ship_address":"呱呱"
+		}
+		"""
+	Then tom成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 200.00,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品14",
+				"price": 100.00,
+				"count": 2
+			}]
+		}
+		"""
+		# "members_money": 0,
+			
+###bill购买,订单金额
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品14",
+				"count": 2
+			}],
+			"ship_area":"北京市",
+			"ship_address":"呱呱"
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 180.00,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品14",
+				"price": 90.00,
+				"count": 2
+			}]
+		}
+		"""
+		# "members_money":20,
+		#		"type": "members",
+	

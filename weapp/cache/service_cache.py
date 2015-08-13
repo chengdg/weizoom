@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 """@package cache.service_cache
 服务 状态, 响应，性能，　剖析　数据　缓存／存储　接口
 
@@ -8,8 +9,9 @@ BDD feature: `user_center_cache.feature`
 
 __author__ = 'abael'
 
-import logging,re, redis
-from django.conf import settings
+import logging
+import re
+import redis
 from django.core.cache import parse_backend_conf
 
 log = logging.getLogger('weapp.service_cache')
@@ -37,7 +39,7 @@ if redis_loc is None:
     sys.exit(-1)
 
 locdic = (lambda s: s and s.groupdict() or None)(re.match('((?P<scheme>redis)\:\/\/)?(?P<host>[^\:]{5,})(:(?P<port>[0-9]+)?)', redis_loc, re.I))
-if locdic is None or not locdic.has_key('host'): 
+if locdic is None or not locdic.has_key('host'):
     log.error('Redis location invalid !')
     sys.exit(-1)
 

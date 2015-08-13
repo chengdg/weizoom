@@ -145,7 +145,6 @@ PRODUCT_TYPE2TEXT = {
 MAX_INDEX = 2**16 - 1
 
 
-
 class Product(models.Model):
 	"""
 	商品
@@ -189,8 +188,9 @@ class Product(models.Model):
 	bar_code = models.CharField(max_length=256, default='')  # 条码
 	unified_postage_money = models.FloatField(default=0.0)  # 统一运费金额
 	postage_type = models.CharField(max_length=125, default=POSTAGE_TYPE_UNIFIED)  # 运费类型
-	weshop_sync = models.IntegerField(default=0) # 0不同步 1普通同步 2加价同步
-	weshop_status = models.IntegerField(default=0) # 0待售 1上架 2回收站
+	weshop_sync = models.IntegerField(default=0)  # 0不同步 1普通同步 2加价同步
+	weshop_status = models.IntegerField(default=0)  # 0待售 1上架 2回收站
+	is_member_product = models.BooleanField(default=False)  # 是否参加会员折扣
 
 	class Meta(object):
 		db_table = 'mall_product'
@@ -664,9 +664,7 @@ class Product(models.Model):
 	@staticmethod
 	def get_from_model(product_id, product_model_name):
 		product = Product.objects.get(id=product_id)
-		model = ProductModel.objects.get(
-			product=product,
-			name=product_model_name)
+		model = ProductModel.objects.get(product_id=product_id, name=product_model_name)
 
 		product.price = model.price
 		product.weight = model.weight
@@ -678,7 +676,6 @@ class Product(models.Model):
 
 		property_ids = []
 		property_value_ids = []
-		name = product.model_name
 		if product.model_name != 'standard':
 			for model_property_info in product.model_name.split('_'):
 				property_id, property_value_id = model_property_info.split(':')
@@ -706,6 +703,39 @@ class Product(models.Model):
 			product.custom_model_properties = None
 
 		return product
+
+	# @staticmethod
+	# def get_model(product_id, product_model_name):
+	# 	"""得到商品规格名称
+
+	# 	Args:
+	# 	  product_id(int):
+	# 	  product_model_name(str): "X1:Y1[_X2:Y2]+"
+
+	# 	Return: List
+	# 	  example:
+	# 	    [{id:1, name:xxx, property_value: '', property_pic_url: ''}, ...]
+	# 	"""
+	# 	product = Product.objects.get(id=product_id)
+	# 	model = ProductModel.objects.get(product_id=product_id, name=product_model_name)
+
+	# 	product.price = model.price
+	# 	product.weight = model.weight
+	# 	product.stock_type = model.stock_type
+	# 	product.min_limit = product.stocks
+	# 	product.stocks = model.stocks
+	# 	product.model_name = product_model_name
+	# 	product.market_price = model.market_price
+
+	# 	property_ids = []
+	# 	property_value_ids = []
+	# 	if product.model_name != 'standard':
+	# 		ptn_p = r'[a-zA-Z0-9]+(?=:)'
+	# 		ptn_pv = r'(?<=:)[a-zA-Z0-9]+'
+	# 		property_ids = re.findall(ptn_p, product_model_name)
+	# 		property_value_ids = re.findall(ptn_pv, product_model_name)
+	# 		p_id_pv_ids = [i.split(":") for i in product_model_name.split("_")]
+
 
 	# 填充特定的规格信息
 	def fill_specific_model(self, model_name, models=None):
@@ -1367,8 +1397,8 @@ class Order(models.Model):
 	reason = models.CharField(max_length=256, default='')  # 取消订单原因
 	update_at = models.DateTimeField(auto_now=True)  # 订单信息更新时间 2014-11-11
 	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
-	promotion_saved_money = models.FloatField(default=0.0) #促销优惠金额
-	edit_money = models.FloatField(default=0.0) #商家修改差价
+	promotion_saved_money = models.FloatField(default=0.0)  # 促销优惠金额
+	edit_money = models.FloatField(default=0.0)  # 商家修改差价
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1575,7 +1605,6 @@ def belong_to(webapp_id):
 Order.objects.belong_to = belong_to
 #from django.db.models import signals
 # def after_save_order(instance, created, **kwargs):
-#    print '>>>>>>>>>>>>>>>>>>>>> after_save_order <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
 #    print kwargs
 
 
@@ -1613,6 +1642,7 @@ class OrderHasProduct(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
 	promotion_id = models.IntegerField(default=0)  # 促销信息id
 	promotion_money = models.FloatField(default=0.0)  # 促销抵扣金额
+	grade_discounted_money = models.FloatField(default=0.0)  # 折扣金额
 
 	class Meta(object):
 		db_table = 'mall_order_has_product'

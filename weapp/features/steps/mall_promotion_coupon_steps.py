@@ -374,6 +374,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			# url = '/termite/workbench/jqm/preview/?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%s&project_id=0&rule_id=%d&coupon_id=%s' % (context.webapp_owner_id, coupon_rule.id, coupon_id)
 			url = '/webapp/api/project_api/call/?design_mode=0&project_id=market_tool:coupon:0'
 			response = context.client.post(bdd_util.nginx(url), {'target_api': 'coupon/consume', 'rule_id': coupon_rule.id, 'webapp_owner_id':context.webapp_owner_id}, follow=True)
+			time.sleep(1)
 			# response = context.client.post(bdd_util.nginx(url), {'target_api': 'coupon/consume', }, follow=True)
 			#bdd_util.assert_api_call_success(response)
 			#coupon = response.context['coupons'][0]

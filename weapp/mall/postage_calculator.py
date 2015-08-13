@@ -45,7 +45,9 @@ class PostageCalculator(object):
 		total_price = 0.0
 		total_ount = 0
 		for product in products:
-			total_price += product.price * product.purchase_count
+			# jz 2015-08-12
+			# total_price += product.price * product.purchase_count
+			total_price += product.original_price * product.purchase_count
 			total_ount += product.purchase_count
 
 		#包邮条件

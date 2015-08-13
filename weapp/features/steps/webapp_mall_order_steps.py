@@ -83,7 +83,12 @@ def step_click_check_out(context, webapp_user_name):
         'bill': order.ship_name,
         'group2integralinfo': {},
     }
+
     data.update(argument_request)
+    coupon_id = context.product_infos.get('coupon_id', None)
+    if coupon_id:
+        data['is_use_coupon'] = 'true'
+        data['coupon_id'] = coupon_id
     response = context.client.post(url, data)
     content = json.loads(response.content)
     msg = content["data"].get("msg", "")
@@ -331,12 +336,17 @@ def step_impl(context, webapp_user_name):
     actual_order.products = []
     for relation in order_has_products:
         product = relation.product
+        product.price = relation.price
         product.count = relation.number
-        product.fill_specific_model('standard')
+        product.model = relation.product_model_name
+        # product.fill_specific_model('standard')
         actual_order.products.append(product)
 
     expected = json.loads(context.text)
-
+    if 'products' in expected:
+        for product in expected['products']:
+            if 'model' in product:
+                product['model'] = steps_db_util.get_product_model_keys(product['model'])
     bdd_util.assert_dict(expected, actual_order)
 
 

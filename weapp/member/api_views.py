@@ -41,7 +41,7 @@ def __get_request_members_list(request):
 	#获取每页个数
 	count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 	#处理排序
-	sort_attr = request.GET.get('sort_attr', '-created_at')
+	sort_attr = request.GET.get('sort_attr', '-id')
 	#会员过滤
 	filter_value = request.GET.get('filter_value', None)
 
@@ -181,7 +181,8 @@ def __build_return_member_json(member):
 		'pay_times': member.pay_times,
 		'unit_price': '%.2f' % member.unit_price,
 		'is_selected': member.is_selected,
-		'is_current_select': member.is_current_select
+		'is_current_select': member.is_current_select,
+		'experience': member.experience
 	}
 
 def __count_member_follow_relations(member):

@@ -54,7 +54,7 @@
 					{% endif %}
 					{% if 'manage_promotion'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall2/promotion_list/' title='促销管理'>促销管理</a>
+						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall2/flash_sale_list/' title='促销管理'>促销管理</a>
 					</li>
 					{% endif %}
 					{% if 'manage_member'|satisfy_permission:request %}

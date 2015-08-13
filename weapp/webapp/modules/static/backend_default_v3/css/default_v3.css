@@ -1246,7 +1246,7 @@ input.ui-input-text, textarea.ui-input-text {
     padding-top:1px;
 }
 /*会员价标签*/
-/*.xui-productDetailPage .xui-memberPriceTag{
+.xui-productDetailPage .xui-memberPriceTag{
     min-width: 2.8rem;
     vertical-align: inherit;
 }
@@ -1257,7 +1257,7 @@ input.ui-input-text, textarea.ui-input-text {
     margin-left: 5px;
     -webkit-transform:scale(.95);
     transform:scale(.95);
-}*/
+}
 
 
 /*.xui-productDetailPage .xui-promotion-gift li{
@@ -1331,11 +1331,15 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-productDetailPage .xui-rate-panel li:last-child{
     padding-bottom:0px;
 }
-.xui-productDetailPage .xui-rate-panel img{
+.xui-productDetailPage .xui-rate-panel .xui-user{
+    background: url(/static/img/user-1.jpg) no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    display: inline-block;
     box-shadow: 0 0 0 1px #e3e3e3;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     vertical-align: middle;
 }
 .xui-productDetailPage .xui-productInfo-section dl{
@@ -1612,9 +1616,13 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-reviewAllPage .xui-user{
     box-shadow: 0 0 0 1px rgba(227,227,227,.5);
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     vertical-align: middle;
+    background: url(/static/img/user-1.jpg) no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    display: inline-block;
 }
 .xui-reviewAllPage .xui-reviewImg img{
     float: left;
@@ -3277,6 +3285,7 @@ input.ui-input-text, textarea.ui-input-text {
     height: 49px;
     line-height: 49px;
     margin-left: 12px;
+    border-top: 1px solid #dbdbdb;
     position: relative;
 }
 .xui-orderListPage .xui-bottomBtn .xui-button{
@@ -3318,7 +3327,7 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-orderListPage .wui-swiper-slide li:first-child{
     margin-top: 0;
 }
-/*.xui-orderListPage .xui-getRedTip{
+.xui-orderListPage .xui-getRedTip{
     display: inline-block;
     width: 14px;
     height: 15px;
@@ -3326,7 +3335,7 @@ input.ui-input-text, textarea.ui-input-text {
     background-size: cover;
     vertical-align: middle;
     margin: -3px auto 0 6px;
-}*/
+}
 
 
 
@@ -3670,7 +3679,7 @@ position: absolute;
 .xui-payOrderPage .xui-priceItem p:not(:first-child) {
     margin-top: 5px;
 }
-/*.xui-payOrderPage .xui-toGetRedBtn,
+.xui-payOrderPage .xui-toGetRedBtn,
 .xui-payOrderPage .xui-gotRedBtn{
     display: inline-block;
     border-radius: 2px;
@@ -3683,12 +3692,18 @@ position: absolute;
     color:#fff;
     background:#cf0404;
 }
+.xui-payOrderPage .xui-toGetRedBtn:visited{
+    color:#fff;
+}
 .xui-payOrderPage .xui-gotRedBtn{
     color:#cf0404;
     border:1px solid #cf0404;
     -webkit-box-sizing:border-box;
     box-sizing:border-box;
-}*/
+}
+.xui-payOrderPage .xui-gotRedBtn:visited{
+    color:#cf0404;
+}
 .xui-expressPage{
     background-image:-webkit-linear-gradient(left, #f0f0f0 21px, #e0e0e0 21px, #e0e0e0 24px, #f0f0f0 24px);
     background-image:-o-linear-gradient(left, #f0f0f0 21px, #e0e0e0 21px, #e0e0e0 24px, #f0f0f0 24px);

@@ -25,12 +25,12 @@ path = os.path.abspath(os.path.join('.', '..'))
 sys.path.insert(0, path)
 
 import unittest
-import time
+#import time
 from pymongo import Connection
 
 from weapp import settings
 from django.contrib.auth.models import User
-from django.core.management import call_command
+#from django.core.management import call_command
 from django.test.client import Client
 from django.test.utils import setup_test_environment as setup_django_test_environment
 from django.db.models import Q
@@ -69,7 +69,7 @@ from modules.member import models as modules_member_models
 
 from selenium import webdriver
 from test.pageobject.page_frame import PageFrame
-from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+#from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.webdriver.chrome.options import Options
 from apps import models as customized
 from apps import apps_manager
@@ -130,7 +130,7 @@ def __clear_all_account_data():
 	User.objects.filter(id__gt=2).delete()
 
 	#会员
-	#member_models.MemberGrade.objects.all().delete()
+	member_models.MemberGrade.objects.all().delete()
 	SocialAccount.objects.all().delete()
 	member_models.WebAppUser.objects.all().delete()
 	member_models.Member.objects.all().delete()
@@ -208,7 +208,13 @@ def __clear_all_app_data():
 	#会员
 	#member_models.MemberGrade.objects.all().update(usable_integral_percentage_in_order=100)
 	#member_models.WebAppUser.objects.all().delete()
-	#member_models.MemberGrade.objects.all().delete()
+	#
+	weapp_id2grade = dict((grade.webapp_id, grade)for grade in member_models.MemberGrade.objects.filter(is_default_grade=True))
+	not_default_grade = member_models.MemberGrade.objects.filter(is_default_grade=False)
+	for member in member_models.Member.objects.filter(grade_id__in=[grade.id for grade in not_default_grade]):
+		member.grade = weapp_id2grade.get(member.webapp_id)
+		member.save()
+	not_default_grade.delete()
 	member_models.Member.objects.all().delete()
 	member_models.MemberFollowRelation.objects.all().delete()
 	member_models.MemberSharedUrlInfo.objects.all().delete()
@@ -362,7 +368,7 @@ def __create_system_user(username):
 	"""
 	创建系统用户
 	"""
-	start = time.time()
+	#start = time.time()
 	user = UserFactory.create(username=username)
 	product = weapp_product_models.Product.objects.get(name=u'完整版')
 	weapp_product_api.install_product_for_user(user, product.id)
@@ -376,8 +382,8 @@ def __create_system_user(username):
 
 def __create_member_grade(user):
 	member_models.MemberGrade.get_default_grade(user.get_profile().webapp_id)
-	member_grade = member_models.MemberGrade.objects.create(name=u'银牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
-	member_grade = member_models.MemberGrade.objects.create(name=u'金牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
+	# member_grade = member_models.MemberGrade.objects.create(name=u'银牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
+	# member_grade = member_models.MemberGrade.objects.create(name=u'金牌会员', webapp_id=user.get_profile().webapp_id, upgrade_lower_bound=0)
 
 def __create_system_member(username, user):
 	"""
@@ -468,7 +474,7 @@ def before_all(context):
 	__create_weapp_product()
 	__create_system_user('jobs')
 	__create_system_user('nokia')
-	user_bill = __create_system_user('bill')
+	__create_system_user('bill')
 	__create_system_user('tom')
 	# __create_system_user('weizoom')
 	# __create_system_user('tom1')
@@ -478,7 +484,7 @@ def before_all(context):
 	# __create_system_user('tom5')
 	# __create_system_user('tom6')
 	__create_simulator_user()
-	user_guo = __create_system_user('guo')
+	__create_system_user('guo')
 	__create_system_user('manager')
 	#call_command('loaddata', 'regional')
 	__create_shengjing_app()
@@ -567,7 +573,7 @@ def enhance_django_model_class():
 	#Model.__getitem__ = model_getitem
 
 	def model_todict(self, *attrs):
-		columns = [field.get_attname() for field in self._meta.fields]
+		#columns = [field.get_attname() for field in self._meta.fields]
 		result = {}
 		for field in self._meta.fields:
 			result[field.get_attname()] = field.value_from_object(self)

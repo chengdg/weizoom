@@ -39,13 +39,8 @@ def step_impl(context, user):
             })
         if 'rules' in promotion:
             for rule in promotion['rules']:
-                if rule.has_key('member_grade_name'):
-                    if rule['member_grade_name'] == '全部会员':
-                        member_grade_id = -1
-                    else:
-                        member_grade_id = MemberGrade.objects.get(webapp_id=webapp_id,name=rule['member_grade_name']).id
-                    rule.pop('member_grade_name')
-                    rule['member_grade_id'] = member_grade_id
+                if rule.has_key('member_grade'):
+                    rule['member_grade_id'] = __get_member_grade(rule, context.webapp_id)
         else:
             rules = [{
                 "member_grade_id": -1,
@@ -55,7 +50,7 @@ def step_impl(context, user):
         data = {
             'name': promotion['name'],
             'promotion_title': promotion.get('promotion_title', ''),
-            'member_grade': promotion.get('member_grade', 0),
+            'member_grade': __get_member_grade(promotion, context.webapp_id),
             'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
             'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
             'products': json.dumps(product_ids),
@@ -88,7 +83,7 @@ def step_impl(context, user):
         data = {
             'name': promotion['name'],
             'promotion_title': promotion.get('promotion_title', ''),
-            'member_grade': promotion.get('member_grade', 0),
+            'member_grade': __get_member_grade(promotion, context.webapp_id),
             'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
             'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
             'products': json.dumps(product_ids),
@@ -130,7 +125,7 @@ def step_create_premium_sale(context, user):
         data = {
             'name': promotion['name'],
             'promotion_title': promotion.get('promotion_title', ''),
-            'member_grade': promotion.get('member_grade', 0),
+            'member_grade': __get_member_grade(promotion, context.webapp_id),
             'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
             'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
             'products': json.dumps(product_ids),
@@ -162,7 +157,7 @@ def step_create_flash_sales(context, user):
         data = {
             'name': promotion['name'],
             'promotion_title': promotion.get('promotion_title', ''),
-            'member_grade': promotion.get('member_grade', 0),
+            'member_grade': __get_member_grade(promotion, context.webapp_id),
             'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
             'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
             'products': json.dumps(product_ids),
@@ -175,3 +170,11 @@ def step_create_flash_sales(context, user):
         url = '/mall2/api/flash_sale/?_method=put'
         response = context.client.post(url, data)
         bdd_util.assert_api_call_success(response)
+
+def __get_member_grade(promotion, webapp_id):
+    member_grade = promotion.get('member_grade', 0)
+    if member_grade == u'全部':
+        member_grade = 0
+    elif member_grade:
+        member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id
+    return member_grade

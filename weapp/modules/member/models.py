@@ -200,26 +200,26 @@ class WebAppUser(models.Model):
 			return get_my_coupons(self.member_id)
 
 	#############################################################################
-	# use_coupon: 使用优惠券
+	# use_coupon: 使用优惠券 jz 2015-08-10
 	#############################################################################
-	def use_coupon(self, coupon_id, price=0):
-		if coupon_id > 0:
-			try:
-				coupon = coupon_model.Coupon.objects.get(id=coupon_id, status=coupon_model.COUPON_STATUS_UNUSED)
-			except:
-				raise IOError
-			coupon.money = float(coupon.money)
-			coupon_role = coupon_model.CouponRule.objects.get(id=coupon.coupon_rule_id)
-			coupon.valid_restrictions = coupon_role.valid_restrictions
-			if coupon.valid_restrictions > price and coupon.valid_restrictions != -1:
-				raise ValueError
-			coupon_model.Coupon.objects.filter(id=coupon_id).update(status=coupon_model.COUPON_STATUS_USED)
-		else:
-			coupon = coupon_model.Coupon()
-			coupon.money = 0.0
-			coupon.id = coupon_id
+	# def use_coupon(self, coupon_id, price=0):
+	# 	if coupon_id > 0:
+	# 		try:
+	# 			coupon = coupon_model.Coupon.objects.get(id=coupon_id, status=coupon_model.COUPON_STATUS_UNUSED)
+	# 		except:
+	# 			raise IOError
+	# 		coupon.money = float(coupon.money)
+	# 		coupon_role = coupon_model.CouponRule.objects.get(id=coupon.coupon_rule_id)
+	# 		coupon.valid_restrictions = coupon_role.valid_restrictions
+	# 		if coupon.valid_restrictions > price and coupon.valid_restrictions != -1:
+	# 			raise ValueError
+	# 		coupon_model.Coupon.objects.filter(id=coupon_id).update(status=coupon_model.COUPON_STATUS_USED)
+	# 	else:
+	# 		coupon = coupon_model.Coupon()
+	# 		coupon.money = 0.0
+	# 		coupon.id = coupon_id
 
-		return coupon
+	# 	return coupon
 
 	#############################################################################
 	# use_coupon_by_coupon_id: 使用优惠券通过优惠券号
@@ -259,30 +259,31 @@ class WebAppUser(models.Model):
 		process_payment_with_shared_info(request)
 
 	#############################################################################
-	# get_discount: 获取折扣信息
+	# get_discount: 获取折扣信息 jz 2015-08-10
 	#############################################################################
-	def get_discount(self):
-		if not hasattr(self, '_grade'):
-			if not self.is_member:
-				self._grade = {'grade':'', 'discount':100}
-			else:
-				target_grade_id = self.member.grade_id
-				target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
+	# def get_discount(self):
+	# 	if not hasattr(self, '_grade'):
+	# 		if not self.is_member:
+	# 			self._grade = {'grade':'', 'discount':100}
+	# 		else:
+	# 			target_grade_id = self.member.grade_id
+	# 			target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
 
-				if not target_member_grade:
-					self._grade = {'grade':'', 'discount':100}
-				else:
-					self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
-		return self._grade
+	# 			if not target_member_grade:
+	# 				self._grade = {'grade':'', 'discount':100}
+	# 			else:
+	# 				self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
+	# 	return self._grade
 
 	#############################################################################
-	# get_discounted_money: 获取折扣后的金额
+	# jz 2015-08-10
+	# get_discounted_money: 获取折扣后的金额 
 	# product_type: 商品类型
 	# 1、如果折扣为100% 或者 商品类型为积分商品，返回当前的价格
 	# 2、折扣不为100% 并且不是积分商品，计算折扣
 	#############################################################################
-	def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
-		return money, 0
+	# def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
+	# 	return money, 0
 		'''
 		grade_discount = self.get_discount()
 		if grade_discount['discount'] == 100 or product_type == PRODUCT_INTEGRAL_TYPE:
@@ -329,7 +330,7 @@ class MemberGrade(models.Model):
 	webapp_id = models.CharField(max_length=16, db_index=True, verbose_name='所关联的app id')
 	name = models.TextField()
 	is_auto_upgrade = models.BooleanField(default=False, verbose_name='是否凭经验值自动升级')
-	upgrade_lower_bound = models.IntegerField(verbose_name='该等级的经验值下限')
+	upgrade_lower_bound = models.IntegerField(default=0, verbose_name='该等级的经验值下限')
 	shop_discount = models.IntegerField(default=100, verbose_name='购物折扣')
 	is_default_grade = models.BooleanField(default=False)
 	# 14迭代 bert add
@@ -338,6 +339,10 @@ class MemberGrade(models.Model):
 	pay_money = models.FloatField(default=0.00)
 	pay_times = models.IntegerField(default=0)
 	integral = models.IntegerField(default=0)
+
+	# @staticmethod
+	# def is_auto_grade(id):
+	# 	return MemberGrade.objects.get(id=id).is_auto_upgrade
 
 	class Meta(object):
 		db_table = 'member_grade'
@@ -373,18 +378,20 @@ class MemberGrade(models.Model):
 				webapp_id = webapp_id,
 				name = MemberGrade.DEFAULT_GRADE_NAME,
 				upgrade_lower_bound = 0,
-				is_default_grade = True
+				is_default_grade = True,
+				is_auto_upgrade = True
 			)
 
 	@staticmethod
 	def get_all_grades_list(webapp_id):
 		if webapp_id is None:
 			return []
-		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id)
+		member_grades = MemberGrade.objects.filter(webapp_id=webapp_id).order_by('id')
 
 		for member_grade in member_grades:
 			member_grade.pay_money = '%.2f' % member_grade.pay_money
 		return member_grades
+
 
 #===============================================================================
 # Member : 会员
@@ -439,6 +446,7 @@ class Member(models.Model):
 	@property
 	def get_webapp_user_ids(self):
 		return [webapp_user.id for webapp_user in WebAppUser.objects.filter(member_id=self.id)]
+
 
 	@staticmethod
 	def from_webapp_user(webapp_user):
@@ -639,11 +647,15 @@ class Member(models.Model):
 			return None
 
 	@staticmethod
-	def update_member_grade(member_id, grade_id):
-		from django.db import connection, transaction
-		cursor = connection.cursor()
-		cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member_id))
-		transaction.commit_unless_managed()
+	def update_member_grade(member, grade_id):
+		"""
+		updated by zhu tianqi,修改为会员等级高于目标等级时不降级
+		"""
+		if member.grade_id <grade_id:
+			from django.db import connection, transaction
+			cursor = connection.cursor()
+			cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member.id))
+			transaction.commit_unless_managed()
 
 	@property
 	def is_binded(self):
@@ -695,7 +707,7 @@ class MemberInfo(models.Model):
 	qq_number = models.CharField(max_length=13, blank=True)
 	weibo_nickname = models.CharField(max_length=16, verbose_name='微博昵称')
 	member_remarks = models.TextField(max_length=1024, blank=True)
-	#new add by bert 
+	#new add by bert
 	is_binded = models.BooleanField(default=False)
 	session_id = models.CharField(max_length=1024, blank=True)
 	captcha = models.CharField(max_length=11, blank=True) #验证码
@@ -714,7 +726,7 @@ class MemberInfo(models.Model):
 		if member_id is None or member_id <= 0:
 			return None
 		try:
-			return MemberInfo.objects.filter(member_id=member_id)[0] 
+			return MemberInfo.objects.filter(member_id=member_id)[0]
 		except:
 			return MemberInfo.objects.create(
 					member_id=member_id,
@@ -724,7 +736,7 @@ class MemberInfo(models.Model):
 					)
 	@staticmethod
 	def is_can_binding(phone_number, member_id, webapp_id):
-		return not MemberInfo.objects.filter(member__webapp_id=webapp_id, is_binded=True, phone_number=phone_number).count() > 0 
+		return not MemberInfo.objects.filter(member__webapp_id=webapp_id, is_binded=True, phone_number=phone_number).count() > 0
 
 
 
@@ -901,6 +913,7 @@ class IntegralStrategySttings(models.Model):
 	buy_via_offline_increase_count_percentage_for_author = models.CharField(max_length=25, verbose_name="线下会员购买为推荐者额外增加的额度(以订单金额的百分比计算）", default="0.0")
 	use_ceiling = models.IntegerField(default=-1, verbose_name='订单积分抵扣上限')
 	review_increase = models.IntegerField(default=0, verbose_name='商品好评送积分')
+	is_all_conditions = models.BooleanField(default=False,verbose_name='自动升级条件')
 
 	class Meta(object):
 		db_table = 'member_integral_strategy_settings'
@@ -931,10 +944,11 @@ signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender
 FIRST_SUBSCRIBE = u'首次关注'
 #FOLLOWER_CLICK_SHARED_URL = u'好友奖励'
 FOLLOWER_CLICK_SHARED_URL = u'好友点击分享链接奖励'
-USE = '购物抵扣'
-RETURN_BY_SYSTEM = '积分返还'
-AWARD = '积分领奖'
-BUY_AWARD = '购物返利'
+USE = u'购物抵扣'
+RETURN_BY_SYSTEM = u'积分返还'
+RETURN_BY_CANCEl_ORDER = u'取消订单 返还积分'
+AWARD = u'积分领奖'
+BUY_AWARD = u'购物返利'
 #FOLLOWER_BUYED_VIA_SHARED_URL = u'好友奖励'
 FOLLOWER_BUYED_VIA_SHARED_URL = u'好友通过分享链接购买奖励'
 BRING_NEW_CUSTOMER_VIA_QRCODE = u'推荐扫码奖励'
@@ -1233,7 +1247,7 @@ class MemberRefuelingInfo(models.Model):
 		db_table = 'member_refueling_info'
 		verbose_name = '加油分享活动信息'
 		verbose_name_plural = '加油分享活动信息'
-		unique_together = ('member_refueling', 'follow_member')		
+		unique_together = ('member_refueling', 'follow_member')
 
 class MemberRefuelingHasOrder(models.Model):
 	member_refueling = models.ForeignKey(MemberRefueling)

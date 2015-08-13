@@ -87,7 +87,7 @@ class WebappItemLinks(resource.Resource):
 			for item in objects:
 				data = dict()
 				data['id'] = item.id
-				data['created_at'] = item.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				data['created_at'] = item.created_at if isinstance(item.created_at, str) else item.created_at.strftime('%Y-%m-%d %H:%M:%S')
 				data['name'] = item.name
 				data['link'] = menu_item['link_template'].format(item.id)
 				data['isChecked'] = True if is_selected_type and item.id == selected_id else False
@@ -103,7 +103,10 @@ class WebappItemLinks(resource.Resource):
 				if link_type == 'coupon':
 					# 优惠券
 					data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
-					data['valid'] = u'{} 至 {}'.format(item.start_date.strftime("%Y-%m-%d %H:%M"), item.end_date.strftime("%Y-%m-%d %H:%M"))
+					data['end_date'] = item.end_date if isinstance(item.end_date, str) else item.end_date.strftime('%Y-%m-%d %H:%M')
+					data['created_at'] = data['created_at'][:16] if len(data['created_at']) > 16 else data['created_at']
+					data['end_date'] = data['end_date'][:16] if len(data['end_date']) > 16 else data['end_date']
+					data['valid'] = u'{} 至 {}'.format(data['created_at'], data['end_date'])
 					data['link'] = menu_item['link_template'].format(item.detail['id'])
 
 				if link_type == 'activity':

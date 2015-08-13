@@ -29,9 +29,10 @@ TEMPLATE_DIR = 'weshop/templates/mall'
 ########################################################################
 # get_productcategory: 显示“商品分类”页面
 ########################################################################
-def get_productcategory(request):
-	request.template_dir = TEMPLATE_DIR
-	return request_util.get_productcategory(request)
+# jz 2015-08-10
+# def get_productcategory(request):
+# 	request.template_dir = TEMPLATE_DIR
+# 	return request_util.get_productcategory(request)
 
 
 ########################################################################
@@ -124,7 +125,6 @@ def get_product(request):
 		# 		% (owner_id, rid, social_account[0].token))
 		# 未关注会员，需要引导关注
 		cache_key = 'from_weshop_%s' % openid
-		# print 'jz1---', cache_key, rid
 		cache.set(cache_key, rid, 5 * 60)
 	else:# openid 获取异常
 		openid = '0'

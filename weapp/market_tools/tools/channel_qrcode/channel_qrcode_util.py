@@ -37,7 +37,8 @@ def create_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_membe
 
 			try:
 				if channel_qrcode.grade_id > 0:
-					Member.update_member_grade(member.id, channel_qrcode.grade_id)
+					# updated by zhu tianqi,修改为会员等级高于目标等级时不降级，member_id->member
+					Member.update_member_grade(member, channel_qrcode.grade_id)
 			except:
 				notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 				watchdog_warning(notify_message)

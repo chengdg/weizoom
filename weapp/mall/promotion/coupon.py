@@ -288,6 +288,9 @@ class CouponInfo(resource.Resource):
             return create_response(500, '优惠券已失效或者已过期')
         count = int(request.POST.get('count', '0'))
         _create_coupons(rules[0], count)
+
+        if rules[0].remained_count <= 0:
+            rules.update(remained_count=0)    
         rules.update(
             count=(rules[0].count + count),
             remained_count=(rules[0].remained_count + count)

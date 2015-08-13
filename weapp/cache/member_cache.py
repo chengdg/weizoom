@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 
-import time
-from datetime import timedelta, datetime, date
-import urllib, urllib2
-import os
-import json
-import shutil
-
-from django.conf import settings
 
 from utils import cache_util
-import cache
 from modules.member import models as member_models
 from account.social_account import models as social_account_models
 from weapp.hack_django import post_update_signal
@@ -22,10 +14,10 @@ def get_accounts_for_cache(openid, webapp_id):
 		social_account = member_models.SocialAccount.objects.get(webapp_id=webapp_id, openid=openid)
 		member = member_models.Member.objects.get(id=member_models.MemberHasSocialAccount.objects.filter(account=social_account)[0].member.id)
 		if member_models.WebAppUser.objects.filter(webapp_id=webapp_id, member_id=member.id, father_id=0).count() == 0:
-			webapp_user = member_models.WebAppUser.objects.create(webapp_id=webapp_id, member_id=member.id, father_id=0, token=member.id)			
+			webapp_user = member_models.WebAppUser.objects.create(webapp_id=webapp_id, member_id=member.id, father_id=0, token=member.id)
 		else:
 			webapp_user = member_models.WebAppUser.objects.filter(webapp_id=webapp_id, member_id=member.id, father_id=0)[0]
-			
+
 		return {
 			'value': {
 				'member': member.to_dict(),
@@ -89,11 +81,11 @@ def update_member_cache(instance, **kwargs):
 				delete_member_cache(openid, member.webapp_id)
 				#get_accounts(openid, webapp_id)
 			except:
-				pass	
+				pass
 	return
 
 post_update_signal.connect(update_member_cache, sender=member_models.Member, dispatch_uid = "members.update")
-signals.post_save.connect(update_member_cache, sender=member_models.Member, dispatch_uid = "member.save")	
-#signals.post_save.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "product_category.save")	
-#signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")	
+signals.post_save.connect(update_member_cache, sender=member_models.Member, dispatch_uid = "member.save")
+#signals.post_save.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "product_category.save")
+#signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")
 

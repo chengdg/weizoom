@@ -74,14 +74,11 @@ def _pay_weizoom_card(context, data, order):
     response_json = json.loads(response.content)
 
 
-##############################################################
-
 ###############################
 # when steps
 ###############################
 
-
-@when(u"{user}'{action}'最新订单")
+@when(u'{user}"{action}"最新订单')
 def step_impl(context, user, action):
     if hasattr(context, 'latest_order_id'):
         latest_order_id = context.latest_order_id
@@ -146,10 +143,10 @@ def step_impl(context, user, order_id):
 
 @then(u"{user}后端订单状态改变为")
 def step_impl(context, user):
-    if hasattr(context, 'client'):
-        context.client.logout()
+    # if hasattr(context, 'client'):
+    #     context.client.logout()
 
-    context.client = bdd_util.login(user)
+    # context.client = bdd_util.login(user)
     profile = context.client.user.profile
     webapp_id = context.client.user.profile.webapp_id
 
@@ -206,42 +203,42 @@ def step_impl(context, user):
     bdd_util.assert_list(expected, actual_orders)
 
 
-@then(u"{webapp_user_name}成功创建配送套餐订单")
-def step_impl(context, webapp_user_name):
-    expected_dates = json.loads(context.text)
-    expecteds = []
-    now = datetime.now()
-    for expected_date in expected_dates['delevery_date']:
-        expected = ''
-        if expected_date == u'今天':
-            expected = now.strftime('%Y-%m-%d')
-        elif expected_date == u'今天+1月':
-            delta = timedelta(days=30)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+2月':
-            delta = timedelta(days=30 * 2)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+1周':
-            delta = timedelta(days=7)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+2周':
-            delta = timedelta(days=7 * 2)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+3天':
-            delta = timedelta(days=3)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        elif expected_date == u'今天+6天':
-            delta = timedelta(days=3 * 2)
-            expected = (now + delta).strftime('%Y-%m-%d')
-        expecteds.append(expected)
-
-    order = steps_db_util.get_order_by_order_id(context.created_order_id)
-    order_has_delivery_times = steps_db_util.get_order_has_delivery_times_by_order_id(order.id)
-    actual_dates = []
-    for dates in order_has_delivery_times:
-        actual_dates.append(dates.delivery_date.strftime('%Y-%m-%d'))
-
-    bdd_util.assert_list(expecteds, actual_dates)
+# @then(u"{webapp_user_name}成功创建配送套餐订单")
+# def step_impl(context, webapp_user_name):
+#     expected_dates = json.loads(context.text)
+#     expecteds = []
+#     now = datetime.now()
+#     for expected_date in expected_dates['delevery_date']:
+#         expected = ''
+#         if expected_date == u'今天':
+#             expected = now.strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+1月':
+#             delta = timedelta(days=30)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+2月':
+#             delta = timedelta(days=30 * 2)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+1周':
+#             delta = timedelta(days=7)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+2周':
+#             delta = timedelta(days=7 * 2)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+3天':
+#             delta = timedelta(days=3)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         elif expected_date == u'今天+6天':
+#             delta = timedelta(days=3 * 2)
+#             expected = (now + delta).strftime('%Y-%m-%d')
+#         expecteds.append(expected)
+#
+#     order = steps_db_util.get_order_by_order_id(context.created_order_id)
+#     order_has_delivery_times = steps_db_util.get_order_has_delivery_times_by_order_id(order.id)
+#     actual_dates = []
+#     for dates in order_has_delivery_times:
+#         actual_dates.append(dates.delivery_date.strftime('%Y-%m-%d'))
+#
+#     bdd_util.assert_list(expecteds, actual_dates)
 
 
 @then(u"{user}获取对应的订单")
@@ -276,13 +273,16 @@ def step_impl(context, user):
         order_id = order_item['id']
         buy_product_response = context.client.get(
             '/mall2/api/order_product/?version=1&order_id=%d&timestamp=1406172500320' % (order_id))
+
         buy_products = json.loads(buy_product_response.content)['data']['products']
+        actural_order['products_count'] = len(buy_products)
         buy_product_results = []
         for buy_product in buy_products:
             buy_product_result = {}
             buy_product_result['product_name'] = buy_product['name']
             buy_product_result['count'] = buy_product['count']
             buy_product_result['total_price'] = buy_product['total_price']
+            buy_product_result['img_url'] = buy_product['thumbnails_url']
             buy_product_results.append(buy_product_result)
 
         actural_order['products'] = buy_product_results
@@ -381,7 +381,7 @@ def step_impl(context, user):
     order.order_type = ORDER_TYPE2TEXT[order.type]
     order.total_price = float(order.final_price)
     order.ship_area = order.area + ' ' + order.ship_address
-    from webapp.modules.mall.templatetags import mall_filter
+    from mall.templatetags import mall_filter
 
     actions = mall_filter.get_order_actions(order)
     order.actions = dict([(action['name'], 1) for action in actions])
@@ -392,6 +392,9 @@ def step_impl(context, user):
     for product in order.products:
         product['total_price'] = float(product['total_price'])
     order.status = STATUS2TEXT[order.status]
+    for product in order.products:
+        if 'custom_model_properties' in product and product['custom_model_properties']:
+            product['model'] = ' '.join([property['property_value'] for property in product['custom_model_properties']])
     actual = order
     actual.reason = order.reason
 
@@ -462,11 +465,13 @@ def step_impl(context, webapp_owner_name):
 
 @given(u"{user}已有的订单")
 def step_impl(context, user):
+    """TODO 弃用 改用 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
+    """
     if hasattr(context, 'client'):
         context.client.logout()
     context.client = bdd_util.login(user)
     profile = context.client.user.profile
-    webapp_id = context.client.user.profile.webapp_id
+    # webapp_id = context.client.user.profile.webapp_id
 
     context.orders = json.loads(context.text)
     for order in context.orders:

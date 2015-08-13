@@ -52,6 +52,12 @@ W.ValidaterClass = function() {
             regex: /^\d{1,5}(\.\d{1,3})?$/g,
             errorHint: '格式不正确，请输入\'3.147\'或\'5\'这样的数字'
         },
+        'require-float-one': {
+            type: 'regex',
+            extract: 'value',
+            regex: /^\d{1,5}(\.\d{0,1})?$/g,
+            errorHint: '格式不正确，请输入\'3.147\'或\'5\'这样的数字'
+        },
         'require-price': {
             type: 'regex',
             extract: 'value',

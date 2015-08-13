@@ -483,7 +483,7 @@ Scenario: 3 bill在下单购买jobs的商品后，jobs发货方式为"不需要�
 		}]
 		"""
 
-@mall @mall.webapp @mall.pay_order
+@mall2 @mall @mall.webapp @mall.pay_order
 Scenario: 4 bill 在不同时段下订单，订单列表按下订单的时间倒序排列
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -528,25 +528,26 @@ Scenario: 4 bill 在不同时段下订单，订单列表按下订单的时间倒
 			}]
 		}
 		"""
-	Then bill可以看到订单列表
+	Given jobs登录系统
+	Then jobs可以看到订单列表
 		"""
 		[{
-			"order_time": "2015-05-04 16:11:12",
-			"status": "待支付",
-			"price": 10.00,
-			"products_count": 1,
-			"products":[{
-				"img_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-				"product_name": "商品1"
-			}]
-		},{
-			"order_time": "2015-05-03 16:11:12",
 			"status": "待支付",
 			"price": 20.00,
 			"products_count": 1,
 			"products":[{
+				"product_name": "商品2",
 				"img_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-				"product_name": "商品2"
+				"count": 1
+			}]
+		},{
+			"status": "待支付",
+			"price": 10.00,
+			"products_count": 1,
+			"products":[{
+				"product_name": "商品1",
+				"img_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+				"count": 1
 			}]
 		}]
 		"""

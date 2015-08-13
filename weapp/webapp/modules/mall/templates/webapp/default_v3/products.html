@@ -26,13 +26,13 @@
         {% endfor %}
     </ul>
     {% endif %} -->
-  
+
     <div data-role="content" data-theme="x">
 		<div class="xui-hlist xui-hlist-cell-1 xui-products">
 			{% if products %}
 			<ul data-role="listview" data-theme="x" data-icon="false">
 				{% for product in products %}
-				<li>
+				<li class="{% if product.is_member_product %}xa-member-product{% endif %}">
 					<a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
                         <div class="img"><img src="{{ product.thumbnails_url }}"></div>
 						<h3>{{ product.name }}</h3>
@@ -54,6 +54,7 @@
 
 
 $(document).ready(function() {
+
     var imgWidth = window.document.body.clientWidth
     var imgHeight = imgWidth - 36
     $('.xui-hlist .img img').css({

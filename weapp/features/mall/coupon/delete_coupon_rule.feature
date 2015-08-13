@@ -189,20 +189,20 @@ Scenario: 1 删除已过期的优惠券
 		"""
 		[
 			{
-				"coupon_id": "coupon2_id_1",
-				"money": 10.00,
+				"coupon_id": "coupon3_id_2",
+				"money": 100.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon3_id_1",
+				"money": 100.00,
 				"status": "未使用"
 			}, {
 				"coupon_id": "coupon2_id_2",
 				"money": 10.00,
 				"status": "未使用"
-			},{
-				"coupon_id": "coupon3_id_1",
-				"money": 100.00,
-				"status": "未使用"
 			}, {
-				"coupon_id": "coupon3_id_2",
-				"money": 100.00,
+				"coupon_id": "coupon2_id_1",
+				"money": 10.00,
 				"status": "未使用"
 			}
 		]
@@ -269,7 +269,7 @@ Scenario: 2 删除已失效的优惠券
 
 @mall2 @zy_cp3 @eugene
 Scenario: 3 删除未领取的优惠券
-jobs添加"优惠券规则"后
+	jobs添加"优惠券规则"后
 	1. 如果优惠券没有被领取和使用，可以删除未领取的优惠券
 	2. jobs的删除操作不影响被领取的优惠券
 
@@ -295,7 +295,7 @@ jobs添加"优惠券规则"后
 
 @mall2 @eugene
 Scenario: 4 删除已过期的优惠券规则
-jobs添加"优惠券"后，优惠券已过期
+	jobs添加"优惠券"后，优惠券已过期
 	1. jobs可以删除已过期的优惠券规则
 	2. jobs的删除操作不影响其他优惠券规则
 	3. jobs的删除操作不影响会员的其他优惠券
@@ -338,20 +338,20 @@ jobs添加"优惠券"后，优惠券已过期
 		"""
 		[
 			{
-				"coupon_id": "coupon2_id_1",
-				"money": 10.00,
+				"coupon_id": "coupon3_id_2",
+				"money": 100.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon3_id_1",
+				"money": 100.00,
 				"status": "未使用"
 			}, {
 				"coupon_id": "coupon2_id_2",
 				"money": 10.00,
 				"status": "未使用"
-			},{
-				"coupon_id": "coupon3_id_1",
-				"money": 100.00,
-				"status": "未使用"
 			}, {
-				"coupon_id": "coupon3_id_2",
-				"money": 100.00,
+				"coupon_id": "coupon2_id_1",
+				"money": 10.00,
 				"status": "未使用"
 			}
 		]
