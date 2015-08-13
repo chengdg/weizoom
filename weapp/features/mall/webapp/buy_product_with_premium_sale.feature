@@ -749,7 +749,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 		"""
 
 # __edit__ : 王丽   补充 "雪静"
-@mall2 @promotionPremium @meberGrade
+@mall2 @promotionPremium @meberGrade @jz
 Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠活动的商品
 	Given jobs登录系统
 	When jobs添加会员等级
@@ -1044,11 +1044,11 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 		"ship_tel": "12345678914",
 		"ship_area": "北京市 北京市 海淀区",
 		"ship_address": "泰兴大厦4",
-		"final_price": 70.0,
+		"final_price": 100.0,
 		"products": [{
 			"name": "商品6",
-			"price": 70.0,
-			"grade_discounted_money": 30.00,
+			"price": 100.0,
+			"grade_discounted_money": 0.00,
 			"count": 1
 		},{
 			"name": "商品6",
@@ -1123,11 +1123,11 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 		"ship_tel": "12345678913",
 		"ship_area": "北京市 北京市 海淀区",
 		"ship_address": "泰兴大厦3",
-		"final_price": 240.00,
+		"final_price": 300.00,
 		"products": [{
 			"name": "商品7",
 			"model": "M",
-			"price": 240.00,
+			"price": 300.00,
 			"count": 1
 		}]
 	}
@@ -1164,18 +1164,18 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 		"ship_tel": "12345678914",
 		"ship_area": "北京市 北京市 海淀区",
 		"ship_address": "泰兴大厦4",
-		"final_price": 1274.0,
+		"final_price": 1814.0,
 		"products": [{
 			"name": "商品7",
 			"model": "M",
-			"price": 210.0,
-			"grade_discounted_money":270.00,
+			"price": 300.0,
+			"grade_discounted_money":0.00,
 			"count": 3
 		},{
 			"name": "商品7",
 			"model": "S",
-			"price": 210.0,
-			"grade_discounted_money":270.00,
+			"price": 300.0,
+			"grade_discounted_money":0.00,
 			"count": 3
 		},{
 			"name": "商品赠品",
