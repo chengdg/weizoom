@@ -777,6 +777,7 @@ def __format_product_group_price_factor(product_groups):
 				"model": product.model_name,
 				"count": product.purchase_count,
 				"price": product.price,
+				"original_price": product.original_price,
 				"weight": product.weight,
 				"active_integral_sale_rule": getattr(product, 'active_integral_sale_rule', None),
 				"postageConfig": product.postage_config if hasattr(product, 'postage_config') else {}
