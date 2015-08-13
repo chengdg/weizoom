@@ -82,7 +82,6 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
             is_limit = false;
         }
         var cur_count = parseInt($cur_up.prevAll('.xa-counterText').text());
-        console.log(is_limit, max_count, limit_count, remained_count, cur_count);
 
         if($cur_up.hasClass("xui-btn")){
             if(is_limit){
@@ -147,35 +146,6 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
             }
         }
 
-        // if($cur_up.hasClass("xui-btn")){
-        //     if(remained_count < (cur_count + 1) * this.member_count){
-        //         if(cur_count <= limit_count &&(remained_count > cur_count*this.member_count)){
-        //             return;
-        //         }
-        //         if((cur_count == limit_count) && (remained_count == cur_count*this.member_count)){
-        //             return;
-        //         }
-        //         $cur_up.parent().next().removeClass('hide');
-        //     }
-        //     return;
-        // }else{
-        //     if(!is_limit || (cur_count+1) * this.member_count <= max_count){
-        //         $cur_up.prevAll('.xa-down').removeClass("xui-btn");
-        //         $cur_up.prevAll('.xa-counterText').text(cur_count+1);
-        //     }
-        //     if(max_count<remained_count && (cur_count+1) * this.member_count <= remained_count && (cur_count+1<=max_count)){
-        //         $cur_up.prevAll('.xa-down').removeClass("xui-btn");
-        //         $cur_up.prevAll('.xa-counterText').text(cur_count+1);
-        //     }
-        //     if(max_count){
-        //         if(cur_count+1 == max_count){
-        //             $cur_up.addClass("xui-btn");
-        //         }
-        //         if(this.member_count > 1 && (cur_count+2)*this.member_count > remained_count){
-        //             $cur_up.addClass("xui-btn");
-        //         }
-        //     }
-        // }
     },
 
     downCounter: function(event) {
