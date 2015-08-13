@@ -37,7 +37,7 @@
 <table class="table table-bordered xb-stripedTable xa-productTable xa-member-couponTable" data-length="${items.length}">
     <thead style="background:#c8d2e5;">
         <tr>
-            <th>优惠券名称${items.length}</th>
+            <th>优惠券名称</th>
             <th>类型</th>
             <th>价值</th>
             <th>有效期</th>
@@ -76,6 +76,8 @@
                             {{else}}
                                 data-max-count="${coupon.limit_counts}"
                             {{/if}}
+                        {{else}}
+                            data-max-count="${coupon.remained_count}"
                         {{/if}}
                         data-remained-count="${coupon.remained_count}"
                         type="hidden"
