@@ -1,4 +1,4 @@
-# __edit__ : "benchi"
+ # __edit__ : "benchi"
 Feature: 在webapp中购买参与买赠活动的商品
 """
 	用户能在webapp中购买"参与买赠活动的商品"
@@ -749,444 +749,442 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 		"""
 
 # __edit__ : 王丽   补充 "雪静"
-@mall2 @promotionPremium @meberGrade
+@mall2 @promotionPremium @meberGrade @jz
 Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠活动的商品
 	Given jobs登录系统
 	When jobs添加会员等级
-	"""
-	[{
-		"name": "铜牌会员",
-		"upgrade": "手动升级",
-		"discount": "9"
-	}, {
-		"name": "银牌会员",
-		"upgrade": "手动升级",
-		"discount": "8"
-	}, {
-		"name": "金牌会员",
-		"upgrade": "手动升级",
-		"discount": "7"
-	}]
-	"""
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
 	And jobs已添加商品
-	"""
-	[{
-		"name": "商品赠品",
-		"is_member_product": "on",
-		"model": {
-			"models": {
-				"standard": {
-					"price": 10.00,
-					"stock_type": "有限",
-					"stocks": 100
+		"""
+		[{
+			"name": "商品赠品",
+			"is_member_product": "on",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 10.00,
+						"stock_type": "有限",
+						"stocks": 100
+					}
 				}
 			}
-		}
-	},{
-		"name": "商品6",
-		"is_member_product": "on",
-		"model": {
-			"models": {
-				"standard": {
-					"price": 100.00,
-					"stock_type": "有限",
-					"stocks": 100
+		},{
+			"name": "商品6",
+			"is_member_product": "on",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 100.00,
+						"stock_type": "有限",
+						"stocks": 100
+					}
 				}
 			}
-		}
-	},{
-		"name": "商品7",
-		"is_member_product": "on",
-		"is_enable_model": "启用规格",
-		"model": {
-			"models":{
-				"M": {
-					"price": 300,
-					"stock_type": "无限"
-				},
-				"S": {
-					"price": 300,
-					"stock_type": "无限"
+		},{
+			"name": "商品7",
+			"is_member_product": "on",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"M": {
+						"price": 300,
+						"stock_type": "无限"
+					},
+					"S": {
+						"price": 300,
+						"stock_type": "无限"
+					}
 				}
 			}
-		}
-	},{
-		"name": "商品8",
-		"model": {
-			"models": {
-				"standard": {
-					"price": 100.00,
-					"stock_type": "有限",
-					"stocks": 100
+		},{
+			"name": "商品8",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 100.00,
+						"stock_type": "有限",
+						"stocks": 100
+					}
 				}
 			}
-		}
-	}]
-	"""
+		}]
+		"""
 	When jobs更新"marry2"的会员等级
-	"""
-	{
-		"name":"marry2",
-		"member_rank":"铜牌会员"
-	}
-	"""
+		"""
+		{
+			"name":"marry2",
+			"member_rank":"铜牌会员"
+		}
+		"""
 	And jobs更新"marry3"的会员等级
-	"""
-	{
-		"name":"marry3",
-		"member_rank":"银牌会员"
-	}
-	"""
+		"""
+		{
+			"name":"marry3",
+			"member_rank":"银牌会员"
+		}
+		"""
 	And jobs更新"marry4"的会员等级
-	"""
-	{
-		"name":"marry4",
-		"member_rank":"金牌会员"
-	}
-	"""
+		"""
+		{
+			"name":"marry4",
+			"member_rank":"金牌会员"
+		}
+		"""
 	Then jobs可以获得会员列表
-	"""
-	[{
-		"name":"marry4",
-		"member_rank":"金牌会员"
-	}, {
-		"name":"marry3",
-		"member_rank":"银牌会员"
-	}, {
-		"name":"marry2",
-		"member_rank":"铜牌会员"
-	}, {
-		"name":"marry1",
-		"member_rank":"普通会员"
-	}, {
-		"name":"tom",
-		"member_rank":"普通会员"
-	}, {
-		"name":"bill",
-		"member_rank":"普通会员"
-	}]
-	"""
+		"""
+		[{
+			"name":"marry4",
+			"member_rank":"金牌会员"
+		}, {
+			"name":"marry3",
+			"member_rank":"银牌会员"
+		}, {
+			"name":"marry2",
+			"member_rank":"铜牌会员"
+		}, {
+			"name":"marry1",
+			"member_rank":"普通会员"
+		}, {
+			"name":"tom",
+			"member_rank":"普通会员"
+		}, {
+			"name":"bill",
+			"member_rank":"普通会员"
+		}]
+		"""
 	When jobs创建买赠活动
-	"""
-	[{
-		"name": "商品6买一赠二",
-		"start_date": "今天",
-		"end_date": "1天后",
-		"products": ["商品6"],
-		"premium_products": [{
-			"name": "商品6",
-			"count": 1
+		"""
+		[{
+			"name": "商品6买一赠二",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品6"],
+			"premium_products": [{
+				"name": "商品6",
+				"count": 1
+			},{
+				"name": "商品赠品",
+				"count": 1
+			}],
+			"count": 1,
+			"member_grade":"金牌会员",
+			"is_enable_cycle_mode": true
 		},{
-			"name": "商品赠品",
-			"count": 1
-		}],
-		"count": 1,
-		"member_grade":"金牌会员",
-		"is_enable_cycle_mode": true
-	},{
-		"name": "商品7买二赠二",
-		"start_date": "今天",
-		"end_date": "1天后",
-		"products": ["商品7"],
-		"premium_products": [{
-			"name": "商品赠品",
-			"count": 2
-		}],
-		"count": 2,
-		"member_grade":"全部",
-		"is_enable_cycle_mode": true
-	},{
-		"name": "商品8买一赠一",
-		"start_date": "今天",
-		"end_date": "1天后",
-		"products": ["商品8"],
-		"premium_products": [{
-			"name": "商品赠品",
-			"count": 1
-		}],
-		"count": 1,
-		"member_grade":"铜牌会员",
-		"is_enable_cycle_mode": true
-	}]
-	"""
-	#购买有单会员等级买赠活动，无会员价商品”商品8“
-	#普通会员等级的会员marry1,购买铜牌会员等级买赠活动商品"商品8"，按照原价购买，无赠品
-	When marry1访问jobs的webapp
-	And marry1购买jobs的商品
-	"""
-	{
-		"ship_name": "marry1",
-		"ship_tel": "12345678911",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦",
-		"products": [{
-			"name": "商品8",
-			"count": 1
+			"name": "商品7买二赠二",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品7"],
+			"premium_products": [{
+				"name": "商品赠品",
+				"count": 2
+			}],
+			"count": 2,
+			"member_grade":"全部",
+			"is_enable_cycle_mode": true
+		},{
+			"name": "商品8买一赠一",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品8"],
+			"premium_products": [{
+				"name": "商品赠品",
+				"count": 1
+			}],
+			"count": 1,
+			"member_grade":"铜牌会员",
+			"is_enable_cycle_mode": true
 		}]
-	}
-	"""
-	Then marry1成功创建订单
-	"""
-	{
-		"status": "待支付",
-		"ship_name": "marry1",
-		"ship_tel": "12345678911",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦",
-		"final_price": 100.0,
-		"products": [{
-			"name": "商品8",
-			"price": 100.0,
-			"grade_discounted_money":0.00,
-			"count": 1
-		}]
-	}
-	"""
-	#	"member_price":100.00,
-	#	"members_money":0.00,
+		"""
 
-	#铜牌会员等级的会员marry2,购买铜牌会员等级买赠活动商品"商品8"，按照原价购买，有赠品
-	When marry2访问jobs的webapp
-	And marry2购买jobs的商品
-	"""
-	{
-		"ship_name": "marry2",
-		"ship_tel": "12345678912",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦2",
-		"products": [{
-			"name": "商品8",
-			"count": 1
-		}]
-	}
-	"""
-	Then marry2成功创建订单
-	"""
-	{
-		"status": "待支付",
-		"ship_name": "marry2",
-		"ship_tel": "12345678912",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦2",
-		"final_price": 100.0,
-		"products": [{
-			"name": "商品8",
-			"price": 100.0,
-			"grade_discounted_money":0.00,
-			"count": 1
-		},{
-			"name": "商品赠品",
-			"price": 0.0,
-			"count": 1
-		}]
-	}
-	"""
-	#	"member_price":100.00,
-	#	"members_money":0.00,
+	#购买有单会员等级买赠活动，无会员价商品"商品8"
 
-	#购买有单会员等级买赠活动，有会员价商品”商品6“
+		#普通会员等级的会员marry1,购买铜牌会员等级买赠活动商品"商品8"，按照原价购买，无赠品
+		When marry1访问jobs的webapp
+		And marry1购买jobs的商品
+			"""
+			{
+				"ship_name": "marry1",
+				"ship_tel": "12345678911",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"products": [{
+					"name": "商品8",
+					"count": 1
+				}]
+			}
+			"""
+		Then marry1成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"ship_name": "marry1",
+				"ship_tel": "12345678911",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦",
+				"final_price": 100.0,
+				"products": [{
+					"name": "商品8",
+					"price": 100.0,
+					"grade_discounted_money":0.00,
+					"count": 1
+				}]
+			}
+			"""
 
-	#铜牌会员等级的会员marry2,购买金牌会员等级买赠活动商品"商品6"，按照会员价购买，无赠品
-	When marry2访问jobs的webapp
-	And marry2购买jobs的商品
-	"""
-	{
-		"ship_name": "marry2",
-		"ship_tel": "12345678912",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦2",
-		"products": [{
-			"name": "商品6",
-			"count": 1
-		}]
-	}
-	"""
-	Then marry2成功创建订单
-	"""
-	{
-		"status": "待支付",
-		"ship_name": "marry2",
-		"ship_tel": "12345678912",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦2",
-		"final_price": 90.0,
-		"products": [{
-			"name": "商品6",
-			"price": 90.0,
-			"grade_discounted_money":10.00,
-			"count": 1
-		}]
-	}
-	"""
-	#	"member_price":90.00,
-	#	"members_money":10.00,
+		#铜牌会员等级的会员marry2,购买铜牌会员等级买赠活动商品"商品8"，按照原价购买，有赠品
+		When marry2访问jobs的webapp
+		And marry2购买jobs的商品
+			"""
+			{
+				"ship_name": "marry2",
+				"ship_tel": "12345678912",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦2",
+				"products": [{
+					"name": "商品8",
+					"count": 1
+				}]
+			}
+			"""
+		Then marry2成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"ship_name": "marry2",
+				"ship_tel": "12345678912",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦2",
+				"final_price": 100.0,
+				"products": [{
+					"name": "商品8",
+					"price": 100.0,
+					"grade_discounted_money":0.00,
+					"count": 1
+				},{
+					"name": "商品赠品",
+					"price": 0.0,
+					"count": 1
+				}]
+			}
+			"""
 
-	#金牌会员等级的会员marry4,购买金牌会员等级买赠活动商品"商品6"，按照原价购买，有赠品
-	When marry4访问jobs的webapp
-	And marry4购买jobs的商品
-	"""
-	{
-		"ship_name": "marry4",
-		"ship_tel": "12345678914",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦4",
-		"products": [{
-			"name": "商品6",
-			"count": 1
-		}]
-	}
-	"""
-	Then marry4成功创建订单
-	"""
-	{
-		"status": "待支付",
-		"ship_name": "marry4",
-		"ship_tel": "12345678914",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦4",
-		"final_price": 70.0,
-		"products": [{
-			"name": "商品6",
-			"price": 70.0,
-			"grade_discounted_money": 30.00,
-			"count": 1
-		},{
-			"name": "商品6",
-			"count": 1
-		},{
-			"name": "商品赠品",
-			"price": 0.0,
-			"count": 1
-		}]
-	}
-	"""
-	#	"member_price":100.00,
-	#	"members_money":0.00,
+	#购买有单会员等级买赠活动，有会员价商品"商品6"
 
-	#购买全部会员等级买赠活动，有会员价多规格商品”商品7“
+		#铜牌会员等级的会员marry2,购买金牌会员等级买赠活动商品"商品6"，按照会员价购买，无赠品
+		When marry2访问jobs的webapp
+		And marry2购买jobs的商品
+			"""
+			{
+				"ship_name": "marry2",
+				"ship_tel": "12345678912",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦2",
+				"products": [{
+					"name": "商品6",
+					"count": 1
+				}]
+			}
+			"""
+		Then marry2成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"ship_name": "marry2",
+				"ship_tel": "12345678912",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦2",
+				"final_price": 90.0,
+				"products": [{
+					"name": "商品6",
+					"price": 90.0,
+					"grade_discounted_money":10.00,
+					"count": 1
+				}]
+			}
+			"""
 
-	#普通会员等级的会员marry1,购买全部会员等级买赠活动，有会员价商品"商品7"，单规格没有达到买赠数量条件，按照原价购买，无赠品
-	When marry1访问jobs的webapp
-	And marry1购买jobs的商品
-	"""
-	{
-		"ship_name": "marry1",
-		"ship_tel": "12345678911",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦",
-		"products": [{
-			"name": "商品7",
-			"model": "M",
-			"count": 1
-		}]
-	}
-	"""
-	Then marry1成功创建订单
-	"""
-	{
-		"status": "待支付",
-		"ship_name": "marry1",
-		"ship_tel": "12345678911",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦",
-		"final_price": 300.00,
-		"products": [{
-			"name": "商品7",
-			"model": "M",
-			"price": 300.00,
-			"count": 1
-		}]
-	}
-	"""
+		#金牌会员等级的会员marry4,购买金牌会员等级买赠活动商品"商品6"，按照原价购买，有赠品
+		When marry4访问jobs的webapp
+		And marry4购买jobs的商品
+			"""
+			{
+				"ship_name": "marry4",
+				"ship_tel": "12345678914",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦4",
+				"products": [{
+					"name": "商品6",
+					"count": 1
+				}]
+			}
+			"""
+		Then marry4成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"ship_name": "marry4",
+				"ship_tel": "12345678914",
+				"ship_area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦4",
+				"final_price": 100.0,
+				"products": [{
+					"name": "商品6",
+					"price": 100.0,
+					"grade_discounted_money": 0.00,
+					"count": 1
+				},{
+					"name": "商品6",
+					"count": 1
+				},{
+					"name": "商品赠品",
+					"price": 0.0,
+					"count": 1
+				}]
+			}
+			"""
 
-	#银牌会员等级的会员marry3,购买全部会员等级买赠活动，有会员价商品"商品7"，单规格没有达到买赠数量条件，按照原价购买，无赠品
-	When marry3访问jobs的webapp
-	And marry3购买jobs的商品
-	"""
-	{
-		"ship_name": "marry3",
-		"ship_tel": "12345678913",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦3",
-		"products": [{
-			"name": "商品7",
-			"model": "M",
-			"count": 1
-		}]
-	}
-	"""
-	Then marry3成功创建订单
-	"""
-	{
-		"status": "待支付",
-		"ship_name": "marry3",
-		"ship_tel": "12345678913",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦3",
-		"final_price": 240.00,
-		"products": [{
-			"name": "商品7",
-			"model": "M",
-			"price": 240.00,
-			"count": 1
-		}]
-	}
-	"""
-	#金牌会员等级的会员marry4,购买全部会员等级买赠活动，有会员价商品"商品7"，整体数量达到买赠数量条件，单规格达到买赠数量条件，按照原价购买，有赠品
-	When marry4访问jobs的webapp
-	And marry4购买jobs的商品
-	"""
-	{
-		"ship_name": "marry4",
-		"ship_tel": "12345678914",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦4",
-		"products": [{
-			"name": "商品7",
-			"model": "M",
-			"count": 3
-		},{
-			"name": "商品7",
-			"model": "S",
-			"count": 3
-		},{
-			"name": "商品赠品",
-			"price": 10,
-			"count": 2
-		}]
-	}
-	"""
-	Then marry4成功创建订单
-	"""
-	{
-		"status": "待支付",
-		"ship_name": "marry4",
-		"ship_tel": "12345678914",
-		"ship_area": "北京市 北京市 海淀区",
-		"ship_address": "泰兴大厦4",
-		"final_price": 1274.0,
-		"products": [{
-			"name": "商品7",
-			"model": "M",
-			"price": 210.0,
-			"grade_discounted_money":270.00,
-			"count": 3
-		},{
-			"name": "商品7",
-			"model": "S",
-			"price": 210.0,
-			"grade_discounted_money":270.00,
-			"count": 3
-		},{
-			"name": "商品赠品",
-			"price": 0.0,
-			"count": 6
-		},{
-			"name": "商品赠品",
-			"price": 7.0,
-			"count": 2
-		}]
-	}
-	"""
-	#	"member_price":1800.00,
-	#	"members_money":0.00,
+	#购买全部会员等级买赠活动，有会员价多规格商品"商品7"
+
+		#铜牌会员等级的会员marry2,购买全部会员等级买赠活动，有会员价商品"商品7"，单规格没有达到买赠数量条件，按照会员价购买，无赠品
+			When marry2访问jobs的webapp
+			And marry2购买jobs的商品
+				"""
+				{
+					"ship_name": "marry2",
+					"ship_tel": "12345678912",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "泰兴大厦2",
+					"products": [{
+						"name": "商品7",
+						"model": "M",
+						"count": 1
+					}]
+				}
+				"""
+			Then marry2成功创建订单
+				"""
+				{
+					"status": "待支付",
+					"ship_name": "marry2",
+					"ship_tel": "12345678912",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "泰兴大厦2",
+					"final_price": 270.00,
+					"products": [{
+						"name": "商品7",
+						"model": "M",
+						"price": 270.00,
+						"count": 1
+					}]
+				}
+				"""
+
+		#银牌会员等级的会员marry3,购买全部会员等级买赠活动，有会员价商品"商品7"，整体数量达到买赠数量条件，单规格没有达到买赠数量条件，按照原价购买，有赠品
+			When marry3访问jobs的webapp
+			And marry3购买jobs的商品
+				"""
+				{
+					"ship_name": "marry3",
+					"ship_tel": "12345678913",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "泰兴大厦3",
+					"products": [{
+						"name": "商品7",
+						"model": "M"
+						"count": 1
+					},{
+						"name": "商品7",
+						"model": "s"
+						"count": 1
+					}]
+				}
+				"""
+			Then marry3成功创建订单
+				"""
+				{
+					"status": "待支付",
+					"ship_name": "marry3",
+					"ship_tel": "12345678913",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "泰兴大厦3",
+					"final_price": 600,
+					"products": [{
+						"name": "商品7",
+						"model": "M"
+						"price": 300,
+						"count": 1
+					},{
+						"name": "商品7",
+						"model": "s"
+						"price": 300,
+						"count": 1
+					},{
+						"name": "商品赠品",
+						"price": 0.0,
+						"count": 2
+					}]
+				}
+				"""
+
+		#金牌会员等级的会员marry4,购买全部会员等级买赠活动，有会员价商品"商品7"，整体数量达到买赠数量条件，单规格达到买赠数量条件，按照原价购买，有赠品
+			When marry4访问jobs的webapp
+			And marry4购买jobs的商品
+				"""
+				{
+					"ship_name": "marry4",
+					"ship_tel": "12345678914",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "泰兴大厦4",
+					"products": [{
+						"name": "商品7",
+						"model": "M",
+						"count": 3
+					},{
+						"name": "商品7",
+						"model": "S",
+						"count": 3
+					}]
+				}
+				"""
+			Then marry4成功创建订单
+				"""
+				{
+					"status": "待支付",
+					"ship_name": "marry4",
+					"ship_tel": "12345678914",
+					"ship_area": "北京市 北京市 海淀区",
+					"ship_address": "泰兴大厦4",
+					"final_price": 1800.0,
+					"products": [{
+						"name": "商品7",
+						"model": "M",
+						"price": 300.0,
+						"grade_discounted_money":0.00,
+						"count": 3
+					},{
+						"name": "商品7",
+						"model": "S",
+						"price": 300.0,
+						"grade_discounted_money":0.00,
+						"count": 3
+					},{
+						"name": "商品赠品",
+						"price": 0.0,
+						"count": 6
+					}]
+				}
+				"""

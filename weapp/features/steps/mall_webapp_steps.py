@@ -230,8 +230,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		product_model_names = []
 		promotion_ids = []
 		products = args['products']
-		integral = 0
-		integral_group_items = []
+		# integral = 0
+		# integral_group_items = []
 		for product in products:
 			product_counts.append(str(product['count']))
 			product_name = product['name']
@@ -245,13 +245,17 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			_product_model_name = _get_product_model_ids_from_name(webapp_owner_id, product.get('model', None))
 			product_model_names.append(_product_model_name)
 			if 'integral' in product and product['integral'] > 0:
-				integral += product['integral']
-				integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
-		if integral:
-			group2integralinfo['-'.join(integral_group_items)] = {
-				"integral": integral,
-				"money": round(integral / integral_each_yuan, 2)
-			}
+				# integral += product['integral']
+				# integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
+				group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
+					"integral": product['integral'],
+					"money": round(product['integral'] / integral_each_yuan, 2)
+				}
+		# if integral:
+		# 	group2integralinfo['-'.join(integral_group_items)] = {
+		# 		"integral": integral,
+		# 		"money": round(integral / integral_each_yuan, 2)
+		# 	}
 
 	order_type = args.get('type', 'normal')
 
@@ -392,7 +396,7 @@ OPERATION2STEPID = {
 	u'完成': u"When %s完成最新订单",
 	u'退款': u"When %s对最新订单进行退款",
 	u'完成退款': u"When %s完成最新订单退款",
-	u'取消': u"When %s'取消'最新订单",
+	u'取消': u"When %s\"取消\"最新订单",
 }
 
 @when(u"微信用户批量消费{webapp_owner_name}的商品")
@@ -477,8 +481,6 @@ def step_impl(context, webapp_owner_name):
 				pass
 			else:
 				raise
-				# context.caller_step_cancel_reason = {"reason":"cancel"}
-				# context.execute_steps(u"When %s'取消'最新订单" % actor)
 
 
 @when(u"微信用户批量访问{webapp_owner_name}的webapp")

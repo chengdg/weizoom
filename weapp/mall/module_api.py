@@ -97,6 +97,7 @@ def __get_promotion_name(product):
 		else:
 			name = '%d_%s' % (promotion['id'], product.model['name'])
 	elif product.integral_sale:
+		print 'jz----', '%d_%s' % (product.integral_sale['id'], product.model['name'])
 		return '%d_%s' % (product.integral_sale['id'], product.model['name'])
 
 	return name
@@ -255,6 +256,7 @@ def group_product_by_promotion(request, products):
 			total_purchase_count = 0
 			total_product_price = 0.0
 			for product in products:
+				product.price = product.original_price
 				total_purchase_count += product.purchase_count
 				total_product_price += product.price * product.purchase_count
 
@@ -529,7 +531,9 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				elif promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
 					promotion.promotion_title = '%s * %s' % (promotion.detail['premium_products'][0]['name'], promotion.detail['count'])
 				elif promotion.type == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-					promotion.promotion_title = '活动截止:%s' % (promotion.end_date)
+					# promotion.promotion_title = '活动截止:%s' % (promotion.end_date)
+					gapPrice = product.price - promotion.detail['promotion_price']
+					promotion.promotion_title = '已优惠%s元' % gapPrice
 				else:
 					promotion.promotion_title = ''
 				product.promotion = promotion.to_dict('detail', 'type_name')
@@ -1654,7 +1658,6 @@ def get_shopping_cart_products(request):
 	# 		products.append(product)
 
 	product_groups = group_product_by_promotion(request, valid_products)
-
 
 	invalid_products.sort(lambda x, y: cmp(x.shopping_cart_id, y.shopping_cart_id))
 

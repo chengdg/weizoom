@@ -28,13 +28,13 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             <div class="xui-section-title xui-section-item xui-pl0">
                 {% if cur_request_member %}
                 <div class="disF">
-                    <h2 class="xui-productName xt-productName">{{ product.name }}{% if product.promotion_title %}
+                    <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}{% if product.promotion_title %}
                     <span class="xui-text-red">{{ product.promotion_title|safe }}</span>{% endif %}</h2>
                     <a href="javascript:void(0);" class="xui-fav xa-collectProduct" data-is-collect="false">收藏</a>
                 </div>
                 {% else %}
                 <div class="disF">
-                    <h2 class="xui-productName xt-productName">{{ product.name }}{% if product.promotion_title %}
+                    <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}{% if product.promotion_title %}
                     <span class="xui-text-red">{{ product.promotion_title }}</span>{% endif %}</h2>
                 </div>
                 {% endif %}
@@ -371,6 +371,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% block js %}
 {% if not is_deleted_data %}
 <script type="text/javascript">
+
 //运费计算因子
 var postageFactor = {};
 //可用积分
@@ -429,6 +430,8 @@ $(document).ready(function() {
             // 商品原价
             var price = view.priceInfo.min_price;
 
+            // 存储商品会员价与促销的状态
+            view.member_or_promotion = '';
             // 商品有促销
             var product_promotion = view.promotion;
             is_product_promotion = !($.isEmptyObject(product_promotion));
@@ -439,20 +442,25 @@ $(document).ready(function() {
                 // 限时抢购
                 if(is_user_has_promotion && product_promotion.detail.promotion_price){
                     price = (product_promotion.detail.promotion_price).toFixed(2);
-                    msg = '促销价';
+                    msg = true;
+                    view.member_or_promotion = 'promotion';
                 }
                 if(!is_user_has_promotion){
                     // 促销bu对此用户开发
                     var next_promotions = $('.xa-display-promotion').next('div');
                     if(next_promotions.length==0){
                         // mei ji fen ying yong
-                        $('.xa-promotionSection').remove()
+                        $('.xa-promotionSection').remove();
                     }else if(next_promotions.length == 1){
                         // you ji fen ying yong
                         $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
-                        next_promotions.remove()
+                        next_promotions.remove();
                     }
-
+                    // 对于不开放的促销，不显示广告语
+                    var span = $('.xa-productName').find('span');
+                    if(span){
+                        span.remove();
+                    }
                 }
             // 商品无促销
             }
@@ -464,20 +472,24 @@ $(document).ready(function() {
                     view.discount = data.discount;
                     price = ((price * data.discount / 100).toFixed(2));
                     msg = '会员价';
+                    view.member_or_promotion = 'member';
+
+                }
+                // 对于不开放的促销，不显示广告语
+                var span = $('.xa-productName').find('span');
+                if(span){
+                    span.remove();
                 }
             }
             // 处理会员价
-            if (msg){
-                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
+            if (msg === true){
+                var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span>';
                 $('.xa-priceSection').html(temp);
 
+            }else if(msg === '会员价'){
+                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
+                $('.xa-priceSection').html(temp);
             }
-            //(msg === '' || msg === "会员价"){
-            //  // 移除多余促销信息
-            //  if(is_product_promotion && !is_user_has_promotion){
-            //      //$('.xa-promotionSection').remove();
-            //  }
-            //
         },
         error: function(data) {
 
@@ -498,7 +510,7 @@ $(document).ready(function() {
         postageConfigName: postageConfigName,
         countPerPurchase: countPerPurchase,
         promotion: promotion,
-        is_member_product: is_member_product
+        is_member_product: is_member_product,
     });
 
     if(models.length > 1){

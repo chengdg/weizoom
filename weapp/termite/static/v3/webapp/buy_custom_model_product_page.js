@@ -34,7 +34,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.isSideSlideOpen = false;
         this.maxCount = -1;
         this.promotion = options.promotion || null;
-        this.is_member_product = options.is_member_product == 'True'
+        this.is_member_product = options.is_member_product == 'True';
 
         if (this.promotion) {//判断促销是否为限时抢购
             this.promotion.isFlashSalePromotion = (this.promotion.type === 1)
@@ -586,65 +586,68 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('[data-ui-role="counter"]').data('view').setMaxCount(0);
             $('.xa-stock').hide();
         } else {
-            if(this.targetModel){
-                var change_price = 0;
-                if (this.promotion && this.promotion.isFlashSalePromotion) {
-                    //do nothing
-                    if (this.promotion.type == 1) {
-                        change_price = this.promotion.detail.promotion_price.toFixed(2)//无规格时，显示抢购的价钱
-
-                    }
-                } else {
-                    change_price = model.price.toFixed(2);
-                }
-                if(this.discount < 100){
-                    $('.xa-orPrice').text(change_price);
-                    change_price = (change_price * this.discount / 100).toFixed(2);
-                }
-                $('.xa-singlePrice').text(change_price);
-                // 是不是没有用 @洪大师
-                $('.xa-variablePrice').text(model.price);
-
-                // $('.xa-market-price').text(model.market_price);
-                // if ('object' == '{{product.type}}'){
-                //     $('.xa-disabledBuyLinks').hide();
-                //     $('.xa-enabledBuyLinks').show();
-                // }else if (this.useIntegral < model.price) {
-                //     $('.xa-disabledIntegralBuyLinks').show();
-                //     $('.xa-disabledBuyLinks').hide();
-                //     $('.xa-enabledBuyLinks').hide();
-                // }else{
-                var counter = $('[data-ui-role="counter"]').data('view');
-                // }
-                //运费
-                var items = [];
-                if (model.weight !== 0) {
-                    items.push('重量：<span class="xt-weight">'+model.weight.toFixed(2)+'</span><span class="xt-single-weight" style="display: none">' + model.weight.toFixed(2) + '</span>公斤</span>&nbsp;&nbsp;');
-                }
-                items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
-                if (model.postage >0) {
-                    items.push(':￥<span class="xt-postage">'+model.postage.toFixed(2)+'</span>');
-                }
-                $('.xa-postageContent').html(items.join(''));
-                $('.xa-postage').show();
-                if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0){
-                    //库存
-                    var maxCount = this.getMaxCount(this.targetModel);
-                    if (model.stock_type === 1) {
-                        $('.xa-stockCount').text(model.stocks);
-                        $('.xa-stock').show();
-                    } else {
-                        $('.xa-stock').hide();
-                    }
-                    counter.setMaxCount(maxCount);
-                }
-                if(counter.maxCount>0 && counter.maxCount<counter.minCount){
-                    $('.xa-disabledBuyLinks').show();
-                    $('.xa-enabledBuyLinks').hide();
+            console.log(model);
+            console.log('llll');
+            var change_price = 0;
+            if (this.promotion && this.promotion.isFlashSalePromotion) {
+                //do nothing
+                if (this.promotion.type == 1 && this.member_or_promotion === 'promotion') {
+                    change_price = this.promotion.detail.promotion_price.toFixed(2); //无规格时，显示抢购的价钱
+                }else if (this.promotion.type == 1 && this.member_or_promotion === 'member') {
+                    change_price = model.price.toFixed(2); //无规格时，显示抢购的价钱
                 }else{
-                    $('.xa-disabledBuyLinks').hide();
-                    $('.xa-enabledBuyLinks').show();
+                    change_price = model.price.toFixed(2);//无规格时，显示抢购的价钱
                 }
+            } else {
+                change_price = model.price.toFixed(2);
+            }
+            if(this.discount < 100){
+                $('.xa-orPrice').text(change_price);
+                change_price = (change_price * this.discount / 100).toFixed(2);
+            }
+            $('.xa-singlePrice').text(change_price);
+            // 是不是没有用 @洪大师
+            $('.xa-variablePrice').text(model.price);
+
+            // $('.xa-market-price').text(model.market_price);
+            // if ('object' == '{{product.type}}'){
+            //     $('.xa-disabledBuyLinks').hide();
+            //     $('.xa-enabledBuyLinks').show();
+            // }else if (this.useIntegral < model.price) {
+            //     $('.xa-disabledIntegralBuyLinks').show();
+            //     $('.xa-disabledBuyLinks').hide();
+            //     $('.xa-enabledBuyLinks').hide();
+            // }else{
+            var counter = $('[data-ui-role="counter"]').data('view');
+            // }
+            //运费
+            var items = [];
+            if (model.weight !== 0) {
+                items.push('重量：<span class="xt-weight">'+model.weight.toFixed(2)+'</span><span class="xt-single-weight" style="display: none">' + model.weight.toFixed(2) + '</span>公斤</span>&nbsp;&nbsp;');
+            }
+            items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
+            if (model.postage >0) {
+                items.push(':￥<span class="xt-postage">'+model.postage.toFixed(2)+'</span>');
+            }
+            $('.xa-postageContent').html(items.join(''));
+            $('.xa-postage').show();
+            if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0){
+                //库存
+                var maxCount = this.getMaxCount(this.targetModel);
+                if (model.stock_type === 1) {
+                    $('.xa-stockCount').text(model.stocks);
+                    $('.xa-stock').show();
+                } else {
+                    $('.xa-stock').hide();
+                }
+                counter.setMaxCount(maxCount);
+            }
+            if(counter.maxCount>0 && counter.maxCount<counter.minCount){
+                $('.xa-disabledBuyLinks').show();
+                $('.xa-enabledBuyLinks').hide();
+            }else{
+                $('.xa-disabledBuyLinks').hide();
+                $('.xa-enabledBuyLinks').show();
             }
         }
     },
