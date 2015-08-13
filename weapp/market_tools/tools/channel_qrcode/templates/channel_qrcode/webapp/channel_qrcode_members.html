@@ -30,7 +30,6 @@
 	.xui-RecommendedDetailPage .xui-tableview .xui-img{
 		width:55px;
 		height: 55px;
-		border:1px solid #f2f2f2;
 		border-radius: 5px;
 		
 	}
@@ -51,9 +50,11 @@
 		background-color: #f9c831;
 		color: #fff;
 		font-family: "华文细黑";
+		text-align: center;
+		border-radius: 5px;
 	}
 	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell .xui-p{
-		height: 20px;
+		height: 18px;
 		width: 100%;
 		text-align: center;
 		font-size: 12px;
@@ -80,13 +81,20 @@
 	<div class="xui-tableview">
 		{% for channel_qrcode_member in channel_qrcode_members %}
 		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}" />
-			<p class="xui-p">{{channel_qrcode_member.member.username}}</p>
+			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}}" />
+			<p class="xui-p xui-ellipsis-1">{{channel_qrcode_member.member.username}}</p>
 			{% if not channel_qrcode_member.member.is_subscribed %}
 			<div class="xui-yellowBar">已跑路</div>
 			{% endif %}
 		</div>
 		{% endfor %}
+			<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}}" />
+			<p class="xui-p xui-ellipsis-1">下雨不打伞下雨不打伞</p>
+			
+			<div class="xui-yellowBar">已跑路</div>
+			
+		</div>
 	</div>
 
 </div>
