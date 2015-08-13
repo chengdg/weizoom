@@ -427,6 +427,7 @@ $(document).ready(function() {
 	//给多人发优惠券
 	$(document).delegate('.xa-select-member', 'click', function(event){
 		var member_ids = [];
+		var member_name = '';
 		$('input.xa-select:checked').each(function(){;
 			if($(this).parent().parent().data('status') == '1'){
     			member_ids.push($(this).parent().parent().attr('data-id'));
@@ -436,7 +437,10 @@ $(document).ready(function() {
   			W.showHint('error', '请先选择会员！');
   			return;
   		}
-  		showDialogAndIssuingCoupon(member_ids, "");
+  		if(member_ids.length == 1){
+  			member_name = $('tr[data-id="'+member_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
+  		}
+  		showDialogAndIssuingCoupon(member_ids, member_name);
 	});
 
 	//给筛选出来的所有人发优惠券
