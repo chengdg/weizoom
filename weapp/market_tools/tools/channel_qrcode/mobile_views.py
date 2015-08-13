@@ -174,7 +174,7 @@ def get_settings_detail(request):
             relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
             payed_count = 0
             pay_money = 0
-
+            payed_member = []
             setting_id2count = {}
             member_id2setting_id = {}
             member_ids = []
@@ -191,11 +191,12 @@ def get_settings_detail(request):
                     setting_id2count[r.channel_qrcode_id] = 1
                 if r.is_new:
                     new_member_id2_create_at[r.member_id] = r.created_at
+                    if r.member.pay_times > 0:
+                        payed_member.append(r.member_id)
+
                 else:
                     old_member_id2_create_at[r.member_id] = r.created_at
 
-                if r.member.pay_times > 0:
-                    payed_count = payed_count + 1
 
             new_webapp_users = WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
             new_webapp_user_ids = [u.id for u in new_webapp_users]
@@ -203,10 +204,12 @@ def get_settings_detail(request):
             #获取old会员的webapp_user
             old_webapp_users = WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
             old_member_order_ids = []
+            
             for webapp_user in old_webapp_users:
                 created_at = old_member_id2_create_at[webapp_user.member_id]
                 for order in Order.objects.filter(webapp_user_id=webapp_user.id, created_at__gte=created_at):
                     old_member_order_ids.append(order.id)
+                    payed_member.append(webapp_user.member_id)
 
             if new_webapp_user_ids and old_member_order_ids:
                 orders = Order.objects.filter(Q(webapp_user_id__in=new_webapp_user_ids) | Q(id__in=old_member_order_ids)).filter(**filter_data_args).order_by('-created_at')
@@ -232,7 +235,7 @@ def get_settings_detail(request):
                     'channel_qrcode_members':relations,
                     'channel_qrcode_members_count':relations.count(),
                     'pay_money': '%.2f' %  pay_money,
-                    'payed_count': payed_count
+                    'payed_count': len(set(payed_member))
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
 
