@@ -96,6 +96,9 @@ def __get_promotion_name(product):
 			name = promotion['id']
 		else:
 			name = '%d_%s' % (promotion['id'], product.model['name'])
+	elif product.integral_sale:
+		print 'jz----', '%d_%s' % (product.integral_sale['id'], product.model['name'])
+		return '%d_%s' % (product.integral_sale['id'], product.model['name'])
 
 	return name
 
@@ -122,7 +125,7 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
 
 		for rule in product.integral_sale['detail']['rules']:
 			member_grade_id = int(rule['member_grade_id'])
-			if member_grade_id < 0 or member_grade_id == target_member_grade_id:
+			if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
 				# member_grade_id == -1则为全部会员等级
 				merged_rule['product_model_names'].append(product_model_name)
 				product.active_integral_sale_rule = rule
@@ -187,8 +190,9 @@ def group_product_by_promotion(request, products):
 		group_unified_id = __get_group_name(products)
 		integral_sale_rule = __collect_integral_sale_rules(member_grade_id, products) if member_grade_id != -1 else None
 
+		promotion = products[0].promotion
 		# 商品没有参加促销
-		if promotion_id <= 0:
+		if not promotion or promotion_id <= 0:
 			product_groups.append({
 				"id": group_id,
 				"uid": group_unified_id,
@@ -202,7 +206,6 @@ def group_product_by_promotion(request, products):
 			})
 			continue
 
-		promotion = products[0].promotion
 
 		# 如果促销对此会员等级的用户不开放
 		if not has_promotion(member_grade_id, promotion.get('member_grade_id')):
@@ -242,17 +245,7 @@ def group_product_by_promotion(request, products):
 				"subtotal": product.purchase_count * product.price
 			}
 
-			# product_groups.append({
-			# 	"id": group_id,
-			# 	"uid": group_unified_id,
-			# 	"promotion_type": type_name,
-			# 	'products': products,
-			# 	'promotion': promotion,
-			# 	'promotion_result': promotion_result,
-			# 	# 'integral_sale_rule': integral_sale_rule,
 			can_use_promotion = (promotion['status'] == promotion_models.PROMOTION_STATUS_STARTED)
-			# 	#'promotion_json': json.dumps(promotion)
-			# })
 		# 买赠
 		elif promotion_type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
 			first_product = products[0]
@@ -263,6 +256,7 @@ def group_product_by_promotion(request, products):
 			total_purchase_count = 0
 			total_product_price = 0.0
 			for product in products:
+				product.price = product.original_price
 				total_purchase_count += product.purchase_count
 				total_product_price += product.price * product.purchase_count
 
@@ -1662,7 +1656,6 @@ def get_shopping_cart_products(request):
 	# 		products.append(product)
 
 	product_groups = group_product_by_promotion(request, valid_products)
-
 
 	invalid_products.sort(lambda x, y: cmp(x.shopping_cart_id, y.shopping_cart_id))
 

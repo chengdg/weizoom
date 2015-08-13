@@ -29,9 +29,12 @@ def step_impl(context, user):
         if grade.is_auto_upgrade:
             data_dict["pay_times"] = grade.pay_times
             data_dict["pay_money"] = grade.pay_money
-            data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
-
+            # data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
         response_data.append(data_dict)
+    for data in json_data:
+        if 'upgrade_lower_bound' in data:
+            del data['upgrade_lower_bound']
+
     bdd_util.assert_list(json_data, response_data)
 
 
@@ -66,7 +69,7 @@ def step_impl(context, user):
         if content['name'] in old_grade_names:
             continue
         content['shop_discount'] = content['discount']
-        if content['upgrade'] == u'手动升级':
+        if content.get('upgrade', '') == u'手动升级':
             content['is_auto_upgrade'] = 0
         else:
             content['is_auto_upgrade'] = 1
