@@ -28,10 +28,7 @@ class voteStatistic(resource.Resource):
 			title2itemCount = {}
 			title_valid_dict = {}
 			for p in all_participances:
-				item_counter = 0
 				for title, data in p.termite_data.items():
-					item_counter += 1
-					title = '%s:%d' % (title, item_counter)
 					if data['type'] == 'appkit.selection':
 						is_valid = False
 						for item, value in data['value'].items():
@@ -51,15 +48,14 @@ class voteStatistic(resource.Resource):
 							else:
 								title_valid_dict[title] = 1
 
-			for title, title_value in reversed(title2itemCount.items()):
-				title_valid_dict[title] = title_valid_dict[title] if title_valid_dict.has_key(title) else 0
+			for title, title_value in title2itemCount.items():
 				single_title_dict = {}
-				single_title_dict['title_name'] = title
+				single_title_dict['title_name'] = title.split('_')[1]
 				single_title_dict['title_valid_count'] = title_valid_dict[title]
 				single_title_dict['title_value'] = []
 				for item, item_value in title_value.items():
 					single_item_value = {}
-					single_item_value['item_name'] = item
+					single_item_value['item_name'] = item.split('_')[1]
 					single_item_value['counter'] = item_value
 					single_item_value['percent'] = '%d%s' % (item_value / float(title_valid_dict[title]) * 100, '%')
 					single_title_dict['title_value'].append(single_item_value)

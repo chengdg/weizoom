@@ -46,16 +46,17 @@ class voteParticipance(resource.Resource):
 			item_data_list = []
 
 			for k, v in sorted(termite_data.items()):
+				pureName = k.split('_')[1]
 				item_data = {}
-				item_data['item_name'] = k
+				item_data['item_name'] = pureName
 				if v['type'] == 'appkit.selection':
 					value_list = []
 					for inner_k, inner_v in v['value'].items():
 						if inner_v['isSelect']:
-							value_list.append(inner_k)
+							value_list.append(inner_k.split('_')[1])
 					item_data['item_value'] = ','.join(value_list)
 				else:
-					item_data['item_name'] = ITEM_FOR_DISPLAY[k]
+					item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
 					item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
 		else:

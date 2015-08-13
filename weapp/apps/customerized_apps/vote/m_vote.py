@@ -82,7 +82,6 @@ class resultVote(resource.Resource):
 		if 'id' in request.GET:
 			id = request.GET['id']
 			vote_detail ={}
-
 			vote_vote = app_models.vote.objects.get(id=id)
 			vote_detail['name'] = vote_vote['name']
 			vote_detail['start_time'] = vote_vote['start_time'].strftime('%Y-%m-%d %H:%M')
@@ -117,7 +116,7 @@ class resultVote(resource.Resource):
 				for a_k,a_v in reversed(v_a):
 					value ={}
 					value['name'] = a_k
-					value['per'] =  a_isSelect[a_k]
+					value['per'] =  '%d' % a_isSelect[a_k]
 					value_list.append(value)
 				result['title'] = k
 				result['values'] = value_list
