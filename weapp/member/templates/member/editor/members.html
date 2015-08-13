@@ -65,25 +65,26 @@
 					</ul>
 				</div>
 				<div class="pr xui-inlineblock">
-					<button type="button" class="pr btn btn-default dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
-						添加到<span class="caret"></span>
-				   	</button>
+					<a type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						添加到
+				   	</a>
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
-					    	<a class="tc" type="button"  href="javascript:void(0);">
-								等级<span class="caret"></span>
+					    	<a class="" type="button"  href="javascript:void(0);">
+								给选中的人修改等级
 						   	</a>
-						   	<ul class="dropdown-menu" style="min-height:29px;">
+						   	<ul class="dropdown-menu xui-dropbox" style="min-height:29px;">
+						   		<div class="drop-box-arrow drop-box-arrow-left"></div>
 						   		{% for grade in grades %}
 						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}">{{grade.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
 					    <li class="dropdown-submenu">
-					    	<a class="tc"  type="button"  href="javascript:void(0);" >
-								分组<span class="caret"></span>
+					    	<a class=""  type="button"  href="javascript:void(0);" >
+								给筛选出来的所有人修改等级
 						   	</a>
-						   	<ul class="dropdown-menu" {% if user_tags|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
+						   	<ul class="dropdown-menu xui-dropbox" {% if user_tags|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
 						   		{% for tag in user_tags %}
 						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 						   		{% endfor %}

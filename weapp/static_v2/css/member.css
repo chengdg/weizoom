@@ -265,6 +265,7 @@
 }
 .xui-memberListPage .xui-operation .dropdown-submenu {
     position: relative;
+    min-width: 105px;
 }
 .xui-memberListPage .xui-operation .dropdown-submenu > .dropdown-menu {
     top: 0;
@@ -272,12 +273,38 @@
     margin-top: -1px;
     margin-left: 0px;
     border-radius: 0;
+
 }
 .xui-memberListPage .xui-operation .dropdown-submenu:hover > .dropdown-menu {
     display: block;
 }
 .xui-memberListPage .xui-operation ul li:first-child{
 	border:none;
+}
+.xui-memberListPage .dropdown-submenu {
+	 padding: 0px;
+}
+.xui-memberListPage .dropdown-submenu a{
+	 padding: 12px 10px !important;
+	 border-radius: 5px;
+}
+
+.xui-memberListPage .xui-dropbox a{
+	padding: 5px 10px !important;
+	text-align: center;
+	border-radius: 5px;
+}
+.xui-memberListPage .xui-dropbox {
+	margin-left: 10px !important;
+	border-top: none !important;
+}
+.xui-memberListPage .xui-dropbox .drop-box-arrow{
+	background: url(/static_v2/img/editor/grayArrow.png) no-repeat;
+
+}
+
+.xui-memberListPage .dropdown-menu {
+	border-radius: 5px;
 }
 .xui-memberListPage .xui-operation ul li{
 	border-top:1px solid #c5c5c5;
