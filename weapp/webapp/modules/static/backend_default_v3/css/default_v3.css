@@ -1338,8 +1338,8 @@ input.ui-input-text, textarea.ui-input-text {
     display: inline-block;
     box-shadow: 0 0 0 1px #e3e3e3;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     vertical-align: middle;
 }
 .xui-productDetailPage .xui-productInfo-section dl{
@@ -1608,7 +1608,7 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-reviewAllPage .xui-reviewlist li{
     box-shadow: 0  1px rgba(0,0,0,.05);
-    padding-bottom:20px;
+    padding-bottom:15px;
 }
 .xui-reviewAllPage .xui-reviewlist li:last-child{
     box-shadow: none;
@@ -1616,8 +1616,8 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-reviewAllPage .xui-user{
     box-shadow: 0 0 0 1px rgba(227,227,227,.5);
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     vertical-align: middle;
     background: url(/static/img/user-1.jpg) no-repeat;
     background-size: cover;

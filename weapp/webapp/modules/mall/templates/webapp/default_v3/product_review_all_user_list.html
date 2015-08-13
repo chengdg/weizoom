@@ -11,7 +11,7 @@
 		<ul class="xui-reviewlist">
 			{% for review in product_review_list %}
 				<li>
-			        <div class="clearfix pt10 pb10">
+			        <div class="clearfix pb10" style="padding-top:12px;">
 			            <div class="fl">
 				            <div class="xui-user">
 				                <img src="{% if review.user_icon %}{{ review.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" data-allow-autoplay="true">
@@ -22,7 +22,7 @@
 			                	{% endautoescape %}
 			                </span>
 			            </div>
-			            <span class="fr">{{ review.created_at|date:"Y-m-j" }}</span>
+			            <span class="fr" style="line-height:30px;">{{ review.created_at|date:"Y-m-j" }}</span>
 			        </div>
 			        <p class="em85 c6">{{ review.review_detail }}</p>
 					{% if review.custom_model_properties %}
