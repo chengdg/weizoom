@@ -53,7 +53,10 @@ W.dialog.member.RelationsDialog = W.dialog.Dialog.extend({
         $('#member-relations-tmpl-src').html('');
         $('.friend_count').text(options.friendCount);
         $('.fans_count').text(options.fansCount);
-        _this.table.reload({member_id:options.memberId,only_fans:options.onlyFans})
+        this.$('.show_friends').css('color','#333333');
+        this.$('.show_fans').css('color','#fff');
+        _this.table.reload({member_id:options.memberId,only_fans:options.onlyFans});
+
        
     },
 
