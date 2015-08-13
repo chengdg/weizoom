@@ -1,7 +1,7 @@
 # __author__ : "冯雪静"
 
-Feature:Manage the test order
-	Jobs能通过管理系统为管理会员的测试订单
+Feature: Jobs能通过管理系统为管理会员的测试订单
+
 Background:
 	Given jobs登录系统
 	And jobs已添加商品
@@ -21,7 +21,8 @@ Background:
 		"""
 	And tom关注jobs的公众号
 	And bill关注jobs的公众号
-	
+
+
 @mall @mall.webapp.test.buy @pyliu
 Scenario: 有测试权限的会员购买商品
 	tom购买'商品1'后
