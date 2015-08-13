@@ -74,14 +74,11 @@ def _pay_weizoom_card(context, data, order):
     response_json = json.loads(response.content)
 
 
-##############################################################
-
 ###############################
 # when steps
 ###############################
 
-
-@when(u"{user}'{action}'最新订单")
+@when(u'{user}"{action}"最新订单')
 def step_impl(context, user, action):
     if hasattr(context, 'latest_order_id'):
         latest_order_id = context.latest_order_id

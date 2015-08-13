@@ -277,6 +277,7 @@ Scenario:导出订单
 	3. jobs选择全部条件时,导出对应的订单
 	4. jobs填写详细信息时,导出对应的订单
 	5. jobs选择固定标签时,导出对应的订单
+	# 建议拆成多个Scenario
 
 	Given jobs登录系统
 	When jobs选择条件为
