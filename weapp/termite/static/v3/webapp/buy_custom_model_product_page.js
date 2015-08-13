@@ -632,7 +632,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-postageContent').html(items.join(''));
             $('.xa-postage').show();
             if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0){
-                if(this.targetMode){
+                if(this.targetModel){
                     //库存
                     var maxCount = this.getMaxCount(this.targetModel);
                     counter.setMaxCount(maxCount);
