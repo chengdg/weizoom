@@ -55,6 +55,11 @@ class CleanUpCookieMiddleware(object):
 	清除缓存的中间件
 	"""
 	def process_request(self, request):
+		
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		# if settings.MODE != "develop":
 		# 	real_ip=request.META.get('HTTP_X_FORWARDED_FOR', None)
