@@ -108,13 +108,14 @@ class Outline(resource.Resource):
     @login_required
     def api_get(request):
         type = request.GET.get('type', None)
-        days = request.GET.get('days', 6)
+        days = request.GET.get('days', 7)
+        webapp_id = request.user_profile.webapp_id
+        total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, -1)
+        date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
+
+
         if type and type == 'purchase_trend':
             try:
-                webapp_id = request.user_profile.webapp_id
-                total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
-                date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
-
                 date2count = dict()
                 date2price = dict()
 
@@ -171,7 +172,6 @@ class Outline(resource.Resource):
             """
             获得每日pv、uv统计
             """
-            webapp_id = request.user_profile.webapp_id
 
             #对当天的统计结果进行更新
             if settings.IS_UPDATE_PV_UV_REALTIME:
@@ -180,9 +180,7 @@ class Outline(resource.Resource):
                 webapp_models.PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id, data_date=today).delete()
                 webapp_statistics_util.count_visit_daily_pv_uv(webapp_id, today)
 
-            total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
             statisticses = webapp_models.PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id, url_type=webapp_models.URL_TYPE_ALL, data_date__range=(low_date, high_date))
-            date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 
             date2pv = dict([(s.data_date.strftime('%Y-%m-%d'), s.pv_count) for s in statisticses])
             date2uv = dict([(s.data_date.strftime('%Y-%m-%d'), s.uv_count) for s in statisticses])
