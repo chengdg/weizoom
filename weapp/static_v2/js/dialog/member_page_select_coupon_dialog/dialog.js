@@ -87,6 +87,9 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
                 if(cur_count <= limit_count &&(remained_count > cur_count*this.member_count)){
                     return;
                 }
+                if((cur_count == limit_count) && (remained_count == cur_count*this.member_count)){
+                    return;
+                }
                 $cur_up.parent().next().removeClass('hide');
             }
             return;
