@@ -674,10 +674,12 @@ Scenario:对会员列表进行消费指数筛选
 			"add_time": "2014-01-03",
 			"status": "已跑路"
 		}]
+		"""
+
 @memberList
 # __editor__ : "新新"
 Scenario:筛选出会员发送优惠券
-	#除已跑路外
+#除已跑路外
 	Given jobs已添加商品
 		"""
 		[{
@@ -998,7 +1000,7 @@ Scenario:筛选条件下所有会员群发消息
 	And jobs已有图文
 		"""
 		[{
-			"name": "图文1"	
+			"name": "图文1"
 		}]
 		"""
 	Given nokia关注jobs的公众号
@@ -1113,6 +1115,5 @@ Scenario:筛选条件下所有会员群发消息
 			"content":"图文1"
 		}
 	"""
-	
 
-	
+
