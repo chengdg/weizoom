@@ -20,7 +20,7 @@ from django.template import RequestContext, Context
 #from django.conf import settings
 
 #from utils.url_helper import remove_querystr_filed_from_request_url
-from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image, is_request_for_cloud_housekeeper
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image, is_request_for_cloud_housekeeper, is_product_stocks_request
 from account.models import WEBAPP_TYPE_WEIZOOM_MALL
 
 #from core import dateutil
@@ -165,6 +165,10 @@ class RequestUserSourceDetectMiddleware(object):
 	请求用户来源识别的中间件
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -244,6 +248,10 @@ class UserProfileMiddleware(object):
 	获得userprofile
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -359,6 +367,10 @@ class ForceLogoutMiddleware(object):
 	@note 该中间件必须置于UserProfileMiddleware之后。
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -379,6 +391,10 @@ class RequestWebAppMiddleware(object):
 	获得当前请求的WebApp
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -518,6 +534,10 @@ class BrowserSourceDetectMiddleware(object):
 	检测处理不同浏览器来源的中间件
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -576,6 +596,10 @@ class ManagerDetectMiddleware(object):
 	检测是否是manager的中间件
 	"""
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
@@ -731,6 +755,10 @@ class WeizoomMallMiddleware(object):
 	"""
 
 	def process_request(self, request):
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
