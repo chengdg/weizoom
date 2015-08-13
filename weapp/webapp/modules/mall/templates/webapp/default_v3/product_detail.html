@@ -470,6 +470,7 @@ $(document).ready(function() {
                 if(has_discount === "True"){
                     //促销与会员价格处理
                     view.discount = data.discount;
+                    view.initForStandardModelProduct()
                     price = ((price * data.discount / 100).toFixed(2));
                     msg = '会员价';
                     view.member_or_promotion = 'member';
