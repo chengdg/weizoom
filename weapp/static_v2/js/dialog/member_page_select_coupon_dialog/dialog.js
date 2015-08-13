@@ -82,35 +82,100 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
             is_limit = false;
         }
         var cur_count = parseInt($cur_up.prevAll('.xa-counterText').text());
+        console.log(is_limit, max_count, limit_count, remained_count, cur_count);
+
         if($cur_up.hasClass("xui-btn")){
-            if(remained_count < (cur_count + 1) * this.member_count){
-                if(cur_count <= limit_count &&(remained_count > cur_count*this.member_count)){
+            if(is_limit){
+                if (this.member_count == 1){
+                    if(limit_count <= remained_count){
+                        return;
+                    }
+                    if(limit_count > remained_count){
+                        $cur_up.parent().next().removeClass('hide');
+                    }
                     return;
                 }
-                if((cur_count == limit_count) && (remained_count == cur_count*this.member_count)){
-                    return;
+                if (this.member_count > 1){
+                    if(limit_count <= remained_count){
+                        if(cur_count < limit_count){
+                            $cur_up.parent().next().removeClass('hide');
+                        }
+                        if(cur_count == limit_count){
+                            return;
+                        }
+                        return;
+                    }
+                    if(limit_count > remained_count){
+                        $cur_up.parent().next().removeClass('hide');
+                        return;
+                    }
                 }
-                $cur_up.parent().next().removeClass('hide');
+            }else{
+                //只考虑库存不足的情况
+                if(remained_count <= (cur_count + 1) * this.member_count){
+                    $cur_up.parent().next().removeClass('hide');
+                }
+                return;
             }
-            return;
-        }else{
-            if(!is_limit || (cur_count+1) * this.member_count <= max_count){
+        }
+
+        if (this.member_count == 1){
+            if((cur_count+1)<=max_count){
                 $cur_up.prevAll('.xa-down').removeClass("xui-btn");
                 $cur_up.prevAll('.xa-counterText').text(cur_count+1);
             }
-            if(max_count<remained_count && (cur_count+1) * this.member_count <= remained_count && (cur_count+1<=max_count)){
-                $cur_up.prevAll('.xa-down').removeClass("xui-btn");
-                $cur_up.prevAll('.xa-counterText').text(cur_count+1);
+            if((cur_count+1) == max_count){
+                $cur_up.addClass("xui-btn");
             }
-            if(max_count){
-                if(cur_count+1 == max_count){
+        }else if (this.member_count > 1){
+            if (limit_count == max_count && limit_count != remained_count){
+                if((cur_count+1) <= limit_count && (cur_count+1)*this.member_count < remained_count){
+                    $cur_up.prevAll('.xa-down').removeClass("xui-btn");
+                    $cur_up.prevAll('.xa-counterText').text(cur_count+1);
+                }
+                if((cur_count+1) == max_count){
                     $cur_up.addClass("xui-btn");
                 }
-                if(this.member_count > 1 && (cur_count+2)*this.member_count > remained_count){
+            }else{
+                if((cur_count+1)*this.member_count < max_count){
+                    $cur_up.prevAll('.xa-down').removeClass("xui-btn");
+                    $cur_up.prevAll('.xa-counterText').text(cur_count+1);
+                }
+                if((cur_count+2)*this.member_count > max_count){
                     $cur_up.addClass("xui-btn");
                 }
             }
         }
+
+        // if($cur_up.hasClass("xui-btn")){
+        //     if(remained_count < (cur_count + 1) * this.member_count){
+        //         if(cur_count <= limit_count &&(remained_count > cur_count*this.member_count)){
+        //             return;
+        //         }
+        //         if((cur_count == limit_count) && (remained_count == cur_count*this.member_count)){
+        //             return;
+        //         }
+        //         $cur_up.parent().next().removeClass('hide');
+        //     }
+        //     return;
+        // }else{
+        //     if(!is_limit || (cur_count+1) * this.member_count <= max_count){
+        //         $cur_up.prevAll('.xa-down').removeClass("xui-btn");
+        //         $cur_up.prevAll('.xa-counterText').text(cur_count+1);
+        //     }
+        //     if(max_count<remained_count && (cur_count+1) * this.member_count <= remained_count && (cur_count+1<=max_count)){
+        //         $cur_up.prevAll('.xa-down').removeClass("xui-btn");
+        //         $cur_up.prevAll('.xa-counterText').text(cur_count+1);
+        //     }
+        //     if(max_count){
+        //         if(cur_count+1 == max_count){
+        //             $cur_up.addClass("xui-btn");
+        //         }
+        //         if(this.member_count > 1 && (cur_count+2)*this.member_count > remained_count){
+        //             $cur_up.addClass("xui-btn");
+        //         }
+        //     }
+        // }
     },
 
     downCounter: function(event) {
