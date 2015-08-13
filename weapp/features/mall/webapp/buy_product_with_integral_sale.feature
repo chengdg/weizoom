@@ -117,7 +117,7 @@ Background:
 			"products": ["商品1"],
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 70,
 				"discount_money": 70.0
 			}]
@@ -128,7 +128,7 @@ Background:
 			"products": ["商品3"],
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 25.0
 			}]
@@ -139,7 +139,7 @@ Background:
 			"products": ["商品5"],
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 20.0
 			}]
@@ -294,7 +294,7 @@ Scenario: 5 购买单个积分折扣商品，积分活动还未开始
 			"products": ["商品4"],
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 20.0
 			}]
@@ -347,7 +347,7 @@ Scenario: 6 购买单个积分折扣商品，积分活动已结束，积分活�
 			"products": ["商品4"],
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 20.0
 			}]
@@ -415,7 +415,7 @@ Scenario: 7 购买单个积分折扣商品，积分活动时间已结束，但�
 			"products": ["商品4"],
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 20.0
 			}]
@@ -504,7 +504,7 @@ Scenario: 9 购买单个,多规格积分折扣商品，积分活动已结束，�
 			"products": ["商品5"],
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 20.0
 			}]
@@ -562,7 +562,7 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 			"products": ["商品4"],
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 20.0
 			}]
@@ -598,19 +598,24 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 	Then bill在jobs的webapp中拥有150会员积分
 
 #补充：张三香
-Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置抵扣50%的商品
+@mall2 @jz
+Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置抵扣5的商品
 #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
-
-	Given jobs已添加商品
+	When tom1关注jobs的公众号
+	And tom2关注jobs的公众号
+	And tom3关注jobs的公众号
+	And tom4关注jobs的公众号
+	Given jobs登录系统
+	And jobs已添加商品
 	"""
 		[{
 			"name": "商品10",
 			"price": 100.00,
-			"member_price": true
+			"is_member_product": "on"
 		},{
 			"name": "商品11",
 			"price": 100.00,
-			"member_price": true
+			"is_member_product": "on"
 		}]
 	"""
 	When jobs创建积分应用活动
@@ -622,38 +627,68 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			"products": ["商品11"],
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 50.0
 				}]
 		}]
 	"""
-
-	And tom1关注jobs的公众号
-	And tom2关注jobs的公众号
-	And tom3关注jobs的公众号
-	And tom4关注jobs的公众号
-
 	When jobs添加会员等级
 		"""
 		[{
 			"name": "铜牌会员",
-			"shop_discount": "90%"
+			"discount": "9"
 		},{
 			"name": "银牌会员",
-			"shop_discount": "80%"
+			"discount": "8"
 		},{
 			"name": "金牌会员",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
-	Given jobs已获取会员列表
-		| name    | name_rank    |
-		|tom1     |普通会员      |
-		|tom2     |铜牌会员      |
-		|tom3     |银牌会员      |
-		|tom4     |金牌会员      |
-
+	When jobs更新"tom2"的会员等级
+	"""
+	{
+		"name": "tom2",
+		"member_rank": "铜牌会员"
+	}
+	"""
+	When jobs更新"tom3"的会员等级
+	"""
+	{
+		"name": "tom4",
+		"member_rank": "银牌会员"
+	}
+	"""
+	When jobs更新"tom4"的会员等级
+	"""
+	{
+		"name": "tom4",
+		"member_rank": "金牌会员"
+	}
+	"""
+	Then jobs可以获得会员列表
+	"""
+	[{
+		"name": "tom4",
+		"member_rank": "金牌会员"
+	}, {
+		"name": "tom3",
+		"member_rank": "银牌会员"
+	}, {
+		"name": "tom2",
+		"member_rank": "铜牌会员"
+	}, {
+		"name": "tom1",
+		"member_rank": "普通会员"
+	}, {
+		"name": "tom",
+		"member_rank": "普通会员"
+	}, {
+		"name": "bill",
+		"member_rank": "普通会员"
+	}]
+	"""
 
 
 #1101会员tom1购买商品11，使用积分抵扣最高：50元，订单金额：50元
@@ -662,9 +697,10 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 	Then tom1在jobs的webapp中拥有100会员积分
 	When tom1购买jobs的商品
 		"""
-		{	"integral_money":50.00,
-			"integral":100.00,
+		{
 			"products": [{
+				"integral_money":50.00,
+				"integral":100.00,
 				"name": "商品11",
 				"count": 1
 			}]
@@ -676,19 +712,21 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 100.00,
-			"member_price":100.00,
-			"members_money":0.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
+			"coupon_money":0.00,
 			"integral_money":50.00,
 			"integral":100.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品11",
+				"price": 100.0,
+				"grade_discounted_money": 0.0,
 				"count": 1
 			}]
 		}
 		"""
+		#	"members_money":0.00,
+		#	"member_price":100.00,
 	Then tom1在jobs的webapp中拥有0会员积分
 
 
@@ -698,9 +736,10 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 	Then tom2在jobs的webapp中拥有200会员积分
 	When tom2购买jobs的商品
 		"""
-		{	"integral_money":45.00,
-			"integral":90.00,
+		{
 			"products": [{
+				"integral_money":45.00,
+				"integral":90.00,
 				"name": "商品11",
 				"count": 1
 			}]
@@ -711,9 +750,7 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 		{
 			"status": "待支付",
 			"final_price": 45.0,
-			"product_price": 100.00,
-			"member_price":90.00,
-			"members_money":10.00,
+			"product_price": 90.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":45.00,
@@ -721,10 +758,14 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品11",
+				"price": 90.0,
+				"grade_discounted_money": 10.0,
 				"count": 1
 			}]
 		}
 		"""
+			#"member_price":90.00,
+			#"members_money":10.00,
 	Then tom2在jobs的webapp中拥有110会员积分
 
 #1103会员tom4购买商品10+商品11，使用积分抵扣最高：35元，订单金额：105元
@@ -733,14 +774,15 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 	Then tom4在jobs的webapp中拥有400会员积分
 	When tom4购买jobs的商品
 		"""
-		{	"integral_money":35.00,
-			"integral":70.00,
+		{
 			"products": [{
 				"name": "商品10",
 				"count": 1
 			},{
 			    "name": "商品11",
-				"count": 1
+				"count": 1,
+				"integral_money":35.00,
+				"integral":70.00
 			}]
 		}
 		"""
@@ -749,9 +791,7 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 		{
 			"status": "待支付",
 			"final_price": 105.0,
-			"product_price": 200.00,
-			"member_price":140.00,
-			"members_money":60.00,
+			"product_price": 140.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":35.00,
@@ -759,15 +799,22 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			"coupon_money":0.00,
 			"products": [{
 				"name": "商品10",
+				"price": 70.0,
+				"grade_discounted_money": 30.0,
 				"count": 1
 			},{
 				"name": "商品11",
+				"price": 70.0,
+				"grade_discounted_money": 30.0,
 				"count": 1
 			}]
 		}
 	"""
+	#		"member_price":140.00,
+	#		"members_money":60.00,
 	Then bill在jobs的webapp中拥有330会员积分
 
+@mall2 
 Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置积分抵扣的商品
  #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 
@@ -789,13 +836,13 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 		"""
 		[{
 			"name": "铜牌会员",
-			"shop_discount": "90%"
+			"discount": "9"
 		}, {
 			"name": "银牌会员",
-			"shop_discount": "80%"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
 	Given jobs已获取会员列表
@@ -815,19 +862,19 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			"is_permanant_active": false,
 			"rules": 
 			[{
-				"member_grade_name": "普通会员",
+				"member_grade": "普通会员",
 				"discount": 100,
 				"discount_money": 100.0
 			},{
-				"member_grade_name": "铜牌会员",
+				"member_grade": "铜牌会员",
 				"discount": 90,
 				"discount_money": 81.0
 			},{
-				"member_grade_name": "银牌会员",
+				"member_grade": "银牌会员",
 				"discount": 80,
 				"discount_money": 64.0
 			},{
-				"member_grade_name": "金牌会员",
+				"member_grade": "金牌会员",
 				"discount": 70,
 				"discount_money": 49.0
 			}]
@@ -997,13 +1044,13 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 		"""
 		[{
 			"name": "铜牌会员",
-			"shop_discount": "90%"
+			"discount": "98"
 		}, {
 			"name": "银牌会员",
-			"shop_discount": "80%"
+			"discount": "8"
 		}, {
 			"name": "金牌会员",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
 	Given jobs已获取会员列表
@@ -1024,19 +1071,19 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 			"is_permanant_active": false,
 			"rules": 
 			[{
-				"member_grade_name": "普通会员",
+				"member_grade": "普通会员",
 				"discount": 100,
 				"discount_money": 100.0
 			},{
-				"member_grade_name": "铜牌会员",
+				"member_grade": "铜牌会员",
 				"discount": 90,
 				"discount_money": 90.0
 			},{
-				"member_grade_name": "银牌会员",
+				"member_grade": "银牌会员",
 				"discount": 80,
 				"discount_money": 80.0
 			},{
-				"member_grade_name": "金牌会员",
+				"member_grade": "金牌会员",
 				"discount": 70,
 				"discount_money": 70.0
 			}]
