@@ -371,6 +371,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% block js %}
 {% if not is_deleted_data %}
 <script type="text/javascript">
+
 //运费计算因子
 var postageFactor = {};
 //可用积分
@@ -429,6 +430,8 @@ $(document).ready(function() {
             // 商品原价
             var price = view.priceInfo.min_price;
 
+            // 存储商品会员价与促销的状态
+            view.member_or_promotion = '';
             // 商品有促销
             var product_promotion = view.promotion;
             is_product_promotion = !($.isEmptyObject(product_promotion));
@@ -439,7 +442,8 @@ $(document).ready(function() {
                 // 限时抢购
                 if(is_user_has_promotion && product_promotion.detail.promotion_price){
                     price = (product_promotion.detail.promotion_price).toFixed(2);
-                    msg = '促销价';
+                    msg = true;
+                    view.member_or_promotion = 'promotion';
                 }
                 if(!is_user_has_promotion){
                     // 促销bu对此用户开发
@@ -464,20 +468,19 @@ $(document).ready(function() {
                     view.discount = data.discount;
                     price = ((price * data.discount / 100).toFixed(2));
                     msg = '会员价';
+                    view.member_or_promotion = 'member';
+
                 }
             }
             // 处理会员价
-            if (msg){
-                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
+            if (msg === true){
+                var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
                 $('.xa-priceSection').html(temp);
 
+            }else if(msg === '会员价'){
+                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
+                $('.xa-priceSection').html(temp);
             }
-            //(msg === '' || msg === "会员价"){
-            //  // 移除多余促销信息
-            //  if(is_product_promotion && !is_user_has_promotion){
-            //      //$('.xa-promotionSection').remove();
-            //  }
-            //
         },
         error: function(data) {
 
@@ -498,7 +501,7 @@ $(document).ready(function() {
         postageConfigName: postageConfigName,
         countPerPurchase: countPerPurchase,
         promotion: promotion,
-        is_member_product: is_member_product
+        is_member_product: is_member_product,
     });
 
     if(models.length > 1){
