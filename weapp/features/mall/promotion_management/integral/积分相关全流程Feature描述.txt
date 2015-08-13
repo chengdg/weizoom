@@ -1,0 +1,123 @@
+#_author_：张三香
+
+积分相关功能模块梳理：
+
+#1微商城-“首页-积分规则”
+
+	Scenario: 1 用户关注公众号获得积分（额外奖励：暂无）
+		#feature名称：member_subscribe_and_unscribe.feature
+		#feature路径:http://git.weizzz.com:8082/weizoom/Weapp/weapp/features/member
+
+	Scenario: 2 分享链接给好友点击-一个链接，不同好友点击，都会增加一次积分（额外奖励：暂无）
+		#备注：未找到对应的feature
+
+	Scenario: 3 购买商品返积分-每次购买都会获得基础奖励（额外奖励：1X订单支付金额）
+		#feature名称：buy_product_increase_integral.feature
+		#feature路径:http://git.weizzz.com:8082/weizoom/Weapp/weapp/features/member
+
+	Scenario: 4 分享链接购买-好友通过分享链接购买后给分享者增加积分（额外奖励：暂无）
+		#feature名称：buy_product_increase_integral.feature
+		#feature路径:http://git.weizzz.com:8082/weizoom/Weapp/weapp/features/member
+
+	Scenario: 5 推荐关注的好友购买奖励-用户推荐的线下会员每次购买给推荐者增加积分（额外奖励：1X订单支付金额）
+		#备注：未找到对应的feature
+	Scenario: 6 订单积分抵扣上限（指订单中商品金额）-开启
+		#feature名称：buy_all_product_with_integral_sale.feature
+		#feature路径:http://git.weizzz.com:8082/weizoom/Weapp/weapp/features/mall
+
+	Scenario: 7 商品好评送积分-用户评价已购买商品，评价内容审核后增加积分
+		#feature名称：buy_product_with_integral_sale.feature
+		#feature路径:http://git.weizzz.com:8082/weizoom/Weapp/weapp/features/mall
+		#场景：Scenario7中已覆盖
+
+#2微商城-“促销管理-积分应用”（整单积分抵扣设置为“关闭状态”）
+
+	#1-促销管理-积分应用（后台已补充feature）
+		Scenario: 1 积分应用活动列表的查询
+			#feature名称：integral_sale_list_query.feature
+			#feature路径:F:\我的文件-zhangsx\微商城\补充-促销管理-积分应用后台feature\integral（我的电脑本地，尚未上传）
+		Scenario: 2 创建积分应用活动
+			#feature名称：add_integral_sale.feature
+			#feature路径:F:\我的文件-zhangsx\微商城\补充-促销管理-积分应用后台feature\integral（我的电脑本地，尚未上传）
+		Scenario: 3 删除积分应用活动（删除、批量删除）
+			#feature名称：delete_integral_sale.feature
+			#feature路径:F:\我的文件-zhangsx\微商城\补充-促销管理-积分应用后台feature\integral（我的电脑本地，尚未上传）
+		Scenario: 4 结束积分应用活动（结束、批量结束）
+			#feature名称：end_integral_sale.feature
+			#feature路径:F:\我的文件-zhangsx\微商城\补充-促销管理-积分应用后台feature\integral（我的电脑本地，尚未上传）
+
+	#2-促销管理-积分应用（手机端购买参与'积分应用'的商品）
+		Scenario: 8 购买积分应用商品
+		#feature名称：buy_product_with_integral_sale.feature
+		#feature路径:http://git.weizzz.com:8082/weizoom/Weapp/weapp/features/mall
+
+	#3-促销管理-积分应用（后台和手机端联调业务流场景，暂无feature）：
+		Scenario: 1 后台'新建'未开始状态的'商品1积分应用',bill手机端购买'商品1'（商品详情页和下单页不显示促销信息，直到状态变为'进行中'才显示促销信息）
+		Scenario: 2 后台'新建'进行中状态的'商品2积分应用',bill手机端购买'商品2'（商品详情页和下单页显示促销信息）
+		Scenario: 3 后台'结束'进行中状态的'商品3积分应用',bill手机端购买'商品3'（商品详情页和下单页不显示促销信息）
+		Scenario: 4 后台商品管理'下架'商品-后台积分应用活动列表-手机端购买商品
+			情景1：
+				#1 后台添加'商品4'并上架；（后台待售商品列表显示商品4，手机端商品列表显示商品4）
+				#2 后台创建'进行中'状态的'商品4积分应用活动'；（后端积分应用活动列表显示该积分应用活动）
+				#3 bill手机端购买'商品4'；（商品详情页和下单页显示积分应用的促销信息）
+				#4 后台'下架'商品4；（后台'商品4积分应用活动'状态变为'已结束'）
+				#5 bill手机端访问webapp（商品列表中不存在'商品4'）
+			情景2：
+				#1 后台添加'商品4'并上架；（后台待售商品列表显示商品4，手机端商品列表显示商品4）
+				#2 后台创建'未开始'状态的'商品4积分应用活动'；（后端积分应用活动列表显示该积分应用活动）
+				#3 bill手机端购买'商品4'；（商品详情页和下单页不显示积分应用的促销信息）
+				#4 后台'下架'商品4；（后台'商品4积分应用活动'状态变为'已结束'）
+				#5 bill手机端访问webapp（商品列表中不存在'商品4'）
+
+#3微商城-其他
+	#管理员调积分（会员管理-会员列表）
+		#备注：不确定有没有feature
+	#取消订单回收积分-购买可以积分抵扣的商品，取消订单后购物抵扣的积分会回收（订单管理-所有订单）
+		#备注不确定有没有feature
+
+#4微信-百宝箱
+
+	Scenario: 1 微信抽奖-会员积分小于抽奖消耗积分
+		#前提：抽奖01-1，消耗2积分，一天抽一次；会员a拥有积分1；
+		#结果：不能参与抽奖
+		#前提：抽奖01-2，消耗2积分，一天抽2次，会员b拥有积分3；
+		#结果：只能抽1次，剩余积分1；
+
+	Scenario: 2 微信抽奖-会员积分等于抽奖消耗积分
+		#前提：抽奖02，消耗2积分，一天抽2次；会员c拥有积分2；
+		#结果：只能抽1次，剩余积分0；
+
+	Scenario: 3 微信抽奖-会员积分大于抽奖消耗积分（且奖励设置选择为：积分 10）
+		#前提：抽奖03，消耗2积分，一天抽2次，一等奖：积分 10；会员d拥有积分10；
+		#结果：
+			积分数大于2时，可以参与抽奖：
+				若抽中一等奖，则消耗2积分，同时获得10积分；
+				若未中奖，则只消耗积分，不获得积分；
+			当积分数小于2时，则不可参与抽奖
+
+	Scenario: 4 微信投票-奖励设置选择积分
+		#前提：投票01，奖励设置：积分 10 ；会员e拥有积分0
+		#结果：会员e参与投票01后，积分数变为10
+
+	Scenario: 5 活动报名-奖励设置选择积分
+		#前提：活动01，奖励设置：积分 10 ；会员f拥有积分0
+		#结果：会员f参加活动01后，积分数变为10
+
+	Scenario: 6 用户调研-奖励设置选择积分
+		#前提：调研01，奖励设置：积分 10 ；会员g拥有积分0
+		#结果：会员g参加调研01后，积分数变为10
+
+	Scenario: 7 趣味测试-奖励设置选择积分
+		#前提：趣味01，奖励设置：积分 10 ；会员h拥有积分0
+		#结果：会员h参加趣味测试01后，积分数变为10
+
+#5微信-“高级管理-带参数二维码”
+
+	Scenario: 1 带参数二维码-奖励设置选择积分
+		#已关注会员可参与
+			#前提：创建'二维码01'，已关注会员可参与，奖励设置：积分 10；会员bill拥有积分0
+			#结果：会员bill扫码'二维码01'后，积分变为10
+
+		#已关注会员不可参与
+			#前提：创建'二维码02'，已关注会员不可参与，奖励设置：积分 10；会员bill拥有积分10
+			#结果：会员bill扫码'二维码02'后，积分不变，仍为10
