@@ -494,10 +494,20 @@ def batch_update_grade(request):
 	webapp_id = request.user_profile.webapp_id
 	grade_id = request.POST.get('grade_id', None)
 	post_ids = request.POST.get('ids', None)
-
 	grade = MemberGrade.objects.get(id=grade_id)
+
+	status = request.POST.get('update_status', 'selected')
+	if status == 'all':
+		filter_value = request.POST.get('filter_value', '')
+		request.GET = request.GET.copy()
+		request.GET['filter_value'] = filter_value
+		_, request_members, _ = __get_request_members_list(request)
+		post_ids = [m.id for m in request_members]
+	else:
+		post_ids = post_ids.split('-')
+
 	if grade.webapp_id == webapp_id and post_ids:
-		Member.objects.filter(id__in=post_ids.split('-')).update(grade=grade)
+		Member.objects.filter(id__in=post_ids).update(grade=grade)
 
 	response = create_response(200)
 	return response.get_response()
