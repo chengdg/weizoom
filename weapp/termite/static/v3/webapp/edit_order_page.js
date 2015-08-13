@@ -608,12 +608,18 @@ var CouponManager = BackboneLite.View.extend({
 			$('.xa-no-use-coupon-show').hide();
 			$('.xa-use-coupon-show').show();
 
-			// 单品券对应商品显示原价
 			var productid = $('#coupon_id').data('productid');
 			$(view.products).each(function(i, n){
-				if(n.id == productid){
+				if(productid > 0 && n.id == productid){
+					// 单品券对应商品显示原价
 					n.member_discount = n.price;
 					n.price = n.original_price;
+					view.prices();
+					$('[data-product-id="'+n.id+'"]').find('.xa-product-price').text(n.price.toFixed(2));
+				}else if (productid <= 0 && n.member_discount){
+					// 单品券对应商品显示原价
+					n.price = n.member_discount;
+					n.member_discount = null;
 					view.prices();
 					$('[data-product-id="'+n.id+'"]').find('.xa-product-price').text(n.price.toFixed(2));
 				}
@@ -660,6 +666,7 @@ var CouponManager = BackboneLite.View.extend({
 		var $target = $(event.currentTarget);
 		var targetId = $target.data('target');
 		$(targetId).data('view').show();
+
 	},
 	recordErrorForTest: function(message) {
 		$('#xt-errMsg').val(message);
