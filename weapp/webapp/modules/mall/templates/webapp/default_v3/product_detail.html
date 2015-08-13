@@ -28,13 +28,13 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             <div class="xui-section-title xui-section-item xui-pl0">
                 {% if cur_request_member %}
                 <div class="disF">
-                    <h2 class="xui-productName xt-productName">{{ product.name }}{% if product.promotion_title %}
+                    <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}{% if product.promotion_title %}
                     <span class="xui-text-red">{{ product.promotion_title|safe }}</span>{% endif %}</h2>
                     <a href="javascript:void(0);" class="xui-fav xa-collectProduct" data-is-collect="false">收藏</a>
                 </div>
                 {% else %}
                 <div class="disF">
-                    <h2 class="xui-productName xt-productName">{{ product.name }}{% if product.promotion_title %}
+                    <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}{% if product.promotion_title %}
                     <span class="xui-text-red">{{ product.promotion_title }}</span>{% endif %}</h2>
                 </div>
                 {% endif %}
@@ -450,13 +450,17 @@ $(document).ready(function() {
                     var next_promotions = $('.xa-display-promotion').next('div');
                     if(next_promotions.length==0){
                         // mei ji fen ying yong
-                        $('.xa-promotionSection').remove()
+                        $('.xa-promotionSection').remove();
                     }else if(next_promotions.length == 1){
                         // you ji fen ying yong
                         $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
-                        next_promotions.remove()
+                        next_promotions.remove();
                     }
-
+                    // 对于不开放的促销，不显示广告语
+                    var span = $('.xa-productName').find('span');
+                    if(span){
+                        span.remove();
+                    }
                 }
             // 商品无促销
             }
@@ -470,6 +474,11 @@ $(document).ready(function() {
                     msg = '会员价';
                     view.member_or_promotion = 'member';
 
+                }
+                // 对于不开放的促销，不显示广告语
+                var span = $('.xa-productName').find('span');
+                if(span){
+                    span.remove();
                 }
             }
             // 处理会员价
