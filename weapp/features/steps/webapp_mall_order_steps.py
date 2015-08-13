@@ -83,7 +83,12 @@ def step_click_check_out(context, webapp_user_name):
         'bill': order.ship_name,
         'group2integralinfo': {},
     }
+
     data.update(argument_request)
+    coupon_id = context.product_infos.get('coupon_id', None)
+    if coupon_id:
+        data['is_use_coupon'] = 'true'
+        data['coupon_id'] = coupon_id
     response = context.client.post(url, data)
     content = json.loads(response.content)
     msg = content["data"].get("msg", "")

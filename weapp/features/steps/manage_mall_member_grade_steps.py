@@ -29,9 +29,11 @@ def step_impl(context, user):
         if grade.is_auto_upgrade:
             data_dict["pay_times"] = grade.pay_times
             data_dict["pay_money"] = grade.pay_money
-            data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
-
+            # data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
         response_data.append(data_dict)
+    for data in json_data:
+        del data['upgrade_lower_bound']
+
     bdd_util.assert_list(json_data, response_data)
 
 
@@ -158,7 +160,7 @@ def step_impl(context, user, name):
             data_dict = content
         data.append(data_dict)
 
-        context.client.post('/mall2/api/member_grade_list/?_method=post', {'grades': json.dumps(data)})
+    context.client.post('/mall2/api/member_grade_list/?_method=post', {'grades': json.dumps(data)})
 
 
 @when(u'{user}更新"{webapp_user_name}"的会员等级')

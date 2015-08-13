@@ -176,13 +176,14 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	else:
 		args = json.loads(context.text)
 
-	def __get_current_promotion_id_for_product(product):
+	def __get_current_promotion_id_for_product(product, member_grade_id):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
 		promotions = Promotion.objects.filter(id__in=promotion_ids, status=PROMOTION_STATUS_STARTED).exclude(type__gt=3)
-		if len(promotions) > 0:
+		if len(promotions) > 0 and (promotions[0].member_grade_id <= 0 or \
+				promotions[0].member_grade_id == member_grade_id):
+			# 存在促销信息，且促销设置等级对该会员开放
 			return promotions[0].id
-		else:
-			return 0
+		return 0
 
 	settings = IntegralStrategySttings.objects.filter(webapp_id=context.webapp_id)
 	integral_each_yuan = settings[0].integral_each_yuan
@@ -210,7 +211,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 				promotion = Promotion.objects.get(name=product.promotion.name)
 				promotion_ids.append(str(promotion.id))
 			else:
-				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj)))
+				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj, member.grade_id)))
 			product_model_names.append(_get_product_model_ids_from_name(webapp_owner_id, product.model_name))
 
 			if hasattr(product, 'integral') and product.integral > 0:
@@ -240,7 +241,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 				promotion = Promotion.objects.get(name=product['promotion']['name'])
 				promotion_ids.append(str(promotion.id))
 			else:
-				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj)))
+				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj, member.grade_id)))
 			_product_model_name = _get_product_model_ids_from_name(webapp_owner_id, product.get('model', None))
 			product_model_names.append(_product_model_name)
 			if 'integral' in product and product['integral'] > 0:
@@ -888,6 +889,8 @@ def step_impl(context, webapp_user_name):
 			'product_counts': product_counts,
 			'product_model_names': product_model_names
 		}
+		if __i.get('coupon'):
+			product_infos['coupon_id'] = __i['coupon']
 
 	elif __i.get("action") == u"click":
 		# 加默认地址

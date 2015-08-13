@@ -252,7 +252,7 @@ Scenario: 4 购买单个多规格商品+一个普通商品
 		"""
 	Then bill在jobs的webapp中拥有20会员积分
 
-@mall2 @mall.promotion @mall.webapp.promotion 
+@mall2 @mall.promotion @mall.webapp.promotion
 Scenario: 5 购买单个限时抢购商品，同时使用积分购买
 	
 	Given jobs登录系统
@@ -379,11 +379,11 @@ Scenario: 6 购买单个限时抢购商品， 买赠商品，同时使用积分�
 	Then bill在jobs的webapp中拥有90会员积分
 
 #补充：张三香 "雪静"
-@integral @meberGrade
+@mall2 @integral @meberGrade
 Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50%的商品
 #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
-
-	Given jobs已添加商品
+	Given jobs登录系统
+	And jobs已添加商品
 		"""
 			[{
 				"name": "商品10",
@@ -400,7 +400,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 	And tom3关注jobs的公众号
 	And tom2关注jobs的公众号
 	And tom1关注jobs的公众号
-
+	Given jobs登录系统
 	When jobs添加会员等级
 		"""
 		[{
@@ -439,14 +439,27 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 		}
 		"""
 	Then jobs可以获得会员列表
-		|name     | name_rank    |
-		|tom1     |普通会员      |
-		|tom2     |铜牌会员      |
-		|tom3     |银牌会员      |
-		|tom4     |金牌会员      |
-		|tom      |普通会员      |
-		|bill     |普通会员      |
-
+		"""
+		[{
+			"name": "tom1",
+			"member_rank": "普通会员"
+		}, {
+			"name": "tom2",
+			"member_rank": "铜牌会员"
+		}, {
+			"name": "tom3",
+			"member_rank": "银牌会员"
+		}, {
+			"name": "tom4",
+			"member_rank": "金牌会员"
+		},{
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "普通会员"
+		}]
+		"""
 #701会员tom1购买商品10，使用积分抵扣最高：50元，订单金额：50元
 	When tom1访问jobs的webapp
 	When tom1获得jobs的100会员积分
