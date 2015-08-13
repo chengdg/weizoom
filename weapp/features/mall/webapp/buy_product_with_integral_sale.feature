@@ -598,7 +598,7 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 	Then bill在jobs的webapp中拥有150会员积分
 
 #补充：张三香
-@mall2 @integral @meberGrade @jz
+@mall2 @integral @meberGrade
 Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置抵扣5的商品
 #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 	When tom1关注jobs的公众号
@@ -814,23 +814,23 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 	#		"members_money":60.00,
 	Then bill在jobs的webapp中拥有330会员积分
 
-@mall2 
+@mall2
 Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置积分抵扣的商品
  #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 
-	Given jobs已添加商品
+	Given bill1关注jobs的公众号
+	And bill2关注jobs的公众号
+	And bill3关注jobs的公众号
+	And bill4关注jobs的公众号
+	And jobs登录系统
+	And jobs已添加商品
 	"""
 		[{
 			"name": "商品12",
 			"price": 100.00,
-			"member_price": true
+			"is_member_product": "on"
 		}]
 	"""
-
-	And bill1关注jobs的公众号
-	And bill2关注jobs的公众号
-	And bill3关注jobs的公众号
-	And bill4关注jobs的公众号
 
 	When jobs添加会员等级
 		"""
@@ -845,13 +845,49 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			"discount": "7"
 		}]
 		"""
-	Given jobs已获取会员列表
-		| name     | name_rank    |
-		|bill1     |普通会员      |
-		|bill2     |铜牌会员      |
-		|bill3     |银牌会员      |
-		|bill4     |金牌会员      |
-
+	When jobs更新"bill2"的会员等级
+	"""
+	{
+		"name": "bill2",
+		"member_rank": "铜牌会员"
+	}
+	"""
+	When jobs更新"bill3"的会员等级
+	"""
+	{
+		"name": "bill3",
+		"member_rank": "银牌会员"
+	}
+	"""
+	When jobs更新"bill4"的会员等级
+	"""
+	{
+		"name": "bill4",
+		"member_rank": "金牌会员"
+	}
+	"""
+	Then jobs可以获得会员列表
+	"""
+	[{
+		"name": "bill4",
+		"member_rank": "金牌会员"
+	}, {
+		"name": "bill3",
+		"member_rank": "银牌会员"
+	}, {
+		"name": "bill2",
+		"member_rank": "铜牌会员"
+	}, {
+		"name": "bill1",
+		"member_rank": "普通会员"
+	}, {
+		"name": "tom",
+		"member_rank": "普通会员"
+	}, {
+		"name": "bill",
+		"member_rank": "普通会员"
+	}]
+	"""
 	When jobs创建积分应用活动
 		"""
 		[{
@@ -888,9 +924,10 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 	Then bill1在jobs的webapp中拥有200会员积分
 	When bill1购买jobs的商品
 		"""
-		{	"integral_money":100.00,
-			"integral":200.00,
+		{
 			"products": [{
+				"integral_money":100.00,
+				"integral":200.00,
 				"name": "商品12",
 				"count": 1
 			}]
@@ -899,22 +936,24 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 	Then bill1成功创建订单
 		"""
 		{
-			"status": "待支付",
+			"status": "待发货",
 			"final_price": 0.00,
 			"product_price": 100.00,
-			"member_price":100.00,
-			"members_money":0.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
+			"coupon_money":0.00,
 			"integral_money":100.00,
 			"integral":200.00,
-			"coupon_money":0.00,
 			"products": [{
+				"price": 100.0,
+				"grade_discounted_money": 0.0,
 				"name": "商品12",
 				"count": 1
 			}]
 		}
 		"""
+		#	"member_price":100.00,
+		#	"members_money":0.00,
 	Then bill1在jobs的webapp中拥有0会员积分
 
 
@@ -924,9 +963,10 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 	Then bill2在jobs的webapp中拥有300会员积分
 	When bill2购买jobs的商品
 		"""
-		{	"integral_money":81.00,
-			"integral":162.00,
+		{
 			"products": [{
+				"integral_money":81.00,
+				"integral":162.00,
 				"name": "商品12",
 				"count": 1
 			}]
@@ -937,15 +977,15 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 		{
 			"status": "待支付",
 			"final_price": 9.00,
-			"product_price": 100.00,
-			"member_price":90.00,
-			"members_money":10.00,
+			"product_price": 90.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
+			"coupon_money":0.00,
 			"integral_money":81.00,
 			"integral":162.00,
-			"coupon_money":0.00,
 			"products": [{
+				"price": 90.0,
+				"grade_discounted_money": 10.0,
 				"name": "商品12",
 				"count": 1
 			}]
@@ -960,9 +1000,10 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 	Then bill3在jobs的webapp中拥有400会员积分
 	When bill3购买jobs的商品
 		"""
-		{	"integral_money":64.00,
-			"integral":128.00,
+		{
 			"products": [{
+				"integral_money":64.00,
+				"integral":128.00,
 				"name": "商品12",
 				"count": 1
 			}]
@@ -973,20 +1014,22 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 		{
 			"status": "待支付",
 			"final_price": 16.00,
-			"product_price": 100.00,
-			"member_price":80.00,
-			"members_money":20.00,
+			"product_price": 80.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
+			"coupon_money":0.00,
 			"integral_money":64.00,
 			"integral":128.00,
-			"coupon_money":0.00,
 			"products": [{
+				"price": 80.0,
+				"grade_discounted_money": 20.0,
 				"name": "商品12",
 				"count": 1
 			}]
 		}
 		"""
+		#	"member_price":80.00,
+		#	"members_money":20.00,
 	Then bill3在jobs的webapp中拥有272会员积分
 
 
@@ -996,9 +1039,10 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 		Then bill4在jobs的webapp中拥有500会员积分
 		When bill4购买jobs的商品
 		"""
-		{	"integral_money":49.00,
-			"integral":98.00,
+		{
 			"products": [{
+				"integral_money":49.00,
+				"integral":98.00,
 				"name": "商品12",
 				"count": 1
 			}]
@@ -1009,42 +1053,46 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 		{
 			"status": "待支付",
 			"final_price": 21.00,
-			"product_price": 100.00,
-			"member_price":70.00,
-			"members_money":30.00,
+			"product_price": 70.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
+			"coupon_money":0.00,
 			"integral_money":49.00,
 			"integral":98.00,
-			"coupon_money":0.00,
 			"products": [{
+				"price": 70.0,
+				"grade_discounted_money": 30.0,
 				"name": "商品12",
 				"count": 1
 			}]
 		}
 		"""
+		#	"member_price":70.00,
+		#	"members_money":30.00,
 		Then bill4在jobs的webapp中拥有402会员积分
 
+@mall2 @jz
 Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分抵扣的商品
 
-	Given jobs已添加商品
+	Given bill1关注jobs的公众号
+	And bill2关注jobs的公众号
+	And bill3关注jobs的公众号
+	And bill4关注jobs的公众号
+	And jobs登录系统
+	And jobs已添加商品
 	"""
 		[{
 			"name": "商品13",
 			"price": 100.00,
-			"member_price": false
+			"is_member_product": "no"
 		}]
 	"""
-	And bill1关注jobs的公众号
-	And bill2关注jobs的公众号
-	And bill3关注jobs的公众号
-	And bill4关注jobs的公众号
 
 	When jobs添加会员等级
 		"""
 		[{
 			"name": "铜牌会员",
-			"discount": "98"
+			"discount": "9.8"
 		}, {
 			"name": "银牌会员",
 			"discount": "8"
@@ -1053,13 +1101,49 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 			"discount": "7"
 		}]
 		"""
-	Given jobs已获取会员列表
-		| name     | name_rank    |
-		|bill1     |普通会员      |
-		|bill2     |铜牌会员      |
-		|bill3     |银牌会员      |
-		|bill4     |金牌会员      |
-
+	When jobs更新"bill2"的会员等级
+	"""
+	{
+		"name": "bill2",
+		"member_rank": "铜牌会员"
+	}
+	"""
+	When jobs更新"bill3"的会员等级
+	"""
+	{
+		"name": "bill3",
+		"member_rank": "银牌会员"
+	}
+	"""
+	When jobs更新"bill4"的会员等级
+	"""
+	{
+		"name": "bill4",
+		"member_rank": "金牌会员"
+	}
+	"""
+	Then jobs可以获得会员列表
+	"""
+	[{
+		"name": "bill4",
+		"member_rank": "金牌会员"
+	}, {
+		"name": "bill3",
+		"member_rank": "银牌会员"
+	}, {
+		"name": "bill2",
+		"member_rank": "铜牌会员"
+	}, {
+		"name": "bill1",
+		"member_rank": "普通会员"
+	}, {
+		"name": "tom",
+		"member_rank": "普通会员"
+	}, {
+		"name": "bill",
+		"member_rank": "普通会员"
+	}]
+	"""
 
 	When jobs创建积分应用活动
 		"""
@@ -1097,10 +1181,11 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 	Then bill1在jobs的webapp中拥有200会员积分
 	When bill1购买jobs的商品
 		"""
-		{	"integral_money":100.00,
-			"integral":200.00,
+		{
 			"products": [{
-				"name": "商品12",
+				"integral_money":100.00,
+				"integral":200.00,
+				"name": "商品13",
 				"count": 1
 			}]
 		}
@@ -1108,22 +1193,24 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 	Then bill1成功创建订单
 		"""
 		{
-			"status": "待支付",
+			"status": "待发货",
 			"final_price": 0.00,
 			"product_price": 100.00,
-			"member_price":100.00,
-			"members_money":0.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":100.00,
 			"integral":200.00,
 			"coupon_money":0.00,
 			"products": [{
+				"price": 100.0,
+				"grade_discounted_money": 0.0,
 				"name": "商品13",
 				"count": 1
 			}]
 		}
 		"""
+		#	"member_price":100.00,
+		#	"members_money":0.00,
 	Then bill1在jobs的webapp中拥有0会员积分
 
 #1302会员bill2购买商品13，使用积分抵扣最高：90元，订单金额：10元
@@ -1132,9 +1219,10 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 	Then bill2在jobs的webapp中拥有300会员积分
 	When bill2购买jobs的商品
 		"""
-		{	"integral_money":90.00,
-			"integral":180.00,
+		{
 			"products": [{
+				"integral_money":90.00,
+				"integral":180.00,
 				"name": "商品13",
 				"count": 1
 			}]
@@ -1146,19 +1234,21 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 			"status": "待支付",
 			"final_price": 10.00,
 			"product_price": 100.00,
-			"member_price":100.00,
-			"members_money":0.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":90.00,
 			"integral":180.00,
 			"coupon_money":0.00,
 			"products": [{
+				"price": 100.0,
+				"grade_discounted_money": 0.0,
 				"name": "商品13",
 				"count": 1
 			}]
 		}
 		"""
+		#	"member_price":100.00,
+		#	"members_money":0.00,
 	Then bill2在jobs的webapp中拥有120会员积分
 
 #1303会员bill3购买商品13，使用积分抵扣最高：80元，订单金额：20元
@@ -1167,9 +1257,10 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 	Then bill3在jobs的webapp中拥有400会员积分
 	When bill3购买jobs的商品
 		"""
-		{	"integral_money":80.00,
-			"integral":160.00,
+		{
 			"products": [{
+				"integral_money":80.00,
+				"integral":160.00,
 				"name": "商品13",
 				"count": 1
 			}]
@@ -1181,19 +1272,21 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 			"status": "待支付",
 			"final_price": 20.00,
 			"product_price": 100.00,
-			"member_price":100.00,
-			"members_money":0.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":80.00,
 			"integral":160.00,
 			"coupon_money":0.00,
 			"products": [{
+				"price": 100.0,
+				"grade_discounted_money": 0.0,
 				"name": "商品13",
 				"count": 1
 			}]
 		}
 		"""
+		#	"member_price":100.00,
+		#	"members_money":0.00,
 	Then bill3在jobs的webapp中拥有240会员积分
 
 #1304会员bill4购买商品13，使用积分抵扣最高：70元，订单金额：30元
@@ -1202,9 +1295,10 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 	Then bill4在jobs的webapp中拥有500会员积分
 	When bill4购买jobs的商品
 		"""
-		{	"integral_money":70.00,
-			"integral":140.00,
+		{
 			"products": [{
+				"integral_money":70.00,
+				"integral":140.00,
 				"name": "商品13",
 				"count": 1
 			}]
@@ -1216,17 +1310,19 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 			"status": "待支付",
 			"final_price": 30.00,
 			"product_price": 100.00,
-			"member_price":100.00,
-			"members_money":0.00,
 			"promotion_saved_money": 0.00,
 			"postage": 0.00,
 			"integral_money":70.00,
 			"integral":140.00,
 			"coupon_money":0.00,
 			"products": [{
+				"price": 100.0,
+				"grade_discounted_money": 0.0,
 				"name": "商品13",
 				"count": 1
 			}]
 		}
 		"""
+		#	"member_price":100.00,
+		#	"members_money":0.00,
 	Then bill4在jobs的webapp中拥有360会员积分
