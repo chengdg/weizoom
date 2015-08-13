@@ -79,6 +79,9 @@ def step_impl(context, user):
 			member_item['status'] = u"已取消"
 		member_item['member_rank'] = member_item['grade_name']
 		actual_members.append(member_item)
+	for data in json_data:
+		if 'experience' in data:
+			del data['experience']
 
 	bdd_util.assert_list(json_data, actual_members)
 
