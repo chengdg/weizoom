@@ -54,7 +54,7 @@
 		border-radius: 5px;
 	}
 	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell .xui-p{
-		height: 20px;
+		height: 18px;
 		width: 100%;
 		text-align: center;
 		font-size: 12px;
@@ -88,6 +88,13 @@
 			{% endif %}
 		</div>
 		{% endfor %}
+			<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}}" />
+			<p class="xui-p xui-ellipsis-1">下雨不打伞下雨不打伞</p>
+			
+			<div class="xui-yellowBar">已跑路</div>
+			
+		</div>
 	</div>
 
 </div>
