@@ -396,7 +396,7 @@ OPERATION2STEPID = {
 	u'完成': u"When %s完成最新订单",
 	u'退款': u"When %s对最新订单进行退款",
 	u'完成退款': u"When %s完成最新订单退款",
-	u'取消': u"When %s'取消'最新订单",
+	u'取消': u"When %s\"取消\"最新订单",
 }
 
 @when(u"微信用户批量消费{webapp_owner_name}的商品")
@@ -481,8 +481,6 @@ def step_impl(context, webapp_owner_name):
 				pass
 			else:
 				raise
-				# context.caller_step_cancel_reason = {"reason":"cancel"}
-				# context.execute_steps(u"When %s'取消'最新订单" % actor)
 
 
 @when(u"微信用户批量访问{webapp_owner_name}的webapp")
