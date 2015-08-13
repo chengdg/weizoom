@@ -14,10 +14,13 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
 
     onInitialize: function(options) {
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+
     },
 
     beforeShow: function() {
         this.table.reset();
+        $(".xa-member-coupon-send").removeClass('disabled');
+        $(".xa-member-info").removeClass('hide');
     },
 
     onShow: function(options) {
@@ -32,12 +35,16 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
         if (options.member_count > 1){
             $('.xa-member-info').html('<img class="mr10 " src="/static_v2/img/editor/hint.png" />'+"您将为"+options.member_count+"人发放优惠券");
         }
-    },
-
-    afterShow: function(options) {
         this.table.reload({
             "member_count": this.member_count
         });
+    },
+
+    afterShow: function(options) {
+        if(!$('.xa-member-couponTable').data('length')){
+            $(".xa-member-coupon-send").addClass('disabled');
+            $(".xa-member-info-block").addClass('hide');
+        }
     },
 
     onSelectCoupon: function(event) {
