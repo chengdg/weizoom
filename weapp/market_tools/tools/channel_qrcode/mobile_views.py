@@ -178,7 +178,7 @@ def get_settings_detail(request):
             setting_id2count = {}
             member_id2setting_id = {}
             member_ids = []
-
+            filter_data_args['status__in'] = (ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
             old_member_id2_create_at = {}
             new_member_id2_create_at = {}
             for r in relations:
