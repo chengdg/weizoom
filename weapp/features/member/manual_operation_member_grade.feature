@@ -62,20 +62,22 @@ Background:
 	When tom关注jobs的公众号
 
 	Given jobs登录系统
-#	Then jobs可以获得会员列表
-#		"""
-#		[{
-#			"name": "tom",
-#			"member_rank": "普通会员",
-#			"pay_money": 0.00,
-#			"pay_times": 0,
-#		}, {
-#			"name": "bill",
-#			"member_rank": "普通会员",
-#			"pay_money": 0.00,
-#			"pay_times": 0,
-#		}]
-#		"""
+	Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"experience": 10000
+		}, {
+			"name": "bill",
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"pay_times": 0,
+			"experience": 1000
+		}]
+		"""
 
 @mall2 @ztq
 Scenario: 1 手动把会员调到自动升级的会员等级里面
