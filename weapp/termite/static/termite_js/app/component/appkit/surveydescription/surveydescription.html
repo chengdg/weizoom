@@ -1,4 +1,4 @@
-{% load workbench_filter %}
+﻿{% load workbench_filter %}
 
 
 {% ifequal component.type 'appkit.surveydescription' %}
@@ -15,7 +15,7 @@
 	</div>
 	<div class="wui-i-info">
 		<div class="wui-i-time">
-			活动时间：{{component.model.start_time}}至{{component.model.end_time}}
+			活动时间1：{{component.model.start_time}}至{{component.model.end_time}}
 		</div>
 		<div class="wui-i-prize">
 			{% if component.model.prize.type == 'integral' %}
