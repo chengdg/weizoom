@@ -150,13 +150,13 @@
         {% if order.integral %}
         <p class="zoom">
             <span class="fl">积分抵扣</span>
-            <span class="fr">-￥</span><span class="xa-integralMoney">{{ order.integral_money | floatformat:"2"}}</span>
+            <span class="fr">-￥<span class="xa-integralMoney">{{ order.integral_money | floatformat:"2"}}</span></span>
         </p>
         {% endif %}
         {% if order.has_promotion_saved_money %}
         <p class="zoom">
             <span class="fl">促销优惠</span>
-            <span class="fr">-￥</span><span class="">{{ order.promotion_saved_money | floatformat:"2"}}</span>
+            <span class="fr">-￥<span class="">{{ order.promotion_saved_money | floatformat:"2"}}</span></span>
         </p>
         {% endif %}
         {% if order.coupon_id %}
