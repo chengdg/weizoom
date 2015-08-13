@@ -256,7 +256,6 @@ def group_product_by_promotion(request, products):
 			total_purchase_count = 0
 			total_product_price = 0.0
 			for product in products:
-				product.price = product.original_price
 				total_purchase_count += product.purchase_count
 				total_product_price += product.price * product.purchase_count
 
@@ -264,6 +263,8 @@ def group_product_by_promotion(request, products):
 				can_use_promotion = False
 			else:
 				#如果满足循环满赠，则调整赠品数量
+				for product in products:
+					product.price = product.original_price
 				if promotion_detail['is_enable_cycle_mode']:
 					premium_round_count = total_purchase_count / promotion['detail']['count']
 					for premium_product in promotion_detail['premium_products']:

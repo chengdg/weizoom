@@ -189,20 +189,20 @@ Scenario: 1 删除已过期的优惠券
 		"""
 		[
 			{
-				"coupon_id": "coupon2_id_1",
-				"money": 10.00,
+				"coupon_id": "coupon3_id_2",
+				"money": 100.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon3_id_1",
+				"money": 100.00,
 				"status": "未使用"
 			}, {
 				"coupon_id": "coupon2_id_2",
 				"money": 10.00,
 				"status": "未使用"
-			},{
-				"coupon_id": "coupon3_id_1",
-				"money": 100.00,
-				"status": "未使用"
 			}, {
-				"coupon_id": "coupon3_id_2",
-				"money": 100.00,
+				"coupon_id": "coupon2_id_1",
+				"money": 10.00,
 				"status": "未使用"
 			}
 		]
@@ -338,20 +338,20 @@ Scenario: 4 删除已过期的优惠券规则
 		"""
 		[
 			{
-				"coupon_id": "coupon2_id_1",
-				"money": 10.00,
+				"coupon_id": "coupon3_id_2",
+				"money": 100.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon3_id_1",
+				"money": 100.00,
 				"status": "未使用"
 			}, {
 				"coupon_id": "coupon2_id_2",
 				"money": 10.00,
 				"status": "未使用"
-			},{
-				"coupon_id": "coupon3_id_1",
-				"money": 100.00,
-				"status": "未使用"
 			}, {
-				"coupon_id": "coupon3_id_2",
-				"money": 100.00,
+				"coupon_id": "coupon2_id_1",
+				"money": 10.00,
 				"status": "未使用"
 			}
 		]

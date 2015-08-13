@@ -484,6 +484,7 @@ INSTALLED_TASKS = [
     # 'services.update_component_mp_token_service',
     'services.analysis_message_service',
     'services.count_keyword_service',
+    'services.send_express_poll_service',
 ]
 
 
@@ -545,7 +546,7 @@ MIXUP_FACTOR = 3179
 WATCH_DOG_DEVICE = 'mysql'
 
 WATCHDOG_WEIXIN_MESSAGE = False
-ENABLE_WEPAGE_CACHE = True
+ENABLE_WEPAGE_CACHE = False
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'

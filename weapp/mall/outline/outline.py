@@ -108,9 +108,10 @@ class Outline(resource.Resource):
     @login_required
     def api_get(request):
         type = request.GET.get('type', None)
-        days = request.GET.get('days', 7)
+        days = request.GET.get('days', 6)
         webapp_id = request.user_profile.webapp_id
-        total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, -1)
+        total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
+        high_date -= timedelta(days=1)
         date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 
 
@@ -120,7 +121,7 @@ class Outline(resource.Resource):
                 date2price = dict()
 
                 # 11.20从查询mall_purchase_daily_statistics变更为直接统计订单表，解决mall_purchase_daily_statistics遗漏统计订单与统计时间不一样导致的统计结果不同的问题。
-                orders = mall_models.Order.objects.belong_to(webapp_id).filter(created_at__range=(low_date, (high_date+timedelta(days=1))))
+                orders = mall_models.Order.objects.belong_to(webapp_id).filter(created_at__range=(low_date, (high_date)+timedelta(days=1)))
                 statuses = set([mall_models.ORDER_STATUS_PAYED_SUCCESSED, mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED])
                 orders = [order for order in orders if (order.type != 'test') and (order.status in statuses)]
                 for order in orders:
@@ -148,7 +149,7 @@ class Outline(resource.Resource):
                 for date in date_list:
                     count_trend_values.append(date2count.get(date, 0))
                     price_trend_values.append(round(date2price.get(date, 0.0), 2))
-
+                print(len(count_trend_values))
                 return create_line_chart_response(
                         '',
                         '',

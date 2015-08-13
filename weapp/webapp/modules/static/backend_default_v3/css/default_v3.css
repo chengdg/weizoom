@@ -3781,8 +3781,8 @@ position: absolute;
     height: 169px;
     display: block;
     background: url(/static_v2/img/webapp/usercenter/usercenterBg.jpg) no-repeat;
-    -webkit-background-size: 100%;
-    background-size: 100%;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
     margin: 0px;
     overflow: hidden;
 }
