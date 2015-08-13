@@ -475,6 +475,7 @@ def get_pay_result(request):
 	#是否提示用户领红包
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
+
 	red_envelope = request.webapp_owner_info.red_envelope
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
@@ -536,6 +537,7 @@ def get_pay_result_success(request):
 	is_show_red_envelope = False
 	red_envelope_rule_id = 0
 	coupon_rule = None
+
 	red_envelope = request.webapp_owner_info.red_envelope
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮

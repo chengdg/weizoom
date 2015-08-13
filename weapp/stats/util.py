@@ -9,7 +9,7 @@ from django.db.models.query_utils import Q
 
 from core import dateutil
 from core import paginator
-from modules.member.models import Member, MemberSharedUrlInfo, MemberInfo, WebAppUser, SOURCE_BY_URL, SOURCE_MEMBER_QRCODE
+from modules.member.models import Member, MemberSharedUrlInfo, MemberInfo, WebAppUser, SOURCE_BY_URL, SOURCE_MEMBER_QRCODE, CANCEL_SUBSCRIBED, SUBSCRIBED
 from market_tools.tools.member_qrcode.models import MemberQrcode, MemberQrcodeLog
 from mall.models import Order, belong_to, ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_SOURCE_OWN
 from mall.models import OrderHasProduct, Product, PRODUCT_SHELVE_TYPE_ON
@@ -197,7 +197,8 @@ def get_date2new_member_count(webapp_id, low_date, high_date, date_formatter = N
 					# is_subscribed = True, 
 					#is_for_buy_test = False, 
 					is_for_test = False, 
-					created_at__range=(low_date, high_date)
+					created_at__range=(low_date, high_date), 
+					status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 				)
 	#初始化数据
 	date2new_member_count = {}
@@ -237,14 +238,16 @@ def get_total_member_count(webapp_id, end_time = None):
 						# is_subscribed = True, 
 						#is_for_buy_test = False, 
 						is_for_test = False,
-						created_at__lte = end_time
+						created_at__lte = end_time, 
+						status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 					).count()
 	else:
 		total_count = Member.objects.filter(
 						webapp_id = webapp_id, 
 						# is_subscribed = True, 
 						#is_for_buy_test = False, 
-						is_for_test = False
+						is_for_test = False, 
+						status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 					).count()
 	return total_count
 
@@ -257,7 +260,8 @@ def get_unsubscribed_member_count(webapp_id):
 									webapp_id = webapp_id, 
 									is_subscribed = False, 
 									#is_for_buy_test = False, 
-									is_for_test = False
+									is_for_test = False, 
+									status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 								).count()
 	return unsubscribed_member_count
 
@@ -405,7 +409,8 @@ def get_date2member_from_share_url_count(webapp_id, low_date, high_date, date_fo
 						source=SOURCE_BY_URL, 
 						# is_subscribed=True, 
 						is_for_test=False, 
-						created_at__range=(low_date, high_date)
+						created_at__range=(low_date, high_date), 
+						status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 					)
 									
 	#收集数据
@@ -435,7 +440,8 @@ def get_member_from_share_url_count(webapp_id, low_date, high_date):
 						source=SOURCE_BY_URL, 
 						# is_subscribed=True, 
 						is_for_test=False, 
-						created_at__range=(low_date, high_date)
+						created_at__range=(low_date, high_date), 
+						status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 					)
 									
 	#收集数据
@@ -572,6 +578,7 @@ def get_ori_qrcode_member_count(webapp_id, low_date, high_date):
 						member__webapp_id=webapp_id,
 						# member__is_subscribed=True, 
 						member__is_for_test=False, 
+						member__status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED), 
 						created_at__range=(low_date, high_date)
 					)
 
@@ -588,7 +595,8 @@ def get_ori_qrcode_member_count(webapp_id, low_date, high_date):
 								# is_subscribed=True, 
 								is_for_test=False, 
 								source=SOURCE_MEMBER_QRCODE, 
-								created_at__range=(low_date, high_date)
+								created_at__range=(low_date, high_date), 
+								status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 							)
 	for member in members_from_qrcode:
 		member_from_qrcode_count += 1
@@ -606,7 +614,8 @@ def get_self_follow_member_count(webapp_id, low_date, high_date):
 								# is_subscribed=True, 
 								is_for_test=False, 
 								source__in = self_follow_sources, 
-								created_at__range=(low_date, high_date)
+								created_at__range=(low_date, high_date), 
+								status__in = (CANCEL_SUBSCRIBED, SUBSCRIBED)
 							).count()
 		
 	return self_follow_member_count
