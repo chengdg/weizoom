@@ -69,15 +69,13 @@
                 {{if coupon.has_remained }}
                     <input
                         data-ui-role="counter"
-                        data-min-limit="0"
+                        data-min-limit="${coupon.limit_counts}"
                         {{if coupon.limit_counts != -1}}
                             {{if coupon.remained_count < coupon.limit_counts}}
                                 data-max-count="${coupon.remained_count}"
                             {{else}}
                                 data-max-count="${coupon.limit_counts}"
                             {{/if}}
-                        {{else}}
-                            data-max-count="${coupon.remained_count}"
                         {{/if}}
                         data-remained-count="${coupon.remained_count}"
                         type="hidden"
