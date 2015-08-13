@@ -598,6 +598,7 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 	Then bill在jobs的webapp中拥有150会员积分
 
 #补充：张三香 雪静
+@integral @meberGrade
 Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置抵扣50%的商品
 #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 
@@ -811,6 +812,8 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 	"""
 	Then bill在jobs的webapp中拥有330会员积分
 
+
+@integral @meberGrade
 Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置积分抵扣的商品
  #会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 
@@ -1063,6 +1066,8 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 		"""
 		Then tom4在jobs的webapp中拥有402会员积分
 
+
+@integral @meberGrade
 Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分抵扣的商品
 
 	Given jobs已添加商品
