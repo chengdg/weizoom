@@ -158,7 +158,7 @@ def create_coupons(owner, rule_id, count, member_id=0, coupon_record_id=0):
 	return coupons
 
 
-def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, member_id):
+def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, member_id, products=None):
 	"""
 	优惠券是否可用
 	"""
@@ -190,7 +190,12 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 					price = 0
 					for i in range(len(product_ids)):
 						if product_ids[i] == str(relation.product_id):
-							price += product_prices[i]
+							if products:
+								for p in products:
+									if p.id == relation.product_id:
+										price += p.original_price
+							else:
+								price += product_prices[i]
 					if coupon_rule.valid_restrictions > 0:
 						# 单品券限制购物金额
 						if coupon_rule.valid_restrictions > price:

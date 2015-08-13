@@ -378,7 +378,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
 	else:
 		order.coupon_money = coupon.money
 		order.final_price -= coupon.money
-	
+
 	coupon = promotion_models.Coupon.objects.filter(id=coupon.id)
 	coupon_rule = promotion_models.CouponRule.objects.filter(id=coupon[0].coupon_rule_id)
 	if not coupon[0].member_id:
@@ -409,7 +409,7 @@ def check_coupon_for_order(pre_order, args, request, **kwargs):
 		product_ids = [str(product.id) for product in pre_order.products]
 
 		from market_tools.tools.coupon import util as coupon_util
-		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, request.member.id)
+		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, request.member.id, pre_order.products)
 		if coupon:
 			pre_order.session_data['coupon'] = coupon
 		else:
