@@ -1,4 +1,5 @@
 # __author__ : "冯雪静"
+# __edite__ : "benchi"  加标签
 Feature: 手动调整会员等级
 	Jobs能管理会员管理中的会员等级
 Background:
@@ -79,7 +80,7 @@ Background:
 		}]
 		"""
 
-@mall2
+@mall2 @member @meberGrade
 Scenario: 1 手动把会员调到自动升级的会员等级里面
 	jobs手动调整已有会员的会员等级
 	1. jobs能获取会员列表
