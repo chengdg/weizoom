@@ -1071,7 +1071,7 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 		#	"members_money":30.00,
 		Then bill4在jobs的webapp中拥有402会员积分
 
-@mall2 @jz
+@mall2
 Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分抵扣的商品
 
 	Given bill1关注jobs的公众号
