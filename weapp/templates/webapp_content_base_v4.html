@@ -14,10 +14,9 @@
         <!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/base.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/webapp_default.css">
-        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">     
-        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">   
-        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">  
-        <link rel="stylesheet" type="text/css" href="/static_v2/css/cloudHousekepper.css">      
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">  
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">  
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">        
         <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
         {% else %}
         <link type="text/css" rel="stylesheet" media="all" href="{{cdn_host}}/standard_static/css/webapp_content_base_all.css">
@@ -32,14 +31,13 @@
         <!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
         <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/gmu-2.1.1.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/gmu/widget/integralMechanism.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/idangerous.swiper.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/fastclick.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
         <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/backbone_lite.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/validate.js"></script>
-
+        
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/crypto-js.js"></script>
@@ -49,6 +47,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
+
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
         <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
@@ -61,7 +60,7 @@
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
         <meta content="telephone=no" name="format-detection">
     </head>
-    <body data-ui-role="integralMechanism" data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative;">
+    <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative;">
         <!-- xt-errMsg for test -->
         <input id="xt-errMsg" type="hidden" value="" />
         
@@ -129,86 +128,40 @@
         </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
-        $(document).ready(function() {
-            var $product = $('.wui-product');
-            var $productList = $('.wui-productlist');
-            var $imageDisplay = $('.wui-imagedisplay');
-            var $imageNav = $('.wui-imagenav');
-            var $swiperImg = $('.wui-swiper-slide');
+        var $product = $('.wui-product');
+        var $productList = $('.wui-productlist');
+        var $imageDisplay = $('.wui-imagedisplay');
+        var $imageNav = $('.wui-imagenav');
 
-            var screenWidth = $(this).width()-2;   //获取屏幕宽度，减去2px外边距
-            var defalutWidth = $(this).width()-1;  //默认一大两小宽度
-            var averageWidth = screenWidth/3;             
-            var width = defalutWidth/3;             
+        if($product.length > 1){
 
-            var $swiperWrapper = $swiperImg.parent('.wui-swiper-wrapper');
-            var $imgs = $swiperWrapper.find('img');
-            var imgsHeightArr = [];
+            getWidth('.wui-product');
 
-            if( $swiperImg.length >0 ){
-                window.onload=function(){
-                    $imgs.each(function() {
-                        console.log($(this).height()); 
-                        imgsHeightArr.push($(this).height());
-                        
-                    });
-                    var maxHeight = Math.max.apply(Math,imgsHeightArr);
-                    var $swiperSlide = $swiperWrapper.children('.wui-swiper-slide');
-                    $swiperWrapper.parent('.wui-swiper-container').height(maxHeight);
-                    $swiperWrapper.height(maxHeight);
-                    $swiperSlide.css({
-                        height: maxHeight,
-                        lineHeight: maxHeight +'px'
-                    });
-                }
-            }
-            if($product.length > 0){
+        }else if($productList.length > 1){
 
-                getWidth('.wui-product');
+            getWidth('.wui-productlist');
 
-            }
-            if($productList.length > 0){
+        }else if($imageDisplay.length > 1){
 
-                getWidth('.wui-productlist');
+            getWidth('.wui-imagedisplay');
 
-            }
-            if($imageDisplay.length > 0){
-                $imageDisplay.find('.wui-grid-b li').width(averageWidth);
-                $imageDisplay.find('.wui-grid-b li').height(averageWidth);
-                $imageDisplay.each(function() {
-                    var $imgGroup = $(this).find('.wui-grid-e');
-                    console.log($imgGroup,55555)
-                    $imgGroup.find('li').eq(0).width(parseInt(width*2));
-                    $imgGroup.find('li').height(width)
-                    $imgGroup.find('li').eq(0).height(width*2);
-                    $imgGroup.find('li').eq(2).height(width-1);
-                });
-                getWidth('.wui-imagedisplay');
+        }else if($imageNav.length > 1){
 
-            }
-            if($imageNav.length > 0){
-                getWidth('.wui-imagenav');
-                var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
-                var imgTitle = $imageNav.find('.wa-inner-title').text();
-                if ( imgTitle =='' ) {
-                    $imageNav.find('li').height(imgNavWidth);
-                };
+            getWidth('.wui-imagenav');
 
-            }
-            function getWidth(component){
-                var $component = $(component);
-                var $inner_pic = $component.find('li .wui-inner-pic');
-                $inner_pic.each(function() {
-                    var width = $(this).width() ;
-                    $(this).height(width);
-                    // 不能在此对图片父级进行高度赋值，会影响到商品
-                });
-            } 
-        });
-        
+        }
+        function getWidth(component){
+            var $component = $(component);
+            var $inner_pic = $component.find('li .wui-inner-pic');
+            $inner_pic.each(function() {
+                var width = $(this).width() +5 ;
+                $(this).height(width);
+            });
+        } 
         </script>
         
 
+        <!--<script src="http://192.168.2.76:8080/target/target-script-min.js"></script> -->
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
 
@@ -230,28 +183,19 @@
             {% endfor %}
             {% endif %}
 
-            W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
+            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
             W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-                  
-            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
-            if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
-                    W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-            var link = window.location.href;
-            if (link.indexOf('fmt') === -1){
-                if (link.indexOf('/?') === -1){
-                    link = link +"?fmt="+W.curRequestMemberToken;
-                } else {
-                    link = link +"&fmt="+W.curRequestMemberToken;
-                }
-            }
+            W.sharePageImg = "{{ request.share_img_url }}";
 
-            //for apps
             W.appRecordId = "{{ record_id }}";
             W.appName = "{{ app_name }}";
             W.resource = "{{ resource }}";
             W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
             W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
             W.activityStatus = "{{activity_status}}";
+            
+            if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
+                W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
 
             $(document).ready(function() {
                 $('a').highlight();
@@ -260,7 +204,8 @@
                 hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
                 var s = document.getElementsByTagName("script")[0]; 
                 s.parentNode.insertBefore(hm, s);
-                /* 微信分享按钮事件
+                /*
+                 * 微信分享按钮事件
                  * 注意：
                  * 1. 所有的JS接口只能在公众号绑定的域名下调用，公众号开发者需要先登录微信公众平台进入“公众号设置”的“功能设置”里填写“JS接口安全域名”。
                  * 2. 如果发现在 Android 不能分享自定义内容，请到官网下载最新的包覆盖安装，Android 自定义分享接口需升级至 6.0.2.58 版本及以上。
@@ -273,48 +218,17 @@
                  */
                 W.wxShareData = {
                     "imgUrl" : W.sharePageImg,
-                    "link" : link,
+                    "link" : window.location.href,
                     "desc" : W.sharePageDesc,
                     "title" : W.sharePageTitle,
                     // 点击分享按钮
                     trigger: function (res) {
-                       //alert('用户点击分享按钮'+res);
+                       // alert('用户点击分享按钮'+res);
                     },
                     // 分享成功
                     success : function(res) {
-                       //alert('success'+res); 增加分享链接api
-                     //  alert('success1')
-                     alert(message)
-                       W.getApi().call({
-                            app: 'webapp',
-                            api: 'project_api/call',
-                            method: 'post',
-                            args: _.extend({
-                                woid: W.webappOwnerId,
-                                project_id: W.projectId,
-                                module: 'user_center',
-                                target_api: 'shared_url/record',
-                                link: link,
-                                title:W.sharePageTitle
-                            }),
-                            success: function(data) {
-                                alert("分享链接成功")
-                            },
-                            error: function(data){
-                                alert("分享链接失败")
-                            }
-                        });
-                      // alert('success2')
+                       // alert('success'+res);
                     }
-                    //error : function(res) {
-                    //           alert('error'+res);
-                    //},
-                    //cancel: function (res) {
-                    //     alert('已取消');
-                    //      },
-                    //fail: function (res) {
-                    //    alert(JSON.stringify(res));
-                    //}     
                 };
                 wx.ready(function () {
                   // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
@@ -328,26 +242,21 @@
                       'showOptionMenu',
                     ],
                     success: function (res) {
-                    if(isHideWeixinOptionMenu){
-                        wx.hideOptionMenu();
-                    }
-                    if(res.hideOptionMenu && isHideWeixinOptionMenu){
-                       wx.hideOptionMenu();
-                    }
-                    if(!W.wxShareData)
-                    return
-                    res = res.checkResult;
-                    if(res.onMenuShareAppMessage)
-                       wx.onMenuShareAppMessage(W.wxShareData)
-                    if(res.onMenuShareTimeline)
-                       wx.onMenuShareTimeline(W.wxShareData)
-                    if(res.onMenuShareQQ)
-                       wx.onMenuShareQQ(W.wxShareData)
-                    if(res.previewImage)
-                       W.ImagePreview(wx)
-                   
-                    if(res.showOptionMenu && !isHideWeixinOptionMenu)
-                       wx.showOptionMenu()
+                      if(!W.wxShareData)
+                        return
+                      res = res.checkResult;
+                      if(res.onMenuShareAppMessage)
+                        wx.onMenuShareAppMessage(W.wxShareData)
+                      if(res.onMenuShareTimeline)
+                        wx.onMenuShareTimeline(W.wxShareData)
+                      if(res.onMenuShareQQ)
+                        wx.onMenuShareQQ(W.wxShareData)
+                      if(res.previewImage)
+                        W.ImagePreview(wx)
+                      if(res.hideOptionMenu && isHideWeixinOptionMenu)
+                        wx.hideOptionMenu()
+                      if(res.showOptionMenu && !isHideWeixinOptionMenu)
+                        wx.showOptionMenu()
                     }
                   });
                 });
@@ -360,11 +269,23 @@
                     $("body").alert({
                         isShow: true,
                         info: W.errorMessage,
-                        speed: 3000
+                        speed: 3000                
                     });
                 }
 
-                //for apps
+                var isInFrame = (parent !== window);
+                if (isInFrame) {
+                    if (parent.setWebappPageTitle) {
+                        parent.setWebappPageTitle(W.pageTitle);
+                    }
+
+                    //在预览模式下，修改a，禁止点击
+                    $('a').each(function() {
+                        var $link = $(this);
+                        $link.attr('href', 'javascript:void(0);');
+                    })
+                }
+
                 var $submitButtonContainer = $('.xa-submitButtonContainer');
                 if ($submitButtonContainer.length > 0) {
                     var $button = $submitButtonContainer.find('.xa-submitTermite');
@@ -386,24 +307,31 @@
                     }
                     var data = {};
                     var $controls = $('.xa-inputControl');
-                    var participanceType = null;
                     for (var i = 0; i < $controls.length; ++i) {
                         var $control = $controls.eq(i);
                         var inputType = $control.attr('data-input-type');
-                        var name = $control.attr('data-input-name');
                         var controlType = $control.attr('data-control-type');
+                        var cid;
+                        if(controlType === 'appkit.shortcuts'){
+                            cid = $control.parents('ul').eq(0).attr('data-component-cid');
+                        }else{
+                            cid = $control.parent().attr('data-component-cid');
+                        }
+                        var name = $control.attr('data-input-name');
+                        name = cid+'_'+name;
                         if (inputType === 'text') {
                             var value = $.trim($control.find('input[type="text"]').val());
                         } else if (inputType === 'textarea') {
                             var value = $.trim($control.find('textarea').val());
                         } else if (inputType === 'selection') {
-                            participanceType = '投票'
                             var $inputs = $control.find('input');
                             var value = {};
                             var selectionInputType = $inputs.eq(0).attr('type');
                             for (var j = 0; j < $inputs.length; ++j) {
                                 var $input = $inputs.eq(j);
+                                var selectionCid = $input.parents('li').eq(0).attr('data-component-cid');
                                 var selectionInputName = $input.attr('data-input-name');
+                                selectionInputName = selectionCid+'_'+selectionInputName;
                                 var isSelect = $input.is(':checked');
                                 value[selectionInputName] = {
                                     type: selectionInputType,
@@ -411,7 +339,6 @@
                                 };
                             }
                         }
-
                         data[name] = {
                             type: controlType,
                             value: value
@@ -422,44 +349,47 @@
                         belong_to: W.appRecordId,
                         termite_data: JSON.stringify(data)
                     }
-                    if (participanceType === '投票'){
-                        participanceData['actionButtons'] = JSON.stringify([{
-                            'text': '查看结果',
-                            'url': '1'
-                        }]);
-                    }
                     var $prizeContainer = $('.xa-prizeContainer');
                     if ($prizeContainer.length > 0) {
                         $prizeContainer = $prizeContainer.eq(0);
                         participanceData['prize'] = $prizeContainer.attr('data-prize');
                     }
+                    var $textSelection = $('.wui-textSelection');
+                    if ($textSelection.length > 0){
+                        participanceData['actionButtons'] = JSON.stringify([{
+                            'text': '查看结果',
+                            'url': '/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId
+                        }]);
+                    }
                     W.getApi().call({
-                      app: 'm/apps/'+W.appName,
-                      resource: W.resource+'_participance',
-                      method: 'put',
-                      args: participanceData,
-                      success: function(data) {
-                        $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
-                        var $button = $submitButtonContainer.find('.xa-submitTermite');
-                        $button.text('您已参加过该活动');
-                        $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
-                        /*
-                        $('body').alert({
-                            isShow: true,
-                            isSlide: true,
-                            info: '参与成功',
-                            speed: 3000,
-                        });
-                        */
-                      },
-                      error: function(resp) {
-                        $('body').alert({
-                            isShow: true,
-                            isSlide: true,
-                            info: '参与失败，请稍后再试！',
-                            speed: 3000,
-                        });
-                      }
+                        app: 'm/apps/'+W.appName,
+                        resource: W.resource+'_participance',
+                        method: 'put',
+                        args: participanceData,
+                        success: function(data) {
+                            $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
+                            var $button = $submitButtonContainer.find('.xa-submitTermite');
+                            $button.text('您已参加过该活动');
+                            $('.xa-submitTermite').unbind('click');
+                            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+
+                            /*
+                            $('body').alert({
+                                isShow: true,
+                                isSlide: true,
+                                info: '参与成功',
+                                speed: 3000,
+                            });
+                            */
+                            },
+                        error: function(resp) {
+                            $('body').alert({
+                                isShow: true,
+                                isSlide: true,
+                                info: '参与失败，请稍后再试！',
+                                speed: 3000,
+                            });
+                        }
                     });
                     
                     /*
@@ -471,15 +401,6 @@
                     */
                 });
             });
-            {# 百度统计代码开始 #}
-            var _hmt = _hmt || [];
-            (function() {
-            var hm = document.createElement("script");
-            hm.src = "//hm.baidu.com/hm.js?ee18872310bbb14797f87c9eda185a85";
-            var s = document.getElementsByTagName("script")[0]; 
-            s.parentNode.insertBefore(hm, s);
-            })();
-            {# 百度统计代码结束 #}
         </script>
 
         {% if under_develop %}

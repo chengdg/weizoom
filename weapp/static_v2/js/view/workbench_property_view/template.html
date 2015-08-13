@@ -30,7 +30,7 @@
 								{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
 								{{if field.validate}}{{html field.validate}}{{/if}} />
 							{{if field.help}}
-							<div class="xui-help" style="color: #888;">
+							<div style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -45,7 +45,7 @@
 							<input class="xa-time xui-datePicker pl5" data-field="${field.name}" value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}" placeholder="${field.placeholder}" {{if field.validate}}data-validate="${field.validate}"{{/if}}
 								data-ui-role="date-picker" data-format="yy-mm-dd HH:MM" data-enable-select-time="true"/>
 							{{if field.help}}
-							<div class="xui-help" style="color: #888;">
+							<div style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -87,7 +87,9 @@
 								data-enable-select-time="true"
 								data-validate="require-notempty"
 								data-ui-role="date-picker"
-								data-format="yy-mm-dd HH:MM" />
+								data-format="yy-mm-dd HH:MM"
+                                data-max-el="#end_time"
+                                data-min="now"/>
 							至
 							<input
 								style="width:132px!important;"
@@ -128,7 +130,7 @@
 						<div class="propertyGroup_property_input pl5" style="width: 90%; margin: 5px auto;">
 							<textarea class="" style="height: 100px; width: 95%;" data-field="${field.name}" {{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
 							{{if field.help}}
-							<div class="xui-help" style="color: #888;">
+							<div style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -167,12 +169,11 @@
 						<div class="propertyGroup_property_label">${field.displayName}</div>
 						<div class="propertyGroup_property_input" style="display: inline;">
 						{{each(fi, checkbox) field.source}}
-						<label style="display:inline;" class="ml5"><input style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
+						<label style="display:inline;" class="ml5"><input style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" /> ${checkbox.name}</label>
 						{{/each}}
 						</div>
 					</div>
 					{{/if}}
-
 
 					{{if (field.type == 'select')}}
 					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
@@ -243,7 +244,7 @@
 							{{/if}}
 							
 							{{if field.help}}
-							<div class="xui-help" style="color: #666;">
+							<div style="color: #666;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
@@ -400,7 +401,7 @@
 											data-force-validate="true"
 											{{/if}} />
 										{{if dynamicComponentField.help}}
-										<div class="xui-help" style="color: #888;">
+										<div style="color: #888;">
 											{{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
 										</div>
 										{{/if}}
@@ -464,7 +465,7 @@
 										{{/if}}
 									</div>
 									{{if dynamicComponentField.help}}
-									<div class="xui-help" style="color: #908E8E;">
+									<div style="color: #656565;">
 										{{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
 									</div>
 									{{/if}}
