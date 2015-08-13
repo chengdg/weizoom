@@ -44,8 +44,10 @@ class IntegralSales(resource.Resource):
             }]
 
             for rule in promotion.detail['rules']:
-                if rule['member_grade_id'] != -1:
+                if rule['member_grade_id'] > 0:
                     rule['member_grade_name'] = MemberGrade.objects.get(id=rule['member_grade_id']).name
+                else:
+                    rule['member_grade_name'] = '全部等级'
 
             c = RequestContext(request, {
                 'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,

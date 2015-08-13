@@ -481,10 +481,12 @@ def __check_integral(request, product_groups, data_detail, pre_order):
 	else:
 		#积分应用
 		group2integralinfo = json.loads(integralinfo)
+		print 'jz----0', product_groups
 		group2integralsalerule = dict((group['uid'], group['integral_sale_rule']) for group in product_groups)
 		uid2group = dict((group['uid'], group) for group in product_groups)
 		for group_uid, integral_info in group2integralinfo.items():
 			products = uid2group[group_uid]['products']
+			print 'jz----1', group_uid, group2integralsalerule
 			if not group_uid in group2integralsalerule.keys() or not group2integralsalerule[group_uid]:
 				for product in products:
 					data_detail.append({

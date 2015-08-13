@@ -238,7 +238,7 @@ Background:
 			"products": ["商品1"],
 			"is_permanant_active": "true",
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 70,
 				"discount_money": 70.0
 			}]
@@ -249,7 +249,7 @@ Background:
 			"products": ["商品2"],
 			"is_permanant_active": "true",
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 70,
 				"discount_money": 70.0
 			}]
