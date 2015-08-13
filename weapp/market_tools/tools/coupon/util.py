@@ -27,7 +27,7 @@ def get_my_coupons(member_id):
 	过滤掉 已经作废的优惠券
 	"""
 	#过滤已经作废的优惠券
-	coupons = promotion_models.Coupon.objects.filter(member_id=member_id, status__lt=promotion_models.COUPON_STATUS_DISCARD).order_by('-id')
+	coupons = promotion_models.Coupon.objects.filter(member_id=member_id, status__lt=promotion_models.COUPON_STATUS_DISCARD).order_by('-provided_time')
 	coupon_rule_ids = [c.coupon_rule_id for c in coupons]
 	coupon_rules = promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids)
 	id2coupon_rule = dict([(c.id, c) for c in coupon_rules])
