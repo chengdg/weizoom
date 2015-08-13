@@ -1,15 +1,15 @@
-# __author__ : "·ëÑ©¾²"
-Feature: Ìí¼ÓÓĞ»áÔ±ÕÛ¿ÛµÄÉÌÆ·
-	JobsÄÜÍ¨¹ı¹ÜÀíÏµÍ³ÔÚÉÌ³ÇÖĞÌí¼ÓÓĞ"»áÔ±ÕÛ¿ÛµÄÉÌÆ·"
+# __author__ : "å†¯é›ªé™"
+Feature: æ·»åŠ æœ‰ä¼šå‘˜æŠ˜æ‰£çš„å•†å“
+	Jobsèƒ½é€šè¿‡ç®¡ç†ç³»ç»Ÿåœ¨å•†åŸä¸­æ·»åŠ æœ‰"ä¼šå‘˜æŠ˜æ‰£çš„å•†å“"
 
 
 Background:
-	Given jobsµÇÂ¼ÏµÍ³
-	And jobsÒÑÌí¼ÓÉÌÆ·¹æ¸ñ
+	Given jobsç™»å½•ç³»ç»Ÿ
+	And jobså·²æ·»åŠ å•†å“è§„æ ¼
 		"""
 		[{
-			"name": "³ß´ç",
-			"type": "ÎÄ×Ö",
+			"name": "å°ºå¯¸",
+			"type": "æ–‡å­—",
 			"values": [{
 				"name": "M"
 			}, {
@@ -17,52 +17,52 @@ Background:
 			}]
 		}]
 		"""
-	When jobsÌí¼Ó»áÔ±µÈ¼¶
+	When jobsæ·»åŠ ä¼šå‘˜ç­‰çº§
 		"""
 		[{
-			"name": "Í­ÅÆ»áÔ±",
-			"upgrade": "ÊÖ¶¯Éı¼¶",
+			"name": "é“œç‰Œä¼šå‘˜",
+			"upgrade": "æ‰‹åŠ¨å‡çº§",
 			"discount": "9"
 		}, {
-			"name": "ÒøÅÆ»áÔ±",
-			"upgrade": "ÊÖ¶¯Éı¼¶",
+			"name": "é“¶ç‰Œä¼šå‘˜",
+			"upgrade": "æ‰‹åŠ¨å‡çº§",
 			"discount": "8"
 		}, {
-			"name": "½ğÅÆ»áÔ±",
-			"upgrade": "ÊÖ¶¯Éı¼¶",
+			"name": "é‡‘ç‰Œä¼šå‘˜",
+			"upgrade": "æ‰‹åŠ¨å‡çº§",
 			"discount": "7"
 		}]
 		"""
-	Then jobsÄÜ»ñÈ¡»áÔ±µÈ¼¶ÁĞ±í
+	Then jobsèƒ½è·å–ä¼šå‘˜ç­‰çº§åˆ—è¡¨
 		"""
 		[{
-			"name": "ÆÕÍ¨»áÔ±",
-			"upgrade": "×Ô¶¯Éı¼¶",
+			"name": "æ™®é€šä¼šå‘˜",
+			"upgrade": "è‡ªåŠ¨å‡çº§",
 			"discount": "10"
 		}, {
-			"name": "Í­ÅÆ»áÔ±",
-			"upgrade": "ÊÖ¶¯Éı¼¶",
+			"name": "é“œç‰Œä¼šå‘˜",
+			"upgrade": "æ‰‹åŠ¨å‡çº§",
 			"discount": "9"
 		}, {
-			"name": "ÒøÅÆ»áÔ±",
-			"upgrade": "ÊÖ¶¯Éı¼¶",
+			"name": "é“¶ç‰Œä¼šå‘˜",
+			"upgrade": "æ‰‹åŠ¨å‡çº§",
 			"discount": "8"
 		}, {
-			"name": "½ğÅÆ»áÔ±",
-			"upgrade": "ÊÖ¶¯Éı¼¶",
+			"name": "é‡‘ç‰Œä¼šå‘˜",
+			"upgrade": "æ‰‹åŠ¨å‡çº§",
 			"discount": "7"
 		}]
 		"""
-	When jobsÒÑÌí¼ÓÖ§¸¶·½Ê½
+	When jobså·²æ·»åŠ æ”¯ä»˜æ–¹å¼
 		"""
 		[{
-			"type": "»õµ½¸¶¿î",
-			"description": "ÎÒµÄ»õµ½¸¶¿î",
-			"is_active": "ÆôÓÃ"
+			"type": "è´§åˆ°ä»˜æ¬¾",
+			"description": "æˆ‘çš„è´§åˆ°ä»˜æ¬¾",
+			"is_active": "å¯ç”¨"
 		},{
-			"type": "Î¢ĞÅÖ§¸¶",
-			"description": "ÎÒµÄÎ¢ĞÅÖ§¸¶",
-			"is_active": "ÆôÓÃ",
+			"type": "å¾®ä¿¡æ”¯ä»˜",
+			"description": "æˆ‘çš„å¾®ä¿¡æ”¯ä»˜",
+			"is_active": "å¯ç”¨",
 			"weixin_appid": "12345",
 			"weixin_partner_id": "22345",
 			"weixin_partner_key": "32345",
@@ -71,54 +71,54 @@ Background:
 		"""
 
 @mall2
-Scenario: Ìí¼ÓÓĞ»áÔ±ÕÛ¿ÛµÄÉÌÆ·
-	jobsÌí¼Ó»áÔ±ÕÛ¿ÛµÄÉÌÆ·ºó£¬ÄÜ»ñÈ¡ËûÌí¼ÓµÄÉÌÆ·
+Scenario: æ·»åŠ æœ‰ä¼šå‘˜æŠ˜æ‰£çš„å•†å“
+	jobsæ·»åŠ ä¼šå‘˜æŠ˜æ‰£çš„å•†å“åï¼Œèƒ½è·å–ä»–æ·»åŠ çš„å•†å“
 
-	#Ìí¼ÓµÄÉÌÆ·Ê¹ÓÃÁË»áÔ±µÈ¼¶ÕÛ¿Û
-	Given jobsµÇÂ¼ÏµÍ³
-	When jobsÒÑÌí¼ÓÉÌÆ·
+	#æ·»åŠ çš„å•†å“ä½¿ç”¨äº†ä¼šå‘˜ç­‰çº§æŠ˜æ‰£
+	Given jobsç™»å½•ç³»ç»Ÿ
+	When jobså·²æ·»åŠ å•†å“
 		"""
 		[{
-			"name": "ÉÌÆ·1",
+			"name": "å•†å“1",
 			"price": 100.00,
 			"is_member_product": "on",
 			"model": {
 				"models": {
 					"standard": {
 						"price": 100.00,
-						"stock_type": "ÓĞÏŞ",
+						"stock_type": "æœ‰é™",
 						"stocks": 2
 					}
 				}
 			}
 		}, {
-			"name": "ÉÌÆ·2",
+			"name": "å•†å“2",
 			"is_member_product": "on",
-			"is_enable_model": "ÆôÓÃ¹æ¸ñ",
+			"is_enable_model": "å¯ç”¨è§„æ ¼",
 			"model": {
 				"models":{
 					"M": {
 						"price": 300,
-						"stock_type": "ÎŞÏŞ"
+						"stock_type": "æ— é™"
 					},
 					"S": {
 						"price": 300,
-						"stock_type": "ÎŞÏŞ"
+						"stock_type": "æ— é™"
 					}
 				}
 			}
 		}]
 		"""
-	Then jobsÄÜ»ñÈ¡ÉÌÆ·'ÉÌÆ·1'
+	Then jobsèƒ½è·å–å•†å“'å•†å“1'
 		"""
 		{
-			"name": "ÉÌÆ·1",
+			"name": "å•†å“1",
 			"is_member_product": "on",
 			"model": {
 				"models": {
 					"standard": {
 						"price": 100.00,
-						"stock_type": "ÓĞÏŞ",
+						"stock_type": "æœ‰é™",
 						"stocks": 2
 					}
 				}
@@ -126,21 +126,21 @@ Scenario: Ìí¼ÓÓĞ»áÔ±ÕÛ¿ÛµÄÉÌÆ·
 		}
 		"""
 		#	"price": 100.00,
-	Then jobsÄÜ»ñÈ¡ÉÌÆ·'ÉÌÆ·2'
+	Then jobsèƒ½è·å–å•†å“'å•†å“2'
 		"""
 		{
-			"name": "ÉÌÆ·2",
+			"name": "å•†å“2",
 			"is_member_product": "on",
-			"is_enable_model": "ÆôÓÃ¹æ¸ñ",
+			"is_enable_model": "å¯ç”¨è§„æ ¼",
 			"model": {
 				"models":{
 					"M": {
 						"price": 300,
-						"stock_type": "ÎŞÏŞ"
+						"stock_type": "æ— é™"
 					},
 					"S": {
 						"price": 300,
-						"stock_type": "ÎŞÏŞ"
+						"stock_type": "æ— é™"
 					}
 				}
 			}
