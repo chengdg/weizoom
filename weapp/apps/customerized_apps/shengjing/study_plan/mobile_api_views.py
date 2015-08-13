@@ -181,7 +181,7 @@ def get_study_plan(request):
 		phone_number = None
 
 
-	#  向盛景发送验证码接口
+	# 向盛景 发送请求 获取学习计划
 	items = shengjing_api.mobile_get_learn_plan_list(phone_number, company)
 	try:
 		if int(items.get('Header').get('Code')) == 0:
@@ -189,10 +189,13 @@ def get_study_plan(request):
 			response.data = items.get("Data", [])
 		else:
 			response = create_response(501)
-			response.data['msg'] = u'{}'.format(items.get('Header').get('Info'))
+			msg = u'code:{}, info:{}'.format(items.get('Header').get('Code'), items.get('Header').get('Info'))
+			response.data['msg'] = msg
+			response.errMsg = msg
 	except:
 		response = create_response(500)
 		response.data['msg'] = u'获取数据失败，请重试'
+		response.errMsg = u'获取数据失败，请重试'
 		
 		
 	#是否是决策人	

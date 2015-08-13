@@ -433,7 +433,7 @@
 					$('.ua-listView').find('li').remove();
 					$('.xui-loading').css('display', 'none');
 					var errMsg = resp.errMsg || '不是决策人！';
-					$('.ua-listView').append($('<li class="ui-notLeaderBox xa-notLeaderBox xui-section">'+errMsg+'</li>'));
+					$('.ua-listView').append($('<li class="ui-notLeaderBox xa-notLeaderBox xui-section">不是决策人！<br/>'+errMsg+'</li>'));
 				} else {
 					$('.xui-loading').css('display', 'none');
 					var errMsg = resp.errMsg || '获取数据失败！';
