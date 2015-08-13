@@ -49,6 +49,24 @@
 				</span>
 				<div class="pr xui-inlineblock">
 					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						群发消息</span>
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="tc xa-send-message-select-member" type="button"  href="javascript:void(0);">
+								给选中的人发消息（以跑路除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class="tc xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
+								给筛选出来的所有人发消息（以跑路除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
+				&nbsp;&nbsp;
+				<div class="pr xui-inlineblock">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 						发优惠券</span>
 				   	</a>
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
@@ -111,6 +129,24 @@
 <script id="members-view" type="text/x-jquery-tmpl">
 	<div class="pa" style="top:10px;left:15px;">
 		<label class="">全部会员：${data.total_count}人</label>
+		<div class="pr xui-inlineblock">
+			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+				群发消息</span>
+		   	</a>
+		   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+			    <li class="dropdown-submenu">
+			    	<a class="tc xa-send-message-select-member" type="button"  href="javascript:void(0);">
+						给选中的人发消息（以跑路除外）</span>
+				   	</a>
+			    </li>
+			    <li class="dropdown-submenu">
+			    	<a class="tc xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
+						给筛选出来的所有人发消息（以跑路除外）</span>
+				   	</a>
+			    </li>
+			</ul>
+		</div>
+		&nbsp;&nbsp;
 		<div class="pr xui-inlineblock">
 			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 				发优惠券</span>
@@ -469,6 +505,15 @@ $(document).ready(function() {
 		});
 
 	};
+
+	//群发消息
+	$(document).delegate('.xa-send-message-all-member', 'click', function(event){
+		console.log("all");
+	});
+
+	$(document).delegate('.xa-send-message-select-member', 'click', function(event){
+		console.log("select");
+	});
 
 	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){

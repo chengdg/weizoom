@@ -74,18 +74,14 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     upCounter: function(event) {
         var $cur_up = $(event.currentTarget);
         var max_count = $cur_up.parent().prev().data('max-count');
-        var remained_count = parseInt($cur_up.parent().prev().data('remained-count'));
-        if (!max_count){
-            max_count = -1;
-        }
         var cur_count = parseInt($cur_up.prevAll('.xa-counterText').text());
         if($cur_up.hasClass("xui-btn")){
-            if(remained_count < (cur_count + 1) * this.member_count){
+            if(max_count < (cur_count + 1) * this.member_count){
                 $cur_up.parent().next().removeClass('hide');
             }
             return;
         }else{
-            if(max_count == -1 || (cur_count+1) * this.member_count <= max_count){
+            if(((cur_count+1) * this.member_count <= max_count) || (cur_count+1) <= max_count){
                 $cur_up.prevAll('.xa-down').removeClass("xui-btn");
                 $cur_up.prevAll('.xa-counterText').text(cur_count+1);
             }
