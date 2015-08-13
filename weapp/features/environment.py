@@ -25,12 +25,12 @@ path = os.path.abspath(os.path.join('.', '..'))
 sys.path.insert(0, path)
 
 import unittest
-import time
+#import time
 from pymongo import Connection
 
 from weapp import settings
 from django.contrib.auth.models import User
-from django.core.management import call_command
+#from django.core.management import call_command
 from django.test.client import Client
 from django.test.utils import setup_test_environment as setup_django_test_environment
 from django.db.models import Q
@@ -69,7 +69,7 @@ from modules.member import models as modules_member_models
 
 from selenium import webdriver
 from test.pageobject.page_frame import PageFrame
-from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+#from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.webdriver.chrome.options import Options
 from apps import models as customized
 from apps import apps_manager
@@ -573,7 +573,7 @@ def enhance_django_model_class():
 	#Model.__getitem__ = model_getitem
 
 	def model_todict(self, *attrs):
-		columns = [field.get_attname() for field in self._meta.fields]
+		#columns = [field.get_attname() for field in self._meta.fields]
 		result = {}
 		for field in self._meta.fields:
 			result[field.get_attname()] = field.value_from_object(self)
