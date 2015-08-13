@@ -39,13 +39,8 @@ def step_impl(context, user):
             })
         if 'rules' in promotion:
             for rule in promotion['rules']:
-                if rule.has_key('member_grade_name'):
-                    if rule['member_grade_name'] == '全部会员':
-                        member_grade_id = -1
-                    else:
-                        member_grade_id = MemberGrade.objects.get(webapp_id=webapp_id,name=rule['member_grade_name']).id
-                    rule.pop('member_grade_name')
-                    rule['member_grade_id'] = member_grade_id
+                if rule.has_key('member_grade'):
+                    rule['member_grade_id'] = __get_member_grade(rule, context.webapp_id)
         else:
             rules = [{
                 "member_grade_id": -1,
