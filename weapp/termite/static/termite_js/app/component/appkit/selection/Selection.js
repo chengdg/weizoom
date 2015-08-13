@@ -57,7 +57,7 @@ W.component.appkit.Selection = W.component.Component.extend({
             displayName: '',
             type: 'dynamic-generated-control',
             isShowCloseButton: true,
-            minItemLength: 0,
+            minItemLength: 2,
             isUserProperty: true,
             default: []
         }]
