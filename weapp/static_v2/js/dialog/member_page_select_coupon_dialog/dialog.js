@@ -41,9 +41,7 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
     },
 
     afterShow: function(options) {
-        console.log($('.xa-member-couponTable').data('length'),">>>>");
         if(!$('.xa-member-couponTable').data('length')){
-            xlog("KKKKKKKKKk");
             $(".xa-member-coupon-send").addClass('disabled');
             $(".xa-member-info-block").addClass('hide');
         }
