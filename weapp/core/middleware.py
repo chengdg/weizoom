@@ -643,6 +643,11 @@ class DisablePostInPcBrowserUnderDeployMiddleware(object):
 		if remote_addr == '111.202.10.158' or remote_addr == '1.202.255.198':
 			return 
 
+		
+		#added by duhao
+		if is_product_stocks_request(request):
+			return None
+
 		#added by slzhu
 		if is_pay_request(request):
 			return None
