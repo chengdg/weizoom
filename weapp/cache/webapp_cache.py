@@ -204,7 +204,6 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         key, mall_api.get_product_detail_for_cache(webapp_owner_id, product_id))
 
     product = mall_models.Product.from_dict(data)
-
     # Set member's discount of the product
     if hasattr(product, 'integral_sale') and product.integral_sale \
         and product.integral_sale['detail'].get('rules', None):

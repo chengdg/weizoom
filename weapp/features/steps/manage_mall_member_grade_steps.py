@@ -158,7 +158,7 @@ def step_impl(context, user, name):
             data_dict = content
         data.append(data_dict)
 
-        context.client.post('/mall2/api/member_grade_list/?_method=post', {'grades': json.dumps(data)})
+    context.client.post('/mall2/api/member_grade_list/?_method=post', {'grades': json.dumps(data)})
 
 
 @when(u'{user}更新"{webapp_user_name}"的会员等级')

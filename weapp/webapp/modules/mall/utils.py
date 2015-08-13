@@ -174,19 +174,16 @@ def group_product_by_promotion(request, products):
     NO_PROMOTION_ID = -1  # 负数的promotion id表示商品没有promotion
     product_groups = []
     promotion2products = {}
-    print 'jz---2', len(products)
     for product in products:
         #对于满减，同一活动中不同规格的商品不能分开，其他活动，需要分开
         group_id += 1
         default_products = {"group_id": group_id, "products": []}
         promotion_name = _get_promotion_name(product)
-        print 'jz-----3', promotion_name
         promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
 
     now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     items = promotion2products.items()
     items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))
-    print 'jz----', len(items)
     for promotion_id, group_info in items:
         products = group_info['products']
         group_id = group_info['group_id']
@@ -505,7 +502,6 @@ def _get_promotion_name(product):
     """
 
     if not product.promotion:
-        print 'jz----4'
         return None
     else:
         promotion = product.promotion

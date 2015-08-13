@@ -833,7 +833,8 @@ Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣�
 		}
 		'''
 
-# __edit__ : "新新"
+# __edit__ : "新新" "雪静"
+@mall2 @meberGrade @coupon
 Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 #（全体券和会员价可以同时使用，但是满多少钱可以使用计算的是会员价）
 	Given jobs登录系统
@@ -842,13 +843,13 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 		[{
 			"name": "商品9",
 			"price": 100.00,
-			"member_price": true,
+			"is_member_product": "on",
 			"weight": 1,
 			"postage": "系统"
 		},{
 			"name": "商品10",
 			"price": 100.00,
-			"member_price": true,
+			"is_member_product": "on",
 			"weight": 1,
 			"postage": "系统"
 		}]
@@ -858,11 +859,11 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 		[{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
-		},{
+			"discount": "9"
+		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
 	Then jobs能获取会员等级列表
@@ -870,31 +871,44 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"discount": "10"
 		}, {
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
-		},{
+			"discount": "9"
+		}, {
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"discount": "7"
 		}]
 		"""
-	When tom关注jobs的公众号
-	When bill关注jobs的公众号
-	When nokin关注jobs的公众号
+	When nokia关注jobs的公众号
+	Given jobs登录系统
+	When jobs更新"nokia"的会员等级
+		"""
+		{
+			"name": "nokia",
+			"member_rank": "金牌会员"
+		}
+		"""
+	When jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
+		"""
 	Then jobs可以获得会员列表
 		"""
 		[{
+			"name": "nokia",
+			"member_rank": "金牌会员"
+		}, {
 			"name": "tom",
 			"member_rank": "普通会员"
 		}, {
 			"name": "bill",
 			"member_rank": "铜牌会员"
-		}, {
-			"name": "nokin",
-			"member_rank": "金牌会员"
 		}]
 		"""
 	Given jobs已添加了优惠券规则
@@ -925,14 +939,15 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"coupon_ids": ["coupon9_id_2"]
 		}]
 		"""	
-	When nokin访问jobs的webapp
-	When nokin领取jobs的优惠券
+	When nokia访问jobs的webapp
+	When nokia领取jobs的优惠券
 		"""
 		[{
 			"name": "全体券1",
 			"coupon_ids": ["coupon9_id_3"]
 		}]
 		"""
+	Given jobs登录系统
 	Then jobs能获得优惠券'全体券1'的码库
 		"""
 		{
@@ -952,7 +967,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 				"money": 20.0,
 				"status": "未使用",
 				"consumer": "",
-				"target": "nokin"
+				"target": "nokia"
 			},
 			"coupon9_id_4": {
 				"money": 20.0,
@@ -963,6 +978,7 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 		}
 		"""
 		#可以使用全体券(满100元,会员价后也是100)
+	When tom访问jobs的webapp
 	When tom购买jobs的商品
 		"""
 		{
@@ -979,13 +995,17 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"status": "待支付",
 			"final_price": 80.00,
 			"product_price": 100.0,
-			"members_money":0,
 			"postage": 0.00,
 			"integral_money":0.00,
-			"coupon_money":20.00
+			"coupon_money":20.00,
+			"products": [{
+				"name": "商品9",
+				"count": 1
+			}]
 		}
 		"""
-		#不可以使用全体券(会员价后也是90,没有满足100元可使用条件)
+	#不可以使用全体券(会员价后也是90,没有满足100元可使用条件)
+	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
 		{
@@ -996,20 +1016,34 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"coupon": "coupon9_id_2"
 		}
 		"""
+	Then bill获得错误提示'该优惠券不满足使用金额限制'
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品9",
+				"count": 1
+			}]
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
 			"status": "待支付",
 			"final_price": 90.00,
-			"product_price": 100.0,
-			"members_money":10,
+			"product_price": 90.00,
 			"postage": 0.00,
 			"integral_money":0.00,
-			"coupon_money":0.00
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品9",
+				"count": 1
+			}]
 		}
 		"""
 		#购买多种会员价使用全体券
-	When nokin加入jobs的商品到购物车
+	When nokia访问jobs的webapp
+	When nokia加入jobs的商品到购物车
 		"""
 		[{
 			"name": "商品9",
@@ -1019,29 +1053,27 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"count": 1
 		}]
 		"""
-	Then nokin能获得购物车
+	Then nokia能获得购物车
 		"""
 		{
 			"product_groups": [{
 				"products": [{
 					"name": "商品9",
-					"member_price": 70.00,
+					"price": 70.00,
 					"count": 1
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品10",
-					"member_price": 70.00,
+					"price": 70.00,
 					"count": 1
 				}]
 			}],
 			"invalid_products": []
 		}
 		"""
-	When nokin从购物车发起购买操作
+	When nokia从购物车发起购买操作
 		"""
 		{
-			"action": "click",
+			"action": "pay",
 			"context": [{
 				"name": "商品9"
 			}, {
@@ -1050,23 +1082,37 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			"coupon": "coupon9_id_3"
 		}
 		"""
-	Then nokin成功创建订单
+	And nokia填写收货信息
+	"""
+		{
+			"ship_name": "nokia",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
+	And nokia在购物车订单编辑中点击提交订单
+	"""
+	{
+		"pay_type": "微信付款"
+	}
+	"""
+	Then nokia成功创建订单
 		"""
 		{
 			"status": "待支付",
 			"final_price": 120.00,
-			"product_price": 200.0,
+			"product_price": 140.0,
 			"coupon_money": 20.0,
-			"members_money": 60.0,
 			"postage": 0.00,
-			"integral_money":0.00
+			"integral_money":0.00,
 			"products": [{
 				"name": "商品9",
-				"member_price": 70.00,
+				"price": 70.00,
 				"count": 1
 			}, {
 				"name": "商品10",
-				"member_price": 70.00,
+				"price": 70.00,
 				"count": 1
 			}]
 		}
@@ -1083,15 +1129,15 @@ Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 			},
 			"coupon9_id_2": {
 				"money": 20.0,
-				"status": "已使用",
-				"consumer": "bill",
+				"status": "未使用",
+				"consumer": "",
 				"target": "bill"
 			},
 			"coupon9_id_3": {
 				"money": 20.0,
 				"status": "已使用",
-				"consumer": "nokin",
-				"target": "nokin"
+				"consumer": "nokia",
+				"target": "nokia"
 			},
 			"coupon9_id_4": {
 				"money": 20.0,

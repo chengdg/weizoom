@@ -363,24 +363,22 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
 
 	order.coupon_id = coupon.id
 
-	# 如果去掉优惠券价格后商品终价低于运费
-	if order.final_price - coupon.money < order.postage:
+	if coupon.coupon_rule.limit_product:
+		# 单品券
+		for p in products:
+			if coupon.coupon_rule.limit_product_id == p.id:
+				p.price = p.original_price
+		order.product_price = sum(map(lambda x: x.price*x.purchase_count, products))
+		order.final_price = order.product_price + order.postage
+
+	if order.final_price - order.postage < coupon.money:
+		# 优惠券不能抵扣运费
 		order.coupon_money = order.final_price - order.postage
 		order.final_price = order.postage
 	else:
 		order.coupon_money = coupon.money
 		order.final_price -= coupon.money
-
-	# 如果是通用优惠券
-	if not coupon.coupon_rule.limit_product:
-		# 会员折扣优惠的价格
-		cut = sum(map(lambda x: x.price*(1-x.member_discount)*x.purchase_count, products))
-
-		if order.final_price - cut < order.postage:
-			order.final_price = order.postage
-		else:
-			order.final_price -= cut
-
+	
 	coupon = promotion_models.Coupon.objects.filter(id=coupon.id)
 	coupon_rule = promotion_models.CouponRule.objects.filter(id=coupon[0].coupon_rule_id)
 	if not coupon[0].member_id:
@@ -677,7 +675,8 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 				}
 
 			product_group['promotion_result'] = {
-				'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
+				# 'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
+				'promotion_saved_money': (product.original_price - detail['promotion_price']) * product.purchase_count,
 				'promotioned_product_price': detail['promotion_price']
 			}
 			#用抢购价替换商品价格

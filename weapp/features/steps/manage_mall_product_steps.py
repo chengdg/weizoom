@@ -296,7 +296,8 @@ def __get_product_from_web_page(context, product_name):
         'is_enable_model': u'启用规格' if product.is_use_custom_model else u'不启用规格',
         'model': {},
         'postage': u'免运费',
-        'pay_interfaces': []
+        'pay_interfaces': [],
+        "is_member_product": 'on' if product.is_member_product else 'off'
     }
 
     #填充运费

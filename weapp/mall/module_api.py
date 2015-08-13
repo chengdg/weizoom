@@ -218,7 +218,6 @@ def group_product_by_promotion(request, products):
 			                      'member_grade_id': member_grade_id
 			                      })
 			continue
-
 		promotion_type = promotion.get('type', 0)
 		if promotion_type == 0:
 			type_name = 'none'
@@ -236,9 +235,10 @@ def group_product_by_promotion(request, products):
 			product = products[0]
 			promotion_price = product.promotion['detail'].get('promotion_price', 0)
 			product.price = promotion_price
-
+			# 会员价不和限时抢购叠加
+			product.member_discount_money = 0
 			promotion_result = {
-				"saved_money": product.price - promotion_price,
+				"saved_money": product.original_price - promotion_price,
 				"subtotal": product.purchase_count * product.price
 			}
 
@@ -511,7 +511,6 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				for review in product_review:
 					review.member_name = member_id2member[review.member_id].username_for_html
 					review.user_icon = member_id2member[review.member_id].user_icon
-
 			#获取促销活动和积分折扣信息
 			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))
 			# Todo: 促销已经结束， 但数据库状态未更改
@@ -1102,7 +1101,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	#处理订单中的product总价
 	order.product_price = sum([product.price * product.purchase_count for product in products])
 	order.final_price = order.product_price
-	order.member_grade_discounted_money = order.product_price - order.final_price
+	# order.member_grade_discounted_money = order.product_price - order.final_price
 	mall_signals.pre_save_order.send(sender=mall_signals, pre_order=fake_order, order=order, products=products, product_groups=product_groups)
 	order.final_price = round(order.final_price, 2)
 	if order.final_price < 0:
@@ -1146,7 +1145,9 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			price=product.price,
 			promotion_id=product.promotion['id'] if product.promotion else 0,
 			promotion_money=product.promotion_money if hasattr(product, 'promotion_money') else 0,
-			grade_discounted_money=product.total_price - product.price * product.purchase_count
+			# 目前product.member_discount_money 只有限时抢购会设置成0，不用乘商品数量
+			grade_discounted_money=product.member_discount_money if hasattr(product, 'member_discount_money')\
+				else product.total_price - product.price * product.purchase_count,
 		)
 	# 	if product.owner_id != webapp_owner_id:
 	# 		order.order_source = ORDER_SOURCE_WEISHOP
@@ -1232,7 +1233,6 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 				'is_deleted': product.is_deleted,
 				'grade_discounted_money': relation.grade_discounted_money
 			}
-			print 'jz----111', product.custom_model_properties
 
 			promotion_relation = id2promotion.get(relation.promotion_id, None)
 			if promotion_relation:
@@ -1272,7 +1272,6 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 			products.extend(temp_premium_products)
 
 		order.products = products
-
 	return order
 
 
@@ -3118,7 +3117,7 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
       True - if 促销对用户开放
       False - if 促销不对用户开放
     """
-    if promotion_member_grade_id == 0:
+    if promotion_member_grade_id <= 0:
         return True
     elif promotion_member_grade_id == user_member_grade_id:
         return True
