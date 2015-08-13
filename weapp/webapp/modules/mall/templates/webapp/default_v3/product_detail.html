@@ -446,6 +446,7 @@ $(document).ready(function() {
                     view.member_or_promotion = 'promotion';
                 }
                 if(!is_user_has_promotion){
+                    view.promotion.isFlashSalePromotion = false;
                     // 促销bu对此用户开发
                     var next_promotions = $('.xa-display-promotion').next('div');
                     if(next_promotions.length==0){
@@ -470,7 +471,7 @@ $(document).ready(function() {
                 if(has_discount === "True" && data.discount < 100){
                     //促销与会员价格处理
                     view.discount = data.discount;
-                    if(view.targetModel){
+                    if(view.isStandardModelProduct){
                         view.initForStandardModelProduct()
                     }else{
                         view.initForCustomModelProduct()
