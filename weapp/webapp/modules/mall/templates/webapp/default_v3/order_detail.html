@@ -75,6 +75,7 @@
                             </span>
                         {% endif %}
                         {% endif %}
+                        {% if product.grade_discounted_money %}<span class="xui-giftTag">会员优惠</span>{% endif %}
                         {% if not product.id %}<span class="xui-giftTag">赠品</span>{% endif %}
                         <img src="{{product.thumbnails_url}}"/>
                     </div>
