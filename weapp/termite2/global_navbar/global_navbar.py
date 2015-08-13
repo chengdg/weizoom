@@ -29,7 +29,7 @@ class GlobalNavbar(resource.Resource):
 		导航渲染页面
 
 		project_id的格式为：
-		fake:${project_type}:${project_id}:${page_id}:${mongodb_id}
+		fake:${project_type}:${webapp_owner_id}:${page_id}:${mongodb_id}
 		"""
 		pagestore = pagestore_manager.get_pagestore_by_type('mongo')
 		project_id = 'fake:wepage:%d:navbar' % request.user.id

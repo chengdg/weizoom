@@ -67,7 +67,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "wepage.item_group": this.initProductsView, 
             "wepage.item_list": this.initProductsView,
             "wepage.pageheader": _.bind(this.initPageHeader, this),
-            "colorpicker": _.bind(this.initColorPicker, this)
+            "colorpicker": _.bind(this.initColorPicker, this),
+            "secondnav": _.bind(this.initSecondNav, this)
         };
 
 
@@ -164,7 +165,9 @@ W.workbench.PropertyView = Backbone.View.extend({
         var $parents = $node.parents('.propertyGroup_property_dynamicControlField_control');
         if ($parents.length > 0) {
             var cid = $parents.eq(0).attr('data-dynamic-cid');
-            return W.component.CID2COMPONENT[cid];
+            if (cid) {
+                return W.component.CID2COMPONENT[cid];
+            }
         } else {
             return this.component;
         }
@@ -842,6 +845,14 @@ W.workbench.PropertyView = Backbone.View.extend({
             })
         }, 100);
     },
+
+    initSecondNav: function($el) {
+        W.createWidgets($el.parent());
+
+        var view = $('[data-ui-role="termite-navbar-secondnav"]').data('view');
+        xwarn(view);
+    },
+
 
     initDateTime:function($el){
         var $input =$el.find('.xa-time');

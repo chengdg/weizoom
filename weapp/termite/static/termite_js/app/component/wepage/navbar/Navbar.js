@@ -8,6 +8,10 @@ W.component.wepage.Navar = W.component.Component.extend({
 	propertyViewTitle: '底部导航',
     selectable: 'no',
 
+    dynamicComponentTypes: [
+        {type: 'wepage.navbar_firstnav', model: {index: 1, image: '', target: ''}}
+    ],
+
 	properties: [
         {
             group: '',
@@ -57,13 +61,24 @@ W.component.wepage.Navar = W.component.Component.extend({
         }, {
             group: '',
             groupClass:'xui-propertyView-navbar-navs',
-            fields: []
+            fields: [{
+                name: 'items',
+                type: 'dynamic-generated-control',
+                isUserProperty: true,
+                isShowCloseButton: true,
+                displayName: '一级导航',
+                minItemLength: 1,
+                default: []
+            }]
         }
     ],
 
     propertyChangeHandlers: {
     	type: function($node, model, value) {
             this.refresh($node, {resize:true});
+        },
+        items: function($node, model, value) {
+            this.refresh($node, {resize:true, refreshPropertyView:true});
         }
     }
 });

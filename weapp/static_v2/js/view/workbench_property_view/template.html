@@ -468,6 +468,20 @@
 								{{/if}}								
 
 
+								{{if (dynamicComponentField.type == 'second_navs')}}
+								<div class="propertyGroup_property_secondNavsField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_input pr" style="width:80px; height:auto;">
+										<input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden"/>
+										<div 
+											class="xa-thirdPartyPlugin"
+											data-plugin="secondnav" 
+											data-ui-role="termite-navbar-secondnav"
+										></div>
+									</div>
+								</div>
+								{{/if}}
+
+
 								{{if (dynamicComponentField.type == 'image_button')}}
 								<div class="propertyGroup_property_imageButtonField propertyGroup_property_horizontalField">
 									<div class="propertyGroup_property_input pr" style="width:80px; height:auto;">

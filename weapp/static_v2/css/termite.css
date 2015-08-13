@@ -433,7 +433,9 @@
 }
 
 
-/*底部导航页面样式*/
+/**
+ * 底部导航页面样式
+ */
 .xui-wepage-globalNavPage .xui-navbarHeader{
 	width: 956px;
 	height: 96px;
@@ -472,4 +474,7 @@
 	margin-top: 3px;
 	position: relative;
 	top:3px;
+}
+.xui-wepage-globalNavPage .xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control {
+	border: solid 1px red;
 }

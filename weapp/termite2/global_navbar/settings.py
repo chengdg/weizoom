@@ -15,7 +15,25 @@ NEW_PAGE_JSON = """
 			"property_view_title": "底部导航",
 			"force_display_in_property_view": "no",
 			"auto_select": "yes",
-			"components": [],
+			"components": [{
+				"cid": 3,
+				"pid": 2,
+				"property_view_title": "",
+				"force_display_in_property_view": "no",
+				"auto_select": "no",
+				"components": [],
+				"selectable": "no",
+				"type": "wepage.navbar_firstnav",
+				"model": {
+					"index": 4,
+					"name": "",
+					"class": "",
+					"id": "",
+					"title": "",
+					"target": ""
+				},
+				"has_global_content": "no"
+			}],
 			"selectable": "no",
 			"type": "wepage.navbar",
 			"model": {
