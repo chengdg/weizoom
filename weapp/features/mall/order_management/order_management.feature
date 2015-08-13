@@ -135,7 +135,8 @@ Background:
 			"status": "进行中"
 		}]
 		"""
-@mall @mall2 @mall.order @zy_mo1 @eugene
+
+@mall2 @mall.order @zy_mo1 @eugene
 Scenario: 购买商品后，可以获得订单列表
 	bill购买了商品1(只下单, 未支付)和商品2(已支付)
 
@@ -187,7 +188,8 @@ Scenario: 购买商品后，可以获得订单列表
 		}]
 		"""
 
-@mall @mall2 @mall.order @mall_a @zy_mo2
+
+@mall2 @mall.order @mall_a @zy_mo2
 Scenario: 购买商品后，管理员通过后台管理系统可以查看订单详情
 	bill购买商品后
 	1. 能看到订单详情
@@ -227,7 +229,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			}]
 		}
 		"""
-	When jobs'支付'最新订单
+	When jobs"支付"最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -245,7 +247,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			"actions": ["标记完成", "修改物流", "取消订单"]
 		}
 		"""
-	When jobs'完成'最新订单
+	When jobs"完成"最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -254,7 +256,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			"actions": ["修改物流", "取消订单"]
 		}
 		"""
-	When jobs'取消'最新订单
+	When jobs"取消"最新订单
 		"""
 		{
 			"reason": "不想要了"
@@ -345,7 +347,7 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有50会员积分
 	Given jobs登录系统
-	When jobs'取消'最新订单
+	When jobs"取消"最新订单
 		"""
 		{
 			"reason": "不想要了"

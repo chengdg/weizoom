@@ -1,6 +1,7 @@
 # __author__ : "冯雪静"
 Feature:订单筛选
 	Jobs能通过管理系统为管理用户订单
+
 Background:
 	Given jobs登录系统
 	And bill关注jobs的公众号
@@ -443,4 +444,3 @@ Scenario: 选择订单筛选条件
 			"ship_tel": "13811223344"
 		}]
 		"""
-

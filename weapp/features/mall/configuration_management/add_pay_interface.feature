@@ -1,8 +1,9 @@
 @func:webapp.modules.mall.views.list_mall_settings
 Feature:添加支付方式
 	Jobs能通过管理系统添加"支付方式"
+
 @mall @mall.pay_interface @mall2
-Scenario: 添加支付方式:微信支付
+Scenario: 添加支付方式：微信支付
 	Jobs添加"微信支付"后
 	1. jobs能获取添加的微信支付
 	2. bill不能获取jobs添加的微信支付
@@ -35,7 +36,7 @@ Scenario: 添加支付方式:微信支付
 
 
 @mall @mall.pay_interface @mall2
-Scenario: 添加支付方式:支付宝支付
+Scenario: 添加支付方式：支付宝支付
 	Jobs添加"支付宝支付"后
 	1. jobs能获取添加的支付宝支付
 	2. bill不能获取jobs添加的支付宝支付
@@ -72,7 +73,7 @@ Scenario: 添加支付方式:支付宝支付
 
 
 @mall @mall.pay_interface @mall2
-Scenario: 添加支付方式:货到付款
+Scenario: 添加支付方式：货到付款
 	Jobs添加"支付方式"后
 	1. jobs能获取添加的支付方式
 	2. bill不能获取jobs添加的支付方式
@@ -103,7 +104,7 @@ Scenario: 添加支付方式:货到付款
 
 
 @mall @mall.pay_interface @mall2
-Scenario:卖家未获得支付方式： 微众卡支付
+Scenario:卖家未获得支付方式：微众卡支付
 
 	Given jobs登录系统
 	Then jobs能获得支付方式
