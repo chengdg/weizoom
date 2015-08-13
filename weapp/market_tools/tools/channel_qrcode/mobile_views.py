@@ -31,7 +31,7 @@ def get_settings(request):
             setting.count = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id).count()
 
         c = RequestContext(request, {
-                'page_title': u'首草送好礼，接力扫码等你来传递',
+                'page_title': u'代言人二维码',
                 'member': member,
                 'setting': setting,
                 'is_hide_weixin_option_menu': False,
@@ -181,7 +181,7 @@ def get_settings_detail(request):
                     payed_count = pay_money + channel_qrcode_member.member.pay_money
 
             c = RequestContext(request, {
-                    'page_title': u'代言人二维码',
+                    'page_title': u'推荐详情',
                     'member': member,
                     'setting': setting,
                     'is_hide_weixin_option_menu': True,
