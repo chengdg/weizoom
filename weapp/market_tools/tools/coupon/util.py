@@ -193,7 +193,7 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 							if products:
 								for p in products:
 									if p.id == relation.product_id:
-										price += p.original_price
+										price += p.original_price * p.purchase_count
 							else:
 								price += product_prices[i]
 					if coupon_rule.valid_restrictions > 0:

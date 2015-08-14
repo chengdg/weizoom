@@ -600,6 +600,9 @@ class RedEnvelopeRule(models.Model):
 		now = datetime.now()
 		if red_envelope and (red_envelope.limit_time or red_envelope.end_time > now):
 			# 缓存里有分享红包规则，并且红包规则未到期，注：红包规则状态在缓存抓取时判断
+			if red_envelope.limit_time and red_envelope.created_at > order.created_at or \
+				not red_envelope.limit_time and red_envelope.start_time > order.created_at:
+				return False
 			coupon_rule = red_envelope.coupon_rule
 			if coupon_rule and coupon_rule.get('end_date', now) > now:
 				# 红包规则对应的优惠券未到期，注：优惠券库存在缓存抓取时判断
