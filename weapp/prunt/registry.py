@@ -20,3 +20,11 @@ def get_task(name):
 
 def dump():
 	global NAME2TASK
+	names = list(NAME2TASK.keys())
+	names.sort()
+	for name in names:
+		func = NAME2TASK[name]
+		if type(func) == dict or type(func) == list:
+			print '\t%s' % name
+		else:
+			print '\t%s\t%s' % (name, func.func_doc.strip() if func.func_doc else '')

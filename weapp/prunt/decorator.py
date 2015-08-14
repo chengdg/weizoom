@@ -13,6 +13,7 @@ def register_task(name):
 			func(prunt)
 		registry = sys.modules['registry']
 		registry.register(name, wrapper)
+		wrapper.func_doc = func.func_doc
 		return wrapper
 
 	return inner
