@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import json
 import operator
+from datetime import datetime
 from itertools import chain
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
@@ -99,6 +100,7 @@ class ProductList(resource.Resource):
 
         #处理商品分类
         if _type == 'offshelf':
+            sort_attr = '-update_time'
             products = models.Product.objects.filter(
                 owner=request.manager,
                 shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,
@@ -220,18 +222,20 @@ class ProductList(resource.Resource):
         else:
             # 更新商品上架状态以及商品排序
             if request.manager.id == products[0].owner_id:
+                now = datetime.now()
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0)
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0, update_time=now)
                 else:
-                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0)
+                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0, update_time=now)
             else:
+                # 微众商城更新商户商品状态
                 products.update(weshop_status=shelve_type)
 
         is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
         is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
-        #商品不再处于上架状态，发出product_not_offline signal
         if is_prev_shelve and is_not_sale or is_deleted:
+            # 商品不再处于上架状态，发出product_not_offline signal
             product_ids = [int(id) for id in ids]
             mall_signals.products_not_online.send(
                 sender=models.Product,
