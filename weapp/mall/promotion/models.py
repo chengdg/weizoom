@@ -398,7 +398,8 @@ class PremiumSale(models.Model):
 		products = Product.objects.filter(id__in=product_ids)
 		Product.fill_details(webapp_owner, products, {
 			'with_product_model': True,
-			"with_model_property_info": True
+			"with_model_property_info": True,
+			'with_sales': True
 		})
 		id2product = dict([(product.id, product) for product in products])
 
