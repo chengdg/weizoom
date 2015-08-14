@@ -154,11 +154,13 @@ class Promotion(resource.Resource):
             status = models.PROMOTION_STATUS_DISABLE
         else:
             status = models.PROMOTION_STATUS_FINISHED
+        # TODO 确认 结束促销的逻辑是在task里运行的，此处是否可以移动到 start == 'true' 的判断分支下
         models.Promotion.objects.filter(
             owner=request.manager,
             id__in=ids
         ).update(status=status)
         if promotion_type == models.PROMOTION_TYPE_COUPON:
+            # 处理优惠券相关状态 
             ruleIds = [i.detail_id for i in models.Promotion.objects.filter(
                 owner=request.manager,
                 id__in=ids)
