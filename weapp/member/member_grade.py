@@ -41,7 +41,7 @@ class MemberGradeList(resource.Resource):
     @login_required
     def api_post(request):
         post_grades = json.loads(request.POST.get('grades', []))
-        if not _check_query(['is_all_conditions', 'grades'], request.POST):
+        if not post_grades:
             response = create_response(500)
             return response.get_response()
 
@@ -160,14 +160,4 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     if is_change:
         Member.objects.filter(id=member.id).update(grade=new_grade)
     return is_change
-
-
-def _check_query(expected_query, actual_query):
-    try:
-        for i in expected_query:
-            assert i in actual_query and actual_query[i]
-    except AssertionError:
-        return False
-    else:
-        return True
 
