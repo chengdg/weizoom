@@ -295,6 +295,7 @@
 	border-radius: 5px;
 }
 .xui-memberListPage .xui-dropbox {
+	border-radius: 5px !important;
 }
 .xui-memberListPage .xui-dropbox .drop-box-arrow{
 	background: url(/static_v2/img/editor/grayArrow.png) no-repeat;
