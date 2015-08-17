@@ -9,7 +9,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 100.00,
+			"price": 100.00
 		}, {
 			"name": "商品2",
 			"price": 100.00
@@ -38,7 +38,7 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
-	When jobs已创建积分应用活动
+	Given jobs已获取积分应用活动列表
 		"""
 		[{
 			"name": "商品4积分应用",
