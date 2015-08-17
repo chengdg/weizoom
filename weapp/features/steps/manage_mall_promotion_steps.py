@@ -171,6 +171,37 @@ def step_create_flash_sales(context, user):
         response = context.client.post(url, data)
         bdd_util.assert_api_call_success(response)
 
+
+@then(u"{user}获取{type}活动列表")
+def step_impl(context, user, type):
+    if type == u"限时抢购":
+        type = "flash_sale"
+    elif type == u"买赠":
+        type = "premium_sale"
+    elif type == u"积分应用":
+        type = "integral_sale"
+    # elif type == u"优惠券":
+    #     type = "coupon"
+    url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % type
+    response = context.client.get(url)
+    actual = json.loads(response.content)['data']['items']
+
+    for promotion in actual:
+        if type == 'integral_sale':
+            promotion['product_name'] = promotion['product']['name']
+            promotion['product_price'] = promotion['product']['display_price']
+            detail = promotion['detail']
+            if len(detail['rules']) == 1 and detail['rules'][0]['member_grade_id'] == -1:
+                rule = detail['rules'][0]
+                promotion['discount'] = str(rule['discount']) + '%'
+                promotion['discount_money'] = rule['discount_money']
+            else:
+                promotion['discount'] = detail['discount'].replace(' ', '')
+                promotion['discount_money'] = detail['discount_money'].replace(' ', '')
+    expected = json.loads(context.text)
+    bdd_util.assert_list(expected, actual)
+
+
 def __get_member_grade(promotion, webapp_id):
     member_grade = promotion.get('member_grade', 0)
     if member_grade == u'全部':
