@@ -41,10 +41,10 @@ class MemberGradeList(resource.Resource):
 
     @login_required
     def api_post(request):
-
         post_grades = json.loads(request.POST.get('grades', []))
         if not post_grades:
-            return HttpResponseRedirect('/mall2/member_grade_list/')
+            response = create_response(500)
+            return response.get_response()
 
         webapp_id = request.user_profile.webapp_id
         original_member_grades = MemberGrade.get_all_grades_list(webapp_id)
