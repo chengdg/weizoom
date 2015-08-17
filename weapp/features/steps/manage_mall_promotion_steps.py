@@ -23,9 +23,9 @@ def step_terminate_promotion(context, user, promotion_name):
     bdd_util.assert_api_call_success(response)
 
 
-@When(u"{user}创建积分应用活动")
+@when(u"{user}创建积分应用活动")
 def step_impl(context, user):
-    webapp_id = context.client.user.profile.webapp_id
+    #webapp_id = context.client.user.profile.webapp_id
     promotions = json.loads(context.text)
     if type(promotions) == dict:
         promotions = [promotions]
@@ -66,7 +66,7 @@ def step_impl(context, user):
         bdd_util.assert_api_call_success(response)
 
 
-@When(u"{user}创建满减活动")
+@when(u"{user}创建满减活动")
 def step_impl(context, user):
     promotions = json.loads(context.text)
     if type(promotions) == dict:
@@ -209,3 +209,5 @@ def __get_member_grade(promotion, webapp_id):
     elif member_grade:
         member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id
     return member_grade
+
+

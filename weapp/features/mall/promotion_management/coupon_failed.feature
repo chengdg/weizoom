@@ -30,6 +30,19 @@ Background:
 		}]
 	"""
 	When jobs创建限时抢购活动
+	"""
+		[{
+			"name": "商品1限时抢购",
+			"promotion_slogan":"",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品1"],
+			"member_grade": "全部会员",
+			"count_per_purchase": 2,
+			"promotion_price": 80.00,
+			"limit_period": 1
+		}]
+	"""
 	Then jobs能获取商品列表
 	"""
 		[{
@@ -50,7 +63,7 @@ Background:
 		}]
 	"""
 
-@mall2 @promotion.promotionCoupon @promotion.promotionFlash
+@wip.cp1 @promotion.promotionCoupon @promotion.promotionFlash
 Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 	"""
@@ -80,6 +93,19 @@ Scenario: 1先建优惠券，不能参加促销活动
 		}]
 	"""
 	When jobs创建限时抢购活动
+	"""
+		[{
+			"name": "商品1限时抢购",
+			"promotion_slogan":"",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品1"],
+			"member_grade": "全部会员",
+			"count_per_purchase": 2,
+			"promotion_price": 80.00,
+			"limit_period": 1
+		}]
+	"""
 	Then jobs能获取商品列表
 	"""
 		[{
@@ -121,7 +147,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 		}]
 	"""
 
-@mall2 @promotion.promotionCoupon @promotion.promotionFlash
+@wip @promotion.promotionCoupon @promotion.promotionFlash
 Scenario: 2先建立限时抢购活动，不能建立该商品的单品券
 	When jobs创建限时抢购活动
 	"""
@@ -167,7 +193,7 @@ Scenario: 2先建立限时抢购活动，不能建立该商品的单品券
 		}]
 	"""
 
-@mall2 @promotion.promotionCoupon @promotion.promotionPremium
+@promotion.promotionCoupon @promotion.promotionPremium
 Scenario: 3先建立买赠活动，不能建立该商品的单品券
 	When jobs创建买赠活动
 	"""
@@ -215,4 +241,3 @@ Scenario: 3先建立买赠活动，不能建立该商品的单品券
 			"price": 200.00
 		}]
 	"""
-
