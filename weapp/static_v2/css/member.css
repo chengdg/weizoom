@@ -295,12 +295,13 @@
 	border-radius: 5px;
 }
 .xui-memberListPage .xui-dropbox {
-	margin-left: 10px !important;
-	border-top: none !important;
 }
 .xui-memberListPage .xui-dropbox .drop-box-arrow{
 	background: url(/static_v2/img/editor/grayArrow.png) no-repeat;
 
+}
+.xui-memberListPage .xui-menu {
+	top: 30px;
 }
 
 .xui-memberListPage .dropdown-menu {
@@ -728,7 +729,9 @@
 }
 
 .xui-memberPageSelectCouponDialog .errorHint {
-    margin-top:3px;
+	position: relative;
+	top: 8px;
+	padding-top: 0px;
 }
 
 }
