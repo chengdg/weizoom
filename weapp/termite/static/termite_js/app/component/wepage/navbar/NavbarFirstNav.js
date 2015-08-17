@@ -47,21 +47,22 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
         },
         target: function($node, model, value, $propertyViewNode) {
             xwarn(value);
+            var $linkSelectFieldNode =  $($propertyViewNode.find('.propertyGroup_property_linkSelectField')[0]);
             if (value.length > 0) {
                 var linkData = $.parseJSON(value);
                 if (linkData.type === 'manualInput') {
 
                 } else {
-                    $propertyViewNode.find('.xa-selected-title-box').show();
-                    $propertyViewNode.find('.xa-selectLink-url').val(linkData.data).attr('disabled','disabled');
-                    $propertyViewNode.find('.xa-selectLink-name').text(linkData.data_path);
-                    $propertyViewNode.find('.xa-link-menu').html('修改<span class="glyphicon glyphicon-menu-down"></span>');
+                    $linkSelectFieldNode.find('.xa-selected-title-box').show();
+                    $linkSelectFieldNode.find('.xa-selectLink-url').val(linkData.data).attr('disabled','disabled');
+                    $linkSelectFieldNode.find('.xa-selectLink-name').text(linkData.data_path);
+                    $linkSelectFieldNode.find('.xa-link-menu').html('修改<span class="glyphicon glyphicon-menu-down"></span>');
                 }
             }else{
-                $propertyViewNode.find('.xa-selected-title-box').hide();
-                $propertyViewNode.find('.xa-selectLink-url').val('').removeAttr('disabled');
-                $propertyViewNode.find('.xa-selectLink-name').text('');
-                $propertyViewNode.find('.xa-link-menu').html('从微站选择<span class="glyphicon glyphicon-menu-down"></span>');
+                $linkSelectFieldNode.find('.xa-selected-title-box').hide();
+                $linkSelectFieldNode.find('.xa-selectLink-url').val('').removeAttr('disabled');
+                $linkSelectFieldNode.find('.xa-selectLink-name').text('');
+                $linkSelectFieldNode.find('.xa-link-menu').html('从微站选择<span class="glyphicon glyphicon-menu-down"></span>');
             }
         },
         items: function($node, model, value) {
