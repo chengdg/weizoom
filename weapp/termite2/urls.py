@@ -17,6 +17,7 @@ import webapp_design_page
 import component_render_result
 import page_archive
 import qrcode_image
+import global_navbar
 
 urlpatterns = [
 ]

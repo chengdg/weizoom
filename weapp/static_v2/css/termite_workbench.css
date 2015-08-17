@@ -1239,3 +1239,23 @@ button.xui-removeImageButton{
 }
 
 
+
+
+/**
+ * 底部导航编辑器页面的样式
+ */
+.xui-wepage-globalNavPage .propertyGroup {
+	padding: 20px;
+	background-color: #FFF;
+	border: solid 1px #CCC;
+}
+.xui-wepage-globalNavPage .propertyGroup-topGap {
+	height: 20px;
+	background-color: transparent;
+}
+.xui-wepage-globalNavPage .xui-propertyView-navbar-settings-topGap {
+	display: none;
+}
+.xui-wepage-globalNavPage .xui-workbench-phonePanel .xui-i-title {
+	display: none;
+}

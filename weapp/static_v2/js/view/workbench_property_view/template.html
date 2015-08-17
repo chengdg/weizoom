@@ -9,6 +9,7 @@
 		<div id="propertyEditor" class="propertyView_actionTarget">
 		{{each(i, property_group) property_groups}}
 			{{if (!onlyShowUserProperty || property_group.isUserProperty)}}
+			<div class="${property_group.groupClass}-topGap propertyGroup-topGap"></div>
 			<div class="propertyGroup ${property_group.groupClass}" {{if property_group.groupName }}name="${property_group.groupName}"{{/if}}>
 				{{if i > 0}}
 				<div class="ml5 fb">${property_group.group}</div>
@@ -116,7 +117,7 @@
 						</div>
 					</div>
 					{{/if}}
-
+					
 
 					{{if (field.type == 'select')}}
 					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
@@ -465,6 +466,20 @@
 									<div class="errorHint"></div>
 								</div>
 								{{/if}}								
+
+
+								{{if (dynamicComponentField.type == 'second_navs')}}
+								<div class="propertyGroup_property_secondNavsField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_input pr" style="width:80px; height:auto;">
+										<input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden"/>
+										<div 
+											class="xa-thirdPartyPlugin"
+											data-plugin="secondnav" 
+											data-ui-role="termite-navbar-secondnav"
+										></div>
+									</div>
+								</div>
+								{{/if}}
 
 
 								{{if (dynamicComponentField.type == 'image_button')}}
