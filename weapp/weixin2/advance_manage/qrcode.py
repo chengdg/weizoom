@@ -92,6 +92,7 @@ class Qrcodes(resource.Resource):
 
 def _get_qrcode_items(request):
 	#处理搜索
+	from mall.models import *
 	query = request.GET.get('query', '').strip()
 	sort_attr = request.GET.get('sort_attr', '-created_at')
 	created_at = '-created_at'
@@ -137,7 +138,7 @@ def _get_qrcode_items(request):
 	webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
 	webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 	webapp_user_ids = set(webapp_user_id2member_id.keys())
-	from mall.models import *
+	
 	orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
 
 	member_id2total_final_price = {}
@@ -634,7 +635,7 @@ class QrcodeOrder(resource.Resource):
 
 		if start_date:
 			filter_data_args['created_at__gte'] = start_date
-		
+
 		if end_date:
 			filter_data_args['created_at__lte'] = end_date
 		filter_data_args['status__in'] = (ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
