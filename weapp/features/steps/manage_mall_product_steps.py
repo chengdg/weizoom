@@ -43,8 +43,15 @@ def step_product_add(context, user):
 
     """
     url = '/mall2/product/?_method=put'
-    context.products = json.loads(context.text)
+    if context.table:
+        context.products = context.table
+    else:
+        context.products = json.loads(context.text)
     for product in context.products:
+        if hasattr(product, 'as_dict'):
+            # Row 转换成dict
+            product = product.as_dict()
+
         if product.get('stocks'):
             product['stock_type'] = 1
         else:
