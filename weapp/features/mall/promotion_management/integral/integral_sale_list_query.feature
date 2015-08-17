@@ -18,7 +18,7 @@ Background:
 		}]
 		"""
 	When jobs批量添加商品
-		|   pro_name|  pro_code  |        category      |   status  |
+		|   name    |  code      |        category      |   status  |
 		|   商品1   |            |    分类1             |   上架    |
 		|   商品2   |  1234561   |    分类1,分类2       |   上架    |
 		|   商品3   |  1234562   |    分类1,分类2,分类3 |   上架    |
