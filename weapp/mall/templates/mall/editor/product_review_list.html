@@ -45,6 +45,7 @@
 {% verbatim %}
 <script id="products-review" type="text/x-jquery-tmpl">
     <table id="productReviewListTable" class="table table-bordered table-condensed xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+        ${data.stickied_count}
         <thead>
           <th width="90">商品编码<th>
           <th width="130" style="text-align:left;">商品名称<th>
@@ -71,7 +72,10 @@
                 {{/if}}
                 {{if review.status.value === '1'}}
                     <a href="/mall2/product_review/?id=${review.id}">修改</a>&nbsp;&nbsp;
-                    <a href="javascript:void(0);" class="xa-modify" data-product-review-id="${review.id}" data-status="2">置顶</a>
+                    {{if data.able_stick}}
+                    {{else}}
+                        <span class='gray'>置顶</span>
+                    {{/if}}
                 {{/if}}
                 {{if review.status.value === '2'}}
                     <a href="/mall2/product_review/?id=${review.id}">修改</a><br>

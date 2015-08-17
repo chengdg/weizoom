@@ -29,8 +29,28 @@ Background:
 			"price": 200.00
 		}]
 	"""
+	When jobs创建限时抢购活动
+	Then jobs能获取商品列表
+	"""
+		[{
+			"name": "商品1",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}, {
+			"name": "商品2",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}, {
+			"name": "商品3",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}]
+	"""
 
-@wip.cp1
+@wip.cp1 @promotion.promotionCoupon @promotion.promotionFlash
 Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 	"""
@@ -79,8 +99,30 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"price": 200.00
 		}]
 	"""
+	When jobs使优惠券失效
+	And jobs创建限时抢购活动
+	Then jobs能获取商品列表
+	"""
+		[{
+			"name": "商品1",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}, {
+			"name": "商品2",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}, {
+			"name": "商品3",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}]
+	"""
 
-Scenario: 2先建立促销活动，不能建立该商品的单品券
+@wip @promotion.promotionCoupon @promotion.promotionFlash
+Scenario: 2先建立限时抢购活动，不能建立该商品的单品券
 	When jobs创建限时抢购活动
 	"""
 		[{
@@ -121,6 +163,55 @@ Scenario: 2先建立促销活动，不能建立该商品的单品券
 			"name": "商品3",
 			"stock_type": "无限",
 			"operate": True,
+			"price": 200.00
+		}]
+	"""
+
+@mall2 @promotion.promotionCoupon @promotion.promotionPremium
+Scenario: 3先建立买赠活动，不能建立该商品的单品券
+	When jobs创建买赠活动
+	"""
+		[{
+			"name": "商品3买一赠一",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品5"],
+			"premium_products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"count": 1,
+			"is_enable_cycle_mode": true
+		}]
+	"""
+	Then jobs能获取买赠活动列表
+	"""
+		[{
+			"name": "商品3买一赠一",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品3"],
+			"start_date": "今天",
+			"end_date": "1天后"
+		}]
+	"""
+	When jobs添加单品优惠券规则
+	Then jobs能获取商品列表
+	"""
+		[{
+			"name": "商品1",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}, {
+			"name": "商品2",
+			"stock_type": "无限",
+			"operate": True,
+			"price": 200.00
+		}, {
+			"name": "商品3",
+			"stock_type": "无限",
+			"operate": False,
 			"price": 200.00
 		}]
 	"""
