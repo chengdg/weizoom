@@ -38,6 +38,7 @@
 			data-item-count-per-page="50"
 			class="panel-body"
 			data-args='{"status":"{{status}}"}'
+			data-disable-header-select="true"
 		></div>
 		<div class="dropdown xui-operation update_dropdown">
 			<div class="pr">
@@ -157,8 +158,7 @@
 {% block js %}
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
-	<div class="pa" style="top:10px;left:15px;">
-		<label class="">全部会员：${data.total_count}人</label>
+	<div class="pa w pr30" style="top:10px;left:15px;line-height:30px;">
 		<div class="pr xui-inlineblock">
 			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 				群发消息</span>
@@ -177,7 +177,7 @@
 			</ul>
 		</div>
 		&nbsp;&nbsp;
-		<div class="pr xui-inlineblock">
+		<div class="pr xui-inlineblock ">
 			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 				发优惠券</span>
 		   	</a>
@@ -194,19 +194,22 @@
 			    </li>
 			</ul>
 		</div>
-		<a href="javascript:void(0);" class="btn btn-default xa-export ml20">导出结果</a>
+		<label class="fr">全部会员：${data.total_count}人</label>
+
+		<a href="javascript:void(0);" class="btn fr  btn-default xa-export ml20">导出结果</a>
+
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
 		<thead>
 		<tr>
-			<th >用户</th>
+			<th >会员</th>
 			<th >会员等级</th>
 			<th  class="tx_sortable" style="width:10%" data-sort-attr='friend_count' >好友数</th>
 			<th  class="tx_sortable" style="width:10%" data-sort-attr='pay_money' >消费总额</th>
 			<th  class="tx_sortable" style="width:10%" data-sort-attr='unit_price' >平均客单价</th>
 			<th  class="tx_sortable" style="width:10%" data-sort-attr='pay_times' >购买次数</th>
-			<th  class="tx_sortable" style="width:10%" data-sort-attr='integral' >拥有积分</th>
-			<th >分组</th>
+			<th  class="tx_sortable" style="width:8%" data-sort-attr='integral' >积分</th>
+			<th  style="width:8%">分组</th>
 			<th  class="tx_sortable " style="width:12%" data-sort-attr='created_at' data-init-sort="-created_at" >加入时间&来源</th>
 			<th class="" style="width:10%">
 				操作
@@ -270,11 +273,27 @@
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
 			<td>
-				<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
-				<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">调等级</a></br>
-				<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a></br>
-				<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">调积分</a></br>
-				<a href="/new_weixin/realtime_messages_detail/?session_id=${ member.session_id }"  {{if member.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看对话</a>
+			<div>
+				<div class="xui-wraper">
+					<div class="xui-left">
+						<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a>
+					</div>
+					<div class="xui-right">
+						<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">调等级</a>
+					</div>
+					<div class="cb"></div>
+				</div>
+				<div class="xui-wraper">
+					<div class="xui-left">
+						<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
+					</div>
+					<div class="xui-right">
+						<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">调积分</a></br>
+					</div>
+					<div class="cb"></div>
+				</div>
+			<div>
+				<a href="/new_weixin/realtime_messages_detail/?session_id=${ member.session_id }"  {{if member.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看聊天记录</a>
 			</td>
 		</tr>
 		{{/each}}
