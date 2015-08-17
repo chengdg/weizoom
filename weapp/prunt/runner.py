@@ -5,6 +5,7 @@ __author__ = 'robert'
 import sys
 import os
 import logging
+import traceback
 
 import registry
 import config
@@ -29,7 +30,7 @@ def load_builtin_tasks():
 		module = __import__(task_module_path, {}, {}, ['*',])
 
 
-def load_gruntfile():
+def load_pruntfile():
 	prunt_file_path = os.path.join(CUR_DIR, 'Pruntfile.py')
 	module = __import__('Pruntfile', {}, {}, ['*',])
 
@@ -37,6 +38,7 @@ def load_gruntfile():
 def run_task(targets, config_dict=None):
 	import prunt
 	import sys
+	has_error = False
 	for target in targets:
 		task = sys.modules['registry'].get_task(target)
 		if task:
@@ -76,13 +78,17 @@ def run_task(targets, config_dict=None):
 					env = config.PruntEnv(target, prunt.get_config_for(target))
 				func(env)
 		else:
-			logger.warn('no task named "%s"', target)
+			logger.error('no task named "%s"', target)
+			has_error = True
+			prunt.set_error()
+
+	return not has_error
 
 
 def run(targets, config_dict=None):
 	load_builtin_tasks()
-	load_gruntfile()
-	run_task(targets, config_dict)
+	load_pruntfile()
+	return run_task(targets, config_dict)
 	
 
 
@@ -97,5 +103,18 @@ if __name__ == '__main__':
 	targets = sys.argv[1:]
 	if not targets:
 		targets = ['default']
-		
-	run(targets)
+
+	import prunt		
+	try:
+		run(targets)
+	except:
+		type, value, tb = sys.exc_info()
+		print type
+		print value
+		traceback.print_tb(tb)
+		prunt.set_error()
+
+	if prunt.has_error():
+		logger.warn('build FAILED!!!')
+	else:
+		logger.info('build SUCCESS')

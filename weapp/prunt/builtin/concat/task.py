@@ -61,6 +61,12 @@ def concat(prunt):
 		comment = ' finish file content for %s' % src_file
 		contents.append(comment_tmpl % comment)
 	
+	#确保dest的目录存在
+	dest_dir = os.path.dirname(dest)
+	if not os.path.exists(dest_dir):
+		os.makedirs(dest_dir)
+
+	#写入dest文件
 	dst_file = open(dest, 'wb')
 	print >> dst_file, '\n'.join(contents)
 	dst_file.close()

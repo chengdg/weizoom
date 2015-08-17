@@ -34,6 +34,7 @@ def md5(prunt):
 		prefix = path[:pos]
 		suffix = path[pos+1:]
 		new_path = '%s_%s.%s' % (prefix, digest, suffix)
+		prunt.set_last_result(new_path)
 		shutil.copyfile(path, new_path)
 		logger.info('generate md5 file %s for %s', new_path, path)
 	

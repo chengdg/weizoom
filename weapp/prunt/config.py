@@ -34,3 +34,6 @@ class PruntEnv(object):
 
 		import prunt
 		self.run_task = prunt.run_task
+		self.set_last_result = prunt.set_last_result
+		self.get_last_result = prunt.get_last_result
+

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 CONFIGS = {}
+RESULT = None
+HAS_ERROR = False
 
 
 def init_config(options):
@@ -41,5 +43,24 @@ def register_task(name, tasks, config_dict=None):
 
 def run_task(name, config_dict=None):
 	import runner
-	runner.run_task([name], config_dict)
+	return runner.run_task([name], config_dict)
 
+
+def set_last_result(result):
+	global RESULT
+	RESULT = result
+
+
+def get_last_result():
+	global RESULT
+	return RESULT
+
+
+def set_error():
+	global HAS_ERROR
+	HAS_ERROR = True
+
+
+def has_error():
+	global HAS_ERROR
+	return HAS_ERROR

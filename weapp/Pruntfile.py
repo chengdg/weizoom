@@ -55,13 +55,9 @@ prunt.init_config({
 	}
 })
 
-prunt.register_task('build:base_v2', 'weizoom-build-base-template', {
+prunt.register_task('build:base_v2', 'weizoom-build', {
 	"files": {
 		"src": "templates/base_v2.html"
-	},
-	"dest": {
-		"js": "static_v2/js/base_all.js",
-		"css": "static_v2/css/base_all.js"
 	}
 })
 
