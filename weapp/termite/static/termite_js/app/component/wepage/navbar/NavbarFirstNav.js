@@ -47,7 +47,8 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
         },
         target: function($node, model, value, $propertyViewNode) {
             xwarn(value);
-            var $linkSelectFieldNode =  $($propertyViewNode.find('.propertyGroup_property_linkSelectField')[0]);
+            console.log(4444444, $propertyViewNode, $node, model)
+            var $linkSelectFieldNode = $($propertyViewNode.find('.propertyGroup_property_linkSelectField'));
             if (value.length > 0) {
                 var linkData = $.parseJSON(value);
                 if (linkData.type === 'manualInput') {

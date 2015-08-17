@@ -24,6 +24,9 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 		var template = this.getTmpl('navTmpl');
 		var html = template({});
 		this.$('.xa-navbar-secondnav-navs').append($(html));
+		var $conterolField = $(event.target).parents('.propertyGroup_property_dynamicControlField_content');
+		W.Broadcaster.trigger("component:secondnav_add", $conterolField, false)
+		console.log('trigger', 'update-show-box')
 	},
 
 	onInputValue: function(event) {
@@ -39,7 +42,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 			})
 		}
 
-		xwarn(navs);
+		console.log(55555555, navs)
 	}
 });
 

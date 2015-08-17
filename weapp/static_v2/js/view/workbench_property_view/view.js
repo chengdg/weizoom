@@ -752,6 +752,19 @@ W.workbench.PropertyView = Backbone.View.extend({
         W.Broadcaster.trigger('component:create', newComponent, this.actionReferenceComponent);
     },
 
+    onAddSecondNav: function($el, isShowUrl){
+        console.log('sdfsdfsdfdsf', $el)
+        var urlBox = $el.children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
+        var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');
+        if (isShowUrl) {
+            urlBox.show();
+            secondeNavsPrompt.hide();
+        }else{
+            urlBox.hide();
+            secondeNavsPrompt.css("display", "inline");
+        }
+    },
+
     initSliderView: function($el){
         _.each($el.find('.xa-progress-bar'), function(item){
             var $item = $(item);
@@ -851,6 +864,7 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         var view = $('[data-ui-role="termite-navbar-secondnav"]').data('view');
         xwarn(view);
+        W.Broadcaster.on('component:secondnav_add', _.bind(this.onAddSecondNav, this));
     },
 
 
