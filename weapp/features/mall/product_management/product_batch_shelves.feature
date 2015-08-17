@@ -165,7 +165,7 @@ Scenario:2 对下架商品进行批量上架
 			"display_index": 0
 		}]
 	"""
-@mall2 @jz
+@mall2
 Scenario:3待售商品上架后，排序重复，自动变为0
 	When jobs-下架商品'叫花鸡'
 	And jobs更新商品'东坡肘子'
