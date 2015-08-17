@@ -187,7 +187,7 @@ Scenario: 购买商品后，可以获得订单列表
 		}]
 		"""
 
-@mall @mall2 @mall.order @mall_a @zy_mo2 @jz
+@mall @mall2 @mall.order @mall_a @zy_mo2
 Scenario: 购买商品后，管理员通过后台管理系统可以查看订单详情
 	bill购买商品后
 	1. 能看到订单详情
