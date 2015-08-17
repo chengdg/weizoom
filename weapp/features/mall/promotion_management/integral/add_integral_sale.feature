@@ -79,14 +79,40 @@ Background:
 			}
 		}]
 		"""
-	Given jobs已获取会员等级列表
+	#会员等级
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+	Then jobs能获取会员等级列表
 		"""
 		[{
 			"name": "普通会员",
-			"shop_discount": "10"
-		},{
+			"discount": "10.0"
+		}, {
 			"name": "铜牌会员",
-			"shop_discount": "9"
+			"upgrade": "手动升级",
+			"discount": "9.0"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8.0"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7.0"
 		}]
 		"""
 	Given jobs设定会员积分策略
