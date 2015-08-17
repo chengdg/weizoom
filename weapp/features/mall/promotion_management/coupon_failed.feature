@@ -167,7 +167,7 @@ Scenario: 2先建立限时抢购活动，不能建立该商品的单品券
 		}]
 	"""
 
-@mall2 @promotion.promotionCoupon @promotion.promotionPremium
+@promotion.promotionCoupon @promotion.promotionPremium
 Scenario: 3先建立买赠活动，不能建立该商品的单品券
 	When jobs创建买赠活动
 	"""
