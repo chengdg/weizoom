@@ -105,7 +105,7 @@ def step_impl(context, user, name):
 def step_impl(context, user):
     json_data = json.loads(context.text)
     condition = json_data['condition'][0]
-    is_all_conditions = False if condition == u"满足一个条件即可" else True
+    is_all_conditions = '0' if condition == u"满足一个条件即可" else '1'
     response = context.client.get('/mall2/member_grade_list/')
     grades = response.context['member_grades']
     data = []
@@ -122,7 +122,7 @@ def step_impl(context, user):
             data_dict["pay_money"] = grade.pay_money
             data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
         data.append(data_dict)
-
+    print('is_all_conditions:',is_all_conditions)
     context.client.post('/mall2/api/member_grade_list/?_method=post',
                         {'is_all_conditions': is_all_conditions, 'grades': json.dumps(data)})
 
