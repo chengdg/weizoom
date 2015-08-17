@@ -510,6 +510,7 @@ def batch_update_grade(request):
 		Member.objects.filter(id__in=post_ids).update(grade=grade)
 
 	response = create_response(200)
+	response.data.post_ids = post_ids
 	return response.get_response()
 
 
