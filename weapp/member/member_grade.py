@@ -50,8 +50,9 @@ class MemberGradeList(resource.Resource):
         original_member_grade_ids = [grade.id for grade in original_member_grades]
         default_grade = MemberGrade.get_default_grade(webapp_id)
 
-        is_all_conditions = request.POST.get('is_all_conditions', '0')
-        IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=int(is_all_conditions))
+        tmp_is_all_conditions = request.POST.get('is_all_conditions', '0')
+        is_all_conditions = True if tmp_is_all_conditions == '1' else False
+        IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=is_all_conditions)
 
         post_ids = []
         for grade in post_grades:
