@@ -30,6 +30,7 @@ Background:
 		}]
 	"""
 
+@wip.cp1
 Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 	"""
