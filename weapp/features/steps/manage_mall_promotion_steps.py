@@ -142,7 +142,6 @@ def step_create_premium_sale(context, user):
 
 @when(u"{user}创建限时抢购活动")
 def step_create_flash_sales(context, user):
-    assert False
     promotions = json.loads(context.text)
     if type(promotions) == dict:
         promotions = [promotions]
@@ -181,7 +180,3 @@ def __get_member_grade(promotion, webapp_id):
     return member_grade
 
 
-@when("{user}使优惠券失效")
-def step_impl(context, user):
-    print("disabled the coupons")
-    assert False
