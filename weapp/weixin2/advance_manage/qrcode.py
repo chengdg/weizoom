@@ -296,7 +296,7 @@ class Qrcode(resource.Resource):
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
 		qrcode = None
-
+		from mall.promotion.models import CouponRule
 		if setting_id > 0:
 			try:
 				qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.user)
@@ -622,6 +622,8 @@ class QrcodeOrder(resource.Resource):
 	@login_required
 	@mp_required
 	def api_get(request):
+		from mall import module_api as mall_api
+		from mall.models import *
 		channel_qrcode_id = request.GET.get('setting_id', None)
 		start_date = request.GET.get('start_date', '')
 		end_date = request.GET.get('end_date', '')
@@ -719,6 +721,7 @@ class QrcodeOrder(resource.Resource):
 		#构造返回的order数据
 		items = []
 		today = datetime.today()
+
 		for order in  orders:
 			 #获取order对应的member的显示名
 			 member = webappuser2member.get(order.webapp_user_id, None)
