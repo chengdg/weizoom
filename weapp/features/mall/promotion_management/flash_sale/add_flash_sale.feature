@@ -147,7 +147,7 @@ Scenario: 0 选取起购数量大于1的商品，创建限时抢购活动（起�
 	#When jobs创建限时抢购活动
 	#新建限时抢购页面，商品查询弹窗中的数据列表中不存在'商品0'
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时，显示活动名称)
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -178,7 +178,7 @@ Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时�
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空，显示广告语）
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -208,7 +208,7 @@ Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空�
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 3 选取参与会员折扣的商品，创建限时抢购活动(限时抢购优先)
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -238,7 +238,7 @@ Scenario: 3 选取参与会员折扣的商品，创建限时抢购活动(限时�
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -268,7 +268,7 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢购活动
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -298,7 +298,7 @@ Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢�
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 6 创建限时抢购活动，必填字段的校验
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -320,7 +320,7 @@ Scenario: 6 创建限时抢购活动，必填字段的校验
 	#限购价格提示：
 	And jobs获得系统提示'内容不能为空'
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 7 创建限时抢购活动，限购价格必须小于商品原价的校验（多规格商品，则必须小于价格最低的规格商品原价）
 	Given jobs登录系统
 	When jobs创建限时抢购活动
