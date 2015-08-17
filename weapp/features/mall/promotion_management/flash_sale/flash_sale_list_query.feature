@@ -32,7 +32,7 @@ Background:
 		|限时抢购2   | 商品2,1234561    |   已结束  |  2015-06-10  |2015-08-10   |
 		|限时抢购1   | 商品1            |   已结束  |  2015-05-10  |2015-07-25   |
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario:限时抢购活动列表查询
 	#空查询、默认查询
 		When jobs设置查询条件
