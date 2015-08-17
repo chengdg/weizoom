@@ -97,7 +97,7 @@ Background:
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 1 删除状态为'已结束'的限时抢购活动
 	Given jobs登录系统
 	When jobs删除限时抢购活动'广告语：商品0抢购'
@@ -133,7 +133,7 @@ Scenario: 1 删除状态为'已结束'的限时抢购活动
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 2 批量删除限时抢购活动（不包含状态为未结束的活动）
 	Given jobs登录系统
 	When jobs批量删除限时抢购活动'广告语：商品1抢购'和'广告语：商品0抢购'
@@ -160,7 +160,7 @@ Scenario: 2 批量删除限时抢购活动（不包含状态为未结束的活�
 			}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@promotion @promotionFlash
 Scenario: 3 批量删除限时抢购活动（包含状态为未结束的活动）
 	Given jobs登录系统
 	When jobs批量删除限时抢购活动
