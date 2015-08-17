@@ -157,7 +157,6 @@ Scenario: 积分应用活动列表查询
 					"pro_code":"",
 					"status":"全部",
 					"start_date":"",
-
 					"end_date":"2015-08-10"
 				}]
 				"""
