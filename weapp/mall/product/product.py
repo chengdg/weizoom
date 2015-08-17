@@ -385,6 +385,10 @@ class Product(resource.Resource):
         # product.display_index = models.Product.objects.filter(
         #     owner=request.manager
         # ).order_by('-display_index').first().display_index + 1
+        # 处理商品排序
+        display_index = int(request.POST.get('display_index', '0'))
+        if display_index > 0:
+            product.move_to_position(display_index)
 
         # 处理standard商品规格
         models.ProductModel.objects.create(
@@ -569,6 +573,11 @@ class Product(resource.Resource):
                 stocks=min_limit,
                 is_member_product=request.POST.get("is_member_product", False) == 'on'
             )
+
+        # 处理商品排序
+        display_index = int(request.POST.get('display_index', '0'))
+        if display_index > 0:
+            models.Product.objects.get(id=product_id).move_to_position(display_index)
 
         # 处理商品规格
         standard_model, custom_models = utils.extract_product_model(request)

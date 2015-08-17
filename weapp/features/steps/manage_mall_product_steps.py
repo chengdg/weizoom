@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-import json
+import json, time
 from behave import when, then, given
 import logging
 logger = logging.getLogger('console')
@@ -15,6 +15,9 @@ from .steps_db_util import (
     get_product_response_from_web_page, get_custom_model_id_from_user_code
 )
 
+@when(u'{user}暂停{scend}秒')
+def step_impl(context, user, scend):
+    time.sleep(float(scend))
 
 @when(u'{user}已添加商品')
 def step_impl(context, user):
@@ -44,6 +47,8 @@ def step_product_add(context, user):
     for product in context.products:
         if product.get('stocks'):
             product['stock_type'] = 1
+        else:
+            product['stock_type'] = 0
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
         __process_product_data(product)
         product = __supplement_product(context.webapp_owner_id, product)
@@ -95,7 +100,7 @@ def step_update_product(context, user, product_name):
     __process_product_data(product)
     product = __supplement_product(context.webapp_owner_id, product)
 
-    url = '/mall2/product/?id=%d&source=offshelf' % existed_product.id
+    # url = '/mall2/product/?id=%d&source=offshelf' % existed_product.id
     url = '/mall2/product/?id=%d&?shelve_type=%d' % (
         existed_product.id, existed_product.shelve_type, )
     response = context.client.post(url, product)
@@ -191,6 +196,16 @@ def update_product(context, user, action, product_name):
 def update_products(context, user, action):
     __update_prducts_by_name(context, json.loads(context.text), action)
 
+@when(u"{user}更新'{product_name}'商品排序{pos}")
+def update_product_display_index(context, user, product_name, pos):
+    data = {
+        "id": ProductFactory(name=product_name).id,
+        "update_type": "update_pos",
+        "pos": pos
+    }
+    response = context.client.post('/mall2/api/product/?_method=post', data)
+    bdd_util.assert_api_call_success(response)
+
 
 def __update_prducts_by_name(context, product_name, action):
     ACTION2TYPE = {
@@ -261,6 +276,7 @@ def __get_products(context, type_name=u'在售'):
                     'standard': product['standard_model']
                 }
             }
+            product['stock_type'] = standard_model['stock_type']
 
     return data["items"]
 
@@ -492,7 +508,11 @@ def __supplement_product(webapp_owner_id, product):
                 custom_model['name'] = custom_model_id
                 custom_models.append(custom_model)
             product_prototype['customModels'] = json.dumps(custom_models)
-
+    else:
+        # 没有规格
+        if int(product.get('stocks', '0')) > 0:
+            product_prototype['stock_type'] = mall_models.PRODUCT_STOCK_TYPE_LIMIT
+            product_prototype['stocks'] = product.get('stocks', '0')
     product_prototype['market_price'] = product_prototype['market_price']
     return product_prototype
 
@@ -508,13 +528,13 @@ def __process_product_data(product):
 
     # 商品分类
     product['product_category'] = -1
-    if product.get('category', ''):
+    if product.get('categories', ''):
         product_category = ''
-        for category_name in product['category'].split(','):
+        for category_name in product['categories'].split(','):
             category = ProductCategoryFactory(name=category_name)
             product_category += "%s," % str(category.id)
         product['product_category'] = product_category
-        del product['category']
+        del product['categories']
 
     # 轮播图
     if product.get('swipe_images'):
