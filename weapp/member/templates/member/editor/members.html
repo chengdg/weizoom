@@ -213,7 +213,7 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		<li><a class="xui-ellipsis-1" href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -267,14 +267,14 @@
 		<tr>
 			<th >会员</th>
 			<th >会员等级</th>
-			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='friend_count' >好友数</th>
+			<th  class="tx_sortable xui-Blue" style="width:8%" data-sort-attr='friend_count' >好友数</th>
 			<th  class="tx_sortable xui-Blue" style="width:8%" data-sort-attr='integral' >积分</th>
-			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='pay_money' >消费总额</th>
+			<th  class="tx_sortable xui-Blue" style="width:8%" data-sort-attr='pay_money' >消费总额</th>
 			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='unit_price' >客单价</th>
 			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='pay_times' >购买次数</th>
 			
-			<th  class="tx_sortable xui-Blue" style="width:12%" data-sort-attr='created_at' data-init-sort="-created_at" >关注时间&来源</th>
-			<th  style="width:8%">分组</th>
+			<th  class="tx_sortable xui-Blue" style="width:14%" data-sort-attr='created_at' data-init-sort="-created_at"  data-sort-direction="down">关注时间&来源 </th>
+			<th  style="width:10%">分组</th>
 
 			<th class="" style="width:10%">
 				操作
@@ -373,7 +373,10 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#all').attr('checked', false);
-
+	$('.xa-arrow').click(function(){
+		console.log('ddddddddddd')
+		alert($('.xa-arrow').attr('src'))
+	})
 	$('.update_dropdown').delegate('#all', 'click', function(event){
 		var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');
