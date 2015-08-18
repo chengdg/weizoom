@@ -78,7 +78,7 @@ def _get_unread_message_count(user):
 	unread_message_count = 0
 	mpuser = get_system_user_binded_mpuser(user)
 	sessions = Session.objects.select_related().filter(mpuser=mpuser, is_show=True).exclude(member_latest_created_at="").aggregate(Sum("unread_count"))
-	
+
 	if sessions["unread_count__sum"] is not None:
 		unread_message_count = sessions["unread_count__sum"]
 
@@ -119,7 +119,7 @@ class UserAnalysis(resource.Resource):
 			display_date_list = [date.strftime("%m.%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 
 			analysis = MemberAnalysis.objects.filter(owner_id=owner_id, date_time__range=(low_date, (high_date+timedelta(days=1)))).order_by('date_time')
-			
+
 			date2added = dict()
 			date2cancel = dict()
 			date2net = dict()
@@ -136,7 +136,7 @@ class UserAnalysis(resource.Resource):
 			cancel_trend_values = []
 			net_trend_values = []
 			total_trend_values = []
-			for date in date_list:		
+			for date in date_list:
 				added_trend_values.append(date2added.get(date, 0))
 				cancel_trend_values.append(date2cancel.get(date, 0))
 				net_trend_values.append(date2net.get(date, 0))
@@ -169,7 +169,7 @@ class UserAnalysis(resource.Resource):
 				response.innerErrMsg = unicode_full_stack()
 				return response.get_response()
 
-		
+
 class PageTrackAnalysis(resource.Resource):
 	app = 'new_weixin'
 	resource = 'page_track_analysis'
@@ -185,9 +185,9 @@ class PageTrackAnalysis(resource.Resource):
 			total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
 			date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 			display_date_list = [date.strftime("%m.%d") for date in dateutil.get_date_range_list(low_date, high_date)]
-			
+
 			analysis = MessageAnalysis.objects.filter(owner_id=owner_id, date_time__range=(low_date, (high_date+timedelta(days=1)))).order_by('date_time')
-			
+
 			date2receive = dict()
 			date2send = dict()
 			date2interaction_user = dict()
@@ -204,7 +204,7 @@ class PageTrackAnalysis(resource.Resource):
 			send_count_values = []
 			interaction_user_count_values = []
 			interaction_count_values = []
-			for date in date_list:		
+			for date in date_list:
 				receive_count_values.append(date2receive.get(date, 0))
 				send_count_values.append(date2send.get(date, 0))
 				interaction_user_count_values.append(date2interaction_user.get(date, 0))
@@ -244,20 +244,20 @@ class FansAnalysis(resource.Resource):
 	@login_required
 	def api_get(request):
 		"""
-		粉丝分析
+		会员分析
 		"""
 		webapp_id = request.user_profile.webapp_id
 		subscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, is_for_test=False).count()
 		unsubscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=False, is_for_test=False).count()
 
-		display_date_list = ['已跑路粉丝', '现有粉丝']
+		display_date_list = ['取消关注会员', '现有会员']
 		try:
 			return create_bar_chart_response(
 				display_date_list,
 				[{
-					"name": "现有粉丝",
+					"name": "现有会员",
 					"values" : [
-						{'value':unsubscribed_fans_count,'itemStyle': {'normal': {'color': '#B5B5B5'}}}, 
+						{'value':unsubscribed_fans_count,'itemStyle': {'normal': {'color': '#B5B5B5'}}},
 						{'value':subscribed_fans_count,'itemStyle': {'normal': {'color': '#63B8FF'}}}
 					],
 					"tooltip" : {
@@ -284,13 +284,13 @@ class BoughtFansAnalysis(resource.Resource):
 	@login_required
 	def api_get(request):
 		"""
-		购买过粉丝分析
+		购买过会员分析
 		"""
 		webapp_id = request.user_profile.webapp_id
 		bought_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False, pay_times__gt=0).count()
 		not_bought_fans_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False, pay_times=0).count()
 		tooltip = {
-					'trigger': 'item', 
+					'trigger': 'item',
 					'formatter': '{b}</br>人数：{c}</br>占比：{d}%',
 					'backgroundColor': '#FFFFFF',
 					'textStyle': {'color': '#363636'},
@@ -300,8 +300,8 @@ class BoughtFansAnalysis(resource.Resource):
 		try:
 			return create_pie_chart_response('',
 				{
-					"购买过的粉丝": bought_fans_count,
-					"未购买过的粉丝": not_bought_fans_count
+					"购买过的会员": bought_fans_count,
+					"未购买过的会员": not_bought_fans_count
 				},
 				tooltip
 			)
@@ -334,7 +334,7 @@ class KeywordAnalysis(resource.Resource):
 		total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
 		date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 		display_date_list = [date.strftime("%m.%d") for date in dateutil.get_date_range_list(low_date, high_date)]
-		
+
 		records = KeywordCount.objects.filter(owner_id=owner_id, date__range=(low_date, high_date), keyword__contains=keyword).annotate(total_count=Sum('count')).order_by('-total_count')
 		new_records = {}
 
