@@ -43,7 +43,7 @@ Copyright (c) 2011-2012 Weizoom Inc
                     this.$button = $('<a href="'+url+'">关注我们可查看账户积分、红包、优惠券等！<i class="xui-icon xui-icon-rightarrow"></i></a>');
                 }
                 this.$el.html(this.$button);
-                height = this.setting.isShowCover(this) ? '100%' : '60px';
+                height = this.setting.isShowCover(this) ? '100%' : '40px';
             }else {
                 height = this.setting.isShowCover(this) ? '100%' : '0px';
             }
