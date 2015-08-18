@@ -60,7 +60,7 @@ Background:
 		"""
 			[{
 				"name": "活动名称：商品3抢购",
-				"products":["商品3"],
+				"product_name":"商品3",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"未开始",
@@ -69,7 +69,7 @@ Background:
 				"actions": ["详情","结束"]
 			},{
 				"name": "活动名称：商品2抢购",
-				"products":["商品2"],
+				"product_name":"商品2",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -78,7 +78,7 @@ Background:
 				"actions": ["详情","结束"]
 			},{
 				"name": "广告语：商品1抢购",
-				"products":["商品1"],
+				"product_name":"商品1",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"已结束",
@@ -87,7 +87,7 @@ Background:
 				"actions": ["详情","删除"]
 			},{
 				"name": "广告语：商品0抢购",
-				"products":["商品0"],
+				"product_name":"商品0",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"已结束",
@@ -105,7 +105,7 @@ Scenario: 1 删除状态为'已结束'的限时抢购活动
 		"""
 			[{
 				"name": "活动名称：商品3抢购",
-				"products":["商品3"],
+				"product_name":"商品3",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"未开始",
@@ -114,7 +114,7 @@ Scenario: 1 删除状态为'已结束'的限时抢购活动
 				"actions": ["详情","结束"]
 			},{
 				"name": "活动名称：商品2抢购",
-				"products":["商品2"],
+				"product_name":"商品2",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -123,7 +123,7 @@ Scenario: 1 删除状态为'已结束'的限时抢购活动
 				"actions": ["详情","结束"]
 			},{
 				"name": "广告语：商品1抢购",
-				"products":["商品1"],
+				"product_name":"商品1",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"已结束",
@@ -141,7 +141,7 @@ Scenario: 2 批量删除限时抢购活动（不包含状态为未结束的活�
 		"""
 			[{
 				"name": "活动名称：商品3抢购",
-				"products":["商品3"],
+				"product_name":"商品3",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"未开始",
@@ -150,7 +150,7 @@ Scenario: 2 批量删除限时抢购活动（不包含状态为未结束的活�
 				"actions": ["详情","结束"]
 			},{
 				"name": "活动名称：商品2抢购",
-				"products":["商品2"],
+				"product_name":"商品2",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -167,7 +167,7 @@ Scenario: 3 批量删除限时抢购活动（包含状态为未结束的活动�
 		"""
 			[{
 				"name": "活动名称：商品3抢购",
-				"products":["商品3"],
+				"product_name":"商品3",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"未开始",
@@ -176,7 +176,7 @@ Scenario: 3 批量删除限时抢购活动（包含状态为未结束的活动�
 				"actions": ["详情","结束"]
 			},{
 				"name": "活动名称：商品2抢购",
-				"products":["商品2"],
+				"product_name":"商品2",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -185,7 +185,7 @@ Scenario: 3 批量删除限时抢购活动（包含状态为未结束的活动�
 				"actions": ["详情","结束"]
 			},{
 				"name": "广告语：商品1抢购",
-				"products":["商品1"],
+				"product_name":"商品1",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"已结束",
@@ -194,7 +194,7 @@ Scenario: 3 批量删除限时抢购活动（包含状态为未结束的活动�
 				"actions": ["详情","删除"]
 			},{
 				"name": "广告语：商品0抢购",
-				"products":["商品0"],
+				"product_name":"商品0",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"已结束",
