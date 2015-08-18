@@ -3,7 +3,9 @@
 # EASY-INSTALL-ENTRY-SCRIPT: 'celery==3.1.17','console_scripts','celery'
 # 
 '''
-import sys;from weapp.celery import app;from celery.execute import send_task
+import sys;
+from weapp.celery import app;
+from celery.execute import send_task
 send_task('example.tasks.example_task',args=['give me a break: AAAAA'])
 
 '''
@@ -59,6 +61,7 @@ class CeleryTaskMonitor(logging.Filter):
     pairs = {}
     tasks  = {}
     loggers = {}
+
     def __init__(self, app,  logdir, sys_handler=None, name='celery.worker.job',  level=logging.DEBUG):
         logging.Filter.__init__(self,name)
         self.logdir = os.path.realpath(logdir)
@@ -66,7 +69,7 @@ class CeleryTaskMonitor(logging.Filter):
         self.app = app
         self.level = level
         self.loggers = {}
-        self.mainpid = pid =  os.getpid()
+        self.mainpid = pid = os.getpid()
         fmt = '[%(asctime)s][%(levelname)s][%(process)s] %(message)s'
         sys_handler and sys_handler.setFormatter(logging.Formatter(fmt))
         self.handlers = sys_handler and [sys_handler] or []
@@ -146,12 +149,15 @@ class CeleryTaskMonitor(logging.Filter):
             if r.levelno == logging.ERROR and r.funcName:
                 r.funcName = 'on_error'
             return getattr(self, r.funcName, 'on_failure')(r)
+
     def revoked(self, r):
         task, tid = r.args
         self.on_reallog(r, tid, TASK_REVOKED)
+
     def on_error(self, r):
         tid, r.task = r.args.get('id'), r.args.get('name')
         self.on_reallog(r, tid, TASK_ERROR)
+
     def on_accepted(self, r):
         r.levelno = logging.INFO
         r.levelname = 'INFO'
@@ -167,19 +173,24 @@ class CeleryTaskMonitor(logging.Filter):
             real_logger = self.loggers[task]
             real_logger.handle(r)
             return False
+
     def on_success(self, r):
         tid = r.args.get('id')
         r.msg = 'Task [%(id)s] succeeded in %(runtime)ss: %(return_value)s'
         self.on_reallog(r, tid, TASK_SUCCESS)
+
     def on_timeout(self, r):
         timeout, task, tid = r.args
         self.on_reallog(r, tid, TASK_TIMEOUT)
+
     def on_retry(self, r):
         tid, name, exc = r.args
         self.on_reallog(r, tid, TASK_RETRY)
+
     def on_failure(self, r):
         tid = r.args['id']
         self.on_reallog(r, tid, TASK_FAILURE)
+
     def on_reallog(self, r, tid, status):
         if CeleryTaskMonitor.pairs.has_key(tid):
             r.process, r.task = self.pairs.pop(tid)
@@ -207,13 +218,17 @@ def getcmd():
                'names'   :'celery multi names    --pidfile=%s',
                }
     fname = os.path.basename(os.path.realpath(__file__))
+    print("fname: {}".format(fname))
     i = (lambda x:(x and x[0] or 0)) ([i for i in xrange(len(sys.argv)) if sys.argv[i].endswith(fname)])
     argv = sys.argv[i:]
     cmd = len(argv) < 2 and 'start' or argv[1]
     cmdline = CMD_DICT.get(cmd)
-    pidfiles = [ f  for f in  os.listdir(WEAPP_CELERY_LOG_DIR) if f.startswith('celery-') and f.endswith('.pid') ]
-    pidfiles = [(file(os.path.join(WEAPP_CELERY_LOG_DIR, f)).read().strip(), os.path.join(WEAPP_CELERY_LOG_DIR, f)) for f in pidfiles ]
-    pids = [(int(pid),f) for (pid,f) in pidfiles if pid.isdigit() ]
+    #_list = os.listdir(WEAPP_CELERY_LOG_DIR)
+    #print("list: {}".format(_list))
+    all_files = os.listdir(WEAPP_CELERY_LOG_DIR)
+    pidfiles = [ f  for f in all_files if f.startswith('celery-') and f.endswith('.pid') ]
+    pidfiles = [ (file(os.path.join(WEAPP_CELERY_LOG_DIR, f)).read().strip(), os.path.join(WEAPP_CELERY_LOG_DIR, f)) for f in pidfiles ]
+    pids = [(int(pid),f) for (pid,f) in pidfiles if pid.isdigit()]
     if cmd == 'down':
         for pid,f in pids:
             try:
