@@ -156,6 +156,22 @@
 	border-color: #ED9611;
 	color:#ED9611;
 }
+.xui-memberListPage .icon-arrow-up {
+  /* background: #000; */
+  background: url('/static_v2/img/editor/upArrow.png') no-repeat;
+}
+.xui-memberListPage .icon-arrow-down {
+  /* background: #000; */
+  background: url('/static_v2/img/editor/downArrow.png') no-repeat;
+}
+.xui-memberListPage [class^="icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  line-height: 14px;
+  vertical-align: text-top;
+}
 .xui-firendlistdialog .modal-footer {
 	height: 0px;
 }
@@ -311,11 +327,20 @@
 	background: url(/static_v2/img/editor/grayArrow.png) no-repeat;
 
 }
+.xui-memberListPage .xui-ellipsis-1{
+    width: 150px;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
 .xui-memberListPage .xui-menu {
 	top: 30px;
 }
 .xui-memberListPage  .xui-productList .xui-wraper{
-	width: 100px;
+	width: 105px;
+	padding-left: 5px;
 }
 .xui-memberListPage  .xui-productList .xui-wraper .xui-left{
 	width: 50px;
