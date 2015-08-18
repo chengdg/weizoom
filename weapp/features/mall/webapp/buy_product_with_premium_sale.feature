@@ -109,7 +109,7 @@ Background:
 			"name": "商品1买二赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"premium_products": [{
 				"name": "商品2",
 				"count": 1
@@ -123,7 +123,7 @@ Background:
 			"name": "商品2买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 5
@@ -134,7 +134,7 @@ Background:
 			"name": "商品5买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品5"],
+			"product_name": "商品5",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -420,7 +420,7 @@ Scenario: 7  创建多规格商品 非循环买赠活动，购买多个 有规�
 			"name": "商品6买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品6"],
+			"product_name": "商品6",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -502,7 +502,7 @@ Scenario: 8  多规格商品，买2赠1 循环买赠
 			"name": "商品8买二赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品8"],
+			"product_name": "商品8",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -571,7 +571,7 @@ Scenario: 9  创建买赠活动，但活动时间没开始，按原有商品销�
 			"name": "商品9买1赠1",
 			"start_date": "1天后",
 			"end_date": "3天后",
-			"products": ["商品9"],
+			"product_name": "商品9",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -618,7 +618,7 @@ Scenario: 10  创建买赠活动，但活动时间没开始，按原有商品销
 			"name": "商品9买1赠1",
 			"start_date": "1天后",
 			"end_date": "3天后",
-			"products": ["商品9"],
+			"product_name": "商品9",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -665,7 +665,7 @@ Scenario: 11  创建买赠活动，选择商品时，活动进行中，但去付
 			"name": "商品10买1赠1",
 			"start_date": "2天前",
 			"end_date": "1天前",
-			"products": ["商品10"],
+			"product_name": "商品10",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -712,7 +712,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 			"name": "商品10买1赠1",
 			"start_date": "1天前",
 			"end_date": "3天后",
-			"products": ["商品10"],
+			"product_name": "商品10",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -872,7 +872,7 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 			"name": "商品6买一赠二",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品6"],
+			"product_name": "商品6",
 			"premium_products": [{
 				"name": "商品6",
 				"count": 1
@@ -887,7 +887,7 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 			"name": "商品7买二赠二",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品7"],
+			"product_name": "商品7",
 			"premium_products": [{
 				"name": "商品赠品",
 				"count": 2
@@ -899,7 +899,7 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 			"name": "商品8买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品8"],
+			"product_name": "商品8",
 			"premium_products": [{
 				"name": "商品赠品",
 				"count": 1

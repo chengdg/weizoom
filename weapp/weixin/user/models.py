@@ -333,3 +333,26 @@ class ComponentAuthedAppidInfo(models.Model):
 		db_table = 'component_authed_appid_info'
 		verbose_name = '委托授权帐号详细信息'
 		verbose_name_plural = '委托授权帐号详细信息'
+
+
+class WoFu(models.Model):
+	phone_number =  models.CharField(max_length=25, db_index=True)
+	coupon_rule_id = models.IntegerField(db_index=True)
+	level = models.IntegerField(db_index=True) # 1234
+	is_send = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'wofu'
+		verbose_name = 'WoFu'
+		verbose_name_plural = 'WoFu'
+
+class WoFuLog(models.Model):
+	wofu = models.ForeignKey(WoFu)
+	member_id = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'wofu_log'
+		verbose_name = 'wofu_log'
+		verbose_name_plural = 'WoFu_log'	
