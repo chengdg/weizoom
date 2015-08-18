@@ -43,7 +43,7 @@ class WoFuHandler(KeywordHandler):
 		response = None
 		response_rule = None
 		response_content = None
-		if message.msgType == WeixinMessageTypes.TEXT and user_profile.user_id in [154,155,153,43]:
+		if message.msgType == WeixinMessageTypes.TEXT and user_profile.user_id in [151,570]:
 			content = message.content
 			print '--------------111111',message, message.content,content.strip().isdigit(), message.fromUserName
 			if content and content.strip().isdigit() and len(content.strip()) == 11:
