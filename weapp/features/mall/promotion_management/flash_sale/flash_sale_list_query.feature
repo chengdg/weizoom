@@ -150,31 +150,32 @@ Scenario:限时抢购活动列表查询
 			|限时抢购4   | 商品4        |1234563    |   已结束  |  2015-08-01  |2015-08-05   |
 			|限时抢购2   | 商品2        |1234561    |   已结束  |  2015-06-10  |2015-08-10   |
 			|限时抢购1   | 商品1        |           |   已结束  |  2015-05-10  |2015-07-25   |
+
 	#活动时间
 		#查询条件校验
-			When jobs设置查询条件
-				"""
-				[{
-					"product_name":"",
-					"bar_code":"",
-					"status":"全部",
-					"start_date":"2015-05-10",
-					"end_date":""
-				}]
-				"""
-			Then jobs获得系统提示"请输入结束日期"
+			#	When jobs设置查询条件
+			#		"""
+			#		[{
+			#			"product_name":"",
+			#			"bar_code":"",
+			#			"status":"全部",
+			#			"start_date":"2015-05-10",
+			#			"end_date":""
+			#		}]
+			#		"""
+			#	Then jobs获得系统提示"请输入结束日期"
 
-			When jobs设置查询条件
-				"""
-				[{
-					"product_name":"",
-					"bar_code":"",
-					"status":"全部",
-					"start_date":"",
-					"end_date":"2015-08-10"
-				}]
-				"""
-			Then jobs获得系统提示"请输入开始日期"
+			#	When jobs设置查询条件
+			#		"""
+			#		[{
+			#			"product_name":"",
+			#			"bar_code":"",
+			#			"status":"全部",
+			#			"start_date":"",
+			#			"end_date":"2015-08-10"
+			#		}]
+			#		"""
+			#	Then jobs获得系统提示"请输入开始日期"
 
 		#查询活动时间
 			When jobs设置查询条件
@@ -232,3 +233,18 @@ Scenario:限时抢购活动列表查询
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
+
+	#组合查询
+		When jobs设置查询条件
+			"""
+				{
+					"product_name":"商品4",
+					"bar_code":"1234563",
+					"status":"全部",
+					"start_date":"2015-08-01",
+					"end_date":"2015-08-05"
+				}
+				"""
+		Then jobs获取限时抢购活动列表
+			|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
+			|限时抢购4   | 商品4        |1234563    |   已结束  |  2015-08-01  |2015-08-05   |
