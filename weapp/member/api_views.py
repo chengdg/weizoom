@@ -4,6 +4,7 @@ __author__ = 'chuter'
 
 import json
 import urlparse
+import time
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
@@ -131,7 +132,7 @@ def __get_request_members_list(request):
 				session_filter['mpuser__owner_id'] = request.manager.id
 				session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
 				session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
-				
+
 				opids = get_opid_from_session(session_filter)
 				session_member_ids = module_api.get_member_ids_by_opid(opids)
 				if filter_data_args.has_key('id__in'):
