@@ -30,10 +30,6 @@ Background:
 	And jobs添加会员等级
 		"""
 		[{
-			"name": "普通会员",
-			"upgrade": "手动升级",
-			"discount": "10"
-		},{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
 			"discount": "9"
@@ -180,8 +176,7 @@ Scenario:3 没有选中会员，选择"给选中的人修改等级"
 			}]
 			"""
 
-		Then jobs获得批量修改等级会员
-			| member_name   | attention_time 	| member_source |  member_rank |
+		Then jobs获得批量修改等级会员"无数据"
 
 @member @memberList
 Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人修改等级"
