@@ -71,7 +71,7 @@ Background:
 			"name": "商品1积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"discount": 70,
 			"discount_money": 70.0,
 			"is_permanant_active": false
@@ -79,7 +79,7 @@ Background:
 			"name": "商品3积分应用",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"discount": 50,
 			"discount_money": 25.0,
 			"is_permanant_active": true

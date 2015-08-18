@@ -17,8 +17,7 @@ from core.jsonresponse import create_response
 from core import search_util
 
 FIRST_NAV_NAME = export.PRODUCT_FIRST_NAV
-COUNT_PER_PAGE = 2**32-1
-
+COUNT_PER_PAGE = 50
 
 REVIEW_FILTERS = {
     'review': [
@@ -86,12 +85,18 @@ class ProductReviewInfo(resource.Resource):
         product_review.member_name = Member.objects.get(id=product_review.member_id).username_for_html
         product_review.pictures = [picture.att_url for picture in
                                    ProductReviewPicture.objects.filter(product_review_id=product_review.id)]
+
+
+        # 可以再置顶
+        able_stick = mall_models.ProductReview.objects.filter(owner_id=request.manager.id, status=2).count() <= 3
+
         c = RequestContext(request,
                            {
                                'first_nav_name': FIRST_NAV_NAME,
                                'second_navs': export.get_second_navs(request),
                                'second_nav_name': export.PRODUCT_REVIEW_NAV,
-                               'product_review': product_review
+                               'product_review': product_review,
+                               'able_stick': able_stick
                            })
         return render_to_response('mall/editor/product_review_update.html', c)
 
@@ -218,6 +223,9 @@ class ProductReviewList(resource.Resource):
         owner = request.manager
         all_reviews = mall_models.ProductReview.objects.filter(owner_id=owner.id).order_by("-created_at")
 
+        # 可以再置顶
+        able_stick = all_reviews.filter(status=2).count() <= 3
+
         if is_fetch_all_reviews:
             # 分页
             count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -292,6 +300,7 @@ class ProductReviewList(resource.Resource):
             'items': items,
             'pageinfo': paginator.to_dict(pageinfo),
             'sortAttr': '',
-            'data': {},
+            'able_stick': able_stick,
+            'data': {}
         }
         return response.get_response()

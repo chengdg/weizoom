@@ -632,15 +632,17 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-postageContent').html(items.join(''));
             $('.xa-postage').show();
             if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0){
-                //库存
-                var maxCount = this.getMaxCount(this.targetModel);
+                if(this.targetModel){
+                    //库存
+                    var maxCount = this.getMaxCount(this.targetModel);
+                    counter.setMaxCount(maxCount);
+                }
                 if (model.stock_type === 1) {
                     $('.xa-stockCount').text(model.stocks);
                     $('.xa-stock').show();
                 } else {
                     $('.xa-stock').hide();
                 }
-                counter.setMaxCount(maxCount);
             }
             if(counter.maxCount>0 && counter.maxCount<counter.minCount){
                 $('.xa-disabledBuyLinks').show();

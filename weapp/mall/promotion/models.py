@@ -93,19 +93,15 @@ class Promotion(models.Model):
 			start_date = self.start_date
 
 		if start_date <= now and end_date > now and self.status == PROMOTION_STATUS_NOT_START:
-			#from webapp.handlers import event_handler_util
+			# 未开始状态,但是时间已经再开始,由于定时任务尚未执行
 			self.status = PROMOTION_STATUS_STARTED
-			# event_data = {
-			# 	"id": self.id
-			# }
-			# event_handler_util.handle(event_data, 'start_promotion')
-		elif end_date <= now and (self.status == PROMOTION_STATUS_NOT_START or self.status == PROMOTION_STATUS_STARTED):
-			#from webapp.handlers import event_handler_util
+			self.save()
+		elif end_date <= now and (self.status == PROMOTION_STATUS_NOT_START or\
+			self.status == PROMOTION_STATUS_STARTED or self.status == PROMOTION_STATUS_DISABLE):
+			# 未开始,进行中状态,但是时间到期了,由于定时任务尚未执行
+			# 已失效状态,优惠券需求要置为已过期
 			self.status = PROMOTION_STATUS_FINISHED
-			# event_data = {
-			# 	"id": self.id
-			# }
-			#event_handler_util.handle(event_data, 'finish_promotion')
+			self.save()
 
 	@property
 	def status_name(self):
@@ -398,7 +394,8 @@ class PremiumSale(models.Model):
 		products = Product.objects.filter(id__in=product_ids)
 		Product.fill_details(webapp_owner, products, {
 			'with_product_model': True,
-			"with_model_property_info": True
+			"with_model_property_info": True,
+			'with_sales': True
 		})
 		id2product = dict([(product.id, product) for product in products])
 
@@ -605,6 +602,9 @@ class RedEnvelopeRule(models.Model):
 		now = datetime.now()
 		if red_envelope and (red_envelope.limit_time or red_envelope.end_time > now):
 			# 缓存里有分享红包规则，并且红包规则未到期，注：红包规则状态在缓存抓取时判断
+			if red_envelope.limit_time and red_envelope.created_at > order.created_at or \
+				not red_envelope.limit_time and red_envelope.start_time > order.created_at:
+				return False
 			coupon_rule = red_envelope.coupon_rule
 			if coupon_rule and coupon_rule.get('end_date', now) > now:
 				# 红包规则对应的优惠券未到期，注：优惠券库存在缓存抓取时判断

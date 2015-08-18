@@ -77,373 +77,82 @@ Background:
 					}
 				}
 			}
-		}]
-		"""
-	Given jobs已获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"shop_discount": "10"
 		},{
-			"name": "铜牌会员",
-			"shop_discount": "9"
-		}]
-		"""
-	Given jobs设定会员积分策略
-		"""
-		{
-			"integral_each_yuan": 2,
-			"order_integral_discount":
-			{
-				"use_ceiling":"",
-				"status":"关闭"
-			}
-			
-		}
-		"""
-
-@promotionIntegral @integral
-Scenario: 0 整单抵扣上限设置开启时，创建积分应用活动
-	Given jobs登录系统
-	When jobs修改会员积分策略
-		"""
-		{
-			"integral_each_yuan": 2,
-			"order_integral_discount":
-			{
-				"use_ceiling": 50,
-				"status":"开启"
-			}
-			
-		}
-		"""
-	When jobs 创建积分应用活动
-	Then jobs获得系统提示'请先关闭整单抵扣上限设置！'
-
-@promotionIntegral @integral
-Scenario: 1 选取普通商品，创建统一设置积分应用活动
-	Given jobs登录系统
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品1积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品1"],
-			"is_permanant_active": false,
-			"rules": [{
-				"member_grade_name": "全部会员",
-				"discount": 50,
-				"discount_money": 50.0
-			}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品1积分应用",
-			"products": ["商品1"],
-			"product_price"：100.00,
-			"discount": "50%",
-			"discount_money": 50.0
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 2 选取多规格商品，创建分级设置积分应用活动
-	Given jobs登录系统
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品2积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品2"],
-			"is_permanant_active": false,
-			"rules": 
-				[{
-					"member_grade_name": "普通会员",
-					"discount": 100,
-					"discount_money": 100.0
-				},{
-					"member_grade_name": "铜牌会员",
-					"discount": 90,
-					"discount_money": 90.0
-				}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品2积分应用",
-			"products": ["商品2"],
-			"product_price"：100.00,
-			"discount": "90%~100%",
-			"discount_money": "90.0~100.0",
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时按照会员价进行计算）
-	Given jobs登录系统
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品3积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品2"],
-			"is_permanant_active": false,
-			"rules": 
-				[{
-					"member_grade_name": "普通会员",
-					"discount": 100,
-					"discount_money": 100.0
-				},{
-					"member_grade_name": "铜牌会员",
-					"discount": 90,
-					"discount_money": 90.0
-				}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品3积分应用",
-			"products": ["商品2"],
-			"product_price"：100.00,
-			"discount": "90%~100%",
-			"discount_money": "90.0~100.0",
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时显示限购价格，）
-	Given jobs登录系统
-	When jobs添加商品
-		"""
-		[{
 			"name": "商品4",
 			"price": 100.00
-		}]
-		"""
-	When jobs创建限时抢购活动
-		"""
-		[{
-			"name": "商品4限时抢购",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品4"],
-			"member_grade_name": "全部",
-			"count_per_purchase": 2,
-			"promotion_price": 90
-		}]
-		"""
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品4积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品4"],
-			"is_permanant_active": false,
-			"rules": 
-				[{
-					"member_grade_name": "普通会员",
-					"discount": 100,
-					"discount_money": 100.0
-				},{
-					"member_grade_name": "铜牌会员",
-					"discount": 90,
-					"discount_money": 90.0
-				}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品4积分应用",
-			"products": ["商品4"],
-			"product_price"：100.00,
-			"discount": "90%~100%",
-			"discount_money": "90.0~100.0",
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建积分应用活动
-	#（后台抵扣金额按照商品原价进行计算显示，限时抢购优先，手机端抵扣金额按照当前页面显示的商品价格进行计算）
-	Given jobs登录系统
-	When jobs添加商品
-		"""
-		[{
+		},{
 			"name": "商品5",
 			"is_member_product": "on",
 			"price": 100.00
-		}]
-		"""
-	When jobs创建限时抢购活动
-		"""
-		[{
-			"name": "商品5限时抢购",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品5"],
-			"member_grade_name": "全部",
-			"promotion_price": 90,
-			"limit_period": 1
-		}]
-		"""
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品5积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品5"],
-			"is_permanant_active": false,
-			"rules": 
-				[{
-					"member_grade_name": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品5积分应用",
-			"products": ["商品5"],
-			"product_price"：100.00,
-			"discount": "50%",
-			"discount_money": 50.0,
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示）
-	When jobs添加商品
-		"""
-		[{
+		},{
 			"name": "商品6",
 			"price": 100.00
 		},{
 			"name": "赠品6",
 			"price": 10.00
-		}]
-		"""
-	And jobs创建买赠活动
-		"""
-		[{
-			"name": "商品6买二赠一",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品6"],
-			"premium_products": [{
-				"name": "赠品6",
-				"count": 1
-			}],
-			"count": 2,
-			"is_enable_cycle_mode": true
-		}]
-		"""
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品6积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品6"],
-			"is_permanant_active": false,
-			"rules": 
-				[{
-					"member_grade_name": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品6积分应用",
-			"products": ["商品6"],
-			"product_price"：100.00,
-			"discount": "50%",
-			"discount_money": 50.0,
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分应用活动 （后台抵扣金额按照商品原价进行计算显示，买赠优先，手机端抵扣金额按照当前页面显示的商品价格进行计算）
-	When jobs添加商品
-		"""
-		[{
+		},{
 			"name": "商品7",
 			"is_member_product": "on",
 			"price": 100.00
 		},{
 			"name": "赠品7",
 			"price": 10.00
+		},{
+			"name": "商品8",
+			"price": 100.00
+		},{
+			"name": "商品9",
+			"is_member_product": "on",
+			"price": 100.00
 		}]
 		"""
-	And jobs创建买赠活动
+
+	When jobs创建限时抢购活动
 		"""
 		[{
+			"name": "商品4限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品4",
+			"member_grade": "全部",
+			"count_per_purchase": 2,
+			"promotion_price": 90
+		},{
+			"name": "商品5限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品5",
+			"member_grade": "全部",
+			"promotion_price": 90,
+			"limit_period": 1
+			}]
+		"""
+	When jobs创建买赠活动
+		"""
+		[{
+			"name": "商品6买二赠一",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品6",
+			"premium_products": 
+			[{
+				"name": "赠品6",
+				"count": 1
+			}],
+			"count": 2,
+			"is_enable_cycle_mode": true
+		},{
 			"name": "商品7买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品7"],
-			"premium_products": [{
+			"product_name": "商品7",
+			"premium_products":
+			[{
 				"name": "赠品7",
 				"count": 1
 			}],
 			"count": 1,
 			"is_enable_cycle_mode": true
-		}]
-		"""
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品7积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品7"],
-			"is_permanant_active": false,
-			"rules": 
-				[{
-					"member_grade_name": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品7积分应用",
-			"products": ["商品7"],
-			"product_price"：100.00,
-			"discount": "50%",
-			"discount_money": 50.0,
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时积分和优惠券不能同时使用）
-	When jobs添加商品
-		"""
-		[{
-			"name": "商品8",
-			"price": 100.00
 		}]
 		"""
 	When jobs添加优惠券规则
@@ -455,49 +164,7 @@ Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应�
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_",
 			"coupon_product": "商品8"
-		}]
-		"""
-	When jobs创建积分应用活动
-		"""
-		[{
-			"name": "商品8积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品8"],
-			"is_permanant_active": false,
-			"rules": 
-				[{
-					"member_grade_name": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-		}]
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name":"商品8积分应用",
-			"products": ["商品8"],
-			"product_price"：100.00,
-			"discount": "50%",
-			"discount_money": 50.0,
-			"status": 进行中
-		}]
-		"""
-
-@promotionIntegral @integral
-Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时积分抵扣按照会员价计算，但积分和优惠券不能同时使用）
-	When jobs添加商品
-		"""
-		[{
-			"name": "商品9",
-			"is_member_product": "on",
-			"price": 100.00
-		}]
-		"""
-	When jobs添加优惠券规则
-		"""
-		[{
+		},{
 			"name": "单品券商品9",
 			"money": 10,
 			"start_date": "今天",
@@ -507,17 +174,335 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 			"coupon_product": "商品9"
 		}]
 		"""
+
+	#会员等级
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"discount": "10.0"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9.0"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8.0"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7.0"
+		}]
+		"""
+	Given jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan": 2,
+			"use_ceiling": -1
+		}
+		"""
+
+@promotionIntegral @integral @ui
+Scenario: 0 整单抵扣上限设置开启时，创建积分应用活动
+	Given jobs登录系统
+	And jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan": 2,
+			"use_ceiling": 50
+		}
+		"""
+	When jobs 创建积分应用活动
+	Then jobs获得系统提示'请先关闭整单抵扣上限设置！'
+
+@mall2 @promotionIntegral @integral
+Scenario: 1 选取普通商品，创建统一设置积分应用活动
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"discount": 50,
+			"discount_money": 50.0
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品1积分应用",
+			"product_name": "商品1",
+			"product_price":100.00,
+			"discount": "50%",
+			"discount_money": 50.0,
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 2 选取多规格商品，创建分级设置积分应用活动
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品2积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品2",
+			"is_permanant_active": false,
+			"rules": 
+				[{
+					"member_grade": "普通会员",
+					"discount": 100,
+					"discount_money": 100.0
+				},{
+					"member_grade": "铜牌会员",
+					"discount": 90,
+					"discount_money": 90.0
+				}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品2积分应用",
+			"product_name": "商品2",
+			"product_price":100.00,
+			"discount": "90%~100%",
+			"discount_money": "90.0~100.0",
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时按照会员价进行计算）
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": 
+				[{
+					"member_grade": "普通会员",
+					"discount": 100,
+					"discount_money": 100.0
+				},{
+					"member_grade": "铜牌会员",
+					"discount": 90,
+					"discount_money": 90.0
+				}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品3积分应用",
+			"product_name": "商品3",
+			"product_price":100.00,
+			"discount": "90%~100%",
+			"discount_money": "90.0~100.0",
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时显示限购价格，）
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品4积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": 
+				[{
+					"member_grade": "普通会员",
+					"discount": 100,
+					"discount_money": 100.0
+				},{
+					"member_grade": "铜牌会员",
+					"discount": 90,
+					"discount_money": 90.0
+				}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品4积分应用",
+			"product_name": "商品4",
+			"product_price":100.00,
+			"discount": "90%~100%",
+			"discount_money": "90.0~100.0",
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建积分应用活动
+	#（后台抵扣金额按照商品原价进行计算显示，限时抢购优先，手机端抵扣金额按照当前页面显示的商品价格进行计算）
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品5积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品5",
+			"is_permanant_active": false,
+			"rules": 
+				[{
+					"member_grade": "全部",
+					"discount": 50,
+					"discount_money": 50.0
+				}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品5积分应用",
+			"product_name": "商品5",
+			"product_price":100.00,
+			"discount": "50%",
+			"discount_money": 50.0,
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示）
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品6积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品6",
+			"is_permanant_active": false,
+			"rules": 
+				[{
+					"member_grade": "全部",
+					"discount": 50,
+					"discount_money": 50.0
+				}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品6积分应用",
+			"product_name": "商品6",
+			"product_price":100.00,
+			"discount": "50%",
+			"discount_money": 50.0,
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分应用活动 （后台抵扣金额按照商品原价进行计算显示，买赠优先，手机端抵扣金额按照当前页面显示的商品价格进行计算）
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品7积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品7",
+			"is_permanant_active": false,
+			"rules": 
+				[{
+					"member_grade": "全部",
+					"discount": 50,
+					"discount_money": 50.0
+				}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品7积分应用",
+			"product_name": "商品7",
+			"product_price":100.00,
+			"discount": "50%",
+			"discount_money": 50.0,
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时积分和优惠券不能同时使用）
+	Given jobs登录系统
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品8积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品8",
+			"is_permanant_active": false,
+			"rules": 
+				[{
+					"member_grade": "全部",
+					"discount": 50,
+					"discount_money": 50.0
+				}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name":"商品8积分应用",
+			"product_name": "商品8",
+			"product_price":100.00,
+			"discount": "50%",
+			"discount_money": 50.0,
+			"status":"进行中"
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应用活动（后台抵扣金额按照商品原价进行计算显示，手机端购买时积分抵扣按照会员价计算，但积分和优惠券不能同时使用）
+	Given jobs登录系统
 	When jobs创建积分应用活动
 		"""
 		[{
 			"name": "商品9积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品9"],
+			"product_name": "商品9",
 			"is_permanant_active": false,
 			"rules": 
 				[{
-					"member_grade_name": "全部会员",
+					"member_grade": "全部",
 					"discount": 50,
 					"discount_money": 50.0
 				}]
@@ -527,15 +512,15 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 		"""
 		[{
 			"name":"商品9积分应用",
-			"products": ["商品9"],
-			"product_price"：100.00,
+			"product_name": "商品9",
+			"product_price":100.00,
 			"discount": "50%",
 			"discount_money": 50.0,
-			"status": 进行中
+			"status":"进行中"
 		}]
 		"""
 
-@promotionIntegral @integral
+@promotionIntegral @integral @ui
 Scenario: 10 创建积分应用活动，必填字段的校验
 	When jobs创建积分应用活动
 		"""
@@ -543,12 +528,12 @@ Scenario: 10 创建积分应用活动，必填字段的校验
 			"name": "",
 			"start_date": "",
 			"end_date": "",
-			"products": "",
+			"product_name": "",
 			"is_permanant_active": false,
 			"rules": 
 				[{
-					"member_grade_name": "全部会员",
-					"discount": ,
+					"member_grade": "全部",
+					"discount":"",
 					"discount_money": 0.00
 				}]
 		}]

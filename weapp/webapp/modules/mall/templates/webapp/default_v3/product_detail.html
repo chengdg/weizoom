@@ -446,6 +446,7 @@ $(document).ready(function() {
                     view.member_or_promotion = 'promotion';
                 }
                 if(!is_user_has_promotion){
+                    view.promotion.isFlashSalePromotion = false;
                     // 促销bu对此用户开发
                     var next_promotions = $('.xa-display-promotion').next('div');
                     if(next_promotions.length==0){
@@ -467,9 +468,14 @@ $(document).ready(function() {
             if(!is_user_has_promotion){
                 // 商品是否折扣
                 has_discount = is_member_product;
-                if(has_discount === "True"){
+                if(has_discount === "True" && data.discount < 100){
                     //促销与会员价格处理
                     view.discount = data.discount;
+                    if(view.isStandardModelProduct){
+                        view.initForStandardModelProduct()
+                    }else{
+                        view.initForCustomModelProduct()
+                    }
                     price = ((price * data.discount / 100).toFixed(2));
                     msg = '会员价';
                     view.member_or_promotion = 'member';

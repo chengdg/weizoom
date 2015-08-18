@@ -51,7 +51,7 @@ Scenario: 添加商品
 		[{
 			"name": "东坡肘子",
 			"promotion_title": "促销的东坡肘子",
-			"category": "分类1,分类2,分类3",
+			"categories": "分类1,分类2,分类3",
 			"detail": "东坡肘子的详情",
 			"status": "待售",
 			"swipe_images": [{
