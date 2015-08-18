@@ -10,53 +10,32 @@ from test import bdd_util
 
 @when(u"{user}'{action}'促销活动'{promotion_name}'")
 def step_terminate_promotion(context, user, action, promotion_name):
-    db_promotion = models.Promotion.objects.get(
-        owner_id=context.webapp_owner_id,
-        name=promotion_name
-    )
-    data = {
-        'type': models.PROMOTION2TYPE[db_promotion.type]['name'],
-        'ids[]': [db_promotion.id]
-    }
-    if action == u'开始':
-        data['start'] = 'true'
-    elif action == u'结束':
-        data['start'] = 'false'
-    elif action == u'删除':
-        data['_method'] = 'delete'
-    url = '/mall2/api/promotion/'
+    """促销活动通用更新单个促销状态
 
-    response = context.client.post(url, data)
-    bdd_util.assert_api_call_success(response)
+    @param action 操作:开始、结束、删除
+    @param promotion_name 需要更新的促销活动名称
+    """
+    __update_promotion_status(context, [promotion_name], action)
 
 
 @when(u"{user}批量'{action}'促销活动")
 def step_terminate_promotion(context, user, action):
-    data = {
-        'ids[]': []
-    }
-    promotions = json.loads(context.text)
-    for promotion in promotions:
-        db_promotion = models.Promotion.objects.get(
-            owner_id=context.webapp_owner_id,
-            name=promotion['name']
-        )
-        data['ids[]'].append(db_promotion.id)
-    data['type'] = models.PROMOTION2TYPE[db_promotion.type]['name'],
-    if action == u'开始':
-        data['start'] = 'true'
-    elif action == u'结束':
-        data['start'] = 'false'
-    elif action == u'删除':
-        data['_method'] = 'delete'
-    url = '/mall2/api/promotion/'
+    """促销活动通用更新多个促销状态
 
-    response = context.client.post(url, data)
-    bdd_util.assert_api_call_success(response)
+    @param action 操作:开始、结束、删除
+    @param context.text 促销活动数组，有效数据格式
+        [{
+            "name": str # 促销活动名称,必填
+        }]
+    ** 注：所有促销活动必须是相同类型
+    """
+    promotions = json.loads(context.text)
+    promotion_names = [promotion['name'] for promotion in promotions]
+    __update_promotion_status(context, action, promotion_names)
+
 
 @when(u"{user}创建积分应用活动")
 def step_impl(context, user):
-    #webapp_id = context.client.user.profile.webapp_id
     if context.table:
         # 处理tables
         promotions = context.table
@@ -288,12 +267,46 @@ def step_impl(context, user, type):
     bdd_util.assert_list(expected, actual)
 
 
+
+
+def __update_promotion_status(context, promotion_names, action):
+    """使用促销活动名称更新促销状态
+
+    @param promotion_names 促销活动名称列表
+    @param action 操作:开始、结束、删除
+    """
+    data = {
+        'ids[]': []
+    }
+    promotion_type = 0
+    for db_promotion in models.Promotion.objects.filter(name__in=promotion_names):
+        data['ids[]'].append(db_promotion.id)
+        promotion_type = db_promotion.type
+    data['type'] = models.PROMOTION2TYPE[promotion_type]['name'],
+    if action == u'开始':
+        data['start'] = 'true'
+    elif action == u'结束':
+        data['start'] = 'false'
+    elif action == u'删除':
+        data['_method'] = 'delete'
+    url = '/mall2/api/promotion/'
+
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
+
+
 def __get_member_grade(promotion, webapp_id):
+    """使用促销信息获取会员等级
+
+    @param promotion 促销信息，有效数据格式
+        {
+            "member_grade": str # 会员等级名称 *全部、全部会员返回 0
+        }
+    @param webapp_id
+    """
     member_grade = promotion.get('member_grade', 0)
     if member_grade == u'全部' or member_grade == u'全部会员':
         member_grade = 0
     elif member_grade:
         member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id
     return member_grade
-
-
