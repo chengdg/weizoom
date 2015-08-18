@@ -13,7 +13,7 @@ Feature:促销管理-新建活动页面的商品查询
 
 Background:
 	Given jobs登录系统
-	And jobs添加商品
+	And jobs已添加商品
 		"""
 		[{
 			"name":"商品0",
@@ -56,7 +56,7 @@ Background:
 			"name": "限时抢购活动",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["限时抢购"],
+			"product_name": "限时抢购",
 			"member_grade": "全部会员",
 			"count_per_purchase": 2,
 			"promotion_price": 90.00
@@ -68,7 +68,7 @@ Background:
 			"name": "买赠活动",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["买赠"],
+			"product_name": "买赠",
 			"premium_products":
 			[{
 				"name": "赠品",
@@ -87,7 +87,7 @@ Background:
 			"product_name": "积分应用",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -105,7 +105,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在上架列表中（不能参与限时抢购）

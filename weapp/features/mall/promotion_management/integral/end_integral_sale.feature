@@ -70,8 +70,6 @@ Background:
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,
@@ -95,7 +93,7 @@ Background:
 		}]
 		"""
 
-@mall2 @promotionIntegral @integral
+@mall2 @promotionIntegral @integral @jz
 Scenario: 1 结束状态为'未开始'的积分应用活动
 	Given jobs登录系统
 	When jobs'结束'促销活动'商品4积分应用'
@@ -115,8 +113,6 @@ Scenario: 1 结束状态为'未开始'的积分应用活动
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,
@@ -172,8 +168,6 @@ Scenario: 2 结束状态为'进行中'，非永久有效的积分应用活动
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,
@@ -229,8 +223,6 @@ Scenario: 3 结束状态为'进行中'，且为永久有效的积分应用活动
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"已结束",
 			"product_name": "商品2",
 			"is_permanant_active": true,
@@ -297,8 +289,6 @@ Scenario: 4 批量结束积分应用活动（包含已结束状态）
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,
@@ -356,8 +346,6 @@ Scenario: 5 批量结束积分应用活动（不包含已结束状态）
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,
@@ -384,8 +372,6 @@ Scenario: 5 批量结束积分应用活动（不包含已结束状态）
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"已结束",
 			"product_name": "商品2",
 			"is_permanant_active": true,
@@ -454,8 +440,6 @@ Scenario: 6 商品下架导致积分应用活动结束
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
 			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,

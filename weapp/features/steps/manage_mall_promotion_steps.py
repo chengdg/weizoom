@@ -215,7 +215,9 @@ def step_impl(context, user):
 
 @then(u"{user}获取{type}活动列表")
 def step_impl(context, user, type):
-    if type == u"限时抢购":
+    if type == u"促销":
+        type = "all"
+    elif type == u"限时抢购":
         type = "flash_sale"
     elif type == u"买赠":
         type = "premium_sale"
@@ -245,10 +247,12 @@ def step_impl(context, user, type):
     actual = json.loads(response.content)['data']['items']
 
     for promotion in actual:
+        promotion['product_name'] = promotion['product']['name']
+        promotion['product_price'] = promotion['product']['display_price']
+        promotion['bar_code'] = promotion['product']['bar_code']
+        promotion['price'] = promotion['product']['display_price']
+        promotion['stocks'] = promotion['product']['stocks']
         if type == 'integral_sale':
-            promotion['product_name'] = promotion['product']['name']
-            promotion['product_price'] = promotion['product']['display_price']
-            promotion['bar_code'] = promotion['product']['bar_code']
             promotion['is_permanant_active'] = str(promotion['detail']['is_permanant_active']).lower()
             detail = promotion['detail']
             rules = detail['rules']
@@ -270,7 +274,8 @@ def step_impl(context, user, type):
         expected = json.loads(context.text)
 
     for promotion in expected:
-        promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
+        if type == 'integral_sale':
+            promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
         if promotion.get('start_date') and promotion.get('end_date'):
             if promotion['is_permanant_active'] != 'true':
                 promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
