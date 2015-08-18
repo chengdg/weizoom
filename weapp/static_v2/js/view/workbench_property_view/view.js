@@ -853,10 +853,11 @@ W.workbench.PropertyView = Backbone.View.extend({
         var view = $el.data('view');
         xwarn(view);
 
-        view.bind('update-show-box', function($el, isShowUrl){
-            var urlBox = $el.children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
+        view.bind('update-show-box', function($el, length){
+            var urlBox = $el.parents('.propertyGroup_property_dynamicControlField_content').children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
             var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');
-            if (isShowUrl) {
+            if (length == 0) {
+                console.log('urlBox.show()', 'prompt.hide()')
                 urlBox.show();
                 secondeNavsPrompt.hide();
             }else{

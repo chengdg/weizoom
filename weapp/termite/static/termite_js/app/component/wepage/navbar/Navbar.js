@@ -68,6 +68,7 @@ W.component.wepage.Navar = W.component.Component.extend({
                 isShowCloseButton: true,
                 displayName: '一级导航',
                 minItemLength: 1,
+                maxItemLength: 3,
                 default: []
             }]
         }

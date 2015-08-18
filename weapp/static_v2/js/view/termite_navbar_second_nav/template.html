@@ -29,17 +29,42 @@
 		<div class="propertyGroup_property_linkSelectField propertyGroup_property_horizontalField xa-errorHintContainer">
 			<div class="propertyGroup_property_label star_show">链接到</div>
 			<div class="propertyGroup_property_input xui-eidt-urlBox" style="height: auto;">
-				<input data-field="target" name="target" type="hidden" value="" data-validate="require-notempty::链接地址不能为空" data-force-validate="true">
-				<input type="text" placeholder="可手动输入连接地址" class="xa-selectLink-url xui-selectLink" value="">
-				<div class="pr xui-selected-title-box xa-selected-title-box xui-hide" style="display:none">
-					<span class="xa-selectLink-name xui-selected-title"></span>
-					<button class="close xa-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
-				</div>
-				<a class="xa-second-nav-link-menu xui-link xui-news-editor-select-link-dialog" data-target-dialog="" data-dialog-parameter="" data-target-name="target">
-					从微站选择<span class="glyphicon glyphicon-menu-down"></span>
-				</a>
+				<input data-field="second-nav-target" name="second-nav-target" type="hidden" value="{{target}}" data-validate="require-notempty::链接地址不能为空" data-force-validate="true">
+
+				{{#if target}}
+					{{#ifCond targetData.type '===' "manualInput"}}
+					<!-- 手动输入连接初始化 -->
+						<input type="text" placeholder="可手动输入连接地址" class="xa-second-nav-selectLink-url xui-selectLink" value="{{targetData.data}}">
+						<div class="pr xui-selected-title-box xa-second-nav-selected-title-box xui-hide" style="display:none">
+							<span class="xa-second-nav-selectLink-title xui-selected-title">{{targetData.data_path}}</span>
+							<button class="close xa-second-nav-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
+						</div>
+						<a class="xa-second-nav-link-menu xui-link xui-news-editor-select-link-dialog">从微站选择<span class="glyphicon glyphicon-menu-down"></span>
+						</a>
+					{{else}}
+					<!-- 选择站内连接初始化 -->				
+						<input type="text" placeholder="可手动输入连接地址" class="xa-second-nav-selectLink-url xui-selectLink" value="{{targetData.data}}" disabled="disabled">
+						<div class="pr xui-selected-title-box xa-second-nav-selected-title-box">
+							<span class="xa-second-nav-selectLink-title xui-selected-title">{{targetData.data_path}}</span>
+							<button class="close xa-second-nav-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
+						</div>
+						<a class="xa-second-nav-link-menu xui-link xui-news-editor-select-link-dialog">修改<span class="glyphicon glyphicon-menu-down"></span>
+						</a>
+					{{/ifCond}}
+				{{else}}
+					<!-- 未选择连接初始化 -->		
+					<input type="text" placeholder="可手动输入连接地址" class="xa-second-nav-selectLink-url xui-selectLink" value="">
+					<div class="pr xui-selected-title-box xa-second-nav-selected-title-box xui-hide" style="display:none">
+						<span class="xa-second-nav-selectLink-title xui-selected-title"></span>
+						<button class="close xa-second-nav-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
+					</div>
+					<a class="xa-second-nav-link-menu xui-link xui-news-editor-select-link-dialog">
+						从微站选择<span class="glyphicon glyphicon-menu-down"></span>
+					</a>
+				{{/if}}
 			</div>
 			<div class="errorHint"></div>
 		</div>
+		<button class="close xa-second-nav-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
 	</div>
 </script>

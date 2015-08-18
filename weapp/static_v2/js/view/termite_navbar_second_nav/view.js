@@ -3,9 +3,10 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 	events: {
 		'click .xa-navbar-secondnav-add': 'onClickAddSecondNav',
 		'input input[type="text"]': 'onInputValue',
+        'input .xa-second-nav-selectLink-url': 'onManualInputUrl',
         'click .xa-second-nav-link-menu': 'onClickLinkMenuButton',
-        'input .xa-selectLink-url': 'onManualInputUrl',
-        'click .xa-selectLink-close': 'onClickCloseLinkButton',
+        'click .xa-second-nav-selectLink-close': 'onClickCloseLinkButton',
+        'click .xa-second-nav-close': 'onClickCloseSecondNav',
 	},
 
 	templates: {
@@ -16,26 +17,36 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 	initialize: function(options) {
 		this.$el = $(this.el);
         this.navsStr = this.$el.attr('data-json') || '';
-        console.log(234234, this.navsStr)
+        this.maxItemLength = 5;
 	},
 
 	render: function() {
-        console.log('render', this.navsStr, 6565)
+        var _this = this;
 		var template = this.getTmpl('viewTmpl');
 		var html = template({});
-
         this.$el.html(html);
 
         if (this.navsStr.length > 0) {
             var json = JSON.parse(this.navsStr);
-            console.log(7878, json)
             for (var i = 0; i < json.length; i++) {
                 this.addSecondNav(json[i]);
             };
         }
+
+        /* 修改显示的box */
+        _.delay(function() {
+            _this.trigger('update-show-box', _this.$el, _this.navsStr.length);
+        }, 30);
 	},
 
+    setMaxItemLength: function(length){
+        this.maxItemLength = length;
+    },
+
     addSecondNav: function(data){
+        if (data.target) {
+            data['targetData'] = JSON.parse(data.target);
+        };
         var template = this.getTmpl('navTmpl');
         var html = template(data);
         this.$('.xa-navbar-secondnav-navs').append($(html));
@@ -47,7 +58,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
         for (var i = 0; i < $navs.length; ++i) {
             var $nav = $navs.eq(i);
             var title = $.trim($nav.find('[name="title"]').val());
-            var target = $.trim($nav.find('[name="target"]').val());
+            var target = $.trim($nav.find('[name="second-nav-target"]').val());
             navs.push({
                 title: title,
                 target: target
@@ -60,8 +71,16 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 		var template = this.getTmpl('navTmpl');
 		var html = template({});
 		this.$('.xa-navbar-secondnav-navs').append($(html));
-		this.trigger('update-show-box', $(event.target).parents('.propertyGroup_property_dynamicControlField_content'), false);
+
+        var length = this.$el.find('.xa-nav').length;
+		this.trigger('update-show-box', this.$el, length);
         this.setJsonData();
+
+        if (this.maxItemLength <= length && this.maxItemLength > 0) {
+            this.$el.find('.xa-navbar-secondnav-add').hide();
+        }else{
+            this.$el.find('.xa-navbar-secondnav-add').show();
+        }
 	},
 
 	onInputValue: function(event) {
@@ -72,14 +91,41 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
      * onClickLinkMenuButton: 点击选择链接按钮
      */
     onClickLinkMenuButton: function(event){
-        var el = $(event.currentTarget).parent('.xui-eidt-urlBox');
+        var _this = this;
+        var $el = $(event.currentTarget).parent('.xui-eidt-urlBox');
         // 实例化选择链接view
         this.linkView = W.getSelectWebSiteLinkView({
-            el: el
+            el: $el
         });
         this.linkView.onClickLinkMenu(event);
+        this.linkView.unbind('finish-select-url');
+        this.linkView.bind('finish-select-url', function(data){
+            _this.updateBoxShow($el, data)
+        });
     },
 
+    /**
+     * updateBoxShow: 修改显示格式
+     */
+    updateBoxShow: function($el, data){
+        $el.find('[name="second-nav-target"]').val(data);
+        if (data.length > 0) {
+            var linkData = $.parseJSON(data);
+            if (linkData.type === 'manualInput') {
+
+            } else {
+                $el.find('.xa-second-nav-selected-title-box').show();
+                $el.find('.xa-second-nav-selectLink-url').val(linkData.data).attr('disabled','disabled').trigger('input');
+                $el.find('.xa-second-nav-selectLink-title').text(linkData.data_path);
+                $el.find('.xa-second-nav-link-menu').html('修改<span class="glyphicon glyphicon-menu-down"></span>');
+            }
+        }else{
+            $el.find('.xa-second-nav-selected-title-box').hide();
+            $el.find('.xa-second-nav-selectLink-url').val('').removeAttr('disabled').trigger('input');
+            $el.find('.xa-second-nav-selectLink-name').text('');
+            $el.find('.xa-second-nav-link-menu').html('从微站选择<span class="glyphicon glyphicon-menu-down"></span>');
+        }
+    },
     /**
      * onSelectedLinkUrl: 选择完成链接后，调用该函数
      */
@@ -102,8 +148,8 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
             $input.val(url);
         };
         var linkData = {data:url, data_path:"", type:'manualInput'};
-        var $targetInput = $input.parent().find('input[type="hidden"]');
-        $targetInput.val(JSON.stringify(linkData)).trigger('input');
+        var $el = $(event.currentTarget).parents('.xui-eidt-urlBox');
+        this.updateBoxShow($el, JSON.stringify(linkData));
     },
 
     /**
@@ -112,10 +158,21 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
     onClickCloseLinkButton: function(event){        
         event.stopPropagation();
         event.preventDefault();
-
-        var $input = $(event.currentTarget).parents('div.propertyGroup_property_input').find('input[type="hidden"]');
-        $input.val("").trigger('input');
+        var $el = $(event.currentTarget).parents('.xui-eidt-urlBox');
+        this.updateBoxShow($el, "");
     },
+
+    /**
+     * onClickCloseSecondNav: 删除一条二级菜单
+     */
+    onClickCloseSecondNav: function(event){
+        var $secondEl = $(event.currentTarget).parents('.xa-nav');
+        $secondEl.remove();
+
+        this.setJsonData();
+        var length = this.$el.find('.xa-nav').length;
+        this.trigger('update-show-box', this.$el, length);
+    }
 
 });
 
