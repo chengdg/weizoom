@@ -1503,10 +1503,10 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
 }
 
 /*====================店铺模板全局导航======================*/
-.xui-template-globalNavbar a:active,.xui-template-globalNavbar a:visited{
+.wui-template-globalNavbar a:active,.wui-template-globalNavbar a:visited,.wui-template-globalNavbar a{
     color: #333;
 }
-.xui-template-globalNavbar .xui-globalBottomBar{
+.wui-template-globalNavbar .xui-globalBottomBar{
     width: 100%;
     height: 45px;
     background: #fff;
@@ -1517,49 +1517,49 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     display: -webkit-box;
     display: -moz-box;
 }
-.xui-template-globalNavbar .xui-bg{
+.wui-template-globalNavbar .xui-bg{
     background: url(/static_v2/img/termite2/nav.png) no-repeat;
     -webkit-background-size:133px 75px;
     background-size:133px 75px ;
 
 }
-.xui-template-globalNavbar .xui-globalBottomBar .xui-home{
+.wui-template-globalNavbar .xui-globalBottomBar .xui-home{
     width: 50px;
     border-right: 1px solid #CBCBCB;
     text-align: center;
     line-height: 53px;
 }
-.xui-template-globalNavbar .xui-globalBottomBar .xui-home a{
+.wui-template-globalNavbar .xui-globalBottomBar .xui-home a{
     display: inline-block;
     width: 23px;
     height: 21px;
     background-position: -112px 0;
 }
-.xui-template-globalNavbar .xui-flex{
+.wui-template-globalNavbar .xui-flex{
     text-align: center;
     line-height: 45px;
     position: relative;
 }
-.xui-template-globalNavbar .xui-flex-one{
+.wui-template-globalNavbar .xui-flex-one{
     box-flex:1;
     -webkit-box-flex:1;
     -moz-box-flex:1;
 }
-.xui-template-globalNavbar .xui-flex-two{
+.wui-template-globalNavbar .xui-flex-two{
     box-flex:2;
     -webkit-box-flex:2;
     -moz-box-flex:2;
     border-right: 1px solid #CBCBCB;
     box-sizing:border-box;
 }
-.xui-template-globalNavbar .xui-flex-third{
+.wui-template-globalNavbar .xui-flex-third{
     box-flex:3;
     -webkit-box-flex:3;
     -moz-box-flex:3;
     border-right: 1px solid #CBCBCB;
     box-sizing:border-box;
 }
-.xui-template-globalNavbar .xui-subMenuContainer{
+.wui-template-globalNavbar .xui-subMenuContainer{
     position: absolute;
     bottom: 50px;
     left: 50%;
@@ -1567,10 +1567,10 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     /*margin-left要换算*/
     display: none;
 }
-.xui-template-globalNavbar .xui-subMenuContainer.xui-show{
+.wui-template-globalNavbar .xui-subMenuContainer.xui-show{
     display: block;
 }
-.xui-template-globalNavbar .xui-menuArrow,.xui-template-globalNavbar .xui-menuArrowBorder{
+.wui-template-globalNavbar .xui-menuArrow,.wui-template-globalNavbar .xui-menuArrowBorder{
     position: absolute;
     z-index: 11;
     border-right: 6px solid transparent;
@@ -1581,20 +1581,20 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     left: 50%;
     margin-left: -6px;
 }
-.xui-template-globalNavbar .xui-menuArrowBorder{
+.wui-template-globalNavbar .xui-menuArrowBorder{
     border-top: 6px solid #CBCBCB;
     bottom: -6px;
     z-index: 10;
 }
-.xui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
     border:1px solid #CBCBCB;
     background: #fff;
     border-radius: 3px;
 }
-.xui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
     max-width: 160px;
 }
-.xui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li{
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li{
     height: 35px;
     min-width: 70px;
     max-width: 120px;
@@ -1604,15 +1604,15 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     text-align: center;
     border-bottom: 1px solid #CBCBCB;
 }
-.xui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li:last-child{
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li:last-child{
     border:none;
 }
-.xui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li a{
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li a{
     color: #333;
 }
 
 /*侧滑导航*/
-.xui-template-globalNavbar .xui-globalSideBar{
+.wui-template-globalNavbar .xui-globalSideBar{
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -1620,13 +1620,27 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     background: #21292B;
     z-index: 1002;
 }
-.xui-template-globalNavbar .xui-globalSideBar li{
+.wui-template-globalNavbar .xui-globalSideBar li{
     float: left;
     width: 25%;
     height: 50px;
     position: relative;
 }
-.xui-template-globalNavbar .xui-globalSideBar li i{
+.wui-template-globalNavbar .xui-globalSideBar .xui-shopCar{
+    padding-left: 4px;
+    padding-right: 4px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 8px;
+    background: #E94141;
+    color: #fff;
+    font-size: 11px;
+    position: absolute;
+    right: -5px;
+    top:-5px;
+    text-align: center;
+}
+.wui-template-globalNavbar .xui-globalSideBar li i{
     display: block;
     width: 24px;
     height: 34px;
@@ -1636,71 +1650,58 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     top:8px;
     margin-left: -12px;
 }
-.xui-template-globalNavbar .xui-globalSideBar li:nth-child(2) i{
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(2) i{
     background-position: -25px 0;
 }
-.xui-template-globalNavbar .xui-globalSideBar li:nth-child(3) i{
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(3) i{
     width: 35px;
     height: 35px;
     background-position: -50px 0;
     margin-left: -17px;
 }
-.xui-template-globalNavbar .xui-globalSideBar li:nth-child(4) i{
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(4) i{
     background-position: -87px 0;
 }
-.xui-template-globalNavbar .xui-globalSideBar li i.xui-active{
+.wui-template-globalNavbar .xui-globalSideBar li i.xui-active{
     background-position: 0 -40px;
 }
-.xui-template-globalNavbar .xui-globalSideBar li:nth-child(2) i.xui-active{
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(2) i.xui-active{
     background-position: -25px -40px;
 }
-.xui-template-globalNavbar .xui-globalSideBar li:nth-child(3) i.xui-active{
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(3) i.xui-active{
     background-position: -50px -40px;
 }
-.xui-template-globalNavbar .xui-globalSideBar li:nth-child(4) i.xui-active{
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(4) i.xui-active{
     background-position: -87px -40px;
 }
 /*侧滑左面板*/
-.xui-template-globalNavbar .xui-sidePanel{
-    position: absolute;
+.wui-template-globalNavbar .xui-sidePanel{
+    position: fixed;
     top: 0;
     left: 0;
-    width: 218px;
+    width: 100%;
     height: 100%;
     background: #fff;
     z-index: 1001;
     font-size: 13px;
     overflow: auto;
-    transition:transform 0.2s linear;
-    -webkit-transition:-webkit-transform 0.2s linear;
-    transform:translate3d(-100%,0,0);
-    -webkit-transform:translate3d(-100%,0,0);
+    display: none;
 }
-.xui-template-globalNavbar .xui-sidePanel.xui-panelShow{
-    -webkit-transform:translate3d(0,0,0);
-    transform:translate3d(0,0,0);
-}
-.xui-template-globalNavbar .xui-sidePanel .xui-allProduct{
-    height: 40px;
-    line-height: 40px;
-    padding-left: 24px;
-    border-bottom: 1px solid #CBCBCB;
-}
-.xui-template-globalNavbar .xui-sidePanel li a{
+.wui-template-globalNavbar .xui-sidePanel li a{
     color: #333;
 }
-.xui-template-globalNavbar .xui-sidePanel .xui-mainMenu li.xui-firstNav{
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li.xui-firstNav{
     background: #fff;
     min-height: 40px;
 }
-.xui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span{
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span{
     display: block;
     padding-left: 24px;
     padding-right: 24px;
     line-height: 40px;
     border-bottom: 1px solid #CBCBCB;
 }
-.xui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-leftArrow{
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-leftArrow{
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 6px solid #B4B4B4;
@@ -1712,7 +1713,7 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     float: right;
     margin-top: 15px;
 }
-.xui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-topArrow{
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-topArrow{
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 6px solid #272636;
@@ -1721,30 +1722,15 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     float: right;
     margin-top: 15px;
 }
-.xui-template-globalNavbar .xui-sidePanel .xui-subMenu{
+.wui-template-globalNavbar .xui-sidePanel .xui-subMenu{
     display: none;
 }
-.xui-template-globalNavbar .xui-sidePanel .xui-subMenu li{
+.wui-template-globalNavbar .xui-sidePanel .xui-subMenu li{
     background: #F7F7F7;
     height: 30px;
     line-height: 30px;
     border-bottom: 1px solid #CBCBCB;
 }
-
-.xui-template-globalNavbar .xui-handleHint{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: blue;
-    position: absolute;
-    top: 50%;
-    margin-top: -20px;
-    margin-left: -20px;
-    left: 0;
-    z-index: 1001;
-    display: none;
-}
-
 
 
 /*=============================================================*/
@@ -2012,18 +1998,4 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     font-size: 12px;
     margin-bottom: 0;
     vertical-align: middle;
-}
-
-
-
-
-/**
- * 底部导航样式
- */
-.wui-navbar {
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    padding: 10px;
-    background-color: rgba(0, 0, 255, 0.3)
 }

@@ -6,7 +6,7 @@ ensureNS('W.component.wepage');
 W.component.wepage.NavbarFirstNav = W.component.Component.extend({
 	type: 'wepage.navbar_firstnav',
 	selectable: 'no',
-	propertyViewTitle: '一级导航',
+	propertyViewTitle: '一级菜单',
 
 	properties: [
         {
@@ -17,7 +17,6 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             	type: 'text',
             	displayName: '导航名称',
                 maxLength:30,
-                validate: 'data-validate="require-notempty::导航名称不能为空"',
                 validateIgnoreDefaultValue: true,
                 isUserProperty: true,
                 placeholder:'编辑[文本导航]',
@@ -27,7 +26,6 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
                 type: 'select_link',
                 displayName: '链接到',
                 isUserProperty: true,
-                validate: 'data-validate="require-notempty::链接地址不能为空"',
                 triggerButton: '从微站选择',
                 default: ''
             }, {

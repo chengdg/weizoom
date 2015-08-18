@@ -1196,6 +1196,16 @@ button.xui-removeImageButton{
 	margin-left: 87px;
 	margin-top: 3px;
 }
+
+/*
+**底部导航
+*/
+.xui-propertyView-navbar-settings .propertyGroup_property:first-child .propertyGroup_property_label{
+	display: block;
+	width: 100%;
+	text-align: left;
+}
+
 /**
  * dialog对话框 商品列表
  */

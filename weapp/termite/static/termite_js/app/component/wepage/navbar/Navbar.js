@@ -19,7 +19,7 @@ W.component.wepage.Navar = W.component.Component.extend({
             fields: [{
                 name: 'pages',
                 type: 'checkbox',
-                displayName: '将导航应用在以下页面',
+                displayName: '将导航应用在以下页面:',
                 isUserProperty: true,
                 source: [{
                     name: '店铺主页',
@@ -47,7 +47,7 @@ W.component.wepage.Navar = W.component.Component.extend({
             }, {
                 name: 'type',
                 type: 'radio',
-                displayName: '模板',
+                displayName: '选择模板:',
                 isUserProperty: true,
                 source: [{
                     name: '微信菜单',
