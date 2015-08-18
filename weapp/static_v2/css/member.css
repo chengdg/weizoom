@@ -261,14 +261,14 @@
 	border:1px solid #c5c5c5;
 	border-radius: 0px;
 	min-width: 96px;
-	top: 39px;
+	top: 39px !important;
 }
 .xui-memberListPage .xui-operation .dropdown-submenu {
     position: relative;
     min-width: 105px;
 }
 .xui-memberListPage .xui-operation .dropdown-submenu > .dropdown-menu {
-    top: 0;
+    top: 0 !important;;
     left: 100%;
     margin-top: -1px;
     margin-left: 0px;
