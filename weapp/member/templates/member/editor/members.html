@@ -267,13 +267,14 @@
 		<tr>
 			<th >会员</th>
 			<th >会员等级</th>
-			<th  class="tx_sortable" style="width:10%" data-sort-attr='friend_count' >好友数</th>
-			<th  class="tx_sortable" style="width:10%" data-sort-attr='pay_money' >消费总额</th>
-			<th  class="tx_sortable" style="width:10%" data-sort-attr='unit_price' >平均客单价</th>
-			<th  class="tx_sortable" style="width:10%" data-sort-attr='pay_times' >购买次数</th>
-			<th  class="tx_sortable" style="width:8%" data-sort-attr='integral' >积分</th>
+			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='friend_count' >好友数</th>
+			<th  class="tx_sortable xui-Blue" style="width:8%" data-sort-attr='integral' >积分</th>
+			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='unit_price' >平均客单价</th>
+			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='pay_times' >购买次数</th>
+			<th  class="tx_sortable xui-Blue" style="width:10%" data-sort-attr='pay_money' >消费总额</th>
+			<th  class="tx_sortable xui-Blue" style="width:12%" data-sort-attr='created_at' data-init-sort="-created_at" >加入时间&来源</th>
 			<th  style="width:8%">分组</th>
-			<th  class="tx_sortable " style="width:12%" data-sort-attr='created_at' data-init-sort="-created_at" >加入时间&来源</th>
+			
 			<th class="" style="width:10%">
 				操作
 			</th>
@@ -310,7 +311,7 @@
 					</span>
 			</td>
 			<td>
-				<div class="centerAlign">${ member.pay_money }</div>
+				<div class="centerAlign">${ member.integral }</div>
 			</td>
 			<td>
 				<div class="centerAlign">${ member.unit_price }</div>
@@ -318,15 +319,9 @@
 			<td>
 				<div class="centerAlign">${ member.pay_times }</div>
 			</td>
+			
 			<td>
-				<div class="centerAlign">${ member.integral }</div>
-			</td>
-			<td>
-				<div class="centerAlign">
-					{{each(i,tag) tags}}
-			          ${tag.name}
-			         {{/each}}
-			    </div>
+				<div class="centerAlign">${ member.pay_money }</div>
 			</td>
 			<td>
 				<div class="centerAlign">${ member.created_at }</div>
@@ -335,6 +330,14 @@
 				{{if member.source == 1}}<div class="xui-fromCode">推广扫码</div>{{/if}}
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
+			<td>
+				<div class="centerAlign">
+					{{each(i,tag) tags}}
+			          ${tag.name}
+			         {{/each}}
+			    </div>
+			</td>
+			
 			<td>
 			<div>
 				<div class="xui-wraper">
