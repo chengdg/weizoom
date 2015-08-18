@@ -55,7 +55,7 @@ Scenario: 添加商品时选择分类，能在分类中看到该商品
 		[{
 			"name": "东坡肘子",
 			"status": "待售",
-			"category": "分类1,分类2",
+			"categories": "分类1,分类2",
 			"model": {
 				"models": {
 					"standard": {
@@ -67,7 +67,7 @@ Scenario: 添加商品时选择分类，能在分类中看到该商品
 		}, {
 			"name": "叫花鸡",
 			"status": "待售",
-			"category": "分类1",
+			"categories": "分类1",
 			"model": {
 				"models": {
 					"standard": {
@@ -80,7 +80,7 @@ Scenario: 添加商品时选择分类，能在分类中看到该商品
 		}, {
 			"name": "水晶虾仁",
 			"status": "待售",
-			"category": "",
+			"categories": "",
 			"model": {
 				"models": {
 					"standard": {

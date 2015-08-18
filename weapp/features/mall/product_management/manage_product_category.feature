@@ -20,7 +20,7 @@ Background:
 		[{
 			"name": "东坡肘子",
 			"status": "待售",
-			"category": "分类1,分类2",
+			"categories": "分类1,分类2",
 			"model": {
 				"models": {
 					"standard": {
@@ -32,7 +32,7 @@ Background:
 		}, {
 			"name": "叫花鸡",
 			"status": "待售",
-			"category": "分类1",
+			"categories": "分类1",
 			"model": {
 				"models": {
 					"standard": {
@@ -45,7 +45,7 @@ Background:
 		}, {
 			"name": "水晶虾仁",
 			"status": "待售",
-			"category": "",
+			"categories": "",
 			"model": {
 				"models": {
 					"standard": {

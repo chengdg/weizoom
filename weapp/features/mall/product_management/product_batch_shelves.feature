@@ -5,21 +5,10 @@ Feature:product_batch_shelves
 
 Background:
 	Given jobs登录系统
-	And jobs已添加商品分类
-		"""
-		[{
-			"name": "分类1"
-		}, {
-			"name": "分类2"
-		}, {
-			"name": "分类3"
-		}]
-		"""
 	And jobs已添加商品
 	"""
 		[{
 			"name": "东坡肘子",
-			"categories": "分类1,分类2,分类3",
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
@@ -27,14 +16,12 @@ Background:
 			"shelve_type": "上架"
 		}, {
 			"name": "叫花鸡",
-			"categories": "分类1",
 			"price": 30.0,
 			"stock_type": "无限",
 			"display_index":1,
 			"shelve_type": "上架"
 		}, {
 			"name": "红烧肉",
-			"categories": "分类2,分类3",
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
@@ -42,20 +29,17 @@ Background:
 			"shelve_type": "上架"
 		}, {
 			"name": "武昌鱼",
-			"categories": "分类3",
 			"price": 30.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"shelve_type": "下架"
 		}, {
 			"name": "水煮肉",
-			"categories": "分类1,分类2,分类3",
 			"price": 20.0,
 			"stock_type": "无限",
 			"shelve_type": "下架"
 		}, {
 			"name": "梅菜扣肉",
-			"categories": "分类1,分类2,分类3",
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
@@ -69,24 +53,20 @@ Scenario:1 对上架商品进行批量下架
 	"""
 		[{
 			"name": "红烧肉",
-			"categories": ["分类2", "分类3"],
 			"price": 20.0,
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "叫花鸡",
-			"categories": ["分类1"],
 			"price": 30.0,
 			"stock_type": "无限",
 			"display_index":1
 		}, {
 			"name": "梅菜扣肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stocks": 3
 		}, {
 			"name": "东坡肘子",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stocks": 3,
 			"display_index": 0
@@ -101,35 +81,29 @@ Scenario:1 对上架商品进行批量下架
 	"""
 		[{
 			"name": "梅菜扣肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3
 		}, {
 			"name": "红烧肉",
-			"categories": ["分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3
 		}, {
 			"name": "叫花鸡",
-			"categories": ["分类1"],
 			"price": 30.0,
 			"stock_type": "无限"
 		}, {
 			"name": "东坡肘子",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3
 		}, {
 			"name": "水煮肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "无限"
 		}, {
 			"name": "武昌鱼",
-			"categories": ["分类3"],
 			"price": 30.0,
 			"stock_type": "有限"
 		}]
@@ -141,12 +115,10 @@ Scenario:2 对下架商品进行批量上架
 	"""
 		[{
 			"name": "水煮肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "无限"
 		}, {
 			"name": "武昌鱼",
-			"categories": ["分类3"],
 			"price": 30.0,
 			"stocks": 3
 		}]
@@ -159,54 +131,47 @@ Scenario:2 对下架商品进行批量上架
 	"""
 		[{
 			"name": "红烧肉",
-			"categories": ["分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "叫花鸡",
-			"categories": ["分类1"],
 			"price": 30.0,
 			"stock_type": "无限",
 			"display_index":1
 		}, {
 			"name": "梅菜扣肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
 		}, {
 			"name": "水煮肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "无限",
 			"display_index": 0
 		}, {
 			"name": "武昌鱼",
-			"categories": ["分类3"],
 			"price": 30.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
 		}, {
 			"name": "东坡肘子",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
 		}]
 	"""
-@mall2 @jz
+@mall2
 Scenario:3待售商品上架后，排序重复，自动变为0
 	When jobs-下架商品'叫花鸡'
 	And jobs更新商品'东坡肘子'
 	"""
 		{
 			"name": "东坡肘子",
-			"categories": "分类1,分类2,分类3",
 			"price": 20.0,
 			"display_index": 1,
 			"stocks": 3
@@ -216,21 +181,18 @@ Scenario:3待售商品上架后，排序重复，自动变为0
 	"""
 		[{
 			"name": "红烧肉",
-			"categories": ["分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "东坡肘子",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 1
 		}, {
 			"name": "梅菜扣肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
@@ -245,34 +207,29 @@ Scenario:3待售商品上架后，排序重复，自动变为0
 	"""
 		[{
 			"name": "红烧肉",
-			"categories": ["分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2
 		}, {
 			"name": "东坡肘子",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 1
 		}, {
 			"name": "梅菜扣肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 0
 		}, {
 			"name": "水煮肉",
-			"categories": ["分类1", "分类2", "分类3"],
 			"price": 20.0,
 			"stock_type": "无限",
 			"display_index":0
 		}, {
 			"name": "武昌鱼",
-			"categories": ["分类3"],
 			"price": 30.0,
 			"stock_type": "有限",
 			"stocks": 3,

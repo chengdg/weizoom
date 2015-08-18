@@ -33,18 +33,25 @@
 			<th>状态</th>
 			<th>销量</th>
 			<th>加入分组时间</th>
+			<th>排序</th>
 			<th>操作</th>
 		</tr>{{product.user_code}}
 	</thead>
 	<tbody>
 		{% for product in category.products %}
-		<tr data-product-id="{{product.id}}">
+		<tr data-product-id="{{product.id}}" data-category-id="{{category.id}}">
 			<td>{{product.name}}</td>
 			<td>{{product.display_price}}</td>
 			<td>{{product.status}}</td>
 			<td>{{product.sales}}</td>
 			<td>{{product.join_category_time|date:"Y-m-j H:i"}}</td>
-			<td><a class=" xa-deleteProductFromCategory" href="javascript:void(0);">删除</a></td>
+			<td>
+				{% if product.status == '在售' %}
+					<input width="38" type="text" class="xa-rank" data-id="{{product.id}}" style="width:100%;"
+					 			 value="{{product.display_index}}" data-display-index="{{product.display_index}}">
+				{% endif %}
+			</td>
+			<td><a class="xa-deleteProductFromCategory" href="javascript:void(0);">删除</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>
@@ -174,6 +181,86 @@ $(document).ready(function() {
 				});
         	}
         })
+	});
+
+	var onConfirmRankInput = function(event){
+		  var $link = $(event.currentTarget);
+		  var category_id = $(event.currentTarget).parents('tr').data('category-id');
+		  var product_id = $(event.currentTarget).parents('tr').data('product-id');
+		  var rankText = $.trim($(event.currentTarget).val());/*文本框的值*/
+		  var oldPos = $.trim($(event.currentTarget).data('display-index'));
+		  var updateAction = function() {
+		      try{
+		          has_index.val('0').data('display-index', 0);
+		      }
+		      catch(e){
+		      }
+		      finally{
+		          W.getApi().call({
+		              method: 'post',
+		              app: 'mall2',
+		              resource: 'category_list',
+		              args: {
+		                  category_id: category_id,
+		                  product_id: product_id,
+		                  position: rankText,
+		              },
+		              success: function(data){
+		                 $(event.currentTarget).data('display-index', rankText).val(rankText);
+		              },
+		              error: function(response){
+		                  W.showHint('error', '更新产品位置失效');
+		              }
+
+		          });
+		      }
+		  }
+		  var has_index = false
+		  var rankTextList = $(event.currentTarget).parents('tr').siblings().find('.xa-rank').each(function(i){
+		      var a_rank = $.trim($(this).data('display-index'));
+		      if(rankText == a_rank && rankText != 0){
+		          has_index = $(this);
+		      }
+		  });
+		  var cancel = function(){
+		      $(event.currentTarget).val(oldPos);
+		  }
+		  if (has_index){
+		          var msg = "位置"+rankText+"已存在商品， 是否替换"
+		          W.requireConfirm({
+		              $el: $link,
+		              width:480,
+		              height:55,
+		              position:'top',
+		              isTitle: false,
+		              msg: msg,
+		              confirm: updateAction,
+		              cancel:cancel,
+		              minClickTime:1
+		          });
+		  }else{
+		      updateAction();
+		  }
+	}
+
+	$(document).delegate('.xa-rank', 'keypress', function(event){
+		var keyCode = event.keyCode;
+		if(keyCode === 13) {
+			onConfirmRankInput(event);
+
+		}
+	});
+
+	$(document).delegate('.xa-rank', 'blur', function(event){
+		var oldConfirmView = W.registry['common-popup-confirm-view'];
+		var oldPos = $.trim($(event.currentTarget).data('display-index'));
+		var rankText = $.trim($(event.currentTarget).val());
+		if(rankText == oldPos){
+		    return;
+		}
+		if(!oldConfirmView || oldConfirmView.$el.css('display') == 'none'){
+		    onConfirmRankInput(event);
+		}
 	});
 });
 </script>

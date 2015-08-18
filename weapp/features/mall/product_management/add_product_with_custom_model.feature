@@ -28,7 +28,7 @@ Background:
 		'''
 
 
-@mall @mall.product @mall.product_model
+@mall2 @mall.product @mall.product_model
 Scenario: 添加拥有单属性商品规格的商品
 	Jobs添加拥有商品规格的商品后，能获取的商品信息中包含商品规格
 	
@@ -68,7 +68,7 @@ Scenario: 添加拥有单属性商品规格的商品
 		"""
 
 
-@mall @mall.product @mall.product_model
+@mall2 @mall.product @mall.product_model
 Scenario: 添加拥有复合属性商品规格的商品
 	Jobs添加拥有商品规格的商品后，能获取的商品信息中包含商品规格
 	

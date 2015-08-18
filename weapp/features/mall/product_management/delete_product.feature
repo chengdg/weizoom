@@ -18,16 +18,16 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"category": "分类1,分类2"
+			"categories": "分类1,分类2"
 		}, {
 			"name": "商品2",
-			"category": "分类1,分类2"
+			"categories": "分类1,分类2"
 		}, {
 			"name": "商品3",
-			"category": "分类1"
+			"categories": "分类1"
 		}, {
 			"name": "商品4",
-			"category": "分类2"
+			"categories": "分类2"
 		}]
 		"""
 
