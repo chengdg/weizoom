@@ -187,14 +187,6 @@
 {% endblock %}
 
 {% block base_js %}
-<!-- start of ueditor -->
-<script type="text/javascript">
-	window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
-</script>
-<script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
-<script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
-<!-- end of ueditor -->
-
 <div id="jsons" style="display: none;">
 	{% for json in jsons %}
 	<div id="__json-{{json.name}}">
