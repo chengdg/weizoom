@@ -93,7 +93,7 @@
 	{{/if}}
 
 	<ul>
-        {{each(i, order) items}}
+		{{each(i, order) items}}
 		<li data-order-id="${order.id}">
 			<table width="100%" class="table mb15 xui-table-orderDetail">
 				<tr class="xui-order-firstTr">
@@ -111,7 +111,7 @@
 							下单时间：${order.created_at}
 						</p>
 						<span class="ml80">
-					     &nbsp;
+						 &nbsp;
 							{{if order.payment_time}}
 								付款时间：${order.payment_time}
 							{{/if}}
@@ -140,11 +140,11 @@
 						<li class="disT" style="width:100%;" data-id="${product.id}">
 							<div style="display:table-cell;vertical-align:middle;text-align: center;width:75px">
 
-                            {{if product.thumbnails_url.search('http://weappimg') != -1}}
-                            <img class="xui-product-thumbnails" src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
-                            {{else}}
-                            <img class="xui-product-thumbnails" src="${product.thumbnails_url}" width="60" height="60"/>
-                            {{/if}}
+							{{if product.thumbnails_url.search('http://weappimg') != -1}}
+							<img class="xui-product-thumbnails" src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+							{{else}}
+							<img class="xui-product-thumbnails" src="${product.thumbnails_url}" width="60" height="60"/>
+							{{/if}}
 
 							</div>
 							<div style="width:235px;display:table-cell">
@@ -183,6 +183,10 @@
 					<td width="100">
 						{{if order.member_id > 0}}
 							<a target="_blank" href="/member/member_detail/edit/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+							<span class="xui-buyerHint xa-buyerHint pr">
+								<i class="xa-buyerHintImg" data-addr="${order.ship_address}" data-tel="${order.ship_tel}" data-message="${order.customer_message}" data-bill-type="${order.bill_type}" data-bill="${order.bill}"></i>
+								<span class="pa xa-buyerHintText" style="display:none;">asdfsafsfds</span>
+							</span>
 						{{else}}
 							{{html order.buyer_name}}
 						{{/if}}
@@ -194,21 +198,21 @@
 					<td width="110">
 						${ order.pay_money }
 						{{if order.postage > 0 }}
-	                    </br>
-	                    	<span class="xui-colorGray">(含运费：${order.postage})</span>
-	                    {{/if}}
-	                    {{if order.weizoom_card_money > 0}}
-	                    </br>
-		                    <span class="xui-weizoomCard pr">
-			                    <i class="xa-weizoomCardImg"></i>
-			                    </br>
-			                    <span class="pa xa-weizoomCardHint" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money}元</span>
-		                    </span>
-	                    {{/if}}
+						</br>
+							<span class="xui-colorGray">(含运费：${order.postage})</span>
+						{{/if}}
+						{{if order.weizoom_card_money > 0}}
+						</br>
+							<span class="xui-weizoomCard pr">
+								<i class="xa-weizoomCardImg"></i>
+								</br>
+								<span class="pa xa-weizoomCardHint" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money}元</span>
+							</span>
+						{{/if}}
 					</td>
 					<td class="nowrap" width="90">
 						<div>
-	                        {{html formatOrderStatus(order.status)}}
+							{{html formatOrderStatus(order.status)}}
 						</div>
 					</td>
 					<!--<td class="auto_wrap">
@@ -271,45 +275,45 @@
 
 <script id="order-products-table-tmpl-src" type="text/x-jquery-tmpl">
 	<table class="table table-bordered table-condensed" id='xx' style="margin: 5px auto; background-color: #FAFAFA; width: 94%;">
-    {{if products}}
-    	<tr>
-    		<th>商品</th>
-    		<th>规格</th>
-    		<th>数量</th>
-    		<th>总价</th>
-    	</tr>
-        {{each(i, product) products}}
-        <tr>
+	{{if products}}
+		<tr>
+			<th>商品</th>
+			<th>规格</th>
+			<th>数量</th>
+			<th>总价</th>
+		</tr>
+		{{each(i, product) products}}
+		<tr>
 			<td width="200" style="padding: 10px;">
-                {{if product.thumbnails_url.search('http://weappimg') != -1}}
-                <img class="imgBox" src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
-                {{else}}
-                <img class="imgBox" src="${product.thumbnails_url}" width="60" height="60"/>
-                {{/if}}
+				{{if product.thumbnails_url.search('http://weappimg') != -1}}
+				<img class="imgBox" src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+				{{else}}
+				<img class="imgBox" src="${product.thumbnails_url}" width="60" height="60"/>
+				{{/if}}
 
-                <span class="ml10">${product.name}</span>
-                <span class="ml10" style="color: red">
-                	{{if product.is_deleted}} 已删除 {{/if}}
-                </span>
-            </td>
-            <td width="20%">
-            {{if (product.custom_model_properties !== null)}}
-            	{{each(j, property) product.custom_model_properties}}
-            	${property.name}: ${property.property_value}<br/>
-            	{{/each}}
-            {{/if}}
-           	</td>
-            <td width="10%" class="nowrap">
-                x ${product.count}
-            </td>
+				<span class="ml10">${product.name}</span>
+				<span class="ml10" style="color: red">
+					{{if product.is_deleted}} 已删除 {{/if}}
+				</span>
+			</td>
+			<td width="20%">
+			{{if (product.custom_model_properties !== null)}}
+				{{each(j, property) product.custom_model_properties}}
+				${property.name}: ${property.property_value}<br/>
+				{{/each}}
+			{{/if}}
+		   	</td>
 			<td width="10%" class="nowrap">
-                ￥${product.total_price}
+				x ${product.count}
+			</td>
+			<td width="10%" class="nowrap">
+				￥${product.total_price}
 			</td>
 		</tr>
-        {{/each}}
-    {{else}}
-    	<tr><td>暂无数据</td></tr>
-    {{/if}}
+		{{/each}}
+	{{else}}
+		<tr><td>暂无数据</td></tr>
+	{{/if}}
 	</table>
 </script>
 {% endverbatim %}
@@ -339,9 +343,9 @@ $(document).ready(function() {
 
 	// 订单状态栏，点击事件
 	$('body').delegate('.xa-count', 'click', function(event){
-        var $el = $(event.currentTarget);
-        status = $el.attr('data-total-status-value');
-        filterBox.trigger('clickStatusBox', status);
+		var $el = $(event.currentTarget);
+		status = $el.attr('data-total-status-value');
+		filterBox.trigger('clickStatusBox', status);
 	});
 
 	// 时间确定按钮
@@ -360,9 +364,9 @@ $(document).ready(function() {
 
 		DATA_INTERVAL = startDate+'|'+endDate;
 
-    	var dataView = $('[data-ui-role="advanced-table"]').data('view');
-    	dataView.options.args = _.extend('{"date_interval":"'+DATA_INTERVAL+'", "filter_value":"'+filterBox.filter_value+'"}', dataView.options.args);
-    	dataView.reload();
+		var dataView = $('[data-ui-role="advanced-table"]').data('view');
+		dataView.options.args = _.extend('{"date_interval":"'+DATA_INTERVAL+'", "filter_value":"'+filterBox.filter_value+'"}', dataView.options.args);
+		dataView.reload();
 	});
 
 	// 获取商品
@@ -376,7 +380,7 @@ $(document).ready(function() {
 			W.getApi().call({
 				app: 'mall2',
 				resource: 'order_product',
-                method: 'get',
+				method: 'get',
 				args: {
 					order_id: order_id
 				},
@@ -398,7 +402,7 @@ $(document).ready(function() {
 	// 	});
 	// });
 	// 发货
-    // todo
+	// todo
 	$('body').delegate('.xa-order-delivery', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var orderId = $el.attr('data-order-id');
@@ -487,23 +491,23 @@ $(document).ready(function() {
 
 		W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
 			orderId: orderId,
-		    success: function(data) {
-                var args = {
-                    'order_id': orderId,
-                    'action' : 'pay'
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-                        $('[data-ui-role="advanced-table"]').data('view').reload();
-                    },
-                    error: function() {
-                        }
-                })
-		    }
+			success: function(data) {
+				var args = {
+					'order_id': orderId,
+					'action' : 'pay'
+				}
+				W.getApi().call({
+					method: 'post',
+					app: 'mall2',
+					resource: 'order',
+					args: args,
+					success: function(data) {
+						$('[data-ui-role="advanced-table"]').data('view').reload();
+					},
+					error: function() {
+						}
+				})
+			}
 
 		});
 
@@ -517,8 +521,8 @@ $(document).ready(function() {
 		W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
 			orderId: orderId,
 			isUpdatePrice: true,
-		    success: function(data) {
-		    	console.log(data);
+			success: function(data) {
+				console.log(data);
 				W.getApi().call({
 					app: 'mall2',
 					resource: 'order',
@@ -535,130 +539,168 @@ $(document).ready(function() {
 
 					}
 				})
-		    }
+			}
 		});
 
 	});
 	//标记完成
 	$('body').delegate('.xa-markFinish', 'click', function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        var $el = $(event.currentTarget);
-        var orderId = $el.parents('li').attr('data-order-id');
-        W.requireConfirm({
-        	$el: $(this),
-        	width:445,
-        	position:'top',
+		event.stopPropagation();
+		event.preventDefault();
+		var $el = $(event.currentTarget);
+		var orderId = $el.parents('li').attr('data-order-id');
+		W.requireConfirm({
+			$el: $(this),
+			width:445,
+			position:'top',
 			isTitle: false,
 			privateContainerClass:'xui-orderConfirmPop',
-        	msg:'确定将该订单标记为完成？',
-        	confirm:function(){
-                var args = {
-                    'order_id': orderId,
-                    'action' : 'finish'
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-{#                        $el.parent().prev().text("已完成");#}
-{#                        $el.parent().html('<a class="xa-applyRefund" href="javascript:void(0);">申请退款</a>');#}
-                        $('[data-ui-role="advanced-table"]').data('view').reload();
-                    },
-                    error: function() {
-                        }
-                })
+			msg:'确定将该订单标记为完成？',
+			confirm:function(){
+				var args = {
+					'order_id': orderId,
+					'action' : 'finish'
+				}
+				W.getApi().call({
+					method: 'post',
+					app: 'mall2',
+					resource: 'order',
+					args: args,
+					success: function(data) {
+{#						$el.parent().prev().text("已完成");#}
+{#						$el.parent().html('<a class="xa-applyRefund" href="javascript:void(0);">申请退款</a>');#}
+						$('[data-ui-role="advanced-table"]').data('view').reload();
+					},
+					error: function() {
+						}
+				})
 
-        	}
-        })
-    });
-    //取消订单
-    $('body').delegate('.xa-cancelOrder', 'click', function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        var $el = $(event.currentTarget);
-        var orderId = $el.parents('li').attr('data-order-id');
-        W.requireConfirm({
-        	$el: $(this),
-        	viewName: 'order-list-confirm',
-        	width:380,
-        	position:'top',
+			}
+		})
+	});
+	//取消订单
+	$('body').delegate('.xa-cancelOrder', 'click', function(event) {
+		event.stopPropagation();
+		event.preventDefault();
+		var $el = $(event.currentTarget);
+		var orderId = $el.parents('li').attr('data-order-id');
+		W.requireConfirm({
+			$el: $(this),
+			viewName: 'order-list-confirm',
+			width:380,
+			position:'top',
 			isTitle: false,
 			privateContainerClass:'xui-orderConfirmPop',
-        	msg:'确定取消订单？',
+			msg:'确定取消订单？',
 
-        	confirm:function(){
-                var args = {
-                    'order_id': orderId,
-                    'action' : 'cancel'
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-{#                        window.location.reload();#}
-                        $('[data-ui-role="advanced-table"]').data('view').reload();
-                    },
-                    error: function() {
-                        }
-                })
+			confirm:function(){
+				var args = {
+					'order_id': orderId,
+					'action' : 'cancel'
+				}
+				W.getApi().call({
+					method: 'post',
+					app: 'mall2',
+					resource: 'order',
+					args: args,
+					success: function(data) {
+{#						window.location.reload();#}
+						$('[data-ui-role="advanced-table"]').data('view').reload();
+					},
+					error: function() {
+						}
+				})
 
-        	}
-        })
-    });
-    //申请退款
-    $('body').delegate('.xa-applyRefund', 'click', function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        var $el = $(event.currentTarget);
-        var orderId = $el.parents('li').attr('data-order-id');
-        W.requireConfirm({
-        	$el: $(this),
-        	width:380,
-        	position:'top',
+			}
+		})
+	});
+	//申请退款
+	$('body').delegate('.xa-applyRefund', 'click', function(event) {
+		event.stopPropagation();
+		event.preventDefault();
+		var $el = $(event.currentTarget);
+		var orderId = $el.parents('li').attr('data-order-id');
+		W.requireConfirm({
+			$el: $(this),
+			width:380,
+			position:'top',
 			isTitle: false,
 			privateContainerClass:'xui-orderConfirmPop',
-        	msg:'确定申请退款？',
-        	confirm:function(){
-                var args = {
-                    'order_id': orderId,
-                    'action' : 'return_pay'
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-                        $('[data-ui-role="advanced-table"]').data('view').reload();
-                    },
-                    error: function() {
-                        }
-                })
-        	}
-        })
+			msg:'确定申请退款？',
+			confirm:function(){
+				var args = {
+					'order_id': orderId,
+					'action' : 'return_pay'
+				}
+				W.getApi().call({
+					method: 'post',
+					app: 'mall2',
+					resource: 'order',
+					args: args,
+					success: function(data) {
+						$('[data-ui-role="advanced-table"]').data('view').reload();
+					},
+					error: function() {
+						}
+				})
+			}
+		})
 
-    });
+	});
 
-    // 微众卡价钱提示
-    $('body').delegate('.xa-weizoomCardImg','mouseenter',function(){
-    	$('.xa-weizoomCardImg').each(function(){
+	// 微众卡价钱提示
+	$('body').delegate('.xa-weizoomCardImg','mouseenter',function(){
+		$('.xa-weizoomCardImg').each(function(){
 			$(this).mouseenter(function() {
 				$(this).siblings('.xa-weizoomCardHint').css('display','inline-block');
 			});
 		});
-    });
-    $('body').delegate('.xa-weizoomCardImg','mouseleave',function(){
-    	$('.xa-weizoomCardImg').each(function(){
+	});
+	$('body').delegate('.xa-weizoomCardImg','mouseleave',function(){
+		$('.xa-weizoomCardImg').each(function(){
 			$(this).mouseleave(function() {
 				$(this).siblings('.xa-weizoomCardHint').css('display','none');
 			});
 		});
-    });
+	});
+
+
+	// 买家信息提示
+	$('body').delegate('.xa-buyerHintImg','mouseenter',function(event){
+		var $el = $(event.currentTarget);
+		var buyerHintView = W.getBuyerHintView({
+			//width: 220,
+			isTitle: false,
+			isArrow:false,
+			privateContainerClass:'xui-buyerHintDropBox xa-buyerHintDropBox',
+			position:'down-middle'
+		});
+
+		var addr = $el.attr('data-addr');
+		var tel = $el.attr('data-tel');
+		var message = $el.attr('data-message');
+		var bill_type = $el.attr('data-bill-type');
+		if(bill_type === "0") {
+			bill_type = "无";
+		} else if(bill_type === "1") {
+			bill_type = "个人";
+		} else if(bill_type === "2") {
+			bill_type = "公司";
+		}
+		var bill = $el.attr('data-bill');
+
+		buyerHintView.show({
+			$action: $el,
+			addr: addr,
+			tel: tel,
+			message: message,
+			bill_type: bill_type,
+			bill: bill
+		});
+	});
+	$('body').delegate('.xa-buyerHintImg','mouseleave',function(){
+		$('.xa-buyerHintDropBox').hide();
+	});
 
 });
 </script>

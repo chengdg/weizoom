@@ -180,6 +180,15 @@ W.view.common.DropBox = Backbone.View.extend({
                     top: elOffset.top + elHeight
                 });
                 break;
+            case 'down-middle':
+                xlog(elOffset.left);
+                xlog(elWidth);
+                xlog(currWidth);
+                this.$el.css({
+                    left: elOffset.left - currWidth/2,
+                    top: elOffset.top + elHeight + 5
+                });
+                break;
             case 'down-left':
                 this.$el.css({
                     left: elOffset.left + elWidth/2,
