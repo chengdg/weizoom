@@ -67,6 +67,7 @@ class MassSendingMessages(resource.Resource):
         source = None
         filter_value = None
         filter_data_args = {}
+        last_message_time = {}
         member_list = []
         member_ids_str = ''
         mode = ''  #发送模式
@@ -95,7 +96,7 @@ class MassSendingMessages(resource.Resource):
                     source = param2value['source'];
                     filter_value = param2value['filter_value'];
 
-                    members, filter_data_args = new_get_members(request, filter_value)
+                    members, filter_data_args, last_message_time = new_get_members(request, filter_value)
 
             else:
                 #params例子： member_ids=1|2|3
@@ -159,6 +160,7 @@ class MassSendingMessages(resource.Resource):
             'pay_money': pay_money,
             'pay_times': pay_times,
             'integral': str(filter_data_args['integral__gte']) + '~' + str(filter_data_args['integral__lte']) if filter_data_args.has_key('integral__gte') else '',
+            'last_message_time': last_message_time['member_latest_created_at__gte'] + '~' + last_message_time['member_latest_created_at__gte'] if last_message_time.has_key('member_latest_created_at__gte') else '',
             'member_list': member_list,
             'member_ids_str': member_ids_str,
             'number': len(member_list)
