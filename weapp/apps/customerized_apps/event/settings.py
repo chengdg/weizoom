@@ -35,9 +35,21 @@ NEW_PAGE_JSON = """
             "type": "appkit.shortcuts",
             "model": {
                 "index": 4,
+                "is_mandatory": "true",
                 "name": "",
                 "class": "",
-                "id": ""
+                "id": "",
+                "modules": {
+                    "name": {
+                        "select": "yes"
+                    },
+                    "phone": {
+                        "select": "yes"
+                    },
+                    "email": {
+                        "select": "yes"
+                    }
+                }
             },
             "has_global_content": "no"
         },{
