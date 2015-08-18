@@ -83,7 +83,6 @@ class MassSendingMessages(resource.Resource):
 
                 if 'sex' in params:
                     #兼容以前的版本
-                    print "PPPPPPPPPPPPP"
                     category = param2value['category'];
                     status = param2value['status'];
                     sex = param2value['sex'];
@@ -91,7 +90,6 @@ class MassSendingMessages(resource.Resource):
 
                     members = get_members(request, filter_value, '-id')
                 else:
-                    print "KKKKKKKKKKKK"
                     category = param2value['category'];
                     status = param2value['status'];
                     grade = param2value['grade'];
