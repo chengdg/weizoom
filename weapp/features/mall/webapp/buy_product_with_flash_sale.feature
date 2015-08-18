@@ -102,7 +102,7 @@ Background:
 			"name": "商品1限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"member_grade": "全部",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
@@ -110,7 +110,7 @@ Background:
 			"name": "商品2限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"member_grade": "全部",
 			"promotion_price": 2.1,
 			"limit_period": 1
@@ -118,7 +118,7 @@ Background:
 			"name": "商品3限时抢购",
 			"start_date": "2天前",
 			"end_date": "1天前",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"member_grade": "全部",
 			"promotion_price": 3.1
 		}]
@@ -265,7 +265,7 @@ Scenario:3 购买单个限时抢购商品，限时抢购活动没开始，按原
 			"name": "商品4限时抢购",
 			"start_date": "1天后",
 			"end_date": "3天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
 		}
@@ -393,7 +393,7 @@ Scenario: 6  购买单个限时抢购商品，未超过库存限制，但超过�
 			"name": "商品4限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
 		}
@@ -476,7 +476,7 @@ Scenario: 8 购买多规格限时抢购商品
 			"name": "商品5限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品5"],
+			"product_name": "商品5",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
 		}
@@ -538,7 +538,7 @@ Scenario: 9 购买多规格限时抢购商品同时适用于积分规则
 			"name": "商品5限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品5"],
+			"product_name": "商品5",
 			"count_per_purchase": 2,
 			"promotion_price": 10
 		}
@@ -596,7 +596,7 @@ Scenario: 10 购买单个限时抢购商品，购买时活动进行中，提交�
 			"name": "商品4限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
 		}
@@ -641,7 +641,7 @@ Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还�
 			"name": "商品4限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5,
 			"limit_period": 1
@@ -745,7 +745,7 @@ Scenario:12 不同等级的会员购买有会员价同时有限时抢购的商�
 	#		"name": "商品1限时抢购",
 	#		"start_date": "今天",
 	#		"end_date": "1天后",
-	#		"products": ["商品1"],
+	#		"product_name": "商品1",
 	#		"member_grade": "全部",
 	#		"promotion_price": 11.5
 	#	}]
@@ -835,7 +835,7 @@ Scenario:13 不同等级的会员购买有会员价同时有会员等级限时�
 			"name": "商品1限时抢购-50",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"member_grade": "银牌会员",
 			"promotion_price": 50.0
 		}]
@@ -948,7 +948,7 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 			"name": "商品1限时抢购-50",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"member_grade": "银牌会员",
 			"promotion_price": 50.0
 		}]
@@ -1073,7 +1073,7 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 		"name": "商品5限时抢购",
 		"start_date": "今天",
 		"end_date": "1天后",
-		"products": ["商品5"],
+		"product_name": "商品5",
 		"member_grade": "银牌会员",
 		"promotion_price": 10
 	}

@@ -1086,9 +1086,26 @@ class Product(models.Model):
 class CategoryHasProduct(models.Model):
 	product = models.ForeignKey(Product)
 	category = models.ForeignKey(ProductCategory)
+	display_index = models.IntegerField(default=0, null=True)  # 分组商品排序
 	created_at = models.DateTimeField(auto_now_add=True)
 
+	def move_to_position(self, pos):
+		"""将分组内的特定商品移动到指定位置
+
+		Args:
+		  pos(int): 指定位置
+		"""
+		category_has_products = CategoryHasProduct.objects.filter(
+			category_id=self.category_id,
+			display_index=pos
+		)
+		if category_has_products.exists():
+			category_has_products.update(display_index=0)
+		self.display_index = pos
+		self.save()
+
 	class Meta(object):
+		unique_together = ('category', 'product')
 		db_table = 'mall_category_has_product'
 		verbose_name = '分类下的商品'
 		verbose_name_plural = '分类下的商品'

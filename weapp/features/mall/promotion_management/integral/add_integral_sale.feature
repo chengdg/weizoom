@@ -113,7 +113,7 @@ Background:
 			"name": "商品4限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["商品4"],
+			"product_name": "商品4",
 			"member_grade": "全部",
 			"count_per_purchase": 2,
 			"promotion_price": 90
@@ -121,7 +121,7 @@ Background:
 			"name": "商品5限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["商品5"],
+			"product_name": "商品5",
 			"member_grade": "全部",
 			"promotion_price": 90,
 			"limit_period": 1
@@ -133,7 +133,7 @@ Background:
 			"name": "商品6买二赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["商品6"],
+			"product_name": "商品6",
 			"premium_products": 
 			[{
 				"name": "赠品6",
@@ -145,7 +145,7 @@ Background:
 			"name": "商品7买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["商品7"],
+			"product_name": "商品7",
 			"premium_products":
 			[{
 				"name": "赠品7",

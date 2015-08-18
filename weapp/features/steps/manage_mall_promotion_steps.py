@@ -60,12 +60,11 @@ def step_impl(context, user):
             'discount': promotion.get('discount', 100),
             'discount_money': promotion.get('discount_money', 0.0),
             'integral_price': promotion.get('integral_price', 0.0),
-            'is_permanant_active': promotion['is_permanant_active'] if promotion.get('is_permanant_active', False) else "false",
+            'is_permanant_active': 'true' if promotion.get('is_permanant_active', False) or promotion['is_permanant_active'] == 'true' else "false",
         }
         if data['is_permanant_active'] != 'true':
             data['start_date'] = bdd_util.get_datetime_no_second_str(promotion['start_date']),
             data['end_date'] = bdd_util.get_datetime_no_second_str(promotion['end_date']),
-        # print 'jz-----2', data['start_date'], data['end_date'], data['is_permanant_active']
         url = '/mall2/api/integral_sale/?_method=put'
         response = context.client.post(url, data)
         if promotion.get('created_at'):
@@ -115,11 +114,10 @@ def step_create_premium_sale(context, user):
 
     for promotion in promotions:
         product_ids = []
-        for product in promotion['products']:
-            db_product = ProductFactory(name=product)
-            product_ids.append({
-                'id': db_product.id
-            })
+        db_product = ProductFactory(name=promotion['product_name'])
+        product_ids =[{
+            'id': db_product.id
+        }]
 
         premium_products = []
         for premium_product in promotion['premium_products']:
@@ -156,12 +154,10 @@ def step_create_flash_sales(context, user):
         promotions = [promotions]
 
     for promotion in promotions:
-        product_ids = []
-        for product in promotion['products']:
-            db_product = ProductFactory(name=product)
-            product_ids.append({
-                'id': db_product.id
-            })
+        db_product = ProductFactory(name=promotion['product_name'])
+        product_ids =[{
+            'id': db_product.id
+        }]
 
         data = {
             'name': promotion['name'],
@@ -196,7 +192,6 @@ def step_impl(context, user, type):
         type = "integral_sale"
     # elif type == u"优惠券":
     #     type = "coupon"
-    print 'jz------', context.query_param
     url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % type
     if hasattr(context, 'query_param'):
         if context.query_param.get('product_name'):
@@ -215,7 +210,6 @@ def step_impl(context, user, type):
             elif context.query_param['status'] == u'已结束':
                 status = 3
             url += '&promotionStatus=%s' % status
-    print 'jz-----4', url
     response = context.client.get(url)
     actual = json.loads(response.content)['data']['items']
 
@@ -245,7 +239,6 @@ def step_impl(context, user, type):
                 promotion.pop('start_date')
                 promotion.pop('end_date')
             promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
-            # print 'jz-----3', promotion['start_date'][0], promotion['end_date'][0]
             expected.append(promotion)
     else:
         expected = json.loads(context.text)
@@ -254,7 +247,7 @@ def step_impl(context, user, type):
 
 def __get_member_grade(promotion, webapp_id):
     member_grade = promotion.get('member_grade', 0)
-    if member_grade == u'全部':
+    if member_grade == u'全部' or member_grade == u'全部会员':
         member_grade = 0
     elif member_grade:
         member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id

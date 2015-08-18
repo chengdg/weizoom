@@ -73,26 +73,26 @@ Background:
 			"name": "商品1限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
 		}, {
 			"name": "商品2限时抢购",
 			"start_date": "1天后",
 			"end_date": "2天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"promotion_price": 2.1
 		}, {
 			"name": "商品3限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"promotion_price": 3.1
 		}, {
 			"name": "商品4限时抢购",
 			"start_date": "前天",
 			"end_date": "昨天",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"promotion_price": 4.1
 		}]
 		"""
@@ -272,7 +272,7 @@ Scenario:3 放入多规格商品到购物车，无限购
 			"name": "商品7限时抢购",
 			"start_date": "1天前",
 			"end_date": "3天后",
-			"products": ["商品7"],
+			"product_name": "商品7",
 			"promotion_price": 10
 		}
 		"""
