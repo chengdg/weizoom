@@ -501,6 +501,7 @@ def batch_update_grade(request):
 		filter_value = request.POST.get('filter_value', '')
 		request.GET = request.GET.copy()
 		request.GET['filter_value'] = filter_value
+		request.GET['count_per_page'] = 999999999
 		_, request_members, _ = __get_request_members_list(request)
 		post_ids = [m.id for m in request_members]
 	else:
@@ -510,6 +511,7 @@ def batch_update_grade(request):
 		Member.objects.filter(id__in=post_ids).update(grade=grade)
 
 	response = create_response(200)
+	response.data.post_ids = post_ids
 	return response.get_response()
 
 

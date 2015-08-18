@@ -427,13 +427,9 @@
         memberIntegralUpdateView.render();
 		
 	});
-	$('.relation-text').click(function() {
+	$('.relation-text').click(function(event) {
 				var _this = this;
-				var $el = $(event.currentTarget);
-
-				if ($el.html() == '0') {
-					return false;
-				}
+				
 				var memberId = {{ show_member.id }};
 				W.dialog.showDialog('W.dialog.member.RelationsDialog', {
 					memberId: memberId,
