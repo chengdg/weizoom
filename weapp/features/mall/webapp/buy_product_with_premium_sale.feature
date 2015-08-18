@@ -151,7 +151,7 @@ Background:
 	And marry4关注jobs的公众号
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 1 购买买赠商品，不满足买赠基数
 
 	When bill访问jobs的webapp
@@ -178,7 +178,7 @@ Scenario: 1 购买买赠商品，不满足买赠基数
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 2 购买买赠活动商品，满足买赠基数
 
 	When bill访问jobs的webapp
@@ -219,7 +219,7 @@ Scenario: 2 购买买赠活动商品，满足买赠基数
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 3 购买多个买赠活动商品，满足买赠基数，并满足循环买赠
 	商品2满足循环买赠，赠品应该累加
 	赠品数量刚好等于赠品库存
@@ -277,7 +277,7 @@ Scenario: 3 购买多个买赠活动商品，满足买赠基数，并满足循�
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 4 购买单个买赠商品，超出库存限制
 	第一次购买2个，成功；第二次购买4个，超出商品库存，确保缓存更新
 
@@ -319,7 +319,7 @@ Scenario: 4 购买单个买赠商品，超出库存限制
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 5 购买单个买赠商品，赠品数量超出库存限制
 
 	When bill访问jobs的webapp
@@ -344,7 +344,7 @@ Scenario: 5 购买单个买赠商品，赠品数量超出库存限制
 		"""
 
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 6 购买多个 有规格的参与买赠的商品
 
 	When bill访问jobs的webapp
@@ -391,7 +391,7 @@ Scenario: 6 购买多个 有规格的参与买赠的商品
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 7  创建多规格商品 非循环买赠活动，购买多个 有规格的参与买赠的商品 赠品只赠送一次
 	Given jobs登录系统
 	And jobs已添加商品
@@ -472,7 +472,7 @@ Scenario: 7  创建多规格商品 非循环买赠活动，购买多个 有规�
 			}]
 		}
 		"""
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 8  多规格商品，买2赠1 循环买赠
 	Given jobs登录系统
 	And jobs已添加商品
@@ -555,7 +555,7 @@ Scenario: 8  多规格商品，买2赠1 循环买赠
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 9  创建买赠活动，但活动时间没开始，按原有商品销售，不进行赠送
 	Given jobs登录系统
 	And jobs已添加商品
@@ -602,7 +602,7 @@ Scenario: 9  创建买赠活动，但活动时间没开始，按原有商品销�
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 10  创建买赠活动，但活动时间没开始，按原有商品销售，不进行赠送
 	Given jobs登录系统
 	And jobs已添加商品
@@ -649,7 +649,7 @@ Scenario: 10  创建买赠活动，但活动时间没开始，按原有商品销
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 11  创建买赠活动，选择商品时，活动进行中，但去付款时，活动已经结束了，系统提示：该活动已经过期
 	Given jobs登录系统
 	And jobs已添加商品
@@ -695,7 +695,7 @@ Scenario: 11  创建买赠活动，选择商品时，活动进行中，但去付
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交订单时，该活动被商家手工结束
 
 	Given jobs登录系统
@@ -722,7 +722,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 		}]
 	"""
 	Given jobs登录系统
-	When jobs结束促销活动'商品10买1赠1'
+	When jobs'结束'促销活动'商品10买1赠1'
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -749,7 +749,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 		"""
 
 # __edit__ : 王丽   补充 "雪静"
-@mall2 @promotionPremium @meberGrade
+@mall2 @promotion @promotionPremium @meberGrade
 Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠活动的商品
 	Given jobs登录系统
 	When jobs添加会员等级

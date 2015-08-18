@@ -93,7 +93,7 @@ Background:
 		}]
 		"""
 
-@mall2 @promotionIntegral @integral @jz
+@mall2 @promotionIntegral @integral
 Scenario: 1 结束状态为'未开始'的积分应用活动
 	Given jobs登录系统
 	When jobs'结束'促销活动'商品4积分应用'
