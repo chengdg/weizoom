@@ -44,7 +44,7 @@ def get_members(request):
 		'should_show_authorize_cover' : get_should_show_authorize_cover(request),
 		'user_tags': MemberTag.get_member_tags(webapp_id),
 		'grades': MemberGrade.get_all_grades_list(webapp_id),
-		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(), 
+		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(),
 		'status': status
 	})
 
@@ -72,7 +72,7 @@ def list_tags(request):
 				is_can_send = True
 		except:
 			pass
-		
+
 
 		for member_tag in member_tags:
 			member_tag.count = MemberHasTag.get_tag_has_member_count(member_tag)
@@ -227,14 +227,14 @@ def edit_member(request):
 			if order.status > 2:
 				pay_money += order.final_price
 				pay_times += 1
-		
+
 		member.pay_times = pay_times
 		member.pay_money = pay_money
 		try:
 			member.unit_price = pay_money/pay_times
 		except:
 			member.unit_price = 0
-		
+
 		try:
 			member.friend_count = __count_member_follow_relations(member)
 		except:
@@ -254,7 +254,7 @@ def edit_member(request):
 		member.user_icon = member.user_icon if len(member.user_icon.strip()) > 0 else DEFAULT_ICON
 	else:
 		member.user_icon = DEFAULT_ICON
-		
+
 	if member.unit_price > 0:
 		member.unit_price = '%.2f' % member.unit_price
 
@@ -380,7 +380,7 @@ def __count_member_follow_relations(member):
 				count = count + 1
 		except:
 			continue
-		
+
 	return count
 
 def __get_member_orders(member):
@@ -457,13 +457,16 @@ def export_members(request):
 					filter_data_args["is_subscribed"] = False
 
 			if key == 'source':
-				if value in ['-1', 0]:
-					pass
+				if value in ['-1']:
+					filter_data_args['source__in'] = [0,-1,1,2]
+				elif value in ['0','1']:
+					filter_data_args['source__in'] = [0,-1]
 				else:
 					filter_data_args["source"] = value
+
 			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price']:
 				if value.find('-') > -1:
-					val1,val2 = value.split('-')
+					val1,val2 = value.split('--')
 					if float(val1) > float(val2):
 						filter_data_args['%s__gte' % key] = float(val2)
 						filter_data_args['%s__lte' % key] = float(val1)
@@ -493,7 +496,7 @@ def export_members(request):
 				session_filter['mpuser__owner_id'] = request.manager.id
 				session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
 				session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
-				
+
 				opids = get_opid_from_session(session_filter)
 				session_member_ids = module_api.get_member_ids_by_opid(opids)
 				if filter_data_args.has_key('id__in'):
@@ -658,14 +661,14 @@ def export_members(request):
 						factor
 					]
 			else:
-				info_list = ['', 
-						'', 
-						'', 
-						'', 
-						'', 
-						'', 
+				info_list = ['',
 						'',
-						'', 
+						'',
+						'',
+						'',
+						'',
+						'',
+						'',
 						'',
 						'',
 						'',

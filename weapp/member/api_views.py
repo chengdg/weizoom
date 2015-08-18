@@ -98,7 +98,7 @@ def __get_request_members_list(request):
 			if key == 'source':
 				if value in ['-1']:
 					filter_data_args['source__in'] = [0,-1,1,2]
-				elif value == '0':
+				elif value in ['0','1']:
 					filter_data_args['source__in'] = [0,-1]
 				else:
 					filter_data_args["source"] = value

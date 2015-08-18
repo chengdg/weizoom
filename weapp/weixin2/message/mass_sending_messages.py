@@ -125,21 +125,21 @@ class MassSendingMessages(resource.Resource):
         pay_money = ""
         if filter_data_args.has_key('unit_price__gte'):
             if filter_data_args.has_key('unit_price__lte'):
-                unit_price = filter_data_args['unit_price__gte'] + '~' + filter_data_args['unit_price__lte']
+                unit_price = str(filter_data_args['unit_price__gte']) + '~' + str(filter_data_args['unit_price__lte'])
             else:
-                unit_price = ">" + filter_data_args['unit_price__gte']
+                unit_price = ">" + str(filter_data_args['unit_price__gte'])
 
         if filter_data_args.has_key('pay_times__gte'):
             if filter_data_args.has_key('pay_times__lte'):
-                pay_times = filter_data_args['pay_times__gte'] + '~' + filter_data_args['pay_times__lte']
+                pay_times = str(filter_data_args['pay_times__gte']) + '~' + str(filter_data_args['pay_times__lte'])
             else:
-                pay_times = ">" + filter_data_args['pay_times__gte']
+                pay_times = ">" + str(filter_data_args['pay_times__gte'])
 
         if filter_data_args.has_key('pay_money__gte'):
             if filter_data_args.has_key('pay_money__lte'):
                 pay_money = str(filter_data_args['pay_money__gte']) + '~' + str(filter_data_args['pay_money__lte'])
             else:
-                pay_money = ">" + filter_data_args['pay_money__gte']
+                pay_money = ">" + str(filter_data_args['pay_money__gte'])
 
 
 
