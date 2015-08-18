@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
-import re
 from datetime import datetime
+from operator import attrgetter
 
 from mall import models
 from core import search_util
@@ -164,6 +164,37 @@ def filter_products(request, products):
         if models:
             filtered_products.append(product)
     return filtered_products
+
+
+def sorted_products(manager_id, product_categories, reverse):
+    """根据display_index对在售商品进行排序
+
+    Args:
+      products(list): 根据CategoryHasProduct，添加过display的product列表
+    """
+    #获取与category关联的product集合
+    category_ids = (category.id for category in product_categories)
+    relations = models.CategoryHasProduct.objects.filter(
+                    category_id__in=category_ids
+    ).select_related('product')
+
+    for c in product_categories:
+        category_has_products = relations.filter(category_id=c.id)
+        products = [x.product for x in category_has_products]
+        models.Product.fill_display_price(products)
+        models.Product.fill_sales_detail(manager_id,
+                                         products,
+                                         [product.id for product in products])
+        for i in category_has_products:
+            i.product.display_index = i.display_index
+            i.product.join_category_time = i.created_at
+
+        products = sorted(products, key=attrgetter('shelve_type', 'display_index'))
+        products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
+
+        c.products = products
+    return product_categories
+
 
 # TODO: update models ref
 #
