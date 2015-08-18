@@ -31,7 +31,7 @@ def step_terminate_promotion(context, user, action):
     """
     promotions = json.loads(context.text)
     promotion_names = [promotion['name'] for promotion in promotions]
-    __update_promotion_status(context, action, promotion_names)
+    __update_promotion_status(context, promotion_names, action)
 
 
 @when(u"{user}创建积分应用活动")
@@ -255,12 +255,13 @@ def step_impl(context, user, type):
     for promotion in expected:
         if type == 'integral_sale':
             promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
-        if promotion['is_permanant_active'] != 'true' and promotion.get('start_date') and promotion.get('end_date'):
-            promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
-            promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
-        else:
-            promotion.pop('start_date')
-            promotion.pop('end_date')
+        if promotion.has_key('start_date') and promotion.has_key('end_date'):
+            if promotion['is_permanant_active'] == 'true':
+                promotion.pop('start_date')
+                promotion.pop('end_date')
+            else:
+                promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
+                promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
         if promotion.get('created_at'):
             promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
     bdd_util.assert_list(expected, actual)
