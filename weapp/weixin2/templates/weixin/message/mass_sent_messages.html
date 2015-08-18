@@ -46,7 +46,6 @@
                 <th>消息内容</th>
                 <th>消息概况</th>
                 <th>时间</th>
-                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -90,13 +89,6 @@
                     </span>
                 </td>
                 <td class="xui-massSentTableOtherColumn c9">${message.created_at}</td>
-                <td class="xui-massSentTableOtherColumn">
-                    {{if message.message_type == 1}}
-                        {{if message.status != 'delete'}}
-                            <a class="xa-deleteMessage" data-type="${message.message_type}" data-msg-id="${message.msg_id}" href="javascript:void(0);">删除</a>
-                        {{/if}}
-                    {{/if}}
-                </td>
             </tr>
             {{/each}}
         </tbody>

@@ -4,14 +4,14 @@
 
 {% block content-panel %}
 <div class="xui-massSendingMessage">
-    {% if mode == 'mass_sending' %} 
-        <ul class="breadcrumb">
-            <li>您当前所在位置</li>
-            <li>
-                <a href="/new_weixin/mass_sending_messages/">消息互动</a>
-            </li>
-            <li class="">群发消息</li>
-        </ul>
+    <ul class="breadcrumb">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/new_weixin/mass_sending_messages/">消息互动</a>
+        </li>
+        <li class="">群发消息</li>
+    </ul>
+    {% if mode == 'mass_sending' %}
 
         <ul class="xui-messageNav">
             <li class="messageNavActive messageNavLi">
@@ -21,11 +21,10 @@
                 <a class="messageNavLiA" href="/new_weixin/mass_sent_messages/">已发送</a>
             </li>
         </ul>
-            
+
         <div class="xui-massageSendingHead">
             群发对象
             <input type="radio" value="member" name="group_type" checked="checked" class="ml35 pr" /><span class="ml5">商城会员</span>
-            <input type="radio" value="fans" name="group_type" class="ml35 pr"/><span class="ml5">微信粉丝</span>
         </div>
 
         <div class="xui-massageSendingGroup">
@@ -38,12 +37,6 @@
             </select>
         </div>
     {% else %}
-        <ul class="breadcrumb">
-            <li>您当前所在位置</li>
-            <li><a href="/new_weixin/materials/">高级管理</a></li>
-            <li class="">粉丝管理</li>
-        </ul>
-
         <ul class="xui-messageNav">
             <li class="messageNavActive messageNavLi">
                 <a class="messageNavLiA" href="javascript:void(0);">新建群发消息</a>
@@ -56,9 +49,35 @@
         <div class="xui-massageSendingHead">
             消息发送给：
             {% if mode == 'filter' %}
-                <span class="xui-sendTargetGroup ml5">分组({{category}})</span>
-                <span class="xui-sendTargetGroup ml5">关注状态({{status}})</span>
-                <span class="xui-sendTargetGroup ml5">性别({{sex}})</span>
+                <span class="xui-sendTargetGroup ml5">会员分组({{category}})</span>
+                <span class="xui-sendTargetGroup ml5">会员等级({{grade}})</span>
+                <span class="xui-sendTargetGroup ml5">会员状态({{status}})</span>
+                <span class="xui-sendTargetGroup ml5">会员来源({{source}})</span>
+                {% if last_pay_time %}
+                    <span class="xui-sendTargetGroup ml5">上次购买时间({{last_pay_time}})
+                    </span>
+                {% endif %}
+                {% if unit_price %}
+                    <span class="xui-sendTargetGroup ml5">平均客单价({{unit_price}})
+                    </span>
+                {% endif %}
+                {% if created_at %}
+                    <span class="xui-sendTargetGroup ml5">关注时间({{created_at}})
+                    </span>
+                {% endif %}
+                {% if pay_money %}
+                    <span class="xui-sendTargetGroup ml5">消费总额({{pay_money}})
+                    </span>
+                {% endif %}
+                {% if pay_times %}
+                    <span class="xui-sendTargetGroup ml5">购买次数({{pay_times}})
+                    </span>
+                {% endif %}
+                {% if integral %}
+                    <span class="xui-sendTargetGroup ml5">积分范围({{integral}})
+                    </span>
+                {% endif %}
+
                 <div class="hidden xa-sendMemberIds" data-send-member-ids={{member_ids_str}}></div>
             {% else %}
                 {% for member in member_list %}
@@ -69,10 +88,10 @@
 
         <div class="xui-massageSendingGroup xa-changeSendNumber" data-send-number={{number}}>
             <span class="xa-changeSendText">准备向{{number}}人发送信息</span>
-            <a href="../../new_weixin/fanses">重新筛选</a>
+            <a href="../../member/members/get/">重新筛选</a>
         </div>
     {% endif %}
-    
+
     <div class="w600" id="edit-message-panel"></div>
     <div class="xui-massageSendingCount pr"><i></i>本月已群发{{sent_count}}条消息</div>
 
@@ -127,7 +146,7 @@ var MassSendingMessagePage = Backbone.View.extend({
 $(document).ready(function() {
     //设置默认选中商城会员按钮，避免火狐浏览器自动记忆
     $('input[type="radio"][name="group_type"][value="member"]').attr("checked",true);
-    
+
     var view = new MassSendingMessagePage({
         el: '.xui-massSendingMessage'
     });
@@ -197,7 +216,7 @@ $(document).ready(function() {
     $('.xa-sendTargetNames').hover(
         function(){
             $(this).append('<i class="xa-sendTargetNamesDelete"></i>')
-            
+
         },
         function(){
             $('.xa-sendTargetNames i').css("display", "none");
