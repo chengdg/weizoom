@@ -138,8 +138,8 @@
 			data-args='{"status":"{{status}}"}'
 			data-disable-header-select="true"
 		></div>
-		<div class="dropdown xui-operation update_dropdown">
-			<div class="pr">
+		<div class="dropdown xui-operation update_dropdown pa"  style="bottom:0px;">
+			<div >
 				<span class="checkbox" style="display:inline-block;margin:0 15px 0 13px;">
 					<label class="xa-selectAll" for="all">
 							<input type="checkbox" style="top:14px" id="all">
@@ -293,13 +293,15 @@
 						已取消
 						</div>
 					{{/if}}
-					<a href="/member/member_detail/edit/?id=${ member.id }">
+					<a target="_blank" href="/member/member_detail/edit/?id=${ member.id }">
 						<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
 					</a>
 				</div>
 				<div class="column_block">
 					<div>
-					<a href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+
+					<a class="xui-Blue" href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+
 				</div>
 			</td>
 			<td>
@@ -331,7 +333,7 @@
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
 			<td>
-				<div class="centerAlign">
+				<div class="centerAlign auto_wrap_no_flow" >
 					{{each(i,tag) tags}}
 			          ${tag.name}
 			         {{/each}}
@@ -359,7 +361,7 @@
 					<div class="cb"></div>
 				</div>
 			<div>
-				<a href="/new_weixin/realtime_messages_detail/?session_id=${ member.session_id }"  {{if member.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看聊天记录</a>
+				<a target="_blank" href="/new_weixin/realtime_messages_detail/?session_id=${ member.session_id }"  {{if member.session_id == -1}}title="暂无对话" onclick="return false"{{/if}}>查看聊天记录</a>
 			</td>
 		</tr>
 		{{/each}}
@@ -724,7 +726,7 @@ $(document).ready(function() {
 	var status = '{{status}}';
 	if(status === '1') {
 		_.delay(function(){
-			$('.xa-more-filter').trigger('click');
+			//$('.xa-more-filter').trigger('click');
 			$("#status").val("1");
 		}, 500);
 

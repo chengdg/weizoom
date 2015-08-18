@@ -256,11 +256,11 @@ W.view.member.memberFilterView = Backbone.View.extend({
         if ($('.more-filter').is(":hidden")){
             $('.more-filter').removeClass('hidden');
              $('.more-filter').show();
-             $('.xa-more-filter').text('>>切换到简单查询');
+             $('.xa-more-filter').text('>>收起');
         } else {
             $('.more-filter').addClass('hidden');
             $('.more-filter').hide();
-            $('.xa-more-filter').text('>>切换到高级查询');
+            $('.xa-more-filter').text('>>展开');
         }
     },
     getTemplate: function() {
