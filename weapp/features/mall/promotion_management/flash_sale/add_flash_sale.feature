@@ -143,7 +143,7 @@ Background:
 
 #该场景在new_promotion_product_search.feature中覆盖
 Scenario: 0 选取起购数量大于1的商品，创建限时抢购活动（起购数量大于1的商品不能参与限时抢购）
-	Given jobs登录系统
+	#Given jobs登录系统
 	#When jobs创建限时抢购活动
 	#新建限时抢购页面，商品查询弹窗中的数据列表中不存在'商品0'
 
