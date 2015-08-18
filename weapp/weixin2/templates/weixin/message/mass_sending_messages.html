@@ -53,10 +53,6 @@
                 <span class="xui-sendTargetGroup ml5">会员等级({{grade}})</span>
                 <span class="xui-sendTargetGroup ml5">会员状态({{status}})</span>
                 <span class="xui-sendTargetGroup ml5">会员来源({{source}})</span>
-                {% if last_pay_time %}
-                    <span class="xui-sendTargetGroup ml5">上次购买时间({{last_pay_time}})
-                    </span>
-                {% endif %}
                 {% if unit_price %}
                     <span class="xui-sendTargetGroup ml5">平均客单价({{unit_price}})
                     </span>
@@ -73,12 +69,16 @@
                     <span class="xui-sendTargetGroup ml5">购买次数({{pay_times}})
                     </span>
                 {% endif %}
+                {% if last_pay_time %}
+                    <span class="xui-sendTargetGroup ml5">最后购买时间({{last_pay_time}})
+                    </span>
+                {% endif %}
                 {% if integral %}
                     <span class="xui-sendTargetGroup ml5">积分范围({{integral}})
                     </span>
                 {% endif %}
                 {% if last_message_time %}
-                    <span class="xui-sendTargetGroup ml5">积分范围({{last_message_time}})
+                    <span class="xui-sendTargetGroup ml5">最后对话时间({{last_message_time}})
                     </span>
                 {% endif %}
 

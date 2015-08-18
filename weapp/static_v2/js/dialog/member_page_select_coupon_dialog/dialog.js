@@ -139,7 +139,7 @@ W.dialog.mall.MemberPageSelectCouponDialog = W.dialog.Dialog.extend({
                     $cur_up.addClass("xui-btn");
                 }
             }else{
-                if((cur_count+1)*this.member_count < max_count){
+                if((cur_count+1)*this.member_count <= max_count){
                     $cur_up.prevAll('.xa-down').removeClass("xui-btn");
                     $cur_up.prevAll('.xa-counterText').text(cur_count+1);
                 }
