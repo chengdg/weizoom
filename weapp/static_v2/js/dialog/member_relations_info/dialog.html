@@ -9,7 +9,7 @@
 		</div>
 		<div class="modal-body" style="padding:0 20px;">
 			
-			<div class="form-inline" style="min-height:420px;">
+			<div class="form-inline">
 				<table class="xa-logTable mt10 w">
 				<div
 					data-ui-role="advanced-table"
@@ -39,58 +39,63 @@
 				<thead style="background:#c8d2e5;">
 				<tr class="">
 					<th width="180">会员</th>
-					<th width="90" class="xui-blue">消费金额</th>
-					<th width="100" class="xui-blue">积分</th>
+					<th width="90" class="xui-colorBlue">消费金额</th>
+					<th width="100" class="xui-colorBlue">积分</th>
 					<th width="100">来源</th>
 					{{if data.only_fans==0}}
 						<th width="150">推荐人</th>
 					{{/if}}
-					<th width="90" class="xui-blue">时间</th>
+					<th width="90" class="xui-colorBlue">时间</th>
 				</tr>
 				</thead>
 
 				<tbody>
-					{{each(i, log) items}}
-					<tr data-id="${log.id}">
-						<td>
-							<div style="display:table ;line-height:42px;">
-								<a target="_blank" href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
-								<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
-								</a>
-								<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">
-									<a target="_blank" href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
-									<div>${grade_name}</div>
-								</div>
-							</div>
-						</td>
-					    <td>${log.pay_money} </td>
-					    <td class="text_nowrap" style="max-width:150px;" title="${log.reason}">${log.integral} </td>
-					    <td style="color:#333333;">
-					    		<span><span style="">
-								{{if log.source == 0}}
-									直接关注
-								{{/if}}
-								{{if log.source == 1}}
-									推广扫码
-								{{/if}}
-								{{if log.source == 2}}
-									会员分享
-								{{/if}}
-								{{if log.source == -1}}
-									直接关注
-								{{/if}}
-								</span>
-							</span>
-					    </td>
+				 	{{if items.length}}
+						{{each(i, log) items}}
+							<tr data-id="${log.id}">
+								<td>
+									<div style="display:table ;line-height:42px;">
+										<a target="_blank" href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
+										<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
+										</a>
+										<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">
+											<a target="_blank" href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
+											<div>${grade_name}</div>
+										</div>
+									</div>
+								</td>
+							    <td>${log.pay_money} </td>
+							    <td class="text_nowrap" style="max-width:150px;" title="${log.reason}">${log.integral} </td>
+							    <td style="color:#333333;">
+							    		<span><span style="">
+										{{if log.source == 0}}
+											直接关注
+										{{/if}}
+										{{if log.source == 1}}
+											推广扫码
+										{{/if}}
+										{{if log.source == 2}}
+											会员分享
+										{{/if}}
+										{{if log.source == -1}}
+											直接关注
+										{{/if}}
+										</span>
+									</span>
+							    </td>
 
-					    {{if data.only_fans==0}}
-							<td >
-								<a target="_blank" href="/member/member_detail/edit/?id=${log.father_id}" >${log.father_name}</a>
-							</td>
-						{{/if}}
-					    <td >${log.created_at} </td>
-					</tr>
+							    {{if data.only_fans==0}}
+									<td >
+										<a target="_blank" href="/member/member_detail/edit/?id=${log.father_id}" >${log.father_name}</a>
+									</td>
+								{{/if}}
+							    <td >${log.created_at} </td>
+							</tr>
 					{{/each}}
+					{{else}}
+						<tr rowspan='2' ><td colspan='5' class="h130 xui-fontBold xui-fontGary" >暂无数据</td></tr>
+					{{/if }}
+
 					</tbody>
 			</table>
 	

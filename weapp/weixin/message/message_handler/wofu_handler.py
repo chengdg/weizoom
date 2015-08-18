@@ -43,7 +43,7 @@ class WoFuHandler(KeywordHandler):
 		response = None
 		response_rule = None
 		response_content = None
-		if message.msgType == WeixinMessageTypes.TEXT and user_profile.user_id in [151,570]:
+		if message.msgType == WeixinMessageTypes.TEXT and user_profile.user_id in [154,155,153,43]:
 			content = message.content
 			print '--------------111111',message, message.content,content.strip().isdigit(), message.fromUserName
 			if content and content.strip().isdigit() and len(content.strip()) == 11:
@@ -69,13 +69,13 @@ class WoFuHandler(KeywordHandler):
 										wo_fu.save()
 										WoFuLog.objects.create(member_id=member.id, wofu=wo_fu)
 										if wo_fu.level == 1:
-											response_content = u'您的订购就是窝夫小子的人生，我们一辈子努力的事儿，就是让您订上一款蛋糕，感谢时空变换中您依旧相伴10余年，虽未谋面，但我们已十分熟悉，老朋友，为感谢您一直都在，窝夫小子刚刚上架的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击优惠券即可39元购买！'
+											response_content = u'您的订购就是窝夫小子的人生，我们一辈子努力的事儿，就是让您订上一款蛋糕，感谢时空变换中您依旧相伴10的余年，虽未谋面，但我们已十分熟悉，老朋友，为感谢您一直都在，窝夫小子刚刚上架的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击优惠券即可购买！'
 										elif wo_fu.level == 2:
-											response_content = u'您的订购就是窝夫小子的人生，我们一辈子努力的事儿，就是让您订上一款蛋糕，感谢时空变换中您依旧相伴10余年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢你一直都在，窝夫小子刚刚上架的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击优惠券即可69元购买！'
+											response_content = u'您的订购就是窝夫小子的人生，我们一辈子努力的事儿，就是让您订上一款蛋糕，感谢时空变换中您依旧相伴10的余年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢你一直都在，窝夫小子刚刚上架的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击优惠券即可购买！'
 										elif wo_fu.level == 3:
-											response_content = u'您的订购就是窝夫小子的人生，我们一辈子努力的事儿，就是让您订上一款蛋糕，感谢时空变换中您依旧相伴的10余年，虽未谋面，但您的人生已经留下窝夫的痕迹，为感谢您的支持，窝夫小子刚刚上架的新宠“一盒甜品”的优惠券已躺在您的个人中心了，点击优惠券即可99元购买！'
-									# 	elif wo_fu.level == 4:
-									# 		response_content = u'虽未谋面，但您的人生已经留下窝夫小子的痕迹，作为新朋友，多想看看首次品尝后您幸福的笑容，您的一个订单，就是窝夫小子默默努力一辈子的事情，绝对不能懈怠的决心让我们坚持品质超过10余年，为感谢您对窝夫小子的支持，窝夫小子刚刚上架的新宠“一盒甜品”欢迎尝鲜价选购！'
+											response_content = u'您的订购就是窝夫小子的人生，我们一辈子努力的事儿，就是让您订上一款蛋糕，感谢时空变换中您依旧相伴的10年，虽未谋面，但您的人生已经留下窝夫的痕迹，为感谢您的支持，窝夫小子刚刚上架的新宠“一盒甜品”的优惠券已躺在您的个人中心了，点击优惠券即可购买！'
+										elif wo_fu.level == 4:
+											response_content = u'虽未谋面，但您的人生已经留下窝夫小子的痕迹，作为新朋友，多想看看首次品尝后您幸福的笑容，您的一个订单，就是窝夫小子默默努力一辈子的事情，绝对不能懈怠的决心让我们坚持品质超过10余年，为感谢您对窝夫小子的支持，窝夫小子刚刚上架的新宠“一盒甜品”欢迎尝鲜价选购！'
 									else:
 										response_content = error_msg
 								else:

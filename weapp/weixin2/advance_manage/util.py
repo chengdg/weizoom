@@ -50,7 +50,6 @@ def get_members(request, filter_value, sort_attr):
 
 def new_get_members(request, filter_value):
     filter_data_args = {}
-    last_message_time = {}
     filter_data_args['webapp_id'] = request.user_profile.webapp_id
     filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
     filter_data_args['is_for_test'] = False
@@ -119,8 +118,6 @@ def new_get_members(request, filter_value):
                 session_filter['mpuser__owner_id'] = request.manager.id
                 session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
                 session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
-                last_message_time['member_latest_created_at__gte'] = val1
-                last_message_time['member_latest_created_at__lte'] = val2
 
                 opids = get_opid_from_session(session_filter)
                 session_member_ids = module_api.get_member_ids_by_opid(opids)
@@ -132,5 +129,4 @@ def new_get_members(request, filter_value):
                     filter_data_args['id__in'] = session_member_ids
 
     members = Member.objects.filter(**filter_data_args)
-    print last_message_time, ">>>>>>>>>>>>>>"
-    return members, filter_data_args, last_message_time
+    return members, filter_data_args, session_filter
