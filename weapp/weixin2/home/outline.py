@@ -33,7 +33,7 @@ class Outline(resource.Resource):
 		owner_id = request.user.id
 		webapp_id = request.user_profile.webapp_id
 
-		member_count = Member.objects.filter(webapp_id=webapp_id, is_for_test=False).count()
+		member_count = Member.count(webapp_id)
 
 		yesterday_added_count, yesterday_net_count = _get_yesterday_count(owner_id)
 

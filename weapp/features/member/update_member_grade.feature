@@ -1,4 +1,5 @@
 # __author__ : "冯雪静"
+# __edite__ : "benchi" 加标签
 Feature: 更新会员等级
 	Jobs能管理会员管理中的会员等级列表
 
@@ -29,7 +30,7 @@ Background:
 		}]
 		"""
 
-@mall2
+@mall2 @member @meberGrade
 Scenario: 1 更新已存在的会员等级
 	jobs添加会员等级后，可以更新等级
 
@@ -63,7 +64,7 @@ Scenario: 1 更新已存在的会员等级
 		}]
 		"""
 
-@mall2
+@mall2 @member @meberGrade
 Scenario: 2 更新手动升级会员等级为自动升级会员等级
 	jobs添加手动升级的会员等级后，可以更新为自动升级的会员等级
 
@@ -138,7 +139,7 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 		}]
 		"""
 
-@mall2
+@mall2 @member @meberGrade
 Scenario: 3 更新自动升级会员等级为手动升级会员等级
 	jobs添加自动升级的会员等级后，可以更新为自动升级的会员等级
 

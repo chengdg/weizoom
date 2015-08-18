@@ -289,6 +289,6 @@ Scenario: 获得商铺首页的会员数量信息
 		"""
 		{
 			"member_count_for_yesterday": 2,
-			"total_member_count": 3
+			"total_member_count": 6
 		}
 		"""
