@@ -23,9 +23,107 @@
 	<div class="xa-productFilterView xui-filterPanel"></div>
 	{% if counts %}
 	<div class="panel panel-default mt20 xb-rightPanel pr">
-		<div class="panel-heading" style="height:40px">
-			<!-- <a class="xui-tipBox fr">
-			如何对数据排序<b class="xui-tip">?</b></a> -->
+		<div class="panel-heading dropdown xui-operation" style="height:40px">
+			<div class="xui-operationWrap">
+				<span class="checkbox" style="display:inline-block;margin:0 15px 0 15px;">
+					<label  for="all">
+						<input type="checkbox" id="xa-selectAll" class="xa-select" style="top:14px" id="all">
+						全选
+					</label>
+				</span>
+				<div class="pr xui-inlineblock ">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						群发消息</span>
+				   	</a>
+				   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
+								给选中的人发消息（已跑路除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=" xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
+								给筛选出来的所有人发消息（已跑路除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
+				&nbsp;&nbsp;
+				
+
+				<div class="pr xui-inlineblock mr10">
+					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						修改等级
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="" type="button"  href="javascript:void(0);">
+								给选中的人修改等级
+						   	</a>
+						   	<ul class="dropdown-menu xui-dropbox" style="min-height:29px;">
+						   		{% for grade in grades %}
+						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="selected">{{grade.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=""  type="button"  href="javascript:void(0);" >
+								给筛选出来的所有人修改等级
+						   	</a>
+						   	<ul class="dropdown-menu xui-dropbox" {% if grades|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
+						   		{% for grade in grades %}
+						   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="all">{{grade.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+					    </li>
+					</ul>
+				</div>
+
+				<div class="pr xui-inlineblock mr10">
+					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						添加分组
+				   	</a>
+				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="" type="button"  href="javascript:void(0);">
+								给选中的人修改等级
+						   	</a>
+						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
+						   		{% for tag in user_tags %}
+						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=""  type="button"  href="javascript:void(0);" >
+								给筛选出来的所有人修改等级
+						   	</a>
+						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
+						   		{% for tag in user_tags %}
+						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		{% endfor %}
+						   	</ul>
+					    </li>
+					</ul>
+				</div>
+				<div class="pr xui-inlineblock mr10">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
+						发优惠券</span>
+				   	</a>
+				   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class=" xa-select-member" type="button"  href="javascript:void(0);">
+								给选中的人发优惠券（已跑路除外）</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=" xa-all-member"  type="button"  href="javascript:void(0);" >
+								给筛选出来的所有人发优惠券（已跑路除外）</span>
+						   	</a>
+					    </li>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<div
 			data-ui-role="advanced-table"
@@ -158,45 +256,10 @@
 {% block js %}
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
-	<div class="pa w pr30" style="top:10px;left:15px;line-height:30px;">
-		<div class="pr xui-inlineblock">
-			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
-				群发消息</span>
-		   	</a>
-		   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
-			    <li class="dropdown-submenu">
-			    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
-						给选中的人发消息（已跑路除外）</span>
-				   	</a>
-			    </li>
-			    <li class="dropdown-submenu">
-			    	<a class=" xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-						给筛选出来的所有人发消息（已跑路除外）</span>
-				   	</a>
-			    </li>
-			</ul>
-		</div>
-		&nbsp;&nbsp;
-		<div class="pr xui-inlineblock ">
-			<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
-				发优惠券</span>
-		   	</a>
-		   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
-			    <li class="dropdown-submenu">
-			    	<a class=" xa-select-member" type="button"  href="javascript:void(0);">
-						给选中的人发优惠券（已跑路除外）</span>
-				   	</a>
-			    </li>
-			    <li class="dropdown-submenu">
-			    	<a class=" xa-all-member"  type="button"  href="javascript:void(0);" >
-						给筛选出来的所有人发优惠券（已跑路除外）</span>
-				   	</a>
-			    </li>
-			</ul>
-		</div>
-		<label class="fr">全部会员：${data.total_count}人</label>
+	<div class="w500 pa pr30 " style="top:10px;left:500px;line-height:30px;">		
+		<label class="fr">筛选结果：${data.total_count}人</label>
 
-		<a href="javascript:void(0);" class="btn fr  btn-default xa-export ml20">导出结果</a>
+		<a href="javascript:void(0);" class="btn fr  btn-default xa-export mr20 ">导出结果</a>
 
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
@@ -279,7 +342,7 @@
 						<a href="javascript:void(0);" class="xa-update-tag" data-id="${member.id}">调分组</a>
 					</div>
 					<div class="xui-right">
-						<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">调等级</a>
+						<a href="javascript:void(0);" class="xa-update-grade" data-id="${member.id}">设等级</a>
 					</div>
 					<div class="cb"></div>
 				</div>
@@ -288,7 +351,7 @@
 						<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
 					</div>
 					<div class="xui-right">
-						<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">调积分</a></br>
+						<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">加积分</a></br>
 					</div>
 					<div class="cb"></div>
 				</div>
@@ -309,11 +372,12 @@ $(document).ready(function() {
 	$('.update_dropdown').delegate('#all', 'click', function(event){
 		var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');
-        $('tbody .xa-select,.xa-selectAll').prop('checked', isChecked);
+        $('tbody .xa-select,.xa-selectAll,#xa-selectAll').prop('checked', isChecked);
 
 	});
 
-	$('.panel-body').delegate('.xa-selectAll', 'click', function(event){
+	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
+		
 		var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');
         $('tbody .xa-select,#all').prop('checked', isChecked);
