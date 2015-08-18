@@ -373,6 +373,9 @@ textarea{resize:none}
 .xui-colorRed{
 	color: red;
 }
+.xui-colorBlue{
+	color:#1262b7!important;
+}
 .cRed{
 	color: #CF0404;
 }
