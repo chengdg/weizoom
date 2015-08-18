@@ -113,7 +113,7 @@ Background:
 			"name": "商品4限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品4"],
+			"product_name": ["商品4"],
 			"member_grade": "全部",
 			"count_per_purchase": 2,
 			"promotion_price": 90
@@ -121,7 +121,7 @@ Background:
 			"name": "商品5限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品5"],
+			"product_name": ["商品5"],
 			"member_grade": "全部",
 			"promotion_price": 90,
 			"limit_period": 1
@@ -133,7 +133,7 @@ Background:
 			"name": "商品6买二赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品6"],
+			"product_name": ["商品6"],
 			"premium_products": 
 			[{
 				"name": "赠品6",
@@ -145,7 +145,7 @@ Background:
 			"name": "商品7买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品7"],
+			"product_name": ["商品7"],
 			"premium_products":
 			[{
 				"name": "赠品7",
@@ -241,7 +241,7 @@ Scenario: 1 选取普通商品，创建统一设置积分应用活动
 			"name": "商品1积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"is_permanant_active": false,
 			"discount": 50,
 			"discount_money": 50.0
@@ -268,7 +268,7 @@ Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 			"name": "商品2积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -303,7 +303,7 @@ Scenario: 3 选取有会员价的商品，创建分级设置积分应用活动�
 			"name": "商品3积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -338,7 +338,7 @@ Scenario: 4 选取无会员价且已参与'限时抢购'活动的商品，创建
 			"name": "商品4积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -374,7 +374,7 @@ Scenario: 5 选取有会员价且已参与'限时抢购'活动的商品，创建
 			"name": "商品5积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品5"],
+			"product_name": "商品5",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -405,7 +405,7 @@ Scenario: 6 选取无会员价且已参与'买赠'活动的商品，创建积分
 			"name": "商品6积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品6"],
+			"product_name": "商品6",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -436,7 +436,7 @@ Scenario: 7 选取有会员价且已参与'买赠'活动的商品，创建积分
 			"name": "商品7积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品7"],
+			"product_name": "商品7",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -467,7 +467,7 @@ Scenario: 8 选取无会员价且已设置单品券的商品，创建积分应�
 			"name": "商品8积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品8"],
+			"product_name": "商品8",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -498,7 +498,7 @@ Scenario: 9 选取有会员价且已设置单品券的商品，创建积分应�
 			"name": "商品9积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品9"],
+			"product_name": "商品9",
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -528,7 +528,7 @@ Scenario: 10 创建积分应用活动，必填字段的校验
 			"name": "",
 			"start_date": "",
 			"end_date": "",
-			"products": "",
+			"product_name": "",
 			"is_permanant_active": false,
 			"rules": 
 				[{

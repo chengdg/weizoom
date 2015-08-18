@@ -56,7 +56,7 @@ Background:
 			"name": "限时抢购活动",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["限时抢购"],
+			"product_name": ["限时抢购"],
 			"member_grade": "全部会员",
 			"count_per_purchase": 2,
 			"promotion_price": 90.00
@@ -68,7 +68,7 @@ Background:
 			"name": "买赠活动",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["买赠"],
+			"product_name": ["买赠"],
 			"premium_products":
 			[{
 				"name": "赠品",
@@ -84,7 +84,7 @@ Background:
 			"name": "积分应用活动",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["积分应用"],
+			"product_name": "积分应用",
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade_name": "全部会员",

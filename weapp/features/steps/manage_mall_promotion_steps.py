@@ -26,43 +26,52 @@ def step_terminate_promotion(context, user, promotion_name):
 @when(u"{user}创建积分应用活动")
 def step_impl(context, user):
     #webapp_id = context.client.user.profile.webapp_id
-    promotions = json.loads(context.text)
+    if context.table:
+        # 处理tables
+        promotions = context.table
+    else:
+        promotions = json.loads(context.text)
     if type(promotions) == dict:
+        # 处理单个积分应用活动创建
         promotions = [promotions]
 
     for promotion in promotions:
-        product_ids = []
-        for product in promotion['products']:
-            db_product = ProductFactory(name=product)
-            product_ids.append({
-                'id': db_product.id
-            })
+        db_product = ProductFactory(name=promotion['product_name'])
+        product_ids = [{
+            'id': db_product.id
+        }]
         if 'rules' in promotion:
-            for rule in promotion['rules']:
+            rules = promotion['rules']
+            for rule in rules:
                 if rule.has_key('member_grade'):
                     rule['member_grade_id'] = __get_member_grade(rule, context.webapp_id)
         else:
             rules = [{
                 "member_grade_id": -1,
-                "discount": promotion['discount'],
-                "discount_money": promotion['discount_money']
+                "discount": promotion.get('discount', 100),
+                "discount_money": promotion.get('discount_money', 0.0)
             }]
         data = {
             'name': promotion['name'],
             'promotion_title': promotion.get('promotion_title', ''),
             'member_grade': __get_member_grade(promotion, context.webapp_id),
-            'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
-            'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
             'products': json.dumps(product_ids),
-            'rules': json.dumps(promotion['rules']) if 'rules' in promotion else json.dumps(rules),
+            'rules': json.dumps(rules),
             'discount': promotion.get('discount', 100),
             'discount_money': promotion.get('discount_money', 0.0),
             'integral_price': promotion.get('integral_price', 0.0),
-            'is_permanant_active': "true" if promotion.get('is_permanant_active', False) else "false",
+            'is_permanant_active': promotion['is_permanant_active'] if promotion.get('is_permanant_active', False) else "false",
         }
-
+        if data['is_permanant_active'] != 'true':
+            data['start_date'] = bdd_util.get_datetime_no_second_str(promotion['start_date']),
+            data['end_date'] = bdd_util.get_datetime_no_second_str(promotion['end_date']),
+        # print 'jz-----2', data['start_date'], data['end_date'], data['is_permanant_active']
         url = '/mall2/api/integral_sale/?_method=put'
         response = context.client.post(url, data)
+        if promotion.get('created_at'):
+            models.Promotion.objects.filter(
+            owner_id=context.webapp_owner_id,
+            name=data['name']).update(created_at=bdd_util.get_datetime_str(promotion['created_at']))
         bdd_util.assert_api_call_success(response)
 
 
@@ -172,6 +181,11 @@ def step_create_flash_sales(context, user):
         bdd_util.assert_api_call_success(response)
 
 
+@when(u"{user}设置查询条件")
+def step_impl(context, user):
+    context.query_param = json.loads(context.text)
+
+
 @then(u"{user}获取{type}活动列表")
 def step_impl(context, user, type):
     if type == u"限时抢购":
@@ -182,7 +196,26 @@ def step_impl(context, user, type):
         type = "integral_sale"
     # elif type == u"优惠券":
     #     type = "coupon"
+    print 'jz------', context.query_param
     url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % type
+    if hasattr(context, 'query_param'):
+        if context.query_param.get('product_name'):
+            url += '&name=' + context.query_param['product_name']
+        if context.query_param.get('bar_code'):
+            url += '&barCode='+ context.query_param['bar_code']
+        if context.query_param.get('start_date'):
+            url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
+        if context.query_param.get('end_date'):
+            url += '&endDate='+ bdd_util.get_datetime_str(context.query_param['end_date'])[:16]
+        if context.query_param.get('status', u'全部') != u'全部':
+            if context.query_param['status'] == u'未开始':
+                status = 1
+            elif context.query_param['status'] == u'进行中':
+                status = 2
+            elif context.query_param['status'] == u'已结束':
+                status = 3
+            url += '&promotionStatus=%s' % status
+    print 'jz-----4', url
     response = context.client.get(url)
     actual = json.loads(response.content)['data']['items']
 
@@ -190,6 +223,9 @@ def step_impl(context, user, type):
         if type == 'integral_sale':
             promotion['product_name'] = promotion['product']['name']
             promotion['product_price'] = promotion['product']['display_price']
+            promotion['bar_code'] = promotion['product']['bar_code']
+            promotion['is_permanant_active'] = promotion['detail']['is_permanant_active']
+            promotion['is_permanant_active'] = 'true' if promotion['is_permanant_active'] else 'false'
             detail = promotion['detail']
             if len(detail['rules']) == 1 and detail['rules'][0]['member_grade_id'] == -1:
                 rule = detail['rules'][0]
@@ -198,7 +234,21 @@ def step_impl(context, user, type):
             else:
                 promotion['discount'] = detail['discount'].replace(' ', '')
                 promotion['discount_money'] = detail['discount_money'].replace(' ', '')
-    expected = json.loads(context.text)
+    if context.table:
+        expected = []
+        for promotion in context.table:
+            promotion = promotion.as_dict()
+            if promotion['is_permanant_active'] != 'true':
+                promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
+                promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
+            else:
+                promotion.pop('start_date')
+                promotion.pop('end_date')
+            promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
+            # print 'jz-----3', promotion['start_date'][0], promotion['end_date'][0]
+            expected.append(promotion)
+    else:
+        expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
 

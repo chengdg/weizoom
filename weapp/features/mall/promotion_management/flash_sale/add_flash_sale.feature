@@ -118,7 +118,7 @@ Background:
 			"name": "商品4积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade_name": "全部会员",
@@ -129,7 +129,7 @@ Background:
 			"name": "商品5积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品5"],
+			"product_name": ["商品5"],
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade_name": "全部会员",

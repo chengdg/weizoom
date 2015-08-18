@@ -114,7 +114,7 @@ Background:
 			"name": "商品1积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部",
@@ -125,7 +125,7 @@ Background:
 			"name": "商品3积分应用",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"is_permanant_active": true,
 			"rules": [{
 				"member_grade": "全部",
@@ -136,7 +136,7 @@ Background:
 			"name": "商品5积分应用",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"products": ["商品5"],
+			"product_name": "商品5",
 			"is_permanant_active": true,
 			"rules": [{
 				"member_grade": "全部",
@@ -291,7 +291,7 @@ Scenario: 5 购买单个积分折扣商品，积分活动还未开始
 			"name": "商品4积分应用",
 			"start_date": "1天后",
 			"end_date": "2天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部",
@@ -344,7 +344,7 @@ Scenario: 6 购买单个积分折扣商品，积分活动已结束，积分活�
 			"name": "商品4积分应用",
 			"start_date": "昨天",
 			"end_date": "今天",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部",
@@ -412,7 +412,7 @@ Scenario: 7 购买单个积分折扣商品，积分活动时间已结束，但�
 			"name": "商品4积分应用",
 			"start_date": "2天前",
 			"end_date": "1天前",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": true,
 			"rules": [{
 				"member_grade": "全部",
@@ -501,7 +501,7 @@ Scenario: 9 购买单个,多规格积分折扣商品，积分活动已结束，�
 			"name": "商品5积分应用",
 			"start_date": "昨天",
 			"end_date": "今天",
-			"products": ["商品5"],
+			"product_name": "商品5",
 			"is_permanant_active": true,
 			"rules": [{
 				"member_grade": "全部",
@@ -559,7 +559,7 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 			"name": "商品4积分应用",
 			"start_date": "2天前",
 			"end_date": "1天前",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": true,
 			"rules": [{
 				"member_grade": "全部",
@@ -624,7 +624,7 @@ Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置�
 			"name": "商品11积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品11"],
+			"product_name": "商品11",
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部",
@@ -894,7 +894,7 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			"name": "商品12积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品12"],
+			"product_name": "商品12",
 			"is_permanant_active": false,
 			"rules": 
 			[{
@@ -1151,7 +1151,7 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 			"name": "商品13积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品13"],
+			"product_name": "商品13",
 			"is_permanant_active": false,
 			"rules": 
 			[{
