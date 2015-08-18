@@ -168,12 +168,6 @@ SHOUCAO_ADVANCE_MANAGE_NAV = {
             'need_permissions': []
         },
         {
-            'name': ADVANCE_MANAGE_FANS_NAV,
-            'title': u'粉丝管理',
-            'url': '/new_weixin/fanses/',
-            'need_permissions': []
-        },
-        {
             'name': ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
             'title': u'首草渠道扫码',
             'url': '/new_weixin/channel_qrcode/',
