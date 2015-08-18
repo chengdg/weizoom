@@ -38,13 +38,13 @@ Scenario:限时抢购活动列表查询
 	#空查询、默认查询
 		When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"",
 					"end_date":""
-				}]
+				}
 				"""
 		Then jobs获取限时抢购活动列表
 			|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -59,13 +59,13 @@ Scenario:限时抢购活动列表查询
 		#完全匹配
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"商品5",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"",
 					"end_date":""
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -73,13 +73,13 @@ Scenario:限时抢购活动列表查询
 		#部分匹配
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"商品",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"",
 					"end_date":""
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -93,13 +93,13 @@ Scenario:限时抢购活动列表查询
 		#查询结果为空
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"商 品 2",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"",
 					"end_date":""
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -108,13 +108,13 @@ Scenario:限时抢购活动列表查询
 		#完全匹配
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"1234564",
 					"status":"全部",
 					"start_date":"",
 					"end_date":""
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -123,13 +123,13 @@ Scenario:限时抢购活动列表查询
 		#查询结果为空
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"1234",
 					"status":"全部",
 					"start_date":"",
 					"end_date":""
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -137,13 +137,13 @@ Scenario:限时抢购活动列表查询
 	#促销状态
 		When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"",
 					"status":"已结束",
 					"start_date":"",
 					"end_date":""
-				}]
+				}
 				"""
 		Then jobs获取限时抢购活动列表
 			|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -180,13 +180,13 @@ Scenario:限时抢购活动列表查询
 		#查询活动时间
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"2015-08-01",
 					"end_date":"2015-08-07"
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -194,13 +194,13 @@ Scenario:限时抢购活动列表查询
 
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"2015-05-10",
 					"end_date":"2015-08-10"
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
@@ -210,26 +210,26 @@ Scenario:限时抢购活动列表查询
 		#查询结果为空
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"2015-06-12",
 					"end_date":"2015-08-11"
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
 
 			When jobs设置查询条件
 				"""
-				[{
+				{
 					"product_name":"",
 					"bar_code":"",
 					"status":"全部",
 					"start_date":"2015-08-01",
 					"end_date":"2015-08-07"
-				}]
+				}
 				"""
 			Then jobs获取限时抢购活动列表
 				|    name    | product_name |bar_code   |   status  |  start_date  |   end_date  |
