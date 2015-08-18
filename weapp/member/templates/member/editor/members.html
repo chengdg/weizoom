@@ -49,7 +49,7 @@
 					</ul>
 				</div>
 				&nbsp;&nbsp;
-				
+
 
 				<div class="pr xui-inlineblock mr10">
 					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
@@ -256,7 +256,7 @@
 {% block js %}
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
-	<div class="w500 pa pr30 " style="top:10px;left:500px;line-height:30px;">		
+	<div class="w500 pa pr30 " style="top:10px;left:500px;line-height:30px;">
 		<label class="fr">筛选结果：${data.total_count}人</label>
 
 		<a href="javascript:void(0);" class="btn fr  btn-default xa-export mr20 ">导出结果</a>
@@ -275,7 +275,7 @@
 			
 			<th  class="tx_sortable xui-Blue" style="width:12%" data-sort-attr='created_at' data-init-sort="-created_at" >加入时间&来源</th>
 			<th  style="width:8%">分组</th>
-			
+
 			<th class="" style="width:10%">
 				操作
 			</th>
@@ -325,8 +325,6 @@
 			<td>
 				<div class="centerAlign">${ member.pay_times }</div>
 			</td>
-			
-			
 			<td>
 				<div class="centerAlign">${ member.created_at }</div>
 				{{if member.source == 0}}<div class="">直接关注</div>{{/if}}
@@ -341,7 +339,7 @@
 			         {{/each}}
 			    </div>
 			</td>
-			
+
 			<td>
 			<div>
 				<div class="xui-wraper">
@@ -384,7 +382,7 @@ $(document).ready(function() {
 	});
 
 	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
-		
+
 		var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');
         $('tbody .xa-select,#all').prop('checked', isChecked);
@@ -607,6 +605,7 @@ $(document).ready(function() {
 	                	}
 	                }
 	                if(member_ids.length == 0){
+	                	W.showHint('error', '请先选择会员！');
 			  			return;
 			  		}
 	                showDialogAndIssuingCoupon(member_ids, "");
