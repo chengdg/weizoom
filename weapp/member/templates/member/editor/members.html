@@ -23,7 +23,7 @@
 	<div class="xa-productFilterView xui-filterPanel"></div>
 	{% if counts %}
 	<div class="panel panel-default mt20 xb-rightPanel pr">
-		<div class="panel-heading dropdown xui-operation" style="height:40px">
+		<div class="panel-heading dropdown xui-operation update_dropdown" style="height:40px">
 			<div class="xui-operationWrap">
 				<span class="checkbox" style="display:inline-block;margin:0 15px 0 15px;">
 					<label  for="all">
@@ -86,21 +86,21 @@
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
 					    	<a class="" type="button"  href="javascript:void(0);">
-								给选中的人修改等级
+								给选中的人修改分组
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		<li><a href="javascript:void(0);"  data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=""  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人修改等级
+								给筛选出来的所有人修改分组
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}" data-status="all">{{tag.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -503,6 +503,11 @@ $(document).ready(function() {
 			// 合并筛选条件
 			var dataArgs = JSON.parse(view.getFilterValueByDict(dataView.args));
 			args = _.extend(args, dataArgs);
+		} else {
+			if (post_ids.length == 0){
+				W.getErrorHintView().show('请先选择会员！');
+				return;
+			}
 		}
 	 	if (tag_id && post_ids.length > 0 || status == 'all') {
 	 		W.getApi().call({
@@ -512,7 +517,8 @@ $(document).ready(function() {
 	            args:args,
 	            success: function(data) {
 	                // window.location.reload();
-	                  dataView.reload();
+	                W.showHint('success', "添加分组成功");
+	                dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
