@@ -255,13 +255,12 @@ def step_impl(context, user, type):
     for promotion in expected:
         if type == 'integral_sale':
             promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
-        if promotion.get('start_date') and promotion.get('end_date'):
-            if promotion['is_permanant_active'] != 'true':
-                promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
-                promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
-            else:
-                promotion.pop('start_date')
-                promotion.pop('end_date')
+        if promotion['is_permanant_active'] != 'true' and promotion.get('start_date') and promotion.get('end_date'):
+            promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
+            promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
+        else:
+            promotion.pop('start_date')
+            promotion.pop('end_date')
         if promotion.get('created_at'):
             promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
     bdd_util.assert_list(expected, actual)
