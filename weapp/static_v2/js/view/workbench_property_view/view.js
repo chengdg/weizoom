@@ -752,19 +752,6 @@ W.workbench.PropertyView = Backbone.View.extend({
         W.Broadcaster.trigger('component:create', newComponent, this.actionReferenceComponent);
     },
 
-    onAddSecondNav: function($el, isShowUrl){
-        console.log('sdfsdfsdfdsf', $el)
-        var urlBox = $el.children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
-        var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');
-        if (isShowUrl) {
-            urlBox.show();
-            secondeNavsPrompt.hide();
-        }else{
-            urlBox.hide();
-            secondeNavsPrompt.css("display", "inline");
-        }
-    },
-
     initSliderView: function($el){
         _.each($el.find('.xa-progress-bar'), function(item){
             var $item = $(item);
@@ -862,9 +849,25 @@ W.workbench.PropertyView = Backbone.View.extend({
     initSecondNav: function($el) {
         W.createWidgets($el.parent());
 
-        var view = $('[data-ui-role="termite-navbar-secondnav"]').data('view');
+        var $input = $el.parent().find('input[name="second_navs"]');
+        var view = $el.data('view');
         xwarn(view);
-        W.Broadcaster.on('component:secondnav_add', _.bind(this.onAddSecondNav, this));
+
+        view.bind('update-show-box', function($el, isShowUrl){
+            var urlBox = $el.children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
+            var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');
+            if (isShowUrl) {
+                urlBox.show();
+                secondeNavsPrompt.hide();
+            }else{
+                urlBox.hide();
+                secondeNavsPrompt.css("display", "inline");
+            }
+        }, this)
+
+        view.bind('update-data', function(data){
+            $input.val(data).trigger('input');
+        });
     },
 
 
