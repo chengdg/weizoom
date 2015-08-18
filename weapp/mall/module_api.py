@@ -525,6 +525,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			#填充促销活动信息
 			if promotion:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [promotion])
+				product.original_promotion_title = product.promotion_title
 				if promotion.promotion_title:
 					product.promotion_title = promotion.promotion_title
 				if promotion.type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
@@ -539,6 +540,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					promotion.promotion_title = ''
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
+				product.original_promotion_title = product.promotion_title
 				product.promotion = None
 			#填充积分折扣信息
 			if integral_sale:
@@ -561,10 +563,21 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				#返回"被删除"商品
 				product = Product()
 				product.is_deleted = True
+		data = product.to_dict(
+								'min_limit',
+								'swipe_images_json',
+								'models',
+								'_is_use_custom_model',
+								'product_model_properties',
+								'is_sellout',
+								'promotion',
+								'integral_sale',
+								'properties',
+								'product_review'
+		)
+		data['original_promotion_title'] = product.original_promotion_title
 
-		return {
-			'value': product.to_dict('min_limit', 'swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'integral_sale', 'properties', 'product_review')
-		}
+		return {'value': data}
 
 	return inner_func
 
@@ -914,7 +927,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 		product = webapp_cache.get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id)
 		if product.is_deleted:
 			return product
-
 		for product_model in product.models:
 			#获取折扣后的价格
 			if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
@@ -933,7 +945,8 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_original_price': str("%.2f" % product_model['original_price']),
 					'display_market_price': str("%.2f" % product_model['market_price']),
 					'min_price': product_model['price'],
-					'max_price': product_model['price']
+					'max_price': product_model['price'],
+					'promotion_title': product.original_promotion_title
 				}
 			else:
 				#有多个custom model，显示custom model集合组合后的价格信息
@@ -974,7 +987,8 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_original_price': price_range,
 					'display_market_price': market_price_range,
 					'min_price': min_price,
-					'max_price': max_price
+					'max_price': max_price,
+					'promotion_title': product.original_promotion_title
 				}
 		else:
 			standard_model = product.models[0]
@@ -983,7 +997,8 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 				'display_original_price': str("%.2f" % standard_model['original_price']),
 				'display_market_price': str("%.2f" % standard_model['market_price']),
 				'min_price': standard_model['price'],
-				'max_price': standard_model['price']
+				'max_price': standard_model['price'],
+				'promotion_title': product.original_promotion_title
 			}
 
 	except:
@@ -996,7 +1011,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 			#返回"被删除"商品
 			product = Product()
 			product.is_deleted = True
-
 	return product
 
 
