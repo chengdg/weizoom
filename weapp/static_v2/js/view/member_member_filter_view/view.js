@@ -139,7 +139,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
          //       return false;
          //   }
         //});
-        if ($('.pay_times').length == 2){ 
+        if ($('.pay_times').length == 2){
             var payTimes_1 =  $('.pay_times')[0];
             var payTimes_2 =  $('.pay_times')[1];
 
@@ -157,7 +157,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
                 return false;
             }
         }
-    
+
         var dataView = this.options.dataView;
         var args = this.getFilterValue();
         dataView.options.args = this.getFilterValueByDict(args);
@@ -216,7 +216,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
             }
         });
         if (pay_times.length > 0) {
-            dataValue.push("pay_times:" + pay_times.join('-'))
+            dataValue.push("pay_times:" + pay_times.join('--'))
         }
 
         var firstPayStartDate = $('#first_pay_start_date').val();
