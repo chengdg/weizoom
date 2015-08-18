@@ -28,17 +28,34 @@ W.view.member.memberFilterView = Backbone.View.extend({
         var firstPayStartDate = $('#first_pay_start_date').val();
         var firstPayEndDate = $('#first_pay_end_date').val();
         if (firstPayStartDate.length > 0 && firstPayEndDate.length == 0) {
-            W.getErrorHintView().show('请输入上次购买结束日期！');
+            W.getErrorHintView().show('请输入最后购买结束日期！');
             return false;
         }
         if (firstPayEndDate.length > 0 && firstPayStartDate.length == 0) {
-            W.getErrorHintView().show('请输入上次购买开始日期！');
+            W.getErrorHintView().show('请输入最后购买开始日期！');
             return false;
         }
         var start = new Date(firstPayStartDate.replace("-", "/").replace("-", "/"));
         var end = new Date(firstPayEndDate.replace("-", "/").replace("-", "/"));
         if ((firstPayStartDate.length > 0 || firstPayEndDate.length > 0) && start > end){
-            W.getErrorHintView().show('上次购买开始日期不能大于上次购买结束日期！');
+            W.getErrorHintView().show('最后购买开始日期不能大于最后购买结束日期！');
+            return false;
+        }
+
+        var firstMessageStartDate = $('#last_message_start_time').val();
+        var firstMessgeEndDate = $('#last_message_end_time').val();
+        if (firstMessageStartDate.length > 0 && firstMessgeEndDate.length == 0) {
+            W.getErrorHintView().show('请输入最后对话时间！');
+            return false;
+        }
+        if (firstMessgeEndDate.length > 0 && firstMessageStartDate.length == 0) {
+            W.getErrorHintView().show('请输入最后对话时间！');
+            return false;
+        }
+        var start = new Date(firstMessageStartDate.replace("-", "/").replace("-", "/"));
+        var end = new Date(firstMessgeEndDate.replace("-", "/").replace("-", "/"));
+        if ((firstMessageStartDate.length > 0 || firstMessgeEndDate.length > 0) && start > end){
+            W.getErrorHintView().show('最后最后对话时间开始时间不能大于最后对话时间结束时间！');
             return false;
         }
 
@@ -168,6 +185,13 @@ W.view.member.memberFilterView = Backbone.View.extend({
         if (subStartDate && subEndDate) {
             dataValue.push("sub_date:"+ subStartDate+"--"+subEndDate)
         }
+
+        var messageStartDate = $('#last_message_start_time').val();
+        var messageEndDate = $('#last_message_end_time').val();
+        if (messageStartDate && messageEndDate) {
+            dataValue.push("last_message_time:"+ messageStartDate+"--"+messageEndDate)
+        }
+
 
         var args = [];
         var name = $('#name').val().trim();
@@ -396,6 +420,8 @@ W.view.member.memberFilterView = Backbone.View.extend({
         $('.pay_times').val('');
         $('#status').val('-1');
         $('#source').val('-1');
+        $('#last_message_start_time').val('');
+        $('#last_message_end_time').val('');
     },
 
     onClickReset:function(){

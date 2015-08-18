@@ -36,7 +36,7 @@ def get_members(request):
 	webapp_id  = request.user_profile.webapp_id
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
-	status = request.GET.get('status' , '-1')
+	status = request.GET.get('status' , '1')
 	c = RequestContext(request, {
 		'first_nav_name': export.MEMBER_FIRST_NAV,
 		'second_navs': export.get_second_navs(request),
@@ -414,6 +414,7 @@ def __get_member_info(member):
 ########################################################################
 # show_member: 会员详情信息
 ########################################################################
+from weixin2.models import get_opid_from_session
 @view(app='member', resource='members', action='export')
 @login_required
 def export_members(request):
@@ -421,6 +422,11 @@ def export_members(request):
 	filter_data_args = {}
 	filter_data_args['webapp_id'] = request.user_profile.webapp_id
 	filter_data_args['is_for_test'] = False
+	filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
+
+	status = request.GET.get('status', '-1')
+	if not filter_value and status == '1':
+		filter_data_args['is_subscribed'] = True
 
 	if filter_value:
 		filter_data_dict = {}
@@ -436,7 +442,6 @@ def export_members(request):
 			if key == 'name':
 				query_hex = byte_to_hex(value)
 				filter_data_args["username_hexstr__contains"] = query_hex
-			print  filter_data_args
 			if key == 'grade_id':
 				filter_data_args["grade_id"] = value
 
@@ -445,14 +450,18 @@ def export_members(request):
 				filter_data_args["id__in"] = member_ids
 
 			if key == 'status':
-				filter_data_args["is_subscribed"] = True if value == '1' else False
+				#无论如何这地方都要带有status参数，不然从“数据罗盘-会员分析-关注会员链接”过来的查询结果会有问题
+				if value == '1':
+					filter_data_args["is_subscribed"] = True
+				elif value == '0':
+					filter_data_args["is_subscribed"] = False
 
 			if key == 'source':
 				if value in ['-1', 0]:
 					pass
 				else:
 					filter_data_args["source"] = value
-			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price', 'integral']:
+			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price']:
 				if value.find('-') > -1:
 					val1,val2 = value.split('-')
 					if float(val1) > float(val2):
@@ -464,15 +473,35 @@ def export_members(request):
 				else:
 					filter_data_args['%s__gte' % key] = value
 
-			if key in ['first_pay', 'sub_date'] :
+			if key in ['first_pay', 'sub_date', 'integral'] :
 				if value.find('-') > -1:
 					val1,val2 = value.split('--')
 					if key == 'first_pay':
 						filter_data_args['last_pay_time__gte'] = val1
 						filter_data_args['last_pay_time__lte'] =  val2
-					else:
+					elif key == 'sub_date':
+
 						filter_data_args['created_at__gte'] = val1
 						filter_data_args['created_at__lte'] = val2
+					else:
+						filter_data_args['integral__gte'] = val1
+						filter_data_args['integral__lte'] = val2
+
+			if key  == 'last_message_time':
+				val1,val2 = value.split('--')
+				session_filter = {}
+				session_filter['mpuser__owner_id'] = request.manager.id
+				session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
+				session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
+				
+				opids = get_opid_from_session(session_filter)
+				session_member_ids = module_api.get_member_ids_by_opid(opids)
+				if filter_data_args.has_key('id__in'):
+					member_ids = filter_data_args['id__in']
+					member_ids = list(set(member_ids).intersection(set(session_member_ids)))
+					filter_data_args['id__in'] = member_ids
+				else:
+					filter_data_args['id__in'] = session_member_ids
 
 	members = Member.objects.filter(**filter_data_args)
 

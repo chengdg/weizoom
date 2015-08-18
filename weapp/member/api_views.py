@@ -14,6 +14,7 @@ from core import paginator
 
 from modules.member.models import *
 from modules.member.integral import increase_member_integral
+from modules.member import module_api
 from apps.customerized_apps.shengjing.models import *
 
 from utils.string_util import byte_to_hex
@@ -27,6 +28,7 @@ from core.restful_url_route import *
 
 from market_tools.tools.member_qrcode import api_views as member_qrcode_api_views
 from core.restful_url_route import *
+from weixin2.models import get_opid_from_session
 
 
 COUNT_PER_PAGE = 20
@@ -78,7 +80,6 @@ def __get_request_members_list(request):
 			if key == 'name':
 				query_hex = byte_to_hex(value)
 				filter_data_args["username_hexstr__contains"] = query_hex
-			print  filter_data_args
 			if key == 'grade_id':
 				filter_data_args["grade_id"] = value
 
@@ -117,11 +118,28 @@ def __get_request_members_list(request):
 						filter_data_args['last_pay_time__gte'] = val1
 						filter_data_args['last_pay_time__lte'] =  val2
 					elif key == 'sub_date':
+
 						filter_data_args['created_at__gte'] = val1
 						filter_data_args['created_at__lte'] = val2
 					else:
 						filter_data_args['integral__gte'] = val1
 						filter_data_args['integral__lte'] = val2
+
+			if key  == 'last_message_time':
+				val1,val2 = value.split('--')
+				session_filter = {}
+				session_filter['mpuser__owner_id'] = request.manager.id
+				session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
+				session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
+				
+				opids = get_opid_from_session(session_filter)
+				session_member_ids = module_api.get_member_ids_by_opid(opids)
+				if filter_data_args.has_key('id__in'):
+					member_ids = filter_data_args['id__in']
+					member_ids = list(set(member_ids).intersection(set(session_member_ids)))
+					filter_data_args['id__in'] = member_ids
+				else:
+					filter_data_args['id__in'] = session_member_ids
 
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 	total_count = members.count()
@@ -525,9 +543,19 @@ def batch_update_tag(request):
 	tag_id = request.POST.get('tag_id', None)
 	post_ids = request.POST.get('ids', None)
 
+	status = request.POST.get('update_status', 'selected')
+	if status == 'all':
+		filter_value = request.POST.get('filter_value', '')
+		request.GET = request.GET.copy()
+		request.GET['filter_value'] = filter_value
+		request.GET['count_per_page'] = 999999999
+		_, request_members, _ = __get_request_members_list(request)
+		post_ids = [m.id for m in request_members]
+	else:
+		post_ids = post_ids.split('-')
 	tag = MemberTag.objects.get(id=tag_id)
 	if tag.webapp_id == webapp_id and post_ids:
-		MemberHasTag.add_members_tag(tag_id, post_ids.split('-'))
+		MemberHasTag.add_members_tag(tag_id, post_ids)
 
 	response = create_response(200)
 	return response.get_response()
