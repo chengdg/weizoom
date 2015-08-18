@@ -18,7 +18,7 @@ from modules.member.models import *
 from datetime import timedelta, datetime, date
 from member.util import *
 from .util import *
-from weixin2.advance_manage.util import get_members
+from weixin2.advance_manage.util import get_members, new_get_members
 from modules.member.models import Member
 
 COUNT_PER_PAGE = 20
@@ -59,15 +59,18 @@ class MassSendingMessages(resource.Resource):
         webapp_id = request.user_profile.webapp_id
 
         params = request.POST.get('params', None)
-        
+        print params, "{}{}{}{}{}{}{}"
+
         category = None
         status = None
         sex = None
+        grade = None
+        source = None
         filter_value = None
+        filter_data_args = {}
         member_list = []
         member_ids_str = ''
         mode = ''  #发送模式
-
         if params and len(params) > 0:
             if 'filter_value' in params:
                 #params例子： category=全部&status=全部&sex=全部&filter_value=name:jobs
@@ -78,12 +81,25 @@ class MassSendingMessages(resource.Resource):
                     _fields = field.split('=')
                     param2value[_fields[0]] = _fields[1]
 
-                category = param2value['category'];
-                status = param2value['status'];
-                sex = param2value['sex'];
-                filter_value = param2value['filter_value'];
+                if 'sex' in params:
+                    #兼容以前的版本
+                    print "PPPPPPPPPPPPP"
+                    category = param2value['category'];
+                    status = param2value['status'];
+                    sex = param2value['sex'];
+                    filter_value = param2value['filter_value'];
 
-                members = get_members(request, filter_value, '-id')
+                    members = get_members(request, filter_value, '-id')
+                else:
+                    print "KKKKKKKKKKKK"
+                    category = param2value['category'];
+                    status = param2value['status'];
+                    grade = param2value['grade'];
+                    source = param2value['source'];
+                    filter_value = param2value['filter_value'];
+
+                    members, filter_data_args = new_get_members(request, filter_value)
+
             else:
                 #params例子： member_ids=1|2|3
                 fields = params.split('=')
@@ -108,17 +124,25 @@ class MassSendingMessages(resource.Resource):
         sent_count = UserSentMassMsgLog.success_count(webapp_id)
 
         c = RequestContext(request, {
-            'first_nav_name': export.ADVANCE_MANAGE_FIRST_NAV,
-            'second_navs': export.get_advance_manage_second_navs(request),
-            'second_nav_name': export.ADVANCE_MANAGE_FANS_NAV,
+            'first_nav_name': FIRST_NAV,
+            'second_navs': export.get_message_second_navs(request),
+            'second_nav_name': export.MESSAGE_MASS_SENDING_NAV,
             'sent_count': sent_count,
             'category': category,
             'status': status,
+            'source': source,
+            'grade': grade,
             'sex': sex,
             'mode': mode,
+            'unit_price': filter_data_args['unit_price__gte'] + '~' + filter_data_args['unit_price__lte'] if filter_data_args.has_key('unit_price__gte') else '',
+            'last_pay_time': filter_data_args['last_pay_time__gte'] + '~' + filter_data_args['last_pay_time__lte'] if filter_data_args.has_key('last_pay_time__gte') else '',
+            'created_at': filter_data_args['created_at__gte'] + '~' + filter_data_args['created_at__lte'] if filter_data_args.has_key('created_at__gte') else '',
+            'pay_money': str(filter_data_args['pay_money__gte']) + '~' + str(filter_data_args['pay_money__lte']) if filter_data_args.has_key('pay_money__gte') else '',
+            'pay_times': str(filter_data_args['pay_times__gte']) + '~' + str(filter_data_args['pay_times__lte']) if filter_data_args.has_key('pay_times__gte') else '',
+            'integral': str(filter_data_args['integral__gte']) + '~' + str(filter_data_args['integral__lte']) if filter_data_args.has_key('integral__gte') else '',
             'member_list': member_list,
             'member_ids_str': member_ids_str,
-            'number': len(member_list),
+            'number': len(member_list)
         })
 
         return render_to_response('weixin/message/mass_sending_messages.html', c)
@@ -187,7 +211,7 @@ class MassSendingMessages(resource.Resource):
                     id_array.append(int(member_id))
             except Exception, e:
                 print u'群发消息异常，mass_sending_messages:', e
-        
+
         if is_from_fans_list:
             members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
             for member in members:
@@ -215,7 +239,7 @@ class MassSendingMessages(resource.Resource):
                 else:
                     id_array = FanHasCategory.get_fan_id_list_by_category_id(group_id)
                     members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
-                
+
                 for member in members:
                     openid_list.append(member.member_open_id)
 

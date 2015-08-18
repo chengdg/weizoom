@@ -378,7 +378,7 @@ $(document).ready(function() {
 		dataView.setPage(1);
 		dataView.args = view.getFilterValue();
 		var args = {
-			ids:post_ids.join('-'), 
+			ids:post_ids.join('-'),
 			grade_id:grade_id,
 			update_status: status
 		}
@@ -563,15 +563,17 @@ $(document).ready(function() {
 	//群发消息
 	$(document).delegate('.xa-send-message-all-member', 'click', function(event){
 		var members = W.loadJSON('members');
-		var category = $('#member_tag option:selected').text();
-        var status = $('#status option:selected').text();
-        var sex = "全部";
+		var category = $('#member_tag option:selected').text();//会员分组
+		var grade = $('#grade option:selected').text();//会员等级
+        var status = $('#status option:selected').text();//会员状态
+        var source = $('#source option:selected').text();//会员来源
+
 		var filter_value = view.filter_value;
-		var params = 'category=' + category + '&status=' + status + '&sex=' + sex + '&filter_value=' + filter_value;
+		var params = 'category=' + category + '&grade=' + grade + '&status=' + status + '&source=' + source + '&filter_value=' + filter_value;
 
 		if(members && members.length > 0){
 			$('form.xa-postSendMessageAll input').val(params);
-            $('form.xa-postSendMessageAll').submit();
+	        $('form.xa-postSendMessageAll').submit();
 		} else {
 			W.showHint('error', "没有可已发送的用户");
 		}
