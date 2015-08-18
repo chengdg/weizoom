@@ -247,7 +247,7 @@ def step_impl(context, user, type):
 
 def __get_member_grade(promotion, webapp_id):
     member_grade = promotion.get('member_grade', 0)
-    if member_grade == u'全部':
+    if member_grade == u'全部' or member_grade == u'全部会员':
         member_grade = 0
     elif member_grade:
         member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id

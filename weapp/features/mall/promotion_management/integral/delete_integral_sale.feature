@@ -38,17 +38,17 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
-	Given jobs已获取积分应用活动列表
+	When jobs创建积分应用活动
 		"""
 		[{
 			"name": "商品4积分应用",
 			"start_date": "明天",
 			"end_date": "3天后",
 			"status":"未开始",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -57,10 +57,10 @@ Background:
 			"start_date": "今天",
 			"end_date": "2天后",
 			"status":"进行中",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -69,10 +69,10 @@ Background:
 			"start_date": "",
 			"end_date": "",
 			"status":"已结束",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -81,10 +81,10 @@ Background:
 			"start_date": "2015-07-11",
 			"end_date": "2015-08-10",
 			"status":"已结束",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -102,10 +102,10 @@ Scenario: 1 删除状态为'已结束'的积分应用活动
 				"start_date": "明天",
 				"end_date": "3天后",
 				"status":"未开始",
-				"products": ["商品4"],
+				"product_name": "商品4",
 				"is_permanant_active": false,
 				"rules": [{
-					"member_grade_name": "全部会员",
+					"member_grade": "全部会员",
 					"discount": 50,
 					"discount_money": 50.0
 				}]
@@ -114,10 +114,10 @@ Scenario: 1 删除状态为'已结束'的积分应用活动
 					"start_date": "今天",
 					"end_date": "2天后",
 					"status":"进行中",
-					"products": ["商品3"],
+					"product_name": "商品3",
 					"is_permanant_active": false,
 					"rules": [{
-						"member_grade_name": "全部会员",
+						"member_grade": "全部会员",
 						"discount": 50,
 						"discount_money": 50.0
 					}]
@@ -126,10 +126,10 @@ Scenario: 1 删除状态为'已结束'的积分应用活动
 				"start_date": "",
 				"end_date": "",
 				"status":"已结束",
-				"products": ["商品2"],
+				"product_name": "商品2",
 				"is_permanant_active": true,
 				"rules": [{
-					"member_grade_name": "全部会员",
+					"member_grade": "全部会员",
 					"discount": 50,
 					"discount_money": 50.0
 				}]
@@ -146,10 +146,10 @@ Scenario: 2 批量删除积分应用活动（包含未结束状态的活动）
 				"start_date": "明天",
 				"end_date": "3天后",
 				"status":"未开始",
-				"products": ["商品4"],
+				"product_name": "商品4",
 				"is_permanant_active": false,
 				"rules": [{
-					"member_grade_name": "全部会员",
+					"member_grade": "全部会员",
 					"discount": 50,
 					"discount_money": 50.0
 				}]
@@ -158,10 +158,10 @@ Scenario: 2 批量删除积分应用活动（包含未结束状态的活动）
 				"start_date": "今天",
 				"end_date": "2天后",
 				"status":"进行中",
-				"products": ["商品3"],
+				"product_name": "商品3",
 				"is_permanant_active": false,
 				"rules": [{
-					"member_grade_name": "全部会员",
+					"member_grade": "全部会员",
 					"discount": 50,
 					"discount_money": 50.0
 				}]
@@ -170,10 +170,10 @@ Scenario: 2 批量删除积分应用活动（包含未结束状态的活动）
 				"start_date": "",
 				"end_date": "",
 				"status":"已结束",
-				"products": ["商品2"],
+				"product_name": "商品2",
 				"is_permanant_active": true,
 				"rules": [{
-					"member_grade_name": "全部会员",
+					"member_grade": "全部会员",
 					"discount": 50,
 					"discount_money": 50.0
 				}]
@@ -182,10 +182,10 @@ Scenario: 2 批量删除积分应用活动（包含未结束状态的活动）
 				"start_date": "2015-07-11",
 				"end_date": "2015-08-10",
 				"status":"已结束",
-				"products": ["商品1"],
+				"product_name": "商品1",
 				"is_permanant_active": false,
 				"rules": [{
-					"member_grade_name": "全部会员",
+					"member_grade": "全部会员",
 					"discount": 50,
 					"discount_money": 50.0
 				}]
@@ -203,10 +203,10 @@ Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动�
 			"start_date": "",
 			"end_date": "",
 			"status":"已结束",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -215,10 +215,10 @@ Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动�
 			"start_date": "2015-07-11",
 			"end_date": "2015-08-10",
 			"status":"已结束",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -231,10 +231,10 @@ Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动�
 			"start_date": "明天",
 			"end_date": "3天后",
 			"status":"未开始",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -243,10 +243,10 @@ Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动�
 			"start_date": "今天",
 			"end_date": "2天后",
 			"status":"进行中",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
