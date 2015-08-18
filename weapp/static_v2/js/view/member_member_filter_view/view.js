@@ -75,43 +75,89 @@ W.view.member.memberFilterView = Backbone.View.extend({
             W.getErrorHintView().show('关注开始日期不能大于关注结束日期！');
             return false;
         }
+        if ($('.m_unit_price').length == 2){
+            var mUnitPrice_1 = $('.m_unit_price')[0];
+            var mUnitPrice_2 = $('.m_unit_price')[1];
 
-        $('.m_unit_price').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (mUnitPrice_1.value.trim().length > 0 && mUnitPrice_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确客单价！');
                 return false;
             }
-        });
+            if (mUnitPrice_2.value.trim().length > 0 && mUnitPrice_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确客单价！');
+                return false;
+            }
 
-        $('.pay_money').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (isNaN(mUnitPrice_1.value.trim()) || isNaN(mUnitPrice_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确客单价！');
+                return false;
+            }
+        }
+
+        if ($('.pay_money').length == 2){
+            var payMoney_1 = $('.pay_money')[0];
+            var payMoney_2 = $('.pay_money')[1];
+
+            if (payMoney_1.value.trim().length > 0 && payMoney_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确消费总额！');
                 return false;
             }
-        });
+            if (payMoney_2.value.trim().length > 0 && payMoney_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确消费总额！');
+                return false;
+            }
 
-        $('.integral').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (isNaN(payMoney_1.value.trim()) || isNaN(payMoney_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确消费总额！');
+                return false;
+            }
+
+        }
+
+        if ($('.integral').length == 2){
+            var integral_1 = $('.integral')[0];
+            var integral_2 = $('.integral')[1];
+
+            if (integral_1.value.trim().length > 0 && integral_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确积分！');
                 return false;
             }
-        });
+            if (integral_2.value.trim().length > 0 && integral_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确积分！');
+                return false;
+            }
 
+            if (isNaN(integral_1.value.trim()) || isNaN(integral_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确积分！');
+                return false;
+            }
+
+        }
         //$('.friend_count').each(function(i, val){
          //   if (val.value.trim() && isNaN(val.value.trim())) {
          //       W.getErrorHintView().show('请输入正确好友数！');
          //       return false;
          //   }
         //});
+        if ($('.pay_times').length == 2){ 
+            var payTimes_1 =  $('.pay_times')[0];
+            var payTimes_2 =  $('.pay_times')[1];
 
-        $('.pay_times').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (payTimes_1.value.trim().length > 0 && payTimes_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确购买次数！');
                 return false;
             }
-        });
+            if (payTimes_2.value.trim().length > 0 && payTimes_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确购买次数！');
+                return false;
+            }
 
-
+            if (isNaN(payTimes_1.value.trim()) || isNaN(payTimes_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确购买次数！');
+                return false;
+            }
+        }
+    
         var dataView = this.options.dataView;
         var args = this.getFilterValue();
         dataView.options.args = this.getFilterValueByDict(args);
@@ -133,7 +179,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
             }
         });
         if (m_unit_price.length > 0) {
-            dataValue.push("unit_price:" + m_unit_price.join('-'));
+            dataValue.push("unit_price:" + m_unit_price.join('--'));
         }
         var pay_money = [];
         $('.pay_money').each(function(i, val){
@@ -143,7 +189,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
         });
 
         if (pay_money.length > 0) {
-            dataValue.push("pay_money:"+pay_money.join('-'))
+            dataValue.push("pay_money:"+pay_money.join('--'))
         }
         var integral = [];
         $('.integral').each(function(i, val){

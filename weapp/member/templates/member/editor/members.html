@@ -727,9 +727,10 @@ $(document).ready(function() {
 	var status = '{{status}}';
 	if(status === '1') {
 		_.delay(function(){
+			console.log(status)
 			//$('.xa-more-filter').trigger('click');
 			$("#status").val("1");
-		}, 500);
+		}, 700);
 
 	}
 });

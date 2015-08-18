@@ -96,13 +96,16 @@ def __get_request_members_list(request):
 					filter_data_args["is_subscribed"] = False
 
 			if key == 'source':
-				if value in ['-1', 0]:
-					pass
+				if value in ['-1']:
+					filter_data_args['source__in'] = [0,-1,1,2]
+				elif value == '0':
+					filter_data_args['source__in'] = [0,-1]
 				else:
 					filter_data_args["source"] = value
+
 			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price']:
 				if value.find('-') > -1:
-					val1,val2 = value.split('-')
+					val1,val2 = value.split('--')
 					if float(val1) > float(val2):
 						filter_data_args['%s__gte' % key] = float(val2)
 						filter_data_args['%s__lte' % key] = float(val1)
