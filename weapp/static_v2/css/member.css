@@ -285,12 +285,12 @@
 	 padding: 0px;
 }
 .xui-memberListPage .dropdown-submenu a{
-	 padding: 12px 10px !important;
+	 padding: 8px 10px !important;
 	 border-radius: 5px;
 }
 
 .xui-memberListPage .xui-dropbox a{
-	padding: 5px 10px !important;
+	padding: 6px 10px !important;
 	text-align: center;
 	border-radius: 5px;
 }
