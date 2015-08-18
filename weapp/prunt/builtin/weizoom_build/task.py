@@ -98,10 +98,10 @@ class PruntTaskBlock(Block):
 				with open(result['template'], 'rb') as src_file:
 					template_content = src_file.read().decode('utf-8')
 
-				dest = u'%s\n<script type="text/javascript" src="/%s"></script>' % (template_content, result['js'].decode('utf-8'))
+				dest = u'{%% verbatim %%}%s{%% endverbatim %%}\n<script type="text/javascript" src="/%s"></script>' % (template_content, result['js'].decode('utf-8'))
 				return dest.encode('utf-8')
 			elif self.task_name == 'weizoom-generate-component-front-template':
-				dest = u'<script type="text/x-handlebar-template" id="componentTemplates">\n%s\n</script>' % prunt.get_last_result().decode('utf-8')
+				dest = u'{%% verbatim %%}<script type="text/x-handlebar-template" id="componentTemplates">\n%s\n</script>{%% endverbatim %%}' % prunt.get_last_result().decode('utf-8')
 				return dest.encode('utf-8')
 		else:
 			logger.error('run task "%s" failed!!!', self.task_name)
