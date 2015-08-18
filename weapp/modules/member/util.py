@@ -21,7 +21,7 @@ from watchdog.utils import watchdog_warning, watchdog_error, watchdog_info
 
 from account.social_account.models import SocialAccount, SOCIAL_PLATFORM_WEIXIN, SOCIAL_PLATFORM_QQ, SOCIAL_PLATFORM_SINAWEIBO
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
-from mall.models import Order
+
 
 import member_settings
 
@@ -216,7 +216,7 @@ def update_send_mass_msg_log(user_profile, msg_id, sent_count, total_count, filt
 def update_models_use_webapp_user(current_webapp_user, expired_webapp_user):
 	if current_webapp_user is None and expired_webapp_user is None:
 		return None
-	
+	from mall.models import Order
 	if current_webapp_user.webapp_id == expired_webapp_user.webapp_id:
 		Order.objects.filter(webapp_user_id=expired_webapp_user.id, webapp_id=current_webapp_user.webapp_id).update(webapp_user_id=current_webapp_user.id)
 

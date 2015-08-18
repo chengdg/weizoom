@@ -129,7 +129,7 @@ Background:
 			"name": "商品5积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["商品5"],
+			"product_name":"商品5",
 			"is_permanant_active": false,
 			"rules": [{
 				"member_grade_name": "全部会员",
@@ -143,7 +143,7 @@ Background:
 
 #该场景在new_promotion_product_search.feature中覆盖
 Scenario: 0 选取起购数量大于1的商品，创建限时抢购活动（起购数量大于1的商品不能参与限时抢购）
-	Given jobs登录系统
+	#Given jobs登录系统
 	#When jobs创建限时抢购活动
 	#新建限时抢购页面，商品查询弹窗中的数据列表中不存在'商品0'
 
@@ -157,7 +157,7 @@ Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时�
 				"promotion_slogan":"",
 				"start_date": "今天",
 				"end_date": "1天后",
-				"products": ["商品1"],
+				"product_name":"商品1",
 				"member_grade": "全部会员",
 				"count_per_purchase": 2,
 				"promotion_price": 80.00,
@@ -168,7 +168,7 @@ Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时�
 		"""
 			[{
 				"name": "活动名称：商品1限时抢购",
-				"products":["商品1"],
+				"product_name":"商品1",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -188,7 +188,7 @@ Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空�
 				"promotion_slogan":"抢购抢购啦",
 				"start_date": "今天",
 				"end_date": "1天后",
-				"products": ["商品2"],
+				"product_name":"商品2",
 				"member_grade": "铜牌会员",
 				"count_per_purchase": 2,
 				"promotion_price": 80.00
@@ -198,7 +198,7 @@ Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空�
 		"""
 			[{
 				"name": "广告语：抢购抢购啦",
-				"products":["商品2"],
+				"product_name":"商品2",
 				"product_price":"100.00~200.00",
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -218,7 +218,7 @@ Scenario: 3 选取参与会员折扣的商品，创建限时抢购活动(限时�
 				"promotion_slogan":"商品3抢购",
 				"start_date": "今天",
 				"end_date": "1天后",
-				"products": ["商品3"],
+				"product_name":"商品3",
 				"member_grade": "铜牌会员",
 				"count_per_purchase": 2,
 				"promotion_price": 80.00
@@ -228,7 +228,7 @@ Scenario: 3 选取参与会员折扣的商品，创建限时抢购活动(限时�
 		"""
 			[{
 				"name": "广告语：商品3抢购",
-				"products":["商品3"],
+				"product_name":"商品3",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -248,7 +248,7 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 				"promotion_slogan":"商品4抢购",
 				"start_date": "今天",
 				"end_date": "1天后",
-				"products": ["商品4"],
+				"product_name":"商品4",
 				"member_grade": "铜牌会员",
 				"count_per_purchase": 2,
 				"promotion_price": 80.00
@@ -258,7 +258,7 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 		"""
 			[{
 				"name": "广告语：商品4抢购",
-				"products":["商品4"],
+				"product_name":"商品4",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"进行中",
@@ -278,7 +278,7 @@ Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢�
 				"promotion_slogan":"商品5抢购",
 				"start_date": "明天",
 				"end_date": "3天后",
-				"products": ["商品5"],
+				"product_name":"商品5",
 				"member_grade": "银牌会员",
 				"count_per_purchase": 1,
 				"promotion_price": 80.00
@@ -288,7 +288,7 @@ Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢�
 		"""
 			[{
 				"name": "广告语：商品5抢购",
-				"products":["商品5"],
+				"product_name":"商品5",
 				"product_price":100.00,
 				"promotion_price":80.00,
 				"status":"未开始",
@@ -298,7 +298,7 @@ Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢�
 			}]
 		"""
 
-@promotion @promotionFlash
+@promotion @promotionFlash @ui
 Scenario: 6 创建限时抢购活动，必填字段的校验
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -308,7 +308,7 @@ Scenario: 6 创建限时抢购活动，必填字段的校验
 				"promotion_slogan":"",
 				"start_date": "",
 				"end_date": "",
-				"products":"",
+				"product_name":"",
 				"member_grade": "",
 				"count_per_purchase":"",
 				"promotion_price":""
@@ -320,7 +320,7 @@ Scenario: 6 创建限时抢购活动，必填字段的校验
 	#限购价格提示：
 	And jobs获得系统提示'内容不能为空'
 
-@promotion @promotionFlash
+@promotion @promotionFlash @ui
 Scenario: 7 创建限时抢购活动，限购价格必须小于商品原价的校验（多规格商品，则必须小于价格最低的规格商品原价）
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -330,7 +330,7 @@ Scenario: 7 创建限时抢购活动，限购价格必须小于商品原价的�
 				"promotion_slogan":"商品6抢购",
 				"start_date": "明天",
 				"end_date": "3天后",
-				"products": ["商品6"],
+				"product_name":"商品6",
 				"member_grade": "银牌会员",
 				"count_per_purchase": 1,
 				"promotion_price": 101.00
