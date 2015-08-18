@@ -158,15 +158,15 @@
 }
 .xui-memberListPage .icon-arrow-up {
   /* background: #000; */
-  background: url('/static_v2/img/editor/upArrow.png') no-repeat;
+  background: url('/static_v2/img/weixin/storingUp.png') no-repeat; 
 }
 .xui-memberListPage .icon-arrow-down {
   /* background: #000; */
-  background: url('/static_v2/img/editor/downArrow.png') no-repeat;
+   background: url('/static_v2/img/weixin/storing.png') no-repeat; 
 }
 .xui-memberListPage [class^="icon-"] {
   display: inline-block;
-  width: 14px;
+  width: 9px;
   height: 14px;
   margin-top: 1px;
   line-height: 14px;
@@ -328,7 +328,7 @@
 
 }
 .xui-memberListPage .xui-ellipsis-1{
-    width: 150px;
+	width: 50px;
     -webkit-line-clamp: 1;
     text-overflow: ellipsis;
     overflow: hidden;
