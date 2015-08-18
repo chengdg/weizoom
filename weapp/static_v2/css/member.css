@@ -297,12 +297,28 @@
 .xui-memberListPage .xui-dropbox {
 	border-radius: 5px !important;
 }
+.xui-memberListPage .xui-operationWrap {
+	margin-top: -10px;
+}
 .xui-memberListPage .xui-dropbox .drop-box-arrow{
 	background: url(/static_v2/img/editor/grayArrow.png) no-repeat;
 
 }
 .xui-memberListPage .xui-menu {
 	top: 30px;
+}
+.xui-memberListPage  .xui-productList .xui-wraper{
+	width: 100px;
+}
+.xui-memberListPage  .xui-productList .xui-wraper .xui-left{
+	width: 50px;
+	float: left;
+	text-align: right;
+}
+.xui-memberListPage  .xui-productList .xui-wraper .xui-right{
+	width: 45px;
+	float: right;
+	text-align: left;
 }
 
 .xui-memberListPage .dropdown-menu {
