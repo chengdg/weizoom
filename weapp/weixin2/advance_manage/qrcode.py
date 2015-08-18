@@ -596,6 +596,7 @@ def build_member_basic_json(member):
 	}
 
 def get_order_status_text(status):
+	from mall.models import STATUS2TEXT
 	return STATUS2TEXT[status]
 
 class QrcodeOrder(resource.Resource):
