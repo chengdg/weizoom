@@ -132,5 +132,4 @@ def new_get_members(request, filter_value):
                     filter_data_args['id__in'] = session_member_ids
 
     members = Member.objects.filter(**filter_data_args)
-    print last_message_time, ">>>>>>>>>>>>>>"
     return members, filter_data_args, last_message_time
