@@ -296,6 +296,7 @@
 }
 .xui-memberListPage .xui-dropbox {
 	border-radius: 5px !important;
+	min-height: 0px !important;
 }
 .xui-memberListPage .xui-operationWrap {
 	margin-top: -10px;

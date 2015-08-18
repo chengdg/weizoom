@@ -25,112 +25,13 @@
 	<div class="panel panel-default mt20 xb-rightPanel pr">
 		<div class="panel-heading dropdown xui-operation" style="height:40px">
 			<div class="xui-operationWrap">
-<<<<<<< HEAD
-			<span class="checkbox" style="display:inline-block;margin:0 15px 0 15px;">
-				<label  for="all">
-					<input type="checkbox" id="xa-selectAll" class="xa-select" style="top:14px" id="all">
-					全选
-				</label>
-			</span>
-			<div class="pr xui-inlineblock ">
-				<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
-					群发消息</span>
-			   	</a>
-			   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
-				    <li class="dropdown-submenu">
-				    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
-							给选中的人发消息（已跑路除外）</span>
-					   	</a>
-				    </li>
-				    <li class="dropdown-submenu">
-				    	<a class=" xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-							给筛选出来的所有人发消息（已跑路除外）</span>
-					   	</a>
-				    </li>
-				</ul>
-			</div>
-			&nbsp;&nbsp;
-			<div class="pr xui-inlineblock mr10">
-				<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
-					发优惠券</span>
-			   	</a>
-			   	<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
-				    <li class="dropdown-submenu">
-				    	<a class=" xa-select-member" type="button"  href="javascript:void(0);">
-							给选中的人发优惠券（已跑路除外）</span>
-					   	</a>
-				    </li>
-				    <li class="dropdown-submenu">
-				    	<a class=" xa-all-member"  type="button"  href="javascript:void(0);" >
-							给筛选出来的所有人发优惠券（已跑路除外）</span>
-					   	</a>
-				    </li>
-				</ul>
-			</div>
-
-			<div class="pr xui-inlineblock mr10">
-				<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
-					修改等级
-			   	</a>
-			   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
-				    <li class="dropdown-submenu">
-				    	<a class="" type="button"  href="javascript:void(0);">
-							给选中的人修改等级
-					   	</a>
-					   	<ul class="dropdown-menu xui-dropbox" style="min-height:29px;">
-					   		{% for grade in grades %}
-					   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="selected">{{grade.name}}</a></li>
-					   		{% endfor %}
-					   	</ul>
-				    </li>
-				    <li class="dropdown-submenu">
-				    	<a class=""  type="button"  href="javascript:void(0);" >
-							给筛选出来的所有人修改等级
-					   	</a>
-					   	<ul class="dropdown-menu xui-dropbox" {% if grades|length == 0 %}style="display:none;"{% endif %} style="min-height:29px;">
-					   		{% for grade in grades %}
-					   		<li><a href="javascript:void(0);" class="update-grade" data-id="{{grade.id}}" data-status="all">{{grade.name}}</a></li>
-					   		{% endfor %}
-					   	</ul>
-				    </li>
-				</ul>
-			</div>
-
-			<div class="pr xui-inlineblock">
-				<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
-					添加分组
-			   	</a>
-			   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
-				    <li class="dropdown-submenu">
-				    	<a class="" type="button"  href="javascript:void(0);">
-							给选中的人修改等级
-					   	</a>
-					   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
-					   		{% for tag in user_tags %}
-					   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
-					   		{% endfor %}
-					   	</ul>
-				    </li>
-				    <li class="dropdown-submenu">
-				    	<a class=""  type="button"  href="javascript:void(0);" >
-							给筛选出来的所有人修改等级
-					   	</a>
-					   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
-					   		{% for tag in user_tags %}
-					   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
-					   		{% endfor %}
-					   	</ul>
-				    </li>
-				</ul>
-			</div>
-=======
 				<span class="checkbox" style="display:inline-block;margin:0 15px 0 15px;">
 					<label  for="all">
 						<input type="checkbox" id="xa-selectAll" class="xa-select" style="top:14px" id="all">
 						全选
 					</label>
 				</span>
-				<div class="pr xui-inlineblock">
+				<div class="pr xui-inlineblock ">
 					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 						群发消息</span>
 				   	</a>
@@ -147,8 +48,10 @@
 					    </li>
 					</ul>
 				</div>
-				&nbsp;&nbsp;				
-				<div class="pr xui-inlineblock">
+				&nbsp;&nbsp;
+				
+
+				<div class="pr xui-inlineblock mr10">
 					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 						修改等级
 				   	</a>
@@ -175,8 +78,8 @@
 					    </li>
 					</ul>
 				</div>
-				&nbsp;&nbsp;	
-				<div class="pr xui-inlineblock">
+
+				<div class="pr xui-inlineblock mr10">
 					<a href="javascript:void(0);" type="button" class="pr dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 						添加分组
 				   	</a>
@@ -203,8 +106,7 @@
 					    </li>
 					</ul>
 				</div>
-				&nbsp;&nbsp;	
-				<div class="pr xui-inlineblock ">
+				<div class="pr xui-inlineblock mr10">
 					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" style="width:96px;">
 						发优惠券</span>
 				   	</a>
@@ -221,7 +123,6 @@
 					    </li>
 					</ul>
 				</div>
->>>>>>> ac9676d28ce0f0042eed85effe5d3dd2f4bb5898
 			</div>
 		</div>
 		<div
