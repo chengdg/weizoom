@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from modules.member.models import Member,SUBSCRIBED,CANCEL_SUBSCRIBED
+from modules.member.models import Member,SUBSCRIBED,CANCEL_SUBSCRIBED, MemberHasTag
 from weixin2.models import FanHasCategory
 from utils.string_util import byte_to_hex
 
