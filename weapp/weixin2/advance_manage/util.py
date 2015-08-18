@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import time
 
 from modules.member.models import Member,SUBSCRIBED,CANCEL_SUBSCRIBED, MemberHasTag
 from weixin2.models import FanHasCategory
 from utils.string_util import byte_to_hex
-import time
+from weixin2.models import get_opid_from_session
+from modules.member import module_api
+
 
 def get_members(request, filter_value, sort_attr):
     filter_data_args = {}
