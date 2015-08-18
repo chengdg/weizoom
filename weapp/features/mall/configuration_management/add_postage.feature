@@ -11,6 +11,7 @@ Scenario: 添加邮费配置
 		"""
 		[{
 			"name" : "圆通",
+<<<<<<< HEAD:weapp/features/mall/configuration_management/add_postage.feature
 			"first_weight": 40,
 			"first_weight_price": 4,
 			"added_weight": 1,
@@ -20,6 +21,17 @@ Scenario: 添加邮费配置
 			"first_weight" : 41,
 			"first_weight_price" : 5
 		}, {
+=======
+			"first_weight" : 40,
+			"first_weight_price" : 4,
+            "added_weight" : 1,
+            "added_weight_price" : 6
+		}, {
+			"name" : "顺丰",
+            "first_weight" : 41,
+            "first_weight_price" : 5
+        }, {
+>>>>>>> remotes/origin/wechat_2.0:weapp/features/mall/configuration_management/add_postage.feature
 			"name" : "EMS",
 			"first_weight":1,
 			"first_weight_price":15.00,
@@ -30,7 +42,11 @@ Scenario: 添加邮费配置
 				"first_weight": 1.0,
 				"first_weight_price":20.00,
 				"added_weight": 1.0,
+<<<<<<< HEAD:weapp/features/mall/configuration_management/add_postage.feature
 				"added_weight_price": 10.00
+=======
+				"added_weight_price":10.00
+>>>>>>> remotes/origin/wechat_2.0:weapp/features/mall/configuration_management/add_postage.feature
 			},{
 				"to_the":"上海市,重庆市,江苏省",
 				"first_weight": 1.0,
@@ -63,7 +79,11 @@ Scenario: 添加邮费配置
 			"name" : "圆通"
 		}, {
 			"name" : "顺丰"
+<<<<<<< HEAD:weapp/features/mall/configuration_management/add_postage.feature
 		}, {
+=======
+        }, {
+>>>>>>> remotes/origin/wechat_2.0:weapp/features/mall/configuration_management/add_postage.feature
 			"name" : "EMS"
 		}, {
 			"name" : "韵达"
