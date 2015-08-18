@@ -225,6 +225,7 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
             integral_sale_data)
     else:
         product.integral_sale_model = None
+    product.original_promotion_title = data['original_promotion_title']
 
     return product
 
