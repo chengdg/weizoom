@@ -20,13 +20,10 @@ from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember,ChannelQrcodeBingMember
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
-from mall.models import *
-from mall import module_api as mall_api
 from weixin2.message.util import get_member_groups
 from modules.member.models import MemberGrade
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
 import json
-from mall.promotion.models import CouponRule
 from excel_response import ExcelResponse
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from core.wxapi import get_weixin_api
