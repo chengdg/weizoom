@@ -19,6 +19,14 @@
 
 	<div class="xui-col disTc">
 		<div class="xui-i-item">
+			<label>会员状态：</label>
+			<select id="status" name="status">
+				<option value="-1">全部</option>
+				<option value="0">取消关注</option>
+				<option value="1">已关注</option>
+			</select>
+		</div>
+		<div class="xui-i-item">
 			<label>会员分组：</label>
 			<select id="member_tag" name="member_tag">
 				<option value="-1">全部</option>
@@ -27,50 +35,10 @@
 				{{/each}}
 			</select>
 		</div>
-
-		<div class="xui-i-item">
-			<label>平均客单价
-			：</label>
-
-			<input type="text" name="m_unit_price" class="form-control xui-w100 m_unit_price"/>
-			&nbsp;~&nbsp;
-			<input type="text" name="m_unit_price" class="form-control xui-w100 m_unit_price"/>
-		</div>
 	</div>
 
 	<div class="xui-col disTc">
-			<div class="xui-i-item">
-			<label>上次购买时间
-			：</label>
-
-			<input
-				type="text"
-				class="form-control xui-datePicker"
-				id="first_pay_start_date"
-				name="first_pay_start_date"
-				style=""
-			    value=""
-			    readonly="readonly"
-				data-validate="require-notempty"
-				data-ui-role="orderDatepicker"
-				data-enable-select-time="true"
-			    data-format="yy-mm-dd HH-MM"
-			    data-max="now"/>
-			<span class="ml5 mr5">至</span>
-			<input
-				type="text"
-				class="form-control xui-datePicker"
-				id="first_pay_end_date"
-				name="first_pay_end_date"
-			    value=""
-			    readonly="readonly"
-				data-validate="require-notempty"
-				data-ui-role="orderDatepicker"
-				data-enable-select-time="true"
-			    data-format="yy-mm-dd HH-MM"
-			    data-max="now"
-			    data-min-el="#first_pay_start_date"/>
-		</div>
+			
 		<div class="xui-i-item">
 			<label>关注时间：</label>
 			<input
@@ -100,6 +68,15 @@
 			    data-format="yy-mm-dd HH-MM"
 			    data-max="now"
 			    data-min-el="#sub_start_date"/>
+		</div>
+		<div class="xui-i-item">
+			<label>会员来源：</label>
+			<select id="source" name="source">
+				<option value="-1">全部</option>
+				<option value="0">直接关注</option>
+				<option value="1">推广扫码</option>
+				<option value="2">会员分享</option>
+			</select>
 		</div>
 	</div>
 <div class="hidden more-filter">
@@ -134,22 +111,69 @@
 	</div>
 
 	<div class="xui-col disTc">
+		
 		<div class="xui-i-item">
-			<label>会员状态：</label>
-			<select id="status" name="status">
-				<option value="-1">全部</option>
-				<option value="0">取消关注</option>
-				<option value="1">关注</option>
-			</select>
+			<label>周后购买时间
+			：</label>
+
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="first_pay_start_date"
+				name="first_pay_start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="first_pay_end_date"
+				name="first_pay_end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"
+			    data-min-el="#first_pay_start_date"/>
 		</div>
 		<div class="xui-i-item">
-			<label>会员来源：</label>
-			<select id="source" name="source">
-				<option value="-1">全部</option>
-				<option value="0">直接关注</option>
-				<option value="1">推广扫码</option>
-				<option value="2">会员分享</option>
-			</select>
+			<label>最后对话时间
+			：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="last_message_start_time"
+				name="last_message_start_time"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="last_message_end_time"
+				name="first_pay_end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"
+			    data-min-el="#last_message_start_time"/>
 		</div>
 	</div>
 	</div>

@@ -59,7 +59,6 @@ class MassSendingMessages(resource.Resource):
         webapp_id = request.user_profile.webapp_id
 
         params = request.POST.get('params', None)
-        print params, "{}{}{}{}{}{}{}"
 
         category = None
         status = None
@@ -120,6 +119,28 @@ class MassSendingMessages(resource.Resource):
                     member_list.append(id2name)
 
         sent_count = UserSentMassMsgLog.success_count(webapp_id)
+        unit_price = ""
+        pay_times = ""
+        pay_money = ""
+        if filter_data_args.has_key('unit_price__gte'):
+            if filter_data_args.has_key('unit_price__lte'):
+                unit_price = filter_data_args['unit_price__gte'] + '~' + filter_data_args['unit_price__lte']
+            else:
+                unit_price = ">" + filter_data_args['unit_price__gte']
+
+        if filter_data_args.has_key('pay_times__gte'):
+            if filter_data_args.has_key('pay_times__lte'):
+                pay_times = filter_data_args['pay_times__gte'] + '~' + filter_data_args['pay_times__lte']
+            else:
+                pay_times = ">" + filter_data_args['pay_times__gte']
+
+        if filter_data_args.has_key('pay_money__gte'):
+            if filter_data_args.has_key('pay_money__lte'):
+                pay_money = str(filter_data_args['pay_money__gte']) + '~' + str(filter_data_args['pay_money__lte'])
+            else:
+                pay_money = ">" + filter_data_args['pay_money__gte']
+
+
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
@@ -132,11 +153,11 @@ class MassSendingMessages(resource.Resource):
             'grade': grade,
             'sex': sex,
             'mode': mode,
-            'unit_price': filter_data_args['unit_price__gte'] + '~' + filter_data_args['unit_price__lte'] if filter_data_args.has_key('unit_price__gte') else '',
+            'unit_price': unit_price,
             'last_pay_time': filter_data_args['last_pay_time__gte'] + '~' + filter_data_args['last_pay_time__lte'] if filter_data_args.has_key('last_pay_time__gte') else '',
             'created_at': filter_data_args['created_at__gte'] + '~' + filter_data_args['created_at__lte'] if filter_data_args.has_key('created_at__gte') else '',
-            'pay_money': str(filter_data_args['pay_money__gte']) + '~' + str(filter_data_args['pay_money__lte']) if filter_data_args.has_key('pay_money__gte') else '',
-            'pay_times': str(filter_data_args['pay_times__gte']) + '~' + str(filter_data_args['pay_times__lte']) if filter_data_args.has_key('pay_times__gte') else '',
+            'pay_money': pay_money,
+            'pay_times': pay_times,
             'integral': str(filter_data_args['integral__gte']) + '~' + str(filter_data_args['integral__lte']) if filter_data_args.has_key('integral__gte') else '',
             'member_list': member_list,
             'member_ids_str': member_ids_str,

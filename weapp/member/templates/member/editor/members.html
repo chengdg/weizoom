@@ -86,21 +86,21 @@
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
 					    	<a class="" type="button"  href="javascript:void(0);">
-								给选中的人修改等级
+								给选中的人修改分组
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		<li><a href="javascript:void(0);"  data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=""  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人修改等级
+								给筛选出来的所有人修改分组
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}" data-status="all">{{tag.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -199,21 +199,21 @@
 				   	<ul class="dropdown-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
 					    <li class="dropdown-submenu">
 					    	<a class="" type="button"  href="javascript:void(0);">
-								给选中的人修改等级
+								给选中的人修改分组
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		<li><a href="javascript:void(0);" data-status="selected" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
 					    <li class="dropdown-submenu">
 					    	<a class=""  type="button"  href="javascript:void(0);" >
-								给筛选出来的所有人修改等级
+								给筛选出来的所有人修改分组
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   		<li><a href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -489,6 +489,7 @@ $(document).ready(function() {
 	$('.update_dropdown').delegate('.update-tag', 'click', function(event){
 		var post_ids = [];
 		var tag_id = $(this).attr('data-id');
+		var status = $(this).attr('data-status');
 	 	$('input.xa-select:checked').each(function(){
     		console.log($(this).parent().parent().attr('data-id'))
     		post_ids.push($(this).parent().parent().attr('data-id'))
@@ -496,15 +497,28 @@ $(document).ready(function() {
 	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
 		dataView.setPage(1);
 		dataView.args = view.getFilterValue();
-	 	if (tag_id && post_ids.length > 0) {
+
+		var args = {ids:post_ids.join('-'), tag_id:tag_id, update_status:status};
+		if (status == 'all') {
+			// 合并筛选条件
+			var dataArgs = JSON.parse(view.getFilterValueByDict(dataView.args));
+			args = _.extend(args, dataArgs);
+		} else {
+			if (post_ids.length == 0){
+				W.getErrorHintView().show('请先选择会员！');
+				return;
+			}
+		}
+	 	if (tag_id && post_ids.length > 0 || status == 'all') {
 	 		W.getApi().call({
 	            method: 'post',
 	            app: 'member',
 	            api: 'tag/batch_update',
-	            args:{ids:post_ids.join('-'), tag_id:tag_id},
+	            args:args,
 	            success: function(data) {
 	                // window.location.reload();
-	                  dataView.reload();
+	                W.showHint('success', "添加分组成功");
+	                dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
