@@ -305,6 +305,24 @@
     -webkit-background-size: 100%;
     background-size: 100%;
 }
+.xui-refundOrderPage .xui-buyerHint i{
+    display: inline-block;
+    width: 18px;
+    height: 17px;
+    margin-bottom: -4px;
+    background: url(/static_v2/img/editor/info.png);
+    -webkit-background-size: 100%;
+    background-size: 100%;
+}
+.xui-auditOrderPage .xui-buyerHint i{
+    display: inline-block;
+    width: 18px;
+    height: 17px;
+    margin-bottom: -4px;
+    background: url(/static_v2/img/editor/info.png);
+    -webkit-background-size: 100%;
+    background-size: 100%;
+}
 .xui-buyerHintDropBox {
     border: 1px solid #d6d4d1;
     border-radius: 4px;
