@@ -65,7 +65,6 @@ def new_get_members(request, filter_value):
             if key == 'name':
                 query_hex = byte_to_hex(value)
                 filter_data_args["username_hexstr__contains"] = query_hex
-            print  filter_data_args
             if key == 'grade_id':
                 filter_data_args["grade_id"] = value
 
@@ -110,5 +109,21 @@ def new_get_members(request, filter_value):
                         filter_data_args['integral__gte'] = val1
                         filter_data_args['integral__lte'] = val2
 
+            if key  == 'last_message_time':
+                val1,val2 = value.split('--')
+                session_filter = {}
+                session_filter['mpuser__owner_id'] = request.manager.id
+                session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
+                session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
+
+                opids = get_opid_from_session(session_filter)
+                session_member_ids = module_api.get_member_ids_by_opid(opids)
+                if filter_data_args.has_key('id__in'):
+                    member_ids = filter_data_args['id__in']
+                    member_ids = list(set(member_ids).intersection(set(session_member_ids)))
+                    filter_data_args['id__in'] = member_ids
+                else:
+                    filter_data_args['id__in'] = session_member_ids
+
     members = Member.objects.filter(**filter_data_args)
-    return members, filter_data_args
+    return members, filter_data_args, session_filter

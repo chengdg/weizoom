@@ -77,6 +77,10 @@
                     <span class="xui-sendTargetGroup ml5">积分范围({{integral}})
                     </span>
                 {% endif %}
+                {% if last_message_time %}
+                    <span class="xui-sendTargetGroup ml5">积分范围({{last_message_time}})
+                    </span>
+                {% endif %}
 
                 <div class="hidden xa-sendMemberIds" data-send-member-ids={{member_ids_str}}></div>
             {% else %}
