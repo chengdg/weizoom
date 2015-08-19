@@ -17,6 +17,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 	initialize: function(options) {
 		this.$el = $(this.el);
         this.navsStr = this.$el.attr('data-json') || '';
+        this.navsbarType = this.$el.attr('data-navbar-type') || '';
         this.maxItemLength = 5;
 	},
 
@@ -39,8 +40,26 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
         }, 30);
 	},
 
+    setNavbarType: function(type){
+        if (type == 'weixin') {
+            this.setMaxItemLength(5);
+        } else {
+            this.setMaxItemLength(999);
+        }
+    },
+
     setMaxItemLength: function(length){
         this.maxItemLength = length;
+        this.isShowAddBtn();
+    },
+
+    isShowAddBtn: function(){
+        var length = this.$el.find('.xa-nav').length;
+        if (this.maxItemLength <= length && this.maxItemLength > 0) {
+            this.$el.find('.xa-navbar-secondnav-add').hide();
+        }else{
+            this.$el.find('.xa-navbar-secondnav-add').show();
+        }
     },
 
     addSecondNav: function(data){
@@ -76,11 +95,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 		this.trigger('update-show-box', this.$el, length);
         this.setJsonData();
 
-        if (this.maxItemLength <= length && this.maxItemLength > 0) {
-            this.$el.find('.xa-navbar-secondnav-add').hide();
-        }else{
-            this.$el.find('.xa-navbar-secondnav-add').show();
-        }
+        this.isShowAddBtn();
 	},
 
 	onInputValue: function(event) {
@@ -172,6 +187,8 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
         this.setJsonData();
         var length = this.$el.find('.xa-nav').length;
         this.trigger('update-show-box', this.$el, length);
+        
+        this.isShowAddBtn();
     }
 
 });

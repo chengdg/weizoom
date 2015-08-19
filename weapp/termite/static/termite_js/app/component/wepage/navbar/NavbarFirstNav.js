@@ -71,9 +71,11 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             parentComponent.refresh($node, {resize:true});
         }
     },
-
     setLimitation: function(args) {
         xwarn('----- set limitation -----');
         xwarn(args);
+        console.log(2323, this.name2field);
+        this.name2field['title'].maxLength = args.titleMaxLength;
+        // alert(this.name2field['title'].maxLength);
     }
 });

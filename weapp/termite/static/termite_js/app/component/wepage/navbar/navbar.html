@@ -11,24 +11,22 @@
         <div class="xui-home">
             <a href="###" class="xui-bg"></a>
         </div>
-        {% with component.components|length as fisrt_count %}
-        {% for fisrt_component in component.components %}
-            <div data-component-cid="{{fisrt_component.cid}}" class="xui-flex xui-flex-two">
+        {% for component in component.components %}
+            <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-two">
                 <div class="xui-menu xa-menu f14">
-                    <a href="###" class="wa-inner-link">{{ fisrt_component.model.title }}</a>
+                    <a href="###" class="wa-inner-link">{{ component.model.title }}</a>
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>
                     <span class="xui-menuArrowBorder"></span>
                     <ul class="xui-subMenu">
-                        {% for second_nav in fisrt_component.model.second_navs %}
+                        {% for second_nav in component.model.second_navs %}
                         <li class="f12"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
             </div>
         {% endfor %}
-        {% endwith %}
 	</div>
 	{% endif  %}
 	{% if component.model.type == "slide" %}
@@ -50,27 +48,21 @@
 				<li class="xui-firstNav">
 					<a href="###">
 						<span>全部商品<i class="xui-leftArrow"></i></span>
-					</a></li>
-				<li class="xui-firstNav xa-firstNav"> 
-					<a href="###">
-						<span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
 					</a>
-					<ul class="xui-subMenu">
-						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-					</ul>
-				</li>
-				 <li class="xui-firstNav xa-firstNav"> 
-					<span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
-				</li>
-				 <li class="xui-firstNav xa-firstNav"> 
-					<span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
-					<ul class="xui-subMenu">
-						<li class="pl50">衣服分类衣服分类衣服</li>
-					</ul>
-				</li>
+                </li>
+
+                {% for component in component.components %}
+                <li class="xui-firstNav xa-firstNav" data-component-cid="{{component.cid}}"> 
+                    <a href="###">
+                        <span class="wa-inner-link">{{ component.model.title }}<i class="xui-leftArrow"></i></span>
+                    </a>
+                    <ul class="xui-subMenu">                        
+                        {% for second_nav in component.model.second_navs %}
+                        <li class="pl50"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
 			</ul>
 		</div>
 	</div>

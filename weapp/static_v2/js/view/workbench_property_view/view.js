@@ -853,6 +853,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         var view = $el.data('view');
         xwarn(view);
 
+        view.setNavbarType(this.component.model.get('type'));
         view.bind('update-show-box', function($el, length){
             var urlBox = $el.parents('.propertyGroup_property_dynamicControlField_content').children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
             var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');

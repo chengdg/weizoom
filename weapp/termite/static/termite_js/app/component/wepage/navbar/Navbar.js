@@ -79,7 +79,7 @@ W.component.wepage.Navar = W.component.Component.extend({
 
             this.type2items[oldType] = model.get('items');
             this.type2components[oldType] = this.components;
-            xwarn(this.name2field['items'])
+
             var items = this.type2items[value];
             if (!items) {
                 model.set('items', [], {silent:true});
@@ -105,9 +105,21 @@ W.component.wepage.Navar = W.component.Component.extend({
             xwarn('-------------------')
             xwarn(model.get('items'));
 
+            // 修改 一级菜单 限制
+            var titleMaxLength = 5;
+            if (oldType == 'weixin') {
+                this.name2field['items'].maxItemLength = 999;
+                titleMaxLength = 10;
+            } else {
+                this.name2field['items'].maxItemLength = 3;
+                titleMaxLength = 5;
+            }
+            // 修改 一级菜单 标题的字数限制
             _.each(this.components, function(subComponent) {
                 if (subComponent.setLimitation) {
-                    subComponent.setLimitation({});
+                    subComponent.setLimitation({
+                        titleMaxLength: titleMaxLength
+                    });
                 }
             });
             this.refresh($node, {resize:true, refreshPropertyView:true});
