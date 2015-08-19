@@ -2146,7 +2146,7 @@ def get_product_ids_in_weizoom_mall(webapp_id):
 	return [weizoom_mall_other_mall_product.product_id for weizoom_mall_other_mall_product in WeizoomMallHasOtherMallProduct.objects.filter(webapp_id=webapp_id)]
 
 
-def update_order_status(user, action, order, request=None):
+def update_order_status(user, action, order, request=None, leader_name=None):
 	"""
 	修改订单状态
 
@@ -2163,6 +2163,8 @@ def update_order_status(user, action, order, request=None):
 	"""
 	order_id = order.id
 	operation_name = user.username
+	if leader_name:
+		operation_name = operation_name + '-' + leader_name
 	action_msg = None
 	if action == 'pay':
 		action_msg = '支付'
@@ -2179,6 +2181,8 @@ def update_order_status(user, action, order, request=None):
 		mall_signals.post_pay_order.send(sender=Order, order=order, request=request)
 	elif action == 'ship':
 		action_msg = '发货'
+		if leader_name:
+			action_msg = '订单发货'
 		target_status = ORDER_STATUS_PAYED_SHIPED
 	elif 'finish' in action:
 		action_msg = '完成'

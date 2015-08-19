@@ -56,12 +56,13 @@ class OrderInfo(resource.Resource):
         ship_name = request.POST.get('ship_name', None)
         ship_tel = request.POST.get('ship_tel', None)
         ship_address = request.POST.get('ship_address', None)
+        leader_name = request.POST.get('leader_name', None)
         remark = request.POST.get('remark', '').strip()
 
         order = Order.objects.get(id=order_id)
 
         if action:
-            mall_api.update_order_status(request.user, action, order, request)
+            mall_api.update_order_status(request.user, action, order, request, leader_name)
 
         else:
             operate_log = ''
