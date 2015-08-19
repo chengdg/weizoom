@@ -12,6 +12,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
         {
             group: '属性1',
             groupClass:'xui-propertyView-navbar-firstnav-property',
+            groupName: '一级菜单',
             fields: [{
             	name: 'title',
             	type: 'text',
