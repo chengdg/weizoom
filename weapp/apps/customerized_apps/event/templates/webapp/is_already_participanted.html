@@ -1,0 +1,39 @@
+{% extends "webapp_content_base_v4.html" %}
+{% block css %}
+    <style>
+    .wui-i-time > span{
+        display: block;
+        height: 35px;
+        line-height: 35px;
+        float: left;
+    }
+    .wui-i-isParticipanted{
+        float: right;
+        line-height: 35px;
+        color: #cf0404;
+    }
+    </style>
+
+{% endblock %}
+
+{% block content-panel %}
+    <div class="wa-page xui-default-background" data-page-title="">
+        <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
+            <h1 class="wui-i-title xa-title">{{ event_detail.name }}</h1>
+            <h2 class="wui-i-subtitle xa-subtitle">{{ event_detail.subtitle }}</h2>
+            <div class="wui-i-description">
+                {{ event_detail.description|safe }}
+            </div>
+            <div class="wui-i-info">
+                <div class="wui-i-time">
+                    <span>此活动于{{ event_detail.end_time }}过期</span>
+                </div>
+                <div class="wui-i-isParticipanted">您已报名</div>
+                <div style="clear: both"></div>
+                <div style="clear: both"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+{% endblock %}

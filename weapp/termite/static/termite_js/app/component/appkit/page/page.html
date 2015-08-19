@@ -3,7 +3,7 @@
 {% ifequal component.type 'appkit.page' %}
 <div 
 	class="wa-page {{component.model.class}} {% if not component.model.background %}xui-default-background{% endif %}" 
-    data-page-title="{{component.model.site_title}}"
+{#    data-page-title="{{component.model.site_title}}"#}
 	{% if component.model.background %}style="background-image: url({{component.model.background}})"{% endif %}
 >
 {% if in_production_mode %}

@@ -32,7 +32,7 @@ var initDom = function(options) {
                 <div class="wui-i-background">\
                     <div class="wui-i-successIcon">&#10003</div>\
                     <div class="wui-i-successText">提交成功</div>\
-                    <div class="wui-i-info">您获得了<span class="xa-appParticipantResult-prizeContent"></span><br/>赶紧去个人中心查看吧</div>\
+                    <div class="wui-i-info"><div class="wui-i-info-prize">您获得了<span class="xa-appParticipantResult-prizeContent"></span><br/>赶紧去个人中心查看吧</div></div>\
                     <div class="wui-i-close xa-closeParticipantResult">&#10005</div>\
                 </div>\
             </div>');
@@ -49,7 +49,7 @@ var initDom = function(options) {
         if (prize) {
             $node.find('.xa-appParticipantResult-prizeContent').text(prize);
         } else {
-            $node.find('.wui-i-info').remove();
+            $node.find('.wui-i-info-prize').remove();
         }
         $body.append($node);
 

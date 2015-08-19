@@ -15,32 +15,26 @@ import export
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
-ITEM_FOR_DISPLAY = {
-	'phone': u'手机号',
-	'name': u'姓名',
-	'email': u'邮箱'
-}
-
-class eventParticipances(resource.Resource):
-	app = 'apps/event'
-	resource = 'event_participances'
+class surveyParticipances(resource.Resource):
+	app = 'apps/survey'
+	resource = 'survey_participances'
 	
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
-		has_data = app_models.eventParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.surveyParticipance.objects(belong_to=request.GET['id']).count()
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_second_navs(request),
-			'second_nav_name': "events",
+			'second_nav_name': "surveies",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
 		});
 		
-		return render_to_response('event/templates/editor/event_participances.html', c)
+		return render_to_response('survey/templates/editor/survey_participances.html', c)
 	
 	@staticmethod
 	def get_datas(request):
@@ -51,6 +45,7 @@ class eventParticipances(resource.Resource):
 			webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 			if not webapp_user_ids:
 				webapp_user_ids = [-1]
+
 		else:
 			webapp_user_ids = []
 		start_time = request.GET.get('start_time', '')
@@ -63,7 +58,7 @@ class eventParticipances(resource.Resource):
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
-		datas = app_models.eventParticipance.objects(**params).order_by('-id')	
+		datas = app_models.surveyParticipance.objects(**params).order_by('-id')
 		
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -77,7 +72,7 @@ class eventParticipances(resource.Resource):
 		"""
 		响应API GET
 		"""
-		pageinfo, datas = eventParticipances.get_datas(request)
+		pageinfo, datas = surveyParticipances.get_datas(request)
 		
 		webappuser2datas = {}
 		webapp_user_ids = set()
@@ -96,22 +91,11 @@ class eventParticipances(resource.Resource):
 		
 		items = []
 		for data in datas:
-			item_data_list = []
-			event_participance = app_models.eventParticipance.objects.get(id=data.id)
-			termite_data = event_participance.termite_data
-			for k, v in termite_data.items():
-				pureName = k.split('_')[1]
-				item_data = {}
-				item_data['item_name'] = pureName
-				item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
-				item_data['item_value'] = v['value']
-				item_data_list.append(item_data)
 			items.append({
 				'id': str(data.id),
 				'participant_name': data.participant_name,
 				'participant_icon': data.participant_icon,
-				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-				'informations': item_data_list
+				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {
 			'items': items,

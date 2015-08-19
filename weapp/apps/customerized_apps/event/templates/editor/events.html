@@ -67,9 +67,9 @@
 				<div class="xui-i-item">
 					<label>奖项类型：</label>
 					<select class="" id="prize_type" name="prize_type">
-						<option value="-1">所有奖品</option>
-						<option value="0">优惠券</option>
-						<option value="1">积分</option>
+						<option value="all">所有奖品</option>
+						<option value="coupon">优惠券</option>
+						<option value="integral">积分</option>
 					</select>
 				</div>
 			</div>
@@ -266,7 +266,7 @@ $(document).ready(function() {
 		$('[name="status"]').val('-1');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
-		$('[name="prize_type"]').val('-1');
+		$('[name="prize_type"]').val('all');
 	});
 
 });

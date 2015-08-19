@@ -14,7 +14,8 @@
         border-bottom: 0;
     }
     .ui-progressbar-h .ui-progressbar-bg {
-        height: 10px;
+        height: 15px;
+        margin-top: 10px;
     }
     .ui-progressbar-bg {
         background: #eee none repeat scroll 0 0;
@@ -24,49 +25,91 @@
         background: #1BA3F9;
         border-radius: 0;
     }
-
+    .wui-i-time > span,.wui-i-prize > span{
+        display: block;
+        height: 35px;
+        line-height: 35px;
+        float: left;
+    }
+    .wui-i-sprite-timerange{
+        background: url('/static_v2/img/m_sprite.png') no-repeat;
+        background-position: 0 5px;
+        display: block;
+        height: 35px;
+        width: 40px;
+        float: left;
+    }
+    .wui-i-sprite-prize{
+        background: url('/static_v2/img/m_sprite.png') no-repeat;
+        background-position: -40px 5px;
+        display: block;
+        height: 35px;
+        width: 40px;
+        float: left;
+    }
+    .xui-name-isSelect{
+        width: 20px;
+        height: 20px;
+    }
     </style>
 
 {% endblock %}
 
 {% block content-panel %}
     <div class="wa-page xui-default-background" data-page-title="">
-    <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
-<h1 class="wui-i-title xa-title">{{ vote_detail.name }}</h1>
-<h2 class="wui-i-subtitle xa-subtitle">{{ vote_detail.subtitle }}</h2>
-<div class="wui-i-description">
-    {{ vote_detail.description|safe }}
-</div>
-<div class="wui-i-info">
-<div class="wui-i-time"> <i class="wui-i-sprite wui-i-sprite-timerange"><i>{{ vote_detail.start_time }}至{{ vote_detail.end_time }} </div>
-<div class="wui-i-prize">
-    <i class="wui-i-sprite wui-i-sprite-prize"><i>
-        {% if vote_detail.prize_type == 'integral' %}{{ vote_detail.prize_data }}积分{% endif %}
-</div>
-</div>
+        <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
+            <h1 class="wui-i-title xa-title">{{ vote_detail.name }}</h1>
+            <h2 class="wui-i-subtitle xa-subtitle">{{ vote_detail.subtitle }}</h2>
+            <div class="wui-i-description">
+                {{ vote_detail.description|safe }}
+            </div>
+            <div class="wui-i-info">
+                <div class="wui-i-time">
+                    <i class="wui-i-sprite wui-i-sprite-timerange"></i>
+                    <span>{{ vote_detail.start_time }}至{{ vote_detail.end_time }}</span>
+                </div>
+                <div style="clear: both"></div>
+                <div class="wui-i-prize">
+                    <i class="wui-i-sprite wui-i-sprite-prize"></i>
+                    <span>{% if vote_detail.prize_type == 'integral' %}{{ vote_detail.prize_data }}积分{% endif %}</span>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        </div>
+        {% for item in q_vote %}
+            {% if item.values %}
+                <div class="wui-textSelection">
+                    <h1 class="wui-i-title">
+                        {{ forloop.counter }}、{{ item.title }}
+                    </h1>
+                    <ul class="wui-i-items xa-inputControl">
+                        {% for select in item.values %}
+                        <li class="wui-i-item">
+                            <label style="display:block; padding: 3px 0px;" >
+                                <img class="xui-name-isSelect" src="{% if select.isSelect %} /static_v2/img/selected.png {% else %} /static_v2/img/not_select.png{% endif %}" /><span class="ml5 xa-itemTitle">{{ select.name }}</span>
+                                <span style="display: inline-block;float: right;">{{ select.per }}%</span>
+                                <span style="display: inline-block;float: right; margin-right: 10px">{{ select.count }}票</span>
+                                <div data-per="{{ select.per }}" id="progressbar-{{ item.title }}-{{ select.name }}" class="progressbar"></div>
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+            <ul class="wui-shortcuts" style="padding: 0">
+                <li class="wui-i-item">
+                    <label class="wui-i-label">{{ item.title }}</label>
+                    <div class="wui-i-inputContainer xa-inputControl" >
+                        <input class="wui-i-input" type="text"  placeholder="请输入{{ item.title }}" disabled>
+                    </div>
+                </li>
+            </ul>
+            {% endif %}
+        {% endfor %}
+        <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >
+            <a class="xui-btn xui-btn-primary xa-submitTermite" style="" href="javascript:void(0);" data-role="button">个人中心</a>
+        </div>
     </div>
-{% for item in q_vote %}
-    <div class="wui-textSelection" style="" data-component-cid="5">
-        <h1 class="wui-i-title">
-            {{ item.title }}
-        </h1>
-        <ul class="wui-i-items xa-inputControl">
-            {% for a in item.values %}
-            <li class="wui-i-item" style="" data-component-cid="6">
-                <label style="display:block; padding: 3px 0px;" for="radio_item_6">
-                    <span class="ml5 xa-itemTitle">{{ a.name }}</span>
-                    <span style="display: inline-block;float: right;">{{ a.per }}%</span>
-                    <div data-per="{{ a.per }}" id="progressbar-{{ item.title }}-{{ a.name }}" class="progressbar"></div>
-                </label>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endfor %}
-    <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" data-component-cid="3">
-<a class="xui-btn xui-btn-primary xa-submitTermite" style="" href="javascript:void(0);" data-role="button">个人中心</a>
-</div>
-</div>
 {% endblock %}
 {% block js %}
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>

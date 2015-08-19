@@ -2,12 +2,12 @@
 {% load apps_filter %}
 
 {% block content-panel %}
-<div class="xui-eventParticipancesAppPage xui-appPage-commonStyle">
+<div class="xui-surveyParticipancesAppPage xui-appPage-commonStyle">
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
 			<li><a href="/apps/">百宝箱</a></li>
-			<li><a href="/apps/event/events/">活动报名</a></li>
+			<li><a href="/apps/survey/surveies/">用户调研</a></li>
 			<li class="active">查看结果</li>
 		</ul>
 	</div>
@@ -15,14 +15,13 @@
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
-				<label class="">用户名：</label>
+				<label class="">用户名 &nbsp;</label>
 				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
 			</div>
 		</div>
 		<div class="xui-i-col">
 			<div class="xui-i-item ml10">
-				<label>活动时间
-				：</label>
+				<label>调研时间 &nbsp;</label>
 				<input
 					type="text"
 					class="form-control xui-datePicker"
@@ -63,8 +62,8 @@
 		<div 
 			class="panel-body panel-table p0 mt10"
 			data-ui-role="advanced-table" 
-			data-app="apps/event" 
-			data-resource="event_participances" 
+			data-app="apps/survey" 
+			data-resource="survey_participances" 
 			data-args='{"id": "{{activity_id}}"}'
 			data-template-id="#table" 
 			data-enable-paginator="true" 
@@ -80,7 +79,7 @@
 
 
 {% block js %}
-{{ "event"|load_app_views_and_dialogs|safe }}
+{{ "survey"|load_app_views_and_dialogs|safe }}
 {% verbatim %}
 <script id="table" type="text/x-jquery-tmpl">
 	{{if items!='' }}
@@ -88,8 +87,8 @@
 		<thead>
 			<tr>
 				<th>用户名</th>
-				<th>报名时间</th>
-				<th>信息</th>
+				<th>调研时间</th>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -106,9 +105,7 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{each(i, information) informations}}
-						${information.item_name}:${information.item_value}<br />
-					{{/each}}
+					<a href="javascript:void(0);" class="ml5 xa-viewData">查看结果</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -127,15 +124,15 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	// $('body').delegate('.xa-viewData', 'click', function(event) {
-	// 	var activityId = $(event.currentTarget).parents('tr').data('id');
-	// 	W.dialog.showDialog('W.dialog.app.event.ViewParticipanceDataDialog', {
-	// 		activityId: activityId,
-	// 		success: function(data) {
-	// 			alert(data);
-	// 		}
-	// 	});
-	// });
+	$('body').delegate('.xa-viewData', 'click', function(event) {
+		var activityId = $(event.currentTarget).parents('tr').data('id');
+		W.dialog.showDialog('W.dialog.app.survey.ViewParticipanceDataDialog', {
+			activityId: activityId,
+			success: function(data) {
+				// alert(data);
+			}
+		});
+	});
 	
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());

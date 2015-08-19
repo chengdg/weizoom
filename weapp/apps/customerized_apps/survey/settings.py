@@ -28,42 +28,6 @@ NEW_PAGE_JSON = """
         }, {
             "cid": 3,
             "pid": 1,
-            "property_view_title": "报名填写项",
-            "force_display_in_property_view": "no",
-            "components": [],
-            "selectable": "yes",
-            "type": "appkit.textlist",
-            "model": {
-                "index": 4,
-                "is_mandatory": "true",
-                "name": "",
-                "class": "",
-                "id": "",
-                "modules": {
-                    "name": {
-                        "select": "yes"
-                    },
-                    "phone": {
-                        "select": "yes"
-                    },
-                    "email": {
-                        "select": "yes"
-                    },
-                    "qq": {
-                        "select": ""
-                    },
-                    "job": {
-                        "select": ""
-                    },
-                    "addr": {
-                        "select": ""
-                    }
-                }
-            },
-            "has_global_content": "no"
-        },{
-            "cid": 4,
-            "pid": 1,
             "property_view_title": "提交按钮",
             "force_display_in_property_view": "no",
             "components": [],
@@ -74,11 +38,11 @@ NEW_PAGE_JSON = """
                 "name": "",
                 "class": "",
                 "id": "",
-                "text": "我要报名"
+                "text": "提交"
             },
             "has_global_content": "no"
         }, {
-            "cid": 5,
+            "cid": 4,
             "pid": 1,
             "property_view_title": "新加模块",
             "force_display_in_property_view": "no",
