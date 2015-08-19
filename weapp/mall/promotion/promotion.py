@@ -319,9 +319,9 @@ class PromotionList(resource.Resource):
                 "name": promotion.name,
                 "promotionTitle": promotion.promotion_title,
                 "type": models.PROMOTION2TYPE[promotion.type],
-                "start_date": promotion.start_date.strftime("%Y-%m-%d %H:%M"),
-                "end_date": promotion.end_date.strftime("%Y-%m-%d %H:%M"),
-                "created_at": promotion.created_at.strftime("%Y-%m-%d"),
+                "start_date": promotion.start_date,
+                "end_date": promotion.end_date,
+                "created_at": promotion.created_at,
                 "detail": promotion.detail,
                 "products": []
             }

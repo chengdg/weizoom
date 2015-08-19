@@ -1,6 +1,25 @@
 # __edit__ : "benchi"
 Feature: 在webapp中购买参与限时抢购活动的商品
+"""
 	用户能在webapp中购买"参与限时抢购活动的商品"
+
+	# __edit__ : 王丽
+	1、限时抢购活动的设置规则
+		1）【限购广告语】：在商品名称后红字显示
+		2）【活动时间】：开始结束时间只能选择今天及其之后的时间，结束时间必须在开始时间之后
+		3）【会员等级】：设置什么等级的会员可以参加此次活动，下拉选项为：全部会员、会员等级中设置会员等级列表；选择"全部会员"或者单选一级会员
+		4）【限购价格】：限购价格必须小于商品原价；多规格商品只能定义一个限购价格，不能根据不同规格定义限购价格
+		5）【单人单次限购】：单人单次限购的数量；空为不限制
+		6）【限购周期】：（？天），舍设置限购的周期，即设置多少天内只能购买一次；只要提交订单（订单状态不是"已取消"）就算购买一次；空为不限制
+	2、限时抢购商品订单规则
+		1）设置了"单人单次限购"的，在下订单的时候，数量只能增加到限购的数量，再增加数量不变，会给出提示"限购？件"
+		2）购买多规格的有"单人单次限购"的限时抢购商品，在加入购物车时，不同规格分别限购，提交订单时，对限购数量不区分规格计算,
+		订单中多规格商品数量的总和超过限购数量，给出提示"该订单内商品状态发生变化"
+		3）会员既具有会员等级价又具有会员限时抢购权限的，限时抢购活动优先于会员等级价，会员看到的商品的价格是"限时抢购价格"，按照限时抢购的价格形成订单
+
+	3、设置了“限时抢购”的商品，不能再设置“买赠”“优惠券活动”，三个活动是互斥的，只要设置了其中的一个活动，就不能再设置其他两个活动
+	
+"""
 
 Background:
 	Given jobs登录系统
@@ -84,6 +103,7 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"products": ["商品1"],
+			"member_grade": "全部",
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
 		}, {
@@ -91,6 +111,7 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"products": ["商品2"],
+			"member_grade": "全部",
 			"promotion_price": 2.1,
 			"limit_period": 1
 		}, {
@@ -98,11 +119,65 @@ Background:
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"products": ["商品3"],
+			"member_grade": "全部",
 			"promotion_price": 3.1
+		}]
+		"""
+	#会员等级
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"discount": "10.0"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9.0"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8.0"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7.0"
 		}]
 		"""
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
+	And sam关注jobs的公众号
+	And jobs登录系统
+	And jobs调tom等级为铜牌会员
+	And jobs调sam等级为银牌会员
+	Then jobs可以获得会员列表
+	"""
+		[{
+			"name": "sam",
+			"grade_name": "银牌会员"
+		}, {
+			"name": "tom",
+			"grade_name": "铜牌会员"
+		}, {
+			"name": "bill",
+			"grade_name": "普通会员"
+		}]
+	"""
 
 
 @mall2 @mall.promotion @mall.webapp.promotion
@@ -156,7 +231,7 @@ Scenario: 1 购买单个限时抢购商品，限时抢购进行中
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion @zy_fs02
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs02 
 Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车中是限时抢购商品，但，去提交订单时已经不是限时抢购商品）
 
 	When bill访问jobs的webapp
@@ -180,7 +255,7 @@ Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车
 		}
 		"""
 
-@mall2 @mall.promotion @mall.webapp.promotion @zy_fs03
+@mall2 @mall.promotion @mall.webapp.promotion @zy_fs03 
 Scenario:3 购买单个限时抢购商品，限时抢购活动没开始，按原价下单
 
 	Given jobs登录系统
@@ -451,8 +526,8 @@ Scenario: 9 购买多规格限时抢购商品同时适用于积分规则
 	And jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 2,
-			"订单积分抵扣上限": 50
+			"integral_each_yuan": 2,
+			"use_ceiling": 50
 		}
 		"""
 
@@ -554,7 +629,7 @@ Scenario: 10 购买单个限时抢购商品，购买时活动进行中，提交�
 		"""
 
 
-# 后续补充.雪静
+# 雪静
 @zy_fs11 @mall2 @mall.promotion @mall.webapp.promotion
 Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还可以再次下单
 	有限购周期和限购数量设置
@@ -598,10 +673,10 @@ Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还�
 		{
 			"status": "待支付",
 			"final_price": 11.5,
-			"actions": ["取消", "支付","修改价格"]
+			"actions": ["取消订单", "支付","修改价格"]
 		}
 		"""
-	When jobs'取消'最新订单
+	When jobs"取消"最新订单
 		"""
 		 {
 		 	"reason": "不想要了"
@@ -641,6 +716,492 @@ Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还�
 		{
 			"status": "待支付",
 			"final_price": 23.00,
-			"actions": ["取消", "支付","修改价格"]
+			"actions": ["取消订单", "支付","修改价格"]
 		}
 		"""
+
+
+#后续补充会员等级价.师帅
+@mall2
+Scenario:12 不同等级的会员购买有会员价同时有限时抢购的商品（限时抢购优先于会员价）
+	When jobs更新商品'商品1'
+	"""
+	{
+		"is_member_product": "on",
+		"model": {
+			"models": {
+				"standard": {
+					"stock_type": "有限",
+					"stocks": 30,
+					"price": 100
+				}
+			}
+		}
+	}
+	"""
+	#When jobs创建限时抢购活动
+	#"""
+	#	[{
+	#		"name": "商品1限时抢购",
+	#		"start_date": "今天",
+	#		"end_date": "1天后",
+	#		"products": ["商品1"],
+	#		"member_grade": "全部",
+	#		"promotion_price": 11.5
+	#	}]
+	#"""
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 23.00,
+			"product_price": 23.00,
+			"promotion_saved_money": 177.0,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"count": 2,
+				"price": 11.5,
+				"promotion": {
+					"promotioned_product_price": 11.5,
+					"type": "flash_sale"
+				}
+			}]
+		}
+		"""
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then tom成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 23.00,
+			"product_price": 23.00,
+			"promotion_saved_money": 177.0,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"count": 2,
+				"promotion": {
+					"promotioned_product_price": 11.5,
+					"type": "flash_sale"
+				}
+			}]
+		}
+		"""
+@mall2
+Scenario:13 不同等级的会员购买有会员价同时有会员等级限时抢购的商品（限时抢购优先于会员价）
+	When jobs更新商品'商品1'
+	"""
+	{
+		"is_member_product": "on",
+		"model": {
+			"models": {
+				"standard": {
+					"stock_type": "有限",
+					"stocks": 30,
+					"price": 100
+				}
+			}
+		}
+	}
+	"""
+	And jobs结束促销活动'商品1限时抢购'
+	And jobs创建限时抢购活动
+	"""
+		[{
+			"name": "商品1限时抢购-50",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品1"],
+			"member_grade": "银牌会员",
+			"promotion_price": 50.0
+		}]
+	"""
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 200.0,
+			"product_price": 200.0,
+			"promotion_saved_money": 0.00,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then tom成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 180.0,
+			"product_price": 180.0,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"price": 90.0,
+				"count": 2
+			}]
+		}
+		"""
+		#	"promotion_saved_money": 20.0,
+	When sam访问jobs的webapp
+	And sam购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then sam成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 100.0,
+			"product_price": 100.0,
+			"promotion_saved_money": 100.0,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"count": 2,
+				"promotion": {
+					"promotioned_product_price": 50.0,
+					"promotion_saved_money": 100.0,
+					"type": "flash_sale"
+				}
+			}]
+		}
+		"""
+@mall2
+Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商品
+	When jobs更新商品'商品1'
+	"""
+	{
+		"is_member_product": "off",
+		"model": {
+			"models": {
+				"standard": {
+					"price": 100.00,
+					"stock_type": "有限",
+					"stocks": 30
+				}
+			}
+		}
+	}
+	"""
+	And jobs结束促销活动'商品1限时抢购'
+	And jobs创建限时抢购活动
+	"""
+		[{
+			"name": "商品1限时抢购-50",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品1"],
+			"member_grade": "银牌会员",
+			"promotion_price": 50.0
+		}]
+	"""
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 200.0,
+			"product_price": 200.0,
+			"promotion_saved_money": 0.00,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then tom成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 200.0,
+			"product_price": 200.0,
+			"promotion_saved_money": 0.00,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	When sam访问jobs的webapp
+	And sam购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	Then sam成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 100.0,
+			"product_price": 100.0,
+			"promotion_saved_money": 100.0,
+			"postage": 0.00,
+			"integral_money":0.00,
+			"coupon_money":0.00,
+			"products": [{
+				"name": "商品1",
+				"count": 2,
+				"promotion": {
+					"promotioned_product_price": 50.0,
+					"promotion_saved_money": 100.0,
+					"type": "flash_sale"
+				}
+			}]
+		}
+		"""
+
+@mall2
+Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会员等级
+
+	Given jobs登录系统
+	And jobs设定会员积分策略
+	"""
+	{
+		"integral_each_yuan": 2,
+		"use_ceiling": 50
+	}
+	"""
+	When jobs更新商品'商品5'
+	"""
+	{
+		"is_member_product": "on",
+		"is_enable_model": "启用规格",
+		"model": {
+			"models":{
+				"M": {
+					"price": 40.00,
+					"stock_type": "无限"
+				},
+				"S": {
+					"price": 40.00,
+					"stock_type": "无限"
+				}
+			}
+		}
+	}
+	"""
+	When jobs创建限时抢购活动
+	"""
+	{
+		"name": "商品5限时抢购",
+		"start_date": "今天",
+		"end_date": "1天后",
+		"products": ["商品5"],
+		"member_grade": "银牌会员",
+		"promotion_price": 10
+	}
+	"""
+	When bill访问jobs的webapp
+	When bill获得jobs的100会员积分
+	Then bill在jobs的webapp中拥有100会员积分
+	When tom获得jobs的100会员积分
+	Then tom在jobs的webapp中拥有100会员积分
+	When sam获得jobs的100会员积分
+	Then sam在jobs的webapp中拥有100会员积分
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+	"""
+	{
+		"integral_money":40.00,
+		"integral":80.00,
+		"products": [{
+			"name": "商品5",
+			"count": 1,
+			"model": "S"
+		}, {
+			"name": "商品5",
+			"count": 1,
+			"model": "M"
+		}]
+	}
+	"""
+	Then bill成功创建订单
+	"""
+	{
+		"status": "待支付",
+		"final_price": 40.00,
+		"product_price": 80.00,
+		"promotion_saved_money":0.00,
+		"postage": 0.00,
+		"integral_money":40.00,
+		"integral":80.00,
+		"coupon_money":0.00,
+		"products": [{
+			"name": "商品5",
+			"count": 1,
+			"model": "S"
+		}, {
+			"name": "商品5",
+			"count": 1,
+			"model": "M"
+		}]
+	}
+	"""
+	Then bill在jobs的webapp中拥有20会员积分
+	When tom访问jobs的webapp
+	And tom购买jobs的商品
+	"""
+	{
+		"integral_money":36.00,
+		"integral":72.00,
+		"products": [{
+			"name": "商品5",
+			"count": 1,
+			"model": "S"
+		}, {
+			"name": "商品5",
+			"count": 1,
+			"model": "M"
+		}]
+	}
+	"""
+	Then tom成功创建订单
+	"""
+	{
+		"status": "待支付",
+		"final_price": 36.00,
+		"product_price": 72.00,
+		"promotion_saved_money":0.00,
+		"postage": 0.00,
+		"integral_money":36.00,
+		"integral":72.00,
+		"coupon_money":0.00,
+		"products": [{
+			"name": "商品5",
+			"count": 1,
+			"model": "S"
+		}, {
+			"name": "商品5",
+			"count": 1,
+			"model": "M"
+		}]
+	}
+	"""
+	Then tom在jobs的webapp中拥有28会员积分
+	When sam访问jobs的webapp
+	And sam购买jobs的商品
+	"""
+	{
+		"integral_money":10.00,
+		"integral":20.00,
+		"products": [{
+			"name": "商品5",
+			"count": 1,
+			"model": "S"
+		}, {
+			"name": "商品5",
+			"count": 1,
+			"model": "M"
+		}]
+	}
+	"""
+	Then sam成功创建订单
+	"""
+	{
+		"status": "待支付",
+		"final_price": 10.00,
+		"product_price": 20.00,
+		"promotion_saved_money": 60.00,
+		"postage": 0.00,
+		"integral_money":10.00,
+		"integral":20.00,
+		"coupon_money":0.00,
+		"products": [{
+			"name": "商品5",
+			"count": 1,
+			"model": "S"
+		}, {
+			"name": "商品5",
+			"count": 1,
+			"model": "M"
+		}]
+	}
+	"""
+	Then sam在jobs的webapp中拥有80会员积分

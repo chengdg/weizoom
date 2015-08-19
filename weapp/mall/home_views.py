@@ -98,7 +98,6 @@ def get_outline(request):
 # 				))
 # 			else:
 # 				first_url = export.get_first_navs(request.user)[0]['url']
-# 				# print 'jz----', first_url, first_url.find('/mall/outline/get') < 0
 # 				if first_url.find('/mall/outline/get') < 0:
 # 					# 第一个有权限的一面，不是首页
 # 					return HttpResponseRedirect(first_url)

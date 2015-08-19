@@ -68,7 +68,6 @@ class DefaultEventHandler(EventMessageHandler):
 			## weshop begin
 			cache_key = 'from_weshop_%s' % received_message.fromUserName
 			product = cache.get(cache_key)
-			# print 'jz---', cache_key, ' product:', product
 			# if product == None:
 			# 	cache.set(cache_key, 1704, 60 * 5)
 			response_rule = None

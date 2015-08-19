@@ -141,7 +141,7 @@ Scenario:1 放入单个商品到购物车
 		"""
 	
 	
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @mall.webapp @mall.webapp.shopping_cart
 Scenario:2 放入多个商品到购物车
 	jobs添加商品后
 	1. bill能在webapp中将jobs添加的商品放入购物车
@@ -187,11 +187,7 @@ Scenario:2 放入多个商品到购物车
 					"name": "商品1",
 					"price": 3,
 					"count": 1
-				}]
-			}, {
-				"promotion": null,
-				"can_use_promotion": false,
-				"products": [{
+				}, {
 					"name": "商品2",
 					"price": 5,
 					"count": 2
@@ -201,7 +197,7 @@ Scenario:2 放入多个商品到购物车
 		}
 		"""
 
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @mall.webapp @mall.webapp.shopping_cart
 Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 	bill在webapp中将jobs的商品加入到购物车后，jobs对此商品进行删除操作
 	1.bill查看jobs的webapp购物车，此商品已无效
@@ -226,9 +222,7 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 					"name": "商品1",
 					"price": 3,
 					"count": 1
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品2",
 					"price": 5,
 					"count": 1
@@ -335,9 +329,7 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 					"price": 7,
 					"count": 1,
 					"model": "M"
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品3",
 					"price": 8,
 					"count": 1,
@@ -432,9 +424,7 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 					"price": 8,
 					"count": 1,
 					"model": "S"
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品5",
 					"price": 10,
 					"count": 1,
@@ -643,13 +633,9 @@ Scenario: 5 商品添加到购物车后，进行删除
 			"product_groups": [{
 				"products": [{
 					"name": "商品1"
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品2"
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品4"
 				}]
 			}],
@@ -710,9 +696,7 @@ Scenario:6 商品添加到购物车后，后台对商品的价格，库存进行
 					"price": 7,
 					"count": 1,
 					"model": "M"
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品3",
 					"price": 8,
 					"count": 1,
@@ -775,9 +759,7 @@ Scenario:6 商品添加到购物车后，后台对商品的价格，库存进行
 					"count": 1,
 					"model": "M",
 					"stocks": 3
-				}]
-			}, {
-				"products": [{
+				}, {
 					"name": "商品3",
 					"price": 10,
 					"count": 1,

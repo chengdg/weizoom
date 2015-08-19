@@ -34,37 +34,39 @@ def _update_member_by_name(webapp_id, member_data):
 	member.integral = member_data['integral']
 	member.save()
 
-@given(u"{user}添加优惠券")
-def step_impl(context, user):
-	user = context.client.user
-	profile = context.client.user.profile
-	webapp_id = context.client.user.profile.webapp_id
+# @given(u"{user}添加优惠券")
+# def step_impl(context, user):
+# 	"""TODO 替换成 @when(u'{user_name}添加优惠券规则')
+# 	"""
+# 	user = context.client.user
+# 	profile = context.client.user.profile
+# 	webapp_id = context.client.user.profile.webapp_id
 
-	context.coupons = json.loads(context.text)
-	for coupon in context.coupons:
-		_save_coupon(user, coupon)
+# 	context.coupons = json.loads(context.text)
+# 	for coupon in context.coupons:
+# 		_save_coupon(user, coupon)
 
-def _save_coupon(user, coupon_data):
-	coupon_price = coupon_data.get('coupon_price')
-	rule = CouponRule.objects.create(
-		owner=user,
-		name=coupon_price,
-		valid_days=120,
-		money=coupon_price,
-		count=1,
-		remained_count=1,
-		start_date=datetime.now(),
-		end_date=datetime.now(),
-	)
-	Coupon.objects.create(
-		owner=user,
-		coupon_rule=rule,
-		provided_time=datetime.now(),
-		start_time=datetime.now(),
-		expired_time=datetime.now() + timedelta(10),
-		coupon_id=coupon_data.get('coupon_code'),
-		money=coupon_price
-	)
+# def _save_coupon(user, coupon_data):
+# 	coupon_price = coupon_data.get('coupon_price')
+# 	rule = CouponRule.objects.create(
+# 		owner=user,
+# 		name=coupon_price,
+# 		valid_days=120,
+# 		money=coupon_price,
+# 		count=1,
+# 		remained_count=1,
+# 		start_date=datetime.now(),
+# 		end_date=datetime.now(),
+# 	)
+# 	Coupon.objects.create(
+# 		owner=user,
+# 		coupon_rule=rule,
+# 		provided_time=datetime.now(),
+# 		start_time=datetime.now(),
+# 		expired_time=datetime.now() + timedelta(10),
+# 		coupon_id=coupon_data.get('coupon_code'),
+# 		money=coupon_price
+# 	)
 
 # @when(u"{webapp_user_name}取消订单'{order_id}'")
 # def step_impl(context, webapp_user_name, order_id):
@@ -85,11 +87,11 @@ def _save_coupon(user, coupon_data):
 # 	else:
 # 		context.created_order_id = -1
 
-def _get_order_by_order_id(order_id):
-	try:
-		return Order.objects.get(order_id=order_id)
-	except:
-		return None
+# def _get_order_by_order_id(order_id):
+# 	try:
+# 		return Order.objects.get(order_id=order_id)
+# 	except:
+# 		return None
 
 # @then(u"{webapp_user_name}手机端获取订单'{order_id}'状态")
 # def step_impl(context, webapp_user_name, order_id):
@@ -178,8 +180,8 @@ def _get_coupon_status_by(coupon):
 def step_impl(context, webapp_user_name):
 	expected = json.loads(context.text)
 
-	profile = context.client.user.profile
-	member = bdd_util.get_member_for(webapp_user_name, profile.webapp_id)
+	# profile = context.client.user.profile
+	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	actual_data = dict()
 	actual_data['integral'] = str(member.integral)
 

@@ -2,7 +2,7 @@
 import json
 import logging
 logger = logging.getLogger(__name__)
-
+from urllib import unquote
 from datetime import datetime, timedelta
 
 from behave import *
@@ -17,7 +17,7 @@ from mall.promotion.models import *
 from modules.member.models import *
 import mall_product_steps as product_step_util
 from .steps_db_util import (
-    get_custom_model_id_from_name
+    get_custom_model_id_from_name, get_product_model_keys
 )
 
 def __get_date(str):
@@ -146,10 +146,10 @@ def step_impl(context, webapp_user_name):
 
 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	"""
-	最近修改: yanzhao
+	"""最近修改: yanzhao
 	e.g.:
 		{
+			"order_no": "" # 订单号
 			"ship_area": "",
 			"ship_name": "bill",
 			"ship_address": "",
@@ -159,7 +159,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 			"integral_money": "10",
 			"weizoom_card": [{"card_name":"", "card_pass": ""}],
 			"coupon": "coupon_1",
-			"date": ""
+			"date": "" # 下单时间
 			"products": [
 				{
 					"count": "",
@@ -176,17 +176,18 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	else:
 		args = json.loads(context.text)
 
-	def __get_current_promotion_id_for_product(product):
+	def __get_current_promotion_id_for_product(product, member_grade_id):
 		promotion_ids = [r.promotion_id for r in ProductHasPromotion.objects.filter(product_id=product.id)]
 		promotions = Promotion.objects.filter(id__in=promotion_ids, status=PROMOTION_STATUS_STARTED).exclude(type__gt=3)
-		if len(promotions) > 0:
+		if len(promotions) > 0 and (promotions[0].member_grade_id <= 0 or \
+				promotions[0].member_grade_id == member_grade_id):
+			# 存在促销信息，且促销设置等级对该会员开放
 			return promotions[0].id
-		else:
-			return 0
-	integral_each_yuan = 10
+		return 0
+
 	settings = IntegralStrategySttings.objects.filter(webapp_id=context.webapp_id)
-	if settings.count() > 0:
-		integral_each_yuan = settings[0].integral_each_yuan
+	integral_each_yuan = settings[0].integral_each_yuan
+
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	group2integralinfo = dict()
 
@@ -200,6 +201,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 
 
 		products = context.response.context['order'].products
+		integral = 0
+		integral_group_items = []
 		for product in products:
 			product_counts.append(str(product.purchase_count))
 			product_ids.append(str(product.id))
@@ -208,16 +211,17 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 				promotion = Promotion.objects.get(name=product.promotion.name)
 				promotion_ids.append(str(promotion.id))
 			else:
-				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj)))
+				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj, member.grade_id)))
 			product_model_names.append(_get_product_model_ids_from_name(webapp_owner_id, product.model_name))
-			# TODO 没有用例
+
 			if hasattr(product, 'integral') and product.integral > 0:
-				group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
-					"member_grade_id": member.grade_id,
-					"product_model_names": '%s_%s' % (product_obj.id, _product_model_name),
-					"integral": product.integral,
-					"money": int(product.integral) / integral_each_yuan
-					}
+				integral += product.integral
+				integral_group_items.append('%s_%s' % (product.id, product.model['name']))
+		if integral:
+			group2integralinfo['-'.join(integral_group_items)] = {
+				"integral": integral,
+				"money": round(integral / integral_each_yuan, 2)
+			}
 	else:
 		is_order_from_shopping_cart = "false"
 		webapp_owner_id = bdd_util.get_user_id_for(webapp_owner_name)
@@ -226,6 +230,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		product_model_names = []
 		promotion_ids = []
 		products = args['products']
+		# integral = 0
+		# integral_group_items = []
 		for product in products:
 			product_counts.append(str(product['count']))
 			product_name = product['name']
@@ -235,16 +241,21 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 				promotion = Promotion.objects.get(name=product['promotion']['name'])
 				promotion_ids.append(str(promotion.id))
 			else:
-				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj)))
+				promotion_ids.append(str(__get_current_promotion_id_for_product(product_obj, member.grade_id)))
 			_product_model_name = _get_product_model_ids_from_name(webapp_owner_id, product.get('model', None))
 			product_model_names.append(_product_model_name)
 			if 'integral' in product and product['integral'] > 0:
+				# integral += product['integral']
+				# integral_group_items.append('%s_%s' % (product_obj.id, _product_model_name))
 				group2integralinfo['%s_%s' % (product_obj.id, _product_model_name)] = {
-					"member_grade_id": member.grade_id,
-					"product_model_names": '%s_%s' % (product_obj.id, _product_model_name),
 					"integral": product['integral'],
-					"money": int(product['integral']) / integral_each_yuan
-					}
+					"money": round(product['integral'] / integral_each_yuan, 2)
+				}
+		# if integral:
+		# 	group2integralinfo['-'.join(integral_group_items)] = {
+		# 		"integral": integral,
+		# 		"money": round(integral / integral_each_yuan, 2)
+		# 	}
 
 	order_type = args.get('type', 'normal')
 
@@ -348,41 +359,19 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
 
-	#填充积分信息
-	# integral = args.get('integral', None)
-	# if integral:
-	# 	data['is_use_integral'] = 'true'
-	# 	data['integral'] = integral
-
-	# use_integral = args.get('use_integral', None)
-	# if use_integral == u"是":
-	# 	data['is_use_integral'] = 'true'
-	# 	data['integral'] = get_use_integral(webapp_user_name, context.webapp_id, data)
-
-	# 访问下订单的API
-	# print("*"*80, "consumer buy producer goods")
-	# from pprint(import pprint)
-	# pprint(data)
-	# print("*"*120)
-
 	response = context.client.post(url, data)
 	context.response = response
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
-	
+
 	# print 'post data ------------', data
 	response_json = json.loads(context.response.content)
 	# print 'response json----------', response_json
 	# if response_json['data'].get('msg', None):
-	#	print 'response error message ---------------', response_json['data']['msg']
+	# 	print 'response error message ---------------', response_json['data']['msg']
 	# if response_json['data'].get('detail', None):
-	#	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
-	
-	# raise '----------------debug test----------------------'
+	# 	print 'response error detail ----------------', response_json['data']['detail'][0]['msg']
 
-	# print("*"*80, "bill购买jobs的商品")
-	# from pprint(import pprint)
-	# pprint(response_json['data'])
-	# print("*"*120)
+	# raise '----------------debug test----------------------'
 
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
@@ -393,6 +382,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	if context.created_order_id != -1:
 		if 'date' in args:
 			Order.objects.filter(order_id=context.created_order_id).update(created_at=__get_date(args['date']))
+		if 'order_no' in args:
+			Order.objects.filter(order_id=context.created_order_id).update(order_id=args['order_no'])
 
 	context.product_ids = product_ids
 	context.product_counts = product_counts
@@ -405,7 +396,7 @@ OPERATION2STEPID = {
 	u'完成': u"When %s完成最新订单",
 	u'退款': u"When %s对最新订单进行退款",
 	u'完成退款': u"When %s完成最新订单退款",
-	u'取消': u"When %s'取消'最新订单",
+	u'取消': u"When %s\"取消\"最新订单",
 }
 
 @when(u"微信用户批量消费{webapp_owner_name}的商品")
@@ -439,12 +430,12 @@ def step_impl(context, webapp_owner_name):
 				tmp = int(row['integral'])
 			except:
 				pass
-			
+
 			if tmp > 0:
 				# 先为会员赋予积分,再使用积分
 				context.execute_steps(u"when %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
 				data['products'][0]['integral'] = row['integral']
-		
+
 		if row.get('coupon', None) and ',' in row['coupon']:
 			coupon_name, coupon_id = row['coupon'].strip().split(',')
 			coupon_dict = {}
@@ -454,14 +445,14 @@ def step_impl(context, webapp_owner_name):
 			context.coupon_list = coupon_list
 			context.execute_steps(u"when %s领取%s的优惠券" % (webapp_user_name, webapp_owner_name))
 			data['coupon'] = coupon_id
-		
+
 		if row.get('weizoom_card', None) and ',' in row['weizoom_card']:
 			card_name, card_pass = row['weizoom_card'].strip().split(',')
 			card_dict = {}
 			card_dict['card_name'] = card_name
 			card_dict['card_pass'] = card_pass
 			data['weizoom_card'] = [ card_dict ]
-			
+
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
 
@@ -490,8 +481,6 @@ def step_impl(context, webapp_owner_name):
 				pass
 			else:
 				raise
-				# context.caller_step_cancel_reason = {"reason":"cancel"}
-				# context.execute_steps(u"When %s'取消'最新订单" % actor)
 
 
 @when(u"微信用户批量访问{webapp_owner_name}的webapp")
@@ -902,6 +891,8 @@ def step_impl(context, webapp_user_name):
 			'product_counts': product_counts,
 			'product_model_names': product_model_names
 		}
+		if __i.get('coupon'):
+			product_infos['coupon_id'] = __i['coupon']
 
 	elif __i.get("action") == u"click":
 		# 加默认地址
@@ -937,12 +928,13 @@ def _get_shopping_cart_parameters(webapp_user_id, context):
 		for product_info in product_infos:
 			product_name = product_info['name']
 			product_model_name = product_info.get('model', 'standard')
+			product_model_name = get_product_model_keys(product_model_name)
 			try:
 				product = Product.objects.get(name= product_info['name'])
 				cart = shopping_cart_items.get(product=product, product_model_name=product_model_name)
-				product_ids.append(str(cart.product.id))
+				product_ids.append(str(product.id))
 				product_counts.append(str(cart.count))
-				product_model_names.append(cart.product_model_name)
+				product_model_names.append(product_model_name)
 			except:
 				pass
 	else:
@@ -1043,14 +1035,15 @@ def step_add_address_info(context, webapp_user_name):
 	page_title = context.response.context['page_title']
 	if page_title == u'编辑收货地址':
 		address_info = json.loads(context.text)
-		redirect_url = context.response.context['redirect_url_query_string']
+		redirect_url = unquote(context.response.context['redirect_url_query_string'])
 		response = _create_address(context, address_info)
 		bdd_util.assert_api_call_success(response)
 		response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
 		assert response.status_code == 200
 		context.response = response
-	elif page_title == u"购物车订单编辑":
-		pass
+	# jz 2015-08-11
+	# elif page_title == u"购物车订单编辑":
+	# 	pass
 
 
 @when(u"{webapp_user_name}更新收货信息")

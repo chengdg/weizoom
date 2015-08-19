@@ -6,7 +6,7 @@
 <div class="relative">
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
-		<li><a href="/mall2/promotion_list/">促销管理</a></li>
+		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
 		<li><a href="/mall2/flash_sale_list/">限时抢购</a></li>
 		<li class="active">新建限时抢购</li>
 	</ul>
@@ -237,7 +237,7 @@ function validatePromotionPrice($el){
   // 获取价格
   var productPrice = $.trim($('.xa-product-price').text()).split('~')[0];
   var promotionPrice = $.trim($('.xa-promotion-price').val());
-  var isValidate = parseInt(promotionPrice) < parseInt(productPrice);
+  var isValidate = parseFloat(promotionPrice) < parseFloat(productPrice);
   return {
 	isValidate: isValidate,
 	errorHint: '限购价格应小于商品原价'

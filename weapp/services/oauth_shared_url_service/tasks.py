@@ -52,8 +52,8 @@ def process_shared_url(request, args):
 				watchdog_fatal(notify_message)
 
 	except:
-		notify_message = u"('fmt':{}), 处理分享信息 cause:\n{}".format(
-				fmt, unicode_full_stack())
+		notify_message = u"('fmt':{}), 处理分享信息,request_path{} cause:\n{}".format(
+				fmt, request.get_full_path(),unicode_full_stack())
 		watchdog_fatal(notify_message)
 
 #@register('oautu_shared_url')

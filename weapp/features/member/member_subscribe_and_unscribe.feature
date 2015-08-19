@@ -6,7 +6,7 @@ Feature: 微信用户关注公众号成为系统会员
 	
 Background:
 	Given jobs登录系统
-	And jobs设置积分策略
+	And jobs设定会员积分策略
 		"""
 		[{ 
 			"be_member_increase_count": 20 
@@ -252,7 +252,7 @@ Scenario: 微信用户关注公众号成为会员
 		}
 		"""
 	Given jobs登录系统
-	When jobs'完成'最新订单
+	When jobs"完成"最新订单
 	Then jobs可以获得会员列表
 		"""
 		[{
@@ -313,7 +313,7 @@ Scenario: 微信用户关注公众号成为会员
 		}
 		"""
 	Given jobs登录系统
-	When jobs'完成'最新订单
+	When jobs"完成"最新订单
 	When tom1访问jobs的webapp
 	When tom1购买jobs的商品
 		"""
@@ -326,7 +326,7 @@ Scenario: 微信用户关注公众号成为会员
 		}
 		"""
 	Given jobs登录系统
-	When jobs'完成'最新订单
+	When jobs"完成"最新订单
 	Then jobs可以获得会员列表
 		"""
 		[{

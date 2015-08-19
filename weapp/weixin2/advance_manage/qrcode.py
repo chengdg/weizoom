@@ -20,13 +20,10 @@ from .fans_category import DEFAULT_CATEGORY_NAME
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember,ChannelQrcodeBingMember
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
-from mall.models import *
-from mall import module_api as mall_api
 from weixin2.message.util import get_member_groups
 from modules.member.models import MemberGrade
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
 import json
-from mall.promotion.models import CouponRule
 from excel_response import ExcelResponse
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from core.wxapi import get_weixin_api
@@ -92,6 +89,7 @@ class Qrcodes(resource.Resource):
 
 def _get_qrcode_items(request):
 	#处理搜索
+	from mall.models import *
 	query = request.GET.get('query', '').strip()
 	sort_attr = request.GET.get('sort_attr', '-created_at')
 	created_at = '-created_at'
@@ -137,6 +135,7 @@ def _get_qrcode_items(request):
 	webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
 	webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 	webapp_user_ids = set(webapp_user_id2member_id.keys())
+	
 	orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
 
 	member_id2total_final_price = {}
@@ -296,7 +295,7 @@ class Qrcode(resource.Resource):
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
 		qrcode = None
-
+		from mall.promotion.models import CouponRule
 		if setting_id > 0:
 			try:
 				qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.user)
@@ -597,6 +596,7 @@ def build_member_basic_json(member):
 	}
 
 def get_order_status_text(status):
+	from mall.models import STATUS2TEXT
 	return STATUS2TEXT[status]
 
 class QrcodeOrder(resource.Resource):
@@ -622,6 +622,8 @@ class QrcodeOrder(resource.Resource):
 	@login_required
 	@mp_required
 	def api_get(request):
+		from mall import module_api as mall_api
+		from mall.models import *
 		channel_qrcode_id = request.GET.get('setting_id', None)
 		start_date = request.GET.get('start_date', '')
 		end_date = request.GET.get('end_date', '')
@@ -719,6 +721,7 @@ class QrcodeOrder(resource.Resource):
 		#构造返回的order数据
 		items = []
 		today = datetime.today()
+
 		for order in  orders:
 			 #获取order对应的member的显示名
 			 member = webappuser2member.get(order.webapp_user_id, None)
