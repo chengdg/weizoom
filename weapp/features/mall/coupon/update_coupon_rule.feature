@@ -33,7 +33,7 @@ Background:
 		"""
 
 @mall2 @coupon @eugene
-Scenario: 更新优惠券规则
+Scenario: 更改优惠券规则名
 	jobs添加"优惠券规则"后
 	1. jobs能更改优惠券的规则名
 

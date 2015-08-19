@@ -6,8 +6,44 @@
     4. 买赠：不影响价格
     5. 无促销商品：不用计算
  */
+
+
+
 W.common.ProductGroupPriceCalculator = BackboneLite.View.extend({
     initialize: function(options) {
+    },
+
+    has_promotion: function(user_member_grade_id, promotion_member_grade_id){
+            if(promotion_member_grade_id == '0'){return true;}
+            if(promotion_member_grade_id == user_member_grade_id){
+                return true;
+            }else{
+                return false;
+            }
+    },
+
+    promotion_price: function(member_grade_id, product){
+        // 非会员
+        if(!member_grade_id){return product.original_price};
+
+        // 商品促销与否
+        is_product_promotion = !($.isEmptyObject(product.promotion));
+        if(is_product_promotion){
+            // 促销是否对用户开放
+            var use_has_promotion = has_promotion(member_grade_id, product.promotion.member_grade_id);
+            if(user_has_promotion){
+                // 限时抢购
+                if(product.promotion.detail.promotion_price){
+                    return product.promotion.detail.promotion_price;
+
+                }
+            }
+        }
+
+        if(product.is_member_product){
+            return product.price;
+        }
+        return product.original_price
     },
 
     calculate: function(productGroups) {
@@ -22,8 +58,8 @@ W.common.ProductGroupPriceCalculator = BackboneLite.View.extend({
                 // 限时抢购
                 var product = productGroup.products[0];
                 if (product.isSelect) {
-                    productPrice += productGroup.promotion.detail.promotion_price * product.count;
-                    promotionedPrice += productGroup.promotion.detail.promotion_price * product.count;
+                    productPrice += product.price * product.count;
+                    promotionedPrice += product.price * product.count;
                     totalCount += product.count;
                 }
             } else if (productGroup.can_use_promotion && productGroup.promotion_type === 'price_cut') {
@@ -54,11 +90,13 @@ W.common.ProductGroupPriceCalculator = BackboneLite.View.extend({
                 }
             } else {
                 // 普通商品
-                var product = productGroup.products[0];
-                if (product.isSelect) {
-                    productPrice += product.price * product.count;
-                    promotionedPrice += product.price * product.count;
-                    totalCount += product.count;
+                for(var j=0; j < productGroup.products.length; ++j){
+                    var product = productGroup.products[j];
+                    if (product.isSelect) {
+                        productPrice += product.price * product.count;
+                        promotionedPrice += product.price * product.count;
+                        totalCount += product.count;
+                    }
                 }
             }
 
@@ -93,7 +131,7 @@ W.common.PremiumSaleView = BackboneLite.View.extend({
         var $productGroup = this.$el;
         var productGroupId = parseInt($productGroup.data('productGroupId'));
         var productGroup = _.findWhere(this.productGroups, {"id": productGroupId});
-        
+
         var totalCount = 0;
         var totalPrice = 0.0;
         for (var i = 0; i < productGroup.products.length; ++i) {
@@ -109,7 +147,7 @@ W.common.PremiumSaleView = BackboneLite.View.extend({
                 totalCount += premiumProduct.premium_count;
             }
         }
-        
+
         productGroup.totalCount = totalCount;
         console.log('premium sale totalCount', totalCount);
         $productGroup.find('.xa-promotion-info').html('共<span class="xt-subtotalCount">'+totalCount+'</span>件商品，');

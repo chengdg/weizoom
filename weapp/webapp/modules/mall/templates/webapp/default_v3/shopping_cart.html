@@ -2,7 +2,13 @@
 {% load common_tag %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x" class="xui-shoppingCartPage"  data-title="{{ page_title }}">
+<div id="shopping-cart-content"
+                class="xui-shoppingCartPage"
+                data-role="page"
+                data-theme="x"
+                data-title="{{ page_title }}"
+                data-member-grade-id="{{request.member.grade_id}}"
+                data-user-discount="{{discount}}">
     <!-- 全局导航 -->
     <div class="wui-globalNav xa-globalNav" data-ui-role="global-nav" data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
     </div>
@@ -133,9 +139,12 @@
                     <div
                         class="xui-section xa-product disT xt-product"
                         data-id="{{product.id}}"
+                        data-product-price="{{product.original_price}}"
                         data-shopping-cart-id = "{{product.shopping_cart_id}}"
                         data-model-name="{{product.model_name}}"
                         data-stocks="{{product.stocks}}"
+                        data-is-member-product="{{product.is_member_product}}"
+                        data-product-promotion="{{product_group.promotion_js}}"
                     >
                         <label for="checkbox-cart-{{forloop.counter}}" style="width:39px;vertical-align:middle;" name="checkbox-cart" class="disTc tc xt-selectProduct">
                             <label id="checkbox-cart-{{forloop.counter}}" class="xa-check xui-regular-radio"></label>
@@ -162,11 +171,7 @@
                                         </span>
                                         {% endif %}
                                     </div>
-                                    {% if product_group.can_use_promotion and product_group.promotion_type == 'flash_sale' %}
-                                    <div class="xui-price xt-price em8">￥{{ product_group.promotion.detail.promotion_price }}</div>
-                                    {% else %}
-                                    <div class="xui-price xt-price em8">￥{{ product.price }}</div>
-                                    {% endif %}
+                                    <div class="xui-price xt-price xt-productPrice em8">￥{{ product.price }}</div>
                                     <div class="clearfix xa-counterContainer ml10 xui-productNum pr">
                                         <span class="em8">数量</span>
                                         <input
@@ -317,6 +322,19 @@ if($product.length == 0){
 };
 
 $(document).ready(function() {
+    // 用户是否为会员
+    var member_grade_id = $('#shopping-cart-content').data('member-grade-id');
+    var user_discount = $('#shopping-cart-content').data('user-discount');
+
+    var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){return true;}
+        if(promotion_member_grade_id == user_member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
+    };
     //绑定初始化数据
     var productGroups = W.loadJSON('productGroups');
     var view = new W.page.ShoppingCartPage({
@@ -332,6 +350,40 @@ $(document).ready(function() {
     });
 
     // window.setInterval(getProductStocks, 5000);
+
+    // 促销会员商品价格显示
+    $(".xa-product").each(function(){
+        // 商品原价
+        var price = $(this).data('product-price');
+        // 商品有促销
+        var product_promotion = $(this).data('product-promotion')
+
+        var is_user_has_promotion = false;
+        is_product_promotion = !($.isEmptyObject(product_promotion));
+        if(is_product_promotion){
+            // 促销是否对此用户开发
+            is_user_has_promotion = user_has_promotion(member_grade_id, product_promotion.member_grade_id);
+            if(is_user_has_promotion){
+                // 限时抢购处理
+                try{
+                    price = (product_promotion.detail.promotion_price).toFixed(2);
+                }catch(err){
+                    price = $(this).data('product-price');
+                }
+            }
+        }
+        if(!is_user_has_promotion){
+            // 商品是否参加会员折扣
+            var is_member_product = $(this).data('is-member-product')
+            if(is_member_product === 'True'){
+                price = ((price * user_discount / 100).toFixed(2))
+            }
+        }
+
+        // 设置显示价格
+        $(this).find('.xt-productPrice').text('￥'+price);
+    });
+
 
     //动态修改库存
     function getProductStocks(){

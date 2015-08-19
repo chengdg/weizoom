@@ -22,17 +22,19 @@ TEMPLATE_DIR = 'webapp/mall'
 #
 # list_coupons: 显示"优惠券"页面
 ########################################################################
-def list_coupons(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.list_coupons(request)
+# jz 2015-08-10
+# def list_coupons(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.list_coupons(request)
 
 
 ########################################################################
 # get_productcategory: 显示“商品分类”页面
 ########################################################################
-def get_productcategory(request):
-	request.template_dir = TEMPLATE_DIR
-	return request_util.get_productcategory(request)
+# jz 2015-08-10
+# def get_productcategory(request):
+# 	request.template_dir = TEMPLATE_DIR
+# 	return request_util.get_productcategory(request)
 
 
 ########################################################################

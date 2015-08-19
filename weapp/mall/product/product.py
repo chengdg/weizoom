@@ -4,7 +4,6 @@ import json
 import operator
 from itertools import chain
 from django.db.models import F
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
@@ -142,7 +141,6 @@ class ProductList(resource.Resource):
             products = sorted(products, key=operator.attrgetter(sort_attr))
 
 
-
         products = utils.filter_products(request, products)
 
         #进行分页
@@ -220,6 +218,7 @@ class ProductList(resource.Resource):
         if is_deleted:
             products.update(is_deleted=True)
         else:
+            # 更新商品上架状态以及商品排序
             if request.manager.id == products[0].owner_id:
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
                     products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0)
@@ -375,7 +374,8 @@ class Product(resource.Resource):
             postage_id=postage_id,
             unified_postage_money=unified_postage_money,
             weshop_sync=request.POST.get('weshop_sync', 0),
-            stocks = min_limit,
+            stocks=min_limit,
+            is_member_product=request.POST.get("is_member_product", False) == 'on'
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -422,7 +422,7 @@ class Product(resource.Resource):
             swipe_images = []
         else:
             swipe_images = json.loads(swipe_images)
-        if len(swipe_images) ==0:
+        if len(swipe_images) == 0:
             thumbnails_url = ''
         else:
             thumbnails_url = swipe_images[0]["url"]
@@ -514,9 +514,6 @@ class Product(resource.Resource):
             unified_postage_money = 0.0
         product_id = request.GET.get('id')
 
-        # import pdb
-        # pdb.set_trace()
-
         min_limit = request.POST.get('min_limit', '0')
         if not min_limit.isdigit():
             min_limit = 0
@@ -542,7 +539,9 @@ class Product(resource.Resource):
                 unified_postage_money=unified_postage_money,
                 postage_type=postage_type,
                 weshop_sync=request.POST.get('weshop_sync', None),
-                stocks = min_limit,
+                stocks=min_limit,
+                is_member_product=request.POST.get("is_member_product", False) == 'on'
+
             )
         else:
             models.Product.objects.record_cache_args(
@@ -563,7 +562,8 @@ class Product(resource.Resource):
                 postage_id=postage_id,
                 unified_postage_money=unified_postage_money,
                 postage_type=postage_type,
-                stocks = min_limit,
+                stocks=min_limit,
+                is_member_product=request.POST.get("is_member_product", False) == 'on'
             )
 
         # 处理商品规格

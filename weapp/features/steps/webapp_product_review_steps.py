@@ -177,11 +177,11 @@ def step_get_user_thanks_page(context, webapp_user):
     bdd_util.assert_list(expected, actual)
 
 
-# @then(u"订单'{order_no}'中'{product_name}'的评商品评价提示信息'{review_status}'")
-# def step_get_user_publish_review(context, order_no, product_name, review_status):
-#     product_review = bdd_util.get_product_review(order_no, product_name)
-#     count = len(product_review.review_detail)
-#     assert count > 200
+@then(u"订单'{order_no}'中'{product_name}'的评商品评价提示信息'{review_status}'")
+def step_get_user_publish_review(context, order_no, product_name, review_status):
+    product_review = bdd_util.get_product_review(order_no, product_name)
+    count = len(product_review.review_detail)
+    assert count > 200
 
 
 # @then(u"订单'1'中'商品1'的评商品评价提示详情'评价文字要求在200字以内'")

@@ -19,6 +19,7 @@ from core.exceptionutil import unicode_full_stack
 from market_tools.tools.delivery_plan.models import DeliveryPlan
 from core.common_util import ignore_exception
 from tools.express.express_poll import ExpressPoll
+#from webapp.modules.mall.utils import get_product_member_discount
 
 #############################################################################################
 # post_update_product_model_property_handler: post_update_product_model_property的handler
@@ -334,8 +335,7 @@ def _get_province_id_by_area(area):
 
 @receiver(mall_signals.pre_save_order, sender=mall_signals)
 def postage_pre_save_order(pre_order, order, products, product_groups, **kwargs):
-	"""
-	计算订单运费
+	"""计算订单运费
 	"""
 	postage_config = None
 	for product in products:
@@ -353,36 +353,45 @@ def postage_pre_save_order(pre_order, order, products, product_groups, **kwargs)
 
 @receiver(mall_signals.pre_save_order, sender=mall_signals)
 def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
-	"""
-	使用优惠券
+	"""使用优惠券
 	"""
 	from mall.promotion import models as promotion_models
 
-	if not pre_order.session_data.has_key('coupon'):
+	if not pre_order.session_data.get('coupon', ''):
 		return
 	coupon = pre_order.session_data['coupon']
+
 	order.coupon_id = coupon.id
-	if order.final_price - coupon.money < order.postage:
-		tmp = order.postage + coupon.money - order.final_price
+
+	if coupon.coupon_rule.limit_product:
+		# 单品券
+		for p in products:
+			if coupon.coupon_rule.limit_product_id == p.id:
+				p.price = p.original_price
+		order.product_price = sum(map(lambda x: x.price*x.purchase_count, products))
+		order.final_price = order.product_price + order.postage
+
+	if order.final_price - order.postage < coupon.money:
+		# 优惠券不能抵扣运费
+		order.coupon_money = order.final_price - order.postage
 		order.final_price = order.postage
-		order.coupon_money = coupon.money - tmp
 	else:
 		order.coupon_money = coupon.money
 		order.final_price -= coupon.money
 
-	coupon = promotion_models.Coupon.objects.filter(id = coupon.id)
-	coupon_rule = promotion_models.CouponRule.objects.filter(id = coupon[0].coupon_rule_id)
+	coupon = promotion_models.Coupon.objects.filter(id=coupon.id)
+	coupon_rule = promotion_models.CouponRule.objects.filter(id=coupon[0].coupon_rule_id)
 	if not coupon[0].member_id:
-		coupon_rule.update(remained_count = F('remained_count') - 1)
-	coupon.update(status = promotion_models.COUPON_STATUS_USED)
-	coupon_rule.update(use_count = F('use_count') + 1)
+		coupon_rule.update(remained_count=F('remained_count') - 1)
+	coupon.update(status=promotion_models.COUPON_STATUS_USED)
+	coupon_rule.update(use_count=F('use_count') + 1)
+
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
 def check_coupon_for_order(pre_order, args, request, **kwargs):
 	"""
 	检查优惠券
 	"""
-	# from mall.promotion import models as promotion_models
 	if not hasattr(pre_order, 'session_data'):
 		pre_order.session_data = dict()
 
@@ -400,7 +409,7 @@ def check_coupon_for_order(pre_order, args, request, **kwargs):
 		product_ids = [str(product.id) for product in pre_order.products]
 
 		from market_tools.tools.coupon import util as coupon_util
-		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, request.member.id)
+		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, request.member.id, pre_order.products)
 		if coupon:
 			pre_order.session_data['coupon'] = coupon
 		else:
@@ -413,15 +422,13 @@ def check_coupon_for_order(pre_order, args, request, **kwargs):
 
 @receiver(mall_signals.pre_save_order, sender=mall_signals)
 def promotions_pre_save_order(pre_order, order, products, product_groups, **kwargs):
-	"""
-	执行促销，更新order.final_price, order.integral, order.integral_money
+	"""执行促销，更新order.final_price, order.integral, order.integral_money.
 	"""
 	order.pre_yuan = pre_order.pre_yuan if hasattr(pre_order, 'pre_yuan') else 0
 	for product_group in product_groups:
 		promotion_result = product_group['promotion_result']
 		if promotion_result:
-			if 'final_saved_money' in promotion_result:
-				order.final_price -= promotion_result['final_saved_money']
+			order.final_price -= promotion_result.get('final_saved_money', 0.000)
 
 		if product_group['integral_sale_rule']:
 			integral_sale_result = product_group['integral_sale_rule'].get('result', None)
@@ -436,6 +443,7 @@ def promotions_pre_save_order(pre_order, order, products, product_groups, **kwar
 		order.integral_money = pre_order.integral_money
 		order.final_price -= pre_order.integral_money
 
+
 def __fill_promotion_failed_reason(product_group, reason):
 	if product_group.get('promotion_result', None):
 		product_group['promotion_result']['failed_reason'] = reason
@@ -448,9 +456,9 @@ def __fill_promotion_failed_reason(product_group, reason):
 
 
 def __check_integral(request, product_groups, data_detail, pre_order):
+	"""检查积分应用、整单积分抵扣使用
 	"""
-	检查积分应用、整单积分抵扣使用
-	"""
+
 	integralinfo = request.POST.get('group2integralinfo', None)
 	count_per_yuan = request.webapp_owner_info.integral_strategy_settings.integral_each_yuan
 	total_integral = 0
@@ -487,8 +495,12 @@ def __check_integral(request, product_groups, data_detail, pre_order):
 					})
 				continue
 			use_integral = int(integral_info['integral'])
+			# integral_info['money'] = integral_info['money'] *
 			integral_money = round(float(integral_info['money']), 2) #round(1.0 * use_integral / count_per_yuan, 2)
 			# 校验前台输入：积分金额不能大于使用上限、积分值不能小于积分金额对应积分值
+			# 根据用户会员与否返回对应的商品价格
+			# for product in products:
+			# 	product.price = product.price * get_product_member_discount(product.member_discount, product)
 			product_price = sum([product.price * product.purchase_count for product in products])
 			integralsalerule = group2integralsalerule[group_uid]
 			max_integral_price = round(product_price * integralsalerule['rule']['discount'] / 100, 2)
@@ -612,8 +624,6 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 					})
 			__fill_promotion_failed_reason(product_group, "活动过期2")
 			continue
-
-		member = request.member
 		if promotion['member_grade_id'] > 0 and promotion['member_grade_id'] != request.member.grade_id:
 			for product in product_group['products']:
 				data_detail.append({
@@ -665,7 +675,8 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 				}
 
 			product_group['promotion_result'] = {
-				'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
+				# 'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
+				'promotion_saved_money': (product.original_price - detail['promotion_price']) * product.purchase_count,
 				'promotioned_product_price': detail['promotion_price']
 			}
 			#用抢购价替换商品价格
@@ -1018,8 +1029,7 @@ def post_save_order_handler_for_product_sales(order, webapp_user, product_groups
 
 @receiver(mall_signals.pre_save_order, sender=mall_signals)
 def weizoom_card_pre_save_order(pre_order, order, products, product_groups, **kwargs):
-	"""
-	扣除微众卡金额
+	"""扣除微众卡金额
 	"""
 	order.weizoom_card_money = 0
 	if not pre_order.session_data.has_key('weizoom_card'):

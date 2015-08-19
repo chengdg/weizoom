@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 
-import time
-from datetime import timedelta, datetime, date
-import urllib, urllib2
 import os
-import json
 
 from webapp.modules.mall import request_util
 
@@ -17,33 +14,25 @@ TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 #
 # list_coupons: 显示"优惠券"页面
 ########################################################################
-def list_coupons(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.list_coupons(request)
-
-
-########################################################################
-# get_productcategory: 显示“商品分类”页面
-########################################################################
-# def get_productcategory(request):
+# jz 2015-08-10
+# def list_coupons(request):
 # 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-# 	return request_util.get_productcategory(request)
+# 	return request_util.list_coupons(request)
 
 
-########################################################################
-# list_products: 显示"商品列表"页面
-########################################################################
 def list_products(request):
+	"""显示"商品列表"页面
+	"""
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.list_products(request)
 
 
-########################################################################
-# get_product: 显示“商品详情”页面
-########################################################################
 def get_product(request):
+	"""显示“商品详情”页面
+	"""
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.get_product(request)
+
 
 ########################################################################
 # get_order_list: 获取订单列表
@@ -104,23 +93,42 @@ def get_pay_result_success(request):
 # show_shopping_cart: 显示购物车详情
 ########################################################################
 def show_shopping_cart(request):
+	'''	显示购物车详情
+	'''
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+
+	# product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
+
+	# product_groups = utils.sorted_product_groups_by_promotioin(product_groups)
+	# request.should_hide_footer = True
+
+	# jsons = [{
+	# 	"name": "productGroups",
+	# 	"content": utils.format_product_group_price_factor(product_groups)
+	# }]
+
+	# c = RequestContext(request, {
+	# 	'is_hide_weixin_option_menu': True,
+	# 	'page_title': u'购物车',
+	# 	'product_groups': product_groups,
+	# 	'invalid_products': invalid_products,
+	# 	'jsons': jsons
+	# })
 	return request_util.show_shopping_cart(request)
 
 
-########################################################################
-# edit_shopping_cart_order: 编辑从购物车产生的订单
-########################################################################
 def edit_shopping_cart_order(request):
+	"""编辑从购物车产生的订单
+	"""
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	request.redirect_url_query_string = _get_redirect_url_query_string(request)
+	# 如果有收货人信息
 	if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
-		print("*"*20, 'edit_shopping_cart_order', ' : 1')
 		return request_util.edit_shopping_cart_order(request)
 	else:
-		print("*"*20, 'edit_shopping_cart_order', ' : 2')
 		request.action = 'add'
 		return request_util.edit_address(request)
+
 
 def pay_weizoompay_order(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
@@ -261,7 +269,8 @@ def redirect_product_review(request):
     return request_util.redirect_product_review(request)
 
 
-#add by bert 
+#add by bert
 def edit_refueling_order(request):
     request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-    return request_util.edit_refueling_order(request)	
+    return request_util.edit_refueling_order(request)
+

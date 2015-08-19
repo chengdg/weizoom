@@ -13,6 +13,17 @@ from features.testenv.model_factory import *
 from mall.promotion.models import Coupon
 
 
+def get_product_model_keys(product_model_name):
+    """使用规格名获取获取规格key
+    @param product_model_name 规格名使用逗号分隔，类似于：男,M,红色
+    @return 规格key，类似于12:58_13:62_14:59
+    """
+    if product_model_name and product_model_name != 'standard':
+        values = ProductModelPropertyValue.objects.filter(name__in=product_model_name.split(','))
+        values = ['%s:%s' % (value.property_id, value.id) for value in values]
+        return '_'.join(values)
+    return 'standard'
+
 def get_postage_config(owner_id, name):
     return PostageConfig.objects.get(name=name, owner_id=owner_id)
 
@@ -182,13 +193,13 @@ def set_order_dict(order, profile):
             product.save()
 
             model = product_data.get('model', None)
-            model_name = None
+            model_name = get_product_model_keys(model)
             # TODO wan shan gui ge
-            if model:
-                value = ProductModelPropertyValue.objects.get(name=model)
-                model_name = '%s:%s' % (value.property_id, value.id)
-            else:
-                model_name = 'standard'
+            # if model:
+            #     value = ProductModelPropertyValue.objects.get(name=model)
+            #     model_name = '%s:%s' % (value.property_id, value.id)
+            # else:
+            #     model_name = 'standard'
 
             product_model = ProductModel.objects.get(product_id=product.id, name=model_name)
 

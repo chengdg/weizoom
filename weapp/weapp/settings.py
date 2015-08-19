@@ -547,7 +547,7 @@ MIXUP_FACTOR = 3179
 WATCH_DOG_DEVICE = 'mysql'
 
 WATCHDOG_WEIXIN_MESSAGE = False
-ENABLE_WEPAGE_CACHE = True
+ENABLE_WEPAGE_CACHE = False
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
