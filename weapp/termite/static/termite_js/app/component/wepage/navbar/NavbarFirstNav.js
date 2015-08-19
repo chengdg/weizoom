@@ -15,7 +15,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             fields: [{
             	name: 'title',
             	type: 'text',
-            	displayName: '导航名称',
+            	displayName: '标题',
                 maxLength:30,
                 validateIgnoreDefaultValue: true,
                 isUserProperty: true,
@@ -24,7 +24,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             }, {
                 name: 'target',
                 type: 'select_link',
-                displayName: '链接到',
+                displayName: '链接',
                 isUserProperty: true,
                 triggerButton: '从微站选择',
                 default: ''

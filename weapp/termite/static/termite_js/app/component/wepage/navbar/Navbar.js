@@ -66,7 +66,7 @@ W.component.wepage.Navar = W.component.Component.extend({
                 type: 'dynamic-generated-control',
                 isUserProperty: true,
                 isShowCloseButton: true,
-                displayName: '一级导航',
+                displayName: '一级菜单',
                 minItemLength: 1,
                 maxItemLength: 3,
                 default: []

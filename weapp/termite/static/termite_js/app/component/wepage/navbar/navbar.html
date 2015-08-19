@@ -3,87 +3,101 @@
 {% ifequal component.type 'wepage.navbar' %}
 <div 
 	class="wui-template-globalNavbar"
-    data-component-cid="{{component.cid}}" 
-    style=""
+	data-component-cid="{{component.cid}}" 
+	style=""
 >
 {{component.model.type}}
-    {% if component.model.type == "weixin" %}
-    <div class="xui-globalBottomBar" data-ui-role="bottomNav">
-                <div class="xui-home">
-                    <a href="###" class="xui-bg"></a>
-                </div>
-                <div class="xui-flex xui-flex-two">
-                    <div class="xui-menu xa-menu f14">
-                        <a href="###">标题</a>
-                    </div>
-                    <div class="xui-subMenuContainer">
-                        <span class="xui-menuArrow"></span>
-                        <span class="xui-menuArrowBorder"></span>
-                        <ul class="xui-subMenu">
-                            <li class="f12"><a href="###">标题名</a></li>
-                            <li class="f12"><a href="###">标题名</a></li>
-                            <li class="f12"><a href="###">标题名</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="xui-flex xui-flex-two">
-                    <div class="xui-menu xa-menu f14">
-                        <a href="###">标题</a>
-                    </div>
-                    <div class="xui-subMenuContainer">
-                        <span class="xui-menuArrow"></span>
-                        <span class="xui-menuArrowBorder"></span>
-                        <ul class="xui-subMenu">
-                            <li class="f12"><a href="###">标题名</a></li>
-                            <li class="f12"><a href="###">标题名</a></li>
-                            <li class="f12"><a href="###">标题名</a></li>
-                        </ul>
-                    </div>
-                </div>
-        </div>
-    {% endif  %}
-    {% if component.model.type == "slide" %}
-    <div class="xui-globalSideBar" data-ui-role="sideNav">
-                <div class="xui-bottomNav">
-                    <ul class="">
-                        <li class="xa-bottomMenu "><i class="xui-bg"></i></li>
-                        <li class="xa-bottomMenu xa-categoryBtn"><i class="xui-bg"></i></li>
-                        <li class="xa-bottomMenu">
-                            <i class="xui-bg"><span class="xui-shopCar">2</span></i>
-                            
-                        </li>
-                        <li class="xa-bottomMenu "><i class="xui-bg"></i></li>
-                    </ul>
-                </div>
-    </div>
-    <div class="xui-sidePanel xa-sidePanel" id="xa-wrapper" style="display:block;">
-        <ul class="xui-mainMenu">
-            <li class="xui-firstNav">
-                <a href="###">
-                    <span>全部商品<i class="xui-leftArrow"></i></span>
-                </a></li>
-            <li class="xui-firstNav xa-firstNav"> 
-                <a href="###">
-                    <span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
-                </a>
-                <ul class="xui-subMenu">
-                    <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-                    <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-                    <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-                    <li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
-                </ul>
-            </li>
-             <li class="xui-firstNav xa-firstNav"> 
-                <span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
-            </li>
-             <li class="xui-firstNav xa-firstNav"> 
-                <span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
-                <ul class="xui-subMenu">
-                    <li class="pl50">衣服分类衣服分类衣服</li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    {% endif %}
+	{% if component.model.type == "weixin" %}
+	<div class="xui-globalBottomBar" data-ui-role="bottomNav">
+				<div class="xui-home">
+					<a href="###" class="xui-bg"></a>
+				</div>
+				<div class="xui-flex xui-flex-two">
+					<div class="xui-menu xa-menu f14">
+						<a href="###">标题</a>
+					</div>
+					<div class="xui-subMenuContainer">
+						<span class="xui-menuArrow"></span>
+						<span class="xui-menuArrowBorder"></span>
+						<ul class="xui-subMenu">
+							<li class="f12"><a href="###">标题名</a></li>
+							<li class="f12"><a href="###">标题名</a></li>
+							<li class="f12"><a href="###">标题名</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="xui-flex xui-flex-two">
+					<div class="xui-menu xa-menu f14">
+						<a href="###">标题</a>
+					</div>
+					<div class="xui-subMenuContainer">
+						<span class="xui-menuArrow"></span>
+						<span class="xui-menuArrowBorder"></span>
+						<ul class="xui-subMenu">
+							<li class="f12"><a href="###">标题名</a></li>
+							<li class="f12"><a href="###">标题名</a></li>
+							<li class="f12"><a href="###">标题名</a></li>
+						</ul>
+					</div>
+				</div><div class="xui-flex xui-flex-two">
+					<div class="xui-menu xa-menu f14">
+						<a href="###">标题</a>
+					</div>
+					<div class="xui-subMenuContainer">
+						<span class="xui-menuArrow"></span>
+						<span class="xui-menuArrowBorder"></span>
+						<ul class="xui-subMenu">
+							<li class="f12"><a href="###">标题名</a></li>
+							<li class="f12"><a href="###">标题名</a></li>
+							<li class="f12"><a href="###">标题名</a></li>
+						</ul>
+					</div>
+				</div>
+		</div>
+	{% endif  %}
+	{% if component.model.type == "slide" %}
+	<div class="wui-weshopSideBar" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>
+		<div class="xui-globalSideBar">
+			<div class="xui-bottomNav">
+				<ul class="">
+					<li class="xa-outLink" data-page="home"><i class="xui-bg"></i></li>
+					<li class="xa-category" data-page="product-category"><i class="xui-bg"></i></li>
+					<li class="xa-outLink" data-page="shopping-cart">
+						<i class="xui-bg"><span class="xui-shopCar">2</span></i>
+					</li>
+					<li class="xa-outLink" data-page="usercenter"><i class="xui-bg"></i></li>
+				</ul>
+			</div>
+		</div>
+		<div class="xui-sidePanel xa-sidePanel"  {% if in_production_mode %}id="xa-wrapper" style="display:block;"{% endif %}>
+			<ul class="xui-mainMenu">
+				<li class="xui-firstNav">
+					<a href="###">
+						<span>全部商品<i class="xui-leftArrow"></i></span>
+					</a></li>
+				<li class="xui-firstNav xa-firstNav"> 
+					<a href="###">
+						<span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
+					</a>
+					<ul class="xui-subMenu">
+						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+						<li class="pl50"><a href="###">衣服分类衣服分类衣服</a></li>
+					</ul>
+				</li>
+				 <li class="xui-firstNav xa-firstNav"> 
+					<span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
+				</li>
+				 <li class="xui-firstNav xa-firstNav"> 
+					<span>衣服分类衣服分类衣服<i class="xui-leftArrow"></i></span>
+					<ul class="xui-subMenu">
+						<li class="pl50">衣服分类衣服分类衣服</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+	{% endif %}
 </div>
 {% endifequal %}
