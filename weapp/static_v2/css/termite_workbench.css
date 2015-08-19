@@ -1204,8 +1204,27 @@ button.xui-removeImageButton{
 	display: block;
 	width: 100%;
 	text-align: left;
+	margin-bottom: 10px;
 }
-
+.xui-propertyView-navbar-settings .propertyGroup_property_checkboxField{
+	margin-bottom: 10px;
+}
+.xui-propertyView-navbar-settings .propertyGroup_property_input label{
+	margin-right: 20px;
+	font-weight: normal;
+}
+.xui-propertyView-navbar-settings .propertyGroup_property_checkboxField .propertyGroup_property_input input{
+	margin-right: 10px;
+	margin-top: 0;
+	position: relative;
+	top:3px;
+}
+.xui-propertyView-navbar-settings .propertyGroup_property_radioField .propertyGroup_property_label{
+	text-align: left;
+}
+/*.xui-propertyView-navbar-settings .propertyGroup_property_radioField .propertyGroup_property_input{
+	text-align: center;
+}*/
 /**
  * dialog对话框 商品列表
  */

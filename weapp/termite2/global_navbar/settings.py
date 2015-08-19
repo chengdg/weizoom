@@ -40,7 +40,8 @@ NEW_PAGE_JSON = """
 				"index": 3,
 				"name": "",
 				"class": "",
-				"id": ""
+				"id": "",
+				"type": "weixin"
 			},
 			"has_global_content": "no"
 		}],

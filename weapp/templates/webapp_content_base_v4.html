@@ -122,7 +122,7 @@
             </div>  -->
             
             <!-- 模板2 -->
-            <div class="wui-weshopSideBar" data-ui-role="sideNav">
+            <!-- <div class="wui-weshopSideBar" data-ui-role="sideNav">
                 <div class="xui-globalSideBar" data-ui-role="sideNav">
                     <div class="xui-bottomNav">
                         <ul class="">
@@ -165,7 +165,7 @@
                     </ul>
                 </div>
             </div>
-
+ -->
         </div>
         <div id="jsons" style="display: none;">
             {% for json in jsons %}
@@ -289,55 +289,6 @@
             } 
         });
         
-        </script>
-
-        <!-- 店铺全局导航侧滑 -->
-        <script type="text/javascript">
-         $(document).ready(function(){
-            var height = $(window).height(); 
-            var width = $(window).width();
-            var rest = (width-218)/2;
-            var $categoryBtn = $('.xa-categoryBtn');
-            var $leftPanel = $('.xa-sidePanel');
-            var $firstNav = $('.xa-firstNav');
-            var $bottomMenu = $('.xa-bottomMenu');
-            var block = false;
-            // 点击出现侧滑面板
-            if ($categoryBtn.length >0) {
-                $categoryBtn.click(function() {
-                    $('.xui-sidePanel').show();
-                    var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
-                });
-                $leftPanel.css('height',height-50);  //左侧面板高度，100%会出现滚动条，导致后面内容跟着滚动
-                $categoryBtn.siblings('li').click(function() {
-                    $('.xui-sidePanel').hide();
-                });
-                // 点击一级菜单
-                $firstNav.click(function() {
-                    var $arrow = $(this).find('span i');
-                    var $subMenu = $(this).find('.xui-subMenu');
-                    if( $subMenu.length >0 ){
-                        var display = $subMenu.css('display');
-                        if( display != 'block'){
-                            $arrow.removeClass('xui-leftArrow');
-                            $arrow.addClass('xui-topArrow');
-                            $subMenu.show();
-                        }else{
-                            $arrow.removeClass('xui-topArrow');
-                            $arrow.addClass('xui-leftArrow');
-                            $subMenu.hide();
-                        }
-                    }
-                });
-
-                // 点击底部导航图标改变
-                $bottomMenu.click(function() {
-                    $(this).find('i').addClass('xui-active');
-                    $(this).siblings().find('i').removeClass('xui-active');
-                });
-            };
-         });
-
         </script>
 
         <script type="text/javascript">

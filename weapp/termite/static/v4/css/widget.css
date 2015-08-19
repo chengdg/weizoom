@@ -1540,6 +1540,11 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     line-height: 45px;
     position: relative;
 }
+.wui-template-globalNavbar .xui-flex a{
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
 .wui-template-globalNavbar .xui-flex-one{
     box-flex:1;
     -webkit-box-flex:1;
