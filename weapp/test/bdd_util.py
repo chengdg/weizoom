@@ -291,6 +291,7 @@ def assert_api_call_success(response):
 	else:
 		content = json.loads(response.content)
 		assert 200 == content['code'], "code != 200, call api FAILED!!!!"
+		return content
 
 
 def print_json(obj):

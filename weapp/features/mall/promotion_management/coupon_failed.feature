@@ -59,10 +59,6 @@ Background:
 		}]
 	"""
 
-@wip.cp0
-Scenario: test
-
-
 @wip.cp1 @promotion @promotionCoupon @promotion @promotionFlash
 Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
@@ -92,13 +88,33 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"end_date": "2天后"
 		}]
 	"""
+	And jobs能获取限时抢购查询列表
+	"""
+		[{
+			"name": "商品1",
+			"stock_type": "无限",
+			"operate": false,
+			"price": 200.00
+		}, {
+			"name": "商品2",
+			"stock_type": "无限",
+			"operate": false,
+			"price": 200.00
+		}, {
+			"name": "商品3",
+			"stock_type": "无限",
+			"operate": true,
+			"price": 200.00
+		}]
+	"""
+
 	When jobs创建限时抢购活动
 	"""
 		[{
 			"name": "商品2限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"promotion_price": 180.00
 		}]
 	"""
