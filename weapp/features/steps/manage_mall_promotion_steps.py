@@ -164,10 +164,14 @@ def step_create_flash_sales(context, user):
         promotions = [promotions]
 
     for promotion in promotions:
-        db_product = ProductFactory(name=promotion['product_name'])
-        product_ids =[{
-            'id': db_product.id
-        }]
+        if promotion.has_key('products'):
+            products = promotion['products']
+            product_ids = [{'id': ProductFactory(name=product_name).id} for product_name in products]
+        else:
+            db_product = ProductFactory(name=promotion['product_name'])
+            product_ids =[{
+                'id': db_product.id
+            }]
 
         data = {
             'name': promotion['name'],
