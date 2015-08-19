@@ -43,7 +43,7 @@ Background:
 	Given tom2关注jobs的公众号
 	Given tom3关注jobs的公众号
 	Given tom5关注jobs的公众号
-	Given tom5取消了jobs的公众号
+	Given tom5取消关注jobs的公众号
 	#tom1,tom2,tom3没有接到过该公众号的任何群发
 	And jobs已有会员列表
 		"""

@@ -2,7 +2,7 @@
 
 Feature:实时消息列表
 """
-	公众账号与关注此公众账号的粉丝直接的消息互动的消息列表展示
+	公众号与关注此公众号的粉丝直接的消息互动的消息列表展示
 	1、在消息列表中对某个粉丝加备注,表示在该粉丝的最后一条消息上（可能是粉丝的发送消息也可能是回复粉丝的消息）加备注
 	2、加完备注后消息状态变为已读
 	3、自动回复的消息，在以粉丝为列表的选项卡中（"所有信息"、"未读信息"、"未回复"），最后一条不计算自动回复的消息，添加备注时，添加都最后添加消息，
@@ -29,26 +29,26 @@ Background：
 		}]
 		"""
 
-	#bill关注jobs的公众账号进行消息互动，发送一条，无回复
+	#bill关注jobs的公众号进行消息互动，发送一条，无回复
 
-		When bill关注jobs的公众账号
+		When bill关注jobs的公众号
 		When bill在模拟器中给jobs发送消息'bill发送一条文本消息，未回复'
 
-	#bill1关注jobs的公众账号进行消息互动，发送两条，无回复
+	#bill1关注jobs的公众号进行消息互动，发送两条，无回复
 
-		When bill1关注jobs的公众账号
+		When bill1关注jobs的公众号
 		When bill1在模拟器中给jobs发送消息'bill1发送一条文本消息，未回复'
 		When bill1在模拟器中给jobs发送消息'bill1_图片.png'
 
-	#bill2关注jobs的公众账号进行消息互动，发送一条，jobs回复一条文本消息
+	#bill2关注jobs的公众号进行消息互动，发送一条，jobs回复一条文本消息
 
-		When bill2关注jobs的公众账号
+		When bill2关注jobs的公众号
 		When bill2在模拟器中给jobs发送消息'bill2发送一条文本消息，回复文本消息'
 		When jobs在模拟器中给bill2回复消息'jobs回复bill2消息'
 
-	#bill3关注jobs的公众账号进行消息互动，发送一条，jobs回复一条图文消息
+	#bill3关注jobs的公众号进行消息互动，发送一条，jobs回复一条图文消息
 
-		When bill3关注jobs的公众账号
+		When bill3关注jobs的公众号
 		When bill3在模拟器中给jobs发送消息'bill3发送一条文本消息，回复图文'
 		When jobs在模拟器中给bill3回复消息'图文1'
 

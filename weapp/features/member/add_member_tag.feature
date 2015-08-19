@@ -19,12 +19,12 @@ Scenario: 添加会员分组
 			"name": "分组3"
 		}]	
 		"""
-	When bill关注jobs的公众账号
-	When bill1关注jobs的公众账号
-	When bill2关注jobs的公众账号
-	When bill3关注jobs的公众账号
-	When bill4关注jobs的公众账号
-	When bill5关注jobs的公众账号
+	When bill关注jobs的公众号
+	When bill1关注jobs的公众号
+	When bill2关注jobs的公众号
+	When bill3关注jobs的公众号
+	When bill4关注jobs的公众号
+	When bill5关注jobs的公众号
 
 	When jobs选择会员
 		| name  |  grade |
