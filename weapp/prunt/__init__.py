@@ -46,6 +46,14 @@ def run_task(name, config_dict=None):
 	return runner.run_task([name], config_dict)
 
 
+def load_task(name):
+	import sys
+	registry = sys.modules['registry']
+	task_func = registry.get_task(name)
+	if not task_func:
+		raise RuntimeError('no task named %s' % name)
+
+
 def set_last_result(result):
 	global RESULT
 	RESULT = result

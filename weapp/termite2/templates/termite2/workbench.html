@@ -49,20 +49,16 @@
 {% endblock %}
 
 {% block base_js %}
-  {% include 'wepage_components.html' %}
-  <!-- handlebar component start -->
-  <script type="text/x-handlebar-template" id="componentTemplates">
-    {{ 'wepage'|load_wepage_components_handlebar_templates }}
-  </script>
-  <!-- handlebar component end -->
   
-  <!-- start of ueditor -->
-  <script type="text/javascript">
-   window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
-  </script>  
-  <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
-  <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
-  <!-- end of ueditor -->
+  <!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-termite-components"
+      }
+    -->  
+  {{ '["wepage.page", "wepage.componentadder", "wepage.pageheader", "wepage.shopheader", "wepage.personalityTheme", "wepage.specialTemplate", "wepage.richtext", "wepage.item", "wepage.itemlist", "wepage.image", "wepage.notice", "wepage.title", "wepage.textnav", "wepage.imagenav", "wepage.block", "wepage.imagedisplay"]'|load_termite_components|safe }}
+  <!-- *end_prunt_task* -->
+  
 
   <script type="text/javascript">
     W.uid = {{ user.id }};

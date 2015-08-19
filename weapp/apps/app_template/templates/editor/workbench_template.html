@@ -5,11 +5,6 @@ __STRIPPER_TAG__
 <% load apps_filter %>
 
 __STRIPPER_TAG__
-<% block css %>
-<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/apps_termite.css">
-<% endblock %>
-
-__STRIPPER_TAG__
 <% block content-panel %>
 <div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
   <div class="relative">
@@ -67,19 +62,14 @@ __STRIPPER_TAG__
 
 __STRIPPER_TAG__
 <% block base_js %>
-  << '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.textsurvey", "appkit.qa", "appkit.selection", "appkit.shortcuts", "appkit.submitbutton"]'|load_app_components|safe >>
-  <script type="text/x-handlebar-template" id="componentTemplates">
-    << "appkit"|load_app_components_handlebar_templates|safe >>
-  </script>
-
-  __STRIPPER_TAG__
-  <!-- start of ueditor -->
-  <script type="text/javascript">
-   window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
-  </script>  
-  <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
-  <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
-  <!-- end of ueditor -->
+  <!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-termite-components"
+      }
+    --> 
+  << '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.qa", "appkit.selection", "appkit.shortcuts", "appkit.submitbutton"]'|load_termite_components|safe >>
+  <!-- *end_prunt_task* -->
 
   __STRIPPER_TAG__
   <script type="text/javascript">

@@ -84,6 +84,7 @@ class PruntTaskBlock(Block):
 				"src": paths
 			}
 
+		self.conf_dict['raw_lines'] = self.lines
 		if prunt.run_task(self.task_name, self.conf_dict):
 			if self.task_name == 'weizoom-merge':
 				if '.js' in self.conf_dict['dest']:
@@ -103,6 +104,12 @@ class PruntTaskBlock(Block):
 			elif self.task_name == 'weizoom-generate-component-front-template':
 				dest = u'{%% verbatim %%}<script type="text/x-handlebar-template" id="componentTemplates">\n%s\n</script>{%% endverbatim %%}' % prunt.get_last_result().decode('utf-8')
 				return dest.encode('utf-8')
+			else:
+				result = prunt.get_last_result()
+				if result:
+					return result
+				else:
+					return ''
 		else:
 			logger.error('run task "%s" failed!!!', self.task_name)
 			return ''
@@ -173,16 +180,6 @@ def buildFile(prunt):
 	prunt.config.require('files')
 	files = prunt.config['files']
 	paths = files['src'] if type(files['src']) == list else [files['src']]
-
-	prunt.run_task('prunt-replace', {
-		"files": {
-			"src": "static_v2/js/termite/component/common/Component.js"
-		},
-		"rules": [{
-			"pattern": 'default:',
-			"replacement": '"default":'
-		}]
-	})
 
 	for path in paths:
 		build(path)

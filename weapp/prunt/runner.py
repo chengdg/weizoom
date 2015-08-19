@@ -76,6 +76,7 @@ def run_task(targets, config_dict=None):
 					env = config.PruntEnv(target, config_dict)
 				else:
 					env = config.PruntEnv(target, prunt.get_config_for(target))
+				prunt.set_last_result(None)
 				func(env)
 		else:
 			logger.error('no task named "%s"', target)

@@ -2,6 +2,7 @@
 
 __author__ = 'robert'
 
+import os
 import shutil
 import logging
 
@@ -61,10 +62,21 @@ prunt.init_config({
 
 @register_task('clean')
 def clean(prunt):
-	logger = logging.getLogger('clean')
-	logger.info('remove dir ./cdn')
-	shutil.rmtree('./cdn')
+	if os.path.exists('cdn'):
+		logger = logging.getLogger('clean')
+		logger.info('remove dir ./cdn')
+		shutil.rmtree('./cdn')
 
+
+prunt.register_task('replace-js-default', 'prunt-replace', {
+	"files": {
+		"src": "static_v2/js/termite/component/common/Component.js"
+	},
+	"rules": [{
+		"pattern": 'default:',
+		"replacement": '"default":'
+	}]
+})
 
 prunt.register_task('build:base_v2', 'weizoom-build', {
 	"files": {
@@ -84,5 +96,7 @@ prunt.register_task('build:webapp_content_base_v4', 'weizoom-build', {
 	}
 })
 
+prunt.load_task('weizoom-build-app')
 
-prunt.register_task('default', ['clean', 'build:webapp_content_base_v4'])
+
+prunt.register_task('default', ['clean', 'replace-js-default', 'weizoom-build-app'])
