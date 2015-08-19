@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from behave import when, then, given
 import json
+from mall.models import ProductReview
 from test import bdd_util
 
 @when(u"{webapp_owner}已完成对商品的评价信息审核")
@@ -32,6 +33,11 @@ def step_webapp_owner_verified_review(context, webapp_owner):
             "status": i.get("status")
         }
         context.client.post(url, args)
+        if 'time' in i and i.get("status") == "2":
+            time = i['time']
+            top_time = "{} 00:00".format(bdd_util.get_date_str(time))
+            product_review.top_time = top_time
+            ProductReview.objects.filter(id=product_review.id).update(top_time=top_time)
 
 @when(u'{webapp_owner}已完成对商品的评价信息审核并置顶')
 def step_impl(context, webapp_owner):
