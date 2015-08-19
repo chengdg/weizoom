@@ -62,8 +62,6 @@ class event(resource.Resource):
 		
 		data = json.loads(event.to_json())
 		data['id'] = data['_id']['$oid']
-		if error_msg:
-			data['error_msg'] = error_msg
 		response = create_response(200)
 		response.data = data
 		return response.get_response()
