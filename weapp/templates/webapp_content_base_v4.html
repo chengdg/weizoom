@@ -9,26 +9,42 @@
         <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
         {% endif %}
         
-        <!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
-        {% if is_use_dev_resource %}
-        <!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+        
+        <!-- *start_prunt_task* -->
+        <!-- [prunt_task] 
+            {
+                "task": "weizoom-merge",
+                "args": {
+                    "dest":"cdn/standard_static/webapp_v4_all.css",
+                    "path_map": {
+                        "termite_static": "termite/static"   
+                    }
+                }
+            }
+        -->
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/base.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/webapp_default.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">  
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">  
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">        
-        <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
-        {% else %}
-        <link type="text/css" rel="stylesheet" media="all" href="{{cdn_host}}/standard_static/css/webapp_content_base_all.css">
-        {% endif %}
-        <!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+        <!-- *end_prunt_task* -->
 
-        <!-- *finish webapp_template_css* [do not modify and delete this line, it will be needed by dist process] -->
+
         {% block css %}{% endblock %}
 
-        <!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
-        {% if is_use_dev_resource %}
-        <!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+        
+        <!-- *start_prunt_task* -->
+        <!-- [prunt_task] 
+            {
+                "task": "weizoom-merge",
+                "args": {
+                    "dest":"cdn/standard_static/webapp_v4_all.js",
+                    "path_map": {
+                        "termite_static": "termite/static"   
+                    }
+                }
+            }
+        -->
         <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/gmu-2.1.1.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/idangerous.swiper.js"></script>
@@ -50,11 +66,9 @@
 
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
-        <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
-        {% else %}
-        <script type="text/javascript" src="{{cdn_host}}/standard_static/js/webapp_content_base_all.min.js"></script>
-        {% endif %}
-        <!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+        <!-- *end_prunt_task* -->
+
+
         <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
         <meta name="x5-orientation" content="portrait">
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">

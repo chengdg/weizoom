@@ -23,6 +23,8 @@ def weizoomMerge(prunt):
 	prunt.config.require('dest')
 	dest = prunt.config['dest']
 
+	path_map = prunt.config.get('path_map', None)
+
 	logger.info('merge %s', paths)
 
 	prunt.run_task('prunt-concat', {
@@ -30,7 +32,8 @@ def weizoomMerge(prunt):
 			"src": paths,
 			"dest": dest
 		},
-		"comment": "/* comment */"
+		"comment": "/* comment */",
+		"path_map": path_map
 	})
 
 	src = dest

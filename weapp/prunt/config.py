@@ -26,6 +26,9 @@ class PruntConfig(object):
 		if not key in self._dict:
 			raise RuntimeError("task '%s' require '%s' in it's config object" % (self.task_name, key))
 
+	def get(self, key, default):
+		return self._dict.get(key, default)
+
 
 class PruntEnv(object):
 	def __init__(self, task_name, config={}):

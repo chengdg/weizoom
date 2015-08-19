@@ -2,6 +2,9 @@
 
 __author__ = 'robert'
 
+import shutil
+import logging
+
 from prunt.decorator import register_task
 import prunt
 
@@ -55,11 +58,31 @@ prunt.init_config({
 	}
 })
 
+
+@register_task('clean')
+def clean(prunt):
+	logger = logging.getLogger('clean')
+	logger.info('remove dir ./cdn')
+	shutil.rmtree('./cdn')
+
+
 prunt.register_task('build:base_v2', 'weizoom-build', {
 	"files": {
 		"src": "templates/base_v2.html"
 	}
 })
 
+prunt.register_task('build:webapp_content_base', 'weizoom-build', {
+	"files": {
+		"src": "templates/webapp_content_base.html"
+	}
+})
 
-prunt.register_task('default', ['build:base_v2'])
+prunt.register_task('build:webapp_content_base_v4', 'weizoom-build', {
+	"files": {
+		"src": "templates/webapp_content_base_v4.html"
+	}
+})
+
+
+prunt.register_task('default', ['clean', 'build:webapp_content_base_v4'])
