@@ -49,7 +49,8 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                 // 向order发送finish
                 var args = {
                     'order_id': this.orderId,
-                    'action': 'finish'
+                    // 'action': 'finish'
+                    'action': 'ship'  //不需要物流时，状态置为已发货 duhao 2015-08-19
                 }
                 //window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=finish';
                 W.getApi().call({
