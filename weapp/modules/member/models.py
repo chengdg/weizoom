@@ -564,7 +564,7 @@ class Member(models.Model):
 
 	@staticmethod
 	def count(webapp_id):
-		return Member.objects.filter(webapp_id=webapp_id).count()
+		return Member.objects.filter(webapp_id=webapp_id, status__in=[CANCEL_SUBSCRIBED, SUBSCRIBED], is_for_test=False).count()
 
 	@staticmethod
 	def update_factor(member):

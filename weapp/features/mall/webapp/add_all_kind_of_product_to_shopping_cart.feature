@@ -52,7 +52,7 @@ Background:
 			"name": "商品1限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"count_per_purchase": 2,
 			"promotion_price": 10
 		}]
@@ -64,7 +64,7 @@ Background:
 			"name": "商品2买二赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1

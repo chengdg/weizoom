@@ -18,6 +18,7 @@ from django.shortcuts import render_to_response
 # from core.jsonresponse import JsonResponse, create_response
 # from core.dateutil import get_today
 from core.exceptionutil import unicode_full_stack
+from mall.module_api import check_product_review_overdue
 
 from watchdog.utils import watchdog_info, watchdog_error
 from mall.models import *
@@ -166,6 +167,8 @@ def get_product(request):
 	webapp_user = request.webapp_user
 
 	member_grade_id = request.member.grade_id if request.member else None
+	# 检查置顶评论是否过期
+	check_product_review_overdue(product_id)
 	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
 	# jz 2015-08-10
 	#product.fill_model()

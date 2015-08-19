@@ -19,7 +19,7 @@ from core.exceptionutil import unicode_full_stack
 from market_tools.tools.delivery_plan.models import DeliveryPlan
 from core.common_util import ignore_exception
 from tools.express.express_poll import ExpressPoll
-from webapp.modules.mall.utils import get_product_member_discount
+#from webapp.modules.mall.utils import get_product_member_discount
 
 #############################################################################################
 # post_update_product_model_property_handler: post_update_product_model_property的handler

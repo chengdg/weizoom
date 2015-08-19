@@ -8,24 +8,34 @@ from features.testenv.model_factory import ProductFactory
 from test import bdd_util
 
 
-@when(u"{user}结束促销活动'{promotion_name}'")
-def step_terminate_promotion(context, user, promotion_name):
-    db_promotion = models.Promotion.objects.get(
-        owner_id=context.webapp_owner_id,
-        name=promotion_name
-    )
-    data = {
-        'type': models.PROMOTION2TYPE[db_promotion.type]['name'],
-        'ids[]': [db_promotion.id]
-    }
-    url = '/mall2/api/promotion/?_method=delete'
-    response = context.client.post(url, data)
-    bdd_util.assert_api_call_success(response)
+@when(u"{user}'{action}'促销活动'{promotion_name}'")
+def step_terminate_promotion(context, user, action, promotion_name):
+    """促销活动通用更新单个促销状态
+
+    @param action 操作:开始、结束、删除
+    @param promotion_name 需要更新的促销活动名称
+    """
+    __update_promotion_status(context, [promotion_name], action)
+
+
+@when(u"{user}批量'{action}'促销活动")
+def step_terminate_promotion(context, user, action):
+    """促销活动通用更新多个促销状态
+
+    @param action 操作:开始、结束、删除
+    @param context.text 促销活动数组，有效数据格式
+        [{
+            "name": str # 促销活动名称,必填
+        }]
+    ** 注：所有促销活动必须是相同类型
+    """
+    promotions = json.loads(context.text)
+    promotion_names = [promotion['name'] for promotion in promotions]
+    __update_promotion_status(context, promotion_names, action)
 
 
 @when(u"{user}创建积分应用活动")
 def step_impl(context, user):
-    #webapp_id = context.client.user.profile.webapp_id
     if context.table:
         # 处理tables
         promotions = context.table
@@ -60,7 +70,7 @@ def step_impl(context, user):
             'discount': promotion.get('discount', 100),
             'discount_money': promotion.get('discount_money', 0.0),
             'integral_price': promotion.get('integral_price', 0.0),
-            'is_permanant_active': 'true' if promotion.get('is_permanant_active', False) or promotion['is_permanant_active'] == 'true' else "false",
+            'is_permanant_active': str(promotion.get('is_permanant_active', False)).lower(),
         }
         if data['is_permanant_active'] != 'true':
             data['start_date'] = bdd_util.get_datetime_no_second_str(promotion['start_date']),
@@ -184,7 +194,9 @@ def step_impl(context, user):
 
 @then(u"{user}获取{type}活动列表")
 def step_impl(context, user, type):
-    if type == u"限时抢购":
+    if type == u"促销":
+        type = "all"
+    elif type == u"限时抢购":
         type = "flash_sale"
     elif type == u"买赠":
         type = "premium_sale"
@@ -214,43 +226,87 @@ def step_impl(context, user, type):
     actual = json.loads(response.content)['data']['items']
 
     for promotion in actual:
+        promotion['product_name'] = promotion['product']['name']
+        promotion['product_price'] = promotion['product']['display_price']
+        promotion['bar_code'] = promotion['product']['bar_code']
+        promotion['price'] = promotion['product']['display_price']
+        promotion['stocks'] = promotion['product']['stocks']
         if type == 'integral_sale':
-            promotion['product_name'] = promotion['product']['name']
-            promotion['product_price'] = promotion['product']['display_price']
-            promotion['bar_code'] = promotion['product']['bar_code']
-            promotion['is_permanant_active'] = promotion['detail']['is_permanant_active']
-            promotion['is_permanant_active'] = 'true' if promotion['is_permanant_active'] else 'false'
+            promotion['is_permanant_active'] = str(promotion['detail']['is_permanant_active']).lower()
             detail = promotion['detail']
-            if len(detail['rules']) == 1 and detail['rules'][0]['member_grade_id'] == -1:
-                rule = detail['rules'][0]
+            rules = detail['rules']
+            if len(rules) == 1 and rules[0]['member_grade_id'] < 1:
+                rule = rules[0]
+                rule['member_grade'] = u'全部会员'
                 promotion['discount'] = str(rule['discount']) + '%'
                 promotion['discount_money'] = rule['discount_money']
             else:
                 promotion['discount'] = detail['discount'].replace(' ', '')
                 promotion['discount_money'] = detail['discount_money'].replace(' ', '')
+            promotion['rules'] = rules
+    expected = []
     if context.table:
-        expected = []
         for promotion in context.table:
             promotion = promotion.as_dict()
-            if promotion['is_permanant_active'] != 'true':
-                promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
-                promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
-            else:
-                promotion.pop('start_date')
-                promotion.pop('end_date')
-            promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
             expected.append(promotion)
     else:
         expected = json.loads(context.text)
+
+    for promotion in expected:
+        if type == 'integral_sale':
+            promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
+        if promotion.has_key('start_date') and promotion.has_key('end_date'):
+            if promotion['is_permanant_active'] == 'true':
+                promotion.pop('start_date')
+                promotion.pop('end_date')
+            else:
+                promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
+                promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
+        if promotion.get('created_at'):
+            promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
     bdd_util.assert_list(expected, actual)
 
 
+
+
+def __update_promotion_status(context, promotion_names, action):
+    """使用促销活动名称更新促销状态
+
+    @param promotion_names 促销活动名称列表
+    @param action 操作:开始、结束、删除
+    """
+    data = {
+        'ids[]': []
+    }
+    promotion_type = 0
+    for db_promotion in models.Promotion.objects.filter(name__in=promotion_names):
+        data['ids[]'].append(db_promotion.id)
+        promotion_type = db_promotion.type
+    data['type'] = models.PROMOTION2TYPE[promotion_type]['name'],
+    if action == u'开始':
+        data['start'] = 'true'
+    elif action == u'结束':
+        data['start'] = 'false'
+    elif action == u'删除':
+        data['_method'] = 'delete'
+    url = '/mall2/api/promotion/'
+
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
+
+
 def __get_member_grade(promotion, webapp_id):
+    """使用促销信息获取会员等级
+
+    @param promotion 促销信息，有效数据格式
+        {
+            "member_grade": str # 会员等级名称 *全部、全部会员返回 0
+        }
+    @param webapp_id
+    """
     member_grade = promotion.get('member_grade', 0)
-    if member_grade == u'全部':
+    if member_grade == u'全部' or member_grade == u'全部会员':
         member_grade = 0
     elif member_grade:
         member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id
     return member_grade
-
-

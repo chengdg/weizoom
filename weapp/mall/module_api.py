@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 import copy
@@ -3009,11 +3009,25 @@ def wishlist_product_count(webapp_owner_id, member_id):
 		is_collect=True
 	).count()
 
+OVERDUE_DAYS = 15
+def check_product_review_overdue(product_id):
+	top_review_list = ProductReview.objects.filter(status=2,product_id=product_id)
+	for review in top_review_list:
+		after_15_days = review.top_time+timedelta(days=OVERDUE_DAYS)
+		now = datetime.now()
+		if (after_15_days < now):
+			review.status = 1
+			ProductReview.objects.filter(id=review.id).update(status=1,top_time=DEFAULT_DATETIME)
+
+
+
 def get_product_review(request):
 	"""
 	获取商品的评价
 	"""
 	product_id = request.GET.get('product_id', None)
+	# 检查置顶评论是否过期
+	check_product_review_overdue(product_id)
 	product_review_list = ProductReview.objects.filter(Q(product_id=product_id) & Q(status__in=['1', '2'])).order_by('-top_time', '-id')
 
 	from cache import webapp_cache

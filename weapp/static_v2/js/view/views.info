@@ -96,3 +96,4 @@ stats_manage_saleroom_echarts_view
 stats_order_list_filter_view
 stats-order-summary-filter-view
 stats_manage_summary_base_data_view
+mall_order_buyer_hint_view
