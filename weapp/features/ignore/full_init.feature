@@ -255,14 +255,14 @@ Scenario: 安装完整测试数据
 			"name": "东坡肘子限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["东坡肘子"],
+			"product_name": "东坡肘子",
 			"promotion_price": 1.1
 		}, {
 			"name": "叫花鸡限时抢购",
 			"promotion_title": "叫花鸡限时抢购年末大放血",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"products": ["叫花鸡"],
+			"product_name": "叫花鸡",
 			"limit_period": 2,
 			"limit_counts": 2,
 			"count_per_purchase": 2,
@@ -275,7 +275,7 @@ Scenario: 安装完整测试数据
 	#		"name": "水晶虾仁满减",
 	#		"start_date": "今天",
 	#		"end_date": "1天后",
-	#		"products": ["水晶虾仁", "热干面"],
+	#		"product_name": ["水晶虾仁", "热干面"],
 	#		"price_threshold": 3.0,
 	#		"cut_money": 0.5
 	#	}, {
@@ -283,7 +283,7 @@ Scenario: 安装完整测试数据
 	#		"promotion_title": "莲藕排骨汤满减年末大放血",
 	#		"start_date": "今天",
 	#		"end_date": "2天后",
-	#		"products": ["莲藕排骨汤"],
+	#		"product_name": ["莲藕排骨汤"],
 	#		"price_threshold": 1.0,
 	#		"cut_money": 0.6,
 	#		"is_enable_cycle_mode": true
@@ -295,7 +295,7 @@ Scenario: 安装完整测试数据
 			"name": "武昌鱼买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["武昌鱼"],
+			"product_name": "武昌鱼",
 			"premium_products": [{
 				"name": "松鼠桂鱼",
 				"count": 1
@@ -304,7 +304,7 @@ Scenario: 安装完整测试数据
 			"is_enable_cycle_mode": false
 		}]
 		"""
-	When jobs结束促销活动'武昌鱼买一赠一'
+	When jobs'结束'促销活动'武昌鱼买一赠一'
 	When jobs创建买赠活动
 		"""
 		[{
@@ -312,7 +312,7 @@ Scenario: 安装完整测试数据
 			"promotion_title": "武昌鱼买赠年末大放血（赠送松鼠桂鱼）",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["武昌鱼"],
+			"product_name": "武昌鱼",
 			"premium_products": [{
 				"name": "东坡肘子",
 				"count": 1
@@ -330,7 +330,7 @@ Scenario: 安装完整测试数据
 			"name": "冬荫功汤积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["冬荫功汤"],
+			"product_name": "冬荫功汤",
 			"discount": 100,
 			"discount_money": 0.0,
 			"is_permanant_active": false
@@ -339,7 +339,7 @@ Scenario: 安装完整测试数据
 			"promotion_title": "松鼠桂鱼积分应用年末大放血",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"products": ["松鼠桂鱼"],
+			"product_name": "松鼠桂鱼",
 			"discount": 50,
 			"discount_money": 6.0,
 			"is_permanant_active": true
