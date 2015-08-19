@@ -88,16 +88,6 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"end_date": "2天后"
 		}]
 	"""
-	When jobs创建限时抢购活动
-	"""
-		[{
-			"name": "商品2限时抢购",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品2"],
-			"promotion_price": 180.00
-		}]
-	"""
 	Then jobs能获取限时抢购查询列表
 	"""
 		[{
@@ -117,9 +107,19 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"price": 200.00
 		}]
 	"""
+	
 	#优惠券过期失效，可以建立促销活动
 	When jobs使优惠券失效
 	And jobs创建限时抢购活动
+	"""
+		[{
+			"name": "商品2限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品2"],
+			"promotion_price": 180.00
+		}]
+	"""
 	Then jobs能获取限时抢购查询列表
 	"""
 		[{
@@ -168,17 +168,7 @@ Scenario: 2先建优惠券，不能参加促销活动
 			"end_date": "2天后"
 		}]
 	"""
-	When jobs创建限时抢购活动
-	"""
-		[{
-			"name": "商品2限时抢购",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品2"],
-			"promotion_price": 180.00
-		}]
-	"""
-	Then jobs能获取限时抢购查询列表
+	And jobs能获取限时抢购查询列表
 	"""
 		[{
 			"name": "商品1",
@@ -199,7 +189,6 @@ Scenario: 2先建优惠券，不能参加促销活动
 	"""
 	#优惠券在有效期内，手动失效，不能建立优惠券，需要等过有效期才能建立
 	When jobs使优惠券失效
-	And jobs创建限时抢购活动
 	Then jobs能获取限时抢购查询列表
 	"""
 		[{
@@ -245,8 +234,8 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 			"promotion_price": 11.5
 		}]
 	"""
-	When jobs添加单品优惠券规则
-	Then jobs能获取单品券查询列表
+
+	And jobs能获取单品券查询列表
 	"""
 		[{
 			"name": "商品1",
@@ -294,8 +283,7 @@ Scenario: 4先建立买赠活动，不能建立该商品的单品券
 			"end_date": "1天后"
 		}]
 	"""
-	When jobs添加单品优惠券规则
-	Then jobs能获取优惠券查询列表
+	And jobs能获取优惠券查询列表
 	"""
 		[{
 			"name": "商品1",
