@@ -47,12 +47,20 @@
 	padding-top: 27px;
 	padding-bottom: 9px;
 }
+.xui-massSendingMessage .xui-massageSendingHead .xui-left{
+	width: 74px;
+	float: left;
+}
+.xui-massSendingMessage .xui-massageSendingHead .xui-right{
+	width: 885px;
+	float: right;
+}
+
 
 .xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetGroup{
 	background-color: #fff;
 	border: 1px solid #060606;
-	height: 70px;
-	line-height: 30px;
+	margin-bottom: 5px;
 	padding-left: 8px;
 	padding-right: 8px;
 	padding-top: 3px;
