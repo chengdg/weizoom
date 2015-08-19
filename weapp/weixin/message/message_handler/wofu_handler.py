@@ -70,7 +70,7 @@ class WoFuHandler(KeywordHandler):
 										if wo_fu.level == 1:
 											response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢您一直都在，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝·服务-个人中心-我的优惠券，只需39元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
 										elif wo_fu.level == 2:
-											response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢您一直都在，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝·服务-个人中心-我的优惠券，只需69元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
+											response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢您一直都在，根据您过去的购买记录，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝•服务-个人中心-我的优惠券，只需69元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
 										elif wo_fu.level == 3:
 											response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但您的人生已经留下窝夫小子的痕迹，为感谢您对窝夫小子的支持，根据您过去的购买记录，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝•服务-个人中心-我的优惠券，只需99元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
 										# elif wo_fu.level == 4:
