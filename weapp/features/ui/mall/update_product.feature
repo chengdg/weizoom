@@ -41,7 +41,8 @@ Background:
 						"stock_type": "无限"
 					}
 				}
-			}
+			},
+			"postage": "顺丰"
 		}, {
 			"name": "商品2",
 			"category": "",
@@ -63,8 +64,23 @@ Background:
 						"stocks": 3
 					}
 				}
-			}
+			},
+			"postage": "免运费"
 		}]	
+		"""
+	When jobs添加邮费配置
+		"""
+		[{
+			"name":"顺丰",
+			"first_weight":1,
+			"first_weight_price":15.00,
+			"added_weight":1,
+			"added_weight_price":5.00
+		}, {
+			"name" : "圆通",
+			"first_weight":1,
+			"first_weight_price":10.00
+		}]
 		"""
 
 @ui @ui-mall @ui-mall.product
@@ -92,7 +108,8 @@ Scenario: 更新商品
 						"stocks": 5
 					}
 				}
-			}
+			},
+			"postage": "顺丰"
 		}	
 		"""	
 	Then jobs找不到商品'商品1'
@@ -114,7 +131,8 @@ Scenario: 更新商品
 						"stocks": 5
 					}
 				}
-			}
+			},
+			"postage": "顺丰"
 		}	
 		"""
 	And jobs能获取商品'商品2':ui
@@ -134,7 +152,8 @@ Scenario: 更新商品
 						"stocks": 3
 					}
 				}
-			}
+			},
+			"postage": "免运费"
 		}
 		"""
 	When jobs更新商品'商品1*':ui
@@ -150,4 +169,24 @@ Scenario: 更新商品
 			"name": "商品1**",
 			"category": ""
 		}	
+		"""
+
+Scenario: 切换邮费配置
+	jobs把运费配置更改为'圆通'
+	jobs查看商品详情
+
+	When jobs选择'圆通'运费配置:ui
+	Then jobs能获取商品'商品1':ui
+		"""
+		{
+			"name": "商品1",
+			"postage": "圆通"
+		}
+		"""
+	And jobs能获取商品'商品2':ui
+		"""
+		{
+			"name": "商品2",
+			"postage": "免运费"
+		}
 		"""

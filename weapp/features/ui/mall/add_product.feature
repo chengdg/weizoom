@@ -13,7 +13,33 @@ Background:
 			"name": "分类3"
 		}]
 		"""
+	When jobs已添加支付方式
+		"""
+		[{
+			"type": "货到付款",
+			"description": "我的货到付款",
+			"is_active": "启用"
+		},{
+			"type": "微信支付",
+			"description": "我的微信支付",
+			"is_active": "启用",
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
+			"weixin_sign": "42345"
+		}]
+		"""
+	When jobs开通使用微众卡权限
+	When jobs添加支付方式
+		"""
+		[{
+			"type": "微众卡支付",
+			"description": "我的微众卡支付",
+			"is_active": "启用"
+		}]
+		"""
 	And jobs登录系统:ui
+
 
 @ui @ui-mall @ui-mall.product
 Scenario: 添加商品
@@ -154,4 +180,69 @@ Scenario: 添加商品按倒序排列
 	Then bill能获取商品列表:ui
 		"""
 		[]
+		"""
+
+Scenario: 添加'免运费'配置的商品
+	Jobs添加商品后，能获取他添加的商品
+
+	Given jobs登录系统:ui
+	And jobs已添加商品:ui
+		"""
+		[{
+			"name": "红烧肉",
+			"category": "",
+			"price": 12.0,
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"introduction": "红烧肉的简介",
+			"detail": "红烧肉的详情",
+			"shelve_type": "上架",
+			"stock_type": "有限",
+			"stocks": 3,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5.5,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			},
+			"postage": "免运费"
+		}]
+		"""
+	Then jobs能获取商品'红烧肉':ui
+		"""
+		{
+			"name": "红烧肉",
+			"category": "",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"detail": "红烧肉的详情",
+			"shelve_type": "上架",
+			"stock_type": "有限",
+			"stocks": 3,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5.5,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			},{
+				"type": "货到付款"
+			}],
+			"postage": "免运费"
+		}
 		"""

@@ -77,3 +77,58 @@ Scenario: 添加商品规格
 		"""
 		[]
 		"""
+
+Scenario: 添加多个商品规格后，获取商品规格列表
+	Jobs添加多个商品规格后
+	1. jobs能获取商品规格列表
+	2. 商品规格列表按创建顺序正序排列
+
+	When jobs已添加商品规格:ui
+		"""
+		[{
+			"name": "颜色",
+			"type": "图片",
+			"values": [{
+				"name": "黑色",
+				"image": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}, {
+				"name": "白色",
+				"image": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}]
+		}, {
+			"name": "尺寸",
+			"type": "文字",
+			"values": [{
+				"name": "M"
+			}, {
+				"name": "S"
+			}]
+		}]
+		"""
+	Then jobs能获取商品规格列表:ui
+		"""
+		[{
+			"name": "颜色",
+			"type": "图片",
+			"values": [{
+				"name": "黑色",
+				"image": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}, {
+				"name": "白色",
+				"image": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}]
+		}, {
+			"name": "尺寸",
+			"type": "文字",
+			"values": [{
+				"name": "M"
+			}, {
+				"name": "S"
+			}]
+		}]
+		"""
+	Given bill登录系统
+	Then bill能获取商品规格列表:ui
+		"""
+		[]
+		"""
