@@ -64,7 +64,9 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             }
         },
         second_navs: function($node, model, value, $propertyViewNode) {
-            this.refresh($node, {resize:true});
+            // this.refresh($node, {resize:true});
+            var parentComponent = W.component.getComponent(this.pid);
+            parentComponent.refresh(null, {resize:true});
         }
     }
 });
