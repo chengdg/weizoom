@@ -75,6 +75,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"coupon_product": "商品2"
 		}]
 	"""
+	
 	Then jobs能获得优惠券规则列表
 	"""
 		[{
@@ -108,35 +109,6 @@ Scenario: 1先建优惠券，不能参加促销活动
 		}]
 	"""
 
-	When jobs创建限时抢购活动
-	"""
-		[{
-			"name": "商品2限时抢购",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"product_name": "商品2",
-			"promotion_price": 180.00
-		}]
-	"""
-	Then jobs能获取限时抢购查询列表
-	"""
-		[{
-			"name": "商品1",
-			"stock_type": "无限",
-			"operate": true,
-			"price": 200.00
-		}, {
-			"name": "商品2",
-			"stock_type": "无限",
-			"operate": false,
-			"price": 200.00
-		}, {
-			"name": "商品3",
-			"stock_type": "无限",
-			"operate": true,
-			"price": 200.00
-		}]
-	"""
 	#优惠券过期失效，可以建立促销活动
 	When jobs使优惠券失效
 	And jobs创建限时抢购活动
@@ -145,7 +117,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": true,
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品2",
@@ -156,6 +128,66 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"name": "商品3",
 			"stock_type": "无限",
 			"operate": true,
+			"price": 200.00
+		}]
+	"""
+
+
+@promotion @promotionCoupon @promotionFlash
+Scenario: 2先建优惠券，不能参加促销活动
+	When jobs添加优惠券规则
+	"""
+		[{
+			"name": "优惠券4",
+			"money": 10.00,
+			"count": 5,
+			"limit_counts": 1,
+			"start_date": "今天",
+			"end_date": "2天后",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon4_id_",
+			"coupon_product": "商品2"
+		}]
+	"""
+	Then jobs能获得优惠券规则列表
+	"""
+		[{
+			"name": "优惠券4",
+			"type": "单品券",
+			"money": 10.00,
+			"remained_count": 5,
+			"limit_counts": 1,
+			"use_count": 0,
+			"start_date": "今天",
+			"end_date": "2天后"
+		}]
+	"""
+	When jobs创建限时抢购活动
+	"""
+		[{
+			"name": "商品2限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品2"],
+			"promotion_price": 180.00
+		}]
+	"""
+	Then jobs能获取限时抢购查询列表
+	"""
+		[{
+			"name": "商品1",
+			"stock_type": "无限",
+			"operate": "false",
+			"price": 200.00
+		}, {
+			"name": "商品2",
+			"stock_type": "无限",
+			"operate": "false",
+			"price": 200.00
+		}, {
+			"name": "商品3",
+			"stock_type": "无限",
+			"operate": "true",
 			"price": 200.00
 		}]
 	"""
@@ -167,7 +199,11 @@ Scenario: 1先建优惠券，不能参加促销活动
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
+<<<<<<< HEAD
 			"operate": true,
+=======
+			"operate": "false",
+>>>>>>> 7f16780c4bdbc6e54909403be59c95fc55346f05
 			"price": 200.00
 		}, {
 			"name": "商品2",
@@ -183,7 +219,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 	"""
 
 @wip @promotion.promotionCoupon @promotion.promotionFlash
-Scenario: 2先建立限时抢购活动，不能建立该商品的单品券
+Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 	When jobs创建限时抢购活动
 	"""
 		[{
@@ -213,7 +249,7 @@ Scenario: 2先建立限时抢购活动，不能建立该商品的单品券
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": "false",
 			"price": 200.00
 		}, {
 			"name": "商品2",
@@ -229,7 +265,7 @@ Scenario: 2先建立限时抢购活动，不能建立该商品的单品券
 	"""
 
 @promotion.promotionCoupon @promotion.promotionPremium
-Scenario: 3先建立买赠活动，不能建立该商品的单品券
+Scenario: 4先建立买赠活动，不能建立该商品的单品券
 	When jobs创建买赠活动
 	"""
 		[{
@@ -262,7 +298,7 @@ Scenario: 3先建立买赠活动，不能建立该商品的单品券
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": "false",
 			"price": 200.00
 		}, {
 			"name": "商品2",
