@@ -35,10 +35,8 @@ Background:
 			"name": "商品1限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"member_grade": "全部会员",
-			"count_per_purchase": 2,
-			"promotion_price": 80.00,
-			"limit_period": 1
+			"products": ["商品1"],
+			"promotion_price": 180.00
 		}]
 	"""
 	Then jobs能获取商品列表
@@ -46,17 +44,17 @@ Background:
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": True,
+			"operate": "true",
 			"price": 200.00
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-			"operate": True,
+			"operate": "true",
 			"price": 200.00
 		}, {
 			"name": "商品3",
 			"stock_type": "无限",
-			"operate": True,
+			"operate": "true",
 			"price": 200.00
 		}]
 	"""
@@ -93,14 +91,11 @@ Scenario: 1先建优惠券，不能参加促销活动
 	When jobs创建限时抢购活动
 	"""
 		[{
-			"name": "商品1限时抢购",
-			"promotion_slogan":"",
+			"name": "商品2限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"member_grade": "全部会员",
-			"count_per_purchase": 2,
-			"promotion_price": 80.00,
-			"limit_period": 1
+			"products": ["商品2"],
+			"promotion_price": 180.00
 		}]
 	"""
 	Then jobs能获取商品列表
