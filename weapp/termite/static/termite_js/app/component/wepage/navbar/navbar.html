@@ -69,7 +69,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="xui-sidePanel xa-sidePanel"  {% if in_production_mode %}id="xa-wrapper" style="display:block;"{% endif %}>
+		<div class="xui-sidePanel xa-sidePanel"  {% if in_production_mode %}id="xa-wrapper" {% endif %} {% if in_design_mode %}style="display:block;"{% endif %}>
 			<ul class="xui-mainMenu">
 				<li class="xui-firstNav">
 					<a href="###">
