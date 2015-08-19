@@ -9,51 +9,30 @@
 {{component.model.type}}
 	{% if component.model.type == "weixin" %}
 	<div class="xui-globalBottomBar" data-ui-role="bottomNav">
-				<div class="xui-home">
-					<a href="###" class="xui-bg"></a>
-				</div>
-				<div class="xui-flex xui-flex-two">
-					<div class="xui-menu xa-menu f14">
-						<a href="###">标题</a>
-					</div>
-					<div class="xui-subMenuContainer">
-						<span class="xui-menuArrow"></span>
-						<span class="xui-menuArrowBorder"></span>
-						<ul class="xui-subMenu">
-							<li class="f12"><a href="###">标题名</a></li>
-							<li class="f12"><a href="###">标题名</a></li>
-							<li class="f12"><a href="###">标题名</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="xui-flex xui-flex-two">
-					<div class="xui-menu xa-menu f14">
-						<a href="###">标题</a>
-					</div>
-					<div class="xui-subMenuContainer">
-						<span class="xui-menuArrow"></span>
-						<span class="xui-menuArrowBorder"></span>
-						<ul class="xui-subMenu">
-							<li class="f12"><a href="###">标题名</a></li>
-							<li class="f12"><a href="###">标题名</a></li>
-							<li class="f12"><a href="###">标题名</a></li>
-						</ul>
-					</div>
-				</div><div class="xui-flex xui-flex-two">
-					<div class="xui-menu xa-menu f14">
-						<a href="###">标题</a>
-					</div>
-					<div class="xui-subMenuContainer">
-						<span class="xui-menuArrow"></span>
-						<span class="xui-menuArrowBorder"></span>
-						<ul class="xui-subMenu">
-							<li class="f12"><a href="###">标题名</a></li>
-							<li class="f12"><a href="###">标题名</a></li>
-							<li class="f12"><a href="###">标题名</a></li>
-						</ul>
-					</div>
-				</div>
-		</div>
+        <div class="xui-home">
+            <a href="###" class="xui-bg"></a>
+        </div>
+        {% with component.components|length as fisrt_count %}
+        {% for fisrt_component in component.components %}
+            <div data-component-cid="{{fisrt_component.cid}}" class="xui-flex xui-flex-two">
+                <div class="xui-menu xa-menu f14">
+                    <a href="###" class="wa-inner-link">{{ fisrt_component.model.title }}</a>
+                </div>
+                <div class="xui-subMenuContainer">
+                    <span class="xui-menuArrow"></span>
+                    <span class="xui-menuArrowBorder"></span>
+                    <ul class="xui-subMenu">
+                        {% with fisrt_component.model.second_navs|parse_json_str as second_navs %}
+                            {% for second_nav in second_navs %}
+                            <li class="f12"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                            {% endfor %}
+                        {% endwith %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+        {% endwith %}
+	</div>
 	{% endif  %}
 	{% if component.model.type == "slide" %}
 	<div class="wui-weshopSideBar" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>

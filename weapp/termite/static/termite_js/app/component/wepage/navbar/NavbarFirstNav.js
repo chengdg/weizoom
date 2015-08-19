@@ -45,7 +45,6 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
         },
         target: function($node, model, value, $propertyViewNode) {
             xwarn(value);
-            console.log(4444444, $propertyViewNode, $node, model)
             var $linkSelectFieldNode = $($propertyViewNode.find('.propertyGroup_property_linkSelectField'));
             if (value.length > 0) {
                 var linkData = $.parseJSON(value);
@@ -64,8 +63,8 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
                 $linkSelectFieldNode.find('.xa-link-menu').html('从微站选择<span class="glyphicon glyphicon-menu-down"></span>');
             }
         },
-        items: function($node, model, value) {
-            this.refresh($node, {resize:true, refreshPropertyView:true});
+        second_navs: function($node, model, value, $propertyViewNode) {
+            this.refresh($node, {resize:true});
         }
     }
 });
