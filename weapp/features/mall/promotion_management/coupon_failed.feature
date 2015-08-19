@@ -35,7 +35,7 @@ Background:
 			"name": "商品1限时抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"promotion_price": 180.00
 		}]
 	"""
@@ -44,20 +44,24 @@ Background:
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "false",
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}, {
 			"name": "商品3",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}]
 	"""
+
+@wip.cp0
+Scenario: test
+
 
 @wip.cp1 @promotion @promotionCoupon @promotion @promotionFlash
 Scenario: 1先建优惠券，不能参加促销活动
@@ -103,17 +107,17 @@ Scenario: 1先建优惠券，不能参加促销活动
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-			"operate": "false",
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品3",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}]
 	"""
@@ -125,17 +129,17 @@ Scenario: 1先建优惠券，不能参加促销活动
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}, {
 			"name": "商品3",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}]
 	"""
@@ -147,17 +151,17 @@ Scenario: 1先建优惠券，不能参加促销活动
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-			"operate": "false",
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品3",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}]
 	"""

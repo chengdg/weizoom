@@ -314,3 +314,21 @@ def __get_member_grade(promotion, webapp_id):
     elif member_grade:
         member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id
     return member_grade
+
+
+@then(u"{user}能获取限时抢购查询列表")
+def step_impl(context, user):
+    real = json.loads(context.text)
+    url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=flash_sale&name=&barCode=&selectedProductIds=&count_per_page=10&page=1&enable_paginate=1'
+    response = context.client.get(url)
+    bdd_util.assert_api_call_success(response)
+    #print("response: {}".format(response))
+    data = json.loads(response.content)['data']
+    expected = [{
+        "name": item['name'],
+        "stock_type": item['total_stocks'],
+        "operate": item['can_select'],
+        "price": item['standard_model']['price']
+    } for item in data['items']]
+    print("expected: {}".format(expected))
+    bdd_util.assert_list(expected, real)
