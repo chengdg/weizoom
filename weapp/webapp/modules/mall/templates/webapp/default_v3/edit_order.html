@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage">
+<div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage xa-editOrderPage">
 
     <div id="wrapper" data-role="content" class="xui-wrapper">
         <form class="xui-form xa-form" method="post" action="">
@@ -609,15 +609,14 @@ if (/ipad|iphone|mac/i.test(navigator.userAgent)){
     // $('.xa-form').css('padding-bottom','0');
     // var myScroll;
     function loaded() {
-        myScroll = new iScroll('wrapper', { checkDOMChanges: true });
+        myScroll = new iScroll('wrapper', { checkDOMChanges: true});
     }
     $('.xui-editOrderPage .xui-form').css('padding-bottom','0px');
     document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     document.addEventListener('DOMContentLoaded', loaded, false);
 
-    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,bounce:false});
 }
-
 var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %};
 
 $(document).ready(function() {

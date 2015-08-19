@@ -96,6 +96,12 @@
                 <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
+            <!-- <div data-ui-role="attentionAlert" class="xui-attentionAlert"
+                    data-is-show-button="true"
+                data-url="/aaa"
+                data-id="{{request.webapp_owner_id}}"
+                >
+            </div> -->
             <div data-ui-role="attentionAlert" class="xui-attentionAlert" 
                 {% if not cur_request_member %}
                     data-is-show-button="true" 
