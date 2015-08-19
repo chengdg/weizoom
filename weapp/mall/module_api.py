@@ -3015,7 +3015,7 @@ def check_product_review_overdue(product_id):
 	for review in top_review_list:
 		after_15_days = review.top_time+timedelta(days=OVERDUE_DAYS)
 		now = datetime.now()
-		if (after_15_days < now):
+		if (after_15_days <= now):
 			review.status = 1
 			ProductReview.objects.filter(id=review.id).update(status=1,top_time=DEFAULT_DATETIME)
 
