@@ -1231,7 +1231,39 @@ button.xui-removeImageButton{
 .propertyGroup_property_secondNavsField .propertyGroup_property_input{
 	width: 100%;
 }
-
+.xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control{
+	width: 378px;
+	padding-top: 20px;
+}
+.propertyGroup_property_secondNavsField .xui-secondNav{
+	margin-left: 44px;
+	width: 280px;
+}
+.propertyGroup_property_secondNavsField .xui-navbar-secondnav-title{
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+.propertyGroup_property_secondNavsField .xui-navbar-secondnav-addBtn{
+	display: block;
+	width: 297px;
+	height: 40px;
+	border:1px dashed #ccc;
+	padding-left: 15px;
+	box-sizing:border-box;
+	line-height: 40px;
+	margin-bottom: 20px;
+}
+.propertyGroup_property_secondNavsField .xui-navbar-secondnav-navs{
+	position: relative;
+}
+.propertyGroup_property_secondNavsField .xui-navbar-secondnav-navs .propertyGroup_property_dynamicControlField_content{
+	border:1px solid #ccc;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.xui-navbar-secondnav-navs .propertyGroup_property_input1{
+	display: inline-block;
+}
 /**
  * dialog对话框 商品列表
  */

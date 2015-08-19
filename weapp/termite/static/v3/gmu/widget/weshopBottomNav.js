@@ -17,7 +17,7 @@ gmu.define('BottomNav', {
 		$('body').height($('body').height()+50);
 
 		var _this = this;
-		$el.find('.xa-menu').click(function(event){
+		$(document).delegate('.xa-menu', 'click', function(event){
 			_this.clickShowSubmenu(event);
 		});
 

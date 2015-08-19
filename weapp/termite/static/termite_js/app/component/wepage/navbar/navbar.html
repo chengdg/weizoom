@@ -6,7 +6,6 @@
 	data-component-cid="{{component.cid}}" 
 	style=""
 >
-{{component.model.type}}
 	{% if component.model.type == "weixin" %}
 	<div class="xui-globalBottomBar" data-ui-role="bottomNav">
         <div class="xui-home">
@@ -22,11 +21,9 @@
                     <span class="xui-menuArrow"></span>
                     <span class="xui-menuArrowBorder"></span>
                     <ul class="xui-subMenu">
-                        {% with fisrt_component.model.second_navs|parse_json_str as second_navs %}
-                            {% for second_nav in second_navs %}
-                            <li class="f12"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
-                            {% endfor %}
-                        {% endwith %}
+                        {% for second_nav in fisrt_component.model.second_navs %}
+                        <li class="f12"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -40,9 +37,9 @@
 			<div class="xui-bottomNav">
 				<ul class="">
 					<li class="xa-outLink" data-page="home"><i class="xui-bg"></i></li>
-					<li class="xa-category" data-page="product-category"><i class="xui-bg"></i></li>
+					<li class="xa-category" data-page="product-category"><i class="xui-bg{% if in_design_mode %} xui-active {% endif %}"></i></li>
 					<li class="xa-outLink" data-page="shopping-cart">
-						<i class="xui-bg"><span class="xui-shopCar">2</span></i>
+						<i class="xui-bg "><span class="xui-shopCar">2</span></i>
 					</li>
 					<li class="xa-outLink" data-page="usercenter"><i class="xui-bg"></i></li>
 				</ul>
