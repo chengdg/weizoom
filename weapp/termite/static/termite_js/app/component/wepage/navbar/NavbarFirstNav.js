@@ -17,7 +17,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             	name: 'title',
             	type: 'text',
             	displayName: '标题',
-                maxLength:30,
+                maxLength:5,
                 validateIgnoreDefaultValue: true,
                 isUserProperty: true,
                 placeholder:'编辑[文本导航]',
@@ -70,5 +70,10 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             var parentComponent = W.component.getComponent(this.pid);
             parentComponent.refresh($node, {resize:true});
         }
+    },
+
+    setLimitation: function(args) {
+        xwarn('----- set limitation -----');
+        xwarn(args);
     }
 });

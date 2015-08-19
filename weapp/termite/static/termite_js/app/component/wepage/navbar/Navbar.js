@@ -75,10 +75,52 @@ W.component.wepage.Navar = W.component.Component.extend({
 
     propertyChangeHandlers: {
     	type: function($node, model, value) {
-            this.refresh($node, {resize:true});
+            var oldType = model.previous('type');
+
+            this.type2items[oldType] = model.get('items');
+            this.type2components[oldType] = this.components;
+            xwarn(this.name2field['items'])
+            var items = this.type2items[value];
+            if (!items) {
+                model.set('items', [], {silent:true});
+                this.components = [];
+                _.each(this.dynamicComponentTypes, function(componentType) {
+                    if (componentType.model) {
+                        //只有在提供model的情况下才创建dynamic component
+                        if (isNaN(componentType.model)) {
+                            var component = W.component.Component.create(componentType.type, componentType.model);
+                            this.addComponent(component);;
+                        } else {
+                            for (var i = 0; i < componentType.model; i++) {
+                                var component = W.component.Component.create(componentType.type, {});
+                                this.addComponent(component);
+                            }
+                        }
+                    }
+                }, this);
+            } else {
+                model.set('items', this.type2items[value], {silent:true})
+                this.components = this.type2components[value];
+            }
+            xwarn('-------------------')
+            xwarn(model.get('items'));
+
+            _.each(this.components, function(subComponent) {
+                if (subComponent.setLimitation) {
+                    subComponent.setLimitation({});
+                }
+            });
+            this.refresh($node, {resize:true, refreshPropertyView:true});
         },
         items: function($node, model, value) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
         }
+    },
+
+    initialize: function(obj) {
+        this.super('initialize', obj);
+
+        this.type2items = {};
+        this.type2components = {};
     }
 });

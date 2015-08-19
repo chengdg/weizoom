@@ -1549,6 +1549,7 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     box-flex:1;
     -webkit-box-flex:1;
     -moz-box-flex:1;
+    width: 1rem;
 }
 .wui-template-globalNavbar .xui-flex-two{
     box-flex:2;
@@ -1556,6 +1557,7 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     -moz-box-flex:2;
     border-right: 1px solid #CBCBCB;
     box-sizing:border-box;
+    width: 1rem;
 }
 .wui-template-globalNavbar .xui-flex-third{
     box-flex:3;
@@ -1563,6 +1565,7 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     -moz-box-flex:3;
     border-right: 1px solid #CBCBCB;
     box-sizing:border-box;
+    width: 1rem;
 }
 .wui-template-globalNavbar .xui-subMenuContainer{
     position: absolute;
