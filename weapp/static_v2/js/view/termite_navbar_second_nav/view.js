@@ -28,8 +28,8 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 
         var navsJson = JSON.parse(this.navsStr);
         if (navsJson.length > 0) {
-            for (var i = 0; i < json.length; i++) {
-                this.addSecondNav(json[i]);
+            for (var i = 0; i < navsJson.length; i++) {
+                this.addSecondNav(navsJson[i]);
             };
         }
 
