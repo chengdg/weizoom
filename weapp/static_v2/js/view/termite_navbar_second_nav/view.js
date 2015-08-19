@@ -26,8 +26,8 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 		var html = template({});
         this.$el.html(html);
 
-        if (this.navsStr.length > 0) {
-            var json = JSON.parse(this.navsStr);
+        var navsJson = JSON.parse(this.navsStr);
+        if (navsJson.length > 0) {
             for (var i = 0; i < json.length; i++) {
                 this.addSecondNav(json[i]);
             };
@@ -35,7 +35,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 
         /* 修改显示的box */
         _.delay(function() {
-            _this.trigger('update-show-box', _this.$el, _this.navsStr.length);
+            _this.trigger('update-show-box', _this.$el, navsJson.length);
         }, 30);
 	},
 
