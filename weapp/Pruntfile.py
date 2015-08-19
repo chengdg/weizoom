@@ -96,7 +96,13 @@ prunt.register_task('build:webapp_content_base_v4', 'weizoom-build', {
 	}
 })
 
-prunt.load_task('weizoom-build-app')
+prunt.register_task('build:termite2_workbench', 'weizoom-build', {
+	"files": {
+		"src": "termite2/templates/termite2/workbench.html"
+	}
+})
+
+prunt.register_task('build:app', 'weizoom-build-app')
 
 
-prunt.register_task('default', ['clean', 'replace-js-default', 'weizoom-build-app'])
+prunt.register_task('default', ['clean', 'build:app', 'build:termite2_workbench'])
