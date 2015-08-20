@@ -41,7 +41,7 @@ var initDom = function(options) {
                     <div class="wui-i-close xa-closeParticipantResult">&#10005</div>\
                 </div>\
             </div>');
-        $node.height(window.innerHeight);
+        $node.height(document.body.scrollHeight);
         if (actionButtons) {
             var $buttonContainer = $('<div>');
             $buttonContainer.addClass('wui-i-buttons-' + actionButtons.length);
