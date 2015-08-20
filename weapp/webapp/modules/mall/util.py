@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+"""TODO 逐步作废，移动到 .utils.py中
+"""
 import time
 # from datetime import timedelta, datetime, date
 # import urllib, urllib2
@@ -283,14 +284,14 @@ def email_order(order):
 			member_id=member_id,
 			status=status,
 			order_id=order.order_id,
-			buyed_time=time.strftime('%Y-%m-%d %H:%M',time.localtime(time.time())),
+			buyed_time=time.strftime('%Y-%m-%d %H:%M', time.localtime(time.time())),
 			order_status=order_status,
 			buy_count=buy_count,
 			total_price=order.final_price,
 			bill=order.bill,
 			coupon=coupon,
 			product_name=product_name,
-			integral = order.integral,
+			integral=order.integral,
 			buyer_name=order.ship_name,
 			buyer_address=buyer_address,
 			buyer_tel=order.ship_tel,

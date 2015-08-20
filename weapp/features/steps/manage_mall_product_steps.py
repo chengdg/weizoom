@@ -50,9 +50,7 @@ def step_product_add(context, user):
         context.client.post(url, product)
         is_be_for_sale = product.get('status', '') == u'待售'
         is_shelve = product['shelve_type'] == mall_models.PRODUCT_SHELVE_TYPE_OFF
-        if is_be_for_sale or is_shelve:
-            pass
-        else:
+        if not is_be_for_sale and not is_shelve:
             latest_product = mall_models.Product.objects.all().order_by('-id')[0]
             mall_models.Product.objects.filter(
                 id=latest_product.id
@@ -298,7 +296,8 @@ def __get_product_from_web_page(context, product_name):
         'is_enable_model': u'启用规格' if product.is_use_custom_model else u'不启用规格',
         'model': {},
         'postage': u'免运费',
-        'pay_interfaces': []
+        'pay_interfaces': [],
+        "is_member_product": 'on' if product.is_member_product else 'off'
     }
 
     #填充运费

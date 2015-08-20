@@ -72,9 +72,8 @@ class Outline(resource.Resource):
         for order in orders:
             order_money += order.final_price + order.weizoom_card_money
 
-        # 获取会员数
-        total_member_count = member_models.Member.objects.filter(
-            webapp_id=webapp_id, is_subscribed=True).count()
+        # 获取会员数 update by bert at 20150817
+        total_member_count = member_models.Member.count(webapp_id)
         members = member_models.Member.objects.filter(
             webapp_id=webapp_id, created_at__range=(yesterday, today))
         members = [member for member in members if member.is_subscribed]
@@ -109,17 +108,19 @@ class Outline(resource.Resource):
     def api_get(request):
         type = request.GET.get('type', None)
         days = request.GET.get('days', 6)
+        webapp_id = request.user_profile.webapp_id
+        total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
+        high_date -= timedelta(days=1)
+        date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
+
+
         if type and type == 'purchase_trend':
             try:
-                webapp_id = request.user_profile.webapp_id
-                total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
-                date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
-
                 date2count = dict()
                 date2price = dict()
 
                 # 11.20从查询mall_purchase_daily_statistics变更为直接统计订单表，解决mall_purchase_daily_statistics遗漏统计订单与统计时间不一样导致的统计结果不同的问题。
-                orders = mall_models.Order.objects.belong_to(webapp_id).filter(created_at__range=(low_date, (high_date+timedelta(days=1))))
+                orders = mall_models.Order.objects.belong_to(webapp_id).filter(created_at__range=(low_date, (high_date)+timedelta(days=1)))
                 statuses = set([mall_models.ORDER_STATUS_PAYED_SUCCESSED, mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED])
                 orders = [order for order in orders if (order.type != 'test') and (order.status in statuses)]
                 for order in orders:
@@ -147,7 +148,7 @@ class Outline(resource.Resource):
                 for date in date_list:
                     count_trend_values.append(date2count.get(date, 0))
                     price_trend_values.append(round(date2price.get(date, 0.0), 2))
-
+                print(len(count_trend_values))
                 return create_line_chart_response(
                         '',
                         '',
@@ -171,7 +172,6 @@ class Outline(resource.Resource):
             """
             获得每日pv、uv统计
             """
-            webapp_id = request.user_profile.webapp_id
 
             #对当天的统计结果进行更新
             if settings.IS_UPDATE_PV_UV_REALTIME:
@@ -180,9 +180,7 @@ class Outline(resource.Resource):
                 webapp_models.PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id, data_date=today).delete()
                 webapp_statistics_util.count_visit_daily_pv_uv(webapp_id, today)
 
-            total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
             statisticses = webapp_models.PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id, url_type=webapp_models.URL_TYPE_ALL, data_date__range=(low_date, high_date))
-            date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 
             date2pv = dict([(s.data_date.strftime('%Y-%m-%d'), s.pv_count) for s in statisticses])
             date2uv = dict([(s.data_date.strftime('%Y-%m-%d'), s.uv_count) for s in statisticses])

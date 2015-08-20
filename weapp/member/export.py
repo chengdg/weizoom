@@ -43,7 +43,7 @@ MEMBER_NAV = {
 		{
 			'name': MEMBER_GRADE,
 			'title': u'会员等级',
-			'url': '/member/member_grades/get/',
+			'url': '/mall2/member_grade_list/',
             'need_permissions': ['manage_member_grade', ]
 		},
 		{
