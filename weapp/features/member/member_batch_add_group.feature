@@ -29,13 +29,13 @@ Background:
 
 	And 已添加会员分组
 		"""
-		[{
+		{
 			"tag_id_1": "会员分组1",
 			"tag_id_2": "会员分组2",
 			"tag_id_3": "会员分组3",
 			"tag_id_4": "会员分组4",
 			"tag_id_5": "会员分组5"
-		}]	
+		}	
 		"""
 	When jobs批量获取微信用户关注
 		| member_name   | attention_time 	| member_source |

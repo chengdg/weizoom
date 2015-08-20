@@ -7,11 +7,11 @@ Background:
 	Given jobs登录系统
 	When jobs添加会员分组
 		"""
-		[{
+		{
 			"tag_id_1": "分组1",
 			"tag_id_2": "分组2",
 			"tag_id_3": "分组3"
-		}]	
+		}	
 		"""
 
 @crm @member @member.tag @member.delete_tag
