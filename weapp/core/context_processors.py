@@ -558,3 +558,17 @@ def is_weizoom_mall(request):
 	else:
 		return {'is_weizoom_mall' : False}
 
+
+def fetch_webapp_global_navbar(request):
+	if request.webapp_owner_id:
+		from termite import pagestore as pagestore_manager
+		pagestore = pagestore_manager.get_pagestore('mongo')
+		project_id = 'fake:wepage:%s:navbar' % request.webapp_owner_id
+		page_id = 'navbar'
+		navbar_page = pagestore.get_page(project_id, page_id)
+
+		if navbar_page:
+			navbar_component = navbar_page['component']['components'][0]
+			return {'global_navbar': navbar_component}
+		else:
+			return {'global_navbar': None}
