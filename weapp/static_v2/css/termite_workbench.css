@@ -1228,12 +1228,26 @@ button.xui-removeImageButton{
 }
 .xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control{
 	width: 378px;
-	padding-top: 20px;
+	padding-top: 10px;
 }
 .xui-propertyView-navbar-navs .xui-link{
 	display: block;
 	margin-left: -1px;
 	margin-top: 10px;
+}
+.xui-wepage-globalNavPage .xui-eidt-urlBox{
+	width: 185px;
+}
+.xui-wepage-globalNavPage .xui-selected-title-box{
+	float: left;
+	margin-left: 0px;
+}
+.xui-wepage-globalNavPage .xui-news-editor-select-link-dialog{
+	float: left;
+	margin-top: 12px;
+}
+.xui-wepage-globalNavPage .xa-second-nav-selectLink-title{
+	float: left;
 }
 .xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control .propertyGroup_property_label{
 	font-weight: bold;
@@ -1254,7 +1268,7 @@ button.xui-removeImageButton{
 	padding-left: 15px;
 	box-sizing:border-box;
 	line-height: 40px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 /*.propertyGroup_property_secondNavsField .xui-navbar-secondnav-navs{
 	position: relative;
@@ -1263,7 +1277,7 @@ button.xui-removeImageButton{
 	border:1px solid #ddd;
 	padding-top: 15px;
 	padding-bottom: 15px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 	width: 297px;
 	position: relative;
 }
@@ -1327,9 +1341,11 @@ button.xui-removeImageButton{
 	padding: 20px;
 	background-color: #FFF;
 	border: solid 1px #CCC;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 .xui-wepage-globalNavPage .propertyGroup-topGap {
-	height: 20px;
+	height: 10px;
 	background-color: transparent;
 }
 .xui-wepage-globalNavPage .xui-propertyView-navbar-settings-topGap {

@@ -307,7 +307,7 @@
 						{{each(dynamicComponentIndex, dynamicComponent) dynamicComponents}}
 						{{if !dynamicComponent.runtimeData || !dynamicComponent.runtimeData.isInvalid}}
 						<div class="propertyGroup_property_dynamicControlField_control" data-dynamic-cid="${dynamicComponent.cid}" data-parent-cid="${component.cid}">
-							{{if dynamicComponent.propertyViewTitle}}
+							{{if dynamicComponent.shouldShowPropertyViewTitle}}
 							<div class="propertyGroup_property_label">${dynamicComponent.propertyViewTitle}</div>
 							{{/if}}
 							<!--

@@ -7,6 +7,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
 	type: 'wepage.navbar_firstnav',
 	selectable: 'no',
 	propertyViewTitle: '一级菜单',
+    shouldShowPropertyViewTitle: true,
 
 	properties: [
         {
