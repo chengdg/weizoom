@@ -167,7 +167,7 @@ def build(path):
 	items = []
 	for block in blocks:
 		items.append(block.generate())
-	with open('%s.result' % path, 'wb') as dst_file:
+	with open(path, 'wb') as dst_file:
 		print >> dst_file, '\n'.join(items)
 	logger.info('build %s', path)
 
