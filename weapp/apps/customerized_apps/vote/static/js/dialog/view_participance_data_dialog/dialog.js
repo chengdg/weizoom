@@ -15,7 +15,7 @@ W.dialog.app.vote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	},
 
 	getTemplate: function() {
-        return "{% verbatim %}
+        return '''{% verbatim %}
         			<h2 class=\"xui-result_fr-desc\">\"{{ webapp_user_name }}\"填写的内容</h2>\
 		    		<table class=\"table table-bordered xui-result_fr_table\">\
                 	{{#each items }}\
@@ -25,7 +25,7 @@ W.dialog.app.vote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
                     	</tr>\
                 	{{/each }}\
             		</table>\
-        		{% endverbatim %}"
+        		{% endverbatim %}'''
     },
 	
 	onInitialize: function(options) {
