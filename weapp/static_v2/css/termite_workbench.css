@@ -242,8 +242,8 @@ body {
 .xui-selectBtn .xui-selectedIcon,
 .xui-propertyView-pageHeader .propertyGroup_property:nth-child(3) .propertyGroup_property_dialogSelectField button{
 	background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
-	-webkit-background-size: 345px 91px;
-	background-size: 345px 91px;
+	-webkit-background-size: 345px 136px;
+	background-size: 345px 136px;
 }
 .propertyGroup_property_colorPickerField .xui-i-triggerButton {
 	background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
@@ -273,11 +273,11 @@ body {
 	background-position:-92px -45px;
 }
 .xui-component .componentList_component_product {
-	background-position:-52px 0;
+	background-position:0px -91px;
 }
 .xui-component .componentList_component_product_list {
 	width: 51px;
-	background-position:-91px 0;
+	background-position:-38px -91px;
 }
 .xui-component .componentList_component_subline {
 	background: url(/termite_static/img/component/component_subline.png) no-repeat transparent 10px 0px;
@@ -290,7 +290,7 @@ body {
 	background-size: 50px 50px;
 }
 .xui-component .componentList_component_richtext {
-	background-position: 0px 0;
+	background-position: -89px -91px;
   	width: 51px;
 }
 .xui-component .componentList_component_text_nav {
