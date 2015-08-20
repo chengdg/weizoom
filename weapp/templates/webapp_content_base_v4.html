@@ -311,7 +311,7 @@
                         var inputType = $control.attr('data-input-type');
                         var controlType = $control.attr('data-control-type');
                         var cid;
-                        if(controlType === 'appkit.shortcuts'){
+                        if(controlType === 'appkit.shortcuts' || controlType === 'appkit.textlist'){
                             cid = $control.parents('ul').eq(0).attr('data-component-cid');
                         }else{
                             cid = $control.parent().attr('data-component-cid');

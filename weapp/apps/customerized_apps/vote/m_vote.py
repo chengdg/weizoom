@@ -160,7 +160,9 @@ def get_result(id,member_id):
 					a_isSelect[a_k] = []
 		for a_k in sorted(v_a.keys()):
 			value ={}
-			value['name'] = a_k.split('_')[1]
+			name = a_k.split('_')[1]
+			value['name'] = name
+			value['id_name'] = a_k
 			value['count'] = a_isSelect[a_k]
 			value['per'] =  '%d' % (a_isSelect[a_k]*100/float(total_count))
 			value['isSelect'] = member_termite_select[a_k]

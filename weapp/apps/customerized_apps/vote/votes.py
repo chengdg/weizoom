@@ -10,6 +10,7 @@ from core import paginator
 from core.jsonresponse import create_response
 import models as app_models
 import export
+from datetime import datetime
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -40,8 +41,17 @@ class votes(resource.Resource):
 		status = int(request.GET.get('status', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
-		
+
+		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.user.id}
+		datas_datas = app_models.vote.objects(**params)
+		for data_data in datas_datas:
+			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
+			data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
+			if data_start_time <= now_time and now_time < data_end_time:
+				data_data.update(set__status=app_models.STATUS_RUNNING)
+			elif now_time >= data_end_time:
+				data_data.update(set__status=app_models.STATUS_STOPED)
 		if name:
 			params['name__icontains'] = name
 		if status != -1:
