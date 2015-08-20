@@ -19,7 +19,11 @@
 				<div class="fl">
 				通过设置自定义导航，使店铺各个页面之间可以相互连接，快速跳转到用户期望的页面。
 				</div>
-				<button class="btn btn-primary xa-startUseBtn xui-startUseBtn f12 fl">启用</button>
+				{% if is_enable %}
+					<button class="btn btn-danger xa-startUseBtn xui-startUseBtn f12 fl" data-status="{{ is_enable }}">停用</button>				
+				{% else %}
+					<button class="btn btn-primary xa-startUseBtn xui-startUseBtn f12 fl" data-status="{{ is_enable }}">启用</button>			
+				{% endif %}
 			</div>
 	</div>
 
@@ -146,6 +150,30 @@
 		$(document).click(function() {
 			// 点击空白处，触发事件
 			W.Broadcaster.trigger('designpage:cancel_delete');
+		});
+
+		$('.xa-startUseBtn').click(function(event){
+			var status = $(event.currentTarget).attr('data-status');
+			if (status == 'False') {
+				status = true;
+			}else{
+				status = false;
+			}
+			W.getApi().call({
+				app: 'termite2',
+				resource: 'global_navbar_status',
+				method: 'post',
+				args: {
+					is_enable: status
+				},
+				showLoading: false,
+				success: function(data) {
+					window.location.reload();
+				},
+				error: function(resp) {
+					W.showHint('error', '修改失败，请稍后再试');
+				}
+			});
 		});
 	});
 </script>
