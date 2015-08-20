@@ -11,7 +11,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 
 from mall.models import *
-from modules.member.models import * 
+from modules.member.models import *
 from weixin.user import models as weixn_models
 from account import models as account_models
 from utils.string_util import byte_to_hex
@@ -31,7 +31,7 @@ def step_impl(context, user):
 
 	integral_detail = {};
 	integral = {}
-	
+
 	for key, value in  json_data[0].items():
 		if key != 'member_integral_strategy_settings_detail':
 			integral[key] = value
@@ -54,11 +54,11 @@ def step_impl(context, user):
 	if IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).count() > 0 and integral_detail:
 		IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).update(**integral_detail)
 	elif integral_detail:
-		
+
 
 		IntegralStrategySttingsDetail.objects.create(**integral_detail)
 
-@Then(u'{user}可以获得会员列表')
+@then(u'{user}可以获得会员列表')
 def step_impl(context, user):
 	if hasattr(context, 'client'):
 		context.client.logout()
@@ -118,4 +118,4 @@ def step_impl(context, member_a, user):
 	url = '/weixin/%s/'% user_profile.webapp_id
 	client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
 
-	
+

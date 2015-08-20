@@ -9,7 +9,7 @@ from features.testenv.model_factory import *
 
 from django.test.client import Client
 from mall.models import *
-from modules.member.models import * 
+from modules.member.models import *
 
 
 @Then(u"{user}能获取会员等级列表")
@@ -36,8 +36,7 @@ def step_impl(context, user):
 
 	bdd_util.assert_list(response_data, json_data)
 
-@When(u"{user}添加会员等级")
-def step_impl(context, user):
+def _add_member_grade(context, user):
 	if hasattr(context, 'client'):
 		context.client.logout()
 	context.client = bdd_util.login(user)
@@ -54,9 +53,13 @@ def step_impl(context, user):
 		if MemberGrade.objects.filter(name=content['name'], webapp_id=user.get_profile().webapp_id).count() == 0:
 			response = context.client.post('/webapp/user_center/grade/create/', content)
 
+@When(u"{user}添加会员等级")
+def step_impl(context, user):
+	_add_member_grade(context, user)
+
 @Given(u"{user}添加会员等级")
 def step_impl(context, user):
-	context.execute_steps(u"when %s添加会员等级" % user)
+	_add_member_grade(context, user)
 
 @When(u"{user}更新会员等级{name}")
 def step_impl(context, user, name):

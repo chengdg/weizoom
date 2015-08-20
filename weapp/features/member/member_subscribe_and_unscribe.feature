@@ -3,13 +3,13 @@
 
 
 Feature: 微信用户关注公众号成为系统会员
-	
+
 Background:
 	Given jobs登录系统
 	And jobs设置积分策略
 		"""
-		[{ 
-			"be_member_increase_count": 20 
+		[{
+			"be_member_increase_count": 20
 		}]
 		"""
 	And jobs添加会员等级
@@ -27,11 +27,9 @@ Background:
 	And jobs添加会员分组
 		"""
 		[{
-			"name": "分组1"
-		},{
-			"name": "分组2"
-		},{
-			"name": "分组3"
+			"tag_id_1": "分组1",
+			"tag_id_2": "分组2",
+			"tag_id_3": "分组3"
 		}]
 		"""
 	And jobs已添加商品
@@ -49,7 +47,7 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
-@crm @member @ignore
+@crm @member @eugeneX
 Scenario: 微信用户关注公众号成为会员
 	微信用户关注jobs公众号成为jobs的会员
 	1.bill直接关注jobs的公众号,生成会员列表
@@ -177,7 +175,7 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 	#When tom把jobs的微站二维码推广给tom1
 	When tom访问jobs的webapp
-	When tom把jobs的二维码推广给tom1
+	#When tom把jobs的二维码推广给tom1
 	When tom1关注jobs的公众号
 	When tom1访问jobs的webapp
 	When tom1获得jobs的20会员积分
