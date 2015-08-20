@@ -16,7 +16,7 @@ W.component.appkit.TextList = W.component.Component.extend({
 
 	properties: [{
 		group: '文本调研项',
-		groupClass: 'xui-propertyView-app-Selection',
+		groupClass: 'xui-propertyView-app-TextList',
 		fields: [{
 			name: 'modules',
 			type: 'checkbox',
