@@ -193,7 +193,6 @@
             W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
             W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
             W.activityStatus = "{{activity_status}}";
-            
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
                 W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
 
@@ -295,7 +294,7 @@
                     } else if (W.isAlreadyParticipanted) {
                         $button.text('您已参加过该活动');
                         $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
-                    } else if (W.activityStatus === '未开启') {
+                    } else if (W.activityStatus === '未开始') {
                         $button.text('请等待活动开始...');
                         $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
                     }

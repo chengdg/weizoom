@@ -33,7 +33,7 @@ class Mvote(resource.Resource):
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
-				activity_status = u"未开启"
+				activity_status = u"未开始"
 			else:
 				#termite类型数据
 				record = app_models.vote.objects.get(id=id)
@@ -46,7 +46,8 @@ class Mvote(resource.Resource):
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
 			is_already_participanted = (participance_data_count > 0)
 			if  is_already_participanted:
-				vote_detail,result_list,activity_status = get_result(id,request.member.id)
+				member_id = request.member.id
+				vote_detail,result_list = get_result(id,member_id)
 				c = RequestContext(request, {
 					'vote_detail': vote_detail,
 					'record_id': id,
@@ -59,6 +60,7 @@ class Mvote(resource.Resource):
 				})
 				return render_to_response('vote/templates/webapp/result_vote.html', c)
 			else:
+				member_id = -1
 				request.GET._mutable = True
 				request.GET.update({"project_id": project_id})
 				request.GET._mutable = False
@@ -68,7 +70,7 @@ class Mvote(resource.Resource):
 
 				c = RequestContext(request, {
 					'record_id': id,
-					'member_id': request.member.id,
+					'member_id': member_id,
 					'activity_status': activity_status,
 					'is_already_participanted': is_already_participanted,
 					'page_title': '微信投票',
@@ -175,7 +177,6 @@ def get_result(id,member_id):
 		result_list.append(result)
 
 	related_page_id = vote_vote.related_page_id
-	activity_status = vote_vote.status_text
 
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
@@ -185,4 +186,4 @@ def get_result(id,member_id):
 	vote_detail['prize_type'] = page_info['prize']['type']
 	vote_detail['prize_data'] = page_info['prize']['data']
 
-	return vote_detail,result_list,activity_status
+	return vote_detail,result_list

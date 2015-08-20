@@ -31,7 +31,7 @@ class Msurvey(resource.Resource):
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
-				activity_status = u"未开启"
+				activity_status = u"未开始"
 			else:
 				#termite类型数据
 				record = app_models.survey.objects.get(id=id)
