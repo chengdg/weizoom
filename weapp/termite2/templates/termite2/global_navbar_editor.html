@@ -25,24 +25,25 @@
 					<button class="btn btn-primary xa-startUseBtn xui-startUseBtn f12 fl" data-status="{{ is_enable }}">启用</button>			
 				{% endif %}
 			</div>
-	</div>
+		</div>
 
-	<div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
-	</div>
+		<div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
+		</div>
 	
-	<div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
-		<div id="phone" class="xui-phone ">
-			<div id="phoneSkin" class="xui-i-skin">
-				<div class="xui-i-title">
-					<span class="xa-title">底部导航</span>
+		<div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
+			<div id="phone" class="xui-phone ">
+				<div id="phoneSkin" class="xui-i-skin">
+					<div class="xui-i-title">
+						<span class="xa-title">底部导航</span>
+					</div>
+					<iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1" height="100%" border="none"></iframe>
+					<div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
 				</div>
-				<iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1" height="100%" border="none"></iframe>
-				<div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
 			</div>
 		</div>
-	</div>
 
-	<div id="rightPanel" class="fl xui-workbench-rightPanel mb30" style="padding: 0px; background-color: transparent; border: none;margin-top:10px!important;">
+		<div id="rightPanel" class="fl xui-workbench-rightPanel mb30" style="padding: 0px; background-color: transparent; border: none;margin-top:10px!important;">
+		</div>
 	</div>
 </div>
 {% endblock %}
