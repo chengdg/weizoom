@@ -2,57 +2,30 @@
 Copyright (c) 2011-2012 Weizoom Inc
 */
 /**
- * 右侧的property视图
+ * 底部导航右侧的property视图
  * @class
  */
 ensureNS('W.workbench');
-W.workbench.PropertyView = Backbone.View.extend({
+W.workbench.GlobalNavView = Backbone.View.extend({
 	el: '',
 
 	events: {
-        'input .propertyGroup_property_input > input': 'onChangeInputContent',
-        'input .propertyGroup_property_input .xa-valueInput': 'onChangeInputContent',
-        'input .propertyGroup_property_input > textarea': 'onChangeInputContent',
-        'change .propertyGroup_property_input > select': 'onChangeSelection',
-        'change .propertyGroup_property_input input[type="radio"]': 'onChangeSelection',
-        'change .propertyGroup_property_input input[type="checkbox"]': 'onChangeCheckboxSelection',
-        'click .btn-group > .btn': 'onClickRadioGroupButton',
-        'click .propertyGroup_property_dynamicControlField_buttons > .xa-addDynamicComponent': 'onClickAddDynamicComponentButton',
-        'click .propertyGroup_property_dynamicControlField_title': 'onClickDynamicComponentTitle',
-        'click .propertyGroup_property_dynamicControlField_title .icon-remove': 'onClickRemoveDynamicComponentButton',
-        'click .propertyGroup_property_dialogSelectField .btn': 'onClickOpenDialogButton',
-        'click .xa-dialogTrigger': 'onClickOpenDialogButton',
-        'click .xa-link-menu': 'onClickLinkMenuButton',
-        'input .xa-selectLink-url': 'onManualInputUrl',
-        'click .xa-selectLink-close': 'onClickCloseLinkButton',
-        'click .propertyGroup_property_htmlEditorField .btn': 'onClickSaveHtmlEditorContentButton',
-        'keypress .propertyGroup_property_htmlEditorField pre': 'onHtmlEditorKeypress',
 
-        'click [data-action="editProperty"]': 'onClickEditPropertyButton',
-        'click [data-action="editDatasource"]': 'onClickEditDatasourceButton',
-        'click select.datasourceEditor_pageSelector': 'onChangeDatasourcePageSelection',
-        'click #datasourceEditor_submitBtn': 'onClickSubmitDatasourceEditorButton',
-
-        'click .xa-component': 'onClickComponent',
-        'click .xa-removeImageButton': 'onClickRemoveDynamicComponentButton',
-        'click .xa-protocol-deleteData':'onClickDeleteData',
-        'mouseover .propertyGroup_property_dynamicControlField_control': 'onMouseoverField',
-        'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',    
-
-        'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger'
 	},
 
     getTemplate: function() {
-        $('#workbench-property-view-tmpl-src').template('workbench-property-view-tmpl');
-        return "workbench-property-view-tmpl";
+        console.log(222)
+        $('#workbench-global-navbar-view-tmpl-src').template('workbench-global-navbar-view-tmpl');
+        return "workbench-global-navbar-view-tmpl";
     },
 
-    getDatasourceFieldsTemplate: function() {
-        $('#datasource-editor-fields-selector-tmpl-src').template('datasource-editor-fields-selector-tmpl');
-        return "datasource-editor-fields-selector-tmpl";
-    },
+    // getDatasourceFieldsTemplate: function() {
+    //     $('#datasource-editor-fields-selector-tmpl-src').template('datasource-editor-fields-selector-tmpl');
+    //     return "datasource-editor-fields-selector-tmpl";
+    // },
 	
 	initialize: function(options) {
+        console.log(1111)
 		this.$el = $(this.el);
         this.left = options.left || 0;
         this.template = this.getTemplate();
@@ -67,8 +40,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             "wepage.item_group": this.initProductsView, 
             "wepage.item_list": this.initProductsView,
             "wepage.pageheader": _.bind(this.initPageHeader, this),
-            "colorpicker": _.bind(this.initColorPicker, this),
-            "secondnav": _.bind(this.initSecondNav, this)
+            "colorpicker": _.bind(this.initColorPicker, this)
         };
 
 
@@ -97,9 +69,9 @@ W.workbench.PropertyView = Backbone.View.extend({
 	},
 
     render: function() {
-        /*
+        
         this.$el.append($.tmpl(this.template, {}));
-        */
+        
     },
 
     /**
@@ -165,9 +137,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         var $parents = $node.parents('.propertyGroup_property_dynamicControlField_control');
         if ($parents.length > 0) {
             var cid = $parents.eq(0).attr('data-dynamic-cid');
-            if (cid) {
-                return W.component.CID2COMPONENT[cid];
-            }
+            return W.component.CID2COMPONENT[cid];
         } else {
             return this.component;
         }
@@ -490,21 +460,11 @@ W.workbench.PropertyView = Backbone.View.extend({
      * onChangeCheckboxSelection: 改变checkbox的select的选项
      *********************************************************/
     onChangeCheckboxSelection: function(event) {
-        /*
         var $checkbox = $(event.currentTarget);
         var isSelected = $checkbox.prop('checked');
 
         var attr = $(event.currentTarget).attr('data-field');
         this.getTargetComponent($checkbox).model.set(attr, isSelected);
-        */
-        var $checkbox = $(event.currentTarget);
-        var isSelected = $checkbox.prop('checked');
-
-        var attr = $(event.currentTarget).attr('data-field');
-        var column = $(event.currentTarget).attr('data-column-name');
-        var attrValue = _.deepClone(this.getTargetComponent($checkbox).model.get(attr));
-        attrValue[column] = {select:isSelected};
-        this.getTargetComponent($checkbox).model.set(attr, attrValue);
     },
 
     /**
@@ -845,32 +805,6 @@ W.workbench.PropertyView = Backbone.View.extend({
             })
         }, 100);
     },
-
-    initSecondNav: function($el) {
-        W.createWidgets($el.parent());
-
-        var $input = $el.parent().find('input[name="second_navs"]');
-        var view = $el.data('view');
-        xwarn(view);
-        
-        view.setNavbarType(this.component.model.get('type'));
-        view.bind('update-show-box', function($el, length){
-            var urlBox = $el.parents('.propertyGroup_property_dynamicControlField_content').children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
-            var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');
-            if (length == 0) {
-                urlBox.show();
-                secondeNavsPrompt.hide();
-            }else{
-                urlBox.hide();
-                secondeNavsPrompt.css("display", "inline-block");
-            }
-        }, this)
-
-        view.bind('update-data', function(data){
-            $input.val(data).trigger('input');
-        });
-    },
-
 
     initDateTime:function($el){
         var $input =$el.find('.xa-time');

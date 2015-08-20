@@ -27,6 +27,10 @@ from core.jsonresponse import create_response
 def __get_display_info(request):
 	pagestore = pagestore_manager.get_pagestore('mongo')
 
+	project_id = request.REQUEST.get('project_id', '')
+	if 'fake:' in project_id:
+		return __get_fake_project_display_info(request)
+
 	#获取project
 	project_id = int(request.REQUEST.get('project_id', 0))
 	if project_id != 0:
@@ -52,6 +56,36 @@ def __get_display_info(request):
 			page['component']['model']['site_title'] = project.site_title
 		except:
 			pass
+
+	display_info = {
+		'project': project,
+		'page_id': page_id,
+		'page': page
+	}
+
+	request.display_info = display_info
+
+
+def __get_fake_project_display_info(request):
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	project_id = request.REQUEST.get('project_id', '')
+	_, project_type, webapp_owner_id, page_id, mongodb_id = project_id.split(':')
+
+	project = request.project
+	if not project:
+		project = webapp_models.Project()
+		project.name = 'fake:%s:%s' % (project_type, page_id)
+		project.type = project_type
+		project.id = project_id
+
+	if mongodb_id == 'new':
+		if page_id == 'navbar':
+			settings_module_path = 'termite2.global_navbar.settings'
+			settings_module = __import__(settings_module_path, {}, {}, ['*',])
+			page = json.loads(settings_module.NEW_PAGE_JSON)
+	else:
+		project_id = 'fake:%s:%s:%s' % (project_type, webapp_owner_id, page_id)
+		page = pagestore.get_page(project_id, page_id)		
 
 	display_info = {
 		'project': project,

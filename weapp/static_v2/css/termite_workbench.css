@@ -1196,6 +1196,102 @@ button.xui-removeImageButton{
 	margin-left: 87px;
 	margin-top: 3px;
 }
+
+/*
+**底部导航
+*/
+.xui-propertyView-navbar-settings .propertyGroup_property:first-child .propertyGroup_property_label{
+	display: block;
+	width: 100%;
+	text-align: left;
+	margin-bottom: 10px;
+}
+.xui-propertyView-navbar-settings .propertyGroup_property_checkboxField{
+	margin-bottom: 10px;
+}
+.xui-propertyView-navbar-settings .propertyGroup_property_input label{
+	margin-right: 20px;
+	font-weight: normal;
+}
+.xui-propertyView-navbar-settings .propertyGroup_property_checkboxField .propertyGroup_property_input input{
+	margin-right: 10px;
+	margin-top: 0;
+	position: relative;
+	top:3px;
+}
+.xui-propertyView-navbar-settings .propertyGroup_property_radioField .propertyGroup_property_label{
+	text-align: left;
+}
+.xui-wepage-globalNavPage .xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control{
+	border:1px solid #E6E6E6;
+	padding-left: 15px;
+}
+.xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control{
+	width: 378px;
+	padding-top: 10px;
+}
+.xui-propertyView-navbar-navs .xui-link{
+	display: block;
+	margin-left: -1px;
+	margin-top: 10px;
+}
+.xui-wepage-globalNavPage .xui-eidt-urlBox{
+	width: 185px;
+}
+.xui-wepage-globalNavPage .xui-selected-title-box{
+	float: left;
+	margin-left: 0px;
+}
+.xui-wepage-globalNavPage button.xui-removeImageButton{
+	right: -5px;
+}
+.xui-wepage-globalNavPage .xui-news-editor-select-link-dialog{
+	float: left;
+	margin-top: 12px;
+}
+.xui-wepage-globalNavPage .xa-second-nav-selectLink-title{
+	float: left;
+}
+.xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control .propertyGroup_property_label{
+	font-weight: bold;
+}
+.propertyGroup_property_secondNavsField .xui-secondNav{
+	margin-left: 44px;
+	width: 280px;
+}
+.propertyGroup_property_secondNavsField .xui-navbar-secondnav-title{
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+.propertyGroup_property_secondNavsField .xui-navbar-secondnav-addBtn{
+	display: block;
+	width: 297px;
+	height: 40px;
+	border:1px dashed #ccc;
+	padding-left: 15px;
+	box-sizing:border-box;
+	line-height: 40px;
+	margin-bottom: 10px;
+}
+/*.propertyGroup_property_secondNavsField .xui-navbar-secondnav-navs{
+	position: relative;
+}*/
+.propertyGroup_property_secondNavsField .xui-navbar-secondnav-navs .propertyGroup_property_dynamicControlField_content{
+	border:1px solid #ddd;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	margin-bottom: 10px;
+	width: 297px;
+	position: relative;
+}
+.xui-navbar-secondnav-navs .propertyGroup_property_input1{
+	display: inline-block;
+}
+.xui-navbar-secondnav-navs .propertyGroup_property_linkSelectField .xui-news-editor-select-link-dialog{
+	display: block;
+}
+
+
 /**
  * dialog对话框 商品列表
  */
@@ -1239,3 +1335,25 @@ button.xui-removeImageButton{
 }
 
 
+
+
+/**
+ * 底部导航编辑器页面的样式
+ */
+.xui-wepage-globalNavPage .propertyGroup {
+	padding: 20px;
+	background-color: #FFF;
+	border: solid 1px #CCC;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.xui-wepage-globalNavPage .propertyGroup-topGap {
+	height: 10px;
+	background-color: transparent;
+}
+.xui-wepage-globalNavPage .xui-propertyView-navbar-settings-topGap {
+	display: none;
+}
+.xui-wepage-globalNavPage .xui-workbench-phonePanel .xui-i-title {
+	display: none;
+}

@@ -50,6 +50,17 @@ W.design.DesignPage = Backbone.View.extend({
 		if (W.design.isInFrame) {
 			W.Broadcaster.trigger('designpage:finish_init');
 			W.Broadcaster.trigger('designpage:resize');
+
+			/*
+			var $autoSelectComponent = $('[data-auto-select="true"]').eq(0);
+			xwarn($autoSelectComponent);
+			if ($autoSelectComponent) {
+				var cid = $autoSelectComponent.data('cid');
+				_.delay(function() {
+					parent.W.Broadcaster.trigger('mobilewidget:select', cid);
+				}, 200);
+			}
+			*/
 		}
 	},
 
@@ -166,6 +177,15 @@ W.design.DesignPage = Backbone.View.extend({
 		if (component.isRootPage()) {
 			this.page = component;
 			this.coverManager.setPage(this.page);
+
+			//select auto_select component
+			var $autoSelectComponent = $('[data-auto-select="true"]').eq(0);
+			if ($autoSelectComponent) {
+				var cid = $autoSelectComponent.data('cid');
+				_.delay(function() {
+					parent.W.Broadcaster.trigger('mobilewidget:select', cid);
+				}, 200);
+			}
 		}        
 	},
 

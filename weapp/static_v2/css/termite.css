@@ -431,3 +431,47 @@
 	text-align: center;
 	font-weight: bold;
 }
+
+
+/**
+ * 底部导航页面样式
+ */
+.xui-wepage-globalNavPage .xui-navbarHeader{
+	width: 956px;
+	height: 96px;
+	color: #333;
+}
+.xui-wepage-globalNavPage .xui-navbarHeader{
+	background: #fff;
+	box-sizing:border-box;
+	padding: 15px 20px;
+	margin: 19px 17px;
+	border:1px solid #DCE3EB;
+}
+.xui-wepage-globalNavPage .xui-navbarHeader .xui-title{
+	font-size: 16px;
+	font-weight: bold;
+}
+.xui-wepage-globalNavPage .xui-navbarHeader .xui-startUseBtn{
+	width: 88px;
+	margin-left: 131px;
+	margin-top: -5px;
+}
+.xui-wepage-globalNavPage .xui-workbench-phonePanel{
+	margin-left: 17px;
+}
+.xui-wepage-globalNavPage .xui-workbench-rightPanel{
+	background: #fff;
+	width: 427px;
+	box-sizing:border-box;
+	margin-top: 75px;
+}
+.xui-wepage-globalNavPage .xui-selectPageSection label{
+	font-weight: normal;
+	margin-right: 45px;
+}
+.xui-wepage-globalNavPage .xui-selectPageSection input{
+	margin-top: 3px;
+	position: relative;
+	top:3px;
+}

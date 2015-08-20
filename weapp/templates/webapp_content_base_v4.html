@@ -38,6 +38,8 @@
         <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/backbone_lite.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/crypto-js.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/md5.js"></script>
@@ -82,7 +84,46 @@
 
             {% block content-panel %}{% endblock %}
         {% endif %}
-
+        <!-- 全局导航 -->
+        <div class="wui-template-globalNavbar xa-template-globalNavbar">
+            <!-- 模板1 -->
+          <!--   <div class="xui-globalBottomBar" data-ui-role="bottomNav">
+                <div class="xui-home">
+                    <a href="###" class="xui-bg"></a>
+                </div>
+                <div class="xui-flex xui-flex-two">
+                    <div class="xui-menu xa-menu f14">
+                        <a href="###">标题</a>
+                    </div>
+                    <div class="xui-subMenuContainer">
+                        <span class="xui-menuArrow"></span>
+                        <span class="xui-menuArrowBorder"></span>
+                        <ul class="xui-subMenu">
+                            <li class="f12"><a href="###">标题名</a></li>
+                            <li class="f12"><a href="###">标题名</a></li>
+                            <li class="f12"><a href="###">标题名</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="xui-flex xui-flex-two">
+                    <div class="xui-menu xa-menu f14">
+                        <a href="###">标题</a>
+                    </div>
+                    <div class="xui-subMenuContainer">
+                        <span class="xui-menuArrow"></span>
+                        <span class="xui-menuArrowBorder"></span>
+                        <ul class="xui-subMenu">
+                            <li class="f12"><a href="###">标题名</a></li>
+                            <li class="f12"><a href="###">标题名</a></li>
+                            <li class="f12"><a href="###">标题名</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>  -->
+            
+            <!-- 模板2 -->
+            <!--   -->
+        </div>
         <div id="jsons" style="display: none;">
             {% for json in jsons %}
             <div id="__json-{{json.name}}">
@@ -90,6 +131,9 @@
             </div>
             {% endfor %}
         </div>
+        
+
+
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
             // 定时器
@@ -203,7 +247,6 @@
         });
         
         </script>
-        
 
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
@@ -234,7 +277,7 @@
                     W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
             var link = window.location.href;
             if (link.indexOf('fmt') === -1){
-                if (link.indexOf('/?') === -1){
+                if (link.indexOf('&') === -1){
                     link = link +"?fmt="+W.curRequestMemberToken;
                 } else {
                     link = link +"&fmt="+W.curRequestMemberToken;
