@@ -11,11 +11,50 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 
 from mall.models import *
-# from modules.member.models import * 
+# from modules.member.models import *
 from modules.member.models import MemberGrade, Member
 from weixin.user import models as weixn_models
 from account import models as account_models
 from utils.string_util import byte_to_hex
+
+def __get_user(user_name):
+	return User.objects.get(username=user_name)
+
+@given(u'{user}设置积分策略')
+def step_impl(context, user):
+	if hasattr(context, 'client'):
+		context.client.logout()
+	context.client = bdd_util.login(user)
+	client = context.client
+	user = UserFactory(username=user)
+	profile = UserProfile.objects.get(user_id=user.id)
+	json_data = json.loads(context.text)
+
+	integral_detail = {};
+	integral = {}
+
+	for key, value in  json_data[0].items():
+		if key != 'member_integral_strategy_settings_detail':
+			integral[key] = value
+
+	if json_data[0].has_key('member_integral_strategy_settings_detail'):
+		integral_detail = json_data[0]['member_integral_strategy_settings_detail'][0]
+
+	if IntegralStrategySttings.objects.filter(webapp_id=profile.webapp_id).count() > 0:
+		IntegralStrategySttings.objects.filter(webapp_id=profile.webapp_id).update(**integral)
+	for key, value in integral_detail.items():
+		if key == 'is_used':
+			if value == u'否':
+				integral_detail[key] = False
+			else:
+				integral_detail[key] = True
+		else:
+			integral_detail[key] = float(value[value.find('+')+1:value.find('*')])
+
+	integral_detail['webapp_id'] = profile.webapp_id
+	if IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).count() > 0 and integral_detail:
+		IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).update(**integral_detail)
+	elif integral_detail:
 
 # def __get_user(user_name):
 # 	return User.objects.get(username=user_name)
@@ -36,7 +75,7 @@ from utils.string_util import byte_to_hex
 
 # 	integral_detail = {};
 # 	integral = {}
-	
+
 # 	for key, value in  json_data[0].items():
 # 		if key != 'member_integral_strategy_settings_detail':
 # 			integral[key] = value
@@ -59,11 +98,9 @@ from utils.string_util import byte_to_hex
 # 	if IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).count() > 0 and integral_detail:
 # 		IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).update(**integral_detail)
 # 	elif integral_detail:
-		
-
 # 		IntegralStrategySttingsDetail.objects.create(**integral_detail)
 
-@Then(u'{user}可以获得会员列表')
+@then(u'{user}可以获得会员列表')
 def step_impl(context, user):
 	json_data = json.loads(context.text)
 	Member.objects.all().update(is_for_test=False)
@@ -128,4 +165,4 @@ def step_impl(context, member_a, user):
 	url = '/weixin/%s/'% user_profile.webapp_id
 	context.client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
 
-	
+

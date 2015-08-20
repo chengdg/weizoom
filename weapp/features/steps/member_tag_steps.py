@@ -15,14 +15,14 @@ from modules.member.models import *
 def step_impl(context, user):
 	context.client = bdd_util.login(user, password=None, context=context)
 
-@when(u"{user}添加会员分组")
+@given(u"{user}添加会员分组")
 def step_impl(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
 	context.member_tags = json.loads(context.text)
 	for member_tag in context.member_tags:
 		data = member_tag
-		response = client.post('/webapp/user_center/tag/create/', data)
+		response = client.post('/member/member_tags/get/', data)
 
 @then(u"{user}能获取会员分组列表")
 def step_impl(context, user):
@@ -39,20 +39,20 @@ def step_impl(context, user):
 	expected = json.loads(context.text)
 	bdd_util.assert_list(expected, tag_list)
 
-@given(u"{user}添加会员分组")
-def step_impl(context, user):
-	if hasattr(context, 'client'):
-		context.client.logout()
-	context.client = bdd_util.login(user)
-	client = context.client
+# @given(u"{user}添加会员分组")
+# def step_impl(context, user):
+# 	if hasattr(context, 'client'):
+# 		context.client.logout()
+# 	context.client = bdd_util.login(user)
+# 	client = context.client
 
-	response = client.get('/webapp/user_center/tags/')
-	member_tags =response.context['member_tags']
-	tag_list = []
-	for tag in member_tags:
-		tag_list.append({"name":tag.name})
-	expected = json.loads(context.text)
-	bdd_util.assert_list(expected, tag_list)
+# 	response = client.get('/webapp/user_center/tags/')
+# 	member_tags =response.context['member_tags']
+# 	tag_list = []
+# 	for tag in member_tags:
+# 		tag_list.append({"name":tag.name})
+# 	expected = json.loads(context.text)
+# 	bdd_util.assert_list(expected, tag_list)
 
 @when(u"{user}更新会员分组'{tag_name}'")
 def step_impl(context, user, tag_name):
