@@ -514,10 +514,11 @@ body {
 	cursor: move;
 }
 .propertyGroup_property_dynamicControlField_content {
-	/*width: 378px;
-	padding:20px;
+	width: 378px;
+	padding: 20px;
 	background-color: #fff;
-	border: solid 1px #E6E6E6;*/
+	border: solid 1px #E6E6E6;
+	margin: 5px 0;
 	font-size: 12px;
 }
 .propertyGroup_property_dynamicControlField_content .star_show:before{
@@ -545,18 +546,19 @@ body {
 
 /*移除按钮*/
 button.xui-removeImageButton{
-	position: absolute;
-	top:-11px;
-	right: 0px;
-	font-size: 14px;
+	position: relative;
+	top: -37px;
+	right: -30px;
 }
 .xui-removeImageButton span{
 	color: #fff;
 	display: block;
-	width: 14px;
-	height: 14px;
-	background: rgba(0,0,0,0.45);
-	border-radius: 50%;
+	width: 22px;
+	height: 22px;
+	background: rgba(0,0,0,0.9);
+	border-radius: 30px;
+	line-height: 26px;
+	font-size: 30px;
 }
 
 

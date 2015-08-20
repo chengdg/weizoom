@@ -885,13 +885,15 @@ W.workbench.PropertyView = Backbone.View.extend({
     },
 
     onMouseoutField: function(event){
-        this.$el.find('.propertyGroup_property_dynamicControlField_control').children('.close').hide();
+        var $el = $(event.currentTarget);
+        $el.find('.close').hide();
     },
 
     onMouseoverField: function(event){
         var $el = $(event.currentTarget);
-        this.$el.find('.propertyGroup_property_dynamicControlField_control').children('.close').hide();
-        $el.children('.close').show();
+        var $closeBtn = $el.find('.close');
+        $closeBtn.hide();
+        $closeBtn.show();
     },
 
     onClickColorPickerTrigger: function(event){
