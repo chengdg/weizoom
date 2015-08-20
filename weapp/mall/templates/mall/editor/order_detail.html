@@ -83,10 +83,7 @@
           {% ifequal action.action 'refund_success' %} xa-refundSuccess{% endifequal %}
           "
           href="javascript:void(0);"
-          {% if action.action == 'update_express' %}
-            data-is-update="true"
-            {% ifequal order.express_company_name '' %} style="display:none"{% endifequal %}
-          {%endif%}
+          {% if action.action == 'update_express' %}data-is-update="true"{%endif%}
           >{{action.name}}</a>
         {% endfor %}
         </div>
