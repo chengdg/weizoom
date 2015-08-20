@@ -31,10 +31,10 @@
 			<th width="415">商品名称</th>
 			<th width="110">商品价格（元）</th>
 			<th width="80">状态</th>
-			<th width="75">排序</th>
+			<th width="75" class="xa-rank-category"><a href="javascript:void(0);">排序</a></th>
 			<th width="75">销量</th>
 			<th width="110">加入分组时间</th>
-			
+
 			<th>操作</th>
 		</tr>{{product.user_code}}
 	</thead>
@@ -182,6 +182,11 @@ $(document).ready(function() {
 				});
         	}
         })
+	});
+
+	$(document).delegate('.xa-rank-category', 'click', function(event){
+			location.reload();
+
 	});
 
 	var onConfirmRankInput = function(event){

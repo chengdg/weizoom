@@ -246,7 +246,10 @@ def step_impl(context, user):
     # url = '/mall2/api/order_list/?sort_attr=-created_at&count_per_page=15&page=1'
     # response = context.client.get(bdd_util.nginx(url))
     response = context.response
-    items = json.loads(response.content)['data']['items']
+    content = json.loads(response.content)
+    items = content['data']['items']
+    query_params = content['data']['pageinfo'].get('query_string')
+    context.query_params = query_params
 
     actual_orders = _get_actual_orders(items, context)
     expected_order = json.loads(context.text)
@@ -531,7 +534,9 @@ def step_look_for_order(context, user):
 
     query_params_c = json.loads(context.text)
     query_params.update(query_params_c)
-    query_params['query'] = query_params['order_no']
+    if query_params.get('order_no'):
+        query_params['query'] = query_params['order_no']
+        query_params.pop('order_no')
 
     query_params['pay_type'] = PAYNAME2ID[query_params['pay_type']]
     if query_params['pay_type'] == -1:
@@ -548,3 +553,24 @@ def step_look_for_order(context, user):
     url = '/mall2/api/order_list/'
     response = context.client.get(url, query_params)
     context.response = response
+
+
+@then(u"{user}导出订单获取订单信息")
+def step_get_specify_order(context, user):
+    filter_value = context.query_params
+    import csv
+
+    if filter_value:
+        url = '/mall2/order_export/?{}'.format(filter_value)
+        response = context.client.get(url)
+        print("*"*39)
+        print(response.content)
+        print("*"*39)
+        reader = csv.reader(response.content, delimiter=',', quotechar='"')
+        for row in reader:
+            print(''.join(row))
+
+        items = json.loads(response.content)
+        actual_orders = _get_actual_orders(items)
+        expected_order = json.loads(context.text)
+        bdd_util.assert_list(expected_order, actual_orders)

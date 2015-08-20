@@ -1,5 +1,5 @@
-Feature: 删除图片分组
-	Jobs通过管理系统在商城中删除图片分组
+Feature: 删除属性模板
+	Jobs通过管理系统在商城中删除属性模板
 
 Background:
 	Given jobs登录系统
