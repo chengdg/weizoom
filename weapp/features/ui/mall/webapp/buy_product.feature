@@ -134,3 +134,63 @@ Scenario: 购买商品时，使用订单备注
 			"customer_message": ""
 		}
 		"""
+
+Scenario: 购买有规格的商品
+	jobs添加商品后
+	1. bill能在webapp中购买jobs添加的商品
+	2. bill的订单中的信息正确
+
+	When bill访问jobs的webapp:ui
+	And bill购买jobs的商品:ui
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
+			"products": [{
+				"name": "商品3",
+				"model": "黑色 M",
+				"price": 10.0,
+				"count": 2
+			}]
+		}
+		"""
+	Then bill成功创建订单:ui
+		"""
+		{
+			"status": "待支付",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
+			"final_price": 20.0,
+			"products": [{
+				"name": "商品3",
+				"model": "黑色 M",
+				"price": 10.0,
+				"count": 2
+			}]
+		}
+		"""
+
+Scenario: 购买已经下架的商品
+	bill可能会在以下情景下购买已下架的商品A：
+	1. bill打开商品A的详情页面
+	2. bill点击“购买”，进入商品A的订单编辑页面
+	3. jobs在后台将商品A下架
+	4. bill点击“支付”，完成订单
+
+	这时，系统应该通知bill：商品已下架
+
+	When bill访问jobs的webapp:ui
+	And bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品4",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill获得错误提示'商品已下架<br/>2秒后返回商城首页':ui

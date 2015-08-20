@@ -3,7 +3,7 @@
 {% load mall_filter %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-addrManage-page xui-page" data-title="{{ page_title }}">
+<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-addrManage-page xui-page xa-page" data-title="{{ page_title }}">
 	<div class="xui-section" style="box-shadow:0 0 0;-webkit-box-shadow:0 0 0;">
 		{% if not ship_infos %}
 		<div class="xui-emptyImg">
