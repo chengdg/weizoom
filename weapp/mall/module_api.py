@@ -2879,6 +2879,7 @@ def update_promotion_status_by_member_grade(member_grade_ids):
 	"""
 	try:
 		promotion_models.Promotion.objects.filter(member_grade_id__in=member_grade_ids, status__in=[promotion_models.PROMOTION_STATUS_NOT_START, promotion_models.PROMOTION_STATUS_STARTED]).update(status=promotion_models.PROMOTION_STATUS_FINISHED)
+		promotion_models.IntegralSaleRule.objects.filter(member_grade_id__in=member_grade_ids).delete()
 	except:
 		alert_message = u"update_promotion_status_by_member_grade cause:\n{}".format(unicode_full_stack())
 		watchdog_error(alert_message)
