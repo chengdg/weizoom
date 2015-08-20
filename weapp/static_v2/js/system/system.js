@@ -22,7 +22,8 @@ W = {
 	},
 	view: {
 		cssEditorView: null,
-	}
+	},
+	runtimeData: {}
 }
 
 /**
