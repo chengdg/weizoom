@@ -35,19 +35,19 @@ Background:
 		[{
 			"name": "普通会员",
 			"upgrade": "手动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		},{
 			"name": "铜牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "90%"
+			"shop_discount": "9"
 		},{
 			"name": "银牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "80%"
+			"shop_discount": "8"
 		},{
 			"name": "金牌会员",
 			"upgrade": "手动升级",
-			"shop_discount": "70%"
+			"shop_discount": "7"
 		}]
 		"""
 

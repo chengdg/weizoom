@@ -73,11 +73,11 @@ Background:
 			[{
 				"name": "银牌会员",
 				"upmember_rank": "不自动升级",
-				"shop_discount": "100%"
+				"shop_discount": "10"
 			},{
 				"name": "金牌会员",
 				"upmember_rank": "自动升级",
-				"shop_discount": "90%"
+				"shop_discount": "9"
 			}]
 			"""
 		Then jobs能获取会员等级列表
@@ -85,15 +85,15 @@ Background:
 			[{
 				"name": "普通会员",
 				"upmember_rank": "自动升级",
-				"shop_discount": "100%"
+				"shop_discount": "10"
 			},{
 				"name": "银牌会员",
 				"upmember_rank": "不自动升级",
-				"shop_discount": "100%"
+				"shop_discount": "10"
 			},{
 				"name": "金牌会员",
 				"upmember_rank": "自动升级",
-				"shop_discount": "90%"
+				"shop_discount": "9"
 			}]
 			"""
 		When jobs添加会员分组

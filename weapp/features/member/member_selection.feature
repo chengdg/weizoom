@@ -20,11 +20,11 @@ Background:
 		[{
 			"name": "银牌会员",
 			"upgrade": "不自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		},{
 			"name": "金牌会员",
 			"upgrade": "自动升级",
-			"shop_discount": "98%"
+			"shop_discount": "9.8"
 		}]
 		"""
 	Then jobs能获取会员等级列表
@@ -32,15 +32,15 @@ Background:
 		[{
 			"name": "普通会员",
 			"upgrade": "自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		},{
 			"name": "银牌会员",
 			"upgrade": "不自动升级",
-			"shop_discount": "100%"
+			"shop_discount": "10"
 		},{
 			"name": "金牌会员",
 			"upgrade": "自动升级",
-			"shop_discount": "98%"
+			"shop_discount": "9.8"
 		}]
 		"""
 	And jobs添加会员分组
