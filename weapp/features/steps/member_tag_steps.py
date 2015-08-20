@@ -15,7 +15,7 @@ from modules.member.models import *
 def step_impl(context, user):
 	context.client = bdd_util.login(user, password=None, context=context)
 
-@given(u"{user}添加会员分组")
+@when(u"{user}添加会员分组")
 def step_impl(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
@@ -23,6 +23,7 @@ def step_impl(context, user):
 	for member_tag in context.member_tags:
 		data = member_tag
 		response = client.post('/member/member_tags/get/', data)
+	#response = client.post('/member/member_tags/get/', context.member_tags)
 
 @then(u"{user}能获取会员分组列表")
 def step_impl(context, user):

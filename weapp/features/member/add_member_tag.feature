@@ -1,5 +1,5 @@
 # __author__ : "崔帅帅"
-@func:webapp.modules.user_center.views.list_tags
+@func:webapp.modules.user_center.views.list_tags @test_a
 Feature: 增加会员分组
 	Jobs能添加会员分组
 
