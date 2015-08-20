@@ -1,0 +1,102 @@
+{% extends "content_base_v2.html" %}
+
+{% block title %}图文预览——微众传媒{% endblock %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/new_preview.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="xui-header">
+    <div class="xui-i pr">
+        <div class="xui-logo">
+            {% if first_navs %}
+                <img src="/static_v2/img/editor/weixinTopLogo.jpg" alt="">
+            {% else %}
+                <img src="/static_v2/img/editor/topLogo.jpg" alt="">
+            {% endif %}
+        </div>
+        <span class="xui-systemName"></span>
+        
+    </div>
+    <div class="xui-navBar">
+        <div class="xui-i pr">
+            <div class="xui-headerActionBar" style="bottom:40px">
+                <span class="mr10">
+                    <span class="">帮助中心</span>
+                    <span class=" ml5">|</span>
+                    <span class=" ml5">服务热线</span>
+                    <span class=" ml5">400-688-6929</span>
+            </div>
+            <div class="xui-headerActionBar">
+                <span class="mr10">
+                    <span class="">{{ request.user.username }}</span>
+                    <span class=" ml5">-</span>
+                    <span title="{{ request.user.username }}" class="xui-i-userName ml5">
+                    <a href="/logout/">退出</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+	<div class="xui-materialNewsPreview xa-termitePreview clearfix"></div>
+</div>
+
+<div class="footer xui-footer">
+	<div class="xui-i" style="">
+		<span>Copyright&nbsp;&copy; 2012-2014 weizoom.com微众传媒 版权所有&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.weizoom.com">微众传媒</a> 旗下微众云商通</span>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+window.setWebappPageTitle = function(title) {
+    $('.xa-simulatorTitle').text(title);
+}
+W.previewName = "";
+
+$(document).ready(function() {
+    W.ISUNLOADALERT = true;
+    var previewUrl = "{{preview_url}}";
+    var qrcodeUrl = 'http://' + window.location.host + previewUrl.replace('&amp;', '%26').replace('&amp;', '%26');
+    var initBrowserUrl = previewUrl;
+
+    $(document).ready(function() {
+        xlog("in news_preview ready()");
+
+        var editNewsPanel = new W.view.weixin.NewsPreviewer({
+            el: '.xa-termitePreview',
+            headImg: '',
+            templateId: '#termite-preview-tmpl-src',
+            initBrowserUrl: initBrowserUrl,
+            qrcodeUrl: qrcodeUrl
+        });
+
+        $('#mobile-browser').load(function() {
+            var height = window.frames[0].document.body.clientHeight;
+            $('.xa-simulator').height(height+50+'px');
+            $('.xa-simulator-back-btn').removeClass('xa-simulator-back-btn').css("cursor", "default"); //禁止模拟器的“返回”按钮
+        }); 
+
+        // 二维码随屏幕移动, 浮动在顶部
+        var $qcodeBox = $('.xa-qcode-box');
+        var offetTop = $qcodeBox.offset().top;
+        $(window).scroll(function () {
+            var scrollTop = $(window).scrollTop();
+            if (offetTop <= scrollTop) {
+                $qcodeBox.css({'position':'fixed', 'top': 0});
+            }else{
+                $qcodeBox.css({'position':'absolute', 'top': offetTop});
+            }
+        });
+    });
+});
+
+
+</script>
+
+{% endblock %}

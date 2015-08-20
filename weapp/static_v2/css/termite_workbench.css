@@ -273,7 +273,7 @@ body {
 	background-position:-92px -45px;
 }
 .xui-component .componentList_component_product {
-	background-position:-46px 0;
+	background-position:-52px 0;
 }
 .xui-component .componentList_component_product_list {
 	width: 51px;
@@ -290,12 +290,13 @@ body {
 	background-size: 50px 50px;
 }
 .xui-component .componentList_component_richtext {
-	background-position:3px 0;
+	background-position: 0px 0;
+  	width: 51px;
 }
 .xui-component .componentList_component_text_nav {
 	height: 46px;
 	width: 51px;
-	background-position:-40px -45px;
+	background-position:-141px -45px;
 }
 .xui-component .componentList_component_title {
 	background-position: 0 -44px;
@@ -956,23 +957,8 @@ button.xui-removeImageButton{
 .xui-propertyView-imgDisplayGroup{
 	width: 378px;
 }
-/*图片导航，橱窗图片提示*/
-/*.xui-propertyView-imageNavGroup .propertyGroup_property_dialogSelectField,
-.xui-propertyView-imgDisplayGroup .propertyGroup_property_dialogSelectField{
-	position: relative;
-}
-.xui-propertyView-imageNavGroup .propertyGroup_property_dialogSelectField .errorHint,
-.xui-propertyView-imgDisplayGroup .propertyGroup_property_dialogSelectField .errorHint{
-	padding-top: 18px;
-}*/
-/*.xui-propertyView-imageNavGroup .propertyGroup_property_dynamicControlField_control .xui-help,
-.xui-propertyView-imgDisplayGroup .propertyGroup_property_dynamicControlField_control .xui-help{
-	position: absolute;
-	width: 140px;
-}*/
 .xui-propertyView-imgDisplayGroup .propertyGroup_property_dynamicControlField_control{
 	width: 416px;
-	/*padding-bottom: 8px;*/
 }
 .xui-propertyView-imgDisplayGroup .errorHint{
 	margin-left: 88px;
@@ -999,10 +985,9 @@ button.xui-removeImageButton{
 .xui-propertyView-imageNavGroup .errorHint,.xui-propertyView-imgAdjGroup .errorHint{
 	margin-left: 88px;
 }
-/*.xui-propertyView-imageNavGroup .propertyGroup_property_dynamicControlField_control{
+.xui-propertyView-imageNavGroup .propertyGroup_property_dynamicControlField_control{
 	height: 162px;
-}*/
-/*添加图片建议尺寸有影响*/
+}
 .xui-propertyView-imageNavGroup .xui-removeImageButton {
 	display: none;
 }
@@ -1053,8 +1038,7 @@ button.xui-removeImageButton{
 	width: 410px;
 }
 .xui-propertyView-imgAdjGroup .xui-selected-title{
-	max-width: 130px;
-	/*超过10个字的长度会掉下来*/
+	max-width: 138px;
 }
 .xui-propertyView-imgAdjGroup .xui-removeImageButton {
 	display: none;

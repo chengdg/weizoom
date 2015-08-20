@@ -22,9 +22,9 @@ from mall.promotion import utils as mall_api
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
-class event(resource.Resource):
-	app = 'apps/event'
-	resource = 'event'
+class survey(resource.Resource):
+	app = 'apps/survey'
+	resource = 'survey'
 	
 	@login_required
 	def get(request):
@@ -32,24 +32,24 @@ class event(resource.Resource):
 		响应GET
 		"""
 		if 'id' in request.GET:
-			event = app_models.event.objects.get(id=request.GET['id'])
+			survey = app_models.survey.objects.get(id=request.GET['id'])
 			is_create_new_data = False
-			project_id = 'new_app:event:%s' % request.GET.get('related_page_id', 0)
+			project_id = 'new_app:survey:%s' % request.GET.get('related_page_id', 0)
 		else:
-			event = None
+			survey = None
 			is_create_new_data = True
-			project_id = 'new_app:event:0'
+			project_id = 'new_app:survey:0'
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_second_navs(request),
-			'second_nav_name': 'events',
-			'event': event,
+			'second_nav_name': 'surveies',
+			'survey': survey,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
 		});
 		
-		return render_to_response('event/templates/editor/workbench.html', c)
+		return render_to_response('survey/templates/editor/workbench.html', c)
 	
 	@login_required
 	def api_put(request):
@@ -57,11 +57,13 @@ class event(resource.Resource):
 		响应PUT
 		"""
 		data = request_util.get_fields_to_be_save(request)
-		event = app_models.event(**data)
-		event.save()
+		survey = app_models.survey(**data)
+		survey.save()
 		
-		data = json.loads(event.to_json())
+		data = json.loads(survey.to_json())
 		data['id'] = data['_id']['$oid']
+		# if error_msg:
+		# 	data['error_msg'] = error_msg
 		response = create_response(200)
 		response.data = data
 		return response.get_response()
@@ -77,7 +79,7 @@ class event(resource.Resource):
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
-		app_models.event.objects(id=request.POST['id']).update(**update_data)
+		app_models.survey.objects(id=request.POST['id']).update(**update_data)
 		
 		response = create_response(200)
 		return response.get_response()
@@ -87,7 +89,7 @@ class event(resource.Resource):
 		"""
 		响应DELETE
 		"""
-		app_models.event.objects(id=request.POST['id']).delete()
+		app_models.survey.objects(id=request.POST['id']).delete()
 		
 		response = create_response(200)
 		return response.get_response()

@@ -331,6 +331,7 @@
                         }else{
                             cid = $control.parent().attr('data-component-cid');
                         }
+                        cid = cid.length<2 ? '0'+cid : cid;
                         var name = $control.attr('data-input-name');
                         name = cid+'_'+name;
                         if (inputType === 'text') {
@@ -344,6 +345,7 @@
                             for (var j = 0; j < $inputs.length; ++j) {
                                 var $input = $inputs.eq(j);
                                 var selectionCid = $input.parents('li').eq(0).attr('data-component-cid');
+                                selectionCid = selectionCid.length<2 ? '0'+selectionCid : selectionCid;
                                 var selectionInputName = $input.attr('data-input-name');
                                 selectionInputName = selectionCid+'_'+selectionInputName;
                                 var isSelect = $input.is(':checked');
@@ -372,7 +374,7 @@
                     if ($textSelection.length > 0){
                         participanceData['actionButtons'] = JSON.stringify([{
                             'text': '查看结果',
-                            'url': '/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId
+                            'url': '/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}'
                         }]);
                     }
                     W.getApi().call({

@@ -17,6 +17,7 @@ import models as app_models
 import export
 from apps import request_util
 from termite2 import pagecreater
+from termite import pagestore as pagestore_manager
 
 class Mevent(resource.Resource):
 	app = 'apps/event'
@@ -42,24 +43,37 @@ class Mevent(resource.Resource):
 					participance_data_count = app_models.eventParticipance.objects(belong_to=id, member_id=request.member.id).count()
 				if participance_data_count == 0 and request.webapp_user:
 					participance_data_count = app_models.eventParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
-			
-			request.GET._mutable = True
-			request.GET.update({"project_id": project_id})
-			request.GET._mutable = False
-			html = pagecreater.create_page(request, return_html_snippet=True)
-			
-			c = RequestContext(request, {
-				'record_id': id,
-				'activity_status': activity_status,
-				'is_already_participanted': (participance_data_count > 0),
-				'page_title': '用户调研',
-				'page_html_content': html,
-				'app_name': "event",
-				'resource': "event",
-				'hide_non_member_cover': True #非会员也可使用该页面
-			})
-			
-			return render_to_response('workbench/wepage_webapp_page.html', c)
+			is_already_participanted = (participance_data_count > 0)
+			if  is_already_participanted:
+				event_detail,activity_status = get_result(id,request.member.id)
+				c = RequestContext(request, {
+					'event_detail': event_detail,
+					'record_id': id,
+					'activity_status': activity_status,
+					'page_title': '活动报名',
+					'app_name': "event",
+					'resource': "event",
+					'hide_non_member_cover': True #非会员也可使用该页面
+				})
+				return render_to_response('event/templates/webapp/is_already_participanted.html', c)
+			else:
+				request.GET._mutable = True
+				request.GET.update({"project_id": project_id})
+				request.GET._mutable = False
+				html = pagecreater.create_page(request, return_html_snippet=True)
+				
+				c = RequestContext(request, {
+					'record_id': id,
+					'activity_status': activity_status,
+					'is_already_participanted': (participance_data_count > 0),
+					'page_title': '活动报名',
+					'page_html_content': html,
+					'app_name': "event",
+					'resource': "event",
+					'hide_non_member_cover': True #非会员也可使用该页面
+				})
+				
+				return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:
 			record = None
 			c = RequestContext(request, {
@@ -68,3 +82,19 @@ class Mevent(resource.Resource):
 			
 			return render_to_response('event/templates/webapp/m_event.html', c)
 
+def get_result(id,member_id):
+	event_detail ={}
+	event_event = app_models.event.objects.get(id=id)
+	event_detail['name'] = event_event['name']
+	event_detail['end_time'] = event_event['end_time'].strftime('%Y-%m-%d')
+
+	related_page_id = event_event.related_page_id
+	activity_status = event_event.status_text
+
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	page = pagestore.get_page(related_page_id, 1)
+	page_info = page['component']['components'][0]['model']
+	event_detail['subtitle'] = page_info['subtitle']
+	event_detail['description'] = page_info['description']
+
+	return event_detail,activity_status

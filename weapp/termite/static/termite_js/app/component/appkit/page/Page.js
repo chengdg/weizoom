@@ -20,17 +20,19 @@ W.component.appkit.Page = W.component.Component.extend({
                 type: 'text',
                 displayName: '页面名',
                 default: '页面'
-            }, {
-                name: 'site_title',
-                type: 'text',
-                displayName: '页面名称',
-                isUserProperty: true,
-                maxLength: 20,
-                validate: 'data-validate="require-notempty::页面标题不能为空"',
-                validateIgnoreDefaultValue: true,
-                default: '微页面标题',
-                placeholder: '微页面标题'
-            }]
+            }
+            //    , {
+            //    name: 'site_title',
+            //    type: 'text',
+            //    displayName: '页面名称',
+            //    isUserProperty: true,
+            //    maxLength: 20,
+            //    validate: 'data-validate="require-notempty::页面标题不能为空"',
+            //    validateIgnoreDefaultValue: true,
+            //    default: '微页面标题',
+            //    placeholder: '微页面标题'
+            //}
+            ]
         }, 
         {
             group: '事件',
@@ -57,9 +59,9 @@ W.component.appkit.Page = W.component.Component.extend({
             var url = 'url(' + value + ')';
             $node.find('.wa-page').css('background-image', url);
         },
-        site_title: function($node, model, value){
-            W.Broadcaster.trigger('designpage:update_site_title', value)
-        }
+        //site_title: function($node, model, value){
+        //    W.Broadcaster.trigger('designpage:update_site_title', value)
+        //}
     },
 
     initialize: function(obj) {

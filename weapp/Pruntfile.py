@@ -68,6 +68,11 @@ def clean(prunt):
 		shutil.rmtree('./cdn')
 
 
+@register_task('cdn')
+def cdn(prunt):
+	print 'in cdn...............'
+
+
 prunt.register_task('replace-js-default', 'prunt-replace', {
 	"files": {
 		"src": "static_v2/js/termite/component/common/Component.js"
@@ -106,3 +111,5 @@ prunt.register_task('build:app', 'weizoom-build-app')
 
 
 prunt.register_task('default', ['clean', 'build:app', 'build:termite2_workbench'])
+
+prunt.register_task('dist', ['clean', 'build:app', 'build:termite2_workbench', 'cdn'])

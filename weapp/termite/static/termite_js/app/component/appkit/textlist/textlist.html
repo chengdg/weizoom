@@ -1,0 +1,121 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.textlist' %}
+<div
+    class="wui-shortcuts"
+    data-component-cid="{{component.cid}}"
+    style=""
+>
+	<ul
+		class="wui-i-items xa-inputControl"
+		data-input-name="{{component.model.title}}"
+		data-input-type="textlist"
+		data-control-type="appkit.textlist"
+	>
+        {% if component.model.modules.name.select %}
+        <li class="wui-i-item">
+            <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">姓名</label>
+            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="name" data-control-type="appkit.textlist">
+                <input
+                    class="wui-i-input"
+                    type="text"
+                    name="name"
+                    placeholder="请输入姓名"
+                    {% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::请输入姓名"{% endif %}
+                />
+            </div>
+        </li>
+        {% endif %}
+        {% if component.model.modules.phone.select %}
+        <li class="wui-i-item">
+            <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">手机号</label>
+            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="phone" data-control-type="appkit.textlist">
+                <input
+                    class="wui-i-input"
+                    type="text"
+                    name="phone"
+                    placeholder="请输入手机号"
+                    {% if component.model.is_mandatory == 'true' %}data-validate="require-mobile-phone::请输入正确的手机号"{% endif %}
+                />
+            </div>
+        </li>
+        {% endif %}
+        {% if component.model.modules.email.select %}
+        <li class="wui-i-item">
+            <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">邮箱</label>
+            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="email" data-control-type="appkit.textlist">
+                <input
+                    class="wui-i-input"
+                    type="text"
+                    name="email"
+                    placeholder="请输入邮箱"
+                    {% if component.model.is_mandatory == 'true' %}data-validate="require-email::请输入正确的邮箱"{% endif %}
+                />
+            </div>
+        </li>
+        {% endif %}
+        {% if component.model.modules.qq.select %}
+            <li class="wui-i-item">
+                <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">QQ</label>
+                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="qq" data-control-type="appkit.textlist">
+                    <input
+                        class="wui-i-input"
+                        type="text"
+                        name="qq"
+                        placeholder="请输入QQ号"
+                        {% if component.model.is_mandatory == 'true' %}data-validate="require-positive-int::请输入正确的QQ号"{% endif %}
+                    />
+                </div>
+            </li>
+        {% endif %}
+        {% if component.model.modules.job.select %}
+            <li class="wui-i-item">
+                <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">职位</label>
+                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="job" data-control-type="appkit.textlist">
+                    <input
+                        class="wui-i-input"
+                        type="text"
+                        name="job"
+                        placeholder="请输入职位"
+                        {% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::内容不能为空"{% endif %}
+                    />
+                </div>
+            </li>
+        {% endif %}
+        {% if component.model.modules.addr.select %}
+            <li class="wui-i-item">
+                <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">地址</label>
+                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="addr" data-control-type="appkit.textlist">
+                    <input
+                        class="wui-i-input"
+                        type="text"
+                        name="addr"
+                        placeholder="请输入地址"
+                        {% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::内容不能为空"{% endif %}
+                    />
+                </div>
+            </li>
+        {% endif %}
+        {% for sub_component in component.components %}
+            {{ sub_component.html|safe }}
+        {% endfor %}
+	</ul>
+</div>
+{% endifequal %}
+
+{% ifequal component.type 'appkit.textitem' %}
+    <li class="wui-i-item" data-component-cid="{{component.cid}}">
+        <label for="text_item_{{component.cid}}" class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">{% if component.model.title == '' %}填写项{% else %}{{ component.model.title }}{% endif %}</label>
+        <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="{{ component.model.title }}" data-control-type="appkit.textlist">
+            <input
+                id="text_item_{{component.cid}}"
+                class="wui-i-input"
+                type="text"
+                name="text_{{component.cid}}"
+                placeholder="请输入{% if component.model.title == '' %}填写项{% else %}{{ component.model.title }}{% endif %}"
+                {% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::内容不能为空"{% endif %}
+            />
+        </div>
+    </li>
+{% endifequal %}

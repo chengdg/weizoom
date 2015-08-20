@@ -31,8 +31,8 @@ NEW_PAGE_JSON = """
             "property_view_title": "报名填写项",
             "force_display_in_property_view": "no",
             "components": [],
-            "selectable": "no",
-            "type": "appkit.shortcuts",
+            "selectable": "yes",
+            "type": "appkit.textlist",
             "model": {
                 "index": 4,
                 "is_mandatory": "true",
@@ -48,6 +48,15 @@ NEW_PAGE_JSON = """
                     },
                     "email": {
                         "select": "yes"
+                    },
+                    "qq": {
+                        "select": ""
+                    },
+                    "job": {
+                        "select": ""
+                    },
+                    "addr": {
+                        "select": ""
                     }
                 }
             },
@@ -65,7 +74,7 @@ NEW_PAGE_JSON = """
                 "name": "",
                 "class": "",
                 "id": "",
-                "text": "提交"
+                "text": "我要报名"
             },
             "has_global_content": "no"
         }, {
