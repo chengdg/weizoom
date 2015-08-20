@@ -749,5 +749,3 @@ RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
 
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)
-
-NAME = 'ROBERT'
