@@ -37,11 +37,11 @@
 
 {% block global_elements %}
 <div class="xui-bottomActionBar">
-  {% if not activity %}
+  {% if not event %}
     <button class="xa-save btn btn-primary">保存</button>
     <button class="xa-preview btn btn-default ml20">预览</button>
   {% else %}
-    {% if event.status_text == "未开启" %}
+    {% if event.status_text == "未开始" %}
     <button class="xa-save btn btn-primary">保存</button>
     <button class="xa-preview btn btn-default ml20">预览</button>
     {% endif %}
