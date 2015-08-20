@@ -132,6 +132,9 @@ W.component.wepage.Navar = W.component.Component.extend({
     initialize: function(obj) {
         this.super('initialize', obj);
 
+        if (this.model.get('type') == 'slide') {
+            this.name2field['items'].maxItemLength = 999;
+        }
         this.type2items = {};
         this.type2components = {};
     }

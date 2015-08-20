@@ -34,19 +34,29 @@
 		<div class="xui-globalSideBar">
 			<div class="xui-bottomNav">
 				<ul class="">
-					<li class="xa-outLink" data-page="home"><i class="xui-bg"></i></li>
+					<li class="xa-outLink" data-page="home">
+                        <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0"><i class="xui-bg"></i></a>
+                    </li>
 					<li class="xa-category" data-page="product-category"><i class="xui-bg{% if in_design_mode %} xui-active {% endif %}"></i></li>
 					<li class="xa-outLink" data-page="shopping-cart">
-						<i class="xui-bg "><span class="xui-shopCar">2</span></i>
+                        <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show&workspace_id=mall">
+                            <i class="xui-bg">
+                            {% if shopping_cart_product_count %}
+                            <span class="xui-shopCar xa-shopCarCount">{{ shopping_cart_product_count }}</span>
+                            {% endif %}
+                            </i>
+                        </a>
 					</li>
-					<li class="xa-outLink" data-page="usercenter"><i class="xui-bg"></i></li>
+					<li class="xa-outLink" data-page="usercenter">
+                        <a href="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
+                    </li>
 				</ul>
 			</div>
 		</div>
 		<div class="xui-sidePanel xa-sidePanel"  {% if in_production_mode %}id="xa-wrapper" {% endif %} {% if in_design_mode %}style="display:block;"{% endif %}>
 			<ul class="xui-mainMenu">
 				<li class="xui-firstNav">
-					<a href="###">
+					<a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">
 						<span>全部商品<i class="xui-leftArrow"></i></span>
 					</a>
                 </li>
