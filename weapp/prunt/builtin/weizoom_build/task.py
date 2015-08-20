@@ -183,3 +183,13 @@ def buildFile(prunt):
 
 	for path in paths:
 		build(path)
+
+		prunt.run_task('prunt-replace', {
+			'files': {
+				'src': path
+			},
+			'rules': [{
+				'pattern': '/cdn/',
+				'replacement': '{{cdn_host}}/'
+			}]
+		})
