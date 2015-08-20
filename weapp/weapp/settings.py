@@ -282,6 +282,7 @@ OPTIMIZATION_MSG_HANDLER_CLASSES = (
     'weixin.statistics.message_statistics.MessageStatistics',
     'weixin.message.impl_handlers.responsed_message_log.ResponseedMessageLogger',
     'weixin.message.message_handler.weixin_user_handler.WeixinUserHandler',
+    'weixin.message.message_handler.wofu_handler.WoFuHandler',
     'weixin.message.message_handler.member_handler.MemberHandler',
     'market_tools.tools.member_qrcode.ticket_messge_handler.QrcodeHandler',
     'market_tools.tools.channel_qrcode.channel_qrcode_handler.ChannelQrcodeHandler',

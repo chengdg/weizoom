@@ -40,9 +40,9 @@ W.component.wepage.Navar = W.component.Component.extend({
                 }],
                 default: {
                     home: {select:true}, 
-                    wepage: {select:true}, 
-                    user_center: {select:true},
-                    product_list_page: {select:true}
+                    wepage: {select:false}, 
+                    user_center: {select:false},
+                    product_list_page: {select:false}
                 }
             }, {
                 name: 'type',

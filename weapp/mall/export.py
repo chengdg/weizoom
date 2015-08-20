@@ -365,7 +365,7 @@ HOME_NAV = {
         },        
         {
             'name': MALL_HOME_GLOBAL_NAVBAR_NAV,
-            'title': u'底部导航',
+            'title': u'店铺导航',
             'url': '/termite2/global_navbar/',
             'need_permissions': ['manage_wepage'],
         }

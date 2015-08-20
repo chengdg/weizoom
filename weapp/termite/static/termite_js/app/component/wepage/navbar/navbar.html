@@ -62,7 +62,7 @@
 
                 {% for component in component.components %}
                 <li class="xui-firstNav xa-firstNav" data-component-cid="{{component.cid}}"> 
-                    <a href="###">
+                    <a href="{{ component.model.target|extract_target_data:request|safe }}">
                         <span class="wa-inner-link">{{ component.model.title }}<i class="xui-leftArrow"></i></span>
                     </a>
                     <ul class="xui-subMenu">                        

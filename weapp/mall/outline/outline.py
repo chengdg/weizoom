@@ -72,9 +72,8 @@ class Outline(resource.Resource):
         for order in orders:
             order_money += order.final_price + order.weizoom_card_money
 
-        # 获取会员数
-        total_member_count = member_models.Member.objects.filter(
-            webapp_id=webapp_id, is_subscribed=True).count()
+        # 获取会员数 update by bert at 20150817
+        total_member_count = member_models.Member.count(webapp_id)
         members = member_models.Member.objects.filter(
             webapp_id=webapp_id, created_at__range=(yesterday, today))
         members = [member for member in members if member.is_subscribed]

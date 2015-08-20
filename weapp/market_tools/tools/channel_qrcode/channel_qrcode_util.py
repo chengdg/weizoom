@@ -22,6 +22,9 @@ def create_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_membe
 		if channel_qrcodes.count() > 0:
 			channel_qrcode = channel_qrcodes[0]
 
+			if channel_qrcode.bing_member_id == member.id:
+				return
+
 			if (is_new_member is False) and channel_qrcode.re_old_member == 0:
 				return
 
