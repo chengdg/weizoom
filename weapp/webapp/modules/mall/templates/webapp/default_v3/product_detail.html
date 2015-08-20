@@ -446,6 +446,7 @@ $(document).ready(function() {
                     view.member_or_promotion = 'promotion';
                 }
                 if(!is_user_has_promotion){
+
                     view.promotion.isFlashSalePromotion = false;
                     // 促销bu对此用户开发
                     var next_promotions = $('.xa-display-promotion').next('div');
@@ -457,10 +458,10 @@ $(document).ready(function() {
                         $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
                         next_promotions.remove();
                     }
-                    // 对于不开放的促销，不显示广告语
+                    // 对于不开放的促销，不显示广告语, 显示商品原有促销标题
                     var span = $('.xa-productName').find('span');
                     if(span){
-                        span.remove();
+                        span.html('<span class="xui-text-red">'+view.priceInfo.promotion_title+'</span>');
                     }
                 }
             // 商品无促销
@@ -484,7 +485,8 @@ $(document).ready(function() {
                 // 对于不开放的促销，不显示广告语
                 var span = $('.xa-productName').find('span');
                 if(span){
-                    span.remove();
+
+                    span.html('<span class="xui-text-red">'+view.priceInfo.promotion_title+'</span>');
                 }
             }
             // 处理会员价

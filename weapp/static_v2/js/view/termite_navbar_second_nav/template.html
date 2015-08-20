@@ -20,7 +20,6 @@
 					value="{{title}}" 
 					placeholder="编辑[文本导航]" 
 					maxlength="10" 
-					data-validate="require-notempty::导航名称不能为空" 
 					data-force-validate="true" />
 				</div>
 				<div class="errorHint"></div>
@@ -29,7 +28,7 @@
 		<div class="propertyGroup_property_linkSelectField propertyGroup_property_horizontalField xa-errorHintContainer">
 			<div class="propertyGroup_property_label">链接</div>
 			<div class="propertyGroup_property_input xui-eidt-urlBox" style="height: auto;">
-				<input data-field="second-nav-target" name="second-nav-target" type="hidden" value="{{target}}" data-validate="require-notempty::链接地址不能为空" data-force-validate="true">
+				<input data-field="second-nav-target" name="second-nav-target" type="hidden" value="{{target}}" data-force-validate="true">
 
 				{{#if target}}
 					{{#ifCond targetData.type '===' "manualInput"}}

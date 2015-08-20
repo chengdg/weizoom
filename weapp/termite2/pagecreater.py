@@ -57,6 +57,7 @@ def __get_display_info(request):
 		except:
 			pass
 
+	__get_navbar(request, page)
 	display_info = {
 		'project': project,
 		'page_id': page_id,
@@ -64,6 +65,20 @@ def __get_display_info(request):
 	}
 
 	request.display_info = display_info
+
+
+def __get_navbar(request, page):
+	if request.in_production_mode:
+		pagestore = pagestore_manager.get_pagestore('mongo')
+		project_id = 'fake:wepage:%s:navbar' % request.webapp_owner_id
+		page_id = 'navbar'
+		navbar_page = pagestore.get_page(project_id, page_id)
+
+		navbar_component = navbar_page['component']['components'][0]
+		navbar_component['cid'] = 9999999
+		navbar_component['model']['index'] = 9999999
+		if navbar_page:
+			page['component']['components'].append(navbar_component)
 
 
 def __get_fake_project_display_info(request):

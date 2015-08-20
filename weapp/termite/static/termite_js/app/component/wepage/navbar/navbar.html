@@ -13,7 +13,7 @@
         {% for component in component.components %}
             <div {% if component.model.type == "weixin" %}data-component-cid="{{component.cid}}"{% endif %} class="xui-flex xui-flex-two">
                 <div class="xui-menu xa-menu f14">
-                    <a href="###" class="wa-inner-link">{{ component.model.title }}</a>
+                    <a href="{{ component.model.target|extract_target_data:request|safe }}" class="wa-inner-link">{{ component.model.title }}</a>
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>

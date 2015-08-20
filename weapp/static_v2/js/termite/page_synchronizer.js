@@ -106,7 +106,7 @@ W.workbench.PageSynchronizer = Backbone.View.extend({
                         W.Broadcaster.trigger('page_synchronizer:success');
                         if (isManualSync) {
                             if (options.callback) {
-                                options.callback(data);
+                                options.callback(data, this.currentPage);
                             }
                         } else {
                             var task = new W.DelayedTask(_this.synchronize, _this);

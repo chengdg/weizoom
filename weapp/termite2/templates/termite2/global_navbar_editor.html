@@ -140,9 +140,9 @@
 			event.preventDefault();
 
 			// 保存model
-			W.Synchronizer.manualSync(function(data) {
-				W.showHint('success', '保存店铺导航成功!');
-				W.projectId = data; //保存新的projectId;
+			W.Synchronizer.manualSync(function(responseData, page) {
+				W.showHint('success', '保存店铺导航成功');
+				W.projectId = responseData; //保存新的projectId;
 			});
 		});
 
