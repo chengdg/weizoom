@@ -9,7 +9,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 
-import termite2.models as termite_models
+from termite2 import models as termite_models
 from django.conf import settings
 from termite2 import export
 from termite import pagestore as pagestore_manager
