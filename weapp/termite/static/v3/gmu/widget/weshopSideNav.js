@@ -56,12 +56,10 @@ gmu.define('SideNav', {
 	},
 
 	onClickFirstNav:function(event){
-		console.log(23232323);
 		var $firstNav = $(event.currentTarget);
 
 		var $arrow = $firstNav.find('i');
         var $subMenu = $firstNav.find('.xui-subMenu');
-        console.log('------',$firstNav,  $subMenu.find('li').length)
         if( $subMenu.find('li').length >0 ){
 	        var display = $subMenu.css('display');
 	        if( display != 'block' ){

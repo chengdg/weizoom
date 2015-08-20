@@ -75,8 +75,8 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
     setLimitation: function(args) {
         xwarn('----- set limitation -----');
         xwarn(args);
-        console.log(2323, this.name2field);
+
         this.name2field['title'].maxLength = args.titleMaxLength;
-        // alert(this.name2field['title'].maxLength);
+        W.component.getFieldsByType('wepage.navbar_firstnav')[0].maxLength = args.titleMaxLength;
     }
 });

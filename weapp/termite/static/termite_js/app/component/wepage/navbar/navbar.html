@@ -11,7 +11,7 @@
             <a href="###" class="xui-bg"></a>
         </div>
         {% for component in component.components %}
-            <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-two">
+            <div {% if component.model.type == "weixin" %}data-component-cid="{{component.cid}}"{% endif %} class="xui-flex xui-flex-two">
                 <div class="xui-menu xa-menu f14">
                     <a href="###" class="wa-inner-link">{{ component.model.title }}</a>
                 </div>
@@ -61,7 +61,7 @@
                 </li>
 
                 {% for component in component.components %}
-                <li class="xui-firstNav xa-firstNav" data-component-cid="{{component.cid}}"> 
+                <li class="xui-firstNav xa-firstNav" {% if component.model.type == "slide" %}data-component-cid="{{component.cid}}"{% endif %}> 
                     <a href="{{ component.model.target|extract_target_data:request|safe }}">
                         <span class="wa-inner-link">{{ component.model.title }}<i class="xui-leftArrow"></i></span>
                     </a>
