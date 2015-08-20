@@ -1443,7 +1443,9 @@ def ship_order(order_id, express_company_name,
 	已知引用：
 	mobile_app/order_api_views.py
 	"""
-	if (len(str(order_id)) == 0) or (len(express_company_name) == 0) or (len(express_number) == 0):
+	# if (len(str(order_id)) == 0) or (len(express_company_name) == 0) or (len(express_number) == 0):
+	# 	return False
+	if (len(str(order_id)) == 0):
 		return False
 	target_status = ORDER_STATUS_PAYED_SHIPED
 
