@@ -16,9 +16,14 @@ var initDom = function(options) {
             prize = '积分奖励'
         }
     }
-    var actionButtons = [{
-        text:'个人中心', url:'/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId
-    }];
+    var actionButtons =[];
+    if (prize){
+        actionButtons.push({
+            text:'个人中心',
+            url:'/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId
+        });
+    }
+
     if (options.actionButtons) {
         for(var i = 0; i < options.actionButtons.length; ++i) {
             var button = options.actionButtons[i];

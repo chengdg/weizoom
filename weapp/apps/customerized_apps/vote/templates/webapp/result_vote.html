@@ -69,11 +69,13 @@
                     <span>{{ vote_detail.start_time }}至{{ vote_detail.end_time }}</span>
                 </div>
                 <div style="clear: both"></div>
+            {% if vote_detail.prize_type != 'no_prize' %}
                 <div class="wui-i-prize">
                     <i class="wui-i-sprite wui-i-sprite-prize"></i>
                     <span>{% if vote_detail.prize_type == 'integral' %}{{ vote_detail.prize_data }}积分{% endif %}</span>
                 </div>
                 <div style="clear: both"></div>
+            {% endif %}
             </div>
         </div>
         {% for item in q_vote %}
@@ -106,9 +108,11 @@
             </ul>
             {% endif %}
         {% endfor %}
-        <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >
-            <a class="xui-btn xui-btn-primary xa-submitTermite" style="" href="javascript:void(0);" data-role="button">个人中心</a>
-        </div>
+        {% if vote_detail.prize_type != 'no_prize' %}
+            <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >
+                <a class="xui-btn xui-btn-primary xa-submitTermite" style="" href="javascript:void(0);" data-role="button">个人中心</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 {% block js %}
