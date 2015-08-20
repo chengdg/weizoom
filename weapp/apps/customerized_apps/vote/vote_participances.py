@@ -32,7 +32,7 @@ class voteParticipances(resource.Resource):
 			'second_nav_name': "votes",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
-		});
+		})
 		
 		return render_to_response('vote/templates/editor/vote_participances.html', c)
 	
