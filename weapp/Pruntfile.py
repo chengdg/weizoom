@@ -104,10 +104,10 @@ prunt.register_task('build:termite2_workbench', 'weizoom-build', {
 
 prunt.register_task('deploy:cdn', 'prunt-cdn', {
 	'rules': [{
-		"pattern": 'cdn/standard_static/*.min.js',
+		"pattern": 'cdn/standard_static/js/*.min.js',
 		"dest": '/standard_static/js'
 	}, {
-		"pattern": 'cdn/standard_static/*.min.css',
+		"pattern": 'cdn/standard_static/css/*.min.css',
 		"dest": '/standard_static/css'
 	}]
 })

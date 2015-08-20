@@ -38,6 +38,17 @@ class Mvote(resource.Resource):
 				#termite类型数据
 				record = app_models.vote.objects.get(id=id)
 				activity_status = record.status_text
+
+				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
+				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
+				if data_start_time <= now_time and now_time < data_end_time:
+					record.update(set__status=app_models.STATUS_RUNNING)
+					activity_status = u'进行中'
+				elif now_time >= data_end_time:
+					record.update(set__status=app_models.STATUS_STOPED)
+					activity_status = u'已结束'
+
 				project_id = 'new_app:vote:%s' % record.related_page_id
 
 				if request.member:

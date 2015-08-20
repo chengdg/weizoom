@@ -42,7 +42,7 @@ __STRIPPER_TAG__
 __STRIPPER_TAG__
 <% block global_elements %>
 <div class="xui-bottomActionBar">
-  <% if not activity %>
+  <% if not {{resource.lower_name}} %>
     <button class="xa-save btn btn-primary">保存</button>
     <button class="xa-preview btn btn-default ml20">预览</button>
   <% else %>

@@ -375,9 +375,11 @@
 							</h3>
 							-->
 							<div class="propertyGroup_property_dynamicControlField_content xui-text">
+							    {{if field.isShowCloseButton && dynamicComponents.length > field.minItemLength}}
+                                    <button type="button" class="close xa-removeImageButton xui-removeImageButton" style="display:none;"><span>&times;</span></button>
+                                {{/if}}
 								{{each(dynamicComponentFieldIndex, dynamicComponentField) W.component.getFieldsByType(dynamicComponent.type)}}
 								{{if (!onlyShowUserProperty || dynamicComponentField.isUserProperty)}}
-
 								{{if (dynamicComponentField.type == 'text')}}
 								<div class="propertyGroup_property_textField propertyGroup_property_horizontalField xa-errorHintContainer">
 									{{if dynamicComponentField.displayName}}
@@ -425,7 +427,7 @@
 									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}</div>
 									<div class="propertyGroup_property_input">
 									{{each(fi, radio) dynamicComponentField.source}}
-									<label type="radio">
+									<label type="radio" style="display:inline-block;" class="xui-selectBtn {{if dynamicComponent.model.get(dynamicComponentField.name) == radio.value}}xui-selected{{/if}}">
 										<input 
 											style="margin-top:-3px;" 
 											type="radio" 
@@ -433,6 +435,7 @@
 											name='${dynamicComponent.cid}>${dynamicComponentField.name}' 
 											{{if dynamicComponent.model.get(dynamicComponentField.name) == radio.value}}checked="checked"{{/if}} 
 											value="${radio.value}" /> ${radio.name}
+                                        <i class="xui-selectedIcon" {{if dynamicComponent.model.get(dynamicComponentField.name) != radio.value}}style="display:none;"{{/if}}></i>
 									</label>
 									{{/each}}
 								</div>
@@ -558,10 +561,10 @@
 								
 								{{/if}} <!-- end for isUserProperty -->
 								{{/each}}
-							</div>
+							</div><!--
 							{{if field.isShowCloseButton && dynamicComponents.length > field.minItemLength}}
 							<button type="button" class="close xa-removeImageButton xui-removeImageButton" style="display:none;"><span>&times;</span></button>
-							{{/if}}
+							{{/if}} -->
 						</div>
 						{{/if}}
 						{{/each}}
