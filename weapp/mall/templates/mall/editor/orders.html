@@ -243,12 +243,14 @@
 								{{else}}
 									<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
 								{{/if}}
-								<a href='javascript:void(0);' class="xa-order-delivery"
-								 data-order-id="${order.id}"
-								 data-is-update=true
-								 data-express-company-name="${order.express_company_name}"
-								 data-express-number="${order.express_number}"
-								 data-leader-name="${order.leader_name}">修改物流</a>
+								{{if order.express_company_name != ''}}
+									<a href='javascript:void(0);' class="xa-order-delivery"
+									 data-order-id="${order.id}"
+									 data-is-update=true
+									 data-express-company-name="${order.express_company_name}"
+									 data-express-number="${order.express_number}"
+									 data-leader-name="${order.leader_name}">修改物流</a>
+								{{/if}}
 							{{/if}}
 							{{if order.order_status == 5 }}
 								{{if order.total_price > 0 }}

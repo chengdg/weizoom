@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from operator import attrgetter
 from django.conf import settings
 from django.db.models import signals
 
@@ -107,6 +108,27 @@ def get_webapp_products(webapp_owner_user_profile,
     products = mall_models.Product.from_list(data['products'])
     if category_id != 0:
         products = [product for product in products if category_id in product.categories]
+
+        # 分组商品排序
+        products_id = map(lambda p: p.id, products)
+        chp_list = mall_models.CategoryHasProduct.objects.filter(product_id__in=products_id)
+        product_id2chp = dict(map(lambda chp: (chp.product_id, chp), chp_list))
+        for product in products:
+            product.display_index = product_id2chp[product.id].display_index
+
+        # 1.shelve_type, 2.display_index, 3.id
+        products = sorted(products, key=attrgetter('id'), reverse=True)
+        products = sorted(products, key=attrgetter('display_index'))
+        products = sorted(products, key=attrgetter('shelve_type'), reverse=False)
+
+        products_display_index_is_0 = filter(lambda p: p.display_index == 0,
+                                             products)
+        products_display_index_not_0 = filter(lambda p: p.display_index != 0,
+                                              products)
+
+        products = products_display_index_not_0 + products_display_index_is_0
+
+
 
     return category, products
 

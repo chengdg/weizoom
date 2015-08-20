@@ -84,7 +84,7 @@
 					{% if promotion.detail.is_permanant_active %}
 					永久有效
 					{% else %}
-					{{promotion.start_date|date:"Y-m-d H:i:s"}} 至 {{promotion.end_date|date:"Y-m-d H:i:s"}}
+					{{promotion.start_date}} 至 {{promotion.end_date}}
 					{% endif %}
 				</div>
 			</div>
