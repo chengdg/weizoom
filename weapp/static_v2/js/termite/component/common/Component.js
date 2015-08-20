@@ -111,31 +111,31 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 				type: 'hidden',
 				displayName: 'Id',
 				isUserProperty: false,
-				default: '',
+				"default": '',
 			}, {
 				name: 'class',
 				type: 'text',
 				displayName: 'Class',
 				isUserProperty: false,
-				default: '',
+				"default": '',
 			}, {
 				name: 'name',
 				type: 'hidden',
 				displayName: 'Name',
 				isUserProperty: false,
-				default: '',
+				"default": '',
 			}, {
 				name: 'index',
 				type: 'hidden',
 				displayName: '',
 				isUserProperty: false,
-				default: '-1',
+				"default": '-1',
 			}, {
 				name: 'datasource',
 				isUserProperty: false,
 				type: 'hidden',
 				displayName: '',
-				default: {
+				"default": {
 					'type': 'api',
 					'api_name': ''
 				},

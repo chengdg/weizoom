@@ -1,4 +1,3 @@
-
 {% load webapp_filter %}
 {% load project_filter %}
 <!DOCTYPE html>
@@ -10,27 +9,41 @@
         <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
         {% endif %}
 
-        <!-- *start css* [do not modify and delete this line, it will be needed by dist process] -->
-        {% if is_use_dev_resource %}
-        <!-- *start develop css* [do not modify and delete this line, it will be needed by dist process] -->
+        
+        <!-- *start_prunt_task* -->
+        <!-- [prunt_task] 
+            {
+                "task": "weizoom-merge",
+                "args": {
+                    "dest":"cdn/standard_static/css/webapp_all.css",
+                    "path_map": {
+                        "termite_static": "termite/static"   
+                    }
+                }
+            }
+        -->
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/base.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/webapp_default.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/idangerous.swiper.css">
-        <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
-        {% else %}
-        <link type="text/css" rel="stylesheet" media="all" href="{{cdn_host}}/standard_static/css/webapp_content_base_all.css">
-        {% endif %}
-        <!-- *finish css* [do not modify and delete this line, it will be needed by dist process] -->
+        <!-- *end_prunt_task* -->
 
-        <!-- *start webapp_template_css* [do not modify and delete this line, it will be needed by dist process] -->
         <link type="text/css" rel="stylesheet" href="{{cdn_host}}/webapp_static/backend_{{request.template_name}}/css/{{request.template_name}}.css">
-        <!-- *finish webapp_template_css* [do not modify and delete this line, it will be needed by dist process] -->
         {% block css %}{% endblock %}
 
-        <!-- *start js* [do not modify and delete this line, it will be needed by dist process] -->
-        {% if is_use_dev_resource %}
-        <!-- *start develop js* [do not modify and delete this line, it will be needed by dist process] -->
+
+        <!-- *start_prunt_task* -->
+        <!-- [prunt_task] 
+            {
+                "task": "weizoom-merge",
+                "args": {
+                    "dest":"cdn/standard_static/js/webapp_all.js",
+                    "path_map": {
+                        "termite_static": "termite/static"   
+                    }
+                }
+            }
+        -->
         <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/gmu-2.1.1.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/idangerous.swiper.js"></script>
@@ -68,13 +81,10 @@
         <script type="text/javascript" src="/termite_static/v3/system/md5.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/webapp.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
-
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
-        <!-- *finish develop js* [do not modify and delete this line, it will be needed by dist process] -->
-        {% else %}
-        <script type="text/javascript" src="{{cdn_host}}/standard_static/js/webapp_content_base_all.min.js"></script>
-        {% endif %}
-        <!-- *finish js* [do not modify and delete this line, it will be needed by dist process] -->
+        <!-- *end_prunt_task* -->
+
+
         <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
         <meta name="x5-orientation" content="portrait">
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
@@ -85,6 +95,7 @@
         <input id="xt-errMsg" type="hidden" value="" />
 
         <div id="homePageUrlZone" style="display: none;">/workbench/jqm/preview/?{{homepage_workspace_info|safe}}</div>
+
         {% if is_deleted_data %}
             <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
                 <h2 style="margin-top: 100px;">您访问的数据已被删除</h2>

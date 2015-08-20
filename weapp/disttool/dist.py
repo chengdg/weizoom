@@ -571,7 +571,7 @@ def up_js_css_to_upyun():
 # 总控函数
 ################################################################################
 def dist():
-	htmls = ['base', 'base_v2', 'jqm_content_base', 'new_jqm_content_base', 'webapp_content_base', 'webapp_content_base_v4']
+	htmls = ['base', 'jqm_content_base', 'new_jqm_content_base']
 	
 	for html in htmls:
 		merge_javascripts(html)

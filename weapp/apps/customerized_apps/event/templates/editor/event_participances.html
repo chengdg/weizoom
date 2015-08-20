@@ -80,7 +80,16 @@
 
 
 {% block js %}
+
+<!-- *start_prunt_task* -->
+	<!-- [prunt_task] 
+	  {
+	    "task": "weizoom-load-app-views-dialogs"
+	  }
+	-->
 {{ "event"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
+
 {% verbatim %}
 <script id="table" type="text/x-jquery-tmpl">
 	{{if items!='' }}

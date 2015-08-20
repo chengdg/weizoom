@@ -14,6 +14,7 @@ from core.jsonresponse import create_response
 
 import models as app_models
 import export
+from datetime import datetime
 __STRIPPER_TAG__
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -50,7 +51,16 @@ class {{resource.class_name}}(resource.Resource):
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		__STRIPPER_TAG__
+		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.user.id}
+		datas_datas = app_models.{{resource.item_class_name}}.objects(**params)
+		for data_data in datas_datas:
+			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
+			data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
+			if data_start_time <= now_time and now_time < data_end_time:
+				data_data.update(set__status=app_models.STATUS_RUNNING)
+			elif now_time >= data_end_time:
+				data_data.update(set__status=app_models.STATUS_STOPED)
 		if name:
 			params['name__icontains'] = name
 		if status != -1:
