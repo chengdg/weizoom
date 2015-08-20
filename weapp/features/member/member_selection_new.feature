@@ -72,11 +72,11 @@ Background:
 			"""
 			[{
 				"name": "银牌会员",
-				"upgrade": "不自动升级",
+				"upmember_rank": "不自动升级",
 				"shop_discount": "100%"
 			},{
 				"name": "金牌会员",
-				"upgrade": "自动升级",
+				"upmember_rank": "自动升级",
 				"shop_discount": "90%"
 			}]
 			"""
@@ -84,37 +84,37 @@ Background:
 			"""
 			[{
 				"name": "普通会员",
-				"upgrade": "自动升级",
+				"upmember_rank": "自动升级",
 				"shop_discount": "100%"
 			},{
 				"name": "银牌会员",
-				"upgrade": "不自动升级",
+				"upmember_rank": "不自动升级",
 				"shop_discount": "100%"
 			},{
 				"name": "金牌会员",
-				"upgrade": "自动升级",
+				"upmember_rank": "自动升级",
 				"shop_discount": "90%"
 			}]
 			"""
 		When jobs添加会员分组
 			"""
-			[{
+			{
 				"tag_id_1": "分组1",
 				"tag_id_2": "分组2",
 				"tag_id_3": "分组3"
-			}]
+			}
 			"""
 
 	#批量获取微信用户关注
 		When jobs批量获取微信用户关注
-			| member_name   | attention_time 	 | member_source |
-			| tom1 			| 2014-8-4 23:59:59  | 直接关注      |
-			| tom2 			| 2014-8-5 00:00:00  | 推广扫码      |
-			| tom3	 	    | 2014-8-5 8:00:00   | 会员分享      |
-			| tom4 			| 2014-8-5 23:59:59  | 会员分享      |
-			| tom5 			| 2014-8-6 00:00:00  | 会员分享      |
-			| tom6          | 2014-10-1 8:00:00  | 推广扫码      |
-			| tom7          | 2014-10-1 8:00:00  | 直接关注      |
+			| member_name   | attention_time 	 | source   |
+			| tom1 			| 2014-8-4 23:59:59  | 直接关注 |
+			| tom2 			| 2014-8-5 00:00:00  | 推广扫码 |
+			| tom3	 	    | 2014-8-5 8:00:00   | 会员分享 |
+			| tom4 			| 2014-8-5 23:59:59  | 会员分享 |
+			| tom5 			| 2014-8-6 00:00:00  | 会员分享 |
+			| tom6          | 2014-10-1 8:00:00  | 推广扫码 |
+			| tom7          | 2014-10-1 8:00:00  | 直接关注 |
 
 		And tom2取消关注jobs的公众号
 		And tom4取消关注jobs的公众号
@@ -172,9 +172,9 @@ Background:
 
 	#设置会员等级
 		When jobs选择会员
-			| member_name   | attention_time 	| member_source |     member_rank   |
-			| tom1 			| 2014-8-4 23:59:59 | 直接关注      |      普通会员     |
-			| tom3 			| 2014-8-5 8:00:00  | 会员分享      |      普通会员     |
+			| member_name |  attention_time   | source   | member_rank |
+			| tom1 	      | 2014-8-4 23:59:59 | 直接关注 |   普通会员  |
+			| tom3 		  | 2014-8-5 8:00:00  | 会员分享 |   普通会员  |
 
 		When jobs批量修改等级
 			"""
@@ -184,10 +184,10 @@ Background:
 			}]
 			"""
 		When jobs选择会员
-			| member_name   | attention_time 	| member_source |     member_rank   |
-			| tom4 			| 2014-8-5 23:59:59 | 会员分享      |      普通会员     |
-			| tom5 			| 2014-8-6 00:00:00 | 会员分享      |      普通会员     |
-			| tom7 			| 2014-10-1 8:00:00 | 直接关注      |      普通会员     |
+			| member_name |  attention_time   | source   | member_rank |
+			| tom4 		  | 2014-8-5 23:59:59 | 会员分享 |   普通会员  |
+			| tom5 		  | 2014-8-6 00:00:00 | 会员分享 |   普通会员  |
+			| tom7 		  | 2014-10-1 8:00:00 | 直接关注 |   普通会员  |
 
 		When jobs批量修改等级
 			"""
@@ -200,30 +200,30 @@ Background:
 	#设置会员分组
 
 		When jobs选择会员
-			| member_name   | attention_time 	| member_source | grouping |
-			| tom1 			| 2014-8-4 23:59:59 | 直接关注      |          |
-			| tom2 			| 2014-8-5 00:00:00 | 推广扫码      |          |
-			| tom3 			| 2014-8-5 8:00:00  | 会员分享      |          |
+			| member_name |  attention_time   | source   |   tags   |
+			| tom1 		  | 2014-8-4 23:59:59 | 直接关注 |          |
+			| tom2 		  | 2014-8-5 00:00:00 | 推广扫码 |          |
+			| tom3 		  | 2014-8-5 8:00:00  | 会员分享 |          |
 
 		When jobs批量添加分组
 				"""
 				[{
 					"modification_method":"给选中的人添加分组",
-					"grouping":"分组1"
+					"tags":"分组1"
 				}]
 				"""
 
 		When jobs选择会员
-			| member_name   | attention_time 	| member_source | grouping |
-			| tom3 			| 2014-8-5 8:00:00  | 会员分享      |  分组1   |
-			| tom4 			| 2014-8-5 23:59:59 | 会员分享      |          |
-			| tom5 			| 2014-8-6 00:00:00 | 会员分享      |          |
+			| member_name |  attention_time   | source   |   tags   |
+			| tom3 		  | 2014-8-5 8:00:00  | 会员分享 |   分组1  |
+			| tom4 		  | 2014-8-5 23:59:59 | 会员分享 |          |
+			| tom5 		  | 2014-8-6 00:00:00 | 会员分享 |          |
 
 		When jobs批量添加分组
 				"""
 				[{
 					"modification_method":"给选中的人添加分组",
-					"grouping":"分组3"
+					"tags":"分组3"
 				}]
 				"""
 
@@ -246,15 +246,15 @@ Scenario:1 默认条件和空条件查询
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| bill3 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| bill2 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    直接关注   |             |
-			| bill  | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| tom7  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    直接关注   |             |
-			| tom6  | 普通会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    推广扫码   |             |	
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
+			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
+			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
+			| tom7  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 直接关注 |             |
+			| tom6  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 推广扫码 |             |	
+			| tom5  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
+			| tom3  |   银牌会员  |       1      |    100   |   335.00  |    111.67  |      3    | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom1  |   银牌会员  |       2      |     0    |   110.00  |    110.00  |      1    | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
 
 	#空调条件查询，“重置”查询条件，空调间查询所有数据
 		When jobs设置会员查询条件
@@ -264,13 +264,13 @@ Scenario:1 默认条件和空条件查询
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -286,17 +286,17 @@ Scenario:1 默认条件和空条件查询
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| bill3 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| bill2 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    直接关注   |             |
-			| bill  | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| tom7  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    直接关注   |             |
-			| tom6  | 普通会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    推广扫码   |             |	
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
-			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |      0     | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |        今天       | 会员分享 |             |
+			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |        今天       | 直接关注 |             |
+			| bill  | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |        今天       | 会员分享 |             |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 直接关注 |             |
+			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 推广扫码 |             |	
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |    0      | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
+			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |    3      | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |    162.50  |    2      | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
 
 Scenario:2 过滤条件"会员名称"
 	
@@ -308,13 +308,13 @@ Scenario:2 过滤条件"会员名称"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -330,10 +330,10 @@ Scenario:2 过滤条件"会员名称"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| bill3 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| bill2 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    直接关注   |             |
-			| bill  | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
+			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |      今天      | 会员分享 |         |
+			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |      今天      | 直接关注 |         |
+			| bill  | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |      今天      | 会员分享 |         |
 
 	#会员名称完全匹配查询
 		When jobs设置会员查询条件
@@ -343,13 +343,13 @@ Scenario:2 过滤条件"会员名称"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -365,8 +365,8 @@ Scenario:2 过滤条件"会员名称"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-8-6 00:00:00 | 会员分享 | 分组3   |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -376,13 +376,13 @@ Scenario:2 过滤条件"会员名称"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -409,13 +409,13 @@ Scenario:3 过滤条件"会员状态"
 				"status":"取消关注",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -431,7 +431,7 @@ Scenario:3 过滤条件"会员状态"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
+			| name  |   member_rank  | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source |  tags   |
 			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |      0     | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
 			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
 
@@ -445,13 +445,13 @@ Scenario:4 过滤条件"关注时间"
 				"status":"全部",
 				"attention_start_time":"2014-8-5 00:00:00",
 				"attention_end_time":"2014-8-6 00:00:00",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -467,10 +467,10 @@ Scenario:4 过滤条件"关注时间"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |      0     | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |     tags    |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |    0      | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
+			| tom3  | 银牌会员    |       1      |    100   | 335.00    |  111.67    |    3      | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom2  | 普通会员    |       0      |     50   | 325.00    |  162.50    |    2      | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
 
 	#开始结束时间相同查询
 		When jobs设置会员查询条件
@@ -480,13 +480,13 @@ Scenario:4 过滤条件"关注时间"
 				"status":"全部",
 				"attention_start_time":"2014-10-1 8:00:00",
 				"attention_end_time":"2014-10-1 8:00:00",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -502,9 +502,9 @@ Scenario:4 过滤条件"关注时间"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom7  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    直接关注   |             |
-			| tom6  | 普通会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    推广扫码   |             |	
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 直接关注 |         |
+			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 推广扫码 |         |	
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -514,13 +514,13 @@ Scenario:4 过滤条件"关注时间"
 				"status":"全部",
 				"attention_start_time":"2015-8-10 00:00:00",
 				"attention_end_time":"2015-8-11 00:00:00",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -547,13 +547,13 @@ Scenario:5 过滤条件"会员等级"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"金牌会员",
-				"grouping":"全部 ",
+				"member_rank":"金牌会员",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -569,10 +569,10 @@ Scenario:5 过滤条件"会员等级"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom7  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    直接关注   |             |
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
-			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |      0     | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 直接关注 |         |
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |      0    | 2014-8-6 00:00:00 | 会员分享 | 分组3   |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |      0    | 2014-8-5 23:59:59 | 会员分享 | 分组3   |
 
 Scenario:6 过滤条件"会员分组"
 
@@ -584,13 +584,13 @@ Scenario:6 过滤条件"会员分组"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"分组1",
+				"member_rank":"全部",
+				"tags":"分组1",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -606,10 +606,10 @@ Scenario:6 过滤条件"会员分组"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| tom3  | 银牌会员    |       1      |    100   |   335.00  |   111.67   |      3    | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |      2    | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |      1    | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
 
 
 		When jobs设置会员查询条件
@@ -619,13 +619,13 @@ Scenario:6 过滤条件"会员分组"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"分组3",
+				"member_rank":"全部",
+				"tags":"分组3",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -641,10 +641,10 @@ Scenario:6 过滤条件"会员分组"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |	
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |    0.00    | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
-			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |    0.00    | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
-			| tom3  | 银牌会员 |    1    |    100   |     0.00       |      0.00      |    0.00    | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |	
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |   0.00    | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |   0.00    | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
+			| tom3  | 银牌会员    |       1      |    100   |   0.00    |    0.00    |   0.00    | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -654,13 +654,13 @@ Scenario:6 过滤条件"会员分组"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"分组2",
+				"member_rank":"全部",
+				"tags":"分组2",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -687,13 +687,13 @@ Scenario:7 过滤条件"会员来源"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部",
+				"member_rank":"全部",
+				"tags":"全部",
 				"source":"会员分享",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -709,12 +709,12 @@ Scenario:7 过滤条件"会员来源"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| bill3 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| bill  | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
-			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |      0     | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 会员分享 |             |
+			| bill  | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 会员分享 |             |
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |     0     | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |     0     | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
+			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |     3     | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
 
 Scenario:8 过滤条件"消费总额"
 
@@ -726,13 +726,13 @@ Scenario:8 过滤条件"消费总额"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"110",
-				"total_spending_end":"335",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"110",
+				"pay_money_end":"335",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -748,10 +748,10 @@ Scenario:8 过滤条件"消费总额"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| tom3  | 银牌会员    |       1      |    100   |   335.00  |   111.67   |     3     | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
 
 	#开始结束数值相同
 		When jobs设置会员查询条件
@@ -761,13 +761,13 @@ Scenario:8 过滤条件"消费总额"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"110",
-				"total_spending_end":"110",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"110",
+				"pay_money_end":"110",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -783,8 +783,8 @@ Scenario:8 过滤条件"消费总额"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1   |
 
 	#特殊数据查询
 		When jobs设置会员查询条件
@@ -794,13 +794,13 @@ Scenario:8 过滤条件"消费总额"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"0",
-				"total_spending_end":"10",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"0",
+				"pay_money_end":"10",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -816,14 +816,14 @@ Scenario:8 过滤条件"消费总额"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| bill3 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| bill2 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    直接关注   |             |
-			| bill  | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| tom7  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    直接关注   |             |
-			| tom6  | 普通会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    推广扫码   |             |	
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
-			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |      0     | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 会员分享 |         |
+			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 直接关注 |         |
+			| bill  | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 会员分享 |         |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |     0     | 2014-10-1 8:00:00 | 直接关注 |         |
+			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |     0     | 2014-10-1 8:00:00 | 推广扫码 |         |	
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |     0     | 2014-8-6 00:00:00 | 会员分享 | 分组3   |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |     0     | 2014-8-5 23:59:59 | 会员分享 | 分组3   |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -833,13 +833,13 @@ Scenario:8 过滤条件"消费总额"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"-10",
-				"total_spending_end":"-1",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"-10",
+				"pay_money_end":"-1",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -866,13 +866,13 @@ Scenario:9 过滤条件"购买次数"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"1",
-				"buy_number_end":"3",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"1",
+				"pay_times_end":"3",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -888,10 +888,10 @@ Scenario:9 过滤条件"购买次数"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| tom3  | 银牌会员    |       1      |    100   |   335.00  |   111.67   |     3     | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
 
 	#开始结束数值相同
 		When jobs设置会员查询条件
@@ -901,13 +901,13 @@ Scenario:9 过滤条件"购买次数"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"2",
-				"buy_number_end":"2",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"2",
+				"pay_times_end":"2",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -923,8 +923,8 @@ Scenario:9 过滤条件"购买次数"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
 
 	#特殊数据查询
 		When jobs设置会员查询条件
@@ -934,13 +934,13 @@ Scenario:9 过滤条件"购买次数"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"-2.2",
-				"buy_number_end":"2.3",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"-2.2",
+				"pay_times_end":"2.3",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -956,9 +956,9 @@ Scenario:9 过滤条件"购买次数"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1   |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -968,13 +968,13 @@ Scenario:9 过滤条件"购买次数"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"4",
-				"buy_number_end":"10.6",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"4",
+				"pay_times_end":"10.6",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"",
@@ -1001,13 +1001,13 @@ Scenario:10 过滤条件"最后购买时间"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"2015-1-1 00:00:00",
 				"last_buy_end_time":"2015-3-5 00:00:00",
 				"integral_start":"",
@@ -1023,10 +1023,10 @@ Scenario:10 过滤条件"最后购买时间"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
-
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1   |
+ 
 	#开始结束时间相同查询
 		When jobs设置会员查询条件
 			"""
@@ -1035,13 +1035,13 @@ Scenario:10 过滤条件"最后购买时间"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"2015-2-2 00:00:00",
 				"last_buy_end_time":"2015-2-2 00:00:00",
 				"integral_start":"",
@@ -1057,8 +1057,8 @@ Scenario:10 过滤条件"最后购买时间"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -1068,13 +1068,13 @@ Scenario:10 过滤条件"最后购买时间"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"2015-8-11 00:00:00",
 				"last_buy_end_time":"2015-8-12 00:00:00",
 				"integral_start":"",
@@ -1101,13 +1101,13 @@ Scenario:11 过滤条件"积分范围"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"20",
@@ -1123,10 +1123,10 @@ Scenario:11 过滤条件"积分范围"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom4  | 金牌会员 |    0    |     20   |     0.00       |      0.00      |      0     | 2014-8-5 23:59:59 |    会员分享   | 分组3       |
-			| tom3  | 银牌会员 |    1    |    100   |     335.00     |      111.67    |      3     | 2014-8-5 8:00:00  |    会员分享   | 分组1,分组3 |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |     0     | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
+			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |     3     | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |    162.50  |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
 
 	#开始结束数值相同
 		When jobs设置会员查询条件
@@ -1136,13 +1136,13 @@ Scenario:11 过滤条件"积分范围"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"0",
@@ -1158,14 +1158,14 @@ Scenario:11 过滤条件"积分范围"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| bill3 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| bill2 | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    直接关注   |             |
-			| bill  | 普通会员 |    1    |     0    |     0.00       |      0.00      |      0     |        今天       |    会员分享   |             |
-			| tom7  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    直接关注   |             |
-			| tom6  | 普通会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-10-1 8:00:00 |    推广扫码   |             |	
-			| tom5  | 金牌会员 |    0    |     0    |     0.00       |      0.00      |      0     | 2014-8-6 00:00:00 |    会员分享   | 分组3       |
-			| tom1  | 银牌会员 |    2    |     0    |     110.00     |      110.00    |      1     | 2014-8-4 23:59:59 |    直接关注   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |         |
+			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |         |
+			| bill  | 普通会员    |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |         |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 直接关注 |         |
+			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 推广扫码 |         |	
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |      0    | 2014-8-6 00:00:00 | 会员分享 | 分组3   |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |      1    | 2014-8-4 23:59:59 | 直接关注 | 分组1   |
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -1175,13 +1175,13 @@ Scenario:11 过滤条件"积分范围"
 				"status":"全部",
 				"attention_start_time":"",
 				"attention_end_time":"",
-				"grade":"全部",
-				"grouping":"全部 ",
+				"member_rank":"全部",
+				"tags":"全部 ",
 				"source":"全部",
-				"total_spending_start":"",
-				"total_spending_end":"",
-				"buy_number_start":"",
-				"buy_number_end":"",
+				"pay_money_start":"",
+				"pay_money_end":"",
+				"pay_times_start":"",
+				"pay_times_end":"",
 				"last_buy_start_time":"",
 				"last_buy_end_time":"",
 				"integral_start":"150",
@@ -1212,13 +1212,13 @@ Scenario:13 过滤条件"条件组合查询"
 				"status":"已关注",
 				"attention_start_time":"2014-8-3 00:00:00",
 				"attention_end_time":"今天",
-				"grade":"银牌会员",
-				"grouping":"分组1 ",
+				"member_rank":"银牌会员",
+				"tags":"分组1 ",
 				"source":"推广扫码",
-				"total_spending_start":"100",
-				"total_spending_end":"325",
-				"buy_number_start":"0",
-				"buy_number_end":"2",
+				"pay_money_start":"100",
+				"pay_money_end":"325",
+				"pay_times_start":"0",
+				"pay_times_end":"2",
 				"last_buy_start_time":"2015-1-1",
 				"last_buy_end_time":"2015-2-2",
 				"integral_start":"0",
@@ -1234,5 +1234,5 @@ Scenario:13 过滤条件"条件组合查询"
 			}]
 			"""
 		Then jobs获得会员列表
-			| name  |   grade  | friends | integral | total_spending | customer_price | buy_number |   attention_time  | member_source |  grouping   |
-			| tom2  | 普通会员 |    0    |     50   |     325.00     |      162.50    |      2     | 2014-8-5 00:00:00 |    推广扫码   | 分组1       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
