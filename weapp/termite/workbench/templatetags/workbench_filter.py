@@ -5,6 +5,7 @@ from datetime import timedelta, datetime, date
 import json
 import sys
 import re
+import os
 
 from django import template
 from django.core.cache import cache
@@ -27,6 +28,7 @@ RENDER_CONTEXT = {}
 
 @register.filter(name='load_wepage_components_handlebar_templates')
 def load_wepage_components_handlebar_templates(component_category):
+	from utils import component_template_util
 	components_dir = '%s/../termite/static/termite_js/app/component/%s' % (settings.PROJECT_HOME, component_category)
 	handlebar_template = component_template_util.generate_handlebar_template(components_dir)
 	return handlebar_template
@@ -682,3 +684,53 @@ def str_split(str, arg='|'):
 	if str:
 		return str.split(arg)
 	return []
+
+
+@register.filter(name='load_app_components_handlebar_templates')
+def load_app_components_handlebar_templates(component_category):
+	components_dir = '%s/../termite/static/termite_js/app/component/%s' % (settings.PROJECT_HOME, component_category)
+	handlebar_template = component_template_util.generate_handlebar_template(components_dir)
+	return handlebar_template
+
+
+@register.filter(name='load_termite_components')
+def load_termite_components(components, wrap_with_verbatim=False):
+	#合并js文件
+	components = json.loads(components)
+	items = [u"<!-- start termite components -->"]
+	components_dir = os.path.join(settings.PROJECT_HOME, '../termite/static/termite_js/app/component')
+	component_category = components[0].split('.')[0]
+	for component in components:
+		category, component_name = component.split('.')
+		component_dir = os.path.join(components_dir, category, component_name)
+		if not os.path.isdir(component_dir):
+			print '[termite] %s is not a valid termite componet' % component
+
+		for file_name in os.listdir(component_dir):
+			if file_name.endswith('.js'):
+				src = open(os.path.join(component_dir, file_name), 'rb')
+				content = src.read()
+				src.close()
+
+				items.append(u"\t<!-- start %s/%s/%s -->" % (category, component_name, file_name))
+				items.append(u'<script type="text/javascript">');
+				items.append(content.decode('utf-8'))
+				items.append(u'</script>');
+				items.append(u"\t<!-- finish %s/%s/%s -->" % (category, component_name, file_name))
+
+	items.append(u"<!-- finish app components %s -->")
+
+	#将模板文件转换为前端handlebar模板
+	from utils import component_template_util
+	components_dir = '%s/../termite/static/termite_js/app/component/%s' % (settings.PROJECT_HOME, component_category)
+	handlebar_template = component_template_util.generate_handlebar_template(components_dir)
+	
+	if wrap_with_verbatim:
+		items.append(u'\n\n{% verbatim %}')
+	items.append(u'<script type="text/x-handlebar-template" id="componentTemplates" data-component-template="true">')
+	items.append(handlebar_template.decode('utf-8').strip())
+	items.append(u'</script>')
+	if wrap_with_verbatim:
+		items.append(u'{% endverbatim %}')
+
+	return u'\n'.join(items).encode('utf-8')
