@@ -852,13 +852,12 @@ W.workbench.PropertyView = Backbone.View.extend({
         var $input = $el.parent().find('input[name="second_navs"]');
         var view = $el.data('view');
         xwarn(view);
-
+        
         view.setNavbarType(this.component.model.get('type'));
         view.bind('update-show-box', function($el, length){
             var urlBox = $el.parents('.propertyGroup_property_dynamicControlField_content').children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
             var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');
             if (length == 0) {
-                console.log('urlBox.show()', 'prompt.hide()')
                 urlBox.show();
                 secondeNavsPrompt.hide();
             }else{
