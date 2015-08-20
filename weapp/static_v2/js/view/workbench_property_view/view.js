@@ -863,7 +863,7 @@ W.workbench.PropertyView = Backbone.View.extend({
                 secondeNavsPrompt.hide();
             }else{
                 urlBox.hide();
-                secondeNavsPrompt.css("display", "inline");
+                secondeNavsPrompt.css("display", "inline-block");
             }
         }, this)
 

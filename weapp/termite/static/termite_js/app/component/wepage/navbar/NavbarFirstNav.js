@@ -20,8 +20,8 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
                 maxLength:5,
                 validateIgnoreDefaultValue: true,
                 isUserProperty: true,
-                placeholder:'编辑[文本导航]',
-            	default: '编辑[文本导航]'
+                placeholder:'标题名',
+            	default: '标题名'
             }, {
                 name: 'target',
                 type: 'select_link',

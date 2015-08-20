@@ -29,7 +29,7 @@ NEW_PAGE_JSON = """
 					"name": "",
 					"class": "",
 					"id": "",
-					"title": "",
+					"title": "标题名",
 					"target": ""
 				},
 				"has_global_content": "no"

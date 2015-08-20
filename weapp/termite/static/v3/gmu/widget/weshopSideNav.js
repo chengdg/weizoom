@@ -18,6 +18,7 @@ gmu.define('SideNav', {
 
 		var _this = this;
 		this.isIScrollInitialized = false;
+		// 判断是否是pc编辑页，底部导航不可切换
 		if (!this._options['disable-switch']) {
 			$el.find('.xa-category').click(function(){
 				var $categoryBtn = $(this);
@@ -43,7 +44,7 @@ gmu.define('SideNav', {
 			}
 		}
 
-		$el.on('click', '.xa-firstNav', _.bind(this.onClickFirstNav, this));
+		$(document).delegate('.xa-firstNav', 'click', _.bind(this.onClickFirstNav, this));
 	},
 	
 	showLeftPanel: function() {
@@ -55,11 +56,11 @@ gmu.define('SideNav', {
 	},
 
 	onClickFirstNav:function(event){
-		var $firstNav = $(event.target);
+		var $firstNav = $(event.currentTarget);
 
-		var $arrow = $firstNav.find('span i');
-        var $subMenu = this.$el.find('.xui-subMenu');
-        if( $subMenu.length >0 ){
+		var $arrow = $firstNav.find('i');
+        var $subMenu = $firstNav.find('.xui-subMenu');
+        if( $subMenu.find('li').length >0 ){
 	        var display = $subMenu.css('display');
 	        if( display != 'block' ){
 	            $arrow.removeClass('xui-leftArrow');

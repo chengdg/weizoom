@@ -33,10 +33,11 @@ gmu.define('BottomNav', {
 	clickShowSubmenu:function(event){
 		var $target = $(event.currentTarget);
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
+		var $subLink = $target.siblings('.xui-subMenuContainer').find('.xui-subMenu li');
         var $otherSubMenuContainer = $target.parent().siblings('.xui-flex').find('.xui-subMenuContainer');
-         $subMenuContainer.toggleClass('xui-show');
          $otherSubMenuContainer.removeClass('xui-show');
-         if( $subMenuContainer.length >0 ){
+         if( $subLink.length >0 ){
+         	$subMenuContainer.toggleClass('xui-show');
            var width = $subMenuContainer.width();
            $subMenuContainer.css('margin-left',-width/2);
          }
