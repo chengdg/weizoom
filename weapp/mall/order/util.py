@@ -770,7 +770,7 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
                 '%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
             'order_total_price': float('%.2f' % order.get_total_price()),
             'ship_name': order.ship_name,
-            'ship_address': order.ship_address,
+            'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
             'ship_tel': order.ship_tel,
             'bill_type': order.bill_type,
             'bill': order.bill,
