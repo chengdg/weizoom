@@ -50,12 +50,13 @@ class Mvote(resource.Resource):
 					activity_status = u'已结束'
 
 				project_id = 'new_app:vote:%s' % record.related_page_id
-
 				if request.member:
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, member_id=request.member.id).count()
 				if participance_data_count == 0 and request.webapp_user:
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
 			is_already_participanted = (participance_data_count > 0)
+
+
 			if  is_already_participanted:
 				member_id = request.member.id
 				vote_detail,result_list = get_result(id,member_id)
@@ -71,7 +72,6 @@ class Mvote(resource.Resource):
 				})
 				return render_to_response('vote/templates/webapp/result_vote.html', c)
 			else:
-				member_id = -1
 				request.GET._mutable = True
 				request.GET.update({"project_id": project_id})
 				request.GET._mutable = False
@@ -81,7 +81,7 @@ class Mvote(resource.Resource):
 
 				c = RequestContext(request, {
 					'record_id': id,
-					'member_id': member_id,
+					'member_id': request.member.id if request.member else "",
 					'activity_status': activity_status,
 					'is_already_participanted': is_already_participanted,
 					'page_title': '微信投票',
@@ -109,11 +109,11 @@ class resultVote(resource.Resource):
 		if 'id' in request.GET:
 			id = request.GET['id']
 			member_id = request.GET['member_id']
-			vote_detail,result_list,activity_status = get_result(id,member_id)
+			print id,member_id
+			vote_detail,result_list = get_result(id,member_id)
 			c = RequestContext(request, {
 				'vote_detail': vote_detail,
 				'record_id': id,
-				'activity_status': activity_status,
 				'page_title': '微信投票',
 				'app_name': "vote",
 				'resource': "vote",

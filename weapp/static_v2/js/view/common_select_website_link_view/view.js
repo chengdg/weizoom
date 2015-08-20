@@ -82,7 +82,6 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 	onClickLinkMenu: function(event, parentEl){	
         event.stopPropagation();
         event.preventDefault();
-        
         this.menuEvent = event;
         var $icon = $(event.currentTarget);
         this.showActionMenu($icon, parentEl);
