@@ -4,10 +4,9 @@
 <div 
 	class="wui-template-globalNavbar"
 	data-component-cid="{{component.cid}}" 
-	style=""
 >
-	{% if component.model.type == "weixin" %}
-	<div class="xui-globalBottomBar" data-ui-role="bottomNav">
+	<!-- 微信导航 -->
+	<div class="xui-globalBottomBar {% if component.model.type == "slide" %}xui-hide{% endif  %}" data-ui-role="bottomNav">
         <div class="xui-home">
             <a href="###" class="xui-bg"></a>
         </div>
@@ -28,9 +27,9 @@
             </div>
         {% endfor %}
 	</div>
-	{% endif  %}
-	{% if component.model.type == "slide" %}
-	<div class="wui-weshopSideBar" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>
+	
+	<!-- 侧滑导航 -->
+	<div class="wui-weshopSideBar {% if component.model.type == "weixin" %}xui-hide{% endif %}" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>
 		<div class="xui-globalSideBar">
 			<div class="xui-bottomNav">
 				<ul class="">
@@ -76,6 +75,5 @@
 			</ul>
 		</div>
 	</div>
-	{% endif %}
 </div>
 {% endifequal %}
