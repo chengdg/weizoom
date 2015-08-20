@@ -145,4 +145,5 @@ class WebappItemLinks(resource.Resource):
 					'data': {},
 					'type': link_type
 				}
+
 		return response.get_response()

@@ -75,7 +75,7 @@ def load_app_components(app_components):
 	for app_component in app_components:
 		category, component_name = app_component.split('.')
 		component_dir = os.path.join(components_dir, category, component_name)
-		if os.path.isdir(component_dir):
+		if not os.path.isdir(component_dir):
 			print '[app] %s is not a valid app componet' % app_component
 
 		for file_name in os.listdir(component_dir):
@@ -84,11 +84,11 @@ def load_app_components(app_components):
 				content = src.read()
 				src.close()
 
-				items.append("\t<!-- start %s/%s/%s -->" % (category, component_name, file_name))
-				items.append('<script type="text/javascript">');
-				items.append(content)
-				items.append('</script>');
-				items.append("\t<!-- finish %s/%s/%s -->" % (category, component_name, file_name))
+				items.append(u"\t<!-- start %s/%s/%s -->" % (category, component_name, file_name))
+				items.append(u'<script type="text/javascript">');
+				items.append(content.decode('utf-8'))
+				items.append(u'</script>');
+				items.append(u"\t<!-- finish %s/%s/%s -->" % (category, component_name, file_name))
 
-	items.append("<!-- finish app components %s -->")
-	return '\n'.join(items)
+	items.append(u"<!-- finish app components %s -->")
+	return u'\n'.join(items).encode('utf-8')

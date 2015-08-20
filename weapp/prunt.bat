@@ -1,0 +1,1 @@
+python prunt/runner.py %*
