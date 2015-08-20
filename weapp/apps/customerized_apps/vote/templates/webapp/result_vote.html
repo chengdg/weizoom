@@ -120,10 +120,9 @@
     <script type="text/javascript">
     $(document).ready(function() {
         var $progressbars = $('.progressbar');
-        for (var i in $progressbars){
+       for (var i = 0; i < $progressbars.length; ++i) {
             var id = $progressbars[i].id;
             var $progressbar = $('#'+id);
-            alert("$progressbar");
             $progressbar.progressbar('value',$progressbar.attr('data-per'));
         }
         $('.xa-toUserCenter').on('click', function(event) {
