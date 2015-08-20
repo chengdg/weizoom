@@ -115,7 +115,6 @@
 					style="width:250px; height:60px;" 
 					title="${item.name}"
 				>
-				{{if (item.status === '未开始')}}
 				    <a
                         class="xui-ellipsisFox"
                         limit="15"
@@ -124,10 +123,6 @@
                     >
                         ${item.name}
                     </a>
-				{{else}}
-				    ${item.name}
-				{{/if}}
-
 				</td>
 				<td>
 					${item.participant_count}
