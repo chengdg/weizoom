@@ -1242,6 +1242,9 @@ button.xui-removeImageButton{
 	float: left;
 	margin-left: 0px;
 }
+.xui-wepage-globalNavPage button.xui-removeImageButton{
+	right: -5px;
+}
 .xui-wepage-globalNavPage .xui-news-editor-select-link-dialog{
 	float: left;
 	margin-top: 12px;
