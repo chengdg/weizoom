@@ -124,9 +124,7 @@
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $('.wa-page').off('tap','xa-prizeContainer',function(){
-
-         });
+        $('.wa-page').off('tap','xa-prizeContainer');
         $('.progressbar').each(function(){
             $(this).progressbar({
                 initValue: $(this).attr('data-per')
