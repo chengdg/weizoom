@@ -2683,6 +2683,7 @@ def batch_handle_order(json_data, user):
 	批量发货
 
 	已知引用:features/steps/mall_order_manager_steps.py
+			mall/order/delivery.py
 	"""
 	error_data = []
 	success_data = []
