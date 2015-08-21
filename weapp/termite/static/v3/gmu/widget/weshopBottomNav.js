@@ -32,7 +32,7 @@ gmu.define('BottomNav', {
 
 	clickShowSubmenu:function(event){
 		var $target = $(event.currentTarget);
-		var $menu = this.$el.find('.xa-menu');
+		var $menu = $('.xa-menu'); 
 		var menuWidth = $menu.eq(0).width();
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
 		var $subLink = $target.siblings('.xui-subMenuContainer').find('.xui-subMenu li');
@@ -53,8 +53,8 @@ gmu.define('BottomNav', {
 			});
 
          }else {
-         	$subMenuContainer.css('margin-left',-width/2- menuWidth/2);
-         	$otherSubMenuContainer.eq(1).css('margin-left',-width/2+ menuWidth/2);
+         	$subMenuContainer.css('margin-left',-width/2 - menuWidth);
+         	$otherSubMenuContainer.eq(1).css('margin-left',-width/2 + menuWidth/2);
          	$otherSubMenuContainer.eq(2).css({
          		'right':8,
          		'left':'auto',
