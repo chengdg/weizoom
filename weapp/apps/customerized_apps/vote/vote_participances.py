@@ -44,7 +44,7 @@ class voteParticipances(resource.Resource):
 		if name:
 			members = member_models.Member.get_by_username(name)#31
 		else:
-			members = member_models.Member.get_members(request.webapp_id)
+			members = member_models.Member.get_members(request.user_profile.webapp_id)
 		print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 		print members
 		print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
