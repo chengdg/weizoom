@@ -89,11 +89,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"end_date": "2天后"
 		}]
 	"""
-<<<<<<< HEAD
-	And jobs能获取限时抢购查询列表
-=======
 	Then jobs能获取限时抢购查询列表
->>>>>>> 8c7b5e4f1269b77ba9335fa964ce268b52fd874d
 	"""
 		[{
 			"name": "商品1",
@@ -112,11 +108,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"price": 200.00
 		}]
 	"""
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> 8c7b5e4f1269b77ba9335fa964ce268b52fd874d
 	#优惠券过期失效，可以建立促销活动
 	When jobs添加优惠券规则
 	"""
@@ -155,11 +147,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-<<<<<<< HEAD
-			"operate": true,
-=======
-			"operate": "false",
->>>>>>> 8c7b5e4f1269b77ba9335fa964ce268b52fd874d
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品3",
@@ -225,11 +213,7 @@ Scenario: 2先建优惠券，不能参加促销活动
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-<<<<<<< HEAD
-			"operate": true,
-=======
-			"operate": "false",
->>>>>>> 7f16780c4bdbc6e54909403be59c95fc55346f05
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品2",
