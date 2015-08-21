@@ -7,7 +7,7 @@ W.component.appkit.TextList = W.component.Component.extend({
 	type: 'appkit.textlist',
 	selectable: 'yes',
 	shouldShowPropertyViewTitle: true,
-	propertyViewTitle: '填写项(此处勾选默认显示为不必填,如需显示为必填请手动添加)',
+	propertyViewTitle: '填写项(此处勾选默认显示为必填,如需显示为不必填请手动添加)',
 
 	dynamicComponentTypes: [{
         type: 'appkit.textitem',
