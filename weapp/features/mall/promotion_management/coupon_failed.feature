@@ -237,7 +237,7 @@ Scenario: 2先建优惠券，不能参加促销活动
 		}]
 	"""
 
-@wip @promotion.promotionCoupon @promotion.promotionFlash
+@wip.cp3 @promotion.promotionCoupon @promotion.promotionFlash
 Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 	When jobs创建限时抢购活动
 	"""
@@ -263,7 +263,7 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 		}]
 	"""
 
-	And jobs能获取单品券查询列表
+	And jobs能获取限时抢购查询列表
 	"""
 		[{
 			"name": "商品1",

@@ -361,3 +361,4 @@ def step_disable_coupon(context, user, coupon_name):
 	print("data: {}".format(data))
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)
+
