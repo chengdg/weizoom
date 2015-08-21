@@ -24,7 +24,7 @@ class feedbacks(resource.Resource):
 		"""
 		响应GET
 		"""
-		has_data = app_models.feedback.objects.count()
+		has_data = app_models.feedbackParticipance.objects.count()
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -37,30 +37,26 @@ class feedbacks(resource.Resource):
 	
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('name', '')
-		status = int(request.GET.get('status', -1))
+		username = request.GET.get('username', '')
+		feedback_type = int(request.GET.get('feedback_type', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-		params = {'owner_id':request.user.id}
-		datas_datas = app_models.feedback.objects(**params)
+		params = {}
+		datas_datas = app_models.feedbackParticipance.objects(**params)
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
-			if data_start_time <= now_time and now_time < data_end_time:
-				data_data.update(set__status=app_models.STATUS_RUNNING)
-			elif now_time >= data_end_time:
-				data_data.update(set__status=app_models.STATUS_STOPED)
-		if name:
-			params['name__icontains'] = name
-		if status != -1:
-			params['status'] = status
+		if username:
+			params['username__icontains'] = username
+		if feedback_type != -1:
+			params['status'] = feedback_type
 		if start_time:
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
-		datas = app_models.feedback.objects(**params).order_by('-id')	
+		datas = app_models.feedbackParticipance.objects(**params).order_by('-id')
 		
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
