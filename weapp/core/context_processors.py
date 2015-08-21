@@ -19,6 +19,7 @@ from product import module_api as weapp_product_api
 
 from account.url_util import is_request_for_webapp
 from utils import component_template_util
+from termite2 import models as termite2_models
 
 #from weixin import cache_util as weixin_cache_util
 #from cache import webapp_cache
@@ -559,8 +560,51 @@ def is_weizoom_mall(request):
 		return {'is_weizoom_mall' : False}
 
 
+'''
+webapp页面底部导航
+'''
+navbar_support_page = {
+	'user_center': ['model=user_info', 'module=user_center', 'action=get'],
+	'product_list_page': ['module=mall', 'model=products', 'action=list']
+}
+def __match_navbar_path(webapp_owner_id, path):
+	# 全局是否启用
+	is_enable = termite2_models.TemplateGlobalNavbar.get_object(webapp_owner_id).is_enable
+	if is_enable is False:
+		return None
+
+	navbar_type = None
+	# 判断是那个页面
+	for key, value in navbar_support_page.items():
+		sign = False
+		for item in value:
+			if path.find(item) > 0:
+				sign = True
+			else:
+				sign = False
+
+			if sign is False:
+				break
+
+		if sign is True:
+			navbar_type = key
+			break
+
+	return navbar_type
+	
+
 def fetch_webapp_global_navbar(request):
-	if request.webapp_owner_id:
+	if request.webapp_owner_id:	
+		path = request.get_full_path()
+		# 微页面不做处理
+		if 'termite2/webapp_page/?' is path:
+			return {}
+
+		# 判断是否是需要显示的页面
+		path_type = __match_navbar_path(request.webapp_owner_id, path)
+		if path_type is None:
+			return {'global_navbar': None}
+
 		from termite import pagestore as pagestore_manager
 		pagestore = pagestore_manager.get_pagestore('mongo')
 		project_id = 'fake:wepage:%s:navbar' % request.webapp_owner_id
@@ -569,6 +613,10 @@ def fetch_webapp_global_navbar(request):
 
 		if navbar_page:
 			navbar_component = navbar_page['component']['components'][0]
-			return {'global_navbar': navbar_component}
+			selected = navbar_component['model']['pages'][path_type]['select']
+			if selected:
+				return {'global_navbar': navbar_component}
+			else:
+				return {'global_navbar': None}
 		else:
 			return {'global_navbar': None}
