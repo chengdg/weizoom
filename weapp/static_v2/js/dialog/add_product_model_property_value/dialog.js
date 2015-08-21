@@ -40,6 +40,7 @@ W.dialog.mall.AddProductModelPropertyValueDialog = W.dialog.Dialog.extend({
         this.picUrl = options.picUrl;
         // console.log(this.picUrl,"=========",this.modelValue);
         var imageView = this.$('input[data-ui-role="image-selector"]').data('view');
+        this.$('input[name="pic_url"]').val(this.picUrl);
         imageView.showImage(this.picUrl);
         $input.val(this.modelValue);
         $input.siblings('.errorHint').hide();
