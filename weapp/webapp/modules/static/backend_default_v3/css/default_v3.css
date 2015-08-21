@@ -2780,7 +2780,7 @@ input.ui-input-text, textarea.ui-input-text {
     margin-right: 3px;
 }
 .xui-shoppingCartPage .wui-counter{
-    float: left;
+    /*float: left;*/
     height: 22px;
 }
 .xui-shoppingCartPage .wui-counter span{
@@ -2789,10 +2789,10 @@ input.ui-input-text, textarea.ui-input-text {
     width: 24px;
     font-size: 0.75rem;
 }
-.xui-shoppingCartPage span.xui-understock{
+/*.xui-shoppingCartPage span.xui-understock{
     padding-left: 5px;
     line-height: 28px;
-}
+}*/
 .xui-shoppingCartPage .xui-deleteBtn{
     width: 17px;
     height:17px;

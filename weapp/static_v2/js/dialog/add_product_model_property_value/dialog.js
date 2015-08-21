@@ -21,18 +21,29 @@ W.dialog.mall.AddProductModelPropertyValueDialog = W.dialog.Dialog.extend({
     }, W.dialog.Dialog.prototype.events),
 
     onInitialize: function(options) {
+        this.template = this.getTemplate();
         W.createWidgets(this.$dialog);
     },
 
     beforeShow: function(options) {
-        var imageView = this.$('input[data-ui-role="image-selector"]').data('view');
-        imageView.cleanImage();
+        
+        // imageView.cleanImage();
 
+        // imageView.showImage("/standard_static/test_resource_img/icon_color/icon_1.png");
         this.$('input[name="name"]').val('');
     },
 
     onShow: function(options) {
-        
+        var $input = this.$('input[name="name"]');
+        this.propertyId = options.propertyId || -1;
+        this.modelValue = options.modelValue;
+        this.picUrl = options.picUrl;
+        // console.log(this.picUrl,"=========",this.modelValue);
+        var imageView = this.$('input[data-ui-role="image-selector"]').data('view');
+        imageView.showImage(this.picUrl);
+        $input.val(this.modelValue);
+        $input.siblings('.errorHint').hide();
+        $input.parent().removeClass('has-error');
     },
 
     afterShow: function(options) {
