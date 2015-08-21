@@ -124,11 +124,12 @@
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $('.wa-page').off('tap','xa-prizeContainer');
+
         $('.progressbar').each(function(){
             $(this).progressbar({
                 initValue: $(this).attr('data-per')
             });
+            $(this).unbind('tap');
         });
         $('.xa-toUserCenter').on('click', function(event) {
             redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
