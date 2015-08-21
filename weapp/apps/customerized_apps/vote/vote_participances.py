@@ -38,7 +38,6 @@ class voteParticipances(resource.Resource):
 	
 	@staticmethod
 	def get_datas(request):
-		import time
 		name = request.GET.get('participant_name', '')
 		if name:
 			members = member_models.Member.get_by_username(name)

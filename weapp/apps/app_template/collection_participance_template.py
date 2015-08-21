@@ -48,7 +48,10 @@ class {{resource.class_name}}(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
-		members = member_models.Member.get_by_username(name)
+		if name:
+			members = member_models.Member.get_by_username(name)
+		else:
+			members = member_models.Member.get_members(request.user_profile.webapp_id)
 		member_ids = [member.id for member in members]
 		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 

@@ -92,12 +92,14 @@
                     <ul class="wui-i-items xa-inputControl">
                         {% for select in item.values %}
                         <li class="wui-i-item">
-                            <label style="display:block; padding: 3px 0;" >
+                            <div style="position: absolute;z-index: 999;width: 100%;height: 50px;"></div>
+                            <label style="padding: 3px 0;" >
                                 <img class="xui-name-isSelect" src="{% if select.isSelect %} /static_v2/img/selected.png {% else %} /static_v2/img/not_select.png{% endif %}" /><span class="ml5 xa-itemTitle">{{ select.name }}</span>
                                 <span style="display: inline-block;float: right;">{{ select.per }}%</span>
                                 <span style="display: inline-block;float: right; margin-right: 10px">{{ select.count }}票</span>
                                 <span data-per="{{ select.per }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
                             </label>
+
                         </li>
                         {% endfor %}
                     </ul>
@@ -128,7 +130,6 @@
             $(this).progressbar({
                 initValue: $(this).attr('data-per')
             });
-            $(this).find('.ui-progressbar-bg').unbind('tap')
         });
         $('.xa-toUserCenter').on('click', function(event) {
             redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
