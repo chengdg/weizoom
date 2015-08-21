@@ -59,7 +59,7 @@ Background:
 		}]
 	"""
 
-@wip.cp1 @promotion @promotionCoupon @promotion @promotionFlash
+@mall2 @promotion @promotionCoupon @promotion @promotionFlash
 Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 	"""
@@ -113,21 +113,21 @@ Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 	"""
 		[{
-			"name": "优惠券4",
+			"name": "优惠券5",
 			"money": 10.00,
 			"count": 5,
 			"limit_counts": 1,
 			"start_date": "2天前",
 			"end_date": "1天前",
 			"using_limit": "满50元可以使用",
-			"coupon_id_prefix": "coupon4_id_",
+			"coupon_id_prefix": "coupon5_id_",
 			"coupon_product": "商品3"
 		}]
 	"""
 	Then jobs能获得优惠券规则列表
 	"""
 		[{
-			"name": "优惠券4",
+			"name": "优惠券5",
 			"type": "单品券",
 			"money": 10.00,
 			"remained_count": 5,
@@ -135,6 +135,15 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"use_count": 0,
 			"start_date": "2天前",
 			"end_date": "1天前"
+		}, {
+			"name": "优惠券4",
+			"type": "单品券",
+			"money": 10.00,
+			"remained_count": 5,
+			"limit_counts": 1,
+			"use_count": 0,
+			"start_date": "今天",
+			"end_date": "2天后"
 		}]
 	"""
 	And jobs能获取限时抢购查询列表
