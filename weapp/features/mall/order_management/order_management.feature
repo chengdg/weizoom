@@ -123,7 +123,7 @@ Background:
 				"count": 1
 			}],
 			"coupon": "coupon2_id_1",
-			"pay_type": "货到付款"
+			"pay_type": "微信支付"
 		}
 		"""
 
@@ -140,7 +140,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 		[{
 			"order_no": "004",
 			"order_time":"2015-08-11 12:00:00",
-			"methods_of_payment":"",
+			"methods_of_payment":"微信支付",
 			"member": "bill",
 			"status":"待支付",
 			"actions": ["修改价格", "取消订单", "支付"],
