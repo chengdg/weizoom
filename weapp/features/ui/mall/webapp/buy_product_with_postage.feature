@@ -1,9 +1,30 @@
+# _edit_ : "新新8.20"
 @func:webapp.modules.mall.views.list_products
-Feature: 在webapp中购买商品
-	bill能在webapp中购买jobs添加的"商品"
+Feature: 在webapp中购买有运费的商品
+	bill能在webapp中购买jobs添加的"有运费的商品"
 
 Background:
 	Given jobs登录系统
+	And jobs已添加商品规格
+		"""
+		[{
+			"name": "尺寸",
+			"type": "文字",
+			"values": [{
+				"name": "M"
+			}, {
+				"name": "S"
+			}]
+		}, {
+			"name": "颜色",
+			"type": "文字",
+			"values": [{
+				"name": "red"
+			}, {
+				"name": "black"
+			}]
+		}]
+		"""
 	And jobs已添加运费配置
 		"""
 		[{
@@ -62,10 +83,45 @@ Background:
 			"price": 10.00,
 			"weight": 1,
 			"postage": 10.0
+		}, {
+			"name": "商品7",
+			"postage": "系统",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"red M": {
+						"price": 50.00,
+						"weight": 1,
+						"stock_type": "无限"
+					},
+					"black S": {
+						"price": 50.00,
+						"weight": 1,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}, {
+			"name": "商品8",
+			"postage": 10.0,
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"M": {
+						"price": 50.00,
+						"weight": 0.6,
+						"stock_type": "无限"
+					},
+					"S": {
+						"price": 50.00,
+						"weight": 0.6,
+						"stock_type": "无限"
+					}
+				}
+			}
 		}]
 		"""
-	#支付方式
-	Given jobs已添加支付方式
+	And jobs已添加支付方式
 		"""
 		[{
 			"type": "微信支付",
@@ -670,5 +726,311 @@ Scenario: 购买多种商品，使用统一运费+系统运费模板，特殊地
 		"""
 		{
 			"price": 225.00
+		}
+		"""
+# _edit_ : "新新8.20"
+Scenario: 购买多规格商品，使用系统运费模板，特殊地区，满足续重
+	When bill访问jobs的webapp
+	When bill设置jobs的webapp的默认收货地址
+	And bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品7",
+			"count": 1,
+			"model": "red M"
+		}, {
+			"name": "商品7",
+			"count": 1,
+			"model": "black S"
+		}]
+		"""
+	When bill访问jobs的webapp:ui
+	And bill从购物车发起购买操作:ui
+	Then bill获得待编辑订单:ui
+		"""
+		{
+			"price_info": {
+				"final_price": 130.00,
+				"product_price": 100.00,
+				"postage": 30.00
+			}
+		}
+		"""
+	When bill使用'货到付款'购买订单中的商品:ui
+	Then bill获得支付结果:ui
+		"""
+		{
+			"price": 130.00
+		}
+		"""
+# _edit_ : "新新8.20"
+Scenario: 购买两个多规格商品
+	1 商品7使用系统运费模板，特殊地区，满足续重
+	2 商品8使用统一运费10元
+	3 运费总额为30+10
+
+	When bill访问jobs的webapp
+	When bill设置jobs的webapp的默认收货地址
+	And bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品7",
+			"count": 1,
+			"model": "red M"
+		}, {
+			"name": "商品7",
+			"count": 1,
+			"model": "black S"
+		},{
+			"name": "商品8",
+			"count": 1,
+			"model": "M"
+		}, {
+			"name": "商品8",
+			"count": 1,
+			"model": "S"
+		}]
+		"""
+	When bill访问jobs的webapp:ui
+	And bill从购物车发起购买操作:ui
+	Then bill获得待编辑订单:ui
+		"""
+		{
+			"price_info": {
+				"final_price": 240.00,
+				"product_price": 200.00,
+				"postage": 40.00
+			}
+		}
+		"""
+	When bill使用'货到付款'购买订单中的商品:ui
+	Then bill获得支付结果:ui
+		"""
+		{
+			"price": 240.00
+		}
+		"""
+# _edit_ : "新新8.20"
+Scenario: jobs选择'免运费'运费配置
+	Given jobs登录系统
+	When jobs选择'免运费'运费配置
+	When bill访问jobs的webapp
+	When bill设置jobs的webapp的默认收货地址
+	And bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品1",
+			"count": 2
+		}]
+		"""
+	When bill访问jobs的webapp:ui
+	And bill从购物车发起购买操作:ui
+	Then bill获得待编辑订单:ui
+		"""
+		{
+			"price_info": {
+				"final_price": 200.00,
+				"product_price": 200.00,
+				"postage": 0.00
+			}
+		}
+		"""
+	When bill使用'货到付款'购买订单中的商品:ui
+	Then bill获得支付结果:ui
+		"""
+		{
+			"price": 200.00
+		}
+		"""
+# _edit_ : "新新8.20"
+Scenario: 更新邮费配置后进行购买
+	jobs更改邮费配置后bill进行购买
+	1.去掉特殊地区和指定地区
+	2.bill创建订单成功，邮费正常
+	Given jobs登录系统
+	When jobs修改'顺丰'运费配置
+		"""
+		[{
+			"name":"顺丰",
+			"first_weight": 1,
+			"first_weight_price": 13.00,
+			"added_weight": 1,
+			"added_weight_price": 5.00
+		}]
+		"""
+	Then jobs能获取'顺丰'运费配置
+		"""
+		[{
+			"name":"顺丰",
+			"first_weight": 1,
+			"first_weight_price": 13.00,
+			"added_weight": 1,
+			"added_weight_price": 5.00
+		}]
+		"""
+	When bill访问jobs的webapp
+	When bill设置jobs的webapp的默认收货地址
+		#第一次购买
+	And bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品1",
+			"count": 1
+		}]
+		"""
+	When bill访问jobs的webapp:ui
+	And bill从购物车发起购买操作:ui
+	Then bill获得待编辑订单:ui
+		"""
+		{
+			"price_info": {
+				"final_price": 113.00,
+				"product_price": 100.00,
+				"postage": 13.00
+			}
+		}
+		"""
+	When bill使用'货到付款'购买订单中的商品:ui
+	Then bill获得支付结果:ui
+		"""
+		{
+			"price": 113.00
+		}
+		"""
+	#第二次购买
+	When bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品1",
+			"count": 3
+		}]
+		"""
+	And bill从购物车发起购买操作:ui
+	Then bill获得待编辑订单:ui
+		"""
+		{
+			"price_info": {
+				"final_price": 323.00,
+				"product_price": 300.00,
+				"postage": 23.00
+			}
+		}
+		"""
+	When bill使用'货到付款'购买订单中的商品:ui
+	Then bill获得支付结果:ui
+		"""
+		{
+			"price": 323.00
+		}
+		"""
+# _edit_ : "新新8.20"
+Scenario: 不同等级的会员购买有会员价同时有运费配置
+#包邮条件:金额取商品原价的金额
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "商品14",
+			"price": 100.00,
+			"member_price": true,
+			"weight": 1,
+			"postage": "系统",
+			"is_member_product": "on"
+		}]
+		"""
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}]
+		"""
+	And jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"discount": "10"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}]
+		"""
+	And jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}]
+		"""
+###tom购买,订单金额
+	When tom访问jobs的webapp
+	When tom设置jobs的webapp的默认收货地址
+	And tom加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品14",
+			"count": 2
+		}]
+		"""
+	When tom访问jobs的webapp:ui
+	And tom从购物车发起购买操作:ui
+	Then tom获得待编辑订单:ui
+		"""
+		{
+			"price_info": {
+				"final_price": 200.00,
+				"product_price": 200.00,
+				"postage": 0.00
+			}
+		}
+		"""
+	When tom使用'货到付款'购买订单中的商品:ui
+	Then tom获得支付结果:ui
+		"""
+		{
+			"price": 200.00
+		}
+		"""
+###bill购买,订单金额
+	When bill访问jobs的webapp
+	When bill设置jobs的webapp的默认收货地址
+		#第一次购买
+	And bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品14",
+			"count": 2
+		}]
+		"""
+	When bill访问jobs的webapp:ui
+	And bill从购物车发起购买操作:ui
+	Then bill获得待编辑订单:ui
+		"""
+		{
+			"price_info": {
+				"final_price": 180.00,
+				"product_price": 180.00,
+				"postage": 0.00
+			}
+		}
+		"""
+	When bill使用'货到付款'购买订单中的商品:ui
+	Then bill获得支付结果:ui
+		"""
+		{
+			"price": 180.00
 		}
 		"""

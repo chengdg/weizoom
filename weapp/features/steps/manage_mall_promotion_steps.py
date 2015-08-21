@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
-from behave import when
+from behave import when, then
 
 from mall.promotion import models
+from mall.promotion.models import Promotion
 from modules.member.models import MemberGrade
 from features.testenv.model_factory import ProductFactory
 from test import bdd_util
@@ -196,19 +197,19 @@ def step_impl(context, user):
     context.query_param = json.loads(context.text)
 
 
-@then(u"{user}获取{type}活动列表")
-def step_impl(context, user, type):
-    if type == u"促销":
-        type = "all"
-    elif type == u"限时抢购":
-        type = "flash_sale"
-    elif type == u"买赠":
-        type = "premium_sale"
-    elif type == u"积分应用":
-        type = "integral_sale"
+@then(u"{user}获取{promotion_type}活动列表")
+def step_impl(context, user, promotion_type):
+    if promotion_type == u"促销":
+        promotion_type = "all"
+    elif promotion_type == u"限时抢购":
+        promotion_type = "flash_sale"
+    elif promotion_type == u"买赠":
+        promotion_type = "premium_sale"
+    elif promotion_type == u"积分应用":
+        promotion_type = "integral_sale"
     # elif type == u"优惠券":
     #     type = "coupon"
-    url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % type
+    url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % promotion_type
     if hasattr(context, 'query_param'):
         if context.query_param.get('product_name'):
             url += '&name=' + context.query_param['product_name']
@@ -235,7 +236,10 @@ def step_impl(context, user, type):
         promotion['bar_code'] = promotion['product']['bar_code']
         promotion['price'] = promotion['product']['display_price']
         promotion['stocks'] = promotion['product']['stocks']
-        if type == 'integral_sale':
+
+        if promotion_type == "flash_sale":
+            promotion['promotion_price'] = promotion['detail']['promotion_price']
+        if promotion_type == 'integral_sale':
             promotion['is_permanant_active'] = str(promotion['detail']['is_permanant_active']).lower()
             detail = promotion['detail']
             rules = detail['rules']
@@ -247,7 +251,17 @@ def step_impl(context, user, type):
             else:
                 promotion['discount'] = detail['discount'].replace(' ', '')
                 promotion['discount_money'] = detail['discount_money'].replace(' ', '')
+                for rule in rules:
+                    rule['member_grade'] = MemberGrade.objects.get(id=rule['member_grade_id']).name
+
             promotion['rules'] = rules
+        else:
+            member_grade_id = Promotion.objects.get(id=promotion['id']).member_grade_id
+            try:
+                promotion['member_grade'] = MemberGrade.objects.get(
+                    id=member_grade_id).name
+            except MemberGrade.DoesNotExist:
+                promotion['member_grade'] = MemberGrade.get_default_grade(bdd_util.get_webapp_id_for(user)).name
     expected = []
     if context.table:
         for promotion in context.table:
@@ -257,15 +271,11 @@ def step_impl(context, user, type):
         expected = json.loads(context.text)
 
     for promotion in expected:
-        if type == 'integral_sale':
+        if promotion_type == 'integral_sale':
             promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
         if promotion.has_key('start_date') and promotion.has_key('end_date'):
-            if promotion['is_permanant_active'] == 'true':
-                promotion.pop('start_date')
-                promotion.pop('end_date')
-            else:
-                promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
-                promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
+            promotion['start_date'] = bdd_util.get_datetime_str(promotion['start_date'])
+            promotion['end_date'] = bdd_util.get_datetime_str(promotion['end_date'])
         if promotion.get('created_at'):
             promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
     bdd_util.assert_list(expected, actual)
@@ -314,3 +324,21 @@ def __get_member_grade(promotion, webapp_id):
     elif member_grade:
         member_grade = MemberGrade.objects.get(name=member_grade, webapp_id=webapp_id).id
     return member_grade
+
+
+@then(u"{user}能获取限时抢购查询列表")
+def step_impl(context, user):
+    real = json.loads(context.text)
+    url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=flash_sale&name=&barCode=&selectedProductIds=&count_per_page=10&page=1&enable_paginate=1'
+    response = context.client.get(url)
+    bdd_util.assert_api_call_success(response)
+    #print("response: {}".format(response))
+    data = json.loads(response.content)['data']
+    expected = [{
+        "name": item['name'],
+        "stock_type": item['total_stocks'],
+        "operate": item['can_select'],
+        "price": item['standard_model']['price']
+    } for item in data['items']]
+    print("expected: {}".format(expected))
+    bdd_util.assert_list(expected, real)
