@@ -180,14 +180,13 @@ Scenario: 3 创建促销活动时，设置单个会员等级，删除等级后�
 	Then jobs获取限时抢购活动列表
 		"""
 		[{
-			"name": "活动名称：商品1限时抢购",
+			"name": "商品1限时抢购",
 			"product_name": "商品1",
 			"product_price": 100.00,
 			"promotion_price": 80.00,
 			"status": "进行中",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"actions": ["详情","结束"]
 		}]
 		"""
 	When jobs创建积分应用活动
@@ -227,7 +226,6 @@ Scenario: 3 创建促销活动时，设置单个会员等级，删除等级后�
 			"discount": "70%~100%",
 			"discount_money": "70.0~100.0",
 			"status":"进行中",
-			"actions": ["详情","结束"]
 		}]
 		"""
 	When jobs创建买赠活动
@@ -251,13 +249,12 @@ Scenario: 3 创建促销活动时，设置单个会员等级，删除等级后�
 	Then jobs获取买赠活动列表
 		"""
 		[{
-			"name": "活动名称:商品3买二赠一",
+			"name": "商品3买二赠一",
 			"product_name": "商品3",
 			"product_price":100.00,
 			"status":"进行中",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"actions": ["详情","结束"]
 		}]
 		"""
 	When jobs删除会员等级'银牌会员'
@@ -280,7 +277,7 @@ Scenario: 3 创建促销活动时，设置单个会员等级，删除等级后�
 	And jobs获取限时抢购活动列表
 		"""
 		[{
-			"name": "活动名称：商品1限时抢购",
+			"name": "商品1限时抢购",
 			"product_name": "商品1",
 			"product_price": 100.00,
 			"promotion_price": 80.00,
@@ -288,7 +285,6 @@ Scenario: 3 创建促销活动时，设置单个会员等级，删除等级后�
 			"member_grade": "普通会员",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"actions": ["详情","删除"]
 		}]
 		"""
 	And jobs获取积分应用活动列表
@@ -300,7 +296,6 @@ Scenario: 3 创建促销活动时，设置单个会员等级，删除等级后�
 			"discount": "70%~100%",
 			"discount_money": "70.0~100.0",
 			"status":"进行中",
-			"actions": ["详情","结束"],
 			"is_permanant_active": false,
 			"rules": 
 				[{
@@ -318,13 +313,12 @@ Scenario: 3 创建促销活动时，设置单个会员等级，删除等级后�
 	Then jobs获取买赠活动列表
 		"""
 		[{
-			"name": "活动名称:商品3买二赠一",
+			"name": "商品3买二赠一",
 			"product_name": "商品3",
 			"product_price":100.00,
 			"status":"已结束",
 			"member_grade": "普通会员",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"actions": ["详情","删除"]
 		}]
 		"""
