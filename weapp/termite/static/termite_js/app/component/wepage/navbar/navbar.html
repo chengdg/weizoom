@@ -6,14 +6,15 @@
 	data-component-cid="{{component.cid}}" 
 	style=""
 >
-	
+
+    {% if component.model.type == "weixin" %}
     <!-- 微信导航 -->
-	<div class="xui-globalBottomBar {% if component.model.type == "slide" %}xui-hide{% endif %}" data-ui-role="bottomNav">
+	<div class="xui-globalBottomBar" data-ui-role="bottomNav">
         <div class="xui-home">
             <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bg"></a>
         </div>
         {% for component in component.components %}
-            <div {% if component.model.type == "weixin" %}data-component-cid="{{component.cid}}"{% endif %} class="xui-flex xui-flex-two">
+            <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-two">
                 <div class="xui-menu xa-menu f14">
                     <a href="{{ component.model.target|extract_target_data:request|safe }}" class="wa-inner-link">{{ component.model.title }}</a>
                 </div>
@@ -29,9 +30,11 @@
             </div>
         {% endfor %}
 	</div>
+    <div class="xui-hide" data-ui-role="sideNav"></div>
 
+    {% else %}
     <!-- 侧滑导航 -->
-	<div class="wui-weshopSideBar {% if component.model.type == "weixin" %}xui-hide{% endif %}" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>
+	<div class="wui-weshopSideBar" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>
 		<div class="xui-globalSideBar">
 			<div class="xui-bottomNav">
 				<ul class="">
@@ -76,7 +79,8 @@
                 {% endfor %}
 			</ul>
 		</div>
-	</div>
-
+	</div>    
+    <div class="xui-hide" data-ui-role="bottomNav"></div>
+    {% endif %}
 </div>
 {% endifequal %}
