@@ -119,12 +119,9 @@
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        var $progressbars = $('.progressbar');
-       for (var i = 0; i < $progressbars.length; ++i) {
-            var id = $progressbars[i].id;
-            var $progressbar = $('#'+id);
-            $progressbar.progressbar('value',$progressbar.attr('data-per'));
-        }
+        $('.progressbar').each(function(){
+            $(this).progressbar('value',$(this).attr('data-per'));
+        });
         $('.xa-toUserCenter').on('click', function(event) {
             redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
         });
