@@ -472,7 +472,101 @@ Scenario:7 筛选条件为“分组”的筛选结果时，批量调整分组
 			| bill2         | 2014-6-5 8:00:00  | 推广扫码      | 会员分组4           |
 			| bill3         | 2014-6-4 8:00:00  | 直接关注      | 会员分组4           |
 
+@member @memberList @meberGroup
+Scenario:7 会员分组人数验证
 
+	Given jobs设置分页查询参数
+		"""
+		{
+			"count_per_page":3
+		}
+		"""
+	Then jobs获取会员列表显示共3页
 
+	#选择第1页全部会员批量添加分组
+		When jobs选择第1页会员
+			| member_name   | attention_time 	| member_source | grouping  |
+			| bill 			| 2014-9-5 8:00:00  | 直接关注      |           |
+			| tom 			| 2014-9-4 8:00:00 	| 推广扫码      |           |
+			| marry 	    | 2014-9-3 10:00:00 | 会员分享      |           |
+
+		When jobs批量添加分组
+			"""
+			[{
+				"modification_method":"给选中的人添加分组",
+				"grouping":"会员分组3"
+			}]
+			"""
+
+		Then jobs获得批量添加分组会员
+			| member_name   | attention_time 	| member_source | grouping  |
+			| bill 			| 2014-9-5 8:00:00  | 直接关注      | 会员分组3 |
+			| tom 			| 2014-9-4 8:00:00 	| 推广扫码      | 会员分组3 |
+			| marry 	    | 2014-9-3 10:00:00 | 会员分享      | 会员分组3 |
+
+	#选择第2页全部会员批量添加分组
+		When jobs选择第2页会员
+			| member_name   | attention_time 	| member_source | grouping  |
+			| tom1 			| 2014-9-2 8:00:00  | 会员分享      |           |
+			| tom2 			| 2014-9-1 8:00:00  | 会员分享      |           |
+			| tom3          | 2014-6-7 8:00:00  | 会员分享      |           |
+
+		When jobs批量添加分组
+			"""
+			[{
+				"modification_method":"给选中的人添加分组",
+				"grouping":"会员分组4"
+			}]
+			"""
+
+		Then jobs获得批量添加分组会员
+			| member_name   | attention_time 	| member_source |  grouping  |
+			| tom1 			| 2014-9-2 8:00:00  | 会员分享      |  会员分组4 |
+			| tom2 			| 2014-9-1 8:00:00  | 会员分享      |  会员分组4 |
+			| tom3          | 2014-6-7 8:00:00  | 会员分享      |  会员分组4 |
+
+	#给筛选出来的所有人条件分组
+		When jobs选择第2页会员
+			| member_name   | attention_time 	| member_source | grouping  |
+			| tom1 			| 2014-9-2 8:00:00  | 会员分享      | 会员分组4 |
+
+		When jobs批量添加分组
+			"""
+			[{
+				"modification_method":"给筛选出来的所有人添加分组",
+				"grouping":"会员分组2"
+			}]
+			"""
+		Then jobs获得批量添加分组会员
+			| member_name   | attention_time 	| member_source |      grouping       |
+			| bill 			| 2014-9-5 8:00:00  | 直接关注      | 会员分组3,会员分组2 |
+			| tom 			| 2014-9-4 8:00:00 	| 推广扫码      | 会员分组3,会员分组2 |
+			| marry 	    | 2014-9-3 10:00:00 | 会员分享      | 会员分组3,会员分组2 |
+			| tom1 			| 2014-9-2 8:00:00  | 会员分享      | 会员分组4,会员分组2 |
+			| tom2 			| 2014-9-1 8:00:00  | 会员分享      | 会员分组4,会员分组2 |
+			| tom3          | 2014-6-7 8:00:00  | 会员分享      | 会员分组4,会员分组2 |
+			| bill1         | 2014-6-6 8:00:00  | 直接关注      | 会员分组2           |
+			| bill2         | 2014-6-5 8:00:00  | 推广扫码      | 会员分组2           |
+			| bill3         | 2014-6-4 8:00:00  | 直接关注      | 会员分组2           |
+
+		Then jobs能获取会员分组列表
+			"""
+			[{
+				"name": "会员分组1",
+				"group_membership":0
+			},{
+				"name": "会员分组2",
+				"group_membership":9
+			},{
+				"name": "会员分组3",
+				"group_membership":3
+			},{
+				"name": "会员分组4",
+				"group_membership":3
+			},{
+				"name": "会员分组5",
+				"group_membership":0
+			}]
+			"""
 
 
