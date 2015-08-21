@@ -1,6 +1,4 @@
 # __author__ : "崔帅帅"
-@func:webapp.modules.user_center.views.member_list
-
 
 Feature: 微信用户关注公众号成为系统会员
 
@@ -8,20 +6,20 @@ Background:
 	Given jobs登录系统
 	And jobs设定会员积分策略
 		"""
-		[{
+		{
 			"be_member_increase_count": 20
-		}]
+		}
 		"""
 	And jobs添加会员等级
 		"""
 		[{
 			"name": "银牌会员",
-			"upgrade": "不自动升级",
-			"shop_discount": "100%"
+			"upgrade": "手动升级",
+			"shop_discount": "1"
 		},{
 			"name": "金牌会员",
 			"upgrade": "自动升级",
-			"shop_discount": "98%"
+			"shop_discount": "9.8"
 		}]
 		"""
 	And jobs添加会员分组
@@ -64,14 +62,14 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 		[{
 			"name": "bill",
-			"member_rank": "银牌会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 0,
-			"sources": "直接关注",
-			"packet": "未分组",
-			"add_time": 2015-01-03,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		}]
 		"""
@@ -95,24 +93,24 @@ Scenario: 微信用户关注公众号成为会员
 		[{
 			"name": "tom",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
+			"pay_times": 0,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "会员分享",
-			"packet": "分组1",
-			"add_time": 2015-01-04,
+			"friend_count": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "银牌会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "直接关注",
-			"packet": "未分组",
-			"add_time": 2015-01-03,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		}]
 		"""
@@ -134,35 +132,35 @@ Scenario: 微信用户关注公众号成为会员
 		[{
 			"name": "nokia",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "会员分享",
-			"packet": "分组2",
-			"add_time": 2015-01-05,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
+			"pay_times": 0,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "会员分享",
-			"packet": "分组1",
-			"add_time": 2015-01-04,
+			"friend_count": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "银牌会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "直接关注",
-			"packet": "未分组",
-			"add_time": 2015-01-03,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		}]
 		"""
@@ -185,47 +183,47 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 		[{
 			"name": "tom1",
-			"member_rank": "金牌会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "推广扫码",
-			"packet": "分组3",
-			"add_time": 2015-01-06,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "会员分享",
-			"packet": "分组2",
-			"add_time": 2015-01-05,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
+			"pay_times": 0,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "会员分享",
-			"packet": "分组1",
-			"add_time": 2015-01-04,
+			"friend_count": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "银牌会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "直接关注",
-			"packet": "未分组",
-			"add_time": 2015-01-03,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		}]
 		"""
@@ -255,63 +253,50 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 		[{
 			"name": "tom1",
-			"member_rank": "金牌会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"member_rank": "普通会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "推广扫码",
-			"packet": "分组3",
-			"add_time": 2015-01-06,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "会员分享",
-			"packet": "分组2",
-			"add_time": 2015-01-05,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
+			"pay_times": 0,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "会员分享",
-			"packet": "分组1",
-			"add_time": 2015-01-04,
+			"friend_count": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "银牌会员",
-			"price": 100.00,
-			"buy_sum": 1,
+			"member_rank": "金牌会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "直接关注",
-			"packet": "未分组",
-			"add_time": 2015-01-03,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		}]
 		"""
-	When tom1访问jobs的webapp
-	When tom1购买jobs的商品
-		"""
-		{
-			"products": [{
-				"name": "商品1",
-				"price": 100.00,
-				"count": 1
-			}]
-		}
-		"""
-	Given jobs登录系统
-	When jobs"完成"最新订单
 	When tom1访问jobs的webapp
 	When tom1购买jobs的商品
 		"""
@@ -330,46 +315,46 @@ Scenario: 微信用户关注公众号成为会员
 		[{
 			"name": "tom1",
 			"member_rank": "金牌会员",
-			"price": 196.00,
-			"buy_sum": 2,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "推广扫码",
-			"packet": "分组3",
-			"add_time": 2015-01-06,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "会员分享",
-			"packet": "分组2",
-			"add_time": 2015-01-05,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
+			"pay_times": 0,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "会员分享",
-			"packet": "分组1",
-			"add_time": 2015-01-04,
+			"friend_count": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "银牌会员",
-			"price": 100.00,
-			"buy_sum": 1,
+			"member_rank": "金牌会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "直接关注",
-			"packet": "未分组",
-			"add_time": 2015-01-03,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		}]
 		"""
@@ -381,46 +366,46 @@ Scenario: 微信用户关注公众号成为会员
 		[{
 			"name": "tom1",
 			"member_rank": "金牌会员",
-			"price": 196.00,
-			"buy_sum": 2,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "推广扫码",
-			"packet": "分组3",
-			"add_time": 2015-01-06,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 1,
-			"sources": "会员分享",
-			"packet": "分组2",
-			"add_time": 2015-01-05,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
-			"price": 0.00,
-			"buy_sum": 0,
+			"pay_money": 0.00,
+			"unit_price": 0.00,
+			"pay_times": 0,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "会员分享",
-			"packet": "分组1",
-			"add_time": 2015-01-04,
+			"friend_count": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已关注"
 		},{
-			"name": "bill",
-			"member_rank": "银牌会员",
-			"price": 100.00,
-			"buy_sum": 1,
+			"name": "",
+			"member_rank": "金牌会员",
+			"pay_money": 0.00,
+			"unit_price": 0.00,
 			"integral": 20,
-			"friends_sum": 2,
-			"sources": "直接关注",
-			"packet": "未分组",
-			"add_time": 2015-01-03,
+			"friend_count": 0,
+			"pay_times": 0,
+			"source": "直接关注",
+			"tags": [],
 			"status": "已取消"
 		}]
 		"""

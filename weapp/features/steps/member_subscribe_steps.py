@@ -101,6 +101,7 @@ def step_impl(context, user):
 # 	elif integral_detail:
 # 		IntegralStrategySttingsDetail.objects.create(**integral_detail)
 
+
 @then(u'{user}可以获得会员列表')
 def step_impl(context, user):
 	json_data = json.loads(context.text)
@@ -116,6 +117,12 @@ def step_impl(context, user):
 		else:
 			member_item['status'] = u"已取消"
 		member_item['member_rank'] = member_item['grade_name']
+		if member_item['source'] == 0:
+			member_item['source'] = u"直接关注"
+		elif member_item['source'] == 1:
+			member_item['source'] = u"推广扫码"
+		elif member_item['source'] == 2:
+			member_item['source'] = u"会员分享"
 		actual_members.append(member_item)
 	for data in json_data:
 		if 'experience' in data:

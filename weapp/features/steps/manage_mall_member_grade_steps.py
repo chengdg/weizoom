@@ -40,6 +40,13 @@ def step_impl(context, user):
 
 @When(u"{user}添加会员等级")
 def step_impl(context, user):
+    _add_member_grade(context, user)
+
+@Given(u"{user}添加会员等级")
+def step_impl(context, user):
+    _add_member_grade(context, user)
+
+def _add_member_grade(context, user):
     json_data = json.loads(context.text)
     response = context.client.get('/mall2/member_grade_list/')
     grades = response.context['member_grades']
@@ -68,7 +75,8 @@ def step_impl(context, user):
     for content in json_data:
         if content['name'] in old_grade_names:
             continue
-        content['shop_discount'] = content['discount']
+        if content.has_key('discount') and not content.has_key('discount'):
+            content['shop_discount'] = content['discount']
         if content.get('upgrade', '') == u'手动升级':
             content['is_auto_upgrade'] = 0
         else:
@@ -76,11 +84,6 @@ def step_impl(context, user):
         content['id'] = '-1'
         data.append(content)
     context.client.post('/mall2/api/member_grade_list/?_method=post', {'grades': json.dumps(data)})
-
-
-@Given(u"{user}添加会员等级")
-def step_impl(context, user):
-    context.execute_steps(u"when %s添加会员等级" % user)
 
 
 @When(u"{user}删除会员等级'{name}'")
