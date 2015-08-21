@@ -30,10 +30,10 @@ Background:
 		}]
 		'''
 
-@mall @mall.product @mall.product_model
+@mall @mall.product @mall.product_model @mall2
 Scenario: 重新添加商品规格
 	Jobs添加无商品规格的商品后，能再次添加商品规格
-	
+
 	Given jobs已添加商品
 		"""
 		[{
@@ -47,7 +47,7 @@ Scenario: 重新添加商品规格
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	Then jobs能获取商品'商品1'
 		"""
@@ -74,7 +74,7 @@ Scenario: 重新添加商品规格
 					}
 				}
 			}
-		}	
+		}
 		"""
 	Then jobs能获取商品'商品1'
 		"""
@@ -99,10 +99,10 @@ Scenario: 重新添加商品规格
 		"""
 
 
-@mall @mall.product @mall.product_model
+@mall @mall.product @mall.product_model @mall2
 Scenario: 更新已有商品规格
 	Jobs添加有商品规格的商品后，能更新商品规格
-	
+
 	Given jobs已添加商品
 		"""
 		[{
@@ -123,7 +123,7 @@ Scenario: 更新已有商品规格
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	When jobs更新商品'商品1'
 		"""
@@ -186,7 +186,7 @@ Scenario: 更新已有商品规格
 		}
 		"""
 
-@mall @mall.product @mall.product_model
+@mall @mall.product @mall.product_model @mall2
 Scenario: 修改商品的商品规格
 	Jobs修改已添加的商品的商品规格
 
@@ -218,7 +218,7 @@ Scenario: 修改商品的商品规格
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	When jobs更新商品'商品1'
 		"""
