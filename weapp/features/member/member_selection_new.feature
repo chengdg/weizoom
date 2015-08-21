@@ -34,7 +34,7 @@ Background:
 	Given jobs登录系统
 
 	#添加相关基础数据
-		When jobs添加商品
+		When jobs已添加商品
 			"""
 			[{
 				"name": "商品1",
