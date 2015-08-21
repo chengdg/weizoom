@@ -79,7 +79,7 @@
             </div>
         </div>
         {% for item in q_vote %}
-            {% if item.values %}
+            {% ifequal item.isShortcuts False %}
                 <div class="wui-textSelection">
                     <h1 class="wui-i-title">
                         {{ forloop.counter }}、{{ item.title }}
@@ -102,11 +102,11 @@
                 <li class="wui-i-item">
                     <label class="wui-i-label">{{ item.title }}</label>
                     <div class="wui-i-inputContainer xa-inputControl" >
-                        <input class="wui-i-input" type="text"  placeholder="请输入{{ item.title }}" disabled>
+                        <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" disabled>
                     </div>
                 </li>
             </ul>
-            {% endif %}
+            {% endifequal %}
         {% endfor %}
         {% if vote_detail.prize_type != 'no_prize' %}
             <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >
