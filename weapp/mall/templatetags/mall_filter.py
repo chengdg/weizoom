@@ -110,13 +110,24 @@ def get_order_actions(order):
 			else:
 				return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
 		elif order.status == ORDER_STATUS_PAYED_SHIPED:
+			actions = []
 			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
-				return [ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+				if order.express_company_name:
+					actions = [ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+				else:
+					actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
 			else:
-				return [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
+				if order.express_company_name:
+					actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
+				else:
+					actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+			return actions
 		elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
-				return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
+				if order.express_company_name:
+					return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
+				else:
+					return [ORDER_REFUNDIND_ACTION]
 			else:
 				return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
 		elif order.status == ORDER_STATUS_SUCCESSED:

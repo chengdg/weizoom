@@ -57,7 +57,7 @@ def export_orders_json(request):
         '10': u'优惠抵扣'
     }
 
-    type = ORDER_TYPE2TEXT
+    # type = ORDER_TYPE2TEXT
 
     source_list = {
         'mine_mall': u'本店',
@@ -73,9 +73,9 @@ def export_orders_json(request):
 
     order_list = None
     # 购买数量
-    number = 0
+    # number = 0
 
-    order_send_count = 0
+    # order_send_count = 0
     webapp_id = request.user_profile.webapp_id
     order_list = Order.objects.belong_to(webapp_id).order_by('-created_at')
     status_type = request.GET.get('status', None)
@@ -92,7 +92,7 @@ def export_orders_json(request):
     # 获取查询条件字典和时间筛选条件
     query_dict, date_interval = __get_select_params(request)
     product_name = ''
-    if query_dict.has_key("product_name"):
+    if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
 
     order_list = __get_orders_by_params(query_dict, date_interval, order_list)
@@ -108,17 +108,16 @@ def export_orders_json(request):
         finished_order_count = exclude_order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
         order_list = list(order_list.all())
 
-
     # 商品总额：
     total_product_money = 0.0
     # 订单金额
-    total_order_money = 0.0
+    # total_order_money = 0.0
     # 支付金额
     final_total_order_money = 0.0
     # 微众卡支付金额
     weizoom_card_total_order_money = 0.0
     # 积分总和
-    use_integral_count = 0
+    # use_integral_count = 0
     # 积分抵扣总金额
     use_integral_money = 0.0
     # 赠品总数
@@ -126,7 +125,7 @@ def export_orders_json(request):
     # 优惠劵价值总和
     coupon_money_count = 0
     # 直降总金额
-    save_money_count = 0
+    # save_money_count = 0
     #
     #####################################
 
@@ -167,8 +166,6 @@ def export_orders_json(request):
                 if i > 0 and re.match('', mod[i:]) and model_value_ids.count(mod[i:]) == 0:
                     model_value_ids.append(mod[i:])
 
-
-
     # print 'begin step 3 products - '+str(time.time() - begin_time)
     id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
 
@@ -205,7 +202,7 @@ def export_orders_json(request):
     premium_product_ids = []
     for order_id in order2promotion:
         temp_premium_products = []
-        if order2promotion[order_id].has_key('premium_products'):
+        if order2promotion[order_id].get('premium_products'):
             for premium_product in order2promotion[order_id]['premium_products']:
                 temp_premium_products.append({
                     'id': premium_product['id'],
@@ -246,8 +243,8 @@ def export_orders_json(request):
         # 计算总和
         final_price = 0.0
         weizoom_card_money = 0.0
-        total_price = order.get_total_price()
-        use_integral = order.get_use_integral(webapp_id)
+        # total_price = order.get_total_price()
+        # use_integral = order.get_use_integral(webapp_id)
         if order.type == PAY_INTERFACE_COD:
             if order.status == ORDER_STATUS_SUCCESSED:
                 final_price = order.final_price
@@ -276,7 +273,7 @@ def export_orders_json(request):
             addr = '%s %s' % (area, order.ship_address)
         else:
             addr = '%s' % (order.ship_address)
-        pay_type = PAYTYPE2NAME.get(order.pay_interface_type, '')
+        # pay_type = PAYTYPE2NAME.get(order.pay_interface_type, '')
 
         if order.order_source:
             order.come = 'weizoom_mall'
@@ -303,10 +300,10 @@ def export_orders_json(request):
                     model_value += '-' + id2modelname.get(mod[mod_i:], '')
                 else:
                     model_value = '-'
-            models_name = ''
+            # models_name = ''
             coupon_name = ''
             coupon_money = ''
-            promotion_name = ''
+            # promotion_name = ''
             promotion_type = ''
             # 订单发货时间
             postage_time = order2postage_time.get(order.order_id, '')
@@ -337,7 +334,7 @@ def export_orders_json(request):
                 if coupon_name:
                     coupon_money = order.coupon_money
 
-                type_name = type.get(order.type, '')
+                # type_name = type.get(order.type, '')
 
                 if area:
                     province = area.split(' ')[0]
@@ -598,6 +595,13 @@ def is_has_order(request, is_refund=False):
 
 
 def get_orders_response(request, is_refund=False):
+    """
+
+    Args:
+      sort_attr: -id,
+      count_per_page: 15
+      cur_page: 1
+    """
     is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.manager.id)
     if request.manager.is_weizoom_mall:
         is_weizoom_mall_partner = False
@@ -620,7 +624,6 @@ def get_orders_response(request, is_refund=False):
     user = request.manager
     query_string = request.META['QUERY_STRING']
     watchdog_message += ",webapp_id:" + str(request.manager.get_profile().webapp_id)
-
     items, pageinfo, order_total_count, order_return_count = __get_order_items(user, query_dict, sort_attr,
                                                                                query_string,
                                                                                count_per_page, cur_page,
@@ -767,7 +770,7 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
                 '%.2f' % order.final_price) if order.pay_interface_type != 9 or order.status == 5 else 0,
             'order_total_price': float('%.2f' % order.get_total_price()),
             'ship_name': order.ship_name,
-            'ship_address': order.ship_address,
+            'ship_address': '%s %s' % (regional_util.get_str_value_by_string_ids(order.area), order.ship_address),
             'ship_tel': order.ship_tel,
             'bill_type': order.bill_type,
             'bill': order.bill,
@@ -863,7 +866,7 @@ def __get_orders_by_params(query_dict, date_interval, orders):
     按照查询条件筛选符合条件的订单
     """
     # 商品名称
-    if query_dict.has_key("product_name"):
+    if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
         query_dict.pop("product_name")
 
@@ -885,7 +888,7 @@ def __get_orders_by_params(query_dict, date_interval, orders):
 
         # 处理搜索
     if len(query_dict):
-        if query_dict.has_key("isUseWeizoomCard"):
+        if query_dict.get("isUseWeizoomCard"):
             query_dict.pop("isUseWeizoomCard")
             orders = orders.exclude(weizoom_card_money=0)
         orders = orders.filter(**query_dict)

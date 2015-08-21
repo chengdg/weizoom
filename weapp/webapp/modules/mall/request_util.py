@@ -136,6 +136,7 @@ def list_products(request):
 	})
 	if hasattr(request, 'is_return_context'):
 		return c
+	# 如果是微众商城。 注: 一般情况都不会是
 	if request.user.is_weizoom_mall:
 		return render_to_response('%s/products.html' % request.template_dir, c)
 	else:
