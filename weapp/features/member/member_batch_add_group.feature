@@ -473,7 +473,7 @@ Scenario:7 筛选条件为“分组”的筛选结果时，批量调整分组
 			| bill3         | 2014-6-4 8:00:00  | 直接关注      | 会员分组4           |
 
 @member @memberList @meberGroup
-Scenario:7 会员分组人数验证
+Scenario:8 会员分组人数验证
 
 	Given jobs设置分页查询参数
 		"""
