@@ -167,7 +167,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 	"""
 
 
-@promotion @promotionCoupon @promotionFlash
+@wip.cp2 @promotion @promotionCoupon @promotionFlash
 Scenario: 2先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 	"""
