@@ -475,3 +475,6 @@
 	position: relative;
 	top:3px;
 }
+.xui-wepage-globalNavPage .btn-danger{
+	border-radius: 3px;
+}

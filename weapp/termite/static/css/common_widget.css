@@ -1,7 +1,6 @@
 .xui-hide {
 	display: none;
 }
-
 /*====================店铺模板全局导航======================*/
 .wui-template-globalNavbar a:active,.wui-template-globalNavbar a:visited,.wui-template-globalNavbar a{
     color: #333;
@@ -99,15 +98,11 @@
     background: #fff;
     border-radius: 3px;
 }
-.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
-    max-width: 160px;
-}
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li{
     height: 35px;
     min-width: 70px;
-    max-width: 120px;
     padding-left: 6px;
-    padding-right: 6px;
+    padding-right: 6px;*/
     line-height: 35px;
     text-align: center;
     border-bottom: 1px solid #CBCBCB;
@@ -238,4 +233,5 @@
     height: 30px;
     line-height: 30px;
     border-bottom: 1px solid #CBCBCB;
+
 }
