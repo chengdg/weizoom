@@ -92,7 +92,7 @@
                     <ul class="wui-i-items xa-inputControl">
                         {% for select in item.values %}
                         <li class="wui-i-item">
-                            <div style="position: absolute;z-index: 999;width: 100%;height: 50px;"></div>
+                            <div style="position: absolute;z-index: 999;width: 97%;height: 50px;"></div>
                             <label style="padding: 3px 0;" >
                                 <img class="xui-name-isSelect" src="{% if select.isSelect %} /static_v2/img/selected.png {% else %} /static_v2/img/not_select.png{% endif %}" /><span class="ml5 xa-itemTitle">{{ select.name }}</span>
                                 <span style="display: inline-block;float: right;">{{ select.per }}%</span>
@@ -125,6 +125,7 @@
 {% block js %}
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
     <script type="text/javascript">
+
     $(document).ready(function() {
         $('.progressbar').each(function(){
             $(this).progressbar({
