@@ -31,7 +31,7 @@ class GlobalNavbarStatus(resource.Resource):
         else:
             is_enable = False
             
-        global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.user)
+        global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.user.id)
         global_navbar.is_enable = is_enable
         global_navbar.save()
 

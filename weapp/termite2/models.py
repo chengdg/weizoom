@@ -69,9 +69,9 @@ class TemplateGlobalNavbar(models.Model):
 			return {}
 
 	@staticmethod
-	def get_object(user):
+	def get_object(user_id):
 		global_navbar, _ = TemplateGlobalNavbar.objects.get_or_create(
-			owner=user
+			owner_id=user_id
 		)
 		return global_navbar
 

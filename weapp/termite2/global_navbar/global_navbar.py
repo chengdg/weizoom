@@ -43,7 +43,7 @@ class GlobalNavbar(resource.Resource):
 		project_id = '%s:%s' % (project_id, mongodb_id)
 
 		# 是否启用
-		global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.user)
+		global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.user.id)
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,

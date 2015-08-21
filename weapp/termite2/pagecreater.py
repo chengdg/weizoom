@@ -20,6 +20,7 @@ from termite2 import pagerender
 from termite import pagestore as pagestore_manager
 from webapp import models as webapp_models
 from core.jsonresponse import create_response
+from termite2 import models as termite2_models
 
 ########################################################################
 # __get_display_info: 构造request的display_info
@@ -70,18 +71,52 @@ def __get_display_info(request):
 	request.display_info = display_info
 
 
+'''
+底部导航总开关
+'''
+def __get_is_enable_navbar(request):
+	navbar = termite2_models.TemplateGlobalNavbar.get_object(request.webapp_owner_id)
+	return navbar.is_enable
+
+def __is_enable_navbar(request, navbar_component):
+	if 'home_page' in request.get_full_path():	
+		'''
+		主页是否显示navbar
+		'''
+		is_enable_navbar = navbar_component['model']['pages']['home']['select']
+		if is_enable_navbar:
+			return True
+		else:
+			return False
+	else:		
+		'''
+		微页面是否显示navbar
+		'''
+		return __is_wepage_navbar(navbar_component)
+
+
+def __is_wepage_navbar(navbar_component):	
+	return navbar_component['model']['pages']['wepage']['select']
+
+
 def __get_navbar(request, page):
 	if request.in_production_mode:
+		if not __get_is_enable_navbar(request):
+			return False
+			
 		pagestore = pagestore_manager.get_pagestore('mongo')
 		project_id = 'fake:wepage:%s:navbar' % request.webapp_owner_id
 		page_id = 'navbar'
 		navbar_page = pagestore.get_page(project_id, page_id)
 
-		navbar_component = navbar_page['component']['components'][0]
-		navbar_component['cid'] = 9999999
-		navbar_component['model']['index'] = 9999999
 		if navbar_page:
-			page['component']['components'].append(navbar_component)
+			navbar_component = navbar_page['component']['components'][0]
+			print navbar_component['model']['pages']
+
+			navbar_component['cid'] = 9999999
+			navbar_component['model']['index'] = 9999999
+			if __is_enable_navbar(request, navbar_component):
+				page['component']['components'].append(navbar_component)
 
 
 def __get_fake_project_display_info(request):
