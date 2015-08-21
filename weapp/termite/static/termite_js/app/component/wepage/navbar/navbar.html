@@ -16,7 +16,7 @@
         <div class="xui-calc">
             {% for component in component.components %}
             <div class="">
-                <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-two xui-menu xa-menu f14">
+                <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-{{component.parent_component.sub_component_count}} xui-menu xa-menu f14">
                         <a href="{{ component.model.target|extract_target_data:request|safe }}" class="wa-inner-link">{{ component.model.title }}</a>
                 </div>
                 <div class="xui-subMenuContainer">

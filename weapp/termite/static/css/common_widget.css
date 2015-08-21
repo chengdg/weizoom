@@ -48,16 +48,16 @@
     width: -webkit-calc(100% - 51px);
     position: relative;
 }
-.wui-template-globalNavbar .xui-flex-one{
+.wui-template-globalNavbar .xui-flex-1{
     width: 100%;
 }
-.wui-template-globalNavbar .xui-flex-two{
+.wui-template-globalNavbar .xui-flex-2{
     width: 50%;
     float: left;
     border-right: 1px solid #CBCBCB;
     box-sizing:border-box;
 }
-.wui-template-globalNavbar .xui-flex-third{
+.wui-template-globalNavbar .xui-flex-3{
     width:33.3%;
     float: left;
     border-right: 1px solid #CBCBCB;
