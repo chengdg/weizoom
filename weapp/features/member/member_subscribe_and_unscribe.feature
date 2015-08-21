@@ -4,6 +4,7 @@ Feature: 微信用户关注公众号成为系统会员
 
 Background:
 	Given jobs登录系统
+	And 开启手动清除cookie模式
 	And jobs设定会员积分策略
 		"""
 		{
@@ -82,7 +83,16 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 	#When bill把jobs的微站链接分享到朋友圈
 	When bill把jobs的商品"商品1"的链接分享到朋友圈
+	When bill获得db中在jobs公众号中的mt为'mt_{bill_jobs}'
+
+	When 清空浏览器
 	When tom点击bill分享链接
+	Then tom在jobs公众号中有uuid对应的webapp_user
+	Then 浏览器cookie包含"[fmt, uuid]"
+	Then 浏览器cookie等于
+		"""
+		{"fmt":"mt_{bill_jobs}"}
+		"""
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom获得jobs的20会员积分
@@ -97,8 +107,8 @@ Scenario: 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"friend_count": 0,
-			"source": "直接关注",
+			"friend_count": 1,
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -107,7 +117,7 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 1,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": [],
@@ -121,7 +131,15 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20
 		}]
 		"""
+
+	When 清空浏览器
 	When nokia点击bill分享链接
+	Then nokia在jobs公众号中有uuid对应的webapp_user
+	Then 浏览器cookie包含"[fmt, uuid]"
+	Then 浏览器cookie等于
+		"""
+		{"fmt":"mt_{bill_jobs}"}
+		"""
 	When nokia关注jobs的公众号
 	When nokia访问jobs的webapp
 	When nokia获得jobs的20会员积分
@@ -135,9 +153,9 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 1,
 			"pay_times": 0,
-			"source": "直接关注",
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -147,8 +165,8 @@ Scenario: 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"friend_count": 0,
-			"source": "直接关注",
+			"friend_count": 1,
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -157,7 +175,7 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": [],
@@ -171,7 +189,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20
 		}]
 		"""
-	#When tom把jobs的微站二维码推广给tom1
+	#tom把jobs的微站二维码推广给tom1
 	When tom访问jobs的webapp
 	#When tom把jobs的二维码推广给tom1
 	When tom1关注jobs的公众号
@@ -198,9 +216,9 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 1,
 			"pay_times": 0,
-			"source": "直接关注",
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -210,8 +228,8 @@ Scenario: 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"friend_count": 0,
-			"source": "直接关注",
+			"friend_count": 1,
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -220,7 +238,7 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": [],
@@ -268,9 +286,9 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 1,
 			"pay_times": 0,
-			"source": "直接关注",
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -280,8 +298,8 @@ Scenario: 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"friend_count": 0,
-			"source": "直接关注",
+			"friend_count": 1,
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -290,7 +308,7 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": [],
@@ -329,9 +347,9 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 1,
 			"pay_times": 0,
-			"source": "直接关注",
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -341,8 +359,8 @@ Scenario: 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"friend_count": 0,
-			"source": "直接关注",
+			"friend_count": 1,
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -351,7 +369,7 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": [],
@@ -380,9 +398,9 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 1,
 			"pay_times": 0,
-			"source": "直接关注",
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -392,8 +410,8 @@ Scenario: 微信用户关注公众号成为会员
 			"unit_price": 0.00,
 			"pay_times": 0,
 			"integral": 20,
-			"friend_count": 0,
-			"source": "直接关注",
+			"friend_count": 1,
+			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
 		},{
@@ -402,7 +420,7 @@ Scenario: 微信用户关注公众号成为会员
 			"pay_money": 0.00,
 			"unit_price": 0.00,
 			"integral": 20,
-			"friend_count": 0,
+			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
 			"tags": [],
