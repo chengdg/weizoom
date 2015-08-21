@@ -276,7 +276,7 @@ Scenario: 更新商品
 		}
 		"""
 
-@mall @mall.product
+@mall2 @wip.p2 @mall.product
 Scenario: 切换邮费配置
 	jobs把运费配置更改为'圆通'
 	jobs查看商品详情
@@ -290,9 +290,10 @@ Scenario: 切换邮费配置
 		}
 		"""
 	And jobs能获取商品'商品2'
+		#	"postage": "免运费"
 		"""
 		{
 			"name": "商品2",
-			"postage": "免运费"
+			"postage": "圆通"
 		}
 		"""

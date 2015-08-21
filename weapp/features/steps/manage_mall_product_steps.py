@@ -330,7 +330,7 @@ def __get_product_from_web_page(context, product_name):
     }
 
     #填充运费
-    if product.postage_id == 999:
+    if product.postage_id == 999 or product.postage_id == 0:
         # TODO: 999表示什么？
         postage_config_info = response.context['postage_config_info']
         if postage_config_info['is_use_system_postage_config']:
