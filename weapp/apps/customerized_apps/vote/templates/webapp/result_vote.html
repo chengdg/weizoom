@@ -128,7 +128,8 @@
             $(this).progressbar({
                 initValue: $(this).attr('data-per')
             });
-            $(this).find('.ui-progressbar-bg').unbind('tap')
+            $(this).find('.ui-progressbar-bg').unbind('tap');
+            $(this).find('.ui-progressbar-bg').unbind('click');
         });
         $('.xa-toUserCenter').on('click', function(event) {
             redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
