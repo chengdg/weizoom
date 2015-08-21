@@ -20,10 +20,11 @@ def step_impl(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
 	context.member_tags = json.loads(context.text)
-	for member_tag in context.member_tags:
-		data = member_tag
-		response = client.post('/member/member_tags/get/', data)
-	#response = client.post('/member/member_tags/get/', context.member_tags)
+	#for member_tag in context.member_tags:
+		#data = member_tag
+		#response = client.post('/member/member_tags/get/', data)
+	response = client.post('/member/member_tags/get/', 
+		context.member_tags)
 
 @then(u"{user}能获取会员分组列表")
 def step_impl(context, user):
@@ -32,11 +33,11 @@ def step_impl(context, user):
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	response = client.get('/webapp/user_center/tags/')
+	response = client.get('/member/member_tags/get/')
 	member_tags =response.context['member_tags']
 	tag_list = []
 	for tag in member_tags:
-		tag_list.append({"name":tag.name})
+		tag_list.append({"name":tag.name,"group_membership":tag.count})
 	expected = json.loads(context.text)
 	bdd_util.assert_list(expected, tag_list)
 
