@@ -40,22 +40,12 @@ class voteParticipances(resource.Resource):
 	def get_datas(request):
 		import time
 		name = request.GET.get('participant_name', '')
-		print time.time(),'start1--22222222222222222222222222222222222222'
 		if name:
 			members = member_models.Member.get_by_username(name)#31
 		else:
 			members = member_models.Member.get_members(request.user_profile.webapp_id)
-		print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-		print members
-		print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
-		print time.time(),'end1-2222222222222222222222222222222222222222222'
 		member_ids = [member.id for member in members]
-		print time.time(),'start2-44444444444444444444444444444444444444'
 		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]#17
-		print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-		print webapp_user_ids
-		print '###########################################'
-		print time.time(),'end2-44444444444444444444444444444444444444'
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		params = {'belong_to':request.GET['id']}
