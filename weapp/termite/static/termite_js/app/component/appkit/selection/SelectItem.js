@@ -17,7 +17,7 @@ W.component.appkit.SelectItem = W.component.Component.extend({
 			displayName: '选项',
 			isUserProperty: true,
 			maxLength: 20,
-			validate: 'data-validate="require-notempty::选项不能为空,,require-letter::只能填入字母、数字、下划线"',
+			validate: 'data-validate="require-notempty::选项不能为空,,require-word::只能填入汉字、字母、数字、下划线"',
 			validateIgnoreDefaultValue: true,
 			default: '',
 			placeholder: ''
