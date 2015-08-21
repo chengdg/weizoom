@@ -15,14 +15,13 @@ from modules.member.models import *
 def step_impl(context, user):
 	context.client = bdd_util.login(user, password=None, context=context)
 
-@given(u"{user}添加会员分组")
+@when(u"{user}添加会员分组")
 def step_impl(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
 	context.member_tags = json.loads(context.text)
-	for member_tag in context.member_tags:
-		data = member_tag
-		response = client.post('/member/member_tags/get/', data)
+	response = client.post('/member/member_tags/get/', 
+		context.member_tags)
 
 @then(u"{user}能获取会员分组列表")
 def step_impl(context, user):
@@ -31,43 +30,28 @@ def step_impl(context, user):
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	response = client.get('/webapp/user_center/tags/')
+	response = client.get('/member/member_tags/get/')
 	member_tags =response.context['member_tags']
 	tag_list = []
 	for tag in member_tags:
-		tag_list.append({"name":tag.name})
+		tag_list.append({"name":tag.name,"group_membership":tag.count})
 	expected = json.loads(context.text)
 	bdd_util.assert_list(expected, tag_list)
 
-# @given(u"{user}添加会员分组")
-# def step_impl(context, user):
-# 	if hasattr(context, 'client'):
-# 		context.client.logout()
-# 	context.client = bdd_util.login(user)
-# 	client = context.client
 
-# 	response = client.get('/webapp/user_center/tags/')
-# 	member_tags =response.context['member_tags']
-# 	tag_list = []
-# 	for tag in member_tags:
-# 		tag_list.append({"name":tag.name})
-# 	expected = json.loads(context.text)
-# 	bdd_util.assert_list(expected, tag_list)
-
-@when(u"{user}更新会员分组'{tag_name}'")
-def step_impl(context, user, tag_name):
+@when(u"{user}更新会员分组")
+def step_impl(context, user):
 	client = context.client
-	existed_member_tag = MemberTagFactory(name=tag_name)
 	new_member_tag = json.loads(context.text)
-	data = {
-		'name': new_member_tag['name']
-	}
-	response = client.post('/webapp/user_center/tag/update/%d/' % existed_member_tag.id, data)
+	response = client.post('/member/member_tags/get/' ,new_member_tag)
 
-@when(u"{user}删除会员分组'{tag_name}'")
-def step_impl(context, user, tag_name):
-	existed_member_tag = MemberTagFactory(name=tag_name)
-	res = context.client.get('/webapp/user_center/tag/delete/%d/' % existed_member_tag.id)
+
+@when(u"{user}删除会员分组")
+def step_impl(context, user):
+	client = context.client
+	new_member_tag = json.loads(context.text)
+	response = client.post('/member/member_tags/get/' ,new_member_tag)
+
 
 
 

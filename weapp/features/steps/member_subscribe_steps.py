@@ -56,6 +56,7 @@ def step_impl(context, user):
 		IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).update(**integral_detail)
 	elif integral_detail:
 		pass
+
 # def __get_user(user_name):
 # 	return User.objects.get(username=user_name)
 
