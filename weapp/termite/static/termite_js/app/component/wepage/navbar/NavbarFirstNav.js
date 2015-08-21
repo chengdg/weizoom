@@ -72,11 +72,21 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             parentComponent.refresh($node, {resize:true});
         }
     },
+
     setLimitation: function(args) {
         xwarn('----- set limitation -----');
         xwarn(args);
 
         this.name2field['title'].maxLength = args.titleMaxLength;
         W.component.getFieldsByType('wepage.navbar_firstnav')[0].maxLength = args.titleMaxLength;
+    },
+
+    initialize: function(obj) {
+        this.super('initialize', obj);
+        if (W.WEAPAGE_NAVBARTYPE == 'slide') {
+            this.setLimitation({
+                titleMaxLength: 10
+            })
+        }
     }
 });

@@ -143,6 +143,9 @@
 			W.Synchronizer.manualSync(function(responseData, page) {
 				W.showHint('success', '保存店铺导航成功');
 				W.projectId = responseData; //保存新的projectId;
+				_.delay(function(){
+					window.location.reload();
+				}, 1000);
 			});
 		});
 

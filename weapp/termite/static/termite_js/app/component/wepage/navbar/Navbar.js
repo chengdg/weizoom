@@ -135,6 +135,7 @@ W.component.wepage.Navar = W.component.Component.extend({
         if (this.model.get('type') == 'slide') {
             this.name2field['items'].maxItemLength = 999;
         }
+        W.WEAPAGE_NAVBARTYPE = this.model.get('type');
         this.type2items = {};
         this.type2components = {};
     }
