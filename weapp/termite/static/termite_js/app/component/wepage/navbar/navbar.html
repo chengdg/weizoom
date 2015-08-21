@@ -13,10 +13,11 @@
         <div class="xui-home">
             <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bg"></a>
         </div>
-        {% for component in component.components %}
-            <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-two">
-                <div class="xui-menu xa-menu f14">
-                    <a href="{{ component.model.target|extract_target_data:request|safe }}" class="wa-inner-link">{{ component.model.title }}</a>
+        <div class="xui-calc">
+            {% for component in component.components %}
+            <div class="">
+                <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-two xui-menu xa-menu f14">
+                        <a href="{{ component.model.target|extract_target_data:request|safe }}" class="wa-inner-link">{{ component.model.title }}</a>
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>
@@ -28,7 +29,8 @@
                     </ul>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
 	</div>
     <div class="xui-hide" data-ui-role="sideNav"></div>
 

@@ -32,14 +32,34 @@ gmu.define('BottomNav', {
 
 	clickShowSubmenu:function(event){
 		var $target = $(event.currentTarget);
+		var $menu = this.$el.find('.xa-menu');
+		var menuWidth = $menu.eq(0).width();
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
 		var $subLink = $target.siblings('.xui-subMenuContainer').find('.xui-subMenu li');
-        var $otherSubMenuContainer = $target.parent().siblings('.xui-flex').find('.xui-subMenuContainer');
-         $otherSubMenuContainer.removeClass('xui-show');
-         if( $subLink.length >0 ){
+        var $otherSubMenuContainer = $target.parents('.xui-globalBottomBar').find('.xui-subMenuContainer');
+        var width = $subMenuContainer.width();
+        $otherSubMenuContainer.removeClass('xui-show');
+         if( $subLink.length>0){
          	$subMenuContainer.toggleClass('xui-show');
-           var width = $subMenuContainer.width();
+         }
+         if($menu.length == 1){
            $subMenuContainer.css('margin-left',-width/2);
+         }else if($menu.length == 2){
+         	$subMenuContainer.css('margin-left',-width/2- menuWidth/2);
+         	$otherSubMenuContainer.eq(1).css({
+         		'right':8,
+         		'left':'auto',
+				'margin-left':0
+			});
+
+         }else {
+         	$subMenuContainer.css('margin-left',-width/2- menuWidth/2);
+         	$otherSubMenuContainer.eq(1).css('margin-left',-width/2+ menuWidth/2);
+         	$otherSubMenuContainer.eq(2).css({
+         		'right':8,
+         		'left':'auto',
+				'margin-left':0
+			});
          }
 	}
 });
