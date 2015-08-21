@@ -57,7 +57,10 @@ def __get_display_info(request):
 		except:
 			pass
 
-	__get_navbar(request, page)
+	if request.user.is_from_weixin:
+		#在预览模式下，不显示导航
+		__get_navbar(request, page)
+
 	display_info = {
 		'project': project,
 		'page_id': page_id,
