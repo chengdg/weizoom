@@ -347,6 +347,7 @@ def step_impl(context, user):
 	print("expected: {}".format(expected))
 	bdd_util.assert_list(expected, real)
 
+
 @when(u"{user}使'{coupon_name}'失效")
 def step_disable_coupon(context, user, coupon_name):
 	"""

@@ -289,13 +289,13 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 		}]
 	"""
 
-@promotion.promotionCoupon @promotion.promotionPremium
+@mall2 @wip.cp4 @promotion.promotionCoupon @promotion.promotionPremium
 Scenario: 4先建立买赠活动，不能建立该商品的单品券
 	When jobs创建买赠活动
 	"""
 		[{
 			"name": "商品3买一赠一",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"premium_products": [{
@@ -306,33 +306,33 @@ Scenario: 4先建立买赠活动，不能建立该商品的单品券
 			"is_enable_cycle_mode": true
 		}]
 	"""
-	Then jobs能获取买赠活动列表
+	Then jobs获取买赠活动列表
 	"""
 		[{
 			"name": "商品3买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"start_date": "今天",
 			"end_date": "1天后"
 		}]
 	"""
-	And jobs能获取上架商品查询列表
+	And jobs获取上架商品查询列表
 	"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "false",
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}, {
 			"name": "商品3",
 			"stock_type": "无限",
-			"operate": "false",
+			"operate": false,
 			"price": 200.00
 		}]
 	"""
