@@ -122,7 +122,8 @@ $(document).ready(function() {
                 $(".xa-couponName").text(data[0].name+couponType);
                 $(".xa-couponInfo").empty().append(' 当前库存:'+remained_count+' 每人限领：'+limit).append($('<a/>').attr('href','/mall2/coupon/?rule_id='+data[0].id).html('增加库存'));
                 $(".xa-selectCoupon").text("修改");
-                var totalMoney = parseFloat(selectCouponMoney) * parseInt(count);
+                var new_count = $('#selectCouponCount').val();
+                var totalMoney = parseFloat(selectCouponMoney) * parseInt(new_count);
                 $(".xa-totalMoney").text("总价值："+ totalMoney.toFixed(2) +"元");
             },
             error: function(data) {}
