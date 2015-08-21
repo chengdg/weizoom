@@ -42,7 +42,7 @@ class voteParticipances(resource.Resource):
 		print time.time(),'11111111111111111111111111111111111111'
 		name = request.GET.get('participant_name', '')
 		print time.time(),'22222222222222222222222222222222222222'
-		members = member_models.Member.get_by_username(name)
+		members = member_models.Member.get_by_username(name)#
 		print time.time(),'3333333333333333333333333333333333333'
 		member_ids = [member.id for member in members]
 		print time.time(),'44444444444444444444444444444444444444'
@@ -60,7 +60,7 @@ class voteParticipances(resource.Resource):
 		if end_time:
 			params['created_at__lte'] = end_time
 		datas = app_models.voteParticipance.objects(**params).order_by('-id')	
-		print '========================================================'
+		print time.time(),'========================================================'
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
