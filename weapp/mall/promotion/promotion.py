@@ -19,11 +19,10 @@ class Promotion(resource.Resource):
 
     @login_required
     def api_get(request):
-        """获得促销活动可以选用的商品集合.
+        """
+        获得促销活动可以选用的商品集合.
 
-        Args:
-          type: "usable_promotion_products" or "promotion_products"
-
+        @param type "usable_promotion_products" or "promotion_products"
         """
         promotion_product_type = request.GET.get('type', 'promotion_products')
         if promotion_product_type == 'usable_promotion_products':
@@ -155,7 +154,10 @@ class Promotion(resource.Resource):
 
     @login_required
     def api_post(request):
-        """结束促销活动
+        """
+        结束促销活动
+
+        @todo 其实应该用DELETE之类的method。
         """
         promotion_type = models.PROMOTIONSTR2TYPE[request.POST['type']]
 
