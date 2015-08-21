@@ -41,11 +41,11 @@ class voteParticipances(resource.Resource):
 		import time
 		name = request.GET.get('participant_name', '')
 		if name:
-			members = member_models.Member.get_by_username(name)#31
+			members = member_models.Member.get_by_username(name)
 		else:
 			members = member_models.Member.get_members(request.user_profile.webapp_id)
 		member_ids = [member.id for member in members]
-		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]#17
+		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		params = {'belong_to':request.GET['id']}
@@ -55,7 +55,7 @@ class voteParticipances(resource.Resource):
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
-		datas = app_models.voteParticipance.objects(**params).order_by('-id')	
+		datas = app_models.voteParticipance.objects(**params).order_by('-id')
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))

@@ -106,10 +106,10 @@ class eventParticipances(resource.Resource):
 			for k, v in termite_data.items():
 				pureName = k.split('_')[1]
 				item_data = {}
-				if re.compile(u'[\u4e00-\u9fa5a-zA-Z0-9]+').search(pureName):#判断是否是自定义的填写项
-					item_data['item_name'] = pureName
-				else:
+				if pureName in ITEM_FOR_DISPLAY:#判断是否是自定义的填写项
 					item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
+				else:
+					item_data['item_name'] = pureName
 				item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
 			items.append({
