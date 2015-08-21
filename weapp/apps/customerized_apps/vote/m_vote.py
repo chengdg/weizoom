@@ -208,7 +208,12 @@ def get_result(id,member_id):
 	page_info = page['component']['components'][0]['model']
 	vote_detail['subtitle'] = page_info['subtitle']
 	vote_detail['description'] = page_info['description']
-	vote_detail['prize_type'] = page_info['prize']['type']
-	vote_detail['prize_data'] = page_info['prize']['data']
+	prize_type = page_info['prize']['type']
+	vote_detail['prize_type'] = prize_type
+	if prize_type == 'coupon':
+		prize_data = page_info['prize']['data']['name']
+	else:
+		prize_data = page_info['prize']['data']
+	vote_detail['prize_data'] = prize_data
 
 	return vote_detail,result_list
