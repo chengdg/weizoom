@@ -39,7 +39,7 @@ def step_impl(context, user):
 def step_impl(context, user):
     orders = json.loads(context.text)
     orders = _handle_fahuo_data(orders)
-    mall_api.batch_handle_order(orders, context.client.user)
+    context.response = mall_api.batch_handle_order(orders, context.client.user)
 
 
 @when(u"{webapp_owner_user}填写发货信息")
@@ -84,3 +84,23 @@ def step_impl(context, user):
             del order['order_money']
 
     bdd_util.assert_dict(expected, actual)
+
+
+@then(u"{user}获得批量发货提示错误信息")
+def step_impl(context, user):
+    expected = []
+    for result in context.table:
+        result = result.as_dict()
+        expected.append(result)
+    print(expected)
+    print(type(expected))
+    actual = context.response[1]
+
+    print(actual)
+    for info in actual:
+        info['order_no'] = info['order_id']
+        info['logistics'] = info['express_company_name']
+        info['number'] = info['express_number']
+        info['failure_reasons'] = info['error_info']
+
+    bdd_util.assert_list(expected, actual)

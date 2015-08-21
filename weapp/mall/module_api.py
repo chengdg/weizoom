@@ -2704,6 +2704,8 @@ def batch_handle_order(json_data, user):
 				item["error_info"] = "订单号错误"
 				error_data.append(item)
 				continue
+			if not express_number:
+				raise
 			if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 				if ship_order(order.id, express_company_value, express_number, user.username, u''):
 					success_data.append(item)

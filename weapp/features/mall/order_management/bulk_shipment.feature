@@ -321,7 +321,7 @@ Scenario: 1 对多个订单同时进行发货
 		"""
 
 
-@deliver
+@mall2 @deliver
 Scenario: 2 对多个订单同时进行发货失败
 	jobs填写多个订单号和快递信息进行发货
 	1.填写信息有误,发货失败
@@ -349,7 +349,7 @@ Scenario: 2 对多个订单同时进行发货失败
 			"number":""
 		}]
 		"""
-	Then jobs提示错误信息
+	Then jobs获得批量发货提示错误信息
 		| order_no | logistics |   number   | failure_reasons |
 		|  00001   | 顺丰速运  | 147258369  |  订单状态错误   |
 		|  000030  | 顺丰速运  | 147258368  |   订单号错误    |
