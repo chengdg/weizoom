@@ -15,16 +15,21 @@
 	</div>
 	<div class="wui-i-info">
 		<div class="wui-i-time">
-			活动时间：{{component.model.start_time}}至{{component.model.end_time}}
+			<i class="wui-i-sprite xui-sprite-timerange"></i>
+			<div>{{component.model.start_time}}至{{component.model.end_time}}</div>
 		</div>
+		<div style="clear: both"></div>
 		<div class="wui-i-prize">
 			{% if component.model.prize.type == 'integral' %}
-			活动奖励：{{component.model.prize.data}}积分
+			<i class="wui-i-sprite xui-sprite-prize"></i>
+				<div>{{component.model.prize.data}}积分</div>
 			{% endif %}
 			{% if component.model.prize.type == 'coupon' %}
-			活动奖励：{{component.model.prize.data.name}}
+			<i class="wui-i-sprite xui-sprite-prize"></i>
+				<div>{{component.model.prize.data.name}}</div>
 			{% endif %}
 		</div>
+		<div style="clear: both"></div>
 	</div>
 </div>
 {% endifequal %}

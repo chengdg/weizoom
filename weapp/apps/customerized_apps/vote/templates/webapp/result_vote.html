@@ -25,28 +25,6 @@
         background: #1BA3F9;
         border-radius: 0;
     }
-    .wui-i-time > span,.wui-i-prize > span{
-        display: block;
-        height: 35px;
-        line-height: 35px;
-        float: left;
-    }
-    .wui-i-sprite-timerange{
-        background: url('/static_v2/img/m_sprite.png') no-repeat;
-        background-position: 0 5px;
-        display: block;
-        height: 35px;
-        width: 40px;
-        float: left;
-    }
-    .wui-i-sprite-prize{
-        background: url('/static_v2/img/m_sprite.png') no-repeat;
-        background-position: -40px 5px;
-        display: block;
-        height: 35px;
-        width: 40px;
-        float: left;
-    }
     .xui-name-isSelect{
         width: 20px;
         height: 20px;
@@ -65,19 +43,19 @@
             </div>
             <div class="wui-i-info">
                 <div class="wui-i-time">
-                    <i class="wui-i-sprite wui-i-sprite-timerange"></i>
-                    <span>{{ vote_detail.start_time }}至{{ vote_detail.end_time }}</span>
+                    <i class="wui-i-sprite xui-sprite-timerange"></i>
+                    <div>{{ vote_detail.start_time }}至{{ vote_detail.end_time }}</div>
                 </div>
                 <div style="clear: both"></div>
             {% ifequal vote_detail.prize_type 'no_prize' %}
             {% else %}
                 <div class="wui-i-prize">
-                    <i class="wui-i-sprite wui-i-sprite-prize"></i>
-                    <span>{{ vote_detail.prize_data }}
+                    <i class="wui-i-sprite xui-sprite-prize"></i>
+                    <div>{{ vote_detail.prize_data }}
                         {% if vote_detail.prize_type == 'integral' %}
                             积分
                         {% endif %}
-                    </span>
+                    </div>
                 </div>
                 <div style="clear: both"></div>
             {% endifequal %}
