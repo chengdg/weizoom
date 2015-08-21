@@ -167,7 +167,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 	"""
 
 
-@wip.cp2 @promotion @promotionCoupon @promotionFlash
+@mall2 @wip.cp2 @promotion @promotionCoupon @promotionFlash
 Scenario: 2先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 	"""
@@ -201,17 +201,17 @@ Scenario: 2先建优惠券，不能参加促销活动
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
-			"operate": "false",
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
-			"operate": "false",
+			"operate": false,
 			"price": 200.00
 		}, {
 			"name": "商品3",
 			"stock_type": "无限",
-			"operate": "true",
+			"operate": true,
 			"price": 200.00
 		}]
 	"""

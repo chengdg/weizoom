@@ -73,12 +73,14 @@ def step_product_add(context, user):
 def step_get_products(context, user, product_name):
     expected = json.loads(context.text)
     actual = __get_product_from_web_page(context, product_name)
-    # print("*"*39, "expected", "*"*39)
-    # from pprint import pprint
-    # pprint(expected)
-    # print("*"*39, "actual", "*"*39)
-    # pprint(actual)
     bdd_util.assert_dict(expected, actual)
+
+
+@when(u"{user}删除商品'{product_name}'的商品规格'{model_name}")
+def step_delete_product_with_custom_model(context, user, product_name, model_name):
+    """删除有定制规格商品的某个规则
+    """
+    step_update_product(context, user, product_name)
 
 
 @then(u'{user}后端获取"{product_name}"库存')
