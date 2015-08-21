@@ -17,7 +17,7 @@ W.component.appkit.TextItem = W.component.Component.extend({
 			displayName: '填写项',
 			isUserProperty: true,
 			maxLength: 20,
-			validate: 'data-validate="require-notempty::选项不能为空,,require-word::只能填入汉字、字母、数字、下划线"',
+			validate: 'data-validate="require-notempty::选项不能为空,,require-word::只能填入汉字、字母、数字"',
 			validateIgnoreDefaultValue: true,
 			default: '',
 			placeholder: ''
@@ -39,6 +39,8 @@ W.component.appkit.TextItem = W.component.Component.extend({
 
 	propertyChangeHandlers: {
 		title: function($node, model, value, $propertyViewNode) {
+			console.log('=======================11');
+			console.log($node);
 			$node.find('.wui-i-label').text(value);
 			$node.find('.wui-i-input').attr("placeholder", "请输入" + value);
 		},
