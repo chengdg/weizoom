@@ -41,7 +41,10 @@ class voteParticipances(resource.Resource):
 		import time
 		name = request.GET.get('participant_name', '')
 		print time.time(),'start1--22222222222222222222222222222222222222'
-		members = member_models.Member.get_by_username(name)#31
+		if name:
+			members = member_models.Member.get_by_username(name)#31
+		else:
+			members = member_models.Member.get_members(request.webapp_id)
 		print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 		print members
 		print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
