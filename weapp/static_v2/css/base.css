@@ -476,6 +476,15 @@ select{
     top: 0;
     width: 190px;
 }
+.xui-mainPanel .xui-sideBar-votes{
+	background-position: -48px -273px;
+}
+.xui-mainPanel .xui-sideBar-events{
+	background-position: -48px -273px;
+}
+.xui-mainPanel .xui-sideBar-surveies{
+	background-position: -48px -273px;
+}
 .xui-mainPanel .xui-sideBar-realtime_messages{
 	background-position: -48px -141px;
 }

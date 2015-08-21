@@ -13,7 +13,7 @@ NEW_PAGE_JSON = """
         "components": [{
             "cid": 2,
             "pid": 1,
-            "property_view_title": "活动详情",
+            "property_view_title": "用户反馈",
             "force_display_in_property_view": "no",
             "components": [],
             "selectable": "yes",
@@ -63,7 +63,7 @@ NEW_PAGE_JSON = """
             "index": 1,
             "name": "",
             "title": "index",
-            "site_title": "用户调研",
+            "site_title": "用户反馈",
             "uploadWidth": "320",
             "uploadHeight": "568",
             "class": "",

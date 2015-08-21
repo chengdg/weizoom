@@ -122,7 +122,7 @@ def get_webapp_link_menu_objectes(request):
 		'complain': {
 			'id': 7,
 			'name': '用户反馈',
-			'link': get_complain_webapp_link(request)
+			'link': '/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.user.id
 		},
 		'shengjingCustom': {
 			'id': 9,
