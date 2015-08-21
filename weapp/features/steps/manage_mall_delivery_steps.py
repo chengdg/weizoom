@@ -39,7 +39,7 @@ def step_impl(context, user):
 def step_impl(context, user):
     orders = json.loads(context.text)
     orders = _handle_fahuo_data(orders)
-    context.response = mall_api.batch_handle_order(orders, context.client.user)
+    context.result_dict = mall_api.batch_handle_order(orders, context.client.user)
 
 
 @when(u"{webapp_owner_user}填写发货信息")
@@ -92,11 +92,7 @@ def step_impl(context, user):
     for result in context.table:
         result = result.as_dict()
         expected.append(result)
-    print(expected)
-    print(type(expected))
-    actual = context.response[1]
-
-    print(actual)
+    actual = context.result_dict[1]
     for info in actual:
         info['order_no'] = info['order_id']
         info['logistics'] = info['express_company_name']
