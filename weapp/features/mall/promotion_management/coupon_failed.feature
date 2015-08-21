@@ -89,7 +89,11 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"end_date": "2天后"
 		}]
 	"""
+<<<<<<< HEAD
 	And jobs能获取限时抢购查询列表
+=======
+	Then jobs能获取限时抢购查询列表
+>>>>>>> 8c7b5e4f1269b77ba9335fa964ce268b52fd874d
 	"""
 		[{
 			"name": "商品1",
@@ -108,11 +112,40 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"price": 200.00
 		}]
 	"""
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 8c7b5e4f1269b77ba9335fa964ce268b52fd874d
 	#优惠券过期失效，可以建立促销活动
-	When jobs使优惠券失效
-	And jobs创建限时抢购活动
-	Then jobs能获取限时抢购查询列表
+	When jobs添加优惠券规则
+	"""
+		[{
+			"name": "优惠券4",
+			"money": 10.00,
+			"count": 5,
+			"limit_counts": 1,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"using_limit": "满50元可以使用",
+			"coupon_id_prefix": "coupon4_id_",
+			"coupon_product": "商品3"
+		}]
+	"""
+	Then jobs能获得优惠券规则列表
+	"""
+		[{
+			"name": "优惠券4",
+			"type": "单品券",
+			"money": 10.00,
+			"remained_count": 5,
+			"limit_counts": 1,
+			"use_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前"
+		}]
+	"""
+	And jobs能获取限时抢购查询列表
 	"""
 		[{
 			"name": "商品1",
@@ -122,7 +155,11 @@ Scenario: 1先建优惠券，不能参加促销活动
 		}, {
 			"name": "商品2",
 			"stock_type": "无限",
+<<<<<<< HEAD
 			"operate": true,
+=======
+			"operate": "false",
+>>>>>>> 8c7b5e4f1269b77ba9335fa964ce268b52fd874d
 			"price": 200.00
 		}, {
 			"name": "商品3",
@@ -162,17 +199,7 @@ Scenario: 2先建优惠券，不能参加促销活动
 			"end_date": "2天后"
 		}]
 	"""
-	When jobs创建限时抢购活动
-	"""
-		[{
-			"name": "商品2限时抢购",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"products": ["商品2"],
-			"promotion_price": 180.00
-		}]
-	"""
-	Then jobs能获取限时抢购查询列表
+	And jobs能获取限时抢购查询列表
 	"""
 		[{
 			"name": "商品1",
@@ -192,8 +219,7 @@ Scenario: 2先建优惠券，不能参加促销活动
 		}]
 	"""
 	#优惠券在有效期内，手动失效，不能建立优惠券，需要等过有效期才能建立
-	When jobs使优惠券失效
-	And jobs创建限时抢购活动
+	When jobs使'优惠券4'失效
 	Then jobs能获取限时抢购查询列表
 	"""
 		[{
@@ -243,8 +269,8 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 			"promotion_price": 11.5
 		}]
 	"""
-	When jobs添加单品优惠券规则
-	Then jobs能获取单品券查询列表
+
+	And jobs能获取单品券查询列表
 	"""
 		[{
 			"name": "商品1",
@@ -292,8 +318,7 @@ Scenario: 4先建立买赠活动，不能建立该商品的单品券
 			"end_date": "1天后"
 		}]
 	"""
-	When jobs添加单品优惠券规则
-	Then jobs能获取优惠券查询列表
+	And jobs能获取优惠券查询列表
 	"""
 		[{
 			"name": "商品1",
