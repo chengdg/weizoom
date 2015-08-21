@@ -69,13 +69,14 @@
                     <span>{{ vote_detail.start_time }}至{{ vote_detail.end_time }}</span>
                 </div>
                 <div style="clear: both"></div>
-            {% if vote_detail.prize_type != 'no_prize' %}
+            {% ifequal vote_detail.prize_type 'no_prize' %}
+            {% else %}
                 <div class="wui-i-prize">
                     <i class="wui-i-sprite wui-i-sprite-prize"></i>
                     <span>{% if vote_detail.prize_type == 'integral' %}{{ vote_detail.prize_data }}积分{% endif %}</span>
                 </div>
                 <div style="clear: both"></div>
-            {% endif %}
+            {% endifequal %}
             </div>
         </div>
         {% for item in q_vote %}
@@ -117,10 +118,14 @@
 {% endblock %}
 {% block js %}
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
+
     <script type="text/javascript">
     $(document).ready(function() {
         $('.progressbar').each(function(){
-            $(this).progressbar('value',$(this).attr('data-per'));
+            $(this).progressbar({
+                initValue: $(this).attr('data-per')
+            });
+            $(this).off();
         });
         $('.xa-toUserCenter').on('click', function(event) {
             redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);

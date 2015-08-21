@@ -13,7 +13,7 @@ NAV = {
 		{% if resource.need_export %}
 		{
 			'name': "{{resource.lower_name}}",
-			'title': "{{resource.lower_name}}",
+			'title': "{{resource.display_name}}",
 			'url': '/apps/{{app_name}}/{{resource.lower_name}}/',
 			'need_permissions': []
 		},
@@ -49,7 +49,7 @@ def get_link_targets(request):
 		link_targets.append({
 			"id": str(data.id),
 			"name": data.name,
-			"link": '/apps/weixin_prize/m_{{resource.item_lower_name}}/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
+			"link": '/apps/{{app_name}}/m_{{resource.item_lower_name}}/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
 			"isChecked": False,
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})
