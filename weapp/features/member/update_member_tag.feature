@@ -14,12 +14,14 @@ Background:
 		}	
 		"""
 
-@crm @member @member.tag @member.update_tag @test_a
+@crm @member @member.tag @member.update_tag
 Scenario: Jobs更新已存在的会员分组
-	When jobs更新会员分组'分组1'
+	When jobs更新会员分组
 		"""
 		{
-			"name": "分组1*"
+			"tag_id_1": "分组1*",
+			"tag_id_2": "分组2",
+			"tag_id_3": "分组3"
 		}	
 		"""
 	Then jobs能获取会员分组列表
