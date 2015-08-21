@@ -39,10 +39,10 @@ class UserFactory(factory.django.DjangoModelFactory):
 	# 	pass
 
 
-###############################################################################################
-# mall: ProductCategoryFactory
-###############################################################################################
 class ProductCategoryFactory(factory.django.DjangoModelFactory):
+	"""
+	ProductCategoryFactory
+	"""
 	FACTORY_FOR = webapp_models.ProductCategory
 	FACTORY_DJANGO_GET_OR_CREATE = ('name',)
 

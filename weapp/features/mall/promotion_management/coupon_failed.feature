@@ -14,7 +14,7 @@ Feature: 优惠券与促销活动互斥问题
 Background:
 	Given jobs登录系统
 	And jobs已添加商品
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -28,9 +28,9 @@ Background:
 			"stock_type": "无限",
 			"price": 200.00
 		}]
-	"""
+		"""
 	When jobs创建限时抢购活动
-	"""
+		"""
 		[{
 			"name": "商品1限时抢购",
 			"start_date": "今天",
@@ -38,9 +38,9 @@ Background:
 			"product_name": "商品1",
 			"promotion_price": 180.00
 		}]
-	"""
+		"""
 	Then jobs能获取上架商品查询列表
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -57,12 +57,12 @@ Background:
 			"operate": true,
 			"price": 200.00
 		}]
-	"""
+		"""
 
 @mall2 @promotion @promotionCoupon @promotionFlash
 Scenario: 1先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
-	"""
+		"""
 		[{
 			"name": "优惠券4",
 			"money": 10.00,
@@ -74,10 +74,10 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"coupon_id_prefix": "coupon4_id_",
 			"coupon_product": "商品2"
 		}]
-	"""
+		"""
 	
 	Then jobs能获得优惠券规则列表
-	"""
+		"""
 		[{
 			"name": "优惠券4",
 			"type": "单品券",
@@ -88,9 +88,9 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"start_date": "今天",
 			"end_date": "2天后"
 		}]
-	"""
+		"""
 	Then jobs获取上架商品查询列表
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -107,11 +107,11 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"operate": true,
 			"price": 200.00
 		}]
-	"""
+		"""
 
 	#优惠券过期失效，可以建立促销活动
 	When jobs添加优惠券规则
-	"""
+		"""
 		[{
 			"name": "优惠券5",
 			"money": 10.00,
@@ -123,9 +123,9 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"coupon_id_prefix": "coupon5_id_",
 			"coupon_product": "商品3"
 		}]
-	"""
+		"""
 	Then jobs能获得优惠券规则列表
-	"""
+		"""
 		[{
 			"name": "优惠券5",
 			"type": "单品券",
@@ -145,9 +145,9 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"start_date": "今天",
 			"end_date": "2天后"
 		}]
-	"""
+		"""
 	And jobs获取上架商品查询列表
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -164,13 +164,13 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"operate": true,
 			"price": 200.00
 		}]
-	"""
+		"""
 
 
 @mall2 @wip.cp2 @promotion @promotionCoupon @promotionFlash
 Scenario: 2先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
-	"""
+		"""
 		[{
 			"name": "优惠券4",
 			"money": 10.00,
@@ -182,9 +182,9 @@ Scenario: 2先建优惠券，不能参加促销活动
 			"coupon_id_prefix": "coupon4_id_",
 			"coupon_product": "商品2"
 		}]
-	"""
+		"""
 	Then jobs能获得优惠券规则列表
-	"""
+		"""
 		[{
 			"name": "优惠券4",
 			"type": "单品券",
@@ -195,9 +195,9 @@ Scenario: 2先建优惠券，不能参加促销活动
 			"start_date": "今天",
 			"end_date": "2天后"
 		}]
-	"""
+		"""
 	And jobs获取上架商品查询列表
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -214,11 +214,11 @@ Scenario: 2先建优惠券，不能参加促销活动
 			"operate": true,
 			"price": 200.00
 		}]
-	"""
+		"""
 	#优惠券在有效期内，手动失效，不能建立优惠券，需要等过有效期才能建立
 	When jobs使'优惠券4'失效
 	Then jobs获取上架商品查询列表
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -235,12 +235,12 @@ Scenario: 2先建优惠券，不能参加促销活动
 			"operate": true,
 			"price": 200.00
 		}]
-	"""
+		"""
 
 @mall2 @wip.cp3 @promotion @promotionCoupon @promotion.promotionFlash
 Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 	When jobs创建限时抢购活动
-	"""
+		"""
 		[{
 			"name": "商品2限时抢购",
 			"product_name": "商品2",
@@ -250,9 +250,9 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 			"count_per_purchase": 2,
 			"promotion_price": 11.5
 		}]
-	"""
+		"""
 	Then jobs获取限时抢购活动列表
-	"""
+		"""
 		[{
 			"name": "商品2限时抢购",
 			"product_name": "商品2",
@@ -268,9 +268,9 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 			"end_date": "1天后",
 			"promotion_price": 180
 		}]
-	"""
+		"""
 	And jobs获取上架商品查询列表
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -287,12 +287,12 @@ Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
 			"operate": true,
 			"price": 200.00
 		}]
-	"""
+		"""
 
 @mall2 @wip.cp4 @promotion.promotionCoupon @promotion.promotionPremium
 Scenario: 4先建立买赠活动，不能建立该商品的单品券
 	When jobs创建买赠活动
-	"""
+		"""
 		[{
 			"name": "商品3买一赠一",
 			"product_name": "商品3",
@@ -305,9 +305,9 @@ Scenario: 4先建立买赠活动，不能建立该商品的单品券
 			"count": 1,
 			"is_enable_cycle_mode": true
 		}]
-	"""
+		"""
 	Then jobs获取买赠活动列表
-	"""
+		"""
 		[{
 			"name": "商品3买一赠一",
 			"start_date": "今天",
@@ -316,9 +316,9 @@ Scenario: 4先建立买赠活动，不能建立该商品的单品券
 			"start_date": "今天",
 			"end_date": "1天后"
 		}]
-	"""
+		"""
 	And jobs获取上架商品查询列表
-	"""
+		"""
 		[{
 			"name": "商品1",
 			"stock_type": "无限",
@@ -335,4 +335,4 @@ Scenario: 4先建立买赠活动，不能建立该商品的单品券
 			"operate": false,
 			"price": 200.00
 		}]
-	"""
+		"""

@@ -19,6 +19,7 @@ from .steps_db_util import (
 def step_impl(context, user, scend):
     time.sleep(float(scend))
 
+
 @when(u'{user}已添加商品')
 def step_impl(context, user):
     step_product_add(context, user)
@@ -26,10 +27,10 @@ def step_impl(context, user):
 
 @given(u'{user}已添加商品')
 def step_product_add(context, user):
-    """添加一个或多个商品.
+    """
+    添加一个或多个商品.
 
     用户user添加一个或多个商品到后台, 但添加商品前请确保用户已经登陆且设置支付方式.
-
 
     所需参数信息如下:
       [
@@ -73,6 +74,7 @@ def step_product_add(context, user):
 def step_get_products(context, user, product_name):
     expected = json.loads(context.text)
     actual = __get_product_from_web_page(context, product_name)
+    print("actual: {}".format(actual))
     bdd_util.assert_dict(expected, actual)
 
 
@@ -108,12 +110,14 @@ def step_update_product(context, user, product_name):
         product['name'] = existed_product.name
     __process_product_data(product)
     product = __supplement_product(context.webapp_owner_id, product)
+    print("POST DATA: {}".format(product))
 
     # url = '/mall2/product/?id=%d&source=offshelf' % existed_product.id
     url = '/mall2/product/?id=%d&?shelve_type=%d' % (
         existed_product.id, existed_product.shelve_type, )
     response = context.client.post(url, product)
     bdd_util.tc.assertEquals(302, response.status_code)
+    #assert False
 
 
 @then(u"{user}能获取商品列表")
@@ -326,9 +330,20 @@ def __get_product_from_web_page(context, product_name):
     }
 
     #填充运费
-    if product.postage_id > 0:
+    if product.postage_id == 999:
+        # TODO: 999表示什么？
+        postage_config_info = response.context['postage_config_info']
+        if postage_config_info['is_use_system_postage_config']:
+            actual['postage'] = postage_config_info['system_postage_config'].name
+        else:
+            # TODO: 如何处理?
+            actual['postage'] = u'免运费？'
+        #postage_config_info.system_postage_config.name
+    elif product.postage_id>0:
+        print("product.postage_id={}".format(product.postage_id))
         actual['postage'] = mall_models.PostageConfig.objects.get(
             id=product.postage_id).name
+          
 
     # 填充支付方式
     if product.is_use_online_pay_interface:

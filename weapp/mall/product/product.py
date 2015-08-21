@@ -255,7 +255,8 @@ class Product(resource.Resource):
 
     @login_required
     def get(request):
-        """商品创建页&&商品更新页
+        """
+        商品创建页&&商品更新页
         """
         # 如果有product说明更新， 否则说明创建
         has_product_id = request.GET.get('id')
