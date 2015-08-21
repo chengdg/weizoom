@@ -520,6 +520,8 @@ W.workbench.PropertyView = Backbone.View.extend({
      * onClickAddDynamicComponentButton: 点击dynamic component区域中的添加button后的响应函数
      */
     onClickAddDynamicComponentButton: function(event, modelData) {
+        console.log('1111111111111111111111111111111');
+        console.log(modelData);
         var $node = $(event.currentTarget);
         var componentType = $node.attr('data-component');
         var component = W.component.Component.create(componentType);
