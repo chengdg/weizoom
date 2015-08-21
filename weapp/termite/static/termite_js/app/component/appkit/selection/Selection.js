@@ -22,7 +22,7 @@ W.component.appkit.Selection = W.component.Component.extend({
 			displayName: '标题',
 			isUserProperty: true,
 			maxLength: 35,
-			validate: 'data-validate="require-notempty::标题不能为空,,require-letter::只能填入字母、数字、下划线"',
+			validate: 'data-validate="require-notempty::标题不能为空,,require-word::只能填入汉字、字母、数字、下划线"',
 			validateIgnoreDefaultValue: true,
 			default: '标题名称',
 			placeholder: '标题名称'

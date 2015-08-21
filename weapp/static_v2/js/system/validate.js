@@ -12,6 +12,13 @@ W.ValidaterClass = function() {
 	var ascii = /[^\x00-\xff]/g;
 
 	this.validateRules = {
+        'require-word': {
+            //字母
+            type: 'regex',
+            extract: 'value',
+            regex: /^[\u4e00-\u9fa5a-zA-Z0-9_]+$/g,
+            errorHint: '格式不正确，请输入汉字、字母、数字、下划线'
+        },
         'require-letter': {
             //字母
             type: 'regex',
