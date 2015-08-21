@@ -1236,3 +1236,486 @@ Scenario:13 过滤条件"条件组合查询"
 		Then jobs获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
+
+Scenario:14 会员列表分页
+
+	Given jobs登录系统
+
+	And jobs设置分页查询参数
+		"""
+		{
+			"count_per_page":3
+		}
+		"""
+
+		When jobs访问会员列表
+
+		Then jobs获取会员列表显示共3页
+
+		When jobs浏览第1页
+		Then jobs获得会员列表
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
+			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
+			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
+
+		When jobs浏览下一页
+		Then jobs获得会员列表
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 直接关注 |             |
+			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 推广扫码 |             |	
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
+
+		When jobs浏览第3页
+		Then jobs获得会员列表
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |    3      | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
+
+		When jobs浏览上一页
+		Then jobs获得会员列表
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 直接关注 |             |
+			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 推广扫码 |             |	
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
+
+@memberList
+# __editor__ : "新新"
+Scenario:15 筛选出会员发送优惠券
+	#除已跑路外
+	Given jobs已添加商品
+		"""
+		[{
+			"name": "商品1",
+			"price": 200.00
+		}]
+		"""
+	And jobs已添加了优惠券规则
+		"""
+		[{
+			"name": "单品券2",
+			"money": 10.00,
+			"each_limit": "不限",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_",
+			"coupon_product": "商品1"
+		}]
+		"""
+	Then jobs能获得优惠券'单品券2'的码库
+		"""
+		{
+			"coupon2_id_1": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_2": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_3": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_4": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_5": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_6": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_7": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_8": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_9": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon2_id_10": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+
+	Given nokia关注jobs的公众号
+	Given tom关注jobs的公众号
+	Given tom2关注jobs的公众号
+	Given tom3关注jobs的公众号
+	Given tom5关注jobs的公众号
+
+	When jobs选择条件为
+		"""
+		{
+			"member_rank":"普通会员"
+		}
+		"""
+	Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "nokia",
+			"member_rank": "普通会员",
+			"price": 100.00,
+			"buy_sum": 1,
+			"buy_time": "2014-12-31",
+			"integral": 20,
+			"friends_sum": 1,
+			"sources": "会员分享",
+			"packet": "分组2",
+			"add_time": "2014-12-29",
+			"status": "已关注"
+		},{
+			"name": "tom",
+			"member_rank": "普通会员",
+			"price": 200.00,
+			"buy_sum": 2,
+			"buy_time": "2014-12-22",
+			"integral": 20,
+			"friends_sum": 2,
+			"sources": "会员分享",
+			"packet": "分组1",
+			"add_time": "2014-12-21",
+			"status": "已关注"
+		},{
+			"name": "tom2",
+			"member_rank": "普通会员",
+			"price": 300.00,
+			"buy_sum": 4,
+			"buy_time": "2014-11-30",
+			"integral": 220,
+			"friends_sum": 2,
+			"sources": "直接关注",
+			"packet": "未分组",
+			"add_time": "2014-11-30",
+			"status": "已关注"
+		},{
+			"name": "tom3",
+			"member_rank": "普通会员",
+			"price": 500.00,
+			"buy_sum": 5,
+			"buy_time": "2014-09-01",
+			"integral": 300,
+			"friends_sum": 0,
+			"sources": "直接关注",
+			"packet": "未分组",
+			"add_time": "2014-09-01",
+			"status": "已关注"
+		},{
+			"name": "tom5",
+			"member_rank": "普通会员",
+			"price": 0.00,
+			"buy_sum": 0,
+			"buy_time": "2014-5-30",
+			"integral": 20,
+			"friends_sum": 0,
+			"sources": "直接关注",
+			"packet": "未分组",
+			"add_time": "2014-01-03",
+			"status": "已跑路"
+		}]
+		"""
+	When jobs为会员发放优惠券
+		"""
+		{
+			"name": "单品券2",
+			"count": 2,
+			"members": ["nokia","tom","tom2","tom3"]
+		}
+		"""
+	Then jobs优惠券发放成功
+	When nokia访问jobs的webapp
+	Then nokia能获得webapp优惠券列表
+		"""
+		[
+			{
+				"coupon_id": "coupon2_id_1",
+				"money": 10.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon2_id_2",
+				"money": 10.00,
+				"status": "未使用"
+			}
+		]
+		"""
+	When tom访问jobs的webapp
+	Then tom能获得webapp优惠券列表
+		"""
+		[
+			{
+				"coupon_id": "coupon2_id_3",
+				"money": 10.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon2_id_4",
+				"money": 10.00,
+				"status": "未使用"
+			}
+		]
+		"""
+	When tom2访问jobs的webapp
+	Then tom2能获得webapp优惠券列表
+		"""
+		[
+			{
+				"coupon_id": "coupon2_id_5",
+				"money": 10.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon2_id_6",
+				"money": 10.00,
+				"status": "未使用"
+			}
+		]
+		"""
+	When tom3访问jobs的webapp
+	Then tom3能获得webapp优惠券列表
+		"""
+		[
+			{
+				"coupon_id": "coupon2_id_7",
+				"money": 10.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon2_id_8",
+				"money": 10.00,
+				"status": "未使用"
+			}
+		]
+		"""
+	When tom5访问jobs的webapp
+	Then tom5能获得webapp优惠券列表
+		"""
+		[
+			{
+				"coupon_id": "coupon2_id_9",
+				"money": 10.00,
+				"status": "未使用"
+			}, {
+				"coupon_id": "coupon2_id_10",
+				"money": 10.00,
+				"status": "未使用"
+			}
+		]
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'单品券2'的码库
+		"""
+		{
+			"coupon2_id_1": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "nokia"
+			},
+			"coupon2_id_2": {
+				"money": 10.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "nokia"
+			},
+			"coupon2_id_3": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom"
+			},
+			"coupon2_id_4": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom"
+			},
+			"coupon2_id_5": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom2"
+			},
+			"coupon2_id_6": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom2"
+			},
+			"coupon2_id_7": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom3"
+			},
+			"coupon2_id_8": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom3"
+			},
+			"coupon2_id_9": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom5"
+			},
+			"coupon2_id_10": {
+				"money": 10.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": "tom5"
+			}
+		}
+		"""
+
+@memberList
+# __editor__ : "新新"
+Scenario:16 筛选条件下所有会员群发消息
+	#除已跑路外
+	#任一会员都没有满足4条群发消息
+	Given jobs登录系统
+	And jobs已有图文
+		"""
+		[{
+			"name": "图文1"
+		}]
+		"""
+	Given nokia关注jobs的公众号
+	Given tom关注jobs的公众号
+	Given tom2关注jobs的公众号
+	Given tom3关注jobs的公众号
+	Given tom5关注jobs的公众号
+	When tom5取消了关注jobs的公众号
+	When jobs选择条件为
+		"""
+		{
+			"member_rank":"普通会员"
+		}
+		"""
+
+	Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "nokia",
+			"member_rank": "普通会员",
+			"price": 100.00,
+			"buy_sum": 1,
+			"buy_time": "2014-12-31",
+			"integral": 20,
+			"friends_sum": 1,
+			"sources": "会员分享",
+			"packet": "分组2",
+			"add_time": "2014-12-29",
+			"status": "已关注"
+		},{
+			"name": "tom",
+			"member_rank": "普通会员",
+			"price": 200.00,
+			"buy_sum": 2,
+			"buy_time": "2014-12-22",
+			"integral": 20,
+			"friends_sum": 2,
+			"sources": "会员分享",
+			"packet": "分组1",
+			"add_time": "2014-12-21",
+			"status": "已关注"
+		},{
+			"name": "tom2",
+			"member_rank": "普通会员",
+			"price": 300.00,
+			"buy_sum": 4,
+			"buy_time": "2014-11-30",
+			"integral": 220,
+			"friends_sum": 2,
+			"sources": "直接关注",
+			"packet": "未分组",
+			"add_time": "2014-11-30",
+			"status": "已关注"
+		},{
+			"name": "tom3",
+			"member_rank": "普通会员",
+			"price": 500.00,
+			"buy_sum": 5,
+			"buy_time": "2014-09-01",
+			"integral": 300,
+			"friends_sum": 0,
+			"sources": "直接关注",
+			"packet": "未分组",
+			"add_time": "2014-09-01",
+			"status": "已关注"
+		},{
+			"name": "tom5",
+			"member_rank": "普通会员",
+			"price": 0.00,
+			"buy_sum": 0,
+			"buy_time": "2014-5-30",
+			"integral": 20,
+			"friends_sum": 0,
+			"sources": "直接关注",
+			"packet": "未分组",
+			"add_time": "2014-01-03",
+			"status": "已跑路"
+		}]
+		"""
+	When jobs添加群发
+		"""
+		{
+			"content":"图文1"
+		}
+		"""
+	When jobs群发
+	When nokia访问jobs的webapp
+	Then nokia能收到群发
+		"""
+		{
+			"content":"图文1"
+		}
+		"""
+	When tom访问jobs的webapp
+	Then tom能收到群发
+		"""
+		{
+			"content":"图文1"
+		}
+		"""
+	When tom2访问jobs的webapp
+	Then tom2能收到群发
+		"""
+		{
+			"content":"图文1"
+		}
+		"""
+	When tom3访问jobs的webapp
+	Then tom3能收到群发
+		"""
+		{
+			"content":"图文1"
+		}
+		"""
