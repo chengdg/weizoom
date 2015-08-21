@@ -31,11 +31,11 @@ Background:
 		'''
 
 
-@mall @mall.product @mall.product_model
+@mall @mall.product @mall.product_model @mall2
 Scenario: 删除单条商品规格
 	Jobs添加有商品规格的商品后
 	1. 能删除一条商品规格
-	
+
 	Given jobs已添加商品
 		"""
 		[{
@@ -80,6 +80,21 @@ Scenario: 删除单条商品规格
 		}
 		"""
 	When jobs删除商品'商品1'的商品规格'黑色 S'
+	"""
+	{
+		"name": "商品1",
+		"is_enable_model": "启用规格",
+		"model": {
+			"models": {
+				"白色 S": {
+					"price": 9.1,
+					"weight": 1.0,
+					"stock_type": "无限"
+				}
+			}
+		}
+	}
+	"""
 	Then jobs能获取商品'商品1'
 		"""
 		{
@@ -93,15 +108,15 @@ Scenario: 删除单条商品规格
 					}
 				}
 			}
-		}	
+		}
 		"""
 
 
-@mall @mall.product @mall.product_model
+@mall @mall.product @mall.product_model @mall2
 Scenario: 删除所有商品规格
 	Jobs添加有商品规格的商品，删除所有商品规格，并添加标准规格数据
 	1. jobs能获得的标准规格
-	
+
 	Given jobs已添加商品
 		"""
 		[{
@@ -125,21 +140,36 @@ Scenario: 删除所有商品规格
 		}]
 		"""
 	When jobs删除商品'商品1'的商品规格'黑色 S'
-	And jobs删除商品'商品1'的商品规格'白色 S'
-	And jobs更新商品'商品1'
-		"""
-		{
-			"model":{
-				"models": {
-					"standard": {
-						"price": 111.0,
-						"weight": 15.0,
-						"stock_type": "有限",
-						"stocks": 5
-					}
+	"""
+	{
+		"name": "商品1",
+		"is_enable_model": "启用规格",
+		"model": {
+			"models": {
+				"白色 S": {
+					"price": 9.1,
+					"weight": 1.0,
+					"stock_type": "无限"
 				}
 			}
 		}
+	}
+	"""
+	And jobs删除商品'商品1'的商品规格'白色 S'
+	"""
+	{
+		"name": "商品1",
+		"model": {
+			"models": {
+				"standard": {
+					"price": 111.0,
+					"weight": 15.0,
+					"stock_type": "有限",
+					"stocks": 5
+				}
+			}
+		}
+	}
 		"""
 	Then jobs能获取商品'商品1'
 		"""
@@ -159,12 +189,12 @@ Scenario: 删除所有商品规格
 		"""
 
 
-@mall @mall.product @mall.product_model
+@mall @mall.product @mall.product_model @mall2
 Scenario: 禁用与启用商品规格
 	Jobs添加有商品规格的商品后
 	1. 能禁用商品规格
 	2. 禁用后商品恢复标准规格
-	
+
 	Given jobs已添加商品
 		"""
 		[{
@@ -179,7 +209,7 @@ Scenario: 禁用与启用商品规格
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	Then jobs能获取商品'商品1'
 		"""

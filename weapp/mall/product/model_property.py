@@ -219,6 +219,30 @@ class ModelPropertyValue(resource.Resource):
         return response.get_response()
 
     @login_required
+    def api_post(request):
+        """修改规格属性值
+
+        Args:
+          id: 属性值id
+          name: 规格值的名字
+          pic_url: 规格值的图片地址
+        """
+        property_value_id = request.POST['id']
+        pic_url = request.POST['pic_url']
+        name = request.POST['name']
+
+        try:
+            mall_models.ProductModelPropertyValue.objects.filter(id=property_value_id).update(
+                name=name,
+                pic_url=pic_url
+            )
+            response = create_response(200)
+        except:
+            response = create_response(500)
+
+        return response.get_response()
+
+    @login_required
     def api_delete(request):
         """删除规格属性值
 
