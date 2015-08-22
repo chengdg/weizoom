@@ -53,7 +53,8 @@ class voteStatistic(resource.Resource):
 				single_title_dict['title_name'] = title.split('_')[1]
 				single_title_dict['title_valid_count'] = title_valid_dict[title]
 				single_title_dict['title_value'] = []
-				for item, item_value in title_value.items():
+				for item in sorted(title_value.keys()):
+					item_value = title_value[item]
 					single_item_value = {}
 					single_item_value['item_name'] = item.split('_')[1]
 					single_item_value['counter'] = item_value

@@ -1238,4 +1238,24 @@ button.xui-removeImageButton{
 	margin-right: 0px!important;
 }
 
+/*活动的图标*/
+.wui-i-time,.wui-i-prize{
+	margin-top: 9px;
+}
+.xui-sprite-timerange{
+	background: url('/static_v2/img/m_sprite.png') no-repeat;
+	background-position: 0 5px;
+	display: block;
+	height: 35px;
+	width: 30px;
+	float: left;
+}
+.xui-sprite-prize{
+	background: url('/static_v2/img/m_sprite.png') no-repeat;
+	background-position: -40px 5px;
+	display: block;
+	height: 35px;
+	width: 30px;
+	float: left;
+}
 
