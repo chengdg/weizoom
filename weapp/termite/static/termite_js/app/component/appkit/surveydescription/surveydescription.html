@@ -14,19 +14,18 @@
 		{{component.model.description|safe}}
 	</div>
 	<div class="wui-i-info">
+		<i class="wui-i-sprite xui-sprite-timerange"></i>
 		<div class="wui-i-time">
-			<i class="wui-i-sprite xui-sprite-timerange"></i>
-			<div>{{component.model.start_time}}至{{component.model.end_time}}</div>
+			{{component.model.start_time}}至{{component.model.end_time}}
 		</div>
 		<div style="clear: both"></div>
+		<i class="wui-i-sprite xui-sprite-prize"></i>
 		<div class="wui-i-prize">
 			{% if component.model.prize.type == 'integral' %}
-			<i class="wui-i-sprite xui-sprite-prize"></i>
-				<div>{{component.model.prize.data}}积分</div>
+				{{component.model.prize.data}}积分
 			{% endif %}
 			{% if component.model.prize.type == 'coupon' %}
-			<i class="wui-i-sprite xui-sprite-prize"></i>
-				<div>{{component.model.prize.data.name}}</div>
+				{{component.model.prize.data.name}}
 			{% endif %}
 		</div>
 		<div style="clear: both"></div>

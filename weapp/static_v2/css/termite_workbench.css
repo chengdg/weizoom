@@ -1225,17 +1225,15 @@ button.xui-removeImageButton{
 }
 
 /*活动的图标*/
-.wui-i-time > div,.wui-i-prize > div{
-	height: 35px;
-	line-height: 35px;
-	float: left;
+.wui-i-time,.wui-i-prize{
+	margin-top: 9px;
 }
 .xui-sprite-timerange{
 	background: url('/static_v2/img/m_sprite.png') no-repeat;
 	background-position: 0 5px;
 	display: block;
 	height: 35px;
-	width: 26px;
+	width: 30px;
 	float: left;
 }
 .xui-sprite-prize{
@@ -1243,7 +1241,7 @@ button.xui-removeImageButton{
 	background-position: -40px 5px;
 	display: block;
 	height: 35px;
-	width: 26px;
+	width: 30px;
 	float: left;
 }
 

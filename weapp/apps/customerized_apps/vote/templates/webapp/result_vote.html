@@ -42,20 +42,19 @@
                 {{ vote_detail.description|safe }}
             </div>
             <div class="wui-i-info">
+                <i class="wui-i-sprite xui-sprite-timerange"></i>
                 <div class="wui-i-time">
-                    <i class="wui-i-sprite xui-sprite-timerange"></i>
-                    <div>{{ vote_detail.start_time }}至{{ vote_detail.end_time }}</div>
+                    {{ vote_detail.start_time }}至{{ vote_detail.end_time }}
                 </div>
                 <div style="clear: both"></div>
             {% ifequal vote_detail.prize_type 'no_prize' %}
             {% else %}
+                <i class="wui-i-sprite xui-sprite-prize"></i>
                 <div class="wui-i-prize">
-                    <i class="wui-i-sprite xui-sprite-prize"></i>
-                    <div>{{ vote_detail.prize_data }}
-                        {% if vote_detail.prize_type == 'integral' %}
-                            积分
-                        {% endif %}
-                    </div>
+                    {{ vote_detail.prize_data }}
+                    {% if vote_detail.prize_type == 'integral' %}
+                        积分
+                    {% endif %}
                 </div>
                 <div style="clear: both"></div>
             {% endifequal %}
