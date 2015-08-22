@@ -29,23 +29,75 @@
 		padding: 26px 10px;
 		margin: 0;
 	}
-	.xui-record {
-		margin: 10px 15px;
-		padding: 5px;
-		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-		border-radius: 5px;
-	}
 	.xui-record .xui-inner-content {
 		color: #8F8F8F;
 	}
-	a.xui-button {
-		padding: 10px;
+	.wui-select{
+		margin: 20px 0;
+	}
+	#freedback_type{
+		background: #fff none repeat scroll 0 0;
+		border: 1px solid #eee;
 		display: block;
-		text-align: center;
-		color: #FFF;
-		margin: 10px 15px;
-		background-color: rgba(0, 125, 255, 0.5);
-		border-radius: 10px;
+		font-size: 1.1em;
+		height: 45px;
+		line-height: 45px;
+		overflow: hidden;
+		position: relative;
+		text-align: left;
+		padding-left: 20px;
+		text-overflow: ellipsis;
+		text-shadow: none;
+		white-space: nowrap;
+		color: #000;
+	}
+	.arrow_down{
+		background: #fff url('/static_v2/img/arrow.png') no-repeat;
+		height: 20px;
+		position: absolute;
+		right: 20px;
+		top: 15px;
+		width: 34px;
+	}
+	.arrow_up{
+		background: #fff url('/static_v2/img/arrow.png') no-repeat;
+		height: 20px;
+		position: absolute;
+		right: 20px;
+		top: 15px;
+		width: 34px;
+		transform:rotate(180deg);
+			-ms-transform:rotate(180deg); 	/* IE 9 */
+			-moz-transform:rotate(180deg); 	/* Firefox */
+			-webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+			-o-transform:rotate(180deg);
+	}
+	.xui-dropmenu{
+		background: #fff none repeat scroll 0 0;
+		position: absolute;
+		width: 100%;
+		z-index: 999;
+	}
+	.xui-dropmenu >ul >li{
+		border-bottom: 1px solid #eee;
+		height: 45px;
+		line-height: 45px;
+		padding-left: 35px !important;
+	}
+	.xui-dropmenu >ul >li >a{
+		display: block;
+		color: #000;
+		width: 100%;
+		height: 100%;
+	}
+	#xui-input-type{
+		cursor: pointer;
+		border: 0;
+		color: #fff;
+	}
+	#freedback_textarea::-webkit-input-placeholder::after {
+		display:block;
+		content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
 	}
 </style>
 {% endblock %}
@@ -54,33 +106,57 @@
 <div>
 	<div>
 		<div class="xui-recordContainer">
-			<div class="wui-QA" data-component-cid="1" style="">
-				<h1 class="wui-i-title">反馈内容<span class="wui-i-mandatory">(必填)</span></h1>
-				<div class="xa-inputControl" data-input-type="textarea" data-input-name="{{component.model.title}}" data-control-type="appkit.qa">
-					<textarea class="wui-i-input" {% if component.model.is_mandatory == "true" %}data-validate='require-notempty::请填写项目"{{component.model.title}}"'{% endif %}></textarea>
+			<div class="wui-select" data-component-cid="1">
+				<div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="type" data-control-type="type">
+					<a id="freedback_type" data-role="button" >
+						反馈类型
+						<span class="type_name" style="color: #666;margin-left: 10px;"></span>
+						<input class="wui-i-input" id="xui-input-type" type="text"   placeholder="" value="" data-validate="require-notempty::请选择反馈类型">
+						<span id="icon" class="arrow_down"></span>
+					</a>
+					<div class="xui-dropmenu" style="display: none">
+						<ul class="ui-dropmenu-items xa-select-type" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);">
+							<li><a href="javascript:void(0);" data-type="0">服务</a></li>
+							<li><a href="javascript:void(0);" data-type="1">功能</a></li>
+							<li><a href="javascript:void(0);" data-type="2">操作</a></li>
+							<li><a href="javascript:void(0);" data-type="3">新的需求</a></li>
+							<li><a href="javascript:void(0);" data-type="4">其它</a></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+			<div class="wui-QA" data-component-cid="2" style="">
+				<h1 class="wui-i-title">反馈内容</h1>
+				<div class="xa-inputControl" data-input-type="textarea" data-input-name="content" data-control-type="appkit.qa">
+					<textarea id="freedback_textarea"
+							class="wui-i-input"
+							placeholder="长度在20-200个字之间"
+							data-validate='require-notempty::请填写反馈内容"'
+							></textarea>
 				</div>
 			</div>
-{#			<ul class="wui-shortcuts" data-component-cid="2" style="">#}
-{#                <li class="wui-i-item">#}
-{#                    <label class="wui-i-label">姓名</label>#}
-{#                    <div class="wui-i-inputContainer xa-inputControl" >#}
-{#                        <input class="wui-i-input" type="text" name="name" placeholder="请输入姓名" value="">#}
-{#                    </div>#}
-{#                </li>#}
-{#				<li class="wui-i-item">#}
-{#                    <label class="wui-i-label">手机</label>#}
-{#                    <div class="wui-i-inputContainer xa-inputControl" >#}
-{#                        <input class="wui-i-input" type="text" name="phone"  placeholder="请输入手机号码" value="">#}
-{#                    </div>#}
-{#                </li>#}
-{#				<li class="wui-i-item">#}
-{#                    <label class="wui-i-label">QQ</label>#}
-{#                    <div class="wui-i-inputContainer xa-inputControl" >#}
-{#                        <input class="wui-i-input" type="text" name="QQ"  placeholder="请输入QQ" value="">#}
-{#                    </div>#}
-{#                </li>#}
-{#            </ul>#}
-			<div class="wui-submitButton xui-hide xa-submitButtonContainer" data-component-cid="{{component.cid}}" style="">
+			<ul class="wui-shortcuts" data-component-cid="3" style="">
+                <li class="wui-i-item">
+                    <label class="wui-i-label">姓名</label>
+                    <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="name" data-control-type="appkit.shortcuts">
+                        <input class="wui-i-input" type="text"  placeholder="请输入姓名" value="" data-validate="require-notempty::请输入姓名">
+                    </div>
+                </li>
+				<li class="wui-i-item">
+                    <label class="wui-i-label">手机</label>
+                    <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="phone" data-control-type="appkit.shortcuts">
+                        <input class="wui-i-input" type="text"   placeholder="请输入手机号码" value="" data-validate="require-mobile-phone::请输入正确的手机号">
+                    </div>
+                </li>
+				<li class="wui-i-item">
+                    <label class="wui-i-label">QQ</label>
+                    <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="QQ" data-control-type="appkit.shortcuts">
+                        <input class="wui-i-input" type="text"   placeholder="请输入QQ" value="" data-validate="require-int::QQ请输入数字">
+                    </div>
+                </li>
+            </ul>
+			<div class="wui-submitButton xui-hide xa-submitButtonContainer" data-component-cid="6" style="">
 				<a class="xui-btn xui-btn-danger xa-submitTermite" data-role="button" href="javascript:void(0);" style="">提交</a>
 			</div>
 		</div>
@@ -89,33 +165,32 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
-	W.pageId = "{{request.GET.page_id}}";
+	<script type="text/javascript" src="/termite_static/v3/gmu/widget/dropmenu.js"></script>
+	<script type="text/javascript">
 	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-{#			var id = $link.attr('data-id');#}
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/feedback',
-				resource: 'feedback_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-{#					belong_to: id,#}
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
+		$('#freedback_type').click(function(){
+			var $dropmenu = $(this).next();
+			if ($dropmenu.css('display') == 'none'){
+				$dropmenu.show();
+				$(this).find('#icon').addClass('arrow_up').removeClass('arrow_down')
+			}
+			else{
+				$dropmenu.hide();
+				$(this).find('#icon').addClass('arrow_down').removeClass('arrow_up')
+			}
+
 		});
+		$('.xa-select-type li a').click(function(event){
+			var $a= $(event.currentTarget);
+			var type_value = $a.attr('data-type');
+			var type_name = $a.text();
+			$('#freedback_type').find('span[class="type_name"]').text(type_name);
+			$('#xui-input-type').val(type_value);
+			$a.parents('.xui-dropmenu').hide();
+
+
+		})
 	});
-</script>
+	</script>
 {% endblock %}
 
