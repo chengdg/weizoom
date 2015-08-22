@@ -48,10 +48,12 @@ class votes(resource.Resource):
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
-			if data_start_time <= now_time and now_time < data_end_time:
-				data_data.update(set__status=app_models.STATUS_RUNNING)
-			elif now_time >= data_end_time:
-				data_data.update(set__status=app_models.STATUS_STOPED)
+			data_status = data_data.status
+			if data_status <= 1:
+				if data_start_time <= now_time and now_time < data_end_time:
+					data_data.update(set__status=app_models.STATUS_RUNNING)
+				elif now_time >= data_end_time:
+					data_data.update(set__status=app_models.STATUS_STOPED)
 		if name:
 			params['name__icontains'] = name
 		if status != -1:
