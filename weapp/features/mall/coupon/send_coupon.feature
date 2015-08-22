@@ -326,7 +326,7 @@ Scenario: 4 发送优惠券总数超出优惠券库存
 	Then jobs能获得发放优惠券失败的信息
 		"""
 		{
-			"error_message": "库存不足"
+			"error_message": "发放数量大于优惠券库存,请先增加库存"
 		}
 		"""
 	When bill访问jobs的webapp
@@ -377,7 +377,7 @@ Scenario: 4 发送优惠券总数超出优惠券库存
 	Then jobs能获得发放优惠券失败的信息
 		"""
 		{
-			"error_message": "库存不足"
+			"error_message": "发放数量大于优惠券库存,请先增加库存"
 		}
 		"""
 	When bill访问jobs的webapp
