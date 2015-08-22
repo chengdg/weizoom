@@ -20,6 +20,13 @@ ITEM_FOR_DISPLAY = {
 	'name': u'姓名',
 	'qq':u'QQ'
 }
+TYPE_FOR_DISPLAY = {
+	'0': u'服务',
+	'1': u'功能',
+	'2': u'操作',
+	'3': u'新的需求',
+	'4': u'其他'
+}
 class feedbacks(resource.Resource):
 	app = 'apps/feedback'
 	resource = 'feedbacks'
@@ -42,14 +49,16 @@ class feedbacks(resource.Resource):
 	
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('participant_name', '')
+		participant_name = request.GET.get('participant_name', '')
 		feedback_type = int(request.GET.get('feedback_type', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
+		phone = request.GET.get('phone', '')
+		name = request.GET.get('name', '')
+		qq = request.GET.get('qq', '')
 
-		params = {}
-		if name:
-			members = member_models.Member.get_by_username(name)
+		if participant_name:
+			members = member_models.Member.get_by_username(participant_name)
 		else:
 			members = member_models.Member.get_members(request.user_profile.webapp_id)
 		member_ids = [member.id for member in members]
@@ -58,14 +67,56 @@ class feedbacks(resource.Resource):
 			webapp_user_ids = [-1]
 		else:
 			webapp_user_ids = []
+
+		params = {}
+		records = app_models.feedbackParticipance.objects.all()
+		if webapp_user_ids:
+			params['webapp_user_id__in'] = webapp_user_ids
 		if feedback_type != -1:
-			params['status'] = feedback_type
+			for record in records:
+				choosen_ids = []
+				for k, v in record.termite_data.items():
+					if v['type'] == 'type':
+						data_feedback_type = int(v['value'])
+						if data_feedback_type == feedback_type:
+							choosen_ids.append(record.id)
+			params['id__in'] = choosen_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
+		if phone:
+			for record in records:
+				choosen_ids = []
+				for k, v in record.termite_data.items():
+					pureName = k.split('_')[1]
+					if pureName == 'phone':
+						data_tel = v['value']
+						if phone in data_tel:
+							choosen_ids.append(record.id)
+			params['id__in'] = choosen_ids
+		if name:
+			for record in records:
+				choosen_ids = []
+				for k, v in record.termite_data.items():
+					pureName = k.split('_')[1]
+					if pureName == 'name':
+						data_name = v['value']
+						if name in data_name:
+							choosen_ids.append(record.id)
+			params['id__in'] = choosen_ids
+		if qq:
+			for record in records:
+				choosen_ids = []
+				for k, v in record.termite_data.items():
+					pureName = k.split('_')[1]
+					if pureName == 'qq':
+						data_qq = v['value']
+						if qq in data_qq:
+							choosen_ids.append(record.id)
+			params['id__in'] = choosen_ids
 		datas = app_models.feedbackParticipance.objects(**params).order_by('-id')
-		
+
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
@@ -111,7 +162,7 @@ class feedbacks(resource.Resource):
 					item_data['item_value'] = v['value']
 					item_informations_list.append(item_data)
 				else:
-					feedback_type = v['value']
+					feedback_type = TYPE_FOR_DISPLAY[v['value']]
 			items.append({
 				'id': str(data.id),
 				'participant_name': data.participant_name,
