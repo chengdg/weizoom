@@ -54,33 +54,32 @@
 <div>
 	<div>
 		<div class="xui-recordContainer">
-		
-			<div class="wui-QA" data-component-cid="{{component.cid}}" style="">
+			<div class="wui-QA" data-component-cid="1" style="">
 				<h1 class="wui-i-title">反馈内容<span class="wui-i-mandatory">(必填)</span></h1>
 				<div class="xa-inputControl" data-input-type="textarea" data-input-name="{{component.model.title}}" data-control-type="appkit.qa">
 					<textarea class="wui-i-input" {% if component.model.is_mandatory == "true" %}data-validate='require-notempty::请填写项目"{{component.model.title}}"'{% endif %}></textarea>
 				</div>
 			</div>
-			<ul class="wui-shortcuts">
-                <li class="wui-i-item">
-                    <label class="wui-i-label">姓名</label>
-                    <div class="wui-i-inputContainer xa-inputControl" >
-                        <input class="wui-i-input" type="text" name="name" placeholder="请输入姓名" value="">
-                    </div>
-                </li>
-				<li class="wui-i-item">
-                    <label class="wui-i-label">手机</label>
-                    <div class="wui-i-inputContainer xa-inputControl" >
-                        <input class="wui-i-input" type="text" name="phone"  placeholder="请输入手机号码" value="">
-                    </div>
-                </li>
-				<li class="wui-i-item">
-                    <label class="wui-i-label">QQ</label>
-                    <div class="wui-i-inputContainer xa-inputControl" >
-                        <input class="wui-i-input" type="text" name="QQ"  placeholder="请输入QQ" value="">
-                    </div>
-                </li>
-            </ul>
+{#			<ul class="wui-shortcuts" data-component-cid="2" style="">#}
+{#                <li class="wui-i-item">#}
+{#                    <label class="wui-i-label">姓名</label>#}
+{#                    <div class="wui-i-inputContainer xa-inputControl" >#}
+{#                        <input class="wui-i-input" type="text" name="name" placeholder="请输入姓名" value="">#}
+{#                    </div>#}
+{#                </li>#}
+{#				<li class="wui-i-item">#}
+{#                    <label class="wui-i-label">手机</label>#}
+{#                    <div class="wui-i-inputContainer xa-inputControl" >#}
+{#                        <input class="wui-i-input" type="text" name="phone"  placeholder="请输入手机号码" value="">#}
+{#                    </div>#}
+{#                </li>#}
+{#				<li class="wui-i-item">#}
+{#                    <label class="wui-i-label">QQ</label>#}
+{#                    <div class="wui-i-inputContainer xa-inputControl" >#}
+{#                        <input class="wui-i-input" type="text" name="QQ"  placeholder="请输入QQ" value="">#}
+{#                    </div>#}
+{#                </li>#}
+{#            </ul>#}
 			<div class="wui-submitButton xui-hide xa-submitButtonContainer" data-component-cid="{{component.cid}}" style="">
 				<a class="xui-btn xui-btn-danger xa-submitTermite" data-role="button" href="javascript:void(0);" style="">提交</a>
 			</div>
@@ -97,7 +96,7 @@
 			event.stopPropagation();
 			event.preventDefault();
 			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
+{#			var id = $link.attr('data-id');#}
 			var tel = $.trim($('[name="tel"]').val());
 			W.getApi().call({
 				app: 'm/apps/feedback',
@@ -105,7 +104,7 @@
 				method: 'put',
 				args: {
 					woid: W.webappOwnerId,
-					belong_to: id,
+{#					belong_to: id,#}
 					tel: tel
 				},
 				success: function(data) {

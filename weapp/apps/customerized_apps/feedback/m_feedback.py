@@ -36,7 +36,6 @@ class Mfeedback(resource.Resource):
 				#termite类型数据
 				record = app_models.feedback.objects.get(id=id)
 				activity_status = record.status_text
-				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -74,7 +73,9 @@ class Mfeedback(resource.Resource):
 		else:
 			record = None
 			c = RequestContext(request, {
-				'record': record
+				'record': record,
+				'app_name': "feedback",
+				'resource': "feedback"
 			});
 			
 			return render_to_response('feedback/templates/webapp/m_feedback.html', c)
