@@ -477,13 +477,18 @@ select{
     width: 190px;
 }
 .xui-mainPanel .xui-sideBar-votes{
-	background-position: -48px -273px;
+	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
+	background-position: 18px -85px;
+	background-repeat: no-repeat;
 }
 .xui-mainPanel .xui-sideBar-events{
-	background-position: -48px -273px;
+	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
+	background-position: 18px 2px;
+	background-repeat: no-repeat;
 }
 .xui-mainPanel .xui-sideBar-surveies{
-	background-position: -48px -273px;
+	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
+	background-position: 18px -19px;
 }
 .xui-mainPanel .xui-sideBar-realtime_messages{
 	background-position: -48px -141px;
