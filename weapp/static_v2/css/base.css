@@ -489,6 +489,7 @@ select{
 .xui-mainPanel .xui-sideBar-surveies{
 	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
 	background-position: 18px -19px;
+	background-repeat: no-repeat;
 }
 .xui-mainPanel .xui-sideBar-realtime_messages{
 	background-position: -48px -141px;
