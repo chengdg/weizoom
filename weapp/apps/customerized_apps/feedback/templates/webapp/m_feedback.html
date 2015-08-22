@@ -5,6 +5,30 @@
 	h1 {
 		color: #00F;
 	}
+	.wui-QA,.wui-shortcuts{
+		background: #fff;
+	}
+	.wui-QA .wui-i-title {
+    	border-left: 0;
+		padding-left: 0;
+	}
+	.wui-shortcuts{
+		padding: 15px 20px 0;
+	}
+	.wui-shortcuts .wui-i-label {
+		text-align: left;
+		width: 40px;
+	}
+	.wui-shortcuts .wui-i-input {
+		border: 1px solid #e5e5e5;
+		padding: 5px 0 5px 5px;
+    	width: 100%;
+	}
+	.wui-submitButton {
+		background: #fff none repeat scroll 0 0;
+		padding: 26px 10px;
+		margin: 0;
+	}
 	.xui-record {
 		margin: 10px 15px;
 		padding: 5px;
@@ -28,22 +52,38 @@
 
 {% block content-panel %}
 <div>
-	<h1 class="tc">Feedback({{record.id}})</h1>
 	<div>
 		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
+		
+			<div class="wui-QA" data-component-cid="{{component.cid}}" style="">
+				<h1 class="wui-i-title">反馈内容<span class="wui-i-mandatory">(必填)</span></h1>
+				<div class="xa-inputControl" data-input-type="textarea" data-input-name="{{component.model.title}}" data-control-type="appkit.qa">
+					<textarea class="wui-i-input" {% if component.model.is_mandatory == "true" %}data-validate='require-notempty::请填写项目"{{component.model.title}}"'{% endif %}></textarea>
+				</div>
 			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
+			<ul class="wui-shortcuts">
+                <li class="wui-i-item">
+                    <label class="wui-i-label">姓名</label>
+                    <div class="wui-i-inputContainer xa-inputControl" >
+                        <input class="wui-i-input" type="text" name="name" placeholder="请输入姓名" value="">
+                    </div>
+                </li>
+				<li class="wui-i-item">
+                    <label class="wui-i-label">手机</label>
+                    <div class="wui-i-inputContainer xa-inputControl" >
+                        <input class="wui-i-input" type="text" name="phone"  placeholder="请输入手机号码" value="">
+                    </div>
+                </li>
+				<li class="wui-i-item">
+                    <label class="wui-i-label">QQ</label>
+                    <div class="wui-i-inputContainer xa-inputControl" >
+                        <input class="wui-i-input" type="text" name="QQ"  placeholder="请输入QQ" value="">
+                    </div>
+                </li>
+            </ul>
+			<div class="wui-submitButton xui-hide xa-submitButtonContainer" data-component-cid="{{component.cid}}" style="">
+				<a class="xui-btn xui-btn-danger xa-submitTermite" data-role="button" href="javascript:void(0);" style="">提交</a>
 			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
 		</div>
 	</div>
 </div>
