@@ -1,6 +1,11 @@
 {% extends "content_base_v2.html" %}
 {% load apps_filter %}
-
+{% block css %}
+    .tl.pl25 img{
+    	height: 60px;
+    	width: 60px;
+    }
+{% endblock %}
 {% block content-panel %}
 <div class="xui-surveyParticipancesAppPage xui-appPage-commonStyle">
 	<div class="relative">
