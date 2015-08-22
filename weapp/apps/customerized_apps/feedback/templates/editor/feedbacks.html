@@ -129,28 +129,23 @@
 				<td 
 					class="tl pl25"
 					style="width:250px; height:60px;" 
-					title="${item.name}"
 				>
-				   <a 
-					class="xui-ellipsisFox" 
-					limit="15" 
-					href="/apps/feedback/feedback/?id=${item.id}&related_page_id=${item.related_page_id}"
-					style="text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"
-					>
-						${item.username}
-					</a>
+					<img src="${item.participant_icon}" />
+					${item.participant_name}
 				</td>
 				<td>
-					${item.tel}
+					{{each(i, information) informations}}
+						${information.item_name}:${information.item_value}<br />
+					{{/each}}
 				</td>
 				<td>
 					${item.feedback_type}
 				</td>
 				<td>
-					${item.content}
+					${item.feedback_content}
 				</td>
 				<td>
-					${item.time}
+					${item.created_at}
 				</td>
 			</tr>
 			{{/each}}
