@@ -241,14 +241,14 @@ body {
 .componentList_component_black,.componentList_component_showcase,.xui-addDynamicComponentTrigger,
 .xui-selectBtn .xui-selectedIcon,
 .xui-propertyView-pageHeader .propertyGroup_property:nth-child(3) .propertyGroup_property_dialogSelectField button{
-	background: url(/static_v2/img/termite2/appKitSeprites.png) no-repeat;
-	-webkit-background-size: 137px 42px;
-	background-size: 137px 42px;
+	background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
+	-webkit-background-size: 345px 91px;
+	background-size: 345px 91px;
 }
 .propertyGroup_property_colorPickerField .xui-i-triggerButton {
-	background: url(/static_v2/img/termite2/appKitSeprites.png) no-repeat;
-	-webkit-background-size: 137px 42px;
-	background-size: 137px 42px;
+	background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
+	-webkit-background-size: 345px 91px;
+	background-size: 345px 91px;
 	width: 18px;
 	min-width: 18px;
 	height: 18px;
@@ -273,11 +273,11 @@ body {
 	background-position:-92px -45px;
 }
 .xui-component .componentList_component_product {
-	background-position:3px 2px;
+	background-position:-52px 0;
 }
 .xui-component .componentList_component_product_list {
 	width: 51px;
-	background-position:-38px 2px;
+	background-position:-91px 0;
 }
 .xui-component .componentList_component_subline {
 	background: url(/termite_static/img/component/component_subline.png) no-repeat transparent 10px 0px;
@@ -290,7 +290,7 @@ body {
 	background-size: 50px 50px;
 }
 .xui-component .componentList_component_richtext {
-	background-position: -89px 2px;
+	background-position: 0px 0;
   	width: 51px;
 }
 .xui-component .componentList_component_text_nav {
@@ -320,12 +320,26 @@ body {
 	padding: 0px;
 }
 
-
-
-
-
-
-
+/*appkit组件样式*/
+.componentList_component_qa,.componentList_component_selection,.componentList_component_textlist,.componentList_component_shortcuts{
+	background: url(/static_v2/img/termite2/appKitSeprites.png) no-repeat;
+	-webkit-background-size: 137px 42px;
+	background-size: 137px 42px;
+}
+.xui-component .componentList_component_qa{
+	background-position:3px 3px;
+}
+.xui-component .componentList_component_selection{
+	background-position:-44px 3px;
+}
+.xui-component .componentList_component_textlist{
+	background-position: -89px 3px;
+  	width: 50px;
+}
+.xui-component .componentList_component_shortcuts{
+	background-position: -89px 3px;
+  	width: 50px;
+}
 
 /*
  * phone区域样式

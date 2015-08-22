@@ -75,6 +75,6 @@ W.component.appkit.TextList = W.component.Component.extend({
 }, {
 	indicator: {
 		name: '文本调研',
-		imgClass: 'componentList_component_product_list' // 控件icon
+		imgClass: 'componentList_component_textlist' // 控件icon
 	}
 });
