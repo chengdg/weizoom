@@ -1241,6 +1241,7 @@ button.xui-removeImageButton{
 .xui-wepage-globalNavPage .xui-selected-title-box{
 	float: left;
 	margin-left: 0px;
+	margin-bottom: 0px;
 }
 .xui-wepage-globalNavPage button.xui-removeImageButton{
 	right: -5px;
@@ -1273,13 +1274,10 @@ button.xui-removeImageButton{
 	line-height: 40px;
 	margin-bottom: 10px;
 }
-/*.propertyGroup_property_secondNavsField .xui-navbar-secondnav-navs{
-	position: relative;
-}*/
 .propertyGroup_property_secondNavsField .xui-navbar-secondnav-navs .propertyGroup_property_dynamicControlField_content{
 	border:1px solid #ddd;
 	padding-top: 15px;
-	padding-bottom: 15px;
+	padding-bottom: 8px;
 	margin-bottom: 10px;
 	width: 297px;
 	position: relative;
