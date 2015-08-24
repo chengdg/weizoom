@@ -53,7 +53,7 @@ W.component.wepage.Navar = W.component.Component.extend({
                     name: '自定义菜单样式',
                     value: 'weixin'
                 }, {
-                    name: 'app导航模式',
+                    name: 'APP导航模式',
                     value: 'slide'
                 }],
                 default: 'weixin'
