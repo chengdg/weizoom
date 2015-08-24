@@ -75,6 +75,7 @@ W.component.wepage.Navar = W.component.Component.extend({
 
     propertyChangeHandlers: {
     	type: function($node, model, value) {
+            W.WEAPAGE_NAVBARTYPE = value;
             var oldType = model.previous('type');
 
             this.type2items[oldType] = model.get('items');
