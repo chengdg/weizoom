@@ -611,3 +611,53 @@ def step_get_specify_order(context, user):
         bdd_util.assert_list(expected_order, actual)
     del StringIO
     del csv
+
+
+def _get_order(context, order_id):
+    url = '/mall2/api/order_list/'
+    query_params = {
+        'query': order_id
+    }
+    response = context.client.get(url, query_params)
+    content = json.loads(response.content)
+    items = content['data']['items']
+    order = {}
+    if len(items) > 0:
+        order = items[0]
+
+    return order
+
+@then(u'{user}能获得订单"{order_id}"')
+def step_impl(context, user, order_id):
+    order = _get_order(context, order_id)
+
+    response = context.client.get('/mall2/order/?order_id=%d' % order['id'])
+    order_obj = response.context['order']
+
+    from mall.templatetags import mall_filter
+    actions = mall_filter.get_order_actions(order_obj)
+    source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
+    actual = {
+        "order_no": order['order_id'],
+        "member": order['buyer_name'],
+        "status": order['status'],
+        "actions": [action['name'] for action in actions],
+        "shipper": order['leader_name'],
+        "order_time": order['created_at'],
+        "methods_of_payment": order['pay_interface_name'],
+        "ship_name": order['ship_name'],
+        "ship_tel": order['ship_tel'],
+        "sources": source[order['come']]
+    }
+
+    expected = json.loads(context.text)
+    bdd_util.assert_dict(expected, actual)
+
+@when(u'{user}完成订单"{order_id}"')
+def step_impl(context, user, order_id):
+    order = _get_order(context, order_id)
+    data = {
+        'order_id': order['id'],
+        'action': 'finish'
+    }
+    response = context.client.post('/mall2/api/order/', data)

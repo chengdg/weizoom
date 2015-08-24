@@ -48,7 +48,7 @@ Background:
 		"""
 
 
-@logistics @order
+@logistics @order @mall2
 Scenario: 1 对待发货订单进行发货不需要物流
 	jobs对不需要物流的订单进行发货
 	1.不填写发货人
@@ -56,7 +56,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 	3.对已发货订单标记完成
 
 	Given jobs登录系统
-	When jobs对订单"00008"进行"发货"
+	When jobs对订单进行发货
 		"""
 		{
 			"order_no": "00008",
@@ -71,9 +71,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"member":"bill",
 			"status":"已发货",
 			"actions": ["标记完成", "取消订单"],
-			"logistics_information": {
-				"shipper": ""
-			},
+			"shipper": "",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
 			"sources":"商城",
@@ -81,7 +79,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"ship_tel":"13811223344"
 		}
 		"""
-	When jobs对订单"00007"进行"发货"
+	When jobs对订单进行发货
 		"""
 		{
 			"order_no": "00007",
@@ -96,9 +94,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"member":"bill",
 			"status":"已发货",
 			"actions": ["标记完成", "申请退款"],
-			"logistics_information": {
-				"shipper": "jobs"
-			},
+			"shipper": "jobs",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
 			"sources":"商城",
@@ -106,7 +102,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"ship_tel":"13811223344"
 		}
 		"""
-	When jobs"完成"订单"00008"
+	When jobs完成订单"00008"
 	Then jobs能获得订单"00008"
 		"""
 		{
@@ -114,9 +110,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"member":"bill",
 			"status":"已完成",
 			"actions": ["取消订单"],
-			"logistics_information": {
-				"shipper": ""
-			},
+			"shipper": "",
 			"order_time":"2014-10-08 12:00:00",
 			"methods_of_payment":"优惠抵扣",
 			"sources":"商城",
@@ -124,7 +118,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"ship_tel":"13811223344"
 		}
 		"""
-	When jobs"完成"订单"00007"
+	When jobs完成订单"00007"
 	Then jobs能获得订单"00007"
 		"""
 		{
@@ -132,9 +126,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"member":"bill",
 			"status":"已完成",
 			"actions": ["申请退款"],
-			"logistics_information": {
-				"shipper": "jobs"
-			},
+			"shipper": "jobs",
 			"order_time":"2014-10-07 12:00:00",
 			"methods_of_payment":"支付宝",
 			"sources":"商城",

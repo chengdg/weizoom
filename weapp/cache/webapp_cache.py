@@ -303,6 +303,18 @@ def update_webapp_product_model_cache(**kwargs):
 post_update_signal.connect(update_webapp_product_model_cache,
                            sender=mall_models.ProductModel, dispatch_uid="product_model.update")
 
+#更新商品规格时，情况该账号的所有商品详情缓存 duhao 2015-08-21
+#TODO:这个方案比较暴力，当修改商品规格时会把该账号下所有商品详情的缓存都清理掉
+def update_webapp_product_detail_cache_when_update_model_property_value(**kwargs):
+    if hasattr(cache, 'request'):
+        if hasattr(cache.request, 'user'):
+            owner_id = cache.request.user.id
+
+            key = 'webapp_product_detail_{wo:%s}_{pid:*}' % (owner_id)
+            cache_util.delete_pattern(key)
+post_update_signal.connect(update_webapp_product_detail_cache_when_update_model_property_value,
+                           sender=mall_models.ProductModelPropertyValue, dispatch_uid="mall_product_model_property_value.update")
+
 
 def update_webapp_product_detail_by_review_cache(**kwargs):
     if hasattr(cache, 'request'):
