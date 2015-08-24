@@ -44,40 +44,43 @@ class eventParticipance(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = request_util.get_fields_to_be_save(request)
-		event_participance = app_models.eventParticipance(**data)
-		event_participance.save()
-		
-		#调整参与数量
-		app_models.event.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
-		
-		#活动奖励
-		prize = data.get('prize', None)
-		error_msg = None
-		if prize:
-			prize_type = prize['type']
-			if prize_type == 'no_prize':
-				pass #不进行奖励
-			elif prize_type == 'integral':
-				if not request.member:
-					pass #非会员，不进行积分奖励
-				else:
-					value = int(prize['data'])
-					integral_api.increase_member_integral(request.member, value, u'参与活动奖励积分')
-			elif prize_type == 'coupon':
-				if not request.member:
-					pass #非会员，不进行优惠券发放
-				else:
-					coupon_rule_id = int(prize['data']['id'])
-					coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
-					if not coupon:
-						error_msg = msg
-		
-		data = json.loads(event_participance.to_json())
-		data['id'] = data['_id']['$oid']
-		if error_msg:
-			data['error_msg'] = error_msg
-		response = create_response(200)
-		response.data = data
-		return response.get_response()
+		try:
+			data = request_util.get_fields_to_be_save(request)
+			event_participance = app_models.eventParticipance(**data)
+			event_participance.save()
 
+			#调整参与数量
+			app_models.event.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
+
+			#活动奖励
+			prize = data.get('prize', None)
+			error_msg = None
+			if prize:
+				prize_type = prize['type']
+				if prize_type == 'no_prize':
+					pass #不进行奖励
+				elif prize_type == 'integral':
+					if not request.member:
+						pass #非会员，不进行积分奖励
+					else:
+						value = int(prize['data'])
+						integral_api.increase_member_integral(request.member, value, u'参与活动奖励积分')
+				elif prize_type == 'coupon':
+					if not request.member:
+						pass #非会员，不进行优惠券发放
+					else:
+						coupon_rule_id = int(prize['data']['id'])
+						coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
+						if not coupon:
+							error_msg = msg
+
+			data = json.loads(event_participance.to_json())
+			data['id'] = data['_id']['$oid']
+			if error_msg:
+				data['error_msg'] = error_msg
+			response = create_response(200)
+			response.data = data
+			return response.get_response()
+		except Exception,e:
+			print e
+			print e.message
