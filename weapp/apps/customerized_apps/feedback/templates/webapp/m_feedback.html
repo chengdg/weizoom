@@ -111,7 +111,7 @@
 					<a id="freedback_type" data-role="button" >
 						反馈类型
 						<span class="type_name" style="color: #666;margin-left: 10px;"></span>
-						<input class="wui-i-input" id="xui-input-type" type="text"   placeholder="" value="" data-validate="require-notempty::请选择反馈类型">
+						<input class="wui-i-input" id="xui-input-type" type="text"   placeholder="" value="" data-validate="require-notempty::请选择反馈类型" readonly>
 						<span id="icon" class="arrow_down"></span>
 					</a>
 					<div class="xui-dropmenu" style="display: none">
@@ -131,9 +131,13 @@
 				<div id="freedback_textarea_num" style="color: #757575">还可以输入<span>200</span>个字</div>
 				<div class="xa-inputControl" data-input-type="textarea" data-input-name="content" data-control-type="appkit.qa">
 					<textarea id="freedback_textarea"
+							  name="content"
 							  class="wui-i-input"
-							  placeholder="长度在20-200个字之间 为了我们能够为您更好的服务，请写下您的意见和反馈意见~"
-							  data-validate='require-notempty::请填写反馈内容"'
+							  placeholder="长度在20-200个字之间"
+							  data-validate="require-string::请输入反馈内容20-200个字"
+							  data-min-length="20"
+							  data-max-length="200"
+							  maxlength="200"
 							  onkeydown='countChar("freedback_textarea","freedback_textarea_num");'
 							  onkeyup='countChar("freedback_textarea","freedback_textarea_num");'
 							></textarea>
@@ -171,7 +175,7 @@
 	<script type="text/javascript" src="/termite_static/v3/gmu/widget/dropmenu.js"></script>
 	<script type="text/javascript">
 	function countChar(textareaName,divName) {
-		$('#'+divName).find('span').text( 140 - $('#'+textareaName).val().length);
+		$('#'+divName).find('span').text(200 - $('#'+textareaName).val().length);
 	}
 	$(document).ready(function() {
 		$('#freedback_type').click(function(){
