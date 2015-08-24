@@ -104,7 +104,6 @@ def step_impl(context, user):
 
 @then(u'{user}可以获得会员列表')
 def step_impl(context, user):
-	json_data = json.loads(context.text)
 	Member.objects.all().update(is_for_test=False)
 	url = '/member/api/members/get/?design_mode=0&version=1&status=-1&count_per_page=50&page=1&enable_paginate=1'
 	response = context.client.get(bdd_util.nginx(url))
@@ -112,6 +111,8 @@ def step_impl(context, user):
 	actual_members = []
 	for member_item in items:
 		member_item['name'] = member_item['username']
+		member_item['attention_time'] = member_item['created_at']
+		member_item['tags'] = ','.join([item['name'] for item in member_item['tags']])
 		if member_item['is_subscribed']:
 			member_item['status'] = u"已关注"
 		else:
@@ -124,10 +125,20 @@ def step_impl(context, user):
 		elif member_item['source'] == 2:
 			member_item['source'] = u"会员分享"
 		actual_members.append(member_item)
-	for data in json_data:
-		if 'experience' in data:
-			del data['experience']
-
+	if context.text:
+		json_data = json.loads(context.text)
+		for data in json_data:
+			if 'experience' in data:
+				del data['experience']
+	elif context.table:
+		table_members = []
+		for row in context.table:
+			table_members.append(row)
+	with open(r'text.txt','w+') as f:
+		f.write('actual_members:')
+        f.write(actual_members)
+        f.write('table_members:')
+        f.write(table_members)
 	bdd_util.assert_list(json_data, actual_members)
 
 
