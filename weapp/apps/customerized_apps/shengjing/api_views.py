@@ -64,6 +64,7 @@ def send_create_template_message(request):
 			}
 			return response.get_response()
 
+		data['webapp_user_id'] = webapp_user_id
 		return __send_message(data).get_response()
 
 	except:
