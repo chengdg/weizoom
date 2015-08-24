@@ -24,7 +24,7 @@ gmu.define('SideNav', {
 				var $categoryBtn = $(this);
 				_this.showLeftPanel();
 				if (!_this.isIScrollInitialized) {
-					var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});	
+					var myscroll = new iScroll('xa-sidePanel',{hScrollbar:false});	
 					_this.isIScrollInitialized = true;
 				}
 				$categoryBtn.find('i').addClass('xui-active');

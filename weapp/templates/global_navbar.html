@@ -56,7 +56,7 @@
                 </ul>
             </div>
         </div>
-        <div class="xui-sidePanel xa-sidePanel"  {% if in_production_mode %}id="xa-wrapper" {% endif %} {% if in_design_mode %}style="display:block;"{% endif %}>
+        <div class="xui-sidePanel xa-sidePanel"  {% if not in_design_mode %}id="xa-sidePanel" {% endif %} {% if in_design_mode %}style="display:block;"{% endif %}>
             <ul class="xui-mainMenu">
                 <li class="xui-firstNav">
                     <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">
