@@ -48,6 +48,6 @@ W.component.appkit.QA = W.component.Component.extend({
 }, {
 	indicator: {
 		name: '问答',
-		imgClass: 'componentList_component_product' // 控件icon
+		imgClass: 'componentList_component_qa' // 控件icon
 	}
 });

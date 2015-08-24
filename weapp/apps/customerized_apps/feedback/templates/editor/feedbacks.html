@@ -15,7 +15,7 @@
 			<div class="xui-col disTc">
 				<div class="xui-i-item">
 					<label class="">用户名：</label>
-					<input type="text" class="form-control" id="username" name="username" value="" />
+					<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
 				</div>
 			</div>
 			<div class="xui-col disTc">
@@ -67,7 +67,7 @@
 			<div class="xui-col disTc">
 				<div class="xui-i-item">
 					<label class="">手机：</label>
-					<input type="text" class="form-control" id="tel" name="tel" value="" />
+					<input type="text" class="form-control" id="phone" name="phone" value="" />
 				</div>
 			</div>
 			<div class="xui-col disTc">
@@ -129,28 +129,23 @@
 				<td 
 					class="tl pl25"
 					style="width:250px; height:60px;" 
-					title="${item.name}"
 				>
-				   <a 
-					class="xui-ellipsisFox" 
-					limit="15" 
-					href="/apps/feedback/feedback/?id=${item.id}&related_page_id=${item.related_page_id}"
-					style="text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"
-					>
-						${item.username}
-					</a>
+					<img src="${item.participant_icon}" />
+					${item.participant_name}
 				</td>
 				<td>
-					${item.tel}
+					{{each(i, information) informations}}
+						${information.item_name}:${information.item_value}<br />
+					{{/each}}
 				</td>
 				<td>
 					${item.feedback_type}
 				</td>
 				<td>
-					${item.content}
+					${item.feedback_content}
 				</td>
 				<td>
-					${item.time}
+					${item.created_at}
 				</td>
 			</tr>
 			{{/each}}
@@ -170,21 +165,21 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('.xa-search').click(function(event) {
-		var username = $.trim($('[name="username"]').val());
+		var participant_name = $.trim($('[name="participant_name"]').val());
 		var feedback_type = $.trim($('[name="feedback_type"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
 		var endTime = $.trim($('[name="end_time"]').val());
 		var name = $.trim($('[name="name"]').val());
-		var tel = $.trim($('[name="tel"]').val());
+		var phone = $.trim($('[name="phone"]').val());
 		var qq = $.trim($('[name="qq"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
-			username: username,
+			participant_name: participant_name,
 			feedback_type: feedback_type,
 			start_time: startTime,
 			end_time: endTime,
 			name: name,
-			tel: tel,
+			phone: phone,
 			qq: qq
 		}, {
 			emptyDataHint: '没有符合条件的数据'
@@ -192,11 +187,11 @@ $(document).ready(function() {
 	});
 	
 	$('.xa-reset').click(function(event) {
-		$('[name="username"]').val('');
+		$('[name="participant_name"]').val('');
 		$('[name="feedback_type"]').val('-1');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
-		$('[name="tel"]').val('');
+		$('[name="phone"]').val('');
 		$('[name="name"]').val('');
 		$('[name="qq"]').val('');
 	});

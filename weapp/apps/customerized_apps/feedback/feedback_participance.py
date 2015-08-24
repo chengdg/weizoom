@@ -50,7 +50,7 @@ class feedbackParticipance(resource.Resource):
 		error_msg = None
 		
 		#调整参与数量
-		app_models.feedback.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
+		# app_models.feedback.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
 		
 		#活动奖励
 		prize = data.get('prize', None)

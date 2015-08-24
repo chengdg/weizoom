@@ -57,6 +57,6 @@ W.component.appkit.Shortcuts = W.component.Component.extend({
 }, {
 	indicator: {
 		name: '快捷模块',
-		imgClass: 'componentList_component_richtext' // 控件icon
+		imgClass: 'componentList_component_shortcuts' // 控件icon
 	}
 });
