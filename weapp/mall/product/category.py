@@ -57,14 +57,15 @@ class CategoryList(resource.Resource):
 
         """
         action = request.GET.get('action')
+        category_id = int(request.GET.get('id'))
         if not action:
             COUNT_PER_PAGE = 20
-            category_id = int(request.GET.get('id'))
             name_query = request.GET.get('name')
 
             #获取商品集合
-            products = [product for product in mall_models.Product.objects.filter(
-                owner=request.manager) if not product.is_deleted]
+            products = list(mall_models.Product.objects.filter(
+                owner=request.manager, is_deleted=False).exclude(
+                shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED))
             if name_query:
                 products = [
                     product for product in products if name_query in product.name
@@ -84,7 +85,7 @@ class CategoryList(resource.Resource):
                     products
                 )
 
-            products.sort(lambda x,y: cmp(x.id, y.id))
+            products.sort(lambda x,y: cmp(y.update_time, x.update_time))
 
             #进行分页
             count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -110,7 +111,7 @@ class CategoryList(resource.Resource):
                     "sales": product.sales if product.sales else -1,
                     "update_time": product.update_time.strftime("%Y-%m-%d")
                 })
-            result_products.sort(lambda x,y: cmp(y['id'], x['id']))
+            # result_products.sort(lambda x,y: cmp(y['update_time'], x['update_time']))
 
             response = create_response(200)
             response.data = {
@@ -121,8 +122,6 @@ class CategoryList(resource.Resource):
             }
             return response.get_response()
         elif action == 'sorted':
-
-            category_id = request.GET.get('category_id')
             reverse = json.loads(request.GET.get('reverse', 'true'))
             #获取category集合
             product_categories = mall_models.ProductCategory.objects.filter(

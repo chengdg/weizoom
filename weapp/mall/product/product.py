@@ -303,7 +303,7 @@ class Product(resource.Resource):
                 pay_interface_config['online_pay_interfaces'].append(
                     pay_interface)
 
-        # 确定运费配置
+        # 确定运费配置(对应表: mall_postage_config)
         system_postage_configs = models.PostageConfig.objects.filter(
             owner=request.manager, is_used=True)
         if system_postage_configs.exists():

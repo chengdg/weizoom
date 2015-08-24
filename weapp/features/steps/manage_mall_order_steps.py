@@ -557,23 +557,61 @@ def step_look_for_order(context, user):
 
 @then(u"{user}导出订单获取订单信息")
 def step_get_specify_order(context, user):
+    """
+    """
+
     filter_value = context.query_params
+    from cStringIO import StringIO
     import csv
 
     if filter_value:
         url = '/mall2/order_export/?{}'.format(filter_value)
         response = context.client.get(url)
-        print("*"*39)
-        print(response.content)
-        print("*"*39)
-        reader = csv.reader(response.content, delimiter=',', quotechar='"')
+        reader = csv.reader(StringIO(response.content))
+        # 去掉表头信息
+        header = reader.next()
+        header = [
+            'order_no',
+            'order_time',
+            'pay_time',
+            'product_name',
+            'model',
+            'product_unit_price',
+            'product_count',
+            'weigth',
+            'pay_way',
+            'money_total',
+            'money',
+            'money_wcard',
+            'postage',
+            'integral',
+            'coupon_money',
+            'coupon_name',
+            'order_status',
+            'purchaser',
+            'consignee',
+            'tel',
+            'province',
+            'address',
+            'consigner',
+            'remark',
+            'source',
+            'logistics_company',
+            'express_number',
+            'delivery_time'
+        ]
+        actual = []
         for row in reader:
-            print(''.join(row))
+            item = dict(map(None, header, row))
+            actual.append(item)
+        # remove statistical information
+        actual.pop()
 
-        items = json.loads(response.content)
-        actual_orders = _get_actual_orders(items)
         expected_order = json.loads(context.text)
-        bdd_util.assert_list(expected_order, actual_orders)
+        bdd_util.assert_list(expected_order, actual)
+    del StringIO
+    del csv
+
 
 def _get_order(context, order_id):
     url = '/mall2/api/order_list/'
@@ -595,7 +633,7 @@ def step_impl(context, user, order_id):
 
     response = context.client.get('/mall2/order/?order_id=%d' % order['id'])
     order_obj = response.context['order']
-    
+
     from mall.templatetags import mall_filter
     actions = mall_filter.get_order_actions(order_obj)
     source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
