@@ -336,7 +336,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'core.context_processors.is_weizoom_mall',
     'core.context_processors.cdn_host',
     'core.context_processors.handlebar_component_templates',
-    'core.context_processors.fetch_webapp_global_navbar'
+    'core.context_processors.fetch_webapp_global_navbar',
 
 ]
 

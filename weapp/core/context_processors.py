@@ -594,7 +594,10 @@ def __match_navbar_path(webapp_owner_id, path):
 	
 
 def fetch_webapp_global_navbar(request):
-	if request.webapp_owner_id:	
+	if request.webapp_owner_id <= 0:
+		return {}
+
+	else:
 		path = request.get_full_path()
 		# 微页面不做处理
 		if 'termite2/webapp_page/?' is path:
