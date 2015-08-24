@@ -599,7 +599,8 @@ class Product(models.Model):
 
 		for sales in ProductSales.objects.filter(product_id__in=product_ids):
 			product_id = sales.product_id
-			id2product[product_id].sales = sales.sales
+			if id2product.has_key(product_id):
+				id2product[product_id].sales = sales.sales
 
 	@staticmethod
 	def fill_details(webapp_owner, products, options):

@@ -1,3 +1,4 @@
+# _edit_ : "新新8.24"
 @func:webapp.modules.mall.views.list_products
 Feature: 在webapp中支付订单
 	bill能在webapp中支付订单
@@ -18,7 +19,8 @@ Background:
 		"""
 		[{
 			"type": "微信支付",
-			"description": "我的微信支付",
+			"version": 2,
+			"description": "我的微信支付V2",
 			"is_active": "启用"
 		}, {
 			"type": "货到付款",
@@ -74,4 +76,94 @@ Scenario: 使用货到付款支付
 			}]
 		}
 		"""
-	
+
+# _insert_ : "新新8.21"		
+Scenario: 使用V2版微信支付进行同步支付
+	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
+	1. bill的订单中变为已支付
+	2. jobs在后台看到订单变为已支付
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 9.9,
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'微信支付'进行支付
+		"""
+		{
+			"is_sync": true
+		}
+		"""
+	Then bill支付订单成功
+		"""
+		{
+			"status": "待发货",
+			"final_price": 9.9,
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}]
+		}
+		"""
+# _insert_ : "新新8.21"	
+Scenario: 使用V2版微信支付进行异步支付
+	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
+	1. bill的订单中变为已支付
+	2. jobs在后台看到订单变为已支付
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 9.9,
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}]
+		}
+		"""
+	When bill使用支付方式'微信支付'进行支付
+		"""
+		{
+			"is_sync": false
+		}
+		"""
+	Then bill支付订单成功
+		"""
+		{
+			"status": "待发货",
+			"final_price": 9.9,
+			"products": [{
+				"name": "商品1",
+				"price": 9.9,
+				"count": 1
+			}]
+		}
+		"""
