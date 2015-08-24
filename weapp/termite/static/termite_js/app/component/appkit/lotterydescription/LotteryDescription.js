@@ -8,6 +8,11 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 	selectable: 'yes',
 	propertyViewTitle: '微信抽奖',
 
+	dynamicComponentTypes: [{
+        type: 'appkit.lotteryitem',
+        model: 3
+    }],
+
 	properties: [{
 		group: '文本调研项',
 		groupClass: 'xui-propertyView-app-TextSurvey',
@@ -70,21 +75,113 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: ''
-		}]
+		}, {
+			name: 'delivery',
+			type: 'text_with_annotation',
+			displayName: '参与送积分',
+			maxLength: 4,
+			size: '70px',
+			isUserProperty: true,
+			default: ''
+		}, {
+			name: 'delivery_setting',
+			type: 'radio',
+			displayName: '送积分规则',
+			isUserProperty: true,
+			source: [{
+				name: '仅限未中奖用户',
+				value: 'true'
+			}, {
+				name: '所有用户',
+				value: 'false'
+			}],
+			default: 'true'
+		},{
+			name: 'limitation',
+			type: 'radio',
+			displayName: '抽奖限制',
+			isUserProperty: true,
+			source: [{
+				name: '一人一次',
+				value: 'once_per_user'
+			}, {
+				name: '一天一次',
+				value: 'once_per_day'
+			}, {
+				name: '一天两次',
+				value: 'twice_per_day'
+			}],
+			default: 'once_per_user'
+		},{
+			name: 'chance',
+			type: 'text_with_annotation',
+			displayName: '中奖率',
+			isUserProperty: true,
+			maxLength: 3,
+			size: '70px',
+			annotation: "%  <b style='color:#1262b7' title='1.中奖概率'>中奖率详细规则</b>",
+			validate: 'data-validate="require-notempty::中奖率不能为空,,require-percent::请输入1-100之间的数字"',
+			validateIgnoreDefaultValue: true
+		}, {
+			name: 'type',
+			type: 'radio',
+			displayName: '重复中奖',
+			isUserProperty: true,
+			source: [{
+				name: '是',
+				value: 'true'
+			}, {
+				name: '否',
+				value: 'false'
+			}],
+			default: 'true'
+		}, {
+            name: 'items',
+            displayName: '',
+            type: 'dynamic-generated-control',
+            isShowCloseButton: false,
+            minItemLength: 3,
+			maxItemLength: 3,
+            isUserProperty: true,
+            default: []
+        }]
 	}],
 
 	propertyChangeHandlers: {
 		title: function($node, model, value, $propertyViewNode) {
-			this.refresh($node, {resize:true});
+			$node.find('.xa-title').text(value);
 		},
+		items: function($node, model, value) {
+            this.refresh($node, {refreshPropertyView:true});
+        },
 		description: function($node, model, value, $propertyViewNode) {
-			this.refresh($node, {resize:true});
+			console.log('------------------------------------');
+			console.log($node[0]);
+			console.log('------------------------------------');
+			$node.find('.xa-description').html(value.replace(/\n/g,'<br>'));
 		},
-		start_time: function($node, model, value, $propertyViewNode) {
-			this.refresh($node, {resize:true});
+		delivery: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-i-prize').html(value+'积分');
 		},
-		end_time: function($node, model, value, $propertyViewNode) {
-			this.refresh($node, {resize:true});
+		limitation: function($node, model, value, $propertyViewNode) {
+			console.log('------------------------------------');
+			console.log($node[0], value);
+			console.log('------------------------------------');
+			switch (value){
+				case 'once_per_user':
+					value = '1';
+					break;
+				case 'once_per_day':
+					value = '1';
+					break;
+				case 'twice_per_day':
+					value = '2';
+					break;
+				default :
+					value = '0';
+					break;
+			}
+			$node.siblings('.wui-lotterydescription').find('.xa-header p b').html(value);
 		}
 	},
 

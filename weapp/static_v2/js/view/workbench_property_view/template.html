@@ -39,6 +39,29 @@
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'text_with_annotation')}}
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+						<div class="propertyGroup_property_input">
+							<input
+								type="text"
+								style="width:${field.size};"
+								class="input-small xui-propertyGroup-input"
+								data-field="${field.name}"
+								value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}"
+								placeholder="${field.placeholder}"
+								{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
+								{{if field.validate}}{{html field.validate}}{{/if}} />
+							{{if field.annotation}}
+							<span style="color: #888;">
+								{{html field.annotation}}
+							</span>
+							{{/if}}
+							<div class="errorHint"></div>
+						</div>
+					</div>
+					{{/if}}
+
 					{{if (field.type == 'time')}}
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_input xui-formPanel">
@@ -412,6 +435,29 @@
 								</div>
 								{{/if}}
 
+								{{if (dynamicComponentField.type == 'text_with_annotation')}}
+                                <div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+                                    <div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
+                                    <div class="propertyGroup_property_input">
+                                        <input
+                                            type="text"
+                                            style="width:${dynamicComponentField.size};"
+                                            class="input-small xui-propertyGroup-input"
+                                            data-field="${dynamicComponentField.name}"
+                                            value="{{if dynamicComponentField.placeholder != dynamicComponent.model.get(dynamicComponentField.name)}}${dynamicComponent.model.get(dynamicComponentField.name)}{{/if}}"
+                                            placeholder="${dynamicComponentField.placeholder}"
+                                            {{if dynamicComponentField.maxLength}}maxlength="${dynamicComponentField.maxLength}"{{/if}}
+                                            {{if dynamicComponentField.validate}}{{html dynamicComponentField.validate}}{{/if}} />
+                                        {{if dynamicComponentField.annotation}}
+                                        <span style="color: #888;">
+                                            {{html dynamicComponentField.annotation}}
+                                        </span>
+                                        {{/if}}
+                                        <div class="errorHint"></div>
+                                    </div>
+                                </div>
+                                {{/if}}
+
 								{{if (dynamicComponentField.type == 'boolean')}}
 								<div class="propertyGroup_property_booleanField propertyGroup_property_horizontalField">
 									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}</div>
@@ -421,6 +467,18 @@
 									</div>
 								</div>
 								{{/if}}
+
+								{{if (dynamicComponentField.type == 'prize_selector')}}
+                                <div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField">
+                                    <div class="propertyGroup_property_label">${dynamicComponentField.displayName}</div>
+                                    <div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="prize_selector" data-field="${dynamicComponentField.name}">
+                                        <div
+                                            data-ui-role="apps-prize-selector"
+                                            data-prize='${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}'
+                                        ></div>
+                                    </div>
+                                </div>
+                                {{/if}}
 
 								{{if (dynamicComponentField.type == 'radio')}}
 								<div class="propertyGroup_property_booleanField propertyGroup_property_horizontalField">
@@ -475,6 +533,39 @@
 									<div class="errorHint" style="margin-left:0px;"></div>
 								</div>
 								{{/if}}
+
+								{{if (dynamicComponentField.type == 'image_dialog_select')}}
+                                <div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
+                                    <div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
+                                    <div class="propertyGroup_property_input" style="position:relative;">
+                                        {{html W.data.getDynamicComponentDataForDialogSelectControl(dynamicComponent, dynamicComponentField)}}
+                                        <input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden" />
+
+                                        {{if dynamicComponent.model.get(dynamicComponentField.name) && dynamicComponentField.selectedButton}}
+                                            <button class="btn btn-small" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">${dynamicComponentField.selectedButton}</button>
+                                        {{else}}
+
+                                            <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">
+                                                {{if triggerButton.nodata}}
+                                                    {{if dynamicComponent.model.get(dynamicComponentField.name)}}
+                                                        ${dynamicComponentField.triggerButton.hasdata}
+                                                    {{else}}
+                                                        ${dynamicComponentField.triggerButton.nodata}
+                                                    {{/if}}
+                                                {{else}}
+                                                    ${dynamicComponentField.triggerButton}
+                                                {{/if}}
+                                            </button>
+                                        {{/if}}
+
+                                        {{if dynamicComponentField.help}}
+                                        <div style="color: #666;">
+                                            {{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
+                                        </div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                {{/if}}
 
 								{{if (dynamicComponentField.type == 'select_link')}}
 								<div class="propertyGroup_property_linkSelectField propertyGroup_property_horizontalField xa-errorHintContainer">

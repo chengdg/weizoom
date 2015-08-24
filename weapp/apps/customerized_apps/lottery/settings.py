@@ -15,14 +15,63 @@ NEW_PAGE_JSON = """
             "pid": 1,
             "property_view_title": "活动详情",
             "force_display_in_property_view": "no",
-            "components": [],
+            "components": [{
+                "cid": 4,
+                "pid": 2,
+                "property_view_title": "",
+                "force_display_in_property_view": "no",
+                "components": [],
+                "selectable": "no",
+                "type": "appkit.lotteryitem",
+                "model": {
+                    "index": 3,
+                    "name": "",
+                    "class": "",
+                    "id": "",
+                    "title": "一等奖"
+                },
+                "has_global_content": "no"
+            }, {
+                "cid": 5,
+                "pid": 2,
+                "property_view_title": "",
+                "force_display_in_property_view": "no",
+                "components": [],
+                "selectable": "no",
+                "type": "appkit.lotteryitem",
+                "model": {
+                    "index": 3,
+                    "name": "",
+                    "class": "",
+                    "id": "",
+                    "title": "二等奖"
+                },
+                "has_global_content": "no"
+            }, {
+                "cid": 6,
+                "pid": 2,
+                "property_view_title": "",
+                "force_display_in_property_view": "no",
+                "components": [],
+                "selectable": "no",
+                "type": "appkit.lotteryitem",
+                "model": {
+                    "index": 3,
+                    "name": "",
+                    "class": "",
+                    "id": "",
+                    "title": "三等奖"
+                },
+                "has_global_content": "no"
+            }],
             "selectable": "yes",
             "type": "appkit.lotterydescription",
             "model": {
                 "index": 2,
                 "name": "",
                 "class": "",
-                "id": ""
+                "id": "",
+                "limitation": "once_per_user"
             },
             "has_global_content": "no"
         }, {
