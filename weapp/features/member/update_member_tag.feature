@@ -14,7 +14,7 @@ Background:
 		}	
 		"""
 
-@crm @member @member.tag @member.update_tag
+@mall2 @member @member.tag @member.update_tag
 Scenario: Jobs更新已存在的会员分组
 	When jobs更新会员分组
 		"""

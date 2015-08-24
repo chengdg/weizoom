@@ -3,7 +3,7 @@
 Feature: 增加会员分组
 	Jobs能添加会员分组
 
-@crm @member @member.tag @member.add_tag
+@mall2 @member @member.tag @member.add_tag
 Scenario: 添加会员分组
 	Jobs添加多组"会员分组"后，"会员分组列表"会按照添加的顺序正序排列
 
