@@ -180,7 +180,8 @@ def sorted_products(manager_id, product_categories, reverse):
     for relation in relations:
         categoryId2relations.setdefault(relation.category_id, []).append(relation)
     productIds = set([x.product_id for x in relations])
-    products = models.Product.objects.filter(id__in=productIds, is_deleted=False)
+    products = models.Product.objects.filter(id__in=productIds, is_deleted=False).exclude(
+        shelve_type=models.PRODUCT_SHELVE_TYPE_RECYCLED)
     models.Product.fill_display_price(products)
     models.Product.fill_sales_detail(manager_id, products, productIds)
     id2product = dict([(product.id, product) for product in products])
