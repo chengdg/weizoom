@@ -57,50 +57,6 @@ def step_impl(context, user):
 	elif integral_detail:
 		pass
 
-# def __get_user(user_name):
-# 	return User.objects.get(username=user_name)
-
-# @given(u'{user}设置积分策略')
-# def step_impl(context, user):
-# 	"""
-# 	此方法要删除掉 换成 设定会员积分策略
-# 	"""
-# 	# if hasattr(context, 'client'):
-# 	# 	context.client.logout()
-# 	# context.client = bdd_util.login(user)
-# 	# client = context.client
-# 	# user = UserFactory(username=user)
-# 	user = context.client.user
-# 	profile = UserProfile.objects.get(user_id=user.id)
-# 	json_data = json.loads(context.text)
-
-# 	integral_detail = {};
-# 	integral = {}
-
-# 	for key, value in  json_data[0].items():
-# 		if key != 'member_integral_strategy_settings_detail':
-# 			integral[key] = value
-
-# 	if json_data[0].has_key('member_integral_strategy_settings_detail'):
-# 		integral_detail = json_data[0]['member_integral_strategy_settings_detail'][0]
-
-# 	if IntegralStrategySttings.objects.filter(webapp_id=profile.webapp_id).count() > 0:
-# 		IntegralStrategySttings.objects.filter(webapp_id=profile.webapp_id).update(**integral)
-# 	for key, value in integral_detail.items():
-# 		if key == 'is_used':
-# 			if value == u'否':
-# 				integral_detail[key] = False
-# 			else:
-# 				integral_detail[key] = True
-# 		else:
-# 			integral_detail[key] = float(value[value.find('+')+1:value.find('*')])
-
-# 	integral_detail['webapp_id'] = profile.webapp_id
-# 	if IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).count() > 0 and integral_detail:
-# 		IntegralStrategySttingsDetail.objects.filter(webapp_id=profile.webapp_id).update(**integral_detail)
-# 	elif integral_detail:
-# 		IntegralStrategySttingsDetail.objects.create(**integral_detail)
-
 
 @then(u'{user}可以获得会员列表')
 def step_impl(context, user):
@@ -129,6 +85,11 @@ def step_impl(context, user):
 			del data['experience']
 
 	bdd_util.assert_list(json_data, actual_members)
+
+#用户可以获取第几页的会员列表
+@then(u'{user}')
+def step_impl(context, user, cur_page):
+	pass
 
 
 @Given(u'{webapp_owner_name}调{webapp_user_name}等级为{grade_name}')
