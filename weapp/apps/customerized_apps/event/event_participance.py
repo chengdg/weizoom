@@ -45,6 +45,7 @@ class eventParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
+			print 'event_participance!!!!!!!!!!'
 			data = request_util.get_fields_to_be_save(request)
 			event_participance = app_models.eventParticipance(**data)
 			event_participance.save()
