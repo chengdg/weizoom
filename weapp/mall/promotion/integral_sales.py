@@ -45,7 +45,10 @@ class IntegralSales(resource.Resource):
 
             for rule in promotion.detail['rules']:
                 if rule['member_grade_id'] > 0:
-                    rule['member_grade_name'] = MemberGrade.objects.get(id=rule['member_grade_id']).name
+                    try:
+                        rule['member_grade_name'] = MemberGrade.objects.get(id=rule['member_grade_id']).name
+                    except:
+                        pass
                 else:
                     rule['member_grade_name'] = '全部等级'
 
