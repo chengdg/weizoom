@@ -44,8 +44,8 @@
                     <li class="xa-outLink" data-page="shopping-cart">
                         <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show&workspace_id=mall">
                             <i class="xui-bg">
-                            {% if shopping_cart_product_count %}
-                            <span class="xui-shopCar xa-shopCarCount">{{ shopping_cart_product_count }}</span>
+                            {% if member.shopping_cart_product_count %}
+                            <span class="xui-shopCar xa-shopCarCount">{{ member.shopping_cart_product_count }}</span>
                             {% endif %}
                             </i>
                         </a>
