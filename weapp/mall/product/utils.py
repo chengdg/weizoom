@@ -199,7 +199,14 @@ def sorted_products(manager_id, product_categories, reverse):
         products = sorted(products, key=attrgetter('shelve_type', 'display_index'))
         products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
 
-        c.products = products
+        products_is_0 = filter(lambda p: p.display_index == 0,
+                                             products)
+        products_not_0 = filter(lambda p: p.display_index != 0,
+                                              products)
+        products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time'), reverse=True)
+        products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
+
+        c.products = products_not_0 + products_is_0
     return product_categories
 
 
