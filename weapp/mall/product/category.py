@@ -57,9 +57,9 @@ class CategoryList(resource.Resource):
 
         """
         action = request.GET.get('action')
+        category_id = int(request.GET.get('id'))
         if not action:
             COUNT_PER_PAGE = 20
-            category_id = int(request.GET.get('id'))
             name_query = request.GET.get('name')
 
             #获取商品集合
@@ -110,7 +110,7 @@ class CategoryList(resource.Resource):
                     "sales": product.sales if product.sales else -1,
                     "update_time": product.update_time.strftime("%Y-%m-%d")
                 })
-            result_products.sort(lambda x,y: cmp(y['id'], x['id']))
+            result_products.sort(lambda x,y: cmp(y['update_time'], x['update_time']))
 
             response = create_response(200)
             response.data = {
@@ -121,8 +121,6 @@ class CategoryList(resource.Resource):
             }
             return response.get_response()
         elif action == 'sorted':
-
-            category_id = request.GET.get('category_id')
             reverse = json.loads(request.GET.get('reverse', 'true'))
             #获取category集合
             product_categories = mall_models.ProductCategory.objects.filter(
