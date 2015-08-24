@@ -261,8 +261,14 @@ def __get_products(context, type_name=u'在售'):
       u'回收站': 'recycled'
     }
     type = NAME2TYPE[type_name]
-    response = context.client.get('/mall2/api/product_list/?version=1&type=%s&count_per_page=15&page=1' % type)
+    url = '/mall2/api/product_list/?version=1&type=%s' % type
+    if hasattr(context, 'query_param'):
+        for key in context.query_param.keys():
+            url += '&%s=%s' % (key, context.query_param[key])
+    response = context.client.get(url)
+
     data = json.loads(response.content)['data']
+    context.pageinfo = data['pageinfo']
 
     for product in data["items"]:
         #价格
