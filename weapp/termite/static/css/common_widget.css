@@ -190,6 +190,8 @@
 }
 .wui-template-globalNavbar .xui-sidePanel li a{
     color: #333;
+    width: 100%;
+    display: block;
 }
 .wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li.xui-firstNav{
     background: #fff;
