@@ -79,11 +79,11 @@ class ProductFactory(factory.django.DjangoModelFactory):
 	def update_created_at(self, create, extracted, **kwargs):
 		if not create:
 			return
-
-		new_created_at = datetime.strptime('2014-06-01 00:00:00', '%Y-%m-%d %H:%M:%S') + timedelta(seconds=self.id)
-		self.created_at = new_created_at
-		self.display_index = self.id
-		self.save()
+		# jz 2015-08-24
+		# new_created_at = datetime.strptime('2014-06-01 00:00:00', '%Y-%m-%d %H:%M:%S') + timedelta(seconds=self.id)
+		# self.created_at = new_created_at
+		# self.display_index = self.id
+		# self.save()
 
 
 ###############################################################################################

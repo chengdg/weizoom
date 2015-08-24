@@ -90,19 +90,22 @@
 			</div>
 
 			{% for rule in promotion.detail.rules %}
-			<div class="form-group">
 				{% if rule.member_grade_id == -1%}
-					<label class="col-sm-2 xui-i-label fn">全部会员：</label>
-					<div class="col-sm-8 xui-i-content">
-							最高可抵扣{{rule.discount}}%
-					</div>
-				{% else %}
-					<label class="col-sm-2 xui-i-label fn">{{rule.member_grade_name}}：</label>
-					<div class="col-sm-8 xui-i-content">
-							最高可抵扣{{rule.discount}}%
-					</div>
+                    <div class="form-group">
+                        <label class="col-sm-2 xui-i-label fn">全部会员：</label>
+                        <div class="col-sm-8 xui-i-content">
+                                最高可抵扣{{rule.discount}}%
+                        </div>
+                    </div>
+				{% elif rule.member_grade_name %}
+                    <div class="form-group">
+                        <label class="col-sm-2 xui-i-label fn">{{rule.member_grade_name}}：</label>
+                        <div class="col-sm-8 xui-i-content">
+                                最高可抵扣{{rule.discount}}%
+                        </div>
+                    </div>
 				{% endif %}
-			</div>
+
 			{% endfor %}
 
 			{% if promotion.detail.type == 0 %}
