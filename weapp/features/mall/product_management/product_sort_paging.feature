@@ -29,12 +29,13 @@ Background:
 			"status":"上架"
 		}]	
 		"""
-	And bill关注了jobs公众号
+	And bill关注jobs的公众号
 
+@mall2 @jz
 Scenario: 1商品排序初始化
 	Jobs商品没有排序时,按创建时间的倒序显示
-
-	Then jobs能获取商品列表 
+	Given jobs登录系统
+	Then jobs能获取商品列表
 		| name    | time                | sort |
 		| 商品3   | 2015-08-01 08:00:00 |  0   |
 		| 商品2   | 2015-07-01 08:00:00 |  0   |
