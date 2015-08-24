@@ -128,11 +128,14 @@
 			</div>
 			<div class="wui-QA" data-component-cid="2" style="">
 				<h1 class="wui-i-title">反馈内容</h1>
+				<div id="freedback_textarea_num" style="color: #757575">还可以输入<span>200</span>个字</div>
 				<div class="xa-inputControl" data-input-type="textarea" data-input-name="content" data-control-type="appkit.qa">
 					<textarea id="freedback_textarea"
-							class="wui-i-input"
-							placeholder="长度在20-200个字之间"
-							data-validate='require-notempty::请填写反馈内容"'
+							  class="wui-i-input"
+							  placeholder="长度在20-200个字之间 为了我们能够为您更好的服务，请写下您的意见和反馈意见~"
+							  data-validate='require-notempty::请填写反馈内容"'
+							  onkeydown='countChar("freedback_textarea","freedback_textarea_num");'
+							  onkeyup='countChar("freedback_textarea","freedback_textarea_num");'
 							></textarea>
 				</div>
 			</div>
@@ -167,6 +170,9 @@
 {% block js %}
 	<script type="text/javascript" src="/termite_static/v3/gmu/widget/dropmenu.js"></script>
 	<script type="text/javascript">
+	function countChar(textareaName,divName) {
+		$('#'+divName).find('span').text( 140 - $('#'+textareaName).val().length);
+	}
 	$(document).ready(function() {
 		$('#freedback_type').click(function(){
 			var $dropmenu = $(this).next();
@@ -187,9 +193,8 @@
 			$('#freedback_type').find('span[class="type_name"]').text(type_name);
 			$('#xui-input-type').val(type_value);
 			$a.parents('.xui-dropmenu').hide();
+		});
 
-
-		})
 	});
 	</script>
 {% endblock %}
