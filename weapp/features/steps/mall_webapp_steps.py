@@ -69,7 +69,13 @@ def step_impl(context, webapp_user_name, webapp_owner_name, category_name):
 
 @then(u"{webapp_user_name}获得webapp商品列表")
 def step_impl(context, webapp_user_name):
-	expected = json.loads(context.text)
+	if context.table:
+		expected = []
+		for promotion in context.table:
+			promotion = promotion.as_dict()
+			expected.append(promotion)
+	else:
+		expected = json.loads(context.text)
 	actual = context.products
 	bdd_util.assert_list(expected, actual)
 
@@ -1041,9 +1047,6 @@ def step_add_address_info(context, webapp_user_name):
 		response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
 		assert response.status_code == 200
 		context.response = response
-	# jz 2015-08-11
-	# elif page_title == u"购物车订单编辑":
-	# 	pass
 
 
 @when(u"{webapp_user_name}更新收货信息")
