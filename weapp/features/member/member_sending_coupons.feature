@@ -1,5 +1,3 @@
-# __editor__ : "新新"
-
 Feature: 群发优惠券
 """
 	筛选出会员发送优惠券
@@ -240,20 +238,8 @@ Scenario:15 筛选出会员发送优惠券
 		]
 		"""
 	When tom5访问jobs的webapp
-	Then tom5能获得webapp优惠券列表
-		"""
-		[
-			{
-				"coupon_id": "coupon2_id_9",
-				"money": 10.00,
-				"status": "未使用"
-			}, {
-				"coupon_id": "coupon2_id_10",
-				"money": 10.00,
-				"status": "未使用"
-			}
-		]
-		"""
+	Then tom5能获得webapp优惠券列表为空
+
 	Given jobs登录系统
 	Then jobs能获得优惠券'单品券2'的码库
 		"""
@@ -272,37 +258,37 @@ Scenario:15 筛选出会员发送优惠券
 			},
 			"coupon2_id_3": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "未使用",
 				"consumer": "",
 				"target": "tom"
 			},
 			"coupon2_id_4": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "未使用",
 				"consumer": "",
 				"target": "tom"
 			},
 			"coupon2_id_5": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "未使用",
 				"consumer": "",
 				"target": "tom2"
 			},
 			"coupon2_id_6": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "未使用",
 				"consumer": "",
 				"target": "tom2"
 			},
 			"coupon2_id_7": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "未使用",
 				"consumer": "",
 				"target": "tom3"
 			},
 			"coupon2_id_8": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "未使用",
 				"consumer": "",
 				"target": "tom3"
 			},

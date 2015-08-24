@@ -14,7 +14,7 @@ Background:
 		}	
 		"""
 
-@crm @member @member.tag @member.delete_tag
+@mall2 @member @member.tag @member.delete_tag
 Scenario: Jobs删除已存在的会员分组
 	When jobs删除会员分组
 		"""
