@@ -20,7 +20,15 @@ def step_impl(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
 	context.member_tags = json.loads(context.text)
-	response = client.post('/member/member_tags/get/', 
+	response = client.post('/member/member_tags/get/',
+		context.member_tags)
+
+@given(u"{user}添加会员分组")
+def step_impl(context, user):
+	MemberTag.objects.all().delete()
+	client = context.client
+	context.member_tags = json.loads(context.text)
+	response = client.post('/member/member_tags/get/',
 		context.member_tags)
 
 @then(u"{user}能获取会员分组列表")
