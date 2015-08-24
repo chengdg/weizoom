@@ -326,7 +326,7 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 			| tom3          | 2014-6-7 8:00:00  | 会员分享      | 会员分组2 |
 
 	#选择第2页全部会员批量添加分组
-		When jobs选择第1页会员
+		When jobs选择第2页会员
 			| member_name   | attention_time 	| member_source | grouping  |
 			| tom3          | 2014-6-7 8:00:00  | 会员分享      | 会员分组2 |
 
