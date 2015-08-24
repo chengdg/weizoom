@@ -63,6 +63,9 @@
     border-right: 1px solid #CBCBCB;
     box-sizing:border-box;
 }
+.wui-template-globalNavbar .xui-menuBox:last-child .xui-flex{
+    border-right: none;
+}
 .wui-template-globalNavbar .xui-subMenuContainer{
     position: absolute;
     bottom: 50px;
