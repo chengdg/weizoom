@@ -84,7 +84,7 @@ class CategoryList(resource.Resource):
                     products
                 )
 
-            products.sort(lambda x,y: cmp(x.id, y.id))
+            products.sort(lambda x,y: cmp(y.update_time, x.update_time))
 
             #进行分页
             count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -110,7 +110,7 @@ class CategoryList(resource.Resource):
                     "sales": product.sales if product.sales else -1,
                     "update_time": product.update_time.strftime("%Y-%m-%d")
                 })
-            result_products.sort(lambda x,y: cmp(y['update_time'], x['update_time']))
+            # result_products.sort(lambda x,y: cmp(y['update_time'], x['update_time']))
 
             response = create_response(200)
             response.data = {
