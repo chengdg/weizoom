@@ -30,7 +30,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall.product
+@mall.product @mall2
 Scenario: 1 下架商品对后台及手机端商品列表的影响
 	Jobs下架商品后
 	1. jobs不能获取含有该商品的商品列表
@@ -62,6 +62,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 		"""
 
 	#jobs下架商品2，jobs不能获取含有该商品的'在售'商品列表
+	Given jobs登录系统
 	When jobs-下架商品'商品2'
 	Then jobs能获得'在售'商品列表
 		"""
@@ -88,7 +89,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 		"""
 
 
-@mall.product
+@mall.product @mall2
 Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 	Jobs下架商品，并再次上架后
 	1. jobs能获取含有该商品的商品列表
