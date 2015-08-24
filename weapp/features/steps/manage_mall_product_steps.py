@@ -295,6 +295,10 @@ def __get_products(context, type_name=u'在售'):
 
 
 def __get_product_from_web_page(context, product_name):
+    """
+    访问 GET `/mall2/product/` 获取response
+
+    """
     response = get_product_response_from_web_page(context, product_name)
     product = response.context['product']
 
@@ -330,14 +334,15 @@ def __get_product_from_web_page(context, product_name):
     }
 
     #填充运费
-    if product.postage_id == 999 or product.postage_id == 0:
+    print("product.postage_id={}".format(product.postage_id))
+    if product.postage_id == 999 or product.postage_id <= 0:
         # TODO: 999表示什么？
         postage_config_info = response.context['postage_config_info']
         if postage_config_info['is_use_system_postage_config']:
             actual['postage'] = postage_config_info['system_postage_config'].name
         else:
             # TODO: 如何处理?
-            actual['postage'] = u'免运费？'
+            actual['postage'] = postage_config_info['system_postage_config'].first_weight_price
         #postage_config_info.system_postage_config.name
     elif product.postage_id>0:
         print("product.postage_id={}".format(product.postage_id))
