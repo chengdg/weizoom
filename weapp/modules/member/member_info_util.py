@@ -27,7 +27,7 @@ from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 import member_settings
 from models import *
 
-# from modules.member import tasks
+from modules.member import tasks
 
 ########################################################################
 # get_member : 获取会员信息
