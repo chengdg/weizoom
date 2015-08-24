@@ -208,7 +208,8 @@
             W.activityStatus = "{{activity_status}}";
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
                 W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-
+            W.isPC = {% if isPC %}true{% else %}false{% endif %};
+            console.log(W.isPC,"W.isPC");
             $(document).ready(function() {
                 $('a').highlight();
                 FastClick.attach(document.body);
@@ -313,7 +314,11 @@
                     }
                     $submitButtonContainer.show();
                 }
-                $('.xa-submitTermite').click(function() {
+                if (W.isPC){
+                    $('.xa-submitTermite').unbind('click');
+                }
+                else{
+                    $('.xa-submitTermite').click(function() {
                     if (!W.validate()) {
                         return;
                     }
@@ -405,7 +410,7 @@
                             });
                         }
                     });
-                    
+
                     /*
                     $('body').alert({
                         isShow: true,
@@ -414,6 +419,7 @@
                     });
                     */
                 });
+                }
             });
         </script>
 

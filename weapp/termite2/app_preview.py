@@ -29,9 +29,11 @@ class AppPreview(resource.Resource):
 		预览
 		"""
 		preview_url = request.GET.get('preview_url', '')
+		preview_url += '&isPC=1'
 		is_view_editing_data = request.GET.get('view_editing_data', False)
 		if is_view_editing_data:
 			preview_url += '&page_id=preview'
+		print preview_url,"preview_url"
 
 		c = RequestContext(request, {
 			'preview_url': preview_url
