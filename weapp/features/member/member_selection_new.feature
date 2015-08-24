@@ -162,12 +162,10 @@ Background:
 			| 2015-3-2   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 货到付款       | 10      | 100      |          |        | 110         |              | 0      | 0      | 110  | jobs,完成         |  已完成         |
 			| 2015-3-4   | tom3     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-3-5   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
-
+@test_a
 Scenario:1 默认条件和空条件查询
-
-	Given jobs登录系统
-
-	#首次进入，默认条件查询
+		Given jobs登录系统
+		#首次进入，默认条件查询
 		When jobs访问会员列表
 		Then jobs获得会员列表默认查询条件
 			"""
@@ -195,7 +193,7 @@ Scenario:1 默认条件和空条件查询
 	#空调条件查询，“重置”查询条件，空调间查询所有数据
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"",
 				"status":"全部",
 				"attention_start_time":"",
@@ -213,7 +211,7 @@ Scenario:1 默认条件和空条件查询
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""
