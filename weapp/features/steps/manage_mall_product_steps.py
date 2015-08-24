@@ -68,6 +68,11 @@ def step_product_add(context, user):
             mall_models.Product.objects.filter(
                 id=latest_product.id
             ).update(shelve_type=1)
+        if product.get('created_at'):
+            latest_product = mall_models.Product.objects.all().order_by('-id')[0]
+            mall_models.Product.objects.filter(
+                id=latest_product.id
+            ).update(created_at=product.get('created_at'))
 
 
 @then(u"{user}能获取商品'{product_name}'")
@@ -123,7 +128,13 @@ def step_update_product(context, user, product_name):
 @then(u"{user}能获取商品列表")
 def step_impl(context, user):
     actual = __get_products(context)
-    expected = json.loads(context.text)
+    expected = []
+    if context.table:
+        for product in context.table:
+            product = product.as_dict()
+            expected.append(product)
+    else:
+        expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
 

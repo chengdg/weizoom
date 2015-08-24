@@ -1,3 +1,4 @@
+# __edit__ : "新新8.24"
 @func:webapp.modules.mall.views.list_products
 Feature: 调整购物车中
 	bill能调整购物车
@@ -19,9 +20,11 @@ Background:
 	And bill加入jobs的商品到购物车
 		"""
 		[{
-			"name": "商品1"
+			"name": "商品1",
+			"count": 1
 		}, {
-			"name": "商品2"
+			"name": "商品2",
+			"count": 2
 		}]
 		"""
 	Given tom关注jobs的公众号
@@ -29,9 +32,11 @@ Background:
 	When tom加入jobs的商品到购物车
 		"""
 		[{
-			"name": "商品1"
+			"name": "商品1",
+			"count": 1
 		}, {
-			"name": "商品2"
+			"name": "商品2",
+			"count": 2
 		}]
 		"""
 
@@ -50,7 +55,7 @@ Scenario: 从购物车中删除商品
 			"count": 1
 		}, {
 			"name": "商品2",
-			"count": 1
+			"count": 2
 		}]
 		"""
 	When bill从购物车中删除商品'商品1':ui
@@ -58,7 +63,7 @@ Scenario: 从购物车中删除商品
 		"""
 		[{
 			"name": "商品2",
-			"count": 1
+			"count": 2
 		}]
 		"""
 	When bill从购物车中删除商品'商品2':ui
@@ -74,6 +79,6 @@ Scenario: 从购物车中删除商品
 			"count": 1
 		}, {
 			"name": "商品2",
-			"count": 1
+			"count": 2
 		}]
 		"""
