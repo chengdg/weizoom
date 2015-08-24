@@ -38,6 +38,8 @@ class Mvote(resource.Resource):
 		"""
 		if 'id' in request.GET:
 			id = request.GET['id']
+			isPC = int(request.GET.get('isPC',0))
+			isPC = True if isPC else False
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
@@ -76,7 +78,7 @@ class Mvote(resource.Resource):
 					'app_name': "vote",
 					'resource': "vote",
 					'q_vote': result_list,
-					'hide_non_member_cover': True #非会员也可使用该页面
+					'hide_non_member_cover': True, #非会员也可使用该页面
 				})
 				return render_to_response('vote/templates/webapp/result_vote.html', c)
 			else:
@@ -96,7 +98,8 @@ class Mvote(resource.Resource):
 					'page_html_content': html,
 					'app_name': "vote",
 					'resource': "vote",
-					'hide_non_member_cover': True #非会员也可使用该页面
+					'hide_non_member_cover': True, #非会员也可使用该页面
+					'isPC': isPC
 				})
 				return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:

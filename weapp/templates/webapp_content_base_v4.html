@@ -206,9 +206,9 @@
             W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
             W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
             W.activityStatus = "{{activity_status}}";
+            W.isPC = {% if isPC %}true{% else %}false{% endif %};
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
                 W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-
             $(document).ready(function() {
                 $('a').highlight();
                 FastClick.attach(document.body);
@@ -313,7 +313,13 @@
                     }
                     $submitButtonContainer.show();
                 }
-                $('.xa-submitTermite').click(function() {
+                console.log("!!!!!!!!!!!!!!!!!!");
+                console.log(W.isPC,"W.isPC");
+                if (W.isPC){
+                    $('.xa-submitTermite').unbind('click');
+                }
+                else{
+                    $('.xa-submitTermite').click(function() {
                     if (!W.validate()) {
                         return;
                     }
@@ -405,7 +411,7 @@
                             });
                         }
                     });
-                    
+
                     /*
                     $('body').alert({
                         isShow: true,
@@ -414,6 +420,7 @@
                     });
                     */
                 });
+                }
             });
         </script>
 
