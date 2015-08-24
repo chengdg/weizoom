@@ -63,9 +63,9 @@ class CategoryList(resource.Resource):
             name_query = request.GET.get('name')
 
             #获取商品集合
-            products = mall_models.Product.objects.filter(
+            products = list(mall_models.Product.objects.filter(
                 owner=request.manager, is_deleted=False).exclude(
-                shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED)
+                shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED))
             if name_query:
                 products = [
                     product for product in products if name_query in product.name
