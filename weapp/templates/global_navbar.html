@@ -12,16 +12,16 @@
             <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bg"></a>
         </div>
         <div class="xui-calc">
-            {% for component in component.components %}
+            {% for sub_component in component.components %}
             <div class="">
-                <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-{{component.parent_component.sub_component_count}} xui-menu xa-menu f14">
-                        <a href="{{ component.model.target|extract_target_data:request|safe }}" class="wa-inner-link">{{ component.model.title }}</a>
+                <div data-component-cid="{{sub_component.cid}}" class="xui-flex xui-flex-{{component.components|length}} xui-menu xa-menu f14">
+                        <a href="{{ sub_component.model.target|extract_target_data:request|safe }}" class="wa-inner-link">{{ sub_component.model.title }}</a>
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>
                     <span class="xui-menuArrowBorder"></span>
                     <ul class="xui-subMenu">
-                        {% for second_nav in component.model.second_navs %}
+                        {% for second_nav in sub_component.model.second_navs %}
                         <li class="f12"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
                         {% endfor %}
                     </ul>
