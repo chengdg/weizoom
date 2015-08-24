@@ -25,7 +25,7 @@ input,textarea{
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 999999;
+    z-index: 10;
 }
 .xui-attentionAlert a{
     box-sizing:boredr-box;
@@ -2159,7 +2159,7 @@ input.ui-input-text, textarea.ui-input-text {
     position: absolute;
     top:0;
     left:0;
-    z-index: 1;
+    z-index: 11;
     background: #f0f0f0;
 }
 .xui-popAddress{
@@ -2780,7 +2780,7 @@ input.ui-input-text, textarea.ui-input-text {
     margin-right: 3px;
 }
 .xui-shoppingCartPage .wui-counter{
-    float: left;
+    /*float: left;*/
     height: 22px;
 }
 .xui-shoppingCartPage .wui-counter span{
@@ -2789,10 +2789,10 @@ input.ui-input-text, textarea.ui-input-text {
     width: 24px;
     font-size: 0.75rem;
 }
-.xui-shoppingCartPage span.xui-understock{
+/*.xui-shoppingCartPage span.xui-understock{
     padding-left: 5px;
     line-height: 28px;
-}
+}*/
 .xui-shoppingCartPage .xui-deleteBtn{
     width: 17px;
     height:17px;

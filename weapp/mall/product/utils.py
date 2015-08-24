@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-import json
-import re
+import json, copy
 from datetime import datetime
+from operator import attrgetter
 
 from mall import models
 from core import search_util
@@ -164,6 +164,44 @@ def filter_products(request, products):
         if models:
             filtered_products.append(product)
     return filtered_products
+
+
+def sorted_products(manager_id, product_categories, reverse):
+    """根据display_index对在售商品进行排序
+
+    Args:
+      products(list): 根据CategoryHasProduct，添加过display的product列表
+    """
+    #获取与category关联的product集合
+    category_ids = (category.id for category in product_categories)
+    relations = models.CategoryHasProduct.objects.filter(
+        category_id__in=category_ids).select_related('product')
+    categoryId2relations = dict()
+    for relation in relations:
+        categoryId2relations.setdefault(relation.category_id, []).append(relation)
+    productIds = set([x.product_id for x in relations])
+    products = models.Product.objects.filter(id__in=productIds, is_deleted=False).exclude(
+        shelve_type=models.PRODUCT_SHELVE_TYPE_RECYCLED)
+    models.Product.fill_display_price(products)
+    models.Product.fill_sales_detail(manager_id, products, productIds)
+    id2product = dict([(product.id, product) for product in products])
+
+    for c in product_categories:
+        products = []
+        for i in categoryId2relations.get(c.id, []):
+            if id2product.has_key(i.product_id):
+                product = copy.copy(id2product[i.product_id])
+                product.display_index = i.display_index
+                product.join_category_time = i.created_at
+                products.append(product)
+
+        products = sorted(products, key=attrgetter('join_category_time'), reverse=True)
+        products = sorted(products, key=attrgetter('shelve_type', 'display_index'))
+        products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
+
+        c.products = products
+    return product_categories
+
 
 # TODO: update models ref
 #

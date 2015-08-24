@@ -337,7 +337,7 @@ Background:
 			"name": "商品1积分应用",
 			"start_date": "2014-8-1",
 			"end_date": "10天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"is_permanant_active": "true",
 			"rules": [{
 				"member_grade": "全部",
@@ -348,7 +348,7 @@ Background:
 			"name": "商品2积分应用",
 			"start_date": "2014-8-1",
 			"end_date": "10天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"is_permanant_active": "true",
 			"rules": [{
 				"member_grade": "全部",

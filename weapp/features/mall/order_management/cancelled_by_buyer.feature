@@ -71,7 +71,6 @@ Background:
 				"count": 1
 			}],
 			"integral": 100
-
 		}
 		"""
 	And bill购买jobs的商品
@@ -110,7 +109,7 @@ Scenario:bill取消订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取"商品1"库存
+	Then jobs后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",
@@ -142,7 +141,7 @@ Scenario:bill取消使用了优惠券的订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取"商品1"库存
+	Then jobs后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",
@@ -187,7 +186,7 @@ Scenario:bill取消使用了积分的订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取"商品1"库存
+	Then jobs后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",
@@ -226,7 +225,7 @@ Scenario:bill取消使用积分和优惠券的订单
 			"status": "已取消"
 		}
 		"""
-	Then job后端获取"商品1"库存
+	Then jobs后端获取"商品1"库存
 		"""
 		{
 			"name": "商品1",

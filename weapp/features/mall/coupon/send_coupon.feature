@@ -1,13 +1,6 @@
 # __author__ : "冯雪静"
-# __editor__ : "新新"
 Feature: 发放优惠券
 	Jobs能通过管理系统将生成的"优惠券"发放给会员
-	#除已跑路会员外
-	1.发送优惠券给一个会员
-	2 发送优惠券给多个会员
-	3 多次发送有领取限制的优惠券给一个会员
-	4 发送优惠券总数超出优惠券库存提示（给2个会员发送6个优惠券（库中4个优惠券））
-
 
 Background:
 	Given jobs登录系统
@@ -102,7 +95,6 @@ Background:
 
 @mall2 @send_coupon @eugene
 Scenario: 1 发送优惠券给一个会员
-	#除已跑路外
 	jobs添加"优惠券规则"后，将优惠券"单品券2"发放给一个会员(bill)
 	1. bill访问jobs的webapp时能看到获得的优惠券
 	2. tom访问jobs的webapp不能看到bill获得的优惠券
@@ -170,7 +162,6 @@ Scenario: 1 发送优惠券给一个会员
 
 @mall2 @send_coupon @eugene
 Scenario: 2 发送优惠券给多个会员
-	#除已跑路外
 	jobs添加"优惠券规则"后，将优惠券"单品券2"发放给多个会员(bill，tom)
 	1. bill访问jobs的webapp时能看到获得的优惠券
 	2. tom访问jobs的webapp时能看到获得的优惠券
@@ -241,7 +232,6 @@ Scenario: 2 发送优惠券给多个会员
 
 @mall2 @send_coupon @eugene
 Scenario: 3 多次发送有领取限制的优惠券给一个会员
-	#除已跑路外
 	jobs添加"优惠券规则"后，将优惠券"全体券3"发放给1个会员(bill)
 	1. bill访问jobs的webapp时只能看到一张优惠券
 	2. jobs能获得包含发放的优惠券的优惠券码库
@@ -307,7 +297,6 @@ Scenario: 3 多次发送有领取限制的优惠券给一个会员
 
 @mall2 @send_coupon @eugene
 Scenario: 4 发送优惠券总数超出优惠券库存
-	#除已跑路外
 	jobs添加"优惠券规则"后，将优惠券发放给1个会员或多个会员
 	1. jobs发放优惠券总数超出库存，jobs能够看到提示信息
 	2. bill访问jobs的webapp时不能看到优惠券
@@ -364,7 +353,6 @@ Scenario: 4 发送优惠券总数超出优惠券库存
 			}
 		}
 		"""
-	##给2个会员发送6个优惠券（库中4个优惠券）
 	When jobs为会员发放优惠券
 		"""
 		{

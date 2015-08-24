@@ -74,7 +74,7 @@ Background:
 			"name": "商品1买二赠三",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"premium_products": [{
 				"name": "商品2",
 				"count": 1
@@ -88,7 +88,7 @@ Background:
 			"name": "商品2买一赠一",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"products": ["商品2"],
+			"product_name": "商品2",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -99,7 +99,7 @@ Background:
 			"name": "商品3买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -110,7 +110,7 @@ Background:
 			"name": "商品5买一赠一",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品5"],
+			"product_name": "商品5",
 			"premium_products": [{
 				"name": "商品4",
 				"count": 1
@@ -347,7 +347,7 @@ Scenario: 6新建买赠活动，买一赠一，买商品6赠 商品6，循环买
 			"name": "商品6买1赠1",
 			"start_date": "1天前",
 			"end_date": "3天后",
-			"products": ["商品6"],
+			"product_name": "商品6",
 			"premium_products": [{
 				"name": "商品6",
 				"count": 1

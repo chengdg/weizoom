@@ -7,6 +7,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 import steps_db_util
 from mall import module_api as mall_api
+from mall.models import Order
 
 
 def _handle_fahuo_data(orders):
@@ -33,13 +34,49 @@ def step_impl(context, user):
     }
     response = context.client.post(url, data)
 
+@when(u'{user}对订单进行发货')
+def step_impl(context, user):
+    delivery_data = json.loads(context.text)
+    order_id = delivery_data['order_no']
+
+    url = '/mall2/api/order_list/'
+    query_params = {
+        'query': order_id
+    }
+    response = context.client.get(url, query_params)
+    content = json.loads(response.content)
+    items = content['data']['items']
+    order = {}
+    if len(items) > 0:
+        order = items[0]
+
+    delivery_data = json.loads(context.text)
+    order_id = delivery_data['order_no']
+    logistics = delivery_data['logistics']
+    leader_name = delivery_data['shipper']
+    express_company_name = ''
+    express_number = ''
+    is_update_express = ''
+    if logistics != 'off':
+        express_company_name = logistics
+        express_number = delivery_data['number']
+        is_update_express = 'false'
+    url = '/mall2/api/delivery/'
+    data = {
+        'order_id': order['id'],
+        'express_company_name': express_company_name,
+        'express_number': express_number,
+        'leader_name': leader_name,
+        'is_update_express': is_update_express
+    }
+    response = context.client.post(url, data)
 
 # 批量发货
 @When(u"{user}填写订单信息")
 def step_impl(context, user):
     orders = json.loads(context.text)
     orders = _handle_fahuo_data(orders)
-    mall_api.batch_handle_order(orders, context.client.user)
+    context.result_dict = mall_api.batch_handle_order(orders, context.client.user)
 
 
 @when(u"{webapp_owner_user}填写发货信息")
@@ -84,3 +121,19 @@ def step_impl(context, user):
             del order['order_money']
 
     bdd_util.assert_dict(expected, actual)
+
+
+@then(u"{user}获得批量发货提示错误信息")
+def step_impl(context, user):
+    expected = []
+    for result in context.table:
+        result = result.as_dict()
+        expected.append(result)
+    actual = context.result_dict[1]
+    for info in actual:
+        info['order_no'] = info['order_id']
+        info['logistics'] = info['express_company_name']
+        info['number'] = info['express_number']
+        info['failure_reasons'] = info['error_info']
+
+    bdd_util.assert_list(expected, actual)

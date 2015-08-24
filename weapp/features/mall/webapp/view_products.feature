@@ -20,13 +20,13 @@ Background:
 		"""
 		[{
 			"name": "商品11",
-			"category": "分类1,分类2,分类3"
+			"categories": "分类1,分类2,分类3"
 		}, {
 			"name": "商品12",
-			"category": "分类1,分类2"
+			"categories": "分类1,分类2"
 		}, {
 			"name": "商品2",
-			"category": "分类2,分类3"
+			"categories": "分类2,分类3"
 		}, {
 			"name": "商品3"
 		}, {

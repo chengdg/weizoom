@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 import copy
@@ -1457,7 +1457,9 @@ def ship_order(order_id, express_company_name,
 	已知引用：
 	mobile_app/order_api_views.py
 	"""
-	if (len(str(order_id)) == 0) or (len(express_company_name) == 0) or (len(express_number) == 0):
+	# if (len(str(order_id)) == 0) or (len(express_company_name) == 0) or (len(express_number) == 0):
+	# 	return False
+	if (len(str(order_id)) == 0):
 		return False
 	target_status = ORDER_STATUS_PAYED_SHIPED
 
@@ -2695,6 +2697,7 @@ def batch_handle_order(json_data, user):
 	批量发货
 
 	已知引用:features/steps/mall_order_manager_steps.py
+			mall/order/delivery.py
 	"""
 	error_data = []
 	success_data = []
@@ -2715,6 +2718,8 @@ def batch_handle_order(json_data, user):
 				item["error_info"] = "订单号错误"
 				error_data.append(item)
 				continue
+			if not express_number:
+				raise
 			if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 				if ship_order(order.id, express_company_value, express_number, user.username, u''):
 					success_data.append(item)
@@ -2891,6 +2896,7 @@ def update_promotion_status_by_member_grade(member_grade_ids):
 	"""
 	try:
 		promotion_models.Promotion.objects.filter(member_grade_id__in=member_grade_ids, status__in=[promotion_models.PROMOTION_STATUS_NOT_START, promotion_models.PROMOTION_STATUS_STARTED]).update(status=promotion_models.PROMOTION_STATUS_FINISHED)
+		promotion_models.IntegralSaleRule.objects.filter(member_grade_id__in=member_grade_ids).delete()
 	except:
 		alert_message = u"update_promotion_status_by_member_grade cause:\n{}".format(unicode_full_stack())
 		watchdog_error(alert_message)
@@ -3023,11 +3029,25 @@ def wishlist_product_count(webapp_owner_id, member_id):
 		is_collect=True
 	).count()
 
+OVERDUE_DAYS = 15
+def check_product_review_overdue(product_id):
+	top_review_list = ProductReview.objects.filter(status=2,product_id=product_id)
+	for review in top_review_list:
+		after_15_days = review.top_time+timedelta(days=OVERDUE_DAYS)
+		now = datetime.now()
+		if (after_15_days <= now):
+			review.status = 1
+			ProductReview.objects.filter(id=review.id).update(status=1,top_time=DEFAULT_DATETIME)
+
+
+
 def get_product_review(request):
 	"""
 	获取商品的评价
 	"""
 	product_id = request.GET.get('product_id', None)
+	# 检查置顶评论是否过期
+	check_product_review_overdue(product_id)
 	product_review_list = ProductReview.objects.filter(Q(product_id=product_id) & Q(status__in=['1', '2'])).order_by('-top_time', '-id')
 
 	from cache import webapp_cache

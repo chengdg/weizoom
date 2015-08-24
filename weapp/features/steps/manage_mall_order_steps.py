@@ -243,9 +243,13 @@ def step_impl(context, user):
 
 @then(u"{user}获取对应的订单")
 def step_impl(context, user):
-    url = '/mall2/api/order_list/?sort_attr=-created_at&count_per_page=15&page=1'
-    response = context.client.get(bdd_util.nginx(url))
-    items = json.loads(response.content)['data']['items']
+    # url = '/mall2/api/order_list/?sort_attr=-created_at&count_per_page=15&page=1'
+    # response = context.client.get(bdd_util.nginx(url))
+    response = context.response
+    content = json.loads(response.content)
+    items = content['data']['items']
+    query_params = content['data']['pageinfo'].get('query_string')
+    context.query_params = query_params
 
     actual_orders = _get_actual_orders(items, context)
     expected_order = json.loads(context.text)
@@ -476,3 +480,184 @@ def step_impl(context, user):
     context.orders = json.loads(context.text)
     for order in context.orders:
         steps_db_util.set_order_dict(order, profile)
+
+
+PAYNAME2ID = {
+    u'全部': -1,
+    u'微信支付': 2,
+    u'货到付款': 9,
+    u'支付宝': 0,
+    u'优惠抵扣': 10
+}
+
+ORDER_SOURCE2ID = {
+    u'全部': -1,
+    u'本店': 0,
+    u'商城': 1
+}
+
+ORDER_STATUS2ID = {
+    u'全部': -1,
+    u'待支付': 0,
+    u'已取消': 1,
+    u'待发货': 3,
+    u'已发货': 4,
+    u'已完成': 5,
+    u'退款中': 6,
+    u'退款成功': 7
+}
+
+
+@when(u'{user}根据给定条件查询订单')
+def step_look_for_order(context, user):
+    """根据给定条件查询订单
+
+    context: {
+        "order_no":          # 订单编号            e.g.:
+        "ship_name":         # 收货人姓名          e.g.:
+        "ship_tel":          # 收货人电话          e.g.:
+        "product_name":      # 商品名称            e.g.:
+        "date_interval":     # 下单时间            e.g.:
+        "pay_type":          # 支付方式            e.g.:
+        "express_number":    # 物流单号            e.g.:
+        "order_source":      # 订单来源            e.g.:
+        "order_status":      # 订单状态            e.g.:
+        "isUseWeizoomCard":  # 仅显示微众卡抵扣订单  e.g.:
+    }
+    """
+    query_params = {
+        'pay_type': u'全部',
+        'order_source': u'全部',
+        'order_status': u'全部',
+        'belong': 'all'
+    }
+
+    query_params_c = json.loads(context.text)
+    query_params.update(query_params_c)
+    if query_params.get('order_no'):
+        query_params['query'] = query_params['order_no']
+        query_params.pop('order_no')
+
+    query_params['pay_type'] = PAYNAME2ID[query_params['pay_type']]
+    if query_params['pay_type'] == -1:
+        query_params.pop('pay_type')
+
+    query_params['order_source'] = ORDER_SOURCE2ID[query_params['order_source']]
+    if query_params['order_source'] == -1:
+        query_params.pop('order_source')
+
+    query_params['order_status'] = ORDER_STATUS2ID[query_params['order_status']]
+    if query_params['order_status'] == -1:
+        query_params.pop('order_status')
+
+    url = '/mall2/api/order_list/'
+    response = context.client.get(url, query_params)
+    context.response = response
+
+
+@then(u"{user}导出订单获取订单信息")
+def step_get_specify_order(context, user):
+    """
+    """
+
+    filter_value = context.query_params
+    from cStringIO import StringIO
+    import csv
+
+    if filter_value:
+        url = '/mall2/order_export/?{}'.format(filter_value)
+        response = context.client.get(url)
+        reader = csv.reader(StringIO(response.content))
+        # 去掉表头信息
+        header = reader.next()
+        header = [
+            'order_no',
+            'order_time',
+            'pay_time',
+            'product_name',
+            'model',
+            'product_unit_price',
+            'product_count',
+            'weigth',
+            'pay_way',
+            'money_total',
+            'money',
+            'money_wcard',
+            'postage',
+            'integral',
+            'coupon_money',
+            'coupon_name',
+            'order_status',
+            'purchaser',
+            'consignee',
+            'tel',
+            'province',
+            'address',
+            'consigner',
+            'remark',
+            'source',
+            'logistics_company',
+            'express_number',
+            'delivery_time'
+        ]
+        actual = []
+        for row in reader:
+            item = dict(map(None, header, row))
+            actual.append(item)
+        # remove statistical information
+        actual.pop()
+
+        expected_order = json.loads(context.text)
+        bdd_util.assert_list(expected_order, actual)
+    del StringIO
+    del csv
+
+
+def _get_order(context, order_id):
+    url = '/mall2/api/order_list/'
+    query_params = {
+        'query': order_id
+    }
+    response = context.client.get(url, query_params)
+    content = json.loads(response.content)
+    items = content['data']['items']
+    order = {}
+    if len(items) > 0:
+        order = items[0]
+
+    return order
+
+@then(u'{user}能获得订单"{order_id}"')
+def step_impl(context, user, order_id):
+    order = _get_order(context, order_id)
+
+    response = context.client.get('/mall2/order/?order_id=%d' % order['id'])
+    order_obj = response.context['order']
+
+    from mall.templatetags import mall_filter
+    actions = mall_filter.get_order_actions(order_obj)
+    source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
+    actual = {
+        "order_no": order['order_id'],
+        "member": order['buyer_name'],
+        "status": order['status'],
+        "actions": [action['name'] for action in actions],
+        "shipper": order['leader_name'],
+        "order_time": order['created_at'],
+        "methods_of_payment": order['pay_interface_name'],
+        "ship_name": order['ship_name'],
+        "ship_tel": order['ship_tel'],
+        "sources": source[order['come']]
+    }
+
+    expected = json.loads(context.text)
+    bdd_util.assert_dict(expected, actual)
+
+@when(u'{user}完成订单"{order_id}"')
+def step_impl(context, user, order_id):
+    order = _get_order(context, order_id)
+    data = {
+        'order_id': order['id'],
+        'action': 'finish'
+    }
+    response = context.client.post('/mall2/api/order/', data)
