@@ -1,3 +1,4 @@
+# _edit_ : "新新8.24"
 @func:webapp.modules.mall.views.list_products
 Feature: 在webapp中浏览商品
 	bill能在webapp中看到jobs添加的"商品"
@@ -62,6 +63,29 @@ Background:
 						"price": 12.0,
 						"weight": 6.0,
 						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			}
+		}, {
+			"name": "商品3",
+			"category": "",
+			"physical_unit": "盘",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"introduction": "商品3的简介",
+			"detail": "商品3的详情",
+			"shelve_type": "上架",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"property": {},
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 6.0,
+						"stock_type": "有限",
 						"stocks": 3
 					}
 				}
@@ -69,7 +93,7 @@ Background:
 		}]	
 		"""
 	And bill关注jobs的公众号
-
+	And tom关注jobs的公众号
 
 @ui @ui-mall @ui-mall.webapp
 Scenario: 浏览标准规格商品
@@ -85,7 +109,6 @@ Scenario: 浏览标准规格商品
 			"name": "商品1",
 			"detail": "商品1的详情",
 			"price": 11.0,
-			"market_price": 11.0,
 			"weight": 5.0,
 			"stocks": "无限",
 			"postage_config_name": "免运费"
@@ -107,7 +130,6 @@ Scenario: 运费为免运费时，浏览商品库存信息，调整商品数量
 			"name": "商品1",
 			"detail": "商品1的详情",
 			"price": 11.0,
-			"market_price": 11.0,
 			"weight": 5.0,
 			"stocks": "无限",
 			"postage_config_name": "免运费"
@@ -139,9 +161,8 @@ Scenario: 运费为免运费时，浏览商品库存信息，调整商品数量
 			"detail": "商品1的详情",
 			"price": 11.0,
 			"purchase_price": 11.0,
-			"market_price": 11.0,
 			"weight": 5.0,
-			"stocks": "3包",
+			"stocks": "3",
 			"postage_config_name": "免运费"
 		}
 		"""
@@ -225,3 +246,103 @@ Scenario: 运费不为免运费时，调整商品数量
 			"postage_config_name": "顺丰"
 		}
 		"""
+# _inert_ : "新新8.24"		
+Scenario: 浏览商品
+	jobs添加商品后
+	1. bill能在webapp中看到jobs添加的商品
+	2. 商品按添加顺序倒序排序
+	When bill访问jobs的webapp
+	And bill浏览jobs的webapp的'全部'商品列表页
+	Then webapp页面标题为'商品列表(全部)'
+	And bill获得webapp商品列表
+		"""
+		[{
+			"name": "商品3"
+		}, {
+			"name": "商品1"
+		}]
+		"""
+# _inert_ : "新新8.24"		
+Scenario: 浏览会员价的商品
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"discount": "10"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+		When jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
+		"""
+		Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员",
+		},{
+			"name": "bill",
+			"member_rank": "铜牌会员",
+		}]
+		"""
+		#无会员折扣显示
+	When tom访问jobs的webapp:ui
+	And tom浏览jobs的webapp的'商品1'商品页:ui
+	Then tom获得webapp商品:ui
+		"""
+		{
+			"name": "商品1",
+			"detail": "商品1的详情",
+			"price": 11.0,
+			"weight": 5.0,
+			"stocks": "无限",
+			"postage_config_name": "免运费"
+		}
+		"""
+		#有会员折扣显示
+	When bill访问jobs的webapp:ui
+	And bill浏览jobs的webapp的'商品1'商品页:ui
+	Then bill获得webapp商品:ui
+		"""
+		{
+			"name": "商品1",
+			"detail": "商品1的详情",
+			"price": 9.9,
+			"weight": 5.0,
+			"stocks": "无限",
+			"postage_config_name": "免运费"
+		}
+		"""
+
