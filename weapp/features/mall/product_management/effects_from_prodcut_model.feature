@@ -105,7 +105,7 @@ Background:
 		}]
 		"""
 
-@product @property @toSaleProduct
+@product @property @toSaleProduct @online_bug
 Scenario: 1 删除商品规格值'S'
 	Given jobs登录系统
 	When jobs删除商品规格'大小'的值'S'
@@ -151,7 +151,7 @@ Scenario: 1 删除商品规格值'S'
 		}]
 		"""
 
-@product @property @toSaleProduct
+@product @property @toSaleProduct @online_bug
 Scenario: 2 删除商品规格'颜色'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
@@ -196,7 +196,7 @@ Scenario: 2 删除商品规格'颜色'
 		}]
 		"""
 
-@product @property @toSaleProduct
+@product @property @toSaleProduct @online_bug
 Scenario: 3 删除商品规格值 '黑'和 'M'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'的值'黑'
@@ -238,7 +238,7 @@ Scenario: 3 删除商品规格值 '黑'和 'M'
 			}]
 		"""
 
-@product @property @toSaleProduct
+@product @property @toSaleProduct @online_bug
 Scenario: 4 删除商品规格'颜色'和'尺寸'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
