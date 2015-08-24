@@ -99,12 +99,11 @@
     border-radius: 3px;
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li{
-    height: 35px;
-    line-height: 35px;
+    height: 40px;
+    line-height: 40px;
     min-width: 70px;
     padding-left: 6px;
     padding-right: 6px;
-    line-height: 35px;
     text-align: center;
     border-bottom: 1px solid #CBCBCB;
 }
@@ -198,13 +197,13 @@
 }
 .wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li.xui-firstNav{
     background: #fff;
-    min-height: 40px;
+    min-height: 48px;
 }
 .wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span{
     display: block;
     padding-left: 24px;
     padding-right: 24px;
-    line-height: 40px;
+    line-height: 48px;
     border-bottom: 1px solid #CBCBCB;
 }
 .wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-leftArrow{
@@ -217,7 +216,7 @@
     -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
     display: inline-block;
     float: right;
-    margin-top: 15px;
+    margin-top: 19px;
 }
 .wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-topArrow{
     border-left: 6px solid transparent;
@@ -233,8 +232,8 @@
 }
 .wui-template-globalNavbar .xui-sidePanel .xui-subMenu li{
     background: #F7F7F7;
-    height: 30px;
-    line-height: 30px;
+    height: 40px;
+    line-height: 40px;
     border-bottom: 1px solid #CBCBCB;
 
 }
