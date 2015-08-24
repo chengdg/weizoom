@@ -33,10 +33,10 @@ W.component.wepage.Navar = W.component.Component.extend({
                     name: '个人中心',
                     value: 'user_center',
                     columnName: 'user_center',
-                }, {
-                    name: '商品列表页',
-                    value: 'product_list_page',
-                    columnName: 'product_list_page',
+                // }, {
+                //     name: '商品列表页',
+                //     value: 'product_list_page',
+                //     columnName: 'product_list_page',
                 }],
                 default: {
                     home: {select:true}, 

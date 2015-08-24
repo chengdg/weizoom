@@ -41,6 +41,7 @@ gmu.define('BottomNav', {
         $otherSubMenuContainer.removeClass('xui-show');
          if( $subLink.length>0){
          	$subMenuContainer.toggleClass('xui-show');
+         	width = $subMenuContainer.width();
          }
          if($menu.length == 1){
            $subMenuContainer.css('margin-left',-width/2);
