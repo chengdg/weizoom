@@ -451,7 +451,6 @@ def _create_coupons(couponRule, count, promotion=None):
                 status=COUPON_STATUS_UNGOT
         ))
         i += 1
-
     Coupon.objects.bulk_create(new_coupons)
 
 def _create_coupon_qrcode(coupon_url, coupon_id):
