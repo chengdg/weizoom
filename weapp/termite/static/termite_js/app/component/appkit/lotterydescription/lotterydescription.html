@@ -1,0 +1,78 @@
+﻿{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.lotterydescription' %}
+    <div class="wui-surveyDescription wui-lotterydescription">
+        <div class="wui-i-roulette wui-i-title"></div>
+        <div class="wui-i-roulette wui-i-header">
+            <p>您还有<b></b>次抽奖机会！</p>
+        </div>
+        <div class="wui-i-roulette wui-i-body">
+            <div class="xui-circle xa-circle xa-circle-unit-0"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-1"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-2"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-3"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-4"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-5"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-6"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-7"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-8"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-9"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-10"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-11"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-12"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-13"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-14"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-15"></div>
+
+            <table>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-0"><img src="" alt="0"></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-1"><img src="" alt="1"></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-2"><img src="" alt="2"></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-3"><img src="" alt="3"></td>
+                </tr>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-11"><img src="" alt="11"></td>
+                    <td class="xa-lottery-go" colspan="2" rowspan="2"><a>点击抽奖</a></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-4"><img src="" alt="4"></td>
+                </tr>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-10"><img src="" alt="10"></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-5"><img src="" alt="5"></td>
+                </tr>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-9"><img src="" alt="9"></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-8"><img src="" alt="8"></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-7"><img src="" alt="7"></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-6"><img src="" alt="6"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+<div  
+    class="wui-surveyDescription xa-prizeContainer"  
+    data-component-cid="{{component.cid}}" 
+    style="min-height:100px; background-color:#8d00ab;"
+    data-prize='{{component.model.prize|to_json|safe}}'
+>
+	<h1 class="wui-i-title wui-i-innerTitle xa-title">{{component.model.title}}</h1>
+{#	<h2 class="wui-i-subtitle xa-subtitle">{{component.model.subtitle}}</h2>#}
+	<div class="wui-i-description" style="margin: 0">
+		{{component.model.description|safe}}
+	</div>
+	<div class="wui-i-info">
+		<div class="wui-i-time">
+			活动时间：{{component.model.start_time}}至{{component.model.end_time}}
+		</div>
+		<div class="wui-i-prize">
+			{% if component.model.prize.type == 'integral' %}
+			活动奖励：{{component.model.prize.data}}积分
+			{% endif %}
+			{% if component.model.prize.type == 'coupon' %}
+			活动奖励：{{component.model.prize.data.name}}
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endifequal %}
