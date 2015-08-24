@@ -74,7 +74,7 @@
                     </a>
                     <ul class="xui-subMenu">                        
                         {% for second_nav in component.model.second_navs %}
-                        <li class="pl50"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        <li><a class="pl50" href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
