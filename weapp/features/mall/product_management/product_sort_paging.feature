@@ -75,8 +75,8 @@ Scenario: 2修改商品排序
 	Then jobs能获取商品列表
 	###有排序时,按排序的倒序显示
 		| name    | created_at         | display_index |
-		| 商品1   | 2015-06-01 08:00 |  2   |
 		| 商品2   | 2015-07-01 08:00 |  1   |
+		| 商品1   | 2015-06-01 08:00 |  2   |
 		| 商品3   | 2015-08-01 08:00 |  0   |
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
@@ -232,7 +232,7 @@ Scenario:3分页
 		"""
 	Then jobs能获取商品列表
 	 	| name    | created_at      | display_index |
-		| 商品1   | 2015-06-01 08:00 |  5   |
+		| 商品3   | 2015-08-01 08:00 |  2   |
 	When jobs设置查询条件
 		"""
 		{
@@ -242,7 +242,7 @@ Scenario:3分页
 		"""
 	Then jobs能获取商品列表
 	 	| name    | created_at      | display_index |
-		| 商品3   | 2015-08-01 08:00 |  2   |
+		| 商品1   | 2015-06-01 08:00 |  5   |
 	When jobs设置查询条件
 		"""
 		{

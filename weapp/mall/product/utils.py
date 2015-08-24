@@ -195,7 +195,7 @@ def sorted_products(manager_id, product_categories, reverse):
                 product.join_category_time = i.created_at
                 products.append(product)
 
-        products = sorted(products, key=attrgetter('join_category_time'), reverse=True)
+        products = sorted(products, key=attrgetter('join_category_time', 'id'), reverse=True)
         products = sorted(products, key=attrgetter('shelve_type', 'display_index'))
         products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
 
