@@ -18,7 +18,7 @@ COUNT_PER_PAGE = 20
 ITEM_FOR_DISPLAY = {
 	'phone': u'手机',
 	'name': u'姓名',
-	'qq':u'QQ'
+	'QQ': u'QQ'
 }
 TYPE_FOR_DISPLAY = {
 	'0': u'服务',
@@ -110,7 +110,7 @@ class feedbacks(resource.Resource):
 				choosen_ids = []
 				for k, v in record.termite_data.items():
 					pureName = k.split('_')[1]
-					if pureName == 'qq':
+					if pureName == 'QQ':
 						data_qq = v['value']
 						if qq in data_qq:
 							choosen_ids.append(record.id)
