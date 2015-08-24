@@ -181,7 +181,7 @@ Scenario:1 默认条件和空条件查询
 				"result_quantity":8
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
@@ -221,7 +221,7 @@ Scenario:1 默认条件和空条件查询
 				"result_quantity":10
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |        今天       | 会员分享 |             |
 			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |        今天       | 直接关注 |             |
@@ -265,7 +265,7 @@ Scenario:2 过滤条件"会员名称"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |      今天      | 会员分享 |         |
 			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |      今天      | 直接关注 |         |
@@ -300,7 +300,7 @@ Scenario:2 过滤条件"会员名称"
 				"result_quantity":1
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-8-6 00:00:00 | 会员分享 | 分组3   |
 
@@ -333,7 +333,7 @@ Scenario:2 过滤条件"会员名称"
 				"result_quantity":0
 			}]
 			"""
-		Then jobs获得会员列表"没有符合要求的数据"
+		Then jobs可以获得会员列表"没有符合要求的数据"
 
 Scenario:3 过滤条件"会员状态"
 
@@ -402,7 +402,7 @@ Scenario:4 过滤条件"关注时间"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |     tags    |
 			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |    0      | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
 			| tom3  | 银牌会员    |       1      |    100   | 335.00    |  111.67    |    3      | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
@@ -437,7 +437,7 @@ Scenario:4 过滤条件"关注时间"
 				"result_quantity":2
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 直接关注 |         |
 			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 推广扫码 |         |	
@@ -471,7 +471,7 @@ Scenario:4 过滤条件"关注时间"
 				"result_quantity":0
 			}]
 			"""
-		Then jobs获得会员列表"没有符合要求的数据"
+		Then jobs可以获得会员列表"没有符合要求的数据"
 
 Scenario:5 过滤条件"会员等级"
 
@@ -504,7 +504,7 @@ Scenario:5 过滤条件"会员等级"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 直接关注 |         |
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |      0    | 2014-8-6 00:00:00 | 会员分享 | 分组3   |
@@ -541,7 +541,7 @@ Scenario:6 过滤条件"会员分组"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| tom3  | 银牌会员    |       1      |    100   |   335.00  |   111.67   |      3    | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |      2    | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
@@ -576,7 +576,7 @@ Scenario:6 过滤条件"会员分组"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |	
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |   0.00    | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
 			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |   0.00    | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
@@ -611,7 +611,7 @@ Scenario:6 过滤条件"会员分组"
 				"result_quantity":0
 			}]
 			"""
-		Then jobs获得会员列表"没有符合要求的数据"
+		Then jobs可以获得会员列表"没有符合要求的数据"
 
 Scenario:7 过滤条件"会员来源"
 
@@ -644,7 +644,7 @@ Scenario:7 过滤条件"会员来源"
 				"result_quantity":5
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 会员分享 |             |
 			| bill  | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 会员分享 |             |
@@ -683,7 +683,7 @@ Scenario:8 过滤条件"消费总额"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| tom3  | 银牌会员    |       1      |    100   |   335.00  |   111.67   |     3     | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
@@ -718,7 +718,7 @@ Scenario:8 过滤条件"消费总额"
 				"result_quantity":1
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1   |
 
@@ -751,7 +751,7 @@ Scenario:8 过滤条件"消费总额"
 				"result_quantity":10
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 会员分享 |         |
 			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |     0     |        今天       | 直接关注 |         |
@@ -790,7 +790,7 @@ Scenario:8 过滤条件"消费总额"
 				"result_quantity":0
 			}]
 			"""
-		Then jobs获得会员列表"没有符合要求的数据"
+		Then jobs可以获得会员列表"没有符合要求的数据"
 
 Scenario:9 过滤条件"购买次数"
 
@@ -823,7 +823,7 @@ Scenario:9 过滤条件"购买次数"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| tom3  | 银牌会员    |       1      |    100   |   335.00  |   111.67   |     3     | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1       |
@@ -858,7 +858,7 @@ Scenario:9 过滤条件"购买次数"
 				"result_quantity":1
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
 
@@ -891,7 +891,7 @@ Scenario:9 过滤条件"购买次数"
 				"result_quantity":2
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
 			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1   |
@@ -925,7 +925,7 @@ Scenario:9 过滤条件"购买次数"
 				"result_quantity":0
 			}]
 			"""
-		Then jobs获得会员列表"没有符合要求的数据"
+		Then jobs可以获得会员列表"没有符合要求的数据"
 
 Scenario:10 过滤条件"最后购买时间"
 
@@ -958,7 +958,7 @@ Scenario:10 过滤条件"最后购买时间"
 				"result_quantity":2
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
 			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     | 2014-8-4 23:59:59 | 直接关注 | 分组1   |
@@ -992,7 +992,7 @@ Scenario:10 过滤条件"最后购买时间"
 				"result_quantity":1
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
 
@@ -1025,7 +1025,7 @@ Scenario:10 过滤条件"最后购买时间"
 				"result_quantity":0
 			}]
 			"""
-		Then jobs获得会员列表"没有符合要求的数据"
+		Then jobs可以获得会员列表"没有符合要求的数据"
 
 Scenario:11 过滤条件"积分范围"
 
@@ -1058,7 +1058,7 @@ Scenario:11 过滤条件"积分范围"
 				"result_quantity":3
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |     0     | 2014-8-5 23:59:59 | 会员分享 | 分组3       |
 			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |     3     | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
@@ -1093,7 +1093,7 @@ Scenario:11 过滤条件"积分范围"
 				"result_quantity":7
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |         |
 			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |         |
@@ -1132,7 +1132,7 @@ Scenario:11 过滤条件"积分范围"
 				"result_quantity":0
 			}]
 			"""
-		Then jobs获得会员列表"没有符合要求的数据"
+		Then jobs可以获得会员列表"没有符合要求的数据"
 
 Scenario:12 过滤条件"最后对话时间"
 
@@ -1169,7 +1169,7 @@ Scenario:13 过滤条件"条件组合查询"
 				"result_quantity":1
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     | 2014-8-5 00:00:00 | 推广扫码 | 分组1   |
 
@@ -1189,27 +1189,27 @@ Scenario:14 会员列表分页
 		Then jobs获取会员列表显示共3页
 
 		When jobs浏览第1页
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
 			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 
 		When jobs浏览下一页
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 直接关注 |             |
 			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 推广扫码 |             |	
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
 
 		When jobs浏览第3页
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |    3      | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
 			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
 
 		When jobs浏览上一页
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  | source   |    tags     |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 直接关注 |             |
 			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      | 2014-10-1 8:00:00 | 推广扫码 |             |	
