@@ -144,7 +144,7 @@ def __send_message(webapp_user_id,
 		response = create_response(200)
 		response.data = {
 			'msg': '发送成功！',
-			# 'message_dict': json,
+			'message_dict': json,
 			'result_code': code
 		}
 	else:
