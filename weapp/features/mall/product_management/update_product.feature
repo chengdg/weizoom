@@ -107,7 +107,7 @@ Background:
 			"pay_interfaces":[{
 				"type": "在线支付"
 			}],
-			"postage": "免运费"
+			"postage": 10.0
 		}]
 		"""
 	Then jobs能获取商品列表
@@ -188,12 +188,9 @@ Scenario: 更新商品
 			}],
 			"postage": "顺丰"
 		}
-		"""	
+		"""
 
 	When jobs更新商品'商品2'
-		#	"physical_unit": "盘",
-		#	"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-		#	"introduction": "商品2的简介",
 		"""
 		{
 			"name": "商品2",
@@ -229,8 +226,6 @@ Scenario: 更新商品
 		}]
 		"""
 	And jobs能获取商品'商品2'
-		#"introduction": "商品2的简介",
-		#"physical_unit": "盘",
 		"""
 		{
 			"name": "商品2",
@@ -290,10 +285,9 @@ Scenario: 切换邮费配置
 		}
 		"""
 	And jobs能获取商品'商品2'
-		#	"postage": "免运费"
 		"""
 		{
 			"name": "商品2",
-			"postage": "圆通"
+			"postage": 10.0
 		}
 		"""
