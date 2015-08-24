@@ -1,4 +1,4 @@
-# __edit__ : "新新"
+# __edit__ : "新新8.24"
 @func:webapp.modules.mall.views.list_products
 Feature: 调整购物车中
 	bill能调整购物车
