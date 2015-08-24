@@ -62,7 +62,7 @@ Background:
 			"coupon_product": "商品2"
 		}]
 		"""
-@eugeneX @mall2
+@eugeneX @mall2 @duhao
 Scenario: 添加分享红包
 	jobs添加"分享红包"后，"红包"列表会按照添加的倒序排列
 	1.bill能获取红包列表
@@ -92,10 +92,12 @@ Scenario: 添加分享红包
 		"""
 		[{
 			"name": "红包2",
-			"status": "关闭"
+			"status": "关闭",
+			"actions": ["开启","删除","查看"]
 		}, {
 			"name": "红包1",
-			"status": "关闭"
+			"status": "关闭",
+			"actions": ["开启","删除","查看"]
 		}]
 		"""
 	Given bill登录系统

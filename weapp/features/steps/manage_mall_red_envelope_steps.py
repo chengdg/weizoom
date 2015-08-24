@@ -21,6 +21,16 @@ def __get_date(date):
 
     return date
 
+def __get_actions(rule):
+    actions = []
+    if rule['is_timeout'] and not rule['limit_time']:
+        actions = [u'删除', u'查看']
+    elif not rule['status']:
+        actions = [u"开启", u"删除", u"查看"]
+    elif rule['status']:
+        actions = [u"关闭", u"查看"]
+    return actions
+
 @when(u'{user}添加分享红包')
 def step_impl(context, user):
     rules = json.loads(context.text)
@@ -54,7 +64,8 @@ def step_impl(context, user):
     for rule in rules:
         actual.append({
             'name': rule['rule_name'],
-            'status': status2name[rule['status']]
+            'status': status2name[rule['status']], 
+            'actions': __get_actions(rule)
         })
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
