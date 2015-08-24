@@ -179,3 +179,10 @@ class ShengjingAPIConfig(object):
 			return self.create_message_template_id
 		else:
 			return self.test_create_message_template_id
+
+	def get_message_template_url(self, template_type, user_id):
+		if template_type == self.SHENGJING_TEMPLATE_RELEASE_TYPE:
+			url = "http://{}/termite/workbench/jqm/preview/?module=apps:shengjing:study_plan&model=study_plans&resource=study_plans&action=get&workspace_id=apps:&webapp_owner_id={}&project_id=0".format(settings.DOMAIN, user_id)
+			return url
+		else:
+			return ''

@@ -117,7 +117,7 @@ class ShengjingTemplateMessage(object):
 		template_data = dict()
 		template_data['touser'] = openid
 		template_data['template_id'] = self.shengjing_config.get_message_template_id(self.template_detail.template_type)
-		template_data['url'] = ''
+		template_data['url'] = self.shengjing_config.get_message_template_url(self.template_detail.template_type, self.user.id)
 		template_data['topcolor'] = "#0000FF"
 		template_data['data'] = self.__get_templeta_data(self.template_detail)
 		return template_data
