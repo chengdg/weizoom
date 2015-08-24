@@ -28,6 +28,7 @@ gmu.define('SideNav', {
 					_this.isIScrollInitialized = true;
 				}
 				$categoryBtn.find('i').addClass('xui-active');
+				$categoryBtn.siblings('li').find('.xui-active').removeClass('xui-active');
 			});
 		}
 
