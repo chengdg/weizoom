@@ -111,7 +111,7 @@ def __get_navbar(request, page):
 
 		if navbar_page:
 			navbar_component = navbar_page['component']['components'][0]
-			print navbar_component['model']['pages']
+			# print navbar_component['model']['pages']
 
 			navbar_component['cid'] = 9999999
 			navbar_component['model']['index'] = 9999999
