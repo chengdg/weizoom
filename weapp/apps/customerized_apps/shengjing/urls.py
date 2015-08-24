@@ -45,6 +45,8 @@ urlpatterns = patterns('',
 	(r'^user_center/api/settings/update/$', user_center_api_views.update_settings),
 	
 	# 释放接口
-	(r'^api/send_template_message/$', api_views.send_template_message),
+	(r'^api/send_template_message/$', api_views.send_release_template_message),
+	# 创建接口
+	(r'^api/send_create_template_message/$', api_views.send_create_template_message),
 )
 

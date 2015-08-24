@@ -290,12 +290,12 @@
 	</div>
 	{{if plan_count > 0 && status != '0'}}
 		<div class="ui-info" onclick="showInfo(this);" type="show">
-			<label>上课人数：</label>${plan_count}
+			<label>计划人数：</label>${plan_count}
 			<span class="xui-arrow xui-arrow-down ua-arrow" ></span>
 		</div>
 		{{if students.length > 0 }}
 			<div class="hidden xui-info xa-info">
-				<label>上课人：</label>
+				<label>计划人：</label>
 				{{each(i,value) students}}
 					${value}{{if i+1<students.length}},{{/if}}
 				{{/each}}
@@ -304,7 +304,7 @@
 			<div class="hidden xui-info xa-info">系统尚未录入信息</div>
 		{{/if}}
 	{{else}}
-		<div class="ui-info"><label>上课人数：</label>${plan_count}</div>
+		<div class="ui-info"><label>计划人数：</label>${plan_count}</div>
 	{{/if}}
 
 	{{if !is_confirm && is_manager}}

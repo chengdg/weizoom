@@ -137,14 +137,45 @@ class ShengjingAPIConfig(object):
 	}
 
 
+	"""
+	模板接口
+	"""
+	SHENGJING_TEMPLATE_RELEASE_TYPE="shengjing_release"
+	SHENGJING_TEMPLATE_CREATE_TYPE="shengjing_create"
+
+	def get_message_template_id(self, template_type):
+		if template_type == self.SHENGJING_TEMPLATE_RELEASE_TYPE:
+			return self.__get_release_message_template_id()
+		elif template_type == self.SHENGJING_TEMPLATE_CREATE_TYPE:
+			return self.__get_create_message_template_id()
+		else:
+			return None
+	"""
+	释放学习计划
+	"""
 	# 微众蓝标测试账号
 	test_message_template_id = "d66HzCDYTWwEkE2nbUN7mYprkIKsDkjL-oAEBMOTmeM"	
 
 	# 盛景正式账号
 	message_template_id = "N-uYx5k4iUuwXwNhfU7Zo-cwvBJ3KG0AAA7NcMW3jvc"	
 
-	def get_message_template_id(self):
+	def __get_release_message_template_id(self):
 		if settings.MODE == 'deploy':
 			return self.message_template_id
 		else:
 			return self.test_message_template_id
+
+	"""
+	创建学习计划
+	"""
+	# 微众蓝标测试账号
+	test_create_message_template_id = "Ua83VYJiQlRyZyPLBXrPDx0hH6BC7rnLM-ih5I9ad4c"	
+
+	# 盛景正式账号
+	create_message_template_id = "EZv7h05g_dJmCxk5NbWfzFcKlXYG7-vR-ta3q4lRGyo"	
+
+	def __get_create_message_template_id(self):
+		if settings.MODE == 'deploy':
+			return self.create_message_template_id
+		else:
+			return self.test_create_message_template_id

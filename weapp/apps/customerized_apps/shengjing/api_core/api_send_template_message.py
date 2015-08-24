@@ -22,11 +22,12 @@ class TemplateDetail(object):
 	name = u'名称'
 	date_time = u'2015-01-01 08:00:00'
 
-	def __init__(self, first, remark, name, date_time):
+	def __init__(self, first, remark, name, date_time, template_type):
 		self.first = first
 		self.remark = remark
 		self.name = name
 		self.date_time = date_time
+		self.template_type = template_type
 		
 
 """"
@@ -115,7 +116,7 @@ class ShengjingTemplateMessage(object):
 
 		template_data = dict()
 		template_data['touser'] = openid
-		template_data['template_id'] = self.shengjing_config.get_message_template_id()
+		template_data['template_id'] = self.shengjing_config.get_message_template_id(self.template_detail.template_type)
 		template_data['url'] = ''
 		template_data['topcolor'] = "#0000FF"
 		template_data['data'] = self.__get_templeta_data(self.template_detail)
