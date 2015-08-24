@@ -84,3 +84,5 @@ class eventParticipance(resource.Resource):
 		except Exception,e:
 			print e
 			print e.message
+			response = create_response(500)
+			return response.get_response()
