@@ -46,7 +46,7 @@
 			<td width="80">{{product.status}}</td>
 			<td width="75">
 				{% if product.status == '在售' %}
-					<input width="38" type="text" class="xa-rank" data-id="{{product.id}}" style="width:100%;"
+					<input autocomplete="off" width="38" type="text" class="xa-rank" data-id="{{product.id}}" style="width:100%;"
 					 			 value="{{product.display_index}}" data-display-index="{{product.display_index}}">
 				{% endif %}
 			</td>
