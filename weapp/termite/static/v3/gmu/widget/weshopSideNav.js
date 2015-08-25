@@ -13,6 +13,7 @@ gmu.define('SideNav', {
 	},
 	
 	_create: function() {
+		this.myscroll = null;
 		var $el = this.$el;
 		$('.wa-page').css('padding-bottom',60);
 
@@ -24,7 +25,7 @@ gmu.define('SideNav', {
 				var $categoryBtn = $(this);
 				_this.showLeftPanel();
 				if (!_this.isIScrollInitialized) {
-					var myscroll = new iScroll('xa-sidePanel',{hScrollbar:false});	
+					_this.myscroll = new iScroll('xa-sidePanel',{hScrollbar:false});	
 					_this.isIScrollInitialized = true;
 				}
 				$categoryBtn.find('i').addClass('xui-active');
@@ -73,6 +74,7 @@ gmu.define('SideNav', {
 	            $subMenu.hide();
 	        }
 	    }
+	    this.myscroll.refresh();
 	}
 });
 
