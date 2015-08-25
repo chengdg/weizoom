@@ -304,12 +304,17 @@
 	font-weight: 400;
 	margin-top: -386px;
 	position: absolute;
-	color: white;
+	color: #fff;
 	text-align: center;
 	width: 84%;
 }
 .wui-lotterydescription>.wui-i-header{
 	text-align: center;
+	color: #fff;
+	margin-bottom: 5px;
+}
+.wui-i-start_time,.wui-i-end_time,.wui-i-time{
+	display: inline-block;
 }
 .wui-lotterydescription>.wui-i-body{
 	height: calc(60px * 4 + 3px + 35px);

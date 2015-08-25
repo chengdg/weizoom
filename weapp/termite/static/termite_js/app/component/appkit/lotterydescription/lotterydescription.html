@@ -69,12 +69,11 @@
     data-prize='{{component.model.prize|to_json|safe}}'
 >
 	<h1 class="wui-i-title wui-i-innerTitle xa-title">{{component.model.title}}</h1>
-
 	<div class="wui-i-info">
-
 		<i class="wui-i-sprite xui-sprite-timerange"></i>
 		<div class="wui-i-time">
-			{{component.model.start_time}}至{{component.model.end_time}}
+			<div class="wui-i-start_time">{{component.model.start_time}}</div>
+            至<div class="wui-i-end_time">{{component.model.end_time}}</div>
 		</div>
         <i class="wui-i-sprite xui-sprite-prize"></i>
         <div class="wui-i-prize">
