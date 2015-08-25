@@ -16,7 +16,7 @@ from core import paginator
 from models import *
 from core.jsonresponse import create_response, JsonResponse
 from core import search_util
-from mall.promotion.utils import coupon_id_maker
+from mall.promotion.utils import create_coupons
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
@@ -287,7 +287,7 @@ class CouponInfo(resource.Resource):
         if rules[0].is_active == 0 or rules[0].end_date < datetime.now():
             return create_response(500, '优惠券已失效或者已过期')
         count = int(request.POST.get('count', '0'))
-        _create_coupons(rules[0], count)
+        create_coupons(rules[0], count)
 
         if rules[0].remained_count <= 0:
             rules.update(remained_count=0)    
@@ -364,34 +364,3 @@ def _filter_reviews(request, coupons):
             if coupon.member_id in member_ids:
                 filter_coupons.append(coupon)
     return filter_coupons
-
-
-def _create_coupons(couponRule, count, promotion=None):
-    """
-    创建未使用的优惠券
-    """
-    i = 0
-    if not promotion:
-        promotion = Promotion.objects.filter(type=PROMOTION_TYPE_COUPON, detail_id=couponRule.id)[0]
-
-    a = couponRule.owner.id
-    b = couponRule.id
-
-    # 创建未使用的优惠券
-    while i < count:
-        # 生成优惠券ID
-        coupon_id = coupon_id_maker(a, b)
-        while Coupon.objects.filter(coupon_id=coupon_id):
-            coupon_id = coupon_id_maker(a, b)
-        new_coupon = Coupon.objects.create(
-            owner=couponRule.owner,
-            coupon_id=coupon_id,
-            provided_time=promotion.start_date,
-            start_time=promotion.start_date,
-            expired_time=promotion.end_date,
-            money=couponRule.money,
-            coupon_rule_id=couponRule.id,
-            is_manual_generated=False,
-            status=COUPON_STATUS_UNGOT
-        )
-        i += 1
