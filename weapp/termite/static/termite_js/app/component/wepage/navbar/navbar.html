@@ -24,7 +24,7 @@
                     <span class="xui-menuArrowBorder"></span>
                     <ul class="xui-subMenu">
                         {% for second_nav in component.model.second_navs %}
-                        <li class="f12"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        <li class="f14"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>

@@ -7,7 +7,7 @@
 }
 .wui-template-globalNavbar .xui-globalBottomBar{
     width: 100%;
-    height: 45px;
+    height: 48px;
     background: #fff;
     border-top: 1px solid #CBCBCB;
     position: fixed;
@@ -27,7 +27,7 @@
     width: 50px;
     border-right: 1px solid #CBCBCB;
     text-align: center;
-    line-height: 53px;
+    line-height: 59px;
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-home a{
     display: inline-block;
@@ -37,7 +37,7 @@
 }
 .wui-template-globalNavbar .xui-flex{
     text-align: center;
-    line-height: 45px;
+    line-height: 48px;
 }
 .wui-template-globalNavbar .xui-flex a{
     width: 100%;
@@ -97,22 +97,24 @@
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
     border:1px solid #CBCBCB;
     background: #fff;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li{
-    height: 40px;
-    line-height: 40px;
+    height: 43px;
+    line-height: 43px;
     min-width: 70px;
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
     text-align: center;
-    border-bottom: 1px solid #CBCBCB;
+    /*border-bottom: 1px solid #CBCBCB;*/
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li:last-child{
     border:none;
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li a{
     color: #333;
+    display: block;
+    border-bottom: 1px solid #CBCBCB;
 }
 
 /*侧滑导航*/
