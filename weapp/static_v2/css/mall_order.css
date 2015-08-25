@@ -308,18 +308,18 @@
 }
 .xui-refundOrderPage .xui-buyerHint i{
     display: inline-block;
-    width: 18px;
-    height: 17px;
-    margin-bottom: -4px;
+    width: 13px;
+    height: 13px;
+    margin-bottom: -2px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
 }
 .xui-auditOrderPage .xui-buyerHint i{
     display: inline-block;
-    width: 18px;
-    height: 17px;
-    margin-bottom: -4px;
+    width: 13px;
+    height: 13px;
+    margin-bottom: -2px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
