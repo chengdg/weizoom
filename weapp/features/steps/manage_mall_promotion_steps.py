@@ -176,7 +176,7 @@ def step_create_flash_sales(context, user):
 
 				data = {
 						'name': promotion['name'],
-						'promotion_title': promotion.get('promotion_title', ''),
+						'promotion_title': promotion.get('promotion_slogan', ''),
 						'member_grade': __get_member_grade(promotion, context.webapp_id),
 						'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
 						'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
@@ -207,46 +207,54 @@ def step_impl(context, user):
 @then(u"{user}获取{promotion_type}活动列表")
 def step_impl(context, user, promotion_type):
 	if promotion_type == u"促销":
-			promotion_type = "all"
+		promotion_type = "all"
 	elif promotion_type == u"限时抢购":
-			promotion_type = "flash_sale"
+		promotion_type = "flash_sale"
 	elif promotion_type == u"买赠":
-			promotion_type = "premium_sale"
+		promotion_type = "premium_sale"
 	elif promotion_type == u"积分应用":
-			promotion_type = "integral_sale"
+		promotion_type = "integral_sale"
 	# elif type == u"优惠券":
 	#     type = "coupon"
 	url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % promotion_type
 	if hasattr(context, 'query_param'):
 		if context.query_param.get('product_name'):
-				url += '&name=' + context.query_param['product_name']
+			url += '&name=' + context.query_param['product_name']
 		if context.query_param.get('bar_code'):
-				url += '&barCode='+ context.query_param['bar_code']
+			url += '&barCode='+ context.query_param['bar_code']
 		if context.query_param.get('start_date'):
-				url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
+			url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
 		if context.query_param.get('end_date'):
-				url += '&endDate='+ bdd_util.get_datetime_str(context.query_param['end_date'])[:16]
+			url += '&endDate='+ bdd_util.get_datetime_str(context.query_param['end_date'])[:16]
 		if context.query_param.get('status', u'全部') != u'全部':
 			if context.query_param['status'] == u'未开始':
-					status = 1
+				status = 1
 			elif context.query_param['status'] == u'进行中':
-					status = 2
+				status = 2
 			elif context.query_param['status'] == u'已结束':
-					status = 3
+				status = 3
 			url += '&promotionStatus=%s' % status
 	response = context.client.get(url)
 	actual = json.loads(response.content)['data']['items']
 
+	# 实际数据
 	for promotion in actual:
-		#print("promotion: {}".format(promotion))
+		print("promotion: {}".format(promotion))
 		if promotion['status'] != u'已结束':
 			# 开启这2项操作(实际上在模板中，此时次2项不含hidden属性)。参考 flash_sales.html
 			promotion['actions'] = [u'详情', u'结束']
 		else:
 			promotion['actions'] = []
 
+		if promotion['promotionTitle'] != '':
+			# 含有促销标题的
+			promotion['name'] = promotion['promotionTitle']
+
 		promotion['product_name'] = promotion['product']['name']
-		promotion['product_price'] = promotion['product']['display_price']
+		if promotion['product']['display_price_range'] != '':
+			promotion['product_price'] = promotion['product']['display_price_range']
+		else:
+			promotion['product_price'] = promotion['product']['display_price']
 		promotion['bar_code'] = promotion['product']['bar_code']
 		promotion['price'] = promotion['product']['display_price']
 		promotion['stocks'] = promotion['product']['stocks']

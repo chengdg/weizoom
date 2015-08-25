@@ -156,7 +156,7 @@ Background:
 
 
 #该场景在new_promotion_product_search.feature中覆盖
-Scenario: 0 选取起购数量大于1的商品，创建限时抢购活动（起购数量大于1的商品不能参与限时抢购）
+#Scenario: 0 选取起购数量大于1的商品，创建限时抢购活动（起购数量大于1的商品不能参与限时抢购）
 	#Given jobs登录系统
 	#When jobs创建限时抢购活动
 	#新建限时抢购页面，商品查询弹窗中的数据列表中不存在'商品0'
@@ -179,6 +179,7 @@ Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时�
 		}]
 		"""
 	Then jobs获取限时抢购活动列表
+		# 页面显示“产品名称：商品1限时抢购”
 		"""
 		[{
 			"name": "商品1限时抢购",
@@ -192,34 +193,35 @@ Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时�
 		}]
 		"""
 
-@promotion @promotionFlash
+@mall2 @wip.f2 @promotion @promotionFlash
 Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空，显示广告语）
 	Given jobs登录系统
 	When jobs创建限时抢购活动
 		"""
-			[{
-				"name": "商品2限时抢购",
-				"promotion_slogan":"抢购抢购啦",
-				"start_date": "今天",
-				"end_date": "1天后",
-				"product_name":"商品2",
-				"member_grade": "铜牌会员",
-				"count_per_purchase": 2,
-				"promotion_price": 80.00
-			}]
+		[{
+			"name": "商品2限时抢购",
+			"promotion_slogan":"抢购抢购啦",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name":"商品2",
+			"member_grade": "铜牌会员",
+			"count_per_purchase": 2,
+			"promotion_price": 80.00
+		}]
 		"""
 	Then jobs获取限时抢购活动列表
+		# 页面显示“广告语：抢购抢购啦”
 		"""
-			[{
-				"name": "广告语：抢购抢购啦",
-				"product_name":"商品2",
-				"product_price":"100.00~200.00",
-				"promotion_price":80.00,
-				"status":"进行中",
-				"start_date": "今天",
-				"end_date": "1天后",
-				"actions": ["详情","结束"]
-			}]
+		[{
+			"name": "抢购抢购啦",
+			"product_name": "商品2",
+			"product_price": "100.0 ~ 200.0",
+			"promotion_price": 80.00,
+			"status": "进行中",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"actions": ["详情","结束"]
+		}]
 		"""
 
 @promotion @promotionFlash
