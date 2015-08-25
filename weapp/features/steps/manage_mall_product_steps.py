@@ -304,6 +304,7 @@ def __get_products(context, type_name=u'在售'):
     context.pageinfo = data['pageinfo']
 
     for product in data["items"]:
+        product['is_member_product'] = 'on' if product.get('is_member_product', False) else 'off'
         #价格
         product['price'] = product['display_price']
         if 'display_price_range' in product:
