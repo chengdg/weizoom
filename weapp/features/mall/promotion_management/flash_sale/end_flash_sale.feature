@@ -88,7 +88,7 @@ Background:
 			}]
 		"""
 
-@promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 1 结束状态为'未开始'的限时抢购活动
 	Given jobs登录系统
 	When jobs'结束'促销活动'活动名称：商品3抢购'
@@ -124,7 +124,7 @@ Scenario: 1 结束状态为'未开始'的限时抢购活动
 			}]
 		"""
 
-@promotion @promotionFlash
+@mall2 @promotion @promotionFlash @jz
 Scenario: 2 结束状态为'进行中'的限时抢购活动
 	Given jobs登录系统
 	When jobs'结束'促销活动'活动名称：商品2抢购'
@@ -196,7 +196,7 @@ Scenario: 3 批量结束限时抢购活动（包含已结束状态）
 		"""
 	Then jobs获得系统提示'不能同时进行删除和结束操作'
 
-@promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 4 批量结束限时抢购活动（不包含已结束状态）
 	Given jobs登录系统
 	When jobs批量'结束'促销活动
@@ -253,7 +253,7 @@ Scenario: 4 批量结束限时抢购活动（不包含已结束状态）
 			}]
 		"""
 
-@promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 5 商品下架导致限时抢购活动结束
 	Given jobs登录系统
 	When jobs批量下架商品
@@ -264,8 +264,7 @@ Scenario: 5 商品下架导致限时抢购活动结束
 		"""
 		[{
 			"name": "商品1",
-			"price": 100.00,
-			"shelve_type": "上架"
+			"price": 100.00
 		}]
 		"""
 	And jobs获取限时抢购活动列表
