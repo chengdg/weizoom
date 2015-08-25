@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from datetime import datetime
 import os
 
+from django.conf import settings
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from core import resource
@@ -123,19 +124,14 @@ class surveyParticipances_Export(resource.Resource):
 		"""
 		响应API GET
 		"""
-		print '========== enter ============'
 		app_name = 'survey'
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
-		print 'export_id',export_id
-
 
 		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		export_file_dir = '/apps/customerized_apps/survey/export/'
-		export_file_path = os.path.join(export_file_dir,excel_file_name)
+		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		import xlwt
-
 		try:
 			data = app_models.surveyParticipance.objects(belong_to=export_id)
 			fields_raw = []
@@ -240,10 +236,13 @@ class surveyParticipances_Export(resource.Resource):
 				row +=1
 				for col in range(lens):
 					ws.write(row,col,record[col])
-
-			wb.save(export_file_path)
+			try:
+				wb.save(export_file_path)
+			except:
+				print 'SAVE ERROR'
+				print '/static/upload/%s'%excel_file_name
 			response = create_response(200)
-			response.data = {'download_path':export_file_path,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 
