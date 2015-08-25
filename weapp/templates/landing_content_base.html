@@ -96,8 +96,10 @@
 		}
     });
 
+	var next_url = "{{next}}";
+	if(next_url == "") { next_url = "/"; }
 	 $('.tx_login').click(function(event) {
-		W.dialog.showDialog('W.weapp.dialog.LoginDialog', {});
+		W.dialog.showDialog('W.weapp.dialog.LoginDialog', {next_url: next_url});
 	 });
 	
   	
