@@ -32,6 +32,11 @@ class lottery(models.Document):
 	participant_count = models.IntField(default=0) #参与者数量
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
+	delivery = models.IntField(default=0) #参与送积分
+	delivery_setting = models.StringField(default="true", max_length=20) #送积分规则
+	limitation = models.StringField(default="once_per_user", max_length=32) #抽奖限制
+	chance = models.IntField(default=0) #中奖几率
+	type = models.StringField(default="true", max_length=10) #是否允许重复中奖
 	
 	meta = {
 		'collection': 'lottery_lottery'

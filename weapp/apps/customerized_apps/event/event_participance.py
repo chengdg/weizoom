@@ -47,10 +47,10 @@ class eventParticipance(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		event_participance = app_models.eventParticipance(**data)
 		event_participance.save()
-		
+
 		#调整参与数量
 		app_models.event.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
-		
+
 		#活动奖励
 		prize = data.get('prize', None)
 		error_msg = None
@@ -72,7 +72,7 @@ class eventParticipance(resource.Resource):
 					coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
 					if not coupon:
 						error_msg = msg
-		
+
 		data = json.loads(event_participance.to_json())
 		data['id'] = data['_id']['$oid']
 		if error_msg:

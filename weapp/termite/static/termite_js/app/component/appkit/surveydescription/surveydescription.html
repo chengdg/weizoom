@@ -19,7 +19,10 @@
 			{{component.model.start_time}}至{{component.model.end_time}}
 		</div>
 		<div style="clear: both"></div>
-		<i class="wui-i-sprite xui-sprite-prize"></i>
+		{% ifequal component.model.prize.type 'no_prize' %}
+		{% else %}
+			<i class="wui-i-sprite xui-sprite-prize"></i>
+		{% endifequal %}
 		<div class="wui-i-prize">
 			{% if component.model.prize.type == 'integral' %}
 				{{component.model.prize.data}}积分

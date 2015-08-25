@@ -33,7 +33,7 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			default: ''
 		},{
 			name: 'prize',
-			type: 'prize_selector',
+			type: 'prize_selector_v3',
 			displayName: '活动奖励',
 			isUserProperty: true
 		},{
@@ -44,7 +44,7 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
-			help: '格式：仅支持jpg.png 尺寸：64*64 不超过1M',
+			help: '格式：建议jpg.png 尺寸：50*50 不超过1M',
 			default: ''
 		}]
 	}],
@@ -81,20 +81,34 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			//	})
 			//}
 
-			//var $img = $node.find('img');
+			var currCid = $propertyViewNode.attr('data-dynamic-cid');
+			var targetClass,alt;
+			switch (currCid){
+				case '4':
+					targetClass = '.xa-lottery-first';
+					alt = '一等奖';
+					break;
+				case '5':
+					targetClass = '.xa-lottery-second';
+					alt = '二等奖';
+					break;
+				case '6':
+					targetClass = '.xa-lottery-third';
+					alt = '三等奖';
+					break;
+				default:
+					targetClass = '.xa-lottery-first';
+					alt = '一等奖';
+					break;
+			}
+			var $target = $('#phoneIFrame').contents().find(targetClass);//找到子frame中的相应元素
 			if (value) {
-				//从无图片到有图片
+				//更新propertyView中的图片
 				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
 				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+				//更新phoneView中的图片
+				$target.html("<img style='height:50px;width:50px;vertical-align:middle;' src='"+image.url+"' alt='"+alt+"'>");
 			}
-
-			//$img.attr('src', value);
-			//$propertyViewNode.find('.xa-imageUploader-img').attr('src', value);
-			//$propertyViewNode.find('.xa-imageUploader-imgContainer').show();
-
-			//$node.find('img').attr('src', value);
-			//$propertyViewNode.find('.xa-imageUploader-img').show().attr('src', value);
-			//$propertyViewNode.find('.xa-imageUploader-imgContainer').show();
 		},
 	}
 });

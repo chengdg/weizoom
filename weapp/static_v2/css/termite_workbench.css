@@ -1243,7 +1243,7 @@ button.xui-removeImageButton{
 	margin-top: 9px;
 }
 .xui-sprite-timerange{
-	background: url('/static_v2/img/m_sprite.png') no-repeat;
+	background: url('/termite_static/img/m_sprite.png') no-repeat;
 	background-position: 0 5px;
 	display: block;
 	height: 35px;
@@ -1251,7 +1251,7 @@ button.xui-removeImageButton{
 	float: left;
 }
 .xui-sprite-prize{
-	background: url('/static_v2/img/m_sprite.png') no-repeat;
+	background: url('/termite_static/img/m_sprite.png') no-repeat;
 	background-position: -40px 5px;
 	display: block;
 	height: 35px;

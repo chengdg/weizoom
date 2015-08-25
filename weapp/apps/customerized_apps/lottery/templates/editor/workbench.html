@@ -41,7 +41,7 @@
     <button class="xa-save btn btn-primary">保存</button>
     <button class="xa-preview btn btn-default ml20">预览</button>
   {% else %}
-    {% if lottery.status_text == "未开启" %}
+    {% if lottery.status_text == "未开始" %}
     <button class="xa-save btn btn-primary">保存</button>
     <button class="xa-preview btn btn-default ml20">预览</button>
     {% endif %}
@@ -152,12 +152,22 @@
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
+          var delivery = descriptionModel.get('delivery');
+          var delivery_setting = descriptionModel.get('delivery_setting');
+          var limitation = descriptionModel.get('limitation');
+          var chance = descriptionModel.get('chance');
+          var type = descriptionModel.get('type');
           var relatedPageId = data['project_id'];
           var args = {
             "name": name,
             "start_time": startTime,
-            "end_time": endTime
-          }
+            "end_time": endTime,
+            "delivery": delivery,
+            "delivery_setting": delivery_setting,
+            "limitation": limitation,
+            "chance": chance,
+            "type": type
+          };
           if (isCreateNewData) {
             var method = 'put';
             args['related_page_id'] = relatedPageId;

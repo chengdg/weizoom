@@ -69,51 +69,72 @@ class feedbacks(resource.Resource):
 			webapp_user_ids = []
 
 		params = {}
+		params_id_length = 0 #在按照一个以上查找条件筛选时，会因为都是对id进行查找而造成BUG,所以对按照id查找的次数进行计数
 		records = app_models.feedbackParticipance.objects.all()
 		if webapp_user_ids:
 			params['webapp_user_id__in'] = webapp_user_ids
 		if feedback_type != -1:
+			params_id_length += 1
+			choosen_ids = []
 			for record in records:
-				choosen_ids = []
 				for k, v in record.termite_data.items():
 					if v['type'] == 'type':
 						data_feedback_type = int(v['value'])
 						if data_feedback_type == feedback_type:
-							choosen_ids.append(record.id)
+							if params_id_length > 1:
+								if record.id in params['id__in']:
+									choosen_ids.append(record.id)
+							else:
+								choosen_ids.append(record.id)
 			params['id__in'] = choosen_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
 		if phone:
+			params_id_length += 1
+			choosen_ids = []
 			for record in records:
-				choosen_ids = []
 				for k, v in record.termite_data.items():
 					pureName = k.split('_')[1]
 					if pureName == 'phone':
 						data_tel = v['value']
 						if phone in data_tel:
-							choosen_ids.append(record.id)
+							if params_id_length > 1:
+								if record.id in params['id__in']:
+									choosen_ids.append(record.id)
+							else:
+								choosen_ids.append(record.id)
 			params['id__in'] = choosen_ids
 		if name:
+			params_id_length += 1
+			choosen_ids = []
 			for record in records:
-				choosen_ids = []
 				for k, v in record.termite_data.items():
 					pureName = k.split('_')[1]
 					if pureName == 'name':
 						data_name = v['value']
 						if name in data_name:
-							choosen_ids.append(record.id)
+							if params_id_length > 1:
+								if record.id in params['id__in']:
+									choosen_ids.append(record.id)
+							else:
+								choosen_ids.append(record.id)
 			params['id__in'] = choosen_ids
 		if qq:
+			params_id_length += 1
+			choosen_ids = []
 			for record in records:
-				choosen_ids = []
 				for k, v in record.termite_data.items():
 					pureName = k.split('_')[1]
 					if pureName == 'QQ':
 						data_qq = v['value']
 						if qq in data_qq:
-							choosen_ids.append(record.id)
+							if params_id_length > 1:
+								if record.id in params['id__in']:
+									choosen_ids.append(record.id)
+							else:
+								choosen_ids.append(record.id)
 			params['id__in'] = choosen_ids
 		datas = app_models.feedbackParticipance.objects(**params).order_by('-id')
 

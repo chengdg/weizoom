@@ -36,6 +36,8 @@ class M{{resource.class_name}}(resource.Resource):
 		if 'id' in request.GET:
 			{% if resource.enable_termite %}
 			id = request.GET['id']
+			isPC = int(request.GET.get('isPC',0))
+			isPC = True if isPC else False
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
@@ -82,7 +84,8 @@ class M{{resource.class_name}}(resource.Resource):
 				'page_html_content': html,
 				'app_name': "{{app_name}}",
 				'resource': "{{resource.lower_name}}",
-				'hide_non_member_cover': True #非会员也可使用该页面
+				'hide_non_member_cover': True, #非会员也可使用该页面
+				'isPC': isPC
 			})
 
 			__STRIPPER_TAG__

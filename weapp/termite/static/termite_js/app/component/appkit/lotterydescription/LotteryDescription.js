@@ -151,9 +151,6 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		title: function($node, model, value, $propertyViewNode) {
 			$node.find('.xa-title').text(value);
 		},
-		items: function($node, model, value) {
-            this.refresh($node, {refreshPropertyView:true});
-        },
 		description: function($node, model, value, $propertyViewNode) {
 			console.log('------------------------------------');
 			console.log($node[0]);
@@ -163,6 +160,15 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		delivery: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-prize').html(value+'积分');
 		},
+		//delivery_setting: function($node, model, value, $propertyViewNode) {
+		//	$node.find('.wui-i-prize').html(value+'积分');
+		//},
+		//chance: function($node, model, value, $propertyViewNode) {
+		//	$node.find('.wui-i-prize').html(value+'积分');
+		//},
+		//type: function($node, model, value, $propertyViewNode) {
+		//	$node.find('.wui-i-prize').html(value+'积分');
+		//},
 		limitation: function($node, model, value, $propertyViewNode) {
 			console.log('------------------------------------');
 			console.log($node[0], value);
