@@ -124,11 +124,6 @@
     width: 20px;
 }
 
-
-
-
-
-
 /**
  * 用户调研survey description样式
  */
@@ -250,9 +245,6 @@
 }
 
 
-
-
-
 /** 
  *
  */
@@ -270,6 +262,7 @@
 /*活动的图标*/
 .wui-i-time,.wui-i-prize{
 	margin-top: 9px;
+	min-height: 30px;
 }
 .xui-sprite-timerange{
 	background: url('/termite_static/img/m_sprite.png') no-repeat;
@@ -313,7 +306,7 @@
 	color: #fff;
 	margin-bottom: 5px;
 }
-.wui-i-start_time,.wui-i-end_time,.wui-i-time{
+p.wui-i-start_time,p.wui-i-end_time{
 	display: inline-block;
 }
 .wui-lotterydescription>.wui-i-body{
