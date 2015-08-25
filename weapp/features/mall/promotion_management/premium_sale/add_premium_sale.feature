@@ -260,7 +260,7 @@ Scenario: 5 主商品和赠品为同一个商品，创建买赠活动
 		"""
 			[{
 				"name": "商品1买一赠一",
-				"promotion_slogan":"",
+				"promotion_title":"",
 				"start_date": "今天",
 				"end_date": "1天后",
 				"member_grade": "全部会员",

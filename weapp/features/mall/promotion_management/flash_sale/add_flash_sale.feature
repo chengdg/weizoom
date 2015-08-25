@@ -168,7 +168,7 @@ Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时�
 		"""
 		[{
 			"name": "商品1限时抢购",
-			"promotion_slogan":"",
+			"promotion_title":"",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name":"商品1",
@@ -200,7 +200,7 @@ Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空�
 		"""
 		[{
 			"name": "商品2限时抢购",
-			"promotion_slogan":"抢购抢购啦",
+			"promotion_title":"抢购抢购啦",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name":"商品2",
@@ -213,7 +213,8 @@ Scenario: 2 选取多规格商品，创建限时抢购活动（广告语非空�
 		# 页面显示“广告语：抢购抢购啦”
 		"""
 		[{
-			"name": "抢购抢购啦",
+			"name": "商品2限时抢购",
+			"promotion_title":"抢购抢购啦",
 			"product_name": "商品2",
 			"product_price": "100.0 ~ 200.0",
 			"promotion_price": 80.00,
@@ -231,7 +232,7 @@ Scenario: 3 选取参与会员折扣的商品，创建限时抢购活动(限时�
 		"""
 		[{
 			"name": "商品3限时抢购",
-			"promotion_slogan":"商品3抢购",
+			"promotion_title":"商品3抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name":"商品3",
@@ -244,7 +245,8 @@ Scenario: 3 选取参与会员折扣的商品，创建限时抢购活动(限时�
 		# 页面显示：广告语：商品3抢购
 		"""
 		[{
-			"name": "商品3抢购",
+			"name": "商品3限时抢购",
+			"promotion_title":"商品3抢购",
 			"product_name": "商品3",
 			"product_price": 100.00,
 			"promotion_price": 80.00,
@@ -262,7 +264,7 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 		"""
 		[{
 			"name": "商品4限时抢购",
-			"promotion_slogan": "商品4抢购",
+			"promotion_title": "商品4抢购",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "商品4",
@@ -275,7 +277,8 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 		# 页面显示：广告语：商品4抢购
 		"""
 		[{
-			"name": "商品4抢购",
+			"name": "商品4限时抢购",
+			"promotion_title": "商品4抢购",
 			"product_name": "商品4",
 			"product_price": 100.00,
 			"promotion_price": 80.00,
@@ -286,14 +289,14 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 		}]
 		"""
 
-@mall2 @promotion @promotionFlash
+@mall2 @promotion @promotionFlash @jz
 Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢购活动
 	Given jobs登录系统
 	When jobs创建限时抢购活动
 		"""
 		[{
 			"name": "商品5限时抢购",
-			"promotion_slogan": "商品5抢购",
+			"promotion_title": "商品5抢购",
 			"start_date": "明天",
 			"end_date": "3天后",
 			"product_name": "商品5",
@@ -306,7 +309,8 @@ Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢�
 		# 页面显示： 广告语：商品5抢购
 		"""
 		[{
-			"name": "商品5抢购",
+			"name": "商品5限时抢购",
+			"promotion_title": "商品5抢购",
 			"product_name": "商品5",
 			"product_price": 100.00,
 			"promotion_price": 80.00,
@@ -324,7 +328,7 @@ Scenario: 6 创建限时抢购活动，必填字段的校验
 		"""
 			[{
 				"name": "",
-				"promotion_slogan":"",
+				"promotion_title":"",
 				"start_date": "",
 				"end_date": "",
 				"product_name":"",
@@ -346,7 +350,7 @@ Scenario: 7 创建限时抢购活动，限购价格必须小于商品原价的�
 		"""
 			[{
 				"name": "商品6限时抢购",
-				"promotion_slogan":"商品6抢购",
+				"promotion_title":"商品6抢购",
 				"start_date": "明天",
 				"end_date": "3天后",
 				"product_name":"商品6",

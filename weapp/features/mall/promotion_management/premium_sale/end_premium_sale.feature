@@ -274,7 +274,7 @@ Scenario: 4 批量结束买赠活动（包括已结束状态的）
 		"""
 	Then jobs获得系统提示'不能同时进行删除和结束操作'
 
-@mall2 @promotion @promotionPremium @jz
+@mall2 @promotion @promotionPremium
 Scenario: 5 商品下架导致买赠活动结束
 	Given jobs登录系统
 	When jobs批量下架商品
