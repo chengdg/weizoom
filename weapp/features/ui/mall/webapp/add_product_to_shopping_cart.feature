@@ -43,20 +43,37 @@ Background:
 			"name": "商品3",
 			"is_enable_model": "启用规格",
 			"model": {
-				"models": {
-					"红色 S": {
-						"price": 10.0,
+				"models":{
+					"M": {
+						"price": 7,
 						"stock_type": "有限",
-						"stocks": 3
+						"stocks": 2
 					},
-					"黄色 M": {
-						"price": 9.1,
+					"S": {
+						"price": 8,
 						"stock_type": "无限"
-					},
-					"蓝色 M": {
-						"price": 11.1,
-						"stock_type": "有限",
-						"stocks": 0
+					}
+				}
+			}
+		}, {
+			"name": "商品4",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"M": {
+						"price": 9,
+						"stock_type": "无限"
+					}
+				}   
+			}
+		}, {
+			"name": "商品5",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"S": {
+						"price": 10,
+						"stock_type": "无限"
 					}
 				}
 			}
@@ -270,18 +287,23 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 2,
+			"total_price": 8,
 			"product_groups": [{
+				"promotion": null,
 				"products": [{
 					"name": "商品1",
 					"price": 3,
 					"count": 1
-				}, {
+				}]
+			}, {
+				"promotion": null,
+				"products": [{
 					"name": "商品2",
 					"price": 5,
 					"count": 1
 				}]
-			}],
-			"invalid_products": []
+			}]
 		}
 		"""
 	Given jobs登录系统:ui
@@ -290,17 +312,22 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 1,
+			"total_price": 5,
 			"product_groups": [{
+				"promotion": null,
 				"products": [{
 					"name": "商品2",
 					"price": 5,
 					"count": 1
 				}]
-			}],
-			"invalid_products": [{
-				"name": "商品1",
-				"price": 3,
-				"count": 1
+			}, {
+				"promotion": null,
+				"invalid_products": [{
+					"name": "商品1",
+					"price": 3,
+					"count": 1
+				}]
 			}]
 		}
 		"""
@@ -310,15 +337,22 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 	Then bill能获得购物车:ui
 		"""
 		{
-			"product_groups": [],
-			"invalid_products": [{
-				"name": "商品1",
-				"price": 3,
-				"count": 1
+			"total_product_count": 0,
+			"total_price": 0,
+			"product_groups": [{
+				"promotion": null,
+				"invalid_products": [{
+					"name": "商品2",
+					"price": 5,
+					"count": 1
+				}]
 			}, {
-				"name": "商品2",
-				"price": 5,
-				"count": 1
+				"promotion": null,
+				"invalid_products": [{
+					"name": "商品1",
+					"price": 3,
+					"count": 1
+				}]
 			}]
 		}
 		"""
@@ -328,20 +362,25 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 1,
+			"total_price": 3,
 			"product_groups": [{
-				"products": [{
+				"promotion": null,
+				"iproducts": [{
 					"name": "商品1",
 					"price": 3,
 					"count": 1
 				}]
-			}],
-			"invalid_products": [{
-				"name": "商品2",
-				"price": 5,
-				"count": 1
+			}, {
+				"promotion": null,
+				"invalid_products": [{
+					"name": "商品2",
+					"price": 5,
+					"count": 1
+				}]
 			}]
 		}
-		"""	
+		"""
 
 Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 	bill在webapp中将jobs的商品加入到购物车后，jobs将此商品的商品规格进行修改
@@ -374,6 +413,8 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 2,
+			"total_price": 15
 			"product_groups": [{
 				"products": [{
 					"name": "商品3",
@@ -436,6 +477,8 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 1,
+			"total_price": 8,
 			"product_groups": [{
 				"products": [{
 					"name": "商品3",
@@ -469,6 +512,8 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 2,
+			"total_price": 18,
 			"product_groups": [{
 				"products": [{
 					"name": "商品3",
@@ -496,6 +541,8 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 0,
+			"total_price": 0,
 			"product_groups": [],
 			"invalid_products": [{
 				"name": "商品3",
@@ -530,6 +577,8 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 1,
+			"total_price": 8,
 			"product_groups": [{
 				"products": [{
 					"name": "商品4",
