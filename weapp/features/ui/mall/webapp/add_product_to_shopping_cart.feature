@@ -728,6 +728,8 @@ Scenario: 5 商品添加到购物车后，进行删除
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 5,
+			"total_price": 35,
 			"product_groups": [{
 				"products": [{
 					"name": "商品1"
@@ -747,6 +749,8 @@ Scenario: 5 商品添加到购物车后，进行删除
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 3,
+			"total_price": 27,
 			"product_groups": [{
 				"products": [{
 					"name": "商品4"
@@ -787,6 +791,8 @@ Scenario:6 商品添加到购物车后，后台对商品的价格，库存进行
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 2,
+			"total_price": 15,
 			"product_groups": [{
 				"products": [{
 					"name": "商品3",
@@ -849,6 +855,8 @@ Scenario:6 商品添加到购物车后，后台对商品的价格，库存进行
 	Then bill能获得购物车:ui
 		"""
 		{
+			"total_product_count": 2,
+			"total_price": 17,
 			"product_groups": [{
 				"products": [{
 					"name": "商品3",
