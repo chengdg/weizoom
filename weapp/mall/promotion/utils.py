@@ -191,11 +191,6 @@ def filter_promotions(request, promotions):
         products = search_util.filter_objects(
             promotion.products, PROMOTION_FILTERS['product']
         )
-        if not products:
-            #product filter没有通过，跳过该promotion
-            print 'end in product filter'
-            continue
-        else:
-            print 'pass product filter'
+        if products:
             filtered_promotions.append(promotion)
     return filtered_promotions
