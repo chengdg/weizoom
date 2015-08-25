@@ -451,7 +451,7 @@ Scenario: 3  经营概况：销量
 			"products": [{
 				"name": "商品2",
 				"count": 2
-			}],
+			}]
 		}
 		"""
 

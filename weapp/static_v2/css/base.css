@@ -138,6 +138,7 @@ textarea{resize:none}
 .h70{height:70px !important;}
 .h80{height:80px!important;}
 .h100{height:100px;}
+.h130{height:130px!important;}
 .h110{height:110px!important;}
 .h175{height:175px!important;}
 .h150{height:150px;}
@@ -371,6 +372,9 @@ textarea{resize:none}
 }
 .xui-colorRed{
 	color: red;
+}
+.xui-colorBlue{
+	color:#1262b7!important;
 }
 .cRed{
 	color: #CF0404;

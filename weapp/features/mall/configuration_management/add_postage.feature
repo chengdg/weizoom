@@ -30,6 +30,7 @@ Scenario: 添加邮费配置
 				"first_weight": 1.0,
 				"first_weight_price":20.00,
 				"added_weight": 1.0,
+
 				"added_weight_price": 10.00
 			},{
 				"to_the":"上海市,重庆市,江苏省",
@@ -64,6 +65,7 @@ Scenario: 添加邮费配置
 		}, {
 			"name" : "顺丰"
 		}, {
+
 			"name" : "EMS"
 		}, {
 			"name" : "韵达"

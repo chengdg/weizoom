@@ -15,9 +15,9 @@
     <div class="xui-mainpage">
         <ul class="funs_date_ul xui-weixin-outlinePage">
             <li><em><a href="/new_weixin/realtime_messages/?status=0" class="xui-i-count">{{ unread_message_count }}</a></em><br>未读消息</li>
-            <li><em>{{ yesterday_added_count }}</em><br>昨日新增粉丝</li>
-            <li><em>{{ yesterday_net_count }}</em><br>昨日跑路粉丝</li>
-            <li><em><a href="/new_weixin/fanses/" class="xui-i-count">{{ member_count }}</a></em><br>总粉丝</li>
+            <li><em>{{ yesterday_added_count }}</em><br>昨日新增会员</li>
+            <li><em>{{ yesterday_net_count }}</em><br>昨日取消关注会员</li>
+            <li><em><a href="/member/members/get/" class="xui-i-count" target="_blank">{{ member_count }}</a></em><br>总会员</li>
         </ul>
         <!-- <div class="xui-ChartContent">
             <div class="panel-heading xui-bold">用户分析</div>
@@ -25,10 +25,10 @@
             </div>
             <div class="tips_wrap xa-member-tips-wrap">
                 <ul class="tips_ul">
-                    <li><span>新增人数：</span>新关注的粉丝去重人数；</li>
-                    <li><span>跑路人数：</span>取消关注的粉丝去重人数；</li>
+                    <li><span>新增人数：</span>新关注的会员去重人数；</li>
+                    <li><span>跑路人数：</span>取消关注的会员去重人数；</li>
                     <li><span>净增人数：</span>新关注与取消关注的用户数之差；</li>
-                    <li><span>累计人数：</span>已关注和已跑路的粉丝总数。</li>
+                    <li><span>累计人数：</span>已关注和已跑路的会员总数。</li>
                 </ul>
             </div>
         </div> -->
@@ -38,16 +38,16 @@
            </div>
            <div class="tips_wrap xa-message-tips-wrap">
                 <ul class="tips_ul">
-                    <li><span>接收消息数：</span>粉丝主动发送信息数量；</li>
+                    <li><span>接收消息数：</span>会员主动发送信息数量；</li>
                     <li><span>发送消息数：</span>回应菜单查阅、自动回复、人工回复、消息群发的次数总和；</li>
-                    <li><span>互动人数：</span>粉丝主动发送消息的人数；</li>
+                    <li><span>互动人数：</span>会员主动发送消息的人数；</li>
                     <li><span>互动次数：</span>接受消息数加上发送消息数的总和。</li>
                 </ul>
             </div>
         </div>
-        
+
         <div class="xui-ChartContent mb50">
-            <div class="panel-heading xui-bold">粉丝分析</div>
+            <div class="panel-heading xui-bold">会员分析</div>
             <div class="xui-fansEchart" id="fansTrend" data-ui-role="fansEchart" data-app="new_weixin" data-resource="fans_analysis" data-wrap-el=".xa-message-tips-wrap">
             </div>
             <div class="xui-boughtFansEchart" id="boughtFansTrend" data-ui-role="boughtFansEchart" data-app="new_weixin" data-resource="bought_fans_analysis" data-wrap-el=".xa-message-tips-wrap">
@@ -59,7 +59,7 @@
             <div class="panel-heading xui-bold">关键字分析</div>
             <div class="xui-ChartBody" id="keywordTrend" data-ui-role="keywordEchart" data-app="new_weixin" data-resource="keyword_analysis" data-wrap-el=".xa-message-tips-wrap" data-type="table">
            </div>
-        </div> 
+        </div>
     </div>
 </div>
 {% endblock %}

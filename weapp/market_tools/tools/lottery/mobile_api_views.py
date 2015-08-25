@@ -105,7 +105,11 @@ def __record_prize(webapp_user, lottery, member, prize, prize_position=0):
 	
 	#减积分
 	if lottery.expend_integral > 0:
-		webapp_user.consume_integral(lottery.expend_integral, u'参与抽奖，花费积分')
+		if webapp_user.integral_info['count'] > lottery.expend_integral:
+			expend_integral = lottery.expend_integral
+		else:
+			expend_integral = webapp_user.integral_info['count']
+		webapp_user.consume_integral(expend_integral, u'参与抽奖，花费积分')
 	
 	if not prize:
 		LotteryRecord.objects.create(owner=lottery.owner, member=member, lottery=lottery, lottery_name=lottery.name, prize_type=0, prize_level=0,

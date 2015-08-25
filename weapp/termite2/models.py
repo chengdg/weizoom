@@ -36,3 +36,32 @@ class Image(models.Model):
 		db_table = 'webapp_image'
 		verbose_name = '图片'
 		verbose_name_plural = '图片'
+
+
+
+class TemplateGlobalNavbar(models.Model):
+	'''
+	全局导航
+	'''
+	owner = models.ForeignKey(User, related_name='owned_template_global_navbar')
+	is_enable = models.BooleanField(default=False, verbose_name='是否启用')
+	content = models.TextField(default='', verbose_name='navbar的json字符串')
+	created_at = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+	updated_at = models.DateTimeField(auto_now=True, verbose_name="修改时间")
+
+	class Meta(object):
+		db_table = 'template_global_navbar'
+		verbose_name = '全局导航'
+		verbose_name_plural = '全局导航'
+
+
+	@staticmethod
+	def get_object(user_id):
+		if user_id > 0:
+			global_navbar, _ = TemplateGlobalNavbar.objects.get_or_create(
+				owner_id=user_id
+			)
+			return global_navbar
+		else:
+			return None
+
