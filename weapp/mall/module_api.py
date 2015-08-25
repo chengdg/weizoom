@@ -2968,25 +2968,30 @@ def get_member_product_info(request):
 	response = create_response(200)
 	# try:
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
-	webapp_owner_id = request.webapp_owner_id
-	member_id = request.member.id
-	product_id = request.GET.get('product_id', "")
-	if product_id:
-		collect = MemberProductWishlist.objects.filter(
-			owner_id=webapp_owner_id,
-			member_id=member_id,
-			product_id=product_id,
-			is_collect=True
-		)
-		if collect.count() > 0:
-			response.data.is_collect = 'true'
-		else:
-			response.data.is_collect = 'false'
 	response.data.count = shopping_cart_count
-	member_grade_id, discount = get_member_discount(request)
-	response.data.member_grade_id = member_grade_id
-	response.data.discount = discount
-
+	webapp_owner_id = request.webapp_owner_id
+	if request.member:
+		member_id = request.member.id
+		product_id = request.GET.get('product_id', "")
+		if product_id:
+			collect = MemberProductWishlist.objects.filter(
+				owner_id=webapp_owner_id,
+				member_id=member_id,
+				product_id=product_id,
+				is_collect=True
+			)
+			if collect.count() > 0:
+				response.data.is_collect = 'true'
+			else:
+				response.data.is_collect = 'false'
+		member_grade_id, discount = get_member_discount(request)
+		response.data.member_grade_id = member_grade_id
+		response.data.discount = discount
+	else:
+		if product_id:
+			response.data.is_collect = 'false'
+		response.data.member_grade_id = -1
+		response.data.discount = 100
 	# except:
 	# 	return create_response(500).get_response()
 	return response.get_response()
