@@ -65,8 +65,8 @@ def get_second_navs(request):
 			})
 	
 	NAV['navs'].append({
-		'name': 'apps',
-		'url': '/apps/',
+		'name': 'old_apps',
+		'url': '/old_apps/',
 		'title': u'<i class="icon icon-arrow-left"></i>返回百宝箱'
 	})
 	

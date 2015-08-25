@@ -10,7 +10,7 @@ from core import paginator
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
-import export
+from weixin2 import export
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -28,7 +28,7 @@ class voteParticipances(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
+			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': "votes",
 			'has_data': has_data,
 			'activity_id': request.GET['id']

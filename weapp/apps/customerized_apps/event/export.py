@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import events
+from apps.customerized_apps.event import events
 
 NAV = {
 	'section': u'',

@@ -10,7 +10,7 @@ from core import paginator
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
-import export
+from weixin2 import export
 from datetime import datetime
 
 FIRST_NAV = 'apps'
@@ -40,7 +40,7 @@ class feedbacks(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
+			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': "feedbacks",
 			'has_data': has_data
 		});

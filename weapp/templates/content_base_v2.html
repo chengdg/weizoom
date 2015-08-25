@@ -37,6 +37,7 @@
 					</li>
 					{% endfor %}
 				{% else %}
+
 					{% if 'manage_index'|satisfy_permission:request %}
 					<li>
 						<a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/mall2/outline/' title='首页'>首页</a>

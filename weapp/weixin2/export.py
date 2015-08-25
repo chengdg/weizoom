@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+from apps.customerized_apps import *
 
 UNBIND_ACCOUNT_FIRST_NAVS = [{
     'name': u'微信',
@@ -49,6 +51,11 @@ FIRST_NAVS = [{
     'name': u'百宝箱',
     'url': '/apps/',
     'inner_name': 'apps',
+    'permission': ''
+},{
+    'name': u'原百宝箱',
+    'url': '/old_apps/old/',
+    'inner_name': 'old_apps',
     'permission': ''
 }]
 
@@ -241,3 +248,21 @@ def get_mpuser_second_navs(request):
         second_navs = [MPUSER_NAV]
 
     return second_navs
+
+
+
+
+#
+# 百宝箱导航信息
+#
+import imp
+def get_customerized_apps(request):
+    dirname = 'apps/customerized_apps/'
+    apps_files = os.listdir(dirname)
+    customerized_apps_info = []
+    for apps_file in apps_files:
+        if os.path.isdir(dirname+apps_file+'/'):
+            if apps_file not in ['shengjing','shihuazhiye','weizoom_event','weshop','test1']:
+                fp, pathname, desc = imp.find_module('export', ['./apps/customerized_apps/'+apps_file,])
+                customerized_apps_info.append(imp.load_module('export', fp, pathname, desc).get_second_navs(request)[0])
+    return customerized_apps_info
