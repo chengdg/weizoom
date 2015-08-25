@@ -255,7 +255,7 @@ def step_impl(context, user, promotion_type):
 
 		if promotion['promotionTitle'] != '':
 			# 含有促销标题的
-			promotion['name'] = promotion['promotionTitle']
+			promotion['promotion_title'] = promotion['promotionTitle']
 
 		promotion['product_name'] = promotion['product']['name']
 		if promotion['product']['display_price_range'] != '':
@@ -293,7 +293,7 @@ def step_impl(context, user, promotion_type):
 				promotion['member_grade'] = MemberGrade.get_default_grade(webapp_id).name
 	expected = []
 	if context.table:
-			expected = [promotion.as_dict() for promotion in context.table]
+		expected = [promotion.as_dict() for promotion in context.table]
 	else:
 		expected = json.loads(context.text)
 
