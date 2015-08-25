@@ -21,7 +21,7 @@ from termite2 import pagecreater
 from termite import pagestore as pagestore_manager
 
 SHORTCUTS_TEXT={
-	'phone': u'手机号',
+	'phone': u'手机',
 	'name': u'姓名',
 	'email': u'邮箱'
 
