@@ -238,6 +238,13 @@ def step_impl(context, user, promotion_type):
 	actual = json.loads(response.content)['data']['items']
 
 	for promotion in actual:
+		#print("promotion: {}".format(promotion))
+		if promotion['status'] != u'已结束':
+			# 开启这2项操作(实际上在模板中，此时次2项不含hidden属性)。参考 flash_sales.html
+			promotion['actions'] = [u'详情', u'结束']
+		else:
+			promotion['actions'] = []
+
 		promotion['product_name'] = promotion['product']['name']
 		promotion['product_price'] = promotion['product']['display_price']
 		promotion['bar_code'] = promotion['product']['bar_code']
@@ -277,6 +284,7 @@ def step_impl(context, user, promotion_type):
 	else:
 		expected = json.loads(context.text)
 
+	# 转化feature中的格式，与actual一致
 	for promotion in expected:
 		if promotion_type == 'integral_sale':
 			promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
@@ -290,7 +298,6 @@ def step_impl(context, user, promotion_type):
 		if promotion.get('created_at'):
 			promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
 	bdd_util.assert_list(expected, actual)
-
 
 
 

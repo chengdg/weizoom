@@ -38,12 +38,12 @@ Background:
 	And jobs已添加商品
 		"""
 		[{
-			"name":"商品0",
-			"price":100.00,
+			"name": "商品0",
+			"price": 100.00,
 			"purchase_count":2
 		},{
-			"name":"商品1",
-			"price":80.50
+			"name": "商品1",
+			"price": 80.50
 		},{
 			"name": "商品2",
 			"is_enable_model": "启用规格",
@@ -57,20 +57,20 @@ Background:
 					},
 					"S": {
 						"price": 200.00,
-						"stock_typee: "无限"
+						"stock_typee": "无限"
 					}
 				}
 			}
 		},{
-			"name":"商品3",
-			"price":100.00,
+			"name": "商品3",
+			"price": 100.00,
 			"is_member_product": "on"
 		},{
-			"name":"商品4",
-			"price":100.00
+			"name": "商品4",
+			"price": 100.00
 		},{
-			"name":"商品5",
-			"price":100.00,
+			"name": "商品5",
+			"price": 100.00,
 			"is_member_product": "on"
 		},{
 			"name": "商品6",
@@ -135,7 +135,7 @@ Background:
 			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -146,7 +146,7 @@ Background:
 			"product_name":"商品5",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -161,7 +161,7 @@ Scenario: 0 选取起购数量大于1的商品，创建限时抢购活动（起�
 	#When jobs创建限时抢购活动
 	#新建限时抢购页面，商品查询弹窗中的数据列表中不存在'商品0'
 
-@wip.f1 @promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时，显示活动名称)
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -180,16 +180,16 @@ Scenario: 1 选取无规格商品，创建限时抢购活动(广告语为空时�
 		"""
 	Then jobs获取限时抢购活动列表
 		"""
-			[{
-				"name": "活动名称：商品1限时抢购",
-				"product_name":"商品1",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"进行中",
-				"start_date": "今天",
-				"end_date": "1天后",
-				"actions": ["详情","结束"]
-			}]
+		[{
+			"name": "商品1限时抢购",
+			"product_name": "商品1",
+			"product_price": 80.50,
+			"promotion_price": 80.00,
+			"status":"进行中",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"actions": ["详情","结束"]
+		}]
 		"""
 
 @promotion @promotionFlash
