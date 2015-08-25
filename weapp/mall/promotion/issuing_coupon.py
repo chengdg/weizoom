@@ -340,7 +340,8 @@ class IssuingCouponsFilter(resource.Resource):
     def api_get(request):
 
         filter_type = request.GET.get("filter_type", None)
-
+        #给会员发优惠券的人数
+        member_count = int(request.GET.get("member_count", "0"))
         if filter_type == "member":
             response = create_response(200)
             data = {}  # context
@@ -380,6 +381,8 @@ class IssuingCouponsFilter(resource.Resource):
                 cur_coupon_rule.remained_count = rule.remained_count
                 cur_coupon_rule.count = rule.remained_count
                 cur_coupon_rule.limit_counts = rule.limit_counts
+                cur_coupon_rule.has_remained = 1 if rule.remained_count >= member_count else 0
+                cur_coupon_rule.member_count = member_count #发放的人数
                 response.data.items.append(cur_coupon_rule)
 
             response.data.sortAttr = request.GET.get('sort_attr', '-created_at')

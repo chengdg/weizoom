@@ -183,9 +183,28 @@ class Project(resource.Resource):
 				response.errMsg = u'导入page失败'
 				return response.get_response()				
 		elif field == 'page_content':
-			Project.update_page_content(request)
-			#清除webapp page cache
-			Project.delete_webapp_page_cache(request.user.id, project_id)
+			project_id = request.GET.get('project_id', '')
+			if project_id.startswith('fake:'):
+				_, project_type, webapp_owner_id, page_id, mongodb_id = project_id.split(':')
+				pagestore = pagestore_manager.get_pagestore_by_type('mongo')
+				page_component = json.loads(request.POST['page_json'])
+				if mongodb_id == 'new':
+					page_component['is_new_created'] = True		
+				real_project_id = 'fake:%s:%s:%s' % (project_type, webapp_owner_id, page_id)			
+				pagestore.save_page(real_project_id, page_id, page_component)
+
+				if mongodb_id == 'new':
+					page = pagestore.get_page(real_project_id, page_id)
+					result_project_id = 'fake:%s:%s:%s:%s' % (project_type, webapp_owner_id, page_id, str(page['_id']))
+				else:
+					result_project_id = project_id
+				response = create_response(200)
+				response.data = result_project_id
+				return response.get_response()
+			else:
+				Project.update_page_content(request)
+				#清除webapp page cache
+				Project.delete_webapp_page_cache(request.user.id, project_id)
 		elif field == 'is_enable':
 			webapp_models.Project.objects.filter(id=project_id).update(is_enable=True)
 		else:

@@ -41,7 +41,6 @@ Feature: 经营报告-经营概况——概况数据
 
 
 	需求变更删除的部分
-		"""
 			二、店铺经营概况-综合
 				1、【会员复购率】：=∑(复购会员数/【下单会员】)*100% 
 					1）【复购会员数】=∑订单.买家个数[(订单.下单时间 in 查询区间) and (订单.来源="本店") and (订单.订单状态 in {待发货、已发货、已完成}) and (订单.订单编号[(订单.买家=该订单.买家) and (订单.下单时间<该订单.下单时间) and (订单.订单状态 in {待发货、已发货、已完成}) and (订单.来源 ='本店')].exist) 
@@ -91,8 +90,7 @@ Feature: 经营报告-经营概况——概况数据
 					备注：在查询区间内通过分享链接新增的会员数
 
 					"？"说明弹窗：通过分享链接新关注的会员数
-		"""
- 
+
 """
 
 
@@ -252,7 +250,7 @@ Background:
 		| memberID008 |  nokia |                       |                   | 直接搜索jobs公众账号 |                          |                                    |   2015-6-1 00:00  |   2015-6-1 00:00  |             关注             |    直接关注   |
 """
 
-@stats @wip.operation1
+@mall2 @stats @wip.operation1
 Scenario: 获取当日的经营概况
 	Given jobs登录系统
 	When jobs设置筛选日期
@@ -272,20 +270,7 @@ Scenario: 获取当日的经营概况
 			"buyer_count": 0
 		}
 		"""
-#		"""
-#		{
-#			"buyer_count": 0,
-#			"transaction_money": 0,
-#			"vis_price": "0.00",
-#			"transaction_orders": 0,
-#			"member_recommend_rate": "40.0%",
-#			"member_from_share_url_count": 2,
-#			"ori_qrcode_member_count": 0,
-#			"share_url_member_count": 2,
-#			"repeat_buying_member_rate": "0.0%",
-#			"member_from_qrcode_count": 0
-#		}
-#		"""
+
 
 
 @ignore 
@@ -356,7 +341,7 @@ Scenario: 1  经营概况：筛选日期，默认筛选日期当天；快速查�
 	#打印：？？
 
 
-@stats @wip.operation2
+@mall2 @stats @wip.operation2
 Scenario: 2  经营概况：综合
 	#consumer字段“*jack”这样带“*”代表非会员
 	When 微信用户批量消费jobs的商品
@@ -378,7 +363,7 @@ Scenario: 2  经营概况：综合
 			"products": [{
 				"name": "商品2",
 				"count": 2
-			}],
+			}]
 		}
 		"""
 	##下单会员：4（bill、tom、bill1、mary）;复购会员数：3（tom、bill、mary）
@@ -466,7 +451,7 @@ Scenario: 3  经营概况：销量
 			"products": [{
 				"name": "商品2",
 				"count": 2
-			}],
+			}]
 		}
 		"""
 

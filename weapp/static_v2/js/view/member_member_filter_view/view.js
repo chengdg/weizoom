@@ -28,17 +28,34 @@ W.view.member.memberFilterView = Backbone.View.extend({
         var firstPayStartDate = $('#first_pay_start_date').val();
         var firstPayEndDate = $('#first_pay_end_date').val();
         if (firstPayStartDate.length > 0 && firstPayEndDate.length == 0) {
-            W.getErrorHintView().show('请输入上次购买结束日期！');
+            W.getErrorHintView().show('请输入最后购买结束日期！');
             return false;
         }
         if (firstPayEndDate.length > 0 && firstPayStartDate.length == 0) {
-            W.getErrorHintView().show('请输入上次购买开始日期！');
+            W.getErrorHintView().show('请输入最后购买开始日期！');
             return false;
         }
         var start = new Date(firstPayStartDate.replace("-", "/").replace("-", "/"));
         var end = new Date(firstPayEndDate.replace("-", "/").replace("-", "/"));
         if ((firstPayStartDate.length > 0 || firstPayEndDate.length > 0) && start > end){
-            W.getErrorHintView().show('上次购买开始日期不能大于上次购买结束日期！');
+            W.getErrorHintView().show('最后购买开始日期不能大于最后购买结束日期！');
+            return false;
+        }
+
+        var firstMessageStartDate = $('#last_message_start_time').val();
+        var firstMessgeEndDate = $('#last_message_end_time').val();
+        if (firstMessageStartDate.length > 0 && firstMessgeEndDate.length == 0) {
+            W.getErrorHintView().show('请输入最后对话时间！');
+            return false;
+        }
+        if (firstMessgeEndDate.length > 0 && firstMessageStartDate.length == 0) {
+            W.getErrorHintView().show('请输入最后对话时间！');
+            return false;
+        }
+        var start = new Date(firstMessageStartDate.replace("-", "/").replace("-", "/"));
+        var end = new Date(firstMessgeEndDate.replace("-", "/").replace("-", "/"));
+        if ((firstMessageStartDate.length > 0 || firstMessgeEndDate.length > 0) && start > end){
+            W.getErrorHintView().show('最后最后对话时间开始时间不能大于最后对话时间结束时间！');
             return false;
         }
 
@@ -58,42 +75,88 @@ W.view.member.memberFilterView = Backbone.View.extend({
             W.getErrorHintView().show('关注开始日期不能大于关注结束日期！');
             return false;
         }
+        if ($('.m_unit_price').length == 2){
+            var mUnitPrice_1 = $('.m_unit_price')[0];
+            var mUnitPrice_2 = $('.m_unit_price')[1];
 
-        $('.m_unit_price').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (mUnitPrice_1.value.trim().length > 0 && mUnitPrice_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确客单价！');
                 return false;
             }
-        });
+            if (mUnitPrice_2.value.trim().length > 0 && mUnitPrice_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确客单价！');
+                return false;
+            }
 
-        $('.pay_money').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (isNaN(mUnitPrice_1.value.trim()) || isNaN(mUnitPrice_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确客单价！');
+                return false;
+            }
+        }
+
+        if ($('.pay_money').length == 2){
+            var payMoney_1 = $('.pay_money')[0];
+            var payMoney_2 = $('.pay_money')[1];
+
+            if (payMoney_1.value.trim().length > 0 && payMoney_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确消费总额！');
                 return false;
             }
-        });
+            if (payMoney_2.value.trim().length > 0 && payMoney_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确消费总额！');
+                return false;
+            }
 
-        $('.integral').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (isNaN(payMoney_1.value.trim()) || isNaN(payMoney_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确消费总额！');
+                return false;
+            }
+
+        }
+
+        if ($('.integral').length == 2){
+            var integral_1 = $('.integral')[0];
+            var integral_2 = $('.integral')[1];
+
+            if (integral_1.value.trim().length > 0 && integral_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确积分！');
                 return false;
             }
-        });
+            if (integral_2.value.trim().length > 0 && integral_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确积分！');
+                return false;
+            }
 
+            if (isNaN(integral_1.value.trim()) || isNaN(integral_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确积分！');
+                return false;
+            }
+
+        }
         //$('.friend_count').each(function(i, val){
          //   if (val.value.trim() && isNaN(val.value.trim())) {
          //       W.getErrorHintView().show('请输入正确好友数！');
          //       return false;
          //   }
         //});
+        if ($('.pay_times').length == 2){
+            var payTimes_1 =  $('.pay_times')[0];
+            var payTimes_2 =  $('.pay_times')[1];
 
-        $('.pay_times').each(function(i, val){
-            if (val.value.trim() && isNaN(val.value.trim())) {
+            if (payTimes_1.value.trim().length > 0 && payTimes_2.value.trim().length == 0){
                 W.getErrorHintView().show('请输入正确购买次数！');
                 return false;
             }
-        });
+            if (payTimes_2.value.trim().length > 0 && payTimes_1.value.trim().length == 0){
+                W.getErrorHintView().show('请输入正确购买次数！');
+                return false;
+            }
 
+            if (isNaN(payTimes_1.value.trim()) || isNaN(payTimes_2.value.trim())) {
+                W.getErrorHintView().show('请输入正确购买次数！');
+                return false;
+            }
+        }
 
         var dataView = this.options.dataView;
         var args = this.getFilterValue();
@@ -116,7 +179,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
             }
         });
         if (m_unit_price.length > 0) {
-            dataValue.push("unit_price:" + m_unit_price.join('-'));
+            dataValue.push("unit_price:" + m_unit_price.join('--'));
         }
         var pay_money = [];
         $('.pay_money').each(function(i, val){
@@ -126,7 +189,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
         });
 
         if (pay_money.length > 0) {
-            dataValue.push("pay_money:"+pay_money.join('-'))
+            dataValue.push("pay_money:"+pay_money.join('--'))
         }
         var integral = [];
         $('.integral').each(function(i, val){
@@ -153,7 +216,7 @@ W.view.member.memberFilterView = Backbone.View.extend({
             }
         });
         if (pay_times.length > 0) {
-            dataValue.push("pay_times:" + pay_times.join('-'))
+            dataValue.push("pay_times:" + pay_times.join('--'))
         }
 
         var firstPayStartDate = $('#first_pay_start_date').val();
@@ -168,6 +231,13 @@ W.view.member.memberFilterView = Backbone.View.extend({
         if (subStartDate && subEndDate) {
             dataValue.push("sub_date:"+ subStartDate+"--"+subEndDate)
         }
+
+        var messageStartDate = $('#last_message_start_time').val();
+        var messageEndDate = $('#last_message_end_time').val();
+        if (messageStartDate && messageEndDate) {
+            dataValue.push("last_message_time:"+ messageStartDate+"--"+messageEndDate)
+        }
+
 
         var args = [];
         var name = $('#name').val().trim();
@@ -232,11 +302,11 @@ W.view.member.memberFilterView = Backbone.View.extend({
         if ($('.more-filter').is(":hidden")){
             $('.more-filter').removeClass('hidden');
              $('.more-filter').show();
-             $('.xa-more-filter').text('>>切换到简单查询');
+             $('.xa-more-filter').html('<span class="mr20">>>收起</span>');
         } else {
             $('.more-filter').addClass('hidden');
             $('.more-filter').hide();
-            $('.xa-more-filter').text('>>切换到高级查询');
+            $('.xa-more-filter').html('<span  class="mr20">>>展开</span>');
         }
     },
     getTemplate: function() {
@@ -396,6 +466,8 @@ W.view.member.memberFilterView = Backbone.View.extend({
         $('.pay_times').val('');
         $('#status').val('-1');
         $('#source').val('-1');
+        $('#last_message_start_time').val('');
+        $('#last_message_end_time').val('');
     },
 
     onClickReset:function(){

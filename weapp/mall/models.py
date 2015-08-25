@@ -1096,6 +1096,9 @@ class CategoryHasProduct(models.Model):
 		Args:
 		  pos(int): 指定位置
 		"""
+		pos = int(pos)
+		if pos < 0 or pos >= MAX_INDEX:
+			raise IndexError('{} out of range [1, 65535)'.format(pos))
 		category_has_products = CategoryHasProduct.objects.filter(
 			category_id=self.category_id,
 			display_index=pos

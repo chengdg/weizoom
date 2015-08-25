@@ -4,6 +4,7 @@ __author__ = 'chuter'
 
 import json
 import urlparse
+import time
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
@@ -14,6 +15,7 @@ from core import paginator
 
 from modules.member.models import *
 from modules.member.integral import increase_member_integral
+from modules.member import module_api
 from apps.customerized_apps.shengjing.models import *
 
 from utils.string_util import byte_to_hex
@@ -27,6 +29,7 @@ from core.restful_url_route import *
 
 from market_tools.tools.member_qrcode import api_views as member_qrcode_api_views
 from core.restful_url_route import *
+from weixin2.models import get_opid_from_session
 
 
 COUNT_PER_PAGE = 20
@@ -78,7 +81,6 @@ def __get_request_members_list(request):
 			if key == 'name':
 				query_hex = byte_to_hex(value)
 				filter_data_args["username_hexstr__contains"] = query_hex
-			print  filter_data_args
 			if key == 'grade_id':
 				filter_data_args["grade_id"] = value
 
@@ -94,13 +96,16 @@ def __get_request_members_list(request):
 					filter_data_args["is_subscribed"] = False
 
 			if key == 'source':
-				if value in ['-1', 0]:
-					pass
+				if value in ['-1']:
+					filter_data_args['source__in'] = [0,-1,1,2]
+				elif value in ['0']:
+					filter_data_args['source__in'] = [0,-1]
 				else:
 					filter_data_args["source"] = value
+
 			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price']:
 				if value.find('-') > -1:
-					val1,val2 = value.split('-')
+					val1,val2 = value.split('--')
 					if float(val1) > float(val2):
 						filter_data_args['%s__gte' % key] = float(val2)
 						filter_data_args['%s__lte' % key] = float(val1)
@@ -117,11 +122,28 @@ def __get_request_members_list(request):
 						filter_data_args['last_pay_time__gte'] = val1
 						filter_data_args['last_pay_time__lte'] =  val2
 					elif key == 'sub_date':
+
 						filter_data_args['created_at__gte'] = val1
 						filter_data_args['created_at__lte'] = val2
 					else:
 						filter_data_args['integral__gte'] = val1
 						filter_data_args['integral__lte'] = val2
+
+			if key  == 'last_message_time':
+				val1,val2 = value.split('--')
+				session_filter = {}
+				session_filter['mpuser__owner_id'] = request.manager.id
+				session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
+				session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
+
+				opids = get_opid_from_session(session_filter)
+				session_member_ids = module_api.get_member_ids_by_opid(opids)
+				if filter_data_args.has_key('id__in'):
+					member_ids = filter_data_args['id__in']
+					member_ids = list(set(member_ids).intersection(set(session_member_ids)))
+					filter_data_args['id__in'] = member_ids
+				else:
+					filter_data_args['id__in'] = session_member_ids
 
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 	total_count = members.count()
@@ -288,6 +310,13 @@ def _get_tags_json(request):
 	return tags_json
 
 def __build_follow_member_basic_json(follow_member, member_id):
+	father_member = MemberFollowRelation.get_father_member(follow_member.id)
+	if father_member:
+		father_name = father_member.username_for_html
+		father_id = father_member.id
+	else:
+		father_name = ''
+		father_id = ''
 
 	return {
 		'id': follow_member.id,
@@ -300,6 +329,8 @@ def __build_follow_member_basic_json(follow_member, member_id):
 		'is_fans': MemberFollowRelation.is_fan(member_id, follow_member.id),
 		'is_father': MemberFollowRelation.is_father(member_id, follow_member.id),
 		'pay_money': '%.2f' % follow_member.pay_money,
+		'father_name': father_name,
+		'father_id': father_id
 	}
 
 def __build_member_has_tags_json(member):
@@ -347,6 +378,7 @@ def get_member_follow_relations(request):
 	response.data = {
 		'items': return_follow_members_json_array,
 		'pageinfo': paginator.to_dict(pageinfo),
+		'only_fans':only_fans
 	}
 	return response.get_response()
 
@@ -485,12 +517,24 @@ def batch_update_grade(request):
 	webapp_id = request.user_profile.webapp_id
 	grade_id = request.POST.get('grade_id', None)
 	post_ids = request.POST.get('ids', None)
-
 	grade = MemberGrade.objects.get(id=grade_id)
+
+	status = request.POST.get('update_status', 'selected')
+	if status == 'all':
+		filter_value = request.POST.get('filter_value', '')
+		request.GET = request.GET.copy()
+		request.GET['filter_value'] = filter_value
+		request.GET['count_per_page'] = 999999999
+		_, request_members, _ = __get_request_members_list(request)
+		post_ids = [m.id for m in request_members]
+	else:
+		post_ids = post_ids.split('-')
+
 	if grade.webapp_id == webapp_id and post_ids:
-		Member.objects.filter(id__in=post_ids.split('-')).update(grade=grade)
+		Member.objects.filter(id__in=post_ids).update(grade=grade)
 
 	response = create_response(200)
+	response.data.post_ids = post_ids
 	return response.get_response()
 
 
@@ -504,9 +548,19 @@ def batch_update_tag(request):
 	tag_id = request.POST.get('tag_id', None)
 	post_ids = request.POST.get('ids', None)
 
+	status = request.POST.get('update_status', 'selected')
+	if status == 'all':
+		filter_value = request.POST.get('filter_value', '')
+		request.GET = request.GET.copy()
+		request.GET['filter_value'] = filter_value
+		request.GET['count_per_page'] = 999999999
+		_, request_members, _ = __get_request_members_list(request)
+		post_ids = [m.id for m in request_members]
+	else:
+		post_ids = post_ids.split('-')
 	tag = MemberTag.objects.get(id=tag_id)
 	if tag.webapp_id == webapp_id and post_ids:
-		MemberHasTag.add_members_tag(tag_id, post_ids.split('-'))
+		MemberHasTag.add_members_tag(tag_id, post_ids)
 
 	response = create_response(200)
 	return response.get_response()

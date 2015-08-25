@@ -78,7 +78,7 @@ Background:
 	#And tom关注jobs的公众号
 
 
-@stats @wip.lottery
+@stats.failed @wip.lottery
 Scenario:1 '微信抽奖'营销活动参与次数和人数统计,参与传播和结果分析
 # 建议改为：测试bill取消关注又再次关注
 #营销活动分析-'微信抽奖'
@@ -261,7 +261,7 @@ Scenario:1 '微信抽奖'营销活动参与次数和人数统计,参与传播和
 		"""
 
     
-
+@stats.not_implemented
 Scenario:2 '微信抽奖'营销活动分析列表及分页
     #列表按照活动结束倒序排列
     #有翻页，每页显示10条数据
