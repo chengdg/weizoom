@@ -34,7 +34,7 @@ Scenario: 添加支付方式:微信支付
 	Then bill无法获得支付方式'微信支付'
 
 
-@mall @mall.pay_interface @mall2
+@mall @mall.pay_interface @mall2 @ztq
 Scenario: 添加支付方式:支付宝支付
 	Jobs添加"支付宝支付"后
 	1. jobs能获取添加的支付宝支付
