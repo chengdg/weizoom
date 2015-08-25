@@ -16,8 +16,8 @@ W.ValidaterClass = function() {
             //字母
             type: 'regex',
             extract: 'value',
-            regex: /^[\u4e00-\u9fa5a-zA-Z0-9]+$/g,
-            errorHint: '格式不正确，请输入汉字、字母、数字'
+            regex: /^[^._$]+$/g,
+            errorHint: '格式不正确，请输入除".","_"和"$"以外的字符'
         },
         'require-letter': {
             //字母

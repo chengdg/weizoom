@@ -56,7 +56,11 @@ W.component.appkit.TextList = W.component.Component.extend({
             minItemLength: 0,
             isUserProperty: true,
             default: []
-        }]
+        },{
+			name: 'is_mandatory',
+			isUserProperty: true,
+			default: 'true'
+		}]
 	}],
 
 	propertyChangeHandlers: {
