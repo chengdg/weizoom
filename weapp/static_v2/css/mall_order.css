@@ -301,7 +301,7 @@
     display: inline-block;
     width: 13px;
     height: 13px;
-    margin-bottom: 1px;
+    margin-bottom: -2px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
