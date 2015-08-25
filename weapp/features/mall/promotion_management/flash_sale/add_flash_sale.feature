@@ -255,7 +255,7 @@ Scenario: 3 选取参与会员折扣的商品，创建限时抢购活动(限时�
 		}]
 		"""
 
-@wip.f4 @promotion @promotionFlash
+@mall2 @wip.f4 @promotion @promotionFlash
 Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 	Given jobs登录系统
 	When jobs创建限时抢购活动
@@ -286,34 +286,35 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 		}]
 		"""
 
-@promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢购活动
 	Given jobs登录系统
 	When jobs创建限时抢购活动
 		"""
-			[{
-				"name": "商品5限时抢购",
-				"promotion_slogan":"商品5抢购",
-				"start_date": "明天",
-				"end_date": "3天后",
-				"product_name":"商品5",
-				"member_grade": "银牌会员",
-				"count_per_purchase": 1,
-				"promotion_price": 80.00
-			}]
+		[{
+			"name": "商品5限时抢购",
+			"promotion_slogan": "商品5抢购",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"product_name": "商品5",
+			"member_grade": "银牌会员",
+			"count_per_purchase": 1,
+			"promotion_price": 80.00
+		}]
 		"""
 	Then jobs获取限时抢购活动列表
+		# 页面显示： 广告语：商品5抢购
 		"""
-			[{
-				"name": "广告语：商品5抢购",
-				"product_name":"商品5",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"未开始",
-				"start_date": "明天",
-				"end_date": "3天后",
-				"actions": ["详情","结束"]
-			}]
+		[{
+			"name": "商品5抢购",
+			"product_name": "商品5",
+			"product_price": 100.00,
+			"promotion_price": 80.00,
+			"status": "未开始",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"actions": ["详情","结束"]
+		}]
 		"""
 
 @promotion @promotionFlash @ui
