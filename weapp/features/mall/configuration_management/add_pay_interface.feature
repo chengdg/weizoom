@@ -102,8 +102,13 @@ Scenario: 添加支付方式:货到付款
 		"""
 
 
+<<<<<<< HEAD
 @mall @mall.pay_interface @mall2
 Scenario:卖家未获得支付方式： 微众卡支付
+=======
+@mall @mall.pay_interface @mall2 @wip.pay_interface
+Scenario:卖家未获得支付方式：微众卡支付
+>>>>>>> origin/mall
 
 	Given jobs登录系统
 	Then jobs能获得支付方式
