@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from datetime import datetime
 import os
 
+from django.conf import settings
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from core import resource
@@ -123,19 +124,14 @@ class surveyParticipances_Export(resource.Resource):
 		"""
 		响应API GET
 		"""
-		print '========== enter ============'
 		app_name = 'survey'
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
-		print 'export_id',export_id
-
 
 		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		export_file_dir = '/apps/customerized_apps/survey/export/'
-		export_file_path = os.path.join(export_file_dir,excel_file_name)
+		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		import xlwt
-
 		try:
 			data = app_models.surveyParticipance.objects(belong_to=export_id)
 			fields_raw = []
@@ -171,7 +167,6 @@ class surveyParticipances_Export(resource.Resource):
 					else:
 						fields_shortcuts.append(item)
 			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
-			print fields_raw
 
 
 			for field in fields_raw:
@@ -184,8 +179,7 @@ class surveyParticipances_Export(resource.Resource):
 				else:
 					fields_pure.append(field)
 
-			#数据表
-			#顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
+			#数据表,顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 			num = 0
 			for record in data:
 				export_record={}
@@ -223,27 +217,31 @@ class surveyParticipances_Export(resource.Resource):
 
 				export_data.append(export_record)
 
-			##写Excel
+			#workboos,worksheet
 			wb = wb = xlwt.Workbook(encoding='utf-8')
 			ws = wb.add_sheet('id%s'%export_id)
 			header_style = xlwt.XFStyle()
 
-			#字段
+			#fields
 			row = col = 0
 			for h in fields_pure:
 				ws.write(row,col,h)
 				col += 1
-			#数据
+
+			#data
 			row = 0
 			lens = len(export_data[0])
 			for record in export_data:
 				row +=1
 				for col in range(lens):
 					ws.write(row,col,record[col])
-
-			wb.save(export_file_path)
+			try:
+				wb.save(export_file_path)
+			except:
+				print 'EXPORT EXCEL FILE SAVE ERROR'
+				print '/static/upload/%s'%excel_file_name
 			response = create_response(200)
-			response.data = {'download_path':export_file_path,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 
