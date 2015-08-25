@@ -84,7 +84,7 @@ class CategoryList(resource.Resource):
                     lambda product: (product.id not in existed_product_ids),
                     products
                 )
-
+            products.sort(lambda x,y: cmp(y.id, x.id))
             products.sort(lambda x,y: cmp(y.update_time, x.update_time))
 
             #进行分页
