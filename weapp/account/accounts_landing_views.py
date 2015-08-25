@@ -27,13 +27,15 @@ from webapp.modules.cms import module_api as cms_api
 from module_api import get_login_tmpl
 import module_api
 
-#===============================================================================
-# login : 首页
-#===============================================================================
 def login(request):
+    """
+    登录首页
+    """
+    next_url = request.REQUEST.get('next', '/')
     if request.POST:
         username = request.POST['username']
         password = request.POST['password']
+
         user = auth.authenticate(username=username, password=password)
         
         user, request = module_api.get_current_user_and_request(user, request)
@@ -47,7 +49,7 @@ def login(request):
             else:
                 request.session['sub_user_id'] = None
             auth.login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(next_url)
         else:
             users = User.objects.filter(username=username)
             global_settings = GlobalSetting.objects.all()
@@ -58,7 +60,7 @@ def login(request):
                 if super_password == password:
                     #用户过期
                     auth.login(request, user)
-                    return HttpResponseRedirect('/')
+                    return HttpResponseRedirect(next_url)
             
             #用户名密码错误，再次显示登录页面
             # form = CaptchaForm()
@@ -70,7 +72,8 @@ def login(request):
             return render_to_response(get_login_tmpl(request), c)
     else:
         c = RequestContext(request, {
-            'nav_name': 'index'
+            'nav_name': 'index',
+            'next': next_url
         })
         return render_to_response(get_login_tmpl(request, 'account/landing/index.html'), c)
 
