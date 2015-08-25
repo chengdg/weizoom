@@ -69,7 +69,7 @@
 }
 .wui-template-globalNavbar .xui-subMenuContainer{
     position: absolute;
-    bottom: 50px;
+    bottom: 55px;
     left: 50%;
     margin-left: -35px;
     /*margin-left要换算*/

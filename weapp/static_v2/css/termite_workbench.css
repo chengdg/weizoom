@@ -1230,6 +1230,7 @@ button.xui-removeImageButton{
 .xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control{
 	width: 378px;
 	padding-top: 10px;
+	padding-bottom: 5px;
 }
 .xui-propertyView-navbar-navs .xui-link{
 	display: block;
