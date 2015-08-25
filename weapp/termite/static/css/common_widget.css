@@ -106,15 +106,14 @@
     padding-left: 10px;
     padding-right: 10px;
     text-align: center;
-    /*border-bottom: 1px solid #CBCBCB;*/
-}
-.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li:last-child{
-    border:none;
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li a{
     color: #333;
     display: block;
     border-bottom: 1px solid #CBCBCB;
+}
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li:last-child a{
+    border:none;
 }
 
 /*侧滑导航*/
