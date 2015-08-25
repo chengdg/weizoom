@@ -239,12 +239,11 @@ def step_impl(context, user, promotion_type):
 
 	# 实际数据
 	for promotion in actual:
-		print("promotion: {}".format(promotion))
 		if promotion['status'] != u'已结束':
 			# 开启这2项操作(实际上在模板中，此时次2项不含hidden属性)。参考 flash_sales.html
 			promotion['actions'] = [u'详情', u'结束']
 		else:
-			promotion['actions'] = []
+			promotion['actions'] = [u'详情', u'删除']
 
 		if promotion['promotionTitle'] != '':
 			# 含有促销标题的
