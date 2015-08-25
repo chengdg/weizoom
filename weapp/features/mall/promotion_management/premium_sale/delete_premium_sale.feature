@@ -99,7 +99,10 @@ Background:
 				"status":"已结束",
 				"start_date": "今天",
 				"end_date": "2天后",
-				"actions": ["详情","删除"]
+				"actions": ["详情","删除"],
+				"premium_products": [{
+					"name": "赠品1"
+				}]
 			},{
 				"name": "活动名称:商品3买赠",
 				"product_name": "商品3",
@@ -107,7 +110,10 @@ Background:
 				"status":"已结束",
 				"start_date": "2天前",
 				"end_date": "1天前",
-				"actions": ["详情","删除"]
+				"actions": ["详情","删除"],
+				"premium_products": [{
+					"name": "赠品1"
+				}]
 			},{
 				"name": "活动名称:商品2买赠",
 				"product_name": "商品2",
@@ -115,7 +121,10 @@ Background:
 				"status":"进行中",
 				"start_date": "今天",
 				"end_date": "3天后",
-				"actions": ["详情","结束"]
+				"actions": ["详情","结束"],
+				"premium_products": [{
+					"name": "赠品1"
+				}]
 			},{
 				"name": "活动名称:商品1买赠",
 				"product_name": "商品1",
@@ -123,11 +132,14 @@ Background:
 				"status":"未开始",
 				"start_date": "明天",
 				"end_date": "3天后",
-				"actions": ["详情","结束"]
+				"actions": ["详情","结束"],
+				"premium_products": [{
+					"name": "赠品1"
+				}]
 			}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium @jz
 Scenario: 1 删除状态为'已结束'的买赠活动
 	Given jobs登录系统
 	When jobs'删除'促销活动'活动名称：商品3买赠'
@@ -144,7 +156,7 @@ Scenario: 1 删除状态为'已结束'的买赠活动
 			},{
 				"name": "活动名称:商品2买赠",
 				"product_name": "商品2",
-				"product_price":"100.00~200.00",
+				"product_price":"100.0 ~ 200.0",
 				"status":"进行中",
 				"start_date": "今天",
 				"end_date": "3天后",
@@ -160,7 +172,7 @@ Scenario: 1 删除状态为'已结束'的买赠活动
 			}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium
 Scenario: 2 批量删除买赠活动（不包括未结束状态的）
 	Given jobs登录系统
 	When jobs批量'删除'促销活动
@@ -196,7 +208,7 @@ Scenario: 2 批量删除买赠活动（不包括未结束状态的）
 			},{
 				"name": "活动名称:商品2买赠",
 				"product_name": "商品2",
-				"product_price":"100.00~200.00",
+				"product_price":"100.0 ~ 200.0",
 				"status":"进行中",
 				"start_date": "今天",
 				"end_date": "3天后",

@@ -3,11 +3,8 @@ from __future__ import absolute_import
 import copy
 import json, time
 from behave import when, then, given
-import logging
 from mall.models import ProductCategory
 from webapp.models import WebApp
-
-logger = logging.getLogger('console')
 
 from mall import models as mall_models  # 注意不要覆盖此module
 from test import bdd_util

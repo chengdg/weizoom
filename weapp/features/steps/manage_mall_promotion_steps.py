@@ -141,8 +141,8 @@ def step_create_premium_sale(context, user):
 						db_product = ProductFactory(name=product_name)
 						premium_products.append({
 								'id': db_product.id,
-								'count': premium_product['count'],
-								'unit': premium_product['unit'] if premium_product.has_key('unit') else ''
+								'count': premium_product.get('count', 1),
+								'unit': premium_product.get('unit', '')
 						})
 
 				data = {
@@ -153,7 +153,7 @@ def step_create_premium_sale(context, user):
 						'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
 						'products': json.dumps(product_ids),
 
-						'count': promotion['count'],
+						'count': promotion.get('count', 1),
 						'is_enable_cycle_mode': "true" if promotion.get('is_enable_cycle_mode', False) else "false",
 						'premium_products': json.dumps(premium_products)
 				}

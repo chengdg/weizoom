@@ -35,12 +35,6 @@ def process_custom_model(custom_model_str):
 
 
 def extract_product_model(request):
-    # logger.debug("------------ %(func)s - customModels:%(value)s ----------",
-    #              {
-    #                 'func': 'extract_product_model',
-    #                 'value': request.POST.get('customModels')
-    #              })
-    # # pdb.set_trace()
     is_use_custom_models = request.POST.get("is_use_custom_model", '') == u'true'
 
     use_custom_models = json.loads(request.POST.get('customModels', '[]'))
