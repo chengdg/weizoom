@@ -15,6 +15,7 @@
     display: box;
     display: -webkit-box;
     display: -moz-box;
+    z-index: 100;
 }
 .wui-template-globalNavbar .xui-bg{
     background: url(/static_v2/img/termite2/nav.png) no-repeat;
