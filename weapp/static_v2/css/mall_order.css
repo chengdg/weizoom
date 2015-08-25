@@ -310,7 +310,7 @@
     display: inline-block;
     width: 18px;
     height: 17px;
-    margin-bottom: -4px;
+    margin-bottom: 1px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
