@@ -476,21 +476,24 @@ select{
     top: 0;
     width: 190px;
 }
-.xui-mainPanel .xui-sideBar-votes,.xui-mainPanel .xui-sideBar-events,.xui-mainPanel .xui-sideBar-surveies,.xui-mainPanel .xui-sideBar-feedbacks{
+.xui-mainPanel .xui-sideBar-votes,.xui-mainPanel .xui-sideBar-events,.xui-mainPanel .xui-sideBar-surveies,.xui-mainPanel .xui-sideBar-feedbacks,.xui-mainPanel .xui-sideBar-lotteries{
 	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
 	background-repeat: no-repeat;
 }
 .xui-mainPanel .xui-sideBar-votes{
-	background-position: 18px -85px;
+	background-position: 17px -85px;
 }
 .xui-mainPanel .xui-sideBar-events{
-	background-position: 18px 2px;
+	background-position: 17px 2px;
 }
 .xui-mainPanel .xui-sideBar-surveies{
-	background-position: 18px -19px;
+	background-position: 17px -19px;
 }
 .xui-mainPanel .xui-sideBar-feedbacks{
-	background-position: 18px -63px;
+	background-position: 17px -63px;
+}
+.xui-mainPanel .xui-sideBar-lotteries{
+	background-position: 17px -42px;
 }
 .xui-mainPanel .xui-sideBar-realtime_messages{
 	background-position: -48px -141px;

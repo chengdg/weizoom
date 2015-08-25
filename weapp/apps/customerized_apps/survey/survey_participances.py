@@ -167,7 +167,6 @@ class surveyParticipances_Export(resource.Resource):
 					else:
 						fields_shortcuts.append(item)
 			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
-			print fields_raw
 
 
 			for field in fields_raw:
@@ -180,8 +179,7 @@ class surveyParticipances_Export(resource.Resource):
 				else:
 					fields_pure.append(field)
 
-			#数据表
-			#顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
+			#数据表,顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 			num = 0
 			for record in data:
 				export_record={}
@@ -219,17 +217,18 @@ class surveyParticipances_Export(resource.Resource):
 
 				export_data.append(export_record)
 
-			##写Excel
+			#workboos,worksheet
 			wb = wb = xlwt.Workbook(encoding='utf-8')
 			ws = wb.add_sheet('id%s'%export_id)
 			header_style = xlwt.XFStyle()
 
-			#字段
+			#fields
 			row = col = 0
 			for h in fields_pure:
 				ws.write(row,col,h)
 				col += 1
-			#数据
+
+			#data
 			row = 0
 			lens = len(export_data[0])
 			for record in export_data:
@@ -239,7 +238,7 @@ class surveyParticipances_Export(resource.Resource):
 			try:
 				wb.save(export_file_path)
 			except:
-				print 'SAVE ERROR'
+				print 'EXPORT EXCEL FILE SAVE ERROR'
 				print '/static/upload/%s'%excel_file_name
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
