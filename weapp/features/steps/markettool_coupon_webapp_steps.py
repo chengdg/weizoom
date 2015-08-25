@@ -3,6 +3,13 @@ import json
 from behave import then
 from test import bdd_util
 
+def __sort(dict_array):
+    if len(dict_array) > 0 and not type(dict_array[0]) == dict:
+        dict_array = sorted(dict_array, key=lambda x:x.coupon_id)
+    else:
+        dict_array = sorted(dict_array, key=lambda x:x['coupon_id'])
+    return dict_array
+
 
 @then(u"{webapp_user_name}能获得webapp优惠券列表")
 def step_impl(context, webapp_user_name):
@@ -20,9 +27,14 @@ def step_impl(context, webapp_user_name):
         coupon.money = coupon.money
 
     expected = json.loads(context.text)
+    actual = __sort(actual)
+    expected = __sort(expected)
+
     # print("*"*40, "get_webapp_coupon", "*"*40)
     # from pprint(import pprint)
     # pprint(expected)
     # pprint(coupons)
     # print("*"*100)
     bdd_util.assert_list(expected, actual)
+
+
