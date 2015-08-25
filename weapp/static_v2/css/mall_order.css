@@ -325,6 +325,7 @@
     background-size: 100%;
 }
 .xui-buyerHintDropBox {
+    color:#666;
     border: 1px solid #d6d4d1;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(214, 212, 209, 0.7);
