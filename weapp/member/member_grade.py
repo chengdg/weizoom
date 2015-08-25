@@ -3,7 +3,6 @@ import json
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 
 from core import resource
@@ -41,18 +40,19 @@ class MemberGradeList(resource.Resource):
 
     @login_required
     def api_post(request):
-
         post_grades = json.loads(request.POST.get('grades', []))
         if not post_grades:
-            return HttpResponseRedirect('/mall2/member_grade_list/')
+            response = create_response(500)
+            return response.get_response()
 
         webapp_id = request.user_profile.webapp_id
         original_member_grades = MemberGrade.get_all_grades_list(webapp_id)
         original_member_grade_ids = [grade.id for grade in original_member_grades]
         default_grade = MemberGrade.get_default_grade(webapp_id)
 
-        is_all_conditions = request.POST.get('is_all_conditions', '0')
-        IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=int(is_all_conditions))
+        tmp_is_all_conditions = request.POST.get('is_all_conditions', '0')
+        is_all_conditions = True if tmp_is_all_conditions == '1' else False
+        IntegralStrategySttings.objects.filter(webapp_id=webapp_id).update(is_all_conditions=is_all_conditions)
 
         post_ids = []
         for grade in post_grades:
@@ -161,3 +161,4 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     if is_change:
         Member.objects.filter(id=member.id).update(grade=new_grade)
     return is_change
+

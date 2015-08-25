@@ -43,7 +43,14 @@ Copyright (c) 2011-2012 Weizoom Inc
                     this.$button = $('<a href="'+url+'">关注我们可查看账户积分、红包、优惠券等！<i class="xui-icon xui-icon-rightarrow"></i></a>');
                 }
                 this.$el.html(this.$button);
-                height = this.setting.isShowCover(this) ? '100%' : '60px';
+                if($('.xa-page')){
+                    $('.xa-page').css('padding-top','40px');
+                }
+                //编辑订单页的布局因为配合iscroll滚动所以使用了绝对定位脱离了page，因而单独处理
+                if($('xa-editOrderPage')){
+                    $('#wrapper').css('top','40px');
+                }
+                height = this.setting.isShowCover(this) ? '100%' : '40px';
             }else {
                 height = this.setting.isShowCover(this) ? '100%' : '0px';
             }
@@ -70,5 +77,6 @@ Copyright (c) 2011-2012 Weizoom Inc
     	$('[data-ui-role="attentionAlert"]').each(function() {
     		$(this).attentionAlert();
     	});
+
 	})
 })(Zepto);

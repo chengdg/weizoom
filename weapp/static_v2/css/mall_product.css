@@ -835,7 +835,7 @@
 	background-color: #666666;
 	position: relative;
 	top:16px;
-	left:42px;
+	left:57px;
 
 }
 .xui-procateCategoriesPage .xui-deleteCategory{
@@ -859,53 +859,50 @@
   
 }
 
-
+.xui-procateCategoriesPage .table>tbody>tr>td,
+.xui-procateCategoriesPage .table>tbody>tr>th,
+.xui-procateCategoriesPage .table>thead>tr>th{
+	padding: 0;
+}
 .xui-procateCategoriesPage .table-bordered>tbody>tr>td{
 	text-align: center;
 }
 .xui-procateCategoriesPage .table > thead > tr > th:nth-child(1){
 	text-align: left;
-	width: 442px;
 	padding-left: 44px;
+	/*width:415px;*/
 }
-.xui-procateCategoriesPage .table > thead > tr > th:nth-child(2){
-	width: 118px;
+/*.xui-procateCategoriesPage .table > thead > tr > th:nth-child(2),
+.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(2){
+	width: 110px;
 }
-.xui-procateCategoriesPage .table > thead > tr > th:nth-child(3){
-	width: 88px;
+.xui-procateCategoriesPage .table > thead > tr > th:nth-child(3),
+.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(3){
+	width: 80px;
 }
-.xui-procateCategoriesPage .table > thead > tr > th:nth-child(4){
-	width: 84px;
+.xui-procateCategoriesPage .table > thead > tr > th:nth-child(4),
+.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(4){
+	width: 75px;
 }
-.xui-procateCategoriesPage .table > thead > tr > th:nth-child(5){
-	width: 111px;
+.xui-procateCategoriesPage .table > thead > tr > th:nth-child(5),
+.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(5){
+	width: 75px;
 }
-.xui-procateCategoriesPage .table > thead > tr > th:nth-child(6){
-	width: 106px;
-}
+.xui-procateCategoriesPage .table > thead > tr > th:nth-child(6),
+.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(6){
+	width: 110px;
+}*/
 .xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(1){
 	text-align:left;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
-	width:456px;
+	/*width:415px;*/
 	padding-left: 44px;
 
 }
-.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(2){
-	width:120px;
-}
-.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(3){
-	width:90px;
-}
 .xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(4){
-	width:85px;
-}
-.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(5){
-	width:180px;
-}
-.xui-procateCategoriesPage .table-bordered>tbody>tr>td:nth-child(6){
-	width:108px;
+	padding:4px 15px;
 }
 
 

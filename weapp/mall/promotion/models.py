@@ -95,11 +95,13 @@ class Promotion(models.Model):
 		if start_date <= now and end_date > now and self.status == PROMOTION_STATUS_NOT_START:
 			# 未开始状态,但是时间已经再开始,由于定时任务尚未执行
 			self.status = PROMOTION_STATUS_STARTED
+			self.save()
 		elif end_date <= now and (self.status == PROMOTION_STATUS_NOT_START or\
 			self.status == PROMOTION_STATUS_STARTED or self.status == PROMOTION_STATUS_DISABLE):
 			# 未开始,进行中状态,但是时间到期了,由于定时任务尚未执行
 			# 已失效状态,优惠券需求要置为已过期
 			self.status = PROMOTION_STATUS_FINISHED
+			self.save()
 
 	@property
 	def status_name(self):

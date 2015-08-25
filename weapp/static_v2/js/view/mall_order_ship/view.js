@@ -40,74 +40,78 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
             var logistics = $('select.ua-logistics').val();
     		var logisticsOrderId = $('input[name="logistics_order_id"]').val().replace(/(^\s*)|(\s*$)/g, "");
             var leaderName = $('input[name="leader_name"]').val();
+            
     		$el.bottonLoading({status: 'show'});
 
             // 是否需要物流
             var isNeedLogistics = $('[name="is_need_logistics"]:checked').val();
             if(isNeedLogistics === '0'){
+                logistics = '';
+                logisticsOrderId = '';
+
                 // 不需要物流
                 // 向order发送finish
-                var args = {
-                    'order_id': this.orderId,
-                    'action': 'finish'
-                }
-                //window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=finish';
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-                        $(".xa-shipDropBox").hide();
-                        if($('[data-ui-role="advanced-table"]').length>0)
-                        {
-                            $('[data-ui-role="advanced-table"]').data('view').reload();
-                        }
+                // var args = {
+                //     'order_id': this.orderId,
+                //     'action': 'finish'
+                // }
+                // //window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=finish';
+                // W.getApi().call({
+                //     method: 'post',
+                //     app: 'mall2',
+                //     resource: 'order',
+                //     args: args,
+                //     success: function(data) {
+                //         $(".xa-shipDropBox").hide();
+                //         if($('[data-ui-role="advanced-table"]').length>0)
+                //         {
+                //             $('[data-ui-role="advanced-table"]').data('view').reload();
+                //         }
 
-                        else
-                        {
-                            window.location.reload();
-                        }
-                    },
-                    error: function() {
-                    }
-                })
+                //         else
+                //         {
+                //             window.location.reload();
+                //         }
+                //     },
+                //     error: function() {
+                //     }
+                // })
 
-            }else{
+            }//else{
                     // 需要物流
                     // 向order_deliver发送信息
-                    var args = {
-                        'order_id': this.orderId,
-                        'express_company_name': logistics,
-                        'express_number': logisticsOrderId,
-                        'leader_name': leaderName,
-                        'is_update_express': isUpdateExpress
+            var args = {
+                'order_id': this.orderId,
+                'express_company_name': logistics,
+                'express_number': logisticsOrderId,
+                'leader_name': leaderName,
+                'is_update_express': isUpdateExpress
+            }
+
+            W.getApi().call({
+                method: 'post',
+                app: 'mall2',
+                resource: 'delivery',
+                args: args,
+                success: function(data) {
+                    $(".xa-shipDropBox").hide();
+                    if($('[data-ui-role="advanced-table"]').length>0)
+                    {
+                        $('[data-ui-role="advanced-table"]').data('view').reload();
                     }
 
-                    W.getApi().call({
-                        method: 'post',
-                        app: 'mall2',
-                        resource: 'delivery',
-                        args: args,
-                        success: function(data) {
-                            $(".xa-shipDropBox").hide();
-                            if($('[data-ui-role="advanced-table"]').length>0)
-                            {
-                                $('[data-ui-role="advanced-table"]').data('view').reload();
-                            }
+                    else
+                    {
+                        window.location.reload();
+                    }
 
-                            else
-                            {
-                                window.location.reload();
-                            }
+                },
+                error: function() {
 
-                        },
-                        error: function() {
+                }
+            });
 
-                        }
-                    })
-
-            }
+            // }
     		// window.location.href = '/mall/editor/order_express/add/?order_id=' +
       //       this.orderId + '&=' + logistics + '&express_number=' + logisticsOrderId +
       //        '&leader_name=' + leaderName+ '&is_update_express='+isUpdateExpress;

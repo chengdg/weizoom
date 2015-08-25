@@ -58,13 +58,12 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"category": "分类1,分类2,分类3",
+			"categories": "分类1,分类2,分类3",
 			"physical_unit": "包",
 			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
 			"introduction": "商品1的简介",
 			"detail": "商品1的详情",
-			"remark": "商品1的备注",
 			"shelve_type": "上架",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
@@ -85,7 +84,7 @@ Background:
 			"postage": "顺丰"
 		}, {
 			"name": "商品2",
-			"category": "",
+			"categories": "",
 			"physical_unit": "盘",
 			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
@@ -108,12 +107,17 @@ Background:
 			"pay_interfaces":[{
 				"type": "在线支付"
 			}],
-			"postage": "免运费"
+			"postage": 10.0
+		}]
+		"""
+	Then jobs能获取商品列表
+		"""
+		[{
+			"name": "商品1"
 		}]
 		"""
 
-
-@mall @mall.product
+@mall2 @wip.p1 @mall.product
 Scenario: 更新商品
 	Jobs添加一组商品后，能更改单个商品的所有字段的属性
 
@@ -121,16 +125,11 @@ Scenario: 更新商品
 		"""
 		{
 			"name": "商品11",
-			"category": "分类2,分类3",
-			"physical_unit": "包*",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-			"introduction": "商品1的简介",
+			"categories": "分类2,分类3",
 			"detail": "商品1的详情",
-			"remark": "商品1的备注",
 			"shelve_type": "下架",
 			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 			}],
 			"model": {
 				"models": {
@@ -148,19 +147,55 @@ Scenario: 更新商品
 			"postage": "免运费"
 		}
 		"""
+	Then jobs能获取商品列表
+		"""
+		[{
+			"name": "商品11"
+		}]
+		"""
+	#Then jobs找不到商品'商品1'
+	And jobs能获取商品'商品11'
+		#	"introduction": "商品1的简介",
+		"""
+		{
+			"name": "商品11",
+			"category": "分类2,分类3",
+			"physical_unit": "",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou3.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+			"detail": "商品1的详情",
+			"remark": "",
+			"shelve_type": "上架",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 111.0,
+						"weight": 15.0,
+						"stock_type": "有限",
+						"stocks": 5
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			}],
+			"postage": "顺丰"
+		}
+		"""
+
 	When jobs更新商品'商品2'
 		"""
 		{
 			"name": "商品2",
 			"category": "",
-			"physical_unit": "盘",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "商品2的简介",
 			"detail": "商品2的详情",
-			"shelve_type": "下架",
+			"shelve_type": "上架",
 			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
 			"model": {
 				"models": {
@@ -180,51 +215,23 @@ Scenario: 更新商品
 			"postage": "顺丰"
 		}
 		"""
-	Then jobs找不到商品'商品1'
-	And jobs能获取商品'商品11'
+	Then jobs能获取商品列表
 		"""
-		{
-			"name": "商品11",
-			"category": "分类2,分类3",
-			"physical_unit": "包*",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-			"introduction": "商品1的简介",
-			"detail": "商品1的详情",
-			"remark": "商品1的备注",
-			"shelve_type": "下架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 111.0,
-						"weight": 15.0,
-						"stock_type": "有限",
-						"stocks": 5
-					}
-				}
-			},
-			"pay_interfaces":[{
-				"type": "在线支付"
-			}],
-			"postage": "免运费"
-		}
+		[{
+			"name": "商品11"
+		}]
 		"""
 	And jobs能获取商品'商品2'
 		"""
 		{
 			"name": "商品2",
 			"category": "",
-			"physical_unit": "盘",
 			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "商品2的简介",
 			"detail": "商品2的详情",
 			"shelve_type": "下架",
 			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
 			"model": {
 				"models": {
@@ -244,22 +251,23 @@ Scenario: 更新商品
 			"postage": "顺丰"
 		}
 		"""
-	When jobs更新商品'商品1'
+
+	When jobs更新商品'商品11'
 		"""
 		{
-			"name": "商品1",
-			"category": ""
+			"name": "商品11",
+			"categories": ""
 		}
 		"""
-	Then jobs能获取商品'商品1'
+	Then jobs能获取商品'商品11'
 		"""
 		{
-			"name": "商品1",
+			"name": "商品11",
 			"category": ""
 		}
 		"""
 
-@mall @mall.product
+@mall2 @wip.p2 @mall.product
 Scenario: 切换邮费配置
 	jobs把运费配置更改为'圆通'
 	jobs查看商品详情
@@ -273,9 +281,10 @@ Scenario: 切换邮费配置
 		}
 		"""
 	And jobs能获取商品'商品2'
+		# postage为数值，表示“统一运费”
 		"""
 		{
 			"name": "商品2",
-			"postage": "免运费"
+			"postage": 10.0
 		}
 		"""

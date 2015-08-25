@@ -19,11 +19,10 @@ class Promotion(resource.Resource):
 
     @login_required
     def api_get(request):
-        """获得促销活动可以选用的商品集合.
+        """
+        获得促销活动可以选用的商品集合.
 
-        Args:
-          type: "usable_promotion_products" or "promotion_products"
-
+        @param type "usable_promotion_products" or "promotion_products"
         """
         promotion_product_type = request.GET.get('type', 'promotion_products')
         if promotion_product_type == 'usable_promotion_products':
@@ -63,8 +62,11 @@ class Promotion(resource.Resource):
                 id2product[product.id] = data
 
             #获得已经与promotion关联的product
-            status_set = [models.PROMOTION_STATUS_NOT_START,
-                          models.PROMOTION_STATUS_STARTED]
+            status_set = [
+                models.PROMOTION_STATUS_NOT_START, 
+                models.PROMOTION_STATUS_STARTED, 
+                models.PROMOTION_STATUS_DISABLE, #手动失效的单品优惠券要等到过期后才能创建买赠或限时抢购 duhao 2015-08-18
+            ]
 
             if filter_type == 'integral_sale':
                 promotions = models.Promotion.objects.filter(
@@ -77,9 +79,20 @@ class Promotion(resource.Resource):
                     ~Q(type=models.PROMOTION_TYPE_INTEGRAL_SALE) &
                     Q(status__in=status_set))
 
+            id2promotion = {}
+            promotion_ids = []
+            for promotion in promotions:
+                #手动失效的单品优惠券要等到过期后才能创建买赠或限时抢购
+                if promotion.status == models.PROMOTION_STATUS_DISABLE:
+                    now = datetime.now()
+                    if now > promotion.end_date:
+                        continue
 
-            id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
-            promotion_ids = [promotion.id for promotion in promotions]
+                id2promotion[promotion.id] = promotion
+                promotion_ids.append(promotion.id)
+
+            # id2promotion = dict([(promotion.id, promotion) for promotion in promotions])
+            # promotion_ids = [promotion.id for promotion in promotions]
             php = models.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)
             for relation in php:
                 product_id = relation.product_id
@@ -141,7 +154,10 @@ class Promotion(resource.Resource):
 
     @login_required
     def api_post(request):
-        """结束促销活动
+        """
+        结束促销活动
+
+        @todo 其实应该用DELETE之类的method。
         """
         promotion_type = models.PROMOTIONSTR2TYPE[request.POST['type']]
 
@@ -154,11 +170,13 @@ class Promotion(resource.Resource):
             status = models.PROMOTION_STATUS_DISABLE
         else:
             status = models.PROMOTION_STATUS_FINISHED
+        # TODO 确认 结束促销的逻辑是在task里运行的，此处是否可以移动到 start == 'true' 的判断分支下
         models.Promotion.objects.filter(
             owner=request.manager,
             id__in=ids
         ).update(status=status)
         if promotion_type == models.PROMOTION_TYPE_COUPON:
+            # 处理优惠券相关状态 
             ruleIds = [i.detail_id for i in models.Promotion.objects.filter(
                 owner=request.manager,
                 id__in=ids)

@@ -87,9 +87,9 @@ def step_impl(context, user):
 	bdd_util.assert_list(json_data, actual_members)
 
 #用户可以获取第几页的会员列表
-@then(u'{user}')
-def step_impl(context, user, cur_page):
-	pass
+# @then(u'{user}')
+# def step_impl(context, user, cur_page):
+# 	pass
 
 
 @Given(u'{webapp_owner_name}调{webapp_user_name}等级为{grade_name}')
