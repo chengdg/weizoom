@@ -14,7 +14,7 @@ gmu.define('SideNav', {
 	
 	_create: function() {
 		var $el = this.$el;
-		$('.wa-page').css('padding-bottom',50);
+		$('.wa-page').css('padding-bottom',60);
 
 		var _this = this;
 		this.isIScrollInitialized = false;
