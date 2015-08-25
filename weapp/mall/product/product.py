@@ -141,9 +141,11 @@ class ProductList(resource.Resource):
         else:
             products = sorted(products, key=operator.attrgetter('id'))
             products = sorted(products, key=operator.attrgetter(sort_attr))
+        products_is_0 = filter(lambda p: p.display_index == 0, products)
+        products_not_0 = filter(lambda p: p.display_index != 0, products)
+        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
-
-        products = utils.filter_products(request, products)
+        products = utils.filter_products(request, products_not_0 + products_is_0)
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))

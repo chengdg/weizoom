@@ -231,7 +231,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         $counterEl.each(function() {
             var $counter = $(this);
             var $product = $counter.parents('.xa-product')
-            var stocks = parseInt($counter.attr('data-max-count'));
+            var stocks = $counter.data('max-count');
             var count = $counter.val();
             if($counter.data('view').minCount>count){
                 count = $counter.data('view').minCount
@@ -242,6 +242,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
                 var $check = $product.find('.xa-check');
                 if(stocks < count){
                     $stockTip.removeClass('hidden');
+
                     $check.addClass('xui-disabled-radio');
                     $product.find('.xui-understock').show();
 
@@ -251,6 +252,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
                     //$check.parent().unbind('touchstart');
                 }else{
                     $check.removeClass('xui-disabled-radio');
+                    $stockTip.html('仅剩'+stocks+'件');
                 }
             }
             $counter.bind('count-changed', _.bind(_this.onChangCounter, _this));

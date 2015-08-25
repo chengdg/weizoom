@@ -92,6 +92,10 @@ def step_impl(context, user, action):
         data["action"] = "pay"
     elif action == u"完成":
         data["action"] = "finish"
+    elif action == u"退款":
+        data["action"] = "return_pay"
+    elif action == u"完成退款":
+        data["action"] = "return_success"
     elif action == u"取消":
         data["action"] = "cancel"
         try:
@@ -105,6 +109,14 @@ def step_impl(context, user, action):
     response = context.client.post(url, data)
 
 
+@when(u'{user}对最新订单进行退款')
+def step_impl(context, user):
+    context.execute_steps(u'when %s"退款"最新订单' % user)
+
+
+@when(u'{user}完成最新订单退款')
+def step_impl(context, user):
+    context.execute_steps(u'when %s"完成退款"最新订单' % user)
 ######
 
 # 缺失对应feature

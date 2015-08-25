@@ -3,9 +3,6 @@
 数据统计(BI)之销售订单分析的BDD steps
 
 """
-from celery.task.http import URL
-
-__author__ = 'victor'
 
 import json
 #import time
