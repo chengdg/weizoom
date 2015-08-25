@@ -160,12 +160,21 @@ def step_impl(context, user, type_name):
                 if 'barCode' in product:
                     product['bar_code'] = product['barCode']
                     del product['barCode']
-                product['categories'] = list(product['categories'])
-                if 'categories' in product:
-                    del product['categories']
+                product['categories'] = product['categories'].split(',')
+                # 处理空字符串分割问题
+                if product['categories'][0] == '':
+                    product['categories'] = []
+                if 'stocks' in product and product['stocks'] == '':
+                    del product['stocks']
                 expected.append(product)
         else:
             expected = json.loads(context.text)
+    # print("******************************************************")
+    # print("expected:~~~~~~~~~",expected)
+    # print("******************************************************")
+    # print("actual:~~~~~~~~~~~~~~~",actual)
+    # print("******************************************************")
+
     bdd_util.assert_list(expected, actual)
 
 
@@ -302,6 +311,8 @@ def __get_products(context, type_name=u'在售'):
     for product in data["items"]:
         #价格
         product['price'] = product['display_price']
+        if 'display_price_range' in product:
+            product['price'] = product['display_price_range']
         #分类
         categories = []
         for category in product['categories']:
