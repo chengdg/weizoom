@@ -143,6 +143,7 @@
                         data-shopping-cart-id = "{{product.shopping_cart_id}}"
                         data-model-name="{{product.model_name}}"
                         data-stocks="{{product.stocks}}"
+                        data-count-per-purchase="{{product.promotion.detail.count_per_purchase}}"
                         data-is-member-product="{{product.is_member_product}}"
                         data-product-promotion="{{product_group.promotion_js}}"
                     >
@@ -155,9 +156,7 @@
                                 <div class="xui-selectedProductList-productImg disTc tc">
                                     <div class="pr">
                                         <img src="{{product.order_thumbnails_url}}" />
-                                        {% if product.stocks <= 5 and product.stock_type == 1 %}
-                                        <p class="xa-stockTip xui-stockTip pa">仅剩{{product.stocks}}件</p>
-                                        {% endif %}
+                                        <p class="xa-stockTip xui-stockTip pa hidden">仅剩{{product.stocks}}件</p>
                                     </div>
                                 </div>
                                 <div class="xui-selectedProductList-productInfo disTc vt">
@@ -407,7 +406,7 @@ $(document).ready(function() {
                                 maxCount = count_per_purchase;
                             }else{
                                 maxCount = data[model_id].stocks;
-                                $(this).data('max-count', maxCount);
+                                $(this).parent('.xa-product').data('stocks', maxCount);
                             }
                         }else {
                             if (count_per_purchase > 0){

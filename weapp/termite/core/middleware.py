@@ -330,6 +330,16 @@ class ProjectMiddleware(object):
 					request.webapp_owner_id_from_project_middleware = webapp_owner_id
 					request.app_name = app
 					request.project = None
+				elif 'fake:' in project_id:
+					_, project_type, webapp_owner_id, page_id, mongodb_id = project_id.split(':')
+
+					request.webapp_owner_id_from_project_middleware = webapp_owner_id
+					request.app_name = '%s:%s' % (project_type, page_id)
+					project = Project()
+					project.name = 'fake:%s:%s' % (project_type, page_id)
+					project.type = project_type
+					project.id = project_id
+					request.project = None
 				else:
 					request.project = Project.objects.get(id=project_id)
 			else:

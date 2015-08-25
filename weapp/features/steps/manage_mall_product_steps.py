@@ -160,9 +160,16 @@ def step_impl(context, user, type_name):
                 if 'barCode' in product:
                     product['bar_code'] = product['barCode']
                     del product['barCode']
-                product['categories'] = list(product['categories'])
-                if 'categories' in product:
-                    del product['categories']
+                product['categories'] = product['categories'].split(',')
+                # 处理空字符串分割问题
+                if product['categories'][0] == '':
+                    product['categories'] = []
+                # 处理table中没有验证库存的行
+                if 'stocks' in product and product['stocks'] == '':
+                    del product['stocks']
+                # 处理table中没有验证条码的行
+                if 'bar_code' in product and product['bar_code'] == '':
+                    del product['bar_code']
                 expected.append(product)
         else:
             expected = json.loads(context.text)
@@ -302,6 +309,8 @@ def __get_products(context, type_name=u'在售'):
     for product in data["items"]:
         #价格
         product['price'] = product['display_price']
+        if 'display_price_range' in product:
+            product['price'] = product['display_price_range']
         #分类
         categories = []
         for category in product['categories']:

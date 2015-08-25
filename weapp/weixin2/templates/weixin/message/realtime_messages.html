@@ -25,7 +25,7 @@
 		class="panel-body"
 		{%if status > -1%}
 		data-args='{"filter_value":"status:{{ status }}"}'
-		{%endif%}		
+		{%endif%}
 	></div>
 </div>
 {% endblock %}
@@ -45,7 +45,7 @@
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
 			<tr>
-				<th class="pa" width="185">粉丝</th>
+				<th class="pa" width="185">会员</th>
 				<th width="540">信息</th>
 				<th width="80">时间</th>
 				<th width="190">操作</th>
@@ -97,14 +97,14 @@
 								</div>
 							{{/if}}
 
-							
+
 							<div class="xui-i-remark xa-i-remark {{if message.remark}} "" {{else}} xui-hidden {{/if}}">
 								{{if message.remark}}
 								备注：<span class="xui-i-remark-text xa-i-remark-text">${message.remark}</span>
 								{{/if}}
 							</div>
 
-							
+
 							<div class="xui-i-quick-reply">
 								{{if message.could_replied}}
 									<a href="javascript:void(0);" data-openid="${message.sender_username}" class="xa-selectMessage">快速回复</a>
@@ -182,7 +182,7 @@ function submitReply(message, openid, sessionId, $current) {
 				},
 				success: function(data) {
 					W.showHint('success', '回复成功');
-					
+
 					var text = data.text;
 					if (data.is_news_type) {
 						text = data.text + '<span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=' + data.material_id + '" target="_blank">' + data.news_title + '</a>';
@@ -214,7 +214,7 @@ $(document).ready(function() {
 	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		
+
 		if ($(this).hasClass('xui-i-voicePlay')) {
 			$(this).siblings('#media')[0].pause();
 			$(this).removeClass('xui-i-voicePlay');
@@ -242,18 +242,18 @@ $(document).ready(function() {
 		status = $el.attr('data-total-status-value');
 		filterBox.trigger('doClickStatusTag', status);
 	});
-	
+
 	$('body').delegate('span[name="messageContent"] a', 'click', function(event){
 		var $current = $(event.currentTarget);
 		window.open($current.attr('href'));
 		return false;
 	});
-	
+
 	var dataId = 0;
 	$('body').delegate('.xa-selectMessage', 'click', function(event){
 		event.stopPropagation();
 		event.preventDefault();
-		
+
 		var $current = $(event.currentTarget);
 		var currentDataId = $current.parents('tr').attr('data-id');
 		xlog('currentDataId:' + currentDataId);
@@ -287,17 +287,16 @@ $(document).ready(function() {
 	   		$('.wui-messageEditorPopup').remove();
 		}
 	});
-	
+
 	$('body').delegate('.xa-displayMessages', 'click', function(event){
 		var $current = $(event.currentTarget);
 		var replied = $current.attr('data-replied');
 		var sessionId = $current.parents('tr').attr('data-id')
 		var queryString = $('#query_string').attr('data-query-string');
 		localStorage['__realtimeMessageQueryString'] = queryString;
-		window.location.href = '/new_weixin/realtime_messages_detail/?session_id=' + sessionId + '&replied=' + replied
-
+		window.open('/new_weixin/realtime_messages_detail/?session_id=' + sessionId + '&replied=' + replied)
 	});
-	
+
 	$('body').delegate('.wx_collect_message', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var status = $el.attr('status');
@@ -325,7 +324,7 @@ $(document).ready(function() {
 			}
 		})
 	});
-	
+
 	//消息-备注
 	$('body').delegate('.message_remark', 'click', function(event){
 		var $el = $(event.currentTarget);

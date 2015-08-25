@@ -67,6 +67,7 @@ class PayInterfaceList(resource.Resource):
         if request.manager.can_use_weizoom_card():
             pay_interfaces = filter(lambda pay_interface: pay_interface.type != PAY_INTERFACE_WEIZOOM_COIN,
                                     pay_interfaces)
+
         for pay_interface in pay_interfaces:
             pay_interface.name = PAYTYPE2NAME[pay_interface.type]
             if pay_interface.type in [PAY_INTERFACE_WEIXIN_PAY,
@@ -126,8 +127,10 @@ class PayInterfaceList(resource.Resource):
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_config_second_navs(request),
             'second_nav_name': export.MALL_CONFIG_PAYINTERFACE_NAV,
-            'pay_interfaces': pay_interfaces
+            'pay_interfaces': pay_interfaces,
+
         })
+
         return render_to_response('mall/editor/pay_interfaces.html', c)
 
 
