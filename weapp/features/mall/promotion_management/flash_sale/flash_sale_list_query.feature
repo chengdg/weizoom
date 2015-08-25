@@ -33,7 +33,7 @@ Background:
 		|限时抢购5   | 商品5    |   进行中  |  2015-08-06  |明天         |
 		|限时抢购6   | 商品6    |   未开始  |  明天        |3天后        |
 
-@mall2 @promotion @promotionFlash @jz
+@mall2 @promotion @promotionFlash
 Scenario:限时抢购活动列表查询
 	#空查询、默认查询
 		When jobs设置查询条件

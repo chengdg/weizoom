@@ -91,7 +91,7 @@ Background:
 			"name": "商品4积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": 
 			[{
@@ -114,14 +114,14 @@ Background:
 		}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium
 Scenario: 1 主商品和赠品均为无规格商品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
 		[{
 			"name": "商品1买二赠一",
-			"promotion_slogan":"",
+			"promotion_title":"",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"member_grade": "普通会员",
@@ -138,7 +138,7 @@ Scenario: 1 主商品和赠品均为无规格商品，创建买赠活动
 	Then jobs获取买赠活动列表
 		"""
 		[{
-			"name": "活动名称:商品1买二赠一",
+			"name": "商品1买二赠一",
 			"product_name": "商品1",
 			"product_price":100.00,
 			"status":"进行中",
@@ -148,14 +148,14 @@ Scenario: 1 主商品和赠品均为无规格商品，创建买赠活动
 		}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium
 Scenario: 2 主商品为多规格，赠品为无规格商品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
 		[{
 			"name": "商品2买一赠一",
-			"promotion_slogan":"买一赠一啦",
+			"promotion_title":"买一赠一啦",
 			"start_date": "明天",
 			"end_date": "3天后",
 			"member_grade": "全部会员",
@@ -172,9 +172,10 @@ Scenario: 2 主商品为多规格，赠品为无规格商品，创建买赠活�
 	Then jobs获取买赠活动列表
 		"""
 		[{
-			"name": "广告语:买一赠一啦",
+			"name": "商品2买一赠一",
+			"promotion_title": "买一赠一啦",
 			"product_name": "商品2",
-			"product_price":"100.00~200.00",
+			"product_price":"100.0 ~ 200.0",
 			"status":"未开始",
 			"start_date": "明天",
 			"end_date": "3天后",
@@ -182,14 +183,14 @@ Scenario: 2 主商品为多规格，赠品为无规格商品，创建买赠活�
 		}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium
 Scenario: 3 主商品为会员价商品，赠品为无规格，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
 		[{
 			"name": "商品3买一赠一",
-			"promotion_slogan":"会员价商品买赠",
+			"promotion_title":"会员价商品买赠",
 			"start_date": "明天",
 			"end_date": "3天后",
 			"member_grade": "铜牌会员",
@@ -206,7 +207,8 @@ Scenario: 3 主商品为会员价商品，赠品为无规格，创建买赠活�
 	Then jobs获取买赠活动列表
 		"""
 		[{
-			"name": "广告语:会员价商品买赠",
+			"name": "商品3买一赠一",
+			"promotion_title": "会员价商品买赠",
 			"product_name": "商品3",
 			"product_price":100.00,
 			"status":"未开始",
@@ -216,14 +218,14 @@ Scenario: 3 主商品为会员价商品，赠品为无规格，创建买赠活�
 		}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium
 Scenario: 4 主商品为会员价和积分应用商品，赠品为无规格，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
 		[{
 			"name": "商品4买一赠一",
-			"promotion_slogan":"会员价商品买赠",
+			"promotion_title":"会员价商品买赠",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"member_grade": "金牌会员",
@@ -240,7 +242,8 @@ Scenario: 4 主商品为会员价和积分应用商品，赠品为无规格，�
 	Then jobs获取买赠活动列表
 		"""
 		[{
-			"name": "广告语:会员价商品买赠",
+			"name": "商品4买一赠一",
+			"promotion_title": "会员价商品买赠",
 			"product_name": "商品4",
 			"product_price":100.00,
 			"status":"进行中",
@@ -250,7 +253,7 @@ Scenario: 4 主商品为会员价和积分应用商品，赠品为无规格，�
 		}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium
 Scenario: 5 主商品和赠品为同一个商品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
@@ -274,7 +277,7 @@ Scenario: 5 主商品和赠品为同一个商品，创建买赠活动
 	Then jobs获取买赠活动列表
 		"""
 			[{
-				"name": "活动名称:商品1买一赠一",
+				"name": "商品1买一赠一",
 				"product_name": "商品1",
 				"product_price":100.00,
 				"status":"进行中",
@@ -284,14 +287,14 @@ Scenario: 5 主商品和赠品为同一个商品，创建买赠活动
 			}]
 		"""
 
-@promotion @promotionPremium
+@mall2 @promotion @promotionPremium
 Scenario: 6 选取多个赠品，创建买赠活动
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
 			[{
 				"name": "多个赠品买赠",
-				"promotion_slogan":"",
+				"promotion_title":"",
 				"start_date": "今天",
 				"end_date": "1天后",
 				"member_grade": "全部会员",
@@ -314,7 +317,7 @@ Scenario: 6 选取多个赠品，创建买赠活动
 	Then jobs获取买赠活动列表
 		"""
 			[{
-				"name": "活动名称:多个赠品买赠",
+				"name": "多个赠品买赠",
 				"product_name": "商品1",
 				"product_price":100.00,
 				"status":"进行中",
@@ -331,7 +334,7 @@ Scenario: 7 赠品为多规格商品，创建买赠活动
 		"""
 		[{
 			"name": "商品1买一赠一",
-			"promotion_slogan":"",
+			"promotion_title":"",
 			"start_date": "明天",
 			"end_date": "3天后",
 			"member_grade": "铜牌会员",
@@ -354,7 +357,7 @@ Scenario: 8 必填字段的校验，创建买赠活动
 		"""
 		[{
 			"name": "",
-			"promotion_slogan":"",
+			"promotion_title":"",
 			"start_date": "",
 			"end_date": "",
 			"member_grade": "全部会员",
