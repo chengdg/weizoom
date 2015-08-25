@@ -952,11 +952,11 @@
 
 
 .xui-orderDetialPage .xui-producttab tr td {
-	vertical-align: middle;
+    vertical-align: middle;
 
-   padding-top: 15px;
+    padding-top: 15px;
     height: 42px;
-    padding-bottom:4px;
+    padding-bottom:15px;
 }
 .xui-orderDetialPage .xui-producttab tr th {
 	font-weight: bold;
@@ -966,6 +966,15 @@
 .xui-orderDetialPage .xui-producttab tr td:first-child {
     text-align: left;
 }
+
+.xui-orderDetialPage .xui-producttab tr td a {
+    line-height: 18px;
+}
+
+.xui-orderDetialPage .xui-producttab tr .xui-td-first {
+   max-width: 300px;
+}
+
 .xui-orderDetialPage .xui-producttab tr:last-child td:first-child {
    padding-bottom: 15px;
 }
@@ -981,7 +990,7 @@
 
 .xui-orderDetialPage .xui-producttab .xui-colorsize {
 
-    margin-top: -5px;
+    margin-top: 5px;
     line-height: 10px;
     text-align: left;
 }

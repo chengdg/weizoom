@@ -282,6 +282,7 @@ OPTIMIZATION_MSG_HANDLER_CLASSES = (
     'weixin.statistics.message_statistics.MessageStatistics',
     'weixin.message.impl_handlers.responsed_message_log.ResponseedMessageLogger',
     'weixin.message.message_handler.weixin_user_handler.WeixinUserHandler',
+    'weixin.message.message_handler.wofu_handler.WoFuHandler',
     'weixin.message.message_handler.member_handler.MemberHandler',
     'market_tools.tools.member_qrcode.ticket_messge_handler.QrcodeHandler',
     'market_tools.tools.channel_qrcode.channel_qrcode_handler.ChannelQrcodeHandler',
@@ -334,7 +335,8 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'core.context_processors.request_host',
     'core.context_processors.is_weizoom_mall',
     'core.context_processors.cdn_host',
-    'core.context_processors.handlebar_component_templates'
+    'core.context_processors.handlebar_component_templates',
+    'core.context_processors.fetch_webapp_global_navbar',
 
 ]
 
@@ -562,7 +564,7 @@ if 'develop' == MODE:
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
     EVENT_DISPATCHER = 'local'
-    ENABLE_WEPAGE_CACHE = True
+    ENABLE_WEPAGE_CACHE = False
 
     WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
 

@@ -446,6 +446,7 @@ $(document).ready(function() {
                     view.member_or_promotion = 'promotion';
                 }
                 if(!is_user_has_promotion){
+
                     view.promotion.isFlashSalePromotion = false;
                     // 促销bu对此用户开发
                     var next_promotions = $('.xa-display-promotion').next('div');
@@ -484,7 +485,8 @@ $(document).ready(function() {
                 // 对于不开放的促销，不显示广告语
                 var span = $('.xa-productName').find('span');
                 if(span){
-                    span.remove();
+
+                    span.html('<span class="xui-text-red">'+view.priceInfo.promotion_title+'</span>');
                 }
             }
             // 处理会员价

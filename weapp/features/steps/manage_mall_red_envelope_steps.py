@@ -38,7 +38,7 @@ def step_impl(context, user):
         limit_money = rule.get('limit_money', 0)
         if limit_money == u'无限制':
             limit_money = 0
-        data = {
+        params = {
             'owner': context.client.user,
             'name': rule.get('name', ''),
             'coupon_rule': __get_coupon_rule_id(rule.get('prize_info', '')),
@@ -49,7 +49,7 @@ def step_impl(context, user):
             'share_pic': rule.get('logo_url', ''),
             'remark': rule.get('desc', '')
         }
-        response = context.client.post('/mall2/api/red_envelope_rule/?_method=put', data)
+        response = context.client.post('/mall2/api/red_envelope_rule/?_method=put', params)
         bdd_util.assert_api_call_success(response)
 
 @then(u'{user}能获取分享红包列表')
@@ -69,3 +69,33 @@ def step_impl(context, user):
         })
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
+
+def __get_red_envelope_rule_id(red_envelope_rule_name):
+    red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(name=red_envelope_rule_name)
+    return red_envelope_rule.id
+
+action2code = {
+    u'开启': 'start',
+    u'关闭': 'over', 
+    u'删除': 'delete'
+}
+@when(u'{user}-{action}分享红包"{red_envelope_rule_name}"')
+def step_impl(context, user, action, red_envelope_rule_name):
+    id = __get_red_envelope_rule_id(red_envelope_rule_name)
+    params = {
+        'id': id,
+        'status': action2code[action]
+    }
+
+    response = context.client.post('/mall2/api/red_envelope_rule/?_method=post', params)
+    api_code = json.loads(response.content)['code']
+
+    if api_code == 500:
+        err_msg = json.loads(response.content)['errMsg']
+        context.err_msg = err_msg
+    else:
+        bdd_util.assert_api_call_success(response)
+
+@then(u'{user}获得错误提示"{err_msg}"')
+def step_impl(context, user, err_msg):
+   context.tc.assertEquals(context.err_msg, err_msg)

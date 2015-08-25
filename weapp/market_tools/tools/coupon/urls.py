@@ -6,7 +6,7 @@ __author__ = "robert"
 from django.conf.urls import *
 
 import views
-import api_views
+# import api_views
 
 urlpatterns = patterns('',
 	(r'^$', views.list_coupons),
@@ -16,5 +16,5 @@ urlpatterns = patterns('',
 	(r'^coupon_rule/delete/$', views.delete_coupon_rule),
 	(r'^expired_coupon/delete/$', views.delete_expired_coupon),
 
-	(r'^api/', api_views.call_api),
+	# (r'^api/', api_views.call_api),
 )

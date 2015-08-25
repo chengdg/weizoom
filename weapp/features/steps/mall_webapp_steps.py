@@ -177,7 +177,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		}
 	"""
 	url = '/webapp/api/project_api/call/'
-	if hasattr(context, 'caller_step_purchase_info'):
+	if hasattr(context, 'caller_step_purchase_info') and context.caller_step_purchase_info:
 		args = context.caller_step_purchase_info
 	else:
 		args = json.loads(context.text)
@@ -397,9 +397,9 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.webapp_owner_name = webapp_owner_name
 
 OPERATION2STEPID = {
-	u'支付': u"When %s支付最新订单",
+	u'支付': u'When %s"支付"最新订单',
 	u'发货': u"When %s对最新订单进行发货",
-	u'完成': u"When %s完成最新订单",
+	u'完成': u'When %s"完成"最新订单',
 	u'退款': u"When %s对最新订单进行退款",
 	u'完成退款': u"When %s完成最新订单退款",
 	u'取消': u"When %s\"取消\"最新订单",
@@ -487,6 +487,7 @@ def step_impl(context, webapp_owner_name):
 				pass
 			else:
 				raise
+	context.caller_step_purchase_info = None
 
 
 @when(u"微信用户批量访问{webapp_owner_name}的webapp")

@@ -46,10 +46,19 @@ class WebappPage(resource.Resource):
 		# 获取页面描述
 		site_description = pagecreater.get_site_description(request)
 
+		# 是否是首页
+		if pagecreater.is_home_page(request):
+			# 首页
+			current_page_name = 'home'
+		else:
+			# 微页面
+			current_page_name = 'page'
+
 		c = RequestContext(request, {
 			'page_title': page_title,
 			'page_html_content': html,
 			'share_page_desc': site_description,
+			'current_page_name': current_page_name,
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})
 
