@@ -40,6 +40,7 @@ def step_impl(context, user):
 		if context.table:
 				# 处理tables
 				promotions = context.table
+				promotions = [promotion.as_dict() for promotion in promotions]
 		else:
 				promotions = json.loads(context.text)
 		if type(promotions) == dict:
@@ -87,7 +88,12 @@ def step_impl(context, user):
 
 @when(u"{user}创建满减活动")
 def step_impl(context, user):
-		promotions = json.loads(context.text)
+		if context.table:
+				# 处理tables
+				promotions = context.table
+				promotions = [promotion.as_dict() for promotion in promotions]
+		else:
+				promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -119,7 +125,12 @@ def step_impl(context, user):
 
 @when(u"{user}创建买赠活动")
 def step_create_premium_sale(context, user):
-		promotions = json.loads(context.text)
+		if context.table:
+				# 处理tables
+				promotions = context.table
+				promotions = [promotion.as_dict() for promotion in promotions]
+		else:
+				promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -160,7 +171,12 @@ def step_create_premium_sale(context, user):
 
 @when(u"{user}创建限时抢购活动")
 def step_create_flash_sales(context, user):
-		promotions = json.loads(context.text)
+		if context.table:
+				# 处理tables
+				promotions = context.table
+				promotions = [promotion.as_dict() for promotion in promotions]
+		else:
+				promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -183,7 +199,7 @@ def step_create_flash_sales(context, user):
 						'products': json.dumps(product_ids),
 
 						'limit_period': promotion.get('limit_period', 0),
-						'promotion_price': promotion['promotion_price'],
+						'promotion_price': promotion.get('promotion_price', 1),
 						'count_per_purchase': promotion.get('count_per_purchase', 9999999),
 				}
 
