@@ -61,7 +61,7 @@ Background:
 			"coupon_product": "商品2"
 		}]
 		"""
-	When jobs添加分享红包
+	And jobs已添加分享红包
 	"""
 	[{
 		"name": "分享红包1",

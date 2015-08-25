@@ -67,7 +67,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "wepage.item_group": this.initProductsView, 
             "wepage.item_list": this.initProductsView,
             "wepage.pageheader": _.bind(this.initPageHeader, this),
-            "colorpicker": _.bind(this.initColorPicker, this)
+            "colorpicker": _.bind(this.initColorPicker, this),
+            "secondnav": _.bind(this.initSecondNav, this)
         };
 
 
@@ -164,7 +165,9 @@ W.workbench.PropertyView = Backbone.View.extend({
         var $parents = $node.parents('.propertyGroup_property_dynamicControlField_control');
         if ($parents.length > 0) {
             var cid = $parents.eq(0).attr('data-dynamic-cid');
-            return W.component.CID2COMPONENT[cid];
+            if (cid) {
+                return W.component.CID2COMPONENT[cid];
+            }
         } else {
             return this.component;
         }
@@ -487,11 +490,21 @@ W.workbench.PropertyView = Backbone.View.extend({
      * onChangeCheckboxSelection: 改变checkbox的select的选项
      *********************************************************/
     onChangeCheckboxSelection: function(event) {
+        /*
         var $checkbox = $(event.currentTarget);
         var isSelected = $checkbox.prop('checked');
 
         var attr = $(event.currentTarget).attr('data-field');
         this.getTargetComponent($checkbox).model.set(attr, isSelected);
+        */
+        var $checkbox = $(event.currentTarget);
+        var isSelected = $checkbox.prop('checked');
+
+        var attr = $(event.currentTarget).attr('data-field');
+        var column = $(event.currentTarget).attr('data-column-name');
+        var attrValue = _.deepClone(this.getTargetComponent($checkbox).model.get(attr));
+        attrValue[column] = {select:isSelected};
+        this.getTargetComponent($checkbox).model.set(attr, attrValue);
     },
 
     /**
@@ -832,6 +845,32 @@ W.workbench.PropertyView = Backbone.View.extend({
             })
         }, 100);
     },
+
+    initSecondNav: function($el) {
+        W.createWidgets($el.parent());
+
+        var $input = $el.parent().find('input[name="second_navs"]');
+        var view = $el.data('view');
+        xwarn(view);
+        
+        view.setNavbarType(this.component.model.get('type'));
+        view.bind('update-show-box', function($el, length){
+            var urlBox = $el.parents('.propertyGroup_property_dynamicControlField_content').children('.propertyGroup_property_linkSelectField').find('.xui-eidt-urlBox');
+            var secondeNavsPrompt = urlBox.next('.xa-seconde-navs-prompt');
+            if (length == 0) {
+                urlBox.show();
+                secondeNavsPrompt.hide();
+            }else{
+                urlBox.hide();
+                secondeNavsPrompt.css("display", "inline-block");
+            }
+        }, this)
+
+        view.bind('update-data', function(data){
+            $input.val(data).trigger('input');
+        });
+    },
+
 
     initDateTime:function($el){
         var $input =$el.find('.xa-time');
