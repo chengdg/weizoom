@@ -45,7 +45,7 @@ Background:
 					},
 					"S": {
 						"price": 200.00,
-						"stock_type": "无限"
+						"stock_typee: "无限"
 					}
 				}
 			}
@@ -61,8 +61,8 @@ Background:
 			"price":100.00,
 			"is_member_product": "on"
 		},{
-			"name":"商品6",
-			"price":100.00,
+			"name": "商品6",
+			"price": 100.00,
 			"is_member_product": "on"
 		}]
 		"""
