@@ -227,6 +227,14 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
     initCounter: function(){
         var $counterEl = $('[data-ui-role="counter"]');
         var _this = this;
+        // 多规格限购
+        // var productCount = {};
+        // $counterEl.each(function(i,n){
+        //     if(!productCount[$(n).data('product-id')]){
+        //         productCount[$(n).data('product-id')]=0;
+        //     }
+        //     productCount[$(n).data('product-id')]+=$(n).data('view').count;
+        // });
         //库存大于购物车数量时显示库存不足
         $counterEl.each(function() {
             var $counter = $(this);
@@ -239,37 +247,33 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
                 $counter.val(count)
             }
             var $stockTip = $counter.parents('.xa-product').find('.xa-stockTip');
-            var understock_msg = '';
+            var $check = $product.find('.xa-check');
+            // 仅剩X件 提示
             if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
                 $stockTip.html('仅剩'+stocks+'件').show();
-                // if(stocks)
             }else{
                 $stockTip.hide();
             }
 
-            if(stocks != null && stocks > 0 && (stocks < 5 || stocks < purchase || stocks || count)){
-                // alert(stocks+' '+count)
-                var $check = $product.find('.xa-check');
-                // var msg1 = '';
-                var msg2 = '库存不足';
-                if (stocks > purchase){
-                    // msg1 = '限购'+purchase+'件';
-                    msg2 = '限购';
-                }
-                if(stocks < count || stocks < purchase){
+            // 库存不足提示
+            var understock_msg = '';
+            if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
+                if(stocks < count){
                     $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
+                    understock_msg = '库存不足'
                     _this.unselectProduct($product);
-                    
-                    // $stockTip.show().html(msg1);
-                    // $product.find('.xui-understock').show().html(msg2);
-
-                    //$check.parent().removeAttr('name');
-                    //$check.parent().unbind('touchstart');
                 }else{
                     $check.removeClass('xui-disabled-radio');
-                    // $product.find('.xui-understock').hide().html(msg2);
-                    // $stockTip.html(msg1);
                 }
+            }
+            // 限购提示
+            if(purchase && purchase < count){
+                $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
+                understock_msg = '限购' + purchase +'件 ' + understock_msg
+                _this.unselectProduct($product);
+            }
+            if(understock_msg){
+                $product.find('.xui-understock').html(understock_msg).show();
             }else{
                 $product.find('.xui-understock').hide();
             }
