@@ -26,15 +26,6 @@ class lottery(resource.Resource):
 	app = 'apps/lottery'
 	resource = 'lottery'
 
-	@staticmethod
-	def add_extra_data(data, post):
-		data['delivery'] = int(post.get('delivery', 0))
-		data['delivery_setting'] = post.get('delivery_setting', 'true')
-		data['limitation'] = post.get('limitation', 'once_per_user')
-		data['chance'] = int(post.get('chance', 0))
-		data['type'] = post.get('type', 'true')
-		return data
-	
 	@login_required
 	def get(request):
 		"""
@@ -66,8 +57,7 @@ class lottery(resource.Resource):
 		响应PUT
 		"""
 		data = request_util.get_fields_to_be_save(request)
-		post = request.POST
-		data = lottery.add_extra_data(data, post)
+		data = add_extra_data(data, request.POST)
 		lottery = app_models.lottery(**data)
 		lottery.save()
 		error_msg = None
@@ -86,7 +76,7 @@ class lottery(resource.Resource):
 		响应POST
 		"""
 		data = request_util.get_fields_to_be_save(request)
-		data = lottery.add_extra_data(data, request.POST)
+		data = add_extra_data(data, request.POST)
 		update_data = {}
 		update_fields = set(['name', 'start_time', 'end_time', 'delivery', 'delivery_setting', 'limitation', 'chance', 'type'])
 		for key, value in data.items():
@@ -106,3 +96,11 @@ class lottery(resource.Resource):
 		
 		response = create_response(200)
 		return response.get_response()
+
+def add_extra_data(data, post):
+	data['delivery'] = int(post.get('delivery', 0))
+	data['delivery_setting'] = post.get('delivery_setting', 'true')
+	data['limitation'] = post.get('limitation', 'once_per_user')
+	data['chance'] = int(post.get('chance', 0))
+	data['type'] = post.get('type', 'true')
+	return data
