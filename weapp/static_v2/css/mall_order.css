@@ -301,7 +301,7 @@
     display: inline-block;
     width: 13px;
     height: 13px;
-    margin-bottom: -4px;
+    margin-bottom: -2px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
@@ -310,7 +310,7 @@
     display: inline-block;
     width: 18px;
     height: 17px;
-    margin-bottom: 1px;
+    margin-bottom: -4px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
@@ -325,6 +325,7 @@
     background-size: 100%;
 }
 .xui-buyerHintDropBox {
+    color:#666;
     border: 1px solid #d6d4d1;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(214, 212, 209, 0.7);
