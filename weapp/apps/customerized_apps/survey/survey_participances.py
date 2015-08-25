@@ -167,7 +167,6 @@ class surveyParticipances_Export(resource.Resource):
 					else:
 						fields_shortcuts.append(item)
 			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
-			print fields_raw
 
 
 			for field in fields_raw:
@@ -239,7 +238,7 @@ class surveyParticipances_Export(resource.Resource):
 			try:
 				wb.save(export_file_path)
 			except:
-				print 'SAVE ERROR'
+				print 'EXPORT EXCEL FILE SAVE ERROR'
 				print '/static/upload/%s'%excel_file_name
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
