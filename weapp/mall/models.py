@@ -1077,7 +1077,8 @@ class Product(models.Model):
 			'standard_model': self.standard_model,
 			'current_used_model': self.current_used_model,
 			'created_at': datetime.strftime(self.created_at, '%Y-%m-%d %H:%M'),
-			'display_index': self.display_index
+			'display_index': self.display_index,
+			'is_member_product': self.is_member_product
 		}
 
 
