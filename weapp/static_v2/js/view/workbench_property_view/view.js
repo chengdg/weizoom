@@ -15,7 +15,8 @@ W.workbench.PropertyView = Backbone.View.extend({
         'input .propertyGroup_property_input > textarea': 'onChangeInputContent',
         'change .propertyGroup_property_input > select': 'onChangeSelection',
         'change .propertyGroup_property_input input[type="radio"]': 'onChangeSelection',
-        'change .propertyGroup_property_input input[type="checkbox"]': 'onChangeCheckboxSelection',
+        'change .propertyGroup_property_input input.xa-checkbox': 'onChangeCheckboxSelection',
+        'change .propertyGroup_property_input input.xa-checkboxGroup-checkbox': 'onChangeGroupCheckboxSelection',
         'click .btn-group > .btn': 'onClickRadioGroupButton',
         'click .propertyGroup_property_dynamicControlField_buttons > .xa-addDynamicComponent': 'onClickAddDynamicComponentButton',
         'click .propertyGroup_property_dynamicControlField_title': 'onClickDynamicComponentTitle',
@@ -490,13 +491,17 @@ W.workbench.PropertyView = Backbone.View.extend({
      * onChangeCheckboxSelection: 改变checkbox的select的选项
      *********************************************************/
     onChangeCheckboxSelection: function(event) {
-        /*
         var $checkbox = $(event.currentTarget);
         var isSelected = $checkbox.prop('checked');
 
         var attr = $(event.currentTarget).attr('data-field');
         this.getTargetComponent($checkbox).model.set(attr, isSelected);
-        */
+    },
+
+    /*********************************************************
+     * onChangeGroupCheckboxSelection: 改变group checkbox的select的选项
+     *********************************************************/
+    onChangeGroupCheckboxSelection: function(event) {
         var $checkbox = $(event.currentTarget);
         var isSelected = $checkbox.prop('checked');
 
