@@ -14,8 +14,10 @@ class ModelPropertyList(resource.Resource):
     app = 'mall2'
     resource = 'model_property_list'
 
+    @login_required
     def get(request):
-        """商品规格列表页面.
+        """
+        商品规格列表页面.
         """
         model_properties = mall_models.ProductModelProperty.objects.filter(
             owner=request.manager,
@@ -51,7 +53,8 @@ class ModelPropertyList(resource.Resource):
 
     @login_required
     def api_get(request):
-        """获取全部规格属性集合
+        """
+        获取全部规格属性集合
 
         Return json:
 
@@ -117,7 +120,8 @@ class ModelProperty(resource.Resource):
 
     @login_required
     def api_put(request):
-        """创建一个空的规格属性
+        """
+        创建一个空的规格属性
 
         Return json:
           data: %d
@@ -134,7 +138,8 @@ class ModelProperty(resource.Resource):
 
     @login_required
     def api_post(request):
-        """更新规格属性.
+        """
+        更新规格属性.
 
         Args:
           id: 规格id
