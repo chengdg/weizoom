@@ -20,6 +20,18 @@ Feature:创建限时抢购活动
 
 Background:
 	Given jobs登录系统
+	And jobs已添加商品规格
+		"""
+		[{
+			"name": "尺寸",
+			"type": "文字",
+			"values": [{
+				"name": "M"
+			}, {
+				"name": "S"
+			}]
+		}]
+		"""
 	And jobs已添加商品
 		"""
 			[{
