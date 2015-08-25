@@ -209,8 +209,8 @@ Scenario:1 默认条件和空条件查询
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -253,8 +253,8 @@ Scenario:2 过滤条件"会员名称"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -288,8 +288,8 @@ Scenario:2 过滤条件"会员名称"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -321,8 +321,8 @@ Scenario:2 过滤条件"会员名称"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -354,8 +354,8 @@ Scenario:3 过滤条件"会员状态"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -390,8 +390,8 @@ Scenario:4 过滤条件"关注时间"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -425,8 +425,8 @@ Scenario:4 过滤条件"关注时间"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -459,8 +459,8 @@ Scenario:4 过滤条件"关注时间"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -492,8 +492,8 @@ Scenario:5 过滤条件"会员等级"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -529,8 +529,8 @@ Scenario:6 过滤条件"会员分组"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -564,8 +564,8 @@ Scenario:6 过滤条件"会员分组"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -599,8 +599,8 @@ Scenario:6 过滤条件"会员分组"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -634,8 +634,8 @@ Scenario:7 过滤条件"会员来源"
 					"last_buy_end_time":"",
 					"integral_start":"",
 					"integral_end":"",
-					"massage_start_time":"",
-					"massage_end_time":""
+					"message_start_time":"",
+					"message_end_time":""
 				}]
 				"""
 			Then jobs获得刷选结果人数
@@ -669,8 +669,8 @@ Scenario:7 过滤条件"会员来源"
 					"last_buy_end_time":"",
 					"integral_start":"",
 					"integral_end":"",
-					"massage_start_time":"",
-					"massage_end_time":""
+					"message_start_time":"",
+					"message_end_time":""
 				}]
 				"""
 			Then jobs获得刷选结果人数
@@ -703,8 +703,8 @@ Scenario:7 过滤条件"会员来源"
 					"last_buy_end_time":"",
 					"integral_start":"",
 					"integral_end":"",
-					"massage_start_time":"",
-					"massage_end_time":""
+					"message_start_time":"",
+					"message_end_time":""
 				}]
 				"""
 			Then jobs获得刷选结果人数
@@ -742,8 +742,8 @@ Scenario:8 过滤条件"消费总额"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -777,8 +777,8 @@ Scenario:8 过滤条件"消费总额"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -810,8 +810,8 @@ Scenario:8 过滤条件"消费总额"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -849,8 +849,8 @@ Scenario:8 过滤条件"消费总额"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -882,8 +882,8 @@ Scenario:9 过滤条件"购买次数"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -917,8 +917,8 @@ Scenario:9 过滤条件"购买次数"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -950,8 +950,8 @@ Scenario:9 过滤条件"购买次数"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -984,8 +984,8 @@ Scenario:9 过滤条件"购买次数"
 				"last_buy_end_time":"",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -1017,8 +1017,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"last_buy_end_time":"2015-3-5 00:00:00",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -1051,8 +1051,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"last_buy_end_time":"2015-2-2 00:00:00",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -1084,8 +1084,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"last_buy_end_time":"2015-8-12 00:00:00",
 				"integral_start":"",
 				"integral_end":"",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -1117,8 +1117,8 @@ Scenario:11 过滤条件"积分范围"
 				"last_buy_end_time":"",
 				"integral_start":"20",
 				"integral_end":"100",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -1152,8 +1152,8 @@ Scenario:11 过滤条件"积分范围"
 				"last_buy_end_time":"",
 				"integral_start":"0",
 				"integral_end":"0",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -1191,8 +1191,8 @@ Scenario:11 过滤条件"积分范围"
 				"last_buy_end_time":"",
 				"integral_start":"150",
 				"integral_end":"300",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
@@ -1228,8 +1228,8 @@ Scenario:13 过滤条件"条件组合查询"
 				"last_buy_end_time":"2015-2-2",
 				"integral_start":"0",
 				"integral_end":"50",
-				"massage_start_time":"",
-				"massage_end_time":""
+				"message_start_time":"",
+				"message_end_time":""
 			}]
 			"""
 		Then jobs获得刷选结果人数
