@@ -1,7 +1,7 @@
 #_author_:王丽
 
 Feature: 会员分析-会员概况-会员详细数据
-
+"""
 	对店铺的会员进行不同维度的分析
 
 	说明：1）整个会员的统计只统计真实会员，没有注册直接下单的不统计
@@ -56,38 +56,151 @@ Feature: 会员分析-会员概况-会员详细数据
 		7、【扫码新增】：∑会员.个数[(会员.加入时间 in 对应日期当天) and (会员.来源 = ‘推广扫码’)]
 
 			备注：对应的【日期】当天通过推广扫码新增的会员数
+"""
 
 Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-	When jobs添加商品
-		"""
-		[{
-			"name": "商品1"
-		}, {
-			"name": "商品2"
-		}, {
-			"name": "商品3"
-		}]
-		"""
-
-	And jobs已添加支付方式
+	When jobs已添加支付方式
 		"""
 		[{
 			"type": "货到付款",
+			"description": "我的货到付款",
 			"is_active": "启用"
 		},{
 			"type": "微信支付",
-			"is_active": "启用"
-		},{
+			"description": "我的微信支付",
+			"is_active": "启用",
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
+			"weixin_sign": "42345"
+		}, {
 			"type": "支付宝",
+			"description": "我的支付宝",
+			"is_active": "启用",
+			"partner": "11",
+			"key": "21",
+			"ali_public_key": "31",
+			"private_key": "41",
+			"seller_email": "a@a.com"
+		}]
+		"""
+	When jobs开通使用微众卡权限
+	When jobs添加支付方式
+		"""
+		[{
+			"type": "微众卡支付",
+			"description": "我的微众卡支付",
 			"is_active": "启用"
 		}]
 		"""
 
-	##微信用户批量关注jobs成为会员
+	When jobs添加邮费配置
+		"""
+		[{
+			"name":"顺丰",
+			"first_weight":1,
+			"first_weight_price":15.00,
+			"added_weight":1,
+			"added_weight_price":5.00
+		}, {
+			"name" : "圆通",
+			"first_weight":1,
+			"first_weight_price":10.00
+		}]
+		"""
+	And jobs选择'顺丰'运费配置
+	
+	When jobs已添加商品
+		"""
+		[{
+			"name": "商品1",
+			"categories": "",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+			"introduction": "商品1的简介",
+			"detail": "商品1的详情",
+			"shelve_type": "上架",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 11.0,
+						"weight": 5,
+						"stock_type": "无限"
+					}
+				}
+			},
+			"postage": "顺丰"
+		}, {
+			"name": "商品2",
+			"categories": "",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"introduction": "商品2的简介",
+			"detail": "商品2的详情",
+			"shelve_type": "上架",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5,
+						"stock_type": "无限",
+						"stocks": 3
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			}],
+			"postage": 10.0
+		}, {
+			"name": "商品3",
+			"categories": "",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"introduction": "商品3的简介",
+			"detail": "商品3的详情",
+			"shelve_type": "上架",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5,
+						"stock_type": "无限",
+						"stocks": 3
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			}],
+			"postage": 10.0
+		}]
+		"""
+	Then jobs能获取商品列表
+		"""
+		[{
+			"name": "商品3"
+		}, {
+			"name": "商品2"
+		}, {
+			"name": "商品1"
+		}]
+		"""		
 
+
+	##微信用户批量关注jobs成为会员
 	When bill关注jobs的公众号于'2天前'
 
 	When mary关注jobs的公众号于'1天前'
@@ -126,7 +239,7 @@ Background:
 		| 1天前  | mary     | 购买 | jobs      | 商品2,2          | 支付    |   支付宝       | 15      | 100      |  0       | 20     | 195         | 0            | 195    |    0   | 0    |         |    已发货       |
 		| 1天前  | -lisi    | 购买 | jobs      | 商品2,2          | 支付    |   支付宝       | 15      | 100      |  0       | 20     | 195         | 0            | 195    |    0   | 0    |         |    已发货       |
 
-@stats @stats.member
+@mall2 @stats @wip.member1
 Scenario: 1  会员概况：会员详细数据
 	Given jobs登录系统
 	When jobs设置筛选日期

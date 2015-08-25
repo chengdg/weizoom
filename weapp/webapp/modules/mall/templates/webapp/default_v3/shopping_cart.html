@@ -348,8 +348,8 @@ $(document).ready(function() {
         var model_id = $(this).attr('data-product-model-id');
         model_ids.push(model_id);
     });
-
-    // window.setInterval(getProductStocks, 5000);
+    getProductStocks()
+    window.setInterval(getProductStocks, 30*1000);
 
     // 促销会员商品价格显示
     $(".xa-product").each(function(){
@@ -401,19 +401,22 @@ $(document).ready(function() {
                     $('[data-ui-role="counter"]').each(function(){
                         var model_id = $(this).data('product-model-id');
                         var count_per_purchase = $(this).data('product-count-per-purchase');
+                        var maxCount = 0;
                         if (data[model_id].stock_type) {
                             if (count_per_purchase > 0 && count_per_purchase < data[model_id].stocks){
-                                $(this).data('view').reset().setMaxCount(count_per_purchase);
+                                maxCount = count_per_purchase;
                             }else{
-                                $(this).data('view').reset().setMaxCount(data[model_id].stocks);
+                                maxCount = data[model_id].stocks;
+                                $(this).data('max-count', maxCount);
                             }
                         }else {
                             if (count_per_purchase > 0){
-                                $(this).data('view').reset().setMaxCount(count_per_purchase);
+                                maxCount = count_per_purchase;
                             }else{
-                                $(this).data('view').reset().setMaxCount(-99999);
+                                maxCount = -99999;
                             }
                         }
+                        $(this).data('view').setMaxCount(maxCount);
                     });
                     view.initCounter();
                 },
