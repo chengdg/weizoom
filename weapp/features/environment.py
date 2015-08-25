@@ -167,6 +167,7 @@ def __clear_all_app_data():
 	promotion_models.PriceCut.objects.all().delete()
 	promotion_models.PremiumSale.objects.all().delete()
 	promotion_models.IntegralSale.objects.all().delete()
+	promotion_models.RedEnvelopeRule.objects.all().delete()
 
 	#商城
 	mall_models.PayInterface.objects.all().delete()

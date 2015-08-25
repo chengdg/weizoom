@@ -82,7 +82,6 @@ Scenario: 添加分享红包
 		}, {
 			"name": "红包2",
 			"prize_info": "单品券4",
-			"is_permanant_active": true,
 			"limit_money": "无限制",
 			"desc": "下订单领红包",
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
