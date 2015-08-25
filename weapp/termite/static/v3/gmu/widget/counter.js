@@ -135,7 +135,7 @@
         },
 
         setMaxCount: function(count) {
-            console.log('setMaxCount', count);
+            // console.log('setMaxCount', count);
             this.maxCount = parseInt(count);
 
             if (this.maxCount === 0) {
@@ -145,10 +145,10 @@
                 this.$el.siblings('.wa-up,.wa-down').css('border-color', '#e5e5e5');
             } else {
                 if (this.count >= this.maxCount && this.maxCount > 0) {
-                    xlog('change to ' + this.maxCount);
+                    // xlog('1change to ' + this.maxCount);
                     this.changeCountTo(this.maxCount);
                 }else if (this.count <= 1) {
-                    xlog('change to ' + 1);
+                    // xlog('2change to ' + 1);
                     this.changeCountTo(1);
                 }
                 if (this.maxCount < this.minCount) {

@@ -326,20 +326,29 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 product_id: this.productId,
             },
             success: function(data){
+                $.each(_this.models, function(i, n){
+                    if(!data[n.id])
+                        return;
+                    n.stock_type = data[n.id].stock_type;
+                    n.stocks = data[n.id].stocks;
+                    if(!isInit){
+                        _this.updateProductInfo(_this.models[i]);
+                    }
+                });
                 if (_this.isStandardModelProduct) {
-                    _this.models[0].stock_type = data.stock_type;
-                    _this.models[0].stocks = data.stocks;
+                    // _this.models[0].stock_type = data.stock_type;
+                    // _this.models[0].stocks = data.stocks;
                     _this.targetModel = _this.models[0];
                     _this.initForStandardModelProduct();
                     // _this.getMaxCount(_this.models[0]); 多余操作 initForStandardModelProduct 已经执行过
                 } else {
-                    for(var i = 0; i < _this.models.length; i++){
-                        _this.models[i].stock_type = data[_this.models[i].id].stock_type;
-                        _this.models[i].stocks = data[_this.models[i].id].stocks;
-                        if(!isInit){
-                            _this.updateProductInfo(_this.models[i]);
-                        }
-                    }
+                    // for(var i = 0; i < _this.models.length; i++){
+                    //     _this.models[i].stock_type = data[_this.models[i].id].stock_type;
+                    //     _this.models[i].stocks = data[_this.models[i].id].stocks;
+                    //     if(!isInit){
+                    //         _this.updateProductInfo(_this.models[i]);
+                    //     }
+                    // }
                     if (isInit){
                         _this.initForCustomModelProduct();
                     }
