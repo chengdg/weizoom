@@ -109,6 +109,10 @@ class PageStore(object):
 		#if not is_new_created_page:
 		if page or (not is_new_created_page):
 			pp_id = '%s_%s' % (project_id, page_id)
+			print '-$-'*20
+			print 'update page'
+			print pp_id
+			print json.dumps(page_component)
 			self.db.page.update({'pp_id': pp_id}, {'$set': {'component': page_component}})
 		else:
 			#创建page
@@ -121,6 +125,9 @@ class PageStore(object):
 				'updated_at': now,
 				'component': page_component
 			}
+			print '-$-'*20
+			print 'create page'
+			print json.dumps(page_component)
 			self.db.page.insert(page, safe=True)
 
 		return now
