@@ -124,11 +124,6 @@
     width: 20px;
 }
 
-
-
-
-
-
 /**
  * 用户调研survey description样式
  */
@@ -250,9 +245,6 @@
 }
 
 
-
-
-
 /** 
  *
  */
@@ -270,6 +262,7 @@
 /*活动的图标*/
 .wui-i-time,.wui-i-prize{
 	margin-top: 9px;
+	min-height: 30px;
 }
 .xui-sprite-timerange{
 	background: url('/termite_static/img/m_sprite.png') no-repeat;
@@ -295,22 +288,26 @@
 	margin-top: -40px;
 }
 .wui-lotterydescription>.wui-i-title{
-	background: url("/termite_static/img/component/lottery/roulette_title.png") no-repeat scroll 42% 100% / 100% auto;
-	padding-top: 0;
-	height: 140px;
+	background: url("/termite_static/img/component/lottery/roulette_title.png") no-repeat scroll center center / 275px 140px rgba(0, 0, 0, 0);
+    height: 140px;
+    padding-top: 0;
 }
 .wui-surveyDescription>.wui-i-innerTitle {
-	background: #8d00ab none repeat scroll 0 0;
-	font-size: 24px;
-	font-weight: bold;
-	margin-left: 25%;
-	margin-top: 25px;
-	padding: 0 5px;
+	font-size: 20px;
+	font-weight: 400;
+	margin-top: -386px;
 	position: absolute;
-	color: white;
+	color: #fff;
+	text-align: center;
+	width: 88%;
 }
 .wui-lotterydescription>.wui-i-header{
 	text-align: center;
+	color: #fff;
+	margin-bottom: 5px;
+}
+p.wui-i-start_time,p.wui-i-end_time{
+	display: inline-block;
 }
 .wui-lotterydescription>.wui-i-body{
 	height: calc(60px * 4 + 3px + 35px);
