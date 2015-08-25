@@ -1,0 +1,243 @@
+.xui-hide {
+	display: none;
+}
+/*====================店铺模板全局导航======================*/
+.wui-template-globalNavbar a:active,.wui-template-globalNavbar a:visited,.wui-template-globalNavbar a{
+    color: #333;
+}
+.wui-template-globalNavbar .xui-globalBottomBar{
+    width: 100%;
+    height: 48px;
+    background: #fff;
+    border-top: 1px solid #CBCBCB;
+    position: fixed;
+    bottom: 0;
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    z-index: 100;
+}
+.wui-template-globalNavbar .xui-bg{
+    background: url(/static_v2/img/termite2/nav.png) no-repeat;
+    -webkit-background-size:133px 75px;
+    background-size:133px 75px ;
+
+}
+.wui-template-globalNavbar .xui-globalBottomBar .xui-home{
+    width: 50px;
+    border-right: 1px solid #CBCBCB;
+    text-align: center;
+    line-height: 59px;
+}
+.wui-template-globalNavbar .xui-globalBottomBar .xui-home a{
+    display: inline-block;
+    width: 23px;
+    height: 21px;
+    background-position: -112px 0;
+}
+.wui-template-globalNavbar .xui-flex{
+    text-align: center;
+    line-height: 48px;
+}
+.wui-template-globalNavbar .xui-flex a{
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+.wui-template-globalNavbar .xui-calc{
+    width: calc(100% - 51px);
+    width: -webkit-calc(100% - 51px);
+    position: relative;
+}
+.wui-template-globalNavbar .xui-flex-1{
+    width: 100%;
+}
+.wui-template-globalNavbar .xui-flex-2{
+    width: 50%;
+    float: left;
+    border-right: 1px solid #CBCBCB;
+    box-sizing:border-box;
+}
+.wui-template-globalNavbar .xui-flex-3{
+    width:33.3%;
+    float: left;
+    border-right: 1px solid #CBCBCB;
+    box-sizing:border-box;
+}
+.wui-template-globalNavbar .xui-menuBox:last-child .xui-flex{
+    border-right: none;
+}
+.wui-template-globalNavbar .xui-subMenuContainer{
+    position: absolute;
+    bottom: 55px;
+    left: 50%;
+    margin-left: -35px;
+    /*margin-left要换算*/
+    display: none;
+}
+.wui-template-globalNavbar .xui-subMenuContainer.xui-show{
+    display: block;
+}
+.wui-template-globalNavbar .xui-menuArrow,.wui-template-globalNavbar .xui-menuArrowBorder{
+    position: absolute;
+    z-index: 11;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    border-bottom: 0 none;
+    border-top: 6px solid #fff;
+    bottom: -5px;
+    left: 50%;
+    margin-left: -6px;
+}
+.wui-template-globalNavbar .xui-menuArrowBorder{
+    border-top: 6px solid #CBCBCB;
+    bottom: -6px;
+    z-index: 10;
+}
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
+    border:1px solid #CBCBCB;
+    background: #fff;
+    border-radius: 4px;
+}
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li{
+    height: 43px;
+    line-height: 43px;
+    min-width: 70px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    /*border-bottom: 1px solid #CBCBCB;*/
+}
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li:last-child{
+    border:none;
+}
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li a{
+    color: #333;
+    display: block;
+    border-bottom: 1px solid #CBCBCB;
+}
+
+/*侧滑导航*/
+.wui-template-globalNavbar .xui-globalSideBar{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background: #21292B;
+    z-index: 1002;
+}
+.wui-template-globalNavbar .xui-globalSideBar li{
+    float: left;
+    width: 25%;
+    height: 50px;
+    position: relative;
+}
+.wui-template-globalNavbar .xui-globalSideBar .xui-shopCar{
+    padding-left: 4px;
+    padding-right: 4px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 8px;
+    background: #E94141;
+    color: #fff;
+    font-size: 11px;
+    position: absolute;
+    right: -5px;
+    top:-5px;
+    text-align: center;
+    font-style: normal;
+}
+.wui-template-globalNavbar .xui-globalSideBar li i{
+    display: block;
+    width: 24px;
+    height: 34px;
+    background-position: 0 0;
+    position: absolute;
+    left: 50%;
+    top:8px;
+    margin-left: -12px;
+}
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(2) i{
+    background-position: -25px 0;
+}
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(3) i{
+    width: 35px;
+    height: 35px;
+    background-position: -50px 0;
+    margin-left: -17px;
+}
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(4) i{
+    background-position: -87px 0;
+}
+.wui-template-globalNavbar .xui-globalSideBar li i.xui-active{
+    background-position: 0 -40px;
+}
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(2) i.xui-active{
+    background-position: -25px -40px;
+}
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(3) i.xui-active{
+    background-position: -50px -40px;
+}
+.wui-template-globalNavbar .xui-globalSideBar li:nth-child(4) i.xui-active{
+    background-position: -87px -40px;
+}
+/*侧滑左面板*/
+.wui-template-globalNavbar .xui-sidePanel{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 1001;
+    font-size: 13px;
+    overflow: auto;
+    display: none;
+}
+.wui-template-globalNavbar .xui-sidePanel li a{
+    color: #333;
+    width: 100%;
+    display: block;
+}
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li.xui-firstNav{
+    background: #fff;
+    min-height: 48px;
+}
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span{
+    display: block;
+    padding-left: 24px;
+    padding-right: 24px;
+    line-height: 48px;
+    border-bottom: 1px solid #CBCBCB;
+}
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-leftArrow{
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #B4B4B4;
+    border-bottom: 0 none;
+    transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);    /* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
+    display: inline-block;
+    float: right;
+    margin-top: 21px;
+}
+.wui-template-globalNavbar .xui-sidePanel .xui-mainMenu li span i.xui-topArrow{
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #272636;
+    border-bottom: 0 none;
+    display: inline-block;
+    float: right;
+    margin-top: 21px;
+}
+.wui-template-globalNavbar .xui-sidePanel .xui-subMenu{
+    display: none;
+}
+.wui-template-globalNavbar .xui-sidePanel .xui-subMenu li{
+    background: #F7F7F7;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #CBCBCB;
+
+}

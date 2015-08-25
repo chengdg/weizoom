@@ -127,7 +127,8 @@ def get_user_info(request):
 		'member_info':member_info,
 		'request': request,
 	 	'market_tools': market_tools,
-	 	'cur_request_member':cur_request_member
+	 	'cur_request_member':cur_request_member,
+	 	'current_page_name': 'usercenter'
 	})
 	return render_to_response('%s/user_center.html' % request.template_dir, c)
 
