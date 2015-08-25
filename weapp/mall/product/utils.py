@@ -195,15 +195,15 @@ def sorted_products(manager_id, product_categories, reverse):
                 product.join_category_time = i.created_at
                 products.append(product)
 
-        products_is_0 = filter(lambda p: p.display_index == 0, products)
+        products_is_0 = filter(lambda p: p.display_index == 0 or p.shelve_type != models.PRODUCT_SHELVE_TYPE_ON, products)
         products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))       
         products = products_not_0 + products_is_0
 
-        products = sorted(products, key=attrgetter('join_category_time', 'id'), reverse=True)
-        products = sorted(products, key=attrgetter('shelve_type', 'display_index'))
-        products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
+        # products = sorted(products, key=attrgetter('join_category_time', 'id'), reverse=True)
+        # products = sorted(products, key=attrgetter('shelve_type', 'display_index'))
+        # products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
 
 
         c.products = products
