@@ -35,7 +35,7 @@ Background:
 		}]
 		"""
 	And bill关注jobs的公众号
-	And tom关注jobs的公众号
+
 
 @product @online_bug
 Scenario: 手机端商品显示已售罄,后台修改库存为有数量后,手机端不再显示已售罄
@@ -113,7 +113,7 @@ Scenario: 手机端商品显示已售罄,后台修改库存为有数量后,手�
 
 	#后台修改库存，商品由已售罄变为有库存
 		Given jobs登录系统
-		When jobs更新商品'商品1'
+		When jobs更新商品'商品1'的库存为
 			"""
 				{
 					"name": "商品1",

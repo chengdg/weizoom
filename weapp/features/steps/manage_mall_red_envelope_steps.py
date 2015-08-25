@@ -8,6 +8,8 @@ from features.testenv.model_factory import *
 import steps_db_util
 from mall import module_api as mall_api
 from mall.promotion import models as  promotion_models
+from modules.member import module_api as member_api
+from utils import url_helper
 
 def __get_coupon_rule_id(coupon_rule_name):
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
@@ -31,8 +33,12 @@ def __get_actions(rule):
         actions = [u"关闭", u"查看"]
     return actions
 
-@when(u'{user}添加分享红包')
+@given(u'{user}已添加分享红包')
 def step_impl(context, user):
+    step_add_red_envelope_rule(context, user)
+
+@when(u'{user}添加分享红包')
+def step_add_red_envelope_rule(context, user):
     rules = json.loads(context.text)
     for rule in rules:
         limit_money = rule.get('limit_money', 0)
@@ -99,3 +105,48 @@ def step_impl(context, user, action, red_envelope_rule_name):
 @then(u'{user}获得错误提示"{err_msg}"')
 def step_impl(context, user, err_msg):
    context.tc.assertEquals(context.err_msg, err_msg)
+
+is_can2code = {
+    u'能够': True,
+    u'不能': False
+}
+@then(u'{member}-{is_can}领取分享红包')
+def step_impl(context, member, is_can):
+    client = context.client
+    pay_result = context.pay_result
+    is_show_red_envelope = pay_result['is_show_red_envelope']
+    if is_show_red_envelope:
+        red_envelope_rule_id = pay_result['red_envelope_rule_id']
+        order = steps_db_util.get_latest_order()
+        url = '/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id=%s&order_id=%s&red_envelope_rule_id=%s&fmt=%s' % (context.webapp_owner_id, order.id, red_envelope_rule_id, context.member.token)
+        url = bdd_util.nginx(url)
+        context.red_envelope_url = url
+        response = context.client.get(url)
+    
+    context.tc.assertEquals(is_show_red_envelope, is_can2code[is_can])
+
+@When(u'{webapp_user_name}把{webapp_owner_name}的分享红包链接分享到朋友圈')
+def step_impl(context, webapp_user_name, webapp_owner_name):
+    context.shared_url = context.red_envelope_url
+
+@When(u'{webapp_user_name}点击{shared_webapp_user_name}分享红包链接')
+def step_impl(context, webapp_user_name, shared_webapp_user_name):
+    webapp_owner_id = context.webapp_owner_id
+    user = User.objects.get(id=webapp_owner_id)
+    openid = "%s_%s" % (webapp_user_name, user.username)
+    member = member_api.get_member_by_openid(openid, context.webapp_id)
+
+
+    if member:
+        new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
+        context.shared_url = "%s&fmt=%s" % (new_url, member.token)
+    response = context.client.get(context.shared_url)
+
+    if response.status_code == 302:
+        print('[info] redirect by change fmt in shared_url')
+        redirect_url = bdd_util.nginx(response['Location'])
+        context.last_url = redirect_url
+        response = context.client.get(bdd_util.nginx(redirect_url))
+    else:
+        print('[info] not redirect')
+        context.last_url = context.shared_url
