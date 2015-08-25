@@ -103,7 +103,7 @@ Scenario: 添加支付方式：货到付款
 		"""
 
 
-@mall @mall.pay_interface @mall2
+@mall @mall.pay_interface @mall2 @wip.pay_interface
 Scenario:卖家未获得支付方式：微众卡支付
 
 	Given jobs登录系统

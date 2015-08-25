@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+import copy
 import json, time
 from behave import when, then, given
 import logging
+from mall.models import ProductCategory
+from webapp.models import WebApp
+
 logger = logging.getLogger('console')
 
 from mall import models as mall_models  # 注意不要覆盖此module
@@ -52,11 +56,13 @@ def step_product_add(context, user):
         if hasattr(product, 'as_dict'):
             # Row 转换成dict
             product = product.as_dict()
-
-        if product.get('stocks'):
-            product['stock_type'] = 1
+        if 'stock_type' in product:
+            product['stock_type'] = 1 if product['stock_type'] == '有限' else 0
         else:
-            product['stock_type'] = 0
+            if product.get('stocks'):
+                product['stock_type'] = 1
+            else:
+                product['stock_type'] = 0
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
         __process_product_data(product)
         product = __supplement_product(context.webapp_owner_id, product)
@@ -144,11 +150,22 @@ def step_impl(context, user, type_name):
     context.products = actual
 
     if hasattr(context, 'caller_step_text'):
-      expected = json.loads(context.caller_step_text)
-      delattr(context, 'caller_step_text')
+        expected = json.loads(context.caller_step_text)
+        delattr(context, 'caller_step_text')
     else:
-      expected = json.loads(context.text)
-
+        if context.table:
+            expected = []
+            for product in context.table:
+                product = product.as_dict()
+                if 'barCode' in product:
+                    product['bar_code'] = product['barCode']
+                    del product['barCode']
+                product['categories'] = list(product['categories'])
+                if 'categories' in product:
+                    del product['categories']
+                expected.append(product)
+        else:
+            expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
 
@@ -229,6 +246,18 @@ def update_product_display_index(context, user, product_name, pos):
     }
     response = context.client.post('/mall2/api/product/?_method=post', data)
     bdd_util.assert_api_call_success(response)
+
+@when(u"{user}设置商品查询条件")
+def step_impl(context,user):
+    query_param = json.loads(context.text)
+    webapp_id = bdd_util.get_webapp_id_for(user)
+    owner = WebApp.objects.get(appid=webapp_id)
+    category_name = query_param['category']
+    if category_name == u'全部' or category_name == u'全部分类':
+        query_param['category'] = -1
+    else:
+        query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
+    context.query_param = query_param
 
 
 def __update_prducts_by_name(context, product_name, action):

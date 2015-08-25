@@ -1,3 +1,4 @@
+# _edit_ : "新新8.25"
 Feature: 添加商品到购物车后，浏览购物车中的商品
 	bill将各种商品放入购物车后，能浏览商品信息
 
@@ -34,7 +35,7 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 3
+			"price": 30
 		}, {
 			"name": "商品2",
 			"price": 5
@@ -101,7 +102,8 @@ Scenario: 放入单种商品到购物车，商品参加限时抢购
 	And bill加入jobs的商品到购物车:ui
 		"""
 		[{
-			"name": "商品1"
+			"name": "商品1",
+			"count": 1
 		}]
 		"""
 	Then bill能获得购物车:ui
@@ -166,7 +168,8 @@ Scenario: 放入多个商品到购物车
 	And bill加入jobs的商品到购物车:ui
 		"""
 		[{
-			"name": "商品4"
+			"name": "商品4",
+			"count": 1
 		}]
 		"""
 	Then bill能获得购物车:ui
@@ -187,7 +190,8 @@ Scenario: 放入多个商品到购物车
 	When bill加入jobs的商品到购物车:ui
 		"""
 		[{
-			"name": "商品5"
+			"name": "商品5",
+			"count": 1
 		}]
 		"""
 	Then bill能获得购物车:ui

@@ -58,8 +58,8 @@ def extract_product_model(request):
             model['properties'] = process_custom_model(model['name'])
 
     else:
-        price = json.loads(request.POST.get('price', '0.0').strip())
-        weight = json.loads(request.POST.get('weight', '0.0').strip())
+        price = request.POST.get('price', '0.0').strip()
+        weight = request.POST.get('weight', '0.0').strip()
         stock_type = int(request.POST.get(
             'stock_type',
             models.PRODUCT_STOCK_TYPE_UNLIMIT)
