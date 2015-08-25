@@ -3,6 +3,9 @@ import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from datetime import datetime
+import os
+
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from core import resource
@@ -31,7 +34,7 @@ class surveyParticipances(resource.Resource):
 			'second_navs': export.get_second_navs(request),
 			'second_nav_name': "surveies",
 			'has_data': has_data,
-			'activity_id': request.GET['id']
+			'activity_id': request.GET['id'],
 		});
 		
 		return render_to_response('survey/templates/editor/survey_participances.html', c)
@@ -109,3 +112,139 @@ class surveyParticipances(resource.Resource):
 		response.data = response_data
 		return response.get_response()		
 
+class surveyParticipances_Export(resource.Resource):
+	'''
+	批量导出
+	'''
+	app = 'apps/survey'
+	resource = 'survey_participances-export'
+	@login_required
+	def api_get(request):
+		"""
+		响应API GET
+		"""
+		print '========== enter ============'
+		app_name = 'survey'
+		export_id = request.GET.get('export_id')
+		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
+		print 'export_id',export_id
+
+
+		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		export_file_dir = '/apps/customerized_apps/survey/export/'
+		export_file_path = os.path.join(export_file_dir,excel_file_name)
+
+		import xlwt
+
+		try:
+			data = app_models.surveyParticipance.objects(belong_to=export_id)
+			fields_raw = []
+			fields_pure = []
+			export_data = []
+
+			#从sample中提取字段
+			fields_raw.append(u'编号')
+			fields_raw.append(u'用户名')
+			fields_raw.append(u'提交时间')
+			sample = data[0]
+
+			fields_selec = []
+			fields_qa= []
+			fields_shortcuts = []
+
+			sample_tm = sample['termite_data']
+
+			for item in sample_tm:
+				if sample_tm[item]['type']=='appkit.qa':
+					if item in fields_qa:
+						pass
+					else:
+						fields_qa.append(item)
+				if sample_tm[item]['type']=='appkit.selection':
+					if item in fields_selec:
+						pass
+					else:
+						fields_selec.append(item)
+				if sample_tm[item]['type']=='appkit.shortcuts':
+					if item in fields_shortcuts:
+						pass
+					else:
+						fields_shortcuts.append(item)
+			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+			print fields_raw
+
+
+			for field in fields_raw:
+				if '_' in field:
+					purename = field.split('_')[1]
+					if purename in trans2zh:
+						fields_pure.append(trans2zh[purename])
+					else:
+						fields_pure.append(purename)
+				else:
+					fields_pure.append(field)
+
+			#数据表
+			#顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
+			num = 0
+			for record in data:
+				export_record={}
+				selec =[]
+				qa = []
+				shortcuts =[]
+				num = num+1
+				webapp_user_id = record['webapp_user_id']
+				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+
+				for s in fields_selec:
+					s_i = record[u'termite_data'][s][u'value']
+					for i in s_i:
+						if s_i[i]['isSelect']== True:
+							selec.append(i.split('_')[1])
+
+				for s in fields_qa:
+					s_v = record[u'termite_data'][s][u'value']
+					qa.append(s_v)
+
+				for s in fields_shortcuts:
+					s_v = record[u'termite_data'][s][u'value']
+					shortcuts.append(s_v)
+
+				export_record = []
+				export_record.append(num)
+				export_record.append(webapp_user_id)
+				export_record.append(create_at)
+				for item in selec:
+					export_record.append(item)
+				for item in qa:
+					export_record.append(item)
+				for item in shortcuts:
+					export_record.append(item)
+
+				export_data.append(export_record)
+
+			##写Excel
+			wb = wb = xlwt.Workbook(encoding='utf-8')
+			ws = wb.add_sheet('id%s'%export_id)
+			header_style = xlwt.XFStyle()
+
+			#字段
+			row = col = 0
+			for h in fields_pure:
+				ws.write(row,col,h)
+				col += 1
+			#数据
+			row = 0
+			lens = len(export_data[0])
+			for record in export_data:
+				row +=1
+				for col in range(lens):
+					ws.write(row,col,record[col])
+
+			wb.save(export_file_path)
+			response = create_response(200)
+			response.data = {'download_path':export_file_path,'filename':excel_file_name,'code':200}
+		except:
+			response = create_response(500)
+
+		return response.get_response()
