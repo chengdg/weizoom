@@ -16,6 +16,7 @@ gmu.define('SideNav', {
 		this.myscroll = null;
 		var $el = this.$el;
 		$('.wa-page').css('padding-bottom',60);
+		$('.wa-shopBottomNavPage').css('padding-bottom',25);
 
 		var _this = this;
 		this.isIScrollInitialized = false;

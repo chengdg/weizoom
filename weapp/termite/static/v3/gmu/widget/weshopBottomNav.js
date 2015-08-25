@@ -15,7 +15,7 @@ gmu.define('BottomNav', {
 	_create: function() {
 		var $el = this.$el;
 		$('.wa-page').css('padding-bottom',60);
-		$('.wa-shopBottomNavPage').css('padding-bottom',45);
+		$('.wa-shopBottomNavPage').css('padding-bottom',25);
 
 		var _this = this;
 		$(document).delegate('.xa-menu', 'click', function(event){
