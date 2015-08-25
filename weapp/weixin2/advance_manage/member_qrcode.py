@@ -11,7 +11,7 @@ from core import resource
 from core import paginator
 from utils.string_util import byte_to_hex
 from weixin2 import export
-from mall.models import *
+
 from modules.member import models as member_model
 from core.jsonresponse import JsonResponse, create_response, decode_json_str
 from weixin.user.models import DEFAULT_ICON, get_system_user_binded_mpuser
@@ -19,7 +19,7 @@ from market_tools.tools.coupon.util import get_coupon_rules, get_my_coupons
 from market_tools.tools.channel_qrcode.models import MemberChannelQrcodeSettings, MemberChannelQrcode, MemberChannelQrcodeHasMember, MemberChannelQrcodeAwardContent
 from modules.member.module_api import get_member_by_id_list, get_member_by_id
 from modules.member import models as member_model
-from mall import module_api as mall_api
+
 from core.wxapi import get_weixin_api
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
@@ -178,6 +178,7 @@ class ChannelQrcodes(resource.Resource):
 
 def _get_channel_qrcode_items(request):
     #处理搜索
+    from mall.models import *
     query = request.GET.get('query', '').strip()
     sort_attr = request.GET.get('sort_attr', '-created_at')
     created_at = '-created_at'
@@ -396,6 +397,8 @@ class ChannelQrcodeOrder(resource.Resource):
     @login_required
     @mp_required
     def api_get(request):
+        from mall import module_api as mall_api
+        from mall.models import *
         channel_qrcode_id = request.GET.get('qrcode_id', None)
         start_date = request.GET.get('start_date', '')
         end_date = request.GET.get('end_date', '')

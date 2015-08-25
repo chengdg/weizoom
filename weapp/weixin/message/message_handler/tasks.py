@@ -97,6 +97,7 @@ def _get_info_from_context(context):
 	return request, message, user_profile, member, response_rule, from_weixin_user, is_from_simulator
 
 def _should_record_message(is_from_simulator, request):
+	return True
 	should_record_message = True
 	'''
 	if settings.RECORD_SIMULATOR_MESSAGE:

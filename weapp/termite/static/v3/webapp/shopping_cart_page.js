@@ -239,32 +239,39 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
                 $counter.val(count)
             }
             var $stockTip = $counter.parents('.xa-product').find('.xa-stockTip');
+            var understock_msg = '';
+            if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
+                $stockTip.html('仅剩'+stocks+'件').show();
+                // if(stocks)
+            }else{
+                $stockTip.hide();
+            }
+
             if(stocks != null && stocks > 0 && (stocks < 5 || stocks < purchase || stocks || count)){
                 // alert(stocks+' '+count)
                 var $check = $product.find('.xa-check');
-                var msg1 = '限购'+stocks+'件';
+                // var msg1 = '';
                 var msg2 = '库存不足';
                 if (stocks > purchase){
-                    msg1 = '限购'+purchase+'件';
+                    // msg1 = '限购'+purchase+'件';
                     msg2 = '限购';
                 }
                 if(stocks < count || stocks < purchase){
                     $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
                     _this.unselectProduct($product);
                     
-                    $stockTip.show().html(msg1);
-                    $product.find('.xui-understock').show().html(msg2);
+                    // $stockTip.show().html(msg1);
+                    // $product.find('.xui-understock').show().html(msg2);
 
                     //$check.parent().removeAttr('name');
                     //$check.parent().unbind('touchstart');
                 }else{
                     $check.removeClass('xui-disabled-radio');
-                    $product.find('.xui-understock').hide().html(msg2);
-                    $stockTip.html(msg1);
+                    // $product.find('.xui-understock').hide().html(msg2);
+                    // $stockTip.html(msg1);
                 }
             }else{
                 $product.find('.xui-understock').hide();
-                $stockTip.hide();
             }
             $counter.bind('count-changed', _.bind(_this.onChangCounter, _this));
         });
