@@ -69,7 +69,8 @@ class feedbacks(resource.Resource):
 			webapp_user_ids = []
 
 		params = {}
-		params_id_length = 0 #在按照一个以上查找条件筛选时，会因为都是对id进行查找而造成BUG,所以对按照id查找的次数进行计数
+		params_id_length = 0 #在按照一个以上查找条件筛选时，会因为都是对id进行查找而造成BUG,
+		# 所以对按照id查找的次数进行计数,如查找两个以上条件，只展示符合所有查找条件id的交集
 		records = app_models.feedbackParticipance.objects.all()
 		if webapp_user_ids:
 			params['webapp_user_id__in'] = webapp_user_ids

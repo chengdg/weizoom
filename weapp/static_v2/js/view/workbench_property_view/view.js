@@ -70,7 +70,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "colorpicker": _.bind(this.initColorPicker, this),
             "richtext": _.bind(this.initRichTextView, this),
             "daterange": _.bind(this.initDateRange, this),
-            "prize_selector": _.bind(this.initPrizeSelector, this)
+            "prize_selector": _.bind(this.initPrizeSelector, this),
+            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this)
         };
 
 
@@ -814,6 +815,16 @@ W.workbench.PropertyView = Backbone.View.extend({
             var attr = $el.attr('data-field');
             _this.getTargetComponent($el).model.set(attr, prize);
         })
+    },
+    initPrizeSelectorV3: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-prize-selector-v3"]').data('view');
+        var _this = this;
+        view.on('change-prize', function(prize) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, prize);
+        });
     },
 
     initProductsView: function($el){
