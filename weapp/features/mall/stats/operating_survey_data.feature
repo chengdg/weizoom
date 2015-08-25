@@ -363,7 +363,7 @@ Scenario: 2  经营概况：综合
 			"products": [{
 				"name": "商品2",
 				"count": 2
-			}],
+			}]
 		}
 		"""
 	##下单会员：4（bill、tom、bill1、mary）;复购会员数：3（tom、bill、mary）
