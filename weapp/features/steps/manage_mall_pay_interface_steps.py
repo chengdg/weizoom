@@ -74,7 +74,7 @@ def step_impl(context, user):
 
     actual = target_pay_interface
     print("~~~~~~~~~~~~~actual:",actual)
-    assert 1==2
+    # assert 1==2
     actual.is_active = u'启用' if actual.is_active else u'停用'
 
     configs = {}
