@@ -282,6 +282,7 @@
 	font-size: 12px;
 	line-height: 24px;
 }*/
+
 .xui-allOrders .xui-colorGray{
     color:#999;
 }
@@ -327,10 +328,19 @@
     border: 1px solid #d6d4d1;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(214, 212, 209, 0.7);
-    padding: 20px;
+    padding: 13px 25px 10px 15px;
     font-size: 12px;
     line-height: 24px;
-    width: 300px;
+}
+.xui-buyerHintDropBox .drop-box-arrow{
+    background: rgba(0, 0, 0, 0) url("/static_v2/img/editor/sb_arrow.png") no-repeat scroll 0 0; 
+}
+.xui-buyerHintDropBox .drop-box-arrow-top{
+    top:-8px;
+    /*right:103px;*/
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 .xui-allOrders .xui-weizoomCard span{
     background: #fff;
