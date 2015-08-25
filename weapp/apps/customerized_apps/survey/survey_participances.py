@@ -43,10 +43,10 @@ class surveyParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
-		if name:
-			members = member_models.Member.get_by_username(name)
-		else:
-			members = member_models.Member.get_members(request.user_profile.webapp_id)
+		# if name:
+		# 	members = member_models.Member.get_by_username(name)
+		# else:
+		members = member_models.Member.get_members(request.user_profile.webapp_id)
 		member_ids = [member.id for member in members]
 		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		if not webapp_user_ids:
@@ -179,8 +179,7 @@ class surveyParticipances_Export(resource.Resource):
 				else:
 					fields_pure.append(field)
 
-			#数据表
-			#顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
+			#数据表,顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 			num = 0
 			for record in data:
 				export_record={}
@@ -218,17 +217,18 @@ class surveyParticipances_Export(resource.Resource):
 
 				export_data.append(export_record)
 
-			##写Excel
+			#workboos,worksheet
 			wb = wb = xlwt.Workbook(encoding='utf-8')
 			ws = wb.add_sheet('id%s'%export_id)
 			header_style = xlwt.XFStyle()
 
-			#字段
+			#fields
 			row = col = 0
 			for h in fields_pure:
 				ws.write(row,col,h)
 				col += 1
-			#数据
+
+			#data
 			row = 0
 			lens = len(export_data[0])
 			for record in export_data:
