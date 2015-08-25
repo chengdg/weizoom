@@ -7,7 +7,6 @@ from test import bdd_util
 from mall.models import PayInterface, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_ALIPAY, PAY_INTERFACE_COD, \
     PAY_INTERFACE_WEIZOOM_COIN
 import steps_db_util
-from webapp.models import WebApp
 
 
 @when(u"{user}添加支付方式")
@@ -49,22 +48,6 @@ def step_impl(context, user):
         pay_interface_type = PAY_INTERFACE_WEIZOOM_COIN
     elif expected['type'] == u'支付宝':
         pay_interface_type = PAY_INTERFACE_ALIPAY
-    db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, type=pay_interface_type)
-    from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
-
-    tmp_user = WebApp.objects.get(appid = bdd_util.get_webapp_id_for(user))
-    owner_id = context.webapp_owner_id
-    permissions = AccountHasWeizoomCardPermissions.objects.filter(owner_id=owner_id)
-    print("count:",permissions.count())
-    # print("func can:",permissions[0].is_can_use_weizoom_card)
-    can = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(context.webapp_owner_id)
-    print('owner_id',context.webapp_owner_id)
-    print("view id:",response.context['view_manager_id'])
-    print("db:",db_pay_interface)
-    print("can:",can)
-    print("response:",response.context['pay_interfaces'])
-
-
 
     target_pay_interface = None
     for pay_interface in response.context['pay_interfaces']:
@@ -73,8 +56,6 @@ def step_impl(context, user):
             break
 
     actual = target_pay_interface
-    print("~~~~~~~~~~~~~actual:",actual)
-    # assert 1==2
     actual.is_active = u'启用' if actual.is_active else u'停用'
 
     configs = {}
