@@ -18,6 +18,8 @@
 # 配置，使behave能使用django的model
 #
 import os
+from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'weapp.settings'
 
 import sys
@@ -197,6 +199,7 @@ def __clear_all_app_data():
 	mall_models.OrderReview.objects.all().delete()
 	mall_models.ProductReview.objects.all().delete()
 	mall_models.ProductReviewPicture.objects.all().delete()
+	AccountHasWeizoomCardPermissions.objects.all().delete()
 
 	#权限
 	auth_models.UserHasPermission.objects.all().delete()
