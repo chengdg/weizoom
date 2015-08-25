@@ -58,8 +58,8 @@ def extract_product_model(request):
             model['properties'] = process_custom_model(model['name'])
 
     else:
-        price = json.loads(request.POST.get('price', '0.0').strip())
-        weight = json.loads(request.POST.get('weight', '0.0').strip())
+        price = request.POST.get('price', '0.0').strip()
+        weight = request.POST.get('weight', '0.0').strip()
         stock_type = int(request.POST.get(
             'stock_type',
             models.PRODUCT_STOCK_TYPE_UNLIMIT)
@@ -195,7 +195,7 @@ def sorted_products(manager_id, product_categories, reverse):
                 product.join_category_time = i.created_at
                 products.append(product)
 
-        products = sorted(products, key=attrgetter('join_category_time'), reverse=True)
+        products = sorted(products, key=attrgetter('join_category_time', 'id'), reverse=True)
         products = sorted(products, key=attrgetter('shelve_type', 'display_index'))
         products = sorted(products, key=attrgetter('shelve_type'), reverse=reverse)
 

@@ -127,7 +127,7 @@ Background:
 		}]
 		"""
 
-@mall.order_filter @mall.order_filter.select_order_list @eugene
+@wip.os1 @mall.order_filter @mall.order_filter.select_order_list @eugene
 Scenario: 选择订单筛选条件
 	jobs选择订单筛选条件后
 	1. jobs选择一个条件时,获取对应的订单

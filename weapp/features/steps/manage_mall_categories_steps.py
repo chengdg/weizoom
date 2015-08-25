@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import json
 from behave import given, then, when
-from features.testenv.model_factory import ProductCategoryFactory
+from features.testenv.model_factory import ProductFactory, ProductCategoryFactory
 
 from test import bdd_util
 from mall import models as mall_models
@@ -107,4 +107,17 @@ def step_add_p_to_category(context, user, category_name):
 
     url = '/mall2/api/category/'
     context.client.post(url, data)
+
+@when(u"{user}更新分类'{category_name}'中商品'{product_name}'商品排序{position}")
+def step_impl(context, user, category_name, product_name, position):
+    product = ProductFactory(name=product_name)
+    category = ProductCategoryFactory(name=category_name)
+    url = '/mall2/api/category_list/'
+    data = {
+        "category_id": category.id,
+        "product_id": product.id,
+        "position": position
+    }
+    context.client.post(url, data)
+
 

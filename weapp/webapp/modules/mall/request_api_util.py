@@ -60,20 +60,20 @@ def product_stocks(request):
 		models = []
 
 	response = create_response(200)
-	if len(models) == 1:
+	# if len(models) == 1 and models[0].is_standard:
+	# 	model_data = dict()
+	# 	model_data["stocks"] = models[0].stocks
+	# 	model_data["stock_type"] = models[0].stock_type
+	# 	response.data = model_data
+	# if len(models) > 0:
+	for model in models:
 		model_data = dict()
-		model_data["stocks"] = models[0].stocks
-		model_data["stock_type"] = models[0].stock_type
-		response.data = model_data
-	elif len(models) > 1:
-		for model in models:
-			model_data = dict()
-			model_data["stocks"] = model.stocks
-			model_data["stock_type"] = model.stock_type
-			result_data[model.id] = model_data
-		response.data = result_data
-	else:
-		return create_response(500).get_response()
+		model_data["stocks"] = model.stocks
+		model_data["stock_type"] = model.stock_type
+		result_data[model.id] = model_data
+	response.data = result_data
+	# else:
+	# 	return create_response(500).get_response()
 
 	return response.get_response()
 
