@@ -184,7 +184,7 @@ def step_create_flash_sales(context, user):
 
 				data = {
 						'name': promotion['name'],
-						'promotion_title': promotion.get('promotion_slogan', ''),
+						'promotion_title': promotion.get('promotion_title', ''),
 						'member_grade': __get_member_grade(promotion, context.webapp_id),
 						'start_date': bdd_util.get_datetime_no_second_str(promotion['start_date']),
 						'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
