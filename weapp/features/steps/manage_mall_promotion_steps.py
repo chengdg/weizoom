@@ -38,11 +38,9 @@ def step_terminate_promotion(context, user, action):
 @when(u"{user}创建积分应用活动")
 def step_impl(context, user):
 		if context.table:
-				# 处理tables
-				promotions = context.table
-				promotions = [promotion.as_dict() for promotion in promotions]
+			promotions = [promotion.as_dict() for promotion in context.table]
 		else:
-				promotions = json.loads(context.text)
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				# 处理单个积分应用活动创建
 				promotions = [promotions]
@@ -89,11 +87,9 @@ def step_impl(context, user):
 @when(u"{user}创建满减活动")
 def step_impl(context, user):
 		if context.table:
-				# 处理tables
-				promotions = context.table
-				promotions = [promotion.as_dict() for promotion in promotions]
+			promotions = [promotion.as_dict() for promotion in context.table]
 		else:
-				promotions = json.loads(context.text)
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -126,11 +122,9 @@ def step_impl(context, user):
 @when(u"{user}创建买赠活动")
 def step_create_premium_sale(context, user):
 		if context.table:
-				# 处理tables
-				promotions = context.table
-				promotions = [promotion.as_dict() for promotion in promotions]
+			promotions = [promotion.as_dict() for promotion in context.table]
 		else:
-				promotions = json.loads(context.text)
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -172,11 +166,9 @@ def step_create_premium_sale(context, user):
 @when(u"{user}创建限时抢购活动")
 def step_create_flash_sales(context, user):
 		if context.table:
-				# 处理tables
-				promotions = context.table
-				promotions = [promotion.as_dict() for promotion in promotions]
+			promotions = [promotion.as_dict() for promotion in context.table]
 		else:
-				promotions = json.loads(context.text)
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -301,9 +293,7 @@ def step_impl(context, user, promotion_type):
 				promotion['member_grade'] = MemberGrade.get_default_grade(webapp_id).name
 	expected = []
 	if context.table:
-		for promotion in context.table:
-			promotion = promotion.as_dict()
-			expected.append(promotion)
+			expected = [promotion.as_dict() for promotion in context.table]
 	else:
 		expected = json.loads(context.text)
 
