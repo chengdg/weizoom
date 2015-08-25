@@ -78,8 +78,21 @@ def __get_is_enable_navbar(request):
 	navbar = termite2_models.TemplateGlobalNavbar.get_object(request.webapp_owner_id)
 	return navbar.is_enable
 
+def is_home_page(request):
+	# 是否是首页
+	project_id = request.REQUEST.get('project_id', 0)
+	if 'workspace_id=home_page' in request.get_full_path() and project_id == '0':
+		return True
+
+	projects = webapp_models.Project.objects.filter(id=project_id)
+	if projects.count() > 0:
+		if projects[0].is_active:
+			return True
+
+	return False
+
 def __is_enable_navbar(request, navbar_component):
-	if 'home_page' in request.get_full_path():	
+	if is_home_page(request):	
 		'''
 		主页是否显示navbar
 		'''

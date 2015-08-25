@@ -47,14 +47,12 @@ class WebappPage(resource.Resource):
 		site_description = pagecreater.get_site_description(request)
 
 		# 是否是首页
-		current_page_name = 'page'
-		if 'workspace_id=home_page' in request.get_full_path():
+		if pagecreater.is_home_page(request):
+			# 首页
 			current_page_name = 'home'
 		else:
-			projects = webapp_models.Project.objects.filter(id=project_id)
-			if projects.count() > 0:
-				if projects[0].is_active:
-					current_page_name = 'home'
+			# 微页面
+			current_page_name = 'page'
 
 		c = RequestContext(request, {
 			'page_title': page_title,
