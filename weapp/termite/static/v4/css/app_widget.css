@@ -300,14 +300,13 @@
 	height: 140px;
 }
 .wui-surveyDescription>.wui-i-innerTitle {
-	background: #8d00ab none repeat scroll 0 0;
-	font-size: 24px;
-	font-weight: bold;
-	margin-left: 25%;
-	margin-top: 25px;
-	padding: 0 5px;
+	font-size: 20px;
+	font-weight: 400;
+	margin-top: -386px;
 	position: absolute;
 	color: white;
+	text-align: center;
+	width: 84%;
 }
 .wui-lotterydescription>.wui-i-header{
 	text-align: center;
