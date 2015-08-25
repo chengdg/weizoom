@@ -7,6 +7,8 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
         'click .xa-second-nav-link-menu': 'onClickLinkMenuButton',
         'click .xa-second-nav-selectLink-close': 'onClickCloseLinkButton',
         'click .xa-second-nav-close': 'onClickCloseSecondNav',
+        'mouseover .propertyGroup_property_dynamicControlField_control2': 'onMouseoverField',
+        'mouseout .propertyGroup_property_dynamicControlField_control2': 'onMouseoutField',
 	},
 
 	templates: {
@@ -189,6 +191,16 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
         this.trigger('update-show-box', this.$el, length);
         
         this.isShowAddBtn();
+    },
+
+    onMouseoutField: function(event){
+        this.$el.find('.propertyGroup_property_dynamicControlField_control2').children('.close').hide();
+    },
+
+    onMouseoverField: function(event){
+        var $el = $(event.currentTarget);
+        this.$el.find('.propertyGroup_property_dynamicControlField_control2').children('.close').hide();
+        $el.children('.close').show();
     }
 
 });
