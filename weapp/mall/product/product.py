@@ -20,11 +20,6 @@ from mall import signals as mall_signals
 from . import utils
 from mall import export
 
-
-import logging
-logger = logging.getLogger('console')
-
-
 class ProductList(resource.Resource):
     app = 'mall2'
     resource = 'product_list'
