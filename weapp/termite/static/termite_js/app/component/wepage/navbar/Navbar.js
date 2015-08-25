@@ -47,7 +47,7 @@ W.component.wepage.Navar = W.component.Component.extend({
             }, {
                 name: 'type',
                 type: 'radio',
-                displayName: '选择模板',
+                displayName: '选择模板：',
                 isUserProperty: true,
                 source: [{
                     name: '自定义菜单样式',
