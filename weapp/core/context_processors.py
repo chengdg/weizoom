@@ -594,7 +594,7 @@ def __match_navbar_path(webapp_owner_id, path):
 	
 
 def fetch_webapp_global_navbar(request):
-	if request.webapp_owner_id <= 0:
+	if not hasattr(request, 'webapp_owner_id') or request.webapp_owner_id <= 0:
 		return {}
 
 	else:
