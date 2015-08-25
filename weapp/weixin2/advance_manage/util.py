@@ -86,7 +86,7 @@ def new_get_members(request, filter_value):
             if key == 'source':
                 if value in ['-1']:
                     filter_data_args['source__in'] = [0,-1,1,2]
-                elif value in ['0','1']:
+                elif value in ['0']:
                     filter_data_args['source__in'] = [0,-1]
                 else:
                     filter_data_args["source"] = value
