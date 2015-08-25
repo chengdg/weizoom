@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import lotteries
+from apps.customerized_apps.lottery import lotteries
 
 NAV = {
 	'section': u'',

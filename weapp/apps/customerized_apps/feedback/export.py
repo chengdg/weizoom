@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import feedbacks
+
+from apps.customerized_apps.feedback import feedbacks
 
 NAV = {
 	'section': u'',

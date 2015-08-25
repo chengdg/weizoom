@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 
 import models as app_models
-import export
+from weixin2 import export
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -71,7 +71,7 @@ class voteStatistic(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
+			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': 'votes',
 			'titles': titles_list,
 			'total_count': total_count,
