@@ -269,7 +269,7 @@ class Product(resource.Resource):
                 product = models.Product.objects.get(id=has_product_id)
             except models.Product.DoesNotExist:
                 return Http404
-            products = [product, ]
+            products = [product]
             models.Product.fill_details(request.manager, products, {
                 'with_product_model': True,
                 'with_image': True,
