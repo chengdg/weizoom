@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-import json
+import copy
+import json, time
 from behave import when, then, given
 import logging
+from mall.models import ProductCategory
+from webapp.models import WebApp
+
 logger = logging.getLogger('console')
 
 from mall import models as mall_models  # 注意不要覆盖此module
@@ -15,6 +19,10 @@ from .steps_db_util import (
     get_product_response_from_web_page, get_custom_model_id_from_user_code
 )
 
+@when(u'{user}暂停{scend}秒')
+def step_impl(context, user, scend):
+    time.sleep(float(scend))
+
 
 @when(u'{user}已添加商品')
 def step_impl(context, user):
@@ -23,10 +31,10 @@ def step_impl(context, user):
 
 @given(u'{user}已添加商品')
 def step_product_add(context, user):
-    """添加一个或多个商品.
+    """
+    添加一个或多个商品.
 
     用户user添加一个或多个商品到后台, 但添加商品前请确保用户已经登陆且设置支付方式.
-
 
     所需参数信息如下:
       [
@@ -40,10 +48,21 @@ def step_product_add(context, user):
 
     """
     url = '/mall2/product/?_method=put'
-    context.products = json.loads(context.text)
+    if context.table:
+        context.products = context.table
+    else:
+        context.products = json.loads(context.text)
     for product in context.products:
-        if product.get('stocks'):
-            product['stock_type'] = 1
+        if hasattr(product, 'as_dict'):
+            # Row 转换成dict
+            product = product.as_dict()
+        if 'stock_type' in product:
+            product['stock_type'] = 1 if product['stock_type'] == '有限' else 0
+        else:
+            if product.get('stocks'):
+                product['stock_type'] = 1
+            else:
+                product['stock_type'] = 0
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
         __process_product_data(product)
         product = __supplement_product(context.webapp_owner_id, product)
@@ -55,18 +74,26 @@ def step_product_add(context, user):
             mall_models.Product.objects.filter(
                 id=latest_product.id
             ).update(shelve_type=1)
+        if product.get('created_at'):
+            latest_product = mall_models.Product.objects.all().order_by('-id')[0]
+            mall_models.Product.objects.filter(
+                id=latest_product.id
+            ).update(created_at=product.get('created_at'))
 
 
 @then(u"{user}能获取商品'{product_name}'")
 def step_get_products(context, user, product_name):
     expected = json.loads(context.text)
     actual = __get_product_from_web_page(context, product_name)
-    # print("*"*39, "expected", "*"*39)
-    # from pprint import pprint
-    # pprint(expected)
-    # print("*"*39, "actual", "*"*39)
-    # pprint(actual)
+    print("actual: {}".format(actual))
     bdd_util.assert_dict(expected, actual)
+
+
+@when(u"{user}删除商品'{product_name}'的商品规格'{model_name}")
+def step_delete_product_with_custom_model(context, user, product_name, model_name):
+    """删除有定制规格商品的某个规则
+    """
+    step_update_product(context, user, product_name)
 
 
 @then(u'{user}后端获取"{product_name}"库存')
@@ -94,18 +121,26 @@ def step_update_product(context, user, product_name):
         product['name'] = existed_product.name
     __process_product_data(product)
     product = __supplement_product(context.webapp_owner_id, product)
+    print("POST DATA: {}".format(product))
 
-    url = '/mall2/product/?id=%d&source=offshelf' % existed_product.id
+    # url = '/mall2/product/?id=%d&source=offshelf' % existed_product.id
     url = '/mall2/product/?id=%d&?shelve_type=%d' % (
         existed_product.id, existed_product.shelve_type, )
     response = context.client.post(url, product)
     bdd_util.tc.assertEquals(302, response.status_code)
+    #assert False
 
 
 @then(u"{user}能获取商品列表")
 def step_impl(context, user):
     actual = __get_products(context)
-    expected = json.loads(context.text)
+    expected = []
+    if context.table:
+        for product in context.table:
+            product = product.as_dict()
+            expected.append(product)
+    else:
+        expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
 
@@ -115,11 +150,29 @@ def step_impl(context, user, type_name):
     context.products = actual
 
     if hasattr(context, 'caller_step_text'):
-      expected = json.loads(context.caller_step_text)
-      delattr(context, 'caller_step_text')
+        expected = json.loads(context.caller_step_text)
+        delattr(context, 'caller_step_text')
     else:
-      expected = json.loads(context.text)
-
+        if context.table:
+            expected = []
+            for product in context.table:
+                product = product.as_dict()
+                if 'barCode' in product:
+                    product['bar_code'] = product['barCode']
+                    del product['barCode']
+                product['categories'] = product['categories'].split(',')
+                # 处理空字符串分割问题
+                if product['categories'][0] == '':
+                    product['categories'] = []
+                # 处理table中没有验证库存的行
+                if 'stocks' in product and product['stocks'] == '':
+                    del product['stocks']
+                # 处理table中没有验证条码的行
+                if 'bar_code' in product and product['bar_code'] == '':
+                    del product['bar_code']
+                expected.append(product)
+        else:
+            expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
 
@@ -191,6 +244,28 @@ def update_product(context, user, action, product_name):
 def update_products(context, user, action):
     __update_prducts_by_name(context, json.loads(context.text), action)
 
+@when(u"{user}更新'{product_name}'商品排序{pos}")
+def update_product_display_index(context, user, product_name, pos):
+    data = {
+        "id": ProductFactory(name=product_name).id,
+        "update_type": "update_pos",
+        "pos": pos
+    }
+    response = context.client.post('/mall2/api/product/?_method=post', data)
+    bdd_util.assert_api_call_success(response)
+
+@when(u"{user}设置商品查询条件")
+def step_impl(context,user):
+    query_param = json.loads(context.text)
+    webapp_id = bdd_util.get_webapp_id_for(user)
+    owner = WebApp.objects.get(appid=webapp_id)
+    category_name = query_param['category']
+    if category_name == u'全部' or category_name == u'全部分类':
+        query_param['category'] = -1
+    else:
+        query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
+    context.query_param = query_param
+
 
 def __update_prducts_by_name(context, product_name, action):
     ACTION2TYPE = {
@@ -222,12 +297,20 @@ def __get_products(context, type_name=u'在售'):
       u'回收站': 'recycled'
     }
     type = NAME2TYPE[type_name]
-    response = context.client.get('/mall2/api/product_list/?version=1&type=%s&count_per_page=15&page=1' % type)
+    url = '/mall2/api/product_list/?version=1&type=%s' % type
+    if hasattr(context, 'query_param'):
+        for key in context.query_param.keys():
+            url += '&%s=%s' % (key, context.query_param[key])
+    response = context.client.get(url)
+
     data = json.loads(response.content)['data']
+    context.pageinfo = data['pageinfo']
 
     for product in data["items"]:
         #价格
         product['price'] = product['display_price']
+        if 'display_price_range' in product:
+            product['price'] = product['display_price_range']
         #分类
         categories = []
         for category in product['categories']:
@@ -261,11 +344,16 @@ def __get_products(context, type_name=u'在售'):
                     'standard': product['standard_model']
                 }
             }
+            product['stock_type'] = standard_model['stock_type']
 
     return data["items"]
 
 
 def __get_product_from_web_page(context, product_name):
+    """
+    访问 GET `/mall2/product/` 获取response
+
+    """
     response = get_product_response_from_web_page(context, product_name)
     product = response.context['product']
 
@@ -301,9 +389,21 @@ def __get_product_from_web_page(context, product_name):
     }
 
     #填充运费
-    if product.postage_id > 0:
+    print("product.postage_id={}".format(product.postage_id))
+    if product.postage_id == 999 or product.postage_id <= 0:
+        # TODO: 999表示什么？
+        postage_config_info = response.context['postage_config_info']
+        if postage_config_info['is_use_system_postage_config']:
+            actual['postage'] = postage_config_info['system_postage_config'].name
+        else:
+            # TODO: 如何处理?
+            actual['postage'] = postage_config_info['system_postage_config'].first_weight_price
+        #postage_config_info.system_postage_config.name
+    elif product.postage_id>0:
+        print("product.postage_id={}".format(product.postage_id))
         actual['postage'] = mall_models.PostageConfig.objects.get(
             id=product.postage_id).name
+          
 
     # 填充支付方式
     if product.is_use_online_pay_interface:
@@ -492,7 +592,11 @@ def __supplement_product(webapp_owner_id, product):
                 custom_model['name'] = custom_model_id
                 custom_models.append(custom_model)
             product_prototype['customModels'] = json.dumps(custom_models)
-
+    else:
+        # 没有规格
+        if int(product.get('stocks', '0')) > 0:
+            product_prototype['stock_type'] = mall_models.PRODUCT_STOCK_TYPE_LIMIT
+            product_prototype['stocks'] = product.get('stocks', '0')
     product_prototype['market_price'] = product_prototype['market_price']
     return product_prototype
 
@@ -508,13 +612,13 @@ def __process_product_data(product):
 
     # 商品分类
     product['product_category'] = -1
-    if product.get('category', ''):
+    if product.get('categories', ''):
         product_category = ''
-        for category_name in product['category'].split(','):
+        for category_name in product['categories'].split(','):
             category = ProductCategoryFactory(name=category_name)
             product_category += "%s," % str(category.id)
         product['product_category'] = product_category
-        del product['category']
+        del product['categories']
 
     # 轮播图
     if product.get('swipe_images'):

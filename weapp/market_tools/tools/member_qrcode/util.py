@@ -136,8 +136,8 @@ def get_qcrod_url(ticket):
 ###########################################################
 #check_member_qrcode_ticket : 检查是否是 会员二维码
 ###########################################################
-def check_member_qrcode_ticket(ticket):
-	return MemberQrcode.objects.filter(ticket=ticket).count()
+# def check_member_qrcode_ticket(ticket):
+# 	return
 
 
 ###########################################################
@@ -145,23 +145,29 @@ def check_member_qrcode_ticket(ticket):
 ###########################################################
 def update_member_qrcode_log(user_profile, member, ticket):
 	try:
-		only_create_friend = False
-		if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
-			only_create_friend = True
-		if member and  member.is_new:
-			if MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-				member_qrcode =  MemberQrcode.objects.filter(ticket=ticket)[0] if MemberQrcode.objects.filter(ticket=ticket).count() > 0 else None
-				if member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-					MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
-					_add_award_to_member(user_profile, member, member_qrcode)
-					#修改来源
-					if not only_create_friend:
-						_update_member_source(member)
-					#建立关系
-					_add_member_relation(member, member_qrcode.member, only_create_friend)
+		if MemberQrcode.objects.filter(ticket=ticket).count() > 0:
+			member_qrcode =  MemberQrcode.objects.filter(ticket=ticket)[0]
+			only_create_friend = False
+			if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
+				only_create_friend = True
+			if member and  member.is_new:
+				if MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
+					
+					if member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
+						MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
+						_add_award_to_member(user_profile, member, member_qrcode)
+						#修改来源
+						if not only_create_friend:
+							_update_member_source(member)
+						#建立关系
+						_add_member_relation(member, member_qrcode.member, only_create_friend)
+			return True
+		else:
+			return False
 	except:
 		notify_msg = u"微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
 		watchdog_fatal(notify_msg)
+		return True
 				
 
 def _add_award_to_member(user_profile, member, member_qrcode):

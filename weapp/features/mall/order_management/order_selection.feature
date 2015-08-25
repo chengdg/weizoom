@@ -127,7 +127,7 @@ Background:
 		}]
 		"""
 
-@mall.order_filter @mall.order_filter.select_order_list @eugene
+@wip.os1 @mall.order_filter @mall.order_filter.select_order_list @eugene
 Scenario: 选择订单筛选条件
 	jobs选择订单筛选条件后
 	1. jobs选择一个条件时,获取对应的订单
@@ -135,8 +135,8 @@ Scenario: 选择订单筛选条件
 	3. jobs填写详细信息时,获取对应的订单
 	4. jobs选择固定标签时,获取对应的订单
 
-
-	When jobs选择条件为
+	Given jobs登录系统
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"order_no": "00008"
@@ -173,7 +173,7 @@ Scenario: 选择订单筛选条件
 		}]
 		"""
 
-	When jobs选择条件为
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"express_number": "123"
@@ -244,7 +244,7 @@ Scenario: 选择订单筛选条件
 		}]
 		"""
 
-	When jobs选择条件为
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"status": "待发货",
@@ -282,7 +282,7 @@ Scenario: 选择订单筛选条件
 		}]
 		"""
 
-	When jobs选择条件为
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"product_name": "商品1",
@@ -343,7 +343,7 @@ Scenario: 选择订单筛选条件
 		}]
 		"""
 
-	When jobs选择条件为
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"ship_name": "tom",
@@ -382,7 +382,7 @@ Scenario: 选择订单筛选条件
 		}]
 		"""
 
-	When jobs选择条件为
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"status": "已发货",
@@ -395,7 +395,7 @@ Scenario: 选择订单筛选条件
 		[]
 		"""
 
-	When jobs选择条件为
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"order_time": "2014-10-07|2014-10-08",
@@ -408,7 +408,7 @@ Scenario: 选择订单筛选条件
 		[]
 		"""
 
-	When jobs选择条件为
+	When jobs根据给定条件查询订单
 		"""
 		{
 			"status": "已取消"

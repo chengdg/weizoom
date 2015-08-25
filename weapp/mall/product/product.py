@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import json
 import operator
+from datetime import datetime
 from itertools import chain
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
@@ -99,6 +100,7 @@ class ProductList(resource.Resource):
 
         #处理商品分类
         if _type == 'offshelf':
+            sort_attr = '-update_time'
             products = models.Product.objects.filter(
                 owner=request.manager,
                 shelve_type=models.PRODUCT_SHELVE_TYPE_OFF,
@@ -139,9 +141,11 @@ class ProductList(resource.Resource):
         else:
             products = sorted(products, key=operator.attrgetter('id'))
             products = sorted(products, key=operator.attrgetter(sort_attr))
+        products_is_0 = filter(lambda p: p.display_index == 0, products)
+        products_not_0 = filter(lambda p: p.display_index != 0, products)
+        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
-
-        products = utils.filter_products(request, products)
+        products = utils.filter_products(request, products_not_0 + products_is_0)
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -220,18 +224,20 @@ class ProductList(resource.Resource):
         else:
             # 更新商品上架状态以及商品排序
             if request.manager.id == products[0].owner_id:
+                now = datetime.now()
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0)
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0, update_time=now)
                 else:
-                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0)
+                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0, update_time=now)
             else:
+                # 微众商城更新商户商品状态
                 products.update(weshop_status=shelve_type)
 
         is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
         is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
-        #商品不再处于上架状态，发出product_not_offline signal
         if is_prev_shelve and is_not_sale or is_deleted:
+            # 商品不再处于上架状态，发出product_not_offline signal
             product_ids = [int(id) for id in ids]
             mall_signals.products_not_online.send(
                 sender=models.Product,
@@ -251,7 +257,8 @@ class Product(resource.Resource):
 
     @login_required
     def get(request):
-        """商品创建页&&商品更新页
+        """
+        商品创建页&&商品更新页
         """
         # 如果有product说明更新， 否则说明创建
         has_product_id = request.GET.get('id')
@@ -262,7 +269,7 @@ class Product(resource.Resource):
                 product = models.Product.objects.get(id=has_product_id)
             except models.Product.DoesNotExist:
                 return Http404
-            products = [product, ]
+            products = [product]
             models.Product.fill_details(request.manager, products, {
                 'with_product_model': True,
                 'with_image': True,
@@ -298,7 +305,7 @@ class Product(resource.Resource):
                 pay_interface_config['online_pay_interfaces'].append(
                     pay_interface)
 
-        # 确定运费配置
+        # 确定运费配置(对应表: mall_postage_config)
         system_postage_configs = models.PostageConfig.objects.filter(
             owner=request.manager, is_used=True)
         if system_postage_configs.exists():
@@ -381,6 +388,10 @@ class Product(resource.Resource):
         # product.display_index = models.Product.objects.filter(
         #     owner=request.manager
         # ).order_by('-display_index').first().display_index + 1
+        # 处理商品排序
+        display_index = int(request.POST.get('display_index', '0'))
+        if display_index > 0:
+            product.move_to_position(display_index)
 
         # 处理standard商品规格
         models.ProductModel.objects.create(
@@ -565,6 +576,11 @@ class Product(resource.Resource):
                 stocks=min_limit,
                 is_member_product=request.POST.get("is_member_product", False) == 'on'
             )
+
+        # 处理商品排序
+        display_index = int(request.POST.get('display_index', '0'))
+        if display_index > 0:
+            models.Product.objects.get(id=product_id).move_to_position(display_index)
 
         # 处理商品规格
         standard_model, custom_models = utils.extract_product_model(request)

@@ -57,10 +57,10 @@
                     <td style="width:508px;">
                         <ul class="xui-propertyValueList">
                             {% for property_value in property.property_values %}
-                            <li data-value-id="{{property_value.id}}">
-                                <div>
+                            <li data-value-id="{{property_value.id}}" data-pic-url="{{property_value.pic_url}}" data-model-name="{{property_value.name}}">
+                                <div class="xa-editModelPropertyValue">
                                     {% if property_value.is_image_property_value %}
-                                    <img src="{{property_value.pic_url}}" />
+                                    <img src="{{property_value.pic_url}}"/>
                                     {% else %}
                                     <span title="{{property_value.name}}">{{property_value.shot_name}}</span>
                                     {% endif %}
@@ -149,6 +149,7 @@ var ModelPropertyPage = Backbone.View.extend({
         'click input[type="radio"]': 'onClickType',
         'click .xa-deleteModelProperty': 'onClickDeleteModelPropertyLink',
         'click .xa-addPropertyValue': 'onClickAddModelPropertyValueLink',
+        'click .xa-editModelPropertyValue': 'onClickEditModelPropertyValue',
         'mouseenter .xui-propertyValueList li': 'onEnterPropertyValue',
         'mouseleave .xui-propertyValueList li': 'onLeavePropertyValue',
         'click .xa-delete': 'onClickDeleteModelPropertyValueLink'
@@ -161,7 +162,6 @@ var ModelPropertyPage = Backbone.View.extend({
     onClickAddModelPropertyLink: function(event) {
         var $tbody = $(event.currentTarget).parents('.xa-specification').find(".xa-isvalidate");
         console.log("onClickAddModelPropertyLink");
-        console.log($tbody);
         if(W.validate($tbody)){
             W.getApi().call({
                 method: 'put',
@@ -191,7 +191,6 @@ var ModelPropertyPage = Backbone.View.extend({
             return false;
         }
     },
-
     onClickDeleteModelPropertyLink: function(event) {
         var $tr = $(event.currentTarget).parents('tr');
         event.stopPropagation();
@@ -267,7 +266,37 @@ var ModelPropertyPage = Backbone.View.extend({
             return false;
         }
     },
-
+    onClickEditModelPropertyValue:function(event){
+        var $tr = $(event.currentTarget).parents('tr');
+        var $li = $(event.currentTarget).parents('li');
+        var propertyValueId = $li.data('value-id');
+        var picUrl = $li.data('pic-url');
+        var modelValue = $li.data('model-name');
+        W.dialog.showDialog('W.dialog.mall.AddProductModelPropertyValueDialog', {
+                propertyValueId: propertyValueId,
+                modelValue:modelValue,
+                picUrl:picUrl,
+                success: function(data) {
+                    data['pic_url'] = data['picUrl'];
+                    W.getApi().call({
+                        method: 'post',
+                        app: 'mall2',
+                        api: 'model_property_value',
+                        args: _.extend(data, {
+                            id: propertyValueId,
+                        }),
+                        scope: this,
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function(resp) {
+                            alert('修改规格值失败!');
+                        }
+                    })
+                }
+            });
+        
+    },
     onClickAddModelPropertyValueLink: function(event) {
         var $tr = $(event.currentTarget).parents('tr');
         var propertyId = $(event.currentTarget).parents('tr').data('propertyId');

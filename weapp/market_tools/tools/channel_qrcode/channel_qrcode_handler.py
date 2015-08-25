@@ -61,17 +61,19 @@ class ChannelQrcodeHandler(MessageHandler):
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
 
+		# if hasattr(context, 'is_member_qrcode') and context.is_member_qrcode is False:
+		# 	return None
+
 		if user_profile.user_id in [467,154] and \
 			check_new_channel_qrcode_ticket(ticket, user_profile):
 			if member.is_new:
 				create_new_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
 			return None
-		elif check_channel_qrcode_ticket(ticket, user_profile):
-			#if member.is_new:
-			create_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
 
-			msg_type, detail = get_response_msg_info(ticket, user_profile)
-
+		if ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id).count() > 0:
+			channel_qrcode = ChannelQrcodeSettings.objects.filter(ticket=ticket, owner_id=user_profile.user_id)[0]
+			create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
+			msg_type, detail = get_response_msg_info_restructure(channel_qrcode, user_profile)
 			if msg_type != None:
 				from_weixin_user = self._get_from_weixin_user(message)
 				#token = self._get_token_for_weixin_user(user_profile, from_weixin_user, is_from_simulator)
@@ -83,6 +85,23 @@ class ChannelQrcodeHandler(MessageHandler):
 				if msg_type == 'news' and get_material_news_info(detail):
 					news = get_material_news_info(detail)
 					return generator.get_news_response(username, message.toUserName, news, username)
+		# elif check_channel_qrcode_ticket(ticket, user_profile):
+		# 	#if member.is_new:
+		# 	create_channel_qrcode_has_memeber(user_profile, context.member, ticket, member.is_new)
+
+		# 	msg_type, detail = get_response_msg_info(ticket, user_profile)
+
+		# 	if msg_type != None:
+		# 		from_weixin_user = self._get_from_weixin_user(message)
+		# 		#token = self._get_token_for_weixin_user(user_profile, from_weixin_user, is_from_simulator)
+		# 		if msg_type == 'text' and detail:
+		# 			if is_from_simulator:
+		# 				return generator.get_text_response(username, message.toUserName, emotion.change_emotion_to_img(detail), username, user_profile)
+		# 			else:
+		# 				return generator.get_text_response(username, message.toUserName, detail, username, user_profile)
+		# 		if msg_type == 'news' and get_material_news_info(detail):
+		# 			news = get_material_news_info(detail)
+		# 			return generator.get_news_response(username, message.toUserName, news, username)
 
 		return None
 

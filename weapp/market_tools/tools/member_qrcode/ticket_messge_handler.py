@@ -49,10 +49,9 @@ class QrcodeHandler(MessageHandler):
 
 		if not hasattr(context.message, 'eventKey') or context.message.eventKey is None or ticket == '':
 			return None
-
-		if check_member_qrcode_ticket(ticket):
-			update_member_qrcode_log(user_profile, context.member, ticket)
 		
+		is_member_qrcode = update_member_qrcode_log(user_profile, context.member, ticket)
+		#context.is_member_qrcode = is_member_qrcode
 		return None
 
 

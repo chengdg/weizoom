@@ -10,15 +10,19 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 100.00,
+			"shelve_type": "上架"
 		}, {
 			"name": "商品2",
-			"price": 100.00
+			"price": 100.00,
+			"shelve_type": "上架"
 		}, {
 			"name": "商品3",
-			"price": 100.00
+			"price": 100.00,
+			"shelve_type": "上架"
 		}, {
 			"name": "商品4",
-			"price": 100.00
+			"price": 100.00,
+			"shelve_type": "上架"
 		}]
 		"""
 	Given jobs设定会员积分策略
@@ -38,17 +42,17 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
-	When jobs已创建积分应用活动
+	When jobs创建积分应用活动
 		"""
 		[{
 			"name": "商品4积分应用",
 			"start_date": "明天",
 			"end_date": "3天后",
 			"status":"未开始",
-			"products": ["商品4"],
+			"product_name": "商品4",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -57,22 +61,20 @@ Background:
 			"start_date": "今天",
 			"end_date": "2天后",
 			"status":"进行中",
-			"products": ["商品3"],
+			"product_name": "商品3",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
 		}, {
 			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
-			"status":"已结束",
-			"products": ["商品2"],
+			"status":"进行中",
+			"product_name": "商品2",
 			"is_permanant_active": true,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
@@ -81,21 +83,394 @@ Background:
 			"start_date": "2015-07-11",
 			"end_date": "2015-08-10",
 			"status":"已结束",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"is_permanant_active": false,
 			"rules": [{
-				"member_grade_name": "全部会员",
+				"member_grade": "全部会员",
 				"discount": 50,
 				"discount_money": 50.0
 			}]
 		}]
 		"""
 
-@promotionIntegral @integral
+@mall2 @promotionIntegral @integral
 Scenario: 1 结束状态为'未开始'的积分应用活动
+	Given jobs登录系统
+	When jobs'结束'促销活动'商品4积分应用'
+	Then jobs获取积分应用活动列表
+		"""
+		[ {
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品2积分应用",
+			"status":"进行中",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"status":"进行中",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品4积分应用",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"status":"已结束",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
 
-@promotionIntegral @integral
+@mall2 @promotionIntegral @integral
 Scenario: 2 结束状态为'进行中'，非永久有效的积分应用活动
+	Given jobs登录系统
+	When jobs'结束'促销活动'商品3积分应用'
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品2积分应用",
+			"status":"进行中",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"status":"已结束",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品4积分应用",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"status":"未开始",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
 
-@promotionIntegral @integral
+@mall2 @promotionIntegral @integral
 Scenario: 3 结束状态为'进行中'，且为永久有效的积分应用活动
+	Given jobs登录系统
+	When jobs'结束'促销活动'商品2积分应用'
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品2积分应用",
+			"status":"已结束",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"status":"进行中",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品4积分应用",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"status":"未开始",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+
+@promotionIntegral @integral @ui
+Scenario: 4 批量结束积分应用活动（包含已结束状态）
+	Given jobs登录系统
+	When jobs批量'结束'促销活动
+		"""
+		[{
+			"name": "商品4积分应用",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"status":"未开始",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"status":"进行中",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品2积分应用",
+			"status":"进行中",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	# ui 验证
+	#	, {
+	#		"name": "商品1积分应用",
+	#		"start_date": "2015-07-11",
+	#		"end_date": "2015-08-10",
+	#		"status":"已结束",
+	#		"product_name": "商品1",
+	#		"is_permanant_active": false,
+	#		"rules": [{
+	#			"member_grade": "全部会员",
+	#			"discount": 50,
+	#			"discount_money": 50.0
+	#		}]
+	#	}
+	#Then jobs获得系统提示'不能同时进行删除和结束操作'
+
+@mall2 @promotionIntegral @integral
+Scenario: 5 批量结束积分应用活动（不包含已结束状态）
+	Given jobs登录系统
+	When jobs批量'结束'促销活动
+		"""
+		[{
+			"name": "商品4积分应用",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"status":"未开始",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"status":"进行中",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品2积分应用",
+			"status":"进行中",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品2积分应用",
+			"status":"已结束",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"status":"已结束",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品4积分应用",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"status":"已结束",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+
+@mall2 @promotionIntegral @integral
+Scenario: 6 商品下架导致积分应用活动结束
+	Given jobs登录系统
+	When jobs批量下架商品
+		"""
+		["商品3", "商品4"]
+		"""
+	Then jobs能获得'在售'商品列表
+		"""
+		[{
+			"name": "商品2",
+			"price": 100.00
+		}, {
+			"name": "商品1",
+			"price": 100.00
+		}]
+		"""
+	And jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品2积分应用",
+			"status":"进行中",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品3积分应用",
+			"start_date": "今天",
+			"end_date": "2天后",
+			"status":"已结束",
+			"product_name": "商品3",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}, {
+			"name": "商品4积分应用",
+			"start_date": "明天",
+			"end_date": "3天后",
+			"status":"已结束",
+			"product_name": "商品4",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""

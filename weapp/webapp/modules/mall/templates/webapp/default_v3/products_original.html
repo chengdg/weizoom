@@ -1,6 +1,12 @@
 {% extends "webapp_content_base.html" %}
 {% load common_tag %}
-
+{% block css %}
+<style>
+    .xui-attentionAlert{
+        display: none;
+    }
+</style>
+{% endblock %}
 {% block content-panel %}
 <div id='product_list_contain' data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
 

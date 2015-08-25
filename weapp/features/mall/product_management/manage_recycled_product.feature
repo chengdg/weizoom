@@ -40,7 +40,7 @@ Background:
 		[{
 			"name": "东坡肘子",
 			"status": "待售",
-			"category": "分类1,分类2,分类3",
+			"categories": "分类1,分类2,分类3",
 			"model": {
 				"models": {
 					"standard": {
@@ -53,7 +53,7 @@ Background:
 		}, {
 			"name": "叫花鸡",
 			"status": "待售",
-			"category": "分类1",
+			"categories": "分类1",
 			"is_enable_model": "启用规格",
 			"model": {
 				"models": {

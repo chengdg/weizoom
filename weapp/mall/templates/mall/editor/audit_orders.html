@@ -180,6 +180,9 @@
 					<td width="100">
 						{{if order.member_id > 0}}
 							<a target="_blank" href="/member/member_detail/edit/?id=${order.member_id}">{{html order.buyer_name}}</a>
+							<span class="xui-buyerHint xa-buyerHint pr">
+								<i class="xa-buyerHintImg" data-addr="${order.ship_address}" data-tel="${order.ship_tel}" data-message="${order.customer_message}" data-bill-type="${order.bill_type}" data-bill="${order.bill}"></i>
+							</span>
 						{{else}}
 							{{html order.buyer_name}}
 						{{/if}}
@@ -472,6 +475,43 @@ $(document).ready(function() {
 		    }
 		});
 
+	});
+
+	// 买家信息提示
+	$('body').delegate('.xa-buyerHintImg','mouseenter',function(event){
+		var $el = $(event.currentTarget);
+		var buyerHintView = W.getBuyerHintView({
+			//width: 220,
+			isTitle: false,
+			isArrow:false,
+			privateContainerClass:'xui-buyerHintDropBox xa-buyerHintDropBox',
+			position:'down-middle'
+		});
+
+		var addr = $el.attr('data-addr');
+		var tel = $el.attr('data-tel');
+		var message = $el.attr('data-message');
+		var bill_type = $el.attr('data-bill-type');
+		if(bill_type === "0") {
+			bill_type = "无";
+		} else if(bill_type === "1") {
+			bill_type = "个人";
+		} else if(bill_type === "2") {
+			bill_type = "公司";
+		}
+		var bill = $el.attr('data-bill');
+
+		buyerHintView.show({
+			$action: $el,
+			addr: addr,
+			tel: tel,
+			message: message,
+			bill_type: bill_type,
+			bill: bill
+		});
+	});
+	$('body').delegate('.xa-buyerHintImg','mouseleave',function(){
+		$('.xa-buyerHintDropBox').hide();
 	});
 });
 </script>

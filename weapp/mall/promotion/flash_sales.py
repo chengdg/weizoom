@@ -18,7 +18,8 @@ class FlashSale(resource.Resource):
 
     @login_required
     def get(request):
-        """浏览限时抢购详情.
+        """
+        浏览限时抢购详情.
         """
         _type = request.GET.get('type')
         if not _type:
@@ -58,10 +59,10 @@ class FlashSale(resource.Resource):
 
             return render_to_response('mall/editor/promotion/flash_sale_detail.html', c)
         elif _type == 'copy':
-            """拷贝限时抢购
+            """
+            拷贝限时抢购
 
-            Args:
-              id: promotion_id
+            @param id: promotion_id
 
             """
             promotion_id = request.GET['id']
@@ -95,7 +96,8 @@ class FlashSale(resource.Resource):
 
     @login_required
     def api_put(request):
-        """创建限时抢购
+        """
+        创建限时抢购
         """
 
         count_per_purchase = request.POST.get('count_per_purchase', 9999999)

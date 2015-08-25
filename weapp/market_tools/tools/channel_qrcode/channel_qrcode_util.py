@@ -125,3 +125,44 @@ def _add_award_to_member(user_profile, award_type, award_content, member, integr
 			except:
 				notify_msg = u"新推广扫码-微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
 				watchdog_fatal(notify_msg)
+
+
+
+def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, member, ticket, is_new_member):
+	try:
+		if channel_qrcode.bing_member_id == member.id:
+			return
+
+		if (is_new_member is False) and channel_qrcode.re_old_member == 0:
+			return
+
+		if ChannelQrcodeHasMember.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
+			ChannelQrcodeHasMember.objects.filter(member=member).delete()
+			ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member, is_new=is_new_member)
+		else:
+			return
+
+		if member:
+			prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
+			award(prize_info, member, CHANNEL_QRCODE)
+
+		try:
+			if channel_qrcode.grade_id > 0:
+				# updated by zhu tianqi,修改为会员等级高于目标等级时不降级，member_id->member
+				Member.update_member_grade(member, channel_qrcode.grade_id)
+		except:
+			notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
+			watchdog_warning(notify_message)
+	except:
+		notify_message = u"渠道扫描异常create_channel_qrcode_has_memeber error, cause:\n{}".format(unicode_full_stack())
+		watchdog_warning(notify_message)
+
+def get_response_msg_info_restructure(channel_qrcode_setting, user_profile):
+	if channel_qrcode_setting.reply_type == 0:
+		return None, None
+	elif channel_qrcode_setting.reply_type == 1:
+		return 'text', channel_qrcode_setting.reply_detail
+	elif channel_qrcode_setting.reply_type == 2:
+		return 'news', channel_qrcode_setting.reply_material_id
+	else:
+		return None, None

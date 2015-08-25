@@ -37,6 +37,7 @@ def step_impl(context, user):
 def step_impl(context, user):
     url = '/mall2/pay_interface_list/'
     response = context.client.get(url)
+    print("pay_interface_list: {}".format(response.context['pay_interfaces']))
 
     expected = json.loads(context.text)
     if expected['type'] == u'微信支付':
@@ -48,6 +49,7 @@ def step_impl(context, user):
     elif expected['type'] == u'支付宝':
         pay_interface_type = PAY_INTERFACE_ALIPAY
     # db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, type=pay_interface_type)
+    target_pay_interface = None
     for pay_interface in response.context['pay_interfaces']:
         if pay_interface.type == pay_interface_type:
             target_pay_interface = pay_interface
