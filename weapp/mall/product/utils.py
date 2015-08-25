@@ -116,35 +116,6 @@ PRODUCT_FILTERS = {
 }
 
 
-# def filter_products(request, products):
-#     has_filter = search_util.init_filters(request, PRODUCT_FILTERS)
-#     if not has_filter:
-#         # 没有filter，直接返回
-#         return products
-
-#     filtered_products = []
-#     products = search_util.filter_objects(products, PRODUCT_FILTERS['product'])
-#     if not products:
-#         # product filter没有通过，跳过该promotion
-#         print 'end in product filter'
-#         return filtered_products
-#     else:
-#         print 'pass product filter'
-
-#     for product in products:
-#         models = search_util.filter_objects(
-#             product.models,
-#             PRODUCT_FILTERS['models']
-#         )
-#         if models:
-#             print 'pass model filter'
-#             filtered_products.append(product)
-#         else:
-#             print 'end in model filter'
-
-#     return filtered_products
-
-
 def filter_products(request, products):
     has_filter = search_util.init_filters(request, PRODUCT_FILTERS)
     if not has_filter:
