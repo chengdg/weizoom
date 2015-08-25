@@ -109,30 +109,7 @@ Background:
 		And tom2取消关注jobs的公众号
 		And tom4取消关注jobs的公众号
 
-	#好友
-		#bill和tom1建立好友关系
-			When tom1访问jobs的webapp
-			When tom1把jobs的微站链接分享到朋友圈
 
-			When 清空浏览器
-			When bill点击tom1分享链接
-			When bill关注jobs的公众号
-			When bill访问jobs的webapp
-
-		#bill2和tom1建立好友关系
-			When 清空浏览器
-			When bill2关注jobs的公众号
-			When bill2访问jobs的webapp
-			When bill2点击tom1分享链接
-
-		#bill3和tom3建立好友关系
-			When tom3访问jobs的webapp
-			When tom3把jobs的微站链接分享到朋友圈
-
-			When 清空浏览器
-			When bill3关注jobs的公众号
-			When bill3点击tom3分享链接
-			When bill3访问jobs的webapp
 
 	#获取会员积分
 
@@ -160,6 +137,7 @@ Background:
 			| 2015-3-4   | tom3     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-3-5   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
 
+@test_aaaa
 Scenario:1 默认条件和空条件查询
 		Given jobs登录系统
 		#首次进入，默认条件查询
@@ -234,7 +212,7 @@ Scenario:2 过滤条件"会员名称"
 	#会员名称部分匹配查询
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"bill",
 				"status":"全部",
 				"attention_start_time":"",
@@ -252,7 +230,7 @@ Scenario:2 过滤条件"会员名称"
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""
@@ -269,7 +247,7 @@ Scenario:2 过滤条件"会员名称"
 	#会员名称完全匹配查询
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"tom5",
 				"status":"全部",
 				"attention_start_time":"",
@@ -287,7 +265,7 @@ Scenario:2 过滤条件"会员名称"
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""
@@ -302,7 +280,7 @@ Scenario:2 过滤条件"会员名称"
 	#无查询结果
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"marry",
 				"status":"全部",
 				"attention_start_time":"",
@@ -320,7 +298,7 @@ Scenario:2 过滤条件"会员名称"
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""
@@ -335,7 +313,7 @@ Scenario:3 过滤条件"会员状态"
 	#会员状态匹配
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"",
 				"status":"取消关注",
 				"attention_start_time":"",
@@ -353,7 +331,7 @@ Scenario:3 过滤条件"会员状态"
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""
@@ -371,7 +349,7 @@ Scenario:4 过滤条件"关注时间"
 	#区间时间边界值查询，不包含结束时间
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"",
 				"status":"全部",
 				"attention_start_time":"2014-8-5 00:00:00",
@@ -389,7 +367,7 @@ Scenario:4 过滤条件"关注时间"
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""
@@ -406,7 +384,7 @@ Scenario:4 过滤条件"关注时间"
 	#开始结束时间相同查询
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"",
 				"status":"全部",
 				"attention_start_time":"2014-10-1 8:00:00",
@@ -424,7 +402,7 @@ Scenario:4 过滤条件"关注时间"
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""
@@ -440,7 +418,7 @@ Scenario:4 过滤条件"关注时间"
 	#无查询结果
 		When jobs设置会员查询条件
 			"""
-			[{
+			{
 				"name":"",
 				"status":"全部",
 				"attention_start_time":"2015-8-10 00:00:00",
@@ -458,7 +436,7 @@ Scenario:4 过滤条件"关注时间"
 				"integral_end":"",
 				"massage_start_time":"",
 				"massage_end_time":""
-			}]
+			}
 			"""
 		Then jobs获得刷选结果人数
 			"""

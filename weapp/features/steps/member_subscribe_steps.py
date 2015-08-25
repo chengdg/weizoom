@@ -105,8 +105,9 @@ def step_impl(context, user):
 @then(u'{user}可以获得会员列表')
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
-	url = '/member/api/members/get/?design_mode=0&version=1&status=-1&count_per_page=50&page=1&enable_paginate=1'
-	response = context.client.get(bdd_util.nginx(url))
+	if not context.url:
+		context.url = '/member/api/members/get/?design_mode=0&version=1&status=-1&count_per_page=50&page=1&enable_paginate=1'
+	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
 	for member_item in items:
@@ -134,11 +135,11 @@ def step_impl(context, user):
 		table_members = []
 		for row in context.table:
 			table_members.append(row)
-	with open(r'text.txt','w+') as f:
-		f.write('actual_members:')
-        f.write(actual_members)
-        f.write('table_members:')
-        f.write(table_members)
+	# with open(r'text.txt','w+') as f:
+	# 	f.write('actual_members:')
+ #        f.write(actual_members)
+ #        f.write('table_members:')
+ #        f.write(table_members)
 	bdd_util.assert_list(json_data, actual_members)
 
 
