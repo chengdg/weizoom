@@ -288,9 +288,9 @@
 	margin-top: -40px;
 }
 .wui-lotterydescription>.wui-i-title{
-	background: url("/termite_static/img/component/lottery/roulette_title.png") no-repeat scroll 42% 100% / 100% auto;
-	padding-top: 0;
-	height: 140px;
+	background: url("/termite_static/img/component/lottery/roulette_title.png") no-repeat scroll center center / 275px 140px rgba(0, 0, 0, 0);
+    height: 140px;
+    padding-top: 0;
 }
 .wui-surveyDescription>.wui-i-innerTitle {
 	font-size: 20px;
@@ -299,7 +299,7 @@
 	position: absolute;
 	color: #fff;
 	text-align: center;
-	width: 84%;
+	width: 88%;
 }
 .wui-lotterydescription>.wui-i-header{
 	text-align: center;
