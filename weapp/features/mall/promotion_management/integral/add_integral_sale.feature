@@ -287,7 +287,7 @@ Scenario: 2 选取多规格商品，创建分级设置积分应用活动
 		[{
 			"name":"商品2积分应用",
 			"product_name": "商品2",
-			"product_price":100.00,
+			"product_price": "100.0 ~ 200.0",
 			"discount": "90%~100%",
 			"discount_money": "90.0~100.0",
 			"status":"进行中"
