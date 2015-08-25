@@ -1,6 +1,6 @@
 Feature: 安装完整测试所需的各种数据
 
-@full_init @ignore
+@full_init @mall2
 Scenario: 安装完整测试数据
 	Given jobs登录系统
 	#商品

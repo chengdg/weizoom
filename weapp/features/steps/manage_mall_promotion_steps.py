@@ -191,11 +191,18 @@ def step_create_flash_sales(context, user):
 				response = context.client.post(url, data)
 				bdd_util.assert_api_call_success(response)
 
-
+### 分页相关的 step 实现 ###
 @when(u"{user}设置查询条件")
 def step_impl(context, user):
-		context.query_param = json.loads(context.text)
+	context.query_param = json.loads(context.text)
 
+
+@then(u"{user}获取分页信息")
+def step_impl(context, user):
+	if hasattr(context, 'pageinfo'):
+		excepted = json.loads(context.text)
+		bdd_util.assert_dict(excepted, context.pageinfo)
+### 分页相关的 step 实现 ###
 
 @then(u"{user}获取{promotion_type}活动列表")
 def step_impl(context, user, promotion_type):
@@ -336,7 +343,6 @@ def step_impl(context, user):
 	url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=flash_sale&name=&barCode=&selectedProductIds=&count_per_page=10&page=1&enable_paginate=1'
 	response = context.client.get(url)
 	bdd_util.assert_api_call_success(response)
-	#print("response: {}".format(response))
 	data = json.loads(response.content)['data']
 	expected = [{
 		"name": item['name'],
@@ -344,7 +350,6 @@ def step_impl(context, user):
 		"operate": item['can_select'],
 		"price": item['standard_model']['price']
 	} for item in data['items']]
-	print("expected: {}".format(expected))
 	bdd_util.assert_list(expected, real)
 
 

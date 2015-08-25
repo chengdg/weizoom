@@ -299,10 +299,10 @@ W.view.mall.ProductCustomModelEditor = Backbone.View.extend({
 
 W.registerUIRole('[data-ui-role="mall-product-custom-model-editor"]', function() {
     var $container = $(this);
-    var models = $.parseJSON($container.attr('data-models'));
-    var customProperties = $.parseJSON($container.attr('data-custom-properties'));
-    var isUseCustomModel = ($container.attr('data-use-custom-model') === 'true');
-    var productType = $container.attr('data-product-type');
+    var models = $container.data('models');
+    var customProperties = $container.data('custom-properties');
+    var isUseCustomModel = $container.data('use-custom-model');
+    var productType = $container.data('product-type');
     var view = new W.view.mall.ProductCustomModelEditor({
         el: this,
         models: models,

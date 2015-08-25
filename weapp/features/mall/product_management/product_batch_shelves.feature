@@ -52,15 +52,15 @@ Scenario:1 对上架商品进行批量下架
 	Then jobs能获得'在售'商品列表
 	"""
 		[{
-			"name": "红烧肉",
-			"price": 20.0,
-			"stocks": 3,
-			"display_index":2
-		}, {
 			"name": "叫花鸡",
 			"price": 30.0,
 			"stock_type": "无限",
 			"display_index":1
+		}, {
+			"name": "红烧肉",
+			"price": 20.0,
+			"stocks": 3,
+			"display_index":2
 		}, {
 			"name": "梅菜扣肉",
 			"price": 20.0,
@@ -130,16 +130,16 @@ Scenario:2 对下架商品进行批量上架
 	Then jobs能获得'在售'商品列表
 	"""
 		[{
+			"name": "叫花鸡",
+			"price": 30.0,
+			"stock_type": "无限",
+			"display_index":1
+		}, {
 			"name": "红烧肉",
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index":2
-		}, {
-			"name": "叫花鸡",
-			"price": 30.0,
-			"stock_type": "无限",
-			"display_index":1
 		}, {
 			"name": "梅菜扣肉",
 			"price": 20.0,
@@ -180,17 +180,17 @@ Scenario:3待售商品上架后，排序重复，自动变为0
 	Then jobs能获得'在售'商品列表
 	"""
 		[{
-			"name": "红烧肉",
-			"price": 20.0,
-			"stock_type": "有限",
-			"stocks": 3,
-			"display_index":2
-		}, {
 			"name": "东坡肘子",
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 1
+		}, {
+			"name": "红烧肉",
+			"price": 20.0,
+			"stock_type": "有限",
+			"stocks": 3,
+			"display_index":2
 		}, {
 			"name": "梅菜扣肉",
 			"price": 20.0,
@@ -206,17 +206,17 @@ Scenario:3待售商品上架后，排序重复，自动变为0
 	Then jobs能获得'在售'商品列表
 	"""
 		[{
-			"name": "红烧肉",
-			"price": 20.0,
-			"stock_type": "有限",
-			"stocks": 3,
-			"display_index":2
-		}, {
 			"name": "东坡肘子",
 			"price": 20.0,
 			"stock_type": "有限",
 			"stocks": 3,
 			"display_index": 1
+		}, {
+			"name": "红烧肉",
+			"price": 20.0,
+			"stock_type": "有限",
+			"stocks": 3,
+			"display_index":2
 		}, {
 			"name": "梅菜扣肉",
 			"price": 20.0,

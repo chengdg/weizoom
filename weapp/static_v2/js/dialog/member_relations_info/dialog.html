@@ -86,7 +86,7 @@
 
 							    {{if data.only_fans==0}}
 									<td >
-										<a target="_blank" href="/member/member_detail/edit/?id=${log.father_id}" >${log.father_name}</a>
+										<a target="_blank" href="/member/member_detail/edit/?id=${log.father_id}" >{{html log.father_name}}</a>
 									</td>
 								{{/if}}
 							    <td >${log.created_at} </td>

@@ -143,6 +143,7 @@
                         data-shopping-cart-id = "{{product.shopping_cart_id}}"
                         data-model-name="{{product.model_name}}"
                         data-stocks="{{product.stocks}}"
+                        data-count-per-purchase="{{product.promotion.detail.count_per_purchase}}"
                         data-is-member-product="{{product.is_member_product}}"
                         data-product-promotion="{{product_group.promotion_js}}"
                     >
@@ -155,9 +156,7 @@
                                 <div class="xui-selectedProductList-productImg disTc tc">
                                     <div class="pr">
                                         <img src="{{product.order_thumbnails_url}}" />
-                                        {% if product.stocks <= 5 and product.stock_type == 1 %}
-                                        <p class="xa-stockTip xui-stockTip pa">仅剩{{product.stocks}}件</p>
-                                        {% endif %}
+                                        <p class="xa-stockTip xui-stockTip pa hidden">仅剩{{product.stocks}}件</p>
                                     </div>
                                 </div>
                                 <div class="xui-selectedProductList-productInfo disTc vt">
@@ -348,8 +347,8 @@ $(document).ready(function() {
         var model_id = $(this).attr('data-product-model-id');
         model_ids.push(model_id);
     });
-
-    // window.setInterval(getProductStocks, 5000);
+    getProductStocks()
+    window.setInterval(getProductStocks, 30*1000);
 
     // 促销会员商品价格显示
     $(".xa-product").each(function(){
@@ -401,19 +400,22 @@ $(document).ready(function() {
                     $('[data-ui-role="counter"]').each(function(){
                         var model_id = $(this).data('product-model-id');
                         var count_per_purchase = $(this).data('product-count-per-purchase');
+                        var maxCount = 0;
                         if (data[model_id].stock_type) {
                             if (count_per_purchase > 0 && count_per_purchase < data[model_id].stocks){
-                                $(this).data('view').reset().setMaxCount(count_per_purchase);
+                                maxCount = count_per_purchase;
                             }else{
-                                $(this).data('view').reset().setMaxCount(data[model_id].stocks);
+                                maxCount = data[model_id].stocks;
+                                $(this).parent('.xa-product').data('stocks', maxCount);
                             }
                         }else {
                             if (count_per_purchase > 0){
-                                $(this).data('view').reset().setMaxCount(count_per_purchase);
+                                maxCount = count_per_purchase;
                             }else{
-                                $(this).data('view').reset().setMaxCount(-99999);
+                                maxCount = -99999;
                             }
                         }
+                        $(this).data('view').setMaxCount(maxCount);
                     });
                     view.initCounter();
                 },
