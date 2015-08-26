@@ -61,7 +61,7 @@ def extract_product_model(request):
         stocks = request.POST.get('stocks')
         # stocks = int(stocks) if stocks else -1
         #默认商品数改为0 duhao 2015-08-26
-        stocks = int(stocks) if stocks else -1
+        stocks = int(stocks) if stocks else 0
         user_code = request.POST.get('user_code', '').strip()
         standard_model = {
             "price": price,
@@ -163,7 +163,7 @@ def sorted_products(manager_id, product_categories, reverse):
                 products.append(product)
 
         products_is_0 = filter(lambda p: p.display_index == 0 or p.shelve_type != models.PRODUCT_SHELVE_TYPE_ON, products)
-        products_not_0 = filter(lambda p: p.display_index != 0 and p.shelve_type == models.PRODUCT_SHELVE_TYPE_ON, products)
+        products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_is_0 = sorted(products_is_0, key=attrgetter('shelve_type', 'join_category_time', 'id'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))       
         products = products_not_0 + products_is_0
