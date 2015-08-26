@@ -96,7 +96,7 @@ Background:
 @mall2 @promotionIntegral @integral
 Scenario: 1 结束状态为'未开始'的积分应用活动
 	Given jobs登录系统
-	When jobs'结束'促销活动'商品4积分应用'
+	When jobs"结束"促销活动"商品4积分应用"
 	Then jobs获取积分应用活动列表
 		"""
 		[ {
@@ -151,7 +151,7 @@ Scenario: 1 结束状态为'未开始'的积分应用活动
 @mall2 @promotionIntegral @integral
 Scenario: 2 结束状态为'进行中'，非永久有效的积分应用活动
 	Given jobs登录系统
-	When jobs'结束'促销活动'商品3积分应用'
+	When jobs"结束"促销活动"商品3积分应用"
 	Then jobs获取积分应用活动列表
 		"""
 		[{
@@ -206,7 +206,7 @@ Scenario: 2 结束状态为'进行中'，非永久有效的积分应用活动
 @mall2 @promotionIntegral @integral
 Scenario: 3 结束状态为'进行中'，且为永久有效的积分应用活动
 	Given jobs登录系统
-	When jobs'结束'促销活动'商品2积分应用'
+	When jobs"结束"促销活动"商品2积分应用"
 	Then jobs获取积分应用活动列表
 		"""
 		[{
