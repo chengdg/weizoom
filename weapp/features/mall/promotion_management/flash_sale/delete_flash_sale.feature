@@ -97,7 +97,7 @@ Background:
 		}]
 		"""
 
-@wip.f1 @mall2 @promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 1 删除状态为'已结束'的限时抢购活动
 	Given jobs登录系统
 	When jobs"删除"促销活动"广告语：商品0抢购"
