@@ -780,7 +780,7 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 					})
 					if premium_product['current_used_model'].get('price', 0) <= 0:
 						watchdog_alert("premium_product['current_used_model'].get('price', 0) <= 0, premium_product:"
-							+premium_product, type='WEB')
+							+str(premium_product), type='WEB')
 
 					# 检查赠品库存
 					if request.POST.get("forcing_submit", None):
