@@ -127,7 +127,7 @@ def step_impl(context, user):
 			adict['tags'] = row['tags']
 			actual_data.append(adict)
 		for i in range(len(json_data)):
-			print 'hello:name,source',json_data[i]['username'],json_data[i]['source'],'kitty:name,source',actual_data[i]['username'],actual_data[i]['source']
+			print 'hello:name,pay_money',json_data[i]['username'],json_data[i]['pay_money'],'kitty:name,pay_money',actual_data[i]['username'],actual_data[i]['pay_money']
 
 		#print 'hello',json_data
 		#print 'world',actual_data
