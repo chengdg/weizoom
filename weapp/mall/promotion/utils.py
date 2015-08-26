@@ -75,6 +75,42 @@ def coupon_id_maker(a, b):
     return '%03d%04d%s' % (a, b, ''.join(random.sample(random_args_value, 6)))
 
 
+
+def create_coupons(couponRule, count, promotion=None):
+    """
+    创建未使用的优惠券
+    """
+    i = 0
+    if not promotion:
+        promotion = promotion_models.Promotion.objects.filter(type=promotion_models.PROMOTION_TYPE_COUPON, detail_id=couponRule.id)[0]
+
+    a = couponRule.owner.id
+    b = couponRule.id
+
+    # 创建未使用的优惠券
+    current_coupon_ids = [coupon.coupon_id for coupon in promotion_models.Coupon.objects.filter(coupon_rule_id=b)]
+    new_coupons = []
+    while i < count:
+        # 生成优惠券ID
+        coupon_id = coupon_id_maker(a, b)
+        while coupon_id in current_coupon_ids:
+            coupon_id = coupon_id_maker(a, b)
+        current_coupon_ids.append(coupon_id)
+        new_coupons.append(promotion_models.Coupon(
+                owner=couponRule.owner,
+                coupon_id=coupon_id,
+                provided_time=promotion.start_date,
+                start_time=promotion.start_date,
+                expired_time=promotion.end_date,
+                money=couponRule.money,
+                coupon_rule_id=couponRule.id,
+                is_manual_generated=False,
+                status=promotion_models.COUPON_STATUS_UNGOT
+        ))
+        i += 1
+    promotion_models.Coupon.objects.bulk_create(new_coupons)
+
+
 PROMOTION_FILTERS = {
     'promotion': [
         {
@@ -155,11 +191,6 @@ def filter_promotions(request, promotions):
         products = search_util.filter_objects(
             promotion.products, PROMOTION_FILTERS['product']
         )
-        if not products:
-            #product filter没有通过，跳过该promotion
-            print 'end in product filter'
-            continue
-        else:
-            print 'pass product filter'
+        if products:
             filtered_promotions.append(promotion)
     return filtered_promotions

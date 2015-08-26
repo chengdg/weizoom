@@ -1,0 +1,126 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css%}
+<style>
+	html,body{
+		background: #ececec;
+		font-family: "华文细黑";
+	}
+	.xui-RecommendedDetailPage .xui-general{
+		height: 56px;
+		border-bottom: 1px solid #ccc;
+		padding-top: 16px;
+		padding-bottom: 16px;
+
+	}
+	
+	.xui-RecommendedDetailPage .xui-red{
+		
+		color:#cf0404;
+	}
+	.xui-RecommendedDetailPage .xui-general p{
+		font-size: 14px;
+		line-height: 20px;
+		color:#666666;
+	}
+	.xui-RecommendedDetailPage .xui-tableview{
+		width:100%;
+
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-img{
+		width:55px;
+		height: 55px;
+		border-radius: 5px;
+		
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell{
+		float: left;
+		width: 55px;
+		height: 75px;
+		margin-left: 10px;
+		margin-top: 15px;
+		position: relative;
+		
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell .xui-yellowBar {
+		position: absolute;
+		top:35px;
+		width: 100%;
+		height: 20px;
+		background-color: #f9c831;
+		color: #fff;
+		font-family: "华文细黑";
+		text-align: center;
+		border-radius:0px 0px 5px 5px;
+
+	}
+	.xui-RecommendedDetailPage .xui-tableview .xui-tableCell .xui-p{
+		height: 16px;
+		overflow-y:hidden; 
+		width: 100%;
+		text-align: center;
+		font-size: 12px;
+		margin-top: 4px;
+		
+	}
+
+    @media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+    	.xui-spokesmanPage p{
+			padding: 2.25rem 0 1.25rem 0;
+		}
+    }
+</style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-RecommendedDetailPage">
+	<div class="xui-general">
+		<div class=" xa-general">
+			<p>扫码人数：<span class="xui-red">{{channel_qrcode_members_count}}</span></p>
+			<p>下单人数：<span class="xui-red">{{payed_count}}</span></p>
+			<p>成交金额：<span class="xui-red">￥{{pay_money}}</span></p>
+		</div>
+	</div>
+	<div class="xui-tableview">
+		{% for channel_qrcode_member in channel_qrcode_members %}
+		<div class="xui-tableCell xa-tableCell">
+			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}}" />
+			<p class="xui-p xui-ellipsis-1">{{channel_qrcode_member.member.username}}</p>
+			{% if not channel_qrcode_member.member.is_subscribed %}
+			<div class="xui-yellowBar">已跑路</div>
+			{% endif %}
+		</div>
+		{% endfor %}
+		
+	</div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+	$(document).ready(function(){
+		var width=document.body.clientWidth;
+		if(width<420)
+		{
+			$('.xa-tableCell').css('margin-left',(width-55*4)/5+'px');
+			$('.xa-general').css('margin-left',(width-55*4)/5)
+		}
+		else{
+			if(width<480)
+			{
+				$('.xa-tableCell').css('margin-left',(width-55*5)/6+'px');
+				$('.xa-general').css('margin-left',(width-55*5)/6);
+			}
+			else
+			{
+				$('.xa-tableCell').css('margin-left',(width-55*6)/7+'px');
+				$('.xa-general').css('margin-left',(width-55*6)/7);
+			}
+		}
+		
+
+	});
+
+</script>
+{% endblock %}

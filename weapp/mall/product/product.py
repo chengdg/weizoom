@@ -20,11 +20,6 @@ from mall import signals as mall_signals
 from . import utils
 from mall import export
 
-
-import logging
-logger = logging.getLogger('console')
-
-
 class ProductList(resource.Resource):
     app = 'mall2'
     resource = 'product_list'
@@ -141,9 +136,11 @@ class ProductList(resource.Resource):
         else:
             products = sorted(products, key=operator.attrgetter('id'))
             products = sorted(products, key=operator.attrgetter(sort_attr))
+        products_is_0 = filter(lambda p: p.display_index == 0, products)
+        products_not_0 = filter(lambda p: p.display_index != 0, products)
+        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
-
-        products = utils.filter_products(request, products)
+        products = utils.filter_products(request, products_not_0 + products_is_0)
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -267,7 +264,7 @@ class Product(resource.Resource):
                 product = models.Product.objects.get(id=has_product_id)
             except models.Product.DoesNotExist:
                 return Http404
-            products = [product, ]
+            products = [product]
             models.Product.fill_details(request.manager, products, {
                 'with_product_model': True,
                 'with_image': True,
@@ -303,7 +300,7 @@ class Product(resource.Resource):
                 pay_interface_config['online_pay_interfaces'].append(
                     pay_interface)
 
-        # 确定运费配置
+        # 确定运费配置(对应表: mall_postage_config)
         system_postage_configs = models.PostageConfig.objects.filter(
             owner=request.manager, is_used=True)
         if system_postage_configs.exists():

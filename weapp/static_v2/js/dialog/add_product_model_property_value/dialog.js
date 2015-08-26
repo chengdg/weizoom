@@ -36,6 +36,11 @@ W.dialog.mall.AddProductModelPropertyValueDialog = W.dialog.Dialog.extend({
     onShow: function(options) {
         var $input = this.$('input[name="name"]');
         this.propertyId = options.propertyId || -1;
+        if(this.propertyId == -1){
+            this.$('.xa-modal-title').text("修改规格值");
+        }else{
+            this.$('.xa-modal-title').text("创建规格值");
+        }
         this.modelValue = options.modelValue;
         this.picUrl = options.picUrl;
         // console.log(this.picUrl,"=========",this.modelValue);

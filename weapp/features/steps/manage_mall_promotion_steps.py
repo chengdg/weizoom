@@ -9,7 +9,7 @@ from features.testenv.model_factory import ProductFactory
 from test import bdd_util
 
 
-@when(u"{user}'{action}'促销活动'{promotion_name}'")
+@when(u"{user}\"{action}\"促销活动\"{promotion_name}\"")
 def step_terminate_promotion(context, user, action, promotion_name):
 		"""促销活动通用更新单个促销状态
 
@@ -38,10 +38,9 @@ def step_terminate_promotion(context, user, action):
 @when(u"{user}创建积分应用活动")
 def step_impl(context, user):
 		if context.table:
-				# 处理tables
-				promotions = context.table
+			promotions = [promotion.as_dict() for promotion in context.table]
 		else:
-				promotions = json.loads(context.text)
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				# 处理单个积分应用活动创建
 				promotions = [promotions]
@@ -87,7 +86,10 @@ def step_impl(context, user):
 
 @when(u"{user}创建满减活动")
 def step_impl(context, user):
-		promotions = json.loads(context.text)
+		if context.table:
+			promotions = [promotion.as_dict() for promotion in context.table]
+		else:
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -119,7 +121,10 @@ def step_impl(context, user):
 
 @when(u"{user}创建买赠活动")
 def step_create_premium_sale(context, user):
-		promotions = json.loads(context.text)
+		if context.table:
+			promotions = [promotion.as_dict() for promotion in context.table]
+		else:
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -131,13 +136,13 @@ def step_create_premium_sale(context, user):
 				}]
 
 				premium_products = []
-				for premium_product in promotion['premium_products']:
+				for premium_product in promotion.get('premium_products', [{"name": u"赠品"}]):
 						product_name = premium_product['name']
 						db_product = ProductFactory(name=product_name)
 						premium_products.append({
 								'id': db_product.id,
-								'count': premium_product['count'],
-								'unit': premium_product['unit'] if premium_product.has_key('unit') else ''
+								'count': premium_product.get('count', 1),
+								'unit': premium_product.get('unit', '')
 						})
 
 				data = {
@@ -148,7 +153,7 @@ def step_create_premium_sale(context, user):
 						'end_date': bdd_util.get_datetime_no_second_str(promotion['end_date']),
 						'products': json.dumps(product_ids),
 
-						'count': promotion['count'],
+						'count': promotion.get('count', 1),
 						'is_enable_cycle_mode': "true" if promotion.get('is_enable_cycle_mode', False) else "false",
 						'premium_products': json.dumps(premium_products)
 				}
@@ -160,7 +165,10 @@ def step_create_premium_sale(context, user):
 
 @when(u"{user}创建限时抢购活动")
 def step_create_flash_sales(context, user):
-		promotions = json.loads(context.text)
+		if context.table:
+			promotions = [promotion.as_dict() for promotion in context.table]
+		else:
+			promotions = json.loads(context.text)
 		if type(promotions) == dict:
 				promotions = [promotions]
 
@@ -183,7 +191,7 @@ def step_create_flash_sales(context, user):
 						'products': json.dumps(product_ids),
 
 						'limit_period': promotion.get('limit_period', 0),
-						'promotion_price': promotion['promotion_price'],
+						'promotion_price': promotion.get('promotion_price', 1),
 						'count_per_purchase': promotion.get('count_per_purchase', 9999999),
 				}
 
@@ -191,48 +199,69 @@ def step_create_flash_sales(context, user):
 				response = context.client.post(url, data)
 				bdd_util.assert_api_call_success(response)
 
-
+### 分页相关的 step 实现 ###
 @when(u"{user}设置查询条件")
 def step_impl(context, user):
-		context.query_param = json.loads(context.text)
+	context.query_param = json.loads(context.text)
 
+
+@then(u"{user}获取分页信息")
+def step_impl(context, user):
+	if hasattr(context, 'pageinfo'):
+		excepted = json.loads(context.text)
+		bdd_util.assert_dict(excepted, context.pageinfo)
+### 分页相关的 step 实现 ###
 
 @then(u"{user}获取{promotion_type}活动列表")
 def step_impl(context, user, promotion_type):
 	if promotion_type == u"促销":
-			promotion_type = "all"
+		promotion_type = "all"
 	elif promotion_type == u"限时抢购":
-			promotion_type = "flash_sale"
+		promotion_type = "flash_sale"
 	elif promotion_type == u"买赠":
-			promotion_type = "premium_sale"
+		promotion_type = "premium_sale"
 	elif promotion_type == u"积分应用":
-			promotion_type = "integral_sale"
+		promotion_type = "integral_sale"
 	# elif type == u"优惠券":
 	#     type = "coupon"
 	url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % promotion_type
 	if hasattr(context, 'query_param'):
 		if context.query_param.get('product_name'):
-				url += '&name=' + context.query_param['product_name']
+			url += '&name=' + context.query_param['product_name']
 		if context.query_param.get('bar_code'):
-				url += '&barCode='+ context.query_param['bar_code']
+			url += '&barCode='+ context.query_param['bar_code']
 		if context.query_param.get('start_date'):
-				url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
+			url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
 		if context.query_param.get('end_date'):
-				url += '&endDate='+ bdd_util.get_datetime_str(context.query_param['end_date'])[:16]
+			url += '&endDate='+ bdd_util.get_datetime_str(context.query_param['end_date'])[:16]
 		if context.query_param.get('status', u'全部') != u'全部':
 			if context.query_param['status'] == u'未开始':
-					status = 1
+				status = 1
 			elif context.query_param['status'] == u'进行中':
-					status = 2
+				status = 2
 			elif context.query_param['status'] == u'已结束':
-					status = 3
+				status = 3
 			url += '&promotionStatus=%s' % status
 	response = context.client.get(url)
 	actual = json.loads(response.content)['data']['items']
 
+	# 实际数据
 	for promotion in actual:
+		if promotion['status'] != u'已结束':
+			# 开启这2项操作(实际上在模板中，此时次2项不含hidden属性)。参考 flash_sales.html
+			promotion['actions'] = [u'详情', u'结束']
+		else:
+			promotion['actions'] = [u'详情', u'删除']
+
+		if promotion['promotionTitle'] != '':
+			# 含有促销标题的
+			promotion['promotion_title'] = promotion['promotionTitle']
+
 		promotion['product_name'] = promotion['product']['name']
-		promotion['product_price'] = promotion['product']['display_price']
+		if promotion['product']['display_price_range'] != '':
+			promotion['product_price'] = promotion['product']['display_price_range']
+		else:
+			promotion['product_price'] = promotion['product']['display_price']
 		promotion['bar_code'] = promotion['product']['bar_code']
 		promotion['price'] = promotion['product']['display_price']
 		promotion['stocks'] = promotion['product']['stocks']
@@ -264,12 +293,11 @@ def step_impl(context, user, promotion_type):
 				promotion['member_grade'] = MemberGrade.get_default_grade(webapp_id).name
 	expected = []
 	if context.table:
-		for promotion in context.table:
-			promotion = promotion.as_dict()
-			expected.append(promotion)
+		expected = [promotion.as_dict() for promotion in context.table]
 	else:
 		expected = json.loads(context.text)
 
+	# 转化feature中的格式，与actual一致
 	for promotion in expected:
 		if promotion_type == 'integral_sale':
 			promotion['is_permanant_active'] = str(promotion.get('is_permanant_active', False)).lower()
@@ -283,7 +311,6 @@ def step_impl(context, user, promotion_type):
 		if promotion.get('created_at'):
 			promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
 	bdd_util.assert_list(expected, actual)
-
 
 
 
@@ -336,7 +363,6 @@ def step_impl(context, user):
 	url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=flash_sale&name=&barCode=&selectedProductIds=&count_per_page=10&page=1&enable_paginate=1'
 	response = context.client.get(url)
 	bdd_util.assert_api_call_success(response)
-	#print("response: {}".format(response))
 	data = json.loads(response.content)['data']
 	expected = [{
 		"name": item['name'],
@@ -344,7 +370,6 @@ def step_impl(context, user):
 		"operate": item['can_select'],
 		"price": item['standard_model']['price']
 	} for item in data['items']]
-	print("expected: {}".format(expected))
 	bdd_util.assert_list(expected, real)
 
 

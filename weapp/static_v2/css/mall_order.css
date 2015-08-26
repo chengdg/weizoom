@@ -282,6 +282,7 @@
 	font-size: 12px;
 	line-height: 24px;
 }*/
+
 .xui-allOrders .xui-colorGray{
     color:#999;
 }
@@ -298,39 +299,49 @@
 }
 .xui-allOrders .xui-buyerHint i{
     display: inline-block;
-    width: 18px;
-    height: 17px;
-    margin-bottom: -4px;
+    width: 13px;
+    height: 13px;
+    margin-bottom: -2px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
 }
 .xui-refundOrderPage .xui-buyerHint i{
     display: inline-block;
-    width: 18px;
-    height: 17px;
-    margin-bottom: -4px;
+    width: 13px;
+    height: 13px;
+    margin-bottom: -2px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
 }
 .xui-auditOrderPage .xui-buyerHint i{
     display: inline-block;
-    width: 18px;
-    height: 17px;
-    margin-bottom: -4px;
+    width: 13px;
+    height: 13px;
+    margin-bottom: -2px;
     background: url(/static_v2/img/editor/info.png);
     -webkit-background-size: 100%;
     background-size: 100%;
 }
 .xui-buyerHintDropBox {
+    color:#666;
     border: 1px solid #d6d4d1;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(214, 212, 209, 0.7);
-    padding: 20px;
+    padding: 13px 25px 10px 15px;
     font-size: 12px;
     line-height: 24px;
-    width: 300px;
+}
+.xui-buyerHintDropBox .drop-box-arrow{
+    background: rgba(0, 0, 0, 0) url("/static_v2/img/editor/sb_arrow.png") no-repeat scroll 0 0; 
+}
+.xui-buyerHintDropBox .drop-box-arrow-top{
+    top:-8px;
+    /*right:103px;*/
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 .xui-allOrders .xui-weizoomCard span{
     background: #fff;
@@ -942,11 +953,11 @@
 
 
 .xui-orderDetialPage .xui-producttab tr td {
-	vertical-align: middle;
+    vertical-align: middle;
 
-   padding-top: 15px;
+    padding-top: 15px;
     height: 42px;
-    padding-bottom:4px;
+    padding-bottom:15px;
 }
 .xui-orderDetialPage .xui-producttab tr th {
 	font-weight: bold;
@@ -956,6 +967,15 @@
 .xui-orderDetialPage .xui-producttab tr td:first-child {
     text-align: left;
 }
+
+.xui-orderDetialPage .xui-producttab tr td a {
+    line-height: 18px;
+}
+
+.xui-orderDetialPage .xui-producttab tr .xui-td-first {
+   max-width: 300px;
+}
+
 .xui-orderDetialPage .xui-producttab tr:last-child td:first-child {
    padding-bottom: 15px;
 }
@@ -971,7 +991,7 @@
 
 .xui-orderDetialPage .xui-producttab .xui-colorsize {
 
-    margin-top: -5px;
+    margin-top: 5px;
     line-height: 10px;
     text-align: left;
 }

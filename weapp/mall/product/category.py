@@ -21,7 +21,8 @@ class CategoryList(resource.Resource):
 
     @login_required
     def get(request):
-        """商品分类列表页面
+        """
+        商品分类列表页面
         """
         #获取category集合
         product_categories = mall_models.ProductCategory.objects.filter(
@@ -39,7 +40,8 @@ class CategoryList(resource.Resource):
 
     @login_required
     def api_get(request):
-        """功能1: 获得商品分类的可选商品列表
+        """
+        功能1: 获得商品分类的可选商品列表
 
         Args:
           id:
@@ -84,7 +86,7 @@ class CategoryList(resource.Resource):
                     lambda product: (product.id not in existed_product_ids),
                     products
                 )
-
+            products.sort(lambda x,y: cmp(y.id, x.id))
             products.sort(lambda x,y: cmp(y.update_time, x.update_time))
 
             #进行分页

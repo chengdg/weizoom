@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import logging
 import time
 from datetime import timedelta, datetime, date
 import urllib, urllib2
@@ -20,6 +18,7 @@ from webapp import views as webapp_views
 from models import *
 from mall import models as mall_models
 from cache import webapp_cache
+from mall import module_api as mall_api
 
 
 type2template = {}
@@ -316,6 +315,11 @@ def __render_component(request, page, component, project):
 		if not sub_component_type in component:
 			component[sub_component_type] = sub_component
 
+	# 购物车数量
+	shopping_cart_product_count = 0
+	if hasattr(request, 'member') and request.member:
+		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
+		
 	#渲染component自身
 	context = Context({
 		'request': request,
@@ -326,18 +330,21 @@ def __render_component(request, page, component, project):
 		'in_design_mode': request.in_design_mode,
 		'in_preview_mode': request.in_preview_mode,
 		'in_production_mode': request.in_production_mode,
+		'shopping_cart_product_count': shopping_cart_product_count
 	})
 	if hasattr(request, 'extra_page_context'):
 		context.update(request.extra_page_context)
 	component_category = project.type
 	template = __get_template(component_category, component)
 	content = stripper.strip_lines(template.render(context))
-	'''
-	print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-	print component
-	print content
-	print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
-	'''
+	# print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+	# types = list(type2template.keys())
+	# types.sort()
+	# print types
+	# print component_category
+	# print component
+	# print content
+	# print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
 	return content
 
 

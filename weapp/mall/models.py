@@ -1077,7 +1077,8 @@ class Product(models.Model):
 			'standard_model': self.standard_model,
 			'current_used_model': self.current_used_model,
 			'created_at': datetime.strftime(self.created_at, '%Y-%m-%d %H:%M'),
-			'display_index': self.display_index
+			'display_index': self.display_index,
+			'is_member_product': self.is_member_product
 		}
 
 
@@ -1096,6 +1097,9 @@ class CategoryHasProduct(models.Model):
 		Args:
 		  pos(int): 指定位置
 		"""
+		pos = int(pos)
+		if pos < 0 or pos >= MAX_INDEX:
+			raise IndexError('{} out of range [1, 65535)'.format(pos))
 		category_has_products = CategoryHasProduct.objects.filter(
 			category_id=self.category_id,
 			display_index=pos

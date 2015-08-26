@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
+# import time
+# from datetime import timedelta, datetime, date
+# import urllib, urllib2
+# import os
+# import json
+# import subprocess
+# import shutil
+# import base64
+# import random
 
-import logging
-import time
-from datetime import timedelta, datetime, date
-import urllib, urllib2
-import os
-import json
-import subprocess
-import shutil
-import base64
-import random
-
-from modules.member.visit_session_util import get_request_url
+# from modules.member.visit_session_util import get_request_url
 
 # def handle(request):
 # 	request_url = get_request_url(request)

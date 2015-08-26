@@ -441,6 +441,10 @@ def get_weixinuser_sessions(weixin_user_name):
 		return []
 
 	return Session.objects.filter(weixin_user=weixin_user_name)
+
+def get_opid_from_session(filter_args):
+	return [session.member_user_username for session in Session.objects.filter(**filter_args)]
+
 		
 		
 TEXT = 'text'

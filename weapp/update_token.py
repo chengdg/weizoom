@@ -33,8 +33,6 @@ WATCHDOG_TYPE = 'ACCESSTOKEN_UPDATE_SERVICE'
 
 class Service(object):
 
-	# LOG = Logger.get_logger()
-
 	def __init__(self):
 		self.MaxRetryTimes = 5
 

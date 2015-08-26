@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+import copy
 import json, time
 from behave import when, then, given
-import logging
-logger = logging.getLogger('console')
+from mall.models import ProductCategory
+from webapp.models import WebApp
 
 from mall import models as mall_models  # 注意不要覆盖此module
 from test import bdd_util
@@ -52,11 +53,13 @@ def step_product_add(context, user):
         if hasattr(product, 'as_dict'):
             # Row 转换成dict
             product = product.as_dict()
-
-        if product.get('stocks'):
-            product['stock_type'] = 1
+        if 'stock_type' in product:
+            product['stock_type'] = 1 if product['stock_type'] == '有限' else 0
         else:
-            product['stock_type'] = 0
+            if product.get('stocks'):
+                product['stock_type'] = 1
+            else:
+                product['stock_type'] = 0
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
         __process_product_data(product)
         product = __supplement_product(context.webapp_owner_id, product)
@@ -68,6 +71,11 @@ def step_product_add(context, user):
             mall_models.Product.objects.filter(
                 id=latest_product.id
             ).update(shelve_type=1)
+        if product.get('created_at'):
+            latest_product = mall_models.Product.objects.all().order_by('-id')[0]
+            mall_models.Product.objects.filter(
+                id=latest_product.id
+            ).update(created_at=product.get('created_at'))
 
 
 @then(u"{user}能获取商品'{product_name}'")
@@ -123,7 +131,13 @@ def step_update_product(context, user, product_name):
 @then(u"{user}能获取商品列表")
 def step_impl(context, user):
     actual = __get_products(context)
-    expected = json.loads(context.text)
+    expected = []
+    if context.table:
+        for product in context.table:
+            product = product.as_dict()
+            expected.append(product)
+    else:
+        expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
 
@@ -133,11 +147,29 @@ def step_impl(context, user, type_name):
     context.products = actual
 
     if hasattr(context, 'caller_step_text'):
-      expected = json.loads(context.caller_step_text)
-      delattr(context, 'caller_step_text')
+        expected = json.loads(context.caller_step_text)
+        delattr(context, 'caller_step_text')
     else:
-      expected = json.loads(context.text)
-
+        if context.table:
+            expected = []
+            for product in context.table:
+                product = product.as_dict()
+                if 'barCode' in product:
+                    product['bar_code'] = product['barCode']
+                    del product['barCode']
+                product['categories'] = product['categories'].split(',')
+                # 处理空字符串分割问题
+                if product['categories'][0] == '':
+                    product['categories'] = []
+                # 处理table中没有验证库存的行
+                if 'stocks' in product and product['stocks'] == '':
+                    del product['stocks']
+                # 处理table中没有验证条码的行
+                if 'bar_code' in product and product['bar_code'] == '':
+                    del product['bar_code']
+                expected.append(product)
+        else:
+            expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
 
@@ -219,6 +251,18 @@ def update_product_display_index(context, user, product_name, pos):
     response = context.client.post('/mall2/api/product/?_method=post', data)
     bdd_util.assert_api_call_success(response)
 
+@when(u"{user}设置商品查询条件")
+def step_impl(context,user):
+    query_param = json.loads(context.text)
+    webapp_id = bdd_util.get_webapp_id_for(user)
+    owner = WebApp.objects.get(appid=webapp_id)
+    category_name = query_param['category']
+    if category_name == u'全部' or category_name == u'全部分类':
+        query_param['category'] = -1
+    else:
+        query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
+    context.query_param = query_param
+
 
 def __update_prducts_by_name(context, product_name, action):
     ACTION2TYPE = {
@@ -250,12 +294,21 @@ def __get_products(context, type_name=u'在售'):
       u'回收站': 'recycled'
     }
     type = NAME2TYPE[type_name]
-    response = context.client.get('/mall2/api/product_list/?version=1&type=%s&count_per_page=15&page=1' % type)
+    url = '/mall2/api/product_list/?version=1&type=%s' % type
+    if hasattr(context, 'query_param'):
+        for key in context.query_param.keys():
+            url += '&%s=%s' % (key, context.query_param[key])
+    response = context.client.get(url)
+
     data = json.loads(response.content)['data']
+    context.pageinfo = data['pageinfo']
 
     for product in data["items"]:
+        product['is_member_product'] = 'on' if product.get('is_member_product', False) else 'off'
         #价格
         product['price'] = product['display_price']
+        if 'display_price_range' in product:
+            product['price'] = product['display_price_range']
         #分类
         categories = []
         for category in product['categories']:
@@ -295,6 +348,10 @@ def __get_products(context, type_name=u'在售'):
 
 
 def __get_product_from_web_page(context, product_name):
+    """
+    访问 GET `/mall2/product/` 获取response
+
+    """
     response = get_product_response_from_web_page(context, product_name)
     product = response.context['product']
 
@@ -330,14 +387,15 @@ def __get_product_from_web_page(context, product_name):
     }
 
     #填充运费
-    if product.postage_id == 999 or product.postage_id == 0:
+    print("product.postage_id={}".format(product.postage_id))
+    if product.postage_id == 999 or product.postage_id <= 0:
         # TODO: 999表示什么？
         postage_config_info = response.context['postage_config_info']
         if postage_config_info['is_use_system_postage_config']:
             actual['postage'] = postage_config_info['system_postage_config'].name
         else:
             # TODO: 如何处理?
-            actual['postage'] = u'免运费？'
+            actual['postage'] = postage_config_info['system_postage_config'].first_weight_price
         #postage_config_info.system_postage_config.name
     elif product.postage_id>0:
         print("product.postage_id={}".format(product.postage_id))

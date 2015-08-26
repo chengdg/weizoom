@@ -117,15 +117,11 @@ Background:
 		}]
 		"""
 
-@mall2 @wip.p1 @mall.product
+@mall2 @mall.product
 Scenario: 更新商品
 	Jobs添加一组商品后，能更改单个商品的所有字段的属性
 
 	When jobs更新商品'商品1'
-		#"thumbnails_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-		#"pic_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-		#"introduction": "商品1的简介",
-		#"physical_unit": "包*",
 		"""
 		{
 			"name": "商品11",
@@ -271,7 +267,7 @@ Scenario: 更新商品
 		}
 		"""
 
-@mall2 @wip.p2 @mall.product
+@mall2 @mall.product
 Scenario: 切换邮费配置
 	jobs把运费配置更改为'圆通'
 	jobs查看商品详情
@@ -285,6 +281,7 @@ Scenario: 切换邮费配置
 		}
 		"""
 	And jobs能获取商品'商品2'
+		# postage为数值，表示“统一运费”
 		"""
 		{
 			"name": "商品2",

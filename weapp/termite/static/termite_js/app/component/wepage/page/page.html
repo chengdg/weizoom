@@ -18,10 +18,14 @@
         data-cid="{{sub_component.cid}}" 
         data-widget-sortable="true" 
         data-type="{{sub_component.type}}" 
-        data-ui-behavior="xub-selectable" 
+        {% if sub_component.selectable == 'yes' %}
+        data-ui-behavior="xub-selectable"
+        {% endif %}
         style="margin:0px; padding:0px;"
+        data-auto-select="{%if sub_component.auto_select == 'yes'%}true{% else %}false{% endif %}"
     >
     	{{ sub_component.html|safe }}
+        {% if sub_component.selectable == 'yes' %}
     	<div class="xui-designPage-actionPanel xui-hide xa-actionPanel">
             <span class="xui-i-action xa-add xa-action">添加模块</span>
             <span class="xui-i-action xui-i-editAction xa-edit xa-action">编辑</span>
@@ -29,6 +33,7 @@
         </div>
         <div class="xui-designPage-selectIndicator xui-hide xa-selectIndicator">
         </div>
+        {% endif %}
 	</div>
     {% endfor %}
 {% endif %}

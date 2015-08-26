@@ -18,6 +18,8 @@
 # 配置，使behave能使用django的model
 #
 import os
+
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'weapp.settings'
 
 import sys
@@ -63,6 +65,7 @@ from market_tools.tools.store import models as store_models
 from market_tools.tools.lottery import models as lottery_models
 from market_tools.tools.channel_qrcode import models as channel_qrcode_models
 from market_tools.tools.member_qrcode import models as member_qrcode_models
+from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 from weixin2 import models as weixin2_models
 from stats import models as stats_models
 from modules.member import models as modules_member_models
@@ -167,6 +170,7 @@ def __clear_all_app_data():
 	promotion_models.PriceCut.objects.all().delete()
 	promotion_models.PremiumSale.objects.all().delete()
 	promotion_models.IntegralSale.objects.all().delete()
+	promotion_models.RedEnvelopeRule.objects.all().delete()
 
 	#商城
 	mall_models.PayInterface.objects.all().delete()
@@ -196,6 +200,7 @@ def __clear_all_app_data():
 	mall_models.OrderReview.objects.all().delete()
 	mall_models.ProductReview.objects.all().delete()
 	mall_models.ProductReviewPicture.objects.all().delete()
+	AccountHasWeizoomCardPermissions.objects.all().delete()
 
 	#权限
 	auth_models.UserHasPermission.objects.all().delete()

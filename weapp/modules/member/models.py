@@ -793,9 +793,9 @@ class MemberFollowRelation(models.Model):
 		try:
 
 			if is_fans != '0' and is_fans != None:
-				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('id')
+				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			else:
-				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id).order_by('id')
+				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id).order_by('-id')
 
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
 
@@ -812,7 +812,7 @@ class MemberFollowRelation(models.Model):
 			return []
 
 		try:
-			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('id')
+			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
 			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL)
 		except:
