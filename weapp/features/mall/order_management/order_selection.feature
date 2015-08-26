@@ -127,13 +127,13 @@ Background:
 		}]
 		"""
 
-@mall2 @order @allOrder @jz
+@mall2 @order @allOrder
 Scenario: 选择订单筛选条件
 	jobs选择订单筛选条件后
-	1. jobs选择一个条件时,获取对应的订单
-	2. jobs选择多个条件时,获取对应的订单
-	3. jobs填写详细信息时,获取对应的订单
-	4. jobs选择固定标签时,获取对应的订单
+	1. jobs选择一个条件时,可以看到订单列表
+	2. jobs选择多个条件时,可以看到订单列表
+	3. jobs填写详细信息时,可以看到订单列表
+	4. jobs选择固定标签时,可以看到订单列表
 
 	Given jobs登录系统
 	When jobs根据给定条件查询订单
@@ -142,7 +142,7 @@ Scenario: 选择订单筛选条件
 			"order_no": "00008"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no": "00008",
@@ -182,7 +182,7 @@ Scenario: 选择订单筛选条件
 			"express_number": "123"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no": "00006",
@@ -250,7 +250,7 @@ Scenario: 选择订单筛选条件
 			"pay_type": "支付宝"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no": "00007",
@@ -287,7 +287,7 @@ Scenario: 选择订单筛选条件
 			"order_source": "商城"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no": "00007",
@@ -344,7 +344,7 @@ Scenario: 选择订单筛选条件
 			"product_name": "商品1"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no": "00003",
@@ -381,7 +381,7 @@ Scenario: 选择订单筛选条件
 			"order_source": "商城"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[]
 		"""
@@ -394,7 +394,7 @@ Scenario: 选择订单筛选条件
 			"ship_tel": "13711223344"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[]
 		"""
@@ -405,7 +405,7 @@ Scenario: 选择订单筛选条件
 			"order_status": "已取消"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no": "00004",
