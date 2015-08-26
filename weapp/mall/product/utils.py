@@ -43,9 +43,7 @@ def extract_product_model(request):
             "price": 0.0,
             "weight": 0.0,
             "stock_type": models.PRODUCT_STOCK_TYPE_LIMIT,
-            # "stocks": -1,
-            #默认商品数改为0 duhao 2015-08-26
-            "stocks": 0,
+            "stocks": -1,
             "user_code": '',
             "is_deleted": True
         }
