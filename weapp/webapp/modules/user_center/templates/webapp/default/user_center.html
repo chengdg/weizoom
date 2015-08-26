@@ -12,7 +12,7 @@
                 </div>
             </dt>
             <dd>
-                <p>{% if member.username %}{{ member.username }}{% else %}我{% endif %}</p>
+                <p>{% if member.username_for_html %}{{ member.username_for_html }}{% else %}我{% endif %}</p>
                 <div class="xui-inner-levelBox">
                     <div class="xui-inner-levelLabel">
                         <a class="xui-btn-guide" href="./?woid={{request.webapp_owner_id}}&module=user_center&model=user_guide&action=get&workspace_id=user_center" >

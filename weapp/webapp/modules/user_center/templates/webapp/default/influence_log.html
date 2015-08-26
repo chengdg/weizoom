@@ -15,7 +15,7 @@
 	            <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
             </dt>
             <dd>
-                <h2>{% if member.username %}{{ member.username }}{% else %}我{% endif %}</h2>
+                <h2>{% if member.username_for_html %}{{ member.username_for_html }}{% else %}我{% endif %}</h2>
                 <a href="#" style="padding-bottom: 0px;">{% if member.integral %}{{ member.integral }}{% else %}0{% endif %}个积分</a>
                 <div class="xui-level-box">
                     <div class="xui-levelBox-label">

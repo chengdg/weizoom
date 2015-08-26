@@ -84,7 +84,7 @@
 		{% for channel_qrcode_member in channel_qrcode_members %}
 		<div class="xui-tableCell xa-tableCell">
 			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}}" />
-			<p class="xui-p xui-ellipsis-1">{{channel_qrcode_member.member.username}}</p>
+			<p class="xui-p xui-ellipsis-1">{{channel_qrcode_member.member.username_for_html}}</p>
 			{% if not channel_qrcode_member.member.is_subscribed %}
 			<div class="xui-yellowBar">已跑路</div>
 			{% endif %}
