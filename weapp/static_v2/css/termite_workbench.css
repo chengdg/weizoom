@@ -482,7 +482,7 @@ body {
 .propertyGroup_property_horizontalField .propertyGroup_property_input {
 	display: inline-block;
 	/*width: 176px;*/
-	line-height: 24px;
+	/*line-height: 24px;*/
 	/*图片导航样式影响*/
 	/* color: #999; */
 }
