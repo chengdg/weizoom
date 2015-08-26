@@ -188,7 +188,7 @@ Scenario: 2 删除分享红包
 		"""
 
 
-@mall2 @wip.oe3
+@mall2 @mall.red_envelop @wip.re3
 Scenario: 3 在查询"活动名称"结果中删除分享红包
 
 	When jobs设置查询条件
