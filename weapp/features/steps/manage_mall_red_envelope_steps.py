@@ -6,11 +6,12 @@ from behave import *
 from test import bdd_util
 from features.testenv.model_factory import *
 import steps_db_util
-from mall import module_api as mall_api
+#from mall import module_api as mall_api
 from mall.promotion import models as  promotion_models
 from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
+from mall.promotion.models import CouponRule
 
 def __get_coupon_rule_id(coupon_rule_name):
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
