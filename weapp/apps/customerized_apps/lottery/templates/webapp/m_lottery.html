@@ -27,56 +27,124 @@
 {% endblock %}
 
 {% block content-panel %}
-<div>
-	<h1 class="tc">Lottery({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
-</div>
+    {{ page_html_content|safe }}
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
-	W.pageId = "{{request.GET.page_id}}";
-	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/lottery',
-				resource: 'lottery_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-					belong_to: id,
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
-		});
-	});
-</script>
+    <script>
+        function Roulette($lottery){
+            this.index = -1;
+            this.count = 0;
+            this.timer = 0;
+            this.speed = 100;
+            this.times = 0;
+            this.cycle = 50;
+            this.prize = -1;
+            this.isRolling = false;
+            this.light_index = -1;
+            this.light_count = 0;
+            this.light_speed = 100;
+            this.lights_timer = 0;
+            this.$lottery = $lottery;
+
+            //初始化
+            var len = $lottery.find(".xa-lottery-unit").length;
+            if(len>0){
+                this.count = len;
+                $lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
+                //lights
+                this.light_count = $lottery.find(".xui-circle").length;
+            }else{
+                alert('没有找到容器');
+                return void(0);
+            }
+        }
+        Roulette.prototype.move = function(){
+            //lottery
+            var $lottery = this.$lottery;
+            $lottery.find(".xa-lottery-unit-"+this.index).removeClass("active");
+            this.index++;
+            if(this.index>this.count){
+                this.index = 0;
+            }
+            $lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
+            //lights
+            var light_index = this.light_index;
+            $lottery.find(".xa-circle-unit-"+light_index).removeClass("active");
+            light_index += 1;
+            if(light_index>this.light_count){
+                light_index = 0;
+            }
+            $lottery.find(".xa-circle-unit-"+light_index).addClass("active");
+            this.light_index = light_index;
+        };
+        Roulette.prototype.stop = function(index){
+            this.prize = index+1;
+        };
+        Roulette.prototype.roll = function(){
+            this.isRolling = true;
+            this.move();
+            if(this.prize == -1){
+                if(this.speed > 50) this.speed -= 10;
+
+            }else{
+                this.speed += 20;
+                if(this.speed >= 500 && ((this.prize == 0 && this.index == 7) || this.prize == this.index+1)){
+                    clearTimeout(this.timer);
+                    this.prize = -1;
+                    this.speed = 100;
+                    this.isRolling = false;
+                    return;
+                }
+            }
+            var that = this;
+            this.timer = setTimeout(function(){
+                that.roll();
+            },this.speed);
+        };
+    </script>
+    <script type="text/javascript">
+        var PRIZE = {
+            '0': getRandomStopPosition(['1', '5', '8', '10']), //谢谢参与位置
+            '1': getRandomStopPosition(['1', '7']), //一等奖位置
+            '2': getRandomStopPosition(['2', '4', '9']), //二等奖位置
+            '3': getRandomStopPosition(['3', '6', '11']) //三等奖位置
+        };
+        function getRandomStopPosition(arr){
+            var len = arr.length - 1;
+            return arr[parseInt(Math.random()*len+0.5)];
+        }
+
+        window.lottery = {};//测试用
+        $(function(){
+            console.log("准备就绪");
+            var $container = $('.wui-lotterydescription').find('.wui-i-body');
+            window.lottery = new Roulette($container);
+            $(".xa-lottery-go").click(function(){
+                console.log(lottery.isRolling);
+                if(lottery.isRolling){
+                    return false;
+                }else{
+                    lottery.roll();
+                    W.getApi().call({
+                        app: 'm/apps/lottery',
+                        resource: 'lottery_prize',
+                        method: 'put',
+                        args:{
+                            id: W.appRecordId,
+                        },
+                        success: function(data){
+                            alert(data.index);
+                            lottery.stop(PRIZE[data.index]);
+                            console.log('抽奖结束');
+                        },
+                        error: function(){
+                            alert('请求抽奖失败');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
