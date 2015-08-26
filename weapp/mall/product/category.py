@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from datetime import datetime
+import json
+from operator import attrgetter
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 
-
 from .. import models as mall_models
 from .. import export
+from . import utils as category_ROA_utils
 from core import resource, paginator
 from core.jsonresponse import create_response
+from core.exceptionutil import unicode_full_stack
+from watchdog.utils import watchdog_warning
 
 
 class CategoryList(resource.Resource):
@@ -24,134 +27,146 @@ class CategoryList(resource.Resource):
         product_categories = mall_models.ProductCategory.objects.filter(
             owner=request.manager)
 
-        #获取与category关联的product集合
-        category_ids = (category.id for category in product_categories)
-        relations = mall_models.CategoryHasProduct.objects.filter(
-                        category_id__in=category_ids)
-        category2products = {}
-        relation2time = {}
-        product_ids = set()
-        for relation in relations:
-            category2products.setdefault(relation.category_id, [])
-            category2products[relation.category_id].append(relation.product_id)
-            key = '%s_%s' % (relation.category_id, relation.product_id)
-            relation2time[key] = relation.created_at
-            product_ids.add(relation.product_id)
+        category_ROA_utils.sorted_products(request.manager.id, product_categories, True)
 
-        products = [product for product in mall_models.Product.objects.filter(
-            owner=request.manager,
-            id__in=product_ids) if not product.is_deleted]
-        mall_models.Product.fill_display_price(products)
-        mall_models.Product.fill_sales_detail(request.manager.id, products, [product.id for product in products])
-        id2product = dict([(product.id, product) for product in products])
-
-        empty_list = []
-        today = datetime.today()
-        for category in product_categories:
-            category.products = []
-            for product_id in category2products.get(category.id, empty_list):
-                if product_id not in id2product:
-                    continue
-                product = id2product[product_id]
-                relation = '%s_%s' % (category.id, product_id)
-                product.join_category_time = relation2time.get(relation, today)
-                category.products.append(id2product[product_id])
-            category.products.sort(lambda x,y: cmp(y.id, x.id))
-
-        c = RequestContext(
-                request,
-                {
+        c = RequestContext(request, {
                     'first_nav_name': export.PRODUCT_FIRST_NAV,
                     'second_navs': export.get_second_navs(request),
                     'second_nav_name': export.PRODUCT_MANAGE_CATEGORY_NAV,
-                    'product_categories': product_categories,
-                }
+                    'product_categories': product_categories}
         )
         return render_to_response('mall/editor/product_categories.html', c)
 
     @login_required
     def api_get(request):
-        """获得商品分类的可选商品列表
+        """功能1: 获得商品分类的可选商品列表
 
-        API:
-          method: get
-          args: id
+        Args:
+          id:
+          action:
 
         可选商品指的是还不属于当前分类的商品.
           可选商品集合 ＝ manager的所有商品集合 － 已经在分类中的商品集合
 
+        功能2: 获取指定排序的分类
+
+        Args:
+          action: 'sorted'
+          category_id:
+          reverse: 'true' or 'false'
+
         """
-        COUNT_PER_PAGE = 20
+        action = request.GET.get('action')
         category_id = int(request.GET.get('id'))
-        name_query = request.GET.get('name')
+        if not action:
+            COUNT_PER_PAGE = 20
+            name_query = request.GET.get('name')
 
-        #获取商品集合
-        products = [product for product in mall_models.Product.objects.filter(
-            owner=request.manager) if not product.is_deleted]
-        if name_query:
-            products = [
-                product for product in products if name_query in product.name
-            ]
+            #获取商品集合
+            products = list(mall_models.Product.objects.filter(
+                owner=request.manager, is_deleted=False).exclude(
+                shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED))
+            if name_query:
+                products = [
+                    product for product in products if name_query in product.name
+                ]
 
-        if category_id != -1:
-            #获取已在分类中的商品
-            relations = mall_models.CategoryHasProduct.objects.filter(
-                category_id=category_id)
-            existed_product_ids = set(
-                [relation.product_id for relation in relations]
-            )
+            if category_id != -1:
+                #获取已在分类中的商品
+                relations = mall_models.CategoryHasProduct.objects.filter(
+                    category_id=category_id)
+                existed_product_ids = set(
+                    [relation.product_id for relation in relations]
+                )
 
-            #获取没在分类中的商品集合(分类的可选商品集合)
-            products = filter(
-                lambda product: (product.id not in existed_product_ids),
-                products
-            )
+                #获取没在分类中的商品集合(分类的可选商品集合)
+                products = filter(
+                    lambda product: (product.id not in existed_product_ids),
+                    products
+                )
+            products.sort(lambda x,y: cmp(y.id, x.id))
+            products.sort(lambda x,y: cmp(y.update_time, x.update_time))
 
-        products.sort(lambda x,y: cmp(x.id, y.id))
+            #进行分页
+            count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+            cur_page = int(request.GET.get('page', '1'))
+            pageinfo, products = paginator.paginate(
+                products,
+                cur_page,
+                count_per_page,
+                query_string=request.META['QUERY_STRING'])
 
-        #进行分页
-        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-        cur_page = int(request.GET.get('page', '1'))
-        pageinfo, products = paginator.paginate(
-            products,
-            cur_page,
-            count_per_page,
-            query_string=request.META['QUERY_STRING'])
+            mall_models.Product.fill_display_price(products)
+            mall_models.Product.fill_details(request.manager,
+                                             products,
+                                             {'with_sales': True})
+            result_products = []
+            for product in products:
+                relation = '%s_%s' % (category_id, product.id)
+                result_products.append({
+                    "id": product.id,
+                    "name": product.name,
+                    "display_price": product.display_price,
+                    "status": product.status,
+                    "sales": product.sales if product.sales else -1,
+                    "update_time": product.update_time.strftime("%Y-%m-%d")
+                })
+            # result_products.sort(lambda x,y: cmp(y['update_time'], x['update_time']))
 
-        mall_models.Product.fill_display_price(products)
-        mall_models.Product.fill_details(
-            request.manager,
-            products,
-            {
-                'with_sales': True
+            response = create_response(200)
+            response.data = {
+                'items': result_products,
+                'pageinfo': paginator.to_dict(pageinfo),
+                'sortAttr': '',
+                'data': {}
             }
-        )
-        result_products = []
-        for product in products:
-            relation = '%s_%s' % (category_id, product.id)
-            result_products.append({
-                "id": product.id,
-                "name": product.name,
-                "display_price": product.display_price,
-                "status": product.status,
-                "sales": product.sales if product.sales else -1,
-                "update_time": product.update_time.strftime("%Y-%m-%d")
-            })
-        result_products.sort(lambda x,y: cmp(y['id'], x['id']))
+            return response.get_response()
+        elif action == 'sorted':
+            reverse = json.loads(request.GET.get('reverse', 'true'))
+            #获取category集合
+            product_categories = mall_models.ProductCategory.objects.filter(
+                id=category_id)
 
-        response = create_response(200)
-        response.data = {
-            'items': result_products,
-            'pageinfo': paginator.to_dict(pageinfo),
-            'sortAttr': '',
-            'data': {}
-        }
-        return response.get_response()
+            category_ROA_utils.sorted_products(request.manager.id, product_categories, reverse)
+
+            response = create_response(200)
+            response.data = {
+                'product_categories': product_categories
+            }
+            return response.get_response()
+
 
     @login_required
     def put(request):
         """创建商品分类
         """
+
+    @login_required
+    def api_post(request):
+        """更新商品排序
+
+        Args:
+          category_id:
+          product_id:
+          position:
+        """
+        try:
+            category_id = request.POST.get('category_id')
+            product_id = request.POST.get('product_id')
+            position = request.POST.get('position')
+            category_has_product = mall_models.CategoryHasProduct.objects.get(
+                category_id=category_id,
+                product_id=product_id
+            )
+            category_has_product.move_to_position(position)
+            response = create_response(200)
+            return response.get_response()
+        except:
+            watchdog_warning(
+                u"更新商品分组商品排序失败, cause:\n{}".format(unicode_full_stack())
+            )
+            response = create_response(500)
+            return response.get_response()
 
 
 class Category(resource.Resource):

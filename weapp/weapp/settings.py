@@ -335,7 +335,8 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'core.context_processors.request_host',
     'core.context_processors.is_weizoom_mall',
     'core.context_processors.cdn_host',
-    'core.context_processors.handlebar_component_templates'
+    'core.context_processors.handlebar_component_templates',
+    'core.context_processors.fetch_webapp_global_navbar',
 
 ]
 
@@ -563,7 +564,7 @@ if 'develop' == MODE:
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
     EVENT_DISPATCHER = 'local'
-    ENABLE_WEPAGE_CACHE = True
+    ENABLE_WEPAGE_CACHE = False
 
     WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
 

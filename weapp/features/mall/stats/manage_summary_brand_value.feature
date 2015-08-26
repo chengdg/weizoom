@@ -10,12 +10,6 @@ Background:
 			"no_payment_order_expire_day":"1天"
 		}
 		"""
-	#Given jobs已添加商品分类
-	#	"""
-	#	[{
-	#		"name": "分类1"
-	#	}]
-	#	"""
 	Given jobs设定会员积分策略
 		# 即: "integral_each_yuan": 10	
 		"""
@@ -99,7 +93,8 @@ Background:
 		# tom4 => kate
 		And kate关注jobs的公众号
 
-@stats @stats.brand_value
+
+@mall2 @stats @wip.brand_value
 Scenario: 测试只有1个消费用户、1个商品的品牌价值
 	When 微信用户批量消费jobs的商品
 		# consumer前有'-'表示清空浏览器

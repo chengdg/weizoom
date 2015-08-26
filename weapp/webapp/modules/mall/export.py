@@ -21,7 +21,7 @@ from webapp import module_views as webapp_module_views
 from mall.models import WeizoomMall
 
 from mall.models import ProductCategory, Product, Order
-import mall.module_api
+from mall import module_api
 
 NAV = {
 	'section': u'微信商城',

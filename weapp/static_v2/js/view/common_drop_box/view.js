@@ -92,7 +92,7 @@ W.view.common.DropBox = Backbone.View.extend({
         var elOffset = $action.offset();
         var elWidth = parseInt($action.css('width'));
         var elHeight = $action.height();
-        var currWidth = this.$el.width() || 0;
+        var currWidth = parseInt(this.$el.css('width')) || 0;
         var currHeight = parseInt(this.$el.css('height')) || 0;
         var isBtn = $action.hasClass('btn') || $action.hasClass('dropdown-toggle');
         // var widthCount = $action.hasClass('btn') ? 28 : 16;
@@ -178,6 +178,15 @@ W.view.common.DropBox = Backbone.View.extend({
                 this.$el.css({
                     left: (elOffset.left + elWidth/2) - currWidth,
                     top: elOffset.top + elHeight
+                });
+                break;
+            case 'down-middle':
+                xlog(elOffset.left);
+                xlog(elWidth);
+                xlog(currWidth);
+                this.$el.css({
+                    left: elOffset.left - currWidth/2,
+                    top: elOffset.top + elHeight + 5
                 });
                 break;
             case 'down-left':

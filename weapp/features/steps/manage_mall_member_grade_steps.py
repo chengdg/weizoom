@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
-import json
-import time
-import copy
 from behave import *
 
 from test import bdd_util
 from features.testenv.model_factory import *
-
-from django.test.client import Client
 from modules.member.models import MemberGrade
 
 
@@ -110,7 +105,7 @@ def step_impl(context, user, name):
 def step_impl(context, user):
     json_data = json.loads(context.text)
     condition = json_data['condition'][0]
-    is_all_conditions = False if condition == u"满足一个条件即可" else True
+    is_all_conditions = '0' if condition == u"满足一个条件即可" else '1'
     response = context.client.get('/mall2/member_grade_list/')
     grades = response.context['member_grades']
     data = []
@@ -127,9 +122,9 @@ def step_impl(context, user):
             data_dict["pay_money"] = grade.pay_money
             data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
         data.append(data_dict)
-
-    context.client.post('/mall2/api/member_grade_list/?_method=post', {'s_all_conditions':is_all_conditions,'grades':json.dumps(data)})
-    pass
+    print('is_all_conditions:',is_all_conditions)
+    context.client.post('/mall2/api/member_grade_list/?_method=post',
+                        {'is_all_conditions': is_all_conditions, 'grades': json.dumps(data)})
 
 
 @When(u"{user}更新会员等级'{name}'")

@@ -69,7 +69,13 @@ def step_impl(context, webapp_user_name, webapp_owner_name, category_name):
 
 @then(u"{webapp_user_name}获得webapp商品列表")
 def step_impl(context, webapp_user_name):
-	expected = json.loads(context.text)
+	if context.table:
+		expected = []
+		for promotion in context.table:
+			promotion = promotion.as_dict()
+			expected.append(promotion)
+	else:
+		expected = json.loads(context.text)
 	actual = context.products
 	bdd_util.assert_list(expected, actual)
 
@@ -171,7 +177,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		}
 	"""
 	url = '/webapp/api/project_api/call/'
-	if hasattr(context, 'caller_step_purchase_info'):
+	if hasattr(context, 'caller_step_purchase_info') and context.caller_step_purchase_info:
 		args = context.caller_step_purchase_info
 	else:
 		args = json.loads(context.text)
@@ -391,9 +397,9 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.webapp_owner_name = webapp_owner_name
 
 OPERATION2STEPID = {
-	u'支付': u"When %s支付最新订单",
+	u'支付': u'When %s"支付"最新订单',
 	u'发货': u"When %s对最新订单进行发货",
-	u'完成': u"When %s完成最新订单",
+	u'完成': u'When %s"完成"最新订单',
 	u'退款': u"When %s对最新订单进行退款",
 	u'完成退款': u"When %s完成最新订单退款",
 	u'取消': u"When %s\"取消\"最新订单",
@@ -481,6 +487,7 @@ def step_impl(context, webapp_owner_name):
 				pass
 			else:
 				raise
+	context.caller_step_purchase_info = None
 
 
 @when(u"微信用户批量访问{webapp_owner_name}的webapp")
@@ -1041,9 +1048,6 @@ def step_add_address_info(context, webapp_user_name):
 		response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
 		assert response.status_code == 200
 		context.response = response
-	# jz 2015-08-11
-	# elif page_title == u"购物车订单编辑":
-	# 	pass
 
 
 @when(u"{webapp_user_name}更新收货信息")

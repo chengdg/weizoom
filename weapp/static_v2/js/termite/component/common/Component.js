@@ -163,6 +163,12 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 			}, this);
 		}
 
+		this.autoSelect = false;
+		if (obj.hasOwnProperty('auto_select')) {
+			this.autoSelect = obj.auto_select;
+		}
+		xwarn(this.autoSelect);
+
 		//初始化property change handler
 		if (!this.propertyChangeHandlers) {
 			this.propertyChangeHandlers = {};
@@ -586,6 +592,7 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 		json.type = this.type;
 		json.cid = this.cid;
 		json.pid = this.pid;
+		json.auto_select = this.autoSelect;
 
 		json.selectable = "yes";
 		if (this.selectable) {

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from datetime import datetime
 import os
 
 import qrcode
@@ -16,7 +16,7 @@ from core import paginator
 
 from core.jsonresponse import create_response
 from core import search_util
-from mall.promotion.utils import coupon_id_maker
+from mall.promotion.utils import create_coupons
 
 
 COUNT_PER_PAGE = 20
@@ -80,8 +80,8 @@ class CouponRuleInfo(resource.Resource):
                 'second_navs': export.get_promotion_second_navs(request),
                 'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
                 'coupon_rule': coupon_rule,
-                'start_date': promotion.start_date[:16],
-                'end_date': promotion.end_date[:16],
+                'start_date': promotion.start_date.strftime("%Y-%m-%d %H:%M"),
+                'end_date': promotion.end_date.strftime("%Y-%m-%d %H:%M"),
                 'promotion': promotion
             })
             return render_to_response('mall/editor/promotion/create_coupon_rule.html', c)
@@ -162,7 +162,6 @@ class CouponRuleInfo(resource.Resource):
             detail_id=couponRule.id,
             status=PROMOTION_STATUS_NOT_START
         )
-        _create_coupons(couponRule, count, promotion)
 
         if limit_product == '1':
             product_ids = request.POST.get('product_ids', '-1').split(',')
@@ -176,6 +175,7 @@ class CouponRuleInfo(resource.Resource):
         if start_date <= now:
             promotion.status = PROMOTION_STATUS_STARTED
             promotion.save()
+        create_coupons(couponRule, count, promotion)
         return create_response(200).get_response()
 
 
@@ -417,38 +417,6 @@ class CouponRuleList(resource.Resource):
 #             #         else:
 #             #             pass
 #     return filtered_promotions
-
-
-def _create_coupons(couponRule, count, promotion=None):
-    """
-    创建未使用的优惠券
-    """
-    i = 0
-    if not promotion:
-        promotion = Promotion.objects.filter(type=PROMOTION_TYPE_COUPON, detail_id=couponRule.id)[0]
-
-    a = couponRule.owner.id
-    b = couponRule.id
-
-    # 创建未使用的优惠券
-    while i < count:
-        # 生成优惠券ID
-        coupon_id = coupon_id_maker(a, b)
-        while Coupon.objects.filter(coupon_id=coupon_id):
-            coupon_id = coupon_id_maker(a, b)
-        new_coupon = Coupon.objects.create(
-            owner=couponRule.owner,
-            coupon_id=coupon_id,
-            provided_time=promotion.start_date,
-            start_time=promotion.start_date,
-            expired_time=promotion.end_date,
-            money=couponRule.money,
-            coupon_rule_id=couponRule.id,
-            is_manual_generated=False,
-            status=COUPON_STATUS_UNGOT
-        )
-        i += 1
-
 
 def _create_coupon_qrcode(coupon_url, coupon_id):
     """

@@ -1,18 +1,19 @@
 {% load workbench_filter %}
 <!DOCTYPE html>
-<html style="background-color: #F5F5F5;">
+<html style="background-color: #F5F5F5; min-height:100%;">
 	<head>
 		<meta charset="UTF-8" />
 		<title></title>
 		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/base.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/webapp_default.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">
+		<link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/css/design.css">
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
-	<body style="overflow: hidden;">
+	<body style="overflow: hidden;min-height:100%;">
 		<div class="
 			wa-page 
 			x-design 
@@ -42,6 +43,8 @@
 		<script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
 
 		<script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
+		<script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
+		<script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
 
 		<script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
 		<script type="text/javascript" src="/static/backbone/backbone-1.0.0.min.js"></script>
@@ -100,7 +103,6 @@
 			};
 			$(document).ready(function() {
 				detectParentTask();
-
 			});
 			$(document).click(function() {
 				// 点击空白处，触发事件

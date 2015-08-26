@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 import copy
@@ -504,8 +504,9 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				members = get_member_by_id_list(member_ids)
 				member_id2member = dict([(m.id, m) for m in members])
 				for review in product_review:
-					review.member_name = member_id2member[review.member_id].username_for_html
-					review.user_icon = member_id2member[review.member_id].user_icon
+					if member_id2member.has_key(review.member_id):
+						review.member_name = member_id2member[review.member_id].username_for_html
+						review.user_icon = member_id2member[review.member_id].user_icon
 			#获取促销活动和积分折扣信息
 			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))
 			# Todo: 促销已经结束， 但数据库状态未更改
@@ -1457,7 +1458,9 @@ def ship_order(order_id, express_company_name,
 	已知引用：
 	mobile_app/order_api_views.py
 	"""
-	if (len(str(order_id)) == 0) or (len(express_company_name) == 0) or (len(express_number) == 0):
+	# if (len(str(order_id)) == 0) or (len(express_company_name) == 0) or (len(express_number) == 0):
+	# 	return False
+	if (len(str(order_id)) == 0):
 		return False
 	target_status = ORDER_STATUS_PAYED_SHIPED
 
@@ -2695,6 +2698,7 @@ def batch_handle_order(json_data, user):
 	批量发货
 
 	已知引用:features/steps/mall_order_manager_steps.py
+			mall/order/delivery.py
 	"""
 	error_data = []
 	success_data = []
@@ -2715,6 +2719,8 @@ def batch_handle_order(json_data, user):
 				item["error_info"] = "订单号错误"
 				error_data.append(item)
 				continue
+			if not express_number:
+				raise
 			if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 				if ship_order(order.id, express_company_value, express_number, user.username, u''):
 					success_data.append(item)
@@ -2891,6 +2897,7 @@ def update_promotion_status_by_member_grade(member_grade_ids):
 	"""
 	try:
 		promotion_models.Promotion.objects.filter(member_grade_id__in=member_grade_ids, status__in=[promotion_models.PROMOTION_STATUS_NOT_START, promotion_models.PROMOTION_STATUS_STARTED]).update(status=promotion_models.PROMOTION_STATUS_FINISHED)
+		promotion_models.IntegralSaleRule.objects.filter(member_grade_id__in=member_grade_ids).delete()
 	except:
 		alert_message = u"update_promotion_status_by_member_grade cause:\n{}".format(unicode_full_stack())
 		watchdog_error(alert_message)
@@ -2976,25 +2983,30 @@ def get_member_product_info(request):
 	response = create_response(200)
 	# try:
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
-	webapp_owner_id = request.webapp_owner_id
-	member_id = request.member.id
-	product_id = request.GET.get('product_id', "")
-	if product_id:
-		collect = MemberProductWishlist.objects.filter(
-			owner_id=webapp_owner_id,
-			member_id=member_id,
-			product_id=product_id,
-			is_collect=True
-		)
-		if collect.count() > 0:
-			response.data.is_collect = 'true'
-		else:
-			response.data.is_collect = 'false'
 	response.data.count = shopping_cart_count
-	member_grade_id, discount = get_member_discount(request)
-	response.data.member_grade_id = member_grade_id
-	response.data.discount = discount
-
+	webapp_owner_id = request.webapp_owner_id
+	if request.member:
+		member_id = request.member.id
+		product_id = request.GET.get('product_id', "")
+		if product_id:
+			collect = MemberProductWishlist.objects.filter(
+				owner_id=webapp_owner_id,
+				member_id=member_id,
+				product_id=product_id,
+				is_collect=True
+			)
+			if collect.count() > 0:
+				response.data.is_collect = 'true'
+			else:
+				response.data.is_collect = 'false'
+		member_grade_id, discount = get_member_discount(request)
+		response.data.member_grade_id = member_grade_id
+		response.data.discount = discount
+	else:
+		if product_id:
+			response.data.is_collect = 'false'
+		response.data.member_grade_id = -1
+		response.data.discount = 100
 	# except:
 	# 	return create_response(500).get_response()
 	return response.get_response()
@@ -3023,11 +3035,25 @@ def wishlist_product_count(webapp_owner_id, member_id):
 		is_collect=True
 	).count()
 
+OVERDUE_DAYS = 15
+def check_product_review_overdue(product_id):
+	top_review_list = ProductReview.objects.filter(status=2,product_id=product_id)
+	for review in top_review_list:
+		after_15_days = review.top_time+timedelta(days=OVERDUE_DAYS)
+		now = datetime.now()
+		if (after_15_days <= now):
+			review.status = 1
+			ProductReview.objects.filter(id=review.id).update(status=1,top_time=DEFAULT_DATETIME)
+
+
+
 def get_product_review(request):
 	"""
 	获取商品的评价
 	"""
 	product_id = request.GET.get('product_id', None)
+	# 检查置顶评论是否过期
+	check_product_review_overdue(product_id)
 	product_review_list = ProductReview.objects.filter(Q(product_id=product_id) & Q(status__in=['1', '2'])).order_by('-top_time', '-id')
 
 	from cache import webapp_cache
