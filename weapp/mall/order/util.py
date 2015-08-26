@@ -61,7 +61,7 @@ def export_orders_json(request):
 
     source_list = {
         'mine_mall': u'本店',
-        'weizoom_mall': u'商户'
+        'weizoom_mall': u'商城'
     }
 
     orders = [

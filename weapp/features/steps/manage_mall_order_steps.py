@@ -370,7 +370,7 @@ def step_get_specify_order(context, user):
             'product_unit_price',
             'product_count',
             'weigth',
-            'pay_way',
+            'methods_of_payment',
             'money_total',
             'money',
             'money_wcard',
@@ -378,25 +378,28 @@ def step_get_specify_order(context, user):
             'integral',
             'coupon_money',
             'coupon_name',
-            'order_status',
-            'purchaser',
-            'consignee',
-            'tel',
+            'status',
+            'member',
+            'ship_name',
+            'ship_tel',
             'province',
             'address',
-            'consigner',
+            'shipper',
             'remark',
-            'source',
-            'logistics_company',
-            'express_number',
+            'sources',
+            'logistics',
+            'number',
             'delivery_time'
         ]
         actual = []
         for row in reader:
-            item = dict(map(None, header, row))
+            print row
+            item = dict(map(None, header, [str(r).decode('utf8') for r in row]))
             actual.append(item)
+            print 'jz---', item
         # remove statistical information
         actual.pop()
+        print 'jz---', actual
 
         expected_order = json.loads(context.text)
         bdd_util.assert_list(expected_order, actual)
