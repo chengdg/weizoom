@@ -200,60 +200,61 @@ Scenario: 3 在查询"活动名称"结果中删除分享红包
 			"end_date": ""
 		}
 		"""
-	Then jobs能获取红包列表
-		#	"actions": ["开启","删除","查看"]
+	Then jobs能获取分享红包列表
 		"""
 		[{
 			"name": "分享红包1",
 			"prize_info": ["全体券3"],
 			"start_date": "今天",
 			"end_date": "2天后",
-			"status": "关闭"
+			"status": "关闭",
+			"actions": ["开启", "删除", "查看"]
 		}]
 		"""
-	When jobs删除微信红包'分享红包1'
-	Then jobs能获取红包列表
+	When jobs-删除分享红包"分享红包1"
+	Then jobs能获取分享红包列表
 		"""
 		[]
 		"""
 
-
+@mall2 @mall.red_envelope @wip.re4
 Scenario: 4 在查询"奖励"结果中删除分享红包
 
-		When jobs设置查询条件
-			"""
-			{
-				"name":"",
-				"prize_info":"单品券4"
-				"start_date": "",
-				"end_date": ""
-			}
-			"""
-		Then jobs能获取红包列表
-			"""
-			[{
-				"name": "分享红包3",
-				"prize_info": ["单品券4"],
-				"status": "关闭",
-				"actions": ["开启","删除","查看"]
-			},{
-				"name": "分享红包2",
-				"prize_info": ["单品券4"],
-				"status": "关闭",
-				"actions": ["开启","删除","查看"]
-			}]
-			"""
-		When jobs删除分享红包'分享红包3'
-		Then jobs能获取红包列表
-			"""
-			[{
-				"name": "分享红包2",
-				"prize_info": ["单品券4"],
-				"status": "关闭",
-				"actions": ["开启","删除","查看"]
-			}]
-			"""
+	When jobs设置查询条件
+		"""
+		{
+			"name":"",
+			"prize_info":"单品券4",
+			"start_date": "",
+			"end_date": ""
+		}
+		"""
+	Then jobs能获取分享红包列表
+		"""
+		[{
+			"name": "分享红包3",
+			"prize_info": ["单品券4"],
+			"status": "关闭",
+			"actions": ["开启","删除","查看"]
+		},{
+			"name": "分享红包2",
+			"prize_info": ["单品券4"],
+			"status": "关闭",
+			"actions": ["开启","删除","查看"]
+		}]
+		"""
+	When jobs-删除分享红包"分享红包3"
+	Then jobs能获取分享红包列表
+		"""
+		[{
+			"name": "分享红包2",
+			"prize_info": ["单品券4"],
+			"status": "关闭",
+			"actions": ["开启","删除","查看"]
+		}]
+		"""
 
+@wip.re5
 Scenario: 5 在查询"奖励时间"结果中删除分享红包
 
 		When jobs设置查询条件

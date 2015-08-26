@@ -854,7 +854,8 @@ class ProductModel(resource.Resource):
             )
             if len(product_model) == 1 and product_model[0].stock_type == models.PRODUCT_STOCK_TYPE_LIMIT and product_model[0].stocks < 1:
                 #触发signal，清理缓存
-                productModel.update(stocks=0)
+                product_model.update(stocks=0)
+                
             product_model.update(stock_type=stock_type, stocks=stocks)
 
         response = create_response(200)
