@@ -62,6 +62,19 @@ gmu.define('BottomNav', {
          		'left':'auto',
 				'margin-left':0
 			});
+			if($otherSubMenuContainer.eq(2).width() > 92){
+				console.log($otherSubMenuContainer.eq(2),'5555555')
+				$otherSubMenuContainer.eq(2).find('.xui-menuArrow').css({
+					'right':40,
+					'left':'auto',
+					'margin-left':0
+				});
+				$otherSubMenuContainer.eq(2).find('.xui-menuArrowBorder').css({
+					'right':40,
+					'left':'auto',
+					'margin-left':0
+				});
+			}
          }
 	}
 });

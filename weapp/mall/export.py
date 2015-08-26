@@ -211,12 +211,12 @@ MALL_PROMOTION_ORDER_RED_ENVELOPE = 'orderRedEnvelope'
 PROMOTION_NAV = {
     'navs': [
         # 商品管理
-        {
-            'name': MALL_PROMOTION_PROMOTIONS_NAV,
-            'title': u'促销查询',
-            'url': '/mall2/promotion_list/',
-            'need_permissions': ['search_promotion', ]
-        },
+        # {
+        #     'name': MALL_PROMOTION_PROMOTIONS_NAV,
+        #     'title': u'促销查询',
+        #     'url': '/mall2/promotion_list/',
+        #     'need_permissions': ['search_promotion', ]
+        # },
         {
             'name': MALL_PROMOTION_FLASH_SALE_NAV,
             'title': u'限时抢购',
