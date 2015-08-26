@@ -82,6 +82,7 @@ class surveyParticipances(resource.Resource):
 		
 		webappuser2datas = {}
 		webapp_user_ids = set()
+
 		for data in datas:
 			webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
 			webapp_user_ids.add(data.webapp_user_id)
@@ -122,13 +123,13 @@ class surveyParticipances_Export(resource.Resource):
 	@login_required
 	def api_get(request):
 		"""
-		响应API GET
+		详情导出:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 		"""
 		app_name = 'survey'
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
-		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		excel_file_name = ('%s_%s.xls') % (app_name,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		import xlwt
@@ -178,8 +179,12 @@ class surveyParticipances_Export(resource.Resource):
 						fields_pure.append(purename)
 				else:
 					fields_pure.append(field)
+			#处理用户名
+			id2name={}
+			user_id = []
+			for record in data:
+				pass
 
-			#数据表,顺序:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 			num = 0
 			for record in data:
 				export_record={}
@@ -188,6 +193,9 @@ class surveyParticipances_Export(resource.Resource):
 				shortcuts =[]
 				num = num+1
 				webapp_user_id = record['webapp_user_id']
+				member_id = record['member_id']
+
+
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
@@ -213,6 +221,8 @@ class surveyParticipances_Export(resource.Resource):
 				for item in qa:
 					export_record.append(item)
 				for item in shortcuts:
+
+
 					export_record.append(item)
 
 				export_data.append(export_record)
