@@ -127,7 +127,7 @@ Background:
 		}]
 		"""
 
-@wip.os1 @mall.order_filter @mall.order_filter.select_order_list @eugene
+@mall2 @order @allOrder @jz
 Scenario: 选择订单筛选条件
 	jobs选择订单筛选条件后
 	1. jobs选择一个条件时,获取对应的订单
@@ -161,17 +161,20 @@ Scenario: 选择订单筛选条件
 			"order_no": "00008",
 			"member": "bill",
 			"status": "待支付",
-			"order_time": "2014-10-08 12:00:00",
+			"order_time": "2014-10-08 12:00",
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
-			"products": [{
-				"name": "商品2",
-				"count": 1
-			}],
+			"product_name": "商品2",
+			"product_count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
 		"""
+
+		#	"products": [{
+		#		"name": "商品2",
+		#		"count": 1
+		#	}],
 
 	When jobs根据给定条件查询订单
 		"""
@@ -213,13 +216,11 @@ Scenario: 选择订单筛选条件
 			"order_no": "00006",
 			"member": "tom",
 			"status": "已发货",
-			"order_time": "2014-10-06 12:00:00",
+			"order_time": "2014-10-06 12:00",
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
-			"products": [{
-				"name": "商品2",
-				"count": 1
-			}],
+			"product_name": "商品2",
+			"product_count": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"logistics": "顺丰",
@@ -229,13 +230,11 @@ Scenario: 选择订单筛选条件
 			"order_no": "00005",
 			"member": "tom",
 			"status": "已完成",
-			"order_time": "2014-10-05 12:00:00",
+			"order_time": "2014-10-05 12:00",
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
-			"products": [{
-				"name": "商品2",
-				"count": 1
-			}],
+			"product_name": "商品2",
+			"product_count": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"logistics": "顺丰",
@@ -247,8 +246,8 @@ Scenario: 选择订单筛选条件
 	When jobs根据给定条件查询订单
 		"""
 		{
-			"status": "待发货",
-			"methods_of_payment": "支付宝"
+			"order_status": "待发货",
+			"pay_type": "支付宝"
 		}
 		"""
 	Then jobs获取对应的订单
@@ -270,13 +269,11 @@ Scenario: 选择订单筛选条件
 			"order_no": "00007",
 			"member": "bill",
 			"status": "待发货",
-			"order_time": "2014-10-07 12:00:00",
+			"order_time": "2014-10-07 12:00",
 			"methods_of_payment": "支付宝",
 			"sources": "商城",
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
+			"product_name": "商品1",
+			"product_count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -287,7 +284,7 @@ Scenario: 选择订单筛选条件
 		{
 			"product_name": "商品1",
 			"ship_name": "bill",
-			"source": "商城"
+			"order_source": "商城"
 		}
 		"""
 	Then jobs获取对应的订单
@@ -318,26 +315,22 @@ Scenario: 选择订单筛选条件
 			"order_no": "00007",
 			"member": "bill",
 			"status": "待发货",
-			"order_time": "2014-10-07 12:00:00",
+			"order_time": "2014-10-07 12:00",
 			"methods_of_payment": "支付宝",
 			"sources": "商城",
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
+			"product_name": "商品1",
+			"product_count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}, {
 			"order_no": "00004",
 			"member": "bill",
 			"status": "已取消",
-			"order_time": "2014-10-04 12:00:00",
+			"order_time": "2014-10-04 12:00",
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
+			"product_name": "商品1",
+			"product_count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -370,13 +363,11 @@ Scenario: 选择订单筛选条件
 			"order_no": "00003",
 			"member": "tom",
 			"status": "待发货",
-			"order_time": "2014-10-03 12:00:00",
+			"order_time": "2014-10-03 12:00",
 			"methods_of_payment": "货到付款",
 			"sources": "商城",
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
+			"product_name": "商品1",
+			"product_count": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344"
 		}]
@@ -385,9 +376,9 @@ Scenario: 选择订单筛选条件
 	When jobs根据给定条件查询订单
 		"""
 		{
-			"status": "已发货",
+			"order_status": "已发货",
 			"express_number": "321",
-			"source": "商城"
+			"order_source": "商城"
 		}
 		"""
 	Then jobs获取对应的订单
@@ -398,7 +389,7 @@ Scenario: 选择订单筛选条件
 	When jobs根据给定条件查询订单
 		"""
 		{
-			"order_time": "2014-10-07|2014-10-08",
+			"date_interval": "2014-10-07|2014-10-08",
 			"ship_name": "tom",
 			"ship_tel": "13711223344"
 		}
@@ -411,7 +402,7 @@ Scenario: 选择订单筛选条件
 	When jobs根据给定条件查询订单
 		"""
 		{
-			"status": "已取消"
+			"order_status": "已取消"
 		}
 		"""
 	Then jobs获取对应的订单
@@ -433,13 +424,11 @@ Scenario: 选择订单筛选条件
 			"order_no": "00004",
 			"member": "bill",
 			"status": "已取消",
-			"order_time": "2014-10-04 12:00:00",
+			"order_time": "2014-10-04 12:00",
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
+			"product_name": "商品1",
+			"product_count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
