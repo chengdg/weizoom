@@ -179,12 +179,41 @@ class surveyParticipances_Export(resource.Resource):
 						fields_pure.append(purename)
 				else:
 					fields_pure.append(field)
-			#处理用户名
-			id2name={}
+			#处理用户名 总有weapp_user_id
+			weapp_id2name={}
+			member_id2name={}
 			user_id = []
+			webapp_id = [record['webapp_user_id'] for record in data ]
+			# member_id = [record['member_id'] for record in data ]
+			members = member_models.Member.objects.filter(webapp_id__in = webapp_id)
+			webapp_id2member ={}
+			for member in members:
+				if member.webapp_id not in webapp_id2member:
+					webapp_id2member[webapp_id] = member
+				else:
+					pass
+			webapp_id2member_id = {}
 			for record in data:
-				pass
+				print record
+				#测试后删除：非member，member值是空还是终端异常》？
+				webapp_id = record['webapp_user_id']
+				print 'member_id 获取值:start……'
+				member_id = record['member_id']
+				print 'member_id :end ……'
+				print '+++++++++++'
 
+				if webapp_id not in webapp_id2member_id:
+					webapp_id2member_id[webapp_id]=member_id
+				else:
+					webapp_id2member_id[webapp_id]=member_id
+				print '-----------'
+			print webapp_id2member_id
+
+			for item in webapp_id2member_id:
+				if webapp_id2member_id[item]:
+					pass
+				else:
+					pass
 			num = 0
 			for record in data:
 				export_record={}
@@ -201,9 +230,8 @@ class surveyParticipances_Export(resource.Resource):
 				for s in fields_selec:
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
-						if s_i[i]['isSelect']== True:
+						if s_i[i]['isSelect'] == True:
 							selec.append(i.split('_')[1])
-
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
@@ -221,8 +249,6 @@ class surveyParticipances_Export(resource.Resource):
 				for item in qa:
 					export_record.append(item)
 				for item in shortcuts:
-
-
 					export_record.append(item)
 
 				export_data.append(export_record)
