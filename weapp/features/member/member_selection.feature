@@ -32,7 +32,7 @@ Feature: 筛选会员列表
 Background:
 
 	Given jobs登录系统
-
+	And 开启手动清除cookie模式
 	#添加相关基础数据
 		When jobs已添加商品
 			"""
@@ -110,32 +110,55 @@ Background:
 		And tom4取消关注jobs的公众号
 
 	#好友
+			#好友
 		#bill和tom1建立好友关系
 			When tom1访问jobs的webapp
 			When tom1把jobs的微站链接分享到朋友圈
+			When tom1获得db中在jobs公众号中的mt为'mt_{tom1_jobs}'
 
 			When 清空浏览器
 			When bill点击tom1分享链接
+			Then bill在jobs公众号中有uuid对应的webapp_user
+			Then 浏览器cookie包含"[fmt, uuid]"
+			Then 浏览器cookie等于
+				"""
+				{"fmt":"mt_{tom1_jobs}"}
+				"""
 			When bill关注jobs的公众号
 			When bill访问jobs的webapp
 
 		#bill2和tom1建立好友关系
 			When 清空浏览器
+			When bill2点击tom1分享链接
+			Then bill2在jobs公众号中有uuid对应的webapp_user
+			Then 浏览器cookie包含"[fmt, uuid]"
+			Then 浏览器cookie等于
+				"""
+				{"fmt":"mt_{tom1_jobs}"}
+				"""
 			When bill2关注jobs的公众号
 			When bill2访问jobs的webapp
-			When bill2点击tom1分享链接
 
 		#bill3和tom3建立好友关系
+			When 清空浏览器
 			When tom3访问jobs的webapp
 			When tom3把jobs的微站链接分享到朋友圈
+			When tom3获得db中在jobs公众号中的mt为'mt_{tom3_jobs}'
 
 			When 清空浏览器
-			When bill3关注jobs的公众号
 			When bill3点击tom3分享链接
+			Then bill3在jobs公众号中有uuid对应的webapp_user
+			Then 浏览器cookie包含"[fmt, uuid]"
+			Then 浏览器cookie等于
+				"""
+				{"fmt":"mt_{tom3_jobs}"}
+				"""
+			When bill3关注jobs的公众号
 			When bill3访问jobs的webapp
 
-	#获取会员积分
 
+	#获取会员积分
+		When 清空浏览器
 		When tom2访问jobs的webapp
 		When tom2获得jobs的50会员积分
 		Then tom2在jobs的webapp中拥有50会员积分
@@ -182,13 +205,13 @@ Scenario:1 默认条件和空条件查询
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
-			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
+			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
-			| tom7  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 直接关注 |             |
-			| tom6  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-1 8:00:00 | 推广扫码 |             |
-			| tom5  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-8-6 00:00:00 | 会员分享 | 分组3       |
-			| tom3  |   银牌会员  |       1      |    100   |   335.00  |    111.67  |      3    | 2014-8-5 8:00:00  | 会员分享 | 分组1,分组3 |
-			| tom1  |   银牌会员  |       2      |     0    |   110.00  |    110.00  |      1    | 2014-8-4 23:59:59 | 直接关注 | 分组1       |
+			| tom7  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-01 | 直接关注 |             |
+			| tom6  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-01 | 推广扫码 |             |
+			| tom5  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-08-06 | 会员分享 | 分组3       |
+			| tom3  |   银牌会员  |       1      |    100   |   335.00  |    111.67  |      3    | 2014-08-05 | 会员分享 | 分组1,分组3 |
+			| tom1  |   银牌会员  |       2      |     0    |   110.00  |    110.00  |      1    | 2014-08-04 | 直接关注 | 分组1       |
 
 	#空调条件查询，“重置”查询条件，空调间查询所有数据
 		When jobs设置会员查询条件
