@@ -97,7 +97,7 @@ Background:
 			"member_rank": "银牌会员"
 		"""
 
-@promotion @promotionFlash
+@promotion @promotionFlash @ui
 Scenario:参与限时抢购的多规格商品手机端详情页显示促销价格
 	Given jobs登录系统
 	When jobs创建限时抢购活动
