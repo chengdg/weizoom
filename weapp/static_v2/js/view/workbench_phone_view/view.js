@@ -56,6 +56,9 @@ W.workbench.PhoneView = Backbone.View.extend({
                 var frameHeight = window.frames['phoneFrame'].document.body.clientHeight;
                 var phoneHeight = _this.$skin.height();
                 if (phoneHeight <= frameHeight+45) {
+                    xwarn('change size...');
+                    xwarn('phoneHeight: ' + phoneHeight);
+                    xwarn('frameHeight: ' + frameHeight);
                     _this.$skin.height(frameHeight+50+'px');    
                 }
             }       

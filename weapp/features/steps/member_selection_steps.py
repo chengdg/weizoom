@@ -14,7 +14,7 @@ from modules.member.models import *
 
 @When(u'{user}访问会员列表')
 def step_impl(context, user):
-    pass
+    context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&count_per_page=50&page=1&enable_paginate=1'
 
 @then(u'{user}获得会员列表默认查询条件')
 def step_impl(context, user):
@@ -23,11 +23,11 @@ def step_impl(context, user):
 
 @Then(u'{user}获得刷选结果人数')
 def step_impl(context, user):
+    response = context.client.get(bdd_util.nginx(context.url))
     actual_count = json.loads(response.content)['data']['total_count']
     json_data = json.loads(context.text)
-    for data in json_data:
-        expected_count = data['result_quantity']
-    bdd_util.assert_list(expected_count, actual_count)
+    expected_count = json_data[0]['result_quantity']
+    assert int(expected_count) == int(actual_count)
 
 
 @When(u'{user}设置会员查询条件')

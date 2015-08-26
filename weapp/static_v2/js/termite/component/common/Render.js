@@ -33,7 +33,7 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 	render: function(component) {
 		var componentContainer = {
 			type: 'wepage.runtime_component_container',
-			components: [component]
+			components: [component],
 		}
 		component = componentContainer;
 
@@ -45,6 +45,7 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 		var subComponents = component.components;
 		subComponents = _.sortBy(subComponents, function(subComponent) { return subComponent.model.index; });
 		var subComponentCount = subComponents.length;
+		component.sub_component_count = subComponentCount;
 		for (var i = 0; i < subComponentCount; ++i) {
 			var subComponent = subComponents[i];
 			subComponent.parent_component = component;
