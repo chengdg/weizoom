@@ -31,7 +31,7 @@
             if(this.minCount <= 1){
                 this.minCount = 1;
             }else{
-                this.$parent.siblings('.wa-limit').html('至少购买'+this.minCount+'件');
+                this.$parent.siblings('.wa-limit').css('margin-right','5px').html('至少购买'+this.minCount+'件');
             }
             if(this.count < this.minCount){
                 this.count = this.minCount;
