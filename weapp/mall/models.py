@@ -932,6 +932,8 @@ class Product(models.Model):
 					for model_property_info in custom_model.name.split('_'):
 						property_id, property_value_id = model_property_info.split(
 							':')
+						if not id2value.has_key(int(property_value_id)):
+							continue
 						model_dict['property_values'].append({
 							"propertyId": property_id,
 							"id": property_value_id,
@@ -1077,7 +1079,8 @@ class Product(models.Model):
 			'standard_model': self.standard_model,
 			'current_used_model': self.current_used_model,
 			'created_at': datetime.strftime(self.created_at, '%Y-%m-%d %H:%M'),
-			'display_index': self.display_index
+			'display_index': self.display_index,
+			'is_member_product': self.is_member_product
 		}
 
 

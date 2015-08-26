@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-import logging
-logger = logging.getLogger(__name__)
 from urllib import unquote
 from datetime import datetime, timedelta
 

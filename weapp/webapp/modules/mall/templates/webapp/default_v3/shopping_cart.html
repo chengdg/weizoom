@@ -112,7 +112,7 @@
             {% with product_group.promotion as promotion %}
                 <div class="xa-productGroup mb10 xa-promotion-{{product_group.promotion_type}} xt-productGroup" data-id="{{product_group.id}}" data-product-group-id="{{product_group.id}}" >
                     {% if product_group.can_use_promotion and product_group.promotion_type == 'flash_sale' %}
-                    <div class="xui-buyLimit pl10 pr15 xt-promotion">
+                    <div class="xui-buyLimit pl10 pr10 xt-promotion">
                         <div class="pt5 pb5">
                             <span class="xui-i-title em75 xt-promotionType">限时抢购</span>
                             <span class="em8">商品已降价<span class="xt-savedMoney">{{product_group.promotion_result.saved_money}}</span>元</span>
@@ -121,7 +121,7 @@
                     {% endif %}
 
                     {% if product_group.promotion_type == 'price_cut' %}
-                    <div class="xui-reduction pl10 pr15 xt-promotion">
+                    <div class="xui-reduction pl10 pr10 xt-promotion">
                         <div class="pt5 pb5">
                             <span class="xui-i-title em75 xt-promotionType">满减</span>
                             <span class="em8 xa-satisfyPriceCut {% if not product_group.can_use_promotion %}hidden{% endif %}">
@@ -225,7 +225,7 @@
                     {% endfor %}
 
                     {% if product_group.promotion_type == 'premium_sale' %}
-                    <div class="xui-donation pl10 pr15 xt-promotion xa-premiumProducts {% if not product_group.can_use_promotion %}hidden{% endif %}">
+                    <div class="xui-donation pl10 pr10 xt-promotion xa-premiumProducts {% if not product_group.can_use_promotion %}hidden{% endif %}">
                         <div class="pt5 pb5 em75">
                             <span class="xui-i-title xt-promotionType">赠品</span>
                             {% for premium_product in promotion.detail.premium_products %}
@@ -239,7 +239,7 @@
                     {% endif %}
 
                     {% if product_group.promotion_type == 'price_cut' %}
-                    <div class="xa-subtotal xui-subtotal pl10 pr15">
+                    <div class="xa-subtotal xui-subtotal pl10 pr10">
                          <div class="pt5 pb5 em75">
                             <span>小计</span>
                             <span class="xui-totalPrice xa-subtotal-price xt-subtotal">￥{{product_group.promotion_result.subtotal}}</span>
@@ -270,7 +270,7 @@
                     <div class="disTc pt15 pb15 xui-divLine pr">
                         <div class="xui-selectedProductList clearfix disT" style="width:100%;">
                             <div class="xui-selectedProductList-productImg disTc tc">
-                                <div class="pr">
+                                <div class="pr" style="height:75px;">
                                     <img src="{{product.order_thumbnails_url}}" />
                                 </div>
                             </div>

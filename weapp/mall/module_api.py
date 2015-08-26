@@ -270,17 +270,9 @@ def group_product_by_promotion(request, products):
 					for premium_product in promotion_detail['premium_products']:
 						premium_product['original_premium_count'] = premium_product['premium_count']
 						premium_product['premium_count'] = premium_product['premium_count'] * premium_round_count
-			# product_groups.append({
-			# 	"id": group_id,
-			# 	"uid": group_unified_id,
-			# 	"promotion_type": type_name,
-			# 	'products': products,
-			# 	'promotion': promotion,
-			# 	'promotion_result': {"subtotal": total_product_price},
-			# 	# 'integral_sale_rule': integral_sale_rule,
-			# 	'can_use_promotion': can_use_promotion,
-			# 	#'promotion_json': json.dumps(promotion)
-			# })
+			promotion_result = {
+				"subtotal": product.purchase_count * product.price
+			}
 		# 满减
 		elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
 			promotion = products[0].promotion
@@ -300,29 +292,6 @@ def group_product_by_promotion(request, products):
 				"subtotal": subtotal,
 				"price_threshold": promotion_round_count*promotion_detail['price_threshold']
 			}
-				# product_groups.append({
-				# 	"id": group_id,
-				# 	"uid": group_unified_id,
-				# 	"promotion_type": type_name,
-				# 	'products': products,
-				# 	'promotion': promotion,
-				# 	'promotion_result': promotion_result,
-				# 	# 'integral_sale_rule': integral_sale_rule,
-				# 	'can_use_promotion': can_use_promotion,
-				# 	#'promotion_json': json.dumps(promotion)
-				# })
-			# else:
-			# 	product_groups.append({
-			# 		"id": group_id,
-			# 		"uid": group_unified_id,
-			# 		"promotion_type": type_name,
-			# 		'products': products,
-			# 		'promotion': None,
-			# 		'promotion_result': None,
-			# 		# 'integral_sale_rule': integral_sale_rule,
-			# 		'can_use_promotion': False,
-			# 		#'promotion_json': json.dumps(promotion)
-			# 	})
 		product_groups.append({
 			"id": group_id,
 			"uid": group_unified_id,
@@ -335,18 +304,6 @@ def group_product_by_promotion(request, products):
 			'promotion_json': json.dumps(promotion),
 			'member_grade_id': member_grade_id
 		})
-		# else:
-		# 	#非促销商品
-		# 	product_groups.append({
-		# 		"id": group_id,
-		# 		"uid": group_unified_id,
-		# 		"promotion_type": type_name,
-		# 		'products': products,
-		# 		'promotion': None,
-		# 		'promotion_result': None,
-		# 		# 'integral_sale_rule': integral_sale_rule,
-		# 		'can_use_promotion': False
-		# 	})
 	return product_groups
 
 
@@ -2714,7 +2671,14 @@ def batch_handle_order(json_data, user):
 				error_data.append(item)
 				continue
 			try:
-				order = Order.objects.get(order_id=order_id.strip())
+				order_id = order_id.strip()
+				if '-' in order_id:
+					new_order_id = order_id.split('-')[0]
+					order = Order.objects.get(order_id=new_order_id)
+					if str(order.edit_money).replace('.', '').replace('-', '') != order_id.split('-')[1]:
+						raise
+				else:
+					order = Order.objects.get(order_id=order_id)
 			except:
 				item["error_info"] = "订单号错误"
 				error_data.append(item)
@@ -2985,9 +2949,9 @@ def get_member_product_info(request):
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
 	response.data.count = shopping_cart_count
 	webapp_owner_id = request.webapp_owner_id
+	product_id = request.GET.get('product_id', "")
 	if request.member:
 		member_id = request.member.id
-		product_id = request.GET.get('product_id', "")
 		if product_id:
 			collect = MemberProductWishlist.objects.filter(
 				owner_id=webapp_owner_id,

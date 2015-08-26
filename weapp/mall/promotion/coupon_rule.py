@@ -75,6 +75,8 @@ class CouponRuleInfo(resource.Resource):
 
             coupon_rule = CouponRule.objects.get(id=promotion.detail_id)
 
+            promotion.start_date = datetime.strptime(promotion.start_date, "%Y-%m-%d %H:%M:%S")
+            promotion.end_date = datetime.strptime(promotion.end_date, "%Y-%m-%d %H:%M:%S")
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
                 'second_navs': export.get_promotion_second_navs(request),
@@ -365,58 +367,6 @@ class CouponRuleList(resource.Resource):
 #     ],
 # }
 
-
-# def _filter_promotions(request, promotions):
-#     has_filter = search_util.init_filters(request, PROMOTION_FILTERS)
-#     if not has_filter:
-#         # 没有filter，直接返回
-#         return promotions
-
-#     filtered_promotions = []
-#     if request.GET.get('type', 'all') == 'coupon':
-#         promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['coupon'])
-#         coupon_type = request.GET.get('couponPromotionType', None)
-#         if coupon_type != '-1':
-#             coupon_type = coupon_type == '2'
-#             Promotion.fill_details(request.manager, promotions, {
-#                 'with_concrete_promotion': True
-#             })
-#             promotions = [promotion for promotion in promotions if promotion.detail['limit_product'] == coupon_type]
-#         return promotions
-#         # 过滤promotion集合
-#     promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['promotion'])
-#     Promotion.fill_details(request.manager, promotions, {
-#         'with_product': True
-#     })
-
-#     if not promotions:
-#         return filtered_promotions
-
-#     for promotion in promotions:
-#         products = search_util.filter_objects(promotion.products, PROMOTION_FILTERS['product'])
-#         if not products:
-#             # product filter没有通过，跳过该promotion
-#             print 'end in product filter'
-#             continue
-#         else:
-#             print 'pass product filter'
-#             filtered_promotions.append(promotion)
-
-#             # filtered_products = []
-#             # for product in products:
-#             # models = search_util.filter_objects(product.models, PROMOTION_FILTERS['model'])
-#             #             if models:
-#             #                 print 'pass model filter'
-#             #                 filtered_products.append(product)
-#             #             else:
-#             #                 print 'end in model filter'
-#             #
-#             #         if filtered_products:
-#             #             #promotion有通过了product filter和model filter的商品，将promotion放入结果
-#             #             filtered_promotions.append(promotion)
-#             #         else:
-#             #             pass
-#     return filtered_promotions
 
 def _create_coupon_qrcode(coupon_url, coupon_id):
     """

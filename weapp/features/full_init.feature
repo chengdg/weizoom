@@ -304,7 +304,7 @@ Scenario: 安装完整测试数据
 			"is_enable_cycle_mode": false
 		}]
 		"""
-	When jobs'结束'促销活动'武昌鱼买一赠一'
+	When jobs"结束"促销活动"武昌鱼买一赠一"
 	When jobs创建买赠活动
 		"""
 		[{
@@ -603,32 +603,3 @@ Scenario: 安装完整测试数据
 	And tom参加抽奖活动'抽奖测试1'
 	And nokia参加抽奖活动'抽奖测试1'
 	And guo参加抽奖活动'抽奖测试1'
-
-
-@ignore @wip.init
-Scenario: 安装完整测试数据
-	Given jobs登录系统
-	When jobs添加抽奖活动配置
-		"""
-		[{
-			"id": 0,
-			"name": "抽奖测试",
-			"award_hour": 0,
-			"award_type": 0,
-			"daily_play_count": 1,
-			"detail": "<p>测试<br/></p>",
-			"start_at": "2015-06-16",
-			"end_at": "2015-06-30",
-			"expend_integral": 0,
-			"no_prize_odd": 0,
-			"not_win_desc": "谢谢参与",
-			"prize_count|1": 1,
-			"prize_name|1": "一等奖",
-			"prize_odds|1": 100,
-			"prize_source|1": 0,
-			"prize_type|1": 1,
-			"type": 0
-		}]
-		"""
-	And bill关注jobs的公众号
-	And bill参加抽奖活动'抽奖测试'

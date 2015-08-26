@@ -20,11 +20,6 @@ from mall import signals as mall_signals
 from . import utils
 from mall import export
 
-
-import logging
-logger = logging.getLogger('console')
-
-
 class ProductList(resource.Resource):
     app = 'mall2'
     resource = 'product_list'
@@ -393,6 +388,9 @@ class Product(resource.Resource):
         if display_index > 0:
             product.move_to_position(display_index)
 
+        is_deleted = False
+        if standard_model.get('is_deleted', None):
+            is_deleted = True
         # 处理standard商品规格
         models.ProductModel.objects.create(
             owner=request.manager,
@@ -403,7 +401,8 @@ class Product(resource.Resource):
             weight=standard_model['weight'],
             stock_type=standard_model['stock_type'],
             stocks=standard_model['stocks'],
-            user_code=standard_model['user_code']
+            user_code=standard_model['user_code'], 
+            is_deleted=is_deleted
         )
 
         # 处理custom商品规格

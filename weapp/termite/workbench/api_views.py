@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import logging
 import time
 from datetime import timedelta, datetime, date
 import urllib, urllib2
