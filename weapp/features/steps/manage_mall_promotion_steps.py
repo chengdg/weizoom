@@ -9,7 +9,7 @@ from features.testenv.model_factory import ProductFactory
 from test import bdd_util
 
 
-@when(u"{user}'{action}'促销活动'{promotion_name}'")
+@when(u"{user}\"{action}\"促销活动\"{promotion_name}\"")
 def step_terminate_promotion(context, user, action, promotion_name):
 		"""促销活动通用更新单个促销状态
 
