@@ -27,11 +27,7 @@ Background:
 				"image": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}]
 		}, {
-<<<<<<< HEAD
-			"name": "尺寸"，
-=======
 			"name": "尺寸",
->>>>>>> 15a5bcb1f6014c16dd3e31908494873f05f4367f
 			"type": "文字",
 			"values": [{
 				"name": "M"
