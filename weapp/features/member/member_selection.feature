@@ -100,11 +100,11 @@ Background:
 			| member_name   | attention_time 	 | member_source |   grade  |    tags     |
 			| tom1 			| 2014-8-4 23:59:59  | 直接关注      | 银牌会员 | 分组1       |
 			| tom2 			| 2014-8-5 00:00:00  | 推广扫码      | 普通会员 | 分组1       |
-			| tom3	 	    | 2014-8-5 8:00:00   | 会员分享      | 银牌会员 | 分组1,分组3 |
+			| tom3	 	    | 2014-8-5 08:00:00   | 会员分享      | 银牌会员 | 分组1,分组3 |
 			| tom4 			| 2014-8-5 23:59:59  | 会员分享      | 金牌会员 | 分组3       |
 			| tom5 			| 2014-8-6 00:00:00  | 会员分享      | 金牌会员 | 分组3       |
-			| tom6          | 2014-10-1 8:00:00  | 推广扫码      | 普通会员 |             |
-			| tom7          | 2014-10-1 8:00:00  | 直接关注      | 金牌会员 |             |
+			| tom6          | 2014-10-1 08:00:00  | 推广扫码      | 普通会员 |             |
+			| tom7          | 2014-10-1 08:00:00  | 直接关注      | 金牌会员 |             |
 
 		And tom2取消关注jobs的公众号
 		And tom4取消关注jobs的公众号
@@ -129,6 +129,8 @@ Background:
 
 		#bill2和tom1建立好友关系
 			When 清空浏览器
+			When bill2关注jobs的公众号
+			When bill2访问jobs的webapp
 			When bill2点击tom1分享链接
 			Then bill2在jobs公众号中有uuid对应的webapp_user
 			Then 浏览器cookie包含"[fmt, uuid]"
@@ -136,9 +138,6 @@ Background:
 				"""
 				{"fmt":"mt_{tom1_jobs}"}
 				"""
-			When bill2关注jobs的公众号
-			When bill2访问jobs的webapp
-
 		#bill3和tom3建立好友关系
 			When 清空浏览器
 			When tom3访问jobs的webapp
@@ -1284,7 +1283,6 @@ Scenario:14 会员列表分页
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
->>>>>>> 994fe321de48b825a0f2dc116c31c7dabbf8b99b
 			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 			| tom7  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-01 | 直接关注 |             |
 			| tom6  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-01 | 推广扫码 |             |

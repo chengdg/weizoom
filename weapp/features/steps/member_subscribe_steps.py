@@ -126,10 +126,11 @@ def step_impl(context, user):
 			adict['source'] = row['source']
 			adict['tags'] = row['tags']
 			actual_data.append(adict)
-		print 'hello',json_data[0]
-		print 'bill3',json_data[0]['source']
-		print 'world',actual_data[0]
-		print 'bill3',actual_data[0]['source']
+		for i in range(len(json_data)):
+			print 'hello:name,source',json_data[i]['username'],json_data[i]['source'],'kitty:name,source',actual_data[i]['username'],actual_data[i]['source']
+
+		#print 'hello',json_data
+		#print 'world',actual_data
 		print 'kitty',actual_members[0]
 
 	bdd_util.assert_list(json_data, actual_data)
