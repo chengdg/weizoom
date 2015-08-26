@@ -178,7 +178,9 @@
 	<script type="text/javascript" src="/termite_static/v3/gmu/widget/dropmenu.js"></script>
 	<script type="text/javascript">
 	function countChar(textareaName,divName) {
-		$('#'+divName).find('span').text(200 - $('#'+textareaName).val().length);
+		var content = $('#'+textareaName).val();
+		content = content.replace(/\n/g,'');
+		$('#'+divName).find('span').text(200 - content.length);
 	}
 	$(document).ready(function() {
 		$('#freedback_type').click(function(){
