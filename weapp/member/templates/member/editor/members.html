@@ -286,7 +286,7 @@
 		<div id="__json-members" class="hidden">${JSON.stringify(items)}</div>
 		{{each(i, member) items}}
 		<tr data-id="${member.id}" data-status="${member.is_subscribed}">
-			<td style="position:relative;" title='{{html member.username}}'>
+			<td style="position:relative;" title='{{html member.username_for_html}}'>
 
 				<div class="column_block xui-memberHeader pr">
 					{{if member.is_subscribed == 0}}
@@ -353,7 +353,7 @@
 				</div>
 				<div class="xui-wraper">
 					<div class="xui-left">
-						<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username }">发优惠券</a>
+						<a href="javascript:void(0);" class="xa-issuing-coupon" data-member-name="${ member.username_for_html }">发优惠券</a>
 					</div>
 					<div class="xui-right">
 						<a href="javascript:void(0);" class="xa-update-integral" data-id="${member.id}">加积分</a></br>
