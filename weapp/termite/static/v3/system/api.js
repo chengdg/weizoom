@@ -66,10 +66,22 @@ W.Api = function() {
 		}
 
 		var method = options.method || 'get';
-		var name = options.api;
+		var name = options.api || options.resource;
+		if (options.hasOwnProperty('resource')) {
+			name = options.resource;
+		}
+
 		var args = options.args;
 		if (!args) {
 			args = {};
+		}
+
+		if (method === 'put') {
+			method = 'post'
+			args['_method'] = 'put'
+		} else if (method === 'delete') {
+			method = 'post'
+			args['_method'] = 'delete'
 		}
 		var onSuccess = options.success;
 		var onError = options.error;

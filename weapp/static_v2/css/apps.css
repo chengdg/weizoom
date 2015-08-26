@@ -1,0 +1,105 @@
+@charset "utf-8";
+
+/**
+ * app page的通用样式
+ */
+.xui-appPage-commonStyle .xui-tableBox {
+	background-color: #E9EDF5;
+}
+.xui-appPage-commonStyle .xui-tableBox .panel-header {
+	width: 98%;
+	margin: 10px auto;
+}
+.xui-appPage-commonStyle .xui-tableBox table{
+	width: 98%;
+	margin-left: 10px;
+}
+.xui-appPage-commonStyle .xui-paginationPosition{
+	position: absolute;
+	bottom: 5px;
+	right: 1px;
+	padding-top: 15px;
+}
+.xui-appPage-commonStyle .xui-app-form {
+	border: solid 1px #DCE4EB;
+	margin-top: 20px;
+	background: #EAEEF5;
+}
+.xui-appPage-commonStyle legend {
+	width: 80%;
+	border-bottom: solid 1px #CBCBCB;
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+.xui-appPage-commonStyle .control-label{
+	width: 80px;
+	padding-top: 3px;
+	margin-left: 30px;
+}
+.xui-appPage-commonStyle .form-group{
+	margin-bottom: 10px;
+}
+.xui-app-form .xui-i-buttons {
+	padding-left: 90px;
+	border-top: solid 1px #CBCBCB;
+}
+.xui-app-form .xui-datePicker {
+	background: url(/static_v2/img/editor/calendar.jpg) no-repeat!important;
+	background-position: right!important;
+	background-color: #f2f2f2!important;
+}
+.xui-appPage-commonStyle .propertyGroup_property_dynamicControlField_content .propertyGroup_property_label {
+	width: 60px;
+}
+
+
+
+
+
+
+
+
+
+.xui-propertyView-app-Selection .propertyGroup_property_dynamicControlField_control {
+	width: 377px;
+	background-color: #FFF;
+	padding: 10px 0px;
+	margin-bottom: 20px;
+}
+.xui-propertyView-app-Selection .propertyGroup_property_horizontalField {
+	min-height: 0px;
+}
+.xui-propertyView-app-Selection .propertyGroup_property_dynamicControlField .errorHint {
+	margin-left: 75px;
+}
+
+
+
+
+
+
+
+
+
+/**
+ * app页面中选择奖励的控件
+ */
+.xui-apps-prizeSelector .xui-i-select {
+	width: 100px;
+}
+.xui-apps-prizeSelector .xui-i-selectedBox {
+	margin: 11px 8px;
+	display: inline;
+}
+.xui-apps-prizeSelector .xui-i-selected-title {
+	background-color: #1e8f19;
+	color: #fff;
+	padding: 1px 4px;
+	border-radius: 2px;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 134px;
+	vertical-align: middle;
+}

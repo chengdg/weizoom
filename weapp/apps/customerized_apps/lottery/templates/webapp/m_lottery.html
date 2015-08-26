@@ -1,0 +1,151 @@
+{% extends "webapp_content_base_v4.html" %}
+
+{% block css %}
+<style type="text/css">
+	h1 {
+		color: #00F;
+	}
+	.xui-record {
+		margin: 10px 15px;
+		padding: 5px;
+		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		border-radius: 5px;
+	}
+	.xui-record .xui-inner-content {
+		color: #8F8F8F;
+	}
+	a.xui-button {
+		padding: 10px;
+		display: block;
+		text-align: center;
+		color: #FFF;
+		margin: 10px 15px;
+		background-color: rgba(0, 125, 255, 0.5);
+		border-radius: 10px;
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+    {{ page_html_content|safe }}
+{% endblock %}
+
+{% block js %}
+    <script>
+        function Roulette($lottery){
+            this.index = -1;
+            this.count = 0;
+            this.timer = 0;
+            this.speed = 100;
+            this.times = 0;
+            this.cycle = 50;
+            this.prize = -1;
+            this.isRolling = false;
+            this.light_index = -1;
+            this.light_count = 0;
+            this.light_speed = 100;
+            this.lights_timer = 0;
+            this.$lottery = $lottery;
+
+            //初始化
+            var len = $lottery.find(".xa-lottery-unit").length;
+            if(len>0){
+                this.count = len;
+                $lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
+                //lights
+                this.light_count = $lottery.find(".xui-circle").length;
+            }else{
+                alert('没有找到容器');
+                return void(0);
+            }
+        }
+        Roulette.prototype.move = function(){
+            //lottery
+            var $lottery = this.$lottery;
+            $lottery.find(".xa-lottery-unit-"+this.index).removeClass("active");
+            this.index++;
+            if(this.index>this.count){
+                this.index = 0;
+            }
+            $lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
+            //lights
+            var light_index = this.light_index;
+            $lottery.find(".xa-circle-unit-"+light_index).removeClass("active");
+            light_index += 1;
+            if(light_index>this.light_count){
+                light_index = 0;
+            }
+            $lottery.find(".xa-circle-unit-"+light_index).addClass("active");
+            this.light_index = light_index;
+        };
+        Roulette.prototype.stop = function(index){
+            this.prize = index+1;
+        };
+        Roulette.prototype.roll = function(){
+            this.isRolling = true;
+            this.move();
+            if(this.prize == -1){
+                if(this.speed > 50) this.speed -= 10;
+
+            }else{
+                this.speed += 20;
+                if(this.speed >= 500 && ((this.prize == 0 && this.index == 7) || this.prize == this.index+1)){
+                    clearTimeout(this.timer);
+                    this.prize = -1;
+                    this.speed = 100;
+                    this.isRolling = false;
+                    return;
+                }
+            }
+            var that = this;
+            this.timer = setTimeout(function(){
+                that.roll();
+            },this.speed);
+        };
+    </script>
+    <script type="text/javascript">
+        var PRIZE = {
+            '0': getRandomStopPosition(['1', '5', '8', '10']), //谢谢参与位置
+            '1': getRandomStopPosition(['1', '7']), //一等奖位置
+            '2': getRandomStopPosition(['2', '4', '9']), //二等奖位置
+            '3': getRandomStopPosition(['3', '6', '11']) //三等奖位置
+        };
+        function getRandomStopPosition(arr){
+            var len = arr.length - 1;
+            return arr[parseInt(Math.random()*len+0.5)];
+        }
+
+        window.lottery = {};//测试用
+        $(function(){
+            console.log("准备就绪");
+            var $container = $('.wui-lotterydescription').find('.wui-i-body');
+            window.lottery = new Roulette($container);
+            $(".xa-lottery-go").click(function(){
+                console.log(lottery.isRolling);
+                if(lottery.isRolling){
+                    return false;
+                }else{
+                    lottery.roll();
+                    alert(W.webappOwnerId);
+                    W.getApi().call({
+                        app: 'm/apps/lottery',
+                        resource: 'lottery_prize',
+                        method: 'put',
+                        args:{
+                            id: W.appRecordId,
+                            webapp_owner_id: W.webappOwnerId
+                        },
+                        success: function(data){
+                            lottery.stop(PRIZE[data.index]);
+                            console.log('抽奖结束');
+                        },
+                        error: function(){
+                            alert('请求抽奖失败');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
+

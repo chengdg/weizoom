@@ -1,0 +1,37 @@
+﻿{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.surveydescription' %}
+<div  
+    class="wui-surveyDescription xa-prizeContainer"  
+    data-component-cid="{{component.cid}}" 
+    style="min-height:100px; background-color:#FFF;"
+    data-prize='{{component.model.prize|to_json|safe}}'
+>
+	<h1 class="wui-i-title xa-title">{{component.model.title}}</h1>
+	<h2 class="wui-i-subtitle xa-subtitle">{{component.model.subtitle}}</h2>
+	<div class="wui-i-description">
+		{{component.model.description|safe}}
+	</div>
+	<div class="wui-i-info">
+		<i class="wui-i-sprite xui-sprite-timerange"></i>
+		<div class="wui-i-time">
+			{{component.model.start_time}}至{{component.model.end_time}}
+		</div>
+		<div style="clear: both"></div>
+		{% ifequal component.model.prize.type 'no_prize' %}
+		{% else %}
+			<i class="wui-i-sprite xui-sprite-prize"></i>
+			<div class="wui-i-prize">
+				{% if component.model.prize.type == 'integral' %}
+					{{component.model.prize.data}}积分
+				{% endif %}
+				{% if component.model.prize.type == 'coupon' %}
+					{{component.model.prize.data.name}}
+				{% endif %}
+			</div>
+			<div style="clear: both"></div>
+		{% endifequal %}
+	</div>
+</div>
+{% endifequal %}

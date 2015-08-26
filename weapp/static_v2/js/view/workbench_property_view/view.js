@@ -64,12 +64,16 @@ W.workbench.PropertyView = Backbone.View.extend({
         this.type2initializer = {
             "wepage.block": this.initSliderView,
             "wepage.title":this.initDateTime, 
-            "wepage.richtext": this.initRichTextView, 
+            //"wepage.richtext": this.initRichTextView, 
             "wepage.item_group": this.initProductsView, 
             "wepage.item_list": this.initProductsView,
             "wepage.pageheader": _.bind(this.initPageHeader, this),
             "colorpicker": _.bind(this.initColorPicker, this),
             "secondnav": _.bind(this.initSecondNav, this)
+            "richtext": _.bind(this.initRichTextView, this),
+            "daterange": _.bind(this.initDateRange, this),
+            "prize_selector": _.bind(this.initPrizeSelector, this),
+            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this)
         };
 
 
@@ -495,7 +499,10 @@ W.workbench.PropertyView = Backbone.View.extend({
         var isSelected = $checkbox.prop('checked');
 
         var attr = $(event.currentTarget).attr('data-field');
-        this.getTargetComponent($checkbox).model.set(attr, isSelected);
+        var column = $(event.currentTarget).attr('data-column-name');
+        var attrValue = _.deepClone(this.getTargetComponent($checkbox).model.get(attr));
+        attrValue[column] = {select:isSelected};
+        this.getTargetComponent($checkbox).model.set(attr, attrValue);
     },
 
     /*********************************************************
@@ -532,6 +539,8 @@ W.workbench.PropertyView = Backbone.View.extend({
      * onClickAddDynamicComponentButton: 点击dynamic component区域中的添加button后的响应函数
      */
     onClickAddDynamicComponentButton: function(event, modelData) {
+        console.log('1111111111111111111111111111111');
+        console.log(modelData);
         var $node = $(event.currentTarget);
         var componentType = $node.attr('data-component');
         var component = W.component.Component.create(componentType);
@@ -778,21 +787,62 @@ W.workbench.PropertyView = Backbone.View.extend({
     },
 
     initRichTextView: function($el){
-        var node = $el.find('.xa-rich-text');
-		this.editor = new W.view.common.RichTextEditor({
-    		el: node,
+        this.editor = new W.view.common.RichTextEditor({
+            el: $el,
             maxCount: 10000,
-    		type: 'full',
-    		width:'100%',
-            imgSuffix: "uid="+W.uid	
-		});
-		this.editor.bind('contentchange', function() {
-            node.val(this.editor.getHtmlContent()).trigger('input');
-			// this.textMessage.set('text', this.editor.getHtmlContent());
-		}, this);
-		//this.editor.setContent('this.answer');
-		this.editor.render();
+            type: 'full',
+            width:'100%',
+            imgSuffix: "uid="+W.uid 
+        });
+        this.editor.bind('contentchange', function() {
+            $el.val(this.editor.getHtmlContent()).trigger('input');
+            // this.textMessage.set('text', this.editor.getHtmlContent());
+        }, this);
+        this.editor.render();
 
+    },
+
+    initDateRange: function($el){
+        W.createWidgets($el);
+        var $dateRangeInput = $el.find('.xa-dateRangeInput');
+
+        var setDateRangeValue = function() {
+            var value = $startTimeInput.val() + '~' + $endTimeInput.val();            
+            $dateRangeInput.val(value).trigger('input');
+        }
+
+        var $startTimeInput = $el.find('#start_time');
+        $startTimeInput.bind('change', function() {
+            $startTimeInput.trigger('input');
+            setDateRangeValue();
+        });
+
+        var $endTimeInput = $el.find('#end_time');
+        $endTimeInput.bind('change', function() {
+            $endTimeInput.trigger('input');
+            setDateRangeValue();
+        })
+    },
+
+    initPrizeSelector: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-prize-selector"]').data('view');
+        var _this = this;
+        view.on('change-prize', function(prize) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, prize);
+        })
+    },
+    initPrizeSelectorV3: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-prize-selector-v3"]').data('view');
+        var _this = this;
+        view.on('change-prize', function(prize) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, prize);
+        });
     },
 
     initProductsView: function($el){
@@ -892,13 +942,15 @@ W.workbench.PropertyView = Backbone.View.extend({
     },
 
     onMouseoutField: function(event){
-        this.$el.find('.propertyGroup_property_dynamicControlField_control').children('.close').hide();
+        var $el = $(event.currentTarget);
+        $el.find('.close').hide();
     },
 
     onMouseoverField: function(event){
         var $el = $(event.currentTarget);
-        this.$el.find('.propertyGroup_property_dynamicControlField_control').children('.close').hide();
-        $el.children('.close').show();
+        var $closeBtn = $el.find('.close');
+        $closeBtn.hide();
+        $closeBtn.show();
     },
 
     onClickColorPickerTrigger: function(event){

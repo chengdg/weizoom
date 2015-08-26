@@ -5,6 +5,7 @@ import os
 import sys
 import zipfile
 import shutil
+import time
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
@@ -49,6 +50,24 @@ class Project(resource.Resource):
 		pagestore.save_page(str(project.id), page_id, page_component)
 
 		return True
+
+	@staticmethod
+	def create_empty_app_page(request):
+		"""
+		创建新的
+		"""
+		_, app_name, _ = request.GET['project_id'].split(':')
+		page_component = json.loads(request.POST['page_json'])
+		page_component['is_new_created'] = True
+		page_id = 1
+		project_id = 'app:%s:%s:%s' % (app_name, request.user.id, time.time())
+		pagestore = pagestore_manager.get_pagestore_by_type('mongo')
+		pagestore.save_page(project_id, page_id, page_component)
+
+		page = pagestore.get_page(project_id, page_id)
+		new_project_id = str(page['_id'])
+		pagestore.update_page_project_id(project_id, page_id, new_project_id)
+		return new_project_id
 
 	@staticmethod
 	def copy_page(project, source_template_id):
@@ -166,6 +185,17 @@ class Project(resource.Resource):
 		Project.update_project_site_title(project_id, page)
 
 	@staticmethod
+	def update_app_page_content(request):
+		"""
+		更新app page内容
+		"""
+		_, app_name, project_id = request.GET['project_id'].split(':')
+		pagestore = pagestore_manager.get_pagestore('mongo')
+		page_id = 1
+		page = json.loads(request.POST['page_json'])
+		pagestore.save_page(project_id, page_id, page)
+
+	@staticmethod
 	def update_project_site_title(project_id, page):
 		site_title = page['model']['site_title']
 		webapp_models.Project.objects.filter(id=project_id).update(site_title=site_title)
@@ -201,6 +231,16 @@ class Project(resource.Resource):
 				response = create_response(200)
 				response.data = result_project_id
 				return response.get_response()
+			if project_id.startswith('new_app:'):
+				if project_id.endswith(':0'):
+					project_id = Project.create_empty_app_page(request)
+					response = create_response(200)
+					response.data = {
+						'project_id': project_id
+					}
+					return response.get_response()
+				else:
+					Project.update_app_page_content(request)
 			else:
 				Project.update_page_content(request)
 				#清除webapp page cache

@@ -103,10 +103,10 @@ W.workbench.PageSynchronizer = Backbone.View.extend({
                             //消除创建标识
                             _this.currentPage.isNewCreated = false;
                         }
-                        W.Broadcaster.trigger('page_synchronizer:success');
+                        W.Broadcaster.trigger('page_synchronizer:success', data);                        
                         if (isManualSync) {
                             if (options.callback) {
-                                options.callback(data, this.currentPage);
+                                options.callback(_this.currentPage, data);
                             }
                         } else {
                             var task = new W.DelayedTask(_this.synchronize, _this);

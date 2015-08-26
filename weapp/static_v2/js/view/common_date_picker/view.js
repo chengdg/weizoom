@@ -48,7 +48,16 @@ W.view.common.DatePicker = Backbone.View.extend({
             dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
             dayNamesMin: ['日','一','二','三','四','五','六'],
             beforeShow: function(inputElement, ui) {
+                var nowTime = new Date();
+                var nowMonth = nowTime.getMonth()+1;
+                var nowDay = nowTime.getDate();
+                var nowHour = nowTime.getHours();
+                var nowMinit = nowTime.getMinutes();
+                var newDateStr = nowTime.getFullYear()+'/'+nowMonth+'/'+nowDay+' '+nowHour+':'+nowMinit+':00';
                 if(_this.min === 'now') {
+                    if(_this.$minEl.length <= 0){
+                        $(this).datepicker('option', 'minDateTime', new Date(newDateStr));
+                    }
                     $(this).datepicker('option', 'minDate', new Date());
                 }else if(_this.min){
                     $(this).datepicker('option', 'minDate', _this.min);

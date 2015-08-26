@@ -10,7 +10,8 @@ import apps_router
 
 urlpatterns = patterns('',
 	#定制化app管理相关
-	(r'^$', views.list_apps),
+	(r'^$', views.list_new_apps),
+	(r'^old/$', views.list_apps),
 	(r'^app/add', views.add_app),
 	(r'^app/update/(\d+)', views.update_app),
 

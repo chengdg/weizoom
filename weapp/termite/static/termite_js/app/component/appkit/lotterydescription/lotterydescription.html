@@ -1,0 +1,92 @@
+﻿{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.lotterydescription' %}
+    <div class="wui-surveyDescription wui-lotterydescription">
+        <div class="wui-i-roulette wui-i-title"></div>
+        <div class="wui-i-roulette wui-i-header xa-header">
+            <p>您还有<b>
+                {% if component.model.limitation == 'once_per_user' %}1{% endif %}
+                {% if component.model.limitation == 'once_per_day' %}1{% endif %}
+                {% if component.model.limitation == 'twice_per_day' %}2{% endif %}
+                {% if component.model.limitation == 'none' %}0{% endif %}</b>次抽奖机会！</p>
+        </div>
+        <div class="wui-i-roulette wui-i-body">
+            <div class="xui-circle xa-circle xa-circle-unit-0"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-1"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-2"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-3"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-4"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-5"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-6"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-7"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-8"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-9"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-10"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-11"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-12"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-13"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-14"></div>
+            <div class="xui-circle xa-circle xa-circle-unit-15"></div>
+
+            <table>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-0 xa-lottery-first">
+                        {% if component.components.0.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.0.model.image }}">{% else %}<b>一等奖</b>{% endif %}</td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-1"><b>谢谢参与</b></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-2 xa-lottery-second">
+                        {% if component.components.1.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-3 xa-lottery-third">
+                        {% if component.components.2.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-11 xa-lottery-third">
+                        {% if component.components.2.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
+                    <td class="xa-lottery-go" colspan="2" rowspan="2"><a>点击抽奖</a></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-4 xa-lottery-second">
+                        {% if component.components.1.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-10"><b>谢谢参与</b></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-5"><b>谢谢参与</b></td>
+                </tr>
+                <tr>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-9 xa-lottery-second">
+                        {% if component.components.1.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-8"><b>谢谢参与</b></td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-7 xa-lottery-first">
+                        {% if component.components.0.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.0.model.image }}">{% else %}<b>一等奖</b>{% endif %}</td>
+                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-6 xa-lottery-third">
+                        {% if component.components.2.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+<div
+    class="wui-surveyDescription xa-prizeContainer"  
+    data-component-cid="{{component.cid}}" 
+    style="min-height:100px; background-color:#8d00ab;"
+    data-prize='{{component.model.prize|to_json|safe}}'
+>
+	<h1 class="wui-i-title wui-i-innerTitle xa-title">{{component.model.title}}</h1>
+	<div class="wui-i-info">
+		<i class="wui-i-sprite xui-sprite-timerange"></i>
+		<div class="wui-i-time">
+			<p class="wui-i-start_time">{{component.model.start_time}}</p>
+            至<p class="wui-i-end_time">{{component.model.end_time}}</p>
+		</div>
+        <i class="wui-i-sprite xui-sprite-prize"></i>
+        <div class="wui-i-prize">
+            {% if component.model.prize.type == 'integral' %}
+                    {{component.model.prize.data}}积分
+            {% endif %}
+        </div>
+	</div>
+    <div class="wui-i-record">
+
+    </div>
+    <div class="wui-i-description xa-description" style="margin: 0; color: white">
+		{{component.model.description|safe}}
+	</div>
+</div>
+{% endifequal %}

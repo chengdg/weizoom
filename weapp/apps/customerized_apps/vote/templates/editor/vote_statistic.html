@@ -1,0 +1,96 @@
+{% extends "content_base_v2.html" %}
+
+{% block css %}
+    <style>
+        .table>tbody tr th:nth-child(1){
+            text-align: left;
+            padding-left: 30px;
+            max-width: 25%;
+        }
+        .table>tbody tr th:nth-child(2){
+            text-align: left;
+            max-width: 680px;
+            min-width: 480px;
+        }
+        .table>tbody tr th:nth-child(3), .table>tbody tr th:nth-child(4){
+            width: 100px;
+        }
+        .xui-progressBar{
+            position: relative;
+            background: #66ABF6;
+            vertical-align: middle;
+            height: 21px;
+            border-radius: 3px;
+        }
+        span{
+            display: inline-block;
+        }
+        .xui-i-totalcount{
+            margin: 7px;
+        }
+        .xui-i-tableHeader{
+            font-family: sans-serif;
+            color: #666666;
+            font-weight: 600;
+            background: #C8D1E4;
+            width: 98%;
+            margin-left: 10px;
+            padding: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-voteParticipanceFormPage xui-appPage-commonStyle">
+	<ul class="breadcrumb" style="margin-bottom:-12px;">
+		<li>您当前所在位置</li>
+		<li><a href="/apps/">百宝箱</a></li>
+		<li><a href="/apps/vote/votes/">微信投票</a></li>
+		<li class="active">查看统计</li>
+	</ul>
+	
+    <div class="panel panel-default xui-tableBox">
+        <div class="panel-header clearfix">
+            <b class="xui-i-totalcount fr">总参与人数: {{ total_count }} 人</b>
+            <a class="btn btn-default xui-fontBold fr xui-i-exportBtn" href="javascript:void(0);">批量导出</a>
+        </div>
+        {% for title in titles %}
+            <div class="xui-i-tableHeader">
+                <span>{{ forloop.counter }}、{{ title.title_name }}</span>
+                <span class="fr">有效参与人数:{{ title.title_valid_count }} 人</span>
+            </div>
+            <table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder mb10">
+                <thead style="display: none">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr style="color: #888888">
+                    <th>选项</th>
+                    <th></th>
+                    <th>参与人数</th>
+                    <th>百分比</th>
+                </tr>
+                {% for v in title.title_value %}
+                    <tr>
+                        <th>{{ v.item_name }}</th>
+                        <th>
+                            <span class="xui-progressBar" style="width: {% ifequal v.percent '0%' %}0{% else %}{{ v.percent }}{% endifequal %}"></span>
+                        </th>
+                        <th>{{ v.counter }}</th>
+                        <th>{{ v.percent }}</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
+

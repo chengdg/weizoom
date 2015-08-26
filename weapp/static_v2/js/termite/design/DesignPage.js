@@ -208,10 +208,17 @@ W.design.DesignPage = Backbone.View.extend({
 			var prevComponent = this.page.getPrevComponentOf(component);
 			if (prevComponent) {
 				var $prevComponentNode = $('[data-cid="'+prevComponent.cid+'"]');
+				xwarn('--------------1-------------------------');
+				xwarn($prevComponentNode.length);
+				xwarn($prevComponentNode);
+				xwarn(prevComponent);
 				$prevComponentNode.after($componentNode);
 			} else {
 				var nextComponent = this.page.getNextComponentOf(component);
 				var $nextComponentNode = $('[data-cid="'+nextComponent.cid+'"]');
+				xwarn('--------------2-------------------------');
+				xwarn($prevComponentNode.length);
+				xwarn(prevComponent);
 				$nextComponentNode.before($componentNode);
 			}
 			//this.coverManager.refresh();
@@ -241,6 +248,8 @@ W.design.DesignPage = Backbone.View.extend({
 			}, this));
 		} else {
 			var componentHtml = component.render();
+			xwarn('=---------------------')
+			xwarn(componentHtml);
 			var $componentNode = $(componentHtml);
 			this.insertComponentNode(component, $componentNode);
 		}
@@ -338,7 +347,9 @@ W.design.DesignPage = Backbone.View.extend({
 	 * onAddWidget: 收到cover manager的add-widget event的响应函数
 	 */
 	onAddWidget: function(offset, relatedCid) {
-		var componentAdders = this.page.getComponentsByType('wepage.componentadder');
+		var componentAdders = _.filter(this.page.components, function(component) {
+			return component.type.indexOf('.componentadder') !== -1;
+		});
 		if (componentAdders.length == 0) {
 			return;
 		}

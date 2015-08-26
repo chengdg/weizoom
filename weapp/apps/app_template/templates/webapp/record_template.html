@@ -1,8 +1,10 @@
-<% extends "new_jqm_content_base.html" %>
-<% load common_tag %>
+<% extends "webapp_content_base_v4.html" %>
 __STRIPPER_TAG__
 <% block css %>
 <style type="text/css">
+	h1 {
+		color: #00F;
+	}
 	.xui-record {
 		margin: 10px 15px;
 		padding: 5px;
@@ -13,31 +15,38 @@ __STRIPPER_TAG__
 		color: #8F8F8F;
 	}
 
-	a[data-role="button"] {
+	a.xui-button {
 		padding: 10px;
+		display: block;
+		text-align: center;
+		color: #FFF;
 		margin: 10px 15px;
+		background-color: rgba(0, 125, 255, 0.5);
+		border-radius: 10px;
 	}
 </style>
 <% endblock %>
 __STRIPPER_TAG__
 <% block content-panel %>
-<div data-role="page" data-theme="x">
-	<div data-role="header">
-		<h1>{{page.component.model.title|capfirst}}(<<record.id>>)</h1>
+<div>
+	<h1 class="tc">{{resource.lower_name|capfirst}}(<<record.id>>)</h1>
+	<div>
+		<div class="xui-recordContainer">
+			<% for item in record.items %>
+			<div class="xui-record">
+				<h3><<item.0>></h3>
+				<p class="xui-inner-content"><<item.1>></p>
+			</div>
+			<% endfor %>
+			<div class="xui-record">
+				<h3>电话</h3>
+				<input name="tel" type="text" placeholder="请输入电话号码" />
+			</div>
+		</div>
+		<div>
+			<a href="javascript:void(0);" class="xa-join xui-button" data-id="<<record.id>>">参与活动</a>
+		</div>
 	</div>
-    <div data-role="content" data-theme="x">
-    	<div class="xui-recordContainer">
-	        <% for item in record.items %>
-	        <div class="xui-record">
-		        <h3><<item.0>></h3>
-		        <p class="xui-inner-content"><<item.1>></p>
-		    </div>
-	        <% endfor %>
-	    </div>
-        <div>
-	    	<a data-role="button" href="javascript:void(0);" data-theme="b" class="xa-showMetaData" data-id="<<record.id>>">显示元信息</a>
-	    </div>
-    </div>
 </div>
 <% endblock %>
 __STRIPPER_TAG__
@@ -45,34 +54,31 @@ __STRIPPER_TAG__
 <script type="text/javascript">
 	W.pageId = "<<request.GET.page_id>>";
 	$(document).ready(function() {
-		$('.xa-showMetaData').click(function(event) {
+		$('.xa-join').click(function(event) {
 			event.stopPropagation();
 			event.preventDefault();
 
 			var $link = $(event.currentTarget);
 			var id = $link.attr('data-id');
+
+			var tel = $.trim($('[name="tel"]').val());
 			
 			W.getApi().call({
-				app: 'webapp',
-	        	api: 'project_api/call',
+				app: 'm/apps/{{app_name}}',
+				resource: '{{resource.lower_name}}_participance',
+				method: 'put',
 				args: {
-		            woid: W.webappOwnerId,
-		            project_id: W.projectId,
-		            target_api: 'record_meta_data/get',
-		            module: 'apps:{{app_name}}:{{page.component.model.module}}',
-		            record_id: id
-		        },
-		        success: function(data) {
-		        	var $container = $('.xui-recordContainer');
-		        	_.each(data, function(value, key) {
-		        		var content = '<div class="xui-record"><h3>'+key+'</h3><p class="xui-inner-content">'+value+'</p></div>';
-		        		$container.append(content);
-		        	});
-		        },
-		        error: function(data) {
-		        	alert('失败');
-		    	}
-	        })
+					woid: W.webappOwnerId,
+					belong_to: id,
+					tel: tel
+				},
+				success: function(data) {
+					alert('参与成功');
+				},
+				error: function(data) {
+					alert('参与失败');
+				}
+			})
 		});
 	});
 </script>
