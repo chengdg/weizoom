@@ -167,9 +167,9 @@ def step_impl(context, user):
 
 @then(u"{user}可以看到订单列表")
 def step_impl(context, user):
-    # if hasattr(context, 'client'):
-    #     context.client.logout()
-    # context.client = bdd_util.login(user)
+    if user != context.client.user.username:
+        context.client.logout()
+        context.client = bdd_util.login(user)
     # client = context.client
     query_params = dict()
     if hasattr(context, 'query_params'):
