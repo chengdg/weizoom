@@ -21,7 +21,7 @@ W.component.appkit.Shortcuts = W.component.Component.extend({
 				value: 'name',
 				columnName: 'name',
 			}, {
-				name: '手机号',
+				name: '手机',
 				value: 'phone',
 				columnName: 'phone',
 			}, {

@@ -24,7 +24,7 @@ FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
 TEXT_NAME={
-	'phone': U'手机号',
+	'phone': U'手机',
 	'email': U'邮箱',
 }
 

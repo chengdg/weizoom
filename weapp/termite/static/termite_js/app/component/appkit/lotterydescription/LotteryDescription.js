@@ -44,7 +44,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			displayName: '活动标题',
 			isUserProperty: true,
 			maxLength: 20,
-			validate: 'data-validate="require-notempty::页面标题不能为空,,require-word::只能填入汉字、字母、数字"',
+			validate: 'data-validate="require-notempty::页面标题不能为空,,require-word::请输入除\' . \' , \' _ \'和\' $ \'以外的字符"',
 			validateIgnoreDefaultValue: true,
 			default: '',
 			placeholder: '活动标题'
@@ -151,6 +151,12 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		title: function($node, model, value, $propertyViewNode) {
 			$node.find('.xa-title').text(value);
 		},
+		start_time: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-i-start_time').text(value);
+		},
+		end_time: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-i-end_time').text(value);
+		},
 		description: function($node, model, value, $propertyViewNode) {
 			console.log('------------------------------------');
 			console.log($node[0]);
@@ -169,6 +175,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		//type: function($node, model, value, $propertyViewNode) {
 		//	$node.find('.wui-i-prize').html(value+'积分');
 		//},
+
 		limitation: function($node, model, value, $propertyViewNode) {
 			console.log('------------------------------------');
 			console.log($node[0], value);

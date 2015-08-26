@@ -27,7 +27,7 @@ W.component.appkit.TextList = W.component.Component.extend({
 				value: 'name',
 				columnName: 'name'
 			}, {
-				name: '手机号',
+				name: '手机',
 				value: 'phone',
 				columnName: 'phone'
 			}, {
@@ -56,7 +56,11 @@ W.component.appkit.TextList = W.component.Component.extend({
             minItemLength: 0,
             isUserProperty: true,
             default: []
-        }]
+        },{
+			name: 'is_mandatory',
+			isUserProperty: true,
+			default: 'true'
+		}]
 	}],
 
 	propertyChangeHandlers: {
