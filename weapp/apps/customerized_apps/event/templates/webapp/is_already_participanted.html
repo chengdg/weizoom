@@ -27,8 +27,19 @@
             <div class="wui-i-info">
                 <div class="wui-i-time">
                     <span>此活动于{{ event_detail.end_time }}过期</span>
+                    <div class="wui-i-isParticipanted">您已报名</div>
                 </div>
-                <div class="wui-i-isParticipanted">您已报名</div>
+                <div class="wui-i-prize">
+                {% if event_detail.prize_data %}
+                    {% if event_detail.prize_type == 'integral' %}
+                        <span>积分奖励{{ event_detail.prize_data }}分</span>
+                    {% else %}
+                         <span>{{ event_detail.prize_data }}一张</span>
+                    {% endif %}
+                {% else %}
+                    <span>无奖励</span>
+                {% endif %}
+                </div>
                 <div style="clear: both"></div>
                 <div style="clear: both"></div>
             </div>
