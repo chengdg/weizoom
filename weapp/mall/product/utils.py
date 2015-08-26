@@ -43,7 +43,9 @@ def extract_product_model(request):
             "price": 0.0,
             "weight": 0.0,
             "stock_type": models.PRODUCT_STOCK_TYPE_LIMIT,
-            "stocks": -1,
+            # "stocks": -1,
+            #默认商品数改为0 duhao 2015-08-26
+            "stocks": 0,
             "user_code": '',
             "is_deleted": True
         }
@@ -161,7 +163,7 @@ def sorted_products(manager_id, product_categories, reverse):
                 products.append(product)
 
         products_is_0 = filter(lambda p: p.display_index == 0 or p.shelve_type != models.PRODUCT_SHELVE_TYPE_ON, products)
-        products_not_0 = filter(lambda p: p.display_index != 0 and p.shelve_type == models.PRODUCT_SHELVE_TYPE_ON, products)
+        products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_is_0 = sorted(products_is_0, key=attrgetter('shelve_type', 'join_category_time', 'id'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))       
         products = products_not_0 + products_is_0
