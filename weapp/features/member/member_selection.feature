@@ -129,15 +129,9 @@ Background:
 
 		#bill2和tom1建立好友关系
 			When 清空浏览器
-			When bill2点击tom1分享链接
-			Then bill2在jobs公众号中有uuid对应的webapp_user
-			Then 浏览器cookie包含"[fmt, uuid]"
-			Then 浏览器cookie等于
-				"""
-				{"fmt":"mt_{tom1_jobs}"}
-				"""
 			When bill2关注jobs的公众号
 			When bill2访问jobs的webapp
+			When bill2点击tom1分享链接
 
 		#bill3和tom3建立好友关系
 			When 清空浏览器
@@ -204,7 +198,7 @@ Scenario:1 默认条件和空条件查询
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
-			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
+			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
 			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 			| tom7  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-01 | 直接关注 |             |
 			| tom6  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    | 2014-10-01 | 推广扫码 |             |
