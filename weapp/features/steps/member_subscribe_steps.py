@@ -62,7 +62,7 @@ def step_impl(context, user):
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
 	if not context.url:
-		context.url = '/member/api/members/get/?design_mode=0&version=1&status=-1&count_per_page=50&page=1&enable_paginate=1'
+		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&count_per_page=50&page=1&enable_paginate=1'
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
@@ -74,7 +74,7 @@ def step_impl(context, user):
 			member_item['status'] = u"已关注"
 		else:
 			member_item['status'] = u"已取消"
-		member_item['member_rank'] = member_item['grade_name']
+		#member_item['member_rank'] = member_item['grade_name']
 		if member_item['source'] == 0:
 			member_item['source'] = u"直接关注"
 		elif member_item['source'] == 1:
@@ -88,15 +88,48 @@ def step_impl(context, user):
 			if 'experience' in data:
 				del data['experience']
 	elif context.table:
-		table_members = []
+		grades_dict = {}
+		tags_dict = {}
+		response = context.client.get('/member/api/members_filter_params/get/')
+		for item in json.loads(response.content)['data']['grades']:
+			grades_dict[item['name']] = item['id']
+		for item in json.loads(response.content)['data']['tags']:
+			tags_dict[item['name']] = item['id']
+		json_data = []
+		actual_data = []
 		for row in context.table:
-			table_members.append(row)
-	# with open(r'text.txt','w+') as f:
-	# 	f.write('actual_members:')
- #        f.write(actual_members)
- #        f.write('table_members:')
- #        f.write(table_members)
-	bdd_util.assert_list(json_data, actual_members)
+			adict = {}
+			adict['username'] = row[0]
+			adict['member_grade'] = row[1]
+			adict['friend_count'] = int(row[2])
+			adict['integral'] = int(row[3])
+			adict['pay_money'] = row[4]
+			adict['unit_price'] = row[5]
+			adict['pay_times'] = int(row[6])
+			if row[7] == u'今天':
+				adict['attention_time'] = time.strftime('%Y-%m-%d')
+			else:
+				adict['attention_time'] = row[7]
+			adict['source'] = row[8]
+			adict['tags'] = row[9]
+			json_data.append(adict)
+		for row in actual_members:
+			adict = {}
+			adict['username'] = row['username']
+			adict['member_grade'] = row['grade_name']
+			adict['friend_count'] = row['friend_count']
+			adict['integral'] = row['integral']
+			adict['pay_money'] = row['pay_money']
+			adict['unit_price'] = row['unit_price']
+			adict['pay_times'] = row['pay_times']
+			adict['attention_time'] = row['attention_time']
+			adict['source'] = row['source']
+			adict['tags'] = row['tags']
+			actual_data.append(adict)
+		print 'hello',json_data
+		print 'world',actual_data
+
+	bdd_util.assert_list(json_data, actual_data)
 
 #用户可以获取第几页的会员列表
 # @then(u'{user}')
