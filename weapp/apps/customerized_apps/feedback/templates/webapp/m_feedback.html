@@ -51,12 +51,9 @@
 		white-space: nowrap;
 		color: #000;
 	}
-	#icon{
+	.arrow_down{
 		background: #fff url('/static_v2/img/arrow.png') no-repeat;
 		background-size: 23px 15px;
-	}
-	.arrow_down{
-
 		height: 20px;
 		position: absolute;
 		right: 20px;
@@ -65,10 +62,12 @@
 
 	}
 	.arrow_up{
+		background: #fff url('/static_v2/img/arrow.png') no-repeat;
+		background-size: 23px 15px;
 		height: 20px;
 		position: absolute;
-		right: 20px;
-		top: 15px;
+		right: 30px;
+		top: 10px;
 		width: 34px;
 		transform:rotate(180deg);
 			-ms-transform:rotate(180deg); 	/* IE 9 */
@@ -202,6 +201,7 @@
 			$('#freedback_type').find('span[class="type_name"]').text(type_name);
 			$('#xui-input-type').val(type_value);
 			$a.parents('.xui-dropmenu').hide();
+			$('#icon').addClass('arrow_down').removeClass('arrow_up')
 		});
 
 	});
