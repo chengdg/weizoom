@@ -168,7 +168,7 @@ Scenario: 使用积分购买影响商品库存
 	
 	Given jobs登录系统
 	Then jobs能获取商品'商品4'
-		'''
+		"""
 		{
 			"name": "商品4",
 			"model": {
@@ -181,13 +181,13 @@ Scenario: 使用积分购买影响商品库存
 				}
 			} 
 		}
-		'''
+		"""
 	When bill访问jobs的webapp
 	When bill获得jobs的500会员积分
 	Then bill在jobs的webapp中拥有500会员积分
 	When bill访问jobs的webapp:ui
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品4",
@@ -195,7 +195,7 @@ Scenario: 使用积分购买影响商品库存
 			}],
 			"use_integral": true
 		}
-		'''
+		"""
 	Then bill获得支付结果:ui
 		"""
 		{
@@ -205,7 +205,7 @@ Scenario: 使用积分购买影响商品库存
 	#job登录，验证库存减少
 	Given jobs登录系统:ui
 	Then jobs能获取商品'商品4':ui
-		'''
+		"""
 		{
 			"name": "商品4",
 			"model": {
@@ -218,6 +218,6 @@ Scenario: 使用积分购买影响商品库存
 				}
 			} 
 		}
-		'''
+		"""
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有390会员积分

@@ -13,7 +13,7 @@ import steps_db_util
 # when steps
 ###############################
 
-@when(u'{user}"{action}"最新订单')
+@when(u"{user}'{action}'最新订单")
 def step_impl(context, user, action):
     if hasattr(context, 'latest_order_id'):
         latest_order_id = context.latest_order_id
@@ -44,14 +44,14 @@ def step_impl(context, user, action):
     response = context.client.post(url, data)
 
 
-@when(u'{user}对最新订单进行退款')
-def step_impl(context, user):
-    context.execute_steps(u'when %s"退款"最新订单' % user)
+# @when(u'{user}对最新订单进行退款')
+# def step_impl(context, user):
+#     context.execute_steps(u'when %s"退款"最新订单' % user)
 
 
-@when(u'{user}完成最新订单退款')
-def step_impl(context, user):
-    context.execute_steps(u'when %s"完成退款"最新订单' % user)
+# @when(u'{user}完成最新订单退款')
+# def step_impl(context, user):
+#     context.execute_steps(u'when %s"完成退款"最新订单' % user)
 ######
 
 # 缺失对应feature
