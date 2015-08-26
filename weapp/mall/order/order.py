@@ -149,7 +149,7 @@ class OrderList(resource.Resource):
         显示订单列表
 
         """
-
+        print("build_test")
         belong = request.GET.get("belong", "all")
 
         if belong == 'audit':
