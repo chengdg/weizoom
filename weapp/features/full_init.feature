@@ -304,7 +304,7 @@ Scenario: 安装完整测试数据
 			"is_enable_cycle_mode": false
 		}]
 		"""
-	When jobs'结束'促销活动'武昌鱼买一赠一'
+	When jobs"结束"促销活动"武昌鱼买一赠一"
 	When jobs创建买赠活动
 		"""
 		[{
