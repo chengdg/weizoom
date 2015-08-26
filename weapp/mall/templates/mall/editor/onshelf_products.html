@@ -141,13 +141,11 @@
 					</td>
 					<td>
 						{{if product.is_use_custom_model}}
-						<a href="javascript:void(0);" class="{{if product.is_use_custom_model}}xa-modifyCustomModelStocks{{else}}xa-modifyStandardModelStocks{{/if}}">
-						{{if product.is_self}}修改{{/if}}</a>
+							<a href="javascript:void(0);" class="xa-modifyCustomModelStocks">{{if product.is_self}}修改{{/if}}</a>
 						{{else}}
-						<div class="xa-stockText">${product.stocks}</div>
-						<input class="xa-stockInput xui-hide" style="width: 100%;" />
-						<div><a href="javascript:void(0);" class="{{if product.is_use_custom_model}}xa-modifyCustomModelStocks{{else}}xa-modifyStandardModelStocks{{/if}}">
-						{{if product.is_self}}修改{{/if}}</a></div>
+							<div class="xa-stockText">${product.stocks}</div>
+							<input class="xa-stockInput xui-hide" style="width: 100%;" />
+							<div><a href="javascript:void(0);" class="xa-modifyStandardModelStocks">{{if product.is_self}}修改{{/if}}</a></div>
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>

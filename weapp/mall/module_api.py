@@ -2671,7 +2671,14 @@ def batch_handle_order(json_data, user):
 				error_data.append(item)
 				continue
 			try:
-				order = Order.objects.get(order_id=order_id.strip())
+				order_id = order_id.strip()
+				if '-' in order_id:
+					new_order_id = order_id.split('-')[0]
+					order = Order.objects.get(order_id=new_order_id)
+					if str(order.edit_money).replace('.', '').replace('-', '') != order_id.split('-')[1]:
+						raise
+				else:
+					order = Order.objects.get(order_id=order_id)
 			except:
 				item["error_info"] = "订单号错误"
 				error_data.append(item)
@@ -2942,9 +2949,9 @@ def get_member_product_info(request):
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
 	response.data.count = shopping_cart_count
 	webapp_owner_id = request.webapp_owner_id
+	product_id = request.GET.get('product_id', "")
 	if request.member:
 		member_id = request.member.id
-		product_id = request.GET.get('product_id', "")
 		if product_id:
 			collect = MemberProductWishlist.objects.filter(
 				owner_id=webapp_owner_id,
