@@ -26,14 +26,13 @@ def step_impl(context, user):
 	from mall.models import MallConfig
 	MallConfig.objects.filter(owner=context.client.user).update(order_expired_day=no_payment_order_expire_day)
 
-"""
+'''
 @when(u"{user}添加商品")
 def step_impl(context, user):
 	context.products = json.loads(context.text)
 	for product in context.products:
 		product['type'] = PRODUCT_DEFAULT_TYPE
 		__add_product(context, product)
-
 
 
 def __process_product_data(product):
@@ -203,4 +202,4 @@ def __supplement_product(context, product):
 
 	product_prototype['market_price'] = product_prototype['market_price']
 	return product_prototype
-"""
+'''
