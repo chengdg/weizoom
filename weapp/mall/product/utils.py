@@ -59,6 +59,8 @@ def extract_product_model(request):
             models.PRODUCT_STOCK_TYPE_UNLIMIT)
         )
         stocks = request.POST.get('stocks')
+        # stocks = int(stocks) if stocks else -1
+        #默认商品数改为0 duhao 2015-08-26
         stocks = int(stocks) if stocks else -1
         user_code = request.POST.get('user_code', '').strip()
         standard_model = {
