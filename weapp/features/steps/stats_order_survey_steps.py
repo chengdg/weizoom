@@ -35,7 +35,7 @@ def step_impl(context, user):
 		elif row['member_source'] == u'会员分享':
 			tmp_source = SOURCE_BY_URL
 
-		if tmp_source:
+		if tmp_source >= 0:
 			tmp_member.source = tmp_source
 		if row.get('grade'):
 			grade_id = MemberGrade.objects.get(webapp_id=context.webapp_id, name=row['grade']).id
