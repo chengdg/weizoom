@@ -60,45 +60,6 @@ def step_impl(context, user):
     for red_envelope in context.red_envelopes:
         __add_red_envelope(context, red_envelope)
 
-def __to_date(str):
-    return dt.datetime.strptime(str, '%Y/%m/%d %H:%M:%S').strftime('%Y-%m-%d')
-
-@then(u"{user}能获取红包列表")
-def step_impl(context, user):
-    context.client = bdd_util.login(user)
-    client = context.client
-    param = {}
-    if hasattr(context, 'query_param'):
-        print("query_param: {}".format(context.query_param))
-        if context.query_param['prize_info'] == u"所有奖励":
-            param['couponRule'] = 0
-        param.update(context.query_param)
-
-    response = client.get('/mall2/api/red_envelope_rule_list/', param)
-    #print("response: {}".format(response))
-    data = json.loads(response.content)['data']
-    actual_red_envelopes = data['items']
-    #print("actual_red_envelopes: {}".format(actual_red_envelopes))
-    actual_data = []
-    for red_envelope in actual_red_envelopes:
-        prize_info = [ red_envelope['coupon_rule_name'] ]
-        actual_data.append({
-            "name": red_envelope['rule_name'],
-            "status": u"开启" if red_envelope['status'] else u"关闭",
-            "start_date": __to_date(red_envelope['start_time']),
-            "end_date": __to_date(red_envelope['end_time']),
-            'prize_info': prize_info
-        })
-    print("actual_data: {}".format(actual_data))
-
-    expected = json.loads(context.text)
-    for expect in expected:
-        expect['start_date'] = bdd_util.get_date_str(expect['start_date'])
-        expect['end_date'] = bdd_util.get_date_str(expect['end_date'])
-
-    print("expected: {}".format(expected))
-    bdd_util.assert_list(expected, actual_data)
-
 
 @given(u"{user}已添加微信红包")
 def step_impl(context, user):
@@ -109,19 +70,6 @@ def step_impl(context, user):
     context.red_envelopes = json.loads(context.text)
     for red_envelope in context.red_envelopes:
         __add_red_envelope(context, red_envelope)
-
-
-@when(u"{user}删除微信红包'{red_envelope_name}'")
-def step_impl(context, user, red_envelope_name):
-    #red_envelope = RedEnvelope.objects.get(name=red_envelope_name)
-    red_envelope = RedEnvelopeRule.objects.get(name=red_envelope_name)
-    #url = '/market_tools/red_envelope/api/red_envelope/delete/'
-    url = '/mall2/api/red_envelope_rule/'
-    param = {
-        'id': red_envelope.id,
-        'status': 'delete'
-    }
-    context.client.post(url, param, HTTP_REFERER='/mall2/red_envelope_rule_list/')
 
 
 @when(u"{member}参加微信红包'{red_envelope_name}'")
