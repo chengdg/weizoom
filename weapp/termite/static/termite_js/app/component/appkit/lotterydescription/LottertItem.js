@@ -17,7 +17,7 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			displayName: '奖项名称',
 			isUserProperty: true,
 			maxLength: 10,
-			validate: 'data-validate="require-notempty::选项不能为空,,require-word::请输入除\' . \' , \' _ \'和\' $ \'以外的字符"',
+			validate: 'data-validate="require-notempty::选项不能为空,,require-word"',
 			validateIgnoreDefaultValue: true,
 			default: ''
 		},{

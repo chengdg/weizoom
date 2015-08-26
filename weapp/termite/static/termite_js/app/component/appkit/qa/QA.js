@@ -17,7 +17,7 @@ W.component.appkit.QA = W.component.Component.extend({
 			displayName: '标题',
 			isUserProperty: true,
 			maxLength: 35,
-			validate: 'data-validate="require-notempty::问答标题不能为空,,require-word::请输入除\' . \' , \' _ \'和\' $ \'以外的字符"',
+			validate: 'data-validate="require-notempty::问答标题不能为空,,require-word"',
 			validateIgnoreDefaultValue: true,
 			default: '标题名称',
 			placeholder: '标题名称'

@@ -223,10 +223,11 @@ def list_new_apps(request):
 			first_nav_name = url_info[1]
 			app = url_info[2]
 			second_nav_name = url_info[3]
+			print first_nav_name,app,second_nav_name,"asdffffffffffffff"
 			import imp
 			fp, pathname, desc = imp.find_module('models', ['./apps/customerized_apps/'+app,])
 
-			has_data = imp.load_module('models', fp, pathname, desc).event.objects.count()
+			has_data = imp.load_module('models', fp, pathname, desc).lottery.objects.count()
 
 			c = RequestContext(request, {
 				'first_nav_name': first_nav_name,
