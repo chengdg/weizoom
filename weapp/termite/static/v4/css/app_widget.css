@@ -136,12 +136,12 @@
     font-weight: bold;
 }
 .wui-surveyDescription .wui-i-subtitle {
-    margin-top: 20px;
+    margin-top: 10px;
     color: #A0A0A0;
     font-size: 20px;
 }
 .wui-surveyDescription .wui-i-description {
-    margin-top: 25px;
+	margin-top: 10px;
     color: #666;
     padding-bottom: 20px;
 }
@@ -261,23 +261,23 @@
 }
 /*活动的图标*/
 .wui-i-time,.wui-i-prize{
-	margin-top: 9px;
-	min-height: 30px;
+	margin-top: 5px;
+	min-height: 26px;
+	margin-left: 30px;
 }
 .xui-sprite-timerange{
 	background: url('/termite_static/img/m_sprite.png') no-repeat;
-	background-position: 0 5px;
 	display: block;
-	height: 35px;
-	width: 30px;
+	height: 24px;
+    width: 25px;
 	float: left;
 }
 .xui-sprite-prize {
 	background: url('/termite_static/img/m_sprite.png') no-repeat;
-	background-position: -40px 5px;
+	background-position: -40px 0;
 	display: block;
-	height: 35px;
-	width: 30px;
+	height: 24px;
+    width: 25px;
 	float: left;
 }
 
