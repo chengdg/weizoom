@@ -321,43 +321,6 @@ Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢�
 		}]
 		"""
 
-@promotion @promotionFlash @ui
-Scenario: 6 创建限时抢购活动，必填字段的校验
-	Given jobs登录系统
-	When jobs创建限时抢购活动
-		"""
-			[{
-				"name": "",
-				"promotion_title":"",
-				"start_date": "",
-				"end_date": "",
-				"product_name":"",
-				"member_grade": "",
-				"count_per_purchase":"",
-				"promotion_price":""
-			}]
-		"""
-	Then jobs获得系统提示'请先选择商品'
-	And jobs获得系统提示'活动名称必须在1-20个字内'
-	And jobs获得系统提示'必须选择一个开始时间，必须选择一个过期时间'
-	#限购价格提示：
-	And jobs获得系统提示'内容不能为空'
 
-@promotion @promotionFlash @ui
-Scenario: 7 创建限时抢购活动，限购价格必须小于商品原价的校验（多规格商品，则必须小于价格最低的规格商品原价）
-	Given jobs登录系统
-	When jobs创建限时抢购活动
-		"""
-			[{
-				"name": "商品6限时抢购",
-				"promotion_title":"商品6抢购",
-				"start_date": "明天",
-				"end_date": "3天后",
-				"product_name":"商品6",
-				"member_grade": "银牌会员",
-				"count_per_purchase": 1,
-				"promotion_price": 101.00
-			}]
-		"""
-	Then jobs获得系统提示'限购价格必须小于商品原价'
+
 
