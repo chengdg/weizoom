@@ -126,15 +126,16 @@
                     return false;
                 }else{
                     lottery.roll();
+                    alert(W.webappOwnerId);
                     W.getApi().call({
                         app: 'm/apps/lottery',
                         resource: 'lottery_prize',
                         method: 'put',
                         args:{
                             id: W.appRecordId,
+                            webapp_owner_id: W.webappOwnerId
                         },
                         success: function(data){
-                            alert(data.index);
                             lottery.stop(PRIZE[data.index]);
                             console.log('抽奖结束');
                         },

@@ -26,12 +26,11 @@ class lottery_prize(resource.Resource):
 	app = 'apps/lottery'
 	resource = 'lottery_prize'
 
-	@login_required
 	def api_put(request):
 		"""
 		响应PUT
 		"""
-
+		print 11111111111111111111
 		response = create_response(200)
-		response.data = {index: 4}
+		response.data = {'index': 4}
 		return response.get_response()
