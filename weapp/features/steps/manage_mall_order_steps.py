@@ -276,9 +276,9 @@ def step_impl(context, webapp_owner_name):
 def step_impl(context, user):
     """TODO 弃用 改用 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
     """
-    # if hasattr(context, 'client'):
-    #     context.client.logout()
-    # context.client = bdd_util.login(user)
+    if not hasattr(context.client.user, 'profile'):
+        context.client.logout()
+        context.client = bdd_util.login(user)
     profile = context.client.user.profile
     # webapp_id = context.client.user.profile.webapp_id
 
@@ -409,7 +409,6 @@ def step_get_specify_order(context, user):
         actual = []
         for row in reader:
             item = dict(map(None, header, [str(r).decode('utf8') for r in row]))
-            print 'jz-----2', item['order_no'], item.get('ship_address', '')
             item['ship_address'] = '' if not item.get('ship_address') else item.get('ship_address').replace(' ', ',')
             actual.append(item)
         # remove statistical information
