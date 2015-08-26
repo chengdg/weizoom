@@ -312,7 +312,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#填充优惠券信息
 	# 根据优惠券规则名称填充优惠券ID
 	coupon = args.get('coupon', None)
-	print 'jz-----2', coupon
 	if coupon:
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
@@ -322,7 +321,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
 
 	response_json = json.loads(context.response.content)
-	print 'response json----------', response_json
+	# print 'response json----------', response_json
 	# if response_json['data'].get('msg', None):
 	# 	print 'response error message ---------------', response_json['data']['msg']
 	# if response_json['data'].get('detail', None):
