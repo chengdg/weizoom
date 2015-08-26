@@ -22,16 +22,16 @@
 		{% ifequal component.model.prize.type 'no_prize' %}
 		{% else %}
 			<i class="wui-i-sprite xui-sprite-prize"></i>
+			<div class="wui-i-prize">
+				{% if component.model.prize.type == 'integral' %}
+					{{component.model.prize.data}}积分
+				{% endif %}
+				{% if component.model.prize.type == 'coupon' %}
+					{{component.model.prize.data.name}}
+				{% endif %}
+			</div>
+			<div style="clear: both"></div>
 		{% endifequal %}
-		<div class="wui-i-prize">
-			{% if component.model.prize.type == 'integral' %}
-				{{component.model.prize.data}}积分
-			{% endif %}
-			{% if component.model.prize.type == 'coupon' %}
-				{{component.model.prize.data.name}}
-			{% endif %}
-		</div>
-		<div style="clear: both"></div>
 	</div>
 </div>
 {% endifequal %}

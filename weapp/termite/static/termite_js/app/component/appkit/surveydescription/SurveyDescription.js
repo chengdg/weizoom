@@ -17,7 +17,7 @@ W.component.appkit.SurveyDescription = W.component.Component.extend({
 			displayName: '标题',
 			isUserProperty: true,
 			maxLength: 35,
-			validate: 'data-validate="require-notempty::页面标题不能为空,,require-word::请输入除\' . \' , \' _ \'和\' $ \'以外的字符"',
+			validate: 'data-validate="require-notempty::页面标题不能为空,,require-word"',
 			validateIgnoreDefaultValue: true,
 			default: '',
 			placeholder: '活动标题'
