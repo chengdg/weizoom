@@ -221,3 +221,61 @@ Scenario: 使用积分购买影响商品库存
 		'''
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有390会员积分
+
+#师帅补充
+Scenario:使用积分购买商品后，取消订单，积分返回
+	bill购买jobs的商品时，使用少于商品金额的积分金额进行购买
+	1. 创建订单成功, 订单状态为“等待支付”
+	2. bill积分减少
+	3. bill能看到积分日志
+	
+	When bill访问jobs的webapp
+	When bill获得jobs的5会员积分
+	When bill访问jobs的webapp:ui
+	Then bill在jobs的webapp中拥有5会员积分:ui
+	When bill使用'货到付款'购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"use_integral": true
+		}
+		"""
+	Then bill获得支付结果:ui
+		"""
+		{
+			"status": "待发货",
+			"price_info": {
+				"integral_count": 5,
+				"integral_money": 1.0
+			}
+		}
+		"""
+	And bill在jobs的webapp中拥有0会员积分:ui
+	And bill在jobs的webapp中的积分日志为:ui
+		"""
+		[{
+			"integral": -5,
+			"event": "使用积分"
+		}, {
+			"integral": 20,
+			"event": "首次关注"
+		}]
+		"""
+	When jobs取消订单
+	Then bill在jobs的webapp中拥有5会员积分
+	And bill在jobs的webapp中的积分日志为
+	"""
+		[{
+			"integral": +5,
+			"event": "取消订单，返回积分"
+		}, {
+			"integral": -5,
+			"event": "使用积分"
+		}, {
+			"integral": 20,
+			"event": "首次关注"
+		}]
+	"""
