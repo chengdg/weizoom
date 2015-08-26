@@ -14,7 +14,7 @@ Background:
 
 	And bill关注jobs的公众号
 
-	When bill访问jobs的weapp
+	When bill访问jobs的webapp
 	When bill添加收货地址
 		"""
 		[{
@@ -26,8 +26,10 @@ Background:
 		"""
 
 Scenario:1 添加收货地址
+
+	Given jobs登录系统
 	
-	Given bill关注jobs的公众号
+	And bill关注jobs的公众号
 
 	Then jobs获得"bill"的收货信息
 		"""
@@ -38,7 +40,7 @@ Scenario:1 添加收货地址
 		}]
 		"""
 
-	When bill访问jobs的weapp
+	When bill访问jobs的webapp
 	When bill添加收货地址
 		"""
 		[{
@@ -48,6 +50,8 @@ Scenario:1 添加收货地址
 			"detailed_address":"详细地址2"
 		}]
 		"""
+
+	Given jobs登录系统
 
 	Then jobs获得"bill"的收货信息
 		"""
@@ -64,7 +68,7 @@ Scenario:1 添加收货地址
 
 Scenario:2 编辑收货地址
 
-	When bill访问jobs的weapp
+	When bill访问jobs的webapp
 	When bill编辑收货地址
 		"""
 		[{
@@ -74,6 +78,9 @@ Scenario:2 编辑收货地址
 			"detailed_address":"详细地址1修改"
 		}]
 		"""
+
+	Given jobs登录系统
+
 	Then jobs获得"bill"的收货信息
 		"""
 		[{
@@ -85,7 +92,7 @@ Scenario:2 编辑收货地址
 
 Scenario:3 删除收货地址
 
-	When bill访问jobs的weapp
+	When bill访问jobs的webapp
 	When bill删除收货地址
 		"""
 		[{
@@ -95,6 +102,9 @@ Scenario:3 删除收货地址
 			"detailed_address":"详细地址1"
 		}]
 		"""
+
+	Given jobs登录系统
+	
 	Then jobs获得"bill"的收货信息
 		"""
 		[{ }]
