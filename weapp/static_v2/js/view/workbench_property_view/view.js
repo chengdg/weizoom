@@ -69,7 +69,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             "wepage.item_list": this.initProductsView,
             "wepage.pageheader": _.bind(this.initPageHeader, this),
             "colorpicker": _.bind(this.initColorPicker, this),
-            "secondnav": _.bind(this.initSecondNav, this)
+            "secondnav": _.bind(this.initSecondNav, this),
             "richtext": _.bind(this.initRichTextView, this),
             "daterange": _.bind(this.initDateRange, this),
             "prize_selector": _.bind(this.initPrizeSelector, this),
