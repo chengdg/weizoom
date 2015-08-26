@@ -109,5 +109,12 @@ def get_result(id,member_id):
 	page_info = page['component']['components'][0]['model']
 	event_detail['subtitle'] = page_info['subtitle']
 	event_detail['description'] = page_info['description']
+	prize_type = page_info['prize']['type']
+	event_detail['prize_type'] = prize_type
+	if prize_type == 'coupon':
+		prize_data = page_info['prize']['data']['name']
+	else:
+		prize_data = page_info['prize']['data']
+	event_detail['prize_data'] = prize_data
 
 	return event_detail,activity_status
