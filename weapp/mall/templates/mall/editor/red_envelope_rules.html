@@ -173,7 +173,8 @@ $(document).ready(function() {
                 status: 'delete'
             },
             success: function() {
-                view.table.reload();
+                //view.table.reload();
+                view.onClickSearchButton();
                 W.showHint('success', '删除成功！');
             },
             error: function() {

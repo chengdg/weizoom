@@ -2,7 +2,9 @@
 #超出限购数量的验证是在前端进行的，故在ui的feathure进行实现
 @func:webapp.modules.mall.views.list_products
 Feature: 添加限时抢购商品到购物车中
+"""
 	bill能在webapp中将jobs添加的"商品"放入购物车
+"""
 	
 
 Background:
