@@ -289,7 +289,7 @@ Scenario: 4 选取参与积分应用的商品，创建限时抢购活动
 		}]
 		"""
 
-@mall2 @promotion @promotionFlash @jz
+@mall2 @promotion @promotionFlash
 Scenario: 5 选取参与会员折扣和积分应用的商品，创建限时抢购活动
 	Given jobs登录系统
 	When jobs创建限时抢购活动

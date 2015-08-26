@@ -136,7 +136,7 @@ def step_create_premium_sale(context, user):
 				}]
 
 				premium_products = []
-				for premium_product in promotion['premium_products']:
+				for premium_product in promotion.get('premium_products', [{"name": u"赠品"}]):
 						product_name = premium_product['name']
 						db_product = ProductFactory(name=product_name)
 						premium_products.append({
