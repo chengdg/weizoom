@@ -134,63 +134,6 @@ Scenario: 1 删除状态为'已结束'的积分应用活动
 			}]
 			"""
 
-@ui @promotionIntegral @integral
-Scenario: 2 批量删除积分应用活动（包含未结束状态的活动）
-		Given jobs登录系统
-		When jobs批量'删除'促销活动
-			"""
-			[{
-				"name": "商品4积分应用",
-				"start_date": "明天",
-				"end_date": "3天后",
-				"status":"未开始",
-				"product_name": "商品4",
-				"is_permanant_active": false,
-				"rules": [{
-					"member_grade": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-			}, {
-				"name": "商品3积分应用",
-				"start_date": "今天",
-				"end_date": "2天后",
-				"status":"进行中",
-				"product_name": "商品3",
-				"is_permanant_active": false,
-				"rules": [{
-					"member_grade": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-			}, {
-				"name": "商品2积分应用",
-				"start_date": "",
-				"end_date": "",
-				"status":"已结束",
-				"product_name": "商品2",
-				"is_permanant_active": true,
-				"rules": [{
-					"member_grade": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-			}, {
-				"name": "商品1积分应用",
-				"start_date": "2015-07-11",
-				"end_date": "2015-08-10",
-				"status":"已结束",
-				"product_name": "商品1",
-				"is_permanant_active": false,
-				"rules": [{
-					"member_grade": "全部会员",
-					"discount": 50,
-					"discount_money": 50.0
-				}]
-			}]
-			"""
-		Then jobs获得系统提示'有未结束的活动，请先结束活动'
-
 @mall2 @promotion @promotionIntegral @integral
 Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动）
 	Given jobs登录系统

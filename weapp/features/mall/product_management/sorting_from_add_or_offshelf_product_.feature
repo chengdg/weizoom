@@ -31,7 +31,7 @@ Background:
 			}]
 		"""
 
-@product @toSaleProduct
+@product @toSaleProduct @online_bug
 Scenario: 1 新建商品,在待售商品列表中第一个显示
 	Given jobs登录系统
 	Then jobs能获得'待售'商品列表
@@ -72,7 +72,7 @@ Scenario: 1 新建商品,在待售商品列表中第一个显示
 			}]
 		"""
 
-@product @toSaleProduct
+@product @toSaleProduct @online_bug
 Scenario: 2 下架商品,在待售商品列表中第一个显示
 	Given jobs登录系统
 	Then jobs能获得'待售'商品列表

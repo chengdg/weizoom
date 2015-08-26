@@ -241,39 +241,6 @@ Scenario: 3 批量结束买赠活动（不包括已结束状态的）
 			}]
 		"""
 
-@ui @promotion @promotionPremium
-Scenario: 4 批量结束买赠活动（包括已结束状态的）
-	Given jobs登录系统
-	When jobs批量'结束'促销活动
-		"""
-			[{
-				"name": "活动名称:商品1买赠",
-				"product_name": "商品1",
-				"product_price":100.00,
-				"status":"未开始",
-				"start_date": "明天",
-				"end_date": "3天后",
-				"actions": ["详情","结束"]
-			},{
-				"name": "活动名称:商品2买赠",
-				"product_name": "商品2",
-				"product_price":"100.0 ~ 200.0",
-				"status":"进行中",
-				"start_date": "今天",
-				"end_date": "3天后",
-				"actions": ["详情","结束"]
-			},{
-				"name": "活动名称:商品3买赠",
-				"product_name": "商品3",
-				"product_price":100.00,
-				"status":"已结束",
-				"start_date": "2天前",
-				"end_date": "1天前",
-				"actions": ["详情","删除"]
-			}]
-		"""
-	Then jobs获得系统提示'不能同时进行删除和结束操作'
-
 @mall2 @promotion @promotionPremium
 Scenario: 5 商品下架导致买赠活动结束
 	Given jobs登录系统

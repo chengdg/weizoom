@@ -49,7 +49,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @online_bug
 Scenario: 不同状态的优惠券规则,其操作列显示不同
 	Given jobs登录系统
 	Then jobs能获得优惠券规则列表
