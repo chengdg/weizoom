@@ -110,74 +110,88 @@ def step_impl(context, user):
     bdd_util.assert_dict(expected, actual_order)
 
 
-@then(u"{user}通过后台管理系统可以看到配送套餐订单列表")
-def step_impl(context, user):
-    if hasattr(context, 'client'):
-        context.client.logout()
-    context.client = bdd_util.login(user)
-    client = context.client
-    response = context.client.get('/mall2/api/order_list/get/?version=1&sort_attr=-created_at&count_per_page=15&page=1')
-    items = json.loads(response.content)['data']['items']
+# @then(u"{user}通过后台管理系统可以看到配送套餐订单列表")
+# def step_impl(context, user):
+#     if hasattr(context, 'client'):
+#         context.client.logout()
+#     context.client = bdd_util.login(user)
+#     client = context.client
+#     response = context.client.get('/mall2/api/order_list/get/?version=1&sort_attr=-created_at&count_per_page=15&page=1')
+#     items = json.loads(response.content)['data']['items']
 
-    actual_orders = []
-    for order_item in items:
-        actural_order = {}
-        actural_order['status'] = order_item['status']
-        actural_order['price'] = order_item['total_price']
-        actural_order['buyer'] = order_item['buyer_name']
+#     actual_orders = []
+#     for order_item in items:
+#         actural_order = {}
+#         actural_order['status'] = order_item['status']
+#         actural_order['price'] = order_item['total_price']
+#         actural_order['buyer'] = order_item['buyer_name']
 
-        order_id = order_item['id']
-        buy_product_response = context.client.get(
-            '/mall2/api/order_product/?version=1&order_id=%d&timestamp=1406172500320' % (order_id))
-        buy_products = json.loads(buy_product_response.content)['data']['products']
-        buy_product_results = []
-        for buy_product in buy_products:
-            buy_product_result = {}
-            buy_product_result['product_name'] = buy_product['name']
-            buy_product_result['count'] = buy_product['count']
-            buy_product_result['total_price'] = buy_product['total_price']
-            buy_product_results.append(buy_product_result)
+#         order_id = order_item['id']
+#         buy_product_response = context.client.get(
+#             '/mall2/api/order_product/?version=1&order_id=%d&timestamp=1406172500320' % (order_id))
+#         buy_products = json.loads(buy_product_response.content)['data']['products']
+#         buy_product_results = []
+#         for buy_product in buy_products:
+#             buy_product_result = {}
+#             buy_product_result['product_name'] = buy_product['name']
+#             buy_product_result['count'] = buy_product['count']
+#             buy_product_result['total_price'] = buy_product['total_price']
+#             buy_product_results.append(buy_product_result)
 
-        actural_order['products'] = buy_product_results
-        actual_orders.append(actural_order)
+#         actural_order['products'] = buy_product_results
+#         actual_orders.append(actural_order)
 
-        # 配置当前日期
-    now = datetime.now()
-    context.current_date = now.strftime('%Y-%m-%d')
+#         # 配置当前日期
+#     now = datetime.now()
+#     context.current_date = now.strftime('%Y-%m-%d')
 
-    expected = json.loads(context.text)
+#     expected = json.loads(context.text)
 
-    bdd_util.assert_list(expected, actual_orders)
+#     bdd_util.assert_list(expected, actual_orders)
 
 
-@then(u"{user}获取对应的订单")
-def step_impl(context, user):
-    # url = '/mall2/api/order_list/?sort_attr=-created_at&count_per_page=15&page=1'
-    # response = context.client.get(bdd_util.nginx(url))
-    response = context.response
-    content = json.loads(response.content)
-    items = content['data']['items']
-    query_params = content['data']['pageinfo'].get('query_string')
-    context.query_params = query_params
+# @then(u"{user}获取对应的订单")
+# def step_impl(context, user):
+#     # url = '/mall2/api/order_list/?sort_attr=-created_at&count_per_page=15&page=1'
+#     # response = context.client.get(bdd_util.nginx(url))
+#     response = context.response
+#     content = json.loads(response.content)
+#     items = content['data']['items']
+#     # query_params = content['data']['pageinfo'].get('query_string')
+#     # context.query_params = query_params
 
-    actual_orders = __get_actual_orders(items, context)
-    expected_order = json.loads(context.text)
-    bdd_util.assert_list(expected_order, actual_orders)
+#     actual_orders = __get_actual_orders(items, context)
+#     expected_order = json.loads(context.text)
+#     bdd_util.assert_list(expected_order, actual_orders)
 
 
 @then(u"{user}可以看到订单列表")
 def step_impl(context, user):
-    if hasattr(context, 'client'):
-        context.client.logout()
-    context.client = bdd_util.login(user)
-    client = context.client
-
-    response = context.client.get('/mall2/api/order_list/?version=1&sort_attr=-created_at&count_per_page=15&page=1')
+    # if hasattr(context, 'client'):
+    #     context.client.logout()
+    # context.client = bdd_util.login(user)
+    # client = context.client
+    query_params = dict()
+    if hasattr(context, 'query_params'):
+        query_params = context.query_params
+    response = context.client.get('/mall2/api/order_list/', query_params)
     items = json.loads(response.content)['data']['items']
 
     actual_orders = []
+    source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
     for order_item in items:
         actural_order = {}
+        actural_order['order_no'] = order_item['order_id']
+        actural_order['order_time'] = order_item['created_at']
+        actural_order['ship_name'] = order_item['ship_name']
+        actural_order['ship_tel'] = order_item['ship_tel']
+        actural_order["sources"] = source[order_item['come']]
+        actural_order["member"] = order_item['buyer_name']
+        actural_order["methods_of_payment"] = order_item['pay_interface_name']
+        actural_order["logistics"] = express_util.get_name_by_value(order_item['express_company_name'])
+        actural_order["number"] = order_item['express_number']
+        actural_order["shipper"] = order_item['leader_name']
+
         actural_order['status'] = order_item['status']
         actural_order['price'] = order_item['pay_money']
         actural_order['customer_message'] = order_item['customer_message']
@@ -209,7 +223,7 @@ def step_impl(context, user):
 def step_impl(context, user):
     order = steps_db_util.get_latest_order()
     context.latest_order_id = order.id
-    client = context.client
+    # client = context.client
     response = context.client.get('/mall2/order/?order_id=%d' % context.latest_order_id)
 
     order = response.context['order']
@@ -262,9 +276,9 @@ def step_impl(context, webapp_owner_name):
 def step_impl(context, user):
     """TODO 弃用 改用 @when(u"{webapp_user_name}购买{webapp_owner_name}的商品")
     """
-    if hasattr(context, 'client'):
-        context.client.logout()
-    context.client = bdd_util.login(user)
+    # if hasattr(context, 'client'):
+    #     context.client.logout()
+    # context.client = bdd_util.login(user)
     profile = context.client.user.profile
     # webapp_id = context.client.user.profile.webapp_id
 
@@ -341,9 +355,10 @@ def step_look_for_order(context, user):
     if query_params['order_status'] == -1:
         query_params.pop('order_status')
 
-    url = '/mall2/api/order_list/'
-    response = context.client.get(url, query_params)
-    context.response = response
+    context.query_params = query_params
+    # url = '/mall2/api/order_list/'
+    # response = context.client.get(url, query_params)
+    # context.response = response
 
 
 @then(u"{user}导出订单获取订单信息")
@@ -356,8 +371,8 @@ def step_get_specify_order(context, user):
     import csv
 
     if filter_value:
-        url = '/mall2/order_export/?{}'.format(filter_value)
-        response = context.client.get(url)
+        url = '/mall2/order_export/'
+        response = context.client.get(url, filter_value)
         reader = csv.reader(StringIO(response.content))
         # 去掉表头信息
         header = reader.next()
@@ -382,10 +397,10 @@ def step_get_specify_order(context, user):
             'member',
             'ship_name',
             'ship_tel',
-            'province',
-            'address',
+            'ship_province',
+            'ship_address',
             'shipper',
-            'remark',
+            'shipper_note',
             'sources',
             'logistics',
             'number',
@@ -393,13 +408,12 @@ def step_get_specify_order(context, user):
         ]
         actual = []
         for row in reader:
-            print row
             item = dict(map(None, header, [str(r).decode('utf8') for r in row]))
+            print 'jz-----2', item['order_no'], item.get('ship_address', '')
+            item['ship_address'] = '' if not item.get('ship_address') else item.get('ship_address').replace(' ', ',')
             actual.append(item)
-            print 'jz---', item
         # remove statistical information
         actual.pop()
-        print 'jz---', actual
 
         expected_order = json.loads(context.text)
         bdd_util.assert_list(expected_order, actual)
