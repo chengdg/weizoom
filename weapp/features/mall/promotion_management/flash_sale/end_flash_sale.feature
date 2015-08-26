@@ -91,7 +91,7 @@ Background:
 @mall2 @promotion @promotionFlash
 Scenario: 1 结束状态为'未开始'的限时抢购活动
 	Given jobs登录系统
-	When jobs'结束'促销活动'活动名称：商品3抢购'
+	When jobs"结束"促销活动"活动名称：商品3抢购"
 	Then jobs获取限时抢购活动列表
 		"""
 			[{
@@ -127,7 +127,7 @@ Scenario: 1 结束状态为'未开始'的限时抢购活动
 @mall2 @promotion @promotionFlash
 Scenario: 2 结束状态为'进行中'的限时抢购活动
 	Given jobs登录系统
-	When jobs'结束'促销活动'活动名称：商品2抢购'
+	When jobs"结束"促销活动"活动名称：商品2抢购"
 	Then jobs获取限时抢购活动列表
 		"""
 			[{
