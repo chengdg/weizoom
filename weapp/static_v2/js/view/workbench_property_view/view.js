@@ -70,7 +70,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "colorpicker": _.bind(this.initColorPicker, this),
             "richtext": _.bind(this.initRichTextView, this),
             "daterange": _.bind(this.initDateRange, this),
-            "prize_selector": _.bind(this.initPrizeSelector, this)
+            "prize_selector": _.bind(this.initPrizeSelector, this),
+            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this)
         };
 
 
@@ -520,6 +521,8 @@ W.workbench.PropertyView = Backbone.View.extend({
      * onClickAddDynamicComponentButton: 点击dynamic component区域中的添加button后的响应函数
      */
     onClickAddDynamicComponentButton: function(event, modelData) {
+        console.log('1111111111111111111111111111111');
+        console.log(modelData);
         var $node = $(event.currentTarget);
         var componentType = $node.attr('data-component');
         var component = W.component.Component.create(componentType);
@@ -812,6 +815,16 @@ W.workbench.PropertyView = Backbone.View.extend({
             var attr = $el.attr('data-field');
             _this.getTargetComponent($el).model.set(attr, prize);
         })
+    },
+    initPrizeSelectorV3: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-prize-selector-v3"]').data('view');
+        var _this = this;
+        view.on('change-prize', function(prize) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, prize);
+        });
     },
 
     initProductsView: function($el){

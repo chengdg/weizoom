@@ -1,0 +1,113 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-feedbackParticipanceFormPage xui-appPage-commonStyle">
+	<ul class="breadcrumb" style="margin-bottom:-12px;">
+		<li>您当前所在位置</li>
+		<li><a href="/apps/">百宝箱</a></li>
+		<li><a href="/apps/feedback/feedbacks/">用户反馈</a></li>
+		<li class="active">新建用户反馈</li>
+	</ul>
+	
+	<form 
+		class="form-horizontal xui-app-form pl20 pr20" 
+		method="post" 
+		id="editForm" 
+		data-id="{% if feedback_participance %}{{ feedback_participance.id }}{% else %}0{% endif %}"
+	>
+		<fieldset >
+			<legend>
+				活动设置
+			</legend>
+			<div class="form-group ">
+				<label class="control-label fl" for="name">name：</label>
+				<div class="fl">
+					<input 
+						type="text" 
+						class="form-control w490 mr20 ml5" 
+						id="name" name="name"
+						placeholder=""
+						value="{% if feedback_participance %}{{ feedback_participance.name }}{% endif %}"
+						data-validate="require-notempty"
+						maxlength="20"
+					/>
+					<div class="errorHint" data-error-hint="不超过20个汉字"></div>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label fl" for="time">活动时间：</label>
+				<div class="fl">
+					<input
+						style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker xui-inline ml5"
+						id="start_time"
+						name="start_time"
+						style=""
+					    value="{{feedback_participance.start_time|date:"Y-m-d H:i"}}"
+					    readonly="readonly"
+						data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM" 
+					/>
+					至
+					<input
+						style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker xui-inline"
+						id="end_time"
+						name="end_time"
+					    value="{{feedback_participance.end_time|date:"Y-m-d H:i"}}"
+					    readonly="readonly"
+					    data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min-el="#start_time"
+					/>
+				</div>
+			</div>	
+		</fieldset>
+		
+		<div class="mt20 xui-i-buttons">
+			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">保存</a>
+			<!--
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/apps/feedback/feedbacks/">取消创建</a>
+			-->
+		</div>
+	</form>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+	var inUpdateMode = {% if feedback_participance %}true{% else %}false{% endif %};
+	$(document).ready(function() {
+		$('.xa-submit').click(function() {
+			if (!W.validate()) {
+				return;
+			}
+			var $form = $('form');
+			var data = $form.serializeObject();
+			W.getApi().call({
+				app: 'apps/feedback',
+				resource: 'feedback_participance',
+				method: 'put',
+				args: data,
+				success: function(data) {
+					W.showHint('success', '创建成功');
+					_.delay(function() {
+						window.location.href = '/apps/feedback/feedbacks/';
+					}, 500);
+				},
+				error: function(resp) {
+					W.showHint('error', '创建失败，请稍后再试！');
+				}
+			});
+		});
+	});
+</script>
+{% endblock %}
+

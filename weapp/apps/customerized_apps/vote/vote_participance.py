@@ -25,7 +25,7 @@ FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
 ITEM_FOR_DISPLAY = {
-	'phone': u'手机号',
+	'phone': u'手机',
 	'name': u'姓名',
 	'email': u'邮箱'
 }

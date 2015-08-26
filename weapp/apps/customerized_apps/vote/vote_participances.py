@@ -10,7 +10,7 @@ from core import paginator
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
-import export
+from weixin2 import export
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -28,7 +28,7 @@ class voteParticipances(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
+			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': "votes",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
@@ -39,12 +39,14 @@ class voteParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
-		members = member_models.Member.get_by_username(name)
+		if name:
+			members = member_models.Member.get_by_username(name)
+		else:
+			members = member_models.Member.get_members(request.user_profile.webapp_id)
 		member_ids = [member.id for member in members]
 		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
-		
 		params = {'belong_to':request.GET['id']}
 		if webapp_user_ids:
 			params['webapp_user_id__in'] = webapp_user_ids
@@ -52,8 +54,7 @@ class voteParticipances(resource.Resource):
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
-		datas = app_models.voteParticipance.objects(**params).order_by('-id')	
-		
+		datas = app_models.voteParticipance.objects(**params).order_by('-id')
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))

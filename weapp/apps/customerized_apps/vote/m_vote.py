@@ -20,6 +20,14 @@ from apps import request_util
 from termite2 import pagecreater
 from termite import pagestore as pagestore_manager
 
+SHORTCUTS_TEXT={
+	'phone': u'手机',
+	'name': u'姓名',
+	'email': u'邮箱'
+
+}
+
+
 class Mvote(resource.Resource):
 	app = 'apps/vote'
 	resource = 'm_vote'
@@ -30,6 +38,8 @@ class Mvote(resource.Resource):
 		"""
 		if 'id' in request.GET:
 			id = request.GET['id']
+			isPC = int(request.GET.get('isPC',0))
+			isPC = True if isPC else False
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
@@ -68,7 +78,7 @@ class Mvote(resource.Resource):
 					'app_name': "vote",
 					'resource': "vote",
 					'q_vote': result_list,
-					'hide_non_member_cover': True #非会员也可使用该页面
+					'hide_non_member_cover': True, #非会员也可使用该页面
 				})
 				return render_to_response('vote/templates/webapp/result_vote.html', c)
 			else:
@@ -88,7 +98,8 @@ class Mvote(resource.Resource):
 					'page_html_content': html,
 					'app_name': "vote",
 					'resource': "vote",
-					'hide_non_member_cover': True #非会员也可使用该页面
+					'hide_non_member_cover': True, #非会员也可使用该页面
+					'isPC': isPC
 				})
 				return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:
@@ -133,11 +144,14 @@ def get_result(id,member_id):
 	votes = app_models.voteParticipance.objects(belong_to=id)
 	member_vote_termite = app_models.voteParticipance.objects.get(belong_to=id,member_id=member_id).termite_data
 	member_termite_select = {}
+	member_termite_shortcuts = {}
 	for k,member_termite in member_vote_termite.items():
 		value = member_vote_termite[k]
 		if value['type'] == 'appkit.selection':
 			for select,isSelect in value['value'].items():
 				member_termite_select[select] = isSelect['isSelect']
+		if value['type'] == 'appkit.shortcuts':
+			member_termite_shortcuts[k] = value['value']
 	q_vote =OrderedDict()
 	result_list = []
 
@@ -160,7 +174,8 @@ def get_result(id,member_id):
 
 		v_a = {}
 		for a in v:
-			v_a = a
+			v_a=a
+			print v_a
 			for a_k,a_v in a.items():
 				if a_v:
 					if not a_isSelect.has_key(a_k):
@@ -179,14 +194,14 @@ def get_result(id,member_id):
 			value['isSelect'] = member_termite_select[a_k]
 			value_list.append(value)
 		title_name = k.split('_')[1]
-		if  title_name == 'phone':
-			title_name = u'手机号'
-		elif title_name == 'name':
-			title_name = u'姓名'
-		elif title_name == 'email':
-			title_name = u'邮箱'
+		isShortcuts = False
+		if title_name in SHORTCUTS_TEXT.keys():
+			isShortcuts = True
+			value_list = member_termite_shortcuts[k]
+			title_name = SHORTCUTS_TEXT[title_name]
 		result['title'] = title_name
 		result['values'] = value_list
+		result['isShortcuts'] = isShortcuts
 		result_list.append(result)
 
 	related_page_id = vote_vote.related_page_id
@@ -196,7 +211,12 @@ def get_result(id,member_id):
 	page_info = page['component']['components'][0]['model']
 	vote_detail['subtitle'] = page_info['subtitle']
 	vote_detail['description'] = page_info['description']
-	vote_detail['prize_type'] = page_info['prize']['type']
-	vote_detail['prize_data'] = page_info['prize']['data']
+	prize_type = page_info['prize']['type']
+	vote_detail['prize_type'] = prize_type
+	if prize_type == 'coupon':
+		prize_data = page_info['prize']['data']['name']
+	else:
+		prize_data = page_info['prize']['data']
+	vote_detail['prize_data'] = prize_data
 
 	return vote_detail,result_list

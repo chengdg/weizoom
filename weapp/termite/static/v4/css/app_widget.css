@@ -124,11 +124,6 @@
     width: 20px;
 }
 
-
-
-
-
-
 /**
  * 用户调研survey description样式
  */
@@ -250,9 +245,6 @@
 }
 
 
-
-
-
 /** 
  *
  */
@@ -266,4 +258,227 @@
 	padding: 11px 0;
     width: 100%;
     border: none;
+}
+/*活动的图标*/
+.wui-i-time,.wui-i-prize{
+	margin-top: 9px;
+	min-height: 30px;
+}
+.xui-sprite-timerange{
+	background: url('/termite_static/img/m_sprite.png') no-repeat;
+	background-position: 0 5px;
+	display: block;
+	height: 35px;
+	width: 30px;
+	float: left;
+}
+.xui-sprite-prize {
+	background: url('/termite_static/img/m_sprite.png') no-repeat;
+	background-position: -40px 5px;
+	display: block;
+	height: 35px;
+	width: 30px;
+	float: left;
+}
+
+.wui-lotterydescription{
+	background: url("/termite_static/img/component/lottery/roulette_background.png") no-repeat scroll 42% 100% / 110% 100%;
+	height: 440px;
+	padding-top: 0;
+	margin-top: -40px;
+}
+.wui-lotterydescription>.wui-i-title{
+	background: url("/termite_static/img/component/lottery/roulette_title.png") no-repeat scroll center center / 275px 140px rgba(0, 0, 0, 0);
+    height: 140px;
+    padding-top: 0;
+}
+.wui-surveyDescription>.wui-i-innerTitle {
+	font-size: 20px;
+	font-weight: 400;
+	margin-top: -386px;
+	position: absolute;
+	color: #fff;
+	text-align: center;
+	width: 88%;
+}
+.wui-lotterydescription>.wui-i-header{
+	text-align: center;
+	color: #fff;
+	margin-bottom: 5px;
+}
+p.wui-i-start_time,p.wui-i-end_time{
+	display: inline-block;
+}
+.wui-lotterydescription>.wui-i-body{
+	height: calc(60px * 4 + 3px + 35px);
+	width: calc(60px * 4 + 3px + 35px);
+	margin-left: auto;
+	margin-right: auto;
+	padding: 2px;
+	position: relative;
+	background: #6F2023;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+}
+.wui-lotterydescription>.wui-i-body table{
+	background: #6F2023;
+	height: calc(60px * 4 + 3px);
+	width: calc(60px * 4 + 3px);
+	margin-left: auto;
+	margin-right: auto;
+}
+.wui-lotterydescription>.wui-i-body .xui-lottery-unit{
+	background-color: transparent;
+	background-image: url("/termite_static/img/component/lottery/roulette_cube.png");
+	background-size: 410% 410%;
+	height: 60px;
+	width:60px;
+	text-align: center;
+	border: 1px;
+	border-radius:5px;
+}
+.wui-lotterydescription .xui-lottery-unit b{
+	color: white;
+    display: inline-block;
+    font-size: 15px;
+    width: 45px;
+}
+.xa-lottery-unit-0{
+	background-position: 0 0;
+}
+.xa-lottery-unit-1{
+	background-position: -62px 0;
+}
+.xa-lottery-unit-2{
+	background-position: -124px 0;
+}
+.xa-lottery-unit-3{
+	background-position: -186px 0;
+}
+.xa-lottery-unit-11{
+	background-position: 0 -63px;
+}
+.xa-lottery-unit-4{
+	background-position: -186px -62px;
+}
+.xa-lottery-unit-5{
+	background-position: -186px -127px;
+}
+.xa-lottery-unit-6{
+	background-position: -186px -189px;
+}
+.xa-lottery-unit-7{
+	background-position: -124px -189px;
+}
+.xa-lottery-unit-8{
+	background-position: -62px -189px;
+}
+.xa-lottery-unit-9{
+	background-position: 0 -190px;
+}
+.xa-lottery-unit-10{
+	background-position: 0 -126px;
+}
+.xa-lottery-go{
+	text-align: center;
+	background: #D61625;
+	border-radius: 5px;
+}
+.xa-lottery-go>a{
+	border: 1px solid black;
+    color: #ffcf3d;
+    display: inline-block;
+    font-size: 22px;
+    font-weight: bold;
+    height: 100px;
+    line-height: 100px;
+    width: 90%;
+	box-shadow: 0 0 3px black inset;
+	border-radius: 5px;
+}
+.xui-lottery-unit .xa-lottery-unit img{
+	height: 63px;
+	width: 63px;
+	margin: auto;
+}
+.xui-lottery-unit.active{
+	background-color:#FFFF01;
+	box-shadow: 0 0 10px #FFFF01;
+	-webkit-box-shadow: 0 0 5px #FFFF01;
+}
+
+.xa-circle.active{
+	background-color:#FFFF01;
+	box-shadow: 0 0 10px #FFFF01;
+	-webkit-box-shadow: 0 0 5px #FFFF01;
+	-moz-box-shadow: 0 0 5px #FFFF01;
+}
+.xa-circle-unit-0{
+	top:1.5%;
+	left: 1%;
+}
+.xa-circle-unit-1{
+	top:1.5%;
+	left: 26%;
+}
+.xa-circle-unit-2{
+	top:1.5%;
+	left: 48%;
+}
+.xa-circle-unit-3{
+	top:1.5%;
+	left: 70%;
+}
+.xa-circle-unit-4{
+	top:1.5%;
+	left: 95%;
+}
+.xa-circle-unit-5{
+	top: 26%;
+	left: 95%;
+}
+.xa-circle-unit-6{
+	top: 48%;
+	left: 95%;
+}
+.xa-circle-unit-7{
+	top: 70%;
+	left: 95%;
+}
+.xa-circle-unit-8{
+	top: 94%;
+	left: 95%;
+}
+.xa-circle-unit-9{
+	top: 95%;
+	left: 70%;
+}
+.xa-circle-unit-10{
+	top: 95%;
+	left: 48%;
+}
+.xa-circle-unit-11{
+	top: 95%;
+	left: 26%;
+}
+.xa-circle-unit-12{
+	top: 95%;
+	left: 1%;
+}
+.xa-circle-unit-13{
+	top: 70%;
+	left: 1%;
+}
+.xa-circle-unit-14{
+	top: 48%;
+	left: 1%;
+}
+.xa-circle-unit-15{
+	top: 26%;
+	left: 1%;
 }

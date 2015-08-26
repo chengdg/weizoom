@@ -147,6 +147,33 @@ W.ValidaterClass = function() {
             	this.errorHint = result['errorHint'];
             	return result.isValidate;
             }
+        },
+        'require-string': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                var trimedValue = $.trim(element.val());
+                console.log(trimedValue,"trimedValue");
+
+                // 支持contenteditable jz
+                if(element.attr('contenteditable') == 'true'){
+                    trimedValue = element.attr('value');
+                }
+                var minLength = element.data('minlength') || element.data('min-length')|| 1;
+                var maxLength = element.data('maxlength') || element.data('max-length') || 9999999;
+                var actualLength = trimedValue.length;
+                if (actualLength < minLength || actualLength > maxLength) {
+                    if (maxLength == 9999999) {
+                        this.errorHint = '输入值长度必须大于等于'+minLength;
+                    } else {
+                        this.errorHint = '请输入长度在'+minLength+'到'+maxLength+'之间的字符串';
+                    }
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            errorHint: ''
         }
 	};
 

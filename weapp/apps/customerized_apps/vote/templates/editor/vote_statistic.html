@@ -77,7 +77,7 @@
                 </tr>
                 {% for v in title.title_value %}
                     <tr>
-                        <th>{{ v.item_name }} : </th>
+                        <th>{{ v.item_name }}</th>
                         <th>
                             <span class="xui-progressBar" style="width: {% ifequal v.percent '0%' %}0{% else %}{{ v.percent }}{% endifequal %}"></span>
                         </th>

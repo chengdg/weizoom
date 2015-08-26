@@ -21,7 +21,7 @@ W.component.appkit.Shortcuts = W.component.Component.extend({
 				value: 'name',
 				columnName: 'name',
 			}, {
-				name: '手机号',
+				name: '手机',
 				value: 'phone',
 				columnName: 'phone',
 			}, {
@@ -57,6 +57,6 @@ W.component.appkit.Shortcuts = W.component.Component.extend({
 }, {
 	indicator: {
 		name: '快捷模块',
-		imgClass: 'componentList_component_richtext' // 控件icon
+		imgClass: 'componentList_component_shortcuts' // 控件icon
 	}
 });

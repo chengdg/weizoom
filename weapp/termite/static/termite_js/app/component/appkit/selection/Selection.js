@@ -22,7 +22,7 @@ W.component.appkit.Selection = W.component.Component.extend({
 			displayName: '标题',
 			isUserProperty: true,
 			maxLength: 35,
-			validate: 'data-validate="require-notempty::标题不能为空,,require-word::只能填入汉字、字母、数字、下划线"',
+			validate: 'data-validate="require-notempty::标题不能为空,,require-word::请输入除\' . \' , \' _ \'和\' $ \'以外的字符"',
 			validateIgnoreDefaultValue: true,
 			default: '标题名称',
 			placeholder: '标题名称'
@@ -93,6 +93,6 @@ W.component.appkit.Selection = W.component.Component.extend({
 }, {
 	indicator: {
 		name: '文本调研',
-		imgClass: 'componentList_component_product_list' // 控件icon
+		imgClass: 'componentList_component_selection' // 控件icon
 	}
 });

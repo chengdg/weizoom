@@ -7,7 +7,7 @@ W.component.appkit.TextList = W.component.Component.extend({
 	type: 'appkit.textlist',
 	selectable: 'yes',
 	shouldShowPropertyViewTitle: true,
-	propertyViewTitle: '填写项(此处勾选默认显示为不必填,如需显示为必填请手动添加)',
+	propertyViewTitle: '填写项(此处勾选默认显示为必填,如需显示为不必填请手动添加)',
 
 	dynamicComponentTypes: [{
         type: 'appkit.textitem',
@@ -27,7 +27,7 @@ W.component.appkit.TextList = W.component.Component.extend({
 				value: 'name',
 				columnName: 'name'
 			}, {
-				name: '手机号',
+				name: '手机',
 				value: 'phone',
 				columnName: 'phone'
 			}, {
@@ -56,7 +56,11 @@ W.component.appkit.TextList = W.component.Component.extend({
             minItemLength: 0,
             isUserProperty: true,
             default: []
-        }]
+        },{
+			name: 'is_mandatory',
+			isUserProperty: true,
+			default: 'true'
+		}]
 	}],
 
 	propertyChangeHandlers: {
@@ -75,6 +79,6 @@ W.component.appkit.TextList = W.component.Component.extend({
 }, {
 	indicator: {
 		name: '文本调研',
-		imgClass: 'componentList_component_product_list' // 控件icon
+		imgClass: 'componentList_component_textlist' // 控件icon
 	}
 });

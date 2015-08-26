@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import votes
+from apps.customerized_apps.vote import votes
 
 NAV = {
 	'section': u'',

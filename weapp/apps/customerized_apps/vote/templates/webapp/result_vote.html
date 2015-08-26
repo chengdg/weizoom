@@ -25,28 +25,6 @@
         background: #1BA3F9;
         border-radius: 0;
     }
-    .wui-i-time > span,.wui-i-prize > span{
-        display: block;
-        height: 35px;
-        line-height: 35px;
-        float: left;
-    }
-    .wui-i-sprite-timerange{
-        background: url('/static_v2/img/m_sprite.png') no-repeat;
-        background-position: 0 5px;
-        display: block;
-        height: 35px;
-        width: 40px;
-        float: left;
-    }
-    .wui-i-sprite-prize{
-        background: url('/static_v2/img/m_sprite.png') no-repeat;
-        background-position: -40px 5px;
-        display: block;
-        height: 35px;
-        width: 40px;
-        float: left;
-    }
     .xui-name-isSelect{
         width: 20px;
         height: 20px;
@@ -64,22 +42,26 @@
                 {{ vote_detail.description|safe }}
             </div>
             <div class="wui-i-info">
+                <i class="wui-i-sprite xui-sprite-timerange"></i>
                 <div class="wui-i-time">
-                    <i class="wui-i-sprite wui-i-sprite-timerange"></i>
-                    <span>{{ vote_detail.start_time }}至{{ vote_detail.end_time }}</span>
+                    {{ vote_detail.start_time }}至{{ vote_detail.end_time }}
                 </div>
                 <div style="clear: both"></div>
-            {% if vote_detail.prize_type != 'no_prize' %}
+            {% ifequal vote_detail.prize_type 'no_prize' %}
+            {% else %}
+                <i class="wui-i-sprite xui-sprite-prize"></i>
                 <div class="wui-i-prize">
-                    <i class="wui-i-sprite wui-i-sprite-prize"></i>
-                    <span>{% if vote_detail.prize_type == 'integral' %}{{ vote_detail.prize_data }}积分{% endif %}</span>
+                    {{ vote_detail.prize_data }}
+                    {% if vote_detail.prize_type == 'integral' %}
+                        积分
+                    {% endif %}
                 </div>
                 <div style="clear: both"></div>
-            {% endif %}
+            {% endifequal %}
             </div>
         </div>
         {% for item in q_vote %}
-            {% if item.values %}
+            {% ifequal item.isShortcuts False %}
                 <div class="wui-textSelection">
                     <h1 class="wui-i-title">
                         {{ forloop.counter }}、{{ item.title }}
@@ -87,12 +69,14 @@
                     <ul class="wui-i-items xa-inputControl">
                         {% for select in item.values %}
                         <li class="wui-i-item">
-                            <label style="display:block; padding: 3px 0;" >
+                            <div class="cover_div" style="position: absolute;z-index: 999;height: 50px;"></div>
+                            <label style="padding: 3px 0;" >
                                 <img class="xui-name-isSelect" src="{% if select.isSelect %} /static_v2/img/selected.png {% else %} /static_v2/img/not_select.png{% endif %}" /><span class="ml5 xa-itemTitle">{{ select.name }}</span>
                                 <span style="display: inline-block;float: right;">{{ select.per }}%</span>
                                 <span style="display: inline-block;float: right; margin-right: 10px">{{ select.count }}票</span>
                                 <span data-per="{{ select.per }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
                             </label>
+
                         </li>
                         {% endfor %}
                     </ul>
@@ -102,11 +86,11 @@
                 <li class="wui-i-item">
                     <label class="wui-i-label">{{ item.title }}</label>
                     <div class="wui-i-inputContainer xa-inputControl" >
-                        <input class="wui-i-input" type="text"  placeholder="请输入{{ item.title }}" disabled>
+                        <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" style="color: #666666" disabled>
                     </div>
                 </li>
             </ul>
-            {% endif %}
+            {% endifequal %}
         {% endfor %}
         {% if vote_detail.prize_type != 'no_prize' %}
             <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >
@@ -119,8 +103,12 @@
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
+        var li_width = $('.wui-textSelection').find('li').css('width');
+        $('.cover_div').css('width',li_width);
         $('.progressbar').each(function(){
-            $(this).progressbar('value',$(this).attr('data-per'));
+            $(this).progressbar({
+                initValue: $(this).attr('data-per')
+            });
         });
         $('.xa-toUserCenter').on('click', function(event) {
             redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);

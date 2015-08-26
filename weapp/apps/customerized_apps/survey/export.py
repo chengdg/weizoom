@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import surveies
+from apps.customerized_apps.survey import surveies
 
 NAV = {
 	'section': u'',

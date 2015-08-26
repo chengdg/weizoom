@@ -10,7 +10,7 @@ from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 import models as app_models
-import export
+from weixin2 import export
 from datetime import datetime
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -28,7 +28,7 @@ class surveies(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
+			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': "surveies",
 			'has_data': has_data
 		});
@@ -48,10 +48,12 @@ class surveies(resource.Resource):
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
-			if data_start_time <= now_time and now_time < data_end_time:
-				data_data.update(set__status=app_models.STATUS_RUNNING)
-			elif now_time >= data_end_time:
-				data_data.update(set__status=app_models.STATUS_STOPED)
+			data_status = data_data.status
+			if data_status <= 1:
+				if data_start_time <= now_time and now_time < data_end_time:
+					data_data.update(set__status=app_models.STATUS_RUNNING)
+				elif now_time >= data_end_time:
+					data_data.update(set__status=app_models.STATUS_STOPED)
 		if name:
 			params['name__icontains'] = name
 		if status != -1:

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+from weixin2 import export
 
 __author__ = 'liupeiyu chuter'
 
@@ -22,6 +24,7 @@ from datetime import datetime
 
 from apps_manager import manager
 from app_status_response_util import *
+from weixin2.export import get_customerized_apps
 
 FIRST_NAV_NAME = 'apps'
 
@@ -199,3 +202,37 @@ def update_app(request, customized_app_info_id):
 		    'is_super_user': request.user.is_manager
 		})
 		return render_to_response('apps/edit_app.html', c)
+
+def list_new_apps(request):
+	if request.user.is_manager:
+		customized_app_infos = CustomizedAppInfo.objects.all().order_by('id')
+		template_file = 'apps/apps_list.html'
+		c = RequestContext(request, {
+			'first_nav_name': FIRST_NAV_NAME,
+			'second_navs': None,
+			'customized_app_infos': customized_app_infos,
+		    'is_super_user': request.user.is_manager
+		})
+		return render_to_response(template_file, c)
+	else:
+		second_navs = export.get_customerized_apps(request)
+		if second_navs:
+			first_nav = second_navs[0]
+			url = first_nav['navs'][0]['url']
+			url_info = url.split('/')
+			first_nav_name = url_info[1]
+			app = url_info[2]
+			second_nav_name = url_info[3]
+			import imp
+			fp, pathname, desc = imp.find_module('models', ['./apps/customerized_apps/'+app,])
+
+			has_data = imp.load_module('models', fp, pathname, desc).event.objects.count()
+
+			c = RequestContext(request, {
+				'first_nav_name': first_nav_name,
+				'second_navs': second_navs,
+				'second_nav_name': second_nav_name,
+				'has_data': has_data
+			})
+
+			return render_to_response(app+'/templates/editor/'+second_nav_name+'.html', c)

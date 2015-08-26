@@ -10,15 +10,19 @@ from core import paginator
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
-import export
+from weixin2 import export
+import re
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
 ITEM_FOR_DISPLAY = {
-	'phone': u'手机号',
+	'phone': u'手机',
 	'name': u'姓名',
-	'email': u'邮箱'
+	'email': u'邮箱',
+	'qq':u'QQ号',
+	'job':u'职位',
+	'addr':u'地址'
 }
 
 class eventParticipances(resource.Resource):
@@ -34,7 +38,7 @@ class eventParticipances(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
+			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': "events",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
@@ -47,10 +51,12 @@ class eventParticipances(resource.Resource):
 		name = request.GET.get('participant_name', '')
 		if name:
 			members = member_models.Member.get_by_username(name)
-			member_ids = [member.id for member in members]
-			webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
-			if not webapp_user_ids:
-				webapp_user_ids = [-1]
+		else:
+			members = member_models.Member.get_members(request.user_profile.webapp_id)
+		member_ids = [member.id for member in members]
+		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
+		if not webapp_user_ids:
+			webapp_user_ids = [-1]
 		else:
 			webapp_user_ids = []
 		start_time = request.GET.get('start_time', '')
@@ -102,8 +108,10 @@ class eventParticipances(resource.Resource):
 			for k, v in termite_data.items():
 				pureName = k.split('_')[1]
 				item_data = {}
-				item_data['item_name'] = pureName
-				item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
+				if pureName in ITEM_FOR_DISPLAY:#判断是否是自定义的填写项
+					item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
+				else:
+					item_data['item_name'] = pureName
 				item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
 			items.append({

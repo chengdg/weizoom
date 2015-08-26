@@ -1,0 +1,205 @@
+{% extends "webapp_content_base_v4.html" %}
+
+{% block css %}
+<style type="text/css">
+	h1 {
+		color: #00F;
+	}
+	.wui-QA,.wui-shortcuts{
+		background: #fff;
+	}
+	.wui-QA .wui-i-title {
+    	border-left: 0;
+		padding-left: 0;
+	}
+	.wui-shortcuts{
+		padding: 15px 20px 0;
+	}
+	.wui-shortcuts .wui-i-label {
+		text-align: left;
+		width: 40px;
+	}
+	.wui-shortcuts .wui-i-input {
+		border: 1px solid #e5e5e5;
+		padding: 5px 0 5px 5px;
+    	width: 100%;
+	}
+	.wui-submitButton {
+		background: #fff none repeat scroll 0 0;
+		padding: 26px 10px;
+		margin: 0;
+	}
+	.xui-record .xui-inner-content {
+		color: #8F8F8F;
+	}
+	.wui-select{
+		margin: 20px 0;
+	}
+	#freedback_type{
+		background: #fff none repeat scroll 0 0;
+		border: 1px solid #eee;
+		display: block;
+		font-size: 1.1em;
+		height: 45px;
+		line-height: 45px;
+		overflow: hidden;
+		position: relative;
+		text-align: left;
+		padding-left: 20px;
+		text-overflow: ellipsis;
+		text-shadow: none;
+		white-space: nowrap;
+		color: #000;
+	}
+	.arrow_down{
+		background: #fff url('/static_v2/img/arrow.png') no-repeat;
+		height: 20px;
+		position: absolute;
+		right: 20px;
+		top: 15px;
+		width: 34px;
+	}
+	.arrow_up{
+		background: #fff url('/static_v2/img/arrow.png') no-repeat;
+		height: 20px;
+		position: absolute;
+		right: 20px;
+		top: 15px;
+		width: 34px;
+		transform:rotate(180deg);
+			-ms-transform:rotate(180deg); 	/* IE 9 */
+			-moz-transform:rotate(180deg); 	/* Firefox */
+			-webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+			-o-transform:rotate(180deg);
+	}
+	.xui-dropmenu{
+		background: #fff none repeat scroll 0 0;
+		position: absolute;
+		width: 100%;
+		z-index: 999;
+	}
+	.xui-dropmenu >ul >li{
+		border-bottom: 1px solid #eee;
+		height: 45px;
+		line-height: 45px;
+		padding-left: 35px !important;
+	}
+	.xui-dropmenu >ul >li >a{
+		display: block;
+		color: #000;
+		width: 100%;
+		height: 100%;
+	}
+	#xui-input-type{
+		cursor: pointer;
+		border: 0;
+		color: #fff;
+	}
+	#freedback_textarea::-webkit-input-placeholder::after {
+		display:block;
+		content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
+	}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div>
+	<div>
+		<div class="xui-recordContainer">
+			<div class="wui-select" data-component-cid="1">
+				<div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="type" data-control-type="type">
+					<a id="freedback_type" data-role="button" >
+						反馈类型
+						<span class="type_name" style="color: #666;margin-left: 10px;"></span>
+						<input class="wui-i-input" id="xui-input-type" type="text"   placeholder="" value="" data-validate="require-notempty::请选择反馈类型" readonly>
+						<span id="icon" class="arrow_down"></span>
+					</a>
+					<div class="xui-dropmenu" style="display: none">
+						<ul class="ui-dropmenu-items xa-select-type" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);">
+							<li><a href="javascript:void(0);" data-type="0">服务</a></li>
+							<li><a href="javascript:void(0);" data-type="1">功能</a></li>
+							<li><a href="javascript:void(0);" data-type="2">操作</a></li>
+							<li><a href="javascript:void(0);" data-type="3">新的需求</a></li>
+							<li><a href="javascript:void(0);" data-type="4">其它</a></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+			<div class="wui-QA" data-component-cid="2" style="">
+				<h1 class="wui-i-title">反馈内容</h1>
+				<div id="freedback_textarea_num" style="color: #757575">还可以输入<span>200</span>个字</div>
+				<div class="xa-inputControl" data-input-type="textarea" data-input-name="content" data-control-type="appkit.qa">
+					<textarea id="freedback_textarea"
+							  name="content"
+							  class="wui-i-input"
+							  placeholder="长度在20-200个字之间"
+							  data-validate="require-string::请输入反馈内容20-200个字"
+							  data-min-length="20"
+							  data-max-length="200"
+							  maxlength="200"
+							  onkeydown='countChar("freedback_textarea","freedback_textarea_num");'
+							  onkeyup='countChar("freedback_textarea","freedback_textarea_num");'
+							></textarea>
+				</div>
+			</div>
+			<ul class="wui-shortcuts" data-component-cid="3" style="">
+                <li class="wui-i-item">
+                    <label class="wui-i-label">姓名</label>
+                    <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="name" data-control-type="appkit.shortcuts">
+                        <input class="wui-i-input" type="text"  placeholder="请输入姓名" value="" data-validate="require-notempty::请输入姓名">
+                    </div>
+                </li>
+				<li class="wui-i-item">
+                    <label class="wui-i-label">手机</label>
+                    <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="phone" data-control-type="appkit.shortcuts">
+                        <input class="wui-i-input" type="text"   placeholder="请输入手机号码" value="" data-validate="require-mobile-phone::请输入正确的手机号">
+                    </div>
+                </li>
+				<li class="wui-i-item">
+                    <label class="wui-i-label">QQ</label>
+                    <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="QQ" data-control-type="appkit.shortcuts">
+                        <input class="wui-i-input" type="text"   placeholder="请输入QQ" value="" data-validate="require-int::QQ请输入数字">
+                    </div>
+                </li>
+            </ul>
+			<div class="wui-submitButton xui-hide xa-submitButtonContainer" data-component-cid="6" style="">
+				<a class="xui-btn xui-btn-danger xa-submitTermite" data-role="button" href="javascript:void(0);" style="">提交</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript" src="/termite_static/v3/gmu/widget/dropmenu.js"></script>
+	<script type="text/javascript">
+	function countChar(textareaName,divName) {
+		$('#'+divName).find('span').text(200 - $('#'+textareaName).val().length);
+	}
+	$(document).ready(function() {
+		$('#freedback_type').click(function(){
+			var $dropmenu = $(this).next();
+			if ($dropmenu.css('display') == 'none'){
+				$dropmenu.show();
+				$(this).find('#icon').addClass('arrow_up').removeClass('arrow_down')
+			}
+			else{
+				$dropmenu.hide();
+				$(this).find('#icon').addClass('arrow_down').removeClass('arrow_up')
+			}
+
+		});
+		$('.xa-select-type li a').click(function(event){
+			var $a= $(event.currentTarget);
+			var type_value = $a.attr('data-type');
+			var type_name = $a.text();
+			$('#freedback_type').find('span[class="type_name"]').text(type_name);
+			$('#xui-input-type').val(type_value);
+			$a.parents('.xui-dropmenu').hide();
+		});
+
+	});
+	</script>
+{% endblock %}
+
