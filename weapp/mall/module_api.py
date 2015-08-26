@@ -270,17 +270,9 @@ def group_product_by_promotion(request, products):
 					for premium_product in promotion_detail['premium_products']:
 						premium_product['original_premium_count'] = premium_product['premium_count']
 						premium_product['premium_count'] = premium_product['premium_count'] * premium_round_count
-			# product_groups.append({
-			# 	"id": group_id,
-			# 	"uid": group_unified_id,
-			# 	"promotion_type": type_name,
-			# 	'products': products,
-			# 	'promotion': promotion,
-			# 	'promotion_result': {"subtotal": total_product_price},
-			# 	# 'integral_sale_rule': integral_sale_rule,
-			# 	'can_use_promotion': can_use_promotion,
-			# 	#'promotion_json': json.dumps(promotion)
-			# })
+			promotion_result = {
+				"subtotal": product.purchase_count * product.price
+			}
 		# 满减
 		elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
 			promotion = products[0].promotion
@@ -300,29 +292,6 @@ def group_product_by_promotion(request, products):
 				"subtotal": subtotal,
 				"price_threshold": promotion_round_count*promotion_detail['price_threshold']
 			}
-				# product_groups.append({
-				# 	"id": group_id,
-				# 	"uid": group_unified_id,
-				# 	"promotion_type": type_name,
-				# 	'products': products,
-				# 	'promotion': promotion,
-				# 	'promotion_result': promotion_result,
-				# 	# 'integral_sale_rule': integral_sale_rule,
-				# 	'can_use_promotion': can_use_promotion,
-				# 	#'promotion_json': json.dumps(promotion)
-				# })
-			# else:
-			# 	product_groups.append({
-			# 		"id": group_id,
-			# 		"uid": group_unified_id,
-			# 		"promotion_type": type_name,
-			# 		'products': products,
-			# 		'promotion': None,
-			# 		'promotion_result': None,
-			# 		# 'integral_sale_rule': integral_sale_rule,
-			# 		'can_use_promotion': False,
-			# 		#'promotion_json': json.dumps(promotion)
-			# 	})
 		product_groups.append({
 			"id": group_id,
 			"uid": group_unified_id,
@@ -335,18 +304,6 @@ def group_product_by_promotion(request, products):
 			'promotion_json': json.dumps(promotion),
 			'member_grade_id': member_grade_id
 		})
-		# else:
-		# 	#非促销商品
-		# 	product_groups.append({
-		# 		"id": group_id,
-		# 		"uid": group_unified_id,
-		# 		"promotion_type": type_name,
-		# 		'products': products,
-		# 		'promotion': None,
-		# 		'promotion_result': None,
-		# 		# 'integral_sale_rule': integral_sale_rule,
-		# 		'can_use_promotion': False
-		# 	})
 	return product_groups
 
 

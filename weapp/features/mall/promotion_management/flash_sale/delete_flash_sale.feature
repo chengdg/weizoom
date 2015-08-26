@@ -58,79 +58,79 @@ Background:
 		"""
 	When jobs创建限时抢购活动
 		"""
-			[{
-				"name": "广告语：商品0抢购",
-				"product_name":"商品0",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"已结束",
-				"start_date": "3天前",
-				"end_date": "2天前",
-				"actions": ["详情","删除"]
-			},{
-				"name": "广告语：商品1抢购",
-				"product_name":"商品1",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"已结束",
-				"start_date": "2天前",
-				"end_date": "1天前",
-				"actions": ["详情","删除"]
-			},{
-				"name": "活动名称：商品2抢购",
-				"product_name":"商品2",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"进行中",
-				"start_date": "今天",
-				"end_date": "1天后",
-				"actions": ["详情","结束"]
-			},{
-				"name": "活动名称：商品3抢购",
-				"product_name":"商品3",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"未开始",
-				"start_date": "明天",
-				"end_date": "2天后",
-				"actions": ["详情","结束"]
-			}]
+		[{
+			"name": "广告语：商品0抢购",
+			"product_name":"商品0",
+			"product_price":100.00,
+			"promotion_price":80.00,
+			"status":"已结束",
+			"start_date": "3天前",
+			"end_date": "2天前",
+			"actions": ["详情","删除"]
+		},{
+			"name": "广告语：商品1抢购",
+			"product_name":"商品1",
+			"product_price":100.00,
+			"promotion_price":80.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"actions": ["详情","删除"]
+		},{
+			"name": "活动名称：商品2抢购",
+			"product_name":"商品2",
+			"product_price":100.00,
+			"promotion_price":80.00,
+			"status":"进行中",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"actions": ["详情","结束"]
+		},{
+			"name": "活动名称：商品3抢购",
+			"product_name":"商品3",
+			"product_price":100.00,
+			"promotion_price":80.00,
+			"status":"未开始",
+			"start_date": "明天",
+			"end_date": "2天后",
+			"actions": ["详情","结束"]
+		}]
 		"""
 
 @mall2 @promotion @promotionFlash
 Scenario: 1 删除状态为'已结束'的限时抢购活动
 	Given jobs登录系统
-	When jobs'删除'促销活动'广告语：商品0抢购'
+	When jobs"删除"促销活动"广告语：商品0抢购"
 	Then jobs获取限时抢购活动列表
 		"""
-			[{
-				"name": "活动名称：商品3抢购",
-				"product_name":"商品3",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"未开始",
-				"start_date": "明天",
-				"end_date": "2天后",
-				"actions": ["详情","结束"]
-			},{
-				"name": "活动名称：商品2抢购",
-				"product_name":"商品2",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"进行中",
-				"start_date": "今天",
-				"end_date": "1天后",
-				"actions": ["详情","结束"]
-			},{
-				"name": "广告语：商品1抢购",
-				"product_name":"商品1",
-				"product_price":100.00,
-				"promotion_price":80.00,
-				"status":"已结束",
-				"start_date": "2天前",
-				"end_date": "1天前",
-				"actions": ["详情","删除"]
-			}]
+		[{
+			"name": "活动名称：商品3抢购",
+			"product_name":"商品3",
+			"product_price":100.00,
+			"promotion_price":80.00,
+			"status":"未开始",
+			"start_date": "明天",
+			"end_date": "2天后",
+			"actions": ["详情","结束"]
+		},{
+			"name": "活动名称：商品2抢购",
+			"product_name":"商品2",
+			"product_price":100.00,
+			"promotion_price":80.00,
+			"status":"进行中",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"actions": ["详情","结束"]
+		},{
+			"name": "广告语：商品1抢购",
+			"product_name":"商品1",
+			"product_price":100.00,
+			"promotion_price":80.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"actions": ["详情","删除"]
+		}]
 		"""
 
 @mall2 @promotion @promotionFlash

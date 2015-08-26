@@ -142,7 +142,7 @@ Background:
 @mall2 @promotion @promotionPremium
 Scenario: 1 删除状态为'已结束'的买赠活动
 	Given jobs登录系统
-	When jobs'删除'促销活动'活动名称:商品3买赠'
+	When jobs"删除"促销活动"活动名称:商品3买赠"
 	Then jobs获取买赠活动列表
 		"""
 			[{

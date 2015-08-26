@@ -9,7 +9,7 @@ from features.testenv.model_factory import ProductFactory
 from test import bdd_util
 
 
-@when(u"{user}'{action}'促销活动'{promotion_name}'")
+@when(u"{user}\"{action}\"促销活动\"{promotion_name}\"")
 def step_terminate_promotion(context, user, action, promotion_name):
 		"""促销活动通用更新单个促销状态
 
@@ -136,7 +136,7 @@ def step_create_premium_sale(context, user):
 				}]
 
 				premium_products = []
-				for premium_product in promotion['premium_products']:
+				for premium_product in promotion.get('premium_products', [{"name": u"赠品"}]):
 						product_name = premium_product['name']
 						db_product = ProductFactory(name=product_name)
 						premium_products.append({
