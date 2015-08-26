@@ -273,9 +273,9 @@ Scenario: 切换启用/停用状态
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在webapp中能使用以下支付方式
-		'''
+		"""
 		["微信支付", "货到付款", "支付宝"]
-		'''
+		"""
 
 	Given jobs登录系统
 	When jobs更新支付方式'我的微信支付'
@@ -288,9 +288,9 @@ Scenario: 切换启用/停用状态
 		"""
 	When bill访问jobs的webapp
 	Then bill在webapp中能使用以下支付方式
-		'''
+		"""
 		["货到付款", "支付宝"]
-		'''
+		"""
 
 	Given jobs登录系统
 	When jobs更新支付方式'我的支付宝'
@@ -303,9 +303,9 @@ Scenario: 切换启用/停用状态
 		"""
 	When bill访问jobs的webapp
 	Then bill在webapp中能使用以下支付方式
-		'''
+		"""
 		["货到付款"]
-		'''
+		"""
 
 	Given jobs登录系统
 	When jobs更新支付方式'我的货到付款'
@@ -318,9 +318,9 @@ Scenario: 切换启用/停用状态
 		"""
 	When bill访问jobs的webapp
 	Then bill在webapp中能使用以下支付方式
-		'''
+		"""
 		[]
-		'''
+		"""
 
 	Given jobs登录系统
 	When jobs更新支付方式'我的支付宝'
@@ -349,6 +349,6 @@ Scenario: 切换启用/停用状态
 		"""
 	When bill访问jobs的webapp
 	Then bill在webapp中能使用以下支付方式
-		'''
+		"""
 		["微信支付", "货到付款", "支付宝"]
-		'''
+		"""

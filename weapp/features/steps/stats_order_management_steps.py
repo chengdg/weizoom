@@ -35,7 +35,6 @@ def step_impl(context, user):
 		__add_product(context, product)
 
 
-
 def __process_product_data(product):
 	"""
 	转换一个商品的数据

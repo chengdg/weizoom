@@ -5,7 +5,7 @@ Feature: 添加商品到购物车后，浏览购物车中的商品
 Background:
 	Given jobs登录系统
 	And jobs已添加商品规格
-		'''
+		"""
 		[{
 			"name": "颜色",
 			"type": "图片",
@@ -30,7 +30,7 @@ Background:
 				"name": "L"
 			}]
 		}]
-		'''
+		"""
 	And jobs已添加商品
 		"""
 		[{
