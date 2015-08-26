@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="xui-userCenterInfo pl5">
-                        <h2 class="em8">{% if member.username %}{{ member.username }}{% else %}我{% endif %}</h2>
+                        <h2 class="em8">{% if member.username_truncated %}{{ member.username_truncated | safe}}{% else %}我{% endif %}</h2>
                         <a href="./?module=user_center&model=binding_page&action=get&workspace_id=user_center&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bindphone">
                             {% if member_info.is_binded %}
                             	{{ member_info.phone }}
