@@ -2949,9 +2949,9 @@ def get_member_product_info(request):
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
 	response.data.count = shopping_cart_count
 	webapp_owner_id = request.webapp_owner_id
+	product_id = request.GET.get('product_id', "")
 	if request.member:
 		member_id = request.member.id
-		product_id = request.GET.get('product_id', "")
 		if product_id:
 			collect = MemberProductWishlist.objects.filter(
 				owner_id=webapp_owner_id,
