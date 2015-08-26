@@ -194,7 +194,7 @@ ul{
     color: #999;
 }
 .wui-limit{
-    vertical-align: middle;
+    /*vertical-align: middle;*/
     /*display: inline-block;*/
     font-size: .7rem!important;
     color: #cf0404;
