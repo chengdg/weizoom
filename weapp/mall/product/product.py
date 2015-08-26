@@ -849,9 +849,13 @@ class ProductModel(resource.Resource):
             stocks = model_info['stocks']
             if stock_type == models.PRODUCT_STOCK_TYPE_UNLIMIT:
                 stocks = 0
-            models.ProductModel.objects.filter(
+            product_model = models.ProductModel.objects.filter(
                 id=product_model_id
-            ).update(stock_type=stock_type, stocks=stocks)
+            )
+            if len(product_model) == 1 and product_model[0].stock_type == models.PRODUCT_STOCK_TYPE_LIMIT and product_model[0].stocks < 1:
+                #触发signal，清理缓存
+                productModel.update(stocks=0)
+            product_model.update(stock_type=stock_type, stocks=stocks)
 
         response = create_response(200)
         return response.get_response()
