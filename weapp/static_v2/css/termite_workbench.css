@@ -482,7 +482,7 @@ body {
 .propertyGroup_property_horizontalField .propertyGroup_property_input {
 	display: inline-block;
 	/*width: 176px;*/
-	/*line-height: 24px;*/
+	line-height: 24px;
 	/*图片导航样式影响*/
 	/* color: #999; */
 }
@@ -556,7 +556,9 @@ body {
 	width: 60px;
 	height: 60px;
 }
-
+.propertyGroup_property_input .ml5 {
+  font-weight: 400;
+}
 
 /*移除按钮*/
 button.xui-removeImageButton{
@@ -567,11 +569,11 @@ button.xui-removeImageButton{
 .xui-removeImageButton span{
 	color: #fff;
 	display: block;
-	width: 22px;
-	height: 22px;
+	width: 20px;
+	height: 20px;
 	background: rgba(0,0,0,0.9);
 	border-radius: 30px;
-	line-height: 26px;
+	line-height: 20px;
 	font-size: 30px;
 }
 
