@@ -75,6 +75,8 @@ class CouponRuleInfo(resource.Resource):
 
             coupon_rule = CouponRule.objects.get(id=promotion.detail_id)
 
+            promotion.start_date = datetime.strptime(promotion.start_date, "%Y-%m-%d %H:%M:%S")
+            promotion.end_date = datetime.strptime(promotion.end_date, "%Y-%m-%d %H:%M:%S")
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
                 'second_navs': export.get_promotion_second_navs(request),
