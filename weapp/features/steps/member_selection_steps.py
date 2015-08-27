@@ -22,6 +22,7 @@ def step_impl(context, user):
 
 @Then(u'{user}获得刷选结果人数')
 def step_impl(context, user):
+    print 'hellokitty',context.url
     response = context.client.get(bdd_util.nginx(context.url))
     actual_count = json.loads(response.content)['data']['total_count']
     json_data = json.loads(context.text)
@@ -58,7 +59,7 @@ def step_impl(context, user):
     if options['message_start_time'] and options['message_end_time']:
         options_url.append('last_message_time:%s--%s' %(options['message_start_time'],options['message_end_time']))
     if options['name']:
-        options_url.append('name:%stag_id:%s' %(options['name'],''))
+        options_url.append('name:%s' %options['name'])
     ###
     if options['tags'] and options['tags'] != u'全部':
         options_url.append('tag_id:%s' %tags_dict[options['tags']])
@@ -79,7 +80,7 @@ def step_impl(context, user):
     context.url = init_url
     #print 'helloworld',context.url
 
-        
+
 
 
 
