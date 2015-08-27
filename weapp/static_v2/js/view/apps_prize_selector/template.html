@@ -12,8 +12,9 @@
 		name="integral" 
 		data-target="integral" 
 		placeholder="输入奖励积分值" 
-		data-validate="require-int::输入整数积分值" 
+		data-validate="require-positive-int::输入正整数积分值"
 		{{#if prize.data}}value="{{prize.data}}"{{/if}} />
+	<div class="errorHint"></div>
 
 	<a 
 		href="javascript:void(0);" 

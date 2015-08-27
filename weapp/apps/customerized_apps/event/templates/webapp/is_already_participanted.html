@@ -1,18 +1,8 @@
 {% extends "webapp_content_base_v4.html" %}
 {% block css %}
     <style>
-    .wui-i-time > span{
-        display: block;
-        height: 35px;
-        line-height: 35px;
-        float: left;
-    }
-    .wui-i-prize {
-        float: left;
-    }
     .wui-i-isParticipanted{
         float: right;
-        line-height: 35px;
         color: #cf0404;
     }
     </style>
@@ -28,16 +18,19 @@
                 {{ event_detail.description|safe }}
             </div>
             <div class="wui-i-info">
+                <i class="wui-i-sprite xui-sprite-timerange"></i>
                 <div class="wui-i-time">
-                    <span>此活动于{{ event_detail.end_time }}过期</span>
+                    此活动于{{ event_detail.end_time }}过期
                     <div class="wui-i-isParticipanted">您已报名</div>
                 </div>
+                <div style="clear: both"></div>
+                <i class="wui-i-sprite xui-sprite-prize"></i>
                 <div class="wui-i-prize">
                 {% if event_detail.prize_data %}
                     {% if event_detail.prize_type == 'integral' %}
-                        <span>积分奖励{{ event_detail.prize_data }}分</span>
+                        积分奖励{{ event_detail.prize_data }}分
                     {% else %}
-                         <span>{{ event_detail.prize_data }}一张</span>
+                         {{ event_detail.prize_data }}一张
                     {% endif %}
                 {% else %}
                     <span>无奖励</span>
