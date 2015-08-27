@@ -31,3 +31,9 @@
 
  c.取消选择规格后，显示最低的会员价
 
+
+
+
+
+UI 手工测试
+\Weapp_mall\weapp\features\ui\mall\product_management\update_product_model.feature
