@@ -7,7 +7,7 @@ Background:
 	Given tom关注jobs的公众号
 
 
-@mall @mall.outline 
+@mall @mall.outline @duhao
 Scenario: 获得页面访问信息
 	多个用户访问jobs的微站后，jobs能获得pv和uv信息
 
@@ -47,4 +47,5 @@ Scenario: 获得页面访问信息
 		| 3天前      | 3  | 1  |
 		| 2天前      | 0  | 0  |
 		| 1天前      | 4  | 3  |
-		| 今天       | 3  | 1  |
+		#| 今天       | 3  | 1  |
+		#首页不显示今天的数据  duhao注
