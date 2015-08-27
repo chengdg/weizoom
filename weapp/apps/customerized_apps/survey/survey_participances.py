@@ -184,9 +184,8 @@ class surveyParticipances_Export(resource.Resource):
 					fields_pure.append(field)
 
 			#username(webapp_user_id/member_id)
-			webapp_id_list = map(long,[record['webapp_user_id'] for record in data ])#大
-			#测试：member里的id好像和webapp_id不一样
-			members = member_models.Member.objects.filter(webapp_id__in = webapp_id_list)#小
+			webapp_id_list = map(long,[record['webapp_user_id'] for record in data ])
+			members = member_models.Member.objects.filter(webapp_id__in = webapp_id_list)
 			webapp_id2name ={}
 			for member in members:
 				w_id = long(member.webapp_id)
@@ -248,17 +247,18 @@ class surveyParticipances_Export(resource.Resource):
 				col += 1
 
 			##write data
-			row = 0
-			lens = len(export_data[0])
-			for record in export_data:
-				row +=1
-				for col in range(lens):
-					ws.write(row,col,record[col])
-			try:
-				wb.save(export_file_path)
-			except:
-				print 'EXPORT EXCEL FILE SAVE ERROR'
-				print '/static/upload/%s'%excel_file_name
+			if export_data:
+				row = 0
+				lens = len(export_data[0])
+				for record in export_data:
+					row +=1
+					for col in range(lens):
+						ws.write(row,col,record[col])
+				try:
+					wb.save(export_file_path)
+				except:
+					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print '/static/upload/%s'%excel_file_name
 
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
