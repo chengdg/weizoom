@@ -3,12 +3,12 @@ import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.db.models import F
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from datetime import datetime
 import os
 
-from django.conf import settings
-from django.db.models import F
-from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
@@ -123,23 +123,26 @@ class surveyParticipances_Export(resource.Resource):
 	@login_required
 	def api_get(request):
 		"""
-		详情导出:	序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
+		详情导出
+
+		字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 		"""
-		app_name = 'survey'
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
+		app_name = surveyParticipances_Export.app.split('/')[1]
 		excel_file_name = ('%s_%s.xls') % (app_name,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
-		import xlwt
+		#Excel Process Part
 		try:
+			import xlwt
 			data = app_models.surveyParticipance.objects(belong_to=export_id)
 			fields_raw = []
 			fields_pure = []
 			export_data = []
 
-			#从sample中提取字段
+			#from sample to get fields4excel_file
 			fields_raw.append(u'编号')
 			fields_raw.append(u'用户名')
 			fields_raw.append(u'提交时间')
@@ -179,52 +182,32 @@ class surveyParticipances_Export(resource.Resource):
 						fields_pure.append(purename)
 				else:
 					fields_pure.append(field)
-			#处理用户名 总有weapp_user_id
-			weapp_id2name={}
-			member_id2name={}
-			user_id = []
-			webapp_id = [record['webapp_user_id'] for record in data ]
-			# member_id = [record['member_id'] for record in data ]
-			members = member_models.Member.objects.filter(webapp_id__in = webapp_id)
-			webapp_id2member ={}
+
+			#username(webapp_user_id/member_id)
+			webapp_id_list = map(long,[record['webapp_user_id'] for record in data ])#大
+			#测试：member里的id好像和webapp_id不一样
+			members = member_models.Member.objects.filter(webapp_id__in = webapp_id_list)#小
+			webapp_id2name ={}
 			for member in members:
-				if member.webapp_id not in webapp_id2member:
-					webapp_id2member[webapp_id] = member
+				w_id = long(member.webapp_id)
+				if w_id not in webapp_id2name:
+					webapp_id2name[w_id] = member.username
 				else:
-					pass
-			webapp_id2member_id = {}
-			for record in data:
-				print record
-				#测试后删除：非member，member值是空还是终端异常》？
-				webapp_id = record['webapp_user_id']
-				print 'member_id 获取值:start……'
-				member_id = record['member_id']
-				print 'member_id :end ……'
-				print '+++++++++++'
+					webapp_id2name[w_id] = member.username
+			for item in webapp_id_list:
+				if item not in webapp_id2name:
+					webapp_id2name[item] = u"非会员"
 
-				if webapp_id not in webapp_id2member_id:
-					webapp_id2member_id[webapp_id]=member_id
-				else:
-					webapp_id2member_id[webapp_id]=member_id
-				print '-----------'
-			print webapp_id2member_id
-
-			for item in webapp_id2member_id:
-				if webapp_id2member_id[item]:
-					pass
-				else:
-					pass
+			#processing data
 			num = 0
 			for record in data:
-				export_record={}
 				selec =[]
 				qa = []
 				shortcuts =[]
+				export_record = []
+
 				num = num+1
-				webapp_user_id = record['webapp_user_id']
-				member_id = record['member_id']
-
-
+				name = webapp_id2name[record['webapp_user_id']]
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
@@ -235,15 +218,15 @@ class surveyParticipances_Export(resource.Resource):
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
-
 				for s in fields_shortcuts:
 					s_v = record[u'termite_data'][s][u'value']
 					shortcuts.append(s_v)
 
-				export_record = []
+				# don't change the order
 				export_record.append(num)
-				export_record.append(webapp_user_id)
+				export_record.append(name)
 				export_record.append(create_at)
+
 				for item in selec:
 					export_record.append(item)
 				for item in qa:
@@ -253,18 +236,18 @@ class surveyParticipances_Export(resource.Resource):
 
 				export_data.append(export_record)
 
-			#workboos,worksheet
-			wb = wb = xlwt.Workbook(encoding='utf-8')
+			#workbook/sheet
+			wb = xlwt.Workbook(encoding='utf-8')
 			ws = wb.add_sheet('id%s'%export_id)
 			header_style = xlwt.XFStyle()
 
-			#fields
+			##write fields
 			row = col = 0
 			for h in fields_pure:
 				ws.write(row,col,h)
 				col += 1
 
-			#data
+			##write data
 			row = 0
 			lens = len(export_data[0])
 			for record in export_data:
@@ -276,6 +259,7 @@ class surveyParticipances_Export(resource.Resource):
 			except:
 				print 'EXPORT EXCEL FILE SAVE ERROR'
 				print '/static/upload/%s'%excel_file_name
+
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
 		except:
