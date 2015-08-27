@@ -70,7 +70,6 @@ def step_impl(context, user):
 		if hasattr(context, 'page'):
 			context.url += '&page=' + str(context.page)
 	response = context.client.get(bdd_util.nginx(context.url))
-	print response, "?????????????????????", context.url
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
 	for member_item in items:
