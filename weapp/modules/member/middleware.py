@@ -330,6 +330,10 @@ class RedirectBySctMiddleware(object):
 		if is_js_config(request):
 			return None
 
+		#不处理非会员修改地址的请求
+		if not request.user_profile and ('model=address&action=list' in request.META.get('HTTP_REFERER', "") or 'model=address&action=add' in request.META.get('HTTP_REFERER', "")):
+			return None
+
 		response = self.process_sct_in_url(request)
 		if response:
 			return response
@@ -948,11 +952,6 @@ class OAUTHMiddleware(object):
 
 		#对于非webapp请求和非pc商城地方请求不进行处理
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
-			return None
-
-		#不处理非会员修改地址的请求
-		if 'model=address&action=list' in request.META.get('HTTP_REFERER', "") or 'model=address&action=add' in request.META.get('HTTP_REFERER', ""):
-			print "-----------------<log>------------", request.user_profile
 			return None
 
 		# if is_request_for_api(request):
