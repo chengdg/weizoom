@@ -217,6 +217,7 @@ def step_impl(context, user, pay_interface_name):
 
 	pay_interface_type = __name_to_type(pay_interface_name)
 	owner_id = bdd_util.get_user_id_for(user)
+	# 按照名字获取ID
 	interface = PayInterface.objects.get(owner_id=owner_id, type=pay_interface_type)
 
 	#response = context.client.get('/mall2/pay_interface/', {'id': interface.id})
@@ -234,9 +235,26 @@ def step_impl(context, user, pay_interface_name):
 			param["pay_version"] = 0 if data['version'] == 'V2' else 1 # V3=>1
 	response = context.client.post('/mall2/pay_interface/?id=%d' % interface.id, param)
 
-# 	db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, description=pay_interface_description)
-# 	pay_interface = json.loads(context.text)
-# 	data = __fill_post_data(pay_interface)
 
-# 	url = '/mall/editor/pay_interface/update/%d/' % db_pay_interface.id
-# 	context.client.post(url, data)
+@when(u"{user}\"{action}\"支付方式\"{pay_interface_name}\"")
+def step_impl(context, user, action, pay_interface_name):
+	"""
+	停用/开启支付方式
+	"""
+	pay_interface_type = __name_to_type(pay_interface_name)
+	owner_id = bdd_util.get_user_id_for(user)
+	# 按照名字获取ID
+	interface = PayInterface.objects.get(owner_id=owner_id, type=pay_interface_type)
+
+	is_enable = None
+	if action == u"开启":
+		is_enable = True
+	elif action == u"停用":
+		is_enable = False
+	param = {
+		"id": interface.id,
+		"is_enable": is_enable
+	}
+
+	response = context.client.post('/mall2/api/pay_interface/', param)
+	bdd_util.assert_api_call_success(response)

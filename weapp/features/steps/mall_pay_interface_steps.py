@@ -81,44 +81,9 @@ def __fill_post_data(pay_interface):
 # 		__add_pay_interface(context, pay_interface)
 
 
-# @when(u"{user}更新支付方式'{pay_interface_description}'")
-# def step_impl(context, user, pay_interface_description):
-# 	db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, description=pay_interface_description)
-# 	pay_interface = json.loads(context.text)
-# 	data = __fill_post_data(pay_interface)
-
-# 	url = '/mall/editor/pay_interface/update/%d/' % db_pay_interface.id
-# 	context.client.post(url, data)
 
 
-'''
-@then(u"{user}能获得支付方式列表")
-def step_impl(context, user):
-	expected = json.loads(context.text)
- 	if expected['type'] == u'微信支付':
- 		pay_interface_type = PAY_INTERFACE_WEIXIN_PAY
- 	elif expected['type'] == u'货到付款':
- 		pay_interface_type = PAY_INTERFACE_COD
- 	elif expected['type'] == u'微众卡支付':
- 		pay_interface_type = PAY_INTERFACE_WEIZOOM_COIN
- 	elif expected['type'] == u'支付宝':
- 		pay_interface_type = PAY_INTERFACE_ALIPAY
 
-	url = "/mall2/pay_interface_list/"
-	response = context.client.get(url)
-	context = response.context
-	pay_interfaces = context['pay_interfaces'] # 参考 pay_interface.py
-
-	actual = []
-	for interface in pay_interfaces:
-		data = {
-			'type': interface.name
-		}
-		actual.append(data)
-
-
-	bdd_util.assert_dict(expected, actual)
-'''
 
 
 # @then(u"{user}能获得支付方式")

@@ -58,11 +58,12 @@ Scenario: 更新支付方式:微信支付
 			"weixin_sign": "423450"
 		}
 		"""
+	And jobs"停用"支付方式"微信支付"
 	Then jobs能获得支付方式
 		"""
 		{
 			"type": "微信支付",
-			"is_active": "启用",
+			"is_active": "停用",
 			"weixin_appid": "123450",
 			"weixin_partner_id": "223450", 
 			"weixin_partner_key": "323450", 
