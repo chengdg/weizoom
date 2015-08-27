@@ -554,8 +554,11 @@ input,textarea{
     padding-left: 10px;
 }*/
 .xui-productDetailPage .xui-understock{
-    float: right;
-    margin-top:-25px;
+    /*float: right;*/
+    /*margin-top:-25px;*/
+    vertical-align: middle;
+    line-height: 32px;
+    margin-left:5px;
 }
 .xui-productDetailPage .xui-productModel-section .xui-inner-tag {
     font-size:0.9rem;
@@ -2794,10 +2797,10 @@ input.ui-input-text, textarea.ui-input-text {
     line-height: 28px;
 }*/
 .xui-shoppingCartPage .xui-deleteBtn{
-    width: 17px;
-    height:17px;
-    right: -12px;
-    top:4px;
+    width: 23px;
+    height: 25px;
+    right: -5px;
+    top: 0;
 }
 .xui-shoppingCartPage .xui-selectedProductList>label{
     width: 40px;
@@ -3015,7 +3018,7 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-shoppingCartPage .xui-invalidProductInfo .xui-deleteBtn{
     top:50px;
-    right: -1px;
+    right: -5px;
 }
 
 @media screen and (max-width: 320px){

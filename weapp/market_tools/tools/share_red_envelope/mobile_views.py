@@ -78,7 +78,7 @@ def get_share_red_envelope(request):
             if (coupon_rule.is_active
                     and coupon_rule.remained_count
                     and coupon_rule.end_date > datetime.now()
-                    and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
+                    and red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
                 coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
                 if coupon:
                     GetRedEnvelopeRecord.objects.create(
@@ -107,7 +107,7 @@ def get_share_red_envelope(request):
         if (coupon_rule.is_active
             and coupon_rule.remained_count
             and coupon_rule.end_date > datetime.now()
-            and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
+            and red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
             coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
             if coupon:
                 relation = RedEnvelopeToOrder.objects.create(

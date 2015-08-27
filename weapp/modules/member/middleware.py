@@ -55,7 +55,7 @@ class CleanUpCookieMiddleware(object):
 	清除缓存的中间件
 	"""
 	def process_request(self, request):
-		
+
 		#added by duhao
 		if is_product_stocks_request(request):
 			return None
@@ -921,6 +921,7 @@ class OAUTHMiddleware(object):
 		return webapp_user
 
 	def process_request(self, request):
+		print request.META['HTTP_REFERER'],"GGGG"
 		#added by duhao
 		if is_product_stocks_request(request):
 			return None
@@ -944,6 +945,9 @@ class OAUTHMiddleware(object):
 
 		# 不处理临时二维码请求 by liupeiyu
 		if request.is_access_temporary_qrcode_image:
+			return None
+
+		if "model=address&action=list" in request.META['HTTP_REFERER'] or "model=address&action=add" in request.META['HTTP_REFERER']:
 			return None
 
 		#对于非webapp请求和非pc商城地方请求不进行处理
@@ -1025,7 +1029,7 @@ class OAUTHMiddleware(object):
 				if response:
 					return response
 
-				if response_data.has_key('openid'):	
+				if response_data.has_key('openid'):
 					weixin_user_name = response_data['openid']
 					access_token = response_data['access_token']
 					social_accounts = SocialAccount.objects.filter(openid=weixin_user_name, webapp_id=request.user_profile.webapp_id)
@@ -1040,12 +1044,12 @@ class OAUTHMiddleware(object):
 					if not member:
 						watchdog_error(u'授权时创建会员信息失败1 %s' % weixin_user_name)
 						member = self.get_member_by(request, social_account)
-						watchdog_error(u'授权时创建会员信息失败2 %s' % weixin_user_name)						
+						watchdog_error(u'授权时创建会员信息失败2 %s' % weixin_user_name)
 
 					if ('share_red_envelope' in request.get_full_path() or 'refueling' in request.get_full_path())and member:
 						if (not member.user_icon) or (not member.user_icon.startswith('http')):
 							get_user_info(weixin_user_name, access_token, member)
-					
+
 					request.social_account = social_account
 					request.member = member
 					#处理分享链接
@@ -1171,9 +1175,9 @@ class OAUTHMiddleware(object):
 				response = HttpResponseRedirect(new_url)
 
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, url_fmt, max_age=60*60*24*365)
-				
+
 				shared_url_digest = _get_hexdigest_url(request.get_full_path())
-				
+
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
 				return response
 		return None

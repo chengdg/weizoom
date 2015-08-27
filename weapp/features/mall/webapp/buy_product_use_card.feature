@@ -87,7 +87,7 @@ Scenario:1 微众卡金额大于订单金额时进行支付
 		}
 		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待发货",
 			"final_price": 0.0,
@@ -103,7 +103,7 @@ Scenario:1 微众卡金额大于订单金额时进行支付
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000001'
 		"""
@@ -137,7 +137,7 @@ Scenario:2 微众卡金额等于订单金额时进行支付
 		"""
 
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待发货",
 			"final_price": 0.0,
@@ -153,7 +153,7 @@ Scenario:2 微众卡金额等于订单金额时进行支付
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000002'
 		"""
@@ -187,7 +187,7 @@ Scenario:3微众卡金额小于订单金额时进行支付
 
 	#bill获得创建订单失败的信息'您的微众卡余额不足！'
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 20.0,
@@ -203,7 +203,7 @@ Scenario:3微众卡金额小于订单金额时进行支付
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000003'
 		"""
@@ -249,7 +249,7 @@ Scenario:4 用微众卡购买商品时，输入错误的卡号密码
 		"""
 
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 50.0,
@@ -264,7 +264,7 @@ Scenario:4 用微众卡购买商品时，输入错误的卡号密码
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000001'
 		"""
@@ -296,7 +296,7 @@ Scenario:5 用已用完的微众卡购买商品时
 		"""
 
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 20.0,
@@ -311,7 +311,7 @@ Scenario:5 用已用完的微众卡购买商品时
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000003'
 		"""
@@ -355,7 +355,7 @@ Scenario:6用未激活的微众卡购买商品时
 		}
 		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 50.0,
@@ -370,7 +370,7 @@ Scenario:6用未激活的微众卡购买商品时
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000005'
 		"""
@@ -414,7 +414,7 @@ Scenario:7 用已过期的微众卡购买商品时
 		}
 		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 50.0,
@@ -429,7 +429,7 @@ Scenario:7 用已过期的微众卡购买商品时
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000006'
 		"""
@@ -461,7 +461,7 @@ Scenario:8用已使用过的微众卡购买商品时
 		"""
 
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待发货",
 			"final_price": 0.0,
@@ -477,7 +477,7 @@ Scenario:8用已使用过的微众卡购买商品时
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡'0000002'
 		"""
@@ -597,7 +597,7 @@ Scenario:9用10张微众卡共同支付
 		"""
 
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 40.0,
@@ -613,7 +613,7 @@ Scenario:9用10张微众卡共同支付
 				"count":1
 			}]
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获取微众卡
 		"""

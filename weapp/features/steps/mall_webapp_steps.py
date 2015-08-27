@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-import logging
-logger = logging.getLogger(__name__)
 from urllib import unquote
 from datetime import datetime, timedelta
 
@@ -361,6 +359,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#填充优惠券信息
 	# 根据优惠券规则名称填充优惠券ID
 	coupon = args.get('coupon', None)
+	print 'jz-----2', coupon
 	if coupon:
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
@@ -369,9 +368,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.response = response
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
 
-	# print 'post data ------------', data
 	response_json = json.loads(context.response.content)
-	# print 'response json----------', response_json
+	print 'response json----------', response_json
 	# if response_json['data'].get('msg', None):
 	# 	print 'response error message ---------------', response_json['data']['msg']
 	# if response_json['data'].get('detail', None):
@@ -397,12 +395,12 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.webapp_owner_name = webapp_owner_name
 
 OPERATION2STEPID = {
-	u'支付': u'When %s"支付"最新订单',
+	u'支付': u"When %s'支付'最新订单",
 	u'发货': u"When %s对最新订单进行发货",
-	u'完成': u'When %s"完成"最新订单',
-	u'退款': u"When %s对最新订单进行退款",
-	u'完成退款': u"When %s完成最新订单退款",
-	u'取消': u"When %s\"取消\"最新订单",
+	u'完成': u"When %s'完成'最新订单",
+	u'退款': u"When %s'退款'最新订单",
+	u'完成退款': u"When %s'完成退款'最新订单",
+	u'取消': u"When %s'取消'最新订单",
 }
 
 @when(u"微信用户批量消费{webapp_owner_name}的商品")

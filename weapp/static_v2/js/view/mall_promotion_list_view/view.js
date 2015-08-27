@@ -57,8 +57,6 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 			scope: this,
 			success: function(data) {
 				W.showHint('success', '结束成功!');
-				$trs.find('.xa-notFinishInfo').hide();
-				$trs.find('.xa-finishInfo').show();
 				$trs.find('.xa-remained-count').text("库存0");
 				$trs.css('background-color', 'yellow');
 				_.delay(function() {

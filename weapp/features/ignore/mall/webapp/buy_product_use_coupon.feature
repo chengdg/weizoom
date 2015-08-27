@@ -80,16 +80,16 @@ Scenario: 使用少于商品价格的优惠券金额进行购买
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "1元券",
 			"count": 2,
 			"members": ["bill"],
 			"coupon_ids": ["coupon_1", "coupon_2"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "1元券",
 			"coupon_id": "coupon_2",
@@ -109,7 +109,7 @@ Scenario: 使用少于商品价格的优惠券金额进行购买
 			"consumer": "",
 			"target": "bill"
 		}]
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	Then bill在jobs的webapp中拥有优惠券:ui
 		"""
@@ -129,7 +129,7 @@ Scenario: 使用少于商品价格的优惠券金额进行购买
 		}
 		"""
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -138,7 +138,7 @@ Scenario: 使用少于商品价格的优惠券金额进行购买
 			"coupon_type": "选择",
 			"coupon": "coupon_1"
 		}
-		'''
+		"""
 	Then bill获得支付结果:ui
 		"""
 		{
@@ -166,7 +166,7 @@ Scenario: 使用少于商品价格的优惠券金额进行购买
 		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "1元券",
 			"coupon_id": "coupon_2",
@@ -186,7 +186,7 @@ Scenario: 使用少于商品价格的优惠券金额进行购买
 			"consumer": "bill",
 			"target": "bill"
 		}]
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -197,16 +197,16 @@ Scenario: 使用多于商品价格的优惠券金额进行购买
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "10元券",
 			"count": 2,
 			"members": ["bill"],
 			"coupon_ids": ["coupon_1", "coupon_2"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "10元券",
 			"coupon_id": "coupon_2",
@@ -226,10 +226,10 @@ Scenario: 使用多于商品价格的优惠券金额进行购买
 			"consumer": "",
 			"target": "bill"
 		}]
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	When bill使用'不支付'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -238,7 +238,7 @@ Scenario: 使用多于商品价格的优惠券金额进行购买
 			"coupon_type": "选择",
 			"coupon": "coupon_1"
 		}
-		'''
+		"""
 	Then bill获得支付结果:ui
 		"""
 		{
@@ -248,7 +248,7 @@ Scenario: 使用多于商品价格的优惠券金额进行购买
 		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "10元券",
 			"coupon_id": "coupon_2",
@@ -267,7 +267,7 @@ Scenario: 使用多于商品价格的优惠券金额进行购买
 			"consumer": "bill",
 			"target": "bill"
 		}]
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -278,16 +278,16 @@ Scenario: 使用等于商品价格的优惠券金额进行购买
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "10元券",
 			"count": 2,
 			"members": ["bill"],
 			"coupon_ids": ["coupon_1", "coupon_2"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "10元券",
 			"coupon_id": "coupon_2",
@@ -307,10 +307,10 @@ Scenario: 使用等于商品价格的优惠券金额进行购买
 			"consumer": "",
 			"target": "bill"
 		}]
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品3",
@@ -319,10 +319,10 @@ Scenario: 使用等于商品价格的优惠券金额进行购买
 			"coupon_type": "选择",
 			"coupon": "coupon_1"
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "10元券",
 			"coupon_id": "coupon_2",
@@ -341,7 +341,7 @@ Scenario: 使用等于商品价格的优惠券金额进行购买
 			"consumer": "bill",
 			"target": "bill"
 		}]
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -353,16 +353,16 @@ Scenario: 输入错误的优惠券码进行购买
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "10元券",
 			"count": 2,
 			"members": ["bill"],
 			"coupon_ids": ["coupon_11111", "coupon_22222"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "10元券",
 			"coupon_id": "coupon_22222",
@@ -382,10 +382,10 @@ Scenario: 输入错误的优惠券码进行购买
 			"consumer": "",
 			"target": "bill"
 		}]
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -394,10 +394,10 @@ Scenario: 输入错误的优惠券码进行购买
 			"coupon_type": "输入",
 			"coupon": "coupon_3"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'优惠券码格式不正确':ui
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -406,11 +406,11 @@ Scenario: 输入错误的优惠券码进行购买
 			"coupon_type": "输入",
 			"coupon": "coupon_33333"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'请输入正确的优惠券号':ui
 	Given jobs登录系统
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "10元券",
 			"coupon_id": "coupon_22222",
@@ -430,7 +430,7 @@ Scenario: 输入错误的优惠券码进行购买
 			"consumer": "",
 			"target": "bill"
 		}]
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -442,15 +442,15 @@ Scenario: 输入手工发放的优惠券码进行购买
 	
 	Given jobs登录系统
 	When jobs手工为优惠券规则生成优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "1元券",
 			"count": 2,
 			"coupon_ids": ["coupon_11111", "coupon_22222"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "1元券",
 			"coupon_id": "coupon_22222",
@@ -470,7 +470,7 @@ Scenario: 输入手工发放的优惠券码进行购买
 			"consumer": "",
 			"target": "手工"
 		}]
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	Then bill在jobs的webapp中拥有优惠券:ui
 		"""
@@ -481,7 +481,7 @@ Scenario: 输入手工发放的优惠券码进行购买
 		}
 		"""
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -490,9 +490,9 @@ Scenario: 输入手工发放的优惠券码进行购买
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -501,7 +501,7 @@ Scenario: 输入手工发放的优惠券码进行购买
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'该优惠券已使用':ui
 	Then bill在jobs的webapp中拥有优惠券:ui
 		"""
@@ -513,7 +513,7 @@ Scenario: 输入手工发放的优惠券码进行购买
 		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "1元券",
 			"coupon_id": "coupon_22222",
@@ -532,7 +532,7 @@ Scenario: 输入手工发放的优惠券码进行购买
 			"consumer": "bill",
 			"target": "手工"
 		}]
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -545,16 +545,16 @@ Scenario: 输入别人的优惠券码进行购买
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "1元券",
 			"count": 2,
 			"members": ["tom"],
 			"coupon_ids": ["coupon_11111", "coupon_22222"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "1元券",
 			"coupon_id": "coupon_22222",
@@ -574,10 +574,10 @@ Scenario: 输入别人的优惠券码进行购买
 			"consumer": "",
 			"target": "tom"
 		}]
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -586,7 +586,7 @@ Scenario: 输入别人的优惠券码进行购买
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Then bill获得支付结果:ui
 		"""
 		{
@@ -594,7 +594,7 @@ Scenario: 输入别人的优惠券码进行购买
 		}
 		"""	
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -603,7 +603,7 @@ Scenario: 输入别人的优惠券码进行购买
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'该优惠券已使用':ui
 	Then bill在jobs的webapp中拥有优惠券:ui
 		"""
@@ -615,7 +615,7 @@ Scenario: 输入别人的优惠券码进行购买
 		"""
 	When tom访问jobs的webapp:ui
 	When tom使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -624,7 +624,7 @@ Scenario: 输入别人的优惠券码进行购买
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Then tom获得创建订单失败的信息'该优惠券已使用':ui
 	Then tom在jobs的webapp中拥有优惠券:ui
 		"""
@@ -646,7 +646,7 @@ Scenario: 输入别人的优惠券码进行购买
 		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "1元券",
 			"coupon_id": "coupon_22222",
@@ -665,7 +665,7 @@ Scenario: 输入别人的优惠券码进行购买
 			"consumer": "bill",
 			"target": "tom"
 		}]
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -676,17 +676,17 @@ Scenario: 使用优惠券购买影响库存
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "1元券",
 			"count": 2,
 			"members": ["bill"],
 			"coupon_ids": ["coupon_11111", "coupon_22222"]
 		}
-		'''
+		"""
 	Given jobs登录系统:ui
 	Then jobs能获取商品'商品4':ui
-		'''
+		"""
 		{
 			"name": "商品4",
 			"model": {
@@ -699,10 +699,10 @@ Scenario: 使用优惠券购买影响库存
 				}
 			} 
 		}
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品4",
@@ -711,10 +711,10 @@ Scenario: 使用优惠券购买影响库存
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Given jobs登录系统:ui
 	Then jobs能获取商品'商品4':ui
-		'''
+		"""
 		{
 			"name": "商品4",
 			"model": {
@@ -727,10 +727,10 @@ Scenario: 使用优惠券购买影响库存
 				}
 			} 
 		}
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	And bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品4",
@@ -739,11 +739,11 @@ Scenario: 使用优惠券购买影响库存
 			"coupon_type": "输入",
 			"coupon": "coupon_33333"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'请输入正确的优惠券号':ui
 	Given jobs登录系统:ui
 	Then jobs能获取商品'商品4':ui
-		'''
+		"""
 		{
 			"name": "商品4",
 			"model": {
@@ -756,7 +756,7 @@ Scenario: 使用优惠券购买影响库存
 				}
 			} 
 		}
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -765,16 +765,16 @@ Scenario: 使用满金额条件的优惠券
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "满10元可用1元券",
 			"count": 2,
 			"members": ["bill"],
 			"coupon_ids": ["coupon_11111", "coupon_22222"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "满10元可用1元券",
 			"coupon_id": "coupon_22222",
@@ -794,12 +794,12 @@ Scenario: 使用满金额条件的优惠券
 			"consumer": "",
 			"target": "bill"
 		}]
-		'''
+		"""
 
 	#购买不满足金额限制的商品，失败
 	When bill访问jobs的webapp:ui
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -808,12 +808,12 @@ Scenario: 使用满金额条件的优惠券
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'该优惠券不满足使用金额限制':ui
 
 	#购买商品价格等于金额限制的商品，成功
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品3",
@@ -822,7 +822,7 @@ Scenario: 使用满金额条件的优惠券
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Then bill获得支付结果:ui
 		"""
 		{
@@ -832,7 +832,7 @@ Scenario: 使用满金额条件的优惠券
 
 	#购买商品价格大于金额限制的商品，成功
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品4",
@@ -841,7 +841,7 @@ Scenario: 使用满金额条件的优惠券
 			"coupon_type": "输入",
 			"coupon": "coupon_22222"
 		}
-		'''
+		"""
 	Then bill获得支付结果:ui
 		"""
 		{
@@ -850,7 +850,7 @@ Scenario: 使用满金额条件的优惠券
 		"""	
 	Given jobs登录系统
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "满10元可用1元券",
 			"coupon_id": "coupon_22222",
@@ -870,7 +870,7 @@ Scenario: 使用满金额条件的优惠券
 			"consumer": "bill",
 			"target": "bill"
 		}]
-		'''
+		"""
 
 
 @ui @ui-mall @ui-mall.webapp @ui-market_tool.coupon @ui-market_tool
@@ -880,7 +880,7 @@ Scenario: 使用过期的优惠券
 	
 	Given jobs登录系统
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "1元券",
 			"count": 2,
@@ -888,9 +888,9 @@ Scenario: 使用过期的优惠券
 			"members": ["bill"],
 			"coupon_ids": ["coupon_11111", "coupon_22222"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "1元券",
 			"coupon_id": "coupon_22222",
@@ -906,7 +906,7 @@ Scenario: 使用过期的优惠券
 			"consumer": "",
 			"target": "bill"
 		}]
-		'''
+		"""
 	When bill访问jobs的webapp:ui
 	Then bill在jobs的webapp中拥有优惠券:ui
 		"""
@@ -926,7 +926,7 @@ Scenario: 使用过期的优惠券
 		}
 		"""
 	When bill使用'货到付款'购买jobs的商品:ui
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -935,5 +935,5 @@ Scenario: 使用过期的优惠券
 			"coupon_type": "输入",
 			"coupon": "coupon_11111"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'该优惠券已使用':ui

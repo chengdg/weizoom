@@ -12,8 +12,8 @@
 				</table>
 			</div>
 		</div>
-		<div class="modal-footer">
-			<div class="xa-order-ship-info">
+		<div class="modal-footer pr">
+			<div class="xa-order-ship-info clearfix pt15" style="padding: 0 240px 0 30px;">
 			</div>
 			<button class="btn btn-success wui-dialogbtn">确认支付</button>
 		</div>
@@ -70,7 +70,8 @@
 	</tbody>
 </script>
 <script id="mall-order-pay-dialog-ship-info-tmpl-src" type="text/x-jquery-tmpl">
-	<p class="xui-innerwrap" style="float:left">收货信息:${order.ship_name} </P>
-	<p class="xui-innerwrap">${order.ship_tel}</p>
-	<p class="xui-innerwrap">${order.area_str} ${order.ship_address}</p>
+	<ul class="disT w tl">
+		<li class="disTc pr10" style="width:35%;white-space:nowrap;">收货信息:${order.ship_name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${order.ship_tel}</li>
+		<li class="disTc pl10 pr10">${order.area_str} ${order.ship_address}</li>
+	</ul>
 </script>

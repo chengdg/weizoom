@@ -56,7 +56,7 @@ Background:
 		| bill2         | 2014-6-5 08:00:00  | 推广扫码      |
 		| bill3         | 2014-6-4 08:00:00  | 直接关注      |
 
-@member @memberList @eugeneX
+@member @memberList
 Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 	Given jobs登录系统
 	And jobs设置分页查询参数

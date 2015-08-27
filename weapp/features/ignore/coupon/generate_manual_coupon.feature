@@ -44,15 +44,15 @@ Scenario: 生成多次优惠券
 
 	Given jobs登录系统
 	When jobs手工为优惠券规则生成优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "优惠券规则1",
 			"count": 2,
 			"coupon_ids": ["coupon_1", "coupon_2"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "优惠券规则1",
 			"coupon_id": "coupon_2",
@@ -70,17 +70,17 @@ Scenario: 生成多次优惠券
 			"status": "未使用",
 			"target": "手工"
 		}]
-		'''
+		"""
 	When jobs手工为优惠券规则生成优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "优惠券规则1",
 			"count": 1,
 			"coupon_ids": ["coupon_3"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "优惠券规则1",
 			"coupon_id": "coupon_3",
@@ -106,17 +106,17 @@ Scenario: 生成多次优惠券
 			"status": "未使用",
 			"target": "手工"
 		}]
-		'''
+		"""
 	When jobs手工为优惠券规则生成优惠券
-		'''
+		"""
 		{
 			"coupon_rule": "优惠券规则2",
 			"count": 1,
 			"coupon_ids": ["coupon_4"]
 		}
-		'''
+		"""
 	Then jobs能获得优惠券列表
-		'''
+		"""
 		[{
 			"coupon_rule": "优惠券规则2",
 			"coupon_id": "coupon_4",
@@ -150,9 +150,9 @@ Scenario: 生成多次优惠券
 			"status": "未使用",
 			"target": "手工"
 		}]
-		'''
+		"""
 	Given bill登录系统
 	Then bill能获得优惠券列表
-		'''
+		"""
 		[]
-		'''
+		"""
