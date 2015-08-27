@@ -72,26 +72,26 @@ class lottery_prize(resource.Resource):
 			response.errMsg = u'积分不足，请先关注'
 			return response.get_response()
 
-		if member:
-			member_id = request.member.id
-			data['member_id'] = member_id
-			lottery_participance = app_models.lotteryParticipance.objects.get(belong_to=record_id, member_id=member_id)
+		try:
+			if member:
+				member_id = request.member.id
+				data['member_id'] = member_id
+				lottery_participance = app_models.lotteryParticipance.objects.get(belong_to=record_id, member_id=member_id)
+			else:
+				lottery_participance = app_models.lotteryParticipance.objects.get(belong_to=record_id, webapp_user_id=webapp_user_id)
+		except:
 			#如果当前用户没有参与过该活动，则创建新记录
-			if not lottery_participance:
-				data['belong_to'] = record_id
-				data['lottery_date'] = datetime.today()
-				data['owner_id'] = request.user.id
-				data['count'] = 2 if limitation == 'twice_per_day' else 1 #根据抽奖活动限制，初始化可参与次数
-				lottery_participance = app_models.lotteryParticipance(**data)
-				lottery_participance.save()
-		else:
-
-
+			data['belong_to'] = record_id
+			data['lottery_date'] = datetime.today()
+			data['owner_id'] = request.user.id
+			data['count'] = 2 if limitation == 'twice_per_day' else 1 #根据抽奖活动限制，初始化可参与次数
+			lottery_participance = app_models.lotteryParticipance(**data)
+			lottery_participance.save()
 
 		#根据送积分规则，查询当前用户是否已中奖
 		if delivery_setting == 'true':
 			pass
-		webapp_user.consume_integral(-int(prize_detail), u'参与抽奖，获得参与积分')
+		webapp_user.consume_integral(-int(delivery), u'参与抽奖，获得参与积分')
 		#判定是否中奖
 		if participants_count == 0 or winner_count / float(participants_count) >= chance:
 			result = u'谢谢参与'
@@ -136,5 +136,6 @@ class lottery_prize(resource.Resource):
 							#查询该用户是否已抽到过该优惠券
 				result = lottery_prize['title']
 				#发奖
-
+		response = create_response(200)
 		response.data = {'index': result}
+		return response.get_response()
