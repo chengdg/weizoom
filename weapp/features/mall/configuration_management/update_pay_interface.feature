@@ -2,7 +2,7 @@
 Feature:更新支付方式
 	Jobs能通过管理系统更新"支付方式"
 
-@mall @mall.pay_interface
+@mall2 @mall.pay_interface @wip.pi1
 Scenario: 更新支付方式:微信支付
 	Jobs更新"微信支付"后
 	1. jobs能获取更新后的微信支付
@@ -10,10 +10,10 @@ Scenario: 更新支付方式:微信支付
 
 	Given jobs登录系统
 	When jobs添加支付方式
+		#	"description": "我的微信支付",
 		"""
 		[{
 			"type": "微信支付",
-			"description": "我的微信支付",
 			"is_active": "启用",
 			"weixin_appid": "12345", 
 			"weixin_partner_id": "22345", 
@@ -21,11 +21,10 @@ Scenario: 更新支付方式:微信支付
 			"weixin_sign": "42345"
 		}]
 		"""
-	Then jobs能获得支付方式'我的微信支付'
+	Then jobs能获得支付方式
 		"""
 		{
 			"type": "微信支付",
-			"description": "我的微信支付",
 			"is_active": "启用",
 			"weixin_appid": "12345", 
 			"weixin_partner_id": "22345", 
@@ -47,36 +46,34 @@ Scenario: 更新支付方式:微信支付
 		}]
 		"""
 	Given jobs登录系统
-	When jobs更新支付方式'我的微信支付'
+	When jobs更新支付方式'微信支付'
+	#			"is_active": "停用",
 		"""
 		{
 			"type": "微信支付",
-			"description": "我的微信支付*",
-			"is_active": "停用",
+			"version": "V2",
 			"weixin_appid": "123450", 
 			"weixin_partner_id": "223450", 
 			"weixin_partner_key": "323450", 
 			"weixin_sign": "423450"
 		}
 		"""
-	Then jobs能获得支付方式'我的微信支付*'
+	Then jobs能获得支付方式
 		"""
 		{
 			"type": "微信支付",
-			"description": "我的微信支付*",
-			"is_active": "停用",
-			"weixin_appid": "123450", 
+			"is_active": "启用",
+			"weixin_appid": "123450",
 			"weixin_partner_id": "223450", 
 			"weixin_partner_key": "323450", 
 			"weixin_sign": "423450"
 		}
 		"""
 	Given nokia登录系统
-	Then nokia能获得支付方式'我的微信支付'
+	Then nokia能获得支付方式
 		"""
 		{
 			"type": "微信支付",
-			"description": "我的微信支付",
 			"is_active": "启用",
 			"weixin_appid": "1", 
 			"weixin_partner_id": "2", 
