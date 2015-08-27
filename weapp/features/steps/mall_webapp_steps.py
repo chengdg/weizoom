@@ -7,7 +7,6 @@ from behave import *
 
 from test import bdd_util
 from features.testenv.model_factory import *
-from tools.regional.models import *
 
 from django.test.client import Client
 from mall.models import *
@@ -15,7 +14,7 @@ from mall.promotion.models import *
 from modules.member.models import *
 import mall_product_steps as product_step_util
 from .steps_db_util import (
-    get_custom_model_id_from_name, get_product_model_keys
+    get_custom_model_id_from_name, get_product_model_keys, get_area_ids
 )
 
 def __get_date(str):
@@ -264,53 +263,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	order_type = args.get('type', 'normal')
 
 	# 处理中文地区转化为id，如果数据库不存在的地区则自动添加该地区
-	ship_area = args.get('ship_area')
-	if ship_area:
-		areas = ship_area.split(' ')
-	else:
-		areas = '北京市 北京市 海淀区'.split(' ')
-		#print(u'没有邮寄地区')
-	if len(areas) > 0:
-		pros = Province.objects.filter(
-			name = areas[0]
-		)
-		pro_count = pros.count()
-		if pro_count == 0:
-			province = Province.objects.create(
-				name = areas[0]
-			)
-			pro_id = province.id
-		else:
-			pro_id = pros[0].id
-		ship_area = str(pro_id)
-	if len(areas) > 1:
-		cities = City.objects.filter(
-			name = areas[1]
-		)
-		city_count = cities.count()
-		if city_count == 0:
-			city = City.objects.create(
-				name=areas[1],
-				zip_code = '',
-				province_id = pro_id
-			)
-			city_id = city.id
-		else:
-			city_id = cities[0].id
-		ship_area = ship_area + '_' + str(city_id)
-	if len(areas) > 2:
-		dis = District.objects.filter(
-			name = areas[2]
-		)
-		dis_count = dis.count()
-		if dis_count == 0:
-			district = District.objects.create(
-				name = areas[2],
-				city_id = city_id
-			)
-			ship_area = ship_area + '_' + str(district.id)
-		else:
-			ship_area = ship_area + '_' + str(dis[0].id)
+	ship_area = get_area_ids(args.get('ship_area'))
 
 	data = {
 		"woid": webapp_owner_id,
@@ -359,7 +312,6 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#填充优惠券信息
 	# 根据优惠券规则名称填充优惠券ID
 	coupon = args.get('coupon', None)
-	print 'jz-----2', coupon
 	if coupon:
 		data['is_use_coupon'] = 'true'
 		data['coupon_id'] = coupon
@@ -369,7 +321,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#response结果为: {"errMsg": "", "code": 200, "data": {"msg": null, "order_id": "20140620180559"}}
 
 	response_json = json.loads(context.response.content)
-	print 'response json----------', response_json
+	# print 'response json----------', response_json
 	# if response_json['data'].get('msg', None):
 	# 	print 'response error message ---------------', response_json['data']['msg']
 	# if response_json['data'].get('detail', None):
@@ -969,20 +921,20 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response = context.client.post(bdd_util.nginx(url), data, follow=True)
 
 
-def __get_address_id(areas):
-	if not areas:
-		areas = u'北京市 北京市 海淀区'
-	areas = areas.split(' ')
-	province = Province.objects.get(name=areas[0])
-	city = City.objects.get(name=areas[1])
-	district = District.objects.get(name=areas[2])
-	return '%d_%d_%d' % (province.id, city.id, district.id)
+# def __get_address_id(areas):
+# 	if not areas:
+# 		areas = u'北京市 北京市 海淀区'
+# 	areas = areas.split(' ')
+# 	province = Province.objects.get(name=areas[0])
+# 	city = City.objects.get(name=areas[1])
+# 	district = District.objects.get(name=areas[2])
+# 	return '%d_%d_%d' % (province.id, city.id, district.id)
 
 @when(u"{webapp_user_name}设置{webapp_owner_name}的webapp的收货地址")
 def step_impl(context, webapp_user_name, webapp_owner_name):
 	ship_info = json.loads(context.text)
 	data = {
-		'area': __get_address_id(ship_info['area']),
+		'area': get_area_ids(ship_info['area']),
 		'ship_address': ship_info.get('ship_address', '泰兴大厦'),
 		'ship_name': ship_info.get('ship_name', webapp_user_name),
 		'ship_tel': ship_info.get('ship_tel', '13811223344')
@@ -1000,7 +952,7 @@ def _create_address(context, address_info):
 
 	ship_info = {
 		'ship_address': address_info.get('ship_address', u'泰兴大厦'),
-		'area': __get_address_id(address_info.get('area')),
+		'area': get_area_ids(address_info.get('area')),
 		'ship_tel': address_info.get("ship_tel", '18612456555'),
 		'ship_name': address_info.get("ship_name", u"你大爷"),
 	}

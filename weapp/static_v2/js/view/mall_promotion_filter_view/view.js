@@ -30,6 +30,7 @@ W.view.mall.PromotionFilterView = Backbone.View.extend({
     },
 
     onClickSearchButton: function(){
+        xlog("in onClickSearchButton()");
         var data = this.getFilterData();
         this.trigger('search', data);
     },

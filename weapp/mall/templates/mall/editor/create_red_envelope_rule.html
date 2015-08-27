@@ -130,12 +130,11 @@
             <div class=""><input type="radio" class="xa-select-time" name="prize-time" {% if red_envelope_rule.limit_time %}{%else%}checked{%endif%}>
                 <div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
                     <input
-                    style="width:132px!important; margin-left:12px;"
+                    style="width:132px!important;cursor:pointer;"
                     type="text"
                     class="form-control xui-datePicker xui-greyColor"
                     id="start_date"
                     name="start_date"
-                    style=""
                     value="{% if not red_envelope_rule.limit_time %}{{red_envelope_rule.start_time|date:"Y-m-d H:i"}}{%endif%}"
                     readonly="readonly"
                     data-validate="require-notempty"
@@ -151,7 +150,7 @@
                 至
                 <div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
                     <input
-                    style="width:132px!important;"
+                    style="width:132px!important;cursor:pointer;"
                     type="text"
                     class="form-control xui-datePicker xui-greyColor"
                     id="end_date"
@@ -235,7 +234,7 @@ $(document).ready(function(){
   $('.xa-select-time').on('click', function(e){
       var $input = $(e.target);
       if($input.prop('checked')){
-          $('input[data-ui-role="date-picker"]').removeAttr('disabled');
+          $('input[data-ui-role="date-picker"]').removeAttr('disabled').css('cursor','pointer');
           $('input[data-ui-role="date-picker"]').attr('data-validate', 'require-notempty');
       }
   });
@@ -243,7 +242,7 @@ $(document).ready(function(){
   $('.xa-forever').on('click', function(e){
       var $input = $(e.target);
       if($input.prop('checked')){
-          $('input[data-ui-role="date-picker"]').removeAttr('data-validate').attr('disabled', 'disabled').parent().removeClass('has-error');
+          $('input[data-ui-role="date-picker"]').removeAttr('data-validate').attr('disabled', 'disabled').css('cursor','not-allowed').parent().removeClass('has-error');
           $('input[data-ui-role="date-picker"]').val("");
           $('.xa-errorHintContainer .errorHint').text("");
       }

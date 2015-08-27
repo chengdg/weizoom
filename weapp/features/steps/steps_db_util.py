@@ -10,6 +10,7 @@ from mall.models import (
 from test import bdd_util
 from modules.member.models import WebAppUser
 from features.testenv.model_factory import *
+from tools.regional.models import District, City, Province
 from mall.promotion.models import Coupon
 
 
@@ -154,7 +155,6 @@ def set_order_dict(order, profile):
     express_value = express_util.get_value_by_name(order.get('logistics'))
     type = _get_type_by_name(order.get('type'))
     pay_interface_type = _get_paytype_by_name(order.get('methods_of_payment'))
-
     webapp_user_id = 1
     if order.get('member'):
         webapp_user_name = order.get('member')
@@ -163,7 +163,7 @@ def set_order_dict(order, profile):
             webapp_user_id = WebAppUser.objects.get(member_id=member.id).id
         except:
             pass
-
+    area = get_area_ids(order.get('ship_area', None))
     order_model = OrderFactory(
         order_id=order.get('order_no'),
         express_company_name=express_value,
@@ -177,6 +177,8 @@ def set_order_dict(order, profile):
         ship_name=order.get('ship_name', u'收货人'),
         ship_tel=order.get('ship_tel', u'1333333333'),
         webapp_source_id=profile.webapp_id,
+        ship_address=order.get('ship_address', ''),
+        area=area
     )
     order_model.product_price = 0
     if order.get('order_time'):
@@ -240,7 +242,7 @@ def _get_paytype_by_name(payment_name):
     for i in PAYTYPE2NAME:
         if PAYTYPE2NAME[i] == payment_name:
             return i
-    return 0
+    return -1
 
 
 def _get_type_by_name(type_name):
@@ -268,10 +270,6 @@ def get_model_property_from_web_page(context, property_name):
     model_property = filter(
                             lambda x: x.id == model_property.id,
                             model_properties)[0]
-    # from pprint import pprint
-    # print("*"*29, "model_property", "*"*29)
-    # pprint(model_property)
-    # print("*"*79)
     actual['name'] = model_property.name
     actual['type'] = u'图片' if model_property.type == PRODUCT_MODEL_PROPERTY_TYPE_IMAGE else u'文字'
     actual['values'] = []
@@ -295,3 +293,51 @@ def get_pay_interface(owner_id,type):
         return PayInterface.objects.get(owner_id=owner_id, type=type)
     except:
         return None
+
+
+def get_area_ids(areas=None):
+    if not areas:
+        areas = '北京市 北京市 海淀区'
+    areas = areas.replace(',', ' ').split(' ')
+    if len(areas) > 0:
+        pros = Province.objects.filter(
+            name = areas[0]
+        )
+        pro_count = pros.count()
+        if pro_count == 0:
+            province = Province.objects.create(
+                name = areas[0]
+            )
+            pro_id = province.id
+        else:
+            pro_id = pros[0].id
+        ship_area = str(pro_id)
+    if len(areas) > 1:
+        cities = City.objects.filter(
+            name = areas[1]
+        )
+        city_count = cities.count()
+        if city_count == 0:
+            city = City.objects.create(
+                name=areas[1],
+                zip_code = '',
+                province_id = pro_id
+            )
+            city_id = city.id
+        else:
+            city_id = cities[0].id
+        ship_area = ship_area + '_' + str(city_id)
+    if len(areas) > 2:
+        dis = District.objects.filter(
+            name = areas[2]
+        )
+        dis_count = dis.count()
+        if dis_count == 0:
+            district = District.objects.create(
+                name = areas[2],
+                city_id = city_id
+            )
+            ship_area = ship_area + '_' + str(district.id)
+        else:
+            ship_area = ship_area + '_' + str(dis[0].id)
+    return ship_area

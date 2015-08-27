@@ -46,6 +46,7 @@ Background:
 				"models": {
 					"S": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 						}
 				}
@@ -57,10 +58,12 @@ Background:
 				"models": {
 					"黑色": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 					}
 				}
@@ -72,10 +75,12 @@ Background:
 				"models": {
 					"黑色 M": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 					},
 					"白色 M": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 					}
 				}
@@ -87,6 +92,7 @@ Background:
 				"models": {
 					"白色 S": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 					}
 				}
@@ -96,10 +102,26 @@ Background:
 			"is_enable_model": "启用规格",
 			"model": {
 				"models": {
-					"黑色 S": {"price": 10.0,"stock_type": "无限"},
-					"白色 S": {"price": 10.0,"stock_type": "无限"},
-					"黑色 M": {"price": 10.0,"stock_type": "无限"},
-					"白色 M": {"price": 10.0,"stock_type": "无限"}
+					"黑色 S": {
+						"price": 10.0,
+						"weight": 1.0,
+						"stock_type": "无限"
+					},
+					"白色 S": {
+						"price": 10.0,
+						"weight": 1.0,
+						"stock_type": "无限"
+					},
+					"黑色 M": {
+						"price": 10.0,
+						"weight": 1.0,
+						"stock_type": "无限"
+					},
+						"白色 M": {
+						"price": 10.0,
+						"weight": 1.0,
+						"stock_type": "无限"
+					}
 				}
 			}
 		}]
@@ -119,6 +141,8 @@ Scenario: 1 删除商品规格值'S'
 				"models": {
 					"standard": {
 						"price": 0.0,
+						"weight": 1.0,
+						"stock_type": "有限",
 						"stocks": 0
 					}
 				}
@@ -135,6 +159,8 @@ Scenario: 1 删除商品规格值'S'
 				"models": {
 					"standard": {
 						"price": 0.0,
+						"weight": 1.0,
+						"stock_type": "有限",
 						"stocks": 0
 					}
 				}
@@ -151,10 +177,12 @@ Scenario: 1 删除商品规格值'S'
 				"models": {
 					"黑色 M": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 						},{
 					"白色 M": {
 						"price": 10.0,
+						"weight": 1.0,
 						"stock_type": "无限"
 						}
 					}
@@ -169,73 +197,121 @@ Scenario: 2 删除商品规格'颜色'
 	When jobs删除商品规格'颜色'
 	Then jobs能获取商品'商品2'
 		"""
-		[{
+		{
 			"name":"商品2",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品3'
 		"""
-		[{
+		{
 			"name":"商品3",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品4'
 		"""
-		[{
+		{
 			"name":"商品4",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品5'
 		"""
-		[{
+		{
 			"name":"商品5",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 
 @product @property @toSaleProduct @online_bug
 Scenario: 3 删除商品规格值 '黑'和 'M'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'的值'黑'
-	When jobs删除商品规格'大小'的值'M'
+	When jobs删除商品规格'尺寸'的值'M'
 	Then jobs能获取商品'商品2'
 		"""
-		[{
+		{
 			"name":"商品2",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	Then jobs能获取商品'商品3'
 		"""
-		[{
+		{
 			"name":"商品3",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	Then jobs能获取商品'商品5'
 		"""
-			[{
+			{
 				"name": "商品5",
 				"shelve_type": "下架",
 				"is_enable_model": "启用规格",
@@ -243,65 +319,106 @@ Scenario: 3 删除商品规格值 '黑'和 'M'
 					"models": {
 						"白色 S": {
 							"price":10.0,
-							"stock_type": 0
+							"weight": 1.0,
+							"stock_type": "无限"
 						}
 					}
 				}
-			}]
+			}
 		"""
 
 @product @property @toSaleProduct @online_bug
 Scenario: 4 删除商品规格'颜色'和'尺寸'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
-	And jobs删除商品规格'大小'
+	And jobs删除商品规格'尺寸'
 	Then jobs能获取商品'商品1'
 		"""
-		[{
+		{
 			"name":"商品1",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品2'
 		"""
-		[{
+		{
 			"name":"商品2",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品3'
 		"""
-		[{
+		{
 			"name":"商品3",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品4'
 		"""
-		[{
+		{
 			"name":"商品4",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品5'
 		"""
-		[{
+		{
 			"name":"商品5",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""

@@ -3191,7 +3191,7 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-orderListPage .wui-swiper-slide{
     background: #f0f0f0;
-    overflow-y:auto;
+    overflow-x:hidden;
 }
 .xui-orderListPage .xui-selectedProductList-productInfo{
     position: relative;
