@@ -1,4 +1,4 @@
-# __editor__ : "新新"
+# __editor__ : "新新8.27"
 
 Feature: 在webapp中使用优惠券购买商品
 """
