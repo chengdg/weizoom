@@ -252,6 +252,14 @@ def step_impl(context, user, pay_interface_name):
 		param['paysign_key'] = data['weixin_sign']
 		if 'version' in data:
 			param["pay_version"] = 0 if data['version'] == 'V2' else 1 # V3=>1
+	elif pay_interface_type == PAY_INTERFACE_ALIPAY:
+		param['type'] = pay_interface_type
+		param['key'] = data['key']
+		param['partner'] = data['partner']
+		param['ali_public_key'] = data['ali_public_key']
+		param['private_key'] = data['private_key']
+		param['seller_email'] = data['seller_email']
+		
 	response = context.client.post('/mall2/pay_interface/?id=%d' % interface.id, param)
 
 @when(u"{user}\"{action}\"支付方式\"{pay_interface_name}\"")
