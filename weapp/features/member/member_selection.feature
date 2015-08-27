@@ -39,25 +39,11 @@ Background:
 			[{
 				"name": "商品1",
 				"postage":10,
-				"price":100,
-				"model": {
-					"models": {
-						"standard": {
-							"stock_type": "无限"
-						}
-					}
-				}
+				"price":100
 			}, {
 				"name": "商品2",
 				"postage":15,
-				"price":100,
-				"model": {
-					"models": {
-						"standard": {
-							"stock_type": "无限"
-						}
-					}
-				}
+				"price":100
 			}]
 			"""
 		And jobs已添加支付方式
@@ -177,7 +163,6 @@ Background:
 			| 2015-3-4   | tom3     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-3-5   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
 
-@eugeneX
 Scenario:1 默认条件和空条件查询
 
 	Given jobs登录系统

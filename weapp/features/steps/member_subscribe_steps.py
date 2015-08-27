@@ -61,9 +61,16 @@ def step_impl(context, user):
 @then(u'{user}可以获得会员列表')
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
-	if not context.url:
-		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&count_per_page=50&page=1&enable_paginate=1'
+	if not hasattr(context, 'url'):
+		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&enable_paginate=1'
+		if hasattr(context, 'count_per_page'):
+			context.url += '&count_per_page=' + str(context.count_per_page)
+		else:
+			context.url += '&count_per_page=' + '50'
+		if hasattr(context, 'page'):
+			context.url += '&page=' + str(context.page)
 	response = context.client.get(bdd_util.nginx(context.url))
+	print response, "?????????????????????", context.url
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
 	for member_item in items:
@@ -126,6 +133,9 @@ def step_impl(context, user):
 			adict['source'] = row['source']
 			adict['tags'] = row['tags']
 			actual_data.append(adict)
+
+		for i in range(len(json_data)):
+			print json_data[i]['username'], "++++++", actual_data[i]['username']
 		print 'hello',json_data
 		print 'world',actual_data
 
@@ -179,4 +189,6 @@ def step_impl(context, member_a, user):
 	url = '/weixin/%s/'% user_profile.webapp_id
 	context.client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
 
-
+@when(u'{username}访问会员列表第{page_count}页')
+def step_impl(context, username, page_count):
+	context.page = page_count
