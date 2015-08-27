@@ -952,7 +952,7 @@ class OAUTHMiddleware(object):
 
 		#不处理非会员修改地址的请求
 		if 'model=address&action=list' in request.META.get('HTTP_REFERER', "") or 'model=address&action=add' in request.META.get('HTTP_REFERER', ""):
-			print "-----------------<log>------------"
+			print "-----------------<log>------------", request.user_profile
 			return None
 
 		# if is_request_for_api(request):
