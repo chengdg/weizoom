@@ -593,7 +593,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"number":"147258368"
 		},{
 			"order_no":"00011",
-			"logistics":"顺丰",
+			"logistics":"顺丰速运",
 			"number":"147258367"
 		}]
 		"""
