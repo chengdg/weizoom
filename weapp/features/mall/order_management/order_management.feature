@@ -206,7 +206,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 	Then jobs能获得订单"001"
 		"""
 		{
-			"order_no": "001-01",
+			"order_no": "001-100",
 			"order_time":"2015-08-08 12:00:00",
 			"methods_of_payment":"微信支付",
 			"member": "bill",
@@ -261,7 +261,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 	Then jobs能获得订单"001"
 		"""
 		{
-			"order_no": "001-01",
+			"order_no": "001-100",
 			"order_time":"2015-08-08 12:00:00",
 			"methods_of_payment":"微信支付",
 			"member": "bill",
@@ -357,7 +357,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 	Then jobs能获得订单"002"
 		"""
 		{
-			"order_no": "002-01",
+			"order_no": "002-400",
 			"order_time":"2015-08-09 12:00:00",
 			"methods_of_payment":"微信支付",
 			"member": "bill",
@@ -415,7 +415,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 	Then jobs能获得订单"002"
 		"""
 		{
-			"order_no": "002-01",
+			"order_no": "002-400",
 			"order_time":"2015-08-09 12:00:00",
 			"methods_of_payment":"微信支付",
 			"member": "bill",
