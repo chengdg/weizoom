@@ -131,7 +131,7 @@ def __type_to_name(type_id):
 @then(u"{user}能获得支付方式列表")
 def step_impl(context, user):
 	"""
-	只列出支付方式列表
+	只列出有效的支付方式列表
 	"""
 	expected = json.loads(context.text)
 
@@ -150,6 +150,26 @@ def step_impl(context, user):
 
 	bdd_util.assert_list(expected, result)
 
+@then(u"{user}获取全部支付方式列表")
+def step_impl(context, user):
+	"""
+	只列出支付方式列表
+	"""
+	expected = json.loads(context.text)
+
+	response = context.client.get('/mall2/pay_interface_list/')
+	interfaces = list(response.context['pay_interfaces'])
+	result = []
+	for pay_interface in interfaces:
+		_actual = {
+			'type': __type_to_name(pay_interface.type),
+			'is_active': u"启用" if pay_interface.is_active else u"停用"
+		}
+		result.append(_actual)
+			
+	print("expected: {}".format(expected))
+	print("actual: {}".format(result))
+	bdd_util.assert_list(expected, result)
 
 @given(u"{user}已添加支付方式")
 def step_impl(context, user):
