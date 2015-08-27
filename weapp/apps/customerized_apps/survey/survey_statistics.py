@@ -171,173 +171,100 @@ class surveyStatistics_Export(resource.Resource):
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
-		app_name = surveyStatistics_Export.app.split('/')[1]
-		excel_file_name = ('%s_%s.xls') % (app_name,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		app_name = surveyStatistics_Export.resource
+		excel_file_name = ('%s_%s.xls') % (app_name.split("/")[1],datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
 		try:
 			import xlwt
 			data = app_models.surveyParticipance.objects(belong_to=export_id)
-			# total = data.count()
-			termite_data = [ item['termite_data'] for item in data]
+			total = data.count()
+			webapp_user_id2termite_data={}
+			for item in data:
+				if item['webapp_user_id'] not in webapp_user_id2termite_data:
+					webapp_user_id2termite_data[item['webapp_user_id']] = {'created_at':item['created_at'],'termite_data':item['termite_data']}
 
 			#select sheet
 			select_data = {}
 			select_static ={}
-			qa_data = {}
 			qa_static = {}
-			for record in termite_data:
-				for s_i in record:
-					if record[s_i]['type']=='appkit.selection':
-						select_data[s_i]=record[s_i]
-					if record[s_i]['type']=='appkit.qa':
-						qa_data[s_i]=record[s_i]
-			#analaysis
+			for item in webapp_user_id2termite_data:
+				record = webapp_user_id2termite_data[item]
+				time = record['created_at']
+				for termite in record['termite_data']:
+					termite_dic = record['termite_data'][termite]
+					if termite_dic['type']=='appkit.selection':
+						select_data[termite] = termite_dic['value']
+					if termite_dic['type']=='appkit.qa':
+						if termite not in qa_static:
+							qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
+						else:
+							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
 
-				#select 是问题
-				#select_data[select]是字典内容
-				#select_data[select]['value']选项字典{u'08_QA1': {u'isSelect': False, u'type': u'radio'}, u'10_QA3': {u'isSelect': False, u'type': u'radio'}, u'09_QA2': {u'isSelect': True, u'type': u'radio'}}
-				#select_data[select]['value']->item选项
-				#select_data[select]['value'][item]['isSelect'] 选项结果 True/False
+			#select-data-processing
 			for select in select_data:
-				for item in select_data[select]['value']:
+				for item in select_data[select]:
 					if select not in select_static:
 						select_static[select]={}
 					if item not in select_static[select]:
 						select_static[select][item] = 0
-					if select_data[select]['value'][item]['isSelect'] == True:
+					if select_data[select][item]['isSelect'] == True:
 						select_static[select][item] += 1
 
-			print select_static
-			print '----------------'
-			print 'here'
+			#workbook/sheet
+			wb = xlwt.Workbook(encoding='utf-8')
 
+			#select_sheet
+			ws = wb.add_sheet(u'选择题')
+			header_style = xlwt.XFStyle()
+			s_dic = {0:u'A.',1:u'B.',2:u'C.',3:u'D.',4:u'E',5:u'F',6:u'G',7:u'H',8:u'I',9:u'J',10:u'K',11:u'L',12:u'M',13:u'N',14:u'O'}
+			select_num = 0
+			row = col =0
+			for s in select_static:
+				select_num += 1
+				ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'%total)
+				ws.write(row,col+1,u'参与人数/百分百')
+				row += 1
+				s_i_num = 0
+				for s_i in select_static[s]:
+					ws.write(row,col,s_dic[s_i_num]+s_i.split('_')[1])
+					s_num = select_static[s][s_i]
+					per = s_num*1.0/total*100
+					ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
+					row += 1
+					s_i_num += 1
+				ws.write(row,col,u'')
+				ws.write(row,col+1,u'')
+				row += 1
+				ws.write(row,col,u'')
+				ws.write(row,col+1,u'')
+				row += 1
 
-			# fields_raw = []
-			# fields_pure = []
-			# export_data = []
-            #
-			# #from sample to get fields4excel_file
-			# fields_raw.append(u'编号')
-			# fields_raw.append(u'用户名')
-			# fields_raw.append(u'提交时间')
-			# sample = data[0]
-            #
-			# fields_selec = []
-			# fields_qa= []
-			# fields_shortcuts = []
-            #
-			# sample_tm = sample['termite_data']
-            #
-			# for item in sample_tm:
-			# 	if sample_tm[item]['type']=='appkit.qa':
-			# 		if item in fields_qa:
-			# 			pass
-			# 		else:
-			# 			fields_qa.append(item)
-			# 	if sample_tm[item]['type']=='appkit.selection':
-			# 		if item in fields_selec:
-			# 			pass
-			# 		else:
-			# 			fields_selec.append(item)
-			# 	if sample_tm[item]['type']=='appkit.shortcuts':
-			# 		if item in fields_shortcuts:
-			# 			pass
-			# 		else:
-			# 			fields_shortcuts.append(item)
-			# fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
-            #
-            #
-			# for field in fields_raw:
-			# 	if '_' in field:
-			# 		purename = field.split('_')[1]
-			# 		if purename in trans2zh:
-			# 			fields_pure.append(trans2zh[purename])
-			# 		else:
-			# 			fields_pure.append(purename)
-			# 	else:
-			# 		fields_pure.append(field)
-            #
-			# #username(webapp_user_id/member_id)
-			# webapp_id_list = map(long,[record['webapp_user_id'] for record in data ])#大
-			# #测试：member里的id好像和webapp_id不一样
-			# members = member_models.Member.objects.filter(webapp_id__in = webapp_id_list)#小
-			# webapp_id2name ={}
-			# for member in members:
-			# 	w_id = long(member.webapp_id)
-			# 	if w_id not in webapp_id2name:
-			# 		webapp_id2name[w_id] = member.username
-			# 	else:
-			# 		webapp_id2name[w_id] = member.username
-			# for item in webapp_id_list:
-			# 	if item not in webapp_id2name:
-			# 		webapp_id2name[item] = u"非会员"
-            #
-			# #processing data
-			# num = 0
-			# for record in data:
-			# 	selec =[]
-			# 	qa = []
-			# 	shortcuts =[]
-			# 	export_record = []
-            #
-			# 	num = num+1
-			# 	name = webapp_id2name[record['webapp_user_id']]
-			# 	create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-            #
-			# 	for s in fields_selec:
-			# 		s_i = record[u'termite_data'][s][u'value']
-			# 		for i in s_i:
-			# 			if s_i[i]['isSelect'] == True:
-			# 				selec.append(i.split('_')[1])
-			# 	for s in fields_qa:
-			# 		s_v = record[u'termite_data'][s][u'value']
-			# 		qa.append(s_v)
-			# 	for s in fields_shortcuts:
-			# 		s_v = record[u'termite_data'][s][u'value']
-			# 		shortcuts.append(s_v)
-            #
-			# 	# don't change the order
-			# 	export_record.append(num)
-			# 	export_record.append(name)
-			# 	export_record.append(create_at)
-            #
-			# 	for item in selec:
-			# 		export_record.append(item)
-			# 	for item in qa:
-			# 		export_record.append(item)
-			# 	for item in shortcuts:
-			# 		export_record.append(item)
-            #
-			# 	export_data.append(export_record)
+			#qa_sheet
+			qa_num = 0
+			for q in qa_static:
+				qa_num += 1
+				row = col = 0
+				ws = wb.add_sheet(u'问题%d'%qa_num)
+				header_style = xlwt.XFStyle()
 
-			# #workbook/sheet
-			# wb = xlwt.Workbook(encoding='utf-8')
-			# ws = wb.add_sheet('id%s'%export_id)
-			# header_style = xlwt.XFStyle()
-            #
-			# ##write fields
-			# row = col = 0
-			# for h in fields_pure:
-			# 	ws.write(row,col,h)
-			# 	col += 1
-            #
-			# ##write data
-			# row = 0
-			# lens = len(export_data[0])
-			# for record in export_data:
-			# 	row +=1
-			# 	for col in range(lens):
-			# 		ws.write(row,col,record[col])
-			# try:
-			# 	wb.save(export_file_path)
-			# except:
-			# 	print 'EXPORT EXCEL FILE SAVE ERROR'
-			# 	print '/static/upload/%s'%excel_file_name
+				ws.write(row,col,u'提交时间')
+				ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'%total)
+
+				for item in qa_static[q]:
+					row +=1
+					ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
+					ws.write(row,col+1,item['answer'])
+
+			try:
+				wb.save(export_file_path)
+			except:
+				print 'EXPORT EXCEL FILE SAVE ERROR'
+				print '/static/upload/%s'%excel_file_name
 
 			response = create_response(200)
-			# response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 
