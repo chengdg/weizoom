@@ -5,7 +5,7 @@ Scenario: 安装完整测试数据
 	Given jobs登录系统
 	#商品
 	And jobs已添加商品规格
-		'''
+		"""
 		[{
 			"name": "颜色",
 			"type": "图片",
@@ -30,7 +30,7 @@ Scenario: 安装完整测试数据
 				"name": "L"
 			}]
 		}]
-		'''
+		"""
 	And jobs已添加商品分类
 		"""
 		[{

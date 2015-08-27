@@ -36,7 +36,7 @@ Background:
 @ignore 
 Scenario:选择时间段
 	jobs选择时间段确认后
-	1.jobs选择时间段时,获取对应的订单列表
+	1.jobs选择时间段时,可以看到订单列表列表
 
 	Given jobs登录系统
 	When jobs选择时间段
@@ -46,7 +46,7 @@ Scenario:选择时间段
 			"submit":"点击"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no":"0000003",
@@ -67,7 +67,7 @@ Scenario:选择时间段
 			"submit":"点击"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[{
 			"order_no":"0000008",
@@ -103,7 +103,7 @@ Scenario:选择时间段
 			"submit":"点击"
 		}
 		"""
-	Then jobs获取对应的订单
+	Then jobs可以看到订单列表
 		"""
 		[]
 		"""
