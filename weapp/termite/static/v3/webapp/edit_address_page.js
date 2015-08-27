@@ -9,6 +9,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
     initialize: function(options) {
         xlog('in EditAddressPage');
         this.redirectUrlQueryString = options.redirectUrlQueryString;
+        alert(this.redirectUrlQueryString,"####");
     },
 
     /**
