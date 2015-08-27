@@ -270,6 +270,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'单品券1'的码库
 				"""
 				{
@@ -312,6 +313,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'单品券1'的码库
 				"""
 				{
@@ -361,6 +363,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'全店券2'的码库
 				"""
 				{
@@ -424,6 +427,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'全店券2'的码库
 				"""
 				{
