@@ -126,7 +126,6 @@
                 if(lottery.isRolling){
                     return false;
                 }else{
-                    lottery.roll();
                     W.getApi().call({
                         app: 'm/apps/lottery',
                         resource: 'lottery_prize',
@@ -136,12 +135,13 @@
                             webapp_owner_id: W.webappOwnerId
                         },
                         success: function(data){
+                            lottery.roll();
                             console.log(PRIZE[data.index]);
                             lottery.stop(PRIZE[data.index]);
                             console.log('抽奖结束');
                         },
-                        error: function(){
-                            alert('请求抽奖失败');
+                        error: function(error){
+                            alert(error);
                         }
                     });
                 }
