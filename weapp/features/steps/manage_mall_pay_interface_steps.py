@@ -259,7 +259,7 @@ def step_impl(context, user, pay_interface_name):
 		param['ali_public_key'] = data['ali_public_key']
 		param['private_key'] = data['private_key']
 		param['seller_email'] = data['seller_email']
-		
+
 	response = context.client.post('/mall2/pay_interface/?id=%d' % interface.id, param)
 
 @when(u"{user}\"{action}\"支付方式\"{pay_interface_name}\"")
@@ -273,14 +273,13 @@ def step_impl(context, user, action, pay_interface_name):
 	interface = PayInterface.objects.get(owner_id=owner_id, type=pay_interface_type)
 
 	is_enable = None
-	if action == u"开启":
+	if action == u"启用":
 		is_enable = True
 	elif action == u"停用":
 		is_enable = False
 	param = {
 		"id": interface.id,
-		"is_enable": is_enable
+		"is_enable": "true" if is_enable else "false"
 	}
-
 	response = context.client.post('/mall2/api/pay_interface/', param)
 	bdd_util.assert_api_call_success(response)
