@@ -70,7 +70,7 @@ def get_webapp_link_menu_objectes(request):
 				'name': '抽奖',
 				'type': 'lottery',
 				'add_btn_title': '新建抽奖',
-				'add_link': '/market_tools/lottery/edit/0/'
+				'add_link': '/apps/lottery/lottery/'
 			}, {
 				'name': '红包',
 				'type': 'red',
@@ -85,17 +85,17 @@ def get_webapp_link_menu_objectes(request):
 				'name': '微信投票',
 				'type': 'vote',
 				'add_btn_title': '新建投票',
-				'add_link': '/market_tools/vote/add/'
+				'add_link': '/apps/vote/vote/'
 			}, {
 				'name': '用户调研',
 				'type': 'survey',
 				'add_btn_title': '新建调研',
-				'add_link': '/apps/survey/'
+				'add_link': '/apps/survey/survey'
 			}, {
 				'name': '活动报名',
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
-				'add_link': '/apps/event/'
+				'add_link': '/apps/event/event'
 			}, {
 				'name': '趣味测试',
 				'type': 'test_game',
