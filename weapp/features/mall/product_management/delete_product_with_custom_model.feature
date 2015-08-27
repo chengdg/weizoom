@@ -5,7 +5,7 @@ Feature: 删除商品的商品规格
 Background:
 	Given jobs登录系统
 	And jobs已添加商品规格
-		'''
+		"""
 		[{
 			"name": "颜色",
 			"type": "图片",
@@ -28,7 +28,7 @@ Background:
 				"name": "S"
 			}]
 		}]
-		'''
+		"""
 
 
 @mall @mall.product @mall.product_model @mall2

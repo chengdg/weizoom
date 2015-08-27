@@ -1,6 +1,7 @@
 #_author_:张三香
 
 Feature:删除规格或规格值对商品的影响
+"""
 	#说明：
 		#针对线上"bug3741"和"bug4257"补充feature
 		#删除规格或规格值会导致使用该规格或规格值的商品下架(待售商品列表中：价格变为0,库存变为0)
@@ -10,6 +11,7 @@ Feature:删除规格或规格值对商品的影响
 			#商品3：黑M  白M
 			#商品4: 白S
 			#商品5：黑M 黑S 白M 白S
+"""
 
 Background:
 	Given jobs登录系统
@@ -56,11 +58,10 @@ Background:
 					"黑色": {
 						"price": 10.0,
 						"stock_type": "无限"
-					},{
+					},
 					"白色": {
 						"price": 10.0,
 						"stock_type": "无限"
-						}
 					}
 				}
 			}
@@ -72,8 +73,7 @@ Background:
 					"黑色 M": {
 						"price": 10.0,
 						"stock_type": "无限"
-						}
-				},{
+					},
 					"白色 M": {
 						"price": 10.0,
 						"stock_type": "无限"
@@ -88,7 +88,7 @@ Background:
 					"白色 S": {
 						"price": 10.0,
 						"stock_type": "无限"
-						}
+					}
 				}
 			}
 		},{
@@ -105,29 +105,41 @@ Background:
 		}]
 		"""
 
-@product @property @toSaleProduct @online_bug
+@wip.ob1 @product @property @toSaleProduct @online_bug
 Scenario: 1 删除商品规格值'S'
 	Given jobs登录系统
-	When jobs删除商品规格'大小'的值'S'
+	When jobs删除商品规格'尺寸'的值'S'
 	Then jobs能获取商品'商品1'
 		"""
-		[{
-			"name":"商品1",
+		{
+			"name": "商品1",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品4'
 		"""
-		[{
-			"name":"商品4",
+		{
+			"name": "商品4",
 			"shelve_type": "下架",
 			"is_enable_model": "不启用规格",
-			"price":0,
-			"stock_type": 0
-		}]
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"stocks": 0
+					}
+				}
+			}
+		}
 		"""
 	And jobs能获取商品'商品5'
 		"""

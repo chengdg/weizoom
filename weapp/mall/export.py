@@ -211,12 +211,12 @@ MALL_PROMOTION_ORDER_RED_ENVELOPE = 'orderRedEnvelope'
 PROMOTION_NAV = {
     'navs': [
         # 商品管理
-        {
-            'name': MALL_PROMOTION_PROMOTIONS_NAV,
-            'title': u'促销查询',
-            'url': '/mall2/promotion_list/',
-            'need_permissions': ['search_promotion', ]
-        },
+        # {
+        #     'name': MALL_PROMOTION_PROMOTIONS_NAV,
+        #     'title': u'促销查询',
+        #     'url': '/mall2/promotion_list/',
+        #     'need_permissions': ['search_promotion', ]
+        # },
         {
             'name': MALL_PROMOTION_FLASH_SALE_NAV,
             'title': u'限时抢购',
@@ -334,6 +334,7 @@ MALL_HOME_OUTLINE_NAV = 'census'
 MALL_HOME_INTEGRAL_NAV = 'integralRule'
 MALL_HOME_NOTICES_NAV = 'notices'
 MALL_HOME_WEPAGE_NAV = 'wepage'
+MALL_HOME_GLOBAL_NAVBAR_NAV = 'globalNavbar'
 
 HOME_NAV = {
     'section': u'商城首页',
@@ -360,6 +361,12 @@ HOME_NAV = {
             'name': MALL_HOME_WEPAGE_NAV,
             'title': u'店铺装修',
             'url': '/termite2/pages/',
+            'need_permissions': ['manage_wepage'],
+        },        
+        {
+            'name': MALL_HOME_GLOBAL_NAVBAR_NAV,
+            'title': u'店铺导航',
+            'url': '/termite2/global_navbar/',
             'need_permissions': ['manage_wepage'],
         }
     ]

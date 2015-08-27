@@ -3,9 +3,9 @@
 
 
 {% block content-panel %}
-<div class="xui-userCenterPage xui-page">
+<div class="xui-userCenterPage xui-page wa-shopBottomNavPage">
     <!-- 全局导航 -->
-    <div class="wui-globalNav xa-globalNav" {% if request.webapp_owner_id != 216 %} data-ui-role="global-nav"{% endif %} data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
+    <div class="wui-globalNav xa-globalNav" {% if global_navbar %}{% else %}{% if request.webapp_owner_id != 216 %}{% endif %} data-ui-role="global-nav"{% endif %} data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
     </div>
         <div class="xui-userCenter-header xa-userCenter-header pr">
             <i data-ui-role="goBack"></i>
@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="xui-userCenterInfo pl5">
-                        <h2 class="em8">{% if member.username %}{{ member.username }}{% else %}我{% endif %}</h2>
+                        <h2 class="em8">{% if member.username_for_html %}{{ member.username_for_html | safe }}{% else %}我{% endif %}</h2>
                         <a href="./?module=user_center&model=binding_page&action=get&workspace_id=user_center&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bindphone">
                             {% if member_info.is_binded %}
                             	{{ member_info.phone }}

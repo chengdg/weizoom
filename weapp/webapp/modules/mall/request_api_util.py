@@ -4,8 +4,6 @@ import time
 import urllib
 import urllib2
 import json
-import logging
-logger = logging.getLogger(__name__)
 
 from django.conf import settings
 

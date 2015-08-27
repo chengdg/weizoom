@@ -167,7 +167,7 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 	
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券1'的码库
-		'''
+		"""
 		{
 			"coupon1_id_1": {
 				"money": 1.0,
@@ -182,11 +182,11 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 	When bill访问jobs的webapp
 	#第一次使用 购买商品1，成功
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -194,9 +194,9 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 			}],
 			"coupon": "coupon1_id_1"
 		}
-		'''
+		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 199.0,
@@ -206,10 +206,10 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 			"postage": 0.00,
 			"integral_money":0.00
 		}
-		'''
+		"""
 	#第二次使用 购买商品2 购买失败
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品2",
@@ -217,11 +217,11 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 			}],
 			"coupon": "coupon1_id_2"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'该优惠券不能购买订单中的商品'
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券1'的码库
-		'''
+		"""
 		{
 			"coupon1_id_1": {
 				"money": 1.0,
@@ -236,7 +236,7 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 
 @mall2 @mall.webapp @mall.coupon
 Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并且商品3满50元才可以使用，而不是订单满50可用
@@ -245,7 +245,7 @@ Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并�
 	
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券2'的码库
-		'''
+		"""
 		{
 			"coupon2_id_1": {
 				"money": 10.0,
@@ -260,11 +260,11 @@ Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 	When bill访问jobs的webapp
 	#第一次使用 购买3个商品3，满足使用条件，成功
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品3",
@@ -272,9 +272,9 @@ Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并�
 			}],
 			"coupon": "coupon2_id_1"
 		}
-		'''
+		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 50.0,
@@ -284,10 +284,10 @@ Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并�
 			"postage": 0.00,
 			"integral_money":0.00
 		}
-		'''
+		"""
 	#第二次使用 购买商品3+商品2 订单购买失败
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品3",
@@ -298,11 +298,11 @@ Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并�
 			}],
 			"coupon": "coupon2_id_2"
 		}
-		'''
+		"""
 	Then bill获得创建订单失败的信息'该优惠券指定商品金额不满足使用条件'
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券2'的码库
-		'''
+		"""
 		{
 			"coupon2_id_1": {
 				"money": 10.0,
@@ -317,14 +317,14 @@ Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 @mall2 @mall.webapp @mall.coupon  
 Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满足优惠劵使用条件
 	
 	
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券5'的码库
-		'''
+		"""
 		{
 			"coupon5_id_1": {
 				"status": "未使用",
@@ -332,10 +332,10 @@ Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品5",
@@ -348,19 +348,19 @@ Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满�
 			}],
 			"coupon": "coupon5_id_1"
 		}
-		'''
+		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 70.0,
 			"product_price": 80.0,
 			"coupon_money": 10.0
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券5'的码库
-		'''
+		"""
 		{
 			"coupon5_id_1": {
 				"status": "已使用",
@@ -368,7 +368,7 @@ Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 
 @mall2 @mall.webapp @mall.coupon
 Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只适用于商品6
@@ -376,7 +376,7 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券6'的码库
-		'''
+		"""
 		{
 			"coupon6_id_1": {
 				"money": 100.0,
@@ -391,10 +391,10 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 				"target": "tom"
 			}
 		}
-		'''
+		"""
 	When tom访问jobs的webapp
 	When tom购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品3",
@@ -405,9 +405,9 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 			}],
 			"coupon": "coupon6_id_1"
 		}
-		'''
+		"""
 	Then tom成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 30.0,
@@ -415,10 +415,10 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 			"postage": 10.00,
 			"coupon_money": 20.0
 		}
-		'''
+		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券6'的码库
-		'''
+		"""
 		{
 			"coupon6_id_1": {
 				"status": "已使用",
@@ -426,7 +426,7 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 				"target": "tom"
 			}
 		}
-		'''
+		"""
 
 #后续补充.雪静
 @mall2
@@ -504,7 +504,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		}
 		"""
 	Then jobs能获得优惠券'优惠券1'的码库
-		'''
+		"""
 		{
 			"coupon1_id_1": {
 				"money": 1.0,
@@ -519,11 +519,11 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 	When bill访问jobs的webapp
 	#使用单品券，商品金额就是原价
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
@@ -531,9 +531,9 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			}],
 			"coupon": "coupon1_id_1"
 		}
-		'''
+		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 199.0,
@@ -548,19 +548,19 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 				"count": 1
 			}]
 		}
-		'''
+		"""
 	#用会员价购买商品，就不能使用单品券
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
 				"count": 1
 			}]
 		}
-		'''
+		"""
 	Then bill成功创建订单
-		'''
+		"""
 		{
 			"status": "待支付",
 			"final_price": 140.0,
@@ -574,7 +574,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 				"count": 1
 			}]
 		}
-		'''
+		"""
 	#购买多种会员价的商品，使用单品券，不影响其他会员价商品
 	When bill加入jobs的商品到购物车
 		"""
@@ -653,7 +653,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券1'的码库
-		'''
+		"""
 		{
 			"coupon1_id_1": {
 				"money": 1.0,
@@ -668,5 +668,5 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 

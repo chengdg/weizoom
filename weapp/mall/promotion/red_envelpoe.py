@@ -50,6 +50,7 @@ class RedEnvelopeRuleList(resource.Resource):
         })
         return render_to_response('mall/editor/red_envelope_rules.html', c)
 
+
     @login_required
     def api_get(request):
         """

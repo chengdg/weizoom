@@ -40,14 +40,14 @@ Scenario: 1 成功支付订单后，商品销量增加
 
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
 				"count": 1
 			}]
 		}
-		'''
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -98,14 +98,14 @@ Scenario: 2 订单为待支付状态时，商品销量不变
 
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
 				"count": 1
 			}]
 		}
-		'''
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -143,14 +143,14 @@ Scenario: 3 成功支付订单后，取消订单，商品销量不变
 
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
-		'''
+		"""
 		{
 			"products": [{
 				"name": "商品1",
 				"count": 1
 			}]
 		}
-		'''
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -185,7 +185,7 @@ Scenario: 3 成功支付订单后，取消订单，商品销量不变
 			"actions": ["发货","取消订单"]
 		}
 		"""
-	When jobs"取消"最新订单
+	When jobs'取消'最新订单
 		"""
 		{
 			"reason": "不想要了"

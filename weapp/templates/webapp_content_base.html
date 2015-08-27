@@ -1,6 +1,7 @@
 
 {% load webapp_filter %}
 {% load project_filter %}
+
 <!DOCTYPE html>
 <html class="{% if user.is_from_android %} android{% endif %}{% if not user.is_from_weixin %} notweixin{% endif %}">
     <head>
@@ -16,7 +17,9 @@
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/base.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/webapp_default.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/widget.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/idangerous.swiper.css">
+	    <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
         <!-- *finish develop css* [do not modify and delete this line, it will be needed by dist process] -->
         {% else %}
         <link type="text/css" rel="stylesheet" media="all" href="{{cdn_host}}/standard_static/css/webapp_content_base_all.css">
@@ -61,6 +64,8 @@
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/globalNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/returnTop.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weixinnavbar.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/integralMechanism.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
@@ -105,6 +110,9 @@
             {% block content-panel %}{% endblock %}
         {% endif %}
 
+        {% if global_navbar %}
+        {% include "global_navbar.html" %}
+        {% endif %}
 
         <div id="jsons" style="display: none;">
             {% for json in jsons %}
@@ -116,6 +124,8 @@
 
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+
+            W.currentPageName = "{{current_page_name}}";
 
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";

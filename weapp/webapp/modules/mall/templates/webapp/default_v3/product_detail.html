@@ -111,7 +111,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </div>
                 {% endif %}
             {% else %}
-                <div class="xui-section-item xui-section-title pt10 pb10 xui-standard">
+                <div class="xui-section-item xui-section-title pt10 pb10 xui-standard clearfix">
                     <label for="" class="pa" style="top:20px;">请选择</label>
                     <input
                         data-ui-role="counter"
@@ -128,14 +128,15 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         id="total_count"
                         value="1"
                     >
-                </div>
-                <span class="em7 cRed hidden xui-understock xa-understock" style="margin-top:-34px;">
+                    <span class="em7 cRed hidden xui-understock xa-understock" style="margin-top:-34px;">
                     {% if product.promotion.type == 1 and product.promotion.detail.count_per_purchase < product.stocks %}
                         限购{{product.promotion.detail.count_per_purchase}}件
                     {% else %}
                         库存不足
                     {% endif %}
-                </span>
+                    </span>
+                </div>
+                
             {% endif %}
             {% if product.properties %}
             <div class="xui-section-item xui-section-title xui-property-panel">
@@ -317,7 +318,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         </div>
                     </li>
                 {% endfor %}
-                    <li class="xui-slidePanel-item pr">
+                    <li class="xui-slidePanel-item pr clearfix">
                         <div class="xui-i-propertyName pa">数量</div>
                         <div class="" style="padding-left:3rem;">
                             <input
@@ -458,19 +459,11 @@ $(document).ready(function() {
                         $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
                         next_promotions.remove();
                     }
-<<<<<<< HEAD
-                    // 对于不开放的促销，不显示广告语, 显示商品原有促销标题
-                    var span = $('.xa-productName').find('span');
-                    if(span){
-                        span.html('<span class="xui-text-red">'+view.priceInfo.promotion_title+'</span>');
-                    }
-=======
                     // // 对于不开放的促销，不显示广告语
                     // var span = $('.xa-productName').find('span');
                     // if(span){
                     //     span.remove();
                     // }
->>>>>>> origin/mall
                 }
             // 商品无促销
             }
@@ -499,6 +492,7 @@ $(document).ready(function() {
             }
             // 处理会员价
             if (msg === true){
+
                 var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span>';
                 $('.xa-priceSection').html(temp);
 

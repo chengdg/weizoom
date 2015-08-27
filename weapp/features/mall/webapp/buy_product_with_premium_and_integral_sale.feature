@@ -41,7 +41,7 @@ Background:
 		"""
 	Given bill关注jobs的公众号
 
-@promotion @promotionPremium @promotionIntegral @online_bug
+@promotion @promotionPremium @promotionIntegral @online_bug @ui
 Scenario: 购买单个买赠商品，同时使用单品积分抵扣
 		待编辑订单页面'小计'信息的校验
 	Given jobs登录系统
