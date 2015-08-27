@@ -16,7 +16,7 @@ from core import paginator
 
 from core.jsonresponse import create_response
 from core import search_util
-from mall.promotion.utils import coupon_id_maker
+from mall.promotion.utils import create_coupons
 
 
 COUNT_PER_PAGE = 20
@@ -75,6 +75,8 @@ class CouponRuleInfo(resource.Resource):
 
             coupon_rule = CouponRule.objects.get(id=promotion.detail_id)
 
+            promotion.start_date = datetime.strptime(promotion.start_date, "%Y-%m-%d %H:%M:%S")
+            promotion.end_date = datetime.strptime(promotion.end_date, "%Y-%m-%d %H:%M:%S")
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
                 'second_navs': export.get_promotion_second_navs(request),
@@ -175,7 +177,7 @@ class CouponRuleInfo(resource.Resource):
         if start_date <= now:
             promotion.status = PROMOTION_STATUS_STARTED
             promotion.save()
-        _create_coupons(couponRule, count, promotion)
+        create_coupons(couponRule, count, promotion)
         return create_response(200).get_response()
 
 
@@ -365,93 +367,6 @@ class CouponRuleList(resource.Resource):
 #     ],
 # }
 
-
-# def _filter_promotions(request, promotions):
-#     has_filter = search_util.init_filters(request, PROMOTION_FILTERS)
-#     if not has_filter:
-#         # 没有filter，直接返回
-#         return promotions
-
-#     filtered_promotions = []
-#     if request.GET.get('type', 'all') == 'coupon':
-#         promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['coupon'])
-#         coupon_type = request.GET.get('couponPromotionType', None)
-#         if coupon_type != '-1':
-#             coupon_type = coupon_type == '2'
-#             Promotion.fill_details(request.manager, promotions, {
-#                 'with_concrete_promotion': True
-#             })
-#             promotions = [promotion for promotion in promotions if promotion.detail['limit_product'] == coupon_type]
-#         return promotions
-#         # 过滤promotion集合
-#     promotions = search_util.filter_objects(promotions, PROMOTION_FILTERS['promotion'])
-#     Promotion.fill_details(request.manager, promotions, {
-#         'with_product': True
-#     })
-
-#     if not promotions:
-#         return filtered_promotions
-
-#     for promotion in promotions:
-#         products = search_util.filter_objects(promotion.products, PROMOTION_FILTERS['product'])
-#         if not products:
-#             # product filter没有通过，跳过该promotion
-#             print 'end in product filter'
-#             continue
-#         else:
-#             print 'pass product filter'
-#             filtered_promotions.append(promotion)
-
-#             # filtered_products = []
-#             # for product in products:
-#             # models = search_util.filter_objects(product.models, PROMOTION_FILTERS['model'])
-#             #             if models:
-#             #                 print 'pass model filter'
-#             #                 filtered_products.append(product)
-#             #             else:
-#             #                 print 'end in model filter'
-#             #
-#             #         if filtered_products:
-#             #             #promotion有通过了product filter和model filter的商品，将promotion放入结果
-#             #             filtered_promotions.append(promotion)
-#             #         else:
-#             #             pass
-#     return filtered_promotions
-
-
-def _create_coupons(couponRule, count, promotion=None):
-    """
-    创建未使用的优惠券
-    """
-    i = 0
-    if not promotion:
-        promotion = Promotion.objects.filter(type=PROMOTION_TYPE_COUPON, detail_id=couponRule.id)[0]
-
-    a = couponRule.owner.id
-    b = couponRule.id
-
-    # 创建未使用的优惠券
-    current_coupon_ids = [coupon.coupon_id for coupon in Coupon.objects.all()]
-    new_coupons = []
-    while i < count:
-        # 生成优惠券ID
-        coupon_id = coupon_id_maker(a, b)
-        while coupon_id in current_coupon_ids:
-            coupon_id = coupon_id_maker(a, b)
-        current_coupon_ids.append(coupon_id)
-        new_coupons.append(Coupon(
-                owner=couponRule.owner,
-                coupon_id=coupon_id,
-                provided_time=promotion.start_date,
-                start_time=promotion.start_date,
-                expired_time=promotion.end_date,
-                money=couponRule.money,
-                coupon_rule_id=couponRule.id,
-                is_manual_generated=False,
-                status=COUPON_STATUS_UNGOT
-        ))
-        i += 1
-    Coupon.objects.bulk_create(new_coupons)
 
 def _create_coupon_qrcode(coupon_url, coupon_id):
     """

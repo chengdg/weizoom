@@ -3,11 +3,8 @@ from __future__ import absolute_import
 import copy
 import json, time
 from behave import when, then, given
-import logging
 from mall.models import ProductCategory
 from webapp.models import WebApp
-
-logger = logging.getLogger('console')
 
 from mall import models as mall_models  # 注意不要覆盖此module
 from test import bdd_util
@@ -307,6 +304,7 @@ def __get_products(context, type_name=u'在售'):
     context.pageinfo = data['pageinfo']
 
     for product in data["items"]:
+        product['is_member_product'] = 'on' if product.get('is_member_product', False) else 'off'
         #价格
         product['price'] = product['display_price']
         if 'display_price_range' in product:

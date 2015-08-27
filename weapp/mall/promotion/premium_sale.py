@@ -130,13 +130,6 @@ class PremiumSale(resource.Resource):
     def api_put(request):
         """创建买赠活动
         """
-        import logging
-        logger = logging.getLogger('console')
-        logger.debug("%(resource)s-%(method)s-%(desc)s",
-                     {"resource": "premium_sale",
-                      "method": "api_put",
-                      "desc": "create premium-sales"})
-
         premium_sale = models.PremiumSale.objects.create(
             owner=request.manager,
             count=request.POST.get('count', 1) or 1,
@@ -187,8 +180,4 @@ class PremiumSale(resource.Resource):
             promotion.status = models.PROMOTION_STATUS_STARTED
             promotion.save()
         response = create_response(200)
-        logger.debug("%(resource)s-%(method)s-%(desc)s",
-                     {"resource": "premium_sale",
-                      "method": "api_put",
-                      "desc": "create premium-sales finished"})
         return response.get_response()

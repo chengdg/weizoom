@@ -113,7 +113,7 @@
 
                                         {% ifequal order.status 4 %}
                                             {% if order.express_number %}
-                                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流{{order.express_number}}</a>
+                                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
                                                 {% if order.session_data.has_comfire_button %}
                                                 <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc" data-id="{{order.id}}">确认收货</a>
                                                 {% endif %}

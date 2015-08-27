@@ -65,7 +65,7 @@ Scenario: 添加优惠券规则
 		}]
 		"""
 	Then jobs能获得优惠券规则列表
-		'''
+		"""
 		[{
 			"name": "优惠券4",
 			"type": "单品券",
@@ -103,9 +103,9 @@ Scenario: 添加优惠券规则
 			"start_date": "今天",
 			"end_date": "1天后"
 		}]
-		'''
+		"""
 	Given bill登录系统
 	Then bill能获得优惠券规则列表
-		'''
+		"""
 		[]
-		'''
+		"""

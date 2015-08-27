@@ -327,6 +327,9 @@ def get_date(str):
 	return today + timedelta(delta)
 
 
+#def parse_datetime(str):
+#	return datetime.strptime(str, "%Y/%m/%d %H:%M:%S")	
+
 def get_date_str(str):
 	date = get_date(str)
 	return date.strftime('%Y-%m-%d')

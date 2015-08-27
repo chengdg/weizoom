@@ -392,6 +392,7 @@ $(function(){
     if (!W.validate()) {
       return false;
     }
+    $(event.currentTarget).bottonLoading({status: 'show'});
     var args = $('.xa-form').serializeObject();
     W.getApi().call({
       method: 'post',

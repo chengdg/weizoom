@@ -175,6 +175,9 @@ ul{
     height:1.7em;
     display:table;
 }
+.xui-productDetailPage .wui-counter{
+    float: left;
+}
 /*.wui-counter .wui-down{
     border-right-width:0!important;
     border-radius:2px 0 0 2px;
@@ -190,13 +193,20 @@ ul{
     border:1px solid #ccc;
     color: #999;
 }
-.wui-counter .wui-limit{
-    vertical-align: middle;
-    display: inline-block;
+.wui-limit{
+    /*vertical-align: middle;*/
+    /*display: inline-block;*/
     font-size: .7rem!important;
     color: #cf0404;
+}
+.xui-productDetailPage .wui-limit{
+    line-height: 32px;
+    float: right;
     margin-left: 5px;
 }
+/*.xui-shoppingCartPage .wui-limit{
+    margin-right: 5px;
+}*/
 .wui-counter span{
     text-align: center;
 }
