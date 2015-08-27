@@ -59,3 +59,11 @@ Scenario: 购买单个买赠商品，同时使用单品积分抵扣
 
 feature名称：send_coupon_verify_total_values.feature
 feature路径：\Weapp_mall\weapp\features\ui\mall\coupon
+
+5)
+4259（功能问题）【手机端】商品在同时参加买赠和积分应用活动，购买时，点击使用积分，小计显示NAN乱码
+
+
+\Weapp_mall\weapp\features\mall\ui\webapp\buy_product_with_premium_and_integral_sale.feature
+
+Scenario: 购买单个买赠商品，同时使用单品积分抵扣
