@@ -60,16 +60,17 @@ Background:
 			| member_name   | attention_time 	 | source   |
 			| tom1 			| 2014-8-4 23:59:59  | 直接关注 |
 			| tom2 			| 2014-8-5 00:00:00  | 推广扫码 |
-			| tom3	 	    | 2014-8-5 8:00:00   | 会员分享 |
+			| tom3	 	    | 2014-8-5 08:00:00  | 会员分享 |
 
 		And tom2取消关注jobs的公众号
 
 	#获取会员积分
-
+		When 清空浏览器
 		When tom1访问jobs的webapp
 		When tom1获得jobs的50会员积分
 		Then tom1在jobs的webapp中拥有50会员积分
 
+		When 清空浏览器
 		When tom2访问jobs的webapp
 		When tom2获得jobs的100会员积分
 		Then tom2在jobs的webapp中拥有100会员积分
@@ -94,9 +95,9 @@ Scenario:1 调分组
 			"""
 		Then jobs获得会员列表
 			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    | 2014-8-5 8:00:00  | 会员分享 |             |
-			| tom2  | 普通会员    |     0    | 2014-8-5 00:00:00 | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    | 2014-8-4 23:59:59 | 直接关注 | 分组1,分组3 |
+			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
+			| tom2  | 普通会员    |     0    |      2014-8-5     | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 | 分组1,分组3 |
 
 	#给有分组的人设置分组
 		When jobs给"tom1"调分组
@@ -107,20 +108,20 @@ Scenario:1 调分组
 			"""
 		Then jobs获得会员列表
 			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    | 2014-8-5 8:00:00  | 会员分享 |             |
-			| tom2  | 普通会员    |     0    | 2014-8-5 00:00:00 | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    | 2014-8-4 23:59:59 | 直接关注 | 分组2       |
+			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
+			| tom2  | 普通会员    |     0    |      2014-8-5     | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 | 分组2       |
 
 	#给有分组的人设置成分组为空
 		When jobs给"tom1"调分组
 			"""
-			{}
+			[]
 			"""
 		Then jobs获得会员列表
 			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    | 2014-8-5 8:00:00  | 会员分享 |             |
-			| tom2  | 普通会员    |     0    | 2014-8-5 00:00:00 | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    | 2014-8-4 23:59:59 | 直接关注 |             |
+			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
+			| tom2  | 普通会员    |     0    |      2014-8-5     | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 |             |
 
 Scenario:2 设等级
 	
@@ -133,9 +134,9 @@ Scenario:2 设等级
 			"""
 		Then jobs获得会员列表
 			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    | 2014-8-5 8:00:00  | 会员分享 |             |
-			| tom2  | 金牌会员    |     0    | 2014-8-5 00:00:00 | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    | 2014-8-4 23:59:59 | 直接关注 |             |
+			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
+			| tom2  | 金牌会员    |     0    |      2014-8-5     | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 |             |
 
 	#给当前会员设置现在的等级
 
@@ -147,9 +148,9 @@ Scenario:2 设等级
 			"""
 		Then jobs获得会员列表
 			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    | 2014-8-5 8:00:00  | 会员分享 |             |
-			| tom2  | 金牌会员    |     0    | 2014-8-5 00:00:00 | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    | 2014-8-4 23:59:59 | 直接关注 |             |
+			| tom3  | 普通会员    |     0    |     2014-8-5      | 会员分享 |             |
+			| tom2  | 金牌会员    |     0    |     2014-8-5      | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |     2014-8-4      | 直接关注 |             |
 
 Scenario:3 发优惠券
 
@@ -269,6 +270,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'单品券1'的码库
 				"""
 				{
@@ -311,6 +313,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'单品券1'的码库
 				"""
 				{
@@ -360,6 +363,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'全店券2'的码库
 				"""
 				{
@@ -423,6 +427,7 @@ Scenario:3 发优惠券
 					"status": "未使用"
 				}]
 				"""
+			Given jobs登录系统
 			Then jobs能获得优惠券'全店券2'的码库
 				"""
 				{

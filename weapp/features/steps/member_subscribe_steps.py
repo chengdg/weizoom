@@ -61,6 +61,7 @@ def step_impl(context, user):
 @then(u'{user}可以获得会员列表')
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
+<<<<<<< HEAD
 	if not context.url:
 		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&count_per_page=50&page=1&enable_paginate=1'
 	###访问会员详情页：访问会员详情页会使购买信息自动调整正确
@@ -71,6 +72,16 @@ def step_impl(context, user):
 	# 	print 'kitty',member_item['id']
 	# 	visit_member_detail_url = context.client.get(member_detail_url)
 	###以上为访问会员详情页
+=======
+	if not hasattr(context, 'url'):
+		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&enable_paginate=1'
+		if hasattr(context, 'count_per_page'):
+			context.url += '&count_per_page=' + str(context.count_per_page)
+		else:
+			context.url += '&count_per_page=' + '50'
+		if hasattr(context, 'page'):
+			context.url += '&page=' + str(context.page)
+>>>>>>> 1ef0019af0b4c584c8ab417e49127567095e2602
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
@@ -134,12 +145,20 @@ def step_impl(context, user):
 			adict['source'] = row['source']
 			adict['tags'] = row['tags']
 			actual_data.append(adict)
+<<<<<<< HEAD
 		# for i in range(len(json_data)):
 		# 	print 'hello:name,pay_money',json_data[i]['username'],json_data[i]['attention_time'],'kitty:name,pay_money',actual_data[i]['username'],actual_data[i]['attention_time']
 
 		#print 'hello',json_data
 		#print 'world',actual_data
 		# print 'kitty',actual_members[7]
+=======
+
+		for i in range(len(json_data)):
+			print json_data[i]['username'], "++++++", actual_data[i]['username']
+		print 'hello',json_data
+		print 'world',actual_data
+>>>>>>> 1ef0019af0b4c584c8ab417e49127567095e2602
 
 	bdd_util.assert_list(json_data, actual_data)
 
@@ -191,4 +210,6 @@ def step_impl(context, member_a, user):
 	url = '/weixin/%s/'% user_profile.webapp_id
 	context.client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
 
-
+@when(u'{username}访问会员列表第{page_count}页')
+def step_impl(context, username, page_count):
+	context.page = page_count

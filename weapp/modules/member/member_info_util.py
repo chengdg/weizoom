@@ -57,7 +57,7 @@ def get_member(request):
 			return MemberHasSocialAccount.objects.filter(account=cur_request_social_account)[0].member
 		else:
 			return None
-				
+
 def get_request_member(request):
 	#假设经过了MemberSessionMiddleware中间件的处理
 	return request.member if hasattr(request, 'member') else None
@@ -88,7 +88,7 @@ def get_social_account(request):
 	social_account_session_key = request.COOKIES.get(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, None)
 	if social_account_session_key:
 		try:
-			return SocialAccount.objects.get(token=social_account_session_key)	
+			return SocialAccount.objects.get(token=social_account_session_key)
 		except:
 			notify_message = u"从数据库读取社会化账号信息失败，社交账户信息:('token':{}), cause:\n{}".format(
 				social_account_session_key, unicode_full_stack())
@@ -210,7 +210,7 @@ def _check_access_token(user_profile):
 
 	if not mp_user.is_service or not mp_user.is_certified:
 		return None
-		
+
 	mpuser_access_token = get_mpuser_accesstoken(mp_user)
 
 	if mpuser_access_token is None:
@@ -233,8 +233,8 @@ def create_relation_in_weapp(member, all_groups, member_group_id):
 				member_tag = MemberTag.get_member_tag(member.webapp_id, name)
 				if member_tag is None:
 					member_tag = MemberTag.create(member.webapp_id, name)
-				
-				MemberHasTag.add_tag_member_relation(member, [member_tag.id])	
+
+				MemberHasTag.add_tag_member_relation(member, [member_tag.id])
 
 def create_member_group(all_groups, webapp_id):
 	if all_groups and 'groups' in all_groups.keys():
@@ -246,20 +246,20 @@ def create_member_group(all_groups, webapp_id):
 				member_tag = MemberTag.get_member_tag(webapp_id, name)
 				if member_tag is None:
 					member_tag = MemberTag.create(webapp_id, name)
-		
+
 def get_member_binded_social_account(member):
 	if member is None:
 		return None
 
 	try:
 		member_social_account_relation = MemberHasSocialAccount.objects.get(member=member)
-		return member_social_account_relation.account	
+		return member_social_account_relation.account
 	except:
 		notify_message = u"根据会员信息从数据库获取绑定的社会化账号信息失败，会员id:{}, cause:\n{}".format(
 				member.id, unicode_full_stack())
 		watchdog_warning(notify_message)
 
-		return None		
+		return None
 
 def update_member_basic_info(user_profile, member, oauth_create=False):
 	if member.is_for_test:
@@ -281,7 +281,8 @@ def update_member_basic_info(user_profile, member, oauth_create=False):
 		if settings.MODE == 'develop' and social_account_info.nickname == u'预览':
 			pass
 		else:
-			member.username = social_account_info.nickname
+			if social_account_info.nickname:
+				member.username = social_account_info.nickname
 
 		member_nickname = social_account_info.nickname if social_account_info else ''
 		if member_nickname:
@@ -295,8 +296,8 @@ def update_member_basic_info(user_profile, member, oauth_create=False):
 
 
 		if social_account_info.is_subscribed:
-			Member.objects.filter(id=member.id).update(user_icon=member.user_icon, 
-					update_time = today, 
+			Member.objects.filter(id=member.id).update(user_icon=member.user_icon,
+					update_time = today,
 					username_hexstr=username_hexstr,
 					is_subscribed=social_account_info.is_subscribed,
 					city=social_account_info.city,
@@ -310,20 +311,20 @@ def update_member_basic_info(user_profile, member, oauth_create=False):
 				status = NOT_SUBSCRIBED #未关注
 			else:
 				status = CANCEL_SUBSCRIBED #取消关注
-			Member.objects.filter(id=member.id).update( 
-					update_time = today, 
+			Member.objects.filter(id=member.id).update(
+					update_time = today,
 					is_subscribed=social_account_info.is_subscribed,
 					status=status
 					)
 		# member.update_time = today
 		# member.save()
-		
+
 
 member_basic_info_updater = update_member_basic_info
 
 def _generate_member_token(member, social_account):
 	return "{}{}{}{}".format(
-		member.webapp_id, 
+		member.webapp_id,
 		social_account.platform,
 		time.strftime("%Y%m%d"),
 		(''.join(random.sample(string.ascii_letters + string.digits, 6))) + str(member.id))
@@ -379,15 +380,15 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 			notify_message = u"create_member_by_social_account2: cause:\n{}".format(unicode_full_stack())
 			watchdog_warning(notify_message)
 			member = None
-	
+
 	if member is None:
 		return None
-	
+
 
 	if MemberHasSocialAccount.objects.filter(webapp_id=user_profile.webapp_id, account=social_account).count() >  0:
 		member.delete()
 		member = MemberHasSocialAccount.objects.filter(webapp_id=user_profile.webapp_id, account=social_account)[0].member
-	else:	
+	else:
 		try:
 			if MemberHasSocialAccount.objects.filter(webapp_id=social_account.webapp_id, member=member, account=social_account).count() == 0:
 				MemberHasSocialAccount.objects.create(
@@ -412,7 +413,7 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 				except:
 					pass
 				return None
-	
+
 	try:
 		token = _generate_member_token(member, social_account)
 		member.token = token
@@ -421,7 +422,7 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 		token = _generate_member_token(member, social_account)
 		member.token = token
 		member.save()
-		
+
 	member.is_new = is_new
 	# try:
 	# 	if member:
@@ -453,7 +454,7 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 	# else:
 	# 	member_nickname_str = member_nickname
 	# username_hexstr = byte_to_hex(member_nickname_str)
-	
+
 	# if not username_hexstr:
 	# 	username_hexstr = ''
 	# temporary_token = _create_random()
@@ -548,8 +549,8 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 import random
 def _create_random():
 	date = str(time.time()*1000)
-	sample_list = ['0','1','2','3','4','5','6','7','8','9','a', 'b', 'c', 'd', 'e'] 
-		
+	sample_list = ['0','1','2','3','4','5','6','7','8','9','a', 'b', 'c', 'd', 'e']
+
 	random_str = ''.join(random.sample(string.ascii_letters + string.digits, 10))
 	random_str = date + random_str
 	return random_str
@@ -568,10 +569,10 @@ def create_social_account(webapp_id,
 						  platform,
 						  is_for_test=False):
 	social_account, _ = SocialAccount.objects.get_or_create(
-			platform = platform, 
+			platform = platform,
 			webapp_id = webapp_id,
 			openid = openid,
 			token = token,
 			is_for_test = is_for_test
-		)	
+		)
 	return social_account

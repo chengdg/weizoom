@@ -1,17 +1,43 @@
-# # -*- coding: utf-8 -*-
-# import json
-# import time
+# -*- coding: utf-8 -*-
+import json
+import time
 
-# from behave import *
+from behave import *
 
-# from test import bdd_util
-# from features.testenv.model_factory import *
+from test import bdd_util
+from features.testenv.model_factory import *
 
-# from django.test.client import Client
-# from mall.models import *
-# from modules.member.models import *
+from django.test.client import Client
+from mall.models import *
+from modules.member.models import *
+from utils.string_util import byte_to_hex
 
+@when(u"{user}选择会员")
+def step_impl(context, user):
+    context.member_ids = []
+    for raw in context.table:
+        query_hex = byte_to_hex(raw['member_name'])
+        member = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex)
+        context.member_ids.append(str(member.id))
 
+@when(u"{user}批量修改等级")
+def step_impl(context, user):
+    member_ids = context.member_ids
+    data = json.loads(context.text)[0]
+    grade_name = data['member_rank']
+    grade_id = MemberGrade.objects.get(webapp_id=context.webapp_id, name=grade_name).id
+    print grade_name, grade_id, "{*}"*10
+    args = {}
+    if data['modification_method'] == '给选中的人修改等级':
+        args['update_status'] = 'selected'
+        args['ids'] = '-'.join(member_ids)
+    elif data['modification_method'] == '给筛选出来的所有人修改等级':
+        args['update_status'] = 'all'
+
+    args['grade_id'] = grade_id
+    print args
+    response = context.client.post('/member/api/grade/batch_update/', args)
+    bdd_util.assert_api_call_success(response)
 # @Then(u"{user}能获取会员等级列表")
 # def step_impl(context, user):
 # 	if hasattr(context, 'client'):
