@@ -54,8 +54,6 @@
 .wui-appParticipantResult-Cover .wui-i-background {
 	background-color: #FFF;
 	width: 75%;
-	/*margin: 0px auto;*/
-	/*margin-top: 30%;*/
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -64,7 +62,8 @@
 	padding-bottom: 5%;
 	top: 10%;
 	left: 12%;
-
+	/*margin: 0px auto;*/
+	/*margin-top: 30%;*/
 }
 .wui-appParticipantResult-Cover .wui-i-successIcon {
 	border: 5px solid #59c969;
