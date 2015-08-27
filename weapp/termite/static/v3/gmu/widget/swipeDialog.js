@@ -25,8 +25,8 @@ gmu.define('SwipeDialog', {
         //     $el.find(".wui-swiper-container").css('height', containerHeightNew);
         //     $el.find(".wui-swiper-slide").css('height', containerHeightNew);
         // }else{
-             $el.find(".wui-swiper-container").css('height', containerHeight);
-             $el.find(".wui-swiper-slide").css('height', containerHeight);
+        $el.find(".wui-swiper-container").css('height', containerHeight);
+        $el.find(".wui-swiper-slide").css('height', containerHeight);
         // }
         $el.css({
             top: screen.height,
