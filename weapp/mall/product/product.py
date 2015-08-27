@@ -20,11 +20,6 @@ from mall import signals as mall_signals
 from . import utils
 from mall import export
 
-
-import logging
-logger = logging.getLogger('console')
-
-
 class ProductList(resource.Resource):
     app = 'mall2'
     resource = 'product_list'
@@ -393,6 +388,9 @@ class Product(resource.Resource):
         if display_index > 0:
             product.move_to_position(display_index)
 
+        is_deleted = False
+        if standard_model.get('is_deleted', None):
+            is_deleted = True
         # 处理standard商品规格
         models.ProductModel.objects.create(
             owner=request.manager,
@@ -403,7 +401,8 @@ class Product(resource.Resource):
             weight=standard_model['weight'],
             stock_type=standard_model['stock_type'],
             stocks=standard_model['stocks'],
-            user_code=standard_model['user_code']
+            user_code=standard_model['user_code'], 
+            is_deleted=is_deleted
         )
 
         # 处理custom商品规格
@@ -850,9 +849,14 @@ class ProductModel(resource.Resource):
             stocks = model_info['stocks']
             if stock_type == models.PRODUCT_STOCK_TYPE_UNLIMIT:
                 stocks = 0
-            models.ProductModel.objects.filter(
+            product_model = models.ProductModel.objects.filter(
                 id=product_model_id
-            ).update(stock_type=stock_type, stocks=stocks)
+            )
+            if len(product_model) == 1 and product_model[0].stock_type == models.PRODUCT_STOCK_TYPE_LIMIT and product_model[0].stocks < 1:
+                #触发signal，清理缓存
+                product_model.update(stocks=0)
+                
+            product_model.update(stock_type=stock_type, stocks=stocks)
 
         response = create_response(200)
         return response.get_response()

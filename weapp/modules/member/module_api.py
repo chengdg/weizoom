@@ -127,3 +127,6 @@ def get_member_by_openid(openid, webapp_id):
 	except:
 		return None
 	
+def get_member_ids_by_opid(openid_list):
+	print '0000000000000--------------',MemberHasSocialAccount.objects.filter(account__openid__in=openid_list)
+	return [member_has_social.member.id for member_has_social in MemberHasSocialAccount.objects.filter(account__openid__in=openid_list)]

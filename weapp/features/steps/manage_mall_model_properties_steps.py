@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
-import logging
-logger = logging.getLogger('console')
 
 from behave import given, when, then
 
@@ -103,8 +101,6 @@ def step_update_model_property(context, user, product_model_property_name):
         else:
             value['pic_url'] = ''
         value['id'] = property_id
-        logger.debug("add values: name->%(value)s",
-                     {'value': value.get('name')})
         response = context.client.post(create_url, value)
         bdd_util.assert_api_call_success(response)
 

@@ -71,16 +71,6 @@
 					<a class="xa-update-integral cursorPointer">修改</a>
 				</span>
 			</ul>
-			<ul>
-				<li>粉丝分组：</li>
-				<span>
-					<select id="category" class="w100 m0 form-control" type="text">
-						{{each(i, category) data.member.categories}}
-							<option {{if data.member.category_id == category.id}}selected="selected"{{/if}} value="${category.id}">${category.name}</option>
-						{{/each}}
-					</select>
-				</span>
-			</ul>
 			<ul><li>绑定手机：</li><span>${data.member.phone}</span></ul>
 			<ul><li>关注时间：</li><span>${data.member.follow_created_at}</span></ul>
 			<ul><li>最后购买：</li><span>${data.member.last_buy_created_at}</span></ul>
@@ -233,7 +223,7 @@ $(document).ready(function() {
 	    });
     }
     //end: 判断是否需要回复
-	
+
 	//不滚动了
 	/*
 	var _menu;
@@ -251,7 +241,7 @@ $(document).ready(function() {
         }
     });
     */
-	
+
 	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) {
         if ($(this).hasClass('xui-i-voicePlay')) {
         	$(this).siblings('#media')[0].pause();
@@ -269,59 +259,59 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
+
 	//start: 修改备注名
 	$('body').delegate('.xa-update-remark-name', 'click', function(event) {
 		$(event.currentTarget).addClass('hidden')
     	$('.xa-remark-name').removeClass('hidden');
     	$('#remark_name').hide();
     	$('.xa-remark-name').focus();
-    	
+
     	var remarkName = $('#remark_name').text();
     	$('.xa-remark-name').val(remarkName);
 	});
-	
+
 	$('body').delegate('.xa-remark-name', 'blur', function(event) {
 		$(event.currentTarget).addClass('hidden');
 		$('.xa-update-remark-name').removeClass('hidden');
 		$('#remark_name').show();
-		
+
 		var remarkName = $('.xa-remark-name').val();
     	if (remarkName.length > 20) {
     		W.showHint('error', '备注姓名不能超过20个字');
     		return;
     	}
     	$('#remark_name').text(remarkName);
-    	
+
     	var memberInfoId = $('.xui-weixin-user-detail').attr('data-member-info-id');
     	updateUserInfo({member_info_id: memberInfoId, remark_name: remarkName});
 	});
 	//end: 修改备注名
-	
+
 	//start: 修改积分
 	$('body').delegate('.xa-update-integral', 'click', function(event) {
 		$(event.currentTarget).addClass('hidden')
     	$('.xa-integral').removeClass('hidden');
     	$('#integral').hide();
     	$('.xa-integral').focus();
-    	
+
     	var integral = $('#integral').text();
     	$('.xa-integral').val(integral);
 	});
-	
+
 	$('body').delegate('.xa-integral', 'blur', function(event) {
 		$(event.currentTarget).addClass('hidden');
 		$('.xa-update-integral').removeClass('hidden');
 		$('#integral').show();
-		
+
 		var integral = $('.xa-integral').val();
     	$('#integral').text(integral);
-    	
+
     	var memberId = $('.xui-weixin-user-detail').attr('data-member-id');
     	updateUserInfo({member_id: memberId, integral: integral});
 	});
 	//end: 修改积分
-	
+
 	//start: 修改性别
 	$('body').delegate('#sex', 'change', function(event) {
 		var memberInfoId = $('.xui-weixin-user-detail').attr('data-member-info-id');
@@ -329,7 +319,7 @@ $(document).ready(function() {
 		updateUserInfo({member_info_id: memberInfoId, sex: sex});
 	});
 	//end: 修改性别
-	
+
 	//start: 修改会员等级
 	$('body').delegate('#grade', 'change', function(event) {
 		var memberId = $('.xui-weixin-user-detail').attr('data-member-id');
@@ -340,7 +330,7 @@ $(document).ready(function() {
 		updateUserInfo({member_id: memberId, grade_id: gradeId});
 	});
 	//end: 需改会员等级
-	
+
 	//start: 修改粉丝分组
 	$('body').delegate('#category', 'change', function(event) {
 		var memberId = $('.xui-weixin-user-detail').attr('data-member-id');
@@ -351,7 +341,7 @@ $(document).ready(function() {
 		updateUserInfo({member_id: memberId, category_id: categoryId});
 	});
 	//end: 需改粉丝分组
-	
+
     $('body').delegate('.wx_collect_message', 'click', function(event){
         var $el = $(event.currentTarget);
         var status = $el.attr('status');

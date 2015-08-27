@@ -28,7 +28,7 @@
 			<li>您当前所在位置</li>
 			<li><a href="/new_weixin/materials/">高级管理</a></li>
 			<li><a href="/new_weixin/qrcodes/">带参数二维码</a></li>
-			<li class="active">关注粉丝</li>
+			<li class="active">关注会员</li>
 		</ul>
 	</div>
 	<div class="xui-filterPanel " >
@@ -100,7 +100,7 @@
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg xui-qrcode-table" >
 		<thead>
 		<tr>
-			<th >粉丝</th>
+			<th >会员</th>
 			<th class="tx_sortable" style="width:15%;text-align:center;" data-sort-attr='pay_times'><a>购买次数</a></th>
 			<th class="tx_sortable" style="width:15%" data-sort-attr='integral' ><a>积分</a></th>
 			<th class="tx_sortable" style="width:15%" data-sort-attr='pay_money'><a>消费总额</a></th>
@@ -125,7 +125,7 @@
 				</div>
 				<div class="fl xui-i-fansName">
 					<a class='lh26 xui-i-link' href="/member/member_detail/edit/?id=${ member.id }" target='_blank'>
-						{{html member.username}}
+						{{html member.username_for_html}}
 						{{if member.name !== ''}}
 							(${member.name})
 						{{/if}}

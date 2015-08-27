@@ -277,7 +277,7 @@ class WebAppUser(models.Model):
 
 	#############################################################################
 	# jz 2015-08-10
-	# get_discounted_money: 获取折扣后的金额 
+	# get_discounted_money: 获取折扣后的金额
 	# product_type: 商品类型
 	# 1、如果折扣为100% 或者 商品类型为积分商品，返回当前的价格
 	# 2、折扣不为100% 并且不是积分商品，计算折扣
@@ -546,11 +546,33 @@ class Member(models.Model):
 	def username_truncated(self):
 		try:
 			username = unicode(self.username_for_html, 'utf8')
-			_username = re.sub('<[^<]+?>', '', username)
+			_username = re.sub('<[^<]+?><[^<]+?>', ' ', username)
 			if len(_username) <= 5:
 				return username
 			else:
-				return u'%s...' % username[:5]
+				name_str = username
+				span_list = re.findall(r'<[^<]+?><[^<]+?>', name_str) #保存表情符
+
+				output_str = ""
+				count = 0
+
+				for span in span_list:
+				    length = len(span)
+				    while not span == name_str[:length]:
+				        output_str += name_str[0]
+				        count += 1
+				        name_str = name_str[1:]
+				        if count == 5:
+				            break
+				    else:
+				        output_str += span
+				        count += 1
+				        name_str = name_str[length:]
+				        if count == 5:
+				            break
+				    if count == 5:
+				        break
+				return u'%s...' % output_str
 		except:
 			return self.username_for_html[:5]
 
@@ -771,9 +793,9 @@ class MemberFollowRelation(models.Model):
 		try:
 
 			if is_fans != '0' and is_fans != None:
-				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('id')
+				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			else:
-				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id).order_by('id')
+				follow_relations = MemberFollowRelation.objects.filter(member_id=member_id).order_by('-id')
 
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
 
@@ -790,7 +812,7 @@ class MemberFollowRelation(models.Model):
 			return []
 
 		try:
-			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('id')
+			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
 			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL)
 		except:

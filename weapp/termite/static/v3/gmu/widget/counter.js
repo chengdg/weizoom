@@ -18,20 +18,20 @@
         template: function(count) {
             return '<span class="wa-down wui-down" style="border-right:0;border-radius:2px 0 0 2px;">-</span>'
                     +'<span class="wui-counterText"></span>'
-                    +'<span class="wa-up wui-up" style="border-left:0;border-radius:0 2px 2px 0;">+</span>'
-                    +'<div class="wui-limit wa-limit"></div>';
+                    +'<span class="wa-up wui-up" style="border-left:0;border-radius:0 2px 2px 0;">+</span>';
         },
 
         initialize: function(count) {
             this.$el.wrap('<div class="wui-counter"></div>');
             this.$parent = this.$el.parent('.wui-counter');
+            this.$parent.after('<span class="wui-limit wa-limit"></span>');
             this.$parent.append(this.template());
             this.count = parseInt(this.$el.val() || 1);
             this.minCount = this.$el.data('minlimit');
             if(this.minCount <= 1){
                 this.minCount = 1;
             }else{
-                this.$parent.find('.wa-limit').html('至少购买'+this.minCount+'件');
+                this.$parent.siblings('.wa-limit').css('margin-right','5px').html('至少购买'+this.minCount+'件');
             }
             if(this.count < this.minCount){
                 this.count = this.minCount;
@@ -144,10 +144,11 @@
                 this.$el.val(this.count);
                 this.$el.siblings('.wa-up,.wa-down').css('border-color', '#e5e5e5');
             } else {
-                if (this.count >= this.maxCount && this.maxCount > 0) {
-                    // xlog('1change to ' + this.maxCount);
-                    this.changeCountTo(this.maxCount);
-                }else if (this.count <= 1) {
+                // if (this.count >= this.maxCount && this.maxCount > 0) {
+                //     // xlog('1change to ' + this.maxCount);
+                //     this.changeCountTo(this.maxCount);
+                // }else 
+                if (this.count <= 1) {
                     // xlog('2change to ' + 1);
                     this.changeCountTo(1);
                 }

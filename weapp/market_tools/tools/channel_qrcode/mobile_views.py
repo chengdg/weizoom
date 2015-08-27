@@ -6,12 +6,12 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
 
 from models import *
-from modules.member.models import Member
+from modules.member.models import *
 from  weixin.user.module_api import get_mp_head_img, get_mp_qrcode_img
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from core.wxapi import get_weixin_api
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
-
+from mall.models import *
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
@@ -20,57 +20,58 @@ def get_settings(request):
     user_id = request.GET.get('webapp_owner_id', 0)
     ticketid = request.GET.get('ticketid', 0)
     member = request.member
-    if user_id == '467':
-        if ticketid:
-            setting = ChannelQrcodeSettings.objects.get(id=ticketid)
-            show_head = False
-            if setting.bing_member_id == request.member.id:
-                show_head = True
-                member = Member.objects.get(id=request.member.id)
-                member.user_name = member.username_for_html
-                setting.count = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id).count()
+    #if user_id == '467':
+    if ticketid:
+        setting = ChannelQrcodeSettings.objects.get(id=ticketid)
+        show_head = False
+        if setting.bing_member_id == request.member.id:
+            show_head = True
+            member = Member.objects.get(id=request.member.id)
+            member.user_name = member.username_for_html
+            setting.count = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id).count()
 
-            c = RequestContext(request, {
-                    'page_title': u'首草送好礼，接力扫码等你来传递',
-                    'member': member,
-                    'setting': setting,
-                    'is_hide_weixin_option_menu': False,
-                    'head_img': get_mp_head_img(user_id),
-                    'show_head': show_head,
-                    'hide_non_member_cover':True
-                })
-            return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
-        else:
-            if request.member:
-                setting = ChannelQrcodeSettings.objects.filter(bing_member_id=request.member.id, is_bing_member=True)
-                if setting.count() > 0:
-                    setting = setting[0]
-                    new_url = '%s&ticketid=%s' % (request.get_full_path(), setting.id)
-                    return HttpResponseRedirect(new_url)
-            c = RequestContext(request, {
-                    'page_title': u'代言人二维码',})
-            return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_context.html' % TEMPLATE_DIR, c)
+        c = RequestContext(request, {
+                'page_title': u'代言人二维码',
+                'member': member,
+                'setting': setting,
+                'is_hide_weixin_option_menu': False,
+                'head_img': get_mp_head_img(user_id),
+                'show_head': show_head,
+                'hide_non_member_cover':True
+            })
+        return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_img.html' % TEMPLATE_DIR, c)
     else:
         if request.member:
             setting = ChannelQrcodeSettings.objects.filter(bing_member_id=request.member.id, is_bing_member=True)
             if setting.count() > 0:
                 setting = setting[0]
-                member = Member.objects.get(id=request.member.id)
-                member.user_name = member.username_for_html
-                setting.count = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id).count()
-                c = RequestContext(request, {
-                    'page_title': u'代言人二维码',
-                    'member': member,
-                    'setting': setting,
-                    'is_hide_weixin_option_menu': True,
-                    'head_img': get_mp_head_img(user_id),
-                    'hide_non_member_cover':True
-                })
-                return render_to_response('%s/channel_qrcode/webapp/channel_qrcode.html' % TEMPLATE_DIR, c)
-
+                new_url = '%s&ticketid=%s' % (request.get_full_path(), setting.id)
+                return HttpResponseRedirect(new_url)
         c = RequestContext(request, {
                 'page_title': u'代言人二维码',})
         return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_context.html' % TEMPLATE_DIR, c)
+    # else:
+    #     if request.member:
+    #         setting = ChannelQrcodeSettings.objects.filter(bing_member_id=request.member.id, is_bing_member=True)
+
+    #         if setting.count() > 0:
+    #             setting = setting[0]
+    #             member = Member.objects.get(id=request.member.id)
+    #             member.user_name = member.username_for_html
+    #             setting.count = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id).count()
+    #             c = RequestContext(request, {
+    #                 'page_title': u'代言人二维码',
+    #                 'member': member,
+    #                 'setting': setting,
+    #                 'is_hide_weixin_option_menu': False,
+    #                 'head_img': get_mp_head_img(user_id),
+    #                 'hide_non_member_cover':True
+    #             })
+    #             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode.html' % TEMPLATE_DIR, c)
+
+    #     c = RequestContext(request, {
+    #             'page_title': u'代言人二维码',})
+    #     return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_context.html' % TEMPLATE_DIR, c)
 
 def get_new_settings(request):
     user_id = request.webapp_owner_id
@@ -161,3 +162,84 @@ def _get_ticket(user_id, screen_id):
             return qrcode_ticket.ticket
         except:
             return ''
+
+def get_settings_detail(request):
+    sid = request.GET.get('sid', 0)
+    member = request.member
+    user_id = request.webapp_owner_id
+    if sid:
+        setting = ChannelQrcodeSettings.objects.get(id=sid)
+        
+        if setting.bing_member_id == request.member.id:
+            relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
+            payed_count = 0
+            pay_money = 0
+            payed_member = []
+            setting_id2count = {}
+            member_id2setting_id = {}
+            member_ids = []
+            filter_data_args = {}
+            filter_data_args['status__in'] = (ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
+            old_member_id2_create_at = {}
+            new_member_id2_create_at = {}
+            for r in relations:
+                member_ids.append(r.member_id)
+                member_id2setting_id[r.member_id] = r.channel_qrcode_id
+                if r.channel_qrcode_id in setting_id2count:
+                    setting_id2count[r.channel_qrcode_id] += 1
+                else:
+                    setting_id2count[r.channel_qrcode_id] = 1
+                if r.is_new:
+                    new_member_id2_create_at[r.member_id] = r.created_at
+                    if r.member.pay_times > 0:
+                        payed_member.append(r.member_id)
+
+                else:
+                    old_member_id2_create_at[r.member_id] = r.created_at
+
+
+            new_webapp_users = WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
+            new_webapp_user_ids = [u.id for u in new_webapp_users]
+
+            #获取old会员的webapp_user
+            old_webapp_users = WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
+            old_member_order_ids = []
+            
+            for webapp_user in old_webapp_users:
+                created_at = old_member_id2_create_at[webapp_user.member_id]
+                for order in Order.objects.filter(webapp_user_id=webapp_user.id, created_at__gte=created_at):
+                    old_member_order_ids.append(order.id)
+                    payed_member.append(webapp_user.member_id)
+
+            if new_webapp_user_ids and old_member_order_ids:
+                orders = Order.objects.filter(Q(webapp_user_id__in=new_webapp_user_ids) | Q(id__in=old_member_order_ids)).filter(**filter_data_args).order_by('-created_at')
+            elif new_webapp_user_ids:
+                filter_data_args['webapp_user_id__in'] = new_webapp_user_ids
+                orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+            elif old_member_order_ids:
+                filter_data_args['id__in'] = old_member_order_ids
+                orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+            else:
+                orders = []
+
+            for order in orders:
+                pay_money += order.final_price
+
+            c = RequestContext(request, {
+                    'page_title': u'推荐详情',
+                    'member': member,
+                    'setting': setting,
+                    'is_hide_weixin_option_menu': True,
+                    'head_img': get_mp_head_img(user_id),
+                    'hide_non_member_cover':True,
+                    'channel_qrcode_members':relations,
+                    'channel_qrcode_members_count':relations.count(),
+                    'pay_money': '%.2f' %  pay_money,
+                    'payed_count': len(set(payed_member))
+                })
+            return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
+
+
+    c = RequestContext(request, {
+                'page_title': u'代言人二维码',})
+    return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_context.html' % TEMPLATE_DIR, c)

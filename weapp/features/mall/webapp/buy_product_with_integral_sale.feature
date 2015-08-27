@@ -573,7 +573,7 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 	Then bill在jobs的webapp中拥有150会员积分
 
 	Given jobs登录系统
-	When jobs'结束'促销活动'商品4积分应用'
+	When jobs"结束"促销活动"商品4积分应用"
 	When bill购买jobs的商品
 		"""
 		{

@@ -1,0 +1,85 @@
+{% load workbench_filter %}
+
+{% with global_navbar as component %}
+<div 
+    class="wui-template-globalNavbar"
+    data-component-cid="{{component.cid}}" 
+>
+    {% if component.model.type == "weixin" %}
+    <!-- 微信导航 -->
+    <div class="xui-globalBottomBar" data-ui-role="bottomNav">
+        <div class="xui-home">
+            <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bg"></a>
+        </div>
+        <div class="xui-calc">
+            {% for sub_component in component.components %}
+            <div class="">
+                <div data-component-cid="{{sub_component.cid}}" class="xui-flex xui-flex-{{component.components|length}} xui-menu xa-menu f14">
+                    <a href="{% if sub_component.model.second_navs %}javascript:void(0);{% else %}{{ sub_component.model.target|extract_target_data:request|safe }}{% endif %}" class="wa-inner-link">{{ sub_component.model.title }}</a>
+                </div>
+                <div class="xui-subMenuContainer">
+                    <span class="xui-menuArrow"></span>
+                    <span class="xui-menuArrowBorder"></span>
+                    <ul class="xui-subMenu">
+                        {% for second_nav in sub_component.model.second_navs %}
+                        <li class="f14"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% else %}
+    <!-- 侧滑导航 -->
+    <div class="wui-weshopSideBar" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>
+        <div class="xui-globalSideBar">
+            <div class="xui-bottomNav">
+                <ul class="">
+                    <li class="xa-outLink" data-page="home">
+                        <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0"><i class="xui-bg"></i></a>
+                    </li>
+                    <li class="xa-category" data-page="product-category"><i class="xui-bg{% if in_design_mode %} xui-active {% endif %}"></i></li>
+                    <li class="xa-outLink" data-page="shopping-cart">
+                        <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show&workspace_id=mall">
+                            <i class="xui-bg">
+                            {% if member.shopping_cart_product_count %}
+                            <span class="xui-shopCar xa-shopCarCount">{{ member.shopping_cart_product_count }}</span>
+                            {% endif %}
+                            </i>
+                        </a>
+                    </li>
+                    <li class="xa-outLink" data-page="usercenter">
+                        <a href="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="xui-sidePanel xa-sidePanel"  {% if not in_design_mode %}id="xa-sidePanel" {% endif %} {% if in_design_mode %}style="display:block;"{% endif %}>
+            <ul class="xui-mainMenu">
+                <li class="xui-firstNav">
+                    <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">
+                        <span>全部商品<i class="xui-leftArrow"></i></span>
+                    </a>
+                </li>
+
+                {% for sub_component in component.components %}
+                <li class="xui-firstNav xa-firstNav" data-component-cid="{{sub_component.cid}}"> 
+                    <a href="{% if sub_component.model.second_navs %}javascript:void(0);{% else %}{{ sub_component.model.target|extract_target_data:request|safe }}{% endif %}">
+                        <span class="wa-inner-link">{{ sub_component.model.title }}<i class="xui-leftArrow"></i></span>
+                    </a>
+                    <ul class="xui-subMenu">                        
+                        {% for second_nav in sub_component.model.second_navs %}
+                        <li class="pl50"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+                <li class="xui-firstNav"></li>
+            </ul>
+        </div>
+    </div>    
+    {% endif %}
+</div>
+{% endwith %}

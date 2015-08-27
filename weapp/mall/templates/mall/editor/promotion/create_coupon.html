@@ -69,6 +69,7 @@ $(function(){
     if(!W.validate()) {
       return false;
     }
+    $(event.currentTarget).bottonLoading({status: 'show'});
     var args = $('.xa-form').serializeObject();
     // args.products = productSelector.getData();
     W.getApi().call({

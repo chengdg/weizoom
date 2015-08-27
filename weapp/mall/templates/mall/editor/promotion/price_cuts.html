@@ -119,13 +119,7 @@
 					<td>
 						满${promotion.detail.price_threshold}减${promotion.detail.cut_money}元
 					</td>
-					<td>
-						{{if (promotion.status === '已结束')}}
-						已结束
-						{{else}}
-						<span class="xa-notFinishInfo">${promotion.status}</span><span class="xa-finishInfo xui-hide">已结束</span>
-						{{/if}}
-					</td>
+					<td>${promotion.status}</td>
 					<td>
 						<span class="xui-i-date">${promotion.start_date}</span>-<span class="xui-i-date">${promotion.end_date}</span>
 					</td>
@@ -135,8 +129,7 @@
 						<a href="javascript:void(0);" class="xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
 						{{else}}
 						<a href="/mall2/price_cut/?id=${promotion.id}" class="fl" style="width: 40px;text-decoration:none;">详情</a>
-						<a href="javascript:void(0);" class="xa-notFinishInfo xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
-						<a href="javascript:void(0);" class="xui-hide xa-finishInfo xa-delete fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;删除</a>
+						<a href="javascript:void(0);" class="xa-finish fl" style="width: 40px;text-decoration:none;">|&nbsp;&nbsp;&nbsp;结束</a>
 						{{/if}}
 					</td>
 				</tr>

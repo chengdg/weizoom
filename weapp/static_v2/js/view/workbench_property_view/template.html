@@ -9,6 +9,7 @@
 		<div id="propertyEditor" class="propertyView_actionTarget">
 		{{each(i, property_group) property_groups}}
 			{{if (!onlyShowUserProperty || property_group.isUserProperty)}}
+			<div class="${property_group.groupClass}-topGap propertyGroup-topGap"></div>
 			<div class="propertyGroup ${property_group.groupClass}" {{if property_group.groupName }}name="${property_group.groupName}"{{/if}}>
 				{{if i > 0}}
 				<div class="ml5 fb">${property_group.group}</div>
@@ -106,17 +107,17 @@
 					{{/if}}
 
 
-					{{if (field.type == 'checkbox')}}
+					{{if (field.type == 'checkbox-group')}}
 					<div class="propertyGroup_property_checkboxField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label">${field.displayName}</div>
 						<div class="propertyGroup_property_input" style="display: inline;">
 						{{each(fi, checkbox) field.source}}
-						<label style="display:inline;"><input style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
+						<label style="display:inline;"><input class="xa-checkboxGroup-checkbox" style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
 						{{/each}}
 						</div>
 					</div>
 					{{/if}}
-
+					
 
 					{{if (field.type == 'select')}}
 					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
@@ -266,7 +267,7 @@
 						{{each(fi, checkboxField) field.source}}
 						<div class="propertyGroup_property_label long-label mt5">${checkboxField.model.get('label')}：</div>
 						<div class="propertyGroup_property_input short-input">
-						<input type="checkbox" data-field="${field.name}" data-column-name="${checkboxField.model.get('name')}" {{if checkboxField.isSelectIntoList}}checked="checked"{{/if}} />&nbsp;选中
+						<input class="xa-checkbox" type="checkbox" data-field="${field.name}" data-column-name="${checkboxField.model.get('name')}" {{if checkboxField.isSelectIntoList}}checked="checked"{{/if}} />&nbsp;选中
 						</div>
 						{{/each}}
 					</div>
@@ -306,6 +307,9 @@
 						{{each(dynamicComponentIndex, dynamicComponent) dynamicComponents}}
 						{{if !dynamicComponent.runtimeData || !dynamicComponent.runtimeData.isInvalid}}
 						<div class="propertyGroup_property_dynamicControlField_control" data-dynamic-cid="${dynamicComponent.cid}" data-parent-cid="${component.cid}">
+							{{if dynamicComponent.shouldShowPropertyViewTitle}}
+							<div class="propertyGroup_property_label">${dynamicComponent.propertyViewTitle}</div>
+							{{/if}}
 							<!--
 							<h3 class="propertyGroup_property_dynamicControlField_title clearfix">
 								<i class="icon-chevron-right"></i> 
@@ -462,9 +466,24 @@
 											
 										{{/if}}
 									</div>
+									<div class="xui-hide xa-seconde-navs-prompt" style="color:#888;margin-top:3px;">请选择二级菜单链接</div>
 									<div class="errorHint"></div>
 								</div>
-								{{/if}}								
+								{{/if}}
+
+								{{if (dynamicComponentField.type == 'second_navs')}}
+								<div class="propertyGroup_property_secondNavsField propertyGroup_property_horizontalField">
+									<div class="propertyGroup_property_input pr" style="width:80px; height:auto;">
+										<input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden"/>
+										<div 
+											class="xui-secondNav xa-thirdPartyPlugin"
+											data-plugin="secondnav" 
+											data-ui-role="termite-navbar-secondnav"
+											data-json="${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}"
+										></div>
+									</div>
+								</div>
+								{{/if}}
 
 
 								{{if (dynamicComponentField.type == 'image_button')}}
@@ -555,11 +574,11 @@
 
 								<div class='xui-nameBlock xa-nameBlock' style="border-top: solid 1px #EFEFEF;">
 									<label class="xui-block xa-itemname mb10 ">
-										<input class="mr10"  type="checkbox" data-field="itemname" name='itemname' {{if model.get('itemname')}}checked="checked"{{/if}} value="${component.name2field['itemname'].value}" />${component.name2field['itemname'].displayName}
+										<input class="mr10 xa-checkbox"  type="checkbox" data-field="itemname" name='itemname' {{if model.get('itemname')}}checked="checked"{{/if}} value="${component.name2field['itemname'].value}" />${component.name2field['itemname'].displayName}
 									</label>
 
 									<label class="xui-block xa-price">
-										<input class="mr10"  type="checkbox" data-field="price" name='price' {{if model.get('price')}}checked="checked"{{/if}} value="${component.name2field['price'].value}" />${component.name2field['price'].displayName}
+										<input class="mr10 xa-checkbox"  type="checkbox" data-field="price" name='price' {{if model.get('price')}}checked="checked"{{/if}} value="${component.name2field['price'].value}" />${component.name2field['price'].displayName}
 									</label>
 								</div>
 							</div>

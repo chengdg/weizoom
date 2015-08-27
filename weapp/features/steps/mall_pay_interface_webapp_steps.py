@@ -128,6 +128,7 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		context.pay_result_url = response_data['url']
 		url = '/workbench/jqm/preview/%s' % context.pay_result_url[2:]
 		response = context.client.get(bdd_util.nginx(url), follow=True)
+		context.pay_result = response.context
 	# 直接修改数据库的订单状态
 	elif pay_interface.type == PAY_INTERFACE_ALIPAY:
 		order.pay_interface_type = PAY_INTERFACE_ALIPAY

@@ -270,17 +270,9 @@ def group_product_by_promotion(request, products):
 					for premium_product in promotion_detail['premium_products']:
 						premium_product['original_premium_count'] = premium_product['premium_count']
 						premium_product['premium_count'] = premium_product['premium_count'] * premium_round_count
-			# product_groups.append({
-			# 	"id": group_id,
-			# 	"uid": group_unified_id,
-			# 	"promotion_type": type_name,
-			# 	'products': products,
-			# 	'promotion': promotion,
-			# 	'promotion_result': {"subtotal": total_product_price},
-			# 	# 'integral_sale_rule': integral_sale_rule,
-			# 	'can_use_promotion': can_use_promotion,
-			# 	#'promotion_json': json.dumps(promotion)
-			# })
+			promotion_result = {
+				"subtotal": product.purchase_count * product.price
+			}
 		# 满减
 		elif promotion_type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
 			promotion = products[0].promotion
@@ -300,29 +292,6 @@ def group_product_by_promotion(request, products):
 				"subtotal": subtotal,
 				"price_threshold": promotion_round_count*promotion_detail['price_threshold']
 			}
-				# product_groups.append({
-				# 	"id": group_id,
-				# 	"uid": group_unified_id,
-				# 	"promotion_type": type_name,
-				# 	'products': products,
-				# 	'promotion': promotion,
-				# 	'promotion_result': promotion_result,
-				# 	# 'integral_sale_rule': integral_sale_rule,
-				# 	'can_use_promotion': can_use_promotion,
-				# 	#'promotion_json': json.dumps(promotion)
-				# })
-			# else:
-			# 	product_groups.append({
-			# 		"id": group_id,
-			# 		"uid": group_unified_id,
-			# 		"promotion_type": type_name,
-			# 		'products': products,
-			# 		'promotion': None,
-			# 		'promotion_result': None,
-			# 		# 'integral_sale_rule': integral_sale_rule,
-			# 		'can_use_promotion': False,
-			# 		#'promotion_json': json.dumps(promotion)
-			# 	})
 		product_groups.append({
 			"id": group_id,
 			"uid": group_unified_id,
@@ -335,18 +304,6 @@ def group_product_by_promotion(request, products):
 			'promotion_json': json.dumps(promotion),
 			'member_grade_id': member_grade_id
 		})
-		# else:
-		# 	#非促销商品
-		# 	product_groups.append({
-		# 		"id": group_id,
-		# 		"uid": group_unified_id,
-		# 		"promotion_type": type_name,
-		# 		'products': products,
-		# 		'promotion': None,
-		# 		'promotion_result': None,
-		# 		# 'integral_sale_rule': integral_sale_rule,
-		# 		'can_use_promotion': False
-		# 	})
 	return product_groups
 
 
@@ -526,6 +483,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			#填充促销活动信息
 			if promotion:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [promotion])
+				product.original_promotion_title = product.promotion_title
 				if promotion.promotion_title:
 					product.promotion_title = promotion.promotion_title
 				if promotion.type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
@@ -540,6 +498,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					promotion.promotion_title = ''
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
+				product.original_promotion_title = product.promotion_title
 				product.promotion = None
 			#填充积分折扣信息
 			if integral_sale:
@@ -562,10 +521,21 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				#返回"被删除"商品
 				product = Product()
 				product.is_deleted = True
+		data = product.to_dict(
+								'min_limit',
+								'swipe_images_json',
+								'models',
+								'_is_use_custom_model',
+								'product_model_properties',
+								'is_sellout',
+								'promotion',
+								'integral_sale',
+								'properties',
+								'product_review'
+		)
+		data['original_promotion_title'] = product.original_promotion_title
 
-		return {
-			'value': product.to_dict('min_limit', 'swipe_images_json', 'models', '_is_use_custom_model', 'product_model_properties', 'is_sellout', 'promotion', 'integral_sale', 'properties', 'product_review')
-		}
+		return {'value': data}
 
 	return inner_func
 
@@ -915,7 +885,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 		product = webapp_cache.get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id)
 		if product.is_deleted:
 			return product
-
 		for product_model in product.models:
 			#获取折扣后的价格
 			if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
@@ -934,7 +903,8 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_original_price': str("%.2f" % product_model['original_price']),
 					'display_market_price': str("%.2f" % product_model['market_price']),
 					'min_price': product_model['price'],
-					'max_price': product_model['price']
+					'max_price': product_model['price'],
+					'promotion_title': product.original_promotion_title
 				}
 			else:
 				#有多个custom model，显示custom model集合组合后的价格信息
@@ -975,7 +945,8 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_original_price': price_range,
 					'display_market_price': market_price_range,
 					'min_price': min_price,
-					'max_price': max_price
+					'max_price': max_price,
+					'promotion_title': product.original_promotion_title
 				}
 		else:
 			standard_model = product.models[0]
@@ -984,7 +955,8 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 				'display_original_price': str("%.2f" % standard_model['original_price']),
 				'display_market_price': str("%.2f" % standard_model['market_price']),
 				'min_price': standard_model['price'],
-				'max_price': standard_model['price']
+				'max_price': standard_model['price'],
+				'promotion_title': product.original_promotion_title
 			}
 
 	except:
@@ -997,7 +969,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 			#返回"被删除"商品
 			product = Product()
 			product.is_deleted = True
-
 	return product
 
 
@@ -2700,7 +2671,14 @@ def batch_handle_order(json_data, user):
 				error_data.append(item)
 				continue
 			try:
-				order = Order.objects.get(order_id=order_id.strip())
+				order_id = order_id.strip()
+				if '-' in order_id:
+					new_order_id = order_id.split('-')[0]
+					order = Order.objects.get(order_id=new_order_id)
+					if str(order.edit_money).replace('.', '').replace('-', '') != order_id.split('-')[1]:
+						raise
+				else:
+					order = Order.objects.get(order_id=order_id)
 			except:
 				item["error_info"] = "订单号错误"
 				error_data.append(item)
@@ -2971,9 +2949,9 @@ def get_member_product_info(request):
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
 	response.data.count = shopping_cart_count
 	webapp_owner_id = request.webapp_owner_id
+	product_id = request.GET.get('product_id', "")
 	if request.member:
 		member_id = request.member.id
-		product_id = request.GET.get('product_id', "")
 		if product_id:
 			collect = MemberProductWishlist.objects.filter(
 				owner_id=webapp_owner_id,
