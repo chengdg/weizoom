@@ -709,7 +709,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 		}]
 	"""
 	Given jobs登录系统:ui
-	When jobs'结束'促销活动'商品10买1赠1':ui
+	When jobs"结束"促销活动"商品10买1赠1":ui
 	When bill访问jobs的webapp:ui
 	And bill购买jobs的商品:ui
 		"""

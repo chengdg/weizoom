@@ -9,12 +9,9 @@ BDD feature: `user_center_cache.feature`
 
 __author__ = 'abael'
 
-import logging
 import re
 import redis
 from django.core.cache import parse_backend_conf
-
-log = logging.getLogger('weapp.service_cache')
 
 redis_loc = None
 redis_args = []
@@ -35,12 +32,10 @@ except:
         pass
 # 没有找到
 if redis_loc is None:
-    log.error('Redis required for service caching !')
     sys.exit(-1)
 
 locdic = (lambda s: s and s.groupdict() or None)(re.match('((?P<scheme>redis)\:\/\/)?(?P<host>[^\:]{5,})(:(?P<port>[0-9]+)?)', redis_loc, re.I))
 if locdic is None or not locdic.has_key('host'):
-    log.error('Redis location invalid !')
     sys.exit(-1)
 
 sredis = redis.StrictRedis(host=locdic['host'], port= (locdic.has_key('port') and int(locdic['port']) or  6379))

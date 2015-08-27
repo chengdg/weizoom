@@ -18,7 +18,7 @@ W.component.wepage.Navar = W.component.Component.extend({
             groupClass:'xui-propertyView-navbar-settings',
             fields: [{
                 name: 'pages',
-                type: 'checkbox',
+                type: 'checkbox-group',
                 displayName: '将导航应用在以下页面：',
                 isUserProperty: true,
                 source: [{

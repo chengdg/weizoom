@@ -35,12 +35,6 @@ def process_custom_model(custom_model_str):
 
 
 def extract_product_model(request):
-    # logger.debug("------------ %(func)s - customModels:%(value)s ----------",
-    #              {
-    #                 'func': 'extract_product_model',
-    #                 'value': request.POST.get('customModels')
-    #              })
-    # # pdb.set_trace()
     is_use_custom_models = request.POST.get("is_use_custom_model", '') == u'true'
 
     use_custom_models = json.loads(request.POST.get('customModels', '[]'))
@@ -116,35 +110,6 @@ PRODUCT_FILTERS = {
 }
 
 
-# def filter_products(request, products):
-#     has_filter = search_util.init_filters(request, PRODUCT_FILTERS)
-#     if not has_filter:
-#         # 没有filter，直接返回
-#         return products
-
-#     filtered_products = []
-#     products = search_util.filter_objects(products, PRODUCT_FILTERS['product'])
-#     if not products:
-#         # product filter没有通过，跳过该promotion
-#         print 'end in product filter'
-#         return filtered_products
-#     else:
-#         print 'pass product filter'
-
-#     for product in products:
-#         models = search_util.filter_objects(
-#             product.models,
-#             PRODUCT_FILTERS['models']
-#         )
-#         if models:
-#             print 'pass model filter'
-#             filtered_products.append(product)
-#         else:
-#             print 'end in model filter'
-
-#     return filtered_products
-
-
 def filter_products(request, products):
     has_filter = search_util.init_filters(request, PRODUCT_FILTERS)
     if not has_filter:
@@ -197,7 +162,7 @@ def sorted_products(manager_id, product_categories, reverse):
 
         products_is_0 = filter(lambda p: p.display_index == 0 or p.shelve_type != models.PRODUCT_SHELVE_TYPE_ON, products)
         products_not_0 = filter(lambda p: p.display_index != 0, products)
-        products_is_0 = sorted(products_is_0, key=attrgetter('shelve_type', 'join_category_time'), reverse=True)
+        products_is_0 = sorted(products_is_0, key=attrgetter('shelve_type', 'join_category_time', 'id'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))       
         products = products_not_0 + products_is_0
 

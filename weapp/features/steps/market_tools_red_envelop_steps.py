@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'guoliyan'
 import json
-import time
+import datetime as dt
+#import time
 from test import bdd_util
 from market_tools.tools.red_envelope.models import *
-from mall.promotion.models import CouponRule
+from mall.promotion.models import CouponRule, RedEnvelopeRule
 
 #######################################################################
 # __supplement_red_envelope: 补足一个红包的数据
@@ -60,23 +61,6 @@ def step_impl(context, user):
         __add_red_envelope(context, red_envelope)
 
 
-@then(u"{user}能获取红包列表")
-def step_impl(context, user):
-    context.client = bdd_util.login(user)
-    client = context.client
-    response = client.get('/market_tools/red_envelope/')
-    actual_red_envelopes = response.context['red_envelopes']
-    actual_data = []
-    for red_envelope in actual_red_envelopes:
-        actual_data.append({
-            "name": red_envelope.name
-        })
-
-    expected = json.loads(context.text)
-
-    bdd_util.assert_list(expected, actual_data)
-
-
 @given(u"{user}已添加微信红包")
 def step_impl(context, user):
     if hasattr(context, 'client'):
@@ -86,13 +70,6 @@ def step_impl(context, user):
     context.red_envelopes = json.loads(context.text)
     for red_envelope in context.red_envelopes:
         __add_red_envelope(context, red_envelope)
-
-
-@when(u"{user}删除微信红包'{red_envelope_name}'")
-def step_impl(context, user, red_envelope_name):
-    red_envelope = RedEnvelope.objects.get(name=red_envelope_name)
-    url = '/market_tools/red_envelope/api/red_envelope/delete/'
-    context.client.post(url, {'id': red_envelope.id}, HTTP_REFERER='/market_tools/red_envelope/')
 
 
 @when(u"{member}参加微信红包'{red_envelope_name}'")
