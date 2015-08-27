@@ -27,7 +27,7 @@ W.view.apps.PrizeSelector = Backbone.View.extend({
 		var $select = $(event.currentTarget);
 		var prizeType = $select.val();
 		this.$('.xa-optionTarget').hide();
-		this.$('.xa-integral').val(0);
+		this.$('.xa-integral').val('');
 		this.$('[data-target="'+prizeType+'"]').show();
 
 		this.prize['type'] = prizeType;
