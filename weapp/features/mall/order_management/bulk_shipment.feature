@@ -513,16 +513,10 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"member":"bill",
 			"status":"待发货",
 			"final_price": 90.00,
-			"edit_money": 10.00,
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344",
-			"products": [{
-				"name": "商品1",
-				"price": 100.00,
-				"count": 1
-			}]
+			"ship_tel":"13811223344"
 		}
 		"""
 	When jobs修改订单'00010'的价格
@@ -540,16 +534,10 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"member":"bill",
 			"status":"待发货",
 			"final_price": 119.00,
-			"edit_money": -19.00,
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344",
-			"products": [{
-				"name": "商品1",
-				"price": 100.00,
-				"count": 1
-			}]
+			"ship_tel":"13811223344"
 		}
 		"""
 	When jobs修改订单'00009'的价格
@@ -567,16 +555,10 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"member":"bill",
 			"status":"待发货",
 			"final_price": 99.00,
-			"edit_money": 1.00,
 			"order_time":"2014-10-07 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344",
-			"products": [{
-				"name": "商品1",
-				"price": 100.00,
-				"count": 1
-			}]
+			"ship_tel":"13811223344"
 		}
 		"""
 
@@ -611,45 +593,42 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"order_no":"00009-10",
 			"member":"bill",
 			"status":"已发货",
-			"final_price": 99.00,
-			"edit_money": 1.00,
+			"price": "99.00",
 			"order_time":"2014-10-07 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
-				"name": "商品1",
-				"price": 100.00,
+				"product_name": "商品1",
+				"total_price": 100.00,
 				"count": 1
 			}]
 		},{
 			"order_no":"00010-190",
 			"member":"bill",
 			"status":"待发货",
-			"final_price": 119.00,
-			"edit_money": -19.00,
+			"price": "119.00",
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
-				"name": "商品1",
-				"price": 100.00,
+				"product_name": "商品1",
+				"total_price": 100.00,
 				"count": 1
 			}]
 		},{
 			"order_no":"00011-100",
 			"member":"bill",
 			"status":"已发货",
-			"final_price": 90.00,
-			"edit_money": 10.00,
+			"price": "90.00",
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
 			"ship_tel":"13811223344",
 			"products": [{
-				"name": "商品1",
-				"price": 100.00,
+				"product_name": "商品1",
+				"total_price": 100.00,
 				"count": 1
 			}]
 		},{
