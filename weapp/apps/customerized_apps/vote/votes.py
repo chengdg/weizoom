@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from termite import pagestore as pagestore_manager
+
 import models as app_models
 from datetime import datetime
 from weixin2 import export
@@ -41,6 +43,7 @@ class votes(resource.Resource):
 		status = int(request.GET.get('status', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
+		prize_type = request.GET.get('prize_type', 'all')
 
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.user.id}
@@ -62,6 +65,18 @@ class votes(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
+		if prize_type != 'all':
+			records = []
+			prize_type_ids = []
+			records = app_models.vote.objects.filter(owner_id=request.user.id)
+			pagestore = pagestore_manager.get_pagestore('mongo')
+			for record in records:
+				page = pagestore.get_page(record.related_page_id, 1)
+				page_details = page['component']['components'][0]['model']
+				page_prize_type = page_details['prize']['type']
+				if prize_type == page_prize_type:
+					prize_type_ids.append(record.id)
+			params['id__in'] = prize_type_ids
 		datas = app_models.vote.objects(**params).order_by('-id')	
 		
 		#进行分页
@@ -80,6 +95,17 @@ class votes(resource.Resource):
 		
 		items = []
 		for data in datas:
+			related_page_id = data.related_page_id
+			pagestore = pagestore_manager.get_pagestore('mongo')
+			page = pagestore.get_page(related_page_id, 1)
+			page_details = page['component']['components'][0]['model']
+			prize_type = page_details['prize']['type']
+			if prize_type == 'no_prize':
+				prize_type = '无奖励'
+			elif prize_type == 'integral':
+				prize_type = '积分'
+			elif prize_type == 'coupon':
+				prize_type = '优惠券'
 			items.append({
 				'id': str(data.id),
 				'name': data.name,
@@ -88,6 +114,7 @@ class votes(resource.Resource):
 				'participant_count': data.participant_count,
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
+				'prize_type': prize_type,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {
