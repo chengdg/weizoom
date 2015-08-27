@@ -442,7 +442,7 @@ Scenario: 2 对多个订单同时进行发货失败
 		"""
 
 
-@deliver @ztq
+@deliver @mall2
 Scenario: 3 对修改过价格的订单进行批量发货
 	jobs对修改过价格的订单进行批量发货
 	1.填写新的订单号也可以发货成功
