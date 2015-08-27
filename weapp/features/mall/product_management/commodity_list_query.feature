@@ -84,6 +84,123 @@ Background:
 		| 2015-7-10  | tom      | 	 购买   | jobs      | 商品3,1   | 支付    | 微信支付       |  0      |   1      |    1        |  0      | 1      | 0     | jobs,无操作   |  待支付         |
 		| 2015-07-02 10:20       | tom      | 	 购买   | jobs      | 商品3,1   | 未支付  | 微信支付       |  0      |   1      |    1        |  0      | 0      | 0     | jobs,完成退款 |  退款成功       |
 
+#前端功能不能用feature实现
+	#"""
+		#			When jobs设置查询条件
+		#			"""
+		#			{
+		#				"name":"",
+		#				"bar_code":"",
+		#				"start_price":"",
+		#				"end_price":"",
+		#				"start_stocks":"",
+		#				"end-stocks":"10",
+		#				"start_sales":"",
+		#				"end_sales":"",
+		#				"category":"全部",
+		#				"start_date":"",
+		#				"end_date":""
+		#			}
+		#			"""
+		#
+		#			Then jobs获得系统提示"请输入起始库存"
+
+		#			When jobs设置查询条件
+		#			"""
+		#			{
+		#				"name":"",
+		#				"bar_code":"",
+		#				"start_price":"",
+		#				"end_price":"",
+		#				"start_stocks":"10",
+		#				"end-stocks":"",
+		#				"start_sales":"",
+		#				"end_sales":"",
+		#				"category":"全部",
+		#				"start_date":"",
+		#				"end_date":""
+		#			}
+		#			"""
+		#
+		#			Then jobs获得系统提示"请输入最高库存"
+
+		#			When jobs设置查询条件
+		#			"""
+		#			{
+		#				"name":"",
+		#				"bar_code":"",
+		#				"start_price":"",
+		#				"end_price":"",
+		#				"start_stocks":"10",
+		#				"end-stocks":"5",
+		#				"start_sales":"",
+		#				"end_sales":"",
+		#				"category":"全部",
+		#				"start_date":"",
+		#				"end_date":""
+		#			}
+		#			"""
+		#
+		#			Then jobs获得系统提示"最高库存不能低于起始库存"
+
+		#			When jobs设置查询条件
+		#				"""
+		#				{
+		#					"name":"",
+		#					"bar_code":"",
+		#					"start_price":"",
+		#					"end_price":"",
+		#					"start_stocks":"-1",
+		#					"end-stocks":"0",
+		#					"start_sales":"",
+		#					"end_sales":"",
+		#					"category":"全部",
+		#					"start_date":"",
+		#					"end_date":""
+		#				}
+		#				"""
+		#
+		#			Then jobs获得系统提示"请输入正确的库存！仅数字"
+
+		#			When jobs设置查询条件
+		#				"""
+		#				{
+		#					"name":"",
+		#					"bar_code":"",
+		#					"start_price":"",
+		#					"end_price":"",
+		#					"start_stocks":"0",
+		#					"end-stocks":"-1",
+		#					"start_sales":"",
+		#					"end_sales":"",
+		#					"category":"全部",
+		#					"start_date":"",
+		#					"end_date":""
+		#				}
+		#				"""
+		#
+		#			Then jobs获得系统提示"请输入正确的库存！仅数字"
+
+		#			When jobs设置查询条件
+		#				"""
+		#				{
+		#					"name":"",
+		#					"bar_code":"",
+		#					"start_price":"",
+		#					"end_price":"",
+		#					"start_stocks":"0.1",
+		#					"end-stocks":"10",
+		#					"start_sales":"",
+		#					"end_sales":"",
+		#					"category":"全部",
+		#					"start_date":"",
+		#					"end_date":""
+		#				}
+		#				"""
+		#
+		#			Then jobs获得系统提示"请输入正确的库存！仅数字"
+	#"""
+
 @mall2
 Scenario:1. 在售商品列表查询
 
@@ -235,119 +352,119 @@ Scenario:1. 在售商品列表查询
 
 		#填写条件校验
 
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"",
-#				"end_price":"10",
-#				"start_stocks":"",
-#				"end-stocks":"",
-#				"start_sales":"",
-#				"end_sales":"",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"请输入起始价格"
+	#			When jobs设置查询条件
+	#			"""
+	#			{
+	#				"name":"",
+	#				"bar_code":"",
+	#				"start_price":"",
+	#				"end_price":"10",
+	#				"start_stocks":"",
+	#				"end-stocks":"",
+	#				"start_sales":"",
+	#				"end_sales":"",
+	#				"category":"全部",
+	#				"start_date":"",
+	#				"end_date":""
+	#			}
+	#			"""
+	#
+	#			Then jobs获得系统提示"请输入起始价格"
 
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"10",
-#				"end_price":"",
-#				"start_stocks":"",
-#				"end-stocks":"",
-#				"start_sales":"",
-#				"end_sales":"",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"请输入最高价格"
+	#			When jobs设置查询条件
+	#			"""
+	#			{
+	#				"name":"",
+	#				"bar_code":"",
+	#				"start_price":"10",
+	#				"end_price":"",
+	#				"start_stocks":"",
+	#				"end-stocks":"",
+	#				"start_sales":"",
+	#				"end_sales":"",
+	#				"category":"全部",
+	#				"start_date":"",
+	#				"end_date":""
+	#			}
+	#			"""
+	#
+	#			Then jobs获得系统提示"请输入最高价格"
 
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"10",
-#				"end_price":"5",
-#				"start_stocks":"",
-#				"end-stocks":"",
-#				"start_sales":"",
-#				"end_sales":"",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"最高价格不能低于起始价格"
+	#			When jobs设置查询条件
+	#			"""
+	#			{
+	#				"name":"",
+	#				"bar_code":"",
+	#				"start_price":"10",
+	#				"end_price":"5",
+	#				"start_stocks":"",
+	#				"end-stocks":"",
+	#				"start_sales":"",
+	#				"end_sales":"",
+	#				"category":"全部",
+	#				"start_date":"",
+	#				"end_date":""
+	#			}
+	#			"""
+	#
+	#			Then jobs获得系统提示"最高价格不能低于起始价格"
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"-1",
-#					"end_price":"5",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的价格"
+	#			When jobs设置查询条件
+	#				"""
+	#				{
+	#					"name":"",
+	#					"bar_code":"",
+	#					"start_price":"-1",
+	#					"end_price":"5",
+	#					"start_stocks":"",
+	#					"end-stocks":"",
+	#					"start_sales":"",
+	#					"end_sales":"",
+	#					"category":"全部",
+	#					"start_date":"",
+	#					"end_date":""
+	#				}
+	#				"""
+	#
+	#			Then jobs获得系统提示"请输入正确的价格"
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"0",
-#					"end_price":"-1",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的价格"
+	#			When jobs设置查询条件
+	#				"""
+	#				{
+	#					"name":"",
+	#					"bar_code":"",
+	#					"start_price":"0",
+	#					"end_price":"-1",
+	#					"start_stocks":"",
+	#					"end-stocks":"",
+	#					"start_sales":"",
+	#					"end_sales":"",
+	#					"category":"全部",
+	#					"start_date":"",
+	#					"end_date":""
+	#				}
+	#				"""
+	#
+	#			Then jobs获得系统提示"请输入正确的价格"
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"0.01",
-#					"end_price":"1",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的价格"
+	#			When jobs设置查询条件
+	#				"""
+	#				{
+	#					"name":"",
+	#					"bar_code":"",
+	#					"start_price":"0.01",
+	#					"end_price":"1",
+	#					"start_stocks":"",
+	#					"end-stocks":"",
+	#					"start_sales":"",
+	#					"end_sales":"",
+	#					"category":"全部",
+	#					"start_date":"",
+	#					"end_date":""
+	#				}
+	#				"""
+	#
+	#			Then jobs获得系统提示"请输入正确的价格"
 
 		#价格区间查询
 
@@ -420,120 +537,6 @@ Scenario:1. 在售商品列表查询
 	#商品库存（任何查询条件，查询结果都查询出库存为无限的商品）
 
 		#填写条件校验
-
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"",
-#				"end_price":"",
-#				"start_stocks":"",
-#				"end-stocks":"10",
-#				"start_sales":"",
-#				"end_sales":"",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"请输入起始库存"
-
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"",
-#				"end_price":"",
-#				"start_stocks":"10",
-#				"end-stocks":"",
-#				"start_sales":"",
-#				"end_sales":"",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"请输入最高库存"
-
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"",
-#				"end_price":"",
-#				"start_stocks":"10",
-#				"end-stocks":"5",
-#				"start_sales":"",
-#				"end_sales":"",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"最高库存不能低于起始库存"
-
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"-1",
-#					"end-stocks":"0",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的库存！仅数字"
-
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"0",
-#					"end-stocks":"-1",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的库存！仅数字"
-
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"0.1",
-#					"end-stocks":"10",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的库存！仅数字"
 
 		#库存区间查询
 
@@ -609,119 +612,119 @@ Scenario:1. 在售商品列表查询
 
 		#填写条件校验
 
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"",
-#				"end_price":"",
-#				"start_stocks":"",
-#				"end-stocks":"",
-#				"start_sales":"",
-#				"end_sales":"10",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"请输入起始销量"
+			#			When jobs设置查询条件
+			#			"""
+			#			{
+			#				"name":"",
+			#				"bar_code":"",
+			#				"start_price":"",
+			#				"end_price":"",
+			#				"start_stocks":"",
+			#				"end-stocks":"",
+			#				"start_sales":"",
+			#				"end_sales":"10",
+			#				"category":"全部",
+			#				"start_date":"",
+			#				"end_date":""
+			#			}
+			#			"""
+			#
+			#			Then jobs获得系统提示"请输入起始销量"
 
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"",
-#				"end_price":"",
-#				"start_stocks":"",
-#				"end-stocks":"",
-#				"start_sales":"10",
-#				"end_sales":"",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"请输入最高销量"
+			#			When jobs设置查询条件
+			#			"""
+			#			{
+			#				"name":"",
+			#				"bar_code":"",
+			#				"start_price":"",
+			#				"end_price":"",
+			#				"start_stocks":"",
+			#				"end-stocks":"",
+			#				"start_sales":"10",
+			#				"end_sales":"",
+			#				"category":"全部",
+			#				"start_date":"",
+			#				"end_date":""
+			#			}
+			#			"""
+			#
+			#			Then jobs获得系统提示"请输入最高销量"
 
-#			When jobs设置查询条件
-#			"""
-#			{
-#				"name":"",
-#				"bar_code":"",
-#				"start_price":"",
-#				"end_price":"",
-#				"start_stocks":"",
-#				"end-stocks":"",
-#				"start_sales":"10",
-#				"end_sales":"5",
-#				"category":"全部",
-#				"start_date":"",
-#				"end_date":""
-#			}
-#			"""
-#
-#			Then jobs获得系统提示"最高销量不能低于起始销量"
+			#			When jobs设置查询条件
+			#			"""
+			#			{
+			#				"name":"",
+			#				"bar_code":"",
+			#				"start_price":"",
+			#				"end_price":"",
+			#				"start_stocks":"",
+			#				"end-stocks":"",
+			#				"start_sales":"10",
+			#				"end_sales":"5",
+			#				"category":"全部",
+			#				"start_date":"",
+			#				"end_date":""
+			#			}
+			#			"""
+			#
+			#			Then jobs获得系统提示"最高销量不能低于起始销量"
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"-1",
-#					"end_sales":"0",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的销量！仅数字"
+			#			When jobs设置查询条件
+			#				"""
+			#				{
+			#					"name":"",
+			#					"bar_code":"",
+			#					"start_price":"",
+			#					"end_price":"",
+			#					"start_stocks":"",
+			#					"end-stocks":"",
+			#					"start_sales":"-1",
+			#					"end_sales":"0",
+			#					"category":"全部",
+			#					"start_date":"",
+			#					"end_date":""
+			#				}
+			#				"""
+			#
+			#			Then jobs获得系统提示"请输入正确的销量！仅数字"
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"0",
-#					"end_sales":"-1",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的销量！仅数字"
+			#			When jobs设置查询条件
+			#				"""
+			#				{
+			#					"name":"",
+			#					"bar_code":"",
+			#					"start_price":"",
+			#					"end_price":"",
+			#					"start_stocks":"",
+			#					"end-stocks":"",
+			#					"start_sales":"0",
+			#					"end_sales":"-1",
+			#					"category":"全部",
+			#					"start_date":"",
+			#					"end_date":""
+			#				}
+			#				"""
+			#
+			#			Then jobs获得系统提示"请输入正确的销量！仅数字"
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"0.1",
-#					"end_sales":"10",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入正确的销量！仅数字"
+			#			When jobs设置查询条件
+			#				"""
+			#				{
+			#					"name":"",
+			#					"bar_code":"",
+			#					"start_price":"",
+			#					"end_price":"",
+			#					"start_stocks":"",
+			#					"end-stocks":"",
+			#					"start_sales":"0.1",
+			#					"end_sales":"10",
+			#					"category":"全部",
+			#					"start_date":"",
+			#					"end_date":""
+			#				}
+			#				"""
+			#
+			#			Then jobs获得系统提示"请输入正确的销量！仅数字"
 
 		#销量区间查询
 
@@ -865,43 +868,43 @@ Scenario:1. 在售商品列表查询
 
 		#查询条件校验
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"2015-1-1",
-#					"end_date":""
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入结束日期"
+			#			When jobs设置查询条件
+			#				"""
+			#				{
+			#					"name":"",
+			#					"bar_code":"",
+			#					"start_price":"",
+			#					"end_price":"",
+			#					"start_stocks":"",
+			#					"end-stocks":"",
+			#					"start_sales":"",
+			#					"end_sales":"",
+			#					"category":"全部",
+			#					"start_date":"2015-1-1",
+			#					"end_date":""
+			#				}
+			#				"""
+			#
+			#			Then jobs获得系统提示"请输入结束日期"
 
-#			When jobs设置查询条件
-#				"""
-#				{
-#					"name":"",
-#					"bar_code":"",
-#					"start_price":"",
-#					"end_price":"",
-#					"start_stocks":"",
-#					"end-stocks":"",
-#					"start_sales":"",
-#					"end_sales":"",
-#					"category":"全部",
-#					"start_date":"",
-#					"end_date":"2015-1-1"
-#				}
-#				"""
-#
-#			Then jobs获得系统提示"请输入开始日期"
+			#			When jobs设置查询条件
+			#				"""
+			#				{
+			#					"name":"",
+			#					"bar_code":"",
+			#					"start_price":"",
+			#					"end_price":"",
+			#					"start_stocks":"",
+			#					"end-stocks":"",
+			#					"start_sales":"",
+			#					"end_sales":"",
+			#					"category":"全部",
+			#					"start_date":"",
+			#					"end_date":"2015-1-1"
+			#				}
+			#				"""
+			#
+			#			Then jobs获得系统提示"请输入开始日期"
 
 		#查询商品创建时间
 
@@ -1255,4 +1258,29 @@ Scenario:2. 在售多规格商品列表查询
 			|     name     |  barCode |      categories      |   price    |  stocks  |  sales  |  created_at    |
 			|  商品复合规格|           |                    |  10.5 ~ 40.0   |          |    4    |  2015-07-02 10:20           |
 			|  商品1       |           |  分类1             |  0.01     |   无限   |    4    |  2015-04-02 23:59 |
+
+@mall2
+Scenario:3. 针对线上BUG3669按商品名称查询时，查询结果的商品库存时正确的
+
+		When jobs设置商品查询条件
+		"""
+		{
+			"name":"商品2",
+			"barCode":"",
+			"lowPrice":"",
+			"highPrice":"",
+			"lowStocks":"",
+			"highStocks":"",
+			"lowSales":"",
+			"highSales":"",
+			"category":"全部",
+			"startDate":"",
+			"endDate":""
+		}
+		"""
+
+		Then jobs能获得'在售'商品列表
+			|  name  |  barCode |      categories    |  price  |  stocks  |  sales  |  created_at      |
+			|  商品2 |  1234562 |                    |  0      |  100000  |    0    |  2015-08-01 05:36|
+
 
