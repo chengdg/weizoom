@@ -141,7 +141,7 @@
 .wui-surveyDescription .wui-i-subtitle {
     margin-top: 10px;
     color: #A0A0A0;
-    font-size: 20px;
+    font-size: 19px;
 }
 .wui-surveyDescription .wui-i-description {
 	margin-top: 10px;
@@ -152,6 +152,10 @@
 	border-top: solid 1px #E5E5E5;
     padding: 25px 0px 5px 0px;
     color: #999;
+}
+.wui-surveyDescription img{
+	padding-top:10px;
+	padding-bottom: 10px;
 }
 
 
@@ -192,7 +196,7 @@
 .wui-textSelection .wui-i-title {
 	color: #333;
 	margin-bottom: 10px;
-	font-size: 20px;
+	font-size: 19px;
 	font-weight: bold;
 	border-left: solid 8px #1AA2F8;
 	padding-left: 10px;
