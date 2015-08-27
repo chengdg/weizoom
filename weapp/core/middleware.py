@@ -342,9 +342,12 @@ class UserProfileMiddleware(object):
 				request.user_profile = UserProfile.objects.get(user_id=webapp_owner_id)
 				request.webapp_owner_info = None
 		else:
+			print "------------log-----------------" * 10
 			request.webapp_owner_info = None
 			request.user_profile = None
 
+		print "webapp_owner_id", request.webapp_owner_id, "/************************************/"
+		print "request.get_full_path()", request.get_full_path(),"/*********************/"
 		#add by duhao 20150519
 		from account.account_util import get_token_for_logined_user
 		request.user_token = get_token_for_logined_user(request.user)

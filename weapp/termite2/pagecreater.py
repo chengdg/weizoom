@@ -209,3 +209,8 @@ def get_site_description(request):
 	project, page = __preprocess_page(request)
 	return page['component']['model'].get('site_description', '')
 
+
+def get_site_title(request):
+	project, page = __preprocess_page(request)
+	return page['component']['model'].get('site_title', '')
+

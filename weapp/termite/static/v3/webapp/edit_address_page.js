@@ -9,6 +9,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
     initialize: function(options) {
         xlog('in EditAddressPage');
         this.redirectUrlQueryString = options.redirectUrlQueryString;
+        alert(this.redirectUrlQueryString,"####");
     },
 
     /**
@@ -37,6 +38,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                             info: data['msg']
                         })
                     } else {
+                        alert("---log----112233445566",this.redirectUrlQueryString);
                         window.location.href = "./?"+this.redirectUrlQueryString;
                     }
                 },

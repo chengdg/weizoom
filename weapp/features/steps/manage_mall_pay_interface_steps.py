@@ -147,7 +147,6 @@ def step_impl(context, user):
 			
 	print("expected: {}".format(expected))
 	print("actual: {}".format(result))
-
 	bdd_util.assert_list(expected, result)
 
 @then(u"{user}获取全部支付方式列表")
@@ -237,7 +236,10 @@ def step_impl(context, user, pay_interface_name):
 
 	pay_interface_type = __name_to_type(pay_interface_name)
 	owner_id = bdd_util.get_user_id_for(user)
+<<<<<<< HEAD
 	# 按照名字获取ID
+=======
+>>>>>>> 4cb46f4b1a1e83b2cee13f2beba105652b14be5c
 	interface = PayInterface.objects.get(owner_id=owner_id, type=pay_interface_type)
 
 	#response = context.client.get('/mall2/pay_interface/', {'id': interface.id})
@@ -254,7 +256,6 @@ def step_impl(context, user, pay_interface_name):
 		if 'version' in data:
 			param["pay_version"] = 0 if data['version'] == 'V2' else 1 # V3=>1
 	response = context.client.post('/mall2/pay_interface/?id=%d' % interface.id, param)
-
 
 @when(u"{user}\"{action}\"支付方式\"{pay_interface_name}\"")
 def step_impl(context, user, action, pay_interface_name):
