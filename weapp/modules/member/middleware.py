@@ -921,7 +921,6 @@ class OAUTHMiddleware(object):
 		return webapp_user
 
 	def process_request(self, request):
-		print request.META['HTTP_REFERER'],"GGGG"
 		#added by duhao
 		if is_product_stocks_request(request):
 			return None
@@ -945,9 +944,6 @@ class OAUTHMiddleware(object):
 
 		# 不处理临时二维码请求 by liupeiyu
 		if request.is_access_temporary_qrcode_image:
-			return None
-
-		if "model=address&action=list" in request.META['HTTP_REFERER'] or "model=address&action=add" in request.META['HTTP_REFERER']:
 			return None
 
 		#对于非webapp请求和非pc商城地方请求不进行处理
