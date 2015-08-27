@@ -44,6 +44,20 @@ def step_impl(context, user, action):
     response = context.client.post(url, data)
 
 
+@when(u"{user}修改订单'{order_code}'的价格")
+def step_impl(context, user, order_code):
+    url = '/mall2/api/order/'
+    post_data = json.loads(context.text)
+    order_real_id = bdd_util.get_order_by_order_no(order_code).id
+    post_data['order_id'] = order_real_id
+    context.client.post(url, post_data)
+
+
+@when(u"{user}'支付'订单'{order_code}'")
+def step_impl(context, user, order_code):
+    context.latest_order_id = bdd_util.get_order_by_order_no(order_code).id
+    context.execute_steps(u"when %s'支付'最新订单" % user)
+
 # @when(u'{user}对最新订单进行退款')
 # def step_impl(context, user):
 #     context.execute_steps(u'when %s"退款"最新订单' % user)
