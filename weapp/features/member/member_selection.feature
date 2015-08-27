@@ -379,8 +379,8 @@ Scenario:4 过滤条件"关注时间"
 			[{
 				"name":"",
 				"status":"全部",
-				"attention_start_time":"2014-8-5 00:00",
-				"attention_end_time":"2014-8-6 00:00",
+				"attention_start_time":"2014-08-05 00:00",
+				"attention_end_time":"2014-08-06 00:00",
 				"member_rank":"全部",
 				"tags":"全部",
 				"source":"全部",
@@ -404,6 +404,7 @@ Scenario:4 过滤条件"关注时间"
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |     tags    |
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-08-06   | 会员分享 | 分组3       |
 			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |    0      |   2014-08-05   | 会员分享 | 分组3       |
 			| tom3  | 银牌会员    |       1      |    100   | 335.00    |  111.67    |    3      |   2014-08-05   | 会员分享 | 分组1,分组3 |
 			| tom2  | 普通会员    |       0      |     50   | 325.00    |  162.50    |    2      |   2014-08-05   | 推广扫码 | 分组1       |
@@ -414,8 +415,8 @@ Scenario:4 过滤条件"关注时间"
 			[{
 				"name":"",
 				"status":"全部",
-				"attention_start_time":"2014-10-1 8:00",
-				"attention_end_time":"2014-10-1 8:00",
+				"attention_start_time":"2014-10-01 08:00",
+				"attention_end_time":"2014-10-01 08:00",
 				"member_rank":"全部",
 				"tags":"全部",
 				"source":"全部",
@@ -448,8 +449,8 @@ Scenario:4 过滤条件"关注时间"
 			[{
 				"name":"",
 				"status":"全部",
-				"attention_start_time":"2015-8-10 00:00",
-				"attention_end_time":"2015-8-11 00:00",
+				"attention_start_time":"2015-08-10 00:00",
+				"attention_end_time":"2015-08-11 00:00",
 				"member_rank":"全部",
 				"tags":"全部",
 				"source":"全部",
