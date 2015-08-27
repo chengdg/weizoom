@@ -7,7 +7,7 @@ Background:
 	Given tom关注jobs的公众号
 
 
-@mall @mall.outline @duhao
+@mall @mall.outline @mall2
 Scenario: 获得页面访问信息
 	多个用户访问jobs的微站后，jobs能获得pv和uv信息
 
