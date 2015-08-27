@@ -169,7 +169,7 @@ $(document).ready(function() {
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
-            app: 'apps/vote',
+            app: 'apps/survey',
             resource: 'survey_participances-export',
             args: {'export_id':export_id},
             success: function(resp){
