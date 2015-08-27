@@ -64,7 +64,7 @@
             {% ifequal item.isShortcuts False %}
                 <div class="wui-textSelection">
                     <h1 class="wui-i-title">
-                        {{ forloop.counter }}、{{ item.title }}
+                        {{ item.title }}
                     </h1>
                     <ul class="wui-i-items xa-inputControl">
                         {% for select in item.values %}
@@ -86,7 +86,7 @@
                 <li class="wui-i-item">
                     <label class="wui-i-label">{{ item.title }}</label>
                     <div class="wui-i-inputContainer xa-inputControl" >
-                        <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" style="color: #666666" disabled>
+                        <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" style="background:#fff;color:#595959;font-size:13px;" disabled>
                     </div>
                 </li>
             </ul>

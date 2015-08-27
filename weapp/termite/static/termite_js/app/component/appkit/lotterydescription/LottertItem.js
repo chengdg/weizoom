@@ -35,7 +35,8 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			name: 'prize',
 			type: 'prize_selector_v3',
 			displayName: '活动奖励',
-			isUserProperty: true
+			isUserProperty: true,
+			default: {type:"no_prize", data:null}
 		},{
 			name: 'image',
 			type: 'image_dialog_select',
@@ -54,9 +55,6 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			$node.find('.xa-itemTitle').text(value);
 		},
 		image: function($node, model, value, $propertyViewNode) {
-			console.log('------------------------------------');
-			console.log($propertyViewNode[0]);
-			console.log('------------------------------------');
 			var image = {url:''};
 			var data = {type:null};
 			if (value !== '') {
@@ -66,20 +64,6 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			model.set({
 				image: image.url
 			}, {silent: true});
-
-			//this.refresh($node, {refreshPropertyViewForField:'image'});
-			//
-			//if (data.type === 'newImage') {
-			//	W.resource.termite2.Image.put({
-			//		data: image,
-			//		success: function(data) {
-			//
-			//		},
-			//		error: function(resp) {
-			//
-			//		}
-			//	})
-			//}
 
 			var currCid = $propertyViewNode.attr('data-dynamic-cid');
 			var targetClass,alt;
