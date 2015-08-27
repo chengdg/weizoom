@@ -571,10 +571,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             if (this.promotion && this.promotion.isFlashSalePromotion) {
                 //do nothing
             } else {
-                var min_price = this.priceInfo['min_price']
+                var min_price = (this.priceInfo['min_price']).toFixed(2);
                 if (this.discount){
-                    min_price = (min_price * this.discount / 100).toFixed(2);
                     $('.xa-orPrice').text(min_price);
+                    min_price = (min_price * this.discount / 100).toFixed(2);
                 }
                 $('.xa-singlePrice').text(min_price);
             }
@@ -595,8 +595,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('[data-ui-role="counter"]').data('view').setMaxCount(0);
             $('.xa-stock').hide();
         } else {
-            console.log(model);
-            console.log('llll');
             var change_price = 0;
             if (this.promotion && this.promotion.isFlashSalePromotion) {
                 //do nothing
