@@ -81,6 +81,7 @@ urlpatterns = patterns('',
 	url(r'^mockapi/', include('mockapi.urls')),
 	url(r'^example/', include('example.urls')),
 	url(r'^apps/', include('apps.urls')),
+	 url(r'^old_apps/', include('apps.urls')),
 	url(r'^m/apps/', include('apps.urls')),
 
 	url(r'^ft/', include('order.urls')),
