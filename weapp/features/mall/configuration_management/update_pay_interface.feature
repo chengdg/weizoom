@@ -58,11 +58,12 @@ Scenario: 更新支付方式:微信支付
 			"weixin_sign": "423450"
 		}
 		"""
+	And jobs"停用"支付方式"微信支付"
 	Then jobs能获得支付方式
 		"""
 		{
 			"type": "微信支付",
-			"is_active": "启用",
+			"is_active": "停用",
 			"weixin_appid": "123450",
 			"weixin_partner_id": "223450", 
 			"weixin_partner_key": "323450", 
@@ -83,7 +84,7 @@ Scenario: 更新支付方式:微信支付
 		"""
 
 
-@mall @mall.pay_interface
+@mall2 @mall.pay_interface @wip.pi2
 Scenario: 更新支付方式:货到付款
 	Jobs更新"货到付款"后
 	1. jobs能获取更新后的货到付款
@@ -94,50 +95,54 @@ Scenario: 更新支付方式:货到付款
 		"""
 		[{
 			"type": "货到付款",
-			"description": "我的货到付款",
 			"is_active": "启用"
 		}]
 		"""
-	Then jobs能获得支付方式'我的货到付款'
+	Then jobs能获得支付方式
 		"""
 		{
 			"type": "货到付款",
-			"description": "我的货到付款",
 			"is_active": "启用"
 		}
+		"""
+	And jobs获取全部支付方式列表
+		"""
+		[{
+			"type": "微信支付",
+			"is_active": "停用"
+		}, {
+			"type": "货到付款",
+			"is_active": "启用"
+		}, {
+			"type": "微众卡支付",
+			"is_active": "停用"
+		}, {
+			"type": "支付宝",
+			"is_active": "停用"
+		}]
 		"""
 	Given nokia登录系统
 	When nokia添加支付方式
 		"""
 		[{
 			"type": "货到付款",
-			"description": "我的货到付款",
 			"is_active": "启用"
 		}]
 		"""
 	Given jobs登录系统
-	When jobs更新支付方式'我的货到付款'
+	When jobs"停用"支付方式"货到付款"
+	Then jobs能获得支付方式
 		"""
 		{
 			"type": "货到付款",
-			"description": "我的货到付款*",
-			"is_active": "停用"
-		}
-		"""
-	Then jobs能获得支付方式'我的货到付款*'
-		"""
-		{
-			"type": "货到付款",
-			"description": "我的货到付款*",
 			"is_active": "停用"
 		}
 		"""
 	Given nokia登录系统
-	Then nokia能获得支付方式'我的货到付款'
+	Then nokia能获得支付方式
 		"""
 		{
 			"type": "货到付款",
-			"description": "我的货到付款",
 			"is_active": "启用"
 		}
 		"""

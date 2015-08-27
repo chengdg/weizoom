@@ -248,7 +248,7 @@ def update_product_display_index(context, user, product_name, pos):
         "update_type": "update_pos",
         "pos": pos
     }
-    response = context.client.post('/mall2/api/product/?_method=post', data)
+    response = context.client.post('/mall2/api/product_pos/?_method=post', data)
     bdd_util.assert_api_call_success(response)
 
 @when(u"{user}设置商品查询条件")
