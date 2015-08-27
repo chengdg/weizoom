@@ -556,6 +556,9 @@ class Member(models.Model):
 				output_str = ""
 				count = 0
 
+				if not span_list:
+					return u'%s...' % name_str[:5]
+
 				for span in span_list:
 				    length = len(span)
 				    while not span == name_str[:length]:

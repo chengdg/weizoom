@@ -573,8 +573,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             } else {
                 var min_price = this.priceInfo['min_price']
                 if (this.discount){
-                    $('.xa-orPrice').text(min_price);
                     min_price = (min_price * this.discount / 100).toFixed(2);
+                    $('.xa-orPrice').text(min_price);
                 }
                 $('.xa-singlePrice').text(min_price);
             }
