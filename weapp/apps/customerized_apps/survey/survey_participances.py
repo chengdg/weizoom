@@ -3,9 +3,9 @@ import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.conf import settings
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 from datetime import datetime
 import os
 

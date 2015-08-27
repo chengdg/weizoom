@@ -164,13 +164,12 @@ $(document).ready(function() {
 		});
 	});
 
-    //导出
+    //export
     $('.xa-export').click(function(event){
         var export_id =window.location.search.split('?id=')[1];
-        console.log(export_id);
         W.getApi().call({
             method: 'get',
-            app: 'apps/survey',
+            app: 'apps/vote',
             resource: 'survey_participances-export',
             args: {'export_id':export_id},
             success: function(resp){

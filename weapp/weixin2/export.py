@@ -54,8 +54,8 @@ FIRST_NAVS = [{
     'permission': ''
 },{
     'name': u'原百宝箱',
-    'url': '/apps/old/',
-    'inner_name': 'apps',
+    'url': '/old_apps/',
+    'inner_name': 'old_apps',
     'permission': ''
 }]
 
