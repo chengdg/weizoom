@@ -336,7 +336,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 	background-color: transparent;
 	background-image: url("/termite_static/img/component/lottery/roulette_cube.png");
 	background-size: 277px auto;
-	height: 60px;
+	height: 56px;
 	width:60px;
 	text-align: center;
 	border: 1px;
@@ -418,67 +418,76 @@ p.wui-i-start_time,p.wui-i-end_time{
 	-webkit-box-shadow: 0 0 5px #FFFF01;
 	-moz-box-shadow: 0 0 5px #FFFF01;
 }
+.xa-circle{
+	width: 12px;
+	height: 12px;
+	position: absolute;
+	background-color: yellow;
+	-moz-border-radius:10em;
+	-webkit-border-radius:10em;
+	border-radius:10em;
+}
 .xa-circle-unit-0{
-	top:1.5%;
-	left: 1%;
+	top:5px;
+	left: 5px;
 }
 .xa-circle-unit-1{
-	top:1.5%;
-	left: 26%;
+	top:5px;
+	left: 74px;
 }
 .xa-circle-unit-2{
-	top:1.5%;
-	left: 48%;
+	top:5px;
+	left:135px;
 }
 .xa-circle-unit-3{
-	top:1.5%;
-	left: 70%;
+	top:5px;
+	left: 195px;
 }
 .xa-circle-unit-4{
-	top:1.5%;
-	left: 95%;
+	top:5px;
+	left: 263px;
 }
 .xa-circle-unit-5{
-	top: 26%;
-	left: 95%;
+	top: 70px;
+	left: 263px;
 }
 .xa-circle-unit-6{
-	top: 48%;
-	left: 95%;
+	top: 135px;
+	left: 263px;
 }
 .xa-circle-unit-7{
-	top: 70%;
-	left: 95%;
+	top: 198px;
+	left: 263px;
 }
 .xa-circle-unit-8{
-	top: 94%;
-	left: 95%;
+	top: 263px;
+	left: 263px;
 }
 .xa-circle-unit-9{
-	top: 95%;
-	left: 70%;
+	top: 263px;
+	left: 195px;
 }
 .xa-circle-unit-10{
-	top: 95%;
-	left: 48%;
+	top: 263px;
+	left: 135px;
 }
 .xa-circle-unit-11{
-	top: 95%;
-	left: 26%;
+	top: 263px;
+	left: 74px;
 }
 .xa-circle-unit-12{
-	top: 95%;
-	left: 1%;
+	top: 263px;
+	left: 5px;
 }
 .xa-circle-unit-13{
-	top: 70%;
-	left: 1%;
+	top: 198px;
+	left: 5px;
 }
 .xa-circle-unit-14{
-	top: 48%;
-	left: 1%;
+	top: 135px;
+	left: 5px;
 }
 .xa-circle-unit-15{
-	top: 26%;
-	left: 1%;
+	top: 70px;
+	left: 5px;
 }
