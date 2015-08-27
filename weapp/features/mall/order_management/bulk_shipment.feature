@@ -460,7 +460,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"methods_of_payment":"",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		},{
 			"order_no":"00010",
 			"member":"bill",
@@ -470,7 +475,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"methods_of_payment":"",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		},{
 			"order_no":"00009",
 			"member":"bill",
@@ -480,7 +490,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"methods_of_payment":"",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		}]
 		"""
 	When jobs修改订单'00011'的价格
@@ -502,7 +517,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		}
 		"""
 	When jobs修改订单'00010'的价格
@@ -524,7 +544,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		}
 		"""
 	When jobs修改订单'00009'的价格
@@ -546,7 +571,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"order_time":"2014-10-07 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		}
 		"""
 
@@ -586,7 +616,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"order_time":"2014-10-07 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		},{
 			"order_no":"00010-190",
 			"member":"bill",
@@ -596,7 +631,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		},{
 			"order_no":"00011-100",
 			"member":"bill",
@@ -606,7 +646,12 @@ Scenario: 3 对修改过价格的订单进行批量发货
 			"order_time":"2014-10-08 12:00:00",
 			"sources":"商城",
 			"ship_name":"bill",
-			"ship_tel":"13811223344"
+			"ship_tel":"13811223344",
+			"products": [{
+				"name": "商品1",
+				"price": 100.00,
+				"count": 1
+			}]
 		},{
 			"order_no":"00001",
 			"member":"tom",
