@@ -43,4 +43,9 @@ UI 手工测试
 
 手机端商品显示已售罄,后台修改库存为有数量后,手机端不再显示已售罄
 
-3) 
+3) 4259（功能问题）【手机端】商品在同时参加买赠和积分应用活动，购买时，点击使用积分，小计显示NAN乱码
+
+
+\Weapp_mall\weapp\features\mall\ui\webapp\buy_product_with_premium_and_integral_sale.feature
+
+Scenario: 购买单个买赠商品，同时使用单品积分抵扣
