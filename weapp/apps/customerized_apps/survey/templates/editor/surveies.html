@@ -115,6 +115,7 @@
 				<th>名称</th>
 				<th>开始时间</th>
 				<th>结束时间</th>
+				<th>奖项类型</th>
 				<th>状态</th>
 				<th>参与人数</th>
 				<th>操作</th>
@@ -142,6 +143,9 @@
 				</td>
 				<td>
 					${item.end_time}
+				</td>
+				<td>
+					${item.prize_type}
 				</td>
 				<td>
 					${item.status}
@@ -245,12 +249,14 @@ $(document).ready(function() {
 		var status = $.trim($('[name="status"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
 		var endTime = $.trim($('[name="end_time"]').val());
+		var prize_type = $.trim($('[name="prize_type"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
 			name: name,
 			status: status,
 			start_time: startTime,
-			end_time: endTime
+			end_time: endTime,
+			prize_type: prize_type
 		}, {
 			emptyDataHint: '没有符合条件的数据'
 		});
@@ -258,9 +264,10 @@ $(document).ready(function() {
 	
 	$('.xa-reset').click(function(event) {
 		$('[name="name"]').val('');
-		$('[name="status"]').val('0');
+		$('[name="status"]').val('-1');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
+		$('[name="prize_type"]').val('all');
 	});
 
 });
