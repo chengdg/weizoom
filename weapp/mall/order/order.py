@@ -149,7 +149,6 @@ class OrderList(resource.Resource):
         显示订单列表
 
         """
-
         belong = request.GET.get("belong", "all")
 
         if belong == 'audit':

@@ -11,7 +11,7 @@
 """
 
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.template import RequestContext
 #from django.contrib.auth.decorators import login_required, permission_required
 #from django.conf import settings
@@ -298,7 +298,7 @@ def _get_current_log_info(member_integral_log):
 			friend_member = Member.objects.get(token=member_integral_log.follower_member_token)
 			if friend_member.user_icon and friend_member.user_icon != '':
 				member_integral_log.pic = friend_member.user_icon
-				member_integral_log.name = friend_member.username
+				member_integral_log.name = friend_member.username_for_html
 			else:
 				member_integral_log.pic = SCAN_REWARDES_IMGE
 				member_integral_log.name = ''
