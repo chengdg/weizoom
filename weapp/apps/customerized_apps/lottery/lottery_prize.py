@@ -89,9 +89,10 @@ class lottery_prize(resource.Resource):
 			lottery_participance.save()
 
 		#根据送积分规则，查询当前用户是否已中奖
-		if delivery_setting == 'true':
-			pass
-		webapp_user.consume_integral(-int(delivery), u'参与抽奖，获得参与积分')
+		if delivery_setting == 'false' or not lottery_participance.has_prize:
+			webapp_user.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+		#扣除抽奖消耗的积分
+		webapp_user.consume_integral(expend, u'参与抽奖，获得参与积分')
 		#判定是否中奖
 		if participants_count == 0 or winner_count / float(participants_count) >= chance:
 			result = u'谢谢参与'
@@ -136,6 +137,13 @@ class lottery_prize(resource.Resource):
 							#查询该用户是否已抽到过该优惠券
 				result = lottery_prize['title']
 				#发奖
+		#抽奖后，更新数据
+		has_prize = False if result == u'谢谢参与' else True
+		print lottery_participance
+		lottery_participance.update(**{"has_prize":has_prize, "inc__total_count":1})
+		#调整参与数量
+		app_models.lottery.objects(id=record_id).update(**{"inc__participant_count":1})
+
 		response = create_response(200)
 		response.data = {'index': result}
 		return response.get_response()
