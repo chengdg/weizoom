@@ -318,6 +318,9 @@ class RedirectBySctMiddleware(object):
 		if request.is_access_temporary_qrcode_image:
 			return None
 
+		if not request.user_profile and ('model=address&action=add' in request.HTTP_REFERER or 'model=address&action=list' in request.HTTP_REFERER):
+			return None
+
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
 
