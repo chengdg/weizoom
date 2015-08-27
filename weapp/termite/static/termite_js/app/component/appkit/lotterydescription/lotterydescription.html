@@ -29,7 +29,7 @@
             <div class="xui-circle xa-circle xa-circle-unit-14"></div>
             <div class="xui-circle xa-circle xa-circle-unit-15"></div>
 
-            <table>
+            <table style="border-collapse: separate; border-spacing: 2px;">
                 <tr>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-0 xa-lottery-first">
                         {% if component.components.0.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.0.model.image }}">{% else %}<b>一等奖</b>{% endif %}</td>
@@ -63,10 +63,8 @@
         </div>
     </div>
 <div
-    class="wui-surveyDescription xa-prizeContainer"  
-    data-component-cid="{{component.cid}}" 
+    class="wui-surveyDescription xa-prizeContainer"
     style="min-height:100px; background-color:#8d00ab;"
-    data-prize='{{component.model.prize|to_json|safe}}'
 >
 	<h1 class="wui-i-title wui-i-innerTitle xa-title">{{component.model.title}}</h1>
 	<div class="wui-i-info">
@@ -77,9 +75,7 @@
 		</div>
         <i class="wui-i-sprite xui-sprite-prize"></i>
         <div class="wui-i-prize">
-            {% if component.model.prize.type == 'integral' %}
-                    {{component.model.prize.data}}积分
-            {% endif %}
+            每次抽奖：送<b class="xa-delivery">{{component.model.delivery}}</b>积分，消耗<b class="xa-expand">{{ component.model.expend }}</b>积分
         </div>
 	</div>
     <div class="wui-i-record">

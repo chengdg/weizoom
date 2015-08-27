@@ -76,10 +76,22 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: ''
 		}, {
+			name: 'expend',
+			type: 'text_with_annotation',
+			displayName: '消耗送积分',
+			maxLength: 4,
+			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
+			validateIgnoreDefaultValue: true,
+			size: '70px',
+			isUserProperty: true,
+			default: ''
+		}, {
 			name: 'delivery',
 			type: 'text_with_annotation',
 			displayName: '参与送积分',
 			maxLength: 4,
+			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
+			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
 			default: ''
@@ -159,12 +171,16 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			console.log('------------------------------------');
-			console.log($node[0]);
+			console.log(model);
 			console.log('------------------------------------');
+			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-description').html(value.replace(/\n/g,'<br>'));
 		},
 		delivery: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-prize').html(value+'积分');
+			$node.find('.wui-i-prize>.xa-delivery').html(value);
+		},
+		expend: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-i-prize>.xa-expand').html(value);
 		},
 		//delivery_setting: function($node, model, value, $propertyViewNode) {
 		//	$node.find('.wui-i-prize').html(value+'积分');

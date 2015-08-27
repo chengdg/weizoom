@@ -16,3 +16,16 @@
 	</div>
 </script>
 
+{% verbatim %}
+<script id="app-vote-viewParticipanceResultDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+    <h2 class="xui-result_fr-desc">"{{webapp_user_name}}"填写的内容</h2>
+    <table class="table table-bordered xui-result_fr_table">
+    {{#each items}}
+        <tr>
+            <td class="xui-result_fr-i-td0">{{item_name}}</td>
+            <td class="xui-result_fr-i-td1">{{item_value}}</td>
+        </tr>
+    {{/each}}
+    </table>
+</script>
+{% endverbatim %}

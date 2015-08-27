@@ -111,7 +111,6 @@
     $(document).ready(function() {
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
-      
       $('#leftPanel').css('min-height' ,height+ 'px');
       $('#workbench').css('min-height' ,height+ 'px');
       $(window).bind('beforeunload', function() {
@@ -145,7 +144,7 @@
       W.Synchronizer = synchronizer;
       
       loadPages(pageManagerView);
-      
+
       $('.xa-save').click(function() {
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {

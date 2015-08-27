@@ -13,3 +13,17 @@
 	</div>
 </script>
 
+{% verbatim %}
+<script id="app-survey-viewParticipanceResultDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+    <span style="font-size:16px;font-weight:bold;">"{{webapp_user_name}}"填写的内容</span>
+    <table class="table table-bordered xb-noTdBorder xb-noBottom xb-noBorder mb10" style="border-bottom:0;">
+        {{#each items}}
+            <tr>
+                <td style="text-align:right;width:10%; padding-left: 30px;">{{item_name}}：</td>
+                <td style="text-align:left;">{{item_value}}</td>
+            </tr>
+        {{/each}}
+    </table>
+</script>
+{% endverbatim %}
+

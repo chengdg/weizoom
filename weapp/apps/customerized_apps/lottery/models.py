@@ -8,17 +8,33 @@ class lotteryParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	total_count = models.IntField(default=0) #可参与次数
-	count = models.IntField(default=0) #已参与次数
-	tel = models.StringField(default="", max_length=100)
-	termite_data = models.DynamicField(default="") #termite数据
-	prize = models.DynamicField(default="") #活动奖励
-	created_at = models.DateTimeField() #创建时间
+	has_prize = models.BooleanField(default=False) #是否中奖
+	total_count = models.IntField(default=0) #已参与次数
+	count = models.IntField(default=0) #可参与次数
+	# tel = models.StringField(default="", max_length=100)
+	# termite_data = models.DynamicField(default="") #termite数据
+	# prize = models.DynamicField(default="") #活动奖励
+	lottery_date = models.DateTimeField() #最近一次抽奖时间
+	# created_at = models.DateTimeField() #创建时间
 
 	meta = {
 		'collection': 'lottery_lottery_participance'
 	}
 
+class lottoryRecord(models.Document):
+	"""
+	抽奖记录表
+	"""
+	webapp_user_id= models.LongField(default=0) #参与者id
+	member_id= models.LongField(default=0) #参与者id
+	belong_to = models.StringField(default="", max_length=100) #对应的抽奖活动id
+	prize = models.StringField(default="", max_length=100) #奖项内容
+	tel = models.StringField(default="", max_length=20)
+	created_at = models.DateTimeField() #创建时间
+
+	meta = {
+		'collection': 'lottery_lottery_record'
+	}
 
 STATUS_NOT_START = 0
 STATUS_RUNNING = 1
@@ -30,8 +46,10 @@ class lottery(models.Document):
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
 	participant_count = models.IntField(default=0) #参与者数量
+	winner_count = models.IntField(default=0) #中奖人数
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
+	expend = models.IntField(default=0) #消耗积分
 	delivery = models.IntField(default=0) #参与送积分
 	delivery_setting = models.StringField(default="true", max_length=20) #送积分规则
 	limitation = models.StringField(default="once_per_user", max_length=32) #抽奖限制

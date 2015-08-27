@@ -112,12 +112,12 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>名称</th>
+				<th>活动名称</th>
+				<th>参与人数</th>
+				<th>奖项类型</th>
 				<th>开始时间</th>
 				<th>结束时间</th>
-				<th>奖项类型</th>
 				<th>状态</th>
-				<th>参与人数</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -139,19 +139,19 @@
 					</a>
 				</td>
 				<td>
+					${item.participant_count}
+				</td>
+				<td>
+					${item.prize_type}
+				</td>
+				<td>
 					${item.start_time}
 				</td>
 				<td>
 					${item.end_time}
 				</td>
 				<td>
-					${item.prize_type}
-				</td>
-				<td>
 					${item.status}
-				</td>
-				<td>
-					${item.participant_count}
 				</td>
 				<td>
 					{{if (item.status === '未开启' || item.status === '已结束')}}
