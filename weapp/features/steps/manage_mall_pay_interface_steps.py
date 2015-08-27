@@ -236,10 +236,7 @@ def step_impl(context, user, pay_interface_name):
 
 	pay_interface_type = __name_to_type(pay_interface_name)
 	owner_id = bdd_util.get_user_id_for(user)
-<<<<<<< HEAD
 	# 按照名字获取ID
-=======
->>>>>>> 4cb46f4b1a1e83b2cee13f2beba105652b14be5c
 	interface = PayInterface.objects.get(owner_id=owner_id, type=pay_interface_type)
 
 	#response = context.client.get('/mall2/pay_interface/', {'id': interface.id})
