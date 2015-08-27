@@ -37,7 +37,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                             info: data['msg']
                         })
                     } else {
-                        alert("---log----112233445566");
+                        alert("---log----112233445566",this.redirectUrlQueryString);
                         window.location.href = "./?"+this.redirectUrlQueryString;
                     }
                 },
