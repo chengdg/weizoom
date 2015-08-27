@@ -576,10 +576,12 @@ def is_can_use_coupon(request):
 # save_address: 保存地址
 ########################################################################
 def save_address(request):
+	print print "------log-----oooooo"
 	webapp_user = request.webapp_user
 	response = create_response(200)
 	data = dict()
 	try:
+		print "------log-----22222"
 		ship_id = int(request.POST.get('ship_id', 0))
 		ship_name = request.POST.get('ship_name', '')
 		ship_address = request.POST.get('ship_address', '')
@@ -595,6 +597,7 @@ def save_address(request):
 			area=area
 		)
 	except:
+		print "------log-----1111"
 		if settings.DEBUG:
 			raise
 		else:
@@ -604,6 +607,7 @@ def save_address(request):
 			data['msg'] = u'保存收货信息失败，请稍后重试'
 			data['exception'] = stack
 
+	print "-------log-------33333"
 	data['ship_name'] = ship_name
 	response.data = data
 	return response.get_response()
