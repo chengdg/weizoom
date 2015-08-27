@@ -244,7 +244,7 @@ class RedirectBySctMiddleware(object):
 	def process_sct_in_cookie(self, request):
 		social_account = None
 		member = None
-		if (member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY in request.COOKIES) and (not member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD in request.GET):
+		if (member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY in request.COOKIES) and (not member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD in request.GET) and request.user_profile:
 			cookie_sct = request.COOKIES.get(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, None)
 			try:
 				if cookie_sct and len(cookie_sct.strip()):
@@ -483,6 +483,10 @@ class RequestSocialAccountMiddleware(object):
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			request.social_account = None
 			return None
+
+		if not request.user_profile:
+			return None
+
 		if hasattr(request, 'found_member_in_cache') and request.found_member_in_cache:
 			#在cache中获得了social account
 			assert hasattr(request, 'social_account')
