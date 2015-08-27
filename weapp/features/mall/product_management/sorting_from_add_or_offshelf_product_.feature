@@ -31,7 +31,7 @@ Background:
 			}]
 		"""
 
-@product @toSaleProduct @online_bug
+@product @toSaleProduct @online_bug @mall2
 Scenario: 1 新建商品,在待售商品列表中第一个显示
 	Given jobs登录系统
 	Then jobs能获得'待售'商品列表
@@ -47,7 +47,7 @@ Scenario: 1 新建商品,在待售商品列表中第一个显示
 				"price": 20.0
 			}]
 		"""
-	When jobs添加商品
+	When jobs已添加商品
 		"""
 			[{
 				"name": "商品4",
