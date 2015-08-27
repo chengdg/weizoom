@@ -49,3 +49,13 @@ UI 手工测试
 \Weapp_mall\weapp\features\mall\ui\webapp\buy_product_with_premium_and_integral_sale.feature
 
 Scenario: 购买单个买赠商品，同时使用单品积分抵扣
+
+4)
+ 重要度:
+故事点数:
+标签:
+
+功能问题【促销管理-发优惠券】选择发送会员后，先选择每人限领张数，在选择优惠券，显示金额错误
+
+feature名称：send_coupon_verify_total_values.feature
+feature路径：\Weapp_mall\weapp\features\ui\mall\coupon
