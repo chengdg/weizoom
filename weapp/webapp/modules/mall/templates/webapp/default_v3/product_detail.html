@@ -251,7 +251,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <img src="{{ product.thumbnails_url }}" alt="" width="90" height="90">
             </div>
             <div class="" style="padding-left:103px;min-height: 75px;">
-                <p class="pt5 em95 xui-text-red">
+                <p class="pt5 em95 xui-text-red xa-priceSection">
                 <!-- 积分商品 -->
                 {% if product.type == 'integral' %}
                     {% if cur_request_member %}
@@ -267,9 +267,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <!-- 普通商品 -->
                 {% elif product.type == 'object' %}
                     {% if cur_request_member %}
-                        <span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb">{{ price_info.min_price }}</span></span>
+                        <span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                     {% else %}
-                        <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb">{{ price_info.min_price }}</span></span>
+                        <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
                     {% endif %}
                 {% endif %}
                 </p>
@@ -492,12 +492,12 @@ $(document).ready(function() {
             }
             // 处理会员价
             if (msg === true){
-
                 var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span>';
                 $('.xa-priceSection').html(temp);
 
             }else if(msg === '会员价'){
-                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+view.priceInfo.min_price+'">'+ view.priceInfo.min_price +'</span></span>';
+                var orPrice = (view.priceInfo.min_price).toFixed(2);
+                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
                 $('.xa-priceSection').html(temp);
             }
         },
