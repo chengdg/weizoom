@@ -24,15 +24,6 @@
 		请选择优惠券
 	</a>
 
-	<input
-		type="text"
-		class="xui-propertyGroup-input xa-optionTarget {{#ifCond prize.type '!==' 'entity'}}xui-hide{{/ifCond}} xa-entity"
-		name="entity"
-		data-target="entity"
-		placeholder="输入实物名称"
-		data-validate="require-notempty::实物名称不能为空"
-		{{#if prize.data}}value="{{prize.data}}"{{/if}} />
-
 	<div class="ml5 xui-inline xa-selectedCoupon xa-optionTarget {{#ifCond prize.type '!==' 'coupon'}}xui-hide{{/ifCond}}">
 		<div class="pr xui-i-selectedBox">
 			<span class="xui-i-selected-title xa-couponName">{{prize.data.name}}</span>
@@ -41,5 +32,14 @@
 
 		<a href="javascript:void(0);" class="xa-selectCoupon ml5">修改</a>
 	</div>
+
+	<input
+		type="text"
+		class="xui-propertyGroup-input xa-optionTarget {{#ifCond prize.type '!==' 'entity'}}xui-hide{{/ifCond}} xa-entity"
+		name="entity"
+		data-target="entity"
+		placeholder="输入实物名称"
+		data-validate="require-notempty::实物名称不能为空"
+		{{#if prize.data}}value="{{prize.data}}"{{/if}} />
 </div>
 </script>
