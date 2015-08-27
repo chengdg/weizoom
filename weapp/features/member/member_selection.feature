@@ -379,8 +379,8 @@ Scenario:4 过滤条件"关注时间"
 			[{
 				"name":"",
 				"status":"全部",
-				"attention_start_time":"2014-8-5 00:00:00",
-				"attention_end_time":"2014-8-6 00:00:00",
+				"attention_start_time":"2014-8-5 00:00",
+				"attention_end_time":"2014-8-6 00:00",
 				"member_rank":"全部",
 				"tags":"全部",
 				"source":"全部",
@@ -414,8 +414,8 @@ Scenario:4 过滤条件"关注时间"
 			[{
 				"name":"",
 				"status":"全部",
-				"attention_start_time":"2014-10-1 8:00:00",
-				"attention_end_time":"2014-10-1 8:00:00",
+				"attention_start_time":"2014-10-1 8:00",
+				"attention_end_time":"2014-10-1 8:00",
 				"member_rank":"全部",
 				"tags":"全部",
 				"source":"全部",
@@ -448,8 +448,8 @@ Scenario:4 过滤条件"关注时间"
 			[{
 				"name":"",
 				"status":"全部",
-				"attention_start_time":"2015-8-10 00:00:00",
-				"attention_end_time":"2015-8-11 00:00:00",
+				"attention_start_time":"2015-8-10 00:00",
+				"attention_end_time":"2015-8-11 00:00",
 				"member_rank":"全部",
 				"tags":"全部",
 				"source":"全部",
