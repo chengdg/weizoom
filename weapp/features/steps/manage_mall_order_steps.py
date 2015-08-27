@@ -4,7 +4,7 @@ from behave import when, then, given
 
 from test import bdd_util
 from mall.models import (ORDER_TYPE2TEXT, STATUS2TEXT, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, express_util,
-                         ORDERSTATUS2TEXT)
+                         ORDERSTATUS2TEXT, Order)
 from features.testenv.model_factory import timedelta, json, ORDER_STATUS_NOT
 from mall.promotion.models import datetime
 import steps_db_util
@@ -211,6 +211,8 @@ def step_impl(context, user):
         actural_order['customer_message'] = order_item['customer_message']
         actural_order['buyer'] = order_item['buyer_name']
 
+        if 'edit_money' in order_item and order_item['edit_money']:
+            actural_order["order_no"] = actural_order["order_no"] + "-" + str(order_item['edit_money']).replace('.', '').replace('-', '')
         order_id = order_item['id']
         buy_product_response = context.client.get(
             '/mall2/api/order_product/?version=1&order_id=%d&timestamp=1406172500320' % (order_id))
@@ -454,9 +456,11 @@ def step_impl(context, user, order_id):
         "methods_of_payment": order['pay_interface_name'],
         "ship_name": order['ship_name'],
         "ship_tel": order['ship_tel'],
-        "sources": source[order['come']]
+        "sources": source[order['come']],
+        "final_price": order['total_price'],
     }
-
+    if 'edit_money' in order and order['edit_money']:
+        actual["order_no"] = actual["order_no"] + "-" + str(order['edit_money']).replace('.', '').replace('-', '')
     expected = json.loads(context.text)
     bdd_util.assert_dict(expected, actual)
 

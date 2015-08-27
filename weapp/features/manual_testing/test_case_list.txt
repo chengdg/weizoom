@@ -39,14 +39,14 @@ UI 手工测试
 1)\Weapp_mall\weapp\features\ui\mall\product_management\update_product_model.feature
 
 2) 3918 功能问题【商品管理】-商品列表，修改库存不管用，手机端还是显示原来的 ，手机端为 售罄，后台改为有库存数量，但手机端显示的还是 售罄
-\Weapp_mall\weapp\features\mall\ui\webapp\effects_from_modifying_stocks.feature
+\Weapp_mall\weapp\features\ui\mall\webapp\effects_from_modifying_stocks.feature
 
 手机端商品显示已售罄,后台修改库存为有数量后,手机端不再显示已售罄
 
 3) 4259（功能问题）【手机端】商品在同时参加买赠和积分应用活动，购买时，点击使用积分，小计显示NAN乱码
 
 
-\Weapp_mall\weapp\features\mall\ui\webapp\buy_product_with_premium_and_integral_sale.feature
+\Weapp_mall\weapp\features\ui\mall\webapp\buy_product_with_premium_and_integral_sale.feature
 
 Scenario: 购买单个买赠商品，同时使用单品积分抵扣
 
@@ -64,6 +64,11 @@ feature路径：\Weapp_mall\weapp\features\ui\mall\coupon
 4259（功能问题）【手机端】商品在同时参加买赠和积分应用活动，购买时，点击使用积分，小计显示NAN乱码
 
 
-\Weapp_mall\weapp\features\mall\ui\webapp\buy_product_with_premium_and_integral_sale.feature
+\Weapp_mall\weapp\features\ui\mall\webapp\buy_product_with_premium_and_integral_sale.feature
 
 Scenario: 购买单个买赠商品，同时使用单品积分抵扣
+
+6)
+\Weapp_mall\weapp\features\ui\mall\promotion_management\flash_sale\view_models_product_with_flash_sale.feature
+
+多规格商品，参加限时抢购，在选择规格时，显示的是原价
