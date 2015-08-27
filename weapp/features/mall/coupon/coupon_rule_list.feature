@@ -53,27 +53,23 @@ Background:
 		}]
 		"""
 
-@promotion @promotionCoupon @online_bug
+@promotion @promotionCoupon @online_bug @mall2
 Scenario: 不同状态的优惠券规则,其操作列显示不同
 	Given jobs登录系统
-	When jobs使失效优惠券'优惠券3'
-	Then jobs能获得优惠券规则列表
+	When jobs失效优惠券'优惠券3'
+	Then jobs能获得优惠券状态列表
 		"""
 			[{
 				"name": "优惠券4",
-				"status":"已过期",
-				"actions":["码库","删除"]
+				"status":"已过期"
 			},{
 				"name": "优惠券3",
-				"status":"已失效",
-				"actions":["码库"]
+				"status":"已失效"
 			},{
 				"name": "优惠券2",
-				"status":"进行中",
-				"actions":["码库","链接","编辑","查看","使失效"]
+				"status":"进行中"
 			},{
 				"name": "优惠券1",
-				"status":"未开始",
-				"actions":["码库","链接","编辑","查看","使失效"]
+				"status":"未开始"
 			}]
 		"""

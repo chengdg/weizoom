@@ -609,13 +609,14 @@ if (/ipad|iphone|mac/i.test(navigator.userAgent)){
     // $('.xa-form').css('padding-bottom','0');
     // var myScroll;
     function loaded() {
-        myScroll = new iScroll('wrapper', { checkDOMChanges: true});
+        var myScroll = new iScroll('wrapper', { checkDOMChanges: true});
+        var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
+
     }
     $('.xui-editOrderPage .xui-form').css('padding-bottom','0px');
     document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     document.addEventListener('DOMContentLoaded', loaded, false);
 
-    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,bounce:false});
 }
 var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %};
 
