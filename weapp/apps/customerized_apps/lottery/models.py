@@ -30,6 +30,7 @@ class lottery(models.Document):
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
 	participant_count = models.IntField(default=0) #参与者数量
+	winner_count = models.IntField(default=0) #中奖人数
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
 	delivery = models.IntField(default=0) #参与送积分

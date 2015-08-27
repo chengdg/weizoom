@@ -33,7 +33,7 @@
 		color: #8F8F8F;
 	}
 	.wui-select{
-		margin: 20px 0;
+		padding: 20px 0;
 	}
 	#freedback_type{
 		background: #fff none repeat scroll 0 0;
@@ -53,18 +53,21 @@
 	}
 	.arrow_down{
 		background: #fff url('/static_v2/img/arrow.png') no-repeat;
+		background-size: 23px 15px;
 		height: 20px;
 		position: absolute;
 		right: 20px;
 		top: 15px;
 		width: 34px;
+
 	}
 	.arrow_up{
 		background: #fff url('/static_v2/img/arrow.png') no-repeat;
+		background-size: 23px 15px;
 		height: 20px;
 		position: absolute;
-		right: 20px;
-		top: 15px;
+		right: 30px;
+		top: 10px;
 		width: 34px;
 		transform:rotate(180deg);
 			-ms-transform:rotate(180deg); 	/* IE 9 */
@@ -112,7 +115,7 @@
 						反馈类型
 						<span class="type_name" style="color: #666;margin-left: 10px;"></span>
 						<input class="wui-i-input" id="xui-input-type" type="text"   placeholder="" value="" data-validate="require-notempty::请选择反馈类型" readonly>
-						<span id="icon" class="arrow_down"></span>
+						<span id="icon" class=" arrow_down"></span>
 					</a>
 					<div class="xui-dropmenu" style="display: none">
 						<ul class="ui-dropmenu-items xa-select-type" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);">
@@ -138,8 +141,7 @@
 							  data-min-length="20"
 							  data-max-length="200"
 							  maxlength="200"
-							  onkeydown='countChar("freedback_textarea","freedback_textarea_num");'
-							  onkeyup='countChar("freedback_textarea","freedback_textarea_num");'
+							  oninput='countChar("freedback_textarea","freedback_textarea_num");'
 							></textarea>
 				</div>
 			</div>
@@ -175,7 +177,9 @@
 	<script type="text/javascript" src="/termite_static/v3/gmu/widget/dropmenu.js"></script>
 	<script type="text/javascript">
 	function countChar(textareaName,divName) {
-		$('#'+divName).find('span').text(200 - $('#'+textareaName).val().length);
+		var content = $('#'+textareaName).val();
+		content = content.replace(/\n/g,'');
+		$('#'+divName).find('span').text(200 - content.length);
 	}
 	$(document).ready(function() {
 		$('#freedback_type').click(function(){
@@ -197,6 +201,7 @@
 			$('#freedback_type').find('span[class="type_name"]').text(type_name);
 			$('#xui-input-type').val(type_value);
 			$a.parents('.xui-dropmenu').hide();
+			$('#icon').addClass('arrow_down').removeClass('arrow_up')
 		});
 
 	});
