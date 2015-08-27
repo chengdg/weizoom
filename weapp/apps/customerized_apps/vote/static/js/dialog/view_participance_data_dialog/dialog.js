@@ -36,7 +36,7 @@ W.dialog.app.vote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 				},
 				success: function(data) {
 					this.$dialog.find('.modal-body').text(data);
-					var template = Handlebars.compile($(templates['resultTmpl']).html());
+					var template = Handlebars.compile($(that.templates['resultTmpl']).html());
 					$('.xui-app_vote-Dialog .modal-body').html(template(data));
 				},
 				error: function(resp) {
