@@ -576,7 +576,7 @@ def is_can_use_coupon(request):
 # save_address: 保存地址
 ########################################################################
 def save_address(request):
-	print print "------log-----oooooo"
+	print "------log-----oooooo"
 	webapp_user = request.webapp_user
 	response = create_response(200)
 	data = dict()
