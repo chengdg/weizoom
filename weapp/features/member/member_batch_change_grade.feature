@@ -210,7 +210,7 @@ Scenario:3 没有选中会员，选择"给选中的人修改等级"
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 |             |
 
 		When jobs选择会员
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 
 		When jobs批量修改等级
 			"""
