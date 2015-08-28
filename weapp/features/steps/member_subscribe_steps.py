@@ -69,6 +69,7 @@ def step_impl(context, user):
 			context.url += '&count_per_page=' + '50'
 		if hasattr(context, 'page'):
 			context.url += '&page=' + str(context.page)
+
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
@@ -135,8 +136,6 @@ def step_impl(context, user):
 
 		for i in range(len(json_data)):
 			print json_data[i]['username'], "++++++", actual_data[i]['username']
-		print 'hello',json_data
-		print 'world',actual_data
 
 	bdd_util.assert_list(json_data, actual_data)
 
@@ -190,4 +189,6 @@ def step_impl(context, member_a, user):
 
 @when(u'{username}访问会员列表第{page_count}页')
 def step_impl(context, username, page_count):
+	if hasattr(context, "url"):
+		delattr(context, "url")
 	context.page = page_count
