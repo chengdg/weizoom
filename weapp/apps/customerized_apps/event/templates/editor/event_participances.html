@@ -170,6 +170,7 @@ $(document).ready(function() {
 
     //export
     $('.xa-export').click(function(event){
+        W.getLoadingView();
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
