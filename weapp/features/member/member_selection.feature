@@ -162,6 +162,7 @@ Background:
 			| 2015-03-04   | tom3     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-03-05   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
         Then jobs访问所有会员
+
 Scenario:1 默认条件和空条件查询
 
 	Given jobs登录系统
@@ -1013,7 +1014,7 @@ Scenario:9 过滤条件"购买次数"
 
 Scenario:10 过滤条件"最后购买时间"
 
-	#区间时间边界值查询，不包含结束时间
+	#区间时间边界值查询，包含结束时间
 		When jobs设置会员查询条件
 			"""
 			[{
@@ -1039,11 +1040,12 @@ Scenario:10 过滤条件"最后购买时间"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":2
+				"result_quantity":3
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
+            | tom3  | 银牌会员    |       1      |    100   |   335.00  |   111.67   |     3     |   2014-08-05   | 会员分享 | 分组1,分组3 |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     |   2014-08-05   | 推广扫码 | 分组1   |
 			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     |   2014-08-04   | 直接关注 | 分组1   |
 
@@ -1062,8 +1064,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"pay_money_end":"",
 				"pay_times_start":"",
 				"pay_times_end":"",
-				"last_buy_start_time":"2015-2-2 00:00",
-				"last_buy_end_time":"2015-2-2 00:00",
+				"last_buy_start_time":"2015-02-04 00:00",
+				"last_buy_end_time":"2015-02-04 00:00",
 				"integral_start":"",
 				"integral_end":"",
 				"message_start_time":"",
@@ -1095,8 +1097,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"pay_money_end":"",
 				"pay_times_start":"",
 				"pay_times_end":"",
-				"last_buy_start_time":"2015-8-11 00:00",
-				"last_buy_end_time":"2015-8-12 00:00",
+				"last_buy_start_time":"2015-08-11 00:00",
+				"last_buy_end_time":"2015-08-12 00:00",
 				"integral_start":"",
 				"integral_end":"",
 				"message_start_time":"",
@@ -1231,7 +1233,7 @@ Scenario:13 过滤条件"条件组合查询"
 			"""
 			[{
 				"name":"tom",
-				"status":"已关注",
+				"status":"取消关注",
 				"attention_start_time":"2014-08-03 00:00",
 				"attention_end_time":"今天",
 				"member_rank":"普通会员",
@@ -1258,7 +1260,7 @@ Scenario:13 过滤条件"条件组合查询"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     |   2014-08-05   | 推广扫码 | 分组1   |
-@test_aaa
+
 Scenario:14 会员列表分页
 
 	Given jobs登录系统
