@@ -345,6 +345,12 @@ p.wui-i-start_time,p.wui-i-end_time{
 	border: 1px;
 	border-radius:5px;
 }
+.wui-lotterydescription>.wui-i-body .xui-lottery-unit img{
+	height:50px;
+	width:50px;
+	vertical-align:middle;
+	padding: 0;
+}
 .wui-lotterydescription .xui-lottery-unit b{
 	color: white;
     display: inline-block;

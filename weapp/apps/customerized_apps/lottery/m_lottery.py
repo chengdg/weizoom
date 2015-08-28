@@ -59,8 +59,13 @@ class Mlottery(resource.Resource):
 					lottery_participance = lottery_participance[0]
 					has_prize = lottery_participance.has_prize
 					#再次进入抽奖活动页面，根据抽奖规则限制以及当前日期和最近一次抽奖日期，更新can_play_count
-					print lottery_participance.lottery_date
-					print datetime.today()
+					now_date_str = datetime.today().strftime('%Y-%m-%d')
+					last_lottery_date_str = lottery_participance.lottery_date.strftime('%Y-%m-%d')
+					if now_date_str != last_lottery_date_str:
+						if lottery_participance.limitation == 'once_per_day':
+							lottery_participance.update(set__can_play_count=1)
+						elif lottery_participance.limitation == 'twice_per_day':
+							lottery_participance.update(set__can_play_count=2)
 
 				lottery_limitation = record.limitation_times
 				if not lottery_participance or lottery_participance.can_play_count >= lottery_limitation:
