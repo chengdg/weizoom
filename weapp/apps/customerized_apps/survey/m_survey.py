@@ -17,6 +17,7 @@ import models as app_models
 import export
 from apps import request_util
 from termite2 import pagecreater
+import weixin.user.models as weixin_models
 
 class Msurvey(resource.Resource):
 	app = 'apps/survey'
@@ -31,6 +32,7 @@ class Msurvey(resource.Resource):
 			isPC = int(request.GET.get('isPC',0))
 			isPC = True if isPC else False
 			participance_data_count = 0
+			isMember = request.member.is_subscribed
 			if 'new_app:' in id:
 				project_id = id
 				activity_status = u"未开始"
@@ -49,7 +51,13 @@ class Msurvey(resource.Resource):
 			request.GET.update({"project_id": project_id})
 			request.GET._mutable = False
 			html = pagecreater.create_page(request, return_html_snippet=True)
-			
+			if isMember:
+					auth_appid_info = None
+			else:
+				from weixin.user.util import get_component_info_from
+				component_info = get_component_info_from(request)
+				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id)[0]
+				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 			c = RequestContext(request, {
 				'record_id': id,
 				'activity_status': activity_status,
@@ -59,7 +67,9 @@ class Msurvey(resource.Resource):
 				'app_name': "survey",
 				'resource': "survey",
 				'hide_non_member_cover': True, #非会员也可使用该页面
-				'isPC': isPC
+				'isPC': isPC,
+				'isMember': isMember,
+				'auth_appid_info': auth_appid_info
 			})
 			
 			return render_to_response('workbench/wepage_webapp_page.html', c)

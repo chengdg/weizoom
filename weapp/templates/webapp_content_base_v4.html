@@ -214,6 +214,7 @@
             W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
             W.activityStatus = "{{activity_status}}";
             W.isPC = {% if isPC %}true{% else %}false{% endif %};
+            W.isMember = {% if isMember %}true{% else %}false{% endif %};
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
             W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
             var link = window.location.href;
@@ -351,7 +352,9 @@
                         }else{
                             cid = $control.parent().attr('data-component-cid');
                         }
-                        cid = cid.length<2 ? '0'+cid : cid;
+                        if (cid !=null){
+                           cid = cid.length<2 ? '0'+cid : cid;
+                        }
                         var name = $control.attr('data-input-name');
                         name = cid+'_'+name;
                         if (inputType === 'text') {
@@ -394,7 +397,7 @@
                     if ($textSelection.length > 0){
                         participanceData['actionButtons'] = JSON.stringify([{
                             'text': '查看结果',
-                            'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}'
+                            'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId
                         }]);
                     }
                     W.getApi().call({
