@@ -454,31 +454,29 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 
 	#支付方式
 		And jobs已添加支付方式
-			"""
-			[{
-				"type": "微信支付",
-				"is_active": "启用"
-			}, {
-				"type": "货到付款",
-				"is_active": "启用"
-			}]
-			"""
+		"""
+		[{
+			"type": "货到付款",
+			"description": "我的货到付款",
+			"is_active": "启用"
+		},{
+			"type": "微信支付",
+			"description": "我的微信支付",
+			"is_active": "启用",
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
+			"weixin_sign": "42345"
+		}]
+		"""
 
 	#添加会员价商品
 		And jobs已添加商品
 		"""
 		[{
 			"name": "商品8",
-			"member_price": true,
-			"model": {
-				"models": {
-					"standard": {
-						"price": 100.00,
-						"stock_type": "有限",
-						"stocks": 100
-					}
-				}
-			}
+			"is_member_product": "on",
+			"price": 100.00
 		}]
 		"""
 
@@ -518,11 +516,9 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 					"ship_area": "北京市 北京市 海淀区",
 					"ship_address": "泰兴大厦",
 					"final_price": 70.00,
-					"member_price":70.00,
-					"members_money":30.00,
 					"products": [{
 						"name": "商品8",
-						"price": 100,
+						"price": 70.00,
 						"count": 1
 					}]
 				}
@@ -552,11 +548,9 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 					"ship_area": "北京市 北京市 海淀区",
 					"ship_address": "泰兴大厦2",
 					"final_price": 100.00,
-					"member_price":100.00,
-					"members_money":0.00,
 					"products": [{
 						"name": "商品8",
-						"price": 100,
+						"price": 100.00,
 						"count": 1
 					}]
 				}
@@ -599,9 +593,9 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				"""
 				{
 					"ship_name": "bill3",
-					"ship_tel": "12345678912",
+					"ship_tel": "12345678913",
 					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦2",
+					"ship_address": "泰兴大厦3",
 					"products": [{
 						"name": "商品8",
 						"count": 1
@@ -613,15 +607,13 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				{
 					"status": "待支付",
 					"ship_name": "bill3",
-					"ship_tel": "12345678912",
+					"ship_tel": "12345678913",
 					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦2",
+					"ship_address": "泰兴大厦3",
 					"final_price": 80.00,
-					"member_price":80.00,
-					"members_money":20.00,
 					"products": [{
 						"name": "商品8",
-						"price": 100,
+						"price": 80.00,
 						"count": 1
 					}]
 				}
@@ -687,11 +679,9 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 					"ship_area": "北京市 北京市 海淀区",
 					"ship_address": "泰兴大厦",
 					"final_price": 90.00,
-					"member_price":90.00,
-					"members_money":10.00,
 					"products": [{
 						"name": "商品8",
-						"price": 100,
+						"price": 90.00,
 						"count": 1
 					}]
 				}
@@ -703,9 +693,9 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				"""
 				{
 					"ship_name": "bill3",
-					"ship_tel": "12345678912",
+					"ship_tel": "12345678913",
 					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦2",
+					"ship_address": "泰兴大厦3",
 					"products": [{
 						"name": "商品8",
 						"count": 1
@@ -717,15 +707,13 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				{
 					"status": "待支付",
 					"ship_name": "bill3",
-					"ship_tel": "12345678912",
+					"ship_tel": "12345678913",
 					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦2",
+					"ship_address": "泰兴大厦3",
 					"final_price": 90.00,
-					"member_price":90.00,
-					"members_money":10.00,
 					"products": [{
 						"name": "商品8",
-						"price": 100,
+						"price": 90.00,
 						"count": 1
 					}]
 				}
