@@ -150,7 +150,9 @@ def step_impl(context, user):
 		# print 'kitty',actual_members[7]
 
 		# for i in range(len(json_data)):
-		# 	print json_data[i]['username'], json_data[i]['pay_money'], json_data[i]['unit_price'], json_data[i]['pay_times'],actual_data[i]['username'], actual_data[i]['pay_money'], actual_data[i]['unit_price'], actual_data[i]['pay_times']
+		# 	print json_data[i]['username'], json_data[i]['pay_money'], json_data[i]['unit_price'], json_data[i]['pay_times']
+		# for i in range(len(actual_data)):
+		# 	actual_data[i]['username'], actual_data[i]['pay_money'], actual_data[i]['unit_price'], actual_data[i]['pay_times']
 		# print 'hello',json_data
 		# print 'world',actual_data
 

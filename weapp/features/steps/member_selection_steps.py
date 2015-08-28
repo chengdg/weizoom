@@ -17,6 +17,18 @@ def handtime(atime):
         return alist[0]
     else:
         return ' '.join(alist)
+@Then(u'{user}访问所有会员')
+def step_impl(context, user):
+    ###访问会员详情页：访问会员详情页会使购买信息自动调整正确
+    url = '/member/api/members/get/?design_mode=0&version=1&status=1&filter_value=status:-1&page=1&count_per_page=50&enable_paginate=1'
+    response = context.client.get(bdd_util.nginx(url))
+    items = json.loads(response.content)['data']['items']
+    for member_item in items:
+        member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
+        #print 'kitty',member_detail_url
+        visit_member_detail_url = context.client.get(member_detail_url)
+    ###以上为访问会员详情页
+
 @When(u'{user}访问会员列表')
 def step_impl(context, user):
     pass
@@ -47,6 +59,11 @@ def step_impl(context, user):
     for item in json.loads(members_filter_params.content)['data']['tags']:
         tags_dict[item['name']] = item['id']
     options = json.loads(context.text)[0]
+    ###判断时间是否为'今天'
+    for key,value in options.items():
+        if value ==u'今天':
+            options[key] = time.strftime('%Y-%m-%d')
+    ###
     options_url = []
     init_url = '/member/api/members/get/?design_mode=0&version=1&status=1&filter_value='
     if options['pay_money_start'] and options['pay_money_end']:
@@ -84,7 +101,7 @@ def step_impl(context, user):
         options_url.append('source:%s' %sources_dict[options['source']])
     init_url = init_url +'|'.join(options_url) + '&page=1&count_per_page=50&enable_paginate=1'
     context.url = init_url
-    print 'helloworld',context.url
+    #print 'helloworld',context.url
 
 
 

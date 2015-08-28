@@ -161,7 +161,7 @@ Background:
 			| 2015-03-02   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 货到付款       | 10      | 100      |          |        | 110         |              | 0      | 0      | 110  | jobs,完成         |  已完成         |
 			| 2015-03-04   | tom3     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-03-05   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
-
+        Then jobs访问所有会员
 Scenario:1 默认条件和空条件查询
 
 	Given jobs登录系统
@@ -1010,7 +1010,7 @@ Scenario:9 过滤条件"购买次数"
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
-@test_aaa
+
 Scenario:10 过滤条件"最后购买时间"
 
 	#区间时间边界值查询，不包含结束时间
@@ -1232,17 +1232,17 @@ Scenario:13 过滤条件"条件组合查询"
 			[{
 				"name":"tom",
 				"status":"已关注",
-				"attention_start_time":"2014-8-3 00:00:00",
+				"attention_start_time":"2014-08-03 00:00",
 				"attention_end_time":"今天",
-				"member_rank":"银牌会员",
-				"tags":"分组1 ",
+				"member_rank":"普通会员",
+				"tags":"分组1",
 				"source":"推广扫码",
 				"pay_money_start":"100",
 				"pay_money_end":"325",
 				"pay_times_start":"0",
 				"pay_times_end":"2",
-				"last_buy_start_time":"2015-1-1",
-				"last_buy_end_time":"2015-2-2",
+				"last_buy_start_time":"2015-01-01",
+				"last_buy_end_time":"2025-02-02",
 				"integral_start":"0",
 				"integral_end":"50",
 				"message_start_time":"",
@@ -1258,7 +1258,7 @@ Scenario:13 过滤条件"条件组合查询"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     |   2014-08-05   | 推广扫码 | 分组1   |
-
+@test_aaa
 Scenario:14 会员列表分页
 
 	Given jobs登录系统
