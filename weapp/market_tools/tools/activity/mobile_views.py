@@ -231,12 +231,8 @@ def get_member_activites(request):
 	events = event_models.eventParticipance.objects.filter(member_id=member.id)
 	events_items = []
 	for event in events:
-		print event.belong_to
-		print '1111111111111'
 		event_id = event.belong_to
 		event_details = event_models.event.objects.get(id=event_id )
-		print event_details
-		print event_details.name
 		events_items.append({
 			'id': str(event_id),
 			'name': event_details.name
