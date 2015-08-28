@@ -2,12 +2,8 @@
 
 
 {% ifequal component.type 'appkit.textlist' %}
-<div
-    class="wui-shortcuts"
-    style=""
->
 	<ul
-		class="wui-i-items"
+		class="wui-i-items wui-shortcuts"
 		data-input-name="{{component.model.title}}"
         data-component-cid="{{component.cid}}"
 	>
@@ -99,7 +95,6 @@
             {{ sub_component.html|safe }}
         {% endfor %}
 	</ul>
-</div>
 {% endifequal %}
 
 {% ifequal component.type 'appkit.textitem' %}
