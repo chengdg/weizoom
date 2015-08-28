@@ -904,15 +904,15 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			},{
 				"member_grade": "铜牌会员",
 				"discount": 90,
-				"discount_money": 81.0
+				"discount_money": 90.0
 			},{
 				"member_grade": "银牌会员",
 				"discount": 80,
-				"discount_money": 64.0
+				"discount_money": 80.0
 			},{
 				"member_grade": "金牌会员",
 				"discount": 70,
-				"discount_money": 49.0
+				"discount_money": 70.0
 			}]
 		}]
 		"""
