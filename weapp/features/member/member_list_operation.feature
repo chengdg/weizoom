@@ -22,11 +22,11 @@ Background:
 			"""
 			[{
 				"name": "银牌会员",
-				"upmember_rank": "不自动升级",
+				"upmember_rank": "手动升级",
 				"shop_discount": "10"
 			},{
 				"name": "金牌会员",
-				"upmember_rank": "自动升级",
+				"upmember_rank": "手动升级",
 				"shop_discount": "9"
 			}]
 			"""
@@ -38,11 +38,11 @@ Background:
 				"shop_discount": "10"
 			},{
 				"name": "银牌会员",
-				"upmember_rank": "不自动升级",
+				"upmember_rank": "手动升级",
 				"shop_discount": "10"
 			},{
 				"name": "金牌会员",
-				"upmember_rank": "自动升级",
+				"upmember_rank": "手动升级",
 				"shop_discount": "9"
 			}]
 			"""
@@ -57,10 +57,10 @@ Background:
 
 	#批量获取微信用户关注
 		When jobs批量获取微信用户关注
-			| member_name   | attention_time 	 | source   |
-			| tom1 			| 2014-8-4 23:59:59  | 直接关注 |
-			| tom2 			| 2014-8-5 00:00:00  | 推广扫码 |
-			| tom3	 	    | 2014-8-5 08:00:00  | 会员分享 |
+			| member_name   |   attention_time     | source   |
+			| tom1 			| 2014-08-04 23:59:59  | 直接关注 |
+			| tom2 			| 2014-08-05 00:00:00  | 推广扫码 |
+			| tom3	 	    | 2014-08-05 08:00:00  | 会员分享 |
 
 		And tom2取消关注jobs的公众号
 
@@ -93,11 +93,11 @@ Scenario:1 调分组
 				"tag_id_3": "分组3"
 			}
 			"""
-		Then jobs获得会员列表
-			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
-			| tom2  | 普通会员    |     0    |      2014-8-5     | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 | 分组1,分组3 |
+		Then jobs可以获得会员列表
+			| name  | member_rank | integral | attention_time |  source  |    tags     |
+			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
+			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 | 分组1,分组3 |
 
 	#给有分组的人设置分组
 		When jobs给"tom1"调分组
@@ -106,51 +106,51 @@ Scenario:1 调分组
 				"tag_id_2": "分组2"
 			}
 			"""
-		Then jobs获得会员列表
-			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
-			| tom2  | 普通会员    |     0    |      2014-8-5     | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 | 分组2       |
+		Then jobs可以获得会员列表
+			| name  | member_rank | integral | attention_time |  source  |    tags     |
+			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
+			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 | 分组2       |
 
 	#给有分组的人设置成分组为空
 		When jobs给"tom1"调分组
 			"""
 			[]
 			"""
-		Then jobs获得会员列表
-			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
-			| tom2  | 普通会员    |     0    |      2014-8-5     | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 |             |
+		Then jobs可以获得会员列表
+			| name  | member_rank | integral | attention_time |  source  |    tags     |
+			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
+			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |             |
 
 Scenario:2 设等级
 	
 	#给当前会员设置等级
-		When 给"tom2"设等级
+		When jobs给"tom2"设等级
 			"""
 			{
 				"member_rank":"金牌会员"
 			}
 			"""
-		Then jobs获得会员列表
-			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |      2014-8-5     | 会员分享 |             |
-			| tom2  | 金牌会员    |     0    |      2014-8-5     | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |      2014-8-4     | 直接关注 |             |
+		Then jobs可以获得会员列表
+			| name  | member_rank | integral | attention_time |  source  |    tags     |
+			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
+			| tom2  | 金牌会员    |     0    |   2014-08-05   | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |             |
 
 	#给当前会员设置现在的等级
 
-		When 给"tom2"设等级
+		When jobs给"tom2"设等级
 			"""
 			{
 				"member_rank":"金牌会员"
 			}
 			"""
-		Then jobs获得会员列表
-			| name  | member_rank | integral |   attention_time  |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |     2014-8-5      | 会员分享 |             |
-			| tom2  | 金牌会员    |     0    |     2014-8-5      | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |     2014-8-4      | 直接关注 |             |
+		Then jobs可以获得会员列表
+			| name  | member_rank | integral | attention_time |  source  |    tags     |
+			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
+			| tom2  | 金牌会员    |     0    |   2014-08-05   | 推广扫码 |             |
+			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |             |
 
 Scenario:3 发优惠券
 
@@ -276,7 +276,7 @@ Scenario:3 发优惠券
 				{
 					"coupon1_id_1": {
 						"money": 10.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "bill",
 						"target": ""
 					},
@@ -319,9 +319,9 @@ Scenario:3 发优惠券
 				{
 					"coupon1_id_1": {
 						"money": 10.00,
-						"status": "已领取",
-						"consumer": "bill",
-						"target": ""
+						"status": "未使用",
+						"consumer": "",
+						"target": "bill"
 					},
 					"coupon1_id_2": {
 						"money": 10.00,
@@ -338,7 +338,7 @@ Scenario:3 发优惠券
 				}
 				"""
 
-	#给一个人发全店优惠券，无单人领取限制，可以发放多次，领取多张
+	#给取消关注的一个人发全店优惠券，无单人领取限制，可以发放多次，领取多张，此会员关注后，可以看到在取消关注时发放的优惠券
 
 		#给取消关注的tom发放无领取限制的全店优惠券，tom可以成功获得优惠券
 			When jobs给"tom"发优惠券
@@ -369,15 +369,15 @@ Scenario:3 发优惠券
 				{
 					"coupon2_id_1": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
-						"target": ""
+						"target": "tom"
 					},
 					"coupon2_id_2": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
-						"target": ""
+						"target": "tom"
 					},
 					"coupon2_id_3": {
 						"money": 20.00,
@@ -414,6 +414,14 @@ Scenario:3 发优惠券
 			Then tom能获得webapp优惠券列表
 				"""
 				[{
+					"coupon_id": "coupon2_id_1",
+					"money": 20.00,
+					"status": "未使用"
+				},{
+					"coupon_id": "coupon2_id_2",
+					"money": 20.00,
+					"status": "未使用"
+				},{
 					"coupon_id": "coupon2_id_3",
 					"money": 20.00,
 					"status": "未使用"
@@ -433,33 +441,33 @@ Scenario:3 发优惠券
 				{
 					"coupon2_id_1": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
-						"target": ""
+						"target": "tom"
 					},
 					"coupon2_id_2": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
-						"target": ""
+						"target": "tom"
 					},
 					"coupon2_id_3": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
-						"target": ""
+						"target": "tom"
 					},
 					"coupon2_id_4": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
-						"target": ""
+						"target": "tom"
 					},
 					"coupon2_id_5": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
-						"target": ""
+						"target": "tom"
 					}
 				}
 				"""
@@ -474,11 +482,11 @@ Scenario:4 加积分
 				"reason":""
 			}
 			"""
-		Then jobs获得会员列表
-			| name  | member_rank | integral |   attention_time  |  source  |
-			| tom3  | 普通会员    |    -10   | 2014-8-5 8:00:00  | 会员分享 |
-			| tom2  | 普通会员    |     0    | 2014-8-5 00:00:00 | 推广扫码 |
-			| tom1  | 普通会员    |     0    | 2014-8-4 23:59:59 | 直接关注 |
+		Then jobs可以获得会员列表
+			| name  | member_rank | integral | attention_time |  source  |
+			| tom3  | 普通会员    |    -10   |   2014-08-05   | 会员分享 |
+			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |
+			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |
 
 	#给当前会员积分为零时加积分正数
 		When jobs给"tom3"加积分
@@ -488,11 +496,11 @@ Scenario:4 加积分
 				"reason":"添加积分的原因"
 			}
 			"""
-		Then jobs获得会员列表
-			| name  | member_rank | integral |   attention_time  |  source  |
-			| tom3  | 普通会员    |    10    | 2014-8-5 8:00:00  | 会员分享 |
-			| tom2  | 普通会员    |     0    | 2014-8-5 00:00:00 | 推广扫码 |
-			| tom1  | 普通会员    |     0    | 2014-8-4 23:59:59 | 直接关注 |
+		Then jobs可以获得会员列表
+			| name  | member_rank | integral | attention_time |  source  |
+			| tom3  | 普通会员    |    10    |   2014-08-05   | 会员分享 |
+			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |
+			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |
 
 Scenario:5 查看聊天记录
 
@@ -541,7 +549,7 @@ Scenario:5 查看聊天记录
 		When jobs查看"tom3"聊天记录
 			"""
 			{
-				"name":"tom2"
+				"name":"tom3"
 			}
 			"""
 

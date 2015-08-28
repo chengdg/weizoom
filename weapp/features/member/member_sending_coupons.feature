@@ -159,7 +159,7 @@ Scenario:15 筛选出会员发送优惠券
 			"member_rank": "普通会员",
 			"price": 0.00,
 			"buy_sum": 0,
-			"buy_time": "2014-5-30",
+			"buy_time": "2014-05-30",
 			"integral": 20,
 			"friends_sum": 0,
 			"sources": "直接关注",
@@ -238,8 +238,10 @@ Scenario:15 筛选出会员发送优惠券
 		]
 		"""
 	When tom5访问jobs的webapp
-	Then tom5能获得webapp优惠券列表为空
-
+	Then tom5能获得webapp优惠券列表
+		"""
+		[]
+		"""
 	Given jobs登录系统
 	Then jobs能获得优惠券'单品券2'的码库
 		"""
