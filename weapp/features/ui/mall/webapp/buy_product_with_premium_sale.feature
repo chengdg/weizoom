@@ -1,4 +1,4 @@
-Feature: 购买参加“满减”活动的商品
+Feature: 购买参加“买赠”活动的商品
 	todo: 缺少已赠完的场景
 
 Background:
