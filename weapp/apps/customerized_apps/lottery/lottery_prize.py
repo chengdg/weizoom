@@ -20,6 +20,8 @@ from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 from mall.promotion import models as coupon_models
+from market_tools.tools.coupon.util import consume_coupon
+from termite import pagestore as pagestore_manager
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -38,16 +40,9 @@ class lottery_prize(resource.Resource):
 		response = create_response(500)
 		record_id = post['id']
 		data = {}
+		now_datetime = datetime.today()
 		if not record_id:
 			response.errMsg = u'抽奖活动信息出错'
-			return response.get_response()
-
-		webapp_user = getattr(request, 'webapp_user', None)
-		if webapp_user:
-			webapp_user_id = request.webapp_user.id
-			data['webapp_user_id'] = webapp_user_id
-		else:
-			response.errMsg = u'用户信息出错'
 			return response.get_response()
 
 		lottery = app_models.lottery.objects.get(id=record_id)
@@ -58,7 +53,7 @@ class lottery_prize(resource.Resource):
 		chance = lottery.chance / 100.0 #中奖率
 		participants_count = lottery.participant_count #所有参与的人数
 		winner_count = lottery.winner_count #中奖人数
-		limitation = lottery.limitation #抽奖限制
+		limitation = lottery.limitation_times #抽奖限制
 		#根据抽奖限制，对比抽奖时间
 		lottery_type = True if lottery.type == 'true' else False
 		expend = lottery.expend
@@ -72,29 +67,28 @@ class lottery_prize(resource.Resource):
 			response.errMsg = u'积分不足，请先关注'
 			return response.get_response()
 
-		try:
-			if member:
-				member_id = request.member.id
-				data['member_id'] = member_id
-				lottery_participance = app_models.lotteryParticipance.objects.get(belong_to=record_id, member_id=member_id)
-			else:
-				lottery_participance = app_models.lotteryParticipance.objects.get(belong_to=record_id, webapp_user_id=webapp_user_id)
-		except:
+		member_id = member.id
+		data['member_id'] = member_id
+		lottery_participances = app_models.lotteryParticipance.objects(belong_to=record_id, member_id=member_id)
+		if lottery_participances.count() != 0:
+			lottery_participance = lottery_participances.first()
+		else:
 			#如果当前用户没有参与过该活动，则创建新记录
 			data['belong_to'] = record_id
-			data['lottery_date'] = datetime.today()
+			data['lottery_date'] = now_datetime
 			data['owner_id'] = request.user.id
-			data['count'] = 2 if limitation == 'twice_per_day' else 1 #根据抽奖活动限制，初始化可参与次数
+			data['can_play_count'] = limitation #根据抽奖活动限制，初始化可参与次数
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
-
 		#根据送积分规则，查询当前用户是否已中奖
 		if delivery_setting == 'false' or not lottery_participance.has_prize:
-			webapp_user.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
 		#扣除抽奖消耗的积分
-		webapp_user.consume_integral(expend, u'参与抽奖，获得参与积分')
+		member.consume_integral(expend, u'参与抽奖，获得参与积分')
 		#判定是否中奖
-		if participants_count == 0 or winner_count / float(participants_count) >= chance:
+		lottery_prize_type = "no_prize"
+		lottery_prize_data = ""
+		if participants_count == 0 or (winner_count / float(participants_count) >= chance):
 			result = u'谢谢参与'
 		else:
 			#中奖，构造奖项池
@@ -104,9 +98,9 @@ class lottery_prize(resource.Resource):
 			page = pagestore.get_page(lottery.related_page_id, 1)
 			page_components = page['component']['components']
 			for sub_components in page_components:
-				if sub_components.type == 'appkit.lotterydescription':
+				if sub_components['type'] == 'appkit.lotterydescription':
 					sub_components = sub_components['components']
-					for c in sub_components['components']:
+					for c in sub_components:
 						model = c['model']
 						prize = model['prize']
 
@@ -123,27 +117,58 @@ class lottery_prize(resource.Resource):
 			random.shuffle(prize_tank)
 			#随机抽奖
 			lottery_prize = random.choice(prize_tank)
+			lottery_prize_type = lottery_prize['prize_type']
 			#1、奖品数为0时，不中奖
 			#2、根据是否可以重复抽奖和抽到的优惠券规则判断
-			if lottery_prize_count == 0:
+			if lottery_prize_count == 0  or (not lottery_type and lottery_participance.has_prize):
 				result = u'谢谢参与'
 			else:
-				# if lottery_type:
-				# 	#如果抽到的是优惠券，则获取该优惠券的配置
-				# 	if lottery_prize['prize_type'] == 'coupon':
-				# 		coupon_rule = coupon_models.CouponRule.objects.get(id=lottery_prize['prize_data']['id'])
-				# 		coupon_limit = coupon_rule.limit_counts
-				# 		if coupon_limit <= 1:
-							#查询该用户是否已抽到过该优惠券
 				result = lottery_prize['title']
-				#发奖
+				#如果抽到的是优惠券，则获取该优惠券的配置
+				if lottery_prize_type == 'coupon':
+					#优惠券
+					lottery_prize_data = couponRule_id = lottery_prize['prize_data']['id']
+					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
+					coupon_limit = coupon_rule.limit_counts
+					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, belong_to=record_id, prize_type='coupon', prize_data=couponRule_id).count()
+					if has_coupon_count >= coupon_limit:
+						result = u'谢谢参与'
+					else:
+						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
+						prize_value = lottery_prize['prize_data']['name']
+				elif lottery_prize_type == 'integral':
+					#积分
+					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，获得参与积分')
+					prize_value = u'%d积分' % lottery_prize['prize_data']
+				else:
+					prize_value = lottery_prize['prize_data']
+
+		#写日志
+		prize_value = result if result == u'谢谢参与' else prize_value
+		log_data = {
+			"member_id": member_id if member else 0,
+			"belong_to": record_id,
+			"lottery_name": lottery.name,
+			"prize_type": lottery_prize_type,
+			"prize_name": str(prize_value),
+			"prize_data": str(lottery_prize_data),
+			"created_at": now_datetime
+		}
+		app_models.lottoryRecord(**log_data).save()
+
 		#抽奖后，更新数据
 		has_prize = False if result == u'谢谢参与' else True
-		print lottery_participance
-		lottery_participance.update(**{"has_prize":has_prize, "inc__total_count":1})
-		#调整参与数量
+		lottery_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
+		#根据抽奖次数限制，更新可抽奖次数
+		lottery_participance.update(dec__can_play_count=1)
+		#调整参与数量和中奖人数
+		if has_prize:
+			app_models.lottery.objects(id=record_id).update(**{"inc__winner_count":1})
 		app_models.lottery.objects(id=record_id).update(**{"inc__participant_count":1})
 
 		response = create_response(200)
-		response.data = {'index': result}
+		response.data = {
+			'result': result,
+			'can_play_count': lottery_participance.can_play_count
+		}
 		return response.get_response()
