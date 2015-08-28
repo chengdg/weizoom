@@ -1177,7 +1177,7 @@ Scenario: 13 【优惠券】-未到使用日期，不能使用
 				"name": "商品1",
 				"count": 1
 			}],
-			"coupon": "coupon4_id_1"
+			"coupon": "coupon6_id_1"
 		}
 		"""
 	Then bill获得创建订单失败的信息'该优惠券不可用'
