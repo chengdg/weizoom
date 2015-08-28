@@ -35,7 +35,7 @@ Background:
 			"tag_id_3": "会员分组3",
 			"tag_id_4": "会员分组4",
 			"tag_id_5": "会员分组5"
-		}	
+		}
 		"""
 	When jobs批量获取微信用户关注
 		| member_name   | attention_time       | member_source |
@@ -65,7 +65,7 @@ Scenario: 批量调整分组的下来列表
 			"name": "会员分组4"
 		},{
 			"name": "会员分组5"
-		}]	
+		}]
 		"""
 
 	When jobs添加分组"给筛选出来的所有人添加分组"
@@ -82,12 +82,12 @@ Scenario: 批量调整分组的下来列表
 			"name": "会员分组4"
 		},{
 			"name": "会员分组5"
-		}]	
+		}]
 		"""
 
 @member @memberList
 Scenario:1 选择当前页的部分会员，选择"给选中的人添加分组";包含了给已经有分组的批量添加分组;批量调整分组的下来列表
-	
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
@@ -174,13 +174,13 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人添加分组";
 			When jobs访问会员列表第3页
 			Then jobs可以获得会员列表
 				| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |        tags        |
-				| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 会员分组2;会员分组3|
+				| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 会员分组2,会员分组3|
 				| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-05    | 推广扫码 |                    |
-				| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 会员分组2;会员分组3|
+				| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 会员分组2,会员分组3|
 
 @member @memberList
 Scenario:2 选择当前页的全部会员，选择"给选中的人添加分组"
-	
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
@@ -248,7 +248,7 @@ Scenario:2 选择当前页的全部会员，选择"给选中的人添加分组"
 
 @member @memberList
 Scenario:3 没有选中会员，选择"给选中的人添加分组"
-
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
@@ -284,17 +284,17 @@ Scenario:3 没有选中会员，选择"给选中的人添加分组"
 
 @member @memberList
 Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人添加分组";包含了给已经有分组的批量添加分组
-
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":3
 		}
 		"""
-	When jobs设置查询条件
+	When jobs设置会员查询条件
 		"""
 		[{
-			"member_source":"会员分享"
+			"source":"会员分享"
 		}]
 		"""
 
@@ -325,7 +325,7 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 会员分组1   |
 			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 会员分组1   |
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 会员分组1   |
-		
+
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
@@ -351,28 +351,28 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |        tags         |
-			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 会员分组1;会员分组2 |
-			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 会员分组1;会员分组2 |
-			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 会员分组1;会员分组2 |
-		
+			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 会员分组1,会员分组2 |
+			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 会员分组1,会员分组2 |
+			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 会员分组1,会员分组2 |
+
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |        tags         |
-			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 会员分组1;会员分组2 |
+			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 会员分组1,会员分组2 |
 
 @member @memberList
 Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人添加分组"包含了给已经有分组的批量添加分组
-
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":3
 		}
 		"""
-	When jobs设置查询条件
+	When jobs设置会员查询条件
 		"""
 		[{
-			"member_source":"会员分享"
+			"source":"会员分享"
 		}]
 		"""
 
@@ -412,17 +412,17 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 
 @member @memberList
 Scenario:6 没有选中会员，选择"给筛选出来的所有人添加分组"包含了给已经有分组的批量添加分组
-
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":3
 		}
 		"""
-	When jobs设置查询条件
+	When jobs设置会员查询条件
 		"""
 		[{
-			"member_source":"会员分享"
+			"source":"会员分享"
 		}]
 		"""
 
@@ -459,7 +459,7 @@ Scenario:6 没有选中会员，选择"给筛选出来的所有人添加分组"�
 
 @member @memberList
 Scenario:7 筛选条件为“分组”的筛选结果时，批量调整分组
-
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
@@ -528,13 +528,13 @@ Scenario:7 筛选条件为“分组”的筛选结果时，批量调整分组
 			When jobs访问会员列表第1页
 			Then jobs可以获得会员列表
 				| member| member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |        tags         |
-				| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 会员分组4;会员分组5 |
-				| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 会员分组4;会员分组5 |
-				| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 会员分组4;会员分组5 |
+				| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 会员分组4,会员分组5 |
+				| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 会员分组4,会员分组5 |
+				| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 会员分组4,会员分组5 |
 
 @member @memberList @meberGroup
 Scenario:8 会员分组人数验证
-
+	Given jobs登录系统
 	Given jobs设置分页查询参数
 		"""
 		{
@@ -606,16 +606,16 @@ Scenario:8 会员分组人数验证
 		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
 			| member| member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |        tags         |
-			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 会员分组3;会员分组2 |
-			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 会员分组3;会员分组2 |
-			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 会员分组3;会员分组2 |
+			| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 会员分组3,会员分组2 |
+			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 | 会员分组3,会员分组2 |
+			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 | 会员分组3,会员分组2 |
 
 		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |        tags         |
-			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 会员分组4;会员分组2 |
-			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 会员分组4;会员分组2 |
-			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 会员分组4;会员分组2 |
+			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 | 会员分组4,会员分组2 |
+			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 | 会员分组4,会员分组2 |
+			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 | 会员分组4,会员分组2 |
 
 		When jobs访问会员列表第3页
 		Then jobs可以获得会员列表
