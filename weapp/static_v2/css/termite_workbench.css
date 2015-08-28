@@ -105,6 +105,7 @@ body {
 
 .xui-wepage-globalNavPage .xui-bottomActionBar,.xui-wepage-workbenchPage .xui-bottomActionBar{
 	position: absolute;
+	width: 995px;
 }
 
 
