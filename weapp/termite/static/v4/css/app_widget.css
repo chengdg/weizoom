@@ -345,6 +345,12 @@ p.wui-i-start_time,p.wui-i-end_time{
 	border: 1px;
 	border-radius:5px;
 }
+.wui-lotterydescription>.wui-i-body .xui-lottery-unit img{
+	height:50px;
+	width:50px;
+	vertical-align:middle;
+	padding: 0;
+}
 .wui-lotterydescription .xui-lottery-unit b{
 	color: white;
     display: inline-block;
@@ -436,7 +442,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .xa-circle-unit-1{
 	top:5px;
-	left: 74px;
+	left: 70px;
 }
 .xa-circle-unit-2{
 	top:5px;
@@ -444,7 +450,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .xa-circle-unit-3{
 	top:5px;
-	left: 195px;
+	left: 200px;
 }
 .xa-circle-unit-4{
 	top:5px;
@@ -468,7 +474,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .xa-circle-unit-9{
 	top: 263px;
-	left: 195px;
+	left: 200px;
 }
 .xa-circle-unit-10{
 	top: 263px;
@@ -476,7 +482,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .xa-circle-unit-11{
 	top: 263px;
-	left: 74px;
+	left: 70px;
 }
 .xa-circle-unit-12{
 	top: 263px;

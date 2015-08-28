@@ -40,12 +40,23 @@
             this.times = 0;
             this.cycle = 50;
             this.prize = -1;
+            this.prize_name = "谢谢参与";
             this.isRolling = false;
             this.light_index = -1;
             this.light_count = 0;
             this.light_speed = 100;
             this.lights_timer = 0;
             this.$lottery = $lottery;
+            this.PRIZE = {
+                '谢谢参与': getRandomStopPosition(['1', '5', '8', '10']), //谢谢参与位置
+                '一等奖': getRandomStopPosition(['1', '7']), //一等奖位置
+                '二等奖': getRandomStopPosition(['2', '4', '9']), //二等奖位置
+                '三等奖': getRandomStopPosition(['3', '6', '11']) //三等奖位置
+            };
+            function getRandomStopPosition(arr){
+                var len = arr.length - 1;
+                return arr[parseInt(Math.random()*len+0.5)];
+            }
 
             //初始化
             var len = $lottery.find(".xa-lottery-unit").length;
@@ -79,7 +90,9 @@
             $lottery.find(".xa-circle-unit-"+light_index).addClass("active");
             this.light_index = light_index;
         };
-        Roulette.prototype.stop = function(index){
+        Roulette.prototype.stop = function(result){
+            this.prize_name = result;
+            var index = this.PRIZE[result];
             this.prize = parseInt(index);
         };
         Roulette.prototype.roll = function(){
@@ -95,6 +108,7 @@
                     this.prize = -1;
                     this.speed = 100;
                     this.isRolling = false;
+                    this.popupResult();
                     return;
                 }
                 this.speed += 30;
@@ -104,20 +118,12 @@
                 that.roll();
             },this.speed);
         };
+        Roulette.prototype.popupResult = function(){
+            alert(this.prize_name);
+        };
     </script>
     <script type="text/javascript">
-        var PRIZE = {
-            '谢谢参与': getRandomStopPosition(['1', '5', '8', '10']), //谢谢参与位置
-            '一等奖': getRandomStopPosition(['1', '7']), //一等奖位置
-            '二等奖': getRandomStopPosition(['2', '4', '9']), //二等奖位置
-            '三等奖': getRandomStopPosition(['3', '6', '11']) //三等奖位置
-        },
-        lottery_status;
-        function getRandomStopPosition(arr){
-            var len = arr.length - 1;
-            return arr[parseInt(Math.random()*len+0.5)];
-        }
-
+        var lottery_status;
         window.lottery = {};//测试用
         $(function(){
             lottery_status = '{{ lottery_status }}' == 'True' ? true : false;
@@ -137,8 +143,7 @@
                         },
                         success: function(data){
                             lottery.roll();
-                            console.log(PRIZE[data.index]);
-                            lottery.stop(PRIZE[data.index]);
+                            lottery.stop(data.result);
                             console.log('抽奖结束');
                         },
                         error: function(error){

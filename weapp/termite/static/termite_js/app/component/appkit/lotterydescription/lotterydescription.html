@@ -32,19 +32,19 @@
             <table style="border-collapse: separate; border-spacing: 2px;">
                 <tr>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-0 xa-lottery-first">
-                        {% if component.components.0.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.0.model.image }}">{% else %}<b>一等奖</b>{% endif %}</td>
+                        {% if component.components.0.model.image %}<img src="{{ component.components.0.model.image }}">{% else %}<b>一等奖</b>{% endif %}</td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-1"><b>谢谢参与</b></td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-2 xa-lottery-second">
-                        {% if component.components.1.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
+                        {% if component.components.1.model.image %}<img src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-3 xa-lottery-third">
-                        {% if component.components.2.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
+                        {% if component.components.2.model.image %}<img src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
                 </tr>
                 <tr>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-11 xa-lottery-third">
-                        {% if component.components.2.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
+                        {% if component.components.2.model.image %}<img src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
                     <td class="xa-lottery-go" colspan="2" rowspan="2"><a>点击抽奖</a></td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-4 xa-lottery-second">
-                        {% if component.components.1.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
+                        {% if component.components.1.model.image %}<img src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
                 </tr>
                 <tr>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-10"><b>谢谢参与</b></td>
@@ -52,12 +52,12 @@
                 </tr>
                 <tr>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-9 xa-lottery-second">
-                        {% if component.components.1.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
+                        {% if component.components.1.model.image %}<img src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-8"><b>谢谢参与</b></td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-7 xa-lottery-first">
-                        {% if component.components.0.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.0.model.image }}">{% else %}<b>一等奖</b>{% endif %}</td>
+                        {% if component.components.0.model.image %}<img src="{{ component.components.0.model.image }}">{% else %}<b>一等奖</b>{% endif %}</td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-6 xa-lottery-third">
-                        {% if component.components.2.model.image %}<img style='height:50px;width:50px;vertical-align:middle;' src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
+                        {% if component.components.2.model.image %}<img src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
                 </tr>
             </table>
         </div>
@@ -75,7 +75,7 @@
 		</div>
         <i class="wui-i-sprite xui-sprite-prize"></i>
         <div class="wui-i-prize">
-            每次抽奖：送<b class="xa-delivery">{{component.model.delivery}}</b>积分，消耗<b class="xa-expand">{{ component.model.expend }}</b>积分
+            参与送<b class="xa-delivery">{{component.model.delivery}}</b>积分
         </div>
 	</div>
     <div class="wui-i-record">

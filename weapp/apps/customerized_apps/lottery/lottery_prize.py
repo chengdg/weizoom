@@ -70,8 +70,8 @@ class lottery_prize(resource.Resource):
 		member_id = member.id
 		data['member_id'] = member_id
 		lottery_participances = app_models.lotteryParticipance.objects(belong_to=record_id, member_id=member_id)
-		if lottery_participances.count != 0:
-			lottery_participance = lottery_participances[0]
+		if lottery_participances.count() != 0:
+			lottery_participance = lottery_participances.first()
 		else:
 			#如果当前用户没有参与过该活动，则创建新记录
 			data['belong_to'] = record_id
@@ -80,7 +80,6 @@ class lottery_prize(resource.Resource):
 			data['can_play_count'] = limitation #根据抽奖活动限制，初始化可参与次数
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
-
 		#根据送积分规则，查询当前用户是否已中奖
 		if delivery_setting == 'false' or not lottery_participance.has_prize:
 			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
@@ -139,7 +138,7 @@ class lottery_prize(resource.Resource):
 						prize_value = lottery_prize['prize_data']['name']
 				elif lottery_prize_type == 'integral':
 					#积分
-					webapp_user.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，获得参与积分')
+					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，获得参与积分')
 					prize_value = u'%d积分' % lottery_prize['prize_data']
 				else:
 					prize_value = lottery_prize['prize_data']
@@ -169,7 +168,7 @@ class lottery_prize(resource.Resource):
 
 		response = create_response(200)
 		response.data = {
-			'index': result,
+			'result': result,
 			'can_play_count': lottery_participance.can_play_count
 		}
 		return response.get_response()

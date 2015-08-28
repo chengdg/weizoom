@@ -106,7 +106,7 @@ class voteParticipances(resource.Resource):
 		response.data = response_data
 		return response.get_response()		
 
-class surveyParticipances_Export(resource.Resource):
+class voteParticipances_Export(resource.Resource):
 	'''
 	批量导出
 	'''
@@ -123,8 +123,8 @@ class surveyParticipances_Export(resource.Resource):
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
-		app_name = surveyParticipances_Export.app.split('/')[1]
-		excel_file_name = ('%s_%s.xls') % (app_name,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		app_name = voteParticipances_Export.app.split('/')[1]
+		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -176,21 +176,21 @@ class surveyParticipances_Export(resource.Resource):
 				else:
 					fields_pure.append(field)
 
-			#username(webapp_user_id/member_id)
-			webapp_id_list = map(long,[record['webapp_user_id'] for record in data ])#大
-			#测试：member里的id好像和webapp_id不一样
-			members = member_models.Member.objects.filter(webapp_id__in = webapp_id_list)#小
-			webapp_id2name ={}
+			#username(member_id)
+			member_ids = [record['member_id'] for record in data ]
+			members = member_models.Member.objects.filter(id__in = member_ids)
+			member_id2name ={}
 			for member in members:
-				w_id = long(member.webapp_id)
-				if w_id not in webapp_id2name:
-					webapp_id2name[w_id] = member.username
+				m_id = member.id
+				if member.is_subscribed == True:
+					u_name = member.username
 				else:
-					webapp_id2name[w_id] = member.username
-			for item in webapp_id_list:
-				if item not in webapp_id2name:
-					webapp_id2name[item] = u"非会员"
-
+					u_name = u'非会员'
+				if m_id not in member_id2name:
+					member_id2name[m_id] = u_name
+				else:
+					member_id2name[m_id] = u_name
+			print member_id2name
 			#processing data
 			num = 0
 			for record in data:
@@ -200,7 +200,8 @@ class surveyParticipances_Export(resource.Resource):
 				export_record = []
 
 				num = num+1
-				name = webapp_id2name[record['webapp_user_id']]
+				print record['member_id']
+				name = member_id2name[record['member_id']]
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
@@ -241,17 +242,18 @@ class surveyParticipances_Export(resource.Resource):
 				col += 1
 
 			##write data
-			row = 0
-			lens = len(export_data[0])
-			for record in export_data:
-				row +=1
-				for col in range(lens):
-					ws.write(row,col,record[col])
-			try:
-				wb.save(export_file_path)
-			except:
-				print 'EXPORT EXCEL FILE SAVE ERROR'
-				print '/static/upload/%s'%excel_file_name
+			if export_data:
+				row = 0
+				lens = len(export_data[0])
+				for record in export_data:
+					row +=1
+					for col in range(lens):
+						ws.write(row,col,record[col])
+				try:
+					wb.save(export_file_path)
+				except:
+					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print '/static/upload/%s'%excel_file_name
 
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}

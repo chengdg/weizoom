@@ -172,7 +172,7 @@ class surveyStatistics_Export(resource.Resource):
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
 		app_name = surveyStatistics_Export.app
-		excel_file_name = ('%s_%s.xls') % (app_name.split("/")[1],datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -180,17 +180,17 @@ class surveyStatistics_Export(resource.Resource):
 			import xlwt
 			data = app_models.surveyParticipance.objects(belong_to=export_id)
 			total = data.count()
-			webapp_user_id2termite_data={}
+			member_id2termite_data={}
 			for item in data:
-				if item['webapp_user_id'] not in webapp_user_id2termite_data:
-					webapp_user_id2termite_data[item['webapp_user_id']] = {'created_at':item['created_at'],'termite_data':item['termite_data']}
+				if item['member_id'] not in member_id2termite_data:
+					member_id2termite_data[item['member_id']] = {'created_at':item['created_at'],'termite_data':item['termite_data']}
 
 			#select sheet
 			select_data = {}
 			select_static ={}
 			qa_static = {}
-			for item in webapp_user_id2termite_data:
-				record = webapp_user_id2termite_data[item]
+			for item in member_id2termite_data:
+				record = member_id2termite_data[item]
 				time = record['created_at']
 				for termite in record['termite_data']:
 					termite_dic = record['termite_data'][termite]
