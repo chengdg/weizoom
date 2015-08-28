@@ -41,26 +41,23 @@ def step_impl(context, user):
 
 @when(u"{user}修改'{postage_name}'运费配置")
 def step_impl(context, user, postage_name):
-    postage = json.loads(context.text)
-    data = __get_post_data_postage(postage)
-    config = get_postage_config(context.client.user.id, data['name'])
-    data['id'] = config.id
-    response = context.client.post('/mall2/api/postage/?_method=post', data)
+    context.postages = json.loads(context.text)
+    for postage in context.postages:
+        data = __get_post_data_postage(postage)
+        config = get_postage_config(context.client.user.id, data['name'])
+        data['id'] = config.id
+        response = context.client.post('/mall2/api/postage/?_method=post', data)
 
 
 @then(u"{user}能获取'{postage_name}'运费配置")
 def step_impl(context, user, postage_name):
     config = get_postage_config(context.client.user.id, postage_name)
     response = context.client.get('/mall2/postage/?id=%d' % config.id)
-    postage_config = response.context['postage_config'].to_dict()
-    special_configs = response.context['jsons'][0]['content']
-    actual = postage_config
-    for config in special_configs:
-        config['to_the'] = config['destination_str']
-    actual['special_area'] = special_configs
+    actual = response.context['postage_config']
 
-    expected = json.loads(context.text)
-    bdd_util.assert_dict(expected, actual)
+    expecteds = json.loads(context.text)
+    for postage in expecteds:
+        bdd_util.assert_dict(postage, actual)
 
 
 @when(u"{user}选择'{postage_name}'运费配置")

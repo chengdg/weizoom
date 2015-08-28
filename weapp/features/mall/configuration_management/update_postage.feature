@@ -19,7 +19,7 @@ Background:
 		}]
 		"""
 
-@mall @mall.postage @mall2
+@mall @mall.postage
 Scenario: 更新邮费配置
 	Jobs更新"邮费配置"
 	1. jobs能获得更新后的邮费配置
@@ -68,11 +68,11 @@ Scenario: 更新邮费配置
 			"added_weight":1,
 			"added_weight_price":5.00,
 			"special_area": [{
-				"to_the":"北京",
+				"to_the":"北京市",
 				"first_weight_price":20.00,
 				"added_weight_price":10.00
 			},{
-				"to_the":"上海, 重庆, 江苏",
+				"to_the":"上海市,重庆市,江苏省",
 				"first_weight_price":30.00,
 				"added_weight_price":20.00
 			}]
@@ -85,10 +85,10 @@ Scenario: 更新邮费配置
 			"first_weight":1,
 			"first_weight_price":10.0,
 			"special_area": [{
-				"to_the":"上海",
+				"to_the":"上海市",
 				"first_weight_price":40.00
 			}, {
-				"to_the":"江苏",
+				"to_the":"江苏省",
 				"first_weight_price":30.00
 			}]
 		}	

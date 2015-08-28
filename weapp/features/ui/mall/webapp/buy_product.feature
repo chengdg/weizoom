@@ -195,6 +195,7 @@ Scenario: 购买商品时，使用订单备注
 		}
 		"""
 
+# _author_ "师帅8.26"补充
 Scenario: 购买有规格的商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs添加的商品

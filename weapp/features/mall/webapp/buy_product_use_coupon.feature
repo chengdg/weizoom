@@ -835,7 +835,7 @@ Scenario: 12 使用多于商品价格的优惠券进行购买，且不能抵扣�
 
 # __edit__ : "新新" "雪静"
 @mall2 @meberGrade @coupon
-Scenario: 13 不同等级的会员购买有会员价同时使用全体券的商品
+Scenario:不同等级的会员购买有会员价同时使用全体券的商品
 #（全体券和会员价可以同时使用，但是满多少钱可以使用计算的是会员价）
 	Given jobs登录系统
 	And jobs已添加商品
@@ -1148,49 +1148,4 @@ Scenario: 13 不同等级的会员购买有会员价同时使用全体券的商�
 		}
 		"""
 
-# __edit__ : "王丽" 针对BUG3490
-Scenario: 13 【优惠券】-未到使用日期，不能使用
-	bill购买jobs的商品时，不能使用未到期的优惠券进行购买
-
-	Given jobs已添加了优惠券规则
-		"""
-		[{
-			"name": "未开始优惠券",
-			"money": 1,
-			"start_date": "1天后",
-			"end_date": "2天后",
-			"coupon_id_prefix": "coupon6_id_"
-		}]
-		"""
-	When bill访问jobs的webapp
-	When bill领取jobs的优惠券
-		"""
-		[{
-			"name": "未开始优惠券",
-			"coupon_ids": ["coupon6_id_1"]
-		}]
-		"""
-	When bill购买jobs的商品
-		"""
-		{
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
-			"coupon": "coupon6_id_1"
-		}
-		"""
-	Then bill获得创建订单失败的信息'该优惠券不可用'
-	Given jobs登录系统
-	Then jobs能获得优惠券'未开始优惠券'的码库
-		"""
-		{
-			"coupon6_id_1": {
-				"money": 1.0,
-				"status": "未使用",
-				"consumer": "",
-				"target": "bill"
-			}
-		}
-		"""
 

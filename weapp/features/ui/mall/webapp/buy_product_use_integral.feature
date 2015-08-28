@@ -222,7 +222,7 @@ Scenario: 使用积分购买影响商品库存
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有390会员积分
 
-#师帅补充
+# _author_ "师帅8.26"补充
 Scenario:使用积分购买商品后，取消订单，积分返回
 	bill购买jobs的商品时，使用少于商品金额的积分金额进行购买
 	1. 创建订单成功, 订单状态为“等待支付”
