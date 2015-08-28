@@ -276,7 +276,7 @@ Scenario:3 发优惠券
 				{
 					"coupon1_id_1": {
 						"money": 10.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "bill",
 						"target": ""
 					},
@@ -319,7 +319,7 @@ Scenario:3 发优惠券
 				{
 					"coupon1_id_1": {
 						"money": 10.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "bill"
 					},
@@ -369,13 +369,13 @@ Scenario:3 发优惠券
 				{
 					"coupon2_id_1": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "tom"
 					},
 					"coupon2_id_2": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "tom"
 					},
@@ -441,31 +441,31 @@ Scenario:3 发优惠券
 				{
 					"coupon2_id_1": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "tom"
 					},
 					"coupon2_id_2": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "tom"
 					},
 					"coupon2_id_3": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "tom"
 					},
 					"coupon2_id_4": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "tom"
 					},
 					"coupon2_id_5": {
 						"money": 20.00,
-						"status": "已领取",
+						"status": "未使用",
 						"consumer": "",
 						"target": "tom"
 					}
