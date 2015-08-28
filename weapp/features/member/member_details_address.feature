@@ -18,10 +18,10 @@ Background:
 	When bill添加收货地址
 		"""
 		[{
-			"name":"收货人1",
-			"phone":"15933556587",
-			"area":"选择的城市地区1"，
-			"detailed_address":"详细地址1"
+			"ship_name":"收货人1",
+			"ship_tel":"15933556587",
+			"ship_area":"北京市 北京市 海淀区"，
+			"ship_address":"详细地址1"
 		}]
 		"""
 
@@ -34,9 +34,9 @@ Scenario:1 添加收货地址
 	Then jobs获得"bill"的收货信息
 		"""
 		[{
-			"address":"选择的城市地区1详细地址1",
-			"name":"收货人1",
-			"phone":"15933556587"
+			"address":"北京市 北京市 海淀区 详细地址1",
+			"ship_name":"收货人1",
+			"ship_tel":"15933556587"
 		}]
 		"""
 
@@ -44,10 +44,10 @@ Scenario:1 添加收货地址
 	When bill添加收货地址
 		"""
 		[{
-			"name":"收货人2",
-			"phone":"15933556586",
-			"area":"选择的城市地区2"，
-			"detailed_address":"详细地址2"
+			"ship_name":"收货人2",
+			"ship_tel":"15933556586",
+			"ship_area":"天津市 天津市 河西区"，
+			"ship_address":"详细地址2"
 		}]
 		"""
 
@@ -56,13 +56,13 @@ Scenario:1 添加收货地址
 	Then jobs获得"bill"的收货信息
 		"""
 		[{
-			"address":"选择的城市地区1详细地址1",
-			"name":"收货人1",
-			"phone":"15933556587"
+			"address":"北京市 北京市 海淀区 详细地址1",
+			"ship_name":"收货人1",
+			"ship_tel":"15933556587"
 		},{
-			"address":"选择的城市地区2详细地址2",
-			"name":"收货人2",
-			"phone":"15933556586"
+			"address":"天津市 天津市 河西区 详细地址2",
+			"ship_name":"收货人2",
+			"ship_tel":"15933556586"
 		}]
 		"""
 
@@ -72,10 +72,10 @@ Scenario:2 编辑收货地址
 	When bill编辑收货地址
 		"""
 		[{
-			"name":"收货人1修改",
-			"phone":"15933556587",
-			"area":"选择的城市地区1修改"，
-			"detailed_address":"详细地址1修改"
+			"ship_name":"收货人1修改",
+			"ship_tel":"15933556587",
+			"ship_area":"北京市 北京市 西城区"，
+			"ship_address":"详细地址1修改"
 		}]
 		"""
 
@@ -84,9 +84,9 @@ Scenario:2 编辑收货地址
 	Then jobs获得"bill"的收货信息
 		"""
 		[{
-			"address":"选择的城市地区1修改详细地址1修改",
-			"name":"收货人1修改",
-			"phone":"15933556587"
+			"address":"北京市 北京市 西城区 详细地址1修改",
+			"ship_name":"收货人1修改",
+			"ship_tel":"15933556587"
 		}]
 		"""
 
@@ -96,10 +96,10 @@ Scenario:3 删除收货地址
 	When bill删除收货地址
 		"""
 		[{
-			"name":"收货人1",
-			"phone":"15933556587",
-			"area":"选择的城市地区1"，
-			"detailed_address":"详细地址1"
+			"ship_name":"收货人1",
+			"ship_tel":"15933556587",
+			"ship_area":"北京市 北京市 海淀区"，
+			"ship_address":"详细地址1"
 		}]
 		"""
 
