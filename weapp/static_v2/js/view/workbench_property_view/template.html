@@ -107,12 +107,12 @@
 					{{/if}}
 
 
-					{{if (field.type == 'checkbox')}}
+					{{if (field.type == 'checkbox-group')}}
 					<div class="propertyGroup_property_checkboxField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label">${field.displayName}</div>
 						<div class="propertyGroup_property_input" style="display: inline;">
 						{{each(fi, checkbox) field.source}}
-						<label style="display:inline;"><input style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
+						<label style="display:inline;"><input class="xa-checkboxGroup-checkbox" style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
 						{{/each}}
 						</div>
 					</div>
@@ -267,7 +267,7 @@
 						{{each(fi, checkboxField) field.source}}
 						<div class="propertyGroup_property_label long-label mt5">${checkboxField.model.get('label')}：</div>
 						<div class="propertyGroup_property_input short-input">
-						<input type="checkbox" data-field="${field.name}" data-column-name="${checkboxField.model.get('name')}" {{if checkboxField.isSelectIntoList}}checked="checked"{{/if}} />&nbsp;选中
+						<input class="xa-checkbox" type="checkbox" data-field="${field.name}" data-column-name="${checkboxField.model.get('name')}" {{if checkboxField.isSelectIntoList}}checked="checked"{{/if}} />&nbsp;选中
 						</div>
 						{{/each}}
 					</div>
@@ -574,11 +574,11 @@
 
 								<div class='xui-nameBlock xa-nameBlock' style="border-top: solid 1px #EFEFEF;">
 									<label class="xui-block xa-itemname mb10 ">
-										<input class="mr10"  type="checkbox" data-field="itemname" name='itemname' {{if model.get('itemname')}}checked="checked"{{/if}} value="${component.name2field['itemname'].value}" />${component.name2field['itemname'].displayName}
+										<input class="mr10 xa-checkbox"  type="checkbox" data-field="itemname" name='itemname' {{if model.get('itemname')}}checked="checked"{{/if}} value="${component.name2field['itemname'].value}" />${component.name2field['itemname'].displayName}
 									</label>
 
 									<label class="xui-block xa-price">
-										<input class="mr10"  type="checkbox" data-field="price" name='price' {{if model.get('price')}}checked="checked"{{/if}} value="${component.name2field['price'].value}" />${component.name2field['price'].displayName}
+										<input class="mr10 xa-checkbox"  type="checkbox" data-field="price" name='price' {{if model.get('price')}}checked="checked"{{/if}} value="${component.name2field['price'].value}" />${component.name2field['price'].displayName}
 									</label>
 								</div>
 							</div>

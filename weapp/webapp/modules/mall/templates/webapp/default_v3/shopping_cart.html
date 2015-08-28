@@ -406,7 +406,7 @@ $(document).ready(function() {
                                 maxCount = count_per_purchase;
                             }else{
                                 maxCount = data[model_id].stocks;
-                                $(this).parent('.xa-product').data('stocks', maxCount);
+                                $(this).parents('.xa-product').data('stocks', maxCount);
                             }
                         }else {
                             if (count_per_purchase > 0){
