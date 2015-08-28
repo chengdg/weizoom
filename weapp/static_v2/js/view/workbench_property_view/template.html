@@ -63,6 +63,19 @@
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'title_with_annotation')}}
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}</div>
+						<div class="propertyGroup_property_input">
+							{{if field.annotation}}
+							<span style="color: #888;line-height:22px;">
+								{{html field.annotation}}
+							</span>
+							{{/if}}
+						</div>
+					</div>
+					{{/if}}
+
 					{{if (field.type == 'time')}}
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_input xui-formPanel">
@@ -191,9 +204,9 @@
 					{{if (field.type == 'checkbox-group')}}
 					<div class="propertyGroup_property_checkboxField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label">${field.displayName}</div>
-						<div class="propertyGroup_property_input" style="display: inline;">
+						<div class="propertyGroup_property_input" style="display: inline;line-height:30px;">
 						{{each(fi, checkbox) field.source}}
-						<label style="display:inline;"><input class="xa-checkboxGroup-checkbox" style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
+						<label style="margin-right:5px;"><input class="xa-checkboxGroup-checkbox" style="margin-top:-3px;" type="checkbox" data-column-name="${checkbox.columnName}" data-field="${field.name}" name='${field.name}' {{if model.get(field.name)[checkbox.columnName].select}}checked="checked"{{/if}} value="${checkbox.value}" />${checkbox.name}</label>
 						{{/each}}
 						</div>
 					</div>
