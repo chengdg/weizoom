@@ -267,7 +267,7 @@ Scenario: 放入同一种商品的不同规格到购物车
 		"""
 
 
-
+# _author_ "师帅8.26"补充
 Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 	bill在webapp中将jobs的商品加入到购物车后，jobs对此商品进行删除操作
 	1.bill查看jobs的webapp购物车，此商品已无效
