@@ -61,16 +61,6 @@ def step_impl(context, user):
 @then(u'{user}可以获得会员列表')
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
-	if not context.url:
-		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&count_per_page=50&page=1&enable_paginate=1'
-	###访问会员详情页：访问会员详情页会使购买信息自动调整正确
-	response = context.client.get(bdd_util.nginx(context.url))
-	items = json.loads(response.content)['data']['items']
-	for member_item in items:
-		member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
-		print 'kitty',member_item['id']
-		visit_member_detail_url = context.client.get(member_detail_url)
-	###以上为访问会员详情页
 	if not hasattr(context, 'url'):
 		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&enable_paginate=1'
 		if hasattr(context, 'count_per_page'):
@@ -79,6 +69,17 @@ def step_impl(context, user):
 			context.url += '&count_per_page=' + '50'
 		if hasattr(context, 'page'):
 			context.url += '&page=' + str(context.page)
+		if hasattr(context, 'filter_str'):
+			context.url += context.filter_str
+	print context.url, "{*}" * 10
+	###访问会员详情页：访问会员详情页会使购买信息自动调整正确
+	response = context.client.get(bdd_util.nginx(context.url))
+	items = json.loads(response.content)['data']['items']
+	for member_item in items:
+		member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
+		print 'kitty',member_item['id']
+		visit_member_detail_url = context.client.get(member_detail_url)
+	###以上为访问会员详情页
 
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
@@ -151,7 +152,7 @@ def step_impl(context, user):
 		# print 'kitty',actual_members[7]
 
 		for i in range(len(json_data)):
-			print json_data[i]['username'], "++++++", actual_data[i]['username']
+			print json_data[i]['source'], "++++++", actual_data[i]['source']
 
 	bdd_util.assert_list(json_data, actual_data)
 
@@ -206,5 +207,6 @@ def step_impl(context, member_a, user):
 @when(u'{username}访问会员列表第{page_count}页')
 def step_impl(context, username, page_count):
 	if hasattr(context, "url"):
+		print context.url, "GGG"
 		delattr(context, "url")
 	context.page = page_count

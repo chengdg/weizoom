@@ -227,7 +227,7 @@ Scenario:3 没有选中会员，选择"给选中的人修改等级"
 			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 |             |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 |             |
 
-@member @memberList @eugeneA
+@member @memberList @eugeneX
 Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人修改等级"
 
 	Given jobs登录系统
@@ -240,10 +240,10 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 	When jobs设置会员查询条件
 		"""
 		[{
-			"member_source":"会员分享"
+			"source":"会员分享"
 		}]
 		"""
-	Then jobs获取会员列表显示共2页
+	#Then jobs获取会员列表显示共2页
 
 	#选择第1页部分会员批量修改等级
 		When jobs访问会员列表第1页
@@ -254,7 +254,7 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 |             |
 
 		When jobs选择会员
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 |             |
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 |             |
 
@@ -285,7 +285,7 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 			| tom3  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
 		When jobs选择会员
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
 		When jobs批量修改等级
@@ -308,7 +308,7 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
-@member @memberList
+@member @memberList @eugeneX
 Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人修改等级"
 
 	Given jobs登录系统
@@ -318,13 +318,13 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 			"count_per_page":3
 		}
 		"""
-	When jobs设置查询条件
+	When jobs设置会员查询条件
 		"""
 		[{
-			"member_source":"会员分享"
+			"source":"会员分享"
 		}]
 		"""
-	Then jobs获取会员列表显示共2页
+	#Then jobs获取会员列表显示共2页
 
 	#选择第1页全部会员批量修改等级
 		When jobs访问会员列表第1页
@@ -335,7 +335,7 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 |             |
 
 		When jobs选择会员
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 |             |
 			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-02    | 会员分享 |             |
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 |             |
@@ -368,7 +368,7 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 			| tom3  |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
 		When jobs选择会员
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
 		When jobs批量修改等级
@@ -391,7 +391,7 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
-@member @memberList
+@member @memberList @eugeneX
 Scenario:6 没有选中会员，选择"给筛选出来的所有人修改等级"
 
 	Given jobs登录系统
@@ -401,13 +401,13 @@ Scenario:6 没有选中会员，选择"给筛选出来的所有人修改等级"
 			"count_per_page":3
 		}
 		"""
-	When jobs设置查询条件
+	When jobs设置会员查询条件
 		"""
 		[{
-			"member_source":"会员分享"
+			"source":"会员分享"
 		}]
 		"""
-	Then jobs获取会员列表显示共2页
+	#Then jobs获取会员列表显示共2页
 
 	#没有选择任何会员批量修改等级
 		When jobs访问会员列表第1页
@@ -418,7 +418,7 @@ Scenario:6 没有选中会员，选择"给筛选出来的所有人修改等级"
 			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 |             |
 
 		When jobs选择会员
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+			| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 
 		When jobs批量修改等级
 			"""

@@ -34,6 +34,9 @@ def step_impl(context, user):
         args['ids'] = '-'.join(member_ids)
     elif data['modification_method'] == '给筛选出来的所有人修改等级':
         args['update_status'] = 'all'
+        if hasattr(context, 'filter_str'):
+            args['filter_value'] = context.filter_str
+
 
     args['grade_id'] = grade_id
     response = context.client.post('/member/api/grade/batch_update/', args)
