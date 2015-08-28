@@ -222,7 +222,7 @@ Scenario: 3 在按"商品名称"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	When jobs设置买赠活动列表查询条件
 		"""
 		{
 			"product_name":"活动名称:商品4买赠",
@@ -255,7 +255,7 @@ Scenario: 4 在按"商品条码"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	When jobs设置买赠活动列表查询条件
 		"""
 		{
 			"product_name":"",
@@ -288,7 +288,7 @@ Scenario: 5 在按"促销状态"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	When jobs设置买赠活动列表查询条件
 		"""
 		{
 			"product_name":"",
@@ -337,7 +337,7 @@ Scenario: 6 在按"活动时间"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	When jobs设置买赠活动列表查询条件
 		"""
 		{
 			"product_name":"",
