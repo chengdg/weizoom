@@ -226,47 +226,61 @@ def get_member_activites(request):
 	profile = request.user_profile
 	webapp_user = request.webapp_user
 	member = member_util.get_member(request)
-
 	#活动
 	events = event_models.eventParticipance.objects.filter(member_id=member.id)
 	events_items = []
 	for event in events:
-		event_id = event.belong_to
-		event_details = event_models.event.objects.get(id=event_id )
-		events_items.append({
-			'id': str(event_id),
-			'name': event_details.name
-		})
+		try:
+			event_id = event.belong_to
+			event_details = event_models.event.objects.get(id=event_id )
+			events_items.append({
+				'id': str(event_id),
+				'name': event_details.name,
+				'participant_time': event.created_at.strftime('%m月%d日')
+			})
+		except:
+			pass
 	#投票
 	votes = vote_models.voteParticipance.objects.filter(member_id=member.id)
 	votes_items = []
 	for vote in votes:
-		vote_id = vote.belong_to
-		vote_details = vote_models.vote.objects.get(id=vote_id )
-		votes_items.append({
-			'id': str(vote_id),
-			'name': vote_details.name
-		})
+		try:
+			vote_id = vote.belong_to
+			vote_details = vote_models.vote.objects.get(id=vote_id )
+			votes_items.append({
+				'id': str(vote_id),
+				'name': vote_details.name,
+				'participant_time': vote.created_at.strftime('%m月%d日')
+			})
+		except:
+			pass
 	#调研
 	surveies = survey_models.surveyParticipance.objects.filter(member_id=member.id)
 	surveies_items = []
 	for survey in surveies:
-		survey_id = survey.belong_to
-		survey_details = survey_models.survey.objects.get(id=survey_id )
-		surveies_items.append({
-			'id': str(survey_id),
-			'name': survey_details.name
-		})
+		try:
+			survey_id = survey.belong_to
+			survey_details = survey_models.survey.objects.get(id=survey_id )
+			surveies_items.append({
+				'id': str(survey_id),
+				'name': survey_details.name,
+				'participant_time': survey.created_at.strftime('%m月%d日')
+			})
+		except:
+			pass
 	#抽奖
 	lotteres = lottery_models.lotteryParticipance.objects.filter(member_id=member.id)
 	lotteres_items = []
 	for lottery in lotteres:
-		lottery_id = lottery.belong_to
-		lottery_details = lottery_models.lottery.objects.get(id=lottery_id )
-		lotteres_items.append({
-			'id': str(lottery_id),
-			'name': lottery_details.name
-		})
+		try:
+			lottery_id = lottery.belong_to
+			lottery_details = lottery_models.lottery.objects.get(id=lottery_id )
+			lotteres_items.append({
+				'id': str(lottery_id),
+				'name': lottery_details.name
+			})
+		except:
+			pass
 
 	c = RequestContext(request, {
 		'page_title': u'我的活动列表',

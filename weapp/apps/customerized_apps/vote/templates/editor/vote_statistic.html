@@ -52,7 +52,8 @@
     <div class="panel panel-default xui-tableBox">
         <div class="panel-header clearfix">
             <b class="xui-i-totalcount fr">总参与人数: {{ total_count }} 人</b>
-            <a class="btn btn-default xui-fontBold fr xui-i-exportBtn" href="javascript:void(0);">批量导出</a>
+            <a class="btn btn-default xui-fontBold fr xui-i-exportBtn xa-i-exportBtn" href="javascript:void(0);">批量导出</a>
+            <a id="export_href" style="display: none ">DownloadXLS</a>
         </div>
         {% for title in titles %}
             <div class="xui-i-tableHeader">
@@ -93,4 +94,31 @@
 
 </div>
 {% endblock %}
+{% block js %}
+    <script>
+    //export
+    $('.xa-i-exportBtn').click(function(event){
+        var export_id =window.location.search.split('?id=')[1];
+        W.getApi().call({
+            method: 'get',
+            app: 'apps/vote',
+            resource: 'vote_statistic-export',
+            args: {'export_id':export_id},
+            success: function(resp){
+                if(resp.code == 200){
+                    $('#export_href').prop({
+                        'href': resp.download_path,
+                        'download': resp.filename
+                    }).get(0).click();
 
+                }
+                console.log("导出成功");
+            },
+            error: function(error){
+                console.log('导出失败');
+            }
+        });
+    });
+    </script>
+
+{% endblock %}

@@ -172,7 +172,7 @@ class surveyStatistics_Export(resource.Resource):
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
 		app_name = surveyStatistics_Export.app
-		excel_file_name = ('%s_%s.xls') % (app_name.split("/")[1],datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -180,38 +180,40 @@ class surveyStatistics_Export(resource.Resource):
 			import xlwt
 			data = app_models.surveyParticipance.objects(belong_to=export_id)
 			total = data.count()
-			webapp_user_id2termite_data={}
+			member_id2termite_data={}
 			for item in data:
-				if item['webapp_user_id'] not in webapp_user_id2termite_data:
-					webapp_user_id2termite_data[item['webapp_user_id']] = {'created_at':item['created_at'],'termite_data':item['termite_data']}
+				if item['member_id'] not in member_id2termite_data:
+					member_id2termite_data[item['member_id']] = {'created_at':item['created_at'],'termite_data':item['termite_data']}
 
 			#select sheet
 			select_data = {}
 			select_static ={}
 			qa_static = {}
-			for item in webapp_user_id2termite_data:
-				record = webapp_user_id2termite_data[item]
+			for item in member_id2termite_data:
+				record = member_id2termite_data[item]
 				time = record['created_at']
 				for termite in record['termite_data']:
 					termite_dic = record['termite_data'][termite]
 					if termite_dic['type']=='appkit.selection':
-						select_data[termite] = termite_dic['value']
+						if termite not in select_data:
+							select_data[termite] = [termite_dic['value']]
+						else:
+							select_data[termite].append(termite_dic['value'])
 					if termite_dic['type']=='appkit.qa':
 						if termite not in qa_static:
 							qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
 						else:
 							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
-
 			#select-data-processing
 			for select in select_data:
-				for item in select_data[select]:
-					if select not in select_static:
-						select_static[select]={}
-					if item not in select_static[select]:
-						select_static[select][item] = 0
-					if select_data[select][item]['isSelect'] == True:
-						select_static[select][item] += 1
-
+				for s_list in select_data[select]:
+					for s in s_list:
+						if select not in select_static:
+							select_static[select]={}
+						if s not in select_static[select]:
+							select_static[select][s]  = 0
+						if s_list[s]['isSelect'] == True:
+							select_static[select][s] += 1
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 

@@ -9,9 +9,7 @@
         width: 50%;
     }
     .wui-swiper-slide{overflow-y: auto;}
-    .xui-myActivityPage .wui-tabs a {
-        width:33.33%;
-    }
+
     .xui-listItem{
         background: #fff;
         border-bottom:1px solid #dfdfdf;
@@ -28,7 +26,34 @@
     a:link,a:hover,a:visited{
         color:#333;
     }
-    
+    .wui-my_activities_event,.wui-my_activities_survey,.wui-my_activities_vote{
+        background: url(/static_v2/img/userCenterMyActivitiesSprite.png) no-repeat;
+        background-size: 100px 30px;
+        display: block;
+        height: 30px;
+        width: 36px;
+        float: left;
+    }
+    .wui-my_activities_event {
+      background-position: -30px 0;
+    }
+    .wui-my_activities_vote {
+      background-position: -66px 0;
+    }
+    .wui-my_activities_survey {
+      background-position: 2px 0;
+    }
+    .xui-i-title .disTc {
+      font-size: 18px;
+      line-height: 30px;
+    }
+    .xui-i-title {
+      border-bottom: 1px solid #dfdfdf;
+    }
+    .xui-i-time {
+        padding-top: 15px;
+        color: #a1a1a1;
+    }
 </style>
 {% endblock %}
 
@@ -43,57 +68,40 @@
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide">
                     {% if events_items %}
-                        <ul class="xui-listItem">
-                            {% for events_item in events_items %}
-                            <li data-role="button" data-icon="true" class="xui-listInner pl10 pr15">
-                                <a href="{{events_item.target_link}}" data-coupon-id="{{coupon.id}}">
-                                    <p class="pt15 pb15 disT">
-                                        <span class="disTc pl5 em1">{{ events_item.name }}</span>
-                                        <span class="mr20 em1 disTc vm ">
-                                        {% if activity.status == 1 %}
-                                        <span class="xui-text-green">已启动</span>
-                                        {% endif %}
-                                        {% if activity.status == 0 %}
-                                        已暂停
-                                        {% endif %}
-                                        {% if activity.status == 3 %}
-                                        未启动
-                                        {% endif %}
-                                        {% if activity.status == 2 %}
-                                        <span class="xui-text-red">已过期</span>
-                                        {% endif %}
-                                        </span>
-                                    </p>
-                                </a>
+                        {% for events_item in events_items %}
+                            <ul class="xui-listItem">
+                            <li data-icon="true" class="xui-listInner pl10 pr15">
+                                <div class="xui-i-title">
+                                  <i class="wui-my_activities_event"></i><span class="disTc pl15 em1">{{ events_item.name }}</span>
+                                </div>
+                                <div class="xui-i-time">{{ events_item.participant_time }}参加了活动报名</div>
                             </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                        <div class="error-info">
-                        您还没有参与活动
-                        </div>
+                            </ul>
+                        {% endfor %}
                     {% endif %}
                     {% if votes_items %}
-                        <ul class="xui-listItem">
-                            {% for votes_item in votes_items %}
-                            <li data-role="button" data-icon="true" class="xui-listInner pl15 pr15">
-                                <a href="{{ votes_item.url }}" style="display:inline-block;width:85%;" class="pl5">{{ votes_item.name }}</a>
+                        {% for votes_item in votes_items %}
+                            <ul class="xui-listItem">
+                            <li data-icon="true" class="xui-listInner pl15 pr15">
+                                <div class="xui-i-title">
+                                  <i class="wui-my_activities_vote"></i><span class="disTc pl15 em1">{{ votes_item.name }}</span>
+                                </div>
+                                <div class="xui-i-time">{{ votes_item.participant_time }}参加了微信投票</div>
                             </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                        您还没有参与投票
+                            </ul>
+                        {% endfor %}
                     {% endif %}
                     {% if surveies_items %}
-                        <ul class="xui-listItem">
-                            {% for surveies_item in surveies_items %}
-                            <li data-role="button" data-icon="true" class="xui-listInner pl15 pr15">
-                                <a href="{{ surveies_item.url }}" style="display:inline-block;width:85%;" class="pl5">{{ surveies_item.name }}</a>
+                        {% for surveies_item in surveies_items %}
+                            <ul class="xui-listItem">
+                            <li data-icon="true" class="xui-listInner pl15 pr15">
+                                <div class="xui-i-title">
+                                  <i class="wui-my_activities_survey"></i><span class="disTc pl15 em1">{{ surveies_item.name }}</span>
+                                </div>
+                                <div class="xui-i-time">{{ surveies_item.participant_time }}参加了用户调研</div>
                             </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                        您还没有参与调研
+                            </ul>
+                        {% endfor %}
                     {% endif %}
                 </div>
                 <div class="wui-swiper-slide">
@@ -175,7 +183,7 @@
     var bodyWidth = window.document.body.clientWidth;
     var bodyHeight = window.document.body.clientHeight;
     var containerHeight = bodyHeight - 47;
-    $(".wui-swiper-container").css({'height':containerHeight,'width': bodyWidth });
+    $(".wui-swiper-container").css({'height':containerHeight,'width': '100%' });
     $(".wui-swiper-slide").css('height', containerHeight );
     // $("body").css('overflow-y', 'hidden');
     var tabsSwiper = new Swiper('.wui-swiper-container',{

@@ -6,8 +6,7 @@ ensureNS('W.component.appkit');
 W.component.appkit.TextList = W.component.Component.extend({
 	type: 'appkit.textlist',
 	selectable: 'yes',
-	shouldShowPropertyViewTitle: true,
-	propertyViewTitle: '报名填写项(此处勾选默认显示为必填,如需显示为不必填请手动添加)',
+	propertyViewTitle: '',
 
 	dynamicComponentTypes: [{
         type: 'appkit.textitem',
@@ -18,8 +17,14 @@ W.component.appkit.TextList = W.component.Component.extend({
 		group: '文本调研项',
 		groupClass: 'xui-propertyView-app-TextList',
 		fields: [{
+			name: 'title',
+			type: 'title_with_annotation',
+			displayName: '报名填写项',
+			isUserProperty: true,
+			annotation: "(此处勾选默认显示为必填,如需显示为不必填请手动添加)"
+		}, {
 			name: 'modules',
-			type: 'checkbox',
+			type: 'checkbox-group',
 			displayName: '默认',
 			isUserProperty: true,
 			source: [{
@@ -56,11 +61,7 @@ W.component.appkit.TextList = W.component.Component.extend({
             minItemLength: 0,
             isUserProperty: true,
             default: []
-        },{
-			name: 'is_mandatory',
-			isUserProperty: true,
-			default: 'true'
-		}]
+        }]
 	}],
 
 	propertyChangeHandlers: {
@@ -73,7 +74,7 @@ W.component.appkit.TextList = W.component.Component.extend({
             this.refresh($node, {resize:true, refreshPropertyView:true});
         },
 		modules: function($node, model, value){
-			this.refresh($node, {resize:true, refreshPropertyView:true});
+			this.refresh($node, {resize:true});
 		}
 	}
 }, {

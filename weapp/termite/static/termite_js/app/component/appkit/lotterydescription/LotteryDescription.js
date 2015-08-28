@@ -15,7 +15,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 
 	properties: [{
 		group: '文本调研项',
-		groupClass: 'xui-propertyView-app-TextSurvey',
+		groupClass: 'xui-propertyView-app-Selection',
 		fields: [
 		//	{
 		//	name: 'type',
@@ -43,7 +43,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			type: 'text',
 			displayName: '活动标题',
 			isUserProperty: true,
-			maxLength: 20,
+			maxLength: 10,
 			validate: 'data-validate="require-notempty::页面标题不能为空,,require-word"',
 			validateIgnoreDefaultValue: true,
 			default: '',
@@ -78,7 +78,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		}, {
 			name: 'expend',
 			type: 'text_with_annotation',
-			displayName: '消耗送积分',
+			displayName: '消耗积分',
 			maxLength: 4,
 			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
 			validateIgnoreDefaultValue: true,
@@ -88,7 +88,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		}, {
 			name: 'delivery',
 			type: 'text_with_annotation',
-			displayName: '参与送积分',
+			displayName: '参与积分',
 			maxLength: 4,
 			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
 			validateIgnoreDefaultValue: true,
@@ -178,9 +178,6 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		},
 		delivery: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-prize>.xa-delivery').html(value);
-		},
-		expend: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-prize>.xa-expand').html(value);
 		},
 		//delivery_setting: function($node, model, value, $propertyViewNode) {
 		//	$node.find('.wui-i-prize').html(value+'积分');
