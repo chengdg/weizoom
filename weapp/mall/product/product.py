@@ -601,10 +601,27 @@ class Product(resource.Resource):
                 user_code=standard_model['user_code']
             )
         elif standard_model.get('is_deleted', None):
-            models.ProductModel.objects.filter(
+            # 多规格的情况
+            db_standard_model = models.ProductModel.objects.filter(
                 product_id=product_id,
                 name='standard'
-            ).update(is_deleted=True)
+            )
+            if not db_standard_model[0].is_deleted:
+                from mall.promotion import models as promotion_models
+                # 单规格改多规格商品
+                db_standard_model.update(is_deleted=True)
+
+                # 结束对应买赠活动 jz
+                premiumSaleIds = set(promotion_models.PremiumSaleProduct.objects.filter(
+                    product_id=db_standard_model[0].product_id).values_list('premium_sale_id', flat=True))
+                if len(premiumSaleIds) > 0:
+                    from webapp.handlers import event_handler_util
+                    promotionIds = set(promotion_models.Promotion.objects.filter(
+                        detail_id__in=premiumSaleIds, type=promotion_models.PROMOTION_TYPE_PREMIUM_SALE).values_list('id', flat=True))
+                    event_data = {
+                        "id": ','.join([str(id) for id in promotionIds])
+                    }
+                    event_handler_util.handle(event_data, 'finish_promotion')
         else:
             models.ProductModel.objects.filter(
                 product_id=product_id, name='standard'
