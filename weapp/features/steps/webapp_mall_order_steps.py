@@ -10,6 +10,8 @@ from mall.promotion.models import *
 import steps_db_util
 from mall import module_api as mall_api
 
+# 手机端订单支付相关step_impl在features/steps/mall_pay_interface_webapp_steps.py
+
 
 def get_prodcut_ids_info(order):
     product_ids = []
