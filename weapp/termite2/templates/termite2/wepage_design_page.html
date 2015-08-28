@@ -106,6 +106,7 @@
 			};
 			$(document).ready(function() {
 				detectParentTask();
+                W.Broadcaster.trigger('designpage:ready');
 			});
 			$(document).click(function() {
 				// 点击空白处，触发事件

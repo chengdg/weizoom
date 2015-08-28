@@ -30,12 +30,15 @@ class Mlottery(resource.Resource):
 		participance_data_count = 0
 		has_prize = False
 		lottery_status = False
+		can_play_count = 0
+		expend = 0
 		if 'new_app:' in id:
 			project_id = id
 			activity_status = u"未开始"
 		else:
 			#termite类型数据
 			record = app_models.lottery.objects.get(id=id)
+			expend = record.expend
 			activity_status = record.status_text
 
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -54,7 +57,6 @@ class Mlottery(resource.Resource):
 				lottery_participance = app_models.lotteryParticipance.objects(belong_to=id, member_id=request.member.id)
 				participance_data_count = lottery_participance.count()
 
-				print participance_data_count
 				if participance_data_count != 0:
 					lottery_participance = lottery_participance[0]
 					has_prize = lottery_participance.has_prize
@@ -64,8 +66,12 @@ class Mlottery(resource.Resource):
 					if now_date_str != last_lottery_date_str:
 						if lottery_participance.limitation == 'once_per_day':
 							lottery_participance.update(set__can_play_count=1)
+							can_play_count = 1
 						elif lottery_participance.limitation == 'twice_per_day':
 							lottery_participance.update(set__can_play_count=2)
+							can_play_count = 2
+				else:
+					can_play_count = 1
 
 				lottery_limitation = record.limitation_times
 				if not lottery_participance or lottery_participance.can_play_count >= lottery_limitation:
@@ -78,6 +84,8 @@ class Mlottery(resource.Resource):
 
 		c = RequestContext(request, {
 			'lottery_status': lottery_status,
+			'can_play_count': can_play_count,
+			'expend_integral': expend,
 			'record_id': id,
 			'activity_status': activity_status,
 			'is_already_participanted': (participance_data_count > 0),
