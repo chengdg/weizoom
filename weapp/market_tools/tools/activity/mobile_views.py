@@ -235,7 +235,8 @@ def get_member_activites(request):
 		event_details = event_models.event.objects.get(id=event_id )
 		events_items.append({
 			'id': str(event_id),
-			'name': event_details.name
+			'name': event_details.name,
+			'participant_time': event.created_at.strftime('%m月%d日')
 		})
 	#投票
 	votes = vote_models.voteParticipance.objects.filter(member_id=member.id)
@@ -245,7 +246,8 @@ def get_member_activites(request):
 		vote_details = vote_models.vote.objects.get(id=vote_id )
 		votes_items.append({
 			'id': str(vote_id),
-			'name': vote_details.name
+			'name': vote_details.name,
+			'participant_time': vote.created_at.strftime('%m月%d日')
 		})
 	#调研
 	surveies = survey_models.surveyParticipance.objects.filter(member_id=member.id)
@@ -255,7 +257,8 @@ def get_member_activites(request):
 		survey_details = survey_models.survey.objects.get(id=survey_id )
 		surveies_items.append({
 			'id': str(survey_id),
-			'name': survey_details.name
+			'name': survey_details.name,
+			'participant_time': survey.created_at.strftime('%m月%d日')
 		})
 	#抽奖
 	lotteres = lottery_models.lotteryParticipance.objects.filter(member_id=member.id)
