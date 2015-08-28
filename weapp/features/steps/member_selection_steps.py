@@ -85,9 +85,3 @@ def step_impl(context, user):
     init_url = init_url +'|'.join(options_url) + '&page=1&count_per_page=50&enable_paginate=1'
     context.url = init_url
     context.filter_str = "&filter_value=" + '|'.join(options_url)
-    print 'helloworld',context.url
-
-
-
-
-

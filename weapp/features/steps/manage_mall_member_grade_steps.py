@@ -70,7 +70,7 @@ def _add_member_grade(context, user):
     for content in json_data:
         if content['name'] in old_grade_names:
             continue
-        if content.has_key('discount') and not content.has_key('discount'):
+        if content.has_key('discount') and not content.has_key('shop_discount'):
             content['shop_discount'] = content['discount']
         if content.get('upgrade', '') == u'手动升级':
             content['is_auto_upgrade'] = 0

@@ -56,7 +56,7 @@ Background:
 		| tom 			| 2014-09-04 08:00:00  | 推广扫码      |
 		| bill 			| 2014-09-05 08:00:00  | 直接关注      |
 
-@member @memberList @eugeneX
+@member @memberList
 Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 	Given jobs登录系统
 	And jobs设置分页查询参数
@@ -121,7 +121,7 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 			| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-05    | 推广扫码 |             |
 			| bill3 |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 |             |
 
-@member @memberList @eugeneX
+@member @memberList
 Scenario:2 选择当前页的全部会员，选择"给选中的人修改等级"
 
 	Given jobs登录系统
@@ -190,7 +190,7 @@ Scenario:2 选择当前页的全部会员，选择"给选中的人修改等级"
 			| tom2  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-01    | 会员分享 |             |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
-@member @memberList @eugeneX
+@member @memberList
 Scenario:3 没有选中会员，选择"给选中的人修改等级"
 
 	Given jobs登录系统
@@ -227,7 +227,7 @@ Scenario:3 没有选中会员，选择"给选中的人修改等级"
 			| tom   |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-04    | 推广扫码 |             |
 			| marry |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-03    | 会员分享 |             |
 
-@member @memberList @eugeneX
+@member @memberList
 Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人修改等级"
 
 	Given jobs登录系统
@@ -308,7 +308,7 @@ Scenario:4 选择当前页的部分会员，选择"给筛选出来的所有人�
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
-@member @memberList @eugeneX
+@member @memberList
 Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人修改等级"
 
 	Given jobs登录系统
@@ -391,7 +391,7 @@ Scenario:5 选择当前页的全部会员，选择"给筛选出来的所有人�
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
-@member @memberList @eugeneX
+@member @memberList
 Scenario:6 没有选中会员，选择"给筛选出来的所有人修改等级"
 
 	Given jobs登录系统
@@ -440,7 +440,7 @@ Scenario:6 没有选中会员，选择"给筛选出来的所有人修改等级"
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 			| tom3  |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-07    | 会员分享 |             |
 
-@member @memberList  @meberGrade @order @allOrder
+@member @memberList
 Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心，会员等级都是修改后的等级，会员在购买有会员价商品时可以享受会员价
 
 	Given jobs登录系统
@@ -559,6 +559,7 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 	#批量修改会员等级，选择"给选中的人修改等级"
 
 		#选择第3页部分会员批量修改等级
+			Given jobs登录系统
 			When jobs访问会员列表第3页
 			Then jobs可以获得会员列表
 				| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
@@ -567,7 +568,7 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 |             |
 
 			When jobs选择会员
-				| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+				| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 				| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 |             |
 
 			When jobs批量修改等级
@@ -620,23 +621,23 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				"""
 
 	#批量修改会员等级，选择"给筛选出来的所有人修改等级"
-
-		When jobs设置查询条件
+		Given jobs登录系统
+		When jobs设置会员查询条件
 			"""
 			[{
-				"member_source":"直接关注"
+				"source":"直接关注"
 			}]
 			"""
 		#不选择任何会员，直接批量修改等级
 			When jobs访问会员列表第1页
 			Then jobs可以获得会员列表
 				| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
-				| bill  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 |             |
+				| bill  |   金牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 |             |
 				| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 |             |
-				| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 |             |
+				| bill3 |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 |             |
 
 			When jobs选择会员
-				| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
+				| member_name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
 
 			When jobs批量修改等级
 				"""
