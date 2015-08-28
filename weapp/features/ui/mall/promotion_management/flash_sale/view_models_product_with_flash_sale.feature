@@ -153,7 +153,7 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 		"""
 			[{
 				"name":"多规格商品",
-				"price":100.00
+				"price":80.00
 				"model":
 				{
 				"models":
@@ -163,11 +163,11 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 						[
 							{ 
 								"name":"M",
-								"is_active":false
+								"is_active":true
 							},
 							{
 								"name":"S",
-								"is_active":false
+								"is_active":true
 							}
 						]
 					}
@@ -189,11 +189,11 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 						[
 							{
 								"name":"M",
-								"is_active":true
+								"is_active":false
 							},
 							{
 								"name":"S",
-								"is_active":false
+								"is_active":true
 							}
 						]
 					}
@@ -236,11 +236,11 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 						[
 							{ 
 								"name":"M",
-								"is_active":false
+								"is_active":true
 							},
 							{
 								"name":"S",
-								"is_active":false
+								"is_active":true
 							}
 						]
 					}
@@ -262,11 +262,11 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 						[
 							{ 
 								"name":"M",
-								"is_active":true
+								"is_active":false
 							},
 							{
 								"name":"S",
-								"is_active":false
+								"is_active":ture
 							}
 						]
 					}

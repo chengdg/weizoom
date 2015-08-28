@@ -39,7 +39,7 @@ Background:
 		 }]
 		"""
 	And bill关注jobs的公众号
-	And jobs已有的会员
+	Given jobs已有的会员
 		"""
 		[{
 			"name": "bill",
@@ -60,7 +60,7 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
-	And jobs设定会员积分策略
+	Given jobs设定会员积分策略
 		"""
 		{
 			"use_ceiling": 100,
