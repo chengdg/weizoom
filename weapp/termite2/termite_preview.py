@@ -14,7 +14,6 @@ from termite import pagestore as pagestore_manager
 
 from weixin.user.module_api import get_mp_qrcode_img
 from django.conf import settings
-from termite2 import pagecreater
 
 class TermitePreview(resource.Resource):
     """
@@ -28,16 +27,13 @@ class TermitePreview(resource.Resource):
         """
         预览
         """
-        object_id = request.GET.get('project_id', None)
+        object_id = request.GET.get('id', None)
         is_view_editing_data = request.GET.get('view_editing_data', False)
         preview_url = u'/termite2/webapp_page/?project_id={}&woid={}'.format(object_id, request.user.id)
         if is_view_editing_data:
             preview_url += '&page_id=preview'
 
-        page_title = pagecreater.get_site_title(request)
-
         c = RequestContext(request, {
-            'page_title': page_title,
             'object_id': object_id,
             # 'head_img': get_mp_qrcode_img(request.user.id),
             'qrcode_url': get_preview_url(request.get_host(), preview_url, object_id),

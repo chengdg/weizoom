@@ -277,23 +277,11 @@ class ModelPropertyValue(resource.Resource):
                 id__in=model_ids
             ).values_list('product_id', flat=True)
         )
-        shelve_type = mall_models.PRODUCT_SHELVE_TYPE_OFF
         mall_models.Product.objects.record_cache_args(
             ids=product_ids
         ).filter(
             id__in=product_ids
-        ).update(shelve_type=shelve_type, weshop_status=shelve_type)
-        # 发送商品下架信号
-        signals.products_not_online.send(sender=mall_models.Product, product_ids=product_ids, request=request)
-
-        # 处理商品无规格的情况，恢复基础规格并设置基础规格为0库存
-        # 获取仍然有规格的商品id
-        ok_product_ids = product_models = set(mall_models.ProductModel.objects.filter(
-            product_id__in=product_ids, is_deleted=False
-        ).values_list('product_id', flat=True))
-        need_update_stock = product_ids - ok_product_ids
-        mall_models.ProductModel.objects.filter(product_id__in=need_update_stock, is_standard=True).update(
-            is_deleted=False, stock_type=mall_models.PRODUCT_STOCK_TYPE_LIMIT, stocks=0)
+        ).update(shelve_type=mall_models.PRODUCT_SHELVE_TYPE_OFF)
 
         response = create_response(200)
         return response.get_response()

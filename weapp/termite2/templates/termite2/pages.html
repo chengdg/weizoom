@@ -28,7 +28,7 @@
 
             <div class="xui-i-actions">
                 <a href="/termite2/page_editor/?project_id={{active_page.id}}">编辑</a>
-                <a class="ml10" href="/termite2/termite_preview/?project_id={{active_page.id}}" target="_blank">预览</a>
+                <a class="ml10" href="/termite2/termite_preview/?id={{active_page.id}}" target="_blank">预览</a>
                 <a href="javascript:void(0);" class="xa-copyLink ml10 xui-hide">链接</a>
                 <a href="javascript:void(0);" class="xa-qrcode ml10">二维码</a>
             </div>
@@ -109,7 +109,7 @@
                 <td>${project.createdAt}</td>
                 <td style="text-align:left;padding-left:30px;">
                     <a href="/termite2/page_editor/?project_id=${project.id}">编辑</a>
-                    <a class="ml10" href="/termite2/termite_preview/?project_id=${project.id}" target="_blank">预览</a>
+                    <a class="ml10" href="/termite2/termite_preview/?id=${project.id}" target="_blank">预览</a>
                     {{if !project.isActive}}
                     <a class="xa-delete ml10" href="javascript:void(0);">删除</a>
                     {{/if}}
