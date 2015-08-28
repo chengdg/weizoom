@@ -28,6 +28,8 @@ class Mlottery(resource.Resource):
 		"""
 		id = request.GET['id']
 		participance_data_count = 0
+		has_prize = False
+		lottery_status = False
 		if 'new_app:' in id:
 			project_id = id
 			activity_status = u"未开始"
@@ -49,9 +51,20 @@ class Mlottery(resource.Resource):
 			project_id = 'new_app:lottery:%s' % record.related_page_id
 
 			if request.member:
-				participance_data_count = app_models.lotteryParticipance.objects(belong_to=id, member_id=request.member.id).count()
-			if participance_data_count == 0 and request.webapp_user:
-				participance_data_count = app_models.lotteryParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
+				lottery_participance = app_models.lotteryParticipance.objects(belong_to=id, member_id=request.member.id)
+				participance_data_count = lottery_participance.count()
+
+				print participance_data_count
+				if participance_data_count != 0:
+					lottery_participance = lottery_participance[0]
+					has_prize = lottery_participance.has_prize
+					#再次进入抽奖活动页面，根据抽奖规则限制以及当前日期和最近一次抽奖日期，更新can_play_count
+					print lottery_participance.lottery_date
+					print datetime.today()
+
+				lottery_limitation = record.limitation_times
+				if not lottery_participance or lottery_participance.can_play_count >= lottery_limitation:
+					lottery_status = True
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
@@ -59,6 +72,7 @@ class Mlottery(resource.Resource):
 		html = pagecreater.create_page(request, return_html_snippet=True)
 
 		c = RequestContext(request, {
+			'lottery_status': lottery_status,
 			'record_id': id,
 			'activity_status': activity_status,
 			'is_already_participanted': (participance_data_count > 0),
