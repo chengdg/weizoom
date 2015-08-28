@@ -205,7 +205,7 @@ Scenario: 4 在按"商品名称"查询的查询结果下删除积分活动
 		{
 			"product_name":"商品1积分应用",
 			"bar_code":"",
-			"status":"",
+			"status":"全部",
 			"start_date":"",
 			"end_date":""
 		}
@@ -242,7 +242,7 @@ Scenario: 5 在按"商品条码"查询的查询结果下删除积分活动
 		{
 			"product_name":"",
 			"bar_code":"123456",
-			"status":"",
+			"status":"全部",
 			"start_date":"",
 			"end_date":""
 		}
@@ -340,7 +340,7 @@ Scenario: 7 在按"活动时间"查询的查询结果下删除积分活动
 		{
 			"product_name":"",
 			"bar_code":"",
-			"status":"",
+			"status":"全部",
 			"start_date":"2015-07-11",
 			"end_date":"2015-08-10"
 		}

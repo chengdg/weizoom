@@ -2,9 +2,69 @@
 
 Feature:用户订单导出功能
 	jobs能导出用户的订单
+	"""
+	1.导出全部订单
+	"""
 
 Background:
 	Given jobs登录系统
+	When jobs已添加支付方式
+		"""
+		[{
+			"type": "货到付款",
+			"description": "我的货到付款",
+			"is_active": "启用"
+		},{
+			"type": "微信支付",
+			"description": "我的微信支付",
+			"is_active": "启用",
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
+			"weixin_sign": "42345"
+		}, {
+			"type": "支付宝",
+			"description": "我的支付宝",
+			"is_active": "启用",
+			"partner": "11",
+			"key": "21",
+			"ali_public_key": "31",
+			"private_key": "41",
+			"seller_email": "a@a.com"
+		}]
+		"""
+	When jobs开通使用微众卡权限
+	When jobs添加支付方式
+		"""
+		[{
+			"type": "微众卡支付",
+			"description": "我的微众卡支付",
+			"is_active": "启用"
+		}]
+		"""
+	When jobs已创建微众卡
+		"""
+		{
+			"cards": [{
+				"id": "0000001",
+				"password": "1234567",
+				"status": "未激活",
+				"price": 100
+			}]
+		}
+		"""
+	When jobs给id为'0000001'的微众卡激活
+	When jobs添加邮费配置
+		"""
+		[{
+			"name":"顺丰",
+			"first_weight":1,
+			"first_weight_price":10.00,
+			"added_weight":1,
+			"added_weight_price":5.00
+		}]
+		"""
+	And jobs选择'顺丰'运费配置
 	And jobs已添加商品规格
 		"""
 		[{
@@ -34,475 +94,190 @@ Background:
 			"model": {
 				"models": {
 					"红色 L": {
-						"price": 100.00
+						"price": 100.00,
+						"weight": 1
 					},
 					"红色 M": {
-						"price": 100.00
+						"price": 100.00,
+						"weight": 1
 					},
 					"红色 S": {
-						"price": 100.00
+						"price": 100.00,
+						"weight": 1
 					}
 				}
 			}
 		},{
 			"name": "商品2",
 			"price": 100.00,
-			"is_commit": "是"
+			"weight": 1
 		},{
 			"name": "商品3",
-			"price": 100.0
-		}]	
+			"price": 100.00,
+			"weight": 0
+		}]
 		"""
 	And bill关注jobs的公众号
-	And jobs已有的会员
+	And bill添加收货地址
+		"""
+		[{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}]
+		"""
+	Given jobs已有的会员
 		"""
 		[{
 			"name": "bill",
-			"integral": "500"
+			"integral": 500
 		}]
 		"""
 	When jobs添加优惠券规则
 		"""
 		[{
 			"name": "优惠券",
-			"money": 100,
+			"money": 100.00,
 			"count": 1,
 			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
-	Given jobs已有的订单
+	Given jobs设定会员积分策略
 		"""
-		[{
-			"order_no":"0000008",
-			"member":"bill",
-			"order_time":"2014-10-08 12:00",
-			"type":"普通订单",
-			"status":"待支付",
-			"sources":"本店",
-			"order_price":100.00,
-			"payment_price":100.00,
-			"freight":10.00,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"北京市,北京市,海淀区",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品1",
-				"model":"红色,L",
-				"count":1,
-				"price":90.00
-			}]
-		},{
-			"order_no":"0000007",
-			"member":"bill",
-			"order_time":"2014-10-07 12:00",
-			"type":"测试订单",
-			"status":"已取消",
-			"sources":"本店",
-			"order_price":100.00,
-			"payment_price":0.01,
-			"freight":10.00,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"河北省,唐山市,乐亭县",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品1",
-				"model":"红色,M",
-				"count":1,
-				"price":90.00
-			}]
-		},{
-			"order_no":"0000006",
-			"member":"bill",
-			"order_time":"2014-10-06 12:00",
-			"type":"普通订单",
-			"status":"待发货",
-			"methods_of_payment":"支付宝",
-			"sources":"本店",
-			"order_price":100.00,
-			"payment_price":100.00,
-			"freight":10.00,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"天津市,天津市,和平区",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品1",
-				"model":"红色,S",
-				"count":1,
-				"price":90.00
-			}]
-		},{
-			"order_no":"0000005",
-			"member":"bill",
-			"order_time":"2014-10-05 12:00",
-			"logistics_information":{
-				"logistics":"顺丰",
-				"number":"123",
-				"shipper":"jobs"
-			},
-			"type":"普通订单",
-			"status":"已发货",
-			"methods_of_payment":"货到付款",
-			"sources":"本店",
-			"order_price":100.00,
-			"payment_price":100.00,
-			"freight":10.00,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"山西省,太原市,小店区",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品1",
-				"model":"红色,L",
-				"count":1,
-				"price":90.00
-			}]
-		},{
-
-			"order_no":"0000004",
-			"member":"bill",
-			"order_time":"2014-10-04 12:00",
-			"logistics_information":{
-				"logistics":"顺丰",
-				"number":"124",
-				"shipper":"jobs"
-			},
-			"type":"普通订单",
-			"status":"已完成",
-			"methods_of_payment":"微众卡支付",
-			"sources":"商户",
-			"order_price":100.00,
-			"payment_price":100.00,
-			"freight":10.00,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"辽宁省,沈阳市,和平区",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品2",
-				"count":1,
-				"price":90.00
-			}]
-		},{
-			"order_no":"0000003",
-			"member":"bill",
-			"order_time":"2014-10-03 12:00",
-			"type":"普通订单",
-			"status":"待发货",
-			"methods_of_payment":"优惠抵扣",
-			"sources":"商户",
-			"coupon":{
-				"coupon_code":"coupon1_id_1",
-				"name":"优惠券",
-				"price":100.00
-			},
-			"order_price":100.00,
-			"payment_price":0.00,
-			"freight":10.00,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"河南省,安阳市,汤阴县",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品2",
-				"count":1,
-				"price":90.00
-			}]
-
-		},{
-			"order_no":"0000002",
-			"member":"bill",
-			"order_time":"2014-10-02 12:00",
-			"logistics_information":{
-				"logistics":"顺丰",
-				"number":"125",
-				"shipper":"jobs"
-			},
-			"type":"普通订单",
-			"status":"已发货",
-			"methods_of_payment":"优惠抵扣",
-			"sources":"商户",
-			"member": "bill",
-			"integral":100,
-			"order_price":100.00,
-			"payment_price":0.00,
-			"freight":10.00,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"河南省,安阳市,汤阴县",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品2",
-				"count":1,
-				"price":90.00
-			}]
-		},{
-
-			"order_no":"0000001",
-			"member":"bill",
-			"order_time":"2014-10-01 12:00",
-			"logistics_information":{
-				"logistics":"顺丰",
-				"number":"126",
-				"shipper":"jobs|发货一箱"
-			},
-			"type":"积分商品",
-			"status":"已完成",
-			"methods_of_payment":"优惠抵扣",
-			"sources":"本店",
-			"member": "bill",
-			"integral":100,
-			"order_price":100,
-			"payment_price":100,
-			"freight":0.0,
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_area":"辽宁省,沈阳市,和平区",
-			"ship_address":"泰兴大厦",
-			"products":[{
-				"name":"商品3",
-				"count":1,
-				"integral":100
-			}]
-		}]
+		{
+			"integral_each_yuan": 2,
+			"use_ceiling": 50
+		}
 		"""
-	
 
-@order @allOrder @jz
-Scenario:导出订单
-	jobs选择条件后
-	1. jobs选择一个条件时,导出对应的订单
-	2. jobs选择多个条件时,导出对应的订单
-	3. jobs选择全部条件时,导出对应的订单
-	4. jobs填写详细信息时,导出对应的订单
-	5. jobs选择固定标签时,导出对应的订单
-	# 建议拆成多个Scenario
+
+@order
+Scenario: 导出全部订单
+	jobs可以导出全部订单
+
+	When 微信用户批量消费jobs的商品
+		| order_no | order_source |  date | payment_time | consumer | type | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   |
+		|  000001  |      0       | 3天前 |    3天前     | bill     | 购买 |   jobs      | 商品1,红色 L,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000002  |      0       | 3天前 |              | bill     | 购买 |   jobs      | 商品1,红色 M,1 |         |   微信支付     | 10      |      100      |  0       |              |              |    110      |         |    待支付       |
+		|  000003  |      0       | 3天前 |              | bill     | 购买 |   jobs      | 商品1,红色 S,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |jobs,取消|    已取消       |
+		|  000004  |      0       | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000005  |      0       | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000006  |      0       | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000007  |      0       | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   优惠抵扣     |  0      |      100      |  0       | coupon1_id_1 |              |     0       |         |    待发货       |
+		|  000008  |      0       | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   货到付款     |  0      |      100      |  100     |              |              |     50      |         |    待发货       |
+		|  000009  |      0       | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   优惠抵扣     |  0      |      100      |  0       |              | 0000001      |     0       |         |    待发货       |
+		|  000010  |      0       | 今天  |    今天      | bill     | 购买 |   jobs      | 商品2,2        | 支付    |   货到付款     | 15      |      200      |  0       |              |              |    215      |         |    待发货       |
 
 	Given jobs登录系统
-	When jobs根据给定条件查询订单
+	#备注放在发货人后面用“|”隔开
+	When jobs对订单'000001'进行"发货"
 		"""
 		{
-			"date_interval":"2014-10-05|2014-10-08"
+			"order_no":"000001",
+			"logistics":"顺丰速运",
+			"number":"123456789",
+			"shipper":"jobs|发货一箱"
 		}
-		""" 
-	Then jobs导出订单获取订单信息
 		"""
-		[{	
-			"order_time":"2014-10-08 12:00",
-			"order_no":"0000008",
-			"member":"bill",
-			"money_total":100.00,
-			"methods_of_payment":"",
-			"money":100.00,
-			"status":"待支付",
-			"product_name":"商品1",
-			"model":"红色 L",
-			"product_count":1,
-			"sources":"本店",
-			"integral":0.0,
-			"coupon_name":"",
-			"coupon_money": "",
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_province":"北京市",
-			"ship_address":"北京市,北京市,海淀区,泰兴大厦",
-			"shipper":"",
-			"shipper_note":"",
-			"logistics":"",
-			"number":""
-
-		},{
-			"order_time":"2014-10-07 12:00",
-			"order_no":"0000007",
-			"member":"bill",
-			"money_total":100.00,
-			"methods_of_payment":"",
-			"money":0.01,
-			"status":"已取消",
-			"product_name":"商品1",
-			"model":"红色 M",
-			"product_count":1,
-			"sources":"本店",
-			"integral":0.0,
-			"coupon_name":"",
-			"coupon_money": "",
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_province":"河北省",
-			"ship_address":"河北省,唐山市,乐亭县,泰兴大厦",
-			"shipper":"",
-			"shipper_note":"",
-			"logistics":"",
-			"number":""
-		},{
-			"order_time":"2014-10-06 12:00",
-			"order_no":"0000006",
-			"member":"bill",
-			"money_total":100.00,
-			"methods_of_payment":"支付宝",
-			"money":100.00,
-			"status":"待发货",
-			"product_name":"商品1",
-			"model":"红色 S",
-			"product_count":1,
-			"sources":"本店",
-			"integral":0.0,
-			"coupon_name":"",
-			"coupon_money": "",
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_province":"天津市",
-			"ship_address":"天津市,天津市,和平区,泰兴大厦",
-			"shipper":"",
-			"shipper_note":"",
-			"logistics":"",
-			"number":""
-		},{
-			"order_time":"2014-10-05 12:00",
-			"order_no":"0000005",
-			"member":"bill",
-			"money_total":100.00,
-			"methods_of_payment":"货到付款",
-			"money":100.00,
-			"status":"已发货",
-			"product_name":"商品1",
-			"model":"红色 L",
-			"product_count":1,
-			"sources":"本店",
-			"integral":0.0,
-			"coupon_name":"",
-			"coupon_money": "",
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_province":"山西省",
-			"ship_address":"山西省,太原市,小店区,泰兴大厦",
-			"shipper":"jobs",
-			"shipper_note":"",
-			"logistics":"顺丰",
-			"number":"123"
-		}]
+	Then jobs能获得订单'000001'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000001  |      0       | 3天前 |    3天前     | bill     |   jobs      | 商品1,红色 L,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |jobs,发货|    已发货       |  jobs   | 发货一箱 |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+	When jobs对订单'000004'进行'发货'
+		""
+			"order_no":"000004",
+			"logistics":"顺丰速运",
+			"number":"123456789",
+			"shipper":"jobs"
+		}
 		"""
+	Then jobs能获得订单'000004'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000004  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,发货|    已发货       |  jobs   |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
 
-	When jobs根据给定条件查询订单
+	When jobs完成订单'000004'
+	Then jobs能获得订单'000004'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000004  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,完成|    已完成       |  jobs   |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+
+	When jobs对订单'000005'进行'发货'
 		"""
 		{
-			"type": "积分商品",
-			"date_interval":"2014-10-01|2014-10-08"
+			"order_no":"000005",
+			"logistics":"顺丰速运",
+			"number":"123456789",
+			"shipper":""
 		}
-		""" 
-	Then jobs导出订单获取订单信息
+		"""
+	Then jobs能获得订单'000005'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000005  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,发货|    已发货       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+
+	When jobs完成订单'000005'
+	Then jobs能获得订单'000005'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000005  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,完成|    已发货       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+
+	When jobs'申请退款'订单'000005'
+	Then jobs能获得订单'000005'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |   action    |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000005  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,申请退款|    退款中       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+
+	When jobs对订单'000006'进行'发货'
 		"""
 		{
-			"order_time":"2014-10-01 12:00",
-			"order_no":"0000001",
-			"member":"bill",
-			"money_total":100.00,
-			"methods_of_payment":"优惠抵扣",
-			"money":0.00,
-			"status":"已完成",
-			"product_name":"商品3",
-			"model":"",
-			"product_count":1,
-			"sources":"本店",
-			"integral":100,
-			"coupon_name":"",
-			"coupon_money": "",
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_province":"辽宁省",
-			"ship_address":"辽宁省,沈阳市,和平区,泰兴大厦",
-			"shipper":"jobs",
-			"shipper_note":"发货一箱",
-			"logistics":"顺丰",
-			"number":"126"
+			"order_no":"000006",
+			"logistics":"顺丰速运",
+			"number":"123456789",
+			"shipper":""
 		}
 		"""
+	Then jobs能获得订单'000006'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000006  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,发货|    已发货       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+
+	When jobs完成订单'000006'
+	Then jobs能获得订单'000006'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000006  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,完成|    已完成       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+
+	When jobs'申请退款'订单'000006'
+	Then jobs能获得订单'000006'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |   action    |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000006  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,申请退款|    退款中       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+
+	When jobs通过财务审核'退款成功'订单'000006'
+	Then jobs能获得订单'000006'
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |   action    |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000006  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,退款成功|    退款成功     |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
 
 	When jobs根据给定条件查询订单
 		"""
-		[{
-			"type": "普通订单",
-			"order_status": "待支付",
-			"order_source": "本店",
-			"date_interval":"2014-10-01|2014-10-08"
-		}]
-		""" 
-	Then jobs导出订单获取订单信息
+		{}
 		"""
-		{	
-			"order_time":"2014-10-08 12:00",
-			"order_no":"0000008",
-			"member":"bill",
-			"money_total":100.00,
-			"methods_of_payment":"",
-			"money":100.00
-			"status":"待支付",
-			"product_name":"商品1",
-			"model":"红色 L",
-			"product_count":1,
-			"sources":"本店",
-			"integral":0,
-			"coupon_name":"",
-			"coupon_money": "",
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_province":"北京市",
-			"ship_address":"北京市,北京市,海淀区,泰兴大厦",
-			"shipper":"",
-			"shipper_note":"",
-			"logistics":"顺丰",
-			"number":"126"
-		}
-		"""
+	Then jobs可以看到订单列表
+		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |   action    |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           |
+		|  000010  |      0       | 今天  |    今天      | bill     |   jobs      | 商品2,2        | 支付    |   货到付款     | 15      |      200      |  0       |              |              |    215      |             |    待发货       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000009  |      0       | 1天前 |    1天前     | bill     |   jobs      | 商品3,1        | 支付    |   优惠抵扣     |  0      |      100      |  0       |              | 0000001      |     0       |             |    待发货       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000008  |      0       | 1天前 |    1天前     | bill     |   jobs      | 商品3,1        | 支付    |   货到付款     |  0      |      100      |  100     |              |              |     50      |             |    待发货       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000007  |      0       | 1天前 |    1天前     | bill     |   jobs      | 商品3,1        | 支付    |   优惠抵扣     |  0      |      100      |  0       | coupon1_id_1 |              |     0       |             |    待发货       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000006  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,申请成功|    退款成功     |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000005  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,申请退款|    退款中       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000004  |      0       | 2天前 |    2天前     | bill     |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |jobs,完成    |    已完成       |  jobs   |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000003  |      0       | 3天前 |              | bill     |   jobs      | 商品1,红色 S,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |jobs,取消    |    已取消       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000002  |      0       | 3天前 |              | bill     |   jobs      | 商品1,红色 M,1 |         |   微信支付     | 10      |      100      |  0       |              |              |    110      |             |    待支付       |         |          |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
+		|  000001  |      0       | 3天前 |    3天前     | bill     |   jobs      | 商品1,红色 L,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |             |    已发货       |  jobs   | 发货一箱 |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |
 
-	When jobs根据给定条件查询订单
-		"""
-		[{
-			"type": "普通订单",
-			"order_status": "已发货",
-			"pay_interface_type": "优惠抵扣",
-			"order_source": "商户"
-			"date_interval":"2014-10-01|2014-10-08"
-		}]
-		"""
-	Then jobs导出订单获取订单信息
-		"""
-		{
-			"order_time":"2014-10-2 12:00",
-			"order_no":"0000002",
-			"member":"bill",
-			"money_total":100.00,
-			"methods_of_payment":"优惠抵扣",
-			"money":0.00,
-			"status":"已发货",
-			"product_name":"商品2",
-			"model":"",
-			"product_count":1,
-			"sources":"商户",
-			"integral":100,
-			"coupon_name":"",
-			"coupon_money": "",
-			"ship_name":"bill",
-			"ship_tel":"13013013011",
-			"ship_province":"河南省",
-			"ship_address":"河南省,安阳市,汤阴县,泰兴大厦",
-			"shipper":"jobs",
-			"shipper_note":"",
-			"logistics":"顺丰",
-			"number":"125"
-		}
-		"""
-
-	When jobs根据给定条件查询订单
-		"""
-		[{
-			"type":"测试订单",
-			"date_interval":"2014-10-01|2014-10-03"
-		}]
-		""" 
-	Then jobs导出订单获取订单信息
-		"""
-		[]
-		"""
+	When jobs'导出订单'
+	Then jobs获取导出订单信息
+		| order_no | order_source |  date | payment_time | consumer | product | model  | price | count | weight | payment_method | postage | payment_amount | integral_money | coupon_money |    coupon    | weizoom_card | cash |  order_status   | shipper | remark   | "ship_name |  ship_tel   | ship_province |        ship_address           | express_company_name | express_number | delivery_time |
+		|  000010  |      0       | 今天  |    今天      | bill     |  商品2  |        |  100  |   2   |   2    |   货到付款     | 15      |      215       |        0       |              |              |              | 215  |    待发货       |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |                      |                |               |
+		|  000009  |      0       | 1天前 |    1天前     | bill     |  商品3  |        |  100  |   1   |   0    |   优惠抵扣     |  0      |      100       |        0       |              |              |     100      |  0   |    待发货       |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |                      |                |               |
+		|  000008  |      0       | 1天前 |    1天前     | bill     |  商品3  |        |  100  |   1   |   0    |   货到付款     |  0      |      50        |        50      |              |              |              |  50  |    待发货       |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |                      |                |               |
+		|  000007  |      0       | 1天前 |    1天前     | bill     |  商品3  |        |  100  |   1   |   0    |   优惠抵扣     |  0      |      0         |        0       |      100     |    优惠券    |              |  0   |    待发货       |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |                      |                |               |
+		|  000006  |      0       | 2天前 |    2天前     | bill     |  商品2  |        |  100  |   1   |   1    |   支付宝       | 10      |      0         |        0       |              |              |              |  0   |    退款成功     |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+		|  000005  |      0       | 2天前 |    2天前     | bill     |  商品2  |        |  100  |   1   |   1    |   支付宝       | 10      |      0         |        0       |              |              |              |  0   |    退款中       |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+		|  000004  |      0       | 2天前 |    2天前     | bill     |  商品2  |        |  100  |   1   |   1    |   支付宝       | 10      |      110       |        0       |              |              |              | 110  |    已完成       |  jobs   |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
+		|  000003  |      0       | 3天前 |              | bill     |  商品1  | 红色 S |  100  |   1   |   1    |   微信支付     | 10      |      0         |        0       |              |              |              |  0   |    已取消       |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |                      |                |               |
+		|  000002  |      0       | 3天前 |              | bill     |  商品1  | 红色 M |  100  |   1   |   1    |   微信支付     | 10      |      0         |        0       |              |              |              |  0   |    待支付       |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |                      |                |               |
+		|  000001  |      0       | 3天前 |    3天前     | bill     |  商品1  | 红色 L |  100  |   1   |   1    |   微信支付     | 10      |      110       |        0       |              |              |              | 110  |    待发货       |  jobs   | 发货一箱 |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
