@@ -9,7 +9,8 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 100.00
+			"price": 100.00,
+			"bar_code":"123456"
 		}, {
 			"name": "商品2",
 			"price": 100.00
@@ -194,4 +195,177 @@ Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动�
 		}]
 		"""
 
+@promotion @promotionIntegral @integral
+Scenario: 4 在按"商品名称"查询的查询结果下删除积分活动
 
+	Given jobs登录系统
+
+	When jobs设置积分应用列表查询条件
+		"""
+		{
+			"product_name":"商品1积分应用",
+			"bar_code":"",
+			"status":"",
+			"start_date":"",
+			"end_date":""
+		}
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	When jobs删除积分应用'商品1积分应用'
+	Then jobs获取积分应用活动列表
+		"""
+		[ ]
+		"""
+
+@promotion @promotionIntegral @integral
+Scenario: 5 在按"商品条码"查询的查询结果下删除积分活动
+
+	Given jobs登录系统
+
+	When jobs设置积分应用列表查询条件
+		"""
+		{
+			"product_name":"",
+			"bar_code":"123456",
+			"status":"",
+			"start_date":"",
+			"end_date":""
+		}
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	When jobs删除积分应用'商品1积分应用'
+	Then jobs获取积分应用活动列表
+		"""
+		[ ]
+		"""
+
+@promotion @promotionIntegral @integral
+Scenario: 6 在按"促销状态"查询的查询结果下删除积分活动
+
+	Given jobs登录系统
+
+	When jobs设置积分应用列表查询条件
+		"""
+		{
+			"product_name":"",
+			"bar_code":"",
+			"status":"已结束",
+			"start_date":"",
+			"end_date":""
+		}
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		},{
+			"name": "商品2积分应用",
+			"start_date": "",
+			"end_date": "",
+			"status":"已结束",
+			"product_name": "商品2",
+			"is_permanant_active": true,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	When jobs删除积分应用'商品2积分应用'
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+
+@promotion @promotionIntegral @integral
+Scenario: 7 在按"活动时间"查询的查询结果下删除积分活动
+
+	Given jobs登录系统
+
+	When jobs设置积分应用列表查询条件
+		"""
+		{
+			"product_name":"",
+			"bar_code":"",
+			"status":"",
+			"start_date":"2015-07-11",
+			"end_date":"2015-08-10"
+		}
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	When jobs删除积分应用'商品1积分应用'
+	Then jobs获取积分应用活动列表
+		"""
+		[ ]
+		"""
+
+
+	

@@ -221,9 +221,9 @@ class ProductList(resource.Resource):
             if request.manager.id == products[0].owner_id:
                 now = datetime.now()
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0, update_time=now)
                 else:
-                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0, update_time=now)
             else:
                 # 微众商城更新商户商品状态
                 products.update(weshop_status=shelve_type)

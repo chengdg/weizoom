@@ -17,6 +17,14 @@ from .steps_db_util import (
     get_custom_model_id_from_name, get_product_model_keys, get_area_ids
 )
 
+PAYNAME2ID = {
+    u'全部': -1,
+    u'微信支付': 2,
+    u'货到付款': 9,
+    u'支付宝': 0,
+    u'优惠抵扣': 10
+}
+
 def __get_date(str):
 	#处理expected中的参数
 	today = datetime.now()
@@ -285,7 +293,8 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		"message": args.get('customer_message', ''),
 		"group2integralinfo": json.JSONEncoder().encode(group2integralinfo),
 		"card_name": '',
-		"card_pass": ''
+		"card_pass": '',
+		"xa-choseInterfaces":str(PAYNAME2ID.get(args.get("pay_type",""),""))
 	}
 	if 'integral' in args and args['integral'] > 0:
 		# 整单积分抵扣
