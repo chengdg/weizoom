@@ -41,7 +41,7 @@ class Mvote(resource.Resource):
 			id = request.GET['id']
 			isPC = int(request.GET.get('isPC',0))
 			isPC = True if isPC else False
-			isMember = request.member.is_subscribed
+			# isMember = request.member.is_subscribed
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
@@ -88,13 +88,13 @@ class Mvote(resource.Resource):
 				request.GET.update({"project_id": project_id})
 				request.GET._mutable = False
 				html = pagecreater.create_page(request, return_html_snippet=True)
-				if isMember:
-					auth_appid_info = None
-				else:
-					from weixin.user.util import get_component_info_from
-					component_info = get_component_info_from(request)
-					auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id)[0]
-					auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+				# if isMember:
+				# 	auth_appid_info = None
+				# else:
+				from weixin.user.util import get_component_info_from
+				component_info = get_component_info_from(request)
+				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id)[0]
+				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 
 
 				c = RequestContext(request, {
@@ -108,7 +108,7 @@ class Mvote(resource.Resource):
 					'resource': "vote",
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isPC': isPC,
-					'isMember': isMember,
+					# 'isMember': isMember,
 					'auth_appid_info': auth_appid_info
 				})
 				return render_to_response('workbench/wepage_webapp_page.html', c)
