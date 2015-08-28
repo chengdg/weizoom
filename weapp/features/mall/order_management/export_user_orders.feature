@@ -184,7 +184,8 @@ Scenario: 导出全部订单
 		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
 		|  000001  |      0       | 3天前 |    3天前     | bill     |   jobs      | 商品1,红色 L,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |jobs,发货|    已发货       |  jobs   | 发货一箱 |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
 	When jobs对订单'000004'进行'发货'
-		""
+		"""
+		{
 			"order_no":"000004",
 			"logistics":"顺丰速运",
 			"number":"123456789",
