@@ -61,7 +61,7 @@
 			<div class="ml80">
 				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
 				<a class="btn btn-default xa-export xui-fontBold" href="javascript:void(0);">批量导出</a>
-               <a id="export_href" style="display: none ">DownloadXLS</a>
+                <a id="export_href" style="display: none ">DownloadXLS</a>
 			</div>
 
 
@@ -172,7 +172,7 @@ $(document).ready(function() {
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
-            app: 'apps/survey',
+            app: 'apps/vote',
             resource: 'vote_participances-export',
             args: {'export_id':export_id},
             success: function(resp){
