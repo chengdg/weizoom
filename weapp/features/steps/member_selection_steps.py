@@ -39,7 +39,7 @@ def step_impl(context, user):
             p.last_pay_time = '2015-01-02'
         if member_item['username'] == u'tom2':
             p = Member.objects.get(id = member_item['id'])
-            p.last_pay_time = '2015-02-04'
+            p.last_pay_time = '2015-02-02'
         if member_item['username'] == u'tom3':
             p = Member.objects.get(id = member_item['id'])
             p.last_pay_time = '2015-03-05'
