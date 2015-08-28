@@ -4,7 +4,7 @@ from behave import when, then, given
 
 from test import bdd_util
 from mall.models import (ORDER_TYPE2TEXT, STATUS2TEXT, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, express_util,
-                         ORDERSTATUS2TEXT)
+                         ORDERSTATUS2TEXT, Order)
 from features.testenv.model_factory import timedelta, json, ORDER_STATUS_NOT
 from mall.promotion.models import datetime
 import steps_db_util
@@ -194,42 +194,56 @@ def step_impl(context, user):
     actual_orders = []
     source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
     for order_item in items:
-        actural_order = {}
-        actural_order['order_no'] = order_item['order_id']
-        actural_order['order_time'] = order_item['created_at']
-        actural_order['ship_name'] = order_item['ship_name']
-        actural_order['ship_tel'] = order_item['ship_tel']
-        actural_order["sources"] = source[order_item['come']]
-        actural_order["member"] = order_item['buyer_name']
-        actural_order["methods_of_payment"] = order_item['pay_interface_name']
-        actural_order["logistics"] = express_util.get_name_by_value(order_item['express_company_name'])
-        actural_order["number"] = order_item['express_number']
-        actural_order["shipper"] = order_item['leader_name']
+        actual_order = {}
+        actual_order['order_no'] = order_item['order_id']
+        actual_order['order_time'] = order_item['created_at']
+        actual_order['ship_name'] = order_item['ship_name']
+        actual_order['ship_tel'] = order_item['ship_tel']
+        actual_order["sources"] = source[order_item['come']]
+        actual_order["member"] = order_item['buyer_name']
+        actual_order["methods_of_payment"] = order_item['pay_interface_name']
+        actual_order["logistics"] = express_util.get_name_by_value(order_item['express_company_name'])
+        actual_order["number"] = order_item['express_number']
+        actual_order["shipper"] = order_item['leader_name']
+        actual_order["integral"] = order_item['integral']
+        actual_order['status'] = order_item['status']
+        actual_order['price'] = order_item['pay_money']
+        actual_order['final_price'] = order_item['pay_money']
 
-        actural_order['status'] = order_item['status']
-        actural_order['price'] = order_item['pay_money']
-        actural_order['customer_message'] = order_item['customer_message']
-        actural_order['buyer'] = order_item['buyer_name']
+        actual_order['customer_message'] = order_item['customer_message']
+        actual_order['buyer'] = order_item['buyer_name']
+        actual_order['save_money'] = order_item.get('save_money', 0)
+
+        if 'edit_money' in order_item and order_item['edit_money']:
+            actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.', '').replace('-', '')
 
         order_id = order_item['id']
         buy_product_response = context.client.get(
             '/mall2/api/order_product/?version=1&order_id=%d&timestamp=1406172500320' % (order_id))
 
         buy_products = json.loads(buy_product_response.content)['data']['products']
-        actural_order['products_count'] = len(buy_products)
+        actual_order['products_count'] = len(buy_products)
         buy_product_results = []
         for buy_product in buy_products:
             buy_product_result = {}
             buy_product_result['product_name'] = buy_product['name']
+            buy_product_result['name'] = buy_product['name']
             buy_product_result['count'] = buy_product['count']
             buy_product_result['total_price'] = buy_product['total_price']
+            buy_product_result['price'] = buy_product['total_price']
             buy_product_result['img_url'] = buy_product['thumbnails_url']
             buy_product_results.append(buy_product_result)
 
-        actural_order['products'] = buy_product_results
-        actual_orders.append(actural_order)
-
+        actual_order['products'] = buy_product_results
+        actual_orders.append(actual_order)
+    print("actual---------------------------------")
+    print(actual_orders)
+    print("actual---------------------------------")
     expected = json.loads(context.text)
+    # todo 暂时跳过操作
+    for order in expected:
+        if 'actions' in order:
+            del order['actions']
     bdd_util.assert_list(expected, actual_orders)
 
 
@@ -454,8 +468,12 @@ def step_impl(context, user, order_id):
         "methods_of_payment": order['pay_interface_name'],
         "ship_name": order['ship_name'],
         "ship_tel": order['ship_tel'],
-        "sources": source[order['come']]
+        "sources": source[order['come']],
+        "final_price": order['total_price'],
     }
+
+    if 'edit_money' in order and order['edit_money']:
+        actual["order_no"] = actual["order_no"] + "-" + str(order['edit_money']).replace('.', '').replace('-', '')
 
     expected = json.loads(context.text)
     bdd_util.assert_dict(expected, actual)
