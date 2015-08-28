@@ -97,7 +97,7 @@
                     this.isRolling = false;
                     return;
                 }
-                this.speed += 20;
+                this.speed += 30;
             }
             var that = this;
             this.timer = setTimeout(function(){
@@ -111,7 +111,8 @@
             '一等奖': getRandomStopPosition(['1', '7']), //一等奖位置
             '二等奖': getRandomStopPosition(['2', '4', '9']), //二等奖位置
             '三等奖': getRandomStopPosition(['3', '6', '11']) //三等奖位置
-        };
+        },
+        lottery_status;
         function getRandomStopPosition(arr){
             var len = arr.length - 1;
             return arr[parseInt(Math.random()*len+0.5)];
@@ -119,11 +120,11 @@
 
         window.lottery = {};//测试用
         $(function(){
-            console.log("准备就绪");
+            lottery_status = '{{ lottery_status }}' == 'True' ? true : false;
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             window.lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
-                if(lottery.isRolling){
+                if(lottery.isRolling || !lottery_status){
                     return false;
                 }else{
                     W.getApi().call({
