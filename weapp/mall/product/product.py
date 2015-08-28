@@ -891,7 +891,11 @@ class ProductModel(resource.Resource):
             stock_type = models.PRODUCT_STOCK_TYPE_UNLIMIT
             if model_info['stock_type'] == 'limit':
                 stock_type = models.PRODUCT_STOCK_TYPE_LIMIT
-
+            if not model_info.get('id', None):
+                # 商品没有规格的情况, 避免报错
+                response = create_response(400)
+                response.errMsg = '商品规格错误请重新编辑商品'
+                return response.get_response()
             product_model_id = model_info['id']
             stocks = model_info['stocks']
             if stock_type == models.PRODUCT_STOCK_TYPE_UNLIMIT:

@@ -193,6 +193,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 args: W.toFormData({'model_infos': newModelInfos}),
                 scope: this,
                 success: function(data) {
+                    alert('sss')
                     //遍历table中的model，如果该model在newModelInfos中出现，则:
                     //model.stock_type = newModelInfo.stock_type
                     //model.stocks = newModelInfo.stocks
@@ -232,7 +233,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     }
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             })
             }
@@ -291,7 +295,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $stockText.text(stockText).show();
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             });
         } else if(stockText === "" || parseInt(stockText) != NaN){
@@ -322,7 +329,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $stockText.text(stockText).show();
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             })
         }
