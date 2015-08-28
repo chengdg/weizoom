@@ -66,44 +66,40 @@ def step_impl(context, user):
     ###
     options_url = []
     init_url = '/member/api/members/get/?design_mode=0&version=1&status=1&filter_value='
-    if options['pay_money_start'] and options['pay_money_end']:
+    if options.has_key('pay_money_start') and options.has_key('pay_money_end'):
         options_url.append('pay_money:%s--%s' %(options['pay_money_start'],options['pay_money_end']))
-    if options['integral_start'] and options['integral_end']:
+    if options.has_key('integral_start') and options.has_key('integral_end'):
         options_url.append('integral:%s--%s' %(options['integral_start'],options['integral_end']))
-    if options['pay_times_start'] and options['pay_times_end']:
+    if options.has_key('pay_times_start') and options.has_key('pay_times_end'):
         options['pay_times_start'] = handtime(options['pay_times_start'])
         options['pay_times_end'] = handtime(options['pay_times_end'])
         options_url.append('pay_times:%s--%s' %(options['pay_times_start'],options['pay_times_end']))
     #最后购买时间
-    if options['last_buy_start_time'] and options['last_buy_end_time']:
+    if options.has_key('last_buy_start_time') and options.has_key('last_buy_end_time'):
         options['last_buy_start_time'] = handtime(options['last_buy_start_time'])
         options['last_buy_end_time'] = handtime(options['last_buy_end_time'])
         options_url.append('first_pay:%s--%s' %(options['last_buy_start_time'],options['last_buy_end_time']))
-    if options['attention_start_time'] and options['attention_end_time']:
+    if options.has_key('attention_start_time') and options.has_key('attention_end_time'):
         options['attention_start_time'] = handtime(options['attention_start_time'])
         options['attention_end_time'] = handtime(options['attention_end_time'])
         options_url.append('sub_date:%s--%s' %(options['attention_start_time'],options['attention_end_time']))
-    if options['message_start_time'] and options['message_end_time']:
+    if options.has_key('message_start_time') and options.has_key('message_end_time'):
         options['message_start_time'] = handtime(options['message_start_time'])
         options['attention_end_time'] = handtime(options['attention_end_time'])
         options_url.append('last_message_time:%s--%s' %(options['message_start_time'],options['message_end_time']))
-    if options['name']:
+    if options.has_key('name'):
         options_url.append('name:%s' %options['name'])
     ###
-    if options['tags'] and options['tags'] != u'全部':
+    if options.has_key('tags') and options.has_key('tags') != u'全部':
         options_url.append('tag_id:%s' %tags_dict[options['tags']])
     ###
-    if options['member_rank'] and options['member_rank'] != u'全部':
+    if options.has_key('member_rank') and options.has_key('member_rank') != u'全部':
         options_url.append('grade_id:%s' %grades_dict[options['member_rank']])
-    if options['status'] :
+    if options.has_key('status') :
         options_url.append('status:%s' %status_dict[options['status']])
-    if options['source'] and options['source'] != u'全部':
+    if options.has_key('source') and options.has_key('source') != u'全部':
         options_url.append('source:%s' %sources_dict[options['source']])
     init_url = init_url +'|'.join(options_url) + '&page=1&count_per_page=50&enable_paginate=1'
     context.url = init_url
-    #print 'helloworld',context.url
-
-
-
-
+    context.filter_str = "&filter_value=" + '|'.join(options_url)
 

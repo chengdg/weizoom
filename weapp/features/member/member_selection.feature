@@ -1272,29 +1272,29 @@ Scenario:14 会员列表分页
 
 		When jobs访问会员列表
 
-		Then jobs获取会员列表显示共3页
+		#Then jobs获取会员列表显示共3页
 
-		When jobs浏览第1页
+		When jobs访问会员列表第1页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
 			| bill3 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 			| bill2 |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 |             |
 			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 会员分享 |             |
 
-		When jobs浏览下一页
+		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-10-01   | 直接关注 |             |
 			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-10-01   | 推广扫码 |             |
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-08-06   | 会员分享 | 分组3       |
 
-		When jobs浏览第3页
+		When jobs访问会员列表第3页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
 			| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |    3      |   2014-08-05   | 会员分享 | 分组1,分组3 |
 			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      |   2014-08-04   | 直接关注 | 分组1       |
 
-		When jobs浏览上一页
+		When jobs访问会员列表第2页
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |    tags     |
 			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |   2014-10-01   | 直接关注 |             |

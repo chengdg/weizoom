@@ -26,16 +26,19 @@ def step_impl(context, user):
     data = json.loads(context.text)[0]
     grade_name = data['member_rank']
     grade_id = MemberGrade.objects.get(webapp_id=context.webapp_id, name=grade_name).id
-    print grade_name, grade_id, "{*}"*10
     args = {}
     if data['modification_method'] == '给选中的人修改等级':
+        if not member_ids:
+            return
         args['update_status'] = 'selected'
         args['ids'] = '-'.join(member_ids)
     elif data['modification_method'] == '给筛选出来的所有人修改等级':
         args['update_status'] = 'all'
+        if hasattr(context, 'filter_str'):
+            args['filter_value'] = context.filter_str
+
 
     args['grade_id'] = grade_id
-    print args
     response = context.client.post('/member/api/grade/batch_update/', args)
     bdd_util.assert_api_call_success(response)
 # @Then(u"{user}能获取会员等级列表")
