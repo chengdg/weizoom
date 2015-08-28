@@ -6,6 +6,7 @@ Feature:删除规格或规格值对商品的影响
 		#针对线上"bug3741"和"bug4257"补充feature
 		#删除规格或规格值会导致使用该规格或规格值的商品下架(待售商品列表中：价格变为0,库存变为0)
 		#创建如下商品数据
+			#无规格:没有规格的商品
 			#商品1：S
 			#商品2：黑,白
 			#商品3：黑M  白M
@@ -40,6 +41,19 @@ Background:
 	And jobs已添加商品
 		"""
 		[{
+			"name":"无规格",
+			"is_enable_model": "不启用规格",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 10.0,
+						"weight": 10.0,
+						"stock_type": "有限",
+						"stocks": 10
+					}
+				}
+			}
+		},{
 			"name": "商品1",
 			"is_enable_model": "启用规格",
 			"model": {
@@ -422,3 +436,73 @@ Scenario: 4 删除商品规格'颜色'和'尺寸'
 			}
 		}
 		"""
+
+@product @property @toSaleProduct @online_bug
+Scenario: 5 无规格商品修改成多规格后,再删除商品规格
+	#无规格商品修改成多规格后，删除商品规格会导致:
+		#商品下架,库存变为0,会保留无规格时的价格和重量
+	Given jobs登录系统
+	When jobs更新商品'无规格'
+		"""
+		{
+			"name":"无规格",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models": {
+					"黑色": {
+						"price": 11.0,
+						"weight": 11.0,
+						"stock_type": "无限"
+					},
+					"白色": {
+						"price": 11.0,
+						"weight": 11.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}
+		"""
+	Then jobs能获取商品'无规格'
+		"""
+		{
+			"name":"无规格",
+			"shelve_type": "上架",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models": {
+					"黑色": {
+						"price": 11.0,
+						"weight": 11.0,
+						"stock_type": "无限"
+					},
+					"白色": {
+						"price": 11.0,
+						"weight": 11.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}
+		"""
+	When jobs删除商品规格'颜色'
+	Then jobs能获取商品'无规格'
+		"""
+		{
+			"name":"无规格",
+			"shelve_type": "下架",
+			"is_enable_model": "不启用规格",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 10.0,
+						"weight": 10.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
+		}
+		"""
+	When jobs上架商品'无规格'
+
