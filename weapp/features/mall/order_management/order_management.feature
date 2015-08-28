@@ -270,7 +270,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 			"methods_of_payment":"微信支付",
 			"member": "bill",
 			"status":"待发货",
-			"actions": ["发货", "申请退款"],
+			"actions": ("发货", "申请退款"),
 			"final_price": 90.00,
 			"edit_money": 10.00,
 			"products": [{
