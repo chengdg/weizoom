@@ -3265,6 +3265,7 @@ input.ui-input-text, textarea.ui-input-text {
 
 .xui-orderListPage .xui-selectedProductList-productImg{
     width: 60px;
+    height:60px;
     vertical-align: middle;
 }
 .xui-orderListPage .xui-selectedProductList-productImg img{

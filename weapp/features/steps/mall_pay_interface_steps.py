@@ -81,14 +81,9 @@ def __fill_post_data(pay_interface):
 # 		__add_pay_interface(context, pay_interface)
 
 
-# @when(u"{user}更新支付方式'{pay_interface_description}'")
-# def step_impl(context, user, pay_interface_description):
-# 	db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, description=pay_interface_description)
-# 	pay_interface = json.loads(context.text)
-# 	data = __fill_post_data(pay_interface)
 
-# 	url = '/mall/editor/pay_interface/update/%d/' % db_pay_interface.id
-# 	context.client.post(url, data)
+
+
 
 
 '''
