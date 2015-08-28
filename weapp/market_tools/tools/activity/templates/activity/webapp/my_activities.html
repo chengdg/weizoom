@@ -43,45 +43,67 @@
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide">
                     {% if events_items %}
-                    <ul class="xui-listItem">
-                        {% for events_item in events_items %}
-                        <li data-role="button" data-icon="true" class="xui-listInner pl10 pr15">
-                            <a href="{{activity.target_link}}" data-coupon-id="{{coupon.id}}">
-                                <p class="pt15 pb15 disT">
-                                    <span class="disTc pl5 em1">{{ events_item.name }}</span>
-                                    <span class="mr20 em1 disTc vm ">
-                                    {% if activity.status == 1 %}
-                                    <span class="xui-text-green">已启动</span>
-                                    {% endif %}
-                                    {% if activity.status == 0 %}
-                                    已暂停
-                                    {% endif %}
-                                    {% if activity.status == 3 %}
-                                    未启动
-                                    {% endif %}
-                                    {% if activity.status == 2 %}
-                                    <span class="xui-text-red">已过期</span>
-                                    {% endif %}
-                                    </span>
-                                </p>
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <div class="error-info">
-                    您还没有参与活动
-                    </div>
+                        <ul class="xui-listItem">
+                            {% for events_item in events_items %}
+                            <li data-role="button" data-icon="true" class="xui-listInner pl10 pr15">
+                                <a href="{{events_item.target_link}}" data-coupon-id="{{coupon.id}}">
+                                    <p class="pt15 pb15 disT">
+                                        <span class="disTc pl5 em1">{{ events_item.name }}</span>
+                                        <span class="mr20 em1 disTc vm ">
+                                        {% if activity.status == 1 %}
+                                        <span class="xui-text-green">已启动</span>
+                                        {% endif %}
+                                        {% if activity.status == 0 %}
+                                        已暂停
+                                        {% endif %}
+                                        {% if activity.status == 3 %}
+                                        未启动
+                                        {% endif %}
+                                        {% if activity.status == 2 %}
+                                        <span class="xui-text-red">已过期</span>
+                                        {% endif %}
+                                        </span>
+                                    </p>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <div class="error-info">
+                        您还没有参与活动
+                        </div>
+                    {% endif %}
+                    {% if votes_items %}
+                        <ul class="xui-listItem">
+                            {% for votes_item in votes_items %}
+                            <li data-role="button" data-icon="true" class="xui-listInner pl15 pr15">
+                                <a href="{{ votes_item.url }}" style="display:inline-block;width:85%;" class="pl5">{{ votes_item.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        您还没有参与投票
+                    {% endif %}
+                    {% if surveies_items %}
+                        <ul class="xui-listItem">
+                            {% for surveies_item in surveies_items %}
+                            <li data-role="button" data-icon="true" class="xui-listInner pl15 pr15">
+                                <a href="{{ surveies_item.url }}" style="display:inline-block;width:85%;" class="pl5">{{ surveies_item.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        您还没有参与调研
                     {% endif %}
                 </div>
                 <div class="wui-swiper-slide">
-                    {% if lotteres %}
+                    {% if lotteres_items %}
                     <ul class="xui-listItem">
-                        {% for lottery_record in lotteres %}
+                        {% for lotteres_item in lotteres_items %}
                         <li data-role="button" data-icon="true" class="xui-listInner pl10 pr15">
-                            <a href="{{ lottery_record.url }}">
+                            <a href="{{ lotteres_item.url }}">
                                     <div>
-                                        <span class="mr5 pl5 em1">{{ lottery_record.prize_name }}</span>
+                                        <span class="mr5 pl5 em1">{{ lotteres_item.prize_name }}</span>
                                         <span class="c65 em1">
                                             {% if lottery_record.prize_type == 1 %}
                                             优惠劵{{lottery_record.prize_money}}元
@@ -134,17 +156,7 @@
                     {% endif %}
                 </div>
 {#                <div class="wui-swiper-slide">#}
-{#                    {% if votes %}#}
-{#                    <ul class="xui-listItem">#}
-{#                        {% for vote in votes %}#}
-{#                        <li data-role="button" data-icon="true" class="xui-listInner pl15 pr15">#}
-{#                            <a href="{{ vote.url }}" style="display:inline-block;width:85%;" class="pl5">{{ vote.name }}</a>#}
-{#                        </li>#}
-{#                        {% endfor %}#}
-{#                    </ul>#}
-{#                    {% else %}#}
-{#                    您还没有参与投票#}
-{#                    {% endif %}#}
+
 {#                </div>#}
             </div>
         </div>
