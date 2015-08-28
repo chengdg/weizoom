@@ -122,23 +122,25 @@ class voteStatistic_Export(resource.Resource):
 				for termite in record['termite_data']:
 					termite_dic = record['termite_data'][termite]
 					if termite_dic['type']=='appkit.selection':
-						select_data[termite] = termite_dic['value']
+						if termite not in select_data:
+							select_data[termite] = [termite_dic['value']]
+						else:
+							select_data[termite].append(termite_dic['value'])
 					if termite_dic['type']=='appkit.qa':
 						if termite not in qa_static:
 							qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
 						else:
 							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
-
 			#select-data-processing
 			for select in select_data:
-				for item in select_data[select]:
-					if select not in select_static:
-						select_static[select]={}
-					if item not in select_static[select]:
-						select_static[select][item] = 0
-					if select_data[select][item]['isSelect'] == True:
-						select_static[select][item] += 1
-
+				for s_list in select_data[select]:
+					for s in s_list:
+						if select not in select_static:
+							select_static[select]={}
+						if s not in select_static[select]:
+							select_static[select][s]  = 0
+						if s_list[s]['isSelect'] == True:
+							select_static[select][s] += 1
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
