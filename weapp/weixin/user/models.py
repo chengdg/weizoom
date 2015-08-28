@@ -20,7 +20,7 @@ class WeixinUser(models.Model):
 	username = models.CharField(max_length=100, unique=True)
 	webapp_id = models.CharField(max_length=16, verbose_name='对应的webapp id')
 	fake_id = models.CharField(max_length=50, default="") #微信公众平台字段fakeId
-	nick_name = models.CharField(max_length=128) #微信公众平台字段nickName
+	nick_name = models.CharField(max_length=256) #微信公众平台字段nickName
 	weixin_user_remark_name = models.CharField(max_length=64) #微信公众平台字段remarkName,暂未使用
 	weixin_user_icon = models.CharField(max_length=1024) #微信公众平台字段icon
 	created_at = models.DateTimeField(auto_now_add=True)
