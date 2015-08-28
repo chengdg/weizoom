@@ -12,7 +12,7 @@
 		</ul>
 	</div>
 
-	<div style="background-color: #EAEEF7;" class="clearfix">
+	<div style="background-color: #EAEEF7;" class="clearfix pr">
 		<div class="xui-navbarHeader">
 			<div class="xui-title mb15">店铺导航</div>
 			<div class="f14">
@@ -44,15 +44,14 @@
 
 		<div id="rightPanel" class="fl xui-workbench-rightPanel mb30" style="padding: 0px; background-color: transparent; border: none;position:relative;top:-132px;">
 		</div>
+		<div class="xui-bottomActionBar xa-stickyBar">
+			<button class="xa-save btn btn-primary">保存</button>
+		</div>
 	</div>
 </div>
 {% endblock %}
 
-{% block global_elements %}
-<div class="xui-bottomActionBar">
-	<button class="xa-save btn btn-primary">保存</button>
-</div>
-{% endblock %}
+
 
 {% block base_js%}
   {% include 'wepage_components.html' %}
@@ -180,6 +179,22 @@
 				}
 			});
 		});
+		// 滚动浮动在底部
+        var stickyMenu = function(){
+            var winScrollTop = $(window).scrollTop();
+        　　var scrollHeight = $(document).height();
+        　　var windowHeight = $(window).height();
+            var gap = scrollHeight - winScrollTop - windowHeight;
+            if( gap < 44 ){
+                $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+            }else{
+                $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+            }  
+        };
+        stickyMenu();
+        $(window).bind('scroll resize',(function() {
+            stickyMenu();
+        }));
 	});
 </script>
 {% endblock %}
