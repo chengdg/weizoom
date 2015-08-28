@@ -65,6 +65,19 @@
 	/*margin: 0px auto;*/
 	/*margin-top: 30%;*/
 }
+.wui-appParticipantResult-Cover .wui-qrcode{
+	background: rgba(0, 0, 0, 0) url("/static_v2/img/qrcode.png") no-repeat scroll 0 0 / 100% auto;
+	height: 60%;
+	width: 75%;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	position: fixed;
+	padding-top: 15%;
+	padding-left: 15%;
+	top: 10%;
+	left: 4%;
+}
 .wui-appParticipantResult-Cover .wui-i-successIcon {
 	border: 5px solid #59c969;
     border-radius: 50%;

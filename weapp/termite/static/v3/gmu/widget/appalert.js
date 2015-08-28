@@ -64,8 +64,19 @@ var initDom = function(options) {
         $('.xa-link').on('click', function(event) {
             var $link = $(event.currentTarget);
             var url = $link.data('href');
-            $('.wui-appParticipantResult-Cover').hide();
-            redirectTo(url);
+            var text = $link.text();
+            if (text.replace(/(^\s*)|(\s*$)/g,'') === '个人中心' && !W.member_id){
+                $('.wui-appParticipantResult-Cover').html('<div class="wui-qrcode">' +
+                '<img height="195px" width="195px" src="{% if auth_appid_info %}{{auth_appid_info.qrcode_url}}{% endif %}">' +
+                '</div><div>');
+            }
+            else{
+                $('.wui-appParticipantResult-Cover').hide();
+                redirectTo(url);
+            }
+
+
+
         });
     } else {
         $('.xa-appParticipantResult-prizeContent').text(prize);
