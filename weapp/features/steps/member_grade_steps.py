@@ -41,6 +41,29 @@ def step_impl(context, user):
     args['grade_id'] = grade_id
     response = context.client.post('/member/api/grade/batch_update/', args)
     bdd_util.assert_api_call_success(response)
+
+@when(u"{user}批量添加分组")
+def step_impl(context, user):
+    member_ids = context.member_ids
+    data = json.loads(context.text)[0]
+    tag_name = data['grouping']
+    tag_id = MemberTag.objects.get(webapp_id=context.webapp_id, name=tag_name).id
+    args = {}
+    if data['modification_method'] == '给选中的人添加分组':
+        if not member_ids:
+            return
+        args['update_status'] = 'selected'
+        args['ids'] = '-'.join(member_ids)
+    elif data['modification_method'] == '给筛选出来的所有人添加分组':
+        args['update_status'] = 'all'
+        if hasattr(context, 'filter_str'):
+            args['filter_value'] = context.filter_str
+
+
+    args['tag_id'] = tag_id
+    response = context.client.post('/member/api/tag/batch_update/', args)
+    bdd_util.assert_api_call_success(response)
+
 # @Then(u"{user}能获取会员等级列表")
 # def step_impl(context, user):
 # 	if hasattr(context, 'client'):
