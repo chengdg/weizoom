@@ -59,12 +59,12 @@ W.workbench.PageSynchronizer = Backbone.View.extend({
     synchronize: function(options) {
         //验证
         if (!W.isSystemManager) {
-            if(!this.currentPage.validate()) {
+            if(!W.validate()) {
                 return;
             }
         }
 
-        var isManualSync = !!(options && options.manual)
+        var isManualSync = !!(options && options.manual);
         if (isManualSync) {
             //手工sync，设置manualSync标识
             this.underManualSync = true;
