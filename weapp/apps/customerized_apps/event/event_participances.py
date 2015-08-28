@@ -219,7 +219,6 @@ class eventParticipances_Export(resource.Resource):
 					member_id2name[m_id] = u_name
 				else:
 					member_id2name[m_id] = u_name
-			print member_id2name
 			#processing data
 			num = 0
 			for record in data:
@@ -229,7 +228,6 @@ class eventParticipances_Export(resource.Resource):
 				export_record = []
 
 				num = num+1
-				print record['member_id']
 				name = member_id2name[record['member_id']]
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
