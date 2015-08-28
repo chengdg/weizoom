@@ -366,7 +366,7 @@ Scenario:3 过滤条件"会员状态"
 				"result_quantity":2
 			}]
 			"""
-		Then jobs获得会员列表
+		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source    |  tags   |
 			| tom4  |   金牌会员  |       0      |    20    |   0.00    |    0.00    |      0    |   2014-08-05   |  会员分享 | 分组3   |
 			| tom2  |   普通会员  |       0      |    50    |   325.00  |    162.50  |      2    |   2014-08-05   |  推广扫码 | 分组1   |
@@ -399,7 +399,7 @@ Scenario:4 过滤条件"关注时间"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":3
+				"result_quantity":4
 			}]
 			"""
 		Then jobs可以获得会员列表
@@ -449,8 +449,8 @@ Scenario:4 过滤条件"关注时间"
 			[{
 				"name":"",
 				"status":"全部",
-				"attention_start_time":"2015-08-10 00:00",
-				"attention_end_time":"2015-08-11 00:00",
+				"attention_start_time":"2015-8-10 00:00",
+				"attention_end_time":"2015-8-11 00:00",
 				"member_rank":"全部",
 				"tags":"全部",
 				"source":"全部",
@@ -822,7 +822,7 @@ Scenario:8 过滤条件"消费总额"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":10
+				"result_quantity":7
 			}]
 			"""
 		Then jobs可以获得会员列表
@@ -963,13 +963,21 @@ Scenario:9 过滤条件"购买次数"
 		Then jobs获得刷选结果人数
 			"""
 			[{
-				"result_quantity":2
+				"result_quantity":9
 			}]
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
-			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     |    2014-08-05  | 推广扫码 | 分组1   |
-			| tom1  | 银牌会员    |       2      |     0    |   110.00  |   110.00   |     1     |    2014-08-04  | 直接关注 | 分组1   |
+			| bill3 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |       今天     | 会员分享 |             |
+			| bill2 | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |       今天     | 直接关注 |             |
+			| bill  | 普通会员    |       1      |     0    |   0.00    |    0.00    |    0      |       今天     | 会员分享 |             |
+			| tom7  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |     2014-10-01 | 直接关注 |             |
+			| tom6  | 普通会员    |       0      |     0    |   0.00    |    0.00    |    0      |     2014-10-01 | 推广扫码 |             |
+			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |    0      |     2014-08-06 | 会员分享 | 分组3       |
+			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |    0      |     2014-08-05 | 会员分享 | 分组3       |
+			| tom2  | 普通会员    |       0      |     50   |   325.00  |    162.50  |    2      |     2014-08-05 | 推广扫码 | 分组1       |
+			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      |     2014-08-04 | 直接关注 | 分组1       |
+
 
 	#无查询结果
 		When jobs设置会员查询条件
@@ -1002,7 +1010,7 @@ Scenario:9 过滤条件"购买次数"
 			"""
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
-
+@test_aaa
 Scenario:10 过滤条件"最后购买时间"
 
 	#区间时间边界值查询，不包含结束时间
@@ -1020,8 +1028,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"pay_money_end":"",
 				"pay_times_start":"",
 				"pay_times_end":"",
-				"last_buy_start_time":"2015-1-1 00:00:00",
-				"last_buy_end_time":"2015-3-5 00:00:00",
+				"last_buy_start_time":"2015-1-1 00:00",
+				"last_buy_end_time":"2015-3-5 00:00",
 				"integral_start":"",
 				"integral_end":"",
 				"message_start_time":"",
@@ -1054,8 +1062,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"pay_money_end":"",
 				"pay_times_start":"",
 				"pay_times_end":"",
-				"last_buy_start_time":"2015-2-2 00:00:00",
-				"last_buy_end_time":"2015-2-2 00:00:00",
+				"last_buy_start_time":"2015-2-2 00:00",
+				"last_buy_end_time":"2015-2-2 00:00",
 				"integral_start":"",
 				"integral_end":"",
 				"message_start_time":"",
@@ -1087,8 +1095,8 @@ Scenario:10 过滤条件"最后购买时间"
 				"pay_money_end":"",
 				"pay_times_start":"",
 				"pay_times_end":"",
-				"last_buy_start_time":"2015-8-11 00:00:00",
-				"last_buy_end_time":"2015-8-12 00:00:00",
+				"last_buy_start_time":"2015-8-11 00:00",
+				"last_buy_end_time":"2015-8-12 00:00",
 				"integral_start":"",
 				"integral_end":"",
 				"message_start_time":"",
