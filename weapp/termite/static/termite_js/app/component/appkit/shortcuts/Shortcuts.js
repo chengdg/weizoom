@@ -13,7 +13,7 @@ W.component.appkit.Shortcuts = W.component.Component.extend({
 		groupClass: 'xui-propertyView-app-Shortcuts',
 		fields: [{
 			name: 'modules',
-			type: 'checkbox',
+			type: 'checkbox-group',
 			displayName: '填写项',
 			isUserProperty: true,
 			source: [{
