@@ -92,6 +92,9 @@
         border-radius: 3px;
         width: 150px;
     }
+    .wui-resultDialog>.wui-i-bottom button{
+        display: block;
+    }
     .wui-resultDialog .wui-i-content button{
         width: 70px;
         color: white;
@@ -306,10 +309,9 @@
             //隐藏参与活动按钮
             $('.xa-submitButtonContainer').hide();
             resultDialog = new ResultDialog();
-            //TODO 发起请求获取中奖历史和剩余积分
-{#            getHistory();#}
+            //获取中奖历史和剩余积分
+            getHistory();
             lottery_status = '{{ lottery_status }}' == 'True' ? true : false;
-            can_play_count = parseInt('{{ can_play_count }}');
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             window.lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
@@ -341,6 +343,8 @@
             });
         });
         function getHistory(){
+            can_play_count = parseInt('{{ can_play_count }}');
+            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
             W.getApi().call({
                 app: 'm/apps/lottery',
                 resource: 'lottery_prize',
@@ -350,12 +354,7 @@
                     webapp_owner_id: W.webappOwnerId
                 },
                 success: function(data){
-                    can_play_count = data.can_play_count;
-                    var last_times = parseInt($('.wui-lotterydescription .xa-header p>b').html());
-                    $('.wui-lotterydescription .xa-header p>b').html(--last_times);
-                    lottery.roll();
-                    lottery.stop(data);
-                    console.log('抽奖结束');
+                    $('.wui-i-record').html('中奖历史');
                 },
                 error: function(error){
                     alert(error);

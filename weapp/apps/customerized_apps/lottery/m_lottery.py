@@ -85,7 +85,7 @@ class Mlottery(resource.Resource):
 		html = pagecreater.create_page(request, return_html_snippet=True)
 		c = RequestContext(request, {
 			'lottery_status': lottery_status,
-			'can_play_count': can_play_count,
+			'can_play_count': can_play_count if lottery_status else 0,
 			'expend_integral': expend,
 			'record_id': id,
 			'activity_status': activity_status,

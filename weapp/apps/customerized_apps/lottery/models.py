@@ -32,7 +32,8 @@ class lottoryRecord(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'lottery_lottery_record'
+		'collection': 'lottery_lottery_record',
+		'ordering': ['-created_at']
 	}
 
 STATUS_NOT_START = 0
