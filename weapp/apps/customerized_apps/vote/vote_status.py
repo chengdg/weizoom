@@ -29,6 +29,8 @@ class voteStatus(resource.Resource):
 		target_status = request.POST['target']
 		if target_status == 'stoped':
 			target_status = app_models.STATUS_STOPED
+			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+			app_models.vote.objects(id=request.POST['id']).update(set__end_time=now_time)
 		elif target_status == 'running':
 			target_status = app_models.STATUS_RUNNING
 		elif target_status == 'not_start':
