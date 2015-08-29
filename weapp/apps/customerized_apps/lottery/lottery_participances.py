@@ -80,7 +80,7 @@ class lotteryParticipances(resource.Resource):
 			data.participant_icon = '/static/img/user-1.jpg'
 		
 		member_user2member = {}
-		members = member_models.Member.object.filter(id__in = member_ids)
+		members = member_models.Member.objects.filter(id__in = member_ids)
 		for member in members:
 			if member.id not in member_user2member:
 				member_user2member[member.id] = member
