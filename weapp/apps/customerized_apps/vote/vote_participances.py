@@ -240,15 +240,24 @@ class voteParticipances_Export(resource.Resource):
 			col += 1
 
 		##write data
+		print '==== Into Write File ========'
+		print '--- export_data----'
+		print export_data
 		if export_data:
 			row = 0
 			lens = len(export_data[0])
+			print 'export_data[0]===>',export_data[0]
+			print 'lens==>',lens
+			print '=== Into: for record in export_data ==='
 			for record in export_data:
+				print 'record :===>',record
 				row +=1
 				for col in range(lens):
+					print 'col:==>',col
 					ws.write(row,col,record[col])
 			try:
 				wb.save(export_file_path)
+				print '=========save File ==========='
 			except:
 				print 'EXPORT EXCEL FILE SAVE ERROR'
 				print '/static/upload/%s'%excel_file_name
