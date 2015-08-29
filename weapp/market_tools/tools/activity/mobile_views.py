@@ -251,7 +251,7 @@ def get_member_activites(request):
 			votes_items.append({
 				'id': str(vote_id),
 				'name': vote_details.name,
-				'url': '/m/apps/event/m_vote/?webapp_owner_id=%d&id=%s' % (vote_details.owner_id, str(vote_id)),
+				'url': '/m/apps/vote/m_vote/?webapp_owner_id=%d&id=%s' % (vote_details.owner_id, str(vote_id)),
 				'participant_time': vote.created_at.strftime('%m月%d日')
 			})
 		except:
@@ -266,7 +266,7 @@ def get_member_activites(request):
 			surveies_items.append({
 				'id': str(survey_id),
 				'name': survey_details.name,
-				'url': '/m/apps/event/m_survey/?webapp_owner_id=%d&id=%s' % (survey_details.owner_id, str(survey_id)),
+				'url': '/m/apps/survey/m_survey/?webapp_owner_id=%d&id=%s' % (survey_details.owner_id, str(survey_id)),
 				'participant_time': survey.created_at.strftime('%m月%d日')
 			})
 		except:
