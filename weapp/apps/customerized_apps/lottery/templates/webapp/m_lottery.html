@@ -23,21 +23,52 @@
 
     .wui-resultDialog{
         background: url("/termite_static/img/component/lottery/roulette_mobile_dialog_bg.png") no-repeat;
+        background-size: 100% 100%;
         display: none;
         position: fixed;
         top: 20%;
-        left: 10%;
-        width: 80%;
+        left: 5%;
+        width: 90%;
         height: 250px;
         border-radius: 5px;
         z-index: 1;
     }
-    .wui-resultDialog>.wui-i-title{
-        background: url("/termite_static/img/component/lottery/roulette_mobile_dialog_title_icon.png") no-repeat;
+    .wui-resultDialog>.wui-i-header>.wui-i-title{
+        margin-top: 45px;
+        font-size: 2em;
+        font-weight: 600;
+        overflow: visible;
+        color: #d81c26;
 
+    }
+    .wui-resultDialog>.wui-i-header>.wui-i-title:before{
+        content: "";
+        display: inline-block;
+        margin-left: -30px;
+        width: 30px;
+        height: 35px;
+        background: url("/termite_static/img/component/lottery/roulette_mobile_dialog_title_icon.png") no-repeat;
+        background-size: 70% 70%;
     }
     .wui-resultDialog>.wui-i-close{
         background: red;
+        color: white;
+        border-radius: 30px;
+        height: 30px;
+        width: 30px;
+        float: right;
+        margin-top: 10px;
+        margin-right: 10px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 33px;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+    .wui-resultDialog>.wui-i-header, .wui-resultDialog>.wui-i-body, .wui-resultDialog>.wui-i-bottom{
+        width: 100%;
+        height: 100%;
+        text-align: center;
     }
 </style>
 {% endblock %}
@@ -45,11 +76,19 @@
 {% block content-panel %}
     {{ page_html_content|safe }}
     <div id="resultDialog" class="wui-resultDialog">
-        <i class="wui-i-close xa-closeDialog">&#10005</i>
-        <h2 class="wui-i-title"></h2>
-        <h3 class="wui-i-subTitle"></h3>
-        <div class="wui-i-content"></div>
-        <div class="wui-i-bottom">
+        <b class="wui-i-close xa-closeDialog">&#10005</b>
+        <div class="wui-i-header">
+            <h2 class="wui-i-title xa-dialog-title">中奖了耶</h2>
+        </div>
+        <div class="wui-i-body xa-dialog-content">
+            <div class="wui-i-content">
+                <label>手机号
+                    <input placeholder="请输入手机号码">
+                </label>
+                <button>提交</button>
+            </div>
+        </div>
+        <div class="wui-i-bottom xa-dialog-bottom">
             <a class="ui-btn wui-i-btnup">
                 <span class="ui-btn-text">个人中心</span>
             </a>
@@ -63,6 +102,7 @@
 {% block js %}
     <script>
         function Roulette($lottery){
+            var that = this;
             this.index = -1;
             this.count = 0;
             this.timer = 0;
@@ -101,9 +141,16 @@
                 return void(0);
             }
             //初始化result dialog
-            this.$dialog = $('#resultDialog');
             var $body = $('body');
-           $body.append($('<div class="wui-mask"></div>'));
+            this.$mask = $('<div class="wui-mask"></div>');
+            $body.append(this.$mask);
+
+            this.$dialog = $('#resultDialog');
+            this.$dialog.find('.xa-closeDialog').on('click',function(){
+                that.$mask.hide();
+                that.$dialog.hide();
+            });
+
         }
         Roulette.prototype.move = function(){
             //lottery
@@ -192,7 +239,7 @@
                         },
                         success: function(data){
                             can_play_count = data.can_play_count;
-                            $frameDoc.find('.wui-lotterydescription .xa-header p>b').html(can_play_count);
+                            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
                             lottery.roll();
                             lottery.stop(data);
                             console.log('抽奖结束');
