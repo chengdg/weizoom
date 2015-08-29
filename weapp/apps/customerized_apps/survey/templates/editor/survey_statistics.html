@@ -151,6 +151,7 @@
     <script>
     //export
     $('.xa-i-exportBtn').click(function(event){
+        W.getLoadingView();
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
