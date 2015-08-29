@@ -50,6 +50,8 @@ class lottery_prize(resource.Resource):
 			response.errMsg = u'不存在该活动或已删除'
 			return response.get_response()
 
+		webapp_user_id = request.webapp_user.id
+
 		chance = lottery.chance / 100.0 #中奖率
 		participants_count = lottery.participant_count #所有参与的人数
 		winner_count = lottery.winner_count #中奖人数
@@ -69,6 +71,7 @@ class lottery_prize(resource.Resource):
 
 		member_id = member.id
 		data['member_id'] = member_id
+		data['webapp_user_id'] = webapp_user_id
 		lottery_participances = app_models.lotteryParticipance.objects(belong_to=record_id, member_id=member_id)
 		if lottery_participances.count() != 0:
 			lottery_participance = lottery_participances.first()
@@ -170,6 +173,6 @@ class lottery_prize(resource.Resource):
 		response.data = {
 			'result': result,
 			'prize_type': lottery_prize_type,
-			'can_play_count': lottery_participance.can_play_count
+			# 'can_play_count': lottery_participance.can_play_count
 		}
 		return response.get_response()
