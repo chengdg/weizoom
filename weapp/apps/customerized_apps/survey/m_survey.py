@@ -56,7 +56,7 @@ class Msurvey(resource.Resource):
 			else:
 				from weixin.user.util import get_component_info_from
 				component_info = get_component_info_from(request)
-				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id)[0]
+				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
 				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 			c = RequestContext(request, {
 				'record_id': id,
