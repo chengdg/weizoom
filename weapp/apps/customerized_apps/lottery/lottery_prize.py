@@ -22,6 +22,7 @@ from mall.promotion import utils as mall_api
 from mall.promotion import models as coupon_models
 from market_tools.tools.coupon.util import consume_coupon
 from termite import pagestore as pagestore_manager
+from modules.member.models import Member as member_models
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -30,6 +31,46 @@ COUNT_PER_PAGE = 20
 class lottery_prize(resource.Resource):
 	app = 'apps/lottery'
 	resource = 'lottery_prize'
+
+	def api_get(request):
+		"""
+		响应GET
+		"""
+		lottery_id = request.GET['id']
+		member_id = request.member.id
+		all_prize_type_list = ['integral', 'coupon', 'entity']
+		lotteries = app_models.lottoryRecord.objects(belong_to=lottery_id, member_id=member_id, prize_type__in=all_prize_type_list)
+
+		data = [{
+			'created_at': l.created_at,
+			'prize_name': l.prize_name,
+			'prize_data': l.prize_data
+		} for l in lotteries]
+		#获取当前用户剩余积分
+		left_integral = member_models.objects.get(id=member_id).integral
+		response = create_response(200)
+		response.data.history = data
+		response.data.left_integral = left_integral
+
+		return response.get_response()
+
+	def api_post(request):
+		"""
+		响应POST
+		"""
+		tel = request.POST['tel']
+		lottery_id = request.POST['id']
+		member_id = request.member.id
+		try:
+			if tel:
+				latest_record = app_models.lottoryRecord.objects(member_id=member_id, belong_to=lottery_id).first()
+				latest_record.update(set__tel=tel)
+			response = create_response(200)
+		except:
+			response = create_response(500)
+			response.errMsg = u'更新数据失败'
+		return response.get_response()
+
 
 	def api_put(request):
 		"""
