@@ -138,7 +138,7 @@
                 if(this.speed > 50) this.speed -= 10;
             }else{
                 console.log('prize:'+this.prize+' index:'+this.index);
-                if(this.speed >= 500 && ((this.prize == 0 && this.index == 7) || this.prize == this.index)){
+                if(this.speed >= 250 && ((this.prize == 0 && this.index == 7) || this.prize == this.index)){
                     clearTimeout(this.timer);
                     this.times = 0;
                     this.prize = -1;
@@ -147,7 +147,7 @@
                     this.popupResult();
                     return;
                 }
-                this.speed += 30;
+                this.speed += 20;
             }
             var that = this;
             this.timer = setTimeout(function(){
