@@ -64,10 +64,10 @@ class Mlottery(resource.Resource):
 					now_date_str = datetime.today().strftime('%Y-%m-%d')
 					last_lottery_date_str = lottery_participance.lottery_date.strftime('%Y-%m-%d')
 					if now_date_str != last_lottery_date_str:
-						if lottery_participance.limitation == 'once_per_day':
+						if record.limitation == 'once_per_day':
 							lottery_participance.update(set__can_play_count=1)
 							can_play_count = 1
-						elif lottery_participance.limitation == 'twice_per_day':
+						elif record.limitation == 'twice_per_day':
 							lottery_participance.update(set__can_play_count=2)
 							can_play_count = 2
 				else:

@@ -169,6 +169,7 @@ class lottery_prize(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'result': result,
+			'prize_type': lottery_prize_type,
 			'can_play_count': lottery_participance.can_play_count
 		}
 		return response.get_response()
