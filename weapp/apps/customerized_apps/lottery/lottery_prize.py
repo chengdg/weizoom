@@ -105,7 +105,7 @@ class lottery_prize(resource.Resource):
 
 		member = getattr(request, 'member', None)
 
-		if not member and expend == 0:
+		if not member.is_subscribed and expend != 0:
 			response = create_response(500)
 			response.errMsg = u'积分不足，请先关注'
 			return response.get_response()

@@ -3,13 +3,20 @@
 
 {% ifequal component.type 'appkit.lotterydescription' %}
     <div class="wui-surveyDescription wui-lotterydescription">
-        <div class="wui-i-roulette wui-i-title"></div>
+        <div class="wui-i-roulette wui-i-title">
+            <h1 class="wui-i-innerTitle">
+                <p class="xa-title">{{component.model.title}}</p>
+            </h1>
+        </div>
         <div class="wui-i-roulette wui-i-header xa-header">
             <p>您还有<b>
                 {% if component.model.limitation == 'once_per_user' %}1{% endif %}
                 {% if component.model.limitation == 'once_per_day' %}1{% endif %}
                 {% if component.model.limitation == 'twice_per_day' %}2{% endif %}
                 {% if component.model.limitation == 'none' %}0{% endif %}</b>次抽奖机会！</p>
+        </div>
+        <div class="wui-i-roulette wui-i-header xa-remainedIntegral">
+            <p>还剩<b></b>积分</p>
         </div>
         <div class="wui-i-roulette wui-i-body">
             <div class="xui-circle xa-circle xa-circle-unit-0"></div>
@@ -66,23 +73,47 @@
     class="wui-surveyDescription xa-prizeContainer"
     style="min-height:100px; background-color:#8d00ab;"
 >
-	<h1 class="wui-i-title wui-i-innerTitle xa-title">{{component.model.title}}</h1>
+    <div class="wui-i-subtitle">
+        <h2 class=" xa-subtitle">活动说明</h2>
+    </div>
 	<div class="wui-i-info">
-		<i class="wui-i-sprite xui-sprite-timerange"></i>
+        <div class="wui-i-settings">
+            <div class="wui-i-settingTitle">奖项设置:</div>
+            <div class="wui-i-settingData xa-settingData">
+                <ul>
+                    <li data_cid="4">
+                        一等奖:<b></b>
+                    </li>
+                    <li data_cid=" 5">
+                        二等奖:<b></b>
+                    </li>
+                    <li data_cid=" 6">
+                        三等奖:<b></b>
+                    </li>
+                </ul>
+            </div>
+        </div>
 		<div class="wui-i-time">
-			<p class="wui-i-start_time">{{component.model.start_time}}</p>
-            至<p class="wui-i-end_time">{{component.model.end_time}}</p>
+			活动时间:<p class="wui-i-start_time">{{component.model.start_time}}</p>
+            -<p class="wui-i-end_time">{{component.model.end_time}}</p>
 		</div>
+        <!--
         <i class="wui-i-sprite xui-sprite-prize"></i>
         <div class="wui-i-prize">
             参与送<b class="xa-delivery">{{component.model.delivery}}</b>积分
         </div>
-	</div>
-    <div class="wui-i-record">
+        -->
+        <div class="wui-i-record">
+            <div class="wui-i-recordTitle">中奖历史:</div>
+            <div class="wui-i-recordData xa-recordData">
+                <ul>
 
-    </div>
-    <div class="wui-i-description xa-description" style="margin: 0; color: white">
-		{{component.model.description|safe}}
+                </ul>
+            </div>
+        </div>
+        <div class="wui-i-description xa-description" style="margin: 0; color: white">
+            {{component.model.description|safe}}
+        </div>
 	</div>
 </div>
 {% endifequal %}

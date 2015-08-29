@@ -94,5 +94,16 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 				$target.html("<img style='height:50px;width:50px;vertical-align:middle;' src='"+image.url+"' alt='"+alt+"'>");
 			}
 		},
+		prize: function($node, model, value, $propertyViewNode) {
+			if(value && value.data){
+				var data_cid = $propertyViewNode.attr('data-dynamic-cid');
+				var $li_b = $node.find('.wui-i-settingData li[data_cid="'+data_cid+'"]').find('b');
+				if(value.type == 'coupon'){
+					$li_b.html(value.data.name);
+				}else{
+					$li_b.html(value.data);
+				}
+			}
+		}
 	}
 });

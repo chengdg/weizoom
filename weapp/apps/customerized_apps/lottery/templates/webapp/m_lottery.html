@@ -92,9 +92,6 @@
         border-radius: 3px;
         width: 150px;
     }
-    .wui-resultDialog>.wui-i-bottom button{
-        display: block;
-    }
     .wui-resultDialog .wui-i-content button{
         width: 70px;
         color: white;
@@ -178,7 +175,8 @@
          * @param options 'prize_type': 'entity','prize_name': 'iphone10'
          */
         ResultDialog.prototype.render = function(options){
-            var prize_type = options?options.prize_type||'timesout':'timesout';
+            var prize_type = options ? options.prize_type||'timesout' : 'timesout';
+            var delay = options ? options.delay || false : false;
             this.$entityContent.hide();
             this.$el.hide();
             if(prize_type == 'entity'){
@@ -201,8 +199,18 @@
                 this.$title.css('visibility','hidden');
                 this.$contentHeader.html("您今天的抽奖机会已经用完了，<br>明天再来吧~");
             }
-            this.$mask.show();
-            this.$el.show();
+            var that = this;
+            if(delay){
+                setTimeout(function(){
+                    that.$mask.show();
+                    that.$el.show();
+                }, 1000);
+            }else{
+                that.$mask.show();
+                that.$el.show();
+            }
+
+
         };
         ResultDialog.prototype.close = function(){
             this.$mask.hide();

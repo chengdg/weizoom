@@ -150,10 +150,18 @@
     font-size: 24px;
     font-weight: bold;
 }
+.wui-lotterydescription .wui-i-innerTitle{
+	text-align: center;
+    width: 100%;
+	padding-top: 92px;
+	font-size: 1.3rem;
+	color: whitesmoke;
+}
 .wui-surveyDescription .wui-i-subtitle {
     margin-top: 10px;
-    color: #A0A0A0;
+    color: whitesmoke;
     font-size: 19px;
+	text-align: center;
 }
 .wui-surveyDescription .wui-i-description {
 	margin-top: 10px;
@@ -162,8 +170,8 @@
 }
 .wui-surveyDescription .wui-i-info {
 	border-top: solid 1px #E5E5E5;
-    padding: 25px 0px 5px 0px;
-    color: #999;
+    padding: 25px 0 5px 0;
+    color: whitesmoke;
 }
 .wui-surveyDescription img{
 	padding-top:10px;
@@ -282,7 +290,7 @@
 .wui-i-time,.wui-i-prize{
 	margin-top: 5px;
 	min-height: 26px;
-	margin-left: 30px;
+	/*margin-left: 30px;*/
 }
 .xui-sprite-timerange,.xui-sprite-prize{
 	background: url('/termite_static/img/m_sprite.png') no-repeat;
