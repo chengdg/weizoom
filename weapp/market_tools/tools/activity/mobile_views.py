@@ -236,6 +236,7 @@ def get_member_activites(request):
 			events_items.append({
 				'id': str(event_id),
 				'name': event_details.name,
+				'url': '/apps/event/m_event/?webapp_owner_id=%d&id=%s' % (event_details.owner_id, str(event_id)),
 				'participant_time': event.created_at.strftime('%m月%d日')
 			})
 		except:
@@ -250,6 +251,7 @@ def get_member_activites(request):
 			votes_items.append({
 				'id': str(vote_id),
 				'name': vote_details.name,
+				'url': '/apps/event/m_vote/?webapp_owner_id=%d&id=%s' % (vote_details.owner_id, str(vote_id)),
 				'participant_time': vote.created_at.strftime('%m月%d日')
 			})
 		except:
@@ -264,6 +266,7 @@ def get_member_activites(request):
 			surveies_items.append({
 				'id': str(survey_id),
 				'name': survey_details.name,
+				'url': '/apps/event/m_survey/?webapp_owner_id=%d&id=%s' % (survey_details.owner_id, str(survey_id)),
 				'participant_time': survey.created_at.strftime('%m月%d日')
 			})
 		except:
@@ -278,6 +281,7 @@ def get_member_activites(request):
 			lotteries_items.append({
 				'id': str(lottery_id),
 				'name': lottery_details.name,
+				'url': '/apps/lottery/m_lottery/?webapp_owner_id=%d&id=%s' % (lottery_details.owner_id, str(lottery_id)),
 				'participant_time': lottery.created_at.strftime('%m月%d日')
 			})
 		except:

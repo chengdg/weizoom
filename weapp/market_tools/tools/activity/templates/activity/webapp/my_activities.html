@@ -64,22 +64,41 @@
 {% block content-panel %}
 <div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myActivityPage wui-swiper">
         <div class="wui-swiper-tabs">
-            <a href="javascript:void(0)" class="wui-inner-active"><span class="wui-inner-tabTitle mt5 em85 c65">我的活动</span><i></i></a>
-            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">我的抽奖</span><i></i></a>
-{#            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">我的投票</span></a>#}
+            <a href="javascript:void(0)" class="wui-inner-active"><span class="wui-inner-tabTitle mt5 em85 c65">我的抽奖</span><i></i></a>
+            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">我的活动</span><i></i></a>
         </div>
         <div class="wui-swiper-container" style="margin-top:47px;">
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide" id="xa-wrapper">
                     <div class="wui-content-slide">
+                        {% if lotteries_items %}
+                            {% for lotteries_item in lotteries_items %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl15 pr15">
+                                    <a href="{{ lotteries_item.url }}">
+                                        <div class="xui-i-title">
+                                          <i class="wui-my_activities_lottery"></i><span class="disTc pl15 em1">{{ lotteries_item.name }}</span>
+                                        </div>
+                                        <div class="xui-i-time">{{ lotteries_item.participant_time }}参加了抽奖</div>
+                                    </a>
+                                </li>
+                                </ul>
+                                {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="wui-content-slide">
                         {% if events_items %}
                             {% for events_item in events_items %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl10 pr15">
-                                    <div class="xui-i-title">
-                                      <i class="wui-my_activities_event"></i><span class="disTc pl15 em1">{{ events_item.name }}</span>
-                                    </div>
-                                    <div class="xui-i-time">{{ events_item.participant_time }}参加了活动报名</div>
+                                    <a href="{{ events_item.url }}">
+                                        <div class="xui-i-title">
+                                            <i class="wui-my_activities_event"></i><span class="disTc pl15 em1">{{ events_item.name }}</span>
+                                        </div>
+                                        <div class="xui-i-time">{{ events_item.participant_time }}参加了活动报名</div>
+                                    </a>
                                 </li>
                                 </ul>
                             {% endfor %}
@@ -88,10 +107,12 @@
                             {% for votes_item in votes_items %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl15 pr15">
-                                    <div class="xui-i-title">
-                                      <i class="wui-my_activities_vote"></i><span class="disTc pl15 em1">{{ votes_item.name }}</span>
-                                    </div>
-                                    <div class="xui-i-time">{{ votes_item.participant_time }}参加了微信投票</div>
+                                    <a href="{{ votes_item.url }}">
+                                        <div class="xui-i-title">
+                                          <i class="wui-my_activities_vote"></i><span class="disTc pl15 em1">{{ votes_item.name }}</span>
+                                        </div>
+                                        <div class="xui-i-time">{{ votes_item.participant_time }}参加了微信投票</div>
+                                    </a>
                                 </li>
                                 </ul>
                             {% endfor %}
@@ -100,29 +121,15 @@
                             {% for surveies_item in surveies_items %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl15 pr15">
-                                    <div class="xui-i-title">
-                                      <i class="wui-my_activities_survey"></i><span class="disTc pl15 em1">{{ surveies_item.name }}</span>
-                                    </div>
-                                    <div class="xui-i-time">{{ surveies_item.participant_time }}参加了用户调研</div>
+                                    <a href="{{ surveies_item.url }}">
+                                        <div class="xui-i-title">
+                                          <i class="wui-my_activities_survey"></i><span class="disTc pl15 em1">{{ surveies_item.name }}</span>
+                                        </div>
+                                        <div class="xui-i-time">{{ surveies_item.participant_time }}参加了用户调研</div>
+                                    </a>
                                 </li>
                                 </ul>
                             {% endfor %}
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="wui-swiper-slide">
-                    <div class="wui-content-slide">
-                        {% if lotteries_items %}
-                            {% for lotteries_item in lotteries_items %}
-                                <ul class="xui-listItem">
-                                <li data-icon="true" class="xui-listInner pl15 pr15">
-                                    <div class="xui-i-title">
-                                      <i class="wui-my_activities_lottery"></i><span class="disTc pl15 em1">{{ lotteries_item.name }}</span>
-                                    </div>
-                                    <div class="xui-i-time">{{ lotteries_item.participant_time }}参加了抽奖</div>
-                                </li>
-                                </ul>
-                                {% endfor %}
                         {% endif %}
                     </div>
                 </div>
