@@ -269,15 +269,16 @@ def get_member_activites(request):
 		except:
 			pass
 	#抽奖
-	lotteres = lottery_models.lotteryParticipance.objects.filter(member_id=member.id)
-	lotteres_items = []
-	for lottery in lotteres:
+	lotteries = lottery_models.lottoryRecord.objects.filter(member_id=member.id)
+	lotteries_items = []
+	for lottery in lotteries:
 		try:
 			lottery_id = lottery.belong_to
 			lottery_details = lottery_models.lottery.objects.get(id=lottery_id )
-			lotteres_items.append({
+			lotteries_items.append({
 				'id': str(lottery_id),
-				'name': lottery_details.name
+				'name': lottery_details.name,
+				'participant_time': lottery.created_at.strftime('%m月%d日')
 			})
 		except:
 			pass
@@ -287,7 +288,7 @@ def get_member_activites(request):
 		'events_items': events_items,
 		'votes_items': votes_items,
 		'surveies_items': surveies_items,
-		'lotteres_items': lotteres_items,
+		'lotteries_items': lotteries_items,
 		'is_hide_weixin_option_menu':False
 	})
 	return render_to_response('activity/webapp/my_activities.html', c)
