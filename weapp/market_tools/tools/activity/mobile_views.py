@@ -227,7 +227,7 @@ def get_member_activites(request):
 	webapp_user = request.webapp_user
 	member = member_util.get_member(request)
 	#活动
-	events = event_models.eventParticipance.objects.filter(member_id=member.id)
+	events = event_models.eventParticipance.objects.filter(member_id=member.id).order_by('-created_at')
 	events_items = []
 	for event in events:
 		try:
@@ -242,7 +242,7 @@ def get_member_activites(request):
 		except:
 			pass
 	#投票
-	votes = vote_models.voteParticipance.objects.filter(member_id=member.id)
+	votes = vote_models.voteParticipance.objects.filter(member_id=member.id).order_by('-created_at')
 	votes_items = []
 	for vote in votes:
 		try:
@@ -257,7 +257,7 @@ def get_member_activites(request):
 		except:
 			pass
 	#调研
-	surveies = survey_models.surveyParticipance.objects.filter(member_id=member.id)
+	surveies = survey_models.surveyParticipance.objects.filter(member_id=member.id).order_by('-created_at')
 	surveies_items = []
 	for survey in surveies:
 		try:
@@ -272,7 +272,7 @@ def get_member_activites(request):
 		except:
 			pass
 	#抽奖
-	lotteries = lottery_models.lottoryRecord.objects.filter(member_id=member.id)
+	lotteries = lottery_models.lottoryRecord.objects.filter(member_id=member.id).order_by('-created_at')
 	lotteries_items = []
 	for lottery in lotteries:
 		try:
