@@ -253,12 +253,12 @@ PROMOTION_NAV = {
             'url': '/mall2/issuing_coupons_record_list/',
             'need_permissions': ['manage_send_coupon', ]
         },
-        {
-            'name': MALL_PROMOTION_ORDER_RED_ENVELOPE,
-            'title': u'分享红包',
-            'url': '/mall2/red_envelope_rule_list/',
-            'need_permissions': ['manage_order_red_envelope', ]
-        }
+        # {
+        #     'name': MALL_PROMOTION_ORDER_RED_ENVELOPE,
+        #     'title': u'分享红包',
+        #     'url': '/mall2/red_envelope_rule_list/',
+        #     'need_permissions': ['manage_order_red_envelope', ]
+        # }
     ]
 }
 
