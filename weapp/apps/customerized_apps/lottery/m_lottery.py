@@ -52,7 +52,6 @@ class Mlottery(resource.Resource):
 				activity_status = u'已结束'
 
 			project_id = 'new_app:lottery:%s' % record.related_page_id
-
 			if request.member:
 				lottery_participance = app_models.lotteryParticipance.objects(belong_to=id, member_id=request.member.id)
 				participance_data_count = lottery_participance.count()
@@ -74,6 +73,7 @@ class Mlottery(resource.Resource):
 					can_play_count = 1
 
 				lottery_limitation = record.limitation_times
+				print lottery_limitation
 				if not lottery_participance or lottery_participance.can_play_count >= lottery_limitation:
 					lottery_status = True
 
@@ -81,7 +81,6 @@ class Mlottery(resource.Resource):
 		request.GET.update({"project_id": project_id})
 		request.GET._mutable = False
 		html = pagecreater.create_page(request, return_html_snippet=True)
-
 		c = RequestContext(request, {
 			'lottery_status': lottery_status,
 			'can_play_count': can_play_count,
