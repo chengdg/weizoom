@@ -152,7 +152,7 @@ def get_result(id,member_id):
 	vote_detail['end_time'] = vote_vote['end_time'].strftime('%Y-%m-%d %H:%M')
 
 	votes = app_models.voteParticipance.objects(belong_to=id)
-	member_vote_termite = app_models.voteParticipance.objects.get(belong_to=id,member_id=member_id).termite_data
+	member_vote_termite = app_models.voteParticipance.objects.filter(belong_to=id,member_id=member_id).order_by('-created_at').first().termite_data
 	member_termite_select = {}
 	member_termite_shortcuts = {}
 	for k,member_termite in member_vote_termite.items():
