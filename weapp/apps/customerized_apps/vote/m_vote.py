@@ -74,9 +74,8 @@ class Mvote(resource.Resource):
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, member_id=request.member.id).count()
 				if participance_data_count == 0 and request.webapp_user:
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
+
 			is_already_participanted = (participance_data_count > 0)
-
-
 			if  is_already_participanted:
 				member_id = request.member.id
 				vote_detail,result_list = get_result(id,member_id)
