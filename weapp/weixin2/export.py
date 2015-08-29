@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-from apps.customerized_apps import *
 
 UNBIND_ACCOUNT_FIRST_NAVS = [{
     'name': u'微信',
@@ -252,12 +250,12 @@ APP_NAV = {
 			'url': '/apps/lottery/lotteries/',
 			'need_permissions': []
         },
-        {
-            'name': "feedbacks",
-			'title': "用户反馈",
-			'url': '/apps/feedback/feedbacks/',
-			'need_permissions': []
-        },
+        # {
+        #     'name': "feedbacks",
+			# 'title': "用户反馈",
+			# 'url': '/apps/feedback/feedbacks/',
+			# 'need_permissions': []
+        # },
          {
             'name': "surveies",
 			'title': "用户调研",
@@ -275,6 +273,12 @@ APP_NAV = {
 			'title': "微信投票",
 			'url': '/apps/vote/votes/',
 			'need_permissions': []
+        },
+        {
+            'name': "orderRedEnvelope",
+            'title': u'分享红包',
+            'url': '/apps/promotion/red_envelope_rule_list/',
+            'need_permissions': ['manage_order_red_envelope', ]
         }
     ]
 }
