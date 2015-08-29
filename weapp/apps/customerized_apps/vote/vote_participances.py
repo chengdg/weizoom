@@ -128,143 +128,140 @@ class voteParticipances_Export(resource.Resource):
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
-		# try:
-		import xlwt
-		data = app_models.voteParticipance.objects(belong_to=export_id)
-		fields_raw = []
-		fields_pure = []
-		export_data = []
+		try:
+			import xlwt
+			data = app_models.voteParticipance.objects(belong_to=export_id)
+			fields_raw = []
+			fields_pure = []
+			export_data = []
 
-		#from sample to get fields4excel_file
-		fields_raw.append(u'编号')
-		fields_raw.append(u'用户名')
-		fields_raw.append(u'提交时间')
-		sample = data[0]
+			#from sample to get fields4excel_file
+			fields_raw.append(u'编号')
+			fields_raw.append(u'用户名')
+			fields_raw.append(u'提交时间')
+			sample = data[0]
 
-		fields_selec = []
-		fields_qa= []
-		fields_shortcuts = []
+			fields_selec = []
+			fields_qa= []
+			fields_shortcuts = []
 
-		sample_tm = sample['termite_data']
+			sample_tm = sample['termite_data']
 
-		for item in sample_tm:
-			if sample_tm[item]['type']=='appkit.qa':
-				if item in fields_qa:
-					pass
+			for item in sample_tm:
+				if sample_tm[item]['type']=='appkit.qa':
+					if item in fields_qa:
+						pass
+					else:
+						fields_qa.append(item)
+				if sample_tm[item]['type']=='appkit.selection':
+					if item in fields_selec:
+						pass
+					else:
+						fields_selec.append(item)
+				if sample_tm[item]['type']=='appkit.shortcuts':
+					if item in fields_shortcuts:
+						pass
+					else:
+						fields_shortcuts.append(item)
+			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+
+
+			for field in fields_raw:
+				if '_' in field:
+					purename = field.split('_')[1]
+					if purename in trans2zh:
+						fields_pure.append(trans2zh[purename])
+					else:
+						fields_pure.append(purename)
 				else:
-					fields_qa.append(item)
-			if sample_tm[item]['type']=='appkit.selection':
-				if item in fields_selec:
-					pass
+					fields_pure.append(field)
+
+			#username(member_id)
+			member_ids = [record['member_id'] for record in data ]
+			members = member_models.Member.objects.filter(id__in = member_ids)
+			member_id2name ={}
+			for member in members:
+				m_id = member.id
+				if member.is_subscribed == True:
+					u_name = member.username
 				else:
-					fields_selec.append(item)
-			if sample_tm[item]['type']=='appkit.shortcuts':
-				if item in fields_shortcuts:
-					pass
+					u_name = u'非会员'
+				if m_id not in member_id2name:
+					member_id2name[m_id] = u_name
 				else:
-					fields_shortcuts.append(item)
-		fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+					member_id2name[m_id] = u_name
+			#processing data
+			num = 0
+			for record in data:
+				selec =[]
+				selec_v =[]
+				qa = []
+				shortcuts =[]
+				export_record = []
 
+				num = num+1
+				name = member_id2name[record['member_id']]
+				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
-		for field in fields_raw:
-			if '_' in field:
-				purename = field.split('_')[1]
-				if purename in trans2zh:
-					fields_pure.append(trans2zh[purename])
-				else:
-					fields_pure.append(purename)
-			else:
-				fields_pure.append(field)
+				for s in fields_selec:
+					s_i = record[u'termite_data'][s][u'value']
+					for i in s_i:
+						if s_i[i]['isSelect'] == True:
+							selec_v.append(i.split('_')[1])
+					selec.append(selec_v)
+				for s in fields_qa:
+					s_v = record[u'termite_data'][s][u'value']
+					qa.append(s_v)
+				for s in fields_shortcuts:
+					s_v = record[u'termite_data'][s][u'value']
+					shortcuts.append(s_v)
 
-		#username(member_id)
-		member_ids = [record['member_id'] for record in data ]
-		members = member_models.Member.objects.filter(id__in = member_ids)
-		member_id2name ={}
-		for member in members:
-			m_id = member.id
-			if member.is_subscribed == True:
-				u_name = member.username
-			else:
-				u_name = u'非会员'
-			if m_id not in member_id2name:
-				member_id2name[m_id] = u_name
-			else:
-				member_id2name[m_id] = u_name
-		#processing data
-		num = 0
-		for record in data:
-			selec =[]
-			qa = []
-			shortcuts =[]
-			export_record = []
+				# don't change the order
+				export_record.append(num)
+				export_record.append(name)
+				export_record.append(create_at)
 
-			num = num+1
-			name = member_id2name[record['member_id']]
-			create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+				for item in selec:
+					export_record.append(item)
+				for item in qa:
+					export_record.append(item)
+				for item in shortcuts:
+					export_record.append(item)
 
-			for s in fields_selec:
-				s_i = record[u'termite_data'][s][u'value']
-				for i in s_i:
-					if s_i[i]['isSelect'] == True:
-						selec.append(i.split('_')[1])
-			for s in fields_qa:
-				s_v = record[u'termite_data'][s][u'value']
-				qa.append(s_v)
-			for s in fields_shortcuts:
-				s_v = record[u'termite_data'][s][u'value']
-				shortcuts.append(s_v)
+				export_data.append(export_record)
 
-			# don't change the order
-			export_record.append(num)
-			export_record.append(name)
-			export_record.append(create_at)
+			#workbook/sheet
+			wb = xlwt.Workbook(encoding='utf-8')
+			ws = wb.add_sheet('id%s'%export_id)
+			header_style = xlwt.XFStyle()
 
-			for item in selec:
-				export_record.append(item)
-			for item in qa:
-				export_record.append(item)
-			for item in shortcuts:
-				export_record.append(item)
+			##write fields
+			row = col = 0
+			for h in fields_pure:
+				ws.write(row,col,h)
+				col += 1
 
-			export_data.append(export_record)
+			##write data
+			print export_data
+			if export_data:
+				row = 0
+				lens = len(export_data[0])
+				for record in export_data:
+					row +=1
+					for col in range(lens):
+						if type(record[col]) == list and len(record[col])>=2:
+							ws.write(row,col,u",".join(record[col]))
+						else:
+							ws.write(row,col,record[col])
+				try:
+					wb.save(export_file_path)
+				except:
+					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print '/static/upload/%s'%excel_file_name
 
-		#workbook/sheet
-		wb = xlwt.Workbook(encoding='utf-8')
-		ws = wb.add_sheet('id%s'%export_id)
-		header_style = xlwt.XFStyle()
-
-		##write fields
-		row = col = 0
-		for h in fields_pure:
-			ws.write(row,col,h)
-			col += 1
-
-		##write data
-		print '==== Into Write File ========'
-		print '--- export_data----'
-		print export_data
-		if export_data:
-			row = 0
-			lens = len(export_data[0])
-			print 'export_data[0]===>',export_data[0]
-			print 'lens==>',lens
-			print '=== Into: for record in export_data ==='
-			for record in export_data:
-				print 'record :===>',record
-				row +=1
-				for col in range(lens):
-					print 'col:==>',col
-					ws.write(row,col,record[col])
-			try:
-				wb.save(export_file_path)
-				print '=========save File ==========='
-			except:
-				print 'EXPORT EXCEL FILE SAVE ERROR'
-				print '/static/upload/%s'%excel_file_name
-
-		response = create_response(200)
-		response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
-		# except:
-		# 	response = create_response(500)
+			response = create_response(200)
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+		except:
+			response = create_response(500)
 
 		return response.get_response()
