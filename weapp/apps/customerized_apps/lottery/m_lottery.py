@@ -44,12 +44,14 @@ class Mlottery(resource.Resource):
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 			data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-			if data_start_time <= now_time and now_time < data_end_time:
-				record.update(set__status=app_models.STATUS_RUNNING)
-				activity_status = u'进行中'
-			elif now_time >= data_end_time:
-				record.update(set__status=app_models.STATUS_STOPED)
-				activity_status = u'已结束'
+			data_status = record.status
+			if data_status <= 1:
+				if data_start_time <= now_time and now_time < data_end_time:
+					record.update(set__status=app_models.STATUS_RUNNING)
+					activity_status = u'进行中'
+				elif now_time >= data_end_time:
+					record.update(set__status=app_models.STATUS_STOPED)
+					activity_status = u'已结束'
 
 			project_id = 'new_app:lottery:%s' % record.related_page_id
 
@@ -64,10 +66,10 @@ class Mlottery(resource.Resource):
 					now_date_str = datetime.today().strftime('%Y-%m-%d')
 					last_lottery_date_str = lottery_participance.lottery_date.strftime('%Y-%m-%d')
 					if now_date_str != last_lottery_date_str:
-						if lottery_participance.limitation == 'once_per_day':
+						if record.limitation == 'once_per_day':
 							lottery_participance.update(set__can_play_count=1)
 							can_play_count = 1
-						elif lottery_participance.limitation == 'twice_per_day':
+						elif record.limitation == 'twice_per_day':
 							lottery_participance.update(set__can_play_count=2)
 							can_play_count = 2
 				else:
