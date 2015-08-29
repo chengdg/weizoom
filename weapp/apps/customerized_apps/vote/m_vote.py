@@ -108,7 +108,7 @@ class Mvote(resource.Resource):
 					'resource': "vote",
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isPC': isPC,
-					# 'isMember': isMember,
+					'isMember': isMember,
 					'auth_appid_info': auth_appid_info
 				})
 				return render_to_response('workbench/wepage_webapp_page.html', c)
@@ -130,8 +130,13 @@ class resultVote(resource.Resource):
 		if 'id' in request.GET:
 			id = request.GET['id']
 			member_id = request.GET['member_id']
-			print id,member_id
 			vote_detail,result_list = get_result(id,member_id)
+			isMember = request.member.is_subscribed
+			if not isMember:
+				from weixin.user.util import get_component_info_from
+				component_info = get_component_info_from(request)
+				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 			c = RequestContext(request, {
 				'vote_detail': vote_detail,
 				'record_id': id,
@@ -139,7 +144,9 @@ class resultVote(resource.Resource):
 				'app_name': "vote",
 				'resource': "vote",
 				'q_vote': result_list,
-				'hide_non_member_cover': True #非会员也可使用该页面
+				'hide_non_member_cover': True, #非会员也可使用该页面
+				'isMember': isMember,
+				'auth_appid_info': auth_appid_info
 			})
 			return render_to_response('vote/templates/webapp/result_vote.html', c)
 

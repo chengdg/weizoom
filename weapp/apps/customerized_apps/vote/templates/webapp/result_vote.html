@@ -94,7 +94,7 @@
         {% endfor %}
         {% if vote_detail.prize_type != 'no_prize' %}
             <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >
-                <a class="xui-btn xui-btn-primary xa-submitTermite" style="" href="javascript:void(0);" data-role="button">个人中心</a>
+                <a class="xui-btn xui-btn-primary" style="" href="javascript:void(0);" data-role="button">个人中心</a>
             </div>
         {% else %}
             <div style="min-height: 25px;"></div>
@@ -113,12 +113,12 @@
             });
         });
         $('.xa-toUserCenter').on('click', function(event) {
-            if (W.memberId){
+            if (W.isMember){
                 redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
             }
             else{
                 $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                '<img height="195px" width="195px" src="{% if auth_appid_info %}{{auth_appid_info.qrcode_url}}{% endif %}">' +
+                '<img height="195px" width="195px" src="'+ W.qrcodeUrl+'">' +
                 '</div><div></div>');
             }
         });
