@@ -26,22 +26,26 @@
     a:link,a:hover,a:visited{
         color:#333;
     }
-    .wui-my_activities_event,.wui-my_activities_survey,.wui-my_activities_vote{
+    .wui-my_activities_event,.wui-my_activities_survey,.wui-my_activities_vote,.wui-my_activities_lottery{
         background: url(/static_v2/img/userCenterMyActivitiesSprite.png) no-repeat;
-        background-size: 100px 30px;
+        background-size: 135px 30px;
         display: block;
         height: 30px;
-        width: 36px;
+        width: 32px;
         float: left;
     }
     .wui-my_activities_event {
-      background-position: -30px 0;
+        background-position: -30px 0;
+        width: 35px;
     }
     .wui-my_activities_vote {
-      background-position: -66px 0;
+      background-position: -68px 0;
     }
     .wui-my_activities_survey {
-      background-position: 2px 0;
+      background-position: 0 0;
+    }
+    .wui-my_activities_lottery {
+      background-position: -100px 0;
     }
     .xui-i-title .disTc {
       font-size: 18px;
@@ -66,106 +70,62 @@
         </div>
         <div class="wui-swiper-container" style="margin-top:47px;">
             <div class="wui-swiper-wrapper">
-                <div class="wui-swiper-slide">
-                    {% if events_items %}
-                        {% for events_item in events_items %}
-                            <ul class="xui-listItem">
-                            <li data-icon="true" class="xui-listInner pl10 pr15">
-                                <div class="xui-i-title">
-                                  <i class="wui-my_activities_event"></i><span class="disTc pl15 em1">{{ events_item.name }}</span>
-                                </div>
-                                <div class="xui-i-time">{{ events_item.participant_time }}参加了活动报名</div>
-                            </li>
-                            </ul>
-                        {% endfor %}
-                    {% endif %}
-                    {% if votes_items %}
-                        {% for votes_item in votes_items %}
-                            <ul class="xui-listItem">
-                            <li data-icon="true" class="xui-listInner pl15 pr15">
-                                <div class="xui-i-title">
-                                  <i class="wui-my_activities_vote"></i><span class="disTc pl15 em1">{{ votes_item.name }}</span>
-                                </div>
-                                <div class="xui-i-time">{{ votes_item.participant_time }}参加了微信投票</div>
-                            </li>
-                            </ul>
-                        {% endfor %}
-                    {% endif %}
-                    {% if surveies_items %}
-                        {% for surveies_item in surveies_items %}
-                            <ul class="xui-listItem">
-                            <li data-icon="true" class="xui-listInner pl15 pr15">
-                                <div class="xui-i-title">
-                                  <i class="wui-my_activities_survey"></i><span class="disTc pl15 em1">{{ surveies_item.name }}</span>
-                                </div>
-                                <div class="xui-i-time">{{ surveies_item.participant_time }}参加了用户调研</div>
-                            </li>
-                            </ul>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                <div class="wui-swiper-slide">
-                    {% if lotteres_items %}
-                    <ul class="xui-listItem">
-                        {% for lotteres_item in lotteres_items %}
-                        <li data-role="button" data-icon="true" class="xui-listInner pl10 pr15">
-                            <a href="{{ lotteres_item.url }}">
-                                    <div>
-                                        <span class="mr5 pl5 em1">{{ lotteres_item.prize_name }}</span>
-                                        <span class="c65 em1">
-                                            {% if lottery_record.prize_type == 1 %}
-                                            优惠劵{{lottery_record.prize_money}}元
-                                            {% endif %}
-                                            {% if lottery_record.prize_type == 2 %}
-                                            兑换码
-                                            {% endif %}
-                                            {% if lottery_record.prize_type == 3 %}
-                                            积分{{lottery_record.prize_source}}
-                                            {% endif %}
-                                            {% if lottery_record.prize_type == 0 %}
-                                            实物奖品{{lottery_record.prize_source}}
-                                            {% endif %}
-                                        </span>
+                <div class="wui-swiper-slide" id="xa-wrapper">
+                    <div class="wui-content-slide">
+                        {% if events_items %}
+                            {% for events_item in events_items %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl10 pr15">
+                                    <div class="xui-i-title">
+                                      <i class="wui-my_activities_event"></i><span class="disTc pl15 em1">{{ events_item.name }}</span>
                                     </div>
-                                    <span class="mt5 em7 pl5 pr10 c9">
-                                        {% if lottery_record.is_awarded %}
-                                        领奖日期：{{ lottery_record.awarded_at|date:'Y.m.d' }}
-                                        {% else %}
-                                        编号：{{lottery_record.prize_number}}
-                                        {% endif %}
-                                    </span>
-                                    {% if lottery_record.prize_type == 1 %}
-                                    <span class="mt5 em7 pl5 c9">
-                                        {% if lottery_record.is_awarded %}
-                                        过期日期：{{promotion.end_date|date:"Y-m-j H:i:s"}}
-                                        {% else %}
-                                        编号：{{lottery_record.prize_number}}
-                                        {% endif %}
-                                    </span>
-                                    {% endif %}
-                                </span>
-                                {% if lottery_record.prize_type == 0 %}
-                                <span class="disTc vm em9">
-                                    {% if lottery_record.is_awarded %}
-                                        已领取
-                                    {% else %}
-                                        <span class="xui-text-green">未领取</span>
-                                    {% endif %}
-                                </span>
-                                {% endif %}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <div class="error-info">
-                    您还没有奖品
+                                    <div class="xui-i-time">{{ events_item.participant_time }}参加了活动报名</div>
+                                </li>
+                                </ul>
+                            {% endfor %}
+                        {% endif %}
+                        {% if votes_items %}
+                            {% for votes_item in votes_items %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl15 pr15">
+                                    <div class="xui-i-title">
+                                      <i class="wui-my_activities_vote"></i><span class="disTc pl15 em1">{{ votes_item.name }}</span>
+                                    </div>
+                                    <div class="xui-i-time">{{ votes_item.participant_time }}参加了微信投票</div>
+                                </li>
+                                </ul>
+                            {% endfor %}
+                        {% endif %}
+                        {% if surveies_items %}
+                            {% for surveies_item in surveies_items %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl15 pr15">
+                                    <div class="xui-i-title">
+                                      <i class="wui-my_activities_survey"></i><span class="disTc pl15 em1">{{ surveies_item.name }}</span>
+                                    </div>
+                                    <div class="xui-i-time">{{ surveies_item.participant_time }}参加了用户调研</div>
+                                </li>
+                                </ul>
+                            {% endfor %}
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </div>
-{#                <div class="wui-swiper-slide">#}
-
-{#                </div>#}
+                <div class="wui-swiper-slide">
+                    <div class="wui-content-slide">
+                        {% if lotteries_items %}
+                            {% for lotteries_item in lotteries_items %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl15 pr15">
+                                    <div class="xui-i-title">
+                                      <i class="wui-my_activities_lottery"></i><span class="disTc pl15 em1">{{ lotteries_item.name }}</span>
+                                    </div>
+                                    <div class="xui-i-time">{{ lotteries_item.participant_time }}参加了抽奖</div>
+                                </li>
+                                </ul>
+                                {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
             
@@ -180,17 +140,20 @@
 {% block js %}
 <script src="/markettools_static/coupon/js/idangerous.swiper.js"></script>
 <script type="text/javascript">
+$(document).ready(function($) {
     var bodyWidth = window.document.body.clientWidth;
     var bodyHeight = window.document.body.clientHeight;
     var containerHeight = bodyHeight - 47;
     $(".wui-swiper-container").css({'height':containerHeight,'width': '100%' });
     $(".wui-swiper-slide").css('height', containerHeight );
-    // $("body").css('overflow-y', 'hidden');
+    $("body").css('overflow-y', 'hidden');
+    var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
     var tabsSwiper = new Swiper('.wui-swiper-container',{
         speed:500,
         onSlideChangeStart: function() {
             $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
             $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
         }
     });
     $(".wui-swiper-tabs a").on('touchstart mousedown',function(e){
@@ -198,6 +161,8 @@
         $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
         $(this).addClass('wui-inner-active');
         tabsSwiper.swipeTo($(this).index());
+        myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
     });
+});
 </script>
 {% endblock %}
