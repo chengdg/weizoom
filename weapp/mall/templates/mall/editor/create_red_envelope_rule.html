@@ -281,14 +281,14 @@ $(document).ready(function(){
     var args = $('.xa-form').serializeObject();
     W.getApi().call({
       method: 'put',
-      app: 'mall2',
+      app: 'apps/promotion',
       resource: 'red_envelope_rule',
       args: W.toFormData(args),
       scope: this,
       success: function() {
         W.showHint('success', '创建红包成功！');
         _.delay(function() {
-          window.location.href = '/mall2/red_envelope_rule_list/';
+          window.location.href = '/apps/promotion/red_envelope_rule_list/';
         }, 500)
       },
       error: function() {
