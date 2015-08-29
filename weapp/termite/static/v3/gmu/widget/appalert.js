@@ -67,7 +67,7 @@ var initDom = function(options) {
             var text = $link.text();
             if (text.replace(/(^\s*)|(\s*$)/g,'') === '个人中心' && !W.isMember){
                 $('.wui-appParticipantResult-Cover').html('<div class="wui-qrcode">' +
-                '<img height="195px" width="195px" src="'+W.qrcodeUrl+'">' +
+                '<img height="205px" width="205px" src="'+W.qrcodeUrl+'">' +
                 '</div><div>');
             }
             else{

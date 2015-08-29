@@ -32,7 +32,7 @@ class Msurvey(resource.Resource):
 			isPC = int(request.GET.get('isPC',0))
 			isPC = True if isPC else False
 			participance_data_count = 0
-			isMember = request.member.is_subscribed
+			isMember = request.member and request.member.is_subscribed
 			if 'new_app:' in id:
 				project_id = id
 				activity_status = u"未开始"
