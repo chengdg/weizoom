@@ -347,16 +347,9 @@
                         var $control = $controls.eq(i);
                         var inputType = $control.attr('data-input-type');
                         var controlType = $control.attr('data-control-type');
-                        var cid;
-                        if(controlType === 'appkit.shortcuts'){
-                            cid = $control.parents('ul').eq(0).attr('data-component-cid');
-                        }else{
-                            cid = $control.parent().attr('data-component-cid');
-                        }
-                        if (cid !=null){
-                           cid = cid.length<2 ? '0'+cid : cid;
-                        }
                         var name = $control.attr('data-input-name');
+                        var cid = i.toString();
+                        cid = cid.length<2 ? '0'+cid : cid;
                         name = cid+'_'+name;
                         if (inputType === 'text') {
                             var value = $.trim($control.find('input[type="text"]').val());
