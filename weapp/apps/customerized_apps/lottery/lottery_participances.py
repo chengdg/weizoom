@@ -44,13 +44,13 @@ class lotteryParticipances(resource.Resource):
 		else:
 			members = member_models.Member.get_members(request.user_profile.webapp_id)
 		member_ids = [member.id for member in members]
-		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
+		member_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		
 		params = {'belong_to':request.GET['id']}
-		if webapp_user_ids:
-			params['webapp_user_id__in'] = webapp_user_ids
+		if member_ids:
+			params['member_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if end_time:
@@ -71,18 +71,26 @@ class lotteryParticipances(resource.Resource):
 		"""
 		pageinfo, datas = lotteryParticipances.get_datas(request)
 		
-		webappuser2datas = {}
-		webapp_user_ids = set()
+		memberuser2datas = {}
+		member_ids = set()
 		for data in datas:
-			webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
-			webapp_user_ids.add(data.webapp_user_id)
+			memberuser2datas.setdefault(data.member_id, []).append(data)
+			member_ids.add(data.member_id)
 			data.participant_name = u'未知'
 			data.participant_icon = '/static/img/user-1.jpg'
 		
-		webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
-		if len(webappuser2member) > 0:
-			for webapp_user_id, member in webappuser2member.items():
-				for data in webappuser2datas.get(webapp_user_id, ()):
+		member_user2member = {}
+		members = member_models.Member.objects.filter(id__in = member_ids)
+		for member in members:
+			if member.id not in member_user2member:
+				member_user2member[member.id] = member
+			else:
+				member_user2member[member.id] = member
+
+
+		if len(member_user2member) > 0:
+			for member_id, member in member_user2member.items():
+				for data in memberuser2datas.get(member_id, ()):
 					data.participant_name = member.username_for_html
 					data.participant_icon = member.user_icon
 					data.created_at = member.created_at

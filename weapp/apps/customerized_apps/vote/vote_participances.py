@@ -194,6 +194,7 @@ class voteParticipances_Export(resource.Resource):
 			num = 0
 			for record in data:
 				selec =[]
+				selec_v =[]
 				qa = []
 				shortcuts =[]
 				export_record = []
@@ -206,7 +207,8 @@ class voteParticipances_Export(resource.Resource):
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
 						if s_i[i]['isSelect'] == True:
-							selec.append(i.split('_')[1])
+							selec_v.append(i.split('_')[1])
+					selec.append(selec_v)
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
@@ -240,13 +242,17 @@ class voteParticipances_Export(resource.Resource):
 				col += 1
 
 			##write data
+			print export_data
 			if export_data:
 				row = 0
 				lens = len(export_data[0])
 				for record in export_data:
 					row +=1
 					for col in range(lens):
-						ws.write(row,col,record[col])
+						if type(record[col]) == list and len(record[col])>=2:
+							ws.write(row,col,u",".join(record[col]))
+						else:
+							ws.write(row,col,record[col])
 				try:
 					wb.save(export_file_path)
 				except:
