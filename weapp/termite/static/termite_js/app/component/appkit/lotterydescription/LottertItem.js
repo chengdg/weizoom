@@ -42,6 +42,7 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
+			dialogParameter: '{"multiSelection": false}',
 			help: '格式：建议jpg.png 尺寸：50*50 不超过1M',
 			default: ''
 		}]

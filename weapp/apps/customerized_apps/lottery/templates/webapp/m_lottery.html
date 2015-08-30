@@ -112,7 +112,7 @@
     <div id="resultDialog" class="wui-resultDialog">
         <b class="wui-i-close xa-closeDialog">&#10005</b>
         <div class="wui-i-header">
-            <h2 class="wui-i-title xa-dialog-title">中奖了耶</h2>
+            <h2 class="wui-i-title xa-dialog-title"></h2>
         </div>
         <div class="wui-i-body xa-dialog-content">
             <div class="wui-i-contentHeader xa-dialog-contentHeader"></div>
@@ -176,18 +176,21 @@
          */
         ResultDialog.prototype.render = function(options){
             var prize_type = options ? options.prize_type||'timesout' : 'timesout';
+            var prize_name = options ? options.prize_name : '';
             var delay = options ? options.delay || false : false;
             this.$entityContent.hide();
             this.$el.hide();
+            this.$title.css('visibility','visible');
             if(prize_type == 'entity'){
-                this.$title.css('visibility','visible');
+                this.$title.html('中奖了耶');
                 this.$contentHeader.html("恭喜您获得了"+prize_name+'！');
                 this.$entityContent.show();
             }else if(prize_type == 'no_prize'){
-                this.$title.html('很遗憾').css('visibility','visible');
+                this.$title.html('很遗憾');
                 this.$contentHeader.html("没有中奖，再接再厉吧~");
                 this.$closeBtn.text('再来一次');
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
+                this.$title.html('中奖了耶');
                 var msg = prize_type == 'coupon' ? ('一张优惠券：'+prize_name): prize_name;
                 this.$contentHeader.html("恭喜您获得了"+msg+"！快去个人中心查看吧！");
                 this.$closeBtn.text('再来一次');
@@ -198,6 +201,7 @@
             }else if(prize_type == 'timesout'){
                 this.$title.css('visibility','hidden');
                 this.$contentHeader.html("您今天的抽奖机会已经用完了，<br>明天再来吧~");
+                this.$closeBtn.text('关闭');
             }
             var that = this;
             if(delay){
@@ -209,8 +213,6 @@
                 that.$mask.show();
                 that.$el.show();
             }
-
-
         };
         ResultDialog.prototype.close = function(){
             this.$mask.hide();
@@ -277,7 +279,7 @@
         };
         Roulette.prototype.stop = function(data){
             this.prize_type = data.prize_type;
-            this.prize_name = data.result;
+            this.prize_name = data.prize_name;
             var index = this.PRIZE[data.result];
             this.prize = parseInt(index);
         };
@@ -297,7 +299,8 @@
                     resultDialog = resultDialog || new ResultDialog();
                     resultDialog.render({
                         'prize_type': this.prize_type,
-                        'prize_name': this.prize_name
+                        'prize_name': this.prize_name,
+                        'delay': true
                     });
                     return;
                 }
@@ -323,8 +326,8 @@
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             window.lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
-                if(lottery.isRolling || !lottery_status){
-                    !lottery_status && resultDialog.render();
+                if(lottery.isRolling || !lottery_status || can_play_count<=0){
+                    if(!lottery.isRolling) resultDialog.render();
                     return false;
                 }else{
                     W.getApi().call({
@@ -337,14 +340,13 @@
                         },
                         success: function(data){
                             can_play_count = data.can_play_count;
-                            var last_times = parseInt($('.wui-lotterydescription .xa-header p>b').html());
-                            $('.wui-lotterydescription .xa-header p>b').html(--last_times);
+                            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
+                            $('.xa-remainedIntegral p>b').html(data.remained_integral);
                             lottery.roll();
                             lottery.stop(data);
-                            console.log('抽奖结束');
                         },
                         error: function(error){
-                            alert(error);
+                            alert(error.errMsg);
                         }
                     });
                 }
@@ -362,7 +364,20 @@
                     webapp_owner_id: W.webappOwnerId
                 },
                 success: function(data){
-                    $('.wui-i-record').html('中奖历史');
+                    $('.xa-remainedIntegral').find('p>b').html(data.remained_integral);
+                    var hisData = data.history;
+                    var len = hisData.length;
+                    if(len>0){
+                        var str_array = [];
+                        for(var i=len-1;i>=0;i--){
+                            str_array.push("<li>" + hisData.created_at + '  '+hisData.prize_title+'  '+ hisData.prize_data);
+                        }
+                        str_array = str_array.toString();
+                        $('.wui-i-record').find('.xa-recordData').html(str_array);
+                    }else{
+                        $('.wui-i-record').find('.xa-recordData').html('还未中奖~');
+                    }
+
                 },
                 error: function(error){
                     alert(error);

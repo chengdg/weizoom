@@ -42,15 +42,15 @@ class lottery_prize(resource.Resource):
 		lotteries = app_models.lottoryRecord.objects(belong_to=lottery_id, member_id=member_id, prize_type__in=all_prize_type_list)
 
 		data = [{
-			'created_at': l.created_at,
+			'created_at': l.created_at.strftime('%Y-%m-%d'),
 			'prize_name': l.prize_name,
-			'prize_data': l.prize_data
+			'prize_data': l.prize_data,
+			'prize_title': l.prize_title
 		} for l in lotteries]
 		#获取当前用户剩余积分
-		left_integral = member_models.objects.get(id=member_id).integral
 		response = create_response(200)
 		response.data.history = data
-		response.data.left_integral = left_integral
+		response.data.remained_integral = request.member.integral
 
 		return response.get_response()
 
@@ -105,7 +105,7 @@ class lottery_prize(resource.Resource):
 
 		member = getattr(request, 'member', None)
 
-		if not member.is_subscribed and expend != 0:
+		if member.integral < expend:
 			response = create_response(500)
 			response.errMsg = u'积分不足，请先关注'
 			return response.get_response()
@@ -128,10 +128,10 @@ class lottery_prize(resource.Resource):
 		if delivery_setting == 'false' or not lottery_participance.has_prize:
 			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
 		#扣除抽奖消耗的积分
-		member.consume_integral(expend, u'参与抽奖，获得参与积分')
+		member.consume_integral(expend, u'参与抽奖，消耗积分')
 		#判定是否中奖
 		lottery_prize_type = "no_prize"
-		lottery_prize_data = ""
+		lottery_prize_data = ''
 		if participants_count == 0 or (winner_count / float(participants_count) >= chance):
 			result = u'谢谢参与'
 		else:
@@ -182,8 +182,9 @@ class lottery_prize(resource.Resource):
 						prize_value = lottery_prize['prize_data']['name']
 				elif lottery_prize_type == 'integral':
 					#积分
-					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，获得参与积分')
-					prize_value = u'%d积分' % lottery_prize['prize_data']
+					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
+					lottery_prize_data = lottery_prize['prize_data']
+					prize_value = u'%d积分' % lottery_prize_data
 				else:
 					prize_value = lottery_prize['prize_data']
 
@@ -194,6 +195,7 @@ class lottery_prize(resource.Resource):
 			"belong_to": record_id,
 			"lottery_name": lottery.name,
 			"prize_type": lottery_prize_type,
+			"prize_title": result,
 			"prize_name": str(prize_value),
 			"prize_data": str(lottery_prize_data),
 			"created_at": now_datetime
@@ -205,15 +207,18 @@ class lottery_prize(resource.Resource):
 		lottery_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
 		#根据抽奖次数限制，更新可抽奖次数
 		lottery_participance.update(dec__can_play_count=1)
+		lottery_participance.reload()
 		#调整参与数量和中奖人数
 		if has_prize:
-			app_models.lottery.objects(id=record_id).update(**{"inc__winner_count":1})
-		app_models.lottery.objects(id=record_id).update(**{"inc__participant_count":1})
+			app_models.lottery.objects(id=record_id).update(inc__winner_count=1)
+		app_models.lottery.objects(id=record_id).update(inc__participant_count=1)
 
 		response = create_response(200)
 		response.data = {
 			'result': result,
+			"prize_name": prize_value,
 			'prize_type': lottery_prize_type,
-			# 'can_play_count': lottery_participance.can_play_count
+			'can_play_count': lottery_participance.can_play_count,
+			'remained_integral': member_models.objects.get(id=member_id).integral
 		}
 		return response.get_response()

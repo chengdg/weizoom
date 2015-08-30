@@ -72,10 +72,14 @@ class Mlottery(resource.Resource):
 							lottery_participance.update(set__can_play_count=2)
 							can_play_count = 2
 				else:
-					can_play_count = 1
+					if record.limitation in ['once_per_day', 'once_per_user']:
+						can_play_count = 1
+					elif record.limitation == 'twice_per_day':
+						can_play_count = 2
+					else:
+						can_play_count = 0
 
 				lottery_limitation = record.limitation_times
-				print lottery_limitation
 				if not lottery_participance or lottery_participance.can_play_count >= lottery_limitation:
 					lottery_status = True
 

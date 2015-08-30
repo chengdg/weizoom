@@ -152,6 +152,7 @@
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
+          var expend = descriptionModel.get('expend');
           var delivery = descriptionModel.get('delivery');
           var delivery_setting = descriptionModel.get('delivery_setting');
           var limitation = descriptionModel.get('limitation');
@@ -162,6 +163,7 @@
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
+            "expend": expend,
             "delivery": delivery,
             "delivery_setting": delivery_setting,
             "limitation": limitation,
@@ -282,7 +284,7 @@
             </div>
 
             <div class="modal-footer modal-footerBg">
-                <button class="btn btn-success xui-btnStyle" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+                <button class="btn btn-success" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
             </div>
         </div>
     </div>
