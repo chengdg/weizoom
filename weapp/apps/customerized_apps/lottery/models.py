@@ -56,6 +56,7 @@ class lottery(models.Document):
 	limitation = models.StringField(default="once_per_user", max_length=32) #抽奖限制
 	chance = models.IntField(default=0) #中奖几率
 	type = models.StringField(default="true", max_length=10) #是否允许重复中奖
+	prize = models.DynamicField() #每个奖项的奖品数量
 	
 	meta = {
 		'collection': 'lottery_lottery'

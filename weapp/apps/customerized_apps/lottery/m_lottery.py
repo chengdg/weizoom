@@ -52,12 +52,12 @@ class Mlottery(resource.Resource):
 				elif now_time >= data_end_time:
 					record.update(set__status=app_models.STATUS_STOPED)
 					activity_status = u'已结束'
+				record.reload()
 
 			project_id = 'new_app:lottery:%s' % record.related_page_id
 			if request.member:
 				lottery_participance = app_models.lotteryParticipance.objects(belong_to=id, member_id=request.member.id)
 				participance_data_count = lottery_participance.count()
-
 				if participance_data_count != 0:
 					lottery_participance = lottery_participance[0]
 					has_prize = lottery_participance.has_prize
@@ -71,6 +71,9 @@ class Mlottery(resource.Resource):
 						elif record.limitation == 'twice_per_day':
 							lottery_participance.update(set__can_play_count=2)
 							can_play_count = 2
+						lottery_participance.reload()
+					else:
+						can_play_count = lottery_participance.can_play_count
 				else:
 					if record.limitation in ['once_per_day', 'once_per_user']:
 						can_play_count = 1
@@ -78,9 +81,7 @@ class Mlottery(resource.Resource):
 						can_play_count = 2
 					else:
 						can_play_count = 0
-
-				lottery_limitation = record.limitation_times
-				if not lottery_participance or lottery_participance.can_play_count >= lottery_limitation:
+				if can_play_count != 0:
 					lottery_status = True
 
 		request.GET._mutable = True

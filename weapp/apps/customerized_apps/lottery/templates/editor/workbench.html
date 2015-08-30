@@ -149,6 +149,7 @@
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
           var descriptionModel = page.components[0].model;
+            var dynamicComponents = page.components[0].components;
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
@@ -159,6 +160,11 @@
           var chance = descriptionModel.get('chance');
           var type = descriptionModel.get('type');
           var relatedPageId = data['project_id'];
+            var prizeData = {
+                "一等奖": dynamicComponents[0].model.get('prize_count'),
+                "二等奖": dynamicComponents[1].model.get('prize_count'),
+                "三等奖": dynamicComponents[2].model.get('prize_count')
+            };
           var args = {
             "name": name,
             "start_time": startTime,
@@ -168,7 +174,8 @@
             "delivery_setting": delivery_setting,
             "limitation": limitation,
             "chance": chance,
-            "type": type
+            "type": type,
+              "prize":JSON.stringify(prizeData)
           };
           if (isCreateNewData) {
             var method = 'put';

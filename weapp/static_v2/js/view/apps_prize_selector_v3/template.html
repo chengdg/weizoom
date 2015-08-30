@@ -1,7 +1,6 @@
 <script id="apps-prize-selector-v3-tmpl" type="text/x-handlebar-tmpl">
 <div class="xui-apps-prizeSelector">
 	<select class="xui-i-select">
-		<option value="no_prize" {{#ifCond prize.type '===' 'no_prize'}}selected{{/ifCond}}>无奖励</option>
 		<option value="integral" {{#ifCond prize.type '===' 'integral'}}selected{{/ifCond}}>积分</option>
 		<option value="coupon" {{#ifCond prize.type '===' 'coupon'}}selected{{/ifCond}}>优惠券</option>
 		<option value="entity" {{#ifCond prize.type '===' 'entity'}}selected{{/ifCond}}>实物</option>

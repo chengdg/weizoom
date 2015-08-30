@@ -132,6 +132,22 @@
 
 {% block js %}
     <script>
+
+        function afterStop(data){
+            //更新可玩次数和剩余积分
+            can_play_count = data.can_play_count;
+            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
+            $('.xa-remainedIntegral p>b').html(data.remained_integral);
+            //更新中奖历史
+            var newRecord = data.newRecord;
+            console.log(newRecord);
+            if(newRecord.length>0){
+                var new_str = "<li>" + newRecord.created_at + '  '+newRecord.prize_title+'  '+ newRecord.prize_name;
+                $('.wui-i-record').find('.xa-recordData').find('p').remove();
+                $('.wui-i-record').find('.xa-recordData').prepend(new_str);
+            }
+        }
+
         function ResultDialog(selector){
             var that = this;
             this.$el = $(selector || '#resultDialog');
@@ -278,9 +294,8 @@
             this.light_index = light_index;
         };
         Roulette.prototype.stop = function(data){
-            this.prize_type = data.prize_type;
-            this.prize_name = data.prize_name;
-            var index = this.PRIZE[data.result];
+            this.retuenData = data;
+            var index = this.PRIZE[this.retuenData.result];
             this.prize = parseInt(index);
         };
         Roulette.prototype.roll = function(){
@@ -298,10 +313,11 @@
                     this.isRolling = false;
                     resultDialog = resultDialog || new ResultDialog();
                     resultDialog.render({
-                        'prize_type': this.prize_type,
-                        'prize_name': this.prize_name,
+                        'prize_type': this.retuenData.prize_type,
+                        'prize_name': this.retuenData.prize_name,
                         'delay': true
                     });
+                    afterStop(this.retuenData);
                     return;
                 }
                 this.speed += 20;
@@ -339,9 +355,6 @@
                             webapp_owner_id: W.webappOwnerId
                         },
                         success: function(data){
-                            can_play_count = data.can_play_count;
-                            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
-                            $('.xa-remainedIntegral p>b').html(data.remained_integral);
                             lottery.roll();
                             lottery.stop(data);
                         },
@@ -370,12 +383,12 @@
                     if(len>0){
                         var str_array = [];
                         for(var i=len-1;i>=0;i--){
-                            str_array.push("<li>" + hisData.created_at + '  '+hisData.prize_title+'  '+ hisData.prize_data);
+                            str_array.push("<li>" + hisData[i].created_at + '  '+hisData[i].prize_title+'  '+ hisData[i].prize_name);
                         }
                         str_array = str_array.toString();
                         $('.wui-i-record').find('.xa-recordData').html(str_array);
                     }else{
-                        $('.wui-i-record').find('.xa-recordData').html('还未中奖~');
+                        $('.wui-i-record').find('.xa-recordData').html('<p>还未中奖~</p>');
                     }
 
                 },

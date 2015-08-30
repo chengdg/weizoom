@@ -58,6 +58,7 @@ class lottery(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		data = add_extra_data(data, request.POST)
+		print data
 		lottery = app_models.lottery(**data)
 		lottery.save()
 		error_msg = None
@@ -78,7 +79,7 @@ class lottery(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		data = add_extra_data(data, request.POST)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'delivery', 'delivery_setting', 'limitation', 'chance', 'type'])
+		update_fields = set(['name', 'start_time', 'end_time', 'expend', 'delivery', 'delivery_setting', 'limitation', 'chance', 'type', 'prize'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
@@ -98,6 +99,7 @@ class lottery(resource.Resource):
 		return response.get_response()
 
 def add_extra_data(data, post):
+	print post
 	data['expend'] = int(post.get('expend', 0))
 	data['delivery'] = int(post.get('delivery', 0))
 	data['delivery_setting'] = post.get('delivery_setting', 'true')

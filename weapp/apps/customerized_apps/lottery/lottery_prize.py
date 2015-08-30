@@ -42,9 +42,8 @@ class lottery_prize(resource.Resource):
 		lotteries = app_models.lottoryRecord.objects(belong_to=lottery_id, member_id=member_id, prize_type__in=all_prize_type_list)
 
 		data = [{
-			'created_at': l.created_at.strftime('%Y-%m-%d'),
+			'created_at': l.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 			'prize_name': l.prize_name,
-			'prize_data': l.prize_data,
 			'prize_title': l.prize_title
 		} for l in lotteries]
 		#获取当前用户剩余积分
@@ -167,26 +166,33 @@ class lottery_prize(resource.Resource):
 			if lottery_prize_count == 0  or (not lottery_type and lottery_participance.has_prize):
 				result = u'谢谢参与'
 			else:
-				result = lottery_prize['title']
-				#如果抽到的是优惠券，则获取该优惠券的配置
-				if lottery_prize_type == 'coupon':
-					#优惠券
-					lottery_prize_data = couponRule_id = lottery_prize['prize_data']['id']
-					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
-					coupon_limit = coupon_rule.limit_counts
-					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, belong_to=record_id, prize_type='coupon', prize_data=couponRule_id).count()
-					if has_coupon_count >= coupon_limit:
-						result = u'谢谢参与'
+				temp_prize_title = result = lottery_prize['title']
+				#奖项的奖品数为0则不中奖
+				lottery_prize_count = int(lottery.prize[result])
+				if lottery_prize_count > 0:
+					#如果抽到的是优惠券，则获取该优惠券的配置
+					if lottery_prize_type == 'coupon':
+						#优惠券
+						lottery_prize_data = couponRule_id = lottery_prize['prize_data']['id']
+						coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
+						coupon_limit = coupon_rule.limit_counts
+						has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, belong_to=record_id, prize_type='coupon', prize_data=couponRule_id).count()
+						if has_coupon_count >= coupon_limit:
+							result = u'谢谢参与'
+						else:
+							consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
+							prize_value = lottery_prize['prize_data']['name']
+					elif lottery_prize_type == 'integral':
+						#积分
+						member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
+						lottery_prize_data = lottery_prize['prize_data']
+						prize_value = u'%d积分' % lottery_prize_data
 					else:
-						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
-						prize_value = lottery_prize['prize_data']['name']
-				elif lottery_prize_type == 'integral':
-					#积分
-					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
-					lottery_prize_data = lottery_prize['prize_data']
-					prize_value = u'%d积分' % lottery_prize_data
+						prize_value = lottery_prize['prize_data']
+					lottery.prize[temp_prize_title] = lottery_prize_count-1
+					lottery.save()
 				else:
-					prize_value = lottery_prize['prize_data']
+					result = u'谢谢参与'
 
 		#写日志
 		prize_value = result if result == u'谢谢参与' else prize_value
@@ -209,13 +215,20 @@ class lottery_prize(resource.Resource):
 		lottery_participance.update(dec__can_play_count=1)
 		lottery_participance.reload()
 		#调整参与数量和中奖人数
+		newRecord = {}
 		if has_prize:
 			app_models.lottery.objects(id=record_id).update(inc__winner_count=1)
+			newRecord = {
+				'created_at': now_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+				'prize_name': prize_value,
+				'prize_title': result
+			}
 		app_models.lottery.objects(id=record_id).update(inc__participant_count=1)
 
 		response = create_response(200)
 		response.data = {
 			'result': result,
+			'newRecord': newRecord,
 			"prize_name": prize_value,
 			'prize_type': lottery_prize_type,
 			'can_play_count': lottery_participance.can_play_count,

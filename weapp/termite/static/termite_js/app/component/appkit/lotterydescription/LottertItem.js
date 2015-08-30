@@ -33,7 +33,7 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			type: 'prize_selector_v3',
 			displayName: '活动奖励',
 			isUserProperty: true,
-			default: {type:"no_prize", data:null}
+			default: {type:"integral", data:0}
 		},{
 			name: 'image',
 			type: 'image_dialog_select',
