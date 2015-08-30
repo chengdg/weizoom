@@ -131,7 +131,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			isUserProperty: true,
 			maxLength: 3,
 			size: '70px',
-			annotation: "%  <b style='color:#1262b7' title='1.中奖概率'>中奖率详细规则</b>",
+			annotation: "%  <b style='color:#1262b7' id='lottery_chance_dialog_trigger'>中奖率详细规则</b>",
 			validate: 'data-validate="require-notempty::中奖率不能为空,,require-percent::请输入1-100之间的数字"',
 			validateIgnoreDefaultValue: true
 		}, {
@@ -170,29 +170,13 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			$node.find('.wui-i-end_time').text(value);
 		},
 		description: function($node, model, value, $propertyViewNode) {
-			console.log('------------------------------------');
-			console.log(model);
-			console.log('------------------------------------');
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-description').html(value.replace(/\n/g,'<br>'));
 		},
 		delivery: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-prize>.xa-delivery').html(value);
 		},
-		//delivery_setting: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.wui-i-prize').html(value+'积分');
-		//},
-		//chance: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.wui-i-prize').html(value+'积分');
-		//},
-		//type: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.wui-i-prize').html(value+'积分');
-		//},
-
 		limitation: function($node, model, value, $propertyViewNode) {
-			console.log('------------------------------------');
-			console.log($node[0], value);
-			console.log('------------------------------------');
 			switch (value){
 				case 'once_per_user':
 					value = '1';

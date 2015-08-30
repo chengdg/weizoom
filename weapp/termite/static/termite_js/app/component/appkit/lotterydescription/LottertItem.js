@@ -16,9 +16,6 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			type: 'text',
 			displayName: '奖项名称',
 			isUserProperty: true,
-			maxLength: 10,
-			validate: 'data-validate="require-notempty::选项不能为空,,require-word"',
-			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
 			name: 'prize_count',
@@ -52,7 +49,23 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 
 	propertyChangeHandlers: {
 		title: function($node, model, value, $propertyViewNode) {
-			$node.find('.xa-itemTitle').text(value);
+			var currCid = $propertyViewNode.attr('data-dynamic-cid');
+			var bak;
+			switch (currCid){
+				case '4':
+					bak = '一等奖';
+					break;
+				case '5':
+					bak = '二等奖';
+					break;
+				case '6':
+					bak = '三等奖';
+					break;
+				default:
+					bak = '';
+					break;
+			}
+			$propertyViewNode.find('input').eq(0).val(bak);
 		},
 		image: function($node, model, value, $propertyViewNode) {
 			var image = {url:''};

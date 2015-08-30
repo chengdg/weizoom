@@ -76,25 +76,25 @@
     <div class="wui-i-subtitle">
         <h2 class=" xa-subtitle">活动说明</h2>
     </div>
-	<div class="wui-i-info">
-        <div class="wui-i-settings">
-            <div class="wui-i-settingTitle">奖项设置:</div>
-            <div class="wui-i-settingData xa-settingData">
+	<div class="wui-i-info p0">
+        <div class="wui-i-settings pt15 pb15">
+            <div class="wui-i-settingTitle fl mr15">奖项设置:</div>
+            <div class="wui-i-settingData xa-settingData fl mb10">
                 <ul>
                     <li data_cid="4">
-                        一等奖:<b></b>
+                        一等奖:&nbsp;&nbsp;<b></b>
                     </li>
-                    <li data_cid=" 5">
-                        二等奖:<b></b>
+                    <li data_cid="5">
+                        二等奖:&nbsp;&nbsp;<b></b>
                     </li>
-                    <li data_cid=" 6">
-                        三等奖:<b></b>
+                    <li data_cid="6">
+                        三等奖:&nbsp;&nbsp;<b></b>
                     </li>
                 </ul>
             </div>
         </div>
-		<div class="wui-i-time">
-			活动时间:<p class="wui-i-start_time">{{component.model.start_time}}</p>
+		<div class="wui-i-time cl pt15 pb15" style="border-top: 1px solid #9c96ac;">
+			活动时间:&nbsp;&nbsp;<p class="wui-i-start_time">{{component.model.start_time}}</p>
             -<p class="wui-i-end_time">{{component.model.end_time}}</p>
 		</div>
         <!--
@@ -103,15 +103,15 @@
             参与送<b class="xa-delivery">{{component.model.delivery}}</b>积分
         </div>
         -->
-        <div class="wui-i-record">
-            <div class="wui-i-recordTitle">中奖历史:</div>
-            <div class="wui-i-recordData xa-recordData">
+        <div class="wui-i-record cl pt15 pb15">
+            <div class="wui-i-recordTitle fl mr15">中奖历史:</div>
+            <div class="wui-i-recordData xa-recordData fl mb10">
                 <ul>
 
                 </ul>
             </div>
         </div>
-        <div class="wui-i-description xa-description" style="margin: 0; color: white">
+        <div class="wui-i-description xa-description cl pt15 pb15" style="margin: 0; color: white;border-top: 1px solid #9c96ac;">
             {{component.model.description|safe}}
         </div>
 	</div>

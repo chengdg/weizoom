@@ -105,7 +105,7 @@
           alert('Failed to load pages in JSON. Please check it.');
         }
       });
-    }
+    };
     
     $(document).ready(function() {
       var windowHeight = $(window).height();
@@ -235,12 +235,59 @@
         });
       });
       
-      $(document).click(function() {
+      $(document).click(function(event) {
         // 点击空白处，触发事件
+          if(event.target.id == 'lottery_chance_dialog_trigger'){
+                W.dialog.showDialog('W.dialog.lottery.InstructionDialog',{
+                    success: function(data){}
+                });
+          }
         W.Broadcaster.trigger('designpage:cancel_delete');
       });
+
+        //初始化中奖率说明dialog
+        ensureNS('W.dialog.lottery');
+        W.dialog.lottery.InstructionDialog = W.dialog.Dialog.extend({
+            getTemplate: function() {
+                $('#lottery-chance-dialog-tmpl-src').template('lottery-chance-dialog-tmpl');
+                return "lottery-chance-dialog-tmpl";
+            }
+        });
     });
   </script>
+<script id="lottery-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">
+<div class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">中奖概率说明</h3>
+            </div>
+
+            <div class="modal-body ml15">
+                <div>
+                    <p>1、中奖概率：参与活动的人里面可以允许多少人中奖</p>
+                    <p class="pl20"> 例如：中奖概率为70%，那么所有参与活动的人里面有70%的人会中奖。</p>
+                </div>
+                <div>
+                    <p>2、奖品数量：奖品数量会直接影响用户中几等奖，前提是用户已中奖</p>
+                    <p class="pl20">例如：一等奖奖品数量为10，二等奖数量为30，三等奖数量为60。</p>
+                </div>
+                <div>
+                    <p>3、导致用户不中奖的可能</p>
+                    <p class="pl20"> a、奖品数量为0。</p>
+                    <p class="pl20">b、优惠券限制。</p>
+                    <p class="pl40">例如：二等奖的奖品为优惠券，但在设置此优惠券时设置了一人只能领一张。<br>当用户在活动期间已经抽到过该优惠券，那么这个用户再次抽到该优惠券就会判定为其他，<br>如果是仅有的奖品，则不中奖。</p>
+                </div>
+            </div>
+
+            <div class="modal-footer modal-footerBg">
+                <button class="btn btn-success xui-btnStyle" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
 {% block js %}{% endblock %}
 {% endblock %}
 
