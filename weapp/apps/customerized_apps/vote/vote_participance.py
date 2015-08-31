@@ -42,6 +42,8 @@ class voteParticipance(resource.Resource):
 		if 'id' in request.GET:
 			vote_participance = app_models.voteParticipance.objects.get(id=request.GET['id'])
 			webapp_user_name = member_models.WebAppUser.get_member_by_webapp_user_id(vote_participance.webapp_user_id).username_for_title
+			if webapp_user_name == "":
+				webapp_user_name = u'非会员'
 			termite_data = vote_participance.termite_data
 			item_data_list = []
 

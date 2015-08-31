@@ -89,43 +89,24 @@
                 </div>
                 <div class="wui-swiper-slide">
                     <div class="wui-content-slide">
-                        {% if events_items %}
-                            {% for events_item in events_items %}
+                        {% if activities_items %}
+                            {% for activities_item in activities_items %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl10 pr15">
-                                    <a href="{{ events_item.url }}">
+                                    <a href="{{ activities_item.url }}">
                                         <div class="xui-i-title">
-                                            <i class="wui-my_activities_event"></i><span class="disTc pl15 em1">{{ events_item.name }}</span>
+                                            {% if activities_item.activity_type_name == '活动报名' %}
+                                                <i class="wui-my_activities_event"></i>
+                                            {% else %}
+                                                {% if activities_item.activity_type_name == '微信投票' %}
+                                                    <i class="wui-my_activities_vote"></i>
+                                                {% else %}
+                                                    <i class="wui-my_activities_survey"></i>
+                                                {% endif %}
+                                            {% endif %}
+                                            <span class="disTc pl15 em1">{{ activities_item.name }}</span>
                                         </div>
-                                        <div class="xui-i-time">{{ events_item.participant_time }}参加了活动报名</div>
-                                    </a>
-                                </li>
-                                </ul>
-                            {% endfor %}
-                        {% endif %}
-                        {% if votes_items %}
-                            {% for votes_item in votes_items %}
-                                <ul class="xui-listItem">
-                                <li data-icon="true" class="xui-listInner pl15 pr15">
-                                    <a href="{{ votes_item.url }}">
-                                        <div class="xui-i-title">
-                                          <i class="wui-my_activities_vote"></i><span class="disTc pl15 em1">{{ votes_item.name }}</span>
-                                        </div>
-                                        <div class="xui-i-time">{{ votes_item.participant_time }}参加了微信投票</div>
-                                    </a>
-                                </li>
-                                </ul>
-                            {% endfor %}
-                        {% endif %}
-                        {% if surveies_items %}
-                            {% for surveies_item in surveies_items %}
-                                <ul class="xui-listItem">
-                                <li data-icon="true" class="xui-listInner pl15 pr15">
-                                    <a href="{{ surveies_item.url }}">
-                                        <div class="xui-i-title">
-                                          <i class="wui-my_activities_survey"></i><span class="disTc pl15 em1">{{ surveies_item.name }}</span>
-                                        </div>
-                                        <div class="xui-i-time">{{ surveies_item.participant_time }}参加了用户调研</div>
+                                        <div class="xui-i-time">{{ activities_item.participant_time }}参加了{{ activities_item.activity_type_name }}</div>
                                     </a>
                                 </li>
                                 </ul>
