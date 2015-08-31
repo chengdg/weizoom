@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 
 from models import *
 from modules.member import util as member_util
-
+import operator
 
 def _is_alert_for_iphone_version_less_6(request):
 	http_user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
@@ -226,6 +226,7 @@ def get_member_activites(request):
 	profile = request.user_profile
 	webapp_user = request.webapp_user
 	member = member_util.get_member(request)
+	activities_items = []
 	#活动
 	events = event_models.eventParticipance.objects.filter(member_id=member.id).order_by('-created_at')
 	events_items = []
@@ -237,7 +238,8 @@ def get_member_activites(request):
 				'id': str(event_id),
 				'name': event_details.name,
 				'url': '/m/apps/event/m_event/?webapp_owner_id=%d&id=%s' % (event_details.owner_id, str(event_id)),
-				'participant_time': event.created_at.strftime('%m月%d日')
+				'participant_time': event.created_at.strftime('%m月%d日'),
+				'activity_type_name': u'活动报名'
 			})
 		except:
 			pass
@@ -252,7 +254,8 @@ def get_member_activites(request):
 				'id': str(vote_id),
 				'name': vote_details.name,
 				'url': '/m/apps/vote/m_vote/?webapp_owner_id=%d&id=%s' % (vote_details.owner_id, str(vote_id)),
-				'participant_time': vote.created_at.strftime('%m月%d日')
+				'participant_time': vote.created_at.strftime('%m月%d日'),
+				'activity_type_name': u'微信投票'
 			})
 		except:
 			pass
@@ -267,7 +270,8 @@ def get_member_activites(request):
 				'id': str(survey_id),
 				'name': survey_details.name,
 				'url': '/m/apps/survey/m_survey/?webapp_owner_id=%d&id=%s' % (survey_details.owner_id, str(survey_id)),
-				'participant_time': survey.created_at.strftime('%m月%d日')
+				'participant_time': survey.created_at.strftime('%m月%d日'),
+				'activity_type_name': u'用户调研'
 			})
 		except:
 			pass
@@ -287,11 +291,16 @@ def get_member_activites(request):
 		except:
 			pass
 
+	for events_item in events_items:
+		activities_items.append(events_item)
+	for votes_item in votes_items:
+		activities_items.append(votes_item)
+	for surveies_item in surveies_items:
+		activities_items.append(surveies_item)
+
 	c = RequestContext(request, {
 		'page_title': u'我的活动列表',
-		'events_items': events_items,
-		'votes_items': votes_items,
-		'surveies_items': surveies_items,
+		'activities_items': sorted(activities_items, key=operator.itemgetter('participant_time'), reverse=True),
 		'lotteries_items': lotteries_items,
 		'is_hide_weixin_option_menu':False
 	})
