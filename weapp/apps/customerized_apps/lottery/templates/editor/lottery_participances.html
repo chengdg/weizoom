@@ -93,8 +93,12 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>用户名</th>
-				<th>参与时间</th>
+				<th>中奖用户</th>
+				<th>手机号</th>
+				<th>获奖等级</th>
+				<th>奖品名称</th>
+				<th>中奖时间</th>
+				<th>领取状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -109,10 +113,24 @@
 					${item.participant_name}
 				</td>
 				<td>
+					${item.tel}
+				</td>
+				<td>
+					${item.prize_title}
+				</td>
+				<td>
+					${item.prize_name}
+				</td>
+				<td>
 					${item.created_at}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-viewData">查看结果</a>
+					${item.status}
+				</td>
+				<td>
+				    {{if !item.status}}
+					    <a href="javascript:void(0);" class="ml5 xa-getLottery">领取</a>
+					{{/if}}
 				</td>
 			</tr>
 			{{/each}}
@@ -136,7 +154,7 @@ $(document).ready(function() {
 		W.dialog.showDialog('W.dialog.app.lottery.ViewParticipanceDataDialog', {
 			activityId: activityId,
 			success: function(data) {
-				alert(data);
+
 			}
 		});
 	});

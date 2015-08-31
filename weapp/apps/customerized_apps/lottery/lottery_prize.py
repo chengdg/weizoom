@@ -97,7 +97,7 @@ class lottery_prize(resource.Resource):
 		winner_count = lottery.winner_count #中奖人数
 		limitation = lottery.limitation_times #抽奖限制
 		#根据抽奖限制，对比抽奖时间
-		lottery_type = True if lottery.type == 'true' else False
+		allow_repeat = True if lottery.allow_repeat == 'true' else False
 		expend = lottery.expend
 		delivery = lottery.delivery
 		delivery_setting = lottery.delivery_setting
@@ -163,7 +163,7 @@ class lottery_prize(resource.Resource):
 			lottery_prize_type = lottery_prize['prize_type']
 			#1、奖品数为0时，不中奖
 			#2、根据是否可以重复抽奖和抽到的优惠券规则判断
-			if lottery_prize_count == 0  or (not lottery_type and lottery_participance.has_prize):
+			if lottery_prize_count == 0  or (not allow_repeat and lottery_participance.has_prize):
 				result = u'谢谢参与'
 			else:
 				temp_prize_title = result = lottery_prize['title']

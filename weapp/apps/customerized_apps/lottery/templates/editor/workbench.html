@@ -158,7 +158,7 @@
           var delivery_setting = descriptionModel.get('delivery_setting');
           var limitation = descriptionModel.get('limitation');
           var chance = descriptionModel.get('chance');
-          var type = descriptionModel.get('type');
+          var allow_repeat = descriptionModel.get('allow_repeat');
           var relatedPageId = data['project_id'];
             var prizeData = {
                 "一等奖": dynamicComponents[0].model.get('prize_count'),
@@ -174,7 +174,7 @@
             "delivery_setting": delivery_setting,
             "limitation": limitation,
             "chance": chance,
-            "type": type,
+            "allow_repeat": allow_repeat,
               "prize":JSON.stringify(prizeData)
           };
           if (isCreateNewData) {

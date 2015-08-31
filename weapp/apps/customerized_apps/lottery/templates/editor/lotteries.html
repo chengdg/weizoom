@@ -137,14 +137,14 @@
 					${item.participant_count}
 				</td>
 				<td>
-					{{if (item.status === '未开启' || item.status === '已结束')}}
+				    <a href="/apps/lottery/lottery_participances/?id=${item.id}" class="ml5">详情</a>
+					{{if (item.status === '未开始' || item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
 					{{if (item.status === '进行中')}}
 					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
 					{{/if}}
 					<a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
-					<a href="/apps/lottery/lottery_participances/?id=${item.id}" class="ml5">查看结果</a>
 				</td>
 			</tr>
 			{{/each}}

@@ -18,7 +18,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		groupClass: 'xui-propertyView-app-Selection',
 		fields: [
 		//	{
-		//	name: 'type',
+		//	name: 'lottery_type',
 		//	type: 'radio',
 		//	displayName: '微信抽奖',
 		//	isUserProperty: true,
@@ -135,7 +135,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			validate: 'data-validate="require-notempty::中奖率不能为空,,require-percent::请输入1-100之间的数字"',
 			validateIgnoreDefaultValue: true
 		}, {
-			name: 'type',
+			name: 'allow_repeat',
 			type: 'radio',
 			displayName: '重复中奖',
 			isUserProperty: true,
@@ -168,12 +168,6 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		},
 		end_time: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-end_time').text(value);
-		},
-		expend: function($node, model, value, $propertyViewNode) {
-			console.log('--------------1-------------------');
-			console.log(model);
-			console.log(value);
-			console.log('--------------2-------------------');
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
