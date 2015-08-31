@@ -56,9 +56,12 @@ class WebappPage(resource.Resource):
 			current_page_name = 'page'
 
 		# 二维码
-		if request.user:
-			qrcode_img = weixin_api.get_mp_qrcode_img(request.user.id)
-		else:
+		try:				
+			webapp_owner_id = request.GET.get('webapp_owner_id',None)
+			woid = request.GET.get('woid', None)
+			user_id = webapp_owner_id if webapp_owner_id is None else woid
+			qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
+		except:
 			qrcode_img = ''
 
 		c = RequestContext(request, {
