@@ -1149,7 +1149,7 @@ Scenario:13 不同等级的会员购买有会员价同时使用全体券的商�
 		"""
 
 # __edit__ : "王丽"
-@meberGrade @coupon
+@meberGrade @coupon @mall2
 Scenario: 13 【优惠券】-未到使用日期，不能使用
 	
 	Given jobs登录系统
@@ -1163,6 +1163,8 @@ Scenario: 13 【优惠券】-未到使用日期，不能使用
 			"coupon_id_prefix": "coupon6_id_"
 		}]
 		"""
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 	When bill领取jobs的优惠券
 		"""
 		[{
@@ -1182,7 +1184,7 @@ Scenario: 13 【优惠券】-未到使用日期，不能使用
 			"coupon": "coupon6_id_1"
 		}
 		"""
-	Then bill获得创建订单失败的信息'该优惠券未开始'
+	Then bill获得创建订单失败的信息'该优惠券活动尚未开始'
 
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券-未开始'的码库
