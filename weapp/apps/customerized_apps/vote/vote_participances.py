@@ -164,7 +164,7 @@ class voteParticipances_Export(resource.Resource):
 					else:
 						fields_shortcuts.append(item)
 			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
-			
+
 			for field in fields_raw:
 				if '_' in field:
 					purename = field.split('_')[1]
