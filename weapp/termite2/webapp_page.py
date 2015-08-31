@@ -60,9 +60,9 @@ class WebappPage(resource.Resource):
 			webapp_owner_id = request.GET.get('webapp_owner_id',None)
 			woid = request.GET.get('woid', None)
 			user_id = woid if webapp_owner_id is None else webapp_owner_id
-			qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
+			current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
 		except:
-			qrcode_img = ''
+			current_auth_qrcode_img = ''
 
 		c = RequestContext(request, {
 			'page_title': page_title,
