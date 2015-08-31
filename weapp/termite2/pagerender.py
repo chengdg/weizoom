@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import logging
 import time
 from datetime import timedelta, datetime, date
 import urllib, urllib2
@@ -21,6 +19,7 @@ from models import *
 from mall import models as mall_models
 from cache import webapp_cache
 from mall import module_api as mall_api
+from weixin.user import module_api as weixin_api
 
 
 type2template = {}
@@ -322,6 +321,14 @@ def __render_component(request, page, component, project):
 	if hasattr(request, 'member') and request.member:
 		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
 		
+	# 二维码
+	webapp_owner_id = request.GET.get('webapp_owner_id',None)
+	woid = request.GET.get('woid', None)
+	user_id = woid if webapp_owner_id is None else webapp_owner_id
+	current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
+	if current_auth_qrcode_img is None:
+		current_auth_qrcode_img = '/static/img/user-1.jpg'
+		
 	#渲染component自身
 	context = Context({
 		'request': request,
@@ -332,7 +339,8 @@ def __render_component(request, page, component, project):
 		'in_design_mode': request.in_design_mode,
 		'in_preview_mode': request.in_preview_mode,
 		'in_production_mode': request.in_production_mode,
-		'shopping_cart_product_count': shopping_cart_product_count
+		'shopping_cart_product_count': shopping_cart_product_count,
+		'current_auth_qrcode_img': current_auth_qrcode_img
 	})
 	if hasattr(request, 'extra_page_context'):
 		context.update(request.extra_page_context)

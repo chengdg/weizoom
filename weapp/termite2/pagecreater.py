@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import logging
 import time
 from datetime import timedelta, datetime, date
 import urllib, urllib2
@@ -58,9 +56,9 @@ def __get_display_info(request):
 		except:
 			pass
 
-	if request.user.is_from_weixin:
+	# if request.user.is_from_weixin:
 		#在预览模式下，不显示导航
-		__get_navbar(request, page)
+	__get_navbar(request, page)
 
 	display_info = {
 		'project': project,
@@ -81,7 +79,7 @@ def __get_is_enable_navbar(request):
 def is_home_page(request):
 	# 是否是首页
 	project_id = request.REQUEST.get('project_id', 0)
-	if 'workspace_id=home_page' in request.get_full_path() and project_id == '0':
+	if 'workspace_id=home_page' in request.get_full_path() or project_id == '0':
 		return True
 
 	projects = webapp_models.Project.objects.filter(id=project_id)
