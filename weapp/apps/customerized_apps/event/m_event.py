@@ -84,6 +84,9 @@ class Mevent(resource.Resource):
 				request.GET._mutable = True
 				request.GET.update({"project_id": project_id})
 				request.GET._mutable = False
+				pagestore = pagestore_manager.get_pagestore('mongo')
+				page = pagestore.get_page(record.related_page_id, 1)
+				permission = page['component']['components'][0]['model']['permission']
 				html = pagecreater.create_page(request, return_html_snippet=True)
 				c = RequestContext(request, {
 					'record_id': id,
@@ -96,16 +99,15 @@ class Mevent(resource.Resource):
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isPC': isPC,
 					'isMember': isMember,
-					'auth_appid_info': auth_appid_info
+					'auth_appid_info': auth_appid_info,
+					'permission': permission
 				})
-				
 				return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:
 			record = None
 			c = RequestContext(request, {
 				'record': record
 			});
-			
 			return render_to_response('event/templates/webapp/m_event.html', c)
 
 def get_result(id,member_id):

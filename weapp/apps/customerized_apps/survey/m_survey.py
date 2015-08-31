@@ -94,6 +94,9 @@ class Msurvey(resource.Resource):
 				request.GET.update({"project_id": project_id})
 				request.GET._mutable = False
 				html = pagecreater.create_page(request, return_html_snippet=True)
+				pagestore = pagestore_manager.get_pagestore('mongo')
+				page = pagestore.get_page(record.related_page_id, 1)
+				permission = page['component']['components'][0]['model']['permission']
 				c = RequestContext(request, {
 					'record_id': id,
 					'activity_status': activity_status,
@@ -105,7 +108,8 @@ class Msurvey(resource.Resource):
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isPC': isPC,
 					'isMember': isMember,
-					'auth_appid_info': auth_appid_info
+					'auth_appid_info': auth_appid_info,
+					'permission': permission
 				})
 
 				return render_to_response('workbench/wepage_webapp_page.html', c)
