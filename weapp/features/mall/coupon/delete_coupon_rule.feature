@@ -354,6 +354,7 @@ Scenario: 4 删除已过期的优惠券规则
 		]
 		"""
 
+# __author__ : "王丽" 补充在查询结果中删除活动
 @promotion @promotionCoupon
 Scenario: 5 在按"优惠券名称"查询的查询结果下删除优惠券
 
@@ -383,7 +384,7 @@ Scenario: 5 在按"优惠券名称"查询的查询结果下删除优惠券
 			"end_date": "1天前"
 		}]
 		"""
-	When jobs删除优惠券规则'全体券1'
+	When jobs删除优惠券'全体券1'
 	Then jobs能获得优惠券规则列表
 		"""
 		[]
@@ -418,7 +419,7 @@ Scenario: 6 在按"优惠码"查询的查询结果下删除优惠券
 			"end_date": "1天前"
 		}]
 		"""
-	When jobs删除优惠券规则'全体券1'
+	When jobs删除优惠券'全体券1'
 	Then jobs能获得优惠券规则列表
 		"""
 		[]
@@ -508,7 +509,7 @@ Scenario: 7 在按"优惠券类型"查询的查询结果下删除优惠券
 			"end_date": "1天后"
 		}]
 		"""
-	When jobs删除优惠券规则'单品券a'
+	When jobs删除优惠券'单品券a'
 	Then jobs能获得优惠券规则列表
 		"""
 		[{
@@ -561,7 +562,7 @@ Scenario: 8 在按"促销状态"查询的查询结果下删除优惠券
 			"end_date": "1天前"
 		}]
 		"""
-	When jobs删除优惠券规则'全体券1'
+	When jobs删除优惠券'全体券1'
 	Then jobs能获得优惠券规则列表
 		"""
 		[]
@@ -605,7 +606,7 @@ Scenario: 9 在按"活动时间"查询的查询结果下删除优惠券
 			"end_date": "1天后"
 		}]
 		"""
-	When jobs删除优惠券规则'全体券1'
+	When jobs删除优惠券'全体券1'
 	Then jobs能获得优惠券规则列表
 		"""
 		[{

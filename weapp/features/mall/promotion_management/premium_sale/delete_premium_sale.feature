@@ -217,6 +217,7 @@ Scenario: 2 批量删除买赠活动（不包括未结束状态的）
 			}]
 		"""
 
+# __author__ : "王丽" 补充在查询结果中删除活动
 @promotion @promotionPremium
 Scenario: 3 在按"商品名称"查询的查询结果下删除买赠活动
 
