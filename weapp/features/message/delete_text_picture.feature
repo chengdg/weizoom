@@ -100,7 +100,7 @@ Background:
 		}]
 		"""
 
-Scenario: 删除图文消息
+Scenario:1 删除图文消息
 	jobs添加单图文和多图文后
 	1. jobs 删除1条图文消息 还有3条
 	2. jobs又删除1条图文消息 还有2条
@@ -129,5 +129,38 @@ Scenario: 删除图文消息
 			"title":"图文1",
 			"add_time":"2015-04-13 15:26:39",
 			"the_last_send_time":"2015-04-14 15:26:39"
+		}]
+		"""
+
+# __author__ : "王丽"
+Scenario:2 在按"图文名称"查询的查询结果下删除图文
+
+	Given jobs登录系统
+
+	When jobs设置图文列表的查询条件
+		"""
+		{
+			"title":"图文3"
+		}
+		"""
+	Then jobs获得'图文管理'列表
+		"""
+		[{
+			"title":"图文4",
+			"add_time":"2015-04-13 18:26:39",
+			"the_last_send_time":"2015-04-14 16:26:39"
+		},{
+			title":"图文3",
+			"add_time":"2015-04-13 17:26:39",
+			"the_last_send_time":""
+		}]
+		"""
+	When jobs已删除'图文3'
+	Then jobs获得'图文管理'列表
+		"""
+		[{
+			"title":"图文4",
+			"add_time":"2015-04-13 18:26:39",
+			"the_last_send_time":"2015-04-14 16:26:39"
 		}]
 		"""
