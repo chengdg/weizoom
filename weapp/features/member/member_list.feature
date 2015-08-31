@@ -47,7 +47,7 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
-@crm @member
+@mall2 @crm @member
 Scenario: 微信用户关注公众号成为会员
 	微信用户关注jobs公众号成为jobs的会员
 	1.bill直接关注jobs的公众号,生成会员列表
@@ -71,8 +71,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		}]
 		"""
 	And jobs能获得bill的积分日志
@@ -110,8 +109,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "bill",
 			"member_rank": "普通会员",
@@ -121,8 +119,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		}]
 		"""
 	And jobs能获得tom的积分日志
@@ -157,8 +154,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
@@ -168,8 +164,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "bill",
 			"member_rank": "普通会员",
@@ -179,8 +174,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		}]
 		"""
 	And jobs能获得nokia的积分日志
@@ -209,8 +203,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
@@ -220,8 +213,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
@@ -231,8 +223,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "bill",
 			"member_rank": "普通会员",
@@ -242,8 +233,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		}]
 		"""
 	And jobs能获得tom1的积分日志
@@ -279,8 +269,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
@@ -290,8 +279,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
@@ -301,8 +289,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "bill",
 			"member_rank": "金牌会员",
@@ -312,8 +299,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		}]
 		"""
 	When tom1访问jobs的webapp
@@ -340,8 +326,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
@@ -351,8 +336,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
@@ -362,8 +346,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "bill",
 			"member_rank": "金牌会员",
@@ -373,8 +356,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		}]
 		"""
 
@@ -391,8 +373,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "nokia",
 			"member_rank": "普通会员",
@@ -402,8 +383,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "tom",
 			"member_rank": "普通会员",
@@ -413,8 +393,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
-			"status": "已关注"
+			"tags": []
 		},{
 			"name": "",
 			"member_rank": "金牌会员",
@@ -424,7 +403,6 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
-			"status": "已取消"
+			"tags": []
 		}]
 		"""
