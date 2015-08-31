@@ -1714,6 +1714,9 @@ input.ui-input-text, textarea.ui-input-text {
 /*.xui-editOrderPage .xui-selectedProductList li:first-child{
     padding-top:0;
 }*/
+.xui-editOrderPage .xui-cantBuyList .xui-productThumbNail{
+    height:50px;
+}
 .xui-editOrderPage .xui-productThumbNail,
 .xui-payOrderPage .xui-productThumbNail{
     width: 50px;

@@ -1325,6 +1325,13 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 						// 全部商品
 						$('.xa-deleteButton').hide();
 					}
+					if (/ipad|iphone|mac/i.test(navigator.userAgent)){
+						if(resp.data.detail.length > 3){
+	    					$('#cantBuyWrapper').css('height', '218px');
+	        				var cantBuyWrapper = new iScroll('cantBuyWrapper',{checkDOMChanges: true});
+
+						}
+					}
 					var query = parseUrl(location.href).query;
 					var url = '/termite/workbench/jqm/preview/?woid='+query.woid+'&module=mall';
 					if(location.href.indexOf('shopping_cart_order')<0){

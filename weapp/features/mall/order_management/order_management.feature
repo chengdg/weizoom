@@ -226,13 +226,12 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill能获得订单"001"
+	Then bill手机端获取订单"001"
 		"""
 		{
 			"order_no": "001",
 			"order_time":"2015-08-08 12:00",
 			"methods_of_payment":"微信支付",
-			"member": "bill",
 			"status":"待支付",
 			"final_price": 90.00,
 			"edit_money": 10.00,
@@ -248,9 +247,8 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 		"""
 		{
 			"order_no": "001",
-			"order_time":"2015-08-08 12:00",
+			"order_time":"2015-08-08 12:00:00",
 			"methods_of_payment":"微信支付",
-			"member": "bill",
 			"status":"待发货",
 			"final_price": 90.00,
 			"edit_money": 10.00,
@@ -270,7 +268,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 			"methods_of_payment":"微信支付",
 			"member": "bill",
 			"status":"待发货",
-			"actions": ("发货", "申请退款"),
+			"actions": ["发货", "申请退款"],
 			"final_price": 90.00,
 			"edit_money": 10.00,
 			"products": [{
