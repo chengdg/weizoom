@@ -12,8 +12,8 @@ Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-@crm @member @member.member_share
-Scenario: 建立好友关系传播情景,A-->(E,F,G)
+@mall2 @crm @member @member.member_share
+Scenario:1 建立好友关系传播情景,A-->(E,F,G)
 
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -78,8 +78,8 @@ Scenario: 建立好友关系传播情景,A-->(E,F,G)
 		]
 		"""
 
-@crm @member @member.member_share
-Scenario: 建立好友关系传播情景,A-->B-->(E,F,G)
+@mall2 @crm @member @member.member_share
+Scenario:2 建立好友关系传播情景,A-->B-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -135,8 +135,8 @@ Scenario: 建立好友关系传播情景,A-->B-->(E,F,G)
 		}]
 		"""
 
-@crm @member @member.member_share
-Scenario: 建立好友关系传播情景,A-->C-->(E,F,G)
+@mall2 @crm @member @member.member_share
+Scenario:3 建立好友关系传播情景,A-->C-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -202,8 +202,8 @@ Scenario: 建立好友关系传播情景,A-->C-->(E,F,G)
 		}]
 		"""
 
-@crm @member @member.member_share
-Scenario: 建立好友关系传播情景,A-->C-->B-->(E,F,G)
+@mall2 @crm @member @member.member_share
+Scenario:4 建立好友关系传播情景,A-->C-->B-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -264,9 +264,8 @@ Scenario: 建立好友关系传播情景,A-->C-->B-->(E,F,G)
 		}]
 		"""
 
-
-@crm @member @member.member_share
-Scenario: 建立好友关系传播情景,A-->C-->D-->(E,F,G)
+@mall2 @crm @member @member.member_share
+Scenario:5 建立好友关系传播情景,A-->C-->D-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
