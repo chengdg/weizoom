@@ -409,7 +409,11 @@ def check_coupon_for_order(pre_order, args, request, **kwargs):
 		product_ids = [str(product.id) for product in pre_order.products]
 
 		from market_tools.tools.coupon import util as coupon_util
-		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, request.member.id, pre_order.products)
+		if request.member:
+			member_id = request.member.id
+		else:
+			member_id = -1
+		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, member_id, pre_order.products)
 		if coupon:
 			pre_order.session_data['coupon'] = coupon
 		else:

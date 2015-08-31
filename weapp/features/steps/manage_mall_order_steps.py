@@ -28,11 +28,11 @@ ORDER_ACTION_NAME2ACTION = {
 @when(u"{user}'{action}'最新订单")
 def step_impl(context, user, action):
     if hasattr(context, 'latest_order_id'):
-        latest_order_no = Order.objects.get(id=context.latest_order_id)
+        latest_order_no = Order.objects.get(id=context.latest_order_id).order_id
     else:
         latest_order_no = steps_db_util.get_latest_order().order_id
 
-    context.execute_steps(u"when %s'%s'%s" % user, action, latest_order_no)
+    context.execute_steps(u"when %s'%s'订单'%s'" % (user, action, latest_order_no))
 
 
 @when(u"{user}修改订单'{order_code}'的价格")
@@ -489,7 +489,12 @@ def step_impl(context, user, order_id):
     # print(response.context['order'])
     # print("actual---------------------------------")
 
-    expected = json.loads(context.text)
+    expected = []
+    if context.table:
+        for order in context.table:
+            expected.append(order.as_dict())
+    else:
+        expected = json.loads(context.text)
     # todo 暂时不处理actions
     if "actions" in expected:
         del expected["actions"]

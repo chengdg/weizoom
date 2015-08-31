@@ -256,20 +256,20 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 		}
 		"""
 	When jobs'取消'最新订单
-		"""
-		{
-			"reason": "不想要了"
-		}
-		"""
+	#	"""
+	#	{
+	#		"reason": "不想要了"
+	#	}
+	#	"""
 	Then jobs可以获得最新订单详情
 		"""
 		{
 			"order_type": "普通订单",
 			"status": "已取消",
-			"actions": [],
-			"reason": "不想要了"
+			"actions": []
 		}
 		"""
+	#	,"reason": "不想要了"
 
 @mall2 @order
 #验证待发货状态的订单可以取消
@@ -347,20 +347,20 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 	Then bill在jobs的webapp中拥有50会员积分
 	Given jobs登录系统
 	When jobs'取消'最新订单
-		"""
-		{
-			"reason": "不想要了"
-		}
-		"""
+	#	"""
+	#	{
+	#		"reason": "不想要了"
+	#	}
+	#	"""
 	Then jobs可以获得最新订单详情
 		"""
 		{
 			"order_type": "普通订单",
 			"status": "已取消",
-			"actions": [],
-			"reason": "不想要了"
+			"actions": []
 		}
 		"""
+	#	,"reason": "不想要了"
 	Then jobs能获取商品'商品1'
 		"""
 		{

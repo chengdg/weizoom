@@ -24,6 +24,7 @@ def _handle_fahuo_data(orders):
 
 @When(u"{user}对最新订单进行发货")
 def step_impl(context, user):
+    # TODO 废弃这个方法，改用 @when(u'{user}对订单进行发货')
     url = '/mall2/api/delivery/'
     data = {
         'order_id': context.latest_order_id,

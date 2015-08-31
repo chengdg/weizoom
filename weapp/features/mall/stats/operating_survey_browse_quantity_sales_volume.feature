@@ -186,7 +186,7 @@ Scenario: 1  经营概况：流量（PV和UV）
 Scenario: 2  经营概况：销量
 	
 	When 微信用户批量消费jobs的商品
-		|       date    	| consumer |businessman|      product     | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action         |  order_status   |
+		|       date    	| consumer |businessman|      product     | payment | payment_method | freight |   price  | product_integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action         |  order_status   |
 		| 2015-4-4  10:20  	| mary     | jobs      | 商品1,1          | 支付    |   微信支付     | 10      | 100      | 10       | 0      | 100         | 0            | 0      |   100  | 0    |   jobs发货，完成    |    已完成       |
 		| 2015-5-2  8:00  	| bill     | jobs      | 商品1,1          |         |   支付宝       | 10      | 100      |  0       | 0      |  0          | 0            | 0      |    0   | 0    |   系统化自动取消    |    已取消       |
 		| 2015-5-3  10:00  	| tom      | jobs      | 商品2,1          | 支付    |   微信支付     | 15      | 100      |  0       | 0      | 115         | 0            | 0      |    115 | 0    |   jobs发货，完成    |    已完成       |
