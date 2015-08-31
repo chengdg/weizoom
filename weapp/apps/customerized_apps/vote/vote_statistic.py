@@ -10,7 +10,7 @@ import os
 from core import resource
 from core.jsonresponse import create_response
 import models as app_models
-from weixin2 import export
+from mall import export
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20

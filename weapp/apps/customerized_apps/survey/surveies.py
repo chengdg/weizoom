@@ -12,7 +12,7 @@ from core.jsonresponse import create_response
 from termite import pagestore as pagestore_manager
 
 import models as app_models
-from weixin2 import export
+from mall import export
 from datetime import datetime
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20

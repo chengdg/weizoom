@@ -63,6 +63,11 @@
 						<a {% ifequal first_nav_name 'member' %}class="active"{% endifequal %} href='/member/members/get/' title='会员管理'>会员管理</a>
 					</li>
 					{% endif %}
+					{% if 'apps'|satisfy_permission:request %}
+					<li>
+						<a {% ifequal first_nav_name 'apps' %}class="active"{% endifequal %} href='/apps/lottery/lotteries/' title='百宝箱'>百宝箱</a>
+					</li>
+					{% endif %}
 					{% if 'static'|satisfy_permission:request %}
 					<li>
 						<!--<a href='http://tj.weizzz.com/' target='_blank' title='数据统计'>数据统计</a>-->
