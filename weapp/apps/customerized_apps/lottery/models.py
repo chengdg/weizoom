@@ -35,7 +35,7 @@ class lottoryRecord(models.Document):
 
 	meta = {
 		'collection': 'lottery_lottery_record',
-		'ordering': ['-created_at']
+		'ordering': ['-id']
 	}
 
 STATUS_NOT_START = 0

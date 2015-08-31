@@ -90,7 +90,7 @@
         font-size: 1rem;
         font-weight: bolder;
         border-radius: 3px;
-        width: 150px;
+        width: 130px;
     }
     .wui-resultDialog .wui-i-content button{
         width: 70px;
@@ -140,8 +140,7 @@
             $('.xa-remainedIntegral p>b').html(data.remained_integral);
             //更新中奖历史
             var newRecord = data.newRecord;
-            console.log(newRecord);
-            if(newRecord.length>0){
+            if(!$.isEmptyObject(newRecord)){
                 var new_str = "<li>" + newRecord.created_at + '  '+newRecord.prize_title+'  '+ newRecord.prize_name;
                 $('.wui-i-record').find('.xa-recordData').find('p').remove();
                 $('.wui-i-record').find('.xa-recordData').prepend(new_str);
@@ -382,7 +381,7 @@
                     var len = hisData.length;
                     if(len>0){
                         var str_array = [];
-                        for(var i=len-1;i>=0;i--){
+                        for(var i=0;i<len;i++){
                             str_array.push("<li>" + hisData[i].created_at + '  '+hisData[i].prize_title+'  '+ hisData[i].prize_name);
                         }
                         str_array = str_array.toString();
@@ -393,7 +392,7 @@
 
                 },
                 error: function(error){
-                    alert(error);
+                    alert(error.errMsg);
                 }
             });
         }
