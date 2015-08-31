@@ -59,7 +59,7 @@ class WebappPage(resource.Resource):
 		try:				
 			webapp_owner_id = request.GET.get('webapp_owner_id',None)
 			woid = request.GET.get('woid', None)
-			user_id = webapp_owner_id if webapp_owner_id is None else woid
+			user_id = woid if webapp_owner_id is None else webapp_owner_id
 			qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
 		except:
 			qrcode_img = ''
@@ -69,7 +69,7 @@ class WebappPage(resource.Resource):
 			'page_html_content': html,
 			'share_page_desc': site_description,
 			'current_page_name': current_page_name,
-			'qrcode_img': qrcode_img,
+			'current_auth_qrcode_img': current_auth_qrcode_img,
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})
 
