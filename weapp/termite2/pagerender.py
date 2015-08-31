@@ -329,9 +329,6 @@ def __render_component(request, page, component, project):
 	if current_auth_qrcode_img is None:
 		current_auth_qrcode_img = '/static/img/user-1.jpg'
 		
-	print '*****************'
-	print user_id
-			
 	#渲染component自身
 	context = Context({
 		'request': request,
