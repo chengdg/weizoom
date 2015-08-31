@@ -87,7 +87,7 @@
     {% endif %}
     <div data-ui-role="swipemask" class="mask"></div>
     <div class="xui-two-dimension">
-        <img src="/static_v2/img/termite2/erweima.png" alt="">
+        <img src="{{ qrcode_img }}" onerror="this.src='/static/img/user-1.jpg'" alt="">
     </div>
 </div>
 {% endifequal %}

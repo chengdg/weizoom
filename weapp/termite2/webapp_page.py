@@ -14,6 +14,7 @@ from webapp import models as webapp_models
 
 from termite2 import pagecreater
 from termite.workbench import jqm_views
+from weixin.user import module_api as weixin_api
 
 
 class WebappPage(resource.Resource):
@@ -54,11 +55,18 @@ class WebappPage(resource.Resource):
 			# 微页面
 			current_page_name = 'page'
 
+		# 二维码
+		if request.user:
+			qrcode_img = weixin_api.get_mp_qrcode_img(request.user.id)
+		else:
+			qrcode_img = ''
+
 		c = RequestContext(request, {
 			'page_title': page_title,
 			'page_html_content': html,
 			'share_page_desc': site_description,
 			'current_page_name': current_page_name,
+			'qrcode_img': qrcode_img,
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})
 
