@@ -58,7 +58,6 @@ class lottery(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		data = add_extra_data(data, request.POST)
-		print data
 		lottery = app_models.lottery(**data)
 		lottery.save()
 		error_msg = None
@@ -105,5 +104,5 @@ def add_extra_data(data, post):
 	data['delivery_setting'] = post.get('delivery_setting', 'true')
 	data['limitation'] = post.get('limitation', 'once_per_user')
 	data['chance'] = int(post.get('chance', 0))
-	data['type'] = post.get('type', 'true')
+	data['allow_repeat'] = post.get('allow_repeat', 'true')
 	return data

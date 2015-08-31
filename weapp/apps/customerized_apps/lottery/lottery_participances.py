@@ -32,7 +32,7 @@ class lotteryParticipances(resource.Resource):
 			'second_nav_name': "lotteries",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
-		});
+		})
 		
 		return render_to_response('lottery/templates/editor/lottery_participances.html', c)
 	

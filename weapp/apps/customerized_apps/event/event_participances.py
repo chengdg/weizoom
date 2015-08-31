@@ -156,7 +156,7 @@ class eventParticipances_Export(resource.Resource):
 		字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 		"""
 		export_id = request.GET.get('export_id')
-		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
+		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话',u'qq':u'QQ号',u'job':u'职位',u'addr':u'地址'}
 
 		app_name = eventParticipances_Export.app.split('/')[1]
 		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
