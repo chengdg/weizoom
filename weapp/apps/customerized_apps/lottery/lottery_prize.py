@@ -15,7 +15,7 @@ from core import paginator
 from core.jsonresponse import create_response
 
 import models as app_models
-from weixin2 import export
+from mall import export
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api

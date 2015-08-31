@@ -12,7 +12,7 @@ from termite import pagestore as pagestore_manager
 
 import models as app_models
 from datetime import datetime
-from weixin2 import export
+from mall import export
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20

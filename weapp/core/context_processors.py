@@ -34,7 +34,7 @@ def first_navs(request):
 	根据request.path_info获取对应的first navs
 	"""
 	result = {}
-	if ('/new_weixin/' in request.path_info) or ('/apps2/' in request.path_info) or ('/apps/' in request.path_info):
+	if ('/new_weixin/' in request.path_info) or ('/apps2/' in request.path_info):
 		if '/unbind_account/' in request.path_info:
 			result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
 		else:

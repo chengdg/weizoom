@@ -10,7 +10,7 @@ from core import paginator
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
-from weixin2 import export
+from mall import export
 from datetime import datetime
 
 FIRST_NAV = 'apps'
