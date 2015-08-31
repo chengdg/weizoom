@@ -97,7 +97,6 @@ def __get_promotion_name(product):
 		else:
 			name = '%d_%s' % (promotion['id'], product.model['name'])
 	elif product.integral_sale:
-		print 'jz----', '%d_%s' % (product.integral_sale['id'], product.model['name'])
 		return '%d_%s' % (product.integral_sale['id'], product.model['name'])
 
 	return name

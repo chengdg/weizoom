@@ -505,4 +505,60 @@ Scenario: 5 无规格商品修改成多规格后,再删除商品规格
 		}
 		"""
 
+@product @property @toSaleProduct @online_bug
+Scenario: 6 无规格商品修改成多规格后,再删除商品规格值
+	#无规格商品修改成多规格后,再删除商品规格值会导致:
+		##商品下架,库存变为0,会保留无规格时的价格和重量
+	Given jobs登录系统
+	When jobs更新商品'无规格'
+		"""
+		{
+			"name":"无规格",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models": {
+					"黑色": {
+						"price": 11.0,
+						"weight": 11.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}
+		"""
+	Then jobs能获取商品'无规格'
+		"""
+			{
+				"name":"无规格",
+				"is_enable_model": "启用规格",
+				"model": {
+					"models": {
+						"黑色": {
+							"price": 11.0,
+							"weight": 11.0,
+							"stock_type": "无限"
+						}
+					}
+				}
+			}
+		"""
+	When jobs删除商品规格'颜色'的值'黑'
+	Then jobs能获取商品'无规格'
+		"""
+			{
+				"name":"无规格",
+				"shelve_type": "下架",
+				"is_enable_model": "不启用规格",
+				"model": {
+					"models": {
+						"standard": {
+							"price": 10.0,
+							"weight": 10.0,
+							"stock_type": "有限",
+							"stocks": 0
+						}
+					}
+				}
+			}
+		"""
 
