@@ -42,7 +42,7 @@ class lottery_prize(resource.Resource):
 		lotteries = app_models.lottoryRecord.objects(belong_to=lottery_id, member_id=member_id, prize_type__in=all_prize_type_list)
 
 		data = [{
-			'created_at': l.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+			'created_at': l.created_at.strftime('%Y-%m-%d'),
 			'prize_name': l.prize_name,
 			'prize_title': l.prize_title
 		} for l in lotteries]
@@ -204,6 +204,7 @@ class lottery_prize(resource.Resource):
 			"prize_title": result,
 			"prize_name": str(prize_value),
 			"prize_data": str(lottery_prize_data),
+			"status": False if lottery_prize_type=='entity' else True,
 			"created_at": now_datetime
 		}
 		app_models.lottoryRecord(**log_data).save()
@@ -219,7 +220,7 @@ class lottery_prize(resource.Resource):
 		if has_prize:
 			app_models.lottery.objects(id=record_id).update(inc__winner_count=1)
 			newRecord = {
-				'created_at': now_datetime.strftime('%Y-%m-%d %H:%M:%S'),
+				'created_at': now_datetime.strftime('%Y-%m-%d'),
 				'prize_name': prize_value,
 				'prize_title': result
 			}

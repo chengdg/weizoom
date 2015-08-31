@@ -154,7 +154,7 @@
 	text-align: center;
     width: 100%;
 	padding-top: 92px;
-	font-size: 1.3rem;
+	font-size: 1.2rem;
 	color: whitesmoke;
 }
 .wui-lotterydescription .wui-i-subtitle {
@@ -376,10 +376,11 @@ p.wui-i-start_time,p.wui-i-end_time{
 	text-align: center;
 	border: 1px;
 	border-radius:2px;
+	padding: 0;
 }
 .wui-lotterydescription>.wui-i-body .xui-lottery-unit img{
-	height:50px;
-	width:50px;
+	height:60px;
+	width:60px;
 	vertical-align:middle;
 	padding: 0;
 }
@@ -414,7 +415,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 	background-position: 0 -143px;
 }
 .xa-lottery-unit-7{
-	background-position: 1px -206px;
+	background-position: 1px -209px;
 }
 .xa-lottery-unit-8{
 	background-position: -72px 0;

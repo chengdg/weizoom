@@ -51,7 +51,6 @@ class lotteryParticipances(resource.Resource):
 		end_time = request.GET.get('end_time', '')
 		
 		params = {'belong_to':request.GET['id'], 'prize_type__ne': 'no_prize'}
-		print member_ids
 		if name:
 			params['member_id__in'] = member_ids
 		if start_time:

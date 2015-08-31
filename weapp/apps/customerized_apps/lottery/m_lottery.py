@@ -95,7 +95,7 @@ class Mlottery(resource.Resource):
 			'record_id': id,
 			'activity_status': activity_status,
 			'is_already_participanted': (participance_data_count > 0),
-			'page_title': '用户调研',
+			'page_title': u'微信抽奖',
 			'page_html_content': html,
 			'app_name': "lottery",
 			'resource': "lottery",
