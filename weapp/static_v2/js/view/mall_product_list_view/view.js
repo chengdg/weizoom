@@ -193,7 +193,6 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 args: W.toFormData({'model_infos': newModelInfos}),
                 scope: this,
                 success: function(data) {
-                    alert('sss')
                     //遍历table中的model，如果该model在newModelInfos中出现，则:
                     //model.stock_type = newModelInfo.stock_type
                     //model.stocks = newModelInfo.stocks
