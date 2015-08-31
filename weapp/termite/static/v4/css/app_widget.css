@@ -157,11 +157,14 @@
 	font-size: 1.3rem;
 	color: whitesmoke;
 }
-.wui-surveyDescription .wui-i-subtitle {
-    margin-top: 10px;
-    color: whitesmoke;
-    font-size: 19px;
+.wui-lotterydescription .wui-i-subtitle {
+	color: whitesmoke;
 	text-align: center;
+}
+.wui-surveyDescription .wui-i-subtitle {
+	color: #A0A0A0;
+    margin-top: 10px;
+    font-size: 19px;
 }
 .wui-surveyDescription .wui-i-description {
 	margin-top: 10px;
@@ -170,7 +173,14 @@
 }
 .wui-surveyDescription .wui-i-info {
 	border-top: solid 1px #E5E5E5;
-    padding: 25px 0 5px 0;
+	font-size: 14px;
+	padding: 25px 0px 5px 0px;
+    color: #999;
+
+}
+.wui-lotterydescription .wui-i-info {
+	border-top: solid 1px #E5E5E5;
+	padding: 25px 0 5px 0;
     color: whitesmoke;
 	font-size: 14px;
 }
