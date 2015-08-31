@@ -366,7 +366,8 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 			"status":"待支付",
 			"actions": ["修改价格", "取消订单", "支付"],
 			"final_price": 90.00,
-			"save_money": 50.00,
+			"save_money": 10.00,
+			"coupon_money": 50.00,
 			"edit_money": -40.00,
 			"products": [{
 				"name": "商品1",
@@ -385,7 +386,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 			"member": "bill",
 			"status":"待支付",
 			"final_price": 90.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"edit_money": -40.00,
 			"products": [{
 				"name": "商品1",
@@ -404,7 +405,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 			"member": "bill",
 			"status":"待发货",
 			"final_price": 90.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"edit_money": -40.00,
 			"products": [{
 				"name": "商品1",
@@ -424,7 +425,8 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 			"status":"待发货",
 			"actions": ["发货", "申请退款"],
 			"final_price": 90.00,
-			"save_money": 50.00,
+			"save_money": 10.00,
+			"coupon_money": 50.00,
 			"edit_money": -40.00,
 			"products": [{
 				"name": "商品1",
@@ -516,6 +518,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 			"actions": ["发货", "申请退款"],
 			"final_price": 85.00,
 			"save_money":15.00,
+			"integral_money":15.00,
 			"integral": 150,
 			"products": [{
 				"name": "商品1",
@@ -536,6 +539,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 			"actions": [],
 			"final_price": 85.00,
 			"save_money":15.00,
+			"integral_money":15.00,
 			"integral": 150,
 			"products": [{
 				"name": "商品1",
@@ -555,6 +559,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 			"status":"退款中",
 			"final_price": 85.00,
 			"save_money":15.00,
+			"integral_money":15.00,
 			"integral": 150,
 			"products": [{
 				"name": "商品1",
@@ -575,6 +580,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 			"actions": ["退款成功"],
 			"final_price": 85.00,
 			"save_money":15.00,
+			"integral_money":15.00,
 			"integral": 150,
 			"products": [{
 				"name": "商品1",
@@ -595,6 +601,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 			"actions": [],
 			"final_price": 85.00,
 			"save_money":15.00,
+			"integral_money":15.00,
 			"integral": 150,
 			"products": [{
 				"name": "商品1",
@@ -614,6 +621,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 			"status":"退款成功",
 			"final_price": 85.00,
 			"save_money":15.00,
+			"integral_money":15.00,
 			"integral": 150,
 			"products": [{
 				"name": "商品1",
@@ -706,7 +714,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"member": "bill",
 			"status":"待发货",
 			"final_price": 50.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -726,6 +734,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"actions": ["发货", "取消订单"],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -745,6 +754,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"actions": ["标记完成", "取消订单", "修改物流"],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -762,7 +772,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"member": "bill",
 			"status":"待收货",
 			"final_price": 50.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -783,6 +793,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"actions": ["申请退款"],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -800,7 +811,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"member": "bill",
 			"status":"已完成",
 			"final_price": 50.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -821,6 +832,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"actions": [],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -838,7 +850,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"member": "bill",
 			"status":"退款中",
 			"final_price": 50.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -858,6 +870,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"actions": ["退款成功"],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -877,6 +890,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"actions": [],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -894,7 +908,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 			"member": "bill",
 			"status":"退款成功",
 			"final_price": 50.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -958,7 +972,7 @@ Scenario: 5 设置未付款订单过期时间
 			"member": "bill",
 			"status":"待支付",
 			"final_price": 50.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -978,6 +992,7 @@ Scenario: 5 设置未付款订单过期时间
 			"actions": [],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -1028,7 +1043,7 @@ Scenario: 5 设置未付款订单过期时间
 			"member": "bill",
 			"status":"待支付",
 			"final_price": 50.00,
-			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
@@ -1048,6 +1063,7 @@ Scenario: 5 设置未付款订单过期时间
 			"actions": ["修改价格", "取消订单", "支付"],
 			"final_price": 50.00,
 			"save_money": 50.00,
+			"coupon_money": 50.00,
 			"products": [{
 				"name": "商品1",
 				"price": 100.00,
