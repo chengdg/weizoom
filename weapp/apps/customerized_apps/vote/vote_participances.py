@@ -164,8 +164,7 @@ class voteParticipances_Export(resource.Resource):
 					else:
 						fields_shortcuts.append(item)
 			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
-
-
+			
 			for field in fields_raw:
 				if '_' in field:
 					purename = field.split('_')[1]
@@ -204,6 +203,7 @@ class voteParticipances_Export(resource.Resource):
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
+					selec_v =[]
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
 						if s_i[i]['isSelect'] == True:
