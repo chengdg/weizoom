@@ -62,7 +62,7 @@ class WebappPage(resource.Resource):
 			user_id = woid if webapp_owner_id is None else webapp_owner_id
 			current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
 		except:
-			current_auth_qrcode_img = ''
+			current_auth_qrcode_img = '/static/img/user-1.jpg'
 
 		c = RequestContext(request, {
 			'page_title': page_title,
