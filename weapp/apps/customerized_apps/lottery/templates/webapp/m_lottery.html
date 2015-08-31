@@ -91,6 +91,8 @@
         font-weight: bolder;
         border-radius: 3px;
         width: 130px;
+        display: block;
+        margin: 5px auto;
     }
     .wui-resultDialog .wui-i-content button{
         width: 70px;
@@ -120,12 +122,12 @@
                 <label>手机号
                     <input placeholder="请输入手机号码">
                 </label>
-                <button class="wui-i-dialog-btn">提&nbsp;交</button>
+                <button class="wui-i-dialog-btn" style="margin: 0;display: inline-block">提&nbsp;交</button>
             </div>
         </div>
         <div class="wui-i-bottom xa-dialog-bottom">
-            <button class="wui-i-dialog-btn wui-i-userCenter xa-userCenter">个人中心</button>
-            <button class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn">关闭</button>
+            <button type="button" class="wui-i-dialog-btn wui-i-userCenter xa-userCenter">个人中心</button>
+            <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn">关闭</button>
         </div>
     </div>
 {% endblock %}
@@ -141,7 +143,7 @@
             //更新中奖历史
             var newRecord = data.newRecord;
             if(!$.isEmptyObject(newRecord)){
-                var new_str = "<li>" + newRecord.created_at + '  '+newRecord.prize_title+'  '+ newRecord.prize_name;
+                var new_str = "<li>" + newRecord.prize_title+'  '+ newRecord.prize_name+ '  '+ newRecord.created_at;
                 $('.wui-i-record').find('.xa-recordData').find('p').remove();
                 $('.wui-i-record').find('.xa-recordData').prepend(new_str);
             }
@@ -178,8 +180,16 @@
                         }
                     });
             });
+
+            this.$userCenter.on('click', function(){
+                window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId;
+
+            });
             //初始化result dialog
             this.$mask = $('<div class="wui-mask"></div>');
+            this.$mask.on('click', function(){
+                that.close();
+            });
             $('body').append(this.$mask);
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
@@ -200,6 +210,7 @@
                 this.$title.html('中奖了耶');
                 this.$contentHeader.html("恭喜您获得了"+prize_name+'！');
                 this.$entityContent.show();
+                this.$closeBtn.hide();
             }else if(prize_type == 'no_prize'){
                 this.$title.html('很遗憾');
                 this.$contentHeader.html("没有中奖，再接再厉吧~");
@@ -212,10 +223,14 @@
             }else if(prize_type == 'gameover'){
                 this.$title.css('visibility','hidden');
                 this.$contentHeader.html("活动已经结束啦，<br>下次早点来哦~");
-                this.$closeBtn.text('关闭');
+                this.$closeBtn.hide();
             }else if(prize_type == 'timesout'){
                 this.$title.css('visibility','hidden');
                 this.$contentHeader.html("您今天的抽奖机会已经用完了，<br>明天再来吧~");
+                this.$closeBtn.hide();
+            }else if(prize_type == 'notready'){
+                this.$title.css('visibility','hidden');
+                this.$contentHeader.html("抽奖活动还未开始~");
                 this.$closeBtn.text('关闭');
             }
             var that = this;
@@ -382,7 +397,7 @@
                     if(len>0){
                         var str_array = [];
                         for(var i=0;i<len;i++){
-                            str_array.push("<li>" + hisData[i].created_at + '  '+hisData[i].prize_title+'  '+ hisData[i].prize_name);
+                            str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at);
                         }
                         str_array = str_array.toString();
                         $('.wui-i-record').find('.xa-recordData').html(str_array);
