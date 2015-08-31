@@ -272,7 +272,11 @@
                     /* 非会员显示二维码 */
                     showSwiper();
                 } else {
-                    window.location.href = "http://"+ window.location.host + url;
+                    if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
+                        window.location.href = url;
+                    }else{
+                        window.location.href = "http://"+ window.location.host + url;
+                    }
                 }
             });
             
