@@ -146,11 +146,9 @@ def step_impl(context, user):
 			actual_data.append(adict)
 		# for i in range(len(json_data)):
 		# 	print 'hello:name,pay_money',json_data[i]['username'],json_data[i]['attention_time'],'kitty:name,pay_money',actual_data[i]['username'],actual_data[i]['attention_time']
-
 		#print 'hello',json_data
 		#print 'world',actual_data
 		# print 'kitty',actual_members[7]
-	print len(json_data), len(actual_data), "+++++"
 
 	bdd_util.assert_list(json_data, actual_data)
 
