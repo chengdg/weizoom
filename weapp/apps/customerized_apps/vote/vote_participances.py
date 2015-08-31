@@ -52,7 +52,6 @@ class voteParticipances(resource.Resource):
 			if name.find(u'非')>=0:
 				sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
 				members = members|sub_members
-
 		else:
 			members = member_models.Member.objects.filter(webapp_id=webapp_id)
 		member_ids = [member.id for member in members]
