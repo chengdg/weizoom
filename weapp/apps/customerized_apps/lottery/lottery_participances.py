@@ -39,24 +39,31 @@ class lotteryParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
+		print name
+		prize_type = request.GET.get('prize_type', '-1')
+		status = request.GET.get('status', '-1')
+		member_ids = []
 		if name:
 			members = member_models.Member.get_by_username(name)
-		else:
-			members = member_models.Member.get_members(request.user_profile.webapp_id)
-		member_ids = [member.id for member in members]
-		member_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
+			member_ids = [member.id for member in members]
+
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		
-		params = {'belong_to':request.GET['id']}
-		if member_ids:
+		params = {'belong_to':request.GET['id'], 'prize_type__ne': 'no_prize'}
+		print member_ids
+		if name:
 			params['member_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
-		datas = app_models.lotteryParticipance.objects(**params).order_by('-id')	
-		
+		if prize_type != '-1':
+			params['prize_type'] = prize_type
+		if status != '-1':
+			params['status'] = True if status == '1' else False
+		# datas = app_models.lotteryParticipance.objects(**params).order_by('-id')
+		datas = app_models.lottoryRecord.objects(**params)
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
@@ -80,13 +87,12 @@ class lotteryParticipances(resource.Resource):
 			data.participant_icon = '/static/img/user-1.jpg'
 		
 		member_user2member = {}
-		members = member_models.Member.objects.filter(id__in = member_ids)
+		members = member_models.Member.objects.filter(id__in=member_ids)
 		for member in members:
 			if member.id not in member_user2member:
 				member_user2member[member.id] = member
 			else:
 				member_user2member[member.id] = member
-
 
 		if len(member_user2member) > 0:
 			for member_id, member in member_user2member.items():
@@ -101,6 +107,10 @@ class lotteryParticipances(resource.Resource):
 				'id': str(data.id),
 				'participant_name': data.participant_name,
 				'participant_icon': data.participant_icon,
+				'tel': data.tel,
+				'prize_title': data.prize_title,
+				'prize_name': data.prize_name,
+				'status': data.status,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {

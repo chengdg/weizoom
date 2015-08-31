@@ -8,16 +8,25 @@
 			<li>您当前所在位置</li>
 			<li><a href="/apps/">百宝箱</a></li>
 			<li><a href="/apps/lottery/lotteries/">微信抽奖</a></li>
-			<li class="active">查看结果</li>
+			<li class="active">中奖详情</li>
 		</ul>
 	</div>
 	
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
-				<label class="">用户名：</label>
+				<label class="">中奖用户：</label>
 				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
 			</div>
+            <div class="xui-i-item">
+                <label>奖品类型：</label>
+                <select class="" id="prize_type" name="prize_type">
+                    <option value="-1">不限</option>
+                    <option value="integral">积分</option>
+                    <option value="coupon">优惠券</option>
+                    <option value="entity">实物</option>
+                </select>
+            </div>
 		</div>
 		<div class="xui-i-col">
 			<div class="xui-i-item ml10">
@@ -49,6 +58,14 @@
 					data-format="yy-mm-dd HH:MM"
 					data-min-el="#start_time"/>
 			</div>
+            <div class="xui-i-item">
+                <label>领取状态：</label>
+                <select class="" id="status" name="status">
+                    <option value="-1">不限</option>
+                    <option value="0">未领取</option>
+                    <option value="1">已领取</option>
+                </select>
+            </div>
 		</div>
 		<div class="xui-i-col">
 			<div class="ml80">
@@ -125,7 +142,11 @@
 					${item.created_at}
 				</td>
 				<td>
-					${item.status}
+				    {{if !item.status}}
+				        未领取
+					{{else}}
+					    已领取
+					{{/if}}
 				</td>
 				<td>
 				    {{if !item.status}}
@@ -161,13 +182,17 @@ $(document).ready(function() {
 	
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());
+        var prize_type = $.trim($('[name="prize_type"]').val());
+        var status = $.trim($('[name="status"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
 		var endTime = $.trim($('[name="end_time"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
 			participant_name: participant_name,
 			start_time: startTime,
-			end_time: endTime
+			end_time: endTime,
+            prize_type: prize_type,
+            status: status
 		}, {
 			emptyDataHint: '没有符合条件的数据'
 		});
