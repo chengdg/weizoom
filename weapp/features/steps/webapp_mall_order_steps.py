@@ -268,10 +268,12 @@ def step_impl(context, webapp_usr_name, order_id):
     response = context.client.get(bdd_util.nginx(url), follow=True)
     actual = response.context['order']
     actual.order_no = actual.order_id
-    actual.order_time = (str(actual.created_at))[:-3]
+    actual.order_time = (str(actual.created_at))
     actual.methods_of_payment = response.context['pay_interface']
     actual.member = actual.buyer_name
     actual.status = ORDERSTATUS2TEXT[actual.status]
+    if actual.status == u'已发货':
+        actual.status = u'待收货'
 
     expected = json.loads(context.text)
     bdd_util.assert_dict(expected, actual)

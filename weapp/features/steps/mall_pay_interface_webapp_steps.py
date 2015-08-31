@@ -140,7 +140,7 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 @when(u"{webapp_user_name}使用支付方式'{pay_interface_name}'进行支付订单'{order_code}'")
 def step_impl(context, webapp_user_name, pay_interface_name, order_code):
 	context.created_order_id = order_code
-	context.execute_steps(u"when %s使用支付方式'%s'进行支付'%s'" % webapp_user_name,pay_interface_name)
+	context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name,pay_interface_name))
 
 
 

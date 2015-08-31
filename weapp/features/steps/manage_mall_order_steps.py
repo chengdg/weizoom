@@ -13,35 +13,26 @@ import steps_db_util
 # when steps
 ###############################
 
+
+ORDER_ACTION_NAME2ACTION = {
+    u'支付': 'pay',
+    u'完成': 'finish',
+    u'退款': 'return_pay',
+    u'申请退款': 'return_pay',
+    u'完成退款': 'return_success',
+    u'取消': 'cancel',
+    u'退款成功': 'return_success'
+}
+
+
 @when(u"{user}'{action}'最新订单")
 def step_impl(context, user, action):
     if hasattr(context, 'latest_order_id'):
-        latest_order_id = context.latest_order_id
+        latest_order_no = Order.objects.get(id=context.latest_order_id)
     else:
-        latest_order_id = steps_db_util.get_latest_order().id
-    data = {
-        "order_id": latest_order_id
-    }
-    url = '/mall2/api/order/'
-    if action == u"支付":
-        data["action"] = "pay"
-    elif action == u"完成":
-        data["action"] = "finish"
-    elif action == u"退款":
-        data["action"] = "return_pay"
-    elif action == u"完成退款":
-        data["action"] = "return_success"
-    elif action == u"取消":
-        data["action"] = "cancel"
-        try:
-            if hasattr(context, 'caller_step_cancel_reason'):
-                tmp_data = context.caller_step_cancel_reason
-            else:
-                tmp_data = json.loads(context.text)
-            data['reason'] = tmp_data['reason']
-        except:
-            pass
-    response = context.client.post(url, data)
+        latest_order_no = steps_db_util.get_latest_order().order_id
+
+    context.execute_steps(u"when %s'%s'%s" % user, action, latest_order_no)
 
 
 @when(u"{user}修改订单'{order_code}'的价格")
@@ -53,19 +44,17 @@ def step_impl(context, user, order_code):
     context.client.post(url, post_data)
 
 
-@when(u"{user}'支付'订单'{order_code}'")
-def step_impl(context, user, order_code):
-    context.latest_order_id = bdd_util.get_order_by_order_no(order_code).id
-    context.execute_steps(u"when %s'支付'最新订单" % user)
+@when(u"{user}'{action}'订单'{order_code}'")
+def step_impl(context, action, user, order_code):
+    url = '/mall2/api/order/'
 
-# @when(u'{user}对最新订单进行退款')
-# def step_impl(context, user):
-#     context.execute_steps(u'when %s"退款"最新订单' % user)
+    data = {
+        'order_id': bdd_util.get_order_by_order_no(order_code).id,
+        'action': ORDER_ACTION_NAME2ACTION[action]
+    }
+    response = context.client.post(url, data)
 
 
-# @when(u'{user}完成最新订单退款')
-# def step_impl(context, user):
-#     context.execute_steps(u'when %s"完成退款"最新订单' % user)
 ######
 
 # 缺失对应feature
@@ -496,9 +485,9 @@ def step_impl(context, user, order_id):
         actual_order.order_no = actual_order.order_no + "-" +\
             str(actual_order.edit_money).replace('.', '').replace('-', '')
 
-    print("actual---------------------------------")
-    print(response.context['order'])
-    print("actual---------------------------------")
+    # print("actual---------------------------------")
+    # print(response.context['order'])
+    # print("actual---------------------------------")
 
     expected = json.loads(context.text)
     # todo 暂时不处理actions
