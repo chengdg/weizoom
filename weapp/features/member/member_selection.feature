@@ -165,6 +165,7 @@ Background:
 		#会员列表，访问会员详情会自动校验会员的购买信息，要不出来的结果和实际结果不符
 		Then jobs访问所有会员
 
+@mall2 @member @memberList
 Scenario:1 默认条件和空条件查询
 
 	Given jobs登录系统
@@ -236,6 +237,7 @@ Scenario:1 默认条件和空条件查询
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |    162.50  |    2      |     2014-08-05 | 推广扫码 | 分组1       |
 			| tom1  | 银牌会员    |       2      |     0    |   110.00  |    110.00  |    1      |     2014-08-04 | 直接关注 | 分组1       |
 
+@mall2 @member @memberList
 Scenario:2 过滤条件"会员名称"
 
 	#会员名称部分匹配查询
@@ -338,6 +340,7 @@ Scenario:2 过滤条件"会员名称"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 
+@mall2 @member @memberList
 Scenario:3 过滤条件"会员状态"
 
 	#会员状态匹配
@@ -374,6 +377,7 @@ Scenario:3 过滤条件"会员状态"
 			| tom4  |   金牌会员  |       0      |    20    |   0.00    |    0.00    |      0    |   2014-08-05   |  会员分享 | 分组3   |
 			| tom2  |   普通会员  |       0      |    50    |   325.00  |    162.50  |      2    |   2014-08-05   |  推广扫码 | 分组1   |
 
+@mall2 @member @memberList
 Scenario:4 过滤条件"关注时间"
 
 	#区间时间边界值查询，不包含结束时间
@@ -478,6 +482,7 @@ Scenario:4 过滤条件"关注时间"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 
+@mall2 @member @memberList
 Scenario:5 过滤条件"会员等级"
 
 	#单等级匹配
@@ -515,6 +520,7 @@ Scenario:5 过滤条件"会员等级"
 			| tom5  | 金牌会员    |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-06   | 会员分享 | 分组3   |
 			| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |      0    |   2014-08-05   | 会员分享 | 分组3   |
 
+@mall2 @member @memberList
 Scenario:6 过滤条件"会员分组"
 
 	#单会员分组匹配
@@ -619,6 +625,7 @@ Scenario:6 过滤条件"会员分组"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 
+@mall2 @member @memberList
 Scenario:7 过滤条件"会员来源"
 
 	#单会员来源匹配
@@ -729,6 +736,7 @@ Scenario:7 过滤条件"会员来源"
 				| tom4  | 金牌会员    |       0      |     20   |   0.00    |    0.00    |     0     |    2014-08-05  | 会员分享 | 分组3       |
 				| tom3  | 银牌会员    |       1      |    100   |   335.00  |    111.67  |     3     |    2014-08-05  | 会员分享 | 分组1,分组3 |
 
+@mall2 @member @memberList
 Scenario:8 过滤条件"消费总额"
 
 	#区间查询，包含开始和结束数值
@@ -870,6 +878,7 @@ Scenario:8 过滤条件"消费总额"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 
+@mall2 @member @memberList
 Scenario:9 过滤条件"购买次数"
 
 	#区间查询，包含开始和结束数值
@@ -1014,6 +1023,7 @@ Scenario:9 过滤条件"购买次数"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 
+@mall2 @member @memberList
 Scenario:10 过滤条件"最后购买时间"
 
 	#区间时间边界值查询，包含结束时间
@@ -1116,6 +1126,7 @@ Scenario:10 过滤条件"最后购买时间"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 
+@mall2 @member @memberList
 Scenario:11 过滤条件"积分范围"
 
 	#区间查询，包含开始和结束数值
@@ -1224,10 +1235,12 @@ Scenario:11 过滤条件"积分范围"
 		Then jobs可以获得会员列表
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 
+@mall2 @member @memberList
 Scenario:12 过滤条件"最后对话时间"
 
 	#无法在feature中模拟到准确的对话时间，不能实现此场景
 
+@mall2 @member @memberList
 Scenario:13 过滤条件"条件组合查询"
 
 	#空调条件查询，“重置”查询条件，空调间查询所有数据
@@ -1263,6 +1276,7 @@ Scenario:13 过滤条件"条件组合查询"
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time | source   |  tags   |
 			| tom2  | 普通会员    |       0      |     50   |   325.00  |   162.50   |     2     |   2014-08-05   | 推广扫码 | 分组1   |
 
+@mall2 @member @memberList
 Scenario:14 会员列表分页
 
 	Given jobs登录系统
