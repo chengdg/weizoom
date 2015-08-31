@@ -72,7 +72,7 @@ Scenario: 1 新建商品,在待售商品列表中第一个显示
 			}]
 		"""
 
-@product @toSaleProduct @online_bug
+@product @toSaleProduct @online_bug @mall2
 Scenario: 2 下架商品,在待售商品列表中第一个显示
 	Given jobs登录系统
 	Then jobs能获得'待售'商品列表
@@ -100,7 +100,7 @@ Scenario: 2 下架商品,在待售商品列表中第一个显示
 		"""
 			[{
 				"name":"商品2",
-				"price":20.0
+				"price":30.0
 			},{
 				"name":"商品0",
 				"price":20.0
@@ -121,7 +121,7 @@ Scenario: 2 下架商品,在待售商品列表中第一个显示
 		"""
 			[{
 				"name": "商品2",
-				"price": 20.0
+				"price": 30.0
 			},{
 				"name": "商品3",
 				"price": 20.0

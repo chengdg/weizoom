@@ -272,6 +272,8 @@ def __update_prducts_by_name(context, product_name, action):
         u'永久删除': 'delete',
     }
     action = ACTION2TYPE[action]
+    if action == 'offshelf':
+        time.sleep(1) #处理下架时睡眠一秒，避免测试结果不准
     data = {
         'shelve_type': action
     }
