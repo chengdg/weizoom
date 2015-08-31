@@ -343,9 +343,10 @@
         };
     </script>
     <script type="text/javascript">
-        var lottery_status, can_play_count, resultDialog;
+        var lottery_status, can_play_count, resultDialog, activity_status;
         window.lottery = {};//测试用
-
+        console.log(W.isPC);
+    if(!W.isPC){
         $(function(){
             //隐藏参与活动按钮
             $('.xa-submitButtonContainer').hide();
@@ -353,11 +354,23 @@
             //获取中奖历史和剩余积分
             getHistory();
             lottery_status = '{{ lottery_status }}' == 'True' ? true : false;
+            activity_status = '{{ activity_status }}';
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             window.lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
                 if(lottery.isRolling || !lottery_status || can_play_count<=0){
-                    if(!lottery.isRolling) resultDialog.render();
+                    if(activity_status == '未开始'){
+                        resultDialog.render({
+                            prize_type: 'notready'
+                        });
+                        return false;
+                    }else if(activity_status == '已结束'){
+                        resultDialog.render({
+                            prize_type: 'gameover'
+                        });
+                        return false;
+                    }
+                    if(!lottery.isRolling){} resultDialog.render();
                     return false;
                 }else{
                     W.getApi().call({
@@ -379,6 +392,7 @@
                 }
             });
         });
+    }
         function getHistory(){
             can_play_count = parseInt('{{ can_play_count }}');
             $('.wui-lotterydescription .xa-header p>b').html(can_play_count);

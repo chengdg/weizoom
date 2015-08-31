@@ -79,6 +79,18 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 				image: image.url
 			}, {silent: true});
 
+			if (data.type === 'newImage') {
+				W.resource.termite2.Image.put({
+					data: image,
+					success: function(data) {
+
+					},
+					error: function(resp) {
+
+					}
+				})
+			}
+
 			var currCid = $propertyViewNode.attr('data-dynamic-cid');
 			var targetClass,alt;
 			switch (currCid){

@@ -28,6 +28,7 @@ class Mlottery(resource.Resource):
 		"""
 		id = request.GET['id']
 		participance_data_count = 0
+		isPC = request.GET['isPC']
 		has_prize = False
 		lottery_status = False
 		can_play_count = 0
@@ -89,7 +90,7 @@ class Mlottery(resource.Resource):
 		request.GET._mutable = False
 		html = pagecreater.create_page(request, return_html_snippet=True)
 		c = RequestContext(request, {
-			'lottery_status': lottery_status,
+			'lottery_status': lottery_status if activity_status == u'进行中' else False,
 			'can_play_count': can_play_count if lottery_status else 0,
 			'expend_integral': expend,
 			'record_id': id,
@@ -99,7 +100,8 @@ class Mlottery(resource.Resource):
 			'page_html_content': html,
 			'app_name': "lottery",
 			'resource': "lottery",
-			'hide_non_member_cover': True #非会员也可使用该页面
+			'hide_non_member_cover': True, #非会员也可使用该页面
+			'isPC': isPC
 		})
 
 		return render_to_response('lottery/templates/webapp/m_lottery.html', c)
