@@ -38,6 +38,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
         <script type="text/javascript" src="/termite_static/backbone/underscore-1.4.4.min.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/backbone_lite.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeMask.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
@@ -95,6 +96,32 @@
         </div>
         
 
+        <script type="text/javascript">
+            var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+            W.currentPageName = "{{current_page_name}}";
+            W.projectId = "{{request.project.id}}";
+            W.webappOwnerId = "{{request.webapp_owner_id}}";
+            W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
+            W.curRequestMemberToken = "{{ cur_request_member.token }}";
+            W.visitHistory = "{{ visit_histroy_url }}";
+            W.urlTitle = "{{ visit_histroy_url_title }}";
+            if (W.urlTitle == ''){
+                W.urlTitle = '{{ show_system_name }}';
+            }
+            W.pageTitle = "{{page_title}}";
+            W.errorMessage = null;
+
+            {% if messages %}
+            {% for message in messages %}
+            W.errorMessage = "{{message}}";
+            {% endfor %}
+            {% endif %}
+
+            W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
+            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
+                  
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
+        </script>
 
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
@@ -207,34 +234,57 @@
                 });
             } 
         });
+
+        $(document).ready(function() {
+            var height = $(window).height();
+            var $twoDimension = $('.xui-two-dimension');
+
+            var showSwiper = function(){                
+                $('body').swipeMask('show');
+                $('.mask').css({
+                    height: height,
+                    background: 'rgba(132,132,132,0.5)',
+                    position:'fixed'
+                });
+                $('.xui-two-dimension').css({
+                    top: height/2,
+                    'margin-top': -185,
+                    display:'block'
+                });   
+            };
+
+            var isUserCenterLink = function(url){
+                if (url.indexOf('module=user_center') > 0 &&
+                    url.indexOf('model=user_info') > 0 &&
+                    url.indexOf('action=get') > 0 ) {
+                    return true;
+                }else{
+                    return false;
+                }
+            };
+
+            $('.xa-wepage-navbar-link').click(function(event){
+                var url = $(event.currentTarget).find('a').attr('data-link');
+                if (url.length == 0) {
+                    return;
+                }
+                if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
+                    /* 非会员显示二维码 */
+                    showSwiper();
+                } else {
+                    window.location.href = "http://"+ window.location.host + url;
+                }
+            });
+            
+            $('.mask').click(function(){
+                $('body').swipeMask('hide');
+                $('.xui-two-dimension').hide();
+            });
+        });
         
         </script>
 
         <script type="text/javascript">
-            var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
-            W.currentPageName = "{{current_page_name}}";
-            W.projectId = "{{request.project.id}}";
-            W.webappOwnerId = "{{request.webapp_owner_id}}";
-            W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
-            W.curRequestMemberToken = "{{ cur_request_member.token }}";
-            W.visitHistory = "{{ visit_histroy_url }}";
-            W.urlTitle = "{{ visit_histroy_url_title }}";
-            if (W.urlTitle == ''){
-                W.urlTitle = '{{ show_system_name }}';
-            }
-            W.pageTitle = "{{page_title}}";
-            W.errorMessage = null;
-
-            {% if messages %}
-            {% for message in messages %}
-            W.errorMessage = "{{message}}";
-            {% endfor %}
-            {% endif %}
-
-            W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
-            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-                  
-            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
                     W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
             var link = window.location.href;
