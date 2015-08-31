@@ -72,9 +72,9 @@ Background:
 			"type": "微信支付",
 			"description": "我的微信支付",
 			"is_active": "启用",
-			"weixin_appid": "12345", 
-			"weixin_partner_id": "22345", 
-			"weixin_partner_key": "32345", 
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
 			"weixin_sign": "42345"
 		},{
 			"type": "支付宝",
@@ -204,7 +204,7 @@ Background:
 				When 清空浏览器
 				When jack3点击jack2分享链接
 				When jack3分享jack2分享jobs的微站链接到朋友圈
-			
+
 			#bill0011点击jack3的分享链接，关注jobs的公众账号，访问jobs的webapp；bill0011是bill推荐的下级好友，来源是"会员分享"
 				When 清空浏览器
 				When bill0011点击jack3分享链接

@@ -72,6 +72,7 @@ def step_impl(context, user):
 		if hasattr(context, 'filter_str'):
 			context.url += context.filter_str
 	###访问会员详情页：访问会员详情页会使购买信息自动调整正确
+	print context.url, "+++++++++++++++"
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
 	for member_item in items:
@@ -149,6 +150,7 @@ def step_impl(context, user):
 		#print 'hello',json_data
 		#print 'world',actual_data
 		# print 'kitty',actual_members[7]
+	print len(json_data), len(actual_data), "+++++"
 
 	bdd_util.assert_list(json_data, actual_data)
 

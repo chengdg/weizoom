@@ -64,6 +64,24 @@ def step_impl(context, user):
     response = context.client.post('/member/api/tag/batch_update/', args)
     bdd_util.assert_api_call_success(response)
 
+@when(u'{webapp_user}给"{member}"调分组')
+def step_impl(context, webapp_user, member):
+    url = '/member/api/tag/update/'
+    query_hex = byte_to_hex(member)
+    member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
+    tag_ids = []
+    data = json.loads(context.text)
+    for tag_name in data:
+        tag_ids.append(str(MemberTag.objects.get(webapp_id=context.webapp_id, name=tag_name).id))
+    print tag_ids, "VVVVVVV"
+    args = {
+        'type': 'tag',
+        'checked_ids': '_'.join(tag_ids),
+        'member_id': member_id
+    }
+    response = context.client.post(url, args)
+    bdd_util.assert_api_call_success(response)
+
 # @Then(u"{user}能获取会员等级列表")
 # def step_impl(context, user):
 # 	if hasattr(context, 'client'):
