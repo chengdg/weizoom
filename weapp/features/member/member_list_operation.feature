@@ -62,7 +62,7 @@ Background:
 			| tom2 			| 2014-08-05 00:00:00  | 推广扫码 |
 			| tom3	 	    | 2014-08-05 08:00:00  | 会员分享 |
 
-		And tom2取消关注jobs的公众号
+		#And tom2取消关注jobs的公众号
 
 	#获取会员积分
 		When 清空浏览器
@@ -83,7 +83,6 @@ Background:
 	#	When tom2在模拟器中发送消息'tom2发送一条文本消息，回复文本消息'
 	#	When jobs在模拟器中给tom2回复消息'jobs回复tom2消息'
 
-@eugeneX
 Scenario:1 调分组
 	Given jobs登录系统
 	#给没有分组的人设置分组
@@ -94,10 +93,10 @@ Scenario:1 调分组
 			]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
-			| tom3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |             |
-			| tom2  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |             |
-			| tom1  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |分组1,分组3 |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
+			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
+			| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |分组1,分组3 |
 
 	#给有分组的人设置分组
 		When jobs给"tom1"调分组
@@ -105,10 +104,10 @@ Scenario:1 调分组
 			["分组2"]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | integral | attention_time |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
-			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 | 分组2       |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
+			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
+			| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |   分组2    |
 
 	#给有分组的人设置成分组为空
 		When jobs给"tom1"调分组
@@ -116,13 +115,13 @@ Scenario:1 调分组
 			[]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | integral | attention_time |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
-			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |             |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
+			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
+			| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
 
 Scenario:2 设等级
-
+	Given jobs登录系统
 	#给当前会员设置等级
 		When jobs给"tom2"设等级
 			"""
@@ -131,10 +130,10 @@ Scenario:2 设等级
 			}
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | integral | attention_time |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
-			| tom2  | 金牌会员    |     0    |   2014-08-05   | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |             |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
+			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
+			| tom2  |   金牌会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
 
 	#给当前会员设置现在的等级
 
@@ -145,10 +144,10 @@ Scenario:2 设等级
 			}
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | integral | attention_time |  source  |    tags     |
-			| tom3  | 普通会员    |     0    |   2014-08-05   | 会员分享 |             |
-			| tom2  | 金牌会员    |     0    |   2014-08-05   | 推广扫码 |             |
-			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |             |
+			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
+			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
+			| tom2  |   金牌会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
 
 Scenario:3 发优惠券
 
@@ -157,6 +156,7 @@ Scenario:3 发优惠券
 	And tom取消关注jobs的公众号
 
 	#添加优惠券规则
+	Given jobs登录系统
 		Given jobs已添加商品
 			"""
 			[{
@@ -170,8 +170,8 @@ Scenario:3 发优惠券
 			[{
 				"name": "单品券1",
 				"money": 10.00,
-				"each_limit": "1",
-				"limit_counts": 3,
+				"limit_counts": 1,
+				"count": 3,
 				"start_date": "今天",
 				"end_date": "1天后",
 				"coupon_id_prefix": "coupon1_id_",
@@ -179,12 +179,11 @@ Scenario:3 发优惠券
 			},{
 				"name": "全店券2",
 				"money": 20.00,
-				"each_limit": "不限",
-				"limit_counts": 5,
+				"limit_counts": "无限",
+				"count": 5,
 				"start_date": "今天",
 				"end_date": "1天后",
-				"coupon_id_prefix": "coupon2_id_",
-				"coupon_product": ""
+				"coupon_id_prefix": "coupon2_id_"
 			}]
 			"""
 
@@ -275,8 +274,8 @@ Scenario:3 发优惠券
 					"coupon1_id_1": {
 						"money": 10.00,
 						"status": "未使用",
-						"consumer": "bill",
-						"target": ""
+						"consumer": "",
+						"target": "bill"
 					},
 					"coupon1_id_2": {
 						"money": 10.00,
@@ -419,18 +418,6 @@ Scenario:3 发优惠券
 					"coupon_id": "coupon2_id_2",
 					"money": 20.00,
 					"status": "未使用"
-				},{
-					"coupon_id": "coupon2_id_3",
-					"money": 20.00,
-					"status": "未使用"
-				},{
-					"coupon_id": "coupon2_id_4",
-					"money": 20.00,
-					"status": "未使用"
-				},{
-					"coupon_id": "coupon2_id_5",
-					"money": 20.00,
-					"status": "未使用"
 				}]
 				"""
 			Given jobs登录系统
@@ -451,27 +438,26 @@ Scenario:3 发优惠券
 					},
 					"coupon2_id_3": {
 						"money": 20.00,
-						"status": "未使用",
+						"status": "未领取",
 						"consumer": "",
-						"target": "tom"
+						"target": ""
 					},
 					"coupon2_id_4": {
 						"money": 20.00,
-						"status": "未使用",
+						"status": "未领取",
 						"consumer": "",
-						"target": "tom"
+						"target": ""
 					},
 					"coupon2_id_5": {
 						"money": 20.00,
-						"status": "未使用",
+						"status": "未领取",
 						"consumer": "",
-						"target": "tom"
+						"target": ""
 					}
 				}
 				"""
-
 Scenario:4 加积分
-
+	Given jobs登录系统
 	#给当前会员积分为零时加积分负数，积分变为负数
 		When jobs给"tom3"加积分
 			"""
@@ -481,10 +467,11 @@ Scenario:4 加积分
 			}
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | integral | attention_time |  source  |
-			| tom3  | 普通会员    |    -10   |   2014-08-05   | 会员分享 |
-			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |
-			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
+		| tom3  |   普通会员  |       0      |   -10    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
+		| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
+		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
+
 
 	#给当前会员积分为零时加积分正数
 		When jobs给"tom3"加积分
@@ -495,10 +482,10 @@ Scenario:4 加积分
 			}
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | integral | attention_time |  source  |
-			| tom3  | 普通会员    |    10    |   2014-08-05   | 会员分享 |
-			| tom2  | 普通会员    |     0    |   2014-08-05   | 推广扫码 |
-			| tom1  | 普通会员    |     0    |   2014-08-04   | 直接关注 |
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
+		| tom3  |   普通会员  |       0      |    10    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
+		| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
+		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
 
 Scenario:5 查看聊天记录
 

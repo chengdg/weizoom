@@ -72,12 +72,10 @@ def step_impl(context, user):
 		if hasattr(context, 'filter_str'):
 			context.url += context.filter_str
 	###访问会员详情页：访问会员详情页会使购买信息自动调整正确
-	print context.url, "+++++++++++++++"
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
 	for member_item in items:
 		member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
-		print 'kitty',member_item['id']
 		visit_member_detail_url = context.client.get(member_detail_url)
 	###以上为访问会员详情页
 
@@ -144,8 +142,8 @@ def step_impl(context, user):
 			adict['source'] = row['source']
 			adict['tags'] = row['tags']
 			actual_data.append(adict)
-		# for i in range(len(json_data)):
-		# 	print 'hello:name,pay_money',json_data[i]['username'],json_data[i]['attention_time'],'kitty:name,pay_money',actual_data[i]['username'],actual_data[i]['attention_time']
+		for i in range(len(json_data)):
+			print json_data[i]['username'],"++++",actual_data[i]['username']
 		#print 'hello',json_data
 		#print 'world',actual_data
 		# print 'kitty',actual_members[7]
@@ -203,6 +201,5 @@ def step_impl(context, member_a, user):
 @when(u'{username}访问会员列表第{page_count}页')
 def step_impl(context, username, page_count):
 	if hasattr(context, "url"):
-		print context.url, "GGG"
 		delattr(context, "url")
 	context.page = page_count

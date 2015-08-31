@@ -10,6 +10,7 @@ from features.testenv.model_factory import *
 from django.test.client import Client
 from mall.models import *
 from modules.member.models import *
+from mall.promotion.models import CouponRule
 from utils.string_util import byte_to_hex
 
 @when(u"{user}选择会员")
@@ -73,7 +74,6 @@ def step_impl(context, webapp_user, member):
     data = json.loads(context.text)
     for tag_name in data:
         tag_ids.append(str(MemberTag.objects.get(webapp_id=context.webapp_id, name=tag_name).id))
-    print tag_ids, "VVVVVVV"
     args = {
         'type': 'tag',
         'checked_ids': '_'.join(tag_ids),
@@ -82,6 +82,61 @@ def step_impl(context, webapp_user, member):
     response = context.client.post(url, args)
     bdd_util.assert_api_call_success(response)
 
+@when(u'{webapp_user}给"{member}"设等级')
+def step_impl(context, webapp_user, member):
+    url = '/member/api/tag/update/'
+    query_hex = byte_to_hex(member)
+    member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
+    data = json.loads(context.text)
+    grade_name = data['member_rank']
+    grade_id = MemberGrade.objects.get(webapp_id=context.webapp_id, name=grade_name).id
+
+    args = {
+        'type': 'grade',
+        'checked_ids': grade_id,
+        'member_id': member_id
+    }
+    response = context.client.post(url, args)
+    bdd_util.assert_api_call_success(response)
+
+
+@when(u'{webapp_user}给"{member}"发优惠券')
+def step_impl(context, webapp_user, member):
+    query_hex = byte_to_hex(member)
+    member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
+    data = json.loads(context.text)[0]
+    coupon_rule_name = data['name']
+    count = data['count']
+    coupon_rule_id = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=coupon_rule_name).id
+
+    args = {
+        'coupon_rule_id': coupon_rule_id,
+        'pre_person_count': count,
+        'member_id': json.dumps([member_id])
+    }
+
+    url = '/mall2/api/issuing_coupons_record/?_method=put'
+    response = context.client.post(url, args)
+    try:
+        bdd_util.assert_api_call_success(response)
+    except:
+        #用来判断出错的提示信息
+        context.response = response
+
+@when(u'{webapp_user}给"{member}"加积分')
+def step_impl(context, webapp_user, member):
+    url = '/member/api/integral/update/'
+    query_hex = byte_to_hex(member)
+    member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
+    data = json.loads(context.text)
+
+    args = {
+        'integral': data['integral'],
+        'reason': data['reason'],
+        'member_id': member_id
+    }
+    response = context.client.post(url, args)
+    bdd_util.assert_api_call_success(response)
 # @Then(u"{user}能获取会员等级列表")
 # def step_impl(context, user):
 # 	if hasattr(context, 'client'):
