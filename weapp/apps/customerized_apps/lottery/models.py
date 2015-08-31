@@ -30,6 +30,7 @@ class lottoryRecord(models.Document):
 	prize_name = models.StringField(default="", max_length=100) #奖项名称
 	prize_data = models.StringField(default="", max_length=100) #奖项数据
 	tel = models.StringField(default="", max_length=20)
+	status = models.BooleanField(default=False) #是否已领取
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
@@ -43,6 +44,7 @@ STATUS_STOPED = 2
 class lottery(models.Document):
 	owner_id = models.LongField() #创建人id
 	name = models.StringField(default="", max_length=100) #名称
+	lottery_type = models.StringField(default="roulette", max_length=100) #抽奖类型
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
@@ -55,12 +57,16 @@ class lottery(models.Document):
 	delivery_setting = models.StringField(default="true", max_length=20) #送积分规则
 	limitation = models.StringField(default="once_per_user", max_length=32) #抽奖限制
 	chance = models.IntField(default=0) #中奖几率
-	type = models.StringField(default="true", max_length=10) #是否允许重复中奖
+	allow_repeat = models.StringField(default="true", max_length=10) #是否允许重复中奖
 	prize = models.DynamicField() #每个奖项的奖品数量
 	
 	meta = {
 		'collection': 'lottery_lottery'
 	}
+
+	@property
+	def lottery_type_cn(self):
+		return (u'大转盘', u'刮刮乐', u'红包')[('roulette', 'scratch', 'red').index(self.lottery_type)]
 
 	@property
 	def limitation_times(self):
