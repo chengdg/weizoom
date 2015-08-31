@@ -68,7 +68,6 @@ class Mevent(resource.Resource):
 				if participance_data_count == 0 and request.webapp_user:
 					participance_data_count = app_models.eventParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
 			is_already_participanted = (participance_data_count > 0)
-			print '1111111'
 			if  is_already_participanted:
 				event_detail,activity_status = get_result(id,request.member.id)
 				c = RequestContext(request, {
