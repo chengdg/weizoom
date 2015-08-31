@@ -313,6 +313,44 @@ def step_impl(context, user, promotion_type):
 	bdd_util.assert_list(expected, actual)
 
 
+@then(u"{user}能获取买赠活动'{promotion_name}'")
+def step_impl(context, user, promotion_name):
+	promotion = Promotion.objects.get(name=promotion_name)
+	response = context.client.get('/mall2/premium_sale/?id=%d' % promotion.id)
+	promotion = response.context['promotion']
+
+	if promotion.member_grade_id == 0:
+		member_grade = u'全部会员'
+	else:
+		member_grade = promotion.member_grade_name
+
+	actual = {
+		"main_product": [],
+		"premium_products": [],
+		"name": promotion.name,
+		"promotion_title": promotion.promotion_title,
+		"start_date": promotion.start_date,
+		"end_date": promotion.end_date,
+		"member_grade": member_grade,
+		"count": promotion.detail['count'],
+		"is_enable_cycle_mode": promotion.detail['is_enable_cycle_mode']
+	}
+	main_product = {}
+	premium_products = {}
+	for product in promotion.products:
+		actual["main_product"].append(product)
+
+	for premium_product in promotion.detail["premium_products"]:
+		actual["premium_products"].append(premium_product)
+
+	expected = json.loads(context.text)
+	expected['start_date'] = bdd_util.get_datetime_str(expected['start_date'])
+	expected['end_date'] = bdd_util.get_datetime_str(expected['end_date'])
+
+	bdd_util.assert_dict(expected, actual)
+
+
+
 
 def __update_promotion_status(context, promotion_names, action):
 	"""使用促销活动名称更新促销状态
