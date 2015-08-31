@@ -210,6 +210,7 @@ class surveyParticipances_Export(resource.Resource):
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
+					selec_v =[]
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
 						if s_i[i]['isSelect'] == True:

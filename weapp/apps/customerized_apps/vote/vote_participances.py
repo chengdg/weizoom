@@ -15,6 +15,7 @@ from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
 from weixin2 import export
+from utils.string_util import hex_to_byte, byte_to_hex
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -43,17 +44,24 @@ class voteParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
+		webapp_id = request.user_profile.webapp_id
 		if name:
-			members = member_models.Member.get_by_username(name)
+			hexstr = byte_to_hex(name)
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+			print members
+			if name.find(u'非')>=0:
+				sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
+				members = members|sub_members
+
 		else:
-			members = member_models.Member.get_members(request.user_profile.webapp_id)
+			members = member_models.Member.objects.filter(webapp_id=webapp_id)
 		member_ids = [member.id for member in members]
-		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
+		# webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		params = {'belong_to':request.GET['id']}
-		if webapp_user_ids:
-			params['webapp_user_id__in'] = webapp_user_ids
+		if member_ids:
+			params['member_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if end_time:
@@ -85,8 +93,12 @@ class voteParticipances(resource.Resource):
 		if len(webappuser2member) > 0:
 			for webapp_user_id, member in webappuser2member.items():
 				for data in webappuser2datas.get(webapp_user_id, ()):
-					data.participant_name = member.username_for_html
-					data.participant_icon = member.user_icon
+					if member.is_subscribed:
+						data.participant_name = member.username_for_html
+						data.participant_icon = member.user_icon
+					else:
+						data.participant_name = u'非会员'
+						data.participant_icon = '/static/img/user-1.jpg'
 		
 		items = []
 		for data in datas:
@@ -165,7 +177,6 @@ class voteParticipances_Export(resource.Resource):
 						fields_shortcuts.append(item)
 			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
 
-
 			for field in fields_raw:
 				if '_' in field:
 					purename = field.split('_')[1]
@@ -204,6 +215,7 @@ class voteParticipances_Export(resource.Resource):
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
+					selec_v =[]
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
 						if s_i[i]['isSelect'] == True:
