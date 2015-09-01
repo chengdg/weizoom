@@ -80,6 +80,7 @@
 			<div class="ml80">
 				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
 				<a class="btn btn-default xa-export xui-fontBold" href="javascript:void(0);">批量导出</a>
+				<a id="export_href" style="display: none ">DownloadXLS</a>
 			</div>
 		</div>
 	</div>
@@ -206,6 +207,31 @@ $(document).ready(function() {
 			emptyDataHint: '没有符合条件的数据'
 		});
 	});
+
+	//export
+    $('.xa-export').click(function(event){
+        W.getLoadingView();
+        var export_id =window.location.search.split('?id=')[1];
+        W.getApi().call({
+            method: 'get',
+            app: 'apps/lottery',
+            resource: 'lottery_participances-export',
+            args: {'export_id':export_id},
+            success: function(resp){
+                if(resp.code == 200){
+                    $('#export_href').prop({
+                        'href': resp.download_path,
+                        'download': resp.filename
+                    }).get(0).click();
+
+                }
+                console.log("导出成功");
+            },
+            error: function(error){
+                console.log('导出失败');
+            }
+        });
+    });
 });
 </script>
 {% endblock %}
