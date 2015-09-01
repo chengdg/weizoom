@@ -244,8 +244,8 @@ Scenario: 使用积分购买影响商品库存
 		}
 		"""
 	When jobs创建积分应用活动
-	"""
-	[{
+		"""
+		[{
 			"name": "商品4积分应用",
 			"start_date": "今天",
 			"end_date": "1天后",
@@ -257,6 +257,7 @@ Scenario: 使用积分购买影响商品库存
 				"discount_money": 20.0
 			}]
 		}]
+		"""
 	When bill访问jobs的webapp
 	When bill获得jobs的500会员积分
 	Then bill在jobs的webapp中拥有500会员积分
