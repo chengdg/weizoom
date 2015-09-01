@@ -23,7 +23,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@promotion @promotionSendCoupon @online_bug
+@promotion @promotionSendCoupon @online_bug @ui
 Scenario: 发放优惠券时,优惠券总价值的校验
 	#jobs选择发放对象
 	#jobs先选择限领张数:每人2张
