@@ -57,7 +57,7 @@ Background:
 			"name": "商品2积分应用",
 			"start_date": "",
 			"end_date": "",
-			"status":"已结束",
+			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,
 			"rules": [{
@@ -144,7 +144,7 @@ Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动�
 			"name": "商品2积分应用",
 			"start_date": "",
 			"end_date": "",
-			"status":"已结束",
+			"status":"进行中",
 			"product_name": "商品2",
 			"is_permanant_active": true,
 			"rules": [{
@@ -196,15 +196,15 @@ Scenario: 3 批量删除积分应用活动（不包含未结束状态的活动�
 		"""
 
 # __author__ : "王丽" 补充在查询结果中删除活动
-@promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral @mall2
 Scenario: 4 在按"商品名称"查询的查询结果下删除积分活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	When jobs设置查询条件
 		"""
 		{
-			"product_name":"商品1积分应用",
+			"product_name":"商品1",
 			"bar_code":"",
 			"status":"全部",
 			"start_date":"",
@@ -233,12 +233,12 @@ Scenario: 4 在按"商品名称"查询的查询结果下删除积分活动
 		[ ]
 		"""
 
-@promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral @mall2
 Scenario: 5 在按"商品条码"查询的查询结果下删除积分活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
@@ -270,17 +270,18 @@ Scenario: 5 在按"商品条码"查询的查询结果下删除积分活动
 		[ ]
 		"""
 
-@promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral @mall2
 Scenario: 6 在按"促销状态"查询的查询结果下删除积分活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	#先用别的查询条件查询一次，不然活动status不会更新为已结束
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
-			"bar_code":"",
-			"status":"已结束",
+			"bar_code":"123456",
+			"status":"全部",
 			"start_date":"",
 			"end_date":""
 		}
@@ -299,13 +300,28 @@ Scenario: 6 在按"促销状态"查询的查询结果下删除积分活动
 				"discount": 50,
 				"discount_money": 50.0
 			}]
-		},{
-			"name": "商品2积分应用",
-			"start_date": "",
-			"end_date": "",
+		}]
+		"""
+
+	When jobs设置查询条件
+		"""
+		{
+			"product_name":"",
+			"bar_code":"",
 			"status":"已结束",
-			"product_name": "商品2",
-			"is_permanant_active": true,
+			"start_date":"",
+			"end_date":""
+		}
+		"""
+	Then jobs获取积分应用活动列表
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "2015-07-11",
+			"end_date": "2015-08-10",
+			"status":"已结束",
+			"product_name": "商品1",
+			"is_permanant_active": false,
 			"rules": [{
 				"member_grade": "全部会员",
 				"discount": 50,
@@ -331,12 +347,12 @@ Scenario: 6 在按"促销状态"查询的查询结果下删除积分活动
 		}]
 		"""
 
-@promotion @promotionIntegral @integral
+@promotion @promotionIntegral @integral @mall2
 Scenario: 7 在按"活动时间"查询的查询结果下删除积分活动
 
 	Given jobs登录系统
 
-	When jobs设置积分应用列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
