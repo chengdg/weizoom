@@ -119,48 +119,48 @@
 	<div class="wui-i-info p0">
         <div class="wui-i-settings pt15 pb15" style="color: #ffffff;">
             <div class="wui-i-settingTitle fl mr15">奖项设置</div>
-            <div class="wui-i-settingData xa-settingData fl mb10">
+            <div class="wui-i-settingData xa-settingData fl mb20">
                 <ul >
                     <li data_cid="4">
                         一等奖:&nbsp;&nbsp;
                         {% if component.components.0.model.prize.type == 'coupon' %}
-                            <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.0.model.prize.data.name}}</p>
+                            <p style="display: inline;font-size: 13px;">{{component.components.0.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.0.model.prize.type == 'integral' %}
-                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.0.model.prize.data}}</P>&nbsp;积分
+                                <p style="display: inline;font-size: 13px;">{{component.components.0.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.0.model.prize.data}}</P>
+                                <p style="display: inline;font-size: 13px;">{{component.components.0.model.prize.data}}</P>
                             {% endif %}
                         {% endif %}
                     </li>
                     <li data_cid="5">
                         二等奖:&nbsp;&nbsp;
                         {% if component.components.1.model.prize.type == 'coupon' %}
-                            <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.1.model.prize.data.name}}</p>
+                            <p style="display: inline;font-size: 13px;">{{component.components.1.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.1.model.prize.type == 'integral' %}
-                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.1.model.prize.data}}</P>&nbsp;积分
+                                <p style="display: inline;font-size: 13px;">{{component.components.1.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.1.model.prize.data}}</P>
+                                <p style="display: inline;font-size: 13px;">{{component.components.1.model.prize.data}}</P>
                             {% endif %}
                         {% endif %}
                     </li>
                     <li data_cid="6" >
                         三等奖:&nbsp;&nbsp;
                         {% if component.components.2.model.prize.type == 'coupon' %}
-                            <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.2.model.prize.data.name}}</p>
+                            <p style="display: inline;font-size: 13px;">{{component.components.2.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.2.model.prize.type == 'integral' %}
-                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.2.model.prize.data}}</P>&nbsp;积分
+                                <p style="display: inline;font-size: 13px;">{{component.components.2.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.2.model.prize.data}}</P>
+                                <p style="display: inline;font-size: 13px;">{{component.components.2.model.prize.data}}</P>
                             {% endif %}
                         {% endif %}
                     </li>
                 </ul>
             </div>
         </div>
-		<div class="wui-i-time cl pt15" style="border-top: 1px solid #ab39c4; min-height: 0;">
+		<div class="wui-i-time cl pt20" style="border-top: 1px solid #ab39c4; min-height: 0;">
 			<div class="wui-i-settingTitle fl mr15">活动时间:</div>
             <p class="wui-i-start_time">{{component.model.start_time}}</p>-<p class="wui-i-end_time">{{component.model.end_time}}</p>
 		</div>
@@ -172,7 +172,7 @@
         -->
         <div class="wui-i-record cl pt5 pb15">
             <div class="wui-i-settingTitle fl mr15">中奖记录:</div>
-            <div class="wui-i-recordData xa-recordData fl mb10">
+            <div class="wui-i-recordData xa-recordData fl mb20">
                 <ul>
                 </ul>
             </div>
