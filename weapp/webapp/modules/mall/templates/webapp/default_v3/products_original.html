@@ -37,7 +37,7 @@
                             <img src="{{ product.thumbnails_url }}">
                         </div>
                         <h3 class="xt-productName">{{ product.name|truncatechars:16 }}</h3>
-                        <p class="xt-productPrice">￥{{ product.display_price }}</p>
+                        <p class="xt-productPrice">￥{{ product.display_price | floatformat:2}}</p>
 
                     </a>
                 </li>
