@@ -240,6 +240,7 @@ def step_impl(context, user, promotion_type):
 			elif context.query_param['status'] == u'进行中':
 				status = 2
 			elif context.query_param['status'] == u'已结束':
+				context.client.get(url) #先获取一次数据，使status都更新到正常值
 				status = 3
 			url += '&promotionStatus=%s' % status
 	response = context.client.get(url)

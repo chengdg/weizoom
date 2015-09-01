@@ -275,34 +275,6 @@ Scenario: 6 在按"促销状态"查询的查询结果下删除积分活动
 
 	Given jobs登录系统
 
-	#先用别的查询条件查询一次，不然活动status不会更新为已结束
-	When jobs设置查询条件
-		"""
-		{
-			"product_name":"",
-			"bar_code":"123456",
-			"status":"全部",
-			"start_date":"",
-			"end_date":""
-		}
-		"""
-	Then jobs获取积分应用活动列表
-		"""
-		[{
-			"name": "商品1积分应用",
-			"start_date": "2015-07-11",
-			"end_date": "2015-08-10",
-			"status":"已结束",
-			"product_name": "商品1",
-			"is_permanant_active": false,
-			"rules": [{
-				"member_grade": "全部会员",
-				"discount": 50,
-				"discount_money": 50.0
-			}]
-		}]
-		"""
-
 	When jobs设置查询条件
 		"""
 		{
