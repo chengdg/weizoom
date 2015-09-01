@@ -40,7 +40,7 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
             var logistics = $('select.ua-logistics').val();
     		var logisticsOrderId = $('input[name="logistics_order_id"]').val().replace(/(^\s*)|(\s*$)/g, "");
             var leaderName = $('input[name="leader_name"]').val();
-            
+
     		$el.bottonLoading({status: 'show'});
 
             // 是否需要物流
@@ -134,7 +134,7 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
         // 是否需要物流
         var isNeedLogistics = $('[name="is_need_logistics"]:checked').val();
     	var logistics = $('select.ua-logistics').val();
-    	var orderId = $('input[name="logistics_order_id"]').val().replace(/(^\s*)|(\s*$)/g, "");
+    	var logisticsOrderId = $('input[name="logistics_order_id"]').val().replace(/(^\s*)|(\s*$)/g, "");
     	//var leaderName = $('input[name="leader_name"]').val();
         var validate = {};
         var errMsg = '';
@@ -146,12 +146,12 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
             }
         }else{
             // 需要物流
-            if (logistics && orderId) {
+            if (logistics && logisticsOrderId) {
                 errMsg = '';
                 validate.is_submit = true;
             }
-            if (orderId == false) {
-                errMsg = '请输入快递单号';
+            if (logisticsOrderId == false || !/^\w+$/.test(logisticsOrderId)) {
+                errMsg = '请输入正确的快递单号';
                 validate.is_submit = false;
                 $('div.xa-error').removeClass('hidden').text(errMsg);
             }

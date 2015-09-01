@@ -2240,9 +2240,7 @@ def update_order_status(user, action, order, request=None):
 
 def __restore_product_stock_by_order(order):
 	"""
-	返回商品的库存
-	包括赠品库存
-	和销量
+	返回商品的库存和销量
 	"""
 	products = get_order_products(order)
 	for product in products:
@@ -2253,7 +2251,9 @@ def __restore_product_stock_by_order(order):
 			product_model.stocks = product_model.stocks + product['count']
 			product_model.save()
 		# product sales update
-		if order.status < mall_models.ORDER_STATUS_PAYED_SUCCESSED:
+		if order.status < mall_models.ORDER_STATUS_PAYED_SUCCESSED or (
+			product.get('promotion', None) and product['promotion'].get('type', '').find('premium_product') > 0):
+			# 订单未支付或者是赠品商品, 不需要回退销量数据
 			continue
 		productsales = ProductSales.objects.filter(product_id=product.get('id'))
 		if len(productsales):

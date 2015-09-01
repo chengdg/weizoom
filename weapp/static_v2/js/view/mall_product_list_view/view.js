@@ -232,7 +232,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     }
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             })
             }
@@ -291,7 +294,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $stockText.text(stockText).show();
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             });
         } else if(stockText === "" || parseInt(stockText) != NaN){
@@ -322,7 +328,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $stockText.text(stockText).show();
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             })
         }

@@ -169,9 +169,13 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 	if len(coupon) > 0:
 		coupon = coupon[0]
 		today = datetime.today()
-		if coupon.expired_time < today:
+		if coupon.expired_time < today or coupon.status == promotion_models.COUPON_STATUS_EXPIRED:
 			return '该优惠券已过期', None
-		if coupon.status != promotion_models.COUPON_STATUS_UNUSED and coupon.status != promotion_models.COUPON_STATUS_UNGOT:
+		elif coupon.status == promotion_models.COUPON_STATUS_Expired:
+			return '该优惠券已失效', None
+		elif coupon.status == promotion_models.COUPON_STATUS_DISCARD:
+			return '该优惠券已作废', None
+		elif coupon.status == promotion_models.COUPON_STATUS_USED:
 			return '该优惠券已使用', None
 		if coupon.member_id > 0 and coupon.member_id != member_id:
 			return '该优惠券已被他人领取不能使用', None
