@@ -127,7 +127,7 @@
         </div>
         <div class="wui-i-bottom xa-dialog-bottom">
             <button type="button" class="wui-i-dialog-btn wui-i-userCenter xa-userCenter">个人中心</button>
-            <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn">关闭</button>
+            <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn">再来一次</button>
         </div>
     </div>
 {% endblock %}
@@ -174,7 +174,6 @@
                             that.$entityContent.hide();
                             that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
                             that.$userCenter.show();
-                            that.$closeBtn.text('再来一次');
                         },
                         error: function(error){
                             alert('请重试~');
@@ -223,12 +222,10 @@
             }else if(prize_type == 'no_prize'){
                 this.$title.html('很遗憾');
                 this.$contentHeader.html("没有中奖，再接再厉吧~");
-                this.$closeBtn.text('再来一次');
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
                 this.$title.html('中奖了耶');
                 var msg = prize_type == 'coupon' ? ('一张优惠券：'+prize_name): prize_name;
                 this.$contentHeader.html("恭喜您获得了"+msg+"！快去个人中心查看吧！");
-                this.$closeBtn.text('再来一次');
             }else if(prize_type == 'gameover'){
                 this.$title.css('visibility','hidden');
                 this.$contentHeader.html("活动已经结束啦，<br>下次早点来哦~");
@@ -239,8 +236,8 @@
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
                 this.$title.css('visibility','hidden');
-                this.$contentHeader.html("抽奖活动还未开始~");
-                this.$closeBtn.text('关闭');
+                this.$contentHeader.html("抽奖活动还未开始,<br>请耐心等待~");
+                this.$closeBtn.hide();
             }
             var that = this;
             if(delay){
