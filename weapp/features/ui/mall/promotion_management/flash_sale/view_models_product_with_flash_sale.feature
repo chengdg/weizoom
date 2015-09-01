@@ -97,14 +97,14 @@ Background:
 			"member_rank": "银牌会员"
 		"""
 
-@promotion @promotionFlash
+@promotion @promotionFlash @ui
 Scenario:参与限时抢购的多规格商品手机端详情页显示促销价格
 	Given jobs登录系统
 	When jobs创建限时抢购活动
 		"""
 		{
 			"name": "多规格限时抢购",
-			"promotion_slogan":"",
+			"promotion_title":"",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"products": ["多规格商品"],
@@ -153,7 +153,7 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 		"""
 			[{
 				"name":"多规格商品",
-				"price":100.00
+				"price":80.00
 				"model":
 				{
 				"models":
@@ -266,7 +266,7 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 							},
 							{
 								"name":"S",
-								"is_active":true
+								"is_active":ture
 							}
 						]
 					}

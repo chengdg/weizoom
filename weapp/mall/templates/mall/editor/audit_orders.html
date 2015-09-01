@@ -481,11 +481,11 @@ $(document).ready(function() {
 	$('body').delegate('.xa-buyerHintImg','mouseenter',function(event){
 		var $el = $(event.currentTarget);
 		var buyerHintView = W.getBuyerHintView({
-			//width: 220,
+			width: 267,
 			isTitle: false,
-			isArrow:false,
+			isArrow:true,
 			privateContainerClass:'xui-buyerHintDropBox xa-buyerHintDropBox',
-			position:'down-middle'
+			position:'top'
 		});
 
 		var addr = $el.attr('data-addr');

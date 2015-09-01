@@ -130,12 +130,11 @@
             <div class=""><input type="radio" class="xa-select-time" name="prize-time" {% if red_envelope_rule.limit_time %}{%else%}checked{%endif%}>
                 <div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
                     <input
-                    style="width:132px!important; margin-left:12px;"
+                    style="width:132px!important;cursor:pointer;"
                     type="text"
                     class="form-control xui-datePicker xui-greyColor"
                     id="start_date"
                     name="start_date"
-                    style=""
                     value="{% if not red_envelope_rule.limit_time %}{{red_envelope_rule.start_time|date:"Y-m-d H:i"}}{%endif%}"
                     readonly="readonly"
                     data-validate="require-notempty"
@@ -151,7 +150,7 @@
                 至
                 <div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
                     <input
-                    style="width:132px!important;"
+                    style="width:132px!important;cursor:pointer;"
                     type="text"
                     class="form-control xui-datePicker xui-greyColor"
                     id="end_date"
@@ -214,7 +213,6 @@
             </div>
         </div>
     </fieldset>
-
   <hr style="border-color:#ccc;">
   <fieldset>
     <div class="form-group mt5 mr5 xa-operateBtns" id="operateBtns">
@@ -227,51 +225,53 @@
   </fieldset>
 </section>
 </form>
-
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function(){
-    $('.uploadify object').attr('height','90');
-    $('.xa-select-time').on('click', function(e){
-        var $input = $(e.target);
-        if($input.prop('checked')){
-            $('input[data-ui-role="date-picker"]').removeAttr('disabled');
-            $('input[data-ui-role="date-picker"]').attr('data-validate', 'require-notempty');
-        }
-    });
+  // $('#coupon_rule').change()
+  $('.uploadify object').attr('height','90');
+  $('.xa-select-time').on('click', function(e){
+      var $input = $(e.target);
+      if($input.prop('checked')){
+          $('input[data-ui-role="date-picker"]').removeAttr('disabled').css('cursor','pointer');
+          $('input[data-ui-role="date-picker"]').attr('data-validate', 'require-notempty');
+      }
+  });
 
-    $('.xa-forever').on('click', function(e){
-        var $input = $(e.target);
-        if($input.prop('checked')){
-            $('input[data-ui-role="date-picker"]').removeAttr('data-validate').attr('disabled', 'disabled').parent().removeClass('has-error');
-            $('input[data-ui-role="date-picker"]').val("");
-            $('.xa-errorHintContainer .errorHint').text("");
-        }
-    });
+  $('.xa-forever').on('click', function(e){
+      var $input = $(e.target);
+      if($input.prop('checked')){
+          $('input[data-ui-role="date-picker"]').removeAttr('data-validate').attr('disabled', 'disabled').css('cursor','not-allowed').parent().removeClass('has-error');
+          $('input[data-ui-role="date-picker"]').val("");
+          $('.xa-errorHintContainer .errorHint').text("");
+      }
+  });
 
-    $('#coupon_rule').change(function(event){
-        var coupon_rule_id = $('#coupon_rule').val();
-        if (coupon_rule_id == "-1") {
-            $('#coupon_rule').next().addClass('hidden');
-            $('.xa-couponTip').addClass('hidden');
-        }else {
-            var count = $('option[value="'+coupon_rule_id+'"]').data('remained-count');
-            $('.xa-couponTip').removeClass('hidden');
-            $('#coupon_rule').siblings('.errorHint').text('');
-            $('#coupon_rule').next().removeClass('hidden').children('a').attr('href', '/mall2/coupon/?rule_id='+coupon_rule_id);
-            $('#coupon_rule').next().children('span').text("库存："+count+"份");
+  $('#coupon_rule').change(function(event){
+      var coupon_rule_id = $('#coupon_rule').val();
+      if (coupon_rule_id == "-1") {
+          $('#coupon_rule').next().addClass('hidden');
+          $('.xa-couponTip').addClass('hidden');
+      }else {
+          var count = $('option[value="'+coupon_rule_id+'"]').data('remained-count');
+          $('.xa-couponTip').removeClass('hidden');
+          $('#coupon_rule').siblings('.errorHint').text('');
+          $('#coupon_rule').next().removeClass('hidden').children('a').attr('href', '/mall2/coupon/?rule_id='+coupon_rule_id);
+          $('#coupon_rule').next().children('span').text("库存："+count+"份");
+      }
+  });
 
-        }
-    });
-
-    $('.xa-tips').popover({
-      template:"<div class='popover'><div class='popover-content'></div></div>",
-      content : "分享图片和分享描述用于朋友圈查看时的展示内容",
-      trigger : "hover",
-      html : true,
-      placement : "bottom"
-    });
+  $('.xa-tips').popover({
+    template:"<div class='popover'><div class='popover-content'></div></div>",
+    content : "分享图片和分享描述用于朋友圈查看时的展示内容",
+    trigger : "hover",
+    html : true,
+    placement : "bottom"
+  });
+  if($('#coupon_rule').val() > -1){
+    $('#coupon_rule').change();
+  }
 // 提交按钮
   $('.xa-submit').click(function(event) {
     if (!W.validate()) {

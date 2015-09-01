@@ -401,7 +401,7 @@ Background:
 		#三种支付方式：支付宝、微信支付、货到付款
 		#优惠期扣：微众卡、优惠券、积分、微众卡+优惠券、微众卡+积分
 	When 微信用户批量消费jobs的商品
-		| date       | consumer | type      |businessman|   product | payment | payment_method | freight |   price  | integral |  	 coupon  			| paid_amount | 		weizoom_card 		| alipay | wechat | cash |      action       |  order_status   |
+		| date       | consumer | type      |businessman|   product | payment | payment_method | freight |   price  | product_integral |  	 coupon  			| paid_amount | 		weizoom_card 		| alipay | wechat | cash |      action       |  order_status   |
 		| 2014-8-5   | bill     | 	 购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      | 		   |               			| 110         |              				| 110    | 0      | 0    | jobs,支付         |  待发货         |
 		| 2014-8-6   | tom      | 	 购买   | jobs      | 商品2,2   | 未支付  | 支付宝         | 15      | 100      |          |        				| 0           |              				| 0      | 0      | 0    | jobs,取消         |  已取消         |	
 		| 2014-9-1   | bill     |    购买   | jobs      | 商品2,2   | 支付    | 支付宝         | 15      | 100      |          |        				| 215         |              				| 215    | 0      | 0    | jobs,支付         |  待发货         |

@@ -4,7 +4,6 @@
 # import integral_strategy
 # import product_views
 # import product_api_views
-# import product_category_views
 # import product_category_api_views
 # import product_model_views
 # import product_model_api_views

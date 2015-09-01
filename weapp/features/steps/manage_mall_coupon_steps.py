@@ -205,6 +205,21 @@ def step_impl(context, webapp_owner_name, coupon_rule_name):
                 index = index - 1
 
 
+@then(u'{user}能获得优惠券状态列表')
+def step_impl(context, user):
+    url = "/mall2/api/promotion_list/?type=coupon"
+    response = context.client.get(url)
+    bdd_util.assert_api_call_success(response)
+
+    actual = json.loads(response.content)['data']['items']
+    for c in actual:
+        if c['status'] == u'已结束':
+            c['status'] = u'已过期'
+
+    expected = json.loads(context.text)
+
+    bdd_util.assert_list(expected, actual)
+
 #######################################
 
 def __add_coupon_rule(context, webapp_owner_name):

@@ -4,7 +4,6 @@ from __future__ import absolute_import
 import os
 import sys
 import logging
-
 # set the default Django settings module for the 'celery' program.
 # if __name__=="__main__":
 WEAPP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))

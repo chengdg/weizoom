@@ -409,7 +409,11 @@ def check_coupon_for_order(pre_order, args, request, **kwargs):
 		product_ids = [str(product.id) for product in pre_order.products]
 
 		from market_tools.tools.coupon import util as coupon_util
-		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, request.member.id, pre_order.products)
+		if request.member:
+			member_id = request.member.id
+		else:
+			member_id = -1
+		msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, member_id, pre_order.products)
 		if coupon:
 			pre_order.session_data['coupon'] = coupon
 		else:
@@ -772,11 +776,14 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
 						"id": premium_product['id'],
 						"name": premium_product['name'],
 						"bar_code": premium_product['id'],
-						"price": premium_product['current_used_model']['price'],
+						"price": premium_product['current_used_model'].get('price', 0),
 						"count": premium_product['premium_count'],
 						"thumbnails_url": premium_product['thumbnails_url'],
 						"forcing_submit": request.POST.get("forcing_submit", None),
 					})
+					if premium_product['current_used_model'].get('price', 0) <= 0:
+						watchdog_alert("premium_product['current_used_model'].get('price', 0) <= 0, premium_product:"
+							+str(premium_product), type='WEB')
 
 					# 检查赠品库存
 					if request.POST.get("forcing_submit", None):

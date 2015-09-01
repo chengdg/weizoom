@@ -117,8 +117,8 @@ Scenario: 获得购买趋势
 
 	When 微信用户批量消费jobs的商品
 		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 7天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |  1      | 支付    |           |
-		| 7天前      | bill     | 测试 | jobs      |叫花鸡,1  |          |  1      | 支付    |           |
+		| 7天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
+		| 7天前      | bill     | 测试 | jobs      |叫花鸡,1  |          |        | 支付    |           |
 		| 7天前      | tom      | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
 		| 7天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        |         | jobs,取消 |
 		| 7天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |

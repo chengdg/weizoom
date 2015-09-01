@@ -81,21 +81,13 @@ def __do_weixin_pay(context, pay_url):
 
 @when(u"{webapp_user_name}使用支付方式'{pay_interface_name}'进行支付")
 def step_impl(context, webapp_user_name, pay_interface_name):
-	# print("*"*80, 'pay_way')
-	# print(context.created_order_id)
-	# print("*"*120)
-
 	order = Order.objects.get(order_id=context.created_order_id)
-
 	data = {
 		"webapp_owner_id": context.webapp_owner_id,
 		"module": "mall",
 		"target_api": "order/pay",
 		"order_id": order.id
 	}
-	# url = '/workbench/jqm/preview/?woid=%s&module=mall&model=pay_interfaces&action=list&order_id=0&ignore_template=1' % context.webapp_owner_id
-	# response = context.client.get(bdd_util.nginx(url), follow=True)
-	# pay_interfaces = response.context['pay_interfaces']
 	from mall.models import PayInterface, PAYTYPE2NAME
 	pay_interfaces = PayInterface.objects.all()
 
@@ -107,10 +99,6 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		data.setdefault('interface_id', pay_interface.id)
 		break
 
-	# print("*"*80, "pay_way")
-	# from pprint(import pprint)
-	# pprint(data)
-	# print("*"*120)
 	url = '/webapp/api/project_api/call/'
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)
@@ -128,6 +116,7 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		context.pay_result_url = response_data['url']
 		url = '/workbench/jqm/preview/%s' % context.pay_result_url[2:]
 		response = context.client.get(bdd_util.nginx(url), follow=True)
+		context.pay_result = response.context
 	# 直接修改数据库的订单状态
 	elif pay_interface.type == PAY_INTERFACE_ALIPAY:
 		order.pay_interface_type = PAY_INTERFACE_ALIPAY
@@ -135,6 +124,12 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		order.save()
 
 	context.pay_order_id = order.order_id
+
+@when(u"{webapp_user_name}使用支付方式'{pay_interface_name}'进行支付订单'{order_code}'")
+def step_impl(context, webapp_user_name, pay_interface_name, order_code):
+	context.created_order_id = order_code
+	context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name,pay_interface_name))
+
 
 
 # @then(u"{webapp_user_name}支付订单成功")

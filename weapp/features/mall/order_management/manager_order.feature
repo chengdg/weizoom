@@ -68,11 +68,12 @@ Background:
 		[{
 			"name": "优惠券规则1",
 			"money": "1",
-			"count": 0,
+			"count": 1,
 			"expire_days": "1",
 			"using_limit": "无限制",
 			"start_date": "前天",
-			"end_date": "后天"
+			"end_date": "后天",
+			"coupon_id_prefix": "coupon_"
 		}, {
 			"name": "优惠券规则2",
 			"money": "10",
@@ -100,13 +101,13 @@ Background:
 		}]
 		"""
 	When jobs为会员发放优惠券
-		'''
+		"""
 		{
 			"name": "优惠券规则1",
 			"count": 1,
 			"members": ["bill"]
 		}
-		'''
+		"""
 	Then jobs获得优惠券规则列表
 		"""
 		[{
@@ -135,7 +136,7 @@ Background:
 			"status": "进行中"
 		}]
 		"""
-@mall @mall2 @mall.order @zy_mo1 @eugene
+@mall2 @order
 Scenario: 购买商品后，可以获得订单列表
 	bill购买了商品1(只下单, 未支付)和商品2(已支付)
 
@@ -187,7 +188,7 @@ Scenario: 购买商品后，可以获得订单列表
 		}]
 		"""
 
-@mall @mall2 @mall.order @mall_a @zy_mo2
+@mall2 @order
 Scenario: 购买商品后，管理员通过后台管理系统可以查看订单详情
 	bill购买商品后
 	1. 能看到订单详情
@@ -227,7 +228,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			}]
 		}
 		"""
-	When jobs"支付"最新订单
+	When jobs'支付'最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -245,7 +246,7 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			"actions": ["标记完成", "修改物流", "取消订单"]
 		}
 		"""
-	When jobs"完成"最新订单
+	When jobs'完成'最新订单
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -254,23 +255,23 @@ Scenario: 购买商品后，管理员通过后台管理系统可以查看订单�
 			"actions": ["修改物流", "取消订单"]
 		}
 		"""
-	When jobs"取消"最新订单
-		"""
-		{
-			"reason": "不想要了"
-		}
-		"""
+	When jobs'取消'最新订单
+	#	"""
+	#	{
+	#		"reason": "不想要了"
+	#	}
+	#	"""
 	Then jobs可以获得最新订单详情
 		"""
 		{
 			"order_type": "普通订单",
 			"status": "已取消",
-			"actions": [],
-			"reason": "不想要了"
+			"actions": []
 		}
 		"""
+	#	,"reason": "不想要了"
 
-@mall @mall.order @zy_mo3
+@mall2 @order
 #验证待发货状态的订单可以取消
 Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取消'取消订单
 	bill购买商品后
@@ -284,8 +285,8 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 	And jobs设定会员积分策略
 		"""
 		{
-			"一元等价的积分数量": 100,
-			"订单积分抵扣上限": 100
+			"integral_each_yuan": 100,
+			"use_ceiling": 100
 		}
 		"""
 	When jobs给id为'0000001'的微众卡激活
@@ -324,7 +325,7 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 		"""
 
 	Then jobs能获得优惠券'优惠券规则1'的码库
-		'''
+		"""
 		{
 			"coupon_1": {
 				"money": 1.0,
@@ -333,7 +334,7 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 
 	Then jobs能获取微众卡'0000001'
 		"""
@@ -346,20 +347,20 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 	Then bill在jobs的webapp中拥有50会员积分
 	Given jobs登录系统
 	When jobs'取消'最新订单
-		"""
-		{
-			"reason": "不想要了"
-		}
-		"""
+	#	"""
+	#	{
+	#		"reason": "不想要了"
+	#	}
+	#	"""
 	Then jobs可以获得最新订单详情
 		"""
 		{
 			"order_type": "普通订单",
 			"status": "已取消",
-			"actions": [],
-			"reason": "不想要了"
+			"actions": []
 		}
 		"""
+	#	,"reason": "不想要了"
 	Then jobs能获取商品'商品1'
 		"""
 		{
@@ -374,7 +375,7 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 		}
 		"""
 	Then jobs能获得优惠券'优惠券规则1'的码库
-		'''
+		"""
 		{
 			"coupon_1": {
 				"money": 1.0,
@@ -383,7 +384,7 @@ Scenario: 购买商品后并支付,管理员通过后台管理系统点击'取�
 				"target": "bill"
 			}
 		}
-		'''
+		"""
 	Then jobs能获取微众卡'0000001'
 		"""
 		{

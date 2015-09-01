@@ -19,8 +19,17 @@ Background:
 		"""
 		[{
 			"name": "商品1",
-			"price": 30
-		}, {
+			"price": 30.00,
+			"model": {
+				"models": {
+					"standard": {
+						"price": 30100.00,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			}
+		} {
 			"name": "商品2",
 			"price": 5
 		}, {
@@ -55,16 +64,17 @@ Background:
 			"is_enable_model": "启用规格",
 			"model": {
 				"models":{
+					"M": {
+						"price": 40.00,
+						"stock_type": "无限"
+					},
 					"S": {
-						"price": 10,
+						"price": 40.00,
 						"stock_type": "无限"
 					}
 				}
 			}
-		}, {
-			"name": "商品6",
-			"price": 5
-		}]	
+		}]
 		"""
 	When jobs创建限时抢购活动
 		"""
@@ -86,7 +96,8 @@ Background:
 			"start_date": "今天",
 			"end_date": "1天后",
 			"products": ["商品3"],
-			"promotion_price": 3.1
+			"promotion_price": 3.1,
+			"limit_period": 1
 		}, {
 			"name": "商品4限时抢购",
 			"start_date": "前天",
@@ -314,9 +325,6 @@ Scenario: 直接购买参加限时抢购活动的商品，但活动当前没有�
 			},
 			"product_groups": [{
 				"promotion": null,
-
-
-
 				"products": [{
 					"name": "商品2",
 					"price": 5.0,
@@ -327,7 +335,7 @@ Scenario: 直接购买参加限时抢购活动的商品，但活动当前没有�
 		"""
 	When bill使用'货到付款'购买订单中的商品:ui
 
-
+# _author_ "师帅8.26"补充
 Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车中是限时抢购商品，但，去提交订单时已经不是限时抢购商品）
 
 	When bill访问jobs的webapp:ui
@@ -353,6 +361,18 @@ Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车
 
 Scenario: 4 购买多个商品，带有限时抢购商品
 
+	Given jobs登录系统:ui
+	And jobs创建限时抢购活动:ui
+	"""
+		{
+			"name": "商品4限时抢购",
+			"start_date": "前天",
+			"end_date": "昨天",
+			"product_name": "商品4",
+			"count_per_purchase": 2,
+			"promotion_price": 11.5
+		}
+		"""
 	When bill访问jobs的webapp:ui
 	When bill购买jobs的商品:ui
 		"""
@@ -369,35 +389,36 @@ Scenario: 4 购买多个商品，带有限时抢购商品
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 		"""
 		{
-			"status": "待支付",
-			"final_price": 65.1,
-			"product_price": 65.1,
-			"promotion_saved_money": 374.9,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2,
-				"promotion": {
-					"promotioned_product_price": 11.5,
-					"type": "flash_sale"
-				}
+			"price_info": {
+				"final_price": 37,
+				"product_price": 37,
+				"promotion_money": 0.0,
+				"postage": 0.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 11.5,
+					"count": 2
+				}]
 			}, {
-				"name": "商品2",
-				"count": 1,
-				"promotion": {
-					"promotioned_product_price": 2.1,
-					"type": "flash_sale"
-				}
+				"promotion": null,
+				"product": [{
+					"name": "商品2"，
+					"price": 5,
+					"count": 1
+				}]
 			}, {
-				"name": "商品4",
-				"count": 1,
-				"price": 40.0,
-				"promotion": null
+				"promotion": null,
+				"product": [{
+					"name": "商品4",
+					"price": 9,
+					"count": 1
+				}]
 			}]
 		}
 		"""
@@ -415,7 +436,7 @@ Scenario: 5 购买单个限时抢购商品，超出库存限制
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -466,7 +487,7 @@ Scenario: 6  购买单个限时抢购商品，未超过库存限制，但超过�
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -496,7 +517,7 @@ Scenario: 7 在限购周期内连续购买限时抢购商品
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -507,7 +528,7 @@ Scenario: 7 在限购周期内连续购买限时抢购商品
 		"""
 		{
 			"products": [{
-				"name": "商品2",
+				"name": "商品3",
 				"count": 1
 			}]
 		}
@@ -516,7 +537,7 @@ Scenario: 7 在限购周期内连续购买限时抢购商品
 		"""
 		{
 			"detail": [{
-				"id": "商品2",
+				"id": "商品3",
 				"msg": "在限购周期内不能多次购买",
 				"short_msg": "限制购买"
 			}]
@@ -551,7 +572,7 @@ Scenario: 8 购买多规格限时抢购商品
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -572,7 +593,16 @@ Scenario: 8 购买多规格限时抢购商品
 			}]
 		}
 		"""
-	Then bill获得创建订单失败的信息'限购2件':ui
+	Then bill获取创建订单失败的信息:ui
+	"""
+		[{
+			"detail": [{
+				"id": "商品5",
+				"msg": "该订单内商品状态发生变化！",
+				"short_msg": "限购2件"
+			}]
+		}]
+	"""
 
 Scenario: 9 购买多规格限时抢购商品同时适用于积分规则
 
@@ -616,28 +646,33 @@ Scenario: 9 购买多规格限时抢购商品同时适用于积分规则
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
-		"""
+	Then bill获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 10.0,
-			"product_price": 20.00,
-			"promotion_saved_money":60.00,
-			"postage": 0.00,
-			"integral_money":10.00,
-			"integral":20.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品5",
-				"count": 1,
-				"model": "S"
-			}, {
-				"name": "商品5",
-				"count": 1,
-				"model": "M"
+			"price_info": {
+				"final_price": 10.0,
+				"product_price": 20.00,
+				"promotion_saved_money": 60.00,
+				"integral_money": 10.00,
+				"integral": 20.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品5",
+					"price": 10,
+					"count": 1,
+					"model": "S"
+				}, {
+					"name": "商品5",
+					"price": 10,
+					"count": 1,
+					"model": "M"
+				}]
 			}]
 		}
 		"""
+
 	Then bill在jobs的webapp中拥有30会员积分:ui
 
 Scenario: 10 购买单个限时抢购商品，购买时活动进行中，提交订单时，该活动被商家手工结束
@@ -654,7 +689,7 @@ Scenario: 10 购买单个限时抢购商品，购买时活动进行中，提交�
 			"promotion_price": 11.5
 		}
 		"""
-	And jobs'结束'促销活动'商品4限时抢购':ui
+	And jobs"结束"促销活动"商品4限时抢购":ui
 
 	When bill访问jobs的webapp:ui
 	And bill购买jobs的商品:ui
@@ -710,7 +745,7 @@ Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还�
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -726,7 +761,7 @@ Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还�
 			"actions": ["取消订单", "支付","修改价格"]
 		}
 		"""
-	When jobs"取消"最新订单:ui
+	When jobs'取消'最新订单:ui
 		"""
 		 {
 		 	"reason": "不想要了"
@@ -753,7 +788,7 @@ Scenario: 11 购买单个限时抢购商品，未支付然后取消订单，还�
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -807,27 +842,31 @@ Scenario:12 不同等级的会员购买有会员价同时有限时抢购的商�
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
-		"""
+	Then bill获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 23.00,
-			"product_price": 23.00,
-			"promotion_saved_money": 177.0,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2,
-				"price": 11.5,
-				"promotion": {
-					"promotioned_product_price": 11.5,
-					"type": "flash_sale"
-				}
+			"price_info": {
+				"final_price": 23.0,
+				"product_price": 23.00,
+				"promotion_saved_money": 177.00,
+				"integral_money": 10.00,
+				"integral": 20.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 11.5,
+					"count": 2,
+					"promotion": {
+						"promotioned_product_price": 11.5,
+						"type": "flash_sale"
+					}
+				}]
 			}]
 		}
 		"""
+
 	When tom访问jobs的webapp:ui
 	And tom购买jobs的商品:ui
 		"""
@@ -838,23 +877,27 @@ Scenario:12 不同等级的会员购买有会员价同时有限时抢购的商�
 			}]
 		}
 		"""
-	Then tom成功创建订单:ui
-		"""
+	Then tom获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 23.00,
-			"product_price": 23.00,
-			"promotion_saved_money": 177.0,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2,
-				"promotion": {
-					"promotioned_product_price": 11.5,
-					"type": "flash_sale"
-				}
+			"price_info": {
+				"final_price": 23.0,
+				"product_price": 23.00,
+				"promotion_saved_money": 177.00,
+				"integral_money": 10.00,
+				"integral": 20.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 11.5,
+					"count": 2,
+					"promotion": {
+						"promotioned_product_price": 11.5,
+						"type": "flash_sale"
+					}
+				}]
 			}]
 		}
 		"""
@@ -875,7 +918,7 @@ Scenario: 13 不同等级的会员购买有会员价同时有会员等级限时�
 		}
 	}
 	"""
-	And jobs'结束'促销活动'商品1限时抢购':ui
+	And jobs"结束"促销活动"商品1限时抢购":ui
 	And jobs创建限时抢购活动:ui
 	"""
 		[{
@@ -897,22 +940,25 @@ Scenario: 13 不同等级的会员购买有会员价同时有会员等级限时�
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
-		"""
+	Then bill获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 200.0,
-			"product_price": 200.0,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2
+			"price_info": {
+				"final_price": 200.0,
+				"product_price": 200.0,
+				"promotion_saved_money": 0.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 100,
+					"count": 2
+				}]
 			}]
 		}
 		"""
+
 	When tom访问jobs的webapp:ui
 	And tom购买jobs的商品:ui
 		"""
@@ -923,23 +969,25 @@ Scenario: 13 不同等级的会员购买有会员价同时有会员等级限时�
 			}]
 		}
 		"""
-	Then tom成功创建订单:ui
-		"""
+	Then tom获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 180.0,
-			"product_price": 180.0,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"price": 90.0,
-				"count": 2
+			"price_info": {
+				"final_price": 180.0,
+				"product_price": 180.0,
+				"promotion_saved_money": 20.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 90,
+					"count": 2
+				}]
 			}]
 		}
 		"""
-		#	"promotion_saved_money": 20.0,
+
 	When sam访问jobs的webapp:ui
 	And sam购买jobs的商品:ui
 		"""
@@ -950,27 +998,30 @@ Scenario: 13 不同等级的会员购买有会员价同时有会员等级限时�
 			}]
 		}
 		"""
-	Then sam成功创建订单:ui
-		"""
+	Then sam获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 100.0,
-			"product_price": 100.0,
-			"promotion_saved_money": 100.0,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2,
-				"promotion": {
+			"price_info": {
+				"final_price": 100.0,
+				"product_price": 100.0,
+				"promotion_saved_money": 100.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 50,
+					"count": 2,
+					"promotion": {
 					"promotioned_product_price": 50.0,
 					"promotion_saved_money": 100.0,
 					"type": "flash_sale"
 				}
+				}]
 			}]
 		}
 		"""
+
 
 Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商品
 	When jobs更新商品'商品1':ui
@@ -988,7 +1039,7 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 		}
 	}
 	"""
-	And jobs'结束'促销活动'商品1限时抢购':ui
+	And jobs"结束"促销活动"商品1限时抢购":ui
 	And jobs创建限时抢购活动:ui
 	"""
 		[{
@@ -1010,22 +1061,25 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 			}]
 		}
 		"""
-	Then bill成功创建订单:ui
-		"""
+	Then bill获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 200.0,
-			"product_price": 200.0,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2
+			"price_info": {
+				"final_price": 200.0,
+				"product_price": 200.0,
+				"promotion_saved_money": 0.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 50,
+					"count": 2
+				}]
 			}]
 		}
 		"""
+
 	When tom访问jobs的webapp:ui
 	And tom购买jobs的商品:ui
 		"""
@@ -1036,19 +1090,21 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 			}]
 		}
 		"""
-	Then tom成功创建订单:ui
+	Then tom获得待编辑订单:ui
 		"""
 		{
-			"status": "待支付",
-			"final_price": 200.0,
-			"product_price": 200.0,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2
+			"price_info": {
+				"final_price": 200.0,
+				"product_price": 200.0,
+				"promotion_saved_money": 0.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 50,
+					"count": 2
+				}]
 			}]
 		}
 		"""
@@ -1062,27 +1118,30 @@ Scenario: 14 不同等级的会员购买原价有会员等级限时抢购的商�
 			}]
 		}
 		"""
-	Then sam成功创建订单:ui
-		"""
+	Then sam获得待编辑订单:ui
+	"""
 		{
-			"status": "待支付",
-			"final_price": 100.0,
-			"product_price": 100.0,
-			"promotion_saved_money": 100.0,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品1",
-				"count": 2,
-				"promotion": {
+			"price_info": {
+				"final_price": 100.0,
+				"product_price": 100.0,
+				"promotion_saved_money": 100.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 50,
+					"count": 2,
+					"promotion": {
 					"promotioned_product_price": 50.0,
 					"promotion_saved_money": 100.0,
 					"type": "flash_sale"
 				}
+				}]
 			}]
 		}
 		"""
+
 
 Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会员等级
 
@@ -1148,28 +1207,31 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 		}]
 	}
 	"""
-	Then bill成功创建订单:ui
+	Then bill获得待编辑订单:ui
 	"""
-	{
-		"status": "待支付",
-		"final_price": 40.00,
-		"product_price": 80.00,
-		"promotion_saved_money":0.00,
-		"postage": 0.00,
-		"integral_money":40.00,
-		"integral":80.00,
-		"coupon_money":0.00,
-		"products": [{
-			"name": "商品5",
-			"count": 1,
-			"model": "S"
-		}, {
-			"name": "商品5",
-			"count": 1,
-			"model": "M"
-		}]
-	}
-	"""
+		{
+			"price_info": {
+				"final_price": 40.0,
+				"product_price": 80.0,
+				"promotion_saved_money": 0.00,
+				"integral": 80.00,
+				"integral_money": 40.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品5",
+					"model": "S"
+					"count": 1
+				}, {
+					"name": "商品5",
+					"model": "M",
+					"count": 1
+				}]
+			}]
+		}
+		"""
+
 	Then bill在jobs的webapp中拥有20会员积分:ui
 	When tom访问jobs的webapp:ui
 	And tom购买jobs的商品:ui
@@ -1188,28 +1250,31 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 		}]
 	}
 	"""
-	Then tom成功创建订单:ui
+	Then tom获得待编辑订单:ui
 	"""
-	{
-		"status": "待支付",
-		"final_price": 36.00,
-		"product_price": 72.00,
-		"promotion_saved_money":0.00,
-		"postage": 0.00,
-		"integral_money":36.00,
-		"integral":72.00,
-		"coupon_money":0.00,
-		"products": [{
-			"name": "商品5",
-			"count": 1,
-			"model": "S"
-		}, {
-			"name": "商品5",
-			"count": 1,
-			"model": "M"
-		}]
-	}
-	"""
+		{
+			"price_info": {
+				"final_price": 36.0,
+				"product_price": 72.0,
+				"promotion_saved_money": 0.00,
+				"integral": 72.00,
+				"integral_money": 36.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品5",
+					"model": "S"
+					"count": 1
+				}, {
+					"name": "商品5",
+					"model": "M",
+					"count": 1
+				}]
+			}]
+		}
+		"""
+
 	Then tom在jobs的webapp中拥有28会员积分:ui
 	When sam访问jobs的webapp:ui
 	And sam购买jobs的商品:ui
@@ -1228,27 +1293,30 @@ Scenario: 15 购买多规格限时抢购商品同时适用于积分规则和会�
 		}]
 	}
 	"""
-	Then sam成功创建订单:ui
+	Then sam获得待编辑订单:ui
 	"""
-	{
-		"status": "待支付",
-		"final_price": 10.00,
-		"product_price": 20.00,
-		"promotion_saved_money": 60.00,
-		"postage": 0.00,
-		"integral_money":10.00,
-		"integral":20.00,
-		"coupon_money":0.00,
-		"products": [{
-			"name": "商品5",
-			"count": 1,
-			"model": "S"
-		}, {
-			"name": "商品5",
-			"count": 1,
-			"model": "M"
-		}]
-	}
-	"""
+		{
+			"price_info": {
+				"final_price": 10.0,
+				"product_price": 20.0,
+				"promotion_saved_money": 0.00,
+				"integral": 20.00,
+				"integral_money": 10.00
+			},
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品5",
+					"model": "S"
+					"count": 1
+				}, {
+					"name": "商品5",
+					"model": "M",
+					"count": 1
+				}]
+			}]
+		}
+		"""
+
 	Then sam在jobs的webapp中拥有80会员积分:ui
 

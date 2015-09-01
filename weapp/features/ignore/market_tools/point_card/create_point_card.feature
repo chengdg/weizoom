@@ -21,15 +21,15 @@ Background:
 Scenario: 生成多个积分卡
 
 	When jobs手工为积分卡规则生成积分卡
-		'''
+		"""
 		{
 			"point_card_rule": "积分卡规则1",
 			"count": 2,
 			"point_card_ids": ["01234560001", "01234560002"]
 		}
-		'''
+		"""
 	Then jobs能获得积分卡列表
-		'''
+		"""
 		[{
 			"point_card_rule_name": "积分卡规则1",
 			"point": "100",
@@ -39,4 +39,4 @@ Scenario: 生成多个积分卡
 			"point": "100",
 			"status": "未使用"
 		}]
-		'''
+		"""

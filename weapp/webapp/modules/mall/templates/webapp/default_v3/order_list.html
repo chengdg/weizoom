@@ -19,7 +19,7 @@
     <div class="wui-swiper-container" style="margin-top:43px;background:#f0f0f0;">
         <div class="wui-swiper-wrapper">
             <div class="wui-swiper-slide" id="xa-wrapper">
-                <div class="xui-list mb40 xt-orderList">
+                <div class="xui-list xt-orderList">
                     <ul>
                         {% for order in orders %}
                         <li>
@@ -113,7 +113,7 @@
 
                                         {% ifequal order.status 4 %}
                                             {% if order.express_number %}
-                                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流{{order.express_number}}</a>
+                                                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
                                                 {% if order.session_data.has_comfire_button %}
                                                 <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc" data-id="{{order.id}}">确认收货</a>
                                                 {% endif %}
@@ -145,7 +145,7 @@
 
             </div>
             <div class="wui-swiper-slide">
-                <div class="xui-list mb40 xt-orderList">
+                <div class="xui-list xt-orderList">
                     <ul>
                         {% for order in orders %}
                         {% ifequal order.status 0 %}
@@ -230,7 +230,7 @@
                 </div>
             </div>
             <div class="wui-swiper-slide">
-                <div class="xui-list mb40 xt-orderList">
+                <div class="xui-list xt-orderList">
                 <ul>
                     {% for order in orders %}
                     {% ifequal order.status 3 %}
@@ -311,7 +311,7 @@
                 </div>
             </div>
             <div class="wui-swiper-slide">
-                <div class="xui-list mb40 xt-orderList">
+                <div class="xui-list xt-orderList">
                     <ul>
                     {% for order in orders %}
                         {% ifequal order.status 4 %}
@@ -423,38 +423,38 @@ Zepto.fn.buttonLoading = function(options) {
         break;
     }
 }
-$(document).ready(function($) {
-    var bodyWidth = window.document.body.clientWidth;
-    var bodyHeight = window.document.body.clientHeight;
-    var containerHeight = bodyHeight - 40;
-    $(".wui-swiper-container").css('height',containerHeight);
-    $(".wui-swiper-slide").css('height', containerHeight );
-    $("body").css('overflow-y', 'hidden');
+var bodyWidth = window.document.body.clientWidth;
+var bodyHeight = window.document.body.clientHeight;
+var containerHeight = bodyHeight - 43;
+$(".wui-swiper-container").css('height',containerHeight);
+$(".wui-swiper-slide").css('height', containerHeight );
+$("body").css('overflow-y', 'hidden');
+if (/ipad|iphone|mac/i.test(navigator.userAgent)){
+    function loaded() {
+        var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+    }
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+    document.addEventListener('DOMContentLoaded', loaded, false);
+}
 
-    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
-    var tabsSwiper = new Swiper('.wui-swiper-container',{
-        speed:500,
-        onSlideChangeStart: function() {
-            $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
-            $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+var tabsSwiper = new Swiper('.wui-swiper-container',{
+    speed:500,
+    onSlideChangeStart: function() {
+        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+        $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+        if (/ipad|iphone|mac/i.test(navigator.userAgent)){
             myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
-
-            var $el = $('.wui-swiper-slide-active');
-            var $info = $el.find('.xa-emptyOrder');
-            if($info.css('display') == 'block'){
-                $el.css('background','#fff');
-                // $el.parents('.wui-swiper-container').css('background','#fff');
-                // $el.parents('.wui-swiper-wrapper').css('background','#fff');
-            };
         }
-    });
-
-    // var myscroll;
-    // function loaded(){
-    //     myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
-    // }
-    // window.addEventListener("load",loaded,false);
-
+        var $el = $('.wui-swiper-slide-active');
+        var $info = $el.find('.xa-emptyOrder');
+        if($info.css('display') == 'block'){
+            $el.css('background','#fff');
+            // $el.parents('.wui-swiper-container').css('background','#fff');
+            // $el.parents('.wui-swiper-wrapper').css('background','#fff');
+        };
+    }
+});
+$(document).ready(function($) {
     var type = "{{status_type}}";
     if (type === "0"){
         $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');

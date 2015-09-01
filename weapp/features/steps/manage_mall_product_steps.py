@@ -3,11 +3,8 @@ from __future__ import absolute_import
 import copy
 import json, time
 from behave import when, then, given
-import logging
 from mall.models import ProductCategory
 from webapp.models import WebApp
-
-logger = logging.getLogger('console')
 
 from mall import models as mall_models  # 注意不要覆盖此module
 from test import bdd_util
@@ -251,7 +248,7 @@ def update_product_display_index(context, user, product_name, pos):
         "update_type": "update_pos",
         "pos": pos
     }
-    response = context.client.post('/mall2/api/product/?_method=post', data)
+    response = context.client.post('/mall2/api/product_pos/?_method=post', data)
     bdd_util.assert_api_call_success(response)
 
 @when(u"{user}设置商品查询条件")
@@ -275,6 +272,8 @@ def __update_prducts_by_name(context, product_name, action):
         u'永久删除': 'delete',
     }
     action = ACTION2TYPE[action]
+    if action == 'offshelf':
+        time.sleep(1) #处理下架时睡眠一秒，避免测试结果不准
     data = {
         'shelve_type': action
     }
@@ -307,6 +306,7 @@ def __get_products(context, type_name=u'在售'):
     context.pageinfo = data['pageinfo']
 
     for product in data["items"]:
+        product['is_member_product'] = 'on' if product.get('is_member_product', False) else 'off'
         #价格
         product['price'] = product['display_price']
         if 'display_price_range' in product:

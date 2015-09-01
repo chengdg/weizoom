@@ -1,4 +1,4 @@
-Feature: 购买参加“满减”活动的商品
+Feature: 购买参加“买赠”活动的商品
 	todo: 缺少已赠完的场景
 
 Background:
@@ -296,7 +296,7 @@ Scenario: 直接购买商品，商品满足买赠，但赠品库存不足
 		}
 		"""
 
-
+# _author_ "师帅8.26"补充
 Scenario: 4 购买单个买赠商品，超出库存限制
 	第一次购买2个，成功；第二次购买4个，超出商品库存，确保缓存更新
 
@@ -709,7 +709,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 		}]
 	"""
 	Given jobs登录系统:ui
-	When jobs'结束'促销活动'商品10买1赠1':ui
+	When jobs"结束"促销活动"商品10买1赠1":ui
 	When bill访问jobs的webapp:ui
 	And bill购买jobs的商品:ui
 		"""

@@ -31,7 +31,7 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.product @jz
+@mall2 @mall.product
 Scenario: 删除商品
 	Jobs添加一组商品后，能删除单个商品。
 	删除后：
