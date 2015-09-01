@@ -225,7 +225,6 @@ def step_impl(context, user, promotion_type):
 	# elif type == u"优惠券":
 	#     type = "coupon"
 	url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % promotion_type
-	context.client.get(url) #先获取一次数据，使status都更新到正常值
 	if hasattr(context, 'query_param'):
 		if context.query_param.get('product_name'):
 			url += '&name=' + context.query_param['product_name']
@@ -241,6 +240,7 @@ def step_impl(context, user, promotion_type):
 			elif context.query_param['status'] == u'进行中':
 				status = 2
 			elif context.query_param['status'] == u'已结束':
+				context.client.get(url) #先获取一次数据，使status都更新到正常值
 				status = 3
 			url += '&promotionStatus=%s' % status
 	response = context.client.get(url)
