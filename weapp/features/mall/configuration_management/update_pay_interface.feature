@@ -9,7 +9,7 @@ Feature:更新支付方式
 	4.切换启用/停用状态
 	"""
 
-@mall2 @mall.pay_interface @wip.pi1
+@mall2 @mall.pay_interface @wip.pi1 @ztq1
 Scenario: 1 更新支付方式:微信支付
 	Jobs更新"微信支付"后
 	1. jobs能获取更新后的微信支付
@@ -91,7 +91,7 @@ Scenario: 1 更新支付方式:微信支付
 		}
 		"""
 
-@mall @mall.pay_interface
+@mall @mall.pay_interface @ztq
 Scenario: 2 更新支付方式:货到付款
 	Jobs更新"货到付款"后
 	1. jobs能获取更新后的货到付款
@@ -128,7 +128,7 @@ Scenario: 2 更新支付方式:货到付款
 			"is_active": "停用"
 		}
 		"""
-	Then jobs能获得支付方式'货到付款'
+	Then jobs能获得支付方式
 		"""
 		{
 			"type": "货到付款",
@@ -136,7 +136,7 @@ Scenario: 2 更新支付方式:货到付款
 		}
 		"""
 	Given nokia登录系统
-	Then nokia能获得支付方式'货到付款'
+	Then nokia能获得支付方式
 		"""
 		{
 			"type": "货到付款",
