@@ -49,7 +49,7 @@
                 <tr>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-11 xa-lottery-third">
                         {% if component.components.2.model.image %}<img src="{{ component.components.2.model.image }}">{% else %}<b>三等奖</b>{% endif %}</td>
-                    <td class="xa-lottery-go" colspan="2" rowspan="2"><a>点击抽奖</a></td>
+                    <td class="xa-lottery-go" colspan="2" rowspan="2"></td>
                     <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-4 xa-lottery-second">
                         {% if component.components.1.model.image %}<img src="{{ component.components.1.model.image }}">{% else %}<b>二等奖</b>{% endif %}</td>
                 </tr>
@@ -74,56 +74,56 @@
     style="min-height:100px; background-color:#8d00ab;"
 >
     <div class="wui-i-subtitle">
-        <h2 class=" xa-subtitle">活动说明</h2>
+        <h2 class=" xa-subtitle" style="color: #ffffff;">活动说明</h2>
     </div>
 	<div class="wui-i-info p0">
-        <div class="wui-i-settings pt15 pb15">
-            <div class="wui-i-settingTitle fl mr15">奖项设置:</div>
+        <div class="wui-i-settings pt15 pb15" style="color: #ffffff;">
+            <div class="wui-i-settingTitle fl mr15" style="color: #ffffff;">奖项设置:</div>
             <div class="wui-i-settingData xa-settingData fl mb10">
-                <ul>
+                <ul >
                     <li data_cid="4">
                         一等奖:&nbsp;&nbsp;
                         {% if component.components.0.model.prize.type == 'coupon' %}
-                            <strong>优惠券</strong>:<b>{{component.components.0.model.prize.data.name}}</b>
+                            <strong style="font-weight: normal;color: #ffffff">优惠券</strong>:<b style="font-weight: normal;color: #ffffff">{{component.components.0.model.prize.data.name}}</b>
                         {% else %}
                             {% if component.components.0.model.prize.type == 'integral' %}
-                                <strong>积分</strong>
+                                <strong style="font-weight: normal;color: #ffffff">积分</strong>
                             {% else %}
-                                <strong>实物</strong>
+                                <strong style="font-weight: normal;color: #ffffff">实物</strong>
                             {% endif %}
-                            :<b>{{component.components.0.model.prize.data}}</b>
+                            :<b style="font-weight: normal;color: #ffffff">{{component.components.0.model.prize.data}}</b>
                         {% endif %}
                     </li>
-                    <li data_cid="5">
+                    <li data_cid="5" style="font-weight: normal;color: #ffffff">
                         二等奖:&nbsp;&nbsp;
                         {% if component.components.1.model.prize.type == 'coupon' %}
-                            <strong>优惠券</strong>:<b>{{component.components.1.model.prize.data.name}}</b>
+                            <strong style="font-weight:lighter;color: #ffffff">优惠券</strong>:<b style="font-weight: normal;color: #ffffff">{{component.components.1.model.prize.data.name}}</b>
                         {% else %}
                             {% if component.components.1.model.prize.type == 'integral' %}
-                                <strong>积分</strong>
+                                <strong style="font-weight: normal;color: #ffffff">积分</strong>
                             {% else %}
-                                <strong>实物</strong>
+                                <strong style="font-weight: normal;color: #ffffff">实物</strong>
                             {% endif %}
-                            :<b>{{component.components.1.model.prize.data}}</b>
+                            :<b style="font-weight: normal;color: #ffffff">{{component.components.1.model.prize.data}}</b>
                         {% endif %}
                     </li>
                     <li data_cid="6">
                         三等奖:&nbsp;&nbsp;
                         {% if component.components.2.model.prize.type == 'coupon' %}
-                            <strong>优惠券</strong>:<b>{{component.components.2.model.prize.data.name}}</b>
+                            <strong style="font-weight: normal;color: #ffffff;font-family: 'Arial', '黑体';">优惠券</strong>:<b style="font-weight: normal;color: #ffffff">{{component.components.2.model.prize.data.name}}</b>
                         {% else %}
                             {% if component.components.2.model.prize.type == 'integral' %}
-                                <strong>积分</strong>
+                                <strong style="font-weight: normal;color: #ffffff">积分</strong>
                             {% else %}
-                                <strong>实物</strong>
+                                <strong style="font-weight: normal;color: #ffffff">实物</strong>
                             {% endif %}
-                            :<b>{{component.components.2.model.prize.data}}</b>
+                            :<b style="font-weight: normal;color: #ffffff">{{component.components.2.model.prize.data}}</b>
                         {% endif %}
                     </li>
                 </ul>
             </div>
         </div>
-		<div class="wui-i-time cl pt15 pb15" style="border-top: 1px solid #9c96ac;">
+		<div class="wui-i-time cl pt15 pb15" style="border-top: 1px solid #9c96ac;font-weight: normal;color: #ffffff">
 			活动时间:&nbsp;&nbsp;<p class="wui-i-start_time">{{component.model.start_time}}</p>
             -<p class="wui-i-end_time">{{component.model.end_time}}</p>
 		</div>
@@ -134,7 +134,7 @@
         </div>
         -->
         <div class="wui-i-record cl pt15 pb15">
-            <div class="wui-i-recordTitle fl mr15">中奖历史:</div>
+            <div class="wui-i-recordTitle fl mr15" style="font-weight: normal;color: #ffffff">中奖记录:</div>
             <div class="wui-i-recordData xa-recordData fl mb10">
                 <ul>
 
