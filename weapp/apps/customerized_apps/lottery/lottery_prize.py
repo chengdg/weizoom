@@ -90,8 +90,6 @@ class lottery_prize(resource.Resource):
 			response.errMsg = u'不存在该活动或已删除'
 			return response.get_response()
 
-		webapp_user_id = request.webapp_user.id
-
 		chance = lottery.chance / 100.0 #中奖率
 		participants_count = lottery.participant_count #所有参与的人数
 		winner_count = lottery.winner_count #中奖人数
@@ -102,11 +100,12 @@ class lottery_prize(resource.Resource):
 		delivery = lottery.delivery
 		delivery_setting = lottery.delivery_setting
 
-		member = getattr(request, 'member', None)
+		webapp_user_id = request.webapp_user.id
+		member = request.member
 
-		if member.integral < expend:
+		if not member or member.integral < expend:
 			response = create_response(500)
-			response.errMsg = u'积分不足，请先关注'
+			response.errMsg = u'积分不足'
 			return response.get_response()
 
 		member_id = member.id
@@ -135,6 +134,7 @@ class lottery_prize(resource.Resource):
 			response = create_response(500)
 			response.errMsg = u'参与抽奖失败，请刷新页面重试~'
 			return response.get_response()
+		#首位用户不中奖
 		if participants_count == 0 or (winner_count / float(participants_count) >= chance):
 			result = u'谢谢参与'
 			#根据送积分规则，查询当前用户是否已中奖
@@ -144,25 +144,18 @@ class lottery_prize(resource.Resource):
 			#中奖，构造奖项池
 			prize_tank = []
 			lottery_prize_count = 0
-			pagestore = pagestore_manager.get_pagestore('mongo')
-			page = pagestore.get_page(lottery.related_page_id, 1)
-			page_components = page['component']['components']
-			for sub_components in page_components:
-				if sub_components['type'] == 'appkit.lotterydescription':
-					sub_components = sub_components['components']
-					for c in sub_components:
-						model = c['model']
-						prize = model['prize']
-
-						prize_count = int(model['prize_count'])
-						lottery_prize_count += prize_count
-						prize_item = {
-							'title': model['title'],
-							'prize_count': prize_count,
-							'prize_type': prize['type'],
-							'prize_data': prize['data']
-						}
-						prize_tank.append(prize_item)
+			lottery_prize_dict = lottery.prize
+			for _, item in lottery_prize_dict.items():
+				prize_count = int(item['prize_count'])
+				lottery_prize_count += prize_count
+				prize_item = {
+					'title': item['title'],
+					'prize_count': prize_count,
+					'prize_type': item['prize_type'],
+					'prize_data': item['prize_data']
+				}
+				if prize_count != 0:
+					prize_tank.append(prize_item)
 			#收集完所有奖项的数据，打乱奖池list顺序
 			random.shuffle(prize_tank)
 			#随机抽奖
@@ -174,32 +167,29 @@ class lottery_prize(resource.Resource):
 				result = u'谢谢参与'
 			else:
 				temp_prize_title = result = lottery_prize['title']
-				#奖项的奖品数为0则不中奖
-				lottery_prize_count = int(lottery.prize[result])
-				if lottery_prize_count > 0:
-					#如果抽到的是优惠券，则获取该优惠券的配置
-					if lottery_prize_type == 'coupon':
-						#优惠券
-						lottery_prize_data = couponRule_id = lottery_prize['prize_data']['id']
-						coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
-						coupon_limit = coupon_rule.limit_counts
-						has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, belong_to=record_id, prize_type='coupon', prize_data=couponRule_id).count()
-						if has_coupon_count >= coupon_limit:
-							result = u'谢谢参与'
-						else:
-							consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
-							prize_value = lottery_prize['prize_data']['name']
-					elif lottery_prize_type == 'integral':
-						#积分
-						member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
-						lottery_prize_data = lottery_prize['prize_data']
-						prize_value = u'%d积分' % lottery_prize_data
+				#如果抽到的是优惠券，则获取该优惠券的配置
+				if lottery_prize_type == 'coupon':
+					#优惠券
+					lottery_prize_data = couponRule_id = lottery_prize['prize_data']['id']
+					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
+					coupon_limit = coupon_rule.limit_counts
+					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, belong_to=record_id, prize_type='coupon', prize_data=couponRule_id).count()
+					if has_coupon_count >= coupon_limit:
+						result = u'谢谢参与'
 					else:
-						prize_value = lottery_prize['prize_data']
-					lottery.prize[temp_prize_title] = lottery_prize_count-1
-					lottery.save()
+						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
+						prize_value = lottery_prize['prize_data']['name']
+				elif lottery_prize_type == 'integral':
+					#积分
+					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
+					lottery_prize_data = lottery_prize['prize_data']
+					prize_value = u'%d积分' % lottery_prize_data
 				else:
-					result = u'谢谢参与'
+					prize_value = lottery_prize['prize_data']
+				#更新奖品所剩数量
+				lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
+				lottery.update(**lottery_prize_dict)
+				lottery.reload()
 
 		#写日志
 		prize_value = result if result == u'谢谢参与' else prize_value
@@ -234,6 +224,7 @@ class lottery_prize(resource.Resource):
 		app_models.lottery.objects(id=record_id).update(inc__participant_count=1)
 
 		response = create_response(200)
+		print prize_value
 		response.data = {
 			'result': result,
 			'newRecord': newRecord,

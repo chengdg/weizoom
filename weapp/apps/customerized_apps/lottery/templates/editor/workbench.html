@@ -173,9 +173,24 @@
           var allow_repeat = descriptionModel.get('allow_repeat');
           var relatedPageId = data['project_id'];
             var prizeData = {
-                "一等奖": dynamicComponents[0].model.get('prize_count'),
-                "二等奖": dynamicComponents[1].model.get('prize_count'),
-                "三等奖": dynamicComponents[2].model.get('prize_count')
+                "一等奖": {
+                    'title': dynamicComponents[0].model.get('title'),
+                    'prize_count': dynamicComponents[0].model.get('prize_count'),
+                    'prize_type': dynamicComponents[0].model.get('prize').type,
+                    'prize_data': dynamicComponents[0].model.get('prize').data
+                },
+                "二等奖": {
+                    'title': dynamicComponents[1].model.get('title'),
+                    'prize_count': dynamicComponents[1].model.get('prize_count'),
+                    'prize_type': dynamicComponents[1].model.get('prize').type,
+                    'prize_data': dynamicComponents[1].model.get('prize').data
+                },
+                "三等奖": {
+                    'title': dynamicComponents[2].model.get('title'),
+                    'prize_count': dynamicComponents[2].model.get('prize_count'),
+                    'prize_type': dynamicComponents[2].model.get('prize').type,
+                    'prize_data': dynamicComponents[2].model.get('prize').data
+                }
             };
           var args = {
             "name": name,
