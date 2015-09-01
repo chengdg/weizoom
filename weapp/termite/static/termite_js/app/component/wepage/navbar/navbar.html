@@ -16,15 +16,15 @@
         <div class="xui-calc">
             {% for component in component.components %}
             <div class="xui-menuBox">
-                <div data-component-cid="{{component.cid}}" class="xui-flex xui-flex-{{component.parent_component.sub_component_count}} xui-menu xa-menu f14">
-                    <a href="{% if component.model.second_navs %}javascript:void(0);{% else %}{{ component.model.target|extract_target_data:request|safe }}{% endif %}" class="wa-inner-link">{{ component.model.title }}</a>   
+                <div data-component-cid="{{component.cid}}" class="xa-wepage-navbar-link xui-flex xui-flex-{{component.parent_component.sub_component_count}} xui-menu xa-menu f14">
+                    <a href="javascript:void(0);" data-link="{% if component.model.second_navs %}{% else %}{{ component.model.target|extract_target_data:request|safe }}{% endif %}" class="wa-inner-link">{{ component.model.title }}</a>   
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>
                     <span class="xui-menuArrowBorder"></span>
                     <ul class="xui-subMenu">
                         {% for second_nav in component.model.second_navs %}
-                        <li class="f14"><a href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        <li class="f14 xa-wepage-navbar-link"><a href="javascript:void(0);" data-link="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -53,8 +53,8 @@
                             </i>
                         </a>
 					</li>
-					<li class="xa-outLink" data-page="usercenter">
-                        <a href="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
+					<li class="xa-outLink xa-wepage-navbar-link" data-page="usercenter">
+                        <a href="javascript:void(0);" data-link="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
                     </li>
 				</ul>
 			</div>
@@ -85,5 +85,9 @@
 	</div>    
     <div class="xui-hide" data-ui-role="bottomNav"></div>
     {% endif %}
+    <div data-ui-role="swipemask" class="mask"></div>
+    <div class="xui-two-dimension">
+        <img src="{{ current_auth_qrcode_img }}" alt="">
+    </div>
 </div>
 {% endifequal %}
