@@ -377,7 +377,7 @@
                             value: value
                         };
                     };
-                    var participanceData = {
+                    W.participanceData = {
                         webapp_owner_id: W.webappOwnerId,
                         belong_to: W.appRecordId,
                         termite_data: JSON.stringify(data)
@@ -396,6 +396,7 @@
                     }
                     //必须关注才可以参与的活动
                     if (W.permission == 'member') {
+                        console.log("member");
                         if (W.isMember == true) {
                             getParticipance();
 
@@ -417,7 +418,7 @@
                 app: 'm/apps/'+W.appName,
                 resource: W.resource+'_participance',
                 method: 'put',
-                args: participanceData,
+                args: W.participanceData,
                 success: function(data) {
                     $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
                     var $button = $submitButtonContainer.find('.xa-submitTermite');
