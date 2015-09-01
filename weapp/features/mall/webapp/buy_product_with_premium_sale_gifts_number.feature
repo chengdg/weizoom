@@ -11,35 +11,16 @@ Background:
 @promotion @promotionPremium @order @allOrder
 Scenario:1 购买买赠活动的商品，在手机端的"待付款"、"待发货"、"待收货"、"待评价"中的订单，订单详情可以展示赠品的数量
 
-	Given jobs登录系统
-	And bill关注jobs的公众号
+	When bill关注jobs的公众号
 
 	And jobs已添加商品
 		"""
 		[{
 			"name": "商品赠品",
-			"is_member_product": "on",
-			"model": {
-				"models": {
-					"standard": {
-						"price": 10.00,
-						"stock_type": "有限",
-						"stocks": 100
-					}
-				}
-			}
+			"price": 10.00
 		},{
 			"name": "商品1",
-			"is_member_product": "on",
-			"model": {
-				"models": {
-					"standard": {
-						"price": 100.00,
-						"stock_type": "有限",
-						"stocks": 100
-					}
-				}
-			}
+			"price": 100.00
 		}]
 		"""
 	When jobs创建买赠活动
