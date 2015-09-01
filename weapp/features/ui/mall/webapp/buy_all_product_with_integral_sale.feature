@@ -86,7 +86,7 @@ Background:
 		"""
 		{
 			"integral_each_yuan": 2,
-			"use_ceiling": 50
+			"use_ceiling ": 50
 		}
 		"""
 	#支付方式
@@ -106,7 +106,7 @@ Background:
 	And tom关注jobs的公众号
 
 Scenario: 1 购买单种一个商品，积分金额小于最大折扣金额
-
+	
 	When bill访问jobs的webapp
 	When bill获得jobs的50会员积分
 	Then bill在jobs的webapp中拥有50会员积分
@@ -140,7 +140,7 @@ Scenario: 1 购买单种一个商品，积分金额小于最大折扣金额
 	Then bill在jobs的webapp中拥有0会员积分
 
 Scenario: 2 购买单种多个商品，积分金额等于最大折扣金额
-
+	
 	When bill访问jobs的webapp
 	When bill获得jobs的400会员积分
 	Then bill在jobs的webapp中拥有400会员积分
@@ -175,7 +175,7 @@ Scenario: 2 购买单种多个商品，积分金额等于最大折扣金额
 	Then bill在jobs的webapp中拥有0会员积分
 
 Scenario:  3 购买多个商品，已有总积分金额大于最大折扣金额
-
+	
 	When bill访问jobs的webapp
 	When bill获得jobs的160会员积分
 	Then bill在jobs的webapp中拥有160会员积分
@@ -216,7 +216,6 @@ Scenario:  3 购买多个商品，已有总积分金额大于最大折扣金额
 	Then bill在jobs的webapp中拥有10会员积分
 
 Scenario: 4 购买单个多规格商品+一个普通商品
-
 
 	When bill访问jobs的webapp
 	When bill获得jobs的150会员积分
@@ -277,6 +276,7 @@ Scenario: 5 购买单个限时抢购商品，同时使用积分购买
 			"promotion_price": 10
 		}
 		"""
+	
 	When bill访问jobs的webapp
 	When bill获得jobs的50会员积分
 	Then bill在jobs的webapp中拥有50会员积分
@@ -340,6 +340,32 @@ Scenario: 6 购买单个限时抢购商品， 买赠商品，同时使用积分�
 			"is_enable_cycle_mode": true
 		}
 		"""
+	When jobs创建积分应用活动
+	"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": {
+				"member_grade": "统一设置",
+				"discount": 50,
+				"discount_money": 50.0
+			}
+		}, {
+			"name": "商品2积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": {
+				"member_grade": "统一设置",
+				"discount": 50,
+				"discount_money": 100.0
+			}
+		}]
+	"""
 	When bill访问jobs的webapp
 	When bill获得jobs的500会员积分
 	Then bill在jobs的webapp中拥有500会员积分
@@ -573,3 +599,6 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 		}
 		"""
 	Then tom4在jobs的webapp中拥有260会员积分
+
+Scenario: 8设置积分活动，活动未开始，不显示积分活动，活动开始显示积分活动
+	When jobs

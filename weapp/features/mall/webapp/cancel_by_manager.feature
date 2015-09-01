@@ -22,7 +22,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall2 @mall.manager_cancel_status @bert
+@mall2 @mall.manager_cancel_status @jz
 Scenario: 取消订单后,手机端订单状态为'已取消'
 		1.jobs取消订单,bill可以获取订单状态为'已取消'
 		2.bill可获取'取消原因'
@@ -79,26 +79,25 @@ Scenario: 取消订单后,手机端订单状态为'已取消'
 		}
 		"""
 	When jobs'取消'最新订单
-		"""
-		{
-			"reason":"不想要了"
-		}
-		"""
+	#	"""
+	#	{
+	#		"reason":"不想要了"
+	#	}
+	#	"""
 	Then jobs可以获得最新订单详情
 		"""
 		{
 			"order_type": "普通订单",
 			"status": "已取消",
-			"actions": [],
-			"reason":"不想要了"
+			"actions": []
 		}
 		"""
+	#	,"reason":"不想要了"
 	When bill访问jobs的webapp
 	Then bill成功创建订单
 		"""
 		{
 			"status": "已取消",
-			"reason":"不想要了",
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"ship_area": "北京市 北京市 海淀区",
@@ -110,4 +109,5 @@ Scenario: 取消订单后,手机端订单状态为'已取消'
 			}]
 		}
 		"""
+	#		"reason":"不想要了",
 

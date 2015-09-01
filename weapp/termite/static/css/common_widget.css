@@ -124,7 +124,7 @@
     width: 100%;
     height: 50px;
     background: #21292B;
-    z-index: 1002;
+    z-index: 10002;
 }
 .wui-template-globalNavbar .xui-globalSideBar li{
     float: left;
@@ -240,4 +240,26 @@
     line-height: 40px;
     border-bottom: 1px solid #CBCBCB;
 
+}
+
+
+/*未关注弹层*/ 
+.wui-template-globalNavbar .xui-two-dimension{
+    width: 233px;
+    height: 270px;
+    background: url(/static_v2/img/termite2/two-dimension.png) no-repeat;
+    -webkit-background-size: 233px 270px;
+    background-size: 233px 270px;
+    position: fixed;
+    left:50%;
+    margin-left: -116px;
+    z-index: 10001;
+    display: none;
+}
+.wui-template-globalNavbar .xui-two-dimension img{
+    width: 148px;
+    height: 148px;
+    position: absolute;
+    top:42px;
+    left: 45px;
 }

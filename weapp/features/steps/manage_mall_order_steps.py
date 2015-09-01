@@ -13,35 +13,26 @@ import steps_db_util
 # when steps
 ###############################
 
+
+ORDER_ACTION_NAME2ACTION = {
+    u'支付': 'pay',
+    u'完成': 'finish',
+    u'退款': 'return_pay',
+    u'申请退款': 'return_pay',
+    u'完成退款': 'return_success',
+    u'取消': 'cancel',
+    u'退款成功': 'return_success'
+}
+
+
 @when(u"{user}'{action}'最新订单")
 def step_impl(context, user, action):
     if hasattr(context, 'latest_order_id'):
-        latest_order_id = context.latest_order_id
+        latest_order_no = Order.objects.get(id=context.latest_order_id).order_id
     else:
-        latest_order_id = steps_db_util.get_latest_order().id
-    data = {
-        "order_id": latest_order_id
-    }
-    url = '/mall2/api/order/'
-    if action == u"支付":
-        data["action"] = "pay"
-    elif action == u"完成":
-        data["action"] = "finish"
-    elif action == u"退款":
-        data["action"] = "return_pay"
-    elif action == u"完成退款":
-        data["action"] = "return_success"
-    elif action == u"取消":
-        data["action"] = "cancel"
-        try:
-            if hasattr(context, 'caller_step_cancel_reason'):
-                tmp_data = context.caller_step_cancel_reason
-            else:
-                tmp_data = json.loads(context.text)
-            data['reason'] = tmp_data['reason']
-        except:
-            pass
-    response = context.client.post(url, data)
+        latest_order_no = steps_db_util.get_latest_order().order_id
+
+    context.execute_steps(u"when %s'%s'订单'%s'" % (user, action, latest_order_no))
 
 
 @when(u"{user}修改订单'{order_code}'的价格")
@@ -53,19 +44,17 @@ def step_impl(context, user, order_code):
     context.client.post(url, post_data)
 
 
-@when(u"{user}'支付'订单'{order_code}'")
-def step_impl(context, user, order_code):
-    context.latest_order_id = bdd_util.get_order_by_order_no(order_code).id
-    context.execute_steps(u"when %s'支付'最新订单" % user)
+@when(u"{user}'{action}'订单'{order_code}'")
+def step_impl(context, action, user, order_code):
+    url = '/mall2/api/order/'
 
-# @when(u'{user}对最新订单进行退款')
-# def step_impl(context, user):
-#     context.execute_steps(u'when %s"退款"最新订单' % user)
+    data = {
+        'order_id': bdd_util.get_order_by_order_no(order_code).id,
+        'action': ORDER_ACTION_NAME2ACTION[action]
+    }
+    response = context.client.post(url, data)
 
 
-# @when(u'{user}完成最新订单退款')
-# def step_impl(context, user):
-#     context.execute_steps(u'when %s"完成退款"最新订单' % user)
 ######
 
 # 缺失对应feature
@@ -450,40 +439,69 @@ def step_get_specify_order(context, user):
 
 @then(u'{user}能获得订单"{order_id}"')
 def step_impl(context, user, order_id):
-    order = __get_order(context, order_id)
+    # order = __get_order(context, order_id)
+    #
+    # response = context.client.get('/mall2/order/?order_id=%d' % order['id'])
+    # order_obj = response.context['order']
+    #
+    # from mall.templatetags import mall_filter
+    # actions = mall_filter.get_order_actions(order_obj)
+    # source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
+    # actual = {
+    #     "order_no": order['order_id'],
+    #     "member": order['buyer_name'],
+    #     "status": order['status'],
+    #     "actions": [action['name'] for action in actions],
+    #     "shipper": order['leader_name'],
+    #     "order_time": order['created_at'],
+    #     "methods_of_payment": order['pay_interface_name'],
+    #     "ship_name": order['ship_name'],
+    #     "ship_tel": order['ship_tel'],
+    #     "sources": source[order['come']],
+    #     "final_price": order['total_price'],
+    #
+    # }
+    #
+    #
+    # actual["products"] = order["products"]
+    #
+    # if 'edit_money' in order and order['edit_money']:
+    #     actual["order_no"] = actual["order_no"] + "-" + str(order['edit_money']).replace('.', '').replace('-', '')
+    #     actual["edit_money"] = order_obj.edit_money
 
-    response = context.client.get('/mall2/order/?order_id=%d' % order['id'])
-    order_obj = response.context['order']
 
-    from mall.templatetags import mall_filter
-    actions = mall_filter.get_order_actions(order_obj)
-    source = {'mine_mall': u'本店', 'weizoom_mall': u'商城'}
-    actual = {
-        "order_no": order['order_id'],
-        "member": order['buyer_name'],
-        "status": order['status'],
-        "actions": [action['name'] for action in actions],
-        "shipper": order['leader_name'],
-        "order_time": order['created_at'],
-        "methods_of_payment": order['pay_interface_name'],
-        "ship_name": order['ship_name'],
-        "ship_tel": order['ship_tel'],
-        "sources": source[order['come']],
-        "final_price": order['total_price'],
-    }
+    real_id = bdd_util.get_order_by_order_no(order_id).id
+    response = context.client.get('/mall2/order/?order_id=%d' % real_id)
+    actual_order = response.context['order']
+    source_dict = {0: u'本店', 1: u'商城'}
+    actual_order.order_no = actual_order.order_id
+    # actual_order.member = actual_order.buyer_name
+    actual_order.shipper = actual_order.leader_name
+    actual_order.order_time = str(actual_order.created_at)
+    actual_order.methods_of_payment = actual_order.pay_interface_name
+    actual_order.sources = source_dict[actual_order.order_source]
+    actual_order.status = STATUS2TEXT[actual_order.status]
+    if actual_order.edit_money:
+        actual_order.order_no = actual_order.order_no + "-" +\
+            str(actual_order.edit_money).replace('.', '').replace('-', '')
 
-    if 'edit_money' in order and order['edit_money']:
-        actual["order_no"] = actual["order_no"] + "-" + str(order['edit_money']).replace('.', '').replace('-', '')
+    # print("actual---------------------------------")
+    # print(response.context['order'])
+    # print("actual---------------------------------")
 
-    print("actual---------------------------------")
-    print(actual)
-    print("actual---------------------------------")
-
-    expected = json.loads(context.text)
+    expected = []
+    if context.table:
+        for order in context.table:
+            expected.append(order.as_dict())
+    else:
+        expected = json.loads(context.text)
     # todo 暂时不处理actions
     if "actions" in expected:
         del expected["actions"]
-    bdd_util.assert_dict(expected, actual)
+
+    if "member" in expected:
+        del expected["member"]
+    bdd_util.assert_dict(expected, actual_order)
 
 
 @when(u'{user}完成订单"{order_id}"')

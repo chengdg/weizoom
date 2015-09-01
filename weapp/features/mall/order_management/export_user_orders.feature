@@ -42,12 +42,12 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
-	When jobs已创建微众卡
+	Given jobs已创建微众卡
 		"""
 		{
 			"cards": [{
 				"id": "0000001",
-				"password": "1234567",
+				"password": "1",
 				"status": "未激活",
 				"price": 100
 			}]
@@ -106,11 +106,13 @@ Background:
 						"weight": 1
 					}
 				}
-			}
+			},
+			"unified_postage_money": 10
 		},{
 			"name": "商品2",
 			"price": 100.00,
-			"weight": 1
+			"weight": 1,
+			"unified_postage_money": 10
 		},{
 			"name": "商品3",
 			"price": 100.00,
@@ -118,16 +120,17 @@ Background:
 		}]
 		"""
 	And bill关注jobs的公众号
-	And bill添加收货地址
+	And bill设置jobs的webapp的收货地址
 		"""
-		[{
+		{
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
-			"ship_area": "北京市,北京市,海淀区",
+			"area": "北京市,北京市,海淀区",
 			"ship_address": "泰兴大厦"
-		}]
+		}
 		"""
-	Given jobs已有的会员
+	Given jobs登录系统
+	And jobs已有的会员
 		"""
 		[{
 			"name": "bill",
@@ -152,26 +155,27 @@ Background:
 		"""
 
 
-@order
+@order @jz
 Scenario: 导出全部订单
 	jobs可以导出全部订单
 
 	When 微信用户批量消费jobs的商品
-		| order_no | order_source |  date | payment_time | consumer | type | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   |
-		|  000001  |      0       | 3天前 |    3天前     | bill     | 购买 |   jobs      | 商品1,红色 L,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
-		|  000002  |      0       | 3天前 |              | bill     | 购买 |   jobs      | 商品1,红色 M,1 |         |   微信支付     | 10      |      100      |  0       |              |              |    110      |         |    待支付       |
-		|  000003  |      0       | 3天前 |              | bill     | 购买 |   jobs      | 商品1,红色 S,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |jobs,取消|    已取消       |
-		|  000004  |      0       | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
-		|  000005  |      0       | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
-		|  000006  |      0       | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝       | 10      |      100      |  0       |              |              |    110      |         |    待发货       |
-		|  000007  |      0       | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   优惠抵扣     |  0      |      100      |  0       | coupon1_id_1 |              |     0       |         |    待发货       |
-		|  000008  |      0       | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   货到付款     |  0      |      100      |  100     |              |              |     50      |         |    待发货       |
-		|  000009  |      0       | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   优惠抵扣     |  0      |      100      |  0       |              | 0000001      |     0       |         |    待发货       |
-		|  000010  |      0       | 今天  |    今天      | bill     | 购买 |   jobs      | 商品2,2        | 支付    |   货到付款     | 15      |      200      |  0       |              |              |    215      |         |    待发货       |
-
+		| order_id | date | payment_time | consumer | type | businessman |      product   | payment | payment_method | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   |
+		|  000001  | 3天前 |    3天前     | bill     | 购买 |   jobs      | 商品1,红色 L,1  | 支付    |   微信支付          |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000002  | 3天前 |              | bill     | 购买 |   jobs      | 商品1,红色 M,1 | 支付    |   微信支付          |      100      |  0       |              |              |    110      |         |    待支付       |
+		|  000003  | 3天前 |              | bill     | 购买 |   jobs      | 商品1,红色 S,1 | 支付    |   微信支付          |      100      |  0       |              |              |    110      |jobs,取消|    已取消       |
+		|  000004  | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝           |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000005  | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝           |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000006  | 2天前 |    2天前     | bill     | 购买 |   jobs      | 商品2,1        | 支付    |   支付宝           |      100      |  0       |              |              |    110      |         |    待发货       |
+		|  000007  | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   优惠抵扣         |      100      |  0       | coupon1_id_1 |              |     0       |         |    待发货       |
+		|  000008  | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   货到付款         |      100      |  100     |              |              |     50      |         |    待发货       |
+		|  000009  | 1天前 |    1天前     | bill     | 购买 |   jobs      | 商品3,1        | 支付    |   优惠抵扣         |      100      |  0       |              | 0000001,1    |     0       |         |    待发货       |
+		|  000010  | 今天  |    今天      | bill     | 购买 |   jobs      | 商品2,2        | 支付    |   货到付款         |      200      |  0       |              |              |    215      |         |    待发货       |
+	# postage 运费是根据商品配置系统计算的，不是输入参数
+	# order_source 订单来源不是输入参数
 	Given jobs登录系统
 	#备注放在发货人后面用“|”隔开
-	When jobs对订单'000001'进行"发货"
+	When jobs对订单进行发货
 		"""
 		{
 			"order_no":"000001",
@@ -180,7 +184,7 @@ Scenario: 导出全部订单
 			"shipper":"jobs|发货一箱"
 		}
 		"""
-	Then jobs能获得订单'000001'
+	Then jobs能获得订单"000001"
 		| order_no | order_source |  date | payment_time | consumer | businessman |      product   | payment | payment_method | postage | product_price | integral |    coupon    | weizoom_card | final_price |  action |  order_status   | shipper | remark   | "ship_name |  ship_tel   |        ship_address           | express_company_name | express_number | delivery_time |
 		|  000001  |      0       | 3天前 |    3天前     | bill     |   jobs      | 商品1,红色 L,1 | 支付    |   微信支付     | 10      |      100      |  0       |              |              |    110      |jobs,发货|    已发货       |  jobs   | 发货一箱 |    bill    | 13811223344 | 北京市,北京市,海淀区,泰兴大厦 |       顺丰速运       |   123456789    |     今天      |
 	When jobs对订单'000004'进行'发货'

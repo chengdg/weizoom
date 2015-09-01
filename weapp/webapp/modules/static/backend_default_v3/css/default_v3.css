@@ -109,10 +109,7 @@ input,textarea{
     border-radius: 4px;
     display: inline-block;
     text-shadow:none;
-    /*background: none repeat scroll 0 0 #CCCCCC;*/
     background: none repeat scroll 0 0 #000000;
-    /*padding:5px 15px;*/
-    /*border: 1px solid #CCCCCC;*/
     height: 22px;
     line-height: 22px;
     font-size: 1.1em;
@@ -125,16 +122,6 @@ input,textarea{
 .xui-btn-noPadding {
     padding: 0px;
 }
-/*.xui-btn-box{float: right;position: absolute;right: 10px;}*/
-/*.xui-btn .ui-btn-text {
-    color: #FFFFFF;
-    font-size: 14px;
-    font-weight: normal;
-    height: 22px;
-    line-height: 22px;
-    display: block;
-}
-.xui-btn .ui-btn-inner{border: none;}*/
 .xui-btn-danger {
     border: 1px solid #d10000;
     background: none repeat scroll 0 0 #d10000;
@@ -145,10 +132,6 @@ input,textarea{
     background: none repeat scroll 0 0 #008601;
     color: #FFFFFF;
     position: relative;
-}
-.xui-btn-success{
-    /*width: 85px;*/
-    /*height:30px; */
 }
 .xui-btn-disable {
     border: 1px solid #666;
@@ -386,7 +369,6 @@ input,textarea{
     -webkit-text-size-adjust:none;
     display: inline-block;
     -webkit-transform:rotate(15deg);
-    -moz-transform:rotate(15deg);
     transform:rotate(15deg);
 }
 .xui-sellout-tag:before {
@@ -399,10 +381,8 @@ input,textarea{
     border-color:#fff #fff #bbbdbf #bbbdbf;
     display:block; width:0; 
     -webkit-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
-       -moz-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
             box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
             -webkit-transform:rotate(270deg);
-            -moz-transform:rotate(270deg);
             transform:rotate(270deg);
 }
 .xui-sellout-middle{
@@ -508,14 +488,11 @@ input,textarea{
 
 /* section样式 */
 .xui-section {
-    /*margin: 10px;*/
     padding:0 9px;
-    /*border-radius: 6px;*/
     background-color: #fff;
     border: none;
 }
 .xui-section-item {
-    /*padding: 1px 3.5%;*/
     position: relative;
     font-size: 0.95rem;
     border-bottom:1px solid #dbdbdb;
@@ -539,23 +516,7 @@ input,textarea{
 .xui-section-item .xui-icon-rightarrow{
     right:2px;
 }
-/*.xui-section .xui-inner-noborder-tag {
-    float:left; 
-    margin-right: 10px; 
-    display: block; 
-    padding: 8px 0px;
-}*/
-/*.xui-productDetailPage .xui-productModel-section .wui-counter{
-    margin-left:12px;
-    margin-top:10px;
-}
-.xui-productDetailPage .xui-productModel-section .wui-counter span:last-child{
-    font-size: 1rem;
-    padding-left: 10px;
-}*/
 .xui-productDetailPage .xui-understock{
-    /*float: right;*/
-    /*margin-top:-25px;*/
     vertical-align: middle;
     line-height: 32px;
     margin-left:5px;
@@ -574,17 +535,12 @@ input,textarea{
     margin-top:10px;
     border-radius: 2px;
     color:#666;
+    -webkit-box-sizing:border-box;
     box-sizing:border-box;
-/*    -webkit-box-sizing:border-box;
-    box-sizing:border-box;*/
 }
 .xui-section a.xui-inner-tag:link, .xui-section a.xui-inner-tag:visited {
     color: #555;
 }
-/*.xui-section .xui-custom-model-box{
-    width: 82%;
-    overflow: hidden;
-}*/
 .xui-productDetailPage .xui-productModel-section .xui-inner-imgTag {
     border: 1px solid #ccc;
     border-radius: 2px;
@@ -605,10 +561,6 @@ input,textarea{
 .xui-productModel-section .xui-inner-tag.xui-unSelectable{
     opacity: 0.4;
 }
-/*.xui-section .xui-inner-imgTag img {
-    max-width: 37px;
-    border:1px solid #dfdfdd;
-}*/
 .xui-productModel-section .xui-inner-selected-tag {
     border:1px solid #cf0404!important;
     color:#cf0404!important;
@@ -635,11 +587,6 @@ input,textarea{
     font-weight: normal;
     position: relative;
 }
-/*.xui-section-title label{
-    color:#999;
-    font-size: 0.95em;
-    margin-right:10px;
-}*/
 .xui-section-normalItemText  {
     color: #7F7F7F;
     font-size: 0.9em;
@@ -655,18 +602,6 @@ input,textarea{
 
 /* action panel 样式 */
 .xui-actionPanel{
-   /* position:fixed;
-    width:100%;
-    background:#eaedf0;
-    border:none;
-    height:60px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    margin:0;
-    padding:15px 10px;
-    z-index:9999;
-    border-top: solid 1px rgba(0,0,0,0.1);*/
     position: fixed;
     width: 100%;
     height: 50px;
@@ -746,103 +681,6 @@ fieldset.xui-section {
 .xui-clearBtn + .xui-inner-input-container > .ui-input-text,.xui-clearBtn + .ui-input-text{
     padding-right:30px;
 }
-/*
-.xui-form .ui-input-text.ui-focus{
-    -webkit-box-shadow:none;
-    -moz-box-shadow:none;
-    box-shadow:none;
-    background:#f8f8f8;
-    border:1px solid #C1C1C1;
-}
-
-.ui-checkbox,
-.ui-radio{
-    overflow:hidden;
-    clear:none;
-    display:inline-block;
-}
-.ui-checkbox .ui-btn,
-.ui-radio .ui-btn{
-    background:none;
-    border:none;
-    padding:0;
-}
-.ui-checkbox .ui-btn .ui-btn-inner,
-.ui-radio .ui-btn .ui-btn-inner{
-    padding-left:25px;
-}
-.ui-checkbox .ui-btn .ui-icon,
-.ui-radio .ui-btn .ui-icon{
-    left:0px;
-}
-.ui-checkbox .ui-btn .ui-btn-text,
-.ui-radio .ui-btn .ui-btn-text{
-    font-size:1em;
-    color:#000;
-}
-.ui-checkbox input,
-.ui-radio input{
-    top:-100px
-}
-.ui-checkbox .ui-icon-checkbox-off,
-.ui-radio .ui-icon-checkbox-off{
-    background:#fff;
-    border:1px solid #B2ABA5;
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box;
-}
-.ui-checkbox .ui-icon-checkbox-on,
-.ui-radio .ui-icon-checkbox-on{
-    background-color:#F1EAE4;
-    background-position:-648px -1px;
-    border:1px solid #B2ABA5;
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box;
-}
-.ui-select{
-    margin-bottom:10px;
-}
-.ui-select:last-child{
-    margin-bottom:0px;
-}
-.ui-select .ui-btn{
-    background:#fff;
-    border: 1px solid #C2C2C2;
-    display: block;
-    background:#fff;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    color: #008605;
-    padding:0.46em 0.5em;
-}
-.ui-select  .ui-btn .ui-btn-inner{
-    padding-right:20px;
-    color:#555;
-    text-align:left;
-}
-.ui-select  .ui-btn .ui-icon-arrow-d{
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: top;
-    border-top: 4px solid #444;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
-    border-bottom: 4px solid transparent;
-    content: "";
-    background:none;
-    right:0px;
-    top:16px;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-}
-.ui-btn.ui-focus {
-    opacity: 0.5;
-}*/
 ::-moz-placeholder{
     color: #c7c7c7;
     font-family: arial,"黑体";
@@ -924,36 +762,12 @@ input.ui-input-text, textarea.ui-input-text {
     border:none;
     padding:0;
 }
-/*.xui-applyBox .xui-section:first-child{
-    padding-top: 10px!important;
-}*/
-..xui-applyBox .xui-section:nth-last-child(2){
-    margin: 0;
-}
 .xui-applyBox .xui-section-inner{
     padding:10px 0 10px 0;
 }
 .xui-editOrderPage fieldset.xui-section .xui-section-info{
     border-bottom:1px solid #dfdfdd;
 }
-/*.xui-applyBox .xui-section-btn{
-    border-top:1px solid #dfdfdd;
-}
-.xui-popInfo-close{
-    width: 23px;
-    height: 23px;
-    top: 5px;
-    bottom:330px;
-    right:15px;
-    display:inline-block;
-    background: url(/standard_static/img/webapp/close.png) no-repeat;
-    -webkit-background-size: cover;
-    background-size: cover;
-}
-.xui-productDetailPage .xui-popInfo-close{
-    position: fixed;
-    bottom:330px;
-}*/
 .xui-productInfo-name{
     font-family:"黑体";
     color:#333;
@@ -1065,15 +879,6 @@ input.ui-input-text, textarea.ui-input-text {
     top: 0px;
     right: 0px;
 }
-
-/*.xui-products .ui-btn .ui-li p{
-    color: #333;
-    font-size: 1em;
-    margin: 0px;
-}
-.xui-products .ui-listview .ui-li > .ui-btn-text{
-    height: 240px;
-}*/
 /*
  * mall: product detail 页面样式
  */
@@ -1261,14 +1066,6 @@ input.ui-input-text, textarea.ui-input-text {
     -webkit-transform:scale(.95);
     transform:scale(.95);
 }
-
-
-/*.xui-productDetailPage .xui-promotion-gift li{
-    margin-bottom:-6px;
-}
-.xui-productDetailPage .xui-promotion-gift:not(:first-child) li{
-    margin-top:6px;
-}*/
 .xui-productDetailPage .xui-standard .wui-counter{
     padding-left:3rem;
 }
@@ -1313,16 +1110,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-productDetailPage .xui-property-panel ul li:last-child{
     padding-bottom:7px;
 }
-/*.xui-productDetailPage .xui-production-panel{
-    padding:0;
-}
-.xui-productDetailPage .xui-production-panel .xui-productDetail-content {
-    color: #444444;
-    background-color: #fff;
-    font-size: 0.9em;
-    line-height: 22px;
-    padding: 10px;
-}*/
 /*RatePanel*/
 .xui-productDetailPage .xui-rate-panel li{
     padding-bottom:10px;
@@ -1556,47 +1343,6 @@ input.ui-input-text, textarea.ui-input-text {
     position: absolute;
     top: 50%;
 }
-/*.xui-productDetailPage .xui-errorTip{
-    position:fixed;
-    width:100%;
-    text-align:center;
-    padding-top:2px;
-    top:0;
-    left:0;
-    -webkit-transition:all 0.4s ease-in-out;
-    -moz-transition:all 0.4s ease-in-out;
-    transition:all 0.4s ease-in-out;
-    -webkit-transform:translate(0,-100px);
-    -moz-transform:translate(0,-100px);
-    transform:translate(0,-100px);
-}
-.xui-productDetailPage .xui-down{
-    -webkit-transform:translate(0,0px);
-    -moz-transform:translate(0,0px);
-    transform:translate(0,0px);
-}
-.xui-productDetailPage .xui-errorTip span{
-    background:rgba(0,0,0,0.7);
-    margin:2.9em auto;
-    color:#f5f5f5;
-    display:inline-block;
-    text-align:center;
-    padding:0.5em 3em;
-    -webkit-border-radius:5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    max-width:70%;
-}*/
-/*.xui-vipPrice{
-    color:#888;
-    font-size: 1em;
-}
-.xui-applyBox .xui-vipPrice-num{
-    font-size: 1.2em;
-}
-.xui-vipPrice-num{
-    font-size: 0.85rem;
-}*/
 /*
  * mall: 更多评价页面样式
  */
@@ -1658,29 +1404,10 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-editOrderPage .xui-section{
     margin-top:10px;
 }
-/*.xui-editOrderPage fieldset.xui-section{
-    box-shadow: 0 0 0 1px rgba(223, 223, 223, 1);
-    padding: 0;
-}*/
 .xui-editOrderPage fieldset.xui-section{
     padding:0px 9px;
     box-shadow: 0 0 1px #ccc;
 }
-/*.xui-editOrderPage .xui-section .xui-section-item {
-    margin-left: 15px;
-    border-bottom:1px dashed #cdd1d4;
-    border-bottom:none;
-    padding:0;
-    position: relative;
-}*/
-/*.xui-editOrderPage .xui-conditionBox .xui-section-item{
-    padding:0 5px;
-}*/
-/*.xui-editOrderPage .xui-addr-border{
-    border-top:3px solid transparent;
-    border-bottom:3px solid transparent;
-    border-image: url(/standard_static/img/webapp/borderImage.png) 4 0 4 0 repeat;
-}*/
 .xui-editOrderPage .xui-nameTd{
     min-width: 100px;
     max-width: 120px;
@@ -1708,12 +1435,11 @@ input.ui-input-text, textarea.ui-input-text {
     box-sizing:border-box;
 }
 .xui-editOrderPage .xui-selectedProductList li:last-child {
-/*    padding-bottom: 0;*/
     border-bottom:none;
 }
-/*.xui-editOrderPage .xui-selectedProductList li:first-child{
-    padding-top:0;
-}*/
+.xui-editOrderPage .xui-cantBuyList .xui-productThumbNail{
+    height:50px;
+}
 .xui-editOrderPage .xui-productThumbNail,
 .xui-payOrderPage .xui-productThumbNail{
     width: 50px;
@@ -1731,9 +1457,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-editOrderPage .xui-product-prizeQuantity {
     white-space: nowrap;
 }
-/*.xui-editOrderPage .xui-conditionBox .xui-section-item:last-child{
-    padding:10px 15px 10px 0;
-}*/
 .xui-editOrderPage .xui-productInfo dl dd:last-child{
     white-space: nowrap;
     min-width:65px;
@@ -1754,7 +1477,6 @@ input.ui-input-text, textarea.ui-input-text {
 *促销样式
 */
 .xui-editOrderPage .xui-promotion-section .xui-i-content{
-    /*padding:7px 0;*/
     display: table;
     width:100%;
 }
@@ -1821,7 +1543,6 @@ input.ui-input-text, textarea.ui-input-text {
     top: 25px;
 }
 .xui-editOrderPage .xui-arrow-slideDown{
-
     -webkit-transform:rotate(135deg)!important;
     -moz-transform:rotate(135deg)!important;
     transform:rotate(135deg)!important;
@@ -1863,40 +1584,6 @@ input.ui-input-text, textarea.ui-input-text {
     border-color:#666;
     color:#666;
 }
-@media screen and (max-width: 320px){
-    .xui-editOrderPage .xui-payInterface-opt{
-        width:65px;
-        margin-left: 5px;
-    }
-}
-/*.xui-editOrderPage .xui-selectContainer{
-    border:1px solid #c7c7c7;
-}
-.xui-editOrderPage .xui-selectContainer .xui-selectedOpt{
-    line-height: 30px;
-    padding:0 10px;
-    margin-top: 1%;
-}
-.xui-editOrderPage .xui-selectContainer .xui-inner{
-    height: 2.5em;
-    border:2px ;
-    box-shadow:none;
-    padding:8px 0;
-    font-family:'黑体';
-    min-width:200px;
-    max-width:300px;
-}
-.xui-editOrderPage .xui-selectContainer select{
-    opacity: 0;
-}
-.xui-editOrderPage .xui-selectContainer .xui-icon-rightarrow{
-    right:10px;
-    -webkit-transform:rotate(135deg);
-    transform:rotate(135deg);
-    border-color:#c7c7c7;
-    top:16px;
-}*/
-
 /*整单抵扣积分*/
 .xui-editOrderPage .xui-orderIntegralDeduction{
     min-height: 39px;
@@ -1928,18 +1615,9 @@ input.ui-input-text, textarea.ui-input-text {
     border-bottom: 2px solid #dbdbdb;
 }
 .xui-editOrderPage .xui-weizoomCard input{
-    /*height: 35px;*/
     width: 95%;
     display: inline-block;
     padding-left:10px;
-   /* margin-right: 5px;
-    background: #EFEFEF;
-    border: none;
-    font-size: 0.95em;
-    color: #999;
-    line-height: 35px;
-    text-align: center;
-    padding: 0;*/
 }
 .xui-editOrderPage .xui-weizoomCard input:first-child{
     margin-left: 3px;
@@ -2007,12 +1685,7 @@ input.ui-input-text, textarea.ui-input-text {
     width: 100%;
 }
 .xui-editOrderPage .xui-cardDialog{
-    /*width: 100%;
-    height: 100%;*/
     background: rgba(0,0,0,0.7);
-   /* position: fixed;*/
-    /*top:0;*/
-    /*z-index: 10000;*/
 }
 .xui-editOrderPage .xui-cardDialog .xui-i-box{
     width: 94%;
@@ -2097,66 +1770,11 @@ input.ui-input-text, textarea.ui-input-text {
     margin-left: 10px;
 }
 
-/* 积分启用按钮 */
-/*.xui-editOrderPage .xui-btn-switch *,.xui-editOrderPage .xui-btn-switch *:before,.xui-editOrderPage .xui-btn-switch *:after {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.xui-editOrderPage .xui-btn-switch {
-    top: 8px;
-    right: 48px;
-}
-.xui-editOrderPage .xui-btn-switch input { visibility:hidden; }
-.xui-editOrderPage .xui-btn-switch label{
-    position: absolute;
-    top: 6px;
-    left: 10px;
-    width: 45px;
-    height: 26px;
-    -webkit-border-radius: 13px;
-    border-radius: 13px;
-    background: #e3e3e8;
-    cursor: pointer;
-    -webkit-transition:all ease .3s;
-    -moz-transition:all ease .3s;
-    transition:all ease .3s;
-}
-.xui-editOrderPage .xui-btn-switch span::before{
-    content: " ";
-    position:absolute;
-    width: 22px;
-    height: 22px;
-    background:#fff;
-    -webkit-box-shadow:0 0 2px rgba(0, 0, 0, 0.3);
-    box-shadow:0 0 2px rgba(0, 0, 0, 0.3);
-    -webkit-border-radius:50%;
-    -moz-border-radius:50%;
-    border-radius:50%;
-    left: 2px;
-    top: 2px;
-    -webkit-transform:translateX(0px);
-    -moz-transform:translateX(0px);
-    transform:translateX(0px);
-    -webkit-transition:all 0.3s ease-in-out 0s;
-    -moz-transition:all 0.3s ease-in-out 0s;
-    transition:all 0.3s ease-in-out 0s;
-}
-.xui-editOrderPage .xui-btn-switch input:checked+label{
-    background:#4bd863;
-}
-.xui-editOrderPage .xui-btn-switch input:checked~label span::before{
-    -webkit-transform:translateX(22px);
-    -moz-transform:translateX(22px);
-    transform:translateX(22px);
-    left: auto;
-}*/
+
 
     /*地址栏*/
 .wui-area{
    padding:7px 0; 
-/*   border-radius:5px;
-   background:#efeff4;
-   border: 1px solid #efeff4;*/
 }
 .xui-outer{
     position: absolute;
@@ -2167,11 +1785,7 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-popAddress{
     width: 100%;
-    /*height: 100%;
-    position:absolute;*/
     background:#f0f0f0;
-    /*top:0;
-    left:0;*/
     overflow: auto;
     border-radius:0!important;
     -webkit-animation-name:lightScale;
@@ -2181,12 +1795,6 @@ input.ui-input-text, textarea.ui-input-text {
     animation-duration: 0.2s;
     animation-timing-function:ease-out;
 }
-/*.lightScale{
-    -webkit-animation-name:lightScale;
-    -webkit-animation-duration: 0.1s;
-    animation-name:lightScale;
-    animation-duration: 0.1s;
-}*/
 .xui-popAddress li{
     list-style: none;
     text-align: left;
@@ -2221,48 +1829,13 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-city{
     top:37px;
-    /*z-index: 1000;*/
 }
 .xui-district{
     top:74px;
 }
-/*.xui-popAddress li:first-child{
-    margin-top: 15px;
-}*/
-/*.xui-popAddress li:last-child{
-    margin-bottom: 15px;
-}*/
-/*.xui-popAddress li:last-child div.liInner{
-    border:none;
-}*/
 .xui-ul-hidden{
     display: none;
 }
-/*@-webkit-keyframes lightScale{
-    0%{
-        opacity: 0;
-        -webkit-transform:scale(0);
-        transform:scale(0);
-    }
-    100%{
-        opacity:1;
-        display: none;
-        -webkit-transform:scale(1);
-        transform:scale(1); 
-    }
-}
-@keyframes lightScale{
-    0%{
-        opacity: 0;
-        -webkit-transform:scale(0);
-        transform:scale(0);
-    }
-    100%{
-        opacity:1;
-        -webkit-transform:scale(1);
-        transform:scale(1); 
-    }
-}*/
 /*发票input*/
 .xui-editOrderPage .xui-regular-radio{
     display: none;
@@ -2301,21 +1874,6 @@ input.ui-input-text, textarea.ui-input-text {
  .xui-editOrderPage .xui-clearBtn{
     right:5px;
  }
-/*.xui-editOrderPage .xui-regular-radio:checked + label:after{
-    content:url(/standard_static/img/webapp/radio-dot.png);
-    font-size: 16px;
-    height: 3px;
-    left: 3px;
-    position: absolute;
-    top: -7px;
-    width: 12px;
-    color:#000;
-}*/
-/*.xui-editOrderPage .xui-billForm{
-    width: 100%;
-    border:1px solid #ccc;
-    box-sizing: border-box;
-}*/
 .xui-editOrderPage .xui-regular-radio:checked + label{
     background-color: #fff;
 }
@@ -2351,24 +1909,17 @@ input.ui-input-text, textarea.ui-input-text {
     height: 100%;
     background: url("/standard_static/img/webapp/clearBtn.png") no-repeat;
     top:0;
-    /*display:inline-block;*/ /* 开启该行会阻止hidden */ 
     z-index:100;
     width: 25px;
     background-size:25px;
     background-position:center;
 }
-    /*优惠券*/
-/*.xui-editOrderPage .xui-iconSprite-coupon{
-    width: 1.25rem;
-    height: 0.75rem;
-    background: url(/standard_static/img/webapp/coupon.png) no-repeat;
-}*/
     /*商品价钱项目列表*/
 .xui-editOrderPage .xui-prizeItemList p{margin-bottom: 7px;}
 .xui-editOrderPage .xui-prizeItemList p span:nth-child(2){color:#d10000;}
 .xui-editOrderPage .xui-prizeItemList p:last-child{margin-bottom: 0px;}
 
-/*????ҳ??ַ??Ϣ*/
+/*编辑订单页面-收货人信息*/
 .xui-editOrderPage fieldset.xui-receiverSection{
     margin-top: 0;
     padding-top:14px;
@@ -2395,7 +1946,6 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-editOrderPage .xui-receiverInfo p span:last-child{
     line-height: 18px;
-    /*text-align: right;*/
 }
 .xui-editOrderPage .xui-rightArrow{
     vertical-align: middle;
@@ -2501,12 +2051,6 @@ input.ui-input-text, textarea.ui-input-text {
     line-height: 38px;
 }
 /*优惠券列表*/
-/*@font-face {
-    font-family: 'impact';
-    src: url('/standard_static/fonts/impact.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}*/
 .xui-orderCoupon-Page .wui-swiper .wui-swiper-tabs-coupon a,
 .xui-myCouponList-Page .wui-swiper .wui-swiper-tabs-coupon a{
     background-color: #fff;
@@ -2565,16 +2109,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-orderCoupon-Page .xui-couponBg-container:before{
     background: #000;
 }
-/*.xui-orderCoupon-Page .xui-couponBg-container .xui-couponBginner,
-.xui-myCouponList-Page .xui-couponBg-container .xui-couponBginner{
-    border-radius:8px;
-    border:2px solid #be3a44;
-    padding:0 10px;
-}*/
-/*.xui-orderCoupon-Page .xui-ffImpact,
-.xui-myCouponList-Page .xui-ffImpact{
-    font-family: 'impact';
-}*/
 .xui-orderCoupon-Page .xui-couponTitle,
 .xui-myCouponList-Page .xui-couponTitle{
     font-weight: bolder;
@@ -2588,12 +2122,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-myCouponList-Page .xui-couponPrice{
   font-size:41px;
 }
-/*@media screen and (min-width: 360px){
-    .xui-orderCoupon-Page .xui-couponPrice,
-    .xui-myCouponList-Page .xui-couponPrice{
-        font-size: 3em;
-    }
-}*/
 .xui-orderCoupon-Page .xui-priceTag,
 .xui-myCouponList-Page .xui-priceTag{
     display: inline-block;
@@ -2688,10 +2216,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-getCouponPage .xui-goShopping-btn,.xui-getCouponPage .xui-myCoupon-btn{
     background: transparent;
 }
-
-
-
-
 /*
  * mall: 购物车页面样式
  */
@@ -2783,7 +2307,6 @@ input.ui-input-text, textarea.ui-input-text {
     margin-right: 3px;
 }
 .xui-shoppingCartPage .wui-counter{
-    /*float: left;*/
     height: 22px;
 }
 .xui-shoppingCartPage .wui-counter span{
@@ -2792,10 +2315,6 @@ input.ui-input-text, textarea.ui-input-text {
     width: 24px;
     font-size: 0.75rem;
 }
-/*.xui-shoppingCartPage span.xui-understock{
-    padding-left: 5px;
-    line-height: 28px;
-}*/
 .xui-shoppingCartPage .xui-deleteBtn{
     width: 23px;
     height: 25px;
@@ -2883,79 +2402,6 @@ input.ui-input-text, textarea.ui-input-text {
     font-size:0.95em;
     padding:3px 5px;
 }
-    /*最近浏览*/
-.xui-shoppingCartPage .xui-footprint{
-    padding: 0 10px 50px 10px;
-    left: 0;
-    width:100%;
-    z-index: 11;
-    box-sizing:border-box;
-    background-color: #fff;
-    /*-moz-transform:translateY(100%);
-    -webkittransform:translateY(100%);
-    transform:translateY(100%);*/
-    position: fixed;
-    bottom:-145px;
-    -moz-transition:0.6s ease-in-out;
-    -webkittransition:0.6s ease-in-out;
-    transition:0.6s ease-in-out;
-}
-.xui-shoppingCartPage .wui-swiper-container{
-    width:100%;
-    height:137px;
-}
-.xui-shoppingCartPage .wui-swiper-slide{
-    display: flex;
-    justify-content: center;
-    text-align: center;
-}
-.xui-shoppingCartPage .wui-swiper-slide .xui-inner{
-    padding:0 2px;
-    font-size: 0.75rem;
-}
-/*.xui-shoppingCartPage .wui-swiper-slide:first-child .xui-inner{
-    padding-left:0;
-}*/
-.xui-shoppingCartPage .wui-swiper-slide .xui-inner p{
-    padding:0 7px;
-}
-.xui-shoppingCartPage .wui-swiper-slide .xui-text{
-    min-height: 2rem;
-    line-height: 1rem;
-    margin-top:3px;
-}
-.xui-shoppingCartPage .xui-fp-header{
-    border-bottom: 1px solid #dbdbdb;
-    padding: 6px 0;
-}
-.xui-shoppingCartPage .xui-fp-header em{
-    position:absolute;
-    left: 10px;
-    font-size: 0.75rem;
-    margin-top: 3px;
-}
-.xui-shoppingCartPage .xui-fp-header .xui-icon-rightarrow{
-    display: inline-block;
-    -webkit-transform:rotate(-45deg);
-    -moz-transform:rotate(-45deg);
-    transform:rotate(-45deg);
-    margin-bottom:-1px;
-}
-.xui-shoppingCartPage .xui-fp-header .xui-down{
-    -webkit-transform:rotate(135deg);
-    -moz-transform:rotate(135deg);
-    transform:rotate(135deg);
-}
-
-.xui-shoppingCartPage .xui-fp-img{
-    width: 75px;
-    height: 75px;
-    line-height: 75px;
-}
-.xui-shoppingCartPage .xui-fp-img img{
-    width:75px;
-    vertical-align: middle;
-}
 /*促销信息*/
 .xui-shoppingCartPage .xui-buyLimit,.xui-shoppingCartPage .xui-reduction,
 .xui-shoppingCartPage .xui-donation,.xui-shoppingCartPage .xui-subtotal{
@@ -3020,17 +2466,6 @@ input.ui-input-text, textarea.ui-input-text {
     top:50px;
     right: -5px;
 }
-
-@media screen and (max-width: 320px){
-    .xui-shoppingCartPage .xui-fp-img{
-        width: 70px;
-        height: 70px;
-        line-height: 70px;
-    }
-    .xui-shoppingCartPage .xui-fp-img img{
-        width:70px;
-    }
-}
 /*
  * mall: 收货地址页面样式
  */
@@ -3065,12 +2500,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-address-page .xui-clearBtn{
     right:10px;
 }
-/*.xui-address-page .xui-form-controls{
-    border-bottom:1px dashed  #cdd1d4;
-    padding:4px 0;
-    width: 100%;
-    display: table;
-}*/
 .xui-address-page .xui-form-controls-first label.xui-form-cell{
     width: 150px;
     padding: 0;
@@ -3083,7 +2512,6 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-address-page .xui-form .ui-input-text.ui-focus{
     background:transparent;
-    /*border:1px solid #C1C1C1;*/
 }
 .xui-address-page .wui-area .ui-select{
     margin-bottom: 0;
@@ -3094,14 +2522,14 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-address-page .xui-btnBox{
         margin:26px 10px 10px;
-    }
+}
 .xui-address-page .xui-btnBox .ui-btn-inner{
         padding: 0;
-    }
+}
 .xui-address-page .xui-btnBox .xui-btn{
         padding:11px 0;
         width: 100%;
-    }
+}
 .xui-address-page .xui-btnBox .xui-btn .ui-btn-text{
     font-size: 1.1em;
 }
@@ -3110,16 +2538,13 @@ input.ui-input-text, textarea.ui-input-text {
     border:none;
 }
 .xui-address-page .xui-btn-danger.ui-btn-up-x, .xui-btn-danger.ui-btn-down-x, .xui-btn-danger.ui-btn-hover-x, .xui-btn-danger.ui-btn-active{
-        border:none;
-        box-shadow: 0 0 0 1px #d10000;
-    }
+    border:none;
+    box-shadow: 0 0 0 1px #d10000;
+}
 .xui-address-page .xui-inner-input-container{
     background: #fff;
     border-color:transparent;
 }
-/*.xui-address-page .xui-form-controls:last-child{
-    border:none;
-}*/
 .xui-address-page .xui-form-controls:last-child .xui-form-cell{
     vertical-align: baseline
 }
@@ -3138,7 +2563,6 @@ input.ui-input-text, textarea.ui-input-text {
     width: 198px;
     position: relative;
     color:#C7C7CD;
-    /*top:-4px;*/
 }
 .xui-openSelect i{
     display: block;
@@ -3167,8 +2591,6 @@ input.ui-input-text, textarea.ui-input-text {
     background: #fff;
     border-top:1px solid rgba(223,223,221,.7);
     border-bottom:1px solid rgba(223,223,221,.7);
-    /*padding-left:12px;*/
-
 }
 .xui-orderListPage .xui-btLine{
     border-bottom: 1px solid #dbdbdb;
@@ -3302,10 +2724,6 @@ input.ui-input-text, textarea.ui-input-text {
     width: 113px;
     -webkit-background-size: 100%;
     background-size: 100%;
-   /* position: absolute;
-    left: 50%;
-    margin-left: -64px;
-    top:10vh;*/
     margin: 10vh auto;
 
 }
@@ -3316,11 +2734,6 @@ input.ui-input-text, textarea.ui-input-text {
     background: #CF0305;
     color: #fff;
     text-align: center;
-    /*line-height: 45px;
-    position: absolute;
-    left: 50%;
-    margin-left: -47%;
-    top:50vh;*/
     margin: 35px auto;
     line-height: 45px;  
 }
@@ -3339,13 +2752,6 @@ input.ui-input-text, textarea.ui-input-text {
     vertical-align: middle;
     margin: -3px auto 0 6px;
 }
-
-
-
-
-
-
-
 /*
  * mall: 订单支付页面样式
  */
@@ -3509,54 +2915,6 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-feedBackSuccess-page .xui-otherPageImg img{
     width: 100%;
 }
-/*.xui-orderResult-page .xui-choice {
-    position: relative;
-    height: 20%;
-    width: 100%;
-}
-.xui-orderResult-page .xui-choice dl {
-    width: 3.875rem;
-    height: 3.875rem;
-    top: 10%;
-}
-.xui-orderResult-page .xui-choice dl dt {
-    text-align: center;
-}
-.xui-orderResult-page .xui-choice dl dd {
-    -webkit-margin-start: 0;
-    -moz-margin-stat: 0;
-    text-align: center;
-    margin: 0;
-}
-.xui-orderResult-page .xui-choice dl dd a {
-    font-size: 0.9em;
-}
-.xui-orderResult-page .xui-choice dl dt img {
-    width: 1.9375rem;
-    height: 1.9375rem;
-}
-.xui-orderResult-page .xui-visitHomePage {
-position: absolute;
-    top: 0;
-    right: 25%;
-}
-.xui-orderResult-page .xui-viewOrder {
-    position: absolute;
-    top: 0;
-    left: 25%;
-}
-.xui-orderResult-page .xui-goAhead-lineLeft {
-    position: absolute;
-    top: 50%;
-    left: 10%;
-}
-.xui-orderResult-page .xui-goAhead-lineRight {
-    position: absolute;
-    top: 50%;
-    right: 10%;
-}*/
-
-
 /*
  *下单结果页面信息
  */
@@ -3625,47 +2983,6 @@ position: absolute;
 .xui-payOrderPage .xui-section .xui-inner-expressLink .xui-icon-rightarrow{
     right:15px;
 }
-/*.xui-payOrderPage .xui-cover{
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 10000;
-    position: absolute;
-    top: 0;
-}*/
-/*.xui-payOrderPage .xui-cover .xui-inner-container{
-    top:10%;
-    -webkit-background-size: cover;
-    background-size: cover;
-    width: 90%;
-    margin: 0 auto;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px; 
-    border-radius: 5px;
-    position: fixed;
-    margin-left: 5%;
-    padding-bottom: 20px;
-}
-.xui-payOrderPage .xui-popBg{
-    background: url('/markettools_static/weizoom_card/img/popbg1.png') no-repeat;
-    background-size: cover;
-    height: 273px;
-    left: 50%;
-    margin-left: -143px;
-    text-align: center;
-    top: 50%;
-    width: 286px;
-}
-.xui-payOrderPage .xui-popBg p:first-child{
-    color: #f77f31;
-    font-size: 1.3em;
-    margin-top: 43px;
-}
-.xui-payOrderPage .xui-popBg .xui-doneInfo{
-    color: #fbfa86;
-    font-size: 2.3em;
-    margin-top: 50px;
-}*/
 .xui-payOrderPage .xui-priceItem{
     border-bottom:1px solid #dbdbdb;
     margin-left:12px;
@@ -3729,29 +3046,6 @@ position: absolute;
     padding-top: 18px;
 }
 /*
- *感恩密码样式
- */
-.xui-thankCard{
-   color:#525252;
-}
-.xui-thankCard a{
-       color:#525252;
-}
-.xui-thankCard ul li{
-    line-height: 30px;
- }
-.xui-thankCard-pwd{
-    background:#eff0f2;
-    padding:0px 10px;
-    cursor:pointer;
-}
-.xui-thankCard-notice{
-    font-size:0.9em;
-    color:#8f8f8f;
-}
-
-
-/*
  * cms文章详情 页面样式
  */
 .xui-articleDetailPage h2 {
@@ -3767,10 +3061,6 @@ position: absolute;
     line-height:28px;
     color:#333;
 }
-
-
-
-
 /*
  * user_center 用户中心首页样式 
  */
@@ -3796,7 +3086,6 @@ position: absolute;
 }
 .xui-userCenter-header .xui-i-box{
     overflow: hidden;
-    /*width: 210px;*/
     margin: 24px auto;
 }
 .xui-userCenter-header .xui-returnPrev,
@@ -3813,12 +3102,6 @@ position: absolute;
 .xui-userCenter-header .xui-returnPrev i,
 .xui-productDetailPage .xui-returnPrev i{
     display: none;
-/*    width: 8px;
-    height: 8px;
-    border-top: 1px solid #fff;
-    border-left: 1px solid #fff;
-    margin-left:10px;
-    -webkit-transform:rotate(-45deg);*/
 }
 .xui-userCenter-header .xui-helpInfo{
     width: 23px;
@@ -3943,7 +3226,6 @@ position: absolute;
 .xui-userCenterPage .xui-section-item{
     float: left;
     width: 33.3333333%;
-    /*height: 100px;*/
     padding-right: 5px;
     box-sizing:border-box;
     margin-top: 5px;
@@ -4084,11 +3366,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-userCenterPage .xui-icon-rightarrow {
     margin-right: 15px;
 }
-
-
-
-
-
 /*我的积分*/
 .xui-myIntegralPage .xui-bg{
     background: #fff;
@@ -4142,9 +3419,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-myActivityPage .xui-listItem li:first-child{
     border-top:1px solid #DBDBDB;
 }
-
-
-
 /*
  * user_center: 用户指南页面样式;
  */
@@ -4272,13 +3546,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     border: 1px solid #CF0404;
     width: 45%;
 }
-
-
-
-
-
-
-
 /*
 *user_center:发表评价
 */
@@ -4387,18 +3654,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     margin-right: 0;
 }
-
-/*.xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto span.xui-i-box,
-.xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto i.xui-cut{
-    font-size: 3.5rem;
-    color: #ccc;
-    display: inline-block;
-    width: 45px;
-    height: 45px;
-    border: 1px dashed #ccc;
-    box-sizing:border-box;
-    font-style: normal;
-}*/
 .xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto span.xui-i-box,
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     display: inline-block;
@@ -4444,8 +3699,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-productReviewCreatePage .xui-serviceReview h2{
     margin-top: 5px;
     margin-bottom:16px;
-  /*  margin-top: 0;
-    margin-bottom: 0;*/
 }
 .xui-productReviewCreatePage .xui-reviewBtn{
     width: 94%;
@@ -4603,7 +3856,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 }
 .xui-helpPage ul li{
     border-bottom: 1px solid #dbdbdb;
-    
     position: relative;
 }
 .xui-helpPage ul li label{
@@ -4681,11 +3933,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-feedBackSuccess-page .xui-success p:nth-child(2){
     padding-bottom:25px;
 }
-/*.xui-feedBackSuccess-page .xui-tip span{
-    display: block;
-    width:188px;
-    margin:0 auto;
-}*/
 /*
 *mall:管理收货地址页面
 */
@@ -4767,20 +4014,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     padding:10px;
     margin:0;
 }
-/*.xui-addrManage-page .xui-regular-radio:checked + label.xui-regular-radio-label:after{
-    background: url(/static_v2/img/webapp/mall/checked.png) no-repeat;
-    -webkit-background-size: 100%;
-    background-size: 100%;
-    background-position: center center;
-    color: #000;
-    content: "";*/
-/*    font-size: 16px;*/
-  /*  height: 21px;
-    left: 0px;
-    position: absolute;
-    top: 0px;
-    width: 21px;
-}*/
 .xui-addrManage-page .xui-checked .xui-regular-radio + label.xui-regular-radio-label:after{
     background: url(/static_v2/img/webapp/mall/checked.png) no-repeat;
     -webkit-background-size: 100%;
@@ -4805,7 +4038,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-addrManage-page ul li .xui-radioBox{
     display:table-cell;
     vertical-align: middle;
-    /*width: 46px;*/
 }
 .xui-addrManage-page .xui-addNewBtn{
     height:75px;
@@ -4831,7 +4063,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 }
 .xui-addrManage-page .xui-addNew:visited .ui-btn-inner > .ui-icon{color: #262626}
 .xui-addrManage-page .xui-addNew label{
-/*    background: url(/standard_static/img/close.png) no-repeat;*/
     background-position: center center;
     background-size: 92% auto;
     background-color: transparent;
@@ -4853,7 +4084,6 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     white-space:nowrap;
     text-overflow:ellipsis;
     overflow: hidden; 
-/*    padding-right: 10px;*/
 }
 .xui-addrManage-page .xui-tel{
     display: block;
@@ -5125,41 +4355,28 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 /**
 *媒体查询
 **/
-@media (max-width:320px){
+@media screen and (max-width:320px){
+    .xui-editOrderPage .xui-payInterface-opt{
+        width:65px;
+        margin-left: 5px;
+    }
+    .xui-shoppingCartPage .xui-fp-img{
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+    }
+    .xui-shoppingCartPage .xui-fp-img img{
+        width:70px;
+    }
     .xui-shoppingCartPage .xui-productName,.xui-shoppingCartPage .xui-productCustomModel{
         width:115px!important;
     }
-    /*.xui-editOrderPage .xui-productInfo{
-        width:150px!important;
-    }*/
-    /*微众卡引导使用*/
-   /* .xui-editOrderPage .xui-weizoomCard input{
-        width: 90px;
-    }
-    .xui-editOrderPage .xui-weizoomCard .xui-button{
-        width: 50px;
-    }*/
 }
-/*@media (max-width:375px){*/
-    /*微众卡引导使用*/
-/*    .xui-editOrderPage .xui-weizoomCard input{
-        width: 90px;
-    }
-    .xui-editOrderPage .xui-weizoomCard .xui-button{
-        width: 50px;
-    }
-}*/
-/*iphone4 , 5 , 5s*/
-  @media only screen 
-  and (min-device-width: 320px) 
-  and (max-device-width: 568px)
-  and (-webkit-min-device-pixel-ratio: 2) {
- }
  /*iphone6*/
  @media only screen 
   and (min-device-width: 375px) 
   and (max-device-width: 667px) 
-  and (-webkit-min-device-pixel-ratio: 2) { 
+  and (-webkit-min-device-pixel-ratio: 2) {
     .xui-userCenter-header{
         height: 230px;
         -webkit-background-size: 100% 230px;

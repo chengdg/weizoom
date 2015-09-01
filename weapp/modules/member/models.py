@@ -407,7 +407,7 @@ NOT_SUBSCRIBED = 2
 class Member(models.Model):
 	token = models.CharField(max_length=255, db_index=True, unique=True)
 	webapp_id = models.CharField(max_length=16, db_index=True)
-	username_hexstr = models.CharField(max_length=128, blank=True, null=True,verbose_name='会员名称的hex str')
+	username_hexstr = models.CharField(max_length=2048, blank=True, null=True,verbose_name='会员名称的hex str')
 	user_icon = models.CharField(max_length=1024, blank=True, verbose_name='会员头像')
 	integral = models.IntegerField(default=0, verbose_name='积分')
 	created_at = models.DateTimeField(auto_now_add=True)
