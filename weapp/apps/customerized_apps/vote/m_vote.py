@@ -39,8 +39,7 @@ class Mvote(resource.Resource):
 		"""
 		if 'id' in request.GET:
 			id = request.GET['id']
-			isPC = int(request.GET.get('isPC',0))
-			isPC = True if isPC else False
+			isPC = request.GET.get('isPC',0)
 			isMember = False
 			auth_appid_info = None
 			if not isPC:

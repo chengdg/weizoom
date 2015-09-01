@@ -129,6 +129,12 @@ class lottery_prize(resource.Resource):
 		#判定是否中奖
 		lottery_prize_type = "no_prize"
 		lottery_prize_data = ''
+		#首先检查活动状态
+		status_text = lottery.status_text
+		if status_text != u'进行中':
+			response = create_response(500)
+			response.errMsg = u'参与抽奖失败，请刷新页面重试~'
+			return response.get_response()
 		if participants_count == 0 or (winner_count / float(participants_count) >= chance):
 			result = u'谢谢参与'
 			#根据送积分规则，查询当前用户是否已中奖
