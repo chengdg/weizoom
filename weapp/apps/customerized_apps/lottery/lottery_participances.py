@@ -5,12 +5,17 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from datetime import datetime
+import os
+
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
 from mall import export
+from utils.string_util import hex_to_byte, byte_to_hex
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -39,13 +44,20 @@ class lotteryParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
-		print name
+		webapp_id = request.user_profile.webapp_id
 		prize_type = request.GET.get('prize_type', '-1')
 		status = request.GET.get('status', '-1')
 		member_ids = []
 		if name:
-			members = member_models.Member.get_by_username(name)
-			member_ids = [member.id for member in members]
+			hexstr = byte_to_hex(name)
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+			print members
+			if name.find(u'非')>=0:
+				sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
+				members = members|sub_members
+		else:
+			members = member_models.Member.objects.filter(webapp_id=webapp_id)
+		member_ids = [member.id for member in members]
 
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -121,3 +133,104 @@ class lotteryParticipances(resource.Resource):
 		response.data = response_data
 		return response.get_response()		
 
+class lotteryParticipances_Export(resource.Resource):
+	'''
+	批量导出
+	'''
+	app = 'apps/lottery'
+	resource = 'lottery_participances-export'
+	@login_required
+	def api_get(request):
+		"""
+		详情导出
+		"""
+		export_id = request.GET.get('export_id')
+
+		app_name = lotteryParticipances_Export.app.split('/')[1]
+		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
+		#Excel Process Part
+		try:
+			import xlwt
+			data = app_models.lottoryRecord.objects(belong_to=export_id)
+			fields_raw = []
+			export_data = []
+
+			#from sample to get fields4excel_file
+			fields_raw.append(u'编号')
+			fields_raw.append(u'用户名')
+			fields_raw.append(u'手机号')
+			fields_raw.append(u'获奖等级')
+			fields_raw.append(u'奖品名称')
+			fields_raw.append(u'中奖时间')
+			fields_raw.append(u'领取状态')
+
+			member_ids = [record['member_id'] for record in data ]
+			members = member_models.Member.objects.filter(id__in = member_ids)
+			member_id2name ={}
+			for member in members:
+				m_id = member.id
+				if member.is_subscribed == True:
+					u_name = member.username
+				else:
+					u_name = u'非会员'
+				if m_id not in member_id2name:
+					member_id2name[m_id] = u_name
+				else:
+					member_id2name[m_id] = u_name
+			#processing data
+			num = 0
+			for record in data:
+				export_record = []
+				num = num+1
+				name = member_id2name[record['member_id']]
+				tel = record['tel']
+				prize_title = record['prize_title']
+				prize_name = record['prize_name']
+				created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+				if record['status']:
+					status = u'已领取'
+				else:
+					status = u'未领取'
+
+				export_record.append(num)
+				export_record.append(name)
+				export_record.append(tel)
+				export_record.append(prize_title)
+				export_record.append(prize_name)
+				export_record.append(created_at)
+				export_record.append(status)
+
+				export_data.append(export_record)
+
+			#workbook/sheet
+			wb = xlwt.Workbook(encoding='utf-8')
+			ws = wb.add_sheet('id%s'%export_id)
+			header_style = xlwt.XFStyle()
+
+			##write fields
+			row = col = 0
+			for h in fields_raw:
+				ws.write(row,col,h)
+				col += 1
+
+			##write data
+			if export_data:
+				row = 0
+				lens = len(export_data[0])
+				for record in export_data:
+					row +=1
+					for col in range(lens):
+						ws.write(row,col,record[col])
+				try:
+					wb.save(export_file_path)
+				except:
+					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print '/static/upload/%s'%excel_file_name
+
+			response = create_response(200)
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+		except :
+			response = create_response(500)
+
+		return response.get_response()
