@@ -74,11 +74,11 @@
     style="min-height:100px; background-color:#8d00ab;"
 >
     <div class="wui-i-subtitle">
-        <h2 class=" xa-subtitle" style="color: #ffffff;">活动说明</h2>
+        <h2 class=" xa-subtitle" style="font-weight: 700;color: #ffffff;">活动说明</h2>
     </div>
 	<div class="wui-i-info p0">
         <div class="wui-i-settings pt15 pb15" style="color: #ffffff;">
-            <div class="wui-i-settingTitle fl mr15" style="color: #ffffff;">奖项设置:</div>
+            <div class="wui-i-settingTitle fl mr15">奖项设置</div>
             <div class="wui-i-settingData xa-settingData fl mb10">
                 <ul >
                     <li data_cid="4">
@@ -120,9 +120,9 @@
                 </ul>
             </div>
         </div>
-		<div class="wui-i-time cl pt15 pb15" style="border-top: 1px solid #9c96ac;font-weight: normal;color: #ffffff">
-			活动时间:&nbsp;&nbsp;<p class="wui-i-start_time">{{component.model.start_time}}</p>
-            -<p class="wui-i-end_time">{{component.model.end_time}}</p>
+		<div class="wui-i-time cl pt15" style="border-top: 1px solid #ab39c4; min-height: 0;">
+			<div class="wui-i-settingTitle fl mr15">活动时间:</div>
+            <p class="wui-i-start_time">{{component.model.start_time}}</p>-<p class="wui-i-end_time">{{component.model.end_time}}</p>
 		</div>
         <!--
         <i class="wui-i-sprite xui-sprite-prize"></i>
@@ -130,15 +130,14 @@
             参与送<b class="xa-delivery">{{component.model.delivery}}</b>积分
         </div>
         -->
-        <div class="wui-i-record cl pt15 pb15">
-            <div class="wui-i-recordTitle fl mr15" style="font-weight: normal;color: #ffffff">中奖记录:</div>
+        <div class="wui-i-record cl pt5 pb15">
+            <div class="wui-i-settingTitle fl mr15">中奖记录:</div>
             <div class="wui-i-recordData xa-recordData fl mb10">
                 <ul>
-
                 </ul>
             </div>
         </div>
-        <div class="wui-i-description xa-description cl pt15 pb15" style="margin: 0; color: white;border-top: 1px solid #9c96ac;">
+        <div class="wui-i-description xa-description cl pt15 pb15" style="margin: 0; color: white;border-top: 1px solid #ab39c4;">
             {{component.model.description|safe}}
         </div>
 	</div>
