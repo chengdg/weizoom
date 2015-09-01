@@ -355,6 +355,10 @@ p.wui-i-start_time,p.wui-i-end_time{
     font-size: 16px;
     margin-left: 7px;
 }
+.wui-i-settingData.xa-settingData p {
+  display: inline;
+  font-size: 13px;
+}
 .wui-lotterydescription>.wui-i-body{
 	height: 278px;
 	width: 278px;
