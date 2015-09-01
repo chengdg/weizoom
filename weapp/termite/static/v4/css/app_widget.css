@@ -375,6 +375,13 @@ p.wui-i-start_time,p.wui-i-end_time{
 	margin-left: auto;
 	margin-right: auto;
 }
+.wui-lotterydescription>.wui-i-body table span{
+	background: url("/termite_static/img/component/lottery/roulette_item_icon.png") no-repeat;
+	background-size: 100% 800%;
+    width: 52px;
+    height: 52px;
+    display: inline-block;
+}
 .wui-lotterydescription>.wui-i-body .xui-lottery-unit{
 	background-color: transparent;
 	background-image: url("/termite_static/img/component/lottery/roulette_cube.png");
