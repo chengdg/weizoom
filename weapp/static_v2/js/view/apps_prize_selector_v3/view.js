@@ -27,10 +27,19 @@ W.view.apps.PrizeSelectorV3 = Backbone.View.extend({
 	onChangeSelect: function(event) {
 		var $select = $(event.currentTarget);
 		var prizeType = $select.val();
+		this.$('.xui-apps-prizeSelector').removeClass('has_error');
 		this.$('.xa-optionTarget').hide();
-		this.$('.xa-integral').val(0);
+		this.$('.errorHint').hide();
+		this.$('.xa-integral').val('');
 		this.$('.xa-entity').val('');
-		this.$('[data-target="'+prizeType+'"]').show();
+		if (prizeType === "coupon"){
+			this.$('.coupon_div').show().css('display', 'inline');
+			this.$('.coupon_div a').show();
+
+		}
+		else{
+			this.$('[data-target="'+prizeType+'"]').show();
+		}
 
 		this.prize['type'] = prizeType;
 		this.prize['data'] = null;
@@ -39,7 +48,7 @@ W.view.apps.PrizeSelectorV3 = Backbone.View.extend({
 
 	onInputIntegral: function(event) {
 		var $input = $(event.currentTarget);
-		this.prize['data'] = parseInt($input.val());
+		this.prize['data'] = $input.val();
 		this.trigger('change-prize', _.deepClone(this.prize));
 	},
 
@@ -73,7 +82,7 @@ W.view.apps.PrizeSelectorV3 = Backbone.View.extend({
 	onClickRemoveCoupon: function(event) {
 		this.$el.find('.xa-optionTarget').hide();
 		this.$el.find('.xa-selectCoupon').show();
-
+		this.$('.coupon_div').css('display', 'inline');
 		this.prize['type'] = 'coupon';
 		this.prize['data'] = {id:0, name:''};
 		this.trigger('change-prize', _.deepClone(this.prize));
