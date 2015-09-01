@@ -82,7 +82,7 @@ $(document).ready(function() {
             }
             $(".xa-product").each(function(){
                 // 商品原价
-                var price = $(this).data('product-price');
+                var price = $(this).data('product-price').toFixed(2);
                 // 商品有促销
                 var product_promotion = $(this).data('product-promotion')
                 var is_user_has_promotion = false;
