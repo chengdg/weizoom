@@ -309,11 +309,14 @@
 	height: 20px;
 	width: 20px;
 	float: left;
-	background-size: 50px 16px;
+	background-size: 42px 15px;
 	margin: 4px 4px;
 }
 .xui-sprite-prize {
-	background-position: -31px 0;
+	background-position: -25px 1px;
+}
+.xui-sprite-timerange {
+  background-position: 2px 1px;
 }
 
 .wui-lotterydescription{
