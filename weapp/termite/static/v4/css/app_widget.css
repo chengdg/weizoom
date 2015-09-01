@@ -146,9 +146,9 @@
     padding: 20px;
 }
 .wui-surveyDescription .wui-i-title {
+	font-size: 20px;
     margin-top: 15px;
-    font-size: 24px;
-    font-weight: bold;
+	color: #333;
 }
 .wui-lotterydescription .wui-i-innerTitle{
 	text-align: center;
@@ -164,7 +164,7 @@
 .wui-surveyDescription .wui-i-subtitle {
 	color: #A0A0A0;
     margin-top: 10px;
-    font-size: 19px;
+    font-size: 18px;
 }
 .wui-surveyDescription .wui-i-description {
 	margin-top: 10px;
@@ -229,7 +229,7 @@
 	margin-bottom: 10px;
 	font-size: 19px;
 	font-weight: bold;
-	border-left: solid 8px #1AA2F8;
+	border-left: solid 4px #1AA2F8;
 	padding-left: 10px;
 }
 .wui-textSelection .wui-i-mandatory {
@@ -263,7 +263,7 @@
 	display: table;
 }
 .wui-shortcuts .wui-i-label {
-	width: 80px;
+	width: 52px;
 	text-align: right;
 	color: #666;
 	display: table-cell;
@@ -309,11 +309,11 @@
 	height: 20px;
 	width: 20px;
 	float: left;
-	background-size: 54px 20px;
+	background-size: 50px 16px;
 	margin: 4px 4px;
 }
 .xui-sprite-prize {
-	background-position: -34px 0;
+	background-position: -31px 0;
 }
 
 .wui-lotterydescription{
