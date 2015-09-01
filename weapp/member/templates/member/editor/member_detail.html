@@ -28,9 +28,9 @@
 ); background-size:100%;" ></div>
         			  <p class=" xui-membername">{{ show_member.username_truncated|safe }}</p>
         		</div>
-        	 
+
         	</div>
-        	<div class="xui-infowrap">   
+        	<div class="xui-infowrap">
 
 
 	        	<div class="xui-fieldwrap">
@@ -47,7 +47,7 @@
 						{% endfor %}
 					</select>
 				 </div>
-				</div> 
+				</div>
 				<div class="xui-fieldwrap">
 				    <div class="xui-name ">姓名：</div>
 	        			<div class="xui-value">
@@ -76,17 +76,17 @@
         	</div>
 
         	<div class="xui-infowrap pt50">
-        			
-        		   
+
+
         			<a href="/new_weixin/realtime_messages_detail/?session_id={{show_member.session_id}}" {% if show_member.session_id == -1 %}title="暂无对话" onclick="return false"{% endif %}>查看聊天记录</a>
-        			
-        	
+
+
         		<div class="xui-name">备注：</div>
         		<div class="xui-value">
         			<textarea class="xui-textarea-mark" id="member_remarks" name="member_remarks" placeholder="" rows=4 value="{{ show_member_info.member_remarks }}">{{ show_member_info.member_remarks }}</textarea>
         		</div>
         	</div>
-        	
+
 
 				<div class="xui-fieldwrap tags">
 				    <div class="xui-name w268 ">所在分组：</div>
@@ -94,7 +94,7 @@
 	        			<div class="tag-group xui-group fl" >
 	        			{% for tag in member_has_tags %}
 		                 <span class="mr30">{{ tag.member_tag.name }}</span>
-		                 <input name = "tag_id" class="tag_id" id = "tag_id" hidden = "hidden" value="{{ tag.member_tag.id }}">  
+		                 <input name = "tag_id" class="tag_id" id = "tag_id" hidden = "hidden" value="{{ tag.member_tag.id }}">
 		                {% endfor %}
 						</div>
 						 <a class="xa-update-tag xui-notify ml10">修改</a>
@@ -106,7 +106,7 @@
 	        			<div class="w700 fl" style="padding-top:6px;">
 		        			<div class="fl ml10" >
 		        				{{show_member.integral}}
-			                   
+
 							</div>
 							 <a href="javascript:void(0);" class="xa-update-integral ml15" data-id="${member.id}">调积分</a>
 							 <a href="javascript:void(0);" class="xa-show-integral ml15">积分明细</a>
@@ -116,16 +116,16 @@
 				    <div class="xui-name w268 ">好友数：</div>
 	        			<div class="w700 fl" style="padding-top:6px;">
 		        			<div class="fl ml10 relation-text" >
-		        				
+
 		        				<a class="relation-text" href="javascript:void(0);" style="" friend_count='{{show_member.friend_count}}'>{{show_member.friend_count}}</a>
 							</div>
 						</div>
 				</div>
 
         	<div class="xui-clear"></div>
-        	<div class="xui-btn-group tc mb20">	
+        	<div class="xui-btn-group tc mb20">
 				<input type="submit" class="btn btn-primary xui-btn-save" id="submitBtn" value="保&nbsp;存" />
-			</div>	
+			</div>
         </div>
         <div class="xui-content xui-content-address">
 				<div class="xui-rightPanelTitle">
@@ -141,7 +141,7 @@
 						</div>
 					</div>
 					<div style="clear:both;"></div>
-				
+
 				{% else %}
 					 {% for ship_info in ship_infos %}
 					    <div class="xui-addresswaper fl">
@@ -191,9 +191,9 @@
 		        </table>
 		        <div style="height:225px; overflow-y:scroll;">
 		        <table class="xui-tab-memberifo" style="border:none;">
-		        	
+
 		        	<tbody>
-		        
+
 						{% for order in orders %}
 		        		<tr>
 			        		<td><span class="xui-color-blue"><a href="/mall2/order/?order_id={{order.id}}" target="_blank">{{order.order_id}}</a><span></td>
@@ -203,7 +203,11 @@
 			        			{% if order.status == 0 %}
 									待支付
 								{% endif %}
-									
+
+								{% if order.status == 1 %}
+									已取消
+								{% endif %}
+
 								{% if order.status == 2 %}
 									已付款
 								{% endif %}
@@ -215,18 +219,23 @@
 								{% if order.status == 4 %}
 									已发货
 								{% endif %}
-										
+
 								{% if order.status == 5 %}
 									已完成
 								{% endif %}
-										
-								{% if order.status == 1 %}
-									已取消
+
+								{% if order.status == 6 %}
+									退款中
 								{% endif %}
+
+								{% if order.status == 7 %}
+									退款成功
+								{% endif %}
+
 							</td>
 		        	    </tr>
 		        	    {% endfor %}
-		        	
+
 		        	</tbody>
 				</table>
 		    	</div>
@@ -266,12 +275,12 @@
 			        		<span class="xui-color-blue"><a href="javascript:void(0);" data-value="shared" class="friends">{{shared_url_lead_number}}</a></span>人
 			        	</p>
 		        	</div>
-		        	
+
 		        </div>
 		        <table class="xui-tab-memberifo">
 		        	<thead>
 		        		<tr>
-		        		    
+
 		        			<th>分享链接</th>
 		        			<th>点击</th>
 		        			<th>关注转化</th>
@@ -292,7 +301,7 @@
 			        	    </tr>
 			        	    {% endfor %}
 			        	</tbody>
-			        	
+
 			        </table>
 		        </div>
 		        {% else %}
@@ -334,7 +343,7 @@
 		        	    </tr>
 		        	    {% endfor %}
 		        	</tbody>
-		        	
+
 		        </table>
 		        {% else %}
 		        	<div class="xui-emptyBox ">
@@ -380,7 +389,7 @@
 		$('.tags').delegate('.xa-update-tag', 'click', function(event){
 			var $el = $(event.currentTarget);
 			var member_id = memberId;
-			
+
 			var memberTagsUpdateView = W.getMemberTagsUpdateView({
 				width: 260,
 				title: '修改分组',
@@ -412,7 +421,7 @@
 	// 修改积分
 	$('.xa-update-integral').click(function(event){
 		var $el = $(event.currentTarget);
-		
+
 		var memberIntegralUpdateView = W.getMemberIntegralUpdateView({
 			width: 310,
 			title: '调积分',
@@ -425,11 +434,11 @@
 			memberId: memberId,
 		})
         memberIntegralUpdateView.render();
-		
+
 	});
 	$('.relation-text').click(function(event) {
 				var _this = this;
-				
+
 				var memberId = {{ show_member.id }};
 				W.dialog.showDialog('W.dialog.member.RelationsDialog', {
 					memberId: memberId,
@@ -443,7 +452,7 @@
 				return false;
 			}
 			var memberId = {{ show_member.id }};
-			
+
 			var gradeId = $('#grade_id').val();
 
 			if (gradeId == '-1'){
