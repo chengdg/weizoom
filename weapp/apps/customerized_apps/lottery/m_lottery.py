@@ -17,6 +17,7 @@ import models as app_models
 import export
 from apps import request_util
 from termite2 import pagecreater
+import weixin.user.models as weixin_models
 
 class Mlottery(resource.Resource):
 	app = 'apps/lottery'
@@ -33,6 +34,15 @@ class Mlottery(resource.Resource):
 		lottery_status = False
 		can_play_count = 0
 		expend = 0
+		isMember = False
+		auth_appid_info = None
+		if not isPC:
+			isMember = request.member and request.member.is_subscribed
+			if not isMember:
+				from weixin.user.util import get_component_info_from
+				component_info = get_component_info_from(request)
+				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 		if 'new_app:' in id:
 			project_id = id
 			activity_status = u"未开始"
@@ -101,7 +111,9 @@ class Mlottery(resource.Resource):
 			'app_name': "lottery",
 			'resource': "lottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': isPC
+			'isPC': isPC,
+			'isMember': isMember,
+			'auth_appid_info': auth_appid_info
 		})
 
 		return render_to_response('lottery/templates/webapp/m_lottery.html', c)

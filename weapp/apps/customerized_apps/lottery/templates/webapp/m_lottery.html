@@ -160,29 +160,38 @@
             this.$closeBtn = this.$el.find('.xa-closeBtn');
 
             this.$entitySubmitBtn.on('click', function(){
-                 W.getApi().call({
-                        app: 'm/apps/lottery',
-                        resource: 'lottery_prize',
-                        method: 'post',
-                        args:{
-                            id: W.appRecordId,
-                            webapp_owner_id: W.webappOwnerId,
-                            tel: that.$entityContent.find('input').val().trim()
-                        },
-                        success: function(data){
-                            that.$title.css('visibility','hidden');
-                            that.$entityContent.hide();
-                            that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
-                            that.$closeBtn.text('再来一次');
-                        },
-                        error: function(error){
-                            alert('请重试~');
-                        }
-                    });
+                W.getApi().call({
+                    app: 'm/apps/lottery',
+                    resource: 'lottery_prize',
+                    method: 'post',
+                    args:{
+                        id: W.appRecordId,
+                        webapp_owner_id: W.webappOwnerId,
+                        tel: that.$entityContent.find('input').val().trim()
+                    },
+                    success: function(data){
+                        that.$title.css('visibility','hidden');
+                        that.$entityContent.hide();
+                        that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
+                        that.$closeBtn.text('再来一次');
+
+                    },
+                    error: function(error){
+                        alert('请重试~');
+                    }
+                });
+
             });
 
             this.$userCenter.on('click', function(){
-                window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId;
+                if (!W.isMember) {
+                    $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                            '<img height="195px" width="195px" src="'+ W.qrcodeUrl+'">' +
+                            '</div><div></div>');
+                }
+                else {
+                    window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
+                }
 
             });
             //初始化result dialog
