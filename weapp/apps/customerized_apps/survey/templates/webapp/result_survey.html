@@ -1,6 +1,14 @@
 {% extends "webapp_content_base_v4.html" %}
 {% block css %}
     <style>
+    .wui-surveyDescription .wui-i-title {
+        font-size: 22px;
+        font-weight: lighter;
+        margin-top: 10px;
+    }
+    .wui-surveyDescription .wui-i-subtitle {
+        font-size: 17px;
+    }
     .xui-btn-primary {
         background: #1BA3F9 none repeat scroll 0 0;
         border: 1px solid #d10000;
@@ -15,6 +23,20 @@
     .xui-name-isSelect{
         width: 20px;
         height: 20px;
+    }
+
+    .wui-i-time, .wui-i-prize {
+        margin-left: 30px;
+        margin-top: 8px;
+        min-height: 26px;
+    }
+
+    .wui-textSelection {
+        padding: 15px 10px 0;
+    }
+    .wui-textSelection .wui-i-title {
+        font-size: 18px;
+        font-weight: lighter;
     }
     </style>
 
@@ -68,7 +90,7 @@
             {% else %}
             <ul class="wui-shortcuts" style="padding: 0">
                 <li class="wui-i-item">
-                    <label class="wui-i-label">{{ item.title }}</label>
+                    <label class="wui-i-label" style="width: 43px;">{{ item.title }}</label>
                     <div class="wui-i-inputContainer xa-inputControl" >
                         <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" style="background:#fff;color:#595959;font-size:13px;" disabled>
                     </div>
