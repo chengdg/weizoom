@@ -212,7 +212,7 @@ $(document).ready(function() {
     $('.xa-export').click(function(event){
         W.getLoadingView();
         var export_id =window.location.search.split('?id=')[1];
-        W.getApi().call({
+		W.getApi().call({
             method: 'get',
             app: 'apps/lottery',
             resource: 'lottery_participances-export',

@@ -143,66 +143,28 @@ class lotteryParticipances_Export(resource.Resource):
 	def api_get(request):
 		"""
 		详情导出
-
-		字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 		"""
 		export_id = request.GET.get('export_id')
-		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
 		app_name = lotteryParticipances_Export.app.split('/')[1]
 		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
-
 		#Excel Process Part
 		try:
 			import xlwt
-			data = app_models.lotteryParticipance.objects(belong_to=export_id)
+			data = app_models.lottoryRecord.objects(belong_to=export_id)
 			fields_raw = []
-			fields_pure = []
 			export_data = []
 
 			#from sample to get fields4excel_file
 			fields_raw.append(u'编号')
 			fields_raw.append(u'用户名')
-			fields_raw.append(u'提交时间')
-			sample = data[0]
+			fields_raw.append(u'手机号')
+			fields_raw.append(u'获奖等级')
+			fields_raw.append(u'奖品名称')
+			fields_raw.append(u'中奖时间')
+			fields_raw.append(u'领取状态')
 
-			fields_selec = []
-			fields_qa= []
-			fields_shortcuts = []
-
-			sample_tm = sample['termite_data']
-
-			for item in sample_tm:
-				if sample_tm[item]['type']=='appkit.qa':
-					if item in fields_qa:
-						pass
-					else:
-						fields_qa.append(item)
-				if sample_tm[item]['type']=='appkit.selection':
-					if item in fields_selec:
-						pass
-					else:
-						fields_selec.append(item)
-				if sample_tm[item]['type']=='appkit.shortcuts':
-					if item in fields_shortcuts:
-						pass
-					else:
-						fields_shortcuts.append(item)
-			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
-
-
-			for field in fields_raw:
-				if '_' in field:
-					purename = field.split('_')[1]
-					if purename in trans2zh:
-						fields_pure.append(trans2zh[purename])
-					else:
-						fields_pure.append(purename)
-				else:
-					fields_pure.append(field)
-
-			#username(member_id)
 			member_ids = [record['member_id'] for record in data ]
 			members = member_models.Member.objects.filter(id__in = member_ids)
 			member_id2name ={}
@@ -219,39 +181,25 @@ class lotteryParticipances_Export(resource.Resource):
 			#processing data
 			num = 0
 			for record in data:
-				selec =[]
-				qa = []
-				shortcuts =[]
 				export_record = []
-
 				num = num+1
 				name = member_id2name[record['member_id']]
-				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+				tel = record['tel']
+				prize_title = record['prize_title']
+				prize_name = record['prize_name']
+				created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+				if record['status']:
+					status = u'已领取'
+				else:
+					status = u'未领取'
 
-				for s in fields_selec:
-					selec_v =[]
-					s_i = record[u'termite_data'][s][u'value']
-					for i in s_i:
-						if s_i[i]['isSelect'] == True:
-							selec.append(i.split('_')[1])
-				for s in fields_qa:
-					s_v = record[u'termite_data'][s][u'value']
-					qa.append(s_v)
-				for s in fields_shortcuts:
-					s_v = record[u'termite_data'][s][u'value']
-					shortcuts.append(s_v)
-
-				# don't change the order
 				export_record.append(num)
 				export_record.append(name)
-				export_record.append(create_at)
-
-				for item in selec:
-					export_record.append(item)
-				for item in qa:
-					export_record.append(item)
-				for item in shortcuts:
-					export_record.append(item)
+				export_record.append(tel)
+				export_record.append(prize_title)
+				export_record.append(prize_name)
+				export_record.append(created_at)
+				export_record.append(status)
 
 				export_data.append(export_record)
 
@@ -262,7 +210,7 @@ class lotteryParticipances_Export(resource.Resource):
 
 			##write fields
 			row = col = 0
-			for h in fields_pure:
+			for h in fields_raw:
 				ws.write(row,col,h)
 				col += 1
 
@@ -282,7 +230,7 @@ class lotteryParticipances_Export(resource.Resource):
 
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
-		except:
+		except :
 			response = create_response(500)
 
 		return response.get_response()
