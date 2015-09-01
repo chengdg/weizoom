@@ -5,7 +5,7 @@ Feature: 群发优惠券
 """
 @memberList
 # __editor__ : "新新"
-Scenario:15 筛选出会员发送优惠券
+Scenario:1 筛选出会员发送优惠券
 	#除已跑路外
 	Given jobs已添加商品
 		"""
@@ -308,3 +308,4 @@ Scenario:15 筛选出会员发送优惠券
 			}
 		}
 		"""
+		
