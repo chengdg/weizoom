@@ -35,7 +35,7 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
                 _this.isShowMenu = false;
                 _this.actionRoleId = null;
                 
-
+                _this.tools = data;
                 _this.initMenuData();
                 _this.$el.delegate('.xa-linkItemMenu', 'click', _.bind(_this.onClickItemMenu, _this));
                 _this.$el.click(function() {
@@ -70,6 +70,7 @@ W.view.weixin.MenuLinkView = W.view.common.SelectWebSiteLinkView.extend({
     	var _this = this;
     	if (title) {
 			W.dialog.showDialog('W.dialog.weixin.SelectWebSiteLinkDialog', {
+                tools: _this.tools,
 				title: title,
 				menuType: menuType,
 				menuItem: item,

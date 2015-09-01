@@ -1224,7 +1224,7 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 				if promotion_relation.promotion_id in processed_promotion_set:
 					continue
 
-				for premium_product in promotion_relation.promotion_result['premium_products']:
+				for premium_product in promotion_relation.promotion_result.get('premium_products', []):
 					temp_premium_products.append({
 						"id": premium_product['id'],
 						"name": premium_product['name'],
