@@ -56,7 +56,7 @@ class OrderInfo(resource.Resource):
         ship_name = request.POST.get('ship_name', None)
         ship_tel = request.POST.get('ship_tel', None)
         ship_address = request.POST.get('ship_address', None)
-        remark = request.POST.get('remark', '').strip()
+        remark = request.POST.get('remark', None)
 
         order = Order.objects.get(id=order_id)
 
@@ -110,7 +110,8 @@ class OrderInfo(resource.Resource):
                     operate_log = operate_log + u' 修改收货人地址'
                     order.ship_address = ship_address
 
-            if remark:
+            if not remark is None:
+                remark = remark.strip()
                 if order.remark != remark:
                     operate_log = operate_log + u' 修改订单备注'
                     order.remark = remark
