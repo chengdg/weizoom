@@ -83,10 +83,8 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 				W.resource.termite2.Image.put({
 					data: image,
 					success: function(data) {
-
 					},
 					error: function(resp) {
-
 					}
 				})
 			}

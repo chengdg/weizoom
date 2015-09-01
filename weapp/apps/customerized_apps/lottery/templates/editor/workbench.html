@@ -3,6 +3,18 @@
 {% load workbench_filter %}
 {% load apps_filter %}
 
+{% block css %}
+    <style>
+        .propertyGroup_property_dialogSelectField{
+            margin-top: 10px;
+        }
+        .propertyGroup_property_dialogSelectField .xui-i-triggerButton{
+            background: none;
+            color: #1262b7;
+        }
+    </style>
+{% endblock %}
+
 {% block content-panel %}
 <div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
   <div class="relative">
