@@ -173,7 +173,7 @@
                             that.$title.css('visibility','hidden');
                             that.$entityContent.hide();
                             that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
-                            that.$entitySubmitBtn.show();
+                            that.$userCenter.show();
                             that.$closeBtn.text('再来一次');
                         },
                         error: function(error){
@@ -211,7 +211,7 @@
                 this.$title.html('中奖了耶');
                 this.$contentHeader.html("恭喜您获得了"+prize_name+'！');
                 this.$entityContent.show();
-                this.$entitySubmitBtn.hide();
+                this.$userCenter.hide();
                 this.$closeBtn.hide();
             }else if(prize_type == 'no_prize'){
                 this.$title.html('很遗憾');
