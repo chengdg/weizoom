@@ -143,7 +143,7 @@
             //更新中奖历史
             var newRecord = data.newRecord;
             if(!$.isEmptyObject(newRecord)){
-                var new_str = "<li>" + newRecord.prize_title+'  '+ newRecord.prize_name+ '  '+ newRecord.created_at;
+                var new_str = "<li>" + newRecord.created_at+'  '+ newRecord.prize_title+ '  '+ newRecord.prize_name;
                 $('.wui-i-record').find('.xa-recordData').find('p').remove();
                 $('.wui-i-record').find('.xa-recordData').prepend(new_str);
             }
@@ -160,27 +160,26 @@
             this.$closeBtn = this.$el.find('.xa-closeBtn');
 
             this.$entitySubmitBtn.on('click', function(){
-                W.getApi().call({
-                    app: 'm/apps/lottery',
-                    resource: 'lottery_prize',
-                    method: 'post',
-                    args:{
-                        id: W.appRecordId,
-                        webapp_owner_id: W.webappOwnerId,
-                        tel: that.$entityContent.find('input').val().trim()
-                    },
-                    success: function(data){
-                        that.$title.css('visibility','hidden');
-                        that.$entityContent.hide();
-                        that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
-                        that.$closeBtn.text('再来一次');
-
-                    },
-                    error: function(error){
-                        alert('请重试~');
-                    }
-                });
-
+                 W.getApi().call({
+                        app: 'm/apps/lottery',
+                        resource: 'lottery_prize',
+                        method: 'post',
+                        args:{
+                            id: W.appRecordId,
+                            webapp_owner_id: W.webappOwnerId,
+                            tel: that.$entityContent.find('input').val().trim()
+                        },
+                        success: function(data){
+                            that.$title.css('visibility','hidden');
+                            that.$entityContent.hide();
+                            that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
+                            that.$userCenter.show();
+                            that.$closeBtn.text('再来一次');
+                        },
+                        error: function(error){
+                            alert('请重试~');
+                        }
+                    });
             });
 
             this.$userCenter.on('click', function(){
@@ -219,6 +218,7 @@
                 this.$title.html('中奖了耶');
                 this.$contentHeader.html("恭喜您获得了"+prize_name+'！');
                 this.$entityContent.show();
+                this.$userCenter.hide();
                 this.$closeBtn.hide();
             }else if(prize_type == 'no_prize'){
                 this.$title.html('很遗憾');
