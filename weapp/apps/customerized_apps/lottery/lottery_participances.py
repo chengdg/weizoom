@@ -98,8 +98,7 @@ class lotteryParticipances(resource.Resource):
 				for data in memberuser2datas.get(member_id, ()):
 					data.participant_name = member.username_for_html
 					data.participant_icon = member.user_icon
-					data.created_at = member.created_at
-		
+
 		items = []
 		for data in datas:
 			items.append({
