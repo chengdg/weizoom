@@ -427,21 +427,9 @@ p.wui-i-start_time,p.wui-i-end_time{
 	background-position: 0 -143px;
 }
 .xa-lottery-go{
-	text-align: center;
-	background: #D61625;
+	background: url("/termite_static/img/component/lottery/lottery_roulette_go.png") no-repeat;
+	background-size: 100% 100%;
 	border-radius: 2px;
-}
-.xa-lottery-go>a{
-	border: 1px solid black;
-    color: #ffcf3d;
-    display: inline-block;
-    font-size: 22px;
-    font-weight: bold;
-    height: 100px;
-    line-height: 100px;
-    width: 90%;
-	box-shadow: 0 0 3px black inset;
-	border-radius: 5px;
 }
 .xui-lottery-unit .xa-lottery-unit img{
 	height: 63px;

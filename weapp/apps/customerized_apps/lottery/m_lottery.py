@@ -28,7 +28,7 @@ class Mlottery(resource.Resource):
 		"""
 		id = request.GET['id']
 		participance_data_count = 0
-		isPC = request.GET['isPC']
+		isPC = request.GET.get('isPC', 0)
 		has_prize = False
 		lottery_status = False
 		can_play_count = 0
