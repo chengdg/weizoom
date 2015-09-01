@@ -21,7 +21,7 @@ from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,Chann
 from modules.member import models as member_model
 from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from weixin2.message.util import get_member_groups
-from modules.member.models import MemberGrade
+from modules.member.models import MemberGrade, MemberTag
 from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
 import json
 from excel_response import ExcelResponse
@@ -135,7 +135,7 @@ def _get_qrcode_items(request):
 	webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
 	webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 	webapp_user_ids = set(webapp_user_id2member_id.keys())
-	
+
 	orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
 
 	member_id2total_final_price = {}
@@ -294,6 +294,7 @@ class Qrcode(resource.Resource):
 		answer_content = {}
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
+		tags = MemberTag.get_member_tags(webapp_id)
 		qrcode = None
 		from mall.promotion.models import CouponRule
 		if setting_id > 0:
@@ -352,6 +353,7 @@ class Qrcode(resource.Resource):
 			'webapp_id': webapp_id,
 			'qrcode': qrcode,
 			'groups': groups,
+			'tags': tags,
 			'selectedMemberIds': json.dumps(selectedMemberIds),
 			'jsons': jsons
 		})
@@ -377,6 +379,7 @@ class Qrcode(resource.Resource):
 		reply_material_id = request.POST.get("reply_material_id", 0)
 		remark = request.POST.get("remark", '')
 		grade_id = int(request.POST.get("grade_id", -1))
+		tag_id = int(request.POST.get("tag_id", -1))
 		re_old_member = int(request.POST.get("re_old_member", 0))
 		is_bing_member = request.POST.get("is_bing_member", 0)
 		bing_member_id = int(request.POST.get("bing_member_id", 0))
@@ -400,6 +403,7 @@ class Qrcode(resource.Resource):
 			reply_material_id=reply_material_id,
 			remark=remark,
 			grade_id=grade_id,
+			tag_id=tag_id,
 			re_old_member=re_old_member,
 			is_bing_member=True if is_bing_member == "true" else False,
 			bing_member_id=bing_member_id,

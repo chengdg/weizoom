@@ -28,6 +28,7 @@ class ChannelQrcodeSettings(models.Model):
 	remark = models.CharField(max_length=500, verbose_name=u'备注')
 	ticket = models.TextField() #获取的ticket值
 	grade_id = models.IntegerField(default=-1) #关注后等级id
+	tag_id = models.IntegerField(default=-1) #关注后将会员添加到指定分组
 	re_old_member = models.IntegerField(default=0) #是否关联已关注会员
 	is_bing_member = models.BooleanField(default=False) #是否关联单个会员
 	bing_member_id = models.IntegerField(default=0) # 关联会员的ID
@@ -63,6 +64,16 @@ class ChannelQrcodeHasMember(models.Model):
 		db_table = 'market_tool_channel_qrcode_has_member'
 		verbose_name = '渠道扫码配置'
 		verbose_name_plural = '渠道扫码配置'
+
+class ChannelQrcodeToMemberLog(models.Model):
+	channel_qrcode = models.ForeignKey(ChannelQrcodeSettings)
+	member = models.ForeignKey(Member)
+	created_at = models.DateTimeField(auto_now_add=True) #添加时间
+
+	class Meta(object):
+		db_table = 'market_tool_channel_qrcode_to_member_log'
+		verbose_name = '会员扫描渠道二维码日志信息'
+		verbose_name_plural = '会员扫描渠道二维码日志信息'
 
 
 AWARD_INTEGRAL = 3 #积分

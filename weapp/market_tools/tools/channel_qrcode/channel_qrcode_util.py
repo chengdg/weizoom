@@ -34,14 +34,20 @@ def create_channel_qrcode_has_memeber(user_profile, member, ticket, is_new_membe
 			else:
 				return
 
-			if member:
-				prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
-				award(prize_info, member, CHANNEL_QRCODE)
+			logs = ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member)
+			#如果没有会员扫该二维码的记录信息，创建记录并发奖，否则不进行操作
+			if logs.count() == 0:
+				ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member)
+				if member:
+					prize_info = PrizeInfo.from_json(channel_qrcode.award_prize_info)
+					award(prize_info, member, CHANNEL_QRCODE)
 
 			try:
 				if channel_qrcode.grade_id > 0:
 					# updated by zhu tianqi,修改为会员等级高于目标等级时不降级，member_id->member
 					Member.update_member_grade(member, channel_qrcode.grade_id)
+				if channel_qrcode.tag_id > 0:
+					MemberHasTag.add_tag_member_relation(member, [channel_qrcode.tag_id])
 			except:
 				notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 				watchdog_warning(notify_message)
