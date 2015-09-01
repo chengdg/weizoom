@@ -393,14 +393,6 @@ p.wui-i-start_time,p.wui-i-end_time{
 	border-radius:2px;
 	padding: 0;
 }
-.wui-surveyDescription>.wui-i-subtitle {
-  background-color: #8d00ab;
-  left: 35%;
-  position: relative;
-  text-align: center;
-  top: 10px;
-  width: 30%;
-}
 .wui-surveyDescription .wui-i-settingTitle{
 	color: #ffffff;
 	font-weight: 700;
