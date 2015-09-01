@@ -84,40 +84,37 @@
                     <li data_cid="4">
                         一等奖:&nbsp;&nbsp;
                         {% if component.components.0.model.prize.type == 'coupon' %}
-                            <strong style="font-weight: normal;color: #ffffff">优惠券</strong>:<b style="font-weight: normal;color: #ffffff">{{component.components.0.model.prize.data.name}}</b>
+                            <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.0.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.0.model.prize.type == 'integral' %}
-                                <strong style="font-weight: normal;color: #ffffff">积分</strong>
+                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.0.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <strong style="font-weight: normal;color: #ffffff">实物</strong>
+                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.0.model.prize.data}}</P>
                             {% endif %}
-                            :<b style="font-weight: normal;color: #ffffff">{{component.components.0.model.prize.data}}</b>
                         {% endif %}
                     </li>
-                    <li data_cid="5" style="font-weight: normal;color: #ffffff">
+                    <li data_cid="5">
                         二等奖:&nbsp;&nbsp;
                         {% if component.components.1.model.prize.type == 'coupon' %}
-                            <strong style="font-weight:lighter;color: #ffffff">优惠券</strong>:<b style="font-weight: normal;color: #ffffff">{{component.components.1.model.prize.data.name}}</b>
+                            <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.1.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.1.model.prize.type == 'integral' %}
-                                <strong style="font-weight: normal;color: #ffffff">积分</strong>
+                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.1.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <strong style="font-weight: normal;color: #ffffff">实物</strong>
+                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.1.model.prize.data}}</P>
                             {% endif %}
-                            :<b style="font-weight: normal;color: #ffffff">{{component.components.1.model.prize.data}}</b>
                         {% endif %}
                     </li>
-                    <li data_cid="6">
+                    <li data_cid="6" >
                         三等奖:&nbsp;&nbsp;
                         {% if component.components.2.model.prize.type == 'coupon' %}
-                            <strong style="font-weight: normal;color: #ffffff;font-family: 'Arial', '黑体';">优惠券</strong>:<b style="font-weight: normal;color: #ffffff">{{component.components.2.model.prize.data.name}}</b>
+                            <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.2.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.2.model.prize.type == 'integral' %}
-                                <strong style="font-weight: normal;color: #ffffff">积分</strong>
+                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.2.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <strong style="font-weight: normal;color: #ffffff">实物</strong>
+                                <p style="display: inline;font-family: sans-serif;font-size: 13px;">{{component.components.2.model.prize.data}}</P>
                             {% endif %}
-                            :<b style="font-weight: normal;color: #ffffff">{{component.components.2.model.prize.data}}</b>
                         {% endif %}
                     </li>
                 </ul>
