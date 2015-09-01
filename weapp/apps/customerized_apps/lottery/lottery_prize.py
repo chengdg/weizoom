@@ -123,9 +123,7 @@ class lottery_prize(resource.Resource):
 			data['can_play_count'] = limitation #根据抽奖活动限制，初始化可参与次数
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
-		#根据送积分规则，查询当前用户是否已中奖
-		if delivery_setting == 'false' or not lottery_participance.has_prize:
-			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+
 		#扣除抽奖消耗的积分
 		member.consume_integral(expend, u'参与抽奖，消耗积分')
 		#判定是否中奖
@@ -133,6 +131,9 @@ class lottery_prize(resource.Resource):
 		lottery_prize_data = ''
 		if participants_count == 0 or (winner_count / float(participants_count) >= chance):
 			result = u'谢谢参与'
+			#根据送积分规则，查询当前用户是否已中奖
+			if delivery_setting == 'false' or not lottery_participance.has_prize:
+				member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
 		else:
 			#中奖，构造奖项池
 			prize_tank = []

@@ -164,10 +164,10 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			$node.find('.xa-title').text(value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-start_time').text(value);
+			$node.find('.wui-i-start_time').text(value.split(' ')[0].replace( /-/g,'.'));
 		},
 		end_time: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-end_time').text(value);
+			$node.find('.wui-i-end_time').text(value.split(' ')[0].replace( /-/g,'.'));
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
