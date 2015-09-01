@@ -123,17 +123,15 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 		prize: function($node, model, value, $propertyViewNode) {
 			if(value && value.data){
 				var data_cid = $propertyViewNode.attr('data-dynamic-cid');
-				var $li_b = $node.find('.wui-i-settingData li[data_cid="'+data_cid+'"]');
+				var $li_b = $node.find('.wui-i-settingData li[data_cid="'+data_cid+'"]').find('p');
 				if(value.type == 'coupon'){
-					$li_b.find('strong').html('优惠券');
-					$li_b.find('b').html(value.data.name);
+					$li_b.html(value.data.name);
 				}else{
 					if(value.type == 'integral'){
-						$li_b.find('strong').html('积分');
+						$li_b.html(value.data + ' 积分');
 					}else if(value.type == 'entity'){
-						$li_b.find('strong').html('实物');
+						$li_b.html(value.data);
 					}
-					$li_b.find('b').html(value.data);
 				}
 			}
 		}
