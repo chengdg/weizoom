@@ -23,11 +23,11 @@ Background:
 			[{
 				"name": "银牌会员",
 				"upgrade": "手动升级",
-				"shop_discount": "10"
+				"discount": "10"
 			},{
 				"name": "金牌会员",
 				"upgrade": "手动升级",
-				"shop_discount": "9"
+				"discount": "9"
 			}]
 			"""
 		Then jobs能获取会员等级列表
@@ -57,10 +57,10 @@ Background:
 
 	#批量获取微信用户关注
 		When jobs批量获取微信用户关注
-			| member_name   |   attention_time     | member_source   |
-			| tom1 			| 2014-08-04 23:59:59  | 直接关注 |
-			| tom2 			| 2014-08-05 00:00:00  | 推广扫码 |
-			| tom3	 	    | 2014-08-05 08:00:00  | 会员分享 |
+			| member_name   |   attention_time     | member_source |
+			| tom1 			| 2014-08-04 23:59:59  |    直接关注   |
+			| tom2 			| 2014-08-05 00:00:00  |    推广扫码   |
+			| tom3	 	    | 2014-08-05 08:00:00  |    会员分享   |
 
 		#And tom2取消关注jobs的公众号
 
@@ -83,6 +83,7 @@ Background:
 	#	When tom2在模拟器中发送消息'tom2发送一条文本消息，回复文本消息'
 	#	When jobs在模拟器中给tom2回复消息'jobs回复tom2消息'
 
+@mall2 @member @memberList 
 Scenario:1 调分组
 	Given jobs登录系统
 	#给没有分组的人设置分组
@@ -118,9 +119,11 @@ Scenario:1 调分组
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
 			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
 			| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |            |
 
+@mall2 @member @memberList
 Scenario:2 设等级
+
 	Given jobs登录系统
 	#给当前会员设置等级
 		When jobs给"tom2"设等级
@@ -133,7 +136,7 @@ Scenario:2 设等级
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
 			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
 			| tom2  |   金牌会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |            |
 
 	#给当前会员设置现在的等级
 
@@ -147,8 +150,9 @@ Scenario:2 设等级
 			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
 			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
 			| tom2  |   金牌会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
+			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |            |
 
+@mall2 @member @memberList
 Scenario:3 发优惠券
 
 	Given bill关注jobs的公众号
@@ -156,7 +160,7 @@ Scenario:3 发优惠券
 	And tom取消关注jobs的公众号
 
 	#添加优惠券规则
-	Given jobs登录系统
+		Given jobs登录系统
 		Given jobs已添加商品
 			"""
 			[{
@@ -397,8 +401,8 @@ Scenario:3 发优惠券
 				}
 				"""
 
-		#给tom发放无领取限制的全店优惠券，tom已经领取了两张，可发送成功，tom可以领取第二次发放的优惠券
-		#超过优惠券剩余的个数，不能再领取，只领取剩余的部分
+		#给tom发放无领取限制的全店优惠券，tom已经领取了两张，不能发送，tom只能领取到第一次发放的优惠券
+		#超过优惠券剩余的个数，不能再领取
 			When jobs给"tom"发优惠券
 				"""
 				[{
@@ -456,8 +460,12 @@ Scenario:3 发优惠券
 					}
 				}
 				"""
+
+@mall2 @member @memberList
 Scenario:4 加积分
+
 	Given jobs登录系统
+
 	#给当前会员积分为零时加积分负数，积分变为负数
 		When jobs给"tom3"加积分
 			"""
@@ -470,7 +478,7 @@ Scenario:4 加积分
 		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
 		| tom3  |   普通会员  |       0      |   -10    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
 		| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
-		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
+		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |            |
 
 
 	#给当前会员积分为零时加积分正数
@@ -485,8 +493,9 @@ Scenario:4 加积分
 		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
 		| tom3  |   普通会员  |       0      |    10    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |            |
 		| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |            |
-		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |       |
+		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |            |
 
+@member @memberList
 Scenario:5 查看聊天记录
 
 	#查看有会员消息的会员消息记录
