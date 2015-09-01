@@ -73,6 +73,7 @@ Background:
 	And tom关注jobs的公众号
 	And marry关注jobs的公众号
 
+@product @sales  @online_bug 
 Scenario: 1 订单量等于商品销量
 	Given jobs登录系统
 	#待发货订单（bill购买商品1,数量1）
@@ -141,7 +142,7 @@ Scenario: 1 订单量等于商品销量
 			}
 		"""
 
-
+@product @sales  @online_bug 
 Scenario: 2 订单量小于商品销量
 	Given jobs登录系统
 	#bill只购买商品1,数量1
