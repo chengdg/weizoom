@@ -82,6 +82,9 @@ def is_home_page(request):
 	if 'workspace_id=home_page' in request.get_full_path() and project_id == '0':
 		return True
 
+	if project_id == '0':
+		return True
+
 	projects = webapp_models.Project.objects.filter(id=project_id)
 	if projects.count() > 0:
 		if projects[0].is_active:
