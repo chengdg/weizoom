@@ -124,36 +124,36 @@
                     <li data_cid="4">
                         一等奖:&nbsp;&nbsp;
                         {% if component.components.0.model.prize.type == 'coupon' %}
-                            <p style="display: inline;font-size: 13px;">{{component.components.0.model.prize.data.name}}</p>
+                            <p>{{component.components.0.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.0.model.prize.type == 'integral' %}
-                                <p style="display: inline;font-size: 13px;">{{component.components.0.model.prize.data}}</P>&nbsp;积分
+                                <p>{{component.components.0.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <p style="display: inline;font-size: 13px;">{{component.components.0.model.prize.data}}</P>
+                                <p>{{component.components.0.model.prize.data}}</P>
                             {% endif %}
                         {% endif %}
                     </li>
                     <li data_cid="5">
                         二等奖:&nbsp;&nbsp;
                         {% if component.components.1.model.prize.type == 'coupon' %}
-                            <p style="display: inline;font-size: 13px;">{{component.components.1.model.prize.data.name}}</p>
+                            <p>{{component.components.1.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.1.model.prize.type == 'integral' %}
-                                <p style="display: inline;font-size: 13px;">{{component.components.1.model.prize.data}}</P>&nbsp;积分
+                                <p>{{component.components.1.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <p style="display: inline;font-size: 13px;">{{component.components.1.model.prize.data}}</P>
+                                <p>{{component.components.1.model.prize.data}}</P>
                             {% endif %}
                         {% endif %}
                     </li>
                     <li data_cid="6" >
                         三等奖:&nbsp;&nbsp;
                         {% if component.components.2.model.prize.type == 'coupon' %}
-                            <p style="display: inline;font-size: 13px;">{{component.components.2.model.prize.data.name}}</p>
+                            <p>{{component.components.2.model.prize.data.name}}</p>
                         {% else %}
                             {% if component.components.2.model.prize.type == 'integral' %}
-                                <p style="display: inline;font-size: 13px;">{{component.components.2.model.prize.data}}</P>&nbsp;积分
+                                <p>{{component.components.2.model.prize.data}}</P>&nbsp;积分
                             {% else %}
-                                <p style="display: inline;font-size: 13px;">{{component.components.2.model.prize.data}}</P>
+                                <p>{{component.components.2.model.prize.data}}</P>
                             {% endif %}
                         {% endif %}
                     </li>
@@ -177,7 +177,9 @@
                 </ul>
             </div>
         </div>
-        <div class="wui-i-description xa-description cl pt15 pb15" style="margin: 0; color: white;border-top: 1px solid #ab39c4;">
+        <div class="wui-i-description xa-description cl pt15 pb15" style="font-size: 16px;margin: 0; color: white;border-top: 1px solid #ab39c4;">
+        <div class="wui-i-settingTitle fl mr15">活动规则:</div>
+            <div style="clear: both"></div>
             {{component.model.description|safe}}
         </div>
 	</div>
