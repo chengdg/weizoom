@@ -222,7 +222,7 @@ Scenario: 3 成功支付订单后，取消订单，商品销量不变
 	"""
 
 
-@promotionPremium @product @sales
+@mall2 @promotionPremium @product @sales
 Scenario: 4 购买买赠商品成功支付订单后，取消订单，商品销量不变
 	jobs创建买赠活动后
 	1.bill成功下单后，销量增加
@@ -236,7 +236,7 @@ Scenario: 4 购买买赠商品成功支付订单后，取消订单，商品销�
 			"name": "商品1买一赠二",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": ["商品1"],
+			"product_name": "商品1",
 			"premium_products": [{
 				"name": "商品1",
 				"count": 2
@@ -283,22 +283,13 @@ Scenario: 4 购买买赠商品成功支付订单后，取消订单，商品销�
 			"final_price": 100.00,
 			"products": [{
 				"name": "商品1",
-				"count": 1,
-				"promotion": {
-					"type": "premium_sale"
-				}
-			}, {
-				"name": "商品1",
-				"count": 2,
-				"promotion": {
-					"type": "premium_sale:premium_product"
-				}
+				"count": 1
 			}]
 		}
 		"""
 	#买赠活动：赠品扣库存，但是不算销量
 	Given jobs登录系统
-	And jobs能获取商品'商品1'
+	Then jobs能获取商品'商品1'
 		"""
 		{
 			"name": "商品1",

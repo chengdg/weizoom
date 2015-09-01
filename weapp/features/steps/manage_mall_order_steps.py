@@ -256,7 +256,7 @@ def step_impl(context, user):
     if order.status == ORDER_STATUS_NOT:
         order.actions[u'修改价格'] = 1
     for product in order.products:
-        product['total_price'] = float(product['total_price'])
+        product['price'] = float(product['price'])
     order.status = STATUS2TEXT[order.status]
     for product in order.products:
         if 'custom_model_properties' in product and product['custom_model_properties']:
