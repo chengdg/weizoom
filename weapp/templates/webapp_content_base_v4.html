@@ -341,6 +341,16 @@
                     }
                 }
                 else{
+                    $('.selection-radio').click(function(event){
+                        var $span = $(event.currentTarget);
+                        $span.parents('ul').find('label').find('span :first').removeClass('radio-select');
+                        $span.addClass('radio-select');
+                    });
+                    $('.selection-checkbox').click(function(event){
+                        var $span = $(event.currentTarget);
+                        $span.parents('ul').find('label').find('span :first').removeClass('checkbox-select');
+                        $span.addClass('checkbox-select');
+                    });
                     $('.xa-submitTermite').click(function() {
                         if (!W.validate()) {
                             return;
@@ -360,16 +370,22 @@
                             } else if (inputType === 'textarea') {
                                 var value = $.trim($control.find('textarea').val());
                             } else if (inputType === 'selection') {
-                                var $inputs = $control.find('input');
+                                var $spans = $control.find('span[data-type="radio"');
                                 var value = {};
-                                var selectionInputType = $inputs.eq(0).attr('type');
-                                for (var j = 0; j < $inputs.length; ++j) {
-                                    var $input = $inputs.eq(j);
-                                    var selectionCid = $input.parents('li').eq(0).attr('data-component-cid');
+                                var selectionInputType = $spans.eq(0).attr('data-type');
+                                for (var j = 0; j < $spans.length; ++j) {
+                                    var $span = $spans.eq(j);
+                                    var selectionCid = $span.parents('li').eq(0).attr('data-component-cid');
                                     selectionCid = selectionCid.length<2 ? '0'+selectionCid : selectionCid;
-                                    var selectionInputName = $input.attr('data-input-name');
+                                    var selectionInputName = $span.attr('data-input-name');
                                     selectionInputName = selectionCid+'_'+selectionInputName;
-                                    var isSelect = $input.is(':checked');
+                                    var class_name;
+                                    if (selectionInputType === 'radio'){
+                                        class_name = 'radio-select';
+                                    }else{
+                                        class_name = 'checkbox-select';
+                                    }
+                                    var isSelect = $span.hasClass(class_name);
                                     value[selectionInputName] = {
                                         type: selectionInputType,
                                         isSelect: isSelect
