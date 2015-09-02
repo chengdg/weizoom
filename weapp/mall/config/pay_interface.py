@@ -63,9 +63,9 @@ class PayInterfaceList(resource.Resource):
                     is_active=False
                 )
 
-        pay_interfaces = list(PayInterface.objects.filter(owner=request.manager))
+        pay_interfaces = list(PayInterface.objects.filter(owner=request.manager).exclude(type=PAY_INTERFACE_WEIZOOM_COIN))
 
-        pay_interfaces = filter(lambda pay_interface: pay_interface.type != PAY_INTERFACE_WEIZOOM_COIN, pay_interfaces)
+        # pay_interfaces = filter(lambda pay_interface: pay_interface.type != PAY_INTERFACE_WEIZOOM_COIN, pay_interfaces)
 
         for pay_interface in pay_interfaces:
             pay_interface.name = PAYTYPE2NAME[pay_interface.type]
