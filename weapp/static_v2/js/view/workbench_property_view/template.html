@@ -489,7 +489,7 @@
 								{{if (dynamicComponentField.type == 'prize_selector')}}
                                 <div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField">
                                     <div class="propertyGroup_property_label">${dynamicComponentField.displayName}</div>
-                                    <div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="prize_selector" data-field="${dynamicComponentField.name}">
+                                    <div class="propertyGroup_property_input xa-thirdPartyPlugin" data-plugin="prize_selector" data-field="${dynamicComponentField.name}">
                                         <div
                                             data-ui-role="apps-prize-selector"
                                             data-prize='${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}'
@@ -501,7 +501,7 @@
                                 {{if (dynamicComponentField.type == 'prize_selector_v3')}}
                                 <div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField">
                                     <div class="propertyGroup_property_label">${dynamicComponentField.displayName}</div>
-                                    <div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="prize_selector_v3" data-field="${dynamicComponentField.name}">
+                                    <div class="propertyGroup_property_input xa-thirdPartyPlugin" data-plugin="prize_selector_v3" data-field="${dynamicComponentField.name}">
                                         <div
                                             data-ui-role="apps-prize-selector-v3"
                                             data-prize='${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}'
