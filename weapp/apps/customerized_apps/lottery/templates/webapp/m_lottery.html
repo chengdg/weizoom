@@ -176,7 +176,12 @@
                             that.$userCenter.show();
                         },
                         error: function(error){
-                            alert('请重试~');
+                            $('body').alert({
+                                isShow: true,
+                                isSlide: false,
+                                info: '请重试~',
+                                speed: 3000
+                            });
                         }
                     });
             });
@@ -289,7 +294,6 @@
                 //lights
                 this.light_count = $lottery.find(".xui-circle").length;
             }else{
-                alert('没有找到容器');
                 return void(0);
             }
         }
@@ -392,7 +396,12 @@
                             lottery.stop(data);
                         },
                         error: function(error){
-                            alert(error.errMsg);
+                            $('body').alert({
+                                isShow: true,
+                                isSlide: false,
+                                info: error.errMsg,
+                                speed: 3000
+                            });
                         }
                     });
                 }
@@ -427,7 +436,12 @@
 
                 },
                 error: function(error){
-                    alert(error.errMsg);
+                    $('body').alert({
+                        isShow: true,
+                        isSlide: false,
+                        info: error.errMsg,
+                        speed: 3000
+                    });
                 }
             });
         }

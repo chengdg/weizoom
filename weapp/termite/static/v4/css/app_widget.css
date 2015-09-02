@@ -466,15 +466,14 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .xui-lottery-unit.active{
 	background-color:#FFFF01;
-	box-shadow: 0 0 10px #FFFF01;
-	-webkit-box-shadow: 0 0 5px #FFFF01;
+	box-shadow: 0 0 30px #FFFF01;
+	-webkit-box-shadow: 0 0 20px #FFFF01;
 }
 
 .xa-circle.active{
 	background-color:#FFFF01;
 	box-shadow: 0 0 10px #FFFF01;
-	-webkit-box-shadow: 0 0 5px #FFFF01;
-	-moz-box-shadow: 0 0 5px #FFFF01;
+	-webkit-box-shadow: 0 0 105px #FFFF01;
 }
 .xa-circle{
 	width: 12px;
