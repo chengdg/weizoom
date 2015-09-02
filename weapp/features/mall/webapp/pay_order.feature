@@ -18,7 +18,7 @@ Background:
 
 
 @mall2 @mall @mall.webapp @mall.pay_order
-Scenario: 使用货到付款支付
+Scenario:1 使用货到付款支付
 	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
 	1. bill的订单中变为已支付
 	2. jobs在后台看到订单变为已支付
@@ -70,7 +70,7 @@ Scenario: 使用货到付款支付
 	
 
 @mall2 @mall @mall.webapp @mall.pay_order
-Scenario: 使用V2版微信支付进行同步支付
+Scenario:2 使用V2版微信支付进行同步支付
 	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
 	1. bill的订单中变为已支付
 	2. jobs在后台看到订单变为已支付
@@ -128,7 +128,7 @@ Scenario: 使用V2版微信支付进行同步支付
 
 
 @mall2 @mall @mall.webapp @mall.pay_order
-Scenario: 使用V2版微信支付进行异步支付
+Scenario:3 使用V2版微信支付进行异步支付
 	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
 	1. bill的订单中变为已支付
 	2. jobs在后台看到订单变为已支付
