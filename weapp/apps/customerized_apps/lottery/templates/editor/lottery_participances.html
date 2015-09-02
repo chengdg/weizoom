@@ -160,7 +160,7 @@
 				</td>
 				<td>
 				    {{if !item.status}}
-					    <a href="javascript:void(0);" class="ml5 xa-getLottery">领取</a>
+					    <a href="javascript:void(0);" class="ml5 xa-getLottery" data-id=${item.id}>领取</a>
 					{{/if}}
 				</td>
 			</tr>
@@ -232,6 +232,38 @@ $(document).ready(function() {
             }
         });
     });
+{#	领取实物奖品#}
+	$('body').delegate('.xa-getLottery', 'click', function(event) {
+		var $el = $(event.target);
+		var id = $el.data('id');
+		W.requireConfirm({
+			$el: $el,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定领取该奖品？',
+			confirm: function() {
+				W.getApi().call({
+					app: 'apps/lottery',
+					resource: 'lottery_participances',
+					method: 'post',
+					args: {
+						id: id
+					},
+					success: function(data) {
+						W.showHint('success', '领取奖品成功！');
+						setTimeout(function() {
+							location.reload()
+						}, 500);
+					},
+					error: function(response) {
+						W.showHint('error', '领取奖品失败，请稍后再试！');
+					}
+				});
+			}
+		});
+	});
 });
 </script>
 {% endblock %}

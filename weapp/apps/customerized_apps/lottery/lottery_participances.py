@@ -131,7 +131,16 @@ class lotteryParticipances(resource.Resource):
 		}
 		response = create_response(200)
 		response.data = response_data
-		return response.get_response()		
+		return response.get_response()
+
+	@login_required
+	def api_post(request):
+		"""
+		领取奖品
+		"""
+		app_models.lottoryRecord.objects(id=request.POST['id']).update(set__status=True)
+		response = create_response(200)
+		return response.get_response()
 
 class lotteryParticipances_Export(resource.Resource):
 	'''
