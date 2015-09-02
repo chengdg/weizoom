@@ -194,7 +194,6 @@ Scenario: 3 更新支付方式:支付宝
 		"""
 		{
 			"type": "支付宝",
-			"is_active": "停用",
 			"partner": "110", 
 			"key": "210", 
 			"ali_public_key": "310", 
@@ -206,7 +205,7 @@ Scenario: 3 更新支付方式:支付宝
 		"""
 		{
 			"type": "支付宝",
-			"is_active": "停用",
+			"is_active": "启用",
 			"partner": "110", 
 			"key": "210", 
 			"ali_public_key": "310", 
@@ -260,21 +259,21 @@ Scenario: 4 切换启用/停用状态
 			"is_active": "启用"
 		}]
 		"""
-	When jobs更新支付方式'微信支付'
+	When jobs停用支付方式'微信支付'
 		"""
 		{
 			"type": "微信支付",
 			"is_active": "停用"
 		}
 		"""
-	When jobs更新支付方式'支付宝'
+	When jobs停用支付方式'支付宝'
 		"""
 		{
 			"type": "支付宝",
 			"is_active": "停用"
 		}
 		"""
-	When jobs更新支付方式'货到付款'
+	When jobs停用支付方式'货到付款'
 		"""
 		{
 			"type": "货到付款",
