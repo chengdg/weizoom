@@ -136,7 +136,7 @@ Scenario: 购买单个商品
 
 
 @mall.webapp @mall2 @zy_bp02
-Scenario: 购买商品时，使用订单备注
+Scenario:1 购买商品时，使用订单备注
 	bill在购买jobs添加的商品时
 	1. 添加了"订单备注"，则jobs能在管理系统中看到该"订单备注"
 	2. 不添加'订单备注', 则jobs能在管理系统中看到"订单备注"为空字符串
@@ -187,7 +187,7 @@ Scenario: 购买商品时，使用订单备注
 		"""
 
 @mall.webapp @mall2 @zy_bp03
-Scenario: 购买有规格的商品
+Scenario:2 购买有规格的商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs添加的商品
 	2. bill的订单中的信息正确
@@ -228,7 +228,7 @@ Scenario: 购买有规格的商品
 
 
 @mall.webapp @mall2 @zy_bp04
-Scenario: 购买已经下架的商品
+Scenario:3 购买已经下架的商品
 	bill可能会在以下情景下购买已下架的商品A：
 	1. bill打开商品A的详情页面
 	2. bill点击“购买”，进入商品A的订单编辑页面
@@ -250,7 +250,7 @@ Scenario: 购买已经下架的商品
 	Then bill获得错误提示'商品已下架<br/>2秒后返回商城首页'
 
 @mall.webapp @mall2 @zy_bp05
-Scenario: 购买的商品数量等于库存数量
+Scenario:4 购买的商品数量等于库存数量
 	jobs添加有限商品后
 	1. bill能在webapp中购买jobs添加的商品
 	2. bill的订单中的信息正确
@@ -296,7 +296,7 @@ Scenario: 购买的商品数量等于库存数量
 		"""
 
 @mall.webapp @mall2 @zy_bp06
-Scenario:购买库存不足的商品
+Scenario:5 购买库存不足的商品
 	bill可能会在以下情景下购买库存不足的商品A：
 	1. bill打开商品A的详情页面
 	2. bill调整数量为3个点击“购买”，进入商品A的订单编辑页面
@@ -333,7 +333,7 @@ Scenario:购买库存不足的商品
 		"""
 
 @mall.webapp @mall2 @zy_bp07
-Scenario:货到付款的商品有两种支付方式
+Scenario:6 货到付款的商品有两种支付方式
 	bill购买jobs配有'货到付款'的商品时
 	1.bill可以使用'在线支付'进行支付
 	2.bill可以使用'货到付款'进行支付
@@ -352,7 +352,7 @@ Scenario:货到付款的商品有两种支付方式
 	Then bill'能'使用支付方式'货到付款'进行支付
 
 @mall.webapp @mall2 @zy_bp08
-Scenario:没有货到付款的商品只有一种支付方式
+Scenario:7 没有货到付款的商品只有一种支付方式
 	bill购买jobs没有配'货到付款'的商品时
 	1.bill可以使用'在线支付'进行支付
 	2.bill不可以使用'货到付款'进行支付
@@ -374,7 +374,7 @@ Scenario:没有货到付款的商品只有一种支付方式
 
 #后续补充.雪静
 @mall.webapp @mall2 @zy_bp09
-Scenario: 购买库存为零的商品
+Scenario:8 购买库存为零的商品
 	bill可能会在以下情景下购买库存不足的商品A：
 	1. bill打开商品A的详情页面
 	2. bill调整数量为2个点击“购买”，进入商品A的订单编辑页面
