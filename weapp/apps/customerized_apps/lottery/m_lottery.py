@@ -71,10 +71,13 @@ class Mlottery(resource.Resource):
 				participance_data_count = lottery_participance.count()
 				if participance_data_count != 0:
 					lottery_participance = lottery_participance[0]
-					has_prize = lottery_participance.has_prize
+					total_count = lottery_participance.total_count
 					#再次进入抽奖活动页面，根据抽奖规则限制以及当前日期和最近一次抽奖日期，更新can_play_count
 					now_date_str = datetime.today().strftime('%Y-%m-%d')
 					last_lottery_date_str = lottery_participance.lottery_date.strftime('%Y-%m-%d')
+					if record.limitation == 'once_per_user' and total_count > 0:
+						lottery_participance.update(set__can_play_count=0)
+						can_play_count = 0
 					if now_date_str != last_lottery_date_str:
 						if record.limitation == 'once_per_day':
 							lottery_participance.update(set__can_play_count=1)
@@ -82,9 +85,9 @@ class Mlottery(resource.Resource):
 						elif record.limitation == 'twice_per_day':
 							lottery_participance.update(set__can_play_count=2)
 							can_play_count = 2
-						lottery_participance.reload()
 					else:
 						can_play_count = lottery_participance.can_play_count
+					lottery_participance.reload()
 				else:
 					if record.limitation in ['once_per_day', 'once_per_user']:
 						can_play_count = 1
@@ -92,8 +95,8 @@ class Mlottery(resource.Resource):
 						can_play_count = 2
 					else:
 						can_play_count = 0
-				if can_play_count != 0:
-					lottery_status = True
+		if can_play_count != 0:
+			lottery_status = True
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})

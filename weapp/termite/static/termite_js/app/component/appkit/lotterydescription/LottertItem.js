@@ -24,7 +24,7 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			isUserProperty: true,
 			maxLength: 5,
 			size: '70px',
-			annotation: '注：奖品数量为0时，不设此奖项',
+			annotation: '个 注：奖品数量为0时，不设此奖项',
 			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
 			validateIgnoreDefaultValue: true,
 			default: ''
