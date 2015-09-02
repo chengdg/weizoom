@@ -678,23 +678,23 @@ Scenario:17 更新邮费配置后进行购买
 	Given jobs登录系统
 	When jobs修改'顺丰'运费配置
 		"""
-		[{
+		{
 			"name":"顺丰",
 			"first_weight": 1,
 			"first_weight_price": 13.00,
 			"added_weight": 1,
 			"added_weight_price": 5.00
-		}]
+		}
 		"""
 	Then jobs能获取'顺丰'运费配置
 		"""
-		[{
+		{
 			"name":"顺丰",
 			"first_weight": 1,
 			"first_weight_price": 13.00,
 			"added_weight": 1,
 			"added_weight_price": 5.00
-		}]
+		}
 		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
