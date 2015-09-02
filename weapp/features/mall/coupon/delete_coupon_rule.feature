@@ -355,18 +355,18 @@ Scenario: 4 删除已过期的优惠券规则
 		"""
 
 # __author__ : "王丽" 补充在查询结果中删除活动
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario: 5 在按"优惠券名称"查询的查询结果下删除优惠券
 
 	Given jobs登录系统
 
-	When jobs设置优惠券列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"name":"全体券1",
-			"coupon_id_prefix":"",
-			"coupon_type":"全部",
-			"state":"全部",
+			"coupon_id":"",
+			"coupon_promotion_type":"全部",
+			"promotion_status":"全部",
 			"start_date":"",
 			"end_date":""
 		}
@@ -390,18 +390,18 @@ Scenario: 5 在按"优惠券名称"查询的查询结果下删除优惠券
 		[]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario: 6 在按"优惠码"查询的查询结果下删除优惠券
 
 	Given jobs登录系统
 
-	When jobs设置优惠券列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"name":"",
-			"coupon_id_prefix":"coupon1_id_1",
-			"coupon_type":"全部",
-			"state":"全部",
+			"coupon_id":"coupon1_id_1",
+			"coupon_promotion_type":"全部",
+			"promotion_status":"全部",
 			"start_date":"",
 			"end_date":""
 		}
@@ -425,7 +425,7 @@ Scenario: 6 在按"优惠码"查询的查询结果下删除优惠券
 		[]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario: 7 在按"优惠券类型"查询的查询结果下删除优惠券
 
 	Given jobs登录系统
@@ -454,26 +454,26 @@ Scenario: 7 在按"优惠券类型"查询的查询结果下删除优惠券
 		{
 			"coupon6_id_1": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "已过期",
 				"consumer": "",
 				"target": ""
 			},
 			"coupon6_id_2": {
 				"money": 10.00,
-				"status": "未领取",
+				"status": "已过期",
 				"consumer": "",
 				"target": ""
 			}
 		}
 		"""
 
-	When jobs设置优惠券列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"name":"",
-			"coupon_id_prefix":"",
-			"coupon_type":"单品券",
-			"state":"全部",
+			"coupon_id":"",
+			"coupon_promotion_type":"单品券",
+			"promotion_status":"全部",
 			"start_date":"",
 			"end_date":""
 		}
@@ -533,18 +533,18 @@ Scenario: 7 在按"优惠券类型"查询的查询结果下删除优惠券
 		}]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario: 8 在按"促销状态"查询的查询结果下删除优惠券
 
 	Given jobs登录系统
 
-	When jobs设置优惠券列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"name":"",
-			"coupon_id_prefix":"",
-			"coupon_type":"全部",
-			"state":"已过期",
+			"coupon_id":"",
+			"coupon_promotion_type":"全部",
+			"promotion_status":"已过期",
 			"start_date":"",
 			"end_date":""
 		}
@@ -568,18 +568,18 @@ Scenario: 8 在按"促销状态"查询的查询结果下删除优惠券
 		[]
 		"""
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario: 9 在按"活动时间"查询的查询结果下删除优惠券
 
 	Given jobs登录系统
 
-	When jobs设置优惠券列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"name":"",
-			"coupon_id_prefix":"",
-			"coupon_type":"全部",
-			"state":"全部",
+			"coupon_id":"",
+			"coupon_promotion_type":"全部",
+			"promotion_status":"全部",
 			"start_date":"2天前",
 			"end_date":"1天后"
 		}
@@ -587,15 +587,6 @@ Scenario: 9 在按"活动时间"查询的查询结果下删除优惠券
 	Then jobs能获得优惠券规则列表
 		"""
 		[{
-			"name": "全体券1",
-			"type": "全店通用券",
-			"money": 1.00,
-			"remained_count": 2,
-			"limit_counts": 10,
-			"use_count": 0,
-			"start_date": "2天前",
-			"end_date": "1天前"
-		},{
 			"name": "单品券2",
 			"type": "单品券",
 			"money": 10.00,
@@ -604,6 +595,15 @@ Scenario: 9 在按"活动时间"查询的查询结果下删除优惠券
 			"use_count": 0,
 			"start_date": "今天",
 			"end_date": "1天后"
+		}, {
+			"name": "全体券1",
+			"type": "全店通用券",
+			"money": 1.00,
+			"remained_count": 2,
+			"limit_counts": 10,
+			"use_count": 0,
+			"start_date": "2天前",
+			"end_date": "1天前"
 		}]
 		"""
 	When jobs删除优惠券'全体券1'
