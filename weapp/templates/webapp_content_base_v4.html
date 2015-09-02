@@ -334,7 +334,11 @@
                 }
                 if (W.isPC){
                     $('.xa-submitTermite').unbind('click');
-                    $('.xa-lottery-go').unbind('click');
+                    //抽奖活动处理
+                    if($('.xa-lottery-go').length>0){
+                        $('.xa-lottery-go').unbind('click');
+                        $('.xa-submitTermite').parent().hide();
+                    }
                 }
                 else{
                     $('.xa-submitTermite').click(function() {
