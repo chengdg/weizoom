@@ -22,19 +22,20 @@ def step_impl(context, user_name):
 
 @then(u'{user_name}能获得优惠券规则列表')
 def step_impl(context, user_name):
-    url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=coupon&promotionType=all&count_per_page=10&page=1'
+    url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1'
     if hasattr(context, 'query_param'):
         if context.query_param.get('name'):
             url += '&name=' + context.query_param['name']
         if context.query_param.get('coupon_id'):
             url += '&couponId='+ context.query_param['coupon_id']
-        coupon_promotion_type = -1
-        if context.query_param.get('coupon_promotion_type', u'全部') != u'全部':
+        if context.query_param.get('coupon_promotion_type', None):
             if context.query_param['coupon_promotion_type'] == u'全店通用券':
                 coupon_promotion_type = 1
             elif context.query_param['coupon_promotion_type'] == u'单品券':
                 coupon_promotion_type = 2
-        url += '&couponPromotionType=%s' % coupon_promotion_type
+            elif context.query_param['coupon_promotion_type'] == u'全部':
+                coupon_promotion_type = -1
+            url += '&couponPromotionType=%s' % coupon_promotion_type
         if context.query_param.get('start_date'):
             url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
         if context.query_param.get('end_date'):
