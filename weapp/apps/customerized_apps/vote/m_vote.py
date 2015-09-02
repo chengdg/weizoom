@@ -119,7 +119,7 @@ class Mvote(resource.Resource):
 			record = None
 			c = RequestContext(request, {
 				'record': record
-			});
+			})
 			
 			return render_to_response('vote/templates/webapp/m_vote.html', c)
 
@@ -164,52 +164,51 @@ def get_result(id,member_id):
 				member_termite_select[select] = isSelect['isSelect']
 		if value['type'] == 'appkit.shortcuts':
 			member_termite_shortcuts[k] = value['value']
-	q_vote =OrderedDict()
+	questions =OrderedDict()
 	result_list = []
 
 	for vote in votes:
 		termite_data = vote.termite_data
-		for k in sorted(termite_data.keys()):
-			value = termite_data[k]
+		for title in sorted(termite_data.keys()):
+			value = termite_data[title]
 			if value['type'] == 'appkit.selection':
-				if not q_vote.has_key(k):
-					q_vote[k] = [value['value']]
+				if not questions.has_key(title):
+					questions[title] = [value['value']]
 				else:
-					q_vote[k].append(value['value'])
+					questions[title].append(value['value'])
 			if value['type'] == 'appkit.shortcuts':
-				q_vote[k] = []
-	for k,v in q_vote.items():
-		a_isSelect = {}
+				questions[title] = []
+	for q_title,values in questions.items():
+		value_isSelect = {}
 		result = {}
-		total_count = len(v)
+		total_count = len(values)
 		value_list = []
 
-		v_a = {}
-		for a in v:
-			v_a=a
-			print v_a
-			for a_k,a_v in a.items():
-				if a_v:
-					if not a_isSelect.has_key(a_k):
-						a_isSelect[a_k] = 0
-					if a_v['isSelect'] == True:
-						a_isSelect[a_k] += 1
+		timp_vlaue = {}
+		for value in values:
+			timp_vlaue = value
+			for v_title,v_value in value.items():
+				if v_value:
+					if not value_isSelect.has_key(v_title):
+						value_isSelect[v_title] = 0
+					if v_value['isSelect'] == True:
+						value_isSelect[v_title] += 1
 				else:
-					a_isSelect[a_k] = []
-		for a_k in sorted(v_a.keys()):
+					value_isSelect[v_title] = []
+		for timp_k in sorted(timp_vlaue.keys()):
 			value ={}
-			name = a_k.split('_')[1]
+			name = timp_k.split('_')[1]
 			value['name'] = name
-			value['id_name'] = a_k
-			value['count'] = a_isSelect[a_k]
-			value['per'] =  '%d' % (a_isSelect[a_k]*100/float(total_count))
-			value['isSelect'] = member_termite_select[a_k]
+			value['id_name'] = timp_k
+			value['count'] = value_isSelect[timp_k]
+			value['per'] =  '%d' % (value_isSelect[timp_k]*100/float(total_count))
+			value['isSelect'] = member_termite_select[timp_k]
 			value_list.append(value)
-		title_name = k.split('_')[1]
+		title_name = q_title.split('_')[1]
 		isShortcuts = False
 		if title_name in SHORTCUTS_TEXT.keys():
 			isShortcuts = True
-			value_list = member_termite_shortcuts[k]
+			value_list = member_termite_shortcuts[q_title]
 			title_name = SHORTCUTS_TEXT[title_name]
 		result['title'] = title_name
 		result['values'] = value_list
