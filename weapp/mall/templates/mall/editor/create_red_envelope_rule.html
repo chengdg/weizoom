@@ -274,7 +274,9 @@ $(document).ready(function(){
   }
 // 提交按钮
   $('.xa-submit').click(function(event) {
+    $(this).attr('disabled',true);
     if (!W.validate()) {
+      $(this).attr('disabled',false);
       return false;
     }
     var args = $('.xa-form').serializeObject();
@@ -292,6 +294,7 @@ $(document).ready(function(){
       },
       error: function() {
         W.showHint('error','创建红包失败！');
+        $(this).attr('disabled',false);
       }
     });
   });
