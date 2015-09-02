@@ -382,7 +382,8 @@ def get_member_follow_relations(request):
 	response.data = {
 		'items': return_follow_members_json_array,
 		'pageinfo': paginator.to_dict(pageinfo),
-		'only_fans':only_fans
+		'only_fans':only_fans,
+		'sortAttr': request.GET.get('sort_attr', '-created_at')
 	}
 	return response.get_response()
 
