@@ -174,7 +174,7 @@ class lottery_prize(resource.Resource):
 					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
 					coupon_limit = coupon_rule.limit_counts
 					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, prize_type='coupon', prize_data=couponRule_id).count()
-					if has_coupon_count >= coupon_limit:
+					if coupon_limit != -1 and has_coupon_count >= coupon_limit:
 						result = u'谢谢参与'
 						lottery_prize_type = 'no_prize'
 					else:

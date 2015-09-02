@@ -368,13 +368,6 @@ p.wui-i-start_time,p.wui-i-end_time{
 	padding: 2px;
 	position: relative;
 	background: #6F2023;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-align-items: center;
-	align-items: center;
-	-webkit-justify-content: center;
-	justify-content: center;
 }
 .wui-lotterydescription>.wui-i-body table{
 	background: #6F2023;
@@ -382,6 +375,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 	width: 243px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 17px;
 }
 .wui-lotterydescription>.wui-i-body table span{
 	background: url("/termite_static/img/component/lottery/roulette_item_icon.png") no-repeat;
