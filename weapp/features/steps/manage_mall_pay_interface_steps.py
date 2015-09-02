@@ -154,7 +154,6 @@ def step_impl(context, user):
         }
         actual.append(_actual)
 
-
     bdd_util.assert_list(expected, actual)
 
 

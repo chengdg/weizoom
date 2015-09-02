@@ -121,13 +121,7 @@ Scenario: 2 更新支付方式:货到付款
 		}]
 		"""
 	Given jobs登录系统
-	When jobs更新支付方式'货到付款'
-		"""
-		{
-			"type": "货到付款",
-			"is_active": "停用"
-		}
-		"""
+	When jobs'停用'支付方式'货到付款'
 	Then jobs能获得支付方式
 		"""
 		{
