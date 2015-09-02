@@ -25,7 +25,7 @@ Scenario: 更新邮费配置
 	1. jobs能获得更新后的邮费配置
 
 	Given jobs登录系统
-	When jobs修改'顺丰'运费配置
+		When jobs修改'顺丰'运费配置
 		"""
 		{
 			"name" : "顺丰",
@@ -93,3 +93,4 @@ Scenario: 更新邮费配置
 			}]
 		}	
 		"""
+
