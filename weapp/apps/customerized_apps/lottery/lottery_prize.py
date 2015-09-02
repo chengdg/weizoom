@@ -179,18 +179,18 @@ class lottery_prize(resource.Resource):
 					else:
 						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
 						prize_value = lottery_prize['prize_data']['name']
-						lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
+						lottery_prize_dict[temp_prize_title]['prize_count'] = int(lottery_prize_dict[temp_prize_title]['prize_count']) - 1
 				elif lottery_prize_type == 'integral':
 					#积分
 					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
 					lottery_prize_data = lottery_prize['prize_data']
-					prize_value = u'%d积分' % lottery_prize_data
-					lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
+					prize_value = u'%s积分' % lottery_prize_data
+					lottery_prize_dict[temp_prize_title]['prize_count'] = int(lottery_prize_dict[temp_prize_title]['prize_count']) - 1
 				else:
 					prize_value = lottery_prize['prize_data']
-					lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
+					lottery_prize_dict[temp_prize_title]['prize_count'] = int(lottery_prize_dict[temp_prize_title]['prize_count']) - 1
 				#更新奖品所剩数量
-				lottery.update(**lottery_prize_dict)
+				lottery.update(set__prize=lottery_prize_dict)
 				lottery.reload()
 
 		#写日志
