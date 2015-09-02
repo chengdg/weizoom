@@ -8,7 +8,7 @@
 			</h3>
 		</div>
 		<div class="modal-body" style="padding:0 20px;">
-			
+
 			<div class="form-inline">
 				<table class="xa-logTable mt10 w">
 				<div
@@ -39,13 +39,13 @@
 				<thead style="background:#c8d2e5;">
 				<tr class="">
 					<th width="180">会员</th>
-					<th width="90" class="xui-colorBlue">消费金额</th>
-					<th width="100" class="xui-colorBlue">积分</th>
+					<th width="90" class="xui-colorBlue" data-sort-attr='pay_money'>消费金额</th>
+					<th width="100" class="xui-colorBlue" data-sort-attr='integral'>积分</th>
 					<th width="100">来源</th>
 					{{if data.only_fans==0}}
 						<th width="150">推荐人</th>
 					{{/if}}
-					<th width="90" class="xui-colorBlue">时间</th>
+					<th width="90" class="xui-colorBlue" data-sort-attr='created_at'>时间</th>
 				</tr>
 				</thead>
 
@@ -98,5 +98,5 @@
 
 					</tbody>
 			</table>
-	
+
 </script>
