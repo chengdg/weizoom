@@ -888,7 +888,6 @@ class Product(models.Model):
 					"id": property.id,
 					"name": property.name,
 					"values": []}
-
 			stock_custom_model_names = []  # 无限库存或库存不为>0的custom_model_name集合
 			property_value_ids = []
 			for custom_model in self.custom_models:
@@ -936,6 +935,7 @@ class Product(models.Model):
 							continue
 						model_dict['property_values'].append({
 							"propertyId": property_id,
+							"propertyName": id2property[int(property_id)]['name'],
 							"id": property_value_id,
 							"name": id2value[int(property_value_id)].name
 						})

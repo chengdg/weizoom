@@ -149,7 +149,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@mall2 @promotion @mall.promotion @mall.webapp.promotion @mall.promotion.integral
+@mall2 @promotion @mall.promotion @mall.webapp.promotion @mall.promotion.integral 
 Scenario: 1 购买单个积分折扣商品，积分金额小于最大折扣金额
 
 	When bill访问jobs的webapp

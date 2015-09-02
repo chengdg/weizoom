@@ -229,15 +229,15 @@ Scenario: 3 批量删除限时抢购活动（包含状态为未结束的活动�
 
 
 # __author__ : "王丽" 补充在查询结果中删除活动
-@promotion @promotionFlash
+@promotion @promotionFlash @mall2
 Scenario: 4 在按"商品名称"查询的查询结果下删除限时抢购活动
 
 	Given jobs登录系统
 
-	When jobs设置限时抢购列表查询条件
+	When jobs设置查询条件
 		"""
 		{
-			"product_name":"广告语：商品0抢购",
+			"product_name":"商品0",
 			"bar_code":"",
 			"status":"全部",
 			"start_date":"",
@@ -263,12 +263,12 @@ Scenario: 4 在按"商品名称"查询的查询结果下删除限时抢购活动
 		[ ]
 		"""
 
-@promotion @promotionFlash
+@promotion @promotionFlash @mall2
 Scenario: 5 在按"商品条码"查询的查询结果下删除限时抢购活动
 
 	Given jobs登录系统
 
-	When jobs设置限时抢购列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
@@ -297,12 +297,12 @@ Scenario: 5 在按"商品条码"查询的查询结果下删除限时抢购活动
 		[ ]
 		"""
 
-@promotion @promotionFlash
+@promotion @promotionFlash @mall2
 Scenario: 6 在按"促销状态"查询的查询结果下删除限时抢购活动
 
 	Given jobs登录系统
 
-	When jobs设置限时抢购列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
@@ -349,12 +349,12 @@ Scenario: 6 在按"促销状态"查询的查询结果下删除限时抢购活动
 		}]
 		"""
 
-@promotion @promotionFlash
+@promotion @promotionFlash @mall2
 Scenario: 7 在按"活动时间"查询的查询结果下删除限时抢购活动
 
 	Given jobs登录系统
 
-	When jobs设置限时抢购列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
