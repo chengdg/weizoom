@@ -40,7 +40,7 @@ def step_impl(context, user):
     """
     url = '/mall2/pay_interface_list/'
     response = context.client.get(url)
-    print("pay_interface_list: {}".format(response.context['pay_interfaces']))
+    # print("pay_interface_list: {}".format(response.context['pay_interfaces']))
 
     expected = json.loads(context.text)
     if expected['type'] == u'微信支付':
@@ -53,9 +53,9 @@ def step_impl(context, user):
         pay_interface_type = PAY_INTERFACE_ALIPAY
 
     target_pay_interface = None
-    for pay_interface in response.context['pay_interfaces']:
-        if pay_interface.type == pay_interface_type:
-            target_pay_interface = pay_interface
+    for this_pay_interface in response.context['pay_interfaces']:
+        if this_pay_interface.type == pay_interface_type:
+            target_pay_interface = this_pay_interface
             break
 
     actual = target_pay_interface
@@ -67,13 +67,21 @@ def step_impl(context, user):
             the_key = actual_config['name']
             the_value = actual_config['value']
             configs[the_key] = the_value
-
     if actual.type == PAY_INTERFACE_WEIXIN_PAY:
         actual.type = u'微信支付'
-        actual.weixin_appid = configs[u"AppID"]
-        actual.weixin_partner_id = configs[u"合作商户ID"]
-        actual.weixin_partner_key = configs[u"合作商户密钥"]
-        actual.weixin_sign = configs[u"支付专用签名串"]
+        if configs.get(u'接口版本','v2') == 'v2':
+            actual.weixin_appid = configs[u"AppID"]
+            actual.weixin_partner_id = configs[u"合作商户ID"]
+            actual.weixin_partner_key = configs[u"合作商户密钥"]
+            actual.weixin_sign = configs[u"支付专用签名串"]
+            actual.version = configs[u"接口版本"]
+        else:
+            actual.version = configs[u"接口版本"]
+            actual.weixin_appid = configs[u"AppID"]
+            actual.app_secret = configs[u"AppSecret"]
+            actual.mch_id = configs[u"商户号MCHID"]
+            actual.api_key = configs[u'APIKEY密钥']
+            # actual.paysign_key =
     elif actual.type == PAY_INTERFACE_ALIPAY:
         actual.type = u'支付宝'
         actual.description = u'我的支付宝'
@@ -90,8 +98,8 @@ def step_impl(context, user):
     else:
         pass
 
-    print("expected: {}".format(expected))
-    print("actual: {}".format(actual))
+    # print("expected: {}".format(expected))
+    # print("actual: {}".format(actual))
 
     bdd_util.assert_dict(expected, actual)
 
@@ -137,18 +145,17 @@ def step_impl(context, user):
 
     response = context.client.get('/mall2/pay_interface_list/')
     interfaces = list(response.context['pay_interfaces'])
-    result = []
+    actual = []
     for pay_interface in interfaces:
-        if pay_interface.is_active:
-            _actual = {
-                'type': __type_to_name(pay_interface.type)
-            }
-            result.append(_actual)
 
-    print("expected: {}".format(expected))
-    print("actual: {}".format(result))
+        _actual = {
+            'type': __type_to_name(pay_interface.type),
+            'is_active': u'启用' if pay_interface.is_active else u'停用'
+        }
+        actual.append(_actual)
 
-    bdd_util.assert_list(expected, result)
+
+    bdd_util.assert_list(expected, actual)
 
 
 @given(u"{user}已添加支付方式")
@@ -169,7 +176,7 @@ def __fill_post_data(pay_interface):
     type = pay_interface['type']
     if type == u'微信支付':
         version = pay_interface.get('version', 2)
-        if version == 2:  # v2
+        if version == 2 or version == 'V2' or version == 'v2':  # v2
             data['type'] = PAY_INTERFACE_WEIXIN_PAY
             data['pay_version'] = 0
             data['app_id'] = pay_interface.get('weixin_appid', '1')
@@ -180,10 +187,10 @@ def __fill_post_data(pay_interface):
             data['type'] = PAY_INTERFACE_WEIXIN_PAY
             data['pay_version'] = 1
             data['app_id'] = pay_interface.get('weixin_appid', '11')
-            data['app_secret'] = '22'
-            data['mch_id'] = '33'  # mch_id
-            data['api_key'] = '44'  # api_key
-            data['paysign_key'] = '55'
+            data['app_secret'] = pay_interface.get('app_srcret', '22')
+            data['mch_id'] = pay_interface.get('mch_id', '33')  # mch_id
+            data['api_key'] = pay_interface.get('api_key', '44')  # api_key
+            data['paysign_key'] = pay_interface.get('paysign_key', '55')
     elif type == u'支付宝':
         data['type'] = PAY_INTERFACE_ALIPAY
         data['partner'] = pay_interface.get('partner', '1')
@@ -197,7 +204,6 @@ def __fill_post_data(pay_interface):
         data['type'] = PAY_INTERFACE_WEIZOOM_COIN
     else:
         pass
-
     return data
 
 
@@ -219,18 +225,45 @@ def step_impl(context, user, pay_interface_name):
     interface = PayInterface.objects.get(owner_id=owner_id, type=pay_interface_type)
 
     # response = context.client.get('/mall2/pay_interface/', {'id': interface.id})
-    # pay_interface = response.context['pay_interface'] # 参考pay_interface.py
+    # pay_interface = response.context['pay_interface'] # 参考pay_interface.py'
+
+    if 'is_active' in data:
+        is_enable = True if data['is_active'] == u'启用' else False
+        api_post_data = {
+            'is_enable': is_enable,
+            'id':  interface.id
+        }
+        context.client.post('/mall2/api/pay_interface/?design_mode=0&version=1', api_post_data)
+
     param = {}
     if pay_interface_type == PAY_INTERFACE_WEIXIN_PAY:
         # 微信支付
         # weixin_pay_config = pay_interface.related_config
-        param['type'] = pay_interface_type
-        param['app_id'] = data['weixin_appid']
-        param['partner_id'] = data['weixin_partner_id']
-        param['partner_key'] = data['weixin_partner_key']
-        param['paysign_key'] = data['weixin_sign']
         if 'version' in data:
-            param["pay_version"] = 0 if data['version'] == 'V2' else 1  # V3=>1
+            param["pay_version"] = 0 if data['version'] == 'v2' else 1  # V3=>1
+
+        if data.get('version', 'v2') == 'v2':
+            param['type'] = pay_interface_type
+            param['app_id'] = data.get('weixin_appid', '11')
+            param['partner_id'] = data.get('weixin_partner_id', '22')
+            param['partner_key'] = data.get('weixin_partner_key', '33')
+            param['paysign_key'] = data.get('weixin_sign', '44')
+        else:
+            param['type'] = pay_interface_type
+            param['app_id'] = data.get('weixin_appid', '11')
+            param['app_secret'] = data.get('app_secret', '22')
+            param['mch_id'] = data.get('mch_id', '33')  # mch_id
+            param['api_key'] = data.get('api_key', '44')  # api_key
+            # param['paysign_key'] = data.get('paysign_key', '55')
+
+    elif pay_interface_type == PAY_INTERFACE_ALIPAY:
+        param['type'] = pay_interface_type
+        param['key'] = data['key']
+        param['partner'] = data['partner']
+        param['ali_public_key'] = data['ali_public_key']
+        param['private_key'] = data['private_key']
+        param['seller_email'] = data['seller_email']
+
     response = context.client.post('/mall2/pay_interface/?id=%d' % interface.id, param)
 
 # 	db_pay_interface = PayInterface.objects.get(owner_id=context.webapp_owner_id, description=pay_interface_description)

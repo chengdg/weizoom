@@ -9,7 +9,7 @@ Feature:更新支付方式
 	4.切换启用/停用状态
 	"""
 
-@mall2 @mall.pay_interface @wip.pi1 @ztq1
+@mall2 @mall.pay_interface @wip.pi1
 Scenario: 1 更新支付方式:微信支付
 	Jobs更新"微信支付"后
 	1. jobs能获取更新后的微信支付
@@ -21,7 +21,7 @@ Scenario: 1 更新支付方式:微信支付
 		[{
 			"type": "微信支付",
 			"is_active": "启用",
-			"version": "V2",
+			"version": "v2",
 			"weixin_appid": "12345",
 			"weixin_partner_id": "22345",
 			"weixin_partner_key": "32345",
@@ -33,7 +33,7 @@ Scenario: 1 更新支付方式:微信支付
 		{
 			"type": "微信支付",
 			"is_active": "启用",
-			"version": "V2",
+			"version": "v2",
 			"weixin_appid": "12345",
 			"weixin_partner_id": "22345",
 			"weixin_partner_key": "32345",
@@ -46,7 +46,7 @@ Scenario: 1 更新支付方式:微信支付
 		[{
 			"type": "微信支付",
 			"is_active": "启用",
-			"version": "V2",
+			"version": "v2",
 			"weixin_appid": "1",
 			"weixin_partner_id": "2",
 			"weixin_partner_key": "3",
@@ -58,11 +58,11 @@ Scenario: 1 更新支付方式:微信支付
 		"""
 		{
 			"type": "微信支付",
-			"version": "V3",
+			"version": "v3",
 			"weixin_appid": "123450",
-			"weixin_partner_id": "223450",
-			"weixin_partner_key": "323450",
-			"weixin_sign": "423450"
+			"app_secret": "223450",
+			"mch_id": "323450",
+			"api_key": "423450"
 		}
 		"""
 	Then jobs能获得支付方式
@@ -70,11 +70,11 @@ Scenario: 1 更新支付方式:微信支付
 		{
 			"type": "微信支付",
 			"is_active": "启用",
-			"version": "V3",
+			"version": "v3",
 			"weixin_appid": "123450",
-			"weixin_partner_id": "223450",
-			"weixin_partner_key": "323450",
-			"weixin_sign": "423450"
+			"app_secret": "223450",
+			"mch_id": "323450",
+			"api_key": "423450"
 		}
 		"""
 	Given nokia登录系统
@@ -83,7 +83,7 @@ Scenario: 1 更新支付方式:微信支付
 		{
 			"type": "微信支付",
 			"is_active": "启用",
-			"version": "V2",
+			"version": "v2",
 			"weixin_appid": "1",
 			"weixin_partner_id": "2",
 			"weixin_partner_key": "3",
@@ -91,7 +91,7 @@ Scenario: 1 更新支付方式:微信支付
 		}
 		"""
 
-@mall @mall.pay_interface @ztq
+@mall2 @mall.pay_interface @ztq2
 Scenario: 2 更新支付方式:货到付款
 	Jobs更新"货到付款"后
 	1. jobs能获取更新后的货到付款
@@ -145,7 +145,7 @@ Scenario: 2 更新支付方式:货到付款
 		"""
 
 
-@mall @mall.pay_interface
+@mall @mall.pay_interface @ztq3
 Scenario: 3 更新支付方式:支付宝
 	Jobs更新"支付宝"后
 	1. jobs能获取更新后的支付宝
@@ -229,7 +229,7 @@ Scenario: 3 更新支付方式:支付宝
 		"""
 
 
-@mall @mall.pay_interface
+@mall @mall.pay_interface @ztq4
 Scenario: 4 切换启用/停用状态
 	jobs切换支付方式的启用/停用状态后，会影响webapp中"支付方式列表页面"的显示
 
