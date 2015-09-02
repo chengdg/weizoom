@@ -153,11 +153,6 @@ class lottery_prize(resource.Resource):
 					}
 					prize_tank.append(prize_item)
 
-			#收集完所有奖项的数据，打乱奖池list顺序
-			random.shuffle(prize_tank)
-			#随机抽奖
-			lottery_prize = random.choice(prize_tank)
-			lottery_prize_type = lottery_prize['prize_type']
 			#1、奖品数为0时，不中奖
 			#2、根据是否可以重复抽奖和抽到的优惠券规则判断
 			if len(prize_tank) == 0:
@@ -165,6 +160,12 @@ class lottery_prize(resource.Resource):
 			elif not allow_repeat and lottery_participance.has_prize:
 				result = u'谢谢参与'
 			else:
+				#收集完所有奖项的数据，打乱奖池list顺序
+				random.shuffle(prize_tank)
+				#随机抽奖
+				lottery_prize = random.choice(prize_tank)
+
+				lottery_prize_type = lottery_prize['prize_type']
 				temp_prize_title = result = lottery_prize['title']
 				#如果抽到的是优惠券，则获取该优惠券的配置
 				if lottery_prize_type == 'coupon':
