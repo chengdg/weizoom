@@ -211,7 +211,7 @@ Scenario:1 会员详情-传播能力
 						"share_link":"商品1",
 						"click_number":2,
 						"new_member":1,
-						"order":5
+						"order":6
 					}
 				]
 			}
