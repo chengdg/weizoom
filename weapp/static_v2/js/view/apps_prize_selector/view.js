@@ -45,7 +45,7 @@ W.view.apps.PrizeSelector = Backbone.View.extend({
 
 	onInputIntegral: function(event) {
 		var $input = $(event.currentTarget);
-		this.prize['data'] = parseInt($input.val());
+		this.prize['data'] = $input.val();
 		this.trigger('change-prize', _.deepClone(this.prize));
 	},
 

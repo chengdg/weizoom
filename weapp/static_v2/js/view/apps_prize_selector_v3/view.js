@@ -32,14 +32,7 @@ W.view.apps.PrizeSelectorV3 = Backbone.View.extend({
 		this.$('.errorHint').hide();
 		this.$('.xa-integral').val('');
 		this.$('.xa-entity').val('');
-		if (prizeType === "coupon"){
-			this.$('.coupon_div').show().css('display', 'inline');
-			this.$('.coupon_div a').show();
-
-		}
-		else{
-			this.$('[data-target="'+prizeType+'"]').show();
-		}
+		this.$('[data-target="'+prizeType+'"]').show().css('display','inline');
 
 		this.prize['type'] = prizeType;
 		this.prize['data'] = null;

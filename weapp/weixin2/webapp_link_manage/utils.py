@@ -71,12 +71,14 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'lottery',
 				'add_btn_title': '新建抽奖',
 				'add_link': '/apps/lottery/lottery/'
-			}, {
-				'name': '红包',
-				'type': 'red',
-				'add_btn_title': '新建红包',
-				'add_link': '/market_tools/red_envelope/edit/0/'
-			}, {
+			},
+			# {
+			# 	'name': '红包',
+			# 	'type': 'red',
+			# 	'add_btn_title': '新建红包',
+			# 	'add_link': '/market_tools/red_envelope/edit/0/'
+			# },
+				{
 				'name': '优惠券',
 				'type': 'coupon',
 				'add_btn_title': '新建优惠券',
@@ -96,17 +98,19 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
 				'add_link': '/apps/event/event'
-			}, {
-				'name': '趣味测试',
-				'type': 'test_game',
-				'add_btn_title': '新建趣味测试',
-				'add_link': '/market_tools/test_game/test_game/create/'
-			}, {
-				'name': '摇一摇',
-				'type': 'shake',
-				'add_btn_title': '新建摇一摇',
-				'add_link': '/market_tools/shake/edit/0/'
-			}]
+			},
+			# {
+			# 	'name': '趣味测试',
+			# 	'type': 'test_game',
+			# 	'add_btn_title': '新建趣味测试',
+			# 	'add_link': '/market_tools/test_game/test_game/create/'
+			# }, {
+			# 	'name': '摇一摇',
+			# 	'type': 'shake',
+			# 	'add_btn_title': '新建摇一摇',
+			# 	'add_link': '/market_tools/shake/edit/0/'
+			# }
+			]
 		},
 		'memberQrcode': {
 			'id': 6,

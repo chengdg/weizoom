@@ -119,18 +119,25 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			}
 		},
 		prize: function($node, model, value, $propertyViewNode) {
-			if(value && value.data){
-				var data_cid = $propertyViewNode.attr('data-dynamic-cid');
-				var $li_b = $node.find('.wui-i-settingData li[data_cid="'+data_cid+'"]').find('p');
-				if(value.type == 'coupon'){
+			var data_cid = $propertyViewNode.attr('data-dynamic-cid');
+			var $li_b = $node.find('.wui-i-settingData li[data_cid="' + data_cid + '"]').find('p');
+			if(value && value.data) {
+				if (value.type == 'coupon') {
 					$li_b.html(value.data.name);
-				}else{
-					if(value.type == 'integral'){
+				} else {
+					if (value.type == 'integral') {
 						$li_b.html(value.data + ' 积分');
-					}else if(value.type == 'entity'){
+					} else if (value.type == 'entity') {
 						$li_b.html(value.data);
 					}
 				}
+			}else{
+				if (value.type == 'integral') {
+					$li_b.html('' + ' 积分');
+				}else{
+					$li_b.html('');
+				}
+
 			}
 		}
 	}
