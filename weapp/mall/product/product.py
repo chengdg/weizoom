@@ -780,7 +780,7 @@ class ProductFilterParams(resource.Resource):
             owner = request.manager
             pos = int(request.GET.get('pos'))
             obj_bs = models.Product.objects.filter(
-                owner=owner, display_index=pos, is_deleted=False, shelve_type=models.PRODUCT_SHELVE_TYPE_ONmodels.PRODUCT_SHELVE_TYPE_ON)
+                owner=owner, display_index=pos, is_deleted=False, shelve_type=models.PRODUCT_SHELVE_TYPE_ON)
             if obj_bs.exists():
                 is_index_exists = True
 
