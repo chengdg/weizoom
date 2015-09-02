@@ -120,7 +120,7 @@
             <div class="wui-i-contentHeader xa-dialog-contentHeader"></div>
             <div class="wui-i-content xa-entity-content" style="display: none">
                 <label>手机号
-                    <input placeholder="请输入手机号码">
+                    <input type="tel" placeholder="请输入手机号码">
                 </label>
                 <button class="wui-i-dialog-btn" style="margin: 0;display: inline-block">提&nbsp;交</button>
             </div>
@@ -160,6 +160,16 @@
             this.$closeBtn = this.$el.find('.xa-closeBtn');
 
             this.$entitySubmitBtn.on('click', function(){
+                var tel = that.$entityContent.find('input').val().trim();
+                if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(tel)){
+                    $('body').alert({
+                        isShow: true,
+                        isSlide: false,
+                        info: '请输入正确的手机号~',
+                        speed: 2000
+                    });
+                    return false;
+                }
                  W.getApi().call({
                         app: 'm/apps/lottery',
                         resource: 'lottery_prize',
@@ -167,7 +177,7 @@
                         args:{
                             id: W.appRecordId,
                             webapp_owner_id: W.webappOwnerId,
-                            tel: that.$entityContent.find('input').val().trim()
+                            tel: tel
                         },
                         success: function(data){
                             that.$title.css('visibility','hidden');

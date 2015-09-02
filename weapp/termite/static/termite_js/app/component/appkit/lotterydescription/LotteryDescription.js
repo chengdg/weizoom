@@ -181,6 +181,9 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-description').html(value.replace(/\n/g,'<br>'));
 		},
+		expend: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-lotterydescription .xa-remainedIntegral strong').text(value);
+		},
 		delivery: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-prize>.xa-delivery').html(value);
 		},
