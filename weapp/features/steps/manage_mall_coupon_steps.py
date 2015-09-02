@@ -35,7 +35,7 @@ def step_impl(context, user_name):
                 coupon_promotion_type = 2
             elif context.query_param['coupon_promotion_type'] == u'全部':
                 coupon_promotion_type = -1
-            url += '&couponPromotionType=%s' % coupon_promotion_type
+            url += '&promotionType=all&couponPromotionType=%s' % coupon_promotion_type
         if context.query_param.get('start_date'):
             url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
         if context.query_param.get('end_date'):
