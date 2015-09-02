@@ -78,7 +78,7 @@ class lottery_prize(resource.Resource):
 
 		post = request.POST
 		response = create_response(500)
-		record_id = post['id']
+		record_id = post.get('id', None)
 		data = {}
 		now_datetime = datetime.today()
 		if not record_id:
@@ -88,6 +88,13 @@ class lottery_prize(resource.Resource):
 		lottery = app_models.lottery.objects.get(id=record_id)
 		if not lottery:
 			response.errMsg = u'不存在该活动或已删除'
+			return response.get_response()
+
+		#首先检查活动状态
+		status_text = lottery.status_text
+		if status_text != u'进行中':
+			response = create_response(500)
+			response.errMsg = u'参与抽奖失败，请刷新页面重试~'
 			return response.get_response()
 
 		chance = lottery.chance / 100.0 #中奖率
@@ -128,34 +135,25 @@ class lottery_prize(resource.Resource):
 		#判定是否中奖
 		lottery_prize_type = "no_prize"
 		lottery_prize_data = ''
-		#首先检查活动状态
-		status_text = lottery.status_text
-		if status_text != u'进行中':
-			response = create_response(500)
-			response.errMsg = u'参与抽奖失败，请刷新页面重试~'
-			return response.get_response()
+
 		#首位用户不中奖
 		if participants_count == 0 or (winner_count / float(participants_count) >= chance):
 			result = u'谢谢参与'
-			#根据送积分规则，查询当前用户是否已中奖
-			if delivery_setting == 'false' or not lottery_participance.has_prize:
-				member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
 		else:
 			#中奖，构造奖项池
 			prize_tank = []
-			lottery_prize_count = 0
 			lottery_prize_dict = lottery.prize
 			for _, item in lottery_prize_dict.items():
 				prize_count = int(item['prize_count'])
-				lottery_prize_count += prize_count
-				prize_item = {
-					'title': item['title'],
-					'prize_count': prize_count,
-					'prize_type': item['prize_type'],
-					'prize_data': item['prize_data']
-				}
-				if prize_count != 0:
+				for i in range(prize_count):
+					prize_item = {
+						'title': item['title'],
+						'prize_count': prize_count,
+						'prize_type': item['prize_type'],
+						'prize_data': item['prize_data']
+					}
 					prize_tank.append(prize_item)
+
 			#收集完所有奖项的数据，打乱奖池list顺序
 			random.shuffle(prize_tank)
 			#随机抽奖
@@ -163,7 +161,9 @@ class lottery_prize(resource.Resource):
 			lottery_prize_type = lottery_prize['prize_type']
 			#1、奖品数为0时，不中奖
 			#2、根据是否可以重复抽奖和抽到的优惠券规则判断
-			if lottery_prize_count == 0  or (not allow_repeat and lottery_participance.has_prize):
+			if len(prize_tank) == 0:
+				result = u'谢谢参与'
+			elif not allow_repeat and lottery_participance.has_prize:
 				result = u'谢谢参与'
 			else:
 				temp_prize_title = result = lottery_prize['title']
@@ -179,15 +179,17 @@ class lottery_prize(resource.Resource):
 					else:
 						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
 						prize_value = lottery_prize['prize_data']['name']
+						lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
 				elif lottery_prize_type == 'integral':
 					#积分
 					member.consume_integral(-int(lottery_prize['prize_data']), u'参与抽奖，抽中积分奖项')
 					lottery_prize_data = lottery_prize['prize_data']
 					prize_value = u'%d积分' % lottery_prize_data
+					lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
 				else:
 					prize_value = lottery_prize['prize_data']
+					lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
 				#更新奖品所剩数量
-				lottery_prize_dict[temp_prize_title]['prize_count'] -= 1
 				lottery.update(**lottery_prize_dict)
 				lottery.reload()
 
@@ -208,7 +210,18 @@ class lottery_prize(resource.Resource):
 
 		#抽奖后，更新数据
 		has_prize = False if result == u'谢谢参与' else True
-		lottery_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
+
+		#根据送积分规则，查询当前用户是否已中奖
+		if delivery_setting == 'false':
+			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+		elif not lottery_participance.has_prize and not has_prize:
+			member.consume_integral(-delivery, u'参与抽奖，获得参与积分')
+
+		if has_prize:
+			lottery_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
+		else:
+			lottery_participance.update(inc__total_count=1)
+
 		#根据抽奖次数限制，更新可抽奖次数
 		lottery_participance.update(dec__can_play_count=1)
 		lottery_participance.reload()
@@ -224,7 +237,6 @@ class lottery_prize(resource.Resource):
 		app_models.lottery.objects(id=record_id).update(inc__participant_count=1)
 
 		response = create_response(200)
-		print prize_value
 		response.data = {
 			'result': result,
 			'newRecord': newRecord,
