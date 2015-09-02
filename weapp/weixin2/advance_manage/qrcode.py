@@ -459,6 +459,7 @@ class Qrcode(resource.Resource):
 		reply_material_id = request.POST.get("reply_material_id", 0)
 		remark = request.POST.get("remark", '')
 		grade_id = int(request.POST.get("grade_id", -1))
+		tag_id = int(request.POST.get("tag_id", -1))
 		re_old_member = int(request.POST.get("re_old_member", 0))
 		is_bing_member = request.POST.get("is_bing_member", 0)
 		bing_member_id = int(request.POST.get("bing_member_id", 0))
@@ -484,6 +485,7 @@ class Qrcode(resource.Resource):
 				reply_material_id=reply_material_id,
 				remark=remark,
 				grade_id=grade_id,
+				tag_id=tag_id,
 				re_old_member=re_old_member,
 				is_bing_member=True if is_bing_member == "true" else False,
 			)
@@ -504,6 +506,7 @@ class Qrcode(resource.Resource):
 				reply_material_id=reply_material_id,
 				remark=remark,
 				grade_id=grade_id,
+				tag_id=tag_id,
 				re_old_member=re_old_member,
 				is_bing_member=True if is_bing_member == "true" else False,
 				bing_member_id=bing_member_id,

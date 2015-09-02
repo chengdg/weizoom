@@ -297,6 +297,7 @@
 
 			var remark = $.trim($('[name="remark"]').val());
 			var grade_id = $.trim($('[name="group_id"]').val());
+			var tag_id = $.trim($('[name="tag_id"]').val());
 			var re_old_member = $('input[name="re_old_member"]:checked').val();
 
 			if(is_bing_member){
@@ -305,6 +306,7 @@
 					setting_id: qrcode_id,
 					prize_info: prize_info,
 					grade_id: grade_id,
+					tag_id: tag_id,
 					remark: remark,
 					reply_type: replyType,
 					reply_detail: textContent,
@@ -321,6 +323,7 @@
 					setting_id: qrcode_id,
 					prize_info: prize_info,
 					grade_id: grade_id,
+					tag_id: tag_id,
 					remark: remark,
 					reply_type: replyType,
 					reply_detail: textContent,
