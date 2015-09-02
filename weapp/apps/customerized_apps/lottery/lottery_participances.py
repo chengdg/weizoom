@@ -167,7 +167,7 @@ class lotteryParticipances_Export(resource.Resource):
 
 			#from sample to get fields4excel_file
 			fields_raw.append(u'编号')
-			fields_raw.append(u'抽奖用户')
+			fields_raw.append(u'用户名')
 			fields_raw.append(u'手机号')
 			fields_raw.append(u'获奖等级')
 			fields_raw.append(u'奖品名称')
