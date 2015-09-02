@@ -37,6 +37,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         'click .xa-component': 'onClickComponent',
         'click .xa-removeImageButton': 'onClickRemoveDynamicComponentButton',
         'click .xa-protocol-deleteData':'onClickDeleteData',
+        'click .xa-lottery-deleteData': 'onClickDeleteLotteryDate',
         'mouseover .propertyGroup_property_dynamicControlField_control': 'onMouseoverField',
         'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',    
 
@@ -73,7 +74,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "richtext": _.bind(this.initRichTextView, this),
             "daterange": _.bind(this.initDateRange, this),
             "prize_selector": _.bind(this.initPrizeSelector, this),
-            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this)
+            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
+            "image_dialog_select": _.bind(this.initImage, this)
         };
 
 
@@ -643,6 +645,19 @@ W.workbench.PropertyView = Backbone.View.extend({
     },
 
     /**
+     * onClickDeleteLotteryDate: 点击.xa-deleteLotteryData的按钮后的响应函数
+     */
+    onClickDeleteLotteryDate: function(event) {
+        var $button = $(event.currentTarget);
+        $button.prev().attr('src','""');
+        $button.parents('.propertyGroup_property_input').find('button[data-target-dialog="W.dialog.termite.SelectImagesDialog"]').text('选择图片');
+        $button.parent().addClass('xui-hide');
+        this.getTargetComponent($button).model.set('image','');
+    },
+
+
+
+    /**
      * onClickSaveHtmlEditorContentButton: 点击保存html editor按钮后的响应函数
      */
     onClickSaveHtmlEditorContentButton: function(event) {
@@ -841,6 +856,15 @@ W.workbench.PropertyView = Backbone.View.extend({
             var attr = $el.attr('data-field');
             _this.getTargetComponent($el).model.set(attr, prize);
         });
+    },
+    initImage: function($el){
+        W.createWidgets($el);
+        var view = $el.find('[data-ui-role="image_dialog_select"]').data('view');
+        var _this = this;
+        view.on('change-image', function(src) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set('image','');
+        })
     },
 
     initProductsView: function($el){
