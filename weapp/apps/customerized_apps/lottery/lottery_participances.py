@@ -62,7 +62,7 @@ class lotteryParticipances(resource.Resource):
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		
-		params = {'belong_to':request.GET['id'], 'prize_type__ne': 'no_prize'}
+		params = {'belong_to':request.GET['id']}
 		if name:
 			params['member_id__in'] = member_ids
 		if start_time:
@@ -161,17 +161,17 @@ class lotteryParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			data = app_models.lottoryRecord.objects(belong_to=export_id,prize_type__ne='no_prize')
+			data = app_models.lottoryRecord.objects(belong_to=export_id)
 			fields_raw = []
 			export_data = []
 
 			#from sample to get fields4excel_file
 			fields_raw.append(u'编号')
-			fields_raw.append(u'用户名')
+			fields_raw.append(u'抽奖用户')
 			fields_raw.append(u'手机号')
 			fields_raw.append(u'获奖等级')
 			fields_raw.append(u'奖品名称')
-			fields_raw.append(u'中奖时间')
+			fields_raw.append(u'抽奖时间')
 			fields_raw.append(u'领取状态')
 
 			member_ids = [record['member_id'] for record in data ]
