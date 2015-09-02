@@ -91,7 +91,7 @@ Scenario: 1 更新支付方式:微信支付
 		}
 		"""
 
-@mall2 @mall.pay_interface @ztq2
+@mall2 @mall.pay_interface
 Scenario: 2 更新支付方式:货到付款
 	Jobs更新"货到付款"后
 	1. jobs能获取更新后的货到付款
@@ -145,7 +145,7 @@ Scenario: 2 更新支付方式:货到付款
 		"""
 
 
-@mall @mall.pay_interface @ztq3
+@mall2 @mall @mall.pay_interface
 Scenario: 3 更新支付方式:支付宝
 	Jobs更新"支付宝"后
 	1. jobs能获取更新后的支付宝
@@ -228,7 +228,7 @@ Scenario: 3 更新支付方式:支付宝
 		"""
 
 
-@mall @mall.pay_interface @ztq4
+@mall2 @mall @mall.pay_interface
 Scenario: 4 切换启用/停用状态
 	jobs切换支付方式的启用/停用状态后，会影响webapp中"支付方式列表页面"的显示
 
@@ -259,27 +259,9 @@ Scenario: 4 切换启用/停用状态
 			"is_active": "启用"
 		}]
 		"""
-	When jobs停用支付方式'微信支付'
-		"""
-		{
-			"type": "微信支付",
-			"is_active": "停用"
-		}
-		"""
-	When jobs停用支付方式'支付宝'
-		"""
-		{
-			"type": "支付宝",
-			"is_active": "停用"
-		}
-		"""
-	When jobs停用支付方式'货到付款'
-		"""
-		{
-			"type": "货到付款",
-			"is_active": "停用"
-		}
-		"""
+	When jobs'停用'支付方式'微信支付'
+	When jobs'停用'支付方式'支付宝'
+	When jobs'停用'支付方式'货到付款'
 	Then jobs能获得支付方式列表
 		"""
 		[{

@@ -227,14 +227,6 @@ def step_impl(context, user, pay_interface_name):
     # response = context.client.get('/mall2/pay_interface/', {'id': interface.id})
     # pay_interface = response.context['pay_interface'] # 参考pay_interface.py'
 
-    if 'is_active' in data:
-        is_enable = True if data['is_active'] == u'启用' else False
-        api_post_data = {
-            'is_enable': is_enable,
-            'id':  interface.id
-        }
-        context.client.post('/mall2/api/pay_interface/?design_mode=0&version=1', api_post_data)
-
     param = {}
     if pay_interface_type == PAY_INTERFACE_WEIXIN_PAY:
         # 微信支付
@@ -272,3 +264,19 @@ def step_impl(context, user, pay_interface_name):
 
 # 	url = '/mall/editor/pay_interface/update/%d/' % db_pay_interface.id
 # 	context.client.post(url, data)
+
+
+@when(u"{user}'{action}'支付方式'{pay_interface_name}'")
+def impl_step(context, user, action, pay_interface_name):
+    """
+    启用、停用支付方式
+    """
+    pay_interface_type = __name_to_type(pay_interface_name)
+    owner_id = bdd_util.get_user_id_for(user)
+    interface_id = PayInterface.objects.get(owner_id=owner_id, type=pay_interface_type).id
+    is_enable = 'true' if action == u'启用' else 'false'
+    data = {
+        'is_enable': is_enable,
+        'id': interface_id
+    }
+    context.client.post('/mall2/api/pay_interface/', data)
