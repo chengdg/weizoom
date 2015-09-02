@@ -46,7 +46,6 @@ class lottery_prize(resource.Resource):
 			'prize_name': l.prize_name,
 			'prize_title': l.prize_title
 		} for l in lotteries]
-		#获取当前用户剩余积分
 		response = create_response(200)
 		response.data.history = data
 		response.data.remained_integral = request.member.integral
