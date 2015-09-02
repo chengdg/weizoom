@@ -218,15 +218,15 @@ Scenario: 2 批量删除买赠活动（不包括未结束状态的）
 		"""
 
 # __author__ : "王丽" 补充在查询结果中删除活动
-@promotion @promotionPremium
+@promotion @promotionPremium @mall2
 Scenario: 3 在按"商品名称"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置买赠活动列表查询条件
+	When jobs设置查询条件
 		"""
 		{
-			"product_name":"活动名称:商品4买赠",
+			"product_name":"商品4",
 			"bar_code":"",
 			"status":"全部",
 			"start_date":"",
@@ -245,18 +245,18 @@ Scenario: 3 在按"商品名称"查询的查询结果下删除买赠活动
 			"actions": ["详情","删除"]
 		}]
 		"""
-	When jobs删除买赠活动'活动名称:商品4买赠'		
+	When jobs"删除"促销活动"活动名称:商品4买赠"
 	Then jobs获取买赠活动列表
 		"""
 		[]
 		"""
 
-@promotion @promotionPremium
+@promotion @promotionPremium @mall2
 Scenario: 4 在按"商品条码"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置买赠活动列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
@@ -278,18 +278,18 @@ Scenario: 4 在按"商品条码"查询的查询结果下删除买赠活动
 			"actions": ["详情","删除"]
 		}]
 		"""
-	When jobs删除买赠活动'活动名称:商品4买赠'		
+	When jobs"删除"促销活动"活动名称:商品4买赠"
 	Then jobs获取买赠活动列表
 		"""
 		[]
 		"""
 
-@promotion @promotionPremium
+@promotion @promotionPremium @mall2
 Scenario: 5 在按"促销状态"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置买赠活动列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
@@ -319,7 +319,7 @@ Scenario: 5 在按"促销状态"查询的查询结果下删除买赠活动
 			"actions": ["详情","删除"]
 		}]
 		"""
-	When jobs删除买赠活动'活动名称:商品4买赠'		
+	When jobs"删除"促销活动"活动名称:商品4买赠"		
 	Then jobs获取买赠活动列表
 		"""
 		[{
@@ -333,17 +333,17 @@ Scenario: 5 在按"促销状态"查询的查询结果下删除买赠活动
 		}]
 		"""
 		
-@promotion @promotionPremium
+@promotion @promotionPremium @mall2
 Scenario: 6 在按"活动时间"查询的查询结果下删除买赠活动
 
 	Given jobs登录系统
 
-	When jobs设置买赠活动列表查询条件
+	When jobs设置查询条件
 		"""
 		{
 			"product_name":"",
 			"bar_code":"",
-			"status":"",
+			"status":"已结束",
 			"start_date":"2天前",
 			"end_date":"今天"
 		}
@@ -368,7 +368,7 @@ Scenario: 6 在按"活动时间"查询的查询结果下删除买赠活动
 			"actions": ["详情","删除"]
 		}]
 		"""
-	When jobs删除买赠活动'活动名称:商品4买赠'		
+	When jobs"删除"促销活动"活动名称:商品4买赠"		
 	Then jobs获取买赠活动列表
 		"""
 		[{

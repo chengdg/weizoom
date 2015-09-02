@@ -63,14 +63,17 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
                 order_id = args['order_id'];
                 remark = args['remark'];
                 $el = $("li[data-order-id=" + order_id + "] table tbody");
-                if($el.find(".xa-remark").length>0)
+                if($el.find(".xa-remark").length>0){
                     $el.find(".xa-remark").html('<img src="/static_v2/img/editor/attention.jpg"> 卖家备注：'+ remark);
-                else
-                {
+                }else{
                     $el.append('<tr> <td class="xui-remark xa-remark" colspan="8"> <img src="/static_v2/img/editor/attention.jpg"> 卖家备注：'+ remark +'</td> </tr>');
                 }
-
                 $(".xa-remarkDropBox").hide();
+                if($('[data-ui-role="advanced-table"]').length > 0){
+                    $('[data-ui-role="advanced-table"]').data('view').reload();
+                }else{
+                    window.location.reload();
+                }
             },
             error: function() {
             }
@@ -89,7 +92,7 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
 	},
 
     onShow: function(options) {
-        this.$content.html($.tmpl(this.getTemplate()));
+        // this.$content.html($.tmpl(this.getTemplate()));
         this.position = options.position;
 
     	$('.modal-backdrop').css({
@@ -106,17 +109,8 @@ W.view.mall.MallOrderRemarkView = W.view.common.DropBox.extend({
     	//this.getLogisticsInfo();
         this.message = options.message;
         this.$content.html($.tmpl(this.getTemplate()));
-        $('input[name="remark"]').attr('value', this.message);
-	},
-
-    clickIsNeedLogistics: function(event){
-        var isNeedLogistics = $('[name="is_need_logistics"]:checked').val();
-        if (isNeedLogistics === '1') {
-            $('.xa-ship-detail-from').show();
-        }else{
-            $('.xa-ship-detail-from').hide();
-        }
-    }
+        $('input[name="remark"]').val(this.message);
+	}
 
 });
 

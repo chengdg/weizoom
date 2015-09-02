@@ -45,7 +45,7 @@ Background:
 
 
 @mall2 @mall @mall.webapp @mall.webapp.shopping_cart @bb1
-Scenario: 从购物车中删除商品
+Scenario:1 从购物车中删除商品
 	bill在购物车中删除商品后
 	1. bill能获得更新后的购物车
 	3. tom的购物车不受bill操作的影响

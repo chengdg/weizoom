@@ -221,9 +221,9 @@ class ProductList(resource.Resource):
             if request.manager.id == products[0].owner_id:
                 now = datetime.now()
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
                 else:
-                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
             else:
                 # 微众商城更新商户商品状态
                 products.update(weshop_status=shelve_type)
@@ -601,10 +601,27 @@ class Product(resource.Resource):
                 user_code=standard_model['user_code']
             )
         elif standard_model.get('is_deleted', None):
-            models.ProductModel.objects.filter(
+            # 多规格的情况
+            db_standard_model = models.ProductModel.objects.filter(
                 product_id=product_id,
                 name='standard'
-            ).update(is_deleted=True)
+            )
+            if not db_standard_model[0].is_deleted:
+                from mall.promotion import models as promotion_models
+                # 单规格改多规格商品
+                db_standard_model.update(is_deleted=True)
+
+                # 结束对应买赠活动 jz
+                premiumSaleIds = set(promotion_models.PremiumSaleProduct.objects.filter(
+                    product_id=db_standard_model[0].product_id).values_list('premium_sale_id', flat=True))
+                if len(premiumSaleIds) > 0:
+                    from webapp.handlers import event_handler_util
+                    promotionIds = set(promotion_models.Promotion.objects.filter(
+                        detail_id__in=premiumSaleIds, type=promotion_models.PROMOTION_TYPE_PREMIUM_SALE).values_list('id', flat=True))
+                    event_data = {
+                        "id": ','.join([str(id) for id in promotionIds])
+                    }
+                    event_handler_util.handle(event_data, 'finish_promotion')
         else:
             models.ProductModel.objects.filter(
                 product_id=product_id, name='standard'
@@ -874,7 +891,11 @@ class ProductModel(resource.Resource):
             stock_type = models.PRODUCT_STOCK_TYPE_UNLIMIT
             if model_info['stock_type'] == 'limit':
                 stock_type = models.PRODUCT_STOCK_TYPE_LIMIT
-
+            if not model_info.get('id', None):
+                # 商品没有规格的情况, 避免报错
+                response = create_response(400)
+                response.errMsg = '商品规格错误请重新编辑商品'
+                return response.get_response()
             product_model_id = model_info['id']
             stocks = model_info['stocks']
             if stock_type == models.PRODUCT_STOCK_TYPE_UNLIMIT:

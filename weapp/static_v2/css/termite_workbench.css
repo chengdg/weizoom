@@ -103,7 +103,10 @@ body {
 	z-index: 1001;
 }
 
-
+.xui-wepage-globalNavPage .xui-bottomActionBar,.xui-wepage-workbenchPage .xui-bottomActionBar{
+	position: absolute;
+	width: 995px;
+}
 
 
 

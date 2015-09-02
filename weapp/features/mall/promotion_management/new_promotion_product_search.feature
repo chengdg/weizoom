@@ -118,7 +118,7 @@ Background:
 		"""
 	When jobs失效优惠券'单品失效活动'
 
-@promotion @promotionFlash @mall2
+@promotion @promotionFlash @mall2 
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在上架列表中（不能参与限时抢购）

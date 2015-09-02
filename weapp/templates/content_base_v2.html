@@ -70,7 +70,7 @@
 					{% endif %}
 					{% if 'manage_auth'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'auth' %}class="active"{% endifequal %} href='/auth/account_help/get/' title='配置管理'>权限管理</a>
+						<a {% ifequal first_nav_name 'auth' %}class="active"{% endifequal %} href='/auth/account_help/get/' title='权限管理'>权限管理</a>
 					</li>
 					{% endif %}
 					{% if 'manage_mall_config'|satisfy_permission:request %}

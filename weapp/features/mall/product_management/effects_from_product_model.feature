@@ -149,41 +149,19 @@ Scenario: 1 删除商品规格值'S'
 		"""
 		{
 			"name": "商品1",
-			"shelve_type": "下架",
-			"is_enable_model": "不启用规格",
-			"model": {
-				"models": {
-					"standard": {
-						"price": 0.0,
-						"weight": 1.0,
-						"stock_type": "有限",
-						"stocks": 0
-					}
-				}
-			}
+			"shelve_type": "下架"
 		}
 		"""
 	And jobs能获取商品'商品4'
 		"""
 		{
 			"name": "商品4",
-			"shelve_type": "下架",
-			"is_enable_model": "不启用规格",
-			"model": {
-				"models": {
-					"standard": {
-						"price": 0.0,
-						"weight": 1.0,
-						"stock_type": "有限",
-						"stocks": 0
-					}
-				}
-			}
+			"shelve_type": "下架"
 		}
 		"""
 	And jobs能获取商品'商品5'
 		"""
-		[{
+		{
 			"name": "商品5",
 			"shelve_type": "下架",
 			"is_enable_model": "启用规格",
@@ -193,19 +171,18 @@ Scenario: 1 删除商品规格值'S'
 						"price": 10.0,
 						"weight": 1.0,
 						"stock_type": "无限"
-						},{
+					},
 					"白色 M": {
 						"price": 10.0,
 						"weight": 1.0,
 						"stock_type": "无限"
-						}
 					}
 				}
 			}
-		}]
+		}
 		"""
 
-@product @property @toSaleProduct @online_bug
+@product @property @toSaleProduct @online_bug @duhao
 Scenario: 2 删除商品规格'颜色'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
