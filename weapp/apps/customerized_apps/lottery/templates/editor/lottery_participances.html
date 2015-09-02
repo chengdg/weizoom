@@ -17,23 +17,24 @@
 			<li>您当前所在位置</li>
 			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
 			<li><a href="/apps/lottery/lotteries/">微信抽奖</a></li>
-			<li class="active">中奖详情</li>
+			<li class="active">查看结果</li>
 		</ul>
 	</div>
 	
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
-				<label class="">中奖用户：</label>
+				<label class="">用户名：</label>
 				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
 			</div>
             <div class="xui-i-item">
                 <label>奖品类型：</label>
                 <select class="" id="prize_type" name="prize_type">
-                    <option value="-1">不限</option>
+                    <option value="-1">全部</option>
                     <option value="integral">积分</option>
                     <option value="coupon">优惠券</option>
                     <option value="entity">实物</option>
+					<option value="no_prize">未中奖</option>
                 </select>
             </div>
 		</div>
@@ -70,7 +71,7 @@
             <div class="xui-i-item ml10">
                 <label>领取状态：</label>
                 <select class="" id="status" name="status">
-                    <option value="-1">不限</option>
+                    <option value="-1">全部</option>
                     <option value="0">未领取</option>
                     <option value="1">已领取</option>
                 </select>
@@ -120,11 +121,11 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>中奖用户</th>
+				<th>用户名</th>
 				<th>手机号</th>
 				<th>获奖等级</th>
 				<th>奖品名称</th>
-				<th>中奖时间</th>
+				<th>抽奖时间</th>
 				<th>领取状态</th>
 				<th>操作</th>
 			</tr>

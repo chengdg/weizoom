@@ -143,7 +143,7 @@
             //更新中奖历史
             var newRecord = data.newRecord;
             if(!$.isEmptyObject(newRecord)){
-                var new_str = "<li>" + newRecord.prize_title+ '  '+ newRecord.prize_name+'  '+newRecord.created_at;
+                var new_str = "<li>" + newRecord.prize_title+ '  '+ newRecord.prize_name+'  '+newRecord.created_at + "</li>";
                 $('.wui-i-record').find('.xa-recordData').find('p').remove();
                 $('.wui-i-record').find('.xa-recordData').prepend(new_str);
             }
@@ -319,6 +319,7 @@
         };
         Roulette.prototype.stop = function(data){
             this.retuenData = data;
+            console.log(this.retuenData.result);
             var index = this.PRIZE[this.retuenData.result];
             this.prize = parseInt(index);
         };
@@ -328,7 +329,6 @@
             if(this.prize == -1 || this.times<3){
                 if(this.speed > 50) this.speed -= 10;
             }else{
-                console.log('prize:'+this.prize+' index:'+this.index);
                 if(this.speed >= 250 && ((this.prize == 0 && this.index == 7) || this.prize == this.index)){
                     clearTimeout(this.timer);
                     this.times = 0;
@@ -354,8 +354,6 @@
     </script>
     <script type="text/javascript">
         var lottery_status, can_play_count, resultDialog, activity_status;
-        window.lottery = {};//测试用
-        console.log(W.isPC);
     if(!W.isPC){
         $(function(){
             //隐藏参与活动按钮
@@ -366,21 +364,21 @@
             lottery_status = '{{ lottery_status }}' == 'True' ? true : false;
             activity_status = '{{ activity_status }}';
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
-            window.lottery = new Roulette($container);
+            var lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
                 if(lottery.isRolling || !lottery_status || can_play_count<=0){
+                    if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
                         resultDialog.render({
                             prize_type: 'notready'
                         });
-                        return false;
                     }else if(activity_status == '已结束'){
                         resultDialog.render({
                             prize_type: 'gameover'
                         });
-                        return false;
+                    }else{
+                        resultDialog.render()
                     }
-                    if(!lottery.isRolling){} resultDialog.render();
                     return false;
                 }else{
                     W.getApi().call({
@@ -426,9 +424,9 @@
                     if(len>0){
                         var str_array = [];
                         for(var i=0;i<len;i++){
-                            str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at);
+                            str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at + "</li>");
                         }
-                        str_array = str_array.toString();
+                        str_array = str_array.toString().replace(/,/g,'');
                         $('.wui-i-record').find('.xa-recordData').html(str_array);
                     }else{
                         $('.wui-i-record').find('.xa-recordData').html('<p>还未中奖~</p>');

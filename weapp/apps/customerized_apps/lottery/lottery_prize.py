@@ -46,7 +46,6 @@ class lottery_prize(resource.Resource):
 			'prize_name': l.prize_name,
 			'prize_title': l.prize_title
 		} for l in lotteries]
-		#获取当前用户剩余积分
 		response = create_response(200)
 		response.data.history = data
 		response.data.remained_integral = request.member.integral
@@ -154,11 +153,6 @@ class lottery_prize(resource.Resource):
 					}
 					prize_tank.append(prize_item)
 
-			#收集完所有奖项的数据，打乱奖池list顺序
-			random.shuffle(prize_tank)
-			#随机抽奖
-			lottery_prize = random.choice(prize_tank)
-			lottery_prize_type = lottery_prize['prize_type']
 			#1、奖品数为0时，不中奖
 			#2、根据是否可以重复抽奖和抽到的优惠券规则判断
 			if len(prize_tank) == 0:
@@ -166,6 +160,12 @@ class lottery_prize(resource.Resource):
 			elif not allow_repeat and lottery_participance.has_prize:
 				result = u'谢谢参与'
 			else:
+				#收集完所有奖项的数据，打乱奖池list顺序
+				random.shuffle(prize_tank)
+				#随机抽奖
+				lottery_prize = random.choice(prize_tank)
+
+				lottery_prize_type = lottery_prize['prize_type']
 				temp_prize_title = result = lottery_prize['title']
 				#如果抽到的是优惠券，则获取该优惠券的配置
 				if lottery_prize_type == 'coupon':
@@ -173,9 +173,10 @@ class lottery_prize(resource.Resource):
 					lottery_prize_data = couponRule_id = lottery_prize['prize_data']['id']
 					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
 					coupon_limit = coupon_rule.limit_counts
-					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, belong_to=record_id, prize_type='coupon', prize_data=couponRule_id).count()
+					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, prize_type='coupon', prize_data=couponRule_id).count()
 					if has_coupon_count >= coupon_limit:
 						result = u'谢谢参与'
+						lottery_prize_type = 'no_prize'
 					else:
 						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
 						prize_value = lottery_prize['prize_data']['name']
