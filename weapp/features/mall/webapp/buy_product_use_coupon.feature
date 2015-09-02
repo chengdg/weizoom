@@ -1150,7 +1150,7 @@ Scenario:13 不同等级的会员购买有会员价同时使用全体券的商�
 
 # __edit__ : "王丽"
 @meberGrade @coupon @mall2
-Scenario: 13 【优惠券】-未到使用日期，不能使用
+Scenario: 14 【优惠券】-未到使用日期，不能使用
 	
 	Given jobs登录系统
 	And jobs已添加了优惠券规则
