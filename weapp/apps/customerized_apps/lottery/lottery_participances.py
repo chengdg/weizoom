@@ -152,7 +152,7 @@ class lotteryParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			data = app_models.lottoryRecord.objects(belong_to=export_id)
+			data = app_models.lottoryRecord.objects(belong_to=export_id,prize_type__ne='no_prize')
 			fields_raw = []
 			export_data = []
 
