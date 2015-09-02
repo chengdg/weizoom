@@ -57,38 +57,38 @@
                     <span class="xui-sendTargetGroup ml5 fl">会员状态({{status}})</span>
                     <span class="xui-sendTargetGroup ml5 fl">会员来源({{source}})</span>
                     {% if unit_price %}
-                        <span class="xui-sendTargetGroup ml5">平均客单价({{unit_price}})
+                        <span class="xui-sendTargetGroup ml5 fl">平均客单价({{unit_price}})
                         </span>
                     {% endif %}
                     {% if created_at %}
-                        <span class="xui-sendTargetGroup ml5">关注时间({{created_at}})
+                        <span class="xui-sendTargetGroup ml5 fl">关注时间({{created_at}})
                         </span>
                     {% endif %}
                     {% if pay_money %}
-                        <span class="xui-sendTargetGroup ml5">消费总额({{pay_money}})
+                        <span class="xui-sendTargetGroup ml5 fl">消费总额({{pay_money}})
                         </span>
                     {% endif %}
                     {% if pay_times %}
-                        <span class="xui-sendTargetGroup ml5">购买次数({{pay_times}})
+                        <span class="xui-sendTargetGroup ml5 fl">购买次数({{pay_times}})
                         </span>
                     {% endif %}
                     {% if last_pay_time %}
-                        <span class="xui-sendTargetGroup ml5">最后购买时间({{last_pay_time}})
+                        <span class="xui-sendTargetGroup ml5 fl">最后购买时间({{last_pay_time}})
                         </span>
                     {% endif %}
                     {% if integral %}
-                        <span class="xui-sendTargetGroup ml5">积分范围({{integral}})
+                        <span class="xui-sendTargetGroup ml5 fl">积分范围({{integral}})
                         </span>
                     {% endif %}
                     {% if last_message_time %}
-                        <span class="xui-sendTargetGroup ml5">最后对话时间({{last_message_time}})
+                        <span class="xui-sendTargetGroup ml5 fl">最后对话时间({{last_message_time}})
                         </span>
                     {% endif %}
 
                     <div class="hidden xa-sendMemberIds" data-send-member-ids={{member_ids_str}}></div>
                 {% else %}
                     {% for member in member_list %}
-                        <span class="xui-sendTargetNames xa-sendTargetNames ml5" data-member-id={{member.id}}>{{member.name|safe}}</span>
+                        <span class="xui-sendTargetNames xa-sendTargetNames ml5 fl" data-member-id={{member.id}}>{{member.name|safe}}</span>
                     {% endfor %}
                 {% endif %}
                 <div class="cb"></div>
