@@ -138,8 +138,22 @@ class lottery_prize(resource.Resource):
 		lottery_prize_type = "no_prize"
 		lottery_prize_data = ''
 
-		#首位用户不中奖
-		if participants_count == 0 or (winner_count / float(participants_count) >= chance):
+		#根据设定的概率，判定是否中奖
+		#首个用户单独判定
+		bingo = False
+		if participants_count == 0:
+			first_blood = [1 for _ in range(int(chance*10))]
+			for _ in range(10-len(first_blood)):
+				first_blood.append(0)
+			random.shuffle(first_blood)
+			bingo = True if random.choice(first_blood) == 1 else False
+		else:
+			bingo = True if winner_count / float(participants_count) < chance else False
+
+		if chance == 1:
+			bingo = True
+		#如果中奖，则继续判定中哪个奖项
+		if not bingo:
 			result = u'谢谢参与'
 		else:
 			#中奖，构造奖项池

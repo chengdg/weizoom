@@ -88,13 +88,14 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		}, {
 			name: 'delivery',
 			type: 'text_with_annotation',
-			displayName: '参与积分',
+			displayName: '参与送积分',
 			maxLength: 4,
-			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
+			annotation: '积分数为0时，则为不送',
+			validate: 'data-validate="require-notempty::参与送积分不能为空,,require-nonnegative::只能输入0和正整数"',
 			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
-			default: ''
+			default: '0'
 		}, {
 			name: 'delivery_setting',
 			type: 'radio',
