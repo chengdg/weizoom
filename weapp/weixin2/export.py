@@ -45,10 +45,17 @@ FIRST_NAVS = [{
     'url': '/new_weixin/menu/',
     'inner_name': 'mp_user',
     'permission': ''
-}, {
-    'name': u'百宝箱',
-    'url': '/apps/',
-    'inner_name': '',
+},
+#     {
+#     'name': u'百宝箱',
+#     'url': '/apps/lottery/lotteries/',
+#     'inner_name': 'apps',
+#     'permission': ''
+# },
+    {
+    'name': u'旧百宝箱',
+    'url': '/old_apps/',
+    'inner_name': 'old_apps',
     'permission': ''
 }]
 
@@ -229,3 +236,71 @@ def get_mpuser_second_navs(request):
         second_navs = [MPUSER_NAV]
 
     return second_navs
+
+
+
+
+#
+# 百宝箱导航信息
+#
+# APP_NAV = {
+#     'section': u'百宝箱',
+#     'navs': [
+#         {
+#             'name': "lotteries",
+# 			'title': "微信抽奖",
+# 			'url': '/apps/lottery/lotteries/',
+# 			'need_permissions': []
+#         },
+#         # {
+#         #     'name': "feedbacks",
+# 			# 'title': "用户反馈",
+# 			# 'url': '/apps/feedback/feedbacks/',
+# 			# 'need_permissions': []
+#         # },
+#          {
+#             'name': "surveies",
+# 			'title': "用户调研",
+# 			'url': '/apps/survey/surveies/',
+# 			'need_permissions': []
+#         },
+#         {
+# 			'name': "events",
+# 			'title': "活动报名",
+# 			'url': '/apps/event/events/',
+# 			'need_permissions': []
+# 		},
+#         {
+#             'name': "votes",
+# 			'title': "微信投票",
+# 			'url': '/apps/vote/votes/',
+# 			'need_permissions': []
+#         },
+#         {
+#             'name': "orderRedEnvelope",
+#             'title': u'分享红包',
+#             'url': '/apps/promotion/red_envelope_rule_list/',
+#             'need_permissions': ['manage_order_red_envelope', ]
+#         }
+#     ]
+# }
+#
+# def get_customerized_apps(request):
+#     if request.user.username == 'manager':
+#         pass
+#     else:
+#         # webapp_module_views.get_modules_page_second_navs(request)
+#         second_navs = [APP_NAV]
+#
+#     return second_navs
+# import imp
+# def get_customerized_apps(request):
+#     dirname = 'apps/customerized_apps/'
+#     apps_files = os.listdir(dirname)
+#     customerized_apps_info = []
+#     for apps_file in apps_files:
+#         if os.path.isdir(dirname+apps_file+'/'):
+#             if apps_file not in ['shengjing','shihuazhiye','weizoom_event','weshop','test1']:
+#                 fp, pathname, desc = imp.find_module('export', ['./apps/customerized_apps/'+apps_file,])
+#                 customerized_apps_info.append(imp.load_module('export', fp, pathname, desc).get_second_navs(request)[0])
+#     return customerized_apps_info

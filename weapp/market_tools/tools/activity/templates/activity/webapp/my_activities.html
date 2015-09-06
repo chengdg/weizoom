@@ -5,10 +5,11 @@
 <!-- <link type="text/css" rel="stylesheet" href="/static/css/market_tools_css/common.css"> -->
 <link rel="stylesheet" href="/markettools_static/coupon/css/idangerous.swiper.css">
 <style>
-    .wui-swiper-slide{overflow-y: auto;}
-    .xui-myActivityPage .wui-tabs a {
-        width:33.33%;
+    .xui-myActivityPage .wui-swiper-tabs a {
+        width: 50%;
     }
+    .wui-swiper-slide{overflow-y: auto;}
+
     .xui-listItem{
         background: #fff;
         border-bottom:1px solid #dfdfdf;
@@ -25,123 +26,93 @@
     a:link,a:hover,a:visited{
         color:#333;
     }
-    
+    .wui-my_activities_event,.wui-my_activities_survey,.wui-my_activities_vote,.wui-my_activities_lottery{
+        background: url(/static_v2/img/userCenterMyActivitiesSprite.png) no-repeat;
+        background-size: 135px 30px;
+        display: block;
+        height: 30px;
+        width: 32px;
+        float: left;
+    }
+    .wui-my_activities_event {
+        background-position: -33px 0;
+        width: 35px;
+    }
+    .wui-my_activities_vote {
+      background-position: -68px 0;
+    }
+    .wui-my_activities_survey {
+      background-position: 0 0;
+    }
+    .wui-my_activities_lottery {
+      background-position: -100px 0;
+    }
+    .xui-i-title .disTc {
+      font-size: 18px;
+      line-height: 30px;
+    }
+    .xui-i-title {
+      border-bottom: 1px solid #dfdfdf;
+    }
+    .xui-i-time {
+        padding-top: 15px;
+        color: #a1a1a1;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
 <div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myActivityPage wui-swiper">
         <div class="wui-swiper-tabs">
-            <a href="javascript:void(0)" class="wui-inner-active"><span class="wui-inner-tabTitle mt5 em85 c65">我的活动</span><i></i></a>
-            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">我的抽奖</span><i></i></a>
-            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">我的投票</span></a>
+            <a href="javascript:void(0)" class="wui-inner-active"><span class="wui-inner-tabTitle mt5 em85 c65">我的抽奖</span><i></i></a>
+            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">我的活动</span><i></i></a>
         </div>
         <div class="wui-swiper-container" style="margin-top:47px;">
             <div class="wui-swiper-wrapper">
-                <div class="wui-swiper-slide">
-                    {% if activities %}
-                    <ul class="xui-listItem">
-                        {% for activity in activities %}
-                        <li data-role="button" data-icon="true" class="xui-listInner pl10 pr15">
-                            <a href="{{activity.target_link}}" data-coupon-id="{{coupon.id}}">
-                                <p class="pt15 pb15 disT">
-                                    <span class="disTc pl5 em1">{{ activity.name }}</span>
-                                    <span class="mr20 em1 disTc vm ">
-                                    {% if activity.status == 1 %}
-                                    <span class="xui-text-green">已启动</span>
-                                    {% endif %}
-                                    {% if activity.status == 0 %}
-                                    已暂停
-                                    {% endif %}
-                                    {% if activity.status == 3 %}
-                                    未启动
-                                    {% endif %}
-                                    {% if activity.status == 2 %}
-                                    <span class="xui-text-red">已过期</span>
-                                    {% endif %}
-                                    </span>
-                                </p>
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <div class="error-info">
-                    您还没有参与活动
+                <div class="wui-swiper-slide" id="xa-wrapper">
+                    <div class="wui-content-slide">
+                        {% if lotteries_items %}
+                            {% for lotteries_item in lotteries_items %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl15 pr15">
+                                    <a href="{{ lotteries_item.url }}">
+                                        <div class="xui-i-title">
+                                          <i class="wui-my_activities_lottery"></i><span class="disTc pl15 em1">{{ lotteries_item.name }}</span>
+                                        </div>
+                                        <div class="xui-i-time">{{ lotteries_item.participant_time }}参加了抽奖</div>
+                                    </a>
+                                </li>
+                                </ul>
+                                {% endfor %}
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </div>
                 <div class="wui-swiper-slide">
-                    {% if lotteres %}
-                    <ul class="xui-listItem">
-                        {% for lottery_record in lotteres %}
-                        <li data-role="button" data-icon="true" class="xui-listInner pl10 pr15">
-                            <a href="{{ lottery_record.url }}">
-                                    <div>
-                                        <span class="mr5 pl5 em1">{{ lottery_record.prize_name }}</span>
-                                        <span class="c65 em1">
-                                            {% if lottery_record.prize_type == 1 %}
-                                            优惠劵{{lottery_record.prize_money}}元
+                    <div class="wui-content-slide">
+                        {% if activities_items %}
+                            {% for activities_item in activities_items %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl10 pr15">
+                                    <a href="{{ activities_item.url }}">
+                                        <div class="xui-i-title">
+                                            {% if activities_item.activity_type_name == '活动报名' %}
+                                                <i class="wui-my_activities_event"></i>
+                                            {% else %}
+                                                {% if activities_item.activity_type_name == '微信投票' %}
+                                                    <i class="wui-my_activities_vote"></i>
+                                                {% else %}
+                                                    <i class="wui-my_activities_survey"></i>
+                                                {% endif %}
                                             {% endif %}
-                                            {% if lottery_record.prize_type == 2 %}
-                                            兑换码
-                                            {% endif %}
-                                            {% if lottery_record.prize_type == 3 %}
-                                            积分{{lottery_record.prize_source}}
-                                            {% endif %}
-                                            {% if lottery_record.prize_type == 0 %}
-                                            实物奖品{{lottery_record.prize_source}}
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                    <span class="mt5 em7 pl5 pr10 c9">
-                                        {% if lottery_record.is_awarded %}
-                                        领奖日期：{{ lottery_record.awarded_at|date:'Y.m.d' }}
-                                        {% else %}
-                                        编号：{{lottery_record.prize_number}}
-                                        {% endif %}
-                                    </span>
-                                    {% if lottery_record.prize_type == 1 %}
-                                    <span class="mt5 em7 pl5 c9">
-                                        {% if lottery_record.is_awarded %}
-                                        过期日期：{{promotion.end_date|date:"Y-m-j H:i:s"}}
-                                        {% else %}
-                                        编号：{{lottery_record.prize_number}}
-                                        {% endif %}
-                                    </span>
-                                    {% endif %}
-                                </span>
-                                {% if lottery_record.prize_type == 0 %}
-                                <span class="disTc vm em9">
-                                    {% if lottery_record.is_awarded %}
-                                        已领取
-                                    {% else %}
-                                        <span class="xui-text-green">未领取</span>
-                                    {% endif %}
-                                </span>
-                                {% endif %}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <div class="error-info">
-                    您还没有奖品
+                                            <span class="disTc pl15 em1">{{ activities_item.name }}</span>
+                                        </div>
+                                        <div class="xui-i-time">{{ activities_item.participant_time }}参加了{{ activities_item.activity_type_name }}</div>
+                                    </a>
+                                </li>
+                                </ul>
+                            {% endfor %}
+                        {% endif %}
                     </div>
-                    {% endif %}
-                </div>
-                <div class="wui-swiper-slide">
-                    {% if votes %}
-                    <ul class="xui-listItem">
-                        {% for vote in votes %}
-                        <li data-role="button" data-icon="true" class="xui-listInner pl15 pr15">
-                            <a href="{{ vote.url }}" style="display:inline-block;width:85%;" class="pl5">{{ vote.name }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    您还没有参与投票
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -157,17 +128,20 @@
 {% block js %}
 <script src="/markettools_static/coupon/js/idangerous.swiper.js"></script>
 <script type="text/javascript">
+$(document).ready(function($) {
     var bodyWidth = window.document.body.clientWidth;
     var bodyHeight = window.document.body.clientHeight;
     var containerHeight = bodyHeight - 47;
-    $(".wui-swiper-container").css({'height':containerHeight,'width': bodyWidth });
+    $(".wui-swiper-container").css({'height':containerHeight,'width': '100%' });
     $(".wui-swiper-slide").css('height', containerHeight );
-    // $("body").css('overflow-y', 'hidden');
+    $("body").css('overflow-y', 'hidden');
+    var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
     var tabsSwiper = new Swiper('.wui-swiper-container',{
         speed:500,
         onSlideChangeStart: function() {
             $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
             $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
         }
     });
     $(".wui-swiper-tabs a").on('touchstart mousedown',function(e){
@@ -175,6 +149,8 @@
         $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
         $(this).addClass('wui-inner-active');
         tabsSwiper.swipeTo($(this).index());
+        myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
     });
+});
 </script>
 {% endblock %}

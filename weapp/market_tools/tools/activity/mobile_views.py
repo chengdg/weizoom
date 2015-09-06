@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 
 from models import *
 from modules.member import util as member_util
-
+import operator
 
 def _is_alert_for_iphone_version_less_6(request):
 	http_user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
@@ -217,28 +217,91 @@ def get_usage(request):
 ########################################################################
 # get_member_activites: 获取“我参与的活动”列表
 ########################################################################
-from market_tools.tools.vote.models import Vote
-from market_tools.tools.vote.mobile_views import _build_vote_link
-from market_tools.tools.lottery.models import Lottery
+from apps.customerized_apps.event import models as event_models
+from apps.customerized_apps.vote import models as vote_models
+from apps.customerized_apps.survey import models as survey_models
+from apps.customerized_apps.lottery import models as lottery_models
 
 def get_member_activites(request):
 	profile = request.user_profile
 	webapp_user = request.webapp_user
 	member = member_util.get_member(request)
+	activities_items = []
 	#活动
-	activities = Activity.get_activites(request)
-	#投票列表
-	votes = Vote.get_webapp_user_voted_votes(webapp_user)
-	#投票链接
+	events = event_models.eventParticipance.objects.filter(member_id=member.id).order_by('-created_at')
+	events_items = []
+	for event in events:
+		try:
+			event_id = event.belong_to
+			event_details = event_models.event.objects.get(id=event_id )
+			events_items.append({
+				'id': str(event_id),
+				'name': event_details.name,
+				'url': '/m/apps/event/m_event/?webapp_owner_id=%d&id=%s' % (event_details.owner_id, str(event_id)),
+				'participant_time': event.created_at.strftime('%m月%d日'),
+				'activity_type_name': u'活动报名'
+			})
+		except:
+			pass
+	#投票
+	votes = vote_models.voteParticipance.objects.filter(member_id=member.id).order_by('-created_at')
+	votes_items = []
 	for vote in votes:
-		vote.url = _build_vote_link(request, vote)
+		try:
+			vote_id = vote.belong_to
+			vote_details = vote_models.vote.objects.get(id=vote_id )
+			votes_items.append({
+				'id': str(vote_id),
+				'name': vote_details.name,
+				'url': '/m/apps/vote/m_vote/?webapp_owner_id=%d&id=%s' % (vote_details.owner_id, str(vote_id)),
+				'participant_time': vote.created_at.strftime('%m月%d日'),
+				'activity_type_name': u'微信投票'
+			})
+		except:
+			pass
+	#调研
+	surveies = survey_models.surveyParticipance.objects.filter(member_id=member.id).order_by('-created_at')
+	surveies_items = []
+	for survey in surveies:
+		try:
+			survey_id = survey.belong_to
+			survey_details = survey_models.survey.objects.get(id=survey_id )
+			surveies_items.append({
+				'id': str(survey_id),
+				'name': survey_details.name,
+				'url': '/m/apps/survey/m_survey/?webapp_owner_id=%d&id=%s' % (survey_details.owner_id, str(survey_id)),
+				'participant_time': survey.created_at.strftime('%m月%d日'),
+				'activity_type_name': u'用户调研'
+			})
+		except:
+			pass
+	#抽奖
+	lotteries = lottery_models.lottoryRecord.objects.filter(member_id=member.id).order_by('-created_at')
+	lotteries_items = []
+	for lottery in lotteries:
+		try:
+			lottery_id = lottery.belong_to
+			lottery_details = lottery_models.lottery.objects.get(id=lottery_id )
+			lotteries_items.append({
+				'id': str(lottery_id),
+				'name': lottery_details.name,
+				'url': '/m/apps/lottery/m_lottery/?webapp_owner_id=%d&id=%s' % (lottery_details.owner_id, str(lottery_id)),
+				'participant_time': lottery.created_at.strftime('%m月%d日')
+			})
+		except:
+			pass
 
-	lotteres = Lottery.get_lottery_records(request, member)
+	for events_item in events_items:
+		activities_items.append(events_item)
+	for votes_item in votes_items:
+		activities_items.append(votes_item)
+	for surveies_item in surveies_items:
+		activities_items.append(surveies_item)
+
 	c = RequestContext(request, {
 		'page_title': u'我的活动列表',
-		'activities': activities,
-		'votes': votes,
-		'lotteres': lotteres,
+		'activities_items': sorted(activities_items, key=operator.itemgetter('participant_time'), reverse=True),
+		'lotteries_items': lotteries_items,
 		'is_hide_weixin_option_menu':False
 	})
 	return render_to_response('activity/webapp/my_activities.html', c)

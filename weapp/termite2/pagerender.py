@@ -429,3 +429,5 @@ def create_mobile_page_html_content(request, page, page_component, project=None)
 	htmls.append(__render_component(request, page, page_component, project))
 
 	return '\n'.join(htmls)
+
+	

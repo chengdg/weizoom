@@ -493,6 +493,11 @@ class Member(models.Model):
 	def username(self, username):
 		self.username_hexstr = byte_to_hex(username)
 
+	@staticmethod
+	def get_by_username(username):
+		hexstr = byte_to_hex(username)
+		return list(Member.objects.filter(username_hexstr=hexstr))
+
 	@cached_property
 	def username_for_html(self):
 		if hasattr(self, '_username_for_html'):
