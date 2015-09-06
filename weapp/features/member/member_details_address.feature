@@ -24,14 +24,14 @@ Background:
 			"ship_address":"详细地址1"
 		}]
 		"""
-
+@eugeneA
 Scenario:1 添加收货地址
 
 	Given jobs登录系统
-	
-	And bill关注jobs的公众号
 
-	Then jobs获得"bill"的收货信息
+	And bill关注jobs的公众号
+	When jobs访问bill会员详情
+	Then jobs获得'bill'的收货信息
 		"""
 		[{
 			"address":"北京市 北京市 海淀区 详细地址1",
@@ -104,9 +104,8 @@ Scenario:3 删除收货地址
 		"""
 
 	Given jobs登录系统
-	
+
 	Then jobs获得"bill"的收货信息
 		"""
 		[]
 		"""
-		
