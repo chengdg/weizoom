@@ -352,10 +352,10 @@
                             $span.removeClass('checkbox-select');
                         }else{
                             $span.addClass('checkbox-select');
-
                         }
                     });
                     $('.xa-submitTermite').click(function() {
+                        alert('as');
                         if (!W.validate()) {
                             return;
                         }
@@ -443,6 +443,7 @@
                         method: 'put',
                         args: participanceData,
                         success: function(data) {
+                            alert('as2');
                             $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
                             var $button = $submitButtonContainer.find('.xa-submitTermite');
                             $button.text('您已参加过该活动');
