@@ -355,7 +355,6 @@
                         }
                     });
                     $('.xa-submitTermite').click(function() {
-                        alert('as');
                         if (!W.validate()) {
                             return;
                         }
@@ -422,6 +421,7 @@
                         if (W.permission == 'member') {
                             console.log("member");
                             if (W.isMember == true) {
+                                alert('as');
                                 getParticipance();
 
                             } else {
