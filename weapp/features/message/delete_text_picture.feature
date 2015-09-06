@@ -12,8 +12,7 @@ Background:
 			}],
 			"cover_in_the_text":"true",
 			"summary":"单条图文1文本摘要",
-			"content":"单条图文1文本内容",
-			"add_time":"2015-04-13 15:26:39"
+			"content":"单条图文1文本内容"
 		},{
 			"title":"图文2",
 			"cover": [{
@@ -21,8 +20,7 @@ Background:
 			}],
 			"cover_in_the_text":"false",
 			"summary":"单条图文2文本摘要",
-			"content":"单条图文2文本内容",
-			"add_time":"2015-04-13 16:26:39"
+			"content":"单条图文2文本内容"
 		},{
 			"title":"图文3",
 			"cover": [{
@@ -30,15 +28,13 @@ Background:
 			}],
 			"cover_in_the_text":"false",
 			"summary":"单条图文3文本摘要",
-			"jump_url":"www.baidu.com",
-			"add_time":"2015-04-13 17:26:39"
+			"jump_url":"www.baidu.com"
 		}]
 		"""
 	And jobs已添加多图文
 		"""
 		[{
-			"title":"图文4",,
-			"add_time":"2015-04-13 18:26:39"
+			"title":"图文4",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
@@ -72,33 +68,6 @@ Background:
 			}]
 		}]
 		"""
-	And jobs已发送图文
-		"""
-		[{
-			"title":"图文1",
-			"add_time":"2015-04-13 15:26:39",
-			"the_last_send_time":"2015-04-14 15:26:39"
-		}, {
-			"title":"图文2",
-			"add_time":"2015-04-13 16:26:39",
-			"the_last_send_time":"2015-04-14 16:26:39"
-		}, {
-			"title":"图文3",
-			"add_time":"2015-04-13 17:26:39",
-			"the_last_send_time":""
-		}, {
-			"title":"图文4",
-			"add_time":"2015-04-13 18:26:39",
-			"the_last_send_time":"2015-04-14 11:26:39"
-		}]
-		"""
-	and jobs已分页设置
-		"""
-		[{
-			"page_count":2
-
-		}]
-		"""
 
 Scenario:1 删除图文消息
 	jobs添加单图文和多图文后
@@ -109,26 +78,18 @@ Scenario:1 删除图文消息
 	Then jobs获得'图文管理'列表
 		"""
 		[{
-			title":"图文3",
-			"add_time":"2015-04-13 17:26:39",
-			"the_last_send_time":""
+			title":"图文3"
 		}, {
-			"title":"图文2",
-			"add_time":"2015-04-13 16:26:39",
-			"the_last_send_time":"2015-04-14 16:26:39"
+			"title":"图文2"
 		}]
 		"""
 	When jobs已删除'图文3'
 	Then jobs获得'图文管理'列表
 		"""
 		[{
-			"title":"图文2",
-			"add_time":"2015-04-13 16:26:39",
-			"the_last_send_time":"2015-04-14 16:26:39"
+			"title":"图文2"
 		}, {
-			"title":"图文1",
-			"add_time":"2015-04-13 15:26:39",
-			"the_last_send_time":"2015-04-14 15:26:39"
+			"title":"图文1"
 		}]
 		"""
 
@@ -146,21 +107,15 @@ Scenario:2 在按"图文名称"查询的查询结果下删除图文
 	Then jobs获得'图文管理'列表
 		"""
 		[{
-			"title":"图文4",
-			"add_time":"2015-04-13 18:26:39",
-			"the_last_send_time":"2015-04-14 16:26:39"
+			"title":"图文4"
 		},{
-			title":"图文3",
-			"add_time":"2015-04-13 17:26:39",
-			"the_last_send_time":""
+			title":"图文3"
 		}]
 		"""
 	When jobs已删除'图文3'
 	Then jobs获得'图文管理'列表
 		"""
 		[{
-			"title":"图文4",
-			"add_time":"2015-04-13 18:26:39",
-			"the_last_send_time":"2015-04-14 16:26:39"
+			"title":"图文4"
 		}]
 		"""
