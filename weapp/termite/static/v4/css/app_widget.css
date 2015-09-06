@@ -227,7 +227,7 @@
 .wui-textSelection .wui-i-title {
 	color: #333;
 	margin-bottom: 10px;
-	font-size: 19px;
+	font-size: 18px;
 	font-weight: bold;
 	border-left: solid 4px #1AA2F8;
 	padding-left: 10px;
@@ -240,7 +240,7 @@
 	background-color: #FFF;
 }
 .wui-textSelection .wui-i-item {
-	padding: 3px 0px;
+	padding: 6px 0px;
 	/*border-bottom: solid 1px #E5E5E5;*/
 }
 .wui-textSelection .wui-i-item:last-child {
@@ -279,11 +279,10 @@
 	display: block;
 	padding: 5px;
 	border: solid 1px transparent;
-	color: #878787;
+	color: #666;
 	vertical-align: middle;
 	width: 95%;
 }
-
 
 /** 
  *
@@ -302,7 +301,7 @@
 /*活动的图标*/
 .wui-i-time,.wui-i-prize{
 	margin-top: 5px;
-	min-height: 26px;
+	min-height: 18px;
 	/*margin-left: 30px;*/
 }
 .xui-sprite-timerange,.xui-sprite-prize{
@@ -312,13 +311,13 @@
 	width: 20px;
 	float: left;
 	background-size: 42px 15px;
-	margin: 4px 4px;
+	margin: 1px 4px;
 }
 .xui-sprite-prize {
-	background-position: -25px 1px;
+	background-position: -24px 5px;
 }
 .xui-sprite-timerange {
-  background-position: 2px 1px;
+  background-position: 2px 5px;
 }
 
 .wui-lotterydescription{
