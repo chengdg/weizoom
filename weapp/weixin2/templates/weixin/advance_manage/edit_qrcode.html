@@ -42,6 +42,17 @@
 				</select>
 					</div>
 				</div>
+				<div class="xui-row">
+					<div class="xui-i-left fl lh1">添加到分组： </div>
+					<div class="fl mt20 ml10">
+						<select class="ml10 w120" name="tag_id" id="tag_id" data-validate="require-select">
+						<option value="-1">未分组</option>
+						{% for tag in tags %}
+							<option value="{{tag.id}}"{% if qrcode.tag_id == tag.id %}selected="selected"{% endif%}>{{tag.name}}</option>
+						{% endfor %}
+						</select>
+					</div>
+				</div>
 				<div class="xui-row" style="border-bottom: none;border-top:none;">
 					<div class="xui-i-left fl lh1"> 已关注会员可参与： </div>
 					<div class=" fl mt18 ml20">
@@ -286,6 +297,7 @@
 
 			var remark = $.trim($('[name="remark"]').val());
 			var grade_id = $.trim($('[name="group_id"]').val());
+			var tag_id = $.trim($('[name="tag_id"]').val());
 			var re_old_member = $('input[name="re_old_member"]:checked').val();
 
 			if(is_bing_member){
@@ -294,6 +306,7 @@
 					setting_id: qrcode_id,
 					prize_info: prize_info,
 					grade_id: grade_id,
+					tag_id: tag_id,
 					remark: remark,
 					reply_type: replyType,
 					reply_detail: textContent,
@@ -310,6 +323,7 @@
 					setting_id: qrcode_id,
 					prize_info: prize_info,
 					grade_id: grade_id,
+					tag_id: tag_id,
 					remark: remark,
 					reply_type: replyType,
 					reply_detail: textContent,

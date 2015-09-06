@@ -350,6 +350,7 @@ def get_member_follow_relations(request):
 	member_id = request.GET.get('member_id', 0)
 	only_fans = request.GET.get('only_fans', 'false')
 	data_value = request.GET.get('data_value', None)
+	sort_attr = request.GET.get('sort_attr', '-id')
 	if only_fans == 'true':
 		only_fans = '1'
 	else:
@@ -365,6 +366,9 @@ def get_member_follow_relations(request):
 	else:
 		follow_members = MemberFollowRelation.get_follow_members_for(member_id, only_fans)
 
+	#进行排序
+	follow_members = follow_members.order_by(sort_attr)
+
 	#进行分页
 	count_per_page = int(request.GET.get('count_per_page', 10))
 	cur_page = int(request.GET.get('page', '1'))
@@ -378,7 +382,8 @@ def get_member_follow_relations(request):
 	response.data = {
 		'items': return_follow_members_json_array,
 		'pageinfo': paginator.to_dict(pageinfo),
-		'only_fans':only_fans
+		'only_fans':only_fans,
+		'sortAttr': request.GET.get('sort_attr', '-created_at')
 	}
 	return response.get_response()
 
