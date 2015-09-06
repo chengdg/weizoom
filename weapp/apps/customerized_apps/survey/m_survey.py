@@ -158,7 +158,7 @@ def get_result(id,member_id):
 	for k,v in q_survey.items():
 		a_isSelect = {}
 		result = {}
-		total_count = len(v)
+		total_count = 0
 		value_list = []
 
 		v_a = {}
@@ -171,6 +171,7 @@ def get_result(id,member_id):
 						a_isSelect[a_k] = 0
 					if a_v['isSelect'] == True:
 						a_isSelect[a_k] += 1
+						total_count += 1
 				else:
 					a_isSelect[a_k] = []
 		for a_k in sorted(v_a.keys()):
