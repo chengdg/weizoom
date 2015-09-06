@@ -5,7 +5,7 @@ Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: 直接关注单个公众号
 	bill关注jobs的公众号
 
@@ -26,7 +26,7 @@ Scenario: 直接关注单个公众号
 	And bill在jobs中的social_account与member已关联
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: 关注多个公众号，访问多个公众号的微站
 	bill先关注jobs的公众号，再关注tom的公众号
 
@@ -64,7 +64,7 @@ Scenario: 关注多个公众号，访问多个公众号的微站
 		{"sct":"sct_to_tom_in_db", "uuid":"uuid_to_tom_in_db"}
 		"""
 	
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: 会员向朋友圈分享链接
 	bill关注jobs的公众号
 
@@ -79,7 +79,7 @@ Scenario: 会员向朋友圈分享链接
 	Then bill分享的链接中的fmt为bill在tom中的mt
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: bill分享，tom关注，tom点击，tom访问webapp
 	bill关注jobs的公众号
 
@@ -110,7 +110,7 @@ Scenario: bill分享，tom关注，tom点击，tom访问webapp
 
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: bill分享，tom关注，tom访问webapp，tom点击
 	bill关注jobs的公众号
 
@@ -133,7 +133,7 @@ Scenario: bill分享，tom关注，tom访问webapp，tom点击
 		"""
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: bill分享，-tom点击，tom关注, tom访问webapp
 	bill关注jobs的公众号
 
@@ -162,7 +162,7 @@ Scenario: bill分享，-tom点击，tom关注, tom访问webapp
 	Then tom在jobs公众号中有mt对应的webapp_user
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: bill分享，-tom点击并分享，nokia关注, nokia访问webapp, nokia点击
 	bill关注jobs的公众号
 
@@ -185,7 +185,7 @@ Scenario: bill分享，-tom点击并分享，nokia关注, nokia访问webapp, nok
 	Then nokia当前链接中的fmt为nokia在jobs中的mt
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: bill分享，-tom点击并分享，nokia关注, nokia点击, nokia访问webapp
 	bill关注jobs的公众号
 
@@ -209,7 +209,7 @@ Scenario: bill分享，-tom点击并分享，nokia关注, nokia点击, nokia访�
 	Then nokia当前链接中的fmt为nokia在jobs中的mt
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: bill分享，-tom点击并分享，nokia点击, nokia关注, nokia访问webapp
 	bill关注jobs的公众号
 
@@ -233,7 +233,7 @@ Scenario: bill分享，-tom点击并分享，nokia点击, nokia关注, nokia访�
 	Then nokia当前链接中的fmt为nokia在jobs中的mt
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: 在多个会员分享公众号的链接中切换
 
 	When 清空浏览器
@@ -261,7 +261,7 @@ Scenario: 在多个会员分享公众号的链接中切换
 		"""
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: 同一个会员在不同设备上访问同一个公众号
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -273,7 +273,7 @@ Scenario: 同一个会员在不同设备上访问同一个公众号
 	Then bill在jobs公众号中有1个webapp_user
 
 
-@crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow
 Scenario: 同一个会员在不同设备上访问同一个公众号
 	When 清空浏览器
 	When bill关注jobs的公众号
