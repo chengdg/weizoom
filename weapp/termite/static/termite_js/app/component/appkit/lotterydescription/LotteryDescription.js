@@ -137,9 +137,10 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			validateIgnoreDefaultValue: true
 		}, {
 			name: 'allow_repeat',
-			type: 'radio',
+			type: 'radio_with_annotation',
 			displayName: '重复中奖',
 			isUserProperty: true,
+			annotation: '是否允许用户多次中奖',
 			source: [{
 				name: '是',
 				value: 'true'

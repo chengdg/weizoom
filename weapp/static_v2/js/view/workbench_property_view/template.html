@@ -190,6 +190,25 @@
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'radio_with_annotation')}}
+					<div class="propertyGroup_property_radioField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}</div>
+						<div class="propertyGroup_property_input">
+						{{each(fi, radio) field.source}}
+						<label style="display:inline-block;" class="xui-selectBtn {{if model.get(field.name) == radio.value}}xui-selected{{/if}}">
+							<input style="margin-top:-3px;" type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == radio.value}}checked="checked"{{/if}} value="${radio.value}" />${radio.name}
+							<i class="xui-selectedIcon" {{if model.get(field.name) != radio.value}}style="display:none;"{{/if}}></i>
+						</label>
+						{{/each}}
+						</div>
+						{{if field.annotation}}
+							<span style="color: #888;">
+								{{html field.annotation}}
+							</span>
+						{{/if}}
+					</div>
+					{{/if}}
+
 					{{if (field.type == 'boolean')}}
 					<div class="propertyGroup_property_booleanField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label">${field.displayName}</div>
