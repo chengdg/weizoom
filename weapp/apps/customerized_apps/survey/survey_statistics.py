@@ -83,7 +83,13 @@ class surveyStatistics(resource.Resource):
 					value_list.append(value)
 				title_name = k.split('_')[1]
 				result['title'] = title_name
-				result['title_type'] = u'单选' if title_type == 'radio' else u'多选'
+				if title_type == 'radio':
+					type_name = u'单选'
+				elif title_type == 'checkbox':
+					type_name = u'多选'
+				else:
+					type_name = u'问答'
+				result['title_type'] = type_name
 				result['title_'] = k
 				result['count'] = count
 				question_list = []
