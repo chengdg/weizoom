@@ -132,6 +132,12 @@ class lottery_prize(resource.Resource):
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
 
+		#如果当前可玩次数为0，则直接返回
+		if lottery_participance.can_play_count == 0:
+			response = create_response(500)
+			response.errMsg = u'您今天的抽奖机会已经用完~'
+			return response.get_response()
+
 		#扣除抽奖消耗的积分
 		member.consume_integral(expend, u'参与抽奖，消耗积分')
 		#判定是否中奖
