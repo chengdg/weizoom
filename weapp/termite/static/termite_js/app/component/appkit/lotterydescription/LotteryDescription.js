@@ -80,6 +80,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			type: 'text_with_annotation',
 			displayName: '消耗积分',
 			maxLength: 4,
+			annotation: '积分数为0时，则为不消耗',
 			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
 			validateIgnoreDefaultValue: true,
 			size: '70px',
