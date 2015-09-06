@@ -399,12 +399,12 @@
                                 type: controlType,
                                 value: value
                             };
-                        };
+                        }
                         participanceData = {
                             webapp_owner_id: W.webappOwnerId,
                             belong_to: W.appRecordId,
                             termite_data: JSON.stringify(data)
-                        }
+                        };
                         var $prizeContainer = $('.xa-prizeContainer');
                         if ($prizeContainer.length > 0) {
                             $prizeContainer = $prizeContainer.eq(0);
@@ -419,10 +419,8 @@
                         }
                         //必须关注才可以参与的活动
                         if (W.permission == 'member') {
-                            console.log("member");
                             if (W.isMember == true) {
-                                alert('as');
-                                getParticipance();
+                                getParticipance(participanceData,$submitButtonContainer);
 
                             } else {
                                 $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
@@ -431,36 +429,35 @@
                             }
                         }
                         else{
-                            getParticipance();
+                            getParticipance(participanceData,$submitButtonContainer);
                         }
 
                     });
                 }
-                function getParticipance(){
-                    W.getApi().call({
-                        app: 'm/apps/'+W.appName,
-                        resource: W.resource+'_participance',
-                        method: 'put',
-                        args: participanceData,
-                        success: function(data) {
-                            alert('as2');
-                            $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
-                            var $button = $submitButtonContainer.find('.xa-submitTermite');
-                            $button.text('您已参加过该活动');
-                            $('.xa-submitTermite').unbind('click');
-                            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
-                            },
-                        error: function(resp) {
-                            $('body').alert({
-                                isShow: true,
-                                isSlide: true,
-                                info: '参与失败，请稍后再试！',
-                                speed: 3000,
-                            });
-                        }
-                    });
-                }
             });
+            function getParticipance(participanceData,$submitButtonContainer){
+                W.getApi().call({
+                    app: 'm/apps/'+W.appName,
+                    resource: W.resource+'_participance',
+                    method: 'put',
+                    args: participanceData,
+                    success: function(data) {
+                        $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
+                        var $button = $submitButtonContainer.find('.xa-submitTermite');
+                        $button.text('您已参加过该活动');
+                        $('.xa-submitTermite').unbind('click');
+                        $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+                        },
+                    error: function(resp) {
+                        $('body').alert({
+                            isShow: true,
+                            isSlide: true,
+                            info: '参与失败，请稍后再试！',
+                            speed: 3000,
+                        });
+                    }
+                });
+            }
 
         </script>
 
