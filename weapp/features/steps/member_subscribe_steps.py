@@ -86,6 +86,7 @@ def step_impl(context, user):
 		member_item['name'] = member_item['username']
 		member_item['attention_time'] = member_item['created_at']
 		member_item['tags'] = ','.join([item['name'] for item in member_item['tags']])
+		member_item['member_rank'] = member_item['grade_name']
 		if member_item['is_subscribed']:
 			member_item['status'] = u"已关注"
 		else:
@@ -103,6 +104,7 @@ def step_impl(context, user):
 		for data in json_data:
 			if 'experience' in data:
 				del data['experience']
+		actual_data = actual_members
 	elif context.table:
 		grades_dict = {}
 		tags_dict = {}
@@ -142,18 +144,8 @@ def step_impl(context, user):
 			adict['source'] = row['source']
 			adict['tags'] = row['tags']
 			actual_data.append(adict)
-		for i in range(len(json_data)):
-			print json_data[i]['username'],"++++",actual_data[i]['username']
-		#print 'hello',json_data
-		#print 'world',actual_data
-		# print 'kitty',actual_members[7]
 
 	bdd_util.assert_list(json_data, actual_data)
-
-#用户可以获取第几页的会员列表
-# @then(u'{user}')
-# def step_impl(context, user, cur_page):
-# 	pass
 
 
 @Given(u'{webapp_owner_name}调{webapp_user_name}等级为{grade_name}')

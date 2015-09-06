@@ -267,7 +267,7 @@ Scenario: 微信用户关注公众号成为会员
 		}
 		"""
 	Given jobs登录系统
-	When jobs"完成"最新订单
+	When jobs'完成'最新订单
 	Then jobs可以获得会员列表
 		"""
 		[{
@@ -306,11 +306,11 @@ Scenario: 微信用户关注公众号成为会员
 		},{
 			"name": "bill",
 			"member_rank": "金牌会员",
-			"pay_money": 0.00,
-			"unit_price": 0.00,
+			"pay_money": 100.00,
+			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 2,
-			"pay_times": 0,
+			"pay_times": 1,
 			"source": "直接关注",
 			"tags": [],
 			"status": "已关注"
@@ -328,17 +328,17 @@ Scenario: 微信用户关注公众号成为会员
 		}
 		"""
 	Given jobs登录系统
-	When jobs"完成"最新订单
+	When jobs'完成'最新订单
 	Then jobs可以获得会员列表
 		"""
 		[{
 			"name": "tom1",
 			"member_rank": "金牌会员",
-			"pay_money": 0.00,
-			"unit_price": 0.00,
+			"pay_money": 100.00,
+			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 0,
-			"pay_times": 0,
+			"pay_times": 1,
 			"source": "直接关注",
 			"tags": [],
 			"status": "已关注"
@@ -367,11 +367,11 @@ Scenario: 微信用户关注公众号成为会员
 		},{
 			"name": "bill",
 			"member_rank": "金牌会员",
-			"pay_money": 0.00,
-			"unit_price": 0.00,
+			"pay_money": 100.00,
+			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 2,
-			"pay_times": 0,
+			"pay_times": 1,
 			"source": "直接关注",
 			"tags": [],
 			"status": "已关注"
@@ -385,11 +385,11 @@ Scenario: 微信用户关注公众号成为会员
 		[{
 			"name": "tom1",
 			"member_rank": "金牌会员",
-			"pay_money": 0.00,
-			"unit_price": 0.00,
+			"pay_money": 100.00,
+			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 0,
-			"pay_times": 0,
+			"pay_times": 1,
 			"source": "直接关注",
 			"tags": [],
 			"status": "已关注"
@@ -415,16 +415,5 @@ Scenario: 微信用户关注公众号成为会员
 			"source": "会员分享",
 			"tags": [],
 			"status": "已关注"
-		},{
-			"name": "",
-			"member_rank": "金牌会员",
-			"pay_money": 0.00,
-			"unit_price": 0.00,
-			"integral": 20,
-			"friend_count": 2,
-			"pay_times": 0,
-			"source": "直接关注",
-			"tags": [],
-			"status": "已取消"
 		}]
 		"""
