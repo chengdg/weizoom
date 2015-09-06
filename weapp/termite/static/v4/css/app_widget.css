@@ -215,6 +215,7 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 	padding: 5px;
+	color: #666;
 }
 
 
@@ -279,7 +280,8 @@
 	display: block;
 	padding: 5px;
 	border: solid 1px transparent;
-	color: #666;
+	color: #333;
+	font-size: 14px;
 	vertical-align: middle;
 	width: 95%;
 }
