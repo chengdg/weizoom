@@ -373,7 +373,7 @@
                             } else if (inputType === 'textarea') {
                                 var value = $.trim($control.find('textarea').val());
                             } else if (inputType === 'selection') {
-                                var $spans = $control.find('span[span-type="selection"');
+                                var $spans = $control.find('span[span-type="selection"]');
                                 var value = {};
                                 var selectionInputType = $spans.eq(0).attr('data-type');
                                 for (var j = 0; j < $spans.length; ++j) {
