@@ -92,7 +92,6 @@ Background:
 			| 2015-08-04   | bill     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-08-05   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
 
-@eugeneA
 Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间、）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
 
 	Given jobs登录系统
@@ -102,12 +101,10 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -118,7 +115,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		"""
 		{
 			"name":"会员姓名",
-			"member_rank":"金牌会员",
+			"grade":"金牌会员",
 			"sex":"女",
 			"phone":"15934567895",
 			"remarks":"会员备注信息"
@@ -128,19 +125,16 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"金牌会员",
+			"grade":"金牌会员",
 			"name":"会员姓名",
 			"sex":"女",
 			"phone":"15934567895",
-			"last_buy_time":"2015-08-05",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
 			"remarks":"会员备注信息"
 		}
 		"""
-
 Scenario:2 会员基本信息修改"所在分组"
 
 	Given jobs登录系统
@@ -150,12 +144,10 @@ Scenario:2 会员基本信息修改"所在分组"
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -172,12 +164,10 @@ Scenario:2 会员基本信息修改"所在分组"
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
 			"tags":["分组1", "分组3"],
 			"integral":0,
 			"friend_count":0,
@@ -194,19 +184,17 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
-			"tags":"",
+			"tags":[],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
 		}
 		"""
-	When jobs给"tom3"加积分
+	When jobs给"bill"加积分
 			"""
 			{
 				"integral":-10,
@@ -217,20 +205,18 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
 			"tags":[],
-			"integral":-10,
+			"integral": -10,
 			"friend_count":0,
 			"remarks":""
 		}
 		"""
 
-	When jobs给"tom3"加积分
+	When jobs给"bill"加积分
 			"""
 			{
 				"integral":20,
@@ -241,14 +227,12 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
 			"tags":[],
-			"integral":10,
+			"integral": 10,
 			"friend_count":0,
 			"remarks":""
 		}
@@ -257,23 +241,23 @@ Scenario:3 会员基本信息修改"调积分"
 	Then jobs获得'积分明细'列表
 		"""
 		[{
-			"date":今天,
-			"type":"管理员赠送",
+			"date":"今天",
+			"event_type":"管理员赠送",
 			"reason":"",
-			" manager":"jobs",
-			"integral":20,
-			"residual_integral":10
+			"manager":"jobs",
+			"integral_count": "20",
+			"current_integral": "10"
 		},{
-			"date":今天,
-			"type":"管理员扣减",
+			"date":"今天",
+			"event_type":"管理员扣减",
 			"reason":"jobs调整积分的原因",
-			" manager":"jobs",
-			"integral":-10,
-			"residual_integral":-10
+			"manager":"jobs",
+			"integral_count":"-10",
+			"current_integral":"-10"
 		}]
 		"""
 
-
+Scenario:4 会员基本信息好友数验证
 	#bill和tom建立好友关系
 			When bill访问jobs的webapp
 			When bill把jobs的微站链接分享到朋友圈
@@ -297,12 +281,10 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 		{
 			"member_name":"bill",
-			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
 			"tags":[],
 			"integral":0,
 			"friend_count":1,
