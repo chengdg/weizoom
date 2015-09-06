@@ -3,14 +3,14 @@ Feature: 1298 编辑(删除) 图文消息 bc
 
 Background:
 	Given jobs登录系统
-	And jobs已添加单条图文
+	And jobs已添加单图文
 		"""
 		[{
 			"title":"图文1",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"cover_in_the_text":"ture",
+			"cover_in_the_text":"true",
 			"summary":"单条图文1文本摘要",
 			"content":"单条图文1文本内容",
 			"add_time":"2015-04-13 15:26:39"
@@ -34,7 +34,7 @@ Background:
 			"add_time":"2015-04-13 17:26:39"
 		}]
 		"""
-	And jobs已添加多条图文
+	And jobs已添加多图文
 		"""
 		[{
 			"title":"图文4",,
@@ -42,7 +42,7 @@ Background:
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"cover_in_the_text":"ture",
+			"cover_in_the_text":"true",
 			#"summary":"单条图文4文本摘要",
 			"content":"单条图文4文本内容",
 			"sub": [{
@@ -50,7 +50,7 @@ Background:
 				"cover": [{
 					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 					}],
-				"cover_in_the_text":"ture",
+				"cover_in_the_text":"true",
 				#"summary":"sub单条图文1文本摘要",
 				"content":"sub单条图文1文本内容"
 			},{
