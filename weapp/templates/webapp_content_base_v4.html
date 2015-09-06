@@ -341,6 +341,19 @@
                     }
                 }
                 else{
+                    $('.selection-radio').click(function(event){
+                        var $span = $(event.currentTarget);
+                        $span.parents('ul').find('label').find('span :first').removeClass('radio-select');
+                        $span.addClass('radio-select');
+                    });
+                    $('.selection-checkbox').click(function(event){
+                        var $span = $(event.currentTarget);
+                        if ($span.hasClass('checkbox-select')){
+                            $span.removeClass('checkbox-select');
+                        }else{
+                            $span.addClass('checkbox-select');
+                        }
+                    });
                     $('.xa-submitTermite').click(function() {
                         if (!W.validate()) {
                             return;
@@ -360,16 +373,22 @@
                             } else if (inputType === 'textarea') {
                                 var value = $.trim($control.find('textarea').val());
                             } else if (inputType === 'selection') {
-                                var $inputs = $control.find('input');
+                                var $spans = $control.find('span[span-type="selection"');
                                 var value = {};
-                                var selectionInputType = $inputs.eq(0).attr('type');
-                                for (var j = 0; j < $inputs.length; ++j) {
-                                    var $input = $inputs.eq(j);
-                                    var selectionCid = $input.parents('li').eq(0).attr('data-component-cid');
+                                var selectionInputType = $spans.eq(0).attr('data-type');
+                                for (var j = 0; j < $spans.length; ++j) {
+                                    var $span = $spans.eq(j);
+                                    var selectionCid = $span.parents('li').eq(0).attr('data-component-cid');
                                     selectionCid = selectionCid.length<2 ? '0'+selectionCid : selectionCid;
-                                    var selectionInputName = $input.attr('data-input-name');
+                                    var selectionInputName = $span.attr('data-input-name');
                                     selectionInputName = selectionCid+'_'+selectionInputName;
-                                    var isSelect = $input.is(':checked');
+                                    var class_name;
+                                    if (selectionInputType === 'radio'){
+                                        class_name = 'radio-select';
+                                    }else if(selectionInputType === 'checkbox'){
+                                        class_name = 'checkbox-select';
+                                    }
+                                    var isSelect = $span.hasClass(class_name);
                                     value[selectionInputName] = {
                                         type: selectionInputType,
                                         isSelect: isSelect
@@ -380,12 +399,12 @@
                                 type: controlType,
                                 value: value
                             };
-                        };
+                        }
                         participanceData = {
                             webapp_owner_id: W.webappOwnerId,
                             belong_to: W.appRecordId,
                             termite_data: JSON.stringify(data)
-                        }
+                        };
                         var $prizeContainer = $('.xa-prizeContainer');
                         if ($prizeContainer.length > 0) {
                             $prizeContainer = $prizeContainer.eq(0);
@@ -400,9 +419,8 @@
                         }
                         //必须关注才可以参与的活动
                         if (W.permission == 'member') {
-                            console.log("member");
                             if (W.isMember == true) {
-                                getParticipance();
+                                getParticipance(participanceData,$submitButtonContainer);
 
                             } else {
                                 $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
@@ -411,35 +429,35 @@
                             }
                         }
                         else{
-                            getParticipance();
+                            getParticipance(participanceData,$submitButtonContainer);
                         }
 
                     });
                 }
-                function getParticipance(){
-                    W.getApi().call({
-                        app: 'm/apps/'+W.appName,
-                        resource: W.resource+'_participance',
-                        method: 'put',
-                        args: participanceData,
-                        success: function(data) {
-                            $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
-                            var $button = $submitButtonContainer.find('.xa-submitTermite');
-                            $button.text('您已参加过该活动');
-                            $('.xa-submitTermite').unbind('click');
-                            $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
-                            },
-                        error: function(resp) {
-                            $('body').alert({
-                                isShow: true,
-                                isSlide: true,
-                                info: '参与失败，请稍后再试！',
-                                speed: 3000,
-                            });
-                        }
-                    });
-                }
             });
+            function getParticipance(participanceData,$submitButtonContainer){
+                W.getApi().call({
+                    app: 'm/apps/'+W.appName,
+                    resource: W.resource+'_participance',
+                    method: 'put',
+                    args: participanceData,
+                    success: function(data) {
+                        $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
+                        var $button = $submitButtonContainer.find('.xa-submitTermite');
+                        $button.text('您已参加过该活动');
+                        $('.xa-submitTermite').unbind('click');
+                        $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
+                        },
+                    error: function(resp) {
+                        $('body').alert({
+                            isShow: true,
+                            isSlide: true,
+                            info: '参与失败，请稍后再试！',
+                            speed: 3000,
+                        });
+                    }
+                });
+            }
 
         </script>
 

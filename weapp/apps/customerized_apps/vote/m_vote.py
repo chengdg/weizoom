@@ -161,7 +161,10 @@ def get_result(id,member_id):
 		value = member_vote_termite[k]
 		if value['type'] == 'appkit.selection':
 			for select,isSelect in value['value'].items():
-				member_termite_select[select] = isSelect['isSelect']
+				member_termite_select[select] = {
+					'isSelect': isSelect['isSelect'],
+					'type': isSelect['type']
+				}
 		if value['type'] == 'appkit.shortcuts':
 			member_termite_shortcuts[k] = value['value']
 	questions =OrderedDict()
@@ -202,7 +205,8 @@ def get_result(id,member_id):
 			value['id_name'] = timp_k
 			value['count'] = value_isSelect[timp_k]
 			value['per'] =  '%d' % (value_isSelect[timp_k]*100/float(total_count))
-			value['isSelect'] = member_termite_select[timp_k]
+			value['isSelect'] = member_termite_select[timp_k]['isSelect']
+			value['type'] = member_termite_select[timp_k]['type']
 			value_list.append(value)
 		title_name = q_title.split('_')[1]
 		isShortcuts = False

@@ -112,6 +112,29 @@ W.ValidaterClass = function() {
             },
             errorHint: ''
         },
+        'require-select-span': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                var el_type =  element.find('label').find('span :first').attr('data-type');
+                var selectedspan = false;
+                var span = element.find('label').find('span :first');
+                var class_name;
+                if (el_type === 'radio'){
+                    class_name = 'radio-select';
+                }
+                if (el_type === 'checkbox'){
+                    class_name = 'checkbox-select';
+                }
+                for (var i=0;i<span.length;i++){
+                    if (span.hasClass(class_name)){
+                        selectedspan = true;
+                    }
+                }
+                return selectedspan;
+            },
+            errorHint: ''
+        },
         'require-select': {
             type: 'function',
             extract: 'value',

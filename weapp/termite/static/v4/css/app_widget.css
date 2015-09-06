@@ -542,3 +542,23 @@ p.wui-i-start_time,p.wui-i-end_time{
 	top: 70px;
 	left: 5px;
 }
+.selection-radio{
+	background: url("/termite_static/img/radio.png") no-repeat;
+	background-size: 70%;
+    width: 30px;
+    height: 22px;
+	position: absolute;
+}
+.radio-select{
+	background-position: 0 -48px;
+}
+.selection-checkbox{
+	background: url("/termite_static/img/checkbox.png") no-repeat;
+	background-size: 70%;
+    width: 30px;
+    height: 22px;
+	position: absolute;
+}
+.checkbox-select{
+	background-position: 0 -34px;
+}
