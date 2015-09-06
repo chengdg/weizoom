@@ -77,14 +77,12 @@ class surveyStatistics(resource.Resource):
 				for a_k in sorted(v_a.keys()):
 					value ={}
 					value['name'] = a_k.split('_')[1]
-					print v_a[a_k]['type'],"type"
 					title_type =  v_a[a_k]['type']
 					value['count'] = a_isSelect[a_k]
 					value['per'] =  '%d%s' % (a_isSelect[a_k]*100/float(total_count),'%')
 					value_list.append(value)
 				title_name = k.split('_')[1]
 				result['title'] = title_name
-				print title_type,"title_type"
 				result['title_type'] = u'单选' if title_type == 'radio' else u'多选'
 				result['title_'] = k
 				result['count'] = count
