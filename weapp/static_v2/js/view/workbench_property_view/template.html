@@ -91,7 +91,7 @@
 					{{/if}}
 
 					{{if (field.type == 'slider')}}
-					<div class="propertyGroup_property_sliderField propertyGroup_property_horizontalField mt10">
+					<div class="propertyGroup_property_sliderField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}：</div>
 						<div class="propertyGroup_property_input xui-progress-bar mr15">
 							<input type="text" class="input-small xui-propertyGroup-input xa-progress-bar" data-field="${field.name}" value="${model.get(field.name)}" placeholder="${field.placeholder}" {{if field.validate}}data-validate="${field.validate}"{{/if}} />
@@ -101,7 +101,7 @@
 					{{/if}}
 
 					{{if (field.type == 'date_range_selector')}}
-					<div class="propertyGroup_property_dateRangeSelectorField propertyGroup_property_horizontalField mt10">
+					<div class="propertyGroup_property_dateRangeSelectorField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="daterange">
 							<input 
@@ -148,7 +148,7 @@
 					{{/if}}
 
 					{{if (field.type == 'prize_selector')}}
-					<div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField mt10">
+					<div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="prize_selector" data-field="${field.name}">
 							<div 
@@ -187,6 +187,25 @@
 						</label>
 						{{/each}}
 						</div>
+					</div>
+					{{/if}}
+
+					{{if (field.type == 'radio_with_annotation')}}
+					<div class="propertyGroup_property_radioField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label">${field.displayName}</div>
+						<div class="propertyGroup_property_input">
+						{{each(fi, radio) field.source}}
+						<label style="display:inline-block;" class="xui-selectBtn {{if model.get(field.name) == radio.value}}xui-selected{{/if}}">
+							<input style="margin-top:-3px;" type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == radio.value}}checked="checked"{{/if}} value="${radio.value}" />${radio.name}
+							<i class="xui-selectedIcon" {{if model.get(field.name) != radio.value}}style="display:none;"{{/if}}></i>
+						</label>
+						{{/each}}
+						</div>
+						{{if field.annotation}}
+							<span style="color: #888;">
+								{{html field.annotation}}
+							</span>
+						{{/if}}
 					</div>
 					{{/if}}
 

@@ -5,6 +5,9 @@
 
 {% block css %}
     <style>
+        .propertyGroup_property {
+          min-height: 35px;
+        }
         .propertyGroup_property_dialogSelectField{
             margin-top: 10px;
         }
@@ -18,7 +21,7 @@
           margin-right: 7px;
           line-height: 24px;
           text-align: right;
-          width: 60px;
+          width: 67px;
         }
         .propertyGroup_property_input {
             display: inline-block;
@@ -37,6 +40,9 @@
         }
         input[value*='等奖']{
             border: none;
+        }
+        .propertyGroup_property_horizontalField .propertyGroup_property_label {
+            width: 67px;
         }
     </style>
 {% endblock %}
@@ -148,7 +154,7 @@
     $(document).ready(function() {
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
-      
+
       $('#leftPanel').css('min-height' ,height+ 'px');
       $('#workbench').css('min-height' ,height+ 'px');
       $(window).bind('beforeunload', function() {
