@@ -36,20 +36,23 @@ class lottery_prize(resource.Resource):
 		"""
 		响应GET
 		"""
-		lottery_id = request.GET['id']
-		member_id = request.member.id
-		all_prize_type_list = ['integral', 'coupon', 'entity']
-		lotteries = app_models.lottoryRecord.objects(belong_to=lottery_id, member_id=member_id, prize_type__in=all_prize_type_list)
+		if request.member:
+			member_id = request.member.id
+			lottery_id = request.GET['id']
+			all_prize_type_list = ['integral', 'coupon', 'entity']
+			lotteries = app_models.lottoryRecord.objects(belong_to=lottery_id, member_id=member_id, prize_type__in=all_prize_type_list)
 
-		data = [{
-			'created_at': l.created_at.strftime('%Y-%m-%d'),
-			'prize_name': l.prize_name,
-			'prize_title': l.prize_title
-		} for l in lotteries]
-		response = create_response(200)
-		response.data.history = data
-		response.data.remained_integral = request.member.integral
-
+			data = [{
+				'created_at': l.created_at.strftime('%Y-%m-%d'),
+				'prize_name': l.prize_name,
+				'prize_title': l.prize_title
+			} for l in lotteries]
+			response = create_response(200)
+			response.data.history = data
+			response.data.remained_integral = request.member.integral
+		else:
+			response = create_response(500)
+			response.errMsg = u'会员信息出错'
 		return response.get_response()
 
 	def api_post(request):
