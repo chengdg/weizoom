@@ -34,12 +34,12 @@
 >
 	{% if component.parent_component.model.type == 'single' %}
 	<label for="radio_item_{{component.cid}}" style="display:block; padding: 3px 0px;">
-		<span id="radio_item_{{component.cid}}" name="radio_{{component.parent_component.cid}}" data-type="radio"  class="selection-radio" data-input-name="{{ component.model.title }}"></span><span class="ml5 xa-itemTitle" style="margin-left: 34px!important;">{{ component.model.title }}</span>
+		<span id="radio_item_{{component.cid}}" name="radio_{{component.parent_component.cid}}" data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{ component.model.title }}"></span><span class="ml5 xa-itemTitle" style="margin-left: 34px!important;">{{ component.model.title }}</span>
 {#		<input  type="radio" name="radio_{{component.parent_component.cid}}" "/><span class="ml5 xa-itemTitle">{{ component.model.title }}</span>#}
 	</label>
 	{% else %}
 	<label for="checkbox_item_{{component.cid}}" style="display:block; padding: 3px 0px;">
-		<span id="checkbox_item_{{component.cid}}" name="checkbox_{{component.parent_component.cid}}" data-type="checkbox"  class="selection-checkbox" data-input-name="{{ component.model.title }}"></span><span class="ml5 xa-itemTitle" style="margin-left: 34px!important;">{{ component.model.title }}</span>
+		<span id="checkbox_item_{{component.cid}}" name="checkbox_{{component.parent_component.cid}}" data-type="checkbox" span-type="selection"  class="selection-checkbox" data-input-name="{{ component.model.title }}"></span><span class="ml5 xa-itemTitle" style="margin-left: 34px!important;">{{ component.model.title }}</span>
 {#		<input id="checkbox_item_{{component.cid}}" type="checkbox" name="checkbox_{{component.cid}}" data-input-name="{{ component.model.title }}"/><span class="ml5 xa-itemTitle">{{ component.model.title }}</span>#}
 	</label>
 	{% endif %}
