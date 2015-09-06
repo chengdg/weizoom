@@ -47,7 +47,7 @@ body.ui-overlay-x .ui-page.xui-egg-page{
     overflow:hidden;
 }
 .xui-content-layer .xui-content-layer-content{
-    color:#400001;
+    color:#fff;
     line-height:25px;
     font-size: 0.9em;
     padding:5px 0;
@@ -59,7 +59,12 @@ body.ui-overlay-x .ui-page.xui-egg-page{
     padding:10px;
     margin-top:10px;
 }
-
+.xui-content-layer-content.rawHtml > p ,.xui-content-layer-content > p{
+    color: #fff;
+}
+.zoom {
+    color: #fff;
+}
 
 /*积分层*/
 .xui-integral-content{
