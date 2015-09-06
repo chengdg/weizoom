@@ -356,8 +356,8 @@
                     });
                     $('.xa-submitTermite').click(function() {
                         alert('click');
+                        alert(W.validate());
                         if (!W.validate()) {
-                            alert(W.validate());
                             return;
                         }
                         var data = {};
