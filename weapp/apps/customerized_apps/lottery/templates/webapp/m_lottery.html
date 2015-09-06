@@ -34,10 +34,10 @@
     }
     @media only screen and (min-height: 480px){
         .wui-resultDialog{
-            height: 260px;
+            height: 280px;
         }
     }
-    @media screen and (max-height: 480px){
+    @media screen and (max-height: 480px) and (max-width: 280px){
         .wui-resultDialog{
             height: 62%;
         }
@@ -251,7 +251,7 @@
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
                 this.$title.html('中奖了耶');
                 var msg = prize_type == 'coupon' ? ('一张优惠券：'+prize_name): prize_name;
-                this.$contentHeader.html("恭喜您获得了"+msg+"！快去个人中心查看吧！");
+                this.$contentHeader.html("恭喜您获得了<br>"+msg+"！<br>快去个人中心查看吧！");
                 this.$userCenter.show();
                 this.$closeBtn.show();
             }else if(prize_type == 'gameover'){
