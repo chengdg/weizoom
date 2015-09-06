@@ -57,7 +57,7 @@
         </div>
         {% for title in titles %}
             <div class="xui-i-tableHeader">
-                <span>{{ forloop.counter }}、{{ title.title_name }}</span>
+                <span>{{ forloop.counter }}、{{ title.title_name }}({{ title.type }})</span>
                 <span class="fr">有效参与人数:{{ title.title_valid_count }} 人</span>
             </div>
             <table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder mb10">
