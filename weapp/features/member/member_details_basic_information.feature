@@ -82,15 +82,15 @@ Background:
 
 	#微信用户批量下订单
 		When 微信用户批量消费jobs的商品
-			| date         | consumer | type      |businessman|   product | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action       |  order_status   |
-			| 2015-06-01   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      | 		 |        | 110         |              | 110    | 0      | 0    | jobs,支付         |  待发货         |
-			| 2015-06-02   | bill     |    购买   | jobs      | 商品2,2   | 未支付  | 支付宝         | 15      | 100      |          |        | 0           |              | 0      | 0      | 0    | jobs,取消         |  已取消         |
-			| 2015-06-03   | bill     |    购买   | jobs      | 商品2,2   | 支付    | 支付宝         | 15      | 100      |          |        | 215         |              | 215    | 0      | 0    | jobs,发货         |  已发货         |
-			| 2015-06-04   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 微信支付       | 10      | 100      |          |        | 110         |              | 0      | 110    | 0    | jobs,完成         |  已完成         |
-			| 2015-07-01   | bill     |    购买   | jobs      | 商品1,1   | 未支付  | 微信支付       | 10      | 100      |          |        | 0           |              | 0      | 0      | 0    | jobs,无操作       |  未支付         |
-			| 2015-07-02   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 货到付款       | 10      | 100      |          |        | 110         |              | 0      | 0      | 110  | jobs,完成         |  已完成         |
-			| 2015-08-04   | bill     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
-			| 2015-08-05   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
+			| date         | consumer | type      |businessman|   product | payment | payment_time | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action       |  order_status   |
+			| 2015-06-01   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 2015-06-02   | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,支付         |  待发货         |
+			| 2015-06-02   | bill     |    购买   | jobs      | 商品2,2   | 未支付  |              | 支付宝         | 15      | 100      |          |        | 0           |              | 0      | 0      | 0    | jobs,取消         |  已取消         |
+			| 2015-06-03   | bill     |    购买   | jobs      | 商品2,2   | 支付    | 2015-06-04   | 支付宝         | 15      | 100      |          |        | 215         |              | 215    | 0      | 0    | jobs,发货         |  已发货         |
+			| 2015-06-04   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 2015-06-05   | 微信支付       | 10      | 100      |          |        | 110         |              | 0      | 110    | 0    | jobs,完成         |  已完成         |
+			| 2015-07-01   | bill     |    购买   | jobs      | 商品1,1   | 未支付  | 2015-07-02   | 微信支付       | 10      | 100      |          |        | 0           |              | 0      | 0      | 0    | jobs,无操作       |  未支付         |
+			| 2015-07-02   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 2015-07-03   | 货到付款       | 10      | 100      |          |        | 110         |              | 0      | 0      | 110  | jobs,完成         |  已完成         |
+			| 2015-08-04   | bill     |    购买   | jobs      | 商品2,1   | 支付    | 2015-08-05   | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
+			| 2015-08-05   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 2015-08-06   | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
 
 Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间、）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
 
@@ -101,10 +101,12 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
+			"last_buy_time":"2015-08-06",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -125,16 +127,19 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"金牌会员",
 			"name":"会员姓名",
 			"sex":"女",
 			"phone":"15934567895",
+			"last_buy_time":"2015-08-06",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
 			"remarks":"会员备注信息"
 		}
 		"""
+
 Scenario:2 会员基本信息修改"所在分组"
 
 	Given jobs登录系统
@@ -144,10 +149,12 @@ Scenario:2 会员基本信息修改"所在分组"
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
+			"last_buy_time":"2015-08-06",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -164,10 +171,12 @@ Scenario:2 会员基本信息修改"所在分组"
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
+			"last_buy_time":"2015-08-06",
 			"tags":["分组1", "分组3"],
 			"integral":0,
 			"friend_count":0,
@@ -184,10 +193,12 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
+			"last_buy_time":"2015-08-06",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -205,10 +216,12 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
+			"last_buy_time":"2015-08-06",
 			"tags":[],
 			"integral": -10,
 			"friend_count":0,
@@ -227,10 +240,12 @@ Scenario:3 会员基本信息修改"调积分"
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
+			"last_buy_time":"2015-08-06",
 			"tags":[],
 			"integral": 10,
 			"friend_count":0,
@@ -281,10 +296,12 @@ Scenario:4 会员基本信息好友数验证
 		"""
 		{
 			"member_name":"bill",
+			"attention_time":"2015-05-20",
 			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
+			"last_buy_time":"2015-08-06",
 			"tags":[],
 			"integral":0,
 			"friend_count":1,
