@@ -85,7 +85,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
-			default: ''
+			default: '0'
 		}, {
 			name: 'delivery',
 			type: 'text_with_annotation',
