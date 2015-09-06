@@ -80,7 +80,7 @@ Scenario: 1 添加单条图文
 		}
 		"""
 	Given bill登录系统
-	Then bill能获取图文
+	Then bill能获取图文管理列表
 		"""
 		[]
 		"""

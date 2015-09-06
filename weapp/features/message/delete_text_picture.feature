@@ -74,8 +74,8 @@ Scenario:1 删除图文消息
 	1. jobs 删除1条图文消息 还有3条
 	2. jobs又删除1条图文消息 还有2条
 
-	When jobs已删除'图文4'
-	Then jobs获得'图文管理'列表
+	When jobs已删除图文'图文4'
+	Then jobs能获取图文管理列表
 		"""
 		[{
 			title":"图文3"
@@ -83,8 +83,8 @@ Scenario:1 删除图文消息
 			"title":"图文2"
 		}]
 		"""
-	When jobs已删除'图文3'
-	Then jobs获得'图文管理'列表
+	When jobs已删除图文'图文3'
+	Then jobs能获取图文管理列表
 		"""
 		[{
 			"title":"图文2"
@@ -104,7 +104,7 @@ Scenario:2 在按"图文名称"查询的查询结果下删除图文
 			"title":"图文3"
 		}
 		"""
-	Then jobs获得'图文管理'列表
+	Then jobs能获取图文管理列表
 		"""
 		[{
 			"title":"图文4"
@@ -112,8 +112,8 @@ Scenario:2 在按"图文名称"查询的查询结果下删除图文
 			title":"图文3"
 		}]
 		"""
-	When jobs已删除'图文3'
-	Then jobs获得'图文管理'列表
+	When jobs已删除图文'图文3'
+	Then jobs能获取图文管理列表
 		"""
 		[{
 			"title":"图文4"
