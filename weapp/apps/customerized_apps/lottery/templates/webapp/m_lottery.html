@@ -29,9 +29,18 @@
         top: 20%;
         left: 5%;
         width: 90%;
-        height: 55%;
         border-radius: 5px;
         z-index: 1;
+    }
+    @media only screen and (min-height: 480px){
+        .wui-resultDialog{
+            height: 260px;
+        }
+    }
+    @media screen and (max-height: 480px){
+        .wui-resultDialog{
+            height: 62%;
+        }
     }
     .wui-resultDialog>.wui-i-header>.wui-i-title{
         margin-top: 30px;
