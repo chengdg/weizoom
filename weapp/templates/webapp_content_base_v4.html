@@ -376,10 +376,12 @@
                                 var value = $.trim($control.find('textarea').val());
                             } else if (inputType === 'selection') {
                                 var $spans = $control.find('span[span-type="selection"');
+                                alert($spans);
                                 var value = {};
                                 var selectionInputType = $spans.eq(0).attr('data-type');
                                 for (var j = 0; j < $spans.length; ++j) {
                                     var $span = $spans.eq(j);
+                                    alert($span);
                                     var selectionCid = $span.parents('li').eq(0).attr('data-component-cid');
                                     selectionCid = selectionCid.length<2 ? '0'+selectionCid : selectionCid;
                                     var selectionInputName = $span.attr('data-input-name');
@@ -391,6 +393,7 @@
                                         class_name = 'checkbox-select';
                                     }
                                     var isSelect = $span.hasClass(class_name);
+                                    alert(selectionInputName,selectionInputType,isSelect);
                                     value[selectionInputName] = {
                                         type: selectionInputType,
                                         isSelect: isSelect
