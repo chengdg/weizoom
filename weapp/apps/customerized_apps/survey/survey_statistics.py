@@ -53,7 +53,6 @@ class surveyStatistics(resource.Resource):
 							q_vote[k] = {
 								'type': 'appkit.qa',
 								'value': [value['value']],
-
 							}
 						else:
 							q_vote[k]['value'].append(value['value'])
@@ -61,7 +60,7 @@ class surveyStatistics(resource.Resource):
 			for k,v in q_vote.items():
 				a_isSelect = {}
 				result = {}
-				count = len(v['value'])
+				count = 0
 				value_list = []
 				v_a = {}
 				for title_value in v['value']:
@@ -72,6 +71,7 @@ class surveyStatistics(resource.Resource):
 								a_isSelect[a_k] = 0
 							if a_v['isSelect'] == True:
 								a_isSelect[a_k] += 1
+								count += 1
 				for a_k in sorted(v_a.keys()):
 					value ={}
 					value['name'] = a_k.split('_')[1]
@@ -83,10 +83,6 @@ class surveyStatistics(resource.Resource):
 				result['title_'] = k
 				result['count'] = count
 				question_list = []
-				# if v['type'] == 'appkit.qa':
-				# 	for question in v['value']:
-				# 		question_list.append(question)
-
 
 				result['values'] = value_list if v['type'] == 'appkit.selection' else question_list
 				result['type'] = v['type']

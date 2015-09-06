@@ -184,9 +184,8 @@ def get_result(id,member_id):
 	for q_title,values in questions.items():
 		value_isSelect = {}
 		result = {}
-		total_count = len(values)
 		value_list = []
-
+		total_count = 0
 		timp_vlaue = {}
 		for value in values:
 			timp_vlaue = value
@@ -196,6 +195,7 @@ def get_result(id,member_id):
 						value_isSelect[v_title] = 0
 					if v_value['isSelect'] == True:
 						value_isSelect[v_title] += 1
+						total_count += 1
 				else:
 					value_isSelect[v_title] = []
 		for timp_k in sorted(timp_vlaue.keys()):
