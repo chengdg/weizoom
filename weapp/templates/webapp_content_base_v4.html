@@ -355,6 +355,7 @@
                         }
                     });
                     $('.xa-submitTermite').click(function() {
+                        alert('click');
                         if (!W.validate()) {
                             return;
                         }
@@ -417,6 +418,7 @@
                                 'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}'
                             }]);
                         }
+                        alert(W.permission);
                         //必须关注才可以参与的活动
                         if (W.permission == 'member') {
                             alert('member');
