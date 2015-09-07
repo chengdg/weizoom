@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# __editor__='justing'
+# edit_time:2015/09/06,删除‘可以获得会员列表’中的访问会员详情页
 import json
 import time
 
@@ -71,13 +73,6 @@ def step_impl(context, user):
 			context.url += '&page=' + str(context.page)
 		if hasattr(context, 'filter_str'):
 			context.url += context.filter_str
-	###访问会员详情页：访问会员详情页会使购买信息自动调整正确
-	response = context.client.get(bdd_util.nginx(context.url))
-	items = json.loads(response.content)['data']['items']
-	for member_item in items:
-		member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
-		visit_member_detail_url = context.client.get(member_detail_url)
-	###以上为访问会员详情页
 
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']

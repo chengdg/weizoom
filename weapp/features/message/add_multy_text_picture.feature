@@ -1,11 +1,6 @@
 Feature: 需求1291新建多图文 jobs在系统中新建多图文
-	
-#Background:
-#	Given jobs登录系统
-	
 
-#@mall @mall.product @after_rebuild
-
+@mall2 @senior @textPicture 
 Scenario: 1 添加多图文 
 	Jobs添加多图文后，能获取他添加多图文
 	标题30字以内，摘要120字以内，正文2万字以内，插入一张图片

@@ -750,7 +750,7 @@ class QrcodeOrder(resource.Resource):
 				'buyer_id': order.buyer_id,
 				'pay_interface_name': PAYTYPE2NAME.get(order.pay_interface_type, u''),
 				'created_at': datetime.strftime(order.created_at,'%Y-%m-%d %H:%M'),
-				'payment_time':datetime.strftime(order.created_at,'%Y-%m-%d %H:%M'),
+				'payment_time':datetime.strftime(order.payment_time,'%Y-%m-%d %H:%M'),
 				'product_count': order2productcount.get(order.id, 0),
 				'products': mall_api.get_order_products(order),
 				'customer_message': order.customer_message,

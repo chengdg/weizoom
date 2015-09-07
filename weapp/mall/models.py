@@ -1610,6 +1610,10 @@ class Order(models.Model):
 
 		return None
 
+	@staticmethod
+	def get_orders_from_webapp_user_ids(webapp_user_ids):
+		return Order.objects.filter(webapp_user_id__in=webapp_user_ids)
+
 
 def belong_to(webapp_id):
 	"""

@@ -681,7 +681,7 @@ class Member(models.Model):
 		"""
 		updated by zhu tianqi,修改为会员等级高于目标等级时不降级
 		"""
-		if member.grade_id <grade_id:
+		if member.grade_id < grade_id:
 			from django.db import connection, transaction
 			cursor = connection.cursor()
 			cursor.execute('update member_member set grade_id = %d where id = %d;' % (grade_id, member.id))
