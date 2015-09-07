@@ -36,6 +36,7 @@ class Mlottery(resource.Resource):
 		expend = 0
 		isMember = False
 		auth_appid_info = None
+		thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
 		if not isPC:
 			isMember = request.member and request.member.is_subscribed
 			if not isMember:
@@ -116,7 +117,9 @@ class Mlottery(resource.Resource):
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': isPC,
 			'isMember': isMember,
-			'auth_appid_info': auth_appid_info
+			'auth_appid_info': auth_appid_info,
+			'share_page_desc': record.name,
+			'share_img_url': thumbnails_url
 		})
 
 		return render_to_response('lottery/templates/webapp/m_lottery.html', c)
