@@ -382,6 +382,7 @@
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             var lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
+                $(this).addClass('xa-lottery-go-to');
                 if(lottery.isRolling || !lottery_status || can_play_count<=0){
                     if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
@@ -395,6 +396,7 @@
                     }else{
                         resultDialog.render()
                     }
+                    $(this).removeClass('xa-lottery-go-to');
                     return false;
                 }else{
                     W.getApi().call({
@@ -410,6 +412,7 @@
                             lottery.stop(data);
                         },
                         error: function(error){
+                            $that.removeClass('xa-lottery-go-to');
                             $('body').alert({
                                 isShow: true,
                                 isSlide: false,
@@ -418,6 +421,7 @@
                             });
                         }
                     });
+                    $(this).removeClass('xa-lottery-go-to');
                 }
             });
         });

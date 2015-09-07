@@ -453,8 +453,14 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .xa-lottery-go{
 	background: url("/termite_static/img/component/lottery/lottery_roulette_go.png") no-repeat;
-	background-size: 100% 100%;
+	background-size: 100%;
 	border-radius: 2px;
+}
+.xa-lottery-go-to{
+	background: url("/termite_static/img/component/lottery/lottery_roulette_go.png") no-repeat;
+	background-size: 100%;
+	border-radius: 2px;
+	background-position: 0 -139px;
 }
 .xui-lottery-unit .xa-lottery-unit img{
 	height: 63px;
