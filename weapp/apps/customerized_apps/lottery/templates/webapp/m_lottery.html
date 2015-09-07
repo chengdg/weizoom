@@ -403,6 +403,7 @@
                     $(this).removeClass('xa-lottery-go-to');
                     return false;
                 }else{
+                    var $that = $(this);
                     W.getApi().call({
                         app: 'm/apps/lottery',
                         resource: 'lottery_prize',
@@ -414,6 +415,7 @@
                         success: function(data){
                             lottery.roll();
                             lottery.stop(data);
+                            $that.removeClass('xa-lottery-go-to');
                         },
                         error: function(error){
                             $that.removeClass('xa-lottery-go-to');
@@ -425,7 +427,6 @@
                             });
                         }
                     });
-                    $(this).removeClass('xa-lottery-go-to');
                 }
             });
         });
