@@ -71,7 +71,7 @@ class lottery(models.Document):
 	@property
 	def limitation_times(self):
 		try:
-			return (1, 1, 2)[('once_per_user', 'once_per_day', 'twice_per_day').index(self.limitation)]
+			return (1, 1, 2, -1)[('once_per_user', 'once_per_day', 'twice_per_day', 'no_limit').index(self.limitation)]
 		except:
 			return 0
 

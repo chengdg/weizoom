@@ -124,6 +124,9 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			}, {
 				name: '一天两次',
 				value: 'twice_per_day'
+			}, {
+				name: '不限',
+				value: 'no_limit'
 			}],
 			default: 'once_per_user'
 		},{
@@ -193,11 +196,20 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 				case 'twice_per_day':
 					value = '2';
 					break;
+				case 'no_limit':
+					value = '-1';
+					break;
 				default :
 					value = '0';
 					break;
 			}
-			$node.find('.wui-lotterydescription').find('.xa-header p b').html(value);
+			var $header = $node.find('.wui-lotterydescription').find('.xa-header');
+			if(value == '-1'){
+				$header.addClass('wui-lotterydescription-hide');
+			}else{
+				$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
+			}
+
 		}
 	},
 

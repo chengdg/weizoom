@@ -91,7 +91,7 @@
         border-radius: 3px;
         width: 170px;
         display: block;
-        margin: 5px auto;
+        margin: 10px auto;
     }
     .wui-resultDialog .wui-i-content button{
         width: 70px;
@@ -137,7 +137,11 @@
         function afterStop(data){
             //更新可玩次数和剩余积分
             can_play_count = data.can_play_count;
-            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
+            if(can_play_count == -1){
+                $('.wui-lotterydescription .xa-header').addClass('wui-lotterydescription-hide');
+            }else{
+                $('.wui-lotterydescription .xa-header').removeClass('wui-lotterydescription-hide').find('p>b').html(can_play_count);
+            }
             $('.xa-remainedIntegral p>b').html(data.remained_integral);
             //更新中奖历史
             var newRecord = data.newRecord;
@@ -252,12 +256,12 @@
                 this.$closeBtn.hide();
             }else if(prize_type == 'timesout'){
                 this.$title.css('visibility','hidden');
-                this.$contentHeader.html("您今天的抽奖机会已经用完了，<br>明天再来吧~");
+                this.$contentHeader.html("您今天的抽奖机会已经用完，<br>明天再来吧~");
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
-                this.$title.css('visibility','hidden');
-                this.$contentHeader.html("抽奖活动还未开始,<br>请耐心等待~");
-                this.$userCenter.hide();
+                this.$title.html('请耐心等待');
+                this.$contentHeader.html("抽奖活动还未开始！");
+                this.$userCenter.show();
                 this.$closeBtn.hide();
             }
             var that = this;
@@ -383,7 +387,7 @@
             var lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
                 $(this).addClass('xa-lottery-go-to');
-                if(lottery.isRolling || !lottery_status || can_play_count<=0){
+                if(lottery.isRolling || !lottery_status || can_play_count==0){
                     if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
                         resultDialog.render({
@@ -428,7 +432,11 @@
     }
         function getHistory(){
             can_play_count = parseInt('{{ can_play_count }}');
-            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
+            if(can_play_count == -1){
+                $('.wui-lotterydescription .xa-header').addClass('wui-lotterydescription-hide');
+            }else{
+                $('.wui-lotterydescription .xa-header').removeClass('wui-lotterydescription-hide').find('p>b').html(can_play_count);
+            }
             W.getApi().call({
                 app: 'm/apps/lottery',
                 resource: 'lottery_prize',

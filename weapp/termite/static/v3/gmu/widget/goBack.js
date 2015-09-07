@@ -18,7 +18,7 @@ gmu.define('GoBack', {
 			if(window.history.length == 1){
 				window.location.href = './?woid='+W.webappOwnerId+'&module=mall&model=products&action=list';
 			}else{
-				window.history.back(-1);
+				window.history.go(-1);
 			}
 		});
 	}

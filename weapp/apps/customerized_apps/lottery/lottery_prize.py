@@ -197,6 +197,7 @@ class lottery_prize(resource.Resource):
 					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
 					coupon_limit = coupon_rule.limit_counts
 					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, prize_type='coupon', prize_data=str(couponRule_id)).count()
+					print coupon_limit, '====================', has_coupon_count
 					if coupon_limit != -1 and has_coupon_count >= coupon_limit:
 						result = u'谢谢参与'
 						lottery_prize_type = 'no_prize'
@@ -247,7 +248,8 @@ class lottery_prize(resource.Resource):
 			lottery_participance.update(inc__total_count=1)
 
 		#根据抽奖次数限制，更新可抽奖次数
-		lottery_participance.update(dec__can_play_count=1)
+		if limitation != -1:
+			lottery_participance.update(dec__can_play_count=1)
 		lottery_participance.reload()
 		#调整参与数量和中奖人数
 		newRecord = {}
