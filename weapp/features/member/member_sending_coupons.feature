@@ -105,7 +105,7 @@ Background:
 
 		And tom5取消关注jobs的公众号
 
-@memberList 
+@memberList
 Scenario:1 给筛选出选中的部分会员发送优惠券
 
 	Given jobs登录系统
@@ -239,7 +239,7 @@ Scenario:1 给筛选出选中的部分会员发送优惠券
 			}
 			"""
 
-@memberList	
+@memberList
 Scenario:2 给筛选出会员发送优惠券
 
 	Given jobs登录系统
