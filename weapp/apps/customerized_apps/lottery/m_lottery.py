@@ -70,7 +70,7 @@ class Mlottery(resource.Resource):
 			if request.member:
 				lottery_participance = app_models.lotteryParticipance.objects(belong_to=id, member_id=request.member.id)
 				participance_data_count = lottery_participance.count()
-				if participance_data_count != 0:
+				if participance_data_count != 0 and record.limitation_times != -1:
 					lottery_participance = lottery_participance[0]
 					total_count = lottery_participance.total_count
 					#再次进入抽奖活动页面，根据抽奖规则限制以及当前日期和最近一次抽奖日期，更新can_play_count
@@ -90,12 +90,15 @@ class Mlottery(resource.Resource):
 						can_play_count = lottery_participance.can_play_count
 					lottery_participance.reload()
 				else:
-					if record.limitation in ['once_per_day', 'once_per_user']:
-						can_play_count = 1
-					elif record.limitation == 'twice_per_day':
-						can_play_count = 2
-					else:
-						can_play_count = 0
+					# if record.limitation in ['once_per_day', 'once_per_user']:
+					# 	can_play_count = 1
+					# elif record.limitation == 'twice_per_day':
+					# 	can_play_count = 2
+					# elif record.limitation == 'no_limit':
+					# 	can_play_count = -1
+					# else:
+					# 	can_play_count = 0
+					can_play_count = record.limitation_times
 		if can_play_count != 0:
 			lottery_status = True
 
