@@ -29,7 +29,6 @@
         top: 20%;
         left: 5%;
         width: 90%;
-        height: 235px;
         border-radius: 5px;
         z-index: 1;
     }
@@ -90,9 +89,9 @@
         font-size: 1rem;
         font-weight: bolder;
         border-radius: 3px;
-        width: 130px;
+        width: 170px;
         display: block;
-        margin: 5px auto;
+        margin: 10px auto;
     }
     .wui-resultDialog .wui-i-content button{
         width: 70px;
@@ -134,16 +133,24 @@
 
 {% block js %}
     <script>
-
+        var parentUrl = document.referrer;
+        if(parentUrl && parentUrl.indexOf('user_center')>0){
+            window.location.replace(window.location.href);
+        }
         function afterStop(data){
             //更新可玩次数和剩余积分
             can_play_count = data.can_play_count;
-            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
+            if(can_play_count == -1){
+                $('.wui-lotterydescription .xa-header').addClass('wui-lotterydescription-hide');
+            }else{
+                $('.wui-lotterydescription .xa-header').removeClass('wui-lotterydescription-hide').find('p>b').html(can_play_count);
+            }
             $('.xa-remainedIntegral p>b').html(data.remained_integral);
             //更新中奖历史
             var newRecord = data.newRecord;
             if(!$.isEmptyObject(newRecord)){
-                var new_str = "<li>" + newRecord.prize_title+ '  '+ newRecord.prize_name+'  '+newRecord.created_at + "</li>";
+                //var new_str = "<li>" + newRecord.prize_title+ '  '+ newRecord.prize_name+'  '+newRecord.created_at + "</li>";
+                var new_str = "<li>" + newRecord.prize_title+ '&nbsp;&nbsp;&nbsp;&nbsp;'+ newRecord.prize_name+"</li>";
                 $('.wui-i-record').find('.xa-recordData').find('p').remove();
                 $('.wui-i-record').find('.xa-recordData').prepend(new_str);
             }
@@ -184,6 +191,7 @@
                             that.$entityContent.hide();
                             that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
                             that.$userCenter.show();
+                            that.$closeBtn.show();
                         },
                         error: function(error){
                             $('body').alert({
@@ -230,7 +238,7 @@
             this.$title.css('visibility','visible');
             if(prize_type == 'entity'){
                 this.$title.html('中奖了耶');
-                this.$contentHeader.html("恭喜您获得了"+prize_name+'！');
+                this.$contentHeader.html("恭喜您获得了<br>"+prize_name+'！');
                 this.$entityContent.show();
                 this.$userCenter.hide();
                 this.$closeBtn.hide();
@@ -242,7 +250,7 @@
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
                 this.$title.html('中奖了耶');
                 var msg = prize_type == 'coupon' ? ('一张优惠券：'+prize_name): prize_name;
-                this.$contentHeader.html("恭喜您获得了"+msg+"！快去个人中心查看吧！");
+                this.$contentHeader.html("恭喜您获得了<br>"+msg+"！<br>快去个人中心查看吧！");
                 this.$userCenter.show();
                 this.$closeBtn.show();
             }else if(prize_type == 'gameover'){
@@ -251,11 +259,12 @@
                 this.$closeBtn.hide();
             }else if(prize_type == 'timesout'){
                 this.$title.css('visibility','hidden');
-                this.$contentHeader.html("您今天的抽奖机会已经用完了，<br>明天再来吧~");
+                this.$contentHeader.html("您今天的抽奖机会已经用完，<br>明天再来吧~");
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
-                this.$title.css('visibility','hidden');
-                this.$contentHeader.html("抽奖活动还未开始,<br>请耐心等待~");
+                this.$title.html('请耐心等待');
+                this.$contentHeader.html("抽奖活动还未开始！");
+                this.$userCenter.show();
                 this.$closeBtn.hide();
             }
             var that = this;
@@ -380,7 +389,8 @@
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             var lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
-                if(lottery.isRolling || !lottery_status || can_play_count<=0){
+                $(this).addClass('xa-lottery-go-to');
+                if(lottery.isRolling || !lottery_status || can_play_count==0){
                     if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
                         resultDialog.render({
@@ -393,8 +403,10 @@
                     }else{
                         resultDialog.render()
                     }
+                    $(this).removeClass('xa-lottery-go-to');
                     return false;
                 }else{
+                    var $that = $(this);
                     W.getApi().call({
                         app: 'm/apps/lottery',
                         resource: 'lottery_prize',
@@ -406,8 +418,10 @@
                         success: function(data){
                             lottery.roll();
                             lottery.stop(data);
+                            $that.removeClass('xa-lottery-go-to');
                         },
                         error: function(error){
+                            $that.removeClass('xa-lottery-go-to');
                             $('body').alert({
                                 isShow: true,
                                 isSlide: false,
@@ -422,7 +436,11 @@
     }
         function getHistory(){
             can_play_count = parseInt('{{ can_play_count }}');
-            $('.wui-lotterydescription .xa-header p>b').html(can_play_count);
+            if(can_play_count == -1){
+                $('.wui-lotterydescription .xa-header').addClass('wui-lotterydescription-hide');
+            }else{
+                $('.wui-lotterydescription .xa-header').removeClass('wui-lotterydescription-hide').find('p>b').html(can_play_count);
+            }
             W.getApi().call({
                 app: 'm/apps/lottery',
                 resource: 'lottery_prize',
@@ -438,7 +456,9 @@
                     if(len>0){
                         var str_array = [];
                         for(var i=0;i<len;i++){
-                            str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at + "</li>");
+                            //str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at + "</li>");
+                            str_array.push("<li>" + hisData[i].prize_title+'&nbsp;&nbsp;&nbsp;&nbsp;'+ hisData[i].prize_name + "</li>");
+
                         }
                         str_array = str_array.toString().replace(/,/g,'');
                         $('.wui-i-record').find('.xa-recordData').html(str_array);

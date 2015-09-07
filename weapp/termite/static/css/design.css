@@ -156,3 +156,8 @@
 .wui-imagedisplay .wui-grid-b li{
     margin-right: 0;
 }
+
+/*活动不显示新增，删除*/
+.xui-appPage-event .xui-i-addAction, .xui-appPage-event .xui-i-deleteAction {
+    display:none !important;
+}

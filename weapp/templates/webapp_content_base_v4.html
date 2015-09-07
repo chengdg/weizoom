@@ -275,6 +275,9 @@
                     return false;
                 }
             };
+            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
 
             $('.xa-wepage-navbar-link').click(function(event){
                 var url = $(event.currentTarget).find('a').attr('data-link');
@@ -313,6 +316,7 @@
         <script type="text/javascript">
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
             W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
+
             var link = window.location.href;
             if (link.indexOf('fmt') === -1){
                 if (link.indexOf('&') === -1){
@@ -323,7 +327,7 @@
             }
 
             $(document).ready(function() {
-                $('a').highlight();
+{#                $('a').highlight();#}
                 FastClick.attach(document.body);
                 var hm = document.createElement("script");
                 hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
@@ -343,16 +347,16 @@
                  */
                 W.wxShareData = {
                     "imgUrl" : W.sharePageImg,
-                    "link" : window.location.href,
+                    "link" : link,
                     "desc" : W.sharePageDesc,
                     "title" : W.sharePageTitle,
                     // 点击分享按钮
                     trigger: function (res) {
-                       // alert('用户点击分享按钮'+res);
+                       //alert('用户点击分享按钮'+res);
                     },
                     // 分享成功
                     success : function(res) {
-                       // alert('success'+res);
+                       //alert('success'+res);
                     }
                 };
                 wx.ready(function () {
@@ -364,22 +368,22 @@
                       'onMenuShareQQ',
                       'previewImage',
                       'hideOptionMenu',
-                      'showOptionMenu',
+                      'showOptionMenu'
                     ],
                     success: function (res) {
                       if(!W.wxShareData)
-                        return
+                        return;
                       res = res.checkResult;
                       if(res.onMenuShareAppMessage)
-                        wx.onMenuShareAppMessage(W.wxShareData)
+                        wx.onMenuShareAppMessage(W.wxShareData);
                       if(res.onMenuShareTimeline)
-                        wx.onMenuShareTimeline(W.wxShareData)
+                        wx.onMenuShareTimeline(W.wxShareData);
                       if(res.onMenuShareQQ)
-                        wx.onMenuShareQQ(W.wxShareData)
+                        wx.onMenuShareQQ(W.wxShareData);
                       if(res.previewImage)
-                        W.ImagePreview(wx)
+                        W.ImagePreview(wx);
                       if(res.hideOptionMenu && isHideWeixinOptionMenu)
-                        wx.hideOptionMenu()
+                        wx.hideOptionMenu();
                       if(res.showOptionMenu && !isHideWeixinOptionMenu)
                         wx.showOptionMenu()
                     }
@@ -508,7 +512,7 @@
                         if ($textSelection.length > 0){
                             participanceData['actionButtons'] = JSON.stringify([{
                                 'text': '查看结果',
-                                'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}'
+                                'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}&isMember={{ isMember }}'
                             }]);
                         }
                         //必须关注才可以参与的活动
