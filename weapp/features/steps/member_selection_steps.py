@@ -61,7 +61,7 @@ def step_impl(context, user):
     actual_count = json.loads(response.content)['data']['total_count']
     json_data = json.loads(context.text)
     expected_count = json_data[0]['result_quantity']
-    print 'hellokittyassert',expected_count,':',actual_count
+    #print 'hellokittyassert',expected_count,':',actual_count
     assert int(expected_count) == int(actual_count)
 
 

@@ -166,7 +166,7 @@ Background:
 		#Then jobs访问所有会员
 
 @mall2 @member @memberList
-@test_aaa
+
 Scenario:1 默认条件和空条件查询
 
 	Given jobs登录系统
