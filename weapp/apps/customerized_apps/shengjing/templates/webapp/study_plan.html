@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
 <link rel="stylesheet" href="/markettools_static/coupon/css/idangerous.swiper.css">
 <link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
+<link rel="stylesheet" href="/static/css/shengjing_custom.css">
 <style>
 	body,html{
 		background-color: #e1e1e6;
@@ -50,6 +51,7 @@
 		top:0px;
 	}
 	.xui-userCenter-header{
+		height: 135px;
 		background: #2d3e4f;
 		color:#fff;
 		width: 100%;
@@ -80,6 +82,7 @@
 		font-size: 20px;
 		padding: 5px 0;
 		border-bottom: 1px solid #EDEDED;
+		overflow: hidden;
 	}
 	.ui-info {
 		color:#666;
@@ -138,11 +141,40 @@
 		text-align: center;
 		padding: 20px 30px;
 	}
+	.xui-btn{
+		background-color: #009ee7;
+		border: none;
+		color: #fff;
+		width: 100%;
+		margin: auto;
+		margin-top: 0px;
+		height: 38px;
+		line-height: 38px;
+		border-radius: 3px;
+		font-size: 18px;
+		box-shadow: none;
+		color: #fff;
+	}
+	.xui-confirm-info-box{		
+		float: right;
+		font-size: 14px;
+		color: #db4242;
+		border: 1px solid;
+		padding: 1px 4px;
+		border-radius: 2px;
+		margin-top: 5px;
+	}
+	.xui-confirm{
+		color: #21ab01;
+	}
+	.xui-not-confirm{
+		color: #db4242;
+	}
 </style>
 {% endblock %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x">
+<div data-role="page" data-theme="x" class="xui-studyPlan-page">
 	<div class="xui-loading" style="display: none">
 		<div class="xui-loading-container container1">
 			<div class="circle1"></div>
@@ -162,9 +194,12 @@
 			<div class="circle3"></div>
 			<div class="circle4"></div>
 		</div>
-		</div>
+	</div>
 	
 	
+	
+
+	<div class="wui-swiper-container"> 
 		<div class="xui-topNav">
 			<div class="xui-userCenter-header">
 				<div class="xui-pageTitle ml20">学习计划</div>
@@ -177,14 +212,13 @@
 			</div>
 			<div class="wui-tabs">
 					<a href="javascript:void(0)" status="0" class="active">未开课</a>
-					<a href="javascript:void(0)" status="1">已上课</a>
+					<a href="javascript:void(0)" status="1">已开课</a>
 					<a href="javascript:void(0)" status="2">全部</a>
 			</div>
-		</div>
-		 <div class="wui-swiper-container">    
-		    <div class="wui-swiper-wrapper">
-		      <div class="wui-swiper-slide">
-		        <div class="wui-content-slide">
+		</div>   
+		<div class="wui-swiper-wrapper">
+			<div class="wui-swiper-slide">
+				<div class="wui-content-slide">
 					<ul data-role="listview" class="xui-list-y ui-listView ua-listView ua-listView0" data-theme="x" data-icon-shadow="false" data-icon="false">
 					</ul>
 				</div>
@@ -201,46 +235,122 @@
 					</ul>
 				</div>
 			</div>
-		  </div>
 		</div>
 	</div>
+
+
+	<div class="xui-cover xa-cover hidden">
+		<div class="ui-applyBox ua-applyBox">
+			<div class="ui-applyBoxTitle">
+				早学习，早受益，为了使您和团队学习
+				效果最大化，帮助企业实现全面、快速
+				成长，请您提前规划好时间按时参课。				
+			</div>
+			<div class="xui-confirmBox clearfix">
+				<div class="fl xui-right-line">
+	           		<a class="xa-clearConfirm" href="javascript:void(0);">取消</a>
+	           	</div>
+				<div class="fl">
+	           		<a class="xa-applyConfirm" href="javascript:void(0);">确认</a>
+	           	</div>
+	        </div>
+		</div>
+		<div class="ui-applyBox ua-applySuccessBox hidden">
+			<div class="fr mr5 mt5 xa-close clearfix" style="width:40px;height:30px;"><span class="xui-close fr"></span></div>
+			<!-- <div class="fr mr5 mt5 xui-close xa-close"></div> -->
+			<div class="ui-applySuccessBox mt20">
+				您已预订{{course.course_name}}课程，稍后客服人员将和您联系，审核通过后，您可以在“<a href="./?module=apps:shengjing:study_plan&resource=study_plans&action=get&project_id=0&workspace_id=apps:&webapp_owner_id={{request.webapp_owner_id}}">学习计划</a>”中查看
+			</div>
+		</div>
+	</div>
+
+</div>
 {% endblock %}
 {% block js %}
+<script type="text/javascript" src="/static_v2/lib/jquery.tmpl.min.js"></script>
 <script src="/markettools_static/coupon/js/idangerous.swiper.js"></script>
-<!-- <script src="/termite_static/js/widget/jquery.smint.js"></script> -->
-<script>
-	//处理留白问题
+
+{% verbatim %}
+<script id="item_study_plan_view" type="text/x-jquery-tmpl">
+<li data-id='${id}' class="xui-section">
+	<div class="ui-title cb">
+		<div>${course_name}</div>
+
+		{{if is_manager}}
+		<!-- 是否显示确认按钮 -->
+			{{if !is_confirm}}
+			<div class="xui-confirm-info-box xui-not-confirm">未确认</div>
+			{{else}}
+			<div class="xui-confirm-info-box xui-confirm">已确认</div>
+			{{/if}}
+		{{/if}}
+	</div>
+	<div class="ui-info">
+		<label>开课时间：</label>${start_date} - ${end_date}
+	</div>
+	{{if plan_count > 0 && status != '0'}}
+		<div class="ui-info" onclick="showInfo(this);" type="show">
+			<label>计划人数：</label>${plan_count}
+			<span class="xui-arrow xui-arrow-down ua-arrow" ></span>
+		</div>
+		{{if students.length > 0 }}
+			<div class="hidden xui-info xa-info">
+				<label>计划人：</label>
+				{{each(i,value) students}}
+					${value}{{if i+1<students.length}},{{/if}}
+				{{/each}}
+			</div>
+		{{else}}
+			<div class="hidden xui-info xa-info">系统尚未录入信息</div>
+		{{/if}}
+	{{else}}
+		<div class="ui-info"><label>计划人数：</label>${plan_count}</div>
+	{{/if}}
+
+	{{if !is_confirm && is_manager}}
+		<div class="ui-info">
+			<a class="xui-btn xa-confirm-btn" href="javascript:void(0);">确认</a>
+		</div>
+	{{/if}}
+</li>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+	var studyId = 0;
+    var bodyWidth = window.document.body.clientWidth;
 	var bodyHeight = window.document.body.clientHeight;
-	var pageHeight = bodyHeight - 222;	
-	$('.wui-swiper-slide').css('height',pageHeight);
-	// $('.wui-tabs').smint();
-	
-	//处理加载时的样式
-	var loadingTop = bodyHeight - (bodyHeight - 222)*0.5;
-	$('.xui-loading').css('top',loadingTop);
-	
-	var company_name = $.cookie('SHENGJING_STUDY_PLAN_COMPANY_NAME');
-	var $options = $('.ua-company').find('option');
-	$options.each(function() {
-		if ($(this).val()==company_name){
-			$(this).attr('selected', 'selected');
-		}
-	});
-	
-	showData();
+
+	var handlyHeight = function(){
+		//处理留白问题
+		var topNavHeight = $('.xui-topNav').height();
+		var toolNavHeight = $('.wui-navBar-item').height()
+		var pageHeight = bodyHeight - topNavHeight - toolNavHeight;	
+		console.log(pageHeight, bodyHeight, topNavHeight, toolNavHeight)
+		$('.wui-swiper-slide').height(pageHeight);
+		console.log($('.wui-swiper-slide').height());
+
+		//处理加载时的样式
+		var loadingTop = bodyHeight * 0.5;
+		$('.xui-loading').css('top',loadingTop);		
+		var company_name = $.cookie('SHENGJING_STUDY_PLAN_COMPANY_NAME');
+		var $options = $('.ua-company').find('option');
+		$options.each(function() {
+			if ($(this).val()==company_name){
+				$(this).attr('selected', 'selected');
+			}
+		});
+
+    	$('.wui-swiper-container').css('width', bodyWidth);
+
+    	$('.xui-studyPlan-page').css('padding-bottom', 0);
+	}
+
 	function showData() {
 		var company_name = $('[name=companys]').val();
-		// for (var i=0; i<3; i++){
 		var args = {'status': 2, 'company_name': company_name, 'member_id': '{{member.id}}'}
 		getData(args);
-		// }
-	}
-	
-	$('.ua-company').change(function() {
-		var company_name = $('[name=companys]').val();
-		$.cookie('SHENGJING_STUDY_PLAN_COMPANY_NAME', company_name, {expires:365*24*60*60, path:'/'});
-		showData();
-	});
+	}	
 	
 	//通过状态获取数据（已开课，未开课，全部）
     function getData(args) {
@@ -255,13 +365,41 @@
 	            target_api: 'study_plan/get'
 	        }, args),
 			success: function(data) {
-				var data = data.items || [];
-				//var data = [{'id': 1, 'course_name': '创新思维', 'curricula_time': '1992-05-13', 'plan_count': args.status}, {'id': 2, 'course_name': 'aad', 'curricula_time': '1992-05-13', 'plan_count': '3'}, {'id': 3, 'course_name': 'ccc', 'curricula_time': '1992-05-13', 'plan_count': '2'}];
+				var data = data || [];
+				/*var data = [{
+					'id': 1, 
+					'course_name': '创新思维', 
+					'start_date': '2015-05-13', 
+					'end_date': '2015-10-01', 
+					'status': 0, 
+					'students': ["李四", "王五"],
+					'plan_count': 10,
+					'is_manager': false, 
+					'is_confirm': false
+				}, {
+					'id': 2, 
+					'course_name': '创新思维sdfsd', 
+					'start_date': '2015-05-13', 
+					'end_date': '2015-10-01', 
+					'status': 1, 
+					'students': ["王五", "赵六"],
+					'plan_count': 10,
+					'is_manager': true, 
+					'is_confirm': false
+				}, {
+					'id': 3, 
+					'course_name': '创新思维sdfsd', 
+					'start_date': '2015-05-13', 
+					'end_date': '2015-10-01', 
+					'status': 0, 
+					'students': ["王五", "赵六"],
+					'plan_count': 10,
+					'is_manager': true, 
+					'is_confirm': true
+				}];*/
 				$('.ua-listView').find('li').remove();
 				$('.xui-loading').css('display', 'none');
-				/*if (data.length==0){
-					$('.ua-listView').append($('<li class="ml10 mr10 mt10" style="font-size: 20px;">您现在尚未制定学习计划，请点击“在线预约”，制定计划，开始学习吧。</li>'));
-				}*/
+
 				for (var i=0; i<data.length; i++) {
 					var $contain = $('.ua-listView'+data[i].status);
 					var $li = getTemplate(data[i]);
@@ -271,19 +409,23 @@
 						$contain.append($li);
 					}
 					var $containAll = $('.ua-listView2');
-					var $li = getTemplate(data[i]);
-					$containAll.append($li);
+					// var $li = getTemplate(data[i]);
+					$containAll.append($li.clone());
 					
 				}
 				for (var i=0; i<3; i++){
 					if (($('.ua-listView'+i).find('li').length)<=0){
 						if (i==0){
-							$('.ua-listView'+i).append($('<li class="ml10 mr10 mt10" style="font-size: 20px;">你还没有制定学习计划哟~马上约课，赶紧来充电吧！</li>'));
+							$('.ua-listView'+i).append($('<li class="ml10 mr10 mt10 xa-change" style="font-size: 20px;">你还没有制定学习计划哟~马上约课，赶紧来充电吧！</li>'));
 						} else{
 							$('.ua-listView'+i).append($('<li class="ml10 mr10 mt10" style="font-size: 20px;">您现在尚未制定学习计划，请点击“在线预约”，制定计划，开始学习吧。</li>'));
 						}
 					}
 				}
+
+				setTimeout(function(){
+					$('ul').append("<li></li>");
+				}, 100);
 			},
 			error: function(resp) {
 				var code = resp.code;
@@ -291,7 +433,7 @@
 					$('.ua-listView').find('li').remove();
 					$('.xui-loading').css('display', 'none');
 					var errMsg = resp.errMsg || '不是决策人！';
-					$('.ua-listView').append($('<li class="ui-notLeaderBox xa-notLeaderBox xui-section">'+errMsg+'</li>'));
+					$('.ua-listView').append($('<li class="ui-notLeaderBox xa-notLeaderBox xui-section">不是决策人！<br/>'+errMsg+'</li>'));
 				} else {
 					$('.xui-loading').css('display', 'none');
 					var errMsg = resp.errMsg || '获取数据失败！';
@@ -299,43 +441,15 @@
 				}
 			}
 		})
-    }
-    var bodyWidth = window.document.body.clientWidth;
-    $('.wui-swiper-container').css('width', bodyWidth);
-     var tabsSwiper = new Swiper('.wui-swiper-container',{
-	    speed:500,
-	    onSlideChangeStart: function(){
-	      $(".wui-tabs .active").removeClass('active')
-	      $(".wui-tabs a").eq(tabsSwiper.activeIndex).addClass('active')  
-	    }
-	  })
-	  $(".wui-tabs a").on('touchstart mousedown',function(e){
-	    e.preventDefault()
-	    $(".wui-tabs .active").removeClass('active')
-	    $(this).addClass('active')
-	    var status = $(this).attr('status');
-	    tabsSwiper.swipeTo( $(this).index() )
-	  })
+    }	
+
 	function getTemplate(data) {
-		var $li = $('<li li-id='+data.id+' class="xui-section"></li>');
-		$li.append($('<div class="ui-title">'+data.course_name+'</div>'));
-		var start_date = data.curricula_time.split('-');
-		start_date = start_date[0] + '.' + start_date[1] + '.' + start_date[2];
-		var end_date = data.stop_time.split('-');
-		end_date = end_date[1] + '.' + end_date[2];
-		$li.append($('<div class="ui-info"><label>开课时间：</label>'+start_date+' - '+end_date+'</div>'));
-		if (data.plan_count>0 && data.status!='0'){
-			$li.append($('<div class="ui-info" onclick="showInfo(this);" type="show"><label>上课人数：</label>'+data.plan_count+'<span class="xui-arrow xui-arrow-down ua-arrow" ></span></div>'));
-			if (data.students.length){
-				var student_str = data.students.join(' , ');
-				$li.append($('<div class="hidden xui-info xa-info"><label>上课人：</label>'+student_str+'</div>'));
-			} else {
-				$li.append($('<div class="hidden xui-info xa-info">系统尚未录入信息</div>'));
-			}
-		} else {
-			$li.append($('<div class="ui-info"><label>上课人数：</label>'+data.plan_count+'</div>'));
-		}
-		return $li;
+		var start_date = data.start_date.split('/');
+		var end_date = data.end_date.split('/');
+		data['start_date'] = start_date[0] + '.' + start_date[1] + '.' + start_date[2];
+		data['end_date'] = end_date[1] + '.' + end_date[2];
+		var $itemEl = $('#item_study_plan_view').tmpl(data);
+		return $itemEl;
 	}
 	
 	function showInfo(el) {
@@ -354,6 +468,88 @@
 			$el.parents('li:eq(0)').find('.xa-info').slideUp('200');
 		}
 	}
+
+
+	$(document).ready(function() {
+		showData();
+
+		$('.ua-company').change(function() {
+			var company_name = $('[name=companys]').val();
+			$.cookie('SHENGJING_STUDY_PLAN_COMPANY_NAME', company_name, {expires:365*24*60*60, path:'/'});
+			showData();
+		});
+
+		// 初始化swiper
+		var tabsSwiper = new Swiper('.wui-swiper-container',{
+			speed:500,
+			onSlideChangeStart: function(){
+				$(".wui-tabs .active").removeClass('active')
+				$(".wui-tabs a").eq(tabsSwiper.activeIndex).addClass('active')  
+			}
+		})
+
+		handlyHeight();
+
+		$(".wui-tabs a").on('touchstart mousedown',function(e){
+			e.preventDefault()
+			$(".wui-tabs .active").removeClass('active')
+			$(this).addClass('active')
+			var status = $(this).attr('status');
+			tabsSwiper.swipeTo( $(this).index() )
+		});
+
+		// 点击‘确认按钮’事件
+		$('body').delegate('.xa-confirm-btn', 'click', function(event){
+			$('.xa-cover').show();
+			event.stopPropagation();
+			event.preventDefault();
+			studyId = $(event.currentTarget).parents('li').attr('data-id');
+		});
+
+		// 点击弹窗中的‘确认’按钮，并发送 api 请求
+		$('.xa-applyConfirm').click(function(event){
+	    	$('.xui-loading').css('display', 'block');
+	    	var args = {
+	    		'study_id': studyId
+	    	};
+			W.getApi().call({
+	    		app: 'webapp',
+	        	api: 'project_api/call',
+				args: _.extend({
+		            woid: W.webappOwnerId,
+		            project_id: W.projectId,
+		            module: 'apps:shengjing:study_plan',
+		            target_api: 'confirm_study_plan/get'
+		        }, args),
+				success: function(data) {
+					$('.xui-loading').css('display', 'none');
+		        	$('.ui-page').alert({
+			         	isShow: true,
+			         	info: '学习计划确认成功！',
+			         	isSlide: true,
+			         	speed: 2000
+				    });
+		        	window.location.reload();
+				},
+				error: function(resp) {
+					$('.xui-loading').css('display', 'none');
+		        	$('.ui-page').alert({
+			         	isShow: true,
+			         	info: resp.data.msg,
+			         	isSlide: true,
+			         	speed: 2000
+				     });
+				}
+			})
+		});
+
+		// 关闭弹窗事件
+		$(document).click(function() {
+			$('.xa-cover').hide();
+		});
+
+		
+	});
 </script>
 {% endblock %}
 

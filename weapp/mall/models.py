@@ -280,6 +280,8 @@ class Product(models.Model):
 
 	@staticmethod
 	def fill_display_price(products):
+		"""根据商品规格，获取商品价格
+		"""
 		# 获取所有models
 		product2models = {}
 		product_ids = [product.id for product in products]
