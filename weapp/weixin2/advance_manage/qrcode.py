@@ -354,6 +354,7 @@ class Qrcode(resource.Resource):
 			'qrcode': qrcode,
 			'groups': groups,
 			'tags': tags,
+			'tag_is_del': False if MemberTag.objects.filter(id=qrcode.tag_id).count() > 0 else True
 			'selectedMemberIds': json.dumps(selectedMemberIds),
 			'jsons': jsons
 		})
