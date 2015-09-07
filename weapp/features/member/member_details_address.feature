@@ -26,7 +26,6 @@ Background:
 			"ship_address":"详细地址2"
 		}]
 		"""
-
 Scenario:1 会员详情获得收货地址列表
 
 	Given jobs登录系统

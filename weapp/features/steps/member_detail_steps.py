@@ -64,7 +64,7 @@ def step_impl(context, user, member):
     actual['name'] = show_member_info['name'] if show_member_info else ""
     actual['sex'] = sex
     actual['phone'] = show_member_info['phone_number'] if show_member_info else ""
-    actual['last_buy_time'] = "今天"
+    actual['last_buy_time'] = "今天" if show_member['last_pay_time'] else ""
     actual['tags'] = [tag.member_tag.name for tag in member_has_tags]
     actual['grade'] = grade_name
     actual['integral'] = show_member['integral']

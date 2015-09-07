@@ -18,4 +18,5 @@ def step_impl(context, user, news_title):
     for news_info in newses_info:
         if news_info['newses'][0]['title'] == news_title:
             material_id = news_info['id']
+            material_type = news_info['']
 

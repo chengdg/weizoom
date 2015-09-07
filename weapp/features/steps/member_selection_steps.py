@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# __author__='justing'
 import json
 import time
 
@@ -18,33 +19,33 @@ def handtime(atime):
         return alist[0]
     else:
         return ' '.join(alist)
-@Then(u'{user}访问所有会员')
-def step_impl(context, user):
-    ###访问会员详情页：访问会员详情页会使购买信息自动调整正确
-    url = '/member/api/members/get/?design_mode=0&version=1&status=1&filter_value=status:-1&page=1&count_per_page=50&enable_paginate=1'
-    response = context.client.get(bdd_util.nginx(url))
-    items = json.loads(response.content)['data']['items']
-    for member_item in items:
-        member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
-        #print 'kitty',member_detail_url
-        visit_member_detail_url = context.client.get(member_detail_url)
-    ###以上为访问会员详情页
-        p = 'a'
-        if member_item['username'] in [u'tom2',u'tom4']:
-            p = Member.objects.get(id = member_item['id'])
-            p.is_subscribed = False
-            p.save()
-        if member_item['username'] == u'tom1':
-            p = Member.objects.get(id = member_item['id'])
-            p.last_pay_time = '2015-01-02'
-        if member_item['username'] == u'tom2':
-            p = Member.objects.get(id = member_item['id'])
-            p.last_pay_time = '2015-02-02'
-        if member_item['username'] == u'tom3':
-            p = Member.objects.get(id = member_item['id'])
-            p.last_pay_time = '2015-03-05'
-        if p is not 'a':
-            p.save()
+# @Then(u'{user}访问所有会员')
+# def step_impl(context, user):
+#     ###访问会员详情页：访问会员详情页会使购买信息自动调整正确
+#     url = '/member/api/members/get/?design_mode=0&version=1&status=1&filter_value=status:-1&page=1&count_per_page=50&enable_paginate=1'
+#     response = context.client.get(bdd_util.nginx(url))
+#     items = json.loads(response.content)['data']['items']
+#     for member_item in items:
+#         member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
+#         #print 'kitty',member_detail_url
+#         visit_member_detail_url = context.client.get(member_detail_url)
+#     ###以上为访问会员详情页
+#         p = 'a'
+#         if member_item['username'] in [u'tom2',u'tom4']:
+#             p = Member.objects.get(id = member_item['id'])
+#             p.is_subscribed = False
+#             p.save()
+#         if member_item['username'] == u'tom1':
+#             p = Member.objects.get(id = member_item['id'])
+#             p.last_pay_time = '2015-01-02'
+#         if member_item['username'] == u'tom2':
+#             p = Member.objects.get(id = member_item['id'])
+#             p.last_pay_time = '2015-02-02'
+#         if member_item['username'] == u'tom3':
+#             p = Member.objects.get(id = member_item['id'])
+#             p.last_pay_time = '2015-03-05'
+#         if p is not 'a':
+#             p.save()
 
 @When(u'{user}访问会员列表')
 def step_impl(context, user):
@@ -60,7 +61,7 @@ def step_impl(context, user):
     actual_count = json.loads(response.content)['data']['total_count']
     json_data = json.loads(context.text)
     expected_count = json_data[0]['result_quantity']
-    print 'hellokittyassert',expected_count,':',actual_count
+    #print 'hellokittyassert',expected_count,':',actual_count
     assert int(expected_count) == int(actual_count)
 
 
@@ -97,8 +98,10 @@ def step_impl(context, user):
     #最后购买时间
     if options.has_key('last_buy_start_time') and options.has_key('last_buy_end_time'):
         if options['last_buy_start_time'] and options['last_buy_end_time']:
-            options['last_buy_start_time'] = handtime(options['last_buy_start_time'])
-            options['last_buy_end_time'] = handtime(options['last_buy_end_time'])
+            if u'天' in options['last_buy_start_time']:
+                options['last_buy_start_time'] = "{} 00:00".format(bdd_util.get_date_str(options['last_buy_start_time']))
+            if u'天' in options['last_buy_end_time']:
+                options['last_buy_end_time'] = "{} 00:00".format(bdd_util.get_date_str(options['last_buy_end_time']))
             options_url.append('first_pay:%s--%s' %(options['last_buy_start_time'],options['last_buy_end_time']))
     if options.has_key('attention_start_time') and options.has_key('attention_end_time'):
         if options['attention_start_time'] and options['attention_end_time']:

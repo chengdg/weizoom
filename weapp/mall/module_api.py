@@ -2232,7 +2232,12 @@ def update_order_status(user, action, order, request=None):
 	except :
 		notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
 		watchdog_alert(notify_message)
-
+	#更新会员的消费、消费次数、消费单价
+	try:
+		update_user_paymoney(order.webapp_user_id) 
+	except:
+		pass
+	#更新会员的消费、消费次数、消费单价
 	if target_status in [ORDER_STATUS_SUCCESSED,ORDER_STATUS_REFUNDING,ORDER_STATUS_CANCEL]:
 		auto_update_grade(webapp_user_id=order.webapp_user_id)
 
@@ -2240,7 +2245,11 @@ def update_order_status(user, action, order, request=None):
 
 def __restore_product_stock_by_order(order):
 	"""
-	返回商品的库存和销量
+
+	返回商品的库存
+	包括赠品库存
+	和销量
+
 	"""
 	products = get_order_products(order)
 	for product in products:
@@ -3113,19 +3122,42 @@ def save_image_and_update_att_url(request, picture, product_review):
 
 
 def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
-    """判断促销是否对用户开放.
+	"""判断促销是否对用户开放.
 
-    Args:
-      user_member_grade_id(int): 用户会员等价
-      promotion_member_grade_id(int): 促销制定的会员等级
+	Args:
+		user_member_grade_id(int): 用户会员等价
+		promotion_member_grade_id(int): 促销制定的会员等级
 
-    Return:
-      True - if 促销对用户开放
-      False - if 促销不对用户开放
-    """
-    if promotion_member_grade_id <= 0:
-        return True
-    elif promotion_member_grade_id == user_member_grade_id:
-        return True
-    else:
-        return False
+	Return:
+		True - if 促销对用户开放
+		False - if 促销不对用户开放
+	"""
+	if promotion_member_grade_id <= 0:
+		return True
+	elif promotion_member_grade_id == user_member_grade_id:
+		return True
+	else:
+		return False
+
+def update_user_paymoney(id):
+	#更新会员的消费、消费次数、消费单价
+	
+	from modules.member.models import *
+	member = WebAppUser.get_member_by_webapp_user_id(id)
+	user_orders = Order.get_orders_from_webapp_user_ids(member.get_webapp_user_ids)
+	pay_money = 0
+	pay_times = 0
+	for user_order in user_orders:
+		user_order.final_price = user_order.final_price + user_order.weizoom_card_money
+		if user_order.status > 2:
+			pay_money += user_order.final_price
+			pay_times += 1
+
+	member.pay_times = pay_times
+	member.pay_money = pay_money
+	try:
+		member.unit_price = pay_money/pay_times
+	except:
+		member.unit_price = 0
+	member.save()
+	#更新会员的消费、消费次数、消费单价
