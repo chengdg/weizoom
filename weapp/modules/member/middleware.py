@@ -949,6 +949,9 @@ class OAUTHMiddleware(object):
 		#对于非webapp请求和非pc商城地方请求不进行处理
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
 			return None
+
+		if 'model=address' in request.get_full_path():
+			return None
 		# if is_request_for_api(request):
 		#  	return None
 		if request.webapp_owner_info and \

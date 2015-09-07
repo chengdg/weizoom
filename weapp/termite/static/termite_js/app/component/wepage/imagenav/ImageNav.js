@@ -46,9 +46,7 @@ W.component.wepage.ImageNav = W.component.Component.extend({
             $node.find('img').attr('src', image.url);
 
             model.set({
-                image: image.url,
-                width: image.width,
-                height: image.height
+                image: image.url
             }, {silent: true});
 
 
