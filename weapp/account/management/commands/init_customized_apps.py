@@ -26,7 +26,7 @@ class Command(BaseCommand):
 						owner = admin,
 						name = module_name,
 						display_name = module_name,
-						status = CustomizedappStatus.STOPEED,
+						status = CustomizedappStatus.RUNNING,
 						last_version = -1,
 						updated_time = datetime.today()
 					)
