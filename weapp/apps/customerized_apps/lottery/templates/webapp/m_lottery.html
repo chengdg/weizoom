@@ -142,7 +142,8 @@
             //更新中奖历史
             var newRecord = data.newRecord;
             if(!$.isEmptyObject(newRecord)){
-                var new_str = "<li>" + newRecord.prize_title+ '  '+ newRecord.prize_name+'  '+newRecord.created_at + "</li>";
+                //var new_str = "<li>" + newRecord.prize_title+ '  '+ newRecord.prize_name+'  '+newRecord.created_at + "</li>";
+                var new_str = "<li>" + newRecord.prize_title+ '&nbsp;&nbsp;&nbsp;&nbsp;'+ newRecord.prize_name+"</li>";
                 $('.wui-i-record').find('.xa-recordData').find('p').remove();
                 $('.wui-i-record').find('.xa-recordData').prepend(new_str);
             }
@@ -439,7 +440,9 @@
                     if(len>0){
                         var str_array = [];
                         for(var i=0;i<len;i++){
-                            str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at + "</li>");
+                            //str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at + "</li>");
+                            str_array.push("<li>" + hisData[i].prize_title+'&nbsp;&nbsp;&nbsp;&nbsp;'+ hisData[i].prize_name + "</li>");
+
                         }
                         str_array = str_array.toString().replace(/,/g,'');
                         $('.wui-i-record').find('.xa-recordData').html(str_array);

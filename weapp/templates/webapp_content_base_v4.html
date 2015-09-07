@@ -421,7 +421,7 @@
                         if ($textSelection.length > 0){
                             participanceData['actionButtons'] = JSON.stringify([{
                                 'text': '查看结果',
-                                'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}'
+                                'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}&isMember={{ isMember }}'
                             }]);
                         }
                         //必须关注才可以参与的活动

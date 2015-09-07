@@ -132,7 +132,14 @@ class resultVote(resource.Resource):
 		print request.GET
 		if 'id' in request.GET:
 			id = request.GET['id']
+			isMember = request.GET.get('isMember',0)
 			member_id = request.GET['member_id']
+			auth_appid_info = None
+			if not isMember:
+				from weixin.user.util import get_component_info_from
+				component_info = get_component_info_from(request)
+				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 			vote_detail,result_list = get_result(id,member_id)
 			c = RequestContext(request, {
 				'vote_detail': vote_detail,
@@ -142,6 +149,8 @@ class resultVote(resource.Resource):
 				'resource': "vote",
 				'q_vote': result_list,
 				'hide_non_member_cover': True, #非会员也可使用该页面
+				'isMember': isMember,
+				'auth_appid_info': auth_appid_info,
 			})
 			return render_to_response('vote/templates/webapp/result_vote.html', c)
 
