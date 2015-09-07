@@ -122,7 +122,6 @@ class Mvote(resource.Resource):
 				})
 				return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:
-			print '111111'
 			record = None
 			c = RequestContext(request, {
 				'record': record

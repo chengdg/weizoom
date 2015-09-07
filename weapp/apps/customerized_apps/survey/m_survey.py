@@ -122,7 +122,6 @@ class Msurvey(resource.Resource):
 			c = RequestContext(request, {
 				'record': record
 			});
-
 			return render_to_response('survey/templates/webapp/m_survey.html', c)
 
 def get_result(id,member_id):
