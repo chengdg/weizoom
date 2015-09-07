@@ -608,7 +608,11 @@ $(document).ready(function() {
 	                	W.showHint('error', '请先选择会员！');
 			  			return;
 			  		}
-	                showDialogAndIssuingCoupon(member_ids, "");
+			  		member_name = '';
+			  		if(member_ids.length == 1){
+			  			member_name = $('tr[data-id="'+member_ids[0]+'"]').find('a.xa-issuing-coupon').data('member-name');
+			  		}
+	                showDialogAndIssuingCoupon(member_ids, member_name);
 	            },
 	            error: function(data){
 	            	W.showHint('error', '发放失败!');
