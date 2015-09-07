@@ -567,6 +567,7 @@ button.xui-removeImageButton{
 	top:-11px;
 	right: 0px;
 	font-size: 14px;
+	z-index: 1;
 }
 .xui-removeImageButton span{
 	color: #fff;
