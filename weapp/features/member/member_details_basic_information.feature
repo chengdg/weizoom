@@ -80,7 +80,7 @@ Background:
 
 	And bill关注jobs的公众号于'2015-05-20'
 
-@member @memberList
+@member @memberList 
 Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
 
 	Given jobs登录系统
@@ -141,7 +141,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		}
 		"""
 
-@member @memberList
+@mall2 @member @memberList
 Scenario:2 会员基本信息修改"所在分组"
 
 	Given jobs登录系统
@@ -186,7 +186,7 @@ Scenario:2 会员基本信息修改"所在分组"
 		}
 		"""
 
-@member @memberList
+@mall2 @member @memberList
 Scenario:3 会员基本信息修改"调积分"
 
 	Given jobs登录系统
@@ -275,7 +275,7 @@ Scenario:3 会员基本信息修改"调积分"
 		}]
 		"""
 
-@member @memberList
+@mall2 @member @memberList
 Scenario:4 会员基本信息好友数验证
 	#bill和tom建立好友关系
 			When bill访问jobs的webapp
