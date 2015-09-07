@@ -948,9 +948,9 @@ W.workbench.PropertyView = Backbone.View.extend({
 
     onMouseoverField: function(event){
         var $el = $(event.currentTarget);
-        var $closeBtn = $el.find('.close');
+        var $closeBtn = this.$el.find('.propertyGroup_property_dynamicControlField_content').children('.close')
         $closeBtn.hide();
-        $closeBtn.show();
+        $el.find('.close').show();
     },
 
     onClickColorPickerTrigger: function(event){
