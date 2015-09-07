@@ -272,7 +272,7 @@ Background:
 		And tom5取消关注jobs的公众号
 
 @memberList @promotionCoupon 
-Scenario:1 给筛选出选中的部分会员发送优惠券
+Scenario:1 选择优惠券的列表
 	Given jobs登录系统
 
 	#优惠券库存满足人数发放，未开始、已过期、已失效的优惠不能进入选择优惠券列表，
