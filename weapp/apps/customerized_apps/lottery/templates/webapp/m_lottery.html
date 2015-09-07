@@ -32,16 +32,6 @@
         border-radius: 5px;
         z-index: 1;
     }
-    @media only screen and (min-height: 480px){
-        .wui-resultDialog{
-            height: 280px;
-        }
-    }
-    @media screen and (max-height: 480px) and (max-width: 280px){
-        .wui-resultDialog{
-            height: 62%;
-        }
-    }
     .wui-resultDialog>.wui-i-header>.wui-i-title{
         margin-top: 30px;
         margin-left: 25px;
@@ -266,6 +256,7 @@
             }else if(prize_type == 'notready'){
                 this.$title.css('visibility','hidden');
                 this.$contentHeader.html("抽奖活动还未开始,<br>请耐心等待~");
+                this.$userCenter.hide();
                 this.$closeBtn.hide();
             }
             var that = this;
