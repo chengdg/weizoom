@@ -383,6 +383,7 @@
     line-height: 37px;
     padding: 0;
     text-align: left !important;
+    word-break:break-all;
 }
 
 .xui-remark img {
@@ -642,7 +643,7 @@
 
 .xui-orderDetialPage .xui-customerinfo .container [class^="col-"]:last-child {
     border-left: 1px solid #d7d7d7;
-    height: 130px;
+    min-height: 100px;
 }
 
 .xui-orderDetialPage .xui-customerinfo .container .xui-innerwrap p {

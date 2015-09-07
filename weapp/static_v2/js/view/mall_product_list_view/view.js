@@ -232,7 +232,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     }
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             })
             }
@@ -291,7 +294,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $stockText.text(stockText).show();
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             });
         } else if(stockText === "" || parseInt(stockText) != NaN){
@@ -322,7 +328,10 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $stockText.text(stockText).show();
                 },
                 error: function(resp) {
-                    W.showHint('error', '更新库存失败!')
+                    var msg = '更新库存失败!';
+                    if(resp.errMsg.length > 0)
+                        msg = resp.errMsg;
+                    W.showHint('error', msg);
                 }
             })
         }
@@ -373,7 +382,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     W.getApi().call({
                         method: 'post',
                         app: 'mall2',
-                        resource: 'product',
+                        resource: 'product_pos',
                         args: {
                             update_type: 'update_pos',
                             id: id,
@@ -389,31 +398,53 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     });
                 }
             }
-            var has_index = false
-            var rankTextList = $(event.currentTarget).parents('tr').siblings().find('.xa-rank').each(function(i){
-                var a_rank = $.trim($(this).data('display-index'));
-                if(rankText == a_rank){
-                    has_index = $(this);
-                }
-            });
-            var cancel = function(){
-                $(event.currentTarget).val(oldPos);
-            }
-            if (has_index){
-                    var msg = "位置"+rankText+"已存在商品， 是否替换"
-                    W.requireConfirm({
-                        $el: $link,
-                        width:480,
-                        height:55,
-                        position:'top',
-                        isTitle: false,
-                        msg: msg,
-                        confirm: updateAction,
-                        cancel:cancel,
-                        minClickTime:1
-                    });
-            }else{
+
+            if(rankText === '0') {  //如果改为0就直接更新
                 updateAction();
+            } else{
+                var cancel = function(){
+                    $(event.currentTarget).val(oldPos);
+                }
+                var has_index = false
+                
+                W.getApi().call({
+                    method: 'get',
+                    app: 'mall2',
+                    resource: 'product_pos',
+                    args: {
+                        id: id,
+                        pos: rankText,
+                    },
+                    success: function(data){
+                       if (data.is_index_exists){
+                            var rankTextList = $(event.currentTarget).parents('tr').siblings().find('.xa-rank').each(function(i){
+                                var a_rank = $.trim($(this).data('display-index'));
+                                if(rankText == a_rank){
+                                    has_index = $(this);
+                                }
+                            });
+
+                            var msg = "位置"+rankText+"已存在商品， 是否替换";
+                            W.requireConfirm({
+                                $el: $link,
+                                width:480,
+                                height:55,
+                                position:'top',
+                                isTitle: false,
+                                msg: msg,
+                                confirm: updateAction,
+                                cancel:cancel,
+                                minClickTime:1
+                            });
+                       } else {
+                            updateAction();
+                       }
+                    },
+                    error: function(response){
+                        W.showHint('error', '获取商品已有排序值失败');
+                    }
+
+                });
             }
     },
     /**

@@ -12,6 +12,13 @@ W.ValidaterClass = function() {
 	var ascii = /[^\x00-\xff]/g;
 
 	this.validateRules = {
+        'require-word': {
+            //字母
+            type: 'regex',
+            extract: 'value',
+            regex: /^[^._$]+$/g,
+            errorHint: '格式不正确，请输入除".","_"和"$"以外的字符'
+        },
         'require-letter': {
             //字母
             type: 'regex',
@@ -272,6 +279,7 @@ W.validate = function(el, checkDynamicElement) {
                 //执行验证
                 var validater = W.Validater.getRule(validateRule);
                 if (!validater) {
+                    xerror('no validater for rule: ' + validateRule);
                     continue;
                 }
                 if (validater.type === 'function') {

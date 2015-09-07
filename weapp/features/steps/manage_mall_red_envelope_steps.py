@@ -67,15 +67,28 @@ def step_impl(context, user):
     # context.query_param由When...指定
     param = {}
     if hasattr(context, 'query_param'):
+        # 如果给定了query_param，则模拟按条件查询
         #print("query_param: {}".format(context.query_param))
-        coupon_name = context.query_param['prize_info'] 
+        query_param = context.query_param
+        param['name'] = query_param['name']
+        coupon_name = query_param['prize_info'] 
         if coupon_name  == u"所有奖励":
             param['couponRule'] = 0
         else:
             owner_id = bdd_util.get_user_id_for(user)
             coupon_rule = CouponRule.objects.get(owner_id=owner_id, name=coupon_name)
             param['couponRule'] = coupon_rule.id
-        param.update(context.query_param)
+        start_date = query_param.get('start_date', '')
+        if len(start_date)>0:
+            param['startDate'] = bdd_util.get_date(query_param['start_date']).strftime('%Y-%m-%d 00:00')
+        else:
+            param['startDate'] = ''
+        end_date = query_param.get('end_date', '')
+        if len(end_date)>0:
+            param['endDate'] = bdd_util.get_date(query_param['end_date']).strftime('%Y-%m-%d 00:00')
+        else:
+            param['endDate'] = ''
+        #param.update(context.query_param)
 
     response = context.client.get('/mall2/api/red_envelope_rule_list/', param)
     rules = json.loads(response.content)['data']['items']

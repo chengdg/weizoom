@@ -436,8 +436,8 @@ $(document).ready(function() {
 	// 备注
 	$('body').delegate('.xa-order-remark', 'click', function(event){
 		var $el = $(event.currentTarget);
-		var orderId = $el.attr('data-order-id');
-		var message = $el.attr('data-order-value');
+		var orderId = $el.data('order-id');
+		var message = $el.data('order-value');
 
 		var mallOrderRemarkView = W.getMallOrderRemarkView({
 			width: 574,

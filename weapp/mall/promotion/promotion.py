@@ -309,13 +309,16 @@ class PromotionList(resource.Resource):
                 coupon_rule_id2promotion = dict([(promotion.detail_id, promotion) for promotion in promotions])
                 coupon = models.Coupon.objects.filter(coupon_id=coupon_id)
                 if coupon.count() > 0:
-                    promotions = [
-                        coupon_rule_id2promotion[coupon[0].coupon_rule_id]
-                    ]
+                    try:
+                        promotions = [
+                            coupon_rule_id2promotion[coupon[0].coupon_rule_id]
+                        ]
+                    except KeyError:
+                        promotions = []
                 else:
                     promotions = []
 
-            #进行分页
+            # 进行分页
             count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
             cur_page = int(request.GET.get('page', '1'))
             pageinfo, promotions = paginator.paginate(

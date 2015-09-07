@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 __author__ = 'liupeiyu, chuter'
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -13,6 +14,7 @@ from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_alert
 
 from apps_manager import manager
+import termite.pagestore as pagestore_manager
 
 @login_required
 def create_installed_app(request):
@@ -241,4 +243,23 @@ def select_app_status(request):
 		response.innerErrMsg = unicode_full_stack()
 
 	response.data.is_refresh = is_refresh
+	return response.get_response()
+
+
+@login_required
+def get_dynamic_pages(request):
+	pagestore = pagestore_manager.get_pagestore('mongo')
+
+	project_id = request.GET['project_id']
+	_, app_name, real_project_id = project_id.split(':')
+	if real_project_id == '0':
+		#新建app的project
+		app_settings_module_path = 'apps.customerized_apps.%s.settings' % app_name
+		app_settings_module = __import__(app_settings_module_path, {}, {}, ['*',])
+		pages = [json.loads(app_settings_module.NEW_PAGE_JSON)['component']]
+	else:
+		pages = pagestore.get_page_components(real_project_id)
+			
+	response = create_response(200)
+	response.data = pages
 	return response.get_response()

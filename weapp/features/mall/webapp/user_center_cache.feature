@@ -49,7 +49,7 @@ Background:
 	And bill关注jobs的公众号
 
 @wip.cache @mall2
-Scenario: bill增加订单数再访问个人中心
+Scenario:1 bill增加订单数再访问个人中心
 	bill下单(影响订单数)之后会影响订单数。检查个人中心订单数是否正确。
 
 	When bill访问jobs的webapp

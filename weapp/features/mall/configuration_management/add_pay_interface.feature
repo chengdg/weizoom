@@ -101,16 +101,6 @@ Scenario: 添加支付方式:货到付款
 		}
 		"""
 
-@mall @mall.pay_interface @mall2 @wip.pay_interface
-Scenario:卖家未获得支付方式：微众卡支付
-	Given jobs登录系统
-	Then jobs能获得支付方式
-		"""
-		{
-			"type": "微众卡支付",
-			"is_active": "停用"
-		}
-		"""
 
 @mall @mall.pay_interface @mall2
 Scenario: 添加多个支付方式
@@ -120,25 +110,25 @@ Scenario: 添加多个支付方式
 	3. bill不能获取jobs添加的支付方式列表
 
 	Given jobs登录系统
-	When jobs添加支付方式
-		"""
-		[{
-			"type": "微信支付"
-		}, {
-			"type": "货到付款"
-		}]
-		"""
 	Then jobs能获得支付方式列表
 		"""
 		[{
 			"type": "微信支付"
 		}, {
 			"type": "货到付款"
+		},{
+			"type": "支付宝"
 		}]
 		"""
 	Given bill登录系统
 	Then bill能获得支付方式列表
 		"""
-		[]
+		[{
+			"type": "微信支付"
+		}, {
+			"type": "货到付款"
+		},{
+			"type": "支付宝"
+		}]
 		"""
 

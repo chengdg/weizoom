@@ -1,0 +1,19 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'appkit.richtext' %}
+<div class="wui-richtext"
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    style="{% ifequal component.itemname.c0.select false %}
+    padding: 8px;
+    {% endifequal %}background-color: {{component.model.background_color}};">
+    {% if not component.model.content %}
+    <div style="padding: 5px; border: dashed 1px #888;">
+    	&lt;html&gt;
+    </div>
+    {% else %}
+    {{ component.model.content|safe}}
+    {% endif %}
+</div>
+{% endifequal %}

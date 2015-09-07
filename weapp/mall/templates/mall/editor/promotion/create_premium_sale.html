@@ -238,7 +238,9 @@ $(document).ready(function() {
 	productSelector.render();
 
 	$('.xa-submit').click(function(event) {
+		$(this).attr("disabled",true);
 		if(!W.validate()) {
+			$(this).attr("disabled",false);
 			return false;
 		}
 		var args = $('.xa-form').serializeObject();
@@ -254,6 +256,7 @@ $(document).ready(function() {
 
 		if (!primaryProducts.length) {
 			W.showHint('error', '请选中一个主商品');
+			$(this).attr("disabled",false);
 			return false;
 		}
 
@@ -271,6 +274,7 @@ $(document).ready(function() {
 
 		if (!premiumProducts.length) {
 			W.showHint('error', '请至少选择一个赠品！');
+			$(this).attr("disabled",false);
 			return false;
 		}
 
@@ -290,6 +294,7 @@ $(document).ready(function() {
 			},
 			error: function(resp) {
 				W.showHint('error', '创建买赠失败!')
+				$(this).attr("disabled",false);
 			}
 		})
 	});

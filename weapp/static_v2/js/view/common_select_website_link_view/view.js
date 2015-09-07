@@ -82,7 +82,7 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
 	onClickLinkMenu: function(event, parentEl){	
         event.stopPropagation();
         event.preventDefault();
-        
+
         this.menuEvent = event;
         var $icon = $(event.currentTarget);
         this.showActionMenu($icon, parentEl);
@@ -133,28 +133,9 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
     	var selectedLinkTarget = this.$el.find('#linkTarget').data('link_target');
     	var _this = this;
     	if (title) {
-            // 控制<营销推广>对话框头部<选项卡>是否顯示
-            var newTitle = []
-            _.each(title, function(t){
-                if(_this.tools[t.type])
-                    newTitle.push(t)
-                else if(t.type == 'red' && _this.tools['red_envelope'])
-                    newTitle.push(t)
-                else if(t.type == 'survey' && _this.tools['research'])
-                    newTitle.push(t)
-                else if(t.type == 'shengjing_app' && _this.tools['shengjing'])
-                    newTitle.push(t)
-                else if(t.type == 'product'  || t.type == 'category')
-                    newTitle.push(t)
-            })
-
-            // 微页面
-            if (menuType == 'webappPage') {
-                newTitle = title;
-            }
-            
 			W.dialog.showDialog('W.dialog.weixin.SelectWebSiteLinkDialog', {
-				title: newTitle,
+                tools: _this.tools,
+				title: title,
 				menuType: menuType,
 				menuItem: item,
 				selectedLinkTarget: selectedLinkTarget,

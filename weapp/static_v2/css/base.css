@@ -93,6 +93,7 @@ textarea{resize:none}
 .w70{width:70px !important;}
 .w75{width:75px !important;}
 .w80{width:80px!important;}
+.w88{width:88px!important;}
 .w90{width:90px!important;}
 .w95{width:95px!important;}
 .w100{width:100px;}
@@ -285,7 +286,6 @@ textarea{resize:none}
 .min220{min-height:220px !important;}
 
 /* 其他 */
-.xui-hide {display: none;}
 .xui-bold {font-weight: bold;}
 .xui-invisible {visibility: hidden;}
 .noborder{border: none;}
@@ -298,6 +298,7 @@ textarea{resize:none}
 .xui-aligntop {vertical-align: top !important;}
 .xui-alignsub {vertical-align: sub !important;}
 .xui-aligntexttop {vertical-align: text-top !important;}
+.xui-hide {display: none;}
 
 
 .text_nowrap{
@@ -478,6 +479,25 @@ select{
     position: absolute;
     top: 0;
     width: 190px;
+}
+.xui-mainPanel .xui-sideBar-votes,.xui-mainPanel .xui-sideBar-events,.xui-mainPanel .xui-sideBar-surveies,.xui-mainPanel .xui-sideBar-feedbacks,.xui-mainPanel .xui-sideBar-lotteries{
+	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
+	background-repeat: no-repeat;
+}
+.xui-mainPanel .xui-sideBar-votes{
+	background-position: 17px -85px;
+}
+.xui-mainPanel .xui-sideBar-events{
+	background-position: 17px 2px;
+}
+.xui-mainPanel .xui-sideBar-surveies{
+	background-position: 17px -19px;
+}
+.xui-mainPanel .xui-sideBar-feedbacks{
+	background-position: 17px -63px;
+}
+.xui-mainPanel .xui-sideBar-lotteries{
+	background-position: 17px -42px;
 }
 .xui-mainPanel .xui-sideBar-realtime_messages{
 	background-position: -48px -141px;
@@ -930,7 +950,7 @@ button.xui-close{
 }
 .xui-formPanel .xui-datePicker {
 	line-height: 24px;
-    width: 100px !important;
+    width: 132px !important;
     background: url(/static_v2/img/editor/calendar.jpg) no-repeat !important;
     background-position: right !important;
     background-color: #f2f2f2 !important;

@@ -202,7 +202,9 @@ $(document).ready(function() {
     productSelector.render();
 
     $('.xa-submit').click(function(event) {
+        $(this).attr("disabled",true);
         if (!W.validate()) {
+            $(this).attr("disabled",false);
             return false;
         }
         var args = $('.xa-form').serializeObject();
@@ -220,7 +222,8 @@ $(document).ready(function() {
                 }, 500)
             },
             error: function(resp) {
-                W.showHint('error', '活动设置成功')
+                W.showHint('error', '活动设置成功');
+                
             }
         })
     });

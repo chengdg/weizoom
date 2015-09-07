@@ -123,6 +123,8 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 			warning_msg: warning_msg,
 			confirm: function() {
 				_this.finishPromotions($tr, [promotionId], msg=='开始');
+				//_this.filterView.onClickSearchButton(); // 刷新商品列表
+				//_this.table.reload();
 			}
 		});
 	},
@@ -136,11 +138,14 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 		W.requireConfirm({
 			$el: $link,
 			width: 373,
-        	position:'top',
+        		position:'top',
 			isTitle: false,
 			msg: '确认删除活动？',
 			confirm: function() {
 				_this.deletePromotions($tr, [promotionId]);
+				//_this.onSearch(_this.filterView.getFilterData()); //onClickSearchButton(); // 刷新商品列表
+				//_this.filterView.onClickSearchButton(); // 刷新商品列表
+				//_this.table.reload();
 			}
 		});
 	},

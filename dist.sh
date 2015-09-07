@@ -32,6 +32,8 @@ echo "now enter `pwd`"
 # python disttool/dist.py --deleteJs --compress --deploy
 python disttool/dist.py --compress --deploy --cdn
 
+python prunt/runner.py deploy
+
 cd -
 echo "remove unnecessary files"
 find $DST_DIR -name ".svn" | xargs rm -rf

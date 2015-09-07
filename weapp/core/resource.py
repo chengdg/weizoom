@@ -23,8 +23,8 @@ RESTFUL_APP_SET = set()
 
 JS_TMPL = """
 
-ensureNS("W.resource.%(app)s");
-W.resource.%(app)s.%(cls)s = new W.resource.Resource({
+ensureNS("W.resource.%(normalized_app)s");
+W.resource.%(normalized_app)s.%(cls)s = new W.resource.Resource({
 	app: '%(app)s',
 	resource: '%(resource)s'
 });"""
@@ -49,6 +49,7 @@ class ResourceBase(type):
 				'instance': None,
 				'js': JS_TMPL % {
 					"app": self.app,
+					"normalized_app": self.app.replace('/', '.'),
 					"resource": self.resource,
 					"cls": name
 				}

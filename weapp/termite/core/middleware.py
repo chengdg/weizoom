@@ -339,6 +339,9 @@ class ProjectMiddleware(object):
 					project.name = 'fake:%s:%s' % (project_type, page_id)
 					project.type = project_type
 					project.id = project_id
+				elif 'new_app:' in project_id:
+					#_, app_project_id = project_id.split(':')
+					#request.webapp_owner_id_from_project_middleware = webapp_owner_id
 					request.project = None
 				else:
 					request.project = Project.objects.get(id=project_id)

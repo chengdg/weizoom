@@ -10,6 +10,7 @@ import active_project
 import project_templates
 import webapp_datas
 import termite_preview
+import app_preview
 import image
 import images
 import webapp_page

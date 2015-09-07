@@ -155,6 +155,15 @@ class PageStore(object):
 
 
 	#######################################################################
+	# update_page_project_id: 鏀瑰彉page鐨刾roject id
+	#######################################################################
+	def update_page_project_id(self, project_id, page_id, new_project_id):
+		pp_id = '%s_%s' % (project_id, page_id)
+		new_pp_id = '%s_%s' % (new_project_id, page_id)
+		self.db.page.update({'pp_id': pp_id}, {'$set':{'project_id':new_project_id, 'pp_id':new_pp_id}})
+
+
+	#######################################################################
 	# get_page_components: 获得project_id对应的所有page集合
 	#######################################################################
 	def get_page_components(self, project_id):
