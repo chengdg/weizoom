@@ -59,12 +59,12 @@ W.workbench.PageSynchronizer = Backbone.View.extend({
     synchronize: function(options) {
         //验证
         if (!W.isSystemManager) {
-            if(!this.currentPage.validate()) {
+            if(!W.validate()) {
                 return;
             }
         }
 
-        var isManualSync = !!(options && options.manual)
+        var isManualSync = !!(options && options.manual);
         if (isManualSync) {
             //手工sync，设置manualSync标识
             this.underManualSync = true;
@@ -103,10 +103,10 @@ W.workbench.PageSynchronizer = Backbone.View.extend({
                             //消除创建标识
                             _this.currentPage.isNewCreated = false;
                         }
-                        W.Broadcaster.trigger('page_synchronizer:success');
+                        W.Broadcaster.trigger('page_synchronizer:success', data);                        
                         if (isManualSync) {
                             if (options.callback) {
-                                options.callback(data, this.currentPage);
+                                options.callback(_this.currentPage, data);
                             }
                         } else {
                             var task = new W.DelayedTask(_this.synchronize, _this);

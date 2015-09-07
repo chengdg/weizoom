@@ -1,0 +1,9 @@
+{	
+	"name": "weixin_prize",
+	"resources": [{
+		"name": "Activity",
+		"need_user_participant": true,
+		"display_name": "微信抽奖",
+		"enable_termite": true
+	}]
+}

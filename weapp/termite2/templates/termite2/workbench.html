@@ -13,7 +13,7 @@
     </ul>
   </div>
 
-  <div style="background-color: #EAEEF7;" class="clearfix">
+  <div style="background-color: #EAEEF7; padding-bottom:70px;" class="clearfix pr">
     <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
     </div>
     
@@ -30,33 +30,38 @@
     </div>
     <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide mb30">
     </div>
-  </div>
+    <!-- 底部栏 -->
+    <div class="xui-bottomActionBar xa-stickyBar">
+      <button class="xa-save btn btn-primary">保存</button>
+      <button class="xa-preview btn btn-default ml20">预览</button>
+      {% if user|is_system_manager %}
+      <!--
+      <button class="xa-makeCover btn btn-default ml20">生成封面</button>
+      -->
+      <button class="xa-export btn btn-default ml20">导出</button>
+      <button class="xa-import btn btn-default ml20">导入</button>
+      {% endif %}
+    </div>
+
 </div>
 {% endblock %}
 
 {% block global_elements %}
-<div class="xui-bottomActionBar">
-  <button class="xa-save btn btn-primary">保存</button>
-  <button class="xa-preview btn btn-default ml20">预览</button>
-  {% if user|is_system_manager %}
-  <!--
-  <button class="xa-makeCover btn btn-default ml20">生成封面</button>
-  -->
-  <button class="xa-export btn btn-default ml20">导出</button>
-  <button class="xa-import btn btn-default ml20">导入</button>
-  {% endif %}
+
 </div>
 {% endblock %}
 
 {% block base_js %}
-  {% include 'wepage_components.html' %}
-  <!-- start of ueditor -->
-  <script type="text/javascript">
-   window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
-  </script>  
-  <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.config.js"></script>
-  <script type="text/javascript" src="/static/ueditor-1.2.6.1/ueditor.all.js"></script>
-  <!-- end of ueditor -->
+  
+  <!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-termite-components"
+      }
+    -->  
+  {{ '["wepage.page", "wepage.componentadder", "wepage.pageheader", "wepage.shopheader", "wepage.personalityTheme", "wepage.specialTemplate", "wepage.richtext", "wepage.item", "wepage.itemlist", "wepage.image", "wepage.notice", "wepage.title", "wepage.textnav", "wepage.imagenav", "wepage.block", "wepage.imagedisplay"]'|load_termite_components|safe }}
+  <!-- *end_prunt_task* -->
+  
 
   <script type="text/javascript">
     W.uid = {{ user.id }};
@@ -310,7 +315,7 @@
             page_json: pageJson
           },
           success: function(data) {
-            window.open("/termite2/termite_preview/?view_editing_data=true&id="+W.projectId);
+            window.open("/termite2/termite_preview/?view_editing_data=true&page_id=preview&project_id="+W.projectId);
           },
           error: function(resp) {
 
@@ -322,6 +327,22 @@
         // 点击空白处，触发事件
         W.Broadcaster.trigger('designpage:cancel_delete');
       });
+      // 滚动浮动在底部
+      var stickyMenu = function(){
+          var winScrollTop = $(window).scrollTop();
+      　　var scrollHeight = $(document).height();
+      　　var windowHeight = $(window).height();
+          var gap = scrollHeight - winScrollTop - windowHeight;
+          if( gap < 44 ){
+              $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+          }else{
+              $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+          }  
+      };
+      stickyMenu();
+      $(window).bind('scroll resize',(function() {
+          stickyMenu();
+      }));
     });
   </script>
 {% block js %}{% endblock %}

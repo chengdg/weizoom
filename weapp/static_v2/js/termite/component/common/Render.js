@@ -18,12 +18,24 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 	},
 
 	compileTemplates: function() {
-		var $templates = $('#componentTemplates');
+		var $templates = $('[data-component-template="true"]');
 		this.$templates = $templates;
-		if ($templates.length > 0) {
-			this.template = Handlebars.compile($templates.html());
-			this.template({}); //第一次渲染，加速后续的渲染
+
+		var contents = []
+		if ($templates.length == 0) {
+			xwarn('no component template');
+			return;
 		}
+
+		if ($templates.length > 0) {
+			for (var i = 0; i < $templates.length; ++i) {
+				var $template = $templates.eq(i);
+				contents.push($template.html());
+			}	
+		}
+
+		this.template = Handlebars.compile(contents.join("\n"));
+		this.template({}); //第一次渲染，加速后续的渲染
 	},
 
 	refresh: function(component) {
@@ -58,7 +70,6 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 			in_product_mode: false,
 			component: component
 		}
-		xwarn(this.template);
 		if (!this.template) {
 			this.compileTemplates();
 		}
@@ -70,7 +81,11 @@ _.extend(W.component.Render.prototype, Backbone.Events, {
 });
 
 
+$(document).ready(function() {
+	W.Render = new W.component.Render();
+})
+/*
 _.delay(function() {
 	W.Render = new W.component.Render();	
 }, 200);
-
+*/

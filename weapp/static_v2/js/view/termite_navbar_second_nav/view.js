@@ -129,7 +129,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
         if (data.length > 0) {
             var linkData = $.parseJSON(data);
             if (linkData.type === 'manualInput') {
-
+                this.setJsonData();
             } else {
                 $el.find('.xa-second-nav-selected-title-box').show();
                 $el.find('.xa-second-nav-selectLink-url').val(linkData.data).attr('disabled','disabled').trigger('input');
@@ -160,6 +160,9 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 
         var $input = $(event.currentTarget);
         var url = $input.val();
+        if (url.substr(0, 3) == './?') {
+            return;
+        }
         if (url.length >= 7 && url.substr(0, 3) != './?' && url.substr(0, 7) != 'http://') {
             url = 'http://'+ url
             $input.val(url);

@@ -502,10 +502,14 @@ class AppManager(object):
 			print '__load_app_module: 1', 
 			return self.APPNAMES_2_MODULES[app.name]
 		app_module_obj = import_module(".{}".format(app.name), package=self.CUSTOMERIZED_APP_PACKAGE_PREFIX)
-		app_module = APPModule(app_module_obj, app.name)
-		self.APPNAMES_2_MODULES[app.name] = app_module
-		
-		settings.TEMPLATE_DIRS.append(app_module.template_dir)
+		if getattr(app_module_obj, 'is_restful_app', False):
+			#对于restful app，跳过install module
+			app_module = None
+		else:
+			app_module = APPModule(app_module_obj, app.name)
+			self.APPNAMES_2_MODULES[app.name] = app_module
+			
+			settings.TEMPLATE_DIRS.append(app_module.template_dir)
 
 		#TODO 完成TODO3之后会移除
 		app.update_status(CustomizedappStatus.RUNNING)

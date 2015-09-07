@@ -23,7 +23,7 @@ Feature: 筛选会员列表
 				=∑ 订单.实付金额[(订单.买家=当前会员) and (订单.状态 in {待发货、已发货、已完成、退款中、退款成功})]
 	（8）【购买次数】：会员提交支付的所有订单的总和
 				=∑ 订单.个数[(订单.买家=当前会员) and (订单.状态 in {待发货、已发货、已完成、退款中、退款成功})]
-	（9）【最后购买时间】：会员最后一个提交有效订单（订单状态为：待发货、已发货、已完成）的下单时间
+	（9）【最后购买时间】：会员最后一个提交有效订单（订单状态为：待发货、已发货、已完成）的【付款时间】
 	（10）【积分范围】：会员目前拥有的积分
 	（11）【最后对话时间】：会员发送给公众账号的最后一条消息的时间
 
@@ -33,6 +33,19 @@ Background:
 
 	Given jobs登录系统
 	And 开启手动清除cookie模式
+	And jobs设定会员积分策略
+		"""
+		{
+			"be_member_increase_count":0,
+			"click_shared_url_increase_count_before_buy":0,
+			"click_shared_url_increase_count_after_buy":0,
+			"buy_via_shared_url_increase_count_for_author":0,
+			"buy_increase_count_for_father":0,
+			"buy_via_offline_increase_count_for_author":0,
+			"click_shared_url_increase_count":0,
+			"buy_award_count_for_buyer":0
+		}
+		"""
 	#添加相关基础数据
 		When jobs已添加商品
 			"""

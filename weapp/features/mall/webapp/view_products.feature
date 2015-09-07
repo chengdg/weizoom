@@ -38,7 +38,7 @@ Background:
 
 
 @mall2 @mall @mall.webapp
-Scenario: 浏览全部商品列表
+Scenario:1 浏览全部商品列表
 	jobs添加商品后
 	1. bill能在webapp中看到jobs添加的商品列表
 	2. 商品按添加顺序倒序排序
@@ -61,7 +61,7 @@ Scenario: 浏览全部商品列表
 		"""
 
 @mall2 @mall.webapp
-Scenario: 按分类浏览商品
+Scenario:2 按分类浏览商品
 	jobs添加多个商品后
 	1. bill能在webapp中按分类浏览商品
 	2. 每个分类中"商品列表"会按照添加的顺序倒序排列

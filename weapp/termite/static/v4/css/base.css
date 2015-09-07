@@ -18,7 +18,7 @@ address,caption,cite,code,dfn,em,th,var,optgroup{font-style:inherit;font-weight:
 del,ins{text-decoration:none;}
 li{list-style:none;}
 caption,th{text-align:left;}
-h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;margin:0px;padding:0px;}
 q:before,q:after{content:'';}
 abbr,acronym{border:0;font-variant:normal;}
 sup{vertical-align:baseline;}

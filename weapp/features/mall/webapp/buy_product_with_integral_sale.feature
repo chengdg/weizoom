@@ -149,7 +149,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@mall2 @promotion @mall.promotion @mall.webapp.promotion @mall.promotion.integral
+@mall2 @promotion @mall.promotion @mall.webapp.promotion @mall.promotion.integral 
 Scenario: 1 购买单个积分折扣商品，积分金额小于最大折扣金额
 
 	When bill访问jobs的webapp
@@ -600,219 +600,219 @@ Scenario: 10 购买单个积分应用活动商品，购买时活动进行中，�
 #补充：张三香
 @mall2 @promotion @integral @meberGrade
 Scenario: 11 不同等级的会员购买有会员价同时有积分统一设置抵扣5的商品
-#会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
-	When tom1关注jobs的公众号
-	And tom2关注jobs的公众号
-	And tom3关注jobs的公众号
-	And tom4关注jobs的公众号
-	Given jobs登录系统
-	And jobs已添加商品
-	"""
-		[{
-			"name": "商品10",
-			"price": 100.00,
-			"is_member_product": "on"
-		},{
-			"name": "商品11",
-			"price": 100.00,
-			"is_member_product": "on"
-		}]
-	"""
-	When jobs创建积分应用活动
-	"""
-		[{
-			"name": "商品11积分应用",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"product_name": "商品11",
-			"is_permanant_active": false,
-			"rules": [{
-				"member_grade": "全部",
-				"discount": 50,
-				"discount_money": 50.0
-				}]
-		}]
-	"""
-	When jobs添加会员等级
+	#会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
+		When tom1关注jobs的公众号
+		And tom2关注jobs的公众号
+		And tom3关注jobs的公众号
+		And tom4关注jobs的公众号
+		Given jobs登录系统
+		And jobs已添加商品
 		"""
-		[{
-			"name": "铜牌会员",
-			"discount": "9"
-		},{
-			"name": "银牌会员",
-			"discount": "8"
-		},{
-			"name": "金牌会员",
-			"discount": "7"
-		}]
+			[{
+				"name": "商品10",
+				"price": 100.00,
+				"is_member_product": "on"
+			},{
+				"name": "商品11",
+				"price": 100.00,
+				"is_member_product": "on"
+			}]
 		"""
-	When jobs更新"tom2"的会员等级
-	"""
-	{
-		"name": "tom2",
-		"member_rank": "铜牌会员"
-	}
-	"""
-	When jobs更新"tom3"的会员等级
-	"""
-	{
-		"name": "tom4",
-		"member_rank": "银牌会员"
-	}
-	"""
-	When jobs更新"tom4"的会员等级
-	"""
-	{
-		"name": "tom4",
-		"member_rank": "金牌会员"
-	}
-	"""
-	Then jobs可以获得会员列表
-	"""
-	[{
-		"name": "tom4",
-		"member_rank": "金牌会员"
-	}, {
-		"name": "tom3",
-		"member_rank": "银牌会员"
-	}, {
-		"name": "tom2",
-		"member_rank": "铜牌会员"
-	}, {
-		"name": "tom1",
-		"member_rank": "普通会员"
-	}, {
-		"name": "tom",
-		"member_rank": "普通会员"
-	}, {
-		"name": "bill",
-		"member_rank": "普通会员"
-	}]
-	"""
-
-
-#1101会员tom1购买商品11，使用积分抵扣最高：50元，订单金额：50元
-	When tom1访问jobs的webapp
-	When tom1获得jobs的100会员积分
-	Then tom1在jobs的webapp中拥有100会员积分
-	When tom1购买jobs的商品
+		When jobs创建积分应用活动
+		"""
+			[{
+				"name": "商品11积分应用",
+				"start_date": "今天",
+				"end_date": "1天后",
+				"product_name": "商品11",
+				"is_permanant_active": false,
+				"rules": [{
+					"member_grade": "全部",
+					"discount": 50,
+					"discount_money": 50.0
+					}]
+			}]
+		"""
+		When jobs添加会员等级
+			"""
+			[{
+				"name": "铜牌会员",
+				"discount": "9"
+			},{
+				"name": "银牌会员",
+				"discount": "8"
+			},{
+				"name": "金牌会员",
+				"discount": "7"
+			}]
+			"""
+		When jobs更新"tom2"的会员等级
 		"""
 		{
-			"products": [{
+			"name": "tom2",
+			"member_rank": "铜牌会员"
+		}
+		"""
+		When jobs更新"tom3"的会员等级
+		"""
+		{
+			"name": "tom4",
+			"member_rank": "银牌会员"
+		}
+		"""
+		When jobs更新"tom4"的会员等级
+		"""
+		{
+			"name": "tom4",
+			"member_rank": "金牌会员"
+		}
+		"""
+		Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom4",
+			"member_rank": "金牌会员"
+		}, {
+			"name": "tom3",
+			"member_rank": "银牌会员"
+		}, {
+			"name": "tom2",
+			"member_rank": "铜牌会员"
+		}, {
+			"name": "tom1",
+			"member_rank": "普通会员"
+		}, {
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "普通会员"
+		}]
+		"""
+
+
+	#1101会员tom1购买商品11，使用积分抵扣最高：50元，订单金额：50元
+		When tom1访问jobs的webapp
+		When tom1获得jobs的100会员积分
+		Then tom1在jobs的webapp中拥有100会员积分
+		When tom1购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":50.00,
+					"integral":100.00,
+					"name": "商品11",
+					"count": 1
+				}]
+			}
+			"""
+		Then tom1成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 50.0,
+				"product_price": 100.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
+				"coupon_money":0.00,
 				"integral_money":50.00,
 				"integral":100.00,
-				"name": "商品11",
-				"count": 1
-			}]
-		}
-		"""
-	Then tom1成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 50.0,
-			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"coupon_money":0.00,
-			"integral_money":50.00,
-			"integral":100.00,
-			"products": [{
-				"name": "商品11",
-				"price": 100.0,
-				"grade_discounted_money": 0.0,
-				"count": 1
-			}]
-		}
-		"""
-		#	"members_money":0.00,
-		#	"member_price":100.00,
-	Then tom1在jobs的webapp中拥有0会员积分
+				"products": [{
+					"name": "商品11",
+					"price": 100.0,
+					"grade_discounted_money": 0.0,
+					"count": 1
+				}]
+			}
+			"""
+			#	"members_money":0.00,
+			#	"member_price":100.00,
+		Then tom1在jobs的webapp中拥有0会员积分
 
 
-#1102会员tom2购买商品11，使用积分抵扣最高：45元，订单金额：45元
-	When tom2访问jobs的webapp
-	When tom2获得jobs的200会员积分
-	Then tom2在jobs的webapp中拥有200会员积分
-	When tom2购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1102会员tom2购买商品11，使用积分抵扣最高：45元，订单金额：45元
+		When tom2访问jobs的webapp
+		When tom2获得jobs的200会员积分
+		Then tom2在jobs的webapp中拥有200会员积分
+		When tom2购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":45.00,
+					"integral":90.00,
+					"name": "商品11",
+					"count": 1
+				}]
+			}
+			"""
+		Then tom2成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 45.0,
+				"product_price": 90.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
 				"integral_money":45.00,
 				"integral":90.00,
-				"name": "商品11",
-				"count": 1
-			}]
-		}
-		"""
-	Then tom2成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 45.0,
-			"product_price": 90.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":45.00,
-			"integral":90.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品11",
-				"price": 90.0,
-				"grade_discounted_money": 10.0,
-				"count": 1
-			}]
-		}
-		"""
-			#"member_price":90.00,
-			#"members_money":10.00,
-	Then tom2在jobs的webapp中拥有110会员积分
+				"coupon_money":0.00,
+				"products": [{
+					"name": "商品11",
+					"price": 90.0,
+					"grade_discounted_money": 10.0,
+					"count": 1
+				}]
+			}
+			"""
+				#"member_price":90.00,
+				#"members_money":10.00,
+		Then tom2在jobs的webapp中拥有110会员积分
 
-#1103会员tom4购买商品10+商品11，使用积分抵扣最高：35元，订单金额：105元
-	When tom4访问jobs的webapp
-	When tom4获得jobs的400会员积分
-	Then tom4在jobs的webapp中拥有400会员积分
-	When tom4购买jobs的商品
+	#1103会员tom4购买商品10+商品11，使用积分抵扣最高：35元，订单金额：105元
+		When tom4访问jobs的webapp
+		When tom4获得jobs的400会员积分
+		Then tom4在jobs的webapp中拥有400会员积分
+		When tom4购买jobs的商品
+			"""
+			{
+				"products": [{
+					"name": "商品10",
+					"count": 1
+				},{
+				    "name": "商品11",
+					"count": 1,
+					"integral_money":35.00,
+					"integral":70.00
+				}]
+			}
+			"""
+		Then tom4成功创建订单
 		"""
-		{
-			"products": [{
-				"name": "商品10",
-				"count": 1
-			},{
-			    "name": "商品11",
-				"count": 1,
+			{
+				"status": "待支付",
+				"final_price": 105.0,
+				"product_price": 140.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
 				"integral_money":35.00,
-				"integral":70.00
-			}]
-		}
+				"integral":70.00,
+				"coupon_money":0.00,
+				"products": [{
+					"name": "商品10",
+					"price": 70.0,
+					"grade_discounted_money": 30.0,
+					"count": 1
+				},{
+					"name": "商品11",
+					"price": 70.0,
+					"grade_discounted_money": 30.0,
+					"count": 1
+				}]
+			}
 		"""
-	Then tom4成功创建订单
-	"""
-		{
-			"status": "待支付",
-			"final_price": 105.0,
-			"product_price": 140.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":35.00,
-			"integral":70.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品10",
-				"price": 70.0,
-				"grade_discounted_money": 30.0,
-				"count": 1
-			},{
-				"name": "商品11",
-				"price": 70.0,
-				"grade_discounted_money": 30.0,
-				"count": 1
-			}]
-		}
-	"""
-	#		"member_price":140.00,
-	#		"members_money":60.00,
-	Then bill在jobs的webapp中拥有330会员积分
+		#		"member_price":140.00,
+		#		"members_money":60.00,
+		Then bill在jobs的webapp中拥有330会员积分
 
 @mall2 @promotion
 Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置积分抵扣的商品
@@ -904,172 +904,172 @@ Scenario: 12 不同等级的会员购买有会员价同时有根据等级设置�
 			},{
 				"member_grade": "铜牌会员",
 				"discount": 90,
-				"discount_money": 81.0
+				"discount_money": 90.0
 			},{
 				"member_grade": "银牌会员",
 				"discount": 80,
-				"discount_money": 64.0
+				"discount_money": 80.0
 			},{
 				"member_grade": "金牌会员",
 				"discount": 70,
-				"discount_money": 49.0
+				"discount_money": 70.0
 			}]
 		}]
 		"""
 
 
-#1201会员bill1购买商品12，使用积分抵扣最高：100元，订单金额：0元
-	When bill1访问jobs的webapp
-	When bill1获得jobs的200会员积分
-	Then bill1在jobs的webapp中拥有200会员积分
-	When bill1购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1201会员bill1购买商品12，使用积分抵扣最高：100元，订单金额：0元
+		When bill1访问jobs的webapp
+		When bill1获得jobs的200会员积分
+		Then bill1在jobs的webapp中拥有200会员积分
+		When bill1购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":100.00,
+					"integral":200.00,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill1成功创建订单
+			"""
+			{
+				"status": "待发货",
+				"final_price": 0.00,
+				"product_price": 100.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
+				"coupon_money":0.00,
 				"integral_money":100.00,
 				"integral":200.00,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill1成功创建订单
-		"""
-		{
-			"status": "待发货",
-			"final_price": 0.00,
-			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"coupon_money":0.00,
-			"integral_money":100.00,
-			"integral":200.00,
-			"products": [{
-				"price": 100.0,
-				"grade_discounted_money": 0.0,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-		#	"member_price":100.00,
-		#	"members_money":0.00,
-	Then bill1在jobs的webapp中拥有0会员积分
+				"products": [{
+					"price": 100.0,
+					"grade_discounted_money": 0.0,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+			#	"member_price":100.00,
+			#	"members_money":0.00,
+		Then bill1在jobs的webapp中拥有0会员积分
 
 
-#1202会员bill2购买商品12，使用积分抵扣最高：81元，订单金额：9元
-	When bill2访问jobs的webapp
-	When bill2获得jobs的300会员积分
-	Then bill2在jobs的webapp中拥有300会员积分
-	When bill2购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1202会员bill2购买商品12，使用积分抵扣最高：81元，订单金额：9元
+		When bill2访问jobs的webapp
+		When bill2获得jobs的300会员积分
+		Then bill2在jobs的webapp中拥有300会员积分
+		When bill2购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":81.00,
+					"integral":162.00,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill2成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 9.00,
+				"product_price": 90.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
+				"coupon_money":0.00,
 				"integral_money":81.00,
 				"integral":162.00,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill2成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 9.00,
-			"product_price": 90.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"coupon_money":0.00,
-			"integral_money":81.00,
-			"integral":162.00,
-			"products": [{
-				"price": 90.0,
-				"grade_discounted_money": 10.0,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill2在jobs的webapp中拥有138会员积分
+				"products": [{
+					"price": 90.0,
+					"grade_discounted_money": 10.0,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill2在jobs的webapp中拥有138会员积分
 
 
-#1203会员bill3购买商品12，使用积分抵扣最高：64元，订单金额：16元
-	When bill3访问jobs的webapp
-	When bill3获得jobs的400会员积分
-	Then bill3在jobs的webapp中拥有400会员积分
-	When bill3购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1203会员bill3购买商品12，使用积分抵扣最高：64元，订单金额：16元
+		When bill3访问jobs的webapp
+		When bill3获得jobs的400会员积分
+		Then bill3在jobs的webapp中拥有400会员积分
+		When bill3购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":64.00,
+					"integral":128.00,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill3成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 16.00,
+				"product_price": 80.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
+				"coupon_money":0.00,
 				"integral_money":64.00,
 				"integral":128.00,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill3成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 16.00,
-			"product_price": 80.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"coupon_money":0.00,
-			"integral_money":64.00,
-			"integral":128.00,
-			"products": [{
-				"price": 80.0,
-				"grade_discounted_money": 20.0,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-		#	"member_price":80.00,
-		#	"members_money":20.00,
-	Then bill3在jobs的webapp中拥有272会员积分
+				"products": [{
+					"price": 80.0,
+					"grade_discounted_money": 20.0,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+			#	"member_price":80.00,
+			#	"members_money":20.00,
+		Then bill3在jobs的webapp中拥有272会员积分
 
 
- #1204会员bill4购买商品12，使用积分抵扣最高：49元，订单金额：21元
-		When bill4访问jobs的webapp
-		When bill4获得jobs的500会员积分
-		Then bill4在jobs的webapp中拥有500会员积分
-		When bill4购买jobs的商品
-		"""
-		{
-			"products": [{
+	 #1204会员bill4购买商品12，使用积分抵扣最高：49元，订单金额：21元
+			When bill4访问jobs的webapp
+			When bill4获得jobs的500会员积分
+			Then bill4在jobs的webapp中拥有500会员积分
+			When bill4购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":49.00,
+					"integral":98.00,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+			Then bill4成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 21.00,
+				"product_price": 70.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
+				"coupon_money":0.00,
 				"integral_money":49.00,
 				"integral":98.00,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-		Then bill4成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 21.00,
-			"product_price": 70.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"coupon_money":0.00,
-			"integral_money":49.00,
-			"integral":98.00,
-			"products": [{
-				"price": 70.0,
-				"grade_discounted_money": 30.0,
-				"name": "商品12",
-				"count": 1
-			}]
-		}
-		"""
-		#	"member_price":70.00,
-		#	"members_money":30.00,
-		Then bill4在jobs的webapp中拥有402会员积分
+				"products": [{
+					"price": 70.0,
+					"grade_discounted_money": 30.0,
+					"name": "商品12",
+					"count": 1
+				}]
+			}
+			"""
+			#	"member_price":70.00,
+			#	"members_money":30.00,
+			Then bill4在jobs的webapp中拥有402会员积分
 
 @mall2 @promotion
 Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分抵扣的商品
@@ -1175,154 +1175,154 @@ Scenario: 13 不同等级的会员购买原价同时有根据等级设置积分�
 		"""
 
 
-#1301会员bill1购买商品13，使用积分抵扣最高：100元，订单金额：0元
-	When bill1访问jobs的webapp
-	When bill1获得jobs的200会员积分
-	Then bill1在jobs的webapp中拥有200会员积分
-	When bill1购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1301会员bill1购买商品13，使用积分抵扣最高：100元，订单金额：0元
+		When bill1访问jobs的webapp
+		When bill1获得jobs的200会员积分
+		Then bill1在jobs的webapp中拥有200会员积分
+		When bill1购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":100.00,
+					"integral":200.00,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill1成功创建订单
+			"""
+			{
+				"status": "待发货",
+				"final_price": 0.00,
+				"product_price": 100.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
 				"integral_money":100.00,
 				"integral":200.00,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill1成功创建订单
-		"""
-		{
-			"status": "待发货",
-			"final_price": 0.00,
-			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":100.00,
-			"integral":200.00,
-			"coupon_money":0.00,
-			"products": [{
-				"price": 100.0,
-				"grade_discounted_money": 0.0,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-		#	"member_price":100.00,
-		#	"members_money":0.00,
-	Then bill1在jobs的webapp中拥有0会员积分
+				"coupon_money":0.00,
+				"products": [{
+					"price": 100.0,
+					"grade_discounted_money": 0.0,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+			#	"member_price":100.00,
+			#	"members_money":0.00,
+		Then bill1在jobs的webapp中拥有0会员积分
 
-#1302会员bill2购买商品13，使用积分抵扣最高：90元，订单金额：10元
-	When bill2访问jobs的webapp
-	When bill2获得jobs的300会员积分
-	Then bill2在jobs的webapp中拥有300会员积分
-	When bill2购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1302会员bill2购买商品13，使用积分抵扣最高：90元，订单金额：10元
+		When bill2访问jobs的webapp
+		When bill2获得jobs的300会员积分
+		Then bill2在jobs的webapp中拥有300会员积分
+		When bill2购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":90.00,
+					"integral":180.00,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill2成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 10.00,
+				"product_price": 100.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
 				"integral_money":90.00,
 				"integral":180.00,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill2成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 10.00,
-			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":90.00,
-			"integral":180.00,
-			"coupon_money":0.00,
-			"products": [{
-				"price": 100.0,
-				"grade_discounted_money": 0.0,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-		#	"member_price":100.00,
-		#	"members_money":0.00,
-	Then bill2在jobs的webapp中拥有120会员积分
+				"coupon_money":0.00,
+				"products": [{
+					"price": 100.0,
+					"grade_discounted_money": 0.0,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+			#	"member_price":100.00,
+			#	"members_money":0.00,
+		Then bill2在jobs的webapp中拥有120会员积分
 
-#1303会员bill3购买商品13，使用积分抵扣最高：80元，订单金额：20元
-	When bill3访问jobs的webapp
-	When bill3获得jobs的400会员积分
-	Then bill3在jobs的webapp中拥有400会员积分
-	When bill3购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1303会员bill3购买商品13，使用积分抵扣最高：80元，订单金额：20元
+		When bill3访问jobs的webapp
+		When bill3获得jobs的400会员积分
+		Then bill3在jobs的webapp中拥有400会员积分
+		When bill3购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":80.00,
+					"integral":160.00,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill3成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 20.00,
+				"product_price": 100.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
 				"integral_money":80.00,
 				"integral":160.00,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill3成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 20.00,
-			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":80.00,
-			"integral":160.00,
-			"coupon_money":0.00,
-			"products": [{
-				"price": 100.0,
-				"grade_discounted_money": 0.0,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-		#	"member_price":100.00,
-		#	"members_money":0.00,
-	Then bill3在jobs的webapp中拥有240会员积分
+				"coupon_money":0.00,
+				"products": [{
+					"price": 100.0,
+					"grade_discounted_money": 0.0,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+			#	"member_price":100.00,
+			#	"members_money":0.00,
+		Then bill3在jobs的webapp中拥有240会员积分
 
-#1304会员bill4购买商品13，使用积分抵扣最高：70元，订单金额：30元
-	When bill4访问jobs的webapp
-	When bill4获得jobs的500会员积分
-	Then bill4在jobs的webapp中拥有500会员积分
-	When bill4购买jobs的商品
-		"""
-		{
-			"products": [{
+	#1304会员bill4购买商品13，使用积分抵扣最高：70元，订单金额：30元
+		When bill4访问jobs的webapp
+		When bill4获得jobs的500会员积分
+		Then bill4在jobs的webapp中拥有500会员积分
+		When bill4购买jobs的商品
+			"""
+			{
+				"products": [{
+					"integral_money":70.00,
+					"integral":140.00,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+		Then bill4成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 30.00,
+				"product_price": 100.00,
+				"promotion_saved_money": 0.00,
+				"postage": 0.00,
 				"integral_money":70.00,
 				"integral":140.00,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-	Then bill4成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 30.00,
-			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"integral_money":70.00,
-			"integral":140.00,
-			"coupon_money":0.00,
-			"products": [{
-				"price": 100.0,
-				"grade_discounted_money": 0.0,
-				"name": "商品13",
-				"count": 1
-			}]
-		}
-		"""
-		#	"member_price":100.00,
-		#	"members_money":0.00,
-	Then bill4在jobs的webapp中拥有360会员积分
+				"coupon_money":0.00,
+				"products": [{
+					"price": 100.0,
+					"grade_discounted_money": 0.0,
+					"name": "商品13",
+					"count": 1
+				}]
+			}
+			"""
+			#	"member_price":100.00,
+			#	"members_money":0.00,
+		Then bill4在jobs的webapp中拥有360会员积分

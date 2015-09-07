@@ -136,17 +136,21 @@ $(document).ready(function() {
         $(".xa-totalMoney").text("总价值："+ totalMoney.toFixed(2) +"元");
     })
 	$('.xa-submit').click(function(event) {
+        $(this).attr("disabled",true); 
         if(!$('.xa-vip-member-id').length){
-            W.showHint('error', '请选择会员!')
+            W.showHint('error', '请选择会员!');
+            $(this).attr("disabled",false);
             return ;
         }
         if (selectCouponMoney == '0') {
             W.showHint('error', '请选择优惠券!')
+            $(this).attr("disabled",false);
             return ;
         }
         var count = parseInt($("#selectCouponCount").val());
         if(parseInt($('.xa-vip-count').attr('vip_count'))*count>remained_count){
-            W.showHint('error', '发放数量大于优惠券库存，请先增加库存!')
+            W.showHint('error', '发放数量大于优惠券库存，请先增加库存!');
+            $(this).attr("disabled",false);
             return ;
         }
 		//获取integral sale rule
@@ -174,6 +178,7 @@ $(document).ready(function() {
                 if (resp.errMsg) {
                     W.showHint('error', resp.errMsg);
                 }else {
+                    $(this).attr("disabled",false);
 				    W.showHint('error', '发放失败!');
                 }
 			}

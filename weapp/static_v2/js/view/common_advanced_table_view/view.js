@@ -378,8 +378,12 @@ W.view.common.AdvancedTable = Backbone.View.extend({
      * getDateItem: 根据数据id获取数据
      */
     getDataItem: function(id) {
-        id = parseInt(id);
-        return this.items.get(id);
+        var data = this.items.get(id);
+        if (!data) {
+            id = parseInt(id);
+            data = this.items.get(id);
+        }
+        return data;
     },
 
     /**

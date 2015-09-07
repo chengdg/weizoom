@@ -50,6 +50,7 @@ Background:
 			"is_member_product": "on"
 		},{
 			"name":"商品4",
+			"bar_code":"123456",
 			"price":100.00,
 			"shelve_type": "上架",
 			"is_member_product": "on"
@@ -215,3 +216,169 @@ Scenario: 2 批量删除买赠活动（不包括未结束状态的）
 				"actions": ["详情","结束"]
 			}]
 		"""
+
+# __author__ : "王丽" 补充在查询结果中删除活动
+@promotion @promotionPremium @mall2
+Scenario: 3 在按"商品名称"查询的查询结果下删除买赠活动
+
+	Given jobs登录系统
+
+	When jobs设置查询条件
+		"""
+		{
+			"product_name":"商品4",
+			"bar_code":"",
+			"status":"全部",
+			"start_date":"",
+			"end_date":""
+		}
+		"""
+	Then jobs获取买赠活动列表
+		"""
+		[{
+			"name": "活动名称:商品4买赠",
+			"product_name": "商品4",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "今天",
+			"actions": ["详情","删除"]
+		}]
+		"""
+	When jobs"删除"促销活动"活动名称:商品4买赠"
+	Then jobs获取买赠活动列表
+		"""
+		[]
+		"""
+
+@promotion @promotionPremium @mall2
+Scenario: 4 在按"商品条码"查询的查询结果下删除买赠活动
+
+	Given jobs登录系统
+
+	When jobs设置查询条件
+		"""
+		{
+			"product_name":"",
+			"bar_code":"123456",
+			"status":"全部",
+			"start_date":"",
+			"end_date":""
+		}
+		"""
+	Then jobs获取买赠活动列表
+		"""
+		[{
+			"name": "活动名称:商品4买赠",
+			"product_name": "商品4",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "今天",
+			"actions": ["详情","删除"]
+		}]
+		"""
+	When jobs"删除"促销活动"活动名称:商品4买赠"
+	Then jobs获取买赠活动列表
+		"""
+		[]
+		"""
+
+@promotion @promotionPremium @mall2
+Scenario: 5 在按"促销状态"查询的查询结果下删除买赠活动
+
+	Given jobs登录系统
+
+	When jobs设置查询条件
+		"""
+		{
+			"product_name":"",
+			"bar_code":"",
+			"status":"已结束",
+			"start_date":"",
+			"end_date":""
+		}
+		"""
+	Then jobs获取买赠活动列表
+		"""
+		[{
+			"name": "活动名称:商品3买赠",
+			"product_name": "商品3",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"actions": ["详情","删除"]
+		},{
+			"name": "活动名称:商品4买赠",
+			"product_name": "商品4",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "今天",
+			"actions": ["详情","删除"]
+		}]
+		"""
+	When jobs"删除"促销活动"活动名称:商品4买赠"		
+	Then jobs获取买赠活动列表
+		"""
+		[{
+			"name": "活动名称:商品3买赠",
+			"product_name": "商品3",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"actions": ["详情","删除"]
+		}]
+		"""
+		
+@promotion @promotionPremium @mall2
+Scenario: 6 在按"活动时间"查询的查询结果下删除买赠活动
+
+	Given jobs登录系统
+
+	When jobs设置查询条件
+		"""
+		{
+			"product_name":"",
+			"bar_code":"",
+			"status":"已结束",
+			"start_date":"2天前",
+			"end_date":"今天"
+		}
+		"""
+	Then jobs获取买赠活动列表
+		"""
+		[{
+			"name": "活动名称:商品3买赠",
+			"product_name": "商品3",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"actions": ["详情","删除"]
+		},{
+			"name": "活动名称:商品4买赠",
+			"product_name": "商品4",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "今天",
+			"actions": ["详情","删除"]
+		}]
+		"""
+	When jobs"删除"促销活动"活动名称:商品4买赠"		
+	Then jobs获取买赠活动列表
+		"""
+		[{
+			"name": "活动名称:商品3买赠",
+			"product_name": "商品3",
+			"product_price":100.00,
+			"status":"已结束",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"actions": ["详情","删除"]
+		}]
+		"""
+	

@@ -1132,6 +1132,19 @@
       }
 
       return tmpl.compiledTemplate;
+    },
+
+    renderTmpl: function(name, context, options) {
+      var template = this.getTmpl(name);
+      if (!template) {
+        return '';
+      }
+      var html = template(context);
+      if (options && options.returnHtml) {
+        return html;
+      } else {
+        return $(html);
+      }
     }
 
   });

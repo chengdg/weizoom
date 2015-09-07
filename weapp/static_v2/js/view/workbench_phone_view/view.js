@@ -10,7 +10,7 @@ W.workbench.PhoneView = Backbone.View.extend({
 	el: '',
 
 	events: {
-        'click .xa-title': 'onClickTitle'
+        //'click .xa-title': 'onClickTitle'
 	},
 	
 	initialize: function(options) {
@@ -22,7 +22,7 @@ W.workbench.PhoneView = Backbone.View.extend({
         //W.Broadcaster.on('component:stop_drag', this.onStopDragComponent, this);
         //W.Broadcaster.on('component:drag', this.onDraggingComponent, this);
         W.Broadcaster.on('designpage:resize', this.onResizeDesignPage, this);
-        W.Broadcaster.on('designpage:update_site_title', this.onUpdateSiteTitle, this);
+        //W.Broadcaster.on('designpage:update_site_title', this.onUpdateSiteTitle, this);
 
         //this.enableDroppable();
 
@@ -39,7 +39,7 @@ W.workbench.PhoneView = Backbone.View.extend({
         this.right = this.left + this.width;
         this.compareTmpl = _.template('[phone view]: compare (<%=x%>, <%=y%>) to phone top(<%=top%>), left(<%=left%>), width(<%=width%>), height(<%=height%>)');
         this.$skin = this.$('.xui-i-skin');
-        this.$title = this.$('.xa-title');
+        //this.$title = this.$('.xa-title');
 	},
 
     render: function() {
@@ -169,12 +169,12 @@ W.workbench.PhoneView = Backbone.View.extend({
         this.$skin.height(height+50+'px');
     },
 
-    onUpdateSiteTitle: function(title) {
-        if (title.length === 0) {
-            return;
-        }
-        this.$title.text(title);
-    },
+    //onUpdateSiteTitle: function(title) {
+    //    if (title.length === 0) {
+    //        return;
+    //    }
+    //    this.$title.text(title);
+    //},
 
     /**
      * enableDroppable: 开启droppable功能
@@ -256,7 +256,7 @@ W.workbench.PhoneView = Backbone.View.extend({
         return offset.left + width;
     },
 
-    onClickTitle: function(event) {
-        W.Broadcaster.trigger('designpage:select_page_component');
-    }
+    //onClickTitle: function(event) {
+    //    W.Broadcaster.trigger('designpage:select_page_component');
+    //}
 });

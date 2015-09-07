@@ -80,6 +80,9 @@ Background:
 
 	And bill关注jobs的公众号于'2015-05-20'
 
+@mall2 @member @memberList 
+Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
+
 	#微信用户批量下订单
 		When 微信用户批量消费jobs的商品
 			| date         | consumer | type      |businessman|   product | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action       |  order_status   |
@@ -91,8 +94,6 @@ Background:
 			| 2015-07-02   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 货到付款       | 10      | 100      |          |        | 110         |              | 0      | 0      | 110  | jobs,完成         |  已完成         |
 			| 2015-08-04   | bill     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-08-05   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
-
-Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间、）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
 
 	Given jobs登录系统
 
@@ -140,6 +141,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		}
 		"""
 
+@mall2 @member @memberList
 Scenario:2 会员基本信息修改"所在分组"
 
 	Given jobs登录系统
@@ -154,7 +156,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"今天",
+			"last_buy_time":"",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -176,7 +178,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"今天",
+			"last_buy_time":"",
 			"tags":["分组1", "分组3"],
 			"integral":0,
 			"friend_count":0,
@@ -184,6 +186,7 @@ Scenario:2 会员基本信息修改"所在分组"
 		}
 		"""
 
+@mall2 @member @memberList
 Scenario:3 会员基本信息修改"调积分"
 
 	Given jobs登录系统
@@ -198,7 +201,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"今天",
+			"last_buy_time":"",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -221,7 +224,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"今天",
+			"last_buy_time":"",
 			"tags":[],
 			"integral": -10,
 			"friend_count":0,
@@ -245,7 +248,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"今天",
+			"last_buy_time":"",
 			"tags":[],
 			"integral": 10,
 			"friend_count":0,
@@ -272,6 +275,7 @@ Scenario:3 会员基本信息修改"调积分"
 		}]
 		"""
 
+@mall2 @member @memberList
 Scenario:4 会员基本信息好友数验证
 	#bill和tom建立好友关系
 			When bill访问jobs的webapp
@@ -301,7 +305,7 @@ Scenario:4 会员基本信息好友数验证
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"今天",
+			"last_buy_time":"",
 			"tags":[],
 			"integral":0,
 			"friend_count":1,

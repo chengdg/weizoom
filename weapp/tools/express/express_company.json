@@ -68,6 +68,11 @@
 		"id": "00014",
 		"name": "速尔快递",
 		"value": "suer"		
+	},
+	{
+		"id": "00015",
+		"name": "国通快递",
+		"value": "guotongkuaidi"		
 	}
 ]
 

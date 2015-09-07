@@ -97,7 +97,6 @@ def __get_promotion_name(product):
 		else:
 			name = '%d_%s' % (promotion['id'], product.model['name'])
 	elif product.integral_sale:
-		print 'jz----', '%d_%s' % (product.integral_sale['id'], product.model['name'])
 		return '%d_%s' % (product.integral_sale['id'], product.model['name'])
 
 	return name
@@ -1225,7 +1224,7 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 				if promotion_relation.promotion_id in processed_promotion_set:
 					continue
 
-				for premium_product in promotion_relation.promotion_result['premium_products']:
+				for premium_product in promotion_relation.promotion_result.get('premium_products', []):
 					temp_premium_products.append({
 						"id": premium_product['id'],
 						"name": premium_product['name'],
@@ -2246,6 +2245,7 @@ def update_order_status(user, action, order, request=None):
 
 def __restore_product_stock_by_order(order):
 	"""
+
 	返回商品的库存
 	包括赠品库存
 	和销量
@@ -2260,7 +2260,9 @@ def __restore_product_stock_by_order(order):
 			product_model.stocks = product_model.stocks + product['count']
 			product_model.save()
 		# product sales update
-		if order.status < mall_models.ORDER_STATUS_PAYED_SUCCESSED:
+		if order.status < mall_models.ORDER_STATUS_PAYED_SUCCESSED or (
+			product.get('promotion', None) and product['promotion'].get('type', '').find('premium_product') > 0):
+			# 订单未支付或者是赠品商品, 不需要回退销量数据
 			continue
 		productsales = ProductSales.objects.filter(product_id=product.get('id'))
 		if len(productsales):

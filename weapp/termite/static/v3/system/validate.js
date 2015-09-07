@@ -78,6 +78,12 @@ W.ValidaterClass = function() {
 			regex: /^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g,
 			errorHint: '输入正确11位有效的手机号码'
 		},
+        'require-email': {
+            type: 'regex',
+            extract: 'value',
+            regex: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/g,
+            errorHint: '输入正确的邮箱'
+        },
 		'require-notempty': {
 			type: 'function',
 			extract: 'element',
@@ -93,6 +99,42 @@ W.ValidaterClass = function() {
 			},
 			errorHint: ''
 		},
+        'require-select-input': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                var $selectedInput = element.find('input:checked');
+                if ($selectedInput.length > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            errorHint: ''
+        },
+        'require-select-span': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                var el_type =  element.find('label').find('span :first').attr('data-type');
+                var selectedspan = false;
+                var span = element.find('label').find('span :first');
+                var class_name;
+                if (el_type === 'radio'){
+                    class_name = 'radio-select';
+                }
+                if (el_type === 'checkbox'){
+                    class_name = 'checkbox-select';
+                }
+                for (var i=0;i<span.length;i++){
+                    if (span.hasClass(class_name)){
+                        selectedspan = true;
+                    }
+                }
+                return selectedspan;
+            },
+            errorHint: ''
+        },
         'require-select': {
             type: 'function',
             extract: 'value',
@@ -128,6 +170,33 @@ W.ValidaterClass = function() {
             	this.errorHint = result['errorHint'];
             	return result.isValidate;
             }
+        },
+        'require-string': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                var trimedValue = $.trim(element.val());
+                console.log(trimedValue,"trimedValue");
+
+                // 支持contenteditable jz
+                if(element.attr('contenteditable') == 'true'){
+                    trimedValue = element.attr('value');
+                }
+                var minLength = element.data('minlength') || element.data('min-length')|| 1;
+                var maxLength = element.data('maxlength') || element.data('max-length') || 9999999;
+                var actualLength = trimedValue.length;
+                if (actualLength < minLength || actualLength > maxLength) {
+                    if (maxLength == 9999999) {
+                        this.errorHint = '输入值长度必须大于等于'+minLength;
+                    } else {
+                        this.errorHint = '请输入长度在'+minLength+'到'+maxLength+'之间的字符串';
+                    }
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            errorHint: ''
         }
 	};
 

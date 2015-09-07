@@ -17,6 +17,21 @@ Background:
 
 	Given jobs登录系统
 
+	And jobs设定会员积分策略
+		"""
+		{
+			"be_member_increase_count":0,
+			"click_shared_url_increase_count_before_buy":0,
+			"click_shared_url_increase_count_after_buy":0,
+			"buy_via_shared_url_increase_count_for_author":0,
+			"buy_increase_count_for_father":0,
+			"buy_via_offline_increase_count_for_author":0,
+			"click_shared_url_increase_count":0,
+			"buy_award_count_for_buyer":0,
+			"integral_each_yuan":0
+
+		}
+		"""
 	#添加相关基础数据
 		When jobs添加会员等级
 			"""
@@ -83,7 +98,7 @@ Background:
 	#	When tom2在模拟器中发送消息'tom2发送一条文本消息，回复文本消息'
 	#	When jobs在模拟器中给tom2回复消息'jobs回复tom2消息'
 
-@mall2 @member @memberList 
+@mall2 @member @memberList
 Scenario:1 调分组
 	Given jobs登录系统
 	#给没有分组的人设置分组

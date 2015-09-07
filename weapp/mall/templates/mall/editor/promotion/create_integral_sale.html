@@ -332,7 +332,9 @@ $(document).ready(function() {
 	});
 
 	$('.xa-submit').click(function(event) {
+		$(this).attr("disabled",true);
 		if (!W.validate()) {
+			$(this).attr("disabled",false);
 			return false;
 		}
 		//获取integral sale rule
