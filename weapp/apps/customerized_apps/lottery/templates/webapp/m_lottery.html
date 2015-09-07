@@ -133,7 +133,11 @@
 
 {% block js %}
     <script>
-
+        var parentUrl = document.referrer;
+        alert(parentUrl);
+        if(parentUrl.indexOf('user_center')>0){
+            window.location.reload(true);
+        }
         function afterStop(data){
             //更新可玩次数和剩余积分
             can_play_count = data.can_play_count;
