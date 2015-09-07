@@ -42,6 +42,7 @@ class Mvote(resource.Resource):
 			isPC = request.GET.get('isPC',0)
 			isMember = False
 			auth_appid_info = None
+			thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
 				if not isMember:
@@ -112,7 +113,9 @@ class Mvote(resource.Resource):
 					'isPC': isPC,
 					'isMember': isMember,
 					'auth_appid_info': auth_appid_info,
-					'permission': permission
+					'permission': permission,
+					'share_page_desc': record.name,
+					'share_img_url': thumbnails_url
 				})
 				return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:
