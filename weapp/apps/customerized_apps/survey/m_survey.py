@@ -41,7 +41,7 @@ class Msurvey(resource.Resource):
 			auth_appid_info = None
 			permission = ''
 			share_page_desc = ''
-			thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
+			thumbnails_url = '/static_v2/img/thumbnails_survey.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
 				if not isMember:
@@ -122,7 +122,6 @@ class Msurvey(resource.Resource):
 			c = RequestContext(request, {
 				'record': record
 			});
-
 			return render_to_response('survey/templates/webapp/m_survey.html', c)
 
 def get_result(id,member_id):
