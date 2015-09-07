@@ -42,7 +42,7 @@ from mall import signals as mall_signals
 from mall.promotion import models as promotion_models
 from mall import models as mall_models
 from modules.member.module_api import get_member_by_id_list
-from webapp.models import WebApp
+from webapp.models import WebApp, WebAppUser
 from member.member_grade import auto_update_grade
 random.seed(time.time())
 
@@ -3142,7 +3142,6 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
 def update_user_paymoney(id):
 	#更新会员的消费、消费次数、消费单价
 	
-	from modules.member.models import *
 	member = WebAppUser.get_member_by_webapp_user_id(id)
 	user_orders = Order.get_orders_from_webapp_user_ids(member.get_webapp_user_ids)
 	pay_money = 0

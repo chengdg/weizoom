@@ -46,9 +46,10 @@
 					<div class="xui-i-left fl lh1">添加到分组： </div>
 					<div class="fl mt20 ml10">
 						<select class="ml10 w120" name="tag_id" id="tag_id">
-						{% if not tags %}
-							<option value="-1">无</option>
+						{% if not tags or tag_is_del %}
+							<option value="-1" selected="selected">无</option>
 						{% endif %}
+
 						{% for tag in tags %}
 							<option value="{{tag.id}}"{% if qrcode.tag_id == tag.id %}selected="selected"{% endif%}>{{tag.name}}</option>
 						{% endfor %}

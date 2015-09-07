@@ -147,6 +147,15 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 			ChannelQrcodeHasMember.objects.filter(member=member).delete()
 			ChannelQrcodeHasMember.objects.create(channel_qrcode=channel_qrcode, member=member, is_new=is_new_member)
 		else:
+			try:
+				# if channel_qrcode.grade_id > 0:
+				# 	# updated by zhu tianqi,修改为会员等级高于目标等级时不降级，member_id->member
+				# 	Member.update_member_grade(member, channel_qrcode.grade_id)
+				if channel_qrcode.tag_id > 0:
+					MemberHasTag.add_tag_member_relation(member, [channel_qrcode.tag_id])
+			except:
+				notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
+			watchdog_warning(notify_message)
 			return
 
 		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:
