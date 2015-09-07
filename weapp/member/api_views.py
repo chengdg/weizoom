@@ -103,7 +103,7 @@ def __get_request_members_list(request):
 				else:
 					filter_data_args["source"] = value
 
-			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price']:
+			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price', 'integral']:
 				if value.find('-') > -1:
 					val1,val2 = value.split('--')
 					if float(val1) > float(val2):
@@ -115,7 +115,7 @@ def __get_request_members_list(request):
 				else:
 					filter_data_args['%s__gte' % key] = value
 
-			if key in ['first_pay', 'sub_date', 'integral'] :
+			if key in ['first_pay', 'sub_date'] :
 				if value.find('-') > -1:
 					val1,val2 = value.split('--')
 					if key == 'first_pay':
@@ -368,13 +368,20 @@ def get_member_follow_relations(request):
 
 	#进行排序
 	follow_members = follow_members.order_by(sort_attr)
-
+	if data_value:
+		filter_date_follow_members = follow_members
+	else:
+		filter_date_follow_members = []
 	#进行分页
-	count_per_page = int(request.GET.get('count_per_page', 10))
+	count_per_page = int(request.GET.get('count_per_page', 8))
 	cur_page = int(request.GET.get('page', '1'))
 	pageinfo, follow_members = paginator.paginate(follow_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 	return_follow_members_json_array = []
+	
+	if data_value:
+		follow_members = filter_date_follow_members
+
 	for follow_member in follow_members:
 		return_follow_members_json_array.append(__build_follow_member_basic_json(follow_member, member_id))
 
