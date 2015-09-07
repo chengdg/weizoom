@@ -346,6 +346,10 @@ class Qrcode(resource.Resource):
 			"name": "qrcode_answer",
 			"content": answer_content
 		}]
+		if not qrcode:
+			tag_id = qrcode.tag_id
+		else:
+			tag_id = -1
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_advance_manage_second_navs(request),
@@ -354,7 +358,7 @@ class Qrcode(resource.Resource):
 			'qrcode': qrcode,
 			'groups': groups,
 			'tags': tags,
-			'tag_is_del': False if MemberTag.objects.filter(id=qrcode.tag_id).count() > 0 else True,
+			'tag_is_del': False if MemberTag.objects.filter(id=tag_id).count() > 0 else True,
 			'selectedMemberIds': json.dumps(selectedMemberIds),
 			'jsons': jsons
 		})
