@@ -205,7 +205,7 @@
 
             W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
             W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageImg = "{{ share_img_url }}";
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
 
             W.appRecordId = "{{ record_id }}";
             W.appName = "{{ app_name }}";
@@ -232,6 +232,8 @@
             $(document).ready(function() {
                 $('a').highlight();
                 FastClick.attach(document.body);
+                alert(W.sharePageImg);
+                alert(W.sharePageDesc);
                 var hm = document.createElement("script");
                 hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
                 var s = document.getElementsByTagName("script")[0]; 
