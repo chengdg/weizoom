@@ -347,9 +347,9 @@ class Qrcode(resource.Resource):
 			"content": answer_content
 		}]
 		if not qrcode:
-			tag_id = qrcode.tag_id
-		else:
 			tag_id = -1
+		else:
+			tag_id = qrcode.tag_id
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_advance_manage_second_navs(request),
