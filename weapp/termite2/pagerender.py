@@ -291,6 +291,7 @@ def __render_component(request, page, component, project):
 
 		if not component['_has_data']:
 			return ''
+	component['app_name'] = request.GET.get('app_name', '')
 	# if request.in_production_mode:
 	# 	#获得数据
 	# 	__get_page_data_from_datasource(request, page, component)

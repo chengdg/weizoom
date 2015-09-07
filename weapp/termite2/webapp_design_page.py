@@ -29,7 +29,8 @@ class WebappDesignPage(resource.Resource):
 
 		c = RequestContext(request, {
 			'page_html_content': html,
-			'project_id': project_id
+			'project_id': project_id,
+			'app_name': request.GET.get('app_name', '')
 		})
 		
 		return render_to_response('termite2/wepage_design_page.html', c)
