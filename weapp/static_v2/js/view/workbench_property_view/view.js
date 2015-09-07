@@ -499,10 +499,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         var isSelected = $checkbox.prop('checked');
 
         var attr = $(event.currentTarget).attr('data-field');
-        var column = $(event.currentTarget).attr('data-column-name');
-        var attrValue = _.deepClone(this.getTargetComponent($checkbox).model.get(attr));
-        attrValue[column] = {select:isSelected};
-        this.getTargetComponent($checkbox).model.set(attr, attrValue);
+        this.getTargetComponent($checkbox).model.set(attr, isSelected);
     },
 
     /*********************************************************
