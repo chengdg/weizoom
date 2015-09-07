@@ -75,6 +75,9 @@
     W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
     var bottomDistance = 110;
     
+    /* 是否页面验证 */
+    W.isUserPageWalidate = true;
+    
     var loadPages = function(pageManagerView) {
       W.getApi().call({
         app: 'apps',

@@ -82,10 +82,9 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			maxLength: 4,
 			annotation: '积分数为0时，则为不消耗',
 			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
-			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
-			default: '0'
+			default: 0
 		}, {
 			name: 'delivery',
 			type: 'text_with_annotation',
@@ -93,10 +92,9 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			maxLength: 4,
 			annotation: '积分数为0时，则为不送',
 			validate: 'data-validate="require-notempty::参与送积分不能为空,,require-nonnegative::只能输入0和正整数"',
-			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
-			default: '0'
+			default: 0
 		}, {
 			name: 'delivery_setting',
 			type: 'radio',
@@ -177,7 +175,7 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
-			$node.find('.xa-description').html(value.replace(/\n/g,'<br>'));
+			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
 		},
 		expend: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-lotterydescription .xa-remainedIntegral strong').text(value);

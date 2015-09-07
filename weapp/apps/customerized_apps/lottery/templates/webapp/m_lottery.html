@@ -134,6 +134,7 @@
 {% block js %}
     <script>
         var parentUrl = document.referrer;
+        console.log(parentUrl);
         if(parentUrl && parentUrl.indexOf('user_center')>0){
             window.location.replace(window.location.href);
         }
@@ -249,8 +250,8 @@
                 this.$closeBtn.show();
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
                 this.$title.html('中奖了耶');
-                var msg = prize_type == 'coupon' ? ('一张优惠券：'+prize_name): prize_name;
-                this.$contentHeader.html("恭喜您获得了<br>"+msg+"！<br>快去个人中心查看吧！");
+                var msg = prize_type == 'coupon' ? ('一张优惠券：<br>'+prize_name): prize_name;
+                this.$contentHeader.html("恭喜您获得了"+msg+"！<br>快去个人中心查看吧！");
                 this.$userCenter.show();
                 this.$closeBtn.show();
             }else if(prize_type == 'gameover'){
