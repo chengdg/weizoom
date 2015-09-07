@@ -37,7 +37,7 @@ class Mlottery(resource.Resource):
 		isMember = False
 		auth_appid_info = None
 		share_page_desc = ''
-		thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
+		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
 		if not isPC:
 			isMember = request.member and request.member.is_subscribed
 			if not isMember:
