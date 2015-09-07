@@ -289,7 +289,12 @@ Scenario:1 选择优惠券的列表
 			|     tom     |   普通会员  |
 			|     tom5    |   普通会员  |
 
-		When jobs选择'给选中的人发优惠券(已取消关注的除外)'
+		When jobs批量发优惠券
+			"""
+			[{
+				"modification_method":"给选中的人发优惠券(已取消关注的除外)"
+			}]
+			"""
 		Then jobs获得选择优惠券列表
 			"""
 			[{
@@ -330,8 +335,12 @@ Scenario:1 选择优惠券的列表
 				"status":"全部"
 			}]
 			"""
-
-		When jobs选择'给筛选出来的所有人发优惠券(已取消关注的除外)'
+		When jobs批量发优惠券
+			"""
+			[{
+				"modification_method":"给筛选出来的所有人发优惠券(已取消关注的除外)"
+			}]
+			"""
 		Then jobs获得选择优惠券列表
 			"""
 			[{
