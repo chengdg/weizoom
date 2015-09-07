@@ -164,3 +164,32 @@ def step_impl(context, user, member):
             expected.append(dict(order))
 
     bdd_util.assert_list(actual, expected)
+
+@when(u"{webapp_user_name}访问{share_member}分享{webapp_owner_name}的微站链接")
+def step_impl(context, webapp_user_name, share_member, webapp_owner_name):
+    context.execute_steps(u"When %s访问%s的webapp" % (webapp_user_name, webapp_owner_name))
+
+@then(u"{user}获得'{member}'的传播能力")
+def step_impl(context, user, member):
+    response = _get_member_info(context, member)
+    expected = json.loads(context.text)
+    print expected
+    shared_url_infos = response.context['shared_url_infos']
+    shared_url_lead_number = response.context['shared_url_lead_number']
+    qrcode_friends = response.context['qrcode_friends']
+    actual = {}
+    share_detailed_data = []
+    actual['scan_qrcode_new_member'] = qrcode_friends
+    actual['share_link_new_member'] = shared_url_lead_number
+    for info in shared_url_infos:
+        share_detailed_data.append(
+            dict(
+                share_link = info.title,
+                click_number = info.pv,
+                new_member = info.followers,
+                order = info.leadto_buy_count
+            )
+        )
+    actual['share_detailed_data'] = share_detailed_data
+    print actual, "LLL"
+    bdd_util.assert_dict(actual, expected)
