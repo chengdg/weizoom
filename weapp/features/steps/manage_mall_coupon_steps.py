@@ -22,8 +22,37 @@ def step_impl(context, user_name):
 
 @then(u'{user_name}能获得优惠券规则列表')
 def step_impl(context, user_name):
-    response = context.client.get(
-        '/mall2/api/promotion_list/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1')
+    url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=coupon&count_per_page=10&page=1'
+    if hasattr(context, 'query_param'):
+        if context.query_param.get('name'):
+            url += '&name=' + context.query_param['name']
+        if context.query_param.get('coupon_id'):
+            url += '&couponId='+ context.query_param['coupon_id']
+        if context.query_param.get('coupon_promotion_type', None):
+            if context.query_param['coupon_promotion_type'] == u'全店通用券':
+                coupon_promotion_type = 1
+            elif context.query_param['coupon_promotion_type'] == u'单品券':
+                coupon_promotion_type = 2
+            elif context.query_param['coupon_promotion_type'] == u'全部':
+                coupon_promotion_type = -1
+            url += '&promotionType=all&couponPromotionType=%s' % coupon_promotion_type
+        if context.query_param.get('start_date'):
+            url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
+        if context.query_param.get('end_date'):
+            url += '&endDate='+ bdd_util.get_datetime_str(context.query_param['end_date'])[:16]
+        if context.query_param.get('promotion_status', u'全部') != u'全部':
+            if context.query_param['promotion_status'] == u'未开始':
+                status = 1
+            elif context.query_param['promotion_status'] == u'进行中':
+                status = 2
+            elif context.query_param['promotion_status'] == u'已过期':
+                context.client.get(url) #先获取一次数据，使status都更新到正常值
+                status = 3
+            elif context.query_param['promotion_status'] == u'已失效':
+                status = 5
+            url += '&promotionStatus=%s' % status
+
+    response = context.client.get(url)
     coupon_rules = json.loads(response.content)['data']['items']
 
     actual = []
@@ -43,6 +72,7 @@ def step_impl(context, user_name):
     for item in expected:
         item["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["start_date"]))
         item["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["end_date"]))
+
     bdd_util.assert_list(expected, actual)
 
 
@@ -204,6 +234,21 @@ def step_impl(context, webapp_owner_name, coupon_rule_name):
                 Coupon.objects.filter(id=coupon.id).update(coupon_id=coupon_id)
                 index = index - 1
 
+
+@then(u'{user}能获得优惠券状态列表')
+def step_impl(context, user):
+    url = "/mall2/api/promotion_list/?type=coupon"
+    response = context.client.get(url)
+    bdd_util.assert_api_call_success(response)
+
+    actual = json.loads(response.content)['data']['items']
+    for c in actual:
+        if c['status'] == u'已结束':
+            c['status'] = u'已过期'
+
+    expected = json.loads(context.text)
+
+    bdd_util.assert_list(expected, actual)
 
 #######################################
 

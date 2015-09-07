@@ -24,14 +24,46 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
         this.getLinkTargetJsonFun = options.getLinkTargetJsonFun;
 
+        this.tools = options.tools;
         this.titles = options.title;
         this.menuType = options.menuType;
         this.menuItem = options.menuItem; 
         this.menuName = this.menuItem.name;
         this.selectedLinkTarget = options.selectedLinkTarget;
 
+        this.titles = this.restructureMenuTitle();
         this.setItemType(this.titles);
         this.setAddBtuHtml();
+    },
+
+    /**
+     * 重构dailog title，主要用于营销工具，权限显示
+     * @return {[type]} [description]
+     */
+    restructureMenuTitle: function(){
+        // 控制<营销推广>对话框头部<选项卡>是否顯示
+        var newTitle = [];
+        var _this = this;
+        _.each(this.titles, function(t){
+            if(_this.tools[t.type])
+                newTitle.push(t)
+            else if(t.type == 'red' && _this.tools['red_envelope'] == 1){
+                console.log('red =====',  t.type, _this.tools['red_envelope'])
+                newTitle.push(t)
+            }
+            else if(t.type == 'survey' && _this.tools['research'] == 1)
+                newTitle.push(t)
+            else if(t.type == 'shengjing_app' && _this.tools['shengjing'] == 1)
+                newTitle.push(t)
+            else if(t.type == 'product'  || t.type == 'category')
+                newTitle.push(t)
+        })
+        // 微页面
+        if (this.menuType == 'webappPage') {
+            newTitle = this.titles;
+        }
+        this.setTitle(newTitle);        
+        return newTitle;
     },
 
     beforeShow: function() {
@@ -45,6 +77,7 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
         this.menuName = this.menuItem.name;
         this.selectedLinkTarget = options.selectedLinkTarget;
 
+        this.titles = this.restructureMenuTitle();
         this.setItemType(this.titles);
         this.setAddBtuHtml();
         this.setAddBox();

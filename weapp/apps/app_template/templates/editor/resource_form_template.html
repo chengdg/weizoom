@@ -1,0 +1,118 @@
+<% extends "content_base_v2.html" %>
+__STRIPPER_TAG__
+<% block content-panel %>
+<div class="xui-{{resource.class_name}}FormPage xui-appPage-commonStyle">
+	<ul class="breadcrumb" style="margin-bottom:-12px;">
+		<li>您当前所在位置</li>
+		<li><a href="/apps/">百宝箱</a></li>
+		<li><a href="/apps/{{app_name}}/{{resource.plural_name}}/">{{resource.display_name}}</a></li>
+		<li class="active">新建{{resource.display_name}}</li>
+	</ul>
+	__STRIPPER_TAG__
+	<form 
+		class="form-horizontal xui-app-form pl20 pr20" 
+		method="post" 
+		id="editForm" 
+		data-id="<% if {{resource.lower_name}} %><< {{resource.lower_name}}.id >><% else %>0<% endif %>"
+	>
+		<fieldset >
+			<legend>
+				活动设置
+			</legend>
+			{% for field in resource.fields %}
+			{% if field.type == 'time' %}
+			<div class="form-group ">
+				<label class="control-label fl" for="time">活动时间：</label>
+				<div class="fl">
+					<input
+						style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker xui-inline ml5"
+						id="start_time"
+						name="start_time"
+						style=""
+					    value="<<{{resource.lower_name}}.start_time|date:"Y-m-d H:i">>"
+					    readonly="readonly"
+						data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM" 
+					/>
+					至
+					<input
+						style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker xui-inline"
+						id="end_time"
+						name="end_time"
+					    value="<<{{resource.lower_name}}.end_time|date:"Y-m-d H:i">>"
+					    readonly="readonly"
+					    data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min-el="#start_time"
+					/>
+				</div>
+			</div>	
+			{% else %}
+			<div class="form-group ">
+				<label class="control-label fl" for="{{field.field}}">{{field.field}}：</label>
+				<div class="fl">
+					<input 
+						type="text" 
+						class="form-control w490 mr20 ml5" 
+						id="{{field.field}}" name="{{field.field}}"
+						placeholder=""
+						value="<% if {{resource.lower_name}} %><< {{resource.lower_name}}.{{field.field}} >><% endif %>"
+						data-validate="require-notempty"
+						maxlength="20"
+					/>
+					<div class="errorHint" data-error-hint="不超过20个汉字"></div>
+				</div>
+			</div>
+			{% endif %}
+			{% endfor %}
+		</fieldset>
+		__STRIPPER_TAG__
+		<div class="mt20 xui-i-buttons">
+			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">保存</a>
+			<!--
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/apps/{{app_name}}/{{resource.plural_name}}/">取消创建</a>
+			-->
+		</div>
+	</form>
+</div>
+<% endblock %>
+__STRIPPER_TAG__
+__STRIPPER_TAG__
+<% block js %>
+<script type="text/javascript">
+	var inUpdateMode = <% if {{resource.lower_name}} %>true<% else %>false<% endif %>;
+	$(document).ready(function() {
+		$('.xa-submit').click(function() {
+			if (!W.validate()) {
+				return;
+			}
+
+			var $form = $('form');
+			var data = $form.serializeObject();
+			W.getApi().call({
+				app: 'apps/{{app_name}}',
+				resource: '{{resource.lower_name}}',
+				method: 'put',
+				args: data,
+				success: function(data) {
+					W.showHint('success', '创建成功');
+					_.delay(function() {
+						window.location.href = '/apps/{{app_name}}/{{resource.plural_name}}/';
+					}, 500);
+				},
+				error: function(resp) {
+					W.showHint('error', '创建失败，请稍后再试！');
+				}
+			});
+		});
+	});
+</script>
+<% endblock %>

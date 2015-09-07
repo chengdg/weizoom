@@ -8,7 +8,7 @@ Feature: 会员列表-会员详情-基本信息
 	3、【姓名】："可编辑"，会员的姓名，不得超过8个字符
 	4、【性别】："可编辑"，单选项（男、女、未知），默认"未知"
 	5、【绑定手机】："可编辑"，会员在手机端的"个人中心"的绑定手机绑定的手机号，可以修改，添加手机号校验
-	6、【上次交易时间】："不可编辑"，会员支付订单（订单状态为：待发货、已发货、已完成、退款中、退款成功）的最后一个订单的"下单时间"
+	6、【上次交易时间】："不可编辑"，会员支付订单（订单状态为：待发货、已发货、已完成、退款中、退款成功）的最后一个订单的"付款时间"
 	7、【所在分组】："可编辑"，会员所在的分组列表，"修改"：弹出选择分组列表，多选修改会员的分组，是修改分组，不是添加分组
 	8、【本店积分】："可编辑"，会员的积分数，
 					（1）"调积分"：弹出调积分窗体，可以填写正或负积分，积分原因，给会员在现有积分的基础上加上调整的积分
@@ -78,12 +78,17 @@ Background:
 			}
 			"""
 
-	And bill关注jobs的公众号
+	And bill关注jobs的公众号于'2015-05-20'
+
+@member @memberList 
+Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
+
+	Given jobs登录系统
 
 	#微信用户批量下订单
 		When 微信用户批量消费jobs的商品
 			| date         | consumer | type      |businessman|   product | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action       |  order_status   |
-			| 2015-06-01   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      | 		 |        | 110         |              | 110    | 0      | 0    | jobs,支付         |  待发货         |
+			| 2015-06-01   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,支付         |  待发货         |
 			| 2015-06-02   | bill     |    购买   | jobs      | 商品2,2   | 未支付  | 支付宝         | 15      | 100      |          |        | 0           |              | 0      | 0      | 0    | jobs,取消         |  已取消         |
 			| 2015-06-03   | bill     |    购买   | jobs      | 商品2,2   | 支付    | 支付宝         | 15      | 100      |          |        | 215         |              | 215    | 0      | 0    | jobs,发货         |  已发货         |
 			| 2015-06-04   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 微信支付       | 10      | 100      |          |        | 110         |              | 0      | 110    | 0    | jobs,完成         |  已完成         |
@@ -92,22 +97,17 @@ Background:
 			| 2015-08-04   | bill     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
 			| 2015-08-05   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
 
-@eugeneA
-Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间、）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
-
-	Given jobs登录系统
-
 	When jobs访问'bill'会员详情
 	Then jobs获得'bill'会员详情
 		"""
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
+			"last_buy_time":"今天",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -118,7 +118,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		"""
 		{
 			"name":"会员姓名",
-			"member_rank":"金牌会员",
+			"grade":"金牌会员",
 			"sex":"女",
 			"phone":"15934567895",
 			"remarks":"会员备注信息"
@@ -129,11 +129,11 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"金牌会员",
+			"grade":"金牌会员",
 			"name":"会员姓名",
 			"sex":"女",
 			"phone":"15934567895",
-			"last_buy_time":"2015-08-05",
+			"last_buy_time":"今天",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -141,6 +141,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 		}
 		"""
 
+@member @memberList 
 Scenario:2 会员基本信息修改"所在分组"
 
 	Given jobs登录系统
@@ -151,11 +152,11 @@ Scenario:2 会员基本信息修改"所在分组"
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
+			"last_buy_time":"",
 			"tags":[],
 			"integral":0,
 			"friend_count":0,
@@ -173,11 +174,11 @@ Scenario:2 会员基本信息修改"所在分组"
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
+			"last_buy_time":"",
 			"tags":["分组1", "分组3"],
 			"integral":0,
 			"friend_count":0,
@@ -185,6 +186,7 @@ Scenario:2 会员基本信息修改"所在分组"
 		}
 		"""
 
+@member @memberList
 Scenario:3 会员基本信息修改"调积分"
 
 	Given jobs登录系统
@@ -195,18 +197,18 @@ Scenario:3 会员基本信息修改"调积分"
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
-			"tags":"",
+			"last_buy_time":"",
+			"tags":[],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
 		}
 		"""
-	When jobs给"tom3"加积分
+	When jobs给"bill"加积分
 			"""
 			{
 				"integral":-10,
@@ -218,19 +220,19 @@ Scenario:3 会员基本信息修改"调积分"
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
+			"last_buy_time":"",
 			"tags":[],
-			"integral":-10,
+			"integral": -10,
 			"friend_count":0,
 			"remarks":""
 		}
 		"""
 
-	When jobs给"tom3"加积分
+	When jobs给"bill"加积分
 			"""
 			{
 				"integral":20,
@@ -242,13 +244,13 @@ Scenario:3 会员基本信息修改"调积分"
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
+			"last_buy_time":"",
 			"tags":[],
-			"integral":10,
+			"integral": 10,
 			"friend_count":0,
 			"remarks":""
 		}
@@ -257,23 +259,24 @@ Scenario:3 会员基本信息修改"调积分"
 	Then jobs获得'积分明细'列表
 		"""
 		[{
-			"date":今天,
-			"type":"管理员赠送",
+			"date":"今天",
+			"event_type":"管理员赠送",
 			"reason":"",
-			" manager":"jobs",
-			"integral":20,
-			"residual_integral":10
+			"manager":"jobs",
+			"integral_count": "20",
+			"current_integral": "10"
 		},{
-			"date":今天,
-			"type":"管理员扣减",
+			"date":"今天",
+			"event_type":"管理员扣减",
 			"reason":"jobs调整积分的原因",
-			" manager":"jobs",
-			"integral":-10,
-			"residual_integral":-10
+			"manager":"jobs",
+			"integral_count":"-10",
+			"current_integral":"-10"
 		}]
 		"""
 
-
+@member @memberList 
+Scenario:4 会员基本信息好友数验证
 	#bill和tom建立好友关系
 			When bill访问jobs的webapp
 			When bill把jobs的微站链接分享到朋友圈
@@ -298,11 +301,11 @@ Scenario:3 会员基本信息修改"调积分"
 		{
 			"member_name":"bill",
 			"attention_time":"2015-05-20",
-			"member_rank":"",
+			"grade":"普通会员",
 			"name":"",
 			"sex":"未知",
 			"phone":"",
-			"last_buy_time":"2015-08-05",
+			"last_buy_time":"",
 			"tags":[],
 			"integral":0,
 			"friend_count":1,

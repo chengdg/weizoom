@@ -54,7 +54,7 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
             for(var i=0; i< products.display_items.length; ++i){
                 $('.xa-selectedProductList').append("<span class='xui-vip-username mr10 mb10'>"+products.display_items[i].name+"("+products.display_items[i].text+")"+"</span>");
             }
-            $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放红包</div>");
+            $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放优惠券</div>");
         }else{
             // 如果是单选， 显示每个会员
             for(var i=0; i< products.items_ids.length; ++i){
@@ -66,7 +66,7 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
                                                         + "<span class='xa-vip-member-id' style='display:none;'>" + products.items_ids[i].id +"</span>"
                                                         +"</span>");
             }
-            $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放红包</div>");
+            $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放优惠券</div>");
         }
     },
     onMouseenterShow:function(event){
@@ -80,7 +80,7 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
     onClickDeleteProduct:function(event){
     	$(event.target).parents('.xa-vip-username').remove();
         var vip_count = parseInt($.trim(this.$el.find('.xa-vip-count').attr('vip_count'))) - 1;
-        this.$el.find('.xa-vip-count').replaceWith("<div class='xa-vip-count' vip_count="+vip_count+">准备向"+vip_count+"人发放红包</div>");
+        this.$el.find('.xa-vip-count').replaceWith("<div class='xa-vip-count' vip_count="+vip_count+">准备向"+vip_count+"人发放优惠券</div>");
     },
 
     validateIntegral: function(lower, upper){

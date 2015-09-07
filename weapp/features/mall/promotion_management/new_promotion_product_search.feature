@@ -9,6 +9,7 @@ Feature:促销管理-新建活动页面的商品查询
 			#按钮：【选取】-操作列中显示  【完成选择】-列表最下方显示；
 			#商品起购数量大于1的商品不显示在限时抢购活动对应的商品弹窗列表中；
 			#同一商品只能参与一个促销活动（限时抢购、买赠、单品券）
+			#使失效的单品券，只有过期后才能创建其他促销活动
 			#积分应用活动与其他活动不互斥
 
 Background:
@@ -18,9 +19,8 @@ Background:
 		[{
 			"name":"商品0",
 			"price":100.00,
-			"code":"00000",
-			"purchase_count":2,
 			"stock_type": "无限",
+			"min_limit": 2,
 			"status":"上架"
 		},{
 			"name":"限时抢购",
@@ -48,7 +48,12 @@ Background:
 			"price":100.00,
 			"stock_type": "无限",
 			"status":"上架"
-			}]
+		},{
+			"name":"单品失效",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"上架"
+		}]
 		"""
 	When jobs创建限时抢购活动
 		"""
@@ -102,83 +107,90 @@ Background:
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_",
 			"coupon_product": "单品券"
+		},{
+			"name": "单品失效活动",
+			"money": 1,
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_",
+			"coupon_product": "单品失效"
 		}]
 		"""
+	When jobs失效优惠券'单品失效活动'
 
-@promotion @promotionFlash
+@promotion @promotionFlash @mall2 
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在上架列表中（不能参与限时抢购）
-	When jobs设置查询条件
+	When jobs新建活动时设置参与活动的商品查询条件
 		"""
-		[{
-			"pro_name":"商品0",
-			"pro_code":"00000"
-			}]
+		{
+			"name":"商品0"
+		}
 		"""
-	Then jobs获取已上架商品列表
-		| code | name     | price | stocks | have_promotion | actions |
+	Then jobs新建限时抢购活动时能获得已上架商品列表
+		| name     | price | stocks | have_promotion | actions |
 
-	When jobs设置查询条件
+	When jobs新建活动时设置参与活动的商品查询条件
 		"""
-		[{
-			"pro_name":"",
-			"pro_code":""
-			}]
+		{
+			"name":""
+		}
 		"""
-	Then jobs获取已上架商品列表
-		| code | name     | price | stocks | have_promotion | actions |
-		|      | 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
-		|      | 买赠     |100.00 | 20     | 买赠活动       |         |
-		|      | 单品券   |100.00 | 无限   | 单品券活动     |         |
-		|      | 赠品     |100.00 | 无限   |                | 选取    |
-		|      | 积分应用 |100.00 | 无限   | 积分应用活动   | 选取    |
+	Then jobs新建限时抢购活动时能获得已上架商品列表
+		| name     | price | stocks | have_promotion | actions |
+		| 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
+		| 买赠     |100.00 | 20     | 买赠活动       |         |
+		| 单品券   |100.00 | 无限   | 单品券活动     |         |
+		| 赠品     |100.00 | 无限   |                | 选取    |
+		| 积分应用 |100.00 | 无限   |                | 选取    |
+		| 单品失效 |100.00 | 无限   | 单品失效活动   |         |
 
-@promotion @promotionPremium
+@promotion @promotionPremium @mall2
 Scenario: 2 买赠-新建活动页面的商品查询
-	When jobs设置查询条件
+	When jobs新建活动时设置参与活动的商品查询条件
 		"""
-		[{
-			"pro_name":"",
-			"pro_code":""
-			}]
+		{
+			"name":""
+		}
 		"""
-	Then jobs获取已上架商品列表
-		| code | name     | price | stocks | have_promotion | actions |
-		|00000 | 商品0    |100.00 | 无限   |                | 选取    |
-		|      | 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
-		|      | 买赠     |100.00 | 20     | 买赠活动       |         |
-		|      | 单品券   |100.00 | 无限   | 单品券活动     |         |
-		|      | 赠品     |100.00 | 无限   |                | 选取    |
-		|      | 积分应用 |100.00 | 无限   | 积分应用活动   | 选取    |
+	Then jobs新建买赠活动时能获得已上架商品列表
+		| name     | price | stocks | have_promotion | actions |
+		| 商品0    |100.00 | 无限   |                | 选取    |
+		| 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
+		| 买赠     |100.00 | 20     | 买赠活动       |         |
+		| 单品券   |100.00 | 无限   | 单品券活动     |         |
+		| 赠品     |100.00 | 无限   |                | 选取    |
+		| 积分应用 |100.00 | 无限   |                | 选取    |
+		| 单品失效 |100.00 | 无限   | 单品失效活动   |         |
 
-@promotion @promotionIntegral
+@promotion @promotionIntegral @mall2
 Scenario: 3 积分应用-新建活动页面的商品查询
-	When jobs设置查询条件
+	When jobs新建活动时设置参与活动的商品查询条件
 		"""
-		[{
-			"pro_name":"",
-			"pro_code":""
-			}]
+		{
+			"name":""
+		}
 		"""
-	Then jobs获取已上架商品列表
-		| code | name     | price | stocks | have_promotion | actions |
-		|00000 | 商品0    |100.00 | 无限   |                | 选取    |
-		|      | 限时抢购 |100.00 | 无限   | 限时抢购活动   | 选取    |
-		|      | 买赠     |100.00 | 20     | 买赠活动       | 选取    |
-		|      | 单品券   |100.00 | 无限   | 单品券活动     | 选取    |
-		|      | 赠品     |100.00 | 无限   |                | 选取    |
-		|      | 积分应用 |100.00 | 无限   | 积分应用活动   |         |
+	Then jobs新建积分应用活动时能获得已上架商品列表
+		| name     | price | stocks | have_promotion | actions |
+		| 商品0    |100.00 | 无限   |                | 选取    |
+		| 限时抢购 |100.00 | 无限   |                | 选取    |
+		| 买赠     |100.00 | 20     |                | 选取    |
+		| 单品券   |100.00 | 无限   |                | 选取    |
+		| 赠品     |100.00 | 无限   |                | 选取    |
+		| 积分应用 |100.00 | 无限   | 积分应用活动   |         |
+		| 单品失效 |100.00 | 无限   |                | 选取    |
 
-@promotion @promotionCoupon
+@promotion @promotionCoupon @mall2
 Scenario: 4 单品券-新建活动页面的商品查询
 	Given jobs登录系统
-	When jobs添加部分商品
-	Then jobs获取已上架商品列表
-		| code | name     | price | stocks | have_promotion | actions |
-		|00000 | 商品0    |100.00 | 无限   |                | 选取    |
-		|      | 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
-		|      | 买赠     |100.00 | 20     | 买赠活动       |         |
-		|      | 单品券   |100.00 | 无限   | 单品券活动     |         |
-		|      | 赠品     |100.00 | 无限   |                | 选取    |
-		|      | 积分应用 |100.00 | 无限   | 积分应用活动   | 选取    |
+	Then jobs新建单品券活动时能获得已上架商品列表
+		| name     | price | stocks | have_promotion | actions |
+		| 商品0    |100.00 | 无限   |                | 选取    |
+		| 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
+		| 买赠     |100.00 | 20     | 买赠活动       |         |
+		| 单品券   |100.00 | 无限   | 单品券活动     |         |
+		| 赠品     |100.00 | 无限   |                | 选取    |
+		| 积分应用 |100.00 | 无限   |                | 选取    |
+		| 单品失效 |100.00 | 无限   | 单品失效活动   |         |

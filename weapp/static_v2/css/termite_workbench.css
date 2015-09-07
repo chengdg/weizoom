@@ -103,7 +103,10 @@ body {
 	z-index: 1001;
 }
 
-
+.xui-wepage-globalNavPage .xui-bottomActionBar,.xui-wepage-workbenchPage .xui-bottomActionBar{
+	position: absolute;
+	width: 995px;
+}
 
 
 
@@ -320,11 +323,26 @@ body {
 }
 
 
-
-
-
-
-
+/*appkit组件样式*/
+.componentList_component_qa,.componentList_component_selection,.componentList_component_textlist,.componentList_component_shortcuts{
+	background: url(/static_v2/img/termite2/appKitSeprites.png) no-repeat;
+	-webkit-background-size: 137px 42px;
+	background-size: 137px 42px;
+}
+.xui-component .componentList_component_qa{
+	background-position:3px 3px;
+}
+.xui-component .componentList_component_selection{
+	background-position:-44px 3px;
+}
+.xui-component .componentList_component_textlist{
+	background-position: -89px 3px;
+  	width: 50px;
+}
+.xui-component .componentList_component_shortcuts{
+	background-position: -89px 3px;
+  	width: 50px;
+}
 
 /*
  * phone区域样式

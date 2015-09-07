@@ -462,7 +462,7 @@
         <div class="xui-i-box">
             <h2 class="xa-cantBuyElement">该订单内商品状态发生变化！</h2>
             <h2 class="hidden">以下赠品库存不足或已赠完！</h2>
-            <div class="xui-cantBuyList" style="">
+            <div class="xui-cantBuyList" style="" id="cantBuyWrapper">
                 <ul class="clearStyle"><!-- 商品循环li -->
                     <li class="xa-product-not-buy disT xui-i-padding w">
                         <div class="disTc xui-productThumbNail pr">
@@ -609,13 +609,13 @@ if (/ipad|iphone|mac/i.test(navigator.userAgent)){
     // $('.xa-form').css('padding-bottom','0');
     // var myScroll;
     function loaded() {
-        myScroll = new iScroll('wrapper', { checkDOMChanges: true});
+        var myScroll = new iScroll('wrapper', { checkDOMChanges: true});
+        var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
     }
     $('.xui-editOrderPage .xui-form').css('padding-bottom','0px');
     document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     document.addEventListener('DOMContentLoaded', loaded, false);
 
-    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,bounce:false});
 }
 var isOrderFromShoppingCart = {% if is_order_from_shopping_cart %}true{% else %}false{% endif %};
 

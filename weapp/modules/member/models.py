@@ -407,7 +407,7 @@ NOT_SUBSCRIBED = 2
 class Member(models.Model):
 	token = models.CharField(max_length=255, db_index=True, unique=True)
 	webapp_id = models.CharField(max_length=16, db_index=True)
-	username_hexstr = models.CharField(max_length=128, blank=True, null=True,verbose_name='会员名称的hex str')
+	username_hexstr = models.CharField(max_length=2048, blank=True, null=True,verbose_name='会员名称的hex str')
 	user_icon = models.CharField(max_length=1024, blank=True, verbose_name='会员头像')
 	integral = models.IntegerField(default=0, verbose_name='积分')
 	created_at = models.DateTimeField(auto_now_add=True)
@@ -493,6 +493,11 @@ class Member(models.Model):
 	def username(self, username):
 		self.username_hexstr = byte_to_hex(username)
 
+	@staticmethod
+	def get_by_username(username):
+		hexstr = byte_to_hex(username)
+		return list(Member.objects.filter(username_hexstr=hexstr))
+
 	@cached_property
 	def username_for_html(self):
 		if hasattr(self, '_username_for_html'):
@@ -555,6 +560,9 @@ class Member(models.Model):
 
 				output_str = ""
 				count = 0
+
+				if not span_list:
+					return u'%s...' % name_str[:5]
 
 				for span in span_list:
 				    length = len(span)

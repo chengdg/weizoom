@@ -137,7 +137,7 @@ Background:
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买单个商品，使用系统运费模板，满足续重
+Scenario:1 购买单个商品，使用系统运费模板，满足续重
 	
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -163,7 +163,7 @@ Scenario: 购买单个商品，使用系统运费模板，满足续重
 		"""
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买单个商品，使用统一运费商品
+Scenario:2 购买单个商品，使用统一运费商品
 	
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -209,7 +209,7 @@ Scenario: 购买单个商品，使用统一运费商品
 		"""
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买单个商品，使用系统运费模板，满足金额包邮条件
+Scenario:3 购买单个商品，使用系统运费模板，满足金额包邮条件
 	
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -236,7 +236,7 @@ Scenario: 购买单个商品，使用系统运费模板，满足金额包邮条�
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买单个商品，使用系统运费模板，满足数量包邮条件
+Scenario:4 购买单个商品，使用系统运费模板，满足数量包邮条件
 	
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -263,7 +263,7 @@ Scenario: 购买单个商品，使用系统运费模板，满足数量包邮条�
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用统一运费
+Scenario:5 购买多种商品，使用统一运费
 	
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -315,7 +315,7 @@ Scenario: 购买多种商品，使用统一运费
 		"""
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用系统运费模板，满足普通续重
+Scenario:6 购买多种商品，使用系统运费模板，满足普通续重
 	顺丰，河北，2公斤，运费18元
 	
 	When bill访问jobs的webapp
@@ -346,7 +346,7 @@ Scenario: 购买多种商品，使用系统运费模板，满足普通续重
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用系统运费模板，满足特殊地区续重
+Scenario:7 购买多种商品，使用系统运费模板，满足特殊地区续重
 	顺丰，北京，1.6公斤，运费30元
 	
 	When bill访问jobs的webapp
@@ -377,7 +377,7 @@ Scenario: 购买多种商品，使用系统运费模板，满足特殊地区续�
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用系统运费模板，合起来满足数量包邮
+Scenario:8 购买多种商品，使用系统运费模板，合起来满足数量包邮
 	顺丰，北京，3件商品，包邮
 	
 	When bill访问jobs的webapp
@@ -408,7 +408,7 @@ Scenario: 购买多种商品，使用系统运费模板，合起来满足数量�
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用系统运费模板，合起来满足金额包邮
+Scenario:9 购买多种商品，使用系统运费模板，合起来满足金额包邮
 	顺丰，北京，商品金额200元，包邮
 	
 	When bill访问jobs的webapp
@@ -439,7 +439,7 @@ Scenario: 购买多种商品，使用系统运费模板，合起来满足金额�
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用统一运费+系统运费模板，普通运费
+Scenario:10 购买多种商品，使用统一运费+系统运费模板，普通运费
 	
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -469,7 +469,7 @@ Scenario: 购买多种商品，使用统一运费+系统运费模板，普通运
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
+Scenario:11 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
 	合起来数量满足包邮，但商品5不是使用系统运费模板，所以不包邮
 	
 	When bill访问jobs的webapp
@@ -500,7 +500,7 @@ Scenario: 购买多种商品，使用统一运费+系统运费模板，特殊地
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
+Scenario:12 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
 	使用系统运费模板的商品满足数量包邮，运费为使用统一运费商品的运费
 	
 	When bill访问jobs的webapp
@@ -534,7 +534,7 @@ Scenario: 购买多种商品，使用统一运费+系统运费模板，特殊地
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
+Scenario:13 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
 	使用系统运费模板的商品满足金额包邮，运费为使用统一运费商品的运费
 	
 	When bill访问jobs的webapp
@@ -567,7 +567,7 @@ Scenario: 购买多种商品，使用统一运费+系统运费模板，特殊地
 		"""
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 购买多规格商品，使用系统运费模板，特殊地区，满足续重
+Scenario:14 购买多规格商品，使用系统运费模板，特殊地区，满足续重
 	
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -598,7 +598,7 @@ Scenario: 购买多规格商品，使用系统运费模板，特殊地区，满�
 		"""
 
 @mall2 @mall.postage @mall.webapp 
-Scenario: 购买两个多规格商品
+Scenario:15 购买两个多规格商品
 	1 商品7使用系统运费模板，特殊地区，满足续重
 	2 商品8使用统一运费10元
 	3 运费总额为30+10
@@ -640,7 +640,7 @@ Scenario: 购买两个多规格商品
 		"""
 
 @mall2 @mall.postage @mall.webapp
-Scenario: jobs选择'免运费'运费配置
+Scenario:16 jobs选择'免运费'运费配置
 	Given jobs登录系统
 	When jobs选择'免运费'运费配置
 	When bill访问jobs的webapp
@@ -669,7 +669,7 @@ Scenario: jobs选择'免运费'运费配置
 
 
 @mall2 @mall.postage @mall.webapp
-Scenario: 更新邮费配置后进行购买
+Scenario:17 更新邮费配置后进行购买
 	jobs更改邮费配置后bill进行购买
 	1.去掉特殊地区和指定地区
 	2.bill创建订单成功，邮费正常
@@ -678,23 +678,23 @@ Scenario: 更新邮费配置后进行购买
 	Given jobs登录系统
 	When jobs修改'顺丰'运费配置
 		"""
-		[{
+		{
 			"name":"顺丰",
 			"first_weight": 1,
 			"first_weight_price": 13.00,
 			"added_weight": 1,
 			"added_weight_price": 5.00
-		}]
+		}
 		"""
 	Then jobs能获取'顺丰'运费配置
 		"""
-		[{
+		{
 			"name":"顺丰",
 			"first_weight": 1,
 			"first_weight_price": 13.00,
 			"added_weight": 1,
 			"added_weight_price": 5.00
-		}]
+		}
 		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -741,115 +741,115 @@ Scenario: 更新邮费配置后进行购买
 		"""
 # _edit_ : "新新"
 @mall2
-Scenario: 不同等级的会员购买有会员价同时有运费配置
-#包邮条件:金额取商品原价的金额
-	Given jobs登录系统
-	And jobs已添加商品
-		"""
-		[{
-			"name": "商品14",
-			"price": 100.00,
-			"member_price": true,
-			"weight": 1,
-			"postage": "系统",
-			"is_member_product": "on"
-		}]
-		"""
-	When jobs添加会员等级
-		"""
-		[{
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}]
-		"""
-	And jobs更新"bill"的会员等级
-		"""
-		{
-			"name": "bill",
-			"member_rank": "铜牌会员"
-		}
-		"""
-	Then jobs能获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"upgrade": "自动升级",
-			"discount": "10"
-		}, {
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}]
-		"""
-	And jobs可以获得会员列表
-		"""
-		[{
-			"name": "tom",
-			"member_rank": "普通会员"
-		}, {
-			"name": "bill",
-			"member_rank": "铜牌会员"
-		}]
-		"""
-###tom购买,订单金额
-	When tom访问jobs的webapp
-	When tom购买jobs的商品
-		"""
-		{
-			"products": [{
-				"name": "商品14",
-				"count": 2
-			}],
-			"ship_area":"北京市",
-			"ship_address":"呱呱"
-		}
-		"""
-	Then tom成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 200.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
+Scenario:18 不同等级的会员购买有会员价同时有运费配置
+	#包邮条件:金额取商品原价的金额
+		Given jobs登录系统
+		And jobs已添加商品
+			"""
+			[{
 				"name": "商品14",
 				"price": 100.00,
-				"count": 2
+				"member_price": true,
+				"weight": 1,
+				"postage": "系统",
+				"is_member_product": "on"
 			}]
-		}
-		"""
-		# "members_money": 0,
-			
-###bill购买,订单金额
-	When bill访问jobs的webapp
-	When bill购买jobs的商品
-		"""
-		{
-			"products": [{
-				"name": "商品14",
-				"count": 2
-			}],
-			"ship_area":"北京市",
-			"ship_address":"呱呱"
-		}
-		"""
-	Then bill成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 180.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00,
-			"products": [{
-				"name": "商品14",
-				"price": 90.00,
-				"count": 2
+			"""
+		When jobs添加会员等级
+			"""
+			[{
+				"name": "铜牌会员",
+				"upgrade": "手动升级",
+				"discount": "9"
 			}]
-		}
-		"""
-		# "members_money":20,
-		#		"type": "members",
+			"""
+		And jobs更新"bill"的会员等级
+			"""
+			{
+				"name": "bill",
+				"member_rank": "铜牌会员"
+			}
+			"""
+		Then jobs能获取会员等级列表
+			"""
+			[{
+				"name": "普通会员",
+				"upgrade": "自动升级",
+				"discount": "10"
+			}, {
+				"name": "铜牌会员",
+				"upgrade": "手动升级",
+				"discount": "9"
+			}]
+			"""
+		And jobs可以获得会员列表
+			"""
+			[{
+				"name": "tom",
+				"member_rank": "普通会员"
+			}, {
+				"name": "bill",
+				"member_rank": "铜牌会员"
+			}]
+			"""
+	###tom购买,订单金额
+		When tom访问jobs的webapp
+		When tom购买jobs的商品
+			"""
+			{
+				"products": [{
+					"name": "商品14",
+					"count": 2
+				}],
+				"ship_area":"北京市",
+				"ship_address":"呱呱"
+			}
+			"""
+		Then tom成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 200.00,
+				"postage": 0.00,
+				"integral_money":0.00,
+				"coupon_money":0.00,
+				"products": [{
+					"name": "商品14",
+					"price": 100.00,
+					"count": 2
+				}]
+			}
+			"""
+			# "members_money": 0,
+				
+	###bill购买,订单金额
+		When bill访问jobs的webapp
+		When bill购买jobs的商品
+			"""
+			{
+				"products": [{
+					"name": "商品14",
+					"count": 2
+				}],
+				"ship_area":"北京市",
+				"ship_address":"呱呱"
+			}
+			"""
+		Then bill成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 180.00,
+				"postage": 0.00,
+				"integral_money":0.00,
+				"coupon_money":0.00,
+				"products": [{
+					"name": "商品14",
+					"price": 90.00,
+					"count": 2
+				}]
+			}
+			"""
+			# "members_money":20,
+			#		"type": "members",
 	

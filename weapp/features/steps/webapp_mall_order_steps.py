@@ -10,6 +10,8 @@ from mall.promotion.models import *
 import steps_db_util
 from mall import module_api as mall_api
 
+# 手机端订单支付相关step_impl在features/steps/mall_pay_interface_webapp_steps.py
+
 
 def get_prodcut_ids_info(order):
     product_ids = []
@@ -256,6 +258,26 @@ def step_impl(context, webapp_user_name, order_id):
     bdd_util.assert_dict(expected, actual_order)
 
 
+@then(u'{webapp_usr_name}手机端获取订单"{order_id}"')
+def step_impl(context, webapp_usr_name, order_id):
+    # 为获取完可顺利支付
+    context.created_order_id = order_id
+
+    url = '/workbench/jqm/preview/?woid=%s&module=mall&model=order&action=pay&order_id=%s' % (
+        context.webapp_owner_id, order_id)
+    response = context.client.get(bdd_util.nginx(url), follow=True)
+    actual = response.context['order']
+    actual.order_no = actual.order_id
+    actual.order_time = (str(actual.created_at))
+    actual.methods_of_payment = response.context['pay_interface']
+    actual.member = actual.buyer_name
+    actual.status = ORDERSTATUS2TEXT[actual.status]
+    if actual.status == u'已发货':
+        actual.status = u'待收货'
+
+    expected = json.loads(context.text)
+    bdd_util.assert_dict(expected, actual)
+
 @then(u"{webapp_user_name}查看个人中心全部订单")
 def step_visit_personal_orders(context, webapp_user_name):
     """
@@ -326,11 +348,18 @@ def step_impl(context, webapp_user_name, order_id):
 @then(u"{webapp_user_name}支付订单成功")
 def step_impl(context, webapp_user_name):
     order, order_has_products = steps_db_util.get_order_has_products(context)
-
+    print("***********************************************")
+    # print(order)
+    print(order.pay_interface_type)
+    print("***********************************************")
     actual_order = order
     actual_order.ship_area = actual_order.area
     actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
+    actual_order.methods_of_payment = PAYTYPE2NAME[actual_order.pay_interface_type] #兼容feature
     actual_order.pay_interface_type = PAYTYPE2NAME[actual_order.pay_interface_type]
+
+    actual_order.order_no = order.order_id
+    actual_order.order_time = str(order.created_at)
 
     # 获取order的products
     actual_order.products = []

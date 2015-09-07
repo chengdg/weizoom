@@ -1,0 +1,209 @@
+{% extends "content_base_v2.html" %}
+{% block css %}
+    <style>
+    .tl.pl25 img{
+    	height: 60px;
+    	width: 60px;
+    }
+    </style>
+{% endblock %}
+{% block content-panel %}
+<div class="xui-feedbacksAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+			<li class="active">用户反馈</li>
+		</ul>
+	</div>
+	
+	<div class="xui-filterPanel mb15">
+		<div class="xui-form disT">
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">用户名：</label>
+					<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item ml20">
+					<label>问题类型：</label>
+					<select class="" id="feedback_type" name="feedback_type">
+						<option value="-1">全部</option>
+						<option value="0">服务</option>
+						<option value="1">功能</option>
+						<option value="2">操作</option>
+						<option value="3">新的需求</option>
+						<option value="4">其他</option>
+					</select>
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label>反馈时间
+					：</label>
+					<input
+						type="text"
+						class="form-control xui-datePicker"
+						id="start_time"
+						name="start_time"
+						style=""
+					    value=""
+					    readonly="readonly"
+						data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM" />
+					至
+					<input
+						type="text"
+						class="form-control xui-datePicker"
+						id="end_time"
+						name="end_time"
+					    value=""
+					    readonly="readonly"
+					    data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min-el="#start_time"/>
+				</div>
+			</div>
+		</div>
+		<div class="xui-form disT">
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">手机：</label>
+					<input type="text" class="form-control" id="phone" name="phone" value="" />
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item ml20">
+					<label class="">姓名：</label>
+					<input type="text" class="form-control" id="name" name="name" value="" />
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">QQ：</label>
+					<input type="text" class="form-control" id="qq" name="qq" value="" />
+				</div>
+			</div>
+		</div>
+		<div class="xui-btn-group">
+			<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+			<a class="btn btn-default mr40 xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
+			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">批量导出</a>
+		</div>
+	</div>
+	
+	<div class="panel panel-default xui-tableBox">
+		<div 
+			class="panel-body panel-table p0"
+			data-ui-role="advanced-table" 
+			data-app="apps/feedback" 
+			data-resource="feedbacks" 
+			data-template-id="#table" 
+			data-enable-paginator="true" 
+			data-enable-sort="false" 
+			data-selectable="false" 
+			data-disable-header-select="true" 
+			data-item-count-per-page="10" 
+		>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="table" type="text/x-jquery-tmpl">
+	{{if items!='' }}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>用户名</th>
+				<th>联系方式</th>
+				<th>问题类型</th>
+				<th>反馈内容</th>
+				<th>反馈时间</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr data-id="${item.id}">
+				<td 
+					class="tl pl25"
+					style="width:250px; height:60px;" 
+				>
+					<img src="${item.participant_icon}" />
+					${item.participant_name}
+				</td>
+				<td>
+					{{each(i, information) informations}}
+						${information.item_name}:${information.item_value}<br />
+					{{/each}}
+				</td>
+				<td>
+					${item.feedback_type}
+				</td>
+				<td>
+					${item.feedback_content}
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
+	<br>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.xa-search').click(function(event) {
+		var participant_name = $.trim($('[name="participant_name"]').val());
+		var feedback_type = $.trim($('[name="feedback_type"]').val());
+		var startTime = $.trim($('[name="start_time"]').val());
+		var endTime = $.trim($('[name="end_time"]').val());
+		var name = $.trim($('[name="name"]').val());
+		var phone = $.trim($('[name="phone"]').val());
+		var qq = $.trim($('[name="qq"]').val());
+		var table = $('[data-ui-role="advanced-table"]').data('view');
+		table.reload({
+			participant_name: participant_name,
+			feedback_type: feedback_type,
+			start_time: startTime,
+			end_time: endTime,
+			name: name,
+			phone: phone,
+			qq: qq
+		}, {
+			emptyDataHint: '没有符合条件的数据'
+		});
+	});
+	
+	$('.xa-reset').click(function(event) {
+		$('[name="participant_name"]').val('');
+		$('[name="feedback_type"]').val('-1');
+		$('[name="start_time"]').val('');
+		$('[name="end_time"]').val('');
+		$('[name="phone"]').val('');
+		$('[name="name"]').val('');
+		$('[name="qq"]').val('');
+	});
+
+});
+</script>
+{% endblock %}
+

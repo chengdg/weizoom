@@ -44,13 +44,13 @@ Scenario:1 建立好友关系传播情景,A-->(E,F,G)
 	Then jobs能获取到bill的好友
 		"""
 		[{
-		"name": "tom",
-		"source": "会员分享",
-		"is_fans": "是"
-		},{
 		"name": "jack",
 		"source": "直接关注",
 		"is_fans": "否"
+		},{
+		"name": "tom",
+		"source": "会员分享",
+		"is_fans": "是"
 		}]
 		"""
 
@@ -63,7 +63,7 @@ Scenario:1 建立好友关系传播情景,A-->(E,F,G)
 	Then jobs能获取到bill的好友
 		"""
 		[{
-		"name": "tom",
+		"name": "nokia",
 		"source": "会员分享",
 		"is_fans": "是"
 		},{
@@ -71,11 +71,10 @@ Scenario:1 建立好友关系传播情景,A-->(E,F,G)
 		"source": "直接关注",
 		"is_fans": "否"
 		},{
-		"name": "nokia",
+		"name": "tom",
 		"source": "会员分享",
 		"is_fans": "是"
-		}
-		]
+		}]
 		"""
 
 @mall2 @crm @member @member.member_share
@@ -169,13 +168,13 @@ Scenario:3 建立好友关系传播情景,A-->C-->(E,F,G)
 	Then jobs能获取到bill的好友
 		"""
 		[{
-		"name": "tom",
-		"source": "会员分享",
-		"is_fans": "是"
-		},{
 		"name": "jack",
 		"source": "直接关注",
 		"is_fans": "否"
+		},{
+		"name": "tom",
+		"source": "会员分享",
+		"is_fans": "是"
 		}]
 		"""
 
@@ -188,7 +187,7 @@ Scenario:3 建立好友关系传播情景,A-->C-->(E,F,G)
 	Then jobs能获取到bill的好友
 		"""
 		[{
-		"name": "tom",
+		"name": "nokia",
 		"source": "会员分享",
 		"is_fans": "是"
 		},{
@@ -196,7 +195,7 @@ Scenario:3 建立好友关系传播情景,A-->C-->(E,F,G)
 		"source": "直接关注",
 		"is_fans": "否"
 		},{
-		"name": "nokia",
+		"name": "tom",
 		"source": "会员分享",
 		"is_fans": "是"
 		}]
@@ -303,13 +302,13 @@ Scenario:5 建立好友关系传播情景,A-->C-->D-->(E,F,G)
 	Then jobs能获取到bill的好友
 		"""
 		[{
-		"name": "tom",
-		"source": "会员分享",
-		"is_fans": "是"
-		},{
 		"name": "jack",
 		"source": "直接关注",
 		"is_fans": "否"
+		},{
+		"name": "tom",
+		"source": "会员分享",
+		"is_fans": "是"
 		}]
 		"""
 
@@ -322,7 +321,7 @@ Scenario:5 建立好友关系传播情景,A-->C-->D-->(E,F,G)
 	Then jobs能获取到bill的好友
 		"""
 		[{
-		"name": "tom",
+		"name": "nokia",
 		"source": "会员分享",
 		"is_fans": "是"
 		},{
@@ -330,9 +329,8 @@ Scenario:5 建立好友关系传播情景,A-->C-->D-->(E,F,G)
 		"source": "直接关注",
 		"is_fans": "否"
 		},{
-		"name": "nokia",
+		"name": "tom",
 		"source": "会员分享",
 		"is_fans": "是"
-		}
-		]
+		}]
 		"""

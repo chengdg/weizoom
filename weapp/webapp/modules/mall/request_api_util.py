@@ -826,13 +826,13 @@ def update_product_review_picture(request):
 		picture_model_list = []
 
 		for picture in picture_list:
-			picture_model_list.append(mall_models.ProductReviewPicture(
+			mall_models.ProductReviewPicture(
 				product_review_id=product_review_id,
 				order_has_product_id=order_has_product_id,
 				att_url=save_base64_img_file_local_for_webapp(request, picture)
-			))
-
-		mall_models.ProductReviewPicture.objects.bulk_create(picture_model_list)
+			).save()
+		# TODO 更好的实现，能触发缓存更新
+		# mall_models.ProductReviewPicture.objects.bulk_create(picture_model_list)
 
 		response = create_response(200)
 		response.data = get_review_status(request)

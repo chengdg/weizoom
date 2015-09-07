@@ -215,15 +215,15 @@ class ProductList(resource.Resource):
 
         products = models.Product.objects.filter(id__in=ids)
         if is_deleted:
-            products.update(is_deleted=True)
+            products.update(is_deleted=True, display_index=0)
         else:
             # 更新商品上架状态以及商品排序
             if request.manager.id == products[0].owner_id:
                 now = datetime.now()
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, is_deleted=False, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
                 else:
-                    products.update(shelve_type=shelve_type, is_deleted=False, display_index=0, update_time=now)
+                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
             else:
                 # 微众商城更新商户商品状态
                 products.update(weshop_status=shelve_type)
@@ -601,10 +601,27 @@ class Product(resource.Resource):
                 user_code=standard_model['user_code']
             )
         elif standard_model.get('is_deleted', None):
-            models.ProductModel.objects.filter(
+            # 多规格的情况
+            db_standard_model = models.ProductModel.objects.filter(
                 product_id=product_id,
                 name='standard'
-            ).update(is_deleted=True)
+            )
+            if not db_standard_model[0].is_deleted:
+                from mall.promotion import models as promotion_models
+                # 单规格改多规格商品
+                db_standard_model.update(is_deleted=True)
+
+                # 结束对应买赠活动 jz
+                premiumSaleIds = set(promotion_models.PremiumSaleProduct.objects.filter(
+                    product_id=db_standard_model[0].product_id).values_list('premium_sale_id', flat=True))
+                if len(premiumSaleIds) > 0:
+                    from webapp.handlers import event_handler_util
+                    promotionIds = set(promotion_models.Promotion.objects.filter(
+                        detail_id__in=premiumSaleIds, type=promotion_models.PROMOTION_TYPE_PREMIUM_SALE).values_list('id', flat=True))
+                    event_data = {
+                        "id": ','.join([str(id) for id in promotionIds])
+                    }
+                    event_handler_util.handle(event_data, 'finish_promotion')
         else:
             models.ProductModel.objects.filter(
                 product_id=product_id, name='standard'
@@ -749,6 +766,37 @@ class Product(resource.Resource):
             url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_RECYCLED, )
             return HttpResponseRedirect(url)
 
+class ProductFilterParams(resource.Resource):
+    app = 'mall2'
+    resource = 'product_pos'
+
+    @login_required
+    def api_get(request):
+        """
+        获取商品是否存在已有的排序值
+        """
+        try:
+            is_index_exists = False
+            owner = request.manager
+            pos = int(request.GET.get('pos'))
+            obj_bs = models.Product.objects.filter(
+                owner=owner, display_index=pos, is_deleted=False, shelve_type=models.PRODUCT_SHELVE_TYPE_ON)
+            if obj_bs.exists():
+                is_index_exists = True
+
+            response = create_response(200)
+            response.data = {
+                'is_index_exists': is_index_exists
+            }
+        except:
+            error_msg = u"获取商品是否存在已有的排序值失败, cause:\n{}".format(unicode_full_stack())
+            print error_msg
+            watchdog_warning(error_msg)
+            response = create_response(500)
+        
+        return response.get_response()
+
+    @login_required
     def api_post(request):
         """根据update_type，更新对应的商品信息.
 
@@ -768,7 +816,7 @@ class Product(resource.Resource):
                 return response.get_response()
         except:
             watchdog_warning(
-                u"failed to update, cause:\n{}".format(unicode_full_stack())
+                u"failed to update product pos, cause:\n{}".format(unicode_full_stack())
             )
             response = create_response(500)
             return response.get_response()
@@ -844,7 +892,11 @@ class ProductModel(resource.Resource):
             stock_type = models.PRODUCT_STOCK_TYPE_UNLIMIT
             if model_info['stock_type'] == 'limit':
                 stock_type = models.PRODUCT_STOCK_TYPE_LIMIT
-
+            if not model_info.get('id', None):
+                # 商品没有规格的情况, 避免报错
+                response = create_response(400)
+                response.errMsg = '商品规格错误请重新编辑商品'
+                return response.get_response()
             product_model_id = model_info['id']
             stocks = model_info['stocks']
             if stock_type == models.PRODUCT_STOCK_TYPE_UNLIMIT:
@@ -855,7 +907,7 @@ class ProductModel(resource.Resource):
             if len(product_model) == 1 and product_model[0].stock_type == models.PRODUCT_STOCK_TYPE_LIMIT and product_model[0].stocks < 1:
                 #触发signal，清理缓存
                 product_model.update(stocks=0)
-                
+
             product_model.update(stock_type=stock_type, stocks=stocks)
 
         response = create_response(200)

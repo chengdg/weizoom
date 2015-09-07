@@ -5,6 +5,7 @@ __author__ = 'chuter'
 
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, Http404
 from core.jsonresponse import create_response, JsonResponse
+from django.contrib.auth.models import User
 
 from apps_router import process_resource, call_resource_process_api
 
@@ -76,6 +77,8 @@ def get_apps(request):
 		return []
 
 	ret_apps = CustomizedApp.all_running_apps_list(user=request.user)
+	admin_user = User.objects.get(id=1)
+	ret_apps.extend([app for app in CustomizedApp.all_running_apps_list(user=admin_user) if not 'markettool:' in app.name])
 	ret_apps_info_jsonarray = []
 	for app in ret_apps:
 		ret_apps_info_jsonarray.append(

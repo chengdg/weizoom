@@ -1,4 +1,4 @@
-Feature: 购买参加“满减”活动的商品
+Feature: 购买参加“积分折扣”活动的商品
 
 
 Background:

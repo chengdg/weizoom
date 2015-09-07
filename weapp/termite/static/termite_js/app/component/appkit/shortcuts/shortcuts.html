@@ -1,0 +1,53 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.shortcuts' %}
+<ul  
+    class="wui-shortcuts"  
+    data-component-cid="{{component.cid}}" 
+    style=""
+>
+	{% if component.model.modules.name.select %}
+	<li class="wui-i-item">
+		<label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">姓名</label>
+		<div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="name" data-control-type="appkit.shortcuts">
+			<input 
+				class="wui-i-input" 
+				type="text" 
+				name="name" 
+				placeholder="请输入姓名" 
+				{% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::请输入姓名"{% endif %}
+			/>
+		</div>
+	</li>
+	{% endif %}
+	{% if component.model.modules.phone.select %}
+	<li class="wui-i-item">
+		<label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">手机</label>
+		<div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="phone" data-control-type="appkit.shortcuts">
+			<input 
+				class="wui-i-input" 
+				type="text" 
+				name="phone" 
+				placeholder="请输入手机号"
+				{% if component.model.is_mandatory == 'true' %}data-validate="require-mobile-phone::请输入正确的手机号"{% endif %}
+			/>
+		</div>
+	</li>
+	{% endif %}
+	{% if component.model.modules.email.select %}
+	<li class="wui-i-item">
+		<label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">邮箱</label>
+		<div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="email" data-control-type="appkit.shortcuts">
+			<input 
+				class="wui-i-input"
+				type="text" 
+				name="email" 
+				placeholder="请输入邮箱" 
+				{% if component.model.is_mandatory == 'true' %}data-validate="require-email::请输入正确的邮箱"{% endif %}
+			/>
+		</div>
+	</li>
+	{% endif %}
+</ul>
+{% endifequal %}

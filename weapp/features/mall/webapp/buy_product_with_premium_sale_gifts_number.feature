@@ -5,41 +5,34 @@
 	购买买赠活动的商品，在手机端的"待付款"、"待发货"、"待收货"、"待评价"中的订单，订单详情可以展示赠品的数量
 """
 
-Background:
-	Given jobs登录系统
-
-@promotion @promotionPremium @order @allOrder
+@mall2 @promotion @promotionPremium @order @allOrder
 Scenario:1 购买买赠活动的商品，在手机端的"待付款"、"待发货"、"待收货"、"待评价"中的订单，订单详情可以展示赠品的数量
 
 	Given jobs登录系统
-	And bill关注jobs的公众号
-
+  	When jobs已添加支付方式
+		"""
+		[{
+			"type": "货到付款",
+			"description": "我的货到付款",
+			"is_active": "启用"
+		},{
+			"type": "微信支付",
+			"description": "我的微信支付",
+			"is_active": "启用",
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
+			"weixin_sign": "42345"
+		}]
+		"""
 	And jobs已添加商品
 		"""
 		[{
 			"name": "商品赠品",
-			"is_member_product": "on",
-			"model": {
-				"models": {
-					"standard": {
-						"price": 10.00,
-						"stock_type": "有限",
-						"stocks": 100
-					}
-				}
-			}
+			"price": 10.00
 		},{
 			"name": "商品1",
-			"is_member_product": "on",
-			"model": {
-				"models": {
-					"standard": {
-						"price": 100.00,
-						"stock_type": "有限",
-						"stocks": 100
-					}
-				}
-			}
+			"price": 100.00
 		}]
 		"""
 	When jobs创建买赠活动
@@ -48,7 +41,7 @@ Scenario:1 购买买赠活动的商品，在手机端的"待付款"、"待发货
 			"name": "商品1买一赠二",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"products": ["商品1"],
+			"product_name": "商品1",
 			"premium_products": [{
 				"name": "商品赠品",
 				"count": 2
@@ -61,6 +54,7 @@ Scenario:1 购买买赠活动的商品，在手机端的"待付款"、"待发货
 
 	#创建"待付款"订单
 
+		When bill关注jobs的公众号
 		When bill访问jobs的webapp
 		When bill购买jobs的商品
 			"""

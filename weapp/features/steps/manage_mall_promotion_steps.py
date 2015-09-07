@@ -240,6 +240,7 @@ def step_impl(context, user, promotion_type):
 			elif context.query_param['status'] == u'进行中':
 				status = 2
 			elif context.query_param['status'] == u'已结束':
+				context.client.get(url) #先获取一次数据，使status都更新到正常值
 				status = 3
 			url += '&promotionStatus=%s' % status
 	response = context.client.get(url)
@@ -311,6 +312,44 @@ def step_impl(context, user, promotion_type):
 		if promotion.get('created_at'):
 			promotion['created_at'] = bdd_util.get_datetime_str(promotion['created_at'])
 	bdd_util.assert_list(expected, actual)
+
+
+@then(u"{user}能获取买赠活动'{promotion_name}'")
+def step_impl(context, user, promotion_name):
+	promotion = Promotion.objects.get(name=promotion_name)
+	response = context.client.get('/mall2/premium_sale/?id=%d' % promotion.id)
+	promotion = response.context['promotion']
+
+	if promotion.member_grade_id == 0:
+		member_grade = u'全部会员'
+	else:
+		member_grade = promotion.member_grade_name
+
+	actual = {
+		"main_product": [],
+		"premium_products": [],
+		"name": promotion.name,
+		"promotion_title": promotion.promotion_title,
+		"start_date": promotion.start_date,
+		"end_date": promotion.end_date,
+		"member_grade": member_grade,
+		"count": promotion.detail['count'],
+		"is_enable_cycle_mode": promotion.detail['is_enable_cycle_mode']
+	}
+	main_product = {}
+	premium_products = {}
+	for product in promotion.products:
+		actual["main_product"].append(product)
+
+	for premium_product in promotion.detail["premium_products"]:
+		actual["premium_products"].append(premium_product)
+
+	expected = json.loads(context.text)
+	expected['start_date'] = bdd_util.get_datetime_str(expected['start_date'])
+	expected['end_date'] = bdd_util.get_datetime_str(expected['end_date'])
+
+	bdd_util.assert_dict(expected, actual)
+
 
 
 
@@ -391,3 +430,47 @@ def step_disable_coupon(context, user, coupon_name):
 	print("data: {}".format(data))
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)
+
+
+@when(u'{user}新建活动时设置参与活动的商品查询条件')
+def step_impl(context, user):
+	query_param = json.loads(context.text)
+	context.query_param = query_param
+
+
+activity2filter_type = {
+	u'限时抢购': 'flash_sale', 
+	u'积分应用': 'integral_sale', 
+	u'买赠': 'all', 
+	u'单品券': 'all', 
+}
+
+def __get_can_select(value):
+	if value and value == u'选取':
+		return True
+	return False
+@then(u'{user}新建{type}活动时能获得已上架商品列表')
+def step_impl(context, user, type):
+	if hasattr(context, 'query_param'):
+		query_param = context.query_param
+	else:
+		query_param = {}
+	url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=%s&name=%s' % (activity2filter_type[type], query_param.get('name', ''))
+	response = context.client.get(url)
+	bdd_util.assert_api_call_success(response)
+	actual = json.loads(response.content)['data']['items']
+
+	expected = []
+	for item in context.table:
+		dict = {
+			"name": item['name'],
+			"total_stocks": item['stocks'],
+			"can_select": __get_can_select(item['actions']),
+			"display_price": item['price']
+		}
+		if item['have_promotion']:
+			dict["promotion_name"] = item['have_promotion']
+
+		expected.append(dict)
+
+	bdd_util.assert_list(expected, actual)

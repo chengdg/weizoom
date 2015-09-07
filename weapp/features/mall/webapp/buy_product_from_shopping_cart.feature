@@ -102,7 +102,7 @@ Background:
 		"""
 
 @mall @mall2 @zy_wsc01 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车购买单个商品
+Scenario:1 从购物车购买单个商品
 	bill将jobs的一个商品加入购物车后
 	1. bill能从购物车中下单
 	2. bill的订单中的信息正确
@@ -206,7 +206,7 @@ Scenario: 从购物车购买单个商品
 		"""
 
 @mall @mall2 @zy_wsc02 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车购买全部商品
+Scenario:2 从购物车购买全部商品
 	bill将jobs的多个商品加入购物车后
 	1. bill能从购物车中下单
 	2. bill的订单中的信息正确
@@ -322,7 +322,7 @@ Scenario: 从购物车购买全部商品
 
 
 @mall @mall2 @zy_wsc03 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车购买部分商品
+Scenario:3 从购物车购买部分商品
 	bill将jobs的多个商品加入购物车后
 	1. bill能从购物车中下单,购买部分商品
 	2. bill的订单中的信息正确
@@ -453,7 +453,7 @@ Scenario: 从购物车购买部分商品
 		"""
 
 @mall @mall2 @zy_wsc04 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车购买空商品
+Scenario:4 从购物车购买空商品
 	bill将jobs的多个商品加入购物车后
 	1. bill不选中商品去下单
 	2. bill下单失败
@@ -551,7 +551,7 @@ Scenario: 从购物车购买空商品
 
 
 @mall @mall2 @zy_wsc05 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车购买商品时有商品下架
+Scenario:5 从购物车购买商品时有商品下架
 	bill将jobs的多个商品加入购物车，并进入订单编辑后，jobs将其中某个商品下架
 	1. bill下单失败
 	2. bill的购物车不受影响
@@ -629,7 +629,7 @@ Scenario: 从购物车购买商品时有商品下架
 
 
 @mall @mall2 @zy_wsc06 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车同时购买"有运费和无运费"的商品，并且商品总重超过续重阈值
+Scenario:6 从购物车同时购买"有运费和无运费"的商品，并且商品总重超过续重阈值
 	bill将jobs有运费的商品和无运费的商品加入购物车后
 	1. bill能从购物车中下单,购买商品
 	2. bill的订单中的信息正确
@@ -716,7 +716,7 @@ Scenario: 从购物车同时购买"有运费和无运费"的商品，并且商�
 
 
 @mall @mall2 @zy_wsc07 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车同时购买"有运费和无运费"的商品，并且商品总重低于续重阈值
+Scenario:7 从购物车同时购买"有运费和无运费"的商品，并且商品总重低于续重阈值
 	bill将jobs有运费的商品和无运费的商品加入购物车后
 	1. bill能从购物车中下单,购买商品
 	2. bill的订单中的信息正确
@@ -793,7 +793,7 @@ Scenario: 从购物车同时购买"有运费和无运费"的商品，并且商�
 
 
 @mall @mall2 @zy_wsc08 @mall.webapp @mall.webapp.shopping_cart
-Scenario: 从购物车购买多个"有特殊运费"的商品
+Scenario:8 从购物车购买多个"有特殊运费"的商品
 	bill将jobs多个'有特殊运费'的商品加入购物车后
 	1. bill 在特殊地区
 	1. bill能从购物车中下单,购买商品

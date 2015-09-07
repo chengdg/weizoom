@@ -1,6 +1,6 @@
 {% load workbench_filter %}
 <!DOCTYPE html>
-<html style="background-color: #F5F5F5; min-height:100%;">
+<html class="notweixin" style="background-color:#F5F5F5; min-height:100%;">
 	<head>
 		<meta charset="UTF-8" />
 		<title></title>
@@ -8,8 +8,10 @@
 		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/webapp_default.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">
+		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">
 		<link type="text/css" rel="stylesheet" href="/termite_static/css/design.css">
+		<link type="text/css" rel="stylesheet" href="/static_v2/css/termite_workbench.css">
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
@@ -93,6 +95,7 @@
 								isEnableSort: true
 							});
 							parent.W.design.DesignPageView = page;
+                            $('.xa-designPage').find("div[data-cid='2']").get(0).click();
 						}, 10);							
 					} else {
 						//parent没有准备好，准备下一次检测
@@ -103,6 +106,7 @@
 			};
 			$(document).ready(function() {
 				detectParentTask();
+                W.Broadcaster.trigger('designpage:ready');
 			});
 			$(document).click(function() {
 				// 点击空白处，触发事件
