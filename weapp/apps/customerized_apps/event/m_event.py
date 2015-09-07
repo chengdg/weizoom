@@ -35,6 +35,8 @@ class Mevent(resource.Resource):
 				participance_data_count = 0
 				isMember = False
 				auth_appid_info = None
+				permission = ''
+				share_page_desc = ''
 				thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
 				if not isPC:
 					isMember = request.member and request.member.is_subscribed
@@ -50,7 +52,7 @@ class Mevent(resource.Resource):
 					#termite类型数据
 					record = app_models.event.objects.get(id=id)
 					activity_status = record.status_text
-
+					share_page_desc = record.name
 					now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 					data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 					data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -68,6 +70,9 @@ class Mevent(resource.Resource):
 						participance_data_count = app_models.eventParticipance.objects(belong_to=id, member_id=request.member.id).count()
 					if participance_data_count == 0 and request.webapp_user:
 						participance_data_count = app_models.eventParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
+					pagestore = pagestore_manager.get_pagestore('mongo')
+					page = pagestore.get_page(record.related_page_id, 1)
+					permission = page['component']['components'][0]['model']['permission']
 				is_already_participanted = (participance_data_count > 0)
 				if  is_already_participanted:
 					event_detail,activity_status = get_result(id,request.member.id)
@@ -85,9 +90,6 @@ class Mevent(resource.Resource):
 					request.GET._mutable = True
 					request.GET.update({"project_id": project_id})
 					request.GET._mutable = False
-					pagestore = pagestore_manager.get_pagestore('mongo')
-					page = pagestore.get_page(record.related_page_id, 1)
-					permission = page['component']['components'][0]['model']['permission']
 					html = pagecreater.create_page(request, return_html_snippet=True)
 					c = RequestContext(request, {
 						'record_id': id,
@@ -102,7 +104,7 @@ class Mevent(resource.Resource):
 						'isMember': isMember,
 						'auth_appid_info': auth_appid_info,
 						'permission': permission,
-						'share_page_desc': record.name,
+						'share_page_desc': share_page_desc,
 						'share_img_url': thumbnails_url
 					})
 					return render_to_response('workbench/wepage_webapp_page.html', c)

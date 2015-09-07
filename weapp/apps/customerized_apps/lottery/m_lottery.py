@@ -37,6 +37,7 @@ class Mlottery(resource.Resource):
 			expend = 0
 			isMember = False
 			auth_appid_info = None
+			share_page_desc = ''
 			thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
@@ -53,7 +54,7 @@ class Mlottery(resource.Resource):
 				record = app_models.lottery.objects.get(id=id)
 				expend = record.expend
 				activity_status = record.status_text
-
+				share_page_desc = record.name
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -119,7 +120,7 @@ class Mlottery(resource.Resource):
 				'isPC': isPC,
 				'isMember': isMember,
 				'auth_appid_info': auth_appid_info,
-				'share_page_desc': record.name,
+				'share_page_desc': share_page_desc,
 				'share_img_url': thumbnails_url
 			})
 
