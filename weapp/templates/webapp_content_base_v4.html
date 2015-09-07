@@ -274,12 +274,6 @@
                       'showOptionMenu'
                     ],
                     success: function (res) {
-                      if(isHideWeixinOptionMenu){
-                           wx.hideOptionMenu();
-                        }
-                      if(res.hideOptionMenu && isHideWeixinOptionMenu){
-                           wx.hideOptionMenu();
-                        }
                       if(!W.wxShareData)
                         alert('1111111111');
                         return;
