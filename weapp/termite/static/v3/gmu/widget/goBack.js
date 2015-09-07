@@ -18,7 +18,13 @@ gmu.define('GoBack', {
 			if(window.history.length == 1){
 				window.location.href = './?woid='+W.webappOwnerId+'&module=mall&model=products&action=list';
 			}else{
-				window.history.go(-1);
+				//获取上一页的url，再通过href转向(修复history.back(-1)不刷新页面的问题)
+				var preUrl = document.referrer;
+				if(!preUrl){//当前页如果不是通过超链接进来的话，会得到null
+					window.history.back(-1);
+				}else{
+					window.location.href = preUrl;
+				}
 			}
 		});
 	}
