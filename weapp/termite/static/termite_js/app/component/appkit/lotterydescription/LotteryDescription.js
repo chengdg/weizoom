@@ -80,11 +80,12 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			type: 'text_with_annotation',
 			displayName: '消耗积分',
 			maxLength: 4,
+			annotation: '积分数为0时，则为不消耗',
 			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
 			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
-			default: ''
+			default: '0'
 		}, {
 			name: 'delivery',
 			type: 'text_with_annotation',
@@ -166,18 +167,10 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			$node.find('.xa-title').text(value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
-			value = value.split(' ')[0].replace( /-/g,'.');
 			$node.find('.wui-i-start_time').text(value);
-			model.set({
-				start_time: value
-			}, {silent: true})
 		},
 		end_time: function($node, model, value, $propertyViewNode) {
-			value = value.split(' ')[0].replace( /-/g,'.');
 			$node.find('.wui-i-end_time').text(value);
-			model.set({
-				end_time: value
-			}, {silent: true})
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});

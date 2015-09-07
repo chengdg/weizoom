@@ -205,7 +205,7 @@
 
             W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
             W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageImg = "{{ request.share_img_url }}";
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
 
             W.appRecordId = "{{ record_id }}";
             W.appName = "{{ app_name }}";
@@ -219,6 +219,7 @@
             W.permission = "{{ permission }}";
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
             W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
+
             var link = window.location.href;
             if (link.indexOf('fmt') === -1){
                 if (link.indexOf('&') === -1){
@@ -231,6 +232,8 @@
             $(document).ready(function() {
                 $('a').highlight();
                 FastClick.attach(document.body);
+                alert(W.sharePageImg);
+                alert(W.sharePageDesc);
                 var hm = document.createElement("script");
                 hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
                 var s = document.getElementsByTagName("script")[0]; 
@@ -249,16 +252,16 @@
                  */
                 W.wxShareData = {
                     "imgUrl" : W.sharePageImg,
-                    "link" : window.location.href,
+                    "link" : link,
                     "desc" : W.sharePageDesc,
                     "title" : W.sharePageTitle,
                     // 点击分享按钮
                     trigger: function (res) {
-                       // alert('用户点击分享按钮'+res);
+                       alert('用户点击分享按钮'+res);
                     },
                     // 分享成功
                     success : function(res) {
-                       // alert('success'+res);
+                       alert('success'+res);
                     }
                 };
                 wx.ready(function () {

@@ -134,8 +134,9 @@ class surveyParticipances_Export(resource.Resource):
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
-		app_name = surveyParticipances_Export.app.split('/')[1]
-		excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		# app_name = surveyParticipances_Export.app.split('/')[1]
+		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		excel_file_name = u'用户调研详情'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part

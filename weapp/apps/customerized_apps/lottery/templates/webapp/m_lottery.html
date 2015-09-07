@@ -29,9 +29,18 @@
         top: 20%;
         left: 5%;
         width: 90%;
-        height: 55%;
         border-radius: 5px;
         z-index: 1;
+    }
+    @media only screen and (min-height: 480px){
+        .wui-resultDialog{
+            height: 280px;
+        }
+    }
+    @media screen and (max-height: 480px) and (max-width: 280px){
+        .wui-resultDialog{
+            height: 62%;
+        }
     }
     .wui-resultDialog>.wui-i-header>.wui-i-title{
         margin-top: 30px;
@@ -184,6 +193,7 @@
                             that.$entityContent.hide();
                             that.$contentHeader.html('工作人员会尽快与您联系，<br>请保持手机开机~');
                             that.$userCenter.show();
+                            that.$closeBtn.show();
                         },
                         error: function(error){
                             $('body').alert({
@@ -230,7 +240,7 @@
             this.$title.css('visibility','visible');
             if(prize_type == 'entity'){
                 this.$title.html('中奖了耶');
-                this.$contentHeader.html("恭喜您获得了"+prize_name+'！');
+                this.$contentHeader.html("恭喜您获得了<br>"+prize_name+'！');
                 this.$entityContent.show();
                 this.$userCenter.hide();
                 this.$closeBtn.hide();
@@ -242,7 +252,7 @@
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
                 this.$title.html('中奖了耶');
                 var msg = prize_type == 'coupon' ? ('一张优惠券：'+prize_name): prize_name;
-                this.$contentHeader.html("恭喜您获得了"+msg+"！快去个人中心查看吧！");
+                this.$contentHeader.html("恭喜您获得了<br>"+msg+"！<br>快去个人中心查看吧！");
                 this.$userCenter.show();
                 this.$closeBtn.show();
             }else if(prize_type == 'gameover'){
