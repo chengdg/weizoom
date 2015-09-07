@@ -80,7 +80,7 @@ Background:
 
 	And bill关注jobs的公众号于'2015-05-20'
 
-@member @memberList @wll
+@mall2 @member @memberList 
 Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
 
 	#微信用户批量下订单
