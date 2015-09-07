@@ -42,6 +42,9 @@ class Mvote(resource.Resource):
 			isPC = request.GET.get('isPC',0)
 			isMember = False
 			auth_appid_info = None
+			permission = ''
+			share_page_desc = ''
+			thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
 				if not isMember:
@@ -57,7 +60,7 @@ class Mvote(resource.Resource):
 				#termite类型数据
 				record = app_models.vote.objects.get(id=id)
 				activity_status = record.status_text
-
+				share_page_desc =record.name
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -74,6 +77,9 @@ class Mvote(resource.Resource):
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, member_id=request.member.id).count()
 				if participance_data_count == 0 and request.webapp_user:
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
+				pagestore = pagestore_manager.get_pagestore('mongo')
+				page = pagestore.get_page(record.related_page_id, 1)
+				permission = page['component']['components'][0]['model']['permission']
 
 			is_already_participanted = (participance_data_count > 0)
 			if  is_already_participanted:
@@ -96,9 +102,7 @@ class Mvote(resource.Resource):
 				request.GET.update({"project_id": project_id})
 				request.GET._mutable = False
 				html = pagecreater.create_page(request, return_html_snippet=True)
-				pagestore = pagestore_manager.get_pagestore('mongo')
-				page = pagestore.get_page(record.related_page_id, 1)
-				permission = page['component']['components'][0]['model']['permission']
+
 				c = RequestContext(request, {
 					'record_id': id,
 					'member_id': request.member.id if request.member else "",
@@ -112,15 +116,17 @@ class Mvote(resource.Resource):
 					'isPC': isPC,
 					'isMember': isMember,
 					'auth_appid_info': auth_appid_info,
-					'permission': permission
+					'permission': permission,
+					'share_page_desc': share_page_desc,
+					'share_img_url': thumbnails_url
 				})
 				return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:
+			print '111111'
 			record = None
 			c = RequestContext(request, {
 				'record': record
 			})
-			
 			return render_to_response('vote/templates/webapp/m_vote.html', c)
 
 
@@ -132,7 +138,14 @@ class resultVote(resource.Resource):
 		print request.GET
 		if 'id' in request.GET:
 			id = request.GET['id']
+			isMember = request.GET.get('isMember',0)
 			member_id = request.GET['member_id']
+			auth_appid_info = None
+			if not isMember:
+				from weixin.user.util import get_component_info_from
+				component_info = get_component_info_from(request)
+				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 			vote_detail,result_list = get_result(id,member_id)
 			c = RequestContext(request, {
 				'vote_detail': vote_detail,
@@ -142,6 +155,8 @@ class resultVote(resource.Resource):
 				'resource': "vote",
 				'q_vote': result_list,
 				'hide_non_member_cover': True, #非会员也可使用该页面
+				'isMember': isMember,
+				'auth_appid_info': auth_appid_info,
 			})
 			return render_to_response('vote/templates/webapp/result_vote.html', c)
 

@@ -36,6 +36,7 @@ class Mlottery(resource.Resource):
 		expend = 0
 		isMember = False
 		auth_appid_info = None
+		share_page_desc = ''
 		thumbnails_url = '/termite_static/img/component/lottery/roulette_title.png'
 		if not isPC:
 			isMember = request.member and request.member.is_subscribed
@@ -52,7 +53,7 @@ class Mlottery(resource.Resource):
 			record = app_models.lottery.objects.get(id=id)
 			expend = record.expend
 			activity_status = record.status_text
-
+			share_page_desc = record.name
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 			data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -102,28 +103,28 @@ class Mlottery(resource.Resource):
 		if can_play_count != 0:
 			lottery_status = True
 
-		request.GET._mutable = True
-		request.GET.update({"project_id": project_id})
-		request.GET._mutable = False
-		html = pagecreater.create_page(request, return_html_snippet=True)
-		c = RequestContext(request, {
-			'lottery_status': lottery_status if activity_status == u'进行中' else False,
-			'can_play_count': can_play_count if lottery_status else 0,
-			'expend_integral': expend,
-			'record_id': id,
-			'activity_status': activity_status,
-			'is_already_participanted': (participance_data_count > 0),
-			'page_title': u'微信抽奖',
-			'page_html_content': html,
-			'app_name': "lottery",
-			'resource': "lottery",
-			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': isPC,
-			'isMember': isMember,
-			'auth_appid_info': auth_appid_info,
-			'share_page_desc': record.name,
-			'share_img_url': thumbnails_url
-		})
+			request.GET._mutable = True
+			request.GET.update({"project_id": project_id})
+			request.GET._mutable = False
+			html = pagecreater.create_page(request, return_html_snippet=True)
+			c = RequestContext(request, {
+				'lottery_status': lottery_status if activity_status == u'进行中' else False,
+				'can_play_count': can_play_count if lottery_status else 0,
+				'expend_integral': expend,
+				'record_id': id,
+				'activity_status': activity_status,
+				'is_already_participanted': (participance_data_count > 0),
+				'page_title': u'微信抽奖',
+				'page_html_content': html,
+				'app_name': "lottery",
+				'resource': "lottery",
+				'hide_non_member_cover': True, #非会员也可使用该页面
+				'isPC': isPC,
+				'isMember': isMember,
+				'auth_appid_info': auth_appid_info,
+				'share_page_desc': share_page_desc,
+				'share_img_url': thumbnails_url
+			})
 
-		return render_to_response('lottery/templates/webapp/m_lottery.html', c)
+			return render_to_response('lottery/templates/webapp/m_lottery.html', c)
 
