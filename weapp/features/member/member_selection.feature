@@ -33,6 +33,19 @@ Background:
 
 	Given jobs登录系统
 	And 开启手动清除cookie模式
+	And jobs设定会员积分策略
+		"""
+		{
+			"be_member_increase_count":0,
+			"click_shared_url_increase_count_before_buy":0,
+			"click_shared_url_increase_count_after_buy":0,
+			"buy_via_shared_url_increase_count_for_author":0,
+			"buy_increase_count_for_father":0,
+			"buy_via_offline_increase_count_for_author":0,
+			"click_shared_url_increase_count":0,
+			"buy_award_count_for_buyer":0
+		}
+		"""
 	#添加相关基础数据
 		When jobs已添加商品
 			"""
