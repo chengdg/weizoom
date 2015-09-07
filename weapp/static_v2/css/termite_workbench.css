@@ -31,7 +31,8 @@ body {
 	/*公告有影响*/
 	border: solid 1px #CCC;
 	background-color: white;
-	overflow: hidden;
+	/*辅助空白会影响到样式*/
+	/*overflow: hidden;*/
 	z-index: 1000;
 	/*min-height: 200px;*/
 	/*公告有影响*/
@@ -566,6 +567,7 @@ button.xui-removeImageButton{
 	top:-11px;
 	right: 0px;
 	font-size: 14px;
+	z-index: 1;
 }
 .xui-removeImageButton span{
 	color: #fff;
