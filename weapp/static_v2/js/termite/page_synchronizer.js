@@ -59,7 +59,7 @@ W.workbench.PageSynchronizer = Backbone.View.extend({
     synchronize: function(options) {
         //验证
         if (!W.isSystemManager) {
-            if(!W.validate()) {
+            if(!this.currentPage.validate()) {
                 return;
             }
         }

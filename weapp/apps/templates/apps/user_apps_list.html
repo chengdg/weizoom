@@ -82,61 +82,32 @@ a.xui-appList-app{
     color: #989DA1;
     padding-left: 36px;
 }
-.xui-old-apps-Dialog{
-    display: none;
-    padding-top:90px;
-    text-align:center;
+.xui-old-apps-Dialog {
+  background-color: #fff9b7;
+  color: #b17800;
+  width: 980px;
+  position: static;
+  margin-left: -20px;
+  margin-top: -20px;
+  padding: 10px 0px 10px 20px;
 }
-.xui-old-apps-Dialog .modal-dialog {
-    position:absolute;
-    z-index:99;
+.xui-old-apps-Dialog-title{
+    font-weight: bold;
+    margin-bottom: 5px;
 }
-.xui-old-apps-Dialog .modal-header{
-  height: 38px;
-  padding: 0;
-  padding-left: 20px;
-  background: #56B2EC;
+.xui-old-apps-Dialog-body {
+    font-size: 13px;
 }
-.xui-old-apps-Dialog .modal-title {
-  color: #fff;
-  line-height: 38px;
-  font-size: 14px;
-  border-radius: 6px;
-  font-weight: 700;
-}
-.xui-old-apps-Dialog .modal-content{
-    background-color:#fff;
-    border-radius: 6px;
-    left:26%;
-    position:fixed !important; /* 浮动对话框 */
-    position:absolute;
-    top:25%;
-    width:600px;
-}
-.xui-old-apps-Dialog .modal-body{
-    margin: 7px 10px 10px;
-    line-height: 24px;
-    text-align: left;
-}
-.modal-backdrop.in{
-    filter: alpha(opacity=50) !important;
-    opacity: 0.5 !important;
-    z-index: 1;
-}
-span.xui-closeColor {
-  line-height: 38px;
-  margin-right: 12px;
-  margin-top: 0;
-  opacity: 1;
-}
-button.close {
-  font-size: 30px;
-  font-weight: normal;
-}
+
 </style>
 {% endblock %}
-
 {% block single-content-panel %}
+  <div class="xui-old-apps-Dialog">
+      <div class="xui-old-apps-Dialog-title">系统公告：</div>
+      <div class="xui-old-apps-Dialog-body">
+          新百宝箱已升级,路径为<a href="/apps/lottery/lotteries/">微商城>百宝箱</a>，旧百宝箱将于9月30日关闭入口，在此期间旧百宝箱只能查看原始数据不能创建新活动。如需创建新活动请<a href="/apps/lottery/lotteries/">点击这里</a>，谢谢支持！
+      </div>
+  </div>
   <div class="">
     <div class="relative">
        {% if is_super_user %}
@@ -157,40 +128,12 @@ button.close {
         {% endfor %}
     </div>
   </div>
-    <div class="xui-old-apps-Dialog">
-        <div class="modal-backdrop fade in"></div>
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
-                        <span class="xui-closeColor" aria-hidden="true">&times;</span></button>
-                    <h3 class="modal-title" >系统公告</h3>
-                </div>
-                <div class="modal-body">
-                    新百宝箱已升级路径为微商城>百宝箱，旧百宝箱将于9月15日关闭入口，在此期间旧百宝箱只能查看原始数据不能创建新活动。如需创建新活动请<a href="/apps/lottery/lotteries/">点击这里</a>，谢谢支持！
-                </div>
-            </div>
-        </div>
-
-    </div>
-
 {% endblock %}
 
 {% block base_js %}
 <script type="text/javascript">
 $(document).ready(function() {
-    if($('.relative').hasClass('breadcrumRightButton')){
-{#        如果是管理员登陆is_super_user#}
-        $('.xui-old-apps-Dialog').hide()
-    }
-    else{
-        $('.xui-old-apps-Dialog').show();
-        $(".modal-content").show();
-    }
-    //关闭灰色遮罩
-    $('.close').click(function(event) {
-        $('.xui-old-apps-Dialog').hide()
-    });
+
 });
 </script>  
 {% endblock %}

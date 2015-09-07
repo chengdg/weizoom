@@ -83,9 +83,8 @@
                                             checkbox-select
                                         {% endifequal %}
                                     {% endifequal %}"></span>
-                                <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;">{{ select.name }}</span>
-                                <span style="display: inline-block;float: right;">{{ select.per }}%</span>
-                                <span style="display: inline-block;float: right; margin-right: 10px">{{ select.count }}票</span>
+                                <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ select.name }}</span>
+                                <span style="display: inline-block;float: right;margin-top: -15px;">{{ select.per }}%&nbsp;票</span>
                                 <span data-per="{{ select.per }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
                             </label>
 
