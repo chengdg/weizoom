@@ -1,5 +1,4 @@
 {% extends "content_base_v2.html" %}
-
 {% load workbench_filter %}
 {% load apps_filter %}
 
@@ -24,7 +23,7 @@
             <div class="xui-i-title">
               <span class="xa-title">微页面标题</span>
             </div>
-            <iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1" height="100%" border="none"></iframe>
+            <iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1&app_name={{ app_name }}" height="100%" border="none"></iframe>
           <div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
         </div>
       </div>

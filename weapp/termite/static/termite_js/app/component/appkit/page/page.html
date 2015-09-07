@@ -22,10 +22,10 @@
         style="margin:0px; padding:0px;"
     >
     	{{ sub_component.html|safe }}
-    	<div class="xui-designPage-actionPanel xui-hide xa-actionPanel">
-            <span class="xui-i-action xa-add xa-action">添加模块</span>
+    	<div class="xui-designPage-actionPanel xui-appPage-{{ sub_component.app_name }} xui-hide xa-actionPanel">
+            <span class="xui-i-action xui-i-addAction xa-add xa-action">添加模块</span>
             <span class="xui-i-action xui-i-editAction xa-edit xa-action">编辑</span>
-            <span class="xui-i-action xa-delete xa-action">删除</span>
+            <span class="xui-i-action xui-i-deleteAction xa-delete xa-action">删除</span>
         </div>
         <div class="xui-designPage-selectIndicator xui-hide xa-selectIndicator">
         </div>
