@@ -3141,23 +3141,22 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
 
 def update_user_paymoney(id):
 	#更新会员的消费、消费次数、消费单价
+	from modules.member.models import WebAppUser
+	member = WebAppUser.get_member_by_webapp_user_id(id)
+	user_orders = Order.get_orders_from_webapp_user_ids(member.get_webapp_user_ids)
+	pay_money = 0
+	pay_times = 0
+	for user_order in user_orders:
+		user_order.final_price = user_order.final_price + user_order.weizoom_card_money
+		if user_order.status > 2:
+			pay_money += user_order.final_price
+			pay_times += 1
 
-	# member = WebAppUser.get_member_by_webapp_user_id(id)
-	# user_orders = Order.get_orders_from_webapp_user_ids(member.get_webapp_user_ids)
-	# pay_money = 0
-	# pay_times = 0
-	# for user_order in user_orders:
-	# 	user_order.final_price = user_order.final_price + user_order.weizoom_card_money
-	# 	if user_order.status > 2:
-	# 		pay_money += user_order.final_price
-	# 		pay_times += 1
-
-	# member.pay_times = pay_times
-	# member.pay_money = pay_money
-	# try:
-	# 	member.unit_price = pay_money/pay_times
-	# except:
-	# 	member.unit_price = 0
-	# member.save()
-	pass
+	member.pay_times = pay_times
+	member.pay_money = pay_money
+	try:
+		member.unit_price = pay_money/pay_times
+	except:
+		member.unit_price = 0
+	member.save()
 	#更新会员的消费、消费次数、消费单价
