@@ -74,9 +74,10 @@
     var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
     W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
     var bottomDistance = 110;
-    
     /* 是否页面验证 */
     W.isUserPageWalidate = true;
+    /* 自动选中cid，当页面进来的时候 */
+    W.autoSelectCid = 2
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
