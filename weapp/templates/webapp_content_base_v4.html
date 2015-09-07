@@ -230,8 +230,9 @@
             }
 
             $(document).ready(function() {
-                $('a').highlight();
+{#                $('a').highlight();#}
                 FastClick.attach(document.body);
+                alert(link);
                 alert(W.sharePageImg);
                 alert(W.sharePageDesc);
                 var hm = document.createElement("script");
@@ -266,7 +267,6 @@
                 };
                 wx.ready(function () {
                   // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
-                  alert('wx.ready');
                   wx.checkJsApi({
                     jsApiList: [
                       'onMenuShareAppMessage',
@@ -277,6 +277,12 @@
                       'showOptionMenu',
                     ],
                     success: function (res) {
+                      if(isHideWeixinOptionMenu){
+                           wx.hideOptionMenu();
+                        }
+                      if(res.hideOptionMenu && isHideWeixinOptionMenu){
+                           wx.hideOptionMenu();
+                        }
                       if(!W.wxShareData)
                         return
                       res = res.checkResult;
