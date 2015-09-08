@@ -74,7 +74,7 @@
 							{% if record.order_id != '-1'%}
 								{% if is_weizoom_mall %}
 									{% if record.true_order_id %}
-									<a href="/mall/order_detail/get/?order_id={{ record.true_order_id }}">{{ record.order_id }}</a>
+									<a href="/mall2/order/?order_id={{ record.true_order_id }}">{{ record.order_id }}</a>
 									{% else %}
 									{{ record.order_id }}
 									{% endif %}

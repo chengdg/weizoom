@@ -1,7 +1,7 @@
 {% load webapp_filter %}
 {% load project_filter %}
 <!DOCTYPE html>
-<html class="{% if user.is_from_android %} android{% endif %}{% if not user.is_from_weixin %} notweixin{% endif %}" style="background:#f2f2f2;">
+<html class="{% if user.is_from_android %} android{% endif %}{% if not user.is_from_weixin %} notweixin {% ifequal app_name 'lottery' %}{% ifequal activity_status '进行中' %}notweixin-lottery_active{% endifequal %}{% endifequal %}{% endif %} " style="background:#f2f2f2;">
     <head>
         <meta charset="UTF-8" />
         <title>{{ page_title }}</title>

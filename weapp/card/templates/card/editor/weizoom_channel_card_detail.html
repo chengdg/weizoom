@@ -120,7 +120,7 @@
                 {{each(j,card_order) card_orders}}
                     <tr>
                         <td style="vertical-align: top; padding-top: 31px;"><div>${card_order[0].created_at}</div></td>
-                        <td style="vertical-align: top; padding-top: 31px;"><div><a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${card_order[0].id}" target="_blank">${card_order[0].order_id}</a><div></td>
+                        <td style="vertical-align: top; padding-top: 31px;"><div><a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${card_order[0].id}" target="_blank">${card_order[0].order_id}</a><div></td>
                         <td>
                             {{each(m,card) card_order}}
                                 {{if m<2}}
