@@ -43,14 +43,14 @@ Background:
 		},{
 			"title":"sub图文3",
 			"cover": [{
-				"url": "/standard_static/test_resource_img/hangzhou4.jpg"
+				"url": "/standard_static/test_resource_img/wufan1.jpg"
 				}],
 			"cover_in_the_text":"false",
 			"summary":"sub单条图文3文本摘要",
-			"jump_url":"www.baidu.com"
+			"jump_url":"www.baidu.com",
+			"content":"sub单条图文3文本内容"
 		}]
 		"""
-	
 
 Scenario: 1 编辑多图文 
 	
@@ -63,13 +63,15 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
+			"summary":"单条图文2文本摘要",
 			"content":"单条图文2文本内容修改"
 		},{
-			"title":"sub图文1",,
+			"title":"sub图文1",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
+			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容修改"
 		},{
 			"title":"sub图文2",
@@ -77,52 +79,60 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
+			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容修改"
 		},{
 			"title":"sub图文3",
 			"cover": [{
-				"url": "/standard_static/test_resource_img/hangzhou4.jpg"
+				"url": "/standard_static/test_resource_img/wufan1.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"jump_url":"www.sohu.com"
+			"jump_url":"www.sohu.com",
+			"summary":"sub单条图文3文本摘要",
+			"content":"sub单条图文3文本内容修改"
 		}]
 		"""
 	 
 	Then jobs能获取多图文'图文2修改'
 		"""
-		{
-			"title":"图文1修改",
+		[{
+			"title":"图文2修改",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
-			"content":"单条图文2文本内容修改",
-			"sub": [{
-				"title":"sub图文1",
-				"cover": [{
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-					}],
-				"cover_in_the_text":"true",
-				"content":"sub单条图文1文本内容修改"
-			},{
-				"title":"sub图文2",
-				"cover": [{
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-					}],
-				"cover_in_the_text":"false",
-				"content":"sub单条图文2文本内容修改"
-			},{
-				"title":"sub图文3",
-				"cover": [{
-					"url": "/standard_static/test_resource_img/hangzhou4.jpg"
-					}],
-				"cover_in_the_text":"false",
-				"jump_url":"www.sohu.com"
-			}]
-		}
+			"summary":"单条图文2文本摘要",
+			"content":"单条图文2文本内容修改"
+		},{
+			"title":"sub图文1",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+				}],
+			"cover_in_the_text":"true",
+			"summary":"sub单条图文1文本摘要",
+			"content":"sub单条图文1文本内容修改"
+		},{
+			"title":"sub图文2",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
+				}],
+			"cover_in_the_text":"false",
+			"summary":"sub单条图文2文本摘要",
+			"content":"sub单条图文2文本内容修改"
+		},{
+			"title":"sub图文3",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/wufan1.jpg"
+				}],
+			"cover_in_the_text":"false",
+			"jump_url":"www.sohu.com",
+			"summary":"sub单条图文3文本摘要",
+			"content":"sub单条图文3文本内容修改"
+		}]
 		"""
 	
-	And bill能获取图文管理列表
+	Given bill登录系统
+	Then bill能获取图文管理列表
 		"""
 		[]
 		"""
@@ -132,7 +142,7 @@ Scenario: 2 编辑单条图文
 	标题30字以内，摘要120字以内，正文2万字以内，插入一张图片
 
 	Given jobs登录系统
-	When jobs已编辑单条图文
+	When jobs已编辑图文'图文1'
 		"""
 		[{
 			"title":"图文1修改",
@@ -156,7 +166,8 @@ Scenario: 2 编辑单条图文
 			"content":"单条图文1文本内容修改"
 		}
 		"""
-	And bill能获取图文管理列表
+	Given bill登录系统
+	Then bill能获取图文管理列表
 		"""
 		[]
 		"""

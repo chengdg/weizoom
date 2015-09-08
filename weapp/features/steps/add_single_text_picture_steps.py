@@ -35,13 +35,12 @@ def step_impl(context, user, news_title):
     materials_url = '/new_weixin/api/materials/'
     response = context.client.get(bdd_util.nginx(materials_url))
     newses_info = json.loads(response.content)['data']['items']
-
     for news_info in newses_info:
         if news_info['type'] == 'single':
             if news_info['newses'][0]['title'] == news_title:
                 single_id = news_info['id']
+                single_url = '/new_weixin/news_preview/?id=%s' %single_id
                 break
-    single_url = '/new_weixin/news_preview/?id=%s' %single_id
     response = context.client.get(bdd_util.nginx(single_url))
     actual_data = json.loads(response.context['newses'])[0]
     actual_data['content'] = actual_data.get('text','')
@@ -57,14 +56,15 @@ def step_impl(context, user, news_title):
 @Then(u"{user}能获取图文管理列表")
 def step_impl(context, user):
     if not hasattr(context,'url'):
-        context.url = '/new_weixin/api/materials/'
+        context.url = '/new_weixin/api/materials/?sort_attr=-created_at'
     response = context.client.get(bdd_util.nginx(context.url))
     newses_info = json.loads(response.content)['data']['items']
     actual_data = []
     for news_info in newses_info:
         actual_data.append({'title':news_info['newses'][0]['title']})
     expected_data = json.loads(context.text)
-    actual_data.reverse()
+    #actual_data.reverse()
+    print 'justing',expected_data,'\n',actual_data
     bdd_util.assert_list(expected_data, actual_data)
 
 
