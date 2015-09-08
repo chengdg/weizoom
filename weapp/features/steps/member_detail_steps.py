@@ -190,3 +190,22 @@ def step_impl(context, user, member):
         )
     actual['share_detailed_data'] = share_detailed_data
     bdd_util.assert_dict(actual, expected)
+
+@then(u"{user}获得'{member}'的浏览轨迹")
+def step_impl(context, user, member):
+    response = _get_member_info(context, member)
+    expected = json.loads(context.text)
+
+    member_browse_records = response.context['member_browse_records']
+
+    actual = []
+    for record in member_browse_records:
+        actual.append(dict(
+            date_time = record.created_at.strftime("%Y-%m-%d"),
+            link = record.title
+        ))
+
+    for item in expected:
+        item['date_time'] = "{}".format(bdd_util.get_date_str(item['date_time']))
+
+    bdd_util.assert_list(actual, expected)
