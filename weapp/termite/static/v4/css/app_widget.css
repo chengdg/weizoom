@@ -358,6 +358,7 @@ p.wui-i-start_time,p.wui-i-end_time{
     font-size: 14px;
     margin-left: 7px;
 	font-weight: 300;
+	margin-top: 5px;
 }
 .wui-i-settingData p {
   display: inline;
