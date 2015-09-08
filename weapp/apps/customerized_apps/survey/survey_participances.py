@@ -142,7 +142,27 @@ class surveyParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			data = app_models.surveyParticipance.objects(belong_to=export_id)
+			name = request.GET.get('participant_name', '')
+			webapp_id = request.user_profile.webapp_id
+			if name:
+				hexstr = byte_to_hex(name)
+				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+				if name.find(u'非')>=0:
+					sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
+					members = members|sub_members
+			else:
+				members = member_models.Member.objects.filter(webapp_id=webapp_id)
+			member_ids = [member.id for member in members]
+			start_time = request.GET.get('start_time', '')
+			end_time = request.GET.get('end_time', '')
+			params = {'belong_to':request.GET['export_id']}
+			if member_ids:
+				params['member_id__in'] = member_ids
+			if start_time:
+				params['created_at__gte'] = start_time
+			if end_time:
+				params['created_at__lte'] = end_time
+			data = app_models.surveyParticipance.objects(**params).order_by('-id')
 			fields_raw = []
 			fields_pure = []
 			export_data = []
@@ -151,31 +171,32 @@ class surveyParticipances_Export(resource.Resource):
 			fields_raw.append(u'编号')
 			fields_raw.append(u'用户名')
 			fields_raw.append(u'提交时间')
-			sample = data[0]
+			if data:
+				sample = data[0]
 
-			fields_selec = []
-			fields_qa= []
-			fields_shortcuts = []
+				fields_selec = []
+				fields_qa= []
+				fields_shortcuts = []
 
-			sample_tm = sample['termite_data']
+				sample_tm = sample['termite_data']
 
-			for item in sample_tm:
-				if sample_tm[item]['type']=='appkit.qa':
-					if item in fields_qa:
-						pass
-					else:
-						fields_qa.append(item)
-				if sample_tm[item]['type']=='appkit.selection':
-					if item in fields_selec:
-						pass
-					else:
-						fields_selec.append(item)
-				if sample_tm[item]['type']=='appkit.shortcuts':
-					if item in fields_shortcuts:
-						pass
-					else:
-						fields_shortcuts.append(item)
-			fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+				for item in sample_tm:
+					if sample_tm[item]['type']=='appkit.qa':
+						if item in fields_qa:
+							pass
+						else:
+							fields_qa.append(item)
+					if sample_tm[item]['type']=='appkit.selection':
+						if item in fields_selec:
+							pass
+						else:
+							fields_selec.append(item)
+					if sample_tm[item]['type']=='appkit.shortcuts':
+						if item in fields_shortcuts:
+							pass
+						else:
+							fields_shortcuts.append(item)
+				fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
 
 
 			for field in fields_raw:
@@ -265,6 +286,9 @@ class surveyParticipances_Export(resource.Resource):
 				except:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
 					print '/static/upload/%s'%excel_file_name
+			else:
+				ws.write(1,0,'')
+				wb.save(export_file_path)
 
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
