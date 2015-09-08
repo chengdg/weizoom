@@ -238,18 +238,18 @@
             this.$el.hide();
             this.$title.show();
             if(prize_type == 'entity'){
-                this.$title.html('中奖了耶');
+                this.$title.html('中奖了耶').show();
                 this.$contentHeader.html("恭喜您获得了<br>"+prize_name+'！');
                 this.$entityContent.show();
                 this.$userCenter.hide();
                 this.$closeBtn.hide();
             }else if(prize_type == 'no_prize'){
-                this.$title.html('很遗憾');
+                this.$title.html('很遗憾').show();
                 this.$contentHeader.html("没有中奖，再接再厉吧~");
                 this.$userCenter.show();
                 this.$closeBtn.show();
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
-                this.$title.html('中奖了耶');
+                this.$title.html('中奖了耶').show();
                 var msg = prize_type == 'coupon' ? ('一张优惠券：<br>'+prize_name): prize_name;
                 this.$contentHeader.html("恭喜您获得了"+msg+"！<br>快去个人中心查看吧！");
                 this.$userCenter.show();
@@ -263,7 +263,7 @@
                 this.$contentHeader.html("您今天的抽奖机会已经用完，<br>明天再来吧~");
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
-                this.$title.html('请耐心等待');
+                this.$title.html('请耐心等待').show();
                 this.$contentHeader.html("抽奖活动还未开始！");
                 this.$userCenter.show();
                 this.$closeBtn.hide();
