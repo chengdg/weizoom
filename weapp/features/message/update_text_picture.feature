@@ -52,10 +52,10 @@ Background:
 		"""
 	
 
-Scenario: 1 编辑多条图文 
+Scenario: 1 编辑多图文 
 	
 	Given jobs登录系统
-	When jobs已编辑多条图文
+	When jobs已编辑图文'图文2'
 		"""
 		[{
 			"title":"图文2修改",
@@ -122,7 +122,7 @@ Scenario: 1 编辑多条图文
 		}
 		"""
 	
-	And bill能获取多条图文
+	And bill能获取图文管理列表
 		"""
 		[]
 		"""

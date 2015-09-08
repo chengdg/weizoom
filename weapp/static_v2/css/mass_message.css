@@ -70,8 +70,7 @@
 .xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetNames{
 	background-color: #fff;
 	border: 1px solid #060606;
-	height: 70px;
-	line-height: 30px;
+	margin-bottom: 5px;
 	padding-left: 8px;
 	padding-right: 8px;
 	padding-top: 3px;
@@ -84,9 +83,12 @@
 	height: 15px;
 	background-size: 100%;
 	position: absolute;
-	margin-top: -4px;
+	margin-top: -10px;
 	margin-left: 2px;
 	display: inline-block;
+}
+.xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetNames .emoji {
+	height: 15px;
 }
 
 .xui-massSendingMessage .xui-massageSendingHead input{

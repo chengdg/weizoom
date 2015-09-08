@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# __author__='justing'
 import json
 import time
 
@@ -13,7 +14,6 @@ from django.test.client import Client
 @when(u"{user}已添加单图文")
 def step_impl(context, user):
     addNewses = json.loads(context.text)
-    #data = []
     for addNews in addNewses:
         data = []
         adict = {}
@@ -35,7 +35,6 @@ def step_impl(context, user, news_title):
     materials_url = '/new_weixin/api/materials/'
     response = context.client.get(bdd_util.nginx(materials_url))
     newses_info = json.loads(response.content)['data']['items']
-    #print newses_info
 
     for news_info in newses_info:
         if news_info['type'] == 'single':
@@ -44,9 +43,7 @@ def step_impl(context, user, news_title):
                 break
     single_url = '/new_weixin/news_preview/?id=%s' %single_id
     response = context.client.get(bdd_util.nginx(single_url))
-    #print response.context
     actual_data = json.loads(response.context['newses'])[0]
-    #print 'justing:',actual_data
     actual_data['content'] = actual_data.get('text','')
     actual_data['cover'] = [{'url':actual_data.get('pic_url','')}]
     actual_data['cover_in_the_text'] = actual_data.get('is_show_cover_pic')
@@ -59,13 +56,15 @@ def step_impl(context, user, news_title):
 
 @Then(u"{user}能获取图文管理列表")
 def step_impl(context, user):
-    materials_url = '/new_weixin/api/materials/'
-    response = context.client.get(bdd_util.nginx(materials_url))
+    if not hasattr(context,'url'):
+        context.url = '/new_weixin/api/materials/'
+    response = context.client.get(bdd_util.nginx(context.url))
     newses_info = json.loads(response.content)['data']['items']
     actual_data = []
     for news_info in newses_info:
-        actual_data.append(news_info['newses'][0]['title'])
+        actual_data.append({'title':news_info['newses'][0]['title']})
     expected_data = json.loads(context.text)
+    actual_data.reverse()
     bdd_util.assert_list(expected_data, actual_data)
 
 
