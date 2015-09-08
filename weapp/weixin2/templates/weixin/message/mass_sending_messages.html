@@ -88,7 +88,7 @@
                     <div class="hidden xa-sendMemberIds" data-send-member-ids={{member_ids_str}}></div>
                 {% else %}
                     {% for member in member_list %}
-                        <span class="xui-sendTargetNames xa-sendTargetNames ml5 fl" data-member-id={{member.id}}>{{member.name|safe}}</span>
+                        <span class="xui-sendTargetGroup xa-sendTargetNames ml5 fl" data-member-id={{member.id}}>{{member.name|safe}}</span>
                     {% endfor %}
                 {% endif %}
                 <div class="cb"></div>
