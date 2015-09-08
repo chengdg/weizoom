@@ -480,7 +480,12 @@ select{
     top: 0;
     width: 190px;
 }
-.xui-mainPanel .xui-sideBar-votes,.xui-mainPanel .xui-sideBar-events,.xui-mainPanel .xui-sideBar-surveies,.xui-mainPanel .xui-sideBar-feedbacks,.xui-mainPanel .xui-sideBar-lotteries{
+.xui-mainPanel .xui-sideBar-votes,
+.xui-mainPanel .xui-sideBar-events,
+.xui-mainPanel .xui-sideBar-surveies,
+.xui-mainPanel .xui-sideBar-feedbacks,
+.xui-mainPanel .xui-sideBar-lotteries,
+.xui-mainPanel .xui-sideBar-orderRedEnvelope{
 	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
 	background-repeat: no-repeat;
 }
@@ -498,6 +503,9 @@ select{
 }
 .xui-mainPanel .xui-sideBar-lotteries{
 	background-position: 17px -42px;
+}
+.xui-mainPanel .xui-sideBar-orderRedEnvelope{
+	background-position: 17px -110px;
 }
 .xui-mainPanel .xui-sideBar-realtime_messages{
 	background-position: -48px -141px;
@@ -625,9 +633,9 @@ select{
 .xui-mainPanel .xui-sideBar-issuingCoupon{
 	background-position: 0 -600px;
 }
-.xui-mainPanel .xui-sideBar-orderRedEnvelope{
-	background-position: -48px -320px;
-}
+/*.xui-mainPanel .xui-sideBar-orderRedEnvelope{*/
+	/*background-position: -48px -320px;*/
+/*}*/
 .xui-mainPanel .xui-sideBar-order_summary{
 	background-position: 50px -380px;
 }

@@ -3,6 +3,7 @@ __author__ = 'liupeiyu'
 
 import datetime
 import hashlib
+from django.conf import settings
 
 class ShengjingAPIConfig(object):
 	"""
@@ -27,6 +28,12 @@ class ShengjingAPIConfig(object):
 
 	# 检验验证码 的 Method
 	method_captcha_verify = 'CaptchaVerify'
+
+	# 通过“手机号”和“公司名称”获取学习计划数据接口 的 Method
+	method_get_learn_plan_list = 'GetLearnPlan'
+
+	# 学员确认学习计划 的 Method
+	method_confirm_learn_plan = 'ConfirmLearnPlan'
 
 	# 版本号
 	version = '1.0'
@@ -128,3 +135,54 @@ class ShengjingAPIConfig(object):
 		CODE_SESSION_EXPIRES: "签到码已过期",
 		CODE_SESSION_ERROR: "无效的签到码"
 	}
+
+
+	"""
+	模板接口
+	"""
+	SHENGJING_TEMPLATE_RELEASE_TYPE="shengjing_release"
+	SHENGJING_TEMPLATE_CREATE_TYPE="shengjing_create"
+
+	def get_message_template_id(self, template_type):
+		if template_type == self.SHENGJING_TEMPLATE_RELEASE_TYPE:
+			return self.__get_release_message_template_id()
+		elif template_type == self.SHENGJING_TEMPLATE_CREATE_TYPE:
+			return self.__get_create_message_template_id()
+		else:
+			return None
+	"""
+	释放学习计划
+	"""
+	# 微众蓝标测试账号
+	test_message_template_id = "d66HzCDYTWwEkE2nbUN7mYprkIKsDkjL-oAEBMOTmeM"	
+
+	# 盛景正式账号
+	message_template_id = "N-uYx5k4iUuwXwNhfU7Zo-cwvBJ3KG0AAA7NcMW3jvc"	
+
+	def __get_release_message_template_id(self):
+		if settings.MODE == 'deploy':
+			return self.message_template_id
+		else:
+			return self.test_message_template_id
+
+	"""
+	创建学习计划
+	"""
+	# 微众蓝标测试账号
+	test_create_message_template_id = "Ua83VYJiQlRyZyPLBXrPDx0hH6BC7rnLM-ih5I9ad4c"	
+
+	# 盛景正式账号
+	create_message_template_id = "EZv7h05g_dJmCxk5NbWfzFcKlXYG7-vR-ta3q4lRGyo"	
+
+	def __get_create_message_template_id(self):
+		if settings.MODE == 'deploy':
+			return self.create_message_template_id
+		else:
+			return self.test_create_message_template_id
+
+	def get_message_template_url(self, template_type, user_id):
+		if template_type == self.SHENGJING_TEMPLATE_CREATE_TYPE:
+			url = "http://{}/termite/workbench/jqm/preview/?module=apps:shengjing:study_plan&model=study_plans&resource=study_plans&action=get&workspace_id=apps:&webapp_owner_id={}&project_id=0".format(settings.DOMAIN, user_id)
+			return url
+		else:
+			return ''

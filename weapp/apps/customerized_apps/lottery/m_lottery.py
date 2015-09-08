@@ -36,6 +36,8 @@ class Mlottery(resource.Resource):
 		expend = 0
 		isMember = False
 		auth_appid_info = None
+		share_page_desc = ''
+		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
 		if not isPC:
 			isMember = request.member and request.member.is_subscribed
 			if not isMember:
@@ -51,7 +53,7 @@ class Mlottery(resource.Resource):
 			record = app_models.lottery.objects.get(id=id)
 			expend = record.expend
 			activity_status = record.status_text
-
+			share_page_desc = record.name
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 			data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -64,12 +66,11 @@ class Mlottery(resource.Resource):
 					record.update(set__status=app_models.STATUS_STOPED)
 					activity_status = u'已结束'
 				record.reload()
-
 			project_id = 'new_app:lottery:%s' % record.related_page_id
 			if request.member:
 				lottery_participance = app_models.lotteryParticipance.objects(belong_to=id, member_id=request.member.id)
 				participance_data_count = lottery_participance.count()
-				if participance_data_count != 0:
+				if participance_data_count != 0 and record.limitation_times != -1:
 					lottery_participance = lottery_participance[0]
 					total_count = lottery_participance.total_count
 					#再次进入抽奖活动页面，根据抽奖规则限制以及当前日期和最近一次抽奖日期，更新can_play_count
@@ -89,12 +90,15 @@ class Mlottery(resource.Resource):
 						can_play_count = lottery_participance.can_play_count
 					lottery_participance.reload()
 				else:
-					if record.limitation in ['once_per_day', 'once_per_user']:
-						can_play_count = 1
-					elif record.limitation == 'twice_per_day':
-						can_play_count = 2
-					else:
-						can_play_count = 0
+					# if record.limitation in ['once_per_day', 'once_per_user']:
+					# 	can_play_count = 1
+					# elif record.limitation == 'twice_per_day':
+					# 	can_play_count = 2
+					# elif record.limitation == 'no_limit':
+					# 	can_play_count = -1
+					# else:
+					# 	can_play_count = 0
+					can_play_count = record.limitation_times
 		if can_play_count != 0:
 			lottery_status = True
 
@@ -116,8 +120,9 @@ class Mlottery(resource.Resource):
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': isPC,
 			'isMember': isMember,
-			'auth_appid_info': auth_appid_info
+			'auth_appid_info': auth_appid_info,
+			'share_page_desc': share_page_desc,
+			'share_img_url': thumbnails_url
 		})
-
 		return render_to_response('lottery/templates/webapp/m_lottery.html', c)
 

@@ -5,3 +5,56 @@
 .xui-userCenter-header h2{
 	max-width: 100%!important;
 }
+
+/**
+ * 学习计划页面
+ */
+.xui-studyPlan-page .ui-applyBox{
+	background: #fff;
+	width: 90%;
+	margin: 0 auto;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px; 
+	border-radius: 5px;
+	position: fixed;
+	margin-left: 5%;
+	/*padding-bottom: 20px;*/
+	margin-top: 50%;
+}
+
+.xui-studyPlan-page .ui-applyBoxTitle{
+	padding:20px 15px;
+	border-radius:5px 5px 0 0;
+	color: #000000;
+	/*background:#ececec; */
+	border-bottom:1px solid #cacaca;
+}
+
+.xui-studyPlan-page .xui-confirmBox div{
+	width: 50%;
+	vertical-align: middle;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.xui-studyPlan-page .xui-confirmBox div>a{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.xui-studyPlan-page .xui-confirmBox .xui-right-line{
+	border-right: solid 1px #b2b2b2;
+}
+
+.xui-studyPlan-page .xui-confirmBox div .xa-clearConfirm{
+	color: #999999;
+}
+
+.xui-studyPlan-page .xui-confirmBox div .xa-applyConfirm{
+	color: #009ee7;
+}
+
+

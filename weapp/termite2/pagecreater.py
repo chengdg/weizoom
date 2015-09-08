@@ -82,7 +82,7 @@ def __get_display_info(request):
 		except:
 			pass
 
-	if request.user.is_from_weixin:
+	if request.user.is_from_weixin and request.REQUEST.get('project_id').startswith('new_app:') is False:
 		#在预览模式下，不显示导航
 		__get_navbar(request, page)
 
