@@ -116,7 +116,6 @@ def step_impl(context, user):
     actual = json.loads(response.content)['data']['items']
     for data in actual:
         data['created_at'] = data['created_at'].split(" ")[0]
-        print data
     bdd_util.assert_list(actual, expected)
 
 @then(u"{user}获得'{member}'的收货信息")
@@ -173,7 +172,6 @@ def step_impl(context, webapp_user_name, share_member, webapp_owner_name):
 def step_impl(context, user, member):
     response = _get_member_info(context, member)
     expected = json.loads(context.text)
-    print expected
     shared_url_infos = response.context['shared_url_infos']
     shared_url_lead_number = response.context['shared_url_lead_number']
     qrcode_friends = response.context['qrcode_friends']
@@ -191,5 +189,4 @@ def step_impl(context, user, member):
             )
         )
     actual['share_detailed_data'] = share_detailed_data
-    print actual, "LLL"
     bdd_util.assert_dict(actual, expected)

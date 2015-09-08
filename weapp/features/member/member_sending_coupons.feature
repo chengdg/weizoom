@@ -35,7 +35,7 @@ Background:
 			[{
 				"name": "单品券1",
 				"money": 10.00,
-				"each_limit": "不限",
+				"limit_counts": "无限",
 				"count": 10,
 				"start_date": "今天",
 				"end_date": "1天后",
@@ -115,7 +115,7 @@ Background:
 			[{
 				"name": "单品券2",
 				"money": 10.00,
-				"each_limit": "不限",
+				"limit_counts": "无限",
 				"count": 5,
 				"start_date": "2天前",
 				"end_date": "1天前",
@@ -165,7 +165,7 @@ Background:
 			[{
 				"name": "单品券3",
 				"money": 10.00,
-				"each_limit": "1",
+				"limit_counts": 1,
 				"count": 3,
 				"start_date": "今天",
 				"end_date": "1天后",
@@ -203,7 +203,7 @@ Background:
 			[{
 				"name": "单品券4",
 				"money": 10.00,
-				"each_limit": "不限",
+				"limit_counts": "无限",
 				"count": 2,
 				"start_date": "1天后",
 				"end_date": "2天后",
@@ -235,7 +235,7 @@ Background:
 			[{
 				"name": "单品券5",
 				"money": 10.00,
-				"each_limit": "不限",
+				"limit_counts": "无限",
 				"count": 2,
 				"start_date": "1天前",
 				"end_date": "2天后",
@@ -271,7 +271,7 @@ Background:
 
 		And tom5取消关注jobs的公众号
 
-@memberList @promotionCoupon 
+@memberList @promotionCoupon
 Scenario:1 选择优惠券的列表
 	Given jobs登录系统
 
@@ -284,12 +284,7 @@ Scenario:1 选择优惠券的列表
 				"status":"全部"
 			}]
 			"""
-		Then jobs可以获得会员列表
-			| name  | member_rank |
-			| tom5  | 普通会员    |
-			| tom3  | 普通会员    |
-			| tom2  | 普通会员    |
-			| tom   | 普通会员    |
+
 
 		When jobs选择会员
 			| member_name | member_rank |
@@ -308,29 +303,26 @@ Scenario:1 选择优惠券的列表
 			[{
 				"name":"单品券4",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "1天后",
-				"end_date": "2天后"
+				"end_date": "2天后",
 				"limit_counts":"不限",
-				"grant_counts":"1",
 				"is_select":"true"
 			},{
 				"name":"单品券3",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "今天",
-				"end_date": "1天后"
-				"limit_counts":"1",
-				"grant_counts":"1",
+				"end_date": "1天后",
+				"limit_counts": 1,
 				"is_select":"true"
 			},{
 				"name":"单品券1",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "今天",
-				"end_date": "1天后"
+				"end_date": "1天后",
 				"limit_counts":"不限",
-				"grant_counts":"1",
 				"is_select":"true"
 			}]
 			"""
@@ -343,13 +335,6 @@ Scenario:1 选择优惠券的列表
 				"status":"全部"
 			}]
 			"""
-		Then jobs可以获得会员列表
-			| name  | member_rank |
-			| tom5  | 普通会员    |
-			| tom3  | 普通会员    |
-			| tom2  | 普通会员    |
-			| tom   | 普通会员    |
-			| nokia | 普通会员    |
 
 		When jobs批量发优惠券
 			"""
@@ -363,29 +348,26 @@ Scenario:1 选择优惠券的列表
 			[{
 				"name":"单品券4",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "1天后",
-				"end_date": "2天后"
+				"end_date": "2天后",
 				"limit_counts":"不限",
-				"grant_counts":"1",
 				"is_select":"false"
 			},{
 				"name":"单品券3",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "今天",
-				"end_date": "1天后"
-				"limit_counts":"1",
-				"grant_counts":"1",
+				"end_date": "1天后",
+				"limit_counts": 1,
 				"is_select":"false"
 			},{
 				"name":"单品券1",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "今天",
-				"end_date": "1天后"
+				"end_date": "1天后",
 				"limit_counts":"不限",
-				"grant_counts":"1",
 				"is_select":"true"
 			}]
 			"""
@@ -398,9 +380,6 @@ Scenario:1 选择优惠券的列表
 				"status":"全部"
 			}]
 			"""
-		Then jobs可以获得会员列表
-			| name  | member_rank |
-			| tom3  | 普通会员    |
 
 		When jobs批量发优惠券
 			"""
@@ -408,35 +387,32 @@ Scenario:1 选择优惠券的列表
 				"modification_method":"给筛选出来的所有人发优惠券(已取消关注的除外)"
 			}]
 			"""
-		Then jobs获得发送提示您将为'tom3'发放优惠券
+		#Then jobs获得发送提示您将为'tom3'发放优惠券
 		Then jobs获得选择优惠券列表
 			"""
 			[{
 				"name":"单品券4",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "1天后",
-				"end_date": "2天后"
+				"end_date": "2天后",
 				"limit_counts":"不限",
-				"grant_counts":"1",
 				"is_select":"true"
 			},{
 				"name":"单品券3",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "今天",
-				"end_date": "1天后"
-				"limit_counts":"1",
-				"grant_counts":"1",
+				"end_date": "1天后",
+				"limit_counts": 1,
 				"is_select":"true"
 			},{
 				"name":"单品券1",
 				"type":"单品券",
-				"money":"10",
+				"money":10.00,
 				"start_date": "今天",
-				"end_date": "1天后"
+				"end_date": "1天后",
 				"limit_counts":"不限",
-				"grant_counts":"1",
 				"is_select":"true"
 			}]
 			"""
@@ -467,7 +443,7 @@ Scenario:2 给筛选出选中的部分会员发送优惠券
 				"count":2
 			}]
 			"""
-		Then jobs优惠券发放成功
+		#Then jobs优惠券发放成功
 
 	#校验会员领取优惠券
 		When tom访问jobs的webapp
@@ -599,7 +575,7 @@ Scenario:3 给筛选出会员发送优惠券
 				"count":2
 			}]
 			"""
-		Then jobs优惠券发放成功
+		#Then jobs优惠券发放成功
 
 	#校验会员领取优惠券
 		When tom访问jobs的webapp
