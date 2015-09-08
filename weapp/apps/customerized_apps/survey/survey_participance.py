@@ -26,6 +26,7 @@ COUNT_PER_PAGE = 20
 TEXT_NAME={
 	'phone': U'手机',
 	'email': U'邮箱',
+	'name': u'姓名'
 }
 
 class surveyParticipance(resource.Resource):
@@ -45,15 +46,23 @@ class surveyParticipance(resource.Resource):
 			termite_data = survey_participance.termite_data
 			item_data_list = []
 
-			for k, v in reversed(termite_data.items()):
+			for k in sorted(termite_data.keys()):
+				v = termite_data[k]
 				pureName = k.split('_')[1]
 				item_data = {}
 				if v['type'] == 'appkit.shortcuts':
-					if pureName in TEXT_NAME:
-						item_data['item_name'] = TEXT_NAME[pureName]
-						item_data['item_value'] = v['value']
-						item_data_list.append(item_data)
-			item_data_list.append({'item_name':u'日期','item_value':survey_participance['created_at'].strftime('%Y-%m-%d')})
+					item_data['item_name'] = TEXT_NAME[pureName]
+					item_data['item_value'] = v['value']
+				elif v['type'] == 'appkit.qa':
+					item_data['item_name'] = pureName
+					item_data['item_value'] = v['value']
+				elif v['type'] == 'appkit.selection':
+					item_data['item_name'] = pureName
+					item_data['item_value'] = []
+					for sub_k, sub_v in sorted(v['value'].items()):
+						if sub_v['isSelect']:
+							item_data['item_value'].append(sub_k.split('_')[1])
+				item_data_list.append(item_data)
 		else:
 			webapp_user_name = ''
 			item_data_list = {}
