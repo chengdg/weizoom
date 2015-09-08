@@ -87,6 +87,9 @@
 	margin-left: 2px;
 	display: inline-block;
 }
+.xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetNames .emoji {
+	height: 15px;
+}
 
 .xui-massSendingMessage .xui-massageSendingHead input{
 	top:3px;
