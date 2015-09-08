@@ -157,12 +157,42 @@ class lotteryParticipances_Export(resource.Resource):
 
 		# app_name = lotteryParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'微信抽奖详情'
+		excel_file_name = u'微信抽奖详情.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 		#Excel Process Part
 		try:
 			import xlwt
-			data = app_models.lottoryRecord.objects(belong_to=export_id)
+			name = request.GET.get('participant_name', '')
+			webapp_id = request.user_profile.webapp_id
+			prize_type = request.GET.get('prize_type', '-1')
+			status = request.GET.get('status', '-1')
+			member_ids = []
+			if name:
+				hexstr = byte_to_hex(name)
+				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+				print members
+				if name.find(u'非')>=0:
+					sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
+					members = members|sub_members
+			else:
+				members = member_models.Member.objects.filter(webapp_id=webapp_id)
+			member_ids = [member.id for member in members]
+
+			start_time = request.GET.get('start_time', '')
+			end_time = request.GET.get('end_time', '')
+
+			params = {'belong_to':request.GET['export_id']}
+			if name:
+				params['member_id__in'] = member_ids
+			if start_time:
+				params['created_at__gte'] = start_time
+			if end_time:
+				params['created_at__lte'] = end_time
+			if prize_type != '-1':
+				params['prize_type'] = prize_type
+			if status != '-1':
+				params['status'] = True if status == '1' else False
+			data = app_models.lottoryRecord.objects(**params)
 			fields_raw = []
 			export_data = []
 
@@ -237,6 +267,9 @@ class lotteryParticipances_Export(resource.Resource):
 				except:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
 					print '/static/upload/%s'%excel_file_name
+			else:
+				ws.write(1,0,'')
+				wb.save(export_file_path)
 
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
