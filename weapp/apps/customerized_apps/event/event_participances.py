@@ -115,7 +115,8 @@ class eventParticipances(resource.Resource):
 			item_data_list = []
 			event_participance = app_models.eventParticipance.objects.get(id=data.id)
 			termite_data = event_participance.termite_data
-			for k, v in termite_data.items():
+			for k in sorted(termite_data.keys()):
+				v = termite_data[k]
 				pureName = k.split('_')[1]
 				item_data = {}
 				if pureName in ITEM_FOR_DISPLAY:#判断是否是自定义的填写项
