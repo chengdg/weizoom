@@ -579,3 +579,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 .checkbox-select{
 	background-position: 0 -34px;
 }
+/*百宝箱》微信抽奖，预览时下方不留灰色空白*/
+.notweixin-lottery_active{
+	background-color: #8d00ab !important;
+}
