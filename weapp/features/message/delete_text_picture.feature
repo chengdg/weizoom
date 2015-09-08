@@ -69,6 +69,7 @@ Background:
 			}]
 		"""
 
+@mall2 @senior @textPicture
 Scenario:1 删除图文消息
 	jobs添加单图文和多图文后
 	1. jobs 删除1条图文消息 还有3条
@@ -96,7 +97,7 @@ Scenario:1 删除图文消息
 		"""
 
 # __author__ : "王丽"
-
+@mall2 @senior @textPicture
 Scenario:2 在按"图文名称"查询的查询结果下删除图文
 
 	Given jobs登录系统
