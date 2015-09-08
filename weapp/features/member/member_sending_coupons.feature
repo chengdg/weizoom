@@ -302,7 +302,7 @@ Background:
 
 		And tom5取消关注jobs的公众号
 
-@memberList @promotionCoupon
+@mall2 @memberList @promotionCoupon
 Scenario:1 选择优惠券的列表
 	Given jobs登录系统
 
@@ -448,7 +448,7 @@ Scenario:1 选择优惠券的列表
 			}]
 			"""
 
-@memberList @promotionCoupon
+@mall2 @memberList @promotionCoupon
 Scenario:2 给筛选出选中的部分会员发送优惠券
 
 	Given jobs登录系统
@@ -582,7 +582,7 @@ Scenario:2 给筛选出选中的部分会员发送优惠券
 			}
 			"""
 
-@memberList	@promotionCoupon
+@mall2 @memberList	@promotionCoupon
 Scenario:3 给筛选出会员发送优惠券
 
 	Given jobs登录系统
