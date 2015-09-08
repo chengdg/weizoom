@@ -136,7 +136,7 @@ class voteParticipances_Export(resource.Resource):
 
 		# app_name = voteParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'微信投票详情'
+		excel_file_name = u'微信投票详情.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
