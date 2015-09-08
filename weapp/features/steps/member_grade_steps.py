@@ -137,6 +137,36 @@ def step_impl(context, webapp_user, member):
     }
     response = context.client.post(url, args)
     bdd_util.assert_api_call_success(response)
+
+@when(u"{user}批量发优惠券")
+def step_impl(context, user):
+    data = json.loads(context.text)[0]
+    coupon_rule_name = data.get('coupon_name', '')
+    count = data.get('count', 0)
+    if not coupon_rule_name:
+        return
+    coupon_rule_id = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=coupon_rule_name).id
+    args = {}
+    args['coupon_rule_id'] = coupon_rule_id
+    args['pre_person_count'] = count
+
+    url = "/mall2/api/issuing_coupons_record/?_method=put"
+    if data['modification_method'] == '给选中的人发优惠券(已取消关注的除外)':
+        args['member_id'] = json.dumps(context.member_ids)
+    elif data['modification_method'] == '给筛选出来的所有人发优惠券(已取消关注的除外)':
+        get_all_member_args = {}
+        get_all_member_args['filter_value'] = context.filter_str
+        get_all_member_args['count_per_page'] = 999999999999
+        response = context.client.get('/member/api/members/get/', get_all_member_args)
+        member_ids = []
+        for item in json.dumps(response)['items']:
+            member_ids.append(item["id"])
+
+        args['member_id'] = member_ids
+
+    response = context.client.post(url, args)
+    bdd_util.assert_api_call_success(response)
+
 # @Then(u"{user}能获取会员等级列表")
 # def step_impl(context, user):
 # 	if hasattr(context, 'client'):
