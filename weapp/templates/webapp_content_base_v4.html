@@ -114,42 +114,6 @@
         </div>
         
 
-        <script type="text/javascript">
-            var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
-            W.currentPageName = "{{current_page_name}}";
-            W.projectId = "{{request.project.id}}";
-            W.webappOwnerId = "{{request.webapp_owner_id}}";
-            W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
-            W.curRequestMemberToken = "{{ cur_request_member.token }}";
-            W.visitHistory = "{{ visit_histroy_url }}";
-            W.urlTitle = "{{ visit_histroy_url_title }}";
-            if (W.urlTitle == ''){
-                W.urlTitle = '{{ show_system_name }}';
-            }
-            W.pageTitle = "{{page_title}}";
-            W.errorMessage = null;
-
-            {% if messages %}
-            {% for message in messages %}
-            W.errorMessage = "{{message}}";
-            {% endfor %}
-            {% endif %}
-
-            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
-
-            W.appRecordId = "{{ record_id }}";
-            W.appName = "{{ app_name }}";
-            W.resource = "{{ resource }}";
-            W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
-            W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
-            W.activityStatus = "{{activity_status}}";
-            W.isPC = {% if isPC %}true{% else %}false{% endif %};
-            W.isMember = {% if isMember %}true{% else %}false{% endif %};
-            W.qrcodeUrl = "{{ auth_appid_info.qrcode_url }}";
-            W.permission = "{{ permission }}";
-        </script>
 
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
@@ -185,7 +149,7 @@
         </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
-        $(document).ready(function() {
+             $(document).ready(function() {
             var $product = $('.wui-product');
             var $productList = $('.wui-productlist');
             var $imageDisplay = $('.wui-imagedisplay');
@@ -294,9 +258,6 @@
                     return false;
                 }
             };
-            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
 
             $('.xa-wepage-navbar-link').click(function(event){
                 var url = $(event.currentTarget).find('a').attr('data-link');
@@ -322,7 +283,43 @@
         });
 
         </script>
+
+        <!--<script src="http://192.168.2.76:8080/target/target-script-min.js"></script> -->
         <script type="text/javascript">
+            var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+            W.currentPageName = "{{current_page_name}}";
+            W.projectId = "{{request.project.id}}";
+            W.webappOwnerId = "{{request.webapp_owner_id}}";
+            W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
+            W.curRequestMemberToken = "{{ cur_request_member.token }}";
+            W.visitHistory = "{{ visit_histroy_url }}";
+            W.urlTitle = "{{ visit_histroy_url_title }}";
+            if (W.urlTitle == ''){
+                W.urlTitle = '{{ show_system_name }}';
+            }
+            W.pageTitle = "{{page_title}}";
+            W.errorMessage = null;
+
+            {% if messages %}
+            {% for message in messages %}
+            W.errorMessage = "{{message}}";
+            {% endfor %}
+            {% endif %}
+
+            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
+
+            W.appRecordId = "{{ record_id }}";
+            W.appName = "{{ app_name }}";
+            W.resource = "{{ resource }}";
+            W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
+            W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
+            W.activityStatus = "{{activity_status}}";
+            W.isPC = {% if isPC %}true{% else %}false{% endif %};
+            W.isMember = {% if isMember %}true{% else %}false{% endif %};
+            W.qrcodeUrl = "{{ auth_appid_info.qrcode_url }}";
+            W.permission = "{{ permission }}";
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
             W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
 
