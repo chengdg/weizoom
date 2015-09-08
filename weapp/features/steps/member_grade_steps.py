@@ -137,6 +137,70 @@ def step_impl(context, webapp_user, member):
     }
     response = context.client.post(url, args)
     bdd_util.assert_api_call_success(response)
+
+@when(u"{user}批量发优惠券")
+def step_impl(context, user):
+    data = json.loads(context.text)[0]
+    coupon_rule_name = data.get('coupon_name', '')
+    count = data.get('count', 0)
+    coupon_rule_id = 0
+    if coupon_rule_name:
+        coupon_rule_id = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=coupon_rule_name).id
+    args = {}
+    args['coupon_rule_id'] = coupon_rule_id
+    args['pre_person_count'] = count
+
+    url = "/mall2/api/issuing_coupons_record/?_method=put"
+    if data['modification_method'] == '给选中的人发优惠券(已取消关注的除外)':
+        args['member_id'] = json.dumps([m.id for m in Member.objects.filter(id__in=context.member_ids) if m.is_subscribed == 1])
+        context.member_ids = args['member_id']
+    elif data['modification_method'] == '给筛选出来的所有人发优惠券(已取消关注的除外)':
+        response = context.client.get('/member/api/members/get/?count_per_page=999999999999'+context.filter_str)
+        member_ids = []
+        for item in json.loads(response.content)['data']['items']:
+            member_ids.append(item["id"])
+        args['member_id'] = json.dumps([m.id for m in Member.objects.filter(id__in=member_ids) if m.is_subscribed == 1])
+        context.member_ids = args['member_id']
+    if not coupon_rule_name:
+        return
+    response = context.client.post(url, args)
+    bdd_util.assert_api_call_success(response)
+
+@then(u"{user}获得发送提示您将为'{member}'发放优惠券")
+def step_impl(context, user, member):
+    query_hex = byte_to_hex(member)
+    member = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex)
+    bdd_util.assert_list([member.id], json.loads(context.member_ids))
+
+@then(u"{user}获得发送提示您将为'{count}'人发放优惠券")
+def step_impl(context, user, count):
+    if str(len(json.loads(context.member_ids))) != count:
+        raise
+
+@then(u"{user}获得选择优惠券列表")
+def step_impl(context, user):
+    expected = json.loads(context.text)
+    url = "/mall2/api/issuing_coupons_filter/?filter_type=coupon&member_count=%s" % str(len(json.loads(context.member_ids)))
+    response = context.client.get(url)
+    coupon_rules = json.loads(response.content)['data']['items']
+
+    actual = []
+    for coupon_rule in coupon_rules:
+        rule = {}
+        rule["name"] = coupon_rule["name"]
+        rule["type"] = "单品券" if coupon_rule["limit_product"] else "全店通用券"
+        rule["money"] = coupon_rule["money"]
+        rule["limit_counts"] = "不限" if coupon_rule["limit_counts"] == -1 else coupon_rule["limit_counts"]
+        rule["start_date"] = coupon_rule["start_time"]
+        rule["end_date"] = coupon_rule["end_time"]
+        rule["is_select"] = 'true' if coupon_rule["has_remained"] else 'false'
+        actual.append(rule)
+
+    for item in expected:
+        item["start_date"] = "{} 00:00".format(bdd_util.get_date_str(item["start_date"]))
+        item["end_date"] = "{} 00:00".format(bdd_util.get_date_str(item["end_date"]))
+    bdd_util.assert_list(actual, expected)
+
 # @Then(u"{user}能获取会员等级列表")
 # def step_impl(context, user):
 # 	if hasattr(context, 'client'):
