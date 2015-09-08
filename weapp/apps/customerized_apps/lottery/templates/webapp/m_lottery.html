@@ -39,7 +39,6 @@
         font-weight: 600;
         overflow: visible;
         color: #d81c26;
-        visibility: hidden;
     }
     .wui-resultDialog>.wui-i-header>.wui-i-title:before{
         content: "";
@@ -250,7 +249,7 @@
                 this.$closeBtn.show();
             }else if(prize_type == 'coupon' || prize_type == 'integral'){
                 this.$title.html('中奖了耶').show();
-                var msg = prize_type == 'coupon' ? ('一张优惠券：<br>'+prize_name): prize_name;
+                var msg = prize_type == 'coupon' ? '一张优惠券' : '积分奖励';
                 this.$contentHeader.html("恭喜您获得了"+msg+"！<br>快去个人中心查看吧！");
                 this.$userCenter.show();
                 this.$closeBtn.show();
