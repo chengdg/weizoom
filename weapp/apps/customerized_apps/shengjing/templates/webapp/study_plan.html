@@ -288,12 +288,12 @@
 	<div class="ui-info">
 		<label>开课时间：</label>${start_date} - ${end_date}
 	</div>
-	{{if plan_count > 0 && status != '0'}}
+	{{if plan_count > 0}}
 		<div class="ui-info" onclick="showInfo(this);" type="show">
 			<label>计划人数：</label>${plan_count}
 			<span class="xui-arrow xui-arrow-down ua-arrow" ></span>
 		</div>
-		{{if students.length > 0 }}
+		{{if students && students.length > 0 }}
 			<div class="hidden xui-info xa-info">
 				<label>计划人：</label>
 				{{each(i,value) students}}
