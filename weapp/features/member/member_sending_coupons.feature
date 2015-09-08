@@ -275,7 +275,7 @@ Background:
 Scenario:1 选择优惠券的列表
 	Given jobs登录系统
 
-	#优惠券库存满足人数发放，未开始、已过期、已失效的优惠不能进入选择优惠券列表，
+	#优惠券库存满足人数发放，已过期、已失效的优惠不能进入选择优惠券列表，
 	#只有"进行中"和"未开始"的优惠券可以选择
 		When jobs设置会员查询条件
 			"""
@@ -284,6 +284,13 @@ Scenario:1 选择优惠券的列表
 				"status":"全部"
 			}]
 			"""
+		Then jobs可以获得会员列表
+			| name  | member_rank |
+			| tom5  | 普通会员    |
+			| tom3  | 普通会员    |
+			| tom2  | 普通会员    |
+			| tom   | 普通会员    |
+
 		When jobs选择会员
 			| member_name | member_rank |
 			|     tom     |   普通会员  |
@@ -295,6 +302,7 @@ Scenario:1 选择优惠券的列表
 				"modification_method":"给选中的人发优惠券(已取消关注的除外)"
 			}]
 			"""
+		Then jobs获得发送提示您将为'tom'发放优惠券
 		Then jobs获得选择优惠券列表
 			"""
 			[{
@@ -335,12 +343,21 @@ Scenario:1 选择优惠券的列表
 				"status":"全部"
 			}]
 			"""
+		Then jobs可以获得会员列表
+			| name  | member_rank |
+			| tom5  | 普通会员    |
+			| tom3  | 普通会员    |
+			| tom2  | 普通会员    |
+			| tom   | 普通会员    |
+			| nokia | 普通会员    |
+
 		When jobs批量发优惠券
 			"""
 			[{
 				"modification_method":"给筛选出来的所有人发优惠券(已取消关注的除外)"
 			}]
 			"""
+		Then jobs获得发送提示您将为'4'人发放优惠券
 		Then jobs获得选择优惠券列表
 			"""
 			[{
@@ -361,6 +378,57 @@ Scenario:1 选择优惠券的列表
 				"limit_counts":"1",
 				"grant_counts":"1",
 				"is_select":"false"
+			},{
+				"name":"单品券1",
+				"type":"单品券",
+				"money":"10",
+				"start_date": "今天",
+				"end_date": "1天后"
+				"limit_counts":"不限",
+				"grant_counts":"1",
+				"is_select":"true"
+			}]
+			"""
+
+	#筛选结果只有一人，选择给所有的人发优惠券，也是提示接收的者的名字
+		When jobs设置会员查询条件
+			"""
+			[{
+				"name":"tom3",
+				"status":"全部"
+			}]
+			"""
+		Then jobs可以获得会员列表
+			| name  | member_rank |
+			| tom3  | 普通会员    |
+
+		When jobs批量发优惠券
+			"""
+			[{
+				"modification_method":"给筛选出来的所有人发优惠券(已取消关注的除外)"
+			}]
+			"""
+		Then jobs获得发送提示您将为'tom3'发放优惠券
+		Then jobs获得选择优惠券列表
+			"""
+			[{
+				"name":"单品券4",
+				"type":"单品券",
+				"money":"10",
+				"start_date": "1天后",
+				"end_date": "2天后"
+				"limit_counts":"不限",
+				"grant_counts":"1",
+				"is_select":"true"
+			},{
+				"name":"单品券3",
+				"type":"单品券",
+				"money":"10",
+				"start_date": "今天",
+				"end_date": "1天后"
+				"limit_counts":"1",
+				"grant_counts":"1",
+				"is_select":"true"
 			},{
 				"name":"单品券1",
 				"type":"单品券",

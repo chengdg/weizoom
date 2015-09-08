@@ -6,7 +6,7 @@ Background:
 	And 开启手动清除cookie模式
 
 @mall2 @crm @member @member.status_flow
-Scenario: 直接关注单个公众号
+Scenario:1 直接关注单个公众号
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -27,7 +27,7 @@ Scenario: 直接关注单个公众号
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: 关注多个公众号，访问多个公众号的微站
+Scenario:2 关注多个公众号，访问多个公众号的微站
 	bill先关注jobs的公众号，再关注tom的公众号
 
 	When 清空浏览器
@@ -65,7 +65,7 @@ Scenario: 关注多个公众号，访问多个公众号的微站
 		"""
 	
 @mall2 @crm @member @member.status_flow
-Scenario: 会员向朋友圈分享链接
+Scenario:3 会员向朋友圈分享链接
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -80,7 +80,7 @@ Scenario: 会员向朋友圈分享链接
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: bill分享，tom关注，tom点击，tom访问webapp
+Scenario:4 bill分享，tom关注，tom点击，tom访问webapp
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -111,7 +111,7 @@ Scenario: bill分享，tom关注，tom点击，tom访问webapp
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: bill分享，tom关注，tom访问webapp，tom点击
+Scenario:5 bill分享，tom关注，tom访问webapp，tom点击
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -134,7 +134,7 @@ Scenario: bill分享，tom关注，tom访问webapp，tom点击
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: bill分享，-tom点击，tom关注, tom访问webapp
+Scenario:6 bill分享，-tom点击，tom关注, tom访问webapp
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -163,7 +163,7 @@ Scenario: bill分享，-tom点击，tom关注, tom访问webapp
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: bill分享，-tom点击并分享，nokia关注, nokia访问webapp, nokia点击
+Scenario:7 bill分享，-tom点击并分享，nokia关注, nokia访问webapp, nokia点击
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -186,7 +186,7 @@ Scenario: bill分享，-tom点击并分享，nokia关注, nokia访问webapp, nok
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: bill分享，-tom点击并分享，nokia关注, nokia点击, nokia访问webapp
+Scenario:8 bill分享，-tom点击并分享，nokia关注, nokia点击, nokia访问webapp
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -210,7 +210,7 @@ Scenario: bill分享，-tom点击并分享，nokia关注, nokia点击, nokia访�
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: bill分享，-tom点击并分享，nokia点击, nokia关注, nokia访问webapp
+Scenario:9 bill分享，-tom点击并分享，nokia点击, nokia关注, nokia访问webapp
 	bill关注jobs的公众号
 
 	When 清空浏览器
@@ -234,7 +234,7 @@ Scenario: bill分享，-tom点击并分享，nokia点击, nokia关注, nokia访�
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: 在多个会员分享公众号的链接中切换
+Scenario:10 在多个会员分享公众号的链接中切换
 
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -262,7 +262,7 @@ Scenario: 在多个会员分享公众号的链接中切换
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: 同一个会员在不同设备上访问同一个公众号
+Scenario:11 同一个会员在不同设备上访问同一个公众号
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -274,7 +274,7 @@ Scenario: 同一个会员在不同设备上访问同一个公众号
 
 
 @mall2 @crm @member @member.status_flow
-Scenario: 同一个会员在不同设备上访问同一个公众号
+Scenario:12 同一个会员在不同设备上访问同一个公众号
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -289,3 +289,4 @@ Scenario: 同一个会员在不同设备上访问同一个公众号
 	When bill访问jobs的webapp
 	Then 浏览器cookie包含"[sct]"
 	Then bill在jobs公众号中有2个webapp_user
+	
