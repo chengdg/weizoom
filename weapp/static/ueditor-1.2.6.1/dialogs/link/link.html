@@ -198,7 +198,8 @@
             onClickEvent = function(event){
                 parent.W.ueditor.handleSelectLinkTarget(function(data) {
                     var link = JSON.parse(data);
-                    if (link.data.indexOf('http:') === -1) {
+                    if (link.data.indexOf('http:') === -1 &&
+                        link.data.indexOf('/apps/') === -1) {
                         link.data = '/workbench/jqm/preview/' + link.data;
                     }
                     $('#href').val(link.data_path).attr('data-href', link.data);
@@ -212,7 +213,8 @@
             });
             webSiteLinkView.bind('finish-select-url', function(data){
                 var link = $.parseJSON(data);
-                if (link.data.indexOf('http:') === -1) {
+                if (link.data.indexOf('http:') === -1 &&
+                    link.data.indexOf('/apps/') === -1) {
                     link.data = '/workbench/jqm/preview/' + link.data;
                 }
                 $('#href').val(link.data_path).attr('data-href', link.data);
