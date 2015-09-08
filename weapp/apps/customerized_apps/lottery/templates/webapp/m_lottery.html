@@ -30,7 +30,7 @@
         left: 5%;
         width: 90%;
         border-radius: 5px;
-        z-index: 1;
+        z-index: 2;
     }
     .wui-resultDialog>.wui-i-header>.wui-i-title{
         margin-top: 30px;
@@ -236,7 +236,7 @@
             var delay = options ? options.delay || false : false;
             this.$entityContent.hide();
             this.$el.hide();
-            this.$title.css('visibility','visible');
+            this.$title.show();
             if(prize_type == 'entity'){
                 this.$title.html('中奖了耶');
                 this.$contentHeader.html("恭喜您获得了<br>"+prize_name+'！');
@@ -255,11 +255,11 @@
                 this.$userCenter.show();
                 this.$closeBtn.show();
             }else if(prize_type == 'gameover'){
-                this.$title.css('visibility','hidden');
+                this.$title.hide();
                 this.$contentHeader.html("活动已经结束啦，<br>下次早点来哦~");
                 this.$closeBtn.hide();
             }else if(prize_type == 'timesout'){
-                this.$title.css('visibility','hidden');
+                this.$title.hide();
                 this.$contentHeader.html("您今天的抽奖机会已经用完，<br>明天再来吧~");
                 this.$closeBtn.hide();
             }else if(prize_type == 'notready'){
@@ -325,12 +325,20 @@
             //lottery
             var $lottery = this.$lottery;
             $lottery.find(".xa-lottery-unit-"+this.index).removeClass("active");
+            //$lottery.find(".xa-lottery-unit-"+this.index).css({
+            //    'transform': 'scale(1, 1)',
+            //    'z-index': '0'
+            //});
             this.index++;
             if(this.index>=this.count){
                 this.index = 0;
                 this.times ++;
             }
             $lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
+            //$lottery.find(".xa-lottery-unit-"+this.index).css({
+            //    'transform': 'scale(1.2, 1.2)',
+            //    'z-index': '1'
+            //});
             //lights
             var light_index = this.light_index;
             $lottery.find(".xa-circle-unit-"+light_index).removeClass("active");
