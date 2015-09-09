@@ -217,7 +217,7 @@ W.design.DesignPage = Backbone.View.extend({
 				var nextComponent = this.page.getNextComponentOf(component);
 				var $nextComponentNode = $('[data-cid="'+nextComponent.cid+'"]');
 				xwarn('--------------2-------------------------');
-				xwarn($prevComponentNode.length);
+				xwarn($nextComponentNode.length);
 				xwarn(prevComponent);
 				$nextComponentNode.before($componentNode);
 			}

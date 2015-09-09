@@ -47,6 +47,7 @@ class event(resource.Resource):
 			'event': event,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
+			'app_name': 'event'
 		});
 		
 		return render_to_response('event/templates/editor/workbench.html', c)

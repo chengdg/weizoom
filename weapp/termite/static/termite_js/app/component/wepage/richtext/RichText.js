@@ -11,7 +11,6 @@ W.component.wepage.RichText = W.component.Component.extend({
         fields: [{
             name: 'content',
             type: 'rich_text',
-            displayName: '内容',
             isUserProperty: true,
             dialogParameter: 'W.component.wepage.RichText.getComponentContent',
             triggerButton: '编辑内容...',

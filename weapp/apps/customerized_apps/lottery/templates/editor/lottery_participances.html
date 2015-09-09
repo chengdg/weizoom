@@ -190,13 +190,13 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+	var participant_name,startTime,endTime,prize_type,status;
 	$('.xa-search').click(function(event) {
-		var participant_name = $.trim($('[name="participant_name"]').val());
-        var prize_type = $.trim($('[name="prize_type"]').val());
-        var status = $.trim($('[name="status"]').val());
-		var startTime = $.trim($('[name="start_time"]').val());
-		var endTime = $.trim($('[name="end_time"]').val());
+		participant_name = $.trim($('[name="participant_name"]').val());
+		startTime = $.trim($('[name="start_time"]').val());
+		endTime = $.trim($('[name="end_time"]').val());
+		prize_type = $.trim($('[name="prize_type"]').val());
+        status = $.trim($('[name="status"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
 			participant_name: participant_name,
@@ -212,12 +212,24 @@ $(document).ready(function() {
 	//export
     $('.xa-export').click(function(event){
         W.getLoadingView();
+		participant_name = $.trim($('[name="participant_name"]').val());
+		startTime = $.trim($('[name="start_time"]').val());
+		endTime = $.trim($('[name="end_time"]').val());
+		prize_type = $.trim($('[name="prize_type"]').val());
+        status = $.trim($('[name="status"]').val());
         var export_id =window.location.search.split('?id=')[1];
-		W.getApi().call({
+        W.getApi().call({
             method: 'get',
             app: 'apps/lottery',
             resource: 'lottery_participances-export',
-            args: {'export_id':export_id},
+            args: {
+				'export_id':export_id,
+				'participant_name': participant_name,
+				'start_time': startTime,
+				'end_time': endTime,
+				'prize_type': prize_type,
+				'status': status
+			},
             success: function(resp){
                 if(resp.code == 200){
                     $('#export_href').prop({
