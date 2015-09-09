@@ -63,7 +63,7 @@ class SheDeHandler(KeywordHandler):
 									
 									she_de.is_send = True
 									she_de.save()
-									SheDeLog.objects.create(member_id=member.id, she_de=she_de)
+									SheDeLog.objects.create(member_id=member.id, shede=she_de)
 									response_content = u'恭喜您获得的舍得酒业100积分已充值到<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">个人中心-我的积分</a>' % (user_profile.host, user_profile.user_id)
 								else:
 									response_content = u'抱歉，该验证码已使用！'
