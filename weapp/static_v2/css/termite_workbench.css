@@ -1023,6 +1023,11 @@ button.xui-removeImageButton{
 	height: 162px;
 }*/
 /*添加图片建议尺寸有影响*/
+.xui-propertyView-imageNavGroup .propertyGroup_property_dynamicControlField_control .propertyGroup_property_dialogSelectField .errorHint,
+.xui-propertyView-imgDisplayGroup .propertyGroup_property_dynamicControlField_control .propertyGroup_property_dialogSelectField .errorHint{
+	margin-top: 13px;
+	margin-bottom: -13px;
+}
 .xui-propertyView-imageNavGroup .xui-removeImageButton {
 	display: none;
 }
