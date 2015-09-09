@@ -19,7 +19,7 @@ from weixin.user.util import *
 from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
 
 from weixin.message import generator
-from cache import component_cache
+
 
 """
 MessagePipeline即收到的消息的处理途径
@@ -280,7 +280,7 @@ class MessagePipeline(object):
 			webapp_id = None
 			user_profile = None
 		else:
-
+			from cache import component_cache
 			user_profile,authed_appid =  component_cache.get_component_auth(component_info, appid)
 			webapp_id = user_profile.webapp_id
 			request.user_profile = user_profile
