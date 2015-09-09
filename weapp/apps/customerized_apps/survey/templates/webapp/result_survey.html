@@ -30,12 +30,13 @@
         min-height: 18px;
     }
 
-    .wui-textSelection {
+    .wui-textSelection, .wui-QA{
         padding: 15px 10px 0;
     }
-    .wui-textSelection .wui-i-title {
+    .wui-textSelection .wui-i-title, .wui-QA .wui-i-title{
         font-size: 18px;
         font-weight: lighter;
+        border-left: 4px solid #1aa2f8;
     }
     </style>
 
@@ -69,36 +70,44 @@
             </div>
         </div>
         {% for item in q_survey %}
-            {% ifequal item.isShortcuts False %}
-                <div class="wui-textSelection">
-                    <h1 class="wui-i-title">
-                        {{ item.title }}
-                    </h1>
-                    <ul class="wui-i-items xa-inputControl">
-                        {% for select in item.values %}
-                        <li class="wui-i-item">
-                            <div class="cover_div" style="position: absolute;z-index: 999;height: 50px;"></div>
-                            <label style="padding: 3px 0;" >
-                                <span class="
-                                    {% ifequal select.type 'radio' %}
-                                        selection-radio
-                                        {% ifequal select.isSelect True %}
-                                            radio-select
-                                        {% endifequal %}
-                                    {% else %}
-                                        selection-checkbox
-                                        {% ifequal select.isSelect True %}
-                                            checkbox-select
-                                        {% endifequal %}
-                                    {% endifequal %}"></span>
-                                <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ select.name }}</span>
-                            </label>
-
-                        </li>
-                        {% endfor %}
-                    </ul>
+        {% ifequal item.type 'appkit.selection'%}
+            <div class="wui-textSelection">
+                <h1 class="wui-i-title">
+                    {{ item.title }}
+                </h1>
+                <ul class="wui-i-items xa-inputControl">
+                    {% for select in item.values %}
+                    <li class="wui-i-item">
+                        <div class="cover_div" style="position: absolute;z-index: 999;height: 50px;"></div>
+                        <label style="padding: 3px 0;" >
+                            <span class="
+                                {% ifequal select.type 'radio' %}
+                                    selection-radio
+                                    {% ifequal select.isSelect True %}
+                                        radio-select
+                                    {% endifequal %}
+                                {% else %}
+                                    selection-checkbox
+                                    {% ifequal select.isSelect True %}
+                                        checkbox-select
+                                    {% endifequal %}
+                                {% endifequal %}"></span>
+                            <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ select.name }}</span>
+                        </label>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endifequal %}
+        {% ifequal item.type 'appkit.qa'%}
+            <div class="wui-QA" style="">
+                <h1 class="wui-i-title">{{ item.title }}</h1>
+                <div class="xa-inputControl" data-input-type="textarea" data-control-type="appkit.qa">
+                    <textarea class="wui-i-input">{{ item.values }}</textarea>
                 </div>
-            {% else %}
+            </div>
+        {% endifequal %}
+        {% ifequal item.type 'appkit.shortcuts'%}
             <ul class="wui-shortcuts" style="padding: 0">
                 <li class="wui-i-item">
                     <label class="wui-i-label" style="width: 43px;">{{ item.title }}</label>
@@ -107,7 +116,7 @@
                     </div>
                 </li>
             </ul>
-            {% endifequal %}
+        {% endifequal %}
         {% endfor %}
         {% if survey_detail.prize_type != 'no_prize' %}
             <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >
