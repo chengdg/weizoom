@@ -49,7 +49,7 @@ class SheDeHandler(KeywordHandler):
 				print member,'==============23423'
 				if member:
 					print '===============1',content, '--',SheDe.objects.filter(number=content.strip()).count() 
-					if SheDe.objects.filter(phone_number=content.strip()).count() > 0:
+					if SheDe.objects.filter(number=content.strip()).count() > 0:
 						print '===============2'
 						if SheDeLog.objects.filter(member_id=member.id).count() == 0:
 							print '===============3'
