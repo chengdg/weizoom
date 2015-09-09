@@ -5,6 +5,7 @@ __author__ = 'chuter'
 import json
 import urlparse
 import time
+import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
@@ -147,7 +148,6 @@ def __get_request_members_list(request):
 
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 	total_count = members.count()
-
 	pageinfo, members = paginator.paginate(members, cur_page, count, query_string=request.GET.get('query', None))
 	for member in members:
 		if str(member.id) in selected_member_ids:
@@ -298,6 +298,26 @@ def get_members(request):
 	}
 	return response.get_response()
 
+@api(app='member', resource='member_ids', action='get')
+@login_required
+def get_member_ids(request):
+	"""
+	获取会员id集()
+
+	"""
+	pageinfo, request_members, total_count = __get_request_members_list(request)
+
+	# 构造返回数据
+	member_ids = []
+	response = create_response(200)
+	for member in request_members:
+		member_ids.append(member.id)
+
+	response.data = {
+		'member_ids': member_ids,
+	}
+	return response.get_response()
+
 
 def _get_tags_json(request):
 	webapp_id=request.user_profile.webapp_id
@@ -378,7 +398,7 @@ def get_member_follow_relations(request):
 	pageinfo, follow_members = paginator.paginate(follow_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 	return_follow_members_json_array = []
-	
+
 	if data_value:
 		follow_members = filter_date_follow_members
 
