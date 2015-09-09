@@ -14,7 +14,7 @@ from weixin.message.qa import cache_util
 from weixin2.models import *
 from weixin.message.message.models import Message
 from weixin.message import generator
-from weixin.user.models import WeixinMpUser, WoFu, WoFuLog
+from weixin.user.models import WeixinMpUser, SheDe, SheDeLog
 from watchdog.utils import watchdog_warning, watchdog_error
 from core.exceptionutil import unicode_full_stack
 from modules.member.module_api import get_member_by_openid
