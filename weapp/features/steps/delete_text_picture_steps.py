@@ -25,4 +25,4 @@ def step_impl(context, user, news_title):
 @when(u"{user}设置图文列表的查询条件")
 def step_impl(context, user):
     query = json.loads(context.text)['title']
-    context.url = '/new_weixin/api/materials/?query=%s' %query
+    context.url = '/new_weixin/api/materials/?sort_attr=-created_at&query=%s' %query

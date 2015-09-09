@@ -42,9 +42,10 @@
 	</ul>
 	<div id="multiline" name=".xui-i-member-username" class="hidden"></div>
 	<div id="query_string" data-query-string="${data.query_string}" class="hidden"></div>
-	<table class="table table-condensed mb0 xui-tableHead">
+	<table class="table table-condensed mb0 xui-tableHead xui-listTable">
 		<thead>
 			<tr>
+				<th></th>
 				<th class="pa" width="185">会员</th>
 				<th width="540">信息</th>
 				<th width="80">时间</th>
@@ -56,8 +57,11 @@
 				{{each(i, message) items}}
 				<tr data-id="${message.id}">
 				<tr class="xui-i-realmessage-tr" data-id="${message.session_id}">
+				<td class="xui-vmiddle pr0">
+					<input type="checkbox" class="xa-select xui-select"/>
+				</td>
 					<td class="wui-advanced-table-sort-handler tl_important">
-						<div class="disT w mt5">
+						<div class="disT w mt5 pr">
 							<div class="imgBox disTc pr xui-i-imgBox">
 								{{if message.is_subscribed == 0}}
 									<div class="xui-i-cancelCover tc pa">
@@ -143,6 +147,28 @@
 			{{/if}}
 		</tbody>
 	</table>
+	<div class="checkbox xui-selectBox">
+	<label  for="all">
+		<input type="checkbox" id="xa-selectAll" class="xui-selectAll">
+		全选
+	</label>
+		<a href="javascript:void(0);" class="dropdown-toggle ml20" data-toggle="dropdown" data-target="#" style="width:96px;">
+			标记为已读
+		</a>
+		<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
+					    <li class="dropdown-submenu">
+					    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
+								给选的消息标记为已读</span>
+						   	</a>
+					    </li>
+					    <li class="dropdown-submenu">
+					    	<a class=" xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
+								全部未读消息标记为已读</span>
+						   	</a>
+					    </li>
+		</ul>
+	</div>
+	
 </script>
 
 <script src="/static/jquery/jquery.cookie.js"></script>
@@ -211,6 +237,13 @@ function submitReply(message, openid, sessionId, $current) {
 }
 
 $(document).ready(function() {
+	$('.xa-select').attr('checked', false);
+	$('#xa-selectAll').attr('checked', false);
+	$('.xa-content').delegate('#xa-selectAll', 'click', function(event){
+		var $checkbox = $(event.currentTarget);
+        var isChecked = $checkbox.is(':checked');
+        $('tbody .xa-select').prop('checked', isChecked);
+	});
 	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) {
 		event.stopPropagation();
 		event.preventDefault();

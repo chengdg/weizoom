@@ -61,11 +61,12 @@ Background:
 			},{
 				"title":"sub图文3",
 				"cover": [{
-					"url": "/standard_static/test_resource_img/hangzhou4.jpg"
+					"url": "/standard_static/test_resource_img/wufan1.jpg"
 					}],
 				"cover_in_the_text":"false",
 				"summary":"sub单条图文3文本摘要",
-				"jump_url":"www.baidu.com"
+				"jump_url":"www.baidu.com",
+				"content":"sub单条图文3文本内容"
 			}]
 		"""
 

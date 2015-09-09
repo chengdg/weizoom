@@ -53,7 +53,7 @@ Background:
 			"jump_url":"www.baidu.com"
 		}]
 		"""
-	
+
 Scenario: 1 预览单图文信息
 	jobs添加单图文和多图文后
 	1. jobs查看'图文1'
@@ -67,17 +67,18 @@ Scenario: 1 预览单图文信息
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"content":"单条图文1文本内容",
-			"infor":"公众号信息"
+			"cover_in_the_text":"true",
+			"summary":"单条图文1文本摘要",
+			"content":"单条图文1文本内容"
 		}]
 		"""
-	
+
 Scenario: 2 预览多图文信息
 	jobs添加单图文和多图文后
 	1. jobs查看'sub图文1'
 	2. jobs能看到'sub图文1'的预览信息，包括 标题，创建时间，公众号信息，图片，内容
 	
-	When jobs预览图文'sub图文1'
+	When jobs预览图文'图文2'
 	Then jobs获得图文'图文2'详情
 		"""
 		[{
@@ -87,7 +88,7 @@ Scenario: 2 预览多图文信息
 			}],
 			"cover_in_the_text":"true",
 			"summary":"单条图文2文本摘要",
-			"content":"单条图文2文本内容",
+			"content":"单条图文2文本内容"
 		},{
 			"title":"sub图文1",
 			"cover": [{

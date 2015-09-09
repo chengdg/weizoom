@@ -6,6 +6,7 @@ Feature: 会员列表-会员详情-浏览轨迹
 	1、【时间】：浏览网页的时间
 	2、【链接】：浏览的网页的名称
 """
+@mall2 @member @memberList 
 Scenario:1 会员详情-浏览轨迹
 
 	Given jobs登录系统
