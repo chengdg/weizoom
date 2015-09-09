@@ -163,7 +163,7 @@ def _record_send_template_info(order, template_id, user):
 #  	发送优惠劵的model格式
 # model: {
 # 	"coupon_store": u'全部可用',
-# 	"coupon_rule": u'点击查看优惠券详情，请在优惠券有使用'
+# 	"coupon_rule": u'每笔订单满159元即可使用本卷' or u'不限'
 # }
 ########################################################################
 def send_weixin_template_message(webapp_id, webapp_user_id, model, send_point):
