@@ -131,73 +131,31 @@ def get_result(id,member_id):
 	survey_detail['start_time'] = survey_survey['start_time'].strftime('%Y-%m-%d %H:%M')
 	survey_detail['end_time'] = survey_survey['end_time'].strftime('%Y-%m-%d %H:%M')
 
-	surveies = app_models.surveyParticipance.objects(belong_to=id)
 	member_survey_termite = app_models.surveyParticipance.objects.filter(belong_to=id,member_id=member_id).order_by('-created_at').first().termite_data
-	member_termite_select = {}
-	member_termite_shortcuts = {}
-	for k,member_termite in member_survey_termite.items():
-		value = member_survey_termite[k]
-		if value['type'] == 'appkit.selection':
-			for select,isSelect in value['value'].items():
-				member_termite_select[select] = {
-					'isSelect': isSelect['isSelect'],
-					'type': isSelect['type']
-				}
-		if value['type'] == 'appkit.shortcuts':
-			member_termite_shortcuts[k] = value['value']
-	q_survey =OrderedDict()
 	result_list = []
 
-	for survey in surveies:
-		termite_data = survey.termite_data
-		for k in sorted(termite_data.keys()):
-			value = termite_data[k]
-			if value['type'] == 'appkit.selection':
-				if not q_survey.has_key(k):
-					q_survey[k] = [value['value']]
-				else:
-					q_survey[k].append(value['value'])
-			if value['type'] == 'appkit.shortcuts':
-				q_survey[k] = []
-	for k,v in q_survey.items():
-		a_isSelect = {}
+	for title in sorted(member_survey_termite.keys()):
+		title_type = member_survey_termite[title]['type']
 		result = {}
-		total_count = 0
-		value_list = []
-
-		v_a = {}
-		for a in v:
-			v_a=a
-			print v_a
-			for a_k,a_v in a.items():
-				if a_v:
-					if not a_isSelect.has_key(a_k):
-						a_isSelect[a_k] = 0
-					if a_v['isSelect'] == True:
-						a_isSelect[a_k] += 1
-						total_count += 1
-				else:
-					a_isSelect[a_k] = []
-		for a_k in sorted(v_a.keys()):
-			value ={}
-			name = a_k.split('_')[1]
-			value['name'] = name
-			value['id_name'] = a_k
-			value['count'] = a_isSelect[a_k]
-			value['per'] =  '%d' % (a_isSelect[a_k]*100/float(total_count))
-			value['isSelect'] = member_termite_select[a_k]['isSelect']
-			value['type'] = member_termite_select[a_k]['type']
-			value_list.append(value)
-		title_name = k.split('_')[1]
-		isShortcuts = False
-		if title_name in SHORTCUTS_TEXT.keys():
-			isShortcuts = True
-			value_list = member_termite_shortcuts[k]
+		title_name = title.split('_')[1]
+		if title_type == 'appkit.shortcuts':
 			title_name = SHORTCUTS_TEXT[title_name]
 		result['title'] = title_name
-		result['values'] = value_list
-		result['isShortcuts'] = isShortcuts
+		result['type'] = title_type
+		values = member_survey_termite[title]['value']
+
+		if title_type == 'appkit.selection':
+			select_values = []
+			for select_title in sorted(values.keys()):
+				select_value = {}
+				select_value['name'] = select_title.split('_')[1]
+				select_value['type'] = values[select_title]['type']
+				select_value['isSelect'] = values[select_title]['isSelect']
+				select_values.append(select_value)
+			values = select_values
+		result['values'] = values
 		result_list.append(result)
+
 
 	related_page_id = survey_survey.related_page_id
 
