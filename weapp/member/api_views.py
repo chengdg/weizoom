@@ -302,7 +302,7 @@ def get_members(request):
 @login_required
 def get_member_ids(request):
 	"""
-	获取会员id集()
+	获取会员id集(取消关注除外)
 
 	"""
 	pageinfo, request_members, total_count = __get_request_members_list(request)
@@ -311,7 +311,8 @@ def get_member_ids(request):
 	member_ids = []
 	response = create_response(200)
 	for member in request_members:
-		member_ids.append(member.id)
+		if member.is_subscribed:
+			member_ids.append(member.id)
 
 	response.data = {
 		'member_ids': member_ids,
