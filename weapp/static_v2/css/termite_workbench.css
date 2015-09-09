@@ -31,7 +31,8 @@ body {
 	/*公告有影响*/
 	border: solid 1px #CCC;
 	background-color: white;
-	overflow: hidden;
+	/*辅助空白会影响到样式*/
+	/*overflow: hidden;*/
 	z-index: 1000;
 	/*min-height: 200px;*/
 	/*公告有影响*/
@@ -566,6 +567,7 @@ button.xui-removeImageButton{
 	top:-11px;
 	right: 0px;
 	font-size: 14px;
+	z-index: 1;
 }
 .xui-removeImageButton span{
 	color: #fff;
@@ -1074,8 +1076,10 @@ button.xui-removeImageButton{
 	max-width: 130px;
 	/*超过10个字的长度会掉下来*/
 }
-.xui-propertyView-imgAdjGroup .xui-removeImageButton {
-	display: none;
+.xui-propertyView-imgAdjGroup .xui-dynamicComponentControlImgBox .xui-removeImageButton,
+.xui-propertyView-imgDisplayGroup .xui-dynamicComponentControlImgBox .xui-removeImageButton,
+.xui-propertyView-imageNavGroup .xui-dynamicComponentControlImgBox .xui-removeImageButton{
+	display: none!important;
 }
 
 /*页头1*/
@@ -1309,6 +1313,10 @@ button.xui-removeImageButton{
 	display: block;
 }
 
+/*所有连接显示删除按钮*/
+.xui-wepage-workbenchPage .xui-selected-title-box .xui-removeImageButton,.xui-wepage-globalNavPage .xui-selected-title-box .xui-removeImageButton{
+	display: block!important;
+}
 
 /**
  * dialog对话框 商品列表

@@ -31,8 +31,10 @@ class voteStatistic(resource.Resource):
 			title2itemCount = {}
 			title_valid_dict = {}
 			total_title_valid_dict ={}
+			title_type_dict = {}
 			for p in all_participances:
 				for title, data in p.termite_data.items():
+					title_type = u''
 					if data['type'] == 'appkit.selection':
 						is_valid = False
 						for item, value in data['value'].items():
@@ -50,16 +52,20 @@ class voteStatistic(resource.Resource):
 							else:
 								title2itemCount[title] = {}
 								title2itemCount[title][item] = 1 if value['isSelect'] else 0
+							title_type = value['type']
 						if is_valid:
 							if title_valid_dict.has_key(title):
 								title_valid_dict[title] += 1
 							else:
 								title_valid_dict[title] = 1
+						title_type_dict[title] = title_type
 
 			for title in sorted(title2itemCount.keys()):
+				print title,"title"
 				single_title_dict = {}
 				single_title_dict['title_name'] = title.split('_')[1]
 				single_title_dict['title_valid_count'] = title_valid_dict[title]
+				single_title_dict['type'] = u'单选' if title_type_dict[title] == 'radio' else u'多选'
 				single_title_dict['title_value'] = []
 				for item in sorted(title2itemCount[title].keys()):
 					item_value = title2itemCount[title][item]
@@ -103,8 +109,9 @@ class voteStatistic_Export(resource.Resource):
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
-		app_name = voteStatistic_Export.app
-		excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		# app_name = voteStatistic_Export.app
+		# excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		excel_file_name = u'微信投票统计.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part

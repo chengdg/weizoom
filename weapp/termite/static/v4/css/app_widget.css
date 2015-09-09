@@ -143,7 +143,7 @@
  * 用户调研survey description样式
  */
 .wui-surveyDescription {
-    padding: 20px 20px 0 20px;
+    padding: 35px 20px 0;
 }
 .wui-surveyDescription .wui-i-title {
 	font-size: 20px;
@@ -153,7 +153,7 @@
 .wui-lotterydescription .wui-i-innerTitle{
 	text-align: center;
     width: 100%;
-	padding-top: 92px;
+	padding-top: 95px;
 	font-size: 1.2rem;
 	color: whitesmoke;
 }
@@ -215,6 +215,8 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 	padding: 5px;
+	color: #666;
+	font-size: 16px;
 }
 
 
@@ -227,7 +229,7 @@
 .wui-textSelection .wui-i-title {
 	color: #333;
 	margin-bottom: 10px;
-	font-size: 19px;
+	font-size: 18px;
 	font-weight: bold;
 	border-left: solid 4px #1AA2F8;
 	padding-left: 10px;
@@ -240,7 +242,7 @@
 	background-color: #FFF;
 }
 .wui-textSelection .wui-i-item {
-	padding: 3px 0px;
+	padding: 6px 0px;
 	/*border-bottom: solid 1px #E5E5E5;*/
 }
 .wui-textSelection .wui-i-item:last-child {
@@ -279,11 +281,11 @@
 	display: block;
 	padding: 5px;
 	border: solid 1px transparent;
-	color: #878787;
+	color: #333;
+	font-size: 14px;
 	vertical-align: middle;
 	width: 95%;
 }
-
 
 /** 
  *
@@ -302,7 +304,7 @@
 /*活动的图标*/
 .wui-i-time,.wui-i-prize{
 	margin-top: 5px;
-	min-height: 26px;
+	min-height: 18px;
 	/*margin-left: 30px;*/
 }
 .xui-sprite-timerange,.xui-sprite-prize{
@@ -312,13 +314,13 @@
 	width: 20px;
 	float: left;
 	background-size: 42px 15px;
-	margin: 4px 4px;
+	margin: 1px 4px;
 }
 .xui-sprite-prize {
-	background-position: -25px 1px;
+	background-position: -24px 5px;
 }
 .xui-sprite-timerange {
-  background-position: 2px 1px;
+  background-position: 2px 5px;
 }
 
 .wui-lotterydescription{
@@ -351,16 +353,17 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .wui-surveyDescription.xa-prizeContainer .wui-i-info .wui-i-time p,.wui-i-record .wui-i-recordData li,.wui-i-recordData p{
 	color: #ffffff;
-	font-size: 16px;
+	font-size: 14px;
 }
 .wui-i-settingData.xa-settingData li {
-    font-size: 16px;
+    font-size: 14px;
     margin-left: 7px;
 	font-weight: 300;
+	margin-top: 5px;
 }
 .wui-i-settingData p {
   display: inline;
-  font-size: 16px;
+  font-size: 14px;
 }
 .wui-lotterydescription>.wui-i-body{
 	height: 278px;
@@ -414,6 +417,9 @@ p.wui-i-start_time,p.wui-i-end_time{
     font-size: 16px;
     width: 45px;
 }
+.wui-lotterydescription-hide{
+	display: none;
+}
 .xa-lottery-unit-0{
 	background-position: 0 0;
 }
@@ -452,8 +458,14 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .xa-lottery-go{
 	background: url("/termite_static/img/component/lottery/lottery_roulette_go.png") no-repeat;
-	background-size: 100% 100%;
+	background-size: 100%;
 	border-radius: 2px;
+}
+.xa-lottery-go-to{
+	background: url("/termite_static/img/component/lottery/lottery_roulette_go.png") no-repeat;
+	background-size: 100%;
+	border-radius: 2px;
+	background-position: 0 -139px;
 }
 .xui-lottery-unit .xa-lottery-unit img{
 	height: 63px;

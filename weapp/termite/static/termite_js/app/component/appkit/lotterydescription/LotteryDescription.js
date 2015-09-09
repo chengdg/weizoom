@@ -80,11 +80,11 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			type: 'text_with_annotation',
 			displayName: '消耗积分',
 			maxLength: 4,
+			annotation: '积分数为0时，则为不消耗',
 			validate: 'data-validate="require-notempty::消耗积分不能为空,,require-nonnegative::只能输入0和正整数"',
-			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
-			default: ''
+			default: 0
 		}, {
 			name: 'delivery',
 			type: 'text_with_annotation',
@@ -92,10 +92,9 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			maxLength: 4,
 			annotation: '积分数为0时，则为不送',
 			validate: 'data-validate="require-notempty::参与送积分不能为空,,require-nonnegative::只能输入0和正整数"',
-			validateIgnoreDefaultValue: true,
 			size: '70px',
 			isUserProperty: true,
-			default: '0'
+			default: 0
 		}, {
 			name: 'delivery_setting',
 			type: 'radio',
@@ -123,6 +122,9 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			}, {
 				name: '一天两次',
 				value: 'twice_per_day'
+			}, {
+				name: '不限',
+				value: 'no_limit'
 			}],
 			default: 'once_per_user'
 		},{
@@ -166,22 +168,14 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 			$node.find('.xa-title').text(value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
-			value = value.split(' ')[0].replace( /-/g,'.');
 			$node.find('.wui-i-start_time').text(value);
-			model.set({
-				start_time: value
-			}, {silent: true})
 		},
 		end_time: function($node, model, value, $propertyViewNode) {
-			value = value.split(' ')[0].replace( /-/g,'.');
 			$node.find('.wui-i-end_time').text(value);
-			model.set({
-				end_time: value
-			}, {silent: true})
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
-			$node.find('.xa-description').html(value.replace(/\n/g,'<br>'));
+			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
 		},
 		expend: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-lotterydescription .xa-remainedIntegral strong').text(value);
@@ -200,11 +194,20 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 				case 'twice_per_day':
 					value = '2';
 					break;
+				case 'no_limit':
+					value = '-1';
+					break;
 				default :
 					value = '0';
 					break;
 			}
-			$node.find('.wui-lotterydescription').find('.xa-header p b').html(value);
+			var $header = $node.find('.wui-lotterydescription').find('.xa-header');
+			if(value == '-1'){
+				$header.addClass('wui-lotterydescription-hide');
+			}else{
+				$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
+			}
+
 		}
 	},
 

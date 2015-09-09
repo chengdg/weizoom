@@ -18,13 +18,48 @@
     vertical-align: middle;
     width: 60px;
 }
+.xui-weixin-realtimeMessagePage .xui-listTable {
+    border-bottom: 1px solid #ddd;
+}
+.xui-weixin-realtimeMessagePage .xui-selectBox {
+    display:inline-block;
+    margin:5px 10px;
+}
+.xui-weixin-realtimeMessagePage .xui-selectAll {
+    margin-right: 10px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-menu {
+    border-radius: 5px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-submenu a {
+    padding: 8px 10px !important;
+    border-radius: 5px;
+    width: 190px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-submenu:first-child {
+    border-bottom: 1px solid #ddd;
+}
+.xui-weixin-realtimeMessagePage .dropdown-menu {
+    border: 1px solid #c5c5c5;
+    min-width: 96px;
+    left:66px;
+}
+.xui-weixin-realtimeMessagePage .xui-listTable .xui-vmiddle {
+    vertical-align: middle!important;
+}
+.xui-weixin-realtimeMessagePage .xui-listTable .xui-selectWrap {
+    height: 100%;
+    width: 40px;
+    background-color: red;
+    float: left;
+}
 
 .xui-weixin-realtimeMessagePage .xui-i-unreadMessageCount {
     background: #cf0404;
     color: white;
     height: 18px;
     position: absolute;
-    left: 65px;
+    left: 50px;
     margin-top: -10px;
     width: auto;
     padding: 1px 5px 0;

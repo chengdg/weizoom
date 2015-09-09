@@ -106,24 +106,13 @@ W.design.CoverManager = Backbone.View.extend({
             }
             */
         }
-        //活动报名不显示新增，删除
-        if ((window.location.href).indexOf('event') != -1){
-            this.$coveredWidget.find('.xa-add').hide();
-            this.$coveredWidget.find('.xa-delete').hide();
-        }
         this.$coveredWidget.find('.xa-selectIndicator').show();
     },
 
     refresh: function() {
         if (this.$coveredWidget) {
-            //活动报名不显示新增，删除
-            if ((window.location.href).indexOf('event') != -1) {
-                this.$coveredWidget.find('.xa-add').hide();
-                this.$coveredWidget.find('.xa-delete').hide();
-            } else {
             this.$coveredWidget.find('.xa-actionPanel').show();
             this.$coveredWidget.find('.xa-selectIndicator').show();
-            }
         }
     },
 
@@ -212,16 +201,8 @@ W.design.CoverManager = Backbone.View.extend({
                 return;
             }
         }
-        //活动报名不显示新增，删除
-        if ((window.location.href).indexOf('event') != -1){
-            $componentContainer.find('.xa-add').hide();
-            $componentContainer.find('.xa-delete').hide();
-        }
-        else{
-            $componentContainer.find('.xa-actionPanel').show();
-            $componentContainer.find('.xa-selectIndicator').show();
-            //this.highlightWidget(cid);
-        }
+        $componentContainer.find('.xa-actionPanel').show();
+        $componentContainer.find('.xa-selectIndicator').show();
 
     },
 

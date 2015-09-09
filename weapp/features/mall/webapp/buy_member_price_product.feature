@@ -674,8 +674,8 @@ Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加�
 		}, {
 			"name": "bill",
 			"member_rank": "铜牌会员",
-			"pay_money": 88.00,
-			"pay_times": 1,
+			"pay_money": 0.00,
+			"pay_times": 0,
 			"experience": 50,
 			"integral": 50
 		}]

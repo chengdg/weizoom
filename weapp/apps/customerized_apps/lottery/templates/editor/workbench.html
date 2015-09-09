@@ -118,6 +118,12 @@
     var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
     W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
     var bottomDistance = 110;
+
+    /* 是否页面验证 */
+    W.isUserPageWalidate = true;
+    
+    /* 自动选中cid，当页面进来的时候 */
+    W.autoSelectCid = 2
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -334,18 +340,19 @@
 
             <div class="modal-body ml15">
                 <div>
-                    <p>1、中奖概率：参与活动的人里面可以允许多少人中奖</p>
-                    <p class="pl20"> 例如：中奖概率为70%，那么所有参与活动的人里面有70%的人会中奖。</p>
+                    <p>1、中奖概率：所有参与活动的人里面可以允许多少人中奖</p>
+                    <p class="pl20"> 例如：比如中奖概率为70%，那么所有参与活动的人里面有70%的人会中奖。</p>
                 </div>
                 <div>
-                    <p>2、奖品数量：奖品数量会直接影响用户中几等奖，前提是用户已中奖</p>
-                    <p class="pl20">例如：一等奖奖品数量为10，二等奖数量为30，三等奖数量为60。</p>
+                    <p>2、奖品数量：奖品数量会直接影响用户中几等奖</p>
+                    <p class="pl20">例如：一等奖奖品数量为10，二等奖数量为30，三等奖数量为60，那么用户中一等奖的概率为10%，中二等奖的概率为30%，中三等奖的概率为60%。</p>
+
                 </div>
                 <div>
-                    <p>3、导致用户不中奖的可能</p>
-                    <p class="pl20"> a、奖品数量为0。</p>
-                    <p class="pl20">b、优惠券限制。</p>
-                    <p class="pl40">例如：二等奖的奖品为优惠券，但在设置此优惠券时设置了一人只能领一张。<br>当用户在活动期间已经抽到过该优惠券，那么这个用户再次抽到该优惠券就会判定为其他，<br>如果是仅有的奖品，则不中奖。</p>
+                    <p>3、导致用户不中奖的原因</p>
+                    <p class="pl20"> a.奖品数量为0时，用户不会中奖</p>
+                    <p class="pl20">b.优惠券如果有限制时，会导致用户不会中奖</p>
+                    <p class="pl40">例如：二等奖的奖品为优惠券，但在设置此优惠券时限制了一人只能领一张。当用户在活动期间内已经抽到过了此优惠券 ，那么此用户当再次抽中二等奖时就会认为不中奖，提示谢谢参与。</p>
                 </div>
             </div>
 
