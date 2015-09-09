@@ -52,6 +52,7 @@ Background:
 		}]
 		"""
 
+@mall2 @senior @textPicture 
 Scenario: 1 编辑多图文 
 	
 	Given jobs登录系统
@@ -137,6 +138,7 @@ Scenario: 1 编辑多图文
 		[]
 		"""
 
+@mall2 @senior @textPicture 
 Scenario: 2 编辑单条图文 
 	Jobs编辑单条图文后，能获取他编辑的单条图文
 	标题30字以内，摘要120字以内，正文2万字以内，插入一张图片
@@ -212,4 +214,4 @@ Scenario: 4 编辑单条图文(js校验)
 		}]
 		"""
 	 
-	Then jobs添加单条图文失败	
+	Then jobs添加单条图文失败
