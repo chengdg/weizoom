@@ -2,6 +2,7 @@
 
 import authorization
 import brand_value
+import order_stats
 
 urlpatterns = [
 ]
