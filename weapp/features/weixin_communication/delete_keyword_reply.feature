@@ -1,3 +1,5 @@
+# __author__ : "王丽"
+
 Feature: 删除关键词自动回复 bc
 	jobs能删除 图文消息
 
