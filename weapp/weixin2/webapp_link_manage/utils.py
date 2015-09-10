@@ -19,6 +19,7 @@ from webapp.models import Project
 from market_tools.tools.member_qrcode.export import get_member_qrcode_webapp_link
 from market_tools.tools.complain.export import get_complain_webapp_link
 from apps.customerized_apps.shengjing.export import get_shengjing_link_targets
+from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_link
 
 def get_webapp_link_menu_objectes(request):
 	"""
@@ -44,12 +45,12 @@ def get_webapp_link_menu_objectes(request):
 				'name': '已上架商品',
 				'type': 'product',
 				'add_btn_title': '新建商品',
-				'add_link': '/mall/product/create/'
+				'add_link': '/mall2/product/'
 			},{
 				'name': '商品分组',
 				'type': 'category',
 				'add_btn_title': '新建分组',
-				'add_link': '/mall/product_categories/get/'
+				'add_link': '/mall2/category_list/'
 			}]
 		},
 		'webappHome':{
@@ -117,24 +118,29 @@ def get_webapp_link_menu_objectes(request):
 			'name': '推广扫码',
 			'link': get_member_qrcode_webapp_link(request)
 		},
+		'channelQrcode': {
+			'id': 10,
+			'name': '代言人二维码',
+			'link': get_channel_qrcode_webapp_link(request)
+		},
 		
 		'myOrder': {
 			'id': 8,
 			'name': '我的订单',
 			'link': './?module=mall&model=order_list&action=get&workspace_id=mall&webapp_owner_id=%d' % request.user.id
 		},
-		'complain': {
-			'id': 7,
-			'name': '用户反馈',
-			'link': '/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.user.id
-		},
+		# 'complain': {
+		# 	'id': 7,
+		# 	'name': '用户反馈',
+		# 	'link': '/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.user.id
+		# },
 		'shengjingCustom': {
 			'id': 9,
 			'name': '盛景定制APP',
 			'title': [{
 				'name': '盛景定制APP',
 				'type': 'shengjing_app',
-				'add_link': '/mall/product/create/'
+				'add_link': '/mall2/product/'
 			}]
 		}
 	}
@@ -207,7 +213,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			'filter': {}
 		},
 		'survey': {
-			'class': Research,
+			'class': Research, 
 			'query_name': 'name',
 			'link_template': './?module=market_tool:research&model=research&action=get&research_id={}&workspace_id=market_tool:research&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
