@@ -72,7 +72,7 @@ Scenario:1 关注后自动回复,文本类型，带文本小尾巴
 	Then bill收到自动回复'关注后自动回复内容+小尾巴'
 
 @mall2 @message @automaticReply
-Scenario:3 关键词自动回复,文本类型，带文本小尾巴；没有自动回复，没有小尾巴
+Scenario:2 关键词自动回复,文本类型，带文本小尾巴；没有自动回复，没有小尾巴
 
 	When jobs已添加关键词自动回复规则
 		"""
@@ -96,60 +96,8 @@ Scenario:3 关键词自动回复,文本类型，带文本小尾巴；没有自�
 	When bill在微信中向jobs的公众号发送消息'bill消息'
 	Then bill收到自动回复' '
 
-@ignore
-Scenario:4 消息托管，图文自动回复没有小尾巴
-
-	When jobs已添加消息托管
-		"""
-		[{
-			"is_open":"true",
-			"time_start":"23:00",
-			"time_end":"8:00",
-			"Weeks":"Mon",
-			"reply":[{
-					"reply_content":"消息托管，自动回复文本",
-					"reply_type":"text"
-					},{
-					"reply_content":"图文1",
-					"reply_type":"text_picture"
-					}]
-		}]
-		"""
-	When jobs添加小尾巴
-		"""
-		[{
-			"is_open":"true",
-			"reply_content":"+小尾巴"
-		}]
-		"""
-
-	#bill获得消息托管的文本回复，有小尾巴
-	When jobs获取当前时间为
-		"""
-		{
-			"time":"2015-08-24 7:00:00"
-		}
-		"""
-	When bill在微信中向jobs的公众号发送消息'消息托管'
-	Then bill收到自动回复'消息托管，自动回复文本+小尾巴'
-
-	#bill获得消息托管的图文回复，无小尾巴
-	When jobs获取当前时间为
-		"""
-		{
-			"time":"2015-08-24 6:00:00"
-		}
-		"""
-	When bill在微信中向jobs的公众号发送消息'消息托管'
-	Then bill获得jobs的回复
-		"""
-		{
-			"reply_content":"图文1"
-		}
-		"""
-
 @mall2 @message @automaticReply
-Scenario:5 小尾巴未开启，关注后自动回复,文本类型，无文本小尾巴
+Scenario:3 小尾巴未开启，关注后自动回复,文本类型，无文本小尾巴
 	
 	When jobs添加关注自动回复规则
 		"""
