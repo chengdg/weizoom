@@ -293,7 +293,7 @@ def get_selected_by_link_target(request, menu_type, link_type, link_target_str):
 		if selected_id == "custom":
 			selected_id = 0
 		else:
-			selected_id = int(selected_id)
+			selected_id = selected_id
 
 		item = get_menu_item_by_name(request, menu_type, link_type)
 		if item and item['name'] == selected_link_target['data_category']:
