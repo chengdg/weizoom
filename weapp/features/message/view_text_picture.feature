@@ -81,6 +81,7 @@ Background:
 		}]
 		"""
 
+@mall2 @senior @textPicture
 Scenario: 1 浏览图文列表，分页
 	jobs添加单图文和多图文后
 	1. jobs能看到按创建时间倒叙排列的图文列表
@@ -120,6 +121,7 @@ Scenario: 1 浏览图文列表，分页
 		}]
 		"""
 
+@mall2 @senior @textPicture
 Scenario: 2 浏览图文列表 按标题搜索结果
 	jobs添加单图文和多图文后
 	1. jobs能看到按创建时间倒叙排列的图文列表
