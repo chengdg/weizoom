@@ -28,6 +28,7 @@ def step_impl(context, user):
 		"use_ceiling": info.get(u"use_ceiling", 0),
 		"review_increase": info.get(u"review_increase", 0),
 		"use_condition": info.get("use_condition", 'off'),
+		#"buy_via_offline_increase_count_percentage_for_author":info.get("buy_via_offline_increase_count_percentage_for_author", 0),
 	}
 
 	url = '/mall2/integral_strategy/'
