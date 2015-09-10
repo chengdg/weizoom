@@ -30,7 +30,7 @@
 		data-ui-role="advanced-table"
 		data-app="mall2"
 		data-resource="product_list"
-		data-args='{"type":"onshelf"}'
+		data-args='{"type":"onshelf", "sort_attr":"-created_at"}'
 		data-template-id="#products-view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
@@ -39,6 +39,7 @@
 		data-disable-header-select="true"
 		data-outer-selecter='.xa-selectAll'
 		class="panel-body"
+		data-selecttable-tr='xa-selectTr'
 	></div>
 		<div style="height:30px;"></div>
 		<div class="xui-batchbtn">
@@ -84,7 +85,7 @@
 				<th width="115">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="78" class="tx_sortable" data-sort-attr="sales"><a href="javascript:;">总销量</a></th>
-				<th width="120" class="tx_sortable" data-sort-attr="created_at"><a href="javascript:;">创建时间</a></th>
+				<th width="120" class="tx_sortable" data-sort-attr="created_at" data-init-sort="-created_at" data-sort-direction="up"><a href="javascript:;">创建时间</a></th>
 				{{if data.data.owner_id != 216}}
 				<th width="58">排序</th>
 				{{/if}}
@@ -94,7 +95,7 @@
 		<tbody id='product_list'>
             {{if items.length}}
 	            {{each(i, product) items}}
-				<tr data-id="${product.id}">
+				<tr data-id="${product.id}" class="xa-selectTr">
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">
