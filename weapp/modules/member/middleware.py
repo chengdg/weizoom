@@ -160,21 +160,21 @@ class MemberCacheMiddleware(object):
 		openid, webapp_id = cookie_openid_webapp_id.split('____')
 		if not request.user_profile:
 			return None
-		try:
-			if webapp_id == request.user_profile.webapp_id:
-				from cache import member_cache
-				webapp_user, social_account, member = member_cache.get_accounts(openid, webapp_id)
-				request.webapp_user = webapp_user
-				request.social_account = social_account
-				request.member = member
+		#try:
+		if webapp_id == request.user_profile.webapp_id:
+			from cache import member_cache
+			webapp_user, social_account, member = member_cache.get_accounts(openid, webapp_id)
+			request.webapp_user = webapp_user
+			request.social_account = social_account
+			request.member = member
 
-				request.webapp_user.member = request.member
-				request.webapp_user.webapp_owner_info = request.webapp_owner_info
-				request.found_member_in_cache = True
-			else:
-				pass
-		except:
+			request.webapp_user.member = request.member
+			request.webapp_user.webapp_owner_info = request.webapp_owner_info
+			request.found_member_in_cache = True
+		else:
 			pass
+		# except:
+		# 	pass
 
 
 class RedirectBySctMiddleware(object):
@@ -948,6 +948,9 @@ class OAUTHMiddleware(object):
 
 		#对于非webapp请求和非pc商城地方请求不进行处理
 		if (not request.is_access_webapp) and (not request.is_access_pcmall):
+			return None
+
+		if 'model=address' in request.get_full_path():
 			return None
 		# if is_request_for_api(request):
 		#  	return None

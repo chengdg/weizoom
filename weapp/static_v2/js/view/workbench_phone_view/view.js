@@ -7,13 +7,13 @@ Copyright (c) 2011-2012 Weizoom Inc
  */
 ensureNS('W.workbench');
 W.workbench.PhoneView = Backbone.View.extend({
-	el: '',
+    el: '',
 
-	events: {
-        //'click .xa-title': 'onClickTitle'
-	},
-	
-	initialize: function(options) {
+    events: {
+        'click .xa-title': 'onClickTitle'
+    },
+    
+    initialize: function(options) {
         this.$el = $(this.el);
 
         this.$cover = this.$('#phoneSkinCover');
@@ -22,7 +22,7 @@ W.workbench.PhoneView = Backbone.View.extend({
         //W.Broadcaster.on('component:stop_drag', this.onStopDragComponent, this);
         //W.Broadcaster.on('component:drag', this.onDraggingComponent, this);
         W.Broadcaster.on('designpage:resize', this.onResizeDesignPage, this);
-        //W.Broadcaster.on('designpage:update_site_title', this.onUpdateSiteTitle, this);
+        W.Broadcaster.on('designpage:update_site_title', this.onUpdateSiteTitle, this);
 
         //this.enableDroppable();
 
@@ -39,8 +39,8 @@ W.workbench.PhoneView = Backbone.View.extend({
         this.right = this.left + this.width;
         this.compareTmpl = _.template('[phone view]: compare (<%=x%>, <%=y%>) to phone top(<%=top%>), left(<%=left%>), width(<%=width%>), height(<%=height%>)');
         this.$skin = this.$('.xui-i-skin');
-        //this.$title = this.$('.xa-title');
-	},
+        this.$title = this.$('.xa-title');
+    },
 
     render: function() {
         //this.$el.append($.tmpl(this.getTemplate(), {}));
@@ -169,12 +169,12 @@ W.workbench.PhoneView = Backbone.View.extend({
         this.$skin.height(height+50+'px');
     },
 
-    //onUpdateSiteTitle: function(title) {
-    //    if (title.length === 0) {
-    //        return;
-    //    }
-    //    this.$title.text(title);
-    //},
+    onUpdateSiteTitle: function(title) {
+       if (title.length === 0) {
+           return;
+       }
+       this.$title.text(title);
+    },
 
     /**
      * enableDroppable: 开启droppable功能
@@ -256,7 +256,9 @@ W.workbench.PhoneView = Backbone.View.extend({
         return offset.left + width;
     },
 
-    //onClickTitle: function(event) {
-    //    W.Broadcaster.trigger('designpage:select_page_component');
-    //}
+    onClickTitle: function(event) {
+        if(W.isEditPageTitleWepage){
+            W.Broadcaster.trigger('designpage:select_page_component');
+        }
+    }
 });

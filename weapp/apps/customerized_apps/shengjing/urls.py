@@ -10,6 +10,7 @@ from study_plan import api_views as study_plan_api_views
 from study_plan import views as study_plan_views
 from order import mobile_api_views as order_mobile_api_views
 from views import *
+import api_views
 
 
 urlpatterns = patterns('',
@@ -42,5 +43,11 @@ urlpatterns = patterns('',
 
 	# (r'^user_center/integral/$', settings_page),
 	(r'^user_center/api/settings/update/$', user_center_api_views.update_settings),
+	
+	# 释放接口
+	(r'^api/send_template_message/$', api_views.send_release_template_message),
+	# 创建接口
+	(r'^api/send_create_template_message/$', api_views.send_create_template_message),
+	
 )
 

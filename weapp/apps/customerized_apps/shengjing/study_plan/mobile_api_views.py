@@ -41,6 +41,7 @@ from modules.member import module_api as member_module_api
 from modules.member.integral import IntegralCaculator
 
 from apps.register import mobile_api
+import apps.customerized_apps.shengjing.study_plan.shengjing_api_view as shengjing_api
 
 ########################################################################
 # apply_course:
@@ -159,7 +160,7 @@ def get_courses(request):
 # get_study_plan:获取课程计划
 ########################################################################
 @mobile_api(resource='study_plan', action='get')
-def get_study_plan(request):
+def get_study_plan(request):	
 	if hasattr(request, 'member'):
 		member = request.member
 	else:
@@ -178,26 +179,86 @@ def get_study_plan(request):
 		phone_number = member_info.phone_number
 	else:
 		phone_number = None
+
+
+	# 向盛景 发送请求 获取学习计划
+	items = shengjing_api.mobile_get_learn_plan_list(phone_number, company)
+	try:
+		if int(items.get('Header').get('Code')) == 0:
+			response = create_response(200)
+			response.data = items.get("Data", [])
+		else:
+			response = create_response(501)
+			msg = u'code:{}, info:{}'.format(items.get('Header').get('Code'), items.get('Header').get('Info'))
+			response.data['msg'] = msg
+			response.errMsg = msg
+	except:
+		response = create_response(500)
+		response.data['msg'] = u'获取数据失败，请重试'
+		response.errMsg = u'获取数据失败，请重试'
+		
 		
 	#是否是决策人	
-	try:
-		is_leader = crm_api_views.is_leader(member_info.phone_number, company)
-	except:
-		watchdog_error(u'盛景获取课程计划判断是否是决策人API出错')
-		is_leader = False
-	if is_leader:
-		try:
-			courses = crm_api_views.get_learning_plan(phone_number, company, status)
-			response = create_response(200)
-			response.data.items = courses
-		except: 
-			response = create_response(500)
-			response.errMsg = u'获取数据失败'
-	else:
-		response = create_response(501)
-		response.errMsg = u'您尚未购买盛景课程<br/>或者您不是企业决策人'
-		
-	
+	# try:
+	# 	is_leader = crm_api_views.is_leader(member_info.phone_number, company)
+	# except:
+	# 	watchdog_error(u'盛景获取课程计划判断是否是决策人API出错')
+	# 	is_leader = False
+	# if is_leader:
+	# 	try:
+	# 		courses = crm_api_views.get_learning_plan(phone_number, company, status)
+	# 		response = create_response(200)
+	# 		response.data.items = courses
+	# 	except: 
+	# 		response = create_response(500)
+	# 		response.errMsg = u'获取数据失败'
+	# else:
+	# 	response = create_response(501)
+	# 	response.errMsg = u'您尚未购买盛景课程<br/>或者您不是企业决策人'
 		
 	return response.get_response()
 
+
+########################################################################
+# get_confirm_study_plan: 学习计划确认
+########################################################################
+@mobile_api(resource='confirm_study_plan', action='get')
+def get_confirm_study_plan(request):
+	if hasattr(request, 'member'):
+		member = request.member
+	else:
+		member_id = request.GET.get('member_id', '')
+		try:
+			member = member_module_api.get_member_by_id(int(member_id))
+		except:
+			response = create_response(500)
+			response.errmsg = u'获取不到会员信息'
+			return response.get_response()
+
+	_, member_info = get_binding_info_by_member(member)
+	if member_info:
+		phone_number = member_info.phone_number
+	else:
+		phone_number = None
+
+	study_id = request.GET.get('study_id', 0)
+	webapp_user_ids = member.get_webapp_user_ids
+		
+	#  确认学习计划
+	items = shengjing_api.mobile_get_confirm_learn_plan(phone_number, study_id, webapp_user_ids[0])
+	try:
+		if int(items.get('Header').get('Code')) == 0:
+			response = create_response(200)
+		else:
+			response = create_response(501)
+			response.data.msg = u'{}'.format(items.get('Header').get('Info'))
+			response.errMsg = u'{}'.format(items.get('Header').get('Info'))
+	except:
+		response = create_response(500)
+		response.data.msg = u'获取数据失败，请重试'
+		response.errMsg = u'获取数据失败，请重试'
+
+	response.return_info = items
+	response.data.webapp_user_ids = webapp_user_ids
+	response.data.study_id = study_id
+	return response.get_response()

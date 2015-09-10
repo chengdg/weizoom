@@ -48,7 +48,6 @@
 
 {% block global_elements %}
 
-</div>
 {% endblock %}
 
 {% block base_js %}
@@ -78,6 +77,12 @@
     W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
     W.isUseWepage = {% if user.get_profile.is_use_wepage %}true{% else %}false{% endif %};
     var bottomDistance = 110;
+
+    /* 是否可编辑标题 */
+    W.isEditPageTitleWepage = true; 
+
+    /* 自动选中cid，当页面进来的时候 */
+    W.autoSelectCid = 0
 
     var loadPages = function(pageManagerView) {
       W.getApi().call({

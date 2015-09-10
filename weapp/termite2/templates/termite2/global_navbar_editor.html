@@ -55,7 +55,15 @@
 
 {% block base_js%}
   {% include 'wepage_components.html' %}
-
+  <!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-termite-components"
+      }
+    -->  
+  {{ '["wepage.page", "wepage.componentadder"]'|load_termite_components|safe }}
+  <!-- *end_prunt_task* -->
+  
 <script type="text/javascript">
 	W.uid = {{ user.id }};
 	W.projectId = "{{project_id}}";

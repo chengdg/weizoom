@@ -73,14 +73,23 @@ class surveyStatistics(resource.Resource):
 							if a_v['isSelect'] == True:
 								a_isSelect[a_k] += 1
 								total_count += 1
+				title_type = u''
 				for a_k in sorted(v_a.keys()):
 					value ={}
 					value['name'] = a_k.split('_')[1]
+					title_type =  v_a[a_k]['type']
 					value['count'] = a_isSelect[a_k]
 					value['per'] =  '%d%s' % (a_isSelect[a_k]*100/float(total_count),'%')
 					value_list.append(value)
 				title_name = k.split('_')[1]
 				result['title'] = title_name
+				if title_type == 'radio':
+					type_name = u'单选'
+				elif title_type == 'checkbox':
+					type_name = u'多选'
+				else:
+					type_name = u'问答'
+				result['title_type'] = type_name
 				result['title_'] = k
 				result['count'] = count
 				question_list = []
@@ -168,8 +177,9 @@ class surveyStatistics_Export(resource.Resource):
 		export_id = request.GET.get('export_id')
 		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
 
-		app_name = surveyStatistics_Export.app
-		excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		# app_name = surveyStatistics_Export.app
+		# excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
+		excel_file_name = u'用户调研统计.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part

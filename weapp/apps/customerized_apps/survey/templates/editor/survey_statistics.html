@@ -81,7 +81,7 @@
         </div>
         {% for title in titles %}
             <div class="xui-i-tableHeader">
-                <span>{{ forloop.counter }}、{{ title.title }}</span>
+                <span>{{ forloop.counter }}、{{ title.title }}（{{ title.title_type }}）</span>
                 <span class="fr">有效参与人数:{{ title.count }} 人</span>
             </div>
             {% ifequal title.type 'appkit.selection' %}

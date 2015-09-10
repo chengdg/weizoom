@@ -596,14 +596,10 @@ $(document).ready(function() {
 			var member_ids = [];
 			W.getApi().call({
 	            app: 'member' ,
-	            api: 'members/get',
+	            api: 'member_ids/get',
 	            args: args,
 	            success: function(data){
-	                for(var i=0; i<data.items.length; ++i){
-	                	if(data.items[i].is_subscribed){
-	                    	member_ids.push(data.items[i].id);
-	                	}
-	                }
+	                member_ids = data.member_ids;
 	                if(member_ids.length == 0){
 	                	W.showHint('error', '请先选择会员！');
 			  			return;

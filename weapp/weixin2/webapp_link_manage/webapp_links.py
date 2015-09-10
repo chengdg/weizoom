@@ -105,8 +105,8 @@ class WebappItemLinks(resource.Resource):
 				}
 				
 			else:	
-				count_per_page = int(request.POST.get('count_per_page', COUNT_PER_PAGE))
-				cur_page = int(request.POST.get('page', '1'))
+				count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+				cur_page = int(request.GET.get('page', '1'))
 				pageinfo, objects = paginator.paginate(objects, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])	
 				items = []
 				for item in objects:

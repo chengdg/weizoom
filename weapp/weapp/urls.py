@@ -86,6 +86,7 @@ urlpatterns = patterns('',
 
 	url(r'^ft/', include('order.urls')),
 
+	url(r'^shengjing/', include('apps.customerized_apps.shengjing.urls')),
 	#定制化app，之后会清除
 	url(r'^apps/shengjing/', include('apps.customerized_apps.shengjing.urls')),
 

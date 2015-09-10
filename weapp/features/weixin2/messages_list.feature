@@ -66,16 +66,9 @@ Background:
 	
 	Given bill关注jobs的公众号
 
-@new_weixin.message
+@new_weixin.message @va
 Scenario: 1 bill给jobs发微信后，jobs登录系统后 能看到 消息信息列表 (分页，每页两条)
 
-	Given jobs已分页设置
-		"""
-		[{
-			"page_count":2
-			
-		}]
-		"""
 	When bill发信息给jobs
 	"""
 		{

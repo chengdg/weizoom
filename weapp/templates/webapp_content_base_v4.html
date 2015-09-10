@@ -114,68 +114,6 @@
         </div>
         
 
-        <script type="text/javascript">
-            var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
-            W.currentPageName = "{{current_page_name}}";
-            W.projectId = "{{request.project.id}}";
-            W.webappOwnerId = "{{request.webapp_owner_id}}";
-            W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
-            W.curRequestMemberToken = "{{ cur_request_member.token }}";
-            W.visitHistory = "{{ visit_histroy_url }}";
-            W.urlTitle = "{{ visit_histroy_url_title }}";
-            if (W.urlTitle == ''){
-                W.urlTitle = '{{ show_system_name }}';
-            }
-            W.pageTitle = "{{page_title}}";
-            W.errorMessage = null;
-
-            {% if messages %}
-            {% for message in messages %}
-            W.errorMessage = "{{message}}";
-            {% endfor %}
-            {% endif %}
-
-            W.sharePageTitle = {% if page_title %}"{{ page_title }}"{% else %}"{{ share_page_title }}"{% endif %};
-            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-                  
-            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
-
-            // jz 2015-09-06
-            // var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
-            // W.currentPageName = "{{current_page_name}}";
-            // W.projectId = "{{request.project.id}}";
-            // W.webappOwnerId = "{{request.webapp_owner_id}}";
-            // W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
-            // W.curRequestMemberToken = "{{ cur_request_member.token }}";
-            // W.visitHistory = "{{ visit_histroy_url }}";
-            // W.urlTitle = "{{ visit_histroy_url_title }}";
-            // if (W.urlTitle == ''){
-            //     W.urlTitle = '{{ show_system_name }}';
-            // }
-            // W.pageTitle = "{{page_title}}";
-            // W.errorMessage = null;
-
-            // {% if messages %}
-            // {% for message in messages %}
-            // W.errorMessage = "{{message}}";
-            // {% endfor %}
-            // {% endif %}
-
-            // W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
-            // W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-            // W.sharePageImg = "{{ request.share_img_url }}";
-
-            W.appRecordId = "{{ record_id }}";
-            W.appName = "{{ app_name }}";
-            W.resource = "{{ resource }}";
-            W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
-            W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
-            W.activityStatus = "{{activity_status}}";
-            W.isPC = {% if isPC %}true{% else %}false{% endif %};
-            W.isMember = {% if isMember %}true{% else %}false{% endif %};
-            W.qrcodeUrl = "{{ auth_appid_info.qrcode_url }}";
-            W.permission = "{{ permission }}";
-        </script>
 
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
@@ -211,45 +149,90 @@
         </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
-        var $product = $('.wui-product');
-        var $productList = $('.wui-productlist');
-        var $imageDisplay = $('.wui-imagedisplay');
-        var $imageNav = $('.wui-imagenav');
+             $(document).ready(function() {
+            var $product = $('.wui-product');
+            var $productList = $('.wui-productlist');
+            var $imageDisplay = $('.wui-imagedisplay');
+            var $imageNav = $('.wui-imagenav');
+            var $swiperImg = $('.wui-swiper-slide');
 
-        if($product.length > 1){
+            var screenWidth = $(this).width()-2;   //获取屏幕宽度，减去2px外边距
+            var defalutWidth = $(this).width()-1;  //默认一大两小宽度
+            var averageWidth = screenWidth/3;             
+            var width = defalutWidth/3;             
 
-            getWidth('.wui-product');
+            var $swiperWrapper = $swiperImg.parent('.wui-swiper-wrapper');
+            var $imgs = $swiperWrapper.find('img');
+            var imgsHeightArr = [];
 
-        }else if($productList.length > 1){
+            if( $swiperImg.length >0 ){
+                window.onload=function(){
+                    $imgs.each(function() {
+                        console.log($(this).height()); 
+                        imgsHeightArr.push($(this).height());
+                        
+                    });
+                    var maxHeight = Math.max.apply(Math,imgsHeightArr);
+                    var $swiperSlide = $swiperWrapper.children('.wui-swiper-slide');
+                    $swiperWrapper.parent('.wui-swiper-container').height(maxHeight);
+                    $swiperWrapper.height(maxHeight);
+                    $swiperSlide.css({
+                        height: maxHeight,
+                        lineHeight: maxHeight +'px'
+                    });
+                }
+            }
+            if($product.length > 0){
 
-            getWidth('.wui-productlist');
+                getWidth('.wui-product');
 
-        }else if($imageDisplay.length > 1){
+            }
+            if($productList.length > 0){
 
-            getWidth('.wui-imagedisplay');
+                getWidth('.wui-productlist');
 
-        }else if($imageNav.length > 1){
+            }
+            if($imageDisplay.length > 0){
+                $imageDisplay.find('.wui-grid-b li').width(averageWidth);
+                $imageDisplay.find('.wui-grid-b li').height(averageWidth);
+                $imageDisplay.each(function() {
+                    var $imgGroup = $(this).find('.wui-grid-e');
+                    console.log($imgGroup,55555)
+                    $imgGroup.find('li').eq(0).width(parseInt(width*2));
+                    $imgGroup.find('li').height(width)
+                    $imgGroup.find('li').eq(0).height(width*2);
+                    $imgGroup.find('li').eq(2).height(width-1);
+                });
+                getWidth('.wui-imagedisplay');
 
-            getWidth('.wui-imagenav');
+            }
+            if($imageNav.length > 0){
+                getWidth('.wui-imagenav');
+                var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
+                var imgTitle = $imageNav.find('.wa-inner-title').text();
+                if ( imgTitle =='' ) {
+                    $imageNav.find('li').height(imgNavWidth);
+                };
 
-        }
-// jz 2015-09-06
-// <<<<<<< HEAD
-            // }
-        function getWidth(component){
-            var $component = $(component);
-            var $inner_pic = $component.find('li .wui-inner-pic');
-            $inner_pic.each(function() {
-                var width = $(this).width() ;
-                $(this).height(width);
-                // 不能在此对图片父级进行高度赋值，会影响到商品
-            });
-        } 
-        // jz 2015-09-06
-        // });
+            }
+            function getWidth(component){
+                var $component = $(component);
+                var $inner_pic = $component.find('li .wui-inner-pic');
+                $inner_pic.each(function() {
+                    var width = $(this).width() ;
+                    $(this).height(width);
+                    // 不能在此对图片父级进行高度赋值，会影响到商品
+                });
+            } 
+        });
 
         $(document).ready(function() {
+            // 个性模板背景图片高度适配
             var height = $(window).height();
+            var $shopBackground =$('.wui-shop-Bg');
+            if( $shopBackground.length > 0 ){
+                $shopBackground.height(height);
+            }
             var $twoDimension = $('.xui-two-dimension');
 
             var showSwiper = function(){                
@@ -298,21 +281,48 @@
                 $('.xui-two-dimension').hide();
             });
         });
-// jz 2015-09-06
-// =======
-        // function getWidth(component){
-        //     var $component = $(component);
-        //     var $inner_pic = $component.find('li .wui-inner-pic');
-        //     $inner_pic.each(function() {
-        //         var width = $(this).width() +5 ;
-        //         $(this).height(width);
-        //     });
-        // } 
-// >>>>>>> remotes/origin/apps3
+
         </script>
+
+        <!--<script src="http://192.168.2.76:8080/target/target-script-min.js"></script> -->
         <script type="text/javascript">
+            var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+            W.currentPageName = "{{current_page_name}}";
+            W.projectId = "{{request.project.id}}";
+            W.webappOwnerId = "{{request.webapp_owner_id}}";
+            W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
+            W.curRequestMemberToken = "{{ cur_request_member.token }}";
+            W.visitHistory = "{{ visit_histroy_url }}";
+            W.urlTitle = "{{ visit_histroy_url_title }}";
+            if (W.urlTitle == ''){
+                W.urlTitle = '{{ show_system_name }}';
+            }
+            W.pageTitle = "{{page_title}}";
+            W.errorMessage = null;
+
+            {% if messages %}
+            {% for message in messages %}
+            W.errorMessage = "{{message}}";
+            {% endfor %}
+            {% endif %}
+
+            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
+            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
+
+            W.appRecordId = "{{ record_id }}";
+            W.appName = "{{ app_name }}";
+            W.resource = "{{ resource }}";
+            W.isAlreadyParticipanted = {% if is_already_participanted %}true{% else %}false{% endif %};
+            W.isAppFinished = {% if is_finished %}true{% else %}false{% endif %};
+            W.activityStatus = "{{activity_status}}";
+            W.isPC = {% if isPC %}true{% else %}false{% endif %};
+            W.isMember = {% if isMember %}true{% else %}false{% endif %};
+            W.qrcodeUrl = "{{ auth_appid_info.qrcode_url }}";
+            W.permission = "{{ permission }}";
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
             W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
+
             var link = window.location.href;
             if (link.indexOf('fmt') === -1){
                 if (link.indexOf('&') === -1){
@@ -343,16 +353,16 @@
                  */
                 W.wxShareData = {
                     "imgUrl" : W.sharePageImg,
-                    "link" : window.location.href,
+                    "link" : link,
                     "desc" : W.sharePageDesc,
                     "title" : W.sharePageTitle,
                     // 点击分享按钮
                     trigger: function (res) {
-                       // alert('用户点击分享按钮'+res);
+                       //alert('用户点击分享按钮'+res);
                     },
                     // 分享成功
                     success : function(res) {
-                       // alert('success'+res);
+                       //alert('success'+res);
                     }
                 };
                 wx.ready(function () {
@@ -364,22 +374,22 @@
                       'onMenuShareQQ',
                       'previewImage',
                       'hideOptionMenu',
-                      'showOptionMenu',
+                      'showOptionMenu'
                     ],
                     success: function (res) {
                       if(!W.wxShareData)
-                        return
+                        return;
                       res = res.checkResult;
                       if(res.onMenuShareAppMessage)
-                        wx.onMenuShareAppMessage(W.wxShareData)
+                        wx.onMenuShareAppMessage(W.wxShareData);
                       if(res.onMenuShareTimeline)
-                        wx.onMenuShareTimeline(W.wxShareData)
+                        wx.onMenuShareTimeline(W.wxShareData);
                       if(res.onMenuShareQQ)
-                        wx.onMenuShareQQ(W.wxShareData)
+                        wx.onMenuShareQQ(W.wxShareData);
                       if(res.previewImage)
-                        W.ImagePreview(wx)
+                        W.ImagePreview(wx);
                       if(res.hideOptionMenu && isHideWeixinOptionMenu)
-                        wx.hideOptionMenu()
+                        wx.hideOptionMenu();
                       if(res.showOptionMenu && !isHideWeixinOptionMenu)
                         wx.showOptionMenu()
                     }
@@ -508,7 +518,7 @@
                         if ($textSelection.length > 0){
                             participanceData['actionButtons'] = JSON.stringify([{
                                 'text': '查看结果',
-                                'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}'
+                                'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}&isMember={{ isMember }}'
                             }]);
                         }
                         //必须关注才可以参与的活动

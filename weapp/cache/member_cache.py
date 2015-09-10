@@ -7,7 +7,7 @@ from modules.member import models as member_models
 from account.social_account import models as social_account_models
 from weapp.hack_django import post_update_signal
 from django.db.models import signals
-
+from datetime import datetime
 
 def get_accounts_for_cache(openid, webapp_id):
 	def inner_func():
@@ -17,12 +17,14 @@ def get_accounts_for_cache(openid, webapp_id):
 			webapp_user = member_models.WebAppUser.objects.create(webapp_id=webapp_id, member_id=member.id, father_id=0, token=member.id)
 		else:
 			webapp_user = member_models.WebAppUser.objects.filter(webapp_id=webapp_id, member_id=member.id, father_id=0)[0]
-
+		today = datetime.today()
+		date_str = datetime.today().strftime('%Y-%m-%d') 
 		return {
 			'value': {
 				'member': member.to_dict(),
 				'webapp_user': webapp_user.to_dict(),
-				'social_account': social_account.to_dict()
+				'social_account': social_account.to_dict(),
+				'date_time':date_str
 			}
 		}
 
@@ -30,8 +32,13 @@ def get_accounts_for_cache(openid, webapp_id):
 
 
 def get_accounts(openid, webapp_id):
+	today = datetime.today()
+	date_str = datetime.today().strftime('%Y-%m-%d') 
 	key = 'member_{webapp:%s}_{openid:%s}' % (webapp_id, openid)
 	data = cache_util.get_from_cache(key, get_accounts_for_cache(openid, webapp_id))
+	if data['date_time'] != date_str:
+		delete_member_cache(openid, webapp_id)
+		data = cache_util.get_from_cache(key, get_accounts_for_cache(openid, webapp_id))
 
 	member = member_models.Member.from_dict(data['member'])
 	webapp_user = member_models.WebAppUser.from_dict(data['webapp_user'])
@@ -41,8 +48,11 @@ def get_accounts(openid, webapp_id):
 
 
 def delete_member_cache(openid, webapp_id):
+	today = datetime.today()
+	date_str = datetime.today().strftime('%Y-%m-%d') 
+
 	key = 'member_{webapp:%s}_{openid:%s}' % (webapp_id, openid)
-	cache_util.delete_cache(key)
+	cache_util.delete_pattern(key)
 
 
 # from django.dispatch.dispatcher import receiver

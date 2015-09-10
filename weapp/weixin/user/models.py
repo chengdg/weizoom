@@ -356,3 +356,24 @@ class WoFuLog(models.Model):
 		db_table = 'wofu_log'
 		verbose_name = 'wofu_log'
 		verbose_name_plural = 'WoFu_log'	
+
+class SheDe(models.Model):
+	number =  models.CharField(max_length=255, db_index=True)
+	is_send = models.BooleanField(default=False)
+	integral = models.IntegerField(default=100)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'shede'
+		verbose_name = 'shede'
+		verbose_name_plural = 'shede'
+
+class SheDeLog(models.Model):
+	shede = models.ForeignKey(SheDe)
+	member_id = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'shede_log'
+		verbose_name = 'shede_log'
+		verbose_name_plural = 'shede_log'	

@@ -69,6 +69,20 @@ class ShengjingAPIParams(object):
 	# String	报名时间
 	Captcha = 'Captcha'
 
+	# String	公司名称
+	COMPANY_NAME = 'company_name'
+
+	# Integer	状态
+	STATUS = 'status'
+
+	# 当前学员的手机号码
+	PHONE_NUMBER = 'phone_number'
+
+	# webapp_user_id
+	WEBAPP_USER_ID = 'webapp_user_id'
+
+	# id
+	ID = 'id'
 
 
 	"""
