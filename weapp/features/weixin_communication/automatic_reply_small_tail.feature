@@ -49,7 +49,7 @@ Background:
 			"content":"sub单条图文3文本内容"
 		}]
 		"""
-		
+
 @mall2 @message @automaticReply
 Scenario:1 关注后自动回复,文本类型，带文本小尾巴
 

@@ -2218,15 +2218,20 @@ def update_order_status(user, action, order, request=None):
 		record_status_log(order.order_id, operation_name, order.status, target_status)
 		record_operation_log(order.order_id, operation_name, action_msg)
 
-	try:
+	#try:
 		# TODO 返还用户积分
-		from modules.member import integral
-		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
-			integral.increase_father_member_integral_by_child_member_buyed(order, order.webapp_id)
-			#integral.increase_detail_integral(order.webapp_user_id, order.webapp_id, order.final_price)
-	except:
-		notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
-		watchdog_error(notify_message)
+	from modules.member import integral
+	if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
+		if MallOrderFromSharedRecord.objects.filter(order_id=order.id).count() > 0:
+			order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
+			fmt = order_record.fmt
+		else:
+			fmt = None
+		print '=====================>>>>>>>>>>>>>>>>>>>>>>>>>11111111111'
+		integral.increase_after_payed_finsh(fmt, order)
+	# except:
+	# 	notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_error(notify_message)
 	try:
 		mall_util.email_order(order=Order.objects.get(id=order_id))
 	except :
@@ -3140,6 +3145,10 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
 		return False
 
 def update_user_paymoney(id):
+	"""
+	add by houtingfei 
+	reason：取消订单修改会员消息信息
+	"""
 	#更新会员的消费、消费次数、消费单价
 	from modules.member.models import WebAppUser
 	member = WebAppUser.get_member_by_webapp_user_id(id)
@@ -3159,4 +3168,16 @@ def update_user_paymoney(id):
 	except:
 		member.unit_price = 0
 	member.save()
-	#更新会员的消费、消费次数、消费单价
+
+def create_mall_order_from_shared(request,order_id):
+	from modules.member.util import get_member, get_followed_member_token_from_cookie
+	member = get_member(request)
+	followed_member_token = get_followed_member_token_from_cookie(request)
+	if (member and member.token == followed_member_token) or not followed_member_token:
+		return 
+
+	MallOrderFromSharedRecord.objects.create(order_id=order_id, fmt=followed_member_token)
+	# try:
+		
+	# except Exception, e:
+	# 	raise e

@@ -74,28 +74,32 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
 
 
     beforeShow: function(options) {
-
         this._initFooterCheckbox();
         this.allin_input = false;
-        this.vip_options = options
-        var filter_value = 'name:' + options.name.value;
+        this.vip_options = options;
+
+        var dataValue = [];
+        if(options.name.value.length > 0){
+            dataValue.push('name:' + options.name.value);
+
+        }
         // 构造会员查询api
         if(options.grade_id.value != '-1'){
-            filter_value += '|' + 'grade_id:' + options.grade_id.value;
+            dataValue.push('grade_id:' + options.grade_id.value);
         }
         if(options.member_tag.value != '-1'){
-            filter_value += '|' + 'tag_id:' + options.member_tag.value;
+            dataValue.push('tag_id:' + options.member_tag.value);
         }
         if(options.member_source.value != '-1'){
-            filter_value += '|' + 'source:' + options.member_source.value;
+            dataValue.push('source:' + options.member_source.value);
         }
         if(options.member_status.value != '-1'){
-            filter_value += '|' + 'status:' + options.member_status.value;
+            dataValue.push('status:' + options.member_status.value);
         }
         if(options.integral.value != ''){
-            filter_value += '|' + 'integral:' + options.integral.value;
+            dataValue.push('integral:' + options.integral.value);
         }
-
+        var filter_value = dataValue.join('|');
         this.table.reload({
             'filter_value': filter_value,
             'allin':$('.xa-allin:checked').length
@@ -148,7 +152,7 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
             vip_status.value = '1';
             vip_status.text = '关注';
             data.display_items.push(vip_status);
-            
+
             // 积分范围
             if(this.vip_options.integral.value != ''){
                 data.display_items.push(this.vip_options.integral);

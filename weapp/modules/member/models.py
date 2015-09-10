@@ -250,10 +250,10 @@ class WebAppUser(models.Model):
 		if request is None:
 			return
 
-		from integral import increase_for_buy_via_shared_url
-		#首先进行积分的处理
-		#print '===========innnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
-		increase_for_buy_via_shared_url(request, order)
+		# from integral import increase_for_buy_via_shared_url
+		# #首先进行积分的处理
+		# #print '===========innnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
+		# increase_for_buy_via_shared_url(request, order)
 		#进行分享链接的相关计算
 		from modules.member.util import  process_payment_with_shared_info
 		process_payment_with_shared_info(request)
@@ -1069,9 +1069,20 @@ class MemberTag(models.Model):
 		verbose_name = '会员分组'
 		verbose_name_plural = '会员分组'
 
+	DEFAULT_TAG_NAME = u'未分组'
+	@staticmethod
+	def get_default_tag(webapp_id):
+		try:
+			return MemberTag.objects.get(webapp_id=webapp_id, name="未分组")
+		except:
+			return MemberTag.objects.create(webapp_id=webapp_id, name="未分组")
+
+
 	@staticmethod
 	def get_member_tags(webapp_id):
 		if webapp_id:
+			if MemberTag.objects.filter(webapp_id=webapp_id, name="未分组").count() == 0:
+				MemberTag.objects.create(webapp_id=webapp_id, name="未分组")
 			return list(MemberTag.objects.filter(webapp_id=webapp_id))
 		else:
 			return []

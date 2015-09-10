@@ -52,14 +52,17 @@ Background:
 			"buy_increase_count_for_father":10,
 			"buy_via_offline_increase_count_for_author":30,
 			"click_shared_url_increase_count":11,
-			"buy_award_count_for_buyer":21
+			"buy_award_count_for_buyer":21,
+			"buy_via_offline_increase_count_percentage_for_author":0.2,
+			"order_money_percentage_for_each_buy":0.5
+
 		}
 		"""
 
 	And bill关注jobs的公众号
 	And 开启手动清除cookie模式
 
-@member @member.shared_integral
+@member @member.shared_integral @mall2
 Scenario:1 点击给未购买的分享者增加积分
 	bill没有购买jobs的商品1，把商品1的链接分享到朋友圈
 	1.nokia点击bill分享的链接后，给bill增加积分
@@ -134,7 +137,7 @@ Scenario:1 点击给未购买的分享者增加积分
 		}]
 		"""
 	
-@member @member.shared_integral 
+@member @member.shared_integral @mall2 
 Scenario:2 点击给已购买的分享者增加积分
 	bill购买jobs的商品1后，把商品1的链接分享到朋友圈
 	1.nokia点击bill分享的链接后，给bill增加积分
@@ -183,10 +186,27 @@ Scenario:2 点击给已购买的分享者增加积分
 	When bill把jobs的商品"商品1"的链接分享到朋友圈
 	When 清空浏览器
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有41会员积分
+	Then bill在jobs的webapp中拥有20会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
+			"content":"首次关注",
+			"integral":20
+		}]
+		"""
+
+	When 清空浏览器
+	Given jobs登录系统
+	When jobs'完成'最新订单
+	When 清空浏览器
+	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有91会员积分
+	Then bill在jobs的webapp中获得积分日志
+		"""
+		[{
+			"content":"购物返利",
+			"integral":50
+		},{
 			"content":"购物返利",
 			"integral":21
 		},
@@ -195,16 +215,20 @@ Scenario:2 点击给已购买的分享者增加积分
 			"integral":20
 		}]
 		"""
+
 	When 清空浏览器
 	When nokia点击bill分享链接
 	When nokia点击bill分享链接
 	When bill访问jobs的webapp	
-	Then bill在jobs的webapp中拥有52会员积分
+	Then bill在jobs的webapp中拥有102会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
 			"content":"好友点击分享链接奖励",
 			"integral":11
+		},{
+			"content":"购物返利",
+			"integral":50
 		},{
 			"content":"购物返利",
 			"integral":21
@@ -217,7 +241,7 @@ Scenario:2 点击给已购买的分享者增加积分
 	When 清空浏览器
 	When tom点击bill分享链接
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有63会员积分
+	Then bill在jobs的webapp中拥有113会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
@@ -228,6 +252,9 @@ Scenario:2 点击给已购买的分享者增加积分
 			"integral":11
 		},{
 			"content":"购物返利",
+			"integral":50
+		},{
+			"content":"购物返利",
 			"integral":21
 		},
 		{
@@ -236,7 +263,7 @@ Scenario:2 点击给已购买的分享者增加积分
 		}]
 		"""
 
-@member @member.shared_integral 
+@member @member.shared_integral @mall2 
 Scenario:3 通过分享链接购买后给分享者增加积分
 	bill把jobs的商品2的链接分享到朋友圈
 	1.nokia点击bill分享的链接并购买，给bill增加积分
@@ -285,7 +312,10 @@ Scenario:3 通过分享链接购买后给分享者增加积分
 			}]
 		}
 		"""
-	#When nokia点击bill分享链接
+	When 清空浏览器
+	Given jobs登录系统
+	When jobs'完成'最新订单
+
 	When 清空浏览器
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有62会员积分
@@ -332,6 +362,9 @@ Scenario:3 通过分享链接购买后给分享者增加积分
 			}]
 		}
 		"""
+	When 清空浏览器
+	Given jobs登录系统
+	When jobs'完成'最新订单
 
 	When 清空浏览器
 	When bill访问jobs的webapp
@@ -356,7 +389,7 @@ Scenario:3 通过分享链接购买后给分享者增加积分
 		}]
 		"""
 
-@member @member.shared_integral  @gycc
+@member @member.shared_integral @mall2 
 Scenario:4 每次购买给邀请者增加积分
 	1.bill是tom的邀请者
 	2.tom每次购买jobs的商品，给bill增加积分
@@ -438,10 +471,13 @@ Scenario:4 每次购买给邀请者增加积分
 	When jobs'完成'最新订单
 	When 清空浏览器
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有61会员积分
+	Then bill在jobs的webapp中拥有81会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
+			"content":"推荐关注的好友购买奖励",
+			"integral":20
+		},{
 			"content":"推荐关注的好友购买奖励",
 			"integral":30
 		},{
@@ -453,275 +489,8 @@ Scenario:4 每次购买给邀请者增加积分
 		}]
 		"""
 
-# __author__ : "王丽"
-@homePage @integral @order
-Scenario:5 消费返积分开启时"购买商品返积分"
-	bill购买jobs的商品1后
-	1.订单已完成状态，给bill增加积分
-
-	When 清空浏览器
-	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
-	Then bill在jobs的webapp中获得积分日志
-		"""
-		[{
-			"content":"首次关注",
-			"integral":20
-		}]
-		"""
-	When bill购买jobs的商品
-		"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
-			"products": [{
-				"name": "商品2",
-				"count": 1
-			}],
-			"customer_message": "bill的订单备注1"
-		}
-		"""
-	When 清空浏览器
-	Given jobs登录系统
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "待支付",
-			"actions": ["修改价格", "取消订单", "支付"],
-			"total_price": 100.0,
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
-			"customer_message": "bill的订单备注1",
-			"products": [{
-				"name": "商品2",
-				"count": 1,
-				"total_price": 100.0
-			}]
-		}
-		"""
-	When jobs'支付'最新订单
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "待发货",
-			"actions": ["发货","取消订单"]
-		}
-		"""
-	#校验支付后不返积分
-		When 清空浏览器
-		When bill访问jobs的webapp
-		Then bill在jobs的webapp中拥有20会员积分
-		Then bill在jobs的webapp中获得积分日志
-			"""
-			[{
-				"content":"首次关注",
-				"integral":20
-			}]
-			"""
-	When 清空浏览器
-	Given jobs登录系统
-	When jobs对最新订单进行发货
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "已发货",
-			"actions": ["标记完成", "取消订单", "修改物流"]
-		}
-		"""
-	When jobs'完成'最新订单
-	#校验订单完成后返积分
-		When 清空浏览器
-		When bill访问jobs的webapp
-		Then bill在jobs的webapp中拥有50会员积分
-		Then bill在jobs的webapp中获得积分日志
-			"""
-			[{
-				"content":"购买奖励",
-				"integral":30
-			},{
-				"content":"首次关注",
-				"integral":20
-			}]
-			"""
-	
-	When bill购买jobs的商品
-		"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
-			"products": [{
-				"name": "商品2",
-				"count": 1
-			}],
-			"customer_message": "bill的订单备注1"
-		}
-		"""
-	When 清空浏览器
-	Given jobs登录系统
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "待支付",
-			"actions": ["修改价格", "取消订单", "支付"],
-			"total_price": 100.0,
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
-			"customer_message": "bill的订单备注1",
-			"products": [{
-				"name": "商品2",
-				"count": 1,
-				"total_price": 100.0
-			}]
-		}
-		"""
-	When jobs'支付'最新订单
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "待发货",
-			"actions": ["发货","取消订单"]
-		}
-		"""
-	#校验支付后不返积分
-		When 清空浏览器
-		When bill访问jobs的webapp
-		Then bill在jobs的webapp中拥有50会员积分
-		Then bill在jobs的webapp中获得积分日志
-			"""
-			[{
-				"content":"购买奖励",
-				"integral":30
-			},{
-				"content":"首次关注",
-				"integral":20
-			}]
-			"""
-	When 清空浏览器
-	Given jobs登录系统
-	When jobs对最新订单进行发货
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "已发货",
-			"actions": ["标记完成", "取消订单", "修改物流"]
-		}
-		"""
-	When jobs'完成'最新订单
-	#校验订单完成后返积分
-		When 清空浏览器
-		When bill访问jobs的webapp
-		Then bill在jobs的webapp中拥有80会员积分
-			"""
-			[{
-				"content":"购买奖励",
-				"integral":30
-			},{
-				"content":"购买奖励",
-				"integral":30
-			},{
-				"content":"首次关注",
-				"integral":20
-			}]
-			"""
-
-# __author__ : "王丽"
-@homePage @integral @order
-Scenario:6 关闭消费返积分，购买不返还积分
-	
-	When jobs关闭消费返积分
-	When 清空浏览器
-	When bill访问jobs的webapp
-	When bill获得jobs的20会员积分
-	Then bill在jobs的webapp中拥有20会员积分
-	Then bill在jobs的webapp中获得积分日志
-		"""
-		[{
-			"content":"首次关注",
-			"integral":20
-		}]
-		"""
-	When bill购买jobs的商品
-		"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
-			"products": [{
-				"name": "商品1",
-				"count": 1
-			}],
-			"customer_message": "bill的订单备注1"
-		}
-		"""
-	When bill使用支付方式'货到付款'进行支付
-	Then bill支付订单成功
-		"""
-		{
-			"status": "待发货",
-			"final_price": 100.00,
-			"products": [{
-				"name": "商品1",
-				"price":100.00,
-				"count": 1
-			}]
-		}
-		"""
-	Given jobs登录系统
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "待发货",
-			"actions": ["发货","取消订单"],
-			"total_price": 100.0,
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
-			"customer_message": "bill的订单备注1",
-			"products": [{
-				"name": "商品1",
-				"count": 1,
-				"total_price": 100.0
-			}]
-		}
-		"""
-	When jobs对最新订单进行发货
-	Then jobs可以获得最新订单详情
-		"""
-		{
-			"order_type": "普通订单",
-			"status": "已发货",
-			"actions": ["标记完成", "取消订单", "修改物流"]
-		}
-		"""
-	When jobs'完成'最新订单
-	When 清空浏览器
-	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有20会员积分
-	Then bill在jobs的webapp中获得积分日志
-		"""
-		[{
-			"content":"首次关注",
-			"integral":20
-		}]
-		"""
-
-@member @member.shared_integral 
-Scenario:7 每次购买给邀请者增加积分
+@member @member.shared_integral @mall2 
+Scenario:5 每次购买给邀请者增加积分
 	1.bill是tom的邀请者
 	2.tom每次购买jobs的商品，给bill增加积分
 
@@ -802,10 +571,13 @@ Scenario:7 每次购买给邀请者增加积分
 	When jobs'完成'最新订单
 	When 清空浏览器
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有61会员积分
+	Then bill在jobs的webapp中拥有81会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
+			"content":"推荐关注的好友购买奖励",
+			"integral":20
+		},{
 			"content":"推荐关注的好友购买奖励",
 			"integral":30
 		},{
