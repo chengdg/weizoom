@@ -49,7 +49,7 @@ Background:
 		}]
 		"""
 
-@mall2 @gyc
+@mall2 @message @automaticReply @gyc
 Scenario: 1 关注后自动回复,文本类型
 	When jobs添加关注自动回复规则
 		"""
@@ -61,7 +61,7 @@ Scenario: 1 关注后自动回复,文本类型
 	When bill关注jobs的公众号
 	Then bill收到自动回复'关注后自动回复内容1'
 
-@mall2 @gyc
+@mall2 @message @automaticReply @gyc
 Scenario: 2 关注后自动回复,图文类型；会员关注后，获得自动回复，取消关注，再关注，仍然可以获得自动回复
 	When jobs添加关注自动回复规则
 		"""
