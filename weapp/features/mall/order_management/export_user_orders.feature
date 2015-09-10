@@ -155,7 +155,7 @@ Background:
 		"""
 
 
-@order @jz
+@order
 Scenario: 导出全部订单
 	jobs可以导出全部订单
 
