@@ -63,7 +63,7 @@ Background:
 		}]
 		"""
 
-@message @automaticReply 
+@message @automaticReply @senior @textPicture
 Scenario: 1 正常添加关键词自动回复
 	Jobs正常添加关键词自动回复 ，能获取他关键词自动回复
 
@@ -119,15 +119,15 @@ Scenario: 1 正常添加关键词自动回复
 					"keyword_name": "关键字21",
 					"match": "equal"
 				},{
-					 "keyword_name": "关键字22",
-					 "match": "like"
+					"keyword_name": "关键字22",
+					"match": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
 				 "reply_content":"图文4"
 				 },{
-					 "reply_content":"图文2",
-					 "reply_type":"text_picture"
+					"reply_content":"图文2",
+					"reply_type":"text_picture"
 				}]
 		},{
 			"rules_name":"规则1",
@@ -135,21 +135,21 @@ Scenario: 1 正常添加关键词自动回复
 					"keyword_name": "关键字1",
 					"match": "equal"
 				},{
-					 "keyword_name": "关键字2",
-					 "match": "like"
+					"keyword_name": "关键字2",
+					"match": "like"
 				},{
-					 "keyword_name": "关键字3",
-					 "match": "like"
+					"keyword_name": "关键字3",
+					"match": "like"
 				}],
 			"keyword_reply": [{
-					 "reply_content":"关键字回复内容1",
-					 "reply_type":"text"
+					"reply_content":"关键字回复内容1",
+					"reply_type":"text"
 				},{
-					 "reply_content":"图文1",
-					 "reply_type":"text_picture"
+					"reply_content":"图文1",
+					"reply_type":"text_picture"
 				},{
-					 "reply_content":"关键字回复内容3",
-					 "reply_type":"text"
+					"reply_content":"关键字回复内容3",
+					"reply_type":"text"
 				}]
 		}]
 		"""
