@@ -27,26 +27,39 @@
 					</thead>
 					<tbody class='tags_tbody'>
 						{% for member_tag in member_tags %}
-						<tr data-id="{{ member_tag.id }}" class="domain_data">
-							<td>
-								<input type="text" class="form-control xa-tag-name"  id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" placeholder="" value="{{ member_tag.name }}" data-validate="require-notempty"/>
-								<div class="errorHint"></div>
-							</td>
-							<td>
-								{{ member_tag.count }}
-							</td>
-							<td>
-								<a href="javascript:void(0);" class="xa-deleteTr">
-								删除
-								</a>
-								{% if is_can_send and False %}
-								&nbsp;&nbsp;&nbsp;
-								<a href="javascript:void(0);" class="xa-send-text {% if member_tag.count > 0 %}{% else %}hide{% endif %}" value="{{member_tag.id}}" >
-								发文本
-								</a>
-								{% endif %}
-							</td>
-						</tr>
+							{% if member_tag.name == '未分组' %}
+								<tr data-id="{{ member_tag.id }}" class="domain_data">
+									<td>
+										<span>{{ member_tag.name }}</span>
+									</td>
+									<td>
+										{{ member_tag.count }}
+									</td>
+									<td>
+									</td>
+								</tr>
+							{% else %}
+								<tr data-id="{{ member_tag.id }}" class="domain_data">
+									<td>
+										<input type="text" class="form-control xa-tag-name"  id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" placeholder="" value="{{ member_tag.name }}" data-validate="require-notempty"/>
+										<div class="errorHint"></div>
+									</td>
+									<td>
+										{{ member_tag.count }}
+									</td>
+									<td>
+										<a href="javascript:void(0);" class="xa-deleteTr">
+										删除
+										</a>
+										{% if is_can_send and False %}
+										&nbsp;&nbsp;&nbsp;
+										<a href="javascript:void(0);" class="xa-send-text {% if member_tag.count > 0 %}{% else %}hide{% endif %}" value="{{member_tag.id}}" >
+										发文本
+										</a>
+										{% endif %}
+									</td>
+								</tr>
+							{% endif %}
 						{% endfor %}
 						<tr data-id="{{ grade.id }}" class="last_tr">
 							<td width="315">
@@ -111,7 +124,7 @@
 	            error: function(resp) {
 	                //TODO 进行错误通知
 	                W.getErrorHintView().show('发送失败');
-	               
+
 	                //failed_callback();
 	            }
 			})
