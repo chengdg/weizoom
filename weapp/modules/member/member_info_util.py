@@ -425,9 +425,12 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 
 	member.is_new = is_new
 	#添加默认分组
-	default_tag = MemberTag.get_default_tag(user_profile.webapp_id)
-	MemberTag.add_tag_member_relation(member, [default_tag.id])
-
+	try:
+		default_tag = MemberTag.get_default_tag(user_profile.webapp_id)
+		MemberHasTag.add_tag_member_relation(member, [default_tag.id])
+	except:
+		notify_message = u"add member to default tag error: cause:\n{}".format(unicode_full_stack())
+		watchdog_warning(notify_message)
 	# try:
 	# 	if member:
 	# 		tasks.create_member_info.delay(member.id, '', social_account_info.sex if social_account_info and social_account_info.sex else SEX_TYPE_UNKOWN)
