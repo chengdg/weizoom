@@ -49,7 +49,7 @@ Background:
 			"content":"sub单条图文3文本内容"
 		}]
 		"""
-		
+
 @mall2 @message @automaticReply
 Scenario:1 关注后自动回复,文本类型，带文本小尾巴
 
@@ -96,7 +96,7 @@ Scenario:3 关键词自动回复,文本类型，带文本小尾巴；没有自�
 	When bill在微信中向jobs的公众号发送消息'bill消息'
 	Then bill收到自动回复' '
 
-ignoreScenario:4 消息托管，图文自动回复没有小尾巴
+Scenario:4 消息托管，图文自动回复没有小尾巴
 
 	When jobs已添加消息托管
 		"""
