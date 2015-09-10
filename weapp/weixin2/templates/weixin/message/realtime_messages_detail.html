@@ -31,6 +31,8 @@
 {% verbatim %}
 <script id="weixin-realtime-message-detail-view" type="text/x-jquery-tmpl">
 	<div id="multiline" name=".xui-i-member-username" class="hidden"></div>
+    <!--
+    //去除个人资料部分
 	<div class="xui-weixin-user-detail" data-member-id="${data.member.id}" data-member-info-id="${data.member.member_info_id}">
 		<div class="xui-i-user-top xui-bold"><span>${data.member.name}的基本资料</span></div>
 		<div class="xui-i-user-body">
@@ -79,6 +81,8 @@
 			<ul><li>购买总金额：</li><span>${data.member.total_price}</span></ul>
 		</div>
 	</div>
+    //去除个人资料部分
+    -->
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead><label class="ml30 xui-bold">聊天记录</label><label class="xui-i-not-reply fn {{if data.member.could_replied == true}}hidden{{/if}}">（注：消息仅在48小时内回复有效！）</label></thead>
 		<tbody id='realtime_message_list' data-id="${data.session_id}" data-openid="${data.member.openid}">
