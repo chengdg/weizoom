@@ -424,6 +424,10 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 		member.save()
 
 	member.is_new = is_new
+	#添加默认分组
+	default_tag = MemberTag.get_default_tag(user_profile.webapp_id)
+	MemberTag.add_tag_member_relation(member, [default_tag.id])
+
 	# try:
 	# 	if member:
 	# 		tasks.create_member_info.delay(member.id, '', social_account_info.sex if social_account_info and social_account_info.sex else SEX_TYPE_UNKOWN)
