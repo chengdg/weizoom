@@ -358,6 +358,7 @@ def __build_member_has_tags_json(member):
 	member_has_tags = []
 	for member_has_tag in MemberHasTag.get_member_has_tags(member):
 		member_has_tag_dict = {}
+		member_has_tag_dict['id'] = member_has_tag.member_tag.id
 		member_has_tag_dict['name'] = member_has_tag.member_tag.name
 		member_has_tags.append(member_has_tag_dict)
 	return member_has_tags
@@ -387,6 +388,20 @@ def get_member_follow_relations(request):
 	else:
 		follow_members = MemberFollowRelation.get_follow_members_for(member_id, only_fans)
 
+	#增加计算follow_members的人数、下单人数、成交金额
+	population = len(follow_members)
+	population_order = 0
+	for follow_member in follow_members:
+		user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
+		if user_orders:
+			population_order += 1
+	#成交金额
+	amount = 0
+	for follow_member in follow_members:
+		amount += follow_member.pay_money
+
+	#增加计算follow_members的人数、下单人数、成交金额
+
 	#进行排序
 	follow_members = follow_members.order_by(sort_attr)
 	if data_value:
@@ -411,7 +426,10 @@ def get_member_follow_relations(request):
 		'items': return_follow_members_json_array,
 		'pageinfo': paginator.to_dict(pageinfo),
 		'only_fans':only_fans,
-		'sortAttr': request.GET.get('sort_attr', '-created_at')
+		'sortAttr': request.GET.get('sort_attr', '-created_at'),
+		'population': population,
+		'population_order': population_order,
+		'amount': '%.2f' % amount
 	}
 	return response.get_response()
 
@@ -531,8 +549,12 @@ def update_tag(request):
 			if type == 'tag':
 				tag_ids = checked_ids.split('_')
 				MemberHasTag.delete_tag_member_relation_by_member(member)
-				MemberHasTag.add_tag_member_relation(member, tag_ids)
-
+				tag_ids = [id for id in tag_ids if id]
+				if tag_ids:
+					MemberHasTag.add_tag_member_relation(member, tag_ids)
+				else:
+					tag_ids.append(MemberTag.get_default_tag(webapp_id).id)
+					MemberHasTag.add_tag_member_relation(member, tag_ids)
 			elif type == 'grade':
 				member.grade = MemberGrade.objects.get(id=checked_ids)
 				member.save()
