@@ -260,6 +260,13 @@ def save_order(request):
 			'order_order_id': order.order_id
 		})
 		event_handler_util.handle(request, 'post_save_order')
+
+		mall_api.create_mall_order_from_shared(request, order.id)
+		# try:
+			
+		# except Exception, e:
+		# 	raise e
+
 	except Exception, e:
 		stack = unicode_full_stack()
 		watchdog_error(stack, 'mall')

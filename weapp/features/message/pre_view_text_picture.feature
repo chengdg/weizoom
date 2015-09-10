@@ -54,6 +54,7 @@ Background:
 		}]
 		"""
 
+@mall2 @senior @textPicture
 Scenario: 1 预览单图文信息
 	jobs添加单图文和多图文后
 	1. jobs查看'图文1'
@@ -73,6 +74,7 @@ Scenario: 1 预览单图文信息
 		}]
 		"""
 
+@mall2 @senior @textPicture
 Scenario: 2 预览多图文信息
 	jobs添加单图文和多图文后
 	1. jobs查看'sub图文1'

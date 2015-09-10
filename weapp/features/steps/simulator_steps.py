@@ -134,6 +134,11 @@ def step_impl(context, user, mp_user_name):
 	__fill_member_info(context, user, openid)
 	#把会员设置为真实用户 add by duhao 2015-07-29
 	Member.objects.update(is_for_test=False)
+	# if context.text:
+	# 	json_date = json.loads(context.text)
+	# 	if len(json_date) > 0:
+	# 		content = json_date[0]
+	# 		context.tc.assertEquals(True, content['reply_content'] in response_data['data'])
 
 
 @when(u"{user}关注{mp_user_name}的公众号于'{date}'")
@@ -200,7 +205,8 @@ def step_impl(context, user, answer):
 	beg = result.find('<div class="content">') + len('<div class="content">')
 	end = result.find('</div>', beg)
 	actual = result[beg:end]
-
+	if answer:
+		answer = answer.strip()
 	expected = answer
 	if expected == 'None':
 		expected = ''

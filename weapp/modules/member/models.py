@@ -250,10 +250,10 @@ class WebAppUser(models.Model):
 		if request is None:
 			return
 
-		from integral import increase_for_buy_via_shared_url
-		#首先进行积分的处理
-		#print '===========innnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
-		increase_for_buy_via_shared_url(request, order)
+		# from integral import increase_for_buy_via_shared_url
+		# #首先进行积分的处理
+		# #print '===========innnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
+		# increase_for_buy_via_shared_url(request, order)
 		#进行分享链接的相关计算
 		from modules.member.util import  process_payment_with_shared_info
 		process_payment_with_shared_info(request)

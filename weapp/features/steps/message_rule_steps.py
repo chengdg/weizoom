@@ -168,11 +168,19 @@ def step_impl(context, user):
 @when(u"{user}添加关注自动回复规则")
 def step_impl(context, user):
 	client = context.client
-	rule = json.loads(context.text)
+	rule = json.loads(context.text)[0]
+	if rule == 'text_picture':
+		new_title = rule['reply_content']
+		news = News.objects.filter(material__owner_id=context.client.user.id, title=new_title)[0]
+		material_id = news.id
+		reply_content = rule['reply_content']
+	else:
+		material_id = 0
+		reply_content = rule['reply_content']
 
 	data = {
-		"material_id": "0",
-		"answer": rule['answer']
+		"material_id": material_id,
+		"answer": reply_content
 	}
 	print(context.client.post('/new_weixin/api/follow_rules/?_method=put', data))
 
@@ -314,6 +322,71 @@ def step_impl(context, user, active_type):
 		"material_id": 0,
 		"answer": rule.answer,
 		"id": rule.id,
+		"active_type": active_type,
+		"start_hour": start_hour,
+		"end_hour": end_hour
+	}
+	__process_unmatch_rule(data)
+	context.client.post('/new_weixin/api/unmatch_rules/?_method=post', data)
+
+@when(u"{user}添加小尾巴")
+def step_impl(context, user):
+	data_json = json.loads(context.text)[0]
+	if data_json['is_open'] == 'true':
+		is_active = 1
+	else:
+		is_active = 0
+
+	data = {
+		"tail": data_json['reply_content'],
+		"is_active": is_active
+	}
+	context.client.post('/new_weixin/api/message_tails/?_method=put', data)
+
+@when(u"{user}已添加消息托管")
+def step_impl(context, user):
+	#rule = Rule.objects.get(owner=context.client.user, type=UNMATCH_TYPE)
+	data_json = json.loads(context.text)[0]
+	start_hour = data_json['time_start']
+	end_hour = data_json['time_end']
+	answers = []
+	for answer in data_json['reply']:
+		answer_dict = {}
+		if answer['reply_type'] == 'text':
+			answer_dict['content']  = answer['reply_content']
+			answer_dict['type']  = 'text'
+		else:
+			new_title = answer['reply_content']
+			print '>>>>>>',context.client.user.id, new_title
+			news = News.objects.filter(material__owner_id=context.client.user.id, title=new_title)[0]
+			answer_dict['content']  = "%s" % news.id
+			answer_dict['type']  = 'news'
+		answers.append(answer_dict)
+
+	if data_json['is_open'] == 'true':
+		active_type = 1
+	else:
+		active_type = 0
+	date = {"Mon":False,"Tue":False,"Wed":False,"Thu":False,"Fri":False,"Sat":False,"Sun":False}
+	if data_json['Weeks'] == "Mon":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Tue":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Wed":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Thu":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Fri":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Sat":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Sun":
+		date['Mon'] = True
+
+	data = {
+		"material_id": 0,
+		"active_days":str(date),
+		"answer": str(answers),
 		"active_type": active_type,
 		"start_hour": start_hour,
 		"end_hour": end_hour
