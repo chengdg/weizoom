@@ -2218,20 +2218,19 @@ def update_order_status(user, action, order, request=None):
 		record_status_log(order.order_id, operation_name, order.status, target_status)
 		record_operation_log(order.order_id, operation_name, action_msg)
 
-	#try:
+	try:
 		# TODO 返还用户积分
-	from modules.member import integral
-	if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
-		if MallOrderFromSharedRecord.objects.filter(order_id=order.id).count() > 0:
-			order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
-			fmt = order_record.fmt
-		else:
-			fmt = None
-		print '=====================>>>>>>>>>>>>>>>>>>>>>>>>>11111111111'
-		integral.increase_after_payed_finsh(fmt, order)
-	# except:
-	# 	notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
-	# 	watchdog_error(notify_message)
+		from modules.member import integral
+		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
+			if MallOrderFromSharedRecord.objects.filter(order_id=order.id).count() > 0:
+				order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
+				fmt = order_record.fmt
+			else:
+				fmt = None
+			integral.increase_after_payed_finsh(fmt, order)
+	except:
+		notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
+		watchdog_error(notify_message)
 	try:
 		mall_util.email_order(order=Order.objects.get(id=order_id))
 	except :
