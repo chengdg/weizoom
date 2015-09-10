@@ -16,7 +16,7 @@ Background:
 		"""
 
 @mall2 @market_tools @market_tools.template_message.test.view
-Scenario:选择主营行业和副营行业
+Scenario:1 选择主营行业和副营行业
 	jobs选择主营行业和副营行业
 	1.模板消息列表正序排列
 
@@ -63,7 +63,7 @@ Scenario:选择主营行业和副营行业
 
 
 @mall2 @market_tools @market_tools.template_message.test.view
-Scenario:选择主营行业不选副营行业
+Scenario:2 选择主营行业不选副营行业
 	jobs选择主营行业不选副营行业
 	1.模板消息列表正序排列
 
@@ -95,7 +95,7 @@ Scenario:选择主营行业不选副营行业
 
 
 @mall2 @market_tools @market_tools.template_message.test.view
-Scenario:不选主营行业选择副营行业
+Scenario:3 不选主营行业选择副营行业
 	jobs不选主营行业选择副营行业
 	1.模板消息列表正序排列
 
@@ -113,7 +113,7 @@ Scenario:不选主营行业选择副营行业
 
 
 @mall2 @market_tools @market_tools.template_message.test.view
-Scenario:不选主营行业不选副营行业
+Scenario:4 不选主营行业不选副营行业
 	jobs不选主营行业不选副营行业
 	1.模板消息列表正序排列
 
@@ -131,7 +131,7 @@ Scenario:不选主营行业不选副营行业
 
 
 @mall2 @market_tools @market_tools.template_message.test.view 
-Scenario:修改主行业和副行业
+Scenario:5 修改主行业和副行业
 	jobs可以修改主行业和副行业
 	1.模板消息列表正序排列
 

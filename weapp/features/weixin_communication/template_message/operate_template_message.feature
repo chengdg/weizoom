@@ -39,7 +39,7 @@ Background:
 		"""
 
 @mall2 @market_tools @market_tools.template_message.test.operate 
-Scenario:添加\修改模板消息内容
+Scenario:1 添加\修改模板消息内容
 	jobs可以添加\修改模板消息内容
 	1.jobs给template_id为"muban03"的模板消息添加内容
 	2.jobs给template_id为"muban03"的模板消息修改内容
@@ -94,7 +94,7 @@ Scenario:添加\修改模板消息内容
 		"""
 
 @mall2 @market_tools @market_tools.template_message.test.operate 
-Scenario:修改模板消息(启用、停用)状态
+Scenario:2 修改模板消息(启用、停用)状态
 	jobs可以修改模板消息状态
 	1.jobs查看模板消息列表
 
