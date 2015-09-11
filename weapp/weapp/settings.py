@@ -568,6 +568,7 @@ if 'develop' == MODE:
 
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://dev.weapp.com'
 
     import logging
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
@@ -587,6 +588,7 @@ elif 'test' == MODE:
 
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://dev.weapp.com'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
@@ -606,6 +608,7 @@ else:
     USE_DEV_JS = False
 
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://api.weizzz.com'
 
 
 IN_DEVELOP_MODE = (MODE == 'develop')
