@@ -584,7 +584,8 @@ elif 'test' == MODE:
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
 
-    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
