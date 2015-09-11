@@ -30,7 +30,7 @@ class ProductCategories(resource.Resource):
 		uid = request.REQUEST.get('uid')
 		categories = mall_models.ProductCategory.objects.filter(owner_id=uid)
 		data = [{ \
-			'category_id': category.id, \
+			'id': category.id, \
 			'name': category.name, \
 			'product_count': category.product_count, \
 			'created_at': utils_dateutil.datetime2string(category.created_at)} for category in categories]
@@ -46,19 +46,30 @@ class ProductCategory(resource.Resource):
 	app = 'wapi'
 	resource = 'product_category'
 
-	@wapi_access_required(required_params=['username'])
+	@wapi_access_required(required_params=['id'])
 	def api_get(request):
 		"""
 		获取WebAPP ID
 
 		@param username 用户名
 		"""
-		username = request.GET.get('username')
-		user = User.objects.get(username=username)
-		user.profile = UserProfile.objects.get(user=user)
-		webapp_id = user.profile.webapp_id
-
+		category = mall_models.ProductCategory.objects.get(id=request.GET.get('id'))
 		return create_json_response(200, {
-				"webapp_id": webapp_id,
-				"username": user.username
+				"id": category.id,
+				"name": category.name,
+				"product_count": category.product_count,
+				"created_at": utils_dateutil.datetime2string(category.created_at)
+			})
+
+
+	@wapi_access_required(required_params=['id', 'name'])
+	def api_post(request):
+		"""
+		修改ProductCategory的名字
+		"""
+		mall_models.ProductCategory.objects.filter(id=request.GET.get('id')).update(
+				name = request.REQUEST.get('name')
+			)
+		#print("size: {}".format(len(category)))
+		return create_json_response(200, {
 			})
