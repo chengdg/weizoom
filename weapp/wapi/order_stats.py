@@ -37,6 +37,32 @@ from wapi.decorators import wapi_access_required
 #from utils import dateutil as utils_dateutil
 
 from mall import models as mall_models
+from modules.member import models as member_models
+
+class MemberStats(resource.Resource):
+	app = 'wapi'
+	resource = 'member_stats'
+
+	@wapi_access_required
+	def api_get(request):
+		"""
+		计算会员数据
+		"""
+		webapp_id = request.GET.get('wid')
+		date_start = request.GET.get('date_start')
+		date_end = request.GET.get('date_end')
+
+		member_count = member_models.Member.objects.filter( \
+			webapp_id=webapp_id, \
+			created_at__range=(date_start, date_end) \
+			).count()
+
+		response = create_response(200)
+		response.data = {
+			"member_count": member_count,
+		}
+		return response.get_response()
+
 
 class OrderStats(resource.Resource):
 	"""
@@ -55,7 +81,6 @@ class OrderStats(resource.Resource):
 		@param date_end 结束日期
 		"""
 		webapp_id = request.GET.get('wid')
-		#print("webapp_id: {}".format(webapp_id))
 		date_start = request.GET.get('date_start')
 		date_end = request.GET.get('date_end')
 
