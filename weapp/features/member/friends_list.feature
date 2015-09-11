@@ -266,11 +266,11 @@ Scenario:1 会员的好友列表和推荐关注列表
 		"""
 		{
 			"friend_count":13,
-			"ordered_members":1,
+			"ordered_members":2,
 			"pay_money":660.00
 		}
 		"""
-	Then jobs获得'bill'的好友列表
+	Then jobs获得'bill'好友列表
 		|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
 		|  bill0013|    0      |     0      | 会员分享 |    bill     |      今天      |
 		|  bill0012|    0      |     0      | 直接关注 |             |      今天      |
@@ -300,26 +300,22 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 			"""
 		When jobs访问'bill'推荐关注页
 		Then jobs获得'bill'推荐关注列表显示共3页
-		When jobs浏览第1页
+		When jobs浏览推荐关注列表第1页
 		Then jobs获得'bill'推荐关注列表
 			|  member  | pay_money |  integral  |  Source  | attention_time |
 			|  bill0013|    0      |     0      | 会员分享 |      今天      |
 			|  bill0011|    0      |     0      | 会员分享 |      今天      |
-		When jobs浏览下一页
+		When jobs浏览推荐关注列表第2页
 		Then jobs获得'bill'推荐关注列表
 			|  member  | pay_money |  integral  |  Source  | attention_time |
 			|  bill13  |    330    |     0      | 会员分享 |      今天      |
 			|  bill11  |    0      |     70     | 会员分享 |      今天      |
-		When jobs浏览第3页
+		When jobs浏览推荐关注列表第3页
 		Then jobs获得'bill'推荐关注列表
 			|  member  | pay_money |  integral  |  Source  | attention_time |
 			|  bill3   |    0      |     0      | 会员分享 |      今天      |
 			|  bill1   |    0      |     50     | 会员分享 |      今天      |
-		When jobs浏览上一页
-		Then jobs获得'bill'推荐关注列表
-			|  member  | pay_money |  integral  |  Source  | attention_time |
-			|  bill13  |    330    |     0      | 会员分享 |      今天      |
-			|  bill11  |    0      |     70     | 会员分享 |      今天      |
+
 
 	#好友列表分页
 		Given jobs设置分页查询参数
@@ -330,31 +326,24 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 			"""
 		When jobs访问'bill'推荐关注页
 		Then jobs获得'bill'好友列表显示共4页
-		When jobs浏览第1页
-		Then jobs获得'bill'的好友列表
+		When jobs浏览好友列表第1页
+		Then jobs获得'bill'好友列表
 			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
 			|  bill0013|    0      |     0      | 会员分享 |    bill     |      今天      |
 			|  bill0012|    0      |     0      | 直接关注 |             |      今天      |
 			|  bill0011|    0      |     0      | 会员分享 |    bill     |      今天      |
 			|  bill001 |    0      |     80     | 会员分享 |    marry2   |      今天      |
-		When jobs浏览下一页
-		Then jobs获得'bill'的好友列表
+		When jobs浏览好友列表第2页
+		Then jobs获得'bill'好友列表
 			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
 			|  marry2  |    0      |     0      | 直接关注 |             |      今天      |
 			|  bill13  |    330    |     0      | 会员分享 |    bill     |      今天      |
 			|  bill12  |    0      |     0      | 直接关注 |             |      今天      |
 			|  bill11  |    0      |     70     | 会员分享 |    bill     |      今天      |
-		When jobs浏览第3页
-		Then jobs获得'bill'的好友列表
+		When jobs浏览好友列表第3页
+		Then jobs获得'bill'好友列表
 			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
 			|  bill01  |    330    |     60     | 会员分享 |    marry    |      今天      |
 			|  marry   |    0      |     0      | 直接关注 |             |      今天      |
 			|  bill3   |    0      |     0      | 会员分享 |    bill     |      今天      |
 			|  bill2   |    0      |     0      | 直接关注 |             |      今天      |
-		When jobs浏览上一页
-		Then jobs获得'bill'的好友列表
-			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
-			|  marry2  |    0      |     0      | 直接关注 |             |      今天      |
-			|  bill13  |    330    |     0      | 会员分享 |    bill     |      今天      |
-			|  bill12  |    0      |     0      | 直接关注 |             |      今天      |
-			|  bill11  |    0      |     70     | 会员分享 |    bill     |      今天      |
