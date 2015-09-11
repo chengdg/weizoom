@@ -58,7 +58,7 @@ class WebappID(resource.Resource):
 		"""
 		username = request.GET.get('username')
 		user = User.objects.get(username=username)
-		user.profile = UserProfile.objects.get(user=client.user)
+		user.profile = UserProfile.objects.get(user=user)
 		webapp_id = user.profile.webapp_id
 
 		response = create_response(200)
