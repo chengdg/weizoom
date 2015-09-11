@@ -163,7 +163,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
         if (url.substr(0, 3) == './?') {
             return;
         }
-        if (url.length >= 7 && url.substr(0, 3) != './?' && url.substr(0, 7) != 'http://') {
+        if (url.length >= 7 && url.substr(0, 1) != '/' && url.substr(0, 3) != './?' && url.substr(0, 7) != 'http://') {
             url = 'http://'+ url
             $input.val(url);
         };
