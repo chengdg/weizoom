@@ -1147,9 +1147,11 @@ class MemberHasTag(models.Model):
 			return []
 
 	@staticmethod
-	def add_members_tag(tag_id, member_ids):
+	def add_members_tag(default_tag_id, tag_id, member_ids):
 		if tag_id:
 			for member_id in member_ids:
+				if MemberHasTag.objects.filter(member_tag_id=default_tag_id, member_id=member_id).count() > 0:
+					MemberHasTag.objects.filter(member_tag_id=default_tag_id, member_id=member_id).delete()
 				if MemberHasTag.objects.filter(member_tag_id=tag_id, member_id=member_id).count() == 0:
 					MemberHasTag.objects.create(member_id=member_id, member_tag_id=tag_id)
 
