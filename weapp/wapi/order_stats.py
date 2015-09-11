@@ -52,14 +52,16 @@ class MemberStats(resource.Resource):
 		date_start = request.GET.get('date_start')
 		date_end = request.GET.get('date_end')
 
-		member_count = member_models.Member.objects.filter( \
+		members = member_models.Member.objects.filter( \
 			webapp_id=webapp_id, \
 			created_at__range=(date_start, date_end) \
-			).count()
+			)
+		subscribed = sum(map(lambda x:x.is_subscribed, members))
 
 		response = create_response(200)
 		response.data = {
-			"member_count": member_count,
+			"total_member": len(members),
+			"member_count": subscribed
 		}
 		return response.get_response()
 
