@@ -46,22 +46,24 @@ Background:
 		"""
 		{
 			"be_member_increase_count":20,
-			"click_shared_url_increase_count":11, 
-			"buy_award_count_for_buyer":21,
-			"order_money_percentage_for_each_buy":0.5,
+			"click_shared_url_increase_count_before_buy":11,
+			"click_shared_url_increase_count_after_buy":21, 
 			"buy_via_shared_url_increase_count_for_author":31, 
+			"buy_increase_count_for_father":10,
 			"buy_via_offline_increase_count_for_author":30,
+			"click_shared_url_increase_count":11,
+			"buy_award_count_for_buyer":21,
 			"buy_via_offline_increase_count_percentage_for_author":0.2,
-			"buy_increase_count_for_father":10
+			"order_money_percentage_for_each_buy":0.5
+
 		}
 		"""
-
 
 	And bill关注jobs的公众号
 	And 开启手动清除cookie模式
 
-@member @member.shared_integral @mall2 
-Scenario:1 分享链接给好友点击，给分享者增加积分
+@member @member.shared_integral @mall2
+Scenario:1 点击给未购买的分享者增加积分
 	bill没有购买jobs的商品1，把商品1的链接分享到朋友圈
 	1.nokia点击bill分享的链接后，给bill增加积分
 	2.nokia再次点击bill分享的链接后，不给bill增加积分
@@ -79,14 +81,10 @@ Scenario:1 分享链接给好友点击，给分享者增加积分
 			"integral":20
 		}]
 		"""
-
 	#When bill把jobs的微站链接分享到朋友圈
 	When bill把jobs的商品"商品1"的链接分享到朋友圈
-
-	#nokia第一次点击bill分享链接，bill获得分享链接积分奖励
 	When 清空浏览器
 	When nokia点击bill分享链接
-
 	When 清空浏览器
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有31会员积分
@@ -100,38 +98,34 @@ Scenario:1 分享链接给好友点击，给分享者增加积分
 			"integral":20
 		}]
 		"""
-		
-	#nokia第二次第三次点击bill分享链接，bill不再获得分享链接积分奖励
 	When 清空浏览器
 	When nokia点击bill分享链接
-
-	When 清空浏览器
-	When nokia点击bill分享链接
-
 	When 清空浏览器
 	When bill访问jobs的webapp	
-	Then bill在jobs的webapp中拥有31会员积分
-	Then bill在jobs的webapp中获得积分日志
-		"""
-		[{
-			"content":"好友点击分享链接奖励",
-			"integral":11
-		},{
-			"content":"首次关注",
-			"integral":20
-		}]
-		"""
-
-	#tom第一次点击bill分享链接，bill获得分享链接积分奖励
-	When 清空浏览器
-	When tom点击bill分享链接
-
-	When 清空浏览器
-	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有42会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
+			"content":"好友点击分享链接奖励",
+			"integral":11
+		},{
+			"content":"好友点击分享链接奖励",
+			"integral":11
+		},{
+			"content":"首次关注",
+			"integral":20
+		}]
+		"""
+	When 清空浏览器
+	When tom点击bill分享链接
+	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有53会员积分
+	Then bill在jobs的webapp中获得积分日志
+		"""
+		[{
+			"content":"好友点击分享链接奖励",
+			"integral":11
+		},{
 			"content":"好友点击分享链接奖励",
 			"integral":11
 		},{
@@ -273,7 +267,7 @@ Scenario:2 点击给已购买的分享者增加积分
 Scenario:3 通过分享链接购买后给分享者增加积分
 	bill把jobs的商品2的链接分享到朋友圈
 	1.nokia点击bill分享的链接并购买，给bill增加积分
-	2.nokia再次点击bill分享的链接并购买，给bill增加积分
+	2.nokia再次点击bill分享的链接并购买，不给bill增加积分
 	3.tom点击bill分享的链接并购买，给bill增加积分
 
 	When 清空浏览器
