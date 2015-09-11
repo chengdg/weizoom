@@ -15,35 +15,6 @@ from django.contrib.auth.models import User
 from account.models import UserProfile
 
 
-def __category_to_dict(category):
-	return {
-			"id": category.id,
-			"uid": category.owner_id,
-			"name": category.name,
-			"product_count": category.product_count,
-			"created_at": utils_dateutil.datetime2string(category.created_at)
-		}
-
-
-class ProductCategories(resource.Resource):
-	"""
-	获取商品分类列表
-	"""
-	app = 'wapi'
-	resource = 'product_categories'
-
-	@wapi_access_required(required_params=['uid'])
-	def api_get(request):
-		"""
-		@see 参考 mall/product/category.py
-		"""
-		uid = request.REQUEST.get('uid')
-		categories = mall_models.ProductCategory.objects.filter(owner_id=uid)
-		data = [ __category_to_dict(category) for category in categories]
-		return create_json_response(200, {
-				"categories": data
-			})
-
 
 class ProductCategory(resource.Resource):
 	"""
@@ -51,6 +22,17 @@ class ProductCategory(resource.Resource):
 	"""
 	app = 'wapi'
 	resource = 'product_category'
+
+	@staticmethod
+	def category_to_dict(category):
+		return {
+			"id": category.id,
+			"uid": category.owner_id,
+			"name": category.name,
+			"product_count": category.product_count,
+			"created_at": utils_dateutil.datetime2string(category.created_at)
+		}
+
 
 	@wapi_access_required(required_params=['id'])
 	def api_get(request):
@@ -60,7 +42,7 @@ class ProductCategory(resource.Resource):
 		@param id 分类ID
 		"""
 		category = mall_models.ProductCategory.objects.get(id=request.GET.get('id'))
-		return create_json_response(200, __category_to_dict(category))
+		return create_json_response(200, ProductCategory.category_to_dict(category))
 
 
 	@wapi_access_required(required_params=['id', 'name'])
@@ -85,4 +67,26 @@ class ProductCategory(resource.Resource):
                 name=request.REQUEST.get('name', '').strip()
             )
 		product_category.save()
-		return create_json_response(200, __category_to_dict(product_category))
+		return create_json_response(200, ProductCategory.category_to_dict(product_category))
+
+
+
+class ProductCategories(resource.Resource):
+	"""
+	获取商品分类列表
+	"""
+	app = 'wapi'
+	resource = 'product_categories'
+
+	@wapi_access_required(required_params=['uid'])
+	def api_get(request):
+		"""
+		@see 参考 mall/product/category.py
+		"""
+		uid = request.REQUEST.get('uid')
+		categories = mall_models.ProductCategory.objects.filter(owner_id=uid)
+		data = [ ProductCategory.category_to_dict(category) for category in categories]
+		return create_json_response(200, {
+				"categories": data
+			})
+
