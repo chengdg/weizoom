@@ -59,7 +59,7 @@ class OrderStats(resource.Resource):
 		date_start = request.GET.get('date_start')
 		date_end = request.GET.get('date_end')
 
-		orders = mall_orders.Order.objects.filter(webapp_id=webapp_id, status=mall_models.ORDER_STATUS_SUCCESSED, created_at__range=(date_start, date_end) )
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status=mall_models.ORDER_STATUS_SUCCESSED, created_at__range=(date_start, date_end) )
 		# 计算购买人数
 		members = set([order.webapp_user_id for order in orders])
 

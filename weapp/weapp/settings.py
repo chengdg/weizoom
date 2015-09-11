@@ -566,7 +566,8 @@ if 'develop' == MODE:
     EVENT_DISPATCHER = 'local'
     ENABLE_WEPAGE_CACHE = False
 
-    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
 
     import logging
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
