@@ -39,6 +39,7 @@ from wapi.decorators import wapi_access_required
 from mall import models as mall_models
 
 from django.contrib.auth.models import User
+from account.models import UserProfile
 
 
 class WebappID(resource.Resource):
