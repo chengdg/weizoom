@@ -59,13 +59,20 @@ class OrderStats(resource.Resource):
 		date_start = request.GET.get('date_start')
 		date_end = request.GET.get('date_end')
 
-		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, status=mall_models.ORDER_STATUS_SUCCESSED, created_at__range=(date_start, date_end) )
+		orders = mall_models.Order.objects.filter( \
+			webapp_id=webapp_id, \
+			status__in=[mall_models.ORDER_STATUS_SUCCESSED, mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_PAYED_SUCCESSED], \
+			created_at__range=(date_start, date_end) )
 		# 计算购买人数
 		members = set([order.webapp_user_id for order in orders])
+		# 计算总支付金额
+		total_payment = sum([order.final_price for order in orders])
 
 		response = create_response(200)
 		response.data = {
+			"webapp_id": webapp_id,
 			"order_count": len(orders),
-			"member_count": len(members)
+			"member_count": len(members),
+			"total_payment": total_payment
 		}
 		return response.get_response()
