@@ -80,7 +80,7 @@ def step_impl(context, user):
 	for member_item in items:
 		member_item['name'] = member_item['username']
 		member_item['attention_time'] = member_item['created_at']
-		member_item['tags'] = ','.join([item['name'] for item in member_item['tags']])
+		member_item['tags'] = [item['name'] for item in member_item['tags']]
 		member_item['member_rank'] = member_item['grade_name']
 		if member_item['is_subscribed']:
 			member_item['status'] = u"已关注"
@@ -112,7 +112,7 @@ def step_impl(context, user):
 		actual_data = []
 		for row in context.table:
 			adict = {}
-			adict['username'] = row[0]
+			adict['name'] = row[0]
 			adict['member_grade'] = row[1]
 			adict['friend_count'] = int(row[2])
 			adict['integral'] = int(row[3])
@@ -128,7 +128,7 @@ def step_impl(context, user):
 			json_data.append(adict)
 		for row in actual_members:
 			adict = {}
-			adict['username'] = row['username']
+			adict['name'] = row['username']
 			adict['member_grade'] = row['grade_name']
 			adict['friend_count'] = row['friend_count']
 			adict['integral'] = row['integral']
@@ -137,9 +137,12 @@ def step_impl(context, user):
 			adict['pay_times'] = row['pay_times']
 			adict['attention_time'] = row['attention_time']
 			adict['source'] = row['source']
-			adict['tags'] = row['tags']
+			adict['tags'] = ','.join(row['tags'])
 			actual_data.append(adict)
 
+	# for i in range(len(json_data)):
+	# 	print json_data[i]['name'], actual_data[i]['name']
+	# 	print json_data[i]['tags'], actual_data[i]['tags']
 	bdd_util.assert_list(json_data, actual_data)
 
 
