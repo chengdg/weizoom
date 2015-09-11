@@ -12,19 +12,22 @@ from utils import mall_api
 @given(u"{user}已添加商品分类")
 def step_add_category(context, user):
     client = context.client
+    uid = client.user.id
     context.product_categories = json.loads(context.text)
     for product_category in context.product_categories:
-        mall_api.add_product_category(product_category['name'])
+        mall_api.add_product_category(uid, product_category['name'])
         #url = '/mall2/api/category/?_method=put'
         #client.post(url, data)
+    #assert False
 
 
 @when(u"{user}添加商品分类")
 def step_impl(context, user):
-    #client = context.client
+    client = context.client
+    uid = client.user.id
     context.product_categories = json.loads(context.text)
     for product_category in context.product_categories:
-        mall_api.add_product_category(product_category['name'])
+        mall_api.add_product_category(uid, product_category['name'])
         #data = product_category
         #url = '/mall2/api/category/?_method=put'
         #client.post(url, data)
