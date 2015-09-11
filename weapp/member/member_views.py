@@ -63,6 +63,14 @@ def get_should_show_authorize_cover(request):
 def list_tags(request):
 	webapp_id = request.user_profile.webapp_id
 	member_tags = MemberTag.get_member_tags(webapp_id)
+	#调整排序，将为分组放在最前面
+	tags = []
+	for tag in member_tags:
+		if tag.name == '未分组':
+			tags = [tag] + tags
+		else:
+			tags.append(tag)
+	member_tags = tags
 	if request.method == "GET":
 		is_can_send = False
 		from weixin.user.models import WeixinMpUser
@@ -89,7 +97,7 @@ def list_tags(request):
 		return render_to_response('member/editor/member_tags.html', c)
 	else:
 		member_tag_ids = [member_tag.id for member_tag in member_tags]
-
+		default_tag_id = MemberTag.get_default_tag(webapp_id).id
 		id_values = {}
 		for key, value in request.POST.dict().items():
 			id = key.split('_')[2]
@@ -103,7 +111,13 @@ def list_tags(request):
 			else:
 				MemberTag.objects.create(name=value, webapp_id=webapp_id)
 		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
+		if default_tag_id in delete_ids:
+			delete_ids.remove(default_tag_id)
+		members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
 		MemberTag.objects.filter(id__in=delete_ids).delete()
+		for m in members:
+			if MemberHasTag.objects.filter(member=m).count() == 0:
+				MemberHasTag.objects.create(member=m, member_tag_id=default_tag_id)
 		return HttpResponseRedirect('/member/member_tags/get/')
 
 
