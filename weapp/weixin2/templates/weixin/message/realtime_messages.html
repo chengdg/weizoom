@@ -55,7 +55,6 @@
 		<tbody id='realtime_message_list'>
 			{{if items.length}}
 				{{each(i, message) items}}
-				<tr data-id="${message.id}">
 				<tr class="xui-i-realmessage-tr" data-id="${message.session_id}">
 				<td class="xui-vmiddle pr0">
 					<input type="checkbox" class="xa-select xui-select"/>
@@ -168,7 +167,7 @@
 					    </li>
 		</ul>
 	</div>
-	
+
 </script>
 
 <script src="/static/jquery/jquery.cookie.js"></script>
@@ -382,6 +381,27 @@ $(document).ready(function() {
 		})
 
 	});
+
+	//标记消息为已读
+	$(document).delegate('.xa-send-message-select-member', 'click', function(event){
+		var session_ids = [];
+		$('input.xa-select:checked').each(function(){
+			session_id = $(this).parent().parent().data('id');
+			session_ids.push(session_id);
+  		});
+  		W.resource.new_weixin.SignUnreadMessages.post({
+  			data: {
+				sessionIds: JSON.stringify(session_ids)
+			},
+			success: function(data) {
+				W.showHint('success', '操作成功！');
+				$('[data-ui-role="advanced-table"]').data('view').reload();
+			},
+			error: function(resp) {
+				W.showHint('error', '操作失败！')
+			}
+  		});
+  	});
 });
 </script>
 {% endblock %}
