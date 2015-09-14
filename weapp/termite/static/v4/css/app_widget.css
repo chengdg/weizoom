@@ -601,11 +601,47 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-UploadImg .wui-i-mandatory {
 	color: #CDCDCD;
 }
-.wui-i-uploadimg{
-	background: url("/static_v2/img/termite2/uploadimg.png");
-	background-repeat: no-repeat;
-	min-height: 60px;
+
+.wui-i-uploadimg .xui-productPhoto .xui-addPhoto span.xui-i-box,
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    display: inline-block;
+    width:46px;
+    height:45px;
+    background: url(/static_v2/img/webapp/mall/photoBtn.png);
+	background-color: #fff;
+    -webkit-background-size: 92px 45px;
+    background-size: 92px 45px;
+    background-position: -46px 0;
 }
-.wui-i-uploadimg p{
-	color: #999;
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    background-position: 0 0;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-remove{
+    top:0px;
+    right:0px;
+    z-index:99;
+    display:inline-block;
+    width:45px;
+    height:45px;
+    background:rgba(0,0,0,0.5);
+    text-align: center;
+    line-height: 45px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-remove i{
+    background: url(/static_v2/img/webapp/mall/sprite0506.png);
+    -webkit-background-size: 195px 123px;
+    background-size: 195px 123px;
+    background-position: -44px 0;
+    width: 23px;
+    height: 22px;
+    display: inline-block;
+    top:10px;
+    left: 10px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-addPhoto .xui-i-box i{
+    margin-left: -3px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-text{
+    color: #A9A9A9;
+    line-height: 45px;
 }
