@@ -117,7 +117,7 @@ def list_tags(request):
 		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
 		if default_tag_id in delete_ids:
 			delete_ids.remove(default_tag_id)
-		print default_tag_id, "2222"
+		print delete_ids, "2222"
 		members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
 		MemberTag.objects.filter(id__in=delete_ids).delete()
 		for m in members:
