@@ -179,6 +179,16 @@ def get_mpuser_access_token_by_appid(appid):
 	else:
 		return None
 
+def get_mpuser_access_token_by_userid(user_id):
+	if user_id is None:
+		return None
+
+	mpuser_access_tokens = WeixinMpUserAccessToken.objects.filter(mpuser__owner_id=user_id)
+	if mpuser_access_tokens.count() > 0:
+		return mpuser_access_tokens[0]
+	else:
+		return None
+
 #===============================================================================
 # get_token_for : 获得(webapp_id, weixin_user_name)对应的weizoom token
 #===============================================================================
