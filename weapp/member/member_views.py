@@ -62,6 +62,7 @@ def get_should_show_authorize_cover(request):
 @login_required
 def list_tags(request):
 	webapp_id = request.user_profile.webapp_id
+	default_tag_id = MemberTag.get_default_tag(webapp_id).id
 	member_tags = MemberTag.get_member_tags(webapp_id)
 	#调整排序，将为分组放在最前面
 	tags = []
@@ -97,12 +98,10 @@ def list_tags(request):
 		return render_to_response('member/editor/member_tags.html', c)
 	else:
 		member_tag_ids = [member_tag.id for member_tag in member_tags]
-		default_tag_id = MemberTag.get_default_tag(webapp_id).id
 		id_values = {}
 		for key, value in request.POST.dict().items():
 			id = key.split('_')[2]
 			id_values[int(id)] = value
-		print id_values, "{1111111111111}"
 		for id in id_values.keys():
 			value = id_values[id]
 
@@ -113,7 +112,6 @@ def list_tags(request):
 				else:
 					MemberTag.objects.create(name=value, webapp_id=webapp_id)
 		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
-		print delete_ids, "{2222222}" * 10
 		if default_tag_id in delete_ids:
 			delete_ids.remove(default_tag_id)
 		members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
