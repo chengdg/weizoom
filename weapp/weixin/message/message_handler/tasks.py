@@ -54,7 +54,7 @@ def _recorde_message(context):  #response_rule, from_weixin_user, is_from_simula
 	record_session_info(session_info, response_rule)
 
 	#如果是声音消息 则语音转换
-	upload_audio.delay(message_id, user_profile.user_id)
+	upload_audio.delay(message.id, user_profile.user_idjj)
 
 def _get_info_from_context(context):
 	request = context["request"]
