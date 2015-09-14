@@ -36,10 +36,18 @@
 </script>
 <script id="member-relation-tmpl-src" type="text/x-jquery-tmpl">
 		<!--增加计算follow_members的人数、下单人数、成交金额-->
-		<p><span><strong>人数：${population}</strong></span>&nbsp;&nbsp;&nbsp;&nbsp;
-			<span><strong>下单人数：${population_order}</strong></span>&nbsp;&nbsp;&nbsp;&nbsp;
-			<span><strong>成交金额：￥${amount}</strong></span>
-		</p>
+		{{if data.population}}
+			<div >
+				{{if data.only_fans==0}}
+					<div class="xui-fontGary fl cursor-text"><strong>好友数：${data.population}</strong></div>
+				{{else}}
+					<div class="xui-fontGary fl cursor-text"><strong>推荐人数：${data.population}</strong></div>
+				{{/if}}
+				<div class="ml50 xui-fontGary fl cursor-text"><strong>下单人数：${data.population_order}</strong></div>
+				<div class="ml50 xui-fontGary fl cursor-text"><strong>成交金额：￥${data.amount}</strong></div>
+			</div>
+		{{/if}}
+		<div class="cb mb5"></div>
 		<!--增加计算follow_members的人数、下单人数、成交金额-->
 		<table style="width:100%;border:1px solid #ddd" class="table xb-stripedTable xb-noBorder">
 				<thead style="background:#c8d2e5;">

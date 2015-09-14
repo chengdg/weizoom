@@ -71,6 +71,8 @@ class MessageTails(resource.Resource):
                 tail = tail,
                 is_active = is_active,
             )
+        else:
+            Tail.objects.filter(owner=request.user).update(is_active=is_active,tail=tail)
 
         response = create_response(200)
         response.data = {

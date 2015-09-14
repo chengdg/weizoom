@@ -55,10 +55,11 @@
 		<tbody id='realtime_message_list'>
 			{{if items.length}}
 				{{each(i, message) items}}
-				<tr data-id="${message.id}">
 				<tr class="xui-i-realmessage-tr" data-id="${message.session_id}">
 				<td class="xui-vmiddle pr0">
+				{{if data.status == 0}}
 					<input type="checkbox" class="xa-select xui-select"/>
+				{{/if}}
 				</td>
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w mt5 pr">
@@ -147,6 +148,7 @@
 			{{/if}}
 		</tbody>
 	</table>
+	{{if data.status == 0}}
 	<div class="checkbox xui-selectBox">
 	<label  for="all">
 		<input type="checkbox" id="xa-selectAll" class="xui-selectAll">
@@ -156,19 +158,20 @@
 			标记为已读
 		</a>
 		<ul class="dropdown-menu xui-menu multi-level" role="menu"  aria-labelledby="dropdownMenu">
-					    <li class="dropdown-submenu">
-					    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
-								给选的消息标记为已读</span>
-						   	</a>
-					    </li>
-					    <li class="dropdown-submenu">
-					    	<a class=" xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
-								全部未读消息标记为已读</span>
-						   	</a>
-					    </li>
+		    <li class="dropdown-submenu">
+		    	<a class="xa-send-message-select-member" type="button"  href="javascript:void(0);">
+					选中的消息标记为已读</span>
+			   	</a>
+		    </li>
+		    <li class="dropdown-submenu">
+		    	<a class=" xa-send-message-all-member"  type="button"  href="javascript:void(0);" >
+					全部未读消息标记为已读</span>
+			   	</a>
+		    </li>
 		</ul>
 	</div>
-	
+	{{/if}}
+
 </script>
 
 <script src="/static/jquery/jquery.cookie.js"></script>
@@ -382,6 +385,58 @@ $(document).ready(function() {
 		})
 
 	});
+
+	//标记消息为已读
+	$(document).delegate('.xa-send-message-select-member', 'click', function(event){
+		var session_ids = [];
+		$('input.xa-select:checked').each(function(){
+			session_id = $(this).parent().parent().data('id');
+			session_ids.push(session_id);
+  		});
+  		W.resource.new_weixin.SignUnreadMessages.post({
+  			data: {
+				sessionIds: JSON.stringify(session_ids)
+			},
+			success: function(data) {
+				W.showHint('success', '操作成功！');
+				$('[data-ui-role="advanced-table"]').data('view').reload();
+			},
+			error: function(resp) {
+				W.showHint('error', '操作失败！')
+			}
+  		});
+  	});
+
+  	$(document).delegate('.xa-send-message-all-member', 'click', function(event){
+  		filter_value = JSON.parse(filterBox.options.dataView.options.args).filter_value;
+  		W.resource.new_weixin.RealtimeMessages.get({
+  			data: {
+  				filter_value: filter_value,
+  				count: 999999999
+  			},
+  			success: function(data){
+  				session_ids = [];
+  				for(var i = 0; i < data.items.length; i++) {
+  					session_ids.push(data.items[i].session_id);
+  				}
+  				W.resource.new_weixin.SignUnreadMessages.post({
+		  			data: {
+						sessionIds: JSON.stringify(session_ids)
+					},
+					success: function(data) {
+						W.showHint('success', '操作成功！');
+						$('[data-ui-role="advanced-table"]').data('view').reload();
+					},
+					error: function(resp) {
+						W.showHint('error', '操作失败！')
+					}
+		  		});
+  			},
+  			error: function(data){
+  				W.showHint('error', '操作失败！')
+  			}
+  		});
+  	});
 });
 </script>
 {% endblock %}
