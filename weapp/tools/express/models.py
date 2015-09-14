@@ -39,7 +39,7 @@ class ExpressHasOrderPushStatus(models.Model):
 	# 重新订阅的依据信息（当重推后，该两字段的信息，将被清空）
 	# abort_receive_at: 第一次接收 失败信息的时间
 	# abort_receive_message 第一次接收 "status":"abort"而且message中包含“3天”关键字的数据
-	abort_receive_at = models.DateTimeField(blank=True, verbose_name="接收信息时间")
+	abort_receive_at = models.DateTimeField(null=True, blank=True, verbose_name="接收信息时间")
 	abort_receive_message = models.TextField(verbose_name="接收的信息")
 
 	class Meta(object):
