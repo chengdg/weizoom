@@ -89,6 +89,7 @@
             {{if items.length}}
 	            {{each(i, message) items}}
 				<div class="xui-messages cb">
+                    {{if message.name == data.member.name}}
 					<div class="xui-messageWrap xui-recieved">
 						<div class="xui-i-wrapLeft">
 							<div class="imgBox disTc pr xui-i-imgBox fl">
@@ -113,6 +114,7 @@
 						</div>
 					</div>      
 					<div class="cb"></div>
+                    {{else}}
 					<div class="xui-messageWrap xui-send">
 						<div class="xui-i-wrapLeft">
 							<div class="xui-message pr xui-message-send ">
@@ -138,12 +140,13 @@
 						</div>
 					</div>      
 					<div class="cb"></div>
+                    {{/if}}
 				</div>
 				</div>
 
 				
 
-
+                <!--旧的消息格式
 				<tr class="xui-i-realmessage-tr" data-id="${message.id}">
 					<td class="wui-advanced-table-sort-handler tl_important" width="185">
 						<div class="disT w mt5">
@@ -202,6 +205,7 @@
 						</div>
 					</td>
 				</tr>
+                旧的消息格式-->
 				{{/each}}
             {{else}}
                 <tr><td colspan='7'>还没有数据</td></tr>

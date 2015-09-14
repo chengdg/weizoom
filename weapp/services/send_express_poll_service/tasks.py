@@ -9,6 +9,7 @@ __author__ = 'liupeiyu'
 from tools.express.models import ExpressHasOrderPushStatus
 from tools.express.express_poll import ExpressPoll
 from mall.models import Order
+from datetime import datetime
 
 from celery import task
 
@@ -21,18 +22,32 @@ def send_express_poll_request(request, args):
 	print "start"
 
 	count = 0
-	expresses = ExpressHasOrderPushStatus.objects.filter(send_count=0)
+	expresses = ExpressHasOrderPushStatus.objects.filter(receive_count=0)
 	for express in expresses:
+		if express.send_count >= 4:
+			# 发送超过4次，就不再重发
+			continue
+			
 		orders = Order.objects.filter(
 			express_company_name=express.express_company_name, 
 			express_number=express.express_number
 		)
+				
 		if orders.count() > 0:
 			order = orders[0]
+
+			if len(express.abort_receive_message) > 0:
+				now = datetime.now()
+				minute = (now - express.abort_receive_at).seconds/60
+				if minute > 20:
+					# 重发
+					print u'		again send express poll '
+					
 			is_success = ExpressPoll(order).get_express_poll()
 			if not is_success:
-				print u"failure send express poll express_id:{}, order_id:{}".format(express.id, order.id)
+				print u"!!!! error send express poll express_id:{}, order_id:{}".format(express.id, order.id)
 			else:
+				print u"success send express poll express_id:{}, order_id:{}".format(express.id, order.id)
 				count = count + 1
 
 	return u"OK send express length is {}".format(count)

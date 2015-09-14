@@ -4,6 +4,7 @@ __author__ = 'bert'
 # from __future__ import absolute_import
 import random
 import string
+import urllib2
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -22,12 +23,13 @@ from weixin.message.message import util as message_util
 # from weixin.message.message.models import Message
 # from weixin.message.qa.models import Rule
 from weixin2.models import Rule, Message, WeixinUser
-from weixin.user.models import WeixinMpUser
+from weixin.user.models import WeixinMpUser, get_mpuser_access_token_by_userid
 
 from weixin.statistics.models import increase_weixin_user_statistics, decrease_weixin_user_statistics
 
 from account import models as account_models
 from account.social_account import models as social_account_models
+from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 
 from celery import task
 
@@ -41,6 +43,7 @@ def _recorde_message(context):  #response_rule, from_weixin_user, is_from_simula
 	request, message, user_profile, member, response_rule, from_weixin_user, is_from_simulator = _get_info_from_context(context)
 	#先对收到的消息进行记录处理
 	session_info = None
+
 	if _should_record_message(is_from_simulator, request):
 		if message["msgType"] in [WeixinMessageTypes.VOICE, WeixinMessageTypes.IMAGE] or message["source"] == WeixinMessageTypes.TEXT:
 			session_info = get_or_create_messge(context, from_weixin_user)
@@ -49,6 +52,11 @@ def _recorde_message(context):  #response_rule, from_weixin_user, is_from_simula
 		Member.objects.filter(id=member.id).update(session_id = session_info['session'].id, last_message_id = session_info['receive_message'].id)
 	#最后记录自动回复的session history
 	record_session_info(session_info, response_rule)
+
+	#如果是声音消息 则语音转换
+	if session_info['receive_message']:
+		receive_message = session_info['receive_message']
+		upload_audio.delay(receive_message.id, user_profile.user_id)
 
 def _get_info_from_context(context):
 	request = context["request"]
@@ -225,3 +233,101 @@ def weixin_user_statistics(user_id, is_increse):
 @task
 def update_weixin_user(openid, is_subscribed):
 	WeixinUser.objects.filter(username=openid).update(is_subscribed=True)
+
+
+
+User_Agent = "Mozilla/5.0 (Windows NT 5.1; rv:23.0) Gecko/20100101 Firefox/23.0"
+Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+Accept_Language = "en-US,en;q=0.5"
+Accept_Encoding = "gzip, deflate"
+Connection = "keep-alive"
+DownloadfileUrlTmpl = "http://api.weixin.qq.com/cgi-bin/media/get?access_token={}&media_id={}"
+TEMP_WORK_DIR = "/weapp/web/weapp/static/audio/"
+MaxRetryTimes = 3
+
+
+@task(bind=True)
+def upload_audio(self, message_id, user_id):
+	message = Message.objects.get(id=message_id)
+	weixin_mp_user_access_token = get_mpuser_access_token_by_userid(user_id)
+	__download_voice(message, weixin_mp_user_access_token)
+
+
+def __build_weixin_request_operner():
+	opener = urllib2.build_opener()
+	
+	opener.addheaders.append(('User-Agent', User_Agent))
+	opener.addheaders.append(('Accept', Accept))
+	opener.addheaders.append(('Accept-Language', Accept_Language))
+	opener.addheaders.append(('Accept-Encoding', Accept_Encoding))
+	opener.addheaders.append(('Connection', Connection))
+
+	return opener
+
+def __download_voice(message, weixin_mp_user_access_token):
+
+	request_url = DownloadfileUrlTmpl.format(weixin_mp_user_access_token.access_token, message.media_id) 
+	#try:
+	message.audio_url = request_url
+	opener = __build_weixin_request_operner()
+	audio_content = None
+	for retryTimes in xrange(MaxRetryTimes):
+		try:
+			response = opener.open(request_url)
+			audio_content = response.read()
+			break
+		except:
+			#下载失败预警后重试三次
+			watchdog_notice(u"__download_voice, cause:\n{}".format(unicode_full_stack()))
+	print audio_content,'=============================23'		
+	if audio_content.find('errmsg') >= 0 or len(audio_content) == 0:
+		watchdog_notice(u"__download_voice, cause:\n{}, {}".format(unicode_full_stack()), audio_content)
+	else:
+		#3. 转换音频格式（amr->mp3）
+		mp3_url = _convert_amr_to_mp3(audio_content, message)
+		if mp3_url:
+			if mp3_url.find('/weapp/web/weapp') > -1:
+				mp3_url = mp3_url.replace('/weapp/web/weapp/','/')
+			message.audio_url = mp3_url
+			message.is_updated = True
+			message.save()
+
+def _save_amr_audio(audio_content, message):
+
+	if not os.path.exists(TEMP_WORK_DIR):
+		os.makedirs(TEMP_WORK_DIR)
+
+	path = os.path.join(TEMP_WORK_DIR, message.msg_id+'.amr')
+
+	audio_file = None
+	try:
+		audio_file = open(path, 'wb')
+		audio_file.write(audio_content)
+		audio_file.flush()
+		return path
+	finally:
+		if audio_file:
+			try:
+				audio_file.close()
+			except:
+				pass
+
+def _convert_amr_to_mp3(audio_content, message):
+	"""调用系统命令ffmpeg完成音频格式的转换"""
+
+	amr_audio_file = _save_amr_audio(audio_content, message)
+	mp3_audio_file_path = os.path.join(TEMP_WORK_DIR, message.msg_id+'.mp3')
+
+	cmd = "ffmpeg -i {} {}".format(amr_audio_file, mp3_audio_file_path)
+	cmd = "/usr/local/ffmpeg_2.4/bin/ffmpeg -i {} {}".format(amr_audio_file, mp3_audio_file_path)
+	output = None
+	try:
+		converter = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+		output = converter.communicate()[0]
+		if not os.path.exists(mp3_audio_file_path):
+			#raise Exception(u'没有找到转换后的mp3，确认ffmpeg操作正常')
+			return None
+	except:
+		watchdog_notice(u"调用系统命令ffmpeg完成音频格式的转换, cause:\n{}".format(unicode_full_stack()))
+
+	return mp3_audio_file_path
