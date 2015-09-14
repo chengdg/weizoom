@@ -32,7 +32,7 @@ class RealtimeMessagesDetail(resource.Resource):
     """
     app = 'new_weixin'
     resource = 'realtime_messages_detail'
-    
+
     @login_required
     def get(request):
         """
@@ -43,7 +43,7 @@ class RealtimeMessagesDetail(resource.Resource):
             could_replied = int(request.GET.get('replied', 0))
         except:
             could_replied = 0
-        
+
         try:
             session = Session.objects.get(id=session_id)
             session.unread_count = 0
@@ -61,7 +61,7 @@ class RealtimeMessagesDetail(resource.Resource):
                     could_replied = 0
         except:
             session = None
-        
+
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
@@ -71,9 +71,9 @@ class RealtimeMessagesDetail(resource.Resource):
             'could_replied': could_replied,
             'session':session
         })
-        
+
         return render_to_response('weixin/message/realtime_messages_detail.html', c)
-    
+
     @login_required
     @mp_required
     def api_get(request):
@@ -99,7 +99,7 @@ class RealtimeMessagesDetail(resource.Resource):
         }
 
         return response.get_response()
-    
+
     @login_required
     def api_post(request):
         """
@@ -141,7 +141,7 @@ class RealtimeMessagesDetail(resource.Resource):
         except:
             response = create_response(500)
             response.errMsg = u'修改用户基本资料失败'
-        
+
         return response.get_response()
 
 
@@ -163,10 +163,10 @@ def get_social_member(webapp_id, username):
         member['remark_name'] = social_member_info.name
         member['sex'] = social_member_info.sex
         member['phone'] = social_member_info.phone_number
-        
+
         fan_has_categories = FanHasCategory.objects.filter(fan=social_member)
         categories = FanCategory.objects.filter(webapp_id=webapp_id)
-        
+
         member_categories = []
         member_category = {}
         member_category['id'] = -1
@@ -177,11 +177,11 @@ def get_social_member(webapp_id, username):
             member_category['id'] = category.id
             member_category['name'] = category.name
             member_categories.append(member_category)
-            
+
         member['categories'] = member_categories
         if len(fan_has_categories) > 0:
             member['category_id'] = fan_has_categories[0].category_id
-        
+
         grades = MemberGrade.objects.filter(webapp_id=webapp_id)
         member_grades = []
         member_grade = {}
@@ -195,9 +195,9 @@ def get_social_member(webapp_id, username):
             member_grades.append(member_grade)
         member['grades'] = member_grades
         member['grade_id'] = social_member.grade_id
-        
+
         member['id'] = social_member.id
-        
+
         member['location'] = ''
         if social_member.country:
             member['location'] = social_member.country
@@ -208,7 +208,7 @@ def get_social_member(webapp_id, username):
         if member['location']:
             member['location'] = member['location'].strip()
         member['integral'] = social_member.integral
-        
+
         member['follow_created_at'] = social_member.created_at.strftime('%Y-%m-%d %H:%M:%S')
         member['last_buy_created_at'] = social_member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S')
         member['buy_times'] = social_member.pay_times
@@ -218,7 +218,7 @@ def get_social_member(webapp_id, username):
         member['is_subscribed'] = social_member.is_subscribed
     except:
         pass
-    
+
     return member
 
 
@@ -235,14 +235,14 @@ def get_social_member_dict(webapp_id, weixin_user_usernames):
         member_ids.append(member_id)
         if account2member.has_key(account_id):
            continue
-        account2member[account_id] = member_id 
+        account2member[account_id] = member_id
     members = Member.objects.filter(id__in=member_ids)
     id2member = {}
     for member in members:
         if id2member.has_key(member.id):
             continue
         id2member[member.id] = member
-    
+
     return username2weixin_account, account2member, id2member
 
 
@@ -254,7 +254,7 @@ def get_collect_message_dict(session_message_ids):
         if message2collect.has_key(message_id):
             return
         message2collect[message_id] = collect_message
-    
+
     return message2collect
 
 
@@ -263,10 +263,10 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
     mpuser = get_system_user_binded_mpuser(user)
     if mpuser is None:
         return []
-   
+
     messages = Message.objects.filter(mpuser=mpuser, session=session_id).order_by('-weixin_created_at', '-id')
     pageinfo, messages = paginator.paginate(messages, cur_page, count, query_string=query_string)
-    
+
     weixin_user_usernames = []
     for message in messages:
         weixin_user_usernames.append(message.from_weixin_user_username)
@@ -274,11 +274,11 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         break
     weixin_users = WeixinUser.objects.filter(username__in=weixin_user_usernames)
     username2weixin_user = dict([(u.username, u) for u in weixin_users])
-    
+
     #会员相关信息
     webapp_id = user_profile.webapp_id
     username2weixin_account, account2member, id2member = get_social_member_dict(webapp_id, weixin_user_usernames)
-    
+
     datetime_before = get_datetime_before_by_hour(DATETIME_BEFORE_HOURS)
 
     items = []
@@ -315,15 +315,15 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
                 one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
             else:
                 one_message['user_icon'] =  DEFAULT_ICON
-        
-        one_message['text'] = emotion.change_emotion_to_img(message.content)
+
+        one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         from_index = one_message['text'].find('<a href=')
         if from_index > -1:
             from_text = one_message['text'][0:from_index]
-            
+
             middle_index = one_message['text'][from_index:].find('>')
             remain_text = one_message['text'][from_index:middle_index] + ' target="_blank"' + one_message['text'][middle_index:]
-            
+
             one_message['text'] = from_text + remain_text
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -355,9 +355,9 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         one_message['material_id'] = message.material_id
 
         message_ids.append(message.id)
-        
+
         items.append(one_message)
-        
+
         try:
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
@@ -366,13 +366,13 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
                 one_message['member_id'] = member.id
         except:
             one_message['member_id'] = ''
-        
+
     #会员相关信息
     webapp_id = user_profile.webapp_id
     member = get_social_member(webapp_id, sender_username)
     member['name'] = name
     member['could_replied'] = replied
-    
+
     member_info = None
     if member and member.has_key('id'):
         member_id =  member['id']
@@ -380,7 +380,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         member_info = get_member_info_by(member_id)
     member["member_info"] = member_info
 
-    
+
     #星标消息
     message2collect = get_collect_message_dict(message_ids)
     for one_message in items:
@@ -392,7 +392,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
                 one_message['is_collected'] = False
         except:
             one_message['is_collected'] = False
- 
+
         try:
             msginfo = MessageRemarkMessage.objects.filter(status=1).all()
             for msg in msginfo:
