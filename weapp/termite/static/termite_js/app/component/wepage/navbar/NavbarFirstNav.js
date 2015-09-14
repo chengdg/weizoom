@@ -85,7 +85,8 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
         if (W.WEAPAGE_NAVBARTYPE == 'slide') {
             this.setLimitation({
                 titleMaxLength: 10
-            })
+            });
+            this.propertyViewTitle = '一级分类';
         }
     }
 });
