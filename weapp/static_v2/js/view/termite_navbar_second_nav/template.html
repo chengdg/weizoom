@@ -1,5 +1,9 @@
 <script id="termite-navbar-secondnav-tmpl" type="text/x-handlebar-tmpl">
+	{{#ifCond navbarType '===' "weixin"}}
 	<div class="xui-navbar-secondnav-title">二级菜单</div>
+	{{else}}
+	<div class="xui-navbar-secondnav-title">二级分类</div>
+	{{/ifCond}}
 	<div class="xui-navbar-secondnav-navs xa-navbar-secondnav-navs">
 		
 	</div>
