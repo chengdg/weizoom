@@ -118,6 +118,10 @@
     padding:10px 10px 0px 10px;
     clear: both;
 }
+.xui-weixin-realtimeMessagePage .xui-message .xui-i-remark-text {
+    color: #f39800;
+    cursor: text !important;
+}
 .xui-weixin-realtimeMessagePage .xui-messageWrap {
 }
 .xui-weixin-realtimeMessagePage .xui-recieved {
@@ -127,7 +131,7 @@
     float: right;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft {
-   width: 165px;
+   width: 160px;
    float: left;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft  p {
@@ -144,9 +148,15 @@
 
 }
 .xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight {
-    width: 190px;
+    width: 160px;
     float: right;
     line-height: 50px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight p{
+    width: 80px;
+    text-align: right;
+
 }
 
 
