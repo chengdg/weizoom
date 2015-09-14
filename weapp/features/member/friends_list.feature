@@ -238,7 +238,7 @@ Background:
 		| 今天 | bill13   | 购买  | jobs      | 商品1,1 | 支付    | 支付宝         | 10      |    100   | 		   |        | 110         |              | 110    | 0      | 0    | jobs,退款       |  退款中         |
 		| 今天 | bill13   | 购买  | jobs      | 商品1,1 | 支付    | 货到付款       | 10      |    100   | 		   |        | 110         |              | 0      | 0      | 110  | jobs,完成退款   |  退款成功       |
 
-@member @memberList @wll
+@mall2 @member @memberList
 Scenario:1 会员的好友列表和推荐关注列表
 
 	Given jobs登录系统
@@ -286,7 +286,7 @@ Scenario:1 会员的好友列表和推荐关注列表
 		|  bill2   |    0      |     0      | 直接关注 |             |      今天      |
 		|  bill1   |    0      |     50     | 会员分享 |    bill     |      今天      |
 
-@member @memberList
+@mall2 @member @memberList
 Scenario:2 会员的好友列表和推荐关注列表分页
 
 	Given jobs登录系统
