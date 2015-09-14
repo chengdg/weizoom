@@ -154,6 +154,10 @@ def get_result(id,member_id):
 				select_values.append(select_value)
 			values = select_values
 		result['values'] = values
+
+		if title_type == 'appkit.uploadimg':
+			print member_survey_termite[title]['value']
+			result['att_urls'] = member_survey_termite[title]['value']
 		result_list.append(result)
 
 
