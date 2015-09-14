@@ -261,11 +261,11 @@ def save_order(request):
 		})
 		event_handler_util.handle(request, 'post_save_order')
 
-		mall_api.create_mall_order_from_shared(request, order.id)
-		# try:
-			
-		# except Exception, e:
-		# 	raise e
+		
+		try:
+			mall_api.create_mall_order_from_shared(request, order.id)	
+		except:
+			pass
 
 	except Exception, e:
 		stack = unicode_full_stack()
