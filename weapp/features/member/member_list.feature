@@ -26,7 +26,7 @@ Background:
 			"shop_discount": "1"
 		},{
 			"name": "金牌会员",
-			"upgrade": "自动升级",
+			"upgrade": "手动升级",
 			"shop_discount": "9.8"
 		}]
 		"""
@@ -53,6 +53,7 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
+
 @mall2 @crm @member 
 Scenario: 微信用户关注公众号成为会员
 	微信用户关注jobs公众号成为jobs的会员
@@ -311,7 +312,7 @@ Scenario: 微信用户关注公众号成为会员
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
@@ -339,7 +340,7 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 		[{
 			"name": "tom1",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
@@ -372,7 +373,7 @@ Scenario: 微信用户关注公众号成为会员
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
@@ -390,7 +391,7 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 		[{
 			"name": "tom1",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,

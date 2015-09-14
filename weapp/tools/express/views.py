@@ -15,6 +15,7 @@ from handle_express_callback import ExpressCallbackHandle
 from django.conf import settings
 import urllib, urllib2
 import models as express_models
+import mall.models as mall_models
 
 EXPRESS_TYPE = 'EXPRESS_API'
 
@@ -52,7 +53,8 @@ def test_analog_push_data(request):
 	order_id = request.GET.get('order_id', 2)
 	is_finish = request.GET.get('is_finish', 'error')
 	version = request.GET.get('v', '1')
-	if version == 2:
+	if version == '2.0':
+		order = mall_models.Order.objects.get(id=order_id)
 		express = express_models.ExpressHasOrderPushStatus.get_by_order(order)
 		order_id = express.id
 
@@ -93,11 +95,17 @@ def test_analog_push_data(request):
 		param_json['lastResult']['state'] = "3"
 		param_json['lastResult']['data'].insert(0, {"context": "本人已签收", "time": "2012-08-30 16:52:02", "ftime": "2012-08-30 16:52:02"})
 
+	if is_finish == 'abort':
+		param_json['status'] = "abort"
+		param_json['message'] = u"3天查询无记录"
+		param_json['lastResult']['data'] = []
+		param_json['lastResult']['message'] = u"快递公司参数异常：单号不存在或者已经过期"		
+
 	# 将PARAMETERS的json转换为字符串
 	param_str = json.dumps(param_json)
-	print '-------------------------------------------'
-	print api_url
-	print param_str
+	# print '-------------------------------------------'
+	# print api_url
+	# print param_str
 	json_data = {
 		"param": param_str
 	}
