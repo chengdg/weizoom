@@ -80,6 +80,11 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
         W.component.getFieldsByType('wepage.navbar_firstnav')[0].maxLength = args.titleMaxLength;
     },
 
+    updateViewTitle: function(args) {
+        this.propertyViewTitle = args.propertyViewTitle;
+        W.component.TYPE2COMPONENT[this.type].prototype.propertyViewTitle = this.propertyViewTitle;
+    },
+
     initialize: function(obj) {
         this.super('initialize', obj);
         if (W.WEAPAGE_NAVBARTYPE == 'slide') {
@@ -87,6 +92,10 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
                 titleMaxLength: 10
             });
             this.propertyViewTitle = '一级分类';
+        }else{
+            this.propertyViewTitle = '一级菜单';
         }
+
+        W.component.TYPE2COMPONENT[this.type].prototype.propertyViewTitle = this.propertyViewTitle;
     }
 });
