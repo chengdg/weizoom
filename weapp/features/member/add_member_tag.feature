@@ -17,7 +17,7 @@ Scenario: 添加会员分组
 	Jobs添加多组"会员分组"后，"会员分组列表"会按照添加的顺序正序排列
 
 	Given jobs登录系统
-	
+
 	When jobs添加会员分组
 		"""
 		{
@@ -46,7 +46,10 @@ Scenario: 添加会员分组
 	Given bill登录系统
 	Then bill能获取会员分组列表
 		"""
-		[]
+		[{
+			"name": "未分组",
+			"group_membership":0
+		}]
 		"""
 
 

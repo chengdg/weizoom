@@ -615,7 +615,8 @@ def batch_update_tag(request):
 		post_ids = post_ids.split('-')
 	tag = MemberTag.objects.get(id=tag_id)
 	if tag.webapp_id == webapp_id and post_ids:
-		MemberHasTag.add_members_tag(tag_id, post_ids)
+		default_tag_id = MemberTag.get_default_tag(webapp_id).id
+		MemberHasTag.add_members_tag(default_tag_id, tag_id, post_ids)
 
 	response = create_response(200)
 	return response.get_response()

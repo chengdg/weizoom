@@ -40,13 +40,31 @@ STATUS_UNREPLY = 1
 STATUS_REMARK = 2
 STATUS_COLLECT = 3
 
+class SignUnreadMessages(resource.Resource):
+    """
+    标记消息为已读
+    """
+    app = 'new_weixin'
+    resource = 'sign_unread_message'
+
+    @login_required
+    def api_post(request):
+        try:
+            response = create_response(200)
+            session_ids = json.loads(request.POST['sessionIds'])
+            Session.objects.filter(id__in=session_ids).update(unread_count=0)
+            return response.get_response()
+        except:
+            response = create_response(500)
+            return response.get_response()
+
 class RealtimeMessages(resource.Resource):
     """
-            实时消息
+    实时消息
     """
     app = 'new_weixin'
     resource = 'realtime_messages'
-    
+
     @login_required
     @mp_required
     def get(request):
@@ -60,9 +78,9 @@ class RealtimeMessages(resource.Resource):
             'second_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
             'status': status
         })
-        
+
         return render_to_response('weixin/message/realtime_messages.html', c)
-    
+
     @login_required
     @mp_required
     def api_get(request):
@@ -144,7 +162,7 @@ class RealtimeMessages(resource.Resource):
         material_id = request.POST['material_id']
         type = request.POST['type']
         openid_sendto = request.POST['openid']
-    
+
         mpuser = get_system_user_binded_mpuser(request.user)
         if mpuser is None:
             response = create_response(500)
@@ -165,7 +183,7 @@ class RealtimeMessages(resource.Resource):
                             newses = weixin_module_api.get_material_news_info(material_id)
                             articles = weixin_module_api.get_articles_object(newses)
                             custom_message = NewsCustomMessage(articles)
-                        
+
                         _send_custom_message(mpuser, openid_sendto, custom_message)
                         response = create_response(200)
                     else:
@@ -182,13 +200,13 @@ class RealtimeMessages(resource.Resource):
             except:
                 response = create_response(500)
                 response.errMsg = u'发送消息失败'
-                response.innerErrMsg = unicode_full_stack()    
-        
+                response.innerErrMsg = unicode_full_stack()
+
         error_msg = u'weixin reply, stage:[weixin reply], result:\n{}'.format(response.get_response())
         watchdog_info(error_msg)
-        
+
         return response.get_response()
-    
+
     @login_required
     @mp_required
     def api_post(request):
@@ -199,38 +217,38 @@ class RealtimeMessages(resource.Resource):
         content = request.POST['content']
         receiver_username = request.POST['receiver_username']
         material_id = request.POST['material_id']
-        
+
         mpuser = get_system_user_binded_mpuser(request.user)
         if mpuser is None:
             response = create_response(500)
             response.errMsg = u'请先进行公众号的绑定'
-        
+
         message = Message.objects.create(
-            mpuser=mpuser, 
-            session_id=session_id, 
-            from_weixin_user_username=mpuser.username, 
-            to_weixin_user_username=receiver_username, 
-            content=content, 
+            mpuser=mpuser,
+            session_id=session_id,
+            from_weixin_user_username=mpuser.username,
+            to_weixin_user_username=receiver_username,
+            content=content,
             material_id=material_id,
             is_reply=True
         )
         latest_contact_created_at = datetime.today()
-        Session.objects.filter(id=session_id).update(latest_contact_content=content, latest_contact_created_at=datetime.today(), 
+        Session.objects.filter(id=session_id).update(latest_contact_content=content, latest_contact_created_at=datetime.today(),
                                                      is_latest_contact_by_viper=True, unread_count=0, is_replied=True, message_id=message.id)
         response = create_response(200)
         data = {}
         data['created_at'] = latest_contact_created_at.strftime('%Y-%m-%d %H:%M:%S')
-        
+
         data['text'] = emotion.change_emotion_to_img(content)
         from_index = data['text'].find('<a href=')
         if from_index > -1:
             from_text = data['text'][0:from_index]
-            
+
             middle_index = data['text'][from_index:].find('>')
             remain_text = data['text'][from_index:middle_index] + ' target="_blank"' + data['text'][middle_index:]
-            
+
             data['text'] = from_text + remain_text
-        
+
         if material_id and int(material_id) > 0:
             newses = list(News.objects.filter(material_id=message.material_id))
             if len(newses) > 0:
@@ -244,9 +262,9 @@ class RealtimeMessages(resource.Resource):
         else:
             data['news_title'] = ''
         data['material_id'] = message.material_id
-        
+
         response.data = data
-        
+
         return response.get_response()
 
 
@@ -263,14 +281,14 @@ def get_social_member_dict(webapp_id, weixin_user_usernames):
         member_ids.append(member_id)
         if account2member.has_key(account_id):
            continue
-        account2member[account_id] = member_id 
+        account2member[account_id] = member_id
     members = Member.objects.filter(id__in=member_ids)
     id2member = {}
     for member in members:
         if id2member.has_key(member.id):
             continue
         id2member[member.id] = member
-    
+
     return username2weixin_account, account2member, id2member
 
 def get_weixin_user_names_from(webapp_id,weixin_user_usernames, tag_id, grade_id, nick_name):
@@ -300,7 +318,7 @@ def get_collect_message_dict(session_message_ids):
         if message2collect.has_key(message_id):
             return
         message2collect[message_id] = collect_message
-    
+
     return message2collect
 
 #获取微信session
@@ -328,7 +346,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
     weixin_user_usernames = [s.weixin_user_id for s in sessions]
     weixin_users = WeixinUser.objects.filter(username__in=weixin_user_usernames)
     username2weixin_user = dict([(u.username, u) for u in weixin_users])
-    
+
     #会员相关信息
     webapp_id = user_profile.webapp_id
     username2weixin_account, account2member, id2member = get_social_member_dict(webapp_id, weixin_user_usernames)
@@ -338,7 +356,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
     msgid2remark = {}
     for msg in msginfo:
         msgid2remark[msg.message_id] = msg.message_remark
-    
+
     items = []
     session_message_ids = []
     for session in sessions:
@@ -357,10 +375,10 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
         from_index = one_session['text'].find('<a href=')
         if from_index > -1:
             from_text = one_session['text'][0:from_index]
-            
+
             middle_index = one_session['text'][from_index:].find('>')
             remain_text = one_session['text'][from_index:middle_index] + ' target="_blank"' + one_session['text'][middle_index:]
-            
+
             one_session['text'] = from_text + remain_text
         try:
             latest_contact_created_at = session.latest_contact_created_at
@@ -382,7 +400,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             one_session['latest_reply_at'] = reply_message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
         except:
             one_session['latest_reply_at'] = ''
-        
+
         try:
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
@@ -394,7 +412,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
                     one_session['could_replied'] = 0
         except:
             one_session['member_id'] = ''
-        
+
         items.append(one_session)
     #星标消息
     message2collect = get_collect_message_dict(session_message_ids)
@@ -409,7 +427,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
                 one_session['message_type'] = message.message_type
                 one_session['pic_url'] = message.pic_url
                 one_session['audio_url'] = message.audio_url
-                
+
                 if message.is_news_type:
                     newses = list(News.objects.filter(material_id=message.material_id))
                     if len(newses) > 0:
@@ -417,7 +435,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
                         news_title = news.title
                         if len(news_title) > 21:
                             news_title = news.title[0:18] + '...'
-        
+
                         one_session['news_title'] = news_title
                 else:
                     one_session['news_title'] = ''
@@ -431,7 +449,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             one_session['message_type'] = 'text'
             one_session['pic_url'] = ''
             one_session['audio_url'] = ''
-        
+
         try:
             if message2collect.has_key(session_message_id):
                 one_session['is_collected'] = message2collect[session_message_id].status
@@ -439,12 +457,12 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
                 one_session['is_collected'] = False
         except:
             one_session['is_collected'] = False
-            
+
         if msgid2remark.has_key(session_message_id):
             one_session['remark'] = msgid2remark[session_message_id]
         else:
             one_session['remark'] = ''
-        
+
     return pageinfo, items
 
 
@@ -453,7 +471,7 @@ def get_messages_from_messages(user, user_profile, cur_page, count, content=None
     mpuser = get_system_user_binded_mpuser(user)
     if mpuser is None:
         return []
-    
+
     messages = Message.objects.filter(mpuser=mpuser)
     if content:
         messages = messages.filter(content__contains=content)
@@ -471,7 +489,7 @@ def get_messages_from_collected(user, user_profile, cur_page, count, query_strin
     collected_ids = CollectMessage.get_message_ids(user)
     messages = Message.objects.filter(id__in=collected_ids)
     pageinfo, messages = paginator.paginate(messages, cur_page, count, query_string=query_string)
-    
+
     return pageinfo, get_message_detail_items(user, user_profile.webapp_id, messages)
 
 
@@ -480,7 +498,7 @@ def get_messages_from_remarked(user, user_profile, cur_page, count, query_string
     collected_ids = MessageRemarkMessage.get_message_ids(user)
     messages = Message.objects.filter(id__in=collected_ids)
     pageinfo, messages = paginator.paginate(messages, cur_page, count, query_string=query_string)
-    
+
     return pageinfo, get_message_detail_items(user, user_profile.webapp_id, messages)
 
 
@@ -489,7 +507,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
     weixin_user_usernames = [m.from_weixin_user_username for m in messages]
     weixin_users = WeixinUser.objects.filter(username__in=weixin_user_usernames)
     username2weixin_user = dict([(u.username, u) for u in weixin_users])
-    
+
     #会员相关信息
     username2weixin_account, account2member, id2member = get_social_member_dict(webapp_id, weixin_user_usernames)
 
@@ -531,7 +549,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         one_message['message_id'] = message.id
         one_message['sender_username'] = weixin_user.username
         one_message['name'] = weixin_user.nickname_for_html
-        
+
         one_message['text'] = emotion.change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -556,7 +574,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             one_message['remark'] = msgid2remark[message.id]
         else:
             one_message['remark'] = ''
-            
+
         if message.is_news_type:
             newses = list(News.objects.filter(material_id=message.material_id))
             if len(newses) > 0:
@@ -577,7 +595,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         except:
             one_message['latest_reply_at'] = ''
         message_ids.append(message.id)
-        
+
         try:
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
@@ -600,7 +618,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['user_icon'] = DEFAULT_ICON
 
         items.append(one_message)
-        
+
     #星标消息
     message2collect = get_collect_message_dict(message_ids)
     for one_message in items:
@@ -612,7 +630,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['is_collected'] = False
         except:
             one_message['is_collected'] = False
-    
+
     return items
 
 

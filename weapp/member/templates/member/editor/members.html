@@ -91,7 +91,7 @@
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
 						   			{% if tag.name != '未分组' %}
-							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
@@ -208,7 +208,7 @@
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
 						   			{% if tag.name != '未分组' %}
-							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
 							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
