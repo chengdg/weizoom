@@ -583,3 +583,29 @@ p.wui-i-start_time,p.wui-i-end_time{
 .notweixin-lottery_active{
 	background-color: #8d00ab !important;
 }
+
+/**
+ * 上传图片UploadImg样式
+ */
+.wui-UploadImg {
+	padding: 15px 20px 0px 20px;
+}
+.wui-UploadImg .wui-i-title {
+	color: #333;
+	margin-bottom: 10px;
+	font-size: 20px;
+	font-weight: bold;
+	border-left: solid 8px #1AA2F8;
+	padding-left: 10px;
+}
+.wui-UploadImg .wui-i-mandatory {
+	color: #CDCDCD;
+}
+.wui-i-uploadimg{
+	background: url("/static_v2/img/termite2/uploadimg.png");
+	background-repeat: no-repeat;
+	min-height: 60px;
+}
+.wui-i-uploadimg p{
+	color: #999;
+}
