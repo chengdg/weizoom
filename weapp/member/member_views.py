@@ -98,13 +98,16 @@ def list_tags(request):
 		return render_to_response('member/editor/member_tags.html', c)
 	else:
 		member_tag_ids = [member_tag.id for member_tag in member_tags]
+		for tag in member_tags:
+			print tag, "0000"
+		print member_tag_ids, "11111"
 		id_values = {}
 		for key, value in request.POST.dict().items():
 			id = key.split('_')[2]
 			id_values[int(id)] = value
 		for id in id_values.keys():
 			value = id_values[id]
-
+			print value
 			#不能添加和更新名为‘未分组’的组名
 			if value != '未分组':
 				if MemberTag.objects.filter(id=id, webapp_id=webapp_id).count() > 0:
