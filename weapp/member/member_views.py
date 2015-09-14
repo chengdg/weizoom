@@ -99,7 +99,7 @@ def list_tags(request):
 	else:
 		member_tag_ids = [member_tag.id for member_tag in member_tags]
 		for tag in member_tags:
-			print tag, "0000"
+			print tag.name, "0000"
 		print member_tag_ids, "11111"
 		id_values = {}
 		for key, value in request.POST.dict().items():
@@ -117,11 +117,14 @@ def list_tags(request):
 		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
 		if default_tag_id in delete_ids:
 			delete_ids.remove(default_tag_id)
+		print default_tag_id, "2222"
 		members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
 		MemberTag.objects.filter(id__in=delete_ids).delete()
 		for m in members:
 			if MemberHasTag.objects.filter(member=m).count() == 0:
 				MemberHasTag.objects.create(member=m, member_tag_id=default_tag_id)
+		for tag in MemberTag.objects.filter(webapp_id=webapp_id):
+			print tag.name, "333"
 		return HttpResponseRedirect('/member/member_tags/get/')
 
 
