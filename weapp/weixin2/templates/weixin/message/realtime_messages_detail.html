@@ -118,10 +118,11 @@
                             </a>
 								</div>
 								<div class="xui-message-content">
-									<p>{{html message.text}}</p>
-                                    {{if message.remark}}
-                                    备注：<span class="xui-i-remark-text xa-i-remark-text">${message.remark}</span>
-                                    {{/if}}
+									<p>{{html message.text}}
+										{{if message.remark}}
+	                                    <br/><span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
+	                                    {{/if}}
+									</p>
 								</div>
 							</div>
 						</div>
@@ -150,10 +151,11 @@
                                     </a>
 								</div>
 								<div class="xui-message-content">
-									<p>{{html message.text}}</p>
-                                    {{if message.remark}}
-                                    备注：<span class="xui-i-remark-text xa-i-remark-text">${message.remark}</span>
-                                    {{/if}}
+                                    <p>{{html message.text}}
+										{{if message.remark}}
+	                                    <br/><span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
+	                                    {{/if}}
+									</p>
 								</div>
 							</div>
 						</div>
