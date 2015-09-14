@@ -285,7 +285,6 @@ def __download_voice(message, weixin_mp_user_access_token):
 		except:
 			#下载失败预警后重试三次
 			watchdog_error(u"__download_voice, cause:\n{}".format(unicode_full_stack()))
-	print audio_content,'=============================23'		
 	if audio_content.find('errmsg') >= 0 or len(audio_content) == 0:
 		watchdog_error(u"__download_voice, cause:\n{}, {}".format(unicode_full_stack()), audio_content)
 	else:
