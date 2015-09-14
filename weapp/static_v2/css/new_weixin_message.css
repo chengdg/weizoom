@@ -135,7 +135,7 @@
    float: left;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft  p {
-    line-height: 50px;
+    line-height: 60px;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
     width: 350px;
@@ -150,7 +150,7 @@
 .xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight {
     width: 160px;
     float: right;
-    line-height: 50px;
+    line-height: 60px;
 }
 
 .xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight p{
