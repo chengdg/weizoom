@@ -404,7 +404,7 @@ def new_change_emotion_to_img(content):
 		for i in range(1, 10):
 			emotion_title = content[pos+1:pos+1+i]
 			if emotion_title in TITLE2EMOTION:
-				emotion_png = '<img class="emoji_append" src="../img/weixin/%s" />' % TITLE2EMOTION[emotion_title]
+				emotion_png = '<img class="emoji_append" src="/static_v2/img/weixin/%s" />' % TITLE2EMOTION[emotion_title]
 				items.append(content[:pos])
 				items.append(emotion_png)
 				content = content[pos+1+i:]
