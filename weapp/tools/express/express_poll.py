@@ -152,6 +152,11 @@ class ExpressPoll(object):
 					)
 			if pushs.count() > 0:
 				push = pushs[0]
+
+				# 超过4次发送就不再发送次快递
+				if push.send_count >= 4:
+					return True
+					
 				# 关闭，重发订阅
 				if len(push.abort_receive_message) > 0:
 					import json
