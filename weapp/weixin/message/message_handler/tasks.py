@@ -54,7 +54,7 @@ def _recorde_message(context):  #response_rule, from_weixin_user, is_from_simula
 	record_session_info(session_info, response_rule)
 
 	#如果是声音消息 则语音转换
-	if session_info['receive_message']:
+	if session_info['receive_message'] and message["msgType"] == WeixinMessageTypes.VOICE:
 		receive_message = session_info['receive_message']
 		upload_audio.delay(receive_message.id, user_profile.user_id)
 
@@ -278,10 +278,10 @@ def __download_voice(message, weixin_mp_user_access_token):
 			break
 		except:
 			#下载失败预警后重试三次
-			watchdog_notice(u"__download_voice, cause:\n{}".format(unicode_full_stack()))
+			watchdog_error(u"__download_voice, cause:\n{}".format(unicode_full_stack()))
 	print audio_content,'=============================23'		
 	if audio_content.find('errmsg') >= 0 or len(audio_content) == 0:
-		watchdog_notice(u"__download_voice, cause:\n{}, {}".format(unicode_full_stack()), audio_content)
+		watchdog_error(u"__download_voice, cause:\n{}, {}".format(unicode_full_stack()), audio_content)
 	else:
 		#3. 转换音频格式（amr->mp3）
 		mp3_url = _convert_amr_to_mp3(audio_content, message)
@@ -328,6 +328,6 @@ def _convert_amr_to_mp3(audio_content, message):
 			#raise Exception(u'没有找到转换后的mp3，确认ffmpeg操作正常')
 			return None
 	except:
-		watchdog_notice(u"调用系统命令ffmpeg完成音频格式的转换, cause:\n{}".format(unicode_full_stack()))
+		watchdog_error(u"调用系统命令ffmpeg完成音频格式的转换, cause:\n{}".format(unicode_full_stack()))
 
 	return mp3_audio_file_path
