@@ -14,6 +14,8 @@ from django.shortcuts import render_to_response, render
 from django.contrib.auth.models import User
 from django.contrib import auth
 
+from account.views import save_base64_img_file_local_for_webapp
+
 #===============================================================================
 # __get_fields_to_be_save : 获得待存储的数据
 #===============================================================================
@@ -35,4 +37,12 @@ def get_fields_to_be_save(request):
 
 	if 'termite_data' in fields:
 		fields['termite_data'] = json.loads(fields['termite_data'])
+
+	if 'uploadImg' in request.POST:
+		att_url = []
+		fields['uploadImg'] = json.loads(fields['uploadImg'])
+		for picture in fields['uploadImg']:
+			att_url.append(save_base64_img_file_local_for_webapp(request, picture))
+			fields['att_url'] = att_url
+		print fields['att_url']
 	return fields

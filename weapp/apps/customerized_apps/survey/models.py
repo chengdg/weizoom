@@ -11,6 +11,7 @@ class surveyParticipance(models.Document):
 	tel = models.StringField(default="", max_length=100)
 	termite_data = models.DynamicField(default="") #termite数据
 	prize = models.DynamicField(default="") #活动奖励
+	att_url = models.DynamicField(default="") #调研图片地址
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {

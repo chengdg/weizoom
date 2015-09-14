@@ -53,18 +53,13 @@
 <script type="text/javascript">
 	W.pageId = "{{request.GET.page_id}}";
 	$(document).ready(function() {
-		var picture_list = [];
-		$('.xui-uploadImage img').each(function(){
-           if($(this).attr('src').indexOf('data:image') != -1){picture_list.push($(this).attr('src'))}
-        });
-		console.log('1111');
-		console.log(picture_list);
 		$('.xa-join').click(function(event) {
 			event.stopPropagation();
 			event.preventDefault();
 			var $link = $(event.currentTarget);
 			var id = $link.attr('data-id');
 			var tel = $.trim($('[name="tel"]').val());
+
 			W.getApi().call({
 				app: 'm/apps/survey',
 				resource: 'survey_participance',

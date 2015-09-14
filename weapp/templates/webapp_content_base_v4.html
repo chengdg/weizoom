@@ -521,6 +521,14 @@
                                 'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}&isMember={{ isMember }}'
                             }]);
                         }
+                        var $uploadImg = $('.wui-UploadImg');
+                        if ($uploadImg.length > 0) {
+                            var picture_list = [];
+                            $('.xui-uploadImage img').each(function(){
+                               if($(this).attr('src').indexOf('data:image') != -1){picture_list.push($(this).attr('src'))}
+                            });
+                            participanceData['uploadImg'] = JSON.stringify(picture_list);
+                        }
                         //必须关注才可以参与的活动
                         if (W.permission == 'member') {
                             if (W.isMember == true) {
