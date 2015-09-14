@@ -392,7 +392,10 @@ def change_img_to_emotion(content):
 #############################################################################
 # new_change_emotion_to_img:(mui版本适用) 将内容中的表情转换为图片
 #############################################################################
+from core.emojicons_util import encode_emojicons_for_html
+
 def new_change_emotion_to_img(content):
+	content = encode_emojicons_for_html(content)
 	beg = 0
 	items = []
 	while True:
