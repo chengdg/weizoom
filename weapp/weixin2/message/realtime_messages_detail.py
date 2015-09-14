@@ -15,7 +15,7 @@ from core.dateutil import get_datetime_before_by_hour, get_datetime_from_timesta
 #from core.exceptionutil import unicode_full_stack
 
 from weixin.mp_decorators import mp_required
-from weixin.user.module_api import get_mp_head_img
+from weixin.user.module_api import get_mp_head_img, get_mp_nick_name
 from weixin2 import export
 from weixin2.models import *
 
@@ -303,10 +303,13 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         one_message['name'] = weixin_user.nickname_for_html
         if message.is_reply:
             head_img = get_mp_head_img(user.id)
+            mp_username = get_mp_nick_name(user.id)
+            one_message['mp_username'] = mp_username
             if head_img:
                 one_message['user_icon'] = head_img
             else:
                 one_message['user_icon'] = DEFAULT_ICON
+
         else:
             if weixin_user.weixin_user_icon:
                 one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON

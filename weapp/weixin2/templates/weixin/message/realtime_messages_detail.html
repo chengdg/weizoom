@@ -95,7 +95,7 @@
 							<div class="imgBox disTc pr xui-i-imgBox fl">
 							<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
 							</div>
-							<span class="ml10 mr20">{{html message.name}}</span>
+							<p class="pl10 mr20 xui-ellipsis-1">{{html message.name}}</p>
 						</div>
 						<div class="xui-i-wrapRight">
 							<div class="xui-message pr xui-message-recieved ">
@@ -119,6 +119,9 @@
 								</div>
 								<div class="xui-message-content">
 									<p>{{html message.text}}</p>
+                                    {{if message.remark}}
+                                    备注：<span class="xui-i-remark-text xa-i-remark-text">${message.remark}</span>
+                                    {{/if}}
 								</div>
 							</div>
 						</div>
@@ -148,11 +151,14 @@
 								</div>
 								<div class="xui-message-content">
 									<p>{{html message.text}}</p>
+                                    {{if message.remark}}
+                                    备注：<span class="xui-i-remark-text xa-i-remark-text">${message.remark}</span>
+                                    {{/if}}
 								</div>
 							</div>
 						</div>
 						<div class="xui-i-wrapRight">
-							<span class="ml20 mr10">fsdfsdfdsfsdf</span>
+							<p class="pl20 fl mr20 xui-ellipsis-1">{{html message.mp_username}}</p>
 							<div class="imgBox disTc pr xui-i-imgBox fr">
 							<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
 							</div>
@@ -166,7 +172,7 @@
 
 				
 
-                <!--旧的消息格式
+               
 				<tr class="xui-i-realmessage-tr" data-id="${message.id}">
 					<td class="wui-advanced-table-sort-handler tl_important" width="185">
 						<div class="disT w mt5">
@@ -225,7 +231,7 @@
 						</div>
 					</td>
 				</tr>
-                旧的消息格式-->
+               
 				{{/each}}
             {{else}}
                 <tr><td colspan='7'>还没有数据</td></tr>
