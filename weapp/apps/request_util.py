@@ -36,13 +36,19 @@ def get_fields_to_be_save(request):
 		fields['prize'] = json.loads(fields['prize'])
 
 	if 'termite_data' in fields:
+		# sample_tm = fields['termite_data']
+		# for item in sample_tm:
+		# 	if sample_tm[item]['type']=='appkit.uploadimg':
+		# 		print '22222'
+		# for item in fields['termite_data']:
+		# print fields['termite_data']['type']
+				# print '2222'
 		fields['termite_data'] = json.loads(fields['termite_data'])
 
-	if 'uploadImg' in request.POST:
-		att_url = []
-		fields['uploadImg'] = json.loads(fields['uploadImg'])
-		for picture in fields['uploadImg']:
-			att_url.append(save_base64_img_file_local_for_webapp(request, picture))
-			fields['att_url'] = att_url
-		print fields['att_url']
+	# if 'uploadImg' in request.POST:
+	# 	att_url = []
+	# 	fields['uploadImg'] = json.loads(fields['uploadImg'])
+	# 	for picture in fields['uploadImg']:
+	# 		att_url.append(save_base64_img_file_local_for_webapp(request, picture))
+	# 	fields['att_url'] = att_url
 	return fields
