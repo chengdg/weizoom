@@ -39,6 +39,7 @@
 		data-disable-header-select="true"
 		data-outer-selecter='.xa-selectAll'
 		class="panel-body"
+		data-selecttable-tr='xa-selectTr'
 	></div>
 		<div style="height:30px;"></div>
 		<div class="xui-batchbtn">
@@ -94,8 +95,8 @@
 		<tbody id='product_list'>
             {{if items.length}}
 	            {{each(i, product) items}}
-				<tr data-id="${product.id}">
-					<td class="wui-advanced-table-sort-handler tl_important">
+				<tr data-id="${product.id}" class="xa-selectTr">
+					<td class="wui-advanced-table-sort-handler tl_important ">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">
 								<a href="/mall2/product/?id=${product.id}">
