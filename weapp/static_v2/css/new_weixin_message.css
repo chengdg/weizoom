@@ -98,6 +98,70 @@
     cursor: pointer;
 }
 
+.xui-weixin-realtimeMessagePage .xui-messages {
+    background-color: #fff;
+    width: 100%;
+    padding: 30px;
+}
+.xui-weixin-realtimeMessagePage .xui-message .xui-message-top{
+   margin-bottom: 5px;
+   color: #666;
+}
+.xui-weixin-realtimeMessagePage .xui-message {
+    min-width: 250px;
+    min-height: 60px;
+    max-width: 430px;
+    width: auto;
+    border: 1px solid #ccc;
+    padding:10px 10px 0px 10px;
+    clear: both;
+    margin-bottom: 20px;
+}
+.xui-weixin-realtimeMessagePage .xui-messageWrap {
+}
+.xui-weixin-realtimeMessagePage .xui-recieved {
+    float: left;
+}
+.xui-weixin-realtimeMessagePage .xui-send {
+    float: right;
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft {
+   width: 165px;
+   float: left;
+   line-height: 50px;
+
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
+    width: 350px;
+    float: right;
+}
+
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapLeft {
+   width: 350px;
+   float: left;
+   line-height: 50px;
+
+}
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight {
+    width: 165px;
+    float: right;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message-recieved {
+    float: left;
+}
+.xui-weixin-realtimeMessagePage .xui-message-send {
+    float: right;
+    background-color: #f0f0f0;
+}
+.xui-weixin-realtimeMessagePage .xui-message .xui-message-content {
+    font-size: 12px;
+    color: #333;
+    line-height: 20px;
+}
+
+
+
 .xui-weixin-realtimeMessagePage .xui-i-newses {
     background-color: #1C911C;
     color: #FFFFFF;
@@ -207,6 +271,21 @@
 .xui-weixin-realtimeMessagePage .xui-i-sessionsIcon-remark {
     background: url("/static_v2/img/weixin/star.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
 }
+
+.xui-weixin-realtimeMessagePage .drop-box-arrow{
+    /*background: url(/static_v2/img/arrow.png) no-repeat;*/
+   /* position: absolute;
+    width: 14px;
+    height: 14px;*/
+}
+.xui-weixin-realtimeMessagePage .drop-box-arrow-left{
+   /* left: -12px;
+    top:23px;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    transform: rotate(180deg);*/
+}
+
 
 .xui-weixin-realtimeMessagePage .xui-i-remarkIcon {
 	margin-top: -10px;
@@ -419,7 +498,7 @@
 * 实时消息详情页面
 */
 .xui-weixin-realtimeMessagePage .xui-i-panel-body {
-    width: 600px;
+    width: 100%;
     background: #eaeef6;
 }
 
@@ -475,7 +554,8 @@
 */
 .xui-weixin-messagePage{
     background: #eaeef6;
-    min-height: 880px;
+    min-height: 950px;
+    padding-bottom: 300px;
 }
 .xui-weixin-messagePage .xui-rule-name{
     padding-left: 29px;

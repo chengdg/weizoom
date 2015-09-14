@@ -88,6 +88,62 @@
 		<tbody id='realtime_message_list' data-id="${data.session_id}" data-openid="${data.member.openid}">
             {{if items.length}}
 	            {{each(i, message) items}}
+				<div class="xui-messages cb">
+					<div class="xui-messageWrap xui-recieved">
+						<div class="xui-i-wrapLeft">
+							<div class="imgBox disTc pr xui-i-imgBox fl">
+							<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
+							</div>
+							<span class="ml10 mr20">{{html message.name}}</span>
+						</div>
+						<div class="xui-i-wrapRight">
+							<div class="xui-message pr xui-message-recieved ">
+				   				<div class="drop-box-arrow drop-box-arrow-left"></div>
+								<div class="xui-message-top">
+									<span class="mr50">2015-03-24 16:23:21</span>
+									<a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" ></a>
+									<a href='javascript:void(0);'>
+										<img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png">
+									</a>
+								</div>
+								<div class="xui-message-content">
+									<p>{{html message.text}}</p>
+								</div>
+							</div>
+						</div>
+					</div>      
+					<div class="cb"></div>
+					<div class="xui-messageWrap xui-send">
+						<div class="xui-i-wrapLeft">
+							<div class="xui-message pr xui-message-send ">
+							<div class="drop-box-arrow drop-box-arrow-right"></div>
+								<div class="xui-message-top">
+									<span class="mr50">2015-03-24 16:23:21</span>
+									<a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" ></a>
+									<a href='javascript:void(0);'>
+										<img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png">
+									</a>
+								</div>
+								<div class="xui-message-content">
+									<p>{{html message.text}}</p>
+								</div>
+							</div>
+						</div>
+						<div class="xui-i-wrapRight">
+							<span class="ml20 mr10">fsdfsdfdsfsdf</span>
+							<div class="imgBox disTc pr xui-i-imgBox fr">
+							<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
+							</div>
+							
+						</div>
+					</div>      
+					<div class="cb"></div>
+				</div>
+				</div>
+
+				
+
+
 				<tr class="xui-i-realmessage-tr" data-id="${message.id}">
 					<td class="wui-advanced-table-sort-handler tl_important" width="185">
 						<div class="disT w mt5">
@@ -152,7 +208,9 @@
             {{/if}}
 		</tbody>
 	</table>
+	
 </script>
+
 {% endverbatim %}
 
 <script type="text/javascript">
