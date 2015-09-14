@@ -5,6 +5,7 @@ __author__ = 'bert'
 import random
 import string
 import urllib2
+import os
 
 from django.conf import settings
 from django.contrib.auth.models import User
