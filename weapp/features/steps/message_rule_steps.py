@@ -530,7 +530,6 @@ def step_impl(context, user):
 	__process_unmatch_rule(data)
 	context.client.post('/new_weixin/api/unmatch_rules/?_method=post', data)
 
-<<<<<<< HEAD
 @when(u'{user}访问关键词自动回复规则列表')
 def step_impl(context, user):
 	url = "/new_weixin/api/keyword_rules/?count_per_page=%s" % context.count_per_page
