@@ -111,8 +111,13 @@ def step_impl(context, user):
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	url = '/new_weixin/api/keyword_rules/?count_per_page=100&page=1'
-
+	url = '/new_weixin/api/keyword_rules/?'
+	if hasattr(context, 'count_per_page') and hasattr(context, 'cur_page'):
+		url += ('count_per_page=%s' % (str(context.count_per_page) + '&')) + 'page=%s' % context.cur_page
+	elif hasattr(context, 'keyword'):
+		url += 'count_per_page=100&query=%s' % context.keyword
+	else:
+		url += 'count_per_page=100&page=1'
 	response = context.client.get(bdd_util.nginx(url))
 	response_json = json.loads(response.content)
 	rules = response_json['data']['items']
@@ -186,7 +191,7 @@ def step_impl(context, user):
 			current_dict['keyword_reply'] = answers
 
 			actual.append(current_dict)
-		
+
 
 	expected = json.loads(context.text)
 	bdd_util.assert_list(expected, actual)
@@ -475,3 +480,37 @@ def step_impl(context, user):
 	}
 	__process_unmatch_rule(data)
 	context.client.post('/new_weixin/api/unmatch_rules/?_method=post', data)
+
+@when(u'{user}访问关键词自动回复规则列表')
+def step_impl(context, user):
+	url = "/new_weixin/api/keyword_rules/?count_per_page=%s" % context.count_per_page
+	print "context.count_per_page"
+	response = context.client.get(url)
+	context.response = response
+
+@then(u'{user}获得关键词自动回复规则列表显示共{page_count}页')
+def step_impl(context, user, page_count):
+	content = context.response.content
+	print json.loads(content)
+	max_page = json.loads(content)['data']['pageinfo']['max_page']
+	if int(page_count) != max_page:
+		raise
+
+@when(u'{user}访问关键词自动回复规则列表第{cur_page}页')
+def step_impl(context, user, cur_page):
+	context.cur_page = cur_page
+
+@when(u"{user}浏览'下一页'")
+def step_impl(context, user):
+	cur_page = int(context.cur_page)
+	context.cur_page = cur_page + 1
+
+@when(u"{user}浏览'上一页'")
+def step_impl(context, user):
+	cur_page = int(context.cur_page)
+	context.cur_page = cur_page - 1
+
+@when(u"{user}设置关键词搜索条件")
+def step_impl(context, user):
+	data = json.loads(context.text)
+	context.keyword = data['keyword']
