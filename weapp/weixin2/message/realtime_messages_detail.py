@@ -307,8 +307,9 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
             mp_username = get_mp_nick_name(user.id)
             #用户名字段长过5个的进行处理
             #mp_username = unicode(mp_username, 'utf8')
-            if len(mp_username) >5:
-                mp_username = u'%s...' % mp_username[:5]
+            if mp_username:
+                if len(mp_username) >5:
+                    mp_username = u'%s...' % mp_username[:5]
             #用户名字段长过5个的进行处理
             one_message['mp_username'] = mp_username
             if head_img:

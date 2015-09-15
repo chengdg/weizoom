@@ -1,116 +1,108 @@
 # __author__ : "benchi"
-Feature: jobs能看到 实时消息的详情，分为能回复，与不能回复（消息仅在48小时内回复有效）
+Feature: 实时消息-消息详情
+"""
+	1）jobs能看到其会员的实时消息的详情，分为能回复，与不能回复（消息仅在48小时内回复有效）
+	2）消息仅在48小时内回复有效，不能在feature中实现
+"""
 
 Background:
 	Given jobs登录系统
-	And bill关注jobs的公众号
-	And jobs已获取"bill"的基本资料
-	"""
-		[{
-			"remark_name": "billb",
-			"gender": "男",
-	   		"location": "中国  北京  海淀",
-	   		"member_level": "普通会员",
-	   		"integral": 100,
-	   		"fans_group": "分组一",
-	   		"binding_tel": 15686896236,
-	   		"attention_time": "2014-12-30 20:06:43"
-		}]
-	"""
-	And tom关注jobs的公众号
-	And jobs已获取"tom"的基本资料
-	"""
-		[{
-			"remark_name": "tomb",
-			"gender": "男",
-	   		"location": "中国  北京  西城",
-	   		"member_level": "普通会员",
-	   		"integral": 50,
-	   		"fans_group": "分组二",
-	   		"binding_tel": 15686896237,
-	   		"attention_time": "2014-11-30 20:06:43"
-		}]
-	"""
 
-@new_weixin.message
-Scenario: 1 jobs可以看到消息详情
-	Given jobs登录系统
-	And jobs已获取"bill"粉丝信息列表
-	"""
-		[{
-			"fans_name": "bill",
-	   		"inf_content": "bill信息内容1",
-	    	"last_message_time": "48小时内",
-	    	"remark": ""
-	    },{
-			"fans_name": "bill",
-	   		"inf_content": "bill信息内容2",
-	    	"last_message_time": "48小时内",
-	    	"remark": ""
-	    },{
-			"fans_name": "tom",
-	   		"inf_content": "tom信息内容",
-	    	"last_message_time": "48小时前",
-	    	"remark": ""
-	    }]
-	"""
-	And jobs已回复"bill"
+	When jobs已添加单图文
 		"""
 		[{
-			"replied_content": "jobs回复bill信息内容"
-	     }]
-	"""
-
-	Then jobs成功获取"bill"消息详情列表
-	"""
-		{
-			"messages": [{
-				"replied_content": "jobs回复bill信息内容"
-			},{
-			"fans_name": "bill",
-	   		"inf_content": "bill信息内容1",
-	    	"last_message_time": "48小时内",
-	    	"remark": ""
-	    },{
-			"fans_name": "bill",
-	   		"inf_content": "bill信息内容2",
-	    	"last_message_time": "48小时内",
-	    	"remark": ""
-	    }],
-	    "member_information": [{
-				"remark_name": "billb",
-				"gender": "男",
-		   		"location": "中国  北京  海淀",
-		   		"member_level": "普通会员",
-		   		"integral": 100,
-		   		"fans_group": "分组一",
-		   		"binding_tel": 15686896236,
-		   		"attention_time": "2014-12-30 20:06:43"
-		}],
-			"can_reply":true
-		}
-	"""
-
-	Then jobs成功获取"tom"消息详情列表
-	"""
-		{
-			"messages": [{
-				"fans_name": "tom",
-		   		"inf_content": "tom信息内容",
-		    	"last_message_time": "48小时前",
-	    		"remark": ""
-		   		 }],
-	   		 "member_information": [{
-				"remark_name": "tomb",
-				"gender": "男",
-		   		"location": "中国  北京  西城",
-		   		"member_level": "普通会员",
-		   		"integral": 50,
-		   		"fans_group": "分组二",
-		   		"binding_tel": 15686896237,
-		   		"attention_time": "2014-11-30 20:06:43"
+			"title":"图文1",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"can_reply":false
-		}
-	"""
-	
+			"cover_in_the_text":"ture",
+			"summary":"单条图文1文本摘要",
+			"content":"单条图文1文本内容"
+		}]
+		"""
+
+	#添加关键词自动回复
+	When jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "关键词tom",
+					"type": "equal"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"关键字回复内容tom",
+					 "reply_type":"text"
+				}]
+		},{
+			"rules_name":"规则3",
+			"keyword": [{
+					 "keyword": "关键词bill",
+					 "type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"图文1",
+					 "reply_type":"text_picture"
+				}]
+		}]
+		"""
+
+	#bill关注jobs的公众号进行消息互动，发送一条，无回复
+	When 清空浏览器
+	and bill关注jobs的公众号
+	and bill访问jobs的webapp
+	and bill在微信中向jobs的公众号发送消息'bill发送一条文本消息，未回复'
+	and bill在微信中向jobs的公众号发送消息'关键词bill'
+
+	#tom关注jobs的公众号进行消息互动，发送两条，第一条回复文本消息，第二条无回复
+	When 清空浏览器
+	and tom关注jobs的公众号
+	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息1，未回复'
+	and tom在微信中向jobs的公众号发送消息'关键词tom'
+	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息2，未回复'
+
+@mall2 @weixin @message @realtimeMessage @wll
+Scenario: 1 jobs浏览会员的消息详情
+
+	Given jobs登录系统
+
+	When jobs查看'tom'的消息详情
+	Then jobs获得'tom'消息详情消息列表
+		"""
+		[{
+			"member_name": "tom",
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"time": "今天"
+		},{
+			"member_name": "jobs",
+			"inf_content": "【自动回复】 关键字回复内容tom",
+			"time": "今天"
+		},{
+			"member_name": "tom",
+			"inf_content": "关键词tom",
+			"time": "今天"
+		},{
+			"member_name": "tom",
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"time": "今天"
+		}]
+		"""
+
+	When jobs查看'bill'的消息详情
+	Then jobs获得'bill'消息详情消息列表
+		"""
+		[{
+			"member_name": "jobs",
+			"inf_content": "图文1",
+			"time": "今天"
+		},{
+			"member_name": "bill",
+			"inf_content": "关键词bill",
+			"time": "今天"
+		},{
+			"member_name": "bill",
+			"inf_content": "bill发送一条文本消息，未回复",
+			"time": "今天"
+		}]
+		"""
+
