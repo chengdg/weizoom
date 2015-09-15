@@ -40,6 +40,13 @@ class MassSendingMessages(resource.Resource):
         webapp_id = request.user_profile.webapp_id
         sent_count = UserSentMassMsgLog.success_count(webapp_id)
         groups = get_member_groups(webapp_id)
+        tags = []
+        for tag in groups:
+            if tag['name'] == '未分组':
+                tags = [tag] + tags
+            else:
+                tags.append(tag)
+        groups = tags
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_message_second_navs(request),
