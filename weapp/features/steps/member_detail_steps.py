@@ -182,13 +182,15 @@ def step_impl(context, user, member):
     for info in shared_url_infos:
         share_detailed_data.append(
             dict(
-                share_link = info.title,
                 click_number = info.pv,
                 new_member = info.followers,
                 order = info.leadto_buy_count
             )
         )
     actual['share_detailed_data'] = share_detailed_data
+    print "actual:",actual
+    print "expected:",expected
+
     bdd_util.assert_dict(actual, expected)
 
 @then(u"{user}获得'{member}'的浏览轨迹")
