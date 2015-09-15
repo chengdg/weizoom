@@ -577,6 +577,7 @@ Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加�
 	And bill购买jobs的商品
 		"""
 		{
+			"order_no":"0000001",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -611,6 +612,17 @@ Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加�
 			}]
 		}
 		"""
+  	Given jobs登录系统
+	When jobs对订单进行发货
+		"""
+		{
+			"order_no":"0000001",
+			"logistics":"顺丰速运",
+			"number":"123456789"
+		}
+		"""
+	When jobs'完成'订单'0000001'
+  	when bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有30会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
@@ -629,9 +641,9 @@ Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加�
 	Then jobs可以获得最新订单详情
 		"""
 		{
-			"status": "待发货",
+			"status": "已完成",
 			"final_price": 88.00,
-			"actions": ["发货","取消订单"]
+			"actions": ["申请退款"]
 		}
 		"""
 	When jobs'取消'最新订单
