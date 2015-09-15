@@ -42,7 +42,7 @@
 .xui-weixin-realtimeMessagePage .dropdown-menu {
     border: 1px solid #c5c5c5;
     min-width: 96px;
-    left:66px;
+    left:98px;
 }
 .xui-weixin-realtimeMessagePage .xui-listTable .xui-vmiddle {
     vertical-align: middle!important;
@@ -112,7 +112,7 @@
     border-radius:5px;
     min-width: 250px;
     min-height: 60px;
-    max-width: 430px;
+    max-width: 440px;
     width: auto;
     border: 1px solid #ccc;
     padding:10px 10px 0px 10px;
@@ -121,6 +121,8 @@
 .xui-weixin-realtimeMessagePage .xui-message .xui-i-remark-text {
     color: #f39800;
     cursor: text !important;
+    position: relative;
+    top:5px;
 }
 .xui-weixin-realtimeMessagePage .xui-messageWrap {
 }
@@ -138,12 +140,12 @@
     line-height: 60px;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
-    width: 350px;
+    width: 440px;
     float: right;
 }
 
 .xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapLeft {
-   width: 350px;
+   width: 440px;
    float: left;
 
 }
@@ -356,7 +358,7 @@
 }
 
 .xui-weixin-realtimeMessagePage .xui-i-not-reply {
-	color: #c09853;
+	color: #f39800;
 }
 
 .xui-weixin-realtimeMessagePage .nav-tabs {
@@ -539,6 +541,7 @@
 .xui-weixin-realtimeMessagePage .xui-i-panel-body {
     width: 100%;
     background: #eaeef6;
+    padding-bottom: 0px;
 }
 
 .xui-weixin-user-detail {
