@@ -112,7 +112,6 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 
 @receiver(mall_signals.post_pay_order, sender=Order)
 def post_pay_order_handler(order, request, **kwargs):
-    print 'jz----1111', order.order_id
     try:
         #支付完成之后的webapp_user操作
         if hasattr(request, 'webapp_user'):

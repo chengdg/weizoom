@@ -1510,8 +1510,7 @@ def ship_order(order_id, express_company_name,
 		record_status_log(order.order_id, operator_name, order.status, target_status)
 
 		if order.origin_order_id > 0:
-			from mall.order.util import set_origin_order_status
-			set_origin_order_status(order)
+			set_origin_order_status(order, operator_name, 'ship')
 
 	record_operation_log(order.order_id, operator_name, action, order)
 
@@ -2181,6 +2180,17 @@ def get_product_ids_in_weizoom_mall(webapp_id):
 	return [weizoom_mall_other_mall_product.product_id for weizoom_mall_other_mall_product in WeizoomMallHasOtherMallProduct.objects.filter(webapp_id=webapp_id)]
 
 
+def set_origin_order_status(child_order, user, action, request=None):
+    children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
+    origin_order = Order.objects.get(id=child_order.origin_order_id)
+    if origin_order.status != min(children_order_status):
+    	if action == 'ship':
+    		origin_order.status = min(children_order_status)
+    		origin_order.save()
+    	else:
+	        update_order_status(user, action, origin_order, request)
+
+
 def update_order_status(user, action, order, request=None):
 	"""
 	修改订单状态
@@ -2199,7 +2209,6 @@ def update_order_status(user, action, order, request=None):
 	order_id = order.id
 	operation_name = user.username
 	action_msg = None
-	print 'jz-----0000', order.order_id
 	if action == 'pay':
 		action_msg = '支付'
 		target_status = ORDER_STATUS_PAYED_NOT_SHIP
@@ -2302,10 +2311,9 @@ def update_order_status(user, action, order, request=None):
 		notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
 		watchdog_alert(notify_message)
 
-	from mall.order.util import set_origin_order_status
 	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_SUCCESSED]:
 		# 如果更新子订单，更新父订单状态
-		set_origin_order_status(order)
+		set_origin_order_status(order, user, action, request)
 	else:
 		# 如果更新父订单，更新子订单状态
 		#更新会员的消费、消费次数、消费单价

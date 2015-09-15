@@ -754,19 +754,8 @@ def get_order_status_text(status):
     return STATUS2TEXT[status]
 
 
-def set_origin_order_status(child_order):
-    children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
-    Order.objects.filter(id=child_order.origin_order_id).update(status=min(children_order_status))
-
-
 def set_children_order_status(origin_order, status):
     Order.objects.filter(origin_order_id=origin_order.id).update(status=status)
-
-
-# 页脚未读订单数统计
-def get_unship_order_count(request):
-    from cache.webapp_owner_cache import get_unship_order_count_from_cache
-    return get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
 
 
 # get_orders_response调用
