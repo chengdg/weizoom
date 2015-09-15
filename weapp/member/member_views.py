@@ -109,7 +109,10 @@ def list_tags(request):
 				if MemberTag.objects.filter(id=id, webapp_id=webapp_id).count() > 0:
 					MemberTag.objects.filter(id=id, webapp_id=webapp_id).update(name=value)
 				else:
-					MemberTag.objects.create(id=id, name=value, webapp_id=webapp_id)
+					if MemberTag.objects.filter(id=id).count() == 0:
+						MemberTag.objects.create(id=id, name=value, webapp_id=webapp_id)
+					else:
+						MemberTag.objects.create(name=value, webapp_id=webapp_id)
 		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
 		if default_tag_id in delete_ids:
 			delete_ids.remove(default_tag_id)
