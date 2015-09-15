@@ -37,12 +37,21 @@ def get_members(request):
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
 	status = request.GET.get('status' , '1')
+	member_tags = MemberTag.get_member_tags(webapp_id)
+	#调整排序，将为分组放在最前面
+	tags = []
+	for tag in member_tags:
+		if tag.name == '未分组':
+			tags = [tag] + tags
+		else:
+			tags.append(tag)
+	member_tags = tags
 	c = RequestContext(request, {
 		'first_nav_name': export.MEMBER_FIRST_NAV,
 		'second_navs': export.get_second_navs(request),
 		'second_nav_name': export.MEMBERS,
 		'should_show_authorize_cover' : get_should_show_authorize_cover(request),
-		'user_tags': MemberTag.get_member_tags(webapp_id),
+		'user_tags': member_tags,
 		'grades': MemberGrade.get_all_grades_list(webapp_id),
 		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(),
 		'status': status

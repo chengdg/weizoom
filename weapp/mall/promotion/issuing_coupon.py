@@ -348,9 +348,14 @@ class IssuingCouponsFilter(resource.Resource):
             data['member_grade'] = json.dumps([
                 {'id': m.id, 'name': m.name} for m in MemberGrade.get_all_grades_list(request.GET.get('webapp_id'))
             ])
-            data['member_tags'] = json.dumps([
-                {'id': m.id, 'name': m.name} for m in MemberTag.get_member_tags(request.GET.get('webapp_id'))
-            ])
+            member_tags = MemberTag.get_member_tags(webapp_id)
+            tags = []
+            for tag in member_tags:
+                if tag.name == '未分组':
+                    tags = [tag] + tags
+                else:
+                    tags.append(tag)
+            data['member_tags'] = json.dumps([{'id': m.id, 'name': m.name} for m in tags])
             response.data = data
             return response.get_response()
 
