@@ -1218,7 +1218,7 @@ button.xui-removeImageButton{
 	margin-left: 87px!important;
 }
 .xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .xui-dynamicComponentControlImgBox .xui-removeImageButton{
-	display: none;
+	display: none!important;
 }
 .xui-propertyView-specialTemplateGroup .xui-link,.xui-propertyView-specialTemplateGroup .xui-selected-title-box{
 	margin-left: 0px;
@@ -1230,7 +1230,6 @@ button.xui-removeImageButton{
 	margin-left: 87px;
 	margin-top: 3px;
 }
-
 /*
 **底部导航
 */

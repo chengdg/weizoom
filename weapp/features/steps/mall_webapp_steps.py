@@ -405,7 +405,7 @@ def step_impl(context, webapp_owner_name):
 			if tmp > 0:
 				# 先为会员赋予积分,再使用积分
 				# TODO 修改成jobs修改bill积分
-				context.execute_steps(u"when %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
+				context.execute_steps(u"When %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
 				data['products'][0]['integral'] = tmp
 
 		if row.get('coupon', '') != '':
@@ -435,15 +435,16 @@ def step_impl(context, webapp_owner_name):
 		if row.get('order_id', '') != '':
 			data['order_no'] = row.get('order_id')
 
+		print("SUB STEP: to buy products, param: {}".format(data))
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
 		#支付订单
 		if row['payment'] == u'支付':
 			if row.get('payment_method', None) != u'优惠抵扣' and row.get('payment_method', None) != u'h货到付款':
 				if row.get('payment_method', None):
-					context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, row['payment_method']))
+					context.execute_steps(u"When %s使用支付方式'%s'进行支付" % (webapp_user_name, row['payment_method']))
 				else:
-					context.execute_steps(u"when %s使用支付方式'货到付款'进行支付" % webapp_user_name)
+					context.execute_steps(u"When %s使用支付方式'货到付款'进行支付" % webapp_user_name)
 
 		order = Order.objects.all().order_by('-id')[0]
 		# if row.get('order_id', '') != '':
