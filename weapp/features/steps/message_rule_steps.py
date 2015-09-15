@@ -17,13 +17,17 @@ from weixin2.models import *
 #######################################################################
 def __add_rule(context, rule):
 	rule_name = rule['rules_name']
-
+	posted = True
 	patterns = '['
 	for pattern in rule['keyword']:
 		if pattern['type'] == 'equal':
 			pattern_type = 0
 		else:
 			pattern_type = 1
+
+		if pattern['keyword'].strip() == '':
+			posted = False
+
 		patterns = patterns + '{"keyword":"%s","type":"%s"},' % (pattern['keyword'], pattern_type)
 	patterns = patterns[:-1] + ']'
 	answers = '['
@@ -36,6 +40,8 @@ def __add_rule(context, rule):
 			news = News.objects.filter(material__owner_id=context.client.user.id, title=answer['reply_content'])[0]
 			material_id = news.material_id
 			content = material_id
+		if str(content).strip() == '':
+			posted = False
 		answers = answers + '{"content":"%s","type":"%s"},' % (content, type)
 	answers = answers[:-1] + ']'
 
@@ -46,7 +52,50 @@ def __add_rule(context, rule):
 		"rule_name": rule_name
 	}
 	#rule_prototype.update(rule)
-	context.client.post('/new_weixin/api/keyword_rules/?_method=put', rule_prototype)
+	if posted:
+		context.client.post('/new_weixin/api/keyword_rules/?_method=put', rule_prototype)
+
+def __update_rule(context, rule, id):
+	rule_name = rule['rules_name']
+	posted = True
+	patterns = '['
+	for pattern in rule['keyword']:
+		if pattern['type'] == 'equal':
+			pattern_type = 0
+		else:
+			pattern_type = 1
+		if pattern['keyword'].strip() == '':
+			posted = False
+		patterns = patterns + '{"keyword":"%s","type":"%s"},' % (pattern['keyword'], pattern_type)
+	patterns = patterns[:-1] + ']'
+	answers = '['
+	for answer in rule['keyword_reply']:
+		content = answer['reply_content']
+		if answer['reply_type'] == 'text':
+			type = 'text'
+		else:
+			type = 'news'
+			try:
+				news = News.objects.filter(material__owner_id=context.client.user.id, title=answer['reply_content'])[0]
+				material_id = news.material_id
+				content = material_id
+			except:
+				content = ''
+			
+		answers = answers + '{"content":"%s","type":"%s"},' % (content, type)
+		if str(content).strip() == '':
+			posted = False
+	answers = answers[:-1] + ']'
+
+	rule_prototype = {
+		"patterns": str(patterns),
+		"answer": str(answers),
+		"id": id,
+		"rule_name": rule_name
+	}
+	#rule_prototype.update(rule)
+	if posted:
+		context.client.post('/new_weixin/api/keyword_rules/?_method=post', rule_prototype)
 
 
 @given(u"{user}已添加关键词自动回复规则")
@@ -204,7 +253,7 @@ def step_impl(context, user, rule_patterns):
 
 @when(u"{user}删除关键词自动回复规则'{rule_patterns}'")
 def step_impl(context, user, rule_patterns):
-	rule = Rule.objects.get(patterns=rule_patterns)
+	rule = Rule.objects.get(rule_name=rule_patterns)
 
 	url = '/new_weixin/api/keyword_rules/?_method=delete'
 	context.client.post(url, data={'id':rule.id}, HTTP_REFERER='/new_weixin/keyword_rules/')
@@ -475,3 +524,12 @@ def step_impl(context, user):
 	}
 	__process_unmatch_rule(data)
 	context.client.post('/new_weixin/api/unmatch_rules/?_method=post', data)
+
+
+@when(u"{user}编辑关键词自动回复规则'{rule_name}'")
+def step_impl(context, user, rule_name):
+	current_rule = Rule.objects.get(rule_name=rule_name)
+	client = context.client
+	context.rules = json.loads(context.text)
+	#for rule in context.rules:
+	__update_rule(context, context.rules , current_rule.id)
