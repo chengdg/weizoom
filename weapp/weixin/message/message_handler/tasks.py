@@ -62,7 +62,7 @@ def _recorde_message(context):  #response_rule, from_weixin_user, is_from_simula
 	#如果是声音消息 则语音转换
 	if session_info and session_info['receive_message'] and message["msgType"] == WeixinMessageTypes.VOICE:
 		receive_message = session_info['receive_message']
-		upload_audio.delay(receive_message.id, user_profile.user_id)
+		upload_audio(receive_message.id, user_profile.user_id)
 
 def _get_info_from_context(context):
 	request = context["request"]
@@ -252,8 +252,8 @@ TEMP_WORK_DIR = "/weapp/web/weapp/static/audio/"
 MaxRetryTimes = 3
 
 
-@task(bind=True)
-def upload_audio(self, message_id, user_id):
+##@task(bind=True)
+def upload_audio(message_id, user_id):
 	message = Message.objects.get(id=message_id)
 	weixin_mp_user_access_token = get_mpuser_access_token_by_userid(user_id)
 	__download_voice(message, weixin_mp_user_access_token)
