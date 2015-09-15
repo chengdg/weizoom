@@ -80,20 +80,20 @@ Scenario:1 删除图文消息
 	Then jobs能获取图文管理列表
 		"""
 		[{
-			"title":"图文1"
+			"title":"图文3"
 		},{
 			"title":"图文2"
 		},{
-			"title":"图文3"
+			"title":"图文1"
 		}]
 		"""
 	When jobs已删除图文'图文3'
 	Then jobs能获取图文管理列表
 		"""
 		[{
-			"title":"图文1"
-		},{
 			"title":"图文2"
+		},{
+			"title":"图文1"
 		}]
 		"""
 
@@ -112,9 +112,9 @@ Scenario:2 在按"图文名称"查询的查询结果下删除图文
 	Then jobs能获取图文管理列表
 		"""
 		[{
-			"title":"图文3"
-		},{
 			"title":"图文4"
+		},{
+			"title":"图文3"
 		}]
 		"""
 	When jobs已删除图文'图文3'
