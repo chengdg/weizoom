@@ -294,7 +294,14 @@ class Qrcode(resource.Resource):
 		answer_content = {}
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
-		tags = MemberTag.get_member_tags(webapp_id)
+		member_tags = MemberTag.get_member_tags(webapp_id)
+		#调整排序，将为分组放在最前面
+		tags = []
+		for tag in member_tags:
+			if tag.name == '未分组':
+				tags = [tag] + tags
+			else:
+				tags.append(tag)
 		qrcode = None
 		from mall.promotion.models import CouponRule
 		if setting_id > 0:
