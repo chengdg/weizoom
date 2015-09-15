@@ -16,11 +16,36 @@ from weixin2.models import *
 # __add_rule: 添加一个规则
 #######################################################################
 def __add_rule(context, rule):
+	rule_name = rule['rules_name']
+
+	patterns = '['
+	for pattern in rule['keyword']:
+		if pattern['type'] == 'equal':
+			pattern_type = 0
+		else:
+			pattern_type = 1
+		patterns = patterns + '{"keyword":"%s","type":"%s"},' % (pattern['keyword'], pattern_type)
+	patterns = patterns[:-1] + ']'
+	answers = '['
+	for answer in rule['keyword_reply']:
+		content = answer['reply_content']
+		if answer['reply_type'] == 'text':
+			type = 'text'
+		else:
+			type = 'news'
+			news = News.objects.filter(material__owner_id=context.client.user.id, title=answer['reply_content'])[0]
+			material_id = news.material_id
+			content = material_id
+		answers = answers + '{"content":"%s","type":"%s"},' % (content, type)
+	answers = answers[:-1] + ']'
+
 	rule_prototype = {
-		"patterns": "",
-		"answer": "answer"
+		"patterns": str(patterns),
+		"answer": str(answers),
+		"id": "new",
+		"rule_name": rule_name
 	}
-	rule_prototype.update(rule)
+	#rule_prototype.update(rule)
 	context.client.post('/new_weixin/api/keyword_rules/?_method=put', rule_prototype)
 
 
@@ -79,32 +104,89 @@ def step_impl(context, user, rule_patterns):
 	context.tc.assertEquals(0, Rule.objects.filter(owner=context.client.user, patterns=rule_patterns).count())
 
 
-@then(u"{user}能获取关键词自动回复规则列表")
+@then(u"{user}获得关键词自动回复列表")
 def step_impl(context, user):
 	if hasattr(context, 'client'):
 		context.client.logout()
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	response = client.get('/new_weixin/keyword_rules/')
-	rules = response.context['rules']
+	url = '/new_weixin/api/keyword_rules/?count_per_page=100&page=1'
 
+	response = context.client.get(bdd_util.nginx(url))
+	response_json = json.loads(response.content)
+	rules = response_json['data']['items']
 	actual = []
 	for rule in rules:
-		answers = rule['answer']
-		if len(answers) > 0:
-			rule['answer'] = answers[0]['content']
+		try:
+			current_dict = {}
+			current_dict['rules_name'] = rule['rule_name']
 
-		patterns = rule['patterns']
-		if len(patterns) > 0:
-			rule['patterns'] = patterns[0]['keyword']
+			patterns = []
+			for pattern in eval(rule['patterns'][0]['keyword']):
+				if pattern['type'] == '0':
+					type = 'equal'
+				else:
+					type = 'like'
+				patterns.append({
+					'type':type,
+					'keyword': pattern['keyword']
+					})
+			current_dict['keyword'] = patterns
 
-		actual.append({
-			"patterns": rule['patterns'],
-			"answer": rule['answer'],
-			"material_id": rule['material_id'],
-			"type": "news" if rule['type'] == NEWS_TYPE else 'text'
-		})
+			answers = []
+			for answer in eval(rule['answer'][0]['content']):
+				if answer['type'] != 'text':
+					material_id = answer['content']
+					#material = Material.objects.get(id=material_id)
+					new =  News.objects.filter(material_id=material_id)[0]
+					reply_content = new.title
+					reply_type = 'text_picture'
+				else:
+					reply_type = 'text'
+					reply_content = answer['content']
+				answers.append({
+					"reply_content":reply_content,
+					"reply_type":reply_type
+					})
+			current_dict['keyword_reply'] = answers
+
+			actual.append(current_dict)
+		except:
+			current_dict = {}
+			current_dict['rules_name'] = rule['rule_name']
+
+			patterns = []
+			for pattern in rule['patterns']:
+				if pattern['type'] == '0':
+					type = 'equal'
+				else:
+					type = 'like'
+				patterns.append({
+					'type':type,
+					'keyword': pattern['keyword']
+					})
+			current_dict['keyword'] = patterns
+
+			answers = []
+			for answer in rule['answer']:
+				if answer['type'] != 'text':
+					material_id = answer['content']
+					#material = Material.objects.get(id=material_id)
+					new =  News.objects.filter(material_id=material_id)[0]
+					reply_content = new.title
+					reply_type = 'text_picture'
+				else:
+					reply_type = 'text'
+					reply_content = answer['content']
+				answers.append({
+					"reply_content":reply_content,
+					"reply_type":reply_type
+					})
+			current_dict['keyword_reply'] = answers
+
+			actual.append(current_dict)
+		
 
 	expected = json.loads(context.text)
 	bdd_util.assert_list(expected, actual)
