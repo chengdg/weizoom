@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/usr/local/bin:$PATH
 # 每小时调用的service
 
 DATE="`date +%Y%m%d`"
