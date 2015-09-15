@@ -142,6 +142,7 @@
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft  p {
     line-height: 60px;
+    height: 60px;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
     width: 440px;
