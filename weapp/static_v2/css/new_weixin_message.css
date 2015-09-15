@@ -42,7 +42,7 @@
 .xui-weixin-realtimeMessagePage .dropdown-menu {
     border: 1px solid #c5c5c5;
     min-width: 96px;
-    left:66px;
+    left:98px;
 }
 .xui-weixin-realtimeMessagePage .xui-listTable .xui-vmiddle {
     vertical-align: middle!important;
@@ -112,7 +112,7 @@
     border-radius:5px;
     min-width: 250px;
     min-height: 60px;
-    max-width: 430px;
+    max-width: 440px;
     width: auto;
     border: 1px solid #ccc;
     padding:10px 10px 0px 10px;
@@ -140,7 +140,7 @@
     line-height: 60px;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
-    width: 350px;
+    width: 440px;
     float: right;
 }
 
