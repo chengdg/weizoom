@@ -461,16 +461,41 @@ Scenario: 安装完整测试数据
 	And jobs已添加关键词自动回复规则
 		"""
 		[{
-			"patterns": "词1_1|词1_2",
-			"answer": "answer1"
-		}, {
-			"patterns": "keyword2_1",
-			"answer": "answer2"
-		}, {
-			"patterns": "keyword3",
-			"answer": "answer3"
-		}]	
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "词1_1",
+					"type": "like"
+				},{
+					 "keyword": "词1_2",
+					 "type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"answer1",
+					 "reply_type":"text"
+				}]
+		},{
+			"rules_name":"规则2",
+			"keyword": [{
+					"keyword": "keyword2_1",
+					"type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"answer2",
+					 "reply_type":"text"
+				}]
+		},{
+			"rules_name":"规则3",
+			"keyword": [{
+					"keyword": "keyword3",
+					"type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"answer3",
+					 "reply_type":"text"
+				}]
+		}]
 		"""
+		
 	When jobs创建分组
 		"""
 		[{

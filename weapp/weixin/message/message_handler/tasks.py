@@ -60,7 +60,7 @@ def _recorde_message(context):  #response_rule, from_weixin_user, is_from_simula
 	record_session_info(session_info, response_rule)
 
 	#如果是声音消息 则语音转换
-	if session_info['receive_message'] and message["msgType"] == WeixinMessageTypes.VOICE:
+	if session_info and session_info['receive_message'] and message["msgType"] == WeixinMessageTypes.VOICE:
 		receive_message = session_info['receive_message']
 		upload_audio.delay(receive_message.id, user_profile.user_id)
 

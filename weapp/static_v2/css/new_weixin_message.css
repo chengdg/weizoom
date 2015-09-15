@@ -118,6 +118,10 @@
     padding:10px 10px 0px 10px;
     clear: both;
 }
+
+.xui-weixin-realtimeMessagePage .xui-message span{
+    cursor: text;
+}
 .xui-weixin-realtimeMessagePage .xui-message .xui-i-remark-text {
     color: #f39800;
     cursor: text !important;
