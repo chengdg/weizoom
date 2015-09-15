@@ -37,8 +37,8 @@ def get_fields_to_be_save(request):
 
 	if 'termite_data' in fields:
 		fields['termite_data'] = json.loads(fields['termite_data'])
-		att_url = []
 		for item in fields['termite_data']:
+			att_url = []
 			if fields['termite_data'][item]['type']=='appkit.uploadimg':
 				fields['uploadImg'] = json.loads(fields['termite_data'][item]['value'])
 				for picture in fields['uploadImg']:

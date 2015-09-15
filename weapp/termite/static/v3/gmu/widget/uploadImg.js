@@ -136,18 +136,14 @@
         removeImgFun:function(event){
             var _this = this;
             var $uploadImage = $(event.target).parent().parent().find('.xui-uploadImage');
-            console.log($(event.target).parent().parent().find('.xui-uploadImage'));
             $(event.target).siblings('.xa-remove').click(function(){
                 $(this).parent().remove();
-                console.log($(this).parent());
-                console.log($uploadImage.length);
                 if($uploadImage.length == 2){
-
-                    $('.xa-finishEdit').hide();
-                    $('.xui-addPhoto').show();
-                    $('.xui-addPhoto').find('.xa-remove').hide();
+                    $uploadImage.prevObject.find('.xa-finishEdit').hide();
+                    $uploadImage.prevObject.find('.xui-addPhoto').show();
+                    $uploadImage.prevObject.find('.xui-addPhoto').find('.xa-remove').hide();
                     // $('.xa-deletePhoto').show();
-                    $('.xa-text').show();
+                    $uploadImage.prevObject.find('.xa-text').show();
                 }else if($uploadImage.length == 6){
                     // $('.xui-productPhoto').children('*:nth-child(5)').css('display','inline-block');
                     // $('.xui-productPhoto').children('*:nth-child(5)').find('.xa-remove').hide();
