@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import json
 import weixin2.module_api as weixin_module_api
 
@@ -158,7 +159,11 @@ class RealtimeMessages(resource.Resource):
         """
                         回复实时消息
         """
+        pattern = re.compile(r'_str=".*"')
         answer = request.POST['answer']
+        src_str = pattern.findall(answer, re.S)
+        if src_str:
+            answer = answer.replace(src_str[0], "")
         material_id = request.POST['material_id']
         type = request.POST['type']
         openid_sendto = request.POST['openid']
@@ -214,7 +219,11 @@ class RealtimeMessages(resource.Resource):
                         回复实时消息后回写操作
         """
         session_id = request.POST['session_id']
+        pattern = re.compile(r'_str=".*"')
         content = request.POST['content']
+        src_str = pattern.findall(content, re.S)
+        if src_str:
+            content = content.replace(src_str[0], "")
         receiver_username = request.POST['receiver_username']
         material_id = request.POST['material_id']
 
