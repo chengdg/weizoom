@@ -758,6 +758,12 @@ def set_children_order_status(origin_order, status):
     Order.objects.filter(origin_order_id=origin_order.id).update(status=status)
 
 
+# 页脚未读订单数统计
+def get_unship_order_count(request):
+    from cache.webapp_owner_cache import get_unship_order_count_from_cache
+    return get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
+
+
 # get_orders_response调用
 def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
