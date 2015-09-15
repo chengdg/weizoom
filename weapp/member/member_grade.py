@@ -119,8 +119,7 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
         if not isinstance(member, Member):
             return
-
-    if not member:
+    if not mgitember:
         return False
     if not member.grade.is_auto_upgrade and not delete:
         return is_change
