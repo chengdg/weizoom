@@ -47,7 +47,7 @@ Background:
 			"""
 	And tom关注jobs的公众号
 
-@mall
+@mall2
 Scenario:1 会员详情-传播能力
 
 	#tom带来的传播能力数据创建
