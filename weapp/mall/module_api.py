@@ -2285,7 +2285,8 @@ def update_order_status(user, action, order, request=None):
 	try:
 		# TODO 返还用户积分
 		from modules.member import integral
-		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
+		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED \
+				and expired_status != ORDER_STATUS_CANCEL and order.origin_order_id <= 0:
 			if MallOrderFromSharedRecord.objects.filter(order_id=order.id).count() > 0:
 				order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
 				fmt = order_record.fmt
