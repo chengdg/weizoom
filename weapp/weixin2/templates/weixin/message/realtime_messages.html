@@ -144,11 +144,19 @@
 				</tr>
 				{{/each}}
 			{{else}}
-				<tr><td colspan='7'>还没有数据</td></tr>
+				<tr><td colspan='7' style="padding:0px;">
+				<div class="xui-emptyBox">
+				<div class="xui-i-emptyHint">
+					<img src="/static_v2/img/editor/empty.png">
+					<div>
+						<span>还没有数据</span>
+					</div>
+				</div>
+			</div></td></tr>
 			{{/if}}
 		</tbody>
 	</table>
-	{{if data.status == 0}}
+	{{if data.status == 0 && items.length}}
 	<div class="checkbox xui-selectBox">
 	<label  for="all">
 		<input type="checkbox" id="xa-selectAll" class="xui-selectAll">
