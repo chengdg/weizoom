@@ -580,6 +580,8 @@
 }
 .xui-selectMallImagesDialog .xui-i-imageGroupSelector {
 	color: #000;
+	overflow: hidden;
+	white-space: nowrap;
 }
 .xui-selectMallImagesDialog .xui-i-selected {
 	border: solid 2px  rgb(60, 155, 215);

@@ -163,6 +163,8 @@ def get_url(url):
 	elif url.startswith('./?'):
 		domain = 'http://%s/workbench/jqm/preview/?' % settings.DOMAIN
 		return url.replace('./?', domain)
+	elif url.startswith('/'):
+		return 'http://%s%s' % (settings.DOMAIN, url)
 	else:
 		return 'http://%s' % url
 	

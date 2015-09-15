@@ -56,7 +56,7 @@ def step_add_red_envelope_rule(context, user):
             'share_pic': rule.get('logo_url', ''),
             'remark': rule.get('desc', '')
         }
-        response = context.client.post('/mall2/api/red_envelope_rule/?_method=put', params)
+        response = context.client.post('/apps/promotion/api/red_envelope_rule/?_method=put', params)
         bdd_util.assert_api_call_success(response)
 
 def __to_date(str):
@@ -90,7 +90,7 @@ def step_impl(context, user):
             param['endDate'] = ''
         #param.update(context.query_param)
 
-    response = context.client.get('/mall2/api/red_envelope_rule_list/', param)
+    response = context.client.get('/apps/promotion/api/red_envelope_rule_list/', param)
     rules = json.loads(response.content)['data']['items']
 
     status2name = {
@@ -140,7 +140,7 @@ def step_impl(context, user, action, red_envelope_rule_name):
         'status': action2code[action]
     }
 
-    response = context.client.post('/mall2/api/red_envelope_rule/?_method=post', params)
+    response = context.client.post('/apps/promotion/api/red_envelope_rule/?_method=post', params)
     api_code = json.loads(response.content)['code']
 
     if api_code == 500:

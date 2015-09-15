@@ -15,7 +15,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User, Group
 from django.contrib import auth
-from termite.core import stripper
+# from termite.core import stripper
 
 from models import *
 from account.models import UserProfile
