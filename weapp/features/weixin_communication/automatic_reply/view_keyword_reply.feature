@@ -61,14 +61,14 @@ Background:
 		[{
 			"rules_name":"规则1",
 			"keyword": [{
-					"keyword_name": "关键字1",
-					"match": "equal"
+					"keyword": "关键字1",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字2",
-					"match": "like"
+					"keyword": "关键字2",
+					"type": "like"
 				},{
-					"keyword_name": "关键字3",
-					"match": "like"
+					"keyword": "关键字3",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 					"reply_content":"关键字回复内容1",
@@ -83,11 +83,11 @@ Background:
 		},{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword_name": "关键字21",
-					"match": "equal"
+					"keyword": "关键字21",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字22",
-					"match": "like"
+					"keyword": "关键字22",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -96,11 +96,11 @@ Background:
 		},{
 			"rules_name":"规则3",
 			"keyword": [{
-					"keyword_name": "关键字4",
-					"match": "equal"
+					"keyword": "关键字4",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字5",
-					"match": "like"
+					"keyword": "关键字5",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -109,11 +109,11 @@ Background:
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture @eugeneA
+@message @automaticReply @senior @textPicture
 Scenario: 1 浏览关键词自动回复列表，分页
 	1. jobs能看到按创建顺序倒叙排列的列表
 	2. jobs能分页查看列表信息
-
+	Given jobs登录系统
 	And jobs设置分页查询参数
 		"""
 		{
@@ -122,7 +122,7 @@ Scenario: 1 浏览关键词自动回复列表，分页
 		"""
 
 	When jobs访问关键词自动回复规则列表
-	Then jobd获得关键词自动回复规则列表显示共3页
+	Then jobs获得关键词自动回复规则列表显示共3页
 
 	When jobs访问关键词自动回复规则列表第1页
 	Then jobs获得关键词自动回复列表
@@ -130,11 +130,11 @@ Scenario: 1 浏览关键词自动回复列表，分页
 		[{
 			"rules_name":"规则3",
 			"keyword": [{
-					"keyword_name": "关键字4",
-					"match": "equal"
+					"keyword": "关键字4",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字5",
-					"match": "like"
+					"keyword": "关键字5",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -148,11 +148,11 @@ Scenario: 1 浏览关键词自动回复列表，分页
 		[{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword_name": "关键字21",
-					"match": "equal"
+					"keyword": "关键字21",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字22",
-					"match": "like"
+					"keyword": "关键字22",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -166,11 +166,11 @@ Scenario: 1 浏览关键词自动回复列表，分页
 		[{
 			"rules_name":"规则3",
 			"keyword": [{
-					"keyword_name": "关键字4",
-					"match": "equal"
+					"keyword": "关键字4",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字5",
-					"match": "like"
+					"keyword": "关键字5",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -179,14 +179,14 @@ Scenario: 1 浏览关键词自动回复列表，分页
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture @eugeneA
+@message @automaticReply @senior @textPicture
 Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 
 	#空条件查询，查询出所有关键词自动回复规则
 	When jobs设置关键词搜索条件
 		"""
 		{
-			"keyword_name":""
+			"keyword":""
 		}
 		"""
 	Then jobs获得关键词自动回复列表
@@ -194,11 +194,11 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 		[{
 			"rules_name":"规则3",
 			"keyword": [{
-					"keyword_name": "关键字4",
-					"match": "equal"
+					"keyword": "关键字4",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字5",
-					"match": "like"
+					"keyword": "关键字5",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -207,11 +207,11 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 		},{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword_name": "关键字21",
-					"match": "equal"
+					"keyword": "关键字21",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字22",
-					"match": "like"
+					"keyword": "关键字22",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -220,14 +220,14 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 		},{
 			"rules_name":"规则1",
 			"keyword": [{
-					"keyword_name": "关键字1",
-					"match": "equal"
+					"keyword": "关键字1",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字2",
-					"match": "like"
+					"keyword": "关键字2",
+					"type": "like"
 				},{
-					"keyword_name": "关键字3",
-					"match": "like"
+					"keyword": "关键字3",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 					"reply_content":"关键字回复内容1",
@@ -246,7 +246,7 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 	When jobs设置关键词搜索条件
 		"""
 		{
-			"keyword_name":"1"
+			"keyword":"1"
 		}
 		"""
 	Then jobs获得关键词自动回复列表
@@ -254,11 +254,11 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 		[{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword_name": "关键字21",
-					"match": "equal"
+					"keyword": "关键字21",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字22",
-					"match": "like"
+					"keyword": "关键字22",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -267,14 +267,14 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 		},{
 			"rules_name":"规则1",
 			"keyword": [{
-					"keyword_name": "关键字1",
-					"match": "equal"
+					"keyword": "关键字1",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字2",
-					"match": "like"
+					"keyword": "关键字2",
+					"type": "like"
 				},{
-					"keyword_name": "关键字3",
-					"match": "like"
+					"keyword": "关键字3",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 					"reply_content":"关键字回复内容1",
@@ -293,7 +293,7 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 	When jobs设置关键词搜索条件
 		"""
 		{
-			"keyword_name":"关键字5"
+			"keyword":"关键字5"
 		}
 		"""
 	Then jobs获得关键词自动回复列表
@@ -301,11 +301,11 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 		[{
 			"rules_name":"规则3",
 			"keyword": [{
-					"keyword_name": "关键字4",
-					"match": "equal"
+					"keyword": "关键字4",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字5",
-					"match": "like"
+					"keyword": "关键字5",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -318,7 +318,7 @@ Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 	When jobs设置关键词搜索条件
 		"""
 		{
-			"keyword_name":"77"
+			"keyword":"77"
 		}
 		"""
 	Then jobs获得关键词自动回复列表
