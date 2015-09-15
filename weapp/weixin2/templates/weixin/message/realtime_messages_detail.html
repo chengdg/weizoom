@@ -89,7 +89,7 @@
             {{if items.length}}
 	            {{each(i, message) items}}
 				<div class="xui-messages cb">
-                    {{if message.name == data.member.name}}
+                    {{if !message.is_reply}}
 					<div class="xui-messageWrap xui-recieved">
 						<div class="xui-i-wrapLeft">
 							<div class="imgBox disTc pr xui-i-imgBox fl">
