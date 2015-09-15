@@ -144,11 +144,19 @@
 				</tr>
 				{{/each}}
 			{{else}}
-				<tr><td colspan='7'>还没有数据</td></tr>
+				<tr><td colspan='7' style="padding:0px;">
+				<div class="xui-emptyBox">
+				<div class="xui-i-emptyHint">
+					<img src="/static_v2/img/editor/empty.png">
+					<div>
+						<span>还没有数据</span>
+					</div>
+				</div>
+			</div></td></tr>
 			{{/if}}
 		</tbody>
 	</table>
-	{{if data.status == 0}}
+	{{if data.status == 0 && items.length}}
 	<div class="checkbox xui-selectBox">
 	<label  for="all">
 		<input type="checkbox" id="xa-selectAll" class="xui-selectAll">
@@ -393,6 +401,10 @@ $(document).ready(function() {
 			session_id = $(this).parent().parent().data('id');
 			session_ids.push(session_id);
   		});
+  		if(session_ids.length == 0){
+  			W.showHint('error', '没有选中任何消息!');
+  			return;
+  		};
   		W.resource.new_weixin.SignUnreadMessages.post({
   			data: {
 				sessionIds: JSON.stringify(session_ids)
