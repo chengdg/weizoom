@@ -269,7 +269,7 @@
 }
 .xui-memberListPage .xui-w218,
 .xui-memberListPage .xui-col .xui-i-item select{
-
+	white-space: nowrap;
 }
 .xui-memberListPage .xui-w100{
 	width:66px!important;
