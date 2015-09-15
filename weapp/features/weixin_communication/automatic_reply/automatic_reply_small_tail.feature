@@ -77,9 +77,16 @@ Scenario:2 关键词自动回复,文本类型，带文本小尾巴；没有自�
 	When jobs已添加关键词自动回复规则
 		"""
 		[{
-			"patterns": "keyword1",
-			"answer": "关键词自动回复"
-		}]	
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "keyword1",
+					"type": "equal"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"关键词自动回复",
+					 "reply_type":"text"
+				}]
+		}]
 		"""
 	When jobs添加小尾巴
 		"""
