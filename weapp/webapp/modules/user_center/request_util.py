@@ -292,7 +292,7 @@ SHOPING_REWARDES_IMGE = '/static_v2/img/webapp/usercenter/Shoppingrewards.jpg'
 SCAN_REWARDES_IMGE = '/static_v2/img/webapp/usercenter/scanReawards.png'
 def _get_current_log_info(member_integral_log):
 	member_integral_log.is_friend = False
-	if u'好友' in member_integral_log.event_type:
+	if u'好友' in member_integral_log.event_type or u'推荐扫码' in member_integral_log.event_type:
 		member_integral_log.is_friend = True
 		try:
 			friend_member = Member.objects.get(token=member_integral_log.follower_member_token)
@@ -305,6 +305,7 @@ def _get_current_log_info(member_integral_log):
 		except:
 			member_integral_log.pic = SCAN_REWARDES_IMGE
 			member_integral_log.name = ''
+
 	elif u'购物返利' in member_integral_log.event_type or u'评' in member_integral_log.event_type or member_integral_log.event_type == u'活动奖励':
 		member_integral_log.pic = SHOPING_REWARDES_IMGE
 	else:

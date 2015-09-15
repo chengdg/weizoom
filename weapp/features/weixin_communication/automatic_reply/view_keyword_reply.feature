@@ -109,7 +109,7 @@ Background:
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 1 浏览关键词自动回复列表，分页
 	1. jobs能看到按创建顺序倒叙排列的列表
 	2. jobs能分页查看列表信息
@@ -179,7 +179,7 @@ Scenario: 1 浏览关键词自动回复列表，分页
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 2 浏览关键词自动回复 按关键词搜索结果
 
 	#空条件查询，查询出所有关键词自动回复规则
