@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import copy
+
 PRODUCT_FIRST_NAV = 'product'
 PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV = 'selling'
 PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV = 'toSell'
@@ -338,7 +340,11 @@ def get_config_second_navs(request):
         pass
     else:
         # webapp_module_views.get_modules_page_second_navs(request)
-        second_navs = [CONFIG_NAV]
+        if request.user.username != 'wzjx001' and request.user.username != 'ceshi001':
+            nav = {"navs":CONFIG_NAV['navs'][:-1]}
+            second_navs = [nav]
+        else:
+            second_navs = [CONFIG_NAV]
 
     return second_navs
 
