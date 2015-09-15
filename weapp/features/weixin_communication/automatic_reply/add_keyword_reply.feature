@@ -63,7 +63,7 @@ Background:
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture
+@message @automaticReply @senior @textPicture @mall2 
 Scenario: 1 正常添加关键词自动回复
 	Jobs正常添加关键词自动回复 ，能获取他关键词自动回复
 
@@ -73,14 +73,14 @@ Scenario: 1 正常添加关键词自动回复
 		[{
 			"rules_name":"规则1",
 			"keyword": [{
-					"keyword_name": "关键字1",
-					"match": "equal"
+					"keyword": "关键字1",
+					"type": "equal"
 				},{
-					 "keyword_name": "关键字2",
-					 "match": "like"
+					 "keyword": "关键字2",
+					 "type": "like"
 				},{
-					 "keyword_name": "关键字3",
-					 "match": "like"
+					 "keyword": "关键字3",
+					 "type": "like"
 				}],
 			"keyword_reply": [{
 					 "reply_content":"关键字回复内容1",
@@ -95,16 +95,16 @@ Scenario: 1 正常添加关键词自动回复
 		},{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword_name": "关键字21",
-					"match": "equal"
-				},{
-					 "keyword_name": "关键字22",
-					 "match": "like"
+					"keyword": "关键字21",
+					"type": "equal"
+					},{
+					 "keyword": "关键字22",
+					 "type": "like"
 				}],
 			"keyword_reply": [{
-				 "reply_type":"text_picture",
-				 "reply_content":"图文4"
-				 },{
+				 	"reply_type":"text_picture",
+				 	"reply_content":"图文4"
+				 	},{
 					 "reply_content":"图文2",
 					 "reply_type":"text_picture"
 				}]
@@ -116,11 +116,11 @@ Scenario: 1 正常添加关键词自动回复
 		[{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword_name": "关键字21",
-					"match": "equal"
+					"keyword": "关键字21",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字22",
-					"match": "like"
+					"keyword": "关键字22",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
@@ -132,14 +132,14 @@ Scenario: 1 正常添加关键词自动回复
 		},{
 			"rules_name":"规则1",
 			"keyword": [{
-					"keyword_name": "关键字1",
-					"match": "equal"
+					"keyword": "关键字1",
+					"type": "equal"
 				},{
-					"keyword_name": "关键字2",
-					"match": "like"
+					"keyword": "关键字2",
+					"type": "like"
 				},{
-					"keyword_name": "关键字3",
-					"match": "like"
+					"keyword": "关键字3",
+					"type": "like"
 				}],
 			"keyword_reply": [{
 					"reply_content":"关键字回复内容1",
@@ -160,7 +160,7 @@ Scenario: 1 正常添加关键词自动回复
 		[]
 		"""
 
-@message @automaticReply @senior @textPicture
+@message @automaticReply @senior @textPicture @mall2
 Scenario: 2 发送关键词，可以获得正确的回复
 	
 	Given jobs登录系统
@@ -169,49 +169,40 @@ Scenario: 2 发送关键词，可以获得正确的回复
 		[{
 			"rules_name":"规则1",
 			"keyword": [{
-					"keyword_name": "关键字1",
-					"match": "equal"
+					"keyword": "关键字1",
+					"type": "equal"
 				},{
-					 "keyword_name": "关键字2",
-					 "match": "like"
+					 "keyword": "关键字2",
+					 "type": "like"
 				},{
-					 "keyword_name": "关键字3",
-					 "match": "like"
+					 "keyword": "关键字3",
+					 "type": "like"
 				}],
 			"keyword_reply": [{
 					 "reply_content":"关键字回复内容1",
-					 "reply_type":"text"
-				},{
-					 "reply_content":"图文1",
-					 "reply_type":"text_picture"
-				},{
-					 "reply_content":"关键字回复内容3",
 					 "reply_type":"text"
 				}]
 		},{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword_name": "关键字21",
-					"match": "equal"
+					"keyword": "关键字21",
+					"type": "equal"
 				},{
-					 "keyword_name": "关键字22",
-					 "match": "like"
+					 "keyword": "关键22",
+					 "type": "like"
 				}],
 			"keyword_reply": [{
 				 "reply_type":"text_picture",
 				 "reply_content":"图文4"
-				 },{
-					 "reply_content":"图文2",
-					 "reply_type":"text_picture"
-				}]
+				 }]
 		}]
 		"""
-
+	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'关键字1'
 	Then bill收到自动回复'关键字回复内容1'
 
-	When bill在微信中向jobs的公众号发送消息'关键字22模糊匹配'
+	When bill在微信中向jobs的公众号发送消息'关键22模糊匹配'
 	Then bill收到自动回复'图文4'
 
 	When bill在微信中向jobs的公众号发送消息'关键字21精确匹配'

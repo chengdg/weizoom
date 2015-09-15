@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import json
 import weixin2.module_api as weixin_module_api
 
@@ -158,7 +159,11 @@ class RealtimeMessages(resource.Resource):
         """
                         回复实时消息
         """
+        pattern = re.compile(r'_src=".*"')
         answer = request.POST['answer']
+        src_str = pattern.findall(answer, re.S)
+        if src_str:
+            answer = answer.replace(src_str[0], "")
         material_id = request.POST['material_id']
         type = request.POST['type']
         openid_sendto = request.POST['openid']
@@ -214,7 +219,11 @@ class RealtimeMessages(resource.Resource):
                         回复实时消息后回写操作
         """
         session_id = request.POST['session_id']
+        pattern = re.compile(r'_src=".*"')
         content = request.POST['content']
+        src_str = pattern.findall(content, re.S)
+        if src_str:
+            content = content.replace(src_str[0], "")
         receiver_username = request.POST['receiver_username']
         material_id = request.POST['material_id']
 
@@ -239,7 +248,7 @@ class RealtimeMessages(resource.Resource):
         data = {}
         data['created_at'] = latest_contact_created_at.strftime('%Y-%m-%d %H:%M:%S')
 
-        data['text'] = emotion.change_emotion_to_img(content)
+        data['text'] = emotion.new_change_emotion_to_img(content)
         from_index = data['text'].find('<a href=')
         if from_index > -1:
             from_text = data['text'][0:from_index]
@@ -371,7 +380,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             one_session['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
         else:
             one_session['user_icon'] =  DEFAULT_ICON
-        one_session['text'] = emotion.change_emotion_to_img(session.latest_contact_content)
+        one_session['text'] = emotion.new_change_emotion_to_img(session.latest_contact_content)
         from_index = one_session['text'].find('<a href=')
         if from_index > -1:
             from_text = one_session['text'][0:from_index]
@@ -550,7 +559,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         one_message['sender_username'] = weixin_user.username
         one_message['name'] = weixin_user.nickname_for_html
 
-        one_message['text'] = emotion.change_emotion_to_img(message.content)
+        one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
             if message.weixin_created_at <= datetime_before:
