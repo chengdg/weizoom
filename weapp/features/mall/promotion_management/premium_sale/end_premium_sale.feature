@@ -292,7 +292,7 @@ Scenario: 5 商品下架导致买赠活动结束
 #针对线上bug4336补充场景
 #bug4336描述：【微商城】买赠活动创建成功后，将赠品修改为多规格，手机端购买主商品无法提交订单（无任何提示）
 
-@promotion @promotionPremium @mall2
+@promotion @promotionPremium @mall2 
 Scenario: 6 买赠活动创建成功后,将赠品修改为多规格导致活动结束
 	Given jobs登录系统
 	When jobs创建买赠活动

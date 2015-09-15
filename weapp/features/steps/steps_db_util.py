@@ -120,7 +120,7 @@ def get_order_has_products(context):
 
 def get_latest_order():
     try:
-        return Order.objects.all().order_by('-id')[0]
+        return Order.objects.filter(origin_order_id__lte=0).order_by('-id')[0]
     except:
         return None
 

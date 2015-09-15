@@ -588,17 +588,17 @@ def get_integral_adjust_accounts(request):
 	cur_page = int(request.GET.get('page', '1'))
 	items = []
 	user_profile = UserProfile.objects.get(user_id=request.GET.get('user_id'))
-	group_datas = Order.objects.filter(status__gte=2, webapp_id=user_profile.webapp_id).values('integral_each_yuan').annotate(count=Count('integral_each_yuan'))
+	group_datas = Order.by_webapp_id(user_profile.webapp_id).filter(status__gte=2).values('integral_each_yuan').annotate(count=Count('integral_each_yuan'))
 	webapp_id = user_profile.webapp_id
 	for group_data in group_datas:
 		integral_each_yuan = group_data['integral_each_yuan']
 		if integral_each_yuan and int(integral_each_yuan) != -1:
-			integral_count = Order.objects.filter(status__gte=2, webapp_id=webapp_id, integral_each_yuan=integral_each_yuan).aggregate(Sum('integral'))
+			integral_count = Order.by_webapp_id(webapp_id).filter(status__gte=2, integral_each_yuan=integral_each_yuan).aggregate(Sum('integral'))
 			integral_sum = 0
 			if integral_count["integral__sum"] is not None:
 				integral_sum = integral_count["integral__sum"]
 
-			integral_money_sums = Order.objects.filter(status__gte=2, webapp_id=webapp_id, integral_each_yuan=integral_each_yuan).aggregate(Sum('integral_money'))
+			integral_money_sums = Order.by_webapp_id(webapp_id).filter(status__gte=2, integral_each_yuan=integral_each_yuan).aggregate(Sum('integral_money'))
 			integral_money_sum = 0.00
 			if integral_money_sums["integral_money__sum"] is not None:
 				integral_money_sum = integral_money_sums["integral_money__sum"]

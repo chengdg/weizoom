@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+import copy
 from datetime import datetime, timedelta
 
 # from hashlib import md5
@@ -191,6 +192,8 @@ class Product(models.Model):
 	weshop_sync = models.IntegerField(default=0)  # 0不同步 1普通同步 2加价同步
 	weshop_status = models.IntegerField(default=0)  # 0待售 1上架 2回收站
 	is_member_product = models.BooleanField(default=False)  # 是否参加会员折扣
+	supplier = models.IntegerField(default=0) # 供货商
+	purchase_price = models.FloatField(default=0.0) # 进货价格
 
 	class Meta(object):
 		db_table = 'mall_product'
@@ -1027,11 +1030,7 @@ class Product(models.Model):
 	# add by liupeiyu at 17.1
 	def is_can_buy_by_product(self, request):
 		if hasattr(request, 'webapp_user') and request.webapp_user:
-			order_ids = [
-				o.id
-				for o in Order.objects.filter(
-					webapp_user_id=request.webapp_user.id,
-					webapp_id=request.user_profile.webapp_id)]
+			order_ids = [o.id for o in Order.by_webapp_user_id(request.webapp_user.id).filter(webapp_id=request.user_profile.webapp_id)]
 			count = OrderHasProduct.objects.filter(
 				order_id__in=order_ids,
 				product_id=self.id).count()
@@ -1088,7 +1087,8 @@ class Product(models.Model):
 			'current_used_model': self.current_used_model,
 			'created_at': datetime.strftime(self.created_at, '%Y-%m-%d %H:%M'),
 			'display_index': self.display_index,
-			'is_member_product': self.is_member_product
+			'is_member_product': self.is_member_product,
+			'purchase_price': self.purchase_price,
 		}
 
 
@@ -1363,6 +1363,10 @@ REFUND_STATUS2TEXT = {
 }
 
 ORDERSTATUS2TEXT = STATUS2TEXT
+
+ORDERSTATUS2MOBILETEXT = copy.copy(ORDERSTATUS2TEXT)
+ORDERSTATUS2MOBILETEXT[ORDER_STATUS_PAYED_SHIPED] = u'待收货'
+
 PAYMENT_INFO = u'下单'
 DEFAULT_DATETIME = datetime.strptime('2000-01-01', '%Y-%m-%d')
 
@@ -1431,12 +1435,46 @@ class Order(models.Model):
 	weizoom_card_money = models.FloatField(default=0.0)  # 微众卡抵扣金额
 	promotion_saved_money = models.FloatField(default=0.0)  # 促销优惠金额
 	edit_money = models.FloatField(default=0.0)  # 商家修改差价
+	origin_order_id = models.IntegerField(default=0) # 原始订单id，用于微众精选拆单
+	# origin_order_id=-1表示有子订单，>0表示有父母订单，=0为默认数据
+	supplier = models.IntegerField(default=0) # 订单供货商，用于微众精选拆单
 
 	class Meta(object):
 		db_table = 'mall_order'
 		verbose_name = '订单'
 		verbose_name_plural = '订单'
 
+	@property
+	def has_sub_order(self):
+		"""
+		判断该订单是否有子订单
+		"""
+		return self.origin_order_id == -1 and self.status > 0 #未支付的订单按未拆单显示
+
+	@staticmethod
+	def get_sub_order_ids(origin_order_id):
+		orders = Order.objects.filter(origin_order_id=origin_order_id)
+		sub_order_ids = [order.order_id for order in orders]
+		return sub_order_ids
+
+
+	@staticmethod
+	def by_webapp_user_id(webapp_user_id, order_id=None):
+		if order_id:
+			Order.objects.filter(Q(webapp_user_id__in=webapp_user_id) | Q(id__in=order_id)).filter(origin_order_id__lte=0)
+		if isinstance(webapp_user_id, int) or isinstance(webapp_user_id, long):
+			return Order.objects.filter(webapp_user_id=webapp_user_id, origin_order_id__lte=0)
+		else:
+			return Order.objects.filter(webapp_user_id__in=webapp_user_id, origin_order_id__lte=0)
+
+	@staticmethod
+	def by_webapp_id(webapp_id):
+		if str(webapp_id) == '3394':
+			return Order.objects.filter(webapp_id=webapp_id)
+		if isinstance(webapp_id, int) or isinstance(webapp_id, long):
+			return Order.objects.filter(webapp_source_id=webapp_id, origin_order_id__lte=0)
+		else:
+			return Order.objects.filter(webapp_source_id__in=webapp_id, origin_order_id__lte=0)
 	##########################################################################
 	# get_coupon: 获取定单使用的优惠券信息
 	##########################################################################
@@ -1559,8 +1597,7 @@ class Order(models.Model):
 	# add by bert at member_4.0
 	@staticmethod
 	def get_orders_final_price_sum(webapp_user_ids):
-		numbers = Order.objects.filter(
-			webapp_user_id__in=webapp_user_ids,
+		numbers = Order.by_webapp_user_id(webapp_user_ids).filter(
 			status__gte=ORDER_STATUS_PAYED_SUCCESSED).aggregate(
 			Sum("final_price"))
 		number = 0
@@ -1572,19 +1609,11 @@ class Order(models.Model):
 	def get_pay_numbers(webapp_user_ids):
 		return Order.objects.filter(
 			webapp_user_id__in=webapp_user_ids,
-			status__gte=ORDER_STATUS_PAYED_SUCCESSED).count()
-
-	# @staticmethod
-	# def pay_days_in(webapp_user_ids, days):
-	#     date_day = datetime.today()-timedelta(days=int(days))
-	# return Order.objects.filter(webapp_user_id__in=webapp_user_ids,
-	# status__gte=ORDER_STATUS_PAYED_SUCCESSED,
-	# payment_time__gte=date_day).count()
+			status__gte=ORDER_STATUS_PAYED_SUCCESSED, origin_order_id__lte=0).count()
 
 	@staticmethod
 	def get_webapp_user_ids_pay_times_greater_than(webapp_id, pay_times):
-		list_info = Order.objects.filter(
-			webapp_id=webapp_id,
+		list_info = Order.by_webapp_user_id(webapp_id).filter(
 			status__gte=ORDER_STATUS_PAYED_SUCCESSED).values('webapp_user_id').annotate(
 			dcount=Count('webapp_user_id'))
 		webapp_user_ids = []
@@ -1601,7 +1630,7 @@ class Order(models.Model):
 			order.webapp_user_id for order in Order.objects.filter(
 				webapp_id=webapp_id,
 				status__gte=ORDER_STATUS_PAYED_SUCCESSED,
-				payment_time__gte=date_day)]
+				payment_time__gte=date_day, origin_order_id__lte=0)]
 
 	@property
 	def get_express_details(self):
@@ -1631,13 +1660,9 @@ def belong_to(webapp_id):
 	if webapp_id == '3394':
 		return Order.objects.filter(webapp_id=webapp_id)
 	else:
-		return Order.objects.filter(webapp_source_id=webapp_id)
+		return Order.objects.filter(webapp_source_id=webapp_id, origin_order_id__lte=0)
 
 
-	# weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(
-	# 	webapp_id)
-	# return Order.objects.filter(
-	# 	Q(webapp_id=webapp_id) | Q(order_id__in=weizoom_mall_order_ids))
 Order.objects.belong_to = belong_to
 #from django.db.models import signals
 # def after_save_order(instance, created, **kwargs):
@@ -2494,3 +2519,19 @@ class MallOrderFromSharedRecord(models.Model):
         verbose_name = "通过分享链接订单"
         verbose_name_plural = "通过分享链接订单"
         db_table = "mall_order_from_shared_record"
+# #######        供货商实现        ####
+
+class Supplier(models.Model):
+	owner = models.ForeignKey(User)
+	name = models.CharField(max_length=16)  # 供货商名称
+	responsible_person = models.CharField(max_length=100) # 供货商负责人
+	supplier_tel = models.CharField(max_length=100) # 供货商电话
+	supplier_address = models.CharField(max_length=256) # 供货商地址
+	remark = models.CharField(max_length=256) # 备注
+	is_delete = models.BooleanField(default=False)  # 是否已经删除
+	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
+
+	class Meta(object):
+		verbose_name = "供货商"
+		verbose_name_plural = "供货商操作"
+		db_table = "mall_supplier"

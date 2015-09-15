@@ -62,3 +62,5 @@ site/
 weapp/error.html
 weapp/static/upload
 
+# PyCharm
+.idea/

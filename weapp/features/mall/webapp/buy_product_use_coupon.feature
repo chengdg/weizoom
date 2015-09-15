@@ -724,7 +724,7 @@ Scenario: 10 使用满金额条件的优惠券，购买大于金额条件的商�
 		}
 		"""
 
-@mall2 @mall.webapp @mall.coupon  
+@mall2 @mall.webapp @mall.coupon
 Scenario: 11 购买多规格商品，买1个商品的两个规格，总价格满足优惠劵使用条件
 	
 	

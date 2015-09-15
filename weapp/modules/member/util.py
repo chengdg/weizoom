@@ -218,5 +218,5 @@ def update_models_use_webapp_user(current_webapp_user, expired_webapp_user):
 		return None
 	from mall.models import Order
 	if current_webapp_user.webapp_id == expired_webapp_user.webapp_id:
-		Order.objects.filter(webapp_user_id=expired_webapp_user.id, webapp_id=current_webapp_user.webapp_id).update(webapp_user_id=current_webapp_user.id)
+		Order.by_webapp_user_id(expired_webapp_user.id).filter(webapp_id=current_webapp_user.webapp_id).update(webapp_user_id=current_webapp_user.id)
 

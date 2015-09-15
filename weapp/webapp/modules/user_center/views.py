@@ -63,7 +63,7 @@ def __get_member_orders(member):
 		watchdog_error(notify_message)
 		return None
 	
-	return Order.objects.filter(webapp_user_id=webapp_user.id).order_by("-created_at")
+	return Order.by_webapp_user_id(webapp_user.id).order_by("-created_at")
 
 def __get_member_shared_urls(member):
 	return MemberSharedUrlInfo.objects.filter(member_id=member.id)

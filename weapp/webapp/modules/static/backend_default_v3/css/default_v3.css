@@ -799,7 +799,6 @@ input.ui-input-text, textarea.ui-input-text {
     position: relative;
     padding: 5px;
 }
-.xui-products-original .xui-inner-li:last-child{padding-bottom:50px;}
 .xui-products-original .xui-inner-li a{
     padding: 5px;
     display: block;
@@ -2802,7 +2801,6 @@ input.ui-input-text, textarea.ui-input-text {
     font-family: "黑体";
     font-size: 16px;
     background-color: #F0F0F0;
-    overflow: hidden;
 }
 .xui-orderResult-page .xui-getRedEnvelope-btn{
     height:40px;
@@ -2819,7 +2817,16 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-orderResult-page a {
     color: #000;
 }
+.xui-orderResult-page .xui-subOrderTip{
+   padding:15px 0px;
+   margin:0 10px;
+   color:#666;
+   font-size:.8rem; 
+   text-align: center;
+   border-top:1px dashed #ddd;
+}
 .xui-orderResult-page .xui-submitOrder{
+    padding-top:20px;
     margin-bottom: 20px;
 }
 .xui-orderResult-page .xui-submitOrder p span {
@@ -2828,15 +2835,14 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-orderResult-page .xui-submitOrder .xui-successHint {
     width: 294px;
-    height: 82px;
-    line-height: 82px;
     position: relative;
     left: 50%;
     margin-left: -147px;
+    margin-bottom:25px;
 }
 .xui-orderResult-page .xui-fonts {
     font-size: 0.95em;
-    color: #999;
+    color: #666;
 }
 .xui-orderResult-page .xui-fonts-tow {
     font-size: 0.9rem;
@@ -2931,6 +2937,22 @@ input.ui-input-text, textarea.ui-input-text {
     position: fixed;
     bottom: 0;
     left: 0;
+}
+.xui-payOrderPage .xui-package{
+   background:#fbfafd;
+   vertical-align: middle;
+   padding:10px;
+   font-size: .8rem;
+   color:#666;
+}
+.xui-payOrderPage .xui-package i{
+    margin-right: 5px;
+    vertical-align: middle;
+    width:17px;
+    height: 17px;
+    display: inline-block;
+    background: url(/static_v2/img/webapp/usercenter/packge_icon.png) no-repeat;
+    background-size: cover;
 }
 .xui-payOrderPage .xui-selectedProductList li{
     padding:12px 12px 12px 0;
@@ -4156,10 +4178,10 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     border-color: #999;
     background-image:url(/static_v2/img/webapp/usercenter/normal.png);
 }
-.xui-expressInfoPage .xui-content ul li:last-child{
+.xui-expressInfoPage .xui-content ul li:first-child{
     background:#fff;
 }
-.xui-expressInfoPage .xui-content ul li:last-child i{
+.xui-expressInfoPage .xui-content ul li:first-child i{
     background-image:url(/static_v2/img/webapp/usercenter/active.png);
     border-color: #0580ce!important;
 }
