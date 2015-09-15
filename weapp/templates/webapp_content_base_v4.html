@@ -322,7 +322,7 @@
             W.permission = "{{ permission }}";
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
             W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-            var slag = true;
+            var slag = true;//调研图片上传较慢，给出提示用
             var link = window.location.href;
             if (link.indexOf('fmt') === -1){
                 if (link.indexOf('&') === -1){

@@ -645,3 +645,6 @@ p.wui-i-start_time,p.wui-i-end_time{
     color: #A9A9A9;
     line-height: 45px;
 }
+.wui-i-uploadimg .xa-inputControl {
+	min-height: 45px;
+}
