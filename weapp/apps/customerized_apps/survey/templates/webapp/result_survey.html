@@ -38,6 +38,9 @@
         font-weight: lighter;
         border-left: 4px solid #1aa2f8;
     }
+    .pa {
+      position: relative;
+    }
     </style>
 
 {% endblock %}
@@ -123,9 +126,8 @@
                 <div class="wui-i-uploadimg" data-control-type="appkit.uploadimg">
                     <div class="xui-productPhoto mt10">
                         <div class="xui-addPhoto mb10 fl pr">
-                        <span class="xui-i-box"></span>
                             {% for att_url in item.att_urls %}
-                            <img class="xui-uploadImg pa" name="file_img" src={{ att_url }} style="width:45px;height:45px;top:0;left:0;" data-allow-autoplay="false">
+                            <span class="xui-i-box"><img class="xui-uploadImg pa" name="file_img" src={{ att_url }} style="width:50px;height:50px;top:0;left:0;" data-allow-autoplay="false"></span>
                             {% endfor %}
                         </div>
                     </div>
