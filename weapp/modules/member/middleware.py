@@ -357,9 +357,7 @@ class RedirectByFmtMiddleware(object):
 		# if cookie_fmt == url_fmt:
 		# 	return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
-		print request.member.id,'========================out',member_settings.OPENID_WEBAPP_ID_KEY in request.COOKIES,'===',url_fmt,'==---',cookie_fmt
-		if (member_settings.OPENID_WEBAPP_ID_KEY in request.COOKIES):
-			print request.member.id,'========================in'
+		if (member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY in request.COOKIES):
 			if request.member:
 				new_fmt = request.member.token
 				if new_fmt == url_fmt:
@@ -1159,9 +1157,10 @@ class OAUTHMiddleware(object):
 		cookie_fmt = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
 		self.process_shared_url(request,is_new_created_member)
-		if cookie_fmt == url_fmt:
-			return None
+		# if cookie_fmt == url_fmt:
+		# 	return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
+		print '===========',request.member.token, url_fmt, cookie_fmt
 		if request.member and url_fmt:
 			new_fmt = request.member.token
 			if new_fmt == url_fmt:
