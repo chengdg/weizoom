@@ -227,8 +227,8 @@
     function common_interval_check_func(){
         W.isRequireConfirmViewDisplayed = false;
       W.getApi().call({
-          app:'mall2',
-          resource:'common_interval_check',
+          app:'new_weixin',
+          resource:'outline',
           showLoading: false,
           args:{},
           success: function (data) {
@@ -346,41 +346,6 @@
 
 <script type="text/javascript">
 $(document).ready(function($) {
-	// 批量发货
-	$('a[name="orderBatchDelivery"]').click(function(event){
-		W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
-			success: function(data) {
-				// W.getLoadingView().show();
-
-				W.getApi().call({
-					app: 'mall2',
-					resource: 'bulk_shipment',
-					method: 'post',
-					args: {
-						file_url: data
-					},
-					success: function(data) {
-						console.log('bulk_shipments/update', data.error_count);
-						if (data.error_count == 0) {
-							W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
-							W.getLoadingView().hide();
-						} else {
-							W.dialog.showDialog('W.dialog.common.OrderResultBatchDeliverDialog', {
-									data: data,
-									success: function(data) {},
-									error: function(data) {}
-								});
-						}
-
-					},
-					error: function(resp) {
-						W.getLoadingView().hide();
-						W.getErrorHintView().show('处理失败，请稍后重试！66666');
-					}
-				})
-			}
-		});
-
 
 	$('.xa-i-logoHref').click(function(event){
 		location.href = "http://fans.weizoom.com";
