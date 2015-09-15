@@ -354,10 +354,10 @@ class RedirectByFmtMiddleware(object):
 	def process_fmt_in_url(self, request):
 		cookie_fmt = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
-		if cookie_fmt == url_fmt:
-			return None
+		# if cookie_fmt == url_fmt:
+		# 	return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
-		if (member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY in request.COOKIES):
+		if (member_settings.OPENID_WEBAPP_ID_KEY in request.COOKIES):
 			if request.member:
 				new_fmt = request.member.token
 				if new_fmt == url_fmt:
