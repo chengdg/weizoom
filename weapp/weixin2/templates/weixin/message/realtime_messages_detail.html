@@ -122,14 +122,17 @@
                                         {{if message.message_type == 'text'}}
                                             {{if message.is_news_type}}
                                                 <span>${message.text} <span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=${message.material_id}" target="_blank">${message.news_title}</a></span>
+                                                <br/>
                                             {{else}}
                                                 <span>{{html message.text}}</span>
+                                                <br/>
                                             {{/if}}
                                         {{/if}}
                                         {{if message.message_type == 'image'}}
                                             <a href="${pic_url}" class="xui-i-sessionsImg">
                                                 <img src = "${pic_url}" />
                                             </a>
+                                            <br/>
                                         {{/if}}
                                         {{if message.message_type == 'voice'}}
                                             <div class="xui-i-voiceContainer">
@@ -138,7 +141,7 @@
                                             </div>
                                         {{/if}}
 										{{if message.remark}}
-	                                    <br/><span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
+	                                    <span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
 	                                    {{/if}}
 									</p>
 								</div>

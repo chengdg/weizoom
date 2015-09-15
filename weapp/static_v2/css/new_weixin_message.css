@@ -121,6 +121,8 @@
 .xui-weixin-realtimeMessagePage .xui-message .xui-i-remark-text {
     color: #f39800;
     cursor: text !important;
+    position: relative;
+    top:5px;
 }
 .xui-weixin-realtimeMessagePage .xui-messageWrap {
 }
@@ -356,7 +358,7 @@
 }
 
 .xui-weixin-realtimeMessagePage .xui-i-not-reply {
-	color: #c09853;
+	color: #f39800;
 }
 
 .xui-weixin-realtimeMessagePage .nav-tabs {
@@ -539,6 +541,7 @@
 .xui-weixin-realtimeMessagePage .xui-i-panel-body {
     width: 100%;
     background: #eaeef6;
+    padding-bottom: 0px;
 }
 
 .xui-weixin-user-detail {
