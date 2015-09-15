@@ -51,17 +51,22 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					$('.modal-body .table.table-bordered').append(att_html);
 
 
+					var click_count = 1;
 					$('img.xa-uploadimg').click(function(){
-						var that = this;
-						$('.xa-uploadimg_box').append($(that).clone(true));
-						$('.xa-uploadimg_box').removeClass('inactive').addClass('active');
-						$('img.xa-uploadimg').unbind();
-					});
-
-					$('.xa-uploadimg_box .xa-close_btn').click(function(){
-						$('.xa-uploadimg_box').removeClass('active');
-					})
-
+						if(click_count ===1){
+							var that = this;
+							click_count = click_count+1;
+							$('.xa-uploadimg_box').append("<img class='xa-close_btn' src='/static_v2/img/close_btn.png'>").append($(that).clone(true)).fadeIn('fast');
+							$('.xa-close_btn').click(function(){
+									$('.xa-uploadimg_box').fadeOut('fast');
+									$('.xa-uploadimg_box').empty();
+									click_count = 1;
+								});
+						}else{
+							$('.xa-uploadimg_box').fadeOut('fast');
+							$('.xa-uploadimg_box').empty();
+							click_count = 1;
+						}});
 				},
 				error: function(resp) {
 				}
