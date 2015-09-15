@@ -889,6 +889,9 @@ input.ui-input-text, textarea.ui-input-text {
     border-right:1px solid #696969;
     right:0px;
 }
+.xui-productDetailPage .xui-production-panel img{
+    vertical-align: middle;
+}
 .xui-productDetailPage .xui-section-title h2{
     font-size:0.95rem;
 }
