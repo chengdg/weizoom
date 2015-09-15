@@ -357,7 +357,9 @@ class RedirectByFmtMiddleware(object):
 		# if cookie_fmt == url_fmt:
 		# 	return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
+		print request.member.id,'========================out',member_settings.OPENID_WEBAPP_ID_KEY in request.COOKIES,'===',url_fmt,'==---',cookie_fmt
 		if (member_settings.OPENID_WEBAPP_ID_KEY in request.COOKIES):
+			print request.member.id,'========================in'
 			if request.member:
 				new_fmt = request.member.token
 				if new_fmt == url_fmt:
