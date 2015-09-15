@@ -338,7 +338,7 @@ textarea{resize:none}
 	cursor: pointer;
 }
 .cursor-text {
-	cursor: text;
+	cursor: text !important;
 }
 .xui-contenteditable:hover {
 	background-color: #FCFFD5 !important;

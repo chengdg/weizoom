@@ -5,14 +5,15 @@ Feature:实时消息列表
 	公众号与关注此公众号的粉丝直接的消息互动的消息列表展示
 	1、在消息列表中对某个粉丝加备注,表示在该粉丝的最后一条消息上（可能是粉丝的发送消息也可能是回复粉丝的消息）加备注
 	2、加完备注后消息状态变为已读
-	3、自动回复的消息，在以粉丝为列表的选项卡中（"所有信息"、"未读信息"、"未回复"），最后一条不计算自动回复的消息，添加备注时，添加都最后添加消息，
-	也不计算自动回复的消息
+	3、自动回复的消息，在以粉丝为列表的选项卡中（"所有信息"、"未读信息"、"未回复"），最后一条不计算自动回复的消息，添加备注时，添加到最后添加消息，也不计算自动回复的消息
 	备注：为在feature中实现
 	4、只有48小时内的消息可以回复，48小时之后的粉丝消息就不能再回复了
 	备注：为在feature中实现
+
+	快速回复不能在feature中实现
 """
 
-Background：
+Background:
 
 	Given jobs登录系统
 
@@ -29,246 +30,588 @@ Background：
 		}]
 		"""
 
+	#添加关键词自动回复
+	When jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "关键词tom",
+					"type": "equal"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"关键字回复内容tom",
+					 "reply_type":"text"
+				}]
+		},{
+			"rules_name":"规则2",
+			"keyword": [{
+					 "keyword": "关键词nokia",
+					 "type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"图文1",
+					 "reply_type":"text_picture"
+				}]
+		},{
+			"rules_name":"规则3",
+			"keyword": [{
+					 "keyword": "关键词bill",
+					 "type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"图文1",
+					 "reply_type":"text_picture"
+				}]
+		}]
+		"""
+
 	#bill关注jobs的公众号进行消息互动，发送一条，无回复
+	When 清空浏览器
+	and bill关注jobs的公众号
+	and bill访问jobs的webapp
+	and bill在微信中向jobs的公众号发送消息'bill发送一条文本消息，未回复'
+	and bill在微信中向jobs的公众号发送消息'关键词bill'
 
-	When bill关注jobs的公众号
-	When bill在模拟器中给jobs发送消息'bill发送一条文本消息，未回复'
+	#tom关注jobs的公众号进行消息互动，发送两条，第一条回复文本消息，第二条无回复
+	When 清空浏览器
+	and tom关注jobs的公众号
+	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息1，未回复'
+	and tom在微信中向jobs的公众号发送消息'关键词tom'
+	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息2，未回复'
 
-	#bill1关注jobs的公众号进行消息互动，发送两条，无回复
+	#nokia关注jobs的公众号进行消息互动，发送一条，jobs回复一条图文消息
+	When 清空浏览器
+	and nokia关注jobs的公众号
+	and nokia在微信中向jobs的公众号发送消息'关键词nokia'
 
-	When bill1关注jobs的公众号
-	When bill1在模拟器中给jobs发送消息'bill1发送一条文本消息，未回复'
-	When bill1在模拟器中给jobs发送消息'bill1_图片.png'
-
-	#bill2关注jobs的公众号进行消息互动，发送一条，jobs回复一条文本消息
-
-	When bill2关注jobs的公众号
-	When bill2在模拟器中给jobs发送消息'bill2发送一条文本消息，回复文本消息'
-	When jobs在模拟器中给bill2回复消息'jobs回复bill2消息'
-
-	#bill3关注jobs的公众号进行消息互动，发送一条，jobs回复一条图文消息
-
-	When bill3关注jobs的公众号
-	When bill3在模拟器中给jobs发送消息'bill3发送一条文本消息，回复图文'
-	When jobs在模拟器中给bill3回复消息'图文1'
-
+@weixin @message @realtimeMessage @wll
 Scenario:1 获取"所有消息"选项卡列表
 
 	Given jobs登录系统
-
-	Then jobs获得实时消息"所有信息"列表
+	When jobs访问实时消息'所有信息'
+	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
+			"member_name": "nokia",
 			"have_read": true,
-			"have_replied": true,
+			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 0,
-			"fans_name": "bill3",
-			"inf_content": "图文1",
+			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
-			"latest_reply_time": "今天",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
 		},{
-			"have_read": true,
-			"have_replied": true,
-			"remark": "",
-			"start": false,
-			"unread_count": 0,
-			"fans_name": "bill2",
-			"inf_content": "jobs回复bill2消息",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
-		},{
+			"member_name": "tom",
 			"have_read": false,
 			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 2,
-			"fans_name": "bill1",
-			"inf_content": "bill1_图片.png，未回复",
+			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
 		},{
+			"member_name": "bill",
 			"have_read": false,
 			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 1,
-			"fans_name": "bill",
-			"inf_content": "bill发送一条文本消息，未回复",
+			"inf_content": "关键词bill",
 			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
 		}]
 		"""
 
+@weixin @message @realtimeMessage
 Scenario:2 获取"未读信息"选项卡列表
 
 	Given jobs登录系统
-
-	Then jobs获得实时消息"未读信息"列表
+	When jobs访问实时消息'未读信息'
+	Then jobs获得实时消息'未读信息'列表
 		"""
 		[{
+			"member_name": "tom",
 			"have_read": false,
 			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 2,
-			"fans_name": "bill1",
-			"inf_content": "bill1_图片.png，未回复",
+			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
 		},{
+			"member_name": "bill",
 			"have_read": false,
 			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 1,
-			"fans_name": "bill",
-			"inf_content": "bill发送一条文本消息，未回复",
+			"inf_content": "关键词bill",
 			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
 		}]
 		"""
 
-Scenario:3 获取"未回复""有备注""星标信息"选项卡列表
+@weixin @message @realtimeMessage
+Scenario:3 获取"未回复"选项卡列表
+
+	Given jobs登录系统
+	When jobs访问实时消息'未回复'
+	Then jobs获得实时消息'未回复'列表
+		"""
+		[{
+			"member_name": "nokia",
+			"have_read": true,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 0,
+			"inf_content": "关键词nokia",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "bill",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 1,
+			"inf_content": "关键词bill",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+@weixin @message @realtimeMessage
+Scenario:4 实时消息列表查询
+
+	Given jobs登录系统
+	#添加会员等级
+	And jobs添加会员等级
+		"""
+		[{
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "10"
+		},{
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"shop_discount": "9"
+		}]
+		"""
+	#添加会员分组
+	When jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1",
+			"tag_id_2": "分组2",
+			"tag_id_3": "分组3"
+		}
+		"""
+
+	#调整会员分组
+	When jobs给"tom"调分组
+		"""
+		[
+			"分组1", "分组3"
+		]
+		"""
+	When jobs给"bill"调分组
+		"""
+		[
+			"分组2", "分组3"
+		]
+		"""
+
+	#设置会员等级
+	When jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "银牌会员"
+		}
+		"""
+	When jobs更新"tom"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "银牌会员"
+		}
+		"""
+
+	#按照会员昵称查询
+	When jobs设置实时消息查询条件
+		"""
+		{
+			"member_name":"o"
+		}
+		"""
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "nokia",
+			"have_read": true,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 0,
+			"inf_content": "关键词nokia",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+	#按照消息内容查询
+	When jobs设置实时消息查询条件
+		"""
+		{
+			"inf_content":"文本"
+		}
+		"""
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "bill",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 1,
+			"inf_content": "bill发送一条文本消息，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+	#按消息时间查询
+	When jobs设置实时消息查询条件
+		"""
+		{
+			"start_date":"今天",
+			"end_date":"1天后"
+		}
+		"""
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "nokia",
+			"have_read": true,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 0,
+			"inf_content": "关键词nokia",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "关键词tom",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "bill",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 1,
+			"inf_content": "关键词bill",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "bill",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 1,
+			"inf_content": "bill发送一条文本消息，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+	#按照会员分组查询
+	When jobs设置实时消息查询条件
+		"""
+		{
+			"tags":"分组3"
+		}
+		"""
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "bill",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 1,
+			"inf_content": "关键词bill",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+	#按照会员等级查询
+	When jobs设置实时消息查询条件
+		"""
+		{
+			"member_rank":"银牌会员"
+		}
+		"""
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "bill",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 1,
+			"inf_content": "关键词bill",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+	#综合查询
+	When jobs设置实时消息查询条件
+		"""
+		{
+			"member_name":"o",
+			"inf_content":"关键词",
+			"start_date":"今天",
+			"end_date":"1天后",
+			"tags":"分组3",
+			"member_rank":"银牌会员"
+		}
+		"""
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "关键词tom",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+@weixin @message @realtimeMessage
+Scenario:5 实时消息"所有消息"列表分页
 
 	Given jobs登录系统
 
-	Then jobs获得实时消息"所有信息"选项卡列表
+	And jobs设置分页查询参数
+		"""
+		{
+			"count_per_page":2
+		}
+		"""
+
+	#按消息时间查询
+	When jobs设置实时消息查询条件
+		"""
+		{
+			"start_date":"今天",
+			"end_date":"1天后"
+		}
+		"""
+	When jobs访问实时消息'所有信息'
+
+	When jobs浏览'所有信息'列表第1页
+	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
+			"member_name": "nokia",
 			"have_read": true,
-			"have_replied": true,
+			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 0,
-			"fans_name": "bill3",
-			"inf_content": "图文1",
+			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
-			"latest_reply_time": "今天",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
 		},{
-			"have_read": true,
-			"have_replied": true,
-			"remark": "",
-			"start": false,
-			"unread_count": 0,
-			"fans_name": "bill2",
-			"inf_content": "jobs回复bill2消息",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
-		},{
+			"member_name": "tom",
 			"have_read": false,
 			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 2,
-			"fans_name": "bill1",
-			"inf_content": "bill1_图片.png，未回复",
+			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+	When jobs浏览'下一页'
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "关键词tom",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
 		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
+		}]
+		"""
+
+	When jobs浏览'所有信息'列表第3页
+	Then jobs获得实时消息'所有信息'列表
+		"""
+		[{
+			"member_name": "bill",
 			"have_read": false,
 			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 1,
-			"fans_name": "bill",
-			"inf_content": "bill发送一条文本消息，未回复",
+			"inf_content": "关键词bill",
 			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
-		}]
-		"""
-
-	When jobs在"所有信息"选项卡下给"bill1 "添加备注信息
-		"""
-		[{
-			"remark": "bill1的备注"
-		}]
-		"""
-
-	When jobs在"所有信息"选项卡下给"bill2 "添加备注信息
-		"""
-		[{
-			"remark": "bill2的备注"
-		}]
-		"""
-
-	Then jobs获得实时消息"未回复"选项卡列表
-		"""
-		[{
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "bill",
 			"have_read": false,
 			"have_replied": false,
 			"remark": "",
 			"start": false,
 			"unread_count": 1,
-			"fans_name": "bill",
 			"inf_content": "bill发送一条文本消息，未回复",
 			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
 		}]
 		"""
 
-	Then jobs获得实时消息"有备注"选项卡列表
+	When jobs浏览'上一页'
+	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
-			"have_read": true,
-			"have_replied": true,
-			"remark": "bill2的备注",
-			"start": false,
-			"unread_count": 0,
-			"fans_name": "bill2",
-			"inf_content": "jobs回复bill2消息",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
-		},{
-			"have_read": true,
+			"member_name": "tom",
+			"have_read": false,
 			"have_replied": false,
-			"remark": "bill1的备注",
-			"start": false,
-			"unread_count": 0,
-			"fans_name": "bill1",
-			"inf_content": "bill1_图片.png，未回复",
-			"last_message_time": "今天",
-			"latest_reply_time": "",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
-		}]
-		"""
-
-	When jobs在"所有信息"选项卡下给"bill3 "添加星标
-		"""
-		[{
-			"start": true
-		}]
-		"""
-
-	Then jobs获得实时消息"星标信息"选项卡列表
-		"""
-		[{
-			"have_read": true,
-			"have_replied": true,
 			"remark": "",
-			"start": true,
-			"unread_count": 0,
-			"fans_name": "bill3",
-			"inf_content": "图文1",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "关键词tom",
 			"last_message_time": "今天",
-			"latest_reply_time": "今天",
-			"user_icon": "http://wx.qlogo.cn/mmopen/u83HrgfsuWXdb82iaCNl0vibGdEc1tib22ORvSBpwBW6VQthuweHP4Vp3kCCh1Sr3n39ogfxAhL7XlXxZYgG4e0Ig/0"
+			"latest_reply_time": "今天"
+		},{
+			"member_name": "tom",
+			"have_read": false,
+			"have_replied": false,
+			"remark": "",
+			"start": false,
+			"unread_count": 2,
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"last_message_time": "今天",
+			"latest_reply_time": "今天"
 		}]
 		"""
-
-Scenario:4 自动回复的消息，在以粉丝为列表的选项卡中（"所有信息"、"未读信息"、"未回复"），最后一条不计算自动回复的消息
-
-Scenario:5 只有48小时内的消息可以回复，48小时之后的粉丝消息就不能再回复
