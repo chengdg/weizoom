@@ -395,7 +395,6 @@ def change_img_to_emotion(content):
 from core.emojicons_util import encode_emojicons_for_html
 
 def new_change_emotion_to_img(content):
-	content = encode_emojicons_for_html(content)
 	beg = 0
 	items = []
 	while True:

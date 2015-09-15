@@ -10,7 +10,7 @@
         </ul>
     </div>
 	<!-- 回复框 -->
-	<div id="edit-message-panel" style="width:580px; z-index:500; background: #eaeef6; margin-top: 10px;"></div>
+	<div id="edit-message-panel" class="xui-edit-message-panel"></div>
 	<div
 		data-ui-role="advanced-table"
 		data-app="new_weixin"
@@ -83,9 +83,9 @@
 	</div>
     //去除个人资料部分
     -->
-	<table class="table table-condensed mb0 xui-tableHead">
+	<div class="table table-condensed mb0 xui-tableHead">
 		<thead><label class="ml30 xui-bold">聊天记录</label><label class="xui-i-not-reply fn {{if data.member.could_replied == true}}hidden{{/if}}">（注：消息仅在48小时内回复有效！）</label></thead>
-		<tbody id='realtime_message_list' data-id="${data.session_id}" data-openid="${data.member.openid}">
+		<div id='realtime_message_list' data-id="${data.session_id}" data-openid="${data.member.openid}">
             {{if items.length}}
 	            {{each(i, message) items}}
 				<div class="xui-messages cb">
@@ -122,14 +122,17 @@
                                         {{if message.message_type == 'text'}}
                                             {{if message.is_news_type}}
                                                 <span>${message.text} <span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=${message.material_id}" target="_blank">${message.news_title}</a></span>
+                                                <br/>
                                             {{else}}
                                                 <span>{{html message.text}}</span>
+                                                <br/>
                                             {{/if}}
                                         {{/if}}
                                         {{if message.message_type == 'image'}}
                                             <a href="${pic_url}" class="xui-i-sessionsImg">
                                                 <img src = "${pic_url}" />
                                             </a>
+                                            <br/>
                                         {{/if}}
                                         {{if message.message_type == 'voice'}}
                                             <div class="xui-i-voiceContainer">
@@ -138,7 +141,7 @@
                                             </div>
                                         {{/if}}
 										{{if message.remark}}
-	                                    <br/><span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
+	                                    <span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
 	                                    {{/if}}
 									</p>
 								</div>
@@ -207,75 +210,13 @@
                     {{/if}}
 				</div>
 				</div>
-
-				
-
-               
-				<tr class="xui-i-realmessage-tr" data-id="${message.id}">
-					<td class="wui-advanced-table-sort-handler tl_important" width="185">
-						<div class="disT w mt5">
-							<div class="imgBox disTc pr xui-i-imgBox">
-								<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
-							</div>
-							<div class="pl15 disTc xui-i-name pa">
-								<div class="xui-i-member-username mb0 mt0" style="height:35px;">
-									<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}} class="mb0" style="line-height:16px;">{{html message.name}}</a>
-								</div>
-							</div>
-						</div>
-					</td>
-					<td width="700">
-						<div class="xui-i-text ml50">
-							<div>${message.created_at}</div>
-							{{if message.message_type == 'text'}}
-								{{if message.is_news_type}}
-									<span>${message.text} <span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=${message.material_id}" target="_blank">${message.news_title}</a></span>
-								{{else}}
-									<span>{{html message.text}}</span>
-								{{/if}}
-							{{/if}}
-
-
-							<div class="xui-i-remark xa-i-remark {{if message.remark}} "" {{else}} xui-hidden {{/if}}">
-								{{if message.remark}}
-								备注：<span class="xui-i-remark-text xa-i-remark-text">${message.remark}</span>
-								{{/if}}
-							</div>
-
-							{{if message.message_type == 'image'}}
-								<a href="${pic_url}" class="xui-i-sessionsImg">
-									<img src = "${pic_url}" />
-								</a>
-							{{/if}}
-							{{if message.message_type == 'voice'}}
-								<div class="xui-i-voiceContainer">
-									<audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
-					    			<div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
-					    		</div>
-							{{/if}}
-							<div class="xui-i-remark hidden">{{if message.remark}}备注：<span class="xui-i-remark-text">${message.remark}</span>{{/if}}</div>
-						</div>
-					</td>
-					<td width="90">
-						<div class="xui-i-operation" style="width:74px;">
-                            {{if message.is_collected}}
-                                <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" value = ${message.message_id} status="1"></a>
-                            {{else}}
-                                <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-star" title="收藏消息" value = ${message.message_id} status="0" ></a>
-                            {{/if}}
-							<a href='javascript:void(0);'>
-								<img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png" data_message_id=${ message.message_id } data_message_value=${ message.remark }>
-							</a>
-						</div>
-					</td>
-				</tr>
-               
 				{{/each}}
+				<div class="h20" style="background:#fff"></div>
             {{else}}
-                <tr><td colspan='7'>还没有数据</td></tr>
+                
             {{/if}}
-		</tbody>
-	</table>
+		</div>
+	</div>
 	
 </script>
 
