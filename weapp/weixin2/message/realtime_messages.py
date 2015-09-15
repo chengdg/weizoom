@@ -159,7 +159,7 @@ class RealtimeMessages(resource.Resource):
         """
                         回复实时消息
         """
-        pattern = re.compile(r'_str=".*"')
+        pattern = re.compile(r'_src=".*"')
         answer = request.POST['answer']
         src_str = pattern.findall(answer, re.S)
         if src_str:
@@ -219,7 +219,7 @@ class RealtimeMessages(resource.Resource):
                         回复实时消息后回写操作
         """
         session_id = request.POST['session_id']
-        pattern = re.compile(r'_str=".*"')
+        pattern = re.compile(r'_src=".*"')
         content = request.POST['content']
         src_str = pattern.findall(content, re.S)
         if src_str:
