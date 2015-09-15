@@ -114,14 +114,14 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     :param kwargs:
     :return:是否改变了等级
     """
-    if not member:
-        return False
-
     is_change = False
     if webapp_user_id:
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
         if not isinstance(member, Member):
             return
+
+    if not member:
+        return False
     if not member.grade.is_auto_upgrade and not delete:
         return is_change
 
