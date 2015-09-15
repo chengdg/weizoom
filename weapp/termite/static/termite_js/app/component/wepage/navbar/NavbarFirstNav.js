@@ -29,6 +29,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
                 displayName: '链接',
                 isUserProperty: true,
                 triggerButton: '从微站选择',
+                otherUpdateDisplayName:'菜单',
                 default: ''
             }, {
                 name: 'second_navs',
@@ -80,12 +81,33 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
         W.component.getFieldsByType('wepage.navbar_firstnav')[0].maxLength = args.titleMaxLength;
     },
 
+    updateViewTitle: function(args) {
+        this.propertyViewTitle = args.propertyViewTitle;
+        this.properties[0].fields[1].otherUpdateDisplayName = args.otherUpdateDisplayName;
+        this.updateComponent();
+    },
+
+    updateComponent: function(){
+        // 修改 propertyViewTitle
+        W.component.TYPE2COMPONENT[this.type].prototype.propertyViewTitle = this.propertyViewTitle;
+
+        // 修改 
+        W.component.TYPE2COMPONENT[this.type].prototype.properties[0].fields[1].otherUpdateDisplayName = this.properties[0].fields[1].otherUpdateDisplayName;
+    },
+
     initialize: function(obj) {
         this.super('initialize', obj);
         if (W.WEAPAGE_NAVBARTYPE == 'slide') {
             this.setLimitation({
                 titleMaxLength: 10
-            })
+            });
+            this.propertyViewTitle = '一级分类';
+            this.properties[0].fields[1].otherUpdateDisplayName = '分类';
+        }else{
+            this.propertyViewTitle = '一级菜单';
+            this.properties[0].fields[1].otherUpdateDisplayName = '菜单';
         }
+
+        this.updateComponent();
     }
 });

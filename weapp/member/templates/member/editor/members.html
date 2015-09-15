@@ -90,7 +90,9 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);"  data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -100,8 +102,10 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}" data-status="all">{{tag.name}}</a></li>
-						   		{% endfor %}
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
+							   	{% endfor %}
 						   	</ul>
 					    </li>
 					</ul>
@@ -203,7 +207,9 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" data-status="selected" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -213,7 +219,9 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -300,8 +308,8 @@
 				</div>
 				<div class="column_block">
 					<div>
-
 					<a class="xui-Blue" target="_blank" href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+
 
 				</div>
 			</td>
@@ -309,9 +317,14 @@
 				<div class="centerAlign">${ member.grade_name }</div>
 			</td>
 			<td>
-				<div class="centerAlign"><a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }</a>
-						</div>
-					</span>
+				<div class="centerAlign">
+					{{if member.friend_count==0}}
+						<span class="cursor-text">${ member.friend_count }</span>
+					{{else}}
+						<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
+						</a>
+					{{/if}}
+				</div>
 			</td>
 			<td>
 				<div class="centerAlign">${ member.integral }</div>
@@ -333,10 +346,10 @@
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
 			<td>
-				<div class="centerAlign auto_wrap_no_flow" >
+				<div class="centerAlign auto_wrap_no_flow">
 					{{each(i,tag) tags}}
-			          ${tag.name}
-			         {{/each}}
+			           <span class="xa-tag-name" data-tag-id="${tag.id}">${tag.name}</span>
+			        {{/each}}
 			    </div>
 			</td>
 
@@ -428,6 +441,12 @@ $(document).ready(function() {
 	$('body').delegate('.xa-update-tag', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var member_id = $el.attr('data-id');
+		var tag_names = $($el).parents('tr').find('.xa-tag-name');
+		var tag_ids = []
+		for(var i = 0; i < tag_names.length; i++){
+			var id = $(tag_names[i]).data('tag-id');
+			tag_ids.push(id);
+		}
 		var dataView = $('[data-ui-role="advanced-table"]').data('view')
 		dataView.setPage(1);
 		dataView.args = view.getFilterValue();
@@ -442,6 +461,7 @@ $(document).ready(function() {
 			$action: $el,
 			isUpdateGrade: false,
 			memberId: member_id,
+			tagIds: tag_ids,
 			isPostData: true,
 			dataView:dataView
 
@@ -456,7 +476,6 @@ $(document).ready(function() {
 		var status = $(this).attr('data-status');
 
 	 	$('input.xa-select:checked').each(function(){
-    		console.log($(this).parent().parent().attr('data-id'))
     		post_ids.push($(this).parent().parent().attr('data-id'))
   		});
 	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
@@ -496,7 +515,6 @@ $(document).ready(function() {
 		var tag_id = $(this).attr('data-id');
 		var status = $(this).attr('data-status');
 	 	$('input.xa-select:checked').each(function(){
-    		console.log($(this).parent().parent().attr('data-id'))
     		post_ids.push($(this).parent().parent().attr('data-id'))
   			});
 	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
@@ -706,7 +724,6 @@ $(document).ready(function() {
 	$('.panel').delegate('.relation-text', 'click', function(event) {
 					var _this = this;
 					var $el = $(event.currentTarget);
-					console.log($el);
 
 					var friend_count = $el.attr('friend_count');
 					var fans_count = $el.attr('fans_count');

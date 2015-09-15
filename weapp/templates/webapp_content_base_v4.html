@@ -363,6 +363,25 @@
                     // 分享成功
                     success : function(res) {
                        //alert('success'+res);
+                        W.getApi().call({
+                            app: 'webapp',
+                            api: 'project_api/call',
+                            method: 'post',
+                            args: _.extend({
+                                woid: W.webappOwnerId,
+                                project_id: W.projectId,
+                                module: 'user_center',
+                                target_api: 'shared_url/record',
+                                link: link,
+                                title:W.sharePageTitle
+                            }),
+                            success: function(data) {
+                                alert("分享链接成功")
+                            },
+                            error: function(data){
+                                alert("分享链接失败")
+                            }
+                        });
                     }
                 };
                 wx.ready(function () {

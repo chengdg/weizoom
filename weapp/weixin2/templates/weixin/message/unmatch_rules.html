@@ -23,19 +23,20 @@
 	{% if rule %}
 		<div class="xui-contentWrap mb0 pb0" id="xa-MessageTrust" >
 			<div class="xui-messageTrust ml10 mr10 mt10">
-			<div class="xui-i-left fl">
-				<h2 class="mt0 fb">信息托管</h2>
-			消息托管模式开启后，不管粉丝给你发什么信息，未触发其他自动回复规则时就会回复以下你设置的内容。
-			</div>
-			<div class="xui-i-right fl ml120">
-				{% ifequal rule.active_type 0 %}
-					<span class="btn btn-primary xui-save xui-i-btnColor xa-switch " data-switch=0 style="background-color:#207cbe"> 开&nbsp;&nbsp;启</span>
-				{% else %}
-					{% ifequal rule.active_type 2 %}
-						<span class="btn btn-primary xui-save xui-i-btnColor xa-switch" data-switch=2 style="background-color:#d9534f">  停&nbsp;&nbsp;用 </span>
+				<div class="xui-i-left fl">
+					<h2 class="mt0 fb">信息托管</h2>
+				消息托管模式开启后，不管粉丝给你发什么信息，未触发其他自动回复规则时就会回复以下你设置的内容。
+				</div>
+				<div class="xui-i-right fl ml120">
+					{% ifequal rule.active_type 0 %}
+						<span class="btn btn-primary xui-save xui-i-btnColor xa-switch " data-switch=0 style="background-color:#207cbe"> 开&nbsp;&nbsp;启</span>
 					{% else %}
+						{% ifequal rule.active_type 2 %}
+							<span class="btn btn-primary xui-save xui-i-btnColor xa-switch" data-switch=2 style="background-color:#d9534f">  停&nbsp;&nbsp;用 </span>
+						{% else %}
+						{% endifequal %}
 					{% endifequal %}
-				{% endifequal %}
+				</div>
 			</div>
 			<div class="lh50 cb tc h50 pb20"><p>设置开启条件</p></div>
 			<div class="xui-setting ml10 mr10">
@@ -92,13 +93,14 @@
 	{% else %}
 		<div  class="xui-contentWrap mb0 pb0" id="xa-MessageTrust" >
 		<div class="xui-messageTrust ml10 mr10 mt10">
-		<div class="xui-i-left fl">
-		<h2 class="mt0 fb">信息托管</h2>
-		消息托管模式开启后，不管粉丝给你发什么信息，未触发其他自动回复规则时就会回复以下你设置的内容。
-		</div>
-		<div class="xui-i-right fl ml120">
-			<span class="btn btn-primary xui-save xui-i-btnColor xa-switch" style="background-color:#207cbe" data-switch=0>开&nbsp;&nbsp;启</span>
-		</div>
+			<div class="xui-i-left fl">
+			<h2 class="mt0 fb">信息托管</h2>
+			消息托管模式开启后，不管粉丝给你发什么信息，未触发其他自动回复规则时就会回复以下你设置的内容。
+			</div>
+			<div class="xui-i-right fl ml120">
+				<span class="btn btn-primary xui-save xui-i-btnColor xa-switch" style="background-color:#207cbe" data-switch=0>开&nbsp;&nbsp;启</span>
+			</div>
+			</div>
 		<div class="lh50 cb tc h50"><p>设置开启条件</p></div>
 		<div class="xui-setting ml10 mr10">
 			<div class="xui-row" style="border-bottom: none;">
@@ -132,7 +134,9 @@
 				<tr><td class=" tl h50  tl"><a class="xa-addAnswer"  href="javascript:void(0);">+添加一条回复</a></td></tr>
 			</table>
 		</div>
+		<div class="cb"></div>
 		<div class="xui-btnWrap"> <span class="btn btn-primary xui-save xa-submit" method='put' >保&nbsp;&nbsp;存</span> </div>
+	</div>
 	</div>
 	
 	{% endif %}
@@ -145,8 +149,9 @@
 $(document).ready(function() {
 	_switch= $('.xa-switch').attr('data-switch');
 	var messageEditorPopup = new W.view.weixin.MessageEditorPopup({	 
-		richTextEditorWidth: 465,
-		width: 487,
+		richTextEditorWidth: 450,
+		richTextEditorHeight:200,
+		width: 490,
 		offset_Y:18,
 		offset_X:-31,
 	});

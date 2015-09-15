@@ -2,6 +2,12 @@
 # __author__ : "王丽"
 
 Feature: 微信用户关注公众号成为系统会员
+"""
+	# __author__ : "王丽"
+	2015-9新增需求
+	1、会员分组默认有个分组："未分组"，不能修改（没有修改框）、不能删除（没有删除按钮）
+	2、新增会员和调整没有分组的会员，默认进入"未分组"
+"""
 
 Background:
 	Given jobs登录系统
@@ -20,7 +26,7 @@ Background:
 			"shop_discount": "1"
 		},{
 			"name": "金牌会员",
-			"upgrade": "自动升级",
+			"upgrade": "手动升级",
 			"shop_discount": "9.8"
 		}]
 		"""
@@ -47,6 +53,7 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
+
 @mall2 @crm @member 
 Scenario: 微信用户关注公众号成为会员
 	微信用户关注jobs公众号成为jobs的会员
@@ -71,7 +78,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		}]
 		"""
@@ -110,7 +117,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "bill",
@@ -121,7 +128,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		}]
 		"""
@@ -157,7 +164,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "tom",
@@ -168,7 +175,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "bill",
@@ -179,7 +186,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		}]
 		"""
@@ -209,7 +216,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "nokia",
@@ -220,7 +227,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "tom",
@@ -231,7 +238,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "bill",
@@ -242,7 +249,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 2,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		}]
 		"""
@@ -279,7 +286,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 0,
 			"pay_times": 0,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "nokia",
@@ -290,7 +297,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "tom",
@@ -301,18 +308,18 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 2,
 			"pay_times": 1,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		}]
 		"""
@@ -333,14 +340,14 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 		[{
 			"name": "tom1",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 0,
 			"pay_times": 1,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "nokia",
@@ -351,7 +358,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "tom",
@@ -362,18 +369,18 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "bill",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 2,
 			"pay_times": 1,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		}]
 		"""
@@ -384,14 +391,14 @@ Scenario: 微信用户关注公众号成为会员
 		"""
 		[{
 			"name": "tom1",
-			"member_rank": "金牌会员",
+			"member_rank": "普通会员",
 			"pay_money": 100.00,
 			"unit_price": 100.00,
 			"integral": 20,
 			"friend_count": 0,
 			"pay_times": 1,
 			"source": "直接关注",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "nokia",
@@ -402,7 +409,7 @@ Scenario: 微信用户关注公众号成为会员
 			"friend_count": 1,
 			"pay_times": 0,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		},{
 			"name": "tom",
@@ -413,7 +420,7 @@ Scenario: 微信用户关注公众号成为会员
 			"integral": 20,
 			"friend_count": 1,
 			"source": "会员分享",
-			"tags": [],
+			"tags": ["未分组"],
 			"status": "已关注"
 		}]
 		"""

@@ -45,9 +45,13 @@ def step_impl(context, user):
 
 		if row.get('tags'):
 			tags_list = row['tags'].split(',')
-			for tag in tags_list:
-				tag_id = MemberTag.objects.get(webapp_id=context.webapp_id, name=tag).id
-				MemberHasTag.objects.create(member_id=tmp_member.id, member_tag_id=tag_id)
+			if len(tags_list) > 1 and '未分组' in tags_list:
+				tags_list.remove('未分组')
+			if tags_list:
+				MemberHasTag.objects.filter(member_id=tmp_member.id).delete()
+				for tag in tags_list:
+					tag_id = MemberTag.objects.get(webapp_id=context.webapp_id, name=tag).id
+					MemberHasTag.objects.create(member_id=tmp_member.id, member_tag_id=tag_id)
 
 @when(u'{user}查询订单概况统计')
 def step_impl(context, user):

@@ -23,6 +23,11 @@ Feature: 会员列表-会员详情-基本信息
 	9、【好友数】："不可编辑"，本会员的好友数量
 	10、【备注】："可编辑"，本会员的备注信息
 	11、【查看聊天记录】:"不可编辑"，点击跳转到本会员的"消息详情"页
+
+	# __author__ : "王丽"
+	2015-9新增需求
+	1、会员分组默认有个分组："未分组"，不能修改（没有修改框）、不能删除（没有删除按钮）
+	2、新增会员和调整没有分组的会员，默认进入"未分组"
 """
 Background:
 
@@ -108,7 +113,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"今天",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
@@ -134,7 +139,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"sex":"女",
 			"phone":"15934567895",
 			"last_buy_time":"今天",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":"会员备注信息"
@@ -157,7 +162,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
@@ -202,7 +207,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
@@ -225,7 +230,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral": -10,
 			"friend_count":0,
 			"remarks":""
@@ -249,7 +254,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral": 10,
 			"friend_count":0,
 			"remarks":""
@@ -306,7 +311,7 @@ Scenario:4 会员基本信息好友数验证
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":1,
 			"remarks":""

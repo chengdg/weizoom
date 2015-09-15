@@ -62,7 +62,16 @@ def get_should_show_authorize_cover(request):
 @login_required
 def list_tags(request):
 	webapp_id = request.user_profile.webapp_id
+	default_tag_id = MemberTag.get_default_tag(webapp_id).id
 	member_tags = MemberTag.get_member_tags(webapp_id)
+	#调整排序，将为分组放在最前面
+	tags = []
+	for tag in member_tags:
+		if tag.name == '未分组':
+			tags = [tag] + tags
+		else:
+			tags.append(tag)
+	member_tags = tags
 	if request.method == "GET":
 		is_can_send = False
 		from weixin.user.models import WeixinMpUser
@@ -89,21 +98,29 @@ def list_tags(request):
 		return render_to_response('member/editor/member_tags.html', c)
 	else:
 		member_tag_ids = [member_tag.id for member_tag in member_tags]
-
 		id_values = {}
 		for key, value in request.POST.dict().items():
 			id = key.split('_')[2]
 			id_values[int(id)] = value
-
 		for id in id_values.keys():
 			value = id_values[id]
-
-			if MemberTag.objects.filter(id=id, webapp_id=webapp_id).count() > 0:
-				MemberTag.objects.filter(id=id, webapp_id=webapp_id).update(name=value)
-			else:
-				MemberTag.objects.create(name=value, webapp_id=webapp_id)
+			#不能添加和更新名为‘未分组’的组名
+			if value != '未分组':
+				if MemberTag.objects.filter(id=id, webapp_id=webapp_id).count() > 0:
+					MemberTag.objects.filter(id=id, webapp_id=webapp_id).update(name=value)
+				else:
+					if MemberTag.objects.filter(id=id).count() == 0:
+						MemberTag.objects.create(id=id, name=value, webapp_id=webapp_id)
+					else:
+						MemberTag.objects.create(name=value, webapp_id=webapp_id)
 		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
+		if default_tag_id in delete_ids:
+			delete_ids.remove(default_tag_id)
+		members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
 		MemberTag.objects.filter(id__in=delete_ids).delete()
+		for m in members:
+			if MemberHasTag.objects.filter(member=m).count() == 0:
+				MemberHasTag.objects.create(member=m, member_tag_id=default_tag_id)
 		return HttpResponseRedirect('/member/member_tags/get/')
 
 

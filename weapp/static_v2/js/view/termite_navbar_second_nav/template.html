@@ -1,11 +1,17 @@
 <script id="termite-navbar-secondnav-tmpl" type="text/x-handlebar-tmpl">
+	{{#ifCond navbarType '===' "weixin"}}
 	<div class="xui-navbar-secondnav-title">二级菜单</div>
-	<div class="xui-navbar-secondnav-navs xa-navbar-secondnav-navs">
-		
-	</div>
+	<div class="xui-navbar-secondnav-navs xa-navbar-secondnav-navs"></div>
     <a class="xui-navbar-secondnav-addBtn xa-navbar-secondnav-add" href="javascript:void(0);">
     	+添加二级菜单
     </a>
+	{{else}}
+	<div class="xui-navbar-secondnav-title">二级分类</div>
+	<div class="xui-navbar-secondnav-navs xa-navbar-secondnav-navs"></div>
+    <a class="xui-navbar-secondnav-addBtn xa-navbar-secondnav-add" href="javascript:void(0);">
+    	+添加二级分类
+    </a>
+	{{/ifCond}}
 </script>
 
 <script id="termite-navbar-secondnav-tmpl-nav" type="text/x-handlebar-tmpl">

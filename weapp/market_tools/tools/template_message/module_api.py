@@ -106,7 +106,7 @@ def _get_order_send_message_dict(user_profile, template_message, order, send_poi
 		else:
 			host = "http://%s/workbench/jqm/preview/" % user_profile.host
 
-		template_data['url'] = '%s?woid=%s&module=mall&model=order&action=pay&order_id=%s&workspace_id=mall&sct=%s' % (host, user_profile.user.id, order.order_id, social_account.token)
+		template_data['url'] = '%s?woid=%s&module=mall&model=order&action=pay&order_id=%s&workspace_id=mall&sct=%s' % (host, user_profile.user_id, order.order_id, social_account.token)
 
 		template_data['topcolor'] = "#FF0000"
 		detail_data = {}

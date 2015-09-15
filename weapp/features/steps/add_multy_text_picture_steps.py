@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# __author__='justing'
 import json
 import time
 
@@ -32,12 +33,12 @@ def step_impl(context, user):
         data.append(adict)
     url = '/new_weixin/api/multi_news/?_method=put'
     response = context.client.post(url, {'data': json.dumps(data)})
+    time.sleep(1)
 @Then(u"{user}能获取多图文'{news_title}'")
 def step_impl(context, user, news_title):
     materials_url = '/new_weixin/api/materials/'
     response = context.client.get(bdd_util.nginx(materials_url))
     newses_info = json.loads(response.content)['data']['items']
-    #print newses_info
 
     for news_info in newses_info:
         if news_info['type'] == 'multi':
@@ -46,9 +47,8 @@ def step_impl(context, user, news_title):
                 break
     multi_url = '/new_weixin/news_preview/?id=%s' %multi_id
     response = context.client.get(bdd_util.nginx(multi_url))
-    #print response.context
     actual_datas = json.loads(response.context['newses'])
-    #actual_data = actual_datas[0]
+
     for actual_data in actual_datas:
         actual_data['content'] = actual_data.get('text','')
         actual_data['cover'] = [{'url':actual_data.get('pic_url','')}]

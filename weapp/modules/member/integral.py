@@ -324,7 +324,51 @@ class IntegralCaculator(object):
 				.format(member.id, follower_member.token if follower_member else '', integral_increase_count, event_type, unicode_full_stack())
 			watchdog_fatal(notify_message)
 			return None
-		
+
+	def increase_after_payed_finsh(self, fmt, order):
+		webapp_id,webapp_user_id = order.webapp_id, order.webapp_user_id
+		if webapp_id:
+			try:
+				member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+			except:
+				member = None
+			
+			try:
+				followed_member = Member.objects.get(token=fmt, webapp_id=webapp_id)
+			except:
+				followed_member = None 
+
+			integral_strategy = self._get_integral_strategy_by_webappid(webapp_id)
+			if integral_strategy:
+
+				increase_count = integral_strategy.buy_via_shared_url_increase_count_for_author
+				#给好友奖励（分享链接购买）
+				if increase_count > 0 and followed_member:
+					self.increase_member_integral(followed_member, \
+							increase_count, FOLLOWER_BUYED_VIA_SHARED_URL, None)
+				#购物返利
+				if  integral_strategy.buy_award_count_for_buyer > 0:
+					self.increase_member_integral(member, \
+						integral_strategy.buy_award_count_for_buyer, BUY_AWARD)
+
+					if order and order.final_price > 0:
+						order_money_percentage_for_each_buy = float(integral_strategy.order_money_percentage_for_each_buy)
+						increase_count_integral = int(order_money_percentage_for_each_buy * float(order.final_price))
+						if increase_count_integral > 0:
+							self.increase_member_integral(member, increase_count_integral, BUY_AWARD)
+
+				if member:
+					father_member = MemberFollowRelation.get_father_member(member.id)
+					if father_member and integral_strategy.buy_via_offline_increase_count_for_author > 0:
+						self.increase_member_integral(father_member, integral_strategy.buy_via_offline_increase_count_for_author, BUY_INCREST_COUNT_FOR_FATHER)
+						if order.final_price > 0 and integral_strategy.buy_via_offline_increase_count_percentage_for_author:
+							try:
+								buy_via_offline_increase_count_percentage_for_author = float(integral_strategy.buy_via_offline_increase_count_percentage_for_author)
+								integral_count = int(order.final_price * buy_via_offline_increase_count_percentage_for_author)
+								self.increase_member_integral(father_member, integral_count, BUY_INCREST_COUNT_FOR_FATHER)
+							except:
+								notify_message = u"increase_father_member_integral_by_child_member_buyed cause:\n{}".format(unicode_full_stack())
+								watchdog_error(notify_message)			
 
 _caculator = IntegralCaculator()
 increase_member_integral = _caculator.increase_member_integral
@@ -334,7 +378,7 @@ increase_for_bring_new_customer_by_qrcode = _caculator.increase_for_bring_new_cu
 increase_for_buy_via_shared_url = _caculator.increase_for_buy_via_shared_url
 use_integral_to_buy = _caculator.use_integral_to_buy
 return_integral = _caculator.return_integral
-
+increase_after_payed_finsh = _caculator.increase_after_payed_finsh
 def _replace_followed_member_token_in_request_url(request, new_followed_member_token=None):
 	orig_full_path = request.get_full_path()
 
@@ -502,33 +546,33 @@ def is_integral_detail_used(webapp_id):
 ################################################################################
 #increase_detail_integral_for_after_buy:购买后为自己加分（详情加分项）
 ################################################################################
-def increase_detail_integral_for_after_buy(webapp_user_id, webapp_id, final_price):
-		integral_settings_detail =	module_api.get_integral_detail(webapp_id)
+# def increase_detail_integral_for_after_buy(webapp_user_id, webapp_id, final_price):
+# 		integral_settings_detail =	module_api.get_integral_detail(webapp_id)
 
-		if integral_settings_detail:
-			member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
-			if member:
-				if integral_settings_detail.increase_count_after_buy > 0:
-					increase_count = float(integral_settings_detail.increase_count_after_buy) * final_price
-					if (increase_count - int(increase_count)) > 0:
-						increase_count = int(increase_count) + 1
-					increase_member_integral(member, increase_count, BUY_AWARD)
+# 		if integral_settings_detail:
+# 			member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+# 			if member:
+# 				if integral_settings_detail.increase_count_after_buy > 0:
+# 					increase_count = float(integral_settings_detail.increase_count_after_buy) * final_price
+# 					if (increase_count - int(increase_count)) > 0:
+# 						increase_count = int(increase_count) + 1
+# 					increase_member_integral(member, increase_count, BUY_AWARD)
 
-def increase_detail_father_member_integral_by_child_member_buyed(webapp_user_id, webapp_id, final_price):
-	integral_settings_detail =	module_api.get_integral_detail(webapp_id)
+# def (webapp_user_id, webapp_id, final_price):
+# 	integral_settings_detail =	module_api.get_integral_detail(webapp_id)
 
-	if integral_settings_detail:
-		member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
-		if member:
-			father_member = MemberFollowRelation.get_father_member(member.id)
-			if father_member and integral_settings_detail.buy_increase_count_for_father != 0:
-				increase_count = float(integral_settings_detail.buy_increase_count_for_father) * final_price
-				if (increase_count - int(increase_count)) > 0:
-					increase_count = int(increase_count) + 1
+# 	if integral_settings_detail:
+# 		member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+# 		if member:
+# 			father_member = MemberFollowRelation.get_father_member(member.id)
+# 			if father_member and integral_settings_detail.buy_increase_count_for_father != 0:
+# 				increase_count = float(integral_settings_detail.buy_increase_count_for_father) * final_price
+# 				if (increase_count - int(increase_count)) > 0:
+# 					increase_count = int(increase_count) + 1
 
-				increase_member_integral(father_member, increase_count, BUY_INCREST_COUNT_FOR_FATHER)
+# 				increase_member_integral(father_member, increase_count, BUY_INCREST_COUNT_FOR_FATHER)
 
-def increase_detail_integral(webapp_user_id, webapp_id, final_price):
-	if is_integral_detail_used(webapp_id):
-		increase_detail_integral_for_after_buy(webapp_user_id, webapp_id, final_price)
-		increase_detail_father_member_integral_by_child_member_buyed(webapp_user_id, webapp_id, final_price)
+# def increase_detail_integral(webapp_user_id, webapp_id, final_price):
+# 	if is_integral_detail_used(webapp_id):
+# 		increase_detail_integral_for_after_buy(webapp_user_id, webapp_id, final_price)
+# 		increase_detail_father_member_integral_by_child_member_buyed(webapp_user_id, webapp_id, final_price)

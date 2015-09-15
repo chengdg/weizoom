@@ -60,3 +60,6 @@ class ExpressRequestParams(object):
 	
 	# 格式化后时间
 	ftime = 'ftime'
+
+	# 监控状态相关消息，如:3天查询无记录，60天无变化
+	MESSAGE = 'message'

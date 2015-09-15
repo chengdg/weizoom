@@ -1,7 +1,15 @@
 # __author__ : "崔帅帅"
+# __author__ : "王丽"
 @func:webapp.modules.user_center.views.list_tags
 Feature: 删除会员分组
+"""
 	Jobs能删除会员分组
+
+	# __author__ : "王丽"
+	2015-9新增需求
+	1、会员分组默认有个分组："未分组"，不能修改（没有修改框）、不能删除（没有删除按钮）
+	2、新增会员和调整没有分组的会员，默认进入"未分组"
+"""
 
 Background:
 	Given jobs登录系统
@@ -19,6 +27,7 @@ Scenario: Jobs删除已存在的会员分组
 	When jobs删除会员分组
 		"""
 		{
+			"tag_id_0": "未分组",
 			"tag_id_1": "分组1",
 			"tag_id_3": "分组3"
 		}	
@@ -26,8 +35,10 @@ Scenario: Jobs删除已存在的会员分组
 	Then jobs能获取会员分组列表
 		"""
 		[{
+			"name": "未分组"
+		},{
 			"name": "分组1"
-		}, {
+		},{
 			"name": "分组3"
 		}]
 		"""

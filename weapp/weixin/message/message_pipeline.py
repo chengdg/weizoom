@@ -20,6 +20,7 @@ from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
 
 from weixin.message import generator
 
+
 """
 MessagePipeline即收到的消息的处理途径
 MessagePipeline中通过组织其中的MessageHandler对消息依次进行处理
@@ -279,20 +280,25 @@ class MessagePipeline(object):
 			webapp_id = None
 			user_profile = None
 		else:
-			try:
-				authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
-				user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
-				request.user_profile = user_profile
-				request.webapp_owner_id = authed_appid.user_id
-				webapp_id = user_profile.webapp_id
-			except:
-				notify_msg = u"消息处理MessagePipeline.handle_component, appid:{} cause:\n{}".format(appid, unicode_full_stack())
-				watchdog_error(notify_msg)
-				return None
-				# if ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True).count() > 0:
+			from cache import component_cache
+			user_profile,authed_appid =  component_cache.get_component_auth(component_info, appid)
+			webapp_id = user_profile.webapp_id
+			request.user_profile = user_profile
+			request.webapp_owner_id = authed_appid.user_id
+			# try:
+			# 	authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
+			# 	user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
+			# 	request.user_profile = user_profile
+			# 	request.webapp_owner_id = authed_appid.user_id
+			# 	webapp_id = user_profile.webapp_id
+			# except:
+			# 	notify_msg = u"消息处理MessagePipeline.handle_component, appid:{} cause:\n{}".format(appid, unicode_full_stack())
+			# 	watchdog_error(notify_msg)
+			# 	return None
+			# 	# if ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True).count() > 0:
 					
-				# else:
-				# 	return None
+			# 	# else:
+			# 	# 	return None
 		
 		if 'weizoom_test_data' in request.GET:
 			xml_message = self._get_raw_message(request)
