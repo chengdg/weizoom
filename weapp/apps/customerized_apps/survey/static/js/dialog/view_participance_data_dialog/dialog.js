@@ -40,21 +40,27 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					var template = Handlebars.compile($(that.templates['resultTmpl']).html());
 					$('.xui-app_survey-Dialog .modal-body').html(template(data));
 
-					var att_name = data.att_url.item_name;
-					var att_array = data.att_url.item_value;
-					var att_val = "";
-					for(var i=0;i<att_array.length;i++){
-						att_val = att_val+'<img class=\"xa-uploadimg\" src=\"'+att_array[i]+'\">'
+					var att_list = data.att_url_list;
+					console.log(att_list);
+					for(var i=0;i<att_list.length;i++){
+						console.log('i-->'+i);
+						console.log(att_list[i]);
+						var att_name = att_list[i].item_name;
+						var att_array = att_list[i].item_value;
+						var att_val = "";
+						for(var j=0;j<att_array.length;j++){
+							att_val = att_val+'<img class=\"xa-uploadimg\" src=\"'+att_array[j]+'\">'
+						}
+						var att_html = '<tr><td style="width:50%">'+att_name+':</td><td>'+att_val+'</td></tr>';
+						$('.modal-body .table.table-bordered').append(att_html);
 					}
-					var att_html = '<tr><td>'+att_name+':</td><td>'+att_val+'</td></tr>';
-					$('.modal-body .table.table-bordered').append(att_html);
 
 					var click_count = 1;
 					$('img.xa-uploadimg').click(function(){
 						if(click_count ===1){
 							var that = this;
 							click_count = click_count+1;
-							$('.xa-uploadimg_box').append("<img class='xa-close_btn' src='/static_v2/img/close_btn.png'>").append($(that).clone(true)).fadeIn('fast');
+							$(this).parents().find('.xa-uploadimg_box').append("<img class='xa-close_btn' src='/static_v2/img/close_btn.png'>").append($(that).clone(true)).fadeIn('fast');
 							$('.xa-close_btn').click(function(){
 									$('.xa-uploadimg_box').fadeOut(400);
 									$('.xa-uploadimg_box').empty();
