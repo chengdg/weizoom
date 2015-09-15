@@ -141,7 +141,7 @@ Background:
 		}]
 		"""
 
-@wip.ob1 @product @property @toSaleProduct @online_bug
+@wip.ob1 @product @property @toSaleProduct @online_bug @mall2
 Scenario: 1 删除商品规格值'S'
 	Given jobs登录系统
 	When jobs删除商品规格'尺寸'的值'S'
@@ -149,14 +149,36 @@ Scenario: 1 删除商品规格值'S'
 		"""
 		{
 			"name": "商品1",
-			"shelve_type": "下架"
+			"shelve_type": "下架",
+			"is_enable_model": "不启用规格",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
 		}
 		"""
 	And jobs能获取商品'商品4'
 		"""
 		{
 			"name": "商品4",
-			"shelve_type": "下架"
+			"shelve_type": "下架",
+			"is_enable_model": "不启用规格",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 0.0,
+						"weight": 0.0,
+						"stock_type": "有限",
+						"stocks": 0
+					}
+				}
+			}
 		}
 		"""
 	And jobs能获取商品'商品5'
@@ -182,7 +204,7 @@ Scenario: 1 删除商品规格值'S'
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug @duhao
+@product @property @toSaleProduct @online_bug @mall2
 Scenario: 2 删除商品规格'颜色'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
@@ -259,24 +281,23 @@ Scenario: 2 删除商品规格'颜色'
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug
+@product @property @toSaleProduct @online_bug @mall2
 Scenario: 3 删除商品规格值 '黑'和 'M'
 	Given jobs登录系统
-	When jobs删除商品规格'颜色'的值'黑'
+	When jobs删除商品规格'颜色'的值'黑色'
 	When jobs删除商品规格'尺寸'的值'M'
 	Then jobs能获取商品'商品2'
 		"""
 		{
 			"name":"商品2",
 			"shelve_type": "下架",
-			"is_enable_model": "不启用规格",
+			"is_enable_model": "启用规格",
 			"model": {
 				"models": {
-					"standard": {
-						"price": 0.0,
-						"weight": 0.0,
-						"stock_type": "有限",
-						"stocks": 0
+					"白色": {
+						"price": 10.0,
+						"weight": 1.0,
+						"stock_type": "无限"
 					}
 				}
 			}
@@ -318,7 +339,7 @@ Scenario: 3 删除商品规格值 '黑'和 'M'
 			}
 		"""
 
-@product @property @toSaleProduct @online_bug
+@product @property @toSaleProduct @online_bug @mall2
 Scenario: 4 删除商品规格'颜色'和'尺寸'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
@@ -414,7 +435,7 @@ Scenario: 4 删除商品规格'颜色'和'尺寸'
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug
+@product @property @toSaleProduct @online_bug @mall2
 Scenario: 5 无规格商品修改成多规格后,再删除商品规格
 	#无规格商品修改成多规格后，删除商品规格会导致:
 		#商品下架,库存变为0,会保留无规格时的价格和重量
@@ -482,7 +503,7 @@ Scenario: 5 无规格商品修改成多规格后,再删除商品规格
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug
+@product @property @toSaleProduct @online_bug @mall2
 Scenario: 6 无规格商品修改成多规格后,再删除商品规格值
 	#无规格商品修改成多规格后,再删除商品规格值会导致:
 		##商品下架,库存变为0,会保留无规格时的价格和重量
@@ -519,7 +540,7 @@ Scenario: 6 无规格商品修改成多规格后,再删除商品规格值
 				}
 			}
 		"""
-	When jobs删除商品规格'颜色'的值'黑'
+	When jobs删除商品规格'颜色'的值'黑色'
 	Then jobs能获取商品'无规格'
 		"""
 			{

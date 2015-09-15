@@ -25,7 +25,7 @@ def get_prodcut_ids_info(order):
             product_counts.append(str(product.purchase_count))
             product_model_names.append(str(product.model_name))
             if product_group['can_use_promotion']:
-                promotion_ids.append(str(product_group['promotion'].id))
+                promotion_ids.append(str(product_group['promotion']['id']))
             else:
                 promotion_ids.append('0')
     return {'product_ids': '_'.join(product_ids),
@@ -91,6 +91,11 @@ def step_click_check_out(context, webapp_user_name):
     if coupon_id:
         data['is_use_coupon'] = 'true'
         data['coupon_id'] = coupon_id
+    if argument.get('integral', None):
+        data['orderIntegralInfo'] = json.dumps({
+            'integral': argument['integral'],
+            'money': argument['integral_money']
+        })
     response = context.client.post(url, data)
     content = json.loads(response.content)
     msg = content["data"].get("msg", "")
@@ -100,6 +105,20 @@ def step_click_check_out(context, webapp_user_name):
     else:
         context.created_order_id = content['data']['order_id']
         context.response = response
+        if argument.get('order_no', None):
+            db_order = Order.objects.get(order_id=context.created_order_id)
+            db_order.order_id=argument['order_no']
+            db_order.save()
+
+            db_order_operation_log = OrderOperationLog.objects.get(order_id=context.created_order_id)
+            db_order_operation_log.order_id=argument['order_no']
+            db_order_operation_log.save()
+
+            if db_order.origin_order_id <0:
+                for order in Order.objects.filter(origin_order_id=db_order.id):
+                    order.order_id = '%s^%s' % (argument['order_no'], order.supplier)
+                    order.save()
+            context.created_order_id = argument['order_no']
 
 
 # 不在mall2
@@ -266,14 +285,26 @@ def step_impl(context, webapp_usr_name, order_id):
     url = '/workbench/jqm/preview/?woid=%s&module=mall&model=order&action=pay&order_id=%s' % (
         context.webapp_owner_id, order_id)
     response = context.client.get(bdd_util.nginx(url), follow=True)
+    has_sub_order = response.context['has_sub_order']
     actual = response.context['order']
     actual.order_no = actual.order_id
     actual.order_time = (str(actual.created_at))
     actual.methods_of_payment = response.context['pay_interface']
     actual.member = actual.buyer_name
-    actual.status = ORDERSTATUS2TEXT[actual.status]
-    if actual.status == u'已发货':
-        actual.status = u'待收货'
+    actual.status = ORDERSTATUS2MOBILETEXT[actual.status]
+    actual.ship_area = actual.area
+
+    if has_sub_order:
+        products = []
+        orders = response.context['orders']
+        for i, order in enumerate(orders):
+            product_dict = {
+                u"包裹" + str(i + 1): order.products,
+                'status': ORDERSTATUS2MOBILETEXT[order.status]
+            }
+            products.append(product_dict)
+
+        actual.products = products
 
     expected = json.loads(context.text)
     bdd_util.assert_dict(expected, actual)
@@ -348,10 +379,6 @@ def step_impl(context, webapp_user_name, order_id):
 @then(u"{webapp_user_name}支付订单成功")
 def step_impl(context, webapp_user_name):
     order, order_has_products = steps_db_util.get_order_has_products(context)
-    print("***********************************************")
-    # print(order)
-    print(order.pay_interface_type)
-    print("***********************************************")
     actual_order = order
     actual_order.ship_area = actual_order.area
     actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
@@ -433,8 +460,6 @@ def step_impl(context, webapp_user_name):
 @then(u"{webapp_user_name}获得创建订单失败的信息'{error_msg}'")
 def step_impl(context, webapp_user_name, error_msg):
     error_data = json.loads(context.response.content)
-    # print error_data
-    # print error_msg
     context.tc.assertTrue(200 != error_data['code'])
     response_msg = error_data['data']['msg']
     if response_msg == '':
@@ -469,7 +494,9 @@ def step_impl(context, webapp_user_name):
     url = '/workbench/jqm/preview/?woid=%s&module=mall&model=order&action=pay&order_id=%s' % (
         context.webapp_owner_id, order_id)
     response = context.client.get(bdd_util.nginx(url), follow=True)
+
     actual_order = response.context['order']
+    actual_order.order_no = actual_order.order_id
     actual_order.ship_area = actual_order.area
     actual_order.status = ORDERSTATUS2TEXT[actual_order.status]
     # 获取coupon规则名
@@ -479,10 +506,12 @@ def step_impl(context, webapp_user_name):
         actual_order.coupon_id = coupon.coupon_rule.name
 
     for product in actual_order.products:
-        # print '---product---', product
         if 'custom_model_properties' in product and product['custom_model_properties']:
             product['model'] = ' '.join([property['property_value'] for property in product['custom_model_properties']])
 
-    # print '---actual_order---', actual_order
+
     expected = json.loads(context.text)
+    if expected.get('actions', None):
+        # TODO 验证订单页面操作
+        del expected['actions']
     bdd_util.assert_dict(expected, actual_order)

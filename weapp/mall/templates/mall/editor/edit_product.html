@@ -44,7 +44,34 @@
 					个字
 				</p>
 			</div>
-
+			<!-- 微众精选开始 -->
+			{%if supplier|length %}
+			<div class="form-group">
+				<label class="control-label fl star_show" for="supplier">供货商：</label>
+				<div class="fl">
+                {% if product.supplier %}
+                        <input type="hidden" name="supplier" value="{{ product.supplier }}"/>
+                        <select disabled="disabled" class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}">
+                {% else %}
+                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" data-validate="require-notempty">
+                {% endif %}
+						<option value="">请选择</option>
+						{% for id, name in supplier %}
+						<option value="{{id}}">{{name}}</option>
+						{% endfor %}
+					</select>
+					<div class="errorHint" data-error-hint="请选择供货商"></div>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label fl" for="purchase_price">采购价：</label>
+				<div class="fl">
+					<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price" value="{% if product %}{{ product.purchase_price }}{% endif %}"/>
+					<div class="errorHint"></div>
+				</div>
+			</div>
+			{% endif %}
+			<!-- 微众精选结束 -->
 			<div class="form-group ">
 				<label class="control-label fl" for="promotion_title">促销标题：</label>
 				<div class="fl">
@@ -91,7 +118,7 @@
 					<div class="errorHint"></div>
 				</div>
 			</div>
-			{% if not request.manager.is_weizoom_mall %}
+			{% if not request.manager.is_weizoom_mall and supplier|length == 0 %}
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="bar_code">同步到微众商城：</label>
 				<div class="fl w700">
@@ -331,6 +358,8 @@
 {% block js %}
 <!--    运费验证实现    -->
 <script type="text/javascript">
+var origin_supplier = $('#supplier').data('origin');
+if(origin_supplier>0)$('#supplier').val(origin_supplier);
 $('.xa-freight').on('click', function(e){
     var $el = $(e.target);
     var $_parent = $el.parents("#freight");
@@ -415,9 +444,13 @@ $('.xa-selectImage').click(function(){return false;})
 			el: '.xui-editProductPage'
 		});
 		view.render();
-		// 隐藏定制规格
-		if(location.search.indexOf('no_custom_model=1')>0){
-			$('[data-ui-role="mall-product-custom-model-editor"] legend div').hide();
+		if(location.search.indexOf('no_custom_model=1')>0||$('#supplier').length>0){
+			// 隐藏定制规格：买赠活动跳转、有供货商选择
+			var $div = $('[data-ui-role="mall-product-custom-model-editor"] legend div');
+			if($(':checkbox', $div).attr('checked')=='checked'){
+				$(':checkbox', $div).click();
+			}
+			$div.hide();
 		}
 	});
 </script>

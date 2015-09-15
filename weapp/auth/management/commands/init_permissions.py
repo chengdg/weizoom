@@ -57,9 +57,6 @@ PERMISSIONS = [{
 		"name": u"所有订单",
 		"code_name": u"manage_order_all"
 	},{
-		"name": u"退款订单",
-		"code_name": u"manage_order_refund"
-	},{
 		"name": u"订单设置",
 		"code_name": u"manage_order_expired_time"
 	},{

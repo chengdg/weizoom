@@ -450,15 +450,15 @@ def overview_board(request):
 		#关注会员总数
 		subscribed_member_count = stats_util.get_subscribed_member_count(webapp_id)
 		#总成交订单
-		all_order = Order.objects.filter(webapp_id=webapp_id,status__in=ORDER_SOURCE)
+		all_order = Order.by_webapp_id(webapp_id).filter(status__in=ORDER_SOURCE)
 		all_deal_order_count = all_order.count()
 		#总成交额 cash + weizoom_card
 		all_deal_order_money = float(sum([(order.final_price + order.weizoom_card_money) for order in all_order]))
 
 		#待发货订单
-		total_to_be_shipped_order_count = Order.objects.filter(webapp_id=webapp_id,status=ORDER_STATUS_PAYED_NOT_SHIP).count()
+		total_to_be_shipped_order_count = Order.by_webapp_id(webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
 		#待退款订单
-		total_refunding_order_count = Order.objects.filter(webapp_id=webapp_id,status=ORDER_STATUS_REFUNDING).count()
+		total_refunding_order_count = Order.by_webapp_id(webapp_id).filter(status=ORDER_STATUS_REFUNDING).count()
 
 		#今日订单
 		today_begin_str = datetime.today().strftime('%Y-%m-%d')+' 00:00:00'
@@ -501,7 +501,7 @@ def order_value(request):
 
 	start_date = util_dateutil.date2string(date_range[0].to_datetime())
 	try:
-		orders = Order.objects.filter(webapp_id=webapp_id,created_at__gte=start_date,created_at__lte=end_date,status__in=ORDER_SOURCE).order_by('created_at')
+		orders = Order.by_webapp_id(webapp_id).filter(created_at__gte=start_date,created_at__lte=end_date,status__in=ORDER_SOURCE).order_by('created_at')
 		order_items = OrderedDict()
 		for order in orders:
 			date = order.created_at.strftime('%Y-%m-%d')
@@ -544,7 +544,7 @@ def sales_chart(request):
 	start_date = util_dateutil.date2string(date_range[0].to_datetime())
 	try:
 		webapp_id = request.user.get_profile().webapp_id
-		orders = Order.objects.filter(webapp_id=webapp_id,created_at__gte=start_date,created_at__lte=end_date,status__in=ORDER_SOURCE).order_by('created_at')
+		orders = Order.by_webapp_id(webapp_id).filter(created_at__gte=start_date,created_at__lte=end_date,status__in=ORDER_SOURCE).order_by('created_at')
 		order_price2time = OrderedDict()
 		for order in orders:
 			created_at = order.created_at.strftime("%Y-%m-%d")

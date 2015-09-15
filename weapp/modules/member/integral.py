@@ -37,7 +37,7 @@ def _is_buyed(member):
 	# else:
 	# 	return False
 	if webapp_user:
-		return True if Order.objects.filter(webapp_user_id=webapp_user.id,status__gte=2).count() > 0 else False
+		return True if Order.by_webapp_user_id(webapp_user.id).filter(status__gte=2).count() > 0 else False
 	else:
 		return False
 

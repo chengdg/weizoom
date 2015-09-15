@@ -40,6 +40,7 @@ from member.member_grade import auto_update_grade
 
 @task
 def update_member_pay_info(order):
+	print 'jz----4444', order.order_id
 	webapp_user_id = order.webapp_user_id
 	member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
 	if member:

@@ -125,7 +125,6 @@ def step_impl(context, user):
             data_dict["pay_money"] = grade.pay_money
             data_dict["upgrade_lower_bound"] = grade.upgrade_lower_bound
         data.append(data_dict)
-    print('is_all_conditions:',is_all_conditions)
     context.client.post('/mall2/api/member_grade_list/?_method=post',
                         {'is_all_conditions': is_all_conditions, 'grades': json.dumps(data)})
 

@@ -509,6 +509,7 @@
 .xui-page-memberDetail .xui-notify{
 	position: relative;
 	top:6px;
+	cursor: pointer;
 }
 .xui-page-memberDetail .xui-group {
 	padding-top: 6px;
@@ -518,20 +519,6 @@
   left:187px;
   top:-15px;
   font-weight: bold;
-}
-.xui-page-memberDetail .xui-unknow{
-    position: relative;
-    left:-30px;
-    background-color: #ccc;
-    border-radius: 9px;
-    height: 18px;
-    width: 18px;
-    border:none;
-    line-height: 20px;
-    color: #ffffff;
-    font-weight: bold;
-    margin-top: 3px;
-
 }
 .xui-page-memberDetail .xui-membername{
 	width: 105px;

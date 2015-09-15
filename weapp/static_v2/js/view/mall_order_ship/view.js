@@ -48,38 +48,7 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
             if(isNeedLogistics === '0'){
                 logistics = '';
                 logisticsOrderId = '';
-
-                // 不需要物流
-                // 向order发送finish
-                // var args = {
-                //     'order_id': this.orderId,
-                //     'action': 'finish'
-                // }
-                // //window.location.href = '/mall/order/update/?order_id='+this.orderId+'&action=finish';
-                // W.getApi().call({
-                //     method: 'post',
-                //     app: 'mall2',
-                //     resource: 'order',
-                //     args: args,
-                //     success: function(data) {
-                //         $(".xa-shipDropBox").hide();
-                //         if($('[data-ui-role="advanced-table"]').length>0)
-                //         {
-                //             $('[data-ui-role="advanced-table"]').data('view').reload();
-                //         }
-
-                //         else
-                //         {
-                //             window.location.reload();
-                //         }
-                //     },
-                //     error: function() {
-                //     }
-                // })
-
-            }//else{
-                    // 需要物流
-                    // 向order_deliver发送信息
+            }
             var args = {
                 'order_id': this.orderId,
                 'express_company_name': logistics,
@@ -95,15 +64,36 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                 args: args,
                 success: function(data) {
                     $(".xa-shipDropBox").hide();
-                    if($('[data-ui-role="advanced-table"]').length>0)
-                    {
+                    if($('[data-ui-role="advanced-table"]').length>0){
                         $('[data-ui-role="advanced-table"]').data('view').reload();
                     }
-
-                    else
-                    {
+                    else {
                         window.location.reload();
                     }
+
+                    W.getApi().call({
+                      app:'mall2',
+                      resource:'common_interval_check',
+                      args:{},
+                      success: function (data) {
+                        var unship_order_count = data.unship_order_count;
+                        var orderTipItem = $('.xa-orderTip');
+                        if(unship_order_count>0){
+                            orderTipItem.show();
+                            if(unship_order_count>99){
+                               orderTipItem.text(99);
+                            }
+                            else{
+                               orderTipItem.text(unship_order_count);
+                            }
+                        }
+                        else{
+                          orderTipItem.hide();
+                          orderTipItem.text(0);
+                        }
+                      }
+                  })
+
 
                 },
                 error: function() {

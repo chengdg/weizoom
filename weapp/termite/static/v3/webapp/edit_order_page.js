@@ -600,7 +600,7 @@ var CouponManager = BackboneLite.View.extend({
 		var id = $coupon.data('id');
 		var money = $coupon.data('money');
 		if (id && money) {
-			$('#coupon_id').val(id).attr('data-money', money).data('productid', $coupon.data('productid'));
+			$('#coupon_id').val(id).data('money', money).data('productid', $coupon.data('productid'));
 			$('#is_use_coupon')[0].checked = true;
 
 			// 修改使用优惠券后的样式
@@ -640,7 +640,7 @@ var CouponManager = BackboneLite.View.extend({
 		$('.xa-no-use-coupon-show').show();
 		$('.xa-use-coupon-show').hide();
 		$('#is_use_coupon')[0].checked = false;
-		$('#coupon_id').val(0).attr('data-money', 0);
+		$('#coupon_id').val(0).data('money', 0);
 		this.trigger('use-coupon');
 		$('.xa-integral').show();
 		$('.xa-order-integral').show();
@@ -685,10 +685,18 @@ var CouponManager = BackboneLite.View.extend({
 		} else {
 			var productIds = [];
 			var productPrice = [];
+			var original_price = [];
+			var productId2price = {};
 			$(_this.editOrderPageView.products).each(function(i,n){
 				productIds.push(n.id);
 				productPrice.push(n.count*n.price);
-			})
+				original_price.push(n.count* n.original_price);
+				if (!productId2price.hasOwnProperty(n.id)){
+					//用于处理同一商品买了不同规格的情况
+					productId2price[n.id] = 0;
+				}
+				productId2price[n.id] += n.count*n.price;  //duhao 20150909
+			});
 			var totalPrice = _this.editOrderPageView.prices().totalPrice;
 			$('body').alert({
 				isShow: true,
@@ -706,17 +714,19 @@ var CouponManager = BackboneLite.View.extend({
 					coupon_coupon_id: couponCouponId,
 					total_price: totalPrice,
 					product_ids: productIds.join('_'),
-					product_price: productPrice.join('_')
+					product_price: productPrice.join('_'),
+					original_price: original_price.join('_'),
+					product_id2price: JSON.stringify(productId2price)
 				},
 				success: function(data) {
 					$('.xa-integral').hide();
 					$('.xa-order-integral').hide();
 					var couponId = data['id'];
-					var money = data['money'];
+					var money = parseFloat(data['money']);
+					var productid = data['productid'];
 					if (parseInt(couponId) !== 0) {
 						_this.onClickCloseCouponDialog(event);
-
-						$('#coupon_id').val(couponId).attr('data-money', money);
+						$('#coupon_id').val(couponId).data('money', money);
 						$('#is_use_coupon')[0].checked = true;
 
 						// 修改使用优惠券后的样式
@@ -725,6 +735,23 @@ var CouponManager = BackboneLite.View.extend({
 						$('.xa-use-coupon-show').show();
 						var $target = _this.$el.find('.xa-couponItem');
 						_this.editOrderPageView.prices();
+
+						$(view.products).each(function(i, n){
+							if(productid > 0 && n.id == productid){
+								// 单品券对应商品显示原价
+								n.member_discount = n.price;
+								n.price = n.original_price;
+								view.prices();
+								$('[data-product-id="'+n.id+'"]').find('.xa-product-price').text(n.price.toFixed(2));
+							}else if (productid <= 0 && n.member_discount){
+								// 单品券对应商品显示原价
+								n.price = n.member_discount;
+								n.member_discount = null;
+								view.prices();
+								$('[data-product-id="'+n.id+'"]').find('.xa-product-price').text(n.price.toFixed(2));
+							}
+						});
+
 					} else {
 						$('.error-info').html(data['msg']);
 						_this.recordErrorForTest(data['msg']);
@@ -1044,21 +1071,29 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		var couponProductId = 0;
 		var couponId = this.$('[name="coupon_id"]').val();
 		if (couponId) {
-			couponMoney = parseFloat($('[name="coupon_id"]').attr('data-money')) || 0;
+			couponMoney = $('[name="coupon_id"]').data('money') || 0;
 			couponProductId = $('[name="coupon_id"]').data('productid');
-			if (couponProductId > 0) {
-				var maxCouponMoney = 0;
+			var maxCouponMoney = 0;
+			if (couponProductId > 0) {// 单品券
 				_.each(options.productGroups, function(group){
-					if(group.uid.indexOf(couponProductId) >= 0){
-						_.each(group.products, function(product){
+					_.each(group.products, function(product){
+						if(product.id==couponProductId){
 							maxCouponMoney += product.price * product.count;
-						});
-					}
+						}
+					});
 				})
-				if(couponMoney > maxCouponMoney){
-					couponMoney = maxCouponMoney;
-					$('.xa-coupon-money').html('已抵用');
-				}
+			}else{// 全店通用券
+				_.each(options.productGroups, function(group){
+					_.each(group.products, function(product){
+						if(!product.forbidden_coupon){// TODO 不禁用全场优惠券商品
+							maxCouponMoney += product.price * product.count;
+						}
+					});
+				})
+			}
+			if(couponMoney > maxCouponMoney){
+				couponMoney = maxCouponMoney;
+				$('.xa-coupon-money').html('已抵用');
 			}
 		}
 		if(this.orderType !== 'test') {
@@ -1097,7 +1132,6 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 			totalProductPrice = 0.01;
 			var totalPrice = 0.01;
 		}
-
 		return {
 			'totalProductPrice': totalProductPrice.toFixed(2),
 			'totalPrice': totalPrice.toFixed(2),

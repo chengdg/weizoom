@@ -10,7 +10,7 @@ Feature: 管理供货商
 	"""
 
 
-@supplier
+@supplier @add_supplier @mall2 @test_zl
 Scenario: 1 添加供货商
 	jobs添加供货商后
 	1.按时间倒序排列
@@ -58,21 +58,19 @@ Scenario: 1 添加供货商
 		"""
 		[{
 			"name": "丹江湖2",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "土小宝1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "负责人",
-			"remark": "备注卖花生油",
-			"actions": ["删除", "修改"]
+			"remark": "备注卖花生油"
 		}]
 		"""
 
 
-@supplier
+@supplier @del_supplier @mall2 @test_zl
 Scenario: 2 删除供货商
 	jobs添加供货商后
 	1.可进行删除
@@ -105,22 +103,19 @@ Scenario: 2 删除供货商
 		"""
 		[{
 			"name": "波尼亚",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "丹江湖2",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "土小宝1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "负责人",
-			"remark": "备注卖花生油",
-			"actions": ["删除", "修改"]
+			"remark": "备注卖花生油"
 		}]
 		"""
 	When jobs删除供货商'波尼亚'
@@ -128,21 +123,19 @@ Scenario: 2 删除供货商
 		"""
 		[{
 			"name": "丹江湖2",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "土小宝1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "负责人",
-			"remark": "备注卖花生油",
-			"actions": ["删除", "修改"]
+			"remark": "备注卖花生油"
 		}]
 		"""
 
 
-@supplier
+@supplier @mod_supplier @mall2 @test_zl
 Scenario: 3 修改供货商
 	jobs添加供货商后
 	1.可进行修改
@@ -174,22 +167,19 @@ Scenario: 3 修改供货商
 		"""
 		[{
 			"name": "波尼亚",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "丹江湖2",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "土小宝1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "负责人",
-			"remark": "备注卖花生油",
-			"actions": ["删除", "修改"]
+			"remark": "备注卖花生油"
 		}]
 		"""
 	When jobs修改供货商'土小宝1'
@@ -240,27 +230,24 @@ Scenario: 3 修改供货商
 		"""
 		[{
 			"name": "波尼亚",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "丹江湖",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "卖鸭蛋",
-			"actions": ["删除", "修改"]
+			"remark": "卖鸭蛋"
 		}, {
 			"name": "土小宝",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "宝宝",
-			"remark": "备注卖花生油",
-			"actions": ["删除", "修改"]
+			"remark": "备注卖花生油"
 		}]
 		"""
 
 
-@supplier
+@supplier @mall2 @ex_supplier
 Scenario: 4 导出供货商
 	jobs添加供货商后
 	1.导出全部供货商
@@ -293,22 +280,19 @@ Scenario: 4 导出供货商
 		"""
 		[{
 			"name": "波尼亚1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "丹江湖2",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "土小宝1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "负责人",
-			"remark": "备注卖花生油",
-			"actions": ["删除", "修改"]
+			"remark": "备注卖花生油"
 		}]
 		"""
 	When jobs导出'供货商'
@@ -329,16 +313,14 @@ Scenario: 4 导出供货商
 		"""
 		[{
 			"name": "波尼亚1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}, {
 			"name": "土小宝1",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "负责人",
-			"remark": "备注卖花生油",
-			"actions": ["删除", "修改"]
+			"remark": "备注卖花生油"
 		}]
 		"""
 	When jobs导出'供货商'
@@ -358,10 +340,9 @@ Scenario: 4 导出供货商
 		"""
 		[{
 			"name": "丹江湖2",
-			"add_time": "今天",
+			"create_at": "今天",
 			"responsible_person": "陌陌",
-			"remark": "",
-			"actions": ["删除", "修改"]
+			"remark": ""
 		}]
 		"""
 	When jobs导出'供货商'

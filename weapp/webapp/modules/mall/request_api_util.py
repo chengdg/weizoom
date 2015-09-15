@@ -209,7 +209,6 @@ def save_order(request):
 
 	# 获取购买的商品集合
 	products = utils.get_products(request)
-
 	# 发送下单检查信号
 	fake_order = common_util.Object("order")
 	fake_order.products = products
@@ -562,17 +561,23 @@ def is_can_use_coupon(request):
 	coupon_id = request.POST.get('coupon_coupon_id', None)
 	product_ids = request.POST.get('product_ids', None)
 	product_prices = request.POST.get('product_price', None)
+	original_prices = request.POST.get('original_price', None)
+	product_id2price = request.POST.get('product_id2price', None)
+	if product_id2price:
+		product_id2price = json.loads(product_id2price)
 
 	if product_ids and product_prices:
 		product_ids = product_ids.split('_')
 		product_prices = [float(price) for price in product_prices.split('_')]
+		original_prices = [float(price) for price in original_prices.split('_')]
 
 	response = create_response(200)
-	msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, product_prices, product_ids, request.member.id)
+	msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, product_prices, product_ids, request.member.id, original_prices=original_prices, product_id2price=product_id2price)
 	if coupon:
 		response.data = {
 			'id': coupon_id,
-			'money': str(coupon.money)
+			'money': str(coupon.money),
+			'productid': coupon.coupon_rule.limit_product_id
 		}
 	else:
 		response.data = {'msg': msg,'id': 0}

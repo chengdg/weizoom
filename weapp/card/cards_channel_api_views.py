@@ -271,7 +271,7 @@ def get_channel_details(filter_value,owner_id=None,start_date="",end_date="",cur
     webapp_appids = []
     for w in webapp:
         webapp_appids.append(w.appid)
-    orders = Order.objects.filter(webapp_id__in=webapp_appids).order_by('-created_at')
+    orders = Order.by_webapp_id(webapp_appids).order_by('-created_at')
     if owner_id:
         orders = orders.filter(created_at__gte=start_date, created_at__lte=end_date)
     id2order_ids = {}
@@ -304,7 +304,7 @@ def get_channel_details(filter_value,owner_id=None,start_date="",end_date="",cur
                     val1 = start_date
                 if val2 > end_date:
                     val2 = end_date
-            orders = Order.objects.filter(webapp_id__in=webapp_appids, created_at__gte=val1, created_at__lte=val2).order_by('-created_at')
+            orders = Order.by_webapp_id(webapp_appids).filter(created_at__gte=val1, created_at__lte=val2).order_by('-created_at')
             order_ids = []
             for r in orders:
                 order_ids.append(r.order_id)
@@ -495,7 +495,7 @@ def get_channel_details(filter_value,owner_id=None,start_date="",end_date="",cur
     webapp_ids = [webapp.appid for webapp in WebApp.objects.filter(owner_id__in=owner_ids)]
     ids = []
     order_id2orderid = {}
-    for order in Order.objects.filter(order_id__in=order_ids,webapp_id__in=webapp_ids):
+    for order in Order.by_webapp_id(webapp_ids).filter(order_id__in=order_ids):
         ids.append(order.id)
         order_id2orderid[order.id] = order.order_id
     order_order_id2Product_ids = {}

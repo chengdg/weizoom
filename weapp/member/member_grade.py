@@ -120,6 +120,8 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     is_change = False
     if webapp_user_id:
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+        if not isinstance(member, Member):
+            return
     if not member.grade.is_auto_upgrade and not delete:
         return is_change
 
@@ -128,7 +130,8 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     webapp_user_ids = member.get_webapp_user_ids
 
     # 获取会员数据
-    paid_orders = Order.objects.filter(status=mall_models.ORDER_STATUS_SUCCESSED, webapp_user_id__in=webapp_user_ids)
+    paid_orders = Order.by_webapp_user_id(webapp_user_ids).filter(
+        status=mall_models.ORDER_STATUS_SUCCESSED, origin_order_id__lte=0)
     pay_times = paid_orders.count()
     bound = member.experience
     pay_money = 0

@@ -1,0 +1,131 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-forbiddenCpPage xui-commonPromotionStyle xui-promotionsPage">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
+		<li class="active">禁用优惠券商品</li>
+	</ul>
+</div>
+<div class="xa-promotionFilterView xui-filterPanel"></div>
+
+<div class="panel panel-default mt20 xui-bigBoxbg">
+<div class="panel panel-default ml10 mr10 mb50" style="border:none;">
+	<div class="panel-heading xui-headStyle pl18"  style="background:#E9EDF5; margin-left: -2px;">
+		<input type="checkbox" id="topSelectAll" class="xa-selectAll" />
+		<label for="topSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+		<a href="/mall2/forbidden_coupon_product/?type=create" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;添加禁用商品</a>
+	</div>
+
+	<div
+		data-ui-role="advanced-table"
+		data-app="mall2"
+		data-api="forbidden_coupon_product"
+		data-args='{}'
+		data-template-id="#products-view"
+		data-enable-paginator="true"
+		data-enable-sort="false"
+		data-selectable="true"
+		data-disable-header-select="true"
+		data-item-count-per-page="10"
+		data-outer-selecter='.xa-selectAll'
+		class="panel-body xui-promotionHead pb0"
+	></div>
+
+	<div class="xui-leftBoxTow">
+	<div class="panel-heading pl22">
+		<input type="checkbox" id="bottomSelectAll"  class="xa-selectAll" style="margin-left:-1px;"/>
+	<label for="bottomSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-proBatchFinish">结&nbsp;&nbsp;&nbsp;&nbsp;束</a>
+	</div>
+</div>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="products-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-condensed mb0 xb-stripedTable xb-noTdBorder">
+		<thead class="xb-theadBg xui-theadHeight">
+			<tr>
+				<th >商品信息</th>
+				<th width="120">商品价格（元）</th>
+				<th width="130">禁用状态</th>
+				<th width="200">有效期</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list' class="xui-flashSaleTbody">
+            {{if items.length}}
+	            {{each(i, item) items}}
+				<tr class="xui-trborder" data-id="${item.id}">
+					<td class="tl_important pt10 pb10">
+						{{if item.product}}
+						<div class="clearfix xui-i-cell2">
+							<div class="imgBox fl pr" style="width: auto;border:solid 1px #cfcfcf;">
+								<a href="${item.product.detail_link}" target="_blank">
+                                    {{if item.product.thumbnails_url.search('http://weappimg') != -1}}
+                                      <img src="${item.product.thumbnails_url + '!60'}" width="60" height="60"/>
+                                    {{else}}
+                                      <img src="${item.product.thumbnails_url}" width="60" height="60"/>
+                                    {{/if}}
+								</a>
+								{{if item.product.is_sellout}}
+								<div class="xui-i-sellout">已售罄</div>
+								{{/if}}
+							</div>
+							<div class="ml10 fl h60">
+								<div class="xui-commodityName">
+									<a href="${item.product.detail_link}" target="_blank">${product.name}</a>
+								</div>
+								<p style="color:#666;" class="mb0">{{if item.product.is_use_custom_model}}</p>
+								<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;padding-bottom:2px;">查看${item.product.models.length}个规格详情</span>
+								{{else}}
+								商品条码：${item.product.bar_code}
+								{{/if}}
+							</div>
+						</div>
+					</td>
+					<td>
+						${item.product.display_price_range}
+					</td>
+					{{/if}}
+					<td>${item.status_name}</td>
+					<td>
+						{{if item.is_permanant_active}}
+						永久有效
+						{{else}}
+						<span class="xui-i-date vm">${item.start_date}</span>至<span class="xui-i-date vm">${item.end_date}</span>
+						{{/if}}
+					</td>
+					<td>
+						<a href="javascript:void(0);" class="xa-proFinish" style="width: 40px;text-decoration:none;">结束</a>
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='8'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</div>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var view = new W.view.mall.PromotionListView({
+		el: '.xui-forbiddenCpPage',
+		templateFilterName: 'mall-forbiddenCoupon-filter-view-tmpl-src'
+	});
+	view.render();
+});
+</script>
+{% endblock %}

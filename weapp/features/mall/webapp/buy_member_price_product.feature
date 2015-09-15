@@ -507,7 +507,8 @@ Scenario: 4 订单完成后，达到自动升级的条件
 			"final_price": 600.00,
 			"ship_name": "tom",
 			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
 			"products": [{
 				"name": "商品2",
 				"price": 300.00,
@@ -525,7 +526,8 @@ Scenario: 4 订单完成后，达到自动升级的条件
 			"final_price": 600.00,
 			"ship_name": "tom",
 			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
 			"products": [{
 				"name": "商品2",
 				"price": 300.00,

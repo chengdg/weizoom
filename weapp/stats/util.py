@@ -286,8 +286,7 @@ def get_date2bought_member_count(webapp_id, low_date, high_date, date_formatter 
 	if not date_formatter:
 		date_formatter = TYPE2FORMATTER['day']
 
-	orders = Order.objects.filter(
-				webapp_id = webapp_id, 
+	orders = Order.by_webapp_id(webapp_id).filter(
 				order_source=ORDER_SOURCE_OWN, 
 				status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED), 
 				created_at__range=(low_date, high_date)
@@ -322,8 +321,7 @@ def get_bought_member_count(webapp_id, low_date, high_date):
 	"""
 	#这里不能像其他数据一样调用get_date2bought_member_count然后进行加和获取数据
 	#要考虑会员滤重问题
-	orders = Order.objects.filter(
-				webapp_id = webapp_id, 
+	orders = Order.by_webapp_id(webapp_id).filter(
 				order_source=ORDER_SOURCE_OWN, 
 				status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED), 
 				created_at__range=(low_date, high_date)
@@ -460,8 +458,7 @@ def get_repeat_buying_member_count(webapp_id, low_date, high_date):
 	检查给定date范围的订单，如果其用户在之前购买过
 	"""
 	#只统计来源为“本店”的购买订单
-	orders = Order.objects.filter(
-				webapp_id=webapp_id, 
+	orders = Order.by_webapp_id(webapp_id).filter(
 				order_source=ORDER_SOURCE_OWN, 
 				created_at__range=(low_date, high_date), 
 				status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
@@ -469,8 +466,7 @@ def get_repeat_buying_member_count(webapp_id, low_date, high_date):
 	repeat_buying_member_set = set()
 
 	#为了优化查询效率，把所有订单按日期倒序都读出来，然后判断是否有复购订单
-	all_orders = Order.objects.filter(
-				webapp_id=webapp_id, 
+	all_orders = Order.by_webapp_id(webapp_id).filter( 
 				order_source=ORDER_SOURCE_OWN, 
 				#created_at__range=(low_date, high_date), 
 				status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)

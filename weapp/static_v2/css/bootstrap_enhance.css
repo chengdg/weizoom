@@ -242,7 +242,7 @@ table.xui-tableBorderRight thead tr th{
 }
 /*删除确认弹窗*/
 .dropdown-menu{
-	min-height:50px;
+	/*min-height:50px;*/
 	background-color: #fff;
 }
 
