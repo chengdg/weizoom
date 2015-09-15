@@ -33,6 +33,7 @@ def step_impl(context, user):
         data.append(adict)
     url = '/new_weixin/api/multi_news/?_method=put'
     response = context.client.post(url, {'data': json.dumps(data)})
+    time.sleep(1)
 @Then(u"{user}能获取多图文'{news_title}'")
 def step_impl(context, user, news_title):
     materials_url = '/new_weixin/api/materials/'
