@@ -117,6 +117,21 @@
                 </li>
             </ul>
         {% endifequal %}
+        {% ifequal item.type 'appkit.uploadimg'%}
+            <div class="wui-UploadImg" style="">
+                <h1 class="wui-i-title">{{ item.title }}</h1>
+                <div class="wui-i-uploadimg" data-control-type="appkit.uploadimg">
+                    <div class="xui-productPhoto mt10">
+                        <div class="xui-addPhoto mb10 fl pr">
+                        <span class="xui-i-box"></span>
+                            {% for att_url in item.att_urls %}
+                            <img class="xui-uploadImg pa" name="file_img" src={{ att_url }} style="width:45px;height:45px;top:0;left:0;" data-allow-autoplay="false">
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endifequal %}
         {% endfor %}
         {% if survey_detail.prize_type != 'no_prize' %}
             <div class="wui-submitButton xui-hide xa-toUserCenter" style="display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" >

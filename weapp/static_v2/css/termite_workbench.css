@@ -344,6 +344,13 @@ body {
 	background-position: -89px 3px;
   	width: 50px;
 }
+.xui-component .componentList_component_uploadimg {
+  background: url(/static_v2/img/termite2/appKit_uploadimg.png) no-repeat;
+  -webkit-background-size: 47px 41px;
+  background-size: 47px 41px;
+  width: 47px;
+  background-position: 0 3px;
+}
 
 /*
  * phone区域样式
@@ -1211,7 +1218,7 @@ button.xui-removeImageButton{
 	margin-left: 87px!important;
 }
 .xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .xui-dynamicComponentControlImgBox .xui-removeImageButton{
-	display: none;
+	display: none!important;
 }
 .xui-propertyView-specialTemplateGroup .xui-link,.xui-propertyView-specialTemplateGroup .xui-selected-title-box{
 	margin-left: 0px;
@@ -1223,7 +1230,6 @@ button.xui-removeImageButton{
 	margin-left: 87px;
 	margin-top: 3px;
 }
-
 /*
 **底部导航
 */

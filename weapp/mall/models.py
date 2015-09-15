@@ -899,7 +899,13 @@ class Product(models.Model):
 					property_id, property_value_id = model_property_info.split(':')
 					property_value_ids.append(int(property_value_id))
 			self.stock_custom_model_names = stock_custom_model_names
-			for value in id2value.values():
+
+			# 解决规格顺序错乱的BUG
+			values = id2value.values()
+			if values:
+				values.sort(lambda x, y: cmp(x.id, y.id))
+
+			for value in values:
 				# 增加该规格值是否属于该产品
 				is_belong_product = (value.id in property_value_ids)
 				id2property[value.property_id]['values'].append({
