@@ -221,7 +221,7 @@ def get_members_filter_params(request):
 	tags = []
 	for tag in MemberTag.get_member_tags(webapp_id):
 		if tag.name == '未分组':
-			tags = [tag] + tags
+			tags = [{"id": tag.id,"name": tag.name}] + tags
 		else:
 			tags.append({
 				"id": tag.id,
@@ -515,7 +515,7 @@ def get_member_tags(request):
 	tags = []
 	for tag in MemberTag.get_member_tags(webapp_id):
 		if tag.name == '未分组':
-			tags = [tag] + tags
+			tags = [{"id": tag.id,"name": tag.name}] + tags
 		else:
 			tags.append({
 				"id": tag.id,
