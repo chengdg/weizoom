@@ -96,7 +96,7 @@ Background:
 		}]
 		"""
 	
-@message @automaticReply @senior @textPicture 
+@message @automaticReply @senior @textPicture @gyc11
 Scenario: 1 删除单个关键字或删除单个回复
 	至少要保留一个关键字，或一个关键字回复，否则无法成功
 	

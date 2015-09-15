@@ -71,7 +71,7 @@ Scenario:1 关注后自动回复,文本类型，带文本小尾巴
 	When bill关注jobs的公众号
 	Then bill收到自动回复'关注后自动回复内容+小尾巴'
 
-@mall2 @message @automaticReply
+@mall2 @message @automaticReply  
 Scenario:2 关键词自动回复,文本类型，带文本小尾巴；没有自动回复，没有小尾巴
 
 	When jobs已添加关键词自动回复规则
@@ -96,7 +96,7 @@ Scenario:2 关键词自动回复,文本类型，带文本小尾巴；没有自�
 	When bill在微信中向jobs的公众号发送消息'bill消息'
 	Then bill收到自动回复' '
 
-@mall2 @message @automaticReply @gyccc
+@mall2 @message @automaticReply @gya
 Scenario:3 小尾巴未开启，关注后自动回复,文本类型，无文本小尾巴
 	
 	When jobs添加关注自动回复规则
