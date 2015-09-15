@@ -38,8 +38,17 @@
         font-weight: lighter;
         border-left: 4px solid #1aa2f8;
     }
-    .pa {
-      position: relative;
+    .wui-UploadImg img{
+        width: 50px;
+        height: 50px;
+        border: 1px solid #E5E5E5;
+        margin-right: 5px;
+    }
+    .wui-UploadImg img:last-child{
+        margin-right: 0;
+    }
+    .xui-productPhoto {
+      display: inline-block;
     }
     </style>
 
@@ -121,15 +130,17 @@
             </ul>
         {% endifequal %}
         {% ifequal item.type 'appkit.uploadimg'%}
-            <div class="wui-UploadImg" style="">
+            <div class="wui-UploadImg">
                 <h1 class="wui-i-title">{{ item.title }}</h1>
-                <div class="wui-i-uploadimg" data-control-type="appkit.uploadimg">
-                    <div class="xui-productPhoto mt10">
-                        <div class="xui-addPhoto mb10 fl pr">
-                            {% for att_url in item.att_urls %}
-                            <span class="xui-i-box"><img class="xui-uploadImg pa" name="file_img" src={{ att_url }} style="width:50px;height:50px;top:0;left:0;" data-allow-autoplay="false"></span>
-                            {% endfor %}
-                        </div>
+                <div class="xui-productPhoto mt10">
+                    <div class="xui-addPhoto mb10 fl pr">
+                        {% for att_url in item.att_urls %}
+                            {% ifequal att_url|truncatechars:18 'http://weappimg...'%}
+                                <img src="{{att_url}}!60" full-src="{{att_url}}">
+                            {% else %}
+                                <img src="{{att_url}}">
+                            {% endifequal%}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
