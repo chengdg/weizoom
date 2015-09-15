@@ -122,22 +122,23 @@
 			<table width="100%" class="table mb15 xui-table-orderDetail">
 				<tr class="xui-order-firstTr">
 					<td colspan="8">
-						<p class="ml20 fl">
+						<p class="ml15 fl">
 						订单编号：
 						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}{{if order.edit_money}}-${order.edit_money}{{/if}}</a>
 						</p>
 						<p class="ml10 fl w60">
 							${order.pay_interface_name}
 						</p>
-						<p class="ml30 fl">
+						<p class="ml10 fl">
 							下单时间：${order.created_at}
 						</p>
 						{{if order.payment_time}}
-						<p class="ml30 fl">
+						<p class="ml15 fl">
 							
 							付款时间：${order.payment_time}
 						</p>
 						{{/if}}
+					<div class="fr">
 					{{if order.groups.length > 1}}<p class="fl ml30">{{else}}<p class="fr mr15">{{/if}}
 						<a title="查看" href="/mall2/order/?order_id=${order.id}" target="_blank" class="mr5">查看详情</a>
 						-
@@ -147,7 +148,7 @@
 						<p class="fl" style="width:90px;text-align:center;margin-left:4px;">
 					    {{html formatOrderStatus(order.status)}}
 					    </p>
-					    <p class="fl ml20">
+					    <p class="fl ml20 mr20">
 					    {{if order.order_status == 3||order.order_status == 4||order.order_status ==5}}
                                 {{if order.total_price > 0 }}
                                     <a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
@@ -160,6 +161,7 @@
 					    {{/if}}
 					    </p>
 					{{/if}}
+					</div>
 					</td>
 				</tr>
 				{{each(j, group) order.groups}}
