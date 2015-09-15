@@ -45,12 +45,13 @@ class surveyParticipance(resource.Resource):
 				webapp_user_name = u'非会员'
 			termite_data = survey_participance.termite_data
 			item_data_list = []
-			att_url = {}
+			att_url_list = []
 
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
 				item_data = {}
+				att_url={}
 				if v['type'] == 'appkit.shortcuts':
 					item_data['item_name'] = TEXT_NAME[pureName]
 					item_data['item_value'] = v['value']
@@ -68,6 +69,8 @@ class surveyParticipance(resource.Resource):
 					att_url['item_value'] = v['value']
 				if item_data:
 					item_data_list.append(item_data)
+				if att_url:
+					att_url_list.append(att_url)
 		else:
 			webapp_user_name = ''
 			item_data_list = {}
@@ -75,7 +78,7 @@ class surveyParticipance(resource.Resource):
 		response.data = {
 			'webapp_user_name': webapp_user_name,
 			'items': item_data_list,
-			'att_url':att_url
+			'att_url_list':att_url_list
 		}
 		return response.get_response()
 	
