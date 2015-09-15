@@ -59,6 +59,7 @@
     background: #f2f2f2;
     padding: 0 5px;
     color: #656565;
+    white-space: nowrap;
 }
 
 .xui-filterPanel .xui-col .xui-i-item  .xui-span{

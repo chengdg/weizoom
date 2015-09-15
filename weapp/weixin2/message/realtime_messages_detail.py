@@ -292,6 +292,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         one_message['session_id'] = message.session_id
         one_message['message_id'] = message.id
         one_message['sender_username'] = weixin_user.username
+        one_message['is_reply'] = message.is_reply
         if not sender_username:
             if message.is_reply:
                 one_weixin_user = username2weixin_user[message.to_weixin_user_username]
@@ -304,6 +305,11 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         if message.is_reply:
             head_img = get_mp_head_img(user.id)
             mp_username = get_mp_nick_name(user.id)
+            #用户名字段长过5个的进行处理
+            #mp_username = unicode(mp_username, 'utf8')
+            if len(mp_username) >5:
+                mp_username = u'%s...' % mp_username[:5]
+            #用户名字段长过5个的进行处理
             one_message['mp_username'] = mp_username
             if head_img:
                 one_message['user_icon'] = head_img
@@ -362,6 +368,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
             member = id2member[member_id]
+            one_message['name'] = member.username_truncated
             if member:
                 one_message['member_id'] = member.id
         except:

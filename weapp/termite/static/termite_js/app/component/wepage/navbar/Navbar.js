@@ -109,14 +109,17 @@ W.component.wepage.Navar = W.component.Component.extend({
             // 修改 一级菜单 限制
             var titleMaxLength = 5;
             var propertyViewTitle = "";
+            var otherUpdateDisplayName = "";
             if (oldType == 'weixin') {
                 this.name2field['items'].maxItemLength = 999;
                 titleMaxLength = 10;
                 propertyViewTitle = '一级分类';
+                otherUpdateDisplayName = '分类';
             } else {
                 this.name2field['items'].maxItemLength = 3;
                 titleMaxLength = 5;
                 propertyViewTitle = '一级菜单';
+                otherUpdateDisplayName = '菜单';
             }
             // 修改 一级菜单 标题的字数限制
             _.each(this.components, function(subComponent) {
@@ -125,7 +128,8 @@ W.component.wepage.Navar = W.component.Component.extend({
                         titleMaxLength: titleMaxLength
                     });
                     subComponent.updateViewTitle({
-                        propertyViewTitle: propertyViewTitle
+                        propertyViewTitle: propertyViewTitle,
+                        otherUpdateDisplayName: otherUpdateDisplayName
                     })
                 }
             });
