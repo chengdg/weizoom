@@ -219,7 +219,7 @@ def __count_member_follow_relations(member):
 def get_members_filter_params(request):
 	webapp_id = request.user_profile.webapp_id
 	tags = []
-	for tag in  MemberTag.get_member_tags(webapp_id):
+	for tag in MemberTag.get_member_tags(webapp_id):
 		if tag.name == '未分组':
 			tags = [tag] + tags
 		else:
@@ -513,11 +513,14 @@ def edit_member_qrcode(request):
 def get_member_tags(request):
 	webapp_id = request.user_profile.webapp_id
 	tags = []
-	for tag in  MemberTag.get_member_tags(webapp_id):
-		tags.append({
-			"id": tag.id,
-			"name": tag.name
-		})
+	for tag in MemberTag.get_member_tags(webapp_id):
+		if tag.name == '未分组':
+			tags = [tag] + tags
+		else:
+			tags.append({
+				"id": tag.id,
+				"name": tag.name
+			})
 
 	grades = []
 	for grade in MemberGrade.get_all_grades_list(webapp_id):
