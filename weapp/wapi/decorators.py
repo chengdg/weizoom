@@ -59,14 +59,14 @@ def check_valid(request, required_params):
 
 
 	
-def wapi_access_required(function=None, required_params=None):
+def param_required(function=None, params=None):
 	"""
 	Decorator for views that checks that the user is using the inner secret key, 
 	returning the failure response when the checking is not passed.
 	"""
 	actual_decorator = user_passes_test(
 		#lambda access_key: access_key == settings.WAPI_SECRET_ACCESS_TOKEN,
-		check_valid, required_params
+		check_valid, params
 	)
 	if function:
 		return actual_decorator(function)

@@ -18,7 +18,6 @@ def step_add_category(context, user):
         mall_api.add_product_category(uid, product_category['name'])
         #url = '/mall2/api/category/?_method=put'
         #client.post(url, data)
-    #assert False
 
 
 @when(u"{user}添加商品分类")

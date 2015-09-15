@@ -4,7 +4,7 @@
 """
 
 from core import resource
-from wapi.decorators import wapi_access_required
+from wapi.decorators import param_required
 from wapi.wapi_utils import create_json_response
 
 from mall import models as mall_models
@@ -15,7 +15,7 @@ class MemberStats(resource.Resource):
 	app = 'wapi'
 	resource = 'member_stats'
 
-	@wapi_access_required(required_params=['wid', 'date_start'])
+	@param_required(params=['wid', 'date_start'])
 	def api_get(request):
 		"""
 		计算会员数据
@@ -44,7 +44,7 @@ class OrderStats(resource.Resource):
 	app = 'wapi'
 	resource = 'order_stats'
 
-	@wapi_access_required(required_params=['wid', 'date_start', 'date_end'])
+	@param_required(params=['wid', 'date_start', 'date_end'])
 	def api_get(request):
 		"""
 		获取订单的统计数据

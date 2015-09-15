@@ -36,7 +36,7 @@ class TestApiClient:
 		self.client = client
 		return
 
-	def get(self, addr, params=None):
+	def _get(self, addr, params=None):
 		if params is None:
 			params={'access_token': self.access_token}
 		else:
@@ -47,7 +47,7 @@ class TestApiClient:
 		return req.content
 
 
-	def post(self, addr, params=None):
+	def _post(self, addr, params=None):
 		if params is None:
 			params={'access_token': self.access_token}
 		else:
@@ -58,7 +58,7 @@ class TestApiClient:
 		return req.content
 
 
-	def put(self, addr, params=None):
+	def _put(self, addr, params=None):
 		if params is None:
 			params={'access_token': self.access_token}
 		else:
@@ -70,7 +70,7 @@ class TestApiClient:
 		return req.content
 
 
-	def get_json(self, addr, params=None):
+	def _get_json(self, addr, params=None):
 		text = self.get(addr, params)
 		json_obj = json.loads(text)
 		if json_obj is not None:
@@ -81,6 +81,18 @@ class TestApiClient:
 		else:
 			print("response: {}".format(text))
 			raise Exception("Not valid JSON!")
+
+	def get(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._get_json(url, params)
+
+	def post(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._post(url, params)
+
+	def put(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._put(url, params)
 
 
 class ApiClient:
@@ -98,7 +110,7 @@ class ApiClient:
 		return
 
 
-	def get(self, addr, params=None):
+	def _get(self, addr, params=None):
 		if params is None:
 			params={'access_token': self.access_token}
 		else:
@@ -109,7 +121,7 @@ class ApiClient:
 		return req.text
 
 
-	def post(self, addr, params=None):
+	def _post(self, addr, params=None):
 		if params is None:
 			params={'access_token': self.access_token}
 		else:
@@ -120,7 +132,7 @@ class ApiClient:
 		return req.text
 
 
-	def put(self, addr, params=None):
+	def _put(self, addr, params=None):
 		if params is None:
 			params={'access_token': self.access_token}
 		else:
@@ -132,7 +144,7 @@ class ApiClient:
 		return req.text
 
 
-	def get_json(self, addr, params=None):
+	def _get_json(self, addr, params=None):
 		text = self.get(addr, params)
 		json_obj = json.loads(text)
 		if json_obj is not None:
@@ -143,3 +155,15 @@ class ApiClient:
 		else:
 			print("response: {}".format(text))
 			raise Exception("Not valid JSON!")
+
+	def get(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._get_json(url, params)
+
+	def post(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._post(url, params)
+
+	def put(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._put(url, params)

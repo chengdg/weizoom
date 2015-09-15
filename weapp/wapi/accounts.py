@@ -30,7 +30,7 @@ from core.charts_apis import *
 #from core.exceptionutil import unicode_full_stack
 #from watchdog.utils import watchdog_error, watchdog_warning
 
-from wapi.decorators import wapi_access_required
+from wapi.decorators import param_required
 
 #from stats.manage.brand_value_utils import get_brand_value
 
@@ -49,7 +49,7 @@ class WebappID(resource.Resource):
 	app = 'wapi'
 	resource = 'webapp_id'
 
-	@wapi_access_required
+	@param_required
 	def api_get(request):
 		"""
 		获取WebAPP ID

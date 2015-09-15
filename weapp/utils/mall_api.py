@@ -18,20 +18,18 @@ def get_order_stats(webapp_id, start_date=None, end_date=None):
 	"""
 	获取多项品牌价值
 	"""
-	params = {
+	results = wapi().get('mall', 'order_stats', {
 		'wid': webapp_id,
 		'date_start': start_date,
 		'date_end': end_date
-	}
-	results = wapi().get_json('wapi/api/order_stats/', params)
+	})
 	return results
 
 
 def get_webapp_id(username):
-	params = {
+	results = wapi().get_json('mall', 'webapp_id', {
 		'username': username
-	}
-	results = wapi().get_json('wapi/api/webapp_id/', params)
+	})
 	return results.get('webapp_id')
 
 
@@ -39,12 +37,11 @@ def get_member_count(webapp_id, date_start=None, date_end=None):
 	"""
 	获取会员总数
 	"""
-	params = {
+	results = wapi().get_json('mall', 'member_stats', {
 		'wid': webapp_id,
 		'date_start': date_start,
 		'date_end': date_end
-	}
-	results = wapi().get_json('wapi/api/member_stats/', params)
+	})
 	return results.get('member_count')
 
 
@@ -52,10 +49,9 @@ def get_product_categories(uid):
 	"""
 	获取商品分组列表
 	"""
-	params = {
+	results = wapi().get_json('mall', 'product_categories', {
 		'uid': uid
-	}
-	results = wapi().get_json('wapi/api/product_categories/', params)
+	})
 	return results['categories']
 
 
@@ -63,10 +59,9 @@ def get_product_category(category_id):
 	"""
 	获取一个分类详情
 	"""
-	params = {
+	category = wapi().get_json('mall', 'product_category', {
 		'id': category_id
-	}
-	category = wapi().get_json('wapi/api/product_category/', params)
+	})
 	return category
 
 
@@ -74,11 +69,10 @@ def update_product_category(category_id, name):
 	"""
 	获取商品分组列表
 	"""
-	params = {
+	wapi().post('mall', 'product_category', {
 		'id': category_id,
 		'name': name
-	}
-	wapi().post('wapi/api/product_category/', params)
+	})
 	return
 
 
@@ -86,12 +80,11 @@ def add_product_category(uid, name):
 	"""
 	创建商品分类
 	"""
-	params = {
+	response = wapi().put('mall', 'product_category', {
 		'uid': uid,
 		'name': name
-	}
-	response = wapi().put('wapi/api/product_category/', params)
-	print("RESPONSE: {}".format(response))
+	})
+	#print("RESPONSE: {}".format(response))
 	return
 
 

@@ -11,7 +11,7 @@
 from core import resource
 #from mall import models as mall_models
 
-from wapi.decorators import wapi_access_required
+from wapi.decorators import param_required
 from wapi.wapi_utils import create_json_response
 
 from stats.manage.brand_value_utils import get_brand_value
@@ -25,7 +25,7 @@ class BrandValue(resource.Resource):
 	app = 'wapi'
 	resource = 'brand_value'
 
-	@wapi_access_required(required_params=['wid', 'dates'])
+	@param_required(params=['wid', 'dates'])
 	def api_get(request):
 		"""
 		获取微品牌价值

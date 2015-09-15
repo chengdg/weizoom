@@ -5,7 +5,7 @@
 
 from mall.models import *
 from core import resource
-from wapi.decorators import wapi_access_required
+from wapi.decorators import param_required
 from wapi.wapi_utils import create_json_response
 from utils import dateutil as utils_dateutil
 
@@ -20,7 +20,7 @@ class ProductCategory(resource.Resource):
 	"""
 	获取WebAPP ID
 	"""
-	app = 'wapi'
+	app = 'mall'
 	resource = 'product_category'
 
 	@staticmethod
@@ -34,7 +34,7 @@ class ProductCategory(resource.Resource):
 		}
 
 
-	@wapi_access_required(required_params=['id'])
+	@param_required(params=['id'])
 	def api_get(request):
 		"""
 		获得分类详情
@@ -45,7 +45,7 @@ class ProductCategory(resource.Resource):
 		return create_json_response(200, ProductCategory.category_to_dict(category))
 
 
-	@wapi_access_required(required_params=['id', 'name'])
+	@param_required(params=['id', 'name'])
 	def api_post(request):
 		"""
 		修改ProductCategory的名字
@@ -57,7 +57,7 @@ class ProductCategory(resource.Resource):
 		return create_json_response(200, {
 			})
 
-	@wapi_access_required(required_params=['uid', 'name'])
+	@param_required(params=['uid', 'name'])
 	def api_put(request):
 		"""
 		创建分类
@@ -75,10 +75,10 @@ class ProductCategories(resource.Resource):
 	"""
 	获取商品分类列表
 	"""
-	app = 'wapi'
+	app = 'mall'
 	resource = 'product_categories'
 
-	@wapi_access_required(required_params=['uid'])
+	@param_required(params=['uid'])
 	def api_get(request):
 		"""
 		@see 参考 mall/product/category.py
