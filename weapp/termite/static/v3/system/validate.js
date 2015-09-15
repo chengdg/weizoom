@@ -197,7 +197,20 @@ W.ValidaterClass = function() {
                 }
             },
             errorHint: ''
-        }
+        },
+        'require-upload-img': {
+			type: 'function',
+			extract: 'element',
+			check: function(element) {
+				var is_upload = element.find('img').attr('src').indexOf('data:image');
+				if (is_upload == -1) {
+					return false;
+				} else {
+					return true;
+				}
+			},
+			errorHint: ''
+		}
 	};
 
 	this.getRule = function(type) {
