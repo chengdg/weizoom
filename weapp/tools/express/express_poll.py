@@ -158,7 +158,7 @@ class ExpressPoll(object):
 					return True
 					
 				# 关闭，重发订阅
-				if len(push.abort_receive_message) > 0:
+				if push.abort_receive_message and len(push.abort_receive_message) > 0:
 					import json
 					json = json.loads(push.abort_receive_message)
 					if json.get(self.express_params.STATUS, '') == self.express_config.STATUS_ABORT:
