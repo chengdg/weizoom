@@ -101,8 +101,9 @@
 .xui-weixin-realtimeMessagePage .xui-messages {
     background-color: #fff;
     width: 100%;
-    padding: 30px;
+    padding: 20px 30px 0px 30px;
 }
+
 .xui-weixin-realtimeMessagePage .xui-message .xui-message-top{
    margin-bottom: 5px;
    color: #666;
@@ -116,7 +117,10 @@
     border: 1px solid #ccc;
     padding:10px 10px 0px 10px;
     clear: both;
-    margin-bottom: 20px;
+}
+.xui-weixin-realtimeMessagePage .xui-message .xui-i-remark-text {
+    color: #f39800;
+    cursor: text !important;
 }
 .xui-weixin-realtimeMessagePage .xui-messageWrap {
 }
@@ -127,11 +131,11 @@
     float: right;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft {
-   width: 165px;
+   width: 160px;
    float: left;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft  p {
-    line-height: 50px;
+    line-height: 60px;
 }
 .xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
     width: 350px;
@@ -144,9 +148,15 @@
 
 }
 .xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight {
-    width: 190px;
+    width: 160px;
     float: right;
-    line-height: 50px;
+    line-height: 60px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight p{
+    width: 80px;
+    text-align: right;
+
 }
 
 
