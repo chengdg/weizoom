@@ -11,6 +11,29 @@
     	width: 60px;
         margin: 2px;
     }
+    .xa-uploadimg_box{
+        display: none;
+        position: absolute;
+        background-color: #DDDDDD;
+        border: 2px solid #DDDDDD;
+        width: 500px;
+        height: 500px;
+        overflow: auto;
+        margin: auto;
+        top: 50%; left: 0; bottom: 0; right: 0;
+    }
+    .xa-uploadimg_box .xa-close_btn{
+        position: absolute;
+        top: 0; right: 0;
+        z-index: 1000000;
+    }
+    .xa-uploadimg_box .xa-uploadimg{
+        max-width: 100%;
+        max-height: 100%;
+        overflow: auto;
+        margin: auto;
+        top: 50%; left: 0; bottom: 0; right: 0;
+    }
     </style>
 {% endblock %}
 {% block content-panel %}

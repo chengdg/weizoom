@@ -44,11 +44,27 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					var att_array = data.att_url.item_value;
 					var att_val = "";
 					for(var i=0;i<att_array.length;i++){
-						att_val = att_val+'<img src=\"'+att_array[i]+'\">'
+						att_val = att_val+'<img class=\"xa-uploadimg\" src=\"'+att_array[i]+'\">'
 					}
 					var att_html = '<tr><td>'+att_name+':</td><td>'+att_val+'</td></tr>';
 					$('.modal-body .table.table-bordered').append(att_html);
 
+					var click_count = 1;
+					$('img.xa-uploadimg').click(function(){
+						if(click_count ===1){
+							var that = this;
+							click_count = click_count+1;
+							$('.xa-uploadimg_box').append("<img class='xa-close_btn' src='/static_v2/img/close_btn.png'>").append($(that).clone(true)).fadeIn('fast');
+							$('.xa-close_btn').click(function(){
+									$('.xa-uploadimg_box').fadeOut(400);
+									$('.xa-uploadimg_box').empty();
+									click_count = 1;
+								});
+						}else{
+							$('.xa-uploadimg_box').fadeOut(400);
+							$('.xa-uploadimg_box').empty();
+							click_count = 1;
+						}});
 				},
 				error: function(resp) {
 				}
