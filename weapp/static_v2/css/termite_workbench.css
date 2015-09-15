@@ -344,6 +344,13 @@ body {
 	background-position: -89px 3px;
   	width: 50px;
 }
+.xui-component .componentList_component_uploadimg {
+  background: url(/static_v2/img/termite2/appKit_uploadimg.png) no-repeat;
+  -webkit-background-size: 47px 41px;
+  background-size: 47px 41px;
+  width: 47px;
+  background-position: 0 3px;
+}
 
 /*
  * phone区域样式
