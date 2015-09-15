@@ -68,7 +68,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/gmu/widget/addImg.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/uploadImg.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
         <!-- *end_prunt_task* -->
@@ -500,7 +500,7 @@
                                 }
                             }else if (inputType === 'imgarea') {
                                 var picture_list = [];
-                                $('.xui-uploadImage img').each(function(){
+                                $control.find('img').each(function(){
                                    if($(this).attr('src').indexOf('data:image') != -1){picture_list.push($(this).attr('src'))}
                                 });
                                 var value = JSON.stringify(picture_list);
