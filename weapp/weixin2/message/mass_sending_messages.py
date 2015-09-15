@@ -42,7 +42,7 @@ class MassSendingMessages(resource.Resource):
         groups = get_member_groups(webapp_id)
         tags = []
         for tag in groups:
-            if tag.name == '未分组':
+            if tag['name'] == '未分组':
                 tags = [tag] + tags
             else:
                 tags.append(tag)
