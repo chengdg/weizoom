@@ -18,9 +18,6 @@ cd $ROOT_DIR
 echo "========================================================" >> $LOG
 
 # add more services here
-echo ">> calling 'services.send_express_poll_service.tasks.send_express_poll_request'" >> $LOG
-echo "--------------------------------------------------------" >> $LOG
-python services/send_task.py "services.send_express_poll_service.tasks.send_express_poll_request" {} "{}" >> $LOG 2>&1
 
 echo "========================================================" >> $LOG
 echo "done!" >> $LOG
