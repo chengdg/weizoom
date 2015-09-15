@@ -393,6 +393,10 @@ $(document).ready(function() {
 			session_id = $(this).parent().parent().data('id');
 			session_ids.push(session_id);
   		});
+  		if(session_ids.length == 0){
+  			W.showHint('error', '没有选中任何消息!');
+  			return;
+  		};
   		W.resource.new_weixin.SignUnreadMessages.post({
   			data: {
 				sessionIds: JSON.stringify(session_ids)
