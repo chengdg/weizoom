@@ -555,7 +555,6 @@
                     info: '玩命传输中请等待...',
                     speed: 3000,
                     callBack: function() {
-
                     }
                 });
                 W.getApi().call({
@@ -564,6 +563,9 @@
                     method: 'put',
                     args: participanceData,
                     success: function(data) {
+                        $('body').alert({
+                            isShow: false
+                        });
                         $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
                         var $button = $submitButtonContainer.find('.xa-submitTermite');
                         $button.text('您已参加过该活动');
