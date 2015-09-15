@@ -45,6 +45,7 @@ class surveyParticipance(resource.Resource):
 				webapp_user_name = u'非会员'
 			termite_data = survey_participance.termite_data
 			item_data_list = []
+			att_url = {}
 
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
@@ -62,14 +63,19 @@ class surveyParticipance(resource.Resource):
 					for sub_k, sub_v in sorted(v['value'].items()):
 						if sub_v['isSelect']:
 							item_data['item_value'].append(sub_k.split('_')[1])
-				item_data_list.append(item_data)
+				elif v['type'] == 'appkit.uploadimg':
+					att_url['item_name'] = pureName
+					att_url['item_value'] = v['value']
+				if item_data:
+					item_data_list.append(item_data)
 		else:
 			webapp_user_name = ''
 			item_data_list = {}
 		response = create_response(200)
 		response.data = {
 			'webapp_user_name': webapp_user_name,
-			'items': item_data_list
+			'items': item_data_list,
+			'att_url':att_url
 		}
 		return response.get_response()
 	
