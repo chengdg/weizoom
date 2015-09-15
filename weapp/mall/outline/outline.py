@@ -209,37 +209,3 @@ class Outline(resource.Resource):
                     "values": uv_trend_values
                 }]
             )
-
-
-class CommonIntervalCheck(resource.Resource):
-    app = 'mall2'
-    resource = 'common_interval_check'
-
-    def api_get(request):
-        from cache.webapp_owner_cache import get_unship_order_count_from_cache
-        unship_order_count = get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
-
-        unread_message_count = _get_unread_message_count(request.user)
-        try:
-            response = create_response(200)
-            response.data = {
-                'unread_realtime_count': unread_message_count,
-                'unship_order_count': unship_order_count
-            }
-            # watchdog_debug("response.data={}".format(response.data))
-        except:
-            response = create_response(500)
-            response.innerErrMsg = unicode_full_stack()
-        return response.get_response()
-
-
-def _get_unread_message_count(user):
-    unread_message_count = 0
-    mpuser = get_system_user_binded_mpuser(user)
-    sessions = Session.objects.select_related().filter(mpuser=mpuser, is_show=True).exclude(
-        member_latest_created_at="").aggregate(Sum("unread_count"))
-
-    if sessions["unread_count__sum"] is not None:
-        unread_message_count = sessions["unread_count__sum"]
-
-    return unread_message_count
