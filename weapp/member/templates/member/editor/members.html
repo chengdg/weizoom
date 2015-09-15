@@ -308,8 +308,8 @@
 				</div>
 				<div class="column_block">
 					<div>
-
 					<a class="xui-Blue" target="_blank" href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+
 
 				</div>
 			</td>
@@ -317,9 +317,14 @@
 				<div class="centerAlign">${ member.grade_name }</div>
 			</td>
 			<td>
-				<div class="centerAlign"><a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }</a>
-						</div>
-					</span>
+				<div class="centerAlign">
+					{{if member.friend_count==0}}
+						<span class="cursor-text">${ member.friend_count }</span>
+					{{else}}
+						<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
+						</a>
+					{{/if}}
+				</div>
 			</td>
 			<td>
 				<div class="centerAlign">${ member.integral }</div>
