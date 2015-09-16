@@ -258,7 +258,7 @@ class surveyParticipances_Export(resource.Resource):
 					upload_v = []
 					u_v = record[u'termite_data'][s][u'value']
 					for i in u_v:
-						upload_v.append("url:%s;"%str(i))
+						upload_v.append("url:%s"%str(i))
 					uploadimg.append(upload_v)
 
 				# don't change the order
