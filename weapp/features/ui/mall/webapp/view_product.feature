@@ -1,7 +1,13 @@
-# _edit_ : "新新8.24"
+# __author__ : "冯雪静"
 @func:webapp.modules.mall.views.list_products
 Feature: 在webapp中浏览商品
 	bill能在webapp中看到jobs添加的"商品"
+	"""
+	准备数据：1.商品分类，2.商品规格，3.会员等级，4.商品，5.限时抢购活动，6.会员
+	1.浏览商品
+	2.浏览商品列表
+	3.浏览商品分类
+	"""
 
 Background:
 	Given jobs登录系统
@@ -13,20 +19,172 @@ Background:
 			"name": "分类2"
 		}, {
 			"name": "分类3"
-		}]	
+		}]
 		"""
-	And jobs已添加商品
+	And jobs已添加商品规格
+		"""
+		[{
+			"name": "颜色",
+			"type": "图片",
+			"values": [{
+				"name": "黑色",
+				"image": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}, {
+				"name": "白色",
+				"image": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}]
+		}, {
+			"name": "尺寸",
+			"type": "文字",
+			"values": [{
+				"name": "M"
+			}, {
+				"name": "S"
+			}]
+		}]
+		"""
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}]
+		"""
+	Given jobs已添加商品
+	#商品1：开起了会员价，多规格，商品2：是限时抢购商品，商品3：普通商品
 		"""
 		[{
 			"name": "商品1",
+			"promotion_title": "促销的东坡肘子",
+			"categories": "分类1,分类2,分类3",
+			"detail": "东坡肘子的详情",
+			"status": "在售",
+			"is_member_product": "on",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}, {
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}, {
+				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
+			}],
+			"is_enable_model": "启用规格",
+			"model": {
+				"models": {
+					"黑色 S": {
+						"price": 20.00,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 S": {
+						"price": 10.00,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}, {
+			"name": "商品2",
 			"category": "分类1",
-			"physical_unit": "包",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-			"introduction": "商品1的简介",
-			"detail": "商品1的详情",
-			"remark": "商品1的备注",
-			"shelve_type": "上架",
+			"detail": "叫花鸡的详情",
+			"status": "在售",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 100.00,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			}
+		}, {
+			"name": "商品3",
+			"category": "",
+			"detail": "叫花鸡的详情",
+			"status": "在售",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.00,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}, {
+			"name": "商品4",
+			"category": "",
+			"detail": "叫花鸡的详情",
+			"status": "待售",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 15.00,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}]
+		"""
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "商品2限时抢购",
+			"promotion_title":"限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name":"商品2",
+			"member_grade": "铜牌会员",
+			"count_per_purchase": 1,
+			"promotion_price": 50.00,
+			"limit_period": 1
+		}]
+		"""
+	Given bill关注jobs的公众号
+	And tom关注jobs的公众号
+	Given jobs登录系统
+	When jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
+		"""
+	Then jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}]
+		"""
+
+
+@product @ui
+Scenario: 1 浏览商品
+	jobs添加商品后
+	1. bill能在webapp中看到jobs添加的商品
+	2. tom能在webapp中看到jobs添加的商品
+
+	When bill访问jobs的webapp
+	And bill浏览jobs的webapp的'商品1'商品页
+	#享受会员价的会员能获取商品原价和会员价
+	Then webapp页面标题为'商品1'
+	And bill获得webapp商品
+		"""
+		{
+			"name": "商品1",
+			"promotion_title": "促销的东坡肘子",
+			"detail": "东坡肘子的详情",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}, {
@@ -35,314 +193,201 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 			}],
 			"model": {
-				"property": {},
 				"models": {
-					"standard": {
-						"price": 11.0,
-						"weight": 5.0,
-						"stock_type": "无限"
+					"黑色 S": {
+						"price": 20.00,
+						"member_price": 18.00,
+						"stocks": 3
+					},
+					"白色 S": {
+						"price": 10.00,
+						"member_price": 9.00
 					}
 				}
 			}
-		}, {
+		}
+		"""
+	When bill浏览jobs的webapp的'商品2'商品页
+	#享受限时抢购的会员获取的是限时抢购价
+	Then webapp页面标题为'商品2'
+	And bill获得webapp商品
+		"""
+		{
 			"name": "商品2",
-			"category": "",
-			"physical_unit": "盘",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "商品2的简介",
-			"detail": "商品2的详情",
-			"shelve_type": "下架",
+			"detail": "限时抢购",
 			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
 			"model": {
-				"property": {},
 				"models": {
 					"standard": {
-						"price": 12.0,
-						"weight": 6.0,
-						"stock_type": "有限",
-						"stocks": 2
-					}
-				}
-			}
-		}, {
-			"name": "商品3",
-			"category": "",
-			"physical_unit": "盘",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "商品3的简介",
-			"detail": "商品3的详情",
-			"shelve_type": "上架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"property": {},
-				"models": {
-					"standard": {
-						"price": 12.0,
-						"weight": 6.0,
-						"stock_type": "有限",
+						"price": 50.00,
 						"stocks": 3
 					}
 				}
 			}
-		}]	
-		"""
-	And bill关注jobs的公众号
-	And tom关注jobs的公众号
-
-@ui @ui-mall @ui-mall.webapp
-Scenario: 浏览标准规格商品
-	jobs添加商品后
-	1. bill能在webapp中看到jobs添加的商品
-
-	When bill访问jobs的webapp:ui
-	And bill浏览jobs的webapp的'商品1'商品页:ui
-	Then webapp页面标题为'商品1':ui
-	And bill获得webapp商品:ui
-		"""
-		{
-			"name": "商品1",
-			"detail": "商品1的详情",
-			"price": 11.0,
-			"weight": 5.0,
-			"stocks": "无限",
-			"postage_config_name": "免运费"
 		}
 		"""
-
-
-@ui @ui-mall @ui-mall.webapp
-Scenario: 运费为免运费时，浏览商品库存信息，调整商品数量
-	jobs添加商品后
-	1. bill能调整商品数量
-	2. bill调整商品数量时，重量，价格，运费有相应的变化
-	
-	When bill访问jobs的webapp:ui
-	And bill浏览jobs的webapp的'商品1'商品页:ui
-	Then bill获得webapp商品:ui
+	When bill浏览jobs的webapp的'商品3'商品页
+	Then webapp页面标题为'商品3'
+	And bill获得webapp商品
 		"""
 		{
-			"name": "商品1",
-			"detail": "商品1的详情",
-			"price": 11.0,
-			"weight": 5.0,
-			"stocks": "无限",
-			"postage_config_name": "免运费"
-		}
-		"""
-	Given jobs登录系统:ui
-	When jobs更新商品'商品1':ui
-	"""
-	{
-		"name": "商品1",
-		"model": {
-			"models": {
-				"standard": {
-					"stock_type": "有限",
-					"stocks": 3,
-					"price": 11.0,
-					"weight": 5.0
+			"name": "商品3",
+			"detail": "叫花鸡的详情",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.00
+					}
 				}
 			}
 		}
-	}	
-	"""
-	When bill访问jobs的webapp:ui
-	And bill浏览jobs的webapp的'商品1'商品页:ui
-	Then bill获得webapp商品:ui
+		"""
+	When tom访问jobs的webapp
+	And tom浏览jobs的webapp的'商品1'商品页
+	Then webapp页面标题为'商品1'
+	And tom获得webapp商品
 		"""
 		{
 			"name": "商品1",
-			"detail": "商品1的详情",
-			"price": 11.0,
-			"purchase_price": 11.0,
-			"weight": 5.0,
-			"stocks": "3",
-			"postage_config_name": "免运费"
+			"promotion_title": "促销的东坡肘子",
+			"detail": "东坡肘子的详情",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}, {
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}, {
+				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
+			}],
+			"model": {
+				"models": {
+					"黑色 S": {
+						"price": 20.00,
+						"stocks": 3
+					},
+					"白色 S": {
+						"price": 10.00
+					}
+				}
+			}
 		}
 		"""
-	When bill增加购买'2'个webapp商品:ui
-	Then bill获得webapp商品的购买数量为'3':ui
-	Then bill获得webapp商品:ui
+	When tom浏览jobs的webapp的'商品2'商品页
+	Then webapp页面标题为'商品2'
+	And tom获得webapp商品
 		"""
 		{
-			"purchase_price": 33.0,
-			"weight": 15.0
+			"name": "商品2",
+			"detail": "叫花鸡的详情",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 100.00,
+						"stocks": 3
+					}
+				}
+			}
 		}
 		"""
-	When bill减少购买'1'个webapp商品:ui
-	Then bill获得webapp商品的购买数量为'2':ui
-	Then bill获得webapp商品:ui
+	When tom浏览jobs的webapp的'商品3'商品页
+	Then webapp页面标题为'商品3'
+	And tom获得webapp商品
 		"""
 		{
-			"purchase_price": 22.0,
-			"weight": 10.0
+			"name": "商品3",
+			"detail": "叫花鸡的详情",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.00
+					}
+				}
+			}
 		}
 		"""
-	When bill减少购买'3'个webapp商品:ui
-	Then bill获得webapp商品的购买数量为'1':ui
-	When bill增加购买'10'个webapp商品:ui
-	Then bill获得webapp商品的购买数量为'3':ui
 
 
-@ui @ui-mall @ui-mall.webapp
-Scenario: 运费不为免运费时，调整商品数量
+@product @ui
+Scenario: 2 浏览商品列表
 	jobs添加商品后
-	1. bill能调整商品数量
-	2. bill调整商品数量时，重量，价格，运费有相应的变化
-	
-	Given jobs登录系统
-	And jobs已添加运费配置
-		"""
-		[{
-			"name":"顺丰",
-			"first_weight":5,
-			"first_weight_price":15.00,
-			"added_weight":2,
-			"added_weight_price":5.50
-		}]
-		"""
-	When jobs选择'顺丰'运费配置
-	When bill访问jobs的webapp:ui
-	And bill浏览jobs的webapp的'商品1'商品页:ui
-	Then bill获得webapp商品:ui
-		"""
-		{
-			"name": "商品1",
-			"detail": "商品1的详情",
-			"price": 11.0,
-			"purchase_price": 11.0,
-			"market_price": 11.0,
-			"weight": 5.0,
-			"postage": 15.0,
-			"stocks": "无限",
-			"postage_config_name": "顺丰"
-		}
-		"""
-	When bill增加购买'1'个webapp商品:ui
-	Then bill获得webapp商品:ui
-		"""
-		{
-			"price": 11.0,
-			"purchase_price": 22.0,
-			"weight": 10.0,
-			"postage": 31.5,
-			"postage_config_name": "顺丰"
-		}
-		"""
-	When bill减少购买'1'个webapp商品:ui
-	Then bill获得webapp商品:ui
-		"""
-		{
-			"price": 11.0,
-			"purchase_price": 11.0,
-			"weight": 5.0,
-			"postage": 15.0,
-			"postage_config_name": "顺丰"
-		}
-		"""
-# _inert_ : "新新8.24"		
-Scenario: 浏览商品
-	jobs添加商品后
-	1. bill能在webapp中看到jobs添加的商品
-	2. 商品按添加顺序倒序排序
+	1. bill获得webapp商品列表，商品按添加顺序倒序排序
+	2. tom获得webapp商品列表，商品按添加顺序倒序排序
+
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
+	#有会员价的会员获取商品列表时是会员价
+	#享受限时抢购的会员获取商品列表是限时抢购价
 	Then webapp页面标题为'商品列表(全部)'
 	And bill获得webapp商品列表
 		"""
 		[{
-			"name": "商品3"
+			"name": "商品3",
+			"price": 12.00
 		}, {
-			"name": "商品1"
-		}]
-		"""
-# _inert_ : "新新8.24"		
-Scenario: 浏览会员价的商品
-	When jobs添加会员等级
-		"""
-		[{
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
+			"name": "商品2",
+			"price": 50.00
 		}, {
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "8"
-		}, {
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "7"
-		}]
-		"""
-	Then jobs能获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"upgrade": "自动升级",
-			"discount": "10"
-		}, {
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}, {
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "8"
-		}, {
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "7"
-		}]
-		"""
-		When jobs更新"bill"的会员等级
-		"""
-		{
-			"name": "bill",
-			"member_rank": "铜牌会员"
-		}
-		"""
-		Then jobs可以获得会员列表
-		"""
-		[{
-			"name": "tom",
-			"member_rank": "普通会员",
-		},{
-			"name": "bill",
-			"member_rank": "铜牌会员",
-		}]
-		"""
-		#无会员折扣显示
-	When tom访问jobs的webapp:ui
-	And tom浏览jobs的webapp的'商品1'商品页:ui
-	Then tom获得webapp商品:ui
-		"""
-		{
 			"name": "商品1",
-			"detail": "商品1的详情",
-			"price": 11.0,
-			"weight": 5.0,
-			"stocks": "无限",
-			"postage_config_name": "免运费"
-		}
+			"price": 9.00
+		}]
 		"""
-		#有会员折扣显示
-	When bill访问jobs的webapp:ui
-	And bill浏览jobs的webapp的'商品1'商品页:ui
-	Then bill获得webapp商品:ui
+	When tom访问jobs的webapp
+	And tom浏览jobs的webapp的'全部'商品列表页
+	Then webapp页面标题为'商品列表(全部)'
+	And tom获得webapp商品列表
 		"""
-		{
+		[{
+			"name": "商品3",
+			"price": 12.00
+		}, {
+			"name": "商品2",
+			"price": 100.00
+		}, {
 			"name": "商品1",
-			"detail": "商品1的详情",
-			"price": 9.9,
-			"weight": 5.0,
-			"stocks": "无限",
-			"postage_config_name": "免运费"
-		}
+			"price": 10.00
+		}]
 		"""
 
+
+@product @ui
+Scenario: 3 浏览商品分类
+	jobs添加商品后
+	1. bill获得webapp商品列表(分类1)，商品按添加顺序倒序排序
+	2. tom获得webapp商品列表(分类1)，商品按添加顺序倒序排序
+
+	When bill访问jobs的webapp
+	And bill浏览jobs的webapp的'分类1'商品列表页
+	Then webapp页面标题为'商品列表(分类1)'
+	And bill获得webapp商品列表
+		"""
+		[{
+			"name": "商品2",
+			"price": 50.00
+		}, {
+			"name": "商品1",
+			"price": 9.00
+		}]
+		"""
+	When tom访问jobs的webapp
+	And tom浏览jobs的webapp的'分类1'商品列表页
+	Then webapp页面标题为'商品列表(分类1)'
+	And tom获得webapp商品列表
+		"""
+		[{
+			"name": "商品2",
+			"price": 100.00
+		}, {
+			"name": "商品1",
+			"price": 10.00
+		}]
+		"""

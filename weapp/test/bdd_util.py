@@ -322,7 +322,14 @@ def get_date(str):
 	elif u'天前' in str:
 		delta = 0-int(str[:-2])
 	else:
-		return datetime.strptime(str, "%Y-%m-%d")
+		tmp = str.split(' ')
+		if len(tmp) == 1:
+			strp = "%Y-%m-%d"
+		elif len(tmp[1]) == 8:
+			strp = "%Y-%m-%d %H:%M:%S"
+		elif len(tmp[1]) == 5:
+			strp = "%Y-%m-%d %H:%M"
+		return datetime.strptime(str, strp)
 
 	return today + timedelta(delta)
 
@@ -335,13 +342,14 @@ def get_date_str(str):
 	return date.strftime('%Y-%m-%d')
 
 def get_datetime_str(str):
+	"""保留小时数
+	"""
 	date = get_date(str)
 	return '%s 00:00:00' % date.strftime('%Y-%m-%d')
 
 def get_datetime_no_second_str(str):
 	date = get_date(str)
 	return '%s 00:00' % date.strftime('%Y-%m-%d')
-
 
 def get_order_has_product(order_code, product_name):
     def _get_product_model_name(product_model_names):

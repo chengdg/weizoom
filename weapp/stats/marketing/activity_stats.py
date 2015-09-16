@@ -87,7 +87,7 @@ def get_channel_qrcode_stats(setting_id):
 	repurchase_order_amount = 0.0
 	
 	for relation in relations:
-		orders = Order.objects.filter(webapp_user_id__in=relation.member.get_webapp_user_ids, status__in=QUALIFIED_ORDER_STATUS).order_by('created_at')
+		orders = Order.by_webapp_user_id(relation.member.get_webapp_user_ids).filter(status__in=QUALIFIED_ORDER_STATUS).order_by('created_at')
 		order_count = orders.count()
 		if order_count > 0:
 			total_paid_amount = 0.0

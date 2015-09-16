@@ -374,7 +374,7 @@ def get_orders(request):
 	webapp_id = request.user.get_profile().webapp_id
 	created_at = request.GET.get('created_at', None)
 
-	weizoom_orders = Order.objects.filter(webapp_id=webapp_id,order_source=ORDER_SOURCE_WEISHOP)
+	weizoom_orders = Order.by_webapp_id(webapp_id).filter(order_source=ORDER_SOURCE_WEISHOP)
 	weizoom_mall_order_ids = [order.id for order in weizoom_orders]
 
 	is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.user.id)

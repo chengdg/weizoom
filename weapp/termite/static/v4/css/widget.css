@@ -640,8 +640,8 @@ ul.wui-relatelink li h3{
     background-size: 345px 91px;
     background-position: -242px  -72px;
     width: 15px;
-    height: 15px;
-    margin-top: 15px;
+    height: 16px;
+    margin-top: 12px;
     float: right;
 }
 
@@ -1722,13 +1722,23 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     padding: 0;
     font-size: 12px;
     max-width: 700px;
-    min-height: 45px;
+    /*min-height: 45px;*/
     background-color: #fff;
 }
-.dropdown-menu .wui-confirmView dd>div{
-    float: left;
+.dropdown-menu .wui-confirmView dd{
+    display: table;
+    width: 100%;
+    padding: 7px 0;
 }
-.dropdown-menu .wui-confirmView span{
+.dropdown-menu .wui-confirmView div{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+/*.dropdown-menu .wui-confirmView dd>div{
+    float: left;
+}*/
+/*.dropdown-menu .wui-confirmView span{
     box-sizing: border-box;
     color: rgb(51, 51, 51);
     display: inline;
@@ -1743,24 +1753,17 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     width: auto;
     word-wrap: break-word;
     margin-left: 20px;
-}
+}*/
 .dropdown-menu .wui-confirmView .xui-confirm{
     background: #1F7BBD;
     color: #fff;
-    margin: 8px 10px 10px 20px;
-    width: 50px;
-    height: 30px;
-    text-align: center;
-    border: none;
-    border-radius: 2px;  
-    font-size: 12px;
-    margin-bottom: 0;
-    vertical-align: middle;
 }
 .dropdown-menu .wui-confirmView .xui-cancel{
     background: #eee;
-    color: #333;
-    margin: 8px;
+    color: #333;    
+}
+.dropdown-menu .wui-confirmView .xui-confirm,
+.dropdown-menu .wui-confirmView .xui-cancel{
     width: 50px;
     height: 30px;
     text-align: center;

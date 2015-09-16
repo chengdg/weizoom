@@ -633,9 +633,9 @@ select{
 .xui-mainPanel .xui-sideBar-issuingCoupon{
 	background-position: 0 -600px;
 }
-/*.xui-mainPanel .xui-sideBar-orderRedEnvelope{*/
-	/*background-position: -48px -320px;*/
-/*}*/
+.xui-mainPanel .xui-sideBar-emailNotify{
+	background-position: -48px -340px;
+}
 .xui-mainPanel .xui-sideBar-order_summary{
 	background-position: 50px -380px;
 }
@@ -647,6 +647,12 @@ select{
 }
 .xui-mainPanel .xui-sideBar-wepage {
 	background-position:-49px -402px;
+}
+.xui-mainPanel .xui-sideBar-forbiddenCouponProduct{
+	background-position:-48px -520px;
+}
+.xui-mainPanel .xui-sideBar-supplier{
+	background-position:-48px -500px;
 }
 .xui-mainPanel .xui-sideBar > ul{
 	margin-top:10px;
@@ -918,6 +924,9 @@ button.xui-close{
     padding: 10px 0 20px 0;
     width: 100%;
 }
+.xui-formPanel .btn-primary{
+	border-radius:0;
+}
 .xui-formPanel .xui-i-table {
 	display: table;
 }
@@ -1026,6 +1035,19 @@ button.xui-close{
 	margin-bottom:2px;
 }
 .wui-rightNav .xui-noticyNum{
+	left: -6px;
+	top: -6px;
+
+}
+.xui-orderTip{
+	right:7px;
+	top:2px;
+	font-style: normal;
+	font-size: 12px;
+	font-family: Arial;
+}
+.wui-rightNav .xui-noticyNum,
+.xui-orderTip{
 	display: none;
 	background-color: #da0909;
 	color: #fff;
@@ -1037,9 +1059,7 @@ button.xui-close{
 	position: absolute;
 	text-align: center;
 	line-height: 18px;
-	top: -6px;
 	box-sizing: border-box;
-	left: -6px;
 	padding: 0 3px;
 }
 .wui-rightNav a:nth-child(2){

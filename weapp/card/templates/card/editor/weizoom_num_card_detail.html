@@ -93,7 +93,7 @@
             {{each(i,card_order) items}}
                 <tr>
                     <td>${card_order.created_at}</td>
-                    <td><a title="查看" class="xt-orderLink" href="/mall/order_detail/get/?order_id=${card_order.orderid}" target="_blank">${card_order.order_id}</a></td>
+                    <td><a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${card_order.orderid}" target="_blank">${card_order.order_id}</a></td>
                     <td>${card_order.owner}</td>
                     <td>${card_order.money}</td>
                     <td>${card_order.remainder}</td>

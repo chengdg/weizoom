@@ -114,13 +114,24 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
 
     onSearch: function(event) {
         var query = $.trim($('.xa-query').val());
-        var link = (this.selectedLinkTarget || "").replace(/\&/g, "%26");
         this.table.reload({
             menu_type: this.menuType,
-            selected_link_target: link,
+            selected_link_target: this.handleSelectedLinkTarget(this.selectedLinkTarget),
             type: this.itemType,
             query: query
         })
+    },
+
+    handleSelectedLinkTarget: function(strSelectLinkTarget) {
+        if (strSelectLinkTarget) {
+            var json = $.parseJSON(strSelectLinkTarget);
+            if (json && json.hasOwnProperty('data')) {
+                json['data'] = ""
+            }
+            strSelectLinkTarget = JSON.stringify(json)
+        }
+        var selectedLink = (strSelectLinkTarget || "").replace(/\&/g, "%26");
+        return selectedLink
     },
 
     setItemType: function(title, index){

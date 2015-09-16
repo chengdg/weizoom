@@ -18,6 +18,9 @@ from mall import models as mall_models
 from .utils import get_to_be_shipped_order_infos
 from webapp import models as webapp_models
 from webapp import statistics_util as webapp_statistics_util
+from weixin.user.models import get_system_user_binded_mpuser
+from weixin2.models import Session
+from django.db.models import Sum
 
 
 class Outline(resource.Resource):
@@ -41,7 +44,7 @@ class Outline(resource.Resource):
                             'first_nav_name': export.MALL_HOME_FIRST_NAV,
                             'second_navs': export.get_home_second_navs(request),
                             'second_nav_name': export.MALL_HOME_INTEGRAL_NAV
-                            }))
+                        }))
                 else:
                     first_url = export.get_first_navs(request.user)[0]['url']
                     if first_url.find('/mall2/outline/') < 0:
@@ -57,7 +60,7 @@ class Outline(resource.Resource):
         to_be_shipped_orders = get_to_be_shipped_order_infos(request)
 
         # 获得昨日订单数据
-        today = '%s 00:00:00' % dateutil.get_today()
+        today = '%s 23:59:59' % dateutil.get_yesterday_str('today')
         yesterday = '%s 00:00:00' % dateutil.get_yesterday_str('today')
         orders = mall_models.Order.objects.belong_to(webapp_id).filter(
             created_at__range=(yesterday, today))
@@ -113,15 +116,16 @@ class Outline(resource.Resource):
         high_date -= timedelta(days=1)
         date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 
-
         if type and type == 'purchase_trend':
             try:
                 date2count = dict()
                 date2price = dict()
 
                 # 11.20从查询mall_purchase_daily_statistics变更为直接统计订单表，解决mall_purchase_daily_statistics遗漏统计订单与统计时间不一样导致的统计结果不同的问题。
-                orders = mall_models.Order.objects.belong_to(webapp_id).filter(created_at__range=(low_date, (high_date)+timedelta(days=1)))
-                statuses = set([mall_models.ORDER_STATUS_PAYED_SUCCESSED, mall_models.ORDER_STATUS_PAYED_NOT_SHIP, mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED])
+                orders = mall_models.Order.objects.belong_to(webapp_id).filter(
+                    created_at__range=(low_date, (high_date) + timedelta(days=1)))
+                statuses = set([mall_models.ORDER_STATUS_PAYED_SUCCESSED, mall_models.ORDER_STATUS_PAYED_NOT_SHIP,
+                                mall_models.ORDER_STATUS_PAYED_SHIPED, mall_models.ORDER_STATUS_SUCCESSED])
                 orders = [order for order in orders if (order.type != 'test') and (order.status in statuses)]
                 for order in orders:
                     # date = dateutil.normalize_date(order.created_at)
@@ -150,17 +154,17 @@ class Outline(resource.Resource):
                     price_trend_values.append(round(date2price.get(date, 0.0), 2))
                 print(len(count_trend_values))
                 return create_line_chart_response(
-                        '',
-                        '',
-                        date_list,
-                        [{
-                            "name": "订单数",
-                            "values": count_trend_values
-                        }, {
-                            "name": "销售额",
-                            "values": price_trend_values
-                        }]
-                    )
+                    '',
+                    '',
+                    date_list,
+                    [{
+                        "name": "订单数",
+                        "values": count_trend_values
+                    }, {
+                        "name": "销售额",
+                        "values": price_trend_values
+                    }]
+                )
             except:
                 if settings.DEBUG:
                     raise
@@ -173,14 +177,16 @@ class Outline(resource.Resource):
             获得每日pv、uv统计
             """
 
-            #对当天的统计结果进行更新
+            # 对当天的统计结果进行更新
             if settings.IS_UPDATE_PV_UV_REALTIME:
-                #先删除当天的pv,uv统计结果，然后重新进行统计
+                # 先删除当天的pv,uv统计结果，然后重新进行统计
                 today = dateutil.get_today()
                 webapp_models.PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id, data_date=today).delete()
                 webapp_statistics_util.count_visit_daily_pv_uv(webapp_id, today)
 
-            statisticses = webapp_models.PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id, url_type=webapp_models.URL_TYPE_ALL, data_date__range=(low_date, high_date))
+            statisticses = webapp_models.PageVisitDailyStatistics.objects.filter(webapp_id=webapp_id,
+                                                                                 url_type=webapp_models.URL_TYPE_ALL,
+                                                                                 data_date__range=(low_date, high_date))
 
             date2pv = dict([(s.data_date.strftime('%Y-%m-%d'), s.pv_count) for s in statisticses])
             date2uv = dict([(s.data_date.strftime('%Y-%m-%d'), s.uv_count) for s in statisticses])

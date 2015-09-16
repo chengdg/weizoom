@@ -201,7 +201,7 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
             if member_ids:
                 app_users = WebAppUser.objects.filter(member_id__in=member_ids)
                 app_user_ids = [a.id for a in app_users]
-                orders = Order.objects.filter(webapp_user_id__in=app_user_ids)
+                orders = Order.by_webapp_user_id(app_user_ids)
                 card_ids = []
                 card_relation2orders = card_relation2orders.filter(order_id__in=[o.order_id for o in orders])
                 card_has_order_dict = {}
@@ -405,7 +405,7 @@ def get_num_details(card_id,filter_value,start_date,end_date):
                     member_ids.append(member.id)
                 member_webappuser_ids = [member.id for member in WebAppUser.objects.filter(member_id__in=member_ids)]
                 if member_ids:
-                    order_ids = list(order.order_id for order in Order.objects.filter(webapp_user_id__in=member_webappuser_ids))
+                    order_ids = list(order.order_id for order in Order.by_webapp_user_id(member_webappuser_ids))
                     filter_data_args["order_id__in"] = order_ids
                 else:
                     filter_data_args["order_id"] = -1

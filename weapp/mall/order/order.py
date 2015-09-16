@@ -155,23 +155,19 @@ class OrderList(resource.Resource):
         if belong == 'audit':
             second_nav_name = export.ORDER_AUDIT
             has_order = util.is_has_order(request, True)
-            html_file = "audit_orders.html"
-        elif belong == 'refund':
-            second_nav_name = export.ORDER_REFUND
-            has_order = util.is_has_order(request, True)
-            html_file = "refund_orders.html"
+            page_type = u"财务审核"
         else:
             second_nav_name = export.ORDER_ALL
             has_order = util.is_has_order(request)
-            html_file = "orders.html"
-
+            page_type =u"所有订单"
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_orders_second_navs(request),
             'second_nav_name': second_nav_name,
-            'has_order': has_order
+            'has_order': has_order,
+            'page_type': page_type
         })
-        return render_to_response('mall/editor/%s' % html_file, c)
+        return render_to_response('mall/editor/orders.html', c)
 
     @login_required
     def api_get(request):
@@ -229,8 +225,7 @@ class OrderFilterParams(resource.Resource):
         # 		{'name': u'待发货', 'value': ORDER_STATUS_PAYED_NOT_SHIP},
         # 		{'name': u'已发货', 'value': ORDER_STATUS_PAYED_SHIPED},
         # 		{'name': u'已完成', 'value': ORDER_STATUS_SUCCESSED}]
-        status_type = request.POST.get('status', None)
-
+        status_type = request.GET.get('status', None)
         status = []
         status_dict = {}
         if status_type == 'audit':
@@ -310,7 +305,7 @@ class ChannelQrcodePayedOrder(resource.Resource):
         webapp_users = WebAppUser.objects.filter(member_id__in=member_ids)
         webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
         webapp_user_ids = set(webapp_user_id2member_id.keys())
-        orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=ORDER_STATUS_SUCCESSED).order_by(
+        orders = Order.by_webapp_user_id(webapp_user_ids).filter(status=ORDER_STATUS_SUCCESSED).order_by(
             '-created_at')
         # 进行分页
         count_per_page = int(request.GET.get('count_per_page', 15))
@@ -364,3 +359,24 @@ class ChannelQrcodePayedOrder(resource.Resource):
             'pageinfo': paginator.to_dict(pageinfo),
         }
         return response.get_response()
+
+
+# class UnShipOrderCount(resource.Resource):
+#     app = "mall2"
+#     resource = "un_ship_order_count"
+#
+#     def api_get(request):
+#         # print(request.manager.get_profile().webapp_id)
+#         # count = len(belong_to(request.manager.get_profile().webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP))
+#         from cache.webapp_owner_cache import get_unship_order_count_from_cache
+#
+#         count = get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
+#
+#         print("count:", count)
+#
+#         response = create_response(200)
+#         response.data = {
+#             'count': count
+#         }
+#         return response.get_response()
+

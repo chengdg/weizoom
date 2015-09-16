@@ -1,0 +1,232 @@
+{% extends "content_base_v2.html" %}
+{% block css%}
+<style>
+	.xui-commonPromotionStyle .xb-stripedTable tbody > tr:nth-child(even){
+		background: #fff;
+		border-bottom: 1px solid #e5e5e5;
+	}
+</style>
+{% endblock%}
+{% block content-panel %}
+<div class="xui-promotion-createFlashSalePage xui-commonPromotionStyle">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall2/forbidden_coupon_product/">促销管理</a></li>
+		<li class="active">禁用优惠券商品</li>
+	</ul>
+</div>
+
+<div class="xa-productSelector">
+	<div class="xa-productSelectConditionPanel">
+	</div>
+
+	<div class="panel panel-default mt20 xb-panelBg xa-errorHintContainer">
+		<div class="panel-body xa-selectedProductList mb0 pb0" style="margin-bottom:15px!important; margin-left:22px;" data-validate="require-element-exist" data-selector="tbody tr">
+			请通过查询选择参与活动的商品
+		</div>
+		<div class="errorHint pb0" style="padding-left:38px;" data-error-hint="请先选择商品"></div>
+	</div>
+</div>
+
+
+<div class="panel panel-default mt20  xb-panelBg">
+	<div class="panel-heading xui-createSaleHead">
+		限制规则
+	</div>
+	<form class="panel-body xui-formPanel xa-form xui-borderCancel mt30 pl40">
+		<!-- <div class=""> -->
+		<label class="star_show fn">活动时间
+		：</label>
+		<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+		<input
+			style="width:132px!important;cursor:pointer;"
+			type="text"
+			class="form-control xui-datePicker"
+			id="start_date"
+			name="start_date"
+			style=""
+		    value=""
+		    readonly="readonly"
+			data-validate="require-notempty"
+			data-enable-select-time="true"
+			data-ui-role="date-picker"
+		    data-format="yy-mm-dd HH:MM"
+		    data-min="now"
+		    data-max-el="#end_date"
+		    width="132"/>
+		    <div class="errorHint" data-error-hint="必须选择一个开始时间" style=""></div>
+		    </div>
+		至
+		<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+		<input
+			style="width:132px!important;cursor:pointer;"
+			type="text"
+			class="form-control xui-datePicker"
+			id="end_date"
+			name="end_date"
+		    value=""
+		    readonly="readonly"
+			data-validate="require-notempty"
+			data-ui-role="date-picker"
+			data-enable-select-time="true"
+		    data-format="yy-mm-dd HH:MM"
+		    data-min="now"
+		    data-min-el="#start_date"/>
+		    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+		</div>
+		<input type="checkbox" id="notLimited" class="ml10 xa-forever" value="1"><label for="notLimited" class="vm ml5 fn">永久</label>
+		<!-- </div> -->
+
+		<div class="" style="display:inline-block;margin-top:-15px;margin-left:40px;">
+			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/forbidden_coupon_product/">取消创建</a>
+		</div>
+	</form>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="selected-promotion-products-view-tmpl-src" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered mb0 table-condensed xb-noTdBorder xb-stripedTable">
+		<thead class="xui-theadHeight">
+			<tr>
+				<th>商品信息</th>
+				<th width="120">商品价格（元）</th>
+				<th>已参与的促销</th>
+				<th width="80">总销量</th>
+				<th width="80">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{each(i, product) products}}
+			<tr
+				data-id="${product.id}"
+				{{if (product.is_use_custom_model)}}
+				data-model-id="${product.current_used_model.id}"
+				{{else}}
+				data-model-id="${product.standard_model.id}"
+				{{/if}}
+			>
+				<td style="text-align: left;" class="pt10">
+					<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
+						<a href="${product.detail_link}" target="_blank">
+                             {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                               <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                             {{else}}
+                               <img src="${product.thumbnails_url}" width="60" height="60"/>
+                             {{/if}}
+						</a>
+					</div>
+					<div class="ml10 fl">
+						<div class="mb25">
+							<a href="${product.detail_link}" target="_blank">${product.name}</a>
+						</div>
+						{{if product.is_use_custom_model}}
+						<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看${product.models.length}个规格详情</span>
+						{{else}}
+						<p style="color:#666;">商品条码：${product.bar_code}</p>
+						{{/if}}
+					</div>
+				</td>
+				<td class="xa-product-price">
+					${product.display_price_range}
+				</td>
+				<td>
+					${product.promotion_name}
+				</td>
+				<td>
+					${product.sales}
+				</td>
+				<td>
+					<a href="javascript:void(0);" class="xa-delete">删除</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<div class="mt10" style="padding-left:8px">
+		<input type="checkbox" id="topSelectAll" class="xa-outSelectAll" />
+		<label for="topSelectAll" class="xui-topSelectAll">全选</label>
+		<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">删&nbsp;&nbsp;&nbsp;&nbsp;除</a>
+	</div>	
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+var promotionId = {% if promotion %}{{promotion.id}}{% else %}0{% endif %};
+$(document).ready(function() {
+	var productSelector = new W.view.mall.PromotionSelectProductView({
+		el: '.xa-productSelector',
+		promotionId: promotionId,
+		enableMultiSelection: true,
+		tableOutAllSelectable:true,
+		uniqueDialog:'W.dialog.mall.SelectForbiddenCouponProductDialog',
+		tableTemplate: 'selected-promotion-products-view-tmpl-src'
+	});
+	productSelector.render();
+
+	$('.xa-forever').change(function(event){
+		var $input = $(event.target);
+		if($input.prop('checked')){
+			$('input[data-ui-role="date-picker"]').val("").removeAttr('data-validate').attr('disabled', 'disabled').css('cursor','not-allowed').parent().removeClass('has-error').find('.errorHint').text("");
+		}else{
+			$('input[data-ui-role="date-picker"]').removeAttr('disabled').css('cursor','pointer').attr('data-validate', 'require-notempty');
+		}
+	});
+	$('.xa-submit').click(function(event) {
+		$(this).attr("disabled",true);
+		if(!W.validate()) {
+			$(this).attr("disabled",false);
+			return false;
+		}
+		var isPermanantActive;
+		if($('.xa-forever').prop('checked')){
+			isPermanantActive = 1;
+		}else{
+			isPermanantActive = 0;
+		}
+		var args = $('.xa-form').serializeObject();
+		args.products = JSON.stringify(productSelector.getData());
+		args.is_permanant_active = isPermanantActive;
+		W.getApi().call({
+			method: 'put',
+			app: 'mall2',
+			resource: 'forbidden_coupon_product',
+			args: W.toFormData(args),
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '创建禁用优惠券商品成功');
+				_.delay(function() {
+					window.location.href = '/mall2/forbidden_coupon_product/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '创建禁用优惠券商品失败!');
+				$(this).attr("disabled",false);
+			}
+		})
+	});
+});
+</script>
+
+<!--	限购价格验证	-->
+<script type="text/javascript">
+function validatePromotionPrice($el){
+  // 获取价格
+  var productPrice = $.trim($('.xa-product-price').text()).split('~')[0];
+  var promotionPrice = $.trim($('.xa-promotion-price').val());
+  var isValidate = parseFloat(promotionPrice) < parseFloat(productPrice);
+  return {
+	isValidate: isValidate,
+	errorHint: '限购价格应小于商品原价'
+  }
+}
+</script>
+<!--	/限购价格验证	-->
+{% endblock %}

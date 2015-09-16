@@ -63,6 +63,11 @@ def step_product_add(context, user):
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
         __process_product_data(product)
         product = __supplement_product(context.webapp_owner_id, product)
+        # 转换供货商
+        if 'supplier' in product:
+            response = context.client.get('/mall2/api/supplier_list/',data={"name":product['supplier']})
+            supplier = json.loads(response.content)['data']['items'][0]
+            product['supplier'] = supplier['id']
         context.client.post(url, product)
         is_be_for_sale = product.get('status', '') == u'待售'
         is_shelve = product['shelve_type'] == mall_models.PRODUCT_SHELVE_TYPE_OFF
@@ -82,7 +87,6 @@ def step_product_add(context, user):
 def step_get_products(context, user, product_name):
     expected = json.loads(context.text)
     actual = __get_product_from_web_page(context, product_name)
-    print("actual: {}".format(actual))
     bdd_util.assert_dict(expected, actual)
 
 
@@ -116,6 +120,7 @@ def step_update_product(context, user, product_name):
         product = json.loads(context.text)
     if 'name' not in product:
         product['name'] = existed_product.name
+    product['supplier'] = existed_product.supplier
     __process_product_data(product)
     product = __supplement_product(context.webapp_owner_id, product)
     print("POST DATA: {}".format(product))
@@ -283,7 +288,7 @@ def __update_prducts_by_name(context, product_name, action):
         for product_name in product_name:
             data['ids'].append(ProductFactory(name=product_name).id)
     else:
-        data['id'] = ProductFactory(name=product_name).id
+        data['ids'] = ProductFactory(name=product_name).id
 
     response = context.client.post('/mall2/api/product_list/?_method=post', data)
     bdd_util.assert_api_call_success(response)
@@ -356,7 +361,9 @@ def __get_product_from_web_page(context, product_name):
     """
     response = get_product_response_from_web_page(context, product_name)
     product = response.context['product']
-
+    supplier = None
+    if 'supplier' in response.context:
+        supplier = response.context['supplier']
     #处理category
     categories = response.context['categories']
     category_name = ''
@@ -385,19 +392,22 @@ def __get_product_from_web_page(context, product_name):
         'model': {},
         'postage': u'免运费',
         'pay_interfaces': [],
-        "is_member_product": 'on' if product.is_member_product else 'off'
+        "is_member_product": 'on' if product.is_member_product else 'off',
+        "supplier": 0 if not supplier else dict(supplier).get(product.supplier),
+        "purchase_price": product.purchase_price,
+        "promotion_title": product.promotion_title,
     }
 
     #填充运费
     print("product.postage_id={}".format(product.postage_id))
     if product.postage_id == 999 or product.postage_id <= 0:
-        # TODO: 999表示什么？
+        # TODO: 999表示什么？ 表示使用系统运费
         postage_config_info = response.context['postage_config_info']
         if postage_config_info['is_use_system_postage_config']:
             actual['postage'] = postage_config_info['system_postage_config'].name
         else:
-            # TODO: 如何处理?
-            actual['postage'] = postage_config_info['system_postage_config'].first_weight_price
+            # TODO: 如何处理? 显示商品统一运费金额
+            actual['postage'] = product.unified_postage_money
         #postage_config_info.system_postage_config.name
     elif product.postage_id>0:
         print("product.postage_id={}".format(product.postage_id))
@@ -451,6 +461,8 @@ def __get_product_from_web_page(context, product_name):
                     models['standard']["integral"] = product_model['price']
 
         actual['model']['models'] = models
+        actual['price'] = models['standard']['price']
+        actual['weight'] = models['standard']['weight']
 
     return actual
 

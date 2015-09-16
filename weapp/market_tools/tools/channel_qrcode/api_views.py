@@ -57,7 +57,7 @@ def get_channel_qrcode_settings(request):
 	webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
 	webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 	webapp_user_ids = set(webapp_user_id2member_id.keys())
-	orders = mall_model.Order.objects.filter(webapp_user_id__in=webapp_user_ids, status=mall_model.ORDER_STATUS_SUCCESSED)
+	orders = mall_model.Order.by_webapp_user_id(webapp_user_ids).filter(status=mall_model.ORDER_STATUS_SUCCESSED)
 	member_id2total_final_price = {}
 	for order in orders:
 		member_id = webapp_user_id2member_id[order.webapp_user_id]

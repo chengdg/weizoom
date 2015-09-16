@@ -110,7 +110,7 @@ Scenario:1 获取"所有消息"选项卡列表
 		}]
 		"""
 
-@weixin @message @realtimeMessage @mall2
+@weixin @message @realtimeMessage 
 Scenario:2 获取"未读信息"选项卡列表
 
 	Given jobs登录系统
@@ -392,6 +392,7 @@ Scenario:4 实时消息列表查询
 			"last_message_time": "今天"
 		}]
 		"""
+
 
 @weixin @message @realtimeMessage @mall2 
 Scenario:5 实时消息"所有消息"列表分页

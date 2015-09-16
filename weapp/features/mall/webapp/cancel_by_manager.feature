@@ -69,7 +69,8 @@ Scenario:1 取消订单后,手机端订单状态为'已取消'
 			"total_price": 19.8,
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
-			"ship_area": "北京市 北京市 海淀区 泰兴大厦",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
 			"customer_message": "bill的订单备注1",
 			"products": [{
 				"name": "商品1",

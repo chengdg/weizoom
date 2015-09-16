@@ -57,7 +57,7 @@ def get_card_channel_details(request):
         start_date = str(start_date) + ' 00:00:00'
         end_date = str(end_date) + ' 23:59:59'
     webapp = WebApp.objects.get(owner_id=owner_id)
-    orders = Order.objects.filter(webapp_id=webapp.appid, created_at__gte=start_date, created_at__lte=end_date).order_by('-created_at')
+    orders = Order.by_webapp_id(webapp.appid).filter(created_at__gte=start_date, created_at__lte=end_date).order_by('-created_at')
     id2order_ids = {}
     for r in orders:
        id2order_ids[r.order_id] = r.id
@@ -197,7 +197,7 @@ def export_channel(request):
     ids = []
     order_id2orderid = {}
 
-    for order in Order.objects.filter(order_id__in=order_ids,webapp_id__in=webapp_ids):
+    for order in Order.by_webapp_id(webapp_ids).filter(order_id__in=order_ids):
         ids.append(order.id)
         order_id2orderid[order.id] = order.order_id
     order_order_id2Product_ids = {}

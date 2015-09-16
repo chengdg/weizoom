@@ -28,14 +28,16 @@ def get_second_navs(request):
 
 
 def get_link_targets(request):
+	selected_id = request.selected_id
+
 	pageinfo, datas = events.events.get_datas(request)
 	link_targets = []
 	for data in datas:
 		link_targets.append({
 			"id": str(data.id),
 			"name": data.name,
-			"link": '/apps/event/m_event/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
-			"isChecked": False,
+			"link": '/m/apps/event/m_event/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
+			"isChecked": True if str(data.id) == selected_id else False,
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})
 	return pageinfo, link_targets

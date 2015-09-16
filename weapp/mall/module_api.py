@@ -1066,11 +1066,12 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	fake_order = order_info['fake_order']
 	product_groups = order_info['product_groups']
 
+
 	#处理订单中的product总价
 	order.product_price = sum([product.price * product.purchase_count for product in products])
 	order.final_price = order.product_price
 	# order.member_grade_discounted_money = order.product_price - order.final_price
-	mall_signals.pre_save_order.send(sender=mall_signals, pre_order=fake_order, order=order, products=products, product_groups=product_groups)
+	mall_signals.pre_save_order.send(sender=mall_signals, pre_order=fake_order, order=order, products=products, product_groups=product_groups, owner_id=request.webapp_owner_id)
 	order.final_price = round(order.final_price, 2)
 	if order.final_price < 0:
 		order.final_price = 0
@@ -1102,8 +1103,12 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			ProductModel.objects.filter(id=product_model['id']).update(stocks = F('stocks') - product.purchase_count)
 
 	#建立<order, product>的关系
+	supplierIds = []
 	for product in products:
-		# product_discounted_money, _ = webapp_user.get_discounted_money(product.price, product_type=order.type)
+		supplier = product.supplier
+		if not supplier in supplierIds:
+			supplierIds.append(supplier)
+
 		OrderHasProduct.objects.create(
 			order=order,
 			product_id=product.id,
@@ -1117,12 +1122,21 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			grade_discounted_money=product.member_discount_money if hasattr(product, 'member_discount_money')\
 				else product.total_price - product.price * product.purchase_count,
 		)
-	# 	if product.owner_id != webapp_owner_id:
-	# 		order.order_source = ORDER_SOURCE_WEISHOP
-	# 		WeizoomMallHasOtherMallProductOrder.create(webapp_id, product, order)
-	#
-	# if order.order_source == ORDER_SOURCE_WEISHOP:
-	# 	order.save()
+
+	if len(supplierIds) > 1:
+		# 进行拆单，生成子订单
+		order.origin_order_id = -1 # 标记有子订单
+		for supplier in supplierIds:
+			fack_order = copy.copy(order)
+			fack_order.id = None
+			fack_order.order_id = '%s^%s' % (order.order_id, supplier)
+			fack_order.origin_order_id = order.id
+			fack_order.supplier = supplier
+			fack_order.save()
+	elif supplierIds[0] != 0:
+		order.supplier = supplierIds[0]
+	order.save()
+
 	# 注意强制提交时这里可能会修改赠品数量，所以要在建立促销结果之前运行
 	mall_signals.post_save_order.send(sender=mall_signals, order=order, webapp_user=webapp_user, product_groups=product_groups)
 
@@ -1158,7 +1172,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 ########################################################################
 # get_order: 获取订单
 ########################################################################
-def get_order(webapp_user, order_id, should_fetch_product=False):
+def get_order(webapp_user, order_id, should_fetch_product=False, is_sub_order=False):
 	order = Order.objects.get(order_id=order_id)
 	try:
 		order.area = regional_util.get_str_value_by_string_ids(order.area)
@@ -1167,13 +1181,19 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 		pass
 
 	if should_fetch_product:
-		relations = list(OrderHasProduct.objects.filter(order=order))
-		order_promotion_relations = list(OrderHasPromotion.objects.filter(order_id=order.id))
+		id = order.id
+		if order.origin_order_id > 0:
+			id = order.origin_order_id
+		relations = list(OrderHasProduct.objects.filter(order_id=id).order_by('id'))
+		order_promotion_relations = list(OrderHasPromotion.objects.filter(order_id=id))
 		id2promotion = dict([(relation.promotion_id, relation) for relation in order_promotion_relations])
 
 		product_infos = []
 		webapp_owner_id = webapp_user.webapp_owner_info.user_profile.user_id
 		for relation in relations:
+			if is_sub_order: #只获取该子订单下面的数据
+				if not relation.product.supplier == order.supplier:
+					continue
 			product_infos.append({
 				"id": relation.product_id,
 				'model_name': relation.product_model_name
@@ -1186,6 +1206,9 @@ def get_order(webapp_user, order_id, should_fetch_product=False):
 		pricecut_id = None
 		processed_promotion_set = set()
 		for relation in relations:
+			if is_sub_order: #只获取该子订单下面的数据
+				if not relation.product.supplier == order.supplier:
+					continue
 			_product_model_id = '%s_%s' % (relation.product_id, relation.product_model_name)
 			product = copy.copy(id2product[_product_model_id])
 			#product.fill_specific_model(relation.product_model_name)
@@ -1247,7 +1270,7 @@ def get_orders(request):
 	"""用户中心 获取webapp_user的订单列表
 	"""
 
-	orders = Order.objects.filter(webapp_user_id=request.webapp_user.id).order_by('-id')
+	orders = Order.by_webapp_user_id(request.webapp_user.id).order_by('-id')
 
 	orderIds = [order.id for order in orders]
 	order2count = {}
@@ -1338,6 +1361,11 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 		#order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		pay_result = True
 		Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
+
+		origin_order_id = Order.objects.get(order_id=order_id).id
+		Order.objects.filter(origin_order_id=origin_order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
+
+		Order.objects.filter()
 		order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		order.pay_interface_type = pay_interface_type
 
@@ -1450,7 +1478,6 @@ def ship_order(order_id, express_company_name,
 				if order_has_delivery_times.count() > 0:
 					order_has_delivery_id = order_has_delivery_times[0].id
 					order_has_delivery_params['status'] = order_has_delivery_times[0].status
-
 		OrderHasDeliveryTime.objects.filter(id=order_has_delivery_id).update(**order_has_delivery_params)
 		Order.objects.filter(id=order_id).update(**order_params)
 
@@ -1482,7 +1509,10 @@ def ship_order(order_id, express_company_name,
 		action = u'订单发货'
 		record_status_log(order.order_id, operator_name, order.status, target_status)
 
-	record_operation_log(order.order_id, operator_name, action)
+		if order.origin_order_id > 0:
+			set_origin_order_status(order, operator_name, 'ship')
+
+	record_operation_log(order.order_id, operator_name, action, order)
 
 	#send post_ship_order signal
 	#mall_signals.post_ship_order.send(sender=Order, order=order)
@@ -1496,6 +1526,14 @@ def ship_order(order_id, express_company_name,
 		notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_alert(notify_message)
 	return True
+
+
+def __get_supplier_name(supplier_id):
+	try:
+		return Supplier.objects.get(id=supplier_id).name
+	except:
+		error_msg = u"获取供应商({})名称失败, cause:\n{}".format(supplier_id, unicode_full_stack())
+		watchdog_error(error_msg)
 
 
 ########################################################################
@@ -1691,14 +1729,18 @@ def create_shopping_cart_order(webapp_owner_id, webapp_user, products):
 # get_order_operation_logs: 获得订单的操作日志
 ########################################################################
 def get_order_operation_logs(order_id):
-	return OrderOperationLog.objects.filter(order_id=order_id)
+	# return OrderOperationLog.objects.filter(order_id=order_id)
+	#为了把子订单的操作日志也筛选出来
+	return OrderOperationLog.objects.filter(order_id__contains=order_id)
 
 
 ########################################################################
 # record_operation_log: 记录订单的操作日志
 ########################################################################
-def record_operation_log(order_id, operator_name, action):
+def record_operation_log(order_id, operator_name, action, order=None):
 	try:
+		if order and order.origin_order_id > 0 and order.supplier > 0:  #add by duhao 如果是子订单，则加入供应商信息
+			action = '%s - %s' % (action, __get_supplier_name(order.supplier))
 		OrderOperationLog.objects.create(order_id=order_id, action=action, operator=operator_name)
 	except:
 		error_msg = u"增加订单({})发货操作记录失败, cause:\n{}".format(order_id, unicode_full_stack())
@@ -1983,7 +2025,7 @@ def get_order_products(order):
 	"""
 	order.session_data = dict()
 	order_id = order.id
-	relations = list(OrderHasProduct.objects.filter(order_id=order_id))
+	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
 	product_ids = [r.product_id for r in relations]
 	#products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
@@ -2000,6 +2042,7 @@ def get_order_products(order):
 	# 当前促销买赠商品
 	temp_premium_products = []
 	# processed_promotion_set = set()
+	suppliers = []
 	for relation in relations:
 		product = copy.copy(id2product[relation.product_id])
 		product.fill_specific_model(relation.product_model_name)
@@ -2014,8 +2057,16 @@ def get_order_products(order):
 			'product_model_name': relation.product_model_name,
 			'physical_unit': product.physical_unit,
 			'is_deleted': product.is_deleted,
-			'grade_discounted_money': relation.grade_discounted_money
+			'grade_discounted_money': relation.grade_discounted_money,
+			'supplier': product.supplier
 		}
+
+		suppliers.append(product.supplier)
+
+		try:
+			product_info['supplier_name'] = Supplier.objects.get(id=product.supplier).name
+		except:
+			pass
 
 		promotion_relation = id2promotion.get(relation.promotion_id, None)
 		if promotion_relation:
@@ -2047,7 +2098,7 @@ def get_order_products(order):
 						for premium_product in promotion_relation.promotion_result['premium_products']:
 							temp_premium_products.append({
 								"id": premium_product['id'],
-								"name": "%s---%s" % (promotion_first_product['name'], premium_product['name']),
+								"name": premium_product['name'],
 								"thumbnails_url": premium_product['thumbnails_url'],
 								"count": premium_product['count'],
 								"price": '%.2f' % premium_product['price'],
@@ -2055,8 +2106,11 @@ def get_order_products(order):
 								"promotion": {
 									"type": "premium_sale:premium_product"
 								},
-								'noline': 1
+								'noline': 1,
+								'supplier': product.supplier,
+								'supplier_name': product_info.get('supplier_name', '')
 							})
+							suppliers.append(product.supplier)
 			else:
 				# 当前促销中其余商品 不显示上边框,给主商品跨行+1
 				product_info['noline'] = 1
@@ -2073,6 +2127,13 @@ def get_order_products(order):
 	if len(temp_premium_products) > 0:
 		# 最后一个促销有赠品
 		products.extend(temp_premium_products)
+
+	for product in products:
+		product['supplier_length'] = suppliers.count(product['supplier'])
+
+	def __sorted_by_supplier(s):
+		return s['supplier']
+	sorted(products, key=__sorted_by_supplier)  # 相同supplier排到一起
 
 	return products
 
@@ -2117,6 +2178,17 @@ def has_other_mall_product(webapp_id):
 
 def get_product_ids_in_weizoom_mall(webapp_id):
 	return [weizoom_mall_other_mall_product.product_id for weizoom_mall_other_mall_product in WeizoomMallHasOtherMallProduct.objects.filter(webapp_id=webapp_id)]
+
+
+def set_origin_order_status(child_order, user, action, request=None):
+    children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
+    origin_order = Order.objects.get(id=child_order.origin_order_id)
+    if origin_order.status != min(children_order_status):
+    	if action == 'ship':
+    		origin_order.status = min(children_order_status)
+    		origin_order.save()
+    	else:
+	        update_order_status(user, action, origin_order, request)
 
 
 def update_order_status(user, action, order, request=None):
@@ -2200,6 +2272,7 @@ def update_order_status(user, action, order, request=None):
 		elif 'pay' == action:
 			payment_time = datetime.now()
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
+			Order.objects.filter(origin_order_id=order_id).update(status=target_status, payment_time=payment_time)
 
 			try:
 				"""
@@ -2216,12 +2289,13 @@ def update_order_status(user, action, order, request=None):
 			Order.objects.filter(id=order_id).update(status=target_status)
 		operate_log = u' 修改状态'
 		record_status_log(order.order_id, operation_name, order.status, target_status)
-		record_operation_log(order.order_id, operation_name, action_msg)
+		record_operation_log(order.order_id, operation_name, action_msg, order)
 
 	try:
 		# TODO 返还用户积分
 		from modules.member import integral
-		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
+		if expired_status < ORDER_STATUS_SUCCESSED and int(target_status) == ORDER_STATUS_SUCCESSED \
+				and expired_status != ORDER_STATUS_CANCEL and order.origin_order_id <= 0:
 			if MallOrderFromSharedRecord.objects.filter(order_id=order.id).count() > 0:
 				order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
 				fmt = order_record.fmt
@@ -2236,14 +2310,21 @@ def update_order_status(user, action, order, request=None):
 	except :
 		notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
 		watchdog_alert(notify_message)
-	#更新会员的消费、消费次数、消费单价
-	try:
-		update_user_paymoney(order.webapp_user_id)
-	except:
-		pass
-	#更新会员的消费、消费次数、消费单价
-	if target_status in [ORDER_STATUS_SUCCESSED,ORDER_STATUS_REFUNDING,ORDER_STATUS_CANCEL]:
-		auto_update_grade(webapp_user_id=order.webapp_user_id)
+
+	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_SUCCESSED]:
+		# 如果更新子订单，更新父订单状态
+		set_origin_order_status(order, user, action, request)
+	else:
+		# 如果更新父订单，更新子订单状态
+		#更新会员的消费、消费次数、消费单价
+		try:
+			update_user_paymoney(order.webapp_user_id)
+		except:
+			pass
+		from mall.order.util import set_children_order_status
+		set_children_order_status(order, target_status)
+		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
+			auto_update_grade(webapp_user_id=order.webapp_user_id)
 
 
 

@@ -19,6 +19,9 @@
 				{%endif%}
 			</span>
 		</div>
+		{% if order.has_sub_order %}
+		<div class="xui-subOrderTip">亲，由于仓库不同，此订单将分开配送</div>
+		{%endif%}
 		<div class="xui-cuttingLineThick"></div>
 		<div class="xui-orderInfo">
 			<p> <b>订单编号：&nbsp;</b>

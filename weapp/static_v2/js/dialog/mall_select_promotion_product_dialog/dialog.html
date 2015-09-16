@@ -8,7 +8,7 @@
 				已上架商品
 			</h3>
 		</div>
-		<div class="modal-body" style="min-height: 300px; max-height: 500px; overflow: auto;">
+		<div class="modal-body" style="min-height: 300px;">
 		<div
 			data-ui-role="advanced-table"
 			data-app="mall2"
@@ -17,7 +17,7 @@
 			data-template-id="#promotion-products-view"
 			data-enable-paginator="true"
 			data-enable-sort="false"
-			data-item-count-per-page="10"
+			data-item-count-per-page="8"
 			data-auto-load="false"
 		></div>
 
@@ -64,6 +64,93 @@
 					</td>
 					<td>
 						{{if !product.promotion_name}}
+							{{if !product.can_select}}
+							<label class="btn btn-primary checked" style="border-radius:3px;">
+								<input type="checkbox" autocomplete="off"><span>已选择</span>
+							</label>
+							{{else}}
+							<label class="btn btn-primary" style="border-radius:3px;">
+								<input type="checkbox" autocomplete="off" class="{{if product.can_select}}xa-selectProduct{{/if}}" ><span>选取</span>
+							</label>
+							{{/if}}
+						{{/if}}
+					</td>
+				</tr>
+				{{/each}}
+            {{else}}
+                <tr><td colspan='6'>还没有数据</td></tr>
+            {{/if}}
+		</tbody>
+	</table>
+</script>
+<script id="mall-select-forbiddenCoupon-product-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-selectPromotionProductDialog" id="mallSelectPromotionProductDialog">
+	<div class="modal-dialog modal-lg" style="width: 800px;">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				已上架商品
+			</h3>
+		</div>
+		<div class="modal-body" style="min-height: 300px;">
+		<div
+			data-ui-role="advanced-table"
+			data-app="mall2"
+			data-api="promotion"
+			data-args='{"type": "usable_promotion_products", "filter_type": "forbidden_coupon"}'
+			data-template-id="#forbiddenCoupon-products-view"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-item-count-per-page="8"
+			data-auto-load="false"
+		></div>
+
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#1F7BBD; color:#ffffff;">完成选择</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="forbiddenCoupon-products-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition">
+		<thead style="background:#c8d2e5;">
+			<tr>
+				<th width="80">商品条码</th>
+				<th>商品名称</th>
+				<th width="120">商品价格（元）</th>
+				<th width="80">商品库存</th>
+				<th width="120">禁用状态</th>
+				<th width="120">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{if items.length}}
+	            {{each(i, product) items}}
+				<tr class="" data-id="${product.id}">
+					<td>
+						${product.bar_code}
+					</td>
+					<td>
+						${product.name}
+					</td>
+					<td>
+						${product.display_price}
+					</td>
+					<td>
+						${product.total_stocks}
+					</td>
+					<td>
+						{{if product.has_forbidden_coupon}}
+						已禁用
+						{{/if}}
+					</td>
+					<td>
+						{{if !product.has_forbidden_coupon}}
 							{{if !product.can_select}}
 							<label class="btn btn-primary checked" style="border-radius:3px;">
 								<input type="checkbox" autocomplete="off"><span>已选择</span>

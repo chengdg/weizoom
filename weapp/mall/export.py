@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import copy
+
 PRODUCT_FIRST_NAV = 'product'
 PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV = 'selling'
 PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV = 'toSell'
@@ -166,12 +168,6 @@ ORDER_NAV = {
             'need_permissions': ['manage_order_all', ]
         },
         {
-            'name': ORDER_REFUND,
-            'title': u'退款订单',
-            'url': '/mall2/order_list/?belong=refund',
-            'need_permissions': ['manage_order_refund', ]
-        },
-        {
             'name': ORDER_EXPIRED_TIME,
             'title': u'订单设置',
             'url': '/mall2/expired_time/',
@@ -212,6 +208,7 @@ MALL_PROMOTION_COUPON_NAV = 'Coupon'
 MALL_PROMOTION_INTEGRAL_SALE_NAV = 'integralYingyon'
 MALL_PROMOTION_ISSUING_COUPONS_NAV = 'issuingCoupon'
 MALL_PROMOTION_ORDER_RED_ENVELOPE = 'orderRedEnvelope'
+MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV = 'forbiddenCouponProduct'
 
 
 PROMOTION_NAV = {
@@ -265,6 +262,12 @@ PROMOTION_NAV = {
         #     'url': '/mall2/red_envelope_rule_list/',
         #     'need_permissions': ['manage_order_red_envelope', ]
         # }
+        {
+            'name': MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV,
+            'title': u'禁用优惠券商品',
+            'url': '/mall2/forbidden_coupon_product/',
+            'need_permissions': ['forbidden_coupon_product', ]
+        }
     ]
 }
 
@@ -288,6 +291,7 @@ MALL_CONFIG_PAYINTERFACE_NAV = 'payInterfaces'
 MALL_CONFIG_POSTAGE_NAV = 'postageManagement'
 MALL_CONFIG_EXPRESS_COMOANY_NAV = 'expressManagement'
 MALL_CONFIG_MAIL_NOTIFY_NAV = 'emailNotify'
+MAIL_CONFIG_SUPPLIER_NAV = 'supplier'
 
 
 CONFIG_NAV = {
@@ -317,6 +321,12 @@ CONFIG_NAV = {
             'url': '/mall2/email_notify_list/',
             'need_permissions': ['manage_config_mail', ]
         },
+        {
+            'name': MAIL_CONFIG_SUPPLIER_NAV,
+            'title': u'供货商',
+            'url': '/mall2/supplier_list/',
+            'need_permissions': ['manage_supplier', ]
+        },
     ]
 }
 
@@ -330,7 +340,11 @@ def get_config_second_navs(request):
         pass
     else:
         # webapp_module_views.get_modules_page_second_navs(request)
-        second_navs = [CONFIG_NAV]
+        if request.user.username != 'wzjx001' and request.user.username != 'ceshi001':
+            nav = {"navs":CONFIG_NAV['navs'][:-1]}
+            second_navs = [nav]
+        else:
+            second_navs = [CONFIG_NAV]
 
     return second_navs
 

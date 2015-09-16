@@ -230,7 +230,7 @@ def get_order_by_status(request):
 	start_date, end_date = get_date_range(date_interval, MIQIER_MONTH_BEFORE)
 
 	user_profile = UserProfile.objects.get(user=request.user)
-	orders = Order.objects.filter(webapp_id=user_profile.webapp_id, created_at__gte=start_date, created_at__lte=end_date)
+	orders = Order.by_webapp_id(user_profile.webapp_id).filter(created_at__gte=start_date, created_at__lte=end_date)
 	item = {}
 	for order in orders:
 		order_id = order.order_id
@@ -318,7 +318,7 @@ def get_order_by_week(request):
 			week_customers.append(order.webapp_user_id)
 			incr_dict_by_key(order_item, u'购买人数')
 			if order.webapp_user_id not in week_old_customers:
-				if Order.objects.filter(webapp_user_id=order.webapp_user_id, webapp_id=order.webapp_id, created_at__lt=order_item[u'起始日期']).exists():
+				if Order.by_webapp_user_id(order.webapp_user_id).filter(webapp_id=order.webapp_id, created_at__lt=order_item[u'起始日期']).exists():
 					week_old_customers.append(order.webapp_user_id)
 					incr_dict_by_key(order_item, u'老用户数')
 				else:

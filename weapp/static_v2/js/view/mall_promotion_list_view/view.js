@@ -25,6 +25,8 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 		'click .xa-finish': 'onClickFinishLink',
 		'click .xa-start': 'onClickFinishLink',
 		'click .xa-delete': 'onClickDeleteLink',
+		'click .xa-proFinish':'onClickProFinish',
+		'click .xa-proBatchFinish':'onClickProBatchFinish',
 		'click .xa-batchDelete': 'onClickBatchDeleteLink',
 		'click .xa-batchFinish': 'onClickBatchFinishLink',
 		'click .xa-showAllModels': 'onClickShowAllModelsButton',
@@ -138,7 +140,7 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 		W.requireConfirm({
 			$el: $link,
 			width: 373,
-        		position:'top',
+        	position:'top',
 			isTitle: false,
 			msg: '确认删除活动？',
 			confirm: function() {
@@ -149,11 +151,70 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 			}
 		});
 	},
+	finishAndDeleteProducts:function($tr, itemId){
+		var _this = this;
+		W.getApi().call({
+			method: 'post',
+			app: 'mall2',
+			resource: 'forbidden_coupon_product',
+			args: {id: JSON.stringify(itemId)},
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '结束成功!');
+				_.each(itemId, function(itemId) {
+					var item = this.table.getDataItem(itemId);
+						item.set('status', '已结束');
+						$tr.remove();
+				}, this);
+				_this.table.reload();
+			},
+			error: function(resp) {
+				W.showHint('error', '结束失败!');
+			}
+		});
+	},
+	onClickProFinish:function(event){
+		var $link = $(event.currentTarget);
+		var $tr = $link.parents('tr');
+		var itemId = $tr.data('id');
+		var _this = this;
+		W.requireConfirm({
+			$el: $link,
+			width: 455,
+        	position:'top',
+			isTitle: false,
+			msg: '结束后该商品将会移出该列表!',
+			confirm: function() {
+				_this.finishAndDeleteProducts($tr, [itemId]);
+			}
+		});
+	},
+	onClickProBatchFinish:function(event){
+		var $link = $(event.currentTarget);
+		var ids = this.table.getAllSelectedDataIds();
+		var _this = this;
 
+		for(var i = 0; i < ids.length; ++i) {
+			var id = ids[i];
+			$('[data-id="'+id+'"]').addClass('xa-actionTarget');
+		}
+
+		var $trs = $('.xa-actionTarget');
+		$trs.removeClass('.xa-actionTarget');
+		W.requireConfirm({
+			$el: $link,
+			width: 398,
+        	position:'top',
+			isTitle: false,
+			msg: '确认结束全部活动？',
+			confirm: function() {
+				_this.finishAndDeleteProducts($trs, ids);
+			}
+		});
+	},
 	onClickBatchFinishLink: function(event) {
 		var $link = $(event.currentTarget);
 		var ids = this.table.getAllSelectedDataIds();
-
 		for (var i = 0; i < ids.length; ++i) {
 			var id = ids[i];
 			var promotion = this.table.getDataItem(id);
