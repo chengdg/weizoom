@@ -196,6 +196,7 @@ class surveyStatistics_Export(resource.Resource):
 			select_data = {}
 			select_static ={}
 			qa_static = {}
+			uploadimg_static = {}
 			for item in member_id2termite_data:
 				record = member_id2termite_data[item]
 				time = record['created_at']
@@ -211,6 +212,12 @@ class surveyStatistics_Export(resource.Resource):
 							qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
 						else:
 							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
+					if termite_dic['type']=='appkit.uploadimg':
+						if termite not in uploadimg_static:
+							uploadimg_static[termite]=[{'created_at':time,'url':termite_dic['value']}]
+						else:
+							uploadimg_static[termite].append({'created_at':time,'url':termite_dic['value']})
+
 			#select-data-processing
 			for select in select_data:
 				for s_list in select_data[select]:
@@ -267,6 +274,28 @@ class surveyStatistics_Export(resource.Resource):
 						row +=1
 						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
 						ws.write(row,col+1,item['answer'])
+
+			#uploadimg_sheet
+			if uploadimg_static:
+				uploadimg_num = 0
+				for u in uploadimg_static:
+					uploadimg_num += 1
+					row = col = 0
+					ws = wb.add_sheet(u'图片%d'%uploadimg_num)
+					header_style = xlwt.XFStyle()
+
+					ws.write(row,col,u'上传时间')
+					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'%total)
+
+					for item in uploadimg_static[u]:
+						row +=1
+						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
+						for i in item['url']:
+							if len(item['url'])>1:
+								ws.write(row,col+1,i)
+								row +=1
+							else:
+								ws.write(row,col+1,i)
 
 			try:
 				wb.save(export_file_path)
