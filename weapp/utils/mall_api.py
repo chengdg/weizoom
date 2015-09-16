@@ -18,7 +18,7 @@ def get_order_stats(webapp_id, start_date=None, end_date=None):
 	"""
 	获取多项品牌价值
 	"""
-	results = wapi().get('mall', 'order_stats', {
+	results = wapi.get('mall', 'order_stats', {
 		'wid': webapp_id,
 		'date_start': start_date,
 		'date_end': end_date
@@ -27,7 +27,7 @@ def get_order_stats(webapp_id, start_date=None, end_date=None):
 
 
 def get_webapp_id(username):
-	results = wapi().get_json('mall', 'webapp_id', {
+	results = wapi.get_json('mall', 'webapp_id', {
 		'username': username
 	})
 	return results.get('webapp_id')
@@ -37,7 +37,7 @@ def get_member_count(webapp_id, date_start=None, date_end=None):
 	"""
 	获取会员总数
 	"""
-	results = wapi().get_json('mall', 'member_stats', {
+	results = wapi.get_json('mall', 'member_stats', {
 		'wid': webapp_id,
 		'date_start': date_start,
 		'date_end': date_end
@@ -49,7 +49,7 @@ def get_product_categories(uid):
 	"""
 	获取商品分组列表
 	"""
-	results = wapi().get_json('mall', 'product_categories', {
+	results = wapi.get_json('mall', 'product_categories', {
 		'uid': uid
 	})
 	return results['categories']
@@ -59,7 +59,7 @@ def get_product_category(category_id):
 	"""
 	获取一个分类详情
 	"""
-	category = wapi().get_json('mall', 'product_category', {
+	category = wapi.get_json('mall', 'product_category', {
 		'id': category_id
 	})
 	return category
@@ -80,7 +80,7 @@ def add_product_category(uid, name):
 	"""
 	创建商品分类
 	"""
-	response = wapi().put('mall', 'product_category', {
+	response = wapi.put('mall', 'product_category', {
 		'uid': uid,
 		'name': name
 	})

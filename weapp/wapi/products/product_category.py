@@ -11,8 +11,8 @@ from utils import dateutil as utils_dateutil
 
 from mall import models as mall_models
 
-from django.contrib.auth.models import User
-from account.models import UserProfile
+#from django.contrib.auth.models import User
+#from account.models import UserProfile
 
 
 

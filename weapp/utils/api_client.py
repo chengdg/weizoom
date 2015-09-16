@@ -8,21 +8,13 @@ from weapp.settings import WAPI_SECRET_ACCESS_TOKEN, WAPI_HOST
 import json
 import requests
 
-_api_client = None
-
-def wapi():
-	global _api_client
-	if _api_client is None:
-		_api_client = ApiClient()
-	return _api_client
-
 
 def set_wapi_client(client):
 	"""
 	用于BDD测试模式
 	"""
-	global _api_client
-	_api_client = TestApiClient(client)
+	global apiclient
+	apiclient = TestApiClient(client)
 	return
 
 
@@ -42,7 +34,7 @@ class TestApiClient:
 		else:
 			params['access_token'] = self.access_token
 		url = "/%s" % (addr)
-		print("GET: {}".format(url))
+		#print("GET: {}".format(url))
 		req = self.client.get(url, params)
 		return req.content
 
@@ -53,22 +45,25 @@ class TestApiClient:
 		else:
 			params['access_token'] = self.access_token
 		url = "/%s" % (addr)
-		print("POST: {}".format(url))
+		#print("POST: {}".format(url))
 		req = self.client.post(url, params)
 		return req.content
 
 
 	def _put(self, addr, params=None):
 		if params is None:
-			params={'access_token': self.access_token}
+			params={'_method': 'put'}
 		else:
-			params['access_token'] = self.access_token
-		params['_method'] = 'put'
-		url = "/%s" % (addr)
-		print("PUT: {}".format(url))
-		req = self.client.post(url, params)
-		return req.content
+			params['_method'] = 'put'
+		return self._post(addr, params)
 
+
+	def _delete(self, addr, params=None):
+		if params is None:
+			params={'_method': 'delete'}
+		else:
+			params['_method'] = 'delete'
+		return self._post(addr, params)
 
 	def _get_json(self, addr, params=None):
 		text = self.get(addr, params)
@@ -94,13 +89,21 @@ class TestApiClient:
 		url = "%s/api/%s".format(app, resource)
 		return self._put(url, params)
 
+	def delete(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._delete(url, params)
+
+
+
 
 class ApiClient:
+	"""
+	WAPI调用的client
+	"""
 
 	def __init__(self, host=WAPI_HOST, access_token=WAPI_SECRET_ACCESS_TOKEN):
 		self.access_token = access_token
 		self.hostname = host
-		#self.conn = httplib.HTTPConnection(self.hostname)
 		self.headers = {
 			"Content-type": "application/x-www-form-urlencoded",
 			"Accept": "text/plain",
@@ -116,7 +119,7 @@ class ApiClient:
 		else:
 			params['access_token'] = self.access_token
 		url = "%s/%s" % (self.hostname, addr)
-		print("URL: {}".format(url))
+		#print("URL: {}".format(url))
 		req = requests.get(url, params=params, headers=self.headers)
 		return req.text
 
@@ -127,21 +130,24 @@ class ApiClient:
 		else:
 			params['access_token'] = self.access_token
 		url = "%s/%s" % (self.hostname, addr)
-		print("URL: {}".format(url))
+		#print("URL: {}".format(url))
 		req = requests.post(url, params=params, headers=self.headers)
 		return req.text
-
 
 	def _put(self, addr, params=None):
 		if params is None:
-			params={'access_token': self.access_token}
+			params = {'_method': 'put'}
 		else:
-			params['access_token'] = self.access_token
-		params['_method'] = 'put'
-		url = "%s/%s" % (self.hostname, addr)
-		print("PUT: {}".format(url))
-		req = requests.post(url, params=params, headers=self.headers)
-		return req.text
+			params['_method'] = 'put'
+		return self._post(addr, params)
+
+
+	def _delete(self, addr, params=None):
+		if params is None:
+			params = {'_method': 'delete'}
+		else:
+			params['_method'] = 'delete'
+		return self._post(addr, params)
 
 
 	def _get_json(self, addr, params=None):
@@ -167,3 +173,11 @@ class ApiClient:
 	def put(self, app, resource, params=None):
 		url = "%s/api/%s".format(app, resource)
 		return self._put(url, params)
+
+	def delete(self, app, resource, params=None):
+		url = "%s/api/%s".format(app, resource)
+		return self._delete(url, params)
+
+
+# for export
+wapi = ApiClient()
