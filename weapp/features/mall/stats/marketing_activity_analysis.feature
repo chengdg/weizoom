@@ -86,7 +86,7 @@ Background:
 	And kate关注jobs的公众号
 	And bob关注jobs的公众号
 
-@ignore  @stats.marketing @wip.marketing1
+@mall2  @stats.marketing @wip.marketing1
 Scenario: '微信抽奖'营销活动分析及分页
 	Given jobs登录系统
 
@@ -134,17 +134,18 @@ Scenario: '渠道扫码'营销活动分析及分页
 		|activity_name  | responsible_person | authority |awards      |creat_time          | participant |share_to        |member_source |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bill        |                |         |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bill        | bill1          |         |
-		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bob      |                |         |
-		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | tom      | bill01,bill,bob| bill    |
-		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | mary     |                | bill1   |
+		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bob         |                |         |
+		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | tom         | bill01,bill,bob| bill    |
+		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | mary        |                | bill1   |
 		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bill        |                | bill1   |
-		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bob      |                | bill1   |
+		| 渠道扫码01    | jobs               | 是        | [优惠券]ss |2015-06-17 08:00:00 | bob         |                | bill1   |
 		| 渠道扫码02    | jobs               | 否        | [积分]20   |2015-06-18 08:00:00 | bill        |                |         |
 		| 渠道扫码03    | jobs               | 是        | [积分]20   |2015-06-19 08:00:00 | bill        |                |         |
+	
 	Then 获取'渠道扫码'营销活动分析列表
-		|name  | manager | parti_times | parti_person_cnt |  end_at              | status   | status_text |
-		| 渠道扫码01    | jobs              |        7 | 4                 |  -  | 1   | 已启动 |
-		| 渠道扫码02    | jobs              |        1 | 1                 |  -  | 1   | 已启动 |
+		|name         | manager | parti_times | parti_person_cnt |  end_at  | status   | status_text |
+		| 渠道扫码01  | jobs    |      7      | 4                |     -    |    1     |    已启动   |
+		| 渠道扫码02  | jobs    |      1      | 1                |     -    |    1     |    已启动   |
 
 
 @ignore 
@@ -169,14 +170,16 @@ Scenario: 一个用户扫描2个渠道二维码
 		"""
 	When bill通过扫描'渠道扫码01'二维码关注
 	Then 获取'渠道扫码'营销活动分析列表
-		|name  | manager | parti_times | parti_person_cnt |  end_at              | status   | status_text |
-		| 渠道扫码01    | jobs              |        1 | 1                 |  -  | 1   | 已启动 |
-		| 渠道扫码02    | jobs              |        0 | 0                 |  -  | 1   | 已启动 |
+		|name           | manager | parti_times | parti_person_cnt | end_at | status | status_text |
+		| 渠道扫码01    | jobs    |       1     | 1                |    -   |    1   | 已启动 |
+		| 渠道扫码02    | jobs    |       0     | 0                |    -   |    1   | 已启动 |
+	
 	When bill通过扫描'渠道扫码02'二维码关注
+	
 	Then 获取'渠道扫码'营销活动分析列表
-		|name  | manager | parti_times | parti_person_cnt |  end_at              | status   | status_text |
-		| 渠道扫码01    | jobs              |        1 | 1                 |  -  | 1   | 已启动 |
-		| 渠道扫码02    | jobs              |        0 | 0                 |  -  | 1   | 已启动 |
+		|name        | manager | parti_times | parti_person_cnt | end_at | status | status_text |
+		| 渠道扫码01 | jobs    |      1      | 1                |    -   | 1      | 已启动 |
+		| 渠道扫码02 | jobs    |      0      | 0                |    -   | 1      | 已启动 |
 
 
 @ignore 
