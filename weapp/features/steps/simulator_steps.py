@@ -70,6 +70,7 @@ def step_impl(context, user, message):
 		"weixin_user_fakeid": "	weizoom_default_fakeid",
 		"weixin_user_name": "weizoom"
 	}
+
 	response = client.post(url, data)
 	context.qa_result = json.loads(response.content)
 
@@ -84,7 +85,7 @@ def step_impl(context, user, mp_user_name, message):
 
 	mp_user = User.objects.get(username=mp_user_name)
 	profile = UserProfile.objects.get(user_id=mp_user.id)
-
+	time.sleep(1)
 	url = '/simulator/api/weixin/send/'
 	data = {
 		"content": message,
@@ -93,7 +94,7 @@ def step_impl(context, user, mp_user_name, message):
 		#"weixin_user_fakeid": "weizoom_default_fakeid",
 		"weixin_user_fakeid": "weizoom_fakeid_{}".format(user),
 		#"weixin_user_name": "weizoom"
-		"weixin_user_name": user
+		"weixin_user_name": "%s_%s" % (user,mp_user_name)
 	}
 	response = client.post(url, data)
 	context.qa_result = json.loads(response.content)

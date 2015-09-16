@@ -1,0 +1,105 @@
+# -*- coding: utf-8 -*-
+import json
+import time
+from datetime import datetime, timedelta
+
+from behave import *
+
+from test import bdd_util
+from features.testenv.model_factory import *
+
+from django.test.client import Client
+#from weixin.message.qa.models import *
+from weixin2.models import *
+from modules.member.models import *
+
+@when(u"{user}获得实时消息'{type}'列表")
+def step_impl(context, user, type):
+	if hasattr(context, 'filter_value'):
+		filter_value = context.filter_value
+	else:
+		filter_value = None
+
+	count_per_page = 30
+	if hasattr(context, 'count_per_page'):
+		count_per_page = context.count_per_page
+
+	page_index = 1
+	if hasattr(context, 'page_index'):
+		page_index = context.page_index
+
+		
+	url = '/new_weixin/api/realtime_messages/?page=%s&count=%s' % (page_index, count_per_page)
+	if type == "所有消息":
+		url = '/new_weixin/api/realtime_messages/?page=%s&count=%s' % (page_index, count_per_page)
+	elif type == "未读信息":
+		url = '/new_weixin/api/realtime_messages/?page=%s&count=%s&filter_value=status:0' % (page_index, count_per_page)
+	elif type == "未回复":
+		url = '/new_weixin/api/realtime_messages/?page=%s&count=%s&filter_value=status:1' % (page_index, count_per_page)
+
+	if filter_value:
+		url = url + '&' + filter_value
+	expected = json.loads(context.text)
+
+	response = context.client.get(url)
+	session_messages = json.loads(response.content)['data']['items']
+	print '-------url', url
+	print '---:::::::::::::',session_messages
+	messages = []
+	for message in session_messages:
+		message_dict = {}
+		message_dict['member_name'] = message['sender_username'].split('_')[0]
+		message_dict['inf_content'] = message['text']
+		message_dict['last_message_time'] = u'今天'
+		message_dict['unread_count'] = message['unread_count']
+		messages.append(message_dict)
+		#now_time = datetime.today().strftime('%Y-%m-%d')
+
+	bdd_util.assert_list(expected, messages)
+
+@when(u"{user}设置实时消息查询条件")
+def step_impl(context, user):
+	#filter_value=status:1|content:33|tag_id:792|grade_id:142|name:123&date_interval=2015-09-08 00:00|2015-09-15 00:00
+	filter_dict = json.loads(context.text)
+	filter_list = []
+	if filter_dict.has_key('member_name'):
+		filter_list.append('name:%s' % filter_dict['member_name'])
+
+	if filter_dict.has_key('inf_content'):
+		filter_list.append('content:%s' % filter_dict['inf_content'])
+
+	if filter_dict.has_key('tags'):
+		tag_id = MemberTag.objects.get(name=filter_dict['tags']).id
+		filter_list.append('tag_id:%s' % tag_id)
+
+	if filter_dict.has_key('member_rank'):
+		grade_id = MemberGrade.objects.get(name=filter_dict['member_rank']).id
+		filter_list.append('grade_id:%s' % grade_id)
+
+	date_interval = ''
+	if filter_dict.has_key('start_date') and  filter_dict.has_key('start_date') :
+		# start_date = filter_dict['start_date']
+		# end_date = filter_dict['end_date']
+		start_date = datetime.today().strftime('%Y-%m-%d')
+		end_date = '2099-07-01'
+		date_interval = 'date_interval=%s 00:00|%s 00:00' % (start_date,end_date)
+
+	filter_value = None
+	if filter_list:
+		filter_value = '|'.join(filter_list)
+		if filter_value and date_interval:
+			filter_value = 'filter_value='+filter_value + '&' + date_interval
+		
+		elif date_interval:
+			filter_value = date_interval
+		else:
+			filter_value = 'filter_value='+filter_value 
+	elif date_interval:
+		filter_value = date_interval 
+
+	if filter_value:
+		context.filter_value = filter_value
+
+@when(u"{user}浏览列表第{page_index}页")
+def step_impl(context, user, page_index):
+	context.page_index = page_index
