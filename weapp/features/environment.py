@@ -288,6 +288,12 @@ def __clear_all_app_data():
 	#统计方面的
 	stats_models.BrandValueHistory.objects.all().delete()
 
+	weixin2_models.Session.objects.all().delete()
+	weixin2_models.Message.objects.all().delete()
+	weixin2_models.CollectMessage.objects.all().delete()
+	weixin2_models.MessageRemarkMessage.objects.all().delete()
+
+	
 	# 缓存
 	cache.clear()
 
