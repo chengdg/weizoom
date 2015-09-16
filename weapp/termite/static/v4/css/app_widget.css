@@ -644,7 +644,9 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-i-uploadimg .xui-productPhoto .xui-text{
     color: #A9A9A9;
     line-height: 45px;
+	padding-left: 10px;
 }
 .wui-i-uploadimg.xa-inputControl {
 	min-height: 45px;
+	padding-bottom: 15px;
 }
