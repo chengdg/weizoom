@@ -61,6 +61,12 @@
         .xb-pagination-component {
             height: 33px;
         }
+        .xui-uploadimg{
+          width: 60px;
+          height: 75px;
+          float: left;
+          margin-left: 20px;
+        }
     </style>
 {% endblock %}
 
@@ -140,8 +146,12 @@
             <tbody>
                 {{each(i, item) items}}
                     <tr>
-                        <td style="text-align:left;padding-left: 30px;"><div style="width:100%;word-break:break-all; overflow:auto;">${ item.content }</div></td>
-                        <td>${ item.created_at }</td>
+                        {{if (item.type === 'uploadimg') }}
+                            <td>{{html item.content}}</td>
+                        {{else}}
+                            <td style="text-align:left;padding-left: 30px;"><div style="width:100%;word-break:break-all; overflow:auto;">${ item.content }</div></td>
+                        {{/if}}
+                            <td>${ item.created_at }</td>
                     </tr>
                 {{/each}}
             </tbody>
