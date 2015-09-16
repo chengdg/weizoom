@@ -59,8 +59,10 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					$('img.xa-uploadimg').click(function(){
 						if(click_count ===1){
 							var that = this;
+							var pic_url = $(that).attr('src');
 							click_count = click_count+1;
 							$(this).parents().find('.xa-uploadimg_box').append("<img class='xa-close_btn' src='/static_v2/img/close_btn.png'>").append($(that).clone(true)).fadeIn('fast');
+							//$(this).parents().find('.xa-uploadimg_box').append("<img class='xa-close_btn' src='/static_v2/img/close_btn.png'>").css("background","url("+pic_url+")" ).fadeIn('fast');
 							$('.xa-close_btn').click(function(){
 									$('.xa-uploadimg_box').fadeOut(400);
 									$('.xa-uploadimg_box').empty();
