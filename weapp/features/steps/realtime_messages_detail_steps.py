@@ -14,7 +14,7 @@ def step_impl(context, user, weapp_user):
     response = context.client.get(bdd_util.nginx(realMsg_url))
     realMsgs_data = json.loads(response.content)['data']['items']
     for realMsg_data in realMsgs_data:
-        if realMsg_data['sender_username'] == weapp_user:
+        if realMsg_data['sender_username'].split('_')[0] == weapp_user:
             session_id = realMsg_data['session_id']
             reply = realMsg_data['could_replied']
             context.detail_url = '/new_weixin/api/realtime_messages_detail/?session_id=%s&replied=%s' %(session_id, reply)
@@ -33,7 +33,7 @@ def step_impl(context, user, weapp_user):
         if realMsg_data['is_reply']:
             adict['member_name'] = realMsg_data['mp_username'] or user
         else:
-            adict['member_name'] = realMsg_data['sender_username']
+            adict['member_name'] = realMsg_data['sender_username'].split('_')[0]
         adict['inf_content'] = realMsg_data['text']
         if realMsg_data['is_news_type']:
             adict['inf_content'] = realMsg_data['news_title']
