@@ -15,7 +15,7 @@ Background:
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"cover_in_the_text":"ture",
+			"cover_in_the_text":"true",
 			"summary":"单条图文1文本摘要",
 			"content":"单条图文1文本内容"
 		}]
@@ -61,7 +61,7 @@ Background:
 	and tom在微信中向jobs的公众号发送消息'关键词tom'
 	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息2，未回复'
 
-@weixin @message @realtimeMessage
+@mall2 @weixin @message @realtimeMessage 
 Scenario: 1 jobs浏览会员的消息详情
 
 	Given jobs登录系统
@@ -75,7 +75,7 @@ Scenario: 1 jobs浏览会员的消息详情
 			"time": "今天"
 		},{
 			"member_name": "jobs",
-			"inf_content": "关键字回复内容tom",
+			"inf_content": "【自动回复】 关键字回复内容tom",
 			"time": "今天"
 		},{
 			"member_name": "tom",
@@ -106,4 +106,3 @@ Scenario: 1 jobs浏览会员的消息详情
 		}]
 		"""
 
-	

@@ -14,7 +14,7 @@ Scenario: 2 添加单条图文(js相关验证)
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"cover_in_the_text":"ture",
+			"cover_in_the_text":"true",
 			"summary_length":121,
 			"content_length":20001
 		}]
@@ -33,7 +33,7 @@ Scenario: 3 添加单条图文(js相关验证)
 		[{
 			"title":null,
 			"cover": null,
-			"cover_in_the_text":"ture",
+			"cover_in_the_text":"true",
 			"summary":null,
 			"content":null
 		}]
