@@ -628,3 +628,17 @@ Scenario: 安装完整测试数据
 	And tom参加抽奖活动'抽奖测试1'
 	And nokia参加抽奖活动'抽奖测试1'
 	And guo参加抽奖活动'抽奖测试1'
+
+@wip.wapi
+Scenario: 测试WAPI
+	Given jobs登录系统
+	And jobs已添加商品分类
+		"""
+		[{
+			"name": "分类1"
+		}, {
+			"name": "分类2"
+		}, {
+			"name": "分类3"
+		}]	
+		"""

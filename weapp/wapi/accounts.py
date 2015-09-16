@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+有关账号的API
+"""
 
 #import json
 #from datetime import datetime
@@ -27,18 +30,40 @@ from core.charts_apis import *
 #from core.exceptionutil import unicode_full_stack
 #from watchdog.utils import watchdog_error, watchdog_warning
 
+from wapi.decorators import param_required
 
-class AccessGrant(resource.Resource):
+#from stats.manage.brand_value_utils import get_brand_value
+
+#from utils import dateutil as utils_dateutil
+
+from mall import models as mall_models
+
+from django.contrib.auth.models import User
+from account.models import UserProfile
+
+
+class WebappID(resource.Resource):
 	"""
-	授权token(类似OAuth授权)
+	获取WebAPP ID
 	"""
 	app = 'wapi'
-	resource = 'access_grant'
+	resource = 'webapp_id'
 
-	@login_required
+	@param_required
 	def api_get(request):
 		"""
-		输入用户名、授权密码授权
+		获取WebAPP ID
+
+		@param username 用户名
 		"""
+		username = request.GET.get('username')
+		user = User.objects.get(username=username)
+		user.profile = UserProfile.objects.get(user=user)
+		webapp_id = user.profile.webapp_id
+
 		response = create_response(200)
+		response.data = {
+			"webapp_id": webapp_id,
+			"username": user.username
+		}
 		return response.get_response()

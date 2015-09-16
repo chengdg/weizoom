@@ -567,7 +567,9 @@ if 'develop' == MODE:
     EVENT_DISPATCHER = 'local'
     ENABLE_WEPAGE_CACHE = False
 
-    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://dev.weapp.com'
 
     import logging
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
@@ -585,7 +587,9 @@ elif 'test' == MODE:
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
 
-    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://dev.weapp.com'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
@@ -605,6 +609,7 @@ else:
     USE_DEV_JS = False
 
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://api.weizzz.com'
 
 
 IN_DEVELOP_MODE = (MODE == 'develop')
@@ -627,10 +632,10 @@ UNCATCHED_EXCEPTION_ACTION_URL = ''
 
 
 WEAPP_WEB_DIALOG_DIRS = [
-    ('static', '%s/../static/' % PROJECT_HOME), 
-    ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME), 
-    #('customerized_apps_static', '%s/../apps/customerized_apps/*' % PROJECT_HOME)
-]
+    ('static', '%s/../static/' %
+     PROJECT_HOME), ('markettools_static', '%s/../market_tools/tools/*' %
+                     PROJECT_HOME), ('customerized_apps_static', '%s/../apps/customerized_apps/*' %
+                                     PROJECT_HOME), ]
 WEAPP_WEB_VIEW_DIRS = [
     ('static', '%s/../static/' % PROJECT_HOME),
 ]
