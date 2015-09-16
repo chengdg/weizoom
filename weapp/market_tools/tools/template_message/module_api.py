@@ -153,3 +153,103 @@ def _record_send_template_info(order, template_id, user):
 			MarketToolsTemplateMessageSendRecord.objects.create(owner=user, template_id=template_id, member_id=member.id, order_id=order.order_id)
 
 
+
+########################################################################
+# send_weixin_template_message: 发送优惠劵模板消息
+# webapp_id : 55
+# webapp_user_id: 2
+# send_point: COUPON_ARRIVAL_NOTIFY/COUPON_EXPIRED_REMIND
+# 
+#  	发送优惠劵的model格式
+# model: {
+# 	"coupon_store": u'全部可用',
+# 	"coupon_rule": u'每笔订单满159元即可使用本卷' or u'不限'
+# }
+########################################################################
+def send_weixin_template_message(webapp_id, webapp_user_id, model, send_point):
+	user_profile = UserProfile.objects.get(webapp_id=webapp_id)
+	user = user_profile.user
+	template_message = get_template_message_by(user_profile.user, send_point)
+	template_message.send_point = send_point
+	# return _get_send_message_dict(user_profile, webapp_user_id, model, template_message)
+
+	if coupon and user_profile and template_message and template_message.template_id:
+		mpuser_access_token = _get_mpuser_access_token(user)
+		if mpuser_access_token:
+			try:
+				weixin_api = get_weixin_api(mpuser_access_token)
+
+				message = _get_send_message_dict(user_profile, webapp_user_id, model, template_message)
+				result = weixin_api.send_template_message(message, True)
+				_record_send_template_info(order, template_message.template_id, user)
+				return True
+			except:
+				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+				watchdog_warning(notify_message)
+				return False
+		else:
+			return False
+
+	return True
+
+
+
+def _get_host(user_profile):
+	if user_profile.host.find('http') > -1:
+		host = user_profile.host
+	else:
+		host = "http://%s" % user_profile.host
+	return host
+
+
+def _get_send_message_dict(user_profile, webapp_user_id, model, template_message):
+	template_data = dict()	
+	social_account = member_model_api.get_social_account(webapp_user_id)
+
+	if social_account and social_account.openid:
+		template_data['touser'] = social_account.openid
+		template_data['template_id'] = template_message.template_id
+		template_data['topcolor'] = "#FF0000"
+		template_data['url'] = __get_template_url(template_message.send_point, user_profile, social_account, model)
+
+		detail_data = {}
+		detail_data["first"] = {"value" : template_message.first_text, "color" : "#000000"}
+		detail_data["remark"] = {"value" : template_message.remark_text, "color" : "#000000"}
+
+		customer_data = __get_detail_data_by_template(template_message.template_message, model)
+		detail_data = dict(detail_data, **customer_data)
+
+		template_data['data'] = detail_data
+	return template_data
+
+def __get_template_url(send_point, user_profile, social_account, model):
+	host = _get_host(user_profile)
+	if send_point == COUPON_ARRIVAL_NOTIFY:
+		return u'{}/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id={}&project_id=0&sct={}'.format(host, user_profile.user.id, social_account.token)
+
+	return u''
+
+def __get_detail_data_by_template(template_message_detail, model):
+	detail_data = dict()
+	if template_message_detail.attribute:
+		if template_message_detail.send_point == COUPON_ARRIVAL_NOTIFY:
+			return __get_coupon_detail_data(template_message_detail.attribute, model)
+		elif template_message_detail.send_point == COUPON_EXPIRED_REMIND:
+			return __get_coupon_detail_data(template_message_detail.attribute, model)
+
+	return detail_data
+
+
+def __get_coupon_detail_data(attribute, model):
+	detail_data = dict()
+
+	attribute_data_list = attribute.split(',')
+	for attribute_datas in attribute_data_list:
+		attribute_data = attribute_datas.split(':')
+		key = attribute_data[0].strip()
+		attr = attribute_data[1].strip()
+
+		value = u'{}'.format(model.get(attr))
+		detail_data[key] = {"value" : value, "color" : "#173177"} 
+
+	return detail_data
