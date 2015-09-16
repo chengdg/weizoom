@@ -1471,7 +1471,7 @@ class Order(models.Model):
 	def by_webapp_id(webapp_id):
 		if str(webapp_id) == '3394':
 			return Order.objects.filter(webapp_id=webapp_id)
-		if isinstance(webapp_id, int) or isinstance(webapp_id, long):
+		if isinstance(webapp_id, int) or isinstance(webapp_id, long) or isinstance(webapp_id, str):
 			return Order.objects.filter(webapp_source_id=webapp_id, origin_order_id__lte=0)
 		else:
 			return Order.objects.filter(webapp_source_id__in=webapp_id, origin_order_id__lte=0)
