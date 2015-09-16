@@ -258,7 +258,7 @@ class surveyParticipances_Export(resource.Resource):
 					upload_v = []
 					u_v = record[u'termite_data'][s][u'value']
 					for i in u_v:
-						upload_v.append("url:%s;"%str(i))
+						upload_v.append(i)
 					uploadimg.append(upload_v)
 
 				# don't change the order
@@ -290,12 +290,23 @@ class surveyParticipances_Export(resource.Resource):
 
 			##write data
 			if export_data:
-				row = 0
+				row = 1
 				lens = len(export_data[0])
 				for record in export_data:
-					row +=1
 					for col in range(lens):
-						ws.write(row,col,record[col])
+						record_col= record[col]
+						row_l = []
+						if type(record_col)==list:
+							row_l.append(len(record_col))
+							for n in range(len(record_col)):
+								data = record_col[n]
+								ws.write(row+n,col,data)
+						else:
+							ws.write(row,col,record[col])
+					if row_l:
+						row = row + max(row_l)
+					else:
+						row += 1
 				try:
 					wb.save(export_file_path)
 				except:
