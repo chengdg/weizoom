@@ -56,6 +56,14 @@ class surveyStatistics(resource.Resource):
 							}
 						else:
 							q_vote[k]['value'].append(value['value'])
+					if value['type'] == 'appkit.uploadimg':
+						if not q_vote.has_key(k):
+							q_vote[k] = {
+								'type': 'appkit.uploadimg',
+								'value': [value['value']],
+							}
+						else:
+							q_vote[k]['value'].append(value['value'])
 
 			for k,v in q_vote.items():
 				a_isSelect = {}
@@ -64,6 +72,7 @@ class surveyStatistics(resource.Resource):
 				total_count = 0
 				value_list = []
 				v_a = {}
+				title_type = u''
 				for title_value in v['value']:
 					if v['type'] == 'appkit.selection':
 						v_a = title_value
@@ -73,7 +82,11 @@ class surveyStatistics(resource.Resource):
 							if a_v['isSelect'] == True:
 								a_isSelect[a_k] += 1
 								total_count += 1
-				title_type = u''
+					if v['type'] == 'appkit.qa':
+						type_name = u'问答'
+					if v['type'] == 'appkit.uploadimg':
+						type_name = u'上传图片'
+
 				for a_k in sorted(v_a.keys()):
 					value ={}
 					value['name'] = a_k.split('_')[1]
@@ -87,13 +100,11 @@ class surveyStatistics(resource.Resource):
 					type_name = u'单选'
 				elif title_type == 'checkbox':
 					type_name = u'多选'
-				else:
-					type_name = u'问答'
+
 				result['title_type'] = type_name
 				result['title_'] = k
 				result['count'] = count
 				question_list = []
-
 				result['values'] = value_list if v['type'] == 'appkit.selection' else question_list
 				result['type'] = v['type']
 				result_list.append(result)
@@ -139,6 +150,11 @@ class question(resource.Resource):
 				if question_title == k :
 					value = termite_data[k]
 					if value['type'] == 'appkit.qa':
+						result_list.append({
+							'content': value['value'],
+							'created_at':participance['created_at'].strftime('%Y-%m-%d')
+						})
+					if value['type'] == 'appkit.uploadimg':
 						result_list.append({
 							'content': value['value'],
 							'created_at':participance['created_at'].strftime('%Y-%m-%d')
