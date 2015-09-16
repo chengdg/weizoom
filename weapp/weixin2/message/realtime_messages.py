@@ -88,6 +88,7 @@ class RealtimeMessages(resource.Resource):
         """
                         获取实时消息集合json数据
         """
+        
         #获取当前页数
         cur_page = int(request.GET.get('page', '1'))
         #获取每页个数
@@ -300,11 +301,13 @@ def get_social_member_dict(webapp_id, weixin_user_usernames):
 
     return username2weixin_account, account2member, id2member
 
-def get_weixin_user_names_from(webapp_id,weixin_user_usernames, tag_id, grade_id, nick_name):
+def get_weixin_user_names_from(webapp_id, weixin_user_usernames, tag_id, grade_id, nick_name):
     accounts = SocialAccount.objects.filter(webapp_id=webapp_id, openid__in=weixin_user_usernames)
     username2weixin_account = dict([(a.webapp_id + '_' + a.openid, a) for a in accounts])
     filter_data = {}
-    filter_data['account__in'] = accounts
+    filter_data['webapp_id'] = webapp_id
+    if accounts:
+        filter_data['account__in'] = accounts
 
     if grade_id != '-1':
         filter_data['member__grade_id'] = grade_id
@@ -313,9 +316,9 @@ def get_weixin_user_names_from(webapp_id,weixin_user_usernames, tag_id, grade_id
         filter_data['member_id__in'] = member_ids
     if nick_name:
         query_hex = byte_to_hex(nick_name)
-        filter_data['member__username_hexstr__contains'] = query_hex
+        filter_data['member__username_hexstr__icontains'] = query_hex
+    
     member_has_accounts = MemberHasSocialAccount.objects.filter(**filter_data)
-
     now_weixin_user_usernames = [member_has_account.account.openid for member_has_account in member_has_accounts]
     return now_weixin_user_usernames
 

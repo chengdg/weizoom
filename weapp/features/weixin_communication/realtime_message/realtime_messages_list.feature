@@ -24,7 +24,7 @@ Background:
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
-			"cover_in_the_text":"ture",
+			"cover_in_the_text":"true",
 			"summary":"单条图文1文本摘要",
 			"content":"单条图文1文本内容"
 		}]
@@ -129,7 +129,7 @@ Scenario:2 获取"未读信息"选项卡列表
 		}]
 		"""
 
-@weixin @message @realtimeMessage @mall2
+@weixin @message @realtimeMessage @mall2 
 Scenario:3 获取"未回复"选项卡列表
 
 	Given jobs登录系统
@@ -153,7 +153,7 @@ Scenario:3 获取"未回复"选项卡列表
 		}]
 		"""
 
-@weixin @message @realtimeMessage @gyc11
+@weixin @message @realtimeMessage @mall2  
 Scenario:4 实时消息列表查询
 
 	Given jobs登录系统
@@ -214,7 +214,7 @@ Scenario:4 实时消息列表查询
 	When jobs设置实时消息查询条件
 		"""
 		{
-			"member_name":"o"
+			"member_name":"k"
 		}
 		"""
 	When jobs获得实时消息'所有信息'列表
@@ -223,11 +223,6 @@ Scenario:4 实时消息列表查询
 			"member_name": "nokia",
 			"unread_count": 0,
 			"inf_content": "关键词nokia",
-			"last_message_time": "今天"
-		},{
-			"member_name": "tom",
-			"unread_count": 2,
-			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天"
 		}]
 		"""
@@ -243,17 +238,17 @@ Scenario:4 实时消息列表查询
 		"""
 		[{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天"
 		},{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息1，未回复",
 			"last_message_time": "今天"
 		},{
 			"member_name": "bill",
-			"unread_count": 1,
+			"unread_count": 0,
 			"inf_content": "bill发送一条文本消息，未回复",
 			"last_message_time": "今天"
 		}]
@@ -276,27 +271,27 @@ Scenario:4 实时消息列表查询
 			"last_message_time": "今天"
 		},{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天"
 		},{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "关键词tom",
 			"last_message_time": "今天"
 		},{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息1，未回复",
 			"last_message_time": "今天"
 		},{
 			"member_name": "bill",
-			"unread_count": 1,
+			"unread_count": 0,
 			"inf_content": "关键词bill",
 			"last_message_time": "今天"
 		},{
 			"member_name": "bill",
-			"unread_count": 1,
+			"unread_count": 0,
 			"inf_content": "bill发送一条文本消息，未回复",
 			"last_message_time": "今天"
 		}]
@@ -313,13 +308,28 @@ Scenario:4 实时消息列表查询
 		"""
 		[{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天"
 		},{
+			"member_name": "tom",
+			"unread_count": 0,
+			"inf_content": "关键词tom",
+			"last_message_time": "今天"
+		},{
+			"member_name": "tom",
+			"unread_count": 0,
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"last_message_time": "今天"
+		},{
 			"member_name": "bill",
-			"unread_count": 1,
+			"unread_count": 0,
 			"inf_content": "关键词bill",
+			"last_message_time": "今天"
+		},{
+			"member_name": "bill",
+			"unread_count": 0,
+			"inf_content": "bill发送一条文本消息，未回复",
 			"last_message_time": "今天"
 		}]
 		"""
@@ -335,13 +345,28 @@ Scenario:4 实时消息列表查询
 		"""
 		[{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天"
 		},{
+			"member_name": "tom",
+			"unread_count": 0,
+			"inf_content": "关键词tom",
+			"last_message_time": "今天"
+		},{
+			"member_name": "tom",
+			"unread_count": 0,
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"last_message_time": "今天"
+		},{
 			"member_name": "bill",
-			"unread_count": 1,
+			"unread_count": 0,
 			"inf_content": "关键词bill",
+			"last_message_time": "今天"
+		},{
+			"member_name": "bill",
+			"unread_count": 0,
+			"inf_content": "bill发送一条文本消息，未回复",
 			"last_message_time": "今天"
 		}]
 		"""
@@ -350,8 +375,8 @@ Scenario:4 实时消息列表查询
 	When jobs设置实时消息查询条件
 		"""
 		{
-			"member_name":"o",
-			"inf_content":"关键词",
+			"member_name":"tom",
+			"inf_content":"关键词tom",
 			"start_date":"今天",
 			"end_date":"1天后",
 			"tags":"分组3",
@@ -362,13 +387,13 @@ Scenario:4 实时消息列表查询
 		"""
 		[{
 			"member_name": "tom",
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "关键词tom",
 			"last_message_time": "今天"
 		}]
 		"""
 
-@weixin @message @realtimeMessage
+@weixin @message @realtimeMessage @mall2
 Scenario:5 实时消息"所有消息"列表分页
 
 	Given jobs登录系统
@@ -388,106 +413,51 @@ Scenario:5 实时消息"所有消息"列表分页
 			"end_date":"1天后"
 		}
 		"""
-	When jobs浏览'所有信息'列表第1页
-	Then jobs获得实时消息'所有信息'列表
+	
+	When jobs获得实时消息'所有信息'列表
 		"""
 		[{
 			"member_name": "nokia",
-			"have_read": true,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
 			"unread_count": 0,
 			"inf_content": "关键词nokia",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
+			"last_message_time": "今天"
 		},{
 			"member_name": "tom",
-			"have_read": false,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息2，未回复",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
+			"last_message_time": "今天"
 		}]
 		"""
 
-	When jobs浏览'下一页'
+	When jobs浏览列表第2页
 	When jobs获得实时消息'所有信息'列表
 		"""
 		[{
 			"member_name": "tom",
-			"have_read": false,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "关键词tom",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
+			"last_message_time": "今天"
 		},{
 			"member_name": "tom",
-			"have_read": false,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
-			"unread_count": 2,
+			"unread_count": 0,
 			"inf_content": "tom发送一条文本消息1，未回复",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
+			"last_message_time": "今天"
 		}]
 		"""
 
-	When jobs浏览'所有信息'列表第3页
-	Then jobs获得实时消息'所有信息'列表
+	When jobs浏览列表第3页
+	When jobs获得实时消息'所有信息'列表
 		"""
 		[{
 			"member_name": "bill",
-			"have_read": false,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
-			"unread_count": 1,
+			"unread_count": 0,
 			"inf_content": "关键词bill",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
+			"last_message_time": "今天"
 		},{
 			"member_name": "bill",
-			"have_read": false,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
-			"unread_count": 1,
+			"unread_count": 0,
 			"inf_content": "bill发送一条文本消息，未回复",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
+			"last_message_time": "今天"
 		}]
 		"""
 
-	When jobs浏览'上一页'
-	Then jobs获得实时消息'所有信息'列表
-		"""
-		[{
-			"member_name": "tom",
-			"have_read": false,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
-			"unread_count": 2,
-			"inf_content": "关键词tom",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
-		},{
-			"member_name": "tom",
-			"have_read": false,
-			"have_replied": false,
-			"remark": "",
-			"start": false,
-			"unread_count": 2,
-			"inf_content": "tom发送一条文本消息1，未回复",
-			"last_message_time": "今天",
-			"latest_reply_time": "今天"
-		}]
-		"""
