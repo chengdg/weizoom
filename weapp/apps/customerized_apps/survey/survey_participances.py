@@ -293,9 +293,9 @@ class surveyParticipances_Export(resource.Resource):
 				row = 1
 				lens = len(export_data[0])
 				for record in export_data:
+					row_l = []
 					for col in range(lens):
 						record_col= record[col]
-						row_l = []
 						if type(record_col)==list:
 							row_l.append(len(record_col))
 							for n in range(len(record_col)):
