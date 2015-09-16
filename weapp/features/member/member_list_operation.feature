@@ -95,14 +95,6 @@ Background:
 		When tom2获得jobs的100会员积分
 		Then tom2在jobs的webapp中拥有100会员积分
 
-	#会员聊天记录
-	#	When tom1关注jobs的公众号
-	#	When tom1在模拟器中发送消息'tom1发送一条文本消息，未回复'
-	#
-	#	When tom2关注jobs的公众号
-	#	When tom2在模拟器中发送消息'tom2发送一条文本消息，回复文本消息'
-	#	When jobs在模拟器中给tom2回复消息'jobs回复tom2消息'
-
 @mall2 @member @memberList
 Scenario:1 调分组
 	Given jobs登录系统
@@ -518,53 +510,71 @@ Scenario:4 加积分
 @member @memberList
 Scenario:5 查看聊天记录
 
+	Given jobs登录系统
+
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"图文1",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"单条图文1文本摘要",
+			"content":"单条图文1文本内容"
+		}]
+		"""
+
+	#添加关键词自动回复
+	When jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "关键词tom",
+					"type": "equal"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"关键字回复内容tom",
+					 "reply_type":"text"
+				}]
+		}]
+		"""
+
+	#tom关注jobs的公众号进行消息互动，发送三条
+	When 清空浏览器
+	and tom关注jobs的公众号
+	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息1，未回复'
+	and tom在微信中向jobs的公众号发送消息'关键词tom'
+	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息2，未回复'
+
+
 	#查看有会员消息的会员消息记录
-		When jobs查看"tom1"聊天记录
-			"""
-			{
-				"name":"tom1"
-			}
-			"""
+	When jobs查看'tom'聊天记录
+		"""
+		{
+			"name":"tom"
+		}
+		"""
 
-		Then jobs获得"tom1"聊天记录列表
-			"""
-			[{
-				"name":"tom1",
-				"time":"今天",
-				"inf_content":"tom1发送一条文本消息，未回复"
-				"have_read": false
-			}]
-			"""
+	Then jobs获得'tom'消息详情消息列表
+		"""
+		[{
+			"member_name": "tom",
+			"inf_content": "tom发送一条文本消息2，未回复",
+			"time": "今天"
+		},{
+			"member_name": "jobs",
+			"inf_content": "【自动回复】 关键字回复内容tom",
+			"time": "今天"
+		},{
+			"member_name": "tom",
+			"inf_content": "关键词tom",
+			"time": "今天"
+		},{
+			"member_name": "tom",
+			"inf_content": "tom发送一条文本消息1，未回复",
+			"time": "今天"
+		}]
+		"""
 
-	#查看已回复消息的会员消息记录
-		When jobs查看"tom2"聊天记录
-			"""
-			{
-				"name":"tom2"
-			}
-			"""
-
-		Then jobs获得"tom2"聊天记录列表
-			"""
-			[{
-				"name":"jobs",
-				"time":"今天",
-				"inf_content":"jobs回复tom2消息 "
-				"have_read": true
-			},{
-				"name":"tom2",
-				"time":"今天",
-				"inf_content":"tom2发送一条文本消息，回复文本消息"
-				"have_read": true
-			}]
-			"""
-
-	#查看无聊天记录的会员消息记录
-		When jobs查看"tom3"聊天记录
-			"""
-			{
-				"name":"tom3"
-			}
-			"""
-
-		Then jobs不会打开新页面跳转到会员的"消息详情"页面
