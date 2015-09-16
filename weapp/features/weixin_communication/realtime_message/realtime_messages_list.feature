@@ -86,7 +86,7 @@ Background:
 	and nokia在微信中向jobs的公众号发送消息'关键词nokia'
 
 
-@weixin @message @realtimeMessage @mall2 
+@weixin @message @realtimeMessage @mall2
 Scenario:1 获取"所有消息"选项卡列表
 
 	Given jobs登录系统
@@ -129,7 +129,7 @@ Scenario:2 获取"未读信息"选项卡列表
 		}]
 		"""
 
-@weixin @message @realtimeMessage @mall2 
+@weixin @message @realtimeMessage @mall2
 Scenario:3 获取"未回复"选项卡列表
 
 	Given jobs登录系统
@@ -153,7 +153,7 @@ Scenario:3 获取"未回复"选项卡列表
 		}]
 		"""
 
-@weixin @message @realtimeMessage @mall2  
+@weixin @message @realtimeMessage @mall2
 Scenario:4 实时消息列表查询
 
 	Given jobs登录系统
@@ -393,7 +393,7 @@ Scenario:4 实时消息列表查询
 		}]
 		"""
 
-@weixin @message @realtimeMessage @mall2
+@weixin @message @realtimeMessage @mall2 
 Scenario:5 实时消息"所有消息"列表分页
 
 	Given jobs登录系统
