@@ -202,10 +202,10 @@ class eventParticipances_Export(resource.Resource):
 				sample = data[0]
 				fields_selec = []
 				fields_qa= []
-				fields_shortcuts = []
+				fields_textlist = []
 
 				sample_tm = sample['termite_data']
-				for item in sample_tm:
+				for item in sorted(sample_tm.keys()):
 					if sample_tm[item]['type']=='appkit.qa':
 						if item in fields_qa:
 							pass
@@ -216,12 +216,12 @@ class eventParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_selec.append(item)
-					if sample_tm[item]['type']=='appkit.shortcuts':
-						if item in fields_shortcuts:
+					if sample_tm[item]['type']=='appkit.textlist':
+						if item in fields_textlist:
 							pass
 						else:
-							fields_shortcuts.append(item)
-				fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+							fields_textlist.append(item)
+				fields_raw = fields_raw + fields_selec + fields_qa + fields_textlist
 
 
 			for field in fields_raw:
@@ -268,7 +268,7 @@ class eventParticipances_Export(resource.Resource):
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
-				for s in fields_shortcuts:
+				for s in fields_textlist:
 					s_v = record[u'termite_data'][s][u'value']
 					shortcuts.append(s_v)
 
