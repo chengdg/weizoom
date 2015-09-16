@@ -143,7 +143,6 @@ class question(resource.Resource):
 		all_participances = app_models.surveyParticipance.objects(belong_to=survey_id)
 
 		result_list = []
-
 		for participance in all_participances:
 			termite_data = participance.termite_data
 			for k in sorted(termite_data.keys()):
@@ -155,10 +154,23 @@ class question(resource.Resource):
 							'created_at':participance['created_at'].strftime('%Y-%m-%d')
 						})
 					if value['type'] == 'appkit.uploadimg':
-						result_list.append({
-							'content': value['value'],
-							'created_at':participance['created_at'].strftime('%Y-%m-%d')
-						})
+						img_urls = []
+						if len(value['value'])>1:
+							for v in value['value']:
+								img_urls.append('<img class="xui-uploadimg" src="'+v+'">')
+							result_list.append({
+								'content': img_urls,
+								'type': 'uploadimg',
+								'created_at':participance['created_at'].strftime('%Y-%m-%d')
+							})
+						else:
+							for v in value['value']:
+								img_urls.append('<img class="xui-uploadimg" src="'+v+'">')
+							result_list.append({
+								'content': img_urls,
+								'type': 'uploadimg',
+								'created_at':participance['created_at'].strftime('%Y-%m-%d')
+							})
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
