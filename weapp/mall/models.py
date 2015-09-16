@@ -1461,7 +1461,7 @@ class Order(models.Model):
 	@staticmethod
 	def by_webapp_user_id(webapp_user_id, order_id=None):
 		if order_id:
-			Order.objects.filter(Q(webapp_user_id__in=webapp_user_id) | Q(id__in=order_id)).filter(origin_order_id__lte=0)
+			return Order.objects.filter(Q(webapp_user_id__in=webapp_user_id) | Q(id__in=order_id)).filter(origin_order_id__lte=0)
 		if isinstance(webapp_user_id, int) or isinstance(webapp_user_id, long):
 			return Order.objects.filter(webapp_user_id=webapp_user_id, origin_order_id__lte=0)
 		else:
