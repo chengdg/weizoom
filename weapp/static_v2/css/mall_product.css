@@ -221,11 +221,6 @@
 	font-weight: bold;
 }
 
-
-
-
-
-
 /*
 * 物流名称管理页
 */
@@ -252,14 +247,16 @@
 }
 
 
-
-
-
-
-
-
-
-
+/*
+* 供货商管理页
+*/
+.xui-logisticsPage .xui-addSuppliertBtn{
+	width: 138px;
+	height: 30px;
+	margin-top: 10px;
+	margin-left: 25px;
+	margin-bottom: 16px;
+}
 
 
 /*物流页面弹窗*/
@@ -517,6 +514,10 @@
 	float: none;
 }
 
+.xui-editProductPage select[disabled]{
+	opacity:0.5;
+}
+
 /*选择产品规格弹窗*/
 .xui-selectProductModelPropertyDialog .modal-dialog{
 	width: 500px;
@@ -580,6 +581,8 @@
 }
 .xui-selectMallImagesDialog .xui-i-imageGroupSelector {
 	color: #000;
+	overflow: hidden;
+	white-space: nowrap;
 }
 .xui-selectMallImagesDialog .xui-i-selected {
 	border: solid 2px  rgb(60, 155, 215);

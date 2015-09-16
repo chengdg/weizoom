@@ -20,9 +20,10 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
     },
 
     getTemplate: function() {
-        var template = '<dl class="itemDeleteView wui-confirmView">'
+        var template = '<dl class="wui-confirmView">'
                 +'<dd>'
-                +  '<div class="xui-i-msg xa-msg"><i></i><span><%=msg%></span></div>'
+                +  '<div class="xa-icon"><i></i></div>'
+                +  '<div class="xui-i-msg xa-msg"><%=msg%></span></div>'
                 +  '<div><button type="button" class="xa-confirm btn xui-confirm">确定</button></div> '
                 +  '<div><button type="button" class="xa-cancel  xui-cancel btn">取消</button></div>'
                 +'</dd>'
@@ -56,7 +57,7 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
         var html = this.template(options);
         this.$content.html(html);
         if(!this.show_icon){
-            this.$content.find('i').hide();
+            this.$content.find('.xa-icon').hide();
         }
     },
 

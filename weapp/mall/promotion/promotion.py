@@ -11,6 +11,7 @@ from mall import export
 from mall.promotion import models  # 注意：不要覆盖此module
 from mall.models import PRODUCT_SHELVE_TYPE_ON
 from .utils import filter_promotions
+from cache import webapp_cache
 
 
 class Promotion(resource.Resource):
@@ -56,9 +57,15 @@ class Promotion(resource.Resource):
                                          "with_model_property_info": True,
                                          'with_sales': True})
             id2product = {}
+            forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(request.manager.id)
             for product in products:
+                has_forbidden_coupon = False
+                if product.id in forbidden_coupon_product_ids:
+                    has_forbidden_coupon = True
                 data = product.format_to_dict()
                 data['can_select'] = True
+                #add by duhao 20150908
+                data['has_forbidden_coupon'] = has_forbidden_coupon
                 id2product[product.id] = data
 
             #获得已经与promotion关联的product
@@ -102,7 +109,10 @@ class Promotion(resource.Resource):
                 promotion = id2promotion.get(relation.promotion_id, None)
                 if promotion:
                     product_data['promotion_name'] = promotion.name
-                product_data['can_select'] = False
+
+                #避免禁用优惠券商品列表里面收到促销活动的影响 duhao 20150908
+                if not filter_type == 'forbidden_coupon':
+                    product_data['can_select'] = False
 
             # 将已选择的商品id改为 can_select 改为 False
             for product_id in selectedProductIds:

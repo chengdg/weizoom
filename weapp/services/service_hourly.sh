@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/usr/local/bin:$PATH
 # 每小时调用的service
 
 DATE="`date +%Y%m%d`"
@@ -17,9 +18,6 @@ cd $ROOT_DIR
 echo "========================================================" >> $LOG
 
 # add more services here
-echo ">> calling 'services.send_express_poll_service.tasks.send_express_poll_request'" >> $LOG
-echo "--------------------------------------------------------" >> $LOG
-python services/send_task.py "services.send_express_poll_service.tasks.send_express_poll_request" {} "{}" >> $LOG 2>&1
 
 echo "========================================================" >> $LOG
 echo "done!" >> $LOG

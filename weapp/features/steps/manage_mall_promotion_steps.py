@@ -3,7 +3,7 @@ import json
 from behave import when, then
 
 from mall.promotion import models
-from mall.promotion.models import Promotion
+from mall.promotion.models import Promotion, ForbiddenCouponProduct
 from modules.member.models import MemberGrade
 from features.testenv.model_factory import ProductFactory
 from test import bdd_util
@@ -223,7 +223,7 @@ def step_impl(context, user, promotion_type):
 	elif promotion_type == u"积分应用":
 		promotion_type = "integral_sale"
 	# elif type == u"优惠券":
-	#     type = "coupon"
+	#	 type = "coupon"
 	url = '/mall2/api/promotion_list/?design_mode=0&version=1&type=%s' % promotion_type
 	if hasattr(context, 'query_param'):
 		if context.query_param.get('product_name'):
@@ -443,6 +443,7 @@ activity2filter_type = {
 	u'积分应用': 'integral_sale', 
 	u'买赠': 'all', 
 	u'单品券': 'all', 
+	u'禁用优惠券商品': 'forbidden_coupon'
 }
 
 def __get_can_select(value):
@@ -455,7 +456,7 @@ def step_impl(context, user, type):
 		query_param = context.query_param
 	else:
 		query_param = {}
-	url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=%s&name=%s' % (activity2filter_type[type], query_param.get('name', ''))
+	url = '/mall2/api/promotion/?type=usable_promotion_products&filter_type=%s&name=%s&barCode=%s' % (activity2filter_type[type], query_param.get('name', ''), query_param.get('bar_code', ''))
 	response = context.client.get(url)
 	bdd_util.assert_api_call_success(response)
 	actual = json.loads(response.content)['data']['items']
@@ -468,9 +469,144 @@ def step_impl(context, user, type):
 			"can_select": __get_can_select(item['actions']),
 			"display_price": item['price']
 		}
-		if item['have_promotion']:
+		if item.get('have_promotion', ''):
 			dict["promotion_name"] = item['have_promotion']
 
+		if item.get('status', '') and item['status'] == u'已禁用':
+			dict["has_forbidden_coupon"] = True
+			dict.pop('can_select')  #禁用优惠券的can_select是根据has_forbidden_coupon字段判断的，所以不需要比较can_select
+
 		expected.append(dict)
+
+	bdd_util.assert_list(expected, actual)
+
+
+@when(u'{user}添加禁用优惠券商品')
+def step_impl(context, user):
+	if context.table:
+		forbidden_coupon_products = [forbidden_coupon_product.as_dict() for forbidden_coupon_product in context.table]
+	else:
+		forbidden_coupon_products = json.loads(context.text)
+
+
+	for forbidden_coupon_product in forbidden_coupon_products:
+		products = []
+		if type(forbidden_coupon_product['products']) == list:
+			for product in forbidden_coupon_product['products']:
+				db_product = ProductFactory(name=product['name'])
+				products.append({'id': db_product.id})
+		else:
+			db_product = ProductFactory(name=forbidden_coupon_product['products'])
+			products.append({'id': db_product.id})
+
+		start_date = forbidden_coupon_product.get('start_date', None)
+		end_date = forbidden_coupon_product.get('end_date', None)
+		is_permanant_active = int(forbidden_coupon_product.get('is_permanant_active', ''))
+		if not is_permanant_active:
+			start_date = bdd_util.get_datetime_str(start_date)
+			end_date = bdd_util.get_datetime_str(end_date)
+		else:
+			start_date = None
+			end_date = None
+
+		data = {
+			'products': json.dumps(products),
+			'is_permanant_active': is_permanant_active
+		}
+
+		if start_date and end_date:
+			data['start_date'] = start_date
+			data['end_date'] = end_date
+		
+		url = '/mall2/api/forbidden_coupon_product/?_method=put'
+		response = context.client.post(url, data)
+		
+		bdd_util.assert_api_call_success(response)
+
+
+@when(u"{user}结束单个禁用优惠券商品'{product_name}'")
+def step_impl(context, user, product_name):
+	db_product = ProductFactory(name=product_name)
+	ids = []
+	forbidden_id = __get_fobidden_id(db_product.id)
+	if forbidden_id:
+		ids.append(forbidden_id)
+	__finish_fobidden_coupon_product(context, ids)
+
+
+@when(u'{user}批量结束禁用优惠券商品时')
+def step_impl(context, user):
+	forbidden_coupon_products = json.loads(context.text)
+	ids = []
+	for product in forbidden_coupon_products:
+		db_product = ProductFactory(name=product['product_name'])
+		forbidden_id = __get_fobidden_id(db_product.id)
+		if forbidden_id:
+			ids.append(forbidden_id)
+	__finish_fobidden_coupon_product(context, ids)
+
+
+def __get_fobidden_id(product_id):
+	items = ForbiddenCouponProduct.objects.filter(product_id=product_id).order_by('-id')
+	if items and len(items) > 0:
+		return items[0].id
+	return 0
+
+def __finish_fobidden_coupon_product(context, ids):
+	data = {
+		'id': json.dumps(ids),
+	}
+	url = '/mall2/api/forbidden_coupon_product/?_method=post'
+	response = context.client.post(url, data)
+	bdd_util.assert_api_call_success(response)
+
+
+@then(u'{user}能获取禁用优惠券商品列表')
+def step_impl(context, user):
+	url = '/mall2/api/forbidden_coupon_product/?design_mode=0&version=1'
+	if hasattr(context, 'query_param'):
+		if context.query_param.get('product_name'):
+			url += '&name=' + context.query_param['product_name']
+		if context.query_param.get('bar_code'):
+			url += '&barCode='+ context.query_param['bar_code']
+		if context.query_param.get('start_date'):
+			url += '&startDate='+ bdd_util.get_datetime_str(context.query_param['start_date'])[:16]
+		if context.query_param.get('end_date'):
+			url += '&endDate='+ bdd_util.get_datetime_str(context.query_param['end_date'])[:16]
+		if context.query_param.get('status', u'全部') != u'全部':
+			if context.query_param['status'] == u'未开始':
+				status = 1
+			elif context.query_param['status'] == u'进行中':
+				status = 2
+	
+	response = context.client.get(url)
+	actual = []
+	for item in json.loads(response.content)['data']['items']:
+		if item['is_permanant_active']:
+			item['start_date'] = ''
+			item['end_date'] = ''
+		if item['is_permanant_active']:
+			item['is_permanant_active'] = 1
+		else:
+			item['is_permanant_active'] = 0
+		actual.append({
+			'product_name': item['product']['name'],
+			'product_price': item['product']['display_price_range'],
+			'start_date': item['start_date'],
+			'end_date': item['end_date'],
+			'status': item['status_name'],
+			'is_permanant_active': item['is_permanant_active']
+		})
+
+	if context.table:
+		expected = [forbidden_coupon_product.as_dict() for forbidden_coupon_product in context.table]
+	else:
+		expected = json.loads(context.text)
+
+	for item in expected:
+		if item.get('start_date', None):
+			item['start_date'] = bdd_util.get_datetime_str(item['start_date'])
+		if item.get('end_date', None):
+			item['end_date'] = bdd_util.get_datetime_str(item['end_date'])
 
 	bdd_util.assert_list(expected, actual)

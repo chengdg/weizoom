@@ -60,7 +60,7 @@ def __do_weixin_pay(context, pay_url):
 		order_id = __get_js_value_from_html_page(html_page, 'var orderId')
 		webapp_owner_id = __get_js_value_from_html_page(html_page, 'var webappOwnerId')
 		related_config_id = __get_js_value_from_html_page(html_page, 'var payInterfaceRelatedConfigId')
-		url = '/termite/workbench/jqm/preview/?module=mall&model=pay_result&action=get&pay_interface_type=%s&order_id=%s&woid=%s&related_config_id=%s' % (pay_interface_type, order_id, webapp_owner_id, related_config_id)
+		url = '/termite/workbench/jqm/preview/?module=mall&model=pay_result&action=get&pay_interface_type=%s&order_id=%s&order_id=%s&woid=%s&related_config_id=%s' % (pay_interface_type, order_id, order_id, webapp_owner_id, related_config_id)
 		return url
 	else:
 		#异步支付
@@ -103,14 +103,14 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 	response = context.client.post(url, data)
 	bdd_util.assert_api_call_success(response)
 
-	if pay_interface.type == PAY_INTERFACE_WEIZOOM_COIN:
-		_pay_weizoom_card(context, data, order)
-	elif pay_interface.type == PAY_INTERFACE_WEIXIN_PAY:
+	# if pay_interface.type == PAY_INTERFACE_WEIZOOM_COIN:
+	# 	_pay_weizoom_card(context, data, order)
+	if pay_interface.type == PAY_INTERFACE_WEIXIN_PAY:
 		response_data = json.loads(response.content)['data']
 		pay_url = response_data['url']
 		pay_result_url = __do_weixin_pay(context, pay_url)
 		if pay_result_url:
-			response = context.client.get(pay_result_url, follow=True)
+			context.client.get(pay_result_url, follow=True)
 	elif pay_interface.type == PAY_INTERFACE_COD:
 		response_data = json.loads(response.content)['data']
 		context.pay_result_url = response_data['url']
@@ -118,10 +118,9 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		response = context.client.get(bdd_util.nginx(url), follow=True)
 		context.pay_result = response.context
 	# 直接修改数据库的订单状态
-	elif pay_interface.type == PAY_INTERFACE_ALIPAY:
-		order.pay_interface_type = PAY_INTERFACE_ALIPAY
-		order.status = ORDER_STATUS_PAYED_NOT_SHIP
-		order.save()
+	elif pay_interface.type == PAY_INTERFACE_ALIPAY:#ali
+		url = '/termite/workbench/jqm/preview/?module=mall&model=pay_result&action=get&pay_interface_type=%s&out_trade_no=%s&woid=%s&result=success' % (data['interface_type'], order.order_id, context.webapp_owner_id)
+		context.client.get(bdd_util.nginx(url), follow=True)
 
 	context.pay_order_id = order.order_id
 

@@ -97,8 +97,6 @@ def get_user_info(request):
 	member.not_ship_order_count = not_ship_order_count    # "待发货"订单数量
 	member.shiped_order_count = shiped_order_count    # "已发货"订单数量
 	member.review_count = review_count
-	#member.history_order_count = Order.objects.filter(webapp_user_id=request.webapp_user.id).count()
-	#member.not_payed_order_count = Order.objects.filter(webapp_user_id=request.webapp_user.id, status=ORDER_STATUS_NOT).count()
 
 	#购物车中商品数量
 	# 对应页面上"购物车"的数量

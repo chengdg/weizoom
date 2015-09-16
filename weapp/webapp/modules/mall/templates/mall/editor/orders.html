@@ -442,34 +442,7 @@ $(document).ready(function() {
 			})
 		});
 
-	// 批量发货
-	$('#deliveryBtn').click(function(event){
-		W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
-		    success: function(data) {
-		    	console.log('aaaaa', data);
-        		W.getLoadingView().show();
 
-				W.getApi().call({
-					app: 'mall',
-					api: 'bulk_shipments',
-					method: 'post',
-					args: {
-						file_url: data
-					},
-					success: function(data) {
-						console.log('bulk_shipments/update', data);
-						W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
-						W.getLoadingView().hide();
-					},
-					error: function(resp) {
-						W.getLoadingView().hide();
-						W.getErrorHintView().show('处理失败，请稍后重试！');
-					}
-				})
-		    }
-		});
-
-	});	
 });
 </script>
 {% endblock %}

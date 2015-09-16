@@ -21,38 +21,38 @@ Background:
 			"price":100.00,
 			"stock_type": "无限",
 			"min_limit": 2,
-			"status":"上架"
+			"status":"在售"
 		},{
 			"name":"限时抢购",
 			"price":100.00,
 			"stock_type": "无限",
-			"status":"上架"
+			"status":"在售"
 		},{
 			"name":"买赠",
 			"price":100.00,
 			"stock_type": "有限",
 			"stocks": 20,
-			"status":"上架"
+			"status":"在售"
 		},{
 			"name":"单品券",
 			"price":100.00,
 			"stock_type": "无限",
-			"status":"上架"
+			"status":"在售"
 		},{
 			"name":"赠品",
 			"price":100.00,
 			"stock_type": "无限",
-			"status":"上架"
+			"status":"在售"
 		},{
 			"name":"积分应用",
 			"price":100.00,
 			"stock_type": "无限",
-			"status":"上架"
+			"status":"在售"
 		},{
 			"name":"单品失效",
 			"price":100.00,
 			"stock_type": "无限",
-			"status":"上架"
+			"status":"在售"
 		}]
 		"""
 	When jobs创建限时抢购活动
@@ -121,7 +121,7 @@ Background:
 @promotion @promotionFlash @mall2 
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
-	#起购数量大于1的商品不在上架列表中（不能参与限时抢购）
+	#起购数量大于1的商品不在在售列表中（不能参与限时抢购）
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
 		{

@@ -13,7 +13,6 @@ from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import Template
-from termite.core import stripper
 from webapp import views as webapp_views 
 from models import *
 from mall.models import ProductCategory
@@ -204,6 +203,7 @@ def __render_component(request, page, component, project):
 		context.update(request.extra_page_context)
 	component_category = project.type
 	template = __get_template(component_category, component)
+	from termite.core import stripper
 	content = stripper.strip_lines(template.render(context))
 	'''
 	print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
@@ -262,7 +262,7 @@ def __render_component_global_content(request, page, components, project):
 			'component': component,
 			'project_id': project_id
 		})
-
+		from termite.core import stripper
 		content = stripper.strip_lines(template.render(context))
 		component['type'] = old_type
 

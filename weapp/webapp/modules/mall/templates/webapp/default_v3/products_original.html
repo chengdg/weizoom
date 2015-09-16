@@ -112,11 +112,6 @@ $(document).ready(function() {
     var $img = $('.xui-inner-img img');
     var imgHeight = $img.css('width');
     $img.css('height', imgHeight);
-
-    $( document.body ).highlight('ui-state-hover', '.xui-inner-li');
-    var wrapperHeight = window.document.body.clientHeight;
-    $('#xa-wrapper').css('height', wrapperHeight);
-    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
 });
 </script>
 {% endblock %}

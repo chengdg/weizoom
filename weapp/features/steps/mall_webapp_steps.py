@@ -25,27 +25,28 @@ PAYNAME2ID = {
     u'优惠抵扣': 10
 }
 
-def __get_date(str):
-	#处理expected中的参数
-	today = datetime.now()
-	if str == u'今天':
-		delta = 0
-	elif str == u'昨天':
-		delta = -1
-	elif str == u'前天':
-		delta = -2
-	elif str == u'明天':
-		delta = 1
-	elif str == u'后天':
-		delta = 2
-	elif u'天后' in str:
-		delta = int(str[:-2])
-	elif u'天前' in str:
-		delta = 0-int(str[:-2])
-	else:
-		return str
+# jz 2015-09-02
+# def __get_date(str):
+# 	#处理expected中的参数
+# 	today = datetime.now()
+# 	if str == u'今天':
+# 		delta = 0
+# 	elif str == u'昨天':
+# 		delta = -1
+# 	elif str == u'前天':
+# 		delta = -2
+# 	elif str == u'明天':
+# 		delta = 1
+# 	elif str == u'后天':
+# 		delta = 2
+# 	elif u'天后' in str:
+# 		delta = int(str[:-2])
+# 	elif u'天前' in str:
+# 		delta = 0-int(str[:-2])
+# 	else:
+# 		return str
 
-	return today + timedelta(delta)
+# 	return today + timedelta(delta)
 
 
 @then(u"webapp页面标题为'{page_title}'")
@@ -127,6 +128,7 @@ def step_impl(context, webapp_user_name):
 	bdd_util.assert_dict(expected, actual)
 
 
+# jz 2015-09-02
 # @then(u"{webapp_user_name}获得待编辑订单")
 # def step_impl(context, webapp_user_name):
 # 	"""
@@ -338,13 +340,18 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		context.created_order_id = response_json['data']['order_id']
 	else:
 		context.created_order_id = -1
-		print 'save order error----', response_json['data']
 		context.server_error_msg = response_json['data']['msg']
 	if context.created_order_id != -1:
 		if 'date' in args:
-			Order.objects.filter(order_id=context.created_order_id).update(created_at=__get_date(args['date']))
+			Order.objects.filter(order_id=context.created_order_id).update(created_at=bdd_util.get_datetime_str(args['date']))
 		if 'order_no' in args:
-			Order.objects.filter(order_id=context.created_order_id).update(order_id=args['order_no'])
+			db_order = Order.objects.get(order_id=context.created_order_id)
+			db_order.order_id=args['order_no']
+			db_order.save()
+			if db_order.origin_order_id <0:
+				for order in Order.objects.filter(origin_order_id=db_order.id):
+					order.order_id = '%s^%s' % (args['order_no'], order.supplier)
+					order.save()
 			context.created_order_id = args['order_no']
 
 	context.product_ids = product_ids
@@ -382,19 +389,21 @@ def step_impl(context, webapp_owner_name):
 			product, model, count = product_infos
 		data = {
 			"date": row['date'].strip(),
-			"products": [{
+			"products": [{	
 				"name": product,
 				"count": count,
 				"model": model
 			}]
 		}
+		if hasattr(context, 'ship_address'):
+			data.update(context.ship_address)
 
 		# TODO 统计BDD使用，需要删掉
 		purchase_type = u'测试购买' if row['type'] == u'测试' else None
 		if purchase_type:
 			data['type'] = purchase_type
 		# TODO 统计BDD使用，需要删掉
-
+		# data['ship_name'] = webapp_user_name
 		if row.get('product_integral', None):
 			tmp = 0
 			try:
@@ -405,7 +414,7 @@ def step_impl(context, webapp_owner_name):
 			if tmp > 0:
 				# 先为会员赋予积分,再使用积分
 				# TODO 修改成jobs修改bill积分
-				context.execute_steps(u"when %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
+				context.execute_steps(u"When %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
 				data['products'][0]['integral'] = tmp
 
 		if row.get('coupon', '') != '':
@@ -434,23 +443,22 @@ def step_impl(context, webapp_owner_name):
 			data['date'] = row.get('date')
 		if row.get('order_id', '') != '':
 			data['order_no'] = row.get('order_id')
+		if row.get('pay_type', '') != '':
+			data['pay_type'] = row.get('pay_type')
 
+		print("SUB STEP: to buy products, param: {}".format(data))
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
-		#支付订单
-		if row['payment'] == u'支付':
-			if row.get('payment_method', None) != u'优惠抵扣' and row.get('payment_method', None) != u'h货到付款':
-				if row.get('payment_method', None):
-					context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, row['payment_method']))
-				else:
-					context.execute_steps(u"when %s使用支付方式'货到付款'进行支付" % webapp_user_name)
 
 		order = Order.objects.all().order_by('-id')[0]
-		# if row.get('order_id', '') != '':
-		# 	order.order_id = row.get('order_id')
-		# if row.get('date', '') != '':
-		# 	order.created_at = __get_date(row.get('date'))
-		# order.save()
+		#支付订单
+		if row.get('payment_time', '') != '' or row.get('payment', '') == u'支付':
+			pay_type = row.get('pay_type', u'货到付款')
+			if pay_type != '' != u'优惠抵扣':
+				context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, pay_type))
+			if row.get('payment_time', '') != '':
+				Order.objects.filter(id=order.id).update(
+					payment_time=bdd_util.get_datetime_str(row['payment_time']))
 		# 操作订单
 		action = row['action'].strip()
 		if action:
@@ -483,7 +491,7 @@ def step_impl(context, webapp_owner_name):
 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_user_name, webapp_owner_name))
 
 		from webapp import models as webapp_models
-		date = __get_date(row['date']).strftime('%Y-%m-%d')
+		date = bdd_util.get_date(row['date']).strftime('%Y-%m-%d')
 		latest_log = webapp_models.PageVisitLog.objects.all().order_by('-id')[0]
 		latest_log.create_date = date
 		latest_log.save()
@@ -493,11 +501,11 @@ def step_impl(context, webapp_owner_name):
 	#进行统计
 	from services.daily_page_visit_statistic_service.tasks import daily_page_visit_statistic_service
 	for date in dates:
-		print('>>>>>>>>>>>>>>>>>>>')
-		print(date)
-		print(daily_page_visit_statistic_service)
+		# print('>>>>>>>>>>>>>>>>>>>')
+		# print(date)
+		# print(daily_page_visit_statistic_service)
 		result = daily_page_visit_statistic_service.delay(None, date)
-		print(result)
+		# print(result)
 
 
 # 获取规格ids, 根据名称
@@ -512,6 +520,7 @@ def _get_product_model_name_from_ids(webapp_owner_id, ids):
 		return "standard"
 	return get_custom_model_id_from_name(webapp_owner_id ,ids)
 
+# jz 2015-09-02
 # @then(u"{webapp_user_name}成功创建订单")
 # def step_impl(context, webapp_user_name):
 # 	order_id = context.created_order_id
@@ -601,6 +610,7 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 		context.tc.assertTrue(pay_interface not in pay_interface_names)
 
 
+# jz 2015-09-02
 # @then(u"{webapp_user_name}获得创建订单失败的信息'{error_msg}'")
 # def step_impl(context, webapp_user_name, error_msg):
 # 	error_data = json.loads(context.response.content)
@@ -635,8 +645,6 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 # 	actual = error_data['data']
 # 	context.tc.assertTrue(200 != error_data['code'])
 # 	bdd_util.assert_dict(expected, actual)
-
-
 # @then(u"{webapp_owner_name}能获取订单")
 # def step_impl(context, webapp_owner_name):
 # 	db_order = Order.objects.all().order_by('-id')[0]
@@ -947,8 +955,9 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	#ship_info = ShipInfo.objects.get(webapp_user_id=context.webapp_user.id)
 	url = '/workbench/jqm/preview/?woid=%s&module=user_center&model=ship_info&action=save' % (context.webapp_owner_id)
 	response = context.client.post(bdd_util.nginx(url), data, follow=True)
+	context.ship_address = data
 
-
+# jz 2015-09-02
 # def __get_address_id(areas):
 # 	if not areas:
 # 		areas = u'北京市 北京市 海淀区'
@@ -962,16 +971,20 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 def step_impl(context, webapp_user_name, webapp_owner_name):
 	ship_info = json.loads(context.text)
 	data = {
-		'area': get_area_ids(ship_info['area']),
 		'ship_address': ship_info.get('ship_address', '泰兴大厦'),
 		'ship_name': ship_info.get('ship_name', webapp_user_name),
-		'ship_tel': ship_info.get('ship_tel', '13811223344')
+		'ship_tel': ship_info.get('ship_tel', '13811223344'),
+		'area': get_area_ids(ship_info['area']),
+		'woid': context.webapp_owner_id,
+		'module': 'mall',
+		'target_api': 'address/save'
 	}
 
 	#from modules.member.models import ShipInfo
 	#ship_info = ShipInfo.objects.get(webapp_user_id=context.webapp_user.id)
-	url = '/workbench/jqm/preview/?woid=%s&module=user_center&model=ship_info&action=save' % (context.webapp_owner_id)
+	url = '/webapp/api/project_api/call/'
 	response = context.client.post(bdd_util.nginx(url), data)
+	context.ship_address = data
 
 
 def _create_address(context, address_info):
@@ -1078,6 +1091,7 @@ def get_prodcut_ids_info(order):
 			}
 
 
+# jz 2015-09-02
 # @when(u"{webapp_user_name}在购物车订单编辑中点击提交订单")
 # def step_click_check_out(context, webapp_user_name):
 # 	"""

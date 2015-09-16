@@ -1023,6 +1023,11 @@ button.xui-removeImageButton{
 	height: 162px;
 }*/
 /*添加图片建议尺寸有影响*/
+.xui-propertyView-imageNavGroup .propertyGroup_property_dynamicControlField_control .propertyGroup_property_dialogSelectField .errorHint,
+.xui-propertyView-imgDisplayGroup .propertyGroup_property_dynamicControlField_control .propertyGroup_property_dialogSelectField .errorHint{
+	margin-top: 13px;
+	margin-bottom: -13px;
+}
 .xui-propertyView-imageNavGroup .xui-removeImageButton {
 	display: none;
 }
@@ -1206,7 +1211,7 @@ button.xui-removeImageButton{
 	margin-left: 87px!important;
 }
 .xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .xui-dynamicComponentControlImgBox .xui-removeImageButton{
-	display: none;
+	display: none!important;
 }
 .xui-propertyView-specialTemplateGroup .xui-link,.xui-propertyView-specialTemplateGroup .xui-selected-title-box{
 	margin-left: 0px;
@@ -1218,7 +1223,6 @@ button.xui-removeImageButton{
 	margin-left: 87px;
 	margin-top: 3px;
 }
-
 /*
 **底部导航
 */

@@ -52,11 +52,16 @@ class Outline(resource.Resource):
 	@login_required
 	def api_get(request):
 		unread_message_count = _get_unread_message_count(request.user)
+
+		from mall.order.util import get_unship_order_count
+		unship_order_count = get_unship_order_count(request)
+
 		try:
 			response = create_response(200)
 			response.data = {
 				'unread_realtime_count': unread_message_count,
-				}
+				'unship_order_count': unship_order_count
+			}
 			#watchdog_debug("response.data={}".format(response.data))
 		except:
 			response = create_response(500)

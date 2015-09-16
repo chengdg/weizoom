@@ -11,6 +11,7 @@ from mall.promotion.models import Coupon
 from mall.promotion.utils import coupon_id_maker
 
 
+
 def get_coupon_rules(owner):
 	"""
 	获取优惠券列表
@@ -158,7 +159,7 @@ def create_coupons(owner, rule_id, count, member_id=0, coupon_record_id=0):
 	return coupons
 
 
-def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, member_id, products=None):
+def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, member_id, products=None, original_prices=None, product_id2price=None):
 	"""
 	优惠券是否可用
 	"""
@@ -180,11 +181,10 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 		if coupon.member_id > 0 and coupon.member_id != member_id:
 			return '该优惠券已被他人领取不能使用', None
 		coupon_rule = promotion_models.CouponRule.objects.get(id=coupon.coupon_rule_id)
-		order_price = sum(product_prices)
 		if coupon_rule.start_date > today:
 			return'该优惠券活动尚未开始', None
-		if coupon_rule.valid_restrictions > order_price and coupon_rule.valid_restrictions != -1:
-			return '该优惠券不满足使用金额限制', None
+
+		order_price = sum(product_prices)
 		if coupon_rule.limit_product:
 			promotion = promotion_models.Promotion.objects.get(detail_id=coupon_rule.id, type=promotion_models.PROMOTION_TYPE_COUPON)
 			cant_use_coupon = True
@@ -198,10 +198,13 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 								for p in products:
 									if p.id == relation.product_id:
 										price += p.original_price * p.purchase_count
+										order_price = order_price + (p.original_price - p.price) * p.purchase_count
 							else:
-								price += product_prices[i]
+								price += original_prices[i]
+								order_price = order_price + original_prices[i] - product_prices[i]
 					if coupon_rule.valid_restrictions > 0:
 						# 单品券限制购物金额
+
 						if coupon_rule.valid_restrictions > price:
 							return '该优惠券指定商品金额不满足使用条件', None
 					# 单品券只抵扣单品金额
@@ -210,7 +213,29 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 					cant_use_coupon = False
 			if cant_use_coupon:
 				return '该优惠券不能购买订单中的商品', None
+		else:
+			#通用优惠券判断逻辑 duhao 20150909
+			from cache import webapp_cache
+			is_forbidden = True
+			forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(owner_id)
+			for product_id in product_ids:
+				product_id = int(product_id)
+				if not product_id in forbidden_coupon_product_ids:
+					is_forbidden = False
+
+			if is_forbidden:
+				return '该优惠券不能购买订单中的商品', None
+
+			if product_id2price and len(product_id2price) > 0:
+				order_price = 0.0
+				for product_id in product_id2price:
+					#被禁用全场优惠券的商品在计算满额可用券时要排除出去，不参与计算 duhao
+					if not int(product_id) in forbidden_coupon_product_ids:
+						order_price += product_id2price[product_id]
+
 		coupon.money = float(coupon.money)
+		if coupon_rule.valid_restrictions > order_price and coupon_rule.valid_restrictions != -1:
+			return '该优惠券不满足使用金额限制', None
 		return '', coupon
 	else:
 		return '请输入正确的优惠券号', None

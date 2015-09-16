@@ -207,15 +207,14 @@ def get_settings_detail(request):
             
             for webapp_user in old_webapp_users:
                 created_at = old_member_id2_create_at[webapp_user.member_id]
-                for order in Order.objects.filter(webapp_user_id=webapp_user.id, created_at__gte=created_at):
+                for order in Order.by_webapp_user_id(webapp_user.id).filter(created_at__gte=created_at):
                     old_member_order_ids.append(order.id)
                     payed_member.append(webapp_user.member_id)
 
             if new_webapp_user_ids and old_member_order_ids:
-                orders = Order.objects.filter(Q(webapp_user_id__in=new_webapp_user_ids) | Q(id__in=old_member_order_ids)).filter(**filter_data_args).order_by('-created_at')
+                orders = Order.by_webapp_user_id(new_webapp_user_ids, order_id=old_member_order_ids).filter(**filter_data_args).order_by('-created_at')
             elif new_webapp_user_ids:
-                filter_data_args['webapp_user_id__in'] = new_webapp_user_ids
-                orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+                orders = Order.by_webapp_user_id(new_webapp_user_ids).filter(**filter_data_args).order_by('-created_at')
             elif old_member_order_ids:
                 filter_data_args['id__in'] = old_member_order_ids
                 orders = Order.objects.filter(**filter_data_args).order_by('-created_at')

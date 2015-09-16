@@ -7,7 +7,7 @@ from test import bdd_util
 from features.testenv.model_factory import *
 import steps_db_util
 from mall import module_api as mall_api
-from mall.models import Order
+from mall.models import Order, OrderOperationLog, Supplier
 
 
 def _handle_fahuo_data(orders):
@@ -37,24 +37,16 @@ def step_impl(context, user):
 
 @when(u'{user}对订单进行发货')
 def step_impl(context, user):
-    delivery_data = json.loads(context.text)
-    order_id = delivery_data['order_no']
-
-    url = '/mall2/api/order_list/'
-    query_params = {
-        'query': order_id
-    }
-    response = context.client.get(url, query_params)
-    content = json.loads(response.content)
-    items = content['data']['items']
-    order = {}
-    if len(items) > 0:
-        order = items[0]
 
     delivery_data = json.loads(context.text)
-    order_id = delivery_data['order_no']
-    logistics = delivery_data['logistics']
-    leader_name = delivery_data['shipper']
+    order_no = delivery_data['order_no']
+    if '-' in order_no:
+        order_no_info = order_no.split('-')
+        order_no = '%s^%s' % (order_no_info[0], Supplier.objects.get(name = order_no_info[1]).id)
+    order_id = Order.objects.get(order_id=order_no).id
+
+    logistics = delivery_data.get('logistics', 'off')
+    leader_name = delivery_data.get('shipper', '')
     express_company_name = ''
     express_number = ''
     is_update_express = ''
@@ -64,13 +56,16 @@ def step_impl(context, user):
         is_update_express = 'false'
     url = '/mall2/api/delivery/'
     data = {
-        'order_id': order['id'],
+        'order_id': order_id,
         'express_company_name': express_company_name,
         'express_number': express_number,
         'leader_name': leader_name,
         'is_update_express': is_update_express
     }
     response = context.client.post(url, data)
+    if 'date' in delivery_data:
+        OrderOperationLog.objects.filter(order_id=delivery_data['order_no'], action="订单发货").update(
+            created_at=bdd_util.get_datetime_str(delivery_data['date']))
 
 # 批量发货
 @When(u"{user}填写订单信息")

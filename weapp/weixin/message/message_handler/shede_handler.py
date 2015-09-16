@@ -42,7 +42,7 @@ class SheDeHandler(KeywordHandler):
 		response = None
 		response_rule = None
 		response_content = None
-		if message.msgType == WeixinMessageTypes.TEXT and user_profile.user_id not in [1]:
+		if message.msgType == WeixinMessageTypes.TEXT and user_profile.user_id in [632,119]:
 			content = message.content
 			if content and content.strip().startswith('sxsdj'):
 				member = get_member_by_openid( message.fromUserName, user_profile.webapp_id)

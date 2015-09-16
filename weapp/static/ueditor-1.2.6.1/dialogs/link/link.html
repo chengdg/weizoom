@@ -198,10 +198,14 @@
             onClickEvent = function(event){
                 parent.W.ueditor.handleSelectLinkTarget(function(data) {
                     var link = JSON.parse(data);
-                    if (link.data.indexOf('http:') === -1) {
-                        link.data = '/workbench/jqm/preview/' + link.data;
+                    var url = link.data;
+                    if (link.data.indexOf('/apps/') === 0) {
+                        url = '/m' + link.data;
                     }
-                    $('#href').val(link.data_path).attr('data-href', link.data);
+                    if (link.data.indexOf('./') === 0) {
+                        url = '/workbench/jqm/preview/' + link.data;
+                    }
+                    $('#href').val(link.data_path).attr('data-href', url);
                 });
             };
         }else{
@@ -212,10 +216,14 @@
             });
             webSiteLinkView.bind('finish-select-url', function(data){
                 var link = $.parseJSON(data);
-                if (link.data.indexOf('http:') === -1) {
-                    link.data = '/workbench/jqm/preview/' + link.data;
+                var url = link.data;
+                if (link.data.indexOf('/apps/') === 0) {
+                    url = '/m' + link.data;
                 }
-                $('#href').val(link.data_path).attr('data-href', link.data);
+                if (link.data.indexOf('./') === 0) {
+                    url = '/workbench/jqm/preview/' + link.data;
+                }
+                $('#href').val(link.data_path).attr('data-href', url);
             });
             onClickEvent = function(event){
                 webSiteLinkView.onClickLinkMenu(event, '.edui-dialog-body');

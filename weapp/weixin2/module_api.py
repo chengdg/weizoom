@@ -8,9 +8,16 @@ def get_news_url(news):
 	'''
 	获取一条图文的url
 	'''
-	if news.url:
-		domain = 'http://%s/workbench/jqm/preview/?' % settings.DOMAIN
-		return news.url.replace('./?', domain)
+	if news.url:		
+		if news.url.find('./') == 0:
+			domain = 'http://%s/workbench/jqm/preview/?' % settings.DOMAIN
+			return news.url.replace('./?', domain)
+
+		if news.url.find('/apps/') == 0:
+			url = 'http://%s/m%s' % (settings.DOMAIN, news.url)
+			return url
+
+		return news.url
 	else:
 		return 'http://{}/weixin/message/material/news_detail/mshow/{}/'.format(settings.DOMAIN, news.id)
 

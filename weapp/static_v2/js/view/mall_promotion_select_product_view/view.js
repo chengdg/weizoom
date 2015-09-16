@@ -15,13 +15,16 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		'click .xa-reset': 'onClickResetButton',
 		'click .xa-delete': 'onClickDeleteProduct',
 		'click .xa-showAllModels': 'onClickShowAllModelsButton',
-		'click .xa-selectAll': 'onClickSelectAll'
+		'click .xa-selectAll': 'onClickSelectAll',
+		'click .xa-outSelectAll':'onClickSelectAll',
+		'click .xa-batchDelete':'onClickBatchDelete'
 	},
 
 	initialize: function(options) {
 		this.$el = $(options.el);
 		this.products = null;
 		this.enableMultiSelection = false;
+		this.uniqueDialog = options.uniqueDialog ||'W.dialog.mall.SelectPromotionProductDialog';
 		if (options.hasOwnProperty('enableMultiSelection')) {
 			this.enableMultiSelection = options.enableMultiSelection;
 		}
@@ -29,6 +32,11 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		this.enableTableItemSelectable = false;
 		if (options.hasOwnProperty('enableTableItemSelectable')) {
 			this.enableTableItemSelectable = options.enableTableItemSelectable;
+		}
+
+		this.tableOutAllSelectable = false;
+		if (options.hasOwnProperty('tableOutAllSelectable')) {
+			this.tableOutAllSelectable = options.tableOutAllSelectable;
 		}
 
 		this.promotionId = 0;
@@ -104,8 +112,16 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		}
 
 		var $node = $.tmpl(this.tableTemplate, {products: products});
+
 		if (this.enableTableItemSelectable) {
 			$node.find('thead tr').prepend('<th width="30"><input type="checkbox" class="xa-selectAll" /></th>');
+			$node.find('tbody tr').each(function() {
+				var $tr = $(this);
+				$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
+			});
+		}
+		if(this.tableOutAllSelectable){
+			$node.find('thead tr').prepend('<th width="30"></th>');
 			$node.find('tbody tr').each(function() {
 				var $tr = $(this);
 				$tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
@@ -127,7 +143,6 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 			this.selectedProductIds.push(products[i].id);
 		};
 	},
-
 	getAllSelectedItems: function() {
 		var $trs = [];
 		this.$('tbody .xa-select').each(function() {
@@ -140,12 +155,24 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 
 		return $trs;
 	},
+	getAllSelectedItemsIds: function() {
+		var ids = [];
+		this.$('tbody .xa-select').each(function() {
+			var $checkbox = $(this);
+			if ($checkbox.is(":checked")) {
+				var $tr = $checkbox.parents('tr');
+				ids.push($tr.data('id'));
+			}
+		});
+
+		return ids;
+	},
 
 	onClickSearchButton: function(){
 		var name = $.trim(this.$('[name="name"]').val());
 		var barCode  = $.trim(this.$('[name="bar_code"]').val());
 		var _this = this;
-		W.dialog.showDialog('W.dialog.mall.SelectPromotionProductDialog', {
+		W.dialog.showDialog(this.uniqueDialog, {
 			enableMultiSelection: this.enableMultiSelection,
 			name: name,
 			barCode: barCode,
@@ -178,7 +205,19 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 			}
 		};
 	},
+	onClickBatchDelete:function(event){
 
+		var ids = this.getAllSelectedItemsIds();
+		for (var i = 0; i < ids.length; i++) {
+			var id = ids[i];
+			this.selectedProductIds.pop(id);
+			$('[data-id="'+id+'"]').remove();
+		};
+		
+		if (this.$('tbody tr').length === 0) {
+			this.$('.xa-selectedProductList').empty().text('请通过查询选择参与活动的商品');
+		}
+	},
 	/**
 	 * onClickSelectAll: 点击全选选择框时的响应函数
 	 */

@@ -11,6 +11,7 @@ from django.db.models import Q
 
 from mall import signals as mall_signals
 from mall import postage_calculator as mall_postage_calculator
+from mall.promotion.models import Coupon
 from models import *
 from webapp.models import Workspace
 from account.models import UserProfile
@@ -364,7 +365,7 @@ def postage_pre_save_order(pre_order, order, products, product_groups, **kwargs)
 
 
 @receiver(mall_signals.pre_save_order, sender=mall_signals)
-def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
+def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=None, **kwargs):
     """使用优惠券
     """
     from mall.promotion import models as promotion_models
@@ -375,6 +376,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
 
     order.coupon_id = coupon.id
 
+    forbidden_coupon_product_price = 0.0
     if coupon.coupon_rule.limit_product:
         # 单品券
         for p in products:
@@ -382,7 +384,15 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
                 p.price = p.original_price
         order.product_price = sum(map(lambda x: x.price*x.purchase_count, products))
         order.final_price = order.product_price + order.postage
+    else:
+        #通用优惠券判断逻辑 duhao 20150909
+        from cache import webapp_cache
+        forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(owner_id)
+        for product in products:
+            if product.id in forbidden_coupon_product_ids:
+                forbidden_coupon_product_price += product.total_price
 
+    order.final_price -= forbidden_coupon_product_price  #先去除被禁止使用全场优惠券的商品价格
     if order.final_price - order.postage < coupon.money:
         # 优惠券不能抵扣运费
         order.coupon_money = order.final_price - order.postage
@@ -390,6 +400,8 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, **kwargs):
     else:
         order.coupon_money = coupon.money
         order.final_price -= coupon.money
+
+    order.final_price += forbidden_coupon_product_price  #把去除的被禁止使用全场优惠券的商品价格加回来
 
     coupon = promotion_models.Coupon.objects.filter(id=coupon.id)
     coupon_rule = promotion_models.CouponRule.objects.filter(id=coupon[0].coupon_rule_id)
@@ -406,7 +418,6 @@ def check_coupon_for_order(pre_order, args, request, **kwargs):
     """
     if not hasattr(pre_order, 'session_data'):
         pre_order.session_data = dict()
-
     fail_msg = {
         'success': False,
         'data': {
@@ -417,11 +428,23 @@ def check_coupon_for_order(pre_order, args, request, **kwargs):
     is_use_coupon = (request.POST.get('is_use_coupon', 'false') == 'true')
     if is_use_coupon:
         coupon_id = request.POST.get('coupon_id', 0)
-        order_price = [product.price * product.purchase_count for product in pre_order.products]
-        product_ids = [str(product.id) for product in pre_order.products]
+        #modified by duhao 20150909
+        # product_prices = [product.price * product.purchase_count for product in pre_order.products]
+        # product_ids = [str(product.id) for product in pre_order.products]
+        product_prices = []
+        product_ids = []
+        product_id2price = {}
+        for product in pre_order.products:
+            price = product.price * product.purchase_count
+            product_ids.append(str(product.id))
+            product_prices.append(price)
+            if not product_id2price.has_key(product.id):
+                #用于处理同一商品买了不同规格的情况
+                product_id2price[product.id] = 0.0
+            product_id2price[product.id] += price
 
         from market_tools.tools.coupon import util as coupon_util
-        msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, order_price, product_ids, request.member.id, pre_order.products)
+        msg, coupon = coupon_util.has_can_use_by_coupon_id(coupon_id, request.webapp_owner_id, product_prices, product_ids, request.member.id, products=pre_order.products, product_id2price=product_id2price)
         if coupon:
             pre_order.session_data['coupon'] = coupon
         else:

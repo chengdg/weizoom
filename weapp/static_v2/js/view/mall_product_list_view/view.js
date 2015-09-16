@@ -84,7 +84,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     }
 
                     if (this.$('tbody tr').length == 0) {
-                        window.location.reload();
+                        _this.table.reload()
                     }
                 }
             });
@@ -133,11 +133,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 },
                 scope: this,
                 success: function(data) {
-                    $tr.remove();
+                        _this.table.reload(this.extraArgs);
 
-                    if (this.$('tbody tr').length == 0) {
-                        window.location.reload();
-                    }
                 }
             })
         };
@@ -428,7 +425,6 @@ W.view.mall.ProductListView = Backbone.View.extend({
                             W.requireConfirm({
                                 $el: $link,
                                 width:480,
-                                height:55,
                                 position:'top',
                                 isTitle: false,
                                 msg: msg,

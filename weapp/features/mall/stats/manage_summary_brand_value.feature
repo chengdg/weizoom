@@ -98,12 +98,12 @@ Background:
 Scenario: 测试只有1个消费用户、1个商品的品牌价值
 	When 微信用户批量消费jobs的商品
 		# consumer前有'-'表示清空浏览器
-		| date       | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 30天前      | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 60天前      | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 366天前    | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 365天前    | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 今天          | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
+		| date       | consumer | type |businessman|product   | payment | action    |
+		| 30天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 60天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 366天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 365天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 今天          | bill | 购买 | jobs      |商品1,1  | 支付    |           |
 	Given jobs登录系统
 	When jobs查看微品牌页面
 	Then 微品牌的数据为
@@ -153,23 +153,23 @@ Scenario: 测试只有1个消费用户、1个商品的品牌价值
 		"""
 
 
-@stats @wip.brand_value2
+@mall2 @stats @wip.brand_value2
 Scenario: 测试2个消费用户、2个商品的品牌价值
 	品牌价值会参考用户1年(365天)内购买金额和数量。
 
 	When 微信用户批量消费jobs的商品
 		# consumer前有'-'表示清空浏览器
-		| date       | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 30天前      | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 60天前      | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 366天前    | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 365天前    | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 今天          | bill | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 367天前     | tom | 购买 | jobs      |商品2,1  |          |  1      | 支付    |           |
-		| 2天前        | tom | 购买 | jobs      |商品1,1  |          |  1      | 支付    |           |
-		| 1天前        | tom | 购买 | jobs      |商品2,1  |          |  1      | 支付    |           |
-		| 今天          | tom | 购买 | jobs      |商品1,1  |          |  1      | 未支付    |           |
-		| 今天          | tom | 购买 | jobs      |商品2,1  |          |  1      | 支付    |           |
+		| date       | consumer | type |businessman| product   | payment | action    |
+		| 30天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 60天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 366天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 365天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 今天          | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 367天前     | tom | 购买 | jobs      |商品2,1  | 支付    |           |
+		| 2天前        | tom | 购买 | jobs      |商品1,1  | 支付    |           |
+		| 1天前        | tom | 购买 | jobs      |商品2,1  | 支付    |           |
+		| 今天          | tom | 购买 | jobs      |商品1,1  | 未支付    |           |
+		| 今天          | tom | 购买 | jobs      |商品2,1  | 支付    |           |
 	Given jobs登录系统
 	When jobs查看微品牌页面
 	Then 微品牌的数据为
@@ -218,9 +218,9 @@ Scenario: 测试2个消费用户、2个商品的品牌价值
 		}]
 		"""
 
-Scenario: 测试当日订单情况变化导致微品牌数据变化的场景
-"""
-避免出现，当日数据被缓存而不变的情况
-"""
+#Scenario: 测试当日订单情况变化导致微品牌数据变化的场景
+#"""
+#避免出现，当日数据被缓存而不变的情况
+#"""
 
-Scenario: 测试当日微品牌数据及和昨日相比的增量
+#Scenario: 测试当日微品牌数据及和昨日相比的增量
