@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from mall.promotion import models as promotion_model
 from watchdog.utils import watchdog_warning
 
 from core import paginator
@@ -276,6 +277,13 @@ class Product(resource.Resource):
 
             #获取商品分类信息
             categories = product.categories
+
+            # 限时抢购的商品不能修改起购数量
+            for promotion in [relation.promotion for relation in
+                              promotion_model.ProductHasPromotion.objects.filter(product_id=product.id)]:
+                if promotion.type == promotion_model.PROMOTION_TYPE_FLASH_SALE and promotion.status == promotion_model.PROMOTION_STATUS_STARTED:
+                    product.is_in_flash_sale = True
+                    break
         else:
             product = {}
             categories = models.ProductCategory.objects.filter(

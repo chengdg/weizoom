@@ -113,8 +113,13 @@
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="min_limit">起购数量：</label>
 				<div class="fl w700 pl5">
+                {% if product.is_in_flash_sale%}
+                    <input type="hidden" class="form-control w106 fl" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
+                    <input type="text"  disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
+                {% else %}
 					<input type="text" class="form-control w106 fl" id="min_limit" name="min_limit" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
-					<span class="xui-fontGary">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
+                {% endif %}
+                    <span class="xui-fontGary">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
 					<div class="errorHint"></div>
 				</div>
 			</div>
