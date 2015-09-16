@@ -8,7 +8,7 @@ Feature: jobs给实时消息加备注
 	3在已有备注下，加备注，相当于替换原有的备注信息
 	4备注图标不变，只有加备注后图标才变化
 """
-	
+
 Background:
 
 	Given jobs登录系统
@@ -81,12 +81,12 @@ Background:
 	and nokia关注jobs的公众号
 	and nokia在微信中向jobs的公众号发送消息'关键词nokia'
 
-@weixin @message @realtimeMessage
+@weixin @message @realtimeMessage @eugeneA
 Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备注
 	#1)表示在最后一条加备注，那么备注信息显示在该粉丝备注信息中，
-	#2)加完备注后消息状态变为已读 
+	#2)加完备注后消息状态变为已读
 	#3)对已有备注进行修改
-	
+
 	#在"所有信息"选项卡加备注
 	When jobs访问实时消息'所有信息'
 
@@ -423,7 +423,7 @@ Scenario:2 在消息详情中加备注
 		},{
 			"member_name": "tom",
 			"inf_content": "关键词tom",
-			"last_message_time": "今天", 
+			"last_message_time": "今天",
 			"unread_count": 0,
 			"remark": "备注: tom消息“关键词tom”的消息备注"
 		}]

@@ -4,7 +4,7 @@ Feature: jobs给实时消息加星标
 			1在消息列表中，在所有信息，未读信息，未回复，三个选项卡下对某个粉丝消息加星标1)表示在最后一条加星标2)加完星标后，消息状态还是以前的状态，例如未读，还是未读状态
 			2在消息详情中加星标，针对的是某个粉丝的某一条消息的星标
 			3星标图变化，未加是空心星标，已加，是实心，并且可以相互切换
-	
+
 Background:
 
 	Given jobs登录系统
@@ -76,8 +76,8 @@ Background:
 	When 清空浏览器
 	and nokia关注jobs的公众号
 	and nokia在微信中向jobs的公众号发送消息'关键词nokia'
-	
-@weixin @message @realtimeMessage 
+
+@weixin @message @realtimeMessage
 Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加星标
 	#1)三个选项卡下对某个粉丝消息加星标，去掉星标,表示在最后一条加星标
 	#2)加完星标后，消息状态还是以前的状态，例如未读，还是未读状态
@@ -91,7 +91,7 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 		[{
 			"member_name":"bill",
 			"inf_content":"关键词bill",
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 	When jobs修改实时消息星标
@@ -99,7 +99,7 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 		[{
 			"member_name":"nokia",
 			"inf_content":"关键词nokia",
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 	Then jobs获得实时消息'所有信息'列表
@@ -109,19 +109,19 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 2,
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
 			"last_message_time": "今天",
 			"unread_count": 1,
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 
@@ -131,7 +131,7 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 		[{
 			"member_name":"bill",
 			"inf_content":"关键词bill",
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 	Then jobs获得实时消息'所有信息'列表
@@ -141,19 +141,19 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 2,
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
 			"last_message_time": "今天",
 			"unread_count": 1,
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 
@@ -164,7 +164,7 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 		[{
 			"member_name":"tom",
 			"inf_content":"tom发送一条文本消息2，未回复",
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 	Then jobs获得实时消息'未读信息'列表
@@ -174,13 +174,13 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 2,
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
 			"last_message_time": "今天",
 			"unread_count": 1,
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 
@@ -191,7 +191,7 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 		[{
 			"member_name":"tom",
 			"inf_content":"tom发送一条文本消息2，未回复",
-			"start": "flase"
+			"star": "flase"
 		}]
 		"""
 	Then jobs获得实时消息'未回复'列表
@@ -201,19 +201,19 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 2,
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
 			"last_message_time": "今天",
 			"unread_count": 1,
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 
@@ -230,22 +230,22 @@ Scenario: 2 在消息详情中加星标
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "jobs",
 			"inf_content": "【自动回复】 关键字回复内容tom",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "tom",
 			"inf_content": "关键词tom",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息1，未回复",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 
@@ -255,7 +255,7 @@ Scenario: 2 在消息详情中加星标
 		[{
 			"member_name":"tom",
 			"inf_content":"tom发送一条文本消息2，未回复",
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 	Then jobs获得'tom'消息详情消息列表
@@ -264,22 +264,22 @@ Scenario: 2 在消息详情中加星标
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"time": "今天",
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "jobs",
 			"inf_content": "【自动回复】 关键字回复内容tom",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "tom",
 			"inf_content": "关键词tom",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息1，未回复",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 	Then jobs获得实时消息'所有信息'列表
@@ -289,19 +289,19 @@ Scenario: 2 在消息详情中加星标
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
 			"last_message_time": "今天",
 			"unread_count": 1,
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 	Then jobs获得实时消息'星标信息'列表
@@ -311,7 +311,7 @@ Scenario: 2 在消息详情中加星标
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 
@@ -321,7 +321,7 @@ Scenario: 2 在消息详情中加星标
 		[{
 			"member_name":"tom",
 			"inf_content":"tom发送一条文本消息2，未回复",
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 	When jobs修改实时消息星标
@@ -329,7 +329,7 @@ Scenario: 2 在消息详情中加星标
 		[{
 			"member_name":"tom",
 			"inf_content":"关键词tom",
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 	When jobs修改实时消息星标
@@ -337,7 +337,7 @@ Scenario: 2 在消息详情中加星标
 		[{
 			"member_name":"jobs",
 			"inf_content":"【自动回复】 关键字回复内容tom",
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 	Then jobs获得'tom'消息详情消息列表
@@ -346,22 +346,22 @@ Scenario: 2 在消息详情中加星标
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "jobs",
 			"inf_content": "【自动回复】 关键字回复内容tom",
 			"time": "今天",
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "tom",
 			"inf_content": "关键词tom",
 			"time": "今天",
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息1，未回复",
 			"time": "今天",
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 	Then jobs获得实时消息'所有信息'列表
@@ -371,19 +371,19 @@ Scenario: 2 在消息详情中加星标
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "false"
+			"star": "false"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
 			"last_message_time": "今天",
 			"unread_count": 1,
-			"start": "false"
+			"star": "false"
 		}]
 		"""
 	Then jobs获得实时消息'星标信息'列表
@@ -393,13 +393,13 @@ Scenario: 2 在消息详情中加星标
 			"inf_content": "【自动回复】 关键字回复内容tom",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "true"
+			"star": "true"
 		},{
 			"member_name": "tom",
 			"inf_content": "关键词tom",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"start": "true"
+			"star": "true"
 		}]
 		"""
 
