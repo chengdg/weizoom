@@ -88,7 +88,7 @@ class RealtimeMessages(resource.Resource):
         """
                         获取实时消息集合json数据
         """
-        
+
         #获取当前页数
         cur_page = int(request.GET.get('page', '1'))
         #获取每页个数
@@ -317,7 +317,7 @@ def get_weixin_user_names_from(webapp_id, weixin_user_usernames, tag_id, grade_i
     if nick_name:
         query_hex = byte_to_hex(nick_name)
         filter_data['member__username_hexstr__icontains'] = query_hex
-    
+
     member_has_accounts = MemberHasSocialAccount.objects.filter(**filter_data)
     now_weixin_user_usernames = [member_has_account.account.openid for member_has_account in member_has_accounts]
     return now_weixin_user_usernames

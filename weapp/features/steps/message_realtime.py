@@ -107,8 +107,8 @@ def step_impl(context, user, page_index):
 @when(u"{user}访问实时消息'{type}'")
 def step_impl(context, user, type):
 	url = '/new_weixin/api/realtime_messages/?page=1&count=30'
-	if type == "所有消息":
-		url = '/new_weixin/api/realtime_messages/?page=1&count=30'
+	if type == "所有信息":
+		url = '/new_weixin/api/realtime_messages/?page=1&count=30&filter_value=status:-1'
 	elif type == "未读信息":
 		url = '/new_weixin/api/realtime_messages/?page=1&count=30&filter_value=status:0'
 	elif type == "未回复":
@@ -128,6 +128,8 @@ def step_impl(context, user, type):
 	url = context.realtime_messages_url
 	response = context.client.get(url)
 	session_messages = json.loads(response.content)['data']['items']
+	print response.content
+	print session_messages, "FFFFFFFFFFF", url
 	messages = []
 	for message in session_messages:
 		message_dict = {}
@@ -148,3 +150,7 @@ def step_impl(context, user, type):
 		#now_time = datetime.today().strftime('%Y-%m-%d')
 
 	bdd_util.assert_list(expected, messages)
+
+@when(u"{user}修改实时消息备注")
+def step_impl(context, user):
+	pass
