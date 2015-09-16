@@ -177,6 +177,7 @@ class surveyParticipances_Export(resource.Resource):
 				fields_selec = []
 				fields_qa= []
 				fields_shortcuts = []
+				fields_uploadimg = []
 
 				sample_tm = sample['termite_data']
 
@@ -196,7 +197,12 @@ class surveyParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_shortcuts.append(item)
-				fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+					if sample_tm[item]['type']=='appkit.uploadimg':
+						if item in fields_uploadimg:
+							pass
+						else:
+							fields_uploadimg.append(item)
+				fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts + fields_uploadimg
 
 
 			for field in fields_raw:
@@ -229,6 +235,7 @@ class surveyParticipances_Export(resource.Resource):
 				selec =[]
 				qa = []
 				shortcuts =[]
+				uploadimg = []
 				export_record = []
 
 				num = num+1
@@ -247,6 +254,12 @@ class surveyParticipances_Export(resource.Resource):
 				for s in fields_shortcuts:
 					s_v = record[u'termite_data'][s][u'value']
 					shortcuts.append(s_v)
+				for s in fields_uploadimg:
+					upload_v = []
+					u_v = record[u'termite_data'][s][u'value']
+					for i in u_v:
+						upload_v.append("url:%s;"%str(i))
+					uploadimg.append(upload_v)
 
 				# don't change the order
 				export_record.append(num)
@@ -258,6 +271,8 @@ class surveyParticipances_Export(resource.Resource):
 				for item in qa:
 					export_record.append(item)
 				for item in shortcuts:
+					export_record.append(item)
+				for item in uploadimg:
 					export_record.append(item)
 
 				export_data.append(export_record)
