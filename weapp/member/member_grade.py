@@ -97,9 +97,14 @@ class MemberGradeList(resource.Resource):
             if default_grade.id in delete_ids:
                 delete_ids.remove(default_grade.id)
 
-            for member in Member.objects.filter(grade_id__in=delete_ids):
-                auto_update_grade(member=member, delete=True)
+            member_ids = [member.id for member in Member.objects.filter(grade_id__in=delete_ids)]
+            Member.objects.filter(id__in=member_ids).update(grade=default_grade)
+
             MemberGrade.objects.filter(id__in=delete_ids).delete()
+            for member_id in member_ids:
+                member = Member.objects.get(id=member_id)
+                auto_update_grade(member=member, delete=False)                
+
             mall.module_api.update_promotion_status_by_member_grade(delete_ids)
 
         response = create_response(200)
