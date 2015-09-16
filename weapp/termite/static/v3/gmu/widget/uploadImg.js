@@ -111,7 +111,7 @@
         showDelete:function(){
              var imgLength = this.$img[0].src.length;
              if( imgLength > 0 ){
-               $('.xa-deletePhoto').show().unbind('click').click(function(){
+               this.$parent.parent().find('.xa-deletePhoto').show().unbind('click').click(function(){
                     $(this).siblings().find('.xa-remove').show();
                     $(this).siblings('.xui-addPhoto').last().hide();
                     $(this).siblings('.xa-deletePhoto').hide();
@@ -139,6 +139,7 @@
             $(event.target).siblings('.xa-remove').click(function(){
                 $(this).parent().remove();
                 if($uploadImage.length == 2){
+                    $uploadImage.prevObject.find('.xui-deletePhoto').hide();
                     $uploadImage.prevObject.find('.xa-finishEdit').hide();
                     $uploadImage.prevObject.find('.xui-addPhoto').show();
                     $uploadImage.prevObject.find('.xui-addPhoto').find('.xa-remove').hide();
