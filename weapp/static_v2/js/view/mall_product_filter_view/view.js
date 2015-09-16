@@ -99,18 +99,18 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             W.showHint('error', '请输入正确的价格');
             return false;
         }
-        if (lowPrice.length === 0 && highPrice.length > 0) {
-            W.showHint('error', '请输入起始价格！');
-            return false;
-        }
-        if (highPrice.length === 0 && lowPrice.length > 0) {
-            W.showHint('error', '请输入最高价格！');
-            return false;
-        }
-        if (parseFloat(highPrice) < parseFloat(lowPrice)) {
-            W.showHint('error', '最高价格不能低于起始价格');
-            return false;
-        }
+        // if (lowPrice.length === 0 && highPrice.length > 0) {
+        //     W.showHint('error', '请输入起始价格！');
+        //     return false;
+        // }
+        // if (highPrice.length === 0 && lowPrice.length > 0) {
+        //     W.showHint('error', '请输入最高价格！');
+        //     return false;
+        // }
+        // if (parseFloat(highPrice) < parseFloat(lowPrice)) {
+        //     W.showHint('error', '最高价格不能低于起始价格');
+        //     return false;
+        // }
 
         //库存
         var stockRex = /^\d*$/;
@@ -122,18 +122,18 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
              return false;
          }
 
-        if (lowStocks.length === 0 && highStocks.length > 0) {
-            W.showHint('error', '请输入起始库存！');
-            return false;
-        }
-        if (highStocks.length === 0 && lowStocks.length > 0) {
-            W.showHint('error', '请输入最高库存！');
-            return false;
-        }
-        if (parseFloat(highStocks) < parseFloat(lowStocks)) {
-            W.showHint('error', '最高库存不能低于起始库存');
-            return false;
-        }
+        // if (lowStocks.length === 0 && highStocks.length > 0) {
+        //     W.showHint('error', '请输入起始库存！');
+        //     return false;
+        // }
+        // if (highStocks.length === 0 && lowStocks.length > 0) {
+        //     W.showHint('error', '请输入最高库存！');
+        //     return false;
+        // }
+        // if (parseFloat(highStocks) < parseFloat(lowStocks)) {
+        //     W.showHint('error', '最高库存不能低于起始库存');
+        //     return false;
+        // }
 
         //销量
         var salesRex = /^\d*$/;
@@ -143,18 +143,18 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             W.showHint('error', '请输入正确的销量, 仅数字');
             return false;
         }
-        if (lowSales.length === 0 && highSales.length > 0) {
-            W.showHint('error', '请输入起始销量！');
-            return false;
-        }
-        if (highSales.length === 0 && lowSales.length > 0) {
-            W.showHint('error', '请输入最高销量！');
-            return false;
-        }
-        if (parseFloat(highSales) < parseFloat(lowSales)) {
-            W.showHint('error', '最高销量不能低于起始销量');
-            return false;
-        }
+        // if (lowSales.length === 0 && highSales.length > 0) {
+        //     W.showHint('error', '请输入起始销量！');
+        //     return false;
+        // }
+        // if (highSales.length === 0 && lowSales.length > 0) {
+        //     W.showHint('error', '请输入最高销量！');
+        //     return false;
+        // }
+        // if (parseFloat(highSales) < parseFloat(lowSales)) {
+        //     W.showHint('error', '最高销量不能低于起始销量');
+        //     return false;
+        // }
 
         //分组
         var category = this.$('#category').val();

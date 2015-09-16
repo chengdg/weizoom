@@ -104,7 +104,7 @@ PRODUCT_FILTERS = {
         'comparator': lambda model, filter_value: model['stock_type'] == models.PRODUCT_STOCK_TYPE_UNLIMIT or model['stocks'] >= int(filter_value),
         'query_string_field': 'lowStocks'
     }, {
-        'comparator': lambda model, filter_value: model['stocks'] <= int(filter_value),
+        'comparator': lambda model, filter_value: model['stock_type'] != models.PRODUCT_STOCK_TYPE_UNLIMIT and 0 <= model['stocks'] <= int(filter_value),
         'query_string_field': 'highStocks'
     }]
 }
@@ -121,11 +121,10 @@ def filter_products(request, products):
         return filtered_products
 
     for product in products:
-        product.fill_model()
-        models = search_util.filter_objects(
-            product.models,
-            PRODUCT_FILTERS['models']
-        )
+        models = copy.copy(product.models)
+        if None in models:
+            models.remove(None)
+        models = search_util.filter_objects(models, PRODUCT_FILTERS['models'])
         if models:
             filtered_products.append(product)
     return filtered_products
