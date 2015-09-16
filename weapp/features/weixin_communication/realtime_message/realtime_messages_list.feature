@@ -110,7 +110,7 @@ Scenario:1 获取"所有消息"选项卡列表
 		}]
 		"""
 
-@weixin @message @realtimeMessage
+@weixin @message @realtimeMessage @mall2
 Scenario:2 获取"未读信息"选项卡列表
 
 	Given jobs登录系统
