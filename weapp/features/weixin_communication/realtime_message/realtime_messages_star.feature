@@ -77,7 +77,7 @@ Background:
 	and nokia关注jobs的公众号
 	and nokia在微信中向jobs的公众号发送消息'关键词nokia'
 	
-@weixin @message @realtimeMessage @wll
+@weixin @message @realtimeMessage 
 Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加星标
 	1)三个选项卡下对某个粉丝消息加星标，去掉星标,表示在最后一条加星标
 	2)加完星标后，消息状态还是以前的状态，例如未读，还是未读状态
