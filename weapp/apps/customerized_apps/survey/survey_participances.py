@@ -244,7 +244,6 @@ class surveyParticipances_Export(resource.Resource):
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
-					selec_v =[]
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
 						if s_i[i]['isSelect'] == True:
@@ -253,8 +252,8 @@ class surveyParticipances_Export(resource.Resource):
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
 				for s in fields_textlist:
-					s_v = record[u'termite_data'][s][u'value']
-					shortcuts.append(s_v)
+					s_t = record[u'termite_data'][s][u'value']
+					shortcuts.append(s_t)
 				for s in fields_uploadimg:
 					upload_v = []
 					u_v = record[u'termite_data'][s][u'value']
@@ -267,8 +266,12 @@ class surveyParticipances_Export(resource.Resource):
 				export_record.append(name)
 				export_record.append(create_at)
 
+				multi_selec = []
 				for item in selec:
-					export_record.append(item)
+					multi_selec.append(item)
+				multi_selec = ','.join(multi_selec)
+				export_record.append(multi_selec)
+
 				for item in qa:
 					export_record.append(item)
 				for item in shortcuts:
