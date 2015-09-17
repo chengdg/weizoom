@@ -142,7 +142,8 @@ def get_result(id,member_id):
 		result = {}
 		title_name = title.split('_')[1]
 		if title_type in['appkit.textlist', 'appkit.shortcuts']:
-			title_name = SHORTCUTS_TEXT[title_name]
+			if title_name in SHORTCUTS_TEXT:
+				title_name = SHORTCUTS_TEXT[title_name]
 		result['title'] = title_name
 		result['type'] = title_type
 		values = member_survey_termite[title]['value']
