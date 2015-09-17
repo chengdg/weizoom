@@ -136,7 +136,8 @@ class voteParticipances_Export(resource.Resource):
 
 		# app_name = voteParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'微信投票详情.xls'
+		excel_file_name = 'vote_details.xls'
+		download_excel_file_name = u'微信投票详情.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -299,7 +300,7 @@ class voteParticipances_Export(resource.Resource):
 				wb.save(export_file_path)
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 
