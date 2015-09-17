@@ -55,6 +55,9 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					var click_count = 1;
 					$('img.xa-uploadimg').click(function(){
 						if(click_count ===1){
+							var curr_hight = $(document).scrollTop();
+							$('.xa-uploadimg_box').css('top',curr_hight+'px');
+
 							click_count = click_count+1;
 							var that = this;
 							var img_len = $(that).parent().find('img').length;
@@ -86,11 +89,8 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 								}
 								$('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);
 							});
-						}else{
-							$('.xa-uploadimg_box').fadeOut(400);
-							$('.xa-uploadimg_box').empty();
-							click_count = 1;
-						}});
+						}
+					});
 
 				},
 				error: function(resp) {

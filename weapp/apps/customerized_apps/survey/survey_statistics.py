@@ -156,8 +156,10 @@ class question(resource.Resource):
 					if value['type'] == 'appkit.uploadimg':
 						img_urls = []
 						if len(value['value'])>1:
+							index = 0
 							for v in value['value']:
-								img_urls.append('<img class="xui-uploadimg" src="'+v+'">')
+								img_urls.append('<img class="xui-uploadimg xa-uploadimg" id="uploadimg-%d" src="'%(index)+v+'">')
+								index +=1
 							result_list.append({
 								'content': img_urls,
 								'type': 'uploadimg',
@@ -165,7 +167,7 @@ class question(resource.Resource):
 							})
 						else:
 							for v in value['value']:
-								img_urls.append('<img class="xui-uploadimg" src="'+v+'">')
+								img_urls.append('<img class="xui-uploadimg xa-uploadimg" id=\"uploadimg-0\" src="'+v+'">')
 							result_list.append({
 								'content': img_urls,
 								'type': 'uploadimg',

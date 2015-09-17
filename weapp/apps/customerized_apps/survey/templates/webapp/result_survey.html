@@ -129,6 +129,16 @@
                 </li>
             </ul>
         {% endifequal %}
+        {% ifequal item.type 'appkit.textlist'%}
+            <ul class="wui-shortcuts" style="padding: 0">
+                <li class="wui-i-item">
+                    <label class="wui-i-label" style="width: 43px;">{{ item.title }}</label>
+                    <div class="wui-i-inputContainer xa-inputControl" >
+                        <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" style="background:#fff;color:#3F3E3E;font-size:13px;" disabled>
+                    </div>
+                </li>
+            </ul>
+        {% endifequal %}
         {% ifequal item.type 'appkit.uploadimg'%}
             <div class="wui-UploadImg">
                 <h1 class="wui-i-title">{{ item.title }}</h1>
