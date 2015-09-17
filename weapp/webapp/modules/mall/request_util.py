@@ -44,6 +44,7 @@ import mall.signal_handler
 from webapp import util as webapp_util
 
 from cache import webapp_cache
+from bs4 import BeautifulSoup
 
 page_title = u'微众商城'
 
@@ -236,6 +237,13 @@ def get_product(request):
 	use_integral = request.member.integral if request.member else 0
 
 	is_non_member = True if request.member else False
+
+	# 商品详情图片lazyload
+	soup = BeautifulSoup(product.detail)
+	for img in soup.find_all('img'):
+		img['data-url'] = img['src']
+		del img['src']
+	product.detail = str(soup)
 
 	c = RequestContext(request, {
 		'page_title': product.name,
