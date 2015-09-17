@@ -68,7 +68,7 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 							}
 							
 							$('.xa-close_btn').click(function(){
-									$('.xa-uploadimg_box').fadeOut(400);
+									$('.xa-uploadimg_box').fadeOut('fast');
 									$('.xa-uploadimg_box').empty();
 									click_count = 1;
 								});
