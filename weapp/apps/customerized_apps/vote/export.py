@@ -30,6 +30,12 @@ def get_second_navs(request):
 def get_link_targets(request):
 	selected_id = request.selected_id
 	
+	# 增加查询
+	query = request.GET.get('query', None)
+	if query:		
+		request.GET = request.GET.copy()
+		request.GET['name'] = query
+		
 	pageinfo, datas = votes.votes.get_datas(request)
 	link_targets = []
 	for data in datas:

@@ -55,7 +55,7 @@ W.dialog.termite.SelectWebSiteDataDialog = W.dialog.Dialog.extend({
     },
 
     onSearch: function(event) {
-        var query = $.trim($('.xa-query').val());
+        var query = $.trim(this.$el.find('.xa-query').val());
         if (!this.enableMultiSelection) {
             var param = {
                 type: this.type,
