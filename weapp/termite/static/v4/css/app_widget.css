@@ -651,5 +651,8 @@ p.wui-i-start_time,p.wui-i-end_time{
 	padding-bottom: 15px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-addPhoto {
-  	margin-right: 5px;
+  	margin-right: 3px;
+}
+.wui-i-uploadimg .xui-finishEdit{
+  line-height: 45px;
 }
