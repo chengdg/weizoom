@@ -89,11 +89,8 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 								}
 								$('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);
 							});
-						}else{
-							$('.xa-uploadimg_box').fadeOut(400);
-							$('.xa-uploadimg_box').empty();
-							click_count = 1;
-						}});
+						}
+					});
 
 				},
 				error: function(resp) {
