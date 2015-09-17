@@ -561,7 +561,6 @@ Scenario:1. 在售商品列表查询
 				|  name  |  barCode |      categories      |  price  |  stocks  |  sales  |  created_at    |
 				|  商品3 |  1234562  |  分类1,分类2,分类3 |  1      |   98     |    1    |  2015-07-02 10:20 |
 				|  商品2 |  1234561  |  分类1,分类2       |  10     |    0     |    0    |  2015-04-03 00:00 |
-				|  商品1 |           |  分类1             |  0.01  |   无限   |    5    |  2015-04-02 23:59 |
 
 			When jobs设置商品查询条件
 				"""
@@ -583,7 +582,6 @@ Scenario:1. 在售商品列表查询
 			Then jobs能获得'在售'商品列表
 				|  name  |  barCode |      categories      |  price  |  stocks  |  sales  |  created_at    |
 				|  商品2 |  1234562  |                    |  0      |  100000  |    0    |  2015-08-01 05:36     |
-				|  商品1 |           |  分类1             |  0.01  |   无限   |    5    |  2015-04-02 23:59 |
 
 		#查询结果为无区间数据
 
@@ -606,7 +604,6 @@ Scenario:1. 在售商品列表查询
 
 			Then jobs能获得'在售'商品列表
 				|  name  |  barCode |      categories      |  price  |  stocks  |  sales  |  created_at    |
-				|  商品1 |           |  分类1             |  0.01  |   无限   |    5    |  2015-04-02 23:59 |
 
 	#商品销量
 
@@ -975,7 +972,7 @@ Scenario:1. 在售商品列表查询
 			|  name  |  barCode |      categories      |  price  |  stocks  |  sales  |  created_at    |
 			|  商品3 |  1234562  |  分类1,分类2,分类3 |  1      |   98     |    1    |  2015-07-02 10:20 |
 
-@mall2
+@mall2 @jz
 Scenario:2. 在售多规格商品列表查询
 
 	Given jobs已添加商品规格
@@ -1163,8 +1160,6 @@ Scenario:2. 在售多规格商品列表查询
 
 			Then jobs能获得'在售'商品列表
 				|    name    |  barCode |      categories      |   price    |  stocks  |  sales  |  created_at    |
-				|  商品单规格|           |                    |  10.0 ~ 20.0 |          |    2    |  2015-07-02 10:20           |
-				|  商品1     |           |  分类1             |  0.01        |   无限   |    5    |  2015-04-02 23:59 |
 
 			When jobs设置商品查询条件
 				"""
@@ -1186,8 +1181,6 @@ Scenario:2. 在售多规格商品列表查询
 			Then jobs能获得'在售'商品列表
 				|     name     |  barCode |      categories      |   price    |  stocks  |  sales  |  created_at    |
 				|  商品复合规格|           |                    |  10.5 ~ 40.0   |          |    4    |  2015-07-02 10:20           |
-				|  商品单规格  |           |                    |  10.0 ~ 20.0     |          |    2    |  2015-07-02 10:20           |
-				|  商品1       |           |  分类1             |  0.01     |   无限   |    5    |  2015-04-02 23:59 |
 
 		#查询结果为无区间数据
 
@@ -1210,8 +1203,6 @@ Scenario:2. 在售多规格商品列表查询
 
 			Then jobs能获得'在售'商品列表
 				|     name     |  barCode |      categories      |   price    |  stocks  |  sales  |  created_at    |
-				|  商品单规格  |           |                    |  10.0 ~ 20.0     |          |    2    |  2015-07-02 10:20           |
-				|  商品1       |           |  分类1             |  0.01     |   无限   |    5    |  2015-04-02 23:59 |
 
 	#商品销量（多规格商品是每个规格的销量之和计算）
 
