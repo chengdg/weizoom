@@ -984,7 +984,7 @@ def __get_select_params(request):
         query_dict['pay_interface_type'] = int(pay_type)
     if len(order_source):
         query_dict['order_source'] = int(order_source)
-    if len(order_status):
+    if len(order_status) and order_status != '-1':
         query_dict['status'] = int(order_status)
     if isUseWeizoomCard:
         query_dict['isUseWeizoomCard'] = isUseWeizoomCard
@@ -1038,6 +1038,7 @@ def __get_orders_by_params(query_dict, date_interval, orders):
         orders = orders.filter(id__in=order_ids)
 
         # 处理搜索
+    print '----------------query_dict:',query_dict
     if len(query_dict):
         if query_dict.get("isUseWeizoomCard"):
             query_dict.pop("isUseWeizoomCard")

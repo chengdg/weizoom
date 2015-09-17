@@ -153,7 +153,7 @@ class OrderList(resource.Resource):
         belong = request.GET.get("belong", "all")
         #处理来自“微商城-首页-待发货订单-更多”过来的查看待发货订单的请求
         #add by duhao 2015-09-17
-        order_status = request.GET.get('order_status' , '1')
+        order_status = request.GET.get('order_status' , '-1')
 
         if belong == 'audit':
             second_nav_name = export.ORDER_AUDIT
