@@ -370,8 +370,8 @@ def export_orders_json(request):
                 source = order2supplier[order.supplier].name.encode("utf-8")
             if i == 0:
 
-                
-                coupon_money = order.coupon_money
+                if order.coupon_id > 0:
+                    coupon_money = order.coupon_money
 
                 if area:
                     province = area.split(' ')[0]
