@@ -145,6 +145,7 @@ class voteStatistic_Export(resource.Resource):
 						else:
 							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
 			#select-data-processing
+			total_count = 0
 			for select in select_data:
 				for s_list in select_data[select]:
 					for s in s_list:
@@ -154,6 +155,7 @@ class voteStatistic_Export(resource.Resource):
 							select_static[select][s]  = 0
 						if s_list[s]['isSelect'] == True:
 							select_static[select][s] += 1
+							total_count += 1
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -173,7 +175,7 @@ class voteStatistic_Export(resource.Resource):
 					for s_i in select_static[s]:
 						ws.write(row,col,s_dic[s_i_num]+s_i.split('_')[1])
 						s_num = select_static[s][s_i]
-						per = s_num*1.0/total*100
+						per = s_num*1.0/total_count*100
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
