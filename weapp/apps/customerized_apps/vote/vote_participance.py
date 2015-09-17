@@ -27,7 +27,10 @@ COUNT_PER_PAGE = 20
 ITEM_FOR_DISPLAY = {
 	'phone': u'手机',
 	'name': u'姓名',
-	'email': u'邮箱'
+	'email': u'邮箱',
+	'qq':u'QQ号',
+	'job':u'职位',
+	'addr':u'地址'
 }
 
 class voteParticipance(resource.Resource):
@@ -47,7 +50,8 @@ class voteParticipance(resource.Resource):
 			termite_data = vote_participance.termite_data
 			item_data_list = []
 
-			for k, v in sorted(termite_data.items()):
+			for k in sorted(termite_data.keys()):
+				v = termite_data[k]
 				pureName = k.split('_')[1]
 				item_data = {}
 				item_data['item_name'] = pureName
@@ -58,7 +62,10 @@ class voteParticipance(resource.Resource):
 							value_list.append(inner_k.split('_')[1])
 					item_data['item_value'] = ','.join(value_list)
 				else:
-					item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
+					if pureName in ITEM_FOR_DISPLAY:
+						item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
+					else:
+						item_data['item_name'] = pureName
 					item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
 		else:

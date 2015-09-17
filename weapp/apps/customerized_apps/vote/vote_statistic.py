@@ -111,7 +111,8 @@ class voteStatistic_Export(resource.Resource):
 
 		# app_name = voteStatistic_Export.app
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'微信投票统计.xls'
+		excel_file_name = 'vote_statistic.xls'
+		download_excel_file_name = u'微信投票统计.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -144,6 +145,7 @@ class voteStatistic_Export(resource.Resource):
 						else:
 							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
 			#select-data-processing
+			total_count = 0
 			for select in select_data:
 				for s_list in select_data[select]:
 					for s in s_list:
@@ -153,6 +155,7 @@ class voteStatistic_Export(resource.Resource):
 							select_static[select][s]  = 0
 						if s_list[s]['isSelect'] == True:
 							select_static[select][s] += 1
+							total_count += 1
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -172,7 +175,7 @@ class voteStatistic_Export(resource.Resource):
 					for s_i in select_static[s]:
 						ws.write(row,col,s_dic[s_i_num]+s_i.split('_')[1])
 						s_num = select_static[s][s_i]
-						per = s_num*1.0/total*100
+						per = s_num*1.0/total_count*100
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
@@ -207,7 +210,7 @@ class voteStatistic_Export(resource.Resource):
 				print '/static/upload/%s'%excel_file_name
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 

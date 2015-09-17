@@ -68,7 +68,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
-
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/uploadImg.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
         <!-- *end_prunt_task* -->
@@ -322,7 +322,7 @@
             W.permission = "{{ permission }}";
             if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
             W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-
+            var slag = true;//调研图片上传较慢，给出提示用
             var link = window.location.href;
             if (link.indexOf('fmt') === -1){
                 if (link.indexOf('&') === -1){
@@ -517,7 +517,14 @@
                                         isSelect: isSelect
                                     };
                                 }
+                            }else if (inputType === 'imgarea') {
+                                var picture_list = [];
+                                $control.find('img').each(function(){
+                                   if($(this).attr('src').indexOf('data:image') != -1){picture_list.push($(this).attr('src'))}
+                                });
+                                var value = JSON.stringify(picture_list);
                             }
+
                             data[name] = {
                                 type: controlType,
                                 value: value
@@ -540,6 +547,7 @@
                                 'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}&isMember={{ isMember }}'
                             }]);
                         }
+
                         //必须关注才可以参与的活动
                         if (W.permission == 'member') {
                             if (W.isMember == true) {
@@ -559,12 +567,24 @@
                 }
             });
             function getParticipance(participanceData,$submitButtonContainer){
+                if (!slag){return;}
+                slag = false;
+                $('body').alert({
+                    isShow: true,
+                    info: '玩命传输中请等待...',
+                    speed: 50000,
+                    callBack: function() {
+                    }
+                });
                 W.getApi().call({
                     app: 'm/apps/'+W.appName,
                     resource: W.resource+'_participance',
                     method: 'put',
                     args: participanceData,
                     success: function(data) {
+                        $('body').alert({
+                            isShow: false
+                        });
                         $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
                         var $button = $submitButtonContainer.find('.xa-submitTermite');
                         $button.text('您已参加过该活动');

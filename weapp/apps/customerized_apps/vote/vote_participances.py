@@ -132,11 +132,12 @@ class voteParticipances_Export(resource.Resource):
 		字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 		"""
 		export_id = request.GET.get('export_id')
-		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
+		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话',u'qq':u'QQ号',u'job':u'职位',u'addr':u'地址'}
 
 		# app_name = voteParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'微信投票详情.xls'
+		excel_file_name = 'vote_details.xls'
+		download_excel_file_name = u'微信投票详情.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -177,11 +178,11 @@ class voteParticipances_Export(resource.Resource):
 
 				fields_selec = []
 				fields_qa= []
-				fields_shortcuts = []
+				fields_textlist = []
 
 				sample_tm = sample['termite_data']
 
-				for item in sample_tm:
+				for item in sorted(sample_tm.keys()):
 					if sample_tm[item]['type']=='appkit.qa':
 						if item in fields_qa:
 							pass
@@ -192,12 +193,12 @@ class voteParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_selec.append(item)
-					if sample_tm[item]['type']=='appkit.shortcuts':
-						if item in fields_shortcuts:
+					if sample_tm[item]['type'] in['appkit.textlist', 'appkit.shortcuts']:
+						if item in fields_textlist:
 							pass
 						else:
-							fields_shortcuts.append(item)
-				fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+							fields_textlist.append(item)
+				fields_raw = fields_raw + fields_selec + fields_qa + fields_textlist
 
 			for field in fields_raw:
 				if '_' in field:
@@ -246,7 +247,7 @@ class voteParticipances_Export(resource.Resource):
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
-				for s in fields_shortcuts:
+				for s in fields_textlist:
 					s_v = record[u'termite_data'][s][u'value']
 					shortcuts.append(s_v)
 
@@ -271,6 +272,7 @@ class voteParticipances_Export(resource.Resource):
 
 			##write fields
 			row = col = 0
+			print fields_pure
 			for h in fields_pure:
 				ws.write(row,col,h)
 				col += 1
@@ -289,15 +291,16 @@ class voteParticipances_Export(resource.Resource):
 							ws.write(row,col,record[col])
 				try:
 					wb.save(export_file_path)
-				except:
+				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
 					print '/static/upload/%s'%excel_file_name
 			else:
 				ws.write(1,0,'')
 				wb.save(export_file_path)
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 
