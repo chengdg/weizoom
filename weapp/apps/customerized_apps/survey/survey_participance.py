@@ -75,7 +75,6 @@ class surveyParticipance(resource.Resource):
 		else:
 			webapp_user_name = ''
 			item_data_list = {}
-		print item_data_list
 		response = create_response(200)
 		response.data = {
 			'webapp_user_name': webapp_user_name,
