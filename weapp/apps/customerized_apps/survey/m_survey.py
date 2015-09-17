@@ -24,7 +24,10 @@ import weixin.user.models as weixin_models
 SHORTCUTS_TEXT={
 	'phone': u'手机',
 	'name': u'姓名',
-	'email': u'邮箱'
+	'email': u'邮箱',
+	'qq':u'QQ号',
+	'job':u'职位',
+	'addr':u'地址'
 }
 class Msurvey(resource.Resource):
 	app = 'apps/survey'
