@@ -1,5 +1,9 @@
 {% block base_js %}
 <script type="text/javascript">
+      var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+
+      W.currentPageName = "{{current_page_name}}";
+
       W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
       W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
       W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
@@ -15,7 +19,7 @@
               link = link +"&fmt="+W.curRequestMemberToken;
           }
       }
-      alert(link)
+      alert(isHideWeixinOptionMenu+link)
       $('a').highlight();
       FastClick.attach(document.body);
       var hm = document.createElement("script");
