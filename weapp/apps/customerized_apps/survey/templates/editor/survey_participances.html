@@ -36,6 +36,23 @@
         top: auto; left: auto; bottom: auto; right: auto;
         vertical-align: middle;
     }
+
+    .xa-arr{
+        position: absolute;
+        top:40%;
+        height: 97px;
+        width: 38px;
+        background: url("/static_v2/img/arrow_lr.png");
+        background-repeat: no-repeat;
+        z-index: 1000001;
+    }
+    .xa-arr.xa-arr_left{
+        left: 3px;
+    }
+    .xa-arr.xa-arr_right{
+        right: 2px;
+        background-position: -91px;
+    }
     </style>
 {% endblock %}
 {% block content-panel %}
