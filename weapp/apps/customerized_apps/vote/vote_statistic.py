@@ -177,7 +177,7 @@ class voteStatistic_Export(resource.Resource):
 					for s_i in select_static[s]:
 						s_num = select_static[s][s_i]
 						if s_num :
-							select_num += 1
+							select_num += s_num
 					for s_i in select_static[s]:
 						s_num = select_static[s][s_i]
 						ws.write(row,col,s_dic[s_i_num]+s_i.split('_')[1])
