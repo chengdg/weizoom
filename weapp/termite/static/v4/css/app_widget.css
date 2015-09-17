@@ -605,7 +605,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-i-uploadimg .xui-productPhoto .xui-addPhoto span.xui-i-box,
 .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     display: inline-block;
-    width:46px;
+    width:45px;
     height:45px;
     background: url(/static_v2/img/webapp/mall/photoBtn.png);
 	background-color: #fff;
@@ -649,4 +649,7 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-i-uploadimg.xa-inputControl {
 	min-height: 45px;
 	padding-bottom: 15px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-addPhoto {
+  	margin-right: 5px;
 }
