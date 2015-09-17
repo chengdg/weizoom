@@ -430,7 +430,7 @@ def export_orders_json(request):
                 orders.append(tmp_order)
                 total_product_money += relation.price * relation.number
             else:
-                if coupon_name:
+                if not role_id or coupon_name:
                     coupon_money = order.coupon_money
                 tmp_order=[
                     order_id,
