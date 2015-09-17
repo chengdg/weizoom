@@ -250,7 +250,6 @@ class surveyStatistics_Export(resource.Resource):
 							uploadimg_static[termite].append({'created_at':time,'url':termite_dic['value']})
 
 			#select-data-processing
-			total_count = 0
 			for select in select_data:
 				for s_list in select_data[select]:
 					for s in s_list:
@@ -260,7 +259,6 @@ class surveyStatistics_Export(resource.Resource):
 							select_static[select][s]  = 0
 						if s_list[s]['isSelect'] == True:
 							select_static[select][s] += 1
-							total_count += 1
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -275,11 +273,16 @@ class surveyStatistics_Export(resource.Resource):
 					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'%total)
 					ws.write(row,col+1,u'参与人数/百分百')
 					row += 1
+					all_select_num = 0
 					s_i_num = 0
+					for s_i in select_static[s]:
+						s_num = select_static[s][s_i]
+						if s_num :
+							all_select_num += s_num
 					for s_i in select_static[s]:
 						ws.write(row,col,s_i.split('_')[1])
 						s_num = select_static[s][s_i]
-						per = s_num*1.0/total_count*100
+						per = s_num*1.0/all_select_num*100
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
