@@ -57,8 +57,6 @@ def export_orders_json(request):
         '10': u'优惠抵扣'
     }
 
-    # type = ORDER_TYPE2TEXT
-
     source_list = {
         'mine_mall': u'本店',
         'weizoom_mall': u'商城'
@@ -72,7 +70,6 @@ def export_orders_json(request):
     ]
 
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
-    order_list= None
     webapp_id = request.user_profile.webapp_id
     order_list = Order.objects.belong_to(webapp_id).order_by('-id')
     status_type = request.GET.get('status', None)
@@ -83,15 +80,10 @@ def export_orders_json(request):
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
     #####################################
-    # 订单除去 积分订单
-    exclude_order_list = order_list.exclude(type=PRODUCT_INTEGRAL_TYPE)
-
-
     query_dict, date_interval = __get_select_params(request)
     product_name = ''
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
-
 
     order_list = __get_orders_by_params(query_dict, date_interval, order_list)
 
@@ -107,26 +99,18 @@ def export_orders_json(request):
         finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
         order_list = list(order_list.all())
     # -----------------------获取查询条件字典和时间筛选条件--------------构造oreder_list----------结束
-
     # 商品总额：
     total_product_money = 0.0
-    # 订单金额
-    # total_order_money = 0.0
     # 支付金额
     final_total_order_money = 0.0
     # 微众卡支付金额
     weizoom_card_total_order_money = 0.0
-    # 积分总和
-    # use_integral_count = 0
     # 积分抵扣总金额
     use_integral_money = 0.0
     # 赠品总数
     total_premium_product = 0
     # 优惠劵价值总和
     coupon_money_count = 0
-    # 直降总金额
-    # save_money_count = 0
-    #
     #####################################
 
     # print 'begin step 1 order_list - '+str(time.time() - begin_time)
@@ -138,13 +122,21 @@ def export_orders_json(request):
         order_order_ids.append(o.order_id)
         if o.coupon_id:
             coupon_ids.append(o.coupon_id)
+    coupon2role = {}
+    role_ids = []
+    from mall.promotion.models import Coupon, CouponRule
+
+    for coupon in Coupon.objects.filter(id__in=coupon_ids):
+        coupon2role[coupon.id] = coupon.coupon_rule_id
+        if role_ids.count(coupon.coupon_rule_id) == 0:
+            role_ids.append(coupon.coupon_rule_id)
+    role_id2role = dict([(role.id, role) for role in CouponRule.objects.filter(id__in=role_ids)])
 
     # print 'begin step 2 relations - '+str(time.time() - begin_time)
     relations = {}
     product_ids = []
     promotion_ids = []
     model_value_ids = []
-
     # print 'begin step 2.5 order_list - '+str(time.time() - begin_time)
     # product_ids =
     for relation in OrderHasProduct.objects.filter(order__id__in=order_ids):
@@ -169,15 +161,6 @@ def export_orders_json(request):
     # print 'begin step 3 products - '+str(time.time() - begin_time)
     id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
     # print 'begin step 4 coupons - '+str(time.time() - begin_time)
-    coupon2role = {}
-    role_ids = []
-    from mall.promotion.models import Coupon, CouponRule
-
-    for coupon in Coupon.objects.filter(id__in=coupon_ids):
-        coupon2role[coupon.id] = coupon.coupon_rule_id
-        if role_ids.count(coupon.coupon_rule_id) == 0:
-            role_ids.append(coupon.coupon_rule_id)
-    role_id2role = dict([(role.id, role) for role in CouponRule.objects.filter(id__in=role_ids)])
 
     # print 'begin step 5 models - '+str(time.time() - begin_time)
     id2modelname = dict(
@@ -214,7 +197,6 @@ def export_orders_json(request):
                 })
                 premium_product_ids.append(premium_product['id'])
         order2premium_product[order_id] = {}
-
         order2premium_product[order_id][promotion['promotion_id']] = temp_premium_products
 
     # 获取商品对应的重量
@@ -227,7 +209,6 @@ def export_orders_json(request):
 
     # 获取order对应的供货商
 
-    # order2supplier2fackorders = {'5':[{'2': order3},{'3':order3}]}
     order2supplier2fackorders = {}
     # 取出所有的子订单
 
@@ -239,8 +220,7 @@ def export_orders_json(request):
         order_order_ids.append(order.order_id)
     # 获取order对应的发货时间
     order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
-                               OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
-    supplier_ids = set([order.supplier for order in list(order_list) + fackorders])
+                        OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
 
     order2supplier = dict([(supplier.id,supplier) for supplier in Supplier.objects.filter(owner=request.manager)])
     # 判断是否有供货商，如果有则显示该字段
@@ -255,11 +235,9 @@ def export_orders_json(request):
         orders[0].append(u'采购成本')
     # print 'end step 8 order - '+str(time.time() - begin_time)
     # 获取order对应的收货地区
-    # area = get_str_value_by_string_ids(order.area)
     temp_premium_id = None
     temp_premium_products = []
     for order in order_list:
-
         # 获取order对应的member的显示名
         member = webappuser2member.get(order.webapp_user_id, None)
         if member:
@@ -284,10 +262,11 @@ def export_orders_json(request):
 
         area = get_str_value_by_string_ids_new(order.area)
         if area:
-            addr = '%s %s' % (area, order.ship_address)
+            province = area.split(' ')[0]
+            address = '%s %s' % (area, order.ship_address)
         else:
-            addr = '%s' % (order.ship_address)
-        # pay_type = PAYTYPE2NAME.get(order.pay_interface_type, '')
+            province = u''
+            address = '%s' % (order.ship_address)
 
         if order.order_source:
             order.come = 'weizoom_mall'
@@ -301,9 +280,8 @@ def export_orders_json(request):
             else:
                 source = u'微众商城'
 
+        i = 0 # 判断是否订单第一件商品
         orderRelations = relations.get(order.id, [])
-
-        i = 0
         for relation in sorted(orderRelations, key=lambda o:o.id):
             if temp_premium_id and '%s_%s' % (order.id, relation.promotion_id) != temp_premium_id:
                 # 添加赠品信息
@@ -318,18 +296,16 @@ def export_orders_json(request):
                     model_value += '-' + id2modelname.get(mod[mod_i:], '')
                 else:
                     model_value = '-'
-            # models_name = ''
-            coupon_name = ''
-            coupon_money = ''
-            promotion_type = ''
-
 
             # 付款时间
             if order.payment_time and DEFAULT_CREATE_TIME != order.payment_time.__str__():
                 payment_time = order.payment_time.strftime('%Y-%m-%d %H:%M').encode('utf8')
             else:
                 payment_time = ''
-            role_id = None
+
+            # 优惠券和金额
+            coupon_name = ''
+            coupon_money = ''
             if order.coupon_id:
                 role_id = coupon2role.get(order.coupon_id, None)
                 if role_id:
@@ -338,8 +314,10 @@ def export_orders_json(request):
                             coupon_name = role_id2role[role_id].name + "（单品券）"
                     elif i == 0:
                         coupon_name = role_id2role[role_id].name + "（通用券）"
+                if not role_id or coupon_name and order.coupon_money > 0:
+                    coupon_money = order.coupon_money
 
-            fackorder_sons = order2supplier2fackorders.get(order.id, None)  # [{1L:order},{2L:order}]
+            fackorder_sons = order2supplier2fackorders.get(order.id, None)
             fackorder = None
             if fackorder_sons:
                 fackorder = fackorder_sons.get(product.supplier, None)
@@ -354,19 +332,10 @@ def export_orders_json(request):
                 source = order2supplier[fackorder.supplier].name.encode("utf-8")
             elif fackorder == None and 0 != order.supplier:
                 source = order2supplier[order.supplier].name.encode("utf-8")
+
             if i == 0:
-
-                if not role_id or coupon_name:
-                    coupon_money = order.coupon_money
-
-                if area:
-                    province = area.split(' ')[0]
-                else:
-                    province = u''
-
-                temp_leader_names = (order.leader_name if not fackorder else fackorder.leader_name).split('|')
-
                 # 发货人处填写的备注
+                temp_leader_names = (order.leader_name if not fackorder else fackorder.leader_name).split('|')
                 leader_remark = ''
                 j = 1
                 while j < len(temp_leader_names):
@@ -397,7 +366,7 @@ def export_orders_json(request):
                     order.ship_name.encode('utf8'),
                     order.ship_tel.encode('utf8'),
                     province.encode('utf8'),
-                    addr.encode('utf8'),
+                    address.encode('utf8'),
                     temp_leader_names[0].encode('utf8'),
                     leader_remark.encode('utf8'),
                     source.encode('utf8'),
@@ -414,8 +383,6 @@ def export_orders_json(request):
                 orders.append(tmp_order)
                 total_product_money += relation.price * relation.number
             else:
-                if not role_id or coupon_name:
-                    coupon_money = order.coupon_money
                 tmp_order=[
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -440,7 +407,7 @@ def export_orders_json(request):
                     order.ship_name.encode('utf8'),
                     order.ship_tel.encode('utf8'),
                     province.encode('utf8'),
-                    addr.encode('utf8'),
+                    address.encode('utf8'),
                     temp_leader_names[0].encode('utf8'),
                     leader_remark.encode('utf8'),
                     source.encode('utf8'),
@@ -456,7 +423,7 @@ def export_orders_json(request):
                     tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
                 orders.append(tmp_order)
                 total_product_money += relation.price * relation.number
-            i = i + 1
+            i += 1
             if order.id in order2premium_product and not temp_premium_id:
                 premium_products = order2premium_product[order.id].get(relation.promotion_id, [])
                 # 已取消订单不累计赠品数量
@@ -486,7 +453,7 @@ def export_orders_json(request):
                         order.ship_name.encode('utf8'),
                         order.ship_tel.encode('utf8'),
                         province.encode('utf8'),
-                        addr.encode('utf8'),
+                        address.encode('utf8'),
                         temp_leader_names[0].encode('utf8'),
                         leader_remark.encode('utf8'),
                         source.encode('utf8'),
@@ -499,7 +466,6 @@ def export_orders_json(request):
                     if has_supplier:
                         tmp_order.append( u'' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
                         tmp_order.append(u'' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
-                    # orders.append(tmp_order)
                     temp_premium_products.append(tmp_order)
                     temp_premium_id = '%s_%s' % (order.id, relation.promotion_id)
                 # if test_index % pre_page == pre_page-1:
@@ -517,7 +483,7 @@ def export_orders_json(request):
         u'微众卡支付金额:' + str(weizoom_card_total_order_money).encode('utf8'),
         u'赠品总数:' + str(total_premium_product).encode('utf8'),
         u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
-        u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),  # u'直降金额总额:'+str(save_money_count).encode('utf8'),
+        u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
     ])
     # print 'end - '+str(time.time() - begin_time)
 

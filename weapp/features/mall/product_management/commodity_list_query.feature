@@ -972,7 +972,7 @@ Scenario:1. 在售商品列表查询
 			|  name  |  barCode |      categories      |  price  |  stocks  |  sales  |  created_at    |
 			|  商品3 |  1234562  |  分类1,分类2,分类3 |  1      |   98     |    1    |  2015-07-02 10:20 |
 
-@mall2 @jz
+@mall2
 Scenario:2. 在售多规格商品列表查询
 
 	Given jobs已添加商品规格
