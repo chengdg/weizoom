@@ -45,7 +45,7 @@ from modules.member.module_api import get_member_by_id_list
 from webapp.models import WebApp
 from member.member_grade import auto_update_grade
 random.seed(time.time())
-
+from bs4 import BeautifulSoup
 # NO_PROMOTION_ID = -1
 
 
@@ -522,6 +522,17 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				#返回"被删除"商品
 				product = Product()
 				product.is_deleted = True
+
+		# 商品详情图片lazyload
+		soup = BeautifulSoup(product.detail)
+		for img in soup.find_all('img'):
+			try:
+				img['data-url'] = img['src']
+				del img['src']
+			except:
+				pass
+		product.detail = str(soup)
+
 		data = product.to_dict(
 								'min_limit',
 								'swipe_images_json',

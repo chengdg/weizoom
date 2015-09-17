@@ -238,13 +238,6 @@ def get_product(request):
 
 	is_non_member = True if request.member else False
 
-	# 商品详情图片lazyload
-	soup = BeautifulSoup(product.detail)
-	for img in soup.find_all('img'):
-		img['data-url'] = img['src']
-		del img['src']
-	product.detail = str(soup)
-
 	c = RequestContext(request, {
 		'page_title': product.name,
 		'product': product,
