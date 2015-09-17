@@ -53,32 +53,33 @@ class surveyParticipance(resource.Resource):
 				item_data = {}
 				att_url={}
 				if v['type'] in['appkit.textlist', 'appkit.shortcuts']:
+					item_data['type'] = v['type']
 					item_data['item_name'] = TEXT_NAME[pureName]
 					item_data['item_value'] = v['value']
 				elif v['type'] == 'appkit.qa':
+					item_data['type'] = v['type']
 					item_data['item_name'] = pureName
 					item_data['item_value'] = v['value']
 				elif v['type'] == 'appkit.selection':
+					item_data['type'] = v['type']
 					item_data['item_name'] = pureName
 					item_data['item_value'] = []
 					for sub_k, sub_v in sorted(v['value'].items()):
 						if sub_v['isSelect']:
 							item_data['item_value'].append(sub_k.split('_')[1])
 				elif v['type'] == 'appkit.uploadimg':
-					att_url['item_name'] = pureName
-					att_url['item_value'] = v['value']
-				if item_data:
-					item_data_list.append(item_data)
-				if att_url:
-					att_url_list.append(att_url)
+					item_data['type'] = []
+					item_data['item_name'] = pureName
+					item_data['item_value'] = v['value']
+				item_data_list.append(item_data)
 		else:
 			webapp_user_name = ''
 			item_data_list = {}
+		print item_data_list
 		response = create_response(200)
 		response.data = {
 			'webapp_user_name': webapp_user_name,
 			'items': item_data_list,
-			'att_url_list':att_url_list
 		}
 		return response.get_response()
 	

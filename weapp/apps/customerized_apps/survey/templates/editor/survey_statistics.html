@@ -67,7 +67,6 @@
           float: left;
           margin-left: 20px;
         }
-{#        放大图#}
         .xa-uploadimg_box{
             display: none;
             position: absolute;
@@ -79,6 +78,7 @@
             text-align: center;
             background-color: #DDDDDD;
             z-index: 1000000;
+            overflow-y: hidden;
         }
         .xa-uploadimg_box .xa-close_btn{
             position: absolute;
@@ -90,7 +90,6 @@
             height: auto;
             border: 2px solid #DDDDDD;
         }
-
         .xa-arr{
             position: absolute;
             top:40%;
@@ -231,8 +230,8 @@
         if(click_count ===1) {
             var curr_hight = $(document).scrollTop();
             $('.xa-uploadimg_box').css('top',curr_hight+'px');
-            click_count = click_count + 1;
 
+            click_count = click_count + 1;
             var that = this;
             var img_len = $(that).parent().find('img').length;
             var img_arr = $(that).parent().find('img').clone(true);
