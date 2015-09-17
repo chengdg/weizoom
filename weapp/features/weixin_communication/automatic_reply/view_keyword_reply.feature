@@ -26,7 +26,6 @@ Background:
 			}],
 			"cover_in_the_text":"true",
 			"jump_url":"www.baidu.com",
-			"summary":"单条图文4文本摘要",
 			"content":"单条图文4文本内容"
 		},{
 			"title":"sub图文1",
@@ -34,7 +33,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容"
 		},{
 			"title":"sub图文2",
@@ -42,7 +40,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容"
 		},{
 			"title":"sub图文3",
@@ -50,7 +47,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou4.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文3文本摘要",
 			"content":"sub单条图文3文本内容",
 			"jump_url":"www.baidu.com"
 		}]
