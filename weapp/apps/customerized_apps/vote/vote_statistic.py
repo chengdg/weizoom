@@ -164,7 +164,6 @@ class voteStatistic_Export(resource.Resource):
 			if select_static:
 				ws = wb.add_sheet(u'选择题')
 				header_style = xlwt.XFStyle()
-				s_dic = {0:u'A.',1:u'B.',2:u'C.',3:u'D.',4:u'E',5:u'F',6:u'G',7:u'H',8:u'I',9:u'J',10:u'K',11:u'L',12:u'M',13:u'N',14:u'O'}
 				select_num = 0
 				row = col =0
 				for s in select_static:
@@ -180,7 +179,7 @@ class voteStatistic_Export(resource.Resource):
 							select_num += s_num
 					for s_i in select_static[s]:
 						s_num = select_static[s][s_i]
-						ws.write(row,col,s_dic[s_i_num]+s_i.split('_')[1])
+						ws.write(row,col,s_i.split('_')[1])
 						per = s_num*1.0/select_num*100
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
