@@ -61,51 +61,52 @@
         .xb-pagination-component {
             height: 33px;
         }
-        .xui-uploadimg{
+        td .xui-uploadimg{
           width: 60px;
           height: 75px;
           float: left;
           margin-left: 20px;
         }
-
 {#        放大图#}
         .xa-uploadimg_box{
-        display: none;
-        position: absolute;
-        width: 500px;
-        height: auto;
-        overflow: auto;
-        margin: auto;
-        top: 25%; left: 0;right: 0;
-        text-align: center;
-        background-color: #DDDDDD;
-    }
-    .xa-uploadimg_box .xa-close_btn{
-        position: absolute;
-        top: 5px; right: 5px;
-        z-index: 1000000;
-    }
-    .xa-uploadimg_box .xa-uploadimg{
-        max-width: 100%;
-        border: 2px solid #DDDDDD;
-    }
+            display: none;
+            position: absolute;
+            width: 500px;
+            height: auto;
+            overflow: auto;
+            margin: auto;
+            top: 25%; left: 0;right: 0;
+            text-align: center;
+            background-color: #DDDDDD;
+            z-index: 1000000;
+        }
+        .xa-uploadimg_box .xa-close_btn{
+            position: absolute;
+            top: 5px; right: 5px;
+            z-index: 1000000;
+        }
+        .xa-uploadimg_box .xa-uploadimg{
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #DDDDDD;
+        }
 
-    .xa-arr{
-        position: absolute;
-        top:40%;
-        height: 97px;
-        width: 38px;
-        background: url("/static_v2/img/arrow_lr.png");
-        background-repeat: no-repeat;
-        z-index: 1000001;
-    }
-    .xa-arr.xa-arr_left{
-        left: 3px;
-    }
-    .xa-arr.xa-arr_right{
-        right: 2px;
-        background-position: -91px;
-    }
+        .xa-arr{
+            position: absolute;
+            top:40%;
+            height: 97px;
+            width: 38px;
+            background: url("/static_v2/img/arrow_lr.png");
+            background-repeat: no-repeat;
+            z-index: 1000001;
+        }
+        .xa-arr.xa-arr_left{
+            left: 3px;
+        }
+        .xa-arr.xa-arr_right{
+            right: 2px;
+            background-position: -91px;
+        }
     </style>
 {% endblock %}
 
@@ -223,54 +224,58 @@
             }
         });
     });
-    </script>
-    <script>
-    $(document).ready(
-        $('.xa-uploadimg').click(function(){
-            console.log('sss');
-        })
-    );
-{#    //pic#}
-{#    var click_count = 1;#}
-{#    $('.xa-uploadimg').click(function(){#}
-{#        console.log('ss');#}
-{#        if(click_count ===1){#}
-{#            click_count = click_count+1;#}
-{#            var that = this;#}
-{#            var img_len = $(that).parent().find('img').length;#}
-{#            var img_arr = $(that).parent().find('img').clone(true);#}
-{#            var img_id_index = parseInt($(that).attr('id').split('-')[1]);#}
-{##}
-{#            $(this).parents().find('.xa-uploadimg_box').append("<div><div class='xa-uploadimg_div'></div><div><img class='xa-close_btn' src='/static_v2/img/close_btn.png'></div><div><div class='xa-arr xa-arr_left'></div><div class='xa-arr xa-arr_right'></div>").fadeIn('fast');#}
-{#            $('.xa-uploadimg_div').append($(that).clone(true));#}
-{#            if(img_len==1){#}
-{#                $('.xa-arr').css('display','none');#}
-{#            }#}
-{##}
-{#            $('.xa-close_btn').click(function(){#}
-{#                    $('.xa-uploadimg_box').fadeOut('fast');#}
-{#                    $('.xa-uploadimg_box').empty();#}
-{#                    click_count = 1;#}
-{#                });#}
-{#            $('.xa-arr_left').click(function(){#}
-{#                img_id_index = img_id_index - 1;#}
-{#                if (img_id_index < 0){#}
-{#                    img_id_index = img_len - 1;#}
-{#                }#}
-{#                $('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);#}
-{#            });#}
-{#            $('.xa-arr_right').click(function () {#}
-{#                img_id_index = img_id_index + 1;#}
-{#                if (img_id_index > img_len-1){#}
-{#                    img_id_index = 0;#}
-{#                }#}
-{#                $('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);#}
-{#            });#}
-{#        }else{#}
-{#            $('.xa-uploadimg_box').fadeOut(400);#}
-{#            $('.xa-uploadimg_box').empty();#}
-{#            click_count = 1;#}
-{#        }#}
-{#    });#}
+    var click_count = 1;
+    $('body').delegate('.xa-uploadimg', 'click', function(event) {
+        if(click_count ===1) {
+            var curr_hight = $(document).scrollTop();
+            $('.xa-uploadimg_box').css('top',curr_hight+'px');
+            click_count = click_count + 1;
+
+            var that = this;
+            console.log('+++++++++++++++');
+            var img_len = $(that).parent().find('img').length;
+            var img_arr = $(that).parent().find('img').clone(true);
+            var img_id_index = parseInt($(that).attr('id').split('-')[1]);
+
+            console.log('TAHT');
+            console.log(that);
+            console.log("LEN");
+            console.log(img_len);
+            console.log("ARR");
+            console.log(img_arr);
+            console.log("INDEX");
+            console.log(img_id_index);
+            console.log("--------------end------------");
+            $('.xa-uploadimg_box').append("<div class='xa-uploadimg_div'></div><div><img class='xa-close_btn' src='/static_v2/img/close_btn.png'></div><div class='xa-arr xa-arr_left'></div><div class='xa-arr xa-arr_right'></div>").fadeIn('fast');
+            $('.xa-uploadimg_div').append($(that).clone(true));
+            if(img_len==1){
+                $('.xa-arr').css('display','none');
+            }
+
+            $('.xa-close_btn').click(function(){
+                    $('.xa-uploadimg_box').fadeOut('fast');
+                    $('.xa-uploadimg_box').empty();
+                    click_count = 1;
+                });
+            $('.xa-arr_left').click(function(){
+                img_id_index = img_id_index - 1;
+                if (img_id_index < 0){
+                    img_id_index = img_len - 1;
+                }
+                $('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);
+            });
+            $('.xa-arr_right').click(function () {
+                img_id_index = img_id_index + 1;
+                if (img_id_index > img_len-1){
+                    img_id_index = 0;
+                }
+                $('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);
+            });
+        }else{
+            $('.xa-uploadimg_box').fadeOut(400);
+            $('.xa-uploadimg_box').empty();
+            click_count = 1;
+        }
+    });
     </script>
 {% endblock %}
