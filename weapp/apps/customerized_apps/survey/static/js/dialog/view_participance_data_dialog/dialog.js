@@ -40,18 +40,6 @@ W.dialog.app.survey.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					var template = Handlebars.compile($(that.templates['resultTmpl']).html());
 					$('.xui-app_survey-Dialog .modal-body').html(template(data));
 
-					var att_list = data.att_url_list;
-					for(var i=0;i<att_list.length;i++){
-						var att_name = att_list[i].item_name;
-						var att_array = att_list[i].item_value;
-						var att_val = "";
-						for(var j=0;j<att_array.length;j++){
-							att_val = att_val+'<img class=\"xa-uploadimg\" id=\"uploadimg-'+j+'\" src=\"'+att_array[j]+'\">'
-						}
-						var att_html = '<tr><td style="width:50%">'+att_name+':</td><td>'+att_val+'</td></tr>';
-						$('.modal-body .table.table-bordered').append(att_html);
-					}
-
 					var click_count = 1;
 					$('img.xa-uploadimg').click(function(){
 						if(click_count ===1){

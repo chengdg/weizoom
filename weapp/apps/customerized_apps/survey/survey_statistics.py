@@ -31,7 +31,7 @@ class surveyStatistics(resource.Resource):
 		if 'id' in request.GET:
 			survey_id =request.GET['id']
 			all_participances = app_models.surveyParticipance.objects(belong_to=survey_id)
-			total_count = all_participances.count()
+			total_participance = all_participances.count()
 
 			q_vote ={}
 			result_list = []
@@ -65,16 +65,16 @@ class surveyStatistics(resource.Resource):
 						else:
 							q_vote[k]['value'].append(value['value'])
 
-			for k,v in q_vote.items():
+			for k in sorted(q_vote.keys()):
 				a_isSelect = {}
 				result = {}
-				count = len(v['value'])
+				count = len(q_vote[k]['value'])
 				total_count = 0
 				value_list = []
 				v_a = {}
 				title_type = u''
-				for title_value in v['value']:
-					if v['type'] == 'appkit.selection':
+				for title_value in q_vote[k]['value']:
+					if q_vote[k]['type'] == 'appkit.selection':
 						v_a = title_value
 						for a_k,a_v in title_value.items():
 							if not a_isSelect.has_key(a_k):
@@ -82,9 +82,9 @@ class surveyStatistics(resource.Resource):
 							if a_v['isSelect'] == True:
 								a_isSelect[a_k] += 1
 								total_count += 1
-					if v['type'] == 'appkit.qa':
+					if q_vote[k]['type'] == 'appkit.qa':
 						type_name = u'问答'
-					if v['type'] == 'appkit.uploadimg':
+					if q_vote[k]['type'] == 'appkit.uploadimg':
 						type_name = u'上传图片'
 
 				for a_k in sorted(v_a.keys()):
@@ -105,8 +105,8 @@ class surveyStatistics(resource.Resource):
 				result['title_'] = k
 				result['count'] = count
 				question_list = []
-				result['values'] = value_list if v['type'] == 'appkit.selection' else question_list
-				result['type'] = v['type']
+				result['values'] = value_list if q_vote[k]['type'] == 'appkit.selection' else question_list
+				result['type'] = q_vote[k]['type']
 				result_list.append(result)
 
 			project_id = 'new_app:survey:%s' % request.GET.get('related_page_id', 0)
@@ -121,7 +121,7 @@ class surveyStatistics(resource.Resource):
 			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': 'surveies',
 			'titles': result_list,
-			'total_count': total_count,
+			'total_participance': total_participance,
 			'project_id': project_id,
 			'survey_id':survey_id
 
@@ -209,7 +209,8 @@ class surveyStatistics_Export(resource.Resource):
 
 		# app_name = surveyStatistics_Export.app
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'用户调研统计.xls'
+		excel_file_name = 'survey_statistic.xls'
+		download_excel_file_name = u'用户调研统计.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -334,7 +335,7 @@ class surveyStatistics_Export(resource.Resource):
 				print '/static/upload/%s'%excel_file_name
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 
