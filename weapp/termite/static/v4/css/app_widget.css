@@ -588,7 +588,7 @@ p.wui-i-start_time,p.wui-i-end_time{
  * 上传图片UploadImg样式
  */
 .wui-UploadImg {
-	padding: 15px 20px 0 20px;
+	padding: 15px 0 0 20px;
 }
 .wui-UploadImg .wui-i-title {
 	color: #333;
