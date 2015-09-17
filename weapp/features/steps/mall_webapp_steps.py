@@ -457,7 +457,8 @@ def step_impl(context, webapp_owner_name):
 		if row.get('payment_time', '') != '' or row.get('payment', '') == u'支付':
 			pay_type = row.get('pay_type', u'货到付款')
 			if pay_type != '' != u'优惠抵扣':
-				context.created_order_id = data['order_no']
+				if 'order_no' in data:
+					context.created_order_id = data['order_no']
 				context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, pay_type))
 			if row.get('payment_time', '') != '':
 				Order.objects.filter(id=order.id).update(
