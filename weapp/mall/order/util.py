@@ -271,20 +271,6 @@ def export_orders_json(request):
         # 计算总和
         final_price = 0.0
         weizoom_card_money = 0.0
-        # if order.type == PAY_INTERFACE_COD:
-        #     print 'jz-----1', order.type, order.type == PAY_INTERFACE_COD
-        #     if order.status == ORDER_STATUS_SUCCESSED:
-        #         final_price = order.final_price
-        #         weizoom_card_money = order.weizoom_card_money
-        #         final_total_order_money += order.final_price
-        #         try:
-        #             coupon_money_count += order.coupon_money
-        #             weizoom_card_total_order_money += order.weizoom_card_money
-        #             use_integral_money += order.integral_money
-        #         except:
-        #             pass
-        # else:
-        print 'jz-----2', order.type, order.type == PAY_INTERFACE_COD
         if order.status in [2, 3, 4, 5, 6]:
             final_price = order.final_price
             weizoom_card_money = order.weizoom_card_money
@@ -316,7 +302,6 @@ def export_orders_json(request):
                 source = u'微众商城'
 
         orderRelations = relations.get(order.id, [])
-        # product_ids = [r.product_id for r in orderRelations]
 
         i = 0
         for relation in sorted(orderRelations, key=lambda o:o.id):
@@ -336,7 +321,6 @@ def export_orders_json(request):
             # models_name = ''
             coupon_name = ''
             coupon_money = ''
-            # promotion_name = ''
             promotion_type = ''
 
 
