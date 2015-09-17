@@ -17,7 +17,7 @@ Background:
 			"content":"单条图文1文本内容"
 		}]
 		"""
-	and jobs已添加多图文
+	And jobs已添加多图文
 		"""
 		[{
 			"title":"图文4",

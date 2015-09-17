@@ -109,7 +109,7 @@ def step_impl(context, user, page_index):
 def step_impl(context, user, type):
 	url = '/new_weixin/api/realtime_messages/?page=1&count=30'
 	if type == "所有信息":
-		url = '/new_weixin/api/realtime_messages/?page=1&count=30'
+		url = '/new_weixin/api/realtime_messages/?page=1&count=30&filter_value=status:-1'
 	elif type == "未读信息":
 		url = '/new_weixin/api/realtime_messages/?page=1&count=30&filter_value=status:0'
 	elif type == "未回复":
