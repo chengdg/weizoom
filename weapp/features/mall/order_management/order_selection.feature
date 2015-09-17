@@ -127,7 +127,7 @@ Background:
 		}]
 		"""
 
-@mall2 @order @allOrder @zhaolei_o
+@mall2 @order @allOrder @order_export
 Scenario: 选择订单筛选条件
 	jobs选择订单筛选条件后
 	1. jobs选择一个条件时,可以看到订单列表
