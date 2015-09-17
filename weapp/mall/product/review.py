@@ -22,7 +22,8 @@ COUNT_PER_PAGE = 50
 REVIEW_FILTERS = {
     'review': [
         {
-            'comparator': lambda review, filter_value: (filter_value == 'all') or (filter_value == review.status),
+            'comparator': lambda review, filter_value: (filter_value == 'all') or (filter_value == review.status) or (
+                filter_value == '1' and review.status == '2'),
             'query_string_field': 'reviewStatus'
         }, {
             'comparator': lambda review, filter_value: (filter_value == 'all') or (
