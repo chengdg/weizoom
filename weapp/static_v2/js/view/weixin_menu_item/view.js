@@ -244,7 +244,6 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 		var $current = $(event.currentTarget);
     	var $oneMenuItemDiv = this.$('.xui-one-menu-item');
     	var length = $oneMenuItemDiv.find('.form-control').length;
-    	alert(length)
     	if (length > 0) {
 			//$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
 			$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
