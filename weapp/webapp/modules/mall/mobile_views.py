@@ -11,17 +11,6 @@ template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 
 
-########################################################################
-#      PAGE FOR TESTING - 测试用页面
-#
-# list_coupons: 显示"优惠券"页面
-########################################################################
-# jz 2015-08-10
-# def list_coupons(request):
-# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-# 	return request_util.list_coupons(request)
-
-
 def list_products(request):
 	"""显示"商品列表"页面
 	"""

@@ -3,10 +3,8 @@
 #相关活动的会员价添加到购物车已在相关活动中写了
 
 
-
-@func:webapp.modules.mall.views.list_products
-Feature: 添加普通商品，促销商品到购物车中
-	bill能在webapp中将jobs添加的"普通商品，促销商品"放入购物车
+Feature: 普通商品，促销商品到购物车中
+	bill能在webapp中将jobs添加的"普通商品，普通商品有规格商品,促销商品(限时抢购,积分商品,买1赠1)"放入购物车
 
 Background:
 	Given jobs登录系统
@@ -48,6 +46,12 @@ Background:
 		}, {
 			"name": "商品4",
 			"price":400
+		}, {
+			"name": "商品5",
+			"price": 50
+		}, {
+			"name": "商品6",
+			"price": 100
 		}]	
 		"""
 
@@ -78,18 +82,28 @@ Background:
 			"is_enable_cycle_mode": true
 		}]
 		"""
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品6积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"products": ["商品6"],
+			"discount": 70,
+			"discount_money": 70.0,
+			"is_permanant_active": false
+		}
+		"""
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
 
 
-@mall2 @mall.webapp @mall.webapp.shopping_cart
-Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢购活动，商品2是买赠活动，商品3是多规格商品，没有参加任何活动
+Scenario:1 放入多个商品到购物车
+	#商品1是限时抢购活动，商品2是买赠活动赠商品4，商品3是多规格商品没有参加任何活动,商品5是普通无规格没有参加活动,商品6是积分活动
 	jobs添加商品后
 	1. bill能在webapp中将jobs添加的商品放入购物车
 	2. tom的购物车不受bill操作的影响
 
-	注意：总价和总商品数量是在前台计算，对它们的测试放到ui测试中，这里无法测试
-	
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -117,10 +131,16 @@ Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢
 					}
 				}
 			}
+		}, {
+			"name": "商品5",
+			"count": 1
+		}, {
+			"name": "商品6",
+			"count": 1
 		}]
 		"""
 	
-	Then bill能获得购物车
+	Then bill能获得购物车:ui
 		"""
 		{
 			"product_groups": [{
@@ -164,18 +184,29 @@ Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢
 					"count": 1,
 					"model": "S"
 				}]
+			}, {
+				"products": [{
+					"name": "商品5",
+					"price": 50,
+					"count": 1
+				}]
+			}, {
+				"products": [{
+					"name": "商品6",
+					"price": 100,
+					"count": 1
+				}]
 			}],
 			"invalid_products": []
 		}
 		"""
 	
 	When tom访问jobs的webapp
-	Then tom能获得购物车
+	Then tom能获得购物车:ui
 		"""
 		{
 			"product_groups": [],
 			"invalid_products": []
 		}
 		"""
-	
 	
