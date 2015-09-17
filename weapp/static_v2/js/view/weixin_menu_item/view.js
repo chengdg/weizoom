@@ -224,6 +224,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	
 	onClickOneMenuItemText: function(event) {
 		var $current = $(event.currentTarget);
+
 		//this.$('.xa-no-panel').removeClass('xui-editCover')
 		$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');
 		if ($current.attr('readonly')) {
@@ -244,14 +245,16 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 		var $current = $(event.currentTarget);
     	var $oneMenuItemDiv = this.$('.xui-one-menu-item');
     	var length = $oneMenuItemDiv.find('.form-control').length;
+
     	if (length > 0) {
-			//$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
-			$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
+			$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
+			
+			//$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
 		} else {
 			$('.xa-no-panel').removeClass('xui-editCover')
 			$('.xa-no-panel').text('')
 		}
-		$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');
+		//$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');
 		if ($current.attr('readonly')) {
 			//$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
 			$('input').attr('readonly', 'readonly');
