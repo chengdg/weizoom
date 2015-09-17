@@ -10,13 +10,6 @@ from django.template import RequestContext
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render_to_response
-# jz 2015-08-11
-# from django.contrib.auth.decorators import login_required, permission_required
-# from django.contrib.auth.models import User, Group, Permission
-# from django.contrib import auth
-# from django.contrib import messages
-# from core.jsonresponse import JsonResponse, create_response
-# from core.dateutil import get_today
 from core.exceptionutil import unicode_full_stack
 from mall.module_api import check_product_review_overdue
 
@@ -46,70 +39,15 @@ from webapp import util as webapp_util
 from cache import webapp_cache
 from bs4 import BeautifulSoup
 
-page_title = u'微众商城'
-
-
-########################################################################
-#      PAGE FOR TESTING - 测试用页面
-#
-# list_coupons: 显示"优惠券"页面
-########################################################################
-# jz 2015-08-10
-# def list_coupons(request):
-# 	profile = request.user_profile
-# 	coupons = list(coupon_model.Coupon.objects.filter(owner=profile.user, member_id=0))
-
-# 	c = RequestContext(request, {
-# 		'is_hide_weixin_option_menu': True,
-# 		'page_title': u'【测试】优惠券列表',
-# 		'coupons': coupons
-# 	})
-# 	return render_to_response('%s/coupons.html' % request.template_dir, c)
-
-
-########################################################################
-# get_productcategory: 显示“商品分类”页面
-########################################################################
-# jz 2015-08-10
-# def get_productcategory(request):
-# 	category_id = request.GET['rid']
-
-# 	try:
-# 		product = Product.objects.get(id=product_id)
-# 	except:
-# 		product = {'is_deleted': True}
-
-# 	#获得swipe image
-# 	swipe_images = []
-# 	swipe_images.append({
-# 		"url": product.pic_url,
-# 		"caption": '',
-# 		"link_url": '#'
-# 	})
-
-# 	#获得购物车数量
-# 	shopping_cart_product_nums = mall_api.get_shopping_cart_product_nums(request.webapp_user)
-
-# 	#获得运费
-# 	# product.postage_config, product.postage = mall_util.get_postage_for_weight(request.webapp_owner_id, product.weight)
-
-# 	c = RequestContext(request, {
-# 		'is_hide_weixin_option_menu': True,
-# 		'page_title': u'商品分类',
-# 		'swipe_images': swipe_images,
-# 		'swipe_image_count': len(swipe_images),
-# 		'swipe_images_json': json.dumps(swipe_images),
-# 		'product': product,
-# 		'shopping_cart_product_nums': shopping_cart_product_nums,
-# 		'is_enable_get_coupons': settings.IS_IN_TESTING
-# 	})
-# 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
+# jz 2015-10-09
+# page_title = u'微众商城'
 
 
 ########################################################################
 # list_products: 显示"商品列表"页面
 ########################################################################
 def list_products(request):
+	# jz 2015-10-09
 	# 得到会员对应的折扣
 	# discount = get_member_discount(member)
 
@@ -130,6 +68,7 @@ def list_products(request):
 		'products': products,
 		'category': category,
 		'is_deleted_data': category.is_deleted if hasattr(category, 'is_deleted') else False,
+		# jz 2015-10-09
 		#'shopping_cart_product_nums': mall_api.get_shopping_cart_product_nums(request.webapp_user),
 		'product_categories': product_categories,
 		'has_category': has_category,
@@ -143,22 +82,6 @@ def list_products(request):
 	else:
 		return render_to_response('%s/products_original.html' % request.template_dir, c)
 
-
-#added by chuter
-# jz 2015-08-10
-# def _get_has_deleted_product_response(request, webapp_user, product):
-# 	#获得购物车数量
-# 	shopping_cart_product_nums = mall_api.get_shopping_cart_product_nums(webapp_user)
-
-# 	c = RequestContext(request, {
-# 		'swipe_images': None,
-# 		'swipe_image_count': 0,
-# 		'swipe_images_json': '{}',
-# 		'product': product,
-# 		'shopping_cart_product_nums': shopping_cart_product_nums,
-# 		'is_enable_get_coupons': settings.IS_IN_TESTING
-# 	})
-# 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 def __is_forbidden_coupon(owner_id, product_id):
 	"""
@@ -194,9 +117,6 @@ def get_product(request):
 	#duhao 2015-09-08
 	hint = __get_product_hint(request.webapp_owner_id, product_id)
 
-	# jz 2015-08-10
-	#product.fill_model()
-
 	if product.is_deleted:
 		c = RequestContext(request, {
 			'is_deleted_data': True
@@ -215,11 +135,7 @@ def get_product(request):
 		'name': 'promotion',
 		'content': product.promotion
 	}]
-	#获得运费计算因子
-	# jz 2015-08-10
-	#postage_factor = mall_util.get_postage_factor(request.webapp_owner_id, product=product)
 
-	###################################################
 	non_member_followurl = None
 	if request.user.is_weizoom_mall:
 		product.is_can_buy_by_product(request)
@@ -243,11 +159,7 @@ def get_product(request):
 		'product': product,
 		'jsons': jsons,
 		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
-		# jz 2015-08-10
-		# 'is_enable_get_coupons': settings.IS_IN_TESTING,
 		'model_property_size': len(product.product_model_properties),
-		# jz 2015-08-10
-		# 'postage_factor': json.dumps(product.postage_factor),
 		'hide_non_member_cover': True,
 		'non_member_followurl': non_member_followurl,
 		'price_info': product.price_info,
@@ -298,10 +210,6 @@ def get_order_list(request):
 ########################################################################
 def pay_order(request):
 	webapp_user = request.webapp_user
-	# jz 2015-08-10
-	# is_delivery_plan = 0
-	# delivery_plan = None
-	# has_delivery_times = None
 	try:
 		order_id = request.GET['order_id']
 		order_id = order_id.split('-')[0]
@@ -338,22 +246,6 @@ def pay_order(request):
 			order.red_envelope_created = True
 
 	for sub_order in orders:
-		# jz 2015-08-10
-		# if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
-		# 	order.is_show_field = True
-		# else:
-		# 	order.is_show_field = False
-		#获取订单包含商品
-		# order_has_products = []
-		# try:
-		# 	# order_has_products = OrderHasProduct.objects.filter(order=order)
-		# 	order.products = mall_api.get_order_products(order)
-		# 	order.total_price = Order.get_order_has_price_number(order)
-		# except:
-		# 	error_msg = u'pay_order:获取订单包含商品异常, cause:\n{}'.format(unicode_full_stack())
-		# 	watchdog_error(error_msg, db_name=settings.WATCHDOG_DB)
-		# 	pass
-
 		if sub_order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - sub_order.update_at).days >= 3:
 			#订单发货后3天显示确认收货按钮
 			if not hasattr(sub_order, 'session_data'):
@@ -379,13 +271,6 @@ def pay_order(request):
 		'error_msg': None,
 		'is_in_testing': settings.IS_IN_TESTING,
 		'is_hide_weixin_option_menu': True,
-		# jz 2015-08-10
-		# 'is_delivery_plan': is_delivery_plan,
-		# 'delivery_plan': delivery_plan,
-		# 'has_delivery_times': has_delivery_times,
-		#'order_has_products': order_has_products,
-		# 'is_support_thanks_card': is_support_thanks_card,
-		# 'thanks_cards': thanks_cards,
 		'hide_non_member_cover': True,
 		'is_show_success': request.GET.get('isShowSuccess', False)
 	})
@@ -423,12 +308,6 @@ def __record_order_payment_info(order, pay_result):
 # out_trade_no 订单号
 ########################################################################
 def get_pay_result(request):
-	'''
-	# jz 2015-08-10
-	order_id = request.GET.get('out_trade_no', None)
-	trade_status = request.GET.get('result', '')
-	is_trade_success = TRADE_SUCCESS == trade_status.lower()
-	'''
 	webapp_owner_id = request.webapp_owner_id
 	type = request.GET['pay_interface_type']
 	related_config_id = request.GET.get('related_config_id', 0)
@@ -436,13 +315,6 @@ def get_pay_result(request):
 	# 同步支付结果开始时间
 	get_pay_result_start_time = int(time.time() * 1000)
 
-	# jz 2015-08-10
-	# pay_interface = PayInterface.objects.get(owner_id=webapp_owner_id, type=type, related_config_id=related_config_id)
-	# if not pay_interface:
-	# 	msg = '支付方式(owner_id={},type={},related_config_id={})不存在'.format(webapp_owner_id, type, related_config_id)
-	# 	error_msg = u'weixin pay, stage:[get_pay_result], result:{}, exception:\n{}'.format(msg, msg)
-	# 	watchdog_error(error_msg)
-	# 	raise Http404(error_msg)
 	pay_interface = PayInterface()
 	pay_interface.type = int(type)
 	pay_result = pay_interface.parse_pay_result(request)
@@ -467,7 +339,6 @@ def get_pay_result(request):
 			watchdog_error(error_msg)
 			raise Http404(error_msg)
 		if pay_result:
-			#request.webapp_user.complete_payment(request)
 			mall_signals.post_pay_order.send(sender=Order, order=order, request=request)
 
 	if order is None:
@@ -484,32 +355,6 @@ def get_pay_result(request):
 			watchdog_error(error_msg)
 			pass
 
-	#获取感恩贺卡密码
-	# jz 2015-08-10
-	# is_support_thanks_card = False
-	# thanks_cards = []
-	# try:
-	# 	thanks_card_orders = ThanksCardOrder.objects.filter(order_id=order.id)
-	# 	if thanks_card_orders:
-	# 		is_support_thanks_card = True
-	# 		for thanks_card_order in thanks_card_orders:
-	# 			thanks_card = {}
-	# 			thanks_card['id'] = thanks_card_order.id
-	# 			thanks_card['thanks_secret'] = thanks_card_order.thanks_secret
-	# 			thanks_card['is_used'] = thanks_card_order.is_used
-	# 			thanks_cards.append(thanks_card)
-	# except:
-	# 	error_msg = u'weixin pay, stage:[get_pay_result], result:获取感恩贺卡密码异常, exception:\n{}'.format(unicode_full_stack())
-	# 	watchdog_error(error_msg)
-	# 	pass
-	#对于已取消的订单, 不展示感恩贺卡
-	#if order.status == ORDER_STATUS_CANCEL:
-	# is_support_thanks_card = False
-	# thanks_cards = []
-
-	# is_delivery_plan = False
-	# if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-	# 	is_delivery_plan = True
 	#确定是否显示运费、积分、优惠券等信息
 	if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
 		order.is_show_field = True
@@ -557,10 +402,6 @@ def get_pay_result(request):
 		'order_status_info': STATUS2TEXT[order.status],
 		'order_has_products': order_has_products,
 		'is_in_testing' : settings.IS_IN_TESTING,
-		# jz 2015-08-10
-		# 'is_support_thanks_card': is_support_thanks_card,
-		# 'thanks_cards': thanks_cards,
-		# 'is_delivery_plan': is_delivery_plan,
 		'hide_non_member_cover': True,
 		'is_show_success': is_show_success,
 		'is_show_red_envelope': is_show_red_envelope,
@@ -647,8 +488,6 @@ def get_pay_notify_result(request):
 			#记录订单对应的支付结果信息
 			__record_order_payment_info(order, pay_notify_result)
 
-			# jz 2015-08-10
-			#request.webapp_user.complete_payment(request)
 			mall_signals.post_pay_order.send(sender=Order, order=order, request=request)
 	try:
 		watchdog_info(u'weixin pay, stage:[get_pay_notify_result], result:支付异步通知{}'.format(pay_notify_result))
@@ -712,15 +551,6 @@ def edit_order(request):
 	order = mall_api.create_order(webapp_owner_id, webapp_user, product)
 	order.product_groups = mall_api.group_product_by_promotion(request, products)
 
-	#测试订单，修改价钱和订单类型
-	# jz 2015-08-10
-	# type = request.GET.get('type', '')
-	# order = mall_api.update_order_type_test(type, order)
-	#获得运费计算因子
-	#postage_factor = order.used['postage_config'].factor
-	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
-	# delivery_dates = request.REQUEST.get('delivery_dates', '')
-
 	#获得运费配置，支持前端修改数量、优惠券等后实时计算运费
 	postage_factor = product.postage_config['factor']
 
@@ -759,10 +589,6 @@ def edit_order(request):
 		'integral_info': integral_info,
 		'coupons': coupons,
 		'limit_coupons': limit_coupons,
-		# jz 2015-08-10
-		# 'is_delivery_plan': 1 if product.type == 'delivery' else 0,	#通过该类型判断商品是配送套餐还是其他商品
-		# 'delivery_plan_id': delivery_plan_id,	#配送套餐id
-		# 'delivery_dates': delivery_dates,	#配送套餐计划,
 		'hide_non_member_cover': True,
 		'use_ceiling': use_ceiling,
 		'jsons': jsons
@@ -780,6 +606,7 @@ def __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id):
 
 	product_ids = []
 	total_price = 0
+	# jz 2015-10-09
 	# productIds2price = dict()
 	productIds2original_price = dict()
 	is_forbidden_coupon = True
@@ -791,6 +618,7 @@ def __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id):
 			#不是被禁用全场优惠券的商品 duhao 20150908
 			total_price += product_total_price
 			is_forbidden_coupon = False
+		# jz 2015-10-09
 		# if not productIds2price.get(product.id):
 		# 	productIds2price[product.id] = 0
 		# productIds2price[product.id] += product_total_price
@@ -818,6 +646,7 @@ def __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id):
 				# 过期状态
 				coupon.display_status = 'overdue'
 			limit_coupons.append(coupon)
+		# jz 2015-10-09
 		# elif coupon.limit_product_id > 0 and \
 		# 	(product_ids.count(limit_id) == 0 or valid > productIds2price[limit_id]) or\
 		# 	valid > total_price or\
@@ -1166,10 +995,6 @@ def show_concern_shop_url(request):
 	from_webapp_id = request.user_profile.webapp_id
 	to_webapp_id = None
 
-	# jz 2015-08-10
-	# otherProduct = WeizoomMallHasOtherMallProduct.objects.filter(product_id=product_id, weizoom_mall__webapp_id=from_webapp_id, is_checked=True)
-	# if otherProduct.count() > 0:
-	# to_webapp_id = otherProduct[0].webapp_id
 	otherProfile = UserProfile.objects.get(user_id=other_owner_id)
 	otherSettings = OperationSettings.objects.get(owner_id = otherProfile.user)
 	if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
@@ -1300,11 +1125,6 @@ def _get_order_review_list(request,need_product_detail=False):
 
     webapp_user_id = request.webapp_user.id  # 游客身份
     member_id = request.member.id            # 会员身份
-
-    # jz 2015-08-10
-    # need_product_detail = request.GET.get("need_product_detail", False)
-    #判断调用的页面是否需要产品信息
-    # start
 
     # 得到会员的所有已完成的订单
     orders = Order.by_webapp_user_id(webapp_user_id).filter(status=5)
@@ -1648,10 +1468,6 @@ def edit_refueling_order(request):
 	use_ceiling = request.webapp_owner_info.integral_strategy_settings.use_ceiling
 
 	request.should_hide_footer = True
-	# jz 2015-08-10
-	# delivery_plan_id = request.REQUEST.get('delivery_plan_id', '')
-	# delivery_dates = request.REQUEST.get('delivery_dates', '')
-
 
 	jsons = [{
 		"name": "postageFactor",
@@ -1672,10 +1488,6 @@ def edit_refueling_order(request):
 		'integral_info': 0,
 		'coupons': None,
 		'limit_coupons': None,
-		# jz 2015-08-10
-		# 'is_delivery_plan': 1 if product.type == 'delivery' else 0,	#通过该类型判断商品是配送套餐还是其他商品
-		# 'delivery_plan_id': delivery_plan_id,	#配送套餐id
-		# 'delivery_dates': delivery_dates,	#配送套餐计划,
 		'hide_non_member_cover': True,
 		'use_ceiling': None,
 		'jsons': jsons,

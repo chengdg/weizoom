@@ -659,31 +659,6 @@ def __get_actual_orders(json_items, context):
 
     return actual_orders
 
-# jz 2015-08-26
-# def _pay_weizoom_card(context, data, order):
-#     url = '/webapp/api/project_api/call/'
-#     card = json.loads(context.text)
-
-#     # 1.根据卡号密码获取id
-#     data['target_api'] = 'weizoom_card/check'
-#     data['name'] = card['id']
-#     data['password'] = card['password']
-#     response = context.client.post(url, data)
-#     response_json = json.loads(response.content)
-#     if response_json['code'] == 200:
-#         card_id = response_json['data']['id']
-#     else:
-#         return False
-
-#     # 2.确认支付
-#     data['target_api'] = 'weizoom_card/pay'
-#     data['card_id'] = card_id
-#     data['order_id'] = order.order_id
-#     del data['name']
-#     del data['password']
-#     response = context.client.post(url, data)
-#     response_json = json.loads(response.content)
-
 
 @then(u'{user}能获得订单"{order_id}"操作日志')
 def step_impl(context, user, order_id):

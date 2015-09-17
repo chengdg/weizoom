@@ -199,27 +199,6 @@ class WebAppUser(models.Model):
 			from market_tools.tools.coupon.util import get_my_coupons
 			return get_my_coupons(self.member_id)
 
-	#############################################################################
-	# use_coupon: 使用优惠券 jz 2015-08-10
-	#############################################################################
-	# def use_coupon(self, coupon_id, price=0):
-	# 	if coupon_id > 0:
-	# 		try:
-	# 			coupon = coupon_model.Coupon.objects.get(id=coupon_id, status=coupon_model.COUPON_STATUS_UNUSED)
-	# 		except:
-	# 			raise IOError
-	# 		coupon.money = float(coupon.money)
-	# 		coupon_role = coupon_model.CouponRule.objects.get(id=coupon.coupon_rule_id)
-	# 		coupon.valid_restrictions = coupon_role.valid_restrictions
-	# 		if coupon.valid_restrictions > price and coupon.valid_restrictions != -1:
-	# 			raise ValueError
-	# 		coupon_model.Coupon.objects.filter(id=coupon_id).update(status=coupon_model.COUPON_STATUS_USED)
-	# 	else:
-	# 		coupon = coupon_model.Coupon()
-	# 		coupon.money = 0.0
-	# 		coupon.id = coupon_id
-
-	# 	return coupon
 
 	#############################################################################
 	# use_coupon_by_coupon_id: 使用优惠券通过优惠券号
@@ -258,42 +237,6 @@ class WebAppUser(models.Model):
 		from modules.member.util import  process_payment_with_shared_info
 		process_payment_with_shared_info(request)
 
-	#############################################################################
-	# get_discount: 获取折扣信息 jz 2015-08-10
-	#############################################################################
-	# def get_discount(self):
-	# 	if not hasattr(self, '_grade'):
-	# 		if not self.is_member:
-	# 			self._grade = {'grade':'', 'discount':100}
-	# 		else:
-	# 			target_grade_id = self.member.grade_id
-	# 			target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
-
-	# 			if not target_member_grade:
-	# 				self._grade = {'grade':'', 'discount':100}
-	# 			else:
-	# 				self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
-	# 	return self._grade
-
-	#############################################################################
-	# jz 2015-08-10
-	# get_discounted_money: 获取折扣后的金额
-	# product_type: 商品类型
-	# 1、如果折扣为100% 或者 商品类型为积分商品，返回当前的价格
-	# 2、折扣不为100% 并且不是积分商品，计算折扣
-	#############################################################################
-	# def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
-	# 	return money, 0
-		'''
-		grade_discount = self.get_discount()
-		if grade_discount['discount'] == 100 or product_type == PRODUCT_INTEGRAL_TYPE:
-			return money, 0
-		else:
-			discount = grade_discount['discount'] / 100.0
-			discounted_money = float('%.2f' % (money * discount))
-			delta = money - discounted_money
-			return discounted_money, delta
-		'''
 
 	#############################################################################
 	# set_purchased: 设置已购买标识

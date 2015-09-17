@@ -1,6 +1,6 @@
 # __editor__ : "新新8.27"
 
-Feature: 在webapp中使用优惠券购买商品
+Feature: 在webapp中使用优惠券购买商品(单品券)
 """
 	bill能在webapp中使用优惠券购买jobs添加的"商品"
 	该feature中需要修改和补充,涉及到场景如下
@@ -13,20 +13,21 @@ Feature: 在webapp中使用优惠券购买商品
 	#点击取消使用后,更新优惠券"*张可用"或者"无可用"
 	4.购买商品时,使用积分抵扣时,不显示优惠券项
 	#与积分抵扣互斥,切换使用优惠券
-	5.购买商品时,使用全店优惠券,满足使用条件与使用期限,即可使用并且显示该优惠券可用列表中,否则显示不可用列表中
+	5.使用单品优惠劵进行购买(选择优惠券)，该单品券适用于商品1，如果商品2使用(用优惠券码)，不显示该优惠券,提示
+	6.使用单品优惠劵进行购买，该单品券适用于商品3并且商品3满50元才可以使用，而不是订单满50可用
+	#购买商品时,使用全店优惠券,满足使用条件与使用期限,即可使用并且显示该优惠券可用列表中,否则显示不可用列表中
 	#该商品金额小于该优惠券时,使用优惠券后,抵扣金额为"-该商品金额"
 	#购买商品时,不可使用已过期优惠券并且显示在不可用列表中
-	6.购买商品时,使用优惠券码
+	7.购买多规格商品，买1个商品的两个规格，总价格满足优惠劵使用条件
+	8.使用多于商品价格的单品券进行购买，该单品券只适用于商品6
+	9.不同等级的会员购买有会员价同时有单品券的商品
+	#选择单品券，商品价格变回原价，取消使用单品券，价格变回会员价，和有会员价的商品同时购买，不影响其他会员价的商品
+	10.选择优惠券购买,订单经过处理处于"已取消"状态后，订单中的优惠券回复到"未使用"状态,并在未使用列表中
+	11.使用优惠券码购买,订单经过处理处于"退款完成"状态后，订单中的优惠券回复到"未使用"状态,并在未使用列表中
+	#优惠码使用规则在相关feature中已写
 	#优惠券活动在设置的活动期间内手动结束活动之后，已经领用的优惠券仍然可以使用(优惠券码可以使用),未领用的优惠券不能再领用，优惠码不能再使用
 	#输入错误的优惠码，提示"请输入正确的优惠码"	
 	#输入已失效的优惠码，提示"该优惠券已失效"
-	7.使用单品优惠劵进行购买，该单品券适用于商品1，如果商品2使用，则不显示该优惠券
-	8.使用单品优惠劵进行购买，该单品券适用于商品1, 该优惠券可用	
-	9.订单提交了，订单中使用的优惠券就处于"已使用状态"
-	10.订单经过处理处于"已取消"、"退款完成"状态后，订单中的优惠券回复到"未使用"状态
-	11.不同等级的会员购买有会员价同时使用全体券的商品（全体券和会员价可以同时使用，但是满多少钱可以使用计算的是会员价）
-	12.不同等级的会员购买有会员价同时有单品券的商品（单品券和会员价不能同时使用）交互：选择单品券，商品价格变回原价，取消使用单品券，价格变回会员价，和有会员价的商品同时购买，不影响其他会员价的商品
-
 	
 """
 
@@ -145,17 +146,175 @@ Background:
 		"""
 		[{
 			"name": "优惠券1",
-			"coupon_ids": ["coupon1_id_3", "coupon1_id_4"]
+			"coupon_ids": ["coupon1_id_4", "coupon1_id_3"]
 		}, {
 			"name": "优惠券6",
 			"coupon_ids": ["coupon6_id_2", "coupon6_id_1"]
 		}]
 		"""
+	And jobs设定会员积分策略
+		"""
+		{
+			"integral_each_yuan": 2
+		}
+		"""
+
+Scenario: 1 购买商品时,有可用优惠券时,在订单页显示优惠券"*张可用"
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""
+	When bill访问jobs的webapp
+	#第一次使用 购买商品1，成功
+	When bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill提示"优惠券2张可用":ui
 
 
+Scenario: 2 购买商品时,无可用优惠券时,在订单页显示优惠券"无可用"
+	#商品2没有设置单品券
+	When bill访问jobs的webapp
+	#第一次使用 购买商品2，提示无可用
+	When bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品2",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill提示"优惠券无可用":ui
 
-Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，如果商品2使用，则，购买失败
-	
+
+Scenario: 3 购买商品时,选择使用优惠券后,显示"已抵用*元"
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""
+	When bill访问jobs的webapp
+	When bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill提示"优惠券2张可用":ui
+	#购买商品1，选择优惠券后,显示已抵用*元
+	When bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_1"
+		}
+		"""
+	Then bill提示"优惠券已抵用1元":ui
+	#点击取消使用后,更新优惠券"*张可用"或者"无可用"
+	When bill点击取消使用:ui
+	Then bill提示"优惠券2张可用":ui
+
+Scenario: 4 购买商品时,使用积分抵扣时,不显示优惠券项
+	#两者互斥
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""
+	When bill获得jobs的50会员积分
+	Then bill在jobs的webapp中拥有50会员积分
+	When jobs创建积分应用活动
+		"""
+		[{
+			"name": "商品1积分应用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品1",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部",
+				"discount": 50,
+				"discount_money": 100.0
+			}]
+		}]
+		"""
+	When bill访问jobs的webapp
+	#第一次使用 购买商品1，成功
+	When bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill提示优惠券可用:ui
+	Then bill提示积分可抵扣:ui
+	When bill勾选积分可抵扣:ui
+	Then bill优惠券消失:ui
+	When bill取消勾选积分可抵扣:ui
+	Then bill优惠券显示:ui
+	When bill选择可使用优惠券:ui
+	Then bill可抵扣积分消失:ui
+	When bill取消选择可使用优惠券:ui
+	Then bill可抵扣积分显示:ui
+
+Scenario: 5 使用单品优惠劵进行购买(选择优惠券)，该单品券适用于商品1，如果商品2使用(用优惠券码)，则提示
+
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券1'的码库
 		"""
@@ -198,8 +357,8 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 			"integral_money":0.00
 		}
 		"""
-	#第二次使用 购买商品2 购买失败
-	When bill购买jobs的商品
+	#第二次使用 购买商品2(使用优惠码)提示
+	When bill购买jobs的商品:ui
 		"""
 		{
 			"products": [{
@@ -209,7 +368,7 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 			"coupon": "coupon1_id_2"
 		}
 		"""
-	Then bill获得创建订单失败的信息'该优惠券不能购买订单中的商品'
+	Then bill获得创建订单失败的信息'该优惠券不能购买订单中的商品':ui
 	Given jobs登录系统
 	Then jobs能获得优惠券'优惠券1'的码库
 		"""
@@ -229,87 +388,87 @@ Scenario: 1 使用单品优惠劵进行购买，该单品券适用于商品1，�
 		}
 		"""
 
-Scenario: 2 使用单品优惠劵进行购买，该单品券适用于商品3并且商品3满50元才可以使用，而不是订单满50可用
+Scenario: 6 使用单品优惠劵进行购买，该单品券适用于商品3并且商品3满50元才可以使用，而不是订单满50可用
 		1 买3件商品3，共60元，满足条件，可用单品劵；
 		2 买1件商品3，买一件商品2，订单满50，但单品不满50，不可以使用该单品卷
 	
-	Given jobs登录系统
-	Then jobs能获得优惠券'优惠券2'的码库
-		"""
-		{
-			"coupon2_id_1": {
-				"money": 10.0,
-				"status": "未使用",
-				"consumer": "",
-				"target": "bill"
-			},
-			"coupon2_id_2": {
-				"money": 10.0,
-				"status": "未使用",
-				"consumer": "",
-				"target": "bill"
+		Given jobs登录系统
+		Then jobs能获得优惠券'优惠券2'的码库
+			"""
+			{
+				"coupon2_id_1": {
+					"money": 10.0,
+					"status": "未使用",
+					"consumer": "",
+					"target": "bill"
+				},
+				"coupon2_id_2": {
+					"money": 10.0,
+					"status": "未使用",
+					"consumer": "",
+					"target": "bill"
+				}
 			}
-		}
-		"""
-	When bill访问jobs的webapp
-	#第一次使用 购买3个商品3，满足使用条件，成功
-	When bill购买jobs的商品
-		"""
-		{
-			"products": [{
-				"name": "商品3",
-				"count": 3
-			}],
-			"coupon": "coupon2_id_1"
-		}
-		"""
-	Then bill成功创建订单
-		"""
-		{
-			"status": "待支付",
-			"final_price": 50.0,
-			"product_price": 60.0,
-			"coupon_money": 10.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00
-		}
-		"""
-	#第二次使用 购买商品3+商品2 订单购买失败
-	When bill购买jobs的商品
-		"""
-		{
-			"products": [{
-				"name": "商品3",
-				"count": 1
-			},{
-				"name": "商品2",
-				"count": 1
-			}],
-			"coupon": "coupon2_id_2"
-		}
-		"""
-	Then bill获得创建订单失败的信息'该优惠券指定商品金额不满足使用条件'
-	Given jobs登录系统
-	Then jobs能获得优惠券'优惠券2'的码库
-		"""
-		{
-			"coupon2_id_1": {
-				"money": 10.0,
-				"status": "已使用",
-				"consumer": "bill",
-				"target": "bill"
-			},
-			"coupon2_id_2": {
-				"money": 10.0,
-				"status": "未使用",
-				"consumer": "",
-				"target": "bill"
+			"""
+		When bill访问jobs的webapp
+		#第一次使用 购买3个商品3，满足使用条件，成功
+		When bill购买jobs的商品
+			"""
+			{
+				"products": [{
+					"name": "商品3",
+					"count": 3
+				}],
+				"coupon": "coupon2_id_1"
 			}
-		}
-		"""
+			"""
+		Then bill成功创建订单
+			"""
+			{
+				"status": "待支付",
+				"final_price": 50.0,
+				"product_price": 60.0,
+				"coupon_money": 10.0,
+				"promotion_saved_money": 0.0,
+				"postage": 0.00,
+				"integral_money":0.00
+			}
+			"""
+		#第二次使用 购买商品3+商品2 订单购买失败,使用优惠码
+		When bill购买jobs的商品:ui
+			"""
+			{
+				"products": [{
+					"name": "商品3",
+					"count": 1
+				},{
+					"name": "商品2",
+					"count": 1
+				}],
+				"coupon": "coupon2_id_2"
+			}
+			"""
+		Then bill获得创建订单失败的信息'该优惠券指定商品金额不满足使用条件':ui
+		Given jobs登录系统
+		Then jobs能获得优惠券'优惠券2'的码库
+			"""
+			{
+				"coupon2_id_1": {
+					"money": 10.0,
+					"status": "已使用",
+					"consumer": "bill",
+					"target": "bill"
+				},
+				"coupon2_id_2": {
+					"money": 10.0,
+					"status": "未使用",
+					"consumer": "",
+					"target": "bill"
+				}
+			}
+			"""
 
-Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满足优惠劵使用条件
+Scenario: 7 购买多规格商品，买1个商品的两个规格，总价格满足优惠劵使用条件
 	
 	
 	Given jobs登录系统
@@ -324,7 +483,7 @@ Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满�
 		}
 		"""
 	When bill访问jobs的webapp
-	When bill购买jobs的商品
+	When bill购买jobs的商品:ui
 		"""
 		{
 			"products": [{
@@ -339,7 +498,7 @@ Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满�
 			"coupon": "coupon5_id_1"
 		}
 		"""
-	Then bill成功创建订单
+	Then bill成功创建订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -361,7 +520,7 @@ Scenario: 3 购买多规格商品，买1个商品的两个规格，总价格满�
 		"""
 
 
-Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只适用于商品6
+Scenario: 8 使用多于商品价格的单品券进行购买，该单品券只适用于商品6
 	且不抵扣其他商品金额和运费金额
 
 	Given jobs登录系统
@@ -383,7 +542,7 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 		}
 		"""
 	When tom访问jobs的webapp
-	When tom购买jobs的商品
+	When tom购买jobs的商品:ui
 		"""
 		{
 			"products": [{
@@ -418,9 +577,8 @@ Scenario: 4 使用多于商品价格的单品券进行购买，该单品券只�
 		}
 		"""
 
-#后续补充.雪静
-@mall2
-Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
+
+Scenario: 9 不同等级的会员购买有会员价同时有单品券的商品
 	1. 单品券和会员价不能同时使用
 	2. 选择单品券，商品价格变回原价，取消使用单品券，价格变回会员价
 	3. 和有会员价的商品同时购买，不影响其他会员价的商品
@@ -512,7 +670,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		"""
 	When bill访问jobs的webapp
 	#使用单品券，商品金额就是原价
-	When bill购买jobs的商品
+	When bill购买jobs的商品:ui
 		"""
 		{
 			"products": [{
@@ -522,7 +680,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			"coupon": "coupon1_id_1"
 		}
 		"""
-	Then bill成功创建订单
+	Then bill成功创建订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -540,7 +698,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		}
 		"""
 	#用会员价购买商品，就不能使用单品券
-	When bill购买jobs的商品
+	When bill购买jobs的商品:ui
 		"""
 		{
 			"products": [{
@@ -549,7 +707,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			}]
 		}
 		"""
-	Then bill成功创建订单
+	Then bill成功创建订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -593,7 +751,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 			"invalid_products": []
 		}
 		"""
-	When bill从购物车发起购买操作
+	When bill从购物车发起购买操作:ui
 		"""
 		{
 			"action": "pay",
@@ -620,7 +778,7 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		"pay_type": "微信付款"
 	}
 	"""
-	Then bill成功创建订单
+	Then bill成功创建订单:ui
 		"""
 		{
 			"status": "待支付",
@@ -660,3 +818,218 @@ Scenario: 5 不同等级的会员购买有会员价同时有单品券的商品
 		}
 		"""
 
+Scenario: 10 选择优惠券购买,订单经过处理处于"已取消"状态后，订单中的优惠券回复到"未使用"状态,并在未使用列表中
+
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""
+	When bill访问jobs的webapp
+	#购买
+	When bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_1"
+		}
+		"""
+	Then bill成功创建订单:ui
+		"""
+		{
+			"order_no": "001",
+			"status": "待支付",
+			"final_price": 199.0,
+			"product_price": 200.0,
+			"coupon_money": 1.0,
+			"promotion_saved_money": 0.0,
+			"postage": 0.00,
+			"integral_money":0.00
+		}
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""
+	#取消订单
+	When bill访问jobs的webapp
+	When bill取消订单'001':ui
+	Then bill购买jobs的商品:ui
+	#未使用列表中仍可重新使用该优惠券
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_1"
+		}
+		"""
+	Then bill成功创建订单:ui
+		"""
+		{
+			"status": "待支付",
+			"final_price": 199.0,
+			"product_price": 200.0,
+			"coupon_money": 1.0,
+			"promotion_saved_money": 0.0,
+			"postage": 0.00,
+			"integral_money":0.00
+		}
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""
+
+Scenario: 11 使用优惠券码购买,订单经过处理处于"退款完成"状态后，订单中的优惠券回复到"未使用"状态,并在未使用列表中
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			}
+		}
+		"""
+		#购买
+	When bill访问jobs的webapp
+	When bill购买jobs的商品:ui
+		"""
+		{
+			"products": [{
+				"name": "商品2",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_2"
+		}
+		"""
+	Then bill成功创建订单:ui
+		"""
+		{
+			"order_no": "001",
+			"status": "待支付",
+			"final_price": 199.0,
+			"product_price": 200.0,
+			"coupon_money": 1.0,
+			"promotion_saved_money": 0.0,
+			"postage": 0.00,
+			"integral_money":0.00
+		}
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			}
+		}
+		"""
+		#退款
+	When bill访问jobs的webapp
+	When bill申请退款'001':ui
+	Then bill退款完成'001':ui
+	Then bill购买jobs的商品:ui
+	#未使用列表中仍可重新使用该优惠券
+		"""
+		{
+			"products": [{
+				"name": "商品2",
+				"count": 1
+			}],
+			"coupon": "coupon1_id_2"
+		}
+		"""
+	Then bill成功创建订单:ui
+		"""
+		{
+			"status": "待支付",
+			"final_price": 199.0,
+			"product_price": 200.0,
+			"coupon_money": 1.0,
+			"promotion_saved_money": 0.0,
+			"postage": 0.00,
+			"integral_money":0.00
+		}
+		"""
+	Given jobs登录系统
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 1.0,
+				"status": "未使用",
+				"consumer": "",
+				"target": "bill"
+			},
+			"coupon1_id_2": {
+				"money": 1.0,
+				"status": "已使用",
+				"consumer": "bill",
+				"target": "bill"
+			}
+		}
+		"""
