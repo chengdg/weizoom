@@ -12,8 +12,8 @@ from modules.member import models as member_models
 
 
 class MemberStats(resource.Resource):
-	app = 'wapi'
-	resource = 'member_stats'
+	app = 'member'
+	resource = 'stats'
 
 	@param_required(params=['wid', 'date_start'])
 	def api_get(request):
@@ -41,7 +41,7 @@ class OrderStats(resource.Resource):
 	"""
 	获取订单的统计数据
 	"""
-	app = 'wapi'
+	app = 'mall'
 	resource = 'order_stats'
 
 	@param_required(params=['wid', 'date_start', 'date_end'])

@@ -20,7 +20,7 @@ class ProductCategory(resource.Resource):
 	"""
 	获取WebAPP ID
 	"""
-	app = 'mall'
+	app = 'wmall'
 	resource = 'product_category'
 
 	@staticmethod
