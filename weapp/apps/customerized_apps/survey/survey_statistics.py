@@ -65,16 +65,16 @@ class surveyStatistics(resource.Resource):
 						else:
 							q_vote[k]['value'].append(value['value'])
 
-			for k,v in q_vote.items():
+			for k in sorted(q_vote.keys()):
 				a_isSelect = {}
 				result = {}
-				count = len(v['value'])
+				count = len(q_vote[k]['value'])
 				total_count = 0
 				value_list = []
 				v_a = {}
 				title_type = u''
-				for title_value in v['value']:
-					if v['type'] == 'appkit.selection':
+				for title_value in q_vote[k]['value']:
+					if q_vote[k]['type'] == 'appkit.selection':
 						v_a = title_value
 						for a_k,a_v in title_value.items():
 							if not a_isSelect.has_key(a_k):
@@ -82,9 +82,9 @@ class surveyStatistics(resource.Resource):
 							if a_v['isSelect'] == True:
 								a_isSelect[a_k] += 1
 								total_count += 1
-					if v['type'] == 'appkit.qa':
+					if q_vote[k]['type'] == 'appkit.qa':
 						type_name = u'问答'
-					if v['type'] == 'appkit.uploadimg':
+					if q_vote[k]['type'] == 'appkit.uploadimg':
 						type_name = u'上传图片'
 
 				for a_k in sorted(v_a.keys()):
@@ -105,8 +105,8 @@ class surveyStatistics(resource.Resource):
 				result['title_'] = k
 				result['count'] = count
 				question_list = []
-				result['values'] = value_list if v['type'] == 'appkit.selection' else question_list
-				result['type'] = v['type']
+				result['values'] = value_list if q_vote[k]['type'] == 'appkit.selection' else question_list
+				result['type'] = q_vote[k]['type']
 				result_list.append(result)
 
 			project_id = 'new_app:survey:%s' % request.GET.get('related_page_id', 0)
