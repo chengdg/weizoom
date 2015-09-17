@@ -420,7 +420,7 @@ def export_orders_json(request):
                     (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
                     postage_time,
                     order.remark.encode('utf8'),
-                    u'' if order.customer_message else order.customer_message.encode('utf-8')
+                    u'' if order.customer_message == '' else order.customer_message.encode('utf-8')
 
                 ]
                 if has_supplier:
