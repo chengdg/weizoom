@@ -22,14 +22,16 @@ def get_to_be_shipped_order_infos(request):
     total_to_be_shipped_order_count = mall_models.Order.objects.belong_to(
         webapp_id
     ).filter(
-        Q(status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP) &
-        ~Q(type='test')
+        # Q(status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP) &
+        # ~Q(type='test')
+        status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP  #跟订单管理保持一致，不进行type字段的test判断 duhao 20150917
     ).count()
     orders = mall_models.Order.objects.belong_to(
         webapp_id
     ).filter(
-        Q(status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP) &
-        ~Q(type='test')
+        # Q(status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP) &
+        # ~Q(type='test')
+        status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP  #跟订单管理保持一致，不进行type字段的test判断 duhao 20150917
     ).order_by('-id')[:10]
     order_ids = []
     id2order = {}

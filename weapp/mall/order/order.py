@@ -151,6 +151,9 @@ class OrderList(resource.Resource):
 
         """
         belong = request.GET.get("belong", "all")
+        #处理来自“微商城-首页-待发货订单-更多”过来的查看待发货订单的请求
+        #add by duhao 2015-09-17
+        order_status = request.GET.get('order_status' , '1')
 
         if belong == 'audit':
             second_nav_name = export.ORDER_AUDIT
@@ -165,7 +168,8 @@ class OrderList(resource.Resource):
             'second_navs': export.get_orders_second_navs(request),
             'second_nav_name': second_nav_name,
             'has_order': has_order,
-            'page_type': page_type
+            'page_type': page_type,
+            'order_status': order_status
         })
         return render_to_response('mall/editor/orders.html', c)
 
