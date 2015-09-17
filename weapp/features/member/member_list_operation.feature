@@ -95,14 +95,6 @@ Background:
 		When tom2获得jobs的100会员积分
 		Then tom2在jobs的webapp中拥有100会员积分
 
-	#会员聊天记录
-	#	When tom1关注jobs的公众号
-	#	When tom1在模拟器中发送消息'tom1发送一条文本消息，未回复'
-	#
-	#	When tom2关注jobs的公众号
-	#	When tom2在模拟器中发送消息'tom2发送一条文本消息，回复文本消息'
-	#	When jobs在模拟器中给tom2回复消息'jobs回复tom2消息'
-
 @mall2 @member @memberList
 Scenario:1 调分组
 	Given jobs登录系统
@@ -515,56 +507,5 @@ Scenario:4 加积分
 		| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 | 未分组     |
 		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 | 未分组     |
 
-@member @memberList
-Scenario:5 查看聊天记录
 
-	#查看有会员消息的会员消息记录
-		When jobs查看"tom1"聊天记录
-			"""
-			{
-				"name":"tom1"
-			}
-			"""
 
-		Then jobs获得"tom1"聊天记录列表
-			"""
-			[{
-				"name":"tom1",
-				"time":"今天",
-				"inf_content":"tom1发送一条文本消息，未回复"
-				"have_read": false
-			}]
-			"""
-
-	#查看已回复消息的会员消息记录
-		When jobs查看"tom2"聊天记录
-			"""
-			{
-				"name":"tom2"
-			}
-			"""
-
-		Then jobs获得"tom2"聊天记录列表
-			"""
-			[{
-				"name":"jobs",
-				"time":"今天",
-				"inf_content":"jobs回复tom2消息 "
-				"have_read": true
-			},{
-				"name":"tom2",
-				"time":"今天",
-				"inf_content":"tom2发送一条文本消息，回复文本消息"
-				"have_read": true
-			}]
-			"""
-
-	#查看无聊天记录的会员消息记录
-		When jobs查看"tom3"聊天记录
-			"""
-			{
-				"name":"tom3"
-			}
-			"""
-
-		Then jobs不会打开新页面跳转到会员的"消息详情"页面

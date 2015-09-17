@@ -5,15 +5,16 @@ Feature:用户通过分享链接购买商品，给分享者增加积分
 """
 	tom通过bill分享jobs商品的链接购买商品，给bill增加积分
 
-	关于 "jobs设置会员积分策略" 的说明，之前的Step和现在的功能不太一致
+
+	关于 "jobs设置会员积分策略" 的说明
 	1、"be_member_increase_count"：关注公众账号
 	2、"click_shared_url_increase_count_before_buy":分享链接给好友点击
 	3、"buy_award_count_for_buyer":购买商品返积分
-		缺少订单金额奖励积分
+		"order_money_percentage_for_each_buy":购买商品返积分额外积分奖励
 	4、"buy_via_shared_url_increase_count_for_author":分享链接购买
 	5、"buy_via_offline_increase_count_for_author":推荐关注的好友购买奖励
-		缺少订单金额奖励积分
-	6、缺少订单积分抵扣上限设置
+		"buy_via_offline_increase_count_percentage_for_author":推荐关注的好友购买奖励额外积分奖励
+	6、订单积分抵扣上限设置
 	7、商品好评送积分
 """
 
@@ -53,7 +54,6 @@ Background:
 			"buy_via_offline_increase_count_for_author":30,
 			"buy_via_offline_increase_count_percentage_for_author":0.2,
 			"buy_increase_count_for_father":10
-
 		}
 		"""
 

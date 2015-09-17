@@ -49,19 +49,19 @@ Background:
 
 	#bill关注jobs的公众号进行消息互动，发送一条，无回复
 	When 清空浏览器
-	and bill关注jobs的公众号
-	and bill访问jobs的webapp
-	and bill在微信中向jobs的公众号发送消息'bill发送一条文本消息，未回复'
-	and bill在微信中向jobs的公众号发送消息'关键词bill'
+	And bill关注jobs的公众号
+	And bill访问jobs的webapp
+	And bill在微信中向jobs的公众号发送消息'bill发送一条文本消息，未回复'
+	And bill在微信中向jobs的公众号发送消息'关键词bill'
 
 	#tom关注jobs的公众号进行消息互动，发送两条，第一条回复文本消息，第二条无回复
 	When 清空浏览器
-	and tom关注jobs的公众号
-	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息1，未回复'
-	and tom在微信中向jobs的公众号发送消息'关键词tom'
-	and tom在微信中向jobs的公众号发送消息'tom发送一条文本消息2，未回复'
+	And tom关注jobs的公众号
+	And tom在微信中向jobs的公众号发送消息'tom发送一条文本消息1，未回复'
+	And tom在微信中向jobs的公众号发送消息'关键词tom'
+	And tom在微信中向jobs的公众号发送消息'tom发送一条文本消息2，未回复'
 
-@weixin @message @realtimeMessage 
+@mall2 @weixin @message @realtimeMessage 
 Scenario: 1 jobs浏览会员的消息详情
 
 	Given jobs登录系统
