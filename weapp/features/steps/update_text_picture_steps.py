@@ -29,6 +29,7 @@ def step_impl(context, user, news_title):
     print 'justing',post_info['newses']
     for index,addNews in enumerate(post_data):
         adict = adict_addNews(addNews)
+        adict['summary'] = addNews.get('summary','')
         adict['id'] = post_info['newses'][index]['id']
         data.append(adict)
     response = context.client.post(post_url,{'data':json.dumps(data),'material_id':material_id})
