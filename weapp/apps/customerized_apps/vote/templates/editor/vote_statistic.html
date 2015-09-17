@@ -52,7 +52,7 @@
     <div class="panel panel-default xui-tableBox">
         <div class="panel-header clearfix">
             <b class="xui-i-totalcount fr">总参与人数: {{ total_count }} 人</b>
-            <a class="btn btn-default xui-fontBold fr xui-i-exportBtn xa-i-exportBtn" href="javascript:void(0);">批量导出</a>
+            {% if titles %}<a class="btn btn-default xui-fontBold fr xui-i-exportBtn xa-i-exportBtn" href="javascript:void(0);">批量导出</a>{% endif %}
             <a id="export_href" style="display: none ">DownloadXLS</a>
         </div>
         {% if titles %}
@@ -93,7 +93,7 @@
         {% else %}
             <div class="xui-emptyBox m10">
                 <img src="/static_v2/img/editor/empty.png">
-                <span class="ml20">该投票没有投票项！</span>
+                <span class="ml20">该投票活动没有投票项！</span>
             </div>
         {% endif %}
     </div>
