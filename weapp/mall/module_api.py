@@ -463,6 +463,8 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					if member_id2member.has_key(review.member_id):
 						review.member_name = member_id2member[review.member_id].username_for_html
 						review.user_icon = member_id2member[review.member_id].user_icon
+					else:
+						review.member_name = '*'
 			#获取促销活动和积分折扣信息
 			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))
 			# Todo: 促销已经结束， 但数据库状态未更改
@@ -3152,9 +3154,12 @@ def get_product_review(request):
 		else:
 			review.pictures = []
 
-		member = member_id2member[review.member_id]
-		review.member_name = member.username_for_html
-		review.user_icon = member.user_icon
+		member = member_id2member.get(review.member_id, None)
+		if member:
+			review.member_name = member.username_for_html
+			review.user_icon = member.user_icon
+		else:
+			review.member_name = '*'
 
 	return product_review_list
 

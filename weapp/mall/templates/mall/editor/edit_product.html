@@ -31,7 +31,7 @@
 			<div class="form-group ">
 				<label class="control-label fl star_show" for="goodsname">商品名称：</label>
 				<div class="fl">
-					<input type="text" class="form-control w490 mr20 ml5" id="name" name="name"
+					<input type="text" class="xa-product-name form-control w490 mr20 ml5" id="name" name="name"
                            placeholder=""
                            value="{% if product %}{{ product.name }}{% endif %}"
                            data-validate="require-notempty"
@@ -40,7 +40,7 @@
 				</div>
 				<p>
 					还可以输入
-					<span style="color:#1F9200;">20</span>
+					<span class="xa-product-name-tip" style="color:#1F9200;">20</span>
 					个字
 				</p>
 			</div>
@@ -75,12 +75,12 @@
 			<div class="form-group ">
 				<label class="control-label fl" for="promotion_title">促销标题：</label>
 				<div class="fl">
-					<input type="text" class="form-control w490 mr20 ml5" id="promotion_title" name="promotion_title" placeholder="" value="{% if product %}{{ product.promotion_title }}{% endif %}" maxlength="20"/>
+					<input type="text" class="xa-promotion-name form-control w490 mr20 ml5" id="promotion_title" name="promotion_title" placeholder="" value="{% if product %}{{ product.promotion_title }}{% endif %}" maxlength="20"/>
 					<div class="errorHint"></div>
 				</div>
 				<p>
 					还可以输入
-					<span style="color:#1F9200;">20</span>
+					<span class="xa-promotion-name-tip" style="color:#1F9200;">20</span>
 					个字
 				</p>
 			</div>
@@ -510,4 +510,23 @@ function validateUserCode($el){
 }
 </script>
 <!--	/商品条码验证	-->
+
+<!--	输入字符计数	-->
+<script type="text/javascript">
+
+$(".xa-product-name").on('input',function(event){
+    var limited = 20;
+    var curLength = $('.xa-product-name').val().length;
+    $('.xa-product-name-tip').text(limited-curLength);
+});
+
+$(".xa-promotion-name").on('input',function(event){
+    var limited = 20;
+    var curLength = $('.xa-promotion-name').val().length;
+    $('.xa-promotion-name-tip').text(limited-curLength);
+});
+
+
+</script>
+<!--	输入字符计数	-->
 {% endblock %}

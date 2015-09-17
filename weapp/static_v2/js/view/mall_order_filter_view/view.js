@@ -104,9 +104,9 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
             args.push('"order_source":"'+orderSource+'"')
         }
         // order_status
-        if (orderStatus != '-1') {
+        // if (orderStatus != '-1') {
             args.push('"order_status":"'+orderStatus+'"')
-        }
+        // }
         //date_interval
         if (startDate != "" && endDate != "") {
             args.push('"date_interval":"'+startDate+'|'+endDate+'"')

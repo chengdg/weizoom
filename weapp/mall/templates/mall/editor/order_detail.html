@@ -187,7 +187,7 @@
               物流公司名称：{% if order.express_company_name %} {{ order.express_company_name|get_company_name_by_value }}   {% endif %}
             </p>
             <p>
-              运单号：{% if order.express_company_name %} <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ child_order.express_number }}</a>{% endif %}
+              运单号：{% if order.express_company_name %} <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ order.express_number }}</a>{% endif %}
             </p>
             <p>
               {% for detail in order.get_express_details %}

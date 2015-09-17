@@ -30,6 +30,7 @@
                 data-init-sort="-created_at"
                 data-selectable = "false"
                 data-user-webapp-id={{user.get_profile.webapp_id}}
+                data-args='{"order_status":"{{order_status}}"}'
             >
             </div>
         {% else %}
@@ -799,6 +800,16 @@ $(document).ready(function() {
 	$('body').delegate('.xa-buyerHintImg','mouseleave',function(){
 		$('.xa-buyerHintDropBox').hide();
 	});
+
+	//处理来自“微商城-首页-待发货订单-更多”过来的查看待发货订单的请求 duhao 20150917
+	var orderStatus = '{{order_status}}';
+	if(orderStatus === '3') {
+		_.delay(function(){
+			console.log(orderStatus)
+			$("#orderStatus").val("3");
+		}, 700);
+
+	}
 
 });
 </script>

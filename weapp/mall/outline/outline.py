@@ -113,8 +113,13 @@ class Outline(resource.Resource):
         days = request.GET.get('days', 6)
         webapp_id = request.user_profile.webapp_id
         total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
-        high_date -= timedelta(days=1)
+        # high_date -= timedelta(days=1)
         date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
+        #当最后一天是今天时，折线图中不显示最后一天的数据 duhao 2015-09-17
+        #当起止日期都是今天时，数据正常显示
+        today = dateutil.get_today()
+        if len(date_list) > 1 and date_list[-1] == today:
+            del date_list[-1]
 
         if type and type == 'purchase_trend':
             try:

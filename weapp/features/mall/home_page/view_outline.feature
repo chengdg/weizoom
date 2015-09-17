@@ -185,10 +185,14 @@ Scenario: 获得商铺首页的代发货订单列表
 	Then jobs能获取商铺首页的代发货订单列表
 		"""
 		{
-			"count": 12,
+			"count": 13,
 			"orders_list": [{
 				"date": "今天",
 				"items": [{
+					"order_id": "14",
+					"order_money": 11.1,
+					"product_count": 1
+				}, {
 					"order_id": "13",
 					"order_money": 6.0,
 					"product_count": 2
@@ -231,10 +235,6 @@ Scenario: 获得商铺首页的代发货订单列表
 				"date": "4天前",
 				"items": [{
 					"order_id": "4",
-					"order_money": 11.1,
-					"product_count": 1
-				}, {
-					"order_id": "3",
 					"order_money": 11.1,
 					"product_count": 1
 				}]
