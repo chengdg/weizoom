@@ -235,7 +235,7 @@ Scenario: 3 购买同供货商多商品,生成待支付订单（显示供货商�
 		}]
 		"""
 
-@mall2 @order @allOrder @jz
+@mall2 @order @allOrder
 Scenario: 4 购买多供货商多商品,生成待支付订单（供货商显示为空）
 	When bill访问jobs的webapp
 	When bill购买jobs的商品

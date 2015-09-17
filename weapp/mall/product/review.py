@@ -82,7 +82,12 @@ class ProductReviewInfo(resource.Resource):
         product_review_id = int(request.GET.get('id'))
         product_review = ProductReview.objects.get(id=product_review_id)
         product_review.product_name = Product.objects.get(id=product_review.product_id).name
-        product_review.member_name = Member.objects.get(id=product_review.member_id).username_for_html
+        member = Member.objects.filter(id=product_review.member_id)
+        if len(member):
+            member_name = member[0].username_for_html
+        else:
+            member_name = '已经跑路'
+        product_review.member_name = member_name
         product_review.pictures = [picture.att_url for picture in
                                    ProductReviewPicture.objects.filter(product_review_id=product_review.id)]
 
@@ -275,7 +280,7 @@ class ProductReviewList(resource.Resource):
                 'id': review.id,
                 'product_user_code': review.product_user_code,
                 'product_name': id2product[review.product_id].name,
-                'user_name': member_id2member_name[review.member_id],
+                'user_name': member_id2member_name.get(review.member_id, '已经跑路'),
                 'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'content': review.review_detail,
                 'product_id': review.product_id,
