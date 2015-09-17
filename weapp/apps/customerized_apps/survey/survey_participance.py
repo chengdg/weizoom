@@ -48,13 +48,11 @@ class surveyParticipance(resource.Resource):
 				webapp_user_name = u'非会员'
 			termite_data = survey_participance.termite_data
 			item_data_list = []
-			att_url_list = []
 
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
 				item_data = {}
-				att_url={}
 				if v['type'] in['appkit.textlist', 'appkit.shortcuts']:
 					item_data['type'] = v['type']
 					if pureName in TEXT_NAME:#判断是否是自定义的填写项
@@ -81,7 +79,6 @@ class surveyParticipance(resource.Resource):
 		else:
 			webapp_user_name = ''
 			item_data_list = {}
-		print item_data_list
 		response = create_response(200)
 		response.data = {
 			'webapp_user_name': webapp_user_name,
