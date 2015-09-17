@@ -2,4 +2,5 @@
 
 import product
 
+import product
 import promotion

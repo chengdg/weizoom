@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-__author__ = 'chuter'
-
 import os
 import sys
 import upyun
@@ -12,7 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "weapp.settings")
 import wapi as resource
 
 product = resource.get('mall', 'product', {
-	"id": 100
+	"id": 9
 })
 print '=====> product <====='
 print product

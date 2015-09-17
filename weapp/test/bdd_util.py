@@ -73,17 +73,12 @@ def login(user, password=None, **kwargs):
 	client.login(username=user, password='test')
 	client.user = User.objects.get(username=user)
 	client.user.profile = UserProfile.objects.get(user=client.user)
-
-	# 初始化wapi()
-	from utils import api_client
-	api_client.set_wapi_client(client)
 	
 	if 'context' in kwargs:
 		context = kwargs['context']
 		context.client = client
 		context.webapp_owner_id = client.user.id
 		context.webapp_id = client.user.profile.webapp_id
-		context.wapi = api_client.wapi
 
 	return client
 

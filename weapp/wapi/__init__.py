@@ -41,12 +41,12 @@ def get(app, resource, data):
 
 
 def post(app, resource, data):
-	return __call('get', app, resource, data)
+	return __call('post', app, resource, data)
 
 
 def put(app, resource, data):
-	return __call('get', app, resource, data)
+	return __call('put', app, resource, data)
 
 
 def delete(app, resource, data):
-	return __call('get', app, resource, data)
+	return __call('delete', app, resource, data)

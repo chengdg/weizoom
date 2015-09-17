@@ -27,7 +27,8 @@ class ProductList(resource.Resource):
 
     @login_required
     def get(request):
-        """得到上架的类型商品
+        """
+        得到上架的类型商品
 
 
         Requirement:

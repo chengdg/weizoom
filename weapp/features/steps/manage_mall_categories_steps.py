@@ -7,7 +7,8 @@ from features.testenv.model_factory import ProductFactory, ProductCategoryFactor
 
 from test import bdd_util
 from mall import models as mall_models
-from utils import mall_api
+#from utils import mall_api
+import wapi as resource
 
 @given(u"{user}已添加商品分类")
 def step_add_category(context, user):
@@ -15,7 +16,11 @@ def step_add_category(context, user):
     uid = client.user.id
     context.product_categories = json.loads(context.text)
     for product_category in context.product_categories:
-        mall_api.add_product_category(uid, product_category['name'])
+        #mall_api.add_product_category(uid, product_category['name'])
+        resource.put('mall', 'product_category', {
+            'uid': uid,
+            'name': product_category['name']
+            })
         #url = '/mall2/api/category/?_method=put'
         #client.post(url, data)
 
@@ -26,7 +31,11 @@ def step_impl(context, user):
     uid = client.user.id
     context.product_categories = json.loads(context.text)
     for product_category in context.product_categories:
-        mall_api.add_product_category(uid, product_category['name'])
+        resource.put('mall', 'product_category', {
+            'uid': uid,
+            'name': product_category['name']
+            })
+        #mall_api.add_product_category(uid, product_category['name'])
         #data = product_category
         #url = '/mall2/api/category/?_method=put'
         #client.post(url, data)
