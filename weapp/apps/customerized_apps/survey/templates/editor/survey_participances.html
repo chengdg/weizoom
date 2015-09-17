@@ -14,27 +14,39 @@
     .xa-uploadimg_box{
         display: none;
         position: absolute;
-        background-color: #DDDDDD;
-        border: 2px solid #DDDDDD;
         width: 500px;
         height: auto;
         overflow: auto;
         margin: auto;
         top: 25%; left: 0;right: 0;
         text-align: center;
+        background-color: #DDDDDD;
     }
     .xa-uploadimg_box .xa-close_btn{
         position: absolute;
-        top: 0; right: 0;
+        top: 5px; right: 5px;
         z-index: 1000000;
     }
     .xa-uploadimg_box .xa-uploadimg{
         max-width: 100%;
-{#        max-height: 100%;#}
-        overflow: auto;
-        margin: auto;
-        top: auto; left: auto; bottom: auto; right: auto;
-        vertical-align: middle;
+        border: 2px solid #DDDDDD;
+    }
+
+    .xa-arr{
+        position: absolute;
+        top:40%;
+        height: 97px;
+        width: 38px;
+        background: url("/static_v2/img/arrow_lr.png");
+        background-repeat: no-repeat;
+        z-index: 1000001;
+    }
+    .xa-arr.xa-arr_left{
+        left: 3px;
+    }
+    .xa-arr.xa-arr_right{
+        right: 2px;
+        background-position: -91px;
     }
     </style>
 {% endblock %}
