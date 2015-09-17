@@ -81,7 +81,7 @@ Background:
 	And nokia关注jobs的公众号
 	And nokia在微信中向jobs的公众号发送消息'关键词nokia'
 
-@weixin @message @realtimeMessage
+@mall2 @weixin @message @realtimeMessage
 Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备注
 	#1)表示在最后一条加备注，那么备注信息显示在该粉丝备注信息中，
 	#2)加完备注后消息状态变为已读
@@ -246,7 +246,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 		"""
 
 
-@weixin @message @realtimeMessage
+@mall2 @weixin @message @realtimeMessage
 Scenario:2 在消息详情中加备注
 	#针对的是某个粉丝的某一条消息的备注
 
