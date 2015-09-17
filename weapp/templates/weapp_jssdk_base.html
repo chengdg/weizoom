@@ -19,12 +19,18 @@
               link = link +"&fmt="+W.curRequestMemberToken;
           }
       }
-      $('a').highlight();
-      FastClick.attach(document.body);
-      var hm = document.createElement("script");
-      hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
-      var s = document.getElementsByTagName("script")[0]; 
-      s.parentNode.insertBefore(hm, s);
+	try{
+	   	   $('a').highlight();
+           FastClick.attach(document.body);
+           var hm = document.createElement("script");
+           hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
+           var s = document.getElementsByTagName("script")[0]; 
+	} catch(e){
+           var hm = document.createElement("script");
+           hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
+           var s = document.getElementsByTagName("script")[0]; 
+           s.parentNode.insertBefore(hm, s);
+	}
       /*
        * 微信分享按钮事件
        * 注意：
