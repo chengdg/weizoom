@@ -14,9 +14,14 @@ import wapi as resource
 product = resource.get('mall', 'product', {
 	"id": 100
 })
+print '=====> product <====='
 print product
 
+promotions = resource.get('mall.promotion', 'promotions', {})
+print '\n=====> promotion <====='
+print promotions
+
+print '\n=====> exception <====='
 product = resource.get('mall', 'product', {
 	
 })
-print product

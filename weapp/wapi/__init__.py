@@ -9,8 +9,8 @@ wapi_path = os.path.join(settings.PROJECT_HOME, '..', 'wapi')
 for f in os.listdir(wapi_path):
 	f_path = os.path.join(wapi_path, f)
 	if os.path.isdir(f_path):
-		resource_json_path = os.path.join(f_path, 'resource.json')
-		if not os.path.exists(resource_json_path):
+		init_file_path = os.path.join(f_path, '__init__.py')
+		if not os.path.exists(init_file_path):
 			continue
 
 		module_name = 'wapi.%s' % f
