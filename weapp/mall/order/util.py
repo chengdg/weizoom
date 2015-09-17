@@ -271,28 +271,30 @@ def export_orders_json(request):
         # 计算总和
         final_price = 0.0
         weizoom_card_money = 0.0
-        if order.type == PAY_INTERFACE_COD:
-            if order.status == ORDER_STATUS_SUCCESSED:
-                final_price = order.final_price
-                weizoom_card_money = order.weizoom_card_money
-                final_total_order_money += order.final_price
-                try:
-                    coupon_money_count += order.coupon_money
-                    weizoom_card_total_order_money += order.weizoom_card_money
-                    use_integral_money += order.integral_money
-                except:
-                    pass
-        else:
-            if order.status in [2, 3, 4, 5, 6]:
-                final_price = order.final_price
-                weizoom_card_money = order.weizoom_card_money
-                final_total_order_money += order.final_price
-                try:
-                    coupon_money_count += order.coupon_money
-                    weizoom_card_total_order_money += order.weizoom_card_money
-                    use_integral_money += order.integral_money
-                except:
-                    pass
+        # if order.type == PAY_INTERFACE_COD:
+        #     print 'jz-----1', order.type, order.type == PAY_INTERFACE_COD
+        #     if order.status == ORDER_STATUS_SUCCESSED:
+        #         final_price = order.final_price
+        #         weizoom_card_money = order.weizoom_card_money
+        #         final_total_order_money += order.final_price
+        #         try:
+        #             coupon_money_count += order.coupon_money
+        #             weizoom_card_total_order_money += order.weizoom_card_money
+        #             use_integral_money += order.integral_money
+        #         except:
+        #             pass
+        # else:
+        print 'jz-----2', order.type, order.type == PAY_INTERFACE_COD
+        if order.status in [2, 3, 4, 5, 6]:
+            final_price = order.final_price
+            weizoom_card_money = order.weizoom_card_money
+            final_total_order_money += order.final_price
+            try:
+                coupon_money_count += order.coupon_money
+                weizoom_card_total_order_money += order.weizoom_card_money
+                use_integral_money += order.integral_money
+            except:
+                pass
 
         area = get_str_value_by_string_ids_new(order.area)
         if area:
@@ -343,7 +345,7 @@ def export_orders_json(request):
                 payment_time = order.payment_time.strftime('%Y-%m-%d %H:%M').encode('utf8')
             else:
                 payment_time = ''
-
+            role_id = None
             if order.coupon_id:
                 role_id = coupon2role.get(order.coupon_id, None)
                 if role_id:
@@ -370,7 +372,7 @@ def export_orders_json(request):
                 source = order2supplier[order.supplier].name.encode("utf-8")
             if i == 0:
 
-                if order.coupon_id > 0:
+                if not role_id or coupon_name:
                     coupon_money = order.coupon_money
 
                 if area:
