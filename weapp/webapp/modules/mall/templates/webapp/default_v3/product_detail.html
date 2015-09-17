@@ -47,7 +47,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </p>
             </div>
         </div>
-        {% if hint %}
+        {% if product.promotion or hint or product.integral_sale %}
         <div class="xui-section xui-section-title clearfix xa-promotionSection xui-promotionSection pr" style="min-height:17px;">
             <div class="xui-upDecorate-left"></div>
             <div class="xui-upDecorate-right"></div>
@@ -102,7 +102,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             {% endif %}
         </div>
         {% endif %}
-
         <div class="xui-section" style="padding-bottom:0;">
             <div class="xui-section-item xui-section-title xui-tag pb10" style="padding-top:1px;">
                 <span><i></i>正品保障</span>
