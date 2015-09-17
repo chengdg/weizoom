@@ -120,8 +120,9 @@ class ProductReviewInfo(resource.Resource):
                         settings = member_models.IntegralStrategySttings.objects.get(
                             webapp_id=request.user_profile.webapp_id)
                         if settings.review_increase > 0:
-                            member = member_models.Member.objects.get(id=review[0].member_id)
-                            increase_member_integral(member, settings.review_increase, '商品评价奖励')
+                            member = member_models.Member.objects.filter(id=review[0].member_id)
+                            if len(member):
+                                increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
 
                 if status == '2':
                     product_review = mall_models.ProductReview.objects.get(id=product_review_id)
