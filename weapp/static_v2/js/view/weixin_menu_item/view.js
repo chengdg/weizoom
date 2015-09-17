@@ -225,7 +225,8 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	onClickOneMenuItemText: function(event) {
 		var $current = $(event.currentTarget);
 
-		//this.$('.xa-no-panel').removeClass('xui-editCover')
+		this.$('.xa-no-panel').removeClass('xui-editCover')
+		this.$('.xa-no-panel').html('');
 		$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');
 		if ($current.attr('readonly')) {
 			$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
