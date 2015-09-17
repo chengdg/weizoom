@@ -45,13 +45,11 @@ class surveyParticipance(resource.Resource):
 				webapp_user_name = u'非会员'
 			termite_data = survey_participance.termite_data
 			item_data_list = []
-			att_url_list = []
 
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
 				item_data = {}
-				att_url={}
 				if v['type'] in['appkit.textlist', 'appkit.shortcuts']:
 					item_data['type'] = v['type']
 					item_data['item_name'] = TEXT_NAME[pureName]
