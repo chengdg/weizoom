@@ -114,7 +114,8 @@
                this.$parent.parent().find('.xa-deletePhoto').show().unbind('click').click(function(){
                     $(this).siblings().find('.xa-remove').show();
                     $(this).siblings('.xui-addPhoto').last().hide();
-                    $(this).siblings('.xa-deletePhoto').hide();
+                    $(this).hide();
+                    //$(this).siblings('.xa-deletePhoto').hide();
                     $(this).siblings('.xa-finishEdit').show();
                });
            }
