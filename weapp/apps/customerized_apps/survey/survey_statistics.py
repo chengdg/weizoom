@@ -31,7 +31,7 @@ class surveyStatistics(resource.Resource):
 		if 'id' in request.GET:
 			survey_id =request.GET['id']
 			all_participances = app_models.surveyParticipance.objects(belong_to=survey_id)
-			total_count = all_participances.count()
+			total_participance = all_participances.count()
 
 			q_vote ={}
 			result_list = []
@@ -121,7 +121,7 @@ class surveyStatistics(resource.Resource):
 			'second_navs': export.get_customerized_apps(request),
 			'second_nav_name': 'surveies',
 			'titles': result_list,
-			'total_count': total_count,
+			'total_participance': total_participance,
 			'project_id': project_id,
 			'survey_id':survey_id
 
