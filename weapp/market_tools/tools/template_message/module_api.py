@@ -55,7 +55,7 @@ def send_order_template_message(webapp_id, order_id, send_point):
 	user_profile = UserProfile.objects.get(webapp_id=webapp_id)
 	user = user_profile.user
 	template_message = get_template_message_by(user, send_point)
-	
+
 	from mall.models import Order
 	order =  Order.objects.get(id=order_id)
 
@@ -120,28 +120,28 @@ def _get_order_send_message_dict(user_profile, template_message, order, send_poi
 				attribute_data = attribute_datas.split(':')
 				key = attribute_data[0].strip()
 				attr = attribute_data[1].strip()
-				if attr == 'final_price' and getattr(order, attr):	
+				if attr == 'final_price' and getattr(order, attr):
 					value = u'￥%s［实际付款］' % getattr(order, attr)
-					detail_data[key] = {"value" : value, "color" : "#173177"} 
+					detail_data[key] = {"value" : value, "color" : "#173177"}
 				elif hasattr(order, attr):
 					if attr == 'final_price':
 						value = u'￥%s［实际付款］' % getattr(order, attr)
-						detail_data[key] = {"value" : value, "color" : "#173177"} 
+						detail_data[key] = {"value" : value, "color" : "#173177"}
 					elif attr == 'payment_time':
 						dt = datetime.now()
 						payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
 						detail_data[key] = {"value" : payment_time, "color" : "#173177"}
 					else:
-						detail_data[key] = {"value" : getattr(order, attr), "color" : "#173177"} 
+						detail_data[key] = {"value" : getattr(order, attr), "color" : "#173177"}
 				else:
 					if 'number' == attr:
 						number = order.get_order_has_product_number(order)
-						detail_data[key] = {"value" : number, "color" : "#173177"} 
+						detail_data[key] = {"value" : number, "color" : "#173177"}
 
 					if 'product_name' == attr:
 						products = order.get_order_has_product(order)
 						product_names =','.join([p.name for p in products])
-						detail_data[key] = {"value" : product_names, "color" : "#173177"} 
+						detail_data[key] = {"value" : product_names, "color" : "#173177"}
 		template_data['data'] = detail_data
 	return template_data
 
@@ -156,30 +156,32 @@ def _record_send_template_info(order, template_id, user):
 
 ########################################################################
 # send_weixin_template_message: 发送优惠劵模板消息
-# webapp_id : 55
-# webapp_user_id: 2
+# webapp_owner_id : 55
+# member_id: 2
 # send_point: COUPON_ARRIVAL_NOTIFY/COUPON_EXPIRED_REMIND
-# 
+#
 #  	发送优惠劵的model格式
 # model: {
 # 	"coupon_store": u'全部可用',
 # 	"coupon_rule": u'每笔订单满159元即可使用本卷' or u'不限'
 # }
 ########################################################################
-def send_weixin_template_message(webapp_id, webapp_user_id, model, send_point):
-	user_profile = UserProfile.objects.get(webapp_id=webapp_id)
+def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
+	user_profile = UserProfile.objects.get(user_id=webapp_owner_id)
 	user = user_profile.user
 	template_message = get_template_message_by(user_profile.user, send_point)
+	if not template_message:
+		return False
 	template_message.send_point = send_point
-	# return _get_send_message_dict(user_profile, webapp_user_id, model, template_message)
+	#return _get_send_message_dict(user_profile, member_id, model, template_message)
 
-	if coupon and user_profile and template_message and template_message.template_id:
+	if model and user_profile and template_message and template_message.template_id:
 		mpuser_access_token = _get_mpuser_access_token(user)
 		if mpuser_access_token:
 			try:
 				weixin_api = get_weixin_api(mpuser_access_token)
 
-				message = _get_send_message_dict(user_profile, webapp_user_id, model, template_message)
+				message = _get_send_message_dict(user_profile, member_id, model, template_message)
 				result = weixin_api.send_template_message(message, True)
 				_record_send_template_info(order, template_message.template_id, user)
 				return True
@@ -202,9 +204,9 @@ def _get_host(user_profile):
 	return host
 
 
-def _get_send_message_dict(user_profile, webapp_user_id, model, template_message):
-	template_data = dict()	
-	social_account = member_model_api.get_social_account(webapp_user_id)
+def _get_send_message_dict(user_profile, member_id, model, template_message):
+	template_data = dict()
+	social_account = member_model_api.get_social_account_by_member_id(member_id)
 
 	if social_account and social_account.openid:
 		template_data['touser'] = social_account.openid
@@ -250,6 +252,6 @@ def __get_coupon_detail_data(attribute, model):
 		attr = attribute_data[1].strip()
 
 		value = u'{}'.format(model.get(attr))
-		detail_data[key] = {"value" : value, "color" : "#173177"} 
+		detail_data[key] = {"value" : value, "color" : "#173177"}
 
 	return detail_data
