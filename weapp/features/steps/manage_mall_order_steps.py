@@ -400,9 +400,28 @@ def step_look_for_order(context, user):
 
 @then(u"{user}导出订单获取订单统计信息")
 def step_get_all_info_of_order(context, user):
+    filter_value = dict()
+    if hasattr(context, 'query_params'):
+        filter_value = context.query_params
+        print "filter_value---------------",filter_value
+    from cStringIO import StringIO
+    import csv
+
+    url = '/mall2/order_export/'
+    response = context.client.get(url, filter_value)
+    reader = csv.reader(StringIO(response.content))
+    # 去掉表头信息
+    csv_items = [row for row in reader]
+    context.last_csv_order_info = csv_items[-1]
     all_info = context.last_csv_order_info
     expect_info = json.loads(context.text)
-    bdd_util.assert_dict(expect_info,all_info)
+    actual = dict([(info.split(':')[0].encode('utf-8'),info.split(':')[1]) for info in all_info[1:]])
+    actual_encode = {}
+    for x,y in actual.items():
+        x = x.encode('utf-8')
+        actual_encode[unicode(x)] = y
+
+    bdd_util.assert_list(expect_info,[actual_encode])
 
 
 @then(u"{user}导出订单获取订单信息")
@@ -420,8 +439,8 @@ def step_get_specify_order(context, user):
     response = context.client.get(url, filter_value)
     reader = csv.reader(StringIO(response.content))
     # 去掉表头信息
-    header = reader.next()
-    header = [
+    csv_items = [row for row in reader]
+    csv_items[0] = [
         'order_no',
         'order_time',
         'pay_time',
@@ -429,6 +448,7 @@ def step_get_specify_order(context, user):
         'model',
         'product_unit_price',
         'count',
+        'sales_money',
         'weight',
         'methods_of_payment',
         'money_total',
@@ -445,25 +465,30 @@ def step_get_specify_order(context, user):
         'ship_province',
         'ship_address',
         'shipper',
-        'remark',
+        'leader_remark',
         'sources',
         'logistics',
         'number',
         'delivery_time',
-        'purchase_price'
+        'remark',
+        'customer_message',
+        'purchase_price',
+        'purchase_costs'
+
     ]
     actual = []
-    for row in reader:
-        item = dict(map(None, header, [str(r).decode('utf8') for r in row]))
+    for row in csv_items[1:]:
+        # if reader.line_num :
+        item = dict(map(None, csv_items[0], [str(r).decode('utf8') for r in row]))
         item['ship_address'] = '' if not item.get('ship_address') else item.get('ship_address').replace(' ', ',')
         if '' != item.get('pay_time') and '已完成' not in item.get('pay_time').encode('utf-8'):
             data = datetime.strptime(item['pay_time'],'%Y-%m-%d %H:%M')
             item['pay_time'] = '%s 00:00' % data.strftime('%Y-%m-%d')
-        if  None != item.get('delivery_time') and '' != item.get('delivery_time'):
+        if None != item.get('delivery_time') and '' != item.get('delivery_time'):
             data = datetime.strptime(item['delivery_time'],'%Y-%m-%d %H:%M')
             item['delivery_time'] = '%s 00:00' % data.strftime('%Y-%m-%d')
         actual.append(item)
-    context.last_csv_order_info = actual[-1]
+    context.last_csv_order_info = csv_items[-1]
     # remove statistical information
     actual.pop()
     expected_order = []
@@ -490,7 +515,6 @@ def step_get_specify_order(context, user):
             if '-' in order['order_no']:
                 order_no_info = order['order_no'].split('-')
                 order['order_no'] = '%s^%s' % (order_no_info[0], Supplier.objects.get(name = order_no_info[1]).id)
-            del order['methods_of_payment']
             expected_order.append(order)
     else:
         expected_order = json.loads(context.text)

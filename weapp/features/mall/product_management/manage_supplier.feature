@@ -10,7 +10,7 @@ Feature: 管理供货商
 	"""
 
 
-@supplier @add_supplier @mall2 @test_zl
+@supplier @add_supplier @mall2
 Scenario: 1 添加供货商
 	jobs添加供货商后
 	1.按时间倒序排列
@@ -70,7 +70,7 @@ Scenario: 1 添加供货商
 		"""
 
 
-@supplier @del_supplier @mall2 @test_zl
+@supplier @del_supplier @mall2
 Scenario: 2 删除供货商
 	jobs添加供货商后
 	1.可进行删除
@@ -135,7 +135,7 @@ Scenario: 2 删除供货商
 		"""
 
 
-@supplier @mod_supplier @mall2 @test_zl
+@supplier @mod_supplier @mall2
 Scenario: 3 修改供货商
 	jobs添加供货商后
 	1.可进行修改

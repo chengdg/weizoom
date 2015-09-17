@@ -443,18 +443,21 @@ def step_impl(context, webapp_owner_name):
 			data['date'] = row.get('date')
 		if row.get('order_id', '') != '':
 			data['order_no'] = row.get('order_id')
+
+
 		if row.get('pay_type', '') != '':
 			data['pay_type'] = row.get('pay_type')
 
 		print("SUB STEP: to buy products, param: {}".format(data))
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
-
 		order = Order.objects.all().order_by('-id')[0]
 		#支付订单
+
 		if row.get('payment_time', '') != '' or row.get('payment', '') == u'支付':
 			pay_type = row.get('pay_type', u'货到付款')
 			if pay_type != '' != u'优惠抵扣':
+				context.created_order_id = data['order_no']
 				context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, pay_type))
 			if row.get('payment_time', '') != '':
 				Order.objects.filter(id=order.id).update(
