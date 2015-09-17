@@ -216,7 +216,7 @@ class eventParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_selec.append(item)
-					if sample_tm[item]['type']=='appkit.textlist':
+					if sample_tm[item]['type'] in['appkit.textlist', 'appkit.shortcuts']:
 						if item in fields_textlist:
 							pass
 						else:
@@ -307,8 +307,9 @@ class eventParticipances_Export(resource.Resource):
 						ws.write(row,col,record[col])
 				try:
 					wb.save(export_file_path)
-				except:
+				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
 					print '/static/upload/%s'%excel_file_name
 			else:
 				ws.write(1,0,'')
