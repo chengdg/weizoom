@@ -179,7 +179,7 @@ def get_result(id,member_id):
 					'isSelect': isSelect['isSelect'],
 					'type': isSelect['type']
 				}
-		if value['type'] == 'appkit.shortcuts':
+		if value['type'] in['appkit.textlist', 'appkit.shortcuts']:
 			member_termite_shortcuts[k] = value['value']
 	questions =OrderedDict()
 	result_list = []
@@ -193,7 +193,7 @@ def get_result(id,member_id):
 					questions[title] = [value['value']]
 				else:
 					questions[title].append(value['value'])
-			if value['type'] == 'appkit.shortcuts':
+			if value['type'] in['appkit.textlist', 'appkit.shortcuts']:
 				questions[title] = []
 	for q_title,values in questions.items():
 		value_isSelect = {}

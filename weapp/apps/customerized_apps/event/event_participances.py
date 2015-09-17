@@ -216,7 +216,7 @@ class eventParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_selec.append(item)
-					if sample_tm[item]['type']=='appkit.textlist':
+					if sample_tm[item]['type'] in['appkit.textlist', 'appkit.shortcuts']:
 						if item in fields_textlist:
 							pass
 						else:

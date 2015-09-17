@@ -52,7 +52,7 @@ class surveyParticipance(resource.Resource):
 				pureName = k.split('_')[1]
 				item_data = {}
 				att_url={}
-				if v['type'] == 'appkit.shortcuts':
+				if v['type'] in['appkit.textlist', 'appkit.shortcuts']:
 					item_data['item_name'] = TEXT_NAME[pureName]
 					item_data['item_value'] = v['value']
 				elif v['type'] == 'appkit.qa':
