@@ -71,11 +71,8 @@ def export_orders_json(request):
          u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号', u'发货时间',u'商家备注',u'用户备注']
     ]
 
-    order_list = None
-    # 购买数量
-    # number = 0
-
-    # order_send_count = 0
+    # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
+    order_list= None
     webapp_id = request.user_profile.webapp_id
     order_list = Order.objects.belong_to(webapp_id).order_by('-id')
     status_type = request.GET.get('status', None)
@@ -89,13 +86,15 @@ def export_orders_json(request):
     # 订单除去 积分订单
     exclude_order_list = order_list.exclude(type=PRODUCT_INTEGRAL_TYPE)
 
-    # 获取查询条件字典和时间筛选条件
+
     query_dict, date_interval = __get_select_params(request)
     product_name = ''
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
 
+
     order_list = __get_orders_by_params(query_dict, date_interval, order_list)
+
     if product_name:
         # 订单总量
         order_count = len(order_list)
@@ -107,6 +106,7 @@ def export_orders_json(request):
         order_count = order_list.count()
         finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
         order_list = list(order_list.all())
+    # -----------------------获取查询条件字典和时间筛选条件--------------构造oreder_list----------结束
 
     # 商品总额：
     total_product_money = 0.0
@@ -130,7 +130,6 @@ def export_orders_json(request):
     #####################################
 
     # print 'begin step 1 order_list - '+str(time.time() - begin_time)
-    # order_list = list(order_list.all())
     order_ids = []
     order_order_ids = []
     coupon_ids = []
@@ -371,8 +370,8 @@ def export_orders_json(request):
                 source = order2supplier[order.supplier].name.encode("utf-8")
             if i == 0:
 
-                if coupon_name:
-                    coupon_money = order.coupon_money
+                
+                coupon_money = order.coupon_money
 
                 if area:
                     province = area.split(' ')[0]
