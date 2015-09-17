@@ -309,8 +309,9 @@ class surveyParticipances_Export(resource.Resource):
 						row += 1
 				try:
 					wb.save(export_file_path)
-				except:
+				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
 					print '/static/upload/%s'%excel_file_name
 			else:
 				ws.write(1,0,'')

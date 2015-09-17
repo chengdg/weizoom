@@ -307,8 +307,9 @@ class eventParticipances_Export(resource.Resource):
 						ws.write(row,col,record[col])
 				try:
 					wb.save(export_file_path)
-				except:
+				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
 					print '/static/upload/%s'%excel_file_name
 			else:
 				ws.write(1,0,'')
