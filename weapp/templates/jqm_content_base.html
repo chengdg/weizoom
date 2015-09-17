@@ -119,6 +119,8 @@
         {% endif %}
         {% include "weapp_jssdk_base.html" %}
         <script type="text/javascript">
+            W.projectId = "{{request.project.id}}";
+            W.webappOwnerId = "{{request.webapp_owner_id}}";
             W.visitHistory = "{{ visit_histroy_url }}";
             W.urlTitle = "{{ visit_histroy_url_title }}";
             if (W.urlTitle == ''){
