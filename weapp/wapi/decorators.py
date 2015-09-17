@@ -59,15 +59,31 @@ def check_valid(request, required_params):
 
 
 	
-def param_required(function=None, params=None):
-	"""
-	Decorator for views that checks that the user is using the inner secret key, 
-	returning the failure response when the checking is not passed.
-	"""
-	actual_decorator = user_passes_test(
-		#lambda access_key: access_key == settings.WAPI_SECRET_ACCESS_TOKEN,
-		check_valid, params
-	)
-	if function:
-		return actual_decorator(function)
-	return actual_decorator
+# def param_required(params=None, function=None):
+# 	"""
+# 	Decorator for views that checks that the user is using the inner secret key, 
+# 	returning the failure response when the checking is not passed.
+# 	"""
+# 	actual_decorator = user_passes_test(
+# 		#lambda access_key: access_key == settings.WAPI_SECRET_ACCESS_TOKEN,
+# 		check_valid, params
+# 	)
+# 	if function:
+# 		return actual_decorator(function)
+# 	return actual_decorator
+
+class ApiParamaterError(Exception):
+	pass
+
+
+def param_required(params=None):
+	def wrapper(function):
+		def inner(data):
+			for param in params:
+				if not param in data:
+					raise ApiParamaterError('no parameter(%s)' % param)
+			return function(data)
+
+		return inner 
+
+	return wrapper
