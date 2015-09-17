@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# __editor__='justing'
 import json
 import time
 from datetime import datetime, timedelta
@@ -43,8 +44,8 @@ def step_impl(context, user, type):
 
 	response = context.client.get(url)
 	session_messages = json.loads(response.content)['data']['items']
-	print '-------url', url
-	print '---:::::::::::::',session_messages
+	# print '-------url', url
+	# print '---:::::::::::::',session_messages
 	messages = []
 	for message in session_messages:
 		message_dict = {}
@@ -107,7 +108,7 @@ def step_impl(context, user, page_index):
 @when(u"{user}访问实时消息'{type}'")
 def step_impl(context, user, type):
 	url = '/new_weixin/api/realtime_messages/?page=1&count=30'
-	if type == "所有消息":
+	if type == "所有信息":
 		url = '/new_weixin/api/realtime_messages/?page=1&count=30'
 	elif type == "未读信息":
 		url = '/new_weixin/api/realtime_messages/?page=1&count=30&filter_value=status:0'
@@ -117,7 +118,6 @@ def step_impl(context, user, type):
 		url = '/new_weixin/api/realtime_messages/?page=1&count=30&filter_value=status:2'
 	elif type == "星标信息":
 		url = '/new_weixin/api/realtime_messages/?page=1&count=30&filter_value=status:3'
-
 	context.realtime_messages_url = url
 
 @then(u"{user}获得实时消息'{type}'列表")
@@ -133,7 +133,7 @@ def step_impl(context, user, type):
 		message_dict = {}
 		for key in key_words:
 			if key == 'member_name':
-				message_dict['member_name'] = message['sender_username'].split('_')[0]
+				message_dict['member_name'] = message['sender_username'].split('_')[0] or user
 			elif key == 'inf_content':
 				message_dict['inf_content'] = message['text']
 			elif key == 'last_message_time':
@@ -148,3 +148,32 @@ def step_impl(context, user, type):
 		#now_time = datetime.today().strftime('%Y-%m-%d')
 
 	bdd_util.assert_list(expected, messages)
+
+
+@When (u"{user}修改实时消息备注")
+def step_impl(context, user):
+    if hasattr(context, 'detail_url'):
+        url = context.detail_url
+    elif hasattr(context, 'realtime_messages_url'):
+        url = context.realtime_messages_url
+    else:
+        url = '/new_weixin/api/realtime_messages/?filter_value=status:-1'
+    response = context.client.get(bdd_util.nginx(url))
+    realMsgs_data = json.loads(response.content)['data']['items']
+    datas_text = json.loads(context.text)
+    for data_text in datas_text:
+        for realMsg_data in realMsgs_data:
+            if hasattr(context, 'detail_url'):
+                if data_text['inf_content'] == realMsg_data['text']:
+                    message_id = realMsg_data['message_id']
+                    session_id = realMsg_data['session_id']
+                    break
+            else:
+                if data_text['member_name'] == realMsg_data['sender_username'].split('_')[0]:
+                    message_id = realMsg_data['message_id']
+                    session_id = realMsg_data['session_id']
+                    break
+        status = 1
+        remark = data_text['remark']
+        url = '/new_weixin/api/msg_memo/'
+        response = context.client.post(url,{'message_id':message_id, 'status':status, 'session_id':session_id, 'message_remark':remark})

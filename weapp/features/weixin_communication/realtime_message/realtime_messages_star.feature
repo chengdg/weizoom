@@ -83,6 +83,7 @@ Scenario: 1 在消息列表的"所有信息"、"未读信息"、"未回复"加�
 	#2)加完星标后，消息状态还是以前的状态，例如未读，还是未读状态
 
 	#在"所有信息"选项卡加星标
+	Given jobs登录系统
 	When jobs访问实时消息'所有信息'
 
 	#添加星标
@@ -250,6 +251,7 @@ Scenario: 2 在消息详情中加星标
 		"""
 
 	#给tom在消息详情中的最后一条消息上添加星标
+	When jobs访问实时消息'所有信息'
 	When jobs修改实时消息星标
 		"""
 		[{
@@ -282,6 +284,7 @@ Scenario: 2 在消息详情中加星标
 			"star": "false"
 		}]
 		"""
+	When jobs访问实时消息'所有信息'
 	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
@@ -304,6 +307,7 @@ Scenario: 2 在消息详情中加星标
 			"star": "false"
 		}]
 		"""
+	When jobs访问实时消息'星标信息'
 	Then jobs获得实时消息'星标信息'列表
 		"""
 		[{
@@ -364,6 +368,7 @@ Scenario: 2 在消息详情中加星标
 			"star": "false"
 		}]
 		"""
+	When jobs访问实时消息'所有信息'
 	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
@@ -386,17 +391,19 @@ Scenario: 2 在消息详情中加星标
 			"star": "false"
 		}]
 		"""
+	When jobs访问实时消息'星标信息'
 	Then jobs获得实时消息'星标信息'列表
 		"""
 		[{
-			"member_name": "jobs",
-			"inf_content": "【自动回复】 关键字回复内容tom",
+			"member_name": "tom",
+			"inf_content": "关键词tom",
 			"last_message_time": "今天",
 			"unread_count": 0,
 			"star": "true"
-		},{
-			"member_name": "tom",
-			"inf_content": "关键词tom",
+		},
+		{
+			"member_name": "jobs",
+			"inf_content": "【自动回复】 关键字回复内容tom",
 			"last_message_time": "今天",
 			"unread_count": 0,
 			"star": "true"

@@ -88,6 +88,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 	#3)对已有备注进行修改
 
 	#在"所有信息"选项卡加备注
+	Given jobs登录系统
 	When jobs访问实时消息'所有信息'
 
 	#添加备注
@@ -114,7 +115,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: nokia消息“关键词nokia”的消息备注"
+			"remark": "nokia消息“关键词nokia”的消息备注"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
@@ -126,7 +127,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 			"inf_content": "关键词bill",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: bill消息“关键词bill”的消息备注"
+			"remark": "bill消息“关键词bill”的消息备注"
 		}]
 		"""
 
@@ -146,7 +147,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: nokia消息“关键词nokia”的消息备注"
+			"remark": "nokia消息“关键词nokia”的消息备注"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
@@ -186,6 +187,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 		"""
 		[]
 		"""
+	When jobs访问实时消息'所有信息'
 	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
@@ -193,13 +195,13 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: nokia消息“关键词nokia”的消息备注"
+			"remark": "nokia消息“关键词nokia”的消息备注"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: tom消息“文本消息2”的消息备注"
+			"remark": "tom消息“文本消息2”的消息备注"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
@@ -219,6 +221,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 			"remark": ""
 		}]
 		"""
+	When jobs访问实时消息'未回复'
 	Then jobs获得实时消息'未回复'列表
 		"""
 		[{
@@ -226,7 +229,7 @@ Scenario:1 在消息列表的"所有信息"、"未读信息"、"未回复"加备
 			"inf_content": "关键词nokia",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: nokia消息“关键词nokia”的消息备注"
+			"remark": "nokia消息“关键词nokia”的消息备注"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
@@ -290,7 +293,7 @@ Scenario:2 在消息详情中加备注
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"time": "今天",
-			"remark": "备注: tom消息“文本消息2”的消息备注"
+			"remark": "tom消息“文本消息2”的消息备注"
 		},{
 			"member_name": "jobs",
 			"inf_content": "【自动回复】 关键字回复内容tom",
@@ -308,6 +311,7 @@ Scenario:2 在消息详情中加备注
 			"remark": ""
 		}]
 		"""
+	When jobs访问实时消息'所有信息'
 	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
@@ -321,7 +325,7 @@ Scenario:2 在消息详情中加备注
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: tom消息“文本消息2”的消息备注"
+			"remark": "tom消息“文本消息2”的消息备注"
 		},{
 			"member_name": "bill",
 			"inf_content": "关键词bill",
@@ -330,14 +334,15 @@ Scenario:2 在消息详情中加备注
 			"remark": ""
 		}]
 		"""
-	Then jobs获得实时消息'备注信息'列表
+	When jobs访问实时消息'有备注'
+	Then jobs获得实时消息'有备注'列表
 		"""
 		[{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息2，未回复",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: tom消息“文本消息2”的消息备注"
+			"remark": "tom消息“文本消息2”的消息备注"
 		}]
 		"""
 
@@ -377,12 +382,12 @@ Scenario:2 在消息详情中加备注
 			"member_name": "jobs",
 			"inf_content": "【自动回复】 关键字回复内容tom",
 			"time": "今天",
-			"remark": "备注: tom消息“【自动回复】XXX”的消息备注"
+			"remark": "tom消息“【自动回复】XXX”的消息备注"
 		},{
 			"member_name": "tom",
 			"inf_content": "关键词tom",
 			"time": "今天",
-			"remark": "备注: tom消息“关键词tom”的消息备注"
+			"remark": "tom消息“关键词tom”的消息备注"
 		},{
 			"member_name": "tom",
 			"inf_content": "tom发送一条文本消息1，未回复",
@@ -390,6 +395,7 @@ Scenario:2 在消息详情中加备注
 			"remark": ""
 		}]
 		"""
+	When jobs访问实时消息'所有信息'
 	Then jobs获得实时消息'所有信息'列表
 		"""
 		[{
@@ -412,19 +418,20 @@ Scenario:2 在消息详情中加备注
 			"remark": ""
 		}]
 		"""
-	Then jobs获得实时消息'备注信息'列表
+	When jobs访问实时消息'有备注'
+	Then jobs获得实时消息'有备注'列表
 		"""
 		[{
-			"member_name": "jobs",
-			"inf_content": "【自动回复】 关键字回复内容tom",
-			"last_message_time": "今天",
-			"unread_count": 0,
-			"remark": "备注: tom消息“【自动回复】XXX”的消息备注"
-		},{
 			"member_name": "tom",
 			"inf_content": "关键词tom",
 			"last_message_time": "今天",
 			"unread_count": 0,
-			"remark": "备注: tom消息“关键词tom”的消息备注"
+			"remark": "tom消息“关键词tom”的消息备注"
+		},{
+			"member_name": "jobs",
+			"inf_content": "【自动回复】 关键字回复内容tom",
+			"last_message_time": "今天",
+			"unread_count": 0,
+			"remark": "tom消息“【自动回复】XXX”的消息备注"
 		}]
 		"""
