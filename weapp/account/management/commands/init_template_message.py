@@ -41,7 +41,7 @@ class Command(BaseCommand):
 				MarketToolsTemplateMessage.objects.create(industry=template_message[0],  title=template_message[1], attribute=template_message[2], send_point=template_message[3])
 
 		self._set_new_template()
-		# self.__abc()
+		self.__abc()
 
 
 	def _set_new_template(self):
@@ -77,15 +77,16 @@ class Command(BaseCommand):
 		print 'set_new_template-------------start'
 
 
-	# def __abc(self):
-	# 	user_profile = User.objects.get(username='jobs').get_profile()
-	# 	from market_tools.tools.template_message import module_api as template_module_api
-	# 	webapp_id = user_profile.webapp_id
-	# 	webapp_user_id = 6
-	# 	send_point = COUPON_ARRIVAL_NOTIFY
-	# 	model = {
-	# 		"coupon_store": u'全部可用',
-	# 		"coupon_rule": u'点击查看优惠券详情，请在优惠券有使用'
-	# 	}
-	# 	message = template_module_api.send_weixin_template_message(webapp_id, webapp_user_id, model, send_point)
-	# 	print message
+	def __abc(self):
+		user = User.objects.get(username='ceshi01')
+		from market_tools.tools.template_message import module_api as template_module_api
+		webapp_owner_id = user.id
+		webapp_user_id = 6
+		member_id = 2184797
+		send_point = COUPON_ARRIVAL_NOTIFY
+		model = {
+			"coupon_store": u'全部可用',
+			"coupon_rule": u'点击查看优惠券详情，请在优惠券有使用'
+		}
+		message = template_module_api.send_weixin_template_message(webapp_owner_id, member_id, model, send_point)
+		print message
