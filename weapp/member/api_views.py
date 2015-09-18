@@ -70,6 +70,8 @@ def __get_request_members_list(request):
 
 	if filter_value:
 		filter_data_dict = {}
+		#session_member_ids:通过最后对话时间而获取到会员id的list，先默认为false
+		session_member_ids = False
 
 		for filter_data_item in filter_value.split('|'):
 			try:
@@ -139,12 +141,15 @@ def __get_request_members_list(request):
 
 				opids = get_opid_from_session(session_filter)
 				session_member_ids = module_api.get_member_ids_by_opid(opids)
-				if filter_data_args.has_key('id__in'):
-					member_ids = filter_data_args['id__in']
-					member_ids = list(set(member_ids).intersection(set(session_member_ids)))
-					filter_data_args['id__in'] = member_ids
-				else:
-					filter_data_args['id__in'] = session_member_ids
+		#最后对话时间和分组的处理：1、都存在，做交集运算2、最后对话时间存在，将它赋值给filter_data_args['id__in']，
+		#3、最后对话时间存在，上面做了处理，不处理了。4、都不存在，pass
+		if filter_data_args.has_key('id__in') and session_member_ids:
+			member_ids = filter_data_args['id__in']
+			member_ids = list(set(member_ids).intersection(set(session_member_ids)))
+			filter_data_args['id__in'] = member_ids
+		elif session_member_ids:
+			filter_data_args['id__in'] = session_member_ids
+		#最后对话时间和分组的处理
 
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 	total_count = members.count()
