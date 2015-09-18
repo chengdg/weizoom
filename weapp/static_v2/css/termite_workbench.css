@@ -585,6 +585,25 @@ button.xui-removeImageButton{
 	border-radius: 50%;
 }
 
+/*appkit.lotterydescription 组件图片移除按钮*/
+button.xui-deleteImageButton{
+	position: absolute;
+	top:-11px;
+	margin-left: 85px;
+	font-size: 14px;
+	z-index: 1;
+	background: none;
+	border: none;
+}
+.xui-deleteImageButton span{
+	color: #fff;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: rgba(0,0,0,0.45);
+	border-radius: 50%;
+}
+
 
 /*图片添加按钮*/
 .xui-product{

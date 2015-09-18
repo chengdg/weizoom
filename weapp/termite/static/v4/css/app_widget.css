@@ -601,7 +601,28 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-UploadImg .wui-i-mandatory {
 	color: #CDCDCD;
 }
-
+.wui-i-uploadimg .xui-productPhoto{
+    overflow: hidden;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-addPhoto,
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    width: 45px;
+    height: 45px;
+    display: inline-block;
+    text-align: center;
+    line-height: 45px;
+    margin-right: 3px;
+	overflow: hidden;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    line-height: 35px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-finishEdit{
+    line-height: 45px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    margin-right: 0;
+}
 .wui-i-uploadimg .xui-productPhoto .xui-addPhoto span.xui-i-box,
 .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     display: inline-block;
@@ -650,9 +671,9 @@ p.wui-i-start_time,p.wui-i-end_time{
 	min-height: 45px;
 	padding-bottom: 15px;
 }
-.wui-i-uploadimg .xui-productPhoto .xui-addPhoto {
-  	margin-right: 3px;
-}
-.wui-i-uploadimg .xui-finishEdit{
-  line-height: 45px;
-}
+/*.wui-i-uploadimg .xui-finishEdit{*/
+  /*line-height: 45px;*/
+/*}*/
+/*.xui-i-box {*/
+  /*margin-right: 4px;*/
+/*}*/
