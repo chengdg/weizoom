@@ -48,33 +48,6 @@ random.seed(time.time())
 from bs4 import BeautifulSoup
 # NO_PROMOTION_ID = -1
 
-
-# def _get_promotion_name(product):
-# 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
-
-# 	Args:
-# 	  product -
-
-# 	Return:
-# 	  False - 商品没有促销
-# 	  'int_str' - 商品有促销
-# 	"""
-
-# 	if not product.promotion:
-# 		return None
-# 	else:
-# 		promotion = product.promotion
-# 		now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-# 		# 已过期或未开始活动的商品，做为 普通商品
-# 		if promotion['start_date'] > now or promotion['end_date'] < now:
-# 			name = '%d_%s' % (promotion['id'], product.model['name'])
-# 		elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT or promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-# 			name = promotion['id']
-# 		else:
-# 			name = '%d_%s' % (promotion['id'], product.model['name'])
-# 	return name
-
-
 def __get_promotion_name(product):
 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
 
@@ -524,15 +497,15 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.is_deleted = True
 
 		# 商品详情图片lazyload
-		# 暂时注掉 等大师开发完成后合并放开代码
-		# soup = BeautifulSoup(product.detail)
-		# for img in soup.find_all('img'):
-		# 	try:
-		# 		img['data-url'] = img['src']
-		# 		del img['src']
-		# 	except:
-		# 		pass
-		# product.detail = str(soup)
+		soup = BeautifulSoup(product.detail)
+		for img in soup.find_all('img'):
+			try:
+				img['data-url'] = img['src']
+				del img['src']
+				del img['title']
+			except:
+				pass
+		product.detail = str(soup)
 
 		data = product.to_dict(
 								'min_limit',

@@ -3669,6 +3669,7 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     text-align: center;
     line-height: 45px;
     margin-right: 3px;
+    overflow: hidden;
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     line-height: 35px;
