@@ -15,9 +15,7 @@ from excel_response import ExcelResponse
 from tools.regional.views import get_str_value_by_string_ids, get_str_value_by_string_ids_new
 from modules.member.models import Member, WebAppUser, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 from mall import module_api as mall_api
-from mall import order_api_views
 import re
-from mall import order_views
 
 COUNT_PER_PAGE = 15
 FIRST_NAV = export.SALES_NAV
