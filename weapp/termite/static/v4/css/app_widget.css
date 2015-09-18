@@ -601,7 +601,28 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-UploadImg .wui-i-mandatory {
 	color: #CDCDCD;
 }
-
+.wui-i-uploadimg .xui-productPhoto{
+    overflow: hidden;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-addPhoto,
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    width: 45px;
+    height: 45px;
+    display: inline-block;
+    text-align: center;
+    line-height: 45px;
+    margin-right: 3px;
+	overflow: hidden;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    line-height: 35px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-finishEdit{
+    line-height: 45px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    margin-right: 0;
+}
 .wui-i-uploadimg .xui-productPhoto .xui-addPhoto span.xui-i-box,
 .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     display: inline-block;
@@ -626,7 +647,6 @@ p.wui-i-start_time,p.wui-i-end_time{
     background:rgba(0,0,0,0.5);
     text-align: center;
     line-height: 45px;
-	margin-right: 4px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-remove i{
     background: url(/static_v2/img/webapp/mall/sprite0506.png);
@@ -636,11 +656,11 @@ p.wui-i-start_time,p.wui-i-end_time{
     width: 23px;
     height: 22px;
     display: inline-block;
-    top:11px;
-    left: 12px;
+    top:10px;
+    left: 10px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-addPhoto .xui-i-box i{
-    margin-left: -4px;
+    margin-left: -3px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-text{
     color: #A9A9A9;
@@ -651,9 +671,9 @@ p.wui-i-start_time,p.wui-i-end_time{
 	min-height: 45px;
 	padding-bottom: 15px;
 }
-.wui-i-uploadimg .xui-finishEdit{
-  line-height: 45px;
-}
-.xui-i-box {
-  margin-right: 4px;
-}
+/*.wui-i-uploadimg .xui-finishEdit{*/
+  /*line-height: 45px;*/
+/*}*/
+/*.xui-i-box {*/
+  /*margin-right: 4px;*/
+/*}*/
