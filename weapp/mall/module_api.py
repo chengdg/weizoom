@@ -524,14 +524,15 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.is_deleted = True
 
 		# 商品详情图片lazyload
-		soup = BeautifulSoup(product.detail)
-		for img in soup.find_all('img'):
-			try:
-				img['data-url'] = img['src']
-				del img['src']
-			except:
-				pass
-		product.detail = str(soup)
+		# 暂时注掉 等大师开发完成后合并放开代码
+		# soup = BeautifulSoup(product.detail)
+		# for img in soup.find_all('img'):
+		# 	try:
+		# 		img['data-url'] = img['src']
+		# 		del img['src']
+		# 	except:
+		# 		pass
+		# product.detail = str(soup)
 
 		data = product.to_dict(
 								'min_limit',
