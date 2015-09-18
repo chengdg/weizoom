@@ -24,8 +24,8 @@ class Command(BaseCommand):
             user_ids.append(component.user_id)
 
         now = datetime.now()
-        expired_time_g = datetime.now() + timedelta(hours=36)
-        expired_time_l = datetime.now() + timedelta(hours=37)
+        expired_time_g = datetime.now() + timedelta(hours=35)
+        expired_time_l = datetime.now() + timedelta(hours=38)
 
         coupons = promotion_models.Coupon.objects.filter(
             owner_id__in=user_ids,
@@ -33,8 +33,10 @@ class Command(BaseCommand):
             expired_time__lt=expired_time_l,
             status=promotion_models.COUPON_STATUS_UNUSED
             )
+        print coupons
 
         for coupon in coupons:
+            print "send message..."
             try:
                 model_data = {
                     "coupon_store": u'全部可用',

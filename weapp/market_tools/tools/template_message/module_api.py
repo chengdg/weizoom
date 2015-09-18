@@ -182,10 +182,8 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
 				weixin_api = get_weixin_api(mpuser_access_token)
 
 				message = _get_send_message_dict(user_profile, member_id, model, template_message)
-				print '------------'
-				print message
 				result = weixin_api.send_template_message(message, True)
-				_record_send_template_info(order, template_message.template_id, user)
+				#_record_send_template_info(order, template_message.template_id, user)
 				return True
 			except:
 				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
