@@ -626,6 +626,7 @@ p.wui-i-start_time,p.wui-i-end_time{
     background:rgba(0,0,0,0.5);
     text-align: center;
     line-height: 45px;
+	margin-right: 4px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-remove i{
     background: url(/static_v2/img/webapp/mall/sprite0506.png);
@@ -639,7 +640,7 @@ p.wui-i-start_time,p.wui-i-end_time{
     left: 10px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-addPhoto .xui-i-box i{
-    margin-left: -3px;
+    margin-left: -4px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-text{
     color: #A9A9A9;
@@ -650,9 +651,9 @@ p.wui-i-start_time,p.wui-i-end_time{
 	min-height: 45px;
 	padding-bottom: 15px;
 }
-.wui-i-uploadimg .xui-productPhoto .xui-addPhoto {
-  	margin-right: 3px;
-}
 .wui-i-uploadimg .xui-finishEdit{
   line-height: 45px;
+}
+.xui-i-box {
+  margin-right: 4px;
 }
