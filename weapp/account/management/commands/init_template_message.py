@@ -41,7 +41,7 @@ class Command(BaseCommand):
 				MarketToolsTemplateMessage.objects.create(industry=template_message[0],  title=template_message[1], attribute=template_message[2], send_point=template_message[3])
 
 		self._set_new_template()
-		self.__abc()
+		# self.__abc()
 
 
 	def _set_new_template(self):
