@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     "coupon_store": u'下单即可使用',
                     "coupon_rule": u'%s至%s有效' % (coupon.coupon_rule.start_date.strftime("%Y-%m-%d"), coupon.coupon_rule.end_date.strftime("%Y-%m-%d"))
                 }
-                if rule.valid_restrictions > -1:
+                if coupon.coupon_rule.valid_restrictions > -1:
                     model_data["coupon_store"] = u"满%s元即可使用" % str(coupon.coupon_rule.valid_restrictions)
 
                 template_message_api.send_weixin_template_message(coupon.owner_id, coupon.member_id, model_data, template_message_model.COUPON_EXPIRED_REMIND)
