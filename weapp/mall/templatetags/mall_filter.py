@@ -129,6 +129,8 @@ def get_order_actions(order):
 					actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
 			if order.has_sub_order and ORDER_UPDATE_EXPREDSS_ACTION in actions:
 				actions.remove(ORDER_UPDATE_EXPREDSS_ACTION)
+			if order.has_sub_order and ORDER_FINISH_ACTION in actions:
+				actions.remove(ORDER_FINISH_ACTION)
 			return actions
 		elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
