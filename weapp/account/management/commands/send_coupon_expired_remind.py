@@ -38,7 +38,7 @@ class Command(BaseCommand):
             try:
                 model_data = {
                     "coupon_store": u'下单即可使用',
-                    "coupon_rule": u'%S至%s有效' % (coupon.coupon_rule.start_date.strftime("%Y-%m-%d"), coupon.coupon_rule.end_date.strftime("%Y-%m-%d"))
+                    "coupon_rule": u'%s至%s有效' % (coupon.coupon_rule.start_date.strftime("%Y-%m-%d"), coupon.coupon_rule.end_date.strftime("%Y-%m-%d"))
                 }
                 if rule.valid_restrictions > -1:
                     model_data["coupon_store"] = u"满%s元即可使用" % str(coupon.coupon_rule.valid_restrictions)
