@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         """
-        优惠券到期前36小时提醒用户有优惠券即将过期
+        优惠券到期前36小时提醒用户有优惠券即将过期。
         """
         user_ids = []
         for component in ComponentAuthedAppid.objects.all():
