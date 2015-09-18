@@ -134,9 +134,13 @@
                $(this).siblings('.xui-addPhoto').find('.xa-remove').hide();
                $(this).siblings('.xa-deletePhoto').show();
                $(this).hide();
-               if( photoLength = 1){ //图片全部删除
+                console.log(photoLength);
+               if( photoLength == 1){ //图片全部删除
                    $(this).siblings('.xa-deletePhoto').hide();
                    $(this).siblings('.xa-text').show();
+               }else{
+                   $(this).siblings('.xa-deletePhoto').show();
+                   $(this).siblings('.xa-text').hide();
                }
                if( photoLength < 6){
                    $(this).siblings('.xui-addPhoto').last().show();
