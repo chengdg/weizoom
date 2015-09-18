@@ -589,28 +589,22 @@
                                     <div class="propertyGroup_property_input" style="position:relative;">
                                         {{html W.data.getDynamicComponentDataForDialogSelectControl(dynamicComponent, dynamicComponentField)}}
                                         <input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden" />
-
-                                        {{if dynamicComponent.model.get(dynamicComponentField.name) && dynamicComponentField.selectedButton}}
-                                            <button class="btn btn-small" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">${dynamicComponentField.selectedButton}</button>
-                                        {{else}}
-
                                             <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">
-                                                {{if triggerButton.nodata}}
-                                                    {{if dynamicComponent.model.get(dynamicComponentField.name)}}
-                                                        ${dynamicComponentField.triggerButton.hasdata}
-                                                    {{else}}
-                                                        ${dynamicComponentField.triggerButton.nodata}
-                                                    {{/if}}
+                                                {{if dynamicComponent.model.get(dynamicComponentField.name)}}
+                                                    ${dynamicComponentField.triggerButton.hasdata}
                                                 {{else}}
-                                                    ${dynamicComponentField.triggerButton}
+                                                    ${dynamicComponentField.triggerButton.nodata}
                                                 {{/if}}
                                             </button>
-                                        {{/if}}
 
                                         {{if dynamicComponentField.help}}
                                         <div style="color: #666;">
                                             {{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
                                         </div>
+                                        {{/if}}
+
+                                        {{if dynamicComponentField.isShowCloseButton}}
+                                            <button type="button" class="deleteImage xa-deleteImageButton xui-deleteImageButton" style="display:none;"><span>&times;</span></button>
                                         {{/if}}
                                     </div>
                                 </div>
