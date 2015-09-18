@@ -710,3 +710,52 @@ def get_member_logs(request):
 	}
 
 	return response.get_response()
+
+
+########################################################################
+# update_tags 修改tag（等级或者分组）
+########################################################################
+@api(app='member', resource='tags', action='update')
+@login_required
+def update_tags(request):
+	webapp_id = request.user_profile.webapp_id
+	default_tag_id = MemberTag.get_default_tag(webapp_id).id
+	member_tags = MemberTag.get_member_tags(webapp_id)
+	check_ids = request.POST.get('ids', '')
+	ids = [str(tag.id) for tag in member_tags]	
+	check_ids = check_ids.split('_')
+	#list(set(member_tag_ids).difference(set(id_values.keys())))
+	response = create_response(200)
+	if check_ids and ids and set(check_ids) != set(ids):
+		response = create_response(201)
+		return response.get_response()
+	else:
+		member_tag_ids = ids
+		id_values = {}
+		print request.POST.dict()
+		for key, value in request.POST.dict().items():
+			if 'tag_' in key:
+				id = key.split('_')[2]
+				id_values[str(id)] = value
+		for id in id_values.keys():
+			value = id_values[id]
+			#不能添加和更新名为‘未分组’的组名
+			if value != '未分组' and value.strip():
+				if MemberTag.objects.filter(id=id, webapp_id=webapp_id).count() > 0:
+					MemberTag.objects.filter(id=id, webapp_id=webapp_id).update(name=value)
+				else:
+					if MemberTag.objects.filter(id=id).count() == 0:
+						MemberTag.objects.create(id=id, name=value, webapp_id=webapp_id)
+					else:
+						MemberTag.objects.create(name=value, webapp_id=webapp_id)
+		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
+		if default_tag_id in delete_ids:
+			delete_ids.remove(default_tag_id)
+		members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
+		MemberTag.objects.filter(id__in=delete_ids).delete()
+		for m in members:
+			if MemberHasTag.objects.filter(member=m).count() == 0:
+				MemberHasTag.objects.create(member=m, member_tag_id=default_tag_id)
+
+
+	return response.get_response()

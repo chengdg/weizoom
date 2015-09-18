@@ -90,8 +90,11 @@ def list_tags(request):
 				is_can_send = True
 		except:
 			pass
-
-
+		ids = [str(tag.id) for tag in MemberTag.objects.filter(webapp_id=webapp_id)]
+		if ids:
+			ids = '_'.join(ids)
+		else:
+			ids = ''
 		for member_tag in member_tags:
 			member_tag.count = MemberHasTag.get_tag_has_member_count(member_tag)
 		c = RequestContext(request, {
@@ -101,7 +104,8 @@ def list_tags(request):
 			'member_tags': member_tags,
 			'should_show_authorize_cover': get_should_show_authorize_cover(request),
 			'success_count': UserSentMassMsgLog.success_count(webapp_id),
-			'is_can_send': is_can_send
+			'is_can_send': is_can_send,
+			'ids':ids
 			#'pageinfo': json.dumps(paginator.to_dict(pageinfo))
 			})
 		return render_to_response('member/editor/member_tags.html', c)
