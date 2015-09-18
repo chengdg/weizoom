@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from core.jsonresponse import create_response
+from mall.models import Order, ORDER_STATUS_PAYED_NOT_SHIP
 from market_tools.tools.channel_qrcode.models import *
 import mall.module_api as mall_api
 from watchdog.utils import watchdog_warning
@@ -104,6 +105,15 @@ class Delivery(resource.Resource):
         leader_name = request.POST.get('leader_name')
         is_update_express = request.POST.get('is_update_express')
         is_update_express = True if is_update_express == 'true' else False
+
+        try:
+            order = Order.objects.get(id=order_id)
+            if not is_update_express and order.status != ORDER_STATUS_PAYED_NOT_SHIP:
+                response = create_response(500)
+                response.errMsg = u'该订单已取消'
+                return response.get_response()
+        except:
+            pass
         is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username,
                                          leader_name=leader_name, is_update_express=is_update_express)
         if is_success:

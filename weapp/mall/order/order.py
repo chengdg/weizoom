@@ -49,14 +49,16 @@ class OrderInfo(resource.Resource):
         """
         order_id = request.POST['order_id']
         action = request.POST.get('action', None)
-        order_status = request.POST.get('order_status', None)
-        bill_type = int(request.POST.get('bill_type', ORDER_BILL_TYPE_NONE))
-        # postage = request.POST.get('postage', None)
-        final_price = request.POST.get('final_price', None)
-        ship_name = request.POST.get('ship_name', None)
-        ship_tel = request.POST.get('ship_tel', None)
-        ship_address = request.POST.get('ship_address', None)
         remark = request.POST.get('remark', None)
+        final_price = request.POST.get('final_price', None)
+
+        # todo should_delete 2015.7.19
+        # order_status = request.POST.get('order_status', None)
+        # bill_type = int(request.POST.get('bill_type', ORDER_BILL_TYPE_NONE))
+        # # postage = request.POST.get('postage', None)
+        # ship_name = request.POST.get('ship_name', None)
+        # ship_tel = request.POST.get('ship_tel', None)
+        # ship_address = request.POST.get('ship_address', None)
 
         order = Order.objects.get(id=order_id)
 
@@ -65,29 +67,29 @@ class OrderInfo(resource.Resource):
 
         else:
             operate_log = ''
-            expired_status = order.status
-            if order_status:
-                if order.status != int(order_status):
-                    operate_log = u' 修改状态'
-                    mall_api.record_status_log(order.order_id, order.status, order_status, request.manager.username)
-                    order.status = order_status
+            # expired_status = order.status
+            # if order_status:
+            #     if order.status != int(order_status):
+            #         operate_log = u' 修改状态'
+            #         mall_api.record_status_log(order.order_id, order.status, order_status, request.manager.username)
+            #         order.status = order_status
+            #
+            #         try:
+            #             if expired_status < ORDER_STATUS_SUCCESSED and int(
+            #                     order_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
+            #                 integral.increase_father_member_integral_by_child_member_buyed(order, order.webapp_id)
+            #                 # integral.increase_for_self_buy(order.webapp_user_id, order.webapp_id, order.final_price)
+            #         except:
+            #             notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
+            #             watchdog_error(notify_message)
 
-                    try:
-                        if expired_status < ORDER_STATUS_SUCCESSED and int(
-                                order_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
-                            integral.increase_father_member_integral_by_child_member_buyed(order, order.webapp_id)
-                            # integral.increase_for_self_buy(order.webapp_user_id, order.webapp_id, order.final_price)
-                    except:
-                        notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
-                        watchdog_error(notify_message)
-
-            if bill_type:
-                bill = request.POST.get('bill', '')
-                # 允许发票信息随意修改
-                # if order.bill_type != bill_type:
-                operate_log = operate_log + u' 修改发票'
-                order.bill_type = bill_type
-                order.bill = bill
+            # if bill_type:
+            #     bill = request.POST.get('bill', '')
+            #     # 允许发票信息随意修改
+            #     # if order.bill_type != bill_type:
+            #     operate_log = operate_log + u' 修改发票'
+            #     order.bill_type = bill_type
+            #     order.bill = bill
 
             # if postage:
             # if float(order.postage) != float(postage):
@@ -95,28 +97,28 @@ class OrderInfo(resource.Resource):
             # 		order.final_price = order.final_price - order.postage + float(postage) #更新最终价格
             # 		order.postage = postage
 
-            if ship_name:
-                if order.ship_name != ship_name:
-                    operate_log = operate_log + u' 修改收货人'
-                    order.ship_name = ship_name
+            # if ship_name:
+            #     if order.ship_name != ship_name:
+            #         operate_log = operate_log + u' 修改收货人'
+            #         order.ship_name = ship_name
+            #
+            # if ship_tel:
+            #     if order.ship_tel != ship_tel:
+            #         operate_log = operate_log + u' 修改收货人电话号'
+            #         order.ship_tel = ship_tel
+            #
+            # if ship_address:
+            #     if order.ship_address != ship_address:
+            #         operate_log = operate_log + u' 修改收货人地址'
+            #         order.ship_address = ship_address
 
-            if ship_tel:
-                if order.ship_tel != ship_tel:
-                    operate_log = operate_log + u' 修改收货人电话号'
-                    order.ship_tel = ship_tel
-
-            if ship_address:
-                if order.ship_address != ship_address:
-                    operate_log = operate_log + u' 修改收货人地址'
-                    order.ship_address = ship_address
-
-            if not remark is None:
+            if remark:
                 remark = remark.strip()
                 if order.remark != remark:
                     operate_log = operate_log + u' 修改订单备注'
                     order.remark = remark
 
-            if final_price is not None:
+            if final_price:
                 if float(order.final_price) != float(final_price):
                     operate_log = operate_log + u' 修改订单金额'
                     order.final_price = float(final_price)
@@ -363,24 +365,4 @@ class ChannelQrcodePayedOrder(resource.Resource):
             'pageinfo': paginator.to_dict(pageinfo),
         }
         return response.get_response()
-
-
-# class UnShipOrderCount(resource.Resource):
-#     app = "mall2"
-#     resource = "un_ship_order_count"
-#
-#     def api_get(request):
-#         # print(request.manager.get_profile().webapp_id)
-#         # count = len(belong_to(request.manager.get_profile().webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP))
-#         from cache.webapp_owner_cache import get_unship_order_count_from_cache
-#
-#         count = get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
-#
-#         print("count:", count)
-#
-#         response = create_response(200)
-#         response.data = {
-#             'count': count
-#         }
-#         return response.get_response()
 

@@ -96,15 +96,13 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
 
 
                 },
-                error: function() {
-
+                error: function(data) {
+                    W.getErrorHintView().show(data.errMsg);
+                    var t=setTimeout("window.location.reload()",2000)
+                    //$('[data-ui-role="advanced-table"]').data('view').reload();
                 }
             });
 
-            // }
-    		// window.location.href = '/mall/editor/order_express/add/?order_id=' +
-      //       this.orderId + '&=' + logistics + '&express_number=' + logisticsOrderId +
-      //        '&leader_name=' + leaderName+ '&is_update_express='+isUpdateExpress;
     	} else {
     		$('div.xa-error').text(validate.errMsg);
     	}
