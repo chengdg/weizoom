@@ -182,7 +182,6 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
 				weixin_api = get_weixin_api(mpuser_access_token)
 
 				message = _get_send_message_dict(user_profile, member_id, model, template_message)
-				print message, "+++++++"
 				result = weixin_api.send_template_message(message, True)
 				#_record_send_template_info(order, template_message.template_id, user)
 				return True
@@ -227,7 +226,7 @@ def _get_send_message_dict(user_profile, member_id, model, template_message):
 
 def __get_template_url(send_point, user_profile, social_account, model):
 	host = _get_host(user_profile)
-	if send_point == COUPON_ARRIVAL_NOTIFY:
+	if send_point == COUPON_ARRIVAL_NOTIFY and send_point == COUPON_EXPIRED_REMIND:
 		return u'{}/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id={}&project_id=0&sct={}'.format(host, user_profile.user.id, social_account.token)
 
 	return u''
