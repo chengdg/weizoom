@@ -33,6 +33,7 @@ from tools.express import util as express_util
 
 #from mall.models import Order,Product
 from modules.member import module_api as member_model_api
+from modules.member import models as member_models
 
 from models import *
 
@@ -208,7 +209,14 @@ def _get_host(user_profile):
 
 def _get_send_message_dict(user_profile, member_id, model, template_message):
 	template_data = dict()
-	social_account = member_model_api.get_social_account_by_member_id(member_id)
+	webapp_user_id = 0
+	webapp_users = member_models.WebAppUser.objects.filter(member_id=member_id)
+	if webapp_users.count() == 0:
+		return None
+	else:
+		webapp_user_id = webapp_users[0].id
+
+	social_account = member_model_api.get_social_account(webapp_user_id)
 
 	if social_account and social_account.openid:
 		template_data['touser'] = social_account.openid
