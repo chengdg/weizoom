@@ -5,7 +5,7 @@ import time
 from django.core.management.base import BaseCommand, CommandError
 
 from core.exceptionutil import unicode_full_stack
-from watchdog.utils import watchdog_error, watchdog_info
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from mall.promotion import models as promotion_models
 from weixin.user.models import ComponentAuthedAppid
 from market_tools.tools.template_message import models as template_message_model
@@ -33,10 +33,8 @@ class Command(BaseCommand):
             expired_time__lt=expired_time_l,
             status=promotion_models.COUPON_STATUS_UNUSED
             )
-        print coupons
 
         for coupon in coupons:
-            print "send message..."
             try:
                 model_data = {
                     "coupon_store": u'全部可用',
@@ -45,7 +43,7 @@ class Command(BaseCommand):
                 if coupon.coupon_rule.limit_product:
                     model_data["coupon_store"] = u'单个商品可用'
                 if coupon.coupon_rule.valid_restrictions > -1:
-                    model_data["coupon_rule"] = "每笔订单满%s元即可使用本券" % str(coupon.coupon_rule.valid_restrictions)
+                    model_data["coupon_rule"] = u"每笔订单满%s元即可使用本券" % str(coupon.coupon_rule.valid_restrictions)
                 template_message_api.send_weixin_template_message(coupon.owner_id, coupon.member_id, model_data, template_message_model.COUPON_EXPIRED_REMIND)
             except:
                 alert_message = u"ship_order 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
