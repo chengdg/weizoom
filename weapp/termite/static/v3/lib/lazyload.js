@@ -19,6 +19,7 @@
     $.fn.lazyload = function(options) {
         var elements = this;
         var $container;
+        var trigger_resize = true;
         var settings = {
             threshold       : 0,
             failure_limit   : 0,
@@ -45,6 +46,9 @@
                         /* Nothing. */
                 } else if (!$.belowthefold(this, settings) &&
                     !$.rightoffold(this, settings)) {
+                        if(counter){
+                            trigger_resize = false;
+                        }
                         $this.trigger("appear");
                         /* if we found an image we'll load, reset the counter */
                         counter = 0;
@@ -158,7 +162,13 @@
 
         /* Force initial check if images should appear. */
         $(document).ready(function() {
-            update();
+            var setInterval_obj = setInterval(function(){
+                if(trigger_resize){
+                    update()
+                }else{
+                    clearInterval(setInterval_obj);
+                }
+            }, 200)
         });
 
         return this;
