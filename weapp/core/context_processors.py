@@ -616,6 +616,14 @@ def fetch_webapp_global_navbar(request):
 
 		if navbar_page:
 			navbar_component = navbar_page['component']['components'][0]
+
+			if path_type is 'product_list_page':
+				# 如果是商品列表页面 只有选择的‘APP导航模式’ 才显示底部
+				if navbar_component['model']['type'] == 'slide':
+					return {'global_navbar': navbar_component}
+				else:
+					return {'global_navbar': None}
+
 			selected = navbar_component['model']['pages'][path_type]['select']
 			if selected:
 				return {'global_navbar': navbar_component}
