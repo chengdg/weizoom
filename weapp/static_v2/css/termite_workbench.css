@@ -674,6 +674,7 @@ button.xui-removeImageButton{
 }
 .xui-propertyView-productGroup .propertyGroup_property:first-child .propertyGroup_property_label{
 	margin-top: -20px;
+	line-height: 78px!important;
 }
 /*选择按钮样式*/
 .xui-selectBtn{
