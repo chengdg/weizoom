@@ -200,7 +200,7 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
 
 ## 会员是否取消关注
 def _is_member_subscribed(member_id):
-	member = member_model_api.get_member_by_id(id=member_id)
+	member = member_model_api.get_member_by_id(member_id)
 	if member and member.is_subscribed is True:
 		return False
 
