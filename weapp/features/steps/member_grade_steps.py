@@ -125,7 +125,7 @@ def step_impl(context, webapp_user, member):
 
 @when(u'{webapp_user}给"{member}"加积分')
 def step_impl(context, webapp_user, member):
-    url = '/member/api/integral/update/'
+    url = '/member/api/integral/'
     query_hex = byte_to_hex(member)
     member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
     data = json.loads(context.text)

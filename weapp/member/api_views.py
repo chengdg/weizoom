@@ -248,28 +248,28 @@ def get_members_filter_params(request):
 	return response.get_response()
 
 
-@api(app='member', resource='integral', action='update')
-@login_required
-def update_integral(request):
-	member_id = request.POST.get('member_id', None)
-	integral = request.POST.get('integral', 0)
-	reason = request.POST.get('reason', '').strip()
-	webapp_id=request.user_profile.webapp_id
+# @api(app='member', resource='integral', action='update')
+# @login_required
+# def update_integral(request):
+# 	member_id = request.POST.get('member_id', None)
+# 	integral = request.POST.get('integral', 0)
+# 	reason = request.POST.get('reason', '').strip()
+# 	webapp_id=request.user_profile.webapp_id
 
-	if Member.objects.filter(webapp_id=webapp_id, id=member_id).count() == 0:
-		pass
-	else:
-		if int(integral) != 0:
-			from modules.member.tasks import update_member_integral
-			if int(integral) > 0:
-				event_type = MANAGER_MODIFY_ADD
-			else:
-				event_type = MANAGER_MODIFY_REDUCT
+# 	if Member.objects.filter(webapp_id=webapp_id, id=member_id).count() == 0:
+# 		pass
+# 	else:
+# 		if int(integral) != 0:
+# 			from modules.member.tasks import update_member_integral
+# 			if int(integral) > 0:
+# 				event_type = MANAGER_MODIFY_ADD
+# 			else:
+# 				event_type = MANAGER_MODIFY_REDUCT
 
-			update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
+# 			update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
 
-	response = create_response(200)
-	return response.get_response()
+# 	response = create_response(200)
+# 	return response.get_response()
 
 
 @api(app='member', resource='members', action='get')

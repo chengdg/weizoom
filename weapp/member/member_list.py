@@ -633,3 +633,29 @@ class MemberIntegral(resource.Resource):
 		}
 
 		return response.get_response()
+
+class Integral(resource.Resource):
+	app='member'
+	resource='integral'
+	@login_required
+	def api_post(request):
+		
+		member_id = request.POST.get('member_id', None)
+		integral = request.POST.get('integral', 0)
+		reason = request.POST.get('reason', '').strip()
+		webapp_id=request.user_profile.webapp_id
+
+		if Member.objects.filter(webapp_id=webapp_id, id=member_id).count() == 0:
+			pass
+		else:
+			if int(integral) != 0:
+				from modules.member.tasks import update_member_integral
+				if int(integral) > 0:
+					event_type = MANAGER_MODIFY_ADD
+				else:
+					event_type = MANAGER_MODIFY_REDUCT
+
+				update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
+
+		response = create_response(200)
+		return response.get_response()
