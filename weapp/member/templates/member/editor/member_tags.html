@@ -31,7 +31,7 @@
 							<input type="hidden"   id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" />
 								<tr data-id="{{ member_tag.id }}" class="domain_data">
 									<td>
-										<span>{{ member_tag.name }}</span>
+										<input type="text" class="form-control xa-tag-name"  id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" placeholder="" value="{{ member_tag.name }}" readonly="readonly"/>
 									</td>
 									<td>
 										{{ member_tag.count }}
@@ -104,41 +104,6 @@
        		$el.parent().parent().remove();
 		});
 
-
-		var send_message = function(group_id, cont, send_type){
-			W.getApi().call({
-			 	method: 'post',
-	            app: 'webapp/user_center',
-	            api: 'massmessage/send',
-	            async: false,
-	            args: {
-	                group_id: group_id,
-	                content: cont,
-	                send_type: send_type
-	            },
-	            scope: this,
-	            success: function(data) {
-	                W.getSuccessHintView().show('发送成功');
-	                var times = $('#times').text();
-	                $('#times').text((parseInt(times) +1 ))
-	            },
-	            error: function(resp) {
-	                //TODO 进行错误通知
-	                W.getErrorHintView().show('发送失败');
-
-	                //failed_callback();
-	            }
-			})
-		}
-
-		$('.xa-send-text').click(function(event){
-			var group_id = $(event.currentTarget).attr('value');
-			W.dialog.showDialog('W.dialog.member.tag.TextareDialog', {
-				success: function(ids) {
-					send_message(group_id, ids, 0);
-				}
-			});
-		});
 		var ids = '{{ids}}';
 		$('#submitBtn').click(function(event){
 			if (!W.validate()) {
@@ -146,15 +111,13 @@
 			}
 			var $form = $('form');
 			var data = $form.serializeObject();
-			data['ids'] = ids;
 			W.getApi().call({
 				method: 'post',
 				app: 'member',
-				api: 'tags/update',
+				api: 'member_tags',
 				args: data,
 				success: function(data) {
 					W.showHint('success', '保存成功');
-					window.location.reload();
                 },
                 error: function(resp) {
                 	console.log(resp)
@@ -166,26 +129,9 @@
                 	setTimeout(function() {
    							window.location.reload();
    						}, 3000);
-	              	
-                },
-                scope: this
+
+                }
 			});
-			
-			/*var $tagName = $('input.xa-tag-name');
-			var flag = true;
-			$tagName.each(function(i, value) {
-				console.log(value)
-				var tag_name = value.value;
-				console.log(tag_name)
-				if (!$.trim(tag_name)) {
-					flag = false;
-					return false;
-				}
-			});
-			if (!flag) {
-				W.showHint('error', '请输入分组名称');
-				return false;
-			} */
 
 		});
 	});

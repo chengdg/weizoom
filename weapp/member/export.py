@@ -37,7 +37,7 @@ MEMBER_NAV = {
 		{
 			'name': MEMBER_TAG,
 			'title': u'会员分组',
-			'url': '/member/member_tags/get/',
+			'url': '/member/member_tags/',
             'need_permissions': ['manage_member_tag', ]
 		},
 		{

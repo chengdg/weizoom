@@ -40,7 +40,7 @@ def step_impl(context, user):
 
 
     args['grade_id'] = grade_id
-    response = context.client.post('/member/api/grade/batch_update/', args)
+    response = context.client.post('/member/api/batch_update_member_Grade/', args)
     bdd_util.assert_api_call_success(response)
 
 @when(u"{user}批量添加分组")
@@ -62,7 +62,7 @@ def step_impl(context, user):
 
 
     args['tag_id'] = tag_id
-    response = context.client.post('/member/api/tag/batch_update/', args)
+    response = context.client.post('/member/api/batch_update_member_tag/', args)
     bdd_util.assert_api_call_success(response)
 
 @when(u'{webapp_user}给"{member}"调分组')

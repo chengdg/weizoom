@@ -62,7 +62,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         if (this.isPostData){
             W.getApi().call({
                     app: 'member',
-                    api: 'tag/update',
+                    api: 'update_member_tag_or_grade',
                     method: 'post',
                     args: args,
                     success: function(data) {
@@ -96,7 +96,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
 
         W.getApi().call({
             app: 'member',
-            api: 'tags/get',
+            api: 'update_member_tag_or_grade',
             scope: this,
             success: function(data) {
                 var tags = '';
