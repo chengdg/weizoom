@@ -946,7 +946,7 @@ input.ui-input-text, textarea.ui-input-text {
     word-wrap: break-word;
     overflow: hidden;
     -webkit-box-pack: center;
-    height: 3em;
+    height: 2.7rem;
     padding-right:2px;
 }
 .xui-productDetailPage .xui-fav{
