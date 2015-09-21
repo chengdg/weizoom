@@ -431,6 +431,12 @@ APP_NAV = {
             'title': u'分享红包',
             'url': '/apps/promotion/red_envelope_rule_list/',
             'need_permissions': ['manage_order_red_envelope', ]
+        },
+        {
+            'name': "signs",
+            'title': u'签到',
+            'url': '/apps/sign/sign/',
+            'need_permissions': []
         }
     ]
 }
