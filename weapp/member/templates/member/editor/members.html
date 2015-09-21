@@ -16,7 +16,7 @@
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
-			<li><a href="/member/members/get/">会员管理</a></li>
+			<li><a href="/member/member_list/">会员管理</a></li>
 			<li class="active">会员列表</li>
 		</ul>
 	</div>
@@ -132,7 +132,7 @@
 		<div
 			data-ui-role="advanced-table"
 			data-app="member"
-			data-api="members/get"
+			data-resource="member_list"
 			data-template-id="#members-view"
 			data-enable-paginator="true"
 			data-enable-sort="false"
@@ -141,7 +141,9 @@
 			class="panel-body"
 			data-args='{"status":"{{status}}"}'
 			data-disable-header-select="true"
+			data-user-webapp-id={{user.get_profile.webapp_id}}
 		></div>
+
 		<div class="dropdown xui-operation update_dropdown pa"  style="bottom:0px;">
 			<div >
 				<span class="checkbox" style="display:inline-block;margin:0 15px 0 13px;">
