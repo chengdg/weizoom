@@ -173,4 +173,4 @@ def step_impl(context, user, webapp_user_name):
         'member_id': member.id,
         'checked_ids': grade.id
     }
-    context.client.post('/member/api/tag/update/', data)
+    context.client.post('/member/api/update_member_tag_or_grade/', data)
