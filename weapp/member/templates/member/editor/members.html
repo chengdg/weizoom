@@ -497,7 +497,7 @@ $(document).ready(function() {
 	 		W.getApi().call({
 	            method: 'post',
 	            app: 'member',
-	            api: 'grade/batch_update',
+	            api: 'batch_update_member_Grade',
 	            args: args,
 	            success: function(data) {
 	                 dataView.reload();
@@ -538,7 +538,7 @@ $(document).ready(function() {
 	 		W.getApi().call({
 	            method: 'post',
 	            app: 'member',
-	            api: 'tag/batch_update',
+	            api: 'batch_update_member_tag',
 	            args:args,
 	            success: function(data) {
 	                // window.location.reload();

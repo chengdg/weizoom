@@ -40,7 +40,7 @@ def step_impl(context, user):
 
 
     args['grade_id'] = grade_id
-    response = context.client.post('/member/api/grade/batch_update/', args)
+    response = context.client.post('/member/api/batch_update_member_Grade/', args)
     bdd_util.assert_api_call_success(response)
 
 @when(u"{user}批量添加分组")
@@ -62,12 +62,12 @@ def step_impl(context, user):
 
 
     args['tag_id'] = tag_id
-    response = context.client.post('/member/api/tag/batch_update/', args)
+    response = context.client.post('/member/api/batch_update_member_tag/', args)
     bdd_util.assert_api_call_success(response)
 
 @when(u'{webapp_user}给"{member}"调分组')
 def step_impl(context, webapp_user, member):
-    url = '/member/api/tag/update/'
+    url = '/member/api/update_member_tag_or_grade/'
     query_hex = byte_to_hex(member)
     member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
     tag_ids = []
@@ -84,7 +84,7 @@ def step_impl(context, webapp_user, member):
 
 @when(u'{webapp_user}给"{member}"设等级')
 def step_impl(context, webapp_user, member):
-    url = '/member/api/tag/update/'
+    url = '/member/api/update_member_tag_or_grade/'
     query_hex = byte_to_hex(member)
     member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
     data = json.loads(context.text)

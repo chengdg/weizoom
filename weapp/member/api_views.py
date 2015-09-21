@@ -543,94 +543,94 @@ def get_member_tags(request):
 	return response.get_response()
 
 
-########################################################################
-# update_tag 修改tag（等级或者分组）
-########################################################################
-@api(app='member', resource='tag', action='update')
-@login_required
-def update_tag(request):
-	webapp_id = request.user_profile.webapp_id
-	type = request.POST.get('type', None)
-	checked_ids = request.POST.get('checked_ids', None)
-	member_id = request.POST.get('member_id', None)
+# ########################################################################
+# # update_tag 修改tag（等级或者分组）
+# ########################################################################
+# @api(app='member', resource='tag', action='update')
+# @login_required
+# def update_tag(request):
+# 	webapp_id = request.user_profile.webapp_id
+# 	type = request.POST.get('type', None)
+# 	checked_ids = request.POST.get('checked_ids', None)
+# 	member_id = request.POST.get('member_id', None)
 
-	if type and member_id:
-		member = Member.objects.get(id=member_id)
-		if member.webapp_id == webapp_id:
-			if type == 'tag':
-				tag_ids = checked_ids.split('_')
-				MemberHasTag.delete_tag_member_relation_by_member(member)
-				tag_ids = [id for id in tag_ids if id]
-				if tag_ids:
-					MemberHasTag.add_tag_member_relation(member, tag_ids)
-				else:
-					tag_ids.append(MemberTag.get_default_tag(webapp_id).id)
-					MemberHasTag.add_tag_member_relation(member, tag_ids)
-			elif type == 'grade':
-				member.grade = MemberGrade.objects.get(id=checked_ids)
-				member.save()
+# 	if type and member_id:
+# 		member = Member.objects.get(id=member_id)
+# 		if member.webapp_id == webapp_id:
+# 			if type == 'tag':
+# 				tag_ids = checked_ids.split('_')
+# 				MemberHasTag.delete_tag_member_relation_by_member(member)
+# 				tag_ids = [id for id in tag_ids if id]
+# 				if tag_ids:
+# 					MemberHasTag.add_tag_member_relation(member, tag_ids)
+# 				else:
+# 					tag_ids.append(MemberTag.get_default_tag(webapp_id).id)
+# 					MemberHasTag.add_tag_member_relation(member, tag_ids)
+# 			elif type == 'grade':
+# 				member.grade = MemberGrade.objects.get(id=checked_ids)
+# 				member.save()
 
-	response = create_response(200)
-	return response.get_response()
-
-
-########################################################################
-# update_tag 修改等级
-########################################################################
-@api(app='member', resource='grade', action='batch_update')
-@login_required
-def batch_update_grade(request):
-	webapp_id = request.user_profile.webapp_id
-	grade_id = request.POST.get('grade_id', None)
-	post_ids = request.POST.get('ids', None)
-	grade = MemberGrade.objects.get(id=grade_id)
-
-	status = request.POST.get('update_status', 'selected')
-	if status == 'all':
-		filter_value = request.POST.get('filter_value', '')
-		request.GET = request.GET.copy()
-		request.GET['filter_value'] = filter_value
-		request.GET['count_per_page'] = 999999999
-		_, request_members, _ = __get_request_members_list(request)
-		post_ids = [m.id for m in request_members]
-	else:
-		post_ids = post_ids.split('-')
-
-	if grade.webapp_id == webapp_id and post_ids:
-		Member.objects.filter(id__in=post_ids).update(grade=grade)
-
-	response = create_response(200)
-	response.data.post_ids = post_ids
-	return response.get_response()
+# 	response = create_response(200)
+# 	return response.get_response()
 
 
-########################################################################
-# update_tag 修改tag（等级或者分组）
-########################################################################
-@api(app='member', resource='tag', action='batch_update')
-@login_required
-def batch_update_tag(request):
-	webapp_id = request.user_profile.webapp_id
-	tag_id = request.POST.get('tag_id', None)
-	post_ids = request.POST.get('ids', None)
+# ########################################################################
+# # update_tag 修改等级
+# ########################################################################
+# @api(app='member', resource='grade', action='batch_update')
+# @login_required
+# def batch_update_grade(request):
+# 	webapp_id = request.user_profile.webapp_id
+# 	grade_id = request.POST.get('grade_id', None)
+# 	post_ids = request.POST.get('ids', None)
+# 	grade = MemberGrade.objects.get(id=grade_id)
 
-	status = request.POST.get('update_status', 'selected')
-	if status == 'all':
-		filter_value = request.POST.get('filter_value', '')
-		request.GET = request.GET.copy()
-		request.GET['filter_value'] = filter_value
-		request.GET['count_per_page'] = 999999999
-		_, request_members, _ = __get_request_members_list(request)
-		post_ids = [m.id for m in request_members]
-	else:
-		post_ids = post_ids.split('-')
-	tag = MemberTag.objects.get(id=tag_id)
-	if tag.webapp_id == webapp_id and post_ids:
-		default_tag_id = MemberTag.get_default_tag(webapp_id).id
-		MemberHasTag.add_members_tag(default_tag_id, tag_id, post_ids)
+# 	status = request.POST.get('update_status', 'selected')
+# 	if status == 'all':
+# 		filter_value = request.POST.get('filter_value', '')
+# 		request.GET = request.GET.copy()
+# 		request.GET['filter_value'] = filter_value
+# 		request.GET['count_per_page'] = 999999999
+# 		_, request_members, _ = __get_request_members_list(request)
+# 		post_ids = [m.id for m in request_members]
+# 	else:
+# 		post_ids = post_ids.split('-')
 
-	response = create_response(200)
-	return response.get_response()
+# 	if grade.webapp_id == webapp_id and post_ids:
+# 		Member.objects.filter(id__in=post_ids).update(grade=grade)
+
+# 	response = create_response(200)
+# 	response.data.post_ids = post_ids
+# 	return response.get_response()
+
+
+# ########################################################################
+# # update_tag 修改tag（等级或者分组）
+# ########################################################################
+# @api(app='member', resource='tag', action='batch_update')
+# @login_required
+# def batch_update_tag(request):
+# 	webapp_id = request.user_profile.webapp_id
+# 	tag_id = request.POST.get('tag_id', None)
+# 	post_ids = request.POST.get('ids', None)
+
+# 	status = request.POST.get('update_status', 'selected')
+# 	if status == 'all':
+# 		filter_value = request.POST.get('filter_value', '')
+# 		request.GET = request.GET.copy()
+# 		request.GET['filter_value'] = filter_value
+# 		request.GET['count_per_page'] = 999999999
+# 		_, request_members, _ = __get_request_members_list(request)
+# 		post_ids = [m.id for m in request_members]
+# 	else:
+# 		post_ids = post_ids.split('-')
+# 	tag = MemberTag.objects.get(id=tag_id)
+# 	if tag.webapp_id == webapp_id and post_ids:
+# 		default_tag_id = MemberTag.get_default_tag(webapp_id).id
+# 		MemberHasTag.add_members_tag(default_tag_id, tag_id, post_ids)
+
+# 	response = create_response(200)
+# 	return response.get_response()
 
 
 ########################################################################
@@ -727,7 +727,7 @@ def update_tags(request):
 	default_tag_id = MemberTag.get_default_tag(webapp_id).id
 	member_tags = MemberTag.get_member_tags(webapp_id)
 	check_ids = request.POST.get('ids', '')
-	ids = [str(tag.id) for tag in member_tags]	
+	ids = [str(tag.id) for tag in member_tags]
 	check_ids = check_ids.split('_')
 	#list(set(member_tag_ids).difference(set(id_values.keys())))
 	response = create_response(200)
