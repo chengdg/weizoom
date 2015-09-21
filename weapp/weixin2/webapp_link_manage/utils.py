@@ -21,6 +21,8 @@ from market_tools.tools.complain.export import get_complain_webapp_link
 from apps.customerized_apps.shengjing.export import get_shengjing_link_targets
 from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_link
 
+from mall.promotion.models import RedEnvelopeRule
+
 def get_webapp_link_menu_objectes(request):
 	"""
 	获取微站内部链接的menu的json数据
@@ -99,7 +101,12 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
 				'add_link': '/apps/event/event'
-			},
+			},{
+				'name': '分享红包',
+				'type': 'red',
+				'add_btn_title': '新建红包',
+				'add_link': '/apps/promotion/red_envelope_rule/'
+			}
 			# {
 			# 	'name': '趣味测试',
 			# 	'type': 'test_game',
@@ -189,11 +196,12 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			}
 		},
 		'red': {
-			'class': RedEnvelope, 
+			'class': RedEnvelopeRule,
 			'query_name': 'name',
-			'link_template': './?module=market_tool:red_envelope&model=red_envelope&action=get&red_envelope_id={}&workspace_id=market_tool:red_envelope&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
+			'link_template': './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&order_id=2&red_envelope_rule_id={}&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
-				"is_deleted": False
+				"is_delete": False,
+				"receive_method": True
 			}
 		},
 		'coupon': {
@@ -262,6 +270,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		if query and len(query) > 0:
 			kwargs[item['query_name']+'__contains'] = query
 		objects = item['class'].objects.filter(**kwargs).order_by(order_by)
+		print objects,"objects"
 
 		if type == 'webappPage':
 			objects = objects.order_by('-is_active', '-id')
