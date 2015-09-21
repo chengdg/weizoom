@@ -45,11 +45,11 @@
 <script id="member-relations-dialog-one-relation-tmpl-src" type="text/x-jquery-tmpl">
 	<div  data-id="${id}" style="overflow: hidden; margin-top:10px">
 		<div >
-			<a href="/member/member_detail/edit/?id=${id}" style="float: left;margin-left: 25px">
+			<a href="/member/detail/?id=${id}" style="float: left;margin-left: 25px">
 			<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
 			</a>
 			<div style="float: left;  margin-left: 12px;margin-top: 1px;">
-			<a href="/member/member_detail/edit/?id=${id}" class="xi-member-name">{{html username}}</a><br>
+			<a href="/member/detail/?id=${id}" class="xi-member-name">{{html username}}</a><br>
 			<div style="margin-top: 15px;">${grade_name}</span>&nbsp;&nbsp;&nbsp;&nbsp;</div></div>
 		</div>
 
