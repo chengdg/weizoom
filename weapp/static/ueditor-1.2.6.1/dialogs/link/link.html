@@ -120,7 +120,9 @@
         var href =$G('href').value.replace(/^\s+|\s+$/g, '');
         if(href){
             var dataHref = $('#href').attr('data-href');
-            if (dataHref) {
+            if (href.indexOf('http://') == 0 || href.indexOf('https://') == 0){
+
+            }else if (dataHref) {
                 if (dataHref.indexOf('http:') !== -1) {
                     href = dataHref;
                 } else {
@@ -147,12 +149,12 @@
             //修改链接内容的情况太特殊了，所以先做到这里了
             //todo:情况多的时候，做到command里
             if(orgText && text.value != orgText){
-                // link[browser.ie ? 'innerText' : 'textContent'] =  obj.textValue = text.value;
+                link[browser.ie ? 'innerText' : 'textContent'] =  obj.textValue = text.value;
                 link[browser.ie ? 'innerText' : 'textContent'] = text.value;
                 range.selectNode(link).select()
             }
             if(range.collapsed){
-                // obj.textValue = text.value;
+                obj.textValue = text.value;
             }
 
             editor.execCommand('link',obj );
