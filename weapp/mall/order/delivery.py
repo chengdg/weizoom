@@ -62,9 +62,9 @@ def _read_file(file_url):
                     row = row[0].split(',')
                     if not (len(row[0]) or len(row[1]) or len(row[2])):
                         continue
-                    item['order_id'] = row[0]
+                    item['order_id'] = row[0].decode('gbk')
                     item['express_company_name'] = row[1].decode('gbk')
-                    item['express_number'] = row[2]
+                    item['express_number'] = row[2].decode('gbk')
                     data.append(item)
             except:
                 error_rows.append(', '.join(row))
