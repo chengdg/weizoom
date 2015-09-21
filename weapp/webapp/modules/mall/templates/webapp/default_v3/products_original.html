@@ -115,6 +115,15 @@ $(document).ready(function() {
     var $img = $('.xui-inner-img img');
     var imgHeight = $img.css('width');
     $img.css('height', imgHeight);
+
+    // 默认开启店铺导航app样式，加padding防止遮盖内容
+    var slideBar = $('.xui-globalSideBar');
+    if(slideBar.length > 0){
+        $('.xui-productsList-page').css({
+            'padding-bottom': '50px'
+        });
+    }
+
 });
 </script>
 {% endblock %}

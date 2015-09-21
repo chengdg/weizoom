@@ -17,7 +17,7 @@
 <script id="termite-navbar-secondnav-tmpl-nav" type="text/x-handlebar-tmpl">
 	<div class="propertyGroup_property_dynamicControlField_content xui-text xa-nav propertyGroup_property_dynamicControlField_control2">
 		<div class="propertyGroup_property_textField propertyGroup_property_horizontalField xa-errorHintContainer">
-			<div class="propertyGroup_property_label">标题</div>
+			<div class="propertyGroup_property_label star_show">标题</div>
 			<div class="propertyGroup_property_input1">
 				<input 
 					name="title"
@@ -26,7 +26,8 @@
 					value="{{title}}" 
 					placeholder="编辑[文本导航]" 
 					maxlength="10" 
-					data-force-validate="true" />
+					data-force-validate="true"
+					data-validate="require-notempty::标题名不能为空" />
 				</div>
 				<div class="errorHint"></div>
 			</div>                                                                                
