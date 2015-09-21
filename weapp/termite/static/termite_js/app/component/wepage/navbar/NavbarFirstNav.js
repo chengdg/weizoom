@@ -19,10 +19,12 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             	type: 'text',
             	displayName: '标题',
                 maxLength:5,
+                validate: 'data-validate="require-notempty::标题名不能为空"',
+                validateIgnoreDefaultValue: true,
                 validateIgnoreDefaultValue: true,
                 isUserProperty: true,
                 placeholder:'标题名',
-            	default: '标题名'
+            	default: ''
             }, {
                 name: 'target',
                 type: 'select_link',

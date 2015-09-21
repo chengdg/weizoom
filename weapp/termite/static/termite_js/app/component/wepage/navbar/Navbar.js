@@ -66,7 +66,7 @@ W.component.wepage.Navar = W.component.Component.extend({
                 type: 'dynamic-generated-control',
                 isUserProperty: true,
                 isShowCloseButton: true,
-                minItemLength: 1,
+                minItemLength: 0,
                 maxItemLength: 3,
                 default: []
             }]
