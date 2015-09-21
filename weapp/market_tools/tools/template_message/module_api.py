@@ -167,6 +167,10 @@ def _record_send_template_info(order, template_id, user):
 # }
 ########################################################################
 def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
+	if _is_member_subscribed(member_id):
+		# 会员已经取消关注
+		return True
+
 	user_profile = UserProfile.objects.get(user_id=webapp_owner_id)
 	user = user_profile.user
 	template_message = get_template_message_by(user_profile.user, send_point)
@@ -194,6 +198,13 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
 
 	return True
 
+## 会员是否取消关注
+def _is_member_subscribed(member_id):
+	member = member_model_api.get_member_by_id(id=member_id)
+	if member and member.is_subscribed is True:
+		return False
+
+	return True
 
 
 def _get_host(user_profile):
