@@ -10,11 +10,14 @@
 {% block content-panel %}
 <div id='product_list_contain' data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
 
+    {% if global_navbar == None %}
+    <!-- 当启用底部导航时，不显示购物车 by liupeiyu-->
     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
         <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
     </a>
+    {% endif %}
 
-    {% if has_category %}
+    {% if has_category and global_navbar == None %}
     <ul data-ui-role="top-dropdown-nav" class="hidden" style="overflow-y:auto;">
         <li><a href='#'></a></li>
         <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" data-role="button">全部</a></li>
@@ -112,6 +115,15 @@ $(document).ready(function() {
     var $img = $('.xui-inner-img img');
     var imgHeight = $img.css('width');
     $img.css('height', imgHeight);
+
+    // 默认开启店铺导航app样式，加padding防止遮盖内容
+    var slideBar = $('.xui-globalSideBar');
+    if(slideBar.length > 0){
+        $('.xui-productsList-page').css({
+            'padding-bottom': '50px'
+        });
+    }
+
 });
 </script>
 {% endblock %}

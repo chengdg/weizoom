@@ -318,8 +318,6 @@ class MemberList(resource.Resource):
 		return response.get_response()
 
 
-
-
 class MemberFilterParams(resource.Resource):
 	app = "member"
 	resource = "members_filter_params"
@@ -349,4 +347,289 @@ class MemberFilterParams(resource.Resource):
 			'tags': tags,
 			'grades': grades
 		}
+		return response.get_response()
+
+
+class MemberDetail(resource.Resource):
+	app = "member"
+	resource = "detail"
+
+	@login_required
+	def get(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.GET.get('id', None)
+		ship_infos = None
+		orders = []
+		#try:
+		if member_id:
+			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+			orders = get_member_orders(member)
+			pay_money = 0
+			pay_times = 0
+			for order in orders:
+				order.final_price = order.final_price + order.weizoom_card_money
+				if order.status > 2:
+					pay_money += order.final_price
+					pay_times += 1
+
+			member.pay_times = pay_times
+			member.pay_money = pay_money
+			try:
+				member.unit_price = pay_money/pay_times
+			except:
+				member.unit_price = 0
+
+			try:
+				member.friend_count = count_member_follow_relations(member)
+			except:
+				notify_message = u"更新会员好友数量失败:cause:\n{}".format(unicode_full_stack())
+				watchdog_error(notify_message)
+			member.save()
+		else:
+			raise Http404(u"不存在该会员")
+		#except:
+		#	raise Http404(u"不存在该会员")
+		from modules.member.member_info_util import update_member_basic_info
+		if (not member.user_icon or not member.username_hexstr) and (settings.MODE != 'develop'):
+			update_member_basic_info(request.user_profile, member)
+
+		#完善会员的基本信息
+		if member.user_icon:
+			member.user_icon = member.user_icon if len(member.user_icon.strip()) > 0 else DEFAULT_ICON
+		else:
+			member.user_icon = DEFAULT_ICON
+
+		if member.unit_price > 0:
+			member.unit_price = '%.2f' % member.unit_price
+
+		if member.pay_money > 0:
+			member.pay_money = '%.2f' % member.pay_money
+
+		member_browse_records = MemberBrowseRecord.objects.filter(~Q(title=''), member=member).order_by('-created_at')
+
+		#会员标签
+		webapp_id  = request.user_profile.webapp_id
+
+		member_has_tags = MemberHasTag.get_member_has_tags(member)
+
+		fans_count = MemberFollowRelation.get_follow_members_for(member.id, '1')
+
+		#我的优惠券
+		coupons = get_my_coupons(member.id)
+
+		# 组织盛景定制信息
+		shengjing_register_info = dict()
+		if request.user.username == 'shengjing360':
+			is_shengjing = True
+			try:
+				sj_binding_member = ShengjingBindingMember.objects.get(member_id=member_id)
+				sj_binding_member_info= ShengjingBindingMemberInfo.objects.get(binding_id=sj_binding_member.id)
+				sj_binding_member_companys= ShengjingBindingMemberHasCompanys.objects.filter(binding_id=sj_binding_member.id)
+				shengjing_register_info['phone_number'] = sj_binding_member.phone_number
+				shengjing_register_info['position'] = sj_binding_member_info.position
+				shengjing_register_info['status'] = sj_binding_member_info.status_name
+				if sj_binding_member_info.status == LEADER:
+					shengjing_register_info['is_leader'] = u'是'
+				else:
+					shengjing_register_info['is_leader'] = u'否'
+				shengjing_register_info['crm_name'] = sj_binding_member_info.name
+				shengjing_register_info['crm_companys'] = []
+				for company in sj_binding_member_companys:
+					shengjing_register_info['crm_companys'].append(company.name)
+				shengjing_register_info['name'] = shengjing_register_info['crm_name']
+				shengjing_register_info['companys'] = shengjing_register_info['crm_companys']
+				# 如果未绑定CRM，则crm_name与crm_companys置空
+				if sj_binding_member_info.status == STAFF or sj_binding_member_info.status == LEADER:
+					pass
+				else:
+					shengjing_register_info['crm_name'] = ''
+					shengjing_register_info['crm_companys'] = []
+				shengjing_register_info['phone_number'] = sj_binding_member.phone_number
+			except:
+				notify_message = u"shengjing360:cause:\n{}".format(unicode_full_stack())
+				watchdog_error(notify_message)
+		else:
+			is_shengjing = False
+
+			webapp_user_ids = member.get_webapp_user_ids
+
+			ship_infos = ShipInfo.objects.filter(webapp_user_id__in=webapp_user_ids)
+			for ship_info in ship_infos:
+				province = ''
+				city = ''
+				village = ''
+				if ship_info.get_str_area:
+					area_list  = ship_info.get_str_area.split(' ')
+					if len(area_list) == 3:
+						province = area_list[0]
+						city = area_list[1]
+						village = area_list[2]
+					elif len(area_list) == 2:
+						province = area_list[0]
+						city = area_list[1]
+					else:
+						province = area_list[0]
+
+				ship_info.province = province
+				ship_info.city = city
+				ship_info.village = village
+
+		shared_url_infos = get_member_shared_urls(member)
+
+		numbers = shared_url_infos.aggregate(Sum("followers"))
+		# shared_url_lead_number = 0
+		# if numbers["followers__sum"] is not None:
+		# 	shared_url_lead_number = numbers["followers__sum"]
+
+		numbers = shared_url_infos.aggregate(Sum("pv"))
+		shared_url_pv = 0
+		if numbers["pv__sum"] is not None:
+			shared_url_pv = numbers["pv__sum"]
+
+		qrcode_friends = 0
+		if fans_count:
+			qrcode_friends = fans_count.filter(source=SOURCE_MEMBER_QRCODE).count()
+
+		shared_url_lead_number = fans_count.count() - qrcode_friends
+
+
+		c = RequestContext(request, {
+			'is_shengjing': is_shengjing,
+			'shengjing_register_info': shengjing_register_info,
+			'first_nav_name': export.MEMBER_FIRST_NAV,
+			'show_member': member,
+			'grades': MemberGrade.get_all_grades_list(member.webapp_id),
+			'orders': orders,
+			'ship_infos': ship_infos,
+			'shared_url_infos': shared_url_infos,
+			'show_member_info': get_member_info(member),
+			'member_browse_records': member_browse_records,
+			'member_has_tags': member_has_tags,
+			'fans_count': len(fans_count),
+			'coupons': coupons,
+			'second_navs': export.get_second_navs(request),
+			'second_nav_name': export.MEMBERS,
+			'shared_url_lead_number':shared_url_lead_number,
+			'shared_url_pv':shared_url_pv,
+			'qrcode_friends':qrcode_friends,
+		})
+		return render_to_response('member/editor/member_detail.html', c)
+
+	@login_required
+	def api_post(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.POST.get('member_id', None)
+		grade_id = request.POST.get('grade_id', None)
+		member_remarks = request.POST.get('member_remarks', None)
+		name = request.POST.get('name', None)
+		sex = request.POST.get('sex', None)
+		phone_number = request.POST.get('phone_number', None)
+		is_for_buy_test = request.POST.get('is_for_buy_test', 0)
+		member = Member.objects.get(id=member_id)
+		tag_ids = request.POST.get('tag_ids', None)
+
+		if member.webapp_id == webapp_id:
+			if grade_id:
+				member.grade = MemberGrade.objects.get(id=grade_id)
+				member.save()
+			member_info_update = {}
+			if member_remarks:
+				member_info_update['member_remarks'] = member_remarks
+			if name:
+				member_info_update['name'] = name
+			if phone_number:
+				member_info_update['phone_number'] = phone_number.strip()
+
+			if sex != None:
+				member_info_update['sex'] = sex
+			member.is_for_buy_test = is_for_buy_test
+			member.save()
+			if member_info_update:
+				if MemberInfo.objects.filter(member=member).count() > 0:
+					MemberInfo.objects.filter(member=member).update(**member_info_update)
+				else:
+					member_info_update['member'] = member
+					MemberInfo.objects.create(**member_info_update)
+
+			if tag_ids:
+				tag_id_list = tag_ids.split('_')
+				MemberHasTag.delete_tag_member_relation_by_member(member)
+				MemberHasTag.add_tag_member_relation(member, tag_id_list)
+
+		response = create_response(200)
+		return response.get_response()
+
+def count_member_follow_relations(member):
+	count = 0
+	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
+		try:
+			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
+			if follower_member.status != NOT_SUBSCRIBED:
+				count = count + 1
+		except:
+			continue
+
+	return count
+
+def get_member_orders(member):
+	if member is None:
+		return None
+	webapp_user_ids = member.get_webapp_user_ids
+	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
+
+def get_member_shared_urls(member):
+	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
+
+def get_member_ship_info(member):
+	if member is None:
+		return None
+
+	webapp_user = WebAppUser.from_member(member)
+	if webapp_user is None:
+		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
+		watchdog_error(notify_message)
+		return None
+
+	return webapp_user.ship_info
+
+def get_member_info(member):
+	try:
+		return MemberInfo.objects.get(member_id=member.id)
+	except:
+		return None
+
+
+class MemberIntegral(resource.Resource):
+	app = "member"
+	resource = "integral_logs"
+
+	@login_required
+	def api_get(request):
+		member_id = request.GET.get('member_id', '')
+		if member_id:
+			member_logs = MemberIntegralLog.objects.filter(member_id=member_id).order_by('-id')
+		else:
+			member_logs = ''
+
+		#进行分页
+		count_per_page = int(request.GET.get('count_per_page', 10))
+		cur_page = int(request.GET.get('page', '1'))
+		pageinfo, member_logs = paginator.paginate(member_logs, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+		data = []
+		for log in member_logs:
+			data.append(
+				{'event_type': log.event_type,
+				'integral_count': log.integral_count,
+				'created_at': log.created_at.strftime('%Y/%m/%d %H:%M:%S'),
+				'manager': log.manager,
+				'reason': log.reason,
+				'current_integral': log.current_integral
+				})
+
+		response = create_response(200)
+		response.data = {
+			'items': data,
+			'pageinfo': paginator.to_dict(pageinfo),
+		}
+
 		return response.get_response()

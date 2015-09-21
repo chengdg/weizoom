@@ -86,9 +86,9 @@
 			<td>${ coupon.money }</td>
 			<td>${ coupon.created_at }</td>
 			<td>{{if coupon.member.username_for_html }}${ coupon.provided_time }{{/if}}</td>
-			<td><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.member.id }">{{html coupon.member.username_for_html }}</a></td>
+			<td><a target="_blank" href="/member/detail/?id=${ coupon.member.id }">{{html coupon.member.username_for_html }}</a></td>
 			<td>${ coupon.use_time }</td>
-			<td><a target="_blank" href="/member/member_detail/edit/?id=${ coupon.consumer.id }">{{html coupon.consumer.username_for_html }}</a></td>
+			<td><a target="_blank" href="/member/detail/?id=${ coupon.consumer.id }">{{html coupon.consumer.username_for_html }}</a></td>
 			<td><a target="_blank" href="/mall2/order/?order_id=${ coupon.order_id }">${ coupon.order_fullid }</a></td>
 			<td style="color:{{if coupon.status == '未使用' || coupon.status == '未领取'}}#086cb2;{{/if}}{{if coupon.status == '已使用' || coupon.status == '已过期' || coupon.status == '作废' || coupon.status == '已失效'}}#999;{{/if}}">${ coupon.status }</td>
 		</tr>

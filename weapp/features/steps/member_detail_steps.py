@@ -27,7 +27,7 @@ def _get_member_info(context, member):
     query_hex = byte_to_hex(member)
     member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
     context.member_id = member_id
-    url = "/member/member_detail/edit/?id=%s" % str(member_id)
+    url = "/member/detail/?id=%s" % str(member_id)
     response = context.client.get(url)
     return response
 

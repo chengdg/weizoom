@@ -119,12 +119,12 @@
                             <span>已跑路</span>
                         </div>
                     {{/if}}
-                    <a href="/member/member_detail/edit/?id=${ member.id }" target='_blank'>
+                    <a href="/member/detail/?id=${ member.id }" target='_blank'>
                         <img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
                     </a>
                 </div>
                 <div class="fl xui-i-fansName">
-                    <a class='lh26 xui-i-link' href="/member/member_detail/edit/?id=${ member.id }" target='_blank'>
+                    <a class='lh26 xui-i-link' href="/member/detail/?id=${ member.id }" target='_blank'>
                         {{html member.username}}
                         {{if member.name !== ''}}
                             (${member.name})
