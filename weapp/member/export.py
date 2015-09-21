@@ -31,7 +31,7 @@ MEMBER_NAV = {
 		{
 			'name': MEMBERS,
 			'title': u'会员列表',
-			'url': '/member/members/get/',
+			'url': '/member/member_list/',
             'need_permissions': ['manage_member_list', ]
 		},
 		{
