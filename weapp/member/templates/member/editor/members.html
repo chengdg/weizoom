@@ -616,7 +616,7 @@ $(document).ready(function() {
 			var member_ids = [];
 			W.getApi().call({
 	            app: 'member' ,
-	            api: 'member_ids/get',
+	            api: 'member_ids',
 	            args: args,
 	            success: function(data){
 	                member_ids = data.member_ids;
