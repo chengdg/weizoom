@@ -608,15 +608,9 @@ def fetch_webapp_global_navbar(request):
 		if path_type is None:
 			return {'global_navbar': None}
 
-		from termite import pagestore as pagestore_manager
-		pagestore = pagestore_manager.get_pagestore('mongo')
-		project_id = 'fake:wepage:%s:navbar' % request.webapp_owner_id
-		page_id = 'navbar'
-		navbar_page = pagestore.get_page(project_id, page_id)
-
-		if navbar_page:
-			navbar_component = navbar_page['component']['components'][0]
-
+		from termite2 import pagecreater
+		navbar_component = pagecreater.get_navbar_components(request.webapp_owner_id)
+		if navbar_component:
 			if path_type is 'product_list_page':
 				# 如果是商品列表页面 只有选择的‘APP导航模式’ 才显示底部
 				if navbar_component['model']['type'] == 'slide':

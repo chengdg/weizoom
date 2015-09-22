@@ -200,7 +200,7 @@
 							</div>
 						</div>
 						<div class="xui-i-wrapRight">
-							<p class="pl20 fl mr20 xui-ellipsis-1">{{html message.mp_username}}</p>
+							<p class="pl20 fl mr20 xui-ellipsis-1">{{html message.sender_username}}</p>
 							<div class="imgBox disTc pr xui-i-imgBox fr">
 							<a href="{{if message.member_id}}/member/detail/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
 							</div>
@@ -337,7 +337,7 @@ $(document).ready(function() {
 	});
 	_.delay(function() {
 		$(".xui-i-voiceContent").each(function(){
-			var time=$(this).siblings('#media')[0].duration+'&nbsp';
+			var time=$(this).siblings('#media')[0].duration+'&nbsp;"';
 			$(this).parent().find(".xa-clock").html(parseInt(time));
 		});
 	}, 8000);

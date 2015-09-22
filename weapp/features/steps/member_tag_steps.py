@@ -51,7 +51,7 @@ def step_impl(context, user):
 def step_impl(context, user):
 	client = context.client
 	new_member_tag = json.loads(context.text)
-	response = client.post('/member/member_tags/get/' ,new_member_tag)
+	response = client.post('/member/api/member_tags/' ,new_member_tag)
 
 
 @when(u"{user}删除会员分组")
