@@ -250,6 +250,10 @@ class lottery_prize(resource.Resource):
 		#根据抽奖次数限制，更新可抽奖次数
 		if limitation != -1:
 			lottery_participance.update(dec__can_play_count=1)
+
+		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
+		lottery_participance.update(set__lottery_date=now_datetime)
+		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----end
 		lottery_participance.reload()
 		#调整参与数量和中奖人数
 		newRecord = {}
