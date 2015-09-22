@@ -18,7 +18,7 @@ python manage.py init_permissions
 
 **问：如何更新线上数据库结构？**
 
-答：执行如下操作：dd
+答：执行如下操作：
 
 1. 导出老版本数据库SQL
 ```
