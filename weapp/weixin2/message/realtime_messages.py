@@ -604,8 +604,10 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         try:
             reply_message = Message.objects.filter(session=message.session_id, is_reply=True).order_by('-id')[0]
             one_message['latest_reply_at'] = reply_message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
+            one_message['fast_reply'] = reply_message.is_reply
         except:
             one_message['latest_reply_at'] = ''
+            one_message['fast_reply'] = True
         message_ids.append(message.id)
 
         try:
