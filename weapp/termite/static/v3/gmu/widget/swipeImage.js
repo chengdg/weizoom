@@ -6,6 +6,8 @@ Copyright (c) 2011-2012 Weizoom Inc
  * weizoom.swipeimage widget
  */
 (function( $, undefined ) {
+var idIndex = 1;
+
 gmu.define('SwipeImage', {
 	options: {
 		width: 0,
@@ -59,8 +61,9 @@ gmu.define('SwipeImage', {
 	        }			
 		}
 		
-		
-		$el.addClass('wui-swiper-container wui-swipeImage').attr('id', 'swipeImage').html($(htmls.join('\n'))).css('visibility', 'visible');
+		this.__id = 'swipeImage_' + idIndex;
+		idIndex += 1;
+		$el.addClass('wui-swiper-container wui-swipeImage').attr('id', this.__id).html($(htmls.join('\n'))).css('visibility', 'visible');
 		var $swipeSlide = $el.find('.wui-swiper-slide');
 		$swipeSlide.css('line-height', height + "px");
 
@@ -73,7 +76,7 @@ gmu.define('SwipeImage', {
 	refresh: function() {
 		var $el = this.$el;
 		var swipeImages = this._options.jsondata;
-        var view = new Swiper('#swipeImage', {
+        var view = new Swiper('#'+this.__id, {
 	        mode:'horizontal',
 	        loop: true,
 	        autoplay: 3000,

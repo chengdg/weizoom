@@ -30,7 +30,7 @@ FIRST_NAVS = [{
     'permission': 'manage_promotion'
 }, {
     'name': u'会员管理',
-    'url': '/member/members/get/',
+    'url': '/member/member_list/',
     'permission': 'manage_member'
 },{
     'name': u'百宝箱',
