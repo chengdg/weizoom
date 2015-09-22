@@ -43,19 +43,8 @@ class Sign(models.Document):
 	
 	@property
 	def status_text(self):
-		if self.status == STATUS_NOT_START:
-			return u'未开始'
-		elif self.status == STATUS_RUNNING:
-			now = datetime.today()
-			if now >= self.end_time:
-				return u'已结束'
-			else:
-				return u'进行中'
-		elif self.status == STATUS_STOPED:
-			return u'已结束'
-		else:
-			return u'未知'
-	
+		return (u'未开始', u'进行中', u'已结束')[int(self.status)]
+
 	@property
 	def is_finished(self):
 		status_text = self.status_text

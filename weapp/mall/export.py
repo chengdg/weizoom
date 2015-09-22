@@ -433,7 +433,7 @@ APP_NAV = {
             'need_permissions': ['manage_order_red_envelope', ]
         },
         {
-            'name': "signs",
+            'name': "sign",
             'title': u'签到',
             'url': '/apps/sign/sign/',
             'need_permissions': []

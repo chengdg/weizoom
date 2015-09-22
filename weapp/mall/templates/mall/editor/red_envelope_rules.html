@@ -53,13 +53,21 @@
             <th>活动状态</th>
             <th>领取人数</th>
             <th>优惠券剩余</th>
-            <th>操作</th>
+            <th width="150">操作</th>
         </tr>
     </thead>
     <tbody>
         {{each(i, rule) items}}
         <tr class="h80" data-id="${ rule.id }">
-            <td class="tl pl20" ><a href="/apps/promotion/red_envelope_rule/?id=${ rule.id }">${ rule.rule_name }</a></td>
+            <td class="tl pl20" >
+                <a href="/apps/promotion/red_envelope_rule/?id=${ rule.id }">
+                    {{if receive_method}}
+                        <b>【图文领取】</b>${ rule.rule_name }
+                    {{else}}
+                        ${ rule.rule_name }
+                    {{/if}}
+                </a>
+            </td>
             <td width="154">
                 {{if rule.limit_time}}
                 永久
@@ -77,16 +85,27 @@
             </td>
             <td>${ rule.get_count }
             </td>
-            <td>${ rule.remained_count }
+            <td class="remained_count">
+                ${ rule.remained_count }
+                {{if rule.remained_count <= 20}}
+                    <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                {{/if}}
+
             </td>
-            <td class="tl xui-operation">
-                {{if rule.status }}
-                    <a href="javascript:void(0);" class="xa-update" data-status="over">关闭</a>
-                {{else}}
-                    {{if !rule.is_timeout || rule.limit_time}}
-                        <a href="javascript:void(0);" class="xa-update" data-status="start">开启</a>
-                    {{/if}}
+            <td class="tl xui-operation" width="150">
+                <a href="#">分析</a>
+                {{if receive_method}}
+                    <span style="display:inline-block;width:29px;"></span>
                     <a href="javascript:void(0);" class="xa-delete">删除</a>
+                {{else}}
+                    {{if rule.status }}
+                        <a href="javascript:void(0);" class="xa-update" data-status="over">关闭</a>
+                    {{else}}
+                        {{if !rule.is_timeout || rule.limit_time}}
+                            <a href="javascript:void(0);" class="xa-update" data-status="start">开启</a>
+                        {{/if}}
+                        <a href="javascript:void(0);" class="xa-delete">删除</a>
+                    {{/if}}
                 {{/if}}
                 <a href="/apps/promotion/red_envelope_rule/?id=${ rule.id }">查看</a>
             </td>
@@ -144,7 +163,7 @@ $(document).ready(function() {
                 }
             });
         }
-    )
+    );
 
     $("#redEnvelopeList").delegate(".xa-delete", "click",
         function(event){
@@ -182,6 +201,7 @@ $(document).ready(function() {
             }
         });
     }
+
 });
 </script>
 {% endblock %}
