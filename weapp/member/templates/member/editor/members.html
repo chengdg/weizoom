@@ -494,19 +494,16 @@ $(document).ready(function() {
 			args = _.extend(args, dataArgs);
 		}
 	 	if (grade_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'batch_update_member_Grade',
-	            args: args,
-	            success: function(data) {
+	 		W.resource.member.BatchUpdateMemberGrade.post({
+	 			data: args,
+	 			success: function(data) {
 	                 dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}else{
 	 		W.getErrorHintView().show('请先选择会员！');
 	 	}
@@ -535,12 +532,9 @@ $(document).ready(function() {
 			}
 		}
 	 	if (tag_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'batch_update_member_tag',
-	            args:args,
-	            success: function(data) {
+	 		W.resource.member.BatchUpdateMemberTag.post({
+	 			data: args,
+	 			success: function(data) {
 	                // window.location.reload();
 	                W.showHint('success', "添加分组成功");
 	                dataView.reload();
@@ -549,7 +543,7 @@ $(document).ready(function() {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}
 	});
 
@@ -614,11 +608,9 @@ $(document).ready(function() {
 	            'count_per_page':999999999999
 			};
 			var member_ids = [];
-			W.getApi().call({
-	            app: 'member' ,
-	            api: 'member_ids/get',
-	            args: args,
-	            success: function(data){
+			W.resource.member.MemberIds.get({
+				data: args,
+				success: function(data){
 	                member_ids = data.member_ids;
 	                if(member_ids.length == 0){
 	                	W.showHint('error', '请先选择会员！');
@@ -633,7 +625,7 @@ $(document).ready(function() {
 	            error: function(data){
 	            	W.showHint('error', '发放失败!');
 	            }
-	        });
+			});
 	    } else {
 	    	W.showHint('error', "没有可已发优惠券的用户！");
 	    }

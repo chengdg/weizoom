@@ -155,7 +155,7 @@ def step_impl(context, user):
         args['member_id'] = json.dumps([m.id for m in Member.objects.filter(id__in=context.member_ids) if m.is_subscribed == 1])
         context.member_ids = args['member_id']
     elif data['modification_method'] == '给筛选出来的所有人发优惠券(已取消关注的除外)':
-        response = context.client.get('/member/api/members/get/?count_per_page=999999999999'+context.filter_str)
+        response = context.client.get('/member/api/member_list/?count_per_page=999999999999'+context.filter_str)
         member_ids = []
         for item in json.loads(response.content)['data']['items']:
             member_ids.append(item["id"])
