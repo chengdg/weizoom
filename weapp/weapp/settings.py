@@ -53,7 +53,7 @@ DATABASES = {
         'USER': 'weapp',                      # Not used with sqlite3.
         'PASSWORD': 'weizoom',                  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': '211.100.47.149',
+        'HOST': 'db.weapp.com',
         # Set to empty string for default. Not used with sqlite3.
         'PORT': '',
         'CONN_MAX_AGE': 100

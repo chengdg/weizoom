@@ -44,7 +44,7 @@ class TemplateGlobalNavbar(models.Model):
 	全局导航
 	'''
 	owner = models.ForeignKey(User, related_name='owned_template_global_navbar')
-	is_enable = models.BooleanField(default=False, verbose_name='是否启用')
+	is_enable = models.BooleanField(default=True, verbose_name='是否启用')
 	content = models.TextField(default='', verbose_name='navbar的json字符串')
 	created_at = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
 	updated_at = models.DateTimeField(auto_now=True, verbose_name="修改时间")
