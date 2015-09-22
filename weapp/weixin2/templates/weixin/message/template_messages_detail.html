@@ -43,6 +43,47 @@
         <legend></legend>
         <div class="ml5 mb10">
             <span class="xui-bold f12 fb ml10">内容示例：</span>
+            {% if message_detail.template_message.send_point == 2 %}
+                <fieldset class="ml110" style="margin-top: -20px;">
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">first：</label>
+                        <span class="mt5">恭喜您！获得一张优惠券!</span>
+                    </div>
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">适用范围：</label>
+                        <span class="mt5">满59元即可使用 / 下单即可使用</span>
+                    </div>
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">使用规则：</label>
+                        <span class="mt5">每笔2015-09-07至2015-09-15有效</span>
+                    </div>
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">remark：</label>
+                        <span class="mt5">点击查看优惠券详情，请在优惠券有效期内使用。</span>
+                    </div>
+                </fieldset>
+            {% endif %}
+            {% if message_detail.template_message.send_point == 3 %}
+                <fieldset class="ml110" style="margin-top: -20px;">
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">first：</label>
+                        <span class="mt5">您好!您有1张优惠券即将过期!</span>
+                    </div>
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">适用范围：</label>
+                        <span class="mt5">满59元即可使用 / 下单即可使用</span>
+                    </div>
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">使用规则：</label>
+                        <span class="mt5">2015-09-07至2015-09-15有效</span>
+                    </div>
+                    <div class="xui-contentItem">
+                        <label class="control-label tr w70">remark：</label>
+                        <span class="mt5">优惠券可在购物、支付时抵扣等额现金。</span>
+                    </div>
+                </fieldset>
+            {% endif %}
+            {% if message_detail.template_message.send_point < 2 %}
             <fieldset class="ml110" style="margin-top: -20px;">
                 <div class="xui-contentItem">
                     <label class="control-label tr w70">first：</label>
@@ -61,6 +102,7 @@
                     <span class="mt5">如有问题咨询微众客服，微众将第一时间为您服务！</span>
                 </div>
             </fieldset>
+            {% endif %}
             <div class="control-group tc mt20">
                 <input type="submit" class="btn btn-success mr50" id="submitBtn" value="&nbsp;&nbsp;保&nbsp;&nbsp;存&nbsp;&nbsp;" />
                 <input type="button" class="btn btn-cancel xui-btn-cancel" id="cancelBtn" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
@@ -114,6 +156,6 @@
          $(".xui-templateIntroduction").hide()
     });
 });
-    
+
 </script>
 {% endblock %}
