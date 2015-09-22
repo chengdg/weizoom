@@ -142,8 +142,17 @@ class RedEnvelopeRuleList(resource.Resource):
                 rule_id2count[record.red_envelope_rule_id] += 1
             else:
                 rule_id2count[record.red_envelope_rule_id] = 1
-
+        flag = True
         for rule in rules:
+            if flag:
+                if id2coupon_rule[rule.coupon_rule_id].remained_count<=98:
+                    flag = False
+                    is_warring = True
+                else:
+                    is_warring = False
+            else:
+                is_warring = False
+
             data = {
                 "id": rule.id,
                 "rule_name": rule.name,
@@ -154,10 +163,11 @@ class RedEnvelopeRuleList(resource.Resource):
                 "status": rule.status,
                 "get_count": rule_id2count[rule.id] if rule_id2count.has_key(rule.id) else 0,
                 "remained_count": id2coupon_rule[rule.coupon_rule_id].remained_count,
-                "is_timeout": False if rule.end_time > datetime.now() else True
+                "is_timeout": False if rule.end_time > datetime.now() else True,
+                "receive_method": rule.receive_method,
+                "is_warring": is_warring
             }
             items.append(data)
-
         data = {
             "items": items,
             'pageinfo': paginator.to_dict(pageinfo),
@@ -214,7 +224,8 @@ class RedEnvelopeRule(resource.Resource):
         if status == 'over':
             promotion_models.RedEnvelopeRule.objects.filter(id=id).update(status=False)
         elif status == 'start':
-            start_rule = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, status=True)
+            #除去图文领取的
+            start_rule = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, status=True, receive_method=False)
             if start_rule.count() > 0:
                 response = create_response(500)
                 response.errMsg = "请先关闭其他分享红包活动！"
@@ -231,6 +242,10 @@ class RedEnvelopeRule(resource.Resource):
         limit_money = request.POST.get('limit_money', 0)
         if not limit_money:
             limit_money = 0.0
+        if request.POST.get('receive-method-order'):
+            receive_method = False #下单领取
+        else:
+            receive_method = True
         if request.POST.get('start_date', None) and request.POST.get('end_date', None):
             promotion_models.RedEnvelopeRule.objects.create(
                 owner=request.user,
@@ -238,6 +253,7 @@ class RedEnvelopeRule(resource.Resource):
                 coupon_rule_id=request.POST.get('coupon_rule', 0),
                 start_time=request.POST.get('start_date'),
                 end_time=request.POST.get('end_date'),
+                receive_method = receive_method,
                 limit_order_money=limit_money,
                 use_info=request.POST.get('detail', ''),
                 share_pic=request.POST.get('share_pic', ''),
@@ -249,6 +265,7 @@ class RedEnvelopeRule(resource.Resource):
                 name=request.POST.get('name', ''),
                 coupon_rule_id=request.POST.get('coupon_rule', 0),
                 limit_time=True,
+                receive_method = receive_method,
                 limit_order_money=limit_money,
                 use_info=request.POST.get('detail', ''),
                 share_pic=request.POST.get('share_pic', ''),

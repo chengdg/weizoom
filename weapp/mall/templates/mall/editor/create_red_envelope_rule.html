@@ -120,7 +120,8 @@
           </select>
           &nbsp;&nbsp;<span class="hidden"><a href="">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#969a9d;">库存：</span></span>
            <p class="xa-couponTip xui-couponTip hidden">当库存为0时用户将无法获取优惠券</p>
-          <div class="errorHint" data-error-hint="请选择奖励" style="margin-left:120px;"></div>
+          <div class="errorHint" data-error-hint="请选择奖励" style="display: inline-block;"></div>
+          <div class="xui-i-help pt5 xa-couponHelp" style="margin-left: 120px;">只能选择"每人限领"为"不限"的优惠卷</div>
         {% endif %}
       </div>
     </div>
@@ -174,7 +175,16 @@
             <div class="errorHint ml120" data-error-hint="请选择奖励时间"></div>
         </div>
     </div>
-
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110 star_show">领取方式</label>
+        <div class="controls xa-errorHintContainer">
+            <div class="receive-method" style="margin-left: 120px;">
+                <input type="radio" name="receive-method-order" class="xa-receive-method-order" {%if not red_envelope_rule.receive_method %}checked{% endif%}>下单领取
+                <input type="radio" name="receive-method-pic" class="xa-receive-method-pic" {%if red_envelope_rule.receive_method %}checked{% endif%}>图文领取
+            </div>
+            <div class="errorHint ml120" data-error-hint="请选择领取方式"></div>
+        </div>
+    </div>
     <div class="form-group h40">
         <label class="control-label col-sm-2 col-sm-offset-1 w110" style="color:#000;">奖励条件</label>
         订单<span style="color:#cf0404;">满</span>
@@ -248,15 +258,33 @@ $(document).ready(function(){
           $('.xa-errorHintContainer .errorHint').text("");
       }
   });
+    //下单领取
+  $('.xa-receive-method-order').on('click', function(e){
+      var $input = $(e.target);
+      if($input.prop('checked')){
+          $input.siblings().prop("checked", false);
+          $('input[name="limit_money"]').removeAttr('disabled');
+      }
+  });
+    //图文领取
+  $('.xa-receive-method-pic').on('click', function(e){
+      var $input = $(e.target);
+      if($input.prop('checked')){
+          $input.siblings().prop("checked", false);
+          $('input[name="limit_money"]').attr('disabled', 'disabled');
+      }
+  });
 
   $('#coupon_rule').change(function(event){
       var coupon_rule_id = $('#coupon_rule').val();
       if (coupon_rule_id == "-1") {
           $('#coupon_rule').next().addClass('hidden');
           $('.xa-couponTip').addClass('hidden');
+          $('.xa-couponHelp').removeClass('hidden');
       }else {
           var count = $('option[value="'+coupon_rule_id+'"]').data('remained-count');
           $('.xa-couponTip').removeClass('hidden');
+          $('.xa-couponHelp').addClass('hidden');
           $('#coupon_rule').siblings('.errorHint').text('');
           $('#coupon_rule').next().removeClass('hidden').children('a').attr('href', '/mall2/coupon/?rule_id='+coupon_rule_id);
           $('#coupon_rule').next().children('span').text("库存："+count+"份");
