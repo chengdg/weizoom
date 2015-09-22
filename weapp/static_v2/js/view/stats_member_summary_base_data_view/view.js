@@ -40,13 +40,13 @@ W.view.stats.MemberSummaryBaseDataAdvancedTable = W.view.common.AdvancedTable.ex
         
         if(total_member_count > 0) {
             $('#total_member_count').text('');
-            $('#total_member_count').append('<a href="/member/members/get/" target="_blank">' + total_member_count + '</a>');
+            $('#total_member_count').append('<a href="/member/member_list/" target="_blank">' + total_member_count + '</a>');
         } else {
             $('#total_member_count').text(total_member_count);
         }
         if(subscribed_member_count > 0) {
             $('#subscribed_member_count').text('');
-            $('#subscribed_member_count').append('<a href="/member/members/get/?status=1" target="_blank">' + subscribed_member_count + '</a>');
+            $('#subscribed_member_count').append('<a href="/member/member_list/?status=1" target="_blank">' + subscribed_member_count + '</a>');
         } else{
             $('#subscribed_member_count').text(subscribed_member_count);
         }

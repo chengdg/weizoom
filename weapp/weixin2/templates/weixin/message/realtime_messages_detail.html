@@ -138,6 +138,7 @@
                                             <div class="xui-i-voiceContainer">
                                                 <audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
                                                 <div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
+                                            	<span class="xui-clock xa-clock"></span>
                                             </div>
                                         {{/if}}
 										{{if message.remark}}
@@ -313,7 +314,7 @@ $(document).ready(function() {
     });
     */
 
-	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) {
+	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) { 
         if ($(this).hasClass('xui-i-voicePlay')) {
         	$(this).siblings('#media')[0].pause();
         	$(this).removeClass('xui-i-voicePlay');
@@ -326,7 +327,11 @@ $(document).ready(function() {
 	        	console.log(12)
 	        	console.log($(this).siblings())
 	        	$(this).siblings().removeClass('xui-i-voicePlay');
-	        	$(this).siblings().addClass('xui-i-voiceStop');
+	        	$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
+			});
+			$(this).siblings('#media').bind('timeupdate', function() {
+	        console.log(this.currentTime);
+	        $(this).parent().find(".xa-clock").html(parseInt(this.currentTime)+'&nbsp;"');
 			});
 		}
 	});
