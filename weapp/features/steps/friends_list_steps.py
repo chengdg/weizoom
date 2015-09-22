@@ -24,7 +24,7 @@ def step_impl(context, user, webapp_user):
             context.member_id = member['id']
     #访问推荐关注的api并获取数据
     if not hasattr(context, 'focus_url'):
-        context.focus_url = '/member/api/follow_relations/get/?member_id=%s&only_fans=true' %context.member_id
+        context.focus_url = '/member/api/follow_relations/?member_id=%s&only_fans=true' %context.member_id
     response = context.client.get(bdd_util.nginx(context.focus_url))
     context.focus_data = json.loads(response.content)['data']
     #获取实际数据
@@ -58,7 +58,7 @@ def step_impl(context, user, webapp_user):
 @Then (u"{user}获得'{webapp_user}'好友列表统计")
 def step_impl(context, user, webapp_user):
     if not hasattr(context, 'friend_url'):
-        context.friend_url = '/member/api/follow_relations/get/?member_id=%s&only_fans=flase&count_per_page=20' %context.member_id
+        context.friend_url = '/member/api/follow_relations/?member_id=%s&only_fans=flase&count_per_page=20' %context.member_id
     response = context.client.get(bdd_util.nginx(context.friend_url))
     context.friend_data = json.loads(response.content)['data']
     #获取实际数据
@@ -100,8 +100,8 @@ def step_impl(context, user, webapp_user):
         if webapp_user == member['username']:
             context.member_id = member['id']
     #访问推荐关注的api并获取数据
-    context.focus_url = '/member/api/follow_relations/get/?member_id=%s&only_fans=true&count_per_page=%s' %(context.member_id,context.count_per_page)
-    context.friend_url = '/member/api/follow_relations/get/?member_id=%s&only_fans=false&count_per_page=%s' %(context.member_id,context.count_per_page)
+    context.focus_url = '/member/api/follow_relations/?member_id=%s&only_fans=true&count_per_page=%s' %(context.member_id,context.count_per_page)
+    context.friend_url = '/member/api/follow_relations/?member_id=%s&only_fans=false&count_per_page=%s' %(context.member_id,context.count_per_page)
 
 
 @Then (u"{user}获得'{webapp_user}'推荐关注列表显示共{total_page}页")
@@ -113,7 +113,7 @@ def step_impl(context, user, webapp_user, total_page):
 
 @When (u"{user}浏览推荐关注列表第{cur_page}页")
 def step_impl(context, user, cur_page):
-    context.focus_url = '/member/api/follow_relations/get/?member_id=%s&only_fans=true&count_per_page=%s&page=%s' %(
+    context.focus_url = '/member/api/follow_relations/?member_id=%s&only_fans=true&count_per_page=%s&page=%s' %(
         context.member_id,context.count_per_page, cur_page)
     response = context.client.get(bdd_util.nginx(context.focus_url))
     context.focus_data = json.loads(response.content)['data']
@@ -128,7 +128,7 @@ def step_impl(context, user, webapp_user, total_page):
 
 @When (u"{user}浏览好友列表第{cur_page}页")
 def step_impl(context, user, cur_page):
-    context.friend_url = '/member/api/follow_relations/get/?member_id=%s&only_fans=false&count_per_page=%s&page=%s' %(
+    context.friend_url = '/member/api/follow_relations/?member_id=%s&only_fans=false&count_per_page=%s&page=%s' %(
         context.member_id,context.count_per_page, cur_page)
     response = context.client.get(bdd_util.nginx(context.friend_url))
     context.friend_data = json.loads(response.content)['data']

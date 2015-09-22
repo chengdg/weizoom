@@ -350,6 +350,45 @@ class MemberFilterParams(resource.Resource):
 		}
 		return response.get_response()
 
+def count_member_follow_relations(member):
+	count = 0
+	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
+		try:
+			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
+			if follower_member.status != NOT_SUBSCRIBED:
+				count = count + 1
+		except:
+			continue
+
+	return count
+
+def get_member_orders(member):
+	if member is None:
+		return None
+	webapp_user_ids = member.get_webapp_user_ids
+	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
+
+def get_member_shared_urls(member):
+	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
+
+def get_member_ship_info(member):
+	if member is None:
+		return None
+
+	webapp_user = WebAppUser.from_member(member)
+	if webapp_user is None:
+		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
+		watchdog_error(notify_message)
+		return None
+
+	return webapp_user.ship_info
+
+def get_member_info(member):
+	try:
+		return MemberInfo.objects.get(member_id=member.id)
+	except:
+		return None
+
 
 class MemberDetail(resource.Resource):
 	app = "member"
@@ -560,44 +599,6 @@ class MemberDetail(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
-def count_member_follow_relations(member):
-	count = 0
-	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
-		try:
-			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
-			if follower_member.status != NOT_SUBSCRIBED:
-				count = count + 1
-		except:
-			continue
-
-	return count
-
-def get_member_orders(member):
-	if member is None:
-		return None
-	webapp_user_ids = member.get_webapp_user_ids
-	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
-
-def get_member_shared_urls(member):
-	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
-
-def get_member_ship_info(member):
-	if member is None:
-		return None
-
-	webapp_user = WebAppUser.from_member(member)
-	if webapp_user is None:
-		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
-		watchdog_error(notify_message)
-		return None
-
-	return webapp_user.ship_info
-
-def get_member_info(member):
-	try:
-		return MemberInfo.objects.get(member_id=member.id)
-	except:
-		return None
 
 
 class MemberIntegral(resource.Resource):
@@ -641,6 +642,33 @@ class Integral(resource.Resource):
 	@login_required
 	def api_post(request):
 		
+		member_id = request.POST.get('member_id', None)
+		integral = request.POST.get('integral', 0)
+		reason = request.POST.get('reason', '').strip()
+		webapp_id=request.user_profile.webapp_id
+
+		if Member.objects.filter(webapp_id=webapp_id, id=member_id).count() == 0:
+			pass
+		else:
+			if int(integral) != 0:
+				from modules.member.tasks import update_member_integral
+				if int(integral) > 0:
+					event_type = MANAGER_MODIFY_ADD
+				else:
+					event_type = MANAGER_MODIFY_REDUCT
+
+				update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
+
+		response = create_response(200)
+		return response.get_response()
+
+
+class MemberFriends(resource.Resource):
+	app='member'
+	resource='follow_relations'
+
+	@login_required
+	def api_get(request):
 		member_id = request.POST.get('member_id', None)
 		integral = request.POST.get('integral', 0)
 		reason = request.POST.get('reason', '').strip()
