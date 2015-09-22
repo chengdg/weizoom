@@ -22,7 +22,7 @@ from excel_response import ExcelResponse
 from market_tools.tools.coupon.util import get_coupon_rules, get_my_coupons
 from market_tools.tools.member_qrcode.models import *
 from apps.customerized_apps.shengjing.models import *
-rom weixin2.models import get_opid_from_session
+from weixin2.models import get_opid_from_session
 from core import resource
 
 COUNT_PER_PAGE = 20
