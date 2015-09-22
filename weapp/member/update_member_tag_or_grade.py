@@ -285,3 +285,27 @@ class BatchUpdateMemberGrade(resource.Resource):
         response = create_response(200)
         response.data.post_ids = post_ids
         return response.get_response()
+
+class MemberIds(resource.Resource):
+    """
+    获取会员id集(取消关注除外)
+    """
+
+    app = "member"
+    resource = "member_ids"
+
+    @login_required
+    def api_get(request):
+        pageinfo, request_members, total_count = get_request_members_list(request)
+
+        # 构造返回数据
+        member_ids = []
+        response = create_response(200)
+        for member in request_members:
+            if member.is_subscribed:
+                member_ids.append(member.id)
+
+        response.data = {
+            'member_ids': member_ids,
+        }
+        return response.get_response()
