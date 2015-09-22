@@ -8,8 +8,7 @@
   <div class="relative">
     <ul class="breadcrumb">
       <li>您当前所在位置</li>
-      <li><a href="/termite2/pages/">百宝箱</a></li>
-      <li><a href="/apps/sign/signs/">签到</a></li>
+      <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
       <li class="active">新建</li>
     </ul>
   </div>
@@ -172,9 +171,6 @@
             args: args,
             success: function(data) {
               W.showHint('success', '保存成功');
-              _.delay(function() {
-                window.location.href = '/apps/sign/signs/';
-              }, 500);
             },
             error: function(resp) {
               W.showHint('error', '保存失败!');
