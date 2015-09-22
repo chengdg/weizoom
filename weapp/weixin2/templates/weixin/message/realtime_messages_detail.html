@@ -313,7 +313,7 @@ $(document).ready(function() {
         }
     });
     */
-
+   
 	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) { 
         if ($(this).hasClass('xui-i-voicePlay')) {
         	$(this).siblings('#media')[0].pause();
@@ -331,10 +331,17 @@ $(document).ready(function() {
 			});
 			$(this).siblings('#media').bind('timeupdate', function() {
 	        console.log(this.currentTime);
-	        $(this).parent().find(".xa-clock").html(parseInt(this.currentTime)+'&nbsp;"');
+	        $(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
 			});
 		}
 	});
+	_.delay(function() {
+		$(".xui-i-voiceContent").each(function(){
+			var time=$(this).siblings('#media')[0].duration+'&nbsp';
+			$(this).parent().find(".xa-clock").html(parseInt(time));
+		});
+	}, 8000);
+	
 
 	//start: 修改备注名
 	$('body').delegate('.xa-update-remark-name', 'click', function(event) {

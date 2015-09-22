@@ -31,7 +31,8 @@
 							<input type="hidden"   id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" />
 								<tr data-id="{{ member_tag.id }}" class="domain_data">
 									<td>
-										<input type="text" class="form-control xa-tag-name"  id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" placeholder="" value="{{ member_tag.name }}" readonly="readonly"/>
+										<span>{{ member_tag.name }}</span>
+										<input type="text" class="form-control xa-tag-name hide"  id="tag_id_{{member_tag.id}}" name="tag_id_{{member_tag.id}}" placeholder="" value="{{ member_tag.name }}" readonly="readonly"/>
 									</td>
 									<td>
 										{{ member_tag.count }}
@@ -104,20 +105,19 @@
        		$el.parent().parent().remove();
 		});
 
-		var ids = '{{ids}}';
 		$('#submitBtn').click(function(event){
 			if (!W.validate()) {
 				return false;
 			}
 			var $form = $('form');
 			var data = $form.serializeObject();
-			W.getApi().call({
-				method: 'post',
-				app: 'member',
-				api: 'member_tags',
-				args: data,
+			W.resource.member.MemberTags.post({
+				data: data,
 				success: function(data) {
 					W.showHint('success', '保存成功');
+					setTimeout(function() {
+   							window.location.reload();
+   						}, 500);
                 },
                 error: function(resp) {
                 	console.log(resp)
