@@ -31,10 +31,11 @@ class Sign(resource.Resource):
 		"""
 		响应GET
 		"""
-		if 'id' in request.GET:
-			sign = app_models.Sign.objects.get(id=request.GET['id'])
+		owner_id = request.user.id
+		sign = app_models.Sign.objects(owner_id=owner_id)
+		if sign.count() > 0:
 			is_create_new_data = False
-			project_id = 'new_app:sign:%s' % request.GET.get('related_page_id', 0)
+			project_id = 'new_app:sign:%s' % sign[0].related_page_id
 		else:
 			sign = None
 			is_create_new_data = True
@@ -47,7 +48,7 @@ class Sign(resource.Resource):
 			'sign': sign,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
-		});
+		})
 		
 		return render_to_response('sign/templates/editor/workbench.html', c)
 	
