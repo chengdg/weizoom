@@ -11,34 +11,23 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
     // 点击‘最近7天’或‘最近30天’
     setDateText: function(event){
         var day = $(event.currentTarget).attr('data-day') -1 ;//parseInt(.toSting()) - 1;
+        //获取要作用于哪个时间控件商
         var today = new Date(); // 获取今天时间
-
         today.setTime(today.getTime()-day*24*3600*1000);
         var begin = $.datepicker.formatDate('yy-mm-dd 00:00', today);
         var end = $.datepicker.formatDate('yy-mm-dd 23:59', new Date());
-
-        $('#start_date').val(begin);
-        $('#end_date').val(end);
+        $("input[name='start_date']").val(begin);
+        $("input[name='end_date']").val(end);
     },
-
     // 点击‘筛选’按钮事件
     seacrhBtn: function(){
-        var startDate = $('#start_date').val();
-        var endDate = $('#end_date').val();
-        if (startDate.length > 0 && endDate.length == 0) {
-            W.getErrorHintView().show('请输入结束日期！');
-            return false;
-        }
-        if (endDate.length > 0 && startDate.length == 0) {
-            W.getErrorHintView().show('请输入开始日期！');
-            return false;
-        }
-        var start = new Date(startDate.replace("-", "/").replace("-", "/"));
-        var end = new Date(endDate.replace("-", "/").replace("-", "/"));
-        if ((startDate.length > 0 || endDate.length > 0) && start > end){
-            W.getErrorHintView().show('开始日期不能大于结束日期！');
-            return false;
-        }
+        // 时间类型，下单，付款，发货，
+        var date_type = $("#date_type_select").val();
+        var startDate = $("input[name='start_date']").val();
+        var endDate = $("input[name='end_date']").val();
+        //对三个时间选择框进行校验
+
+        this.checkStartAndEndDate(startDate,endDate,date_type);
 
         var dataView = this.options.dataView;
         var args = this.getFilterValue();
@@ -62,8 +51,9 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var orderSource = $('#orderSource').val();
         var productName = $('#product_name').val().trim();
 
-        var startDate = $('#start_date').val().trim();
-        var endDate = $('#end_date').val().trim();
+        var startDate = $("input[name='start_date']").val().trim();
+        var endDate = $("input[name='end_date']").val().trim();
+        var date_type = $("#date_type_select").val();
         var expressNumber = $('#express_number').val().trim();
 
 
@@ -110,6 +100,9 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         //date_interval
         if (startDate != "" && endDate != "") {
             args.push('"date_interval":"'+startDate+'|'+endDate+'"')
+        }
+        if (date_type != "") {
+            args.push('"date_interval_type":"'+date_type+'"' )
         }
 
         //is_only_show_pay_by_weizoom_card
@@ -279,7 +272,30 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         // 调用搜索事件
         this.seacrhBtn();
     },
-
+    //根据输入id的不同，分别对下单，付款，发货三者时间进行校验
+    checkStartAndEndDate: function(startDate,endDate,tip_info){
+        if (1==tip_info){
+            tip_info= "下单"
+        }else if (2==tip_info){
+            tip_info = "付款"
+        }else if (3 == tip_info){
+            tip_info = "发货"
+        }
+        if (startDate.length > 0 && endDate.length == 0) {
+            W.getErrorHintView().show('请输入'+tip_info+'结束日期！');
+            return false;
+        }
+        if (endDate.length > 0 && startDate.length == 0) {
+            W.getErrorHintView().show('请输入'+tip_info+'开始日期！');
+            return false;
+        }
+        var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+        var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+        if ((startDate.length > 0 || endDate.length > 0) && start > end){
+            W.getErrorHintView().show(tip_info+'开始日期不能大于结束日期！');
+            return false;
+        }
+    },
     resetFrom: function(){
         $('#order_id').val('');
         $('#ship_name').val('');

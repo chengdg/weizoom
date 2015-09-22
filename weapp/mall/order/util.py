@@ -80,12 +80,12 @@ def export_orders_json(request):
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
     #####################################
-    query_dict, date_interval = __get_select_params(request)
+    query_dict, date_interval,date_interval_type = __get_select_params(request)
     product_name = ''
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
 
-    order_list = __get_orders_by_params(query_dict, date_interval, order_list)
+    order_list = __get_orders_by_params(query_dict, date_interval, date_interval_type, order_list)
 
     if product_name:
         # 订单总量
@@ -505,12 +505,6 @@ def get_detail_response(request, belong='all'):
         return HttpResponseRedirect('/mall2/order_list/')
     else:
         order = mall.models.Order.objects.get(id=request.GET['order_id'])
-    # #如果定单是微众卡支付显示微众卡号
-    # try:
-    # 	order.used_weizoom_card_id, order.used_weizoom_card_number = order.get_used_weizoom_card_id()
-    # except:
-    # 	order.used_weizoom_card_id = None
-    # 	order.used_weizoom_card_number = None
 
     if request.method == 'GET':
         order_has_products = OrderHasProduct.objects.filter(order=order)
@@ -528,11 +522,6 @@ def get_detail_response(request, belong='all'):
             relation = ProductHasPromotion.objects.filter(promotion_id=promotion.id)
             if len(relation) > 0:
                 coupon.product_id = relation[0].product_id
-        '''
-        coupons = OrderHasCoupon.objects.filter(order_id=order.order_id)
-        if coupons.count() > 0:
-            coupon =  coupons[0]
-        '''
         if order.status in [ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED]:
             order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED)
             if order_has_delivery_times.count() > 0:
@@ -657,8 +646,9 @@ def get_orders_response(request, is_refund=False):
         is_weizoom_mall_partner = False
 
     # 获取查询条件字典和时间筛选条件
-    query_dict, date_interval = __get_select_params(request)
-    watchdog_message = "query_dict:" + json.dumps(query_dict) + ",date:" + str(date_interval)
+    query_dict, date_interval, date_interval_type = __get_select_params(request)
+    watchdog_message = "query_dict:" + json.dumps(query_dict) + ",date:" + str(date_interval) + ",date_type" \
+                       + str(date_interval_type)
     # 处理排序
     sort_attr = request.GET.get('sort_attr', '-id')
     if sort_attr == 'created_at':
@@ -674,32 +664,26 @@ def get_orders_response(request, is_refund=False):
     user = request.manager
     query_string = request.META['QUERY_STRING']
     watchdog_message += ",webapp_id:" + str(request.manager.get_profile().webapp_id)
-    items, pageinfo, order_total_count, order_return_count = __get_order_items(user, query_dict, sort_attr,
+    items, pageinfo, order_return_count = __get_order_items(user, query_dict, sort_attr,
+                                                                               date_interval_type,
                                                                                query_string,
                                                                                count_per_page, cur_page,
                                                                                date_interval=date_interval,
                                                                                is_refund=is_refund)
-
     # 获取该用户下的所有支付方式
     existed_pay_interfaces = mall_api.get_pay_interfaces_by_user(user)
-
+    # 是否是合作伙伴，是的话 和微众精选类似都显示来源
     if is_weizoom_mall_partner or request.manager.is_weizoom_mall:
         is_show_source = True
     else:
         is_show_source = False
 
-    response = create_response(200)
-    if sort_attr == 'id':
-        sort_attr = 'created_at'
-    if sort_attr == '-id':
-        sort_attr = '-created_at'
-
-    supplier = dict((s.id, s.name) for s in Supplier.objects.filter(owner=request.manager))
+    supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner=request.manager))
     if len(supplier.keys()) > 0:
         is_show_source = True
 
     show_supplier = Supplier.objects.filter(owner=request.manager, is_delete=False).count() > 0
-
+    response = create_response(200)
     response.data = {
         'items': items,
         'pageinfo': paginator.to_dict(pageinfo),
@@ -707,7 +691,6 @@ def get_orders_response(request, is_refund=False):
         'sortAttr': sort_attr,
         'is_show_source': is_show_source,
         'existed_pay_interfaces': existed_pay_interfaces,
-        'order_total_count': order_total_count,
         'order_return_count': order_return_count,
         'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
         'is_refund': is_refund,
@@ -719,14 +702,11 @@ def get_orders_response(request, is_refund=False):
 
     return response.get_response()
 
-
 def get_order_status_text(status):
     return STATUS2TEXT[status]
 
-
 def set_children_order_status(origin_order, status):
     Order.objects.filter(origin_order_id=origin_order.id).update(status=status)
-
 
 # 页脚未读订单数统计
 def get_unship_order_count(request):
@@ -735,7 +715,7 @@ def get_unship_order_count(request):
 
 
 # get_orders_response调用
-def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None,
+def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
     webapp_id = user.get_profile().webapp_id
     orders = belong_to(webapp_id)
@@ -743,28 +723,11 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
-    # 统计订单总数
-    count = orders.count()
-    status_not_count = orders.filter(status=ORDER_STATUS_NOT).count()
-    status_payed_not_ship_total = orders.filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
-    status_payed_shiped_total = orders.filter(status=ORDER_STATUS_PAYED_SHIPED).count()
-    status_cancel_count = orders.filter(status=ORDER_STATUS_CANCEL).count()
-    status_successed_count = orders.filter(status=ORDER_STATUS_SUCCESSED).count()
-
-    order_total_count = {
-        'total_count': count,
-        'status_not_count': status_not_count,
-        'status_payed_not_ship_total': status_payed_not_ship_total,
-        'status_payed_shiped_total': status_payed_shiped_total,
-        'status_cancel_count': status_cancel_count,
-        'status_successed_count': status_successed_count
-    }
-
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
 
-    orders = __get_orders_by_params(query_dict, date_interval, orders)
+    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders)
 
     # 返回订单的数目
     order_return_count = orders.count()
@@ -803,7 +766,6 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
         order2fackorders[origin_order_id].append(order)
 
     # 构造返回的order数据
-    items = []
     for order in orders:
         # 获取order对应的member的显示名
         member = webappuser2member.get(order.webapp_user_id, None)
@@ -839,7 +801,6 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
 
             # 构造返回的order数据
     items = []
-
     for order in orders:
         products = mall_api.get_order_products(order)
 
@@ -921,7 +882,7 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
         })
-    return items, pageinfo, order_total_count, order_return_count
+    return items, pageinfo, order_return_count
 
 
 def __get_select_params(request):
@@ -937,6 +898,7 @@ def __get_select_params(request):
     order_source = request.GET.get('order_source', '').strip()
     order_status = request.GET.get('order_status', '').strip()
     isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
+    date_interval_type = request.GET.get('date_interval_type', '')
 
     # 填充query
     query_dict = dict()
@@ -959,8 +921,7 @@ def __get_select_params(request):
     if isUseWeizoomCard:
         query_dict['isUseWeizoomCard'] = isUseWeizoomCard
 
-
-    # 时间区间
+     # 时间区间
     try:
         date_interval = request.GET.get('date_interval', '')
         if date_interval:
@@ -979,10 +940,9 @@ def __get_select_params(request):
     except:
         date_interval = None
 
-    return query_dict, date_interval
+    return query_dict, date_interval, date_interval_type
 
-
-def __get_orders_by_params(query_dict, date_interval, orders):
+def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders):
     """
     按照查询条件筛选符合条件的订单
     """
@@ -1006,21 +966,30 @@ def __get_orders_by_params(query_dict, date_interval, orders):
                     order_ids.append(orderHasPromotion.order_id)
 
         orders = orders.filter(id__in=order_ids)
-
+        print "orders----------------------------",orders
         # 处理搜索
     print '----------------query_dict:',query_dict
+
+    if query_dict.get("isUseWeizoomCard"):
+        query_dict.pop("isUseWeizoomCard")
+        orders = orders.exclude(weizoom_card_money=0)
     if len(query_dict):
-        if query_dict.get("isUseWeizoomCard"):
-            query_dict.pop("isUseWeizoomCard")
-            orders = orders.exclude(weizoom_card_money=0)
         orders = orders.filter(**query_dict)
 
-        # 处理 时间区间筛选
+    # 处理 时间区间筛选
     if date_interval:
         start_time = date_interval[0]
         end_time = date_interval[1]
-        orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
-
+        # 1 下单时间，2 付款时间， 3 发货时间
+        if '1' == date_interval_type:
+            orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
+        elif '2' == date_interval_type:
+            orders = orders.filter(payment_time__gte=start_time, payment_time__lt=end_time)
+        elif '3' == date_interval_type:
+            order_ids_in_delivery_intervale = [operationlog.order_id for operationlog in list(OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lt=end_time,action__startswith="订单发货"))]
+            order_ids_in_delivery_intervale = [de.split("^")[0] for de in order_ids_in_delivery_intervale]
+            print "orders----------------------------+++",orders
+            orders = orders.filter(order_id__in=order_ids_in_delivery_intervale)
     return orders
 
 

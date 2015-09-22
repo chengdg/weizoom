@@ -334,13 +334,14 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response_json = json.loads(context.response.content)
 
 	# raise '----------------debug test----------------------'
-
+	print "code----------------------",
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
 		context.created_order_id = response_json['data']['order_id']
 	else:
 		context.created_order_id = -1
 		context.server_error_msg = response_json['data']['msg']
+		print "buy_error----------------------------",context.server_error_msg
 	if context.created_order_id != -1:
 		if 'date' in args:
 			Order.objects.filter(order_id=context.created_order_id).update(created_at=bdd_util.get_datetime_str(args['date']))
@@ -448,6 +449,7 @@ def step_impl(context, webapp_owner_name):
 		if row.get('pay_type', '') != '':
 			data['pay_type'] = row.get('pay_type')
 
+
 		print("SUB STEP: to buy products, param: {}".format(data))
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
@@ -468,6 +470,24 @@ def step_impl(context, webapp_owner_name):
 		if action:
 			actor, operation = action.split(',')
 			context.execute_steps(u"given %s登录系统" % actor)
+			if operation == u'完成':
+				step_id = OPERATION2STEPID.get(u'发货', None)
+				context.latest_order_id = order.id
+				context.execute_steps(step_id % actor)
+				log = OrderOperationLog.objects.filter(
+					order_id=order.order_id, action='订单发货').get()
+				if row.get('delivery_time'):
+					log.created_at =  bdd_util.get_date(row.get('delivery_time'))
+					log.save()
+			if operation == u'取消' or operation == u'退款' or operation == u'完成退款':
+				if row.get('delivery_time'):
+					step_id = OPERATION2STEPID.get(u'发货', None)
+					context.latest_order_id = order.id
+					context.execute_steps(step_id % actor)
+					log = OrderOperationLog.objects.filter(
+					order_id=order.order_id, action='订单发货').get()
+					log.created_at =  bdd_util.get_date(row.get('delivery_time'))
+					log.save()
 			step_id = OPERATION2STEPID.get(operation, None)
 			if step_id:
 				context.latest_order_id = order.id
@@ -505,11 +525,7 @@ def step_impl(context, webapp_owner_name):
 	#进行统计
 	from services.daily_page_visit_statistic_service.tasks import daily_page_visit_statistic_service
 	for date in dates:
-		# print('>>>>>>>>>>>>>>>>>>>')
-		# print(date)
-		# print(daily_page_visit_statistic_service)
 		result = daily_page_visit_statistic_service.delay(None, date)
-		# print(result)
 
 
 # 获取规格ids, 根据名称

@@ -51,15 +51,6 @@ class OrderInfo(resource.Resource):
         action = request.POST.get('action', None)
         remark = request.POST.get('remark', None)
         final_price = request.POST.get('final_price', None)
-
-        # todo should_delete 2015.7.19
-        # order_status = request.POST.get('order_status', None)
-        # bill_type = int(request.POST.get('bill_type', ORDER_BILL_TYPE_NONE))
-        # # postage = request.POST.get('postage', None)
-        # ship_name = request.POST.get('ship_name', None)
-        # ship_tel = request.POST.get('ship_tel', None)
-        # ship_address = request.POST.get('ship_address', None)
-
         order = Order.objects.get(id=order_id)
 
         if action:

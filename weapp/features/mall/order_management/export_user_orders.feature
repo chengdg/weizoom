@@ -162,7 +162,7 @@ Background:
 		"""
 
 
-@order @mall2 @order_export
+@order @mall2
 Scenario: 导出全部订单
 	jobs可以导出全部订单
 
@@ -300,7 +300,7 @@ Scenario: 导出全部订单
 
 
 
-@mall2 @order @order_export
+@mall2 @order
 Scenario: 2 促销订单导出
 	jobs可以促销导订单
 
@@ -405,7 +405,7 @@ Scenario: 2 促销订单导出
 		| 9999999  |  本店   |     今天    |          |  bill  | (赠品)商品3  |        |        100.0       |   2   |  0.0   |                    |         |             |          |              |             |             |       |  待支付   |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |           |           |               |
 		| 9999999  |  本店   |     今天    |          |  bill  |    商品2     |        |        50.0        |   1   |  2.0   |                    |         |             |          |              |             |             |       |  待支付   |         |          |    bill    | 13811223344 |    北京市     | 北京市,北京市,海淀区,泰兴大厦 |           |           |               |
 
-@order @mall2 @order_export
+@order @mall2
 Scenario: 3 导出订单信息中'总计'信息的校验
 	#导出所有订单
 	Given jobs登录系统
