@@ -111,12 +111,15 @@
 
 
 							<div class="xui-i-quick-reply">
-								{{if message.could_replied}}
-									<a href="javascript:void(0);" data-openid="${message.sender_username}" class="xa-selectMessage">快速回复</a>
+								{{if !message.fast_reply}}	
+									{{if message.could_replied }}
+										<a href="javascript:void(0);" data-openid="${message.sender_username}" class="xa-selectMessage">快速回复</a>
+									{{/if}}
+									{{if message.could_replied && message.latest_reply_at}}
+										&nbsp;|&nbsp;
+									{{/if}}
 								{{/if}}
-								{{if message.could_replied && message.latest_reply_at}}
-									&nbsp;|&nbsp;
-								{{/if}}
+								
 								{{if message.latest_reply_at}}
 									<span name="messageReplyAt">商家最后回复时间：${message.latest_reply_at}</span>
 								{{/if}}
@@ -272,6 +275,7 @@ $(document).ready(function() {
 				$(this).siblings().removeClass('xui-i-voicePlay');
 				$(this).siblings().addClass('xui-i-voiceStop');
 			});
+			$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
 		}
 	});
 
