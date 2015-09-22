@@ -5,3 +5,6 @@ __author__ = 'bert'
 
 
 from . import member_list
+from . import member_tags
+from . import update_member_tag_or_grade
+from . import member_qrcode

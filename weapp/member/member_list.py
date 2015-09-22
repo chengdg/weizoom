@@ -22,6 +22,7 @@ from excel_response import ExcelResponse
 from market_tools.tools.coupon.util import get_coupon_rules, get_my_coupons
 from market_tools.tools.member_qrcode.models import *
 from apps.customerized_apps.shengjing.models import *
+from weixin2.models import get_opid_from_session
 from core import resource
 
 COUNT_PER_PAGE = 20
@@ -349,6 +350,45 @@ class MemberFilterParams(resource.Resource):
 		}
 		return response.get_response()
 
+def count_member_follow_relations(member):
+	count = 0
+	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
+		try:
+			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
+			if follower_member.status != NOT_SUBSCRIBED:
+				count = count + 1
+		except:
+			continue
+
+	return count
+
+def get_member_orders(member):
+	if member is None:
+		return None
+	webapp_user_ids = member.get_webapp_user_ids
+	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
+
+def get_member_shared_urls(member):
+	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
+
+def get_member_ship_info(member):
+	if member is None:
+		return None
+
+	webapp_user = WebAppUser.from_member(member)
+	if webapp_user is None:
+		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
+		watchdog_error(notify_message)
+		return None
+
+	return webapp_user.ship_info
+
+def get_member_info(member):
+	try:
+		return MemberInfo.objects.get(member_id=member.id)
+	except:
+		return None
+
 
 class MemberDetail(resource.Resource):
 	app = "member"
@@ -515,49 +555,53 @@ class MemberDetail(resource.Resource):
 		})
 		return render_to_response('member/editor/member_detail.html', c)
 
+	@login_required
+	def api_post(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.POST.get('member_id', None)
+		grade_id = request.POST.get('grade_id', None)
+		member_remarks = request.POST.get('member_remarks', None)
+		name = request.POST.get('name', None)
+		sex = request.POST.get('sex', None)
+		phone_number = request.POST.get('phone_number', None)
+		is_for_buy_test = request.POST.get('is_for_buy_test', 0)
+		member = Member.objects.get(id=member_id)
+		tag_ids = request.POST.get('tag_ids', None)
+
+		if member.webapp_id == webapp_id:
+			if grade_id:
+				member.grade = MemberGrade.objects.get(id=grade_id)
+				member.save()
+			member_info_update = {}
+			if member_remarks:
+				member_info_update['member_remarks'] = member_remarks
+			if name:
+				member_info_update['name'] = name
+			if phone_number:
+				member_info_update['phone_number'] = phone_number.strip()
+
+			if sex != None:
+				member_info_update['sex'] = sex
+			member.is_for_buy_test = is_for_buy_test
+			member.save()
+			if member_info_update:
+				if MemberInfo.objects.filter(member=member).count() > 0:
+					MemberInfo.objects.filter(member=member).update(**member_info_update)
+				else:
+					member_info_update['member'] = member
+					MemberInfo.objects.create(**member_info_update)
+
+			if tag_ids:
+				tag_id_list = tag_ids.split('_')
+				MemberHasTag.delete_tag_member_relation_by_member(member)
+				MemberHasTag.add_tag_member_relation(member, tag_id_list)
+
+		response = create_response(200)
+		return response.get_response()
 
 
-def count_member_follow_relations(member):
-	count = 0
-	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
-		try:
-			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
-			if follower_member.status != NOT_SUBSCRIBED:
-				count = count + 1
-		except:
-			continue
 
-	return count
-
-def get_member_orders(member):
-	if member is None:
-		return None
-	webapp_user_ids = member.get_webapp_user_ids
-	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
-
-def get_member_shared_urls(member):
-	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
-
-def get_member_ship_info(member):
-	if member is None:
-		return None
-
-	webapp_user = WebAppUser.from_member(member)
-	if webapp_user is None:
-		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
-		watchdog_error(notify_message)
-		return None
-
-	return webapp_user.ship_info
-
-def get_member_info(member):
-	try:
-		return MemberInfo.objects.get(member_id=member.id)
-	except:
-		return None
-
-
-class MemberDetail(resource.Resource):
+class MemberIntegral(resource.Resource):
 	app = "member"
 	resource = "integral_logs"
 
@@ -590,4 +634,57 @@ class MemberDetail(resource.Resource):
 			'pageinfo': paginator.to_dict(pageinfo),
 		}
 
+		return response.get_response()
+
+class Integral(resource.Resource):
+	app='member'
+	resource='integral'
+	@login_required
+	def api_post(request):
+		
+		member_id = request.POST.get('member_id', None)
+		integral = request.POST.get('integral', 0)
+		reason = request.POST.get('reason', '').strip()
+		webapp_id=request.user_profile.webapp_id
+
+		if Member.objects.filter(webapp_id=webapp_id, id=member_id).count() == 0:
+			pass
+		else:
+			if int(integral) != 0:
+				from modules.member.tasks import update_member_integral
+				if int(integral) > 0:
+					event_type = MANAGER_MODIFY_ADD
+				else:
+					event_type = MANAGER_MODIFY_REDUCT
+
+				update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
+
+		response = create_response(200)
+		return response.get_response()
+
+
+class MemberFriends(resource.Resource):
+	app='member'
+	resource='follow_relations'
+
+	@login_required
+	def api_get(request):
+		member_id = request.POST.get('member_id', None)
+		integral = request.POST.get('integral', 0)
+		reason = request.POST.get('reason', '').strip()
+		webapp_id=request.user_profile.webapp_id
+
+		if Member.objects.filter(webapp_id=webapp_id, id=member_id).count() == 0:
+			pass
+		else:
+			if int(integral) != 0:
+				from modules.member.tasks import update_member_integral
+				if int(integral) > 0:
+					event_type = MANAGER_MODIFY_ADD
+				else:
+					event_type = MANAGER_MODIFY_REDUCT
+
+				update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
+
+		response = create_response(200)
 		return response.get_response()

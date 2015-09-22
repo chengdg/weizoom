@@ -86,7 +86,7 @@ def step_impl(context, user, webapp_user_name):
 	json_data = json.loads(context.text)
 	openid = '%s_%s' % (webapp_user_name, user)
 	member = __get_member_by_openid(openid)
-	url = '/member/api/follow_relations/get/?member_id=%s' % member.id
+	url = '/member/api/follow_relations/?member_id=%s' % member.id
 	response = client.get(bdd_util.nginx(url))
 
 	items = json.loads(response.content)['data']['items']

@@ -304,13 +304,13 @@
 						已取消
 						</div>
 					{{/if}}
-					<a target="_blank" href="/member/member_detail/edit/?id=${ member.id }">
+					<a target="_blank" href="/member/detail/?id=${ member.id }">
 						<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
 					</a>
 				</div>
 				<div class="column_block">
 					<div>
-					<a class="xui-Blue" target="_blank" href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+					<a class="xui-Blue" target="_blank" href="/member/detail/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
 
 
 				</div>
@@ -497,7 +497,7 @@ $(document).ready(function() {
 	 		W.getApi().call({
 	            method: 'post',
 	            app: 'member',
-	            api: 'grade/batch_update',
+	            api: 'batch_update_member_Grade',
 	            args: args,
 	            success: function(data) {
 	                 dataView.reload();
@@ -538,7 +538,7 @@ $(document).ready(function() {
 	 		W.getApi().call({
 	            method: 'post',
 	            app: 'member',
-	            api: 'tag/batch_update',
+	            api: 'batch_update_member_tag',
 	            args:args,
 	            success: function(data) {
 	                // window.location.reload();
@@ -616,7 +616,7 @@ $(document).ready(function() {
 			var member_ids = [];
 			W.getApi().call({
 	            app: 'member' ,
-	            api: 'member_ids/get',
+	            api: 'member_ids',
 	            args: args,
 	            success: function(data){
 	                member_ids = data.member_ids;

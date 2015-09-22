@@ -39,7 +39,7 @@ def step_impl(context, webapp_owner_name, webapp_user_name, action):
 @then(u"{webapp_user_name}获取测试权限")
 def step_impl(context, webapp_user_name):
 	member = context.client.request_member
-	url = '/member/member_detail/edit/?id={}'.format(member.id)
+	url = '/member/detail/?id={}'.format(member.id)
 	response = context.client.get(bdd_util.nginx(url))
 	member = response.context['show_member']
 

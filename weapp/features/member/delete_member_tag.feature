@@ -19,10 +19,10 @@ Background:
 			"tag_id_1": "分组1",
 			"tag_id_2": "分组2",
 			"tag_id_3": "分组3"
-		}	
+		}
 		"""
 
-@mall2 @member @member.tag @member.delete_tag
+@mall2 @member @member.tag @member.delete_tag @eugeneXX
 Scenario: Jobs删除已存在的会员分组
 	When jobs删除会员分组
 		"""
@@ -30,7 +30,7 @@ Scenario: Jobs删除已存在的会员分组
 			"tag_id_0": "未分组",
 			"tag_id_1": "分组1",
 			"tag_id_3": "分组3"
-		}	
+		}
 		"""
 	Then jobs能获取会员分组列表
 		"""
