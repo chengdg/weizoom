@@ -249,7 +249,7 @@
 	             		<input type='checkbox' id='is_enable_online_pay_interface'
                                name='is_enable_online_pay_interface'
                                class="xa-pay-selected"
-                               {% if request.manager.id == 216 %}
+                               {% if is_weizoom_mall %}
                                checked="checked"
                                {% endif %}
                                disabled
