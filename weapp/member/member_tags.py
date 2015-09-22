@@ -85,6 +85,8 @@ class MemberTags(resource.Resource):
         tags_dict = request.POST.dict()
         if tags_dict.has_key('timestamp'):
             tags_dict.pop('timestamp')
+        if tags_dict.has_key('_ids'):
+            tags_dict.pop('_ids')
         for key, value in tags_dict.items():
             id = key.split('_')[2]
             id_values[int(id)] = value
