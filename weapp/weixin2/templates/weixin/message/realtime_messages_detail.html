@@ -337,7 +337,7 @@ $(document).ready(function() {
 	});
 	_.delay(function() {
 		$(".xui-i-voiceContent").each(function(){
-			var time=$(this).siblings('#media')[0].duration+'&nbsp';
+			var time=$(this).siblings('#media')[0].duration+'&nbsp;"';
 			$(this).parent().find(".xa-clock").html(parseInt(time));
 		});
 	}, 8000);

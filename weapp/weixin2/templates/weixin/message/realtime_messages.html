@@ -275,8 +275,16 @@ $(document).ready(function() {
 				$(this).siblings().removeClass('xui-i-voicePlay');
 				$(this).siblings().addClass('xui-i-voiceStop');
 			});
+			$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
 		}
 	});
+
+	_.delay(function() {
+		$(".xui-i-voiceContent").each(function(){
+			var time=$(this).siblings('#media')[0].duration+'&nbsp;"';
+			$(this).parent().find(".xa-clock").html(parseInt(time));
+		});
+	}, 4000);
 
 	var filterBox = new W.view.weixin.RealtimeMessageFilterView({
 		el: "#weixin-realtime-message-filter-view",
