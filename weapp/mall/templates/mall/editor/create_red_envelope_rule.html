@@ -178,9 +178,9 @@
     <div class="form-group">
         <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110 star_show">领取方式</label>
         <div class="controls xa-errorHintContainer">
-            <div class="receive-method" style="margin-left: 120px;" data-validate="require-notempty">
-                <input type="radio" class="xa-receive-method-order">下单领取
-                <input type="radio" class="xa-receive-method-pic">图文领取
+            <div class="receive-method" style="margin-left: 120px;">
+                <input type="radio" name="receive-method-order" class="xa-receive-method-order" {%if not red_envelope_rule.receive_method %}checked{% endif%}>下单领取
+                <input type="radio" name="receive-method-pic" class="xa-receive-method-pic" {%if red_envelope_rule.receive_method %}checked{% endif%}>图文领取
             </div>
             <div class="errorHint ml120" data-error-hint="请选择领取方式"></div>
         </div>
@@ -263,7 +263,6 @@ $(document).ready(function(){
       var $input = $(e.target);
       if($input.prop('checked')){
           $input.siblings().prop("checked", false);
-          $('.receive-method').removeAttr('data-validate');
           $('input[name="limit_money"]').removeAttr('disabled');
       }
   });
@@ -272,7 +271,6 @@ $(document).ready(function(){
       var $input = $(e.target);
       if($input.prop('checked')){
           $input.siblings().prop("checked", false);
-          $('.receive-method').removeAttr('data-validate');
           $('input[name="limit_money"]').attr('disabled', 'disabled');
       }
   });
