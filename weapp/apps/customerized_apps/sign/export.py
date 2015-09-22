@@ -5,9 +5,9 @@ NAV = {
 	'section': u'',
 	'navs': [
 		{
-			'name': "signs",
+			'name': "sign",
 			'title': "签到",
-			'url': '/apps/sign/signs/',
+			'url': '/apps/sign/sign/',
 			'need_permissions': []
 		},
 	]

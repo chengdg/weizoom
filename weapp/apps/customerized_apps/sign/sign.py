@@ -32,19 +32,19 @@ class Sign(resource.Resource):
 		响应GET
 		"""
 		owner_id = request.user.id
-		sign = app_models.Sign.objects(owner_id=owner_id)
-		if sign.count() > 0:
+		sign = app_models.Sign.objects.get(owner_id=owner_id)
+		if sign:
 			is_create_new_data = False
-			project_id = 'new_app:sign:%s' % sign[0].related_page_id
+			project_id = 'new_app:sign:%s' % sign.related_page_id
+			print sign.status_text
 		else:
 			sign = None
 			is_create_new_data = True
 			project_id = 'new_app:sign:0'
-		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_second_navs(request),
-			'second_nav_name': 'signs',
+			'second_nav_name': 'sign',
 			'sign': sign,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
@@ -75,6 +75,12 @@ class Sign(resource.Resource):
 		"""
 		响应POST
 		"""
+		if request.POST['status']:
+			status = 1 if request.POST['status'] == 'on' else 0
+			app_models.Sign.objects(id=request.POST['signId']).update(set__status=status)
+			response = create_response(200)
+			return response.get_response()
+
 		data = request_util.get_fields_to_be_save(request)
 		update_data = {}
 		update_fields = set(['name', 'start_time', 'end_time'])
@@ -95,4 +101,3 @@ class Sign(resource.Resource):
 		
 		response = create_response(200)
 		return response.get_response()
-
