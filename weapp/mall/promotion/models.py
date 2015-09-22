@@ -575,7 +575,7 @@ class RedEnvelopeRule(models.Model):
 	share_title = models.CharField(max_length=256)
 	share_pic = models.CharField(max_length=256)
 	is_delete = models.BooleanField(default=False)
-	status = models.BooleanField(default=False) #状态默认开启
+	status = models.BooleanField(default=False) #状态默认关闭
 	receive_method = models.BooleanField(default=False)#领取方式默认为下单领取
 	created_at = models.DateTimeField(auto_now_add=True)
 

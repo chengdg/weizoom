@@ -240,12 +240,14 @@ class RedEnvelopeRule(resource.Resource):
     @login_required
     def api_put(request):
         limit_money = request.POST.get('limit_money', 0)
+        status = False
         if not limit_money:
             limit_money = 0.0
         if request.POST.get('receive-method-order'):
             receive_method = False #下单领取
         else:
             receive_method = True
+            status = True #图文领取-状态默认开启
         if request.POST.get('start_date', None) and request.POST.get('end_date', None):
             promotion_models.RedEnvelopeRule.objects.create(
                 owner=request.user,
@@ -254,6 +256,7 @@ class RedEnvelopeRule(resource.Resource):
                 start_time=request.POST.get('start_date'),
                 end_time=request.POST.get('end_date'),
                 receive_method = receive_method,
+                status = status,
                 limit_order_money=limit_money,
                 use_info=request.POST.get('detail', ''),
                 share_pic=request.POST.get('share_pic', ''),
@@ -266,6 +269,7 @@ class RedEnvelopeRule(resource.Resource):
                 coupon_rule_id=request.POST.get('coupon_rule', 0),
                 limit_time=True,
                 receive_method = receive_method,
+                status = status,
                 limit_order_money=limit_money,
                 use_info=request.POST.get('detail', ''),
                 share_pic=request.POST.get('share_pic', ''),
