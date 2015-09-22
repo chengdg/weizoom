@@ -65,14 +65,6 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
-	function addCategory() {
-		W.getAip().call({
-			method: 'put',
-			app: 'mall2',
-			resource: 'category',
-		})
-	}
-
 	$('.xa-addCategory').click(function() {
 		W.dialog.showDialog('W.dialog.mall.AddProductCategoryDialog', {
 			canEditTitle: true,
