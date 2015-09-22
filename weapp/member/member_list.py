@@ -22,6 +22,7 @@ from excel_response import ExcelResponse
 from market_tools.tools.coupon.util import get_coupon_rules, get_my_coupons
 from market_tools.tools.member_qrcode.models import *
 from apps.customerized_apps.shengjing.models import *
+from weixin2.models import get_opid_from_session
 from core import resource
 
 COUNT_PER_PAGE = 20
@@ -245,9 +246,6 @@ def build_follow_member_basic_json(follow_member, member_id):
 		'father_id': father_id
 	}
 
-def __count_member_follow_relations(member):
-	return MemberFollowRelation.objects.filter(member_id=member.id).count()
-
 class MemberList(resource.Resource):
 	app = 'member'
 	resource = 'member_list'
@@ -289,7 +287,7 @@ class MemberList(resource.Resource):
 		"""
 		获取会员列表
 
-		URL: http://weapp.weizoom.com/member/api/members/get/?design_mode=0&version=1&filter_value=pay_times:0-1|first_pay:2015-04-08%2000:00--2015-04-30%2000:00&page=1&count_per_page=50&enable_paginate=1&timestamp=1435216368297&_=1435215905446
+		URL: http://weapp.weizoom.com/member/api/member_list/?design_mode=0&version=1&filter_value=pay_times:0-1|first_pay:2015-04-08%2000:00--2015-04-30%2000:00&page=1&count_per_page=50&enable_paginate=1&timestamp=1435216368297&_=1435215905446
 
 		"""
 		pageinfo, request_members, total_count = get_request_members_list(request)
@@ -348,6 +346,45 @@ class MemberFilterParams(resource.Resource):
 			'grades': grades
 		}
 		return response.get_response()
+
+def count_member_follow_relations(member):
+	count = 0
+	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
+		try:
+			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
+			if follower_member.status != NOT_SUBSCRIBED:
+				count = count + 1
+		except:
+			continue
+
+	return count
+
+def get_member_orders(member):
+	if member is None:
+		return None
+	webapp_user_ids = member.get_webapp_user_ids
+	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
+
+def get_member_shared_urls(member):
+	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
+
+def get_member_ship_info(member):
+	if member is None:
+		return None
+
+	webapp_user = WebAppUser.from_member(member)
+	if webapp_user is None:
+		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
+		watchdog_error(notify_message)
+		return None
+
+	return webapp_user.ship_info
+
+def get_member_info(member):
+	try:
+		return MemberInfo.objects.get(member_id=member.id)
+	except:
+		return None
 
 
 class MemberDetail(resource.Resource):
@@ -515,49 +552,53 @@ class MemberDetail(resource.Resource):
 		})
 		return render_to_response('member/editor/member_detail.html', c)
 
+	@login_required
+	def api_post(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.POST.get('member_id', None)
+		grade_id = request.POST.get('grade_id', None)
+		member_remarks = request.POST.get('member_remarks', None)
+		name = request.POST.get('name', None)
+		sex = request.POST.get('sex', None)
+		phone_number = request.POST.get('phone_number', None)
+		is_for_buy_test = request.POST.get('is_for_buy_test', 0)
+		member = Member.objects.get(id=member_id)
+		tag_ids = request.POST.get('tag_ids', None)
+
+		if member.webapp_id == webapp_id:
+			if grade_id:
+				member.grade = MemberGrade.objects.get(id=grade_id)
+				member.save()
+			member_info_update = {}
+			if member_remarks:
+				member_info_update['member_remarks'] = member_remarks
+			if name:
+				member_info_update['name'] = name
+			if phone_number:
+				member_info_update['phone_number'] = phone_number.strip()
+
+			if sex != None:
+				member_info_update['sex'] = sex
+			member.is_for_buy_test = is_for_buy_test
+			member.save()
+			if member_info_update:
+				if MemberInfo.objects.filter(member=member).count() > 0:
+					MemberInfo.objects.filter(member=member).update(**member_info_update)
+				else:
+					member_info_update['member'] = member
+					MemberInfo.objects.create(**member_info_update)
+
+			if tag_ids:
+				tag_id_list = tag_ids.split('_')
+				MemberHasTag.delete_tag_member_relation_by_member(member)
+				MemberHasTag.add_tag_member_relation(member, tag_id_list)
+
+		response = create_response(200)
+		return response.get_response()
 
 
-def count_member_follow_relations(member):
-	count = 0
-	for member_follow_relation in MemberFollowRelation.objects.filter(member_id=member.id):
-		try:
-			follower_member = Member.objects.get(id=member_follow_relation.follower_member_id)
-			if follower_member.status != NOT_SUBSCRIBED:
-				count = count + 1
-		except:
-			continue
 
-	return count
-
-def get_member_orders(member):
-	if member is None:
-		return None
-	webapp_user_ids = member.get_webapp_user_ids
-	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
-
-def get_member_shared_urls(member):
-	return MemberSharedUrlInfo.objects.filter(member_id=member.id)
-
-def get_member_ship_info(member):
-	if member is None:
-		return None
-
-	webapp_user = WebAppUser.from_member(member)
-	if webapp_user is None:
-		notify_message = u"获取会员对应webappuser失败，member id:{}".format(member.id)
-		watchdog_error(notify_message)
-		return None
-
-	return webapp_user.ship_info
-
-def get_member_info(member):
-	try:
-		return MemberInfo.objects.get(member_id=member.id)
-	except:
-		return None
-
-
-class MemberDetail(resource.Resource):
+class MemberIntegral(resource.Resource):
 	app = "member"
 	resource = "integral_logs"
 
@@ -590,4 +631,101 @@ class MemberDetail(resource.Resource):
 			'pageinfo': paginator.to_dict(pageinfo),
 		}
 
+		return response.get_response()
+
+class Integral(resource.Resource):
+	app='member'
+	resource='integral'
+	@login_required
+	def api_post(request):
+		
+		member_id = request.POST.get('member_id', None)
+		integral = request.POST.get('integral', 0)
+		reason = request.POST.get('reason', '').strip()
+		webapp_id=request.user_profile.webapp_id
+
+		if Member.objects.filter(webapp_id=webapp_id, id=member_id).count() == 0:
+			pass
+		else:
+			if int(integral) != 0:
+				from modules.member.tasks import update_member_integral
+				if int(integral) > 0:
+					event_type = MANAGER_MODIFY_ADD
+				else:
+					event_type = MANAGER_MODIFY_REDUCT
+
+				update_member_integral(member_id, None, int(integral), event_type, 0, reason, request.user.username)
+
+		response = create_response(200)
+		return response.get_response()
+
+
+class MemberFriends(resource.Resource):
+	app='member'
+	resource='follow_relations'
+
+	@login_required
+	def api_get(request):
+		member_id = request.GET.get('member_id', 0)
+		only_fans = request.GET.get('only_fans', 'false')
+		data_value = request.GET.get('data_value', None)
+		sort_attr = request.GET.get('sort_attr', '-id')
+		if only_fans == 'true':
+			only_fans = '1'
+		else:
+			only_fans = '0'
+
+		if data_value:
+			if data_value == 'shared':
+				follow_members = MemberFollowRelation.get_follow_members_for_shred_url(member_id)
+			elif  data_value == 'qrcode':
+				follow_members=  MemberFollowRelation.get_follow_members_for(member_id, '1', True)
+			else:
+				follow_members = []
+		else:
+			follow_members = MemberFollowRelation.get_follow_members_for(member_id, only_fans)
+
+		#增加计算follow_members的人数、下单人数、成交金额
+		population = len(follow_members)
+		population_order = 0
+		for follow_member in follow_members:
+			user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
+			if user_orders:
+				population_order += 1
+		#成交金额
+		amount = 0
+		for follow_member in follow_members:
+			amount += follow_member.pay_money
+
+		#增加计算follow_members的人数、下单人数、成交金额
+
+		#进行排序
+		follow_members = follow_members.order_by(sort_attr)
+		if data_value:
+			filter_date_follow_members = follow_members
+		else:
+			filter_date_follow_members = []
+		#进行分页
+		count_per_page = int(request.GET.get('count_per_page', 8))
+		cur_page = int(request.GET.get('page', '1'))
+		pageinfo, follow_members = paginator.paginate(follow_members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		return_follow_members_json_array = []
+
+		if data_value:
+			follow_members = filter_date_follow_members
+
+		for follow_member in follow_members:
+			return_follow_members_json_array.append(build_follow_member_basic_json(follow_member, member_id))
+
+		response = create_response(200)
+		response.data = {
+			'items': return_follow_members_json_array,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'only_fans':only_fans,
+			'sortAttr': request.GET.get('sort_attr', '-created_at'),
+			'population': population,
+			'population_order': population_order,
+			'amount': '%.2f' % amount
+		}
 		return response.get_response()

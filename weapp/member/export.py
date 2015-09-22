@@ -37,7 +37,7 @@ MEMBER_NAV = {
 		{
 			'name': MEMBER_TAG,
 			'title': u'会员分组',
-			'url': '/member/member_tags/get/',
+			'url': '/member/member_tags/',
             'need_permissions': ['manage_member_tag', ]
 		},
 		{
@@ -49,7 +49,7 @@ MEMBER_NAV = {
 		{
 			'name': MEMBER_QRCODE,
 			'title': u'推广扫码',
-			'url': '/member/member_qrcode/get/',
+			'url': '/member/member_qrcode/',
             'need_permissions': ['manage_member_qrcode', ]
 		}
 	]

@@ -304,13 +304,13 @@
 						已取消
 						</div>
 					{{/if}}
-					<a target="_blank" href="/member/member_detail/edit/?id=${ member.id }">
+					<a target="_blank" href="/member/detail/?id=${ member.id }">
 						<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
 					</a>
 				</div>
 				<div class="column_block">
 					<div>
-					<a class="xui-Blue" target="_blank" href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+					<a class="xui-Blue" target="_blank" href="/member/detail/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
 
 
 				</div>
@@ -494,19 +494,16 @@ $(document).ready(function() {
 			args = _.extend(args, dataArgs);
 		}
 	 	if (grade_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'grade/batch_update',
-	            args: args,
-	            success: function(data) {
+	 		W.resource.member.BatchUpdateMemberGrade.post({
+	 			data: args,
+	 			success: function(data) {
 	                 dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}else{
 	 		W.getErrorHintView().show('请先选择会员！');
 	 	}
@@ -535,12 +532,9 @@ $(document).ready(function() {
 			}
 		}
 	 	if (tag_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'tag/batch_update',
-	            args:args,
-	            success: function(data) {
+	 		W.resource.member.BatchUpdateMemberTag.post({
+	 			data: args,
+	 			success: function(data) {
 	                // window.location.reload();
 	                W.showHint('success', "添加分组成功");
 	                dataView.reload();
@@ -549,7 +543,7 @@ $(document).ready(function() {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}
 	});
 
@@ -614,11 +608,9 @@ $(document).ready(function() {
 	            'count_per_page':999999999999
 			};
 			var member_ids = [];
-			W.getApi().call({
-	            app: 'member' ,
-	            api: 'member_ids/get',
-	            args: args,
-	            success: function(data){
+			W.resource.member.MemberIds.get({
+				data: args,
+				success: function(data){
 	                member_ids = data.member_ids;
 	                if(member_ids.length == 0){
 	                	W.showHint('error', '请先选择会员！');
@@ -633,7 +625,7 @@ $(document).ready(function() {
 	            error: function(data){
 	            	W.showHint('error', '发放失败!');
 	            }
-	        });
+			});
 	    } else {
 	    	W.showHint('error', "没有可已发优惠券的用户！");
 	    }
