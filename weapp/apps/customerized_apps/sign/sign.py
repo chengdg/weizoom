@@ -32,11 +32,11 @@ class Sign(resource.Resource):
 		响应GET
 		"""
 		owner_id = request.user.id
-		sign = app_models.Sign.objects.get(owner_id=owner_id)
-		if sign:
+		sign = app_models.Sign.objects(owner_id=owner_id)
+		if sign.count()>0:
+			sign = sign[0]
 			is_create_new_data = False
 			project_id = 'new_app:sign:%s' % sign.related_page_id
-			print sign.status_text
 		else:
 			sign = None
 			is_create_new_data = True
