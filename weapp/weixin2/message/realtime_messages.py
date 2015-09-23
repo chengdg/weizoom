@@ -582,6 +582,11 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             one_message['pic_url'] = ''
             one_message['audio_url'] = ''
 
+        try:
+            one_message['fast_reply'] = message.is_reply
+        except:
+            one_message['fast_reply'] = True
+
         if msgid2remark.has_key(message.id):
             one_message['remark'] = msgid2remark[message.id]
         else:
@@ -604,10 +609,10 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         try:
             reply_message = Message.objects.filter(session=message.session_id, is_reply=True).order_by('-id')[0]
             one_message['latest_reply_at'] = reply_message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
-            one_message['fast_reply'] = reply_message.is_reply
+
         except:
             one_message['latest_reply_at'] = ''
-            one_message['fast_reply'] = True
+
         message_ids.append(message.id)
 
         try:
