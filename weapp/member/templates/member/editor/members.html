@@ -704,7 +704,7 @@ $(document).ready(function() {
 
 	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){
-		var url = '/member/members/export/';
+		var url = '/member/export/';
 		if (view.filter_value) {
 			url = url + '?filter_value='+view.filter_value;
 		}

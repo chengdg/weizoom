@@ -82,6 +82,7 @@ $(document).ready(function() {
             var user_member_grade_id = data.member_grade_id;
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+                $('.xa-shopCarCount').text(data.count).show();
             }
             $(".xa-product").each(function(){
                 // 商品原价
