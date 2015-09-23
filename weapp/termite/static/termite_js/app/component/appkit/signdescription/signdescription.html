@@ -1,190 +1,131 @@
 {% load workbench_filter %}
+{% block css %}
+<style>
+    .Chr,p{
+        font-family: STHeiti ;
+    }
+    .wui-SignPageDiv{
+        width: 100%;
+        height: 540px;
+        background-color: #F0F0F0;
+    }
+    .wui-TopPaneDiv{
+        height: 250px;
+        background-image: url('/termite_static/img/component/sign/signdescription_left_bg.png');
+        background-repeat: repeat-x;
+        background-size: 4% auto;
+        text-align: center;
+        color:white;
 
+    }
+    .wui-UserPhotoDiv{
+        padding-top: 20px;
+    }
+    .wui-UserPhotoCircle{
+        width: 70px;
+        height: 70px;
+        padding:2px;
+        background: #FFFEFF;
+        border-radius: 40px;
+        box-shadow: 0px 0px 1px rgba(0,0,0,0.4);
+        -moz-border-radius: 40px;
+        -webkit-border-radius: 40px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .wui-UserPhotoCircle img{
+        width:70px;
+        height:70px;
+        line-height: 0; /* remove line-height */
+        display: inline-block; /* circle wraps image */
+        border-radius: 50%; /* relative value */
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        transition: linear 0.25s;
+    }
+    .wui-UserName{
+        padding-top: 4px;
+    }
+    .wui-UserPointDiv{
+        margin: 4px 0 8px 0;
+    }
+    .wui-TotalPoints{
+        color:#FFFD32;
+    }
+    .wui-Rules.Border{
+        border: 1px solid white;
+        margin-left: 30%;
+        margin-right: 30%;
+        border-radius: 16px;
+        padding: 2px 0 2px 0;
+    }
+    .wui-SignCircle{
+        width: 200px;
+        height: 200px;
+        padding:2px;
+        background: #9AD2EB;
+        border-radius: 50%;
+        -moz-border-radius: 40px;
+        -webkit-border-radius: 40px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        position: relative;
+    }
+    .wui-SignCircle .wui-SignSign{
+        width:170px;
+        height:170px;
+        background: #0090D6;
+        display: inline-block; /* circle wraps image */
+        border-radius: 50%; /* relative value */
+        margin: auto;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+        position: absolute;
+    }
+    .wui-SignSign .wui-SignChr{
+        color:white;
+        font-size: 2.5em;
+        line-height: 170px;
+    }
+    .wui-SignDescriptionDiv{
+        margin-top: 25px;
+        color: #555555;
+        text-align: center;
+    }
+
+</style>
+{% endblock %}
 
 {#{% ifequal component.type 'appkit.signdescription' %}#}
-    <div class="wui-surveyDescription wui-lotterydescription">
-        <div class="wui-i-roulette wui-i-title">
-            <h1 class="wui-i-innerTitle">
-                <p class="xa-title">{{component.model.title}}</p>
-            </h1>
+    <div class="wui-SignPageDiv">
+        <div class="wui-TopPaneDiv">
+            <div class="wui-UserPhotoDiv">
+                <div class="wui-UserPhotoCircle">
+                    <img src="/termite_static/img/component/sign/defaultHead.jpg">
+                </div>
+            </div>
+            <div class="wui-UserName Chr"><p>小公举呀呀呀呀</p></div>
+            <div class="wui-UserPointDiv">
+                <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr">520</span></p>
+            </div>
+            <div class="wui-Rules Border">
+                <div class="wui-Rules Chr">活动规则<span class="wui-Rules logo">》</span></div>
+            </div>
         </div>
-        <div class="wui-i-roulette wui-i-header xa-header {% if component.model.limitation == 'no_limit' %}wui-lotterydescription-hide{% endif %}">
-            <p>您还有<b>
-                {% if component.model.limitation == 'once_per_user' %}1{% endif %}
-                {% if component.model.limitation == 'once_per_day' %}1{% endif %}
-                {% if component.model.limitation == 'twice_per_day' %}2{% endif %}
-                {% if component.model.limitation == 'none' %}0{% endif %}</b>次抽奖机会！</p>
-        </div>
-        <div class="wui-i-roulette wui-i-header xa-remainedIntegral">
-            需要消耗<strong>{{ component.model.expend }}</strong>积分, <p style="display: inline-block">剩余<b></b>积分</p>
-        </div>
-        <div class="wui-i-roulette wui-i-body">
-            <div class="xui-circle xa-circle xa-circle-unit-0"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-1"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-2"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-3"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-4"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-5"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-6"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-7"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-8"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-9"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-10"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-11"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-12"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-13"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-14"></div>
-            <div class="xui-circle xa-circle xa-circle-unit-15"></div>
 
-            <table style="border-collapse: separate; border-spacing: 2px;">
-                <tr>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-0 xa-lottery-first" defaultPosition="0 -155px">
-                        {% if component.components.0.model.image %}
-                            <img src="{{ component.components.0.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 -155px;"></span>
-                        {% endif %}
-                    </td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-1"><b>谢谢参与</b></td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-2 xa-lottery-second" defaultPosition="0 -212px">
-                        {% if component.components.1.model.image %}
-                            <img src="{{ component.components.1.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 -212px;"></span>
-                        {% endif %}
-                    </td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-3 xa-lottery-third" defaultPosition="0 -264px">
-                        {% if component.components.2.model.image %}
-                            <img src="{{ component.components.2.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 -264px;"></span>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-11 xa-lottery-third" defaultPosition="0 -318px">
-                        {% if component.components.2.model.image %}
-                            <img src="{{ component.components.2.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 -318px;"></span>
-                        {% endif %}
-                    </td>
-                    <td class="xa-lottery-go" colspan="2" rowspan="2"></td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-4 xa-lottery-second" defaultPosition="0 -47px">
-                        {% if component.components.1.model.image %}
-                            <img src="{{ component.components.1.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 -47px;"></span>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-10"><b>谢谢参与</b></td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-5"><b>谢谢参与</b></td>
-                </tr>
-                <tr>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-9 xa-lottery-second" defaultPosition="0 -101px">
-                        {% if component.components.1.model.image %}
-                            <img src="{{ component.components.1.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 -101px;"></span>
-                        {% endif %}
-                    </td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-8"><b>谢谢参与</b></td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-7 xa-lottery-first" defaultPosition="0 -155px">
-                        {% if component.components.0.model.image %}
-                            <img src="{{ component.components.0.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 -155px;"></span>
-                        {% endif %}
-                    </td>
-                    <td class="xui-lottery-unit xa-lottery-unit xa-lottery-unit-6 xa-lottery-third" defaultPosition="0 5px">
-                        {% if component.components.2.model.image %}
-                            <img src="{{ component.components.2.model.image }}">
-                        {% else %}
-                            <span style="background-position: 0 5px;"></span>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
+        <div class="wui-BodyPaneDiv">
+            <div class ="wui-SignDiv">
+                <div class = "wui-SignCircle">
+                    <div class = "wui-SignSign"><p class="wui-SignChr">签到</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wui-SignDescriptionDiv">
+            <div class="wui-SignDescriptionDiv Chr">今日可以领取<span class="Points">x</span>积分，"<span>5元优惠劵</span>"一张</div>
         </div>
     </div>
-<div
-    class="wui-surveyDescription xa-prizeContainer"
-    style="min-height:100px; background-color:#8d00ab;"
->
-    <div class="wui-i-subtitle" style="background-color: #8d00ab;left: 35%;position: relative;text-align: center;top: 10px;width: 30%;">
-        <h2 class=" xa-subtitle" style="font-weight: 700;color: #ffffff;">活动说明</h2>
-    </div>
-	<div class="wui-i-info p0">
-        <div class="wui-i-settings pt15 pb15" style="color: #ffffff;">
-            <div class="wui-i-settingTitle mr15">奖项设置</div>
-            <div class="wui-i-settingData xa-settingData" style="margin-left: 2em;margin-top: 10px;">
-                <ul >
-                    <li data_cid="4">
-                        一等奖:&nbsp;&nbsp;
-                        {% if component.components.0.model.prize.type == 'coupon' %}
-                            <p>{{component.components.0.model.prize.data.name}}</p>
-                        {% else %}
-                            {% if component.components.0.model.prize.type == 'integral' %}
-                                <p>{{component.components.0.model.prize.data}}&nbsp;积分</P>
-                            {% else %}
-                                <p>{{component.components.0.model.prize.data}}</P>
-                            {% endif %}
-                        {% endif %}
-                    </li>
-                    <li data_cid="5">
-                        二等奖:&nbsp;&nbsp;
-                        {% if component.components.1.model.prize.type == 'coupon' %}
-                            <p>{{component.components.1.model.prize.data.name}}</p>
-                        {% else %}
-                            {% if component.components.1.model.prize.type == 'integral' %}
-                                <p>{{component.components.1.model.prize.data}}&nbsp;积分</P>
-                            {% else %}
-                                <p>{{component.components.1.model.prize.data}}</P>
-                            {% endif %}
-                        {% endif %}
-                    </li>
-                    <li data_cid="6" >
-                        三等奖:&nbsp;&nbsp;
-                        {% if component.components.2.model.prize.type == 'coupon' %}
-                            <p>{{component.components.2.model.prize.data.name}}</p>
-                        {% else %}
-                            {% if component.components.2.model.prize.type == 'integral' %}
-                                <p>{{component.components.2.model.prize.data}}&nbsp;积分</P>
-                            {% else %}
-                                <p>{{component.components.2.model.prize.data}}</P>
-                            {% endif %}
-                        {% endif %}
-                    </li>
-                </ul>
-            </div>
-        </div>
-		<div class="wui-i-time cl pt20" style="border-top: 1px solid #ab39c4; min-height: 0;color: #ffffff;font-size: 16px;">
-			<div class="wui-i-settingTitle mr15">活动时间</div>
-            <div style="margin-left: 2em;margin-top: 10px;margin-bottom: 10px;">
-                <p class="wui-i-start_time">{{component.model.start_time}}</p>至<p class="wui-i-end_time">{{component.model.end_time}}</p>
-            </div>
-		</div>
-        <!--
-        <i class="wui-i-sprite xui-sprite-prize"></i>
-        <div class="wui-i-prize">
-            参与送<b class="xa-delivery">{{component.model.delivery}}</b>积分
-        </div>
-        -->
-        <div class="wui-i-record cl pt5 pb15">
-            <div class="wui-i-settingTitle mr15 mb10">中奖记录</div>
-            <div class="wui-i-recordData xa-recordData" style="margin-left: 2em;">
-                <ul>
-                </ul>
-            </div>
-        </div>
-        <div class="wui-i-description xa-description cl pt15 pb15" style="font-size: 14px;margin: 0; color: white;border-top: 1px solid #ab39c4;">
-        <div class="wui-i-settingTitle mr15 mb10">活动规则</div>
-        <div style="clear: both; margin-left: 2em;" class="wui-i-description-content">
-            {{component.model.description|safe}}
-        </div>
-        </div>
-	</div>
-</div>
 {#{% endifequal %}#}
