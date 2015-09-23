@@ -13,7 +13,14 @@ def get_news_url(news):
 			domain = 'http://%s/workbench/jqm/preview/?' % settings.DOMAIN
 			return news.url.replace('./?', domain)
 
-		if news.url.find('/apps/') == 0:
+		if news.url.find('m/apps/') > 0 and not news.url.startswith('http') :
+			if news.url.startswith('/m'):
+				url = 'http://%s%s' % (settings.DOMAIN, news.url)
+			else:
+				url = 'http://%s/%s' % (settings.DOMAIN, news.url)
+			return url
+
+		if news.url.startswith('/apps/'): 
 			url = 'http://%s/m%s' % (settings.DOMAIN, news.url)
 			return url
 
