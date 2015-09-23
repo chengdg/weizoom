@@ -20,6 +20,9 @@
 	min-height: 687px;
 
 }
+.xui-massSendingMessage select {
+	white-space: nowrap;
+}
 
 .xui-massSendingMessage .xui-massageSendingCount{
 	width: 185px;
