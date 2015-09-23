@@ -32,6 +32,10 @@
             margin: 15px 10px;
             padding: 20px 30px;
         }
+        .btn-danger {
+            border-radius: 3px;
+            margin: 10px;
+        }
     </style>
 {% endblock %}
 
@@ -80,12 +84,88 @@
     <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide mb30">
     </div>
   </div>
-    <div class="xui-state-tag xa-state" style="display: none">表格</div>
+    <div class="xui-state-tag xa-state" style="display: none">
+        <div
+			class="panel-body panel-table p0 mt10"
+			data-ui-role="advanced-table"
+			data-app="apps/sign"
+			data-resource="sign_participances"
+			data-args='{"id": "{{activity_id}}"}'
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="true"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
+		>
+		</div>
+    </div>
 </div>
+    {% verbatim %}
+        <script id="table" type="text/x-jquery-tmpl">
+            {{if items!='' }}
+            <table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+                <thead>
+                    <tr>
+                        <th>会员</th>
+                        <th>第一次签到</th>
+                        <th>最后一次签到</th>
+                        <th>累计次数</th>
+                        <th>连续次数</th>
+                        <th>最高连续次数</th>
+                        <th>奖励总积分</th>
+                        <th>优惠券奖励</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {{each(i, item) items}}
+                    <tr data-id="${item.id}">
+                        <td
+                            class="tl pl25"
+                            style="width:250px; height:60px;"
+                        >
+                            <img src="${item.participant_icon}" />
+                            {{html item.participant_name}}
+                        </td>
+                        <td>
+                            ${item.created_at}
+                        </td>
+                        <td>
+                            ${item.latest_date}
+                        </td>
+                        <td>
+                            ${item.total_count}
+                        </td>
+                        <td>
+                            ${item.serial_count}
+                        </td>
+                        <td>
+                            ${item.top_serial_count}
+                        </td>
+                        <td>
+                            ${item.total_integral}
+                        </td>
+                        <td>
+                            ${item.latest_coupon}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+                <div class="cb"></div>
+            </table>
+            {{else}}
+                <div class="xui-emptyBox m10">
+                    <img src="/static_v2/img/editor/empty.png">
+                    <span class="ml20">您还没有相关数据！</span>
+                </div>
+            {{/if}}
+            <br>
+        </script>
+    {% endverbatim %}
 {% endblock %}
 
 {% block global_elements %}
-<div class="xui-bottomActionBar">{{ sign.status_text }}
+<div class="xui-bottomActionBar">
   {% if not sign %}
     <button class="xa-save btn btn-primary">保存</button>
     <button class="xa-preview btn btn-default ml20">预览</button>
@@ -115,7 +195,7 @@
   <!-- *end_prunt_task* -->
   
   <script type="text/javascript">
-    var signStatus = false;
+    var signStatus = "off";
     W.uid = {{ user.id }};
     W.projectId = "{{project_id}}";
     W.activityId = "{{sign.id}}";
@@ -126,6 +206,8 @@
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;
+
+    var table;
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -160,6 +242,7 @@
     }
     
     $(document).ready(function() {
+        table = $('[data-ui-role="advanced-table"]').data('view');
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
       
@@ -207,6 +290,7 @@
           var relatedPageId = data['project_id'];
           var args = {
             "name": name,
+            "status": signStatus,
             "start_time": startTime,
             "end_time": endTime
           }
@@ -216,6 +300,7 @@
           } else {
             var method = 'post';
             args['id'] = W.activityId;
+            args['signId'] = W.activityId;
           }
           W.getApi().call({
             app: 'apps/sign',
@@ -224,6 +309,10 @@
             args: args,
             success: function(data) {
               W.showHint('success', '保存成功');
+                isCreateNewData = false;
+                if(data && data.id){
+                    W.activityId = data.id;
+                }
             },
             error: function(resp) {
               W.showHint('error', '保存失败!');
@@ -287,16 +376,28 @@
                 $('.xa-setting').show().siblings('.xa-state').hide();
             }else if('xa-state' == target){
                 $('.xa-state').show().siblings('.xa-setting').hide();
+                table && table.reload({
+                    id: W.activityId
+                }, {
+                    emptyDataHint: '没有符合条件的数据'
+                });
             }
             $this.addClass('xui-i-tag-active').siblings().removeClass('xui-i-tag-active');
         });
     });
 
     function changeStatus(act){
-        var innerHtml = act=='on' ? '<button type="button" class="btn btn-danger fr" style="margin-top: -35px;" onclick="changeStatus(\'off\');">关&nbsp;&nbsp;闭</button>':
-                '<button type="button" class="btn btn-primary fr" style="margin-top: -35px;" onclick="changeStatus(\'on\');">开&nbsp;&nbsp;启</button>';
+        var innerHtml,actionHtml;
+        if(act == 'on'){
+            innerHtml = '<button type="button" class="btn btn-danger fr" style="margin-top: -35px;" onclick="changeStatus(\'off\');">关&nbsp;&nbsp;闭</button>';
+            actionHtml = '进行中，不可更改';
+        }else{
+            innerHtml = '<button type="button" class="btn btn-primary fr" style="margin-top: -35px;" onclick="changeStatus(\'on\');">开&nbsp;&nbsp;启</button>';
+            actionHtml = '<button class="xa-save btn btn-primary">保存</button><button class="xa-preview btn btn-default ml20">预览</button>';
+        }
         if(isCreateNewData){
-            signStatus = act == 'on';
+            signStatus = act;
+            $('.xa-status-control>span').html(innerHtml);
         }else{
             W.getApi().call({
                 app: 'apps/sign',
@@ -308,7 +409,8 @@
                 },
                 success: function(data) {
                     W.showHint('success', '更新状态成功');
-                    $('.xa-status-control').html(innerHtml);
+                    $('.xa-status-control>span').html(innerHtml);
+                    $('.xui-bottomActionBar').html(actionHtml);
                 },
                 error: function(resp) {
                   W.showHint('error', '更新状态失败!');

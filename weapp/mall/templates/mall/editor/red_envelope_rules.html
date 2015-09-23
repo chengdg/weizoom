@@ -7,36 +7,33 @@
 {% endblock %}
 {% block content-panel %}
 <div class="xui-redEnvelope-page xui-commonPromotionStyle">
-
-<div class="relative">
-    <ul class="breadcrumb">
-        <li>您当前所在位置</li>
-        <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-        <li class="active">分享红包</li>
-    </ul>
-</div>
-
-<div class="xa-redEnvelopeFilterView xui-filterPanel"></div>
-
-<div class="panel panel-default mt20 xui-bigBoxbg">
-<div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
-    <div class="panel-heading xui-headStyle clearfix">
-        <a href="/apps/promotion/red_envelope_rule/" class="btn btn-success ml10 fr xui-btnSetting"><span class="xui-add-btn-icon">+</span>新建分享红包</a>
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+            <li class="active">分享红包</li>
+        </ul>
     </div>
-    <div
-        data-ui-role="advanced-table"
-        data-app="apps/promotion"
-        data-resource="red_envelope_rule_list"
-        data-template-id="#red_envelope_rule_list_view"
-        data-enable-paginator="true"
-        data-enable-sort="false"
-        data-disable-header-select="true"
-        data-item-count-per-page="10"
-        class="xui-redEnvelopeList pb0"
-        id="redEnvelopeList"
-    ></div>
-</div>
-</div>
+    <div class="xa-redEnvelopeFilterView xui-filterPanel"></div>
+    <div class="panel panel-default mt20 xui-bigBoxbg">
+        <div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
+            <div class="panel-heading xui-headStyle clearfix">
+                <a href="/apps/promotion/red_envelope_rule/" class="btn btn-success ml10 fr xui-btnSetting"><span class="xui-add-btn-icon">+</span>新建分享红包</a>
+            </div>
+            <div
+                data-ui-role="advanced-table"
+                data-app="apps/promotion"
+                data-resource="red_envelope_rule_list"
+                data-template-id="#red_envelope_rule_list_view"
+                data-enable-paginator="true"
+                data-enable-sort="false"
+                data-disable-header-select="true"
+                data-item-count-per-page="10"
+                class="xui-redEnvelopeList pb0"
+                id="redEnvelopeList"
+            ></div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -93,7 +90,7 @@
 
             </td>
             <td class="tl xui-operation" width="150">
-                <a href="#">分析</a>
+                <a href="/apps/promotion/red_envelope_participances/?id=${ rule.id }">分析</a>
                 {{if receive_method}}
                     <span style="display:inline-block;width:29px;"></span>
                     <a href="javascript:void(0);" class="xa-delete">删除</a>

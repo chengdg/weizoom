@@ -194,3 +194,19 @@ def filter_promotions(request, promotions):
         if products:
             filtered_promotions.append(promotion)
     return filtered_promotions
+
+def byte_to_hex(byte_str, join_with=''):
+    """
+    Convert a byte string to it's hex string representation e.g. for output.
+    """
+
+    if byte_str is None or len(byte_str) == 0:
+        return byte_str
+
+    if isinstance(byte_str, unicode):
+        byte_str = byte_str.encode('utf-8')
+
+    if is_hax_str(byte_str):
+        return byte_str
+    else:
+        return binascii.b2a_hex(byte_str).upper()
