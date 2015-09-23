@@ -12,6 +12,7 @@ class SignParticipance(models.Document):
 	termite_data = models.DynamicField(default="") #termite数据
 	prize = models.DynamicField(default="") #活动奖励
 	created_at = models.DateTimeField() #创建时间&第一次签到时间
+	latest_date = models.DateTimeField() #最后一次签到时间
 	total_count = models.IntField(default=0) #总签到天数
 	serial_count = models.IntField(default=0) #连续签到天数
 	top_serial_count = models.IntField(default=0) #最高连续签到天数
