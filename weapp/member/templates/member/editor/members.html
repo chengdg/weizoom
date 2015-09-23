@@ -394,6 +394,16 @@ $(document).ready(function() {
 
 	});
 
+	$('body').delegate('.xa-select', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var isChecked = $el.is(':checked');
+
+		if (isChecked == false) {
+			$('#xa-selectAll').attr('checked', false);	
+			$('#all').attr('checked', false);	
+		}
+	});
+
 	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
 
 		var $checkbox = $(event.currentTarget);
