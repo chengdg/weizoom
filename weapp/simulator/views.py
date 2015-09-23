@@ -222,7 +222,7 @@ def send_from_simulator(request):
 
 	#模拟POST，获得response
 	client = Client()
-	html_response = client.post('/weixin/%s/?weizoom_test_data=1' % webapp_id, params)
+	html_response = client.post('/weixin/appid/%s/?weizoom_test_data=1' % profile.user_id, params)
 
 	#从response中抽取返回的文本
 	xml_response = html_response.content.decode('utf-8')
