@@ -401,9 +401,21 @@ $(document).ready(function() {
 		if (isChecked == false) {
 			$('#xa-selectAll').attr('checked', false);	
 			$('#all').attr('checked', false);	
-		}
+		} else {
+			var all_checked = true;
+			$(".xa-select").each(function(index, e){
+			    var isChecked = $(this).is(':checked');
+			    if (isChecked == false) {
+			    	all_checked = false;
+			    }	
+			  });
+			if (all_checked){
+				$('#xa-selectAll').attr('checked', true);	
+				$('#all').attr('checked', true);	
+			}
+		}	
 	});
-
+	
 	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
 
 		var $checkbox = $(event.currentTarget);
