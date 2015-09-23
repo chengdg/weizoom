@@ -520,6 +520,8 @@ $(document).ready(function() {
 	            api: 'grade/batch_update',
 	            args: args,
 	            success: function(data) {
+	            	$('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
 	                 dataView.reload();
 	            },
 	            error: function(response) {
@@ -563,6 +565,8 @@ $(document).ready(function() {
 	            success: function(data) {
 	                // window.location.reload();
 	                W.showHint('success', "添加分组成功");
+	                $('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
 	                dataView.reload();
 	            },
 	            error: function(response) {
