@@ -35,7 +35,7 @@ def get_link_targets(request):
 		link_targets.append({
 			"id": str(data.id),
 			"name": data.name,
-			"link": '/m/apps/feedback/m_feedback/?webapp_owner_id=%d' % (request.user.id),
+			"link": './m/apps/feedback/m_feedback/?webapp_owner_id=%d' % (request.user.id),
 			"isChecked": False,
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})
