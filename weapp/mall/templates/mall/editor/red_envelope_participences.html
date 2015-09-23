@@ -18,18 +18,41 @@
 			<li class="active">查看结果</li>
 		</ul>
 	</div>
-    	<div class="xui-formPanel pb10 mb15">
-		<div class="xui-i-col">
-			<div class="xui-i-item">
-				<label class="">用户名：</label>
-				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+	<div class="xui-filterPanel pb10 mb15">
+		<div class="xui-form disT">
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">下单会员：</label>
+					<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item ml20">
+					<label>会员状态：</label>
+					<select class="" id="member_status" name="member_status">
+						<option value="-1">所有会员</option>
+						<option value="0">非会员</option>
+						<option value="1">新会员</option>
+						<option value="2">普通会员</option>
+						<option value="3">铜牌会员</option>
+						<option value="4">钻石会员</option>
+					</select>
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item ml20">
+					<label>使用状态：</label>
+					<select class="" id="red_envelope_status" name="red_envelope_status">
+						<option value="-1">所有状态</option>
+						<option value="0">未使用</option>
+						<option value="1">已使用</option>
+					</select>
+				</div>
 			</div>
 		</div>
-		<div class="xui-i-col">
-			<div class="ml80">
-				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
-				<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
-			</div>
+		<div class="xui-btn-group">
+			<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
 		</div>
 	</div>
     <div class="panel panel-default xui-tableBox">
@@ -57,9 +80,15 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>用户名</th>
-				<th>报名时间</th>
-				<th>信息</th>
+				<th>下单会员</th>
+				<th>会员状态</th>
+				<th>引入领取人数</th>
+				<th>引入使用人数</th>
+				<th>引入新关注</th>
+				<th>引入消费额</th>
+				<th>领取时间</th>
+				<th>使用状态</th>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -73,12 +102,28 @@
 					{{html item.participant_name}}
 				</td>
 				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
 					${item.created_at}
 				</td>
 				<td>
-					{{each(i, information) informations}}
-						${information.item_name}:${information.item_value}<br />
-					{{/each}}
+
+				</td>
+				<td>
+
 				</td>
 			</tr>
 			{{/each}}
@@ -142,10 +187,23 @@ $(document).ready(function() {
         });
     });
 
+	$('.xa-search').click(function(event) {
+		var name = $.trim($('[name="participant_name"]').val());
+		var member_status = $.trim($('[name="member_status"]').val());
+		var red_envelope_status = $.trim($('[name="red_envelope_status"]').val());
+		var table = $('[data-ui-role="advanced-table"]').data('view');
+		table.reload({
+			name: name,
+			member_status: member_status,
+			red_envelope_status: red_envelope_status
+		}, {
+			emptyDataHint: '没有符合条件的数据'
+		});
+	});
     $('.xa-reset').click(function(event) {
-		$('[name="name"]').val('');
-		$('[name="status"]').val('-1');
-		$('[name="prize_type"]').val('all');
+		$('[name="participant_name"]').val('');
+		$('[name="member_status"]').val('-1');
+		$('[name="red_envelope_status"]').val('-1');
 	});
 
 });

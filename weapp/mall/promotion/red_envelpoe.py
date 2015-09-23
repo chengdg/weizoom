@@ -291,7 +291,7 @@ class RedEnvelopeParticipances(resource.Resource):
         红包分析页面
         """
         rule_id = request.GET.get('id', None)
-        has_data = promotion_models.GetRedEnvelopeRecord.objects.filter(coupon_id=rule_id).count()
+        has_data = promotion_models.GetRedEnvelopeRecord.objects.filter(red_envelope_rule_id=rule_id).count()
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': get_customerized_apps(request),
@@ -316,15 +316,15 @@ class RedEnvelopeParticipances(resource.Resource):
             members = member_models.Member.objects.filter(webapp_id=webapp_id)
         member_ids = [member.id for member in members]
         # webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
-        start_time = request.GET.get('start_time', '')
-        end_time = request.GET.get('end_time', '')
-        params = {'coupon_id':request.GET['id']}
+        member_status = request.GET.get('member_status', '')
+        red_envelope_status = request.GET.get('red_envelope_status', '')
+        params = {'red_envelope_rule_id':request.GET['id']}
         if member_ids:
             params['member__in'] = member_ids
-        if start_time:
-            params['created_at__gte'] = start_time
-        if end_time:
-            params['created_at__lte'] = end_time
+        # if member_status:
+        #     params['created_at__gte'] = member_status
+        # if red_envelope_status:
+        #     params['created_at__lte'] = red_envelope_status
         datas = promotion_models.GetRedEnvelopeRecord.objects.filter(**params).order_by('-id')
 
         #进行分页
@@ -337,16 +337,17 @@ class RedEnvelopeParticipances(resource.Resource):
     @login_required
     def api_get(request):
         """
-        获取红包规则列表advanced table
+        获取advanced table
         """
         pageinfo, datas = RedEnvelopeParticipances.get_datas(request)
         webappuser2datas = {}
         webapp_user_ids = set()
+        print datas
         for data in datas:
-            webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
-            webapp_user_ids.add(data.webapp_user_id)
-            data.participant_name = u'未知'
-            data.participant_icon = '/static/img/user-1.jpg'
+        #     webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
+            webapp_user_ids.add(data.member_id)
+        #     data.participant_name = u'未知'
+        #     data.participant_icon = '/static/img/user-1.jpg'
 
         webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
         if len(webappuser2member) > 0:
@@ -361,14 +362,12 @@ class RedEnvelopeParticipances(resource.Resource):
 
         items = []
         for data in datas:
-            item_data_list = []
             red_envelope_participance = promotion_models.GetRedEnvelopeRecord.objects.get(id=data.id)
             items.append({
 				'id': str(data.id),
-				'participant_name': data.participant_name,
-				'participant_icon': data.participant_icon,
+				# 'participant_name': data.participant_name,
+				# 'participant_icon': data.participant_icon,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-				'informations': item_data_list
 			})
         response_data = {
 			'items': items,
