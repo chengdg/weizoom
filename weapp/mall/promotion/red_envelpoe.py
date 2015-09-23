@@ -14,6 +14,9 @@ from core.jsonresponse import create_response
 from core import paginator
 from core import search_util
 
+from utils import byte_to_hex
+from modules.member import models as member_models
+
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
 # FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
@@ -277,6 +280,105 @@ class RedEnvelopeRule(resource.Resource):
             )
         return create_response(200).get_response()
 
+
+class RedEnvelopeParticipances(resource.Resource):
+    app = "apps/promotion"
+    resource = "red_envelope_participances"
+
+    @login_required
+    def get(request):
+        """
+        红包分析页面
+        """
+        rule_id = request.GET.get('id', None)
+        has_data = promotion_models.GetRedEnvelopeRecord.objects.filter(coupon_id=rule_id).count()
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV_NAME,
+            'second_navs': get_customerized_apps(request),
+            'second_nav_name': 'orderRedEnvelope',
+            'has_data': has_data,
+            'red_envelope_id': rule_id
+        })
+        return render_to_response('mall/editor/red_envelope_participences.html', c)
+
+    @staticmethod
+    def get_datas(request):
+        name = request.GET.get('participant_name', '')
+        webapp_id = request.user_profile.webapp_id
+        if name:
+            hexstr = byte_to_hex(name)
+            members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+
+            if name.find(u'非')>=0:
+                sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
+                members = members|sub_members
+        else:
+            members = member_models.Member.objects.filter(webapp_id=webapp_id)
+        member_ids = [member.id for member in members]
+        # webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
+        start_time = request.GET.get('start_time', '')
+        end_time = request.GET.get('end_time', '')
+        params = {'coupon_id':request.GET['id']}
+        if member_ids:
+            params['member__in'] = member_ids
+        if start_time:
+            params['created_at__gte'] = start_time
+        if end_time:
+            params['created_at__lte'] = end_time
+        datas = promotion_models.GetRedEnvelopeRecord.objects.filter(**params).order_by('-id')
+
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+        return pageinfo, datas
+
+    @login_required
+    def api_get(request):
+        """
+        获取红包规则列表advanced table
+        """
+        pageinfo, datas = RedEnvelopeParticipances.get_datas(request)
+        webappuser2datas = {}
+        webapp_user_ids = set()
+        for data in datas:
+            webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
+            webapp_user_ids.add(data.webapp_user_id)
+            data.participant_name = u'未知'
+            data.participant_icon = '/static/img/user-1.jpg'
+
+        webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
+        if len(webappuser2member) > 0:
+            for webapp_user_id, member in webappuser2member.items():
+                for data in webappuser2datas.get(webapp_user_id, ()):
+                    if member.is_subscribed:
+                        data.participant_name = member.username_for_html
+                        data.participant_icon = member.user_icon
+                    else:
+                        data.participant_name = u'非会员'
+                        data.participant_icon = '/static/img/user-1.jpg'
+
+        items = []
+        for data in datas:
+            item_data_list = []
+            red_envelope_participance = promotion_models.GetRedEnvelopeRecord.objects.get(id=data.id)
+            items.append({
+				'id': str(data.id),
+				'participant_name': data.participant_name,
+				'participant_icon': data.participant_icon,
+				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				'informations': item_data_list
+			})
+        response_data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': 'id',
+			'data': {}
+		}
+        response = create_response(200)
+        response.data = response_data
+        return response.get_response()
 
 #########################
 
