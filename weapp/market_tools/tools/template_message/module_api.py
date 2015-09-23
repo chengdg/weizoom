@@ -177,7 +177,7 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
 	if not template_message:
 		return False
 	template_message.send_point = send_point
-	#return _get_send_message_dict(user_profile, member_id, model, template_message)
+	# return _get_send_message_dict(user_profile, member_id, model, template_message)
 
 	if model and user_profile and template_message and template_message.template_id:
 		mpuser_access_token = _get_mpuser_access_token(user)
