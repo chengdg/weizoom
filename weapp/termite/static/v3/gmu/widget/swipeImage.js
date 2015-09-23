@@ -71,6 +71,24 @@ gmu.define('SwipeImage', {
 	    if ($.trim($title.text()).length !== 0) {
 	    	$title.show();	
 	    }
+
+	    W.onloadHandlers.push(function(){
+			var $imgs = $el.find('img');
+			var imgsHeightArr = [];
+			$imgs.each(function() {
+	            imgsHeightArr.push($(this).height());
+	            console.log(imgsHeightArr,"!!!!!!!!!!!")
+	        }); 
+	        var maxHeight = Math.max.apply(Math,imgsHeightArr);
+            var $swiperSlide = $el.children('.wui-swiper-slide');
+            var $swiperWrapper = $el.children('.wui-swiper-wrapper');
+            $el.height(maxHeight);
+            $swiperWrapper.height(maxHeight);
+            $swiperSlide.css({
+                height: maxHeight,
+                lineHeight: maxHeight +'px'
+            });   
+		});
 	},
 
 	refresh: function() {
