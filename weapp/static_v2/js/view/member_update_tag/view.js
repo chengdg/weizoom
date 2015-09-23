@@ -60,18 +60,15 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         args  = {checked_ids : check_value.join("_"), type : type, member_id : memberId}
         var _this = this;
         if (this.isPostData){
-            W.getApi().call({
-                    app: 'member',
-                    api: 'update_member_tag_or_grade',
-                    method: 'post',
-                    args: args,
-                    success: function(data) {
-                        //window.location.reload();
-                        _this.dataView.reload();
-                    },
-                    error: function() {
-                    }
-                })
+            W.resource.member.UpdateMemberTagOrGrade.post({
+                data: args,
+                success: function(data) {
+                    //window.location.reload();
+                    _this.dataView.reload();
+                },
+                error: function() {
+                }
+            });
         } else {
             $(".tag-group").text('');
             tag_values = tag_values.reverse();
@@ -94,9 +91,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         this.isPostData = options.isPostData;
         this.dataView = options.dataView;
 
-        W.getApi().call({
-            app: 'member',
-            api: 'update_member_tag_or_grade',
+        W.resource.member.UpdateMemberTagOrGrade.get({
             scope: this,
             success: function(data) {
                 var tags = '';
@@ -119,7 +114,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
             },
             error: function(resp) {
             }
-        });
+        })
     },
 
     render: function() {
