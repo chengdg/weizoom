@@ -32,6 +32,10 @@
             margin: 15px 10px;
             padding: 20px 30px;
         }
+        .btn-danger {
+            border-radius: 3px;
+            margin: 10px;
+        }
     </style>
 {% endblock %}
 
@@ -171,7 +175,7 @@
   <!-- *end_prunt_task* -->
   
   <script type="text/javascript">
-    var signStatus = false;
+    var signStatus = "off";
     W.uid = {{ user.id }};
     W.projectId = "{{project_id}}";
     W.activityId = "{{sign.id}}";
@@ -263,6 +267,7 @@
           var relatedPageId = data['project_id'];
           var args = {
             "name": name,
+            "status": signStatus,
             "start_time": startTime,
             "end_time": endTime
           }
@@ -272,6 +277,7 @@
           } else {
             var method = 'post';
             args['id'] = W.activityId;
+            args['signId'] = W.activityId;
           }
           W.getApi().call({
             app: 'apps/sign',
@@ -280,6 +286,10 @@
             args: args,
             success: function(data) {
               W.showHint('success', '保存成功');
+                isCreateNewData = false;
+                if(data && data.id){
+                    W.activityId = data.id;
+                }
             },
             error: function(resp) {
               W.showHint('error', '保存失败!');
@@ -352,7 +362,8 @@
         var innerHtml = act=='on' ? '<button type="button" class="btn btn-danger fr" style="margin-top: -35px;" onclick="changeStatus(\'off\');">关&nbsp;&nbsp;闭</button>':
                 '<button type="button" class="btn btn-primary fr" style="margin-top: -35px;" onclick="changeStatus(\'on\');">开&nbsp;&nbsp;启</button>';
         if(isCreateNewData){
-            signStatus = act == 'on';
+            signStatus = act;
+            $('.xa-status-control>span').html(innerHtml);
         }else{
             W.getApi().call({
                 app: 'apps/sign',
@@ -364,7 +375,7 @@
                 },
                 success: function(data) {
                     W.showHint('success', '更新状态成功');
-                    $('.xa-status-control').html(innerHtml);
+                    $('.xa-status-control>span').html(innerHtml);
                 },
                 error: function(resp) {
                   W.showHint('error', '更新状态失败!');

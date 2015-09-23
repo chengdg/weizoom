@@ -58,11 +58,15 @@ class Sign(resource.Resource):
 		响应PUT
 		"""
 		data = request_util.get_fields_to_be_save(request)
+		status = request.POST['status']
+		if status:
+			data['status'] = 0 if status == 'off' else 1
 		sign = app_models.Sign(**data)
 		sign.save()
 		error_msg = None
 		
 		data = json.loads(sign.to_json())
+		print data
 		data['id'] = data['_id']['$oid']
 		if error_msg:
 			data['error_msg'] = error_msg
