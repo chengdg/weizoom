@@ -102,7 +102,7 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
 				merged_rule['product_model_names'].append(product_model_name)
 				product.active_integral_sale_rule = rule
 				merged_rule['rule'] = rule
-
+		merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
 	if len(merged_rule['product_model_names']) > 0:
 		return merged_rule
 	else:
@@ -1130,8 +1130,19 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	#建立<order, promotion>的关系
 	for product_group in product_groups:
 		promotion_result = product_group.get('promotion_result', None)
-		if promotion_result:
-			promotion_id = product_group['promotion']['id']
+		if promotion_result or product_group.get('integral_sale_rule', None):
+			try:
+				promotion_id = product_group['promotion']['id']
+				promotion_type = product_group['promotion_type']
+			except:
+				promotion_id = 0
+				promotion_type = 'integral_sale'
+			try:
+				if not promotion_result:
+					promotion_result = dict()
+				promotion_result['integral_product_info'] = product_group['integral_sale_rule']['integral_product_info']
+			except:
+				pass
 			integral_money = 0
 			integral_count = 0
 			if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].get('result'):
@@ -1141,7 +1152,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 				order=order,
 				webapp_user_id=webapp_user.id,
 				promotion_id=promotion_id,
-				promotion_type=product_group['promotion_type'],
+				promotion_type=promotion_type,
 				promotion_result_json=json.dumps(promotion_result),
 				integral_money=integral_money,
 				integral_count=integral_count,
@@ -2018,7 +2029,9 @@ def get_order_products(order):
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
 
 	order_promotion_relations = list(OrderHasPromotion.objects.filter(order_id=order_id))
-	id2promotion = dict([(relation.promotion_id, relation) for relation in order_promotion_relations])
+	id2promotion = dict([(promotion.promotion_id, promotion) for promotion in order_promotion_relations])
+	product2integral = dict([(promotion.promotion_result.get('integral_product_info'), promotion) for promotion in order_promotion_relations])
+
 
 	products = []
 	pricecut_id = None
@@ -2048,6 +2061,15 @@ def get_order_products(order):
 			'supplier': product.supplier
 		}
 
+
+		try:
+			integral_product_info = str(product.id) + '-' + product.model_name
+			product_info['integral_money'] = product2integral[integral_product_info].integral_money
+			product_info['integral_count'] = product2integral[integral_product_info].integral_count
+		except:
+			product_info['integral_money'] = 0
+			product_info['integral_count'] = 0
+
 		suppliers.append(product.supplier)
 
 		try:
@@ -2060,8 +2082,7 @@ def get_order_products(order):
 			# 有促销信息
 			promotion_result = promotion_relation.promotion_result
 			product_info['promotion'] = promotion_result
-			product_info['integral_money'] = promotion_relation.integral_money
-			product_info['integral_count'] = promotion_relation.integral_count
+
 
 			# 处理订单详情页跨行的问题
 			if current_promotion_id != relation.promotion_id:
