@@ -537,6 +537,11 @@ def get_detail_response(request, belong='all'):
 
         order.products = mall_api.get_order_products(order)
 
+        # 如果有单品积分抵扣，则不显示整单的积分抵扣数额
+        for product in order.products:
+            if 'integral_count' in product and product['integral_count'] > 0:
+                order.integral = None
+
         order.area = regional_util.get_str_value_by_string_ids(order.area)
         order.belong = belong
         order.pay_interface_name = PAYTYPE2NAME.get(order.pay_interface_type, u'')
