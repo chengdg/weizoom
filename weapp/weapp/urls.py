@@ -97,7 +97,8 @@ urlpatterns = patterns('',
     url(r'^erp/', include('erp.urls')),
     url(r'^pay/', include('pay.urls')),
 
-    url(r'^member/', restful_url('member')),
+   #url(r'^member/', restful_url('member')),
+    url(r'^member/', restful_url2('member')),
     url(r'^messages/', restful_url('message')),
 
     #微信支付模拟api

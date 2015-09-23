@@ -143,20 +143,32 @@ def __get_navbar(request, page):
 	if request.in_production_mode:
 		if not __get_is_enable_navbar(request):
 			return False
-			
-		pagestore = pagestore_manager.get_pagestore('mongo')
-		project_id = 'fake:wepage:%s:navbar' % request.webapp_owner_id
-		page_id = 'navbar'
-		navbar_page = pagestore.get_page(project_id, page_id)
 
-		if navbar_page:
-			navbar_component = navbar_page['component']['components'][0]
-			# print navbar_component['model']['pages']
-
+		navbar_component = get_navbar_components(request.webapp_owner_id)
+		if navbar_component:
 			navbar_component['cid'] = 9999999
 			navbar_component['model']['index'] = 9999999
 			if __is_enable_navbar(request, navbar_component):
 				page['component']['components'].append(navbar_component)
+
+
+def get_navbar_components(webapp_owner_id):
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	project_id = 'fake:wepage:%s:navbar' % webapp_owner_id
+	page_id = 'navbar'
+	navbar_page = pagestore.get_page(project_id, page_id)
+
+	if navbar_page is None:
+		navbar_page = __get_init_navbar_json()
+
+	navbar_component = navbar_page['component']['components'][0]
+	return navbar_component
+
+
+def __get_init_navbar_json():
+	settings_module_path = 'termite2.global_navbar.settings'
+	settings_module = __import__(settings_module_path, {}, {}, ['*',])
+	return json.loads(settings_module.NEW_PAGE_JSON)
 
 
 def __get_fake_project_display_info(request):
@@ -173,9 +185,7 @@ def __get_fake_project_display_info(request):
 
 	if mongodb_id == 'new':
 		if page_id == 'navbar':
-			settings_module_path = 'termite2.global_navbar.settings'
-			settings_module = __import__(settings_module_path, {}, {}, ['*',])
-			page = json.loads(settings_module.NEW_PAGE_JSON)
+			page = __get_init_navbar_json()
 	else:
 		project_id = 'fake:%s:%s:%s' % (project_type, webapp_owner_id, page_id)
 		page = pagestore.get_page(project_id, page_id)		

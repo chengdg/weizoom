@@ -54,7 +54,7 @@ Background:
 		}]
 		"""
 
-@mall2 @crm @member 
+@mall2 @crm @member
 Scenario: 微信用户关注公众号成为会员
 	微信用户关注jobs公众号成为jobs的会员
 	1.bill直接关注jobs的公众号,生成会员列表

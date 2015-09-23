@@ -136,6 +136,7 @@
 
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+            W.onloadHandlers = [];
             W.currentPageName = "{{current_page_name}}";
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";

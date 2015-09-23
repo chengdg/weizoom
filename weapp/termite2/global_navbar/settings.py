@@ -2,7 +2,7 @@
 
 NEW_PAGE_JSON = """
 {
-	"created_at": "2014-12-11 11:29:38",
+	"created_at": "2015-01-01 12:00:00",
 	"component": {
 		"cid": 1,
 		"pid": null,
@@ -15,25 +15,7 @@ NEW_PAGE_JSON = """
 			"property_view_title": "底部导航",
 			"force_display_in_property_view": "no",
 			"auto_select": "yes",
-			"components": [{
-				"cid": 3,
-				"pid": 2,
-				"property_view_title": "",
-				"force_display_in_property_view": "no",
-				"auto_select": "no",
-				"components": [],
-				"selectable": "no",
-				"type": "wepage.navbar_firstnav",
-				"model": {
-					"index": 4,
-					"name": "",
-					"class": "",
-					"id": "",
-					"title": "标题名",
-					"target": ""
-				},
-				"has_global_content": "no"
-			}],
+			"components": [],
 			"selectable": "no",
 			"type": "wepage.navbar",
 			"model": {
@@ -41,7 +23,21 @@ NEW_PAGE_JSON = """
 				"name": "",
 				"class": "",
 				"id": "",
-				"type": "weixin"
+				"type": "slide",
+				"pages" : {
+					"home" : {
+						"select" : true
+					},
+					"product_list_page" : {
+						"select" : false
+					},
+					"user_center" : {
+						"select" : false
+					},
+					"wepage" : {
+						"select" : true
+					}
+				}
 			},
 			"has_global_content": "no"
 		}],
@@ -61,7 +57,7 @@ NEW_PAGE_JSON = """
 		},
 		"has_global_content": "no"
 	},
-	"updated_at": "2014-12-11 11:29:38",
+	"updated_at": "2015-01-01 12:00:00",
 	"display_index": "1",
 	"project_id": "14",
 	"page_id": "1",
