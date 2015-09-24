@@ -68,3 +68,5 @@ weapp/static/upload
 #self
 .gitignore
 
+/.gitignore
+weapp/.idea/

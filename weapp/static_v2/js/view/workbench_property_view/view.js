@@ -77,7 +77,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "richtext": _.bind(this.initRichTextView, this),
             "daterange": _.bind(this.initDateRange, this),
             "prize_selector": _.bind(this.initPrizeSelector, this),
-            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this)
+            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
+            "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this)
         };
 
 
@@ -843,7 +844,16 @@ W.workbench.PropertyView = Backbone.View.extend({
             _this.getTargetComponent($el).model.set(attr, prize);
         });
     },
+    initPrizeSelectorV4: function($el){
+        W.createWidgets($el);
 
+        var view = $el.find('[data-ui-role="apps-prize-selector-v4"]').data('view');
+        var _this = this;
+        view.on('change-prize', function(prize) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, prize);
+        });
+    },
     initProductsView: function($el){
         var type = $el.find('[name="type"]:checked').val();
         var cardType = $el.find('[name="card_type"]:checked').val();
