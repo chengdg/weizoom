@@ -125,9 +125,9 @@
 
 .xui-weixin-realtimeMessagePage .xui-message .xui-clock{
     float: left;
-    position: relative;
-    left: 100px;
-    top: -20px;
+    position: absolute;
+    left: 110px;
+    top: 44px;
     font-size: 12px;
     color: #999;
 }
