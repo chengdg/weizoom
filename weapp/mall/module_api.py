@@ -1454,11 +1454,12 @@ def ship_order(order_id, express_company_name,
 		order_params['express_company_name'] = express_company_name
 		order_params['express_number'] = express_number
 		order_params['leader_name'] = leader_name
+		order_params['status'] = target_status
 
-		order_has_delivery_params = dict()
-		order_has_delivery_params['express_company_name'] = express_company_name
-		order_has_delivery_params['express_number'] = express_number
-		order_has_delivery_params['leader_name'] = leader_name
+		# order_has_delivery_params = dict()
+		# order_has_delivery_params['express_company_name'] = express_company_name
+		# order_has_delivery_params['express_number'] = express_number
+		# order_has_delivery_params['leader_name'] = leader_name
 
 		order_has_delivery_id = 0
 		order = Order.objects.get(id=order_id)
@@ -1470,7 +1471,6 @@ def ship_order(order_id, express_company_name,
 		# order_has_delivery_id = 0
 		# 即修改物流信息，也修改状态, 需要加上状态条件
 		# if not is_update_express:
-		# 	order_params['status'] = target_status
 		# 	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
 		# 		order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED).order_by('delivery_date')
 		# 		if order_has_delivery_times.count() > 0:
