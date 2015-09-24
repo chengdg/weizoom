@@ -281,10 +281,13 @@ class MessagePipeline(object):
 			user_profile = None
 		else:
 			from cache import component_cache
-			user_profile,authed_appid =  component_cache.get_component_auth(component_info, appid)
+			component_cache_obj =  component_cache.get_component_auth(component_info, appid)
+
+			user_profile = component_cache_obj.user_profile
 			webapp_id = user_profile.webapp_id
 			request.user_profile = user_profile
-			request.webapp_owner_id = authed_appid.user_id
+			request.webapp_owner_id = component_cache_obj.component_authed_appid.user_id
+			request.component_owner_info = component_cache_obj
 			# try:
 			# 	authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
 			# 	user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)

@@ -195,7 +195,7 @@ def call_api(weixin_api, api_instance_class):
 					
 				api_response = weixin_api.weixin_http_client.post(request_url, post_param_json_str, is_for_form)
 		except:
-			weixin_api._raise_system_error(api_desc, weixin_api.mpuser_access_token.mpuser.owner.id)
+			weixin_api._raise_system_error(api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
 
 		result = api_response
 		
@@ -221,15 +221,15 @@ def call_api(weixin_api, api_instance_class):
 		if weixin_api._is_error_response(api_response):
 			if weixin_api._is_error_dueto_access_token(api_response):
 				if api_instance_class.is_retry(agrs):
-					weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner.id)
+					weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
 				else:
 					#如果由于access_token的问题，那么先更新access_token后重试
 					if (update_access_token(weixin_api.mpuser_access_token)):
 						return _call_api(*agrs)
 					else:
-						weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner.id)
+						weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
 			else:
-				weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner.id)
+				weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
 		
 		return api_instance_class.parse_response(api_response)
 
@@ -240,7 +240,7 @@ class WeixinApi(object):
 		if mpuser_access_token is None or mpuser_access_token.access_token is None:
 			raise ValueError(u'缺少授权信息')
 
-		mpuser = mpuser_access_token.mpuser
+		#mpuser = mpuser_access_token.mpuser
 		# if not mpuser.is_service or not mpuser.is_certified:
 		# 	raise ValueError(u'只有授权过的服务号才可以使用Api')
 

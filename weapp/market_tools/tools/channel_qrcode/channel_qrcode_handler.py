@@ -75,7 +75,7 @@ class ChannelQrcodeHandler(MessageHandler):
 			create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
 			msg_type, detail = get_response_msg_info_restructure(channel_qrcode, user_profile)
 			if msg_type != None:
-				from_weixin_user = self._get_from_weixin_user(message)
+				#from_weixin_user = self._get_from_weixin_user(message)
 				#token = self._get_token_for_weixin_user(user_profile, from_weixin_user, is_from_simulator)
 				if msg_type == 'text' and detail:
 					if is_from_simulator:
