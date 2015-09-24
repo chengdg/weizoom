@@ -291,7 +291,7 @@
                 {% if product.promotion.type == 'flash_sale' %}
                 直降{{product.promotion.promotion_saved_money|floatformat:"2" }}元
                 {% endif %}
-                {% if coupon.product_id == product.id %}
+                {% if product.has_coupon %}
                   <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                 {% endif %}
                 {% if product.integral_count %}
@@ -310,7 +310,7 @@
 
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
-                {% if order.coupon_id and coupon.product_id != product.id%}
+                {% if order.coupon_id and coupon.product_id == -1 %}
                 <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                 {% endif %}
                 {% if order.integral %}

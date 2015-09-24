@@ -119,7 +119,7 @@ def get_order_actions(order):
 			actions = []
 			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
 				if order.express_company_name:
-					actions = [ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+					actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
 				else:
 					actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
 			else:

@@ -514,14 +514,6 @@ def get_detail_response(request, belong='all'):
             number += order_has_product.number
         order.number = number
 
-        # 处理订单关联的优惠券
-        coupon = order.get_coupon()
-        if coupon:
-            coupon_rule = CouponRule.objects.get(id=coupon.coupon_rule_id)
-            promotion = Promotion.objects.get(detail_id=coupon_rule.id, type=PROMOTION_TYPE_COUPON)
-            relation = ProductHasPromotion.objects.filter(promotion_id=promotion.id)
-            if len(relation) > 0:
-                coupon.product_id = relation[0].product_id
         if order.status in [ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED]:
             order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED)
             if order_has_delivery_times.count() > 0:
@@ -541,6 +533,23 @@ def get_detail_response(request, belong='all'):
         for product in order.products:
             if 'integral_count' in product and product['integral_count'] > 0:
                 order.integral = None
+
+        # 处理订单关联的优惠券
+        coupon = order.get_coupon()
+        if coupon:
+            coupon_rule = CouponRule.objects.get(id=coupon.coupon_rule_id)
+            promotion = Promotion.objects.get(detail_id=coupon_rule.id, type=PROMOTION_TYPE_COUPON)
+            relation = ProductHasPromotion.objects.filter(promotion_id=promotion.id)
+            if len(relation) > 0:
+                coupon.product_id = relation[0].product_id
+            else:
+                coupon.product_id = -1  # 通用券标志
+
+            for product in order.products:
+                if coupon.product_id == product['id']:
+                    product['has_coupon'] = True
+                    print(product['id'], product['has_coupon'])
+                    break
 
         order.area = regional_util.get_str_value_by_string_ids(order.area)
         order.belong = belong
