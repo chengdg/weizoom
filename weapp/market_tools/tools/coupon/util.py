@@ -96,8 +96,7 @@ def consume_coupon(owner_id, rule_id, member_id, coupon_record_id=0):
 			rules.update(remained_count=F('remained_count')-1, get_count=F('get_count')+1)
 		else:
 			rules.update(remained_count=F('remained_count')-1, get_person_count=F('get_person_count')+1, get_count=F('get_count')+1)
-		#给用户发优惠券提示
-		send_message_to_member(rules[0], member_id)
+
 		return coupons[0], ''
 	else:
 		return None, u'该优惠券使用期已过，不能领取！'
