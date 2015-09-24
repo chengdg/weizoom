@@ -28,13 +28,50 @@
                 data-enable-paginator="true"
                 data-enable-sort="false"
                 data-disable-header-select="true"
-                data-item-count-per-page="10"
+                data-item-count-per-page="2"
                 class="xui-redEnvelopeList pb0"
                 id="redEnvelopeList"
             ></div>
         </div>
     </div>
 </div>
+{% for rule in items %}
+    {% if rule.is_warring %}
+        <button id="is_warring" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="display:none">库存提示</button>
+    {% endif %}
+{% endfor %}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:400px; margin-top: 16%;">
+    <div class="modal-content" style="height: 267px;" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">库存提示</h4>
+      </div>
+      <div class="modal-body" style="height: 100px; overflow:auto">
+      {% for rule in items %}
+        {% if rule.remained_count <= 20  %}
+            {% if rule.receive_method %}
+                {% if rule.is_timeout and not rule.limit_time %}
+                {% else %}
+                    <p><b>【图文领取】</b>{{ rule.rule_name }}&nbsp;&nbsp;<span style="color:#ccc;">红包活动库存即将用完</span></p>
+                {% endif %}
+
+            {% else %}
+                {% if rule.status %}
+                    <p>{{ rule.rule_name }}&nbsp;&nbsp;<span style="color:#ccc;">红包活动库存即将用完</span></p>
+                {% endif %}
+
+            {% endif %}
+        {% endif %}
+      {% endfor %}
+      </div>
+      <div class="modal-footer">
+          <div style="height: 45px">请及时处理！</div>
+        <a href="/mall2/coupon_rule_list/" target="_blank" class="btn btn-primary" >修改库存</a>
+        <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block js %}
@@ -85,7 +122,16 @@
             <td class="remained_count">
                 ${ rule.remained_count }
                 {{if rule.remained_count <= 20}}
-                    <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                    {{if receive_method}}
+                        {{if rule.is_timeout && !rule.limit_time }}
+                        {{else}}
+                            <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                        {{/if}}
+                    {{else}}
+                        {{if rule.status }}
+                            <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                        {{/if}}
+                    {{/if}}
                 {{/if}}
 
             </td>
@@ -133,6 +179,9 @@ $(document).ready(function() {
         coupon_rule: coupon_rule
     });
     view.render();
+    if (!{{is_create}}){
+        $('#is_warring').click();
+    }
 
     $("#redEnvelopeList").delegate(".xa-update", "click",
         function(event){

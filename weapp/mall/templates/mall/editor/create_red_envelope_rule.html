@@ -318,7 +318,7 @@ $(document).ready(function(){
       success: function() {
         W.showHint('success', '创建红包成功！');
         _.delay(function() {
-          window.location.href = '/apps/promotion/red_envelope_rule_list/';
+          window.location.href = '/apps/promotion/red_envelope_rule_list/?is_create=1';
         }, 500)
       },
       error: function() {
