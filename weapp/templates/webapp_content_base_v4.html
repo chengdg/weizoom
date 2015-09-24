@@ -117,81 +117,73 @@
         
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
-             $(document).ready(function() {
-            var $product = $('.wui-product');
-            var $productList = $('.wui-productlist');
-            var $imageDisplay = $('.wui-imagedisplay');
-            var $imageNav = $('.wui-imagenav');
-            var $swiperImg = $('.wui-swiper-slide');
-
-            var screenWidth = $(this).width()-2;   //获取屏幕宽度，减去2px外边距
-            var defalutWidth = $(this).width()-1;  //默认一大两小宽度
-            var averageWidth = screenWidth/3;             
-            var width = defalutWidth/3;             
-
-            var $swiperWrapper = $swiperImg.parent('.wui-swiper-wrapper');
-            var $imgs = $swiperWrapper.find('img');
-            var imgsHeightArr = [];
-
-            if( $swiperImg.length >0 ){
-                window.onload=function(){
-                    $imgs.each(function() {
-                        console.log($(this).height()); 
-                        imgsHeightArr.push($(this).height());
-                        
-                    });
-                    var maxHeight = Math.max.apply(Math,imgsHeightArr);
-                    var $swiperSlide = $swiperWrapper.children('.wui-swiper-slide');
-                    $swiperWrapper.parent('.wui-swiper-container').height(maxHeight);
-                    $swiperWrapper.height(maxHeight);
-                    $swiperSlide.css({
-                        height: maxHeight,
-                        lineHeight: maxHeight +'px'
-                    });
+            // 定义全局变量处理 
+            W.onloadHandlers = [];
+            window.onload = function(){
+                for(var i = 0; i < W.onloadHandlers.length; i++){
+                    console.log(W.onloadHandlers[i]);
+                    W.onloadHandlers[i]();
                 }
             }
-            if($product.length > 0){
+            
+            $(document).ready(function() {
+                var $product = $('.wui-product');
+                var $productList = $('.wui-productlist');
+                var $imageDisplay = $('.wui-imagedisplay');
+                var $imageNav = $('.wui-imagenav');
+                var $swiperImg = $('.wui-swiper-slide');
 
-                getWidth('.wui-product');
+                var screenWidth = $(this).width()-2;   //获取屏幕宽度，减去2px外边距
+                var defalutWidth = $(this).width()-1;  //默认一大两小宽度
+                var averageWidth = screenWidth/3;             
+                var width = defalutWidth/3;             
 
-            }
-            if($productList.length > 0){
+                var $swiperWrapper = $swiperImg.parent('.wui-swiper-wrapper');
+                var $imgs = $swiperWrapper.find('img');
+                var imgsHeightArr = [];
 
-                getWidth('.wui-productlist');
+                if($product.length > 0){
 
-            }
-            if($imageDisplay.length > 0){
-                $imageDisplay.find('.wui-grid-b li').width(averageWidth);
-                $imageDisplay.find('.wui-grid-b li').height(averageWidth);
-                $imageDisplay.each(function() {
-                    var $imgGroup = $(this).find('.wui-grid-e');
-                    console.log($imgGroup,55555)
-                    $imgGroup.find('li').eq(0).width(parseInt(width*2));
-                    $imgGroup.find('li').height(width)
-                    $imgGroup.find('li').eq(0).height(width*2);
-                    $imgGroup.find('li').eq(2).height(width-1);
-                });
-                getWidth('.wui-imagedisplay');
+                    getWidth('.wui-product');
 
-            }
-            if($imageNav.length > 0){
-                getWidth('.wui-imagenav');
-                var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
-                var imgTitle = $imageNav.find('.wa-inner-title').text();
-                if ( imgTitle =='' ) {
-                    $imageNav.find('li').height(imgNavWidth);
-                };
+                }
+                if($productList.length > 0){
 
-            }
-            function getWidth(component){
-                var $component = $(component);
-                var $inner_pic = $component.find('li .wui-inner-pic');
-                $inner_pic.each(function() {
-                    var width = $(this).width() ;
-                    $(this).height(width);
-                    // 不能在此对图片父级进行高度赋值，会影响到商品
-                });
-            } 
+                    getWidth('.wui-productlist');
+
+                }
+                if($imageDisplay.length > 0){
+                    $imageDisplay.find('.wui-grid-b li').width(averageWidth);
+                    $imageDisplay.find('.wui-grid-b li').height(averageWidth);
+                    $imageDisplay.each(function() {
+                        var $imgGroup = $(this).find('.wui-grid-e');
+                        console.log($imgGroup,55555)
+                        $imgGroup.find('li').eq(0).width(parseInt(width*2));
+                        $imgGroup.find('li').height(width)
+                        $imgGroup.find('li').eq(0).height(width*2);
+                        $imgGroup.find('li').eq(2).height(width-1);
+                    });
+                    getWidth('.wui-imagedisplay');
+
+                }
+                if($imageNav.length > 0){
+                    getWidth('.wui-imagenav');
+                    var imgNavWidth = $imageNav.find('.wui-inner-pic').eq(0).width();
+                    var imgTitle = $imageNav.find('.wa-inner-title').text();
+                    if ( imgTitle =='' ) {
+                        $imageNav.find('li').height(imgNavWidth);
+                    };
+
+                }
+                function getWidth(component){
+                    var $component = $(component);
+                    var $inner_pic = $component.find('li .wui-inner-pic');
+                    $inner_pic.each(function() {
+                        var width = $(this).width() ;
+                        $(this).height(width);
+                        // 不能在此对图片父级进行高度赋值，会影响到商品
+                    });
+                } 
         });
 
         $(document).ready(function() {

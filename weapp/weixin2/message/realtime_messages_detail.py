@@ -57,7 +57,7 @@ class RealtimeMessagesDetail(resource.Resource):
                     could_replied = 1
                 webapp_id = request.user_profile.webapp_id
                 member = get_social_member(webapp_id, session.member_user_username)
-                if not member.is_subscribed:
+                if not member.get('is_subscribed',True):
                     could_replied = 0
         except:
             session = None
@@ -147,74 +147,74 @@ class RealtimeMessagesDetail(resource.Resource):
 
 def get_social_member(webapp_id, username):
     member = {}
-    #会员相关信息
+    #会员相关信息(获取is_subscribed的值)
     try:
         accounts = SocialAccount.objects.filter(webapp_id=webapp_id, openid=username)
         member_has_accounts = MemberHasSocialAccount.objects.filter(webapp_id=webapp_id, account=accounts[0])
         social_member = Member.objects.get(id=member_has_accounts[0].member_id)
-        try:
-            social_member_info = MemberInfo.objects.get(member=social_member)
-        except:
-            social_member_info = MemberInfo.objects.create(
-                member = social_member,
-                name = ''
-            )
-        member['member_info_id'] = social_member_info.id
-        member['remark_name'] = social_member_info.name
-        member['sex'] = social_member_info.sex
-        member['phone'] = social_member_info.phone_number
+        # try:
+        #     social_member_info = MemberInfo.objects.get(member=social_member)
+        # except:
+        #     social_member_info = MemberInfo.objects.create(
+        #         member = social_member,
+        #         name = ''
+        #     )
+        # member['member_info_id'] = social_member_info.member_id
+        # member['remark_name'] = social_member_info.name
+        # member['sex'] = social_member_info.sex
+        # member['phone'] = social_member_info.phone_number
 
-        fan_has_categories = FanHasCategory.objects.filter(fan=social_member)
-        categories = FanCategory.objects.filter(webapp_id=webapp_id)
+        # fan_has_categories = FanHasCategory.objects.filter(fan=social_member)
+        # categories = FanCategory.objects.filter(webapp_id=webapp_id)
 
-        member_categories = []
-        member_category = {}
-        member_category['id'] = -1
-        member_category['name'] = u'请选择分组'
-        member_categories.append(member_category)
-        for category in categories:
-            member_category = {}
-            member_category['id'] = category.id
-            member_category['name'] = category.name
-            member_categories.append(member_category)
+        # member_categories = []
+        # member_category = {}
+        # member_category['id'] = -1
+        # member_category['name'] = u'请选择分组'
+        # member_categories.append(member_category)
+        # for category in categories:
+        #     member_category = {}
+        #     member_category['id'] = category.id
+        #     member_category['name'] = category.name
+        #     member_categories.append(member_category)
 
-        member['categories'] = member_categories
-        if len(fan_has_categories) > 0:
-            member['category_id'] = fan_has_categories[0].category_id
+        # member['categories'] = member_categories
+        # if len(fan_has_categories) > 0:
+        #     member['category_id'] = fan_has_categories[0].category_id
 
-        grades = MemberGrade.objects.filter(webapp_id=webapp_id)
-        member_grades = []
-        member_grade = {}
-        member_grade['id'] = -1
-        member_grade['name'] = u'请选择等级'
-        member_grades.append(member_grade)
-        for grade in grades:
-            member_grade = {}
-            member_grade['id'] = grade.id
-            member_grade['name'] = grade.name
-            member_grades.append(member_grade)
-        member['grades'] = member_grades
-        member['grade_id'] = social_member.grade_id
+        # grades = MemberGrade.objects.filter(webapp_id=webapp_id)
+        # member_grades = []
+        # member_grade = {}
+        # member_grade['id'] = -1
+        # member_grade['name'] = u'请选择等级'
+        # member_grades.append(member_grade)
+        # for grade in grades:
+        #     member_grade = {}
+        #     member_grade['id'] = grade.id
+        #     member_grade['name'] = grade.name
+        #     member_grades.append(member_grade)
+        # member['grades'] = member_grades
+        # member['grade_id'] = social_member.grade_id
 
-        member['id'] = social_member.id
+        # member['id'] = social_member.id
 
-        member['location'] = ''
-        if social_member.country:
-            member['location'] = social_member.country
-        if social_member.province:
-            member['location'] += ' ' + social_member.province
-        if social_member.city:
-            member['location'] += ' ' + social_member.city
-        if member['location']:
-            member['location'] = member['location'].strip()
-        member['integral'] = social_member.integral
+        # member['location'] = ''
+        # if social_member.country:
+        #     member['location'] = social_member.country
+        # if social_member.province:
+        #     member['location'] += ' ' + social_member.province
+        # if social_member.city:
+        #     member['location'] += ' ' + social_member.city
+        # if member['location']:
+        #     member['location'] = member['location'].strip()
+        # member['integral'] = social_member.integral
 
-        member['follow_created_at'] = social_member.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        member['last_buy_created_at'] = social_member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S')
-        member['buy_times'] = social_member.pay_times
-        member['average_price'] = social_member.unit_price
-        member['total_price'] = social_member.pay_money
-        member['openid'] = username
+        # member['follow_created_at'] = social_member.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        # member['last_buy_created_at'] = social_member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S')
+        # member['buy_times'] = social_member.pay_times
+        # member['average_price'] = social_member.unit_price
+        # member['total_price'] = social_member.pay_money
+        # member['openid'] = username
         member['is_subscribed'] = social_member.is_subscribed
     except:
         pass
@@ -376,17 +376,18 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
             one_message['member_id'] = ''
 
     #会员相关信息
-    webapp_id = user_profile.webapp_id
-    member = get_social_member(webapp_id, sender_username)
-    member['name'] = name
+    # webapp_id = user_profile.webapp_id
+    # member = get_social_member(webapp_id, sender_username)
+    # member['name'] = name
+    member = {}
     member['could_replied'] = replied
-
-    member_info = None
-    if member and member.has_key('id'):
-        member_id =  member['id']
-        from modules.member.module_api import get_member_info_by
-        member_info = get_member_info_by(member_id)
-    member["member_info"] = member_info
+    member['openid'] = sender_username
+    # member_info = None
+    # if member and member.has_key('id'):
+    #     member_id =  member['id']
+    #     from modules.member.module_api import get_member_info_by
+    #     member_info = get_member_info_by(member_id)
+    # member["member_info"] = member_info
 
 
     #星标消息

@@ -85,20 +85,22 @@ W.component.wepage.Navar = W.component.Component.extend({
             if (!items) {
                 model.set('items', [], {silent:true});
                 this.components = [];
-                _.each(this.dynamicComponentTypes, function(componentType) {
-                    if (componentType.model) {
-                        //只有在提供model的情况下才创建dynamic component
-                        if (isNaN(componentType.model)) {
-                            var component = W.component.Component.create(componentType.type, componentType.model);
-                            this.addComponent(component);;
-                        } else {
-                            for (var i = 0; i < componentType.model; i++) {
-                                var component = W.component.Component.create(componentType.type, {});
-                                this.addComponent(component);
+                if (oldType != 'weixin') {
+                    _.each(this.dynamicComponentTypes, function(componentType) {
+                        if (componentType.model) {
+                            //只有在提供model的情况下才创建dynamic component
+                            if (isNaN(componentType.model)) {
+                                var component = W.component.Component.create(componentType.type, componentType.model);
+                                this.addComponent(component);;
+                            } else {
+                                for (var i = 0; i < componentType.model; i++) {
+                                    var component = W.component.Component.create(componentType.type, {});
+                                    this.addComponent(component);
+                                }
                             }
                         }
-                    }
-                }, this);
+                    }, this);
+                }
             } else {
                 model.set('items', this.type2items[value], {silent:true})
                 this.components = this.type2components[value];
@@ -111,16 +113,20 @@ W.component.wepage.Navar = W.component.Component.extend({
             var propertyViewTitle = "";
             var otherUpdateDisplayName = "";
             if (oldType == 'weixin') {
+                this.name2field['items'].minItemLength = 0;
                 this.name2field['items'].maxItemLength = 999;
                 titleMaxLength = 10;
                 propertyViewTitle = '一级分类';
                 otherUpdateDisplayName = '分类';
             } else {
+                this.name2field['items'].minItemLength = 1;
                 this.name2field['items'].maxItemLength = 3;
                 titleMaxLength = 5;
                 propertyViewTitle = '一级菜单';
                 otherUpdateDisplayName = '菜单';
             }
+            // 修改 一级菜单 的 propertyViewTitle值
+            W.component.TYPE2COMPONENT['wepage.navbar_firstnav'].prototype.propertyViewTitle = propertyViewTitle;
             // 修改 一级菜单 标题的字数限制
             _.each(this.components, function(subComponent) {
                 if (subComponent.setLimitation) {
@@ -144,7 +150,9 @@ W.component.wepage.Navar = W.component.Component.extend({
         this.super('initialize', obj);
 
         if (this.model.get('type') == 'slide') {
+            this.name2field['items'].maxItemLength = 0;
             this.name2field['items'].maxItemLength = 999;
+            W.component.TYPE2COMPONENT['wepage.navbar_firstnav'].prototype.propertyViewTitle = '一级分类';
         }
         W.WEAPAGE_NAVBARTYPE = this.model.get('type');
         this.type2items = {};

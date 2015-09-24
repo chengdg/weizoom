@@ -6,6 +6,8 @@ Copyright (c) 2011-2012 Weizoom Inc
  * weizoom.swipeimage widget
  */
 (function( $, undefined ) {
+var idIndex = 1;
+
 gmu.define('SwipeImage', {
 	options: {
 		width: 0,
@@ -59,8 +61,9 @@ gmu.define('SwipeImage', {
 	        }			
 		}
 		
-		
-		$el.addClass('wui-swiper-container wui-swipeImage').attr('id', 'swipeImage').html($(htmls.join('\n'))).css('visibility', 'visible');
+		this.__id = 'swipeImage_' + idIndex;
+		idIndex += 1;
+		$el.addClass('wui-swiper-container wui-swipeImage').attr('id', this.__id).html($(htmls.join('\n'))).css('visibility', 'visible');
 		var $swipeSlide = $el.find('.wui-swiper-slide');
 		$swipeSlide.css('line-height', height + "px");
 
@@ -68,12 +71,30 @@ gmu.define('SwipeImage', {
 	    if ($.trim($title.text()).length !== 0) {
 	    	$title.show();	
 	    }
+
+	    W.onloadHandlers.push(function(){
+			var $imgs = $el.find('img');
+			var imgsHeightArr = [];
+			$imgs.each(function() {
+	            imgsHeightArr.push($(this).height());
+	            console.log(imgsHeightArr,"!!!!!!!!!!!")
+	        }); 
+	        var maxHeight = Math.max.apply(Math,imgsHeightArr);
+            var $swiperSlide = $el.children('.wui-swiper-slide');
+            var $swiperWrapper = $el.children('.wui-swiper-wrapper');
+            $el.height(maxHeight);
+            $swiperWrapper.height(maxHeight);
+            $swiperSlide.css({
+                height: maxHeight,
+                lineHeight: maxHeight +'px'
+            });   
+		});
 	},
 
 	refresh: function() {
 		var $el = this.$el;
 		var swipeImages = this._options.jsondata;
-        var view = new Swiper('#swipeImage', {
+        var view = new Swiper('#'+this.__id, {
 	        mode:'horizontal',
 	        loop: true,
 	        autoplay: 3000,

@@ -76,6 +76,9 @@
 	W.isUseWepage = {% if user.get_profile.is_use_wepage %}true{% else %}false{% endif %};
 	var bottomDistance = 110;
 
+	/* 是否页面验证 */
+	W.isUserPageWalidate = true;
+	
 	var loadGlobalNavbar = function(pageManagerView) {
 		W.getApi().call({
 			app: 'termite2',

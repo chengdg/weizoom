@@ -64,7 +64,7 @@
 					{% endif %}
 					{% if 'manage_member'|satisfy_permission:request %}
 					<li>
-						<a {% ifequal first_nav_name 'member' %}class="active"{% endifequal %} href='/member/members/get/' title='会员管理'>会员管理</a>
+						<a {% ifequal first_nav_name 'member' %}class="active"{% endifequal %} href='/member/member_list/' title='会员管理'>会员管理</a>
 					</li>
 					{% endif %}
 					{% if 'apps'|satisfy_permission:request %}

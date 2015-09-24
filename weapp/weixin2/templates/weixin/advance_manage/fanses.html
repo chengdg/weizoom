@@ -112,7 +112,7 @@
                             <span style="width:41px;width:41px;">已跑路</span>
                             </div>
                         {{/if}}
-                        <a class="xa-appendUser" href="/member/member_detail/edit/?id=${ fans.id }">
+                        <a class="xa-appendUser" href="/member/detail/?id=${ fans.id }">
                             <img width="60" he ght="60" data-id='${fans.id}' class="fl xa-showUserData" src="{{if fans.profile_img}}${ fans.profile_img }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
                         </a>
 
@@ -121,11 +121,11 @@
                         <div class="fans_name">
 
                             {{if fans.name}}
-                            <a href="/member/member_detail/edit/?id=${ fans.id }" style="width:80px;">
+                            <a href="/member/detail/?id=${ fans.id }" style="width:80px;">
                             <span id='xui-i-displayName-${ fans.id }'>${ fans.name }({{html fans.nickname}})</span>
                             </a>
                             {{else}}
-                            <a href="/member/member_detail/edit/?id=${ fans.id }" style="width:80px;">
+                            <a href="/member/detail/?id=${ fans.id }" style="width:80px;">
                             <span id='xui-i-displayName-${ fans.id }'>{{html fans.nickname}}</span>
                             </a>
                             {{/if}}

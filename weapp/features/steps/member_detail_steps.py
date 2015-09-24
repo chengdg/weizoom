@@ -27,7 +27,7 @@ def _get_member_info(context, member):
     query_hex = byte_to_hex(member)
     member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
     context.member_id = member_id
-    url = "/member/member_detail/edit/?id=%s" % str(member_id)
+    url = "/member/detail/?id=%s" % str(member_id)
     response = context.client.get(url)
     return response
 
@@ -100,12 +100,12 @@ def step_impl(context, user):
         'tag_ids': '_'.join(tag_ids)
     }
 
-    response = context.client.post('/member/api/member/update/', args)
+    response = context.client.post('/member/api/detail/', args)
     bdd_util.assert_api_call_success(response)
 
 @then(u"{user}获得'积分明细'列表")
 def step_impl(context, user):
-    url = '/member/api/member_logs/get/'
+    url = '/member/api/integral_logs/'
     response = context.client.get(url, {'member_id': context.member_id})
     expected = json.loads(context.text)
     for data in expected:
