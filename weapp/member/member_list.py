@@ -27,7 +27,7 @@ from core import resource
 
 COUNT_PER_PAGE = 20
 
-def get_request_members_list(request):
+def get_request_members_list(request, export=False):
 	"""
 	获取会员列表
 	"""
@@ -143,6 +143,10 @@ def get_request_members_list(request):
 		#最后对话时间和分组的处理
 
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
+
+	if export:
+		return members
+
 	total_count = members.count()
 	pageinfo, members = paginator.paginate(members, cur_page, count, query_string=request.GET.get('query', None))
 	for member in members:
@@ -738,7 +742,7 @@ class MemberExport(resource.Resource):
 
 	@login_required
 	def get(request):
-		_, members, _ = get_request_members_list(request)
+		members = get_request_members_list(request, True)
 
 		members_info = [
 			[u'ID', u'昵称',u'性别',u'备注名',
