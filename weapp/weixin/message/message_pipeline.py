@@ -310,6 +310,8 @@ class MessagePipeline(object):
 			wxiz_msg_crypt = WXBizMsgCrypt(component_info.token, component_info.ase_key, component_info.app_id)#"2950d602ffb613f47d7ec17d0a802b", "BPQSp7DFZSs1lz3EBEoIGe6RVCJCFTnGim2mzJw5W4I", "wx984abb2d00cc47b8")
 			_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
 		
+
+		print xml_message
 		if xml_message is None or len(xml_message) == 0:
 			return None
 		
