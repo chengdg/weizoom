@@ -38,9 +38,6 @@ class WeappDebugWrapper(orm_util.CursorDebugWrapper):
 				buf.append(formated_stack_entry)
 			stack = '<br/>'.join(buf).replace("\\", '/').replace('"', "``").replace("'", '`')
 			self.db.queries[-1]['stack'] = stack
-			file_object = open('thefile.txt', 'w+')
-			file_object.write(str(stack_entries).encode('utf8'))
-			file_object.close( )
 
 
 def hackCursorDebugWrapper(params):

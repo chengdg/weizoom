@@ -221,7 +221,7 @@ class SqlMonitorMiddleware(object):
 		if 'flash' in request.META['HTTP_USER_AGENT'].lower():
 			return None
 
-		if 'd-sql' in request.GET or 'd-allsql' in request.GET or '/weixin/appid/' in request.GET:
+		if 'd-sql' in request.GET or 'd-allsql' in request.GET:
 			settings.DEBUG = True
 			request.enable_sql_monitor = True
 		else:
