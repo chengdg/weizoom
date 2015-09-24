@@ -11,14 +11,9 @@ from models import *
 def get_member_by_id(member_id):
 	if member_id is None:
 		return None
-
-	if not isinstance(member_id, int):
-		return None
-
-	members = Member.objects.filter(id=member_id)
-	if members.count() > 0:
-		return members[0]
-	else:
+	try:
+		return Member.objects.get(id=member_id)
+	except:
 		return None
 
 def get_member_by_id_list(member_id_list):
