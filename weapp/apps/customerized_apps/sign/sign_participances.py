@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+from datetime import datetime
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -63,12 +64,27 @@ class SignParticipances(resource.Resource):
 		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 		
 		return pageinfo, datas
-	
+
 	@login_required
 	def api_get(request):
 		"""
 		响应API GET
 		"""
+		# print '测试自动签到start=================='
+		# print request.GET
+		# signer = app_models.SignParticipance.objects(belong_to=request.GET['id'], member_id=1)
+		# if signer.count() == 0:
+		# 	signer = app_models.SignParticipance(
+		# 		belong_to=request.GET['id'],
+		# 		member_id=1,
+		# 		created_at=datetime.today()
+		# 	)
+		# 	signer.save()
+		# else:
+		# 	signer = signer[0]
+		# sign = app_models.Sign.objects.get(id=request.GET['id'])
+		# signer.do_signment(sign)
+		# print '测试自动签到end=================='
 		pageinfo, datas = SignParticipances.get_datas(request)
 		
 		webappuser2datas = {}

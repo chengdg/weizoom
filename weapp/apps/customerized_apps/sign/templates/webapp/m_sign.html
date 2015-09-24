@@ -27,26 +27,7 @@
 {% endblock %}
 
 {% block content-panel %}
-<div>
-	<h1 class="tc">Sign({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
-</div>
+
 {% endblock %}
 
 {% block js %}

@@ -84,7 +84,7 @@ class MSign(resource.Resource):
 				'auth_appid_info': auth_appid_info
 			})
 			
-			return render_to_response('workbench/wepage_webapp_page.html', c)
+			return render_to_response('sign/templates/webapp/m_sign.html', c)
 		else:
 			record = None
 			c = RequestContext(request, {
