@@ -104,7 +104,7 @@
 	vertical-align: middle;
 }
 
-/*红包页面样式*/
+/*红包分析页面样式*/
 .fans_data_title > div {
   display: inline-block;
 }
@@ -136,4 +136,11 @@
 .xui-tableBox .fans_data_ul li:last-child
 {
 	border-right: none;
+}
+.xui-redEnvelopeParticipances-page .xui-batchbtn {
+  position: absolute;
+  height: 50px;
+  line-height: 50px;
+  bottom: 0;
+  padding-left: 15px;
 }

@@ -14,7 +14,7 @@ from core.jsonresponse import create_response
 from core import paginator
 from core import search_util
 
-from utils import byte_to_hex
+from string_util import byte_to_hex
 from modules.member import models as member_models
 
 COUNT_PER_PAGE = 20
