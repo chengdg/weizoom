@@ -103,3 +103,37 @@
 	max-width: 134px;
 	vertical-align: middle;
 }
+
+/*红包页面样式*/
+.fans_data_title > div {
+  display: inline-block;
+}
+.fans_data_name {
+  font-size: 14px;
+  font-weight: bold;
+}
+.xui-tableBox .fans_data_ul
+{
+	background: #fff;
+	padding: 20px 0;
+	font-size: 12px;
+	color: #333;
+	height: 82px;
+}
+.xui-tableBox .fans_data_ul li
+{
+	width: 20%;
+	float: left;
+	border-right: 1px solid #ddd;
+	text-align: center;
+}
+.xui-tableBox .fans_data_ul li em
+{
+	font-size: 18px;
+	font-weight: bold;
+	color: #da0909;
+}
+.xui-tableBox .fans_data_ul li:last-child
+{
+	border-right: none;
+}
