@@ -160,12 +160,8 @@ class RealtimeMessages(resource.Resource):
         """
                         回复实时消息
         """
-        pattern = re.compile(r'_src=".*"')
-        pattern = re.compile(r'textvalue=".*"')
         answer = request.POST['answer']
-        src_str = pattern.findall(answer, re.S)
-        if src_str:
-            answer = answer.replace(src_str[0], "")
+        answer = change_message_content(answer)
         material_id = request.POST['material_id']
         type = request.POST['type']
         openid_sendto = request.POST['openid']
@@ -221,12 +217,8 @@ class RealtimeMessages(resource.Resource):
                         回复实时消息后回写操作
         """
         session_id = request.POST['session_id']
-        pattern = re.compile(r'_src=".*"')
-        pattern = re.compile(r'textvalue=".*"')
         content = request.POST['content']
-        src_str = pattern.findall(content, re.S)
-        if src_str:
-            content = content.replace(src_str[0], "")
+        content = change_message_content(content)
         receiver_username = request.POST['receiver_username']
         material_id = request.POST['material_id']
 
@@ -278,6 +270,23 @@ class RealtimeMessages(resource.Resource):
         response.data = data
 
         return response.get_response()
+
+def change_message_content(content):
+    """
+    处理消息链接信息的类容
+    """
+    pattern_src = re.compile(r'_src=".*"')
+    pattern_textvalue = re.compile(r'textvalue=".*"')
+
+    src_str = pattern_src.findall(content, re.S)
+    if src_str:
+        content = content.replace(src_str[0], "")
+
+    textvalue_str = pattern_textvalue.findall(content, re.S)
+    if textvalue_str:
+        content = content.replace(src_str[0], "")
+
+    return content
 
 
 def get_social_member_dict(webapp_id, weixin_user_usernames):
