@@ -1,8 +1,8 @@
-# FAQ
+# FAQ #
 
-**问：如何rebuild本地环境？**
+### 问：如何rebuild本地环境？ ###
 
-答：如下步骤操作（即执行rebuild.bat）
+**答**：如下步骤操作（即执行rebuild.bat）
 ```
 cd init_db 
 mysql -u weapp --password=weizoom weapp < rebuild_database.sql
@@ -16,15 +16,14 @@ python manage.py markettool2app
 python manage.py init_permissions
 ```
 
-**问：如何更新线上数据库结构？**
+### 问：如何更新线上数据库结构？ ###
 
-答：执行如下操作：
+**答**：执行如下操作：
 
 1. 导出老版本数据库SQL
 ```
 mysqldump -d -u xxx -p weapp > old.sql
 ```
-
 
 2. 导出最新数据库SQL
 ```
@@ -42,7 +41,35 @@ python manage.py sqldiff --old old.sql --new new.sql
 mysql -u xxx -p weapp < migrate.sql
 ```
 
-# 集成测试
+### 问：如何启动前端模拟器？ ###
+
+**答**：执行如下步骤：
+
+1. 启动 MySQL，Redis，MongoDB，Nginx。
+
+2. 执行：
+```
+rebuild.bat
+behave -kt @full_init
+```
+
+3. 启动 web server：
+```
+python manage.py runserver 0.0.0.0:8000
+```
+
+4. 打开浏览器： `http://dev.weapp.com/simulator/2/`  
+> 说明：需要将 `dev.weapp.com` 映射到本机地址。即在 hosts 文件中加入：
+> ```
+> 127.0.0.1       dev.weapp.com
+> ```
+
+
+5. 用 **bill** 登录，选 **jobs**。
+
+
+
+# 集成测试 #
 
 * [Weapp每日BDD测试](http://192.168.1.21:8081/jenkins/view/bdd/job/weapp_2.0_trunk_bdd_everyday/)
 
