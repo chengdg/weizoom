@@ -70,31 +70,7 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                     else {
                         window.location.reload();
                     }
-
-                    W.getApi().call({
-                      app:'mall2',
-                      resource:'common_interval_check',
-                      args:{},
-                      success: function (data) {
-                        var unship_order_count = data.unship_order_count;
-                        var orderTipItem = $('.xa-orderTip');
-                        if(unship_order_count>0){
-                            orderTipItem.show();
-                            if(unship_order_count>99){
-                               orderTipItem.text(99);
-                            }
-                            else{
-                               orderTipItem.text(unship_order_count);
-                            }
-                        }
-                        else{
-                          orderTipItem.hide();
-                          orderTipItem.text(0);
-                        }
-                      }
-                  })
-
-
+                    common_interval_check_func();
                 },
                 error: function(data) {
                     W.getErrorHintView().show(data.errMsg);

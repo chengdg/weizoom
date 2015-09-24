@@ -225,7 +225,6 @@
 </script>
  <script type="text/javascript">
     function common_interval_check_func(){
-        W.isRequireConfirmViewDisplayed = false;
       W.getApi().call({
           app:'new_weixin',
           resource:'outline',
@@ -262,7 +261,6 @@
                     $('.xa-num-unread-message-count').css('display', 'none');
                 }
 
-            W.isRequireConfirmViewDisplayed = true;
           },
           error: function(resp) {
             //TODO 进行错误通知
