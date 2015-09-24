@@ -112,7 +112,8 @@ def list_products(request):
 	移动端显示"商品列表"页面
 	"""
 
-	category_id = int(request.GET.get('category_id', 0))
+	#category_id = int(request.GET.get('category_id', 0))
+	category_id = int(request.GET.get('category_id', 7))
 
 	# TODO: 改用API获取商品、分类
 	# category_id=0 表示全部商品

@@ -6,6 +6,7 @@ from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 
 def api_wrapper(request, app, resource):
+	"""
 	try:
 		result = wapi.get(app, resource, request.REQUEST)
 		response = create_response(200)
@@ -17,7 +18,7 @@ def api_wrapper(request, app, resource):
 		response.innerErrMsg = unicode_full_stack()
 	"""
 	result = wapi.get(app, resource, request.REQUEST)
+	print("WAPI RESULT: {}".format(result))
 	response = create_response(200)
 	response.data = result
-	"""
 	return response.get_response()

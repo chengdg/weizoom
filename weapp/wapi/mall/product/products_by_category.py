@@ -34,7 +34,7 @@ class ProductsByCategory(api_resource.ApiResource):
 			data.append(Product.to_dict(product))
 		return data
 
-	@param_required(['webapp_id', 'category_id', 'user_id', 'is_access_weizoom_mall'])
+	@param_required(['webapp_id', 'category_id', 'owner_id', 'is_access_weizoom_mall'])
 	def get(args):
 		"""
 		获取商品详情
@@ -45,9 +45,18 @@ class ProductsByCategory(api_resource.ApiResource):
 		category_id = args['category_id']
 		owner_id = args['owner_id']
 		is_access_weizoom_mall = args['is_access_weizoom_mall']
+		print("args: {}".format(args))
 
 		user_profile = DummyUserProfile(webapp_id, owner_id)
 
 		#product = mall_models.Product.objects.get(id=args['id'])
-		category, products = webapp_cache.get_webapp_products(user_profile, is_access_weizoom_mall, category_id)
-		return ProductsByCategory.to_dict(products)
+		#category, products = webapp_cache.get_webapp_products(user_profile, is_access_weizoom_mall, category_id)
+
+		func = webapp_cache.get_webapp_products_from_db(user_profile, is_access_weizoom_mall)
+		result = func()
+		products = result['value']['products']
+		#categories = result['value']['categories']
+		#return ProductsByCategory.to_dict(products)
+		#return products
+		#return {"products": "{}".format(products)}
+		return products
