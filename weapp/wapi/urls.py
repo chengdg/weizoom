@@ -2,5 +2,9 @@
 
 import mall
 
+import views
+from django.conf.urls import *
 
-#urlpatterns = []
+urlpatterns = patterns('',
+	(r'^(.+)/(.+)/', views.api_wrapper),
+)

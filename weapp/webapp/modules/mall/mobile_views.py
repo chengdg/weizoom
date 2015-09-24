@@ -21,7 +21,8 @@ TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 
 
 def list_products(request):
-	"""显示"商品列表"页面
+	"""
+	显示"商品列表"页面
 	"""
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.list_products(request)

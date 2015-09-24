@@ -11,12 +11,12 @@ from utils import dateutil as utils_dateutil
 from mall import models as mall_models
 
 
-class ProductCategory(api_resource.ApiResource):
+class Category(api_resource.ApiResource):
 	"""
 	获取WebAPP ID
 	"""
 	app = 'mall'
-	resource = 'product_category'
+	resource = 'category'
 
 	@staticmethod
 	def category_to_dict(category):
@@ -37,13 +37,13 @@ class ProductCategory(api_resource.ApiResource):
 		@param id 分类ID
 		"""
 		category = mall_models.ProductCategory.objects.get(id=args['id'])
-		return ProductCategory.category_to_dict(category)
+		return Category.category_to_dict(category)
 
 
 	@param_required(['id', 'name'])
 	def post(args):
 		"""
-		修改ProductCategory的名字
+		修改Category的名字
 		"""
 		mall_models.ProductCategory.objects.filter(id=args['id']).update(
 				name = args['name']
@@ -61,4 +61,4 @@ class ProductCategory(api_resource.ApiResource):
                 name=args.get('name', '').strip()
             )
 		product_category.save()
-		return ProductCategory.category_to_dict(product_category)
+		return Category.category_to_dict(product_category)

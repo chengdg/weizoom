@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+
+from core import api_resource
+from wapi.decorators import param_required
+#from wapi.wapi_utils import create_json_response
+
+from mall import models as mall_models
+
+from product import Product
+from cache import webapp_cache
+
+
+class DummyUserProfile:
+	"""
+	模拟webapp_owner_user_profile，用于cache调用
+	"""
+	def __init__(self, webapp_id, user_id):
+		self.webapp_id = webapp_id
+		self.user_id = user_id
+
+
+
+class ProductsByCategory(api_resource.ApiResource):
+	"""
+	按类别获取商品列表
+	"""
+	app = 'mall'
+	resource = 'products_by_category'
+
+	@staticmethod
+	def to_dict(products):
+		data = []
+		for product in products:
+			data.append(Product.to_dict(product))
+		return data
+
+	@param_required(['webapp_id', 'category_id', 'user_id', 'is_access_weizoom_mall'])
+	def get(args):
+		"""
+		获取商品详情
+
+		@param id 类别ID
+		"""
+		webapp_id = args['webapp_id']
+		category_id = args['category_id']
+		owner_id = args['owner_id']
+		is_access_weizoom_mall = args['is_access_weizoom_mall']
+
+		user_profile = DummyUserProfile(webapp_id, owner_id)
+
+		#product = mall_models.Product.objects.get(id=args['id'])
+		category, products = webapp_cache.get_webapp_products(user_profile, is_access_weizoom_mall, category_id)
+		return ProductsByCategory.to_dict(products)

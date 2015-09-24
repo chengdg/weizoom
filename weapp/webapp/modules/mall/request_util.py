@@ -45,6 +45,8 @@ from webapp import util as webapp_util
 
 from cache import webapp_cache
 
+import wapi as resource
+
 page_title = u'微众商城'
 
 
@@ -105,16 +107,23 @@ page_title = u'微众商城'
 # 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 
-########################################################################
-# list_products: 显示"商品列表"页面
-########################################################################
 def list_products(request):
-	# 得到会员对应的折扣
-	# discount = get_member_discount(member)
+	"""
+	移动端显示"商品列表"页面
+	"""
 
 	category_id = int(request.GET.get('category_id', 0))
 
-	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
+	# TODO: 改用API获取商品、分类
+	# category_id=0 表示全部商品
+	category = resource.get('mall', 'category', {'id': category_id})
+	products = resource.get('mall', 'products_by_category', {
+		'category_id': category_id,
+		'webapp_id': request.user_profile.webapp_id,
+		'owner_id': request.user_profile.user_id,
+		'is_access_weizoom_mall': request.is_access_weizoom_mall
+		}) # 按类别取商品
+	#category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 
 	for p in products:
