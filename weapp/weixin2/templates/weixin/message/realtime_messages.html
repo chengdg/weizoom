@@ -281,6 +281,7 @@ $(document).ready(function() {
 				$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
 			});
 			$(this).siblings('#media').bind('timeupdate', function() {
+<<<<<<< HEAD
 		        console.log(this.currentTime);
 		        if(parseInt(this.duration)){
 		        	$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
@@ -289,6 +290,10 @@ $(document).ready(function() {
 		        {
 
 		        }
+=======
+	        console.log(this.currentTime);
+	        $(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+>>>>>>> d555f763284532cb51761b3da610568406cdf6da
 			});
 		}
 	});
