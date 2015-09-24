@@ -21,7 +21,7 @@ from core.wxapi.custom_message import TextCustomMessage, NewsCustomMessage
 from core.exceptionutil import unicode_full_stack
 
 from weixin.mp_decorators import mp_required
-from weixin.user.module_api import get_mp_head_img
+from weixin.user.module_api import get_mp_head_img,get_mp_nick_name
 from weixin2 import export
 from weixin2.models import *
 
@@ -160,8 +160,11 @@ class RealtimeMessages(resource.Resource):
         """
                         回复实时消息
         """
+        pattern = re.compile(r'_src=".*"')
         answer = request.POST['answer']
-        answer = change_message_content(answer)
+        src_str = pattern.findall(answer, re.S)
+        if src_str:
+            answer = answer.replace(src_str[0], "")
         material_id = request.POST['material_id']
         type = request.POST['type']
         openid_sendto = request.POST['openid']
@@ -217,8 +220,11 @@ class RealtimeMessages(resource.Resource):
                         回复实时消息后回写操作
         """
         session_id = request.POST['session_id']
+        pattern = re.compile(r'_src=".*"')
         content = request.POST['content']
-        content = change_message_content(content)
+        src_str = pattern.findall(content, re.S)
+        if src_str:
+            content = content.replace(src_str[0], "")
         receiver_username = request.POST['receiver_username']
         material_id = request.POST['material_id']
 
@@ -270,23 +276,6 @@ class RealtimeMessages(resource.Resource):
         response.data = data
 
         return response.get_response()
-
-def change_message_content(content):
-    """
-    处理消息链接信息的类容
-    """
-    pattern_src = re.compile(r'_src=".*"')
-    pattern_textvalue = re.compile(r'textvalue=".*"')
-
-    src_str = pattern_src.findall(content, re.S)
-    if src_str:
-        content = content.replace(src_str[0], "")
-
-    textvalue_str = pattern_textvalue.findall(content, re.S)
-    if textvalue_str:
-        content = content.replace(textvalue_str[0], "")
-
-    return content
 
 
 def get_social_member_dict(webapp_id, weixin_user_usernames):
@@ -646,6 +635,15 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['user_icon'] = head_img
             else:
                 one_message['user_icon'] = DEFAULT_ICON
+
+            mp_username = get_mp_nick_name(user.id)
+            #用户名字段长过5个的进行处理
+            #mp_username = unicode(mp_username, 'utf8')
+            if mp_username:
+                if len(mp_username) >5:
+                    mp_username = u'%s...' % mp_username[:5]
+            #用户名字段长过5个的进行处理
+            one_message['mp_username'] = mp_username
 
         items.append(one_message)
 

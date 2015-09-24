@@ -73,7 +73,11 @@
 							</div>
 							<div class="pl15 disTc xui-i-name pa">
 								<div class="xui-i-member-username" class="mb0 mt0" style="height:35px;">
-									<a {{if !message.fast_reply}}href="/member/detail/?id=${message.member_id}" class="mb0" target="_blank"{{else}} class="mb0 cursor-text"{{/if}} style="line-height:16px;">{{html message.name}}</a>
+									{{if !message.fast_reply}}
+										<a href="/member/detail/?id=${message.member_id}" class="mb0" target="_blank" style="line-height:16px;">{{html message.name}}</a>
+									{{else}}
+										<p class="mb0" style="line-height:16px;">{{html message.mp_username}}</p>
+									{{/if}}
 								</div>
 							</div>
 							{{if message.unread_count}}
