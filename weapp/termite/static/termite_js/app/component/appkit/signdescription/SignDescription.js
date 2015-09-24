@@ -8,16 +8,20 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 	selectable: 'yes',
 	propertyViewTitle: '微信抽奖',
 
-    //dynamicComponentTypes: [{
-    //    type: 'appkit.signitem',
-    //    model: 3
-    //}],
+    dynamicComponentTypes: [{
+        type: 'appkit.signitem',
+        model: 2
+    }],
 
 	properties: [{
 		group: '文本调研项',
 		groupClass: 'xui-propertyView-app-Selection',
-		fields: [
-			{
+		fields: [{
+			name: 'title_group',
+			type: 'title_with_annotation',
+			displayName: '活动名称',
+			isUserProperty: true
+		},{
 			name: 'title',
 			type: 'text',
 			displayName: '活动名称',
@@ -34,13 +38,15 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: ''
 		},{
-			name: 'share',
-			type: 'text',
+			name: 'share_group',
+			type: 'title_with_annotation',
+			displayName: '分享设置',
+			isUserProperty: true
+		},{
+			name: 'image',
+			type: 'image_dialog_select',
 			displayName: '分享图片',
 			isUserProperty: true,
-			maxLength: 10,
-			//validate: 'data-validate="require-notempty::页面标题不能为空,,require-word"',
-			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
 			name: 'share_description',
@@ -49,6 +55,11 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: '签到赚积分啦！'
+		},{
+			name: 'reply_group',
+			type: 'title_with_annotation',
+			displayName: '自动回复',
+			isUserProperty: true
 		},{
 			name: 'keyword',
 			type: 'text',
@@ -65,13 +76,18 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: '建议填写垫付近期活动通知，签到奖励等内容……'
-		},{name: 'items',//动态组件
-
+		},{
+			name: 'signsetting_group',
+			type: 'title_with_annotation',
+			displayName: '签到设置',
+			isUserProperty: true
+		},{
+			name: 'items',//动态组件,那个加好
             displayName: '',
             type: 'dynamic-generated-control',
             isShowCloseButton: false,
-            minItemLength: 3,
-			maxItemLength: 3,
+            minItemLength: 2,
+			maxItemLength: 4,
             isUserProperty: true,
             default: []
         }]
