@@ -199,6 +199,7 @@ input[type="text"]{
 .table>thead>tr>th{
 	border:none;
 	font-weight: bold;
+	white-space: nowrap;
 }
 /*表头颜色*/
 .xb-theadBg thead{
