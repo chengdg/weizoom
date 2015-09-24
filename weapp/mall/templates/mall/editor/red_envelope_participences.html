@@ -56,7 +56,24 @@
 		</div>
 	</div>
     <div class="panel panel-default xui-tableBox">
-        <div
+		<div class="fans_data_title"><div class="fans_data_name ml10 mt10 mr5">{{ red_envelope_name }}</div>
+			<div class="fans_data_date">({{ red_envelope_start_time }}至{{ red_envelope_end_time }})</div>
+		</div>
+		<ul class="fans_data_ul xui-weixin-outlinePage ml10 mt10">
+			<li><em>{{ new_member_count }}</em><br>新关注人数</li>
+			<li><em>{{ received_count }}</em><br>领取人数</li>
+			<li><em>{{ consumption_sum }}</em><br>产生消费额</li>
+			<li><em>{{ total_use_count }}</em><br>使用人数<div style="margin-left: 120px;margin-top: -17px;text-decoration: underline;"><a>使用记录</a></div></li>
+		</ul>
+		<div class="ml10 mt10" style="font-weight: bold">{% if receive_method %}通过图文方式领取{% else %}通过成交订单方式领取{% endif %}</div>
+        <div class="panel-heading">
+			<label for="topSelectAll" class="xui-selectAll ml15">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">导出选中</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">导出结果</a>
+		</div>
+		<div
             class="panel-body panel-table p0 mt10"
             data-ui-role="advanced-table"
             data-app="apps/promotion"
@@ -65,10 +82,18 @@
             data-template-id="#red_envelope_participances_view"
             data-enable-paginator="true"
             data-enable-sort="false"
+			data-selectable="true"
             data-disable-header-select="true"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
             data-item-count-per-page="10"
             id="redEnvelopeParticipancesList"
         ></div>
+		<div class="xui-batchbtn">
+			<label for="bottomSelectAll" class="xui-selectAll ml12">
+				<input type="checkbox" id="bottomSelectAll" class="xa-selectAll">全选
+			</label>
+		</div>
     </div>
 </div>
 {% endblock %}
@@ -93,7 +118,7 @@
 		</thead>
 		<tbody>
 		  {{each(i, item) items}}
-			<tr data-id="${item.id}">
+			<tr data-id="${item.id}" class="xa-selectTr">
 				<td
 					class="tl pl25"
 					style="width:250px; height:60px;"
@@ -142,16 +167,6 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	// $('body').delegate('.xa-viewData', 'click', function(event) {
-	// 	var activityId = $(event.currentTarget).parents('tr').data('id');
-	// 	W.dialog.showDialog('W.dialog.app.event.ViewParticipanceDataDialog', {
-	// 		activityId: activityId,
-	// 		success: function(data) {
-	// 			alert(data);
-	// 		}
-	// 	});
-	// });
-
 	var participant_name,startTime,endTime;
     //export
     $('.xa-export').click(function(event){
@@ -186,7 +201,12 @@ $(document).ready(function() {
             }
         });
     });
-
+	$('.xa-selectAll').click(function(event) {
+        var $checkbox = $(event.currentTarget);
+        var isChecked = $checkbox.is(':checked');
+        $('tbody .xa-select').prop('checked', isChecked);
+        $('.xa-selectAll').prop('checked', isChecked);
+    });
 	$('.xa-search').click(function(event) {
 		var name = $.trim($('[name="participant_name"]').val());
 		var member_status = $.trim($('[name="member_status"]').val());

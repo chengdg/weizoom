@@ -9,7 +9,6 @@ class SignParticipance(models.Document):
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	tel = models.StringField(default="", max_length=100)
-	termite_data = models.DynamicField(default="") #termite数据
 	prize = models.DynamicField(default="") #活动奖励
 	created_at = models.DateTimeField() #创建时间&第一次签到时间
 	latest_date = models.DateTimeField() #最后一次签到时间
@@ -119,8 +118,17 @@ class Sign(models.Document):
 			if sign.status != 1:
 				return_data['errMsg'] = u'签到活动未开始'
 			elif data.keyword == sign.reply.keyword:
-				user = SignParticipance.objects.get(member_id=data.member_id, belong_to=sign.id)
-				return_data = user.do_signment(sign)
+				signer = SignParticipance.objects(member_id=data.member_id, belong_to=sign.id)
+				if signer.count() == 0:
+					signer = SignParticipance(
+						belong_to = sign.id,
+						member_id = data.member_id,
+						created_at= datetime.datetime.today()
+					)
+					signer.save()
+				else:
+					signer = signer[0]
+				return_data = signer.do_signment(sign)
 			else:
 				return_data['status_code'] = RETURN_STATUS_CODE['NONE']
 				return_data['errMsg'] = u'关键字不匹配'
