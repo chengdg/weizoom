@@ -150,7 +150,7 @@ W.component.wepage.Navar = W.component.Component.extend({
         this.super('initialize', obj);
 
         if (this.model.get('type') == 'slide') {
-            this.name2field['items'].maxItemLength = 0;
+            this.name2field['items'].minItemLength = 0;
             this.name2field['items'].maxItemLength = 999;
             W.component.TYPE2COMPONENT['wepage.navbar_firstnav'].prototype.propertyViewTitle = '一级分类';
         }
