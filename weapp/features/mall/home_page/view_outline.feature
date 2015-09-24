@@ -64,24 +64,24 @@ Background:
 	When bill访问jobs的webapp
 	When bill获得jobs的800会员积分
 	Then bill在jobs的webapp中拥有800会员积分
-	When jobs给会员bill"分配"测试权限
-	Then bill获取测试权限
-		"""
-		{
-			"test_whether_permission": "是"
-		}
-		"""
+#	When jobs给会员bill"分配"测试权限
+#	Then bill获取测试权限
+#		"""
+#		{
+#			"test_whether_permission": "是"
+#		}
+#		"""
 	Given tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom获得jobs的800会员积分
 	Then tom在jobs的webapp中拥有800会员积分
-	When jobs给会员tom"分配"测试权限
-	Then tom获取测试权限
-		"""
-		{
-			"test_whether_permission": "是"
-		}
-		"""
+#	When jobs给会员tom"分配"测试权限
+#	Then tom获取测试权限
+#		"""
+#		{
+#			"test_whether_permission": "是"
+#		}
+#		"""
 	Given nokia登录系统
 	When nokia已添加商品
 		"""

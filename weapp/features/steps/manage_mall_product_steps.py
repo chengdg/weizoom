@@ -166,7 +166,6 @@ def step_impl(context, user, type_name):
                 # 处理空字符串分割问题
                 if product['categories'][0] == '':
                     product['categories'] = []
-                print 'jz--------', product['categories']
                 # 处理table中没有验证库存的行
                 if 'stocks' in product and product['stocks'] == '':
                     del product['stocks']
@@ -176,8 +175,6 @@ def step_impl(context, user, type_name):
                 expected.append(product)
         else:
             expected = json.loads(context.text)
-    for product in actual:
-        print 'jz-------2', product['categories']
     bdd_util.assert_list(expected, actual)
 
 

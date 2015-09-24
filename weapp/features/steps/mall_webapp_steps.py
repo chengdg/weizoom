@@ -470,10 +470,11 @@ def step_impl(context, webapp_owner_name):
 		if action:
 			actor, operation = action.split(',')
 			context.execute_steps(u"given %s登录系统" % actor)
-			if row.get('delivery_time'):
+			if row.get('delivery_time') or operation == u'完成':
 				step_id = OPERATION2STEPID.get(u'发货', None)
 				context.latest_order_id = order.id
 				context.execute_steps(step_id % actor)
+			if row.get('delivery_time'):
 				log = OrderOperationLog.objects.filter(
 				order_id=order.order_id, action='订单发货').get()
 				log.created_at =  bdd_util.get_date(row.get('delivery_time'))
