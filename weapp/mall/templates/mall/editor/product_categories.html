@@ -106,7 +106,7 @@ $(document).ready(function() {
 						window.location.reload();
 					},
 					error: function(resp) {
-
+                        W.showHint('error', resp.data.msg);
 					}
 				})
 			}
@@ -169,7 +169,7 @@ $(document).ready(function() {
 						window.location.reload();
 					},
 					error: function(resp) {
-						alert("创建分组失败");
+                        W.showHint('error', '删除分组失败');
 					}
 				});
         	}
