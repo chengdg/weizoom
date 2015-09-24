@@ -94,7 +94,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty:true
 
 		},{
-			name: 'sign0_points',
+			name: 'daily_points',
 			type: 'text_with_annotation_v2',
 			displayName: '送积分',
 			isUserProperty: true,
@@ -105,7 +105,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
-			name: 'sign0_prizes',
+			name: 'daily_prizes',
 			type: 'prize_selector_v4',
 			displayName: '送优惠券',
 			isUserProperty: true,
@@ -166,7 +166,17 @@ W.component.appkit.SignDescription = W.component.Component.extend({
             }, this), 100);
 			*/
             this.refresh($node, {resize:true, refreshPropertyView:true});
-        }
+        },
+		daily_points:function($node, model, value){
+			var daily_points = value;
+			$node.find('.daily_points').text(points);
+
+		},
+		daily_prizes:function($node, model, value){
+			var daily_prizes = value;
+			$node.find('.daily_prizes').text(daily_prizes);
+		}
+
 	},
 
 	initialize: function(obj) {
