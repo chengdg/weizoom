@@ -60,10 +60,6 @@ def get_component_auth(component, appid):
 		obj.integral_strategy_settings = member_models.IntegralStrategySttings.from_dict(data['integral_strategy_settings'])
 	else:
 		obj.integral_strategy_settings = None
-<<<<<<< HEAD
-=======
-
->>>>>>> 优化 compent
 	obj.default_tag = member_models.MemberTag.from_dict(data['default_tag'])
 	obj.default_grade = member_models.MemberGrade.from_dict(data['default_grade'])
 	return obj
