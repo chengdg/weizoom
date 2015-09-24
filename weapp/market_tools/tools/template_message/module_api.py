@@ -246,7 +246,10 @@ def __get_detail_data_by_template(template_message_detail, model):
 	detail_data = dict()
 	if template_message_detail.attribute:
 		if template_message_detail.send_point == COUPON_ARRIVAL_NOTIFY:
-			return __get_coupon_detail_data(template_message_detail.attribute, model)
+			detail_data = __get_coupon_detail_data(template_message_detail.attribute, model)
+			detail_data['keyword2'] = {"value" : datetime.now().strftime('%Y%m%d'), "color" : "#173177"}
+			return detail_data
+			
 		elif template_message_detail.send_point == COUPON_EXPIRED_REMIND:
 			return __get_coupon_detail_data(template_message_detail.attribute, model)
 
