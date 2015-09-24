@@ -22,59 +22,6 @@ PROMOTION_TYPE_COUPON = 4
 # FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
 
 FIRST_NAV_NAME = 'apps'
-#
-# 百宝箱导航信息
-#
-APP_NAV = {
-    'section': u'百宝箱',
-    'navs': [
-        {
-            'name': "lotteries",
-			'title': "微信抽奖",
-			'url': '/apps/lottery/lotteries/',
-			'need_permissions': []
-        },
-        # {
-        #     'name': "feedbacks",
-			# 'title': "用户反馈",
-			# 'url': '/apps/feedback/feedbacks/',
-			# 'need_permissions': []
-        # },
-         {
-            'name': "surveies",
-			'title': "用户调研",
-			'url': '/apps/survey/surveies/',
-			'need_permissions': []
-        },
-        {
-			'name': "events",
-			'title': "活动报名",
-			'url': '/apps/event/events/',
-			'need_permissions': []
-		},
-        {
-            'name': "votes",
-			'title': "微信投票",
-			'url': '/apps/vote/votes/',
-			'need_permissions': []
-        },
-        {
-            'name': "orderRedEnvelope",
-            'title': u'分享红包',
-            'url': '/apps/promotion/red_envelope_rule_list/',
-            'need_permissions': ['manage_order_red_envelope', ]
-        }
-    ]
-}
-
-def get_customerized_apps(request):
-    if request.user.username == 'manager':
-        pass
-    else:
-        # webapp_module_views.get_modules_page_second_navs(request)
-        second_navs = [APP_NAV]
-
-    return second_navs
 
 class RedEnvelopeRuleList(resource.Resource):
     app = "apps/promotion"
@@ -145,7 +92,7 @@ class RedEnvelopeRuleList(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': get_customerized_apps(request),
+            'second_navs': export.get_customerized_apps(request),
             'second_nav_name': 'orderRedEnvelope',
             "coupon_rule_info": json.dumps(coupon_rule_info),
             "items": items,
@@ -238,7 +185,7 @@ class RedEnvelopeRule(resource.Resource):
             coupon_rule = promotion_models.CouponRule.objects.get(id=red_envelope_rule.coupon_rule_id)
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': get_customerized_apps(request),
+                'second_navs': export.get_customerized_apps(request),
                 'second_nav_name': 'orderRedEnvelope',
                 'coupon_rule': coupon_rule,
                 'red_envelope_rule': red_envelope_rule,
@@ -249,7 +196,7 @@ class RedEnvelopeRule(resource.Resource):
                                                                       end_date__gt=datetime.now(), limit_counts=-1)
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': get_customerized_apps(request),
+                'second_navs': export.get_customerized_apps(request),
                 'second_nav_name': 'orderRedEnvelope',
                 'coupon_rules': coupon_rules
             })
@@ -339,7 +286,7 @@ class RedEnvelopeParticipances(resource.Resource):
         total_use_count = 300
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': get_customerized_apps(request),
+            'second_navs': export.get_customerized_apps(request),
             'second_nav_name': 'orderRedEnvelope',
             'has_data': has_data,
             'new_member_count': new_member_count,
