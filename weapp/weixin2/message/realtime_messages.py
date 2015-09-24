@@ -284,7 +284,7 @@ def change_message_content(content):
 
     textvalue_str = pattern_textvalue.findall(content, re.S)
     if textvalue_str:
-        content = content.replace(src_str[0], "")
+        content = content.replace(textvalue_str[0], "")
 
     return content
 
