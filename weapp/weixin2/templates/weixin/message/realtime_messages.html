@@ -86,7 +86,7 @@
 						</div>
 					</td>
 					<td>
-						<div class="xui-i-text xa-displayMessages ml30 mr50" data-replied="${message.could_replied}">
+						<div class="xui-i-text xa-displayMessages ml30 mr50 pr" data-replied="${message.could_replied}">
 							{{if message.message_type == 'text'}}
 								{{if message.is_news_type}}
 									<span name="messageContent">${message.text} <span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=${message.material_id}" target="_blank">${message.news_title}</a></span>
@@ -100,10 +100,10 @@
 								</a>
 							{{/if}}
 							{{if message.message_type == 'voice'}}
-								<div class="xui-i-voiceContainer pr">
+								<div class="xui-i-voiceContainer ">
 									<audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
 									<div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
-									<span class="xui-clock xa-clock" style="left: 100px;position:absolute;top:5px;"></span>
+									<span class="xui-clock xa-clock" style="left: 100px;position:absolute;top:19px;"></span>
 								</div>
 							{{/if}}
 
@@ -278,18 +278,20 @@ $(document).ready(function() {
 			$(this).addClass('xui-i-voicePlay');
 			$(this).siblings('#media').bind('ended', function() {
 				$(this).siblings().removeClass('xui-i-voicePlay');
-				$(this).siblings().addClass('xui-i-voiceStop');
+				$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
 			});
-			$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+			$(this).siblings('#media').bind('timeupdate', function() {
+		        console.log(this.currentTime);
+		        if(parseInt(this.duration)){
+		        	$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+		        }
+		        else
+		        {
+
+		        }
+			});
 		}
 	});
-
-	_.delay(function() {
-		$(".xui-i-voiceContent").each(function(){
-			var time=$(this).siblings('#media')[0].duration+'&nbsp;"';
-			$(this).parent().find(".xa-clock").html(parseInt(time));
-		});
-	}, 4000);
 
 	var filterBox = new W.view.weixin.RealtimeMessageFilterView({
 		el: "#weixin-realtime-message-filter-view",
