@@ -109,7 +109,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             this.propertyViewTitle = '一级菜单';
             this.properties[0].fields[1].otherUpdateDisplayName = '菜单';
         }
-
+        console.log(90909090)
         this.updateComponent();
     }
 });

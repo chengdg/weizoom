@@ -24,21 +24,6 @@ Feature:自定义模块——【基础模块】商品列表-页面
 
 Background:
 	Given jobs登录系统
-	And jobs已添加模块
-		"""
-		[	
-			{"modle_name": "富文本"},
-			{"modle_name": "商品"},
-			{"modle_name": "商品列表"},
-			{"modle_name": "图片广告"},
-			{"modle_name": "公告"},
-			{"modle_name": "标题"},
-			{"modle_name": "文本导航"},
-			{"modle_name": "图片导航"},
-			{"modle_name": "辅助空白"},
-			{"modle_name": "橱窗"}
-		]
-		"""
 	And jobs已添加分组
 		"""
 		[{
@@ -213,6 +198,9 @@ Scenario:选择商品分组窗体：商品分组列表搜索、添加新商品�
 			Then jobs获得商品分组列表
 			"""
 			[{
+				"name": "分类5",
+				"create_time":"2015-05-05 8:00"
+			},{
 				"name": "分类6",
 				"create_time":"2015-05-04 8:00"
 			},{
@@ -321,7 +309,7 @@ Scenario:选择商品分组窗体：商品分组列表搜索、添加新商品�
 			}]
 			"""
 
-Scenario:商品分组选择列表分页
+Scenario:1 商品分组选择列表分页
 	When jobs获取商品分组选择列表
 	"""
 	[{
@@ -356,11 +344,11 @@ Scenario:商品分组选择列表分页
 	When jobs已设置分页条件
 	"""
 	{
-		"page_count":4
+		"page_count":8
 	}
 	"""
 
-	Then jobs获取商品列表模块商品分组选择列表显示共3页
+	Then jobs获取商品列表模块商品分组选择列表显示共2页
 	When jobs浏览第1页
 	Then jobs获取商品分组选择列表
 	"""
@@ -376,12 +364,7 @@ Scenario:商品分组选择列表分页
 	},{
 		"name": "分组3",
 		"create_time":"2015-05-07 9:00"
-	}]
-	"""
-	When jobs浏览'下一页'
-	Then jobs获取商品分组列表
-	"""
-	[{
+	},{
 		"name": "分类5",
 		"create_time":"2015-05-05 8:00"
 	},{
@@ -395,7 +378,7 @@ Scenario:商品分组选择列表分页
 		"create_time":"2015-05-02 8:00"
 	}]
 	"""
-	When jobs浏览'第3页'
+	When jobs浏览'第2页'
 	Then jobs获取商品分组选择列表
 	"""
 	[{
@@ -407,6 +390,18 @@ Scenario:商品分组选择列表分页
 	Then jobs获取商品分组列表
 	"""
 	[{
+		"name": "分组1",
+		"create_time":"2015-05-09 9:00"
+	},{
+		"name": "分组4",
+		"create_time":"2015-05-09 8:00"
+	},{
+		"name": "分组2",
+		"create_time":"2015-05-08 9:00"
+	},{
+		"name": "分组3",
+		"create_time":"2015-05-07 9:00"
+	},{
 		"name": "分类5",
 		"create_time":"2015-05-05 8:00"
 	},{
@@ -421,12 +416,12 @@ Scenario:商品分组选择列表分页
 	}]
 	"""
 
-Scenario:商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
+Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 
 	#商品列表模块显示个数'6','详细列表'样式,'默认样式'
 		When jobs添加商品列表
 		"""
-		[{
+		[{	"title": "微页面标题",
 			"products_source":"分组1",
 			"display_count":"6",
 			"list_style1":"详细列表",
@@ -435,10 +430,11 @@ Scenario:商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 			"price_show":"true"
 		}]
 		"""
-		Then jobs编辑区'商品来源'为'分组1'
-		And jobs展示区详细列表单列显示商品
+		Then jobs能获取'微页面标题'
 		"""
 		[{
+			"title": "微页面标题"
+		},{
 			"name":"商品2可两行显示",
 			"product_picture_id":"2",
 			"price":"2.0",
@@ -496,9 +492,11 @@ Scenario:商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 			"product_picture_id":"1"
 		}]
 		"""
-		Then jobs展示区详细列表单列显示商品
+		Then jobs能获取'微页面标题'
 		"""
 		[{
+			"title": "微页面标题"
+		},{
 			"name":"商品2可两行显示",
 			"product_picture_id":"2",
 			"price":"2.0",
@@ -555,9 +553,11 @@ Scenario:商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 			"product_picture_id":"1"
 		}]
 		"""
-		Then jobs展示区详细列表单列显示商品
+		Then jobs能获取'微页面标题'
 		"""
 		[{
+			"title": "微页面标题"
+		},{
 			"name":"商品3不可两行显示...",
 			"product_picture_id":"3",
 			"price":"3.0",
@@ -614,9 +614,11 @@ Scenario:商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 			"product_picture_id":"10"
 		}]
 		"""
-		Then jobs展示区详细列表单列显示商品
+		Then jobs能获取'微页面标题'
 		"""
 		[{
+			"title": "微页面标题"
+		},{
 			"name":"商品3不可两行显示...",
 			"product_picture_id":"3",
 			"price":"3.0",
@@ -683,9 +685,11 @@ Scenario:商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 			"price":"30.0"
 		}]
 		"""
-		Then jobs展示区详细列表单列显示商品
+		Then jobs能获取'微页面标题'
 		"""
 		[{
+			"title": "微页面标题"
+		},{
 			"name":"修改后商品3不可两行显示...",
 			"product_picture_id":"3",
 			"price":"30.0",
@@ -744,11 +748,11 @@ Scenario:商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 		}]
 		"""
 
-Scenario:商品管理，删除商品分组
+Scenario:3 商品管理，删除商品分组
 	#商品列表模块显示个数'6','详细列表'样式,'默认样式'
 		When jobs添加商品列表
 		"""
-		[{
+		[{	"title": "微页面标题",
 			"products_source":"分组1",
 			"display_count":"6",
 			"list_style1":"详细列表",
@@ -757,10 +761,11 @@ Scenario:商品管理，删除商品分组
 			"price_show":"true"
 		}]
 		"""
-		Then jobs编辑区'商品来源'为'分组1'
-		And jobs展示区详细列表单列显示商品
+		Then jobs能获取'微页面标题'
 		"""
 		[{
+			"title": "微页面标题"
+		},{
 			"name":"商品2可两行显示",
 			"product_picture_id":"2",
 			"price":"2.0",
@@ -811,16 +816,20 @@ Scenario:商品管理，删除商品分组
 		}]
 		"""
 	#删除商品分组
-		When jobs保存自定义页面'自定义页面1'
-		And jobs删除分组'分组1'
-		Then jobs'自定义页面1'中删除‘分组1’的商品列表基础模块
+		When jobs删除分组'分组1'
+		Then jobs能获取'微页面标题'
+		"""
+			[{
+				"title": "微页面标题"
+			}]
+		"""
 
-Scenario:分组管理修改商品名，商品列表中使用该分组的商品来源，也应该同步修改
+Scenario:4 分组管理修改商品名，商品列表中使用该分组的商品来源，也应该同步修改
 
 	#商品列表模块显示个数'6','详细列表'样式,'默认样式'
 		When jobs添加商品列表
 		"""
-		[{
+		[{	"title": "微页面标题",
 			"products_source":"分组1",
 			"display_count":"6",
 			"list_style1":"详细列表",
@@ -829,10 +838,11 @@ Scenario:分组管理修改商品名，商品列表中使用该分组的商品�
 			"price_show":"true"
 		}]
 		"""
-		Then jobs编辑区'商品来源'为'分组1'
-		And jobs展示区详细列表单列显示商品
+		Then jobs能获取'微页面标题'
 		"""
 		[{
+			"title": "微页面标题"
+		},{
 			"name":"商品2可两行显示",
 			"product_picture_id":"2",
 			"price":"2.0",
@@ -887,13 +897,12 @@ Scenario:分组管理修改商品名，商品列表中使用该分组的商品�
 		When jobs修改'分组1'的分组名称
 		"""
 		[{
-			"old_grouping_name":"分组1",
-			"new_grouping_name":"分组1——修改"
+			"grouping_name":"分组1——修改"
 		}]
 		"""
 		Then jobs获取商品列表
 		"""
-		[{
+		[{	"title": "微页面标题"
 			"products_source":"分组1——修改",
 			"display_count":"6",
 			"list_style1":"详细列表",
@@ -903,27 +912,6 @@ Scenario:分组管理修改商品名，商品列表中使用该分组的商品�
 		}]
 		"""
 
-Scenario:商品列表模块删除
-	Given jobs添加商品列表模块
-	"""
-	[{
-		"name":"商品列表模块"
-	}]
-	"""
-	#删除商品列表模块,弹窗提示确认删除
-		When jobs删除商品列表模块
-		Then jobs展示区商品列表模块删除
-		And jobs编辑区编辑窗体关闭
 
 
-Scenario:商品模块展示商品促销价格
-	Given jobs已添加商品模块
-	"""
-	[{
-		"name":"商品模块"
-	}]
-	"""
-	And jobs已添加限时抢购商品
-	When jobs添加限时抢购商品
-	Then jobs展示区商品展示限时抢购价格
-	Then jobs手机端展示限时抢购价格
+
