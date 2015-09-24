@@ -96,9 +96,10 @@
 								</a>
 							{{/if}}
 							{{if message.message_type == 'voice'}}
-								<div class="xui-i-voiceContainer">
+								<div class="xui-i-voiceContainer pr">
 									<audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
 									<div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
+									<span class="xui-clock xa-clock" style="left: 100px;position:absolute;top:5px;"></span>
 								</div>
 							{{/if}}
 

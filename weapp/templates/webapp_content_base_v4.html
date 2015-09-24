@@ -115,6 +115,14 @@
         {% include "weapp_jssdk_base.html" %}
         <!-- 公告超出滚动 -->
         <script type="text/javascript">
+            // 定义全局变量处理 
+            W.onloadHandlers = [];
+            window.onload = function(){
+                for(var i = 0; i < W.onloadHandlers.length; i++){
+                    console.log(W.onloadHandlers[i]);
+                    W.onloadHandlers[i]();
+                }
+            }
             // 定时器
             var mytimer = function(i, $content){
                 window.setInterval(function(){
@@ -147,6 +155,7 @@
         </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
+
              $(document).ready(function() {
             var $product = $('.wui-product');
             var $productList = $('.wui-productlist');
@@ -163,23 +172,6 @@
             var $imgs = $swiperWrapper.find('img');
             var imgsHeightArr = [];
 
-            if( $swiperImg.length >0 ){
-                window.onload=function(){
-                    $imgs.each(function() {
-                        console.log($(this).height()); 
-                        imgsHeightArr.push($(this).height());
-                        
-                    });
-                    var maxHeight = Math.max.apply(Math,imgsHeightArr);
-                    var $swiperSlide = $swiperWrapper.children('.wui-swiper-slide');
-                    $swiperWrapper.parent('.wui-swiper-container').height(maxHeight);
-                    $swiperWrapper.height(maxHeight);
-                    $swiperSlide.css({
-                        height: maxHeight,
-                        lineHeight: maxHeight +'px'
-                    });
-                }
-            }
             if($product.length > 0){
 
                 getWidth('.wui-product');
