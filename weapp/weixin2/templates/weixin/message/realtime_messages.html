@@ -278,9 +278,12 @@ $(document).ready(function() {
 			$(this).addClass('xui-i-voicePlay');
 			$(this).siblings('#media').bind('ended', function() {
 				$(this).siblings().removeClass('xui-i-voicePlay');
-				$(this).siblings().addClass('xui-i-voiceStop');
+				$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
 			});
-			$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+			$(this).siblings('#media').bind('timeupdate', function() {
+	        console.log(this.currentTime);
+	        $(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+			});
 		}
 	});
 
