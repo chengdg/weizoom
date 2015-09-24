@@ -637,12 +637,6 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['user_icon'] = DEFAULT_ICON
 
             mp_username = get_mp_nick_name(user.id)
-            #用户名字段长过5个的进行处理
-            #mp_username = unicode(mp_username, 'utf8')
-            if mp_username:
-                if len(mp_username) >5:
-                    mp_username = u'%s...' % mp_username[:5]
-            #用户名字段长过5个的进行处理
             one_message['mp_username'] = mp_username
 
         items.append(one_message)
