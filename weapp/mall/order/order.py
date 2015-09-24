@@ -103,7 +103,7 @@ class OrderInfo(resource.Resource):
             #         operate_log = operate_log + u' 修改收货人地址'
             #         order.ship_address = ship_address
 
-            if remark:
+            if 'remark' in request.POST:
                 remark = remark.strip()
                 if order.remark != remark:
                     operate_log = operate_log + u' 修改订单备注'
