@@ -76,7 +76,7 @@ ORDER_CANCEL_ACTION = {
 }
 ORDER_REFUNDIND_ACTION = {
 	'name': u'申请退款',
-	'action': 'refunding',
+	'action': 'return_pay',
 	'button_class': 'btn-danger'
 }
 ORDER_UPDATE_PRICE_ACTION = {
@@ -91,7 +91,7 @@ ORDER_UPDATE_EXPREDSS_ACTION = {
 }
 ORDER_REFUND_SUCCESS_ACTION = {
 	'name': u'退款成功',
-	'action': 'refund_success',
+	'action': 'return_success',
 	'button_class': 'btn-danger'
 }
 
