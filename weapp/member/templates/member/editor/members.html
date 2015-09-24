@@ -459,6 +459,8 @@ $(document).ready(function() {
 			dataView:dataView
 		})
         memberTagsUpdateView.render();
+		$('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 
 	});
 	// 修改分组
@@ -491,6 +493,8 @@ $(document).ready(function() {
 
 		})
         memberTagsUpdateView.render();
+        $('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 	});
 
 	// 修改等级
