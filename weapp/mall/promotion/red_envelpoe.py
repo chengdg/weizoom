@@ -66,7 +66,7 @@ class RedEnvelopeRuleList(resource.Resource):
             flag = True
             for rule in rules:
                 if flag:
-                    if id2coupon_rule[rule.coupon_rule_id].remained_count<=20:
+                    if id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and rule.status:
                         flag = False
                         is_warring = True
                     else:
