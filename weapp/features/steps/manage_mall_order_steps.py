@@ -48,10 +48,11 @@ def step_impl(context, user, order_code):
 @when(u"{user}'{action}'订单'{order_code}'")
 def step_impl(context, action, user, order_code):
     url = '/mall2/api/order/'
+    order_id = bdd_util.get_order_by_order_no(order_code).id
 
     data = {
-        'order_id': bdd_util.get_order_by_order_no(order_code).id,
-        'action': ORDER_ACTION_NAME2ACTION[action]
+            'order_id': order_id,
+            'action': ORDER_ACTION_NAME2ACTION[action]
     }
     response = context.client.post(url, data)
 

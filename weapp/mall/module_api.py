@@ -1360,6 +1360,7 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 		pay_result = True
 		Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
+		# 修改子订单的订单状态，该处有逻辑状态的校验
 		origin_order_id = Order.objects.get(order_id=order_id).id
 		Order.objects.filter(origin_order_id=origin_order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
@@ -1461,24 +1462,27 @@ def ship_order(order_id, express_company_name,
 
 		order_has_delivery_id = 0
 		order = Order.objects.get(id=order_id)
-
-		# 即修改物流信息，也修改状态, 需要加上状态条件
-		if not is_update_express:
-			order_params['status'] = target_status
-			if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-				order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED).order_by('delivery_date')
-				if order_has_delivery_times.count() > 0:
-					order_has_delivery_id = order_has_delivery_times[0].id
-					order_has_delivery_params['status'] = SHIPED
-		else:
-			if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-				order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=SHIPED).order_by('-delivery_date')
-				if order_has_delivery_times.count() > 0:
-					order_has_delivery_id = order_has_delivery_times[0].id
-					order_has_delivery_params['status'] = order_has_delivery_times[0].status
-		OrderHasDeliveryTime.objects.filter(id=order_has_delivery_id).update(**order_has_delivery_params)
 		Order.objects.filter(id=order_id).update(**order_params)
-
+		# order_has_delivery_params = dict()
+		# order_has_delivery_params['express_company_name'] = express_company_name
+		# order_has_delivery_params['express_number'] = express_number
+		# order_has_delivery_params['leader_name'] = leader_name
+		# order_has_delivery_id = 0
+		# 即修改物流信息，也修改状态, 需要加上状态条件
+		# if not is_update_express:
+		# 	order_params['status'] = target_status
+		# 	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
+		# 		order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED).order_by('delivery_date')
+		# 		if order_has_delivery_times.count() > 0:
+		# 			order_has_delivery_id = order_has_delivery_times[0].id
+		# 			order_has_delivery_params['status'] = SHIPED
+		# else:
+		# 	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
+		# 		order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=SHIPED).order_by('-delivery_date')
+		# 		if order_has_delivery_times.count() > 0:
+		# 			order_has_delivery_id = order_has_delivery_times[0].id
+		# 			order_has_delivery_params['status'] = order_has_delivery_times[0].status
+		# OrderHasDeliveryTime.objects.filter(id=order_has_delivery_id).update(**order_has_delivery_params)
 		#发送模板消息
 		# current_final_price = order.final_price
 		# if order.type == PRODUCT_INTEGRAL_TYPE:
@@ -1508,6 +1512,7 @@ def ship_order(order_id, express_company_name,
 		record_status_log(order.order_id, operator_name, order.status, target_status)
 
 		if order.origin_order_id > 0:
+			# 修改子订单状态，上面只修改物流信息
 			set_origin_order_status(order, operator_name, 'ship')
 
 	record_operation_log(order.order_id, operator_name, action, order)
@@ -2209,10 +2214,11 @@ def update_order_status(user, action, order, request=None):
 	services/cancel_not_pay_order_service/tasks.py
 
 	已知action:
-	'action' : 'pay'
-	'action' : 'finish'
-	'action' : 'cancel'
-	'action' : 'return_pay'
+	'action' : 'pay' 支付
+	'action' : 'finish' 完成
+	'action' : 'cancel' 取消
+	'action' : 'return_pay' 退款
+	'action' : 'rship' 发货
 	"""
 	order_id = order.id
 	operation_name = user.username
@@ -2333,8 +2339,6 @@ def update_order_status(user, action, order, request=None):
 		set_children_order_status(order, target_status)
 		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
 			auto_update_grade(webapp_user_id=order.webapp_user_id)
-
-
 
 def __restore_product_stock_by_order(order):
 	"""
@@ -2787,6 +2791,7 @@ def batch_handle_order(json_data, user):
 			if not express_number:
 				raise
 			if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+				# 批量发货
 				if ship_order(order.id, express_company_value, express_number, user.username, u''):
 					success_data.append(item)
 				else:

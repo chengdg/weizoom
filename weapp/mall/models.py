@@ -511,7 +511,7 @@ class Product(models.Model):
 			products,
 			product_ids,
 			only_selected_category=False):
-		categories = list(ProductCategory.objects.filter(owner=webapp_owner))
+		categories = list(ProductCategory.objects.filter(owner=webapp_owner).order_by('id'))
 
 		# 获取product关联的category集合
 		id2product = dict([(product.id, product) for product in products])
@@ -531,7 +531,7 @@ class Product(models.Model):
 
 		category_ids = [category.id for category in categories]
 		id2category = dict([(category.id, category) for category in categories])
-		for relation in CategoryHasProduct.objects.filter(product_id__in=product_ids):
+		for relation in CategoryHasProduct.objects.filter(product_id__in=product_ids).order_by('id'):
 			category_id = relation.category_id
 			product_id = relation.product_id
 			if not category_id in id2category:

@@ -26,17 +26,6 @@ class BulkShipment(resource.Resource):
 
         # 批量处理订单
         success_data, error_items = mall_api.batch_handle_order(json_data, request.manager)
-        # print '------------------'
-        # print json_data
-        # print u'成功处理订单'
-        # print success_data
-        # print u'失败处理订单'
-        # print 'error_rows'
-        # print error_rows
-        # print 'error_items'
-        # print error_items
-
-        # __clean_file(file_url[1:])
         response.data = {
             'success_count': len(success_data),
             'error_count': len(error_rows) + len(error_items),
@@ -114,6 +103,7 @@ class Delivery(resource.Resource):
                 return response.get_response()
         except:
             pass
+        # 订单发货，和批量发货所用的方法相同
         is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username,
                                          leader_name=leader_name, is_update_express=is_update_express)
         if is_success:

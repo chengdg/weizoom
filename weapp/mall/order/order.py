@@ -49,13 +49,26 @@ class OrderInfo(resource.Resource):
         """
         order_id = request.POST['order_id']
         action = request.POST.get('action', None)
+        order_status = request.POST.get('order_status', None)
+        bill_type = int(request.POST.get('bill_type', ORDER_BILL_TYPE_NONE))
+        # postage = request.POST.get('postage', None)
+        ship_name = request.POST.get('ship_name', None)
+        ship_tel = request.POST.get('ship_tel', None)
+        ship_address = request.POST.get('ship_address', None)
         remark = request.POST.get('remark', None)
+        # 待支付状态下 修改价格  最终价格
         final_price = request.POST.get('final_price', None)
+
         order = Order.objects.get(id=order_id)
-
         if action:
-            mall_api.update_order_status(request.user, action, order, request)
+            # 检查order的状态是否可以跳转，如果是非法跳转则报错
 
+            flag = util.check_order_status_filter(order,action)
+            if not flag:
+                response = create_response(500)
+                response.data = {'msg':"非法操作，订单状态不允许进行该操作"}
+                return response.get_response()
+            mall_api.update_order_status(request.user, action, order, request)
         else:
             operate_log = ''
             # expired_status = order.status
@@ -110,12 +123,13 @@ class OrderInfo(resource.Resource):
                     order.remark = remark
 
             if final_price:
-                if float(order.final_price) != float(final_price):
+                # 只有价格不相等 以及待支付的时候 才可以进行订单价格的修改
+                if float(order.final_price) != float(final_price) and order.status == ORDER_STATUS_NOT:
                     operate_log = operate_log + u' 修改订单金额'
                     order.final_price = float(final_price)
                     order.edit_money = (order.product_price + order.postage) - (
                         order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money) - order.final_price
-                    # TODO 临时解决方案，需要数据清理
+                    # 限时抢购
                     promotions = OrderHasPromotion.objects.filter(order_id=order.id)
                     for promotion in promotions:
                         if promotion.promotion_type == 'flash_sale':
@@ -128,7 +142,6 @@ class OrderInfo(resource.Resource):
 
         response = create_response(200)
         return response.get_response()
-
 
 class OrderList(resource.Resource):
     """

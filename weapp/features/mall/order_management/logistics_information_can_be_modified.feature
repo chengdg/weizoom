@@ -19,7 +19,7 @@ Background:
 			"order_no": "0000002",
 			"logistics": "圆通",
 			"number": "100065940000",
-			"status": "已完成",
+			"status": "已发货",
 			"member": "tom"
 		}]
 		"""
@@ -52,7 +52,7 @@ Scenario:jobs修改'0000001'的物流信息
 			"order_no":"0000002",
 			"logistics":"顺丰",
 			"number":"321321321321",
-			"status":"已完成"
+			"status":"已发货"
 		}
 		"""
 	Then tom在webapp查看'0000002'的物流信息
@@ -61,6 +61,6 @@ Scenario:jobs修改'0000001'的物流信息
 			"order_no":"0000002",
 			"logistics":"顺丰",
 			"number":"321321321321",
-			"status":"已完成"
+			"status":"已发货"
 		}
 		"""

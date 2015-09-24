@@ -23,6 +23,7 @@ from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissi
 from core.restful_url_route import api
 from watchdog.utils import watchdog_info
 import re
+from mall.templatetags.mall_filter import *
 
 COUNT_PER_PAGE = 20
 
@@ -716,6 +717,19 @@ def get_orders_response(request, is_refund=False):
 
     return response.get_response()
 
+
+def check_order_status_filter(order,action):
+        """
+            检查订单的状态是否允许跳转
+        """
+        flag = False
+        actions = get_order_actions(order)
+        for ac in actions:
+            if action == ac['action']:
+                flag = True
+        return flag
+
+
 def get_order_status_text(status):
     return STATUS2TEXT[status]
 
@@ -1080,6 +1094,58 @@ def get_channel_qrcode_payed_orders(request):
         'pageinfo': paginator.to_dict(pageinfo),
     }
     return response.get_response()
+
+
+def get_order_actions(order):
+
+	if order.status == ORDER_STATUS_NOT:
+		return [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+	elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY] :
+			if order.has_sub_order:
+				return [ORDER_REFUNDIND_ACTION]
+			else:
+				return [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
+		else:
+			if order.has_sub_order:
+				return [ORDER_CANCEL_ACTION]
+			else:
+				return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+	elif order.status == ORDER_STATUS_PAYED_SHIPED:
+		actions = []
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+			if order.express_company_name:
+				actions = [ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+			else:
+				actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+		else:
+			if order.express_company_name:
+				actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
+			else:
+				actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+		if order.has_sub_order and ORDER_UPDATE_EXPREDSS_ACTION in actions:
+			actions.remove(ORDER_UPDATE_EXPREDSS_ACTION)
+        # 删除掉了东西
+		return actions
+	elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+			if order.express_company_name:
+				if order.has_sub_order:
+					return [ORDER_REFUNDIND_ACTION]
+				else:
+					return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
+			else:
+				return [ORDER_REFUNDIND_ACTION]
+		else:
+			return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+	elif order.status == ORDER_STATUS_SUCCESSED:
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_COD]:
+			return [ORDER_REFUNDIND_ACTION]
+		else:
+			return [ORDER_CANCEL_ACTION]
+	elif order.status == ORDER_STATUS_REFUNDING:
+		return [ORDER_REFUND_SUCCESS_ACTION]
+	return []
 
     # #===============================================================================
     # # get_thanks_card_orders : 获得感恩贺卡类型的订单列表

@@ -140,7 +140,7 @@ Scenario:1 点击给未购买的分享者增加积分
 		}]
 		"""
 	
-@member @member.shared_integral @mall2 
+@member @member.shared_integral @mall2
 Scenario:2 点击给已购买的分享者增加积分
 	bill购买jobs的商品1后，把商品1的链接分享到朋友圈
 	1.nokia点击bill分享的链接后，给bill增加积分
@@ -200,6 +200,7 @@ Scenario:2 点击给已购买的分享者增加积分
 
 	When 清空浏览器
 	Given jobs登录系统
+  	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 	When 清空浏览器
 	When bill访问jobs的webapp
@@ -266,7 +267,7 @@ Scenario:2 点击给已购买的分享者增加积分
 		}]
 		"""
 
-@member @member.shared_integral @mall2 
+@member @member.shared_integral @mall2
 Scenario:3 通过分享链接购买后给分享者增加积分
 	bill把jobs的商品2的链接分享到朋友圈
 	1.nokia点击bill分享的链接并购买，给bill增加积分
@@ -332,6 +333,7 @@ Scenario:3 通过分享链接购买后给分享者增加积分
 
 	When 清空浏览器
 	Given jobs登录系统
+  	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 
 	When 清空浏览器
@@ -385,6 +387,7 @@ Scenario:3 通过分享链接购买后给分享者增加积分
 
 	When 清空浏览器
 	Given jobs登录系统
+  	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 
 	When 清空浏览器
@@ -441,6 +444,7 @@ Scenario:3 通过分享链接购买后给分享者增加积分
 		"""
 	When 清空浏览器
 	Given jobs登录系统
+  	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 
 	When 清空浏览器

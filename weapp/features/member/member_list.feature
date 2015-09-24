@@ -273,7 +273,9 @@ Scenario: 微信用户关注公众号成为会员
 			}]
 		}
 		"""
+  	When bill使用支付方式'货到付款'进行支付
 	Given jobs登录系统
+  	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 	Then jobs可以获得会员列表
 		"""
@@ -334,7 +336,9 @@ Scenario: 微信用户关注公众号成为会员
 			}]
 		}
 		"""
+  	When tom1使用支付方式'货到付款'进行支付
 	Given jobs登录系统
+  	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 	Then jobs可以获得会员列表
 		"""
