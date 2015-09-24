@@ -331,12 +331,26 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         rule_id = request.GET.get('id', None)
         has_data = promotion_models.GetRedEnvelopeRecord.objects.filter(red_envelope_rule_id=rule_id).count()
+        rule_data = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
+        #TODO 传递正确的数字
+        new_member_count = 152
+        received_count = 3000
+        consumption_sum = 13000.00
+        total_use_count = 300
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': get_customerized_apps(request),
             'second_nav_name': 'orderRedEnvelope',
             'has_data': has_data,
-            'red_envelope_id': rule_id
+            'new_member_count': new_member_count,
+            'received_count': received_count,
+            'consumption_sum': consumption_sum,
+            'total_use_count': total_use_count,
+            'red_envelope_id': rule_id,
+            'red_envelope_name': rule_data.name,
+            'red_envelope_start_time': rule_data.start_time.strftime("%Y-%m-%d"),
+            'red_envelope_end_time': rule_data.end_time.strftime("%Y-%m-%d"),
+            'receive_method': rule_data.receive_method
         })
         return render_to_response('mall/editor/red_envelope_participences.html', c)
 
@@ -381,7 +395,6 @@ class RedEnvelopeParticipances(resource.Resource):
         pageinfo, datas = RedEnvelopeParticipances.get_datas(request)
         webappuser2datas = {}
         webapp_user_ids = set()
-        print datas
         for data in datas:
         #     webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
             webapp_user_ids.add(data.member_id)
