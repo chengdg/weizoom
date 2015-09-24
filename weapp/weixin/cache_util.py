@@ -119,11 +119,18 @@ def _parse_rule(user_profile, reply_rule):
 		reply_rule.newses = list(News.objects.filter(material_id=reply_rule.material_id))
 	else:
 		#如果是文本消息，则在末尾加入小尾巴内容
-		tails = Tail.objects.filter(owner_id=user_profile.user_id)
-		if tails.count() > 0:
-			tail = tails[0]
+		#update by bert at 0924
+		try:
+			tail = Tail.objects.get(owner_id=user_profile.user_id)
 			if tail.is_active:
 				reply_rule.answer = reply_rule.answer + tail.tail
+		except:
+			pass
+		# tails = Tail.objects.filter(owner_id=user_profile.user_id)
+		# if tails.count() > 0:
+		# 	tail = tails[0]
+		# 	if tail.is_active:
+		# 		reply_rule.answer = reply_rule.answer + tail.tail
 
 	if (reply_rule.type == TEXT_TYPE or reply_rule.type == NEWS_TYPE) and reply_rule.patterns != '':
 		record_keyword(user_profile.user_id, reply_rule.patterns)  #记录用户发送的关键词
