@@ -6,15 +6,15 @@ ensureNS('W.component.appkit');
 W.component.appkit.SignDescription = W.component.Component.extend({
 	type: 'appkit.signdescription',
 	selectable: 'yes',
-	propertyViewTitle: '微信抽奖',
+	propertyViewTitle: '签到',
 
     dynamicComponentTypes: [{
         type: 'appkit.signitem',
-        model: 2
+        model: 366
     }],
 
 	properties: [{
-		group: '文本调研项',
+		group: '签到设置',
 		groupClass: 'xui-propertyView-app-Selection',
 		fields: [{
 			name: 'title_group',
@@ -45,8 +45,14 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 		},{
 			name: 'image',
 			type: 'image_dialog_select',
-			displayName: '分享图片',
+			displayName: '上传图片',
 			isUserProperty: true,
+			isShowCloseButton: true,
+			triggerButton: {nodata:'选择图片', hasdata:'修改'},
+			selectedButton: '选择图片',
+			dialog: 'W.dialog.termite.SelectImagesDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '注:不上传则使用默认图片,建议尺寸90*90，仅支持jpg/png',
 			default: ''
 		},{
 			name: 'share_description',
@@ -61,7 +67,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			displayName: '自动回复',
 			isUserProperty: true
 		},{
-			name: 'keyword',
+			name: 'reply_keyword',
 			type: 'text',
 			displayName: '关键字',
 			isUserProperty: true,
@@ -70,7 +76,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
-			name: 'reply',
+			name: 'reply_content',
 			type: 'textarea',
 			displayName: '回复内容',
 			maxLength: 200,
@@ -81,6 +87,30 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			type: 'title_with_annotation',
 			displayName: '签到设置',
 			isUserProperty: true
+		},{
+			name:'daily_group',
+			displayName:'每日签到',
+			type:'title_with_annotation',
+			isUserProperty:true
+
+		},{
+			name: 'daily_points',
+			type: 'text_with_annotation_v2',
+			displayName: '送积分',
+			isUserProperty: true,
+			maxLength: 5,
+			size: '70px',
+			annotation: '积分',
+			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
+			validateIgnoreDefaultValue: true,
+			default: ''
+		},{
+			name: 'daily_prizes',
+			type: 'prize_selector_v4',
+			displayName: '送优惠券',
+			isUserProperty: true,
+			help:"仅能选择限领为“不限”的优惠券",
+			default:""
 		},{
 			name: 'items',//动态组件,那个加好
             displayName: '',
@@ -94,54 +124,63 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 	}],
 
 	propertyChangeHandlers: {
-		//title: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.xa-title').text(value);
-		//},
-		//start_time: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.wui-i-start_time').text(value);
-		//},
-		//end_time: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.wui-i-end_time').text(value);
-		//},
-		//description: function($node, model, value, $propertyViewNode) {
-		//	model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
-		//	$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
-		//},
-		//expend: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.wui-lotterydescription .xa-remainedIntegral strong').text(value);
-		//},
-		//delivery: function($node, model, value, $propertyViewNode) {
-		//	$node.find('.wui-i-prize>.xa-delivery').html(value);
-		//},
-		//limitation: function($node, model, value, $propertyViewNode) {
-		//	switch (value){
-		//		case 'once_per_user':
-		//			value = '1';
-		//			break;
-		//		case 'once_per_day':
-		//			value = '1';
-		//			break;
-		//		case 'twice_per_day':
-		//			value = '2';
-		//			break;
-		//		case 'no_limit':
-		//			value = '-1';
-		//			break;
-		//		default :
-		//			value = '0';
-		//			break;
-		//	}
-		//	var $header = $node.find('.wui-lotterydescription').find('.xa-header');
-		//	if(value == '-1'){
-		//		$header.addClass('wui-lotterydescription-hide');
-		//	}else{
-		//		$header.removeClass('wui-lotterydescription-hide').find('p b').html(value);
-		//	}
-        //
-		//}
+		image: function($node, model, value, $propertyViewNode) {
+			var image = {url:''};
+			var data = {type:null};
+			if (value !== '') {
+				data = $.parseJSON(value);
+				image = data.images[0];
+			}
+			model.set({
+				image: image.url
+			}, {silent: true});
+
+			if (data.type === 'newImage') {
+				W.resource.termite2.Image.put({
+					data: image,
+					success: function(data) {
+					},
+					error: function(resp) {
+					}
+				})
+			}
+
+			if (value) {
+				//更新propertyView中的图片
+				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
+		},
+		items: function($node, model, value) {
+			/*
+            var index = 1;
+            var orderedCids = value;
+            _.each(orderedCids, function(cid) {
+                W.component.CID2COMPONENT[cid].model.set('index', index++, {
+                    silent: true
+                });
+            });
+
+            _.delay(_.bind(function() {
+                W.Broadcaster.trigger('component:finish_create', null, this);
+            }, this), 100);
+			*/
+            this.refresh($node, {resize:true, refreshPropertyView:true});
+        },
+		daily_points:function($node, model, value){
+			var daily_points = value;
+			$node.find('.daily_points').text(points);
+
+		},
+		daily_prizes:function($node, model, value){
+			var daily_prizes = value;
+			$node.find('.daily_prizes').text(daily_prizes);
+		}
+
 	},
 
 	initialize: function(obj) {
 		this.super('initialize', obj);
+
 	}
 });

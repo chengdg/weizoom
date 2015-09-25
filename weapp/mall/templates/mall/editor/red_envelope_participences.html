@@ -2,10 +2,13 @@
 {% load apps_filter %}
 {% block css %}
     <style>
-    .tl.pl25 img{
+    .tl.pl10 img{
     	height: 60px;
     	width: 60px;
     }
+	input.xa-select {
+	  margin-left: 10px;
+	}
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -120,7 +123,7 @@
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
 				<td
-					class="tl pl25"
+					class="tl pl10"
 					style="width:250px; height:60px;"
 				>
 					<img src="${item.participant_icon}" />

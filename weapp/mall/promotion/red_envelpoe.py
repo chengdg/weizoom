@@ -332,21 +332,22 @@ class RedEnvelopeParticipances(resource.Resource):
         获取advanced table
         """
         pageinfo, datas = RedEnvelopeParticipances.get_datas(request)
-        webappuser2datas = {}
-        webapp_user_ids = set()
+        member2datas = {}
+        member_ids = set()
         for data in datas:
-        #     webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
-            webapp_user_ids.add(data.member_id)
-        #     data.participant_name = u'未知'
-        #     data.participant_icon = '/static/img/user-1.jpg'
+            print data
+            member2datas.setdefault(data.member_id, []).append(data)
+            member_ids.add(data.member_id)
+            data.participant_name = u'未知'
+            data.participant_icon = '/static/img/user-1.jpg'
 
-        webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
-        if len(webappuser2member) > 0:
-            for webapp_user_id, member in webappuser2member.items():
-                for data in webappuser2datas.get(webapp_user_id, ()):
-                    if member.is_subscribed:
-                        data.participant_name = member.username_for_html
-                        data.participant_icon = member.user_icon
+        if len(member_ids) > 0:
+            for member in member_ids:
+                for data in member2datas.get(member, ()):
+                    member2data = member_models.Member.objects.get(id=member)
+                    if member2data.is_subscribed:
+                        data.participant_name = member2data.username_for_html
+                        data.participant_icon = member2data.user_icon
                     else:
                         data.participant_name = u'非会员'
                         data.participant_icon = '/static/img/user-1.jpg'
@@ -356,8 +357,8 @@ class RedEnvelopeParticipances(resource.Resource):
             red_envelope_participance = promotion_models.GetRedEnvelopeRecord.objects.get(id=data.id)
             items.append({
 				'id': str(data.id),
-				# 'participant_name': data.participant_name,
-				# 'participant_icon': data.participant_icon,
+				'participant_name': data.participant_name,
+				'participant_icon': data.participant_icon,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 			})
         response_data = {
