@@ -57,10 +57,11 @@ class Sign(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = request_util.get_fields_to_be_save(request)
+		data = get_sing_fields_to_be_save(request)
 		status = request.POST['status']
 		if status:
 			data['status'] = 0 if status == 'off' else 1
+		data['related_page_id'] = request.POST['related_page_id']
 		sign = app_models.Sign(**data)
 		sign.save()
 		error_msg = None
@@ -85,7 +86,7 @@ class Sign(resource.Resource):
 			response = create_response(200)
 			return response.get_response()
 
-		data = request_util.get_fields_to_be_save(request)
+		data = get_sing_fields_to_be_save(request)
 		update_data = {}
 		update_fields = set(['name', 'start_time', 'end_time'])
 		for key, value in data.items():
@@ -105,3 +106,29 @@ class Sign(resource.Resource):
 		
 		response = create_response(200)
 		return response.get_response()
+
+
+def get_sing_fields_to_be_save(request):
+	fields = request.POST.dict()
+	print fields
+	fields['created_at'] = datetime.today()
+	fields['owner_id'] = request.user.id
+
+	webapp_user = getattr(request, 'webapp_user', None)
+	if webapp_user:
+		fields['webapp_user_id'] = request.webapp_user.id
+
+	member = getattr(request, 'member', None)
+	if member:
+		fields['member_id'] = request.member.id
+
+	if 'prize_settings' in request.POST:
+		fields['prize_settings'] = json.loads(fields['prize_settings'])
+
+	if 'share' in request.POST:
+		fields['share'] = json.loads(fields['share'])
+
+	if 'reply' in request.POST:
+		fields['reply'] = json.loads(fields['reply'])
+
+	return fields

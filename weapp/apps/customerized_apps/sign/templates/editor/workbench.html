@@ -253,7 +253,7 @@
           return '您对页面的编辑还没保存，请先保存页面'
         } else {
         }
-      })
+      });
       
       var pageManagerView = new W.workbench.PageManagerView({
         el: '#leftPanel',
@@ -279,24 +279,59 @@
       W.Synchronizer = synchronizer;
       
       loadPages(pageManagerView);
-      
+
       $('.xa-save').click(function() {
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
-          var descriptionModel = page.components[0].model;
-          var name = descriptionModel.get('title');
-          var startTime = descriptionModel.get('start_time')+":00";
-          var endTime = descriptionModel.get('end_time')+":00";
-          var relatedPageId = data['project_id'];
-          var args = {
-            "name": name,
-            "status": signStatus,
-            "start_time": startTime,
-            "end_time": endTime
-          }
+        var descriptionModel = page.components[0].model;
+        var dynamicComponents = page.components[0].components;
+            var name = descriptionModel.get('title');
+
+            var share_img =descriptionModel.get('image');
+            var share_desc =descriptionModel.get('share_description');
+            var share = {"img":share_img,"desc":share_desc};
+
+            var reply_keyword = descriptionModel.get('reply_keyword');
+            var reply_content = descriptionModel.get('reply_content');
+            var reply ={"keyword":reply_keyword,"content":reply_content};
+
+            var daily_points = descriptionModel.get('daily_points');
+            var daily_prizes = descriptionModel.get('daily_prizes');
+                    console.log('!!!!!!!!!!!!!!!!!!!');
+                    console.log(daily_prizes);
+            var prize_setings = {
+                '0':{
+                        'integral':daily_points,
+                        'coupon':daily_prizes ? {
+                            'id': daily_prizes.data.id,
+                            'name': daily_prizes.data.name
+                        } : ''
+                    }
+                };
+            for(var i=0;i<dynamicComponents.length;i++){
+                var index = dynamicComponents[i].model.get('serial_count');
+                var serial_prizes = dynamicComponents[i].model.get('serial_count_prizes');
+                prize_setings[index]={
+                    'integral':dynamicComponents[i].model.get('serial_count_points'),
+                    'coupon':serial_prizes? {
+                        'id': serial_prizes.data.id,
+                        'name': serial_prizes.data.name
+                    }: ''
+                }
+            }
+
+            var args ={
+                'name':name,
+                'share':JSON.stringify(share),
+                'reply':JSON.stringify(reply),
+                'prize_settings':JSON.stringify(prize_setings),
+                'status': signStatus
+            };
+
+
           if (isCreateNewData) {
             var method = 'put';
-            args['related_page_id'] = relatedPageId;
+            args['related_page_id'] = data['project_id'];
           } else {
             var method = 'post';
             args['id'] = W.activityId;
@@ -318,7 +353,9 @@
               W.showHint('error', '保存失败!');
             }
           });
-        });
+        }
+
+        );
       });
       
       W.isReady = true;
@@ -345,7 +382,7 @@
                 return;
             }
         }
-        
+
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];

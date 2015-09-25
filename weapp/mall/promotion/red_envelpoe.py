@@ -56,13 +56,6 @@ class RedEnvelopeRuleList(resource.Resource):
 
             id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
                                    promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids)])
-            records = promotion_models.GetRedEnvelopeRecord.objects.filter(owner=request.manager)
-            rule_id2count = {}
-            for record in records:
-                if rule_id2count.has_key(record.red_envelope_rule_id):
-                    rule_id2count[record.red_envelope_rule_id] += 1
-                else:
-                    rule_id2count[record.red_envelope_rule_id] = 1
             flag = True
             for rule in rules:
                 if flag:
@@ -82,7 +75,6 @@ class RedEnvelopeRuleList(resource.Resource):
                     "end_time": rule.end_time.strftime("%Y/%m/%d %H:%M:%S"),
                     "coupon_rule_name": id2coupon_rule[rule.coupon_rule_id].name,
                     "status": rule.status,
-                    "get_count": rule_id2count[rule.id] if rule_id2count.has_key(rule.id) else 0,
                     "remained_count": id2coupon_rule[rule.coupon_rule_id].remained_count,
                     "is_timeout": False if rule.end_time > datetime.now() else True,
                     "receive_method": rule.receive_method,

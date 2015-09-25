@@ -193,7 +193,7 @@ post_update_signal.connect(update_webapp_owner_info_cache_with_login,
 
 def get_red_envelope_for_cache(owner_id):
     def inner_func():
-        red_envelope = promotion_models.RedEnvelopeRule.objects.filter(owner_id=owner_id, status=True)
+        red_envelope = promotion_models.RedEnvelopeRule.objects.filter(owner_id=owner_id, status=True,receive_method=False)
         result = {}
         if len(red_envelope):
             red_envelope = red_envelope[0]
