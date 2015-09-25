@@ -253,7 +253,7 @@
           return '您对页面的编辑还没保存，请先保存页面'
         } else {
         }
-      })
+      });
       
       var pageManagerView = new W.workbench.PageManagerView({
         el: '#leftPanel',
@@ -279,46 +279,66 @@
       W.Synchronizer = synchronizer;
       
       loadPages(pageManagerView);
-      
+
       $('.xa-save').click(function() {
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
-          var descriptionModel = page.components[0].model;
-          var name = descriptionModel.get('title');
-          var startTime = descriptionModel.get('start_time')+":00";
-          var endTime = descriptionModel.get('end_time')+":00";
-          var relatedPageId = data['project_id'];
-          var args = {
-            "name": name,
-            "status": signStatus,
-            "start_time": startTime,
-            "end_time": endTime
-          }
-          if (isCreateNewData) {
-            var method = 'put';
-            args['related_page_id'] = relatedPageId;
-          } else {
-            var method = 'post';
-            args['id'] = W.activityId;
-            args['signId'] = W.activityId;
-          }
-          W.getApi().call({
-            app: 'apps/sign',
-            resource: 'sign',
-            method: method,
-            args: args,
-            success: function(data) {
-              W.showHint('success', '保存成功');
-                isCreateNewData = false;
-                if(data && data.id){
-                    W.activityId = data.id;
-                }
-            },
-            error: function(resp) {
-              W.showHint('error', '保存失败!');
+        var descriptionModel = page.components[0].model;
+        var dynamicComponents = page.components[0].components;
+            var name = descriptionModel.get('title');
+
+            var share_img = "image";//xxx???
+            var share_desc =descriptionModel.get('share_description');
+            var share = {"img":share_img,"desc":share_desc};
+
+            var reply_keyword = descriptionModel.get('reply_keyword');
+            var reply_content = descriptionModel.get('reply_content');
+            var reply ={"keyword":reply_keyword,"content":reply_content};
+
+            var daily_points = descriptionModel.get('daily_points');
+            var daily_prizes = descriptionModel.get('daily_prizes');
+            var prize_setings = {'0':{'serial_count':0,'integral':daily_points,'coupon':daily_prizes}};
+            for(var i=1;i<dynamicComponents.length+1;i++){
+                prize_setings[i]={'serial_count':dynamicComponents[i].model.get('serial_count'),
+                'integral':dynamicComponents[i].model.get('serial_count_points'),
+                'coupon':dynamicComponents[i].model.get('serial_count_prizes')}
             }
-          });
-        });
+
+            var args ={
+                'name':name,
+                'share':share,
+                'reply':reply,
+                'prize_settings':prize_setings
+            };
+
+
+{#          if (isCreateNewData) {#}
+{#            var method = 'put';#}
+{#            args['related_page_id'] = relatedPageId;#}
+{#          } else {#}
+{#            var method = 'post';#}
+{#            args['id'] = W.activityId;#}
+{#            args['signId'] = W.activityId;#}
+{#          }#}
+{#          W.getApi().call({#}
+{#            app: 'apps/sign',#}
+{#            resource: 'sign',#}
+{#            method: method,#}
+{#            args: args,#}
+{#            success: function(data) {#}
+{#              W.showHint('success', '保存成功');#}
+{#                isCreateNewData = false;#}
+{#                if(data && data.id){#}
+{#                    W.activityId = data.id;#}
+{#                }#}
+{#            },#}
+{#            error: function(resp) {#}
+{#              W.showHint('error', '保存失败!');#}
+{#            }#}
+{#          });#}
+        }
+
+        );
       });
       
       W.isReady = true;
@@ -345,7 +365,7 @@
                 return;
             }
         }
-        
+
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];

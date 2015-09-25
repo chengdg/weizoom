@@ -52,7 +52,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
-			help: '格式：建议jpg.png 尺寸：50*50 不超过1M',
+			help: '注:不上传则使用默认图片,建议尺寸90*90，仅支持jpg/png',
 			default: ''
 		},{
 			name: 'share_description',
@@ -88,7 +88,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			displayName: '签到设置',
 			isUserProperty: true
 		},{
-			name:'sign0_group',
+			name:'daily_group',
 			displayName:'每日签到',
 			type:'title_with_annotation',
 			isUserProperty:true
@@ -181,5 +181,6 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 
 	initialize: function(obj) {
 		this.super('initialize', obj);
+
 	}
 });
