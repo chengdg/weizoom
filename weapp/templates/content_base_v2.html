@@ -224,48 +224,55 @@
 
 </script>
  <script type="text/javascript">
+
+    document.addEventListener("visibilitychange", common_interval_check_func, false);
+
     function common_interval_check_func(){
-      W.getApi().call({
-          app:'new_weixin',
-          resource:'outline',
-          showLoading: false,
-          args:{},
-          success: function (data) {
-            //待发货订单计数
-            var unship_order_count = data.unship_order_count;
-            var orderTipItem = $('.xa-orderTip');
-            if(unship_order_count>0){
-                orderTipItem.show();
-                if(unship_order_count>99){
-                   orderTipItem.text(99);
+
+        if(document.visibilityState == 'visible'){
+            W.getApi().call({
+              app:'new_weixin',
+              resource:'outline',
+              showLoading: false,
+              args:{},
+              success: function (data) {
+                //待发货订单计数
+                var unship_order_count = data.unship_order_count;
+                var orderTipItem = $('.xa-orderTip');
+                if(unship_order_count>0){
+                    orderTipItem.show();
+                    if(unship_order_count>99){
+                       orderTipItem.text(99);
+                    }
+                    else{
+                       orderTipItem.text(unship_order_count);
+                    }
                 }
                 else{
-                   orderTipItem.text(unship_order_count);
+                  orderTipItem.hide();
+                  orderTipItem.text(0);
                 }
-            }
-            else{
-              orderTipItem.hide();
-              orderTipItem.text(0);
-            }
 
-                //微信未读消息计数
-                var unreadRealtimeCount = data.unread_realtime_count;
-                // $('#message_notify').html('new');
-                if (parseInt(unreadRealtimeCount) > 0){
-                    $('.xa-num-unread-message-count').css('display', 'block');
-                    if (parseInt(unreadRealtimeCount) > 99){
-                        unreadRealtimeCount = '99+'
+                    //微信未读消息计数
+                    var unreadRealtimeCount = data.unread_realtime_count;
+                    // $('#message_notify').html('new');
+                    if (parseInt(unreadRealtimeCount) > 0){
+                        $('.xa-num-unread-message-count').css('display', 'block');
+                        if (parseInt(unreadRealtimeCount) > 99){
+                            unreadRealtimeCount = '99+'
+                        }
+                        $('.xa-num-unread-message-count').text(unreadRealtimeCount);
+                    } else {
+                        $('.xa-num-unread-message-count').css('display', 'none');
                     }
-                    $('.xa-num-unread-message-count').text(unreadRealtimeCount);
-                } else {
-                    $('.xa-num-unread-message-count').css('display', 'none');
-                }
 
           },
           error: function(resp) {
             //TODO 进行错误通知
           }
       })
+        }
+
     }
 	$(document).ready(function($) {
 		if($('.xui-navBar-box .active').length==0 && $('.xui-navBar-box a').length){
