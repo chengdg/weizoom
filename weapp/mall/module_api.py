@@ -507,6 +507,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				pass
 		product.detail = str(soup)
 
+		# product.mark = str(product.id) + '-' + product.model_name
 		data = product.to_dict(
 								'min_limit',
 								'swipe_images_json',
@@ -1272,43 +1273,11 @@ def get_orders(request):
 
 	orderIds = [order.id for order in orders]
 	order2count = {}
-	orderId2order = dict()
+	orderId2order = dict([(order.id,order) for order in orders])
 
 	orderHasProducts = OrderHasProduct.objects.filter(order_id__in=orderIds)
-	for order_product_relation in orderHasProducts:
-		order_id = order_product_relation.order_id
-		old_count = 0
-		if order_id in order2count:
-			old_count = order2count[order_id]
-		order2count[order_id] = old_count + order_product_relation.number
-
-	red_envelope = request.webapp_owner_info.red_envelope
-	red_envelope_orderIds = []
-	for order in orders:
-		orderId2order[order.id] = order
-		order.product_count = order2count.get(order.id, 0)
-		if order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - order.update_at).days >= 3:
-			#订单发货后3天显示确认收货按钮
-			if not hasattr(order, 'session_data'):
-				order.session_data = dict()
-			order.session_data['has_comfire_button'] = '1'
-		if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
-			# 订单满足红包条件
-			order.red_envelope = True
-			red_envelope_orderIds.append(order.id)
-		else:
-			order.red_envelope = False
-
-	order_product_has_review = {}
-	user_product_review = mall_models.ProductReview.objects.filter(
-		member_id=request.member.id
-	)
-	for i in user_product_review:
-		key = "%s_%s" % (i.order_id, i.product_id)
-		order_product_has_review[key] = True
 
 	totalProductIds = [orderHasProduct.product_id for orderHasProduct in orderHasProducts]
-	productId2products = dict([(product.id, product) for product in Product.objects.filter(id__in=totalProductIds)])
 	orderId2productIds = dict()
 
 	from cache import webapp_cache
@@ -1321,20 +1290,45 @@ def get_orders(request):
 		orderId2productIds.get(orderHasProduct.order_id).append(orderHasProduct.product_id)
 		if not hasattr(orderId2order[orderHasProduct.order_id], 'products'):
 			orderId2order[orderHasProduct.order_id].products = []
-		product = productId2products[orderHasProduct.product_id]
-		product.price = orderHasProduct.price
-		product.number = orderHasProduct.number
+		product = copy.copy(cache_productId2cache_products[orderHasProduct.product_id])
 		product.properties = product.fill_specific_model(orderHasProduct.product_model_name, cache_productId2cache_products[product.id].models)
 		orderId2order[orderHasProduct.order_id].products.append(product)
 
-	exist_red_envelope_orderIds = [relation.order_id for relation in
-		promotion_models.RedEnvelopeToOrder.objects.filter(order_id__in=red_envelope_orderIds)]
+		order_id = orderHasProduct.order_id
+		old_count = 0
+		if order_id in order2count:
+			old_count = order2count[order_id]
+		order2count[order_id] = old_count + orderHasProduct.number
+
+	red_envelope = request.webapp_owner_info.red_envelope
+	red_envelope_orderIds = []
+
+	order_product_has_review = dict([(str(review.order_id) + "_" + str(review.product_id), True) for review in mall_models.ProductReview.objects.filter(member_id=request.member.id)])
+
 	for order in orders:
+		order.product_count = order2count.get(order.id, 0)
+
 		is_finished = True
 		for productId in orderId2productIds.get(order.id, []):
 			key = "%s_%s" % (order.id, productId)
 			is_finished = is_finished & order_product_has_review.get(key, False)
 		order.review_is_finished = is_finished
+
+		if order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - order.update_at).days >= 3:
+			#订单发货后3天显示确认收货按钮
+			if not hasattr(order, 'session_data'):
+				order.session_data = dict()
+			order.session_data['has_comfire_button'] = '1'
+		if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+			# 订单满足红包条件
+			order.red_envelope = True
+			red_envelope_orderIds.append(order.id)
+		else:
+			order.red_envelope = False
+
+	exist_red_envelope_orderIds = [relation.order_id for relation in
+		promotion_models.RedEnvelopeToOrder.objects.filter(order_id__in=red_envelope_orderIds)]
+	for order in orders:
 		if order.red_envelope and order.id in exist_red_envelope_orderIds:
 			# 订单已经访问过领取红包页面，不显示红包标识
 			order.red_envelope = False
