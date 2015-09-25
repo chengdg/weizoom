@@ -61,6 +61,7 @@ class Sign(resource.Resource):
 		status = request.POST['status']
 		if status:
 			data['status'] = 0 if status == 'off' else 1
+		data['related_page_id'] = request.POST['related_page_id']
 		sign = app_models.Sign(**data)
 		sign.save()
 		error_msg = None
@@ -109,6 +110,7 @@ class Sign(resource.Resource):
 
 def get_sing_fields_to_be_save(request):
 	fields = request.POST.dict()
+	print fields
 	fields['created_at'] = datetime.today()
 	fields['owner_id'] = request.user.id
 

@@ -297,20 +297,35 @@
 
             var daily_points = descriptionModel.get('daily_points');
             var daily_prizes = descriptionModel.get('daily_prizes');
-            var prize_setings = {'0':{'serial_count':0,'integral':daily_points,'coupon':daily_prizes}};
+                    console.log('!!!!!!!!!!!!!!!!!!!');
+                    console.log(daily_prizes);
+            var prize_setings = {
+                '0':{
+                        'integral':daily_points,
+                        'coupon':daily_prizes ? {
+                            'id': daily_prizes.data.id,
+                            'name': daily_prizes.data.name
+                        } : ''
+                    }
+                };
             for(var i=0;i<dynamicComponents.length;i++){
                 var index = dynamicComponents[i].model.get('serial_count');
+                var serial_prizes = dynamicComponents[i].model.get('serial_count_prizes');
                 prize_setings[index]={
                     'integral':dynamicComponents[i].model.get('serial_count_points'),
-                    'coupon':dynamicComponents[i].model.get('serial_count_prizes')
+                    'coupon':serial_prizes? {
+                        'id': serial_prizes.data.id,
+                        'name': serial_prizes.data.name
+                    }: ''
                 }
             }
 
             var args ={
                 'name':name,
-                'share':share,
-                'reply':reply,
-                'prize_settings':prize_setings
+                'share':JSON.stringify(share),
+                'reply':JSON.stringify(reply),
+                'prize_settings':JSON.stringify(prize_setings),
+                'status': signStatus
             };
 
 
