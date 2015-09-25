@@ -10,7 +10,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 
     dynamicComponentTypes: [{
         type: 'appkit.signitem',
-        model: 366
+        model: 2
     }],
 
 	properties: [{
@@ -117,7 +117,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
             type: 'dynamic-generated-control',
             isShowCloseButton: false,
             minItemLength: 2,
-			maxItemLength: 4,
+			maxItemLength: 10,
             isUserProperty: true,
             default: []
         }]
@@ -152,29 +152,14 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			}
 		},
 		items: function($node, model, value) {
-			/*
-            var index = 1;
-            var orderedCids = value;
-            _.each(orderedCids, function(cid) {
-                W.component.CID2COMPONENT[cid].model.set('index', index++, {
-                    silent: true
-                });
-            });
-
-            _.delay(_.bind(function() {
-                W.Broadcaster.trigger('component:finish_create', null, this);
-            }, this), 100);
-			*/
             this.refresh($node, {resize:true, refreshPropertyView:true});
         },
 		daily_points:function($node, model, value){
-			var daily_points = value;
-			$node.find('.daily_points').text(points);
+			$node.find('.daily_points').text(value);
 
 		},
 		daily_prizes:function($node, model, value){
-			var daily_prizes = value;
-			$node.find('.daily_prizes').text(daily_prizes);
+			$node.find('.daily_prizes').text(value);
 		}
 
 	},

@@ -2,7 +2,7 @@ ensureNS('W.view.apps');
 W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 	events: {
 		'click .xa-selectCoupon': 'onClickSelectCouponLink',
-		'click .xa-removeCoupon': 'onClickRemoveCoupon',
+		'click .xa-removeCoupon': 'onClickRemoveCoupon'
 	},
 
 	templates: {
@@ -24,20 +24,6 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 		this.$el.append(html);
 	},
 
-	onChangeSelect: function(event) {
-		var $select = $(event.currentTarget);
-		var prizeType = $select.val();
-		this.$('.xui-apps-prizeSelector').removeClass('has_error');
-		this.$('.xa-optionTarget').hide();
-		this.$('.errorHint').hide();
-		this.$('.xa-entity').val('');
-		this.$('[data-target="'+prizeType+'"]').show().css('display','inline');
-
-		this.prize['type'] = prizeType;
-		this.prize['data'] = null;
-		this.trigger('change-prize', _.deepClone(this.prize));
-	},
-
 	onClickSelectCouponLink: function(event) {
 		var _this = this;
 		W.dialog.showDialog('W.dialog.mall.SelectCouponDialog', {
@@ -51,8 +37,7 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 				xwarn(_this.prize);
 
 				_this.$el.find('.xa-couponName').text(coupon.name);
-				_this.$el.find('.xa-optionTarget').hide();
-				_this.$el.find('.xa-selectedCoupon').show().css('display', 'inline');
+				_this.$el.find('.xa-selectedCoupon').removeClass('xui-hide');
 
 				_this.trigger('change-prize', _.deepClone(_this.prize));
 			}
@@ -60,7 +45,7 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 	},
 
 	onClickRemoveCoupon: function(event) {
-		this.$el.find('.xa-optionTarget').hide();
+		this.$el.find('.xa-optionTarget').addClass('xui-hide');
 		this.$el.find('.xa-selectCoupon').show();
 		this.$('.coupon_div').css('display', 'inline');
 		this.prize['type'] = 'coupon';
@@ -72,7 +57,7 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 W.registerUIRole('[data-ui-role="apps-prize-selector-v4"]', function() {
     var $el = $(this);
     var view = new W.view.apps.PrizeSelectorV4({
-        el: $el.get(0),
+        el: $el.get(0)
     });
     view.render();
 
