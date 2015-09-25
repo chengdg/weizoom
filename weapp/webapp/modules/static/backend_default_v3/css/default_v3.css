@@ -138,6 +138,11 @@ input,textarea{
     background: none repeat scroll 0 0 #666;
     color: #000000;
 }
+.xui-btn-warring {
+    border: 1px solid #F39A00;
+    background: none repeat scroll 0 0 #F39A00;
+    color: #ffffff;
+}
 
 /* icon样式 */
 .xui-icon {
