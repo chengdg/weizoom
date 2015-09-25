@@ -616,7 +616,7 @@ $(document).ready(function() {
 		var member_name = '';
 		$('input.xa-select:checked').each(function(){;
 			if($(this).parent().parent().data('status') == '1'){
-    			member_ids.push($(this).parent().parent().attr('data-id'));
+    			member_ids.push($(this).parent().parent().data('id'));
 			}
   		});
   		if(member_ids.length == 0){

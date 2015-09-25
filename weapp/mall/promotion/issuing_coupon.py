@@ -18,6 +18,7 @@ from mall import models as mall_models
 from modules.member.module_api import get_member_by_id_list
 from modules.member.models import (MemberGrade, MemberTag, WebAppUser)
 from core import search_util
+from market_tools.tools.coupon.tasks import send_message_to_member
 
 
 COUNT_PER_PAGE = 10
@@ -174,7 +175,8 @@ class IssuingCouponsRecord(resource.Resource):
         send_count = pre_person_count * person_count  # 发放的张数
 
         # 对应优惠券的库存
-        coupon_count = promotion_models.CouponRule.objects.get(id=coupon_rule_id).remained_count
+        coupon_rule = promotion_models.CouponRule.objects.get(id=coupon_rule_id)
+        coupon_count = coupon_rule.remained_count
         if coupon_count < send_count:
             response = create_response(500)
             response.errMsg = u"发放数量大于优惠券库存,请先增加库存"
@@ -200,6 +202,8 @@ class IssuingCouponsRecord(resource.Resource):
                                                  coupon_record_id=coupon_record.id)
                     if coupon:
                         c_real_count += 1
+                        #给用户发优惠券提示
+                        send_message_to_member(coupon_rule, member_id)
                     c_index += 1
                 if c_real_count:
                     real_person_count += 1

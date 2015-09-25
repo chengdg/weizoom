@@ -24,8 +24,8 @@ class Command(BaseCommand):
             user_ids.append(component.user_id)
 
         now = datetime.now()
-        expired_time_g = datetime.now() + timedelta(hours=35)
-        expired_time_l = datetime.now() + timedelta(hours=38)
+        expired_time_g = datetime.now() + timedelta(hours=36)
+        expired_time_l = datetime.now() + timedelta(hours=37)
 
         coupons = promotion_models.Coupon.objects.filter(
             owner_id__in=user_ids,
@@ -43,8 +43,10 @@ class Command(BaseCommand):
                 if coupon.coupon_rule.valid_restrictions > -1:
                     model_data["coupon_store"] = u"满%s元即可使用" % str(coupon.coupon_rule.valid_restrictions)
 
+                print u"给用户{}发优惠券过期提醒！".format(coupon.member_id)
                 template_message_api.send_weixin_template_message(coupon.owner_id, coupon.member_id, model_data, template_message_model.COUPON_EXPIRED_REMIND)
             except:
+                print unicode_full_stack()
                 alert_message = u"ship_order 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
                 watchdog_warning(alert_message)
 

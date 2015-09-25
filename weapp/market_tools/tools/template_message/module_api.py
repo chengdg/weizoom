@@ -177,7 +177,7 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
 	if not template_message:
 		return False
 	template_message.send_point = send_point
-	#return _get_send_message_dict(user_profile, member_id, model, template_message)
+	# return _get_send_message_dict(user_profile, member_id, model, template_message)
 
 	if model and user_profile and template_message and template_message.template_id:
 		mpuser_access_token = _get_mpuser_access_token(user)
@@ -246,7 +246,10 @@ def __get_detail_data_by_template(template_message_detail, model):
 	detail_data = dict()
 	if template_message_detail.attribute:
 		if template_message_detail.send_point == COUPON_ARRIVAL_NOTIFY:
-			return __get_coupon_detail_data(template_message_detail.attribute, model)
+			detail_data = __get_coupon_detail_data(template_message_detail.attribute, model)
+			detail_data['keyword2'] = {"value" : datetime.now().strftime('%Y%m%d'), "color" : "#173177"}
+			return detail_data
+			
 		elif template_message_detail.send_point == COUPON_EXPIRED_REMIND:
 			return __get_coupon_detail_data(template_message_detail.attribute, model)
 
