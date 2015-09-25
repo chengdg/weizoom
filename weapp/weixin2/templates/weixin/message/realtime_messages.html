@@ -100,13 +100,12 @@
 								</a>
 							{{/if}}
 							{{if message.message_type == 'voice'}}
-								<div class="xui-i-voiceContainer ">
+								<div name="messageContent" class="xui-i-voiceContainer ">
 									<audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
 									<div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
 									<span class="xui-clock xa-clock" style="left: 100px;position:absolute;top:5px;"></span>
 								</div>
 							{{/if}}
-
 
 							<div class="xui-i-remark xa-i-remark {{if message.remark}} "" {{else}} xui-hidden {{/if}}">
 								{{if message.remark}}
@@ -205,7 +204,7 @@ if (__realtimeMessageQueryString) {
 
 function submitReply(message, openid, sessionId, $current) {
 	var $parent = $current.parents('tr');
-	var $messageContent = $parent.find('span[name="messageContent"]');
+	var $messageContent = $parent.find('[name="messageContent"]');
 	var $messageReplyAt = $parent.find('span[name="messageReplyAt"]');
 	var $messageCreatedAt = $parent.find('div[name="messageCreatedAt"]');
 
@@ -281,13 +280,9 @@ $(document).ready(function() {
 				$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
 			});
 			$(this).siblings('#media').bind('timeupdate', function() {
-		        if(parseInt(this.duration)){
-		        	$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
-		        }
-		        else
-		        {
-
-		        }
+				if(parseInt(this.duration)){
+					$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+				}
 			});
 		}
 	});

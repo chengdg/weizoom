@@ -330,17 +330,12 @@ $(document).ready(function() {
 	        	$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
 			});
 			$(this).siblings('#media').bind('timeupdate', function() {
-		        if(parseInt(this.duration)){
-		        	console.log('ddddddddddddddddddddddddddd',this.duration)
-		        	$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
-		        }
-		        else
-		        {
-		        	
-		        }
+				if(parseInt(this.duration)){
+					$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+				}
 			});
 		}
-	});
+	});	
 
 	//start: 修改备注名
 	$('body').delegate('.xa-update-remark-name', 'click', function(event) {
