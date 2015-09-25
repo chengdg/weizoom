@@ -19,6 +19,14 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
 
     render: function() {
         var _this = this;
+        low_stocks = this.options.low_stocks || -1;
+        if(low_stocks < 0) {
+            low_stocks = '';
+        }
+        high_stocks = this.options.high_stocks || -1;
+        if(high_stocks < 0) {
+            high_stocks = '';
+        }
         W.getApi().call({
             method: 'get',
             app: 'mall2',
@@ -27,8 +35,8 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             success: function(data) {
                 var html = $.tmpl(this.getTemplate(), {
                     categories: data.categories, 
-                    low_stocks: this.options.low_stocks || '',  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
-                    high_stocks: this.options.high_stocks || ''  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+                    low_stocks: low_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+                    high_stocks: high_stocks  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
                 });
                 this.$el.append(html);
                 _this.addDatepicker();
