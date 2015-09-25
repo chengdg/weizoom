@@ -14,8 +14,8 @@ W.component.appkit.SignDescription = W.component.Component.extend({
     }],
 
 	properties: [{
-		group: '签到设置',
-		groupClass: 'xui-propertyView-app-Selection',
+		group: '活动名称分组',
+		groupClass: 'xui-propertyView-app-SignNameGroup',
 		fields: [{
 			name: 'title_group',
 			type: 'title_with_annotation',
@@ -37,7 +37,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: ''
-		},{
+		}]},{
+		group:'分享设置分组',
+		groupClass:'xui-propertyView-app-ShareGroup',
+		fields:[{
 			name: 'share_group',
 			type: 'title_with_annotation',
 			displayName: '分享设置',
@@ -61,7 +64,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: '签到赚积分啦！'
-		},{
+		}]},{
+		group:"自动回复分组",
+		groupClass:'xui-propertyView-app-ReplyGroup',
+		fields:[{
 			name: 'reply_group',
 			type: 'title_with_annotation',
 			displayName: '自动回复',
@@ -82,7 +88,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: '建议填写垫付近期活动通知，签到奖励等内容……'
-		},{
+		}]},{
+		group:"签到设置分组",
+		groupClass:'xui-propertyView-app-SignSettingGroup',
+		fields:[{
 			name: 'signsetting_group',
 			type: 'title_with_annotation',
 			displayName: '签到设置',
@@ -122,7 +131,6 @@ W.component.appkit.SignDescription = W.component.Component.extend({
             default: []
         }]
 	}],
-
 	propertyChangeHandlers: {
 		image: function($node, model, value, $propertyViewNode) {
 			var image = {url:''};
