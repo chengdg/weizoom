@@ -144,3 +144,30 @@
   bottom: 0;
   padding-left: 15px;
 }
+
+/*红包分析弹窗样式*/
+.xui-appPage-commonStyle .xui-detail-tableBox {
+    background-color: #E9EDF5;
+}
+.xui-detail-tableBox .fans_data_ul {
+	font-size: 12px;
+	color: #333;
+	height: 17px;
+}
+.xui-detail-tableBox .fans_data_ul li {
+	width: 13%;
+	float: left;
+	text-align: center;
+}
+.xui-detail-tableBox .fans_data_ul li em {
+	font-size: 12px;
+	font-weight: bold;
+	color: #da0909;
+}
+.xui-detail-tableBox .fans_data_ul li:last-child {
+	border-right: none;
+}
+.xui-detail-tableBox .modal-body .panel-table table >thead >tr >th{
+	background-color: #C8D1E4;
+}
+
