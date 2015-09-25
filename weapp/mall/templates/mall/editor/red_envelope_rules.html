@@ -47,28 +47,41 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">库存提示</h4>
       </div>
-      <div class="modal-body" style="height: 100px; overflow:auto">
+      <div class="modal-body" style="max-height: 100px; overflow:auto">
+      <ul class="list-group" style="margin-bottom: 0">
       {% for rule in items %}
         {% if rule.remained_count <= 20  %}
             {% if rule.receive_method %}
                 {% if rule.is_timeout and not rule.limit_time %}
                 {% else %}
-                    <p><b>【图文领取】</b>{{ rule.rule_name }}&nbsp;&nbsp;<span style="color:#ccc;">红包活动库存即将用完</span></p>
+                    <li class="list-group-item" style="border: 0;padding-top: 0;padding-bottom: 8px;">
+                        <div style="float: left;width: 85%">
+                            <div style="width:100%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden; "><b>【图文领取】</b>{{ rule.rule_name }}</div>
+                        </div>
+                        <div style="float: left;color:#8c8c8c;">即将用完</div>
+                    <div style="clear: both"></div>
+                    </li>
                 {% endif %}
-
             {% else %}
                 {% if rule.status %}
-                    <p>{{ rule.rule_name }}&nbsp;&nbsp;<span style="color: #8c8c8c;">红包活动库存即将用完</span></p>
+                    <li class="list-group-item" style="border: 0;padding-top: 0;padding-bottom: 8px;">
+                        <div style="float: left;width: 85%">
+                            <div style="width:100%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden;">{{ rule.rule_name }}</div>
+                        </div>
+                        <div style="float: left;color: #8c8c8c;">即将用完</div>
+                    <div style="clear: both"></div>
+                    </li>
                 {% endif %}
-
             {% endif %}
         {% endif %}
       {% endfor %}
+      </ul>
       </div>
       <div class="modal-footer">
-          <div style="height: 45px">请及时处理！</div>
-        <a href="/mall2/coupon_rule_list/" target="_blank" class="btn btn-primary" >修改库存</a>
-        <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+          <div style="margin-top: 20px;height: 17px;line-height: 17px">请及时处理！</div>
+          <a href="/mall2/coupon_rule_list/" target="_blank" class="btn btn-primary" >修改库存</a>
+          <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+
       </div>
     </div>
   </div>
