@@ -1409,7 +1409,7 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 # 如果订单id、快递公司名称或运单号任一为None，直接返回False
 ########################################################################
 def ship_order(order_id, express_company_name,
-	express_number, operator_name=u'我', leader_name=u'', is_update_express=False):
+	express_number, operator_name=u'我', leader_name=u'', is_update_express=False, is_100 = True):
 	"""
 	进行订单的发货处理：
 		order_id: 需要处理的订单号
@@ -1449,13 +1449,7 @@ def ship_order(order_id, express_company_name,
 		order_params['express_number'] = express_number
 		order_params['leader_name'] = leader_name
 		order_params['status'] = target_status
-
-		# order_has_delivery_params = dict()
-		# order_has_delivery_params['express_company_name'] = express_company_name
-		# order_has_delivery_params['express_number'] = express_number
-		# order_has_delivery_params['leader_name'] = leader_name
-
-		order_has_delivery_id = 0
+		order_params['is_100'] = is_100
 		order = Order.objects.get(id=order_id)
 		Order.objects.filter(id=order_id).update(**order_params)
 		# order_has_delivery_params = dict()
@@ -1515,7 +1509,9 @@ def ship_order(order_id, express_company_name,
 	#mall_signals.post_ship_order.send(sender=Order, order=order)
 
 	#send post_ship_send_request_to_kuaidi signal
-	mall_signals.post_ship_send_request_to_kuaidi.send(sender=Order, order=order)
+	# 是快递100的才进行发送
+	if is_100:
+		mall_signals.post_ship_send_request_to_kuaidi.send(sender=Order, order=order)
 
 	try:
 		mall_util.email_order(order=Order.objects.get(id=order_id))
@@ -1535,7 +1531,7 @@ def __get_supplier_name(supplier_id):
 
 ########################################################################
 # add_product_to_shopping_cart: 向购物车中添加商品
-########################################################################
+######################################################################## c
 def add_product_to_shopping_cart(webapp_user, product_id, product_model_name, count):
 	try:
 		shopping_cart_item = ShoppingCart.objects.get(

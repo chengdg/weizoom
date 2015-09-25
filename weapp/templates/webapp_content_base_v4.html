@@ -59,6 +59,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/validate.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/swipeImage.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/notice.js"></script>
+
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
@@ -114,7 +115,38 @@
             {% endfor %}
         </div>
         {% include "weapp_jssdk_base.html" %}
-        
+        <!-- 公告超出滚动 -->
+        <script type="text/javascript">
+            // 定时器
+            var mytimer = function(i, $content){
+                window.setInterval(function(){
+                    if(nowleftList[i] == -contentWidthList[i]){
+                        nowleftList[i] = width;
+                    }else{
+                        nowleftList[i] = nowleftList[i] -1;
+                    }
+                    $content.css('left',nowleftList[i]);
+                },15)  
+            };
+
+            var nowleftList = [];            // 向左移动的距离
+            var contentWidthList = [];       // 内容长度
+            var width = $(this).width();     // 屏幕的宽度
+            var rollWidth = width * 0.9;     // 滚动临界值
+            var $notice = $('.wui-notice');
+
+            if($notice.length > 0){
+                for (var i = 0; i < $notice.length; i++) {
+                    var $content = $($notice[i]).find('.wa-content');
+                    var contentWidth = $content.width();
+                    contentWidthList[i] = contentWidth;
+                    nowleftList[i] = 0;
+                    if(contentWidth == rollWidth || contentWidth > rollWidth){
+                        mytimer(i, $content);
+                    }
+                };
+            }
+        </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
             // 定义全局变量处理 

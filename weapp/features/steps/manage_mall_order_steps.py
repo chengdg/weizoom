@@ -86,12 +86,14 @@ def step_impl(context, user, order_id):
     order = json.loads(context.text)
     express_value = express_util.get_value_by_name(order['logistics'])
     data_order_id = __get_order(context, order['order_no']).id
+    if 'name' in order:
+        express_value = order['name']
     url = '/mall2/api/delivery/'
     data = {
         'order_id': data_order_id,
         'express_company_name': express_value,
         'express_number': order['number'],
-        'leader_name': 'aa',
+        'leader_name': 'aa' if 'shipper' not in order else order['shipper'],
         'is_update_express': 'true'
     }
     response = context.client.post(url, data)
@@ -563,7 +565,10 @@ def step_impl(context, user, order_id):
     source_dict = {0: u'本店', 1: u'商城'}
     actual_order.order_no = actual_order.order_id
     # actual_order.member = actual_order.buyer_name
-    actual_order.shipper = actual_order.leader_name
+    leader_name_and_remark = actual_order.leader_name.split('|')
+    actual_order.shipper = leader_name_and_remark[0]
+    if len(leader_name_and_remark) > 1:
+        actual_order.leader_remark = leader_name_and_remark[1]
     actual_order.order_time = str(actual_order.created_at)
     actual_order.methods_of_payment = actual_order.pay_interface_name
     actual_order.sources = source_dict[actual_order.order_source]
@@ -578,13 +583,19 @@ def step_impl(context, user, order_id):
             expected.append(order.as_dict())
     else:
         expected = json.loads(context.text)
-
+    if "logistics" in expected:
+        express_value = express_util.get_value_by_name(expected['logistics'])
+        expected['logistics'] = express_value
     if "actions" in expected:
         expected["actions"] = set(expected["actions"])
 
     # 会员详情页无会员信息
     if "member" in expected:
         del expected["member"]
+    if actual_order.express_company_name:
+        actual_order.logistics = actual_order.express_company_name
+    # 字段名称不匹配，order中有number属性
+    actual_order.number = actual_order.express_number
     bdd_util.assert_dict(expected, actual_order)
 
 

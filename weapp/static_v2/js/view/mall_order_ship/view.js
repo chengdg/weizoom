@@ -23,7 +23,9 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
     events:{
         'click .xa-submit': 'onClickSubmit',
      	'click .xa-close': 'onClickClose',
-        'click .xa-is-need-logistics': 'onClickIsNeedLogistics'
+        'click .xa-is-need-logistics': 'onClickIsNeedLogistics',
+        'change .xa-logistics': 'showExpressName'
+
     },
 
     initializePrivate: function(options) {
@@ -40,7 +42,7 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
             var logistics = $('select.ua-logistics').val();
     		var logisticsOrderId = $('input[name="logistics_order_id"]').val().replace(/(^\s*)|(\s*$)/g, "");
             var leaderName = $('input[name="leader_name"]').val();
-
+            var logisticsOtherExpressName = $('input[name="logistics_other_express_name"]').val();
     		$el.bottonLoading({status: 'show'});
 
             // 是否需要物流
@@ -49,14 +51,20 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                 logistics = '';
                 logisticsOrderId = '';
             }
+            var is_100 = true;
+            // 如果是其他 则修改为用户自己填写的快递
+            if('other' == logistics){
+                logistics = logisticsOtherExpressName;
+                is_100 = false;
+            }
             var args = {
                 'order_id': this.orderId,
                 'express_company_name': logistics,
                 'express_number': logisticsOrderId,
                 'leader_name': leaderName,
-                'is_update_express': isUpdateExpress
+                'is_update_express': isUpdateExpress,
+                'is_100': is_100
             }
-
             W.getApi().call({
                 method: 'post',
                 app: 'mall2',
@@ -89,16 +97,22 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
         event.preventDefault();
         this.hide(event);
     },
-
-
-
-
-
+    showExpressName: function(event) {
+        var logistics = $('select.ua-logistics').val();
+        // 如果是其他 则显示物流名称的选项框
+        if ('other' == logistics){
+            $(".xui-logistics-other-express-name").css("display","block");
+        }else{
+            $(".xui-logistics-other-express-name").css("display","none");
+        }
+    },
     validate: function() {
         // 是否需要物流
         var isNeedLogistics = $('[name="is_need_logistics"]:checked').val();
     	var logistics = $('select.ua-logistics').val();
     	var logisticsOrderId = $('input[name="logistics_order_id"]').val().replace(/(^\s*)|(\s*$)/g, "");
+        var logisticsOtherExpressName = $('input[name="logistics_other_express_name"]').val();
+        var logistics = $('select.ua-logistics').val();
     	//var leaderName = $('input[name="leader_name"]').val();
         var validate = {};
         var errMsg = '';
@@ -114,16 +128,17 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
                 errMsg = '';
                 validate.is_submit = true;
             }
+            //校验选择了其他后是否输入了物流名称
+            if ('other' == logistics && logisticsOtherExpressName == ''){
+                errMsg = '请输入正确的物流名称';
+                validate.is_submit = false;
+                $('div.xa-error').removeClass('hidden').text(errMsg);
+            }
             if (logisticsOrderId == false || !/^\w+$/.test(logisticsOrderId)) {
                 errMsg = '请输入正确的快递单号';
                 validate.is_submit = false;
                 $('div.xa-error').removeClass('hidden').text(errMsg);
             }
-            // if (leaderName.trim() == '') {
-            //     errMsg = '请输入负责人';
-            //     validate.is_submit = false;
-            //     $('div.xa-error').text(errMsg);
-            // }
             validate.errMsg = errMsg;
             return validate;
         }
@@ -137,14 +152,33 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
     		args: {'source':'shipping_express_companies'},
     		success: function(data) {
     			_this.render();
+                var flag = false;
     			var $container = $('.ua-logistics');
     			for (var i=0; i<data.length; i++ ) {
     				var $option = $.tmpl(_this.getOneTemplate(), data[i]);
                     if(data[i]['value'] === _this.expressCompanyValue){
                         $option.attr('selected','selected');
+                        flag = true;
                     }
     				$container.append($option);
     			};
+                // 添加其他快递的选项，选择后显示物流名称
+                var data_last = {"id": "00000", "value": "other", "name": "\u5176\u4ed6"}
+
+                var $option = $.tmpl(_this.getOneTemplate(), data_last);
+                if(!flag){
+                    $option.attr('selected','selected');
+                    $(".xui-logistics-other-express-name").css("display","block");
+                    $('input[name="logistics_other_express_name"]').val(_this.expressCompanyValue);
+                }
+                $container.append($option);
+                console.log(_this.expressCompanyValue);
+                if(_this.expressCompanyValue == -1){
+                    $('select.xa-logistics option:last-child').removeAttr('selected');
+                    $('select.xa-logistics option:first-child').attr('selected','selected');
+                    $(".xui-logistics-other-express-name").css("display","none");
+                    $('input[name="logistics_other_express_name"]').val("");
+                }
 
     		},
     		error: function() {

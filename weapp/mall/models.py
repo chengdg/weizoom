@@ -1438,6 +1438,7 @@ class Order(models.Model):
 	origin_order_id = models.IntegerField(default=0) # 原始订单id，用于微众精选拆单
 	# origin_order_id=-1表示有子订单，>0表示有父母订单，=0为默认数据
 	supplier = models.IntegerField(default=0) # 订单供货商，用于微众精选拆单
+	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1775,6 +1776,7 @@ class OrderHasDeliveryTime(models.Model):
 	leader_name = models.CharField(max_length=256)  # 订单负责人
 	status = models.IntegerField(default=UNSHIPED)
 	delivery_date = models.DateField(default=DEFAULT_DATETIME)  # 配送日期
+
 
 	class Meta(object):
 		db_table = 'mall_order_has_delivery_time'

@@ -51,6 +51,8 @@ def step_impl(context, user):
     order_id = Order.objects.get(order_id=order_no).id
 
     logistics = delivery_data.get('logistics', 'off')
+    if logistics == u'其他':
+        logistics = delivery_data.get('name')
     leader_name = delivery_data.get('shipper', '')
     express_company_name = ''
     express_number = ''
@@ -67,6 +69,8 @@ def step_impl(context, user):
         'leader_name': leader_name,
         'is_update_express': is_update_express
     }
+    if logistics == u'其他':
+        data['is_100'] = 'false'
     response = context.client.post(url, data)
     if 'date' in delivery_data:
         OrderOperationLog.objects.filter(order_id=delivery_data['order_no'], action="订单发货").update(

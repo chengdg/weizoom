@@ -93,6 +93,8 @@ class Delivery(resource.Resource):
         express_number = request.POST.get('express_number')
         leader_name = request.POST.get('leader_name')
         is_update_express = request.POST.get('is_update_express')
+        is_100 = request.POST.get('is_100','true')
+        is_100 = True if is_100 == 'true' else False
         is_update_express = True if is_update_express == 'true' else False
 
         try:
@@ -105,7 +107,7 @@ class Delivery(resource.Resource):
             pass
         # 订单发货，和批量发货所用的方法相同
         is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username,
-                                         leader_name=leader_name, is_update_express=is_update_express)
+                                         leader_name=leader_name, is_update_express=is_update_express, is_100=is_100 )
         if is_success:
             response = create_response(200)
         else:
