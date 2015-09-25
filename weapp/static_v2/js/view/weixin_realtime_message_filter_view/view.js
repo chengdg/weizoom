@@ -20,9 +20,9 @@ W.view.weixin.RealtimeMessageFilterView = Backbone.View.extend({
     render: function() {
         var _this = this;
         W.getApi().call({
-            method: 'get',
             app: 'member',
-            api: 'members_filter_params',
+            resource:'members_filter_params',
+            method: 'get',
             args:{status:status},
             success: function(data) {
                  var html = $.tmpl(_this.getTemplate(), {
