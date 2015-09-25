@@ -21,7 +21,6 @@ from modules.member import integral as integral_api
 from modules.member import models as member_models
 from mall.promotion import utils as mall_api
 
-FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
 ITEM_FOR_DISPLAY = {

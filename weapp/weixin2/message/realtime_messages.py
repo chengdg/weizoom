@@ -32,7 +32,7 @@ from watchdog.utils import *
 from utils.string_util import byte_to_hex
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 DATETIME_BEFORE_HOURS = 48
 
 STATUS_ALL = -1
@@ -75,8 +75,9 @@ class RealtimeMessages(resource.Resource):
         status = request.GET.get('status', -1)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
             'status': status
         })
 

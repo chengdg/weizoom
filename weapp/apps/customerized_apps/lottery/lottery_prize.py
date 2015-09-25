@@ -24,7 +24,7 @@ from market_tools.tools.coupon.util import consume_coupon
 from termite import pagestore as pagestore_manager
 from modules.member.models import Member as member_models
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 

@@ -14,7 +14,7 @@ from weixin2.models import *
 
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MPUSER_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MenuStatus(resource.Resource):
 	app = 'new_weixin'

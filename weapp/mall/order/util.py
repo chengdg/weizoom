@@ -617,7 +617,7 @@ def get_detail_response(request, belong='all'):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': second_nav_name,
             'order': order,
             'child_orders': child_orders,
@@ -994,9 +994,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
                     order_ids.append(orderHasPromotion.order_id)
 
         orders = orders.filter(id__in=order_ids)
-        print "orders----------------------------",orders
         # 处理搜索
-    print '----------------query_dict:',query_dict
 
     if query_dict.get("isUseWeizoomCard"):
         query_dict.pop("isUseWeizoomCard")
@@ -1016,7 +1014,6 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
         elif '3' == date_interval_type:
             order_ids_in_delivery_intervale = [operationlog.order_id for operationlog in list(OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lt=end_time,action__startswith="订单发货"))]
             order_ids_in_delivery_intervale = [de.split("^")[0] for de in order_ids_in_delivery_intervale]
-            print "orders----------------------------+++",orders
             orders = orders.filter(order_id__in=order_ids_in_delivery_intervale)
     return orders
 

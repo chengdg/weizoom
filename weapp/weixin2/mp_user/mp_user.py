@@ -21,7 +21,7 @@ from weixin.mp_decorators import mp_required
 
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MPUSER_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MpUser(resource.Resource):
 	app = 'new_weixin'
@@ -80,8 +80,9 @@ class MpUser(resource.Resource):
 			mpuser_access_token = weixin_models.get_mpuser_access_token_for(mpuser)
 			c = RequestContext(request, {
 				'first_nav_name': FIRST_NAV,
-				'second_navs': export.get_mpuser_second_navs(request),
-				'second_nav_name': export.MPUSER_BINDING_NAV,
+				'second_navs': export.get_weixin_second_navs(request),
+				'second_nav_name': export.WEIXIN_MPUSER_SECOND_NAV,
+				'third_nav_name': export.MPUSER_BINDING_NAV,
 				'component_info':component_info,
 				'request_user': request_user,
 				'user_profile': user_profile,

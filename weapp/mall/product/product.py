@@ -55,8 +55,9 @@ class ProductList(resource.Resource):
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
-             'second_navs': export.get_second_navs(request),
-             'has_product': has_product}
+             'second_navs': export.get_mall_product_second_navs(request),
+             'has_product': has_product,
+             'high_stocks': request.GET.get('high_stocks', '-1')}
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
             c.update({'second_nav_name': export.PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV})
@@ -332,7 +333,7 @@ class Product(resource.Resource):
         supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
-            'second_navs': export.get_second_navs(request),
+            'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_ADD_PRODUCT_NAV,
             'product': product,
             'categories': categories,

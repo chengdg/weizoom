@@ -16,7 +16,7 @@ from core import paginator
 from core.jsonresponse import create_response
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MessageTails(resource.Resource):
     app = 'new_weixin'
@@ -49,8 +49,9 @@ class MessageTails(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_AUTO_REPLY_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_AUTO_REPLY_NAV,
             'tail': tail,
         })
         return render_to_response('weixin/message/message_tails.html', c)

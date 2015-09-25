@@ -22,7 +22,7 @@ from weixin2.advance_manage.util import get_members, new_get_members
 from modules.member.models import Member
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MassSendingMessages(resource.Resource):
     """
@@ -49,8 +49,9 @@ class MassSendingMessages(resource.Resource):
         groups = tags
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_MASS_SENDING_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_MASS_SENDING_NAV,
             'sent_count': sent_count,
             'groups': groups,
             'mode': 'mass_sending'
@@ -152,8 +153,9 @@ class MassSendingMessages(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_MASS_SENDING_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_MASS_SENDING_NAV,
             'sent_count': sent_count,
             'category': category,
             'status': status,

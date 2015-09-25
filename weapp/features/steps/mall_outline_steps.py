@@ -35,12 +35,9 @@ def step_impl(context, user):
 
 	url = '/mall2/outline/'
 	response = context.client.get(url)
-	outline_counts = response.context['outline_counts']
 	actual = {
-		"order_count_for_yesterday": outline_counts[0]['count'],
-		"order_money_for_yesterday": outline_counts[1]['count'],
-		"member_count_for_yesterday": outline_counts[2]['count'],
-		"total_member_count": outline_counts[3]['count']
+		"order_count_for_yesterday": response.context['order_count'],
+		"order_money_for_yesterday": response.context['order_money']
 	}
 
 	expected = json.loads(context.text)

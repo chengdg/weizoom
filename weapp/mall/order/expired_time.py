@@ -29,7 +29,7 @@ class ExpiredTime(resource.Resource):
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_EXPIRED_TIME,
             'mall_config': mall_config,
         })
@@ -49,7 +49,7 @@ class ExpiredTime(resource.Resource):
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_EXPIRED_TIME,
             'mall_config': mall_config,
         })

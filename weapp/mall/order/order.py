@@ -171,7 +171,7 @@ class OrderList(resource.Resource):
             page_type =u"所有订单"
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': second_nav_name,
             'has_order': has_order,
             'page_type': page_type,

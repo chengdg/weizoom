@@ -26,7 +26,9 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             args:{},
             success: function(data) {
                 var html = $.tmpl(this.getTemplate(), {
-                    categories: data.categories
+                    categories: data.categories, 
+                    low_stocks: this.options.low_stocks || '',  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+                    high_stocks: this.options.high_stocks || ''  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
                 });
                 this.$el.append(html);
                 _this.addDatepicker();

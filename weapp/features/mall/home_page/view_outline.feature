@@ -1,5 +1,20 @@
-Feature: 获得购买趋势信息
-	jobs通过管理系统能获得购买趋势信息
+
+#_edit_:张三香
+
+
+
+Feature: 获得店铺首页的经营概况和购买趋势信息
+	jobs通过管理系统能获得首页经营概况和购买趋势信息
+	"""
+		#2015-9-23:云商通整合,微商城'首页-统计概况'需求变动:
+			1、经营概况
+				未读消息:统计微信实时消息的未读消息列表中未读消息的总和;点击链接跳转到微信实时消息的未读消息列表页面
+				昨日新增会员:昨天新关注的会员数量（不包括取消关注的会员）
+				昨日下单数:昨天该店铺发生的待发货、已发货和已完成的订单数之和
+				昨日成交额:该店铺已支付订单和货到付款提交成功订单的总金额
+				关注会员:当前关注的会员总数
+			2、购买趋势:图表形式展现订单数和销售额
+	"""
 
 Background:
 	Given jobs登录系统
@@ -110,9 +125,119 @@ Background:
 	Given bill关注nokia的公众号
 	When bill访问nokia的webapp
 
+@homePage @statistics
+Scenario:1 获得店铺首页经营概况的未读消息信息
+	Given jobs登录系统
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"图文1",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"单条图文1文本摘要",
+			"content":"单条图文1文本内容"
+		}]
+		"""
 
-@mall2 @mall.outline1 @vippp1
-Scenario: 获得购买趋势
+	#添加关键词自动回复
+	When jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "关键词tom2",
+					"type": "equal"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"关键字回复内容tom2",
+					 "reply_type":"text"
+				}]
+		},{
+			"rules_name":"规则2",
+			"keyword": [{
+					 "keyword": "关键词bill2",
+					 "type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"图文1",
+					 "reply_type":"text_picture"
+				}]
+		}]
+		"""
+
+	#bill2关注jobs的公众号进行消息互动，发送一条，无回复
+	When 清空浏览器
+	And bill2关注jobs的公众号
+	And bill2访问jobs的webapp
+	And bill2在微信中向jobs的公众号发送消息'bill2发送一条文本消息，未回复'
+	And bill2在微信中向jobs的公众号发送消息'关键词bill2'
+
+	#tom2关注jobs的公众号进行消息互动，发送两条，第一条回复文本消息，第二条无回复
+	When 清空浏览器
+	And tom2关注jobs的公众号
+	And tom2在微信中向jobs的公众号发送消息'tom2发送一条文本消息1，未回复'
+	And tom2在微信中向jobs的公众号发送消息'关键词tom2'
+	And tom2在微信中向jobs的公众号发送消息'tom2发送一条文本消息2，未回复'
+
+	Given jobs登录系统
+	Then jobs能获得店铺首页的数量信息
+		"""
+		{
+			"unread_count": 3
+		}
+		"""
+
+@mall2 @mall.outline
+Scenario:2 获得商铺首页经营概况的订单数量信息
+	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
+
+	When 微信用户批量消费jobs的商品
+		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
+		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
+		| 1天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
+		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
+		| 1天前      | bill     | 测试 | jobs      |东坡肘,1  |          |        |         |           |
+		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |
+		| 1天前      | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
+		| 1天前      | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    | jobs,取消 |
+		| 今天       | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
+		| 今天       | bill     | 测试 | jobs      |东坡肘,1  |          |        | 支付    |           |
+		| 今天       | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    | jobs,取消 |
+	When 微信用户批量消费nokia的商品
+		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
+		| 1天前      | bill     | 购买 | nokia     |酸菜鱼,2  |          |        | 支付    |           |
+	Given jobs登录系统
+	Then jobs能获取商铺首页的数量信息
+		"""
+		{
+			"order_count_for_yesterday": 3,
+			"order_money_for_yesterday": 28.2
+		}
+		"""
+
+@homePage @statistics
+Scenario:3 获得商铺首页经营概况的会员数量信息
+	When bill取消关注jobs的公众号
+	When tom取消关注jobs的公众号
+	When tom1关注jobs的公众号于'1天前'
+	When tom2关注jobs的公众号于'1天前'
+	When tom3关注jobs的公众号于'1天前'
+	When tom3取消关注jobs的公众号
+	When tom4关注nokia的公众号于'1天前'
+	When tom5关注jobs的公众号于'2天前'
+	Given jobs登录系统
+	Then jobs能获取商铺首页的数量信息
+		"""
+		{
+			"昨日新增会员": 2,
+			"关注会员": 4
+		}
+		"""
+
+@mall2 @homePage @statistics @zhaolei
+Scenario:4 获得店铺首页的购买趋势
 	jobs的用户购买商品后，jobs能获得正确的购买趋势
 
 	When 微信用户批量消费jobs的商品
@@ -154,141 +279,3 @@ Scenario: 获得购买趋势
 		| 3天前      | 2             | 22.2  |
 		| 2天前      | 0             | 0.0   |
 		| 1天前      | 3             | 33.3  |
-
-
-
-@mall2 @mall.outline
-Scenario: 获得商铺首页的代发货订单列表
-	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
-
-	When 微信用户批量消费jobs的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    | order_id |
-		| 4天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 1        |
-		| 4天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 2        |
-		| 4天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 3        |
-		| 4天前      | -tom1    | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 4        |
-		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 5        |
-		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 6        |
-		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 7        |
-		| 1天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 8        |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 9        |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           | 10       |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 11       |
-		| 1天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           | 12       |
-		| 今天       | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           | 13       |
-		| 今天       | bill     | 测试 | jobs      |东坡肘,1  |          |        | 支付    |           | 14       |
-		| 今天       | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    | jobs,取消 | 15       |
-	When 微信用户批量消费nokia的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    | order_id |
-		| 今天       | bill     | 购买 | nokia     |酸菜鱼,2  |          |        | 支付    |           | 16       |
-	Given jobs登录系统
-	Then jobs能获取商铺首页的代发货订单列表
-		"""
-		{
-			"count": 13,
-			"orders_list": [{
-				"date": "今天",
-				"items": [{
-					"order_id": "14",
-					"order_money": 11.1,
-					"product_count": 1
-				}, {
-					"order_id": "13",
-					"order_money": 6.0,
-					"product_count": 2
-				}]
-			}, {
-				"date": "1天前",
-				"items": [{
-					"order_id": "12",
-					"order_money": 11.1,
-					"product_count": 1
-				}, {
-					"order_id": "11",
-					"order_money": 11.1,
-					"product_count": 1
-				}, {
-					"order_id": "9",
-					"order_money": 11.1,
-					"product_count": 1
-				}, {
-					"order_id": "8",
-					"order_money": 11.1,
-					"product_count": 1
-				}]
-			}, {
-				"date": "3天前",
-				"items": [{
-					"order_id": "7",
-					"order_money": 11.1,
-					"product_count": 1
-				}, {
-					"order_id": "6",
-					"order_money": 11.1,
-					"product_count": 1
-				}, {
-					"order_id": "5",
-					"order_money": 11.1,
-					"product_count": 1
-				}]
-			}, {
-				"date": "4天前",
-				"items": [{
-					"order_id": "4",
-					"order_money": 11.1,
-					"product_count": 1
-				}]
-			}]
-		}
-		"""
-
-
-@mall2 @mall.outline @wip
-Scenario: 获得商铺首页的订单数量信息
-	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
-
-	When 微信用户批量消费jobs的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | bill     | 测试 | jobs      |东坡肘,1  |          |        |         |           |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |
-		| 1天前      | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
-		| 1天前      | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    | jobs,取消 |
-		| 今天       | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
-		| 今天       | bill     | 测试 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 今天       | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    | jobs,取消 |
-	When 微信用户批量消费nokia的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 1天前      | bill     | 购买 | nokia     |酸菜鱼,2  |          |        | 支付    |           |
-	Given jobs登录系统
-	Then jobs能获取商铺首页的数量信息
-		"""
-		{
-			"order_count_for_yesterday": 3,
-			"order_money_for_yesterday": 28.2
-		}
-		"""
-
-
-@mall2 @mall.outline @zy_ui_1
-Scenario: 获得商铺首页的会员数量信息
-	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
-
-	When bill取消关注jobs的公众号
-	When tom取消关注jobs的公众号
-	When tom1关注jobs的公众号于'1天前'
-	When tom2关注jobs的公众号于'1天前'
-	When tom3关注jobs的公众号于'1天前'
-	When tom3取消关注jobs的公众号
-	When tom4关注nokia的公众号于'1天前'
-	When tom5关注jobs的公众号于'2天前'
-	Given jobs登录系统
-	Then jobs能获取商铺首页的数量信息
-		"""
-		{
-			"member_count_for_yesterday": 2,
-			"total_member_count": 6
-		}
-		"""

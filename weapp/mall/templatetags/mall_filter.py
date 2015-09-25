@@ -97,19 +97,13 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 @register.filter(name='get_order_actions')
 def get_order_actions(order):
-	belong = 'all'
-	if hasattr(order, 'belong'):
-		belong = order.belong
 
-	if belong == 'all':
-		if order.status == ORDER_STATUS_NOT:
-			return [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
-		elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY] :
-				if order.has_sub_order:
-					return [ORDER_REFUNDIND_ACTION]
-				else:
-					return [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
+	if order.status == ORDER_STATUS_NOT:
+		return [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+	elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY] :
+			if order.has_sub_order:
+				return [ORDER_REFUNDIND_ACTION]
 			else:
 				if order.has_sub_order:
 					return [ORDER_CANCEL_ACTION]
@@ -123,37 +117,43 @@ def get_order_actions(order):
 				else:
 					actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
 			else:
-				if order.express_company_name:
-					actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
-				else:
-					actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
-			if order.has_sub_order and ORDER_UPDATE_EXPREDSS_ACTION in actions:
-				actions.remove(ORDER_UPDATE_EXPREDSS_ACTION)
-			if order.has_sub_order and ORDER_FINISH_ACTION in actions:
-				actions.remove(ORDER_FINISH_ACTION)
-			return actions
-		elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
-				if order.express_company_name:
-					if order.has_sub_order:
-						return [ORDER_REFUNDIND_ACTION]
-					else:
-						return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
-				else:
-					return [ORDER_REFUNDIND_ACTION]
-			else:
 				return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
-		elif order.status == ORDER_STATUS_SUCCESSED:
-			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_COD]:
-				return [ORDER_REFUNDIND_ACTION]
+	elif order.status == ORDER_STATUS_PAYED_SHIPED:
+		actions = []
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+			if order.express_company_name:
+				actions = [ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
 			else:
-				return [ORDER_CANCEL_ACTION]
-	elif belong == 'audit':
-		if order.status == ORDER_STATUS_REFUNDING:
-			return [ORDER_REFUND_SUCCESS_ACTION]
-
+				actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+		else:
+			if order.express_company_name:
+				actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
+			else:
+				actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+		if order.has_sub_order and ORDER_UPDATE_EXPREDSS_ACTION in actions:
+			actions.remove(ORDER_UPDATE_EXPREDSS_ACTION)
+		if order.has_sub_order and ORDER_FINISH_ACTION in actions:
+			actions.remove(ORDER_FINISH_ACTION)
+		return actions
+	elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+			if order.express_company_name:
+				if order.has_sub_order:
+					return [ORDER_REFUNDIND_ACTION]
+				else:
+					return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
+			else:
+				return [ORDER_REFUNDIND_ACTION]
+		else:
+			return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+	elif order.status == ORDER_STATUS_SUCCESSED:
+		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_COD]:
+			return [ORDER_REFUNDIND_ACTION]
+		else:
+			return [ORDER_CANCEL_ACTION]
+	elif order.status == ORDER_STATUS_REFUNDING:
+		return [ORDER_REFUND_SUCCESS_ACTION]
 	return []
-
 
 @register.filter(name='get_order_status_transition')
 def get_order_status_transition(order):

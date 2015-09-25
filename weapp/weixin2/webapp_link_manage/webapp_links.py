@@ -20,7 +20,7 @@ import utils as webapp_link_utils
 
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 
 class WebappLinkMenus(resource.Resource):

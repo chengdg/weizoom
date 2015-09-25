@@ -19,7 +19,7 @@ from datetime import timedelta, datetime, date
 from member.util import *
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MassSentMessages(resource.Resource):
     """
@@ -61,8 +61,9 @@ class MassSentMessages(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_MASS_SENDING_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_MASS_SENDING_NAV,
             'sent_messages': sent_messages
         })
         return render_to_response('weixin/message/mass_sent_messages.html', c)

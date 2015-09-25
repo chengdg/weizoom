@@ -23,7 +23,7 @@ from modules.member.models import *
 from account.social_account.models import SocialAccount
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 DATETIME_BEFORE_HOURS = 48
 
 class RealtimeMessagesDetail(resource.Resource):
@@ -65,8 +65,9 @@ class RealtimeMessagesDetail(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
             'session_id': session_id,
             'could_replied': could_replied,
             'session':session

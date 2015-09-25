@@ -26,7 +26,7 @@ from core.wxapi.api_create_qrcode_ticket import QrcodeTicket
 
 
 COUNT_PER_PAGE = 50
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class ChannelQrcode(resource.Resource):
     app = 'new_weixin'
@@ -58,8 +58,9 @@ class ChannelQrcode(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_advance_manage_second_navs(request),
-            'second_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+            'third_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
             'member_qrcode_settings': member_qrcode_setting,
             'coupon_rules': coupon_rules,
             'award_content': award_content,
@@ -137,7 +138,7 @@ class ChannelQrcodes(resource.Resource):
         """
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_advance_manage_second_navs(request),
+            'second_navs': export.get_weixin_second_navs(request),
             'second_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
         })
         return render_to_response('weixin/advance_manage/channel_qrcodes.html', c)
@@ -315,7 +316,7 @@ class ChannelQrcodeMember(resource.Resource):
         qrcode_id = request.GET.get('qrcode_id', None)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_advance_manage_second_navs(request),
+            'second_navs': export.get_weixin_second_navs(request),
             'second_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
             'qrcode_id': qrcode_id
         })
@@ -387,7 +388,7 @@ class ChannelQrcodeOrder(resource.Resource):
         qrcode_id = request.GET.get('qrcode_id', None)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_advance_manage_second_navs(request),
+            'second_navs': export.get_weixin_second_navs(request),
             'second_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
             'qrcode_id': qrcode_id
         })

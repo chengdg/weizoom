@@ -25,7 +25,7 @@ COUNT_PER_PAGE = 10
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
-FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
+FIRST_NAV_NAME = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 
 class IssuingCouponsRecordList(resource.Resource):
@@ -40,8 +40,9 @@ class IssuingCouponsRecordList(resource.Resource):
         print(export.MALL_PROMOTION_ISSUING_COUPONS_NAV)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
         })
         return render_to_response('mall/editor/promotion/issuing_coupons_record.html', c)
 
@@ -143,8 +144,9 @@ class IssuingCouponsRecord(resource.Resource):
         """
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
             'has_vip': False,
         })
         return render_to_response(
@@ -234,8 +236,9 @@ class IssuingCouponsDetail(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
             'record_id': record_id,
         })
         return render_to_response('mall/editor/promotion/issuing_coupons_detail.html', c)
