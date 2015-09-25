@@ -154,13 +154,13 @@
                 }
                 if($imageDisplay.length > 0){
                     $imageDisplay.find('.wui-grid-b li').width(averageWidth);
-                    $imageDisplay.find('.wui-grid-b li').height(averageWidth);
+                    $imageDisplay.find('.wui-grid-b li').height(parseInt(averageWidth));
                     $imageDisplay.each(function() {
                         var $imgGroup = $(this).find('.wui-grid-e');
                         console.log($imgGroup,55555)
                         $imgGroup.find('li').eq(0).width(parseInt(width*2));
-                        $imgGroup.find('li').height(width)
                         $imgGroup.find('li').eq(0).height(width*2);
+                        $imgGroup.find('li').eq(1).height(parseInt(width));
                         $imgGroup.find('li').eq(2).height(width-1);
                     });
                     getWidth('.wui-imagedisplay');
