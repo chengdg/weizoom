@@ -103,7 +103,7 @@
 								<div class="xui-i-voiceContainer ">
 									<audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
 									<div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
-									<span class="xui-clock xa-clock" style="left: 100px;position:absolute;top:19px;"></span>
+									<span class="xui-clock xa-clock" style="left: 100px;position:absolute;top:5px;"></span>
 								</div>
 							{{/if}}
 
@@ -281,7 +281,6 @@ $(document).ready(function() {
 				$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
 			});
 			$(this).siblings('#media').bind('timeupdate', function() {
-		        console.log(this.currentTime);
 		        if(parseInt(this.duration)){
 		        	$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
 		        }
