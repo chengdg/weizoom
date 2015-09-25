@@ -287,7 +287,7 @@
         var dynamicComponents = page.components[0].components;
             var name = descriptionModel.get('title');
 
-            var share_img = "image";//xxx???
+            var share_img =descriptionModel.get('image');
             var share_desc =descriptionModel.get('share_description');
             var share = {"img":share_img,"desc":share_desc};
 
@@ -298,10 +298,12 @@
             var daily_points = descriptionModel.get('daily_points');
             var daily_prizes = descriptionModel.get('daily_prizes');
             var prize_setings = {'0':{'serial_count':0,'integral':daily_points,'coupon':daily_prizes}};
-            for(var i=1;i<dynamicComponents.length+1;i++){
-                prize_setings[i]={'serial_count':dynamicComponents[i].model.get('serial_count'),
-                'integral':dynamicComponents[i].model.get('serial_count_points'),
-                'coupon':dynamicComponents[i].model.get('serial_count_prizes')}
+            for(var i=0;i<dynamicComponents.length;i++){
+                var index = dynamicComponents[i].model.get('serial_count');
+                prize_setings[index]={
+                    'integral':dynamicComponents[i].model.get('serial_count_points'),
+                    'coupon':dynamicComponents[i].model.get('serial_count_prizes')
+                }
             }
 
             var args ={
@@ -312,30 +314,30 @@
             };
 
 
-{#          if (isCreateNewData) {#}
-{#            var method = 'put';#}
-{#            args['related_page_id'] = relatedPageId;#}
-{#          } else {#}
-{#            var method = 'post';#}
-{#            args['id'] = W.activityId;#}
-{#            args['signId'] = W.activityId;#}
-{#          }#}
-{#          W.getApi().call({#}
-{#            app: 'apps/sign',#}
-{#            resource: 'sign',#}
-{#            method: method,#}
-{#            args: args,#}
-{#            success: function(data) {#}
-{#              W.showHint('success', '保存成功');#}
-{#                isCreateNewData = false;#}
-{#                if(data && data.id){#}
-{#                    W.activityId = data.id;#}
-{#                }#}
-{#            },#}
-{#            error: function(resp) {#}
-{#              W.showHint('error', '保存失败!');#}
-{#            }#}
-{#          });#}
+          if (isCreateNewData) {
+            var method = 'put';
+            args['related_page_id'] = data['project_id'];
+          } else {
+            var method = 'post';
+            args['id'] = W.activityId;
+            args['signId'] = W.activityId;
+          }
+          W.getApi().call({
+            app: 'apps/sign',
+            resource: 'sign',
+            method: method,
+            args: args,
+            success: function(data) {
+              W.showHint('success', '保存成功');
+                isCreateNewData = false;
+                if(data && data.id){
+                    W.activityId = data.id;
+                }
+            },
+            error: function(resp) {
+              W.showHint('error', '保存失败!');
+            }
+          });
         }
 
         );
