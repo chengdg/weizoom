@@ -647,3 +647,24 @@ class GetRedEnvelopeRecord(models.Model):
 		db_table = 'mall_red_envelope_record'
 		verbose_name = '红包领用记录'
 		verbose_name_plural = '红包领用记录'
+
+class RedEnvelopeParticipences(models.Model):
+	"""
+	红包领用记录
+	"""
+	owner = models.ForeignKey(User)
+	coupon_id = models.CharField(max_length=50)
+	red_envelope_rule_id = models.IntegerField(default=0)
+	red_envelope_relation_id = models.IntegerField(default=0)
+	member = models.IntegerField(default=0)
+	introduced_by = models.IntegerField(default=0)  #由谁引入
+	introduce_new_member = models.IntegerField(default=0) #引入新关注
+	introduce_used_number = models.IntegerField(default=0) #引入使用人数
+	introduce_received_number = models.IntegerField(default=0) #引入领取人数
+	introduce_sales_number = models.IntegerField(default=0) #引入消费额
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_red_envelope_participences'
+		verbose_name = '红包领用分析'
+		verbose_name_plural = '红包领用分析'
