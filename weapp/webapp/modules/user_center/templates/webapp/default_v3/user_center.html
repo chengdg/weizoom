@@ -6,7 +6,7 @@
 <div class="xui-userCenterPage xui-page wa-shopBottomNavPage">
     {% if not is_weizoom_mall %}
     <!-- 全局导航 -->
-    <div class="wui-globalNav xa-globalNav"{% if global_navbar %} data-ui-role="global-nav"{% endif %} data-member="{% if cur_request_member %}true{% else %}false{% endif %}"></div>
+    <div class="wui-globalNav xa-globalNav"{% if not global_navbar %} data-ui-role="global-nav"{% endif %} data-member="{% if cur_request_member %}true{% else %}false{% endif %}"></div>
     {% endif %}
     <div class="xui-userCenter-header xa-userCenter-header pr">
         <i data-ui-role="goBack"></i>
