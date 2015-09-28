@@ -638,7 +638,7 @@ def get_mileke_page(request):
 	"""
 		排序
 	"""
-	milekes = sorted(milekes, key=lambda x:xcurrent_count,reverse=True)
+	milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
 	
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': False,
