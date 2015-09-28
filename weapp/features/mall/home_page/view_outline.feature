@@ -125,7 +125,7 @@ Background:
 	Given bill关注nokia的公众号
 	When bill访问nokia的webapp
 
-@homePage @statistics
+@homePage @statistics @mall2
 Scenario:1 获得店铺首页经营概况的未读消息信息
 	Given jobs登录系统
 	When jobs已添加单图文
@@ -182,10 +182,10 @@ Scenario:1 获得店铺首页经营概况的未读消息信息
 	And tom2在微信中向jobs的公众号发送消息'tom2发送一条文本消息2，未回复'
 
 	Given jobs登录系统
-	Then jobs能获得店铺首页的数量信息
+	Then jobs能获取商铺首页的数量信息
 		"""
 		{
-			"unread_count": 3
+			"unread_message_count": 3
 		}
 		"""
 
@@ -217,7 +217,7 @@ Scenario:2 获得商铺首页经营概况的订单数量信息
 		}
 		"""
 
-@homePage @statistics
+@homePage @statistics @mall2
 Scenario:3 获得商铺首页经营概况的会员数量信息
 	When bill取消关注jobs的公众号
 	When tom取消关注jobs的公众号
@@ -231,12 +231,12 @@ Scenario:3 获得商铺首页经营概况的会员数量信息
 	Then jobs能获取商铺首页的数量信息
 		"""
 		{
-			"昨日新增会员": 2,
-			"关注会员": 4
+			"new_member_count": 3,
+			"subscribed_member_count": 3
 		}
 		"""
 
-@mall2 @homePage @statistics @zhaolei
+@mall2 @homePage @statistics
 Scenario:4 获得店铺首页的购买趋势
 	jobs的用户购买商品后，jobs能获得正确的购买趋势
 

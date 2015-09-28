@@ -152,6 +152,7 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
                 	filters: _this.filterData,
 	            	types: data.type || [],
 		        	statuses: data.status || [],
+                    orderStatus: this.options.orderStatus || '',
 		        	payTypes: data.pay_interface_type || [],
 		        	orderSources: data.source || []
 		        });
