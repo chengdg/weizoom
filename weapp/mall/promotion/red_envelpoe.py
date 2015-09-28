@@ -60,7 +60,7 @@ class RedEnvelopeRuleList(resource.Resource):
             for rule in rules:
                 is_timeout = False if rule.end_time > datetime.now() else True
                 if flag:
-                    if id2coupon_rule[rule.coupon_rule_id].remained_count<=85 and is_timeout :
+                    if id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and is_timeout :
                         flag = False
                         is_warring = True
                     else:
@@ -80,7 +80,7 @@ class RedEnvelopeRuleList(resource.Resource):
                     "is_timeout": is_timeout,
                     "receive_method": rule.receive_method,
                     "is_warring": is_warring,
-                    "warring_count": id2coupon_rule[rule.coupon_rule_id].remained_count<=85 and is_timeout
+                    "warring_count": id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and is_timeout
                 }
                 items.append(data)
 

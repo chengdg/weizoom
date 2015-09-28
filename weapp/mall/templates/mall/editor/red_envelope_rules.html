@@ -50,7 +50,7 @@
       <div class="modal-body" style="max-height: 107px; overflow:auto">
       <ul class="list-group" style="margin-bottom: 0">
       {% for rule in items %}
-        {% if rule.remained_count <= 85  %}
+        {% if rule.remained_count <= 20  %}
             {% if rule.receive_method %}
                 {% if rule.is_timeout and not rule.limit_time %}
                 {% else %}
@@ -137,7 +137,7 @@
             </td>
             <td class="remained_count">
                 ${ rule.remained_count }
-                {{if rule.remained_count <= 85}}
+                {{if rule.remained_count <= 20}}
                     {{if receive_method}}
                         {{if rule.is_timeout && !rule.limit_time }}
                         {{else}}
