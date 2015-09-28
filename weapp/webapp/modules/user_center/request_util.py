@@ -626,7 +626,7 @@ def get_mileke_page(request):
 		"""
 			是否给该 url_fid 投过票
 		"""
-		member_voted = MilekeLog.objects.filter(mileke__member___id=url_fid, member_id=member.id).count() > 0
+		member_voted = MilekeLog.objects.filter(mileke__member__id=url_fid, member_id=member.id).count() > 0
 
 	"""
 		投票总数
