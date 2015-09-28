@@ -3,7 +3,6 @@
 商品分类相关
 """
 
-from mall.models import *
 from core import api_resource
 from wapi.decorators import param_required
 from utils import dateutil as utils_dateutil
@@ -37,7 +36,7 @@ class ProductCategory(api_resource.ApiResource):
 		@param id 分类ID
 		"""
 		category = mall_models.ProductCategory.objects.get(id=args['id'])
-		return Category.category_to_dict(category)
+		return ProductCategory.category_to_dict(category)
 
 
 	@param_required(['id', 'name'])
@@ -57,8 +56,8 @@ class ProductCategory(api_resource.ApiResource):
 		创建分类
 		"""
 		product_category = mall_models.ProductCategory.objects.create(
-                owner_id=args['uid'],
-                name=args.get('name', '').strip()
-            )
+			owner_id=args['uid'],
+			name=args.get('name', '').strip()
+		)
 		product_category.save()
-		return Category.category_to_dict(product_category)
+		return ProductCategory.category_to_dict(product_category)

@@ -1,4 +1,4 @@
 import product
-import category
-import categories
+import product_category
+import product_categories
 import products_by_category

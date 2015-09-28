@@ -113,19 +113,24 @@ def list_products(request):
 	"""
 
 	#category_id = int(request.GET.get('category_id', 0))
-	category_id = int(request.GET.get('category_id', 7))
+	category_id = int(request.GET.get('category_id', 0))
+	owner_id = request.user_profile.user_id
 
 	# TODO: 改用API获取商品、分类
 	# category_id=0 表示全部商品
-	"""
-	category = resource.get('mall', 'category', {'id': category_id})
+	if category_id == 0:
+		# 获取全部分类
+		categories = resource.get('mall', 'product_categories', {'uid': owner_id})
+	else:
+		categories = resource.get('mall', 'product_category', {'id': category_id})
 	products = resource.get('mall', 'products_by_category', {
 		'category_id': category_id,
 		'webapp_id': request.user_profile.webapp_id,
 		'owner_id': request.user_profile.user_id,
 		'is_access_weizoom_mall': request.is_access_weizoom_mall
 		}) # 按类别取商品
-	"""
+
+	# TODO: 区分全部商品和部分商品
 	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 
