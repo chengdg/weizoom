@@ -79,7 +79,15 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: '建议填写垫付近期活动通知，签到奖励等内容……'
 		}]},{
-		group:"签到设置",
+			group:"签到设置",
+			groupClass:"xui-propertyView-app-SignSettingGroupName",
+			fields:[{
+				name:'SignSettingGroupName',
+				isUserProperty: true,
+				type:'title'
+			}]
+		},{
+		group:"",
 		groupClass:'xui-propertyView-app-SignSettingGroup',
 		fields:[{
 			name:'daily_group',
@@ -105,7 +113,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			help:"仅能选择限领为“不限”的优惠券",
 			default:""
-		},{
+		}]},{
+		group:"",
+		groupClass:"xui-propertyView-app-SignynamicGroup",
+		fields:[{
 			name: 'items',//动态组件,那个加好
             displayName: '',
             type: 'dynamic-generated-control',
