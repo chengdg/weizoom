@@ -117,6 +117,7 @@ def list_products(request):
 
 	# TODO: 改用API获取商品、分类
 	# category_id=0 表示全部商品
+	"""
 	category = resource.get('mall', 'category', {'id': category_id})
 	products = resource.get('mall', 'products_by_category', {
 		'category_id': category_id,
@@ -124,7 +125,8 @@ def list_products(request):
 		'owner_id': request.user_profile.user_id,
 		'is_access_weizoom_mall': request.is_access_weizoom_mall
 		}) # 按类别取商品
-	#category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
+	"""
+	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 
 	for p in products:

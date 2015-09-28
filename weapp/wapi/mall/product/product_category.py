@@ -11,12 +11,12 @@ from utils import dateutil as utils_dateutil
 from mall import models as mall_models
 
 
-class Category(api_resource.ApiResource):
+class ProductCategory(api_resource.ApiResource):
 	"""
 	获取WebAPP ID
 	"""
 	app = 'mall'
-	resource = 'category'
+	resource = 'product_category'
 
 	@staticmethod
 	def category_to_dict(category):
