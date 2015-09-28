@@ -76,7 +76,7 @@
     <div class="xui-tag-group xa-tag-group">
         <span class="xui-i-tag xui-i-tag-active" target="xa-setting">规则设置</span>
         <span class="xui-i-tag" target="xa-state">签到统计</span>
-        <!--<button type="button" class="xui-link-copy fr">复制链接</button>-->
+        <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/">复制链接</button>
     </div>
 
     <div class="clearfix xui-setting-tag xa-setting">
@@ -363,6 +363,7 @@
                 isCreateNewData = false;
                 if(data && data.id){
                     W.activityId = data.id;
+                    $('.xa-link-copy').removeClass('xui-hide');
                 }
             },
             error: function(resp) {
@@ -436,6 +437,14 @@
                 });
             }
             $this.addClass('xui-i-tag-active').siblings().removeClass('xui-i-tag-active');
+        });
+
+        //初始化复制链接到剪贴板
+        var client = new ZeroClipboard( $(".xa-link-copy") , {
+          moviePath: "/static_v2/zero_clipboard.swf"
+        });
+        client.on('complete', function(client, args) {
+            W.showHint('success', '已经将链接复制到剪贴板');
         });
     });
 

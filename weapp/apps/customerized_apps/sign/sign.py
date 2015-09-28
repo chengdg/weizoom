@@ -48,6 +48,7 @@ class Sign(resource.Resource):
 			'sign': sign,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
+			'webapp_owner_id': owner_id,
 		})
 		
 		return render_to_response('sign/templates/editor/workbench.html', c)
@@ -101,7 +102,6 @@ class Sign(resource.Resource):
 
 def get_sing_fields_to_save(request):
 	fields = request.POST.dict()
-	print fields
 	fields['created_at'] = datetime.today()
 	fields['owner_id'] = request.user.id
 
