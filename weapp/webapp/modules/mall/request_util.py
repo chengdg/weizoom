@@ -120,23 +120,27 @@ def list_products(request):
 	# category_id=0 表示全部商品
 	if category_id == 0:
 		# 获取全部分类
-		categories = resource.get('mall', 'product_categories', {'uid': owner_id})
+		#categories = resource.get('mall', 'product_categories', {'uid': owner_id})
+		#categories = [{"id": category.id, "name": category.name} for category in categories]
+		category = {"id": category_id, "name": u"全部"}
 	else:
-		categories = resource.get('mall', 'product_category', {'id': category_id})
+		category = resource.get('mall', 'product_category', {'id': category_id})
+		#categories = [{"id": category.id, "name": category.name}]
+
 	products = resource.get('mall', 'products_by_category', {
 		'category_id': category_id,
 		'webapp_id': request.user_profile.webapp_id,
-		'owner_id': request.user_profile.user_id,
+		'uid': request.user_profile.user_id,
 		'is_access_weizoom_mall': request.is_access_weizoom_mall
 		}) # 按类别取商品
 
 	# TODO: 区分全部商品和部分商品
-	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
+	#category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
 	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 
 	for p in products:
-		if p.promotion:
-			p.promotion_js = json.dumps(p.promotion)
+		if p['promotion']:
+			p['promotion_js'] = json.dumps(p['promotion'])
 
 	has_category = False
 	if len(product_categories) > 0:

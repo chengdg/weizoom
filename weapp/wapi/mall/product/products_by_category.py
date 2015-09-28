@@ -9,6 +9,7 @@ from mall import models as mall_models
 from product import Product
 from cache import webapp_cache
 
+from utils import dateutil as utils_dateutil
 
 class DummyUserProfile:
 	"""
@@ -24,7 +25,7 @@ class ProductsByCategory(api_resource.ApiResource):
 	"""
 	按类别获取商品列表
 
-	举例：`http://dev.weapp.com/wapi/mall/products_by_category/?webapp_id=3196&category_id=7&owner_id=18&is_access_weizoom_mall=false`
+	举例：`http://dev.weapp.com/wapi/mall/products_by_category/?webapp_id=3211&category_id=7&uid=33&is_access_weizoom_mall=false`
 	"""
 	app = 'mall'
 	resource = 'products_by_category'
@@ -36,16 +37,29 @@ class ProductsByCategory(api_resource.ApiResource):
 			data.append(Product.to_dict(product))
 		return data
 
-	@param_required(['webapp_id', 'category_id', 'owner_id', 'is_access_weizoom_mall'])
+	@staticmethod
+	def cached_to_dict(products):
+		"""
+		将cache数据结构转成dict
+		"""
+		data = []
+		for product in products:
+			product['update_time'] = utils_dateutil.date2string(product['update_time'])
+			product['created_at'] = utils_dateutil.datetime2string(product['created_at'])
+			product['categories'] = ';'.join([str(x) for x in product['categories'] ])
+			data.append(product)
+		return data
+
+	@param_required(['webapp_id', 'category_id', 'uid', 'is_access_weizoom_mall'])
 	def get(args):
 		"""
 		获取商品详情
 
-		@param id 类别ID
+		@param category_id 类别ID(id=0表示全部分类)
 		"""
 		webapp_id = args['webapp_id']
 		category_id = args['category_id']
-		owner_id = args['owner_id']
+		owner_id = args['uid']
 		is_access_weizoom_mall = args['is_access_weizoom_mall']
 		print("args: {}".format(args))
 
@@ -56,9 +70,11 @@ class ProductsByCategory(api_resource.ApiResource):
 
 		func = webapp_cache.get_webapp_products_from_db(user_profile, is_access_weizoom_mall)
 		result = func()
+		print("result from get_webapp_products_from_db: {}".format(result))
 		products = result['value']['products']
+		categories = result['value']['categories']
 		#categories = result['value']['categories']
 		#return ProductsByCategory.to_dict(products)
 		#return products
 		#return {"products": "{}".format(products)}
-		return products
+		return ProductsByCategory.cached_to_dict(products)
