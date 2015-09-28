@@ -1575,6 +1575,20 @@ class RefuelingMiddleware(object):
 						response = HttpResponseRedirect(new_url)
 						response.set_cookie(member_settings.REFUELING_FID, request.member.id, max_age=60*60*24*365)
 						return response
+
+			if 'mileke_page' in  request.get_full_path() and request.member.is_subscribed:
+				url_fid = request.GET.get(member_settings.REFUELING_FID, None)
+				cookie_fid = request.COOKIES.get(member_settings.REFUELING_FID, None)
+				crmid = request.GET.get('crmid', None)
+				
+				
+				if not url_fid:
+					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), member_settings.REFUELING_FID, request.member.id)
+					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, 'crmid')
+					response = HttpResponseRedirect(new_url)
+					response.set_cookie(member_settings.REFUELING_FID, request.member.id, max_age=60*60*24*365)
+					return response
+
 		return None
 
 def _get_hexdigest_url(shared_url):

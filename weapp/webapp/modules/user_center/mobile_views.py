@@ -149,3 +149,10 @@ def get_refueling_page(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.get_refueling_page(request)
 
+@member_required
+def get_mileke_page(request):
+	"""
+	米乐可
+	"""
+	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+	return request_util.get_mileke_page(request)

@@ -145,13 +145,18 @@ def get_weixin_second_navs(request):
         pass
     else:
         if request.manager.id in [467,154]:
-            for navs in WEIXIN_SECOND_NAV['navs']:
+            import copy
+            SHOWCAO_WEIXIN_SECOND_NAV = copy.deepcopy(WEIXIN_SECOND_NAV)
+            for navs in SHOWCAO_WEIXIN_SECOND_NAV['navs']:
                 if navs['name'] == ADVANCE_MANAGE_MATERIAL_NAV:
                     for third_nav in navs['third_navs']:
                         if third_nav['name'] == ADVANCE_MANAGE_QRCODE_NAV:
                             third_nav['name'] = ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV
                             third_nav['title'] = u'首草渠道扫码'
                             third_nav['url'] = '/new_weixin/channel_qrcode/'
-        second_navs = [WEIXIN_SECOND_NAV]
+
+            second_navs = [SHOWCAO_WEIXIN_SECOND_NAV]
+        else:
+            second_navs = [WEIXIN_SECOND_NAV]
 
     return second_navs

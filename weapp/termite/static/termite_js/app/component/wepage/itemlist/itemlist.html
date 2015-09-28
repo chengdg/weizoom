@@ -1,7 +1,7 @@
 {% load workbench_filter %}
 
 {% if component.type == 'wepage.item_list' %}
-<div class="xa-products-box wui-productlist {% if component.model.itemname %}wui-productTitle{% endif %}" 
+<div class="wui-productlist {% if component.model.itemname %}wui-productTitle{% endif %}" 
     data-component-cid="{{component.cid}}" 
     data-index="{{component.model.index}}" 
 >
@@ -9,11 +9,7 @@
         {% with component.runtime_data.products as products %}
             {% for product in products %}
             <li>
-                <a class="wui-inner-box{% cycle '1' '2' '3' %}{% if product.is_member_product %} xa-member-product{% endif %} wa-item-product" 
-                    href="{{product.url}}"
-                    data-product-promotion='{{product.promotion_js}}'
-                    data-product-price="{{product.display_price}}"
-                >
+                <a class="wui-inner-box{% cycle '1' '2' '3' %}" href="{{product.url}}">
                     <div class="wui-inner-pic">
                         {% if product.thumbnails_url %}
                         <img src="{{product.thumbnails_url}}" />
@@ -40,7 +36,7 @@
                                 xui-border
                                 {% endif %}
                             {% endif %}
-                        {% endif %}">¥{% firstof product.display_price '234.0' %}</p>
+                        {% endif %}"><span>¥</span>{% firstof product.display_price '234.0' %}</p>
                     </div>
                     <div class="wa-inner-shopCar wui-inner-shopCar wui-shopCar-style{{component.model.style}}"></div>
                 </a>

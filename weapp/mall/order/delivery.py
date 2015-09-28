@@ -97,20 +97,24 @@ class Delivery(resource.Resource):
         is_100 = True if is_100 == 'true' else False
         is_update_express = True if is_update_express == 'true' else False
 
-        try:
-            order = Order.objects.get(id=order_id)
-            if not is_update_express and order.status != ORDER_STATUS_PAYED_NOT_SHIP:
-                response = create_response(500)
-                response.errMsg = u'该订单已取消'
-                return response.get_response()
-        except:
-            pass
-        # 订单发货，和批量发货所用的方法相同
-        is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username,
-                                         leader_name=leader_name, is_update_express=is_update_express, is_100=is_100 )
+        order = Order.objects.get(id=order_id)
+        err_msg = None
+        # 修改物流信息且信息未变不发送消息
+        if is_update_express and order.express_company_name == express_company_name and order.express_number == express_number:
+            is_success = True
+        # 已取消的订单不能发货
+        elif not is_update_express and order.status != ORDER_STATUS_PAYED_NOT_SHIP:
+            is_success = False
+            err_msg = u'该订单已取消'
+        else:
+            # 订单发货，和批量发货所用的方法相同
+            is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username,
+                                             leader_name=leader_name, is_update_express=is_update_express, is_100=is_100 )
         if is_success:
             response = create_response(200)
         else:
             response = create_response(500)
+            if err_msg:
+                response.errMsg = err_msg
         return response.get_response()
 
