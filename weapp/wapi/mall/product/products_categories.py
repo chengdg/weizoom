@@ -41,6 +41,7 @@ class ProductsCategories(api_resource.ApiResource):
 
 		@see 参考request_util.py中的
 		```
+			# get_webapp_product_categories() 调用 get_webapp_products_from_db()
 			product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 		```
 		"""
