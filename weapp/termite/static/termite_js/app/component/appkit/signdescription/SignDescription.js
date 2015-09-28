@@ -40,6 +40,14 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 		}]},{
 		group:'分享设置',
 		groupClass:'xui-propertyView-app-ShareGroup',
+		groupHelp:{
+			className:'xui-propertyView-app-ShareGroup-helper',
+			id:'propertyView-app-ShareGroup-helper',
+			tip:{
+				text:'此分析图片和描述用户分享到朋友圈、微信群、微信好友'
+			}
+		},
+
 		fields:[{
 			name: 'image',
 			type: 'image_dialog_select',
@@ -82,9 +90,14 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			group:"签到设置",
 			groupClass:"xui-propertyView-app-SignSettingGroupName",
 			groupHelp:{
-				text:'奖励说明',
-				handler: 'W.component.appkit.SignDescription.handleHelp',
-				id:'outerFunctionTrigger'
+				className:'xui-propertyView-app-SignSettingGroupName-helper',
+				id:'propertyView-app-SignSettingGroupName-helper',
+				link:{
+					className:'xui-outerFunctionTrigger xa-outerFunctionTrigger',
+					id:'outerFunctionTrigger',
+					text:'奖励说明',
+					handler: 'W.component.appkit.SignDescription.handleHelp'
+				}
 			},
 			fields:[{
 				name:'SignSettingGroupName',
