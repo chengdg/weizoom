@@ -83,7 +83,8 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			groupClass:"xui-propertyView-app-SignSettingGroupName",
 			groupHelp:{
 				text:'奖励说明',
-				handler: 'W.component.appkit.SignDescription.handleHelp'
+				handler: 'W.component.appkit.SignDescription.handleHelp',
+				id:'outerFunctionTrigger'
 			},
 			fields:[{
 				name:'SignSettingGroupName',
@@ -179,5 +180,14 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 });
 
 W.component.appkit.SignDescription.handleHelp = function(){
-	console.log('sssssssss');
+
+	//初始化签到奖励说明
+	ensureNS('W.dialog.sign');
+	W.dialog.sign.InstructionDialog = W.dialog.Dialog.extend({
+		getTemplate: function() {
+			$('#sign-chance-dialog-tmpl-src').template('sign-chance-dialog-tmpl');
+			return "sign-chance-dialog-tmpl";
+		}
+	});
+
 };

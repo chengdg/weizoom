@@ -988,6 +988,8 @@ W.workbench.PropertyView = Backbone.View.extend({
         $input.trigger('click');
     },
     onClickOuterFunctionTrigger:function(event){
-        console.log('VVVVVVVVVVVVVVVVVVVVVVV');
+        var $data_func = $(event.target).attr('data-func');
+        W.data.getData($data_func);
+
     }
 });

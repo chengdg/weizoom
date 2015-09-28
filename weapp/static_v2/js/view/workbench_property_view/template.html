@@ -12,7 +12,7 @@
 			<div class="${property_group.groupClass}-topGap propertyGroup-topGap"></div>
 			<div class="propertyGroup ${property_group.groupClass}" {{if property_group.groupName }}name="${property_group.groupName}"{{/if}}>
 				{{if i > 0}}
-				<div class="ml5 fb">${property_group.group}{{if property_group.groupHelp }}<a class="xa-outerFunctionTrigger"  data-func="${property_group.groupHelp.handler}" >${property_group.groupHelp.text}</a>{{/if}}</div>
+				<div class="ml5 fb">${property_group.group}{{if property_group.groupHelp }}<a {{if property_group.groupHelp.id }} id="${property_group.groupHelp.id}" {{/if}} class="xui-outerFunctionTrigger xa-outerFunctionTrigger"  data-func="${property_group.groupHelp.handler}" >${property_group.groupHelp.text}</a>{{/if}}</div>
 				{{/if}}
 
 				{{each(j, field) property_group.fields}}
