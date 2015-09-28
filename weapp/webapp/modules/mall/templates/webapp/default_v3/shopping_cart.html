@@ -406,6 +406,7 @@ $(document).ready(function() {
                             }else{
                                 maxCount = data[model_id].stocks;
                             }
+                            // alert(maxCount)
                         }else {
                             if (count_per_purchase > 0){
                                 maxCount = count_per_purchase;
@@ -439,20 +440,27 @@ $(document).ready(function() {
         $counter.bind('reach-max-count',function(){
             $el.find('.xui-understock').show();
         });
-        $cutDown.bind('click',function(){
-            var count = parseInt($el.find('.wui-counterText').text()) -1;
+        $counter.bind('count-changed',function(i,n){
             $el.find('.xui-understock').hide();
-            // 不可用选框，全选框
-            if(stocks != null && stocks != -99999){
-            //库存无限的时候 
-            if( $check.hasClass('xui-disabled-radio')){
-                if( stocks >= count){
-                    $check.removeClass('xui-disabled-radio');
-                    $('#checkbox-cart-all').removeClass('xui-checkCart');
-                }
-            } 
+            if($counter.data('view').maxCount>=n && $check.hasClass('xui-disabled-radio')){
+                $check.removeClass('xui-disabled-radio');
+                $('#checkbox-cart-all').removeClass('xui-checkCart');
             }
         });
+        // $cutDown.bind('click',function(){
+        //     var count = parseInt($el.find('.wui-counterText').text()) -1;
+        //     // $el.find('.xui-understock').hide();
+        //     // 不可用选框，全选框
+        //     if(stocks != null && stocks != -99999){
+        //         //库存无限的时候 
+        //         if( $check.hasClass('xui-disabled-radio')){
+        //             if( stocks >= count){
+        //                 $check.removeClass('xui-disabled-radio');
+        //                 $('#checkbox-cart-all').removeClass('xui-checkCart');
+        //             }
+        //         } 
+        //     }
+        // });
 
     });
 });
