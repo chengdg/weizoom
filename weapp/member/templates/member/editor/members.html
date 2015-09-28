@@ -396,6 +396,28 @@ $(document).ready(function() {
 
 	});
 
+	$('body').delegate('.xa-select', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var isChecked = $el.is(':checked');
+
+		if (isChecked == false) {
+			$('#xa-selectAll').attr('checked', false);	
+			$('#all').attr('checked', false);	
+		} else {
+			var all_checked = true;
+			$(".xa-select").each(function(index, e){
+			    var isChecked = $(this).is(':checked');
+			    if (isChecked == false) {
+			    	all_checked = false;
+			    }	
+			  });
+			if (all_checked){
+				$('#xa-selectAll').attr('checked', true);	
+				$('#all').attr('checked', true);	
+			}
+		}	
+	});
+	
 	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
 
 		var $checkbox = $(event.currentTarget);
@@ -437,6 +459,8 @@ $(document).ready(function() {
 			dataView:dataView
 		})
         memberTagsUpdateView.render();
+		$('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 
 	});
 	// 修改分组
@@ -469,6 +493,8 @@ $(document).ready(function() {
 
 		})
         memberTagsUpdateView.render();
+        $('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 	});
 
 	// 修改等级
@@ -497,7 +523,9 @@ $(document).ready(function() {
 	 		W.resource.member.BatchUpdateMemberGrade.post({
 	 			data: args,
 	 			success: function(data) {
-	                 dataView.reload();
+	 				$('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
+	                dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
@@ -537,6 +565,8 @@ $(document).ready(function() {
 	 			success: function(data) {
 	                // window.location.reload();
 	                W.showHint('success', "添加分组成功");
+	                $('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
 	                dataView.reload();
 	            },
 	            error: function(response) {
@@ -586,7 +616,7 @@ $(document).ready(function() {
 		var member_name = '';
 		$('input.xa-select:checked').each(function(){;
 			if($(this).parent().parent().data('status') == '1'){
-    			member_ids.push($(this).parent().parent().attr('data-id'));
+    			member_ids.push($(this).parent().parent().data('id'));
 			}
   		});
   		if(member_ids.length == 0){

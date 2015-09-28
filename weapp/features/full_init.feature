@@ -413,18 +413,21 @@ Scenario: 安装完整测试数据
 			"name": "优惠券1",
 			"money": 1,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon1_id_"
 		}, {
 			"name": "优惠券2",
 			"money": 100,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_"
 		}, {
 			"name": "优惠券3",
 			"money": 1,
 			"start_date": "今天",
 			"end_date": "2天后",
-			"using_limit": "满5元可以使用"
+			"using_limit": "满5元可以使用",
+			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
 	When bill访问jobs的webapp
@@ -432,13 +435,13 @@ Scenario: 安装完整测试数据
 		"""
 		[{
 			"name": "优惠券1",
-			"coupon_ids": ["coupon_12", "coupon_11"]
+			"coupon_ids": ["coupon1_id_2", "coupon1_id_1"]
 		}, {
 			"name": "优惠券2",
-			"coupon_ids": ["coupon_22", "coupon_21"]
+			"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
 		}, {
 			"name": "优惠券3",
-			"coupon_ids": ["coupon_32", "coupon_31"]
+			"coupon_ids": ["coupon3_id_2", "coupon3_id_1"]
 		}]
 		"""
 	#bill收货地址

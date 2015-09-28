@@ -151,14 +151,21 @@
 .xui-members-page .td-discount .form-control{
 	display: inline-block;
 }
-.xui-members-page .errorHint{
+
+.xui-members-page .td-name .errorHint{
 	text-align: center;
 	width: 80px;
-	margin-left: 95px;
+	margin-left: 30px;
 	position: relative;
-	top:-3px;
+	top: 5px;
 }
-
+.xui-members-page .td-discount .errorHint{
+	text-align: center;
+	width: 100px;
+	margin-left: 45px;
+	position: relative;
+	top: 5px;
+}
 /*
 *会员列表页面
 */

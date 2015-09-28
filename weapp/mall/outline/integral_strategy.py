@@ -36,7 +36,7 @@ class IntegralStrategy(resource.Resource):
                 webapp_id=webapp_id).update(use_ceiling=0)
         c = RequestContext(request, {
             'first_nav_name': export.MALL_HOME_FIRST_NAV,
-            'second_navs': export.get_home_second_navs(request),
+            'second_navs': export.get_mall_home_second_navs(request),
             'second_nav_name': export.MALL_HOME_INTEGRAL_NAV,
             'integral_strategy': integral_strategy,
             'has_a_integral_strategy':  has_a_integral_strategy,

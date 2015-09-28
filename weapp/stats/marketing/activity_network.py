@@ -8,14 +8,12 @@ from django.contrib.auth.decorators import login_required
 #from django.shortcuts import render_to_response
 #from django.db.models import F
 
-from stats import export
 from core import resource
 #from core import paginator
 from core.jsonresponse import create_response
 #from weixin.mp_decorators import mp_required
 from core.exceptionutil import unicode_full_stack
 
-FIRST_NAV = export.MARKETING_NAV
 DEFAULT_COUNT_PER_PAGE = 20
 
 import chart_api

@@ -26,9 +26,10 @@ class ForbiddenCouponProduct(resource.Resource):
 			tmpl = 'mall/editor/promotion/create_forbidden_coupon_products.html'
 
 		c = RequestContext(request, {
-			'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-			'second_navs': export.get_promotion_second_navs(request),
-			'second_nav_name': export.MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV
+			'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+			'third_nav_name': export.MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV
 		})
 
 		return render_to_response(tmpl, c)

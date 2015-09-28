@@ -1,7 +1,7 @@
 {% extends "content_base_v2.html" %}
 
 {% block content-panel %}
-<div class="xui-mall-outlinePage">
+<div class="xui-mall-outlinePage xui-wepage-orderSummaryPage">
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
@@ -10,76 +10,81 @@
 			</li>
 			<li class="active">统计概况</li>
 		</ul>
-	</div>
-
-	<section class="xui-i-allContent">
-		<div class="xui-legend">
-			经营概况
+		<div class="xui-title">
+			<div class="xui-i-block"></div>
+			<span class="ml5">经营概况</span>
 		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-body clearfix">
-				<section class="xui-i-left xui-mall-outlinePage-orders">
-					<header class="xui-i-header">待发货订单 <span class="xui-i-date">({{order_info.count}})</span></header>
-					<div class="pl20 xui-i-orders">
-						{% for orders in order_info.orders_list %}
-						<section class="mt5">
-							<header class="xui-i-date">［{{orders.date}}］</header>
-							{% for order in orders.items %}
-							<ul class="pl20">
-								<li class="mt5">
-									<a href="/mall2/order/?order_id={{order.id}}" target="_blank" class="xui-block">{{order.order_id}}</a>
-									<p class="fl">订单金额：</p><p class=" w80 fl">{{order.final_price}}</p><p class="fl">数量：</p><p class="fl w50 ml10">{{order.product_count}}</p>
-								</li>
-							</ul>
-							{% endfor %}
-						</section>
-						{% endfor %}
+		<table class="xui-summary"  style="height:103px;">
+			<tr>
+				<td class="xui-i-left" style="height:103px;"><p class="xui-i-title">概况</p></td>
+				<td>
+					<div class="xui-i-wrap">
+						<span class="xui-i-money" id="unred_message_count">
+							<a href="/new_weixin/realtime_messages/?status=0" target="_blank">{{unread_message_count}}</a>
+						</span><br/>
+						<span class="xui-i-name">未读消息</span>
 					</div>
-					<footer class="xui-i-moreOrder">
-					<a href='/mall2/order_list/?order_status=3'>更多...</a>
-					</footer>
-				</section>
-
-				<section class="xui-i-right ml10">
-					<div class="xui-i-outlineCounts">
-						<ul class="clearfix">
-							{% for outline_count in outline_counts %}
-								<li class="xui-i-outlineCount fl">
-									<div class="xui-i-count">{{outline_count.count}}</div>
-									<div class="xui-i-description">{{outline_count.description}}</div>
-								</li>
-							{% endfor %}
-						</ul>
+				</td>
+				<td>
+					<div class="xui-i-wrap">
+						<span class="xui-i-money" id="new_member_count">{{new_member_count}}</span><br/>
+						<span class="xui-i-name">昨日新增会员</span>
 					</div>
+				</td>
+				<td>
+					<div class="xui-i-wrap">
+						<span class="xui-i-money" id="order_count">{{order_count}}</span><br/>
+						<span class="xui-i-name">昨日下单数</span>
+					</div>
+				</td>
+				<td>
+					<div class="xui-i-wrap">
+						<span class="xui-i-money" id="order_money">{{order_money}}</span><br/>
+						<span class="xui-i-name">昨日成交额</span>
+					</div>
+				</td>
+				<td>
+					<div class="xui-i-wrap">
+						<span class="xui-i-money" id="subscribed_member_count">{{subscribed_member_count}}</span><br/>
+						<span class="xui-i-name">关注会员</span>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div class="xui-charWrap pr xui-shopTips">
+        	<div class="xui-i-title">
+        		<span class="ml10">店铺提醒</span>
+        	</div>
+        	<ul class="xui-tips">
+        		<li>
+	        		<span class="xui-item">商品管理</span>
+	        		<a href="/mall2/product_list/?shelve_type=1" target="_blank">在售商品<span class="xui-numTip">（{{shop_hint_data.onshelf_product_count}}）</span></a>
+	        		<a href="/mall2/product_list/?shelve_type=1&high_stocks=0" target="_blank">库存不足商品<span class="xui-numTip">（{{shop_hint_data.sellout_product_count}}）</span></a>
+        		</li>
+        		<li>
+	        		<span class="xui-item">订单管理</span>
+	        		<a href="/mall2/order_list/?order_status=3" target="_blank">待发货<span class="xui-numTip">（{{shop_hint_data.to_be_shipped_order_count}}）</span></a>
+	        		<a href="/mall2/order_list/?order_status=6" target="_blank">退款中<span class="xui-numTip">（{{shop_hint_data.refunding_order_count}}）</span></a>
+        		</li>
+        		<li>
+	        		<span class="xui-item">即将到期的活动</span>
+	        		<a href="/mall2/flash_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">限时抢购<span class="xui-numTip">（{{shop_hint_data.flash_sale_count}}）</span></a>
+	        		<a href="/mall2/premium_sale_list/?endDate={{tomorrow}}&status=2" target="_blank">买赠<span class="xui-numTip">（{{shop_hint_data.premium_sale_count}}）</span></a>
+	        		<a href="/mall2/integral_sales_list/?endDate={{tomorrow}}&status=2" target="_blank">积分应用<span class="xui-numTip">（{{shop_hint_data.integral_sale_count}}）</span></a>
+	        		<a href="/mall2/coupon_rule_list/?endDate={{tomorrow}}&status=2" target="_blank">优惠券<span class="xui-numTip">（{{shop_hint_data.coupon_count}}）</span></a>
+	        		<a href="/apps/promotion/red_envelope_rule_list/?endDate={{tomorrow}}&status=1" target="_blank">分享红包<span class="xui-numTip">（{{shop_hint_data.red_envelope_count}}）</span></a>
+        		</li>
+        	</ul>
+        </div>
+		<div class="xui-charWrap pr">
+        	<div class="xui-i-title">
+        		<div class="xui-i-block"></div>
+        		<span class="ml5">购买趋势</span>
+        	</div>
+        	<div  class="xui-ChartBody pt20 pb30" id="purchaseTrend" data-ui-role="echart" data-app="mall2" data-api="outline" data-args='{"type":"purchase_trend"}'>
+			 </div>
+        </div>
 
-					<section class="xui-i-messages">
-						<header class="p10 pl20"><img src="/static_v2/img/editor/clock.png"/><span class="ml15 xui-bold">系统通知</span><a href="#" class="fr"></a></header>
-
-						{% for message in system_messages %}
-						<div class="xui-i-message ml80">
-							<a href='/mall2/notice/?pk={{message.id}}' class="xui-i-messageLink">［{{message.created_at|date:"o-m-d"}}］{{message.title}}</a>
-							<div class="xui-i-messageSummary">
-								{{message.summary}}
-							</div>
-						</div>
-						{% endfor %}
-					</section>
-				</section>
-			</div>
-			<div class="xui-ChartContent">
-				 <div class="panel-heading xui-bold">购买趋势</div>
-			     <div  class="xui-ChartBody" id="purchaseTrend" data-ui-role="echart" data-app="mall2" data-api="outline" data-args='{"type":"purchase_trend"}'>
-			     </div>
-			</div>
-			<div class="xui-ChartContent mb50">
-				<div class="panel-heading xui-bold">页面访问</div>
-				<div class="xui-ChartBody" id="visitTrend" data-ui-role="echart" data-app="mall2" data-api="outline" data-args='{"type":"visit_daily_trend"}'>
-			   </div>
-			</div>
-		</div>
-
-	</section>
 </div>
 {% endblock %}
 
@@ -87,6 +92,11 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+	$('.xui-numTip').each(function(index, el) {
+		if($(this).text() === "（0）"){
+			$(this).css('color', '#666');
+		}
+	});
 	// var view = new W.view.mall.ProductListView({
 	// 	el: '.xui-productsPage',
 	// 	type: 'offshelf'

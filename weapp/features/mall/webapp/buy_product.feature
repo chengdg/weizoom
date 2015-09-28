@@ -415,3 +415,84 @@ Scenario:8 购买库存为零的商品
 		}
 		"""
 	Then bill获得错误提示'有商品库存不足<br/>2秒后返回购物车<br/>请重新下单'
+
+
+
+@allOrder @mall2
+Scenario: 9 会员购买商品后，获取订单列表
+	bill成功创建订单多个订单后，获取订单列表
+
+
+	When bill访问jobs的webapp
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 2
+			}]
+		}
+		"""
+	And bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}, {
+				"name": "商品2",
+				"count": 1
+			}, {
+				"name": "商品3",
+				"model": "黑色 M",
+				"count": 1
+			}, {
+				"name": "商品5",
+				"count": 2
+			}]
+		}
+		"""
+	Then bill查看个人中心全部订单
+		"""
+		[{
+			"status": "待支付",
+			"created_at": "今天",
+			"products": [{
+				"name": "商品1"
+			}, {
+				"name": "商品2"
+			}, {
+				"name": "商品3"
+			}],
+			"counts": 5,
+			"final_price": 38.7,
+			"actions": ["取消订单", "支付"]
+		}, {
+			"status": "待支付",
+			"created_at": "今天",
+			"products": [{
+				"name": "商品1"
+			}],
+			"counts": 2,
+			"final_price": 19.8,
+			"actions": ["取消订单", "支付"]
+		}, {
+			"status": "待支付",
+			"created_at": "今天",
+			"products": [{
+				"name": "商品1"
+			}],
+			"counts": 1,
+			"final_price": 9.9,
+			"actions": ["取消订单", "支付"]
+		}]
+		"""

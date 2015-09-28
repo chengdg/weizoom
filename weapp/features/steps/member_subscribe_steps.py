@@ -151,7 +151,7 @@ def step_impl(context, webapp_owner_name, webapp_user_name, grade_name):
 	user = context.client.user
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	db_grade = MemberGrade.objects.get(name=grade_name, webapp_id=user.get_profile().webapp_id)
-	context.client.post('/member/api/tag/update/', {
+	context.client.post('/member/api/update_member_tag_or_grade/', {
 		'checked_ids':	db_grade.id, 'member_id': member.id, 'type': 'grade'})
 
 @then(u'{webapp_owner_name}能获得{webapp_user_name}的积分日志')

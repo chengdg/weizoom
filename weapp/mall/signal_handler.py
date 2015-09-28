@@ -390,7 +390,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
         forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(owner_id)
         for product in products:
             if product.id in forbidden_coupon_product_ids:
-                forbidden_coupon_product_price += product.total_price
+                forbidden_coupon_product_price += float(product.price)*product.purchase_count
 
     order.final_price -= forbidden_coupon_product_price  #先去除被禁止使用全场优惠券的商品价格
     if order.final_price - order.postage < coupon.money:

@@ -24,7 +24,7 @@ from datetime import datetime
 
 from apps_manager import manager
 from app_status_response_util import *
-from mall.export import get_customerized_apps
+# from mall.export import get_customerized_apps
 
 FIRST_NAV_NAME = 'apps'
 

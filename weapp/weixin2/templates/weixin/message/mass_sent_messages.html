@@ -58,16 +58,18 @@
                             <span class="wui-i-text">{{html message.message_content}}</span>
                         {{else}}
                             {{each(i, news) message.newses}}
-                                <span class="wui-i-header">图文</span>
-                                <span class="wui-i-title">
-                                    {{if message.message_content != -1}}
-                                        <a href="/new_weixin/news_preview/?id=${message.message_content}" target="_blank">
+                                <div class="cb">
+                                    <span class="wui-i-header">图文</span>
+                                    <span class="wui-i-title">
+                                        {{if message.message_content != -1}}
+                                            <a href="/new_weixin/news_preview/?id=${message.message_content}" target="_blank">
+                                                ${news.title}
+                                            </a>
+                                        {{else}}
                                             ${news.title}
-                                        </a>
-                                    {{else}}
-                                        ${news.title}
-                                    {{/if}}
-                                </span>
+                                        {{/if}}
+                                    </span>
+                                </div>
                             {{/each}}
                         {{/if}}
                     </ul>

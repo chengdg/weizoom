@@ -123,7 +123,7 @@ PROMOTION_FILTERS = {
             'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime("%Y-%m-%d %H:%M"),
             'query_string_field': 'startDate'
         }, {
-            'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime("%Y-%m-%d %H:%M"),
+            'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime("%Y-%m-%d %H:%M") or filter_value == '',
             'query_string_field': 'endDate'
         }
     ],
@@ -140,7 +140,7 @@ PROMOTION_FILTERS = {
             'comparator': lambda promotion, filter_value: filter_value <= promotion.start_date.strftime("%Y-%m-%d %H:%M"),
             'query_string_field': 'startDate'
         }, {
-            'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime("%Y-%m-%d %H:%M"),
+            'comparator': lambda promotion, filter_value: filter_value >= promotion.end_date.strftime("%Y-%m-%d %H:%M") or filter_value == '',
             'query_string_field': 'endDate'
         }
     ],
@@ -166,7 +166,7 @@ def filter_promotions(request, promotions):
         promotions = search_util.filter_objects(
             promotions, PROMOTION_FILTERS['coupon']
         )
-        coupon_type = request.GET.get('couponPromotionType', None)
+        coupon_type = request.GET.get('couponPromotionType', '-1')
         if coupon_type != '-1':
             coupon_type = coupon_type == '2'
             promotion_models.Promotion.fill_details(

@@ -17,7 +17,7 @@ from modules.member.models import Member, MemberSharedUrlInfo
 from market_tools.tools.member_qrcode.models import MemberQrcode, MemberQrcodeLog
 from core.charts_apis import create_line_chart_response
 
-FIRST_NAV = export.MEMBER_NAV
+FIRST_NAV = export.STATS_HOME_FIRST_NAV
 DEFAULT_COUNT_PER_PAGE = 20
 
 
@@ -40,8 +40,8 @@ class MemberSummary(resource.Resource):
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_member_second_navs(request),
-			'second_nav_name': export.MEMBER_SUMMARY_NAV,
+			'second_navs': export.get_stats_second_navs(request),
+			'second_nav_name': export.STATS_MEMBER_SECOND_NAV,
 			'start_date': start_date,
 			'end_date': end_date,
 

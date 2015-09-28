@@ -8,4 +8,4 @@ WEPAGE_FIRST_NAV = mall_export.MALL_HOME_FIRST_NAV
 WEPAGE_PAGES_NAV = mall_export.MALL_HOME_WEPAGE_NAV
 WEPAGE_GLOBAL_NAVBAR_NAV = mall_export.MALL_HOME_GLOBAL_NAVBAR_NAV
 
-get_wepage_second_navs = mall_export.get_home_second_navs
+get_wepage_second_navs = mall_export.get_mall_home_second_navs

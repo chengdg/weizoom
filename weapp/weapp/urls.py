@@ -7,7 +7,6 @@ from django.conf import settings
 from weapp import views as weizoom
 from account import views as account_view
 from account import accounts_landing_views
-from mall import home_views as mall_views
 #from weixin import views as weixin_view
 from termite.workbench import jqm_views as termite_jqm_views
 
@@ -60,7 +59,6 @@ urlpatterns = patterns('',
 	url(r'^termite/', include('termite.urls')),
 	#url(r'^shop/', include('webapp.modules.shop.urls')),
 
-	url(r'^mall/', mall_views.get_outline),
 	url(r'^mall2/', restful_url2('mall2')),
 	url(r'^mall_promotion/', restful_url('mall_promotion')),
 	url(r'^auth/', restful_url('auth')),

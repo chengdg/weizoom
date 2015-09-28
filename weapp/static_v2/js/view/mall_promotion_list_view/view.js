@@ -38,7 +38,10 @@ W.view.mall.PromotionListView = Backbone.View.extend({
 		this.filterView = new W.view.mall.PromotionFilterView({
 			el: '.xa-promotionFilterView',
 			promotionType: this.promotionType,
-			templateName: this.options.templateFilterName
+			templateName: this.options.templateFilterName, 
+			promotionStatus: this.options.promotionStatus || '',  //支持从首页店铺提醒“即将到期的活动”过来的请求 duhao 20150925
+			startDate: this.options.startDate || '',  //支持从首页店铺提醒“即将到期的活动”过来的请求 duhao 20150925
+			endDate: this.options.endDate || ''  //支持从首页店铺提醒“即将到期的活动”过来的请求 duhao 20150925
 		});
 		this.filterView.on('search', _.bind(this.onSearch, this));
 		this.filterView.render();

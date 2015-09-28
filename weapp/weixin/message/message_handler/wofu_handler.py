@@ -46,43 +46,45 @@ class WoFuHandler(KeywordHandler):
 		if message.msgType == WeixinMessageTypes.TEXT and user_profile.user_id in [151,570]:
 			content = message.content
 			if content and content.strip().isdigit() and len(content.strip()) == 11:
-				member = get_member_by_openid( message.fromUserName, user_profile.webapp_id)
-				print member,'==============23423'
-				if member:
-					print '===============1',content, '--',WoFu.objects.filter(phone_number=content.strip()).count() 
-					if WoFu.objects.filter(phone_number=content.strip()).count() > 0:
-						print '===============2'
-						if WoFuLog.objects.filter(member_id=member.id).count() == 0:
-							print '===============3'
-							with transaction.atomic():
-								print '===============4'
-								wo_fu = WoFu.objects.select_for_update().get(phone_number=content.strip())
-								print '===============5'
-								if wo_fu.is_send is False:
-									print '===============6'
-									coupon,error_msg = consume_coupon(user_profile.user_id, wo_fu.coupon_rule_id, member.id)
-									print '===============7',coupon,error_msg
-									if coupon:
-										print '===============8'
-										wo_fu.is_send = True
-										wo_fu.save()
-										WoFuLog.objects.create(member_id=member.id, wofu=wo_fu)
-										if wo_fu.level == 1:
-											response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢您一直都在，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝·服务-个人中心-我的优惠券，只需39元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
-										elif wo_fu.level == 2:
-											response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢您一直都在，根据您过去的购买记录，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝•服务-个人中心-我的优惠券，只需69元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
-										elif wo_fu.level == 3:
-											response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但您的人生已经留下窝夫小子的痕迹，为感谢您对窝夫小子的支持，根据您过去的购买记录，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝•服务-个人中心-我的优惠券，只需99元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
-										# elif wo_fu.level == 4:
-										# 	response_content = u'虽未谋面，但您的人生已经留下窝夫小子的痕迹，作为新朋友，多想看看首次品尝后您幸福的笑容，您的一个订单，就是窝夫小子默默努力一辈子的事情，绝对不能懈怠的决心让我们坚持品质超过10余年，为感谢您对窝夫小子的支持，窝夫小子刚刚上架的新宠“一盒甜品”欢迎尝鲜价选购！'
-									else:
-										response_content = u'老朋友决不能冒名取代，每一个老朋友对于窝夫小子来说都是独一无二的，您的手机号已经领取过相应的优惠券，本次活动一个微信号只对应一个老朋友资格的手机号，不支持帮朋友查询哦~您可以邀请您的朋友关注窝夫小子蛋糕公众号亲自参与活动哦'
-								else:
-									response_content = u'老朋友决不能冒名取代，每一个老朋友对于窝夫小子来说都是独一无二的，您的手机号已经领取过相应的优惠券，本次活动一个微信号只对应一个老朋友资格的手机号，不支持帮朋友查询哦~您可以邀请您的朋友关注窝夫小子蛋糕公众号亲自参与活动哦~'
-						else:
-							response_content = u'老朋友决不能冒名取代，每一个老朋友对于窝夫小子来说都是独一无二的，您的手机号已经领取过相应的优惠券，本次活动一个微信号只对应一个老朋友资格的手机号，不支持帮朋友查询哦~您可以邀请您的朋友关注窝夫小子蛋糕公众号亲自参与活动哦~'
-					else:
-						response_content = u'虽未谋面，但您的人生已经留下窝夫小子的痕迹，作为新朋友，多想看看首次品尝后您幸福的笑容，您的一个订单，就是窝夫小子默默努力一辈子的事情，绝对不能懈怠的决心让我们坚持品质超过10余年，为感谢您对窝夫小子的支持，冰箱里的新宠“一盒甜品”现在尝鲜价只需119元~快快点击链接尝鲜吧~<a href="http://weapp.weizoom.com/termite/workbench/jqm/preview/?module=mall&model=product&action=get&rid=3813&workspace_id=mall&webapp_owner_id=570">点击我购买</a>'
+				response_content = u'感谢亲的关注，「一盒甜品」老朋友活动已经结束了哦！但是亲还是可以优惠价尝鲜哦~<a href="http://weapp.weizoom.com/workbench/jqm/preview/?module=mall&model=product&action=get&rid=3813&workspace_id=mall&webapp_owner_id=570">点击我购买</a>'
+				#member = get_member_by_openid( message.fromUserName, user_profile.webapp_id)
+				#print member,'==============23423'
+
+				#if member:
+					# print '===============1',content, '--',WoFu.objects.filter(phone_number=content.strip()).count() 
+					# if WoFu.objects.filter(phone_number=content.strip()).count() > 0:
+					# 	# print '===============2'
+					# 	# if WoFuLog.objects.filter(member_id=member.id).count() == 0:
+					# 	# 	print '===============3'
+					# 	# 	with transaction.atomic():
+					# 	# 		print '===============4'
+					# 	# 		wo_fu = WoFu.objects.select_for_update().get(phone_number=content.strip())
+					# 	# 		print '===============5'
+					# 	# 		if wo_fu.is_send is False:
+					# 	# 			print '===============6'
+					# 	# 			coupon,error_msg = consume_coupon(user_profile.user_id, wo_fu.coupon_rule_id, member.id)
+					# 	# 			print '===============7',coupon,error_msg
+					# 	# 			if coupon:
+					# 	# 				print '===============8'
+					# 	# 				wo_fu.is_send = True
+					# 	# 				wo_fu.save()
+					# 	# 				WoFuLog.objects.create(member_id=member.id, wofu=wo_fu)
+					# 	# 				if wo_fu.level == 1:
+					# 	# 					response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢您一直都在，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝·服务-个人中心-我的优惠券，只需39元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
+					# 	# 				elif wo_fu.level == 2:
+					# 	# 					response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但我们已彼此熟悉，老朋友，为感谢您一直都在，根据您过去的购买记录，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝•服务-个人中心-我的优惠券，只需69元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
+					# 	# 				elif wo_fu.level == 3:
+					# 	# 					response_content = u'您的订购就是窝夫小子的人生！我们一辈子努力的事儿，就是让您订上一款满意的蛋糕！感谢时空变换中您依旧相伴的这些年，虽未谋面，但您的人生已经留下窝夫小子的痕迹，为感谢您对窝夫小子的支持，根据您过去的购买记录，冰箱里的新宠“一盒甜品”的优惠券已经躺在您的个人中心了，点击窝•服务-个人中心-我的优惠券，只需99元（原价139元）即可购买！<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s&project_id=0">戳我进入个人中心</a>' % (user_profile.host, user_profile.user_id)
+					# 	# 				# elif wo_fu.level == 4:
+					# 	# 				# 	response_content = u'虽未谋面，但您的人生已经留下窝夫小子的痕迹，作为新朋友，多想看看首次品尝后您幸福的笑容，您的一个订单，就是窝夫小子默默努力一辈子的事情，绝对不能懈怠的决心让我们坚持品质超过10余年，为感谢您对窝夫小子的支持，窝夫小子刚刚上架的新宠“一盒甜品”欢迎尝鲜价选购！'
+					# 	# 			else:
+					# 	# 				response_content = u'老朋友决不能冒名取代，每一个老朋友对于窝夫小子来说都是独一无二的，您的手机号已经领取过相应的优惠券，本次活动一个微信号只对应一个老朋友资格的手机号，不支持帮朋友查询哦~您可以邀请您的朋友关注窝夫小子蛋糕公众号亲自参与活动哦'
+					# 	# 		else:
+					# 	# 			response_content = u'老朋友决不能冒名取代，每一个老朋友对于窝夫小子来说都是独一无二的，您的手机号已经领取过相应的优惠券，本次活动一个微信号只对应一个老朋友资格的手机号，不支持帮朋友查询哦~您可以邀请您的朋友关注窝夫小子蛋糕公众号亲自参与活动哦~'
+					# 	else:
+					# 		response_content = u'老朋友决不能冒名取代，每一个老朋友对于窝夫小子来说都是独一无二的，您的手机号已经领取过相应的优惠券，本次活动一个微信号只对应一个老朋友资格的手机号，不支持帮朋友查询哦~您可以邀请您的朋友关注窝夫小子蛋糕公众号亲自参与活动哦~'
+					# else:
+					# 	response_content = u'虽未谋面，但您的人生已经留下窝夫小子的痕迹，作为新朋友，多想看看首次品尝后您幸福的笑容，您的一个订单，就是窝夫小子默默努力一辈子的事情，绝对不能懈怠的决心让我们坚持品质超过10余年，为感谢您对窝夫小子的支持，冰箱里的新宠“一盒甜品”现在尝鲜价只需119元~快快点击链接尝鲜吧~<a href="http://weapp.weizoom.com/termite/workbench/jqm/preview/?module=mall&model=product&action=get&rid=3813&workspace_id=mall&webapp_owner_id=570">点击我购买</a>'
 
 
 		if response_content:

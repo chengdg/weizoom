@@ -20,7 +20,7 @@ from datetime import timedelta
 from core.charts_apis import create_line_chart_response
 
 
-FIRST_NAV = export.MANAGEMENT_NAV
+FIRST_NAV = export.STATS_HOME_FIRST_NAV
 DEFAULT_COUNT_PER_PAGE = 20
 
 
@@ -78,8 +78,8 @@ class ManageSummary(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'app_name': 'stats',
-			'second_navs': export.get_management_second_navs(request),
-			'second_nav_name': export.MANAGEMENT_SUMMARY_NAV,
+			'second_navs': export.get_stats_second_navs(request),
+			'second_nav_name': export.STATS_MANAGEMENT_SECOND_NAV,
 			'start_date': start_date,
 			'end_date': end_date,
 

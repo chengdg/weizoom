@@ -249,7 +249,7 @@
 	             		<input type='checkbox' id='is_enable_online_pay_interface'
                                name='is_enable_online_pay_interface'
                                class="xa-pay-selected"
-                               {% if request.manager.id == 216 %}
+                               {% if is_weizoom_mall %}
                                checked="checked"
                                {% endif %}
                                disabled
@@ -324,7 +324,7 @@
 	</section>
 
 	<section >
-		<header class="xui-fontBold">商品描述<span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间，高度小于等于960）</span></header>
+		<header class="xui-fontBold">商品描述<span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span></header>
 		<div class="form-group">
 			<label class="control-label col-sm-1" for="detail"></label>
 			<div class="ml100" >

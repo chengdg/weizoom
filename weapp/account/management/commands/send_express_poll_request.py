@@ -40,7 +40,7 @@ class Command(BaseCommand):
 			if orders.count() > 0:
 				order = orders[0]
 
-				if len(express.abort_receive_message) > 0:
+				if express.abort_receive_message and len(express.abort_receive_message) > 0:
 					now = datetime.now()
 					minute = (now - express.abort_receive_at).seconds/60
 					if minute > 20:

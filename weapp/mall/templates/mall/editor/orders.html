@@ -75,7 +75,7 @@
 	{{else}}
 		<li class="xa-count {{if data.current_status_value==-1}}active{{/if}}" data-total-status-value="-1"><a href="javascript:void(0);">所有订单</a></li>
   		<li class="xa-count {{if data.current_status_value==0}}active{{/if}}" data-total-status-value="0"><a href="javascript:void(0);">待支付</a></li>
-  		<li class="xa-count {{if data.current_status_value==3}}active{{/if}}" data-total-status-value="3"><a href="javascript:void(0);">待发货<i class="xui-orderTip xa-orderTip " style="display:none"></i></a></li>
+  		<li class="xa-count {{if data.current_status_value==3}}active{{/if}}" data-total-status-value="3"><a href="javascript:void(0);">待发货<i class="xui-noticyTip xa-orderTip " style="display:none"></i></a></li>
   		<li class="xa-count {{if data.current_status_value==4}}active{{/if}}" data-total-status-value="4"><a href="javascript:void(0);">已发货</a></li>
   		<li class="xa-count {{if data.current_status_value==5}}active{{/if}}" data-total-status-value="5"><a href="javascript:void(0);">已完成</a></li>
   		<li class="xa-count {{if data.current_status_value==1}}active{{/if}}" data-total-status-value="1"><a href="javascript:void(0);">已取消</a></li>
@@ -666,7 +666,7 @@ $(document).ready(function() {
 					args: args,
 					success: function(data) {
 						$('[data-ui-role="advanced-table"]').data('view').reload();
-                        common_interval_check_func();
+                        // common_interval_check_func();
 					},
 					error: function() {
 						}
@@ -700,7 +700,7 @@ $(document).ready(function() {
 					args: args,
 					success: function(data) {
 						$('[data-ui-role="advanced-table"]').data('view').reload();
-                        common_interval_check_func();
+                        // common_interval_check_func();
 					},
 					error: function() {
 						}

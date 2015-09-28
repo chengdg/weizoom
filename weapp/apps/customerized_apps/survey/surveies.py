@@ -14,7 +14,7 @@ from termite import pagestore as pagestore_manager
 import models as app_models
 from mall import export
 from datetime import datetime
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class surveies(resource.Resource):
@@ -30,8 +30,9 @@ class surveies(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_customerized_apps(request),
-			'second_nav_name': "surveies",
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_APPS_SECOND_NAV,
+            'third_nav_name': export.MALL_APPS_SURVEY_NAV,
 			'has_data': has_data
 		});
 		

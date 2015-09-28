@@ -8,104 +8,68 @@
 	<div id="spin-hint" class="ml10"></div>
 </div>
 <div id="main-mask"></div>
-
-
 <div class="xui-header">
 	<div class="xui-i pr">
 		<div class="xui-logo">
-			<div class="xui-i-logoHref xa-i-logoHref"></div>
-			{% if first_navs %}
-				{% ifequal app_name 'stats' %}
-				<img src="/static_v2/img/editor/statsTopLogo.jpg" alt="">
-				{% else %}
-				<img src="/static_v2/img/editor/weixinTopLogo.jpg" alt="">
-				{% endifequal %}
-			{% else %}
-				<img src="/static_v2/img/editor/topLogo.jpg" alt="">
-			{% endif %}
+			<!-- <div class="xui-i-logoHref xa-i-logoHref"></div> -->
+			<img src="/static_v2/img/editor/topLogo.jpg" alt="" class="xa-i-logoHref">
 		</div>
 		<span class="xui-systemName"></span>
+		<div class="xui-headerActionBar">
+			<a href="/auth/account_help/get/"><i class="xui-toolIcon"></i>权限管理</a>
+			<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
+			<!-- <a href="#"><i class="xui-toolIcon"></i>系统通知</a>
+			<a href="#"><i class="xui-toolIcon"></i>帮助中心 </a> -->
+			<span class="ml15">欢迎您：{{ request.user.username }}</span>
+			<a href="/logout/" title="{{ request.user.username }}" class="ml10">退出</a>
+			</span>
+			<div id='popover_tmpl' style="display:none;">
+		 		<form class="form-horizontal">
+					<div class="control-group">
+						<span class="control-label" for="old_password">当前密码</span>
+						<span class="controls">
+							<input type="password" id="old_password" name="old_password"/>
+						</span>
+					</div>
 
+					<div class="control-group">
+						<span class="control-label pr15" for="new_password">新密码</span>
+						<span class="controls">
+							<input type="password" id="new_password" name="new_password" />
+						</span>
+					</div>
+
+					<div class="control-group">
+						<span class="control-label" for="confirm_password">确认密码</span>
+						<span class="controls">
+							<input type="password" id="confirm_password" name="confirm_password"/>
+							<p class="origin edit_password" error="old_password"></p>
+						</span>
+					</div>
+
+					<div class="control-group tc">
+						<input type="button" class="btn btn-primary xa-submit btn-sm " value="保存" />
+						<input type="button" class="btn btn-default xa-cancle btn-sm" value="取消" />
+					</div>
+				</form>
+ 			</div>
+		</div>
 	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
 			<ul class="xui-navBar-box clearStyle">
 				{% if first_navs %}
 					{% for nav in first_navs %}
-					<li>
-						<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href='{{nav.url}}' title='{{nav.name}}'>{{nav.name}}</a>
-					</li>
+						{% if nav.inner_name|satisfy_permission:request %}
+						<li class="pr">
+							<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title='{{nav.name}}'>{{nav.name}}</a>
+							{% if nav.class_name %}<i class="xui-noticyTip {{nav.class_name}}"></i>{% endif %}
+						</li>
+						{% endif %}
 					{% endfor %}
-				{% else %}
-
-					{% if 'manage_index'|satisfy_permission:request %}
-					<li>
-						<a {% ifequal first_nav_name 'home' %}class="active"{% endifequal %} href='/mall2/outline/' title='首页'>首页</a>
-					</li>
-					{% endif %}
-					{% if 'manage_product'|satisfy_permission:request %}
-					<li>
-						<a {% ifequal first_nav_name 'product' %}class="active"{% endifequal %} href='/mall2/product_list/?shelve_type=1' title='商品管理'>商品管理</a>
-					</li>
-					{% endif %}
-					{% if 'manage_order'|satisfy_permission:request %}
-					<li class="pr">
-						<a {% ifequal first_nav_name 'order' %}class="active"{% endifequal %} href='/mall2/order_list/' title='订单管理'>订单管理</a>
-
-                        <i class="xui-orderTip xa-orderTip " style="display:none"></i>
-
-
-					</li>
-					{% endif %}
-					{% if 'manage_promotion'|satisfy_permission:request %}
-					<li>
-						<a {% ifequal first_nav_name 'promotion' %}class="active"{% endifequal %} href='/mall2/flash_sale_list/' title='促销管理'>促销管理</a>
-					</li>
-					{% endif %}
-					{% if 'manage_member'|satisfy_permission:request %}
-					<li>
-						<a {% ifequal first_nav_name 'member' %}class="active"{% endifequal %} href='/member/member_list/' title='会员管理'>会员管理</a>
-					</li>
-					{% endif %}
-					{% if 'apps'|satisfy_permission:request %}
-					<li>
-						<a {% ifequal first_nav_name 'apps' %}class="active"{% endifequal %} href='/apps/lottery/lotteries/' title='百宝箱'>百宝箱</a>
-					</li>
-					{% endif %}
-					{% if 'static'|satisfy_permission:request %}
-					<li>
-						<!--<a href='http://tj.weizzz.com/' target='_blank' title='数据统计'>数据统计</a>-->
-						<a href='/stats/manage_summary/' title='数据罗盘'>数据罗盘</a>
-					</li>
-					{% endif %}
-					{% if 'manage_auth'|satisfy_permission:request %}
-					<li>
-						<a {% ifequal first_nav_name 'auth' %}class="active"{% endifequal %} href='/auth/account_help/get/' title='权限管理'>权限管理</a>
-					</li>
-					{% endif %}
-					{% if 'manage_mall_config'|satisfy_permission:request %}
-					<li>
-						<a {% ifequal first_nav_name 'config' %}class="active"{% endifequal %} href='/mall2/pay_interface_list/' title='配置管理'>配置管理</a>
-					</li>
-					{% endif %}
-
 				{% endif %}
 			</ul>
-			<div class="xui-headerActionBar" style="bottom:40px">
-				<span class="mr10">
-					<span class="">帮助中心</span>
-					<span class=" ml5">|</span>
-					<span class=" ml5">服务热线</span>
-					<span class=" ml5">400-688-6929</span>
-			</div>
-			<div class="xui-headerActionBar">
-				<span class="mr10">
-					<span class="">{{ request.user.username }}</span>
-					<span class=" ml5">-</span>
-					<span title="{{ request.user.username }}" class="xui-i-userName ml5">
-					<a href="/logout/">退出</a>
-				</span>
-			</div>
+			
 		</div>
 	</div>
 </div>
@@ -131,12 +95,13 @@
 						</a>
 					   </li>
 						<!-- 三级导航 -->
-						{% if nav.third_navs and second_nav_name == nav.name %}
+						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
 								<li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
 									<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
 										&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
 										<i class="xui-icon-arrow"></i>
+										{% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
 									</a>
 								</li>
 							{% endfor %}
@@ -151,7 +116,7 @@
 						</a>
 					   </li>
 							<!-- 三级导航 -->
-							{% if nav.third_navs and second_nav_name == nav.name %}
+							{% if nav.third_navs %}
 								{% for third_nav in nav.third_navs %}
 									<li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
 										<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
@@ -183,13 +148,14 @@
 </div>
 
 <div class="footer xui-footer">
-	<div class="xui-i" style="">
-		<!-- <span>
-			<a target="_blank" href="http://www.weizoom.com">关于微众</a>&nbsp;|&nbsp;
-			<a href="http://bizapp.qq.com/webc.htm?new=0&sid=800051878&eid=&o=http://www.weizoom.com/&q=7&ref=http://www.weizoom.com/" target="_blank">在线客服</a>&nbsp;|&nbsp;
-			<a target="_blank" href="mailto:service@weizoom.com">联系邮箱</a>
-		</span> -->
-		<span>Copyright&nbsp;&copy; 2012-2015 weizoom.com 微众传媒 版权所有&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.weizoom.com">微众传媒</a> 旗下微众云商通</span>
+	<div class="xui-content">
+		<div class="xui-i" style="">
+			<p style="color:#cd0205">系统负责人：010-50948901&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统服务号：2575261826</p>
+			<p>Copyright&nbsp;&copy; 2012-2015 weizoom.com 微众传媒 版权所有&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.weizoom.com">微众传媒</a> 旗下微众云商通</p>
+		</div>
+		<div class="xui-i">
+			<img width="80" height="80" src="/static_v2/img/editor/sys_QRcode.jpg" class="fl"><span class="fl mt20 ml10 xui-greyColor">扫码关注<br>服务号</span>
+		</div>
 	</div>
 </div>
 
@@ -224,9 +190,14 @@
 
 </script>
  <script type="text/javascript">
+
+    document.addEventListener("visibilitychange", common_interval_check_func, false);
+
     function common_interval_check_func(){
-        W.isRequireConfirmViewDisplayed = false;
-      W.getApi().call({
+        if(document.visibilityState != 'visible'){
+        	return
+        }
+        W.getApi().call({
           app:'new_weixin',
           resource:'outline',
           showLoading: false,
@@ -249,26 +220,24 @@
               orderTipItem.text(0);
             }
 
-                //微信未读消息计数
-                var unreadRealtimeCount = data.unread_realtime_count;
-                // $('#message_notify').html('new');
-                if (parseInt(unreadRealtimeCount) > 0){
-                    $('.xa-num-unread-message-count').css('display', 'block');
-                    if (parseInt(unreadRealtimeCount) > 99){
-                        unreadRealtimeCount = '99+'
-                    }
-                    $('.xa-num-unread-message-count').text(unreadRealtimeCount);
-                } else {
-                    $('.xa-num-unread-message-count').css('display', 'none');
+            //微信未读消息计数
+            var unreadRealtimeCount = data.unread_realtime_count;
+            var msgTip = $('.xa-msgTip');
+            if (unreadRealtimeCount > 0){
+                msgTip.show();
+                if (parseInt(unreadRealtimeCount) > 99){
+                    unreadRealtimeCount = '99+'
                 }
-
-            W.isRequireConfirmViewDisplayed = true;
-          },
-          error: function(resp) {
-            //TODO 进行错误通知
-          }
+                msgTip.text(unreadRealtimeCount);
+            } else {
+                msgTip.hide();
+            }
+	    },error: function(resp) {
+	        //TODO 进行错误通知
+	    }
       })
     }
+
 	$(document).ready(function($) {
 		if($('.xui-navBar-box .active').length==0 && $('.xui-navBar-box a').length){
 			location.href = $('.xui-navBar-box a:first').attr('href');
@@ -320,7 +289,80 @@
 
 
         });
+		var tmpl = getPopoverContent();
+		$('#mf').popover({
+		    html: true,
+		    trigger: "click",
+		    content: tmpl,
+		    container: '.xui-headerActionBar',
+		    animation: false,
+		    placement: "bottom",
+		    template: '<div class="popover" role="tooltip" id="popover"><div class="arrow"></div><div class="popover-content"></div></div>'
+  		});
+  		$('#mf').on('shown.bs.popover',initSubmit);
+  		function getPopoverContent(){
+			var result = $('#popover_tmpl').html();
+			$('#popover_tmpl').remove();
+			return result;
+		}
+		function initSubmit(){
+			$('#old_password').val('');
+			$('.xa-cancle').on('click',function(){
+				$('#mf').popover('hide');
+			});
+			$('.xa-submit').on('click',function(){
+	  			var oldPassword = $('#old_password').val();
+				var newPassword = $('#new_password').val();
+				var confirmPassword = $('#confirm_password').val();
+			
+				if (oldPassword.length == 0) {
+					$('.edit_password').text("请输入初始密码").css('display', 'block');
+					return false;
+				}
+				if (newPassword.length == 0) {
+					$('.edit_password').text("请输入新密码").css('display', 'block');
+					return false;
+				}
+				if (confirmPassword.length == 0) {
+					$('.edit_password').text("请输入确认密码").css('display', 'block');
+					return false;
+				}
+				if (newPassword != confirmPassword && confirmPassword !=0) {
+					$('.edit_password').text("两次密码输入不一致").css('display', 'block');
+					return false;
+				}
 
+				$.ajax({
+					url:'{{fans_host}}/password/update/',
+					type:'post',
+					dataType:'jsonp',
+					data:{
+						old_password: oldPassword,
+						new_password: newPassword,
+						confirm_password: confirmPassword
+					},
+					// xhrFields: {withCredentials: true},
+					// crossDomain: true,
+					success:function(response) {
+						if (response.code == 200) {
+							if (response.data.success) {
+								$('.edit_password').text("").css('display', 'block');
+								alert("修改成功");
+							} else {
+								alert(response.data.reason);
+							}
+							$('#old_password').val('');
+							$('#new_password').val('');
+							$('#confirm_password').val('');
+						}
+						else{
+							$('.edit_password').text("初始密码不正确").css('display', 'block');	
+						}
+					}
+				});
+				return false;
+			});
+		}
 // 	var scrollLeft = $(this).scrollLeft();
 // 	if(scrollLeft != 0){
 // 		$('.xa-sideBar').css('position', 'absolute');
@@ -348,13 +390,8 @@
 $(document).ready(function($) {
 
 	$('.xa-i-logoHref').click(function(event){
-		location.href = "http://fans.weizoom.com";
+		location.href = "/mall2/outline/";
 	});
-
-	//让这三个临时标签在新页面打开 duhao 20150512
-	$(".xa-navBar a[title='账号信息']").attr('target', '_blank');
-{#	$(".xa-navBar a[title='百宝箱']").attr('target', '_blank');#}
-	$(".xa-navBar a[title='模板']").attr('target', '_blank');
 
 	//添加token参数
 	//$(".xa-navBar a[title='数据统计']").attr('href', 'http://tj.weizzz.com/?token=' + "{{request.user_token}}");

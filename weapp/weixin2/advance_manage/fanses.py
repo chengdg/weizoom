@@ -16,7 +16,7 @@ from .fans_category import DEFAULT_CATEGORY_NAME
 
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 #DEFAULT_CATEGORY_NAME=u"未分组"
 
@@ -39,8 +39,9 @@ class Fanses(resource.Resource):
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_FANS_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_FANS_NAV,
 			'has_fans': has_fans,
 			'categories': categories
 		})

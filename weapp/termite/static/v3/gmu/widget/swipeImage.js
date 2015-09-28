@@ -80,7 +80,7 @@ gmu.define('SwipeImage', {
 	            console.log(imgsHeightArr,"!!!!!!!!!!!")
 	        }); 
 	        var maxHeight = Math.max.apply(Math,imgsHeightArr);
-            var $swiperSlide = $el.children('.wui-swiper-slide');
+            var $swiperSlide = $el.find('.wui-swiper-slide');
             var $swiperWrapper = $el.children('.wui-swiper-wrapper');
             $el.height(maxHeight);
             $swiperWrapper.height(maxHeight);

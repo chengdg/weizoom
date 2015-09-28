@@ -31,7 +31,7 @@
 		data-ui-role="advanced-table"
 		data-app="mall2"
 		data-resource="promotion_list"
-		data-args='{"type": "coupon"}'
+		data-args='{"type": "coupon", "endDate": "{{endDate}}", "promotionStatus": "{{promotion_status}}"}'
 		data-template-id="#coupons_list_view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
@@ -127,10 +127,18 @@
 {% endverbatim %}
 <script type="text/javascript">
 $(document).ready(function() {
+	var endDate = '{{endDate}}';
+	var startDate = '';
+	if(endDate){
+		startDate = '2014-01-01';
+	}
 	var view = new W.view.mall.PromotionListView({
 		el: '.xui-promotionsPage',
 		promotionType: 'coupon',
-		templateFilterName: 'mall-coupon-filter-view-tmpl-src'
+		templateFilterName: 'mall-coupon-filter-view-tmpl-src',
+		startDate: startDate,
+		endDate: endDate,
+		promotionStatus: '{{promotion_status}}',
 	});
 	view.render();
 	xlog(view.filterView)

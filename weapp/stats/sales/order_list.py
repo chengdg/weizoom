@@ -15,12 +15,10 @@ from excel_response import ExcelResponse
 from tools.regional.views import get_str_value_by_string_ids, get_str_value_by_string_ids_new
 from modules.member.models import Member, WebAppUser, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 from mall import module_api as mall_api
-from mall import order_api_views
 import re
-from mall import order_views
 
 COUNT_PER_PAGE = 15
-FIRST_NAV = export.SALES_NAV
+FIRST_NAV = export.STATS_HOME_FIRST_NAV
 
 ########################################################################
 # export_orders:  导出订单列表
@@ -460,8 +458,9 @@ class OrderList(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'app_name': 'stats',
-			'second_navs': export.get_sales_second_navs(request),
-			'second_nav_name': export.SALES_ORDER_LIST_NAV,
+			'second_navs': export.get_stats_second_navs(request),
+			'second_nav_name': export.STATS_SALES_SECOND_NAV,
+			'third_nav_name': export.SALES_ORDER_LIST_NAV,
 			'jsons': jsons
 		})
 		

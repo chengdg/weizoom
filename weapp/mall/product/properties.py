@@ -150,7 +150,7 @@ class PropertyList(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
-            'second_navs': export.get_second_navs(request),
+            'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_MANAGE_MODEL_NAV,
             'templates': templates
         })

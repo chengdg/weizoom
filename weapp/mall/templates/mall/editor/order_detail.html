@@ -168,7 +168,13 @@
                   物流公司名称：{% if child_order.express_company_name %} {{ child_order.express_company_name|get_company_name_by_value }}   {% endif %}
                 </p>
                 <p>
-                  运单号：{% if child_order.express_company_name %} <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{child_order.express_company_name}}&nu={{ child_order.express_number }}">{{ child_order.express_number }}</a>{% endif %}
+                  运单号：{% if child_order.express_company_name %}
+                            {% if child_order.is_100 %}
+                                <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{child_order.express_company_name}}&nu={{ child_order.express_number }}">{{ child_order.express_number }}</a>
+                            {% else %}
+                                {{child_order.express_number  }}
+                            {% endif %}
+                        {% endif %}
                 </p>
                 <p>
                   {% for detail in child_order.get_express_details %}
@@ -187,7 +193,13 @@
               物流公司名称：{% if order.express_company_name %} {{ order.express_company_name|get_company_name_by_value }}   {% endif %}
             </p>
             <p>
-              运单号：{% if order.express_company_name %} <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ order.express_number }}</a>{% endif %}
+              运单号：{% if order.express_company_name %}
+                        {% if order.is_100 %}
+                            <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ order.express_number }}</a>
+                        {% else %}
+                            {{order.express_number  }}
+                        {% endif %}
+                    {% endif %}
             </p>
             <p>
               {% for detail in order.get_express_details %}
@@ -291,7 +303,7 @@
                 {% if product.promotion.type == 'flash_sale' %}
                 直降{{product.promotion.promotion_saved_money|floatformat:"2" }}元
                 {% endif %}
-                {% if coupon.product_id == product.id %}
+                {% if product.has_coupon %}
                   <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                 {% endif %}
                 {% if product.integral_count %}
@@ -310,7 +322,7 @@
 
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
-                {% if order.coupon_id and coupon.product_id != product.id%}
+                {% if order.coupon_id and coupon.product_id == -1 %}
                 <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                 {% endif %}
                 {% if order.integral %}

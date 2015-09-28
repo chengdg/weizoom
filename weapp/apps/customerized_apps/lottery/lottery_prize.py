@@ -24,7 +24,7 @@ from market_tools.tools.coupon.util import consume_coupon
 from termite import pagestore as pagestore_manager
 from modules.member.models import Member as member_models
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 
@@ -250,6 +250,10 @@ class lottery_prize(resource.Resource):
 		#根据抽奖次数限制，更新可抽奖次数
 		if limitation != -1:
 			lottery_participance.update(dec__can_play_count=1)
+
+		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
+		lottery_participance.update(set__lottery_date=now_datetime)
+		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----end
 		lottery_participance.reload()
 		#调整参与数量和中奖人数
 		newRecord = {}

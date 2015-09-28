@@ -28,23 +28,31 @@ from termite2 import models as termite2_models
 
 from weixin2 import export as weixin_export
 from stats import export as stats_export
+from mall import export as mall_export
 
 def first_navs(request):
 	"""
 	根据request.path_info获取对应的first navs
 	"""
 	result = {}
-	if ('/new_weixin/' in request.path_info) or ('/apps2/' in request.path_info):
-		if '/unbind_account/' in request.path_info:
-			result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
-		else:
-			result['first_navs'] = weixin_export.FIRST_NAVS
-	elif '/stats/' in request.path_info:
-		result['first_navs'] = stats_export.FIRST_NAVS
+	# if ('/new_weixin/' in request.path_info) or ('/apps2/' in request.path_info):
+	# 	if '/unbind_account/' in request.path_info:
+	# 		result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
+	# 	else:
+	# 		result['first_navs'] = weixin_export.FIRST_NAVS
+	# elif '/stats/' in request.path_info:
+	# 	result['first_navs'] = stats_export.FIRST_NAVS
+	if '/unbind_account/' in request.path_info:
+		result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
+	else:
+		result['first_navs'] = mall_export.FIRST_NAVS
 	return result
 
 def cdn_host(request):
-	return {'cdn_host': settings.CDN_HOST}
+	return {
+		'cdn_host': settings.CDN_HOST,
+		'fans_host': settings.FAN_HOST
+	}
 
 
 def handlebar_component_templates(request):

@@ -87,7 +87,7 @@ Background:
     #账号前面'-'代表取消关注的会员
         
     When 微信用户批量消费jobs的商品
-         | date | consumer | type |businessman| product | payment | payment_method | freight | price    | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash | action    |  order_status   |
+         | date | consumer | type |businessman| product | payment | pay_type | freight | price    | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash | action    |  order_status   |
          | 今天 | bill     | 购买 | jobs      | 商品1,2 | 支付    |   支付宝       | 10      | 100      |  0       |        | 210         | 0            | 210    |    0   | 0    |           |    已发货       |            
          | 今天 | tom      | 购买 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100      |  0       |        | 110         | 0            | 0      |    110 | 0    |           |    已完成       |           
          | 今天 | -tom     | 购买 | jobs      | 商品1,1 | 支付    |   货到付款     | 10      | 100      |  0       |        | 110         | 0            | 0      |    0   | 110  |           |    待发货       |
@@ -98,8 +98,8 @@ Background:
          | 今天 | bill     | 购买 | jobs      | 商品2,9 | 支付    |   支付宝       | 10      | 100      |  0       |        | 910         | 0            | 910    |    0   | 0    |           |    已发货       |
          | 今天 | bill     | 购买 | jobs      | 商品3,1 | 支付    |   支付宝       | 10      | 100      |  0       |        | 110         | 0            | 110    |    0   | 0    |           |    已发货       |
          | 今天 | bill     | 购买 | jobs      | 商品1,2 |         |   支付宝       | 10      | 100      |  0       |        |  0          | 0            | 0      |    0   | 0    |           |    未支付       |       
-         | 今天 | bill     | 测试 | jobs      | 商品2,3 | 支付    |   微信支付     | 10      | 100      |  0       |        | 310         | 0            | 0      |    310 | 0    | jobs,取消 |    已取消       |            
-         | 今天 | tom      | 购买 | jobs      | 商品1,4 | 支付    |   货到付款     | 10      | 100      |  0       |        | 0           | 0            | 0      |    0   | 410  | jobs,退款 |    退款中       |            
+         | 今天 | bill     | 测试 | jobs      | 商品2,3 |         |   微信支付     | 10      | 100      |  0       |        | 310         | 0            | 0      |    310 | 0    | jobs,取消 |    已取消       |
+         | 今天 | tom      | 购买 | jobs      | 商品1,4 | 支付    |   微信支付     | 10      | 100      |  0       |        | 0           | 0            | 0      |    0   | 410  | jobs,退款 |    退款中       |
 
 @stats @stats.product @mall2
 Scenario: 1 商品排行（下单单量、被分享次数）
