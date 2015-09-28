@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from core import api_resource
 from wapi.decorators import param_required
 #from wapi.wapi_utils import create_json_response
@@ -42,12 +44,16 @@ class ProductsByCategory(api_resource.ApiResource):
 		"""
 		将cache数据结构转成dict
 		"""
+		"""
 		data = []
 		for product in products:
 			product['update_time'] = utils_dateutil.date2string(product['update_time'])
 			product['created_at'] = utils_dateutil.datetime2string(product['created_at'])
 			product['categories'] = ';'.join([str(x) for x in product['categories'] ])
 			data.append(product)
+		return data
+		"""
+		data = [Product.to_dict(product) for product in products]
 		return data
 
 	@param_required(['webapp_id', 'category_id', 'uid', 'is_access_weizoom_mall'])
@@ -63,18 +69,17 @@ class ProductsByCategory(api_resource.ApiResource):
 		is_access_weizoom_mall = args['is_access_weizoom_mall']
 		print("args: {}".format(args))
 
+		# 伪造一个UserProfile，便于传递参数
 		user_profile = DummyUserProfile(webapp_id, owner_id)
 
 		#product = mall_models.Product.objects.get(id=args['id'])
-		#category, products = webapp_cache.get_webapp_products(user_profile, is_access_weizoom_mall, category_id)
 
-		func = webapp_cache.get_webapp_products_from_db(user_profile, is_access_weizoom_mall)
-		result = func()
-		print("result from get_webapp_products_from_db: {}".format(result))
-		products = result['value']['products']
-		categories = result['value']['categories']
+		# 通过缓存获取数据
+		category, products = webapp_cache.get_webapp_products(user_profile, is_access_weizoom_mall, category_id)
+		print("products: {}".format(products))
+		#func = webapp_cache.get_webapp_products_from_db(user_profile, is_access_weizoom_mall)
+		#result = func()
+		#print("result from get_webapp_products_from_db: {}".format(result))
+		#products = result['value']['products']
 		#categories = result['value']['categories']
-		#return ProductsByCategory.to_dict(products)
-		#return products
-		#return {"products": "{}".format(products)}
 		return ProductsByCategory.cached_to_dict(products)

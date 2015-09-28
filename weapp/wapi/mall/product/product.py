@@ -30,6 +30,11 @@ class Product(api_resource.ApiResource):
 			'remark': product.remark,
 			'created_at': utils_dateutil.datetime2string(product.created_at),
 			'shelve_type': product.shelve_type,
+
+			'promotion': product.promotion,
+			'promotion_title': product.promotion_title,
+			'purchase_price': product.purchase_price,
+			'display_price': product.display_price,
 		}
 		return data
 
