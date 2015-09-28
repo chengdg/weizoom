@@ -13,15 +13,15 @@ W.component.appkit.SignDescription = W.component.Component.extend({
         model: 2
     }],
 
-	properties: [{
-		group: '活动名称分组',
+	properties: [
+		{
+		group: '占空位',
+		groupClass: '',
+		fields: [{
+		}]},{
+		group: '活动名称',
 		groupClass: 'xui-propertyView-app-SignNameGroup',
 		fields: [{
-			name: 'title_group',
-			type: 'title_with_annotation',
-			displayName: '活动名称',
-			isUserProperty: true
-		},{
 			name: 'title',
 			type: 'text',
 			displayName: '活动名称',
@@ -38,14 +38,9 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: ''
 		}]},{
-		group:'分享设置分组',
+		group:'分享设置',
 		groupClass:'xui-propertyView-app-ShareGroup',
 		fields:[{
-			name: 'share_group',
-			type: 'title_with_annotation',
-			displayName: '分享设置',
-			isUserProperty: true
-		},{
 			name: 'image',
 			type: 'image_dialog_select',
 			displayName: '上传图片',
@@ -65,14 +60,9 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: '签到赚积分啦！'
 		}]},{
-		group:"自动回复分组",
+		group:"自动回复",
 		groupClass:'xui-propertyView-app-ReplyGroup',
 		fields:[{
-			name: 'reply_group',
-			type: 'title_with_annotation',
-			displayName: '自动回复',
-			isUserProperty: true
-		},{
 			name: 'reply_keyword',
 			type: 'text',
 			displayName: '关键字',
@@ -89,14 +79,9 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			default: '建议填写垫付近期活动通知，签到奖励等内容……'
 		}]},{
-		group:"签到设置分组",
+		group:"签到设置",
 		groupClass:'xui-propertyView-app-SignSettingGroup',
 		fields:[{
-			name: 'signsetting_group',
-			type: 'title_with_annotation',
-			displayName: '签到设置',
-			isUserProperty: true
-		},{
 			name:'daily_group',
 			displayName:'每日签到',
 			type:'title_with_annotation',
