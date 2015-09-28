@@ -138,10 +138,11 @@ Scenario:2 设等级
 
 	Given jobs登录系统
 	#给当前会员设置等级
-		When jobs给"tom2"设等级
+		When jobs更新"tom2"的会员等级
 			"""
 			{
-				"member_rank":"金牌会员"
+				"name": "tom2",
+				"member_rank": "金牌会员"
 			}
 			"""
 		Then jobs可以获得会员列表
@@ -152,10 +153,11 @@ Scenario:2 设等级
 
 	#给当前会员设置现在的等级
 
-		When jobs给"tom2"设等级
+		When jobs更新"tom2"的会员等级
 			"""
 			{
-				"member_rank":"金牌会员"
+				"name": "tom2",
+				"member_rank": "金牌会员"
 			}
 			"""
 		Then jobs可以获得会员列表
