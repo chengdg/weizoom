@@ -1,0 +1,103 @@
+<script id="red-envelope-detail-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade ">
+    <div class="modal-dialog modal-lg xui-appPage-commonStyle" style="width: 1000px;">
+    <div class="modal-content xui-detail-tableBox">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">{{html member_name}}引入详情</h3>
+        </div>
+        <ul class="fans_data_ul xui-weixin-outlinePage">
+			<li>新关注人数<em>152</em>人</li>
+			<li>领取人数<em>3000</em>人</li>
+			<li>产生消费额<em>13000</em>人</li>
+			<li>使用人数<em>300</em>人</li>
+		</ul>
+        <div class="modal-body" style="min-height: 100px;overflow: auto;">
+            <div
+                class="panel-body panel-table p0 mt10"
+                data-ui-role="advanced-table"
+                data-app="apps/promotion"
+                data-resource="red_envelope_participances"
+                data-args='{"id": "${red_id}"}'
+                data-template-id="#red_envelope_participances_view"
+                data-enable-paginator="true"
+                data-enable-sort="false"
+                data-selectable="true"
+                data-disable-header-select="true"
+                data-outer-selecter='.xa-selectAll'
+                data-selecttable-tr='xa-selectTr'
+                data-item-count-per-page="10"
+                ></div>
+            <div class="dropdown xui-operation update_dropdown pa"  style="bottom: 5px;left: 33px;">
+			<div >
+				<span class="checkbox">
+					<label class="xa-selectAll" for="all">
+							<input type="checkbox" style="top: -3px;" id="all">
+							全选
+					</label>
+				</span>
+				</div>
+				</div>
+        </div>
+    </div>
+    </div>
+    </div>
+</script>
+
+<script id="red-envelope-dialog-detail-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>下单会员</th>
+				<th>会员状态</th>
+				<th>引入领取人数</th>
+				<th>引入使用人数</th>
+				<th>引入新关注</th>
+				<th>引入消费额</th>
+				<th>领取时间</th>
+				<th>使用状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr data-id="${item.id}" class="xa-selectTr">
+			<td style="position:relative;" >
+				<div class="column_block xui-memberHeader pr">
+					<a target="_blank" href="">
+						<img width="41" height="41" src="${item.participant_icon}" />
+						{{html item.participant_name}}
+					</a>
+				</div>
+			</td>
+				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
+
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+				<td>
+
+				</td>
+				<td>
+					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	<br>
+</script>

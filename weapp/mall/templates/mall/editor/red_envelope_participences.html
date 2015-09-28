@@ -122,13 +122,14 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
-				<td
-					class="tl pl10"
-					style="width:250px; height:60px;"
-				>
-					<img src="${item.participant_icon}" />
-					{{html item.participant_name}}
-				</td>
+			<td style="position:relative;" >
+				<div class="column_block xui-memberHeader pr">
+					<a target="_blank" href="">
+						<img width="41" height="41" src="${item.participant_icon}" /><br>
+						{{html item.participant_name}}
+					</a>
+				</div>
+			</td>
 				<td>
 
 				</td>
@@ -151,7 +152,7 @@
 
 				</td>
 				<td>
-
+					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -170,6 +171,21 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	$('.panel-body').delegate('.xa-detail', 'click', function(event){
+		var member_name = $(event.currentTarget).data('member-name');
+		console.log(member_name);
+		var dialog = W.dialog.showDialog('W.dialog.mall.RedEnvelopeDetailDialog',{
+			member_name: member_name,
+			member_count: 1,
+			red_id: {{red_envelope_id}},
+			success: function(data){
+
+			},
+			error: function(data){
+				W.showHint('error', '发放失败!');
+			}
+		});
+	});
 	var participant_name,startTime,endTime;
     //export
     $('.xa-export').click(function(event){
