@@ -12,7 +12,19 @@
 			<div class="${property_group.groupClass}-topGap propertyGroup-topGap"></div>
 			<div class="propertyGroup ${property_group.groupClass}" {{if property_group.groupName }}name="${property_group.groupName}"{{/if}}>
 				{{if i > 0}}
-				<div class="ml5 fb">${property_group.group}</div>
+				<div class="ml5 fb">${property_group.group}
+                    {{if property_group.groupHelp }}
+                        <span id="${property_group.groupHelp.id}" class="${property_group.groupHelp.className}">
+                        {{if property_group.groupHelp.link }}
+                        <a id="${property_group.groupHelp.link.id}" class="${property_group.groupHelp.link.className}" data-func="${property_group.groupHelp.link.handler}" >${property_group.groupHelp.link.text}</a>
+                        {{/if}}
+
+                        {{if property_group.groupHelp.tip }}
+                            <span type="button" class="glyphicon glyphicon-question-sign groupHelp_tip" data-toggle="tooltip" data-placement="bottom" title="${property_group.groupHelp.tip.text}"></span>
+                        {{/if}}
+                        </span>
+                    {{/if}}
+				</div>
 				{{/if}}
 
 				{{each(j, field) property_group.fields}}

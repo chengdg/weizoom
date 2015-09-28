@@ -36,6 +36,33 @@
             border-radius: 3px;
             margin: 10px;
         }
+        .xui-propertyView-app-ShareGroup,.xui-propertyView-app-ReplyGroup,.xui-propertyView-app-SignSettingGroupName{
+            border-top: 1px solid #DDDDDD;
+            padding-top: 15px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        .xui-propertyView-app-ShareGroup:first-child,.xui-propertyView-app-ReplyGroup:first-child,.xui-propertyView-app-SignSettingGroupName:first-child{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .xui-propertyView-app-SignSettingGroup{
+            border:1px solid #DDDDDD;
+            background-color: #FFFFFF;
+            padding-bottom: 5px;
+            padding-top: 5px;
+        }
+        .propertyGroup_property_dynamicControlField_content{
+            width: 100%;
+            border:1px solid #DDDDDD;
+            background-color: #FFFFFF;
+            padding-bottom: 5px;
+            padding-top: 5px;
+
+        }
+        .xui-outerFunctionTrigger,.groupHelp_tip{
+            margin-left: 5px;
+        }
     </style>
 {% endblock %}
 
@@ -52,7 +79,7 @@
     <div class="xui-tag-group xa-tag-group">
         <span class="xui-i-tag xui-i-tag-active" target="xa-setting">规则设置</span>
         <span class="xui-i-tag" target="xa-state">签到统计</span>
-        <!--<button type="button" class="xui-link-copy fr">复制链接</button>-->
+        <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/">复制链接</button>
     </div>
 
     <div class="clearfix xui-setting-tag xa-setting">
@@ -297,15 +324,10 @@
 
             var daily_points = descriptionModel.get('daily_points');
             var daily_prizes = descriptionModel.get('daily_prizes');
-                    console.log('!!!!!!!!!!!!!!!!!!!');
-                    console.log(daily_prizes);
             var prize_setings = {
                 '0':{
                         'integral':daily_points,
-                        'coupon':daily_prizes ? {
-                            'id': daily_prizes.data.id,
-                            'name': daily_prizes.data.name
-                        } : ''
+                        'coupon':daily_prizes ? daily_prizes : ''
                     }
                 };
             for(var i=0;i<dynamicComponents.length;i++){
@@ -313,10 +335,7 @@
                 var serial_prizes = dynamicComponents[i].model.get('serial_count_prizes');
                 prize_setings[index]={
                     'integral':dynamicComponents[i].model.get('serial_count_points'),
-                    'coupon':serial_prizes? {
-                        'id': serial_prizes.data.id,
-                        'name': serial_prizes.data.name
-                    }: ''
+                    'coupon':serial_prizes? serial_prizes: ''
                 }
             }
 
@@ -324,14 +343,14 @@
                 'name':name,
                 'share':JSON.stringify(share),
                 'reply':JSON.stringify(reply),
-                'prize_settings':JSON.stringify(prize_setings),
-                'status': signStatus
+                'prize_settings':JSON.stringify(prize_setings)
             };
 
 
           if (isCreateNewData) {
             var method = 'put';
             args['related_page_id'] = data['project_id'];
+              args['status'] = signStatus;
           } else {
             var method = 'post';
             args['id'] = W.activityId;
@@ -347,6 +366,7 @@
                 isCreateNewData = false;
                 if(data && data.id){
                     W.activityId = data.id;
+                    $('.xa-link-copy').removeClass('xui-hide');
                 }
             },
             error: function(resp) {
@@ -399,11 +419,20 @@
           }
         });
       });
-      
-      $(document).click(function() {
-        // 点击空白处，触发事件
+      //说明
+      $(document).click(function(event) {
+      // 点击空白处，触发事件
+
+      //签到奖励说明
+      if(event.target.id == 'outerFunctionTrigger'){
+            W.dialog.showDialog('W.dialog.sign.InstructionDialog',{
+                success: function(data){}
+            });
+      }
+
         W.Broadcaster.trigger('designpage:cancel_delete');
       });
+
 
         //绑定标签页切换事件
         $('.xa-tag-group').delegate('.xui-i-tag', 'click', function(){
@@ -420,6 +449,14 @@
                 });
             }
             $this.addClass('xui-i-tag-active').siblings().removeClass('xui-i-tag-active');
+        });
+
+        //初始化复制链接到剪贴板
+        var client = new ZeroClipboard( $(".xa-link-copy") , {
+          moviePath: "/static_v2/zero_clipboard.swf"
+        });
+        client.on('complete', function(client, args) {
+            W.showHint('success', '已经将链接复制到剪贴板');
         });
     });
 
@@ -456,6 +493,41 @@
         }
     }
   </script>
-{% block js %}{% endblock %}
+{% block js %}
+<script id="sign-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">
+<div class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">拿到奖励说明</h3>
+            </div>
+
+            <div class="modal-body ml15">
+                <div>
+                    <p>1、每日签到奖励：用户每天签到的奖励</p>
+                    <p class="pl20"> 例如：设置为5积分，则用户每次签到都可获得5积分。</p>
+                </div>
+                <div>
+                    <p>2、连续签到至X天：用户连续签到至X天的奖励</p>
+                    <p class="pl20">例如：设置连续签到10，奖励为100积分，则用户连续签到至第10天可获得100积分。</p>
+
+                </div>
+                <div>
+                    <p>3、周期：连续签到天数最高设置为30天，则用户签到至30天后，连续签到天数变为0，重新开始签到规则。</p>
+                </div>
+                <div>
+                    <p>4、当签到奖励设置为优惠劵，且优惠券库存不足时，用户签到时会提示：奖品已领完，请联系客服补发！</p>
+                </div>
+            </div>
+
+            <div class="modal-footer modal-footerBg">
+                <button class="btn btn-success" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock %}
 {% endblock %}
 

@@ -149,6 +149,11 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'shengjing_app',
 				'add_link': '/mall2/product/'
 			}]
+		},
+		'sign': {
+			'id': 10,
+			'name': '签到',
+			'link': '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.user.id
 		}
 	}
 
@@ -255,7 +260,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			'filter': {
 				"is_deleted": False
 			}
-		},		
+		},
 	}
 
 	item = type2object[type]

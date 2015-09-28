@@ -41,6 +41,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',    
 
         'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger',
+        'click .xa-outerFunctionTrigger': 'onClickOuterFunctionTrigger',
 
         //image_dialog_select 类型
         'click .xa-deleteImageButton': 'onClickDeleteImage',
@@ -985,5 +986,10 @@ W.workbench.PropertyView = Backbone.View.extend({
         var $el = $(event.target);
         var $input = $el.parents('.propertyGroup_property_input').find('.xa-valueInput');
         $input.trigger('click');
+    },
+    onClickOuterFunctionTrigger:function(event){
+        var $data_func = $(event.target).attr('data-func');
+        W.data.getData($data_func);
+
     }
 });

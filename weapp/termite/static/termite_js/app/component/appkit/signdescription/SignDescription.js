@@ -13,15 +13,15 @@ W.component.appkit.SignDescription = W.component.Component.extend({
         model: 2
     }],
 
-	properties: [{
-		group: '签到设置',
-		groupClass: 'xui-propertyView-app-Selection',
+	properties: [
+		{
+		group: '占空位',
+		groupClass: '',
 		fields: [{
-			name: 'title_group',
-			type: 'title_with_annotation',
-			displayName: '活动名称',
-			isUserProperty: true
-		},{
+		}]},{
+		group: '活动名称',
+		groupClass: 'xui-propertyView-app-SignNameGroup',
+		fields: [{
 			name: 'title',
 			type: 'text',
 			displayName: '活动名称',
@@ -37,12 +37,18 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: ''
-		},{
-			name: 'share_group',
-			type: 'title_with_annotation',
-			displayName: '分享设置',
-			isUserProperty: true
-		},{
+		}]},{
+		group:'分享设置',
+		groupClass:'xui-propertyView-app-ShareGroup',
+		groupHelp:{
+			className:'xui-propertyView-app-ShareGroup-helper',
+			id:'propertyView-app-ShareGroup-helper',
+			tip:{
+				text:'此分析图片和描述用户分享到朋友圈、微信群、微信好友'
+			}
+		},
+
+		fields:[{
 			name: 'image',
 			type: 'image_dialog_select',
 			displayName: '上传图片',
@@ -61,12 +67,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: '签到赚积分啦！'
-		},{
-			name: 'reply_group',
-			type: 'title_with_annotation',
-			displayName: '自动回复',
-			isUserProperty: true
-		},{
+		}]},{
+		group:"自动回复",
+		groupClass:'xui-propertyView-app-ReplyGroup',
+		fields:[{
 			name: 'reply_keyword',
 			type: 'text',
 			displayName: '关键字',
@@ -82,12 +86,28 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 200,
 			isUserProperty: true,
 			default: '建议填写垫付近期活动通知，签到奖励等内容……'
+		}]},{
+			group:"签到设置",
+			groupClass:"xui-propertyView-app-SignSettingGroupName",
+			groupHelp:{
+				className:'xui-propertyView-app-SignSettingGroupName-helper',
+				id:'propertyView-app-SignSettingGroupName-helper',
+				link:{
+					className:'xui-outerFunctionTrigger xa-outerFunctionTrigger',
+					id:'outerFunctionTrigger',
+					text:'奖励说明',
+					handler: 'W.component.appkit.SignDescription.handleHelp'
+				}
+			},
+			fields:[{
+				name:'SignSettingGroupName',
+				isUserProperty: true,
+				type:'title'
+			}]
 		},{
-			name: 'signsetting_group',
-			type: 'title_with_annotation',
-			displayName: '签到设置',
-			isUserProperty: true
-		},{
+		group:"",
+		groupClass:'xui-propertyView-app-SignSettingGroup',
+		fields:[{
 			name:'daily_group',
 			displayName:'每日签到',
 			type:'title_with_annotation',
@@ -111,7 +131,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			isUserProperty: true,
 			help:"仅能选择限领为“不限”的优惠券",
 			default:""
-		},{
+		}]},{
+		group:"",
+		groupClass:"xui-propertyView-app-SignynamicGroup",
+		fields:[{
 			name: 'items',//动态组件,那个加好
             displayName: '',
             type: 'dynamic-generated-control',
@@ -122,7 +145,6 @@ W.component.appkit.SignDescription = W.component.Component.extend({
             default: []
         }]
 	}],
-
 	propertyChangeHandlers: {
 		image: function($node, model, value, $propertyViewNode) {
 			var image = {url:''};
@@ -169,3 +191,16 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 
 	}
 });
+
+W.component.appkit.SignDescription.handleHelp = function(){
+
+	//初始化签到奖励说明
+	ensureNS('W.dialog.sign');
+	W.dialog.sign.InstructionDialog = W.dialog.Dialog.extend({
+		getTemplate: function() {
+			$('#sign-chance-dialog-tmpl-src').template('sign-chance-dialog-tmpl');
+			return "sign-chance-dialog-tmpl";
+		}
+	});
+
+};

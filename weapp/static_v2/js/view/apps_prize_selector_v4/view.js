@@ -13,10 +13,8 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 		this.$el = $(options.el);
 		
 		this.options = options || {};		
-		this.prize = options.prize || {type:'coupon', data:null};
-		this.prize['type'] = 'coupon';
-		this.prize['data'] = {id:0, name:''};
-		this.trigger('change-prize', _.deepClone(this.prize));//keep
+		this.prize = options.prize || {id:0, name:''};
+		//this.trigger('change-prize', _.deepClone(this.prize));//keep
 	},
 	
 	render: function() {
@@ -29,8 +27,7 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 		W.dialog.showDialog('W.dialog.mall.SelectCouponDialog', {
 			success: function(data) {
 				var coupon = data[0];
-				_this.prize['type'] = 'coupon';
-				_this.prize['data'] = {
+				_this.prize= {
 					id: coupon.id,
 					name: coupon.name
 				};
@@ -38,6 +35,7 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 
 				_this.$el.find('.xa-couponName').text(coupon.name);
 				_this.$el.find('.xa-selectedCoupon').removeClass('xui-hide');
+				_this.$el.find('.coupon_div').addClass('xui-hide');
 
 				_this.trigger('change-prize', _.deepClone(_this.prize));
 			}
@@ -46,18 +44,21 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 
 	onClickRemoveCoupon: function(event) {
 		this.$el.find('.xa-optionTarget').addClass('xui-hide');
-		this.$el.find('.xa-selectCoupon').show();
-		this.$('.coupon_div').css('display', 'inline');
-		this.prize['type'] = 'coupon';
-		this.prize['data'] = {id:0, name:''};
+		this.$el.find('.xa-selectCoupon').removeClass('xui-hide');
+		//this.$('.coupon_div').css('display', 'inline');
+		this.prize = {id:0, name:''};
 		this.trigger('change-prize', _.deepClone(this.prize));//keep
 	}
 });
 
 W.registerUIRole('[data-ui-role="apps-prize-selector-v4"]', function() {
     var $el = $(this);
+	var prize = $el.data('prize');
+	console.log('!!!!!!!!!!!!!!');
+	console.log(prize);
     var view = new W.view.apps.PrizeSelectorV4({
-        el: $el.get(0)
+        el: $el.get(0),
+		prize: prize
     });
     view.render();
 
