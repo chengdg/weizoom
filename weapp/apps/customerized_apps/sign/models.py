@@ -41,7 +41,7 @@ class SignParticipance(models.Document):
 		#如果当前连续签到大于等于最高连续签到，则更新最高连续签到
 		curr_serial_count = 1
 		if self.serial_count >= self.top_serial_count:
-			curr_serial_count = user_update_data['set__top_serial_count'] = self.serial_count + 1
+			curr_serial_count = user_update_data['set__top_serial_count'] = int(self.serial_count) + 1
 		#更新prize
 		daily_integral = serial_integral = 0
 		daily_coupon_id = serial_coupon_id = ''
@@ -55,14 +55,14 @@ class SignParticipance(models.Document):
 					if type == 'integral':
 						daily_integral += int(value)
 					elif type == 'coupon':
-						daily_coupon_id = value
+						daily_coupon_id = value.id if value != '' else ''
 			if int(name) == curr_serial_count:
 				#达到连续签到要求的奖励
 				for type, value in setting.items():
 					if type == 'integral':
 						serial_integral += int(value)
 					elif type == 'coupon':
-						serial_coupon_id = value
+						serial_coupon_id = value.id if value != '' else ''
 		user_prize = self.prize
 		user_prize['integral'] += daily_integral + serial_integral
 		temp_coupon_list = user_prize['coupon'].split(',')
@@ -95,8 +95,6 @@ RETURN_STATUS_CODE = {
 class Sign(models.Document):
 	owner_id = models.LongField() #创建人id
 	name = models.StringField(default="", max_length=100) #名称
-	# start_time = models.DateTimeField() #开始时间
-	# end_time = models.DateTimeField() #结束时间
 	share = models.DynamicField(default="") #分享设置
 	reply = models.DynamicField(default="") #自动回复设置
 	prize_settings = models.DynamicField(default="") #签到奖项设置

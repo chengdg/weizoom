@@ -57,7 +57,7 @@ class Sign(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = get_sing_fields_to_be_save(request)
+		data = get_sing_fields_to_save(request)
 		status = request.POST['status']
 		if status:
 			data['status'] = 0 if status == 'off' else 1
@@ -67,7 +67,6 @@ class Sign(resource.Resource):
 		error_msg = None
 		
 		data = json.loads(sign.to_json())
-		print data
 		data['id'] = data['_id']['$oid']
 		if error_msg:
 			data['error_msg'] = error_msg
@@ -80,15 +79,17 @@ class Sign(resource.Resource):
 		"""
 		响应POST
 		"""
-		if request.POST['status']:
+		print request.POST
+		if request.POST.get('status', None):
 			status = 1 if request.POST['status'] == 'on' else 0
 			app_models.Sign.objects(id=request.POST['signId']).update(set__status=status)
 			response = create_response(200)
 			return response.get_response()
 
-		data = get_sing_fields_to_be_save(request)
+		data = get_sing_fields_to_save(request)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time'])
+		print data
+		update_fields = set(['name', 'share', 'reply', 'prize_settings'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
@@ -97,18 +98,8 @@ class Sign(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 	
-	@login_required
-	def api_delete(request):
-		"""
-		响应DELETE
-		"""
-		app_models.Sign.objects(id=request.POST['id']).delete()
-		
-		response = create_response(200)
-		return response.get_response()
 
-
-def get_sing_fields_to_be_save(request):
+def get_sing_fields_to_save(request):
 	fields = request.POST.dict()
 	print fields
 	fields['created_at'] = datetime.today()
