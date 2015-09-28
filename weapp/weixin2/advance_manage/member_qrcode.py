@@ -139,7 +139,8 @@ class ChannelQrcodes(resource.Resource):
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_weixin_second_navs(request),
-            'second_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
+            'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+            'third_nav_name': export.ADVANCE_MANAGE_MEMBER_CHANNEL_QRCODE_NAV,
         })
         return render_to_response('weixin/advance_manage/channel_qrcodes.html', c)
 
