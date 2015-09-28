@@ -23,6 +23,8 @@ class DummyUserProfile:
 class ProductsByCategory(api_resource.ApiResource):
 	"""
 	按类别获取商品列表
+
+	举例：`http://dev.weapp.com/wapi/mall/products_by_category/?webapp_id=3196&category_id=7&owner_id=18&is_access_weizoom_mall=false`
 	"""
 	app = 'mall'
 	resource = 'products_by_category'
