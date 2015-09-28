@@ -136,7 +136,13 @@ def list_products(request):
 		}) # 按类别取商品
 
 	# TODO: 改成用API方式
-	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
+	#product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
+	#print("product_categories: {}".format(product_categories))
+	product_categories = resource.get('mall', 'products_categories', {
+		'webapp_id': request.user_profile.webapp_id,
+		'uid': request.user_profile.user_id,
+		'is_access_weizoom_mall': request.is_access_weizoom_mall
+		})
 
 	for p in products:
 		if p['promotion']:

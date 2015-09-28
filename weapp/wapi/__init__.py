@@ -24,6 +24,7 @@ class ApiNotExistError(Exception):
 
 def __call(method, app, resource, data):
 	key = '%s-%s' % (app, resource)
+	print("called WAPI: {}/{}, param: {}".format(app, resource, data))
 
 	resource = api_resource.APPRESOURCE2CLASS.get(key, None)
 	if not resource:

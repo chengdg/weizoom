@@ -33,15 +33,21 @@ def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
 
 
 def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall):
+    """
+    获得商品及其分类的信息
+    """
 
     def inner_func():
         webapp_id = webapp_owner_user_profile.webapp_id
         webapp_owner_id = webapp_owner_user_profile.user_id
 
+        # 取回全部商品
         _, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, 0)
 
+        # 获取owner_id的类别
         categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
 
+        # 获取将每个商品所在的category信息，即product->category
         product_ids = [product.id for product in products]
         category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id__in=product_ids)
         product2categories = dict()

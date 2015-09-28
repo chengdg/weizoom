@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import json
+#import json
 
 from core import api_resource
 from wapi.decorators import param_required
 #from wapi.wapi_utils import create_json_response
 
-from mall import models as mall_models
+#from mall import models as mall_models
 
 from product import Product
 from cache import webapp_cache
 
-from utils import dateutil as utils_dateutil
+#from utils import dateutil as utils_dateutil
 
 class DummyUserProfile:
 	"""
@@ -67,7 +67,7 @@ class ProductsByCategory(api_resource.ApiResource):
 		category_id = args['category_id']
 		owner_id = args['uid']
 		is_access_weizoom_mall = args['is_access_weizoom_mall']
-		print("args: {}".format(args))
+		#print("args: {}".format(args))
 
 		# 伪造一个UserProfile，便于传递参数
 		user_profile = DummyUserProfile(webapp_id, owner_id)
@@ -76,7 +76,7 @@ class ProductsByCategory(api_resource.ApiResource):
 
 		# 通过缓存获取数据
 		category, products = webapp_cache.get_webapp_products(user_profile, is_access_weizoom_mall, category_id)
-		print("products: {}".format(products))
+		#print("products: {}".format(products))
 		#func = webapp_cache.get_webapp_products_from_db(user_profile, is_access_weizoom_mall)
 		#result = func()
 		#print("result from get_webapp_products_from_db: {}".format(result))
