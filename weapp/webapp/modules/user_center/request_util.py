@@ -649,7 +649,7 @@ def get_mileke_page(request):
 		'self_visit': self_visit,
 		'member_voted': member_voted,
 		'url_fid': url_fid,
-		'hide_non_member_cover': False
+		'hide_non_member_cover': True
 
 	})
 	return render_to_response('%s/mileke_page.html' % request.template_dir, c)
