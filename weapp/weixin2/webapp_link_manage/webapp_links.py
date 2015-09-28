@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from mall.promotion import CouponRule
+
 __author__ = 'liupeiyu'
 
 import os
@@ -111,34 +114,59 @@ class WebappItemLinks(resource.Resource):
 				items = []
 				for item in objects:
 					data = dict()
-					data['id'] = item.id
-					data['created_at'] = item.created_at if isinstance(item.created_at, str) else item.created_at.strftime('%Y-%m-%d %H:%M:%S')
-					data['name'] = item.name
-					data['link'] = menu_item['link_template'].format(item.id)
-					data['isChecked'] = True if is_selected_type and item.id == selected_id else False
-					if link_type == 'webappPage':
-						# 微页面
-						data['name'] = item.site_title
-						
-					if link_type == 'lottery':
-						# 抽奖
-						data['type'] = WebappItemLinks.LOTTER_TYPE[item.type]
-						data['valid'] = u'{} 至 {}'.format(item.start_at.strftime("%Y-%m-%d"), item.end_at.strftime("%Y-%m-%d"))
+					if link_type == 'red':
+						id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
+				                                   CouponRule.objects.filter(id=item.coupon_rule_id)])
+						if item.limit_time:
+							data = {
+			                    "name": item.name,
+								"limit_time": item.limit_time,
+			                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
+			                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
+			                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
+			                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
+			                }
+							items.append(data)
+						else:
+							is_timeout = False if item.end_time > datetime.now() else True
+							if not is_timeout:
+								data = {
+				                    "name": item.name,
+									"limit_time": item.limit_time,
+				                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
+				                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
+				                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
+				                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
+			                    }
+								items.append(data)
+					else:
+						data['id'] = item.id
+						data['created_at'] = item.created_at if isinstance(item.created_at, str) else item.created_at.strftime('%Y-%m-%d %H:%M:%S')
+						data['name'] = item.name
+						data['link'] = menu_item['link_template'].format(item.id)
+						data['isChecked'] = True if is_selected_type and item.id == selected_id else False
+						if link_type == 'webappPage':
+							# 微页面
+							data['name'] = item.site_title
 
-					if link_type == 'coupon':
-						# 优惠券
-						data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
-						data['end_date'] = item.end_date if isinstance(item.end_date, str) else item.end_date.strftime('%Y-%m-%d %H:%M')
-						data['created_at'] = data['created_at'][:16] if len(data['created_at']) > 16 else data['created_at']
-						data['end_date'] = data['end_date'][:16] if len(data['end_date']) > 16 else data['end_date']
-						data['valid'] = u'{} 至 {}'.format(data['created_at'], data['end_date'])
-						data['link'] = menu_item['link_template'].format(item.detail['id'])
+						if link_type == 'lottery':
+							# 抽奖
+							data['type'] = WebappItemLinks.LOTTER_TYPE[item.type]
+							data['valid'] = u'{} 至 {}'.format(item.start_at.strftime("%Y-%m-%d"), item.end_at.strftime("%Y-%m-%d"))
 
-					if link_type == 'activity':
-						# 活动
-						data['valid'] = u'{} 至 {}'.format(item.start_date, item.end_date)				
+						if link_type == 'coupon':
+							# 优惠券
+							data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
+							data['end_date'] = item.end_date if isinstance(item.end_date, str) else item.end_date.strftime('%Y-%m-%d %H:%M')
+							data['created_at'] = data['created_at'][:16] if len(data['created_at']) > 16 else data['created_at']
+							data['end_date'] = data['end_date'][:16] if len(data['end_date']) > 16 else data['end_date']
+							data['valid'] = u'{} 至 {}'.format(data['created_at'], data['end_date'])
+							data['link'] = menu_item['link_template'].format(item.detail['id'])
 
-					items.append(data)
+						if link_type == 'activity':
+							# 活动
+							data['valid'] = u'{} 至 {}'.format(item.start_date, item.end_date)
+						items.append(data)
 
 				response = create_response(200)
 				response.data = {

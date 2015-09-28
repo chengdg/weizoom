@@ -44,7 +44,12 @@
 	<table id="pageTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition m0">
 		<thead style="background:#c8d2e5;">
 			<tr>
+			{{if data.type == 'red'}}
+				<th>活动名称</th>
+				<th>奖励</th>
+			{{else}}
 				<th>名称</th>
+			{{/if}}
 			{{if data.type == 'lottery' || data.type == 'coupon'}}
 				<th>类型</th>
 			{{/if}}
@@ -53,7 +58,11 @@
 				{{if data.type == 'lottery' || data.type == 'coupon' || data.type == 'activity'}}
 					<th width="230">有效期</th>
 				{{else}}
-					<th width="200">创建时间</th>
+					{{if data.type == 'red'}}
+						<th width="200">奖励时间</th>
+					{{else}}
+						<th width="200">创建时间</th>
+					{{/if}}
 				{{/if}}
 			{{/if}}
 				<th width="120">操作</th>
@@ -62,9 +71,18 @@
 		<tbody>
             {{each(i, item) items}}
 			<tr class="xb-stripedTable" data-id="${item.id}">
+			{{if data.type == 'red'}}
 				<td>
 					${item.name}
 				</td>
+				<td>
+					${item.coupon_rule_name}
+				</td>
+			{{else}}
+				<td>
+					${item.name}
+				</td>
+			{{/if}}
 			{{if data.type == 'lottery' || data.type == 'coupon'}}
 				<td>
 					${item.type}
@@ -77,9 +95,19 @@
 					</td>
 				{{else}}
 					{{if data.type != 'shengjing_app'}}
-					<td>
-						${item.created_at}
-					</td>
+						{{if data.type == 'red'}}
+							<td>
+							{{if  item.limit_time}}
+								永久
+							{{else}}
+								${item.start_time}至${item.end_time}
+							{{/if}}
+							</td>
+						{{else}}
+							<td>
+								${item.created_at}
+							</td>
+						{{/if}}
 					{{/if}}
 				{{/if}}
 			

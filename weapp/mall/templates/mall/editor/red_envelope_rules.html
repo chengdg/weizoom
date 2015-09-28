@@ -47,14 +47,14 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">库存提示</h4>
       </div>
-      <div class="modal-body" style="max-height: 100px; overflow:auto">
+      <div class="modal-body" style="max-height: 107px; overflow:auto">
       <ul class="list-group" style="margin-bottom: 0">
       {% for rule in items %}
-        {% if rule.remained_count <= 20  %}
+        {% if rule.remained_count <= 85  %}
             {% if rule.receive_method %}
                 {% if rule.is_timeout and not rule.limit_time %}
                 {% else %}
-                    <li class="list-group-item" style="border: 0;padding-top: 0;padding-bottom: 8px;">
+                    <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 8px;">
                         <div style="float: left;width: 85%">
                             <div style="width:100%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden; "><b>【图文领取】</b>{{ rule.rule_name }}</div>
                         </div>
@@ -64,13 +64,16 @@
                 {% endif %}
             {% else %}
                 {% if rule.status %}
-                    <li class="list-group-item" style="border: 0;padding-top: 0;padding-bottom: 8px;">
-                        <div style="float: left;width: 85%">
-                            <div style="width:100%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden;">{{ rule.rule_name }}</div>
-                        </div>
-                        <div style="float: left;color: #8c8c8c;">即将用完</div>
-                    <div style="clear: both"></div>
-                    </li>
+                    {% if rule.is_timeout and not rule.limit_time %}
+                    {% else %}
+                        <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 8px;">
+                            <div style="float: left;width: 85%">
+                                <div style="width:100%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden;">&nbsp;&nbsp;{{ rule.rule_name }}</div>
+                            </div>
+                            <div style="float: left;color: #8c8c8c;">即将用完</div>
+                        <div style="clear: both"></div>
+                        </li>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         {% endif %}
@@ -78,9 +81,9 @@
       </ul>
       </div>
       <div class="modal-footer">
-          <div style="margin-top: 20px;height: 17px;line-height: 17px">请及时处理！</div>
+          <div style="margin-top: 8px;height: 17px;line-height: 17px">请及时处理！</div>
           <a href="/mall2/coupon_rule_list/" target="_blank" class="btn btn-primary" >修改库存</a>
-          <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #8C8C8C;">确认</button>
 
       </div>
     </div>
@@ -111,7 +114,7 @@
                     {{if receive_method}}
                         <b>【图文领取】</b>${ rule.rule_name }
                     {{else}}
-                        ${ rule.rule_name }
+                        &nbsp;&nbsp;${ rule.rule_name }
                     {{/if}}
                 </a>
             </td>
@@ -134,7 +137,7 @@
             </td>
             <td class="remained_count">
                 ${ rule.remained_count }
-                {{if rule.remained_count <= 20}}
+                {{if rule.remained_count <= 85}}
                     {{if receive_method}}
                         {{if rule.is_timeout && !rule.limit_time }}
                         {{else}}
@@ -142,7 +145,10 @@
                         {{/if}}
                     {{else}}
                         {{if rule.status }}
-                            <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                            {{if rule.is_timeout && !rule.limit_time }}
+                            {{else}}
+                                <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                            {{/if}}
                         {{/if}}
                     {{/if}}
                 {{/if}}

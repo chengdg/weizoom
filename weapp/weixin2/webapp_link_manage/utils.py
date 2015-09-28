@@ -201,7 +201,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			'link_template': './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&order_id=2&red_envelope_rule_id={}&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
 				"is_delete": False,
-				"receive_method": True
+				"receive_method": True,
 			}
 		},
 		'coupon': {
@@ -281,6 +281,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	            'with_product': True,
 	            'with_concrete_promotion': True
         	})
+
 	return objects, item
 
 
