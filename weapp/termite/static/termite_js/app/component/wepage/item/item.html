@@ -2,7 +2,7 @@
 
 {% if component.type == 'wepage.item_group' %}
 <div 
-    class="wui-product {% if component.model.itemname %}wui-productTitle{% endif %}" 
+    class="xa-products-box wui-product {% if component.model.itemname %}wui-productTitle{% endif %}" 
     data-component-cid="{{component.cid}}" 
     data-index="{{component.model.index}}" 
 >
@@ -70,9 +70,11 @@
     {% with component|find_index_in_parent as index %}
     {% with component.runtime_data.product as product %}
     <a 
-        class="wui-inner-box{{index}}" 
+        class="wui-inner-box{{index}}{% if product.is_member_product %} xa-member-product{% endif %} wa-item-product" 
         href="{{component.model.target|format_target:project_id}}"
         data-handlebar-data='{ "index":"{{index}}", "product":{"thumbnails_url":"{{product.thumbnails_url}}", "name":"{{product.name}}", "display_price":"{{product.display_price}}"} }'
+        data-product-promotion='{{product.promotion_js}}'
+        data-product-price="{{product.display_price}}"
     >
         <div class="wui-inner-pic">
             {% if product.thumbnails_url %}
@@ -111,7 +113,7 @@
                     style="display:none;"
                     {% endif %}
                 {% endif %}
-            ><span>¥</span>{{product.display_price}}</p>
+            >¥{{product.display_price}}</p>
         </div>
     </a>
     {% endwith %}
