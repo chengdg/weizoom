@@ -2,9 +2,7 @@
 __author__ = 'bert'
 #import urls
 # -*- coding: utf-8 -*-
-
-
-from . import member_list
-from . import member_tags
-from . import update_member_tag_or_grade
-from . import member_qrcode
+import member_list
+import member_tags
+import update_member_tag_or_grade
+import member_qrcode
