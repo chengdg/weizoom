@@ -81,6 +81,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 		}]},{
 			group:"签到设置",
 			groupClass:"xui-propertyView-app-SignSettingGroupName",
+			groupHelp:{
+				text:'奖励说明',
+				handler: 'W.component.appkit.SignDescription.handleHelp'
+			},
 			fields:[{
 				name:'SignSettingGroupName',
 				isUserProperty: true,
@@ -173,3 +177,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 
 	}
 });
+
+W.component.appkit.SignDescription.handleHelp = function(){
+	console.log('sssssssss');
+};
