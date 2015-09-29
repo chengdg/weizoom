@@ -104,7 +104,7 @@ def get_webapp_link_menu_objectes(request):
 			},{
 				'name': '分享红包',
 				'type': 'red',
-				'add_btn_title': '新建红包',
+				'add_btn_title': '新建分享红包',
 				'add_link': '/apps/promotion/red_envelope_rule/'
 			}
 			# {
@@ -286,6 +286,34 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	            'with_product': True,
 	            'with_concrete_promotion': True
         	})
+		if type == 'red':
+			objects_data = []
+			for item in objects:
+				id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
+		                                   CouponRule.objects.filter(id=item.coupon_rule_id)])
+				if item.limit_time:
+					data = {
+	                    "name": item.name,
+						"limit_time": item.limit_time,
+	                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
+	                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
+	                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
+	                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
+	                }
+					objects_data.append(data)
+				else:
+					is_timeout = False if item.end_time > datetime.now() else True
+					if not is_timeout:
+						data = {
+		                    "name": item.name,
+							"limit_time": item.limit_time,
+		                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
+		                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
+		                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
+		                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
+	                    }
+						objects_data.append(data)
+			objects = objects_data
 
 	return objects, item
 

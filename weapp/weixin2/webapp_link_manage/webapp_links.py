@@ -115,30 +115,7 @@ class WebappItemLinks(resource.Resource):
 				for item in objects:
 					data = dict()
 					if link_type == 'red':
-						id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
-				                                   CouponRule.objects.filter(id=item.coupon_rule_id)])
-						if item.limit_time:
-							data = {
-			                    "name": item.name,
-								"limit_time": item.limit_time,
-			                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
-			                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
-			                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
-			                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
-			                }
-							items.append(data)
-						else:
-							is_timeout = False if item.end_time > datetime.now() else True
-							if not is_timeout:
-								data = {
-				                    "name": item.name,
-									"limit_time": item.limit_time,
-				                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
-				                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
-				                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
-				                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
-			                    }
-								items.append(data)
+						items.append(item)
 					else:
 						data['id'] = item.id
 						data['created_at'] = item.created_at if isinstance(item.created_at, str) else item.created_at.strftime('%Y-%m-%d %H:%M:%S')

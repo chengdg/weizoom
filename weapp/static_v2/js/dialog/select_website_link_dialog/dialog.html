@@ -59,13 +59,13 @@
 					<th width="230">有效期</th>
 				{{else}}
 					{{if data.type == 'red'}}
-						<th width="200">奖励时间</th>
+						<th width="230">奖励时间</th>
 					{{else}}
 						<th width="200">创建时间</th>
 					{{/if}}
 				{{/if}}
 			{{/if}}
-				<th width="120">操作</th>
+				<th width="92">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -100,7 +100,7 @@
 							{{if  item.limit_time}}
 								永久
 							{{else}}
-								${item.start_time}至${item.end_time}
+								${item.start_time}&nbsp;至&nbsp;${item.end_time}
 							{{/if}}
 							</td>
 						{{else}}
