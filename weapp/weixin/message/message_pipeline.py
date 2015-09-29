@@ -280,11 +280,21 @@ class MessagePipeline(object):
 			webapp_id = None
 			user_profile = None
 		else:
-			from cache import component_cache
-			user_profile,authed_appid =  component_cache.get_component_auth(component_info, appid)
-			webapp_id = user_profile.webapp_id
-			request.user_profile = user_profile
-			request.webapp_owner_id = authed_appid.user_id
+			"""
+				如果缓存异常走非缓存代码
+			"""
+			try:
+				from cache import component_cache
+				user_profile,authed_appid =  component_cache.get_component_auth(component_info, appid)
+				webapp_id = user_profile.webapp_id
+				request.user_profile = user_profile
+				request.webapp_owner_id = authed_appid.user_id
+			except:
+				authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
+				user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
+				request.user_profile = user_profile
+				request.webapp_owner_id = authed_appid.user_id
+				webapp_id = user_profile.webapp_id
 			# try:
 			# 	authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
 			# 	user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)

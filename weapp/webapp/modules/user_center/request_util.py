@@ -612,8 +612,9 @@ def get_mileke_page(request):
 	webapp_user = request.webapp_user
 	member_kilekes = Mileke.objects.filter(member_id=member.id)
 	cookie_fid = request.COOKIES.get('fid', '')
-	url_fid = request.GET.get(member_settings.REFUELING_FID, None)
+	url_fid = request.GET.get('fid', None)
 	current_count = 0
+	vote_member = None
 	if member_kilekes.count() == 0:
 		"""
 		进入我要参加页面：从图文进入未参加活动
@@ -624,7 +625,7 @@ def get_mileke_page(request):
 		member_ids = [log.member_id  for log in MilekeLog.objects.filter(mileke=member_kilekes[0])]
 		current_count = MilekeLog.objects.filter(mileke=member_kilekes[0], member__is_subscribed=True).count()
 
-	if str(url_fid) == str(member.id):
+	if url_fid is None or str(url_fid) == str(member.id):
 		self_visit = True
 		member_voted = False
 	else:
@@ -632,6 +633,9 @@ def get_mileke_page(request):
 		"""
 			是否给该 url_fid 投过票
 		"""
+		vote_member = Member.objects.get(id=url_fid)
+		if Mileke.objects.filter(member=vote_member).count() == 0:
+			Mileke.objects.create(member=vote_member)
 		member_voted = MilekeLog.objects.filter(mileke__member__id=url_fid, member_id=member.id).count() > 0
 
 	"""
@@ -666,9 +670,11 @@ def get_mileke_page(request):
 		'self_visit': self_visit,
 		'member_voted': member_voted,
 		'url_fid': url_fid,
+		'vote_member': vote_member,
 		'hide_non_member_cover': True,
 		'game_over': game_over,
-		'current_index': current_index
+		'current_index': current_index,
+		'member':member
 	})
 	return render_to_response('%s/mileke_page.html' % request.template_dir, c)
 
