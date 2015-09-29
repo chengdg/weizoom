@@ -229,7 +229,7 @@ Background:
     When jack点击mary分享链接
     When jack把jobs的微站链接分享到朋友圈
 
-@mall2 @stats 
+@stats 
 Scenario:1 获取默认查询最近7天的经营概况
     Given jobs登录系统
     Then jobs获得默认筛选日期
