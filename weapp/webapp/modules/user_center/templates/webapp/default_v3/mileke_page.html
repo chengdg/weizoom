@@ -325,8 +325,8 @@
         <div class="xui-otherState">
             <div class="xui-i-title f12 xui-spritebg mt10">其他说明</div>
             <div class="xui-content f12">
-                <div>“斑马来了”后台统计参与抢物品票数最多的前50名，公布在“斑马来了”微信公众账号最新活动内。请您于一周内（10月11日—10月18日）与斑马客服联系，咨询时间早上10点到晚上17点。</div>
-                <div>客服电话：王老师 <b>13488651517</b>李老师 <b>18601909571</b> </div>
+                <div>“斑马来了”后台统计参与抢物品票数最多的前50名，公布在“斑马来了”微信公众账号最新活动内。请您于一周内（10月11日—10月18日）与斑马客服联系并告知您的收货地址，咨询时间10点到17点。</div>
+                <div>客服电话：王老师 <b>13488651517</b> 李老师 <b>18601909571</b> </div>
             </div>
         </div>          
     </div>
@@ -347,7 +347,7 @@
         </ul>
     </div>
         <div class="xui-myRanking f13 {% if not joined %} none {% endif %}">
-        <div class="fl">我的排名：第<span class="xui-myNum">{{current_index}}名</span></div>
+        <div class="fl">我的排名：第<span class="xui-myNum">{{current_index}}</span>名</div>
         <div class="fr">共获得<span class="xui-myNum">{{current_count}}</span>票</div>
     </div>
 </div>
@@ -384,22 +384,16 @@
                     target_api: 'mileke_log/record',
                     fid: '{{url_fid}}'
                 },
-                success: function(data) {
-                   $('.xui-voteSucceed').show();
+                success: function(data) {                  
                    setTimeout(function() {
-                      $('.xui-voteSucceed').hide();
                       $('body').swipeMask('show');
                       $('.xa-attention').removeClass('none');
                    }, 1000);
                 },
                 error: function(data) {
-                    // $('.xa-loading').addClass('hidden');
-                    $('body').alert({
-                        isShow: true,
-                        info: data['data']['msg'],
-                        speed:2000
-                });
-            }
+                      $('body').swipeMask('show');
+                      $('.xa-attention').removeClass('none');                
+                }
             });
 
         });
