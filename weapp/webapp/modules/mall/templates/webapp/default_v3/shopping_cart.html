@@ -382,8 +382,6 @@ $(document).ready(function() {
         // 设置显示价格
         $(this).find('.xt-productPrice').text('￥'+price);
     });
-
-
     //动态修改库存
     function getProductStocks(){
         W.getApi().call({
@@ -402,11 +400,11 @@ $(document).ready(function() {
                         var count_per_purchase = $(this).data('product-count-per-purchase');
                         var maxCount = 0;
                         if (data[model_id].stock_type) {
+                            $(this).parents('.xa-product').data('stocks', data[model_id].stocks);
                             if (count_per_purchase > 0 && count_per_purchase < data[model_id].stocks){
                                 maxCount = count_per_purchase;
                             }else{
                                 maxCount = data[model_id].stocks;
-                                $(this).parents('.xa-product').data('stocks', maxCount);
                             }
                         }else {
                             if (count_per_purchase > 0){
@@ -446,10 +444,13 @@ $(document).ready(function() {
             $el.find('.xui-understock').hide();
             // 不可用选框，全选框
             if(stocks != null && stocks != -99999){
+            //库存无限的时候 
+            if( $check.hasClass('xui-disabled-radio')){
                 if( stocks >= count){
                     $check.removeClass('xui-disabled-radio');
                     $('#checkbox-cart-all').removeClass('xui-checkCart');
                 }
+            } 
             }
         });
 

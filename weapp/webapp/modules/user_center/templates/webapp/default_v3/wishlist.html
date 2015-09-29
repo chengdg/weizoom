@@ -39,7 +39,7 @@
     <div class="xui-emptyCollection">
         <div class="xui-placeholder"></div>
         <div class="xui-emptyImg"></div>
-        <a class="xui-returnHome" href="./?woid={{request.webapp_owner_id}}&{%if request.webapp_owner_id == 216 %}project_id=4109{%else%}module=mall&model=products&action=list{%endif%}">返回首页</a>
+        <a class="xui-returnHome" href="./?woid={{request.webapp_owner_id}}&{%if is_weizoom_mall %}project_id=4109{%else%}module=mall&model=products&action=list{%endif%}">返回首页</a>
     </div>
     {% endif %}
 </div>

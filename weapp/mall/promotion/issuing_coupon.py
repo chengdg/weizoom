@@ -18,13 +18,14 @@ from mall import models as mall_models
 from modules.member.module_api import get_member_by_id_list
 from modules.member.models import (MemberGrade, MemberTag, WebAppUser)
 from core import search_util
+from market_tools.tools.coupon.tasks import send_message_to_member
 
 
 COUNT_PER_PAGE = 10
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
-FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
+FIRST_NAV_NAME = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 
 class IssuingCouponsRecordList(resource.Resource):
@@ -39,8 +40,9 @@ class IssuingCouponsRecordList(resource.Resource):
         print(export.MALL_PROMOTION_ISSUING_COUPONS_NAV)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
         })
         return render_to_response('mall/editor/promotion/issuing_coupons_record.html', c)
 
@@ -142,8 +144,9 @@ class IssuingCouponsRecord(resource.Resource):
         """
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
             'has_vip': False,
         })
         return render_to_response(
@@ -174,7 +177,8 @@ class IssuingCouponsRecord(resource.Resource):
         send_count = pre_person_count * person_count  # 发放的张数
 
         # 对应优惠券的库存
-        coupon_count = promotion_models.CouponRule.objects.get(id=coupon_rule_id).remained_count
+        coupon_rule = promotion_models.CouponRule.objects.get(id=coupon_rule_id)
+        coupon_count = coupon_rule.remained_count
         if coupon_count < send_count:
             response = create_response(500)
             response.errMsg = u"发放数量大于优惠券库存,请先增加库存"
@@ -200,6 +204,8 @@ class IssuingCouponsRecord(resource.Resource):
                                                  coupon_record_id=coupon_record.id)
                     if coupon:
                         c_real_count += 1
+                        #给用户发优惠券提示
+                        send_message_to_member(coupon_rule, member_id)
                     c_index += 1
                 if c_real_count:
                     real_person_count += 1
@@ -230,8 +236,9 @@ class IssuingCouponsDetail(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ISSUING_COUPONS_NAV,
             'record_id': record_id,
         })
         return render_to_response('mall/editor/promotion/issuing_coupons_detail.html', c)

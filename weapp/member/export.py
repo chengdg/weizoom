@@ -31,13 +31,13 @@ MEMBER_NAV = {
 		{
 			'name': MEMBERS,
 			'title': u'会员列表',
-			'url': '/member/members/get/',
+			'url': '/member/member_list/',
             'need_permissions': ['manage_member_list', ]
 		},
 		{
 			'name': MEMBER_TAG,
 			'title': u'会员分组',
-			'url': '/member/member_tags/get/',
+			'url': '/member/member_tags/',
             'need_permissions': ['manage_member_tag', ]
 		},
 		{
@@ -49,7 +49,7 @@ MEMBER_NAV = {
 		{
 			'name': MEMBER_QRCODE,
 			'title': u'推广扫码',
-			'url': '/member/member_qrcode/get/',
+			'url': '/member/member_qrcode/',
             'need_permissions': ['manage_member_qrcode', ]
 		}
 	]

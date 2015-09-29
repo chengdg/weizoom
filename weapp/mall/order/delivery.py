@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from core.jsonresponse import create_response
+from mall.models import Order, ORDER_STATUS_PAYED_NOT_SHIP
 from market_tools.tools.channel_qrcode.models import *
 import mall.module_api as mall_api
 from watchdog.utils import watchdog_warning
@@ -25,17 +26,6 @@ class BulkShipment(resource.Resource):
 
         # 批量处理订单
         success_data, error_items = mall_api.batch_handle_order(json_data, request.manager)
-        # print '------------------'
-        # print json_data
-        # print u'成功处理订单'
-        # print success_data
-        # print u'失败处理订单'
-        # print 'error_rows'
-        # print error_rows
-        # print 'error_items'
-        # print error_items
-
-        # __clean_file(file_url[1:])
         response.data = {
             'success_count': len(success_data),
             'error_count': len(error_rows) + len(error_items),
@@ -61,9 +51,9 @@ def _read_file(file_url):
                     row = row[0].split(',')
                     if not (len(row[0]) or len(row[1]) or len(row[2])):
                         continue
-                    item['order_id'] = row[0]
+                    item['order_id'] = row[0].decode('gbk')
                     item['express_company_name'] = row[1].decode('gbk')
-                    item['express_number'] = row[2]
+                    item['express_number'] = row[2].decode('gbk')
                     data.append(item)
             except:
                 error_rows.append(', '.join(row))
@@ -103,9 +93,21 @@ class Delivery(resource.Resource):
         express_number = request.POST.get('express_number')
         leader_name = request.POST.get('leader_name')
         is_update_express = request.POST.get('is_update_express')
+        is_100 = request.POST.get('is_100','true')
+        is_100 = True if is_100 == 'true' else False
         is_update_express = True if is_update_express == 'true' else False
+
+        try:
+            order = Order.objects.get(id=order_id)
+            if not is_update_express and order.status != ORDER_STATUS_PAYED_NOT_SHIP:
+                response = create_response(500)
+                response.errMsg = u'该订单已取消'
+                return response.get_response()
+        except:
+            pass
+        # 订单发货，和批量发货所用的方法相同
         is_success = mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username,
-                                         leader_name=leader_name, is_update_express=is_update_express)
+                                         leader_name=leader_name, is_update_express=is_update_express, is_100=is_100 )
         if is_success:
             response = create_response(200)
         else:

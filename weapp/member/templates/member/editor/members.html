@@ -16,7 +16,7 @@
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
-			<li><a href="/member/members/get/">会员管理</a></li>
+			<li><a href="/member/member_list/">会员管理</a></li>
 			<li class="active">会员列表</li>
 		</ul>
 	</div>
@@ -132,7 +132,7 @@
 		<div
 			data-ui-role="advanced-table"
 			data-app="member"
-			data-api="members/get"
+			data-resource="member_list"
 			data-template-id="#members-view"
 			data-enable-paginator="true"
 			data-enable-sort="false"
@@ -141,7 +141,9 @@
 			class="panel-body"
 			data-args='{"status":"{{status}}"}'
 			data-disable-header-select="true"
+			data-user-webapp-id={{user.get_profile.webapp_id}}
 		></div>
+
 		<div class="dropdown xui-operation update_dropdown pa"  style="bottom:0px;">
 			<div >
 				<span class="checkbox" style="display:inline-block;margin:0 15px 0 13px;">
@@ -302,13 +304,13 @@
 						已取消
 						</div>
 					{{/if}}
-					<a target="_blank" href="/member/member_detail/edit/?id=${ member.id }">
+					<a target="_blank" href="/member/detail/?id=${ member.id }">
 						<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
 					</a>
 				</div>
 				<div class="column_block">
 					<div>
-					<a class="xui-Blue" target="_blank" href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
+					<a class="xui-Blue" target="_blank" href="/member/detail/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
 
 
 				</div>
@@ -394,6 +396,28 @@ $(document).ready(function() {
 
 	});
 
+	$('body').delegate('.xa-select', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var isChecked = $el.is(':checked');
+
+		if (isChecked == false) {
+			$('#xa-selectAll').attr('checked', false);	
+			$('#all').attr('checked', false);	
+		} else {
+			var all_checked = true;
+			$(".xa-select").each(function(index, e){
+			    var isChecked = $(this).is(':checked');
+			    if (isChecked == false) {
+			    	all_checked = false;
+			    }	
+			  });
+			if (all_checked){
+				$('#xa-selectAll').attr('checked', true);	
+				$('#all').attr('checked', true);	
+			}
+		}	
+	});
+	
 	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
 
 		var $checkbox = $(event.currentTarget);
@@ -435,6 +459,8 @@ $(document).ready(function() {
 			dataView:dataView
 		})
         memberTagsUpdateView.render();
+		$('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 
 	});
 	// 修改分组
@@ -467,6 +493,8 @@ $(document).ready(function() {
 
 		})
         memberTagsUpdateView.render();
+        $('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 	});
 
 	// 修改等级
@@ -492,19 +520,18 @@ $(document).ready(function() {
 			args = _.extend(args, dataArgs);
 		}
 	 	if (grade_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'grade/batch_update',
-	            args: args,
-	            success: function(data) {
-	                 dataView.reload();
+	 		W.resource.member.BatchUpdateMemberGrade.post({
+	 			data: args,
+	 			success: function(data) {
+	 				$('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
+	                dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}else{
 	 		W.getErrorHintView().show('请先选择会员！');
 	 	}
@@ -533,21 +560,20 @@ $(document).ready(function() {
 			}
 		}
 	 	if (tag_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'tag/batch_update',
-	            args:args,
-	            success: function(data) {
+	 		W.resource.member.BatchUpdateMemberTag.post({
+	 			data: args,
+	 			success: function(data) {
 	                // window.location.reload();
 	                W.showHint('success', "添加分组成功");
+	                $('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
 	                dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}
 	});
 
@@ -590,7 +616,7 @@ $(document).ready(function() {
 		var member_name = '';
 		$('input.xa-select:checked').each(function(){;
 			if($(this).parent().parent().data('status') == '1'){
-    			member_ids.push($(this).parent().parent().attr('data-id'));
+    			member_ids.push($(this).parent().parent().data('id'));
 			}
   		});
   		if(member_ids.length == 0){
@@ -612,11 +638,9 @@ $(document).ready(function() {
 	            'count_per_page':999999999999
 			};
 			var member_ids = [];
-			W.getApi().call({
-	            app: 'member' ,
-	            api: 'member_ids/get',
-	            args: args,
-	            success: function(data){
+			W.resource.member.MemberIds.get({
+				data: args,
+				success: function(data){
 	                member_ids = data.member_ids;
 	                if(member_ids.length == 0){
 	                	W.showHint('error', '请先选择会员！');
@@ -631,7 +655,7 @@ $(document).ready(function() {
 	            error: function(data){
 	            	W.showHint('error', '发放失败!');
 	            }
-	        });
+			});
 	    } else {
 	    	W.showHint('error', "没有可已发优惠券的用户！");
 	    }
@@ -710,7 +734,7 @@ $(document).ready(function() {
 
 	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){
-		var url = '/member/members/export/';
+		var url = '/member/export/';
 		if (view.filter_value) {
 			url = url + '?filter_value='+view.filter_value;
 		}

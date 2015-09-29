@@ -62,6 +62,7 @@ Background:
 			"coupon_product": "商品2"
 		}]
 		"""
+@mall2
 Scenario: 添加分享红包
 	jobs添加"分享红包"后，"红包"列表会按照添加的倒序排列
 	1.bill能获取红包列表
@@ -72,7 +73,7 @@ Scenario: 添加分享红包
 		"""
 		[{
 			"name": "红包1",
-			"prize_info": ["全体券3"],
+			"prize_info": "全体券3",
 			"start_date": "今天",
 			"end_date": "2天后",
 			"limit_money": 200,
@@ -80,7 +81,7 @@ Scenario: 添加分享红包
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
 		}, {
 			"name": "红包2",
-			"prize_info": ["单品券4"],
+			"prize_info": "单品券4",
 			"is_permanant_active": true,
 			"limit_money": "无限制",
 			"desc": "下订单领红包",
@@ -99,7 +100,7 @@ Scenario: 添加分享红包
 			"actions": ["开启","删除","查看"]
 		}]
 		"""
-	And bill能获取红包列表
-		"""
-		[]
-		"""
+#	And bill能获取红包列表
+#		"""
+#		[]
+#		"""

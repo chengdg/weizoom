@@ -104,7 +104,7 @@ PRODUCT_FILTERS = {
         'comparator': lambda model, filter_value: model['stock_type'] == models.PRODUCT_STOCK_TYPE_UNLIMIT or model['stocks'] >= int(filter_value),
         'query_string_field': 'lowStocks'
     }, {
-        'comparator': lambda model, filter_value: model['stock_type'] != models.PRODUCT_STOCK_TYPE_UNLIMIT and 0 <= model['stocks'] <= int(filter_value),
+        'comparator': lambda model, filter_value: model['stock_type'] != models.PRODUCT_STOCK_TYPE_UNLIMIT and 0 <= model['stocks'] <= int(filter_value) or int(filter_value) < 0,
         'query_string_field': 'highStocks'
     }]
 }

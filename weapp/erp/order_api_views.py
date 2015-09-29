@@ -15,6 +15,7 @@ from core.jsonresponse import JsonResponse, create_response
 import module_api
 from util import session_required, arguments_required
 import util as erp_util
+from order import util
 from core.exceptionutil import unicode_full_stack
 
 MESSAGE_COUNT_PER_PAGE = 50
@@ -68,9 +69,9 @@ def __get_request_order_list(request):
 		count_per_page = -1
 
 	user.is_weizoom_mall = False
-
-	orders, pageinfo, order_total_count = mall_api.get_order_list(user, query_dict, filter_value, sort_attr, query_string, 
-		count_per_page, cur_page, dates, DATA_TYPE[date_type])
+	# TODO need to recheck the method. made by zhaolei
+	orders, pageinfo, order_total_count = util.__get_order_items(user, query_dict, sort_attr,1,query_string,
+		count_per_page, cur_page, None ,is_refund=False)
 
 	return pageinfo, list(orders), count_per_page
 

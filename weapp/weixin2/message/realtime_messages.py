@@ -21,7 +21,7 @@ from core.wxapi.custom_message import TextCustomMessage, NewsCustomMessage
 from core.exceptionutil import unicode_full_stack
 
 from weixin.mp_decorators import mp_required
-from weixin.user.module_api import get_mp_head_img
+from weixin.user.module_api import get_mp_head_img,get_mp_nick_name
 from weixin2 import export
 from weixin2.models import *
 
@@ -32,7 +32,7 @@ from watchdog.utils import *
 from utils.string_util import byte_to_hex
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 DATETIME_BEFORE_HOURS = 48
 
 STATUS_ALL = -1
@@ -75,8 +75,9 @@ class RealtimeMessages(resource.Resource):
         status = request.GET.get('status', -1)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
             'status': status
         })
 
@@ -582,6 +583,11 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             one_message['pic_url'] = ''
             one_message['audio_url'] = ''
 
+        try:
+            one_message['fast_reply'] = message.is_reply
+        except:
+            one_message['fast_reply'] = True
+
         if msgid2remark.has_key(message.id):
             one_message['remark'] = msgid2remark[message.id]
         else:
@@ -604,8 +610,10 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         try:
             reply_message = Message.objects.filter(session=message.session_id, is_reply=True).order_by('-id')[0]
             one_message['latest_reply_at'] = reply_message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
+
         except:
             one_message['latest_reply_at'] = ''
+
         message_ids.append(message.id)
 
         try:
@@ -628,6 +636,9 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['user_icon'] = head_img
             else:
                 one_message['user_icon'] = DEFAULT_ICON
+
+            mp_username = get_mp_nick_name(user.id)
+            one_message['mp_username'] = mp_username
 
         items.append(one_message)
 

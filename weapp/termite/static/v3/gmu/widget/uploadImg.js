@@ -88,10 +88,16 @@
 
         addedImgFun: function(event) {
             var $uploadImage = $(event.target).parent().parent().find('.xui-uploadImage');
+            var dataValidate = $uploadImage.attr('data-validate');
+            if (dataValidate){
+                dataValidate = 'data-validate='+dataValidate
+            }else{
+                dataValidate = ''
+            }
             if($uploadImage.length < 6){
                 var imgLength = this.$img[0].src.length;
                 if(imgLength >0){
-                    this.$parent.parent('.xui-productPhoto').find('.xa-deletePhoto').before('<div class="xui-addPhoto fl pr">'
+                    this.$parent.parent('.xui-productPhoto').find('.xa-deletePhoto').before('<div class="xui-addPhoto fl pr" '+dataValidate+'>'
                                                                                                 +'<span class="xui-i-box"></span>'
                                                                                                 +'<input id="" name="imgFile'+imgLength+'"  data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa">'
                                                                                             +'</div>');
@@ -128,6 +134,14 @@
                $(this).siblings('.xui-addPhoto').find('.xa-remove').hide();
                $(this).siblings('.xa-deletePhoto').show();
                $(this).hide();
+                console.log(photoLength);
+               if( photoLength == 1){ //图片全部删除
+                   $(this).siblings('.xa-deletePhoto').hide();
+                   $(this).siblings('.xa-text').show();
+               }else{
+                   $(this).siblings('.xa-deletePhoto').show();
+                   $(this).siblings('.xa-text').hide();
+               }
                if( photoLength < 6){
                    $(this).siblings('.xui-addPhoto').last().show();
                }
@@ -138,6 +152,7 @@
             var _this = this;
             var $uploadImage = $(event.target).parent().parent().find('.xui-uploadImage');
             $(event.target).siblings('.xa-remove').click(function(){
+                //console.log($(this).parent());
                 $(this).parent().remove();
                 if($uploadImage.length == 2){
                     $uploadImage.prevObject.find('.xui-deletePhoto').hide();

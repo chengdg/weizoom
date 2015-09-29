@@ -51,7 +51,7 @@ W.view.member.MemberUpdateIntegralView = W.view.common.DropBox.extend({
         var _this = this;
         W.getApi().call({
             app: 'member',
-            api: 'integral/update',
+            resource: 'integral',
             scope: this,
             method: 'post',
             args: {

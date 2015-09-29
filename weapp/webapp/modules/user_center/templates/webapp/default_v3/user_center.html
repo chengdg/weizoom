@@ -4,95 +4,96 @@
 
 {% block content-panel %}
 <div class="xui-userCenterPage xui-page wa-shopBottomNavPage">
+    {% if not is_weizoom_mall %}
     <!-- 全局导航 -->
-    <div class="wui-globalNav xa-globalNav" {% if global_navbar %}{% else %}{% if request.webapp_owner_id != 216 %}{% endif %} data-ui-role="global-nav"{% endif %} data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
-    </div>
-        <div class="xui-userCenter-header xa-userCenter-header pr">
-            <i data-ui-role="goBack"></i>
-            <a class="xui-helpInfo pa" href="./?woid={{request.webapp_owner_id}}&module=user_center&model=help&action=get" >
-                <i class="xui-icon-tool xui-icon-help"></i>
-            </a>
-            <div class="xui-userCenterInfoBox">
-                <div class="xui-i-box">
-                    <div class="xui-userCenterInfo">
-                        <div class="xui-userCenter-imgBox xa-userCenter-imgBox">
-            	            <img class="fl xui-userCenterImg" src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
-                        </div>
+    <div class="wui-globalNav xa-globalNav"{% if not global_navbar %} data-ui-role="global-nav"{% endif %} data-member="{% if cur_request_member %}true{% else %}false{% endif %}"></div>
+    {% endif %}
+    <div class="xui-userCenter-header xa-userCenter-header pr">
+        <i data-ui-role="goBack"></i>
+        <a class="xui-helpInfo pa" href="./?woid={{request.webapp_owner_id}}&module=user_center&model=help&action=get" >
+            <i class="xui-icon-tool xui-icon-help"></i>
+        </a>
+        <div class="xui-userCenterInfoBox">
+            <div class="xui-i-box">
+                <div class="xui-userCenterInfo">
+                    <div class="xui-userCenter-imgBox xa-userCenter-imgBox">
+        	            <img class="fl xui-userCenterImg" src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'"/>
                     </div>
-                    <div class="xui-userCenterInfo pl5">
-                        <h2 class="em8">{% if member.username_for_html %}{{ member.username_for_html | safe }}{% else %}我{% endif %}</h2>
-                        <a href="./?module=user_center&model=binding_page&action=get&workspace_id=user_center&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bindphone">
-                            {% if member_info.is_binded %}
-                            	{{ member_info.phone }}
-                            {% else %}
-                            	绑定手机
-                            {% endif %}
-                        </a>
-                        <div>
-                            <span class="xui-inner-levelBox em85">
-                                <i></i>
-                                <span class="xui-btn-guide em7 vm">
-                                {{ member.grade.name }}
-                                </span>
+                </div>
+                <div class="xui-userCenterInfo pl5">
+                    <h2 class="em8">{% if member.username_for_html %}{{ member.username_for_html | safe }}{% else %}我{% endif %}</h2>
+                    <a href="./?module=user_center&model=binding_page&action=get&workspace_id=user_center&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bindphone">
+                        {% if member_info.is_binded %}
+                        	{{ member_info.phone }}
+                        {% else %}
+                        	绑定手机
+                        {% endif %}
+                    </a>
+                    <div>
+                        <span class="xui-inner-levelBox em85">
+                            <i></i>
+                            <span class="xui-btn-guide em7 vm">
+                            {{ member.grade.name }}
                             </span>
-                        </div>
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="xui-fastBtn disT pa">
-            {% if is_weizoom_mall %}
-                <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=-1">
-                    <p class="xui-inner-red">{% if member.history_order_count %}{{ member.history_order_count }}{% else %}0{% endif %}</p>
-                    <p class="em9">全部订单</p>
-                </a>
-                <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
-                    <p class="xui-inner-red">{% if member.not_payed_order_count %}{{ member.not_payed_order_count }}{% else %}0{% endif %}</p>
-                    <p class="em9">待支付</p>
-                </a>
-
-            {% else %}
-                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
-                    <i class="pr">
-                         {% if member.not_payed_order_count %}
-                            <p class="em85 xui-hintNum pa">{{ member.not_payed_order_count }}</p>
-                        {% endif %}
-                    </i>
-                    <p class="em7">待支付</p>
-                </a>
-                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=3">
-                    <i class="pr">
-                        {% if member.not_ship_order_count %}
-                            <p class="em85 xui-hintNum pa {% if member.history_order_count %}xui-inner-red{% else %}xui-inner-gray{% endif %}">{{ member.not_ship_order_count }}</p>
-                        {% endif %}
-                    </i>
-                    <p class="em7">待发货</p>
-                </a>
-                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=4">
-                    <i class="pr">
-                        {% if member.shiped_order_count %}
-                            <p class="em85 xui-hintNum pa {% if member.history_order_count %}xui-inner-red{% else %}xui-inner-gray{% endif %}">{{ member.shiped_order_count }}</p>
-                        {% endif %}
-                    </i>
-                    <p class="em7">待收货</p>
-                </a>
-                <a class="xui-fastBtnInner disTc tc xui-oneThird" href="?woid={{request.webapp_owner_id}}&module=mall&model=order_review_list&action=get">
-                    <i class="pr">
-                        {% if member.review_count %}
-                        <p class="em85 xui-hintNum pa">{{member.review_count}}</p>
-                        {% else%}
-                        {% endif %}
-                    </i>
-                    <p class="em7">待评价</p>
-                </a>
-                <!-- <a class="xui-fastBtnInner disTc tc xui-oneThird" href="###">
-                    <i class="pr">
-                        <p class="em85 xui-hintNum pa">13</p>
-                    </i>
-                    <p class="em7">退货/退款</p>
-                </a> -->
-            {% endif %}
-            </div>
         </div>
+        <div class="xui-fastBtn disT pa">
+        {% if is_weizoom_mall %}
+            <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=-1">
+                <p class="xui-inner-red">{% if member.history_order_count %}{{ member.history_order_count }}{% else %}0{% endif %}</p>
+                <p class="em9">全部订单</p>
+            </a>
+            <a class="xui-fastBtnInner disTc tc xui-half" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
+                <p class="xui-inner-red">{% if member.not_payed_order_count %}{{ member.not_payed_order_count }}{% else %}0{% endif %}</p>
+                <p class="em9">待支付</p>
+            </a>
+
+        {% else %}
+            <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=0">
+                <i class="pr">
+                     {% if member.not_payed_order_count %}
+                        <p class="em85 xui-hintNum pa">{{ member.not_payed_order_count }}</p>
+                    {% endif %}
+                </i>
+                <p class="em7">待支付</p>
+            </a>
+            <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=3">
+                <i class="pr">
+                    {% if member.not_ship_order_count %}
+                        <p class="em85 xui-hintNum pa {% if member.history_order_count %}xui-inner-red{% else %}xui-inner-gray{% endif %}">{{ member.not_ship_order_count }}</p>
+                    {% endif %}
+                </i>
+                <p class="em7">待发货</p>
+            </a>
+            <a class="xui-fastBtnInner disTc tc xui-oneThird" href="./?woid={{request.webapp_owner_id}}&module=mall&model=order_list&action=get&member_id={{member.id}}&workspace_id=mall&type=4">
+                <i class="pr">
+                    {% if member.shiped_order_count %}
+                        <p class="em85 xui-hintNum pa {% if member.history_order_count %}xui-inner-red{% else %}xui-inner-gray{% endif %}">{{ member.shiped_order_count }}</p>
+                    {% endif %}
+                </i>
+                <p class="em7">待收货</p>
+            </a>
+            <a class="xui-fastBtnInner disTc tc xui-oneThird" href="?woid={{request.webapp_owner_id}}&module=mall&model=order_review_list&action=get">
+                <i class="pr">
+                    {% if member.review_count %}
+                    <p class="em85 xui-hintNum pa">{{member.review_count}}</p>
+                    {% else%}
+                    {% endif %}
+                </i>
+                <p class="em7">待评价</p>
+            </a>
+            <!-- <a class="xui-fastBtnInner disTc tc xui-oneThird" href="###">
+                <i class="pr">
+                    <p class="em85 xui-hintNum pa">13</p>
+                </i>
+                <p class="em7">退货/退款</p>
+            </a> -->
+        {% endif %}
+        </div>
+    </div>
 
 
     <div class="xui-userCenter-itemList">

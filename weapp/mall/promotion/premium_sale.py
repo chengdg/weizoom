@@ -20,10 +20,16 @@ class PremiumSaleList(resource.Resource):
     def get(request):
         """获得买赠列表.
         """
+        endDate = request.GET.get('endDate', '')
+        if endDate:
+            endDate +=' 00:00'
         c = RequestContext(request, {
-            'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_PREMIUM_SALE_NAV
+            'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_PREMIUM_SALE_NAV,
+            'endDate': endDate,
+            'promotion_status': request.GET.get('status', '-1')
         })
 
         return render_to_response('mall/editor/promotion/premium_sales.html', c)
@@ -69,9 +75,10 @@ class PremiumSale(resource.Resource):
             }]
 
             c = RequestContext(request, {
-                'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_PREMIUM_SALE_NAV,
+                'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_PREMIUM_SALE_NAV,
                 'promotion': promotion,
                 'jsons': jsons
             })
@@ -84,9 +91,10 @@ class PremiumSale(resource.Resource):
 
             c = RequestContext(request, {
                 'member_grades': member_grades,
-                'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_PREMIUM_SALE_NAV
+                'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_PREMIUM_SALE_NAV
             })
 
             return render_to_response('mall/editor/promotion/create_premium_sale.html', c)
@@ -115,8 +123,8 @@ class PremiumSale(resource.Resource):
         #     }]
 
         #     c = RequestContext(request, {
-        #         'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-        #         'second_navs': export.get_promotion_second_navs(request),
+        #         'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+        #         'second_navs': export.get_promotion_and_apps_second_navs(request),
         #         'second_nav_name': export.MALL_PROMOTION_PREMIUM_SALE_NAV,
         #         'promotion': promotion,
         #         'jsons': jsons

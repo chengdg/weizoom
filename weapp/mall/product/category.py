@@ -32,7 +32,7 @@ class CategoryList(resource.Resource):
 
         c = RequestContext(request, {
                     'first_nav_name': export.PRODUCT_FIRST_NAV,
-                    'second_navs': export.get_second_navs(request),
+                    'second_navs': export.get_mall_product_second_navs(request),
                     'second_nav_name': export.PRODUCT_MANAGE_CATEGORY_NAV,
                     'product_categories': product_categories}
         )
@@ -213,12 +213,16 @@ class Category(resource.Resource):
         """
         category_id = request.POST['id']
         product_ids = request.POST.getlist('product_ids[]')
-
-        mall_models.ProductCategory.objects.filter(id=category_id).update(
+        product_categorys = mall_models.ProductCategory.objects.filter(id=category_id)
+        if 0 != product_categorys.count():
+            product_categorys.update(
             name=request.POST.get('name', '').strip(),
             product_count=len(product_ids)
-        )
-
+            )
+        else:
+            response = create_response(500)
+            response.data = {'msg':"该商品分类已不存在"}
+            return response.get_response()
         #重建<category, product>关系
         for product_id in product_ids:
             mall_models.CategoryHasProduct.objects.create(

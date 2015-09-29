@@ -40,7 +40,11 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .propertyGroup_property_dynamicControlField_control': 'onMouseoverField',
         'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',    
 
-        'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger'
+        'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger',
+
+        //image_dialog_select 类型
+        'click .xa-deleteImageButton': 'onClickDeleteImage',
+        'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage'
 	},
 
     getTemplate: function() {
@@ -948,8 +952,27 @@ W.workbench.PropertyView = Backbone.View.extend({
         $el.find('.close').show();
     },
 
-    onClickColorPickerTrigger: function(event){
+    onClickDeleteImage: function(event){
         var $el = $(event.currentTarget);
+        console.log(event.currentTarget);
+        $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('img').attr('src', '');
+        $el.siblings('input[data-field="image"]').val('');
+        $el.siblings('.xui-i-triggerButton').text('选择图片');
+        $el.hide();
+        //广播删除事件，以便删除phoneView中的对应图片
+        var cid = $el.parents('.propertyGroup_property_dynamicControlField_control').attr('data-dynamic-cid');
+        W.Broadcaster.trigger("image_dialog_select:deleteImage", cid);
+    },
+
+    onMouseoverImage: function(event){
+        var $el = $(event.target);
+        $el.parent().siblings('.deleteImage').show();
+    },
+
+    onClickColorPickerTrigger: function(event){
+        console.log(['===========']);
+        console.log(event);
+        var $el = $(event.target);
         var $input = $el.parents('.propertyGroup_property_input').find('.xa-valueInput');
         $input.trigger('click');
     }

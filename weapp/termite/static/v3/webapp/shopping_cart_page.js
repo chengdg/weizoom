@@ -200,7 +200,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
             $(this).data('view', view);
             _this.premiumSaleViews.push(view);
         });
-        
+
         this.onClickCheckAll();
     },
 
@@ -352,7 +352,6 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         var productGroupPriceInfo = this.productGroupPriceCalculator.calculate(this.productGroups)
         var totalPrice = productGroupPriceInfo.promotionedPrice;
         var totalCount = productGroupPriceInfo.totalCount;
-
         //更新页面元素
         $('.xa-totalPrice').text(totalPrice.toFixed(2));
         $('.xa-total-count').text(totalCount);

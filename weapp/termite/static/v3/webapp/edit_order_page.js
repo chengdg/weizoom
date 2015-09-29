@@ -1071,7 +1071,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		var couponProductId = 0;
 		var couponId = this.$('[name="coupon_id"]').val();
 		if (couponId) {
-			couponMoney = $('[name="coupon_id"]').data('money') || 0;
+			couponMoney = parseFloat($('[name="coupon_id"]').data('money')) || 0;
 			couponProductId = $('[name="coupon_id"]').data('productid');
 			var maxCouponMoney = 0;
 			if (couponProductId > 0) {// 单品券

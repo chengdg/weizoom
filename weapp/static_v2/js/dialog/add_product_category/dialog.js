@@ -87,5 +87,21 @@ W.dialog.mall.AddProductCategoryDialog = W.dialog.Dialog.extend({
             "name": name,
             "product_ids": productIds
         };
-    }
+    },
+
+    /**
+     * onClickSubmitButton: 重写点击“确定”按钮后的响应函数，支持successCallback返回值
+     */
+    onClickSubmitButton: function(event) {
+        var data = this.onGetData(event);
+        if (data) {
+            if(!data.name){
+                W.showHint('error', '请输入商品分组名称');
+            }else{
+                this.successCallback(data)
+                this.$dialog.modal('hide');
+                this.successCallback = null;
+            }
+        }
+    },
 });

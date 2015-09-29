@@ -31,7 +31,7 @@ from core.wxapi import get_weixin_api
 
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 #DEFAULT_CATEGORY_NAME=u"未分组"
 
@@ -47,8 +47,9 @@ class Qrcodes(resource.Resource):
 		"""
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 		})
 		return render_to_response('weixin/advance_manage/qrcodes.html', c)
 
@@ -359,8 +360,9 @@ class Qrcode(resource.Resource):
 			tag_id = qrcode.tag_id
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'webapp_id': webapp_id,
 			'qrcode': qrcode,
 			'groups': groups,
@@ -541,8 +543,9 @@ class QrcodeMember(resource.Resource):
 		setting_id = request.GET['setting_id']
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
 		})
 
@@ -631,8 +634,9 @@ class QrcodeOrder(resource.Resource):
 		setting_id = request.GET.get('setting_id', None)
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
 		})
 

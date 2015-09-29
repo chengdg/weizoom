@@ -95,7 +95,7 @@ class ProductReviewInfo(resource.Resource):
         c = RequestContext(request,
                            {
                                'first_nav_name': FIRST_NAV_NAME,
-                               'second_navs': export.get_second_navs(request),
+                               'second_navs': export.get_mall_product_second_navs(request),
                                'second_nav_name': export.PRODUCT_REVIEW_NAV,
                                'product_review': product_review,
                            })
@@ -198,7 +198,7 @@ class ProductReviewList(resource.Resource):
         c = RequestContext(request,
                            {
                                'first_nav_name': FIRST_NAV_NAME,
-                               'second_navs': export.get_second_navs(request),
+                               'second_navs': export.get_mall_product_second_navs(request),
                                'second_nav_name': export.PRODUCT_REVIEW_NAV,
                            })
 

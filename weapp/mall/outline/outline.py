@@ -15,11 +15,11 @@ from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 from mall import export, notices_models
 from mall import models as mall_models
+from mall.promotion import models as promotion_models
 from .utils import get_to_be_shipped_order_infos
 from webapp import models as webapp_models
 from webapp import statistics_util as webapp_statistics_util
-from weixin.user.models import get_system_user_binded_mpuser
-from weixin2.models import Session
+from weixin2.home.outline import get_unread_message_count
 from django.db.models import Sum
 
 
@@ -42,7 +42,7 @@ class Outline(resource.Resource):
                         'mall/editor/outline_no_permission.html',
                         RequestContext(request, {
                             'first_nav_name': export.MALL_HOME_FIRST_NAV,
-                            'second_navs': export.get_home_second_navs(request),
+                            'second_navs': export.get_mall_home_second_navs(request),
                             'second_nav_name': export.MALL_HOME_INTEGRAL_NAV
                         }))
                 else:
@@ -55,9 +55,6 @@ class Outline(resource.Resource):
             if integral_strategy.use_ceiling == -1:
                 # 需要进入积分引导页
                 return HttpResponseRedirect('/mall2/integral_strategy/')
-
-        # 获取待支付订单
-        to_be_shipped_orders = get_to_be_shipped_order_infos(request)
 
         # 获得昨日订单数据
         today = '%s 23:59:59' % dateutil.get_yesterday_str('today')
@@ -76,34 +73,31 @@ class Outline(resource.Resource):
             order_money += order.final_price + order.weizoom_card_money
 
         # 获取会员数 update by bert at 20150817
-        total_member_count = member_models.Member.count(webapp_id)
-        members = member_models.Member.objects.filter(
-            webapp_id=webapp_id, created_at__range=(yesterday, today))
-        members = [member for member in members if member.is_subscribed]
+        subscribed_member_count = member_models.Member.objects.filter(
+            webapp_id=webapp_id, 
+            is_subscribed=True, 
+            is_for_test=False
+        ).count()
+        new_member_count = member_models.Member.objects.filter(
+            webapp_id=webapp_id, 
+            created_at__range=(yesterday, today), 
+            status=member_models.SUBSCRIBED, 
+            is_for_test=False
+        ).count()
 
-        outline_counts = [{
-            "count": len(orders),
-            "description": "昨日下单数"
-        }, {
-            "count": order_money,
-            "description": "昨日成交额"
-        }, {
-            "count": len(members),
-            "description": "昨日新增会员"
-        }, {
-            "count": total_member_count,
-            "description": "店铺会员总数"
-        }]
-
-        messages = notices_models.Notice.objects.all().order_by('-id')[:5]
+        # messages = notices_models.Notice.objects.all().order_by('-id')[:5]
 
         c = RequestContext(request, {
             'first_nav_name': export.MALL_HOME_FIRST_NAV,
-            'second_navs': export.get_home_second_navs(request),
+            'second_navs': export.get_mall_home_second_navs(request),
             'second_nav_name': export.MALL_HOME_OUTLINE_NAV,
-            'order_info': to_be_shipped_orders,
-            'outline_counts': outline_counts,
-            'system_messages': messages
+            'unread_message_count': get_unread_message_count(request.user),
+            'new_member_count': new_member_count,
+            'order_count': len(orders), 
+            'order_money': order_money,
+            'subscribed_member_count': subscribed_member_count,
+            'shop_hint_data': _get_shop_hint_data(request),
+            'tomorrow': dateutil.get_tomorrow_str('today')
         })
         return render_to_response('mall/editor/outline.html', c)
 
@@ -157,19 +151,26 @@ class Outline(resource.Resource):
                 for date in date_list:
                     count_trend_values.append(date2count.get(date, 0))
                     price_trend_values.append(round(date2price.get(date, 0.0), 2))
-                print(len(count_trend_values))
-                return create_line_chart_response(
+                result = create_line_chart_response(
                     '',
                     '',
                     date_list,
                     [{
-                        "name": "订单数",
-                        "values": count_trend_values
-                    }, {
                         "name": "销售额",
                         "values": price_trend_values
-                    }]
+                    }, {
+                        "name": "订单数",
+                        "values": count_trend_values
+                    }],
+                    use_double_y_lable = True,
+                    get_json = True
                 )
+                result['yAxis'][0]['name'] = '销售额'
+                result['yAxis'][1]['name'] = '订单数'
+                result['yAxis'][1]['splitLine'] = {'show':False}
+                response = create_response(200)
+                response.data = result
+                return response.get_response()
             except:
                 if settings.DEBUG:
                     raise
@@ -214,3 +215,75 @@ class Outline(resource.Resource):
                     "values": uv_trend_values
                 }]
             )
+
+def _get_shop_hint_data(request):
+    """
+    获取首页店铺提醒数据
+    """
+    onshelf_products = mall_models.Product.objects.filter(
+        owner=request.manager,
+        shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON,
+        is_deleted=False)
+    #在售商品数
+    onshelf_product_count = len(onshelf_products)
+    sellout_products = []
+    mall_models.Product.fill_details(request.manager, onshelf_products, {
+        "with_product_model": True
+    })
+    for product in onshelf_products:
+        for model in product.models:
+            if model and model['stock_type'] == mall_models.PRODUCT_STOCK_TYPE_LIMIT and model['stocks'] <= 0:
+                sellout_products.append(product)
+                break
+    #库存不足商品数
+    sellout_product_count = len(sellout_products)
+
+    #待发货订单数
+    to_be_shipped_order_count = mall_models.Order.objects.belong_to(request.user_profile.webapp_id).filter(
+        status=mall_models.ORDER_STATUS_PAYED_NOT_SHIP
+    ).count()
+    #退款中订单数
+    refunding_order_count = mall_models.Order.objects.belong_to(request.user_profile.webapp_id).filter(
+        status=mall_models.ORDER_STATUS_REFUNDING
+    ).count()
+
+    #即将到期的限时抢购活动数
+    flash_sale_count = _get_expiring_promotion_count(request, promotion_models.PROMOTION_TYPE_FLASH_SALE)
+    #即将到期的买赠活动数
+    premium_sale_count = _get_expiring_promotion_count(request, promotion_models.PROMOTION_TYPE_PREMIUM_SALE)
+    #即将到期的积分应用活动数
+    integral_sale_count = _get_expiring_promotion_count(request, promotion_models.PROMOTION_TYPE_INTEGRAL_SALE)
+    #即将到期的优惠券活动数
+    coupon_count = _get_expiring_promotion_count(request, promotion_models.PROMOTION_TYPE_COUPON)
+    #即将到期的分享红包活动数
+    red_envelope_count = promotion_models.RedEnvelopeRule.objects.filter(
+        owner=request.manager, 
+        status=True, 
+        limit_time=False,
+        is_delete=False, 
+        end_time__lte=dateutil.get_tomorrow_str('today')
+    ).count()
+
+    return {
+        'onshelf_product_count': onshelf_product_count,
+        'sellout_product_count': sellout_product_count,
+        'to_be_shipped_order_count': to_be_shipped_order_count,
+        'refunding_order_count': refunding_order_count,
+        'flash_sale_count': flash_sale_count,
+        'premium_sale_count': premium_sale_count,
+        'integral_sale_count': integral_sale_count,
+        'coupon_count': coupon_count,
+        'red_envelope_count': red_envelope_count
+    }
+
+
+def _get_expiring_promotion_count(request, promotion_type):
+    """
+    即将到期的促销活动数
+    """
+    return promotion_models.Promotion.objects.filter(
+        owner=request.manager,
+        status=promotion_models.PROMOTION_STATUS_STARTED,
+        type=promotion_type,
+        end_date__lte=dateutil.get_tomorrow_str('today')
+    ).count()

@@ -14,7 +14,7 @@ from modules.member.models import *
 
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 DEFAULT_CATEGORY_NAME=u"未分组"
 

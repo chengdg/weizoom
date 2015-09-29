@@ -80,7 +80,7 @@ Background:
 
 
 	 When 微信用户批量消费jobs的商品
-	     | date       | consumer | type |businessman| product | payment | payment_method | freight | price | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash | action    |  order_status   |buy_source  |    
+	     | date       | consumer | type |businessman| product | payment | pay_type | freight | price | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash | action    |  order_status   |buy_source  |
 	     | 2015-05-31 | bill1    | 购买 | jobs      | 商品1,2 | 支付    |   支付宝       | 10      | 100   |  0       |        | 210         | 0            | 210    |    0   | 0    |           |    已完成       |            |
          | 2015-06-01 | bill1    | 购买 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 110          | 0      |    0   | 0    |           |    已发货       |            |
          | 2015-06-03 | bill1    | 购买 | jobs      | 商品1,1 | 支付    |   货到付款     | 10      | 100   |  0       |        | 110         | 0            | 0      |    0   | 110  |           |    待发货       |            |
@@ -98,8 +98,8 @@ Background:
          |    今天    | -bill5   | 购买 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 0            | 0      |    110 | 0    |           |    待发货       |tom分享链接 |
          |    今天    | bill1    | 购买 | jobs      | 商品2,1 | 支付    |   支付宝       | 10      | 100   |  0       |        | 110         | 0            | 110    |    0   | 0    |           |    已发货       |tom分享链接 |
 	     |    今天    | bill1    | 购买 | jobs      | 商品1,1 |         |   支付宝       | 10      | 100   |  0       |        |  0          | 0            | 0      |    0   | 0    |           |    未支付       |            |
-	     |    今天    | bill1    | 测试 | jobs      | 商品2,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 0            | 0      |    110 | 0    | jobs,取消 |    已取消       |            |
-	     |    今天    | bill2    | 购买 | jobs      | 商品1,1 | 支付    |   货到付款     | 10      | 100   |  0       |        | 0           | 0            | 0      |    0   | 110  | jobs,退款 |    退款中       |            |
+	     |    今天    | bill1    | 测试 | jobs      | 商品2,1 |         |   微信支付     | 10      | 100   |  0       |        | 110         | 0            | 0      |    110 | 0    | jobs,取消 |    已取消       |            |
+	     |    今天    | bill2    | 购买 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 0           | 0            | 0      |    0   | 110  | jobs,退款 |    退款中       |            |
        
 @stats @stats.product @mall2
 Scenario: 1 商品概况数据

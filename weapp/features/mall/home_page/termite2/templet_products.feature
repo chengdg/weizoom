@@ -21,21 +21,6 @@ Feature:自定义模块——【基础模块】商品-页面
 
 Background:
 	Given jobs登录系统
-	And jobs已添加模块
-		"""
-		[	
-			{"modle_name": "富文本"},
-			{"modle_name": "商品"},
-			{"modle_name": "商品列表"},
-			{"modle_name": "图片广告"},
-			{"modle_name": "公告"},
-			{"modle_name": "标题"},
-			{"modle_name": "文本导航"},
-			{"modle_name": "图片导航"},
-			{"modle_name": "辅助空白"},
-			{"modle_name": "橱窗"}
-		]
-		"""
 	And jobs已添加商品
 		#商品1,商品2,商品3（上架状态）,商品4（下架状态）
 		"""
@@ -66,7 +51,7 @@ Background:
 		}]	
 		"""
 
-Scenario:选择在售商品窗体：在售商品列表、搜索、添加新商品
+Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商品
 	Given jobs获取'在售'商品选择列表
 	"""
 	[{
@@ -161,7 +146,7 @@ Scenario:选择在售商品窗体：在售商品列表、搜索、添加新商�
 		}]
 		"""
 
-Scenario:商品选择列表分页,每页显示8个商品
+Scenario:2 商品选择列表分页,每页显示8个商品
 	When jobs获取'在售'商品选择列表
 	"""
 	[{
@@ -214,6 +199,12 @@ Scenario:商品选择列表分页,每页显示8个商品
 		"shelve_type":"上架",
 		"price": 10.0
 	}]
+	"""
+	And jobs已设置分页条件
+	"""
+	{
+		"page_count":8
+	}
 	"""
 	Then jobs商品模块商品选择列表显示2页
 	When jobs访问商品选择列表第1页
@@ -282,16 +273,8 @@ Scenario:商品选择列表分页,每页显示8个商品
 		"create_time":"2015-05-02 9:00"
 	}]
 	"""
-	When jobs浏览'第二页'
-	Then jobs获取商品选择列表
-	"""
-	[{
-		"name":"商品2可两行显示",
-		"create_time":"2015-05-01 9:00"
-	}]
-	"""
 
-Scenario:一个商品可以被重复选择
+Scenario:3 一个商品可以被重复选择
 	Given jobs获取'在售'商品选择列表
 	"""
 	[{
@@ -307,7 +290,7 @@ Scenario:一个商品可以被重复选择
 	"""	
 	When jobs商品模块添加商品
 	"""
-	[{
+	[{  "title":"微页面标题",
 		"products":[
 		{
 			"name":"商品3不可两行显示......",
@@ -325,9 +308,10 @@ Scenario:一个商品可以被重复选择
 		"show_price":"true"
 	}]
 	"""
-	Then jobs展示区大图单列显示商品
+	Then jobs能获取'微页面标题'
 	"""
-	[{
+	[{"title":"微页面标题"
+	},{
 		"name":"商品3不可两行显示...",
 		"price":"3.0",
 		"list_style1":"大图",
@@ -368,9 +352,10 @@ Scenario:一个商品可以被重复选择
 	}]
 	"""
 
-	Then jobs展示区大图单列显示商品
+	Then jobs能获取'微页面标题'
 	"""
-	[{
+	[{"title":"微页面标题"
+	},{
 		"name":"商品3不可两行显示...",
 		"price":"3.0",
 		"list_style1":"大图",
@@ -408,7 +393,7 @@ Scenario:一个商品可以被重复选择
 	}]
 	"""
 
-Scenario:商品管理'下架'、'删除'商品
+Scenario:4 商品管理'下架'、'删除'商品
 	Given jobs获取'在售'商品选择列表
 	"""
 	[{
@@ -424,7 +409,7 @@ Scenario:商品管理'下架'、'删除'商品
 	"""	
 	When jobs商品模块添加商品
 	"""
-	[{
+	[{	"title":"微页面标题",
 		"products":[
 		{
 			"name":"商品3不可两行显示......",
@@ -442,9 +427,11 @@ Scenario:商品管理'下架'、'删除'商品
 		"show_price":"true"
 	}]
 	"""
-	Then jobs展示区大图单列显示商品
+	Then jobs能获取'微页面标题'
 	"""
 	[{
+		"title":"微页面标题"
+	},{
 		"name":"商品3不可两行显示...",
 		"price":"3.0",
 		"list_style1":"大图",
@@ -473,9 +460,11 @@ Scenario:商品管理'下架'、'删除'商品
 		"product_picture_id":"3",
 	}]
 	"""
-	Then jobs商品模块展示区大图单列显示商品
+	Then jobs能获取'微页面标题'
 	"""
 	[{
+		"title": "微页面标题"
+	},{
 		"name":"商品1可单行显示",
 		"price":"1.0",
 		"list_style1":"大图",
@@ -498,9 +487,11 @@ Scenario:商品管理'下架'、'删除'商品
 		"product_picture_id":"1",
 	}]
 	"""
-	Then jobs商品模块展示区大图单列显示商品
+	Then jobs能获取'微页面标题'
 	"""
 	[{
+		"title": "微页面标题"
+	},{
 		"name":"商品1可单行显示",
 		"price":"1.0",
 		"list_style1":"大图",
@@ -510,7 +501,7 @@ Scenario:商品管理'下架'、'删除'商品
 	}]
 	"""
 
-Scenario:商品管理'修改'商品
+Scenario:5 商品管理'修改'商品
 	Given jobs获取'在售'商品选择列表
 	"""
 	[{
@@ -526,7 +517,7 @@ Scenario:商品管理'修改'商品
 	"""	
 	When jobs商品模块添加商品
 	"""
-	[{
+	[{	"title": "微页面标题",
 		"products":[
 		{
 			"name":"商品3不可两行显示......",
@@ -544,9 +535,11 @@ Scenario:商品管理'修改'商品
 		"show_price":"true"
 	}]
 	"""
-	Then jobs展示区大图单列显示商品
+	Then jobs能获取'微页面标题'
 	"""
 	[{
+		"title": "微页面标题"
+	},{
 		"name":"商品3不可两行显示...",
 		"price":"3.0",
 		"list_style1":"大图",
@@ -578,9 +571,11 @@ Scenario:商品管理'修改'商品
 		"price":"20.0"
 	}]
 	"""
-	Then jobs展示区大图单列显示商品
+	Then jobs能获取'微页面标题'
 	"""
 	[{
+		"title": "微页面标题"
+	},{
 		"name":"商品3不可两行显示...",
 		"price":"3.0",
 		"list_style1":"大图",
@@ -604,28 +599,4 @@ Scenario:商品管理'修改'商品
 	}]
 	"""
 
-Scenario:商品模块删除
-	Given jobs已添加商品模块
-	"""
-	[{
-		"name":"商品模块"
-	}]
-	"""
-	#删除商品模块,删除模块时弹窗确认删除
-	When jobs删除商品模块
-	Then jobs展示区商品模块删除
-	And jobs编辑区编辑窗体关闭
-
-Scenario:商品模块展示商品促销价格
-	Given jobs已添加商品模块
-	"""
-	[{
-		"name":"商品模块"
-	}]
-	"""
-	And jobs已添加限时抢购商品
-	When jobs添加限时抢购商品
-	Then jobs展示区商品展示限时抢购价格
-	Then jobs手机端展示限时抢购价格
 	
-

@@ -23,6 +23,9 @@ TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 def list_products(request):
 	"""显示"商品列表"页面
 	"""
+	if request.user.is_weizoom_mall:
+		# 微众商城跳至微众商城首页
+		return __weshop_index(request)
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.list_products(request)
 
@@ -95,6 +98,9 @@ def get_pay_result_success(request):
 def show_shopping_cart(request):
 	'''	显示购物车详情
 	'''
+	if request.user.is_weizoom_mall:
+		# 微众商城跳至微众商城首页
+		return __weshop_index(request)
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 
 	# product_groups, invalid_products = mall_api.get_shopping_cart_products(request.webapp_user, request.webapp_owner_id)
@@ -274,3 +280,8 @@ def edit_refueling_order(request):
     request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
     return request_util.edit_refueling_order(request)
 
+
+def __weshop_index(request):
+	'''跳转至微众商城首页
+	'''
+	return HttpResponseRedirect('?workspace_id=home_page&webapp_owner_id=216&workspace_id=866&state=123&fmt=%s' % request.GET.get('fmt', ''))

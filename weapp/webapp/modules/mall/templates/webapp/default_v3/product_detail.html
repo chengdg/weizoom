@@ -201,10 +201,11 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         </div>
         {% endif %}
         {% if product.detail %}
-        <div class="xui-section xui-production-panel pt0 xa-production hidden" style="border:0;">
+        <div class="xui-section xui-production-panel pt0 xa-production" style="border:0;">
             <div class="xui-section-title xui-section-item zoom">
                 <label>商品介绍</label>
-                <div class="xui-productDetail-content rawHtml c3 pt10 xa-productDetail-content" data-detail="{{product.detail}}">
+                <div class="xui-productDetail-content rawHtml c3 pt10 xa-productDetail-content">
+                {{ product.detail|safe }}
                 </div>
             </div>
         </div>
@@ -216,7 +217,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             </div>
         </div>
         {% endif %}
-        <div class="ui-refresh-down"></div>
+        <!-- <div class="ui-refresh-down"></div> -->
     </div>
     <!-- 购物车、加入购物车、购买按钮组Start -->
     <div class="tc xui-tab-fixed">
@@ -539,51 +540,69 @@ $(document).ready(function() {
     if(models.length > 1){
         var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,bounce:false});
     }
-    if($('.xa-production').length > 0){
-        $('.xa-content').css('height',window.document.body.clientHeight - 42).refresh({
-            statechange: function (e, $elem, state, dir) {
-                var refreshInfo = this._options.refreshInfo[dir];
-                switch (state) {
-                    case 'loading':
-                        refreshInfo['$label'].html('详情加载中...');
-                        break;
-                }
-            },
-            load: function (dir, type) {
-                var me = this;
-                var data = $('.xa-productDetail-content').data('detail');
-                $('.xa-productDetail-content').html(data);
-                var img = $(data).find('img');
-                if(img.length > 0){
-                    var a = setInterval(function(){
-                        var flag = true;
-                        img.each(function(i,n){
-                            if(!n.complete)
-                                flag = false;
-                        })
-                        if(flag){
-                            $('.xa-production').removeClass('hidden');
-                            me.afterDataLoading(dir);
-                            clearInterval(a)
-                            me.disable(dir,true);
-                        }
-                    });
-                }else{
-                    $('.xa-production').removeClass('hidden');
-                    me.afterDataLoading(dir);
-                    me.disable(dir,true);
-                }
+    var $img = $('.xa-productDetail-content img');
+    $img.lazyload({
+        data_attribute:"url",
+        effect : "fadeIn",
+        placeholder:"{{cdn_host}}/static_v2/img/webapp/mall/info_placeholder.png"
+    });
+    // if($('.xa-production').length > 0){
+    //     var $wrapper = $('.xa-content');
+    //     $wrapper.css('height',window.document.body.clientHeight - 42).refresh({
+    //         statechange: function (e, $elem, state, dir) {
+    //             var refreshInfo = this._options.refreshInfo[dir];
+    //             switch (state) {
+    //                 case 'loading':
+    //                     refreshInfo['$label'].html('详情加载中...');
+    //                     break;
+    //             }
+    //         },
+    //         load: function (dir, type) {
+    //             var me = this;
+    //             var data = $('.xa-productDetail-content').data('detail');
+    //             $('.xa-productDetail-content').html(data);
+    //             var $img = $('.xa-productDetail-content').find('img');
+    //             // $img.lazyload({
+    //             //     container: $(".xa-productDetail-content"),
+    //             //     data_attribute:"url"
+    //             // });
+    //             $img.imglazyload({
+    //                 container:$('.xa-content'),
+    //                 innerScroll: true
+    //             }).on('loadcomplete', function () {
+    //                 $wrapper.iScroll('refresh');
+    //             });
+    //             if($img.length > 0){
+    //                 var a = setInterval(function(){
+    //                     var flag = true;
+    //                     $img.each(function(i,n){
+    //                         if(!n.complete)
+    //                             flag = false;
+    //                     })
+    //                     if(flag){
+    //                         $('.xa-production').removeClass('hidden');
+    //                         me.afterDataLoading(dir);
+    //                         clearInterval(a)
+    //                         me.disable(dir,true);
+    //                     }
+    //                 });
+    //             }else{
+    //                 $('.xa-production').removeClass('hidden');
+    //                 me.afterDataLoading(dir);
+    //                 me.disable(dir,true);
+    //             }
+                
 
-            }
-        });
-        // $('.ui-refresh-icon').hide();
-        isPhone6pinches = (window.screen.height==736);
-        if(isPhone6pinches){
-            $('.ui-refresh-label').text("点击加载商品详情");
-        }else{
-            $('.ui-refresh-label').text("↑ 上拉加载商品详情");
-        }
-    }
+    //         }
+    //     });
+    //     // $('.ui-refresh-icon').hide();
+    //     isPhone6pinches = (window.screen.height==736);
+    //     if(isPhone6pinches){
+    //         $('.ui-refresh-label').text("点击加载商品详情");
+    //     }else{
+    //         $('.ui-refresh-label').text("↑ 上拉加载商品详情");
+    //     }
+    // }
 
     //处理会员名称
     var spanMemberName = $(".xa-memberName");

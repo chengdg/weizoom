@@ -50,9 +50,10 @@ class FlashSale(resource.Resource):
             }]
 
             c = RequestContext(request, {
-                'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV,
+                'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV,
                 'promotion': promotion,
                 'jsons': jsons
             })
@@ -72,9 +73,10 @@ class FlashSale(resource.Resource):
             })
 
             c = RequestContext(request, {
-                'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV,
+                'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV,
                 'promotion': promotion
             })
 
@@ -86,9 +88,10 @@ class FlashSale(resource.Resource):
 
             c = RequestContext(request, {
                 'member_grades': member_grades,
-                'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV
+                'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV
             })
 
             return render_to_response('mall/editor/promotion/create_flash_sale.html', c)
@@ -154,9 +157,10 @@ class FlashSale(resource.Resource):
 
         c = RequestContext(request, {
             'member_grades': member_grades,
-            'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV
+            'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV
         })
 
         return render_to_response('mall/editor/promotion/create_flash_sale.html', c)
@@ -170,11 +174,16 @@ class FlashSaleList(resource.Resource):
     def get(request):
         """获得限时抢购列表.
         """
-
+        endDate = request.GET.get('endDate', '')
+        if endDate:
+            endDate +=' 00:00'
         c = RequestContext(request, {
-            'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV
+            'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_FLASH_SALE_NAV,
+            'endDate': endDate,
+            'promotion_status': request.GET.get('status', '-1')
         })
 
         return render_to_response('mall/editor/promotion/flash_sales.html', c)

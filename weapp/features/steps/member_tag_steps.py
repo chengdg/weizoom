@@ -20,7 +20,7 @@ def step_impl(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
 	context.member_tags = json.loads(context.text)
-	response = client.post('/member/member_tags/get/',
+	response = client.post('/member/api/member_tags/',
 		context.member_tags)
 
 @given(u"{user}添加会员分组")
@@ -28,7 +28,7 @@ def step_impl(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
 	context.member_tags = json.loads(context.text)
-	response = client.post('/member/member_tags/get/',
+	response = client.post('/member/api/member_tags/',
 		context.member_tags)
 
 @then(u"{user}能获取会员分组列表")
@@ -38,7 +38,7 @@ def step_impl(context, user):
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	response = client.get('/member/member_tags/get/')
+	response = client.get('/member/member_tags/')
 	member_tags =response.context['member_tags']
 	tag_list = []
 	for tag in member_tags:
@@ -51,14 +51,14 @@ def step_impl(context, user):
 def step_impl(context, user):
 	client = context.client
 	new_member_tag = json.loads(context.text)
-	response = client.post('/member/member_tags/get/' ,new_member_tag)
+	response = client.post('/member/api/member_tags/' ,new_member_tag)
 
 
 @when(u"{user}删除会员分组")
 def step_impl(context, user):
 	client = context.client
 	new_member_tag = json.loads(context.text)
-	response = client.post('/member/member_tags/get/' ,new_member_tag)
+	response = client.post('/member/api/member_tags/' ,new_member_tag)
 
 
 

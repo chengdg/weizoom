@@ -25,9 +25,14 @@ def _handle_fahuo_data(orders):
 @When(u"{user}对最新订单进行发货")
 def step_impl(context, user):
     # TODO 废弃这个方法，改用 @when(u'{user}对订单进行发货')
+    if hasattr(context, 'latest_order_id'):
+        latest_order_no = Order.objects.get(id=context.latest_order_id).id
+    else:
+        latest_order_no = steps_db_util.get_latest_order().id
+    print "last----------------------------",latest_order_no
     url = '/mall2/api/delivery/'
     data = {
-        'order_id': context.latest_order_id,
+        'order_id': latest_order_no,
         'express_company_name': 'shentong',
         'express_number': '123456789',
         'leader_name': user,
@@ -46,6 +51,8 @@ def step_impl(context, user):
     order_id = Order.objects.get(order_id=order_no).id
 
     logistics = delivery_data.get('logistics', 'off')
+    if logistics == u'其他':
+        logistics = delivery_data.get('name')
     leader_name = delivery_data.get('shipper', '')
     express_company_name = ''
     express_number = ''
@@ -62,6 +69,8 @@ def step_impl(context, user):
         'leader_name': leader_name,
         'is_update_express': is_update_express
     }
+    if logistics == u'其他':
+        data['is_100'] = 'false'
     response = context.client.post(url, data)
     if 'date' in delivery_data:
         OrderOperationLog.objects.filter(order_id=delivery_data['order_no'], action="订单发货").update(

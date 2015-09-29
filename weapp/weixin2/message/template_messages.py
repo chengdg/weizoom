@@ -16,7 +16,7 @@ from core import paginator
 from core.jsonresponse import create_response
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 
 class MessageIndustry(resource.Resource):
@@ -123,8 +123,9 @@ class TemplateMessages(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_TEMPLATE_MESSAGE_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_TEMPLATE_MESSAGE_NAV,
             'industry': industry,
         })
 

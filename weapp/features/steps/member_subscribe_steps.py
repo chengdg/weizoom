@@ -64,7 +64,7 @@ def step_impl(context, user):
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
 	if not hasattr(context, 'url'):
-		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&enable_paginate=1'
+		context.url = '/member/api/member_list/?design_mode=0&version=1&status=1&enable_paginate=1'
 		if hasattr(context, 'count_per_page'):
 			context.url += '&count_per_page=' + str(context.count_per_page)
 		else:
@@ -103,7 +103,7 @@ def step_impl(context, user):
 	elif context.table:
 		grades_dict = {}
 		tags_dict = {}
-		response = context.client.get('/member/api/members_filter_params/get/')
+		response = context.client.get('/member/api/members_filter_params/')
 		for item in json.loads(response.content)['data']['grades']:
 			grades_dict[item['name']] = item['id']
 		for item in json.loads(response.content)['data']['tags']:
@@ -151,13 +151,13 @@ def step_impl(context, webapp_owner_name, webapp_user_name, grade_name):
 	user = context.client.user
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	db_grade = MemberGrade.objects.get(name=grade_name, webapp_id=user.get_profile().webapp_id)
-	context.client.post('/member/api/tag/update/', {
+	context.client.post('/member/api/update_member_tag_or_grade/', {
 		'checked_ids':	db_grade.id, 'member_id': member.id, 'type': 'grade'})
 
 @then(u'{webapp_owner_name}能获得{webapp_user_name}的积分日志')
 def step_impl(context, webapp_owner_name, webapp_user_name):
 	webapp_user_member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
-	url = '/member/api/member_logs/get/?design_mode=0&version=1&member_id=%d&count_per_page=10&page=1&enable_paginate=1' % webapp_user_member.id
+	url = '/member/api/integral_logs/?design_mode=0&version=1&member_id=%d&count_per_page=10&page=1&enable_paginate=1' % webapp_user_member.id
 	response = context.client.get(url)
 	member_logs = json.loads(response.content)['data']['items']
 	actual = [{"content":log['event_type'], "integral":log['integral_count']} for log in member_logs]
