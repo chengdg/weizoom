@@ -131,9 +131,6 @@ class lottery_prize(resource.Resource):
 			data['can_play_count'] = limitation #根据抽奖活动限制，初始化可参与次数
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
-			#更新lottery表中的参与人数
-			lottery.update(inc__participant_count=1)
-			lottery.reload()
 
 		#如果当前可玩次数为0，则直接返回
 		if lottery_participance.can_play_count == 0:
@@ -266,7 +263,7 @@ class lottery_prize(resource.Resource):
 				'prize_name': prize_value,
 				'prize_title': result
 			}
-		# app_models.lottery.objects(id=record_id).update(inc__participant_count=1)
+		app_models.lottery.objects(id=record_id).update(inc__participant_count=1)
 
 		response = create_response(200)
 		response.data = {
