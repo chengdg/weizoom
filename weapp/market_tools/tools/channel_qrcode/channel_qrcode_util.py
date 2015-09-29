@@ -155,7 +155,7 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 					MemberHasTag.add_tag_member_relation(member, [channel_qrcode.tag_id])
 			except:
 				notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
-			watchdog_warning(notify_message)
+				watchdog_warning(notify_message)
 			return
 
 		if ChannelQrcodeToMemberLog.objects.filter(channel_qrcode=channel_qrcode, member=member).count() == 0:

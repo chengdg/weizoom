@@ -196,22 +196,22 @@ def record_mileke_log(request):
 			if MilekeLog.objects.filter(mileke=mileke, member=current_member).count() == 0:
 				try:
 					MilekeLog.objects.create(mileke=mileke, member=current_member)
-					data['msg'] = u'加油成功'
+					data['msg'] = u'投票成功'
 				except:
 					"""
 						已经存在
 					"""
-					data['msg'] = u'已加油成功'
+					data['msg'] = u'已投票成功'
 			else:
 				response = create_response(501)
-				data['msg'] = u'已加油成功'
+				data['msg'] = u'已投票成功'
 		else:
-			data['msg'] = u'加油失败,好友未正确分享'
+			data['msg'] = u'投票失败,好友未正确分享'
 	else:
 		if str(fid) == str(current_member.id):
-			data['msg'] = u'加油失败,不能给自己加油'
+			data['msg'] = u'投票失败,不能给自己投票'
 		else:
-			data['msg'] = u'加油失败，无目标会员，请重新点击'
+			data['msg'] = u'投票失败，无目标会员，请重新点击'
 
 		response = create_response(502)
 		
