@@ -21,7 +21,7 @@ class ProductCategory(api_resource.ApiResource):
 	def category_to_dict(category):
 		return {
 			"id": category.id,
-			"uid": category.owner_id,
+			"oid": category.owner_id,
 			"name": category.name,
 			"product_count": category.product_count,
 			"created_at": utils_dateutil.datetime2string(category.created_at)

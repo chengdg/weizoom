@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import json
+import re
 from behave import given, then, when
 #from features.testenv.model_factory import ProductFactory, ProductCategoryFactory
 
@@ -9,10 +10,31 @@ from test import bdd_util
 from mall import models as mall_models
 #from utils import mall_api
 import wapi as wapi_resource
-import re
+from utils import dateutil as utils_dateutil
+
+PATTERN_VARIABLE = re.compile(r'^\$([A-Za-z_]+)\((.*?)\)\$$')
+
+# 定义scenario中处理子函数
+
+def _profunc_owner_id(param):
+	# 将用户名转成owner_id
+	return bdd_util.get_user_id_for(param)
+
+def _profunc_category_id(param):
+	# 将类名转成ID
+	return mall_models.ProductCategory.objects.get(name=param).id
+
+def _profunc_today_date(param):
+	# 返回今天日期YYYY-MM-DD
+	return utils_dateutil.date2string(utils_dateutil.now())
 
 
-PATTERN_VARIABLE = re.compile(r'^\$(.+?)\$$')
+_PROCESS_FUNC_DICT = {
+	'owner_id': _profunc_owner_id,
+	'category_id': _profunc_category_id,
+	'today_date': _profunc_today_date
+}
+
 
 def _process_param(params):
 	"""
@@ -24,13 +46,11 @@ def _process_param(params):
 			m = re.match(PATTERN_VARIABLE, value)
 			if m:
 				#print(m.group(1))
-				variable = m.group(1)
-				if key == 'oid':
-					value = bdd_util.get_user_id_for(variable)
-				elif key == 'category_id':
-					obj = mall_models.ProductCategory.objects.get(name=variable)
-					value = obj.id
-				params[key] = value
+				func_name = m.group(1)
+				param = m.group(2)
+				func = _PROCESS_FUNC_DICT[func_name]
+				new_value = func(param)
+				params[key] = new_value
 	return params
 
 
@@ -53,7 +73,7 @@ def step_impl(context):
 	#client = context.client
 	#uid = client.user.id
 	data = context.data
-	expected = json.loads(context.text)
+	expected = _process_param(json.loads(context.text))
 	bdd_util.assert_dict(expected, data)	
 	#assert False
 
