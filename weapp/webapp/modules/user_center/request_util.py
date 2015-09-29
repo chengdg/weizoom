@@ -634,8 +634,8 @@ def get_mileke_page(request):
 			是否给该 url_fid 投过票
 		"""
 		vote_member = Member.objects.get(id=url_fid)
-		if Mileke.objects.filter(member=member).count() == 0:
-			Mileke.objects.create(member=member)
+		if Mileke.objects.filter(member=vote_member).count() == 0:
+			Mileke.objects.create(member=vote_member)
 		member_voted = MilekeLog.objects.filter(mileke__member__id=url_fid, member_id=member.id).count() > 0
 
 	"""
