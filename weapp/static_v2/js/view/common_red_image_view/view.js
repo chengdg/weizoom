@@ -201,7 +201,7 @@ W.view.common.RedImageView = Backbone.View.extend({
                 options['fileSizeLimit'] = _this.sizeLimit + 'KB';
             }
             if (_this.format === 'all') {
-                options['fileTypeExts'] = '*.jpg; *.png; *.gif';
+                options['fileTypeExts'] = '*.jpg; *.png';
             } else {
                 options['fileTypeExts'] = '*.' + _this.format;
             }
