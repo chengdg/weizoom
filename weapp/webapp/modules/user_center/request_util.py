@@ -602,10 +602,10 @@ def get_refueling_page(request):
 
 
 def get_mileke_page(request):
-	now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+	now_time = datetime.today().strftime('%Y-%m-%d')
 	print now_time,'======================now_time'
 	game_over = False
-	if now_time == '2015-10-09 18:00':
+	if now_time == '2015-09-29':
 		game_over = True
 
 	member = Member.objects.get(id=request.member.id)

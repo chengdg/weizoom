@@ -50,6 +50,11 @@
         -webkit-box-align:center;
         
     }
+    .xui-activeBtn .xui-gameover{
+        background: #b3b2b1;
+        box-shadow: 0 2px 0 #cfccc9;
+        color:#efefef;
+    }
     .xui-hint{
         color: #7a7a7a;
         text-align: center;
@@ -277,12 +282,17 @@
 <div class="xui-mlkActivityPage">
     <div class="xui-blackPlaceholder"></div>
     <div class="xui-activeBtn f16">
-        {% if self_visit %}
-            <div class="xui-participationBtn xa-participationBtn"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
+        {% if game_over %}
+            <div class="xui-gameover xa-gameover">活动结束</div>
         {% else %}
-            <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated|safe}}</span>拉票</div>
-            <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
+            {% if self_visit %}
+                <div class="xui-participationBtn xa-participationBtn"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
+            {% else %}
+                <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated|safe}}</span>拉票</div>
+                <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
+            {% endif %}
         {% endif %}
+
     </div>
     <div class="xui-hint f12">收集票数进入前50名，即可获得儿童安全坐垫</div>
     <div class="xui-activityRules">
@@ -321,7 +331,7 @@
         </div>          
     </div>
     <div class="xui-rankingList">
-        <div class="xui-activityTitle f16 mb0">得票排行榜</div>
+        <div class="xui-activityTitle f16 mb0 mt15">得票排行榜</div>
         <ul class="xui-i-list">
             {% for mileke in milekes %}
             <li>
