@@ -378,11 +378,11 @@
                 },
                 success: function(data) {
                    $('.xui-voteSucceed').show();
-                   $('body').swipeMask('show');
-                   $('.xa-attention').removeClass('none');
                    setTimeout(function() {
                       $('.xui-voteSucceed').hide();
-                   }, 500);
+                      $('body').swipeMask('show');
+                      $('.xa-attention').removeClass('none');
+                   }, 1000);
                 },
                 error: function(data) {
                     // $('.xa-loading').addClass('hidden');
