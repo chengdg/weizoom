@@ -321,7 +321,7 @@
         <ul class="xui-i-list">
             {% for mileke in milekes %}
             <li>
-                <i class="f12 fl">1</i>
+                <i class="f12 fl">{{ forloop.counter }}</i>
                 <img src="{{ mileke.member.user_icon }}" alt="" class="xui-img fl">
                 <span class="xui-name f12 fl">{{ mileke.member.username_truncated|safe }}</span>
                 <span class="xui-ticketNum fr f12 c3">共获得<span class="xui-num">{{mileke.current_count}}</span>票</span>
