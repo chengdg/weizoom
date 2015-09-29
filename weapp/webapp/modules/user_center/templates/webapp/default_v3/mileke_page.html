@@ -384,22 +384,16 @@
                     target_api: 'mileke_log/record',
                     fid: '{{url_fid}}'
                 },
-                success: function(data) {
-                   $('.xui-voteSucceed').show();
+                success: function(data) {                  
                    setTimeout(function() {
-                      $('.xui-voteSucceed').hide();
                       $('body').swipeMask('show');
                       $('.xa-attention').removeClass('none');
                    }, 1000);
                 },
                 error: function(data) {
-                    // $('.xa-loading').addClass('hidden');
-                    $('body').alert({
-                        isShow: true,
-                        info: data['data']['msg'],
-                        speed:2000
-                });
-            }
+                      $('body').swipeMask('show');
+                      $('.xa-attention').removeClass('none');                
+                }
             });
 
         });

@@ -635,7 +635,10 @@ def get_mileke_page(request):
 		vote_member = Member.objects.get(id=url_fid)
 		if Mileke.objects.filter(member=vote_member).count() == 0:
 			Mileke.objects.create(member=vote_member)
-		member_voted = MilekeLog.objects.filter(mileke__member__id=url_fid, member_id=member.id).count() > 0
+		if member.is_subscribed:
+			member_voted = MilekeLog.objects.filter(mileke__member__id=url_fid, member_id=member.id).count() > 0
+		else:
+			member_voted = False
 
 	"""
 		投票总数
