@@ -791,7 +791,7 @@ def create_product_review(request):
 			product_id=product_id,
 			order_has_product_id=order_has_product_id,
 			product_score=product_score,
-			review_detail=__valid_utf8_filter(review_detail)
+			review_detail=__invalid_utf8_filter(review_detail)
 		)
 
 		# 创建商品评价图片
@@ -803,7 +803,7 @@ def create_product_review(request):
 			for picture in picture_list:
 				att_url=save_base64_img_file_local_for_webapp(request, picture)
 				mall_models.ProductReviewPicture(
-					product_review=__valid_utf8_filter(product_review),
+					product_review=__invalid_utf8_filter(product_review),
 					order_has_product_id=order_has_product_id,
 					att_url=att_url
 				).save()
