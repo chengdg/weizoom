@@ -4,6 +4,7 @@ import time
 import urllib
 import urllib2
 import json
+import re
 
 from django.conf import settings
 
@@ -712,14 +713,23 @@ def get_review_status(request):
 	return result
 
 
-########################################################################
-# create_product_review: 创建评论
-########################################################################
+
+def __invalid_utf8_filter(unicode_string):
+	"""
+	过滤Emoji等超过0xFFFF的Unicode字符，以避免出现4 bytes的UTF-8编码
+	"""
+	re_pattern = re.compile(u'[^\u0000-\uD7FF\uE000-\uFFFF]', re.UNICODE)
+	filtered_string = re_pattern.sub(u' ', unicode_string)
+	return filtered_string
+
+
 def create_product_review(request):
 	'''
+	创建评论
 
 	Precondition:
 		json data like:
+	```		
 		{
 		'product_score': '!None',
 		'review_detail': '',
@@ -727,6 +737,8 @@ def create_product_review(request):
 		'deliver_score': '!None',
 		'process_score': '!None',
 		}
+	```
+	
 	PostCondition:
 		返回一个状态码, 表示是否创建成功
 
@@ -779,7 +791,7 @@ def create_product_review(request):
 			product_id=product_id,
 			order_has_product_id=order_has_product_id,
 			product_score=product_score,
-			review_detail=review_detail
+			review_detail=__valid_utf8_filter(review_detail)
 		)
 
 		# 创建商品评价图片
@@ -791,7 +803,7 @@ def create_product_review(request):
 			for picture in picture_list:
 				att_url=save_base64_img_file_local_for_webapp(request, picture)
 				mall_models.ProductReviewPicture(
-					product_review=product_review,
+					product_review=__valid_utf8_filter(product_review),
 					order_has_product_id=order_has_product_id,
 					att_url=att_url
 				).save()
