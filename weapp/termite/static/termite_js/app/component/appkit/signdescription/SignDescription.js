@@ -133,13 +133,13 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			default:""
 		}]},{
 		group:"",
-		groupClass:"xui-propertyView-app-SignynamicGroup",
+		groupClass:"xui-propertyView-app-SignDynamicGroup",
 		fields:[{
 			name: 'items',//动态组件,那个加好
             displayName: '',
             type: 'dynamic-generated-control',
-            isShowCloseButton: false,
-            minItemLength: 2,
+            isShowCloseButton: true,
+            minItemLength: 1,
 			maxItemLength: 10,
             isUserProperty: true,
             default: []
