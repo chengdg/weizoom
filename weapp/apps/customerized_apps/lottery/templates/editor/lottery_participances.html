@@ -138,7 +138,7 @@
 					style="width:250px; height:60px;" 
 				>
 					<img src="${item.participant_icon}" />
-					{{html item.participant_name}}
+					{{html item.participant_name|safe}}
 				</td>
 				<td>
 					${item.tel}
