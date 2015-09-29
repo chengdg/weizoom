@@ -843,7 +843,11 @@ ul.wui-relatelink li h3{
 
 /*====type1====*/
 .wui-product .wui-block-type1 .wui-inner-titleAndprice,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice{
-    font-size: 13px;
+    font-size: 15px;
+}
+.wui-product .wui-block-type1 .wui-inner-titleAndprice .xui-inner-price span,
+.wui-productlist .wui-block-type1 .wui-inner-titleAndprice .xui-inner-price span{
+    margin-right:2px; 
 }
 .wui-product .wui-block-type1 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice p:first-child{
     margin-bottom: 6px;
