@@ -274,11 +274,8 @@
     <div class="xui-blackPlaceholder"></div>
     <div class="xui-activeBtn f16">
         {% if self_visit %}
-            
-            <div class="xui-participationBtn xa-participationBtn">我也要参加</div>
-            <div class="xui-voteBtn xa-voteBtn">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated}}</span>拉票</div>
+            <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
         {% else %}
-
             <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated}}</span>拉票</div>
             <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
         {% endif %}
@@ -352,8 +349,8 @@
         </ul>
     </div>
         <div class="xui-myRanking f13 {% if not joined %} none {% endif %}">
-        <div class="fl">我的排名：第<span class="xui-myNum">251名</span></div>
-        <div class="fr">共获得<span class="xui-myNum">2600</span>票</div>
+        <div class="fl">我的排名：第<span class="xui-myNum">{{current_index}}名</span></div>
+        <div class="fr">共获得<span class="xui-myNum">{{current_count}}</span>票</div>
     </div>
 </div>
 <div data-ui-role="swipemask" class="mask"></div>
