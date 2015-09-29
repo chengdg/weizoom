@@ -1,29 +1,8 @@
-#_author_:王丽
-#_edit_:benchi
-#_edit_:新新
+#_author_:师帅
 
 Feature:自定义模块——【基础模块】标题-页面
-        显示位置：居左、居中、居右，
-        根据字数不同，副标题与时间的显示位置也不同
 
-Background:
-	Given jobs登录系统
-	And jobs已添加模块
-		"""
-		[	
-			{"modle_name": "富文本"},
-			{"modle_name": "商品"},
-			{"modle_name": "商品列表"},
-			{"modle_name": "图片广告"},
-			{"modle_name": "公告"},
-			{"modle_name": "标题"},
-			{"modle_name": "文本导航"},
-			{"modle_name": "图片导航"},
-			{"modle_name": "辅助空白"},
-			{"modle_name": "橱窗"}
-		]
-		"""
-
+@ui
 Scenario:(1)标题模块,编辑、删除、字数和控制校验
 
 	When jobs设置标题'小于30''不折行'和副标题'小于30''不折行'、显示位置'默认'、背景色'默认'
