@@ -119,7 +119,7 @@
     .xui-rankingList li i{
         font-style: normal;
         display: block;
-        width: 27px;
+        width: 30px;
         height: 20px;
         text-align: center;
         line-height: 28px;
@@ -137,15 +137,21 @@
     .xui-rankingList li:nth-child(3) i{
         background-position: -70px 0;
     }
+    .xui-imgBox{
+        border: 2px solid #fff;
+        width: 32px;
+        height: 32px;
+        border-radius: 18px;
+        float: left;
+        position: relative;
+        top: 12px;
+        margin-right: 4px;
+    }
     .xui-img{
         width: 32px;
         height: 32px;
         border-radius: 18px;
         display: block;
-        border: 2px solid #fff;
-        position: relative;
-        top: 12px;
-        margin-right: 4px;
     }
     .xui-rankingList .xui-name{
         color: #7a7a7a;
@@ -322,7 +328,9 @@
             {% for mileke in milekes %}
             <li>
                 <i class="f12 fl">{{ forloop.counter }}</i>
-                <img src="{{ mileke.member.user_icon }}" alt="" class="xui-img fl">
+                <div class="xui-imgBox">
+                    <img src="{{ mileke.member.user_icon }}" alt="" class="xui-img">
+                </div>
                 <span class="xui-name f12 fl">{{ mileke.member.username_truncated|safe }}</span>
                 <span class="xui-ticketNum fr f12 c3">共获得<span class="xui-num">{{mileke.current_count}}</span>票</span>
             </li>
