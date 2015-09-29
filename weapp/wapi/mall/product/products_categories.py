@@ -10,6 +10,7 @@ from wapi.decorators import param_required
 #from product_category import ProductCategory
 from products_by_category import DummyUserProfile
 from cache import webapp_cache
+from wapi import wapi_utils
 
 class ProductsCategories(api_resource.ApiResource):
 	"""
@@ -20,7 +21,7 @@ class ProductsCategories(api_resource.ApiResource):
 	app = 'mall'
 	resource = 'products_categories'
 
-	@param_required(['uid', 'webapp_id', 'is_access_weizoom_mall'])
+	@param_required(['oid'])
 	def get(args):
 		"""
 		获取指定webapp_id的全部商品的分类列表
@@ -45,10 +46,12 @@ class ProductsCategories(api_resource.ApiResource):
 			product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
 		```
 		"""
-		webapp_id = args['webapp_id']
-		#category_id = args['category_id']
-		owner_id = args['uid']
-		is_access_weizoom_mall = args['is_access_weizoom_mall']
+		owner_id = args['oid']
+		if 'webapp_id' in args:
+			webapp_id = args['webapp_id']
+		else:
+			webapp_id = wapi_utils.get_webapp_id_via_oid(owner_id)
+		is_access_weizoom_mall = args.get('is_access_weizoom_mall', False)
 		#print("args: {}".format(args))
 
 		# 伪造一个UserProfile，便于传递参数

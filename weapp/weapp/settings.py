@@ -239,8 +239,9 @@ MIDDLEWARE_CLASSES = [
 
     'core.middleware.GetRequestInfoMiddleware',
     'core.middleware.RequestUserSourceDetectMiddleware',
+
     # profiling的中间件
-    'core.profiling_middleware.ProfileMiddleware',
+    #'core.profiling_middleware.ProfileMiddleware',
 
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',

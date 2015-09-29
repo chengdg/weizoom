@@ -4,6 +4,7 @@
 
 from core import api_resource
 from wapi.decorators import param_required
+from wapi import wapi_utils
 #from wapi.wapi_utils import create_json_response
 
 #from mall import models as mall_models
@@ -56,18 +57,19 @@ class ProductsByCategory(api_resource.ApiResource):
 		data = [Product.to_dict(product) for product in products]
 		return data
 
-	@param_required(['webapp_id', 'category_id', 'uid', 'is_access_weizoom_mall'])
+	@param_required(['oid', 'category_id'])
 	def get(args):
 		"""
 		获取商品详情
 
 		@param category_id 类别ID(id=0表示全部分类)
 		"""
-		webapp_id = args['webapp_id']
+		#webapp_id = args['webapp_id']
+		owner_id = args['oid']
 		category_id = args['category_id']
-		owner_id = args['uid']
-		is_access_weizoom_mall = args['is_access_weizoom_mall']
-		#print("args: {}".format(args))
+		webapp_id = wapi_utils.get_webapp_id_via_oid(owner_id)
+		is_access_weizoom_mall = args.get('is_access_weizoom_mall', False)
+		print("args: {}".format(args))
 
 		# 伪造一个UserProfile，便于传递参数
 		user_profile = DummyUserProfile(webapp_id, owner_id)

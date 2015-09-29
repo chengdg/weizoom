@@ -188,10 +188,10 @@ class ExpirationMiddleware(object):
 					Session.objects.filter(session_key=session_key).delete()
 				return HttpResponseRedirect('/')
 
-#===============================================================================
-# UserProfile : 获得userprofile
-#===============================================================================
 class UserProfileMiddleware(object):
+	"""
+	获得userprofile的中间件
+	"""
 	def process_request(self, request):
 		if request.user.is_authenticated():
 			try:
