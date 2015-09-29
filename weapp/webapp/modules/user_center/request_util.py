@@ -662,7 +662,7 @@ def get_mileke_page(request):
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': False,
-		'page_title': u'斑马来了',
+		'page_title': u'免费领取儿童安全坐垫 ',
 		'milekes': milekes,
 		'joined': joined,
 		'current_count': current_count,
