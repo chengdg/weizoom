@@ -280,7 +280,7 @@
     <div class="xui-blackPlaceholder"></div>
     <div class="xui-activeBtn f16">
         {% if self_visit %}
-            <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
+            <div class="xui-participationBtn xa-participationBtn"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
         {% else %}
             <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated|safe}}</span>拉票</div>
             <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
@@ -364,6 +364,7 @@
     var is_sub = "{{member.is_subscribed}}";
     $(document).ready(function(){
         // $('body').swipeMask('show');
+
         $('.xa-voteBtn').click(function(){
             W.getApi().call({
                 app: 'webapp',
@@ -376,8 +377,12 @@
                     fid: '{{url_fid}}'
                 },
                 success: function(data) {
+                   $('.xui-voteSucceed').show();
                    $('body').swipeMask('show');
                    $('.xa-attention').removeClass('none');
+                   setTimeout(function() {
+                      $('.xui-voteSucceed').hide();
+                   }, 500);
                 },
                 error: function(data) {
                     // $('.xa-loading').addClass('hidden');
