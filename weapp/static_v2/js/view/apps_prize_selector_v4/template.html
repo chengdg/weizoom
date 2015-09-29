@@ -1,6 +1,6 @@
 <script id="apps-prize-selector-v4-tmpl" type="text/x-handlebar-tmpl">
 <div class="xui-apps-prizeSelector" style="margin-top: 2px;">
-	<div class="coupon_div xa-selectCoupon {{#if prize}}xui-hide{{/if}}" data-target="coupon">
+	<div class="coupon_div xa-selectCoupon {{#if prize.name}}xui-hide{{/if}}" data-target="coupon">
 		<a
 			href="javascript:void(0);"
 			class="ml5"
@@ -8,7 +8,7 @@
 		<input style="width:0;background:#F9F9F9;border:0" type="text" data-validate="require-notempty::请选择一张优惠券" />
 		<div class="errorHint" style="margin-left: 58%;width: 100px;"></div>
 	</div>
-	<div class="ml5 xui-inline xa-selectedCoupon xa-optionTarget {{#isnotvalid prize}}xui-hide{{/isnotvalid}}">
+	<div class="ml5 xui-inline xa-selectedCoupon xa-optionTarget {{#if prize.name}}{{else}}xui-hide{{/if}}">
 		<div class="pr xui-i-selectedBox">
 			<span class="xui-i-selected-title xa-couponName">{{prize.name}}</span>
 			<button class="close xui-close xa-removeCoupon" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
