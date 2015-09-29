@@ -62,6 +62,7 @@
 
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopBottomNav.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/weshopSideNav.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/productsPrice.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/api.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/crypto-js.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/md5.js"></script>
@@ -512,6 +513,29 @@
                 });
             }
 
+            /* 商品显示会员价或促销价 */
+            gmu.staticCall('.xa-products-box', 'calculProductMemberPriceOrPromotionPrice', {
+                fmt: $('body').data('value'),
+                updateProductPrice: function(event, data){
+                    var _this = this;
+                    $(".wa-item-product").each(function(){
+                        // 商品原价
+                        var price = $(this).data('product-price').toFixed(2);
+                        // 商品有促销
+                        var productPromotion = $(this).data('product-promotion');
+                        var isMemberProduct = $(this).hasClass('xa-member-product');
+                        // 计算价钱                
+                        price = _this.calculPrice({
+                            price: price,
+                            productPromotion: productPromotion,
+                            isMemberProduct: isMemberProduct
+                        });
+                        console.log(price, $(this).find(''))
+                        // 设置显示价格
+                        $(this).find('.wa-inner-price').text('¥'+price);
+                    });
+                }
+            });
         </script>
 
         {% if under_develop %}
