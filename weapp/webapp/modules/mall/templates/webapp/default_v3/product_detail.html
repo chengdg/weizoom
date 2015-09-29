@@ -374,9 +374,11 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     </div>
     <div class="xui-coverV2 xa-coverV2 hidden"></div>
     {% endif %}
+    {% if not is_weizoom_mall %}
     <!-- 全局导航 -->
     <div class="wui-globalNav xa-globalNav" data-ui-role="global-nav" data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
     </div>
+    {% endif %}
     <!-- 返回顶部 -->
     <div class="wui-returnTop xa-returnTop hidden" data-ui-role="return-top">
     </div>
