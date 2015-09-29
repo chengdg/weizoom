@@ -10,24 +10,126 @@ Feature:自定义模块——【基础模块】文本导航-页面
 	6、文本导航可以删除，最后必须保留一个，当只有一个文本导航的时候，该文本导航不能删除
 	7、文本导航的链接，“从微站选择”当选择的链接的名称过长时用省略号截取显示，保证链接名称、修改、图标在同一行，不折行
 
-Background:
-	Given jobs登录系统
-	And jobs已添加模块
-		"""
-		[	
-			{"modle_name": "富文本"},
-			{"modle_name": "商品"},
-			{"modle_name": "商品列表"},
-			{"modle_name": "图片广告"},
-			{"modle_name": "公告"},
-			{"modle_name": "标题"},
-			{"modle_name": "文本导航"},
-			{"modle_name": "图片导航"},
-			{"modle_name": "辅助空白"},
-			{"modle_name": "橱窗"}
-		]
-		"""
+Scenario:1添加文本导航
+	When jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	When jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}]
+	"""
 
+Scenario: 2编辑文本导航
+	When jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	When jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}]
+	"""
+	When jobs编辑微页面'微页面标题'
+	And jobs修改'文本导航1'
+	"""
+		[{
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航2",
+					"navigation_link": "微页面"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航2",
+					"navigation_link": "微页面"
+				}]
+			}
+		}]
+	"""
+	When jobs删除'文本导航'
+	Then jobs能获取'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航2",
+					"navigation_link": "微页面"
+				}]
+			}
+		}]
+	"""
+
+
+@ui
 Scenario:文本导航模块，编辑、删除、字数校验
 
 	#添加文本导航'可单行显示'

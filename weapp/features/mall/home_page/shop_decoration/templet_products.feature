@@ -50,9 +50,7 @@ Background:
 			"price": 4.0
 		}]	
 		"""
-
-Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商品
-	Given jobs获取'在售'商品选择列表
+	Then jobs获取'在售'商品选择列表
 	"""
 	[{
 		"name":"商品3不可两行显示...",
@@ -65,6 +63,8 @@ Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商
 		"create_time":"2015-05-01 9:00"
 	}]
 	"""
+
+Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商品
 	
 	#搜索功能,按商品名称搜索
 		#模糊匹配搜索
@@ -119,7 +119,7 @@ Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商
 			}]
 			"""
 		#添加新商品
-		When jobs添加商品
+		Given jobs已添加商品
 		"""
 		[{
 			"name": "商品5",
@@ -147,20 +147,7 @@ Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商
 		"""
 
 Scenario:2 商品选择列表分页,每页显示8个商品
-	When jobs获取'在售'商品选择列表
-	"""
-	[{
-		"name":"商品3不可两行显示......",
-		"create_time":"2015-05-03 9:00"
-	},{
-		"name":"商品1可单行显示",
-		"create_time":"2015-05-02 9:00"
-	},{
-		"name":"商品2可两行显示",
-		"create_time":"2015-05-01 9:00"
-	}]
-	"""
-	And jobs已添加商品 
+	Given jobs已添加商品
 	"""
 	[{
 		"name": "商品5",
@@ -200,15 +187,9 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 		"price": 10.0
 	}]
 	"""
-	And jobs已设置分页条件
-	"""
-	{
-		"page_count":8
-	}
-	"""
 	Then jobs商品模块商品选择列表显示2页
 	When jobs访问商品选择列表第1页
-	Then jobs获取商品选择列表
+	Then jobs获取'在售'商品选择列表
 	"""
 	[{
 		"name": "商品9",
@@ -237,7 +218,7 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 	}]
 	"""
 	When jobs浏览'下一页'
-	Then jobs获取商品选择列表
+	Then jobs获取'在售'商品选择列表
 	"""
 	[{
 		"name":"商品2可两行显示",
@@ -245,7 +226,7 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 	}]
 	"""
 	When jobs浏览'上一页'
-	Then jobs获取商品选择列表
+	Then jobs获取'在售'商品选择列表
 	"""
 	[{
 		"name": "商品9",
@@ -275,257 +256,214 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 	"""
 
 Scenario:3 一个商品可以被重复选择
-	Given jobs获取'在售'商品选择列表
+	When jobs创建微页面
 	"""
-	[{
-		"name":"商品3不可两行显示......",
-		"create_time":"2015-05-03 9:00"
-	},{
-		"name":"商品1可单行显示",
-		"create_time":"2015-05-02 9:00"
-	},{
-		"name":"商品2可两行显示",
-		"create_time":"2015-05-01 9:00"
-	}]
-	"""	
-	When jobs商品模块添加商品
-	"""
-	[{  "title":"微页面标题",
-		"products":[
+	[{	"title": 
 		{
+			"name": 微页面标题"
+		},
+		"products":
+		{
+			"items": [{
 			"name":"商品3不可两行显示......",
 			"create_time":"2015-05-03 9:00"
-		},{
+			},{
 			"name":"商品1可单行显示",
 			"create_time":"2015-05-02 9:00"
-		},{
+			},{
 			"name":"商品2可两行显示",
 			"create_time":"2015-05-01 9:00"
-		}],
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+			}],
+			"list_style1":"大图",
+			"list_style2":"卡片样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+		}
+		
 	}]
 	"""
 	Then jobs能获取'微页面标题'
 	"""
-	[{"title":"微页面标题"
-	},{
-		"name":"商品3不可两行显示...",
-		"price":"3.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品2可两行显示",
-		"price":"2.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+	[{"title": 
+		{
+			"name": 微页面标题"
+		}, 
+		"products": {
+			"items"[{
+				"name":"商品3不可两行显示...",
+				"price":"3.0"
+			},{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+			},{
+				"name":"商品2可两行显示",
+				"price":"2.0"
+				}],
+			"list_style1":"大图",
+			"list_style2":"卡片样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+			}
 	}]
 	"""
-	When jobs添加商品
+	When jobs编辑微页面'微页面标题'
 	"""
 	[{
-		"products":[
-		{
-			"name":"商品1可单行显示",
-			"create_time":"2015-05-02 9:00"
-		},{
-			"name":"商品2可两行显示",
-			"create_time":"2015-05-01 9:00"
-		}],
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+		"products":{
+			"items"{
+				[{
+				"name":"商品1可单行显示",
+				"create_time":"2015-05-02 9:00"
+				},{
+				"name":"商品2可两行显示",
+				"create_time":"2015-05-01 9:00"
+				}],
+			"list_style1":"大图",
+			"list_style2":"卡片样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+				}
+		}	
 	}]
 	"""
 
 	Then jobs能获取'微页面标题'
 	"""
-	[{"title":"微页面标题"
-	},{
-		"name":"商品3不可两行显示...",
-		"price":"3.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品2可两行显示",
-		"price":"2.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品2可两行显示",
-		"price":"2.0",
-		"list_style1":"大图",
-		"list_style2":"卡片样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+	[{
+		"title": {
+			"name": 微页面标题"
+		}, 
+		"products": {
+			"items" [{
+				"name":"商品3不可两行显示...",
+				"price":"3.0"
+			},{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+			},{
+				"name":"商品2可两行显示",
+				"price":"2.0"
+			},{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+			},{
+				"name":"商品2可两行显示",
+				"price":"2.0"
+			}],
+			"list_style1":"大图",
+			"list_style2":"卡片样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+		}
 	}]
 	"""
 
 Scenario:4 商品管理'下架'、'删除'商品
-	Given jobs获取'在售'商品选择列表
+	When jobs创建微页面
 	"""
 	[{
-		"name":"商品3不可两行显示......",
-		"create_time":"2015-05-03 9:00"
-	},{
-		"name":"商品1可单行显示",
-		"create_time":"2015-05-02 9:00"
-	},{
-		"name":"商品2可两行显示",
-		"create_time":"2015-05-01 9:00"
-	}]
-	"""	
-	When jobs商品模块添加商品
-	"""
-	[{	"title":"微页面标题",
-		"products":[
-		{
-			"name":"商品3不可两行显示......",
-			"create_time":"2015-05-03 9:00"
-		},{
-			"name":"商品1可单行显示",
-			"create_time":"2015-05-02 9:00"
-		},{
-			"name":"商品2可两行显示",
-			"create_time":"2015-05-01 9:00"
-		}],
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+		"title": {
+			"name": 微页面标题"
+		},
+		"products": {
+			"items":[{
+				"name":"商品3不可两行显示......",
+				"create_time":"2015-05-03 9:00"
+				},{
+				"name":"商品1可单行显示",
+				"create_time":"2015-05-02 9:00"
+				},{
+				"name":"商品2可两行显示",
+				"create_time":"2015-05-01 9:00"
+				}],
+			"list_style1":"大图",
+			"list_style2":"默认样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+		}
 	}]
 	"""
 	Then jobs能获取'微页面标题'
 	"""
 	[{
-		"title":"微页面标题"
-	},{
-		"name":"商品3不可两行显示...",
-		"price":"3.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品2可两行显示",
-		"price":"2.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+		"title": {
+			"name": 微页面标题"
+		}, 
+		"products": {
+			"items" [{
+				"name":"商品3不可两行显示...",
+				"price":"3.0"
+				},{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+				},{
+				"name":"商品2可两行显示",
+				"price":"2.0"
+				}],
+			"list_style1":"大图",
+			"list_style2":"默认样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+		}
 	}]
 	"""
-	When jobs下架商品
-	"""
-	[{
-		"product_picture_id":"3",
-	}]
-	"""
+	When jobs下架商品'商品3不可两行显示...'
 	Then jobs能获取'微页面标题'
 	"""
 	[{
-		"title": "微页面标题"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品2可两行显示",
-		"price":"2.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+		"title": {
+			"name": 微页面标题"
+		}, 
+		"products": {
+			"items": [{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+				},{
+				"name":"商品2可两行显示",
+				"price":"2.0"
+			}],
+			"list_style1":"大图",
+			"list_style2":"默认样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+		}
 	}]
 	"""
 
-	When jobs删除商品
-	"""
-	[{
-		"product_picture_id":"1",
-	}]
-	"""
+	When jobs删除商品'商品2可两行显示'
 	Then jobs能获取'微页面标题'
 	"""
 	[{
-		"title": "微页面标题"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
+		"title": {
+			"name": 微页面标题"
+		}, 
+		"products": {
+			"items": [{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+				}],
+				"list_style1":"大图",
 		"list_style2":"默认样式",
 		"show_product_name":"ture",
 		"show_price":"true"
+			}
 	}]
 	"""
 
 Scenario:5 商品管理'修改'商品
-	Given jobs获取'在售'商品选择列表
+	When jobs创建微页面
 	"""
-	[{
-		"name":"商品3不可两行显示......",
-		"create_time":"2015-05-03 9:00"
-	},{
-		"name":"商品1可单行显示",
-		"create_time":"2015-05-02 9:00"
-	},{
-		"name":"商品2可两行显示",
-		"create_time":"2015-05-01 9:00"
-	}]
-	"""	
-	When jobs商品模块添加商品
-	"""
-	[{	"title": "微页面标题",
-		"products":[
-		{
+	[{	"title": {
+			"name": 微页面标题"
+		}
+		"products": {
+			"items" [{
 			"name":"商品3不可两行显示......",
 			"create_time":"2015-05-03 9:00"
-		},{
+			},{
 			"name":"商品1可单行显示",
 			"create_time":"2015-05-02 9:00"
-		},{
+			},{
 			"name":"商品2可两行显示",
 			"create_time":"2015-05-01 9:00"
 		}],
@@ -533,40 +471,37 @@ Scenario:5 商品管理'修改'商品
 		"list_style2":"默认样式",
 		"show_product_name":"ture",
 		"show_price":"true"
-	}]
+		}
+	}]	
 	"""
 	Then jobs能获取'微页面标题'
 	"""
 	[{
-		"title": "微页面标题"
-	},{
-		"name":"商品3不可两行显示...",
-		"price":"3.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品2可两行显示",
-		"price":"2.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+		"title": {
+			"name": 微页面标题"
+		}, 
+		"products": {
+			"items": [{
+				"name":"商品3不可两行显示...",
+				"price":"3.0"
+				},{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+				},{
+				"name":"商品2可两行显示",
+				"price":"2.0"
+				}],
+			"list_style1":"大图",
+			"list_style2":"默认样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+		}
 	}]
 	"""
 	#修改商品价格和名称
-	When jobs修改商品
+	When jobs修改商品'商品2可两行显示'
 	"""
 	[{
-		"product_picture_id":"2"
 		"name":"修改后——商品2可两行显示",
 		"price":"20.0"
 	}]
@@ -574,29 +509,25 @@ Scenario:5 商品管理'修改'商品
 	Then jobs能获取'微页面标题'
 	"""
 	[{
-		"title": "微页面标题"
-	},{
-		"name":"商品3不可两行显示...",
-		"price":"3.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"商品1可单行显示",
-		"price":"1.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
-	},{
-		"name":"修改后——商品2可两行显示",
-		"price":"20.0",
-		"list_style1":"大图",
-		"list_style2":"默认样式",
-		"show_product_name":"ture",
-		"show_price":"true"
+		"title": {
+			"name": 微页面标题"
+		}, 
+		"products": {
+			"items": [{
+				"name":"商品3不可两行显示...",
+				"price":"3.0"
+				},{
+				"name":"商品1可单行显示",
+				"price":"1.0"
+				},{
+				"name":"修改后——商品2可两行显示",
+				"price":"20.0"
+			}],
+			"list_style1":"大图",
+			"list_style2":"默认样式",
+			"show_product_name":"ture",
+			"show_price":"true"
+			}
 	}]
 	"""
-
 	

@@ -8,22 +8,64 @@ Feature:自定义模块——【基础模块】标题-页面
 
 Background:
 	Given jobs登录系统
-	And jobs已添加模块
-		"""
-		[	
-			{"modle_name": "富文本"},
-			{"modle_name": "商品"},
-			{"modle_name": "商品列表"},
-			{"modle_name": "图片广告"},
-			{"modle_name": "公告"},
-			{"modle_name": "标题"},
-			{"modle_name": "文本导航"},
-			{"modle_name": "图片导航"},
-			{"modle_name": "辅助空白"},
-			{"modle_name": "橱窗"}
-		]
-		"""
+	And jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"templet_title":{
+				"title": "标题",
+				"subtitle": "副标题",
+				"time": "2015-5-13 10:13",
+				"color": "blue"
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"templet_title":{
+				"title": "标题",
+				"subtitle": "副标题",
+				"time": "2015-5-13 10:13",
+				"color": "blue"
+			}
+		}]
+	"""
 
+Scenario: 1编辑标题
+	When jobs编辑微页面'微页面标题'
+	"""
+		[{
+			"templet_title":{
+				"title": "标题1111",
+				"subtitle": "副标题",
+				"time": "2015-5-13 10:13",
+				"color": "red"
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"templet_title":{
+				"title": "标题1111",
+				"subtitle": "副标题",
+				"time": "2015-5-13 10:13",
+				"color": "red"
+			}
+		}]
+	"""
+
+
+@ui
 Scenario:(1)标题模块,编辑、删除、字数和控制校验
 
 	When jobs设置标题'小于30''不折行'和副标题'小于30''不折行'、显示位置'默认'、背景色'默认'
