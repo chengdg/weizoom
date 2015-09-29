@@ -232,18 +232,6 @@
         top:60px;
         left: 53px;
     }
-    .xui-attention .xui-twoDimensionBox::after{
-        content:'';
-        display: block;
-        width: 34px;
-        height: 34px;
-        background: url('/static_v2/img/activity/zebra.jpg') no-repeat;
-        -webkit-background-size: 100%;
-        background-size: 100%;
-        position: absolute;
-        top:118px;
-        left: 111px;
-    }
     .xui-closeBtn{
         width: 30px;
         height: 30px;
@@ -271,6 +259,16 @@
         left: 50%;
         margin-left: -25px;
         background-position: -32px -45px;
+    }
+    @media (min-width:321px) and (max-width:375px) {
+        .xui-blackPlaceholder{
+            height: 450px;
+        }
+    }
+    @media (min-width:376px) and (max-width:414px) {
+        .xui-blackPlaceholder{
+            height: 495px;
+        }
     }
 </style>
 {% endblock %}
@@ -349,7 +347,7 @@
 </div>
 <div class="xui-attention xa-attention none">
     <div class="xui-twoDimensionBox">
-        <img src="/static_v2/img/editor/sys_QRcode.jpg" alt="" class="xui-twoDimension">
+        <img src="/static_v2/img/activity/mileke.jpg" alt="" class="xui-twoDimension">
         <div class="xui-closeBtn xa-closeBtn"></div>
     </div>
 </div>
