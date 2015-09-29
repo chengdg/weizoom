@@ -143,6 +143,11 @@ def record_shared_url(request):
 			if 'refueling' in shared_url:
 				if MemberRefueling.objects.filter(member=member).count() == 0:
 					MemberRefueling.objects.create(member=member)
+
+			if 'mileke_page' in shared_url and member.is_subscribed:
+				print '--------------------mileke_page'
+				if Mileke.objects.filter(member=member).count() == 0:
+					Mileke.objects.create(member=member)				
 			
 	else:
 		print 'no-------------------member'
@@ -177,4 +182,38 @@ def record_refueling_log(request):
 		data['msg'] = u'加油失败，无目标会员，请重新点击'
 	response.data = data
 
+	return response.get_response()
+
+def record_mileke_log(request):
+	fid = request.GET.get('fid', None)
+	current_member = request.member
+	data = dict()
+	response = create_response(200)
+	if fid and str(fid) !=  str(current_member.id):
+		member = Member.objects.get(id=fid) 
+		if Mileke.objects.filter(member=member).count() > 0:
+			mileke = Mileke.objects.filter(member=member)[0]
+			if MilekeLog.objects.filter(mileke=mileke, member=current_member).count() == 0:
+				try:
+					MilekeLog.objects.create(mileke=mileke, member=current_member)
+					data['msg'] = u'投票成功'
+				except:
+					"""
+						已经存在
+					"""
+					data['msg'] = u'已投票成功'
+			else:
+				response = create_response(501)
+				data['msg'] = u'已投票成功'
+		else:
+			data['msg'] = u'投票失败,好友未正确分享'
+	else:
+		if str(fid) == str(current_member.id):
+			data['msg'] = u'投票失败,不能给自己投票'
+		else:
+			data['msg'] = u'投票失败，无目标会员，请重新点击'
+
+		response = create_response(502)
+		
+	response.data = data
 	return response.get_response()
