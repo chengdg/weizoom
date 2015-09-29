@@ -600,8 +600,14 @@ def get_refueling_page(request):
 	})
 	return render_to_response('%s/refueling_page.html' % request.template_dir, c)
 
-from weixin.user.models import *
+
 def get_mileke_page(request):
+	now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+	print now_time,'======================now_time'
+	game_over = False
+	if now_time == '2015-10-09 18:00':
+		game_over = True
+
 	member = Member.objects.get(id=request.member.id)
 	webapp_user = request.webapp_user
 	member_kilekes = Mileke.objects.filter(member_id=member.id)
@@ -632,14 +638,25 @@ def get_mileke_page(request):
 		投票总数
 	"""
 	milekes = Mileke.objects.all()
+	member_mileke = None
 	for mileke in milekes:
 		mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
+		if joined and mileke.member == member:
+			member_mileke = mileke
 
 	"""
 		排序
 	"""
 	milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
-	
+
+	"""
+		获取当前用户位置
+	"""
+	if member_mileke:
+		current_index = list(milekes).index(member_mileke) + 1
+	else:
+		current_index = 0
+
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': False,
 		'page_title': u'斑马来了',
@@ -649,8 +666,9 @@ def get_mileke_page(request):
 		'self_visit': self_visit,
 		'member_voted': member_voted,
 		'url_fid': url_fid,
-		'hide_non_member_cover': True
-
+		'hide_non_member_cover': True,
+		'game_over': game_over,
+		'current_index': current_index
 	})
 	return render_to_response('%s/mileke_page.html' % request.template_dir, c)
 

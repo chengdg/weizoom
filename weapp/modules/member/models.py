@@ -1304,7 +1304,7 @@ class MemberRefuelingHasOrder(models.Model):
 
 
 class Mileke(models.Model):
-	member = models.ForeignKey(Member)
+	member = models.ForeignKey(Member, db_index=True, unique=True)
 	created_at = models.DateTimeField(auto_now=True)
 
 	class Meta(object):
@@ -1313,11 +1313,14 @@ class Mileke(models.Model):
 		verbose_name_plural = 'mileke'
 
 class MilekeLog(models.Model):
-	mileke = models.ForeignKey(Mileke)
-	member = models.ForeignKey(Member)
+	mileke = models.ForeignKey(Mileke,db_index=True)
+	member = models.ForeignKey(Member,db_index=True)
 	created_at = models.DateTimeField(auto_now=True)
 
 	class Meta(object):
 		db_table = 'mileke_log'
 		verbose_name = 'mileke_log'
 		verbose_name_plural = 'mileke_log'
+
+		unique_together = (('mileke', 'member'),)
+		
