@@ -1,6 +1,6 @@
 /**
  * @class W.component.appkit.SignItem
- * 奖项
+ * 签到动态组件
  */
 ensureNS('W.component.appkit');
 W.component.appkit.SignItem = W.component.Component.extend({
@@ -10,7 +10,7 @@ W.component.appkit.SignItem = W.component.Component.extend({
 
 	properties: [{
 		group: '',
-		gropuClass: '',
+		groupClass: '',
 		fields: [{
 			name: 'serial_count',
 			type: 'text_with_annotation_v2',
