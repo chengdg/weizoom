@@ -77,11 +77,12 @@ def step_impl(context):
 	bdd_util.assert_dict(expected, data)	
 	#assert False
 
-
 @then(u"获得WAPI列表结果")
 def step_impl(context):
 	#client = context.client
 	#uid = client.user.id
 	data = context.data
 	expected = json.loads(context.text)
+	for i in range(0, len(expected)):
+		expected[i] = _process_param(expected[i])
 	bdd_util.assert_list(expected, data)

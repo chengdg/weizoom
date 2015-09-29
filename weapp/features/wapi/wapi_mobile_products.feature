@@ -267,7 +267,7 @@ Scenario: 测试按类别获得商品列表的API
 		"""
 
 @wip.wapi
-Scenario: 测试products_categories
+Scenario: 测试商品分类的接口
 	# 获得分类列表
 
 	When 访问WAPI:mall/products_categories
@@ -280,10 +280,13 @@ Scenario: 测试products_categories
 	Then 获得WAPI列表结果
 		"""
 		[{
+			"id": "$category_id(分类1)$",
 			"name": "分类1"
 		}, {
+			"id": "$category_id(分类2)$",
 			"name": "分类2"
 		}, {
+			"id": "$category_id(分类3)$",
 			"name": "分类3"
 		}]
 		"""
@@ -302,6 +305,23 @@ Scenario: 测试products_categories
 			"oid": "$owner_id(jobs)$",
 			"id": "$category_id(分类1)$",
 			"name": "分类1"
+		}
+		"""
+
+	When 访问WAPI:mall/product_category
+		"""
+		{
+			"id": "$category_id(分类2)$",
+			"is_access_weizoom_mall": false
+		}
+		"""
+	Then 获得WAPI结果
+		"""
+		{
+			"product_count": 0,
+			"oid": "$owner_id(jobs)$",
+			"id": "$category_id(分类2)$",
+			"name": "分类2"
 		}
 		"""
 
