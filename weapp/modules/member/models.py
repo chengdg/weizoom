@@ -1301,3 +1301,26 @@ class MemberRefuelingHasOrder(models.Model):
 		db_table = 'member_refueling_has_order'
 		verbose_name = '加油分享活动下单记录'
 		verbose_name_plural = '加油分享活动下单记录'
+
+
+class Mileke(models.Model):
+	member = models.ForeignKey(Member, db_index=True, unique=True)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'mileke'
+		verbose_name = 'mileke'
+		verbose_name_plural = 'mileke'
+
+class MilekeLog(models.Model):
+	mileke = models.ForeignKey(Mileke,db_index=True)
+	member = models.ForeignKey(Member,db_index=True)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'mileke_log'
+		verbose_name = 'mileke_log'
+		verbose_name_plural = 'mileke_log'
+
+		unique_together = (('mileke', 'member'),)
+		
