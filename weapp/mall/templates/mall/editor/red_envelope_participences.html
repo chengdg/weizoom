@@ -66,7 +66,7 @@
 			<li><em>{{ new_member_count }}</em><br>新关注人数</li>
 			<li><em>{{ received_count }}</em><br>领取人数</li>
 			<li><em>{{ consumption_sum }}</em><br>产生消费额</li>
-			<li><em>{{ total_use_count }}</em><br>使用人数<div style="margin-left: 120px;margin-top: -17px;text-decoration: underline;"><a>使用记录</a></div></li>
+			<li><em>{{ total_use_count }}</em><br>使用人数<div style="margin-left: 120px;margin-top: -17px;text-decoration: underline;"><a href="/mall2/coupon_list/?id={{coupon_rule_id}}&is_max_page=1" target="_blank">使用记录</a></div></li>
 		</ul>
 		<div class="ml10 mt10" style="font-weight: bold">{% if receive_method %}通过图文方式领取{% else %}通过成交订单方式领取{% endif %}</div>
         <div class="panel-heading">
@@ -149,7 +149,7 @@
 					${item.created_at}
 				</td>
 				<td>
-
+					${item.coupon_status}
 				</td>
 				<td>
 					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a>

@@ -13,6 +13,7 @@ from mall import export
 from core.jsonresponse import create_response
 from core import paginator
 from core import search_util
+from mall.promotion.models import Coupon,COUPONSTATUS
 
 from string_util import byte_to_hex
 from modules.member import models as member_models
@@ -273,6 +274,7 @@ class RedEnvelopeParticipances(resource.Resource):
         rule_id = request.GET.get('id', None)
         has_data = promotion_models.GetRedEnvelopeRecord.objects.filter(red_envelope_rule_id=rule_id).count()
         rule_data = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
+        coupon_rule = promotion_models.CouponRule.objects.get(id=rule_data.coupon_rule_id)
         #TODO 传递正确的数字
         new_member_count = 152
         received_count = 3000
@@ -291,7 +293,8 @@ class RedEnvelopeParticipances(resource.Resource):
             'red_envelope_name': rule_data.name,
             'red_envelope_start_time': rule_data.start_time.strftime("%Y-%m-%d"),
             'red_envelope_end_time': rule_data.end_time.strftime("%Y-%m-%d"),
-            'receive_method': rule_data.receive_method
+            'receive_method': rule_data.receive_method,
+            'coupon_rule_id': coupon_rule.id
         })
         return render_to_response('mall/editor/red_envelope_participences.html', c)
 
@@ -336,13 +339,17 @@ class RedEnvelopeParticipances(resource.Resource):
         pageinfo, datas = RedEnvelopeParticipances.get_datas(request)
         member2datas = {}
         member_ids = set()
+        coupon_ids = set()
         for data in datas:
-            print data
+            coupon_ids.add(data.coupon_id)
             member2datas.setdefault(data.member_id, []).append(data)
             member_ids.add(data.member_id)
             data.participant_name = u'未知'
             data.participant_icon = '/static/img/user-1.jpg'
-
+        id2Coupon = {}
+        for coupon in Coupon.objects.filter(id__in=list(coupon_ids)):
+            id2Coupon[str(coupon.id)] =COUPONSTATUS[coupon.status]
+        print id2Coupon
         if len(member_ids) > 0:
             for member in member_ids:
                 for data in member2datas.get(member, ()):
@@ -362,6 +369,7 @@ class RedEnvelopeParticipances(resource.Resource):
 				'participant_name': data.participant_name,
 				'participant_icon': data.participant_icon,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                'coupon_status': id2Coupon[str(data.coupon_id)]['name']
 			})
         response_data = {
 			'items': items,

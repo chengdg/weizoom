@@ -288,29 +288,33 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
         	})
 		if type == 'red':
 			objects_data = []
-			for item in objects:
+			for object in objects:
 				id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
-		                                   CouponRule.objects.filter(id=item.coupon_rule_id)])
-				if item.limit_time:
+		                                   CouponRule.objects.filter(id=object.coupon_rule_id)])
+				if object.limit_time:
 					data = {
-	                    "name": item.name,
-						"limit_time": item.limit_time,
-	                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
-	                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
-	                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
-	                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
+						"id": object.id,
+	                    "name": object.name,
+						"limit_time": object.limit_time,
+	                    "start_time": object.start_time.strftime("%Y-%m-%d %H:%M"),
+	                    "end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
+	                    "coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
+	                    "remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
+						'link': item['link_template'].format(object.id)
 	                }
 					objects_data.append(data)
 				else:
-					is_timeout = False if item.end_time > datetime.now() else True
+					is_timeout = False if object.end_time > datetime.now() else True
 					if not is_timeout:
 						data = {
-		                    "name": item.name,
-							"limit_time": item.limit_time,
-		                    "start_time": item.start_time.strftime("%Y-%m-%d %H:%M"),
-		                    "end_time": item.end_time.strftime("%Y-%m-%d %H:%M"),
-		                    "coupon_rule_name": id2coupon_rule[item.coupon_rule_id].name,
-		                    "remained_count": id2coupon_rule[item.coupon_rule_id].remained_count,
+							"id": object.id,
+		                    "name": object.name,
+							"limit_time": object.limit_time,
+		                    "start_time": object.start_time.strftime("%Y-%m-%d %H:%M"),
+		                    "end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
+		                    "coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
+		                    "remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
+							'link': item['link_template'].format(object.id)
 	                    }
 						objects_data.append(data)
 			objects = objects_data
