@@ -1,395 +1,386 @@
 {% extends "webapp_content_base.html" %}
 {% load mall_filter %}
-{% load common_tag %}
 
-{% block css%}
+{% block css %}
 <link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
 <style>
+    .xui-mlkActivityPage{
+        width: 100%;
+        background: url('/static_v2/img/activity/bg.jpg') #fcf9da no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        box-sizing:border-box;
+    }
+    .xui-name{
+        max-width: 73px;
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .xui-voteBtn .xui-name{
+        max-width: 97px;
+    }
+    .xui-rankingList .xui-name{
+        position: relative;
+        top:3px;
+    }
+    .xui-blackPlaceholder{
+        height: 387px;
+    }
+    .xui-activeBtn{
+        width: 68.75%;
+        position: relative;
+        left: 50%;
+        margin-left: -35.375%;
+        top: 0px;
+    }
+    .xui-activeBtn div{
+        width: 100%;
+        height: 31px;
+        line-height: 32px;
+        background: #fd5b0e;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        box-shadow: 0 2px 0 #c84000;
+        display: -webkit-box;
+        -webkit-box-pack:center;
+        -webkit-box-align:center;
+        
+    }
+    .xui-hint{
+        color: #7a7a7a;
+        text-align: center;
+        margin-bottom: 17px;
+    }
+    .xui-activityTitle{
+        width: 100%;
+        height: 18px;
+        line-height: 18px;
+        background: url('/static_v2/img/activity/cutLine.png') no-repeat center;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        text-align: center;
+        color: #6f2e0e;
+        margin-bottom: 10px;
+    }
+    .xui-spritebg{
+        background: url('/static_v2/img/activity/mlkSprite.png') no-repeat;
+        -webkit-background-size: 100px 77.5px; 
+        background-size: 100px 77.5px;
+    }
+    .xui-i-title{
+        color: #fff;
+        width: 64px;
+        height: 20px;
+        padding-left: 5px;
+        line-height: 20px;
+        background-position: 0 -24px; 
+        margin-bottom: 9px;
+    }
+    .xui-content{
+        color: #c75c28;
+        margin-bottom: 5px;
+        line-height: 20px;
+    }
+    .xui-participationWay,.xui-activityTime,.xui-otherState,.xui-i-list{
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+    .xui-ways i{
+        font-style: normal;
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #c75c28;
+        color: #fff;
+        text-align: center;
+        line-height: 14px;
+        margin-right: 5px;
+        margin-top: 3px;
+        float: left;
+    }
+    .xui-ways span{
+        display: table-cell;
+    }
+    .xui-rankingList li{
+        height: 56px;
+        line-height: 56px;
+        border-bottom: 1px dashed #cac8b0;
+        /*position: relative;*/
+    }
+    .xui-rankingList li:last-child{
+        border: none;
+        height: 40px;
+    }
+    .xui-rankingList li i{
+        font-style: normal;
+        display: block;
+        width: 27px;
+        height: 20px;
+        text-align: center;
+        line-height: 28px;
+        margin-right: 10px;
+        margin-top: 18px;
+    }
+    .xui-rankingList li:first-child i,.xui-rankingList li:nth-child(2) i,.xui-rankingList li:nth-child(3) i{
+        background: url('/static_v2/img/activity/mlkSprite.png') no-repeat;
+        -webkit-background-size: 100px 77.5px; 
+        background-size: 100px 77.5px;
+    }
+    .xui-rankingList li:nth-child(2) i{
+        background-position: -35px 0;
+    }
+    .xui-rankingList li:nth-child(3) i{
+        background-position: -70px 0;
+    }
+    .xui-img{
+        width: 32px;
+        height: 32px;
+        border-radius: 18px;
+        display: block;
+        border: 2px solid #fff;
+        position: relative;
+        top: 12px;
+        margin-right: 4px;
+    }
+    .xui-rankingList .xui-name{
+        color: #7a7a7a;
+    }
+    .xui-num{
+        color: #fd5b0e;
+    }
+    .xui-ticketNum{
+        position: relative;
+        top:3px;
+    }
+    .xui-myRanking{
+        width: 100%;
+        padding-left: 4%;
+        padding-right: 4%;
+        height: 40px;
+        line-height: 40px;
+        box-sizing:border-box;
+        border-top:1px solid #ccc;
+        background: rgba(255,255,255,0.85);
+        position: fixed;
+        bottom: 0;
+    }
+    .xui-myNum{
+        color: #fd5b0e;
+    }
+    .mask{
+        background: rgba(0,0,0,0.8)!important;
+        position: fixed!important;
+    }
+    .xui-voteSucceed{
+        width: 81.25%;
+        height: 113px;
+        line-height: 113px;
+        background: #fff;
+        text-align: center;
+        color: #4a4a4a;
+        position: fixed;
+        top:50%;
+        margin-top: -56px;
+        left: 50%;
+        margin-left: -40.625%;
+        z-index: 10001;
+        border-radius: 4px;
+        display: none;
+    }
+    .xui-successHint::before{
+        content:'';
+        width: 31px;
+        height: 31px;
+        display: inline-block;
+        background: url('/static_v2/img/activity/mlkSprite.png') no-repeat;
+        -webkit-background-size: 100px 77.5px; 
+        background-size: 100px 77.5px;
+        background-position: 0 -45px;
+        position: relative;
+        top:8px;
+        margin-right: 11px;
+    }
+    .xui-attention .xui-twoDimensionBox{
+        width: 260px;
+        height: 286px;
+        background: url('/static_v2/img/activity/attention.png') no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        position: fixed;
+        top:50%;
+        margin-top: -155px;
+        left:50%;
+        margin-left: -130px;
+        z-index: 10001;
+    }
+    .xui-attention .xui-twoDimension{
+        width: 150px;
+        height: 150px;
+        display: block;
+        position: absolute;
+        top:60px;
+        left: 53px;
+    }
+    .xui-attention .xui-twoDimensionBox::after{
+        content:'';
+        display: block;
+        width: 34px;
+        height: 34px;
+        background: url('/static_v2/img/activity/zebra.jpg') no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        position: absolute;
+        top:118px;
+        left: 111px;
+    }
+    .xui-closeBtn{
+        width: 30px;
+        height: 30px;
+        /*background: #000;*/
+        position: absolute;
+        top:0;
+        right: 0;
+    }
+    .xui-share{
+        position: fixed;
+        top:0;
+        width: 100%;
+        height: 74%;
+        background: url(/static_v2/img/activity/share.png) no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        z-index: 10001;
 
-html{
-font-family:Arial,Tahoma,Roboto,"Droid Sans","Helvetica Neue","Droid Sans Fallback","Heiti SC","Hiragino Sans GB",'Microsoft Yahei',Simsun,sans-serif;
-}
-html,body{
-	background: #fff;
-}
-body .wui-alert{
-	font-size: .8rem;
-}
-.xui-attentionAlert a{
-	font-size: .75rem!important;
-}
-.xui-info{
-	padding:.6rem .75rem .5rem .75rem;
-	border-top:1px solid #e5e5e5;
-}
-.xui-info h2,
-.xui-info h3{
-	font-weight: normal;
-}
-.xui-info h2{
-	font-size: .75rem;
-	margin:0 0 .35rem 0;
-}
-.xui-info h3{
-	color:#cf0404;
-	font-size: .6rem;
-	margin:0 0 .5rem 0;
-}
-.xui-info label{
-	display: block;
-}
-.xui-info .xui-oShopping,
-.xui-info .xui-oShopping:visited{
-	color:#a4a4a4;
-	font-size:.6rem;
-	float: right;
-}
-.xui-countPrice{
-	font-size: .6rem;
-	color:#4a4a4a;
-}
-.xui-price{
-	font-size: .55rem;
-	color:#a4a4a4;
-}
-.xui-price span{
-	display: inline-block;
-	-webkit-transform:scale(.98);
-	transform:scale(.98);
-}
-.xui-images img{
-	display: block;
-}
-.xui-tips{
-	font-size: .65rem;
-	color:#cf0404;
-	padding:.15rem .1rem;
-}
-.xui-orange{
-	color:#ff8502;
-}
-.xui-borderBtn{
-	display: block;
-	text-align: center;
-	width:100%;
-	border:.05rem solid #ff8502;
-	color:#ff8502;
-	border-radius:.1rem;
-	background: #fff;
-	font-size: .7rem;
-	line-height: 2rem;
-	-webkit-appearance:none;
-	box-sizing:border-box;
-	padding:0;
-	margin:.4rem 0;
-}
-.xui-borderBtn span{
-	font-weight:bold;
-}
-.xui-progress,
-.xui-successBtn{
-	color:#fff;
-	font-size: .7rem;
-	line-height: 2rem;
-	height: 2rem;
-	border-radius:.1rem;
-	text-align: center;
-	position: relative;
-	overflow: hidden;
-	margin: .4rem 0;
-}
-.xui-progress{
-	background: rgba(255,133,2,.5);
-}
-.xui-successBtn{
-	display: block;
-	background: #ff8502;
-}
-/*安卓a标记兼容*/
-.xui-successBtn:link,
-.xui-successBtn:active,
-.xui-successBtn:visited{
-	color:#fff;
-}
-.xui-progress label{
-	display: block;
-	position: absolute;
-	width: 100%;
-}
-.xui-progressBar{
-	position: absolute;
-	left:0;
-	top: 0;
-	height: 2rem;
-	width:10%;
-	background: #ff8502;
-	transition-delay: 0s;
-    transition-duration: 0.4s;
-    transition-property: width, background-color;
-    transition-timing-function: linear;
-}
-.xui-panel{
-	width: 11.5rem;
-	margin: 5rem auto 0 auto;
-	padding:1.4rem .7rem 1rem .7rem;
-	box-sizing:border-box;
-	background: #fff;
-	border-radius:.2rem;
-}
-.xui-rule{
-	width: 12rem;
-	padding:1.4rem .85rem 1.2rem .85rem;
-}
-.xui-panel h3{
-	font-size: .75rem;
-	color: #8a8a8a;
-	font-weight:normal;
-	position: relative;
-	text-align: center;
-	padding:0 0 .15rem 0;
-	margin: 0;
-}
-.xui-panel h3::before,
-.xui-panel h3::after{
-	position: absolute;
-	content: "";
-	width:3.05rem;
-	border-top: solid 1px #ccc;
-	-webkit-transform: scaleY(.5);
-	-moz-transform: scaleY(.5);
-	transform: scaleY(.5);
-	top: .5rem;
-}
-.xui-rule h3::before,
-.xui-rule h3::after{
-	width:3.1rem;
-}
-.xui-members{
-	padding-bottom: .75rem;
-}
-.xui-members h3::before,
-.xui-members h3::after{
-	width:2.8rem;
-}
-.xui-success h3,
-.xui-success h4{
-	color:#60b82b;
-	font-size: .75rem;
-}
-.xui-success h4 i{
-	content: "";
-	display: inline-block;
-	width: 1.35rem;
-	height: 1.35rem;
-	background: url(/static_v2/img/webapp/usercenter/socketPage/succ_icon.jpg) no-repeat;
-	background-size: cover;
-	vertical-align: middle;
-	margin-right: .5rem;
-}
-.xui-success img{
-	width:7.5rem;
-	margin:0 auto;
-	display: block;
-	margin-top: .75rem;
-}
-.xui-success p{
-	font-size: .55rem;
-	-webkit-transform: scale(.9);
-	transform: scale(.9);
-	text-align: center;
-	margin-top: .5rem;
-	white-space: nowrap;
-}
-.xui-panel h3::before{
-	left: 0;
-}
-.xui-panel h3::after{
-	right: 0;
-}
-.xui-panel li{
-	color:#4a4a4a;
-	margin-top: .6rem;
-	font-size: .6rem;
-}
-.xui-guideTip{
-	position: absolute;
-	width:9.5rem;
-	height:3.5rem;
-	top: 0;
-	right: .75rem;
-	background: url(/static_v2/img/webapp/usercenter/socketPage/guide_tip.png) no-repeat;
-	background-size:100% auto;
-}
-.xui-members .xui-avatar{
-	width:2.6rem;
-	height: 2.6rem;
-	border-radius:.15rem;
-	display: block;
-}
-.xui-members ul{
-	padding:.05rem .2rem 0 .2rem;
-	height: 12rem;
-	overflow-y:auto; 
-}
-.xui-members ul li{
-	width: 2.6rem;
-	display: inline-block;
-	margin-right:.95rem;
-	float: left;
-	margin-top: .5rem;
-}
-.xui-members ul li:nth-child(3n){
-	margin-right: 0;
-}
-.xui-members p{
-	font-size: .6rem;
-	margin-top:.08rem;
-	text-align: center;
-}
-.wui-i-dotPositions{
-	position: absolute;
-	right: 0;
-	left: 0;
-	bottom: 1rem;
-	text-align: center;	
-}
-.wui-i-dotPosition{
-	display: inline-block;
-	width: .3rem;
-	height: .3rem;
-	background: #eaeaea;
-	border-radius:50%;
-}
-.wui-i-activeDotPosition{
-	background: #ff8502;
-}
-.xui-loadingContainer{
-	position: fixed;
-	left: 0;
-	top: 0;
-	width:100%;
-	height:100%;
-	background:rgba(0,0,0,0);
-	z-index: 10000;
-}
-.xui-loading{
-	top:12.35rem;
-}
-.hidden{
-	display: none!important;
-}
-.no-code{
-	margin-top:9rem;
-}
-@media only screen and (min-device-width: 320px) and (max-device-height: 480px){
-	.xui-guideTip{
-		width:8.3rem;
-		height:3.05rem;
-	}
-	.xui-panel{
-		margin: 3.8rem auto 0 auto;
-	}
-	.no-code{
-		margin-top:8rem;
-	}
-	.xui-loading{
-		top:11rem;
-	}
-}
+    }
+    .xui-colseButton{
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        top:85%;
+        left: 50%;
+        margin-left: -25px;
+        background-position: -32px -45px;
+    }
 </style>
 {% endblock %}
+
 {% block content-panel %}
-<div class="xui-socketPage">
-
-        joined:{{joined}}:<br>
-        current_count:{{current_count}}<br>self_visit:{{self_visit}} 
-        <br>member_voted:{{member_voted}}
-
-<button class="voted">dddddd</button>
+<div class="xui-mlkActivityPage">
+    <div class="xui-blackPlaceholder"></div>
+    <div class="xui-activeBtn f16">
+        <div class="xui-voteBtn xa-voteBtn">帮<span class="xui-name">王明王明不知道啦</span>拉票</div>
+        <div class="xui-participationBtn xa-participationBtn">我也要参加</div>
+    </div>
+    <div class="xui-hint f12">收集票数进入前50名，即可获得儿童安全坐垫</div>
+    <div class="xui-activityRules">
+        <div class="xui-activityTitle f16">活动规则</div>
+        <div class="xui-participationWay disT">
+           <div class="xui-i-title f12 xui-spritebg">参与方式</div>
+           <div class="xui-ways f12 xui-content">
+                <i>1</i>
+                <span>手机微信 关注“斑马来了”亲子活动平台。</span>
+            </div>
+           <div class="xui-ways f12 xui-content">
+                <i>2</i>
+                <span>
+                   点击我要参加，长按二维码进入公众号，回复“抢礼品”即可参与抢儿童安全坐垫活动。
+               </span>
+           </div>
+           <div class="xui-ways f12 xui-content">
+                <i>3</i>
+                <span>将你的活动链接转发给你的好友帮你拉票。</span>
+            </div>
+        </div> 
+        <div class="xui-activityTime">
+            <div class="xui-i-title f12 xui-spritebg mt10">活动时间</div>
+            <div class="xui-content f12">
+                <div class="">开始时间：2015年10月1日8时</div>
+                <div class="">结束时间：2015年10月9日18时</div>
+                <div class="">名单公布时间：2015年10月10号18时</div>
+            </div>
+        </div> 
+        <div class="xui-otherState">
+            <div class="xui-i-title f12 xui-spritebg mt10">其他说明</div>
+            <div class="xui-content f12">
+                <div>“斑马来了”后台统计参与抢物品票数最多的前50名，公布在“斑马来了”微信公众账号最新活动内。请您于一周内（10月11日—10月18日）与斑马客服联系，咨询时间早上10点到晚上17点。</div>
+                <div>客服电话：王老师 <b>13488651517</b>李老师 <b>18601909571</b> </div>
+            </div>
+        </div>          
+    </div>
+    <div class="xui-rankingList">
+        <div class="xui-activityTitle f16 mb0">得票排行榜</div>
+        <ul class="xui-i-list">
+            <li>
+                <i class="f12 fl">1</i>
+                <img src="/static_v2/img/thumbnails_vote.png" alt="" class="xui-img fl">
+                <span class="xui-name f12 fl">叶良辰</span>
+                <span class="xui-ticketNum fr f12 c3">共获得<span class="xui-num">4000</span>票</span>
+            </li>
+            <li>
+                <i class="f12 fl">2</i>
+                <img src="/static_v2/img/thumbnails_vote.png" alt="" class="xui-img fl">
+                <span class="xui-name f12 fl">红杏美凯龙巴拉</span>
+                <span class="xui-ticketNum fr f12 c3">共获得<span class="xui-num">4000</span>票</span>
+            </li>
+            <li>
+                <i class="f12 fl">3</i>
+                <img src="/static_v2/img/thumbnails_vote.png" alt="" class="xui-img fl">
+                <span class="xui-name f12 fl">红杏美凯龙巴拉</span>
+                <span class="xui-ticketNum fr f12 c3">共获得<span class="xui-num">4000</span>票</span>
+            </li>
+            <li>
+                <i class="f12 fl">4</i>
+                <img src="/static_v2/img/thumbnails_vote.png" alt="" class="xui-img fl">
+                <span class="xui-name f12 fl">红杏美凯龙巴拉</span>
+                <span class="xui-ticketNum fr f12 c3">共获得<span class="xui-num">4000</span>票</span>
+            </li>
+            <li></li>
+        </ul>
+    </div>
+    <div class="xui-myRanking f13 none">
+        <div class="fl">我的排名：第<span class="xui-myNum">251名</span></div>
+        <div class="fr">共获得<span class="xui-myNum">2600</span>票</div>
+    </div>
+</div>
+<div data-ui-role="swipemask" class="mask"></div>
+<div class="xui-voteSucceed">
+    <div class="f15 xui-successHint">投票成功!</div>
+</div>
+<div class="xui-attention xa-attention none">
+    <div class="xui-twoDimensionBox">
+        <img src="/static_v2/img/editor/sys_QRcode.jpg" alt="" class="xui-twoDimension">
+        <div class="xui-closeBtn xa-closeBtn"></div>
+    </div>
+</div>
+<div class="xui-share xa-share">
+    <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
 </div>
 {% endblock %}
 
 {% block js %}
-<script>
-(function (doc, win) {
-    var docEl = doc.documentElement,
-    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
-    recalc = function () {
-      var clientWidth = docEl.clientWidth;
-      if (!clientWidth) return;
-      docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
-    };
-
-    if (!doc.addEventListener) return;
-    win.addEventListener(resizeEvt, recalc, false);
-    doc.addEventListener('DOMContentLoaded', recalc, false);
-})(document, window);
-
-$(document).ready(function() {
-	var count = 0;
-	var totalCount = 15;
-	var changeProgressBar = function(){
-		count = parseInt($('.xa-member-count').text());
-		var width = count >= totalCount ? 100:(count * 6.67);
-		var percent = Math.round(width);
-		$('.xa-progress').css('width', width + '%');
-		// $('.xa-percent').text(percent);
-		if(count >= totalCount){
-			$('.xa-progress').siblings('label').html('加油完成，我也要分享');
-			$('.xa-progress').parent('.xui-progress').removeClass('xa-showMembers').addClass('xa-showRule');
-		}else{
-			$('.xa-percent').text(percent);
-		}
-		
-	}
-	if( $('.xa-member-count').length){
-		changeProgressBar();
-	}
-
-	$('body').delegate('.xa-showRule', 'click', function(event) {
-		$('.xa-ruleCover').removeClass('hidden');
-	});
-
-	$('.xa-showMembers').click(function(event) {
-		if (count < totalCount) {
-			$('.xa-membersCover').removeClass('hidden');
-		}
-	});
-	$('.xui-cover').click(function(event) {
-		if($(event.target).hasClass('xui-cover') || $(event.target).hasClass('xui-guideTip')){
-			$(this).addClass('hidden');
-		}
-	});
-	 $('.voted').click(function(){
-        W.getApi().call({
-        app: 'webapp',
-        api: 'project_api/call',
-        method: 'get',
-        args: {
-            woid: W.webappOwnerId,
-            module: 'user_center',
-            target_api: 'mileke_log/record',
-            fid: '{{url_fid}}'
-	        },
-        success: function(data) {
-        	$('.xa-loading').addClass('hidden');
-	 		$('.xa-successCover').removeClass('hidden');
-            $('.xa-refueling').addClass('hidden');
-            $('.xa-showMembers').removeClass('hidden');
-            $('.xa-success-refueling').removeClass('hidden');
-            $('.xa-member-count').text({{refueling_count}}+1);
-            changeProgressBar();
-        },
-        error: function(data) {
-        	$('.xa-loading').addClass('hidden');
-            $('body').alert({
-                isShow: true,
-                info: data['data']['msg'],
-                speed:2000
-            });
-        }
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('body').swipeMask('show');
+        $('.xa-voteBtn').click(function(){
+            $('body').swipeMask('show');
+        });
+        $('.mask').click(function(){
+            $('body').swipeMask('hide');
+        });
+        $('.xa-closeBtn').click(function(){
+            $('.xa-attention').hide();
+            $('body').swipeMask('hide');
+        });
+        $('.xa-colseButton').click(function(){
+            $('.xa-share').hide();
+            $('body').swipeMask('hide');
         });
     });
-});
+
 </script>
 {% endblock %}
