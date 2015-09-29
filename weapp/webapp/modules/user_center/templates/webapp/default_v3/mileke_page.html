@@ -276,7 +276,7 @@
         {% if self_visit %}
             <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
         {% else %}
-            <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated}}</span>拉票</div>
+            <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated|safe}}</span>拉票</div>
             <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
         {% endif %}
     </div>
@@ -323,7 +323,7 @@
             <li>
                 <i class="f12 fl">1</i>
                 <img src="{{ mileke.member.user_icon }}" alt="" class="xui-img fl">
-                <span class="xui-name f12 fl">{{ mileke.member.username_truncated }}</span>
+                <span class="xui-name f12 fl">{{ mileke.member.username_truncated|safe }}</span>
                 <span class="xui-ticketNum fr f12 c3">共获得<span class="xui-num">{{mileke.current_count}}</span>票</span>
             </li>
             {% endfor %}
