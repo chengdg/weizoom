@@ -86,8 +86,15 @@ def get_global_navs(request):
 		webapp_owner_id = request.webapp_owner_id
 		workspace = Workspace.objects.get(owner_id=webapp_owner_id, inner_name='home_page')
 		template_project_name = workspace.template_name
-		template_project = Project.objects.get(owner_id=webapp_owner_id, workspace=workspace, inner_name=template_project_name)
+		template_projects = Project.objects.filter(owner_id=webapp_owner_id, workspace=workspace, inner_name=template_project_name)
 
+		if template_projects.count() == 0:
+			return {
+				"is_standard_global_nav": False,
+				"navs": []
+			}
+
+		template_project = template_projects[0]
 		#在首页中寻找导航信息
 		navs = []
 		#获得首页
