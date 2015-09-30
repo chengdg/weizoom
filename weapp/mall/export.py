@@ -69,14 +69,14 @@ def get_first_navs(user):
     from auth.export import NAV as AUTH_NAV
     from member.export import MEMBER_NAV
     manage_index=MALL_HOME_SECOND_NAV
-    manage_product=NAV
-    manage_order=ORDER_NAV
-    manage_promotion=PROMOTION_NAV
+    manage_product=MALL_PRODUCT_SECOND_NAV
+    manage_order=MALL_ORDER_SECOND_NAV
+    manage_promotion=MALL_PROMOTION_AND_APPS_SECOND_NAV
     manage_member=CONFIG_NAV
     static={'navs':[]}
     manage_auth=MEMBER_NAV
     manage_mall_config=CONFIG_NAV
-    apps = APP_NAV
+    apps = MALL_PROMOTION_AND_APPS_SECOND_NAV
 
     first_navs_result = []
     for nav in FIRST_NAVS:

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from member import export
-
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -24,6 +22,7 @@ from market_tools.tools.member_qrcode.models import *
 from apps.customerized_apps.shengjing.models import *
 from weixin2.models import get_opid_from_session
 from core import resource
+import export
 
 COUNT_PER_PAGE = 20
 

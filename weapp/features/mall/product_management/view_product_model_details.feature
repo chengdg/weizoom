@@ -42,7 +42,7 @@ Background:
 			"model": {
 				"models": {
 					"standard": {
-						"price": 10.0.,
+						"price": 10.0,
 						"weight": 1.0,
 						"stock_type": "有限",
 						"stocks": 1
@@ -59,7 +59,7 @@ Background:
 						"weight": 1.0,
 						"stock_type": "有限",
 						"stocks": 11,
-						"bar_code":"101010"
+						"user_code":"101010"
 					},
 					"白色 M": {
 						"price": 11.0,
@@ -101,7 +101,7 @@ Background:
 		}]
 		"""
 
-@product @saleingProduct @online_bug 
+@product @saleingProduct @online_bug @mall2
 Scenario:1 不设置查询条件,查看商品规格详情
 	Given jobs登录系统
 	When jobs设置商品查询条件
@@ -144,7 +144,7 @@ Scenario:1 不设置查询条件,查看商品规格详情
 		| 黑色 |  S    |  11      | 11     |          |
 		| 白色 |  S    |  11      | 无限   |          |
 
-@product @saleingProduct @online_bug
+@product @saleingProduct @online_bug @mall2 
 Scenario:2 设置查询条件,查看商品规格详情
 	Given jobs登录系统
 	#商品名称
