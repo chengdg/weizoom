@@ -366,7 +366,7 @@ class ProjectMiddleware(object):
 #==================================================================================================
 class ModifyStaticMiddleware(object):
 	def process_response(self, request, response):
-		if '/termite/' in request.path or '/termite2/' in request.path:
+		if '/termite/' in request.path or '/termite2/webapp_page/' in request.path:
 			if '/termite/workbench/viper/' in request.path:
 				pass
 			else:
