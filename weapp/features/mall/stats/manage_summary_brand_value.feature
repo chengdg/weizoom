@@ -4,12 +4,7 @@ Feature: 测试 经营报告->经营概况->微品牌价值
 Background:
 	#说明：jobs代表商户
 	Given jobs登录系统
-	When jobs设置未付款订单过期时间:
-		"""
-		{
-			"no_payment_order_expire_day":"1天"
-		}
-		"""
+	When jobs设置未付款订单过期时间24小时
 	Given jobs设定会员积分策略
 		# 即: "integral_each_yuan": 10	
 		"""
