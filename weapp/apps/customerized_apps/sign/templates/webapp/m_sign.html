@@ -86,6 +86,9 @@
         color: white;
         background: #d81c26;
     }
+    .wui-rules-div{
+        display: none;
+    }
 </style>
 {% endblock %}
 
@@ -111,6 +114,7 @@
             <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn">知道了</button>
         </div>
     </div>
+    <div class="wui-rules-div wa-rules-div"></div>
 {% endblock %}
 
 {% block js %}
@@ -205,6 +209,11 @@
             prize_html = ''
         }
         $('.wa-daily_prizes').html(prize_html);
+        //绑定规则信息事件
+        $('.wa-signPageDiv').find('.wa-rules').on('click', function(){
+            $('.wa-signPageDiv').hide();
+            $('.wa-rules-div').show();
+        });
 {#        //从后台获取数据#}
 {#        W.getApi().call({#}
 {#            app: 'm/apps/sign',#}
