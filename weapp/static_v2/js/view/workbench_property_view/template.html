@@ -633,14 +633,13 @@
                                         <div
                                             data-ui-role="apps-prize-selector-v4"
                                             data-prize='${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}'
-                                        ></div>
+                                        >
+                                        </div>
                                     {{if dynamicComponentField.help}}
                                     <div>
                                         {{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
                                     </div>
-                                    <div>追加库存</div>
                                     {{/if}}
-
                                     </div>
                                 </div>
                                 {{/if}}

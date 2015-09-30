@@ -38,7 +38,6 @@ W.component.appkit.SignItem = W.component.Component.extend({
 			type: 'prize_selector_v4',
 			displayName: '送优惠券',
 			isUserProperty: true,
-			help:"剩余库存x件",
 			default:""
 		}]
 	}],
