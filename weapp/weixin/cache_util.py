@@ -65,15 +65,17 @@ def get_auto_qa_message_material_for_cache(user_profile, query):
 	def inner_func():
 		response_rule = qa_util.find_answer_for(user_profile, query.lower())
 		webapp_id = user_profile.webapp_id
-	
-	 	if not response_rule:
-			#user_profile = UserProfile.objects.get(webapp_id=webapp_id)
-			webapp_owner_id = user_profile.user_id
-			msg = u"获得user('{}')对应的material_news构建cache失败，query:{}"\
-					.format(webapp_owner_id, query)
-			watchdog_info(msg, user_id=webapp_owner_id)
-			#add by bert None 需要保存吗？
-			return response_rule
+		"""
+			update by bert at 20150930 去掉输入日志，优化速度
+		"""
+	 	# if not response_rule:
+			# #user_profile = UserProfile.objects.get(webapp_id=webapp_id)
+			# webapp_owner_id = user_profile.user_id
+			# msg = u"获得user('{}')对应的material_news构建cache失败，query:{}"\
+			# 		.format(webapp_owner_id, query)
+			# watchdog_info(msg, user_id=webapp_owner_id)
+			# #add by bert None 需要保存吗？
+			# return response_rule
 
 		return {
 				'keys': [
@@ -120,6 +122,11 @@ def _parse_rule(user_profile, reply_rule):
 	else:
 		#如果是文本消息，则在末尾加入小尾巴内容
 		#update by bert at 0924
+		"""
+			update by bert at 20150930 
+			 如果有记录查询两次，没有查询一次
+			 修改后查询异常
+		"""
 		try:
 			tail = Tail.objects.get(owner_id=user_profile.user_id)
 			if tail.is_active:
@@ -148,13 +155,16 @@ def get_auto_reply_message_by_type_for_cache(user_profile, reply_type):
 		elif reply_type == UNMATCH_TYPE:
 			reply_rule = qa_util.find_unmatch_answer_for(user_profile)
 		else:
-			return None
-		if not reply_rule:
+			reply_rule = None
+		"""
+			update by bert at 20150930 去掉输入日志，优化速度
+		"""
+		#if not reply_rule:
 			# user_profile = UserProfile.objects.get(webapp_id=webapp_id)
-			webapp_owner_id = user_profile.user_id
-			msg = u"获得user('{}')对应的 qa type {}构建cache失败，可能该app没有设置对应的自动回复内容"\
-					.format(webapp_owner_id, reply_type)
-			watchdog_info(msg, user_id=webapp_owner_id)
+			# webapp_owner_id = user_profile.user_id
+			# msg = u"获得user('{}')对应的 qa type {}构建cache失败，可能该app没有设置对应的自动回复内容"\
+			# 		.format(webapp_owner_id, reply_type)
+			# watchdog_info(msg, user_id=webapp_owner_id)
 
 		return {
 				'keys': [
