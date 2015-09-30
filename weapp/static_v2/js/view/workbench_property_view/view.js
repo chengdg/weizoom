@@ -607,7 +607,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         var options = {
             success: _.bind(function(data) {
                         if ($button.hasClass('xa-addDynamicComponentTrigger')) {
-                            var event = {currentTarget: $button.get(0)}
+                            var event = {currentTarget: $button.get(0)};
                             var datas = data;
                             _.each(datas, function(data) {
                                 this.onClickAddDynamicComponentButton(event, data);
@@ -623,7 +623,7 @@ W.workbench.PropertyView = Backbone.View.extend({
                     }, this),
             component: this.component,
             $button: $button
-        }
+        };
 
         if (parameter) {
             _.extend(options, parameter);
