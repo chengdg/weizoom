@@ -11,7 +11,8 @@ Feature:自定义模块——【基础模块】文本导航-页面
 	7、文本导航的链接，“从微站选择”当选择的链接的名称过长时用省略号截取显示，保证链接名称、修改、图标在同一行，不折行
 
 Scenario:1添加文本导航
-	When jobs创建微页面
+	When jobs登录系统
+	And jobs创建微页面
 	"""
 		[{
 			"title": {
@@ -47,7 +48,8 @@ Scenario:1添加文本导航
 	"""
 
 Scenario: 2编辑文本导航
-	When jobs创建微页面
+	When jobs登录系统
+	And jobs创建微页面
 	"""
 		[{
 			"title": {
