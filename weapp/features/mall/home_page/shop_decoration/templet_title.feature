@@ -6,8 +6,10 @@ Feature:自定义模块——【基础模块】标题-页面
         显示位置：居左、居中、居右，
         根据字数不同，副标题与时间的显示位置也不同
 
-Background:
-	Given jobs登录系统
+
+
+Scenario: 1编辑标题
+	When jobs登录系统
 	And jobs创建微页面
 	"""
 		[{
@@ -24,7 +26,7 @@ Background:
 	"""
 	Then jobs能获取'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			},
@@ -34,10 +36,8 @@ Background:
 				"time": "2015-5-13 10:13",
 				"color": "blue"
 			}
-		}]
+		}
 	"""
-
-Scenario: 1编辑标题
 	When jobs编辑微页面'微页面标题'
 	"""
 		[{
@@ -51,7 +51,7 @@ Scenario: 1编辑标题
 	"""
 	Then jobs能获取'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			},
@@ -61,5 +61,5 @@ Scenario: 1编辑标题
 				"time": "2015-5-13 10:13",
 				"color": "red"
 			}
-		}]
+		}
 	"""
