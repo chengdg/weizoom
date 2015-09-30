@@ -39,6 +39,8 @@ class MSign(resource.Resource):
 				'user_icon': '/static/img/user-1.jpg',
 				'user_integral': 0
 			}
+			prize_settings = record.prize_settings
+
 			auth_appid_info = None
 			participance_data_count = 0
 			if not isPC:
@@ -60,20 +62,47 @@ class MSign(resource.Resource):
 			id = record.id
 
 			if member:
-				participance_data_count = app_models.SignParticipance.objects(belong_to=id, member_id=member.id).count()
+				signers = app_models.SignParticipance.objects(belong_to=id, member_id=member.id)
+				participance_data_count = signers.count()
 			if participance_data_count == 0 and request.webapp_user:
-				participance_data_count = app_models.SignParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
+				signers = app_models.SignParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id)
+				participance_data_count = signers.count()
+			signer = signers[0] if participance_data_count>0 else None
+			#检查当前用户签到情况
+			daily_prize = prize_settings['0']
+			serial_prize = {}
+			next_serial_prize = {}
+			if signer and signer.serial_count >1:
+				flag = False
+				for name in sorted(prize_settings.keys()):
+					setting = prize_settings[name]
+					if int(name) == signer.serial_count + 1:
+						serial_prize = {
+							'count': name,
+							'prize':setting
+						}
+						flag = True
+					if flag:
+						next_serial_prize = {
+							'count': name,
+							'prize': setting
+						}
+						flag = False
+			prize_info = {
+				'daily_prize': daily_prize,
+				'serial_prize': serial_prize,
+				'next_serial_prize': next_serial_prize
+			}
 
 			request.GET._mutable = True
 			request.GET.update({"project_id": project_id})
 			request.GET._mutable = False
 			html = pagecreater.create_page(request, return_html_snippet=True)
-			print member_info
 			c = RequestContext(request, {
 				'record_id': id,
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
-				'page_title': "签到",
+				'page_title': u"签到",
 				'page_html_content': html,
 				'app_name': "sign",
 				'resource': "sign",
@@ -81,7 +110,11 @@ class MSign(resource.Resource):
 				'isPC': isPC,
 				'isMember': isMember,
 				'member_info':json.dumps(member_info),
-				'auth_appid_info': auth_appid_info
+				'prize_info': json.dumps(prize_info),
+				'auth_appid_info': auth_appid_info,
+				'share_img_url': record.share['img'],
+				'share_page_desc': record.share['desc']
+
 			})
 		else:
 			c = RequestContext(request, {
