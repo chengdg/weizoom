@@ -510,6 +510,10 @@ def __check_integral(request, product_groups, data_detail, pre_order):
             pre_order.integral_money = round(float(orderIntegralInfo['money']), 2)
             # 校验前台输入：积分金额不能大于使用上限、积分值不能小于积分金额对应积分值
             product_price = sum([product.price * product.purchase_count for product in pre_order.products])
+            print '111============:',(pre_order.integral_money - 1),product_price,use_ceiling
+            print '222============:',round(product_price * use_ceiling / 100, 2)
+            print '333============:',(total_integral + 1)
+            print '444============:',(pre_order.integral_money * count_per_yuan)
             if (pre_order.integral_money - 1) > round(product_price * use_ceiling / 100, 2)\
                 or (total_integral + 1) < (pre_order.integral_money * count_per_yuan):
                 return '积分使用超限'

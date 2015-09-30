@@ -21,7 +21,8 @@ def step_impl(context, user):
 	@todo 去掉操作数据库的部分
 	"""
 	config = json.loads(context.text)
-	no_payment_order_expire_day = config['no_payment_order_expire_day'][:-1]
+	# no_payment_order_expire_day = config['no_payment_order_expire_day'][:-1]
+	no_payment_order_expire_day = config['no_payment_order_expire_hour']
 
 	from mall.models import MallConfig
 	MallConfig.objects.filter(owner=context.client.user).update(order_expired_day=no_payment_order_expire_day)

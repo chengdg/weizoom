@@ -42,7 +42,8 @@ def step_impl(context, user, order_code):
     post_data = json.loads(context.text)
     order_real_id = bdd_util.get_order_by_order_no(order_code).id
     post_data['order_id'] = order_real_id
-    context.client.post(url, post_data)
+    response = context.client.post(url, post_data)
+    bdd_util.assert_api_call_success(response)
 
 
 @when(u"{user}'{action}'订单'{order_code}'")
@@ -55,6 +56,7 @@ def step_impl(context, action, user, order_code):
             'action': ORDER_ACTION_NAME2ACTION[action]
     }
     response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
 
 @when(u"{user}设置订单过期时间{order_expired_day}天")
 def step_impl(context, user, order_expired_day):
@@ -62,7 +64,8 @@ def step_impl(context, user, order_expired_day):
     data = {
         "order_expired_day": order_expired_day
     }
-    context.client.post(url, data)
+    response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
 
 @when(u"{user}触发订单超时取消任务")
 def step_impl(context, user):
