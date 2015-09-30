@@ -59,7 +59,7 @@ Scenario:1 购买买赠活动的商品，在手机端的"待付款"、"待发货
 		When bill购买jobs的商品
 			"""
 			{
-				"order_no": "001",
+				"order_id": "001",
 				"products": [{
 					"name": "商品1",
 					"count": 1

@@ -256,15 +256,15 @@ Background:
     When marry取消关注jobs的公众号
 
     When 微信用户批量消费jobs的商品
-        | order_id |    date    | consumer | businessman |    product   | payment | payment_method |postage*|price*|integral | product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status*  |
-        |   0001   | 2014-08-05 |   jack   |    jobs     | 商品1,1      |         |    支付宝      |   10   | 100  |  300    |       200        |                      |     90       |                   |   90    |    0    |   0   |               |    待支付      |
-        |   0002   | 8天前      |   tom    |    jobs     | 商品1,1      |         |    支付宝      |   10   | 100  |  200    |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,取消    |    已取消      |
-        |   0003   | 7天前      |   tom    |    jobs     | 商品2,黑色,2 |   支付  |    微信支付    |   15   | 100  |  400    |       300        | 全体券1,coupon1_id_1 |     175      |                   |    0    |   175   |   0   |  jobs,发货    |    已发货      |
-        |   0004   | 6天前      |   tom    |    jobs     | 商品2,白色,1 |   支付  |    货到付款    |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |  105  |  jobs,完成    |    已完成      |
-        |   0005   | 2天前      |  marry   |    jobs     | 商品1,1      |   支付  |    支付宝      |   10   | 100  |  200    |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,退款    |    退款中      |
-        |   0006   | 今天       |  marry   |    jobs     | 商品1,1      |   支付  |    支付宝      |   10   | 100  |  200    |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,完成退款|   退款成功     |
-        |   0007   | 今天       |   -tom3  |    jobs     | 商品1,1      |   支付  |    货到付款    |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    已发货      |
-        |   0008   | 今天       |   -tom4  |    jobs     | 商品1,1      |   支付  |    支付宝      |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货      |
+        | order_id |    date    | consumer | businessman |    product   | payment | pay_type |postage*|price*|integral | product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status*  |
+        |   0001   | 2014-08-05 |   jack   |    jobs     | 商品1,1      |         | 支付宝   |   10   | 100  |  300    |       200        |                      |     90       |                   |   90    |    0    |   0   |               |    待支付      |
+        |   0002   | 8天前      |   tom    |    jobs     | 商品1,1      |         | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,取消    |    已取消      |
+        |   0003   | 7天前      |   tom    |    jobs     | 商品2,黑色,2 |   支付  | 微信支付 |   15   | 100  |  400    |       300        | 全体券1,coupon1_id_1 |     175      |                   |    0    |   175   |   0   |  jobs,发货    |    已发货      |
+        |   0004   | 6天前      |   tom    |    jobs     | 商品2,白色,1 |   支付  | 货到付款 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |  105  |  jobs,完成    |    已完成      |
+        |   0005   | 2天前      |  marry   |    jobs     | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,退款    |    退款中      |
+        |   0006   | 今天       |  marry   |    jobs     | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,完成退款|   退款成功     |
+        |   0007   | 今天       |   -tom3  |    jobs     | 商品1,1      |   支付  | 货到付款 |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    已发货      |
+        |   0008   | 今天       |   -tom4  |    jobs     | 商品1,1      |   支付  | 支付宝   |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货      |
 
 @stats @ui
 Scenario:1 获取默认查询最近7天的经营概况

@@ -12,7 +12,7 @@ from features.testenv.model_factory import *
 from django.test.client import Client
 from mall.models import *
 
-
+'''
 @when(u"{user}设置未付款订单过期时间")
 def step_impl(context, user):
 	"""
@@ -27,7 +27,7 @@ def step_impl(context, user):
 	from mall.models import MallConfig
 	MallConfig.objects.filter(owner=context.client.user).update(order_expired_day=no_payment_order_expire_day)
 
-'''
+
 @when(u"{user}添加商品")
 def step_impl(context, user):
 	context.products = json.loads(context.text)

@@ -181,23 +181,23 @@ Scenario: 1 查看商品管理
 Scenario: 2 查看订单管理
 
 	When 微信用户批量消费jobs的商品
-		|order_id| date  | consumer | type |businessman|product   | integral | coupon | payment | pay_type | action        | status   |
-		|00001   | 3天前 | bill     | 购买 | jobs      |商品4,1   |          |        |         | 微信支付 |               | 待支付   |
-		|00002   | 3天前 | bill     | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 微信支付 | jobs,取消     | 已取消   |
-		|00003   | 3天前 | tom      | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 货到付款 |               | 待发货   |
-		|00004   | 3天前 | bill     | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 支付宝   | jobs,发货     | 已发货   |
-		|00005   | 3天前 | bill     | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 微信支付 | jobs,完成     | 已完成   |
-		|00006   | 2天前 | bill     | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 货到付款 | jobs,退款     | 退款中   |
-		|00007   | 2天前 | bill     | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 微信支付 | jobs,完成退款 | 退款成功 |
-		|00008   | 1天前 | bill     | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 微信支付 |               | 待发货   |
-		|00009   | 今天  | tom      | 购买 | jobs      |商品4,1   |          |        |   支付  | 微信支付 | jobs,退款     | 退款中   |
-		|00010   | 今天  | bill     | 购买 | jobs      |商品5,M,1 |          |        |   支付  | 支付宝   |               | 待发货   |
+		|order_id| date  | consumer |product   | payment | pay_type  | action        | status*  |
+		|00001   | 3天前 | bill     |商品4,1   |         | 微信支付  |               | 待支付   |
+		|00002   | 3天前 | bill     |商品5,M,1 |   支付  | 货到付款  | jobs,取消     | 已取消   |
+		|00003   | 3天前 | tom      |商品5,M,1 |   支付  | 货到付款  |               | 待发货   |
+		|00004   | 3天前 | bill     |商品5,M,1 |   支付  | 支付宝    | jobs,发货     | 已发货   |
+		|00005   | 3天前 | bill     |商品5,M,1 |   支付  | 微信支付  | jobs,完成     | 已完成   |
+		|00006   | 2天前 | bill     |商品5,M,1 |   支付  | 微信支付  | jobs,退款     | 退款中   |
+		|00007   | 2天前 | bill     |商品5,M,1 |   支付  | 微信支付  | jobs,完成退款 | 退款成功 |
+		|00008   | 1天前 | bill     |商品5,M,1 |   支付  | 微信支付  |               | 待发货   |
+		|00009   | 今天  | tom      |商品4,1   |   支付  | 微信支付  | jobs,退款     | 退款中   |
+		|00010   | 今天  | bill     |商品5,M,1 |   支付  | 支付宝    |               | 待发货   |
 	Given jobs登录系统
 	Then jobs能获取店铺提醒信息
 		"""
 			{
-				"to_be_shipped_order_count":5,
-				"refunding_order_count":1
+				"to_be_shipped_order_count":3,
+				"refunding_order_count":2
 			}
 		"""
 
@@ -207,7 +207,7 @@ Scenario: 2 查看订单管理
 			When bill购买jobs的商品
 				"""
 					{
-						"order_no": "00011",
+						"order_id": "00011",
 						"products": [{
 							"name": "商品4",
 							"count": 1
@@ -220,7 +220,7 @@ Scenario: 2 查看订单管理
 			When tom购买jobs的商品
 				"""
 					{
-						"order_no": "00012",
+						"order_id": "00012",
 						"products": [{
 							"name": "商品4",
 							"count": 1
@@ -232,8 +232,8 @@ Scenario: 2 查看订单管理
 			Then jobs能获取店铺提醒信息
 				"""
 					{
-						"to_be_shipped_order_count":7,
-						"refunding_order_count":1
+						"to_be_shipped_order_count":5,
+						"refunding_order_count":2
 					}
 				"""
 		#进行发货操作
@@ -250,8 +250,8 @@ Scenario: 2 查看订单管理
 			Then jobs能获取店铺提醒信息
 				"""
 					{
-						"to_be_shipped_order_count":6,
-						"refunding_order_count":1
+						"to_be_shipped_order_count":4,
+						"refunding_order_count":2
 					}
 				"""
 	#申请退款或完成退款影响'退款中'订单数
@@ -260,15 +260,15 @@ Scenario: 2 查看订单管理
 		Then jobs能获取店铺提醒信息
 				"""
 					{
-						"to_be_shipped_order_count":6,
-						"refunding_order_count":2
+						"to_be_shipped_order_count":4,
+						"refunding_order_count":3
 					}
 				"""
 		When jobs通过财务审核'退款成功'订单'00005'
 		Then jobs能获取店铺提醒信息
 				"""
 					{
-						"to_be_shipped_order_count":6,
-						"refunding_order_count":1
+						"to_be_shipped_order_count":4,
+						"refunding_order_count":2
 					}
 				"""

@@ -58,14 +58,14 @@ def step_impl(context, action, user, order_code):
     response = context.client.post(url, data)
     bdd_util.assert_api_call_success(response)
 
-@when(u"{user}设置订单过期时间{order_expired_day}天")
-def step_impl(context, user, order_expired_day):
+# @when(u"{user}设置订单过期时间{order_expired_day}天")
+@when(u"{user}设置未付款订单过期时间{order_expired_hour}小时")
+def step_impl(context, user, order_expired_hour):
     url = '/mall2/expired_time/'
     data = {
-        "order_expired_day": order_expired_day
+        "order_expired_day": order_expired_hour
     }
-    response = context.client.post(url, data)
-    bdd_util.assert_api_call_success(response)
+    context.client.post(url, data)
 
 @when(u"{user}触发订单超时取消任务")
 def step_impl(context, user):

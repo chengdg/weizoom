@@ -97,77 +97,33 @@ Feature: 经营报告-经营概况——概况数据
 
 Background:
     Given jobs登录系统
-    Given 开启手动清除cookie模式
-
     And jobs设定会员积分策略
         """
         {
-            "integral_each_yuan": 10
+            "integral_each_yuan":10
         }
         """
 
-    When jobs已添加商品
-        """
-        [{
-            "name": "商品1",
-            "promotion_title": "促销商品1",
-            "detail": "商品1详情",
-            "swipe_images": [{
-                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
-            }],
-            "model": {
-                "models": {
-                    "standard": {
-                        "price": 100.00,
-                        "freight":"10",
-                        "weight": 5.0,
-                        "stock_type": "无限"
-                    }
-                }
-            },
-            "synchronized_mall":"是"
-        }, {
-            "name": "商品2",
-            "promotion_title": "促销商品2",
-            "detail": "商品2详情",
-            "swipe_images": [{
-                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
-            }],
-            "model": {
-                "models": {
-                    "standard": {
-                        "price": 100.00,
-                        "freight":"15",
-                        "weight": 5.0,
-                        "stock_type": "无限"
-                    }
-                }
-            },
-            "synchronized_mall":"是"
-        }]
-        """
-
-    And jobs设置未付款订单过期时间
-        """
-        {
-            "no_payment_order_expire_day":"1天"
-        }
-        """
-
-    And jobs已添加支付方式
+    When jobs添加支付方式
         """
         [{
             "type": "货到付款",
+            "description": "我的货到付款",
             "is_active": "启用"
-        }, {
+        },{
             "type": "微信支付",
-            "is_active": "启用"
-        }, {
+            "description": "我的微信支付",
+            "is_active": "启用",
+            "weixin_appid": "12345", 
+            "weixin_partner_id": "22345", 
+            "weixin_partner_key": "32345", 
+            "weixin_sign": "42345"
+        },{
             "type": "支付宝",
+            "description": "我的支付宝支付",
             "is_active": "启用"
         }]
         """
-
     And jobs开通使用微众卡权限
     And jobs添加支付方式
         """
@@ -177,173 +133,145 @@ Background:
             "is_active": "启用"
         }]
         """
+    Given jobs已创建微众卡
+        """
+        {
+            "cards":[{
+                "id":"0000001",
+                "password":"1234567",
+                "status":"未使用",
+                "price":110.00
+            },{
+                "id":"0000002",
+                "password":"1234567",
+                "status":"未使用",
+                "price":90.00
+            }]
+        }
+        """
+    
+    When jobs添加商品规格
+        """
+        [{
+            "name": "颜色",
+            "type": "文字",
+            "values": [{
+                "name": "黑色"
+            },{
+                "name": "白色"
+            }]
+        }]
+        """
+    And jobs已添加商品
+        """
+        [{
+            "name": "商品1",
+            "promotion_title": "促销商品1",
+            "category": "分类1",
+            "postage": 10,
+            "detail": "商品1详情",
+            "swipe_images": [{
+                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
+            }],
+            "model": {
+                "models": {
+                    "standard": {
+                        "price": 100.00,
+                        "weight": 5.0,
+                        "stock_type": "无限"
+                    }
+                }
+            },
+            "synchronized_mall":"是"
+        }, {
+            "name": "商品2",
+            "promotion_title": "促销商品2",
+            "category": "分类1",
+            "postage": 15,
+            "detail": "商品2详情",
+            "swipe_images": [{
+                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
+            }],
+            "is_enable_model": "启用规格",
+            "model": {
+                "models": {
+                    "黑色": {
+                        "price": 100.00,
+                        "weight": 5.0,
+                        "stock_type": "无限"
+                    },
+                    "白色": {
+                        "price": 100.00,
+                        "weight": 5.0,
+                        "stock_type": "无限"
+                    }
+                }
+            },
+            "synchronized_mall":"是"
+        }]
+        """
 
-    When jobs创建积分应用活动
+    And jobs创建积分应用活动
         """
         [{
             "name": "商品1积分应用",
-            "start_date": "2014-8-1",
+            "start_date": "2014-08-01",
             "end_date": "10天后",
             "product_name": "商品1",
-            "is_permanant_active": false,
-            "discount": 70,
-            "discount_money": 70.0
+            "is_permanant_active": "true",
+            "rules": [{
+                "member_grade": "全部会员",
+                "discount": 70,
+                "discount_money": 70.00
+            }]
+        }, {
+            "name": "商品2积分应用",
+            "start_date": "2014-08-01",
+            "end_date": "10天后",
+            "product_name": "商品2",
+            "is_permanant_active": "true",
+            "rules": [{
+                "member_grade": "全部会员",
+                "discount": 70,
+                "discount_money": 70.00
+            }]
         }]
         """
 
     And jobs添加优惠券规则
         """
         [{
-            "name": "商品2优惠券",
-            "money": 10.00,
-            "start_date": "2014-8-1",
+            "name": "全体券1",
+            "money": 10,
+            "start_date": "2014-08-01",
             "end_date": "10天后",
             "coupon_id_prefix": "coupon1_id_"
         }]
         """
 
-    ##微信用户批量关注jobs成为会员
-
-    When bill关注jobs的公众号于'2015-4-2'
-
-    When mary关注jobs的公众号于'2015-4-3'
-    When mary访问jobs的webapp
-    When mary把jobs的微站链接分享到朋友圈
-
-    When tom关注jobs的公众号
-    When tom访问jobs的webapp
-    When tom把jobs的微站链接分享到朋友圈
-
-    When bill1关注jobs的公众号
-    When bill1取消关注jobs的公众号
-
-    #When 清空浏览器
-    When bill1通过tom分享链接关注jobs的公众号
-    When bill1访问jobs的webapp
-
-    #When 清空浏览器
-    When tom1通过tom分享链接关注jobs的公众号
-    When tom1访问jobs的webapp
-
-    When 清空浏览器
-    When jack点击mary分享链接
-    When jack把jobs的微站链接分享到朋友圈
-
-@stats 
-Scenario:1 获取默认查询最近7天的经营概况
-    Given jobs登录系统
-    Then jobs获得默认筛选日期
-        """
-        [{
-            "begin_date":"7天前",
-            "end_date":"今天"
-        }]
-        """
-    Then 获得店铺经营概况数据
-        """
-        {
-            "transaction_orders": 0,
-            "transaction_money": "0.00",
-            "vis_price": "0.00",
-            "buyer_count": 0
-        }
-        """
-
-@ignore @ui
-Scenario:2  经营概况：筛选日期，默认筛选日期当天；快速查询
-
-    Given jobs登录系统
-    #筛选日期默认最近7天
-    When 浏览'经营概况'页面
-    Then jobs获得筛选日期
-        """
-        [{
-            "begin_date":"7天前",
-            "end_date":"今天"
-        }]
-        """
-
-    #备注：昨天，今天是2015-6-16，筛选日期：2015-6-15到2015-6-15
-    When jobs选中'昨天'
-    Then jobs设置筛选日期
-        """
-        [{
-            "begin_date":"昨天",
-            "end_date":"昨天"
-        }]
-        """
-
-    #备注：最近7天，今天是2015-6-16，筛选日期：2015-6-10到2015-6-16
-    When jobs选中'最近7天'
-    Then jobs设置筛选日期
-        """
-        [{
-            "begin_date":"7天前",
-            "end_date":"今天"
-        }]
-        """
-
-    #备注：最近30天，今天是2015-6-16，筛选日期：2015-5-19到2015-6-16
-    When jobs选中'最近30天'
-    Then jobs设置筛选日期
-        """
-        [{
-            "begin_date":"30天前",
-            "end_date":"今天"
-        }]
-        """
-
-    #备注：最近90天，今天是2015-6-16，筛选日期：2015-3-19到2015-6-16
-    When jobs选中'最近90天'
-    Then jobs设置筛选日期
-        """
-        [{
-            "begin_date":"90天前",
-            "end_date":"今天"
-        }]
-        """
-
-    #备注：全部，今天是2015-6-16，筛选日期：2013-1-1到2015-6-16
-    When jobs选中'全部'
-    Then jobs获得查询条件
-        """
-        [{
-            "begin_date":"2013-1-1",
-            "end_date":"今天"
-        }]
-        """
+    When jack关注jobs的公众号于'2014-07-01'
+    When tom关注jobs的公众号于'2014-07-02'
+    When marry关注jobs的公众号于'2014-07-03'
 
 @mall2 @stats
 Scenario:3  经营概况：店铺经营概况
-    #consumer字段“*jack”这样带“*”代表非会员
-    When 微信用户批量消费jobs的商品
-        # consumer前有'-'表示清空浏览器
-        | date   | consumer | type |businessman|product  | integral | coupon | payment | action    |
-        | 60天前 | mary     | 购买 | jobs      |商品1,1  |          |        | 支付    |           |
-        | 今天   | bill     | 购买 | jobs      |商品1,1  |          |        |         |           |
-        | 今天   | tom      | 购买 | jobs      |商品2,1  |          |        | 支付    |           |
-        | 今天   | tom      | 测试 | jobs      |商品2,1  |          |        | 支付    |           |
-        | 今天   | bill     | 购买 | jobs      |商品1,1  |          |        | 支付    |           |
-        | 今天   | bill1    | 购买 | jobs      |商品1,1  |          |        | 支付    |           |
-        | 今天   | bill1    | 购买 | jobs      |商品2,1  |          |        | 支付    |           |
-        | 今天   | mary     | 购买 | jobs      |商品2,2  |          |        | 支付    |           |
 
-    #非会员Jack购买商品
-    And jack购买jobs的商品
-        """
-        {
-            "products": [{
-                "name": "商品2",
-                "count": 2
-            }]
-        }
-        """
+    When 微信用户批量消费jobs的商品
+        | order_id |    date    | consumer |    product   | payment | pay_type |postage*|price*|integral | product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
+        |   0001   | 2014-08-05 |   jack   | 商品1,1      |         | 支付宝   |   10   | 100  |  300    |       200        |                      |     90       |                   |    0    |    0    |   0   |               |    待支付     |
+        |   0002   | 5天前      |   tom    | 商品1,1      |         | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,取消    |    已取消     |
+        |   0003   | 4天前      |   tom    | 商品2,黑色,2 |   支付  | 微信支付 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_1 |     205      |                   |    0    |   205   |   0   |  jobs,发货    |    已发货     |
+        |   0004   | 3天前      |   tom    | 商品2,白色,1 |   支付  | 货到付款 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |   15  |  jobs,完成    |    已完成     |
+        |   0005   | 2天前      |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,退款    |    退款中     |
+        |   0006   | 今天       |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,完成退款|   退款成功    |
+        |   0007   | 今天       |   -tom3  | 商品1,1      |   支付  | 货到付款 |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
+        |   0008   | 今天       |   -tom4  | 商品1,1      |   支付  | 支付宝   |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
 
     Given jobs登录系统
     When jobs设置筛选日期
         """
         [{
-            "begin_date":"今天",
+            "begin_date":"5天前",
             "end_date":"今天"
         }]
         """
@@ -352,10 +280,10 @@ Scenario:3  经营概况：店铺经营概况
     Then 获得店铺经营概况数据
         """
         {
-            "buyer_count": 4,
-            "transaction_money": "700.00",
-            "vis_price": "116.67",
-            "transaction_orders": 6
+            "buyer_count": 3,
+            "transaction_money": "530.00",
+            "vis_price": "132.50",
+            "transaction_orders": 4
         }
         """
 

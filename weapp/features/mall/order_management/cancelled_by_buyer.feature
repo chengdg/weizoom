@@ -44,7 +44,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no": "001",
+			"order_id": "001",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -54,7 +54,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no":"002",
+			"order_id":"002",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -65,7 +65,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no":"003",
+			"order_id":"003",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -76,7 +76,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no":"004",
+			"order_id":"004",
 			"products": [{
 				"name": "商品1",
 				"count": 1

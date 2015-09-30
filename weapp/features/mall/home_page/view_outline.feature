@@ -1,8 +1,6 @@
 
 #_edit_:张三香
 
-
-
 Feature: 获得店铺首页的经营概况和购买趋势信息
 	jobs通过管理系统能获得首页经营概况和购买趋势信息
 	"""
@@ -79,24 +77,12 @@ Background:
 	When bill访问jobs的webapp
 	When bill获得jobs的800会员积分
 	Then bill在jobs的webapp中拥有800会员积分
-#	When jobs给会员bill"分配"测试权限
-#	Then bill获取测试权限
-#		"""
-#		{
-#			"test_whether_permission": "是"
-#		}
-#		"""
+
 	Given tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom获得jobs的800会员积分
 	Then tom在jobs的webapp中拥有800会员积分
-#	When jobs给会员tom"分配"测试权限
-#	Then tom获取测试权限
-#		"""
-#		{
-#			"test_whether_permission": "是"
-#		}
-#		"""
+
 	Given nokia登录系统
 	When nokia已添加商品
 		"""
@@ -194,20 +180,22 @@ Scenario:2 获得商铺首页经营概况的订单数量信息
 	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
 
 	When 微信用户批量消费jobs的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | bill     | 测试 | jobs      |东坡肘,1  |          |        |         |           |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |
-		| 1天前      | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
-		| 1天前      | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    | jobs,取消 |
-		| 今天       | bill     | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
-		| 今天       | bill     | 测试 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 今天       | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    | jobs,取消 |
+		| order_id | date  | consumer |product   | payment | action    |
+		| 0001     | 3天前 | tom      |东坡肘,1  | 支付    |           |
+		| 0002     | 1天前 | -nokia   |东坡肘,1  | 支付    |           |
+		| 0003     | 1天前 | tom      |东坡肘,1  | 支付    |           |
+		| 0004     | 1天前 | bill     |东坡肘,1  |         |           |
+		| 0005     | 1天前 | tom      |东坡肘,1  |         |           |
+		| 0006     | 1天前 | bill     |水晶虾,2  | 支付    |           |
+		| 0007     | 1天前 | bill     |水晶虾,2  | 支付    | jobs,取消 |
+		| 0008     | 今天  | bill     |水晶虾,2  | 支付    |           |
+		| 0009     | 今天  | bill     |东坡肘,1  | 支付    |           |
+		| 0010     | 今天  | bill     |东坡肘,1  | 支付    | jobs,取消 |
+
 	When 微信用户批量消费nokia的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 1天前      | bill     | 购买 | nokia     |酸菜鱼,2  |          |        | 支付    |           |
+		| order_id | date  | consumer  |product   | payment | action |
+		| 0011     | 1天前 | bill      |酸菜鱼,2  | 支付    |        |
+
 	Given jobs登录系统
 	Then jobs能获取商铺首页的数量信息
 		"""
@@ -231,7 +219,7 @@ Scenario:3 获得商铺首页经营概况的会员数量信息
 	Then jobs能获取商铺首页的数量信息
 		"""
 		{
-			"new_member_count": 3,
+			"new_member_count": 2,
 			"subscribed_member_count": 3
 		}
 		"""
@@ -241,41 +229,43 @@ Scenario:4 获得店铺首页的购买趋势
 	jobs的用户购买商品后，jobs能获得正确的购买趋势
 
 	When 微信用户批量消费jobs的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 7天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 7天前      | bill     | 测试 | jobs      |叫花鸡,1  |          |        | 支付    |           |
-		| 7天前      | tom      | 购买 | jobs      |水晶虾,2  |          |        | 支付    |           |
-		| 7天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        |         | jobs,取消 |
-		| 7天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |
-		| 6天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 5天前      | bill     | 测试 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 5天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 5天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        |         | jobs,取消 |
-		| 5天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |
-		| 4天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 4天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        |         | jobs,取消 |
-		| 4天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 4天前      | -tom1    | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 3天前      | tom      | 测试 | jobs      |东坡肘,1  |          |        |         |           |
-		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 3天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | -nokia   | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        |         |           |
-		| 1天前      | tom      | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 1天前      | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 今天       | bill     | 购买 | jobs      |东坡肘,1  |          |        |         |           |
-		| 今天       | bill     | 购买 | jobs      |东坡肘,1  |          |        | 支付    |           |
-		| 今天       | bill     | 测试 | jobs      |东坡肘,1  |          |        |         | jobs,取消 |
+		| order_id| date  | consumer | product   | payment | action    |
+		| 0001    | 7天前 | -nokia   | 东坡肘,1  | 支付    |           |
+		| 0002    | 7天前 | bill     | 叫花鸡,1  | 支付    |           |
+		| 0003    | 7天前 | tom      | 水晶虾,2  | 支付    |           |
+		| 0004    | 7天前 | bill     | 东坡肘,1  |         | jobs,取消 |
+		| 0005    | 7天前 | tom      | 东坡肘,1  |         |           |
+		| 0006    | 6天前 | bill     | 东坡肘,1  | 支付    |           |
+		| 0007    | 5天前 | bill     | 东坡肘,1  | 支付    |           |
+		| 0008    | 5天前 | bill     | 东坡肘,1  | 支付    |           |
+		| 0009    | 5天前 | bill     | 东坡肘,1  |         | jobs,取消 |
+		| 0010    | 5天前 | tom      | 东坡肘,1  |         |           |
+		| 0011    | 4天前 | bill     | 东坡肘,1  | 支付    |           |
+		| 0012    | 4天前 | bill     | 东坡肘,1  |         | jobs,取消 |
+		| 0013    | 4天前 | tom      | 东坡肘,1  | 支付    |           |
+		| 0014    | 4天前 | -tom1    | 东坡肘,1  | 支付    |           |
+		| 0015    | 3天前 | tom      | 东坡肘,1  |         |           |
+		| 0016    | 3天前 | tom      | 东坡肘,1  | 支付    |           |
+		| 0017    | 3天前 | tom      | 东坡肘,1  | 支付    |           |
+		| 0018    | 1天前 | -nokia   | 东坡肘,1  | 支付    |           |
+		| 0019    | 1天前 | tom      | 东坡肘,1  |         |           |
+		| 0020    | 1天前 | tom      | 东坡肘,1  | 支付    |           |
+		| 0021    | 1天前 | bill     | 东坡肘,1  | 支付    |           |
+		| 0022    | 今天  | bill     | 东坡肘,1  |         |           |
+		| 0023    | 今天  | bill     | 东坡肘,1  | 支付    |           |
+		| 0024    | 今天  | bill     | 东坡肘,1  |         | jobs,取消 |
+
 	When 微信用户批量消费nokia的商品
-		| date  	 | consumer | type |businessman|product   | integral | coupon | payment | action    |
-		| 今天       | bill     | 购买 | nokia     |酸菜鱼,2  |          |        | 支付    |           |
+		| order_id| date | consumer | product   | payment | action    |
+		| 0025    | 今天 | bill     | 酸菜鱼,2  | 支付    |           |
+
 	Given jobs登录系统
+	#当今天为最后一天时不显示今天的数据，所以只有六天
 	Then jobs能获取'7天'购买趋势
-		| date  	 | product_count | money |
-		| 7天前      | 2             | 17.1  |
-		| 6天前      | 1             | 11.1  |
-		| 5天前      | 1             | 11.1  |
-		| 4天前      | 3             | 33.3  |
-		| 3天前      | 2             | 22.2  |
-		| 2天前      | 0             | 0.0   |
-		| 1天前      | 3             | 33.3  |
+		| date  | product_count | money |
+		| 6天前 | 1             | 11.1  |
+		| 5天前 | 2             | 22.2  |
+		| 4天前 | 3             | 33.3  |
+		| 3天前 | 2             | 22.2  |
+		| 2天前 | 0             | 0.0   |
+		| 1天前 | 3             | 33.3  |

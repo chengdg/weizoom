@@ -81,7 +81,7 @@ Scenario: 1 订单量等于商品销量
 		And bill购买jobs的商品
 			"""
 				{
-  					"order_no": "001",
+  					"order_id": "001",
 					"products": [{
 						"name": "商品1",
 						"model": "M",
@@ -96,7 +96,7 @@ Scenario: 1 订单量等于商品销量
 		And tom购买jobs的商品
 			"""
 				{
-					"order_no": "002",
+					"order_id": "002",
 					"products": [{
 						"name": "商品1",
 						"model": "S",
@@ -118,7 +118,7 @@ Scenario: 1 订单量等于商品销量
 		And marry购买jobs的商品
 			"""
 				{
-					"order_no": "003",
+					"order_id": "003",
 					"products": [{
 						"name": "商品1",
 						"model": "M",
@@ -173,7 +173,7 @@ Scenario: 2 订单量小于商品销量
 		And bill购买jobs的商品
 			"""
 				{
-					"order_no": "001",
+					"order_id": "001",
 					"products": [{
 						"name": "商品1",
 						"model": "M",
@@ -195,7 +195,7 @@ Scenario: 2 订单量小于商品销量
 		And tom购买jobs的商品
 			"""
 				{
-					"order_no": "002",
+					"order_id": "002",
 					"products": [{
 						"name": "商品1",
 						"model": "M",
@@ -221,7 +221,7 @@ Scenario: 2 订单量小于商品销量
 		And marry购买jobs的商品
 			"""
 				{
-					"order_no": "003",
+					"order_id": "003",
 					"products": [{
 						"name": "商品1",
 						"model": "M",

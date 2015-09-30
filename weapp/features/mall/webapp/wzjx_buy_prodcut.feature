@@ -110,7 +110,7 @@ Scenario: 1 购买单个商品
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no": "001",
+			"order_id": "001",
 			"products": [{
 				"name": "商品1",
 				"count": 2

@@ -74,7 +74,7 @@ Scenario:1 会员详情-传播能力
 		And bill购买jobs的商品
 			"""
 			{
-				"order_no": "001",
+				"order_id": "001",
 				"products": [{
 					"name": "商品1",
 					"count": 1
@@ -87,7 +87,7 @@ Scenario:1 会员详情-传播能力
 		And bill购买jobs的商品
 			"""
 			{
-				"order_no": "002",
+				"order_id": "002",
 				"products": [{
 					"name": "商品1",
 					"count": 1
@@ -101,7 +101,7 @@ Scenario:1 会员详情-传播能力
 		And bill购买jobs的商品
 			"""
 			{
-				"order_no": "003",
+				"order_id": "003",
 				"products": [{
 					"name": "商品1",
 					"count": 1
@@ -118,7 +118,7 @@ Scenario:1 会员详情-传播能力
 		And bill购买jobs的商品
 			"""
 			{
-				"order_no": "004",
+				"order_id": "004",
 				"products": [{
 					"name": "商品1",
 					"count": 1
@@ -144,7 +144,7 @@ Scenario:1 会员详情-传播能力
 		And bill购买jobs的商品
 			"""
 			{
-				"order_no": "005",
+				"order_id": "005",
 				"products": [{
 					"name": "商品1",
 					"count": 1
@@ -162,7 +162,7 @@ Scenario:1 会员详情-传播能力
 		And bill购买jobs的商品
 			"""
 			{
-				"order_no": "006",
+				"order_id": "006",
 				"products": [{
 					"name": "商品1",
 					"count": 1
@@ -199,7 +199,7 @@ Scenario:1 会员详情-传播能力
 		And bill2购买jobs的商品
 			"""
 			{
-				"order_no": "007",
+				"order_id": "007",
 				"products": [{
 					"name": "商品1",
 					"count": 1

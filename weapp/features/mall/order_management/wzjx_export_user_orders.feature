@@ -133,7 +133,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000001",
+			"order_id": "0000001",
 			"date": "今天",
 			"products": [{
 				"name": "商品1",
@@ -163,7 +163,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000002",
+			"order_id": "0000002",
 			"date": "今天",
 			"ship_tel": "13811223344",
 			"products": [{
@@ -202,7 +202,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000003",
+			"order_id": "0000003",
 			"date": "今天",
 			"products": [{
 				"name": "商品3",
@@ -228,7 +228,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000004",
+			"order_id": "0000004",
 			"date": "今天",
 			"products": [{
 				"name": "商品4",
@@ -268,7 +268,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000005",
+			"order_id": "0000005",
 			"date": "今天",
 			"products": [{
 				"name": "商品3",
@@ -293,7 +293,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000006",
+			"order_id": "0000006",
 			"date": "今天",
 			"products": [{
 				"name": "商品3",
@@ -308,7 +308,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000007",
+			"order_id": "0000007",
 			"date": "今天",
 			"products": [{
 				"name": "商品4",
@@ -333,7 +333,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000008",
+			"order_id": "0000008",
 			"date": "今天",
 			"products": [{
 				"name": "商品4",
@@ -356,7 +356,7 @@ Scenario: 1 不同供货商订单导出
 	When bill购买jobs的商品
 		"""
 		{
-			"order_no": "0000009",
+			"order_id": "0000009",
 			"date": "今天",
 			"products": [{
 				"name": "商品3",

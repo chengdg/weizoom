@@ -340,7 +340,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	else:
 		context.created_order_id = -1
 		context.server_error_msg = response_json['data']['msg']
-		print "buy_error----------------------------",context.server_error_msg
+		print "buy_error----------------------------",context.server_error_msg,response
 	if context.created_order_id != -1:
 		if 'date' in args:
 			Order.objects.filter(order_id=context.created_order_id).update(created_at=bdd_util.get_datetime_str(args['date']))
@@ -416,7 +416,7 @@ def step_impl(context, webapp_owner_name):
 				# 先为会员赋予积分,再使用积分
 				# TODO 修改成jobs修改bill积分
 				context.execute_steps(u"When %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
-				data['products'][0]['integral'] = tmp
+			data['products'][0]['integral'] = tmp
 
 		if row.get('coupon', '') != '':
 			if ',' in row['coupon']:
@@ -492,14 +492,14 @@ def step_impl(context, webapp_owner_name):
 				step_id = OPERATION2STEPID.get(u'退款', None)
 				context.latest_order_id = order.id
 				context.execute_steps(step_id % actor)
-			if operation == u'退款':  # 完成退款的前提是要进行发货和完成操作
-				step_id = OPERATION2STEPID.get(u'发货', None)
-				context.latest_order_id = order.id
-				context.execute_steps(step_id % actor)
+			# if operation == u'退款':  # 完成退款的前提是要进行发货和完成操作
+			# 	step_id = OPERATION2STEPID.get(u'发货', None)
+			# 	context.latest_order_id = order.id
+			# 	context.execute_steps(step_id % actor)
 
-				step_id = OPERATION2STEPID.get(u'完成', None)
-				context.latest_order_id = order.id
-				context.execute_steps(step_id % actor)
+			# 	step_id = OPERATION2STEPID.get(u'完成', None)
+			# 	context.latest_order_id = order.id
+			# 	context.execute_steps(step_id % actor)
 
 			step_id = OPERATION2STEPID.get(operation, None)
 			if step_id:
