@@ -253,7 +253,7 @@ class FansAnalysis(resource.Resource):
 		"""
 		webapp_id = request.user_profile.webapp_id
 		subscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, is_for_test=False).count()
-		unsubscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=False, is_for_test=False).count()
+		unsubscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=False, is_for_test=False, status=NOT_SUBSCRIBED).count()
 
 		display_date_list = ['取消关注会员', '现有会员']
 		try:
