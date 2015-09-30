@@ -69,7 +69,6 @@ W.view.mall.redMemberFilterView = Backbone.View.extend({
                     coupon_status: data.coupon_status
                 });
                 this.$el.append(html);
-                _this.addDatepicker();
                 $('.xa-showFilterBox').append($('.xa-timelineControl'));
             },
             error: function(response) {
