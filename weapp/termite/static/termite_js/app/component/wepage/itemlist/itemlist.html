@@ -40,7 +40,16 @@
                                 xui-border
                                 {% endif %}
                             {% endif %}
-                        {% endif %}">¥{% firstof product.display_price '234.0' %}</p>
+                        {% endif %}"
+
+                        {% if component.model.type == '3' %}
+                        {% else %}
+                            {% if component.model.price %}
+                            {% else %}
+                            style="display:none;"
+                            {% endif %}
+                        {% endif %}
+                        >¥{% firstof product.display_price '234.0' %}</p>
                     </div>
                     <div class="wa-inner-shopCar wui-inner-shopCar wui-shopCar-style{{component.model.style}}"></div>
                 </a>
