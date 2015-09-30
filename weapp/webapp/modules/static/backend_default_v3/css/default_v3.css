@@ -2291,6 +2291,7 @@ input.ui-input-text, textarea.ui-input-text {
     color: #333;
     height: 34px;
     overflow: hidden;
+    line-height: 17px;
 }
 .xui-shoppingCartPage .xui-productName,.xui-shoppingCartPage .xui-productCustomModel span{
     margin-right: 7px;
@@ -2702,6 +2703,7 @@ input.ui-input-text, textarea.ui-input-text {
     height: 32px;
     overflow: hidden;
     width: 174px;
+    line-height: 17px;
 }
 .xui-orderListPage .xui-productNum{
     position: absolute;
