@@ -24,6 +24,10 @@ def _profunc_category_id(param):
 	# 将类名转成ID
 	return mall_models.ProductCategory.objects.get(name=param).id
 
+def _profunc_product_id(param):
+	# 将类名转成ID
+	return mall_models.Product.objects.get(name=param).id
+
 def _profunc_today_date(param):
 	# 返回今天日期YYYY-MM-DD
 	return utils_dateutil.date2string(utils_dateutil.now())
@@ -32,7 +36,8 @@ def _profunc_today_date(param):
 _PROCESS_FUNC_DICT = {
 	'owner_id': _profunc_owner_id,
 	'category_id': _profunc_category_id,
-	'today_date': _profunc_today_date
+	'today_date': _profunc_today_date,
+	'product_id': _profunc_product_id
 }
 
 

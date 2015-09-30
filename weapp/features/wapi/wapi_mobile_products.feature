@@ -266,7 +266,26 @@ Scenario: 测试按类别获得商品列表的API
 		}
 		"""
 
+
 @wip.wapi
+Scenario: 测试获取商品的API
+
+	When 访问WAPI:mall/product
+		"""
+		{
+			"id": "$product_id(东坡肘子)$"
+		}
+		"""
+	Then 获得WAPI结果
+		"""
+		{
+			"id": "$product_id(东坡肘子)$",
+			"owner_id": "$owner_id(jobs)$",
+			"name": "东坡肘子"
+		}
+		"""
+
+@wapi
 Scenario: 测试商品分类的接口
 	# 获得分类列表
 
