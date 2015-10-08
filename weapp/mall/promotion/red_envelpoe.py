@@ -553,8 +553,11 @@ class redParticipances_Export(resource.Resource):
                        new_coupon_ids.add(coupon.id)
                 datas = datas.filter(coupon_id__in=list(new_coupon_ids))
             if selected_ids:
-                params['member__in'] = selected_ids
-                datas = datas.filter(**params)
+                member_ids = set()
+                for data in datas:
+                    if str(data.member.id) in selected_ids:
+                        member_ids.add(data.member_id)
+                datas = datas.filter(member__in=list(member_ids))
             fields_pure = []
             export_data = []
 
