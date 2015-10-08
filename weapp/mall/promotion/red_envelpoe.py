@@ -66,7 +66,6 @@ class RedEnvelopeRuleList(resource.Resource):
                 if flag:
                     if rule.limit_time and rule.status:
                         if id2coupon_rule[rule.coupon_rule_id].remained_count<=20:
-                            is_timeout = False
                             flag = False
                             is_warring = True
                         else:
@@ -329,6 +328,7 @@ class RedEnvelopeParticipances(resource.Resource):
         return response.get_response()
 
 def get_datas(request):
+    receive_method = request.GET.get('receive_method','')
     name = request.GET.get('participant_name', '')
     webapp_id = request.user_profile.webapp_id
     if name:
@@ -386,6 +386,7 @@ def get_datas(request):
             'status_id': coupon.status,
             'status_name': COUPONSTATUS[coupon.status]['name']
         }
+    print id2Coupon,"id2Coupon"
     # 获取被使用的优惠券使用者信息
     coupon_ids = [c.id for c in coupon_list if c.status == COUPON_STATUS_USED]
     orders = Order.get_orders_by_coupon_ids(coupon_ids)
@@ -482,6 +483,9 @@ class RedEnvelopeParticipancesFilter(resource.Resource):
         },{
             "id": 1,
             "name": u'已使用'
+        },{
+            "id": 2,
+            "name": u'已过期'
         }]
 
         grades = []
@@ -553,8 +557,11 @@ class redParticipances_Export(resource.Resource):
                        new_coupon_ids.add(coupon.id)
                 datas = datas.filter(coupon_id__in=list(new_coupon_ids))
             if selected_ids:
-                params['member__in'] = selected_ids
-                datas = datas.filter(**params)
+                member_ids = set()
+                for data in datas:
+                    if str(data.member.id) in selected_ids:
+                        member_ids.add(data.member_id)
+                datas = datas.filter(member__in=list(member_ids))
             fields_pure = []
             export_data = []
 

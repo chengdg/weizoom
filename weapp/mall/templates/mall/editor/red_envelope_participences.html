@@ -37,8 +37,9 @@
 			<label for="topSelectAll" class="xui-selectAll ml15">
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-selected">导出选中</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-all">导出结果</a>
+			<label class="fr mt5 ml10">筛选结果：{{has_data}}人</label>
+			<a href="javascript:void(0);" class="fr btn btn-default ml10 xa-export-all">导出结果</a>
+			<a href="javascript:void(0);" class="fr btn btn-default ml10 xa-export-selected">导出选中</a>
 			<a id="export_href" style="display: none ">DownloadXLS</a>
 		</div>
 		<div
@@ -74,13 +75,13 @@
 		<thead>
 			<tr>
 				<th>下单会员</th>
-				<th>会员状态</th>
-				<th>引入领取人数</th>
-				<th>引入使用人数</th>
-				<th>引入新关注</th>
-				<th>引入消费额</th>
-				<th>领取时间</th>
-				<th>使用状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='grade' data-sort-direction="up">会员状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_new_member' data-sort-direction="up">引入新关注</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_sales_number' data-sort-direction="up">引入消费额</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">领取时间</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='coupon_status' data-sort-direction="up">使用状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -114,10 +115,12 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{if item.coupon_status_id}}
-						<b style="color:#5D8F17">${item.coupon_status}</b>
-					{{else}}
+					{{if item.coupon_status_id==0 }}
 						<b>${item.coupon_status}</b>
+					{{else item.coupon_status_id==1}}
+						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{else item.coupon_status_id==2}}
+						<b style="color:#DB2009">${item.coupon_status}</b>
 					{{/if}}
 				</td>
 				<td>
@@ -166,13 +169,14 @@ $(document).ready(function() {
 
 	var name,grade_id,coupon_status;
 	var export_id =window.location.search.split('?id=')[1];
-    //export
+	var selected_ids = [];
+    //导出选中
 	$('.xa-export-selected').click(function(event) {
+		selected_ids = [];//清空selected_ids
         W.getLoadingView();
 		name = $.trim($('[name="name"]').val());
 		grade_id = $.trim($('[name="grade"]').val());
 		coupon_status = $.trim($('[name="coupon_status"]').val());
-		var selected_ids = [];
         $('tbody .xa-select').each(function() {
             var $checkbox = $(this);
             if ($checkbox.is(":checked")) {
@@ -183,62 +187,17 @@ $(document).ready(function() {
 		if(selected_ids==''){
 			W.getErrorHintView().show("请选择导出内容");
 		}else{
-			W.getApi().call({
-				method: 'get',
-				app: 'apps/promotion',
-				resource: 'red_participances_export',
-				args: {
-					'export_id':export_id,
-					'name': name,
-					'grade_id': grade_id,
-					'coupon_status': coupon_status,
-					'selected_ids': selected_ids
-				},
-				success: function(resp){
-					if(resp.code == 200){
-						$('#export_href').prop({
-							'href': resp.download_path,
-							'download': resp.filename
-						}).get(0).click();
-
-					}
-					console.log("导出成功");
-				},
-				error: function(error){
-					console.log('导出失败');
-				}
-			});
+			exportItem();
 		}
     });
+	//批量导出
 	$('.xa-export-all').click(function(event) {
+		selected_ids = [];//清空selected_ids
         W.getLoadingView();
 		name = $.trim($('[name="name"]').val());
 		grade_id = $.trim($('[name="grade"]').val());
 		coupon_status = $.trim($('[name="coupon_status"]').val());
-        W.getApi().call({
-            method: 'get',
-            app: 'apps/promotion',
-            resource: 'red_participances_export',
-            args: {
-				'export_id':export_id,
-				'name': name,
-				'grade_id': grade_id,
-				'coupon_status': coupon_status
-			},
-            success: function(resp){
-                if(resp.code == 200){
-                    $('#export_href').prop({
-                        'href': resp.download_path,
-                        'download': resp.filename
-                    }).get(0).click();
-
-                }
-                console.log("导出成功");
-            },
-            error: function(error){
-                console.log('导出失败');
-            }
-        });
+        exportItem();
     });
 	//全选js
 	$('.xa-selectAll').click(function(event) {
@@ -248,6 +207,33 @@ $(document).ready(function() {
         $('.xa-selectAll').prop('checked', isChecked);
     });
 
+	function exportItem(){
+		W.getApi().call({
+			method: 'get',
+			app: 'apps/promotion',
+			resource: 'red_participances_export',
+			args: {
+				'export_id':export_id,
+				'name': name,
+				'grade_id': grade_id,
+				'coupon_status': coupon_status,
+				'selected_ids': selected_ids
+			},
+			success: function(resp){
+				if(resp.code == 200){
+					$('#export_href').prop({
+						'href': resp.download_path,
+						'download': resp.filename
+					}).get(0).click();
+
+				}
+				console.log("导出成功");
+			},
+			error: function(error){
+				console.log('导出失败');
+			}
+		});
+	}
 });
 </script>
 {% endblock %}
