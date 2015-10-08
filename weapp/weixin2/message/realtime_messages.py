@@ -422,7 +422,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             if member:
                 one_session['member_id'] = member.id
                 one_session['is_subscribed'] = member.is_subscribed
-                one_session['user_icon'] =  member.user_icon
+                one_session['user_icon'] =  member.user_icon if len(member.user_icon.strip()) > 0 else DEFAULT_ICON
                 one_session['name'] =  member.username_for_html
                 if not member.is_subscribed:
                     one_session['could_replied'] = 0
@@ -630,7 +630,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             if member:
                 one_message['member_id'] = member.id
                 one_message['is_subscribed'] = member.is_subscribed
-                one_message['user_icon'] =  member.user_icon
+                one_message['user_icon'] = member.user_icon if member.user_icon and len(member.user_icon.strip()) > 0 else DEFAULT_ICON
                 one_message['name'] =  member.username_for_html
                 if not member.is_subscribed:
                     one_message['could_replied'] = 0
