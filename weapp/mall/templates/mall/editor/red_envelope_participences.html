@@ -38,7 +38,7 @@
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">导出选中</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">导出结果</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete xa-export">导出结果</a>
 		</div>
 		<div
             class="panel-body panel-table p0 mt10"
@@ -113,10 +113,17 @@
 					${item.created_at}
 				</td>
 				<td>
-					${item.coupon_status}
+					{{if item.coupon_status_id}}
+						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{else}}
+						<b>${item.coupon_status}</b>
+					{{/if}}
 				</td>
 				<td>
-					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a>
+					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a><br>
+					{{if item.coupon_status_id}}
+						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
+					{{/if}}
 				</td>
 			</tr>
 			{{/each}}
@@ -155,26 +162,25 @@ $(document).ready(function() {
 			}
 		});
 	});
-	var participant_name,startTime,endTime;
+	var name,grade_id,coupon_status;
     //export
     $('.xa-export').click(function(event){
         W.getLoadingView();
-		participant_name = $.trim($('[name="participant_name"]').val());
-		startTime = $.trim($('[name="start_time"]').val());
-		endTime = $.trim($('[name="end_time"]').val());
+		name = $.trim($('[name="name"]').val());
+		grade_id = $.trim($('[name="grade"]').val());
+		coupon_status = $.trim($('[name="coupon_status"]').val());
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
-            app: 'apps/event',
-            resource: 'event_participances-export',
+            app: 'apps/promotion',
+            resource: 'red_participances_export',
             args: {
 				'export_id':export_id,
-				'participant_name': participant_name,
-				'start_time': startTime,
-				'end_time': endTime
+				'name': name,
+				'grade_id': grade_id,
+				'coupon_status': coupon_status
 			},
             success: function(resp){
-
                 if(resp.code == 200){
                     $('#export_href').prop({
                         'href': resp.download_path,
@@ -195,24 +201,6 @@ $(document).ready(function() {
         $('tbody .xa-select').prop('checked', isChecked);
         $('.xa-selectAll').prop('checked', isChecked);
     });
-	$('.xa-search').click(function(event) {
-		var name = $.trim($('[name="participant_name"]').val());
-		var member_status = $.trim($('[name="member_status"]').val());
-		var red_envelope_status = $.trim($('[name="red_envelope_status"]').val());
-		var table = $('[data-ui-role="advanced-table"]').data('view');
-		table.reload({
-			name: name,
-			member_status: member_status,
-			red_envelope_status: red_envelope_status
-		}, {
-			emptyDataHint: '没有符合条件的数据'
-		});
-	});
-    $('.xa-reset').click(function(event) {
-		$('[name="participant_name"]').val('');
-		$('[name="member_status"]').val('-1');
-		$('[name="red_envelope_status"]').val('-1');
-	});
 
 });
 </script>
