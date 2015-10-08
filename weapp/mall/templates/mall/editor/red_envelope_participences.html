@@ -37,8 +37,9 @@
 			<label for="topSelectAll" class="xui-selectAll ml15">
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">导出选中</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete xa-export">导出结果</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-selected">导出选中</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-all">导出结果</a>
+			<a id="export_href" style="display: none ">DownloadXLS</a>
 		</div>
 		<div
             class="panel-body panel-table p0 mt10"
@@ -162,9 +163,10 @@ $(document).ready(function() {
 			}
 		});
 	});
+
 	var name,grade_id,coupon_status;
     //export
-    $('.xa-export').click(function(event){
+	$('.panel-heading').delegate('.xa-export-all', 'click', function(event){
         W.getLoadingView();
 		name = $.trim($('[name="name"]').val());
 		grade_id = $.trim($('[name="grade"]').val());
@@ -195,6 +197,7 @@ $(document).ready(function() {
             }
         });
     });
+	//全选js
 	$('.xa-selectAll').click(function(event) {
         var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');
