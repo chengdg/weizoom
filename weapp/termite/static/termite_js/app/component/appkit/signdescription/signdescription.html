@@ -15,7 +15,7 @@
             height: 250px;
             background-image: url('/termite_static/img/component/sign/signdescription_left_bg.png');
             background-repeat: repeat-x;
-            background-size: 4% auto;
+            background-size: 4.5% auto;
             text-align: center;
             color: white;
         }
@@ -134,9 +134,18 @@
     </div>
 
     <div class="wui-BodyPaneDiv">
-        <div class="wui-SignDiv">
+        <div class="wui-SignDiv animate3d">
             <div class="wui-SignCircle wa-sign-btn">
-                <div class="wui-SignSign"><p class="wui-SignChr">签到</p></div>
+                <div class="wui-SignSign">
+                    <p class="wui-SignChr">签到</p>
+                </div>
+            </div>
+            <div class="wui-SignCircle wa-sign-board" style="display: none">
+                <div class="wui-SignSign">
+                    <p class="wui-SignChr">已连续签到</p>
+                    <p class="wui-SignChr wa-i-serial-count"><b></b>天</p>
+                    <p class="wui-SignChr">已签到</p>
+                </div>
             </div>
         </div>
     </div>

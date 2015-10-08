@@ -37,8 +37,9 @@
 			<label for="topSelectAll" class="xui-selectAll ml15">
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-selected">导出选中</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-all">导出结果</a>
+			<label class="fr mt5 ml10">筛选结果：{{has_data}}人</label>
+			<a href="javascript:void(0);" class="fr btn btn-default ml10 xa-export-all">导出结果</a>
+			<a href="javascript:void(0);" class="fr btn btn-default ml10 xa-export-selected">导出选中</a>
 			<a id="export_href" style="display: none ">DownloadXLS</a>
 		</div>
 		<div
@@ -74,17 +75,18 @@
 		<thead>
 			<tr>
 				<th>下单会员</th>
-				<th>会员状态</th>
-				<th>引入领取人数</th>
-				<th>引入使用人数</th>
-				<th>引入新关注</th>
-				<th>引入消费额</th>
-				<th>领取时间</th>
-				<th>使用状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='grade' data-sort-direction="up">会员状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_new_member' data-sort-direction="up">引入新关注</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_sales_number' data-sort-direction="up">引入消费额</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">领取时间</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='coupon_status' data-sort-direction="up">使用状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
+		<div id="__json-members" class="hidden">${JSON.stringify(items)}</div>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
 			<td style="position:relative;" >
