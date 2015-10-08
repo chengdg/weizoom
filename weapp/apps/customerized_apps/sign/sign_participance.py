@@ -66,5 +66,7 @@ class SignParticipance(resource.Resource):
 			return_data = signer.do_signment(sign)
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
 				response = create_response(200)
+			else:
+				response.errMsg = return_data['errMsg']
 		return response.get_response()
 

@@ -32,8 +32,13 @@ class SignParticipance(models.Document):
 			'set__latest_date': nowDate,
 			'inc__total_count': 1
 		}
-		#判断是否连续签到，否则重置为1
 		latest_date = self.latest_date
+		#判断是否已签到
+		if latest_date.strftime('%Y-%m-%d') == nowDate.strftime('%Y-%m-%d'):
+			return_data['status_code'] = RETURN_STATUS_CODE['ERROR']
+			return_data['errMsg'] = u'今日已签到'
+			return return_data
+		#判断是否连续签到，否则重置为1
 		if latest_date == nowDate - datetime.timedelta(days=1):
 			user_update_data['inc__serial_count'] = 1
 		else:
