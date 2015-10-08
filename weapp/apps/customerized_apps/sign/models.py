@@ -133,10 +133,10 @@ class Sign(models.Document):
 		"""
 		return_data = {}
 		try:
-			sign = Sign.objects.get(owner_id=data.webapp_owner_id)
+			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
 			if sign.status != 1:
 				return_data['errMsg'] = u'签到活动未开始'
-			elif data.keyword == sign.reply['keyword']:
+			elif data['keyword'] == sign.reply['keyword']:
 				# add by bert  增加获取会员代码
 				member = get_member_by_openid(data['openid'])
 				if not member:
