@@ -578,7 +578,7 @@ Scenario:4 每次购买给邀请者增加积分
 		"""
 
 @member @member.shared_integral @mall2
-Scenario:5 基础积分设为0，额外积分奖励不为零，此项整体积分奖励没有
+Scenario:5 购买商品返积分 基础积分设为0，额外积分奖励不为零，此项整体积分奖励没有
 
 	Given jobs登录系统
 	And jobs已添加商品
@@ -655,10 +655,13 @@ Scenario:5 基础积分设为0，额外积分奖励不为零，此项整体积�
 	When jobs'完成'最新订单
 	When 清空浏览器
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有20会员积分
+	Then bill在jobs的webapp中拥有21会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""
 		[{
+			"content":"购物返利",
+			"integral":1
+		},{
 			"content":"首次关注",
 			"integral":20
 		}]
@@ -748,6 +751,110 @@ Scenario:6 基础积分不为0，额外积分奖励，小数部分直接舍掉�
 		[{
 			"content":"购物返利",
 			"integral":10
+		},{
+			"content":"首次关注",
+			"integral":20
+		}]
+		"""
+
+@member @member.shared_integral @mall2
+Scenario:7 推荐关注的好友购买奖励 基础积分设为0，额外积分奖励不为零，此项整体积分奖励没有
+	1.bill是tom的邀请者
+	2.tom每次购买jobs的商品，给bill增加积分
+
+	Given jobs登录系统
+	And jobs设定会员积分策略
+		"""
+		{
+			"buy_via_offline_increase_count_for_author":0,
+			"buy_via_offline_increase_count_percentage_for_author":0.01
+		}
+		"""
+
+	When 清空浏览器
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill把jobs的微站链接分享到朋友圈
+	
+	When 清空浏览器
+	When tom点击bill分享链接
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When 清空浏览器
+	Given jobs登录系统
+	Then jobs能获取到bill的好友
+		"""
+		[{
+			"name": "tom",
+			"source": "会员分享",
+			"is_fans": "是"
+		}]
+		"""
+	When 清空浏览器
+	When tom访问jobs的webapp
+	When tom购买jobs的商品
+		"""
+		{
+			"ship_name": "tom",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
+			"products": [{
+				"name": "商品2",
+				"count": 1
+			}],
+			"customer_message": "tom的订单备注1"
+		}
+		"""
+	
+	When 清空浏览器
+	Given jobs登录系统
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"order_type": "普通订单",
+			"status": "待支付",
+			"actions": ["取消订单", "支付"],
+			"total_price": 100.0,
+			"ship_name": "tom",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
+			"customer_message": "tom的订单备注1",
+			"products": [{
+				"name": "商品2",
+				"count": 1,
+				"total_price": 100.0
+			}]
+		}
+		"""
+	When jobs'支付'最新订单
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"order_type": "普通订单",
+			"status": "待发货",
+			"actions": ["发货","取消订单"]
+		}
+		"""
+	When jobs对最新订单进行发货
+	Then jobs可以获得最新订单详情
+		"""
+		{
+			"order_type": "普通订单",
+			"status": "已发货",
+			"actions": ["标记完成", "修改物流","取消订单"]
+		}
+		"""
+	When jobs'完成'最新订单
+	When 清空浏览器
+	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有21会员积分
+	Then bill在jobs的webapp中获得积分日志
+		"""
+		[{
+			"content":"推荐关注的好友购买奖励",
+			"integral":1
 		},{
 			"content":"首次关注",
 			"integral":20
