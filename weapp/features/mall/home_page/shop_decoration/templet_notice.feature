@@ -6,8 +6,8 @@ Feature:自定义模块——【基础模块】公告-页面
 
 
 Scenario:添加公告
-	When jobs登录系统
-	And jobs创建微页面
+	Given jobs登录系统
+	When jobs创建微页面
 	"""
 	[{
 		"title": {

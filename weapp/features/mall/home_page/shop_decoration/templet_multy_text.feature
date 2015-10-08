@@ -7,6 +7,7 @@ Feature: 自定义模块-富文本
 
 
 Scenario: 添加，编辑富文本
+	Given jobs登录系统
 	When jobs创建微页面
 	"""
 		[{

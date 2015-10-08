@@ -11,63 +11,8 @@ Feature:自定义模块——【基础模块】橱窗-页面
 
 
 Scenario:1 新建橱窗微页面
-		When jobs登录系统
-		And jobs创建微页面
-		"""
-			[{
-				"title":{
-					"name": "微页面标题"
-				},
-				"display_window":{
-					"items":[{
-						"display_window_title":"",
-						"content_title":"",
-						"display_mode":"默认",
-						"content_explain":"",
-						"value":[{
-							"pictrue1":"图片1",
-							"pictrue_link1":"会员主页"
-							},{
-							"picture2":"图片2",
-							"picture_link2":"会员主页"
-							},{
-							"picture3":"图片3",
-							"picture_link2":"店铺主页"
-							}]
-						}]
-					}
-			}]
-		"""
-		Then jobs能获取'微页面标题'
-		"""
-			{
-				"title": {
-					"name": "微页面标题"
-				},
-				"display_window": {
-					"items":[{
-						"display_window_title":"",
-						"content_title":"",
-						"display_mode":"默认",
-						"content_explain":"",
-						"value":[{
-							"pictrue1":"图片1",
-							"pictrue_link1":"会员主页"
-							},{
-							"picture2":"图片2",
-							"picture_link2":"会员主页"
-							},{
-							"picture3":"图片3",
-							"picture_link2":"店铺主页"
-							}]
-						}]
-				}
-			}
-		"""
-
-Scenario: 2编辑，删除
-	When jobs登录系统
-	And jobs创建微页面
+		Given jobs登录系统
+		When jobs创建微页面
 		"""
 			[{
 				"title":{
