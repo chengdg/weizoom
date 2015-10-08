@@ -2,6 +2,7 @@
 
 import json
 from datetime import datetime
+import os
 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -13,10 +14,13 @@ from mall import export
 from core.jsonresponse import create_response
 from core import paginator
 from core import search_util
-from mall.promotion.models import Coupon,COUPONSTATUS
+from mall.models import Order
+from mall.promotion.models import Coupon,COUPONSTATUS,COUPON_STATUS_USED
+from modules.member.models import MemberTag, MemberGrade
 
 from string_util import byte_to_hex
 from modules.member import models as member_models
+from weapp import settings
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
@@ -59,16 +63,25 @@ class RedEnvelopeRuleList(resource.Resource):
                                    promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids)])
             flag = True
             for rule in rules:
-                is_timeout = False if rule.end_time > datetime.now() else True
                 if flag:
-                    if id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and is_timeout :
-                        flag = False
-                        is_warring = True
+                    if rule.limit_time and rule.status:
+                        if id2coupon_rule[rule.coupon_rule_id].remained_count<=20:
+                            is_timeout = False
+                            flag = False
+                            is_warring = True
+                        else:
+                            is_warring = False
                     else:
-                        is_warring = False
+                        is_timeout = False if rule.end_time > datetime.now() else True
+
+                        if id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and not is_timeout  :
+                            flag = False
+                            is_warring = True
+                        else:
+                            is_warring = False
                 else:
                     is_warring = False
-
+                is_timeout = False if rule.end_time > datetime.now() else True
                 data = {
                     "id": rule.id,
                     "rule_name": rule.name,
@@ -81,7 +94,6 @@ class RedEnvelopeRuleList(resource.Resource):
                     "is_timeout": is_timeout,
                     "receive_method": rule.receive_method,
                     "is_warring": is_warring,
-                    "warring_count": id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and is_timeout
                 }
                 items.append(data)
 
@@ -298,79 +310,14 @@ class RedEnvelopeParticipances(resource.Resource):
         })
         return render_to_response('mall/editor/red_envelope_participences.html', c)
 
-    @staticmethod
-    def get_datas(request):
-        name = request.GET.get('participant_name', '')
-        webapp_id = request.user_profile.webapp_id
-        if name:
-            hexstr = byte_to_hex(name)
-            members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-
-            if name.find(u'非')>=0:
-                sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-                members = members|sub_members
-        else:
-            members = member_models.Member.objects.filter(webapp_id=webapp_id)
-        member_ids = [member.id for member in members]
-        # webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
-        member_status = request.GET.get('member_status', '')
-        red_envelope_status = request.GET.get('red_envelope_status', '')
-        params = {'red_envelope_rule_id':request.GET['id']}
-        if member_ids:
-            params['member__in'] = member_ids
-        # if member_status:
-        #     params['created_at__gte'] = member_status
-        # if red_envelope_status:
-        #     params['created_at__lte'] = red_envelope_status
-        datas = promotion_models.GetRedEnvelopeRecord.objects.filter(**params).order_by('-id')
-
-        #进行分页
-        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-        cur_page = int(request.GET.get('page', '1'))
-        pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-
-        return pageinfo, datas
 
     @login_required
     def api_get(request):
         """
         获取advanced table
         """
-        pageinfo, datas = RedEnvelopeParticipances.get_datas(request)
-        member2datas = {}
-        member_ids = set()
-        coupon_ids = set()
-        for data in datas:
-            coupon_ids.add(data.coupon_id)
-            member2datas.setdefault(data.member_id, []).append(data)
-            member_ids.add(data.member_id)
-            data.participant_name = u'未知'
-            data.participant_icon = '/static/img/user-1.jpg'
-        id2Coupon = {}
-        for coupon in Coupon.objects.filter(id__in=list(coupon_ids)):
-            id2Coupon[str(coupon.id)] =COUPONSTATUS[coupon.status]
-        print id2Coupon
-        if len(member_ids) > 0:
-            for member in member_ids:
-                for data in member2datas.get(member, ()):
-                    member2data = member_models.Member.objects.get(id=member)
-                    if member2data.is_subscribed:
-                        data.participant_name = member2data.username_for_html
-                        data.participant_icon = member2data.user_icon
-                    else:
-                        data.participant_name = u'非会员'
-                        data.participant_icon = '/static/img/user-1.jpg'
-
-        items = []
-        for data in datas:
-            red_envelope_participance = promotion_models.GetRedEnvelopeRecord.objects.get(id=data.id)
-            items.append({
-				'id': str(data.id),
-				'participant_name': data.participant_name,
-				'participant_icon': data.participant_icon,
-				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                'coupon_status': id2Coupon[str(data.coupon_id)]['name']
-			})
+        receive_method = request.GET.get('receive_method',0)
+        pageinfo, items = get_datas(request)
         response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
@@ -380,6 +327,112 @@ class RedEnvelopeParticipances(resource.Resource):
         response = create_response(200)
         response.data = response_data
         return response.get_response()
+
+def get_datas(request):
+    name = request.GET.get('participant_name', '')
+    webapp_id = request.user_profile.webapp_id
+    if name:
+        hexstr = byte_to_hex(name)
+        members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+
+        if name.find(u'非')>=0:
+            sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
+            members = members|sub_members
+    else:
+        members = member_models.Member.objects.filter(webapp_id=webapp_id)
+    member_ids = [member.id for member in members]
+    # webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
+    grade_id = request.GET.get('grade_id', '')
+    coupon_status = request.GET.get('coupon_status', '')
+    params = {'red_envelope_rule_id':request.GET['id']}
+    datas = promotion_models.GetRedEnvelopeRecord.objects.filter(**params).order_by('-id')
+    if member_ids:
+        params['member__in'] = member_ids
+        datas = datas.filter(**params)
+    if grade_id:
+        member_ids = set()
+        for data in datas:
+            if grade_id == str(data.member.grade.id):
+                member_ids.add(data.member_id)
+        datas = datas.filter(member__in=list(member_ids))
+    if coupon_status:
+        coupon_ids = set()
+        new_coupon_ids = set()
+        for data in datas:
+            coupon_ids.add(data.coupon_id)
+        for coupon in Coupon.objects.filter(id__in=list(coupon_ids)):
+            if coupon_status == str(coupon.status):
+               new_coupon_ids.add(coupon.id)
+        datas = datas.filter(coupon_id__in=list(new_coupon_ids))
+
+    #进行分页
+    count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+    cur_page = int(request.GET.get('page', '1'))
+    pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+    member2datas = {}
+    member_ids = set()
+    coupon_ids = set()
+    for data in datas:
+        coupon_ids.add(data.coupon_id)
+        member2datas.setdefault(data.member_id, []).append(data)
+        member_ids.add(data.member_id)
+        data.participant_name = u'未知'
+        data.participant_icon = '/static/img/user-1.jpg'
+    id2Coupon = {}
+    coupon_list = Coupon.objects.filter(id__in=list(coupon_ids))
+    for coupon in coupon_list:
+        id2Coupon[str(coupon.id)] = {
+            'status_id': coupon.status,
+            'status_name': COUPONSTATUS[coupon.status]['name']
+        }
+    # 获取被使用的优惠券使用者信息
+    coupon_ids = [c.id for c in coupon_list if c.status == COUPON_STATUS_USED]
+    orders = Order.get_orders_by_coupon_ids(coupon_ids)
+    if orders:
+        coupon_id2order_id = dict([(str(o.coupon_id), \
+                                          {'order_id': o.id,})\
+                                         for o in orders])
+    else:
+        coupon_id2order_id = {}
+
+    if len(member_ids) > 0:
+        member2data = {}
+        for m in member_models.Member.objects.filter(id__in=member_ids):
+            member2data[m.id]={
+                'is_subscribed': m.is_subscribed,
+                'username_for_html': m.username_for_html,
+                'user_icon': m.user_icon,
+                'grade': m.grade.name
+            }
+        for member in member_ids:
+            for data in member2datas.get(member, ()):
+                member_data = member2data[member]
+                if member_data['is_subscribed']:
+                    data.participant_name = member_data['username_for_html']
+                    data.participant_icon = member_data['user_icon']
+                    data.grade = member_data['grade']
+                else:
+                    data.participant_name = u''
+                    data.participant_icon = '/static/img/user-1.jpg'
+                    data.grade = u'非会员'
+
+    items = []
+    for data in datas:
+        red_envelope_participance = promotion_models.GetRedEnvelopeRecord.objects.get(id=data.id)
+        items.append({
+            'id': data.id,
+            'member_id': data.member_id,
+            'participant_name': data.participant_name,
+            'participant_icon': data.participant_icon,
+            'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            'coupon_status_id': id2Coupon[data.coupon_id]['status_id'],
+            'coupon_status': id2Coupon[data.coupon_id]['status_name'],
+            'order_id': coupon_id2order_id[data.coupon_id]['order_id'] if coupon_id2order_id.has_key(data.coupon_id) else '',
+            'grade': data.grade
+        })
+
+    return pageinfo, items
 
 #########################
 
@@ -411,3 +464,125 @@ def _filter_rules(request, rules):
     rules = search_util.filter_objects(rules, RULE_FILTERS['rule'])
 
     return rules
+
+########################################################################
+# get_red_members_filter_params: 获取过滤参数
+########################################################################
+class RedEnvelopeParticipancesFilter(resource.Resource):
+    app = "apps/promotion"
+    resource = "red_members_filter_params"
+
+    @login_required
+    def api_get(request):
+        webapp_id = request.user_profile.webapp_id
+        print webapp_id
+        coupon_status = [{
+            "id": 0,
+            "name": u'未使用'
+        },{
+            "id": 1,
+            "name": u'已使用'
+        }]
+
+        grades = []
+        for grade in MemberGrade.get_all_grades_list(webapp_id):
+            grades.append({
+                "id": grade.id,
+                "name": grade.name
+            })
+
+        response = create_response(200)
+        response.data = {
+            'coupon_status': coupon_status,
+            'grades': grades
+        }
+        return response.get_response()
+
+class redParticipances_Export(resource.Resource):
+    '''
+	批量导出
+	'''
+    app = 'apps/promotion'
+    resource = 'red_participances_export'
+
+    @login_required
+    def api_get(request):
+        """
+        详情导出
+
+        字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
+        """
+        export_id = request.GET.get('export_id')
+        print export_id
+        trans2zh = {
+            u'member': u'下单会员',
+            u'member_grade': u'会员状态',
+            u'name': u'引入领取人数',
+            u'use': u'引入使用人数',
+            u'follow': u'引入新关注',
+            u'money': u'引入消费额',
+            u'created_at': u'领取时间',
+            u'coupon_status': u'使用状态'}
+
+        download_excel_file_name = u'红包分析详情.xls'
+        excel_file_name = 'red_details.xls'
+        export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
+
+        #Excel Process Part
+        try:
+            import xlwt
+            pageinfo, items = get_datas(request)
+            print items
+
+            fields_raw = []
+            fields_pure = []
+            export_data = []
+
+            num = 0
+            for record in items:
+                print record
+                export_record = []
+
+                # don't change the order
+                export_record.append(num)
+                export_record.append(name)
+                export_record.append(create_at)
+                export_data.append(export_record)
+
+            #workbook/sheet
+            wb = xlwt.Workbook(encoding='utf-8')
+            ws = wb.add_sheet('id%s'%export_id)
+            header_style = xlwt.XFStyle()
+
+            ##write fields
+            row = col = 0
+            for h in fields_pure:
+                ws.write(row,col,h)
+                col += 1
+
+            ##write data
+            if export_data:
+                row = 0
+                lens = len(export_data[0])
+                for record in export_data:
+                    row +=1
+                    try:
+                        for col in range(lens):
+                            ws.write(row,col,record[col])
+                    except Exception, e:
+                        print e
+                try:
+                    wb.save(export_file_path)
+                except Exception, e:
+                    print 'EXPORT EXCEL FILE SAVE ERROR'
+                    print e
+                    print '/static/upload/%s'%excel_file_name
+            else:
+                ws.write(1,0,'')
+                wb.save(export_file_path)
+            response = create_response(200)
+            response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
+        except:
+            response = create_response(500)
+
+        return response.get_response()

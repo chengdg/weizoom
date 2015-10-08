@@ -21,43 +21,7 @@
 			<li class="active">查看结果</li>
 		</ul>
 	</div>
-	<div class="xui-filterPanel pb10 mb15">
-		<div class="xui-form disT">
-			<div class="xui-col disTc">
-				<div class="xui-i-item">
-					<label class="">下单会员：</label>
-					<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
-				</div>
-			</div>
-			<div class="xui-col disTc">
-				<div class="xui-i-item ml20">
-					<label>会员状态：</label>
-					<select class="" id="member_status" name="member_status">
-						<option value="-1">所有会员</option>
-						<option value="0">非会员</option>
-						<option value="1">新会员</option>
-						<option value="2">普通会员</option>
-						<option value="3">铜牌会员</option>
-						<option value="4">钻石会员</option>
-					</select>
-				</div>
-			</div>
-			<div class="xui-col disTc">
-				<div class="xui-i-item ml20">
-					<label>使用状态：</label>
-					<select class="" id="red_envelope_status" name="red_envelope_status">
-						<option value="-1">所有状态</option>
-						<option value="0">未使用</option>
-						<option value="1">已使用</option>
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="xui-btn-group">
-			<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
-			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
-		</div>
-	</div>
+	<div class="xa-redMemberFilterView xui-filterPanel pb10 mb15"></div>
     <div class="panel panel-default xui-tableBox">
 		<div class="fans_data_title"><div class="fans_data_name ml10 mt10 mr5">{{ red_envelope_name }}</div>
 			<div class="fans_data_date">({{ red_envelope_start_time }}至{{ red_envelope_end_time }})</div>
@@ -74,14 +38,14 @@
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
 			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">导出选中</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete">导出结果</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete xa-export">导出结果</a>
 		</div>
 		<div
             class="panel-body panel-table p0 mt10"
             data-ui-role="advanced-table"
             data-app="apps/promotion"
             data-resource="red_envelope_participances"
-            data-args='{"id": "{{red_envelope_id}}"}'
+            data-args='{"id": "{{red_envelope_id}}","receive_method": "{{receive_method}}"}'
             data-template-id="#red_envelope_participances_view"
             data-enable-paginator="true"
             data-enable-sort="false"
@@ -124,14 +88,14 @@
 			<tr data-id="${item.id}" class="xa-selectTr">
 			<td style="position:relative;" >
 				<div class="column_block xui-memberHeader pr">
-					<a target="_blank" href="">
+					<a target="_blank" href="/member/member_detail/edit/?id=${item.member_id}">
 						<img width="41" height="41" src="${item.participant_icon}" /><br>
 						{{html item.participant_name}}
 					</a>
 				</div>
 			</td>
 				<td>
-
+					${item.grade}
 				</td>
 				<td>
 
@@ -149,10 +113,17 @@
 					${item.created_at}
 				</td>
 				<td>
-					${item.coupon_status}
+					{{if item.coupon_status_id}}
+						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{else}}
+						<b>${item.coupon_status}</b>
+					{{/if}}
 				</td>
 				<td>
-					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a>
+					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a><br>
+					{{if item.coupon_status_id}}
+						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
+					{{/if}}
 				</td>
 			</tr>
 			{{/each}}
@@ -171,6 +142,11 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var view = new W.view.mall.redMemberFilterView({
+        el: '.xa-redMemberFilterView',
+		dataView: $('[data-ui-role="advanced-table"]').data('view'),
+		status:''
+    });
 	$('.panel-body').delegate('.xa-detail', 'click', function(event){
 		var member_name = $(event.currentTarget).data('member-name');
 		console.log(member_name);
@@ -186,26 +162,25 @@ $(document).ready(function() {
 			}
 		});
 	});
-	var participant_name,startTime,endTime;
+	var name,grade_id,coupon_status;
     //export
     $('.xa-export').click(function(event){
         W.getLoadingView();
-		participant_name = $.trim($('[name="participant_name"]').val());
-		startTime = $.trim($('[name="start_time"]').val());
-		endTime = $.trim($('[name="end_time"]').val());
+		name = $.trim($('[name="name"]').val());
+		grade_id = $.trim($('[name="grade"]').val());
+		coupon_status = $.trim($('[name="coupon_status"]').val());
         var export_id =window.location.search.split('?id=')[1];
         W.getApi().call({
             method: 'get',
-            app: 'apps/event',
-            resource: 'event_participances-export',
+            app: 'apps/promotion',
+            resource: 'red_participances_export',
             args: {
 				'export_id':export_id,
-				'participant_name': participant_name,
-				'start_time': startTime,
-				'end_time': endTime
+				'name': name,
+				'grade_id': grade_id,
+				'coupon_status': coupon_status
 			},
             success: function(resp){
-
                 if(resp.code == 200){
                     $('#export_href').prop({
                         'href': resp.download_path,
@@ -226,24 +201,6 @@ $(document).ready(function() {
         $('tbody .xa-select').prop('checked', isChecked);
         $('.xa-selectAll').prop('checked', isChecked);
     });
-	$('.xa-search').click(function(event) {
-		var name = $.trim($('[name="participant_name"]').val());
-		var member_status = $.trim($('[name="member_status"]').val());
-		var red_envelope_status = $.trim($('[name="red_envelope_status"]').val());
-		var table = $('[data-ui-role="advanced-table"]').data('view');
-		table.reload({
-			name: name,
-			member_status: member_status,
-			red_envelope_status: red_envelope_status
-		}, {
-			emptyDataHint: '没有符合条件的数据'
-		});
-	});
-    $('.xa-reset').click(function(event) {
-		$('[name="participant_name"]').val('');
-		$('[name="member_status"]').val('-1');
-		$('[name="red_envelope_status"]').val('-1');
-	});
 
 });
 </script>
