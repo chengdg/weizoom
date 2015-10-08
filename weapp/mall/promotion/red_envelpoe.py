@@ -62,14 +62,23 @@ class RedEnvelopeRuleList(resource.Resource):
             id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
                                    promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids)])
             flag = True
+            is_timeout = False
             for rule in rules:
-                is_timeout = False if rule.end_time > datetime.now() else True
                 if flag:
-                    if id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and not is_timeout :
-                        flag = False
-                        is_warring = True
+                    if rule.limit_time:
+                        if id2coupon_rule[rule.coupon_rule_id].remained_count<=20:
+                            flag = False
+                            is_warring = True
+                        else:
+                            is_warring = False
                     else:
-                        is_warring = False
+                        is_timeout = False if rule.end_time > datetime.now() else True
+
+                        if id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and not is_timeout  :
+                            flag = False
+                            is_warring = True
+                        else:
+                            is_warring = False
                 else:
                     is_warring = False
 
