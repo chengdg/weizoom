@@ -80,6 +80,8 @@ def __process_activity_data(context, page):
 		page_json['model']['site_title'] = page['title'].get('name', "")
 		page_json['model']['site_description'] = page['title'].get('description', "")
 
+	page_json['components'] = [page_json['components'][0]]
+
 	__add_templet_title(page, page_json)
 	__add_notice_text(page, page_json)
 
