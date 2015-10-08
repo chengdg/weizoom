@@ -237,7 +237,7 @@
             }
             this.$dialogContent.show();
         }else{
-            this.$title.text('签到活动未开始！');
+            this.$title.text(data.errMsg);
             this.$dialogContent.hide();
         }
         this.$mask.show();
@@ -267,13 +267,13 @@
                         id: W.appRecordId
                     },
                     success: function(data) {
-                        alert('参与成功');
+                        resultDialog.render(true, {});
                     },
                     error: function(data) {
-                        console.log(data);
+                        resultDialog.render(false, data);
                     }
                 });
-                resultDialog.render(true, {});
+
             }
         });
         //填充用户信息
