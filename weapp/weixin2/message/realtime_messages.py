@@ -379,11 +379,11 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
         one_session['session_id'] = session.id
         one_session['message_id'] = session.message_id
         one_session['sender_username'] = weixin_user.username
-        # one_session['name'] = weixin_user.nickname_for_html
-        # if weixin_user.weixin_user_icon:
-        #     one_session['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
-        # else:
-        #     one_session['user_icon'] =  DEFAULT_ICON
+        one_session['name'] = weixin_user.nickname_for_html
+        if weixin_user.weixin_user_icon:
+            one_session['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
+        else:
+            one_session['user_icon'] =  DEFAULT_ICON
         one_session['text'] = emotion.new_change_emotion_to_img(session.latest_contact_content)
         from_index = one_session['text'].find('<a href=')
         if from_index > -1:
@@ -564,8 +564,11 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         one_message['session_id'] = message.session_id
         one_message['message_id'] = message.id
         one_message['sender_username'] = weixin_user.username
-        #one_message['name'] = weixin_user.nickname_for_html
-
+        one_message['name'] = weixin_user.nickname_for_html
+        if weixin_user.weixin_user_icon:
+            one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
+        else:
+            one_message['user_icon'] =  DEFAULT_ICON
         one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
