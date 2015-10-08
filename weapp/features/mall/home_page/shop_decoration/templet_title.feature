@@ -6,11 +6,10 @@ Feature:自定义模块——【基础模块】标题-页面
         显示位置：居左、居中、居右，
         根据字数不同，副标题与时间的显示位置也不同
 
-
-
+@wepage
 Scenario: 1编辑标题
-	When jobs登录系统
-	And jobs创建微页面
+	Given jobs登录系统
+	When jobs创建微页面
 	"""
 		[{
 			"title": {
