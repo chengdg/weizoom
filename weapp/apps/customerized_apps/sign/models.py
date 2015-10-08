@@ -52,6 +52,7 @@ class SignParticipance(models.Document):
 		daily_coupon_name = serial_coupon_name = ''
 		#首先获取奖项配置
 		prize_settings = sign.prize_settings
+		bingo = 0
 		for name in sorted(prize_settings.keys()):
 			setting = prize_settings[name]
 			if int(name) == 0:
@@ -64,6 +65,7 @@ class SignParticipance(models.Document):
 						daily_coupon_name = value['name']
 			if int(name) == curr_serial_count:
 				#达到连续签到要求的奖励
+				bingo = curr_serial_count
 				for type, value in setting.items():
 					if type == 'integral':
 						serial_integral += int(value)
@@ -71,19 +73,21 @@ class SignParticipance(models.Document):
 						serial_coupon_id = value['id'] if value != '' else ''
 						serial_coupon_name = value['name']
 		user_prize = self.prize
-		user_prize['integral'] = int(user_prize['integral']) + daily_integral + serial_integral
 		temp_coupon_list = user_prize['coupon'].split(',')
-		if daily_coupon_id != '':
-			temp_coupon_list.append(str(daily_coupon_name))
-		if serial_coupon_id != '':
-			temp_coupon_list.append(str(serial_coupon_name))
+		#若命中连续签到，则不奖励每日签到
+		if bingo == curr_serial_count:
+			user_prize['integral'] = int(user_prize['integral']) + daily_integral
+			temp_coupon_list.append(daily_coupon_name)
+		else:
+			user_prize['integral'] = int(user_prize['integral']) + serial_integral
+			temp_coupon_list.append(serial_coupon_name)
+
 		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
 		self.update(**user_update_data)
 		self.reload()
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)
-		sign.reload()
 
 		return_data['daily_integral'] = daily_integral
 		return_data['daily_coupon_id'] = daily_coupon_id
@@ -92,7 +96,7 @@ class SignParticipance(models.Document):
 		return_data['serial_coupon_id'] = serial_coupon_id
 		return_data['serial_coupon_name'] = serial_coupon_name
 		return_data['reply_content'] = sign.reply['content']
-
+		return_data['hit_serial_count'] = bingo
 		return_data['serial_count'] = self.serial_count
 
 		return return_data

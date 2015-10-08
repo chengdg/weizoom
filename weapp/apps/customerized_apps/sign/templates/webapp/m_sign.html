@@ -254,6 +254,7 @@
         resultDialog = new ResultDialog();
         //绑定签到按钮点击事件
         $('.wa-sign-btn').on('click', function(){
+            var $this = $(this);
             if('未开始' === status){
                 resultDialog.render(false, {});
             }else{
@@ -268,9 +269,11 @@
                     },
                     success: function(data) {
                         resultDialog.render(true, {});
+                        $this.hide().sibling().show();
                     },
                     error: function(data) {
                         resultDialog.render(false, data);
+                        $this.hide().siblings().show();
                     }
                 });
 
@@ -281,34 +284,25 @@
         $('.wa-user-integral').html(member_info.user_integral);
         $('.wa-user-icon').find('img').attr('src', member_info.user_icon);
         //填充签到奖励信息
-        $('.wa-daily_points').html(prize_info.daily_prize.integral || 0);
-        if (prize_info.daily_prize.coupon){
-            prize_html = '"'+prize_info.daily_prize.coupon.name+'"';
-            prize_html += '一张';
+        if('已签到' != status){
+            $('.wa-daily_points').html(prize_info.daily_prize.integral || 0);
+            if (prize_info.daily_prize.coupon){
+                prize_html = '"'+prize_info.daily_prize.coupon.name+'"';
+                prize_html += '一张';
+            }else{
+                prize_html = ''
+            }
+            $('.wa-daily_prizes').html(prize_html);
         }else{
-            prize_html = ''
+            $('.wa-sign-btn').hide();
+            $('.wa-sign-board').find('.wa-i-serial-count b').html(),show();
         }
-        $('.wa-daily_prizes').html(prize_html);
+
         //绑定规则信息事件
         $('.wa-signPageDiv').find('.wa-rules').on('click', function(){
             $('.wa-signPageDiv').hide();
             $('.wa-rules-div').show();
         });
-{#        //从后台获取数据#}
-{#        W.getApi().call({#}
-{#            app: 'm/apps/sign',#}
-{#            resource: 'sign_participance',#}
-{#            method: 'get',#}
-{#            args: {#}
-{#                owner_id: W.webappOwnerId#}
-{#            },#}
-{#            success: function(data) {#}
-{#                alert('参与成功');#}
-{#            },#}
-{#            error: function(data) {#}
-{#                alert('参与失败');#}
-{#            }#}
-{#        });#}
 	});
 </script>
 {% endblock %}
