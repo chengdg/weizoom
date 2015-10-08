@@ -631,7 +631,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['member_id'] = member.id
                 one_message['is_subscribed'] = member.is_subscribed
                 one_message['user_icon'] =  member.user_icon
-                one_session['name'] =  member.username_for_html
+                one_message['name'] =  member.username_for_html
                 if not member.is_subscribed:
                     one_message['could_replied'] = 0
         except:
