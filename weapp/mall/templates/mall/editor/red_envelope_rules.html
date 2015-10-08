@@ -47,14 +47,14 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">库存提示</h4>
       </div>
-      <div class="modal-body" style="max-height: 107px; overflow:auto">
+      <div class="modal-body" style="max-height: 98px; overflow:auto">
       <ul class="list-group" style="margin-bottom: 0">
       {% for rule in items %}
         {% if rule.remained_count <= 20  %}
             {% if rule.receive_method %}
                 {% if rule.is_timeout and not rule.limit_time %}
                 {% else %}
-                    <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 8px;">
+                    <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 5px;">
                         <div style="float: left;width: 85%">
                             <div style="width:100%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden; "><b>【图文领取】</b>{{ rule.rule_name }}</div>
                         </div>
