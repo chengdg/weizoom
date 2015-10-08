@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+import json
 import signs
 
 NAV = {
@@ -39,3 +41,27 @@ def get_link_targets(request):
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})
 	return pageinfo, link_targets
+
+def get_sing_fields_to_save(request):
+	fields = request.POST.dict()
+	fields['created_at'] = datetime.datetime.today()
+	fields['owner_id'] = request.user.id
+
+	webapp_user = getattr(request, 'webapp_user', None)
+	if webapp_user:
+		fields['webapp_user_id'] = request.webapp_user.id
+
+	member = getattr(request, 'member', None)
+	if member:
+		fields['member_id'] = request.member.id
+
+	if 'prize_settings' in request.POST:
+		fields['prize_settings'] = json.loads(fields['prize_settings'])
+
+	if 'share' in request.POST:
+		fields['share'] = json.loads(fields['share'])
+
+	if 'reply' in request.POST:
+		fields['reply'] = json.loads(fields['reply'])
+
+	return fields

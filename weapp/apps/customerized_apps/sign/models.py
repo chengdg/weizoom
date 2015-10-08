@@ -3,6 +3,7 @@
 import datetime
 
 import mongoengine as models
+from modules.member.module_api import get_member_by_openid
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
@@ -32,8 +33,13 @@ class SignParticipance(models.Document):
 			'set__latest_date': nowDate,
 			'inc__total_count': 1
 		}
-		#判断是否连续签到，否则重置为1
 		latest_date = self.latest_date
+		#判断是否已签到
+		if latest_date.strftime('%Y-%m-%d') == nowDate.strftime('%Y-%m-%d'):
+			return_data['status_code'] = RETURN_STATUS_CODE['ERROR']
+			return_data['errMsg'] = u'今日已签到'
+			return return_data
+		#判断是否连续签到，否则重置为1
 		if latest_date == nowDate - datetime.timedelta(days=1):
 			user_update_data['inc__serial_count'] = 1
 		else:
@@ -55,31 +61,33 @@ class SignParticipance(models.Document):
 					if type == 'integral':
 						daily_integral += int(value)
 					elif type == 'coupon':
-						daily_coupon_id = value.id if value != '' else ''
+						daily_coupon_id = value['id'] if value != '' else ''
 			if int(name) == curr_serial_count:
 				#达到连续签到要求的奖励
 				for type, value in setting.items():
 					if type == 'integral':
 						serial_integral += int(value)
 					elif type == 'coupon':
-						serial_coupon_id = value.id if value != '' else ''
+						serial_coupon_id = value['id'] if value != '' else ''
 		user_prize = self.prize
-		user_prize['integral'] += daily_integral + serial_integral
+		user_prize['integral'] = int(user_prize['integral']) + daily_integral + serial_integral
 		temp_coupon_list = user_prize['coupon'].split(',')
 		if daily_coupon_id != '':
-			temp_coupon_list.append(daily_coupon_id)
+			temp_coupon_list.append(str(daily_coupon_id))
 		if serial_coupon_id != '':
-			temp_coupon_list.append(serial_coupon_id)
-		user_prize['coupon'] = temp_coupon_list.join(',')
+			temp_coupon_list.append(str(serial_coupon_id))
+		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
 		self.update(**user_update_data)
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)
+		sign.reload()
 
 		return_data['daily_integral'] = daily_integral
 		return_data['daily_coupon_id'] = daily_coupon_id
 		return_data['serial_integral'] = serial_integral
 		return_data['serial_coupon_id'] = serial_coupon_id
+		return_data['reply_content'] = sign.reply['content']
 
 		return return_data
 
@@ -109,18 +117,39 @@ class Sign(models.Document):
 
 
 	@staticmethod
-	def get_auto_sign_data(data):
+	def do_auto_signment(data):
+		"""
+		回复关键字自动签到
+		:param data: 字典 :包含 webapp_owner_id, openid, keyword
+		:return: 字典 : ｛
+							daily_integral：每日签到积分，
+							daily_coupon_id：每日签到优惠券id，
+							serial_integral：连续签到积分，
+							serial_coupon_id： 连续签到优惠券id，
+							reply_content ：设置的回复内容，
+							status_code： 状态码（0：失败，1：成功，2：关键字不匹配），
+							errMsg： 错误信息，
+						｝
+		"""
 		return_data = {}
 		try:
-			sign = Sign.objects.get(owner_id=data.owner_id)
+			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
 			if sign.status != 1:
 				return_data['errMsg'] = u'签到活动未开始'
-			elif data.keyword == sign.reply.keyword:
-				signer = SignParticipance.objects(member_id=data.member_id, belong_to=sign.id)
+			elif data['keyword'] == sign.reply['keyword']:
+				# add by bert  增加获取会员代码
+				member = get_member_by_openid(data['openid'])
+				if not member:
+					return None
+				signer = SignParticipance.objects(member_id=member.id, belong_to=sign.id)
 				if signer.count() == 0:
 					signer = SignParticipance(
 						belong_to = sign.id,
-						member_id = data.member_id,
+						member_id = member.id,
+						prize = {
+							'integral': 0,
+							'coupon': ''
+						},
 						created_at= datetime.datetime.today()
 					)
 					signer.save()
