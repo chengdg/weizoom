@@ -58,7 +58,7 @@ class Sign(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = get_sing_fields_to_save(request)
+		data = export.get_sing_fields_to_save(request)
 		status = request.POST['status']
 		if status:
 			data['status'] = 0 if status == 'off' else 1
@@ -87,7 +87,7 @@ class Sign(resource.Resource):
 			response = create_response(200)
 			return response.get_response()
 
-		data = get_sing_fields_to_save(request)
+		data = export.get_sing_fields_to_save(request)
 		update_data = {}
 		print data
 		update_fields = set(['name', 'share', 'reply', 'prize_settings'])
@@ -98,28 +98,3 @@ class Sign(resource.Resource):
 		
 		response = create_response(200)
 		return response.get_response()
-	
-
-def get_sing_fields_to_save(request):
-	fields = request.POST.dict()
-	fields['created_at'] = datetime.today()
-	fields['owner_id'] = request.user.id
-
-	webapp_user = getattr(request, 'webapp_user', None)
-	if webapp_user:
-		fields['webapp_user_id'] = request.webapp_user.id
-
-	member = getattr(request, 'member', None)
-	if member:
-		fields['member_id'] = request.member.id
-
-	if 'prize_settings' in request.POST:
-		fields['prize_settings'] = json.loads(fields['prize_settings'])
-
-	if 'share' in request.POST:
-		fields['share'] = json.loads(fields['share'])
-
-	if 'reply' in request.POST:
-		fields['reply'] = json.loads(fields['reply'])
-
-	return fields
