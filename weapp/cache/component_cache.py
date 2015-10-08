@@ -98,7 +98,6 @@ def update_component_cache_for_auther_appid(instance, **kwargs):
 				pass
 	return
 
-<<<<<<< HEAD
 def update_component_cache_for_integral_settings(instance, **kwargs):
 	"""
 	IntegralStrategySttings.save or update时触发信号回调函数
@@ -139,10 +138,6 @@ def update_component_cache_for_integral_settings(instance, **kwargs):
 post_update_signal.connect(update_component_cache_for_auther_appid, sender=ComponentAuthedAppid, dispatch_uid = "ComponentInfo.update")
 #signals.post_save.connect(update_component_cache_for_integral_settings, sender=member_models.IntegralStrategySttings, dispatch_uid = "member_models.IntegralStrategySttings.save")
 post_update_signal.connect(update_component_cache_for_integral_settings, sender=member_models.IntegralStrategySttings, dispatch_uid = "member_models.IntegralStrategySttings.update")
-=======
-post_update_signal.connect(update_component_cache, sender=ComponentAuthedAppid, dispatch_uid = "ComponentInfo.update")
-signals.post_save.connect(update_component_cache, sender=member_models.IntegralStrategySttings, dispatch_uid = "member_models.IntegralStrategySttings")
->>>>>>> 优化 compent
 #signals.post_save.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "product_category.save")
 #signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")
 
