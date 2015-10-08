@@ -81,6 +81,7 @@ def __process_activity_data(context, page):
 		page_json['model']['site_description'] = page['title'].get('description', "")
 
 	__add_templet_title(page, page_json)
+	__add_notice_text(page, page_json)
 
 	data = {
 		"field": "page_content",
@@ -141,6 +142,30 @@ def __add_templet_title(page, page_json):
 		page_json['components'].append(wepage_title)
 
 
+def __add_notice_text(page, page_json):
+	pid = page_json['cid']
+	cid = page_json['components'][0]['cid']
+	if page.has_key("notice_text"):
+		cid = cid + 1
+		wepage_notice = {
+			"type":"wepage.notice",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": u"公告",
+			"model": { "id":"", "class":"", "name":"", "index":4,
+				"datasource":{"type":"api","api_name":""},
+				"title": page['notice_text']
+			}
+		}
+		page_json['components'].append(wepage_notice)
+
+
 
 def __actual_page(page_json):
 	actual = {
@@ -153,6 +178,7 @@ def __actual_page(page_json):
 	for component in page_json["components"]:
 		actual_component = {}
 		model = component['model']
+		# 标题
 		if component['type'] == "wepage.title":
 			actual_component = {
 				"templet_title": {
@@ -162,6 +188,13 @@ def __actual_page(page_json):
 					"align": model['align'],
 					"background_color": model['background_color']
 				}
+			}
+
+		# 公告
+		if component['type'] == "wepage.notice":
+			default = u'默认显示公告，请填写内容，如果过长，将会在手机上滚动显示'
+			actual_component = {
+				"notice_text": model['title'] if model['title'] else default
 			}
 
 		actual.update(actual_component)

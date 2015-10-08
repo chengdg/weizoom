@@ -4,7 +4,7 @@
 #_edit_:师帅
 Feature:自定义模块——【基础模块】公告-页面
 
-
+@wepage
 Scenario:添加公告
 	Given jobs登录系统
 	When jobs创建微页面
@@ -30,12 +30,12 @@ Scenario:添加公告
 #公告为空
 	When jobs编辑微页面'微页面标题'
 	"""
-	[{
+	{
 		"title": {
 			"name": "微页面标题"
 		},
 		"notice_text":""
-	}]
+	}
 	"""
 	Then jobs能获取'微页面标题'
 	"""
@@ -49,18 +49,17 @@ Scenario:添加公告
 #删除公告
 	When jobs编辑微页面'微页面标题'
 	"""
-		[{
-			"title": {
-				"name": "微页面标题"
-			},
-			"notice_text":""
-		}]
+	{
+		"title": {
+			"name": "微页面标题"
+		}
+	}
 	"""
 	Then jobs能获取'微页面标题'
 	"""
-		{
-			"title":{
-				"name": "微页面标题"
-			}
+	{
+		"title":{
+			"name": "微页面标题"
 		}
+	}
 	"""
