@@ -37,8 +37,9 @@
 			<label for="topSelectAll" class="xui-selectAll ml15">
 				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
 			</label>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchOffshelf">导出选中</a>
-			<a href="javascript:void(0);" class="btn btn-default ml10 xa-batchDelete xa-export">导出结果</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-selected">导出选中</a>
+			<a href="javascript:void(0);" class="btn btn-default ml10 xa-export-all">导出结果</a>
+			<a id="export_href" style="display: none ">DownloadXLS</a>
 		</div>
 		<div
             class="panel-body panel-table p0 mt10"
@@ -162,14 +163,58 @@ $(document).ready(function() {
 			}
 		});
 	});
+
 	var name,grade_id,coupon_status;
+	var export_id =window.location.search.split('?id=')[1];
     //export
-    $('.xa-export').click(function(event){
+	$('.xa-export-selected').click(function(event) {
         W.getLoadingView();
 		name = $.trim($('[name="name"]').val());
 		grade_id = $.trim($('[name="grade"]').val());
 		coupon_status = $.trim($('[name="coupon_status"]').val());
-        var export_id =window.location.search.split('?id=')[1];
+		var selected_ids = [];
+        $('tbody .xa-select').each(function() {
+            var $checkbox = $(this);
+            if ($checkbox.is(":checked")) {
+                var $tr = $checkbox.parents('tr');
+                selected_ids.push($tr.data('id'));
+            }
+        });
+		if(selected_ids==''){
+			W.getErrorHintView().show("请选择导出内容");
+		}else{
+			W.getApi().call({
+				method: 'get',
+				app: 'apps/promotion',
+				resource: 'red_participances_export',
+				args: {
+					'export_id':export_id,
+					'name': name,
+					'grade_id': grade_id,
+					'coupon_status': coupon_status,
+					'selected_ids': selected_ids
+				},
+				success: function(resp){
+					if(resp.code == 200){
+						$('#export_href').prop({
+							'href': resp.download_path,
+							'download': resp.filename
+						}).get(0).click();
+
+					}
+					console.log("导出成功");
+				},
+				error: function(error){
+					console.log('导出失败');
+				}
+			});
+		}
+    });
+	$('.xa-export-all').click(function(event) {
+        W.getLoadingView();
+		name = $.trim($('[name="name"]').val());
+		grade_id = $.trim($('[name="grade"]').val());
+		coupon_status = $.trim($('[name="coupon_status"]').val());
         W.getApi().call({
             method: 'get',
             app: 'apps/promotion',
@@ -195,6 +240,7 @@ $(document).ready(function() {
             }
         });
     });
+	//全选js
 	$('.xa-selectAll').click(function(event) {
         var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');

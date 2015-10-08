@@ -508,22 +508,9 @@ class redParticipances_Export(resource.Resource):
     @login_required
     def api_get(request):
         """
-        详情导出
-
-        字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
+        分析导出
         """
         export_id = request.GET.get('export_id')
-        print export_id
-        trans2zh = {
-            u'member': u'下单会员',
-            u'member_grade': u'会员状态',
-            u'name': u'引入领取人数',
-            u'use': u'引入使用人数',
-            u'follow': u'引入新关注',
-            u'money': u'引入消费额',
-            u'created_at': u'领取时间',
-            u'coupon_status': u'使用状态'}
-
         download_excel_file_name = u'红包分析详情.xls'
         excel_file_name = 'red_details.xls'
         export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
@@ -531,22 +518,89 @@ class redParticipances_Export(resource.Resource):
         #Excel Process Part
         try:
             import xlwt
-            pageinfo, items = get_datas(request)
-            print items
-
-            fields_raw = []
+            name = request.GET.get('name', '')
+            selected_ids = request.GET.get('selected_ids', '')
+            webapp_id = request.user_profile.webapp_id
+            if name:
+                hexstr = byte_to_hex(name)
+                members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+                if name.find(u'非')>=0:
+                    sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
+                    members = members|sub_members
+            else:
+                members = member_models.Member.objects.filter(webapp_id=webapp_id)
+            member_ids = [member.id for member in members]
+            grade_id = request.GET.get('grade_id', '')
+            coupon_status = request.GET.get('coupon_status', '')
+            params = {'red_envelope_rule_id':export_id}
+            datas = promotion_models.GetRedEnvelopeRecord.objects.filter(**params).order_by('-id')
+            if member_ids:
+                params['member__in'] = member_ids
+                datas = datas.filter(**params)
+            if grade_id != '-1':
+                member_ids = set()
+                for data in datas:
+                    if grade_id == str(data.member.grade.id):
+                        member_ids.add(data.member_id)
+                datas = datas.filter(member__in=list(member_ids))
+            if coupon_status != '-1':
+                coupon_ids = set()
+                new_coupon_ids = set()
+                for data in datas:
+                    coupon_ids.add(data.coupon_id)
+                for coupon in Coupon.objects.filter(id__in=list(coupon_ids)):
+                    if coupon_status == str(coupon.status):
+                       new_coupon_ids.add(coupon.id)
+                datas = datas.filter(coupon_id__in=list(new_coupon_ids))
+            if selected_ids:
+                params['member__in'] = selected_ids
+                datas = datas.filter(**params)
             fields_pure = []
             export_data = []
 
-            num = 0
-            for record in items:
-                print record
-                export_record = []
+            #from sample to get fields4excel_file
+            fields_pure.append(u'编号')
+            fields_pure.append(u'下单会员')
+            fields_pure.append(u'会员状态')
+            fields_pure.append(u'引入领取人数')
+            fields_pure.append(u'引入使用人数')
+            fields_pure.append(u'引入新关注')
+            fields_pure.append(u'引入消费额')
+            fields_pure.append(u'领取时间')
+            fields_pure.append(u'使用状态')
 
+            #username(member_id)
+            member_ids = [record['member_id'] for record in datas ]
+            members = member_models.Member.objects.filter(id__in = member_ids)
+            member_id2name ={}
+            for member in members:
+                m_id = member.id
+                if member.is_subscribed == True:
+                    u_name = member.username
+                else:
+                    u_name = u'非会员'
+                if m_id not in member_id2name:
+                    member_id2name[m_id] = u_name
+                else:
+                    member_id2name[m_id] = u_name
+            #processing data
+            num = 0
+            for record in datas:
+                export_record = []
+                num = num+1
+                name = member_id2name[record['member_id']]
+                created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
                 # don't change the order
                 export_record.append(num)
                 export_record.append(name)
-                export_record.append(create_at)
+                #TODO 显示正确数字
+                export_record.append('')
+                export_record.append('')
+                export_record.append('')
+                export_record.append('')
+                export_record.append('')
+                export_record.append(created_at)
+                export_record.append('')
                 export_data.append(export_record)
 
             #workbook/sheet
@@ -562,15 +616,23 @@ class redParticipances_Export(resource.Resource):
 
             ##write data
             if export_data:
-                row = 0
+                row = 1
                 lens = len(export_data[0])
                 for record in export_data:
-                    row +=1
-                    try:
-                        for col in range(lens):
+                    row_l = []
+                    for col in range(lens):
+                        record_col= record[col]
+                        if type(record_col)==list:
+                            row_l.append(len(record_col))
+                            for n in range(len(record_col)):
+                                data = record_col[n]
+                                ws.write(row+n,col,data)
+                        else:
                             ws.write(row,col,record[col])
-                    except Exception, e:
-                        print e
+                    if row_l:
+                        row = row + max(row_l)
+                    else:
+                        row += 1
                 try:
                     wb.save(export_file_path)
                 except Exception, e:
@@ -582,7 +644,8 @@ class redParticipances_Export(resource.Resource):
                 wb.save(export_file_path)
             response = create_response(200)
             response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
-        except:
+        except Exception, e:
+            print e
             response = create_response(500)
 
         return response.get_response()
