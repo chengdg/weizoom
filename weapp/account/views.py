@@ -70,7 +70,7 @@ def show_loading_page(request):
 #===============================================================================
 # index : 用户首页
 #===============================================================================
-@login_required
+@login_required(login_url='/login/')
 def index(request):
 	if request.user.is_superuser:
 		return render_to_response('account/login.html', {})
