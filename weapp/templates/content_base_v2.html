@@ -16,51 +16,51 @@
 		</div>
 		<span class="xui-systemName"></span>
 		<div class="xui-headerActionBar">
-			{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
-			<a href="http://fans.weapp.weizzz.com/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
-			{% endif %}
-			<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
-            {% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
-			<a href="{{ fans_host }}/message/message_list/?from=portal"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:inline" id ="message_count"></i></a>
-            <a href="{{ fans_host }}/help_center/outline/"><i class="xui-toolIcon"></i>帮助中心</a>
-			{% endif %}
+			{% if request.user.is_manager %}
+				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
+					<a href="http://fans.weapp.weizzz.com/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
+				{% endif %}
+					<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
+				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
+					<a href="{{ fans_host }}/message/message_list/?from=portal" target="_blank"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:inline" id ="message_count"></i></a>
+					<a href="{{ fans_host }}/help_center/outline/" target="_blank"><i class="xui-toolIcon"></i>帮助中心</a>
+				{% endif %}
+				<div id='popover_tmpl' style="display:none;">
+					<form class="form-horizontal">
+						<div class="control-group">
+							<span class="control-label" for="old_password">当前密码</span>
+							<span class="controls">
+								<input type="password" id="old_password" name="old_password"/>
+							</span>
+						</div>
 
-			<!-- <a href="#"><i class="xui-toolIcon"></i>帮助中心 </a> -->
+						<div class="control-group">
+							<span class="control-label pr15" for="new_password">新密码</span>
+							<span class="controls">
+								<input type="password" id="new_password" name="new_password" />
+							</span>
+						</div>
+
+						<div class="control-group">
+							<span class="control-label" for="confirm_password">确认密码</span>
+							<span class="controls">
+								<input type="password" id="confirm_password" name="confirm_password"/>
+								<p class="origin edit_password" error="old_password"></p>
+							</span>
+						</div>
+
+						<div class="control-group tc">
+							<input type="button" class="btn btn-primary xa-submit btn-sm " value="保存" />
+							<input type="button" class="btn btn-default xa-cancle btn-sm" value="取消" />
+						</div>
+					</form>
+				</div>
+			{% endif %}
 			<span class="ml15">欢迎您：{{ request.user.username }}</span>
 			<a href="javascript:void(0)" onclick="logout()" title="{{ request.user.username }}" class="ml10">退出</a>
 			</span>
-			<div id='popover_tmpl' style="display:none;">
-		 		<form class="form-horizontal">
-					<div class="control-group">
-						<span class="control-label" for="old_password">当前密码</span>
-						<span class="controls">
-							<input type="password" id="old_password" name="old_password"/>
-						</span>
-					</div>
-
-					<div class="control-group">
-						<span class="control-label pr15" for="new_password">新密码</span>
-						<span class="controls">
-							<input type="password" id="new_password" name="new_password" />
-						</span>
-					</div>
-
-					<div class="control-group">
-						<span class="control-label" for="confirm_password">确认密码</span>
-						<span class="controls">
-							<input type="password" id="confirm_password" name="confirm_password"/>
-							<p class="origin edit_password" error="old_password"></p>
-						</span>
-					</div>
-
-					<div class="control-group tc">
-						<input type="button" class="btn btn-primary xa-submit btn-sm " value="保存" />
-						<input type="button" class="btn btn-default xa-cancle btn-sm" value="取消" />
-					</div>
-				</form>
- 			</div>
+				
 		</div>
-	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
 			<ul class="xui-navBar-box clearStyle">
