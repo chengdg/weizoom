@@ -75,11 +75,13 @@ class SignParticipance(models.Document):
 		self.update(**user_update_data)
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)
+		sign.reload()
 
 		return_data['daily_integral'] = daily_integral
 		return_data['daily_coupon_id'] = daily_coupon_id
 		return_data['serial_integral'] = serial_integral
 		return_data['serial_coupon_id'] = serial_coupon_id
+		return_data['reply_content'] = sign.reply['content']
 
 		return return_data
 
@@ -118,6 +120,7 @@ class Sign(models.Document):
 							daily_coupon_id：每日签到优惠券id，
 							serial_integral：连续签到积分，
 							serial_coupon_id： 连续签到优惠券id，
+							reply_content ：设置的回复内容，
 							status_code： 状态码（0：失败，1：成功，2：关键字不匹配），
 							errMsg： 错误信息，
 						｝
