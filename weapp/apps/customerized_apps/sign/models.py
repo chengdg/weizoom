@@ -127,7 +127,7 @@ class Sign(models.Document):
 			sign = Sign.objects.get(owner_id=data.webapp_owner_id)
 			if sign.status != 1:
 				return_data['errMsg'] = u'签到活动未开始'
-			elif data.keyword == sign.reply.keyword:
+			elif data.keyword == sign.reply['keyword']:
 				signer = SignParticipance.objects(member_id=data.member_id, belong_to=sign.id)
 				if signer.count() == 0:
 					signer = SignParticipance(
