@@ -33,8 +33,9 @@ class SignParticipance(models.Document):
 		}
 		latest_date = self.latest_date
 		#判断是否已签到
-		if latest_date.strftime('%Y-%m-%d') == nowDate.strftime('%Y-%m-%d'):
+		if latest_date and latest_date.strftime('%Y-%m-%d') == nowDate.strftime('%Y-%m-%d'):
 			return_data['status_code'] = RETURN_STATUS_CODE['ALREADY']
+			return_data['errMsg'] = u'今日已签到'
 			return return_data
 		#判断是否连续签到，否则重置为1
 		if latest_date == nowDate - datetime.timedelta(days=1):
@@ -73,9 +74,9 @@ class SignParticipance(models.Document):
 		user_prize['integral'] = int(user_prize['integral']) + daily_integral + serial_integral
 		temp_coupon_list = user_prize['coupon'].split(',')
 		if daily_coupon_id != '':
-			temp_coupon_list.append(str(daily_coupon_id))
+			temp_coupon_list.append(str(daily_coupon_name))
 		if serial_coupon_id != '':
-			temp_coupon_list.append(str(serial_coupon_id))
+			temp_coupon_list.append(str(serial_coupon_name))
 		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
 		self.update(**user_update_data)
