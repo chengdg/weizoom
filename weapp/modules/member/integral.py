@@ -361,9 +361,9 @@ class IntegralCaculator(object):
 				if member:
 					father_member = MemberFollowRelation.get_father_member(member.id)
 					if father_member:
-						if integral_strategy.buy_via_offline_increase_count_for_author > 0：
+						if integral_strategy.buy_via_offline_increase_count_for_author > 0:
 							self.increase_member_integral(father_member, integral_strategy.buy_via_offline_increase_count_for_author, BUY_INCREST_COUNT_FOR_FATHER)
-							
+
 						if order.final_price > 0 and integral_strategy.buy_via_offline_increase_count_percentage_for_author:
 							try:
 								buy_via_offline_increase_count_percentage_for_author = float(integral_strategy.buy_via_offline_increase_count_percentage_for_author)
