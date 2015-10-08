@@ -373,7 +373,6 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
             one_message['name'] = member.username_truncated
             if member:
                 one_message['member_id'] = member.id
-                one_message['user_icon'] = member.user_icon if len(member.user_icon.strip()) > 0 else DEFAULT_ICON
         except:
             one_message['member_id'] = ''
 
