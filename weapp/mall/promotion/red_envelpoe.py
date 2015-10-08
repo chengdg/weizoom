@@ -361,7 +361,7 @@ def get_datas(request):
         for data in datas:
             coupon_ids.add(data.coupon_id)
         for coupon in Coupon.objects.filter(id__in=list(coupon_ids)):
-            if coupon_status == 0:
+            if coupon_status == '0':
                 if 1 != coupon.status:
                     new_coupon_ids.add(coupon.id)
             else:
