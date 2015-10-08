@@ -127,17 +127,18 @@ class Sign(models.Document):
 	def do_auto_signment(data):
 		"""
 		回复关键字自动签到
-		:param data: 字典 :包含 webapp_owner_id, openid, keyword
+		:param data: 字典 :包含 webapp_owner_id, openid, keyword, webapp_id
 		:return: html片段
 		"""
 		return_html = []
+		1/0
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
 			if sign.status != 1:
 				return_html.append(u'签到活动未开始')
 			elif data['keyword'] == sign.reply['keyword']:
 				# add by bert  增加获取会员代码
-				member = get_member_by_openid(data['openid'])
+				member = get_member_by_openid(data['openid'], data['webapp_id'])
 				if not member:
 					return None
 				signer = SignParticipance.objects(member_id=member.id, belong_to=sign.id)
