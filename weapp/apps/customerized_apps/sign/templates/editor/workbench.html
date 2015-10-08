@@ -307,7 +307,7 @@
       
       loadPages(pageManagerView);
 
-      $('.xui-bottomActionBar').delegate('.xa-save', 'click', function() {
+      $('.xa-save').click(function() {
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
         var descriptionModel = page.components[0].model;
