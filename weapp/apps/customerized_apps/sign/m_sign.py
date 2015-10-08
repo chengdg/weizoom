@@ -78,22 +78,23 @@ class MSign(resource.Resource):
 				nowDate = datetime.datetime.now().strftime('%Y-%m-%d')
 				if latest_sign_date == nowDate:
 					activity_status = u'已签到'
-				elif signer.serial_count >1:
+				if signer.serial_count >1:
 					flag = False
 					for name in sorted(prize_settings.keys()):
 						setting = prize_settings[name]
+						if flag:
+							next_serial_prize = {
+								'count': name,
+								'prize': setting
+							}
+							break
 						if int(name) == signer.serial_count + 1:
 							serial_prize = {
 								'count': name,
 								'prize':setting
 							}
 							flag = True
-						if flag:
-							next_serial_prize = {
-								'count': name,
-								'prize': setting
-							}
-							flag = False
+
 			prize_info = {
 				'daily_prize': daily_prize,
 				'serial_prize': serial_prize,
