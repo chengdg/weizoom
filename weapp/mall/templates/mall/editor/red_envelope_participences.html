@@ -165,13 +165,56 @@ $(document).ready(function() {
 	});
 
 	var name,grade_id,coupon_status;
+	var export_id =window.location.search.split('?id=')[1];
     //export
-	$('.panel-heading').delegate('.xa-export-all', 'click', function(event){
+	$('.xa-export-selected').click(function(event) {
         W.getLoadingView();
 		name = $.trim($('[name="name"]').val());
 		grade_id = $.trim($('[name="grade"]').val());
 		coupon_status = $.trim($('[name="coupon_status"]').val());
-        var export_id =window.location.search.split('?id=')[1];
+		var selected_ids = [];
+        $('tbody .xa-select').each(function() {
+            var $checkbox = $(this);
+            if ($checkbox.is(":checked")) {
+                var $tr = $checkbox.parents('tr');
+                selected_ids.push($tr.data('id'));
+            }
+        });
+		if(selected_ids==''){
+			W.getErrorHintView().show("请选择导出内容");
+		}else{
+			W.getApi().call({
+				method: 'get',
+				app: 'apps/promotion',
+				resource: 'red_participances_export',
+				args: {
+					'export_id':export_id,
+					'name': name,
+					'grade_id': grade_id,
+					'coupon_status': coupon_status,
+					'selected_ids': selected_ids
+				},
+				success: function(resp){
+					if(resp.code == 200){
+						$('#export_href').prop({
+							'href': resp.download_path,
+							'download': resp.filename
+						}).get(0).click();
+
+					}
+					console.log("导出成功");
+				},
+				error: function(error){
+					console.log('导出失败');
+				}
+			});
+		}
+    });
+	$('.xa-export-all').click(function(event) {
+        W.getLoadingView();
+		name = $.trim($('[name="name"]').val());
+		grade_id = $.trim($('[name="grade"]').val());
+		coupon_status = $.trim($('[name="coupon_status"]').val());
         W.getApi().call({
             method: 'get',
             app: 'apps/promotion',

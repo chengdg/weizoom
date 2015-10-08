@@ -519,6 +519,7 @@ class redParticipances_Export(resource.Resource):
         try:
             import xlwt
             name = request.GET.get('name', '')
+            selected_ids = request.GET.get('selected_ids', '')
             webapp_id = request.user_profile.webapp_id
             if name:
                 hexstr = byte_to_hex(name)
@@ -551,6 +552,9 @@ class redParticipances_Export(resource.Resource):
                     if coupon_status == str(coupon.status):
                        new_coupon_ids.add(coupon.id)
                 datas = datas.filter(coupon_id__in=list(new_coupon_ids))
+            if selected_ids:
+                params['member__in'] = selected_ids
+                datas = datas.filter(**params)
             fields_pure = []
             export_data = []
 
@@ -579,7 +583,6 @@ class redParticipances_Export(resource.Resource):
                     member_id2name[m_id] = u_name
                 else:
                     member_id2name[m_id] = u_name
-            print member_id2name
             #processing data
             num = 0
             for record in datas:
