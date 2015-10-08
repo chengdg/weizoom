@@ -13,52 +13,55 @@ Scenario: 1编辑标题
 	"""
 		[{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"templet_title":{
 				"title": "标题",
 				"subtitle": "副标题",
 				"time": "2015-5-13 10:13",
-				"color": "blue"
+				"background_color": "#0000ff"
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"templet_title":{
 				"title": "标题",
 				"subtitle": "副标题",
 				"time": "2015-5-13 10:13",
-				"color": "blue"
+				"background_color": "#0000ff"
 			}
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
-	"""
-		[{
-			"templet_title":{
-				"title": "标题1111",
-				"subtitle": "副标题",
-				"time": "2015-5-13 10:13",
-				"color": "red"
-			}
-		}]
-	"""
-	Then jobs能获取'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"templet_title":{
 				"title": "标题1111",
 				"subtitle": "副标题",
 				"time": "2015-5-13 10:13",
-				"color": "red"
+				"background_color": "#ff0000"
+			}
+		}
+	"""
+	Then jobs能获取'微页面标题1'
+	"""
+		{
+			"title": {
+				"name": "微页面标题1"
+			},
+			"templet_title":{
+				"title": "标题1111",
+				"subtitle": "副标题",
+				"time": "2015-5-13 10:13",
+				"background_color": "#ff0000"
 			}
 		}
 	"""
