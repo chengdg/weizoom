@@ -55,9 +55,11 @@ def get_request_members_list(request, export=False):
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
 	status = request.GET.get('status', '-1')
-	if not filter_value and status == '1':
-		filter_data_args['is_subscribed'] = True
-
+	if not filter_value:
+		if status == '1':
+			filter_data_args['is_subscribed'] = True
+		elif status == '0':
+			filter_data_args['is_subscribed'] = False
 	if filter_value:
 		filter_data_dict = {}
 		#session_member_ids:通过最后对话时间而获取到会员id的list，先默认为false

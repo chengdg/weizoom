@@ -325,7 +325,8 @@ W.view.member.memberFilterView = Backbone.View.extend({
             success: function(data) {
                  var html = $.tmpl(this.getTemplate(), {
                     grades: data.grades,
-                    tags: data.tags
+                    tags: data.tags,
+                    status: status
                 });
                 /*var html = $.tmpl(this.getTemplate(), {
                     filters: _this.filterData,

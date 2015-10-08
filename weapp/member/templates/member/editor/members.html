@@ -429,7 +429,7 @@ $(document).ready(function() {
 		el: '.xui-filterPanel',
 		dataView: $('[data-ui-role="advanced-table"]').data('view'),
 		userWebappId: {{user.get_profile.webapp_id}},
-		status:''
+		status:'{{status}}'
 	});
 	view.$el.bind('end_click', function(){
 		DATA_INTERVAL = '';

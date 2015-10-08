@@ -40,7 +40,7 @@ W.view.stats.MemberSummaryBaseDataAdvancedTable = W.view.common.AdvancedTable.ex
         
         if(total_member_count > 0) {
             $('#total_member_count').text('');
-            $('#total_member_count').append('<a href="/member/member_list/" target="_blank">' + total_member_count + '</a>');
+            $('#total_member_count').append('<a href="/member/member_list/?status=-1" target="_blank">' + total_member_count + '</a>');
         } else {
             $('#total_member_count').text(total_member_count);
         }
