@@ -249,12 +249,30 @@
     };
 
 	$(function() {
+        //隐藏参与活动按钮
+        $('.xa-submitButtonContainer').hide();
         resultDialog = new ResultDialog();
         //绑定签到按钮点击事件
         $('.wa-sign-btn').on('click', function(){
             if('未开始' === status){
                 resultDialog.render(false, {});
             }else{
+                //发起签到请求
+                W.getApi().call({
+                    app: 'm/apps/sign',
+                    resource: 'sign_participance',
+                    method: 'put',
+                    args: {
+                        webapp_owner_id: W.webappOwnerId,
+                        id: W.appRecordId
+                    },
+                    success: function(data) {
+                        alert('参与成功');
+                    },
+                    error: function(data) {
+                        alert('参与失败');
+                    }
+                });
                 resultDialog.render(true, {});
             }
         });

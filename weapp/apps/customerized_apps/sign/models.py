@@ -55,22 +55,22 @@ class SignParticipance(models.Document):
 					if type == 'integral':
 						daily_integral += int(value)
 					elif type == 'coupon':
-						daily_coupon_id = value.id if value != '' else ''
+						daily_coupon_id = value['id'] if value != '' else ''
 			if int(name) == curr_serial_count:
 				#达到连续签到要求的奖励
 				for type, value in setting.items():
 					if type == 'integral':
 						serial_integral += int(value)
 					elif type == 'coupon':
-						serial_coupon_id = value.id if value != '' else ''
+						serial_coupon_id = value['id'] if value != '' else ''
 		user_prize = self.prize
-		user_prize['integral'] += daily_integral + serial_integral
+		user_prize['integral'] = int(user_prize['integral']) + daily_integral + serial_integral
 		temp_coupon_list = user_prize['coupon'].split(',')
 		if daily_coupon_id != '':
-			temp_coupon_list.append(daily_coupon_id)
+			temp_coupon_list.append(str(daily_coupon_id))
 		if serial_coupon_id != '':
-			temp_coupon_list.append(serial_coupon_id)
-		user_prize['coupon'] = temp_coupon_list.join(',')
+			temp_coupon_list.append(str(serial_coupon_id))
+		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
 		self.update(**user_update_data)
 		#更新签到参与人数
@@ -109,10 +109,22 @@ class Sign(models.Document):
 
 
 	@staticmethod
-	def get_auto_sign_data(data):
+	def do_auto_signment(data):
+		"""
+		回复关键字自动签到
+		:param data: 字典 :包含 webapp_owner_id, member_id, keyword
+		:return: 字典 : ｛
+							daily_integral：每日签到积分，
+							daily_coupon_id：每日签到优惠券id，
+							serial_integral：连续签到积分，
+							serial_coupon_id： 连续签到优惠券id，
+							status_code： 状态码（0：失败，1：成功，2：关键字不匹配），
+							errMsg： 错误信息，
+						｝
+		"""
 		return_data = {}
 		try:
-			sign = Sign.objects.get(owner_id=data.owner_id)
+			sign = Sign.objects.get(owner_id=data.webapp_owner_id)
 			if sign.status != 1:
 				return_data['errMsg'] = u'签到活动未开始'
 			elif data.keyword == sign.reply.keyword:
@@ -121,6 +133,10 @@ class Sign(models.Document):
 					signer = SignParticipance(
 						belong_to = sign.id,
 						member_id = data.member_id,
+						prize = {
+							'integral': 0,
+							'coupon': ''
+						},
 						created_at= datetime.datetime.today()
 					)
 					signer.save()
