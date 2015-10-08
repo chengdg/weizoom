@@ -113,10 +113,12 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{if item.coupon_status_id}}
-						<b style="color:#5D8F17">${item.coupon_status}</b>
-					{{else}}
+					{{if item.coupon_status_id==0 }}
 						<b>${item.coupon_status}</b>
+					{{else item.coupon_status_id==1}}
+						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{else item.coupon_status_id==2}}
+						<b style="color:#DB2009">${item.coupon_status}</b>
 					{{/if}}
 				</td>
 				<td>
