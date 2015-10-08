@@ -418,9 +418,12 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
             member = id2member[member_id]
+            one_session['user_icon'] =  DEFAULT_ICON
             if member:
                 one_session['member_id'] = member.id
                 one_session['is_subscribed'] = member.is_subscribed
+                one_session['user_icon'] =  member.user_icon
+                one_session['name'] =  member.username_for_html
                 if not member.is_subscribed:
                     one_session['could_replied'] = 0
         except:
@@ -562,7 +565,10 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         one_message['message_id'] = message.id
         one_message['sender_username'] = weixin_user.username
         one_message['name'] = weixin_user.nickname_for_html
-
+        if weixin_user.weixin_user_icon:
+            one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
+        else:
+            one_message['user_icon'] =  DEFAULT_ICON
         one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -625,6 +631,7 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['member_id'] = member.id
                 one_message['is_subscribed'] = member.is_subscribed
                 one_message['user_icon'] =  member.user_icon
+                one_session['name'] =  member.username_for_html
                 if not member.is_subscribed:
                     one_message['could_replied'] = 0
         except:
