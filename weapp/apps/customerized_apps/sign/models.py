@@ -76,11 +76,13 @@ class SignParticipance(models.Document):
 		self.update(**user_update_data)
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)
+		sign.reload()
 
 		return_data['daily_integral'] = daily_integral
 		return_data['daily_coupon_id'] = daily_coupon_id
 		return_data['serial_integral'] = serial_integral
 		return_data['serial_coupon_id'] = serial_coupon_id
+		return_data['reply_content'] = sign.reply['content']
 
 		return return_data
 
@@ -119,6 +121,7 @@ class Sign(models.Document):
 							daily_coupon_id：每日签到优惠券id，
 							serial_integral：连续签到积分，
 							serial_coupon_id： 连续签到优惠券id，
+							reply_content ：设置的回复内容，
 							status_code： 状态码（0：失败，1：成功，2：关键字不匹配），
 							errMsg： 错误信息，
 						｝
@@ -128,17 +131,16 @@ class Sign(models.Document):
 			sign = Sign.objects.get(owner_id=data.webapp_owner_id)
 			if sign.status != 1:
 				return_data['errMsg'] = u'签到活动未开始'
-			elif data.keyword == sign.reply.keyword:
+			elif data.keyword == sign.reply['keyword']:
 				# add by bert  增加获取会员代码
 				member = get_member_by_openid(data['openid'])
 				if not member:
 					return None
-					
-				signer = SignParticipance.objects(member_id=data.member_id, belong_to=sign.id)
+				signer = SignParticipance.objects(member_id=member.id, belong_to=sign.id)
 				if signer.count() == 0:
 					signer = SignParticipance(
 						belong_to = sign.id,
-						member_id = data.member_id,
+						member_id = member.id,
 						prize = {
 							'integral': 0,
 							'coupon': ''
