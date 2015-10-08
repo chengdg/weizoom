@@ -3,6 +3,7 @@
 import datetime
 
 import mongoengine as models
+from modules.member.module_api import get_member_by_openid
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
@@ -112,7 +113,7 @@ class Sign(models.Document):
 	def do_auto_signment(data):
 		"""
 		回复关键字自动签到
-		:param data: 字典 :包含 webapp_owner_id, member_id, keyword
+		:param data: 字典 :包含 webapp_owner_id, openid, keyword
 		:return: 字典 : ｛
 							daily_integral：每日签到积分，
 							daily_coupon_id：每日签到优惠券id，
@@ -128,6 +129,11 @@ class Sign(models.Document):
 			if sign.status != 1:
 				return_data['errMsg'] = u'签到活动未开始'
 			elif data.keyword == sign.reply.keyword:
+				# add by bert  增加获取会员代码
+				member = get_member_by_openid(data['openid'])
+				if not member:
+					return None
+					
 				signer = SignParticipance.objects(member_id=data.member_id, belong_to=sign.id)
 				if signer.count() == 0:
 					signer = SignParticipance(
