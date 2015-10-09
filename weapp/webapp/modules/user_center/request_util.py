@@ -643,22 +643,24 @@ def get_mileke_page(request):
 	"""
 		投票总数
 	"""
-	milekes = Mileke.objects.all()
-	member_mileke = None
-	for mileke in milekes:
-		mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
-		if joined and mileke.member == member:
-			member_mileke = mileke
+	# milekes = Mileke.objects.all().order_by('-count')
+	# member_mileke = None
+	# for mileke in milekes:
+	# 	mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
+	# 	if joined and mileke.member == member:
+	# 		member_mileke = mileke
 
 	"""
 		排序
 	"""
-	milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
-
+	#milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
+	milekes = Mileke.objects.all().order_by('-count')
 	"""
 		获取当前用户位置
 	"""
-	if member_mileke:
+	member_milekes = Mileke.objects.filter(member=member)
+	if member_milekes.count() > 0:
+		member_mileke = member_milekes[0]
 		current_index = list(milekes).index(member_mileke) + 1
 	else:
 		current_index = 0
