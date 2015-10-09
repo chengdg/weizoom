@@ -278,6 +278,7 @@ def __clear_all_app_data():
 	# 会员扫码
 	member_qrcode_models.MemberQrcode.objects.all().delete()
 	member_qrcode_models.MemberQrcodeLog.objects.all().delete()
+	member_qrcode_models.MemberQrcodeSettings.objects.all().delete()
 	modules_member_models.MemberMarketUrl.objects.all().delete()
 
 	# 店铺装修

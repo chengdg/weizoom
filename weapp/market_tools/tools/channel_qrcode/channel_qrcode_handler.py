@@ -61,8 +61,9 @@ class ChannelQrcodeHandler(MessageHandler):
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
 
-		# if hasattr(context, 'is_member_qrcode') and context.is_member_qrcode is False:
-		# 	return None
+		#优化处理
+		if hasattr(context, 'is_member_qrcode') and context.is_member_qrcode is False:
+			return None
 
 		if user_profile.user_id in [467,154] and \
 			check_new_channel_qrcode_ticket(ticket, user_profile):

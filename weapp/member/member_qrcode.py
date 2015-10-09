@@ -60,7 +60,6 @@ class MemberQrcode(resource.Resource):
 				if content:
 					member_grade.award_type = content.award_type
 					member_grade.award_content = content.award_content
-
 		c = RequestContext(request, {
 			'first_nav_name': export.MEMBER_FIRST_NAV,
 			'second_navs': export.get_second_navs(request),

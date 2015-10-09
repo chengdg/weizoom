@@ -171,22 +171,19 @@ def step_impl(context, member_a, user):
 	# if hasattr(context, 'client'):
 	# 	context.client.logout()
 	# context.client = bdd_util.login(user)
-	# client = context.client
+	client = context.client
 	user = UserFactory(username=user)
 	# user = context.client.user
 	user_profile = user.get_profile()
 	openid = '%s_%s' % (member_a, user)
-	post_data = """
-				<xml><ToUserName><![CDATA[weizoom]]></ToUserName>
-				<FromUserName><![CDATA[%s]]></FromUserName>
-				<CreateTime>1405079048</CreateTime>
-				<MsgType><![CDATA[event]]></MsgType>
-				<Event><![CDATA[unsubscribe]]></Event>
-				<EventKey><![CDATA[]]></EventKey>
-				</xml>
-	""" % openid
-	url = '/weixin/%s/'% user_profile.webapp_id
-	context.client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
+	url = '/simulator/api/mp_user/unsubscribe/?version=2'
+	data = {
+		"timestamp": "1402211023857",
+		"webapp_id": user_profile.webapp_id,
+		"from_user": openid
+	}
+	response = client.post(url, data)
+
 
 @when(u'{username}访问会员列表第{page_count}页')
 def step_impl(context, username, page_count):

@@ -14,5 +14,6 @@ urlpatterns = patterns('',
 	(r'^api/menu_event_response/get/', views.get_menu_event_response),
 	(r'^api/mp_user/subscribe/', views.subscribe),
 	(r'^api/mp_user/unsubscribe/', views.unsubscribe),
+	(r'^api/mp_user/qr_subscribe/', views.qr_subscribe),
 	(r'^api/', api_views.call_api),
 )

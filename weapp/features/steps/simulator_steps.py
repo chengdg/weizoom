@@ -225,3 +225,4 @@ def step_impl(context, user):
 @when("清空浏览器")
 def step_impl(context):
 	context.client.reset()
+

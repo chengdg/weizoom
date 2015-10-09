@@ -184,7 +184,7 @@ Background:
 			| 2015-03-05   | tom3     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
 
 
-@mall2 @member @memberList
+@mall2 @member @memberList @tesss
 Scenario:1 默认条件和空条件查询
 
 	Given jobs登录系统

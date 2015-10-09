@@ -51,7 +51,8 @@ class QrcodeHandler(MessageHandler):
 			return None
 		
 		is_member_qrcode = update_member_qrcode_log(user_profile, context.member, ticket)
-		#context.is_member_qrcode = is_member_qrcode
+		#用于优化如果是会员推广扫描则不进入渠道二维码处理买
+		context.is_member_qrcode = is_member_qrcode
 		return None
 
 

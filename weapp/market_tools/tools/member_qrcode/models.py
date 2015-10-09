@@ -112,7 +112,8 @@ class MemberQrcodeAwardContent(models.Model):
 
 class MemberQrcode(models.Model):
 	owner = models.ForeignKey(User)
-	ticket = models.TextField() #获取的ticket值
+	ticket = models.CharField(default='', max_length=256)
+	#ticket = models.TextField() #获取的ticket值
 	member = models.ForeignKey(Member) #会员id
 	expired_second = models.IntegerField(default=1800) #临时二维码失效时间
 	created_time = models.IntegerField()
@@ -126,7 +127,7 @@ class MemberQrcode(models.Model):
 
 class MemberQrcodeLog(models.Model):
 	member_qrcode = models.ForeignKey(MemberQrcode)
-	member_id = models.CharField(max_length=100)
+	member_id = models.CharField(max_length=100, db_index=True)
 
 	class Meta(object):
 		db_table = 'market_tool_member_qrcode_log'
