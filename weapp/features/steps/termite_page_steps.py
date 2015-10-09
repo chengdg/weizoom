@@ -7,6 +7,24 @@ from django.test.client import Client
 from webapp import models as webapp_models
 from test import bdd_util
 
+@Given(u"{user}已添加微页面")
+def step_impl(context, user):
+	user = context.client.user
+
+	pages = json.loads(context.text)
+	for page in pages:
+		page_json = {
+			"title":{
+				"name": page.get('name')
+			}
+		}
+		context.project_id = _get_new_project_id(context)
+		_save_page(context, user, page_json)
+		create_time = page.get('create_time', "")
+		if create_time:
+			webapp_models.Project.objects.filter(id=context.project_id).update(created_at=create_time)
+
+
 @When(u"{user}创建微页面")
 def step_impl(context, user):
 	user = context.client.user
@@ -15,7 +33,6 @@ def step_impl(context, user):
 	for page in pages:
 		context.project_id = _get_new_project_id(context)
 		_save_page(context, user, page)
-
 
 @Then(u"{user}能获取'{page_name}'")
 def step_impl(context, user, page_name):
@@ -144,9 +161,8 @@ def __actual_page(page_json):
 
 		# 公告
 		if component['type'] == "wepage.notice":
-			default = u'默认显示公告，请填写内容，如果过长，将会在手机上滚动显示'
 			actual_component = {
-				"notice_text": model['title'] if model['title'] else default
+				"notice_text": model['title']
 			}
 
 		# 富文本
@@ -188,7 +204,8 @@ def __add_templet_title(page, page_json):
 
 def __add_notice_text(page, page_json):
 	pid = page_json['cid']
-	cid = page_json['components'][0]['cid']
+	cid = page_json['components'][0]['cid']	
+	default = u'请填写内容，如果过长，将会在手机上滚动显示'
 	if page.has_key("notice_text"):
 		cid = cid + 1
 		wepage_notice = {
@@ -204,7 +221,7 @@ def __add_notice_text(page, page_json):
 			"property_view_title": u"公告",
 			"model": { "id":"", "class":"", "name":"", "index":4,
 				"datasource":{"type":"api","api_name":""},
-				"title": page['notice_text']
+				"title": page['notice_text'] if page['notice_text'] else default
 			}
 		}
 		page_json['components'].append(wepage_notice)

@@ -1,11 +1,10 @@
-
 #_author_：师帅
 #_edit_：benchi
 #_edit_：新新
 # 利用现有控件，在编辑区内编辑什么样的内容，相应的，在展示区内显示对应的富文本内容（富文本可包括，文件，图片，表格等等,富文本中有默认信息，字数控制在10000字）
 Feature: 自定义模块-富文本
 
-@wepage
+@termite2
 Scenario: 添加，编辑富文本
 	Given jobs登录系统
 	When jobs创建微页面
