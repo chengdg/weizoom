@@ -37,6 +37,17 @@ class MongoAPILogger(object):
 	def get_now(self):
 		return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+	def params_to_str(self, params):
+		"""
+		将params转成字符串
+		"""
+		try:
+			str = json.dumps(params)
+		except:
+			# params有时是QueryDict对象
+			str = '{}'.format(params)
+		return str
+
 	def log(self, app, resource, method, params, status=0):
 		"""
 		记录WAPI的信息
@@ -46,7 +57,7 @@ class MongoAPILogger(object):
 			'api': '%s/%s' % (app, resource),
 			'method': method,
 			#'params': '{}'.format(params),
-			'params': json.dumps(params),
+			'params': self.params_to_str(params),
 			'at': now,
 			'status': status
 		}

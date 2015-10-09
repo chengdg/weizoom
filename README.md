@@ -76,6 +76,15 @@ behave -k -t @wapi
 ```
 
 
+### 问：如何通过Web访问WAPI？ ###
+
+**答**：URL格式是 `/wapi/<app>/<resource>/`，例如：
+```
+http://dev.weapp.com/wapi/mall/products_by_category/?webapp_id=3196&category_id=7&owner_id=18&is_access_weizoom_mall=false
+http://dev.weapp.com/wapi/mall/products_categories/?webapp_id=3201&oid=23&is_access_weizoom_mall=false
+```
+具体的参数可以看MongoDB记录中的信息。
+
 
 # 集成测试 #
 
