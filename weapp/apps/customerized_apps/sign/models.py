@@ -115,15 +115,11 @@ class SignParticipance(models.Document):
 		return_data['daily_integral'] = daily_integral
 		return_data['daily_coupon_id'] = daily_coupon_id
 		return_data['daily_coupon_name'] = daily_coupon_name
-		return_data['serial_integral'] = serial_integral
-		return_data['serial_coupon_id'] = serial_coupon_id
-		return_data['serial_coupon_name'] = serial_coupon_name
 		return_data['next_serial_count'] = next_serial_count
 		return_data['next_serial_integral'] = next_serial_integral
 		return_data['next_serial_coupon_id'] = next_serial_coupon_id
 		return_data['next_serial_coupon_name'] = next_serial_coupon_name
 		return_data['reply_content'] = sign.reply['content']
-		return_data['hit_serial_count'] = bingo
 		return_data['serial_count'] = self.serial_count
 
 		return return_data
@@ -190,9 +186,9 @@ class Sign(models.Document):
 					return_html.append(u'亲，今天您已经签到过了哦，明天再来吧！<br>')
 				if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
 					return_html.append(u'签到成功！<br>已连续签到').append(return_data['serial_count']).append(u'天<br>本次签到获得以下奖励：')
-					return_html.append(return_data['daily_integral']+return_data['serial_integral']).append(u'积分<br>')
-					if return_data['daily_coupon_name'] or return_data['serial_coupon_name']:
-						return_html.append(return_data['daily_coupon_name']).append('<br>').append(return_data['serial_coupon_name']).append('<br>')
+					return_html.append(return_data['curr_prize_integral']).append(u'积分<br>')
+					if return_data['curr_prize_coupon_name'] != '':
+						return_html.append(return_data['curr_prize_coupon_name']).append('<br>')
 						return_html.append(u'<a>点击查看</a><br>')
 					return_html.append(u'签到说明：签到有礼！<br>').append(return_data['reply_content'])
 				return_html.append(u'<a href="#">>>点击查看详情</a>')
