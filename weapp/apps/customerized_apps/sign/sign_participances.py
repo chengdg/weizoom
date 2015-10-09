@@ -33,13 +33,18 @@ class SignParticipances(resource.Resource):
 			'second_nav_name': "signs",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
-		});
+		})
 		
 		return render_to_response('sign/templates/editor/sign_participances.html', c)
 	
 	@staticmethod
 	def get_datas(request):
-		datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by('-id')
+		sort_attr = request.GET.get('sort_attr', 'id')
+		if 'total_integral' == sort_attr:
+			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
+			datas = sorted(datas, lambda x: x['prize']['integral'], reverse=True)
+		else:
+			datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by(sort_attr)
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
@@ -52,6 +57,7 @@ class SignParticipances(resource.Resource):
 		"""
 		响应API GET
 		"""
+		sort_attr = request.GET.get('sort_attr', 'id')
 		pageinfo, datas = SignParticipances.get_datas(request)
 		
 		webappuser2datas = {}
@@ -86,7 +92,7 @@ class SignParticipances(resource.Resource):
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': 'id',
+			'sortAttr': sort_attr,
 			'data': {}
 		}
 		response = create_response(200)
