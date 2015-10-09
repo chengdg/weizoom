@@ -360,6 +360,8 @@
         		商品金额：
         	</p>
         	<p class="xui-value">￥{{order.total_price|floatformat:"2"}}</p>
+          <p class="xui-field">运费：</p>
+          <p class="xui-value">+￥{{order.postage|floatformat:"2"}}</p>
           {% if order.save_money > 0 %}
         	<p class="xui-field">优惠金额：</p>
           <p class="xui-value">-￥{{order.save_money|floatformat:"2"}}</p>
@@ -367,8 +369,6 @@
           <p class="xui-field">优惠金额：</p>
           <p class="xui-value">+￥{{order.save_money|floatformat:"2"|cut:'-'}}</p>
           {% endif %}
-        	<p class="xui-field">运费：</p>
-        	<p class="xui-value">+￥{{order.postage|floatformat:"2"}}</p>
           <div class="xui-line-long"></div>
           <p class="xui-field ml38" style="width:350px;">
             <span class="pull-left">
