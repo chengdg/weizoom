@@ -154,6 +154,7 @@ def __clear_all_app_data():
 	member_models.ShipInfo.objects.all().delete()
 	webapp_models.PageVisitLog.objects.all().delete()
 	webapp_models.PageVisitDailyStatistics.objects.all().delete()
+	webapp_models.Project.objects.filter(type="wepage", is_active=False).delete()
 
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
