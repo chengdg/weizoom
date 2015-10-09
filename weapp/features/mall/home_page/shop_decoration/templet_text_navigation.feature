@@ -11,6 +11,7 @@ Feature:自定义模块——【基础模块】文本导航-页面
 	7、文本导航的链接，“从微站选择”当选择的链接的名称过长时用省略号截取显示，保证链接名称、修改、图标在同一行，不折行
 
 Scenario:1添加文本导航
+	Given jobs登录系统
 	When jobs创建微页面
 	"""
 		[{
@@ -30,7 +31,7 @@ Scenario:1添加文本导航
 	"""
 	Then jobs能获取'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			},
@@ -43,10 +44,11 @@ Scenario:1添加文本导航
 					"navigation_link": "店铺主页"
 				}]
 			}
-		}]
+		}
 	"""
 
 Scenario: 2编辑文本导航
+	Given jobs登录系统
 	When jobs创建微页面
 	"""
 		[{
@@ -66,7 +68,7 @@ Scenario: 2编辑文本导航
 	"""
 	Then jobs能获取'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			},
@@ -79,23 +81,28 @@ Scenario: 2编辑文本导航
 					"navigation_link": "店铺主页"
 				}]
 			}
-		}]
+		}
 	"""
 	When jobs编辑微页面'微页面标题'
-	And jobs修改'文本导航1'
 	"""
 		[{
+			"title": {
+				"name": "微页面标题"
+			},
 			"navigation":{
 				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
 					"navigation_name": "文本导航2",
-					"navigation_link": "微页面"
+					"navigation_link": "店铺主页"
 				}]
 			}
 		}]
 	"""
 	Then jobs能获取'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			},
@@ -108,10 +115,9 @@ Scenario: 2编辑文本导航
 					"navigation_link": "微页面"
 				}]
 			}
-		}]
+		}
 	"""
-	When jobs删除'文本导航'
-	Then jobs能获取'微页面标题'
+	When jobs编辑微页面'微页面标题'
 	"""
 		[{
 			"title": {
@@ -124,5 +130,35 @@ Scenario: 2编辑文本导航
 				}]
 			}
 		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航2",
+					"navigation_link": "微页面"
+				}]
+			}
+		}
+	"""
+	When jobs编辑微页面'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			}
+		}
 	"""
 
