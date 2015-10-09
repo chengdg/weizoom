@@ -4,7 +4,7 @@
 #_edit_:师帅
 Feature:自定义模块——【基础模块】公告-页面
 
-@wepage
+@termite2
 Scenario:添加公告
 	Given jobs登录系统
 	When jobs创建微页面
@@ -43,7 +43,7 @@ Scenario:添加公告
 		"title": {
 			"name": "微页面标题"
 		},
-		"notice_text":"默认显示公告，请填写内容，如果过长，将会在手机上滚动显示"
+		"notice_text":"请填写内容，如果过长，将会在手机上滚动显示"
 	}
 	"""
 #删除公告

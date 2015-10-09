@@ -38,7 +38,7 @@ Background:
 		}]
 	"""
 
-@termite2 @termite2.custom_module
+@termite21
 Scenario:1已有模块新建模块
 	#已有模块,新建模块后,列表中显示(名称 最近应用在 操作列)
 	When jobs创建微页面
@@ -71,7 +71,7 @@ Scenario:1已有模块新建模块
 
 
 
-@termite2 @termite2.custom_module
+@termite23
 Scenario:2删除
 	#删除提示并且被删除的模块消息一列消失
 	When jobs删除'微页面2'
@@ -90,7 +90,7 @@ Scenario:2删除
 	"""
 
 	
-@termite2 @termite2.custom_module
+@termite23
 Scenario:3改名
 	#改名后,成功显示修改后的名称
 	When jobs编辑微页面'微页面1'
