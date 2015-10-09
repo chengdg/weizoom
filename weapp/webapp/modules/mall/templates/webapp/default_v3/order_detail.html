@@ -298,7 +298,7 @@
                     {% endif %}
                     <!-- 红包 -->
                     {% if order.red_envelope %}
-                        <a href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{order.red_envelope}}" class="xui-btn xui-btn-warring" type="button">
+                        <a href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{order.red_envelope}}" class="xui-btn" type="button" style="background: #F39A00;color: #ffffff;">
                             {% if order.red_envelope_created %}
                                 分享红包
                             {% else %}
