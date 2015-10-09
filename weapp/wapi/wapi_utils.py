@@ -7,14 +7,15 @@ from wapi.logger.mongo_logger import MongoAPILogger
 
 _wapi_logger = None
 
-def wapi_log(level, app, resource, params, status=0):
+def wapi_log(app, resource, method, params, status=0):
 	"""
 	记录WAPI信息，保存到mongo中
 	"""
 	global _wapi_logger
 	if _wapi_logger is None:
 		_wapi_logger = MongoAPILogger()
-	return _wapi_logger.log(app, resource, params, status)
+	print("called WAPI: {} {}/{}, param: {}".format(method, app, resource, params))
+	return _wapi_logger.log(app, resource, method, params, status)
 
 
 def create_json_response(code, data):

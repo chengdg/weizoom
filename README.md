@@ -68,6 +68,14 @@ python manage.py runserver 0.0.0.0:8000
 5. 用 **bill** 登录，选 **jobs**。
 
 
+### 问：如何进行WAPI的BDD测试？ ###
+
+**答**：执行
+```
+behave -k -t @wapi
+```
+
+
 
 # 集成测试 #
 

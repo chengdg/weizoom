@@ -756,11 +756,10 @@ RESOURCE_LOADED = False
 RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
 
 
-from weapp import hack_django
-hack_django.hack(DJANGO_HACK_PARAMS)
-
-
 # settings for WAPI Logger
 WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
 WAPI_LOGGER_SERVER_PORT = 27017
 WAPI_LOGGER_DB = 'wapi'
+
+from weapp import hack_django
+hack_django.hack(DJANGO_HACK_PARAMS)

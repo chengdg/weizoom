@@ -12,7 +12,7 @@ from django.conf import settings
 from pymongo import Connection
 #import pymongo
 #from bson.objectid import ObjectId
-
+import json
 
 """
 import sys
@@ -37,14 +37,16 @@ class MongoAPILogger(object):
 	def get_now(self):
 		return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-	def log(self, app, resource, params, status=0):
+	def log(self, app, resource, method, params, status=0):
 		"""
 		记录WAPI的信息
 		"""
 		now = self.get_now()
 		record = {
-			'api': '%s-%s' % (app, resource),
-			'params': '{}'.format(params),
+			'api': '%s/%s' % (app, resource),
+			'method': method,
+			#'params': '{}'.format(params),
+			'params': json.dumps(params),
 			'at': now,
 			'status': status
 		}

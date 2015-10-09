@@ -4,6 +4,7 @@ import sys
 import os
 
 from django.conf import settings
+from wapi_utils import wapi_log
 
 wapi_path = os.path.join(settings.PROJECT_HOME, '..', 'wapi')
 for f in os.listdir(wapi_path):
@@ -23,18 +24,23 @@ class ApiNotExistError(Exception):
 	pass
 
 def __call(method, app, resource, data):
+	resource_name = resource
 	key = '%s-%s' % (app, resource)
-	print("called WAPI: {}/{}, param: {}".format(app, resource, data))
+	#print("called WAPI: {}/{}, param: {}".format(app, resource, data))
 
 	resource = api_resource.APPRESOURCE2CLASS.get(key, None)
 	if not resource:
+		wapi_log(app, resource_name, method, data, -1)
 		raise ApiNotExistError('%s:%s' % (key, method))
 
 	func = getattr(resource['cls'], method, None)
 	if not func:
-		raise ApiNotExistError('%s:%s' % (key, method))		
+		wapi_log(app, resource_name, method, data, -1)
+		raise ApiNotExistError('%s:%s' % (key, method))
 
-	return func(data)
+	response = func(data)
+	wapi_log(app, resource_name, method, data, 0)
+	return response
 
 
 def get(app, resource, data):
