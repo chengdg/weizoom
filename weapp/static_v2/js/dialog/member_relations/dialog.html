@@ -45,13 +45,14 @@
 <script id="member-relations-dialog-one-relation-tmpl-src" type="text/x-jquery-tmpl">
 	<div  data-id="${id}" style="overflow: hidden; margin-top:10px">
 		<div >
-			<div class="column_block xui-memberHeader pr">
+			<div class="column_block xui-memberHeader">
+				
+				<a href="/member/detail/?id=${id}" class="pr" style="float: left;margin-left: 25px">
 				{{if is_subscribed == 0}}
 					<div class="xui-cancelCover tc">
 					已取消
 					</div>
 				{{/if}}
-				<a href="/member/detail/?id=${id}" style="float: left;margin-left: 25px">
 				<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
 				</a>
 			</div>
