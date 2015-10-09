@@ -25,7 +25,7 @@ from weapp import settings
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
 
-FIRST_NAV_NAME = 'apps'
+FIRST_NAV_NAME  = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 class RedEnvelopeRuleList(resource.Resource):
     app = "apps/promotion"
@@ -104,8 +104,8 @@ class RedEnvelopeRuleList(resource.Resource):
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_APPS_SECOND_NAV,
             'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
-            'second_nav_name': 'orderRedEnvelope',
             "coupon_rule_info": json.dumps(coupon_rule_info),
             "items": items,
             'endDate': endDate,
