@@ -126,18 +126,18 @@ def edit_shopping_cart_order(request):
 		request.action = 'add'
 		return request_util.edit_address(request)
 
+# jz 2015-10-09
+# def pay_weizoompay_order(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.pay_weizoompay_order(request)
 
-def pay_weizoompay_order(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.pay_weizoompay_order(request)
-
-def get_weizoompay_confirm(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.get_weizoompay_confirm(request)
-
-def get_weizoomcard_change_intr(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.get_weizoomcard_change_intr(request)
+# jz 2015-10-09
+# def get_weizoompay_confirm(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.get_weizoompay_confirm(request)
+# def get_weizoomcard_change_intr(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.get_weizoomcard_change_intr(request)
 
 def _get_redirect_url_query_string(request):
 	# 入口是图文
