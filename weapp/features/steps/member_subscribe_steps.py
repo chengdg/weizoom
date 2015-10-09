@@ -112,19 +112,19 @@ def step_impl(context, user):
 		actual_data = []
 		for row in context.table:
 			adict = {}
-			adict['name'] = row[0]
-			adict['member_grade'] = row[1]
-			adict['friend_count'] = int(row[2])
-			adict['integral'] = int(row[3])
-			adict['pay_money'] = row[4]
-			adict['unit_price'] = row[5]
-			adict['pay_times'] = int(row[6])
-			if row[7] == u'今天':
+			adict['name'] = row['name']
+			adict['member_grade'] = row['member_rank']
+			adict['friend_count'] = int(row['friend_count'])
+			adict['integral'] = int(row['integral'])
+			adict['pay_money'] = row['pay_money']
+			adict['unit_price'] = row['unit_price']
+			adict['pay_times'] = int(row['pay_times'])
+			if row['attention_time'] == u'今天':
 				adict['attention_time'] = time.strftime('%Y-%m-%d')
 			else:
-				adict['attention_time'] = row[7]
-			adict['source'] = row[8]
-			adict['tags'] = row[9]
+				adict['attention_time'] = row['attention_time']
+			adict['source'] = row['source']
+			adict['tags'] = row['tags']
 			json_data.append(adict)
 		for row in actual_members:
 			adict = {}
