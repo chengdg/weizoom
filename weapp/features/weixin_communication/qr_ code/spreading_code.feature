@@ -19,6 +19,7 @@ Feature:推广扫码
 
 Background:
 	Given jobs登录系统
+
 @mall2 @qr_code
 Scenario:1 无奖励
 
@@ -42,21 +43,21 @@ Scenario:1 无奖励
 	#推广扫码验证
 	When 清空浏览器
 	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 	When bill进入推广扫描链接
 
 	When 清空浏览器
 	When tom扫描bill的推广二维码关注jobs公众号
-	Given jobs登录系统
-	Then jobs可以获得会员列表
-		"""
-		[{
-			"name": "tom"
-		}, {
-			"name": "bill"
-		}]
-		"""
 
-@qr_code		
+	When 清空浏览器
+	Given jobs登录系统
+	When jobs访问会员列表
+	Then jobs可以获得会员列表
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
+		| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+		
+@mall2 @qr_code	
 Scenario:2 积分奖励
 
 	Given jobs登录系统
@@ -81,21 +82,18 @@ Scenario:2 积分奖励
 	#推广扫码验证
 	When 清空浏览器
 	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 	When bill进入推广扫描链接
 	When tom扫描bill的推广二维码关注jobs公众号
 
+	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		"""
-		[{
-			"name": "tom",
-			"integral":0
-		}, {
-			"name": "bill",
-			"integral":10
-		}]
-		"""
-@qr_code1
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
+		| bill  |   普通会员  |       1      |    10    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+
+@mall2 @qr_code1
 Scenario:3 优惠券奖励
 
 	Given jobs登录系统
@@ -151,21 +149,19 @@ Scenario:3 优惠券奖励
 	#推广扫码验证
 	When 清空浏览器
 	When bill关注jobs的公众号
+	When bill访问jobs的webapp
 	When bill进入推广扫描链接
 
 	When 清空浏览器
 	When tom扫描bill的推广二维码关注jobs公众号
 
-
+	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		"""
-		[{
-			"name": "tom"
-		}, {
-			"name": "bill"
-		}]
-		"""
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
+		| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+
 
 	Then jobs能获得优惠券'优惠券1'的码库
 		"""
