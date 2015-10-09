@@ -299,9 +299,8 @@
             var temp_integral,
                 temp_coupon;
             if(!$.isEmptyObject(prize_info.serial_prize)) {
-                alert(11);
-                temp_integral = prize_info.serial_prize.integral;
-                temp_coupon = prize_info.serial_prize.coupon;
+                temp_integral = prize_info.serial_prize.prize.integral;
+                temp_coupon = prize_info.serial_prize.prize.coupon;
             }else{
                 temp_integral = prize_info.daily_prize.integral;
                 temp_coupon = prize_info.daily_prize.coupon;
@@ -321,18 +320,18 @@
             if(temp_prize){
                 $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count);
                 if(temp_prize.prize.integral != 0){
-                    str.push("连续签到"+temp_prize.count+"天可领取"+temp_prize.prize.integral+"积分. ");
+                    str.push("连续签到"+temp_prize.count+"天可领取"+temp_prize.prize.integral+"积分");
                 }
                 if(temp_prize.prize.coupon.id != 0){
                    str.push(" \""+temp_prize.prize.coupon.name+"\" 一张");
                 }
             }else{
                 var tomorrow_prize = prize_info.daily_prize;
-                if(tomorrow_prize.prize.integral != 0){
-                    str.push("明天可领取"+tomorrow_prize.prize.integral+"积分");
+                if(tomorrow_prize.integral != 0){
+                    str.push("明天可领取"+tomorrow_prize.integral+"积分");
                 }
-                if(tomorrow_prize.prize.coupon.id != 0){
-                   str.push(", \""+tomorrow_prize.prize.coupon.name+"\" 一张");
+                if(tomorrow_prize.coupon.id != 0){
+                   str.push("\""+tomorrow_prize.coupon.name+"\" 一张");
                 }
             }
             $('.wa-prize-board').html(str.toString());
